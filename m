@@ -2,86 +2,307 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F16ABC04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:20:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8A72C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:20:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C72FF21743
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:20:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f6Tfhl71"
+	by mail.kernel.org (Postfix) with ESMTP id 94DD82173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:20:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728871AbfEUPUN (ORCPT
+        id S1728883AbfEUPU7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 11:20:13 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:38202 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728837AbfEUPUK (ORCPT
+        Tue, 21 May 2019 11:20:59 -0400
+Received: from www62.your-server.de ([213.133.104.62]:58986 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728099AbfEUPU6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 11:20:10 -0400
-Received: by mail-ot1-f67.google.com with SMTP id s19so16689171otq.5
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 08:20:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=A+8divkK1RJk885MhoBadHe7V0Gz6HXofpqqERzrJNA=;
-        b=f6Tfhl718TNjdi17fhG7uFrVhiNMtt0eFnN88/vWM/iqLcrXdf0U78Tcw2BR4iQWh8
-         BpO6NpBCYB8c7OHdo47JDGicRRFwC5/faPsW3qq7jO+OUHOxI/qbZhr00c10svQ7dwP7
-         O+Wm4TvaOB0rOEgPyHxOKrauegQSRzVft+LE5BPSDPnwgfo7LybMTjqFdxQwlh1jw2pL
-         067JIheUQAjveLhU0yumxM018uQkXYZiy8mb4De7QOb9L3SEYr2fAK3FhlsN7+wCGKqV
-         XMKmaEaXTxZSutXnkwjOSQgeTSIl81ZRwkYcEcx3efybOKztMt+f8gRWrJUH60qGMMN5
-         j8KA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=A+8divkK1RJk885MhoBadHe7V0Gz6HXofpqqERzrJNA=;
-        b=piVbL/8AWJxzMgjRAVQmxAZ/4JGhIkaczO0xH0d5gbEoThHIKooLZXmamWiUpyludj
-         vHE6MilRj+LLGBltPhVG625Y6J/D0fo/g5CRahC74vxT6dcTWYWzpMUs4A9GdKR9r8IJ
-         Ogt6ya8S2Ds9qTbYknKwTuh5ocpZmYR1qvx7rRjRbz0uJN1G/SDtfwVx40HSFNnUUA/Y
-         vtpN/vcUfSlncKY1fiyqE3AiHoIWhRWxDUDBHzGqT8bbTuD6V7VhINouKubaxBP53dDe
-         vkha1OJvWeX3o0aEWTTLWtYIduv7/10w62MCMBKaNL2AZohK11Tqrx5IBpwT3xCgxs6+
-         6urA==
-X-Gm-Message-State: APjAAAWSPThtGExHV8dZmtgdDiScUBaZtcunbTagdNUEJgcf9ze+1iMP
-        raWOKLymaQKvtOLgXAU2OMXr6lA96Cugn47WifHgJwuJ
-X-Google-Smtp-Source: APXvYqyNDKJ6GMe6x1bgirllN226UDaCKuo/V2cXOkEm0n2JojXasrFXk9uTVsfXh7oaX/38x3TpAHQkNYNRZQ6UWLk=
-X-Received: by 2002:a05:6830:209a:: with SMTP id y26mr19927286otq.232.1558452009981;
- Tue, 21 May 2019 08:20:09 -0700 (PDT)
+        Tue, 21 May 2019 11:20:58 -0400
+Received: from [78.46.172.2] (helo=sslproxy05.your-server.de)
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1hT6ZI-0005PY-5V; Tue, 21 May 2019 17:20:44 +0200
+Received: from [178.197.249.20] (helo=linux.home)
+        by sslproxy05.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1hT6ZH-000SWf-Tp; Tue, 21 May 2019 17:20:44 +0200
+Subject: Re: [PATCH 1/5] samples/bpf: fix test_lru_dist build
+To:     Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Matteo Croce <mcroce@redhat.com>
+Cc:     xdp-newbies@vger.kernel.org, bpf@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>
+References: <20190518004639.20648-1-mcroce@redhat.com>
+ <CAGnkfhxt=nq-JV+D5Rrquvn8BVOjHswEJmuVVZE78p9HvAg9qQ@mail.gmail.com>
+ <20190520133830.1ac11fc8@cakuba.netronome.com>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <dfb6cf40-81f4-237e-9a43-646077e020f7@iogearbox.net>
+Date:   Tue, 21 May 2019 17:20:43 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.3.0
 MIME-Version: 1.0
-References: <20190521145116.24378-1-TheSven73@gmail.com> <20190521151059.GM31203@kadam>
-In-Reply-To: <20190521151059.GM31203@kadam>
-From:   Sven Van Asbroeck <thesven73@gmail.com>
-Date:   Tue, 21 May 2019 11:19:59 -0400
-Message-ID: <CAGngYiXLN-oT_b9d1kRyBrrFMALhKO-KnuwXB0MjVq0NFc01Xw@mail.gmail.com>
-Subject: Re: [PATCH] staging: fieldbus: anybuss: force address space conversion
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Greg KH <gregkh@linuxfoundation.org>, devel@driverdev.osuosl.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190520133830.1ac11fc8@cakuba.netronome.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.100.3/25456/Tue May 21 09:56:54 2019)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 21, 2019 at 11:13 AM Dan Carpenter <dan.carpenter@oracle.com> wrote:
->
-> There is no need to use __force.  Just:
->
->         void __iomem *base = (void __iomem *)context;
->
-> For the rest as well.
+On 05/20/2019 10:38 PM, Jakub Kicinski wrote:
+> On Mon, 20 May 2019 19:46:27 +0200, Matteo Croce wrote:
+>> On Sat, May 18, 2019 at 2:46 AM Matteo Croce <mcroce@redhat.com> wrote:
+>>>
+>>> Fix the following error by removing a duplicate struct definition:
+>>
+>> Hi all,
+>>
+>> I forget to send a cover letter for this series, but basically what I
+>> wanted to say is that while patches 1-3 are very straightforward,
+>> patches 4-5 are a bit rough and I accept suggstions to make a cleaner
+>> work.
+> 
+> samples depend on headers being locally installed:
+> 
+> make headers_install
+> 
+> Are you intending to change that?
 
-Yes, that appears to work for 'void *' -> __iomem, but not the other way around:
++1, Matteo, could you elaborate?
 
-+       return devm_regmap_init(dev, NULL, (void *)base, &regmap_cfg);
+On latest bpf tree, everything compiles just fine:
 
-sparse generates:
-drivers/staging/fieldbus/anybuss/arcx-anybus.c:156:16: warning: cast
-removes address space of expression
-
-Would it be a ok solution to use __force in this instance only?
+[root@linux bpf]# make headers_install
+[root@linux bpf]# make -C samples/bpf/
+make: Entering directory '/home/darkstar/trees/bpf/samples/bpf'
+make -C ../../ /home/darkstar/trees/bpf/samples/bpf/ BPF_SAMPLES_PATH=/home/darkstar/trees/bpf/samples/bpf
+make[1]: Entering directory '/home/darkstar/trees/bpf'
+  CALL    scripts/checksyscalls.sh
+  CALL    scripts/atomic/check-atomics.sh
+  DESCEND  objtool
+make -C /home/darkstar/trees/bpf/samples/bpf/../../tools/lib/bpf/ RM='rm -rf' LDFLAGS= srctree=/home/darkstar/trees/bpf/samples/bpf/../../ O=
+  HOSTCC  /home/darkstar/trees/bpf/samples/bpf/test_lru_dist
+  HOSTCC  /home/darkstar/trees/bpf/samples/bpf/sock_example
+  HOSTCC  /home/darkstar/trees/bpf/samples/bpf/fds_example.o
+  HOSTLD  /home/darkstar/trees/bpf/samples/bpf/fds_example
+  HOSTCC  /home/darkstar/trees/bpf/samples/bpf/sockex1_user.o
+  HOSTLD  /home/darkstar/trees/bpf/samples/bpf/sockex1
+  HOSTCC  /home/darkstar/trees/bpf/samples/bpf/sockex2_user.o
+  HOSTLD  /home/darkstar/trees/bpf/samples/bpf/sockex2
+  HOSTCC  /home/darkstar/trees/bpf/samples/bpf/bpf_load.o
+  HOSTCC  /home/darkstar/trees/bpf/samples/bpf/sockex3_user.o
+  HOSTLD  /home/darkstar/trees/bpf/samples/bpf/sockex3
+  HOSTCC  /home/darkstar/trees/bpf/samples/bpf/tracex1_user.o
+  HOSTLD  /home/darkstar/trees/bpf/samples/bpf/tracex1
+  HOSTCC  /home/darkstar/trees/bpf/samples/bpf/tracex2_user.o
+  HOSTLD  /home/darkstar/trees/bpf/samples/bpf/tracex2
+  HOSTCC  /home/darkstar/trees/bpf/samples/bpf/tracex3_user.o
+  HOSTLD  /home/darkstar/trees/bpf/samples/bpf/tracex3
+  HOSTCC  /home/darkstar/trees/bpf/samples/bpf/tracex4_user.o
+  HOSTLD  /home/darkstar/trees/bpf/samples/bpf/tracex4
+  HOSTCC  /home/darkstar/trees/bpf/samples/bpf/tracex5_user.o
+  HOSTLD  /home/darkstar/trees/bpf/samples/bpf/tracex5
+  HOSTCC  /home/darkstar/trees/bpf/samples/bpf/tracex6_user.o
+  HOSTLD  /home/darkstar/trees/bpf/samples/bpf/tracex6
+  HOSTCC  /home/darkstar/trees/bpf/samples/bpf/tracex7_user.o
+  HOSTLD  /home/darkstar/trees/bpf/samples/bpf/tracex7
+  HOSTCC  /home/darkstar/trees/bpf/samples/bpf/test_probe_write_user_user.o
+  HOSTLD  /home/darkstar/trees/bpf/samples/bpf/test_probe_write_user
+  HOSTCC  /home/darkstar/trees/bpf/samples/bpf/trace_output_user.o
+  HOSTLD  /home/darkstar/trees/bpf/samples/bpf/trace_output
+  HOSTCC  /home/darkstar/trees/bpf/samples/bpf/lathist_user.o
+  HOSTLD  /home/darkstar/trees/bpf/samples/bpf/lathist
+  HOSTCC  /home/darkstar/trees/bpf/samples/bpf/offwaketime_user.o
+  HOSTLD  /home/darkstar/trees/bpf/samples/bpf/offwaketime
+  HOSTCC  /home/darkstar/trees/bpf/samples/bpf/spintest_user.o
+  HOSTLD  /home/darkstar/trees/bpf/samples/bpf/spintest
+  HOSTCC  /home/darkstar/trees/bpf/samples/bpf/map_perf_test_user.o
+  HOSTLD  /home/darkstar/trees/bpf/samples/bpf/map_perf_test
+  HOSTCC  /home/darkstar/trees/bpf/samples/bpf/test_overhead_user.o
+  HOSTLD  /home/darkstar/trees/bpf/samples/bpf/test_overhead
+  HOSTCC  /home/darkstar/trees/bpf/samples/bpf/test_cgrp2_array_pin.o
+  HOSTLD  /home/darkstar/trees/bpf/samples/bpf/test_cgrp2_array_pin
+  HOSTCC  /home/darkstar/trees/bpf/samples/bpf/test_cgrp2_attach.o
+  HOSTLD  /home/darkstar/trees/bpf/samples/bpf/test_cgrp2_attach
+  HOSTCC  /home/darkstar/trees/bpf/samples/bpf/test_cgrp2_attach2.o
+  HOSTLD  /home/darkstar/trees/bpf/samples/bpf/test_cgrp2_attach2
+  HOSTCC  /home/darkstar/trees/bpf/samples/bpf/test_cgrp2_sock.o
+  HOSTLD  /home/darkstar/trees/bpf/samples/bpf/test_cgrp2_sock
+  HOSTCC  /home/darkstar/trees/bpf/samples/bpf/test_cgrp2_sock2.o
+  HOSTLD  /home/darkstar/trees/bpf/samples/bpf/test_cgrp2_sock2
+  HOSTCC  /home/darkstar/trees/bpf/samples/bpf/xdp1_user.o
+  HOSTLD  /home/darkstar/trees/bpf/samples/bpf/xdp1
+  HOSTLD  /home/darkstar/trees/bpf/samples/bpf/xdp2
+  HOSTCC  /home/darkstar/trees/bpf/samples/bpf/xdp_router_ipv4_user.o
+  HOSTLD  /home/darkstar/trees/bpf/samples/bpf/xdp_router_ipv4
+  HOSTCC  /home/darkstar/trees/bpf/samples/bpf/test_current_task_under_cgroup_user.o
+  HOSTLD  /home/darkstar/trees/bpf/samples/bpf/test_current_task_under_cgroup
+  HOSTCC  /home/darkstar/trees/bpf/samples/bpf/trace_event_user.o
+  HOSTLD  /home/darkstar/trees/bpf/samples/bpf/trace_event
+  HOSTCC  /home/darkstar/trees/bpf/samples/bpf/sampleip_user.o
+  HOSTLD  /home/darkstar/trees/bpf/samples/bpf/sampleip
+  HOSTCC  /home/darkstar/trees/bpf/samples/bpf/tc_l2_redirect_user.o
+  HOSTLD  /home/darkstar/trees/bpf/samples/bpf/tc_l2_redirect
+  HOSTCC  /home/darkstar/trees/bpf/samples/bpf/lwt_len_hist_user.o
+  HOSTLD  /home/darkstar/trees/bpf/samples/bpf/lwt_len_hist
+  HOSTCC  /home/darkstar/trees/bpf/samples/bpf/xdp_tx_iptunnel_user.o
+  HOSTLD  /home/darkstar/trees/bpf/samples/bpf/xdp_tx_iptunnel
+  HOSTCC  /home/darkstar/trees/bpf/samples/bpf/test_map_in_map_user.o
+  HOSTLD  /home/darkstar/trees/bpf/samples/bpf/test_map_in_map
+  HOSTCC  /home/darkstar/trees/bpf/samples/bpf/cookie_uid_helper_example.o
+  HOSTLD  /home/darkstar/trees/bpf/samples/bpf/per_socket_stats_example
+  HOSTCC  /home/darkstar/trees/bpf/samples/bpf/xdp_redirect_user.o
+  HOSTLD  /home/darkstar/trees/bpf/samples/bpf/xdp_redirect
+  HOSTCC  /home/darkstar/trees/bpf/samples/bpf/xdp_redirect_map_user.o
+  HOSTLD  /home/darkstar/trees/bpf/samples/bpf/xdp_redirect_map
+  HOSTCC  /home/darkstar/trees/bpf/samples/bpf/xdp_redirect_cpu_user.o
+  HOSTLD  /home/darkstar/trees/bpf/samples/bpf/xdp_redirect_cpu
+  HOSTCC  /home/darkstar/trees/bpf/samples/bpf/xdp_monitor_user.o
+  HOSTLD  /home/darkstar/trees/bpf/samples/bpf/xdp_monitor
+  HOSTCC  /home/darkstar/trees/bpf/samples/bpf/xdp_rxq_info_user.o
+  HOSTLD  /home/darkstar/trees/bpf/samples/bpf/xdp_rxq_info
+  HOSTCC  /home/darkstar/trees/bpf/samples/bpf/syscall_tp_user.o
+  HOSTLD  /home/darkstar/trees/bpf/samples/bpf/syscall_tp
+  HOSTCC  /home/darkstar/trees/bpf/samples/bpf/cpustat_user.o
+  HOSTLD  /home/darkstar/trees/bpf/samples/bpf/cpustat
+  HOSTCC  /home/darkstar/trees/bpf/samples/bpf/xdp_adjust_tail_user.o
+  HOSTLD  /home/darkstar/trees/bpf/samples/bpf/xdp_adjust_tail
+  HOSTCC  /home/darkstar/trees/bpf/samples/bpf/xdpsock_user.o
+  HOSTLD  /home/darkstar/trees/bpf/samples/bpf/xdpsock
+  HOSTCC  /home/darkstar/trees/bpf/samples/bpf/xdp_fwd_user.o
+  HOSTLD  /home/darkstar/trees/bpf/samples/bpf/xdp_fwd
+  HOSTCC  /home/darkstar/trees/bpf/samples/bpf/task_fd_query_user.o
+  HOSTLD  /home/darkstar/trees/bpf/samples/bpf/task_fd_query
+  HOSTCC  /home/darkstar/trees/bpf/samples/bpf/xdp_sample_pkts_user.o
+  HOSTLD  /home/darkstar/trees/bpf/samples/bpf/xdp_sample_pkts
+  HOSTCC  /home/darkstar/trees/bpf/samples/bpf/ibumad_user.o
+  HOSTLD  /home/darkstar/trees/bpf/samples/bpf/ibumad
+  HOSTCC  /home/darkstar/trees/bpf/samples/bpf/hbm.o
+  HOSTLD  /home/darkstar/trees/bpf/samples/bpf/hbm
+  CLANG-bpf  /home/darkstar/trees/bpf/samples/bpf/sockex1_kern.o
+pahole -J /home/darkstar/trees/bpf/samples/bpf/sockex1_kern.o
+  CLANG-bpf  /home/darkstar/trees/bpf/samples/bpf/sockex2_kern.o
+pahole -J /home/darkstar/trees/bpf/samples/bpf/sockex2_kern.o
+  CLANG-bpf  /home/darkstar/trees/bpf/samples/bpf/sockex3_kern.o
+pahole -J /home/darkstar/trees/bpf/samples/bpf/sockex3_kern.o
+  CLANG-bpf  /home/darkstar/trees/bpf/samples/bpf/tracex1_kern.o
+pahole -J /home/darkstar/trees/bpf/samples/bpf/tracex1_kern.o
+  CLANG-bpf  /home/darkstar/trees/bpf/samples/bpf/tracex2_kern.o
+pahole -J /home/darkstar/trees/bpf/samples/bpf/tracex2_kern.o
+  CLANG-bpf  /home/darkstar/trees/bpf/samples/bpf/tracex3_kern.o
+pahole -J /home/darkstar/trees/bpf/samples/bpf/tracex3_kern.o
+  CLANG-bpf  /home/darkstar/trees/bpf/samples/bpf/tracex4_kern.o
+pahole -J /home/darkstar/trees/bpf/samples/bpf/tracex4_kern.o
+  CC      /home/darkstar/trees/bpf/samples/bpf/syscall_nrs.s
+  UPD     /home/darkstar/trees/bpf/samples/bpf/syscall_nrs.h
+  CLANG-bpf  /home/darkstar/trees/bpf/samples/bpf/tracex5_kern.o
+pahole -J /home/darkstar/trees/bpf/samples/bpf/tracex5_kern.o
+  CLANG-bpf  /home/darkstar/trees/bpf/samples/bpf/tracex6_kern.o
+pahole -J /home/darkstar/trees/bpf/samples/bpf/tracex6_kern.o
+  CLANG-bpf  /home/darkstar/trees/bpf/samples/bpf/tracex7_kern.o
+pahole -J /home/darkstar/trees/bpf/samples/bpf/tracex7_kern.o
+  CLANG-bpf  /home/darkstar/trees/bpf/samples/bpf/sock_flags_kern.o
+pahole -J /home/darkstar/trees/bpf/samples/bpf/sock_flags_kern.o
+  CLANG-bpf  /home/darkstar/trees/bpf/samples/bpf/test_probe_write_user_kern.o
+pahole -J /home/darkstar/trees/bpf/samples/bpf/test_probe_write_user_kern.o
+  CLANG-bpf  /home/darkstar/trees/bpf/samples/bpf/trace_output_kern.o
+pahole -J /home/darkstar/trees/bpf/samples/bpf/trace_output_kern.o
+  CLANG-bpf  /home/darkstar/trees/bpf/samples/bpf/tcbpf1_kern.o
+pahole -J /home/darkstar/trees/bpf/samples/bpf/tcbpf1_kern.o
+  CLANG-bpf  /home/darkstar/trees/bpf/samples/bpf/tc_l2_redirect_kern.o
+pahole -J /home/darkstar/trees/bpf/samples/bpf/tc_l2_redirect_kern.o
+  CLANG-bpf  /home/darkstar/trees/bpf/samples/bpf/lathist_kern.o
+pahole -J /home/darkstar/trees/bpf/samples/bpf/lathist_kern.o
+  CLANG-bpf  /home/darkstar/trees/bpf/samples/bpf/offwaketime_kern.o
+pahole -J /home/darkstar/trees/bpf/samples/bpf/offwaketime_kern.o
+  CLANG-bpf  /home/darkstar/trees/bpf/samples/bpf/spintest_kern.o
+pahole -J /home/darkstar/trees/bpf/samples/bpf/spintest_kern.o
+  CLANG-bpf  /home/darkstar/trees/bpf/samples/bpf/map_perf_test_kern.o
+pahole -J /home/darkstar/trees/bpf/samples/bpf/map_perf_test_kern.o
+  CLANG-bpf  /home/darkstar/trees/bpf/samples/bpf/test_overhead_tp_kern.o
+pahole -J /home/darkstar/trees/bpf/samples/bpf/test_overhead_tp_kern.o
+  CLANG-bpf  /home/darkstar/trees/bpf/samples/bpf/test_overhead_raw_tp_kern.o
+pahole -J /home/darkstar/trees/bpf/samples/bpf/test_overhead_raw_tp_kern.o
+  CLANG-bpf  /home/darkstar/trees/bpf/samples/bpf/test_overhead_kprobe_kern.o
+pahole -J /home/darkstar/trees/bpf/samples/bpf/test_overhead_kprobe_kern.o
+  CLANG-bpf  /home/darkstar/trees/bpf/samples/bpf/parse_varlen.o
+pahole -J /home/darkstar/trees/bpf/samples/bpf/parse_varlen.o
+  CLANG-bpf  /home/darkstar/trees/bpf/samples/bpf/parse_simple.o
+pahole -J /home/darkstar/trees/bpf/samples/bpf/parse_simple.o
+  CLANG-bpf  /home/darkstar/trees/bpf/samples/bpf/parse_ldabs.o
+pahole -J /home/darkstar/trees/bpf/samples/bpf/parse_ldabs.o
+  CLANG-bpf  /home/darkstar/trees/bpf/samples/bpf/test_cgrp2_tc_kern.o
+pahole -J /home/darkstar/trees/bpf/samples/bpf/test_cgrp2_tc_kern.o
+  CLANG-bpf  /home/darkstar/trees/bpf/samples/bpf/xdp1_kern.o
+pahole -J /home/darkstar/trees/bpf/samples/bpf/xdp1_kern.o
+  CLANG-bpf  /home/darkstar/trees/bpf/samples/bpf/xdp2_kern.o
+pahole -J /home/darkstar/trees/bpf/samples/bpf/xdp2_kern.o
+  CLANG-bpf  /home/darkstar/trees/bpf/samples/bpf/xdp_router_ipv4_kern.o
+pahole -J /home/darkstar/trees/bpf/samples/bpf/xdp_router_ipv4_kern.o
+  CLANG-bpf  /home/darkstar/trees/bpf/samples/bpf/test_current_task_under_cgroup_kern.o
+pahole -J /home/darkstar/trees/bpf/samples/bpf/test_current_task_under_cgroup_kern.o
+  CLANG-bpf  /home/darkstar/trees/bpf/samples/bpf/trace_event_kern.o
+pahole -J /home/darkstar/trees/bpf/samples/bpf/trace_event_kern.o
+  CLANG-bpf  /home/darkstar/trees/bpf/samples/bpf/sampleip_kern.o
+pahole -J /home/darkstar/trees/bpf/samples/bpf/sampleip_kern.o
+  CLANG-bpf  /home/darkstar/trees/bpf/samples/bpf/lwt_len_hist_kern.o
+pahole -J /home/darkstar/trees/bpf/samples/bpf/lwt_len_hist_kern.o
+  CLANG-bpf  /home/darkstar/trees/bpf/samples/bpf/xdp_tx_iptunnel_kern.o
+pahole -J /home/darkstar/trees/bpf/samples/bpf/xdp_tx_iptunnel_kern.o
+  CLANG-bpf  /home/darkstar/trees/bpf/samples/bpf/test_map_in_map_kern.o
+pahole -J /home/darkstar/trees/bpf/samples/bpf/test_map_in_map_kern.o
+  CLANG-bpf  /home/darkstar/trees/bpf/samples/bpf/tcp_synrto_kern.o
+pahole -J /home/darkstar/trees/bpf/samples/bpf/tcp_synrto_kern.o
+  CLANG-bpf  /home/darkstar/trees/bpf/samples/bpf/tcp_rwnd_kern.o
+pahole -J /home/darkstar/trees/bpf/samples/bpf/tcp_rwnd_kern.o
+  CLANG-bpf  /home/darkstar/trees/bpf/samples/bpf/tcp_bufs_kern.o
+pahole -J /home/darkstar/trees/bpf/samples/bpf/tcp_bufs_kern.o
+  CLANG-bpf  /home/darkstar/trees/bpf/samples/bpf/tcp_cong_kern.o
+pahole -J /home/darkstar/trees/bpf/samples/bpf/tcp_cong_kern.o
+  CLANG-bpf  /home/darkstar/trees/bpf/samples/bpf/tcp_iw_kern.o
+pahole -J /home/darkstar/trees/bpf/samples/bpf/tcp_iw_kern.o
+  CLANG-bpf  /home/darkstar/trees/bpf/samples/bpf/tcp_clamp_kern.o
+pahole -J /home/darkstar/trees/bpf/samples/bpf/tcp_clamp_kern.o
+  CLANG-bpf  /home/darkstar/trees/bpf/samples/bpf/tcp_basertt_kern.o
+pahole -J /home/darkstar/trees/bpf/samples/bpf/tcp_basertt_kern.o
+  CLANG-bpf  /home/darkstar/trees/bpf/samples/bpf/tcp_tos_reflect_kern.o
+pahole -J /home/darkstar/trees/bpf/samples/bpf/tcp_tos_reflect_kern.o
+  CLANG-bpf  /home/darkstar/trees/bpf/samples/bpf/xdp_redirect_kern.o
+pahole -J /home/darkstar/trees/bpf/samples/bpf/xdp_redirect_kern.o
+  CLANG-bpf  /home/darkstar/trees/bpf/samples/bpf/xdp_redirect_map_kern.o
+pahole -J /home/darkstar/trees/bpf/samples/bpf/xdp_redirect_map_kern.o
+  CLANG-bpf  /home/darkstar/trees/bpf/samples/bpf/xdp_redirect_cpu_kern.o
+pahole -J /home/darkstar/trees/bpf/samples/bpf/xdp_redirect_cpu_kern.o
+  CLANG-bpf  /home/darkstar/trees/bpf/samples/bpf/xdp_monitor_kern.o
+pahole -J /home/darkstar/trees/bpf/samples/bpf/xdp_monitor_kern.o
+  CLANG-bpf  /home/darkstar/trees/bpf/samples/bpf/xdp_rxq_info_kern.o
+pahole -J /home/darkstar/trees/bpf/samples/bpf/xdp_rxq_info_kern.o
+  CLANG-bpf  /home/darkstar/trees/bpf/samples/bpf/xdp2skb_meta_kern.o
+pahole -J /home/darkstar/trees/bpf/samples/bpf/xdp2skb_meta_kern.o
+  CLANG-bpf  /home/darkstar/trees/bpf/samples/bpf/syscall_tp_kern.o
+pahole -J /home/darkstar/trees/bpf/samples/bpf/syscall_tp_kern.o
+  CLANG-bpf  /home/darkstar/trees/bpf/samples/bpf/cpustat_kern.o
+pahole -J /home/darkstar/trees/bpf/samples/bpf/cpustat_kern.o
+  CLANG-bpf  /home/darkstar/trees/bpf/samples/bpf/xdp_adjust_tail_kern.o
+pahole -J /home/darkstar/trees/bpf/samples/bpf/xdp_adjust_tail_kern.o
+  CLANG-bpf  /home/darkstar/trees/bpf/samples/bpf/xdp_fwd_kern.o
+pahole -J /home/darkstar/trees/bpf/samples/bpf/xdp_fwd_kern.o
+  CLANG-bpf  /home/darkstar/trees/bpf/samples/bpf/task_fd_query_kern.o
+pahole -J /home/darkstar/trees/bpf/samples/bpf/task_fd_query_kern.o
+  CLANG-bpf  /home/darkstar/trees/bpf/samples/bpf/xdp_sample_pkts_kern.o
+pahole -J /home/darkstar/trees/bpf/samples/bpf/xdp_sample_pkts_kern.o
+  CLANG-bpf  /home/darkstar/trees/bpf/samples/bpf/ibumad_kern.o
+pahole -J /home/darkstar/trees/bpf/samples/bpf/ibumad_kern.o
+  CLANG-bpf  /home/darkstar/trees/bpf/samples/bpf/hbm_out_kern.o
+pahole -J /home/darkstar/trees/bpf/samples/bpf/hbm_out_kern.o
+make[1]: Leaving directory '/home/darkstar/trees/bpf'
+make: Leaving directory '/home/darkstar/trees/bpf/samples/bpf'
+[root@linux bpf]#
