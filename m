@@ -2,98 +2,105 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42E4AC04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:53:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7106AC04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:53:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16C012173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:53:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E6E821743
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:53:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dGc5ZZV9"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="ou58S9me"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728825AbfEUPx2 (ORCPT
+        id S1728894AbfEUPxd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 11:53:28 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:35766 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727969AbfEUPx1 (ORCPT
+        Tue, 21 May 2019 11:53:33 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:42816 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728792AbfEUPxd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 11:53:27 -0400
-Received: by mail-oi1-f194.google.com with SMTP id a132so13216133oib.2
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 08:53:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Uiy2m9z99ipbVeeWFB4EOcFq0uh6YoqdjiXnnlz32AE=;
-        b=dGc5ZZV9m0gIO9qApqTZsdg/BMohXW3nXpoRoTFn41fsv8zZ+0GfLrCTMUyd90zhcy
-         lpANNPkydRSz/k48z+g/y8wHvFOp8rVV84sk3R3NrK6vkgpoEK51w+pxYnUkZYfZfXXV
-         LZ1q36BZf9Q4zpGVMNzZE54z1iYMc7COZwGs1Ve4IvzJTAN+9IZjKFg3+SRH3D/SBavL
-         ROGtiVdI5VTA7Xp1zWBkp7buRnHrzBR+VBjRuX2eoOhTP2NPeLyxeOLkVcY5N31b71KG
-         KtW3soYtqm32k3xLY2S2EP6E3gCILfwUhAAonXdqwaxKCclfBrjovtaQpkCq5XLLq7AZ
-         0rfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Uiy2m9z99ipbVeeWFB4EOcFq0uh6YoqdjiXnnlz32AE=;
-        b=RvqM2Zn9a4odnR9ksyv4iBwN8ngYASdBfIDnITa0+4+1hOZ2jzPx/rqnPrS0aKFvJL
-         Yr/vgzftCnkfVQR5KYz19RSvMlRY2KifLV4lN+ivmLYIkFJ2yie3QmWnJ+mW8brNdFW9
-         mraksjHQztxrp9TgwWhaSebC4m6VC2FMMkszu8/P5Zerx1su0zRWycHWhNKY+GPs/gGO
-         Gse+aC/HdDn1paMYXqLMdEZrcnBv0ivv2JgxiO4dAfw4L/LZHUqcUTo4I6B0VrzsQGRO
-         iOv0NnZG3UX2qSwKhkqwbYqySG/Wz0jd1SpnBg52/vSbTIGKzI6n+guWMyTLuviLlFRQ
-         fhdQ==
-X-Gm-Message-State: APjAAAUQvePX2IDNBpH8+PolG9DRtZkLdKU3lyknDmwRN9I9TGkBKbJG
-        BYgoqvkTVL4YDcHtqoDBSY1mdp3IcQZuv4kYIqvIj0Sp
-X-Google-Smtp-Source: APXvYqzzcqppAL/kopI3FM+VWAkNyBbUx3pEfH8WRHrx7NOG5uRvquGWrBk9Tt1uboZQhqYDmmGR3RE0ch5xE3wAcxc=
-X-Received: by 2002:aca:580b:: with SMTP id m11mr1401504oib.169.1558454006316;
- Tue, 21 May 2019 08:53:26 -0700 (PDT)
+        Tue, 21 May 2019 11:53:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1558454011; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=nEz/jx6tk/NW0NouC1NN13IDxP7BkPHZBE4FY1Wn2h4=;
+        b=ou58S9meD58qIv1AaH2y73i38ZbwX3yCPPDx3EDX3eR+JiDRI7eCzaShe2y0FiO8nvGL6n
+        0TxYErlheKs14x9AXNQ6fyDV2BcmtWMLsQze4P+Fr5w9BOfG5BHq1O6jpXssVjemvG10FI
+        RIjRXH1uPAfYgbKtz49ATIK2VrFWP/k=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Cc:     od@zcrc.me, linux-watchdog@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH 2/4] watchdog: jz4740: Avoid starting watchdog in set_timeout
+Date:   Tue, 21 May 2019 17:53:11 +0200
+Message-Id: <20190521155313.19326-2-paul@crapouillou.net>
+In-Reply-To: <20190521155313.19326-1-paul@crapouillou.net>
+References: <20190521155313.19326-1-paul@crapouillou.net>
 MIME-Version: 1.0
-References: <20190521145116.24378-1-TheSven73@gmail.com> <20190521151059.GM31203@kadam>
- <CAGngYiXLN-oT_b9d1kRyBrrFMALhKO-KnuwXB0MjVq0NFc01Xw@mail.gmail.com> <20190521154241.GB15818@kroah.com>
-In-Reply-To: <20190521154241.GB15818@kroah.com>
-From:   Sven Van Asbroeck <thesven73@gmail.com>
-Date:   Tue, 21 May 2019 11:53:15 -0400
-Message-ID: <CAGngYiU_iK5=swD_DA5PcOeYFT0zTrdQ+30Db0YrahuEukEP_A@mail.gmail.com>
-Subject: Re: [PATCH] staging: fieldbus: anybuss: force address space conversion
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        devel@driverdev.osuosl.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 21, 2019 at 11:42 AM Greg KH <gregkh@linuxfoundation.org> wrote:
->
-> Ick, if you are using __force, almost always something is wrong.
->
+Previously the jz4740_wdt_set_timeout() function was starting the timer
+unconditionally, even if it was stopped when that function was entered.
 
-What if I create a separate structure for the regmap context ?
+Now, the timer will be restarted only if it was already running before
+this function is called.
 
-struct anybus_regmap_context {
-        void __iomem *base;
-};
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+---
+ drivers/watchdog/jz4740_wdt.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-Then just store the base pointer inside the struct, and pass the struct
-as the regmap context:
+diff --git a/drivers/watchdog/jz4740_wdt.c b/drivers/watchdog/jz4740_wdt.c
+index 51be321c775a..f970a7a53084 100644
+--- a/drivers/watchdog/jz4740_wdt.c
++++ b/drivers/watchdog/jz4740_wdt.c
+@@ -77,6 +77,7 @@ static int jz4740_wdt_set_timeout(struct watchdog_device *wdt_dev,
+ 	unsigned int rtc_clk_rate;
+ 	unsigned int timeout_value;
+ 	unsigned short clock_div = JZ_WDT_CLOCK_DIV_1;
++	u8 tcer;
+ 
+ 	rtc_clk_rate = clk_get_rate(drvdata->rtc_clk);
+ 
+@@ -92,6 +93,7 @@ static int jz4740_wdt_set_timeout(struct watchdog_device *wdt_dev,
+ 		clock_div += (1 << TCU_TCSR_PRESCALE_LSB);
+ 	}
+ 
++	tcer = readb(drvdata->base + TCU_REG_WDT_TCER);
+ 	writeb(0x0, drvdata->base + TCU_REG_WDT_TCER);
+ 	writew(clock_div, drvdata->base + TCU_REG_WDT_TCSR);
+ 
+@@ -99,7 +101,7 @@ static int jz4740_wdt_set_timeout(struct watchdog_device *wdt_dev,
+ 	writew(0x0, drvdata->base + TCU_REG_WDT_TCNT);
+ 	writew(clock_div | JZ_WDT_CLOCK_RTC, drvdata->base + TCU_REG_WDT_TCSR);
+ 
+-	writeb(0x1, drvdata->base + TCU_REG_WDT_TCER);
++	writeb(tcer & TCU_WDT_TCER_TCEN, drvdata->base + TCU_REG_WDT_TCER);
+ 
+ 	wdt_dev->timeout = new_timeout;
+ 	return 0;
+@@ -107,8 +109,11 @@ static int jz4740_wdt_set_timeout(struct watchdog_device *wdt_dev,
+ 
+ static int jz4740_wdt_start(struct watchdog_device *wdt_dev)
+ {
++	struct jz4740_wdt_drvdata *drvdata = watchdog_get_drvdata(wdt_dev);
++
+ 	jz4740_timer_enable_watchdog();
+ 	jz4740_wdt_set_timeout(wdt_dev, wdt_dev->timeout);
++	writeb(TCU_WDT_TCER_TCEN, drvdata->base + TCU_REG_WDT_TCER);
+ 
+ 	return 0;
+ }
+-- 
+2.21.0.593.g511ec345e18
 
-ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
-ctx->base = base;
-devm_regmap_init(..., ctx);
-
-static int write_reg_bus(void *context, unsigned int reg,
-                  unsigned int val)
-{
-        struct anybus_regmap_context *ctx = context;
-        <now access ctx->base>
-}
-
-Penalty is an additional dynamic pointer-size
-allocation. Pro: it'll be formally correct ?
