@@ -2,145 +2,124 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6557C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 18:16:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1E9FC04E87
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 18:16:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 952B7217F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 18:16:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 792542173C
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 18:16:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hC3NzunQ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="StpYFVZS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729112AbfEUSQD (ORCPT
+        id S1729241AbfEUSQ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 14:16:03 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:42712 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727969AbfEUSQD (ORCPT
+        Tue, 21 May 2019 14:16:27 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:42288 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729152AbfEUSQ1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 14:16:03 -0400
-Received: by mail-pl1-f196.google.com with SMTP id go2so291879plb.9;
-        Tue, 21 May 2019 11:16:02 -0700 (PDT)
+        Tue, 21 May 2019 14:16:27 -0400
+Received: by mail-pf1-f196.google.com with SMTP id 13so9465625pfw.9
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 11:16:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=Y/MYMhrU1tjyFi5FjnHoCnJ6B3pMDuL+caZmJS6iXvc=;
-        b=hC3NzunQtTacilbhVcY+YFbxqEcQa7u2d4uxOn6mm8U3vBSyR8govzXKG4chhNrcRA
-         wHqe/oPMYGsy7eymiKvAciIePZj1f94FfWgD7qI7eEiNhGMyNwlz/RUdusmaicIsKFjG
-         Og4d1f9RMsLBqyFpUOi1GzmCAdfvJxL782vKeAAEvGAMOaAewamcuUPjJQSZLxZr2q8H
-         M5QbbfP7CQS5mwa3rtANt0wV+w1ALdpzJrWFRgsnWe2wDDyT8yQvjX/vMVJ+GB3k2hlX
-         RYlPw1YHcImnxJh5jKM/YeETpxv9xMJSEk4ety0d/RZwDyc6S5c8W7BdzoVAVn8NlVr3
-         UlKQ==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=kWn23uPSMxDFn2qGTs4o2rEa3INC2eoWBUd16xA7XV8=;
+        b=StpYFVZSovK25IyEPqkVrilukmqVU8wqhQsBBJXhzVWPRyObGv3Y0sE/foiPAP1dLY
+         u+5cRVaM2aXyHOZbDnvo5CixYT3pDTGkwkastTAD9csANh4Kq53CAYqdt3BU542IHDWo
+         GL5I6q2Z4PZP3D28tm1mOHEUFcPTPaXw5u/4PmkRk1zyWJvXlJA1+y01Eb56nO8IuZZZ
+         7O7OzNNw+gXkyyEWTk9bN4QuYEOEFrAk7OSvc5rGDby3rnQqpeuTXTMHw/HMugDrt6SQ
+         sJExt/iFymWshqalcGbMGMqXuAuxB6kf0qmYF9UKfVF8w5mMat09dUmFZKf+frzxamE0
+         dGbg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Y/MYMhrU1tjyFi5FjnHoCnJ6B3pMDuL+caZmJS6iXvc=;
-        b=IOAwhdEnVdJvZ7Iw0noYc8Kyb1Vy1148rXkMOW5w56Q4MTgmeuk4u3fr6hTgAPQ8y9
-         lO8DcRZMPj6UVwdgHbmZPoPz0usDUJoRaTXOp8ysEeIoZnm593wlUxgKRvm5bpeRIKOW
-         lq3FPqvGMqzE8BG3T/4jHipwq9M856NhVXQaigx7P2K4fP1agYw2P/Sc4sbofCj+7M8w
-         BtZwD5yPGCF0LzlNypT0EpaxysATeCJWhh9X/uu3yoS7pAaDg8sQcK8Fvv2aLV4T4e4d
-         rc0URM02iRuX0bv8klG5lwbyOzJuy1yFTwN5v43+P/xj8HQ3/M0AjcqVT6iSgNeJO3Zh
-         be/w==
-X-Gm-Message-State: APjAAAUEht9ymeAPUjzrJDMoDfNBJmOjDceONA2taqU4UW8syE90cg5h
-        lL/DD+zM1A/Tx8HDW4gOwrk=
-X-Google-Smtp-Source: APXvYqxAfd+J7HIHw5JyCAQwtUv73KL+sISPMY7Pc7gfBzn8OOfnEfEILHYYQdJXY1Y2bECtz1qIxg==
-X-Received: by 2002:a17:902:6b:: with SMTP id 98mr84476086pla.271.1558462562160;
-        Tue, 21 May 2019 11:16:02 -0700 (PDT)
-Received: from bnva-HP-Pavilion-g6-Notebook-PC.domain.name ([117.241.200.143])
-        by smtp.gmail.com with ESMTPSA id y17sm24090105pfn.79.2019.05.21.11.15.58
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 21 May 2019 11:16:01 -0700 (PDT)
-From:   Vandana BN <bnvandana@gmail.com>
-To:     hverkuil@xs4all.nl, royale@zerezo.com, mchehab@kernel.org,
-        linux-usb@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     skhan@linuxfoundation.org, gregkh@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Vandana BN <bnvandana@gmail.com>
-Subject: [PATCH] media:usb:zr364xx:Fix KASAN:null-ptr-deref Read in zr364xx_vidioc_querycap
-Date:   Tue, 21 May 2019 23:45:35 +0530
-Message-Id: <20190521181535.7974-1-bnvandana@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=kWn23uPSMxDFn2qGTs4o2rEa3INC2eoWBUd16xA7XV8=;
+        b=TDeuwJnvwVOStbN8EOZkb4Uxc1iRPlmQizmnFBkJFLUejNGaEPEc9R9QgpqvFJSwuA
+         OqsHVkQQU3jE3iZIDn+DQ3NGJSp7WYfGMpzyXlBTzQ1q82BhgIZB3xzwuCYo+5xJNiLk
+         3MAHreRAtHrRXFp36kKQBrmIUdwdYiwxKcq6tn25LTgosVoyOjHv/262fIZQQ/CiyZYY
+         8pcDoUGyMxuSLuh8KfNUd1TGbB+jGq1uHJvYg9fHwJRPkGXc+KujsR7MleLn4u2YvP3Z
+         x4/zQDRV6hAzJWiww/jy9Zz0SWcbz8f2in+iaY9b2qpjlDd+0relhf2G/NZh4xlriAUN
+         Bmkw==
+X-Gm-Message-State: APjAAAXfjoH6/+IEZiEVKtBWWV8bwfXw7rRvaI56RZ68z67+ag/GwJH0
+        PIITnEQS6Dj7MQ0Ks1h6Iy20jg==
+X-Google-Smtp-Source: APXvYqzNDTddr3qSb0H+nAtgW+HjSihhmwcLS/tOoKNIQOseOHwP64iiNXN2WRg9soFejjy2u6Ne/A==
+X-Received: by 2002:a63:484d:: with SMTP id x13mr56974pgk.275.1558462586195;
+        Tue, 21 May 2019 11:16:26 -0700 (PDT)
+Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id i17sm27598969pfo.103.2019.05.21.11.16.24
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 21 May 2019 11:16:25 -0700 (PDT)
+Date:   Tue, 21 May 2019 11:16:52 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc:     agross@kernel.org, david.brown@linaro.org, jcrouse@codeaurora.org,
+        lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH 3/3] arm64: dts: msm8998-mtp: Add pm8005_s1 regulator
+Message-ID: <20190521181652.GC2085@tuxbook-pro>
+References: <20190521164932.14265-1-jeffrey.l.hugo@gmail.com>
+ <20190521165341.14428-1-jeffrey.l.hugo@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190521165341.14428-1-jeffrey.l.hugo@gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SyzKaller hit the null pointer deref while reading from uninitialized
-udev->product in zr364xx_vidioc_querycap().
-==================================================================
-BUG: KASAN: null-ptr-deref in read_word_at_a_time+0xe/0x20
-include/linux/compiler.h:274
-Read of size 1 at addr 0000000000000000 by task v4l_id/5287
+On Tue 21 May 09:53 PDT 2019, Jeffrey Hugo wrote:
 
-CPU: 1 PID: 5287 Comm: v4l_id Not tainted 5.1.0-rc3-319004-g43151d6 #6
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0xe8/0x16e lib/dump_stack.c:113
-  kasan_report.cold+0x5/0x3c mm/kasan/report.c:321
-  read_word_at_a_time+0xe/0x20 include/linux/compiler.h:274
-  strscpy+0x8a/0x280 lib/string.c:207
-  zr364xx_vidioc_querycap+0xb5/0x210 drivers/media/usb/zr364xx/zr364xx.c:706
-  v4l_querycap+0x12b/0x340 drivers/media/v4l2-core/v4l2-ioctl.c:1062
-  __video_do_ioctl+0x5bb/0xb40 drivers/media/v4l2-core/v4l2-ioctl.c:2874
-  video_usercopy+0x44e/0xf00 drivers/media/v4l2-core/v4l2-ioctl.c:3056
-  v4l2_ioctl+0x14e/0x1a0 drivers/media/v4l2-core/v4l2-dev.c:364
-  vfs_ioctl fs/ioctl.c:46 [inline]
-  file_ioctl fs/ioctl.c:509 [inline]
-  do_vfs_ioctl+0xced/0x12f0 fs/ioctl.c:696
-  ksys_ioctl+0xa0/0xc0 fs/ioctl.c:713
-  __do_sys_ioctl fs/ioctl.c:720 [inline]
-  __se_sys_ioctl fs/ioctl.c:718 [inline]
-  __x64_sys_ioctl+0x74/0xb0 fs/ioctl.c:718
-  do_syscall_64+0xcf/0x4f0 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x7f3b56d8b347
-Code: 90 90 90 48 8b 05 f1 fa 2a 00 64 c7 00 26 00 00 00 48 c7 c0 ff ff ff
-ff c3 90 90 90 90 90 90 90 90 90 90 b8 10 00 00 00 0f 05 <48> 3d 01 f0 ff
-ff 73 01 c3 48 8b 0d c1 fa 2a 00 31 d2 48 29 c2 64
-RSP: 002b:00007ffe005d5d68 EFLAGS: 00000202 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00007f3b56d8b347
-RDX: 00007ffe005d5d70 RSI: 0000000080685600 RDI: 0000000000000003
-RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000202 R12: 0000000000400884
-R13: 00007ffe005d5ec0 R14: 0000000000000000 R15: 0000000000000000
-==================================================================
+> The pm8005_s1 is VDD_GFX, and needs to be on to enable the GPU.
+> This should be hooked up to the GPU CPR, but we don't have support for that
+> yet, so until then, just turn on the regulator and keep it on so that we
+> can focus on basic GPU bringup.
+> 
 
-For this device udev->product is not initialized and accessing it causes a NULL pointer deref.
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-The fix is to check for NULL before strscpy() and copy empty string, if
-product is NULL
-
-Reported-by: syzbot+66010012fd4c531a1a96@syzkaller.appspotmail.com
-
-Signed-off-by: Vandana BN <bnvandana@gmail.com>
----
- drivers/media/usb/zr364xx/zr364xx.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/media/usb/zr364xx/zr364xx.c b/drivers/media/usb/zr364xx/zr364xx.c
-index 96fee8d5b865..401a1e55dbe1 100644
---- a/drivers/media/usb/zr364xx/zr364xx.c
-+++ b/drivers/media/usb/zr364xx/zr364xx.c
-@@ -703,7 +703,10 @@ static int zr364xx_vidioc_querycap(struct file *file, void *priv,
- 	struct zr364xx_camera *cam = video_drvdata(file);
- 
- 	strscpy(cap->driver, DRIVER_DESC, sizeof(cap->driver));
--	strscpy(cap->card, cam->udev->product, sizeof(cap->card));
-+	if (cam->udev->product)
-+		strscpy(cap->card, cam->udev->product, sizeof(cap->card));
-+	else
-+		strscpy(cap->card, "", sizeof(cap->card));
- 	strscpy(cap->bus_info, dev_name(&cam->udev->dev),
- 		sizeof(cap->bus_info));
- 	cap->device_caps = V4L2_CAP_VIDEO_CAPTURE |
--- 
-2.17.1
-
+> Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+> ---
+>  arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
+> index f09f3e03f708..108667ce4f31 100644
+> --- a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
+> @@ -27,6 +27,23 @@
+>  	status = "okay";
+>  };
+>  
+> +&pm8005_lsid1 {
+> +	pm8005-regulators {
+> +		compatible = "qcom,pm8005-regulators";
+> +
+> +		vdd_s1-supply = <&vph_pwr>;
+> +
+> +		pm8005_s1: s1 { /* VDD_GFX supply */
+> +			regulator-min-microvolt = <524000>;
+> +			regulator-max-microvolt = <1100000>;
+> +			regulator-enable-ramp-delay = <500>;
+> +
+> +			/* hack until we rig up the gpu consumer */
+> +			regulator-always-on;
+> +		};
+> +	};
+> +};
+> +
+>  &qusb2phy {
+>  	status = "okay";
+>  
+> -- 
+> 2.17.1
+> 
