@@ -4,87 +4,77 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AD1CC04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 19:54:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF1F7C46460
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 19:55:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 329DB217F9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 19:54:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B01C217D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 19:55:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558468495;
-	bh=h1xx92l5nqd/qYNS+wyRkS2AwUm9f2Ch9PbuYX/0z7U=;
-	h=Subject:From:To:Date:List-ID:From;
-	b=YuIDCcjNCiYwKQupJqaYrJOVw7165le6Mjz2elhVm46Gj3nSfGioSXvCKNUtiuV7w
-	 q9IT56XpxVrJddKUpSFMH6EEDK7UXCU0N1b7LOV44/tnca4dW+UE8ax3nnPobpgr82
-	 wv3iqJ4F38iLPlgQ5W7AAUqYLNQwfke0PFz1UDHU=
+	s=default; t=1558468522;
+	bh=eIpOw3kyNjsuf9y4SGhbSEns7aKrJ+UZytUElm9znZU=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=e8/Ylc0K9N/chDxZUpzAghw0BiP0IJvcV6Fc0HknERNCnbzijRo9NWEG0t07Er4Ns
+	 a1K4pzFrP6yCGXMf9xwmm7jQaykHoCpMHApjwXURarTVqw7vyCHa5A4suRVoI2nMXb
+	 HW+acm5k9Qzlm4DCty+ZOAvmkYVH979RgL8PWTAk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727608AbfEUTyy (ORCPT
+        id S1727680AbfEUTzV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 15:54:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53490 "EHLO mail.kernel.org"
+        Tue, 21 May 2019 15:55:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53574 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726767AbfEUTyy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 15:54:54 -0400
-Received: from tzanussi-mobl (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3724217D7;
-        Tue, 21 May 2019 19:54:52 +0000 (UTC)
+        id S1727464AbfEUTzV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 15:55:21 -0400
+Subject: Re: [GIT] Crypto Fixes for 5.2
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558468493;
-        bh=h1xx92l5nqd/qYNS+wyRkS2AwUm9f2Ch9PbuYX/0z7U=;
-        h=Subject:From:To:Date:From;
-        b=P76UUBQEGfSDa25/fzsc/iQUoYkPFhwUkIvIMdgGqGITF2+TzKDfocZXk3bZqhK98
-         CSGgz4wI2OMTg1OlalneC/U7jZOFXWAqqFMuFAgeCWSHCg/0nYLuI1BMBdC+6UGsc8
-         KvO+eDBmv/sAMPZrsHShKoHnJuPF1brXlwlMwbXU=
-Message-ID: <1558468491.3056.6.camel@kernel.org>
-Subject: [ANNOUNCE] 3.18.138-rt116
-From:   Tom Zanussi <zanussi@kernel.org>
-To:     LKML <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Carsten Emde <C.Emde@osadl.org>,
-        John Kacur <jkacur@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Daniel Wagner <daniel.wagner@siemens.com>,
-        Tom Zanussi <tom.zanussi@linux.intel.com>,
-        Julia Cartwright <julia@ni.com>
-Date:   Tue, 21 May 2019 14:54:51 -0500
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.1-1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        s=default; t=1558468520;
+        bh=eIpOw3kyNjsuf9y4SGhbSEns7aKrJ+UZytUElm9znZU=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=gGRR9Gx1Ek4KdX5fyqO+cxnBd1DI9RHmWYkrycIIbdOGBRffnf+o0WAUlwF3TBXzE
+         TBY5JJcEVb6gUNoIKfgl7fX+MqfclfhJbA2QFCJjGSjVsaI+jo8+mDa3Y9poBtlESw
+         c3R6T6ek6fEazcfcEZoMv3EKU1StG3r1VO7izTUw=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20190521125817.6lqknb2kztxddi4p@gondor.apana.org.au>
+References: <20180428080517.haxgpvqrwgotakyo@gondor.apana.org.au>
+ <20180622145403.6ltjip7che227fuo@gondor.apana.org.au>
+ <20180829033353.agnzxra3jk2r2mzg@gondor.apana.org.au>
+ <20181116063146.e7a3mep3ghnfltxe@gondor.apana.org.au>
+ <20181207061409.xflg423nknleuddw@gondor.apana.org.au>
+ <20190118104006.ye5amhxkgd4xrbmc@gondor.apana.org.au>
+ <20190201054204.ehl7u7aaqmkdh5b6@gondor.apana.org.au>
+ <20190215024738.fynl64d5u5htcy2l@gondor.apana.org.au>
+ <20190312045818.bgpiuxogmaxyscdv@gondor.apana.org.au>
+ <20190515060552.ecfwhazt2fnthepg@gondor.apana.org.au>
+ <20190521125817.6lqknb2kztxddi4p@gondor.apana.org.au>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20190521125817.6lqknb2kztxddi4p@gondor.apana.org.au>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git linus
+X-PR-Tracked-Commit-Id: 357d065a44cdd77ed5ff35155a989f2a763e96ef
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: d53e860fd46f3d95c437bb67518f7374500de467
+Message-Id: <155846852069.2650.10220458600061142386.pr-tracker-bot@kernel.org>
+Date:   Tue, 21 May 2019 19:55:20 +0000
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello RT Folks!
+The pull request you sent on Tue, 21 May 2019 20:58:17 +0800:
 
-I'm pleased to announce the 3.18.138-rt116 stable release.
+> git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git linus
 
-You can get this release via the git tree at:
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/d53e860fd46f3d95c437bb67518f7374500de467
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
+Thank you!
 
-  branch: v3.18-rt
-  Head SHA1: 32e860e0679fce1ccfa8395df41f8790e24172b6
-
-Or to build 3.18.138-rt116 directly, the following patches should be applied:
-
-  https://www.kernel.org/pub/linux/kernel/v3.x/linux-3.18.tar.xz
-
-  https://www.kernel.org/pub/linux/kernel/v3.x/patch-3.18.138.xz
-
-  https://www.kernel.org/pub/linux/kernel/projects/rt/3.18/patch-3.18.138-rt116.patch.xz
-
-
-You can also build from 3.18.138-rt115 by applying the incremental patch:
-
-  https://www.kernel.org/pub/linux/kernel/projects/rt/3.18/incr/patch-3.18.138-rt115-rt116.patch.xz
-
-Enjoy!
-
-   Tom
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
