@@ -3,111 +3,91 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CD93C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 11:49:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09A92C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 11:49:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F14DB2173C
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 11:49:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCE012173C
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 11:49:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728025AbfEULtE (ORCPT
+        id S1728029AbfEULtp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 07:49:04 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:52882 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727208AbfEULtD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 07:49:03 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4LBmi20140823
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 07:49:02 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2smfa7kvu7-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 07:49:02 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Tue, 21 May 2019 12:48:59 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 21 May 2019 12:48:56 +0100
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4LBmtK133161418
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 21 May 2019 11:48:55 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9085EAE053;
-        Tue, 21 May 2019 11:48:55 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6BEFBAE045;
-        Tue, 21 May 2019 11:48:54 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.80.126])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 21 May 2019 11:48:54 +0000 (GMT)
-Subject: Re: [PATCH 3/4] ima: don't ignore INTEGRITY_UNKNOWN EVM status
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Roberto Sassu <roberto.sassu@huawei.com>,
-        dmitry.kasatkin@huawei.com, mjg59@google.com
-Cc:     linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, silviu.vlasceanu@huawei.com,
-        stable@vger.kernel.org
-Date:   Tue, 21 May 2019 07:48:43 -0400
-In-Reply-To: <e81b761c-9133-a432-4d06-3cfe57e29e4b@huawei.com>
-References: <20190516161257.6640-1-roberto.sassu@huawei.com>
-         <20190516161257.6640-3-roberto.sassu@huawei.com>
-         <1558387212.4039.77.camel@linux.ibm.com>
-         <e81b761c-9133-a432-4d06-3cfe57e29e4b@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19052111-0008-0000-0000-000002E8EB58
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19052111-0009-0000-0000-00002255A150
-Message-Id: <1558439323.4039.141.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-21_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905210073
+        Tue, 21 May 2019 07:49:45 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:47623 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726740AbfEULto (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 07:49:44 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 457Yw527Kzz9s7h;
+        Tue, 21 May 2019 21:49:40 +1000 (AEST)
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Andrew Donnellan <ajd@linux.ibm.com>,
+        Eric Piel <eric.piel@tremplin-utc.net>,
+        Frank Haverkamp <haver@linux.ibm.com>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        =?utf-8?Q?Micha=C5=82_Miros?= =?utf-8?Q?=C5=82aw?= 
+        <mirq-linux@rere.qmqm.pl>, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH] misc: remove redundant 'default n' from Kconfig-s
+In-Reply-To: <1ab818ae-4d9f-d17a-f11f-7caaa5bf98bc@samsung.com>
+References: <CGME20190520141047eucas1p2c6006d1ecfc3eb287b6b33d131f66180@eucas1p2.samsung.com> <1ab818ae-4d9f-d17a-f11f-7caaa5bf98bc@samsung.com>
+Date:   Tue, 21 May 2019 21:49:38 +1000
+Message-ID: <87pnoc6n8t.fsf@concordia.ellerman.id.au>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-05-21 at 09:26 +0200, Roberto Sassu wrote:
-> On 5/20/2019 11:20 PM, Mimi Zohar wrote:
-> > On Thu, 2019-05-16 at 18:12 +0200, Roberto Sassu wrote:
-> >> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> >> index 52e6fbb042cc..80e1c233656b 100644
-> >> --- a/Documentation/admin-guide/kernel-parameters.txt
-> >> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> >> @@ -1588,6 +1588,9 @@
-> >>   			Format: { "off" | "enforce" | "fix" | "log" }
-> >>   			default: "enforce"
-> >>   
-> >> +	ima_appraise_req_evm
-> >> +			[IMA] require EVM for appraisal with file digests.
-> > 
-> > As much as possible we want to limit the number of new boot command
-> > line options as possible.  Is there a reason for not extending
-> > "ima_appraise=" with "require-evm" or "enforce-evm"?
-> 
-> ima-appraise= can be disabled with CONFIG_IMA_APPRAISE_BOOTPARAM, which
-> probably is done when the system is in production.
-> 
-> Should I allow to use ima-appraise=require-evm even if
-> CONFIG_IMA_APPRAISE_BOOTPARAM=n?
+Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com> writes:
+> 'default n' is the default value for any bool or tristate Kconfig
+> setting so there is no need to write it explicitly.
+>
+> Also since commit f467c5640c29 ("kconfig: only write '# CONFIG_FOO
+> is not set' for visible symbols") the Kconfig behavior is the same
+> regardless of 'default n' being present or not:
+>
+>     ...
+>     One side effect of (and the main motivation for) this change is making
+>     the following two definitions behave exactly the same:
+>     
+>         config FOO
+>                 bool
+>     
+>         config FOO
+>                 bool
+>                 default n
+>     
+>     With this change, neither of these will generate a
+>     '# CONFIG_FOO is not set' line (assuming FOO isn't selected/implied).
+>     That might make it clearer to people that a bare 'default n' is
+>     redundant.
+>     ...
+>
+> Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+...
+> Index: b/drivers/misc/ocxl/Kconfig
+> ===================================================================
+> --- a/drivers/misc/ocxl/Kconfig
+> +++ b/drivers/misc/ocxl/Kconfig
+> @@ -4,7 +4,6 @@
+>  
+>  config OCXL_BASE
+>  	bool
+> -	default n
+>  	select PPC_COPRO_BASE
+>  
+>  config OCXL
 
-Yes, that should be fine.  It's making "ima_appraise" stricter.
+Acked-by: Michael Ellerman <mpe@ellerman.id.au> (ocxl)
 
-Mimi
-
+cheers
