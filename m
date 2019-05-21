@@ -2,103 +2,85 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E19EFC46460
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 19:11:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE13EC04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 19:15:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3BC9217F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 19:11:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95683217D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 19:15:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="yWkDv5Pz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727141AbfEUTLO (ORCPT
+        id S1727047AbfEUTPC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 15:11:14 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:43247 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726419AbfEUTLN (ORCPT
+        Tue, 21 May 2019 15:15:02 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:42596 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726466AbfEUTPC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 15:11:13 -0400
-Received: from callcc.thunk.org (guestnat-104-133-0-109.corp.google.com [104.133.0.109] (may be forged))
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x4LJAYLu009279
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 21 May 2019 15:10:35 -0400
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id 0FC18420481; Tue, 21 May 2019 15:10:34 -0400 (EDT)
-Date:   Tue, 21 May 2019 15:10:33 -0400
-From:   "Theodore Ts'o" <tytso@mit.edu>
-To:     Josef Bacik <josef@toxicpanda.com>
-Cc:     Jan Kara <jack@suse.cz>, Paolo Valente <paolo.valente@linaro.org>,
-        "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>,
-        linux-fsdevel@vger.kernel.org,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-ext4@vger.kernel.org, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org, axboe@kernel.dk, jmoyer@redhat.com,
-        amakhalov@vmware.com, anishs@vmware.com, srivatsab@vmware.com
-Subject: Re: CFQ idling kills I/O performance on ext4 with blkio cgroup
- controller
-Message-ID: <20190521191033.GA4855@mit.edu>
-Mail-Followup-To: Theodore Ts'o <tytso@mit.edu>,
-        Josef Bacik <josef@toxicpanda.com>, Jan Kara <jack@suse.cz>,
-        Paolo Valente <paolo.valente@linaro.org>,
-        "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>,
-        linux-fsdevel@vger.kernel.org,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-ext4@vger.kernel.org, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org, axboe@kernel.dk, jmoyer@redhat.com,
-        amakhalov@vmware.com, anishs@vmware.com, srivatsab@vmware.com
-References: <8d72fcf7-bbb4-2965-1a06-e9fc177a8938@csail.mit.edu>
- <1812E450-14EF-4D5A-8F31-668499E13652@linaro.org>
- <20190518192847.GB14277@mit.edu>
- <20190520091558.GC2172@quack2.suse.cz>
- <20190521164814.GC2591@mit.edu>
- <20190521181952.4vpruone2mzbczpw@MacBook-Pro-91.local>
+        Tue, 21 May 2019 15:15:02 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4LJF1Q9023935;
+        Tue, 21 May 2019 14:15:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1558466101;
+        bh=3WysA2VpJ32YviVM2gWhIYoGciz0aznDNykj2COnt3k=;
+        h=Subject:To:References:From:Date:In-Reply-To;
+        b=yWkDv5PzlXiE3eGkM+4Y1pOOLcwUP0LjtJp09S34CWHEkW5ppUjjGryhwah4W4E5Y
+         fd/RKVpmUm6or8d8aeed8XwgLqSoaYajq7Ar4uzl4t6axZCKAw1xb8DT4NUBf0KIJo
+         V11DPljVVWiwBJb3sLxYYRbadPTqjUilOPgkoNoQ=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4LJF19o081898
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 21 May 2019 14:15:01 -0500
+Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 21
+ May 2019 14:15:01 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 21 May 2019 14:15:01 -0500
+Received: from [10.8.44.208] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4LJF11R004869;
+        Tue, 21 May 2019 14:15:01 -0500
+Subject: Re: Generic PHY "unload" crash
+To:     Alan Cooper <alcooperx@gmail.com>,
+        ": Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>
+References: <CAOGqxeWTh0NJ177cH5a4ph-W49pFehjdEcVv+SLm__TiHJc_aQ@mail.gmail.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <9f0becda-4ee1-1330-91c4-df919507cb2c@ti.com>
+Date:   Tue, 21 May 2019 14:15:01 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190521181952.4vpruone2mzbczpw@MacBook-Pro-91.local>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAOGqxeWTh0NJ177cH5a4ph-W49pFehjdEcVv+SLm__TiHJc_aQ@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 21, 2019 at 02:19:53PM -0400, Josef Bacik wrote:
-> Chris is adding a REQ_ROOT (or something) flag that means don't throttle me now,
-> but the the blkcg attached to the bio is the one that is responsible for this
-> IO.  Then for io.latency we'll let the io go through unmolested but it gets
-> counted to the right cgroup, and if then we're exceeding latency guarantees we
-> have the ability to schedule throttling for that cgroup in a safer place.  This
-> would eliminate the data=ordered issue for ext4, you guys keep doing what you
-> are doing and we'll handle throttling elsewhere, just so long as the bio's are
-> tagged with the correct source then all is well.  Thanks,
+Hi Alan,
 
-Great, it sounds like Chris also came up with the the entangled writes
-flag idea (although with probably a better name than I did :-).  So
-now all we need to do is to plumb a flag through the writeback code so
-that file systems (or the VFS player) implementing syncfs(2) or
-fsync(2) can arrange to have that flag set if necessary.
+On 21/05/19 1:40 PM, Alan Cooper wrote:
+> I'm seeing an issue on a system where I have a generic PHY that is
+> used by a USB XHCI driver. The XHCI driver does the phy_init() in
+> probe and the phy_exit() in remove. The problem happens when I use
+> sysfs to "unload" the PHY driver before doing an unload of the XHCI
+> driver. This is a result of the XHCI driver calling into the PHY
+> driver's phy_exit routine after it's been removed. It seems like this
+> issue will exist for other PHY provider/user pairs and I don't see an
+> easy solution. I was wondering if anyone had any suggestions on how to
+> solve this problem.
 
-Speaking of syncfs(2), something which we considered doing at Google
-many years ago (but never did) was to implement a hack so that someone
-calling syncfs(2) or sync(2) when they were not root, would make that
-sys call be a no-op.  The reason for this was on heavy loaded
-machines, an SRE logged in as a non-root user might absent-mindly type
-"sync", and that would cause a storm of I/O traffic that would really
-mess up the machine.  The jobs that were in the low latency bucket
-would be protected (since we didn't run with journalling), but those
-that were in the best efforts bucket would be really unhappy.
+Can you share the crash dump please?
 
-If we have a "don't throttle me now" REQ_ROOT flag combined with
-journalling, then someone running "sync", even if it's by accident,
-could really ruin a low-latency job's day, and in a container
-environment, there really is no reason for a non-root user to be
-wanting to request a syncfs(2) or sync(2).  So maybe we should have a
-way to make it be a no-op (or return an error, but that might surprise
-some applications) for non-privileged users.  Maybe as a per-mount
-flag/option, or via some other tunable?
-
-						- Ted
+Thanks
+Kishon
