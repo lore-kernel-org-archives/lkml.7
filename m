@@ -2,69 +2,109 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4EF4C04E87
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:27:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ED16C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:27:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 784A221743
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:27:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WVQbSLh/"
+	by mail.kernel.org (Postfix) with ESMTP id 7C032217D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:27:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728220AbfEUN1Z (ORCPT
+        id S1728270AbfEUN1b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 09:27:25 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:45410 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726995AbfEUN1Z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 09:27:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=yt1TSE+hvjdYVZh8L0V5R+F6bnTH4NU+zMd4kOaAMvQ=; b=WVQbSLh/MDT4P+lDDna9iiMLr
-        RRbMOAsBBmx4mCsZkNt49bylRYvcHzTVyua8N+OHNPIuw3GOInsrr2tiwogTLqP5AK7jQXqd5vN5O
-        FjMt7ysOrVATKhJxwsW8wu+IQw/7kazzkaztdjb/VdxkhrNb2+NFaafvKE6FHHNvmGdLiztCuWzq7
-        Rn6o/w88n0EJknBygF+sAKOyOMzco10Xo9MPtUSM57FxRbDwkIeLozXg2s6fnIwfuhrOPFLM13NnE
-        BMFnkXKcR7RVT9hjYGA8A55oRboTjDWL+0GercEMTRGgwU8IlWl4Oph/kXhf1JAplB3yExABbnpFX
-        AIZzOg+Ig==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hT4nY-0006Jh-Ty; Tue, 21 May 2019 13:27:20 +0000
-Date:   Tue, 21 May 2019 06:27:20 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Oliver Neukum <oneukum@suse.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Jaewon Kim <jaewon31.kim@gmail.com>, linux-mm@kvack.org,
-        gregkh@linuxfoundation.org, Jaewon Kim <jaewon31.kim@samsung.com>,
-        m.szyprowski@samsung.com, ytk.lee@samsung.com,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
-Subject: Re: [RFC PATCH] usb: host: xhci: allow __GFP_FS in dma allocation
-Message-ID: <20190521132720.GA23361@infradead.org>
-References: <20190520101206.GA9291@infradead.org>
- <Pine.LNX.4.44L0.1905201011490.1498-100000@iolanthe.rowland.org>
- <20190520142331.GA12108@infradead.org>
- <1558428877.12672.8.camel@suse.com>
+        Tue, 21 May 2019 09:27:31 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:35176 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726750AbfEUN1a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 09:27:30 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id EDEF43082E58;
+        Tue, 21 May 2019 13:27:24 +0000 (UTC)
+Received: from plouf.redhat.com (ovpn-116-49.ams2.redhat.com [10.36.116.49])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4D33E60F8D;
+        Tue, 21 May 2019 13:27:20 +0000 (UTC)
+From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        KT Liao <kt.liao@emc.com.tw>, Rob Herring <robh+dt@kernel.org>,
+        Aaron Ma <aaron.ma@canonical.com>,
+        Hans de Goede <hdegoede@redhat.com>
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Subject: [PATCH v2 00/10] Fix Elan I2C touchpads in latest generation from Lenovo
+Date:   Tue, 21 May 2019 15:27:02 +0200
+Message-Id: <20190521132712.2818-1-benjamin.tissoires@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1558428877.12672.8.camel@suse.com>
-User-Agent: Mutt/1.9.2 (2017-12-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Tue, 21 May 2019 13:27:30 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 21, 2019 at 10:54:37AM +0200, Oliver Neukum wrote:
-> OK, but this leaves a question open. Will the GFP_NOIO actually
-> hurt, if it is used after memalloc_noio_save()?
+Hi,
 
-Unless we have a bug somewhere it should not make any difference,
-neither positively nor negatively.
+This is the v2 from https://lkml.org/lkml/2018/10/12/633
+
+So I initially thought it would be easy to integrate the suggested changes
+in the v1, but it turns our that the changes to have the touchscreen-width
+and height parameters were quite hard to do.
+
+I finally postponed the issue by blacklisting the 2 laptops we knew were
+not working and tried to devote more time to understand both drivers more.
+
+But it s the time where Lenovo is preparing the new models, and guess what,
+they suffer from the same symptoms.
+
+So I took a few time to work on this and finally got my head around the
+width and height problem. Once I got it, it was simple clear, but this also
+means we can not really rely on a device tree property for that.
+
+So in the elan* drivers, the "traces" are simply how many antennas there
+are on each axis. Which means that if a trace of 4 is reported in the
+events, it means it is simply seen by 4 antennas. So the computation of the
+width/height is the following: we take how many antennas there are, we
+subtract one to have the number of holes between the antennas, and we
+divide the number of unit we have in the axis by the value we just
+computed.
+This gives a rough 4mm on the P52, in both directions.
+
+And once you get that, you can just realize that the unit of the width and
+height are just the same than the X and Y coordinates, so we can apply the
+same resolution.
+
+So, in the end, that means that elan_i2c needs the information, or it will
+not be able to convert the number of crossed antennas into a size, but this
+is something specific to this touchpad.
+
+So here come, 7 months later the v2 on the subject.
+
+Cheers,
+Benjamin
+
+Benjamin Tissoires (10):
+  Input: elantech - query the min/max information beforehand too
+  Input: elantech - add helper function elantech_is_buttonpad()
+  Input: elantech - detect middle button based on firmware version
+  dt-bindings: add more optional properties for elan_i2c touchpads
+  Input: elan_i2c - do not query the info if they are provided
+  Input: elantech/SMBus - export all capabilities from the PS/2 node
+  Input: elan_i2c - handle physical middle button
+  Input: elan_i2c - export true width/height
+  Input: elan_i2c - correct the width/size base value
+  Input: elantech: remove P52 from SMBus blacklist
+
+ .../devicetree/bindings/input/elan_i2c.txt    |  11 +
+ drivers/input/mouse/elan_i2c_core.c           |  85 +++--
+ drivers/input/mouse/elantech.c                | 318 ++++++++++--------
+ drivers/input/mouse/elantech.h                |   8 +
+ 4 files changed, 251 insertions(+), 171 deletions(-)
+
+-- 
+2.21.0
+
