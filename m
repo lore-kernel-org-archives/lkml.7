@@ -2,241 +2,120 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9BD8C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:09:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA8B2C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:09:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4CA52173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:09:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="h1nN6R3D"
+	by mail.kernel.org (Postfix) with ESMTP id C700D21743
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:09:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728633AbfEUPJq (ORCPT
+        id S1728877AbfEUPJu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 11:09:46 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:37690 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728357AbfEUPJp (ORCPT
+        Tue, 21 May 2019 11:09:50 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:60498 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728357AbfEUPJu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 11:09:45 -0400
-Received: by mail-ed1-f66.google.com with SMTP id w37so29911989edw.4
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 08:09:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=kGFA98E8YUTXSd1vlNUtmMd7zWl23WEkLkg7eY2TneA=;
-        b=h1nN6R3DwWW3hI2z4yWrg3b88MlSB3Sz1499ALECkxeB07XI3zHEBAfxyBAOAKpZyh
-         ni58vX4bzcyK4Tl2UsniaPoSgsZ4HnhkTAi5IWMz7lhnWJWjI9uLkK9nOnpL65yX5eHq
-         8ZEyiszfX5wwtsgQcu2IkWyr6Vm9K/+1pmV0c=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=kGFA98E8YUTXSd1vlNUtmMd7zWl23WEkLkg7eY2TneA=;
-        b=dnW5VNMzT+JH5HjJHXv1xJ46yAsigFtD2PYxbzF8Zdt20GyYEAywOCCpwjmzYSmb2X
-         s3Y6eT4UIesz6KxLT15qqaeDbUWV91E50JHSIASx6zgyYvGw67gLl/ygegIPE6EqUsEB
-         2IHOxq3CiDI3HHmbACvcE6G19BgipHaRXKsFJrs2vSN6iF37gDWJD+Kepbfx9fozK/rC
-         QM3xYVa/uYA4dfMz1P/6125xdT4Urvt40Zxc67k2QW/RP6BPO60tX8ejDoi2qygYe6Yo
-         9R+4cQZAJHZJT21PjZff7BQSGH9jZqB4q2397P0ua4VDgUBsyZuXGdUX+rHuCm9Gygkm
-         kI2A==
-X-Gm-Message-State: APjAAAVpf4EObPvTjVZ1SXBiyagIGgtlV1lNOvAH1TRoADhj6pE9ocCW
-        IYDxOrRMJaDFm3zSGQWHKfA6Lg==
-X-Google-Smtp-Source: APXvYqxBhBhjiZm6DIIVQclLcEYKPK25uT4p++L6X7xVUHvTJFqOSCuMzHWwvHIYKInLQrZSLpB5Zg==
-X-Received: by 2002:a17:906:1545:: with SMTP id c5mr65212434ejd.135.1558451383140;
-        Tue, 21 May 2019 08:09:43 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id v2sm6280163eds.69.2019.05.21.08.09.41
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 21 May 2019 08:09:42 -0700 (PDT)
-Date:   Tue, 21 May 2019 17:09:39 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Thomas Zimmermann <tzimmermann@suse.de>
-Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>,
-        Yisheng Xie <ysxie@foxmail.com>, Peter Rosin <peda@axentia.se>,
-        =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        Mikulas Patocka <mpatocka@redhat.com>,
-        linux-fbdev@vger.kernel.org
-Subject: Re: [PATCH 10/33] fbcon: call fbcon_fb_(un)registered directly
-Message-ID: <20190521150939.GQ21222@phenom.ffwll.local>
-Mail-Followup-To: Thomas Zimmermann <tzimmermann@suse.de>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>,
-        Yisheng Xie <ysxie@foxmail.com>, Peter Rosin <peda@axentia.se>,
-        =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        Mikulas Patocka <mpatocka@redhat.com>, linux-fbdev@vger.kernel.org
-References: <20190520082216.26273-1-daniel.vetter@ffwll.ch>
- <20190520082216.26273-11-daniel.vetter@ffwll.ch>
- <423eba4b-15e1-f10b-ae2d-855b8a585688@suse.de>
- <8aecc0d8-83a3-8144-a266-441a5c1d5db5@suse.de>
+        Tue, 21 May 2019 11:09:50 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4LF3aEp022456
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 11:09:49 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2smkn1r90k-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 11:09:48 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <linuxram@us.ibm.com>;
+        Tue, 21 May 2019 16:09:47 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 21 May 2019 16:09:42 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4LF9fb857606362
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 21 May 2019 15:09:41 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A194A52051;
+        Tue, 21 May 2019 15:09:40 +0000 (GMT)
+Received: from ram.ibm.com (unknown [9.85.154.252])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id 9D4715204F;
+        Tue, 21 May 2019 15:09:37 +0000 (GMT)
+Date:   Tue, 21 May 2019 08:09:35 -0700
+From:   Ram Pai <linuxram@us.ibm.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Anshuman Khandual <anshuman.linux@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Mike Anderson <andmike@linux.ibm.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Claudio Carvalho <cclaudio@linux.ibm.com>
+Reply-To: Ram Pai <linuxram@us.ibm.com>
+References: <20190521044912.1375-1-bauerman@linux.ibm.com>
+ <20190521044912.1375-3-bauerman@linux.ibm.com>
+ <20190521051326.GC29120@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <8aecc0d8-83a3-8144-a266-441a5c1d5db5@suse.de>
-X-Operating-System: Linux phenom 4.14.0-3-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190521051326.GC29120@lst.de>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19052115-0016-0000-0000-0000027E06E9
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19052115-0017-0000-0000-000032DAF3D4
+Message-Id: <20190521150935.GB8402@ram.ibm.com>
+Subject: Re:  Re: [RFC PATCH 02/12] powerpc: Add support for adding an ESM blob to
+ the zImage wrapper
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-21_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905210094
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 20, 2019 at 10:37:53AM +0200, Thomas Zimmermann wrote:
-> Hi
-> 
-> Am 20.05.19 um 10:33 schrieb Thomas Zimmermann:
-> > Hi
+On Tue, May 21, 2019 at 07:13:26AM +0200, Christoph Hellwig wrote:
+> On Tue, May 21, 2019 at 01:49:02AM -0300, Thiago Jung Bauermann wrote:
+> > From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
 > > 
-> > Am 20.05.19 um 10:21 schrieb Daniel Vetter:
-> > ...
-> >> diff --git a/drivers/video/fbdev/core/fbmem.c b/drivers/video/fbdev/core/fbmem.c
-> >> index fc3d34a8ea5b..ae2db31eeba7 100644
-> >> --- a/drivers/video/fbdev/core/fbmem.c
-> >> +++ b/drivers/video/fbdev/core/fbmem.c
-> >> @@ -1660,7 +1660,6 @@ MODULE_PARM_DESC(lockless_register_fb,
-> >>  static int do_register_framebuffer(struct fb_info *fb_info)
-> >>  {
-> >>  	int i, ret;
-> >> -	struct fb_event event;
-> >>  	struct fb_videomode mode;
-> >>  
-> >>  	if (fb_check_foreignness(fb_info))
-> >> @@ -1723,7 +1722,6 @@ static int do_register_framebuffer(struct fb_info *fb_info)
-> >>  	fb_add_videomode(&mode, &fb_info->modelist);
-> >>  	registered_fb[i] = fb_info;
-> >>  
-> >> -	event.info = fb_info;
-> >>  	if (!lockless_register_fb)
-> >>  		console_lock();
-> >>  	else
-> >> @@ -1732,9 +1730,8 @@ static int do_register_framebuffer(struct fb_info *fb_info)
-> >>  		ret = -ENODEV;
-> >>  		goto unlock_console;
-> >>  	}
-> >> -	ret = 0;
-> >>  
-> >> -	fb_notifier_call_chain(FB_EVENT_FB_REGISTERED, &event);
-> >> +	ret = fbcon_fb_registered(fb_info);
+> > For secure VMs, the signing tool will create a ticket called the "ESM blob"
+> > for the Enter Secure Mode ultravisor call with the signatures of the kernel
+> > and initrd among other things.
 > > 
-> > What about backlight drivers? [1] Apparently these also use the
-> > notifiers. [2] From my understanding, backlight drivers would stop
-> > working with this change.
-> 
-> I just saw that backlight drivers only care about blanking and
-> unblanking. Never mind then.
-
-I did screw this up for one event for the mode changes. But should be
-fixed in the next series.
-
-I also added a patch to simplify the backlight/lcd notifier, since it
-doesn't need to filter events anymore after this series - the only events
-left are the ones backlight cares about.
-
-Cheers, Daniel
-
-> 
-> Best regards
-> Thomas
-> 
+> > This adds support to the wrapper script for adding that blob via the "-e"
+> > option to the zImage.pseries.
 > > 
-> > Best regards
-> > Thomas
-> > 
-> > [1]
-> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/video/backlight
-> > [2]
-> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/video/backlight/backlight.c#n40
-> > 
-> >>  	unlock_fb_info(fb_info);
-> >>  unlock_console:
-> >>  	if (!lockless_register_fb)
-> >> @@ -1771,7 +1768,6 @@ static int __unlink_framebuffer(struct fb_info *fb_info);
-> >>  
-> >>  static int do_unregister_framebuffer(struct fb_info *fb_info)
-> >>  {
-> >> -	struct fb_event event;
-> >>  	int ret;
-> >>  
-> >>  	ret = unbind_console(fb_info);
-> >> @@ -1789,9 +1785,8 @@ static int do_unregister_framebuffer(struct fb_info *fb_info)
-> >>  	registered_fb[fb_info->node] = NULL;
-> >>  	num_registered_fb--;
-> >>  	fb_cleanup_device(fb_info);
-> >> -	event.info = fb_info;
-> >>  	console_lock();
-> >> -	fb_notifier_call_chain(FB_EVENT_FB_UNREGISTERED, &event);
-> >> +	fbcon_fb_unregistered(fb_info);
-> >>  	console_unlock();
-> >>  
-> >>  	/* this may free fb info */
-> >> diff --git a/include/linux/fb.h b/include/linux/fb.h
-> >> index f52ef0ad6781..701abaf79c87 100644
-> >> --- a/include/linux/fb.h
-> >> +++ b/include/linux/fb.h
-> >> @@ -136,10 +136,6 @@ struct fb_cursor_user {
-> >>  #define FB_EVENT_RESUME			0x03
-> >>  /*      An entry from the modelist was removed */
-> >>  #define FB_EVENT_MODE_DELETE            0x04
-> >> -/*      A driver registered itself */
-> >> -#define FB_EVENT_FB_REGISTERED          0x05
-> >> -/*      A driver unregistered itself */
-> >> -#define FB_EVENT_FB_UNREGISTERED        0x06
-> >>  /*      CONSOLE-SPECIFIC: get console to framebuffer mapping */
-> >>  #define FB_EVENT_GET_CONSOLE_MAP        0x07
-> >>  /*      CONSOLE-SPECIFIC: set console to framebuffer mapping */
-> >> diff --git a/include/linux/fbcon.h b/include/linux/fbcon.h
-> >> index f68a7db14165..94a71e9e1257 100644
-> >> --- a/include/linux/fbcon.h
-> >> +++ b/include/linux/fbcon.h
-> >> @@ -4,9 +4,13 @@
-> >>  #ifdef CONFIG_FRAMEBUFFER_CONSOLE
-> >>  void __init fb_console_init(void);
-> >>  void __exit fb_console_exit(void);
-> >> +int fbcon_fb_registered(struct fb_info *info);
-> >> +void fbcon_fb_unregistered(struct fb_info *info);
-> >>  #else
-> >>  static inline void fb_console_init(void) {}
-> >>  static inline void fb_console_exit(void) {}
-> >> +static inline int fbcon_fb_registered(struct fb_info *info) { return 0; }
-> >> +static inline void fbcon_fb_unregistered(struct fb_info *info) {}
-> >>  #endif
-> >>  
-> >>  #endif /* _LINUX_FBCON_H */
-> >>
-> > 
+> > It also adds code to the zImage wrapper itself to retrieve and if necessary
+> > relocate the blob, and pass its address to Linux via the device-tree, to be
+> > later consumed by prom_init.
 > 
-> -- 
-> Thomas Zimmermann
-> Graphics Driver Developer
-> SUSE Linux GmbH, Maxfeldstrasse 5, 90409 Nuernberg, Germany
-> GF: Felix Imendörffer, Mary Higgins, Sri Rasiah
-> HRB 21284 (AG Nürnberg)
-> 
+> Where does the "BLOB" come from?  How is it licensed and how can we
+> satisfy the GPL with it?
 
-
+The "BLOB" is not a piece of code. Its just a piece of data that gets
+generated by our build tools. This data contains the
+signed hash of the kernel, initrd, and kernel command line parameters.
+Also it contains any information that the creator the the BLOB wants to
+be made available to anyone needing it, inside the
+secure-virtual-machine. All of this is integrity-protected and encrypted
+to safegaurd it when at rest and at runtime.
+ 
+Bottomline -- Blob is data, and hence no licensing implication. And due
+to some reason, even data needs to have licensing statement, we can
+make it available to have no conflicts with GPL.
 
 
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+Ram Pai
+
