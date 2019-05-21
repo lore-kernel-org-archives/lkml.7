@@ -2,80 +2,173 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E37AC04E87
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:34:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51AD8C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:34:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76CBF217D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:34:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558434877;
-	bh=4pcR0Y7ezSPmwoolKrytC4V9G/OZ9llkZa4QM8dX6LA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AhmhKxJWC6L3On/0amPwObpTEmj8L5cU2w9KTKquJqfSSzz4bYWnpSFYsNWfWSmWE
-	 IEv/TvzauppcS6uzOtDnHNFqtJYLolWsIjAEOCbifdaglKC5rfff2rcpmgCftN7Za3
-	 a+g7n/NuNHEP84TPKl9pkfESI5xX6MlV7OCzcFEg=
+	by mail.kernel.org (Postfix) with ESMTP id 28505217D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:34:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zP89vje+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727655AbfEUKeg (ORCPT
+        id S1727758AbfEUKeu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 06:34:36 -0400
-Received: from mx2.suse.de ([195.135.220.15]:36586 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726138AbfEUKeg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 06:34:36 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 7D287ABF4;
-        Tue, 21 May 2019 10:34:34 +0000 (UTC)
-Date:   Tue, 21 May 2019 12:34:33 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     Tim Murray <timmurray@google.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>
-Subject: Re: [RFC 0/7] introduce memory hinting API for external process
-Message-ID: <20190521103433.GL32329@dhcp22.suse.cz>
-References: <20190520035254.57579-1-minchan@kernel.org>
- <dbe801f0-4bbe-5f6e-9053-4b7deb38e235@arm.com>
- <CAEe=Sxka3Q3vX+7aWUJGKicM+a9Px0rrusyL+5bB1w4ywF6N4Q@mail.gmail.com>
- <1754d0ef-6756-d88b-f728-17b1fe5d5b07@arm.com>
+        Tue, 21 May 2019 06:34:50 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:46257 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727671AbfEUKeu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 06:34:50 -0400
+Received: by mail-lf1-f67.google.com with SMTP id l26so12626027lfh.13
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 03:34:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=fCy/VGpOq743DayHQQsEozNjpRnyCKmSgWu0EqLS7qg=;
+        b=zP89vje+56kWqEkujYv48d0KS4alfTieGHI7YzDNtsS4JuwFk1Dh8MNxXHZoJPbAxQ
+         CH3lOVrIsd6nqpUPTVZulS1/3Z+tnWTCxbnoLBkwiBZw+zOPGMUncf2qftUjFiql35Lk
+         CdPFd1b7QYx+1e/JzV/e485h65Z1WwH5rdGpe6KrVTAKDG3TOsSMvRfpR9bNtzjaJDh7
+         EwUC03mrqTHncJzjWFsziAhLwIJ5pSDPgI02aDo6COvLOEYrIBe+ClTUuVLXmE58NrqW
+         sJSwMImQdNKURKsZVdP/6VfWR/gfbYg2GXdAyMQ/SzZNCKDKyLzIG6NxyCxBFsvuENeO
+         2nxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=fCy/VGpOq743DayHQQsEozNjpRnyCKmSgWu0EqLS7qg=;
+        b=jveBW+XgSuqug0y55dj1G4nNnMOTu+MPinYTnZjo4AAl0ZxUHrEL+75lav/vKIxaiR
+         xt86p1UOuQEsR0wleJGHIPtJ69sqi25ucQ6jb7nk4p5Cs4q+utKRydAidu/LGwc0LKr7
+         hrUqhzoe+XYKhzAoiK6uxIEMNT3OrcUoeoHlMn2m0ZTbe20R8IgP5LdeHrV79oA3Gwuj
+         61miM6DqQERohudLCPtd3wmwOl16Y9u4PMIwJEmVCWvC8PdqW3zv+oGaehTYpXzRG7Bs
+         26JB7bJ8qI1vPPOIAw7pZnvGT+DvzEyLOb/3Mnd93vEtZ4h4TL4qLZ2zSpUc17F8XGJx
+         m3gg==
+X-Gm-Message-State: APjAAAUGu9+ryJwWL2G63fPUuqfX8zCjvcoTRCwxTsaeNvhirDew2amn
+        LBdJqlPrcgsC3AHYqde3JZYdy1KQ8uksDIHASzHAtQ==
+X-Google-Smtp-Source: APXvYqyQFz1GGstt7zS1hAVbudRpaHbP9enaU8FISyREPvFreiVL7X+mhabTLNetdmWxR+2SPWWHYx8+tn/RG6YHtcE=
+X-Received: by 2002:a19:6703:: with SMTP id b3mr5248194lfc.153.1558434887837;
+ Tue, 21 May 2019 03:34:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1754d0ef-6756-d88b-f728-17b1fe5d5b07@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190520115230.720347034@linuxfoundation.org>
+In-Reply-To: <20190520115230.720347034@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Tue, 21 May 2019 16:04:35 +0530
+Message-ID: <CA+G9fYs+Ft2v_Xr0KJ3AOdbTTJJ8YB6vgLc-ps6TiVM4nyftLw@mail.gmail.com>
+Subject: Re: [PATCH 4.9 00/44] 4.9.178-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 21-05-19 08:25:55, Anshuman Khandual wrote:
-> On 05/20/2019 10:29 PM, Tim Murray wrote:
-[...]
-> > not seem to introduce a noticeable hot start penalty, not does it
-> > cause an increase in performance problems later in the app's
-> > lifecycle. I've measured with and without process_madvise, and the
-> > differences are within our noise bounds. Second, because we're not
-> 
-> That is assuming that post process_madvise() working set for the application is
-> always smaller. There is another challenge. The external process should ideally
-> have the knowledge of active areas of the working set for an application in
-> question for it to invoke process_madvise() correctly to prevent such scenarios.
+On Mon, 20 May 2019 at 17:47, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 4.9.178 release.
+> There are 44 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Wed 22 May 2019 11:50:58 AM UTC.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.9.178-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.9.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-But that doesn't really seem relevant for the API itself, right? The
-higher level logic the monitor's business.
--- 
-Michal Hocko
-SUSE Labs
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
+
+Summary
+------------------------------------------------------------------------
+
+kernel: 4.9.178-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.9.y
+git commit: 1a569b62b013b75248598605647b0c077a399c5c
+git describe: v4.9.177-45-g1a569b62b013
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.9-oe/bui=
+ld/v4.9.177-45-g1a569b62b013
+
+No regressions (compared to build v4.9.177)
+
+No fixes (compared to build v4.9.177)
+
+Ran 23360 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c - arm64
+- i386
+- juno-r2 - arm64
+- qemu_arm
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* kselftest
+* libhugetlbfs
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* ltp-timers-tests
+* perf
+* spectre-meltdown-checker-test
+* v4l2-compliance
+* ltp-open-posix-tests
+* prep-tmp-disk
+* kvm-unit-tests
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
+* ssuite
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
