@@ -2,158 +2,227 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D091BC04AAC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 00:38:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4231DC04AAC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 00:38:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EDFD21479
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 00:38:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="X8iM6w02"
+	by mail.kernel.org (Postfix) with ESMTP id 15A0421479
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 00:38:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727406AbfEUAiW (ORCPT
+        id S1727429AbfEUAif (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 20:38:22 -0400
-Received: from ozlabs.org ([203.11.71.1]:47515 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726913AbfEUAiV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 20:38:21 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 457H1N1YFtz9s9T;
-        Tue, 21 May 2019 10:38:15 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1558399098;
-        bh=IcmSxkyhyheY63x0Sqljy/UD2XTdhq+M+ULqA85IMVQ=;
-        h=Date:From:To:Cc:Subject:From;
-        b=X8iM6w02bCD//+TQlz+bmuk+7UeIDmbe3w2UuDhZ5Y8JSt7TeyY0//XXUslTIRL3L
-         9drDsVuuGiTGR77pwrePkP7SoxX+Q8oVEjtZ0V6GxyZW34uULqMZ89fI50MsgBPPs8
-         Dvop7iVlNMrIm776un8j9DCOovmC/FRwBfNVN6l64lDqBaBngM/+PSB75Oxw0oIQ6B
-         bkgp48zpUOttwDnLRoo/fbl64bQZBz+IxQz22c9oL06wBW1AzbN27edFt+jsuRur6h
-         NRVH+0lTtwTRTn0/f8d+G5iRzQ+GJLTXbx8C1ynJ+wgx55ueqdgHQVuRiC7jx55wLc
-         T+8AJBQJzaXpQ==
-Date:   Tue, 21 May 2019 10:38:15 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>,
-        DRI <dri-devel@lists.freedesktop.org>,
-        Alex Deucher <alexdeucher@gmail.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        xinhui pan <xinhui.pan@amd.com>,
-        Andrey Grodzovsky <andrey.grodzovsky@amd.com>
-Subject: linux-next: manual merge of the drm-misc tree with the amdgpu tree
-Message-ID: <20190521103815.21dcb0ba@canb.auug.org.au>
+        Mon, 20 May 2019 20:38:35 -0400
+Received: from master.debian.org ([82.195.75.110]:54046 "EHLO
+        master.debian.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726586AbfEUAif (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 20:38:35 -0400
+Received: from pabs by master.debian.org with local (Exim 4.89)
+        (envelope-from <pabs@master.debian.org>)
+        id 1hSsnC-0001uo-8h; Tue, 21 May 2019 00:38:10 +0000
+From:   Paul Wise <pabs3@bonedaddy.net>
+To:     Neil Horman <nhorman@tuxdriver.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Paul Wise <pabs3@bonedaddy.net>, Jakub Wilk <jwilk@jwilk.net>
+Subject: [PATCH] coredump: Split pipe command whitespace before expanding template
+Date:   Tue, 21 May 2019 08:37:56 +0800
+Message-Id: <20190521003756.5236-1-pabs3@bonedaddy.net>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <201905202342.COVmaSLI%lkp@intel.com>
+References: <201905202342.COVmaSLI%lkp@intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/F+2zI99WB3E_l/eAI8=GZdg"; protocol="application/pgp-signature"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/F+2zI99WB3E_l/eAI8=GZdg
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Save the offsets of the start of each argument to avoid having to
+update pointers to each argument after every corename krealloc and
+to avoid having to duplicate the memory for the dump command.
 
-Hi all,
+Executable names containing spaces were previously being expanded from
+%e or %E and then split in the middle of the filename. This is incorrect
+behaviour since an argument list can represent arguments with spaces.
 
-Today's linux-next merge of the drm-misc tree got a conflict in:
+The splitting could lead to extra arguments being passed to the core dump
+handler that it might have interpreted as options or ignored completely.
 
-  drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+Core dump handlers that are not aware of this Linux kernel issue will be
+using %e or %E without considering that it may be split and so they will
+be vulnerable to processes with spaces in their names breaking their
+argument list. If their internals are otherwise well written, such as
+if they are written in shell but quote arguments, they will work better
+after this change than before. If they are not well written, then there
+is a slight chance of breakage depending on the details of the code but
+they will already be fairly broken by the split filenames.
 
-between commit:
+Core dump handlers that are aware of this Linux kernel issue will be
+placing %e or %E as the last item in their core_pattern and then
+aggregating all of the remaining arguments into one, separated by
+spaces. Alternatively they will be obtaining the filename via other
+methods. Both of these will be compatible with the new arrangement.
 
-  56965ce261af ("drm/amdgpu: cancel late_init_work before gpu reset")
+A side effect from this change is that unknown template types
+(for example %z) result in an empty argument to the dump handler
+instead of the argument being dropped. This is a desired change as:
 
-from the amdgpu tree and commit:
+It is easier for dump handlers to process empty arguments than dropped
+ones, especially if they are written in shell or don't pass each template
+item with a preceding command-line option in order to differentiate
+between individual template types. Most core_patterns in the wild do not
+use options so they can confuse different template types (especially
+numeric ones) if an earlier one gets dropped in old kernels. If the
+kernel introduces a new template type and a core_pattern uses it, the
+core dump handler might not expect that the argument can be dropped in
+old kernels.
 
-  1d721ed679db ("drm/amdgpu: Avoid HW reset if guilty job already signaled.=
-")
+For example, this can result in security issues when %d is dropped in old
+kernels. This happened with the corekeeper package in Debian and resulted
+in the interface between corekeeper and Linux having to be rewritten to
+use command-line options to differentiate between template types.
 
-from the drm-misc tree.
+The core_pattern for most core dump handlers is written by the handler
+author who would generally not insert unknown template types so this
+change should be compatible with all the core dump handlers that exist.
 
-I fixed it up (I think - see below) and can carry the fix as
-necessary. This is now fixed as far as linux-next is concerned, but any
-non trivial conflicts should be mentioned to your upstream maintainer
-when your tree is submitted for merging.  You may also want to consider
-cooperating with the maintainer of the conflicting tree to minimise any
-particularly complex conflicts.
+Reported-by: Jakub Wilk <jwilk@jwilk.net>
+Reported-in: <20190312145043.jxjoj66kqssptolr@jwilk.net>
+Reported-by: Paul Wise <pabs3@bonedaddy.net>
+Reported-in: <c8b7ecb8508895bf4adb62a748e2ea2c71854597.camel@bonedaddy.net>
+Suggestions-from: Jakub Wilk <jwilk@jwilk.net>
+Signed-off-by: Paul Wise <pabs3@bonedaddy.net>
+See-also: https://bugs.debian.org/924398
+Fixes: commit 74aadce986052f20088c2678f589ea0e8d3a4b59
+---
+ fs/coredump.c | 45 ++++++++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 40 insertions(+), 5 deletions(-)
 
---=20
-Cheers,
-Stephen Rothwell
+diff --git a/fs/coredump.c b/fs/coredump.c
+index e42e17e55bfd..c45582b5856c 100644
+--- a/fs/coredump.c
++++ b/fs/coredump.c
+@@ -7,6 +7,7 @@
+ #include <linux/stat.h>
+ #include <linux/fcntl.h>
+ #include <linux/swap.h>
++#include <linux/ctype.h>
+ #include <linux/string.h>
+ #include <linux/init.h>
+ #include <linux/pagemap.h>
+@@ -187,11 +188,13 @@ static int cn_print_exe_file(struct core_name *cn)
+  * name into corename, which must have space for at least
+  * CORENAME_MAX_SIZE bytes plus one byte for the zero terminator.
+  */
+-static int format_corename(struct core_name *cn, struct coredump_params *cprm)
++static int format_corename(struct core_name *cn, struct coredump_params *cprm,
++			   size_t **argv, int *argc)
+ {
+ 	const struct cred *cred = current_cred();
+ 	const char *pat_ptr = core_pattern;
+ 	int ispipe = (*pat_ptr == '|');
++	bool was_space = false;
+ 	int pid_in_pattern = 0;
+ 	int err = 0;
+ 
+@@ -201,12 +204,36 @@ static int format_corename(struct core_name *cn, struct coredump_params *cprm)
+ 		return -ENOMEM;
+ 	cn->corename[0] = '\0';
+ 
+-	if (ispipe)
++	if (ispipe) {
++		/* sizeof(core_pattern) / 2 is the maximum number of args. */
++		int argvs = sizeof(core_pattern) / 2;
++		(*argv) = kmalloc_array(argvs, sizeof(**argv), GFP_KERNEL);
++		if (!(*argv))
++			return -ENOMEM;
++		(*argv)[(*argc)++] = 0;
+ 		++pat_ptr;
++	}
+ 
+ 	/* Repeat as long as we have more pattern to process and more output
+ 	   space */
+ 	while (*pat_ptr) {
++		/*
++		 * Split on spaces before doing template expansion so that
++		 * %e and %E don't get split if they have spaces in them
++		 */
++		if (ispipe) {
++			if (isspace(*pat_ptr)) {
++				was_space = true;
++				pat_ptr++;
++				continue;
++			} else if (was_space) {
++				was_space = false;
++				err = cn_printf(cn, "%c", '\0');
++				if (err)
++					return err;
++				(*argv)[(*argc)++] = cn->used;
++			}
++		}
+ 		if (*pat_ptr != '%') {
+ 			err = cn_printf(cn, "%c", *pat_ptr++);
+ 		} else {
+@@ -546,6 +573,8 @@ void do_coredump(const kernel_siginfo_t *siginfo)
+ 	struct cred *cred;
+ 	int retval = 0;
+ 	int ispipe;
++	size_t *argv = NULL;
++	int argc = 0;
+ 	struct files_struct *displaced;
+ 	/* require nonrelative corefile path and be extra careful */
+ 	bool need_suid_safe = false;
+@@ -592,9 +621,10 @@ void do_coredump(const kernel_siginfo_t *siginfo)
+ 
+ 	old_cred = override_creds(cred);
+ 
+-	ispipe = format_corename(&cn, &cprm);
++	ispipe = format_corename(&cn, &cprm, &argv, &argc);
+ 
+ 	if (ispipe) {
++		int argi;
+ 		int dump_count;
+ 		char **helper_argv;
+ 		struct subprocess_info *sub_info;
+@@ -637,12 +667,16 @@ void do_coredump(const kernel_siginfo_t *siginfo)
+ 			goto fail_dropcount;
+ 		}
+ 
+-		helper_argv = argv_split(GFP_KERNEL, cn.corename, NULL);
++		helper_argv = kmalloc_array(argc + 1, sizeof(*helper_argv),
++					    GFP_KERNEL);
+ 		if (!helper_argv) {
+ 			printk(KERN_WARNING "%s failed to allocate memory\n",
+ 			       __func__);
+ 			goto fail_dropcount;
+ 		}
++		for (argi = 0; argi < argc; argi++)
++			helper_argv[argi] = cn.corename + argv[argi];
++		helper_argv[argi] = NULL;
+ 
+ 		retval = -ENOMEM;
+ 		sub_info = call_usermodehelper_setup(helper_argv[0],
+@@ -652,7 +686,7 @@ void do_coredump(const kernel_siginfo_t *siginfo)
+ 			retval = call_usermodehelper_exec(sub_info,
+ 							  UMH_WAIT_EXEC);
+ 
+-		argv_free(helper_argv);
++		kfree(helper_argv);
+ 		if (retval) {
+ 			printk(KERN_INFO "Core dump to |%s pipe failed\n",
+ 			       cn.corename);
+@@ -766,6 +800,7 @@ void do_coredump(const kernel_siginfo_t *siginfo)
+ 	if (ispipe)
+ 		atomic_dec(&core_dump_count);
+ fail_unlock:
++	kfree(argv);
+ 	kfree(cn.corename);
+ 	coredump_finish(mm, core_dumped);
+ 	revert_creds(old_cred);
+-- 
+2.20.1
 
-diff --cc drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-index c9024f92e203,b9371ec5e04f..000000000000
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-@@@ -3614,28 -3538,27 +3595,28 @@@ int amdgpu_device_gpu_recover(struct am
- =20
-  	dev_info(adev->dev, "GPU reset begin!\n");
- =20
- +	cancel_delayed_work_sync(&adev->late_init_work);
-+ 	hive =3D amdgpu_get_xgmi_hive(adev, false);
- =20
-  	/*
-- 	 * In case of XGMI hive disallow concurrent resets to be triggered
-- 	 * by different nodes. No point also since the one node already executing
-- 	 * reset will also reset all the other nodes in the hive.
-+ 	 * Here we trylock to avoid chain of resets executing from
-+ 	 * either trigger by jobs on different adevs in XGMI hive or jobs on
-+ 	 * different schedulers for same device while this TO handler is running.
-+ 	 * We always reset all schedulers for device and all devices for XGMI
-+ 	 * hive so that should take care of them too.
-  	 */
-- 	hive =3D amdgpu_get_xgmi_hive(adev, 0);
-- 	if (hive && adev->gmc.xgmi.num_physical_nodes > 1 &&
-- 	    !mutex_trylock(&hive->reset_lock))
-+=20
-+ 	if (hive && !mutex_trylock(&hive->reset_lock)) {
-+ 		DRM_INFO("Bailing on TDR for s_job:%llx, hive: %llx as another already =
-in progress",
-+ 			 job->base.id, hive->hive_id);
-  		return 0;
-+ 	}
- =20
-  	/* Start with adev pre asic reset first for soft reset check.*/
-- 	amdgpu_device_lock_adev(adev);
-- 	r =3D amdgpu_device_pre_asic_reset(adev,
-- 					 job,
-- 					 &need_full_reset);
-- 	if (r) {
-- 		/*TODO Should we stop ?*/
-- 		DRM_ERROR("GPU pre asic reset failed with err, %d for drm dev, %s ",
-- 			  r, adev->ddev->unique);
-- 		adev->asic_reset_res =3D r;
-+ 	if (!amdgpu_device_lock_adev(adev, !hive)) {
-+ 		DRM_INFO("Bailing on TDR for s_job:%llx, as another already in progress=
-",
-+ 					 job->base.id);
-+ 		return 0;
-  	}
- =20
-  	/* Build list of devices to reset */
-
---Sig_/F+2zI99WB3E_l/eAI8=GZdg
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzjSHcACgkQAVBC80lX
-0Gwk+Af/bWXFQKn3v8vCeqqNO+4DfcXDlz579wmq2ctkdCwkYkmOnnfIKTrthi3Q
-sKr2F+qc+132SCjhAQHPIuAE8zDFW9XasdKkdd36VJtrqaRitmWA8qvWkz8Riy5R
-DHIAsy3W4evd19zi0X4Zbc8vPQewGdunLH1cvi9FOC1zr4/+nX+Zq5NV4LGfvZTf
-ehr0AIxCxfAM3Dw9FYHtv0EdcFAF/m+LnKKLiZ5VJgS+XAM3/4q6swy/YMsHr0S5
-yg+NgdmdjFvEqd+MZk68Fsb0LmIAMMS78ZRbMvVlRcG8ZaaGdDubaL4mHCp8hQV3
-oWaF6GPjbv0+C0kDh6KDFYyzAPRHhQ==
-=KYAk
------END PGP SIGNATURE-----
-
---Sig_/F+2zI99WB3E_l/eAI8=GZdg--
