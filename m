@@ -2,106 +2,165 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B488C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 06:26:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31D2FC04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 06:27:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4136A21783
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 06:26:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558419993;
-	bh=hclROgpufajFmgKL6NldwkYR4zwvFxcAVewgFKLtmqg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rJ8w/hyejICt76/el6tPSeGE13fAQoDRm5ly2b7UpzpMkhEBseuynEwrnmWRPuHOf
-	 u4IvzCnUiTL0ejhzT9Enya9kBEzNyfHQft7o44Yyxnldb15gJcyPxJCL2TwkuyQLWl
-	 FxhbqAIaP8aj4JNnLMGz+l0zxWdOSVi+UKnkSQiI=
+	by mail.kernel.org (Postfix) with ESMTP id 0B8E021783
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 06:27:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727868AbfEUG0b (ORCPT
+        id S1727927AbfEUG1z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 02:26:31 -0400
-Received: from mx2.suse.de ([195.135.220.15]:53092 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725798AbfEUG0a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 02:26:30 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 7FB96AE08;
-        Tue, 21 May 2019 06:26:29 +0000 (UTC)
-Date:   Tue, 21 May 2019 08:26:28 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Minchan Kim <minchan@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tim Murray <timmurray@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>, linux-api@vger.kernel.org
-Subject: Re: [RFC 7/7] mm: madvise support MADV_ANONYMOUS_FILTER and
- MADV_FILE_FILTER
-Message-ID: <20190521062628.GE32329@dhcp22.suse.cz>
-References: <20190520035254.57579-1-minchan@kernel.org>
- <20190520035254.57579-8-minchan@kernel.org>
- <20190520092801.GA6836@dhcp22.suse.cz>
- <20190521025533.GH10039@google.com>
+        Tue, 21 May 2019 02:27:55 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:34132 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726668AbfEUG1y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 02:27:54 -0400
+Received: by mail-wr1-f66.google.com with SMTP id f8so10703600wrt.1
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 23:27:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=dCD1dJdG/0nLQ16mvfGU1vp0j4Tn1rC4YMsDRx2jTq0=;
+        b=TqYP/6cluaCgF0eJge5xdnUuQN9gRjwZEQ0NjBo2iEEdeyYVtguiNQBuBMyKJ6QdjE
+         TnFx6LDFWluXPjD3nhQVmUiTDLIn9110vTy1FnhgupBZOHQQqYPE8RdzNLToT664pbow
+         Fzx4UcvQzWwBA3jugTmfsrEWSC7toYaBOLC8qL9oNgnaVX1+RIzyO+EX7jQSZafNGE4I
+         nVoJSE6/fyTTysX3gBbramvvEWkUbCeXuGj0164YeAj38yGAnkAmiSMzFPbSV1dm4Fpm
+         kcsyNbxpdGVS/JBp3n14sD3BUaCUvfCyQszs0/y9OG+9Q5uZ97toBffwNa6EQ0mNTPbV
+         d88Q==
+X-Gm-Message-State: APjAAAWpCqyFRWo744EBb8k0TPk+y/G7YFPmH/uBlPbVxFaRya9UqzZj
+        tgA9AZSqgfCLwD0VUoUWpc4uPw==
+X-Google-Smtp-Source: APXvYqwp6x07EVQG49p3BgC/aXK1zsZJ7j3xPSToIFVel1+1/P82LoAsOXJJ9x3PUhKsQtXdfCb3OQ==
+X-Received: by 2002:adf:dc8e:: with SMTP id r14mr32869437wrj.121.1558420073023;
+        Mon, 20 May 2019 23:27:53 -0700 (PDT)
+Received: from localhost (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id x187sm2312795wmb.33.2019.05.20.23.27.51
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 20 May 2019 23:27:51 -0700 (PDT)
+Date:   Tue, 21 May 2019 08:27:51 +0200
+From:   Oleksandr Natalenko <oleksandr@redhat.com>
+To:     Grzegorz Halat <ghalat@redhat.com>
+Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, linux-fbdev@vger.kernel.org
+Subject: Re: [PATCH] vt/fbcon: deinitialize resources in visual_init() after
+ failed memory allocation
+Message-ID: <20190521062751.vi6hlaod2gfth7ea@butterfly.localdomain>
+References: <20190426144357.25826-1-ghalat@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190521025533.GH10039@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190426144357.25826-1-ghalat@redhat.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 21-05-19 11:55:33, Minchan Kim wrote:
-> On Mon, May 20, 2019 at 11:28:01AM +0200, Michal Hocko wrote:
-> > [cc linux-api]
-> > 
-> > On Mon 20-05-19 12:52:54, Minchan Kim wrote:
-> > > System could have much faster swap device like zRAM. In that case, swapping
-> > > is extremely cheaper than file-IO on the low-end storage.
-> > > In this configuration, userspace could handle different strategy for each
-> > > kinds of vma. IOW, they want to reclaim anonymous pages by MADV_COLD
-> > > while it keeps file-backed pages in inactive LRU by MADV_COOL because
-> > > file IO is more expensive in this case so want to keep them in memory
-> > > until memory pressure happens.
-> > > 
-> > > To support such strategy easier, this patch introduces
-> > > MADV_ANONYMOUS_FILTER and MADV_FILE_FILTER options in madvise(2) like
-> > > that /proc/<pid>/clear_refs already has supported same filters.
-> > > They are filters could be Ored with other existing hints using top two bits
-> > > of (int behavior).
-> > 
-> > madvise operates on top of ranges and it is quite trivial to do the
-> > filtering from the userspace so why do we need any additional filtering?
-> > 
-> > > Once either of them is set, the hint could affect only the interested vma
-> > > either anonymous or file-backed.
-> > > 
-> > > With that, user could call a process_madvise syscall simply with a entire
-> > > range(0x0 - 0xFFFFFFFFFFFFFFFF) but either of MADV_ANONYMOUS_FILTER and
-> > > MADV_FILE_FILTER so there is no need to call the syscall range by range.
-> > 
-> > OK, so here is the reason you want that. The immediate question is why
-> > cannot the monitor do the filtering from the userspace. Slightly more
-> > work, all right, but less of an API to expose and that itself is a
-> > strong argument against.
-> 
-> What I should do if we don't have such filter option is to enumerate all of
-> vma via /proc/<pid>/maps and then parse every ranges and inode from string,
-> which would be painful for 2000+ vmas.
+Hi.
 
-Painful is not an argument to add a new user API. If the existing API
-suits the purpose then it should be used. If it is not usable, we can
-think of a different way.
+On Fri, Apr 26, 2019 at 04:43:57PM +0200, Grzegorz Halat wrote:
+> After memory allocation failure vc_allocate() doesn't clean up data
+> which has been initialized in visual_init(). In case of fbcon this
+> leads to divide-by-0 in fbcon_init() on next open of the same tty.
+> 
+> memory allocation in vc_allocate() may fail here:
+> 1097:     vc->vc_screenbuf = kzalloc(vc->vc_screenbuf_size, GFP_KERNEL);
+> 
+> on next open() fbcon_init() skips vc_font.data initialization:
+> 1088:     if (!p->fontdata) {
+> 
+> division by zero in fbcon_init() happens here:
+> 1149:     new_cols /= vc->vc_font.width;
+> 
+> Additional check is needed in fbcon_deinit() to prevent
+> usage of uninitialized vc_screenbuf:
+> 
+> 1251:        if (vc->vc_hi_font_mask && vc->vc_screenbuf)
+> 1252:                set_vc_hi_font(vc, false);
+> 
+> Crash:
+> 
+>  #6 [ffffc90001eafa60] divide_error at ffffffff81a00be4
+>     [exception RIP: fbcon_init+463]
+>     RIP: ffffffff814b860f  RSP: ffffc90001eafb18  RFLAGS: 00010246
+> ...
+>  #7 [ffffc90001eafb60] visual_init at ffffffff8154c36e
+>  #8 [ffffc90001eafb80] vc_allocate at ffffffff8154f53c
+>  #9 [ffffc90001eafbc8] con_install at ffffffff8154f624
+> ...
+> 
+> Signed-off-by: Grzegorz Halat <ghalat@redhat.com>
+> ---
+>  drivers/tty/vt/vt.c              | 11 +++++++++--
+>  drivers/video/fbdev/core/fbcon.c |  2 +-
+>  2 files changed, 10 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
+> index 650c66886c80..ec85d195678f 100644
+> --- a/drivers/tty/vt/vt.c
+> +++ b/drivers/tty/vt/vt.c
+> @@ -1056,6 +1056,13 @@ static void visual_init(struct vc_data *vc, int num, int init)
+>  	vc->vc_screenbuf_size = vc->vc_rows * vc->vc_size_row;
+>  }
+>  
+> +
+> +static void visual_deinit(struct vc_data *vc)
+> +{
+> +	vc->vc_sw->con_deinit(vc);
+> +	module_put(vc->vc_sw->owner);
+> +}
+> +
+>  int vc_allocate(unsigned int currcons)	/* return 0 on success */
+>  {
+>  	struct vt_notifier_param param;
+> @@ -1103,6 +1110,7 @@ int vc_allocate(unsigned int currcons)	/* return 0 on success */
+>  
+>  	return 0;
+>  err_free:
+> +	visual_deinit(vc);
+>  	kfree(vc);
+>  	vc_cons[currcons].d = NULL;
+>  	return -ENOMEM;
+> @@ -1331,9 +1339,8 @@ struct vc_data *vc_deallocate(unsigned int currcons)
+>  		param.vc = vc = vc_cons[currcons].d;
+>  		atomic_notifier_call_chain(&vt_notifier_list, VT_DEALLOCATE, &param);
+>  		vcs_remove_sysfs(currcons);
+> -		vc->vc_sw->con_deinit(vc);
+> +		visual_deinit(vc);
+>  		put_pid(vc->vt_pid);
+> -		module_put(vc->vc_sw->owner);
+>  		vc_uniscr_set(vc, NULL);
+>  		kfree(vc->vc_screenbuf);
+>  		vc_cons[currcons].d = NULL;
+> diff --git a/drivers/video/fbdev/core/fbcon.c b/drivers/video/fbdev/core/fbcon.c
+> index cd059a801662..c59b23f6e9ba 100644
+> --- a/drivers/video/fbdev/core/fbcon.c
+> +++ b/drivers/video/fbdev/core/fbcon.c
+> @@ -1248,7 +1248,7 @@ static void fbcon_deinit(struct vc_data *vc)
+>  	if (free_font)
+>  		vc->vc_font.data = NULL;
+>  
+> -	if (vc->vc_hi_font_mask)
+> +	if (vc->vc_hi_font_mask && vc->vc_screenbuf)
+>  		set_vc_hi_font(vc, false);
+>  
+>  	if (!con_is_bound(&fb_con))
+> -- 
+> 2.20.1
+> 
+
+LGTM.
+
+Reviewed-by: Oleksandr Natalenko <oleksandr@redhat.com>
+
 -- 
-Michal Hocko
-SUSE Labs
+  Best regards,
+    Oleksandr Natalenko (post-factum)
+    Senior Software Maintenance Engineer
