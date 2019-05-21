@@ -4,33 +4,34 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8974C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 14:52:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0E2EC04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 14:52:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E0DE217D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 14:52:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87AF22054F
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 14:52:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="nlHsXBiT"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="yCZ6lx2n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728908AbfEUOwS (ORCPT
+        id S1728927AbfEUOwW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 10:52:18 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:41178 "EHLO
+        Tue, 21 May 2019 10:52:22 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:41286 "EHLO
         crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728841AbfEUOwN (ORCPT
+        with ESMTP id S1728906AbfEUOwT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 10:52:13 -0400
+        Tue, 21 May 2019 10:52:19 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1558450331; h=from:from:sender:reply-to:subject:subject:date:date:
+        s=mail; t=1558450336; h=from:from:sender:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=1AcWS9HVqY1PLzqsC6hpHLotkuwFZ5ngbhqoh2uQkjc=;
-        b=nlHsXBiTI2hOMyqvIFAOvexJxPBBNl3CAaVQnS8qA9oHXhjfz8B837s1hpXajTSR5TfbG0
-        2l6OgRfvQQok4yJ1VzDsXkgNdAX74PkEkNs58DLWtNS2KgpT5GvmkugOsDJx3cpPXzY7Hy
-        nElVo6O/9C02icf8goYXZtGUqlZtPaA=
+        bh=dkpWB3BedlQ2A/bVMr6jA46kT7eWK3lBANFrXOJIPf8=;
+        b=yCZ6lx2nq+6pK+mAT624ZF8rwxKDKwtYHrELg/dS2ZBKL6GVqET83KOGdrwhb+BN7xdv9E
+        WXfShi3RU1ihOx33XdDliXteDtKeFPQqyhroWNe9UjPIKCxGCfOThwz6hXU6F0OTrTVmlx
+        lKnXoghn9Yur+8w4JiMEC5nGJ2Dm7TY=
 From:   Paul Cercueil <paul@crapouillou.net>
 To:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -49,9 +50,9 @@ Cc:     Mathieu Malaterre <malat@debian.org>, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
         linux-doc@vger.kernel.org, linux-clk@vger.kernel.org, od@zcrc.me,
         Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v12 10/13] MIPS: qi_lb60: Reduce system timer and clocksource to 750 kHz
-Date:   Tue, 21 May 2019 16:51:38 +0200
-Message-Id: <20190521145141.9813-11-paul@crapouillou.net>
+Subject: [PATCH v12 12/13] MIPS: GCW0: Reduce system timer and clocksource to 750 kHz
+Date:   Tue, 21 May 2019 16:51:40 +0200
+Message-Id: <20190521145141.9813-13-paul@crapouillou.net>
 In-Reply-To: <20190521145141.9813-1-paul@crapouillou.net>
 References: <20190521145141.9813-1-paul@crapouillou.net>
 MIME-Version: 1.0
@@ -61,43 +62,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The default clock (12 MHz) is too fast for the system timer, which fails
-to report time accurately.
+The default clock (12 MHz) is too fast for the system timer.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
 
 Notes:
-    v5: New patch
+    v8: New patch
     
-    v6: Remove ingenic,clocksource-channel property
+    v9: Don't configure clock timer1, as the OS Timer is used as
+    	clocksource on this SoC
     
-    v7-v12: No change
+    v10: Revert back to v8 bahaviour. Let the user choose what
+    	 clocksource should be used.
+    
+    v11: No change
+    
+    v12: Move clocksource to channel 2, as channel 1 is used as PWM
+    	 for the backlight.
 
- arch/mips/boot/dts/ingenic/qi_lb60.dts | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/mips/boot/dts/ingenic/gcw0.dts | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/arch/mips/boot/dts/ingenic/qi_lb60.dts b/arch/mips/boot/dts/ingenic/qi_lb60.dts
-index 76aaf8982554..01b8c917cb33 100644
---- a/arch/mips/boot/dts/ingenic/qi_lb60.dts
-+++ b/arch/mips/boot/dts/ingenic/qi_lb60.dts
+diff --git a/arch/mips/boot/dts/ingenic/gcw0.dts b/arch/mips/boot/dts/ingenic/gcw0.dts
+index 35f0291e8d38..f58d239c2058 100644
+--- a/arch/mips/boot/dts/ingenic/gcw0.dts
++++ b/arch/mips/boot/dts/ingenic/gcw0.dts
 @@ -2,6 +2,7 @@
  /dts-v1/;
  
- #include "jz4740.dtsi"
+ #include "jz4770.dtsi"
 +#include <dt-bindings/clock/ingenic,tcu.h>
  
  / {
- 	compatible = "qi,lb60", "ingenic,jz4740";
-@@ -31,3 +32,9 @@
- 		bias-disable;
- 	};
+ 	compatible = "gcw,zero", "ingenic,jz4770";
+@@ -60,3 +61,12 @@
+ 	/* The WiFi module is connected to the UHC. */
+ 	status = "okay";
  };
 +
 +&tcu {
 +	/* 750 kHz for the system timer and clocksource */
-+	assigned-clocks = <&tcu TCU_CLK_TIMER0>, <&tcu TCU_CLK_TIMER1>;
++	assigned-clocks = <&tcu TCU_CLK_TIMER0>, <&tcu TCU_CLK_TIMER2>;
 +	assigned-clock-rates = <750000>, <750000>;
++
++	/* PWM1 is in use, so reserve channel #2 for the clocksource */
++	ingenic,pwm-channels-mask = <0xfa>;
 +};
 -- 
 2.21.0.593.g511ec345e18
