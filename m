@@ -2,79 +2,48 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3137C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 07:49:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD232C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 07:49:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1668216B7
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 07:49:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="O+4ww5Rr"
+	by mail.kernel.org (Postfix) with ESMTP id BA44E21773
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 07:49:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727058AbfEUHtM (ORCPT
+        id S1727070AbfEUHtp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 03:49:12 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:56738 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726193AbfEUHtL (ORCPT
+        Tue, 21 May 2019 03:49:45 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:45588 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725920AbfEUHto (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 03:49:11 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4L7kp2S017921;
-        Tue, 21 May 2019 09:48:54 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=GqxsC/HmUBt+EZxqpLDAlGaRrwKBJVv+DIPYytOsgHM=;
- b=O+4ww5RrIOrvk0ZwzbfxP2ZwW5MWhfSmI33EwCRauM2DpgmEv+mgxFbTJocOvTUCFRGU
- //C9eVSPYQC10CEDY2N+rrZ2crRec1En3CuzG/0fH6EYS0aaS1TdgEfvDGtqgjizPJBQ
- /fo6+2lLZXFXZpcuaqYuQHuJFe6P1152MTqVpL2C+UBtxgpBhlGoJqcJS1wMt8OncbwN
- jwYhav5uC7fL8vYxMQbVEjCMOEPLkvVM1uNaM2GWDTQ+aBFCIQfTchl4CAa0YcIA2aS1
- Nt10VfUaBzYKpg7QEFb7tofUwQgiyYcVGrOXLGyXrUg3kd1jP3ZtOSczYAofsXCJNuxF Dw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2sj7h0r0bf-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Tue, 21 May 2019 09:48:54 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id EFA903F;
-        Tue, 21 May 2019 07:48:53 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id A05911613;
-        Tue, 21 May 2019 07:48:53 +0000 (GMT)
-Received: from [10.48.0.204] (10.75.127.48) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 21 May
- 2019 09:48:49 +0200
-Subject: Re: [PATCH 5/5] ARM: dts: stm32: use dedicated files to manage
- stm32mp157 packages
-To:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, <arnd@arndb.de>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-References: <1554895824-25709-1-git-send-email-alexandre.torgue@st.com>
- <1554895824-25709-6-git-send-email-alexandre.torgue@st.com>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <b236861c-2a25-d5a9-c892-3d2a33bacf30@st.com>
-Date:   Tue, 21 May 2019 09:48:49 +0200
+        Tue, 21 May 2019 03:49:44 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 5AC9E284620
+Subject: Re: [PATCH v4 2/3] spi: Allow SPI devices to request the pumping
+ thread be realtime
+To:     Douglas Anderson <dianders@chromium.org>,
+        Mark Brown <broonie@kernel.org>,
+        Benson Leung <bleung@chromium.org>
+Cc:     linux-rockchip@lists.infradead.org, drinkcat@chromium.org,
+        Guenter Roeck <groeck@chromium.org>, briannorris@chromium.org,
+        mka@chromium.org, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org
+References: <20190515164814.258898-1-dianders@chromium.org>
+ <20190515164814.258898-3-dianders@chromium.org>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <21d93d23-40c4-0db5-934e-77329b4dc93c@collabora.com>
+Date:   Tue, 21 May 2019 09:49:39 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <1554895824-25709-6-git-send-email-alexandre.torgue@st.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+In-Reply-To: <20190515164814.258898-3-dianders@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.48]
-X-ClientProxiedBy: SFHDAG6NODE1.st.com (10.75.127.16) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-21_01:,,
- signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -82,466 +51,127 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hi,
 
-On 4/10/19 1:30 PM, Alexandre Torgue wrote:
-> Four packages exist for stm32mp157 die. As ball-out is different between
-> them, this patch covers those differences by creating dedicated pinctrl
-> dtsi files. Each dtsi pinctrl package file describes the package ball-out
-> through gpio-ranges.
+On 15/5/19 18:48, Douglas Anderson wrote:
+> Right now the only way to get the SPI pumping thread bumped up to
+> realtime priority is for the controller to request it.  However it may
+> be that the controller works fine with the normal priority but
+> communication to a particular SPI device on the bus needs realtime
+> priority.
 > 
-> stm32mp157a-dk1 / dk2 boards embed a STM32MP_PKG_AC (TFBGA361 (12*12))
-> package.
+> Let's add a way for devices to request realtime priority when they set
+> themselves up.
 > 
-> stm32mp157c-ed1 / ev1 boards embed a STM32MP_PKG_AA (LFBGA448 (18*18))
-> package.
+> NOTE: this will just affect the priority of transfers that end up on
+> the SPI core's pumping thread.  In many cases transfers happen in the
+> context of the caller so if you need realtime priority for all
+> transfers you should ensure the calling context is also realtime
+> priority.
 > 
-> Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
-> 
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> Reviewed-by: Guenter Roeck <groeck@chromium.org>
 
-Applied on stm32-next.
+Tested-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 
-Thanks.
-Alex
+Thanks,
+ Enric
 
-> diff --git a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
-> index 9104896..3b4cc3c 100644
-> --- a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
-> +++ b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
-> @@ -26,6 +26,7 @@
->   				st,bank-name = "GPIOA";
->   				ngpios = <16>;
->   				gpio-ranges = <&pinctrl 0 0 16>;
-> +				status = "disabled";
->   			};
->   
->   			gpiob: gpio@50003000 {
-> @@ -38,6 +39,7 @@
->   				st,bank-name = "GPIOB";
->   				ngpios = <16>;
->   				gpio-ranges = <&pinctrl 0 16 16>;
-> +				status = "disabled";
->   			};
->   
->   			gpioc: gpio@50004000 {
-> @@ -50,6 +52,7 @@
->   				st,bank-name = "GPIOC";
->   				ngpios = <16>;
->   				gpio-ranges = <&pinctrl 0 32 16>;
-> +				status = "disabled";
->   			};
->   
->   			gpiod: gpio@50005000 {
-> @@ -62,6 +65,7 @@
->   				st,bank-name = "GPIOD";
->   				ngpios = <16>;
->   				gpio-ranges = <&pinctrl 0 48 16>;
-> +				status = "disabled";
->   			};
->   
->   			gpioe: gpio@50006000 {
-> @@ -74,6 +78,7 @@
->   				st,bank-name = "GPIOE";
->   				ngpios = <16>;
->   				gpio-ranges = <&pinctrl 0 64 16>;
-> +				status = "disabled";
->   			};
->   
->   			gpiof: gpio@50007000 {
-> @@ -86,6 +91,7 @@
->   				st,bank-name = "GPIOF";
->   				ngpios = <16>;
->   				gpio-ranges = <&pinctrl 0 80 16>;
-> +				status = "disabled";
->   			};
->   
->   			gpiog: gpio@50008000 {
-> @@ -98,6 +104,7 @@
->   				st,bank-name = "GPIOG";
->   				ngpios = <16>;
->   				gpio-ranges = <&pinctrl 0 96 16>;
-> +				status = "disabled";
->   			};
->   
->   			gpioh: gpio@50009000 {
-> @@ -110,6 +117,7 @@
->   				st,bank-name = "GPIOH";
->   				ngpios = <16>;
->   				gpio-ranges = <&pinctrl 0 112 16>;
-> +				status = "disabled";
->   			};
->   
->   			gpioi: gpio@5000a000 {
-> @@ -122,6 +130,7 @@
->   				st,bank-name = "GPIOI";
->   				ngpios = <16>;
->   				gpio-ranges = <&pinctrl 0 128 16>;
-> +				status = "disabled";
->   			};
->   
->   			gpioj: gpio@5000b000 {
-> @@ -134,6 +143,7 @@
->   				st,bank-name = "GPIOJ";
->   				ngpios = <16>;
->   				gpio-ranges = <&pinctrl 0 144 16>;
-> +				status = "disabled";
->   			};
->   
->   			gpiok: gpio@5000c000 {
-> @@ -146,6 +156,7 @@
->   				st,bank-name = "GPIOK";
->   				ngpios = <8>;
->   				gpio-ranges = <&pinctrl 0 160 8>;
-> +				status = "disabled";
->   			};
->   
->   			cec_pins_a: cec-0 {
-> @@ -427,6 +438,7 @@
->   				st,bank-ioport = <11>;
->   				ngpios = <8>;
->   				gpio-ranges = <&pinctrl_z 0 400 8>;
-> +				status = "disabled";
->   			};
->   
->   			i2c4_pins_a: i2c4-0 {
-> diff --git a/arch/arm/boot/dts/stm32mp157a-dk1.dts b/arch/arm/boot/dts/stm32mp157a-dk1.dts
-> index 1b1886d..8d60641 100644
-> --- a/arch/arm/boot/dts/stm32mp157a-dk1.dts
-> +++ b/arch/arm/boot/dts/stm32mp157a-dk1.dts
-> @@ -7,7 +7,7 @@
->   /dts-v1/;
->   
->   #include "stm32mp157c.dtsi"
-> -#include "stm32mp157-pinctrl.dtsi"
-> +#include "stm32mp157xac-pinctrl.dtsi"
->   #include <dt-bindings/gpio/gpio.h>
->   
->   / {
-> diff --git a/arch/arm/boot/dts/stm32mp157c-ed1.dts b/arch/arm/boot/dts/stm32mp157c-ed1.dts
-> index 9fd7943..6ed9d49 100644
-> --- a/arch/arm/boot/dts/stm32mp157c-ed1.dts
-> +++ b/arch/arm/boot/dts/stm32mp157c-ed1.dts
-> @@ -6,7 +6,7 @@
->   /dts-v1/;
->   
->   #include "stm32mp157c.dtsi"
-> -#include "stm32mp157-pinctrl.dtsi"
-> +#include "stm32mp157xaa-pinctrl.dtsi"
->   #include <dt-bindings/gpio/gpio.h>
->   
->   / {
-> diff --git a/arch/arm/boot/dts/stm32mp157xaa-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp157xaa-pinctrl.dtsi
-> new file mode 100644
-> index 0000000..875adf5
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/stm32mp157xaa-pinctrl.dtsi
-> @@ -0,0 +1,90 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
-> +/*
-> + * Copyright (C) STMicroelectronics 2019 - All Rights Reserved
-> + * Author: Alexandre Torgue <alexandre.torgue@st.com>
+> ---
+> 
+> Changes in v4: None
+> Changes in v3:
+> - SPI core change now like patch v1 patch #2 (with name "rt").
+> 
+> Changes in v2:
+> - Now only force transfers to the thread for devices that want it.
+> - Squashed patch #1 and #2 together.
+> - Renamed variable to "force_rt_transfers".
+> 
+>  drivers/spi/spi.c       | 36 ++++++++++++++++++++++++++++++------
+>  include/linux/spi/spi.h |  2 ++
+>  2 files changed, 32 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+> index 8eb7460dd744..466984796dd9 100644
+> --- a/drivers/spi/spi.c
+> +++ b/drivers/spi/spi.c
+> @@ -1364,10 +1364,32 @@ static void spi_pump_messages(struct kthread_work *work)
+>  	__spi_pump_messages(ctlr, true);
+>  }
+>  
+> -static int spi_init_queue(struct spi_controller *ctlr)
+> +/**
+> + * spi_set_thread_rt - set the controller to pump at realtime priority
+> + * @ctlr: controller to boost priority of
+> + *
+> + * This can be called because the controller requested realtime priority
+> + * (by setting the ->rt value before calling spi_register_controller()) or
+> + * because a device on the bus said that its transfers needed realtime
+> + * priority.
+> + *
+> + * NOTE: at the moment if any device on a bus says it needs realtime then
+> + * the thread will be at realtime priority for all transfers on that
+> + * controller.  If this eventually becomes a problem we may see if we can
+> + * find a way to boost the priority only temporarily during relevant
+> + * transfers.
 > + */
+> +static void spi_set_thread_rt(struct spi_controller *ctlr)
+>  {
+>  	struct sched_param param = { .sched_priority = MAX_RT_PRIO - 1 };
+>  
+> +	dev_info(&ctlr->dev,
+> +		"will run message pump with realtime priority\n");
+> +	sched_setscheduler(ctlr->kworker_task, SCHED_FIFO, &param);
+> +}
 > +
-> +#include "stm32mp157-pinctrl.dtsi"
-> +/ {
-> +	soc {
-> +		pinctrl: pin-controller@50002000 {
-> +			st,package = <STM32MP_PKG_AA>;
+> +static int spi_init_queue(struct spi_controller *ctlr)
+> +{
+>  	ctlr->running = false;
+>  	ctlr->busy = false;
+>  
+> @@ -1387,11 +1409,8 @@ static int spi_init_queue(struct spi_controller *ctlr)
+>  	 * request and the scheduling of the message pump thread. Without this
+>  	 * setting the message pump thread will remain at default priority.
+>  	 */
+> -	if (ctlr->rt) {
+> -		dev_info(&ctlr->dev,
+> -			"will run message pump with realtime priority\n");
+> -		sched_setscheduler(ctlr->kworker_task, SCHED_FIFO, &param);
+> -	}
+> +	if (ctlr->rt)
+> +		spi_set_thread_rt(ctlr);
+>  
+>  	return 0;
+>  }
+> @@ -2982,6 +3001,11 @@ int spi_setup(struct spi_device *spi)
+>  
+>  	spi_set_cs(spi, false);
+>  
+> +	if (spi->rt && !spi->controller->rt) {
+> +		spi->controller->rt = true;
+> +		spi_set_thread_rt(spi->controller);
+> +	}
 > +
-> +			gpioa: gpio@50002000 {
-> +				status = "okay";
-> +				ngpios = <16>;
-> +				gpio-ranges = <&pinctrl 0 0 16>;
-> +			};
-> +
-> +			gpiob: gpio@50003000 {
-> +				status = "okay";
-> +				ngpios = <16>;
-> +				gpio-ranges = <&pinctrl 0 16 16>;
-> +			};
-> +
-> +			gpioc: gpio@50004000 {
-> +				status = "okay";
-> +				ngpios = <16>;
-> +				gpio-ranges = <&pinctrl 0 32 16>;
-> +			};
-> +
-> +			gpiod: gpio@50005000 {
-> +				status = "okay";
-> +				ngpios = <16>;
-> +				gpio-ranges = <&pinctrl 0 48 16>;
-> +			};
-> +
-> +			gpioe: gpio@50006000 {
-> +				status = "okay";
-> +				ngpios = <16>;
-> +				gpio-ranges = <&pinctrl 0 64 16>;
-> +			};
-> +
-> +			gpiof: gpio@50007000 {
-> +				status = "okay";
-> +				ngpios = <16>;
-> +				gpio-ranges = <&pinctrl 0 80 16>;
-> +			};
-> +
-> +			gpiog: gpio@50008000 {
-> +				status = "okay";
-> +				ngpios = <16>;
-> +				gpio-ranges = <&pinctrl 0 96 16>;
-> +			};
-> +
-> +			gpioh: gpio@50009000 {
-> +				status = "okay";
-> +				ngpios = <16>;
-> +				gpio-ranges = <&pinctrl 0 112 16>;
-> +			};
-> +
-> +			gpioi: gpio@5000a000 {
-> +				status = "okay";
-> +				ngpios = <16>;
-> +				gpio-ranges = <&pinctrl 0 128 16>;
-> +			};
-> +
-> +			gpioj: gpio@5000b000 {
-> +				status = "okay";
-> +				ngpios = <16>;
-> +				gpio-ranges = <&pinctrl 0 144 16>;
-> +			};
-> +
-> +			gpiok: gpio@5000c000 {
-> +				status = "okay";
-> +				ngpios = <8>;
-> +				gpio-ranges = <&pinctrl 0 160 8>;
-> +			};
-> +		};
-> +
-> +		pinctrl_z: pin-controller-z@54004000 {
-> +			st,package = <STM32MP_PKG_AA>;
-> +
-> +			gpioz: gpio@54004000 {
-> +				status = "okay";
-> +				ngpios = <8>;
-> +				gpio-ranges = <&pinctrl_z 0 400 8>;
-> +			};
-> +		};
-> +	};
-> +};
-> diff --git a/arch/arm/boot/dts/stm32mp157xab-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp157xab-pinctrl.dtsi
-> new file mode 100644
-> index 0000000..961fa12
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/stm32mp157xab-pinctrl.dtsi
-> @@ -0,0 +1,62 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
-> +/*
-> + * Copyright (C) STMicroelectronics 2019 - All Rights Reserved
-> + * Author: Alexandre Torgue <alexandre.torgue@st.com>
-> + */
-> +
-> +#include "stm32mp157-pinctrl.dtsi"
-> +/ {
-> +	soc {
-> +		pinctrl: pin-controller@50002000 {
-> +			st,package = <STM32MP_PKG_AB>;
-> +
-> +			gpioa: gpio@50002000 {
-> +				status = "okay";
-> +				ngpios = <16>;
-> +				gpio-ranges = <&pinctrl 0 0 16>;
-> +			};
-> +
-> +			gpiob: gpio@50003000 {
-> +				status = "okay";
-> +				ngpios = <16>;
-> +				gpio-ranges = <&pinctrl 0 16 16>;
-> +			};
-> +
-> +			gpioc: gpio@50004000 {
-> +				status = "okay";
-> +				ngpios = <16>;
-> +				gpio-ranges = <&pinctrl 0 32 16>;
-> +			};
-> +
-> +			gpiod: gpio@50005000 {
-> +				status = "okay";
-> +				ngpios = <16>;
-> +				gpio-ranges = <&pinctrl 0 48 16>;
-> +			};
-> +
-> +			gpioe: gpio@50006000 {
-> +				status = "okay";
-> +				ngpios = <16>;
-> +				gpio-ranges = <&pinctrl 0 64 16>;
-> +			};
-> +
-> +			gpiof: gpio@50007000 {
-> +				status = "okay";
-> +				ngpios = <6>;
-> +				gpio-ranges = <&pinctrl 6 86 6>;
-> +			};
-> +
-> +			gpiog: gpio@50008000 {
-> +				status = "okay";
-> +				ngpios = <10>;
-> +				gpio-ranges = <&pinctrl 6 102 10>;
-> +			};
-> +
-> +			gpioh: gpio@50009000 {
-> +				status = "okay";
-> +				ngpios = <2>;
-> +				gpio-ranges = <&pinctrl 0 112 2>;
-> +			};
-> +		};
-> +	};
-> +};
-> diff --git a/arch/arm/boot/dts/stm32mp157xac-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp157xac-pinctrl.dtsi
-> new file mode 100644
-> index 0000000..26600f1
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/stm32mp157xac-pinctrl.dtsi
-> @@ -0,0 +1,78 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
-> +/*
-> + * Copyright (C) STMicroelectronics 2019 - All Rights Reserved
-> + * Author: Alexandre Torgue <alexandre.torgue@st.com>
-> + */
-> +
-> +#include "stm32mp157-pinctrl.dtsi"
-> +/ {
-> +	soc {
-> +		pinctrl: pin-controller@50002000 {
-> +			st,package = <STM32MP_PKG_AC>;
-> +
-> +			gpioa: gpio@50002000 {
-> +				status = "okay";
-> +				ngpios = <16>;
-> +				gpio-ranges = <&pinctrl 0 0 16>;
-> +			};
-> +
-> +			gpiob: gpio@50003000 {
-> +				status = "okay";
-> +				ngpios = <16>;
-> +				gpio-ranges = <&pinctrl 0 16 16>;
-> +			};
-> +
-> +			gpioc: gpio@50004000 {
-> +				status = "okay";
-> +				ngpios = <16>;
-> +				gpio-ranges = <&pinctrl 0 32 16>;
-> +			};
-> +
-> +			gpiod: gpio@50005000 {
-> +				status = "okay";
-> +				ngpios = <16>;
-> +				gpio-ranges = <&pinctrl 0 48 16>;
-> +			};
-> +
-> +			gpioe: gpio@50006000 {
-> +				status = "okay";
-> +				ngpios = <16>;
-> +				gpio-ranges = <&pinctrl 0 64 16>;
-> +			};
-> +
-> +			gpiof: gpio@50007000 {
-> +				status = "okay";
-> +				ngpios = <16>;
-> +				gpio-ranges = <&pinctrl 0 80 16>;
-> +			};
-> +
-> +			gpiog: gpio@50008000 {
-> +				status = "okay";
-> +				ngpios = <16>;
-> +				gpio-ranges = <&pinctrl 0 96 16>;
-> +			};
-> +
-> +			gpioh: gpio@50009000 {
-> +				status = "okay";
-> +				ngpios = <16>;
-> +				gpio-ranges = <&pinctrl 0 112 16>;
-> +			};
-> +
-> +			gpioi: gpio@5000a000 {
-> +				status = "okay";
-> +				ngpios = <12>;
-> +				gpio-ranges = <&pinctrl 0 128 12>;
-> +			};
-> +		};
-> +
-> +		pinctrl_z: pin-controller-z@54004000 {
-> +			st,package = <STM32MP_PKG_AC>;
-> +
-> +			gpioz: gpio@54004000 {
-> +				status = "okay";
-> +				ngpios = <8>;
-> +				gpio-ranges = <&pinctrl_z 0 400 8>;
-> +			};
-> +		};
-> +	};
-> +};
-> diff --git a/arch/arm/boot/dts/stm32mp157xad-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp157xad-pinctrl.dtsi
-> new file mode 100644
-> index 0000000..910113f
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/stm32mp157xad-pinctrl.dtsi
-> @@ -0,0 +1,62 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
-> +/*
-> + * Copyright (C) STMicroelectronics 2019 - All Rights Reserved
-> + * Author: Alexandre Torgue <alexandre.torgue@st.com>
-> + */
-> +
-> +#include "stm32mp157-pinctrl.dtsi"
-> +/ {
-> +	soc {
-> +		pinctrl: pin-controller@50002000 {
-> +			st,package = <STM32MP_PKG_AD>;
-> +
-> +			gpioa: gpio@50002000 {
-> +				status = "okay";
-> +				ngpios = <16>;
-> +				gpio-ranges = <&pinctrl 0 0 16>;
-> +			};
-> +
-> +			gpiob: gpio@50003000 {
-> +				status = "okay";
-> +				ngpios = <16>;
-> +				gpio-ranges = <&pinctrl 0 16 16>;
-> +			};
-> +
-> +			gpioc: gpio@50004000 {
-> +				status = "okay";
-> +				ngpios = <16>;
-> +				gpio-ranges = <&pinctrl 0 32 16>;
-> +			};
-> +
-> +			gpiod: gpio@50005000 {
-> +				status = "okay";
-> +				ngpios = <16>;
-> +				gpio-ranges = <&pinctrl 0 48 16>;
-> +			};
-> +
-> +			gpioe: gpio@50006000 {
-> +				status = "okay";
-> +				ngpios = <16>;
-> +				gpio-ranges = <&pinctrl 0 64 16>;
-> +			};
-> +
-> +			gpiof: gpio@50007000 {
-> +				status = "okay";
-> +				ngpios = <6>;
-> +				gpio-ranges = <&pinctrl 6 86 6>;
-> +			};
-> +
-> +			gpiog: gpio@50008000 {
-> +				status = "okay";
-> +				ngpios = <10>;
-> +				gpio-ranges = <&pinctrl 6 102 10>;
-> +			};
-> +
-> +			gpioh: gpio@50009000 {
-> +				status = "okay";
-> +				ngpios = <2>;
-> +				gpio-ranges = <&pinctrl 0 112 2>;
-> +			};
-> +		};
-> +	};
-> +};
+>  	dev_dbg(&spi->dev, "setup mode %d, %s%s%s%s%u bits/w, %u Hz max --> %d\n",
+>  			(int) (spi->mode & (SPI_CPOL | SPI_CPHA)),
+>  			(spi->mode & SPI_CS_HIGH) ? "cs_high, " : "",
+> diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
+> index 053abd22ad31..15505c2485d6 100644
+> --- a/include/linux/spi/spi.h
+> +++ b/include/linux/spi/spi.h
+> @@ -109,6 +109,7 @@ void spi_statistics_add_transfer_stats(struct spi_statistics *stats,
+>   *	This may be changed by the device's driver, or left at the
+>   *	default (0) indicating protocol words are eight bit bytes.
+>   *	The spi_transfer.bits_per_word can override this for each transfer.
+> + * @rt: Make the pump thread real time priority.
+>   * @irq: Negative, or the number passed to request_irq() to receive
+>   *	interrupts from this device.
+>   * @controller_state: Controller's runtime state
+> @@ -143,6 +144,7 @@ struct spi_device {
+>  	u32			max_speed_hz;
+>  	u8			chip_select;
+>  	u8			bits_per_word;
+> +	bool			rt;
+>  	u32			mode;
+>  #define	SPI_CPHA	0x01			/* clock phase */
+>  #define	SPI_CPOL	0x02			/* clock polarity */
 > 
