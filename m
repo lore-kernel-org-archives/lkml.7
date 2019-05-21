@@ -2,114 +2,149 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AADAC04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 04:33:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F37EAC04E87
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 04:34:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 137D02173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 04:33:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=russell.cc header.i=@russell.cc header.b="n4hFcBI7";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Ppy3lDs/"
+	by mail.kernel.org (Postfix) with ESMTP id C896721743
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 04:34:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558413285;
+	bh=FyMfJVTBNMLoW1/4K1izPZGoiFCIGoNjbcj57tYlg70=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=m6RT9ngSVpv8Z0cWr0M9EiiVRN8RUhYe/T9STdRIIoymq4uPgv5vg8ZRWN4ESHMRu
+	 eRaLXVJYBv/vkayudbzX+L4jZ42aVxCSvCAqOsjUkuYGwxIInoEwa/UMzzWcIv/Cwl
+	 kovnVymfYak9zJ9p97DTnvTguMKKYpMnb7w12FBI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726377AbfEUEd1 (ORCPT
+        id S1726897AbfEUEeo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 00:33:27 -0400
-Received: from wout4-smtp.messagingengine.com ([64.147.123.20]:46933 "EHLO
-        wout4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725793AbfEUEd0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 00:33:26 -0400
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailout.west.internal (Postfix) with ESMTP id 1168068D;
-        Tue, 21 May 2019 00:33:25 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute6.internal (MEProxy); Tue, 21 May 2019 00:33:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=russell.cc; h=
-        message-id:subject:from:to:cc:date:in-reply-to:references
-        :content-type:mime-version:content-transfer-encoding; s=fm1; bh=
-        AlWrfBTrcpPv2MHnZ7Kz+KHi+IVsVLeNo9zFDUGz76Y=; b=n4hFcBI7t383uVyf
-        rn6SAFOdBocVIvP2WYVx9mCubIyxB52Fsxt6YEBCpVuomjIZbvKpXxwtm2jigzHG
-        7hoJmQm8fzT37fif6X/aKk9Bb/VZxaNn6tBoCqPfE3WV2GCpLQE/R3ULig/iHe7a
-        SYZMEDuEqGoW4SYYOQKVA4f+nv+mdUc7l8NnHwES6OOeYkAwChvON11E2+pVmBIe
-        rP1oGN5lqS9Ge5kpJtoPDN6I4IUABmdYRLgBy+v3Ek6/g7MpkEU+1uza35hgzWpn
-        oaTX60NkF1VAO5nL8YYlaAeQwjWue0WobbecPq9wKHB1KPFRyMbsJtAT9BOmtHvA
-        HQ4HOA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm2; bh=AlWrfBTrcpPv2MHnZ7Kz+KHi+IVsVLeNo9zFDUGz7
-        6Y=; b=Ppy3lDs/uAXuwh6Bfhz2pMFRedUu6AdzAc+Uyn2tBzLL0/wIYhLd8WshG
-        FyjdQNKYqsei7uqFdcRNYOpeRwQ6MICh/qM/27gS+YCp2u8do03efOrZuPjC1vDV
-        F2ebVYbGrlAvTkUsNIS5ry9wS0TKtPl3YDN90xGOeMNbGyfKunBIqYWnrhRDhZln
-        LizlfsSpbRZCCX9Ygl9gaIBJlqa/1OxJ634FMy08YdgyZY2t9LkvHuvwDiXqV1nL
-        5rgYYP0jYKoSL21ZvvholK+xDdDoWXTlQxv7Dg3Qgs50bA39Cc3gizTEJwpLsX69
-        Bd/1BgzEezuG7WfqLsuDe0pRu+sKQ==
-X-ME-Sender: <xms:k3_jXDg75Llg6VcPCl5wWvcnNSHfaYWJN5wYY_8z4eSQeZMwsw583A>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddruddtledgkeegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    gfrhhlucfvnfffucdludehmdenucfjughrpefkuffhvfffjghftggfggfgsehtjeertddt
-    reejnecuhfhrohhmpeftuhhsshgvlhhlucevuhhrrhgvhicuoehruhhstghurhesrhhush
-    hsvghllhdrtggtqeenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppeduvddv
-    rdelledrkedvrddutdenucfrrghrrghmpehmrghilhhfrhhomheprhhushgtuhhrsehruh
-    hsshgvlhhlrdgttgenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:k3_jXEkafT24d5MddrYm-5I2xa8VYHejmOeUC9W7NnP4fQFvTTyXfA>
-    <xmx:k3_jXANHDl4rw_mFtE2sgFaPs8Wkl9LqweSfOSFwayKMcC6INLjTrw>
-    <xmx:k3_jXHF_YDP0pcKsWRH0_D_ld2mg37PygOwtC2W9q9_kBzaHv7XOXw>
-    <xmx:lH_jXBd6lIprkHfLs2QimfROtqsr62W8b2oHghmEtxyugbpnrIzEvg>
-Received: from crackle.ozlabs.ibm.com (unknown [122.99.82.10])
-        by mail.messagingengine.com (Postfix) with ESMTPA id A7D778005B;
-        Tue, 21 May 2019 00:33:20 -0400 (EDT)
-Message-ID: <6a90db30c8543d547ab8543fbdba02f7fe6a4898.camel@russell.cc>
-Subject: Re: [RFC PATCH] powerpc/mm: Implement STRICT_MODULE_RWX
-From:   Russell Currey <ruscur@russell.cc>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Tue, 21 May 2019 14:33:17 +1000
-In-Reply-To: <df502ffe07caa38c46b0144fc824fff447f4105b.1557901092.git.christophe.leroy@c-s.fr>
-References: <df502ffe07caa38c46b0144fc824fff447f4105b.1557901092.git.christophe.leroy@c-s.fr>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.2 
+        Tue, 21 May 2019 00:34:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43744 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725793AbfEUEeo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 00:34:44 -0400
+Received: from localhost (unknown [106.201.107.13])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A5712173E;
+        Tue, 21 May 2019 04:34:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558413283;
+        bh=FyMfJVTBNMLoW1/4K1izPZGoiFCIGoNjbcj57tYlg70=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Dj4bvWTjTtgdEulQyjYthsUxg86jGVS5KBLTR1djqTJeXjMErVUynDKx+fLhWR5qA
+         CO/d8w7o57Z82DXG/fBqmSk8QB33FY23HSMkJUq79JhvADaJttpqov+P39AolOj1Rf
+         H4/TZEjvSJSihncHn742uoitLWZ0kumcdU7K1a0M=
+Date:   Tue, 21 May 2019 10:04:38 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Peng Ma <peng.ma@nxp.com>
+Cc:     dan.j.williams@intel.com, leoyang.li@nxp.com,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [V2 1/2] dmaengine: fsl-qdma: fixed the source/destination
+ descriptor format
+Message-ID: <20190521043438.GL15118@vkoul-mobl>
+References: <20190506022111.31751-1-peng.ma@nxp.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190506022111.31751-1-peng.ma@nxp.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-05-15 at 06:20 +0000, Christophe Leroy wrote:
+On 06-05-19, 10:21, Peng Ma wrote:
+> CMD of Source/Destination descriptor format should be lower of
+> struct fsl_qdma_engine number data address.
+> 
+> Signed-off-by: Peng Ma <peng.ma@nxp.com>
+> ---
+> changed for V2:
+> 	- Fix descriptor spelling
+> 
+>  drivers/dma/fsl-qdma.c |   25 +++++++++++++++++--------
+>  1 files changed, 17 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/dma/fsl-qdma.c b/drivers/dma/fsl-qdma.c
+> index aa1d0ae..2e8b46b 100644
+> --- a/drivers/dma/fsl-qdma.c
+> +++ b/drivers/dma/fsl-qdma.c
+> @@ -113,6 +113,7 @@
+>  /* Field definition for Descriptor offset */
+>  #define QDMA_CCDF_STATUS		20
+>  #define QDMA_CCDF_OFFSET		20
+> +#define QDMA_SDDF_CMD(x)		(((u64)(x)) << 32)
+>  
+>  /* Field definition for safe loop count*/
+>  #define FSL_QDMA_HALT_COUNT		1500
+> @@ -214,6 +215,12 @@ struct fsl_qdma_engine {
+>  
+>  };
+>  
+> +static inline void
+> +qdma_sddf_set_cmd(struct fsl_qdma_format *sddf, u32 val)
+> +{
+> +	sddf->data = QDMA_SDDF_CMD(val);
+> +}
 
-Confirming this works on hash and radix book3s64.
+Do you really need this helper which calls another macro!
 
 > +
-> +	// only operate on VM areas for now
-> +	area = find_vm_area((void *)addr);
-> +	if (!area || end > (unsigned long)area->addr + area->size ||
-> +	    !(area->flags & VM_ALLOC))
-> +		return -EINVAL;
+>  static inline u64
+>  qdma_ccdf_addr_get64(const struct fsl_qdma_format *ccdf)
+>  {
+> @@ -341,6 +348,7 @@ static void fsl_qdma_free_chan_resources(struct dma_chan *chan)
+>  static void fsl_qdma_comp_fill_memcpy(struct fsl_qdma_comp *fsl_comp,
+>  				      dma_addr_t dst, dma_addr_t src, u32 len)
+>  {
+> +	u32 cmd;
+>  	struct fsl_qdma_format *sdf, *ddf;
+>  	struct fsl_qdma_format *ccdf, *csgf_desc, *csgf_src, *csgf_dest;
+>  
+> @@ -353,6 +361,7 @@ static void fsl_qdma_comp_fill_memcpy(struct fsl_qdma_comp *fsl_comp,
+>  
+>  	memset(fsl_comp->virt_addr, 0, FSL_QDMA_COMMAND_BUFFER_SIZE);
+>  	memset(fsl_comp->desc_virt_addr, 0, FSL_QDMA_DESCRIPTOR_BUFFER_SIZE);
+> +
 
-https://lore.kernel.org/patchwork/project/lkml/list/?series=391470
+why did you add a blank line in this 'fix', it does not belong here!
 
-With this patch, the above series causes crashes on (at least) Hash,
-since it adds another user of change_page_rw() and change_page_nx()
-that for reasons I don't understand yet, we can't handle.  I can work
-around this with:
+>  	/* Head Command Descriptor(Frame Descriptor) */
+>  	qdma_desc_addr_set64(ccdf, fsl_comp->bus_addr + 16);
+>  	qdma_ccdf_set_format(ccdf, qdma_ccdf_get_offset(ccdf));
+> @@ -369,14 +378,14 @@ static void fsl_qdma_comp_fill_memcpy(struct fsl_qdma_comp *fsl_comp,
+>  	/* This entry is the last entry. */
+>  	qdma_csgf_set_f(csgf_dest, len);
+>  	/* Descriptor Buffer */
+> -	sdf->data =
+> -		cpu_to_le64(FSL_QDMA_CMD_RWTTYPE <<
+> -			    FSL_QDMA_CMD_RWTTYPE_OFFSET);
+> -	ddf->data =
+> -		cpu_to_le64(FSL_QDMA_CMD_RWTTYPE <<
+> -			    FSL_QDMA_CMD_RWTTYPE_OFFSET);
+> -	ddf->data |=
+> -		cpu_to_le64(FSL_QDMA_CMD_LWC << FSL_QDMA_CMD_LWC_OFFSET);
+> +	cmd = cpu_to_le32(FSL_QDMA_CMD_RWTTYPE <<
+> +			  FSL_QDMA_CMD_RWTTYPE_OFFSET);
+> +	qdma_sddf_set_cmd(sdf, cmd);
 
-	if (area->flags & VM_FLUSH_RESET_PERMS)
-		return 0;
+why not do sddf->data = QDMA_SDDF_CMD(cmd);
 
-so this is broken on at least one platform as of 5.2-rc1.  We're going
-to look into this more to see if there's anything else we have to do as
-a result of this series before the next merge window, or if just
-working around it like this is good enough.
+> +
+> +	cmd = cpu_to_le32(FSL_QDMA_CMD_RWTTYPE <<
+> +			  FSL_QDMA_CMD_RWTTYPE_OFFSET);
+> +	cmd |= cpu_to_le32(FSL_QDMA_CMD_LWC << FSL_QDMA_CMD_LWC_OFFSET);
+> +	qdma_sddf_set_cmd(ddf, cmd);
+>  }
+>  
+>  /*
+> -- 
+> 1.7.1
 
-- Russell
-
+-- 
+~Vinod
