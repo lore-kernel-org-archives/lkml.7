@@ -2,216 +2,179 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E98C3C04E87
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:55:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CC66C04E87
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:55:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBD7821773
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:55:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZeCYc5/F"
+	by mail.kernel.org (Postfix) with ESMTP id 18B32217D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:55:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558436108;
+	bh=9MEN2KbBeRSyHZZ/tEW93WclsJlCnlFw4hYl5f3HiOU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qYsDu9euNz3L+4Kv6zT61W/IqWllI/HHmR4BFlsqf99kvw3ZNtt1NA2/gX6UQnprL
+	 YRyPFhm7kTeoeRrdcDVE1G56Vy42bcuIDaWfrVpDalJPKDc/R+zj1WoUyblV9NLO7f
+	 yfWMRwVgBNYE0WRQVAbA2Cp5aB+OLI+Y3PU5fzw4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727875AbfEUKzA (ORCPT
+        id S1727915AbfEUKzG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 06:55:00 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:52729 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726750AbfEUKy7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 06:54:59 -0400
-Received: by mail-wm1-f65.google.com with SMTP id y3so2490807wmm.2;
-        Tue, 21 May 2019 03:54:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=17nYfbdzzIwCOeEA+32Sv30sZvfqih6k6/KJfQXHU0U=;
-        b=ZeCYc5/F8knOo4+9a9x6Xq+QFpVOaFI3oIhMnprKcgXcpS0kD1HJciICKcvMlghVW0
-         XfCl+74pJ6lL6G113gPktUgcftO4/FlnnjbiPOLrTZDSKGg5HHEUWd+4Cb+9Cd+ADIt/
-         xpvfN1/LZjXz5OwL5kj7NUy58RxlnTo7kTgJPRKNy0E2Ue4hxsX9YDXcxe1kYVglKBEo
-         dmUC+Oeiw5Img+KeBRlGuX8erP29OpjFE7kWGMG89WJR2wRKoLjIbWEkNXiEY2sp8Pbh
-         CvguTnOhYmiwt65ikaarYkabr/g4bzFtFYHlcbCRamQ1gHzQv4pp3EEo4bznfCNvDJT0
-         kVrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=17nYfbdzzIwCOeEA+32Sv30sZvfqih6k6/KJfQXHU0U=;
-        b=tKzBRpkzrbkXkl/Yey/bX2Yn0JvxDqkukq02AWSxRcsu/ItuADtWyo4b1zWbEDmtIY
-         QJXAoAFl7wgX3FV1PxXt8z+VC2Z7tZTsiESjziCSyrpbBOkc/Cr0GuA6dhWLH4onikE4
-         8Iabov/MDeHPEFo/pCt1lIaNsioj77QQ8FFSHDhCJUm61LpXPiuWyp9ir/BdP58gjpx8
-         yrL70YoMrJOIGtB8oq1fOUyh9s+AhDMFe6WHfrqT9Jul1uyVpELnLHwJppHL1Qe2vSba
-         pTeM9g1AKUgDCCU9YYc/oURUPuXIArBBymNBhFJn3uDwvFQ+EYy61b7mlNAAcwwWHfhS
-         WPiQ==
-X-Gm-Message-State: APjAAAWFa0SgVJw1RUg9Rb/qv8p78rjFkWpbUizPe/G5cWBtPrRClrCQ
-        dQqxbbEqaIqXC10Fo2fOMaU=
-X-Google-Smtp-Source: APXvYqz60C1gN4ScjH6m6U5kFd88ETnN9gWQBtpWy+PHfqfM7Bq7SOcnQmw1+nRlZkREwZl5nQ9N7w==
-X-Received: by 2002:a1c:65c3:: with SMTP id z186mr2831904wmb.93.1558436096773;
-        Tue, 21 May 2019 03:54:56 -0700 (PDT)
-Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
-        by smtp.gmail.com with ESMTPSA id k8sm7245236wrp.74.2019.05.21.03.54.55
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 21 May 2019 03:54:56 -0700 (PDT)
-Date:   Tue, 21 May 2019 12:54:55 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, jonathanh@nvidia.com, kishon@ti.com,
-        catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com,
-        gustavo.pimentel@synopsys.com, mperttunen@nvidia.com,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, kthota@nvidia.com,
-        mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V7 12/15] arm64: tegra: Enable PCIe slots in P2972-0000
- board
-Message-ID: <20190521105455.GK29166@ulmo>
-References: <20190517123846.3708-1-vidyas@nvidia.com>
- <20190517123846.3708-13-vidyas@nvidia.com>
+        Tue, 21 May 2019 06:55:06 -0400
+Received: from mx2.suse.de ([195.135.220.15]:42094 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726750AbfEUKzG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 06:55:06 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 2FCA9ACBC;
+        Tue, 21 May 2019 10:55:04 +0000 (UTC)
+Date:   Tue, 21 May 2019 12:55:03 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Minchan Kim <minchan@kernel.org>
+Cc:     Oleksandr Natalenko <oleksandr@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tim Murray <timmurray@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>
+Subject: Re: [RFC 4/7] mm: factor out madvise's core functionality
+Message-ID: <20190521105503.GQ32329@dhcp22.suse.cz>
+References: <20190520035254.57579-1-minchan@kernel.org>
+ <20190520035254.57579-5-minchan@kernel.org>
+ <20190520142633.x5d27gk454qruc4o@butterfly.localdomain>
+ <20190521012649.GE10039@google.com>
+ <20190521063628.x2npirvs75jxjilx@butterfly.localdomain>
+ <20190521104949.GE219653@google.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ibq+fG+Ci5ONsaof"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190517123846.3708-13-vidyas@nvidia.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190521104949.GE219653@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue 21-05-19 19:49:49, Minchan Kim wrote:
+> On Tue, May 21, 2019 at 08:36:28AM +0200, Oleksandr Natalenko wrote:
+> > Hi.
+> > 
+> > On Tue, May 21, 2019 at 10:26:49AM +0900, Minchan Kim wrote:
+> > > On Mon, May 20, 2019 at 04:26:33PM +0200, Oleksandr Natalenko wrote:
+> > > > Hi.
+> > > > 
+> > > > On Mon, May 20, 2019 at 12:52:51PM +0900, Minchan Kim wrote:
+> > > > > This patch factor out madvise's core functionality so that upcoming
+> > > > > patch can reuse it without duplication.
+> > > > > 
+> > > > > It shouldn't change any behavior.
+> > > > > 
+> > > > > Signed-off-by: Minchan Kim <minchan@kernel.org>
+> > > > > ---
+> > > > >  mm/madvise.c | 168 +++++++++++++++++++++++++++------------------------
+> > > > >  1 file changed, 89 insertions(+), 79 deletions(-)
+> > > > > 
+> > > > > diff --git a/mm/madvise.c b/mm/madvise.c
+> > > > > index 9a6698b56845..119e82e1f065 100644
+> > > > > --- a/mm/madvise.c
+> > > > > +++ b/mm/madvise.c
+> > > > > @@ -742,7 +742,8 @@ static long madvise_dontneed_single_vma(struct vm_area_struct *vma,
+> > > > >  	return 0;
+> > > > >  }
+> > > > >  
+> > > > > -static long madvise_dontneed_free(struct vm_area_struct *vma,
+> > > > > +static long madvise_dontneed_free(struct task_struct *tsk,
+> > > > > +				  struct vm_area_struct *vma,
+> > > > >  				  struct vm_area_struct **prev,
+> > > > >  				  unsigned long start, unsigned long end,
+> > > > >  				  int behavior)
+> > > > > @@ -754,8 +755,8 @@ static long madvise_dontneed_free(struct vm_area_struct *vma,
+> > > > >  	if (!userfaultfd_remove(vma, start, end)) {
+> > > > >  		*prev = NULL; /* mmap_sem has been dropped, prev is stale */
+> > > > >  
+> > > > > -		down_read(&current->mm->mmap_sem);
+> > > > > -		vma = find_vma(current->mm, start);
+> > > > > +		down_read(&tsk->mm->mmap_sem);
+> > > > > +		vma = find_vma(tsk->mm, start);
+> > > > >  		if (!vma)
+> > > > >  			return -ENOMEM;
+> > > > >  		if (start < vma->vm_start) {
+> > > > > @@ -802,7 +803,8 @@ static long madvise_dontneed_free(struct vm_area_struct *vma,
+> > > > >   * Application wants to free up the pages and associated backing store.
+> > > > >   * This is effectively punching a hole into the middle of a file.
+> > > > >   */
+> > > > > -static long madvise_remove(struct vm_area_struct *vma,
+> > > > > +static long madvise_remove(struct task_struct *tsk,
+> > > > > +				struct vm_area_struct *vma,
+> > > > >  				struct vm_area_struct **prev,
+> > > > >  				unsigned long start, unsigned long end)
+> > > > >  {
+> > > > > @@ -836,13 +838,13 @@ static long madvise_remove(struct vm_area_struct *vma,
+> > > > >  	get_file(f);
+> > > > >  	if (userfaultfd_remove(vma, start, end)) {
+> > > > >  		/* mmap_sem was not released by userfaultfd_remove() */
+> > > > > -		up_read(&current->mm->mmap_sem);
+> > > > > +		up_read(&tsk->mm->mmap_sem);
+> > > > >  	}
+> > > > >  	error = vfs_fallocate(f,
+> > > > >  				FALLOC_FL_PUNCH_HOLE | FALLOC_FL_KEEP_SIZE,
+> > > > >  				offset, end - start);
+> > > > >  	fput(f);
+> > > > > -	down_read(&current->mm->mmap_sem);
+> > > > > +	down_read(&tsk->mm->mmap_sem);
+> > > > >  	return error;
+> > > > >  }
+> > > > >  
+> > > > > @@ -916,12 +918,13 @@ static int madvise_inject_error(int behavior,
+> > > > >  #endif
+> > > > 
+> > > > What about madvise_inject_error() and get_user_pages_fast() in it
+> > > > please?
+> > > 
+> > > Good point. Maybe, there more places where assume context is "current" so
+> > > I'm thinking to limit hints we could allow from external process.
+> > > It would be better for maintainance point of view in that we could know
+> > > the workload/usecases when someone ask new advises from external process
+> > > without making every hints works both contexts.
+> > 
+> > Well, for madvise_inject_error() we still have a remote variant of
+> > get_user_pages(), and that should work, no?
+> 
+> Regardless of madvise_inject_error, it seems to be risky to expose all
+> of hints for external process, I think. For example, MADV_DONTNEED with
+> race, it's critical for stability. So, until we could get the way to
+> prevent the race, I want to restrict hints.
 
---ibq+fG+Ci5ONsaof
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Well, if you allow the full ptrace access then you can shoot the target
+whatever you like.
 
-On Fri, May 17, 2019 at 06:08:43PM +0530, Vidya Sagar wrote:
-> Enable PCIe controller nodes to enable respective PCIe slots on
-> P2972-0000 board. Following is the ownership of slots by different
-> PCIe controllers.
-> Controller-0 : M.2 Key-M slot
-> Controller-1 : On-board Marvell eSATA controller
-> Controller-3 : M.2 Key-E slot
->=20
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> ---
-> Changes since [v6]:
-> * None
->=20
-> Changes since [v5]:
-> * Arranged PCIe nodes in the order of their addresses
->=20
-> Changes since [v4]:
-> * None
->=20
-> Changes since [v3]:
-> * None
->=20
-> Changes since [v2]:
-> * Changed P2U label names to reflect new format that includes 'hsio'/'nvh=
-s'
->   strings to reflect UPHY brick they belong to
->=20
-> Changes since [v1]:
-> * Dropped 'pcie-' from phy-names property strings
->=20
->  .../arm64/boot/dts/nvidia/tegra194-p2888.dtsi |  2 +-
->  .../boot/dts/nvidia/tegra194-p2972-0000.dts   | 41 +++++++++++++++++++
->  2 files changed, 42 insertions(+), 1 deletion(-)
->=20
-> diff --git a/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi b/arch/arm64/=
-boot/dts/nvidia/tegra194-p2888.dtsi
-> index 0fd5bd29fbf9..30a83d4c5b69 100644
-> --- a/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
-> +++ b/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
-> @@ -191,7 +191,7 @@
->  						regulator-boot-on;
->  					};
-> =20
-> -					sd3 {
-> +					vdd_1v8ao: sd3 {
->  						regulator-name =3D "VDD_1V8AO";
->  						regulator-min-microvolt =3D <1800000>;
->  						regulator-max-microvolt =3D <1800000>;
-> diff --git a/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts b/arch/ar=
-m64/boot/dts/nvidia/tegra194-p2972-0000.dts
-> index 73801b48d1d8..a22704e76a84 100644
-> --- a/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
-> +++ b/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
-> @@ -167,4 +167,45 @@
->  			};
->  		};
->  	};
-> +
-> +	pcie@14100000 {
-> +		status =3D "okay";
-> +
-> +		vddio-pex-ctl-supply =3D <&vdd_1v8ao>;
-> +
-> +		phys =3D <&p2u_hsio_0>;
-> +		phy-names =3D "p2u-0";
-> +	};
-> +
-> +	pcie@14140000 {
-> +		status =3D "okay";
-> +
-> +		vddio-pex-ctl-supply =3D <&vdd_1v8ao>;
-> +
-> +		phys =3D <&p2u_hsio_7>;
-> +		phy-names =3D "p2u-0";
-> +	};
-> +
-> +	pcie@14180000 {
-> +		status =3D "okay";
-> +
-> +		vddio-pex-ctl-supply =3D <&vdd_1v8ao>;
-> +
-> +		phys =3D <&p2u_hsio_2>, <&p2u_hsio_3>, <&p2u_hsio_4>,
-> +		       <&p2u_hsio_5>;
-> +		phy-names =3D "p2u-0", "p2u-1", "p2u-2", "p2u-3";
-> +	};
-> +
-> +	pcie@141a0000 {
-> +		status =3D "disabled";
-> +
-> +		vddio-pex-ctl-supply =3D <&vdd_1v8ao>;
-> +
-> +		phys =3D <&p2u_nvhs_0>, <&p2u_nvhs_1>, <&p2u_nvhs_2>,
-> +		       <&p2u_nvhs_3>, <&p2u_nvhs_4>, <&p2u_nvhs_5>,
-> +		       <&p2u_nvhs_6>, <&p2u_nvhs_7>;
-> +
-> +		phy-names =3D "p2u-0", "p2u-1", "p2u-2", "p2u-3", "p2u-4",
-> +			    "p2u-5", "p2u-6", "p2u-7";
-> +	};
+> > Regarding restricting the hints, I'm definitely interested in having
+> > remote MADV_MERGEABLE/MADV_UNMERGEABLE. But, OTOH, doing it via remote
+> > madvise() introduces another issue with traversing remote VMAs reliably.
+> 
+> How is it signifiact when the race happens? It could waste CPU cycle
+> and make unncessary break of that merged pages but expect it should be
+> rare so such non-desruptive hint could be exposed via process_madvise, I think.
+> 
+> If the hint is critical for the race, yes, as Michal suggested, we need a way
+> to close it and I guess non-cooperative userfaultfd with synchronous support
+> would help private anonymous vma.
 
-This last controller is disabled by default. Why do we need to include
-all of this if it's not going to be used anyway?
+If we have a per vma fd approach then we can revalidate atomically and
+make sure the operation is performed on the range that was really
+requested. I do not think we want to provide a more specific guarantees.
+Monitor process has to be careful same way ptrace doesn't want to harm
+the target.
 
-Thierry
-
---ibq+fG+Ci5ONsaof
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlzj2P8ACgkQ3SOs138+
-s6EDeA/9EVyT1aT46kUCfatlTu/Dz99vr8HzGHDju/DqmmIWFuXT6U/7e/iziS8m
-LcoCBu23buFnDYZe9UBTKkKtTUSOipOpE+TW0MR/h3Rk0E7sB29RljYCoooRJbrZ
-cRBl1HbLt4NueaYck621spKCghRw84gPRDOtCEIP1ET/kpkDCRYBtuoMhOufrqgQ
-8Zddc+5YzhNC7dYdV+DLi6WvKjmi12Tz3HNFgwxIXSgfEieCnzwms63qZLULA2tf
-dvwCNKS9w8x6EsOmu8iXxfYv9gr823Yge1pCJTKW+LxTaACRSzKMiGAotDMqCxWG
-VIb39bG+wsiSLb8PjKT3X34wW6VPtsAWCCxeXJ8EsZuT3YGVskswBQ/tLyDvpooJ
-ni/zobjMTFqJl9ePCgEauo+Zhdf665JwZO6vkRql7+ZFquFBHVwY8IOag0qM/kx5
-pv4Q8Ov3GQr/QYPfn+CtvYJ1Iq61NJBhNC6zQwxw8DonLLt1OL64gGpF32x2155I
-Toi6a3SAnJVYe1rJirldNME8Xb3HbyBhItj5GVMkf+jMxrsxs3GL9nzNfLi4gmDT
-EXleRiiWixks2F/DATusE28tPhE9j+Fo9ZUXyLZ9rJiCuvqcZKGgtnboipXrn0+o
-bRdy6xLv9PhLEkwYzxqnn9odSa3LHH40b39t+xOgdr9Yw8QZ0ZM=
-=xv9D
------END PGP SIGNATURE-----
-
---ibq+fG+Ci5ONsaof--
+-- 
+Michal Hocko
+SUSE Labs
