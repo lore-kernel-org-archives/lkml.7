@@ -2,100 +2,246 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7B3DC04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:50:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DA96C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:51:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4CDD2173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:50:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A5BE2173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:51:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="pAt/gkOM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u1jKMVRb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729094AbfEUQuJ (ORCPT
+        id S1728905AbfEUQvr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 12:50:09 -0400
-Received: from mail-lj1-f182.google.com ([209.85.208.182]:33308 "EHLO
-        mail-lj1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728858AbfEUQuJ (ORCPT
+        Tue, 21 May 2019 12:51:47 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:35503 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727817AbfEUQvq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 12:50:09 -0400
-Received: by mail-lj1-f182.google.com with SMTP id w1so16554518ljw.0
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 09:50:08 -0700 (PDT)
+        Tue, 21 May 2019 12:51:46 -0400
+Received: by mail-it1-f196.google.com with SMTP id u186so5806931ith.0;
+        Tue, 21 May 2019 09:51:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=i0j6kDnEIeaPX+1KUXPs7si1+pehMqLyQylQVBwbYdQ=;
-        b=pAt/gkOM6HSmPpnHOr2potyfhHapA+fv7YdZ8Mwej7N9YXmb49ctGf7PnHuBSE8a/T
-         iWCJWU7dKfqCPe8fl+PdKkxSpqMHncJT3dckU3T/Ex3cot50U3lYxHEG0sm4hI55PVh1
-         t2ygIqje1rZ7OYpjtPqRDN4Ldgs2G/0nW8a6cHWs0nM7A8S42cEelG7/nyvMR2ldDibH
-         MjQ6kV3sjTmqDrNYOfXSpYBwp7xTGFCz3g705R3mqOSxrtGrWg4CT4X7jGzLrVOru6wD
-         dIiXUHuyl3IQpTtKHF7Wu+ywRlu9Ncce/wJfBBo674DWSRA4I4R37a0pk9azdUTS21NN
-         Y4Bg==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FyOEggHwGzPI5qEnDbJv+1Xb8QlwlUcmzeEqPbicyUA=;
+        b=u1jKMVRbtJBmfof4As6O7aK/n5DJHoN1RkBbgLPJ12GTHexL3FSA6GqhEQOEr/S+Ei
+         f8WYNH3c/dVflKHHGT7VFCxbZ7oncpC1cLiaNcdxq3ye9xdkAzRa6dGP++Uu4yISItUl
+         yugJX952CTJiJilOjOTgflgIZ6JX/9kgPVa0VhXBFXonGGAPd8W3PDbw62nqC9kgEE6o
+         ky+KOzsretWDUqLJGFjLO22mYHbuct+WMXRb+cTY60GEA9X74bzAV2KO2TrHwtSH2Jdp
+         joseLLL1BzBoqal0FoS8rs5d0D5EaOLWZtvwr/yoQAL3SRXpquKcT5qos4aVz5xaYEKA
+         oLpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=i0j6kDnEIeaPX+1KUXPs7si1+pehMqLyQylQVBwbYdQ=;
-        b=CRrxsiCVuYxyyvLDyntGxIxjVG32KeDK0Xup9OqxCX4lr/MiuAPE/4QHyYL0oiy4e4
-         JZZeXMP1iki4Y7gDRE0IfkEWwyokN+icaTagk8Ubj5IVCz1PfRSuQMisbZ7eSmyrYMwr
-         TMzsquM2WHLpR/MhK8+VxnqHFeMsMPMc3U0rEmxT/hVAUhgqJft8OarYz8v4tE3uQ6uV
-         vmTCHYkpUDDGldptV8+ZXPSKb5P6vgUQEzJNFcq7SrbuaORF5WPB2hmwYUWDs43PrgiY
-         4phgSf/PX2xJRURBeXRp8QZtvF+qwL5kCLqNn9jbmp9vAcjFqZkrdEhlw3UgdVbtwaEz
-         Hz6Q==
-X-Gm-Message-State: APjAAAXncfEoElnPDJD2QxetSnqNoXGhHdSy6GL2QYanEaytHL6+SRZ5
-        /voxH3r7rhkTAm+a44071+xrxInXykByATuhnHkI
-X-Google-Smtp-Source: APXvYqxWgk6A9MlHhUyl+gJsVKB8GP0WXya0zsymp9swKk8LdqPHx9o76G382EqZguQYbQ8YOjZjPhLS1e3m5Ru/d44=
-X-Received: by 2002:a2e:380c:: with SMTP id f12mr5075618lja.53.1558457406870;
- Tue, 21 May 2019 09:50:06 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FyOEggHwGzPI5qEnDbJv+1Xb8QlwlUcmzeEqPbicyUA=;
+        b=KDiZradTmyyDHD8ir5lBJMsAlBlgnmxwKsGOdN62CYMRGS8IvCAsJyKVbFE/b6FODQ
+         sxpUBLcdjRPROWVNJ/WGhFvsjisidUCWcGBbZD9XBZaICzDZIlZR37p1WU3y5A9K8EzV
+         C1EhnR1yR1CUqhM4iXIwx33uqSLFpW+T43EzEy62dIdlvpN4Ex6KSLXpv4tZnB6w89bJ
+         IyiOmeB2EgX26NA/sCJK9tXWiUNFWckP8WbDF4lSnXBt/fOSX3j1+HRKk6+Ys052Erie
+         DQS4mv2j5KfDtiwZhWHoxNOT7Zv2WeG34LIfX3vgTPFUQmqm4yiaTAjZwK9Vn8yhl19n
+         hSaQ==
+X-Gm-Message-State: APjAAAURkyGKKy/Cd4nyJAi5JN/3wE+DpK7CGq79k5bnZOWGSC2KVsys
+        3jdUiQhNIXpYT07y5AQLUx666NB5Owhz0gL0pu/gnTeeQeA=
+X-Google-Smtp-Source: APXvYqxamx5g6o4eRosmxSKjsEYvCnrZmu9IaKMISy6htP3zIasonmkK6/+9dhv2dSFq3k0NmtaTGn4dSxPzq1zIlcI=
+X-Received: by 2002:a24:d145:: with SMTP id w66mr4482319itg.71.1558457505431;
+ Tue, 21 May 2019 09:51:45 -0700 (PDT)
 MIME-Version: 1.0
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Tue, 21 May 2019 12:49:55 -0400
-Message-ID: <CAHC9VhTvU7kQ7D8OwRPvc0tpjtXVK6FiiT07WuQyjtJ80TeQrQ@mail.gmail.com>
-Subject: [GIT PULL] SELinux fixes for v5.2 (#1)
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     selinux@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+References: <20190513165547.alkkgcsdelaznw6v@csclub.uwaterloo.ca>
+ <CAKgT0Uf_nqZtCnHmC=-oDFz-3PuSM6=30BvJSDiAgzK062OY6w@mail.gmail.com>
+ <20190514163443.glfjva3ofqcy7lbg@csclub.uwaterloo.ca> <CAKgT0UdPDyCBsShQVwwE5C8fBKkMcfS6_S5m3T7JP-So9fzVgA@mail.gmail.com>
+ <20190516183407.qswotwyjwtjqfdqm@csclub.uwaterloo.ca> <20190516183705.e4zflbli7oujlbek@csclub.uwaterloo.ca>
+ <CAKgT0UfSa-dM2+7xntK9tB7Zw5N8nDd3U1n4OSK0gbWbkNSKJQ@mail.gmail.com>
+ <CAKgT0Ucd0s_0F5_nwqXknRngwROyuecUt+4bYzWvp1-2cNSg7g@mail.gmail.com>
+ <20190517172317.amopafirjfizlgej@csclub.uwaterloo.ca> <CAKgT0UdM28pSTCsaT=TWqmQwCO44NswS0PqFLAzgs9pmn41VeQ@mail.gmail.com>
+ <20190521151537.xga4aiq3gjtiif4j@csclub.uwaterloo.ca>
+In-Reply-To: <20190521151537.xga4aiq3gjtiif4j@csclub.uwaterloo.ca>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Tue, 21 May 2019 09:51:33 -0700
+Message-ID: <CAKgT0UfpZ-ve3Hx26gDkb+YTDHvN3=MJ7NZd2NE7ewF5g=kHHw@mail.gmail.com>
+Subject: Re: [Intel-wired-lan] i40e X722 RSS problem with NAT-Traversal IPsec packets
+To:     Lennart Sorensen <lsorense@csclub.uwaterloo.ca>
+Cc:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>,
+        intel-wired-lan <intel-wired-lan@lists.osuosl.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Tue, May 21, 2019 at 8:15 AM Lennart Sorensen
+<lsorense@csclub.uwaterloo.ca> wrote:
+>
+> On Fri, May 17, 2019 at 03:20:02PM -0700, Alexander Duyck wrote:
+> > I was hoping it would work too. It seemed like it should have been the
+> > answer since it definitely didn't seem right. Now it has me wondering
+> > about some of the other code in the driver.
+> >
+> > By any chance have you run anything like DPDK on any of the X722
+> > interfaces on this system recently? I ask because it occurs to me that
+> > if you had and it loaded something like a custom parsing profile it
+> > could cause issues similar to this.
+>
+> I have never used DPDK on anything.  I was hoping never to do so. :)
+>
+> This system has so far booted Debian (with a 4.19 kernel) and our own OS
+> (which has a 4.9 kernel).
+>
+> > A debugging step you might try would be to revert back to my earlier
+> > patch that only displayed the input mask instead of changing it. Once
+> > you have done that you could look at doing a full power cycle on the
+> > system by either physically disconnecting the power, or using the
+> > power switch on the power supply itself if one is available. It is
+> > necessary to disconnect the motherboard/NIC from power in order to
+> > fully clear the global state stored in the device as it is retained
+> > when the system is in standby.
+> >
+> > What I want to verify is if the input mask that we have ran into is
+> > the natural power-on input mask of if that is something that was
+> > overridden by something else. The mask change I made should be reset
+> > if the system loses power, and then it will either default back to the
+> > value with the 6's if that is it's natural state, or it will match
+> > what I had if it was not.
+> >
+> > Other than that I really can't think up too much else. I suppose there
+> > is the possibility of the NVM either setting up a DCB setting or
+> > HREGION register causing an override that is limiting the queues to 1.
+> > However, the likelihood of that should be really low.
+>
+> Here is the register dump after a full power off:
+>
+> 40e: Intel(R) Ethernet Connection XL710 Network Driver - version 2.1.7-k
+> i40e: Copyright (c) 2013 - 2014 Intel Corporation.
+> i40e 0000:3d:00.0: fw 3.10.52896 api 1.6 nvm 4.00 0x80001577 1.1767.0
+> i40e 0000:3d:00.0: The driver for the device detected a newer version of the NVM image than expected. Please install the most recent version of the network driver.
+> i40e 0000:3d:00.0: MAC address: a4:bf:01:4e:0c:87
+> i40e 0000:3d:00.0: flow_type: 63 input_mask:0x0000000000004000
+> i40e 0000:3d:00.0: flow_type: 46 input_mask:0x0007fff800000000
+> i40e 0000:3d:00.0: flow_type: 45 input_mask:0x0007fff800000000
+> i40e 0000:3d:00.0: flow_type: 44 input_mask:0x0007ffff80000000
+> i40e 0000:3d:00.0: flow_type: 43 input_mask:0x0007fffe00000000
+> i40e 0000:3d:00.0: flow_type: 42 input_mask:0x0007fffe00000000
+> i40e 0000:3d:00.0: flow_type: 41 input_mask:0x0007fffe00000000
+> i40e 0000:3d:00.0: flow_type: 40 input_mask:0x0007fffe00000000
+> i40e 0000:3d:00.0: flow_type: 39 input_mask:0x0007fffe00000000
+> i40e 0000:3d:00.0: flow_type: 36 input_mask:0x0006060000000000
+> i40e 0000:3d:00.0: flow_type: 35 input_mask:0x0006060000000000
+> i40e 0000:3d:00.0: flow_type: 34 input_mask:0x0006060780000000
+> i40e 0000:3d:00.0: flow_type: 33 input_mask:0x0006060600000000
+> i40e 0000:3d:00.0: flow_type: 32 input_mask:0x0006060600000000
+> i40e 0000:3d:00.0: flow_type: 31 input_mask:0x0006060600000000
+> i40e 0000:3d:00.0: flow_type: 30 input_mask:0x0006060600000000
+> i40e 0000:3d:00.0: flow_type: 29 input_mask:0x0006060600000000
+> i40e 0000:3d:00.0: Features: PF-id[0] VSIs: 34 QP: 12 TXQ: 13 RSS VxLAN Geneve VEPA
+> i40e 0000:3d:00.1: fw 3.10.52896 api 1.6 nvm 4.00 0x80001577 1.1767.0
+> i40e 0000:3d:00.1: The driver for the device detected a newer version of the NVM image than expected. Please install the most recent version of the network driver.
+> i40e 0000:3d:00.1: MAC address: a4:bf:01:4e:0c:88
+> i40e 0000:3d:00.1: flow_type: 63 input_mask:0x0000000000004000
+> i40e 0000:3d:00.1: flow_type: 46 input_mask:0x0007fff800000000
+> i40e 0000:3d:00.1: flow_type: 45 input_mask:0x0007fff800000000
+> i40e 0000:3d:00.1: flow_type: 44 input_mask:0x0007ffff80000000
+> i40e 0000:3d:00.1: flow_type: 43 input_mask:0x0007fffe00000000
+> i40e 0000:3d:00.1: flow_type: 42 input_mask:0x0007fffe00000000
+> i40e 0000:3d:00.1: flow_type: 41 input_mask:0x0007fffe00000000
+> i40e 0000:3d:00.1: flow_type: 40 input_mask:0x0007fffe00000000
+> i40e 0000:3d:00.1: flow_type: 39 input_mask:0x0007fffe00000000
+> i40e 0000:3d:00.1: flow_type: 36 input_mask:0x0006060000000000
+> i40e 0000:3d:00.1: flow_type: 35 input_mask:0x0006060000000000
+> i40e 0000:3d:00.1: flow_type: 34 input_mask:0x0006060780000000
+> i40e 0000:3d:00.1: flow_type: 33 input_mask:0x0006060600000000
+> i40e 0000:3d:00.1: flow_type: 32 input_mask:0x0006060600000000
+> i40e 0000:3d:00.1: flow_type: 31 input_mask:0x0006060600000000
+> i40e 0000:3d:00.1: flow_type: 30 input_mask:0x0006060600000000
+> i40e 0000:3d:00.1: flow_type: 29 input_mask:0x0006060600000000
+> i40e 0000:3d:00.1: Features: PF-id[1] VSIs: 34 QP: 12 TXQ: 13 RSS VxLAN Geneve VEPA
+> i40e 0000:3d:00.1 eth2: NIC Link is Up, 1000 Mbps Full Duplex, Flow Control: None
+>
+> Pretty sure that is identical to before.
+>
+> If I dump the registers after doing the update I see this (just did a
+> reboot this time, not a power cycle):
+>
+> i40e: Intel(R) Ethernet Connection XL710 Network Driver - version 2.1.7-k
+> i40e: Copyright (c) 2013 - 2014 Intel Corporation.
+> i40e 0000:3d:00.0: fw 3.10.52896 api 1.6 nvm 4.00 0x80001577 1.1767.0
+> i40e 0000:3d:00.0: The driver for the device detected a newer version of the NVM image than expected. Please install the most recent version of the network driver.
+> i40e 0000:3d:00.0: MAC address: a4:bf:01:4e:0c:87
+> i40e 0000:3d:00.0: flow_type: 63 input_mask:0x0000000000004000
+> i40e 0000:3d:00.0: flow_type: 46 input_mask:0x0007fff800000000
+> i40e 0000:3d:00.0: flow_type: 45 input_mask:0x0007fff800000000
+> i40e 0000:3d:00.0: flow_type: 44 input_mask:0x0007ffff80000000
+> i40e 0000:3d:00.0: flow_type: 43 input_mask:0x0007fffe00000000
+> i40e 0000:3d:00.0: flow_type: 42 input_mask:0x0007fffe00000000
+> i40e 0000:3d:00.0: flow_type: 41 input_mask:0x0007fffe00000000
+> i40e 0000:3d:00.0: flow_type: 40 input_mask:0x0007fffe00000000
+> i40e 0000:3d:00.0: flow_type: 39 input_mask:0x0007fffe00000000
+> i40e 0000:3d:00.0: flow_type: 36 input_mask:0x0006060000000000
+> i40e 0000:3d:00.0: flow_type: 35 input_mask:0x0006060000000000
+> i40e 0000:3d:00.0: flow_type: 34 input_mask:0x0006060780000000
+> i40e 0000:3d:00.0: flow_type: 33 input_mask:0x0006060600000000
+> i40e 0000:3d:00.0: flow_type: 32 input_mask:0x0006060600000000
+> i40e 0000:3d:00.0: flow_type: 31 input_mask:0x0006060600000000
+> i40e 0000:3d:00.0: flow_type: 30 input_mask:0x0006060600000000
+> i40e 0000:3d:00.0: flow_type: 29 input_mask:0x0006060600000000
+> i40e 0000:3d:00.0: flow type: 36 update input mask from:0x0006060000000000, to:0x0001801800000000
+> i40e 0000:3d:00.0: flow type: 35 update input mask from:0x0006060000000000, to:0x0001801800000000
+> i40e 0000:3d:00.0: flow type: 34 update input mask from:0x0006060780000000, to:0x0001801f80000000
+> i40e 0000:3d:00.0: flow type: 33 update input mask from:0x0006060600000000, to:0x0001801e00000000
+> i40e 0000:3d:00.0: flow type: 32 update input mask from:0x0006060600000000, to:0x0001801e00000000
+> i40e 0000:3d:00.0: flow type: 31 update input mask from:0x0006060600000000, to:0x0001801e00000000
+> i40e 0000:3d:00.0: flow type: 30 update input mask from:0x0006060600000000, to:0x0001801e00000000
+> i40e 0000:3d:00.0: flow type: 29 update input mask from:0x0006060600000000, to:0x0001801e00000000
+> i40e 0000:3d:00.0: flow_type after update: 63 input_mask:0x0000000000004000
+> i40e 0000:3d:00.0: flow_type after update: 46 input_mask:0x0007fff800000000
+> i40e 0000:3d:00.0: flow_type after update: 45 input_mask:0x0007fff800000000
+> i40e 0000:3d:00.0: flow_type after update: 44 input_mask:0x0007ffff80000000
+> i40e 0000:3d:00.0: flow_type after update: 43 input_mask:0x0007fffe00000000
+> i40e 0000:3d:00.0: flow_type after update: 42 input_mask:0x0007fffe00000000
+> i40e 0000:3d:00.0: flow_type after update: 41 input_mask:0x0007fffe00000000
+> i40e 0000:3d:00.0: flow_type after update: 40 input_mask:0x0007fffe00000000
+> i40e 0000:3d:00.0: flow_type after update: 39 input_mask:0x0007fffe00000000
+> i40e 0000:3d:00.0: flow_type after update: 36 input_mask:0x0001801800000000
+> i40e 0000:3d:00.0: flow_type after update: 35 input_mask:0x0001801800000000
+> i40e 0000:3d:00.0: flow_type after update: 34 input_mask:0x0001801f80000000
+> i40e 0000:3d:00.0: flow_type after update: 33 input_mask:0x0001801e00000000
+> i40e 0000:3d:00.0: flow_type after update: 32 input_mask:0x0001801e00000000
+> i40e 0000:3d:00.0: flow_type after update: 31 input_mask:0x0001801e00000000
+> i40e 0000:3d:00.0: flow_type after update: 30 input_mask:0x0001801e00000000
+> i40e 0000:3d:00.0: flow_type after update: 29 input_mask:0x0001801e00000000
+> i40e 0000:3d:00.0: Features: PF-id[0] VSIs: 34 QP: 12 TXQ: 13 RSS VxLAN Geneve VEPA
+>
+> So at least it appears the update did apply.
+>
+> --
+> Len Sorensen
 
-One small SELinux patch for v5.2 to fix a problem when disconnecting a
-SCTP socket with connect(AF_UNSPEC).  Please merge this fix for v5.2.
+I think we need to narrow this down a bit more. Let's try forcing the
+lookup table all to one value and see if traffic is still going to
+queue 0.
 
-Thanks,
--Paul
---
-The following changes since commit 35a196bef449b5824033865b963ed9a43fb8c730:
+Specifically what we need to is run the following command to try and
+force all RSS traffic to queue 8, you can verify the result with
+"ethtool -x":
+ethtool -X <iface> weight 0 0 0 0 0 0 0 0 1
 
- proc: prevent changes to overridden credentials (2019-04-29 09:51:21 -0400)
+If that works and the IPSec traffic goes to queue 8 then we are likely
+looking at some sort of input issue, either in the parsing or the
+population of things like the input mask that we can then debug
+further.
 
-are available in the Git repository at:
+If traffic still goes to queue 0 then that tells us the output of the
+RSS hash and lookup table are being ignored, this would imply either
+some other filter is rerouting the traffic or is directing us to limit
+the queue index to 0 bits.
 
- git://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/selinux.git
-   tags/selinux-pr-20190521
+Thanks.
 
-for you to fetch changes up to 05174c95b83f8aca0c47b87115abb7a6387aafa5:
-
- selinux: do not report error on connect(AF_UNSPEC)
-   (2019-05-20 21:46:02 -0400)
-
-----------------------------------------------------------------
-selinux/stable-5.2 PR 20190521
-
-----------------------------------------------------------------
-Paolo Abeni (1):
-     selinux: do not report error on connect(AF_UNSPEC)
-
-security/selinux/hooks.c | 10 ++++++++--
-1 file changed, 8 insertions(+), 2 deletions(-)
-
--- 
-paul moore
-www.paul-moore.com
+- Alex
