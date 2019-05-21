@@ -2,142 +2,135 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B514FC04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 12:27:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36247C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 12:30:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9206A2173C
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 12:27:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 040D12173C
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 12:30:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oEG5kSSv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728040AbfEUM1f (ORCPT
+        id S1727903AbfEUMaI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 08:27:35 -0400
-Received: from lb3-smtp-cloud7.xs4all.net ([194.109.24.31]:59143 "EHLO
-        lb3-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726900AbfEUM1f (ORCPT
+        Tue, 21 May 2019 08:30:08 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:45710 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726344AbfEUMaH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 08:27:35 -0400
-Received: from [IPv6:2001:420:44c1:2579:1066:b00f:a986:b5ce] ([IPv6:2001:420:44c1:2579:1066:b00f:a986:b5ce])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id T3rbh21ur3qlsT3rfhtxFC; Tue, 21 May 2019 14:27:32 +0200
-Subject: Re: [PATCH 10/10] venus: dec: make decoder compliant with stateful
- codec API
-To:     Tomasz Figa <tfiga@chromium.org>,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Cc:     Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Vikash Garodia <vgarodia@codeaurora.org>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Malathi Gottam <mgottam@codeaurora.org>
-References: <20190117162008.25217-1-stanimir.varbanov@linaro.org>
- <20190117162008.25217-11-stanimir.varbanov@linaro.org>
- <60b3efff-31c1-bc04-8af9-deebb8bc013a@xs4all.nl>
- <fe51ae1e-6d2e-36bd-485a-d85520ad2386@linaro.org>
- <CAAFQd5Co3G1J4+HOcjtCb7p3rhLcm+1E=mPr2d=AtdOSuF_eKg@mail.gmail.com>
- <c56930e0-be6f-2ade-fcea-8ee0ff6247ec@linaro.org>
- <CAAFQd5CNGsnqjpLsWSTf=8r+hSfyOgD8SU-tn5EbHCCuuSgH6A@mail.gmail.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <01b6683f-9378-e6f2-501f-e2213e6c690d@xs4all.nl>
-Date:   Tue, 21 May 2019 14:27:27 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Tue, 21 May 2019 08:30:07 -0400
+Received: by mail-pg1-f194.google.com with SMTP id i21so8511813pgi.12;
+        Tue, 21 May 2019 05:30:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=46JMP9UhSrdZDKfv14LYnvE7EhHvgz/jp/Vs7+Uw0m8=;
+        b=oEG5kSSvG9zbJ+3f/czMR7vDwCFNFp4Jnf+u/rK0GxnBoD7ewfa4HXrJHsRa2WCC9i
+         jMQoDT0AROlxlwDnoVoAADQJxc7/5ixxwahNsdHb45MV3F7rpG5o1jAsZPW1+ybnJvOA
+         PW4EdUn4m7XTRt9x9ApeX49b9mM5ixSdKDpREn6PVjyUpAf5ELhAIEr1s6TRYaXex47D
+         +qonYxeGepQ+BTwkT6KCEKG+QymiRozg5s/Og1zxrSBtNTvYVqPRmU4o4INfJmKCCKku
+         AONRcPTUbILvRZ5KZC6WQ+Y12xb+JI4j/UH7Pfe11pGOnkRzLcDqwfCmh7ggZDV6SOKQ
+         jNSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=46JMP9UhSrdZDKfv14LYnvE7EhHvgz/jp/Vs7+Uw0m8=;
+        b=K5V5T++o41D14TpA7Bd8ZJ0G6oTtGZtFtOI5lsOamycWiSWvj6ZFAbIuepR/xRdqqd
+         9IDgHtYUaGbjGiA0uW/OeKHFt57XpuEXr0WR2Y3J2QMPenmraHX3Mh7nJVJyXfrvAGcy
+         fY7zNKdjGmXPsfZfBYk9Yjj8G+xwc66hN6cTtMjXmw1plT+AZSNubdqYECjqvN6JVE4G
+         yYYGKMVas7AZVPOVOchCEDh6zWcCmODSTUu4ncvuIDepq3w9n6ygduYGWyn3pL8O5mbi
+         1oeATVj1SPh8HDWPJNtuuVyvy9M7LhF/xSjVjL/zdNSAHm5v/ji2uQfFGFtCsEHUrnrH
+         UCPw==
+X-Gm-Message-State: APjAAAUuYVwbtKpaNGVosbc7RuNRp0zPxYiu8REoV+qDiaXWYBMboNgv
+        nFRlTFukGn3taAVDOOqKnRk=
+X-Google-Smtp-Source: APXvYqyUwd5x0qltCvnSmFr4ssrTa7CS0wIB+ItsygM5QYhTS8zEzL3qMw0XkkahRASEJT2/o0D4qQ==
+X-Received: by 2002:a63:1854:: with SMTP id 20mr79450619pgy.366.1558441807157;
+        Tue, 21 May 2019 05:30:07 -0700 (PDT)
+Received: from masabert (150-66-66-201m5.mineo.jp. [150.66.66.201])
+        by smtp.gmail.com with ESMTPSA id t7sm25540820pfh.156.2019.05.21.05.30.06
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 21 May 2019 05:30:06 -0700 (PDT)
+Received: by masabert (Postfix, from userid 1000)
+        id 557972011A2; Tue, 21 May 2019 21:30:02 +0900 (JST)
+From:   Masanari Iida <standby24x7@gmail.com>
+To:     corbet@lwn.net, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, rostedt@goodmis.org,
+        mingo@redhat.com, rdunlap@infradead.org
+Cc:     Masanari Iida <standby24x7@gmail.com>
+Subject: [PATCH] [linux-next] docs: tracing: Fix typos in histogram.rst
+Date:   Tue, 21 May 2019 21:30:00 +0900
+Message-Id: <20190521123000.24544-1-standby24x7@gmail.com>
+X-Mailer: git-send-email 2.22.0.rc1
 MIME-Version: 1.0
-In-Reply-To: <CAAFQd5CNGsnqjpLsWSTf=8r+hSfyOgD8SU-tn5EbHCCuuSgH6A@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfP9bAukXy5w9F+0DSaJeryRUlQHgly/WAZNpSOm5vDrb5wQN6Tp+5l4syU+U0MtYFPNMhu99vp6ZC77Wmop+slCcF5GhXSjfhZxHmgSAhDp1qV2foHIw
- b+siH/56q9y/8iMro4xbAfxiUxpc0bH7MxH3cU+KcfuT5OxEFn+2kEgM1FzpKBoUbuoP91KC/MlMuhgmbR0sL/a8lxvx2hb5tRSJ86Tka7eaM5F1l/OPGonT
- rmXwRF/7jNaKWJAaSODHUuKMld3MUdu8o3D/43RE0eWGbal4srwMWph5Kbc0znzB62DkRscG0V1Z4Q4UBw7wCPhYCuJ2LFPMfasePRQOi9ISP6yYPMcfUMxu
- NIOs3wOXcxbvGSz6XsRLem45JZxt6KuLFzFj4XfUd8ocTRDLbRaEFaOyVNikLmbzEyKaXr0qumoxKLtQaeikQYHzCGVzOomp73kCtxdkwWTQHxAtov4bjuma
- XApR+XB++T5PBCkWf5j2Oia41FnSmqnuGfFs98W32MMA6gbXTu0tUcmOV0R4JTAky+3jyzY3bYpSVtmPu+jbdzVDg87U2ToKqEJDOktskx3CUzwJ2Ch/bcXC
- SSs=
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/21/19 11:09 AM, Tomasz Figa wrote:
-> Hi Stan,
-> 
-> On Mon, May 20, 2019 at 11:47 PM Stanimir Varbanov
-> <stanimir.varbanov@linaro.org> wrote:
->>
->> Hi Tomasz,
->>
->> On 4/24/19 3:39 PM, Tomasz Figa wrote:
->>> On Wed, Apr 24, 2019 at 9:15 PM Stanimir Varbanov
->>> <stanimir.varbanov@linaro.org> wrote:
->>>>
->>>> Hi Hans,
->>>>
->>>> On 2/15/19 3:44 PM, Hans Verkuil wrote:
->>>>> Hi Stanimir,
->>>>>
->>>>> I never paid much attention to this patch series since others were busy
->>>>> discussing it and I had a lot of other things on my plate, but then I heard
->>>>> that this patch made G_FMT blocking.
->>>>
->>>> OK, another option could be to block REQBUF(CAPTURE) until event from hw
->>>> is received that the stream is parsed and the resolution is correctly
->>>> set by application. Just to note that I'd think to this like a temporal
->>>> solution until gstreamer implements v4l events.
->>>>
->>>> Is that looks good to you?
->>>
->>> Hmm, I thought we concluded that gstreamer sets the width and height
->>> in OUTPUT queue before querying the CAPTURE queue and so making the
->>> driver calculate the CAPTURE format based on what's set on OUTPUT
->>> would work fine. Did I miss something?
->>
->> Nobody is miss something.
->>
->> First some background about how Venus implements stateful codec API.
->>
->> The Venus firmware can generate two events "sufficient" and
->> "insufficient" buffer requirements (this includes decoder output buffer
->> size and internal/scratch buffer sizes). Presently I always set minimum
->> possible decoder resolution no matter what the user said, and by that
->> way I'm sure that "insufficient" event will always be triggered by the
->> firmware (the other reason to take this path is because this is the
->> least-common-divider for all supported Venus hw/fw versions thus common
->> code in the driver). The reconfiguration (during codec Initialization
->> sequence) is made from STREAMON(CAPTURE) context. Now, to make that
->> re-configuration happen I need to wait for "insufficient" event from
->> firmware in order to know the real coded resolution.
->>
->> In the case of gstreamer where v4l2_events support is missing I have to
->> block (wait for firmware event) REQBUF(CAPTURE) (vb2::queue_setup) or
->> STREAMON(CAPTURE) (vb2::start_streaming).
->>
->> I tried to set the coded resolution to the firmware as-is it set by
->> gstreamer but then I cannot receive the "sufficient" event for VP8 and
->> VP9 codecs. So I return back to the solution with minimum resolution above.
->>
->> I'm open for suggestions.
-> 
-> I think you could still keep setting the minimum size and wait for the
-> "insufficient" event. At the same time, you could speculatively
-> advertise the expected "sufficient" size on the CAPTURE queue before
-> the hardware signals those. Even if you mispredict them, you'll get
-> the event, update the CAPTURE resolution and send the source change
-> event to the application, which would then give you the correct
-> buffers. Would that work for you?
+This patch fixes some spelling typos in histogram.rst
 
-As I understand it this still would require event support, which gstreamer
-doesn't have.
+Signed-off-by: Masanari Iida <standby24x7@gmail.com>
+---
+ Documentation/trace/histogram.rst | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-I think it is OK to have REQBUFS sleep in this case. However, I would only
-enable this behavior if the application didn't subscribe to the SOURCE_CHANGE
-event. That's easy enough to check in the driver. And that means that if the
-application is well written, then the driver will behave in a completely
-standard way that the compliance test can check.
+diff --git a/Documentation/trace/histogram.rst b/Documentation/trace/histogram.rst
+index fb621a1c2638..8408670d0328 100644
+--- a/Documentation/trace/histogram.rst
++++ b/Documentation/trace/histogram.rst
+@@ -1010,7 +1010,7 @@ Extended error information
+ 
+   For example, suppose we wanted to take a look at the relative
+   weights in terms of skb length for each callpath that leads to a
+-  netif_receieve_skb event when downloading a decent-sized file using
++  netif_receive_skb event when downloading a decent-sized file using
+   wget.
+ 
+   First we set up an initially paused stacktrace trigger on the
+@@ -1843,7 +1843,7 @@ practice, not every handler.action combination is currently supported;
+ if a given handler.action combination isn't supported, the hist
+ trigger will fail with -EINVAL;
+ 
+-The default 'handler.action' if none is explicity specified is as it
++The default 'handler.action' if none is explicitly specified is as it
+ always has been, to simply update the set of values associated with an
+ entry.  Some applications, however, may want to perform additional
+ actions at that point, such as generate another event, or compare and
+@@ -2088,7 +2088,7 @@ The following commonly-used handler.action pairs are available:
+     and the saved values corresponding to the max are displayed
+     following the rest of the fields.
+ 
+-    If a snaphot was taken, there is also a message indicating that,
++    If a snapshot was taken, there is also a message indicating that,
+     along with the value and event that triggered the global maximum:
+ 
+     # cat /sys/kernel/debug/tracing/events/sched/sched_switch/hist
+@@ -2176,7 +2176,7 @@ The following commonly-used handler.action pairs are available:
+     hist trigger entry.
+ 
+     Note that in this case the changed value is a global variable
+-    associated withe current trace instance.  The key of the specific
++    associated with current trace instance.  The key of the specific
+     trace event that caused the value to change and the global value
+     itself are displayed, along with a message stating that a snapshot
+     has been taken and where to find it.  The user can use the key
+@@ -2203,7 +2203,7 @@ The following commonly-used handler.action pairs are available:
+     and the saved values corresponding to that value are displayed
+     following the rest of the fields.
+ 
+-    If a snaphot was taken, there is also a message indicating that,
++    If a snapshot was taken, there is also a message indicating that,
+     along with the value and event that triggered the snapshot::
+ 
+       # cat /sys/kernel/debug/tracing/events/tcp/tcp_probe/hist
+-- 
+2.22.0.rc1
 
-Regards,
-
-	Hans
