@@ -2,99 +2,93 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1A7BC072B5
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 20:48:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EEAFC18E7C
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 20:49:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCF97217D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 20:48:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="hi11wg5d"
+	by mail.kernel.org (Postfix) with ESMTP id 30123217D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 20:49:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727948AbfEUUs1 (ORCPT
+        id S1727974AbfEUUtE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 16:48:27 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:34150 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727222AbfEUUs0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 16:48:26 -0400
-Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4LKjEG6010429
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 13:48:25 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=facebook;
- bh=gXtQ5o2xO00nWLwMn6/HQC5ELcxFd8dno/KGqwEyWn4=;
- b=hi11wg5dkOis8h1p5ZcRZQDM4LnYRuRMbWj9yu/hc3Pp+DO2keB416WzwuKcAwB3oUmt
- P0CDVW+h2iPceAUyITp9Vy8vRGvy5/Xol/Vg+w27VfDNvU9jf/e/lLQSfuwu9kmZHD9p
- 2PhqNSepVrj0Hshx5eHDhZtKJh3RPacyEoc= 
-Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2smp0wrmb5-3
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 13:48:25 -0700
-Received: from mx-out.facebook.com (2620:10d:c081:10::13) by
- mail.thefacebook.com (2620:10d:c081:35::126) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5;
- Tue, 21 May 2019 13:48:18 -0700
-Received: by devbig006.ftw2.facebook.com (Postfix, from userid 4523)
-        id C8DF762E2BFE; Tue, 21 May 2019 13:48:16 -0700 (PDT)
-Smtp-Origin-Hostprefix: devbig
-From:   Song Liu <songliubraving@fb.com>
-Smtp-Origin-Hostname: devbig006.ftw2.facebook.com
-To:     <linux-kernel@vger.kernel.org>, <bpf@vger.kernel.org>
-CC:     <kernel-team@fb.com>, Song Liu <songliubraving@fb.com>,
-        Kairui Song <kasong@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Smtp-Origin-Cluster: ftw2c04
-Subject: [PATCH] perf/x86: always include regs->ip in callchain
-Date:   Tue, 21 May 2019 13:48:13 -0700
-Message-ID: <20190521204813.1167784-1-songliubraving@fb.com>
-X-Mailer: git-send-email 2.17.1
-X-FB-Internal: Safe
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-21_05:,,
- signatures=0
-X-Proofpoint-Spam-Reason: safe
-X-FB-Internal: Safe
+        Tue, 21 May 2019 16:49:04 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:4837 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727218AbfEUUtD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 16:49:03 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 3A2BBC002965;
+        Tue, 21 May 2019 20:48:55 +0000 (UTC)
+Received: from llong.com (dhcp-17-85.bos.redhat.com [10.18.17.85])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8D45D5C69A;
+        Tue, 21 May 2019 20:48:51 +0000 (UTC)
+From:   Waiman Long <longman@redhat.com>
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>
+Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Waiman Long <longman@redhat.com>
+Subject: [PATCH] rcu: Force inlining of rcu_read_lock()
+Date:   Tue, 21 May 2019 16:48:43 -0400
+Message-Id: <20190521204843.11060-1-longman@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Tue, 21 May 2019 20:49:03 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit d15d356887e7 removes regs->ip for !perf_hw_regs(regs) case. This
-breaks tests like test_stacktrace_map from selftests/bpf/tests_prog.
+It is found that when debugging options are turned on, the
+rcu_read_lock() function may not be inlined at all. That will make
+it harder to debug RCU related problem as the print_lock() function
+in lockdep will print "rcu_read_lock()" instead of the caller of
+rcu_read_lock() function. For example,
 
-This patch adds regs->ip back.
+[   10.579995] =============================
+[   10.584033] WARNING: suspicious RCU usage
+[   10.588074] 4.18.0.memcg_v2+ #1 Not tainted
+[   10.593162] -----------------------------
+[   10.597203] include/linux/rcupdate.h:281 Illegal context switch in
+RCU read-side critical section!
+[   10.606220]
+[   10.606220] other info that might help us debug this:
+[   10.606220]
+[   10.614280]
+[   10.614280] rcu_scheduler_active = 2, debug_locks = 1
+[   10.620853] 3 locks held by systemd/1:
+[   10.624632]  #0: (____ptrval____) (&type->i_mutex_dir_key#5){.+.+}, at: lookup_slow+0x42/0x70
+[   10.633232]  #1: (____ptrval____) (rcu_read_lock){....}, at: rcu_read_lock+0x0/0x70
+[   10.640954]  #2: (____ptrval____) (rcu_read_lock){....}, at: rcu_read_lock+0x0/0x70
 
-Fixes: d15d356887e7 ("perf/x86: Make perf callchains work without CONFIG_FRAME_POINTER")
-Cc: Kairui Song <kasong@redhat.com>
-Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Song Liu <songliubraving@fb.com>
+To make sure that the proper caller of rcu_read_lock() is shown, we
+have to force the inlining of the rcu_read_lock() function.
+
+Signed-off-by: Waiman Long <longman@redhat.com>
 ---
- arch/x86/events/core.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ include/linux/rcupdate.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index f315425d8468..7b8a9eb4d5fd 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -2402,9 +2402,9 @@ perf_callchain_kernel(struct perf_callchain_entry_ctx *entry, struct pt_regs *re
- 		return;
- 	}
- 
-+	if (perf_callchain_store(entry, regs->ip))
-+		return;
- 	if (perf_hw_regs(regs)) {
--		if (perf_callchain_store(entry, regs->ip))
--			return;
- 		unwind_start(&state, current, regs, NULL);
- 	} else {
- 		unwind_start(&state, current, NULL, (void *)regs->sp);
+diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
+index 922bb6848813..44f80aced02b 100644
+--- a/include/linux/rcupdate.h
++++ b/include/linux/rcupdate.h
+@@ -588,7 +588,7 @@ static inline void rcu_preempt_sleep_check(void) { }
+  * read-side critical sections may be preempted and they may also block, but
+  * only when acquiring spinlocks that are subject to priority inheritance.
+  */
+-static inline void rcu_read_lock(void)
++static __always_inline void rcu_read_lock(void)
+ {
+ 	__rcu_read_lock();
+ 	__acquire(RCU);
 -- 
-2.17.1
+2.18.1
 
