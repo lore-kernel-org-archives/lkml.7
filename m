@@ -2,114 +2,139 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35732C072B5
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 23:50:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06728C18E7C
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 23:52:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03905217F9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 23:50:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF69C2183F
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 23:52:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PgFRHz9L"
+	dkim=pass (1024-bit key) header.d=stackpath.com header.i=@stackpath.com header.b="cMPtQOly"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727493AbfEUXuK (ORCPT
+        id S1727941AbfEUXwr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 19:50:10 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:41487 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725797AbfEUXuJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 19:50:09 -0400
-Received: by mail-pg1-f194.google.com with SMTP id z3so299280pgp.8
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 16:50:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=7q0PelwL9bKMV8j6fotAmIIGWuu5yPxHabkyZucfWSs=;
-        b=PgFRHz9LTKAW06xheSlCgmaBYlHudfTzK+hJD9m+hf4w8jZW0zxEWlzYfdhjW8BoOz
-         sDx93ktSy6nK4r9e0Z/eFmV3NlH0dxZppw28/hubD1RTw5WFELEY0B28z0t71MVdkawX
-         tofgt+pzOVwVuSxr4zX7Kr3vgG7xf/Uf45AW8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=7q0PelwL9bKMV8j6fotAmIIGWuu5yPxHabkyZucfWSs=;
-        b=G/a8kkYDJmj3Nj9Oxy5hnUHrcx8Gco8kqtBYKofBQz9Hi9xenFEHW8Hi0qY4Gnil7Z
-         sAN9tE4BPj/LGCSoANxHlB6RCDXQhQtPZ0bkIEanygBT8juHC0j0bY7TnCvz4reyUfiC
-         vzuX9WuueOxk5z2wU/MusiHudQYJCRttk/sP1OqVyCiHFXl2+9u5e6ciC7xvbnrIfCjY
-         WMAIE2faBSGD5b48DznrWP6NNTfwaxRfBidld2AH9kOiKrEUiT4k3PxHeu5rvQ5Bj6f+
-         ZBUcZJNpXDqlovb1LHiDYPQjby3aVL7MauzixFG1NUuqpBxqQNfzFDK5DbxZ2nR3yQZX
-         +Tvw==
-X-Gm-Message-State: APjAAAVQ80ftJS2JfZXKrzOdIF2qoRPSb8thEXjLiqrojz4Oa3vm3wSR
-        rFDnfuOD2J9HMU6FBrytMLL5kw==
-X-Google-Smtp-Source: APXvYqyw8kaeTYK/TiQMeIZGSd18nYuR1FaVotEhqU23R+CYW+qg0qbUu1Ce2nBjA7PX/xVkt40Fqw==
-X-Received: by 2002:a65:64c9:: with SMTP id t9mr85741782pgv.221.1558482608692;
-        Tue, 21 May 2019 16:50:08 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id 194sm19955605pgd.33.2019.05.21.16.50.07
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 21 May 2019 16:50:08 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     Heiko Stuebner <heiko@sntech.de>
-Cc:     briannorris@chromium.org, ryandcase@chromium.org, mka@chromium.org,
-        Douglas Anderson <dianders@chromium.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH] ARM: dts: rockchip: Mark that the rk3288 timer might stop in suspend
-Date:   Tue, 21 May 2019 16:49:33 -0700
-Message-Id: <20190521234933.153953-1-dianders@chromium.org>
-X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
+        Tue, 21 May 2019 19:52:47 -0400
+Received: from mail-eopbgr700088.outbound.protection.outlook.com ([40.107.70.88]:28128
+        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726434AbfEUXwq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 19:52:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stackpath.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yXXOQhsgg5LPvRdht5kSoMp26m2VTfh23n8+xQGUTog=;
+ b=cMPtQOlyl0fyrtSmjvF+c14TFYtQLO6qTTDMUhyJc1McMcD388DqCNJDwP1hOu3QxqWif72g6TkSYKA8cXlaTIvn21/sOsiC0tV8qbelbilsdL7ZQqH0JLPhhmKyW0ypNUf1OqmQLkYFhsn4qNaDnMmOBJmoy3WzuV+AgbI6fGA=
+Received: from BYAPR10MB2680.namprd10.prod.outlook.com (52.135.217.31) by
+ BYAPR10MB3429.namprd10.prod.outlook.com (20.177.187.204) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1900.20; Tue, 21 May 2019 23:52:43 +0000
+Received: from BYAPR10MB2680.namprd10.prod.outlook.com
+ ([fe80::ec8c:9c6a:c83f:43db]) by BYAPR10MB2680.namprd10.prod.outlook.com
+ ([fe80::ec8c:9c6a:c83f:43db%7]) with mapi id 15.20.1900.020; Tue, 21 May 2019
+ 23:52:43 +0000
+From:   Matthew Cover <matthew.cover@stackpath.com>
+To:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Matthew Cover <werekraken@gmail.com>
+Subject: tc_classid access in skb bpf context
+Thread-Topic: tc_classid access in skb bpf context
+Thread-Index: AQHVEC09Nj6ajF14HkezzoiQKGhG0Q==
+Date:   Tue, 21 May 2019 23:52:43 +0000
+Message-ID: <BYAPR10MB2680B63C684345098E6E7669E3070@BYAPR10MB2680.namprd10.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=matthew.cover@stackpath.com; 
+x-originating-ip: [24.56.44.135]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f3918b74-848a-47d1-c15a-08d6de476a8f
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:BYAPR10MB3429;
+x-ms-traffictypediagnostic: BYAPR10MB3429:
+x-microsoft-antispam-prvs: <BYAPR10MB34291AB998FDF23F58C62129E3070@BYAPR10MB3429.namprd10.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0044C17179
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(366004)(346002)(39850400004)(396003)(136003)(199004)(189003)(55016002)(9686003)(66066001)(26005)(44832011)(102836004)(99286004)(7696005)(71190400001)(81166006)(81156014)(8936002)(8676002)(53936002)(2906002)(7416002)(6116002)(6436002)(2201001)(86362001)(2501003)(71200400001)(316002)(305945005)(7736002)(3846002)(4326008)(478600001)(68736007)(186003)(74316002)(76116006)(66556008)(64756008)(66476007)(73956011)(66946007)(66446008)(14454004)(256004)(14444005)(5660300002)(52536014)(486006)(6506007)(25786009)(110136005)(476003)(33656002);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR10MB3429;H:BYAPR10MB2680.namprd10.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: stackpath.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: wkBwGHbzXDI8/GbNp6m8b1WWwWNrsFaIMYPdMWKw3EaYi3vV5NnbIp+6pN7HGVve2/e5UUrCkAT+jbldZSifdszr1ToelWDKvjuu/+CpTQSX0raGNZ/KMdjYgrugNMZjbrb5Hs3uvCsAYM3oM547GB61vhtVMbf5l4/MPAHYwMR3JtXe9a8zL+U5jCK0pEf9whdChIspzY/FAF6F/rCqwwKV8/ZE6YO+MphvgJF8LtNMQCu80iFFbncanRfEquNR6VWxgkJkfdi+Axei4L515pnVBZceRXEj8u0pmOkF06z+jjhmhH4zyltbyXV+KEgxd13ATPC3oIq8ZhtymNYlkD8z2Vdp/mhzaKGcuSpmGCY1NzBWRSClfSa9HY+zal3NRjc5hYE6zcIGc8DMMx2PwO7SDCUoUckMaz0V6fonA+o=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: stackpath.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f3918b74-848a-47d1-c15a-08d6de476a8f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 May 2019 23:52:43.0494
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: fd04f7e7-8712-48a5-bd2d-688fe1861f4b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR10MB3429
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is similar to commit e6186820a745 ("arm64: dts: rockchip: Arch
-counter doesn't tick in system suspend").  Specifically on the rk3288
-it can be seen that the timer stops ticking in suspend if we end up
-running through the "osc_disable" path in rk3288_slp_mode_set().  In
-that path the 24 MHz clock will turn off and the timer stops.
+__sk_buff has a member tc_classid which I'm interested in accessing from th=
+e skb bpf context.
 
-To test this, I ran this on a Chrome OS filesystem:
-  before=$(date); \
-  suspend_stress_test -c1 --suspend_min=30 --suspend_max=31; \
-  echo ${before}; date
+A bpf program which accesses skb->tc_classid compiles, but fails verificati=
+on; the specific failure is "invalid bpf_context access".
 
-...and I found that unless I plug in a device that requests USB wakeup
-to be active that the two calls to "date" would show that fewer than
-30 seconds passed.
+if (skb->tc_classid !=3D 0)
+ return 1;
+return 0;
 
-NOTE: deep suspend (where the 24 MHz clock gets disabled) isn't
-supported yet on upstream Linux so this was tested on a downstream
-kernel.
+Some of the tests in tools/testing/selftests/bpf/verifier/ (those on tc_cla=
+ssid) further confirm that this is, in all likelihood, intentional behavior=
+.
 
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
+The very similar bpf program which instead accesses skb->mark works as desi=
+red.
 
- arch/arm/boot/dts/rk3288.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+if (skb->mark !=3D 0)
+ return 1;
+return 0;
 
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index 171231a0cd9b..1e5260b556b7 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -231,6 +231,7 @@
- 			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
- 			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
- 		clock-frequency = <24000000>;
-+		arm,no-tick-in-suspend;
- 	};
- 
- 	timer: timer@ff810000 {
--- 
-2.21.0.1020.gf2820cf01a-goog
+I built a kernel (v5.1) with 4 instances of the following line removed from=
+ net/core/filter.c to test the behavior when the instructions pass verifica=
+tion.
 
+    switch (off) {
+-    case bpf_ctx_range(struct __sk_buff, tc_classid):
+...
+        return false;
+
+It appears skb->tc_classid is always zero within my bpf program, even when =
+I verify by other means (e.g. netfilter) that the value is set non-zero.
+
+I gather that sk_buff proper sometimes (i.e. at some layers) has qdisc_skb_=
+cb stored in skb->cb, but not always.
+
+I suspect that the tc_classid is available at l3 (and therefore to utils li=
+ke netfilter, ip route, tc), but not at l2 (and not to AF_PACKET).
+
+Is it impractical to make skb->tc_classid available in this bpf context or =
+is there just some plumbing which hasn't been connected yet?
+
+Is my suspicion that skb->cb no longer contains qdisc_skb_cb due to crossin=
+g a layer boundary well founded?
+
+I'm willing to look into hooking things together as time permits if it's a =
+feasible task.
+
+It's trivial to have iptables match on tc_classid and set a mark which is a=
+vailable to bpf at l2, but I'd like to better understand this.
+
+Thanks,
+Matt C.=
