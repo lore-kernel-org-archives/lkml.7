@@ -2,156 +2,185 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 797C2C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 18:29:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5A12C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 18:29:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49252217D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 18:29:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qHKNNvOI"
+	by mail.kernel.org (Postfix) with ESMTP id BE2E621479
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 18:29:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729267AbfEUS3j (ORCPT
+        id S1729296AbfEUS3o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 14:29:39 -0400
-Received: from mail-it1-f196.google.com ([209.85.166.196]:52498 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727990AbfEUS3i (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 14:29:38 -0400
-Received: by mail-it1-f196.google.com with SMTP id t184so6751114itf.2
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 11:29:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=5lq45XSqNE2uFvBFuFvCqHdT2kO9oK+DRuyIon8Em/o=;
-        b=qHKNNvOIgeJJ6MWa9m9U9cs1EZ36EM2S8XRIDU7PCmVfkhWLYb2Gy2ndNaFR6BpCjl
-         HdJIohQoJYeMcYgR+uBaydZTu/9uhgqbkoOWBXNl2hPdXdzz4tEj/TYaycwjnZWslF3v
-         vjIs+OioZN1Nq39eE1zi5NgCJWlQO3M8GGW/Q0EOACe1UFrNXJPumEDaNoh8D8OoHFiN
-         izpXChELzvDAmQBpFtcCkdq4/32a9WUJADUy6pMEQgojKioUatKtVvxAO7YN1BQLjNGR
-         5+kqwdFWtMgY8cmc4FX2aowuPehkFZL3JDhc/z3TQ5rdE4PK9U31w8dntjd1+oPIeojA
-         YlLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=5lq45XSqNE2uFvBFuFvCqHdT2kO9oK+DRuyIon8Em/o=;
-        b=tu1qtbujdRdV84wRjK8ck6Qeh0P+P0GYfqwFmdmkX1dR8gll/AgADaLYxMJVAitfEP
-         XGPYOa3ydgwbi6shRVvLtkqviJzmeePI46pbB/5oGhJrrmRA51IB7KWFHsoEG85UqTbv
-         Pon8T69YqNGoRgu5XqhXVSk5S/XwdT7bcgToDD+HCv8WBtDmNJPJ8EYHN2itjNt3b5oa
-         sgfYGqSlrTux9YQWfa1g7wH0Ev/ZXcUpi6AZNnkJgNEBRAAF9LIzeuX/Yz15dnFzNuT4
-         p+TFec2Vb8q2gsPzOcwzmo+YxKXklbcp2iwLHqUNwVk38zgsvFsuGL+/70WBhnoFdMcq
-         E97w==
-X-Gm-Message-State: APjAAAWzxGsd6z1yooD7jSFHU/xvvL30hSQnTQzp5GMiuWZZd7uRcspW
-        c8jzZghHU8wQhvZprvr2sN0=
-X-Google-Smtp-Source: APXvYqwp5ZsSzocAb69f4Wj1mmfZ5BRXGnHm2J4cclyR6Jp2LRUTYyQos7tDQCUPyHQNoHChRXI1DQ==
-X-Received: by 2002:a24:af1a:: with SMTP id t26mr5523437ite.55.1558463377841;
-        Tue, 21 May 2019 11:29:37 -0700 (PDT)
-Received: from svens-asus.arcx.com ([184.94.50.30])
-        by smtp.gmail.com with ESMTPSA id v134sm1598920ita.16.2019.05.21.11.29.37
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 21 May 2019 11:29:37 -0700 (PDT)
-From:   Sven Van Asbroeck <thesven73@gmail.com>
-X-Google-Original-From: Sven Van Asbroeck <TheSven73@gmail.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     devel@driverdev.osuosl.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Subject: [PATCH] staging: fieldbus: arcx-anybus: change custom -> mmio regmap
-Date:   Tue, 21 May 2019 14:29:32 -0400
-Message-Id: <20190521182932.13502-1-TheSven73@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 21 May 2019 14:29:44 -0400
+Received: from foss.arm.com ([217.140.101.70]:39894 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727990AbfEUS3n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 14:29:43 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4EE4F80D;
+        Tue, 21 May 2019 11:29:42 -0700 (PDT)
+Received: from mbp (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 294B83F5AF;
+        Tue, 21 May 2019 11:29:36 -0700 (PDT)
+Date:   Tue, 21 May 2019 19:29:33 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Evgenii Stepanov <eugenis@google.com>
+Cc:     Andrey Konovalov <andreyknvl@google.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
+        kvm@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alexander Deucher <Alexander.Deucher@amd.com>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
+        Elliott Hughes <enh@google.com>
+Subject: Re: [PATCH v15 00/17] arm64: untag user pointers passed to the kernel
+Message-ID: <20190521182932.sm4vxweuwo5ermyd@mbp>
+References: <cover.1557160186.git.andreyknvl@google.com>
+ <20190517144931.GA56186@arrakis.emea.arm.com>
+ <CAFKCwrj6JEtp4BzhqO178LFJepmepoMx=G+YdC8sqZ3bcBp3EQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAFKCwrj6JEtp4BzhqO178LFJepmepoMx=G+YdC8sqZ3bcBp3EQ@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The arcx-anybus's registers are accessed via a memory-mapped
-IO region. A regmap associated with this region is created
-using custom reg_read() / reg_write() callbacks.
+On Mon, May 20, 2019 at 04:53:07PM -0700, Evgenii Stepanov wrote:
+> On Fri, May 17, 2019 at 7:49 AM Catalin Marinas <catalin.marinas@arm.com> wrote:
+> > IMO (RFC for now), I see two ways forward:
+> >
+> > 1. Make this a user space problem and do not allow tagged pointers into
+> >    the syscall ABI. A libc wrapper would have to convert structures,
+> >    parameters before passing them into the kernel. Note that we can
+> >    still support the hardware MTE in the kernel by enabling tagged
+> >    memory ranges, saving/restoring tags etc. but not allowing tagged
+> >    addresses at the syscall boundary.
+> >
+> > 2. Similar shim to the above libc wrapper but inside the kernel
+> >    (arch/arm64 only; most pointer arguments could be covered with an
+> >    __SC_CAST similar to the s390 one). There are two differences from
+> >    what we've discussed in the past:
+> >
+> >    a) this is an opt-in by the user which would have to explicitly call
+> >       prctl(). If it returns -ENOTSUPP etc., the user won't be allowed
+> >       to pass tagged pointers to the kernel. This would probably be the
+> >       responsibility of the C lib to make sure it doesn't tag heap
+> >       allocations. If the user did not opt-in, the syscalls are routed
+> >       through the normal path (no untagging address shim).
+> >
+> >    b) ioctl() and other blacklisted syscalls (prctl) will not accept
+> >       tagged pointers (to be documented in Vicenzo's ABI patches).
+[...]
+> Any userspace shim approach is problematic for Android because of the
+> apps that use raw system calls. AFAIK, all apps written in Go are in
+> that camp - I'm not sure how common they are, but getting them all
+> recompiled is probably not realistic.
 
-However, an abstraction which creates a memory-mapped IO
-region backed regmap already exists: devm_regmap_init_mmio().
+That's a fair point (I wasn't expecting it would get much traction
+anyway ;)). OTOH, it allows upstreaming of the MTE patches while we
+continue the discussions around TBI.
 
-Replace the custom regmap with the existing kernel abstraction.
-As a pleasant side-effect, sparse warnings now disappear.
+> The way I see it, a patch that breaks handling of tagged pointers is
+> not that different from, say, a patch that adds a wild pointer
+> dereference. Both are bugs; the difference is that (a) the former
+> breaks a relatively uncommon target and (b) it's arguably an easier
+> mistake to make. If MTE adoption goes well, (a) will not be the case
+> for long.
 
-Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
----
- .../staging/fieldbus/anybuss/arcx-anybus.c    | 44 ++++++-------------
- 1 file changed, 13 insertions(+), 31 deletions(-)
+It's also the fact such patch would go unnoticed for a long time until
+someone exercises that code path. And when they do, the user would be
+pretty much in the dark trying to figure what what went wrong, why a
+SIGSEGV or -EFAULT happened. What's worse, we can't even say we fixed
+all the places where it matters in the current kernel codebase (ignoring
+future patches).
 
-diff --git a/drivers/staging/fieldbus/anybuss/arcx-anybus.c b/drivers/staging/fieldbus/anybuss/arcx-anybus.c
-index a167fb68e355..2ecffa42e561 100644
---- a/drivers/staging/fieldbus/anybuss/arcx-anybus.c
-+++ b/drivers/staging/fieldbus/anybuss/arcx-anybus.c
-@@ -111,49 +111,31 @@ static void export_reset_1(struct device *dev, bool assert)
-  * at a time for now.
-  */
- 
--static int read_reg_bus(void *context, unsigned int reg,
--			unsigned int *val)
--{
--	void __iomem *base = context;
--
--	*val = readb(base + reg);
--	return 0;
--}
--
--static int write_reg_bus(void *context, unsigned int reg,
--			 unsigned int val)
--{
--	void __iomem *base = context;
--
--	writeb(val, base + reg);
--	return 0;
--}
-+static const struct regmap_config arcx_regmap_cfg = {
-+	.reg_bits = 16,
-+	.val_bits = 8,
-+	.max_register = 0x7ff,
-+	.use_single_read = true,
-+	.use_single_write = true,
-+	/*
-+	 * single-byte parallel bus accesses are atomic, so don't
-+	 * require any synchronization.
-+	 */
-+	.disable_locking = true,
-+};
- 
- static struct regmap *create_parallel_regmap(struct platform_device *pdev,
- 					     int idx)
- {
--	struct regmap_config regmap_cfg = {
--		.reg_bits = 11,
--		.val_bits = 8,
--		/*
--		 * single-byte parallel bus accesses are atomic, so don't
--		 * require any synchronization.
--		 */
--		.disable_locking = true,
--		.reg_read = read_reg_bus,
--		.reg_write = write_reg_bus,
--	};
- 	struct resource *res;
- 	void __iomem *base;
- 	struct device *dev = &pdev->dev;
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, idx + 1);
--	if (resource_size(res) < (1 << regmap_cfg.reg_bits))
--		return ERR_PTR(-EINVAL);
- 	base = devm_ioremap_resource(dev, res);
- 	if (IS_ERR(base))
- 		return ERR_CAST(base);
--	return devm_regmap_init(dev, NULL, base, &regmap_cfg);
-+	return devm_regmap_init_mmio(dev, base, &arcx_regmap_cfg);
- }
- 
- static struct anybuss_host *
+I think we should revisit the static checking discussions we had last
+year. Run-time checking (even with compiler instrumentation and
+syzkaller fuzzing) would only cover the code paths specific to a Linux
+or Android installation.
+
+> This is a bit of a chicken-and-egg problem. In a world where memory
+> allocators on one or several popular platforms generate pointers with
+> non-zero tags, any such breakage will be caught in testing.
+> Unfortunately to reach that state we need the kernel to start
+> accepting tagged pointers first, and then hold on for a couple of
+> years until userspace catches up.
+
+Would the kernel also catch up with providing a stable ABI? Because we
+have two moving targets.
+
+On one hand, you have Android or some Linux distro that stick to a
+stable kernel version for some time, so they have better chance of
+clearing most of the problems. On the other hand, we have mainline
+kernel that gets over 500K lines every release. As maintainer, I can't
+rely on my testing alone as this is on a limited number of platforms. So
+my concern is that every kernel release has a significant chance of
+breaking the ABI, unless we have a better way of identifying potential
+issues.
+
+> Perhaps we can start by whitelisting ioctls by driver?
+
+This was also raised by Ruben in private but without a (static) tool to
+to check, manually going through all the drivers doesn't scale. It's
+very likely that most drivers don't care, just a get_user/put_user is
+already handled by these patches. Searching for find_vma() was
+identifying one such use-case but is this sufficient? Are there other
+cases we need to explicitly untag a pointer?
+
+
+The other point I'd like feedback on is 2.a above. I see _some_ value
+into having the user opt-in to this relaxed ABI rather than blinding
+exposing it to all applications. Dave suggested (in private) a new
+personality (e.g. PER_LINUX_TBI) inherited by children. It would be the
+responsibility of the C library to check the current personality bits
+and only tag pointers on allocation *if* the kernel allowed it. The
+kernel could provide the AT_FLAGS bit as in Vincenzo's patches if the
+personality was set but can't set it retrospectively if the user called
+sys_personality. By default, /sbin/init would not have this personality
+and libc would not tag pointers, so we can guarantee that your distro
+boots normally with a new kernel version. We could have an envp that
+gets caught by /sbin/init so you can pass it on the kernel command line
+(or a dynamic loader at run-time). But the default should be the current
+ABI behaviour.
+
+We can enforce the current behaviour by having access_ok() check the
+personality or a TIF flag but we may relax this enforcement at some
+point in the future as we learn more about the implications of TBI.
+
+Thanks.
+
 -- 
-2.17.1
-
+Catalin
