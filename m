@@ -2,91 +2,100 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F32F3C04E87
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:49:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7B3DC04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:50:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C76852173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:49:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4CDD2173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:50:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ddep7DyH"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="pAt/gkOM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729088AbfEUQti (ORCPT
+        id S1729094AbfEUQuJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 12:49:38 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:35905 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727817AbfEUQth (ORCPT
+        Tue, 21 May 2019 12:50:09 -0400
+Received: from mail-lj1-f182.google.com ([209.85.208.182]:33308 "EHLO
+        mail-lj1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728858AbfEUQuJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 12:49:37 -0400
-Received: by mail-pl1-f193.google.com with SMTP id d21so8722314plr.3;
-        Tue, 21 May 2019 09:49:37 -0700 (PDT)
+        Tue, 21 May 2019 12:50:09 -0400
+Received: by mail-lj1-f182.google.com with SMTP id w1so16554518ljw.0
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 09:50:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=v2SnYdg7A+KRf1CirjBXBSRjCuSa5ZCNOU/wWwgCIfk=;
-        b=Ddep7DyHe5OsovWNiAt9kTIMBQlef/9LvJA19PYauVxiR02nikKb24vzLGi03F7nsN
-         T2V6VOpn+2U+RJicJhJatRRwwq+azLcIwsHclxn81zlRcai3UATILn6cxNnxzZV/5ehR
-         Bu3VpJ6zqJUnJD1T7k2/U+eJTy4iNZg4xoSO25YWBpbTJW9MizL1zJb0hfYqcBUbh1om
-         UTxzOpSjyh9aorCUnS7hb3qFRtytTckbMZugXBTXBLRcTpIwnsM/pLy9FuLME7FYojIK
-         hA/YL9CdX9tR3PrsCv5SI7noKMNDtvgGrxWGXve6/d66D0l3XoTicIH89o1pUS7QchMo
-         bNVQ==
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=i0j6kDnEIeaPX+1KUXPs7si1+pehMqLyQylQVBwbYdQ=;
+        b=pAt/gkOM6HSmPpnHOr2potyfhHapA+fv7YdZ8Mwej7N9YXmb49ctGf7PnHuBSE8a/T
+         iWCJWU7dKfqCPe8fl+PdKkxSpqMHncJT3dckU3T/Ex3cot50U3lYxHEG0sm4hI55PVh1
+         t2ygIqje1rZ7OYpjtPqRDN4Ldgs2G/0nW8a6cHWs0nM7A8S42cEelG7/nyvMR2ldDibH
+         MjQ6kV3sjTmqDrNYOfXSpYBwp7xTGFCz3g705R3mqOSxrtGrWg4CT4X7jGzLrVOru6wD
+         dIiXUHuyl3IQpTtKHF7Wu+ywRlu9Ncce/wJfBBo674DWSRA4I4R37a0pk9azdUTS21NN
+         Y4Bg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=v2SnYdg7A+KRf1CirjBXBSRjCuSa5ZCNOU/wWwgCIfk=;
-        b=LZbjSW/Ytxhz7PXEaWtzcDNCaoYMweuTamvfijHAY3fLMiVS12tvRz0cLBp8h+nbwt
-         VvomViT4z2LrV56DO0V9/c8aFE8qdXMNfz9BZqMTY63FZGhERC8jRwmQ5rlQEMJNMMFr
-         xrrRX5MtJS8swqnWA0NMRaQdi8z8BtHTG/3OWTyu4pMjMeWGLI3Y1bRL8rdquWIpK1q1
-         9ARs+1TBMPiu+/t1XwXCCXeZCl3haZlEC5dkIEFTxZ86D7qhbJZdNIIeGjDDXv0PShTj
-         DPXHgc3fjjP1RugqXRAp7m1yGwRt8K+0B5dRJUzaFsUs1H1ECnR2yFihRAlCZJ1w8sFE
-         H/Xg==
-X-Gm-Message-State: APjAAAVNRLCI/x7zpXQgp2D0xN/0L1JId7H988JKGGFlOK6RPOO4qfyt
-        u8PBgBJ7MGpD/qpCG7dZb6Y=
-X-Google-Smtp-Source: APXvYqzvYTYoKR4keXPH4jiYbPWg9Rfb6ADPPLBY7qhfTOKHapIWHpV+sbFumzLUsWLGsvVb034/Ng==
-X-Received: by 2002:a17:902:2a2b:: with SMTP id i40mr83744999plb.170.1558457376769;
-        Tue, 21 May 2019 09:49:36 -0700 (PDT)
-Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
-        by smtp.gmail.com with ESMTPSA id o7sm32411008pfp.168.2019.05.21.09.49.35
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 21 May 2019 09:49:36 -0700 (PDT)
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc:     agross@kernel.org, david.brown@linaro.org,
-        bjorn.andersson@linaro.org, jcrouse@codeaurora.org,
-        lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Subject: [PATCH 0/3] PM8005 regulator support for msm8998 GPU
-Date:   Tue, 21 May 2019 09:49:32 -0700
-Message-Id: <20190521164932.14265-1-jeffrey.l.hugo@gmail.com>
-X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=i0j6kDnEIeaPX+1KUXPs7si1+pehMqLyQylQVBwbYdQ=;
+        b=CRrxsiCVuYxyyvLDyntGxIxjVG32KeDK0Xup9OqxCX4lr/MiuAPE/4QHyYL0oiy4e4
+         JZZeXMP1iki4Y7gDRE0IfkEWwyokN+icaTagk8Ubj5IVCz1PfRSuQMisbZ7eSmyrYMwr
+         TMzsquM2WHLpR/MhK8+VxnqHFeMsMPMc3U0rEmxT/hVAUhgqJft8OarYz8v4tE3uQ6uV
+         vmTCHYkpUDDGldptV8+ZXPSKb5P6vgUQEzJNFcq7SrbuaORF5WPB2hmwYUWDs43PrgiY
+         4phgSf/PX2xJRURBeXRp8QZtvF+qwL5kCLqNn9jbmp9vAcjFqZkrdEhlw3UgdVbtwaEz
+         Hz6Q==
+X-Gm-Message-State: APjAAAXncfEoElnPDJD2QxetSnqNoXGhHdSy6GL2QYanEaytHL6+SRZ5
+        /voxH3r7rhkTAm+a44071+xrxInXykByATuhnHkI
+X-Google-Smtp-Source: APXvYqxWgk6A9MlHhUyl+gJsVKB8GP0WXya0zsymp9swKk8LdqPHx9o76G382EqZguQYbQ8YOjZjPhLS1e3m5Ru/d44=
+X-Received: by 2002:a2e:380c:: with SMTP id f12mr5075618lja.53.1558457406870;
+ Tue, 21 May 2019 09:50:06 -0700 (PDT)
+MIME-Version: 1.0
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Tue, 21 May 2019 12:49:55 -0400
+Message-ID: <CAHC9VhTvU7kQ7D8OwRPvc0tpjtXVK6FiiT07WuQyjtJ80TeQrQ@mail.gmail.com>
+Subject: [GIT PULL] SELinux fixes for v5.2 (#1)
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     selinux@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The MSM8998 MTP reference platform supplies VDD_GFX from s1 of the
-pm8005 PMIC.  VDD_GFX is needed to turn on the GPU.  As we are looking
-to bring up the GPU, add the support for pm8005 and wire up s1 in a
-basic manner so that we have this dependency out of the way and can
-focus on enabling the GPU driver.
+Hi Linus,
 
-Jeffrey Hugo (3):
-  dt-bindings: qcom_spmi: Document PM8005 regulators
-  regulator: qcom_spmi: Add support for PM8005
-  arm64: dts: msm8998-mtp: Add pm8005_s1 regulator
+One small SELinux patch for v5.2 to fix a problem when disconnecting a
+SCTP socket with connect(AF_UNSPEC).  Please merge this fix for v5.2.
 
- .../regulator/qcom,spmi-regulator.txt         |   4 +
- arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi     |  17 ++
- drivers/regulator/qcom_spmi-regulator.c       | 203 +++++++++++++++++-
- 3 files changed, 219 insertions(+), 5 deletions(-)
+Thanks,
+-Paul
+--
+The following changes since commit 35a196bef449b5824033865b963ed9a43fb8c730:
+
+ proc: prevent changes to overridden credentials (2019-04-29 09:51:21 -0400)
+
+are available in the Git repository at:
+
+ git://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/selinux.git
+   tags/selinux-pr-20190521
+
+for you to fetch changes up to 05174c95b83f8aca0c47b87115abb7a6387aafa5:
+
+ selinux: do not report error on connect(AF_UNSPEC)
+   (2019-05-20 21:46:02 -0400)
+
+----------------------------------------------------------------
+selinux/stable-5.2 PR 20190521
+
+----------------------------------------------------------------
+Paolo Abeni (1):
+     selinux: do not report error on connect(AF_UNSPEC)
+
+security/selinux/hooks.c | 10 ++++++++--
+1 file changed, 8 insertions(+), 2 deletions(-)
 
 -- 
-2.17.1
-
+paul moore
+www.paul-moore.com
