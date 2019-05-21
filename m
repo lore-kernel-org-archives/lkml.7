@@ -2,105 +2,98 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D699BC072B5
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 21:42:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E571CC072B5
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 21:43:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF23C21883
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 21:42:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6D07217F9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 21:43:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="bVfVn6vC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727777AbfEUVlk (ORCPT
+        id S1728098AbfEUVnU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 17:41:40 -0400
-Received: from mga11.intel.com ([192.55.52.93]:32413 "EHLO mga11.intel.com"
+        Tue, 21 May 2019 17:43:20 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:37481 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726907AbfEUVlk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 17:41:40 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 May 2019 14:41:38 -0700
-X-ExtLoop1: 1
-Received: from otc-icl-cdi-210.jf.intel.com ([10.54.55.28])
-  by orsmga006.jf.intel.com with ESMTP; 21 May 2019 14:41:38 -0700
-From:   kan.liang@linux.intel.com
-To:     peterz@infradead.org, acme@kernel.org, mingo@redhat.com,
-        linux-kernel@vger.kernel.org
-Cc:     tglx@linutronix.de, jolsa@kernel.org, eranian@google.com,
-        alexander.shishkin@linux.intel.com, ak@linux.intel.com,
-        Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH 0/9] TopDown metrics support for Icelake
-Date:   Tue, 21 May 2019 14:40:46 -0700
-Message-Id: <20190521214055.31060-1-kan.liang@linux.intel.com>
-X-Mailer: git-send-email 2.14.5
+        id S1727525AbfEUVnU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 17:43:20 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 457q5022KZz9s3Z;
+        Wed, 22 May 2019 07:43:16 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1558474998;
+        bh=VLslGDXi1nLS5zOC5e0unUn83VnGb1HeqayhR5MbjPY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=bVfVn6vCR58ksGTm3Kz62mvFD/aP9HM8dyGBXIH3kCo+noYxJKuNjqMHduISxr3Zz
+         JAvv9T0uL+iBybdOBQioSUVBMudd6JuroiJGJ/at8j7IcG6K312zjXIdI8fqXKoWqY
+         YNBNj7VA6JjU1ZMHCylxbfCoe4Qnl2qIQ1G8njC+0xIZn9JNeimdr4p2jt/+m3aV5J
+         YfoT/TViq3MHC8mnivf70wb4ekHfXmTCkhPLM2JWh9o5UxEXjuaQgULB5m31ssiwtt
+         hsDHW31paQ7k0I0GI3aiZYmOOH1rqxIY88G/2otEjSUv6ik4Oj+qKMmaN2QvrYdOXi
+         jviTLZ4q8fMLQ==
+Date:   Wed, 22 May 2019 07:43:13 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+Cc:     DRI <dri-devel@lists.freedesktop.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Intel Graphics <intel-gfx@lists.freedesktop.org>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Chris Wilson <chris@chris-wilson.co.uk>
+Subject: Re: Comments in Fixes: line (Was: Re: linux-next: Fixes tag needs
+ some work in the drm-intel tree)
+Message-ID: <20190522074313.347f039a@canb.auug.org.au>
+In-Reply-To: <155844385673.15761.3434506339174536733@jlahtine-desk.ger.corp.intel.com>
+References: <20190520221526.0e103916@canb.auug.org.au>
+        <155844385673.15761.3434506339174536733@jlahtine-desk.ger.corp.intel.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/=1dxdUJ9WnawpF7=6CXdUXL"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kan Liang <kan.liang@linux.intel.com>
+--Sig_/=1dxdUJ9WnawpF7=6CXdUXL
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Icelake has support for measuring the level 1 TopDown metrics
-directly in hardware. This is implemented by an additional METRICS
-register, and a new Fixed Counter 3 that measures pipeline SLOTS.
+Hi Joonas,
 
-Four TopDown metric events as separate perf events, which map to
-internal METRICS register, are exposed. They are topdown-retiring,
-topdown-bad-spec, topdown-fe-bound and topdown-be-bound.
-Those events do not exist in hardware, but can be allocated by the
-scheduler. We use a special 0xff event code, which is reserved for
-software. The value of TopDown metric events can be calculated by
-multiplying the METRICS (percentage) register with SLOTS fixed counter.
+On Tue, 21 May 2019 16:04:16 +0300 Joonas Lahtinen <joonas.lahtinen@linux.i=
+ntel.com> wrote:
+>
+> We also have an incoming patch where the Fixes: line has a comment in
+> it. Does your tooling account for this when checking the Fixes: line?
 
-New in Icelake
-- Do not require generic counters. This allows to collect TopDown always
-  in addition to other events.
-- Measuring TopDown per thread/process instead of only per core
+I will make sure mine does.
 
-Limitation
-- To get accurate result and avoid reading the METRICS register multiple
-  times, the TopDown metrics events and SLOTS event have to be in the
-  same group.
-- METRICS and SLOTS registers have to be cleared after each read by SW.
-  That is to prevent the lose of precision and a known side effect of
-  METRICS register.
-- Cannot do sampling read SLOTS and TopDown metric events
+--=20
+Cheers,
+Stephen Rothwell
 
-Please refer SDM Vol3, 18.3.9.3 Performance Metrics for the details of
-TopDown metrics.
+--Sig_/=1dxdUJ9WnawpF7=6CXdUXL
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-Andi Kleen (7):
-  perf/core: Support a REMOVE transaction
-  perf/x86/intel: Basic support for metrics counters
-  perf/x86/intel: Support overflows on SLOTS
-  perf/x86/intel: Set correct weight for TopDown metrics events
-  perf/x86/intel: Export new TopDown metrics events for Icelake
-  perf, tools, stat: Support new per thread TopDown metrics
-  perf, tools: Add documentation for topdown metrics
+-----BEGIN PGP SIGNATURE-----
 
-Kan Liang (2):
-  perf/x86/intel: Support hardware TopDown metrics
-  perf/x86/intel: Disable sampling read slots and topdown
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzkcPEACgkQAVBC80lX
+0GzFlwf+MRLCmFgKUnLP3fJYw0qVudP2JJ2+wXN3AJcl4p302jwHHLs34RTTSeN7
+pxoR0xFFeaAIqytLYGfizowqX86Qv6dxiRTckoPuE3uw+SH76lcwQtZzgDTppYgo
+axsQxTaRStKFYun8p8SNZdFfZF8BuI9kTl8OhUcrysVs+57v8etyZ+XyZspvzVQN
+XR9Z4bIb1aufYEVJq0ygaQ0iCXzvfZOoeZdqrAJ+YWVwaG5D2G/JruOuDOU62E/D
+tcYcQmFSO9Ry3hsbOWAgzAL4nU8XR9Xwem2gJmg+1rqBRIOhCj3/ZTtR5ODnFA8Q
+IV3Uyqjc277gqQaOeVjGG8KCP+x4cQ==
+=fjIr
+-----END PGP SIGNATURE-----
 
- arch/x86/events/core.c                 |  63 ++++++--
- arch/x86/events/intel/core.c           | 284 +++++++++++++++++++++++++++++++--
- arch/x86/events/perf_event.h           |  31 ++++
- arch/x86/include/asm/msr-index.h       |   3 +
- arch/x86/include/asm/perf_event.h      |  30 ++++
- include/linux/perf_event.h             |   7 +
- kernel/events/core.c                   |   5 +
- tools/perf/Documentation/perf-stat.txt |   9 +-
- tools/perf/Documentation/topdown.txt   | 223 ++++++++++++++++++++++++++
- tools/perf/builtin-stat.c              |  24 +++
- tools/perf/util/stat-shadow.c          |  89 +++++++++++
- tools/perf/util/stat.c                 |   4 +
- tools/perf/util/stat.h                 |   8 +
- 13 files changed, 754 insertions(+), 26 deletions(-)
- create mode 100644 tools/perf/Documentation/topdown.txt
-
--- 
-2.14.5
-
+--Sig_/=1dxdUJ9WnawpF7=6CXdUXL--
