@@ -2,164 +2,86 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7513DC04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:28:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57883C04E87
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:30:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36D4E208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:28:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="rX15COky";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="Y0drvktL"
+	by mail.kernel.org (Postfix) with ESMTP id 2013E2173C
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:30:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558456216;
+	bh=80+x1wYVzAInFNDmRNx1g3qJ61uzzAjRrmAnmhXxVE8=;
+	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
+	b=lyB4PPcL52YhRelYkd/gOQmu/N5oQA7iLJ+tc7EOt+krMz+s84NplhH7jFok4qUl/
+	 ErkeDWxKepkaWLapRm4SrjwhPhsb+/5gHYJPr5lfdQuAyxVdl4DCssrty5v6hf8KQy
+	 n+TYR0+AnaFKR1e++bEGewongmkjkBY8vGEQcCcI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728255AbfEUQ2J (ORCPT
+        id S1728597AbfEUQaP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 12:28:09 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:52406 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727932AbfEUQ2I (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 12:28:08 -0400
-Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
-        by m0001303.ppops.net (8.16.0.27/8.16.0.27) with SMTP id x4LGL7po022648;
-        Tue, 21 May 2019 09:27:06 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=4W8NHuI/u+XHU37aD05p8OdYnW8rnzf3lzt+u0w6T0w=;
- b=rX15COkyc0fGnOW5oVy4aQn6/HTALXMc6uTT2C1v6nYJQg5TEiTc0tuk5Z/HZkOCGKF5
- C/zOftIxuyed4Z0MRFZVmZVExC2B0IDlGQdrt1a/UUNYNJxBYU7owfHxHIh1FM7VIBhq
- T5jPuNv+xBunjbn4PQKzyA9PVqHdbe0+K8Y= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by m0001303.ppops.net with ESMTP id 2smcnpsnv9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Tue, 21 May 2019 09:27:06 -0700
-Received: from ash-exopmbx101.TheFacebook.com (2620:10d:c0a8:82::b) by
- ash-exhub102.TheFacebook.com (2620:10d:c0a8:82::f) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 21 May 2019 09:27:04 -0700
-Received: from ash-exhub204.TheFacebook.com (2620:10d:c0a8:83::4) by
- ash-exopmbx101.TheFacebook.com (2620:10d:c0a8:82::b) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 21 May 2019 09:27:04 -0700
-Received: from NAM04-BN3-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.36.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Tue, 21 May 2019 09:27:04 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector1-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4W8NHuI/u+XHU37aD05p8OdYnW8rnzf3lzt+u0w6T0w=;
- b=Y0drvktLjnroRyrVOB+YvT+efeErs9Z+isGykpzAteVnw5tmavVI9J6gYpF/GRQnFyMltR0NPVfZxfjsA/45g9KJamMYyLmXbWwk+j5illnkWxYWNAao8f7ibzcuoKWWxFcL49Kz9lqORhO6FrXryhoIu09PWZ7IJp1xFezNJXw=
-Received: from MWHPR15MB1165.namprd15.prod.outlook.com (10.175.2.19) by
- MWHPR15MB1695.namprd15.prod.outlook.com (10.175.142.16) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1900.18; Tue, 21 May 2019 16:27:02 +0000
-Received: from MWHPR15MB1165.namprd15.prod.outlook.com
- ([fe80::85b5:614:bc49:8a15]) by MWHPR15MB1165.namprd15.prod.outlook.com
- ([fe80::85b5:614:bc49:8a15%11]) with mapi id 15.20.1900.020; Tue, 21 May 2019
- 16:27:02 +0000
-From:   Song Liu <songliubraving@fb.com>
-To:     =?utf-8?B?TWljaGFsIEtvdXRuw70=?= <mkoutny@suse.com>
-CC:     Morten Rasmussen <morten.rasmussen@arm.com>,
-        Kernel Team <Kernel-team@fb.com>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "vincent.guittot@linaro.org" <vincent.guittot@linaro.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/7] introduce cpu.headroom knob to cpu controller
-Thread-Topic: [PATCH 0/7] introduce cpu.headroom knob to cpu controller
-Thread-Index: AQHU7lSD68FtcB4UGUOYupgC9AfmOKY1TPCAgACBxACAQAwaAIAALJKA
-Date:   Tue, 21 May 2019 16:27:02 +0000
-Message-ID: <D9376488-F290-4917-9124-292AA649948C@fb.com>
-References: <20190408214539.2705660-1-songliubraving@fb.com>
- <20190410115907.GE19434@e105550-lin.cambridge.arm.com>
- <A2E9A149-9EAA-478D-A096-1D4D4BA442B3@fb.com>
- <20190521134730.GA12346@blackbody.suse.cz>
-In-Reply-To: <20190521134730.GA12346@blackbody.suse.cz>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3445.104.8)
-x-originating-ip: [2620:10d:c090:200::1:bee7]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 62d56774-4771-49c0-e7e2-08d6de092819
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:MWHPR15MB1695;
-x-ms-traffictypediagnostic: MWHPR15MB1695:
-x-microsoft-antispam-prvs: <MWHPR15MB169518FF4144390263FA01F5B3070@MWHPR15MB1695.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0044C17179
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(136003)(39860400002)(346002)(376002)(366004)(189003)(199004)(2906002)(305945005)(25786009)(99286004)(486006)(57306001)(476003)(76176011)(446003)(14444005)(316002)(11346002)(2616005)(46003)(68736007)(53936002)(256004)(6246003)(71200400001)(71190400001)(36756003)(83716004)(4326008)(6436002)(6506007)(186003)(82746002)(6116002)(6486002)(53546011)(6512007)(102836004)(5660300002)(229853002)(66476007)(8936002)(7736002)(14454004)(81156014)(81166006)(33656002)(76116006)(66446008)(66556008)(8676002)(86362001)(64756008)(6916009)(66946007)(73956011)(50226002)(54906003)(478600001);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1695;H:MWHPR15MB1165.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: skEQxFHDwmww0vF/DKz7m4I9DqkL2IbwuAToTvVSm53aALvqjp3H0dYZPfSbL8JDXCSrOcdfUaEmv471HwNAjEVBla7j/1pAJ1DM6ERcrkTj5nmCSwNFgd7cnqiVhR4Fbu/p0JvX6mPOg+8JhPMEctCqHMwRUGae1DKJuYrD+QsTAw3EQSLVXRmyBgIpqLJj93ZDFUooq0f8K4txjfHHZvu0iec2+943aG7nWrpnd72rbw7pc0oIYIbIZVS2gRZWW8j0e/tayCbkKM5i8bGBlTXWoNJBMYCDBLb559XQhK1cmjLaKP0y5jbQhQ1opLlnouOSexpNTHBrQJQg0MK1S4CsUYDL7Nvci04oBtbgqe97rDzoobQD+cjY3GHy1SnWS7kfxbI+NX4BIF+2Rx87YXtA7GqilaYPqoVdo7IdruQ=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <227172D9A4EF6C4B9300F4C897FCC117@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Tue, 21 May 2019 12:30:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57024 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726900AbfEUQaP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 12:30:15 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D5B9208C3;
+        Tue, 21 May 2019 16:30:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558456214;
+        bh=80+x1wYVzAInFNDmRNx1g3qJ61uzzAjRrmAnmhXxVE8=;
+        h=Date:From:To:Subject:References:In-Reply-To:From;
+        b=VutVlFFQQf6IyVI5F/Zq8qBoJwND7QXZ7Au/VhzYHcBIEcPdm8XXtAcTQndIE3Ras
+         +v0lPXJvXOrXJc8S7hphCCPou69Yey2QE6+/4713gs7ulQmDLrXWtQN80LXbL4rGLN
+         dsxGHznezLYFHbvdFxlfAdrh6Ag6tHPQLIGiVi5w=
+Date:   Tue, 21 May 2019 18:30:12 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Theodore Ts'o <tytso@mit.edu>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>,
+        linux-ext4@vger.kernel.org,
+        Arthur Marsh <arthur.marsh@internode.on.net>,
+        Richard Weinberger <richard.weinberger@gmail.com>
+Subject: Re: ext4 regression (was Re: [PATCH 4.19 000/105] 4.19.45-stable
+ review)
+Message-ID: <20190521163012.GA19986@kroah.com>
+References: <20190520115247.060821231@linuxfoundation.org>
+ <20190520222342.wtsjx227c6qbkuua@xps.therub.org>
+ <20190521085956.GC31445@kroah.com>
+ <CA+G9fYvHmUimtwszwo=9fDQLn+MNh8Vq3UGPaPUdhH=dEKzqxg@mail.gmail.com>
+ <20190521093849.GA9806@kroah.com>
+ <CA+G9fYveeg_FMsL31aunJ2A9XLYk908Y1nSFw4kwkFk3h3uEiA@mail.gmail.com>
+ <20190521162142.GA2591@mit.edu>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 62d56774-4771-49c0-e7e2-08d6de092819
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 May 2019 16:27:02.7541
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1695
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-21_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=925 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905210101
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190521162142.GA2591@mit.edu>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgTWljaGFsLA0KDQo+IE9uIE1heSAyMSwgMjAxOSwgYXQgNjo0NyBBTSwgTWljaGFsIEtvdXRu
-w70gPG1rb3V0bnlAc3VzZS5jb20+IHdyb3RlOg0KPiANCj4gSGVsbG8gU29uZy4NCj4gDQo+IE9u
-IFdlZCwgQXByIDEwLCAyMDE5IGF0IDA3OjQzOjM1UE0gKzAwMDAsIFNvbmcgTGl1IDxzb25nbGl1
-YnJhdmluZ0BmYi5jb20+IHdyb3RlOg0KPj4gVGhlIGxvYWQgbGV2ZWwgYWJvdmUgaXMgbWVhc3Vy
-ZWQgYXMgcmVxdWVzdHMtcGVyLXNlY29uZC4gDQo+PiANCj4+IFdoZW4gdGhlcmUgaXMgbm8gc2lk
-ZSB3b3JrbG9hZCwgdGhlIHN5c3RlbSBoYXMgYWJvdXQgNDUlIGJ1c3kgQ1BVIHdpdGggDQo+PiBs
-b2FkIGxldmVsIG9mIDEuMDsgYW5kIGFib3V0IDc1JSBidXN5IENQVSBhdCBsb2FkIGxldmVsIG9m
-IDEuNS4gDQo+PiANCj4+IFRoZSBzYXR1cmF0aW9uIHN0YXJ0cyBiZWZvcmUgdGhlIHN5c3RlbSBo
-aXR0aW5nIDEwMCUgdXRpbGl6YXRpb24uIFRoaXMgaXMNCj4+IHRydWUgZm9yIG1hbnkgZGlmZmVy
-ZW50IHJlc291cmNlczogQUxVcyBpbiBTTVQgc3lzdGVtcywgY2FjaGUgbGluZXMsIA0KPj4gbWVt
-b3J5IGJhbmR3aWR0aHMsIGV0Yy4gDQo+IEkgaGF2ZSByZWFkIHRocm91Z2ggdGhlIHRocmVhZCBj
-b250aW51YXRpb24gYW5kIGl0IGFwcGVhcnMgdG8gbWUgdGhlcmUNCj4gaXMgc29tZSBtaXN1bmRl
-cnN0YW5kaW5nIG9uIHRoZSBsYXRlbmN5IG1ldHJpYyAoc2NoZWR1bGVyIGxhdGVuY3kgPD0NCj4g
-eW91ciBsYXRlbmN5IDw9IHJlcXVlc3Qgd2FsbCB0aW1lPykuDQoNCldlIGRlZmluZSAieW91ciBs
-YXRlbmN5IiA9PSAicmVxdWVzdCB3YWxsIHRpbWUiID4gInNjaGVkdWxlciBsYXRlbmN5Ii4gDQoN
-ClRoZSBhcHBsaWNhdGlvbiBpcyBhIHdlYiBzZXJ2ZXIuIEl0IHdvcmtzIGFzOg0KDQogICAgZm9y
-IGEgZmV3IGl0ZXJhdGlvbnM6DQogICAgICAgIChhKSByZXF1ZXN0IGRhdGEgZnJvbSBjYWNoZS9k
-Yg0KICAgICAgICAoYikgd2FpdCBmb3IgZGF0YQ0KICAgICAgICAoYykgZGF0YSBpcyByZWFkeSwg
-d2FpdCB0byBiZSBzY2hlZHVsZWQNCiAgICAgICAgKGQpIHJlbmRlciB3ZWIgcGFnZSBiYXNlZCBv
-biBkYXRhDQoNCldlIG5lZWQgdG8gZG8gYSBmZXcgaXRlcmF0aW9ucyBiZWNhdXNlIHdlIG5lZWQg
-c29tZSBkYXRhIHRvIGRlY2lkZSB3aGF0DQpvdGhlciBkYXRhIHRvIGZldGNoLiANCg0KVGhlIG92
-ZXJhbGwgbGF0ZW5jeSAob3Igd2FsbCBsYXRlbmN5KSBjb250YWluczogDQoNCiAgICgxKSBjcHUg
-dGltZSwgd2hpY2ggaXMgKGEpIGFuZCAoZCkgaW4gdGhlIGxvb3AgYWJvdmU7DQogICAoMikgdGlt
-ZSB3YWl0aW5nIGZvciBkYXRhLCB3aGljaCBpcyAoYik7DQogICAoMykgc2NoZWR1bGUgbGF0ZW5j
-eSwgdGltZSBiZXR3ZWVuIGRhdGEgaXMgcmVhZHkgYW5kIHRoZSB0aHJlYWQgd2FrZXMNCiAgICAg
-ICB1cCwgd2hpY2ggaXMgKGMpOw0KDQpJbiBvdXIgZXhwZXJpbWVudCwgd2UgY2FuIG1lYXN1cmUg
-KDEpIGFuZCAiKDEpKygyKSsoMykiLiBGb3IgZGF0YSBpbiB0aGUNCmZvbGxvd2luZyB0YWJsZS4g
-ImNwdSB0aW1lIiBpcyAoMSksICJ3YWxsIHRpbWUiIGlzICgxKSsoMikrKDMpLCBhbmQgDQoid2Fs
-bCAtIGNwdSIgaXMgIigyKSsoMykiLiBXZSBhc3N1bWUgKDIpIGRvZXNuJ3QgY2hhbmdlLCBzbyBj
-aGFuZ2VzIGluIA0KIndhbGwgLSBjcHUiIGlzIG1vc3RseSBkdWUgdG8gY2hhbmdlcyBpbiAoMyku
-IA0KDQpzaWRlIGpvYiB8IGNwdS5oZWFkcm9vbSB8ICBjcHUtaWRsZSB8IHdhbGwgdGltZSB8IGNw
-dSB0aW1lIHwgd2FsbCAtIGNwdQ0KLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQogbm9uZSAgICB8ICAgICBuL2Eg
-ICAgICB8ICAgIDQyLjQlICB8ICAgMS4wMCAgICB8ICAgMC4zMSAgIHwgICAwLjY5DQpmZm1wZWcg
-ICB8ICAgICAgIDAgICAgICB8ICAgIDEwLjglICB8ICAgMS4xNyAgICB8ICAgMC4zOCAgIHwgICAw
-Ljc5DQpmZm1wZWcgICB8ICAgICAyNSUgICAgICB8ICAgIDIyLjglICB8ICAgMS4wOCAgICB8ICAg
-MC4zNSAgIHwgICAwLjczDQoNCg0KRG9lcyB0aGlzIG1ha2Ugc2Vuc2U/DQoNClRoYW5rcywNClNv
-bmcNCg0K
+On Tue, May 21, 2019 at 12:21:42PM -0400, Theodore Ts'o wrote:
+> On Tue, May 21, 2019 at 03:58:15PM +0530, Naresh Kamboju wrote:
+> > > Ted, any ideas here?  Should I drop this from the stable trees, and you
+> > > revert it from Linus's?  Or something else?
+> 
+> It's safe to drop this from the stable trees while we investigate.  It
+> was always borderline for stable anyway.  (See below).
+
+Ok, will go drop both of these now, thanks.
+
+greg k-h
