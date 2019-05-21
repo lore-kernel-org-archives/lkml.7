@@ -2,113 +2,98 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=AC_FROM_MANY_DOTS,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50749C04E87
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:31:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DC6CC04E87
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:32:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FAF4208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:31:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E2F4217D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:32:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729065AbfEUQbN (ORCPT
+        id S1729076AbfEUQcB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 12:31:13 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:47383 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728005AbfEUQbM (ORCPT
+        Tue, 21 May 2019 12:32:01 -0400
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:41432 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728055AbfEUQcB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 12:31:12 -0400
-Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1hT7fR-00027I-1U; Tue, 21 May 2019 16:31:09 +0000
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-To:     bhelgaas@google.com, rafael.j.wysocki@intel.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>
-Subject: [PATCH] PCI / PM: Don't runtime suspend when device only supports wakeup from D0
-Date:   Wed, 22 May 2019 00:31:04 +0800
-Message-Id: <20190521163104.15759-1-kai.heng.feng@canonical.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 21 May 2019 12:32:01 -0400
+Received: from callcc.thunk.org (guestnat-104-133-0-109.corp.google.com [104.133.0.109] (may be forged))
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x4LGV973024567
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 21 May 2019 12:31:10 -0400
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id DF045420481; Tue, 21 May 2019 12:31:08 -0400 (EDT)
+Date:   Tue, 21 May 2019 12:31:08 -0400
+To:     Jan Kara <jack@suse.cz>
+Cc:     Paolo Valente <paolo.valente@linaro.org>,
+        "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>,
+        linux-fsdevel@vger.kernel.org,
+        linux-block <linux-block@vger.kernel.org>,
+        linux-ext4@vger.kernel.org, cgroups@vger.kernel.org,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Jens Axboe <axboe@kernel.dk>, jmoyer@redhat.com,
+        amakhalov@vmware.com, anishs@vmware.com, srivatsab@vmware.com
+Subject: Re: CFQ idling kills I/O performance on ext4 with blkio cgroup
+ controller
+Message-ID: <20190521163108.GB2591@mit.edu>
+Mail-Followup-To: tytso@mit.edu, Jan Kara <jack@suse.cz>,
+        Paolo Valente <paolo.valente@linaro.org>,
+        "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>,
+        linux-fsdevel@vger.kernel.org,
+        linux-block <linux-block@vger.kernel.org>,
+        linux-ext4@vger.kernel.org, cgroups@vger.kernel.org,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Jens Axboe <axboe@kernel.dk>, jmoyer@redhat.com,
+        amakhalov@vmware.com, anishs@vmware.com, srivatsab@vmware.com
+References: <8d72fcf7-bbb4-2965-1a06-e9fc177a8938@csail.mit.edu>
+ <1812E450-14EF-4D5A-8F31-668499E13652@linaro.org>
+ <46c6a4be-f567-3621-2e16-0e341762b828@csail.mit.edu>
+ <07D11833-8285-49C2-943D-E4C1D23E8859@linaro.org>
+ <238e14ff-68d1-3b21-a291-28de4f2d77af@csail.mit.edu>
+ <6EB6C9D2-E774-48FA-AC95-BC98D97645D0@linaro.org>
+ <20190521091026.GA17019@quack2.suse.cz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190521091026.GA17019@quack2.suse.cz>
+>From:  Theodore Ts'o <tytso@mit.edu>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+From:   "Theodore Ts'o" <tytso@mit.edu>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There's an xHC device that doesn't wake when a USB device gets plugged
-to its USB port. The driver's own runtime suspend callback was called,
-PME signaling was enabled, but it stays at PCI D0.
+On Tue, May 21, 2019 at 11:10:26AM +0200, Jan Kara wrote:
+> > [root@localhost tmp]# dd if=/dev/zero of=/root/test.img bs=512 count=10000 oflag=dsync
+> 
+> Yes and that's expected. It just shows how inefficient small synchronous IO
+> is. Look, dd(1) writes 512-bytes. From FS point of view we have to write:
+> full fs block with data (+4KB), inode to journal (+4KB), journal descriptor
+> block (+4KB), journal superblock (+4KB), transaction commit block (+4KB) -
+> so that's 20KB just from top of my head to write 512 bytes...
 
-A PCI device can be runtime suspended to D0 when it supports D0 PME and
-its _S0W reports D0. Theoratically this should work, but as [1]
-specifies, D0 doesn't have wakeup capability.
+Well, it's not *that* bad.  With fdatasync(), we're only having to do
+this worse case thing every 8 writes.  The other writes, we don't
+actually need to do any file-system level block allocation, so it's
+only a 512 byte write to the disk[1] seven out of eight writes.
 
-To avoid this problematic situation, we should avoid runtime suspend if
-D0 is the only state that can wake up the device.
+That's also true for the slice_idle hit, of course, We only need to do
+a jbd2 transaction when there is a block allocation, and that's only
+going to happen one in eight writes.
 
-[1] https://docs.microsoft.com/en-us/windows-hardware/drivers/kernel/device-working-state-d0
+       	   	      	     	     	   - Ted
 
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
----
- drivers/pci/pci-driver.c | 5 +++++
- drivers/pci/pci.c        | 2 +-
- include/linux/pci.h      | 3 +++
- 3 files changed, 9 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-index cae630fe6387..15a6310c5d7b 100644
---- a/drivers/pci/pci-driver.c
-+++ b/drivers/pci/pci-driver.c
-@@ -1251,6 +1251,11 @@ static int pci_pm_runtime_suspend(struct device *dev)
- 		return 0;
- 	}
- 
-+	if (pci_target_state(pci_dev, device_can_wakeup(dev)) == PCI_D0) {
-+		dev_dbg(dev, "D0 doesn't have wakeup capability\n");
-+		return -EBUSY;
-+	}
-+
- 	pci_dev->state_saved = false;
- 	if (pm && pm->runtime_suspend) {
- 		error = pm->runtime_suspend(dev);
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 8abc843b1615..ceee6efbbcfe 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -2294,7 +2294,7 @@ EXPORT_SYMBOL(pci_wake_from_d3);
-  * If the platform can't manage @dev, return the deepest state from which it
-  * can generate wake events, based on any available PME info.
-  */
--static pci_power_t pci_target_state(struct pci_dev *dev, bool wakeup)
-+pci_power_t pci_target_state(struct pci_dev *dev, bool wakeup)
- {
- 	pci_power_t target_state = PCI_D3hot;
- 
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 4a5a84d7bdd4..91e8dc4d04aa 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -1188,6 +1188,7 @@ bool pci_pme_capable(struct pci_dev *dev, pci_power_t state);
- void pci_pme_active(struct pci_dev *dev, bool enable);
- int pci_enable_wake(struct pci_dev *dev, pci_power_t state, bool enable);
- int pci_wake_from_d3(struct pci_dev *dev, bool enable);
-+pci_power_t pci_target_state(struct pci_dev *dev, bool wakeup);
- int pci_prepare_to_sleep(struct pci_dev *dev);
- int pci_back_from_sleep(struct pci_dev *dev);
- bool pci_dev_run_wake(struct pci_dev *dev);
-@@ -1672,6 +1673,8 @@ static inline int pci_set_power_state(struct pci_dev *dev, pci_power_t state)
- { return 0; }
- static inline int pci_wake_from_d3(struct pci_dev *dev, bool enable)
- { return 0; }
-+pci_power_t pci_target_state(struct pci_dev *dev, bool wakeup)
-+{ return PCI_D0; }
- static inline pci_power_t pci_choose_state(struct pci_dev *dev,
- 					   pm_message_t state)
- { return PCI_D0; }
--- 
-2.17.1
-
+[1] Of course, small synchronous writes to a HDD are *also* terrible
+for performance, just from the HDD's perspective.  For a random write
+workload, if you are using disks with a 4k physical sector size, it's
+having to do a read/modify/write for each 512 byte write.  And HDD
+vendors are talking about wanting to go to a 32k or 64k physical
+sector size...  In this sequential write workload, you'll mostly be
+shielded from this by the HDD's cache, but the fact that you have to
+wait for the bits to hit the platter is always going to be painful.
