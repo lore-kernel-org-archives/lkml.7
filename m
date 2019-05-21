@@ -2,171 +2,104 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F19CC04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 06:07:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A33D9C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 06:08:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 092B220863
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 06:07:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AfTgyoeX"
+	by mail.kernel.org (Postfix) with ESMTP id 6F8E021743
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 06:08:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558418903;
+	bh=dXyQKvVAAS2PMMvZGhgQTK3uZ6zmRariexjEwh6Fs7E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=RCNb1mYUcYvdfx+dlQbFT5FiSAekTpk2ytm/yHLjfS8lQCvZ/SkcAI7YWfMiwK/sx
+	 zvg0AAE0SMEeR6OjtORHi1hSx4pmNb0Oc/U5e9XYO/xgb0qx04QPztSP0c8+MjpqIC
+	 6zFW+FQKTu38KTLexxQzSoQ3Brb3nROUK1rKMrK0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727937AbfEUGHH (ORCPT
+        id S1727945AbfEUGIX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 02:07:07 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:39078 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726719AbfEUGHG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 02:07:06 -0400
-Received: by mail-pf1-f196.google.com with SMTP id z26so8478948pfg.6;
-        Mon, 20 May 2019 23:07:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=T2f0j+HcR+Hm2808+uYZ0INzAMJinwKKeoQwZ5KAAMI=;
-        b=AfTgyoeXL7FvsFCYPAMw2WB6WEYULcybTi8Y4feHwmKhP32/yEDF7uQVjZCOD1BOyH
-         MJkOKTFQTBy+9FR9fykBAuRzjhuYIMFY6LOJUotbnevwBeiCealuEvvzdv3t2799rSeh
-         feljqw21jIYZLBfOMhKN3jDfh0PVDpcDsPpfqP5aVrv9DhEllO5x4ASFWNKqThoN0Trj
-         Pazimk3nOviXHAB3wyl0VbQ4Dvwd0M1zmMDIGhszXhuKzZBxsh3LgR5NKRWv1Mn59Jvv
-         PsuPJ+NDlziuakmxo10qlB5hxKS4p10i44atoayaiRyldpDnMGCuZU3fIIlhqQMllRV2
-         s12Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=T2f0j+HcR+Hm2808+uYZ0INzAMJinwKKeoQwZ5KAAMI=;
-        b=H6n6IGbTdFraDRn3h0z+dcRso0p4U3dY16rK6MTppkkRZZ80a5TUAS09RzCtJA0ITz
-         C3adAMALZp3Tq+s5qCwUiLzQBO+9gGYbbv++srOxgWGQ49F92k9iDE9cXpHfw+u0R9kf
-         ZH2BfXnvF6xPTymtf7a3nYF3IdHbpdXoCTylz+qyJCujuLxSk6HkVyHJn9eiw8ycibno
-         MX+f9socNtkqWQlh5/4vCzJN+dkCLqttbe1vNl46Y6BzTW9ls3J0WzYgDf1F8biIEfiC
-         TnP5BM4nggxXvoMj9TURH32ltJhLDU7sJ5iYmRaH/PrZIeG3OH2vBuRmC3suimQi5sKs
-         XB3g==
-X-Gm-Message-State: APjAAAXz+Px93naRAUKj5iV4RAteatoy0mFyCdnpGzyzvFAy0oJ387Yw
-        /k1rQX+arNP+IO1SXIf39CuCOLb1
-X-Google-Smtp-Source: APXvYqwK/Tl2RHm3mvIPhxToSh/2lEv1avoEWuM3BPxoT0DKr2jUctRvx8kGLha9eTQMMOzFVdc1+g==
-X-Received: by 2002:a63:495e:: with SMTP id y30mr37000742pgk.185.1558418825234;
-        Mon, 20 May 2019 23:07:05 -0700 (PDT)
-Received: from localhost.localdomain ([203.205.141.123])
-        by smtp.googlemail.com with ESMTPSA id a15sm2351484pgv.4.2019.05.20.23.07.03
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 20 May 2019 23:07:04 -0700 (PDT)
-From:   Wanpeng Li <kernellwp@gmail.com>
-X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Liran Alon <liran.alon@oracle.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Subject: [PATCH v2 3/3] KVM: X86: Emulate MSR_IA32_MISC_ENABLE MWAIT bit
-Date:   Tue, 21 May 2019 14:06:54 +0800
-Message-Id: <1558418814-6822-3-git-send-email-wanpengli@tencent.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1558418814-6822-1-git-send-email-wanpengli@tencent.com>
-References: <1558418814-6822-1-git-send-email-wanpengli@tencent.com>
+        Tue, 21 May 2019 02:08:23 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50878 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725798AbfEUGIW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 02:08:22 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 6A6FDAD45;
+        Tue, 21 May 2019 06:08:21 +0000 (UTC)
+Date:   Tue, 21 May 2019 08:08:20 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Minchan Kim <minchan@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tim Murray <timmurray@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>, linux-api@vger.kernel.org
+Subject: Re: [RFC 3/7] mm: introduce MADV_COLD
+Message-ID: <20190521060820.GB32329@dhcp22.suse.cz>
+References: <20190520035254.57579-1-minchan@kernel.org>
+ <20190520035254.57579-4-minchan@kernel.org>
+ <20190520082703.GX6836@dhcp22.suse.cz>
+ <20190520230038.GD10039@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190520230038.GD10039@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wanpeng Li <wanpengli@tencent.com>
+On Tue 21-05-19 08:00:38, Minchan Kim wrote:
+> On Mon, May 20, 2019 at 10:27:03AM +0200, Michal Hocko wrote:
+> > [Cc linux-api]
+> > 
+> > On Mon 20-05-19 12:52:50, Minchan Kim wrote:
+> > > When a process expects no accesses to a certain memory range
+> > > for a long time, it could hint kernel that the pages can be
+> > > reclaimed instantly but data should be preserved for future use.
+> > > This could reduce workingset eviction so it ends up increasing
+> > > performance.
+> > > 
+> > > This patch introduces the new MADV_COLD hint to madvise(2)
+> > > syscall. MADV_COLD can be used by a process to mark a memory range
+> > > as not expected to be used for a long time. The hint can help
+> > > kernel in deciding which pages to evict proactively.
+> > 
+> > As mentioned in other email this looks like a non-destructive
+> > MADV_DONTNEED alternative.
+> > 
+> > > Internally, it works via reclaiming memory in process context
+> > > the syscall is called. If the page is dirty but backing storage
+> > > is not synchronous device, the written page will be rotate back
+> > > into LRU's tail once the write is done so they will reclaim easily
+> > > when memory pressure happens. If backing storage is
+> > > synchrnous device(e.g., zram), hte page will be reclaimed instantly.
+> > 
+> > Why do we special case async backing storage? Please always try to
+> > explain _why_ the decision is made.
+> 
+> I didn't make any decesion. ;-) That's how current reclaim works to
+> avoid latency of freeing page in interrupt context. I had a patchset
+> to resolve the concern a few years ago but got distracted.
 
-MSR IA32_MISC_ENABLE bit 18, according to SDM:
-
-| When this bit is set to 0, the MONITOR feature flag is not set (CPUID.01H:ECX[bit 3] = 0).
-| This indicates that MONITOR/MWAIT are not supported.
-|
-| Software attempts to execute MONITOR/MWAIT will cause #UD when this bit is 0.
-|
-| When this bit is set to 1 (default), MONITOR/MWAIT are supported (CPUID.01H:ECX[bit 3] = 1).
-
-The CPUID.01H:ECX[bit 3] ought to mirror the value of the MSR bit,
-CPUID.01H:ECX[bit 3] is a better guard than kvm_mwait_in_guest().
-kvm_mwait_in_guest() affects the behavior of MONITOR/MWAIT, not its
-guest visibility.
-
-This patch implements toggling of the CPUID bit based on guest writes
-to the MSR.
-
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Radim Krčmář <rkrcmar@redhat.com>
-Cc: Sean Christopherson <sean.j.christopherson@intel.com>
-Cc: Liran Alon <liran.alon@oracle.com>
-Cc: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
----
-v1 -> v2:
- * hide behind KVM_CAP_DISABLE_QUIRKS
-
- arch/x86/include/uapi/asm/kvm.h |  1 +
- arch/x86/kvm/cpuid.c            | 10 ++++++++++
- arch/x86/kvm/x86.c              | 10 ++++++++++
- 3 files changed, 21 insertions(+)
-
-diff --git a/arch/x86/include/uapi/asm/kvm.h b/arch/x86/include/uapi/asm/kvm.h
-index 7a0e64c..e3ae96b5 100644
---- a/arch/x86/include/uapi/asm/kvm.h
-+++ b/arch/x86/include/uapi/asm/kvm.h
-@@ -382,6 +382,7 @@ struct kvm_sync_regs {
- #define KVM_X86_QUIRK_CD_NW_CLEARED	(1 << 1)
- #define KVM_X86_QUIRK_LAPIC_MMIO_HOLE	(1 << 2)
- #define KVM_X86_QUIRK_OUT_7E_INC_RIP	(1 << 3)
-+#define KVM_X86_QUIRK_MISC_ENABLE_MWAIT (1 << 4)
- 
- #define KVM_STATE_NESTED_GUEST_MODE	0x00000001
- #define KVM_STATE_NESTED_RUN_PENDING	0x00000002
-diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-index e18a9f9..f54d266 100644
---- a/arch/x86/kvm/cpuid.c
-+++ b/arch/x86/kvm/cpuid.c
-@@ -137,6 +137,16 @@ int kvm_update_cpuid(struct kvm_vcpu *vcpu)
- 		(best->eax & (1 << KVM_FEATURE_PV_UNHALT)))
- 		best->eax &= ~(1 << KVM_FEATURE_PV_UNHALT);
- 
-+	if (kvm_check_has_quirk(vcpu->kvm, KVM_X86_QUIRK_MISC_ENABLE_MWAIT)) {
-+		best = kvm_find_cpuid_entry(vcpu, 0x1, 0);
-+		if (best) {
-+			if (vcpu->arch.ia32_misc_enable_msr & MSR_IA32_MISC_ENABLE_MWAIT)
-+				best->ecx |= F(MWAIT);
-+			else
-+				best->ecx &= ~F(MWAIT);
-+		}
-+	}
-+
- 	/* Update physical-address width */
- 	vcpu->arch.maxphyaddr = cpuid_query_maxphyaddr(vcpu);
- 	kvm_mmu_reset_context(vcpu);
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 765fe59..a4eb711 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -2547,6 +2547,16 @@ int kvm_set_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 		}
- 		break;
- 	case MSR_IA32_MISC_ENABLE:
-+		if (kvm_check_has_quirk(vcpu->kvm, KVM_X86_QUIRK_MISC_ENABLE_MWAIT) &&
-+			((vcpu->arch.ia32_misc_enable_msr ^ data) & MSR_IA32_MISC_ENABLE_MWAIT)) {
-+			if ((vcpu->arch.ia32_misc_enable_msr & MSR_IA32_MISC_ENABLE_MWAIT) &&
-+				!(data & MSR_IA32_MISC_ENABLE_MWAIT)) {
-+				if (!guest_cpuid_has(vcpu, X86_FEATURE_XMM3))
-+					return 1;
-+			}
-+			vcpu->arch.ia32_misc_enable_msr = data;
-+			kvm_update_cpuid(vcpu);
-+		}
- 		vcpu->arch.ia32_misc_enable_msr = data;
- 		break;
- 	case MSR_IA32_SMBASE:
+Please articulate that in the changelog then. Or even do not go into
+implementation details and stick with - reuse the current reclaim
+implementation. If you call out some of the specific details you are
+risking people will start depending on them. The fact that this reuses
+the currect reclaim logic is enough from the review point of view
+because we know that there is no additional special casing to worry
+about.
 -- 
-2.7.4
-
+Michal Hocko
+SUSE Labs
