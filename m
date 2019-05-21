@@ -2,76 +2,135 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 782E6C04AAC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 01:44:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43982C04E87
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 01:45:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42CAC2171F
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 01:44:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1804D21743
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 01:45:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="q4yLHaP0"
+	dkim=pass (2048-bit key) header.d=tobin.cc header.i=@tobin.cc header.b="aVzZIMke";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="wogBIOI9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727597AbfEUBoz (ORCPT
+        id S1727632AbfEUBpm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 21:44:55 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:50846 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727347AbfEUBoz (ORCPT
+        Mon, 20 May 2019 21:45:42 -0400
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:56245 "EHLO
+        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727511AbfEUBpl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 21:44:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=H2+x+MHVEZdCVE43yCMhl0CBsWPnqAGcA3mpEfmYBV4=; b=q4yLHaP0ptU37tRb4hLHZxJmm
-        ew5v4etxyfhz8kN5laXZoOJo0kg4bdW+mbUnZQ4wTr6eX35KDhHy9W1FM/Th6gTkXw0m7JmwDncr6
-        d3Ky/VrjxPss4IkozN7BQDI00Ja/RNMdxYF8ewPodxJQSznB04gOl3ramIHiqM4EMlydAhHLIowN+
-        /LHHYx/EygTi582MDiFvUyClSpCqhAbjBrqUpmTy4G9UaWfAOAsVN8j7PkYrQd7fGlpm+UWv9ms8t
-        XTjN+gKCo1BaWEOY1E123DatNsdFdKJYfobIgRpVoNrld/nW/6z2XcSSrfpaTTEqWOe7a2Gsbhf6i
-        J1c0i7Rvg==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hStpl-0000XC-36; Tue, 21 May 2019 01:44:53 +0000
-Date:   Mon, 20 May 2019 18:44:52 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Minchan Kim <minchan@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tim Murray <timmurray@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>
-Subject: Re: [RFC 0/7] introduce memory hinting API for external process
-Message-ID: <20190521014452.GA6738@bombadil.infradead.org>
-References: <20190520035254.57579-1-minchan@kernel.org>
+        Mon, 20 May 2019 21:45:41 -0400
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailnew.nyi.internal (Postfix) with ESMTP id ADF3BBFD1;
+        Mon, 20 May 2019 21:45:40 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute5.internal (MEProxy); Mon, 20 May 2019 21:45:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tobin.cc; h=date
+        :from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=zSyPy+Mn5LVlJ+FlCj33Ng1Vj0N
+        3aj5sXaJqqEQXdJg=; b=aVzZIMke8RgIn6fgRezyJIRNTdJNmy5BsAfcf1rzNh9
+        kfmmri+unp7PyZsnxtkTgHSaodOlSW0TTlKw/4fzSUEUmmtotFcMflrouEawmetl
+        yMmjYklNKZ2LGYBcwcppzbcYXLRiwTA4QcWSB/ZX7H9FsqXPJxD/cRXvqR7HSnbl
+        zmsZE4Ph1MtGXYkMjSGtQYC7AFO14uXoLyZbbHwa5QkUlBhb3yBrrCFILt19iBEf
+        kwl8tl11sbo2aN+IhYgJFA3CPgZgs+3qDPLfVBdw4eJznoV2b2tluB4D4CqOi8Cz
+        8hEcWr+0tr06AIlzR9mIdoTTxdmg5oLtQIMgMM4lQRA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=zSyPy+
+        Mn5LVlJ+FlCj33Ng1Vj0N3aj5sXaJqqEQXdJg=; b=wogBIOI9ILp8CO+jyYf2m/
+        4O6hf7ZDRufCxFGdAvGp6xsRPd+RZznXygF6h6C8FzaK2UCm+jexQBRPR5a036PZ
+        ragLxfROMNdB/0r9JMwaS38EjvpdLnYb6fIAMRTYkPNQkcbQryDr2NjG42OxjcBW
+        byUfI68V1yvb882goJR9nc6oZZ2w4KokjWRhkD9kaYfk1ROH6zxZnlbBDN2gDvJO
+        7blXnkWpM6kS89cTpb9wYgh63AMAU4w6AKN4L9TLTCXZXNm6HDKxrTN6+h/1QAZv
+        nk5lOnZ1kaxo4AMVAoe6nuYv6JnFpbD1aDar6wzuzMu+RpE4pza1gfrJUfw8GXDw
+        ==
+X-ME-Sender: <xms:QFjjXGtb0C56eqETPYVgual6pqtTl3Xv4VQd2dU88ZWfBDZlqDgMDw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddruddtledggeelucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    gfrhhlucfvnfffucdlfedtmdenucfjughrpeffhffvuffkfhggtggujgfofgesthdtredt
+    ofervdenucfhrhhomhepfdfvohgsihhnucevrdcujfgrrhguihhnghdfuceomhgvsehtoh
+    gsihhnrdgttgeqnecukfhppeduvdegrdduieelrdduheeirddvtdefnecurfgrrhgrmhep
+    mhgrihhlfhhrohhmpehmvgesthhosghinhdrtggtnecuvehluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:QFjjXGIUKhDO5k2QKvBTG4W_hsJowdoztPZE9oKq0Iey0Y_y7DE0TQ>
+    <xmx:QFjjXKeDFCQTJi5XPVg3TWkSTJwYsjmcT--3DtyGNqhPO6u28SGLQA>
+    <xmx:QFjjXIW67bTni76x_zcwROybxmtiemrH031fommHrIE4s3RokU4WTA>
+    <xmx:RFjjXCYvXZUddiAM0f0wNqhYLLKvySulEgfuHrNdsxa024x5Zp9wow>
+Received: from localhost (124-169-156-203.dyn.iinet.net.au [124.169.156.203])
+        by mail.messagingengine.com (Postfix) with ESMTPA id B78C810378;
+        Mon, 20 May 2019 21:45:35 -0400 (EDT)
+Date:   Tue, 21 May 2019 11:44:57 +1000
+From:   "Tobin C. Harding" <me@tobin.cc>
+To:     Roman Gushchin <guro@fb.com>
+Cc:     "Tobin C. Harding" <tobin@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Alexander Viro <viro@ftp.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>,
+        Pekka Enberg <penberg@cs.helsinki.fi>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Christopher Lameter <cl@linux.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Andreas Dilger <adilger@dilger.ca>,
+        Waiman Long <longman@redhat.com>,
+        Tycho Andersen <tycho@tycho.ws>, Theodore Ts'o <tytso@mit.edu>,
+        Andi Kleen <ak@linux.intel.com>,
+        David Chinner <david@fromorbit.com>,
+        Nick Piggin <npiggin@gmail.com>,
+        Rik van Riel <riel@redhat.com>,
+        Hugh Dickins <hughd@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH v5 13/16] slub: Enable balancing slabs across nodes
+Message-ID: <20190521014457.GA27676@eros.localdomain>
+References: <20190520054017.32299-1-tobin@kernel.org>
+ <20190520054017.32299-14-tobin@kernel.org>
+ <20190521010404.GB9552@tower.DHCP.thefacebook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190520035254.57579-1-minchan@kernel.org>
-User-Agent: Mutt/1.9.2 (2017-12-15)
+In-Reply-To: <20190521010404.GB9552@tower.DHCP.thefacebook.com>
+X-Mailer: Mutt 1.11.4 (2019-03-13)
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 20, 2019 at 12:52:47PM +0900, Minchan Kim wrote:
-> IMHO we should spell it out that this patchset complements MADV_WONTNEED
-> and MADV_FREE by adding non-destructive ways to gain some free memory
-> space. MADV_COLD is similar to MADV_WONTNEED in a way that it hints the
-> kernel that memory region is not currently needed and should be reclaimed
-> immediately; MADV_COOL is similar to MADV_FREE in a way that it hints the
-> kernel that memory region is not currently needed and should be reclaimed
-> when memory pressure rises.
+On Tue, May 21, 2019 at 01:04:10AM +0000, Roman Gushchin wrote:
+> On Mon, May 20, 2019 at 03:40:14PM +1000, Tobin C. Harding wrote:
+> > We have just implemented Slab Movable Objects (SMO).  On NUMA systems
+> > slabs can become unbalanced i.e. many slabs on one node while other
+> > nodes have few slabs.  Using SMO we can balance the slabs across all
+> > the nodes.
+> > 
+> > The algorithm used is as follows:
+> > 
+> >  1. Move all objects to node 0 (this has the effect of defragmenting the
+> >     cache).
+> 
+> This already sounds dangerous (or costly). Can't it be done without
+> cross-node data moves?
+>
+> > 
+> >  2. Calculate the desired number of slabs for each node (this is done
+> >     using the approximation nr_slabs / nr_nodes).
+> 
+> So that on this step only (actual data size - desired data size) has
+> to be moved?
 
-Do we tear down page tables for these ranges?  That seems like a good
-way of reclaiming potentially a substantial amount of memory.
+This is just the most braindead algorithm I could come up with.  Surely
+there are a bunch of things that could be improved.  Since I don't know
+the exact use case it seemed best not to optimize for any one use case.
 
+I'll review, comment on, and test any algorithm you come up with!
+
+thanks,
+Tobin.
