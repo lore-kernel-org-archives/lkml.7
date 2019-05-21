@@ -2,119 +2,89 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD4BEC04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 06:43:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E08AC46470
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 06:43:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8504C21743
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 06:43:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F017721773
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 06:43:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558421028;
+	bh=RnXLYhfY6lh0LSaoZsZoiyKf5U+jGs1qWIeePKBc4oc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vcQR7KK7mzrzKc1Sa1NchS1SEFJ375kmaIRxxO8MXGC8vxF0ywdYHApNGe/FLpzoQ
+	 8Tquv45ZucZ8X5RzD+4k/1StpNxb6tmEpO3A5bZiFSXPg+mP3eWDAvq1M2nLi+zOsY
+	 7BwbKrYMGbct10iGjMhDNm+dRa5+5XcjXwAecC8w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726487AbfEUGnm (ORCPT
+        id S1726738AbfEUGnr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 02:43:42 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:35039 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726247AbfEUGnm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 02:43:42 -0400
-Received: by mail-qt1-f193.google.com with SMTP id a39so19280684qtk.2
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 23:43:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Gro6bYpyJjEyBjnoN8cxKbYz7QpgKEPbeHJeHV938fM=;
-        b=o70lWBtNq+9lVO/+3WktlfA3Qcx5KEFT3di9wEW7mVBfZ/9MPxVh5FBvU/XhRYmKfT
-         PMgfvDzZuIiyt5Mw7tLRPANDpOZhMIRPRbXkTJGNUWvH3W+piLE6+54p6JWM++F18pCi
-         dPBuoQ+oV8JLzi9kE2idkuTmcrqWj3brLVUNFsF/y6AQpvU20GpeAdARz7Tp75rpK+PW
-         r4+7LxbEUQ2mwADs+F/LNhQWFgY3h2lfZbBlQduNnEiq+0HJf/puBjyKvzHEP+YwKvR6
-         TNDA9U13K2hDxBQeWHJtOSHKSazJl1EtNBtDQBiJnsa9CqmQwqvv74qsvcM5R4o914ok
-         Za6A==
-X-Gm-Message-State: APjAAAXllQ5rMgO0Ap09pr9yCBcsBd6qzWO4mj43Gz4mMqL2mavAkvdg
-        3XP5kFC+c/zc5QhUGI+P9JORzZqi7d6EtB2uR7yo3A==
-X-Google-Smtp-Source: APXvYqxXn1go1qbpDCG2yWak7kaOv1RYHlLtQD7wJZmZnmwbmMBNnw+06Lou9G3h+HjhnOOY/oD7Ff7vM7mbiHjnR+o=
-X-Received: by 2002:ac8:875:: with SMTP id x50mr65243976qth.345.1558421021479;
- Mon, 20 May 2019 23:43:41 -0700 (PDT)
+        Tue, 21 May 2019 02:43:47 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55498 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726247AbfEUGnq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 02:43:46 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 7F1A5AD12;
+        Tue, 21 May 2019 06:24:22 +0000 (UTC)
+Date:   Tue, 21 May 2019 08:24:21 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Minchan Kim <minchan@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tim Murray <timmurray@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>, linux-api@vger.kernel.org
+Subject: Re: [RFC 6/7] mm: extend process_madvise syscall to support vector
+ arrary
+Message-ID: <20190521062421.GD32329@dhcp22.suse.cz>
+References: <20190520035254.57579-1-minchan@kernel.org>
+ <20190520035254.57579-7-minchan@kernel.org>
+ <20190520092258.GZ6836@dhcp22.suse.cz>
+ <20190521024820.GG10039@google.com>
 MIME-Version: 1.0
-References: <20190519072711.2592-1-aaron.ma@canonical.com> <20190521051053.GD183429@dtor-ws>
-In-Reply-To: <20190521051053.GD183429@dtor-ws>
-From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Date:   Tue, 21 May 2019 08:43:29 +0200
-Message-ID: <CAO-hwJ+edn3SD8Z=yc1gOWRsA8_=uPTAHc18PkDhV2y7ackTPw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] Input: elantech - enable middle button support on 2 ThinkPads
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Peter Hutterer <peter.hutterer@who-t.net>,
-        =?UTF-8?B?5buW5bSH5qau?= <kt.liao@emc.com.tw>
-Cc:     Aaron Ma <aaron.ma@canonical.com>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190521024820.GG10039@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Tue 21-05-19 11:48:20, Minchan Kim wrote:
+> On Mon, May 20, 2019 at 11:22:58AM +0200, Michal Hocko wrote:
+> > [Cc linux-api]
+> > 
+> > On Mon 20-05-19 12:52:53, Minchan Kim wrote:
+> > > Currently, process_madvise syscall works for only one address range
+> > > so user should call the syscall several times to give hints to
+> > > multiple address range.
+> > 
+> > Is that a problem? How big of a problem? Any numbers?
+> 
+> We easily have 2000+ vma so it's not trivial overhead. I will come up
+> with number in the description at respin.
 
-On Tue, May 21, 2019 at 7:11 AM Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
->
-> Hi Aaron,
->
-> On Sun, May 19, 2019 at 03:27:10PM +0800, Aaron Ma wrote:
-> > Adding 2 new touchpad PNPIDs to enable middle button support.
->
-> Could you add their names in the comments please?
->
-> >
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Aaron Ma <aaron.ma@canonical.com>
-> > ---
-> >  drivers/input/mouse/elantech.c | 2 ++
-> >  1 file changed, 2 insertions(+)
-> >
-> > diff --git a/drivers/input/mouse/elantech.c b/drivers/input/mouse/elantech.c
-> > index a7f8b1614559..530142b5a115 100644
-> > --- a/drivers/input/mouse/elantech.c
-> > +++ b/drivers/input/mouse/elantech.c
-> > @@ -1189,6 +1189,8 @@ static const char * const middle_button_pnp_ids[] = {
-> >       "LEN2132", /* ThinkPad P52 */
-> >       "LEN2133", /* ThinkPad P72 w/ NFC */
-> >       "LEN2134", /* ThinkPad P72 */
-> > +     "LEN0407",
+Does this really have to be a fast operation? I would expect the monitor
+is by no means a fast path. The system call overhead is not what it used
+to be, sigh, but still for something that is not a hot path it should be
+tolerable, especially when the whole operation is quite expensive on its
+own (wrt. the syscall entry/exit).
 
-AFAICT, this one is the Lenovo P53.
-However, having a whitelist of new models is not going to scale IMO.
-
-I was thinking at submitting a patch to enable middle button
-unconditionally, but then I realized that libinput disables middle
-click emulation on touchpads with an actual physical middle button.
-
-And this morning I just realized that we might have a better chance at
-this if we consider the new models to have the physical middle button.
-I know LEN0407 attempts to bind over SMBus, so I would think we can
-reduce the set of whitelist by just checking for
-ETP_NEW_IC_SMBUS_HOST_NOTIFY (patch coming in).
-
-Cheers,
-Benjamin
-
-> > +     "LEN0408",
->
-> These should come first - I'd like to keep the list sorted
-> alphabetically.
->
-> >       NULL
-> >  };
-> >
-> > --
-> > 2.17.1
-> >
->
-> Thanks.
->
-> --
-> Dmitry
+I am not saying we do not need a multiplexing API, I am just not sure
+we need it right away. Btw. there was some demand for other MM syscalls
+to provide a multiplexing API (e.g. mprotect), maybe it would be better
+to handle those in one go?
+-- 
+Michal Hocko
+SUSE Labs
