@@ -2,86 +2,188 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB19CC04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 09:02:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02BD0C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 09:03:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90E0D21479
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 09:02:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAFAA21479
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 09:03:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aXbZOCmd"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="pp8mOjd7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726969AbfEUJCf (ORCPT
+        id S1727273AbfEUJDM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 05:02:35 -0400
-Received: from mail-wr1-f54.google.com ([209.85.221.54]:44820 "EHLO
-        mail-wr1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726006AbfEUJCf (ORCPT
+        Tue, 21 May 2019 05:03:12 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:53199 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726448AbfEUJDL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 05:02:35 -0400
-Received: by mail-wr1-f54.google.com with SMTP id w13so6867901wru.11
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 02:02:34 -0700 (PDT)
+        Tue, 21 May 2019 05:03:11 -0400
+Received: by mail-wm1-f66.google.com with SMTP id y3so2093219wmm.2
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 02:03:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=6vXRpcR8hUy/z236jHDc62nRnBJfz6oPwUw/X75saOc=;
-        b=aXbZOCmdi0RuzZZYueJKuRuzHc9qm6+e8qV7RidheapqjMsHvZ+WEt2p5bqrquTIVh
-         iF7mj9TJ1vHbYR9Iy8zIfIcroqjGd+yWWiuXOi8A/tvDh7EMByRwz4RWNQU8uucMtkTm
-         91DeVuszQAd9D7JpcEQETJC6205zorp0zrito0Mn7RYRggKVuVRXZi7POCFm1CrdD2Jz
-         BztcP0cTLDmN9hWJokghJizBOXif4kCobFcHHsli8dn3VDQQl78IaIycZql0hMj9avW9
-         oOJALNTgfkX4+xiad4VNprAjvJyF7s5+pObDUfEANfYGqKg8IbD6RD1p+8dLXEQjVoD0
-         3YCA==
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5R288mKF0GeHgJxCPpIdKCMHA/0CyoeQ5qge6u2tdDc=;
+        b=pp8mOjd7Mqs7yfAH43C6eB3d9rmh5jCVdEhDqU+Aug0+WajfS82ikNUV0LIXbA7tvR
+         GiEy7Q8pt8JgbacuMahdKch3HK6U286+qD0Aba9TVrFSpnIfFveJ96qnzZ2zO2kX8dt1
+         wi5xQcY/HMjYR9AhAUvRBXqw1Jhm6+mqmOSJlW41wQm2OcEwu0gauPLqZJMoP1wgnrAA
+         JFa0/dqis26Zwlg+wkVoYUaJReioOvFd7MY+BbyIBEdCh6kD7kWv2pgqTLFgAt7pUQC/
+         9+mAFIHrmYIahtfh+3vb13EqZYNILpT9bI4rwKAKNcknH25HW5ulQ20HEZHTEXKHRRJM
+         K7/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=6vXRpcR8hUy/z236jHDc62nRnBJfz6oPwUw/X75saOc=;
-        b=GJnGgK0BBM7cW17aADLFWVM1YjZdUKsQlbdUL+raJfACIYvssKGHlopWY0GbLUoZAd
-         s100zef3OjvQ095+1gBp2Q5s3YBcaNKuvkkpzpd0kKzhqtI3o5xJ5Tb/GOqym6qMH0Gs
-         AV4H2ON8AjaX+9qk87KAvIyEaxSyXGy6VLCKiiYJwJ6xsBCY6IEgklJAmLC8Tjm8msRU
-         N/K9ms0/E32LWwJehh8YhRZWjbNi42f1qPpykJag50dowKqQPoTgpEssFjRm+uj4Oq3o
-         7oHkoUHkpb5soWsfLc2s5489QW3Z9wUtLgbcnUsgkidMZbDZuk8eMNUdkf5/RaHbZEqC
-         zzdg==
-X-Gm-Message-State: APjAAAVledi8f8G0C4tbETwSAr0MNv7OWiTaRWMVno/rLvslyM1V1u0y
-        Dw+41LbtgvC9tnzQWzCtis4kMA==
-X-Google-Smtp-Source: APXvYqwHbKy6XrNMrf0bXWw/znNxyjKmOYV/fT85nkOTssBGYNlZ75SwruRwpJ6LEmr0CwrFTNRKEg==
-X-Received: by 2002:a5d:4a44:: with SMTP id v4mr4275934wrs.84.1558429354138;
-        Tue, 21 May 2019 02:02:34 -0700 (PDT)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id 20sm3143604wmj.36.2019.05.21.02.02.32
+        bh=5R288mKF0GeHgJxCPpIdKCMHA/0CyoeQ5qge6u2tdDc=;
+        b=kdIDC0J9cQ5IAcVaaPnyFTVj4fNq/wMfrRr6SjyAYAvIuYWpA05xycSzLsT9xdyT18
+         Z8LZB50l65c3ZJo/5ORoDQvl2FjD3oM7F292BrlRBuYVolHCUdBGek33Z3SvtjCN9GmH
+         aULiSIpbgIU6N4xpeRY8h/hv/sMCIMAncwjxZbQNwH+bHFEe1x5HuTwAH24nbnp0+oWA
+         SN9EaEjXCdX6t0klUxLTYjSPhp75Kr1O63FpRLgrhTWS7AFQu8zJIRA/2omOumqBycAQ
+         Ppp4goLijxY2sU6CbFzj7GdHyE0kRRLhpBjkbZD2q3osNLp3jfkJHY3QMm3tdb0t0AN9
+         aKaw==
+X-Gm-Message-State: APjAAAW93l0tvzFpB84oQcyqW5hPW+LXPOucfU3QiggBcBXrg+UVOMEf
+        /7YSkYKauw+MmVnCYOPtizQfxA==
+X-Google-Smtp-Source: APXvYqyYRmwwb6Ur91PzaPTRyj5uJeV4urFJ2olz107d6M1dE6T9hSGdHqM0jQjQDKlGiWhJgCMxFA==
+X-Received: by 2002:a7b:cd0e:: with SMTP id f14mr2414832wmj.127.1558429389238;
+        Tue, 21 May 2019 02:03:09 -0700 (PDT)
+Received: from debian-brgl.home ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
+        by smtp.gmail.com with ESMTPSA id j28sm35898692wrd.64.2019.05.21.02.03.08
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 21 May 2019 02:02:33 -0700 (PDT)
-Subject: Re: nvmem creates multiple devices with the same name
-To:     Sascha Hauer <s.hauer@pengutronix.de>, linux-kernel@vger.kernel.org
-Cc:     kernel@pengutronix.de, linux-mtd@lists.infradead.org
-References: <20190521085641.i6g5aijwa5zbolah@pengutronix.de>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <a9ccac90-7b2f-41da-2ca9-ca3bba52781b@linaro.org>
-Date:   Tue, 21 May 2019 10:02:32 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 21 May 2019 02:03:08 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH 1/2] gpio: max732x: use i2c_new_dummy_device()
+Date:   Tue, 21 May 2019 11:03:05 +0200
+Message-Id: <20190521090306.28113-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <20190521085641.i6g5aijwa5zbolah@pengutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
+We now have a resource managed version of i2c_new_dummy_device() that
+also returns an actual error code instead of a NULL-pointer. Use it
+in the max732x GPIO driver and simplify code in the process.
 
-On 21/05/2019 09:56, Sascha Hauer wrote:
-> . Are there any suggestions how to register the nvmem devices
-> with a different name?
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+---
+ drivers/gpio/gpio-max732x.c | 37 ++++++++++++++-----------------------
+ 1 file changed, 14 insertions(+), 23 deletions(-)
 
-struct nvmem_config provides id field for this purpose, this will be 
-used by nvmem to set the device name space along with name field.
+diff --git a/drivers/gpio/gpio-max732x.c b/drivers/gpio/gpio-max732x.c
+index f03cb0ba7726..7fd1bdfe00e5 100644
+--- a/drivers/gpio/gpio-max732x.c
++++ b/drivers/gpio/gpio-max732x.c
+@@ -652,12 +652,12 @@ static int max732x_probe(struct i2c_client *client,
+ 	case 0x60:
+ 		chip->client_group_a = client;
+ 		if (nr_port > 8) {
+-			c = i2c_new_dummy(client->adapter, addr_b);
+-			if (!c) {
++			c = devm_i2c_new_dummy_device(&client->dev,
++						      client->adapter, addr_b);
++			if (IS_ERR(c)) {
+ 				dev_err(&client->dev,
+ 					"Failed to allocate I2C device\n");
+-				ret = -ENODEV;
+-				goto out_failed;
++				return PTR_ERR(c);
+ 			}
+ 			chip->client_group_b = chip->client_dummy = c;
+ 		}
+@@ -665,12 +665,12 @@ static int max732x_probe(struct i2c_client *client,
+ 	case 0x50:
+ 		chip->client_group_b = client;
+ 		if (nr_port > 8) {
+-			c = i2c_new_dummy(client->adapter, addr_a);
+-			if (!c) {
++			c = devm_i2c_new_dummy_device(&client->dev,
++						      client->adapter, addr_a);
++			if (IS_ERR(c)) {
+ 				dev_err(&client->dev,
+ 					"Failed to allocate I2C device\n");
+-				ret = -ENODEV;
+-				goto out_failed;
++				return PTR_ERR(c);
+ 			}
+ 			chip->client_group_a = chip->client_dummy = c;
+ 		}
+@@ -678,36 +678,34 @@ static int max732x_probe(struct i2c_client *client,
+ 	default:
+ 		dev_err(&client->dev, "invalid I2C address specified %02x\n",
+ 				client->addr);
+-		ret = -EINVAL;
+-		goto out_failed;
++		return -EINVAL;
+ 	}
+ 
+ 	if (nr_port > 8 && !chip->client_dummy) {
+ 		dev_err(&client->dev,
+ 			"Failed to allocate second group I2C device\n");
+-		ret = -ENODEV;
+-		goto out_failed;
++		return -ENODEV;
+ 	}
+ 
+ 	mutex_init(&chip->lock);
+ 
+ 	ret = max732x_readb(chip, is_group_a(chip, 0), &chip->reg_out[0]);
+ 	if (ret)
+-		goto out_failed;
++		return ret;
+ 	if (nr_port > 8) {
+ 		ret = max732x_readb(chip, is_group_a(chip, 8), &chip->reg_out[1]);
+ 		if (ret)
+-			goto out_failed;
++			return ret;
+ 	}
+ 
+ 	ret = gpiochip_add_data(&chip->gpio_chip, chip);
+ 	if (ret)
+-		goto out_failed;
++		return ret;
+ 
+ 	ret = max732x_irq_setup(chip, id);
+ 	if (ret) {
+ 		gpiochip_remove(&chip->gpio_chip);
+-		goto out_failed;
++		return ret;
+ 	}
+ 
+ 	if (pdata && pdata->setup) {
+@@ -719,10 +717,6 @@ static int max732x_probe(struct i2c_client *client,
+ 
+ 	i2c_set_clientdata(client, chip);
+ 	return 0;
+-
+-out_failed:
+-	i2c_unregister_device(chip->client_dummy);
+-	return ret;
+ }
+ 
+ static int max732x_remove(struct i2c_client *client)
+@@ -744,9 +738,6 @@ static int max732x_remove(struct i2c_client *client)
+ 
+ 	gpiochip_remove(&chip->gpio_chip);
+ 
+-	/* unregister any dummy i2c_client */
+-	i2c_unregister_device(chip->client_dummy);
+-
+ 	return 0;
+ }
+ 
+-- 
+2.21.0
 
---srini
