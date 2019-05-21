@@ -2,100 +2,147 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66BAEC04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 07:39:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06A53C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 07:41:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3846B21019
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 07:39:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O5AMhsix"
+	by mail.kernel.org (Postfix) with ESMTP id D80FE21019
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 07:41:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727130AbfEUHjN (ORCPT
+        id S1726786AbfEUHlh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 03:39:13 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:33244 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726059AbfEUHjN (ORCPT
+        Tue, 21 May 2019 03:41:37 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:46563 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726193AbfEUHlg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 03:39:13 -0400
-Received: by mail-pg1-f196.google.com with SMTP id h17so8157600pgv.0
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 00:39:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ertU93vLyvZbyhqI5mMBCSgKS6RS62cHiIXJIbfZNjU=;
-        b=O5AMhsixq0BooHonQfVIB2VNXmTe/upfgN0xFMResCgzVpKx7PZuo61IDBt/QfI8Mx
-         h/TTholMO0hFP/jLW2R0GvL5yHsCbPwdDDJyDRsMzUZyIU319q12ERfoxn5kdrRNrm8R
-         Wc5k+PxcNkwpEyVz7LdLXGMPTzZFVe2JHM8nMXgbduYLjfc2lW8ttCewuzVKGl6ZRUcr
-         u2X2AioGajC9HHYWrL3YsQT6NwZFoJ8D2sio2OrLAztRJJbshsjZMm2fDyIh/V+dGGab
-         AKf4SwIl0f5kVzz/Qpd9V+gtHdkW2SevAMnbNC/6tZpvveJ7HqCUJLmlMB36hYOV+ngv
-         LvTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ertU93vLyvZbyhqI5mMBCSgKS6RS62cHiIXJIbfZNjU=;
-        b=gZkQ0xzz0EbTHCX4u9DtghHu1JepasHG+o1RYFcA9PAqoD8aHHkv2yNWWud8g/R+Pn
-         yMlslPsuxZ1O1kGQm537FI4vNHH6t81FWOtz2CTAAdngogAHQ9efMPYv6LOXa9Iza5nE
-         keH1sW6WdicxeOv28bJaQnxmvIhUcx0IEGfmsiKKyp5gXzCAVH628L6sATM5kYKKLAVZ
-         WI7zkj0rZXXn9N/3zenEgXvjkX4PH7PuoSV3UTdYTAd5Q6QQQxsEuA62b1I5185ak7Qx
-         AamVVT+KZKQ8x1D4V4XFjAGu/OGQp/LC1+ojbXxsQ5AIMbsDYm7q3nD36J3GZ4GIUZVC
-         U+Iw==
-X-Gm-Message-State: APjAAAXpIgER1nQa9+gbE7bU05SVZW3r/2raTAmAm6xaeyXXf3Oooky6
-        2AiV7/xCRtUkHmZQwgEUQm/LfCTycs0=
-X-Google-Smtp-Source: APXvYqyFMJXJBetRH/tQItKUh0um5jcuAmaHg3cXa+hKpXi0zE3v54WVcDDI6HQmI2Z3O51KkVljdw==
-X-Received: by 2002:a63:2c14:: with SMTP id s20mr62763921pgs.182.1558424352594;
-        Tue, 21 May 2019 00:39:12 -0700 (PDT)
-Received: from zhanggen-UX430UQ ([66.42.35.75])
-        by smtp.gmail.com with ESMTPSA id s66sm23940174pfb.37.2019.05.21.00.39.09
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 21 May 2019 00:39:12 -0700 (PDT)
-Date:   Tue, 21 May 2019 15:39:01 +0800
-From:   Gen Zhang <blackgod016574@gmail.com>
-To:     Nicolas Pitre <nico@fluxnic.net>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] vt: Fix a missing-check bug in drivers/tty/vt/vt.c
-Message-ID: <20190521073901.GF5263@zhanggen-UX430UQ>
-References: <20190521022940.GA4858@zhanggen-UX430UQ>
- <nycvar.YSQ.7.76.1905202242410.1558@knanqh.ubzr>
- <20190521030905.GB5263@zhanggen-UX430UQ>
- <nycvar.YSQ.7.76.1905202323290.1558@knanqh.ubzr>
- <20190521040019.GD5263@zhanggen-UX430UQ>
- <nycvar.YSQ.7.76.1905210022050.1558@knanqh.ubzr>
+        Tue, 21 May 2019 03:41:36 -0400
+X-Originating-IP: 90.88.22.185
+Received: from localhost (aaubervilliers-681-1-80-185.w90-88.abo.wanadoo.fr [90.88.22.185])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 329F5240014;
+        Tue, 21 May 2019 07:41:22 +0000 (UTC)
+Date:   Tue, 21 May 2019 09:41:22 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Frank Lee <tiny.windzz@gmail.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        catalin.marinas@arm.com, will.deacon@arm.com,
+        bjorn.andersson@linaro.org,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        paulmck@linux.ibm.com, stefan.wahren@i2se.com,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Andy Gross <andy.gross@linaro.org>, rui.zhang@intel.com,
+        devicetree@vger.kernel.org, marc.w.gonzalez@free.fr,
+        Eduardo Valentin <edubezval@gmail.com>,
+        enric.balletbo@collabora.com, robh+dt@kernel.org,
+        Jonathan.Cameron@huawei.com,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        olof@lixom.net, David Miller <davem@davemloft.net>
+Subject: Re: [PATCH 2/3] thermal: sun50i: add thermal driver for h6
+Message-ID: <20190521074122.syyctwvfsorl45dv@flea>
+References: <20190512082614.9045-1-tiny.windzz@gmail.com>
+ <20190512082614.9045-3-tiny.windzz@gmail.com>
+ <20190512133930.t5txssl7mou2gljt@flea>
+ <20190512214128.qjyys3vfpwdiacib@core.my.home>
+ <20190516150252.hf4u3bloo37chy6q@flea>
+ <CAEExFWu-T2mGQ9Teo7TQOcJsEzXi_dB=S8CFv7MiwHyu5z4-ow@mail.gmail.com>
+ <20190517073151.mz6hcmzubk7iqfre@flea>
+ <CAEExFWtban8Fjw6aZ5gdeC2GNk1vdqFoaJB_o-JtYZ_z70AJcQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="oyv7cdm2vd7as2px"
 Content-Disposition: inline
-In-Reply-To: <nycvar.YSQ.7.76.1905210022050.1558@knanqh.ubzr>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <CAEExFWtban8Fjw6aZ5gdeC2GNk1vdqFoaJB_o-JtYZ_z70AJcQ@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 21, 2019 at 12:30:38AM -0400, Nicolas Pitre wrote:
-> Now imagine that MIN_NR_CONSOLES is defined to 10 instead of 1.
-> 
-> What happens with allocated memory if the err_vc condition is met on the 
-> 5th loop?
-Yes, vc->vc_screenbuf from the last loop is still not freed, right? I
-don't have idea to solve this one. Could please give some advice? Since
-we have to consider the err_vc condition.
 
-> If err_vc_screenbuf condition is encountered on the 5th loop (curcons = 
-> 4), what is the value of vc_cons[4].d? Isn't it the same as vc that you 
-> just freed?
-> 
-> 
-> Nicolas
-Thanks for your explaination! You mean a double free situation may 
-happen, right? But in vc_allocate() there is also such a kfree(vc) and 
-vc_cons[currcons].d = NULL operation. This situation is really confusing
-me.
-Thanks
-Gen
+--oyv7cdm2vd7as2px
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Sat, May 18, 2019 at 01:19:54AM +0800, Frank Lee wrote:
+> On Fri, May 17, 2019 at 3:32 PM Maxime Ripard <maxime.ripard@bootlin.com>=
+ wrote:
+> >
+> > On Fri, May 17, 2019 at 02:10:47AM +0800, Frank Lee wrote:
+> > > > On Sun, May 12, 2019 at 11:41:28PM +0200, Ond=C5=99ej Jirman wrote:
+> > > > > > > +static int tsens_get_temp(void *data, int *temp)
+> > > > > > > +{
+> > > > > > > + struct tsensor *s =3D data;
+> > > > > > > + struct tsens_device *tmdev =3D s->tmdev;
+> > > > > > > + int val;
+> > > > > > > +
+> > > > > > > + regmap_read(tmdev->regmap, tmdev->chip->temp_data_base +
+> > > > > > > +             0x4 * s->id, &val);
+> > > > > > > +
+> > > > > > > + if (unlikely(val =3D=3D 0))
+> > > > > > > +         return -EBUSY;
+> > > > > >
+> > > > > > I'm not sure why a val equals to 0 would be associated with EBU=
+SY?
+> > > > >
+> > > > > Thermal zone driver can (will) call get_temp before we got the
+> > > > > first interrupt and the thermal data. In that case val will be 0.
+> > > > >
+> > > > > Resulting in:
+> > > > >
+> > > > >  (val + offset) * scale =3D (-2794) * -67 =3D 187198
+> > > > >
+> > > > > 187=C2=B0C and immediate shutdown during boot - based on cirtical
+> > > > > temperature being reached.
+> > > > >
+> > > > > Busy here means, get_temp does not yet have data. Thermal zone
+> > > > > driver just reports any error to dmesg output.
+> > > >
+> > > > Ah, that makes sense.
+> > > >
+> > > > I guess if we're switching to an interrupt-based driver, then we can
+> > > > just use a waitqueue, or is get_temp supposed to be atomic?
+> > >
+> > > I think get_temp should not be bloacked.
+> >
+> > Why not?
+>
+> Maybe, I am wrong. I also want to know if we should do this.
+
+I guess it really all depends on whether you can sleep or not in
+get_temps. If you can, then you should wait for the value to be
+converted and the THS raising an interrupt.
+
+If you can't, then we should ask what the thermal frameworks expects
+in such a case.
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--oyv7cdm2vd7as2px
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXOOrogAKCRDj7w1vZxhR
+xULTAQC1mWNEVwrK+oid9JOzl0rrU7ybLUMo5gBPlvdd1iIu+QEAzEe9pVgCRCN6
+Z8AqbAjBGsyR2h/P/5jg1jYC4d/GBQg=
+=MglJ
+-----END PGP SIGNATURE-----
+
+--oyv7cdm2vd7as2px--
