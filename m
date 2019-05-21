@@ -2,111 +2,111 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4433CC18E7C
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 22:25:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CF8CC18E7C
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 22:27:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16F39217F9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 22:25:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="XaPfBi/i"
+	by mail.kernel.org (Postfix) with ESMTP id 602A9217D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 22:27:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558477671;
+	bh=f5uEoHUN4BmcdB5I8paRLRa+KIbFOaIzyTepmZ7yDes=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=N3gBI8rbMP+pJoi0k5SwkguJvJs3ILf3EDpTQ2PtChw/i49Gh5qvlQmuo7um2bBPq
+	 zMagidNhphxRopVjUcrDH9bpCl1G9ce9aE1Q3HDwq0quoyBFWGnpF7s+02/6HtWJ3s
+	 TBdbdFHEhYpi6JgJuSHTr6uu2WJ7679IHdEBjMDM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727347AbfEUWZg (ORCPT
+        id S1727437AbfEUW1u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 18:25:36 -0400
-Received: from sonic310-31.consmr.mail.ne1.yahoo.com ([66.163.186.212]:35241
-        "EHLO sonic310-31.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725797AbfEUWZg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 18:25:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1558477534; bh=mMUfg/kztpyKEMpyvsC7QSWJXiAhVrZGUJ/ifJj4pRw=; h=Subject:To:Cc:References:From:Date:In-Reply-To:From:Subject; b=XaPfBi/iEgQ96ARzZorqmhVR509wy8GGiBiBQesClsylXNCog8HQB+a0nblENeVtXoW27sgeGJbiTaSHMufJNYZ9un1yt86kIsVx0efY3TApxBz4sEa1F2Pzeb4wgzev7DxawUzGPiXuD9QxgWjjoPfGdiEiGC8gLfXT3JhS6cwc7wPs2ys4C7F1WMLEjyrmfSoFkSXuna9DeEWCdSAN0OXEytWALcAL+Gpv7CoCz64VYivT5SrtIwgM7E44uPjnRzMVl2T2oQ3qP+2S5DeqHrWP96tQj9+OpZeyzjRVuTFS7EYp2YG/HFZOGFKjr1QDaeUkNlxV/drK5qAR1TZAjg==
-X-YMail-OSG: EjuVhvQVM1neN8fIKh2BNfejS4DYtDvzfkGqMnrpZVzT._nQhCTDzTf9uXL4ScO
- rlwQ_zUPt_.smWrqs3EqcerKZ_WAvWuRveu6e01tz7dlQLf6FsmR0Prn0DZcuKSOQHhV7RWCCA89
- 0IBXW91zfD63uCEMXJSfyrCKx7q_aoIp4gFyAYz8WSv4C0svnn.2eIgpKu4VPPO1Xi_WApiiO854
- NRw6P9rdYSLF6zBfnVFQWjPvvcwjAi8iUMHOpgX5.0c.q4VL0vtqZrUFk3jhJXzuT7BbuzXoIL9N
- Cz0T.xKzymgALElponuZK4pRIq3sNrHnPWStVWFNvGaw1l.Ha5EuKUxPD9VtpLdtbTTnX9aouwQ1
- WaMFekspf5mSNTwvmUIjLVHZNjhuOUH8fxihPEUzY65WWvbLXVsySmYhstLvUQ77m.dH28ZWq4Tp
- I8T_mssD5FiF74P7UquXyeRJb87vP3ftevemVXFoc70a8fch567aVWO80u86T8csBNCCi2MHnmsD
- ZFNuX90aFXdwdQCMHTOnOtVSheGQSLABD_abrgDcTa84Mh0a189B5qy38cMBNdUQmn4q4dyJdC1a
- Xy3la5xhROlJuChHbJPuUCYo5S5FVcOFXyWy8gtEHg7YvK2SE6et6W9p1ABKj_5pwgi8v.dGztqs
- jkO6J2woajUT6WbhIYypOHVVJ5p_aq6FyZ_4EUEWc29IfieFPV7TH.j5hTnyN.a0STpIcNA7OgWb
- teUlkDhQ2W941OJJnp35Dqur.gKFetr8XQfdq1qaYG7w7gnMPjKghodiBA3emTL9aOkWTsVjA16e
- cIxwHHwJLbnSlvaP_kUJpsRvCCLToZUsUqAEr52g09kbNvStRV1gY1X3HshUwpy6hHwYcpBfrUdY
- FAeFqv8HGEp0hYpAI3pLQhhvsVTdMxw7YwOBzgg6gkQ0Ughkr.GqRG1drtr9e40GR.PThttDMBhI
- RVcetpsA1M9wyUgmg4VgQzyLox1fQW.2KfXb.lznxdP421kO.UXK1HBeG8yvoN62F2t43n.PI7oD
- M_OzNUkhsibcLorXbtK8hLVC6z5MgaanmhYMNAKPxgwYYY7RMwsv_ARQpnn6ChWBAYKTuknFfelb
- Kow9tMtEk3Mufc55_ZkRP6Q31cZu1QONyLfq2nQ2THpC5kZPs.gaQuyTjy3DT.ztNEEQxgkaUh3J
- 0NkiJpHIliL6xlB5MLpWuPhSpsVrckpLoeb_0gmX6TRXSvcwlMox7.uKaEU_x8.0.CdnpVOpIn8l
- VNJnbWzdri1zsHSXATAE5HbskDONZ
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic310.consmr.mail.ne1.yahoo.com with HTTP; Tue, 21 May 2019 22:25:34 +0000
-Received: from c-73-223-4-185.hsd1.ca.comcast.net (EHLO [192.168.0.103]) ([73.223.4.185])
-          by smtp405.mail.ne1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 555db4704c750d4da09ee360a204ae6c;
-          Tue, 21 May 2019 22:25:31 +0000 (UTC)
-Subject: Re: [PATCH] Smack: Restore the smackfsdef mount option
-To:     LKML <linux-kernel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, dhowells@redhat.com
-Cc:     jose.bollo@iot.bzh,
-        Linux Security Module list 
-        <linux-security-module@vger.kernel.org>
-References: <1ebab7e7-f7ee-b910-9cc8-5d826eee8e97@schaufler-ca.com>
-From:   Casey Schaufler <casey@schaufler-ca.com>
-Message-ID: <4ff60417-ea57-7c6f-e4e1-cab74fd36ebb@schaufler-ca.com>
-Date:   Tue, 21 May 2019 15:25:30 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <1ebab7e7-f7ee-b910-9cc8-5d826eee8e97@schaufler-ca.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+        Tue, 21 May 2019 18:27:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50018 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726017AbfEUW1u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 18:27:50 -0400
+Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F2A5C217D7;
+        Tue, 21 May 2019 22:27:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558477669;
+        bh=f5uEoHUN4BmcdB5I8paRLRa+KIbFOaIzyTepmZ7yDes=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=aYlPqqP861Eho4x2nqqJFvRWWd/odtIQcz9aqclko8lAceqQYjeJ/t5tGi1KP0wiJ
+         038YM5HOU3qLCLPDaAKxkytnBl/M5vZrjsK5K7vMh2XNjz4DcB73WwBR2Yl2AJi/Sm
+         bOws1O/C+vDEjEsToQuVRz5LZMZVnS7PF8zdTE5Q=
+Date:   Tue, 21 May 2019 15:27:48 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Eric Wong <e@80x24.org>
+Cc:     Deepa Dinamani <deepa.kernel@gmail.com>,
+        linux-kernel@vger.kernel.org, viro@zeniv.linux.org.uk,
+        arnd@arndb.de, dbueso@suse.de, axboe@kernel.dk, dave@stgolabs.net,
+        jbaron@akamai.com, linux-fsdevel@vger.kernel.org,
+        linux-aio@kvack.org, omar.kilani@gmail.com, tglx@linutronix.de,
+        stable@vger.kernel.org, Oleg Nesterov <oleg@redhat.com>
+Subject: Re: [PATCH 1/1] signal: Adjust error codes according to
+ restore_user_sigmask()
+Message-Id: <20190521152748.6b4cd70cf83a1183caa6aae7@linux-foundation.org>
+In-Reply-To: <20190521092551.fwtb6recko3tahwj@dcvr>
+References: <20190507043954.9020-1-deepa.kernel@gmail.com>
+        <20190521092551.fwtb6recko3tahwj@dcvr>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/20/2019 3:48 PM, Casey Schaufler wrote:
-> The 5.1 mount system rework changed the smackfsdef mount option
-> to smackfsdefault. This fixes the regression by making smackfsdef
-> treated the same way as smackfsdefault. The change was made in
-> commit c3300aaf95fb4 from Al Viro.
->
-> Reported-by: Jose Bollo <jose.bollo@iot.bzh>
-> Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
+On Tue, 21 May 2019 09:25:51 +0000 Eric Wong <e@80x24.org> wrote:
 
-Al, Dave, is this patch in keeping with the intent
-of the mount rework? Is there a different way I should
-do it? Do you want to take it as a fix for the mount
-work, or should I push it?
+> Deepa Dinamani <deepa.kernel@gmail.com> wrote:
+> > For all the syscalls that receive a sigmask from the userland,
+> > the user sigmask is to be in effect through the syscall execution.
+> > At the end of syscall, sigmask of the current process is restored
+> > to what it was before the switch over to user sigmask.
+> > But, for this to be true in practice, the sigmask should be restored
+> > only at the the point we change the saved_sigmask. Anything before
+> > that loses signals. And, anything after is just pointless as the
+> > signal is already lost by restoring the sigmask.
+> > 
+> > The inherent issue was detected because of a regression caused by
+> > 854a6ed56839a.
+> > The patch moved the signal_pending() check closer to restoring of the
+> > user sigmask. But, it failed to update the error code accordingly.
+> > 
+> > Detailed issue discussion permalink:
+> > https://lore.kernel.org/linux-fsdevel/20190427093319.sgicqik2oqkez3wk@dcvr/
+> > 
+> > Note that the patch returns interrupted errors (EINTR, ERESTARTNOHAND,
+> > etc) only when there is no other error. If there is a signal and an error
+> > like EINVAL, the syscalls return -EINVAL rather than the interrupted
+> > error codes.
+> > 
+> > The sys_io_uring_enter() seems to be returning success when there is
+> > a signal and the queue is not empty. This seems to be a bug. I will
+> > follow up with a separate patch for that.
+> > 
+> > Reported-by: Eric Wong <e@80x24.org>
+> > Fixes: 854a6ed56839a40f6b5d02a2962f48841482eec4 ("signal: Add restore_user_sigmask()")
+> > Signed-off-by: Deepa Dinamani <deepa.kernel@gmail.com>
+> > Reviewed-by: Davidlohr Bueso <dbueso@suse.de>
 
-Thank you.
+(top-posting fixed).
 
-> ---
-> ??security/smack/smack_lsm.c | 2 ++
-> ??1 file changed, 2 insertions(+)
->
-> diff --git a/security/smack/smack_lsm.c b/security/smack/smack_lsm.c
-> index b9abcdb36a73..915cf598e164 100644
-> --- a/security/smack/smack_lsm.c
-> +++ b/security/smack/smack_lsm.c
-> @@ -68,6 +68,7 @@ static struct {
-> ???????? int len;
-> ???????? int opt;
-> ??} smk_mount_opts[] = {
-> +?????? {"smackfsdef", sizeof("smackfsdef") - 1, Opt_fsdefault},
-> ???????? A(fsdefault), A(fsfloor), A(fshat), A(fsroot), A(fstransmute)
-> ??};
-> ??#undef A
-> @@ -682,6 +683,7 @@ static int smack_fs_context_dup(struct fs_context 
-> *fc,
-> ??}
->
-> ??static const struct fs_parameter_spec smack_param_specs[] = {
-> +?????? fsparam_string("fsdef",?????????????? Opt_fsdefault),
-> ???????? fsparam_string("fsdefault",?????? Opt_fsdefault),
-> ???????? fsparam_string("fsfloor",?????? Opt_fsfloor),
-> ???????? fsparam_string("fshat",?????????????? Opt_fshat),
->
+> It's been 2 weeks and this fix hasn't appeared in mmots / mmotm.
+> I also noticed it's missing Cc: for stable@ (below)
+
+Why is a -stable backport needed?  I see some talk above about lost
+signals but it is unclear whether these are being observed after fixing
+the regression caused by 854a6ed56839a.
+
+IOW, can we please have a changelog which has a clear and complete
+description of the user-visible effects of the change.
+
+And please Cc Oleg.
