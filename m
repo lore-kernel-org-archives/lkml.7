@@ -2,157 +2,246 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E67BAC04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:40:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DF41C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:40:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6666208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:40:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7488E21743
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:40:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728595AbfEUNkI (ORCPT
+        id S1728613AbfEUNkm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 09:40:08 -0400
-Received: from mail-it1-f197.google.com ([209.85.166.197]:52946 "EHLO
-        mail-it1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728420AbfEUNkG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 09:40:06 -0400
-Received: by mail-it1-f197.google.com with SMTP id z128so745970itb.2
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 06:40:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=K4ds8cMxo1iXc8WzeVkbAabvNASPap6txWxba5dr+7A=;
-        b=C+ccJ2E56elu+c+145f5uZhBhXyF+GV2yLGy+MUbqJAVRZN5toWAMBHujd1/pbZTYn
-         Y4P6zO9w4hW8n3R0gMwzvvWMBGGW2NEFz567/qmKXPAqWWPgZW5h9bMWloONKCGe+JZQ
-         e7a3N9JaPU8RwvXwTO4yO6TRBgkiKygmaDyAPB21So23VpAeQ4Qpl1mSyp5bJrR9127f
-         Y7uq42YRU7B1MIPWPujuEiDtB/iiaeh4Veuj/h+fWDHM3+6jYlrKbjMpaNPMceE3PSDq
-         XaiFmdtIwspN6hFuMz55Hlk9d+zQA1Fwsl0XR35ipUARXTrqEncyUrCq/VX3S4z7e6Ii
-         T9Tg==
-X-Gm-Message-State: APjAAAVuNnIi7ExMOMKsgq1o1Vq2KOCG5QaxOCSKJuHXDF4650zBgnCi
-        hs4JK5eNpTvZdEQdlk+szAgvotLCRIPG8ReEE2tAWOnKI7y0
-X-Google-Smtp-Source: APXvYqzspuOvi+vHsplGaSP0d+7NSlzKcyTf0DIR7haZL8LBBYvCtkq00YtKlZWtSNX6rVfsX7qkJ0CBxbpY3JHqwNrOhhQ2pJdL
-MIME-Version: 1.0
-X-Received: by 2002:a6b:b2c7:: with SMTP id b190mr10910519iof.14.1558446005778;
- Tue, 21 May 2019 06:40:05 -0700 (PDT)
-Date:   Tue, 21 May 2019 06:40:05 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000009382e7058965fc65@google.com>
-Subject: memory leak in llc_ui_sendmsg
-From:   syzbot <syzbot+31c16aa4202dace3812e@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, edumazet@google.com,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, penguin-kernel@I-love.SAKURA.ne.jp,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+        Tue, 21 May 2019 09:40:42 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38034 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728142AbfEUNkl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 09:40:41 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 6B2D67FDFA;
+        Tue, 21 May 2019 13:40:30 +0000 (UTC)
+Received: from dhcp201-121.englab.pnq.redhat.com (ovpn-116-97.sin2.redhat.com [10.67.116.97])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 848581001F5B;
+        Tue, 21 May 2019 13:39:47 +0000 (UTC)
+From:   Pankaj Gupta <pagupta@redhat.com>
+To:     linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        qemu-devel@nongnu.org, linux-ext4@vger.kernel.org,
+        linux-xfs@vger.kernel.org, dm-devel@redhat.com
+Cc:     dan.j.williams@intel.com, zwisler@kernel.org,
+        vishal.l.verma@intel.com, dave.jiang@intel.com, mst@redhat.com,
+        jasowang@redhat.com, willy@infradead.org, rjw@rjwysocki.net,
+        hch@infradead.org, lenb@kernel.org, jack@suse.cz, tytso@mit.edu,
+        adilger.kernel@dilger.ca, darrick.wong@oracle.com,
+        lcapitulino@redhat.com, kwolf@redhat.com, imammedo@redhat.com,
+        jmoyer@redhat.com, nilal@redhat.com, riel@surriel.com,
+        stefanha@redhat.com, aarcange@redhat.com, david@redhat.com,
+        david@fromorbit.com, cohuck@redhat.com,
+        xiaoguangrong.eric@gmail.com, pagupta@redhat.com,
+        pbonzini@redhat.com, yuval.shaia@oracle.com, kilobyte@angband.pl,
+        jstaron@google.com, rdunlap@infradead.org, snitzer@redhat.com
+Subject: [PATCH v10 3/7] libnvdimm: add dax_dev sync flag
+Date:   Tue, 21 May 2019 19:07:09 +0530
+Message-Id: <20190521133713.31653-4-pagupta@redhat.com>
+In-Reply-To: <20190521133713.31653-1-pagupta@redhat.com>
+References: <20190521133713.31653-1-pagupta@redhat.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Tue, 21 May 2019 13:40:40 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+This patch adds 'DAXDEV_SYNC' flag which is set
+for nd_region doing synchronous flush. This later
+is used to disable MAP_SYNC functionality for
+ext4 & xfs filesystem for devices don't support
+synchronous flush.
 
-syzbot found the following crash on:
-
-HEAD commit:    f49aa1de Merge tag 'for-5.2-rc1-tag' of git://git.kernel.o..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=117ba18aa00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=61dd9e15a761691d
-dashboard link: https://syzkaller.appspot.com/bug?extid=31c16aa4202dace3812e
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=137f3d9ca00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=156389f8a00000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+31c16aa4202dace3812e@syzkaller.appspotmail.com
-
-udit(1558395599.193:36): avc:  denied  { map } for  pid=7045  
-comm="syz-executor641" path="/root/syz-executor641959542" dev="sda1"  
-ino=1426 scontext=unconfined_u:system_r:insmod_t:s0-s0:c0.c1023  
-tcontext=unconfined_u:object_r:user_home_t:s0 tclass=file permissive=1
-executing program
-executing program
-executing program
-BUG: memory leak
-unreferenced object 0xffff888116270800 (size 224):
-   comm "syz-executor641", pid 7047, jiffies 4294947360 (age 13.860s)
-   hex dump (first 32 bytes):
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-     00 20 e1 2a 81 88 ff ff 00 40 3d 2a 81 88 ff ff  . .*.....@=*....
-   backtrace:
-     [<000000004d41b4cc>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:55 [inline]
-     [<000000004d41b4cc>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<000000004d41b4cc>] slab_alloc_node mm/slab.c:3269 [inline]
-     [<000000004d41b4cc>] kmem_cache_alloc_node+0x153/0x2a0 mm/slab.c:3579
-     [<00000000506a5965>] __alloc_skb+0x6e/0x210 net/core/skbuff.c:198
-     [<000000001ba5a161>] alloc_skb include/linux/skbuff.h:1058 [inline]
-     [<000000001ba5a161>] alloc_skb_with_frags+0x5f/0x250  
-net/core/skbuff.c:5327
-     [<0000000047d9c78b>] sock_alloc_send_pskb+0x269/0x2a0  
-net/core/sock.c:2225
-     [<000000003828fe54>] sock_alloc_send_skb+0x32/0x40 net/core/sock.c:2242
-     [<00000000e34d94f9>] llc_ui_sendmsg+0x10a/0x540 net/llc/af_llc.c:933
-     [<00000000de2de3fb>] sock_sendmsg_nosec net/socket.c:652 [inline]
-     [<00000000de2de3fb>] sock_sendmsg+0x54/0x70 net/socket.c:671
-     [<000000008fe16e7a>] __sys_sendto+0x148/0x1f0 net/socket.c:1964
-     [<000000005b17a3ac>] __do_sys_sendto net/socket.c:1976 [inline]
-     [<000000005b17a3ac>] __se_sys_sendto net/socket.c:1972 [inline]
-     [<000000005b17a3ac>] __x64_sys_sendto+0x2a/0x30 net/socket.c:1972
-     [<0000000094b2fa53>] do_syscall_64+0x76/0x1a0  
-arch/x86/entry/common.c:301
-     [<00000000ea5a7233>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff88812274ac00 (size 512):
-   comm "syz-executor641", pid 7047, jiffies 4294947360 (age 13.860s)
-   hex dump (first 32 bytes):
-     08 c2 03 00 00 00 00 00 69 63 65 73 2f 76 69 72  ........ices/vir
-     74 75 61 6c 2f 74 74 79 2f 74 74 79 71 37 00 41  tual/tty/ttyq7.A
-   backtrace:
-     [<000000009abfb07f>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:55 [inline]
-     [<000000009abfb07f>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<000000009abfb07f>] slab_alloc_node mm/slab.c:3269 [inline]
-     [<000000009abfb07f>] kmem_cache_alloc_node_trace+0x15b/0x2a0  
-mm/slab.c:3597
-     [<000000001e6bdec9>] __do_kmalloc_node mm/slab.c:3619 [inline]
-     [<000000001e6bdec9>] __kmalloc_node_track_caller+0x38/0x50  
-mm/slab.c:3634
-     [<00000000dcf4f208>] __kmalloc_reserve.isra.0+0x40/0xb0  
-net/core/skbuff.c:142
-     [<0000000081158459>] __alloc_skb+0xa0/0x210 net/core/skbuff.c:210
-     [<000000001ba5a161>] alloc_skb include/linux/skbuff.h:1058 [inline]
-     [<000000001ba5a161>] alloc_skb_with_frags+0x5f/0x250  
-net/core/skbuff.c:5327
-     [<0000000047d9c78b>] sock_alloc_send_pskb+0x269/0x2a0  
-net/core/sock.c:2225
-     [<000000003828fe54>] sock_alloc_send_skb+0x32/0x40 net/core/sock.c:2242
-     [<00000000e34d94f9>] llc_ui_sendmsg+0x10a/0x540 net/llc/af_llc.c:933
-     [<00000000de2de3fb>] sock_sendmsg_nosec net/socket.c:652 [inline]
-     [<00000000de2de3fb>] sock_sendmsg+0x54/0x70 net/socket.c:671
-     [<000000008fe16e7a>] __sys_sendto+0x148/0x1f0 net/socket.c:1964
-     [<000000005b17a3ac>] __do_sys_sendto net/socket.c:1976 [inline]
-     [<000000005b17a3ac>] __se_sys_sendto net/socket.c:1972 [inline]
-     [<000000005b17a3ac>] __x64_sys_sendto+0x2a/0x30 net/socket.c:1972
-     [<0000000094b2fa53>] do_syscall_64+0x76/0x1a0  
-arch/x86/entry/common.c:301
-     [<00000000ea5a7233>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-executing program
-executing program
-
-
+Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
 ---
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ drivers/dax/bus.c            |  2 +-
+ drivers/dax/super.c          | 19 ++++++++++++++++++-
+ drivers/md/dm.c              |  3 ++-
+ drivers/nvdimm/pmem.c        |  5 ++++-
+ drivers/nvdimm/region_devs.c |  7 +++++++
+ include/linux/dax.h          |  9 +++++++--
+ include/linux/libnvdimm.h    |  1 +
+ 7 files changed, 40 insertions(+), 6 deletions(-)
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
+index 2109cfe80219..5f184e751c82 100644
+--- a/drivers/dax/bus.c
++++ b/drivers/dax/bus.c
+@@ -388,7 +388,7 @@ struct dev_dax *__devm_create_dev_dax(struct dax_region *dax_region, int id,
+ 	 * No 'host' or dax_operations since there is no access to this
+ 	 * device outside of mmap of the resulting character device.
+ 	 */
+-	dax_dev = alloc_dax(dev_dax, NULL, NULL);
++	dax_dev = alloc_dax(dev_dax, NULL, NULL, DAXDEV_F_SYNC);
+ 	if (!dax_dev)
+ 		goto err;
+ 
+diff --git a/drivers/dax/super.c b/drivers/dax/super.c
+index bbd57ca0634a..93b3718b5cfa 100644
+--- a/drivers/dax/super.c
++++ b/drivers/dax/super.c
+@@ -186,6 +186,8 @@ enum dax_device_flags {
+ 	DAXDEV_ALIVE,
+ 	/* gate whether dax_flush() calls the low level flush routine */
+ 	DAXDEV_WRITE_CACHE,
++	/* flag to check if device supports synchronous flush */
++	DAXDEV_SYNC,
+ };
+ 
+ /**
+@@ -354,6 +356,18 @@ bool dax_write_cache_enabled(struct dax_device *dax_dev)
+ }
+ EXPORT_SYMBOL_GPL(dax_write_cache_enabled);
+ 
++bool dax_synchronous(struct dax_device *dax_dev)
++{
++	return test_bit(DAXDEV_SYNC, &dax_dev->flags);
++}
++EXPORT_SYMBOL_GPL(dax_synchronous);
++
++void set_dax_synchronous(struct dax_device *dax_dev)
++{
++	set_bit(DAXDEV_SYNC, &dax_dev->flags);
++}
++EXPORT_SYMBOL_GPL(set_dax_synchronous);
++
+ bool dax_alive(struct dax_device *dax_dev)
+ {
+ 	lockdep_assert_held(&dax_srcu);
+@@ -508,7 +522,7 @@ static void dax_add_host(struct dax_device *dax_dev, const char *host)
+ }
+ 
+ struct dax_device *alloc_dax(void *private, const char *__host,
+-		const struct dax_operations *ops)
++		const struct dax_operations *ops, unsigned long flags)
+ {
+ 	struct dax_device *dax_dev;
+ 	const char *host;
+@@ -531,6 +545,9 @@ struct dax_device *alloc_dax(void *private, const char *__host,
+ 	dax_add_host(dax_dev, host);
+ 	dax_dev->ops = ops;
+ 	dax_dev->private = private;
++	if (flags & DAXDEV_F_SYNC)
++		set_dax_synchronous(dax_dev);
++
+ 	return dax_dev;
+ 
+  err_dev:
+diff --git a/drivers/md/dm.c b/drivers/md/dm.c
+index 1fb1333fefec..7eee7ddc73a8 100644
+--- a/drivers/md/dm.c
++++ b/drivers/md/dm.c
+@@ -1970,7 +1970,8 @@ static struct mapped_device *alloc_dev(int minor)
+ 	sprintf(md->disk->disk_name, "dm-%d", minor);
+ 
+ 	if (IS_ENABLED(CONFIG_DAX_DRIVER)) {
+-		md->dax_dev = alloc_dax(md, md->disk->disk_name, &dm_dax_ops);
++		md->dax_dev = alloc_dax(md, md->disk->disk_name,
++					&dm_dax_ops, 0);
+ 		if (!md->dax_dev)
+ 			goto bad;
+ 	}
+diff --git a/drivers/nvdimm/pmem.c b/drivers/nvdimm/pmem.c
+index 0279eb1da3ef..bdbd2b414d3d 100644
+--- a/drivers/nvdimm/pmem.c
++++ b/drivers/nvdimm/pmem.c
+@@ -365,6 +365,7 @@ static int pmem_attach_disk(struct device *dev,
+ 	struct gendisk *disk;
+ 	void *addr;
+ 	int rc;
++	unsigned long flags = 0UL;
+ 
+ 	pmem = devm_kzalloc(dev, sizeof(*pmem), GFP_KERNEL);
+ 	if (!pmem)
+@@ -462,7 +463,9 @@ static int pmem_attach_disk(struct device *dev,
+ 	nvdimm_badblocks_populate(nd_region, &pmem->bb, &bb_res);
+ 	disk->bb = &pmem->bb;
+ 
+-	dax_dev = alloc_dax(pmem, disk->disk_name, &pmem_dax_ops);
++	if (is_nvdimm_sync(nd_region))
++		flags = DAXDEV_F_SYNC;
++	dax_dev = alloc_dax(pmem, disk->disk_name, &pmem_dax_ops, flags);
+ 	if (!dax_dev) {
+ 		put_disk(disk);
+ 		return -ENOMEM;
+diff --git a/drivers/nvdimm/region_devs.c b/drivers/nvdimm/region_devs.c
+index b4ef7d9ff22e..f3ea5369d20a 100644
+--- a/drivers/nvdimm/region_devs.c
++++ b/drivers/nvdimm/region_devs.c
+@@ -1197,6 +1197,13 @@ int nvdimm_has_cache(struct nd_region *nd_region)
+ }
+ EXPORT_SYMBOL_GPL(nvdimm_has_cache);
+ 
++bool is_nvdimm_sync(struct nd_region *nd_region)
++{
++	return is_nd_pmem(&nd_region->dev) &&
++		!test_bit(ND_REGION_ASYNC, &nd_region->flags);
++}
++EXPORT_SYMBOL_GPL(is_nvdimm_sync);
++
+ struct conflict_context {
+ 	struct nd_region *nd_region;
+ 	resource_size_t start, size;
+diff --git a/include/linux/dax.h b/include/linux/dax.h
+index 0dd316a74a29..2b106752b1b8 100644
+--- a/include/linux/dax.h
++++ b/include/linux/dax.h
+@@ -7,6 +7,9 @@
+ #include <linux/radix-tree.h>
+ #include <asm/pgtable.h>
+ 
++/* Flag for synchronous flush */
++#define DAXDEV_F_SYNC (1UL << 0)
++
+ typedef unsigned long dax_entry_t;
+ 
+ struct iomap_ops;
+@@ -32,18 +35,20 @@ extern struct attribute_group dax_attribute_group;
+ #if IS_ENABLED(CONFIG_DAX)
+ struct dax_device *dax_get_by_host(const char *host);
+ struct dax_device *alloc_dax(void *private, const char *host,
+-		const struct dax_operations *ops);
++		const struct dax_operations *ops, unsigned long flags);
+ void put_dax(struct dax_device *dax_dev);
+ void kill_dax(struct dax_device *dax_dev);
+ void dax_write_cache(struct dax_device *dax_dev, bool wc);
+ bool dax_write_cache_enabled(struct dax_device *dax_dev);
++bool dax_synchronous(struct dax_device *dax_dev);
++void set_dax_synchronous(struct dax_device *dax_dev);
+ #else
+ static inline struct dax_device *dax_get_by_host(const char *host)
+ {
+ 	return NULL;
+ }
+ static inline struct dax_device *alloc_dax(void *private, const char *host,
+-		const struct dax_operations *ops)
++		const struct dax_operations *ops, unsigned long flags)
+ {
+ 	/*
+ 	 * Callers should check IS_ENABLED(CONFIG_DAX) to know if this
+diff --git a/include/linux/libnvdimm.h b/include/linux/libnvdimm.h
+index feb342d026f2..3238a206e563 100644
+--- a/include/linux/libnvdimm.h
++++ b/include/linux/libnvdimm.h
+@@ -264,6 +264,7 @@ void nvdimm_flush(struct nd_region *nd_region);
+ int nvdimm_has_flush(struct nd_region *nd_region);
+ int nvdimm_has_cache(struct nd_region *nd_region);
+ int nvdimm_in_overwrite(struct nvdimm *nvdimm);
++bool is_nvdimm_sync(struct nd_region *nd_region);
+ 
+ static inline int nvdimm_ctl(struct nvdimm *nvdimm, unsigned int cmd, void *buf,
+ 		unsigned int buf_len, int *cmd_rc)
+-- 
+2.20.1
+
