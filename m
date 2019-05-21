@@ -2,120 +2,104 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C755CC04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 14:34:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD55EC04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 14:37:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A14E1217D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 14:34:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EB2221743
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 14:37:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="mI86anzZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728342AbfEUOe4 (ORCPT
+        id S1728234AbfEUOhn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 10:34:56 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:52452 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726900AbfEUOe4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 10:34:56 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id EA2627EBC1;
-        Tue, 21 May 2019 14:34:50 +0000 (UTC)
-Received: from Diego (unknown [10.43.2.54])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id CAC371001F5B;
-        Tue, 21 May 2019 14:34:48 +0000 (UTC)
-Date:   Tue, 21 May 2019 16:34:47 +0200 (CEST)
-From:   Michael Petlan <mpetlan@redhat.com>
-X-X-Sender: Michael@Diego
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-cc:     Vitaly Chikunov <vt@altlinux.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Hendrik Brueckner <brueckner@linux.ibm.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Kim Phillips <kim.phillips@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
-Subject: Re: [PATCH] perf arm64: Fix mksyscalltbl when system kernel headers
- are ahead of the kernel
-In-Reply-To: <20190521132838.GB26253@kernel.org>
-Message-ID: <alpine.LRH.2.20.1905211632300.4243@Diego>
-References: <20190521030203.1447-1-vt@altlinux.org> <20190521132838.GB26253@kernel.org>
-User-Agent: Alpine 2.20 (LRH 67 2015-01-07)
+        Tue, 21 May 2019 10:37:43 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:56196 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726900AbfEUOhn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 10:37:43 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4LESia5053994;
+        Tue, 21 May 2019 14:37:39 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=RskMyQenR2wM63OcevwOWHNzwugK/Hp4hiHKYsTHcGs=;
+ b=mI86anzZgCOl64SZEtqO81GboHVZc8TD37fnMGspxVJG0lLQGcgTh5wWn4sopBVW2vq2
+ LjIc/aSOzROGo2RCIB+BtG2R2Eq469qTKrBQevEtmobyIPPiYoJOf3awZCMRFZdRipzJ
+ ZwcnZYvS2kG72UzfU0533ZWV8ofPpP9/4WhNx0ubYLtLmmJzVoDYI9eQ5LcXWE7zJUDQ
+ XL6Ggi9QRZ7gs1H2z1enYQAf2QPmPKMODc+AqdiisfTkRtleQ2LEp+Kh1ETI/ksAf7Sw
+ qNMn5zJJJqZe4p2kfkMCEZmtpUiRU4dPUiyFHuOpBslTBZeL55fBtnOYcP6JLrZrrAoF iQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2sj9ftdvd7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 21 May 2019 14:37:39 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4LEa216025352;
+        Tue, 21 May 2019 14:37:38 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 2sm0470wsn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 21 May 2019 14:37:38 +0000
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x4LEbb6J005043;
+        Tue, 21 May 2019 14:37:37 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 21 May 2019 14:37:36 +0000
+Date:   Tue, 21 May 2019 17:37:30 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Sven Van Asbroeck <thesven73@gmail.com>
+Cc:     Oscar Gomez Fuente <oscargomezf@gmail.com>,
+        devel@driverdev.osuosl.org, Greg KH <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3] staging: fieldbus: core: fix ->poll() annotation
+Message-ID: <20190521143730.GJ31203@kadam>
+References: <20190521142009.7331-1-TheSven73@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Tue, 21 May 2019 14:34:56 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190521142009.7331-1-TheSven73@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9263 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1905210091
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9263 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905210091
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 21 May 2019, Arnaldo Carvalho de Melo wrote:
-> Em Tue, May 21, 2019 at 06:02:03AM +0300, Vitaly Chikunov escreveu:
-> > When a host system has kernel headers that are newer than a compiling
-> > kernel, mksyscalltbl fails with errors such as:
-> > 
-> >   <stdin>: In function 'main':
-> >   <stdin>:271:44: error: '__NR_kexec_file_load' undeclared (first use in this function)
-> >   <stdin>:271:44: note: each undeclared identifier is reported only once for each function it appears in
-> >   <stdin>:272:46: error: '__NR_pidfd_send_signal' undeclared (first use in this function)
-> >   <stdin>:273:43: error: '__NR_io_uring_setup' undeclared (first use in this function)
-> >   <stdin>:274:43: error: '__NR_io_uring_enter' undeclared (first use in this function)
-> >   <stdin>:275:46: error: '__NR_io_uring_register' undeclared (first use in this function)
-> >   tools/perf/arch/arm64/entry/syscalls//mksyscalltbl: line 48: /tmp/create-table-xvUQdD: Permission denied
-> > 
-> > mksyscalltbl is compiled with default host includes, but run with
+On Tue, May 21, 2019 at 10:20:09AM -0400, Sven Van Asbroeck wrote:
+> From: Oscar Gomez Fuente <oscargomezf@gmail.com>
 > 
-> It shouldn't :-\ So with this you're making it use the ones shipped in
-> tools/include? Good, I'll test it, thanks!
+> ->poll() functions should return __poll_t, but the fieldbus
+> core's poll() does not. This generates a sparse warning.
 > 
-> - Arnaldo
+> Fix the ->poll() return value, and use recommended __poll_t
+> constants (EPOLLxxx).
 > 
+> Signed-off-by: Oscar Gomez Fuente <oscargomezf@gmail.com>
+> ---
 
-I've hit the issue too, this patch fixes it for me.
-Tested.
+If you're resending someone's patch, you have to add your own Signed off
+by line as well.  Everyone who touches a patch has to sign that they
+didn't add any of SCO's all powerful UnixWare source code into the
+patch.
 
-Michael
+regards,
+dan carpenter
 
-> > compiling kernel tree includes, causing some syscall numbers being
-> > undeclared.
-> > 
-> > Signed-off-by: Vitaly Chikunov <vt@altlinux.org>
-> > Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> > Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-> > Cc: Hendrik Brueckner <brueckner@linux.ibm.com>
-> > Cc: Ingo Molnar <mingo@redhat.com>
-> > Cc: Jiri Olsa <jolsa@redhat.com>
-> > Cc: Kim Phillips <kim.phillips@arm.com>
-> > Cc: Namhyung Kim <namhyung@kernel.org>
-> > Cc: Peter Zijlstra <peterz@infradead.org>
-> > Cc: Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
-> > ---
-> >  tools/perf/arch/arm64/entry/syscalls/mksyscalltbl | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl b/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl
-> > index c88fd32563eb..459469b7222c 100755
-> > --- a/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl
-> > +++ b/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl
-> > @@ -56,7 +56,7 @@ create_table()
-> >  	echo "};"
-> >  }
-> >  
-> > -$gcc -E -dM -x c  $input	       \
-> > +$gcc -E -dM -x c -I $incpath/include/uapi $input \
-> >  	|sed -ne 's/^#define __NR_//p' \
-> >  	|sort -t' ' -k2 -nu	       \
-> >  	|create_table
-> > -- 
-> > 2.11.0
-> 
-> -- 
-> 
-> - Arnaldo
-> 
+
