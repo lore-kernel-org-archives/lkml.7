@@ -2,372 +2,513 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=AC_FROM_MANY_DOTS,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16216C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 12:35:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAA88C04E87
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 12:40:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E90462173C
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 12:35:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4C7D2173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 12:40:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727883AbfEUMfp (ORCPT
+        id S1727864AbfEUMkr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 08:35:45 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:12593 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726448AbfEUMfo (ORCPT
+        Tue, 21 May 2019 08:40:47 -0400
+Received: from out02.mta.xmission.com ([166.70.13.232]:46323 "EHLO
+        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726692AbfEUMkq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 08:35:44 -0400
-X-IronPort-AV: E=Sophos;i="5.60,495,1549897200"; 
-   d="scan'208";a="16575733"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 21 May 2019 21:35:39 +0900
-Received: from renesas-VirtualBox.ree.adwin.renesas.com (unknown [10.226.37.56])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id C353F4002650;
-        Tue, 21 May 2019 21:35:36 +0900 (JST)
-From:   Gareth Williams <gareth.williams.jx@renesas.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Phil Edworthy <phil.edworthy@renesas.com>
-Cc:     Gareth Williams <gareth.williams.jx@renesas.com>,
-        linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] clk: renesas: r9a06g032: Add clock domain support
-Date:   Tue, 21 May 2019 13:35:11 +0100
-Message-Id: <1558442111-10599-1-git-send-email-gareth.williams.jx@renesas.com>
-X-Mailer: git-send-email 2.7.4
+        Tue, 21 May 2019 08:40:46 -0400
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1hT44Q-0002W0-K9; Tue, 21 May 2019 06:40:42 -0600
+Received: from ip72-206-97-68.om.om.cox.net ([72.206.97.68] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1hT44O-0006Wl-TZ; Tue, 21 May 2019 06:40:42 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     linux-usb@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Oliver Neukum <oneukum@suse.com>,
+        <linux-kernel@vger.kernel.org>
+References: <Pine.LNX.4.44L0.1905181116330.7855-100000@netrider.rowland.org>
+Date:   Tue, 21 May 2019 07:40:35 -0500
+In-Reply-To: <Pine.LNX.4.44L0.1905181116330.7855-100000@netrider.rowland.org>
+        (Alan Stern's message of "Sat, 18 May 2019 11:20:47 -0400 (EDT)")
+Message-ID: <877eakou9o.fsf@xmission.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.1 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain
+X-XM-SPF: eid=1hT44O-0006Wl-TZ;;;mid=<877eakou9o.fsf@xmission.com>;;;hst=in02.mta.xmission.com;;;ip=72.206.97.68;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1+um2qOfD8zT9eCNXAbbXB8CYAaLZPeOsA=
+X-SA-Exim-Connect-IP: 72.206.97.68
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: [PATCH] signal/usb: Replace kill_pid_info_as_cred with kill_pid_usb_asyncio
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are several clocks on the r9ag032 which are currently not enabled
-in their drivers that can be delegated to clock domain system for power
-management. Therefore add support for clock domain functionality to the
-r9a06g032 clock driver.
 
-Signed-off-by: Gareth Williams <gareth.williams.jx@renesas.com>
----
-v2:
- - Rebased onto kernel/git/geert/renesas-drivers.git
----
- drivers/clk/renesas/r9a06g032-clocks.c | 243 ++++++++++++++++++++++++---------
- 1 file changed, 176 insertions(+), 67 deletions(-)
+The usb support for asyncio encoded one of it's values in the wrong
+field.  It should have used si_value but instead used si_addr which is
+not present in the _rt union member of struct siginfo.
 
-diff --git a/drivers/clk/renesas/r9a06g032-clocks.c b/drivers/clk/renesas/r9a06g032-clocks.c
-index 97c7247..2e580dd 100644
---- a/drivers/clk/renesas/r9a06g032-clocks.c
-+++ b/drivers/clk/renesas/r9a06g032-clocks.c
-@@ -16,6 +16,8 @@
- #include <linux/of.h>
- #include <linux/of_address.h>
- #include <linux/platform_device.h>
-+#include <linux/pm_clock.h>
-+#include <linux/pm_domain.h>
- #include <linux/slab.h>
- #include <linux/spinlock.h>
- #include <dt-bindings/clock/r9a06g032-sysctrl.h>
-@@ -28,6 +30,7 @@ struct r9a06g032_gate {
- /* This is used to describe a clock for instantiation */
- struct r9a06g032_clkdesc {
- 	const char *name;
-+	bool managed;
- 	uint32_t type: 3;
- 	uint32_t index: 8;
- 	uint32_t source : 8; /* source index + 1 (0 == none) */
-@@ -60,7 +63,11 @@ struct r9a06g032_clkdesc {
- #define D_GATE(_idx, _n, _src, ...) \
- 	{ .type = K_GATE, .index = R9A06G032_##_idx, \
- 		.source = 1 + R9A06G032_##_src, .name = _n, \
--		.gate = I_GATE(__VA_ARGS__), }
-+		.managed = 0, .gate = I_GATE(__VA_ARGS__) }
-+#define D_MODULE(_idx, _n, _src, ...) \
-+	{ .type = K_GATE, .index = R9A06G032_##_idx, \
-+		.source = 1 + R9A06G032_##_src, .name = _n, \
-+		.managed = 1, .gate = I_GATE(__VA_ARGS__) }
- #define D_ROOT(_idx, _n, _mul, _div) \
- 	{ .type = K_FFC, .index = R9A06G032_##_idx, .name = _n, \
- 		.div = _div, .mul = _mul }
-@@ -170,7 +177,7 @@ static const struct r9a06g032_clkdesc r9a06g032_clocks[] __initconst = {
- 	D_GATE(CLK_P6_PG2, "clk_p6_pg2", DIV_P6_PG, 0x8a3, 0x8a4, 0x8a5, 0, 0xb61, 0, 0),
- 	D_GATE(CLK_P6_PG3, "clk_p6_pg3", DIV_P6_PG, 0x8a6, 0x8a7, 0x8a8, 0, 0xb62, 0, 0),
- 	D_GATE(CLK_P6_PG4, "clk_p6_pg4", DIV_P6_PG, 0x8a9, 0x8aa, 0x8ab, 0, 0xb63, 0, 0),
--	D_GATE(CLK_PCI_USB, "clk_pci_usb", CLKOUT_D40, 0xe6, 0, 0, 0, 0, 0, 0),
-+	D_MODULE(CLK_PCI_USB, "clk_pci_usb", CLKOUT_D40, 0xe6, 0, 0, 0, 0, 0, 0),
- 	D_GATE(CLK_QSPI0, "clk_qspi0", DIV_QSPI0, 0x2a4, 0x2a5, 0, 0, 0, 0, 0),
- 	D_GATE(CLK_QSPI1, "clk_qspi1", DIV_QSPI1, 0x484, 0x485, 0, 0, 0, 0, 0),
- 	D_GATE(CLK_RGMII_REF, "clk_rgmii_ref", CLKOUT_D8, 0x340, 0, 0, 0, 0, 0, 0),
-@@ -187,17 +194,17 @@ static const struct r9a06g032_clkdesc r9a06g032_clocks[] __initconst = {
- 	D_GATE(CLK_SPI5, "clk_spi5", DIV_P4_PG, 0x822, 0x823, 0, 0, 0, 0, 0),
- 	D_GATE(CLK_SWITCH, "clk_switch", DIV_SWITCH, 0x982, 0x983, 0, 0, 0, 0, 0),
- 	D_DIV(DIV_MOTOR, "div_motor", CLKOUT_D5, 84, 2, 8),
--	D_GATE(HCLK_ECAT125, "hclk_ecat125", CLKOUT_D8, 0x400, 0x401, 0, 0x402, 0, 0x440, 0x441),
--	D_GATE(HCLK_PINCONFIG, "hclk_pinconfig", CLKOUT_D40, 0x740, 0x741, 0x742, 0, 0xae0, 0, 0),
--	D_GATE(HCLK_SERCOS, "hclk_sercos", CLKOUT_D10, 0x420, 0x422, 0, 0x421, 0, 0x460, 0x461),
--	D_GATE(HCLK_SGPIO2, "hclk_sgpio2", DIV_P5_PG, 0x8c3, 0x8c4, 0x8c5, 0, 0xb41, 0, 0),
--	D_GATE(HCLK_SGPIO3, "hclk_sgpio3", DIV_P5_PG, 0x8c6, 0x8c7, 0x8c8, 0, 0xb42, 0, 0),
--	D_GATE(HCLK_SGPIO4, "hclk_sgpio4", DIV_P5_PG, 0x8c9, 0x8ca, 0x8cb, 0, 0xb43, 0, 0),
--	D_GATE(HCLK_TIMER0, "hclk_timer0", CLKOUT_D40, 0x743, 0x744, 0x745, 0, 0xae1, 0, 0),
--	D_GATE(HCLK_TIMER1, "hclk_timer1", CLKOUT_D40, 0x746, 0x747, 0x748, 0, 0xae2, 0, 0),
--	D_GATE(HCLK_USBF, "hclk_usbf", CLKOUT_D8, 0xe3, 0, 0, 0xe4, 0, 0x102, 0x103),
--	D_GATE(HCLK_USBH, "hclk_usbh", CLKOUT_D8, 0xe0, 0xe1, 0, 0xe2, 0, 0x100, 0x101),
--	D_GATE(HCLK_USBPM, "hclk_usbpm", CLKOUT_D8, 0xe5, 0, 0, 0, 0, 0, 0),
-+	D_MODULE(HCLK_ECAT125, "hclk_ecat125", CLKOUT_D8, 0x400, 0x401, 0, 0x402, 0, 0x440, 0x441),
-+	D_MODULE(HCLK_PINCONFIG, "hclk_pinconfig", CLKOUT_D40, 0x740, 0x741, 0x742, 0, 0xae0, 0, 0),
-+	D_MODULE(HCLK_SERCOS, "hclk_sercos", CLKOUT_D10, 0x420, 0x422, 0, 0x421, 0, 0x460, 0x461),
-+	D_MODULE(HCLK_SGPIO2, "hclk_sgpio2", DIV_P5_PG, 0x8c3, 0x8c4, 0x8c5, 0, 0xb41, 0, 0),
-+	D_MODULE(HCLK_SGPIO3, "hclk_sgpio3", DIV_P5_PG, 0x8c6, 0x8c7, 0x8c8, 0, 0xb42, 0, 0),
-+	D_MODULE(HCLK_SGPIO4, "hclk_sgpio4", DIV_P5_PG, 0x8c9, 0x8ca, 0x8cb, 0, 0xb43, 0, 0),
-+	D_MODULE(HCLK_TIMER0, "hclk_timer0", CLKOUT_D40, 0x743, 0x744, 0x745, 0, 0xae1, 0, 0),
-+	D_MODULE(HCLK_TIMER1, "hclk_timer1", CLKOUT_D40, 0x746, 0x747, 0x748, 0, 0xae2, 0, 0),
-+	D_MODULE(HCLK_USBF, "hclk_usbf", CLKOUT_D8, 0xe3, 0, 0, 0xe4, 0, 0x102, 0x103),
-+	D_MODULE(HCLK_USBH, "hclk_usbh", CLKOUT_D8, 0xe0, 0xe1, 0, 0xe2, 0, 0x100, 0x101),
-+	D_MODULE(HCLK_USBPM, "hclk_usbpm", CLKOUT_D8, 0xe5, 0, 0, 0, 0, 0, 0),
- 	D_GATE(CLK_48_PG_F, "clk_48_pg_f", CLK_48, 0x78c, 0x78d, 0, 0x78e, 0, 0xb04, 0xb05),
- 	D_GATE(CLK_48_PG4, "clk_48_pg4", CLK_48, 0x789, 0x78a, 0x78b, 0, 0xb03, 0, 0),
- 	D_FFC(CLK_DDRPHY_PLLCLK_D4, "clk_ddrphy_pllclk_d4", CLK_DDRPHY_PLLCLK, 4),
-@@ -207,13 +214,13 @@ static const struct r9a06g032_clkdesc r9a06g032_clocks[] __initconst = {
- 	D_FFC(CLK_REF_SYNC_D8, "clk_ref_sync_d8", CLK_REF_SYNC, 8),
- 	D_FFC(CLK_SERCOS100_D2, "clk_sercos100_d2", CLK_SERCOS100, 2),
- 	D_DIV(DIV_CA7, "div_ca7", CLK_REF_SYNC, 57, 1, 4, 1, 2, 4),
--	D_GATE(HCLK_CAN0, "hclk_can0", CLK_48, 0x783, 0x784, 0x785, 0, 0xb01, 0, 0),
--	D_GATE(HCLK_CAN1, "hclk_can1", CLK_48, 0x786, 0x787, 0x788, 0, 0xb02, 0, 0),
--	D_GATE(HCLK_DELTASIGMA, "hclk_deltasigma", DIV_MOTOR, 0x1ef, 0x1f0, 0x1f1, 0, 0, 0, 0),
--	D_GATE(HCLK_PWMPTO, "hclk_pwmpto", DIV_MOTOR, 0x1ec, 0x1ed, 0x1ee, 0, 0, 0, 0),
--	D_GATE(HCLK_RSV, "hclk_rsv", CLK_48, 0x780, 0x781, 0x782, 0, 0xb00, 0, 0),
--	D_GATE(HCLK_SGPIO0, "hclk_sgpio0", DIV_MOTOR, 0x1e0, 0x1e1, 0x1e2, 0, 0, 0, 0),
--	D_GATE(HCLK_SGPIO1, "hclk_sgpio1", DIV_MOTOR, 0x1e3, 0x1e4, 0x1e5, 0, 0, 0, 0),
-+	D_MODULE(HCLK_CAN0, "hclk_can0", CLK_48, 0x783, 0x784, 0x785, 0, 0xb01, 0, 0),
-+	D_MODULE(HCLK_CAN1, "hclk_can1", CLK_48, 0x786, 0x787, 0x788, 0, 0xb02, 0, 0),
-+	D_MODULE(HCLK_DELTASIGMA, "hclk_deltasigma", DIV_MOTOR, 0x1ef, 0x1f0, 0x1f1, 0, 0, 0, 0),
-+	D_MODULE(HCLK_PWMPTO, "hclk_pwmpto", DIV_MOTOR, 0x1ec, 0x1ed, 0x1ee, 0, 0, 0, 0),
-+	D_MODULE(HCLK_RSV, "hclk_rsv", CLK_48, 0x780, 0x781, 0x782, 0, 0xb00, 0, 0),
-+	D_MODULE(HCLK_SGPIO0, "hclk_sgpio0", DIV_MOTOR, 0x1e0, 0x1e1, 0x1e2, 0, 0, 0, 0),
-+	D_MODULE(HCLK_SGPIO1, "hclk_sgpio1", DIV_MOTOR, 0x1e3, 0x1e4, 0x1e5, 0, 0, 0, 0),
- 	D_DIV(RTOS_MDC, "rtos_mdc", CLK_REF_SYNC, 100, 80, 640, 80, 160, 320, 640),
- 	D_GATE(CLK_CM3, "clk_cm3", CLK_REF_SYNC_D4, 0xba0, 0xba1, 0, 0xba2, 0, 0xbc0, 0xbc1),
- 	D_GATE(CLK_DDRC, "clk_ddrc", CLK_DDRPHY_PLLCLK_D4, 0x323, 0x324, 0, 0, 0, 0, 0),
-@@ -221,53 +228,53 @@ static const struct r9a06g032_clkdesc r9a06g032_clocks[] __initconst = {
- 	D_GATE(CLK_HSR50, "clk_hsr50", CLK_HSR100_D2, 0x484, 0x485, 0, 0, 0, 0, 0),
- 	D_GATE(CLK_HW_RTOS, "clk_hw_rtos", CLK_REF_SYNC_D4, 0xc60, 0xc61, 0, 0, 0, 0, 0),
- 	D_GATE(CLK_SERCOS50, "clk_sercos50", CLK_SERCOS100_D2, 0x424, 0x423, 0, 0, 0, 0, 0),
--	D_GATE(HCLK_ADC, "hclk_adc", CLK_REF_SYNC_D8, 0x1af, 0x1b0, 0x1b1, 0, 0, 0, 0),
--	D_GATE(HCLK_CM3, "hclk_cm3", CLK_REF_SYNC_D4, 0xc20, 0xc21, 0xc22, 0, 0, 0, 0),
--	D_GATE(HCLK_CRYPTO_EIP150, "hclk_crypto_eip150", CLK_REF_SYNC_D4, 0x123, 0x124, 0x125, 0, 0x142, 0, 0),
--	D_GATE(HCLK_CRYPTO_EIP93, "hclk_crypto_eip93", CLK_REF_SYNC_D4, 0x120, 0x121, 0, 0x122, 0, 0x140, 0x141),
--	D_GATE(HCLK_DDRC, "hclk_ddrc", CLK_REF_SYNC_D4, 0x320, 0x322, 0, 0x321, 0, 0x3a0, 0x3a1),
--	D_GATE(HCLK_DMA0, "hclk_dma0", CLK_REF_SYNC_D4, 0x260, 0x261, 0x262, 0x263, 0x2c0, 0x2c1, 0x2c2),
--	D_GATE(HCLK_DMA1, "hclk_dma1", CLK_REF_SYNC_D4, 0x264, 0x265, 0x266, 0x267, 0x2c3, 0x2c4, 0x2c5),
--	D_GATE(HCLK_GMAC0, "hclk_gmac0", CLK_REF_SYNC_D4, 0x360, 0x361, 0x362, 0x363, 0x3c0, 0x3c1, 0x3c2),
--	D_GATE(HCLK_GMAC1, "hclk_gmac1", CLK_REF_SYNC_D4, 0x380, 0x381, 0x382, 0x383, 0x3e0, 0x3e1, 0x3e2),
--	D_GATE(HCLK_GPIO0, "hclk_gpio0", CLK_REF_SYNC_D4, 0x212, 0x213, 0x214, 0, 0, 0, 0),
--	D_GATE(HCLK_GPIO1, "hclk_gpio1", CLK_REF_SYNC_D4, 0x215, 0x216, 0x217, 0, 0, 0, 0),
--	D_GATE(HCLK_GPIO2, "hclk_gpio2", CLK_REF_SYNC_D4, 0x229, 0x22a, 0x22b, 0, 0, 0, 0),
--	D_GATE(HCLK_HSR, "hclk_hsr", CLK_HSR100_D2, 0x480, 0x482, 0, 0x481, 0, 0x4c0, 0x4c1),
--	D_GATE(HCLK_I2C0, "hclk_i2c0", CLK_REF_SYNC_D8, 0x1a9, 0x1aa, 0x1ab, 0, 0, 0, 0),
--	D_GATE(HCLK_I2C1, "hclk_i2c1", CLK_REF_SYNC_D8, 0x1ac, 0x1ad, 0x1ae, 0, 0, 0, 0),
--	D_GATE(HCLK_LCD, "hclk_lcd", CLK_REF_SYNC_D4, 0x7a0, 0x7a1, 0x7a2, 0, 0xb20, 0, 0),
--	D_GATE(HCLK_MSEBI_M, "hclk_msebi_m", CLK_REF_SYNC_D4, 0x164, 0x165, 0x166, 0, 0x183, 0, 0),
--	D_GATE(HCLK_MSEBI_S, "hclk_msebi_s", CLK_REF_SYNC_D4, 0x160, 0x161, 0x162, 0x163, 0x180, 0x181, 0x182),
--	D_GATE(HCLK_NAND, "hclk_nand", CLK_REF_SYNC_D4, 0x280, 0x281, 0x282, 0x283, 0x2e0, 0x2e1, 0x2e2),
--	D_GATE(HCLK_PG_I, "hclk_pg_i", CLK_REF_SYNC_D4, 0x7ac, 0x7ad, 0, 0x7ae, 0, 0xb24, 0xb25),
--	D_GATE(HCLK_PG19, "hclk_pg19", CLK_REF_SYNC_D4, 0x22c, 0x22d, 0x22e, 0, 0, 0, 0),
--	D_GATE(HCLK_PG20, "hclk_pg20", CLK_REF_SYNC_D4, 0x22f, 0x230, 0x231, 0, 0, 0, 0),
--	D_GATE(HCLK_PG3, "hclk_pg3", CLK_REF_SYNC_D4, 0x7a6, 0x7a7, 0x7a8, 0, 0xb22, 0, 0),
--	D_GATE(HCLK_PG4, "hclk_pg4", CLK_REF_SYNC_D4, 0x7a9, 0x7aa, 0x7ab, 0, 0xb23, 0, 0),
--	D_GATE(HCLK_QSPI0, "hclk_qspi0", CLK_REF_SYNC_D4, 0x2a0, 0x2a1, 0x2a2, 0x2a3, 0x300, 0x301, 0x302),
--	D_GATE(HCLK_QSPI1, "hclk_qspi1", CLK_REF_SYNC_D4, 0x480, 0x481, 0x482, 0x483, 0x4c0, 0x4c1, 0x4c2),
--	D_GATE(HCLK_ROM, "hclk_rom", CLK_REF_SYNC_D4, 0xaa0, 0xaa1, 0xaa2, 0, 0xb80, 0, 0),
--	D_GATE(HCLK_RTC, "hclk_rtc", CLK_REF_SYNC_D8, 0xa00, 0, 0, 0, 0, 0, 0),
--	D_GATE(HCLK_SDIO0, "hclk_sdio0", CLK_REF_SYNC_D4, 0x60, 0x61, 0x62, 0x63, 0x80, 0x81, 0x82),
--	D_GATE(HCLK_SDIO1, "hclk_sdio1", CLK_REF_SYNC_D4, 0x640, 0x641, 0x642, 0x643, 0x660, 0x661, 0x662),
--	D_GATE(HCLK_SEMAP, "hclk_semap", CLK_REF_SYNC_D4, 0x7a3, 0x7a4, 0x7a5, 0, 0xb21, 0, 0),
--	D_GATE(HCLK_SPI0, "hclk_spi0", CLK_REF_SYNC_D4, 0x200, 0x201, 0x202, 0, 0, 0, 0),
--	D_GATE(HCLK_SPI1, "hclk_spi1", CLK_REF_SYNC_D4, 0x203, 0x204, 0x205, 0, 0, 0, 0),
--	D_GATE(HCLK_SPI2, "hclk_spi2", CLK_REF_SYNC_D4, 0x206, 0x207, 0x208, 0, 0, 0, 0),
--	D_GATE(HCLK_SPI3, "hclk_spi3", CLK_REF_SYNC_D4, 0x209, 0x20a, 0x20b, 0, 0, 0, 0),
--	D_GATE(HCLK_SPI4, "hclk_spi4", CLK_REF_SYNC_D4, 0x20c, 0x20d, 0x20e, 0, 0, 0, 0),
--	D_GATE(HCLK_SPI5, "hclk_spi5", CLK_REF_SYNC_D4, 0x20f, 0x210, 0x211, 0, 0, 0, 0),
--	D_GATE(HCLK_SWITCH, "hclk_switch", CLK_REF_SYNC_D4, 0x980, 0, 0x981, 0, 0, 0, 0),
--	D_GATE(HCLK_SWITCH_RG, "hclk_switch_rg", CLK_REF_SYNC_D4, 0xc40, 0xc41, 0xc42, 0, 0, 0, 0),
--	D_GATE(HCLK_UART0, "hclk_uart0", CLK_REF_SYNC_D8, 0x1a0, 0x1a1, 0x1a2, 0, 0, 0, 0),
--	D_GATE(HCLK_UART1, "hclk_uart1", CLK_REF_SYNC_D8, 0x1a3, 0x1a4, 0x1a5, 0, 0, 0, 0),
--	D_GATE(HCLK_UART2, "hclk_uart2", CLK_REF_SYNC_D8, 0x1a6, 0x1a7, 0x1a8, 0, 0, 0, 0),
--	D_GATE(HCLK_UART3, "hclk_uart3", CLK_REF_SYNC_D4, 0x218, 0x219, 0x21a, 0, 0, 0, 0),
--	D_GATE(HCLK_UART4, "hclk_uart4", CLK_REF_SYNC_D4, 0x21b, 0x21c, 0x21d, 0, 0, 0, 0),
--	D_GATE(HCLK_UART5, "hclk_uart5", CLK_REF_SYNC_D4, 0x220, 0x221, 0x222, 0, 0, 0, 0),
--	D_GATE(HCLK_UART6, "hclk_uart6", CLK_REF_SYNC_D4, 0x223, 0x224, 0x225, 0, 0, 0, 0),
--	D_GATE(HCLK_UART7, "hclk_uart7", CLK_REF_SYNC_D4, 0x226, 0x227, 0x228, 0, 0, 0, 0),
-+	D_MODULE(HCLK_ADC, "hclk_adc", CLK_REF_SYNC_D8, 0x1af, 0x1b0, 0x1b1, 0, 0, 0, 0),
-+	D_MODULE(HCLK_CM3, "hclk_cm3", CLK_REF_SYNC_D4, 0xc20, 0xc21, 0xc22, 0, 0, 0, 0),
-+	D_MODULE(HCLK_CRYPTO_EIP150, "hclk_crypto_eip150", CLK_REF_SYNC_D4, 0x123, 0x124, 0x125, 0, 0x142, 0, 0),
-+	D_MODULE(HCLK_CRYPTO_EIP93, "hclk_crypto_eip93", CLK_REF_SYNC_D4, 0x120, 0x121, 0, 0x122, 0, 0x140, 0x141),
-+	D_MODULE(HCLK_DDRC, "hclk_ddrc", CLK_REF_SYNC_D4, 0x320, 0x322, 0, 0x321, 0, 0x3a0, 0x3a1),
-+	D_MODULE(HCLK_DMA0, "hclk_dma0", CLK_REF_SYNC_D4, 0x260, 0x261, 0x262, 0x263, 0x2c0, 0x2c1, 0x2c2),
-+	D_MODULE(HCLK_DMA1, "hclk_dma1", CLK_REF_SYNC_D4, 0x264, 0x265, 0x266, 0x267, 0x2c3, 0x2c4, 0x2c5),
-+	D_MODULE(HCLK_GMAC0, "hclk_gmac0", CLK_REF_SYNC_D4, 0x360, 0x361, 0x362, 0x363, 0x3c0, 0x3c1, 0x3c2),
-+	D_MODULE(HCLK_GMAC1, "hclk_gmac1", CLK_REF_SYNC_D4, 0x380, 0x381, 0x382, 0x383, 0x3e0, 0x3e1, 0x3e2),
-+	D_MODULE(HCLK_GPIO0, "hclk_gpio0", CLK_REF_SYNC_D4, 0x212, 0x213, 0x214, 0, 0, 0, 0),
-+	D_MODULE(HCLK_GPIO1, "hclk_gpio1", CLK_REF_SYNC_D4, 0x215, 0x216, 0x217, 0, 0, 0, 0),
-+	D_MODULE(HCLK_GPIO2, "hclk_gpio2", CLK_REF_SYNC_D4, 0x229, 0x22a, 0x22b, 0, 0, 0, 0),
-+	D_MODULE(HCLK_HSR, "hclk_hsr", CLK_HSR100_D2, 0x480, 0x482, 0, 0x481, 0, 0x4c0, 0x4c1),
-+	D_MODULE(HCLK_I2C0, "hclk_i2c0", CLK_REF_SYNC_D8, 0x1a9, 0x1aa, 0x1ab, 0, 0, 0, 0),
-+	D_MODULE(HCLK_I2C1, "hclk_i2c1", CLK_REF_SYNC_D8, 0x1ac, 0x1ad, 0x1ae, 0, 0, 0, 0),
-+	D_MODULE(HCLK_LCD, "hclk_lcd", CLK_REF_SYNC_D4, 0x7a0, 0x7a1, 0x7a2, 0, 0xb20, 0, 0),
-+	D_MODULE(HCLK_MSEBI_M, "hclk_msebi_m", CLK_REF_SYNC_D4, 0x164, 0x165, 0x166, 0, 0x183, 0, 0),
-+	D_MODULE(HCLK_MSEBI_S, "hclk_msebi_s", CLK_REF_SYNC_D4, 0x160, 0x161, 0x162, 0x163, 0x180, 0x181, 0x182),
-+	D_MODULE(HCLK_NAND, "hclk_nand", CLK_REF_SYNC_D4, 0x280, 0x281, 0x282, 0x283, 0x2e0, 0x2e1, 0x2e2),
-+	D_MODULE(HCLK_PG_I, "hclk_pg_i", CLK_REF_SYNC_D4, 0x7ac, 0x7ad, 0, 0x7ae, 0, 0xb24, 0xb25),
-+	D_MODULE(HCLK_PG19, "hclk_pg19", CLK_REF_SYNC_D4, 0x22c, 0x22d, 0x22e, 0, 0, 0, 0),
-+	D_MODULE(HCLK_PG20, "hclk_pg20", CLK_REF_SYNC_D4, 0x22f, 0x230, 0x231, 0, 0, 0, 0),
-+	D_MODULE(HCLK_PG3, "hclk_pg3", CLK_REF_SYNC_D4, 0x7a6, 0x7a7, 0x7a8, 0, 0xb22, 0, 0),
-+	D_MODULE(HCLK_PG4, "hclk_pg4", CLK_REF_SYNC_D4, 0x7a9, 0x7aa, 0x7ab, 0, 0xb23, 0, 0),
-+	D_MODULE(HCLK_QSPI0, "hclk_qspi0", CLK_REF_SYNC_D4, 0x2a0, 0x2a1, 0x2a2, 0x2a3, 0x300, 0x301, 0x302),
-+	D_MODULE(HCLK_QSPI1, "hclk_qspi1", CLK_REF_SYNC_D4, 0x480, 0x481, 0x482, 0x483, 0x4c0, 0x4c1, 0x4c2),
-+	D_MODULE(HCLK_ROM, "hclk_rom", CLK_REF_SYNC_D4, 0xaa0, 0xaa1, 0xaa2, 0, 0xb80, 0, 0),
-+	D_MODULE(HCLK_RTC, "hclk_rtc", CLK_REF_SYNC_D8, 0xa00, 0, 0, 0, 0, 0, 0),
-+	D_MODULE(HCLK_SDIO0, "hclk_sdio0", CLK_REF_SYNC_D4, 0x60, 0x61, 0x62, 0x63, 0x80, 0x81, 0x82),
-+	D_MODULE(HCLK_SDIO1, "hclk_sdio1", CLK_REF_SYNC_D4, 0x640, 0x641, 0x642, 0x643, 0x660, 0x661, 0x662),
-+	D_MODULE(HCLK_SEMAP, "hclk_semap", CLK_REF_SYNC_D4, 0x7a3, 0x7a4, 0x7a5, 0, 0xb21, 0, 0),
-+	D_MODULE(HCLK_SPI0, "hclk_spi0", CLK_REF_SYNC_D4, 0x200, 0x201, 0x202, 0, 0, 0, 0),
-+	D_MODULE(HCLK_SPI1, "hclk_spi1", CLK_REF_SYNC_D4, 0x203, 0x204, 0x205, 0, 0, 0, 0),
-+	D_MODULE(HCLK_SPI2, "hclk_spi2", CLK_REF_SYNC_D4, 0x206, 0x207, 0x208, 0, 0, 0, 0),
-+	D_MODULE(HCLK_SPI3, "hclk_spi3", CLK_REF_SYNC_D4, 0x209, 0x20a, 0x20b, 0, 0, 0, 0),
-+	D_MODULE(HCLK_SPI4, "hclk_spi4", CLK_REF_SYNC_D4, 0x20c, 0x20d, 0x20e, 0, 0, 0, 0),
-+	D_MODULE(HCLK_SPI5, "hclk_spi5", CLK_REF_SYNC_D4, 0x20f, 0x210, 0x211, 0, 0, 0, 0),
-+	D_MODULE(HCLK_SWITCH, "hclk_switch", CLK_REF_SYNC_D4, 0x980, 0, 0x981, 0, 0, 0, 0),
-+	D_MODULE(HCLK_SWITCH_RG, "hclk_switch_rg", CLK_REF_SYNC_D4, 0xc40, 0xc41, 0xc42, 0, 0, 0, 0),
-+	D_MODULE(HCLK_UART0, "hclk_uart0", CLK_REF_SYNC_D8, 0x1a0, 0x1a1, 0x1a2, 0, 0, 0, 0),
-+	D_MODULE(HCLK_UART1, "hclk_uart1", CLK_REF_SYNC_D8, 0x1a3, 0x1a4, 0x1a5, 0, 0, 0, 0),
-+	D_MODULE(HCLK_UART2, "hclk_uart2", CLK_REF_SYNC_D8, 0x1a6, 0x1a7, 0x1a8, 0, 0, 0, 0),
-+	D_MODULE(HCLK_UART3, "hclk_uart3", CLK_REF_SYNC_D4, 0x218, 0x219, 0x21a, 0, 0, 0, 0),
-+	D_MODULE(HCLK_UART4, "hclk_uart4", CLK_REF_SYNC_D4, 0x21b, 0x21c, 0x21d, 0, 0, 0, 0),
-+	D_MODULE(HCLK_UART5, "hclk_uart5", CLK_REF_SYNC_D4, 0x220, 0x221, 0x222, 0, 0, 0, 0),
-+	D_MODULE(HCLK_UART6, "hclk_uart6", CLK_REF_SYNC_D4, 0x223, 0x224, 0x225, 0, 0, 0, 0),
-+	D_MODULE(HCLK_UART7, "hclk_uart7", CLK_REF_SYNC_D4, 0x226, 0x227, 0x228, 0, 0, 0, 0),
- 	/*
- 	 * These are not hardware clocks, but are needed to handle the special
- 	 * case where we have a 'selector bit' that doesn't just change the
-@@ -344,6 +351,104 @@ struct r9a06g032_clk_gate {
+The practical result of this is that on a 64bit big endian kernel
+when delivering a signal to a 32bit process the si_addr field
+is set to NULL, instead of the expected pointer value.
+
+This issue can not be fixed in copy_siginfo_to_user32 as the usb
+usage of the the _sigfault (aka si_addr) member of the siginfo
+union when SI_ASYNCIO is set is incompatible with the POSIX and
+glibc usage of the _rt member of the siginfo union.
+
+Therefore replace kill_pid_info_as_cred with kill_pid_usb_asyncio a
+dedicated function for this one specific case.  There are no other
+users of kill_pid_info_as_cred so this specialization should have no
+impact on the amount of code in the kernel.  Have kill_pid_usb_asyncio
+take instead of a siginfo_t which is difficult and error prone, 3
+arguments, a signal number, an errno value, and an address enconded as
+a sigval_t.  The encoding of the address as a sigval_t allows the
+code that reads the userspace request for a signal to handle this
+compat issue along with all of the other compat issues.
+
+Add BUILD_BUG_ONs in kernel/signal.c to ensure that we can now place
+the pointer value at the in si_pid (instead of si_addr).  That is the
+code now verifies that si_pid and si_addr always occur at the same
+location.  Further the code veries that for native structures a value
+placed in si_pid and spilling into si_uid will appear in userspace in
+si_addr (on a byte by byte copy of siginfo or a field by field copy of
+siginfo).  The code also verifies that for a 64bit kernel and a 32bit
+userspace the 32bit pointer will fit in si_pid.
+
+I have used the usbsig.c program below written by Alan Stern and
+slightly tweaked by me to run on a big endian machine to verify the
+issue exists (on sparc64) and to confirm the patch below fixes the issue.
+
+/* usbsig.c -- test USB async signal delivery */
+
+static struct usbdevfs_urb urb;
+static struct usbdevfs_disconnectsignal ds;
+static volatile sig_atomic_t done = 0;
+
+void urb_handler(int sig, siginfo_t *info , void *ucontext)
+{
+	printf("Got signal %d, signo %d errno %d code %d addr: %p urb: %p\n",
+	       sig, info->si_signo, info->si_errno, info->si_code,
+	       info->si_addr, &urb);
+
+	printf("%s\n", (info->si_addr == &urb) ? "Good" : "Bad");
+}
+
+void ds_handler(int sig, siginfo_t *info , void *ucontext)
+{
+	printf("Got signal %d, signo %d errno %d code %d addr: %p ds: %p\n",
+	       sig, info->si_signo, info->si_errno, info->si_code,
+	       info->si_addr, &ds);
+
+	printf("%s\n", (info->si_addr == &ds) ? "Good" : "Bad");
+	done = 1;
+}
+
+int main(int argc, char **argv)
+{
+	char *devfilename;
+	int fd;
+	int rc;
+	struct sigaction act;
+	struct usb_ctrlrequest *req;
+	void *ptr;
+	char buf[80];
+
+	if (argc != 2) {
+		fprintf(stderr, "Usage: usbsig device-file-name\n");
+		return 1;
+	}
+
+	devfilename = argv[1];
+	fd = open(devfilename, O_RDWR);
+	if (fd == -1) {
+		perror("Error opening device file");
+		return 1;
+	}
+
+	act.sa_sigaction = urb_handler;
+	sigemptyset(&act.sa_mask);
+	act.sa_flags = SA_SIGINFO;
+
+	rc = sigaction(SIGUSR1, &act, NULL);
+	if (rc == -1) {
+		perror("Error in sigaction");
+		return 1;
+	}
+
+	act.sa_sigaction = ds_handler;
+	sigemptyset(&act.sa_mask);
+	act.sa_flags = SA_SIGINFO;
+
+	rc = sigaction(SIGUSR2, &act, NULL);
+	if (rc == -1) {
+		perror("Error in sigaction");
+		return 1;
+	}
+
+	memset(&urb, 0, sizeof(urb));
+	urb.type = USBDEVFS_URB_TYPE_CONTROL;
+	urb.endpoint = USB_DIR_IN | 0;
+	urb.buffer = buf;
+	urb.buffer_length = sizeof(buf);
+	urb.signr = SIGUSR1;
+
+	req = (struct usb_ctrlrequest *) buf;
+	req->bRequestType = USB_DIR_IN | USB_TYPE_STANDARD | USB_RECIP_DEVICE;
+	req->bRequest = USB_REQ_GET_DESCRIPTOR;
+	req->wValue = htole16(USB_DT_DEVICE << 8);
+	req->wIndex = htole16(0);
+	req->wLength = htole16(sizeof(buf) - sizeof(*req));
+
+	rc = ioctl(fd, USBDEVFS_SUBMITURB, &urb);
+	if (rc == -1) {
+		perror("Error in SUBMITURB ioctl");
+		return 1;
+	}
+
+	rc = ioctl(fd, USBDEVFS_REAPURB, &ptr);
+	if (rc == -1) {
+		perror("Error in REAPURB ioctl");
+		return 1;
+	}
+
+	memset(&ds, 0, sizeof(ds));
+	ds.signr = SIGUSR2;
+	ds.context = &ds;
+	rc = ioctl(fd, USBDEVFS_DISCSIGNAL, &ds);
+	if (rc == -1) {
+		perror("Error in DISCSIGNAL ioctl");
+		return 1;
+	}
+
+	printf("Waiting for usb disconnect\n");
+	while (!done) {
+		sleep(1);
+	}
+
+	close(fd);
+	return 0;
+}
+
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-usb@vger.kernel.org
+Cc: Alan Stern <stern@rowland.harvard.edu>
+Cc: Oliver Neukum <oneukum@suse.com>
+Fixes: v2.3.39
+Cc: stable@vger.kernel.org
+Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+---
+
+I managed to wrestle a sparc64 qemu to the ground so I could verify this
+bug exists and the patch below fixes it.
+
+Can I get an Ack from the usb side of things?
+
+I intend to merge this through my siginfo tree unless someone objects.
+
+Thank you,
+Eric Biederman
+
+ drivers/usb/core/devio.c     | 48 ++++++++++++-------------
+ include/linux/sched/signal.h |  2 +-
+ kernel/signal.c              | 69 +++++++++++++++++++++++++++++++-----
+ 3 files changed, 86 insertions(+), 33 deletions(-)
+
+diff --git a/drivers/usb/core/devio.c b/drivers/usb/core/devio.c
+index fa783531ee88..a02448105527 100644
+--- a/drivers/usb/core/devio.c
++++ b/drivers/usb/core/devio.c
+@@ -63,7 +63,7 @@ struct usb_dev_state {
+ 	unsigned int discsignr;
+ 	struct pid *disc_pid;
+ 	const struct cred *cred;
+-	void __user *disccontext;
++	sigval_t disccontext;
+ 	unsigned long ifclaimed;
+ 	u32 disabled_bulk_eps;
+ 	bool privileges_dropped;
+@@ -90,6 +90,7 @@ struct async {
+ 	unsigned int ifnum;
+ 	void __user *userbuffer;
+ 	void __user *userurb;
++	sigval_t userurb_sigval;
+ 	struct urb *urb;
+ 	struct usb_memory *usbm;
+ 	unsigned int mem_usage;
+@@ -582,22 +583,19 @@ static void async_completed(struct urb *urb)
+ {
+ 	struct async *as = urb->context;
+ 	struct usb_dev_state *ps = as->ps;
+-	struct kernel_siginfo sinfo;
+ 	struct pid *pid = NULL;
+ 	const struct cred *cred = NULL;
+ 	unsigned long flags;
+-	int signr;
++	sigval_t addr;
++	int signr, errno;
  
- #define to_r9a06g032_gate(_hw) container_of(_hw, struct r9a06g032_clk_gate, hw)
+ 	spin_lock_irqsave(&ps->lock, flags);
+ 	list_move_tail(&as->asynclist, &ps->async_completed);
+ 	as->status = urb->status;
+ 	signr = as->signr;
+ 	if (signr) {
+-		clear_siginfo(&sinfo);
+-		sinfo.si_signo = as->signr;
+-		sinfo.si_errno = as->status;
+-		sinfo.si_code = SI_ASYNCIO;
+-		sinfo.si_addr = as->userurb;
++		errno = as->status;
++		addr = as->userurb_sigval;
+ 		pid = get_pid(as->pid);
+ 		cred = get_cred(as->cred);
+ 	}
+@@ -615,7 +613,7 @@ static void async_completed(struct urb *urb)
+ 	spin_unlock_irqrestore(&ps->lock, flags);
  
-+struct r9a06g032_clk_domain {
-+	struct generic_pm_domain genpd;
-+	struct device_node *np;
-+};
-+
-+static struct r9a06g032_clk_domain *r9a06g032_clk_domain;
-+
-+static int create_add_module_clock(struct of_phandle_args *clkspec,
-+				   struct device *dev)
-+{
-+	struct clk *clk;
-+	int error = 0;
-+
-+	clk = of_clk_get_from_provider(clkspec);
-+
-+	if (IS_ERR(clk))
-+		return PTR_ERR(clk);
-+
-+	error = pm_clk_create(dev);
-+	if (error) {
-+		dev_err(dev, "pm_clk_create failed %d\n", error);
-+		clk_put(clk);
-+		return error;
-+	}
-+
-+	error = pm_clk_add_clk(dev, clk);
-+	if (error) {
-+		dev_err(dev, "pm_clk_add_clk %pC failed %d\n", clk, error);
-+		pm_clk_destroy(dev);
-+		clk_put(clk);
-+	}
-+
-+	return error;
-+}
-+
-+int __init r9a06g032_attach_dev(struct generic_pm_domain *unused,
-+				struct device *dev)
-+{
-+	struct r9a06g032_clk_domain *pd = r9a06g032_clk_domain;
-+	struct device_node *np = dev->of_node;
-+	struct of_phandle_args clkspec;
-+	int i = 0;
-+	int error;
-+
-+	if (!pd) {
-+		dev_dbg(dev, "RZN1 clock domain not yet available\n");
-+		return -EPROBE_DEFER;
-+	}
-+
-+	while (!of_parse_phandle_with_args(np, "clocks", "#clock-cells", i,
-+					   &clkspec)) {
-+		int index = clkspec.args[0];
-+
-+		if (index < R9A06G032_CLOCK_COUNT &&
-+		    r9a06g032_clocks[index].managed) {
-+			error = create_add_module_clock(&clkspec, dev);
-+
-+			if (error)
-+				return error;
-+
-+			of_node_put(clkspec.np);
-+		}
-+		i++;
-+	}
-+
-+	return 0;
-+}
-+
-+void r9a06g032_detach_dev(struct generic_pm_domain *unused, struct device *dev)
-+{
-+	if (!pm_clk_no_clocks(dev))
-+		pm_clk_destroy(dev);
-+}
-+
-+static int __init r9a06g032_add_clk_domain(struct device *dev)
-+{
-+	struct device_node *np = dev->of_node;
-+	struct generic_pm_domain *genpd;
-+	struct r9a06g032_clk_domain *pd;
-+
-+	pd = devm_kzalloc(dev, sizeof(*pd), GFP_KERNEL);
-+	if (!pd)
-+		return -ENOMEM;
-+
-+	pd->np = np;
-+
-+	genpd = &pd->genpd;
-+	genpd->name = np->name;
-+	genpd->flags = GENPD_FLAG_PM_CLK | GENPD_FLAG_ACTIVE_WAKEUP;
-+	genpd->attach_dev = r9a06g032_attach_dev;
-+	genpd->detach_dev = r9a06g032_detach_dev;
-+	pm_genpd_init(genpd, &pm_domain_always_on_gov, false);
-+	r9a06g032_clk_domain = pd;
-+
-+	of_genpd_add_provider_simple(np, genpd);
-+	return 0;
-+}
-+
- static void
- r9a06g032_clk_gate_set(struct r9a06g032_priv *clocks,
- 		       struct r9a06g032_gate *g, int on)
-@@ -870,6 +975,10 @@ static int __init r9a06g032_clocks_probe(struct platform_device *pdev)
- 	if (error)
- 		return error;
+ 	if (signr) {
+-		kill_pid_info_as_cred(sinfo.si_signo, &sinfo, pid, cred);
++		kill_pid_usb_asyncio(signr, errno, addr, pid, cred);
+ 		put_pid(pid);
+ 		put_cred(cred);
+ 	}
+@@ -1427,7 +1425,7 @@ find_memory_area(struct usb_dev_state *ps, const struct usbdevfs_urb *uurb)
  
-+	error = r9a06g032_add_clk_domain(dev);
-+	if (error)
-+		return error;
+ static int proc_do_submiturb(struct usb_dev_state *ps, struct usbdevfs_urb *uurb,
+ 			struct usbdevfs_iso_packet_desc __user *iso_frame_desc,
+-			void __user *arg)
++			void __user *arg, sigval_t userurb_sigval)
+ {
+ 	struct usbdevfs_iso_packet_desc *isopkt = NULL;
+ 	struct usb_host_endpoint *ep;
+@@ -1727,6 +1725,7 @@ static int proc_do_submiturb(struct usb_dev_state *ps, struct usbdevfs_urb *uurb
+ 	isopkt = NULL;
+ 	as->ps = ps;
+ 	as->userurb = arg;
++	as->userurb_sigval = userurb_sigval;
+ 	if (as->usbm) {
+ 		unsigned long uurb_start = (unsigned long)uurb->buffer;
+ 
+@@ -1801,13 +1800,17 @@ static int proc_do_submiturb(struct usb_dev_state *ps, struct usbdevfs_urb *uurb
+ static int proc_submiturb(struct usb_dev_state *ps, void __user *arg)
+ {
+ 	struct usbdevfs_urb uurb;
++	sigval_t userurb_sigval;
+ 
+ 	if (copy_from_user(&uurb, arg, sizeof(uurb)))
+ 		return -EFAULT;
+ 
++	memset(&userurb_sigval, 0, sizeof(userurb_sigval));
++	userurb_sigval.sival_ptr = arg;
 +
- 	return devm_add_action_or_reset(dev,
- 					r9a06g032_clocks_del_clk_provider, np);
+ 	return proc_do_submiturb(ps, &uurb,
+ 			(((struct usbdevfs_urb __user *)arg)->iso_frame_desc),
+-			arg);
++			arg, userurb_sigval);
  }
+ 
+ static int proc_unlinkurb(struct usb_dev_state *ps, void __user *arg)
+@@ -1977,7 +1980,7 @@ static int proc_disconnectsignal_compat(struct usb_dev_state *ps, void __user *a
+ 	if (copy_from_user(&ds, arg, sizeof(ds)))
+ 		return -EFAULT;
+ 	ps->discsignr = ds.signr;
+-	ps->disccontext = compat_ptr(ds.context);
++	ps->disccontext.sival_int = ds.context;
+ 	return 0;
+ }
+ 
+@@ -2005,13 +2008,17 @@ static int get_urb32(struct usbdevfs_urb *kurb,
+ static int proc_submiturb_compat(struct usb_dev_state *ps, void __user *arg)
+ {
+ 	struct usbdevfs_urb uurb;
++	sigval_t userurb_sigval;
+ 
+ 	if (get_urb32(&uurb, (struct usbdevfs_urb32 __user *)arg))
+ 		return -EFAULT;
+ 
++	memset(&userurb_sigval, 0, sizeof(userurb_sigval));
++	userurb_sigval.sival_int = ptr_to_compat(arg);
++
+ 	return proc_do_submiturb(ps, &uurb,
+ 			((struct usbdevfs_urb32 __user *)arg)->iso_frame_desc,
+-			arg);
++			arg, userurb_sigval);
+ }
+ 
+ static int processcompl_compat(struct async *as, void __user * __user *arg)
+@@ -2092,7 +2099,7 @@ static int proc_disconnectsignal(struct usb_dev_state *ps, void __user *arg)
+ 	if (copy_from_user(&ds, arg, sizeof(ds)))
+ 		return -EFAULT;
+ 	ps->discsignr = ds.signr;
+-	ps->disccontext = ds.context;
++	ps->disccontext.sival_ptr = ds.context;
+ 	return 0;
+ }
+ 
+@@ -2614,22 +2621,15 @@ const struct file_operations usbdev_file_operations = {
+ static void usbdev_remove(struct usb_device *udev)
+ {
+ 	struct usb_dev_state *ps;
+-	struct kernel_siginfo sinfo;
+ 
+ 	while (!list_empty(&udev->filelist)) {
+ 		ps = list_entry(udev->filelist.next, struct usb_dev_state, list);
+ 		destroy_all_async(ps);
+ 		wake_up_all(&ps->wait);
+ 		list_del_init(&ps->list);
+-		if (ps->discsignr) {
+-			clear_siginfo(&sinfo);
+-			sinfo.si_signo = ps->discsignr;
+-			sinfo.si_errno = EPIPE;
+-			sinfo.si_code = SI_ASYNCIO;
+-			sinfo.si_addr = ps->disccontext;
+-			kill_pid_info_as_cred(ps->discsignr, &sinfo,
+-					ps->disc_pid, ps->cred);
+-		}
++		if (ps->discsignr)
++			kill_pid_usb_asyncio(ps->discsignr, EPIPE, ps->disccontext,
++					     ps->disc_pid, ps->cred);
+ 	}
+ }
+ 
+diff --git a/include/linux/sched/signal.h b/include/linux/sched/signal.h
+index 38a0f0785323..c68ca81db0a1 100644
+--- a/include/linux/sched/signal.h
++++ b/include/linux/sched/signal.h
+@@ -329,7 +329,7 @@ extern void force_sigsegv(int sig, struct task_struct *p);
+ extern int force_sig_info(int, struct kernel_siginfo *, struct task_struct *);
+ extern int __kill_pgrp_info(int sig, struct kernel_siginfo *info, struct pid *pgrp);
+ extern int kill_pid_info(int sig, struct kernel_siginfo *info, struct pid *pid);
+-extern int kill_pid_info_as_cred(int, struct kernel_siginfo *, struct pid *,
++extern int kill_pid_usb_asyncio(int sig, int errno, sigval_t addr, struct pid *,
+ 				const struct cred *);
+ extern int kill_pgrp(struct pid *pid, int sig, int priv);
+ extern int kill_pid(struct pid *pid, int sig, int priv);
+diff --git a/kernel/signal.c b/kernel/signal.c
+index a1eb44dc9ff5..18040d6bd63a 100644
+--- a/kernel/signal.c
++++ b/kernel/signal.c
+@@ -1439,13 +1439,44 @@ static inline bool kill_as_cred_perm(const struct cred *cred,
+ 	       uid_eq(cred->uid, pcred->uid);
+ }
+ 
+-/* like kill_pid_info(), but doesn't use uid/euid of "current" */
+-int kill_pid_info_as_cred(int sig, struct kernel_siginfo *info, struct pid *pid,
+-			 const struct cred *cred)
++/*
++ * The usb asyncio usage of siginfo is wrong.  The glibc support
++ * for asyncio which uses SI_ASYNCIO assumes the layout is SIL_RT.
++ * AKA after the generic fields:
++ *	kernel_pid_t	si_pid;
++ *	kernel_uid32_t	si_uid;
++ *	sigval_t	si_value;
++ *
++ * Unfortunately when usb generates SI_ASYNCIO it assumes the layout
++ * after the generic fields is:
++ *	void __user 	*si_addr;
++ *
++ * This is a practical problem when there is a 64bit big endian kernel
++ * and a 32bit userspace.  As the 32bit address will encoded in the low
++ * 32bits of the pointer.  Those low 32bits will be stored at higher
++ * address than appear in a 32 bit pointer.  So userspace will not
++ * see the address it was expecting for it's completions.
++ *
++ * There is nothing in the encoding that can allow
++ * copy_siginfo_to_user32 to detect this confusion of formats, so
++ * handle this by requiring the caller of kill_pid_usb_asyncio to
++ * notice when this situration takes place and to store the 32bit
++ * pointer in sival_int, instead of sival_addr of the sigval_t addr
++ * parameter.
++ */
++int kill_pid_usb_asyncio(int sig, int errno, sigval_t addr,
++			 struct pid *pid, const struct cred *cred)
+ {
+-	int ret = -EINVAL;
++	struct kernel_siginfo info;
+ 	struct task_struct *p;
+ 	unsigned long flags;
++	int ret = -EINVAL;
++
++	clear_siginfo(&info);
++	info.si_signo = sig;
++	info.si_errno = errno;
++	info.si_code = SI_ASYNCIO;
++	*((sigval_t *)&info.si_pid) = addr;
+ 
+ 	if (!valid_signal(sig))
+ 		return ret;
+@@ -1456,17 +1487,17 @@ int kill_pid_info_as_cred(int sig, struct kernel_siginfo *info, struct pid *pid,
+ 		ret = -ESRCH;
+ 		goto out_unlock;
+ 	}
+-	if (si_fromuser(info) && !kill_as_cred_perm(cred, p)) {
++	if (!kill_as_cred_perm(cred, p)) {
+ 		ret = -EPERM;
+ 		goto out_unlock;
+ 	}
+-	ret = security_task_kill(p, info, sig, cred);
++	ret = security_task_kill(p, &info, sig, cred);
+ 	if (ret)
+ 		goto out_unlock;
+ 
+ 	if (sig) {
+ 		if (lock_task_sighand(p, &flags)) {
+-			ret = __send_signal(sig, info, p, PIDTYPE_TGID, 0);
++			ret = __send_signal(sig, &info, p, PIDTYPE_TGID, 0);
+ 			unlock_task_sighand(p, &flags);
+ 		} else
+ 			ret = -ESRCH;
+@@ -1475,7 +1506,7 @@ int kill_pid_info_as_cred(int sig, struct kernel_siginfo *info, struct pid *pid,
+ 	rcu_read_unlock();
+ 	return ret;
+ }
+-EXPORT_SYMBOL_GPL(kill_pid_info_as_cred);
++EXPORT_SYMBOL_GPL(kill_pid_usb_asyncio);
+ 
+ /*
+  * kill_something_info() interprets pid in interesting ways just like kill(2).
+@@ -4474,6 +4505,28 @@ static inline void siginfo_buildtime_checks(void)
+ 	CHECK_OFFSET(si_syscall);
+ 	CHECK_OFFSET(si_arch);
+ #undef CHECK_OFFSET
++
++	/* usb asyncio */
++	BUILD_BUG_ON(offsetof(struct siginfo, si_pid) !=
++		     offsetof(struct siginfo, si_addr));
++	if (sizeof(int) == sizeof(void __user *)) {
++		BUILD_BUG_ON(sizeof_field(struct siginfo, si_pid) !=
++			     sizeof(void __user *));
++	} else {
++		BUILD_BUG_ON((sizeof_field(struct siginfo, si_pid) +
++			      sizeof_field(struct siginfo, si_uid)) !=
++			     sizeof(void __user *));
++		BUILD_BUG_ON(offsetofend(struct siginfo, si_pid) !=
++			     offsetof(struct siginfo, si_uid));
++	}
++#ifdef CONFIG_COMPAT
++	BUILD_BUG_ON(offsetof(struct compat_siginfo, si_pid) !=
++		     offsetof(struct compat_siginfo, si_addr));
++	BUILD_BUG_ON(sizeof_field(struct compat_siginfo, si_pid) !=
++		     sizeof(compat_uptr_t));
++	BUILD_BUG_ON(sizeof_field(struct compat_siginfo, si_pid) !=
++		     sizeof_field(struct siginfo, si_pid));
++#endif
+ }
+ 
+ void __init signals_init(void)
 -- 
-2.7.4
+2.17.1
 
