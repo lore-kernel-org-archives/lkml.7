@@ -2,292 +2,140 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79787C04AAC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 02:56:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 915EDC04AAC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 02:58:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3860A21479
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 02:56:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558407413;
-	bh=OMBFhS5nCKTGkywbQ7uj42oFd38dabFEHCAQigmhaQs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Xeu6Q2aSw5tiYQ9it336+RhCN2idu00aHRMDEl6nFCNbSiTFTztiI7yxEOLQpPK57
-	 Lgmuz/QzpguaT4CeEUzTuWEehScKjegZ5daH6dzrDDvQ4G0m/aEhZcsjAB4HYP103I
-	 +uty7yMvAaHij5mqn77rDREynO+BXTjI+/IeachA=
+	by mail.kernel.org (Postfix) with ESMTP id 61CC221479
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 02:58:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f54Jfcj7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727742AbfEUC4w (ORCPT
+        id S1727279AbfEUC6M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 22:56:52 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:36203 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726039AbfEUC4v (ORCPT
+        Mon, 20 May 2019 22:58:12 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:35270 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727043AbfEUC6M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 22:56:51 -0400
-Received: by mail-pl1-f193.google.com with SMTP id d21so7677197plr.3
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 19:56:51 -0700 (PDT)
+        Mon, 20 May 2019 22:58:12 -0400
+Received: by mail-pl1-f196.google.com with SMTP id p1so2288396plo.2
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 19:58:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=6Afh3+z0qmcfkeuctfv1v2GNWM1yrCE10w4LdsfArpU=;
-        b=ryyO3SCTjZ1P51XagZ2b4X1f0ekMu6xS7/hBacBJ7oBTZ97AyhVLG4SmL5puT6PS+A
-         CrYxMzYM2SNECAV2y+fmHEl1TZuFsoB22zvcVzRnBFI4ABiutcfbZBoI7kAWg4kuY/zk
-         Z8pEcn5wMNtgVDznjp5X6ZvaxBkGS2CKJqHIg47LkrGSGjD7Ca9P0UaC4vTrSaG9vRvU
-         qkAOOOYgPVtYuarpWeJ60CMcjz6HslEpXu4CHYhs2+kyja5khRcujRdWgKDhu3IRC5gR
-         nTv0kH849FahWfDsHOJ2PUBKVN1qYrztf48t6DLkr5Mv0Tzxxu6h6wX9sF4LBIzENsL7
-         fU7Q==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=j7HdXPYxvmLu7dAn+oOr5Hftd2YV/QZHVEZ2U127O1k=;
+        b=f54Jfcj7s8GNo9SMGfgOnaYMr/gXcigJiadGDGGiYPTMmAqroUbOANfzUMjX+ImAls
+         HidKU0nWRrkW648S0TE8KBWk5oDuiLVgnLrPijhtjlgec6uMImll6VnPUEA0J8GE75BY
+         +VtJpLOgadWsJWh2/v7ah8hJvKE6Afu8bk1eBb/i9PeT/oiHFu1DArZwGicd3Y9tla6y
+         aDQg8TVtwmNULO7fsZO5LhFxfVVvHZEg6iJue61j3XawYo9+m6fPlvVPHJNggRfe9Rb4
+         DVxSi3WWyfpPfjrAPHt03++Jmfj8REg1P9Gl0Bs7dneY0Q2rBhAdokDkxD5rLCjRNidB
+         8yEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=6Afh3+z0qmcfkeuctfv1v2GNWM1yrCE10w4LdsfArpU=;
-        b=HHggHORDXg1PiluGNA879je92553ZbWY1Ohl2NhmH7Q588q/cJkszRk0IFsk2aC0js
-         BjIwKp+7CUBh8Ga26nBrEkfF1GXSOvgNseJU3SinEwov6nM8OAS1puPK0Y1BJOI16NUF
-         nK2o5dCMtf4e7LZrsGqU2PruODEvsCzk1kgchUi2kncAiYOEiUHF8aP73ZZuNoSTWjYC
-         BP7sFYRCM0k5HYyxsF9gZ6ATcR97wTC46fiBWskcimql/Y7bpKPJi2qsUhQH/NocZEtB
-         EX/HYuYmQDGDp1oNeM5Q4I6ca1EGgr2T8JVv6A+qElT1k7/TXLxZ3oaAwf1a9L13VcjP
-         whQQ==
-X-Gm-Message-State: APjAAAWTOIcntGnlno8V1uabBD6sGY+c85AqWArP2/HG3Ha9Xj09BjLu
-        LNZFSG5vbnnXNgTokV4WORSZRGCr
-X-Google-Smtp-Source: APXvYqxOqqKzfHjrBuGGsb9HgKt4DNkrhaD+HUgE2b3fqnEQJgptqdR6bTofWAs99kevyfVePs7KCA==
-X-Received: by 2002:a17:902:7082:: with SMTP id z2mr56570051plk.176.1558407410941;
-        Mon, 20 May 2019 19:56:50 -0700 (PDT)
-Received: from google.com ([2401:fa00:d:0:98f1:8b3d:1f37:3e8])
-        by smtp.gmail.com with ESMTPSA id q5sm23222349pfb.51.2019.05.20.19.56.46
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 20 May 2019 19:56:49 -0700 (PDT)
-Date:   Tue, 21 May 2019 11:56:44 +0900
-From:   Minchan Kim <minchan@kernel.org>
-To:     Oleksandr Natalenko <oleksandr@redhat.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tim Murray <timmurray@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>
-Subject: Re: [RFC 0/7] introduce memory hinting API for external process
-Message-ID: <20190521025644.GI10039@google.com>
-References: <20190520035254.57579-1-minchan@kernel.org>
- <20190520144200.cpiqhxxbxyovmk7h@butterfly.localdomain>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=j7HdXPYxvmLu7dAn+oOr5Hftd2YV/QZHVEZ2U127O1k=;
+        b=Y5NQkHCdIvIjXUgBo+h75jnb0BgCabe81KfRsyEATKYQHlBOqBYJdLwoR6YqiDdL0Y
+         J43RhsBj1V7NYZ7oQReYuI7cHCcenMOtIXAFINF1dpaIN0h2FmUCieQKV256qAhzKWmF
+         NQSPvzR2EnLKbH2N15E9O+rGfD6IsyRnj1wgsFg+husv/vHWE7v63VfTVfgW2klfItFv
+         KUZ/EYLxjE82Rx+xuPeopFcgjpSVcT7SnSOsnBoTLFxyz0i0dx9JA+mASzCzJ2PSgrYG
+         V+m2khCmUCpRGs4Gyh1gvwMihnzLumT0nqGcq8ppPUN3aamw4MdhhbElZnQ7aY+DPJUD
+         GHHQ==
+X-Gm-Message-State: APjAAAVJbdA7UoWGJ4fxlVCrd63RAvwddLuCWCqTNCpf3vpAMgz1xgFQ
+        Mzv9xJhnO4thSdQxiBA+Ail5fxZ5/4g=
+X-Google-Smtp-Source: APXvYqzpfN58U1nrshnBlaB6asXK9A1lYbCFK4RB3FQh0SgbCjtfsJOFze4QscnYoYo3uePeHeYqDQ==
+X-Received: by 2002:a17:902:2808:: with SMTP id e8mr53478533plb.244.1558407491166;
+        Mon, 20 May 2019 19:58:11 -0700 (PDT)
+Received: from zhanggen-UX430UQ ([66.42.35.75])
+        by smtp.gmail.com with ESMTPSA id h13sm22849302pfo.98.2019.05.20.19.58.07
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 20 May 2019 19:58:10 -0700 (PDT)
+Date:   Tue, 21 May 2019 10:57:59 +0800
+From:   Gen Zhang <blackgod016574@gmail.com>
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>, dvhart@infradead.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] efi_64: Fix a missing-check bug in
+ arch/x86/platform/efi/efi_64.c
+Message-ID: <20190521025759.GA5263@zhanggen-UX430UQ>
+References: <20190517082633.GA3890@zhanggen-UX430UQ>
+ <CAKv+Gu98JNK34Q6MNOe3aq0W5rbv6hUFiuc7cHxHJat5aTk_gg@mail.gmail.com>
+ <20190517090628.GA4162@zhanggen-UX430UQ>
+ <CAKv+Gu_mwFpdtNZm9QMFn69+vOMTOpv9gvuhnBL2NBXvwkhXqg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190520144200.cpiqhxxbxyovmk7h@butterfly.localdomain>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAKv+Gu_mwFpdtNZm9QMFn69+vOMTOpv9gvuhnBL2NBXvwkhXqg@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 20, 2019 at 04:42:00PM +0200, Oleksandr Natalenko wrote:
-> Hi.
+On Fri, May 17, 2019 at 11:24:27AM +0200, Ard Biesheuvel wrote:
+> On Fri, 17 May 2019 at 11:06, Gen Zhang <blackgod016574@gmail.com> wrote:
+> >
+> > On Fri, May 17, 2019 at 10:41:28AM +0200, Ard Biesheuvel wrote:
+> > > Returning an error here is not going to make much difference, given
+> > > that the caller of efi_call_phys_prolog() does not bother to check it,
+> > > and passes the result straight into efi_call_phys_epilog(), which
+> > > happily attempts to dereference it.
+> > >
+> > > So if you want to fix this properly, please fix it at the call site as
+> > > well. I'd prefer to avoid ERR_PTR() and just return NULL for a failed
+> > > allocation though.
+> > Hi Ard,
+> > Thanks for your timely reply!
+> > I think returning NULL in efi_call_phys_prolog() and checking in
+> > efi_call_phys_epilog() is much better. But I am confused what to return
+> > in efi_call_phys_epilog() if save_pgd is NULL. Definitely not return
+> > -ENOMEM, because efi_call_phys_epilog() returns unsigned long. Could
+> > please light on me to fix this problem?
 > 
-> On Mon, May 20, 2019 at 12:52:47PM +0900, Minchan Kim wrote:
-> > - Background
-> > 
-> > The Android terminology used for forking a new process and starting an app
-> > from scratch is a cold start, while resuming an existing app is a hot start.
-> > While we continually try to improve the performance of cold starts, hot
-> > starts will always be significantly less power hungry as well as faster so
-> > we are trying to make hot start more likely than cold start.
-> > 
-> > To increase hot start, Android userspace manages the order that apps should
-> > be killed in a process called ActivityManagerService. ActivityManagerService
-> > tracks every Android app or service that the user could be interacting with
-> > at any time and translates that into a ranked list for lmkd(low memory
-> > killer daemon). They are likely to be killed by lmkd if the system has to
-> > reclaim memory. In that sense they are similar to entries in any other cache.
-> > Those apps are kept alive for opportunistic performance improvements but
-> > those performance improvements will vary based on the memory requirements of
-> > individual workloads.
-> > 
-> > - Problem
-> > 
-> > Naturally, cached apps were dominant consumers of memory on the system.
-> > However, they were not significant consumers of swap even though they are
-> > good candidate for swap. Under investigation, swapping out only begins
-> > once the low zone watermark is hit and kswapd wakes up, but the overall
-> > allocation rate in the system might trip lmkd thresholds and cause a cached
-> > process to be killed(we measured performance swapping out vs. zapping the
-> > memory by killing a process. Unsurprisingly, zapping is 10x times faster
-> > even though we use zram which is much faster than real storage) so kill
-> > from lmkd will often satisfy the high zone watermark, resulting in very
-> > few pages actually being moved to swap.
-> > 
-> > - Approach
-> > 
-> > The approach we chose was to use a new interface to allow userspace to
-> > proactively reclaim entire processes by leveraging platform information.
-> > This allowed us to bypass the inaccuracy of the kernel’s LRUs for pages
-> > that are known to be cold from userspace and to avoid races with lmkd
-> > by reclaiming apps as soon as they entered the cached state. Additionally,
-> > it could provide many chances for platform to use much information to
-> > optimize memory efficiency.
-> > 
-> > IMHO we should spell it out that this patchset complements MADV_WONTNEED
-> > and MADV_FREE by adding non-destructive ways to gain some free memory
-> > space. MADV_COLD is similar to MADV_WONTNEED in a way that it hints the
-> > kernel that memory region is not currently needed and should be reclaimed
-> > immediately; MADV_COOL is similar to MADV_FREE in a way that it hints the
-> > kernel that memory region is not currently needed and should be reclaimed
-> > when memory pressure rises.
-> > 
-> > To achieve the goal, the patchset introduce two new options for madvise.
-> > One is MADV_COOL which will deactive activated pages and the other is
-> > MADV_COLD which will reclaim private pages instantly. These new options
-> > complement MADV_DONTNEED and MADV_FREE by adding non-destructive ways to
-> > gain some free memory space. MADV_COLD is similar to MADV_DONTNEED in a way
-> > that it hints the kernel that memory region is not currently needed and
-> > should be reclaimed immediately; MADV_COOL is similar to MADV_FREE in a way
-> > that it hints the kernel that memory region is not currently needed and
-> > should be reclaimed when memory pressure rises.
-> > 
-> > This approach is similar in spirit to madvise(MADV_WONTNEED), but the
-> > information required to make the reclaim decision is not known to the app.
-> > Instead, it is known to a centralized userspace daemon, and that daemon
-> > must be able to initiate reclaim on its own without any app involvement.
-> > To solve the concern, this patch introduces new syscall -
-> > 
-> > 	struct pr_madvise_param {
-> > 		int size;
-> > 		const struct iovec *vec;
-> > 	}
-> > 
-> > 	int process_madvise(int pidfd, ssize_t nr_elem, int *behavior,
-> > 				struct pr_madvise_param *restuls,
-> > 				struct pr_madvise_param *ranges,
-> > 				unsigned long flags);
-> > 
-> > The syscall get pidfd to give hints to external process and provides
-> > pair of result/ranges vector arguments so that it could give several
-> > hints to each address range all at once.
-> > 
-> > I guess others have different ideas about the naming of syscall and options
-> > so feel free to suggest better naming.
-> > 
-> > - Experiment
-> > 
-> > We did bunch of testing with several hundreds of real users, not artificial
-> > benchmark on android. We saw about 17% cold start decreasement without any
-> > significant battery/app startup latency issues. And with artificial benchmark
-> > which launches and switching apps, we saw average 7% app launching improvement,
-> > 18% less lmkd kill and good stat from vmstat.
-> > 
-> > A is vanilla and B is process_madvise.
-> > 
-> > 
-> >                                        A          B      delta   ratio(%)
-> >                allocstall_dma          0          0          0       0.00
-> >            allocstall_movable       1464        457      -1007     -69.00
-> >             allocstall_normal     263210     190763     -72447     -28.00
-> >              allocstall_total     264674     191220     -73454     -28.00
-> >           compact_daemon_wake      26912      25294      -1618      -7.00
-> >                  compact_fail      17885      14151      -3734     -21.00
-> >          compact_free_scanned 4204766409 3835994922 -368771487      -9.00
-> >              compact_isolated    3446484    2967618    -478866     -14.00
-> >       compact_migrate_scanned 1621336411 1324695710 -296640701     -19.00
-> >                 compact_stall      19387      15343      -4044     -21.00
-> >               compact_success       1502       1192       -310     -21.00
-> > kswapd_high_wmark_hit_quickly        234        184        -50     -22.00
-> >             kswapd_inodesteal     221635     233093      11458       5.00
-> >  kswapd_low_wmark_hit_quickly      66065      54009     -12056     -19.00
-> >                    nr_dirtied     259934     296476      36542      14.00
-> >   nr_vmscan_immediate_reclaim       2587       2356       -231      -9.00
-> >               nr_vmscan_write    1274232    2661733    1387501     108.00
-> >                    nr_written    1514060    2937560    1423500      94.00
-> >                    pageoutrun      67561      55133     -12428     -19.00
-> >                    pgactivate    2335060    1984882    -350178     -15.00
-> >                   pgalloc_dma   13743011   14096463     353452       2.00
-> >               pgalloc_movable          0          0          0       0.00
-> >                pgalloc_normal   18742440   16802065   -1940375     -11.00
-> >                 pgalloc_total   32485451   30898528   -1586923      -5.00
-> >                  pgdeactivate    4262210    2930670   -1331540     -32.00
-> >                       pgfault   30812334   31085065     272731       0.00
-> >                        pgfree   33553970   31765164   -1788806      -6.00
-> >                  pginodesteal      33411      15084     -18327     -55.00
-> >                   pglazyfreed          0          0          0       0.00
-> >                    pgmajfault     551312    1508299     956987     173.00
-> >                pgmigrate_fail      43927      29330     -14597     -34.00
-> >             pgmigrate_success    1399851    1203922    -195929     -14.00
-> >                        pgpgin   24141776   19032156   -5109620     -22.00
-> >                       pgpgout     959344    1103316     143972      15.00
-> >                  pgpgoutclean    4639732    3765868    -873864     -19.00
-> >                      pgrefill    4884560    3006938   -1877622     -39.00
-> >                     pgrotated      37828      25897     -11931     -32.00
-> >                 pgscan_direct    1456037     957567    -498470     -35.00
-> >        pgscan_direct_throttle          0          0          0       0.00
-> >                 pgscan_kswapd    6667767    5047360   -1620407     -25.00
-> >                  pgscan_total    8123804    6004927   -2118877     -27.00
-> >                    pgskip_dma          0          0          0       0.00
-> >                pgskip_movable          0          0          0       0.00
-> >                 pgskip_normal      14907      25382      10475      70.00
-> >                  pgskip_total      14907      25382      10475      70.00
-> >                pgsteal_direct    1118986     690215    -428771     -39.00
-> >                pgsteal_kswapd    4750223    3657107   -1093116     -24.00
-> >                 pgsteal_total    5869209    4347322   -1521887     -26.00
-> >                        pswpin     417613    1392647     975034     233.00
-> >                       pswpout    1274224    2661731    1387507     108.00
-> >                 slabs_scanned   13686905   10807200   -2879705     -22.00
-> >           workingset_activate     668966     569444     -99522     -15.00
-> >        workingset_nodereclaim      38957      32621      -6336     -17.00
-> >            workingset_refault    2816795    2179782    -637013     -23.00
-> >            workingset_restore     294320     168601    -125719     -43.00
-> > 
-> > pgmajfault is increased by 173% because swapin is increased by 200% by
-> > process_madvise hint. However, swap read based on zram is much cheaper
-> > than file IO in performance point of view and app hot start by swapin is
-> > also cheaper than cold start from the beginning of app which needs many IO
-> > from storage and initialization steps.
-> > 
-> > This patchset is against on next-20190517.
-> > 
-> > Minchan Kim (7):
-> >   mm: introduce MADV_COOL
-> >   mm: change PAGEREF_RECLAIM_CLEAN with PAGE_REFRECLAIM
-> >   mm: introduce MADV_COLD
-> >   mm: factor out madvise's core functionality
-> >   mm: introduce external memory hinting API
-> >   mm: extend process_madvise syscall to support vector arrary
-> >   mm: madvise support MADV_ANONYMOUS_FILTER and MADV_FILE_FILTER
-> > 
-> >  arch/x86/entry/syscalls/syscall_32.tbl |   1 +
-> >  arch/x86/entry/syscalls/syscall_64.tbl |   1 +
-> >  include/linux/page-flags.h             |   1 +
-> >  include/linux/page_idle.h              |  15 +
-> >  include/linux/proc_fs.h                |   1 +
-> >  include/linux/swap.h                   |   2 +
-> >  include/linux/syscalls.h               |   2 +
-> >  include/uapi/asm-generic/mman-common.h |  12 +
-> >  include/uapi/asm-generic/unistd.h      |   2 +
-> >  kernel/signal.c                        |   2 +-
-> >  kernel/sys_ni.c                        |   1 +
-> >  mm/madvise.c                           | 600 +++++++++++++++++++++----
-> >  mm/swap.c                              |  43 ++
-> >  mm/vmscan.c                            |  80 +++-
-> >  14 files changed, 680 insertions(+), 83 deletions(-)
-> > 
-> > -- 
-> > 2.21.0.1020.gf2820cf01a-goog
-> > 
 > 
-> Please Cc me for the next iteration since I was working on the very same
-> thing recently [1].
-> 
-> Thank you.
-> 
-> [1] https://gitlab.com/post-factum/pf-kernel/commits/remote-madvise-v3
+> If efi_call_phys_prolog() returns NULL, the calling function should
+> abort and never call efi_call_phys_epilog().
+In efi_call_phys_prolog(), save_pgd is allocated by kmalloc_array(). 
+And it is dereferenced in the following codes. However, memory 
+allocation functions such as kmalloc_array() may fail. Dereferencing
+this save_pgd null pointer may cause the kernel go wrong. Thus we 
+should check this allocation.
+Further, if efi_call_phys_prolog() returns NULL, we should abort the 
+process in phys_efi_set_virtual_address_map(), and return EFI_ABORTED.
 
-Sure, I'm happy to see others have similar requirement.
+Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
+
+---
+diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
+index e1cb01a..a7189a3 100644
+--- a/arch/x86/platform/efi/efi.c
++++ b/arch/x86/platform/efi/efi.c
+@@ -85,6 +85,8 @@ static efi_status_t __init phys_efi_set_virtual_address_map(
+ 	pgd_t *save_pgd;
+ 
+ 	save_pgd = efi_call_phys_prolog();
++	if (!save_pgd)
++		return EFI_ABORTED;
+ 
+ 	/* Disable interrupts around EFI calls: */
+ 	local_irq_save(flags);
+diff --git a/arch/x86/platform/efi/efi_64.c b/arch/x86/platform/efi/efi_64.c
+index cf0347f..828460a 100644
+--- a/arch/x86/platform/efi/efi_64.c
++++ b/arch/x86/platform/efi/efi_64.c
+@@ -91,6 +91,8 @@ pgd_t * __init efi_call_phys_prolog(void)
+ 
+ 	n_pgds = DIV_ROUND_UP((max_pfn << PAGE_SHIFT), PGDIR_SIZE);
+ 	save_pgd = kmalloc_array(n_pgds, sizeof(*save_pgd), GFP_KERNEL);
++	if (!save_pgd)
++		return NULL;
+ 
+ 	/*
+ 	 * Build 1:1 identity mapping for efi=old_map usage. Note that
+---
