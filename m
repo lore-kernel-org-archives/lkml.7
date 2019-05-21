@@ -2,147 +2,115 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06A53C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 07:41:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC245C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 07:42:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D80FE21019
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 07:41:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91DD62173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 07:42:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726786AbfEUHlh (ORCPT
+        id S1726803AbfEUHmc convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 03:41:37 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:46563 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726193AbfEUHlg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 03:41:36 -0400
-X-Originating-IP: 90.88.22.185
-Received: from localhost (aaubervilliers-681-1-80-185.w90-88.abo.wanadoo.fr [90.88.22.185])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 329F5240014;
-        Tue, 21 May 2019 07:41:22 +0000 (UTC)
-Date:   Tue, 21 May 2019 09:41:22 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Frank Lee <tiny.windzz@gmail.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        catalin.marinas@arm.com, will.deacon@arm.com,
-        bjorn.andersson@linaro.org,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        paulmck@linux.ibm.com, stefan.wahren@i2se.com,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Andy Gross <andy.gross@linaro.org>, rui.zhang@intel.com,
-        devicetree@vger.kernel.org, marc.w.gonzalez@free.fr,
-        Eduardo Valentin <edubezval@gmail.com>,
-        enric.balletbo@collabora.com, robh+dt@kernel.org,
-        Jonathan.Cameron@huawei.com,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        olof@lixom.net, David Miller <davem@davemloft.net>
-Subject: Re: [PATCH 2/3] thermal: sun50i: add thermal driver for h6
-Message-ID: <20190521074122.syyctwvfsorl45dv@flea>
-References: <20190512082614.9045-1-tiny.windzz@gmail.com>
- <20190512082614.9045-3-tiny.windzz@gmail.com>
- <20190512133930.t5txssl7mou2gljt@flea>
- <20190512214128.qjyys3vfpwdiacib@core.my.home>
- <20190516150252.hf4u3bloo37chy6q@flea>
- <CAEExFWu-T2mGQ9Teo7TQOcJsEzXi_dB=S8CFv7MiwHyu5z4-ow@mail.gmail.com>
- <20190517073151.mz6hcmzubk7iqfre@flea>
- <CAEExFWtban8Fjw6aZ5gdeC2GNk1vdqFoaJB_o-JtYZ_z70AJcQ@mail.gmail.com>
+        Tue, 21 May 2019 03:42:32 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:42413 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725809AbfEUHmc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 03:42:32 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 457SQs0PKRz9s55;
+        Tue, 21 May 2019 17:42:29 +1000 (AEST)
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] powerpc/mm: mark more tlb functions as __always_inline
+In-Reply-To: <CAK7LNAQNp+wsvNK84oYcGwR24=Kf=_N8WJdyZ2aUL9T3qDsVsA@mail.gmail.com>
+References: <20190521061659.6073-1-yamada.masahiro@socionext.com> <16d967dd-9f8f-4e9e-97fd-3f9761e5d97c@c-s.fr> <CAK7LNAQNp+wsvNK84oYcGwR24=Kf=_N8WJdyZ2aUL9T3qDsVsA@mail.gmail.com>
+Date:   Tue, 21 May 2019 17:42:27 +1000
+Message-ID: <87y3306yos.fsf@concordia.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="oyv7cdm2vd7as2px"
-Content-Disposition: inline
-In-Reply-To: <CAEExFWtban8Fjw6aZ5gdeC2GNk1vdqFoaJB_o-JtYZ_z70AJcQ@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---oyv7cdm2vd7as2px
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Sat, May 18, 2019 at 01:19:54AM +0800, Frank Lee wrote:
-> On Fri, May 17, 2019 at 3:32 PM Maxime Ripard <maxime.ripard@bootlin.com>=
- wrote:
-> >
-> > On Fri, May 17, 2019 at 02:10:47AM +0800, Frank Lee wrote:
-> > > > On Sun, May 12, 2019 at 11:41:28PM +0200, Ond=C5=99ej Jirman wrote:
-> > > > > > > +static int tsens_get_temp(void *data, int *temp)
-> > > > > > > +{
-> > > > > > > + struct tsensor *s =3D data;
-> > > > > > > + struct tsens_device *tmdev =3D s->tmdev;
-> > > > > > > + int val;
-> > > > > > > +
-> > > > > > > + regmap_read(tmdev->regmap, tmdev->chip->temp_data_base +
-> > > > > > > +             0x4 * s->id, &val);
-> > > > > > > +
-> > > > > > > + if (unlikely(val =3D=3D 0))
-> > > > > > > +         return -EBUSY;
-> > > > > >
-> > > > > > I'm not sure why a val equals to 0 would be associated with EBU=
-SY?
-> > > > >
-> > > > > Thermal zone driver can (will) call get_temp before we got the
-> > > > > first interrupt and the thermal data. In that case val will be 0.
-> > > > >
-> > > > > Resulting in:
-> > > > >
-> > > > >  (val + offset) * scale =3D (-2794) * -67 =3D 187198
-> > > > >
-> > > > > 187=C2=B0C and immediate shutdown during boot - based on cirtical
-> > > > > temperature being reached.
-> > > > >
-> > > > > Busy here means, get_temp does not yet have data. Thermal zone
-> > > > > driver just reports any error to dmesg output.
-> > > >
-> > > > Ah, that makes sense.
-> > > >
-> > > > I guess if we're switching to an interrupt-based driver, then we can
-> > > > just use a waitqueue, or is get_temp supposed to be atomic?
-> > >
-> > > I think get_temp should not be bloacked.
-> >
-> > Why not?
+Masahiro Yamada <yamada.masahiro@socionext.com> writes:
+> On Tue, May 21, 2019 at 3:54 PM Christophe Leroy
+> <christophe.leroy@c-s.fr> wrote:
+>> Le 21/05/2019 à 08:16, Masahiro Yamada a écrit :
+>> > With CONFIG_OPTIMIZE_INLINING enabled, Laura Abbott reported error
+>> > with gcc 9.1.1:
+>> >
+>> >    arch/powerpc/mm/book3s64/radix_tlb.c: In function '_tlbiel_pid':
+>> >    arch/powerpc/mm/book3s64/radix_tlb.c:104:2: warning: asm operand 3 probably doesn't match constraints
+>> >      104 |  asm volatile(PPC_TLBIEL(%0, %4, %3, %2, %1)
+>> >          |  ^~~
+>> >    arch/powerpc/mm/book3s64/radix_tlb.c:104:2: error: impossible constraint in 'asm'
+>> >
+>> > Fixing _tlbiel_pid() is enough to address the warning above, but I
+>> > inlined more functions to fix all potential issues.
+>> >
+>> > To meet the 'i' (immediate) constraint for the asm operands, functions
+>> > propagating propagated 'ric' must be always inlined.
+>> >
+>> > Fixes: 9012d011660e ("compiler: allow all arches to enable CONFIG_OPTIMIZE_INLINING")
+>> > Reported-by: Laura Abbott <labbott@redhat.com>
+>> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+>> > ---
+>> >
+>> >   arch/powerpc/mm/book3s64/hash_native.c |  8 +++--
+>> >   arch/powerpc/mm/book3s64/radix_tlb.c   | 44 +++++++++++++++-----------
+>> >   2 files changed, 30 insertions(+), 22 deletions(-)
+>> >
+>> > diff --git a/arch/powerpc/mm/book3s64/hash_native.c b/arch/powerpc/mm/book3s64/hash_native.c
+>> > index aaa28fd918fe..bc2c35c0d2b1 100644
+>> > --- a/arch/powerpc/mm/book3s64/hash_native.c
+>> > +++ b/arch/powerpc/mm/book3s64/hash_native.c
+>> > @@ -60,9 +60,11 @@ static inline void tlbiel_hash_set_isa206(unsigned int set, unsigned int is)
+>> >    * tlbiel instruction for hash, set invalidation
+>> >    * i.e., r=1 and is=01 or is=10 or is=11
+>> >    */
+>> > -static inline void tlbiel_hash_set_isa300(unsigned int set, unsigned int is,
+>> > -                                     unsigned int pid,
+>> > -                                     unsigned int ric, unsigned int prs)
+>> > +static __always_inline void tlbiel_hash_set_isa300(unsigned int set,
+>> > +                                                unsigned int is,
+>> > +                                                unsigned int pid,
+>> > +                                                unsigned int ric,
+>> > +                                                unsigned int prs)
+>>
+>> Please don't split the line more than it is.
+>>
+>> powerpc accepts lines up to 90 chars, see arch/powerpc/tools/checkpatch.pl
 >
-> Maybe, I am wrong. I also want to know if we should do this.
+> Ugh, I did not know this. Horrible.
+>
+> The Linux coding style should be global in the kernel tree.
+> No subsystem should adopts its own coding style.
 
-I guess it really all depends on whether you can sleep or not in
-get_temps. If you can, then you should wait for the value to be
-converted and the THS raising an interrupt.
+Well that ship sailed long ago.
 
-If you can't, then we should ask what the thermal frameworks expects
-in such a case.
+But we don't have our own coding style, we just don't enforce 80 columns
+rigidly, there are cases where a slightly longer line (up to ~90) is
+preferable to a split line.
 
-Maxime
+In a case like this with a long attribute and function name I think this
+is probably the least worst option:
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+static __always_inline
+void tlbiel_hash_set_isa300(unsigned int set, unsigned int is, unsigned int pid,
+			    unsigned int ric, unsigned int prs)
+{
+	...
 
---oyv7cdm2vd7as2px
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXOOrogAKCRDj7w1vZxhR
-xULTAQC1mWNEVwrK+oid9JOzl0rrU7ybLUMo5gBPlvdd1iIu+QEAzEe9pVgCRCN6
-Z8AqbAjBGsyR2h/P/5jg1jYC4d/GBQg=
-=MglJ
------END PGP SIGNATURE-----
-
---oyv7cdm2vd7as2px--
+cheers
