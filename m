@@ -2,100 +2,104 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D74BDC04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 11:02:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27395C04E87
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 11:02:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7099217D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 11:02:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F021221773
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 11:02:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZvRBIPtf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727894AbfEULCD (ORCPT
+        id S1727933AbfEULCP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 07:02:03 -0400
-Received: from mailgate1.rohmeurope.com ([178.15.145.194]:51106 "EHLO
-        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726138AbfEULCC (ORCPT
+        Tue, 21 May 2019 07:02:15 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:33484 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726138AbfEULCP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 07:02:02 -0400
-X-AuditID: c0a8fbf4-519ff700000014c1-ea-5ce3daa70e1e
-Received: from smtp.reu.rohmeu.com (will-cas002.reu.rohmeu.com [192.168.251.178])
-        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 28.9E.05313.7AAD3EC5; Tue, 21 May 2019 13:01:59 +0200 (CEST)
-Received: from WILL-MAIL001.REu.RohmEu.com ([fe80::2915:304f:d22c:c6ba]) by
- WILL-CAS002.REu.RohmEu.com ([fe80::fc24:4cbc:e287:8659%12]) with mapi id
- 14.03.0439.000; Tue, 21 May 2019 13:01:54 +0200
-From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-To:     "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>
-CC:     "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "sre@kernel.org" <sre@kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
-        "Mutanen, Mikko" <Mikko.Mutanen@fi.rohmeurope.com>,
-        "linux@roeck-us.net" <linux@roeck-us.net>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "Haikola, Heikki" <Heikki.Haikola@fi.rohmeurope.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v14 0/8] support ROHM BD70528 PMIC
-Thread-Topic: [PATCH v14 0/8] support ROHM BD70528 PMIC
-Thread-Index: AQHVAMcZ2S9oIqrnW0ecnOWL7FvEJaZ1ZiIA
-Date:   Tue, 21 May 2019 11:01:53 +0000
-Message-ID: <3a78cc77499d5027f527be51a7c40f6c5d70338c.camel@fi.rohmeurope.com>
-References: <cover.1556787930.git.matti.vaittinen@fi.rohmeurope.com>
-In-Reply-To: <cover.1556787930.git.matti.vaittinen@fi.rohmeurope.com>
-Accept-Language: en-US, de-DE
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [213.255.186.46]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <431A5F4502DF11498E73A4ADCF92A350@de.rohmeurope.com>
-Content-Transfer-Encoding: base64
+        Tue, 21 May 2019 07:02:15 -0400
+Received: by mail-lj1-f196.google.com with SMTP id w1so15492208ljw.0
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 04:02:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JiOuebsbWgjEjp0a4XhtJdVmmGWnCnRTxg69qCcOtsY=;
+        b=ZvRBIPtfv2tQxLEbXHDCKUrcnh/NVGQfK3ADpUqQQBHq1gYARpxa+eRJtDdzIgJu00
+         kldlfPB4RQNBEqY7t9xCcYTx60nZQBUNINx3FuZLkV4uQquWRRo0ZPQVLb4Gmk2L8dfh
+         USl8OwxlE0Lwfu33/W2BA31HSvaLTnOEeLrf1CWKLuutF2ytufBEwqs16ms8qN0neyLc
+         +KOZj1m8EZx3foz/XKFg3yT3ele5AQZCLu7ZTBo9lCedes1ZgP7k8FK8ofFAumM/oNfz
+         MuSoRVwe5VBd9AnIjHJGGJFnPOxeYVrX8VYOq1+YDhFfQguqeHkycLU5DZGaPjTGM2s/
+         c3LA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JiOuebsbWgjEjp0a4XhtJdVmmGWnCnRTxg69qCcOtsY=;
+        b=Uz0ce6iGmPdLqP44obEf79R7BWUDeHoJBokCpshAq04geX3+VEY8jhs8cpg6IVcukB
+         au9n688J4TA6ACH5dzHblxZLNpyDWs5OIWrGiemXulaDWc3UoPG6MW9GaiVv639CJdF7
+         x/J11Zu1/LNo8W37Meqtza4sc5zVUD91UyZ9ogdEkMsO6uBY1hh599DMXJRSt7aO++bx
+         btEaaDVepHvuN33qJfTBswin2d9KbSijN6/Hgl1hroN8LMe2PSbRggEL+/XQysZLepmL
+         AjkOWBLBgCK8oL3dRe3qN7VjfIs6/Vy5WkDWjsTEmIkr0nlf2OxiRPRI4vNASqX1xOqw
+         mvzA==
+X-Gm-Message-State: APjAAAUFMVsfhzQa4y/pyVn+N7ibFzdX/pwUz1dZtfViJOX3MGtvm/fG
+        xRWXEJ7bSxI+6PtGJZcC0p6bWeoBdajU/iKf1hacEQ==
+X-Google-Smtp-Source: APXvYqwWehMJJXjGsP0Bc9f4SddpS0xg17Ozs3s2XazkB+UlZqZ2pxY6LcgfzktZnCGe51S0yfCdqoJ2EF6kI7Lo3Ns=
+X-Received: by 2002:a2e:2b58:: with SMTP id q85mr41770277lje.179.1558436532542;
+ Tue, 21 May 2019 04:02:12 -0700 (PDT)
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Te0xTVxzOuff23lvgboeCcsTHtAkzkiiyEDkGY3Qb2dX4SkzMRkjqVa5c
-        sj7YbWuoJqZmMyrMhWSYzYqABvBVN+iimwUUmmIQVEKGtSiotQ2I8RlUomK3e1sU/jnnO7/v
-        fN/3O8nvsKTuNZ3OlphtomwWjHo6gWo/9c6z+OTtcOHSwDjG9X03Gbz/aSODXx7rpvDhUITG
-        tf4bGnzvVSfAr/sPELhq4iSBX/x8V4P/qp0A+F9vNY3HDvkBvnK2n8bBPy4xOHL8GoEbbvUR
-        uLqhi8J93fl4X5ufwdFAM4V7Wmw4PBolV83k3TVuwD8L7mP4Gvdu/qJriOE9Zw7S/GCgleZP
-        u90a/uK4k+F/q3lD8GOeeZsSChJXbBNsOzeXFJuzVm5NlEarA3SpX1M23Plc4wRNmnKgZRHM
-        QQ17WxScwOpgAKCR0NDkoQuga9VHmXLAsjRcgcoHYjAVLkfNfcmqloS9WlTb+KmKU+Ay1Om9
-        TKk4Feai812DZBx/gSp/amJUTMEMdNdZGbvDwQ3oeNUgULEOfo1GLjhj9lqYj5rqYq0BOBcd
-        dD4l4lFpyDM8PtkyRPWtvWQcz0Cj4ehkXY/a3oQo1YaEi9Cf3qy4dBWaOHV10mYBqqoIMfEO
-        ktHVIxGqEsx0TUtwTald09SuaWrXNHUd0JwByCSUGIsFm5i9RBbtS2SLZFK27RaTB8Rn5uU/
-        4D/fGh+ALNAncVFfuFCnEXZaHSYfmMUS+hncoSyl9Mk2S5FDEqySQbYbRasPIJbUp3I93Q8K
-        dVyR4NglypYP1GyW0qdx77wdhTqoJn8viqWi/IGdw7J6xJUOKKbJslgslu0oMdqmaILVquYJ
-        6alW0VwkyoLdJhnUUTFYlVlRqSQld2NQkXPWUsGkVOPSbpDNtp8IHSPZJx0jylo38LaG1FFm
-        i1lMT+NWqnlQFUh288e4RyBNeXUKt1hlk5TP9NHtkRJEKEFzmViQTZii0p3gx105Be3mzzPs
-        kSZ/8PCzxN9zf2hd+/B579Bq03BOSsTw9qvArS/n9OfJxr+9dWDPXu+6aNl364ce99dGzha3
-        NebeyV6zNm+sucVm6DgibeIrte+jT77dcv/90usVwfz5mXnLTOduN4YLPlvO8q7MigwHAo6F
-        wYauJKNU/8uv33T26CmrJGRnkrJV+B/6QzoeCQQAAA==
+References: <20190517154256.255696-1-darekm@google.com> <c0007b51-5e9f-4788-b860-d0623e21013b@xs4all.nl>
+In-Reply-To: <c0007b51-5e9f-4788-b860-d0623e21013b@xs4all.nl>
+From:   Dariusz Marcinkiewicz <darekm@google.com>
+Date:   Tue, 21 May 2019 13:02:01 +0200
+Message-ID: <CALFZZQHqg1oNXOoMJGhSxOuXc-a1AqJL23GAW2oUGk8h9X9Fbw@mail.gmail.com>
+Subject: Re: [PATCH v6 1/3] media: cec: expose HDMI connector to CEC dev mapping
+To:     Hans Verkuil <hverkuil@xs4all.nl>
+Cc:     linux-media@vger.kernel.org, hans.verkuil@cisco.com,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGVsbG8gQWxsLA0KDQpPbiBUaHUsIDIwMTktMDUtMDIgYXQgMTI6MTEgKzAzMDAsIE1hdHRpIFZh
-aXR0aW5lbiB3cm90ZToNCj4gUGF0Y2ggc2VyaWVzIGludHJvZHVjaW5nIHN1cHBvcnQgZm9yIFJP
-SE0gQkQ3MDUyOCBQTUlDDQo+IA0KSnVzdCB0aG91Z2h0IEknZCBhc2sgaWYgdGhlcmUncyBhbnkg
-Y2hhbmNlcyB0byBnZXQgdGhpcyBzZXJpZXMgaW4gNS4yPw0KSXQgc2VlbXMgdG8gbWUgdGhlIFdE
-VCBwYXJ0IChwYXRjaCA4KSB3YXMgYWxyZWFkeSBtZXJnZWQgaW4gYnV0IHJlc3Qgb2YNCnRoZSBw
-YXRjaGVzIHNlZW0gdG8gYmUgaW4gbGltYm8gc29tZXdoZXJlIDopDQoNCkkgZ3Vlc3MgbW9zdCBv
-ZiB0aGUgcGF0Y2hlcyBoYXZlIHJlbGV2YW50IGFja3MgLSBzbyB3b25kZXIgaWYgdGhlIHJlc3QN
-CmNhbiBnbyB0aHJvdWdoIExlZSdzIHRyZWU/IEkgYWRtaXQgSSBhbSBnZXR0aW5nIHNsaWdodGx5
-IGltcGF0aWVudCAtDQpzb3JyeSBmb3IgdGhhdCA6XQ0KDQpCciwNCglNYXR0aSBWYWl0dGluZW4N
-Cg==
+On Mon, May 20, 2019 at 12:25 PM Hans Verkuil <hverkuil@xs4all.nl> wrote:
+>
+> It's a bit unusual since it uses the Synopsys bridge, but not the Synopsys
+> CEC driver (it has its own meson cec driver).
+>
+> The first thing I noticed is that I did not get any connector info.
+> I think that the root cause of that is that you forgot that there are
+> several drm drivers that call cec_notifier_get() instead of cec_notifier_get_conn().
+>
+> I think all those calls to cec_notifier_get() in drm drivers should be replaced
+> by cec_notifier_get_conn() where the second argument is NULL, but the third argument
+> should contain valid connector info.
+>
+> A quick grep gives me the following drivers that need work:
+>
+> drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> drivers/gpu/drm/exynos/exynos_hdmi.c
+> drivers/gpu/drm/i2c/tda998x_drv.c
+> drivers/gpu/drm/sti/sti_hdmi.c
+> drivers/gpu/drm/tegra/output.c
+>
+I am afraid that just replacing cec_notifier_get with
+cec_notifier_get_conn won't necessarily make this information
+available, as, e.g. looking at tegra, those would also require some
+reshuffling of the code so that notifier is created once connector is
+initialized. Btw. I've updated dw-hdmi.c and tda998x_drv.c to use
+cec_notifier_get_conn, so at least those 2 will be covered.
+
+
+> The second thing I noticed is that patch 2 gave me a new kernel warning, but
+> I'll do some more testing for that and reply to patch 2/3 once I know more.
+>
+I hope this is fixed in v7.
+
+Thank you for your testing and best regards!
