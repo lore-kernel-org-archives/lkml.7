@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB726C04E87
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:13:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E931C04E87
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:14:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF71C21773
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:13:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4498121773
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:14:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dkbaEWk2"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PIkr1V2Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727619AbfEUKNm (ORCPT
+        id S1727628AbfEUKOe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 06:13:42 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:43668 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726750AbfEUKNm (ORCPT
+        Tue, 21 May 2019 06:14:34 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:34157 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726138AbfEUKOe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 06:13:42 -0400
-Received: by mail-wr1-f67.google.com with SMTP id r4so17873971wro.10
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 03:13:41 -0700 (PDT)
+        Tue, 21 May 2019 06:14:34 -0400
+Received: by mail-wm1-f67.google.com with SMTP id j187so1954190wma.1
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 03:14:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ExhtHOYixmQ3q1DaWe84tRAbBCksXA4j7ETOHrXNd7Q=;
-        b=dkbaEWk2jBQbR2GXBgbKgYnKBf4wzflpQsQOwwuKmqRzR1jvkdKuv2V+0nBXcugw+R
-         qXUJerGUfUdd5U6RpUHhd80mWpaIQNZtNG1EF94VpiH3RouLOtgwk8FPGjevHWQqUQiv
-         P1GLowr79+uCtGnhfosMrt0RDOEKIqxydGMHIgVZiqu3UcNua3uuzzC9wDELw02RQDA/
-         kRU9OCqDZixLi1R/iqMkpbCGpUC1rkuG03reORC/GqPQEV2zw0q7dxAn5/XbXuK9OEUt
-         M0VlbIi4UDk2nGgfaxvIvYgYtPcxWyFJuQpV265MkTnTC0mYWol6BAAWZyDXqcS2ptae
-         5VJw==
+        bh=3voex/jBEW9v9dc4oWg0TTQi5rLILcSF0U6L8KVM4UE=;
+        b=PIkr1V2QTJYmRpwDqmjYbI060u3HF5TNMycLref/026rLmSbRIE7Ka3CfSC0T7nhMP
+         10OOJQR+wKMIaENtCO/He9lOoeuV1e7tS4/PJhUadKYY8cy4LqVtbdZoY3xnfvRV6exh
+         q3WKxM1k+H5UeCAgy93LelnODqeoDVHq7C4BBV1n3d/nEsoXVFMIYX3lnI5LyY2fY9M2
+         ZnVmKYnuDFAxRTk+74a99dxd4+MLk6YTBY0J9yXVG3DCgKFXEOTJMhxwoRw5y781v4+l
+         +I5uN3TJ7tbHnAo2YJx6a4UQftob+IwzxxhotKsYiuiqN3fsdtHC3aZuyGmOWNtC0Cw8
+         QnnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=ExhtHOYixmQ3q1DaWe84tRAbBCksXA4j7ETOHrXNd7Q=;
-        b=BLb1ZjCYbNUzpIa3TxZUh0ueiB/1/FR/GYo8iwOEbqHNxo9BrGFYyXroLQVMuaTepA
-         ApiqObs975GOm/V+74xbIVKNNeVwy6bpfGvqROuMZPDPowfKuG52zxL+ct9s0wv0UKSc
-         vlXpwkjO9KRjWPptyswpPMsLe3pDXMSbzBvliK3LVk+139GZKqb8JaXDmEEXXnV7vhOo
-         0lgzcMF44O3fXbVUH7Mj3uviQ0pWj7/lPv9vIHF1CHyoDY5Ml1VPvQqN6SJWQIU+ktvY
-         iqm5t7vDFbSMzHwJINuspyvhMhKcomhdfXlzTlTTleQoJS2YmcylLL+qrG+cmh8nfl1X
-         T1fw==
-X-Gm-Message-State: APjAAAX62IFezz7wg7WLzjBZwc/wPJhHs5+BarrCFWt9BDin74trSun2
-        TpJd/awdTewxacArjPs2/5iuEQ==
-X-Google-Smtp-Source: APXvYqx6nGhjKpD8X1e8RNKlkcPEHA0wu1fWgProf887xpQF5o3CDXBEqtzPwSaBYOyhclFuYvUG+w==
-X-Received: by 2002:adf:cf0e:: with SMTP id o14mr13521746wrj.230.1558433620515;
-        Tue, 21 May 2019 03:13:40 -0700 (PDT)
+        bh=3voex/jBEW9v9dc4oWg0TTQi5rLILcSF0U6L8KVM4UE=;
+        b=q8Pm7bVWqPk7C42i1u42Cx3t71rWjKRQixRckQym2uLBaSfIvnqHNUjkWf2OWr3xA8
+         CXnu9wJ9YtMLkZW/D8lLIvYENPtnyd4lJogdZid0g0/DgvE/JpbnSjtwBWt6qdaJNOSE
+         ehICEMIa6w1/HfdiwIguIiZhNgg3hFEvbF6Wd2Dvr35hBANvgBIbAQLGxRHE3ifjREVo
+         eUnQyuePb+jNv4J6u3chChtPZsYuGuw87frtjnTcbVZGYnGE+EVe9NWR/0A1OFKZRsKS
+         127cvwK3a1qJKGDtRdkTnGwKGfNJgGrueyli/eSqb06FpoEs7vylqfEQUpRLPvNlIrTB
+         xqow==
+X-Gm-Message-State: APjAAAWXuLzsqO9XdRESWn7ULjbnlTzA7s3ecJ9FlP6uZqHPX+QUfHyc
+        AYxYAZcy4D++zeAqe0F9dPXiDw==
+X-Google-Smtp-Source: APXvYqyo+0aEb88Qh52g+hWsQkGu2zF7ZMonwwWcENIiggHq3E+mgnk4XyzZ4R3uURr+ZjJHGnE9Bw==
+X-Received: by 2002:a7b:ca4c:: with SMTP id m12mr2717082wml.31.1558433671197;
+        Tue, 21 May 2019 03:14:31 -0700 (PDT)
 Received: from [10.1.203.87] (nat-wifi.sssup.it. [193.205.81.22])
-        by smtp.googlemail.com with ESMTPSA id y8sm2751112wmi.8.2019.05.21.03.13.39
+        by smtp.googlemail.com with ESMTPSA id 20sm3441976wmj.36.2019.05.21.03.14.30
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 21 May 2019 03:13:39 -0700 (PDT)
-Subject: Re: [PATCH v2 6/9] arm64: dts: qcom: msm8996: Add PSCI cpuidle low
- power states
+        Tue, 21 May 2019 03:14:30 -0700 (PDT)
+Subject: Re: [PATCH v2 9/9] arm64: dts: msm8996: Add proper capacity scaling
+ for the cpus
 To:     Amit Kucheria <amit.kucheria@linaro.org>,
         linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         bjorn.andersson@linaro.org, agross@kernel.org,
@@ -68,14 +68,14 @@ To:     Amit Kucheria <amit.kucheria@linaro.org>,
         Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>
 Cc:     devicetree@vger.kernel.org
 References: <cover.1558430617.git.amit.kucheria@linaro.org>
- <2ffbb3f32484c03360ff7d6fa4668581ef298c9e.1558430617.git.amit.kucheria@linaro.org>
+ <5224535a7ef5b257e3baa698991bf6deeefccc36.1558430617.git.amit.kucheria@linaro.org>
 From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <10d95552-0a0c-3e8a-62c3-80a307fed0c9@linaro.org>
-Date:   Tue, 21 May 2019 12:13:39 +0200
+Message-ID: <6636af52-4f29-2869-7f9f-6d6277af6712@linaro.org>
+Date:   Tue, 21 May 2019 12:14:29 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <2ffbb3f32484c03360ff7d6fa4668581ef298c9e.1558430617.git.amit.kucheria@linaro.org>
+In-Reply-To: <5224535a7ef5b257e3baa698991bf6deeefccc36.1558430617.git.amit.kucheria@linaro.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -85,78 +85,59 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 On 21/05/2019 11:35, Amit Kucheria wrote:
-> Add device bindings for cpuidle states for cpu devices.
-> 
 > msm8996 features 4 cpus - 2 in each cluster. However, all cpus implement
 > the same microarchitecture and the two clusters only differ in the
 > maximum frequency attainable by the CPUs.
 > 
+> Add capacity-dmips-mhz property to allow the topology code to determine
+> the actual capacity by taking into account the highest frequency for
+> each CPU.
+> 
 > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> Suggested-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 
 Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 
-
-
 > ---
->  arch/arm64/boot/dts/qcom/msm8996.dtsi | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
+>  arch/arm64/boot/dts/qcom/msm8996.dtsi | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
 > diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-> index c761269caf80..4f2fb7885f39 100644
+> index 4f2fb7885f39..e0e8f30ce11a 100644
 > --- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
 > +++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-> @@ -95,6 +95,7 @@
->  			compatible = "qcom,kryo";
+> @@ -96,6 +96,7 @@
 >  			reg = <0x0 0x0>;
 >  			enable-method = "psci";
-> +			cpu-idle-states = <&CPU_SLEEP_0>;
+>  			cpu-idle-states = <&CPU_SLEEP_0>;
+> +			capacity-dmips-mhz = <1024>;
 >  			next-level-cache = <&L2_0>;
 >  			L2_0: l2-cache {
 >  			      compatible = "cache";
-> @@ -107,6 +108,7 @@
->  			compatible = "qcom,kryo";
+> @@ -109,6 +110,7 @@
 >  			reg = <0x0 0x1>;
 >  			enable-method = "psci";
-> +			cpu-idle-states = <&CPU_SLEEP_0>;
+>  			cpu-idle-states = <&CPU_SLEEP_0>;
+> +			capacity-dmips-mhz = <1024>;
 >  			next-level-cache = <&L2_0>;
 >  		};
 >  
-> @@ -115,6 +117,7 @@
->  			compatible = "qcom,kryo";
+> @@ -118,6 +120,7 @@
 >  			reg = <0x0 0x100>;
 >  			enable-method = "psci";
-> +			cpu-idle-states = <&CPU_SLEEP_0>;
+>  			cpu-idle-states = <&CPU_SLEEP_0>;
+> +			capacity-dmips-mhz = <1024>;
 >  			next-level-cache = <&L2_1>;
 >  			L2_1: l2-cache {
 >  			      compatible = "cache";
-> @@ -127,6 +130,7 @@
->  			compatible = "qcom,kryo";
+> @@ -131,6 +134,7 @@
 >  			reg = <0x0 0x101>;
 >  			enable-method = "psci";
-> +			cpu-idle-states = <&CPU_SLEEP_0>;
+>  			cpu-idle-states = <&CPU_SLEEP_0>;
+> +			capacity-dmips-mhz = <1024>;
 >  			next-level-cache = <&L2_1>;
 >  		};
 >  
-> @@ -151,6 +155,19 @@
->  				};
->  			};
->  		};
-> +
-> +		idle-states {
-> +			entry-method = "psci";
-> +
-> +			CPU_SLEEP_0: cpu-sleep-0 {
-> +				compatible = "arm,idle-state";
-> +				idle-state-name = "standalone-power-collapse";
-> +				arm,psci-suspend-param = <0x00000004>;
-> +				entry-latency-us = <40>;
-> +				exit-latency-us = <80>;
-> +				min-residency-us = <300>;
-> +			};
-> +		};
->  	};
->  
->  	thermal-zones {
 > 
 
 
