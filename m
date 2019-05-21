@@ -3,46 +3,46 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA22FC04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 08:53:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 949FCC04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 08:53:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8447820863
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 08:53:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 744B220863
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 08:53:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727176AbfEUIxf convert rfc822-to-8bit (ORCPT
+        id S1727351AbfEUIxy convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 04:53:35 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:44155 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726259AbfEUIxf (ORCPT
+        Tue, 21 May 2019 04:53:54 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:53337 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726259AbfEUIxy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 04:53:35 -0400
+        Tue, 21 May 2019 04:53:54 -0400
 X-Originating-IP: 90.88.22.185
 Received: from xps13 (aaubervilliers-681-1-80-185.w90-88.abo.wanadoo.fr [90.88.22.185])
         (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 2CAF1FF80F;
-        Tue, 21 May 2019 08:53:31 +0000 (UTC)
-Date:   Tue, 21 May 2019 10:53:30 +0200
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id BC2E420015;
+        Tue, 21 May 2019 08:53:50 +0000 (UTC)
+Date:   Tue, 21 May 2019 10:53:49 +0200
 From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Kamal Dasu <kdasu.kdev@gmail.com>
-Cc:     linux-mtd@lists.infradead.org,
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Kamal Dasu <kdasu.kdev@gmail.com>, linux-mtd@lists.infradead.org,
         bcm-kernel-feedback-list@broadcom.com,
         linux-kernel@vger.kernel.org,
-        David Woodhouse <dwmw2@infradead.org>,
         Brian Norris <computersforpeace@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
         Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] dt-bindings: mtd: brcmnand: Make
- nand-ecc-strength and nand-ecc-step-size optional
-Message-ID: <20190521105330.6d9444c0@xps13>
-In-Reply-To: <1558379144-28283-1-git-send-email-kdasu.kdev@gmail.com>
+        David Woodhouse <dwmw2@infradead.org>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>
+Subject: Re: [PATCH v2 2/2] mtd: nand: raw: brcmnand: fallback to detected
+ ecc-strength, ecc-step-size
+Message-ID: <20190521105349.3b6562f2@xps13>
+In-Reply-To: <63bbd3eb-60c1-042c-633c-cfa6fbef528c@gmail.com>
 References: <1558379144-28283-1-git-send-email-kdasu.kdev@gmail.com>
+        <1558379144-28283-2-git-send-email-kdasu.kdev@gmail.com>
+        <63bbd3eb-60c1-042c-633c-cfa6fbef528c@gmail.com>
 Organization: Bootlin
 X-Mailer: Claws Mail 3.17.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
@@ -53,40 +53,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kamal,
+Hi Florian,
 
-Kamal Dasu <kdasu.kdev@gmail.com> wrote on Mon, 20 May 2019 15:05:11
--0400:
+Florian Fainelli <f.fainelli@gmail.com> wrote on Mon, 20 May 2019
+12:11:42 -0700:
 
-> nand-ecc-strength and nand-ecc-step-size can be made optional as
-> brcmnand driver can support using raw NAND layer detected values.
+> On 5/20/19 12:05 PM, Kamal Dasu wrote:
+> > This change supports nand-ecc-step-size and nand-ecc-strength fields in
+> > brcmnand DT node to be optional.
+> > see: Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
+> > 
+> > If both nand-ecc-strength and nand-ecc-step-size are not specified in
+> > device tree node for NAND, raw NAND layer does detect ECC information by
+> > reading ONFI extended parameter page for parts using ONFI >= 2.1.
+> > In case of non-ONFI NAND parts there could be a nand_id table entry with
+> > ECC information. If there is valid device tree entry for nand-ecc-strength
+> > and nand-ecc-step-size fields it still shall override the detected values.
+> > 
+> > Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
+> > ---
+> >  drivers/mtd/nand/raw/brcmnand/brcmnand.c | 11 +++++++++++
+> >  1 file changed, 11 insertions(+)
+> > 
+> > diff --git a/drivers/mtd/nand/raw/brcmnand/brcmnand.c b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+> > index ce0b8ff..a4d2057 100644
+> > --- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+> > +++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+> > @@ -2144,6 +2144,17 @@ static int brcmnand_setup_dev(struct brcmnand_host *host)
+> >  		return -EINVAL;
+> >  	}
+> >  
+> > +	if (chip->ecc.mode != NAND_ECC_NONE &&
+> > +	    (!chip->ecc.size || !chip->ecc.strength)) {
+> > +		if (chip->base.eccreq.step_size && chip->base.eccreq.strength) {
+> > +			/* use detected ECC parameters */
+> > +			chip->ecc.size = chip->base.eccreq.step_size;
+> > +			chip->ecc.strength = chip->base.eccreq.strength;
+> > +			pr_info("Using ECC step-size %d, strength %d\n",
+> > +				chip->ecc.size, chip->ecc.strength);  
 > 
-> Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
-> ---
->  Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
-> index bcda1df..29feaba 100644
-> --- a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
-> +++ b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
-> @@ -101,10 +101,10 @@ Required properties:
->                                number (e.g., 0, 1, 2, etc.)
->  - #address-cells            : see partition.txt
->  - #size-cells               : see partition.txt
-> -- nand-ecc-strength         : see nand.txt
-> -- nand-ecc-step-size        : must be 512 or 1024. See nand.txt
->  
->  Optional properties:
-> +- nand-ecc-strength         : see nand.txt
-> +- nand-ecc-step-size        : must be 512 or 1024. See nand.txt
->  - nand-on-flash-bbt         : boolean, to enable the on-flash BBT for this
->                                chip-select. See nand.txt
->  - brcm,nand-oob-sector-size : integer, to denote the spare area sector size
+> Nit: should not we use dev_info(&host->pdev->dev) for printing the
+> message in case we have multiple NAND controllers on chip, that way we
+> can still differentiate them from the prints?
 
+With the above changed
 
 Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
-
 
 Thanks,
 Miquèl
