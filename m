@@ -2,135 +2,145 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64FD2C04E87
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 18:49:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B794C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 18:51:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A0E0217D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 18:49:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="JYscqSP1"
+	by mail.kernel.org (Postfix) with ESMTP id EFC5E217D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 18:51:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558464665;
+	bh=h5jgN6tNwdBAOYZ+b5ZiyLSFUM+cRLP1+lI0YeLN9Dk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xK0+VI2n37lGgmO0wfXHd/8m8TX44ohlZBb7bTQE3dcJJk75Eq6c5vK51SUMzvFqy
+	 nbkoEJbCsdA7xgmF97lh6Cbvc+Gp5XPySaFlALTEsvXaFYLGqUW7h1hBtvTZKgQyth
+	 WicBUyt2JLjXRaR7jf9f5KbLW1blnWHh7/Z72O78=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729272AbfEUStA (ORCPT
+        id S1729205AbfEUSvE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 14:49:00 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:46008 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728175AbfEUSs7 (ORCPT
+        Tue, 21 May 2019 14:51:04 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:41260 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727990AbfEUSvE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 14:48:59 -0400
-Received: by mail-qk1-f194.google.com with SMTP id j1so11689528qkk.12
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 11:48:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Brh6Wum1Zthj/uQ2mtyHFIq9uQlvrAXKSZbEsVapKL8=;
-        b=JYscqSP1HPPRVqGuMd5owD3l/IDlGmL6FFL67m798Jm2AP4qGcOTqtawfRNo+5kAFu
-         iEJ0vUz9qOZ+rvajt/fb76zKILX2m7sPHzCjQLxU/xpu8s+X3lkRy9CgqtNpDaf0XFJu
-         m/SIilww4DfdKs62gi8wE4MGevsPrJgDS2TyvhL/7eUtavobHZ7DqCVwKBcDulDJUjVu
-         MVt0CUr2fUDTtnd4Vvag66g4rnBT/cZ1xH3t4yZwYbfafoegD76V6HRafoLD0R1dZ62Z
-         EbRvObIPEul9wb7eEhcBGsIGomq6YRkOd3NfdawsXW6Hn11cNpJ1sY5CjCpDM4tjfGZL
-         aezw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Brh6Wum1Zthj/uQ2mtyHFIq9uQlvrAXKSZbEsVapKL8=;
-        b=CfmoLhCKSxnpSG7l+ekXITJ4yfQnbH7ovAP+fM7Xtcy7BgAh3OCt1iNNPFKgP0ZEbN
-         wWmqS34fY+wpBvXpaOtaYQ1zboYsj/IZTeBCHEAjvfeT//THXcMCgKxmqrAJQaYiIvg4
-         VHsPej3bTCuSXmXdTJYaP3AIouq1Hh/ATGDNCZLL4j9op74wahABmwPBpWdLe3LWtU0z
-         wGD+YPRVHHW4nTsSBxyojEKCdYnasc/dQL7JB4Rrbmbb82GbKyLxVRip9nuLS3PxGgLw
-         GltNNtI5NJ2PaH54uVMDpWQ+nhtaeUqICYUcyQ3CKLU9FVtULandGCszCTDw0Yamkhns
-         zlvw==
-X-Gm-Message-State: APjAAAU3rIDNqPKt5WUqFZUje/EDQCLiUm3m+g16JtxsjtFKoLxqN4et
-        HxpEHslFSZfVneeoSPF59rdW7w==
-X-Google-Smtp-Source: APXvYqwU77tWKnZY68/uvl8nI3fxF+k0K8AI67X6RVtQAbCKMK/pPRLs+1/gDbqNIuNCiuScF9EnOQ==
-X-Received: by 2002:a37:358:: with SMTP id 85mr63206066qkd.174.1558464538599;
-        Tue, 21 May 2019 11:48:58 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-49-251.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.49.251])
-        by smtp.gmail.com with ESMTPSA id u2sm5545370qtq.45.2019.05.21.11.48.57
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 21 May 2019 11:48:57 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1hT9om-0004QR-Qs; Tue, 21 May 2019 15:48:56 -0300
-Date:   Tue, 21 May 2019 15:48:56 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     Andrey Konovalov <andreyknvl@google.com>,
-        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
-        linux-media@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
-Subject: Re: [PATCH v15 00/17] arm64: untag user pointers passed to the kernel
-Message-ID: <20190521184856.GC2922@ziepe.ca>
-References: <cover.1557160186.git.andreyknvl@google.com>
- <20190517144931.GA56186@arrakis.emea.arm.com>
+        Tue, 21 May 2019 14:51:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=uyW5JgqktOeQEaUw+A116CMaNFtMso5q/Jn1XmiRdLk=; b=dDdIXaNASaq3WoLuurvMj9md7
+        p/iCtcLueRbPFYhFf0qk0VBRZWlhE5Aqp7tYt6UcvEUf6Tb5msHtjIncicKr2PpEcj4FlFzAv/dwH
+        uyMFgIiKCI/cZQ7iFeglH7xxmiEBlishs+UuXJv/3+LNnC3icSCCPBwRg7RQrMJYcBJCM=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hT9qk-0000WF-5e; Tue, 21 May 2019 18:50:58 +0000
+Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
+        id 8B8F51126D13; Tue, 21 May 2019 19:50:54 +0100 (BST)
+Date:   Tue, 21 May 2019 19:50:54 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc:     lgirdwood@gmail.com, agross@kernel.org, david.brown@linaro.org,
+        bjorn.andersson@linaro.org, jcrouse@codeaurora.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+Subject: Re: [PATCH 2/3] regulator: qcom_spmi: Add support for PM8005
+Message-ID: <20190521185054.GD16633@sirena.org.uk>
+References: <20190521164932.14265-1-jeffrey.l.hugo@gmail.com>
+ <20190521165315.14379-1-jeffrey.l.hugo@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="C+ts3FVlLX8+P6JN"
 Content-Disposition: inline
-In-Reply-To: <20190517144931.GA56186@arrakis.emea.arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190521165315.14379-1-jeffrey.l.hugo@gmail.com>
+X-Cookie: Do I have a lifestyle yet?
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 17, 2019 at 03:49:31PM +0100, Catalin Marinas wrote:
 
-> The tagged pointers (whether hwasan or MTE) should ideally be a
-> transparent feature for the application writer but I don't think we can
-> solve it entirely and make it seamless for the multitude of ioctls().
-> I'd say you only opt in to such feature if you know what you are doing
-> and the user code takes care of specific cases like ioctl(), hence the
-> prctl() proposal even for the hwasan.
+--C+ts3FVlLX8+P6JN
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I'm not sure such a dire view is warrented.. 
+On Tue, May 21, 2019 at 09:53:15AM -0700, Jeffrey Hugo wrote:
 
-The ioctl situation is not so bad, other than a few special cases,
-most drivers just take a 'void __user *' and pass it as an argument to
-some function that accepts a 'void __user *'. sparse et al verify
-this. 
+> -	spmi_vreg_read(vreg, SPMI_COMMON_REG_VOLTAGE_RANGE, &range_sel, 1);
+> +	/* second common devices don't have VOLTAGE_RANGE register */
+> +	if (vreg->logical_type == SPMI_REGULATOR_LOGICAL_TYPE_FTSMPS2) {
+> +		spmi_vreg_read(vreg, SPMI_COMMON2_REG_VOLTAGE_LSB, &lsb, 1);
+> +		spmi_vreg_read(vreg, SPMI_COMMON2_REG_VOLTAGE_MSB, &msb, 1);
+> +
+> +		uV = (((int)msb << 8) | (int)lsb) * 1000;
 
-As long as the core functions do the right thing the drivers will be
-OK.
+This overlaps with some changes that Jorge (CCed) was sending for the
+PMS405.  As I was saying to him rather than shoving special cases for
+different regulator types into the ops (especially ones that don't have
+any of the range stuff) it'd be better to just define separate ops for
+the regulators that look quite different to the existing ones.
 
-The only place things get dicy is if someone casts to unsigned long
-(ie for vma work) but I think that reflects that our driver facing
-APIs for VMAs are compatible with static analysis (ie I have no
-earthly idea why get_user_pages() accepts an unsigned long), not that
-this is too hard.
+> +static int spmi_regulator_common_list_voltage(struct regulator_dev *rdev,
+> +					      unsigned selector);
+> +
+> +static int spmi_regulator_common2_set_voltage(struct regulator_dev *rdev,
+> +					      unsigned selector)
 
-Jason
+Eeew, can we not have better names?
+
+> +static unsigned int spmi_regulator_common2_get_mode(struct regulator_dev *rdev)
+> +{
+> +	struct spmi_regulator *vreg = rdev_get_drvdata(rdev);
+> +	u8 reg;
+> +
+> +	spmi_vreg_read(vreg, SPMI_COMMON2_REG_MODE, &reg, 1);
+> +
+> +	if (reg == SPMI_COMMON2_MODE_HPM_MASK)
+> +		return REGULATOR_MODE_NORMAL;
+> +
+> +	if (reg == SPMI_COMMON2_MODE_AUTO_MASK)
+> +		return REGULATOR_MODE_FAST;
+> +
+> +	return REGULATOR_MODE_IDLE;
+> +}
+
+This looks like you want to write a switch statement.
+
+> +spmi_regulator_common2_set_mode(struct regulator_dev *rdev, unsigned int mode)
+> +{
+> +	struct spmi_regulator *vreg = rdev_get_drvdata(rdev);
+> +	u8 mask = SPMI_COMMON2_MODE_MASK;
+> +	u8 val = SPMI_COMMON2_MODE_LPM_MASK;
+> +
+> +	if (mode == REGULATOR_MODE_NORMAL)
+> +		val = SPMI_COMMON2_MODE_HPM_MASK;
+> +	else if (mode == REGULATOR_MODE_FAST)
+> +		val = SPMI_COMMON2_MODE_AUTO_MASK;
+
+This needs to be a switch statement, then it can have a default case to
+catch errors too.
+
+--C+ts3FVlLX8+P6JN
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlzkSI0ACgkQJNaLcl1U
+h9D4Pwf+N0VEAMaUrHu9DiDBqWU4jYSrQlR7BPtYN4DHzRzhYd/GSW4c1RhNMsz4
+og7GQSz83ppbsfv22Sf1/2ivsR/0VihEhoOVduEnH2MJcowZwd4vUnNfTvOuAcvN
+nN/THjD7Nz4GpP9QBetIwsInrafl+bbpMedq0fI/u6EsUSNOmoHnFxgJM8aXxYJQ
+WzquUkwu8XTUi5UNspFDXXTRYmjfKAiY0fYSsATVZOZHtSCktsijI35IN77oxvSB
+l2UT7XH3xXPQ7UyeF64U4Yp7L+NeYrh7eX6qZGb5NaUq1k/CiruEZK/OUkNkkNsR
+sQWT5yGgYmgS2BOIlXy3SsNbouafeQ==
+=vCWU
+-----END PGP SIGNATURE-----
+
+--C+ts3FVlLX8+P6JN--
