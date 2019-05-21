@@ -2,210 +2,74 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6B6BC04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:15:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01737C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:17:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C77920856
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:15:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="byDN3URg"
+	by mail.kernel.org (Postfix) with ESMTP id D3DFF20856
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:17:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728192AbfEUNPe (ORCPT
+        id S1728217AbfEUNRK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 09:15:34 -0400
-Received: from conuserg-09.nifty.com ([210.131.2.76]:42776 "EHLO
-        conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726740AbfEUNPe (ORCPT
+        Tue, 21 May 2019 09:17:10 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:42293 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726750AbfEUNRJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 09:15:34 -0400
-Received: from grover.flets-west.jp (softbank126125154139.bbtec.net [126.125.154.139]) (authenticated)
-        by conuserg-09.nifty.com with ESMTP id x4LDDYAd004855;
-        Tue, 21 May 2019 22:13:34 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com x4LDDYAd004855
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1558444415;
-        bh=ahqbC92DL/pM+EvNd4RugG8jQvrt9otxZH6g7EH9AdY=;
-        h=From:To:Cc:Subject:Date:From;
-        b=byDN3URgP1aFiKBf13O4eB3IcCRmRHdS4w/Vsk71gfIMjCTpQlM9x+pTrWYxKD6xD
-         V9VH0X04qL3lZtOUfsrhQBsiJk6csDQXXVUjQ5+uCPagVEG7fWaXK52ua2aETjKK0M
-         XJBCDyN1+HfIrqq14MuJoUdVthou2qSoYfOre6SZViNDt8nEYf7GoZg7rNW8Dw2tNh
-         YYah8oMxK2FXgGkEVEphUKIna2of4Et7E+xJuLal9Z4afYm3hMxjRQeL9FQlOvFsdX
-         svjA5A9a8iW0Z2C/nqYiS0rqRctgK33ezsq1t3T5mDDH55zWryW003qi4NZml1meAb
-         PH79Wg2BhesJA==
-X-Nifty-SrcIP: [126.125.154.139]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org
-Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        Suraj Jitindar Singh <sjitindarsingh@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] powerpc/mm: mark more tlb functions as __always_inline
-Date:   Tue, 21 May 2019 22:13:24 +0900
-Message-Id: <1558444404-12254-1-git-send-email-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.7.4
+        Tue, 21 May 2019 09:17:09 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1hT4de-0003es-QC; Tue, 21 May 2019 13:17:06 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Adham Abozaeid <adham.abozaeid@microchip.com>,
+        Ajay Singh <ajay.kathat@microchip.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-wireless@vger.kernel.org, devel@driverdev.osuosl.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] staging: wilc1000: remove redundant masking of pkt_offset
+Date:   Tue, 21 May 2019 14:17:06 +0100
+Message-Id: <20190521131706.30236-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With CONFIG_OPTIMIZE_INLINING enabled, Laura Abbott reported error
-with gcc 9.1.1:
+From: Colin Ian King <colin.king@canonical.com>
 
-  arch/powerpc/mm/book3s64/radix_tlb.c: In function '_tlbiel_pid':
-  arch/powerpc/mm/book3s64/radix_tlb.c:104:2: warning: asm operand 3 probably doesn't match constraints
-    104 |  asm volatile(PPC_TLBIEL(%0, %4, %3, %2, %1)
-        |  ^~~
-  arch/powerpc/mm/book3s64/radix_tlb.c:104:2: error: impossible constraint in 'asm'
+The masking update of pkg_offset is redundant as the updated
+value is never read and pkg_offset is re-assigned on the next
+iteration of the loop.  Clean this up by removing the redundant
+assignment.
 
-Fixing _tlbiel_pid() is enough to address the warning above, but I
-inlined more functions to fix all potential issues.
-
-To meet the "i" (immediate) constraint for the asm operands, functions
-propagating "ric" must be always inlined.
-
-Fixes: 9012d011660e ("compiler: allow all arches to enable CONFIG_OPTIMIZE_INLINING")
-Reported-by: Laura Abbott <labbott@redhat.com>
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Addresses-Coverity: ("Unused value")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
 ---
+ drivers/staging/wilc1000/wilc_wlan.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-Changes in v2:
-  - Do not split lines
-
- arch/powerpc/mm/book3s64/hash_native.c |  2 +-
- arch/powerpc/mm/book3s64/radix_tlb.c   | 32 ++++++++++++++++----------------
- 2 files changed, 17 insertions(+), 17 deletions(-)
-
-diff --git a/arch/powerpc/mm/book3s64/hash_native.c b/arch/powerpc/mm/book3s64/hash_native.c
-index aaa28fd..c854151 100644
---- a/arch/powerpc/mm/book3s64/hash_native.c
-+++ b/arch/powerpc/mm/book3s64/hash_native.c
-@@ -60,7 +60,7 @@ static inline void tlbiel_hash_set_isa206(unsigned int set, unsigned int is)
-  * tlbiel instruction for hash, set invalidation
-  * i.e., r=1 and is=01 or is=10 or is=11
-  */
--static inline void tlbiel_hash_set_isa300(unsigned int set, unsigned int is,
-+static __always_inline void tlbiel_hash_set_isa300(unsigned int set, unsigned int is,
- 					unsigned int pid,
- 					unsigned int ric, unsigned int prs)
- {
-diff --git a/arch/powerpc/mm/book3s64/radix_tlb.c b/arch/powerpc/mm/book3s64/radix_tlb.c
-index 4d84136..4d3dc10 100644
---- a/arch/powerpc/mm/book3s64/radix_tlb.c
-+++ b/arch/powerpc/mm/book3s64/radix_tlb.c
-@@ -29,7 +29,7 @@
-  * tlbiel instruction for radix, set invalidation
-  * i.e., r=1 and is=01 or is=10 or is=11
-  */
--static inline void tlbiel_radix_set_isa300(unsigned int set, unsigned int is,
-+static __always_inline void tlbiel_radix_set_isa300(unsigned int set, unsigned int is,
- 					unsigned int pid,
- 					unsigned int ric, unsigned int prs)
- {
-@@ -150,8 +150,8 @@ static __always_inline void __tlbie_lpid(unsigned long lpid, unsigned long ric)
- 	trace_tlbie(lpid, 0, rb, rs, ric, prs, r);
- }
+diff --git a/drivers/staging/wilc1000/wilc_wlan.c b/drivers/staging/wilc1000/wilc_wlan.c
+index 95eaf8fdf4f2..dcd728557958 100644
+--- a/drivers/staging/wilc1000/wilc_wlan.c
++++ b/drivers/staging/wilc1000/wilc_wlan.c
+@@ -709,9 +709,6 @@ static void wilc_wlan_handle_rx_buff(struct wilc *wilc, u8 *buffer, int size)
+ 			break;
  
--static inline void __tlbiel_lpid_guest(unsigned long lpid, int set,
--				unsigned long ric)
-+static __always_inline void __tlbiel_lpid_guest(unsigned long lpid, int set,
-+						unsigned long ric)
- {
- 	unsigned long rb,rs,prs,r;
- 
-@@ -167,8 +167,8 @@ static inline void __tlbiel_lpid_guest(unsigned long lpid, int set,
- }
- 
- 
--static inline void __tlbiel_va(unsigned long va, unsigned long pid,
--			       unsigned long ap, unsigned long ric)
-+static __always_inline void __tlbiel_va(unsigned long va, unsigned long pid,
-+					unsigned long ap, unsigned long ric)
- {
- 	unsigned long rb,rs,prs,r;
- 
-@@ -183,8 +183,8 @@ static inline void __tlbiel_va(unsigned long va, unsigned long pid,
- 	trace_tlbie(0, 1, rb, rs, ric, prs, r);
- }
- 
--static inline void __tlbie_va(unsigned long va, unsigned long pid,
--			      unsigned long ap, unsigned long ric)
-+static __always_inline void __tlbie_va(unsigned long va, unsigned long pid,
-+				       unsigned long ap, unsigned long ric)
- {
- 	unsigned long rb,rs,prs,r;
- 
-@@ -199,8 +199,8 @@ static inline void __tlbie_va(unsigned long va, unsigned long pid,
- 	trace_tlbie(0, 0, rb, rs, ric, prs, r);
- }
- 
--static inline void __tlbie_lpid_va(unsigned long va, unsigned long lpid,
--			      unsigned long ap, unsigned long ric)
-+static __always_inline void __tlbie_lpid_va(unsigned long va, unsigned long lpid,
-+					    unsigned long ap, unsigned long ric)
- {
- 	unsigned long rb,rs,prs,r;
- 
-@@ -239,7 +239,7 @@ static inline void fixup_tlbie_lpid(unsigned long lpid)
- /*
-  * We use 128 set in radix mode and 256 set in hpt mode.
-  */
--static inline void _tlbiel_pid(unsigned long pid, unsigned long ric)
-+static __always_inline void _tlbiel_pid(unsigned long pid, unsigned long ric)
- {
- 	int set;
- 
-@@ -341,7 +341,7 @@ static inline void _tlbie_lpid(unsigned long lpid, unsigned long ric)
- 	asm volatile("eieio; tlbsync; ptesync": : :"memory");
- }
- 
--static inline void _tlbiel_lpid_guest(unsigned long lpid, unsigned long ric)
-+static __always_inline void _tlbiel_lpid_guest(unsigned long lpid, unsigned long ric)
- {
- 	int set;
- 
-@@ -381,8 +381,8 @@ static inline void __tlbiel_va_range(unsigned long start, unsigned long end,
- 		__tlbiel_va(addr, pid, ap, RIC_FLUSH_TLB);
- }
- 
--static inline void _tlbiel_va(unsigned long va, unsigned long pid,
--			      unsigned long psize, unsigned long ric)
-+static __always_inline void _tlbiel_va(unsigned long va, unsigned long pid,
-+				       unsigned long psize, unsigned long ric)
- {
- 	unsigned long ap = mmu_get_ap(psize);
- 
-@@ -413,8 +413,8 @@ static inline void __tlbie_va_range(unsigned long start, unsigned long end,
- 		__tlbie_va(addr, pid, ap, RIC_FLUSH_TLB);
- }
- 
--static inline void _tlbie_va(unsigned long va, unsigned long pid,
--			      unsigned long psize, unsigned long ric)
-+static __always_inline void _tlbie_va(unsigned long va, unsigned long pid,
-+				      unsigned long psize, unsigned long ric)
- {
- 	unsigned long ap = mmu_get_ap(psize);
- 
-@@ -424,7 +424,7 @@ static inline void _tlbie_va(unsigned long va, unsigned long pid,
- 	asm volatile("eieio; tlbsync; ptesync": : :"memory");
- }
- 
--static inline void _tlbie_lpid_va(unsigned long va, unsigned long lpid,
-+static __always_inline void _tlbie_lpid_va(unsigned long va, unsigned long lpid,
- 			      unsigned long psize, unsigned long ric)
- {
- 	unsigned long ap = mmu_get_ap(psize);
+ 		if (pkt_offset & IS_MANAGMEMENT) {
+-			pkt_offset &= ~(IS_MANAGMEMENT |
+-					IS_MANAGMEMENT_CALLBACK |
+-					IS_MGMT_STATUS_SUCCES);
+ 			buff_ptr += HOST_HDR_OFFSET;
+ 			wilc_wfi_mgmt_rx(wilc, buff_ptr, pkt_len);
+ 		} else {
 -- 
-2.7.4
+2.20.1
 
