@@ -2,148 +2,135 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DBF5C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:22:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10E99C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:23:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C0272173C
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:22:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DADD92173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:23:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="BUu5zjdt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728088AbfEUNWK (ORCPT
+        id S1728286AbfEUNXa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 09:22:10 -0400
-Received: from gateway20.websitewelcome.com ([192.185.61.9]:44083 "EHLO
-        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726740AbfEUNWK (ORCPT
+        Tue, 21 May 2019 09:23:30 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:39102 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728175AbfEUNX2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 09:22:10 -0400
-Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
-        by gateway20.websitewelcome.com (Postfix) with ESMTP id 83B1940139994
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 07:57:39 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id T4KphlUs6dnCeT4KphRqal; Tue, 21 May 2019 07:57:39 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.47.159] (port=49062 helo=[192.168.1.76])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.91)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hT4Ko-0045t0-Ub; Tue, 21 May 2019 07:57:39 -0500
-To:     christian.koenig@amd.com, Daniel Vetter <daniel@ffwll.ch>,
-        Alex Deucher <alexdeucher@gmail.com>
-Cc:     "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "Pan, Xinhui" <Xinhui.Pan@amd.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
-        "Quan, Evan" <Evan.Quan@amd.com>
-References: <1558082760-4915-1-git-send-email-xiaolinkui@kylinos.cn>
- <SN6PR12MB2800A7AEC22121C8704CBB09870B0@SN6PR12MB2800.namprd12.prod.outlook.com>
- <20190520162807.GE21222@phenom.ffwll.local>
- <SN6PR12MB28007ED8F5C6838F2C25A9D587060@SN6PR12MB2800.namprd12.prod.outlook.com>
- <CADnq5_O=PAK3qZJ-kHUX9jQDkmEYOX+iOhOX7gNaaXp+tC7nUg@mail.gmail.com>
- <CAKMK7uHS837L9Ze_K5q-AsFgOtAMD+n_i_Y404BX-_CwJeP08Q@mail.gmail.com>
- <36de7e05-9055-6d8b-fb2c-fa5a4e94274b@gmail.com>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Subject: Re: [PATCH] gpu: drm: use struct_size() in kmalloc()
-Message-ID: <5a9089f3-501b-24a1-202b-5a2b2ae62de6@embeddedor.com>
-Date:   Tue, 21 May 2019 07:57:36 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 21 May 2019 09:23:28 -0400
+Received: by mail-wr1-f67.google.com with SMTP id w8so18620466wrl.6
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 06:23:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brauner.io; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=zPeZPlO76ltnQqvYGINFToUvBJmXqM645QmEt4Hw6Rc=;
+        b=BUu5zjdtN4tz3uDq/7UpOx4K4hUQVJBWS+eEuFLdpi6Rmwdp0HavCUwLV8syhoRhBs
+         uutuEJthT54zEPxESFMYXggKMqpF+e9kjCS2KXB6a8V8DjwFSU/ukGJ+bjlCRLwN7Itn
+         NioFIdnrRyEyEXF9J8PaDiZ1BKte4njCTV4UqMcQIxHCp36wZKBXLuGaTuzR077IIyGB
+         sh/VNZyNC9dytmpNSG0A/cuTGl76M/BtkEN2Bj2PP9spj3uzju6GRwQbZsYefL3l1zFQ
+         DUpnJfPzQ1HZROA8RvSmOKB1jZ+QySIxvLrPIvBwJ5t1t+aSsSSgiGJe52BZXhX2b2t5
+         /pjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=zPeZPlO76ltnQqvYGINFToUvBJmXqM645QmEt4Hw6Rc=;
+        b=jD26rNd36IaQfOvXn+T6MhUA3crEvzUQqBpIIgDXOIoOeBW3ZuCblsBN6+rTqGnPLz
+         XS6xRHcuDtUCzX1mFtZxLQnRmReHyUmelAV06lnMd9q30pEtLkdzQ8qWa2/xvF/ni9OV
+         7b9ve5PykUB4uybXWLuoAqJzfSkmb1sYZOiVbscSucYV29s081MnQx3TNU0PqV+oflbx
+         iWdHEx8UNMX44kOH+XyYZIhoCyO5G0K+JcWgB7izKqo3sVsA6lsV7/TjAo2cVh7d04wv
+         oD46f/ISLyyAmy6waBHxSONmcsMb5u1mThV0J9iFJgJ9UHVk3z83U/5FQqGP8DYhf7mP
+         W5dg==
+X-Gm-Message-State: APjAAAXpu3QdnTVzljem7gDF/yZaxAEMk6NKbjb+oEoL4ULeSQrlVvMv
+        co2qfGFqKlSyJw96v94cv8X0Xw==
+X-Google-Smtp-Source: APXvYqx9Vd+T8JFd9e9hzlyFLebVljF2D14aArNe6wO+D4nzJaWpMCXvLevCthzGrMSyj5JSdNW7NA==
+X-Received: by 2002:adf:e344:: with SMTP id n4mr26865746wrj.192.1558445005993;
+        Tue, 21 May 2019 06:23:25 -0700 (PDT)
+Received: from brauner.io (p548C9938.dip0.t-ipconnect.de. [84.140.153.56])
+        by smtp.gmail.com with ESMTPSA id a15sm5483898wrw.49.2019.05.21.06.23.23
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 21 May 2019 06:23:24 -0700 (PDT)
+Date:   Tue, 21 May 2019 15:23:23 +0200
+From:   Christian Brauner <christian@brauner.io>
+To:     Florian Weimer <fweimer@redhat.com>
+Cc:     viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
+        jannh@google.com, oleg@redhat.com, tglx@linutronix.de,
+        torvalds@linux-foundation.org, arnd@arndb.de, shuah@kernel.org,
+        dhowells@redhat.com, tkjos@android.com, ldv@altlinux.org,
+        miklos@szeredi.hu, linux-alpha@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        x86@kernel.org
+Subject: Re: [PATCH 1/2] open: add close_range()
+Message-ID: <20190521132252.y5wt7d7o4bdjns4e@brauner.io>
+References: <20190521113448.20654-1-christian@brauner.io>
+ <87tvdoau12.fsf@oldenburg2.str.redhat.com>
+ <20190521130438.q3u4wvve7p6md6cm@brauner.io>
+ <87h89o9cng.fsf@oldenburg2.str.redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <36de7e05-9055-6d8b-fb2c-fa5a4e94274b@gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.47.159
-X-Source-L: No
-X-Exim-ID: 1hT4Ko-0045t0-Ub
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.1.76]) [189.250.47.159]:49062
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 7
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Disposition: inline
+In-Reply-To: <87h89o9cng.fsf@oldenburg2.str.redhat.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 5/21/19 3:59 AM, Christian König wrote:
-
-> BTW: Is there actually good documentation how to correctly do the variable length array at end of structure thing in the kernel?
+On Tue, May 21, 2019 at 03:10:11PM +0200, Florian Weimer wrote:
+> * Christian Brauner:
 > 
-> I do know that I've seen a lot of different variants like array[] array[0] or array[1] and I have also seen a bunch of gcc versions failing to generate correct
-> code for some of them.
+> >> Solaris has an fdwalk function:
+> >> 
+> >>   <https://docs.oracle.com/cd/E88353_01/html/E37843/closefrom-3c.html>
+> >> 
+> >> So a different way to implement this would expose a nextfd system call
+> >
+> > Meh. If nextfd() then I would like it to be able to:
+> > - get the nextfd(fd) >= fd
+> > - get highest open fd e.g. nextfd(-1)
 > 
-> So we should probably nail down how to do things correctly.
+> The highest open descriptor isn't istering for fdwalk because nextfd
+> would just fail.
+
+Sure. I was thinking about other usecases. For example, sometimes in
+userspace you want to do the following:
+save_fd = dup(fd, <well-known-number-at-the-end-of-the-range);
+close_range(3, (save_fd - 1));
+
+Which brings me to another point. So even if we don't do close_range() I
+would like libc to maybe give us something like close_range() for such
+scenarios.
+
 > 
-
-A flexible array member is the preferred[1] mechanism:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=next-20190520&id=76497732932f15e7323dc805e8ea8dc11bb587cf
-
-Thanks
---
-Gustavo
-
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> > But then I wonder if nextfd() needs to be a syscall and isn't just
+> > either:
+> > fcntl(fd, F_GET_NEXT)?
+> > or
+> > prctl(PR_GET_NEXT)?
+> 
+> I think the fcntl route is a bit iffy because you might need it to get
+> the *first* valid descriptor.
+> 
+> >> to userspace, so that we can use that to implement both fdwalk and
+> >> closefrom.  But maybe fdwalk is just too obscure, given the existence of
+> >> /proc.
+> >
+> > Yeah we probably don't need fdwalk.
+> 
+> Agreed.  Just wanted to bring it up for completeness.  I certainly don't
+> want to derail the implementation of close_range.
+> 
+> Thanks,
+> Florian
