@@ -2,103 +2,112 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F09FC04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:54:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC20EC46470
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:54:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40B4221019
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:54:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9877217D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:54:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729028AbfEUPyp (ORCPT
+        id S1729037AbfEUPyv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 11:54:45 -0400
-Received: from mail-oln040092069092.outbound.protection.outlook.com ([40.92.69.92]:48613
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727969AbfEUPyn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 11:54:43 -0400
-Received: from HE1EUR02FT018.eop-EUR02.prod.protection.outlook.com
- (10.152.10.53) by HE1EUR02HT070.eop-EUR02.prod.protection.outlook.com
- (10.152.11.51) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1900.16; Tue, 21 May
- 2019 15:54:40 +0000
-Received: from VI1PR07MB4432.eurprd07.prod.outlook.com (10.152.10.56) by
- HE1EUR02FT018.mail.protection.outlook.com (10.152.10.248) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.1900.16 via Frontend Transport; Tue, 21 May 2019 15:54:40 +0000
-Received: from VI1PR07MB4432.eurprd07.prod.outlook.com
- ([fe80::91f:b1bb:a60a:fdc3]) by VI1PR07MB4432.eurprd07.prod.outlook.com
- ([fe80::91f:b1bb:a60a:fdc3%7]) with mapi id 15.20.1922.013; Tue, 21 May 2019
- 15:54:36 +0000
-From:   Philippe Mazenauer <philippe.mazenauer@outlook.de>
-CC:     Philippe Mazenauer <philippe.mazenauer@outlook.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        "Ard Biesheuvel" <ard.biesheuvel@linaro.org>,
-        "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: [PATCH] arm: add missing include <linux/elf-randomize.h>
-Thread-Topic: [PATCH] arm: add missing include <linux/elf-randomize.h>
-Thread-Index: AQHVD+196VQxVFzkxUm6hIWwPiiwhw==
-Date:   Tue, 21 May 2019 15:54:36 +0000
-Message-ID: <VI1PR07MB44324E07A6AFE89A920444AFFD070@VI1PR07MB4432.eurprd07.prod.outlook.com>
-Accept-Language: de-CH, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MWHPR04CA0061.namprd04.prod.outlook.com
- (2603:10b6:300:6c::23) To VI1PR07MB4432.eurprd07.prod.outlook.com
- (2603:10a6:802:67::17)
-x-incomingtopheadermarker: OriginalChecksum:1B20B10E0D37E672A2A37032CC990F06044B38EB367D1C78112B8A0A12F11ADF;UpperCasedChecksum:D6A7E7506F0D5C558B5E9FCFB493E8F104A525A8B45A64B21960325CF08A7F68;SizeAsReceived:7703;Count:47
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-tmn:  [0/mt7oT42HkDkcphSArYfbly3ntQ7FEF]
-x-microsoft-original-message-id: <20190521155408.176794-1-philippe.mazenauer@outlook.de>
-x-ms-publictraffictype: Email
-x-incomingheadercount: 47
-x-eopattributedmessage: 0
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(5050001)(7020095)(20181119110)(201702061078)(5061506573)(5061507331)(1603103135)(2017031320274)(2017031323274)(2017031324274)(2017031322404)(1601125500)(1603101475)(1701031045);SRVR:HE1EUR02HT070;
-x-ms-traffictypediagnostic: HE1EUR02HT070:
-x-microsoft-antispam-message-info: W493sq3XOzztmL+wkxZ1mIpQe+TyOvYilerCH0Ud4Fu0B9NSriFJiKz7b/bKGcoju7J4O1fgCiiWXSZHAklcFjlFp/xjVhE5TI3KcyODu9DhAHSKR8AGhFR7gS/TxY0LVwucK/wbHYmqnxnbDIuln3TUG3aPO+rRQG/w84FZfIxGaIWEM7MJR5sUtk2azI2u
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <42BCE344A2286F4E8170B11CBAEB83E0@eurprd07.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Tue, 21 May 2019 11:54:51 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:50034 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727969AbfEUPys (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 11:54:48 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4LFqRa2047385
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 11:54:47 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2smkn1td91-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 11:54:47 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
+        Tue, 21 May 2019 16:54:45 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 21 May 2019 16:54:43 +0100
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4LFsgGU47644812
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 21 May 2019 15:54:43 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D85A2A405B;
+        Tue, 21 May 2019 15:54:42 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 47969A4060;
+        Tue, 21 May 2019 15:54:42 +0000 (GMT)
+Received: from rapoport-lnx (unknown [9.148.204.239])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue, 21 May 2019 15:54:42 +0000 (GMT)
+Date:   Tue, 21 May 2019 18:54:40 +0300
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Helge Deller <deller@gmx.de>
+Cc:     "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        linux-parisc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] parisc: Kconfig: remove ARCH_DISCARD_MEMBLOCK
+References: <1557898882-28507-1-git-send-email-rppt@linux.ibm.com>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1d1fff71-75ec-4e53-59c3-08d6de049efa
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 May 2019 15:54:36.6515
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1EUR02HT070
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1557898882-28507-1-git-send-email-rppt@linux.ibm.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-TM-AS-GCONF: 00
+x-cbid: 19052115-0028-0000-0000-0000037007EC
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19052115-0029-0000-0000-0000242FB2CF
+Message-Id: <20190521155440.GD24470@rapoport-lnx>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-21_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905210099
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SW5jbHVkZSBjb3JyZXNwb25kaW5nIGhlYWRlciBmaWxlIDxsaW51eC9lbGYtcmFuZG9taXplLmg+
-IGZvciBmdW5jdGlvbg0KYXJjaF9yYW5kb21pemVfYnJrKCkuDQoNCi4uL2FyY2gvYXJtL2tlcm5l
-bC9wcm9jZXNzLmM6MzI1OjE1OiB3YXJuaW5nOiBubyBwcmV2aW91cyBwcm90b3R5cGUgZm9yIOKA
-mGFyY2hfcmFuZG9taXplX2Jya+KAmSBbLVdtaXNzaW5nLXByb3RvdHlwZXNdDQogdW5zaWduZWQg
-bG9uZyBhcmNoX3JhbmRvbWl6ZV9icmsoc3RydWN0IG1tX3N0cnVjdCAqbW0pDQogICAgICAgICAg
-ICAgICBefn5+fn5+fn5+fn5+fn5+fn4NCg0KU2lnbmVkLW9mZi1ieTogUGhpbGlwcGUgTWF6ZW5h
-dWVyIDxwaGlsaXBwZS5tYXplbmF1ZXJAb3V0bG9vay5kZT4NCi0tLQ0KIGFyY2gvYXJtL2tlcm5l
-bC9wcm9jZXNzLmMgfCAxICsNCiAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKykNCg0KZGlm
-ZiAtLWdpdCBhL2FyY2gvYXJtL2tlcm5lbC9wcm9jZXNzLmMgYi9hcmNoL2FybS9rZXJuZWwvcHJv
-Y2Vzcy5jDQppbmRleCA3MmNjMDg2MmEzMGUuLjczNzgyMDEyZDQwMyAxMDA2NDQNCi0tLSBhL2Fy
-Y2gvYXJtL2tlcm5lbC9wcm9jZXNzLmMNCisrKyBiL2FyY2gvYXJtL2tlcm5lbC9wcm9jZXNzLmMN
-CkBAIC0yMyw2ICsyMyw3IEBADQogI2luY2x1ZGUgPGxpbnV4L2ludGVycnVwdC5oPg0KICNpbmNs
-dWRlIDxsaW51eC9pbml0Lmg+DQogI2luY2x1ZGUgPGxpbnV4L2VsZmNvcmUuaD4NCisjaW5jbHVk
-ZSA8bGludXgvZWxmLXJhbmRvbWl6ZS5oPg0KICNpbmNsdWRlIDxsaW51eC9wbS5oPg0KICNpbmNs
-dWRlIDxsaW51eC90aWNrLmg+DQogI2luY2x1ZGUgPGxpbnV4L3V0c25hbWUuaD4NCi0tIA0KMi4x
-Ny4xDQoNCg==
+Gentle ping ...
+
+On Wed, May 15, 2019 at 08:41:22AM +0300, Mike Rapoport wrote:
+> Since commit 350e88bad496 ("mm: memblock: make keeping memblock memory
+> opt-in rather than opt-out") the default behaviour is to discard memblock
+> data after init and the ARCH_DISCARD_MEMBLOCK is obsolete.
+> 
+> Remove it.
+> 
+> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+> ---
+>  arch/parisc/Kconfig | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/arch/parisc/Kconfig b/arch/parisc/Kconfig
+> index 09407ed..13b95125 100644
+> --- a/arch/parisc/Kconfig
+> +++ b/arch/parisc/Kconfig
+> @@ -36,7 +36,6 @@ config PARISC
+>  	select GENERIC_STRNCPY_FROM_USER
+>  	select SYSCTL_ARCH_UNALIGN_ALLOW
+>  	select SYSCTL_EXCEPTION_TRACE
+> -	select ARCH_DISCARD_MEMBLOCK
+>  	select HAVE_MOD_ARCH_SPECIFIC
+>  	select VIRT_TO_BUS
+>  	select MODULES_USE_ELF_RELA
+> -- 
+> 2.7.4
+> 
+
+-- 
+Sincerely yours,
+Mike.
+
