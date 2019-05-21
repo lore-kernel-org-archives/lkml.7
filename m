@@ -2,102 +2,375 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBE5FC04E87
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:47:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4082AC04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:49:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBC9A216B7
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:47:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0568521743
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:49:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727837AbfEUKr1 (ORCPT
+        id S1727606AbfEUKtM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 06:47:27 -0400
-Received: from tyo162.gate.nec.co.jp ([114.179.232.162]:48341 "EHLO
-        tyo162.gate.nec.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726344AbfEUKr1 (ORCPT
+        Tue, 21 May 2019 06:49:12 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:51413 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726344AbfEUKtM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 06:47:27 -0400
-Received: from mailgate02.nec.co.jp ([114.179.233.122])
-        by tyo162.gate.nec.co.jp (8.15.1/8.15.1) with ESMTPS id x4LAkXik006037
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Tue, 21 May 2019 19:46:33 +0900
-Received: from mailsv01.nec.co.jp (mailgate-v.nec.co.jp [10.204.236.94])
-        by mailgate02.nec.co.jp (8.15.1/8.15.1) with ESMTP id x4LAkXo0029763;
-        Tue, 21 May 2019 19:46:33 +0900
-Received: from mail02.kamome.nec.co.jp (mail02.kamome.nec.co.jp [10.25.43.5])
-        by mailsv01.nec.co.jp (8.15.1/8.15.1) with ESMTP id x4LAiEhb002991;
-        Tue, 21 May 2019 19:46:33 +0900
-Received: from bpxc99gp.gisp.nec.co.jp ([10.38.151.138] [10.38.151.138]) by mail01b.kamome.nec.co.jp with ESMTP id BT-MMP-5240706; Tue, 21 May 2019 19:43:31 +0900
-Received: from BPXM12GP.gisp.nec.co.jp ([10.38.151.204]) by
- BPXC10GP.gisp.nec.co.jp ([10.38.151.138]) with mapi id 14.03.0319.002; Tue,
- 21 May 2019 19:43:31 +0900
-From:   Junichi Nomura <j-nomura@ce.jp.nec.com>
-To:     Kairui Song <kasong@redhat.com>, Borislav Petkov <bp@alien8.de>
-CC:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Baoquan He <bhe@redhat.com>,
-        "dyoung@redhat.com" <dyoung@redhat.com>,
-        "fanc.fnst@cn.fujitsu.com" <fanc.fnst@cn.fujitsu.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>
-Subject: Re: [PATCH v6 1/2] x86/kexec: Build identity mapping for EFI systab
- and ACPI tables
-Thread-Topic: [PATCH v6 1/2] x86/kexec: Build identity mapping for EFI
- systab and ACPI tables
-Thread-Index: AQHVD7QFUJEBPcePeESpYMnbGSS4VaZ0zb0A
-Date:   Tue, 21 May 2019 10:43:30 +0000
-Message-ID: <d9d9a627-d0e5-4ee6-7ce1-676db6cb60f4@ce.jp.nec.com>
-References: <20190424092944.30481-2-bhe@redhat.com>
- <20190429002318.GA25400@MiWiFi-R3L-srv> <20190429135536.GC2324@zn.tnic>
- <20190513014248.GA16774@MiWiFi-R3L-srv> <20190513070725.GA20105@zn.tnic>
- <20190513073254.GB16774@MiWiFi-R3L-srv> <20190513075006.GB20105@zn.tnic>
- <20190513080210.GC16774@MiWiFi-R3L-srv>
- <20190515051717.GA13703@jeru.linux.bs1.fc.nec.co.jp>
- <20190515065843.GA24212@zn.tnic>
- <20190515070942.GA17154@jeru.linux.bs1.fc.nec.co.jp>
- <CACPcB9cyiPc8JYmt1QhYNipSsJ5z3wTOJ90LS5LTx4YqwaG8rA@mail.gmail.com>
-In-Reply-To: <CACPcB9cyiPc8JYmt1QhYNipSsJ5z3wTOJ90LS5LTx4YqwaG8rA@mail.gmail.com>
-Accept-Language: en-US, ja-JP
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.34.125.85]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <C8CB98E7593A254FA2F953E6D7F99473@gisp.nec.co.jp>
-Content-Transfer-Encoding: base64
+        Tue, 21 May 2019 06:49:12 -0400
+X-Originating-IP: 92.137.69.152
+Received: from localhost (alyon-656-1-672-152.w92-137.abo.wanadoo.fr [92.137.69.152])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 30C70C0005;
+        Tue, 21 May 2019 10:49:06 +0000 (UTC)
+Date:   Tue, 21 May 2019 12:49:06 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Claudiu.Beznea@microchip.com
+Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, Nicolas.Ferre@microchip.com,
+        Ludovic.Desroches@microchip.com, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 2/4] clk: at91: sckc: add support to specify registers
+ bit offsets
+Message-ID: <20190521104906.GF3274@piout.net>
+References: <1558433454-27971-1-git-send-email-claudiu.beznea@microchip.com>
+ <1558433454-27971-3-git-send-email-claudiu.beznea@microchip.com>
 MIME-Version: 1.0
-X-TM-AS-MML: disable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1558433454-27971-3-git-send-email-claudiu.beznea@microchip.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMjAxOS8wNS8yMSAxODowMiwgS2FpcnVpIFNvbmcgd3JvdGU6DQo+IE9uIFdlZCwgTWF5IDE1
-LCAyMDE5IGF0IDM6MTAgUE0gSnVuaWNoaSBOb211cmEgPGotbm9tdXJhQGNlLmpwLm5lYy5jb20+
-IHdyb3RlOg0KPj4gT24gNS8xNS8xOSAzOjU4IFBNLCBCb3Jpc2xhdiBQZXRrb3Ygd3JvdGU6DQo+
-Pj4gT24gV2VkLCBNYXkgMTUsIDIwMTkgYXQgMDU6MTc6MTlBTSArMDAwMCwgSnVuaWNoaSBOb211
-cmEgd3JvdGU6DQo+Pj4+IEkgZm91bmQga2V4ZWMoMSkgZmFpbHMgdG8gbG9hZCBrZXJuZWwgb24g
-YSBmZXcgbWFjaGluZXMgaWYgdGhpcyBwYXRjaA0KPj4+PiBpcyBhcHBsaWVkLiAgVGhvc2UgbWFj
-aGluZXMgZG9uJ3QgaGF2ZSBJT1JFU19ERVNDX0FDUElfVEFCTEVTIHJlZ2lvbg0KPj4+PiBhbmQg
-aGF2ZSBBQ1BJIHRhYmxlcyBpbiBJT1JFU19ERVNDX0FDUElfTlZfU1RPUkFHRSByZWdpb24gaW5z
-dGVhZC4NCj4+Pg0KPj4+IFdoeT8gV2hhdCBraW5kIG9mIG1hY2hpbmVzIGFyZSB0aG9zZT8NCj4+
-DQo+PiBJIGRvbid0IGtub3cuICBUaGV5IGFyZSBqdXN0IGdlbmVyYWwgcHVycG9zZSBYZW9uLWJh
-c2VkIHNlcnZlcnMNCj4+IGFuZCBub3Qgc29tZSBzcGVjaWFsIHB1cnBvc2UgbWFjaGluZXMuICBT
-byBJIGd1ZXNzIHRoZXJlIGFyZSBvdGhlcg0KPj4gc3VjaCBtYWNoaW5lcyBpbiB0aGUgd2lsZC4N
-Cj4gDQo+IEhpLCBJIHRoaW5rIGl0J3MgcmVhc29uYWJsZSB0byB1cGRhdGUgdGhlIHBhdGNoIHRv
-IGluY2x1ZGUgdGhlDQo+IE5WX1NUT1JBR0UgcmVnaW9ucyBhcyB3ZWxsLCBtb3N0IGxpa2VseSB0
-aGUgZmlybXdhcmUgb25seSBwcm92aWRlZA0KPiBOVl9TVE9SQUdFIHJlZ2lvbj8gQ2FuIHlvdSBo
-ZWxwIGNvbmZpcm0gaWYgdGhlIGU4MjAgZGlkbid0IGNvbnRhaW4NCj4gQUNQSSBkYXRhLCBhbmQg
-b25seSBBQ1BJIE5WUz8NCg0KWWVzLCB0aG9zZSBtYWNoaW5lcyBvbmx5IGhhdmUgQUNQSSBOVlMg
-cmVnaW9uIGFzIGZhciBhcyBJIHNlZSBmcm9tIGtlcm5lbCBsb2cuDQoNCj4gSSBoYWQgYSB0cnkg
-d2l0aCB0aGlzIHVwZGF0ZSBwYXRjaCwgaXQgd29ya2VkIGFuZCBkaWRuJ3QgYnJlYWsgYW55dGhp
-bmcuDQo+IA0KPiBIaSBCb3Jpcywgd291bGQgeW91IHByZWZlciB0byBqdXN0IGZvbGQgSnVuaWNo
-aSB1cGRhdGUgcGF0Y2ggaW50byB0aGUNCj4gcHJldmlvdXMgb25lIG9yIEkgc2hvdWxkIHNlbmQg
-YW4gdXBkYXRlZCBwYXRjaD8NCg0KLS0gDQpKdW4naWNoaSBOb211cmEsIE5FQyBDb3Jwb3JhdGlv
-biAvIE5FQyBTb2x1dGlvbiBJbm5vdmF0b3JzLCBMdGQu
+On 21/05/2019 10:11:26+0000, Claudiu.Beznea@microchip.com wrote:
+> From: Claudiu Beznea <claudiu.beznea@microchip.com>
+> 
+> Different IPs uses different bit offsets in registers for the same
+> functionality, thus adapt the driver to support this.
+> 
+> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
+> ---
+>  drivers/clk/at91/sckc.c | 93 ++++++++++++++++++++++++++++++++-----------------
+>  1 file changed, 61 insertions(+), 32 deletions(-)
+> 
+> diff --git a/drivers/clk/at91/sckc.c b/drivers/clk/at91/sckc.c
+> index 6c55a7a86f79..ab18b1da269f 100644
+> --- a/drivers/clk/at91/sckc.c
+> +++ b/drivers/clk/at91/sckc.c
+> @@ -23,14 +23,18 @@
+>  				 SLOW_CLOCK_FREQ)
+>  
+>  #define	AT91_SCKC_CR			0x00
+> -#define		AT91_SCKC_RCEN		(1 << 0)
+> -#define		AT91_SCKC_OSC32EN	(1 << 1)
+> -#define		AT91_SCKC_OSC32BYP	(1 << 2)
+> -#define		AT91_SCKC_OSCSEL	(1 << 3)
+> +
+> +struct clk_slow_bits {
+> +	u32 cr_rcen;
+> +	u32 cr_osc32en;
+> +	u32 cr_osc32byp;
+> +	u32 cr_oscsel;
+> +};
+>  
+>  struct clk_slow_osc {
+>  	struct clk_hw hw;
+>  	void __iomem *sckcr;
+> +	const struct clk_slow_bits *bits;
+>  	unsigned long startup_usec;
+>  };
+>  
+> @@ -39,6 +43,7 @@ struct clk_slow_osc {
+>  struct clk_sama5d4_slow_osc {
+>  	struct clk_hw hw;
+>  	void __iomem *sckcr;
+> +	const struct clk_slow_bits *bits;
+>  	unsigned long startup_usec;
+>  	bool prepared;
+>  };
+> @@ -48,6 +53,7 @@ struct clk_sama5d4_slow_osc {
+>  struct clk_slow_rc_osc {
+>  	struct clk_hw hw;
+>  	void __iomem *sckcr;
+> +	const struct clk_slow_bits *bits;
+>  	unsigned long frequency;
+>  	unsigned long accuracy;
+>  	unsigned long startup_usec;
+> @@ -58,6 +64,7 @@ struct clk_slow_rc_osc {
+>  struct clk_sam9x5_slow {
+>  	struct clk_hw hw;
+>  	void __iomem *sckcr;
+> +	const struct clk_slow_bits *bits;
+>  	u8 parent;
+>  };
+>  
+> @@ -69,10 +76,10 @@ static int clk_slow_osc_prepare(struct clk_hw *hw)
+>  	void __iomem *sckcr = osc->sckcr;
+>  	u32 tmp = readl(sckcr);
+>  
+> -	if (tmp & (AT91_SCKC_OSC32BYP | AT91_SCKC_OSC32EN))
+> +	if (tmp & (osc->bits->cr_osc32byp | osc->bits->cr_osc32en))
+>  		return 0;
+>  
+> -	writel(tmp | AT91_SCKC_OSC32EN, sckcr);
+> +	writel(tmp | osc->bits->cr_osc32en, sckcr);
+>  
+>  	usleep_range(osc->startup_usec, osc->startup_usec + 1);
+>  
+> @@ -85,10 +92,10 @@ static void clk_slow_osc_unprepare(struct clk_hw *hw)
+>  	void __iomem *sckcr = osc->sckcr;
+>  	u32 tmp = readl(sckcr);
+>  
+> -	if (tmp & AT91_SCKC_OSC32BYP)
+> +	if (tmp & osc->bits->cr_osc32byp)
+>  		return;
+>  
+> -	writel(tmp & ~AT91_SCKC_OSC32EN, sckcr);
+> +	writel(tmp & ~osc->bits->cr_osc32en, sckcr);
+>  }
+>  
+>  static int clk_slow_osc_is_prepared(struct clk_hw *hw)
+> @@ -97,10 +104,10 @@ static int clk_slow_osc_is_prepared(struct clk_hw *hw)
+>  	void __iomem *sckcr = osc->sckcr;
+>  	u32 tmp = readl(sckcr);
+>  
+> -	if (tmp & AT91_SCKC_OSC32BYP)
+> +	if (tmp & osc->bits->cr_osc32byp)
+>  		return 1;
+>  
+> -	return !!(tmp & AT91_SCKC_OSC32EN);
+> +	return !!(tmp & osc->bits->cr_osc32en);
+>  }
+>  
+>  static const struct clk_ops slow_osc_ops = {
+> @@ -114,7 +121,8 @@ at91_clk_register_slow_osc(void __iomem *sckcr,
+>  			   const char *name,
+>  			   const char *parent_name,
+>  			   unsigned long startup,
+> -			   bool bypass)
+> +			   bool bypass,
+> +			   const struct clk_slow_bits *bits)
+>  {
+>  	struct clk_slow_osc *osc;
+>  	struct clk_hw *hw;
+> @@ -137,10 +145,11 @@ at91_clk_register_slow_osc(void __iomem *sckcr,
+>  	osc->hw.init = &init;
+>  	osc->sckcr = sckcr;
+>  	osc->startup_usec = startup;
+> +	osc->bits = bits;
+>  
+>  	if (bypass)
+> -		writel((readl(sckcr) & ~AT91_SCKC_OSC32EN) | AT91_SCKC_OSC32BYP,
+> -		       sckcr);
+> +		writel((readl(sckcr) & ~osc->bits->cr_osc32en) |
+> +					osc->bits->cr_osc32byp, sckcr);
+>  
+>  	hw = &osc->hw;
+>  	ret = clk_hw_register(NULL, &osc->hw);
+> @@ -173,7 +182,7 @@ static int clk_slow_rc_osc_prepare(struct clk_hw *hw)
+>  	struct clk_slow_rc_osc *osc = to_clk_slow_rc_osc(hw);
+>  	void __iomem *sckcr = osc->sckcr;
+>  
+> -	writel(readl(sckcr) | AT91_SCKC_RCEN, sckcr);
+> +	writel(readl(sckcr) | osc->bits->cr_rcen, sckcr);
+>  
+>  	usleep_range(osc->startup_usec, osc->startup_usec + 1);
+>  
+> @@ -185,14 +194,14 @@ static void clk_slow_rc_osc_unprepare(struct clk_hw *hw)
+>  	struct clk_slow_rc_osc *osc = to_clk_slow_rc_osc(hw);
+>  	void __iomem *sckcr = osc->sckcr;
+>  
+> -	writel(readl(sckcr) & ~AT91_SCKC_RCEN, sckcr);
+> +	writel(readl(sckcr) & ~osc->bits->cr_rcen, sckcr);
+>  }
+>  
+>  static int clk_slow_rc_osc_is_prepared(struct clk_hw *hw)
+>  {
+>  	struct clk_slow_rc_osc *osc = to_clk_slow_rc_osc(hw);
+>  
+> -	return !!(readl(osc->sckcr) & AT91_SCKC_RCEN);
+> +	return !!(readl(osc->sckcr) & osc->bits->cr_rcen);
+>  }
+>  
+>  static const struct clk_ops slow_rc_osc_ops = {
+> @@ -208,7 +217,8 @@ at91_clk_register_slow_rc_osc(void __iomem *sckcr,
+>  			      const char *name,
+>  			      unsigned long frequency,
+>  			      unsigned long accuracy,
+> -			      unsigned long startup)
+> +			      unsigned long startup,
+> +			      const struct clk_slow_bits *bits)
+>  {
+>  	struct clk_slow_rc_osc *osc;
+>  	struct clk_hw *hw;
+> @@ -230,6 +240,7 @@ at91_clk_register_slow_rc_osc(void __iomem *sckcr,
+>  
+>  	osc->hw.init = &init;
+>  	osc->sckcr = sckcr;
+> +	osc->bits = bits;
+>  	osc->frequency = frequency;
+>  	osc->accuracy = accuracy;
+>  	osc->startup_usec = startup;
+> @@ -255,14 +266,14 @@ static int clk_sam9x5_slow_set_parent(struct clk_hw *hw, u8 index)
+>  
+>  	tmp = readl(sckcr);
+>  
+> -	if ((!index && !(tmp & AT91_SCKC_OSCSEL)) ||
+> -	    (index && (tmp & AT91_SCKC_OSCSEL)))
+> +	if ((!index && !(tmp & slowck->bits->cr_oscsel)) ||
+> +	    (index && (tmp & slowck->bits->cr_oscsel)))
+>  		return 0;
+>  
+>  	if (index)
+> -		tmp |= AT91_SCKC_OSCSEL;
+> +		tmp |= slowck->bits->cr_oscsel;
+>  	else
+> -		tmp &= ~AT91_SCKC_OSCSEL;
+> +		tmp &= ~slowck->bits->cr_oscsel;
+>  
+>  	writel(tmp, sckcr);
+>  
+> @@ -275,7 +286,7 @@ static u8 clk_sam9x5_slow_get_parent(struct clk_hw *hw)
+>  {
+>  	struct clk_sam9x5_slow *slowck = to_clk_sam9x5_slow(hw);
+>  
+> -	return !!(readl(slowck->sckcr) & AT91_SCKC_OSCSEL);
+> +	return !!(readl(slowck->sckcr) & slowck->bits->cr_oscsel);
+>  }
+>  
+>  static const struct clk_ops sam9x5_slow_ops = {
+> @@ -287,7 +298,8 @@ static struct clk_hw * __init
+>  at91_clk_register_sam9x5_slow(void __iomem *sckcr,
+>  			      const char *name,
+>  			      const char **parent_names,
+> -			      int num_parents)
+> +			      int num_parents,
+> +			      const struct clk_slow_bits *bits)
+>  {
+>  	struct clk_sam9x5_slow *slowck;
+>  	struct clk_hw *hw;
+> @@ -309,7 +321,8 @@ at91_clk_register_sam9x5_slow(void __iomem *sckcr,
+>  
+>  	slowck->hw.init = &init;
+>  	slowck->sckcr = sckcr;
+> -	slowck->parent = !!(readl(sckcr) & AT91_SCKC_OSCSEL);
+> +	slowck->bits = bits;
+> +	slowck->parent = !!(readl(sckcr) & slowck->bits->cr_oscsel);
+>  
+>  	hw = &slowck->hw;
+>  	ret = clk_hw_register(NULL, &slowck->hw);
+> @@ -322,7 +335,8 @@ at91_clk_register_sam9x5_slow(void __iomem *sckcr,
+>  }
+>  
+>  static void __init at91sam9x5_sckc_register(struct device_node *np,
+> -					    unsigned int rc_osc_startup_us)
+> +					    unsigned int rc_osc_startup_us,
+> +					    const struct clk_slow_bits *bits)
+>  {
+>  	const char *parent_names[2] = { "slow_rc_osc", "slow_osc" };
+>  	void __iomem *regbase = of_iomap(np, 0);
+> @@ -335,7 +349,8 @@ static void __init at91sam9x5_sckc_register(struct device_node *np,
+>  		return;
+>  
+>  	hw = at91_clk_register_slow_rc_osc(regbase, parent_names[0], 32768,
+> -					   50000000, rc_osc_startup_us);
+> +					   50000000, rc_osc_startup_us,
+> +					   bits);
+>  	if (IS_ERR(hw))
+>  		return;
+>  
+> @@ -358,11 +373,12 @@ static void __init at91sam9x5_sckc_register(struct device_node *np,
+>  		return;
+>  
+>  	hw = at91_clk_register_slow_osc(regbase, parent_names[1], xtal_name,
+> -					1200000, bypass);
+> +					1200000, bypass, bits);
+>  	if (IS_ERR(hw))
+>  		return;
+>  
+> -	hw = at91_clk_register_sam9x5_slow(regbase, "slowck", parent_names, 2);
+> +	hw = at91_clk_register_sam9x5_slow(regbase, "slowck", parent_names, 2,
+> +					   bits);
+>  	if (IS_ERR(hw))
+>  		return;
+>  
+> @@ -373,16 +389,23 @@ static void __init at91sam9x5_sckc_register(struct device_node *np,
+>  		of_clk_add_hw_provider(child, of_clk_hw_simple_get, hw);
+>  }
+>  
+> +static const struct clk_slow_bits at91sam9x5_bits = {
+> +	.cr_rcen = BIT(0),
+> +	.cr_osc32en = BIT(1),
+> +	.cr_osc32byp = BIT(2),
+> +	.cr_oscsel = BIT(3),
+> +};
+> +
+>  static void __init of_at91sam9x5_sckc_setup(struct device_node *np)
+>  {
+> -	at91sam9x5_sckc_register(np, 75);
+> +	at91sam9x5_sckc_register(np, 75, &at91sam9x5_bits);
+>  }
+>  CLK_OF_DECLARE(at91sam9x5_clk_sckc, "atmel,at91sam9x5-sckc",
+>  	       of_at91sam9x5_sckc_setup);
+>  
+>  static void __init of_sama5d3_sckc_setup(struct device_node *np)
+>  {
+> -	at91sam9x5_sckc_register(np, 500);
+> +	at91sam9x5_sckc_register(np, 500, &at91sam9x5_bits);
+>  }
+>  CLK_OF_DECLARE(sama5d3_clk_sckc, "atmel,sama5d3-sckc",
+>  	       of_sama5d3_sckc_setup);
+> @@ -398,7 +421,7 @@ static int clk_sama5d4_slow_osc_prepare(struct clk_hw *hw)
+>  	 * Assume that if it has already been selected (for example by the
+>  	 * bootloader), enough time has aready passed.
+>  	 */
+> -	if ((readl(osc->sckcr) & AT91_SCKC_OSCSEL)) {
+> +	if ((readl(osc->sckcr) & osc->bits->cr_oscsel)) {
+>  		osc->prepared = true;
+>  		return 0;
+>  	}
+> @@ -421,6 +444,10 @@ static const struct clk_ops sama5d4_slow_osc_ops = {
+>  	.is_prepared = clk_sama5d4_slow_osc_is_prepared,
+>  };
+>  
+> +static const struct clk_slow_bits at91sama5d4_bits = {
+> +	.cr_oscsel = BIT(3),
+> +};
+> +
+>  static void __init of_sama5d4_sckc_setup(struct device_node *np)
+>  {
+>  	void __iomem *regbase = of_iomap(np, 0);
+> @@ -455,6 +482,7 @@ static void __init of_sama5d4_sckc_setup(struct device_node *np)
+>  	osc->hw.init = &init;
+>  	osc->sckcr = regbase;
+>  	osc->startup_usec = 1200000;
+> +	osc->bits = &at91sama5d4_bits;
+>  
+>  	hw = &osc->hw;
+>  	ret = clk_hw_register(NULL, &osc->hw);
+> @@ -463,7 +491,8 @@ static void __init of_sama5d4_sckc_setup(struct device_node *np)
+>  		return;
+>  	}
+>  
+> -	hw = at91_clk_register_sam9x5_slow(regbase, "slowck", parent_names, 2);
+> +	hw = at91_clk_register_sam9x5_slow(regbase, "slowck", parent_names, 2,
+> +					   &at91sama5d4_bits);
+>  	if (IS_ERR(hw))
+>  		return;
+>  
+> -- 
+> 2.7.4
+> 
+
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
