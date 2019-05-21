@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AE07C04E87
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:11:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63023C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:11:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50F0C217D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:11:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 390ED21743
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:11:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YrCzRXON"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mBYZazpR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728973AbfEUQLP (ORCPT
+        id S1729072AbfEUQL2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 12:11:15 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:53058 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728858AbfEUQLL (ORCPT
+        Tue, 21 May 2019 12:11:28 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:33853 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728957AbfEUQLP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 12:11:11 -0400
-Received: by mail-wm1-f67.google.com with SMTP id y3so3582377wmm.2;
-        Tue, 21 May 2019 09:11:10 -0700 (PDT)
+        Tue, 21 May 2019 12:11:15 -0400
+Received: by mail-wr1-f67.google.com with SMTP id f8so12904122wrt.1;
+        Tue, 21 May 2019 09:11:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=pcynCO3Bhnyyyh0AzkuL7DAz7yiCtTiW/mLXsFC4qdg=;
-        b=YrCzRXON/0Vpkv9VFfnH6p1V3nggv/XRBoBPsx+/vqNSV/s+pu9R6XK+Hki1MeKXVW
-         iOGxBpY077JEobnVKhTOfi+3VNke0nn8+CBJ+6RMQgVF13yL9mF58lbebM+srWUv5Ueg
-         wtq1dzjsCXbsJC34G8ddp6z6u4O0ALYJbv0DY8YbsesAgEjukZJX+OV7OOF8M8/wXK9g
-         +18b+uxQzEKtktq6PDkGvCDZQAyNx3bhgElXQN/NYDo821mt7JsqhHJ2tH1JJGKwc6V4
-         ZnBBhOp7m8/U1xHIe+bNL1LXtKSr2t+xK+KGDrUju6zr127Tm3Ui+E56cxeDNrKttAPL
-         2Xew==
+        bh=uWjp5N7/2gycMhkjj4F7Je3PI1NUTqU00O1ySy3vSNY=;
+        b=mBYZazpRj6EVU7E58MdMi7y+AJ+HedRo3jJJlcg9GWps2CdOi9yPkeRg9EXQZMZ4w0
+         lHyOVHvQG/bLCCwVRejE/7v04UpUP4UNkRSoaITOErYNy7bzb4VrnNwAyPY400UzjMIm
+         izWERToMX4dzCYvZS7q6lhOmCb5swJ9Npb9pmBtTO4UqvMD73p7YaSOqPmcIuIIRS127
+         HaB7/2461amKirTxJ9/9fSDjuy4xeFxCfkA/tMLFaytIcbIjoUhUlLL2E1booh329WNV
+         yagjPAkc1KFlf0HzEennc6ozheuvQABWQgPSgZG/NsrQrg32jV46+A96j/6cedbM2qp4
+         4SgA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=pcynCO3Bhnyyyh0AzkuL7DAz7yiCtTiW/mLXsFC4qdg=;
-        b=Vyp9aNZSqM2713pWP5CmyenFxQYoN4lsNuRTz9P8QlVqv5vxE9HZASya40TJZcaTDS
-         BCSU0wR8i8m7TEWRISihlidT8/uaG8p0BIymIyJYRK1p3gcKCqtPFNkcaw2TfOgqyDzg
-         C+rvOXHxWtUQCxhG2D4MRZ6jLjYP7fvQmh9y/qxbOHzANpGrvBeIHUwQbw74S7jPeMHY
-         Jtezi0MAOuZh594EZJjFcVyS7VsdLO7NnYTJQqAz5ObW8WQRnDgoujKks7FQZO0I9zmr
-         8K0uOyq/3UFw6nw1Je+qsLJusjNAFnslm43Cd9tQAX4mRCp8XCN5/eawvuGC0BLLf+FV
-         83TA==
-X-Gm-Message-State: APjAAAXez1EpXGeVvycfXk1cdQf2PoNrYQgvYkz5NBclB3kepxG62lDu
-        4sHHn5DxE7MtFnll4NAfUeo=
-X-Google-Smtp-Source: APXvYqynBK31B9gGuYlYbOmFDLrVXZyQ7MV/LPrhgtP4OE0MWCnSyrxl5VmWGWjgIOMTzPaP4WdGOw==
-X-Received: by 2002:a7b:c76b:: with SMTP id x11mr4416026wmk.22.1558455069253;
-        Tue, 21 May 2019 09:11:09 -0700 (PDT)
+        bh=uWjp5N7/2gycMhkjj4F7Je3PI1NUTqU00O1ySy3vSNY=;
+        b=kVQD8sG60ygwUMGzYC9+TvFHUczwopO6B4Uglbybaysudq/BCTsY50oICY6EhnK86u
+         bBu69+0tkPWsoXNLe2Yx2F/gbh3vw9KD9nIgHY2/gnL7SGqiLXmV63I5f0Ole/Eq1e5d
+         kTHGIZn3AOKyRMsgd5luT7JTI2BwC0KPY7SdCzVbTobHzgLhHv8Nh7pXNwHI6CSnhx4d
+         JM273O7BW5MJXVT3lDE9HTboeT0Zm92fSzpZYoyxa4moxBfwMS7hCjI88ZIaXz4c/ls6
+         vTuqwkBJFsW1ToXZc5DXUldfhBrOUqCTdbi1hD7BzlMvoIkcb7Oq2Ct7USwb+dfo2UzX
+         xPvA==
+X-Gm-Message-State: APjAAAU5oFBymdzLw3dbQeUr4g6WROX2q38mcFA9L/gEt8xCDCk9hztf
+        1ReU2b8d8L2mzAEuHn+ZPBU=
+X-Google-Smtp-Source: APXvYqzyKZ0rTYgJlTdwuX2CPB9g3HFvHZgguGxqods3XjUbGjAvqDQc2M25Gwzjc4EFEDphnvB5Pw==
+X-Received: by 2002:adf:dfd0:: with SMTP id q16mr18856873wrn.235.1558455073159;
+        Tue, 21 May 2019 09:11:13 -0700 (PDT)
 Received: from localhost.localdomain (18.189-60-37.rdns.acropolistelecom.net. [37.60.189.18])
-        by smtp.gmail.com with ESMTPSA id n63sm3891094wmn.38.2019.05.21.09.11.08
+        by smtp.gmail.com with ESMTPSA id n63sm3891094wmn.38.2019.05.21.09.11.11
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 21 May 2019 09:11:08 -0700 (PDT)
+        Tue, 21 May 2019 09:11:12 -0700 (PDT)
 From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
 To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         Rob Herring <robh+dt@kernel.org>,
@@ -73,9 +73,9 @@ Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         iommu@lists.linux-foundation.org,
         =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v6 1/6] drm: panfrost: add optional bus_clock
-Date:   Tue, 21 May 2019 18:10:57 +0200
-Message-Id: <20190521161102.29620-2-peron.clem@gmail.com>
+Subject: [PATCH v6 4/6] dt-bindings: gpu: mali-midgard: Add H6 mali gpu compatible
+Date:   Tue, 21 May 2019 18:11:00 +0200
+Message-Id: <20190521161102.29620-5-peron.clem@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190521161102.29620-1-peron.clem@gmail.com>
 References: <20190521161102.29620-1-peron.clem@gmail.com>
@@ -87,66 +87,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allwinner H6 has an ARM Mali-T720 MP2 which required a bus_clock.
-
-Add an optional bus_clock at the init of the panfrost driver.
+This add the H6 mali compatible in the dt-bindings to later support
+specific implementation.
 
 Signed-off-by: Clément Péron <peron.clem@gmail.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- drivers/gpu/drm/panfrost/panfrost_device.c | 22 ++++++++++++++++++++++
- drivers/gpu/drm/panfrost/panfrost_device.h |  1 +
- 2 files changed, 23 insertions(+)
+ .../devicetree/bindings/gpu/arm,mali-midgard.txt         | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/panfrost/panfrost_device.c b/drivers/gpu/drm/panfrost/panfrost_device.c
-index 3b2bced1b015..ccb8eb2a518c 100644
---- a/drivers/gpu/drm/panfrost/panfrost_device.c
-+++ b/drivers/gpu/drm/panfrost/panfrost_device.c
-@@ -55,11 +55,33 @@ static int panfrost_clk_init(struct panfrost_device *pfdev)
- 	if (err)
- 		return err;
+diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
+index 2e8bbce35695..4bf17e1cf555 100644
+--- a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
++++ b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
+@@ -15,6 +15,7 @@ Required properties:
+     + "arm,mali-t860"
+     + "arm,mali-t880"
+   * which must be preceded by one of the following vendor specifics:
++    + "allwinner,sun50i-h6-mali"
+     + "amlogic,meson-gxm-mali"
+     + "rockchip,rk3288-mali"
+     + "rockchip,rk3399-mali"
+@@ -49,9 +50,15 @@ Vendor-specific bindings
+ ------------------------
  
-+	pfdev->bus_clock = devm_clk_get_optional(pfdev->dev, "bus");
-+	if (IS_ERR(pfdev->bus_clock)) {
-+		dev_err(pfdev->dev, "get bus_clock failed %ld\n",
-+			PTR_ERR(pfdev->bus_clock));
-+		return PTR_ERR(pfdev->bus_clock);
-+	}
-+
-+	if (pfdev->bus_clock) {
-+		rate = clk_get_rate(pfdev->bus_clock);
-+		dev_info(pfdev->dev, "bus_clock rate = %lu\n", rate);
-+
-+		err = clk_prepare_enable(pfdev->bus_clock);
-+		if (err)
-+			goto disable_clock;
-+	}
-+
- 	return 0;
-+
-+disable_clock:
-+	clk_disable_unprepare(pfdev->clock);
-+
-+	return err;
- }
+ The Mali GPU is integrated very differently from one SoC to
+-another. In order to accomodate those differences, you have the option
++another. In order to accommodate those differences, you have the option
+ to specify one more vendor-specific compatible, among:
  
- static void panfrost_clk_fini(struct panfrost_device *pfdev)
- {
-+	clk_disable_unprepare(pfdev->bus_clock);
- 	clk_disable_unprepare(pfdev->clock);
- }
- 
-diff --git a/drivers/gpu/drm/panfrost/panfrost_device.h b/drivers/gpu/drm/panfrost/panfrost_device.h
-index 56f452dfb490..8074f221034b 100644
---- a/drivers/gpu/drm/panfrost/panfrost_device.h
-+++ b/drivers/gpu/drm/panfrost/panfrost_device.h
-@@ -66,6 +66,7 @@ struct panfrost_device {
- 
- 	void __iomem *iomem;
- 	struct clk *clock;
-+	struct clk *bus_clock;
- 	struct regulator *regulator;
- 	struct reset_control *rstc;
- 
++- "allwinner,sun50i-h6-mali"
++  Required properties:
++  - clocks : phandles to core and bus clocks
++  - clock-names : must contain "core" and "bus"
++  - resets: phandle to GPU reset line
++
+ - "amlogic,meson-gxm-mali"
+   Required properties:
+   - resets : Should contain phandles of :
 -- 
 2.17.1
 
