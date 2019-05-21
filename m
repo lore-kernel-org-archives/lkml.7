@@ -2,277 +2,90 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04446C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 11:40:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EF6DC04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 11:40:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C371F21773
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 11:40:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="Kg5eAwKu"
+	by mail.kernel.org (Postfix) with ESMTP id 18DA5217D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 11:40:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728112AbfEULkw (ORCPT
+        id S1728123AbfEULkz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 07:40:52 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:33688 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728062AbfEULkt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 07:40:49 -0400
-Received: by mail-pl1-f194.google.com with SMTP id g21so263663plq.0
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 04:40:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Md/SEV623PH8+Ut8zUc7zYx2Wn6pyFc2gwGLva1wC8M=;
-        b=Kg5eAwKuepKyHoZb0HIBpHsOjkWQvVsLqc8VN/0VGDOq5PzBKsxI6IQr7kDH3bEbgs
-         zZWW728d/N9Bayktnz43WT4cIbAqKqGG4stcXL4mZNI8ES5QddufVPmSAuxeP8h85EI0
-         P4Jsl7YCYQfB4KNxPtE1r1FJJ943rbcT0S0la0XuVbmH5sbe4qTS2zoyharGmQ1S6cNn
-         XqxluNBYBUVpO8xiVXLWd2HQmKkM+rxu86S2nPC7PchCjCY7Mlz2A9e2+qbpajUYcvB9
-         aOSugtRc7aWe9b52gavavVVbFhMs5KONMsqn/1YCylCHuC3IrXbWbyqvpjpzp1Aywh8X
-         IFOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Md/SEV623PH8+Ut8zUc7zYx2Wn6pyFc2gwGLva1wC8M=;
-        b=BflWHNncUVoKusvIrP5hAkbJzfnB0nZ7QDXachBzY8eps9mIuIlBc/zQsW/IqV4AVo
-         eXyXVM7EIdrlXb/GoB7YlbPCSsd27uTx+2wkme3VkUP8+i5QEKuvhCclicvMbHOeSdWn
-         h2/gXQbWBzAkGVyLFUAL9pIIEBMosz0QVyKR2MRKnV9jLJGbK/6POCEjyFqaY5zWRwwv
-         YHsOauMr0dW38nTZHPCqatObwyDm7KU1MWHEnX51i2FRs/2zwRbCbvtjkiNxhDrNLTpW
-         zg+3AAWBLPI1hAmsiKHxfTc8FuJTRPg4xgUm5EePWa0vc5DpucLaHUqJmVFGQtFGER8W
-         uIzg==
-X-Gm-Message-State: APjAAAWx606R5dXa4xmcZ0MRrNGwd7cyUR9rd4nzj1+mfAoIlugy8UzV
-        BPOnCGNettv2PKN3hsJ3qe7j0Q==
-X-Google-Smtp-Source: APXvYqzbXBIlQ2z2g72ZEC89uyp74lq3y/Ysp7sahtfrvXFl1YlEL04tAQWbw1P6O9siRCL+PpC15g==
-X-Received: by 2002:a17:902:184:: with SMTP id b4mr55569251plb.2.1558438848409;
-        Tue, 21 May 2019 04:40:48 -0700 (PDT)
-Received: from localhost.localdomain ([208.54.39.182])
-        by smtp.gmail.com with ESMTPSA id s9sm34103515pfa.31.2019.05.21.04.40.37
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 21 May 2019 04:40:47 -0700 (PDT)
-From:   Christian Brauner <christian@brauner.io>
-To:     viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org
-Cc:     jannh@google.com, fweimer@redhat.com, oleg@redhat.com,
-        tglx@linutronix.de, torvalds@linux-foundation.org, arnd@arndb.de,
-        shuah@kernel.org, dhowells@redhat.com, tkjos@android.com,
-        ldv@altlinux.org, miklos@szeredi.hu, linux-alpha@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        x86@kernel.org, Christian Brauner <christian@brauner.io>
-Subject: [PATCH 2/2] tests: add close_range() tests
-Date:   Tue, 21 May 2019 13:34:48 +0200
-Message-Id: <20190521113448.20654-2-christian@brauner.io>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190521113448.20654-1-christian@brauner.io>
-References: <20190521113448.20654-1-christian@brauner.io>
+        Tue, 21 May 2019 07:40:55 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37514 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728093AbfEULkv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 07:40:51 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 85836AE82;
+        Tue, 21 May 2019 11:40:49 +0000 (UTC)
+Message-ID: <c259e5166d9f6c2e1db3bcbec6dc943e578ebef2.camel@suse.de>
+Subject: Re: [RFC v2 4/5] dts: bcm2837: add per-cpu clock devices
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Stefan Wahren <stefan.wahren@i2se.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com
+Cc:     mbrugger@suse.de, viresh.kumar@linaro.org, rjw@rjwysocki.net,
+        sboyd@kernel.org, eric@anholt.net, ptesarik@suse.com,
+        linux-rpi-kernel@lists.infradead.org, ssuloev@orpaltech.com,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        mturquette@baylibre.com, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Tue, 21 May 2019 13:40:47 +0200
+In-Reply-To: <af50c1e9-5f52-e06b-8d0b-c9f72fba1324@i2se.com>
+References: <20190520104708.11980-1-nsaenzjulienne@suse.de>
+         <20190520104708.11980-5-nsaenzjulienne@suse.de>
+         <af50c1e9-5f52-e06b-8d0b-c9f72fba1324@i2se.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-XdardQecTGOsrtJ31nRH"
+User-Agent: Evolution 3.32.2 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds basic tests for the new close_range() syscall.
-- test that no invalid flags can be passed
-- test that a range of file descriptors is correctly closed
-- test that a range of file descriptors is correctly closed if there there
-  are already closed file descriptors in the range
-- test that max_fd is correctly capped to the current fdtable maximum
 
-Signed-off-by: Christian Brauner <christian@brauner.io>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Jann Horn <jannh@google.com>
-Cc: David Howells <dhowells@redhat.com>
-Cc: Dmitry V. Levin <ldv@altlinux.org>
-Cc: Oleg Nesterov <oleg@redhat.com>
-Cc: Florian Weimer <fweimer@redhat.com>
-Cc: linux-api@vger.kernel.org
----
- tools/testing/selftests/Makefile              |   1 +
- tools/testing/selftests/core/.gitignore       |   1 +
- tools/testing/selftests/core/Makefile         |   6 +
- .../testing/selftests/core/close_range_test.c | 128 ++++++++++++++++++
- 4 files changed, 136 insertions(+)
- create mode 100644 tools/testing/selftests/core/.gitignore
- create mode 100644 tools/testing/selftests/core/Makefile
- create mode 100644 tools/testing/selftests/core/close_range_test.c
+--=-XdardQecTGOsrtJ31nRH
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Makefile
-index 9781ca79794a..06e57fabbff9 100644
---- a/tools/testing/selftests/Makefile
-+++ b/tools/testing/selftests/Makefile
-@@ -4,6 +4,7 @@ TARGETS += bpf
- TARGETS += breakpoints
- TARGETS += capabilities
- TARGETS += cgroup
-+TARGETS += core
- TARGETS += cpufreq
- TARGETS += cpu-hotplug
- TARGETS += drivers/dma-buf
-diff --git a/tools/testing/selftests/core/.gitignore b/tools/testing/selftests/core/.gitignore
-new file mode 100644
-index 000000000000..6e6712ce5817
---- /dev/null
-+++ b/tools/testing/selftests/core/.gitignore
-@@ -0,0 +1 @@
-+close_range_test
-diff --git a/tools/testing/selftests/core/Makefile b/tools/testing/selftests/core/Makefile
-new file mode 100644
-index 000000000000..de3ae68aa345
---- /dev/null
-+++ b/tools/testing/selftests/core/Makefile
-@@ -0,0 +1,6 @@
-+CFLAGS += -g -I../../../../usr/include/ -I../../../../include
-+
-+TEST_GEN_PROGS := close_range_test
-+
-+include ../lib.mk
-+
-diff --git a/tools/testing/selftests/core/close_range_test.c b/tools/testing/selftests/core/close_range_test.c
-new file mode 100644
-index 000000000000..ab10cd205ab9
---- /dev/null
-+++ b/tools/testing/selftests/core/close_range_test.c
-@@ -0,0 +1,128 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#define _GNU_SOURCE
-+#include <errno.h>
-+#include <fcntl.h>
-+#include <linux/kernel.h>
-+#include <limits.h>
-+#include <stdbool.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <syscall.h>
-+#include <unistd.h>
-+
-+#include "../kselftest.h"
-+
-+static inline int sys_close_range(unsigned int fd, unsigned int max_fd,
-+				  unsigned int flags)
-+{
-+	return syscall(__NR_close_range, fd, max_fd, flags);
-+}
-+
-+#ifndef ARRAY_SIZE
-+#define ARRAY_SIZE(x) (sizeof(x) / sizeof((x)[0]))
-+#endif
-+
-+int main(int argc, char **argv)
-+{
-+	const char *test_name = "close_range";
-+	int i, ret;
-+	int open_fds[100];
-+	int fd_max, fd_mid, fd_min;
-+
-+	ksft_set_plan(7);
-+
-+	for (i = 0; i < ARRAY_SIZE(open_fds); i++) {
-+		int fd;
-+
-+		fd = open("/dev/null", O_RDONLY | O_CLOEXEC);
-+		if (fd < 0) {
-+			if (errno == ENOENT)
-+				ksft_exit_skip(
-+					"%s test: skipping test since /dev/null does not exist\n",
-+					test_name);
-+
-+			ksft_exit_fail_msg(
-+				"%s test: %s - failed to open /dev/null\n",
-+				strerror(errno), test_name);
-+		}
-+
-+		open_fds[i] = fd;
-+	}
-+
-+	fd_min = open_fds[0];
-+	fd_max = open_fds[99];
-+
-+	ret = sys_close_range(fd_min, fd_max, 1);
-+	if (!ret)
-+		ksft_exit_fail_msg(
-+			"%s test: managed to pass invalid flag value\n",
-+			test_name);
-+	ksft_test_result_pass("do not allow invalid flag values for close_range()\n");
-+
-+	fd_mid = open_fds[50];
-+	ret = sys_close_range(fd_min, fd_mid, 0);
-+	if (ret < 0)
-+		ksft_exit_fail_msg(
-+			"%s test: Failed to close range of file descriptors from 4 to 50\n",
-+			test_name);
-+	ksft_test_result_pass("close_range() from %d to %d\n", fd_min, fd_mid);
-+
-+	for (i = 0; i <= 50; i++) {
-+		ret = fcntl(open_fds[i], F_GETFL);
-+		if (ret >= 0)
-+			ksft_exit_fail_msg(
-+				"%s test: Failed to close range of file descriptors from 4 to 50\n",
-+				test_name);
-+	}
-+	ksft_test_result_pass("fcntl() verify closed range from %d to %d\n", fd_min, fd_mid);
-+
-+	/* create a couple of gaps */
-+	close(57);
-+	close(78);
-+	close(81);
-+	close(82);
-+	close(84);
-+	close(90);
-+
-+	fd_mid = open_fds[51];
-+	/* Choose slightly lower limit and leave some fds for a later test */
-+	fd_max = open_fds[92];
-+	ret = sys_close_range(fd_mid, fd_max, 0);
-+	if (ret < 0)
-+		ksft_exit_fail_msg(
-+			"%s test: Failed to close range of file descriptors from 51 to 100\n",
-+			test_name);
-+	ksft_test_result_pass("close_range() from %d to %d\n", fd_mid, fd_max);
-+
-+	for (i = 51; i <= 92; i++) {
-+		ret = fcntl(open_fds[i], F_GETFL);
-+		if (ret >= 0)
-+			ksft_exit_fail_msg(
-+				"%s test: Failed to close range of file descriptors from 51 to 100\n",
-+				test_name);
-+	}
-+	ksft_test_result_pass("fcntl() verify closed range from %d to %d\n", fd_mid, fd_max);
-+
-+	fd_mid = open_fds[93];
-+	fd_max = open_fds[99];
-+	/* test that the kernel caps and still closes all fds */
-+	ret = sys_close_range(fd_mid, UINT_MAX, 0);
-+	if (ret < 0)
-+		ksft_exit_fail_msg(
-+			"%s test: Failed to close range of file descriptors from 51 to 100\n",
-+			test_name);
-+	ksft_test_result_pass("close_range() from %d to %d\n", fd_mid, fd_max);
-+
-+	for (i = 93; i < 100; i++) {
-+		ret = fcntl(open_fds[i], F_GETFL);
-+		if (ret >= 0)
-+			ksft_exit_fail_msg(
-+				"%s test: Failed to close range of file descriptors from 51 to 100\n",
-+				test_name);
-+	}
-+	ksft_test_result_pass("fcntl() verify closed range from %d to %d\n", fd_mid, fd_max);
-+
-+	return ksft_exit_pass();
-+}
--- 
-2.21.0
+On Mon, 2019-05-20 at 14:19 +0200, Stefan Wahren wrote:
+> Hi Nicolas,
+>=20
+> On 20.05.19 12:47, Nicolas Saenz Julienne wrote:
+> > The four CPUs share a same clock source called pllb_arm. The clock can
+> > be scaled through the raspberrypi firmware interface.
+> do you see a problem with applying this also to bcm2835.dtsi and
+> bcm2836.dtsi?
+
+Not at all. I just need to test it first.
+
+
+--=-XdardQecTGOsrtJ31nRH
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAlzj478ACgkQlfZmHno8
+x/7yYQgAnqgXYhdAshV8U4gwtS+/dHnDGQp1/PL1XVVLYWmuHP2y3SO5fVlw6Ebq
+ckR3ubP2gvpOOeBbDD/py+EqkT6u089s/e4v/Duju0rM3AX34z4xtUaVGSZwZ/pv
+Bi95Xz7KRumD9YbUBCXoFGMzRwlAwKIz3EN7Q2U3B6oPZneavK8ipSjYm5XobWE7
+7oB311KX909ENnlR1iOZGYh0HjX0fEkPb9aMkNp6xyxc2zJOPVMUD7anPwWB4b06
+YymlQO7FJHpq9ZBaSFQhh5b/FuqpaZpa19GmyoHiGZoJHfZ1QmD/op6addi7DZa+
+lt2LuUfBE/MYUaVA33mQNsx3Vgh14Q==
+=zGgQ
+-----END PGP SIGNATURE-----
+
+--=-XdardQecTGOsrtJ31nRH--
 
