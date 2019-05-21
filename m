@@ -2,133 +2,104 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4681FC072B5
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 23:32:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01BD6C18E7C
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 23:33:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 148942183F
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 23:32:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="QIhkn38d"
+	by mail.kernel.org (Postfix) with ESMTP id D3A3421773
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 23:33:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728348AbfEUXcI (ORCPT
+        id S1728096AbfEUXdU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 19:32:08 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:1176 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726083AbfEUXbS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 19:31:18 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ce48a460000>; Tue, 21 May 2019 16:31:19 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 21 May 2019 16:31:17 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 21 May 2019 16:31:17 -0700
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 21 May
- 2019 23:31:17 +0000
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 21 May
- 2019 23:31:17 +0000
-Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Tue, 21 May 2019 23:31:17 +0000
-Received: from skomatineni-linux.nvidia.com (Not Verified[10.110.102.174]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5ce48a450003>; Tue, 21 May 2019 16:31:17 -0700
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>
-CC:     <jckuo@nvidia.com>, <talho@nvidia.com>, <josephl@nvidia.com>,
-        <skomatineni@nvidia.com>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH V1 01/12] irqchip: tegra: do not disable COP IRQ during suspend
-Date:   Tue, 21 May 2019 16:31:12 -0700
-Message-ID: <1558481483-22254-2-git-send-email-skomatineni@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1558481483-22254-1-git-send-email-skomatineni@nvidia.com>
-References: <1558481483-22254-1-git-send-email-skomatineni@nvidia.com>
-X-NVConfidentiality: public
+        Tue, 21 May 2019 19:33:20 -0400
+Received: from dcvr.yhbt.net ([64.71.152.64]:59806 "EHLO dcvr.yhbt.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726017AbfEUXdU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 19:33:20 -0400
+Received: from localhost (dcvr.yhbt.net [127.0.0.1])
+        by dcvr.yhbt.net (Postfix) with ESMTP id 7D2A61F462;
+        Tue, 21 May 2019 23:33:19 +0000 (UTC)
+Date:   Tue, 21 May 2019 23:33:19 +0000
+From:   Eric Wong <e@80x24.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Deepa Dinamani <deepa.kernel@gmail.com>,
+        linux-kernel@vger.kernel.org, viro@zeniv.linux.org.uk,
+        arnd@arndb.de, dbueso@suse.de, axboe@kernel.dk, dave@stgolabs.net,
+        jbaron@akamai.com, linux-fsdevel@vger.kernel.org,
+        linux-aio@kvack.org, omar.kilani@gmail.com, tglx@linutronix.de,
+        stable@vger.kernel.org, Oleg Nesterov <oleg@redhat.com>
+Subject: Re: [PATCH 1/1] signal: Adjust error codes according to
+ restore_user_sigmask()
+Message-ID: <20190521233319.GA17957@dcvr>
+References: <20190507043954.9020-1-deepa.kernel@gmail.com>
+ <20190521092551.fwtb6recko3tahwj@dcvr>
+ <20190521152748.6b4cd70cf83a1183caa6aae7@linux-foundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1558481479; bh=vpItaAdCCfi7ntL6ByckdKbRZ/KSHdenIpT3xYHKDOM=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=QIhkn38dP1DrL0kVPaDgngZ6ffRasvlnPfN2k8FxXb+UWpZojml9YtyU3buUxCsrD
-         wXiyBj1BxIOOD5ahyHTELGvKPnb+eBsrWXkTopzraYIagDRebRs32YM9U5saf+WpHC
-         NNHiskGsrIXfN4ctu6tiolYkRmzrFAYbbMYvwRGcVonJAHzblD3SPYNLLNR5rLPkZT
-         kiEOTbzL+EQYrR+kMgcdBHDvADx836O8+IeO/ZbaavBbfsV4W8h9G3s+5JrD1FMqo6
-         e+wODMn5wayHU+HCJO7gP4mVYCTdDoBc6MpLrGJ/d3rVa5EmEmiF9S8OfFqeADC4Hc
-         kU/QVevd22exA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190521152748.6b4cd70cf83a1183caa6aae7@linux-foundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-BPMP-lite still need IRQ function to finish SC7 suspend sequence for
-Tegra210.
+Andrew Morton <akpm@linux-foundation.org> wrote:
+> On Tue, 21 May 2019 09:25:51 +0000 Eric Wong <e@80x24.org> wrote:
+> 
+> > Deepa Dinamani <deepa.kernel@gmail.com> wrote:
+> > > For all the syscalls that receive a sigmask from the userland,
+> > > the user sigmask is to be in effect through the syscall execution.
+> > > At the end of syscall, sigmask of the current process is restored
+> > > to what it was before the switch over to user sigmask.
+> > > But, for this to be true in practice, the sigmask should be restored
+> > > only at the the point we change the saved_sigmask. Anything before
+> > > that loses signals. And, anything after is just pointless as the
+> > > signal is already lost by restoring the sigmask.
+> > > 
+> > > The inherent issue was detected because of a regression caused by
+> > > 854a6ed56839a.
+> > > The patch moved the signal_pending() check closer to restoring of the
+> > > user sigmask. But, it failed to update the error code accordingly.
+> > > 
+> > > Detailed issue discussion permalink:
+> > > https://lore.kernel.org/linux-fsdevel/20190427093319.sgicqik2oqkez3wk@dcvr/
+> > > 
+> > > Note that the patch returns interrupted errors (EINTR, ERESTARTNOHAND,
+> > > etc) only when there is no other error. If there is a signal and an error
+> > > like EINVAL, the syscalls return -EINVAL rather than the interrupted
+> > > error codes.
+> > > 
+> > > The sys_io_uring_enter() seems to be returning success when there is
+> > > a signal and the queue is not empty. This seems to be a bug. I will
+> > > follow up with a separate patch for that.
+> > > 
+> > > Reported-by: Eric Wong <e@80x24.org>
+> > > Fixes: 854a6ed56839a40f6b5d02a2962f48841482eec4 ("signal: Add restore_user_sigmask()")
+> > > Signed-off-by: Deepa Dinamani <deepa.kernel@gmail.com>
+> > > Reviewed-by: Davidlohr Bueso <dbueso@suse.de>
+> 
+> (top-posting fixed).
+> 
+> > It's been 2 weeks and this fix hasn't appeared in mmots / mmotm.
+> > I also noticed it's missing Cc: for stable@ (below)
+> 
+> Why is a -stable backport needed?  I see some talk above about lost
+> signals but it is unclear whether these are being observed after fixing
+> the regression caused by 854a6ed56839a.
 
-This patch has fix for leaving the COP IRQ enabled for Tegra210 during
-interrupt controller suspend operation.
+I guess Deepa's commit messages wasn't clear...
+I suggest prepending this as the first paragraph to Deepa's
+original message:
 
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
----
- drivers/irqchip/irq-tegra.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+  This fixes a bug introduced with 854a6ed56839a which caused
+  EINTR to not be reported to userspace on epoll_pwait.  Failure
+  to report EINTR to userspace caused problems with user code
+  which relies on EINTR to run signal handlers.
 
-diff --git a/drivers/irqchip/irq-tegra.c b/drivers/irqchip/irq-tegra.c
-index 0abc0cd1c32e..1882373fa1fd 100644
---- a/drivers/irqchip/irq-tegra.c
-+++ b/drivers/irqchip/irq-tegra.c
-@@ -53,18 +53,24 @@ static unsigned int num_ictlrs;
- 
- struct tegra_ictlr_soc {
- 	unsigned int num_ictlrs;
-+	bool has_bpmpl;
- };
- 
-+static const struct tegra_ictlr_soc *soc;
-+
- static const struct tegra_ictlr_soc tegra20_ictlr_soc = {
- 	.num_ictlrs = 4,
-+	.has_bpmpl = false,
- };
- 
- static const struct tegra_ictlr_soc tegra30_ictlr_soc = {
- 	.num_ictlrs = 5,
-+	.has_bpmpl = false,
- };
- 
- static const struct tegra_ictlr_soc tegra210_ictlr_soc = {
- 	.num_ictlrs = 6,
-+	.has_bpmpl = true,
- };
- 
- static const struct of_device_id ictlr_matches[] = {
-@@ -157,7 +163,8 @@ static int tegra_ictlr_suspend(void)
- 		lic->cop_iep[i] = readl_relaxed(ictlr + ICTLR_COP_IEP_CLASS);
- 
- 		/* Disable COP interrupts */
--		writel_relaxed(~0ul, ictlr + ICTLR_COP_IER_CLR);
-+		if (!soc->has_bpmpl)
-+			writel_relaxed(~0ul, ictlr + ICTLR_COP_IER_CLR);
- 
- 		/* Disable CPU interrupts */
- 		writel_relaxed(~0ul, ictlr + ICTLR_CPU_IER_CLR);
-@@ -286,7 +293,6 @@ static int __init tegra_ictlr_init(struct device_node *node,
- {
- 	struct irq_domain *parent_domain, *domain;
- 	const struct of_device_id *match;
--	const struct tegra_ictlr_soc *soc;
- 	unsigned int i;
- 	int err;
- 
--- 
-2.7.4
-
+> IOW, can we please have a changelog which has a clear and complete
+> description of the user-visible effects of the change.
+> 
+> And please Cc Oleg.
