@@ -2,179 +2,229 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CC66C04E87
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:55:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D057C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:56:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18B32217D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:55:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558436108;
-	bh=9MEN2KbBeRSyHZZ/tEW93WclsJlCnlFw4hYl5f3HiOU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qYsDu9euNz3L+4Kv6zT61W/IqWllI/HHmR4BFlsqf99kvw3ZNtt1NA2/gX6UQnprL
-	 YRyPFhm7kTeoeRrdcDVE1G56Vy42bcuIDaWfrVpDalJPKDc/R+zj1WoUyblV9NLO7f
-	 yfWMRwVgBNYE0WRQVAbA2Cp5aB+OLI+Y3PU5fzw4=
+	by mail.kernel.org (Postfix) with ESMTP id 01678217D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:56:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727915AbfEUKzG (ORCPT
+        id S1727486AbfEUK4i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 06:55:06 -0400
-Received: from mx2.suse.de ([195.135.220.15]:42094 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726750AbfEUKzG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 06:55:06 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 2FCA9ACBC;
-        Tue, 21 May 2019 10:55:04 +0000 (UTC)
-Date:   Tue, 21 May 2019 12:55:03 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Minchan Kim <minchan@kernel.org>
-Cc:     Oleksandr Natalenko <oleksandr@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
+        Tue, 21 May 2019 06:56:38 -0400
+Received: from mga11.intel.com ([192.55.52.93]:56971 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726289AbfEUK4i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 06:56:38 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 May 2019 03:56:34 -0700
+X-ExtLoop1: 1
+Received: from asaudi-mobl.ger.corp.intel.com (HELO [10.249.47.52]) ([10.249.47.52])
+  by orsmga005.jf.intel.com with ESMTP; 21 May 2019 03:56:31 -0700
+Subject: Re: [PATCH 29/33] fbcon: replace FB_EVENT_MODE_CHANGE/_ALL with
+ direct calls
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        DRI Development <dri-devel@lists.freedesktop.org>
+Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tim Murray <timmurray@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>
-Subject: Re: [RFC 4/7] mm: factor out madvise's core functionality
-Message-ID: <20190521105503.GQ32329@dhcp22.suse.cz>
-References: <20190520035254.57579-1-minchan@kernel.org>
- <20190520035254.57579-5-minchan@kernel.org>
- <20190520142633.x5d27gk454qruc4o@butterfly.localdomain>
- <20190521012649.GE10039@google.com>
- <20190521063628.x2npirvs75jxjilx@butterfly.localdomain>
- <20190521104949.GE219653@google.com>
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        Yisheng Xie <ysxie@foxmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mikulas Patocka <mpatocka@redhat.com>,
+        linux-fbdev@vger.kernel.org, Jingoo Han <jingoohan1@gmail.com>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Lee Jones <lee.jones@linaro.org>, Peter Rosin <peda@axentia.se>
+References: <20190520082216.26273-1-daniel.vetter@ffwll.ch>
+ <20190520082216.26273-30-daniel.vetter@ffwll.ch>
+From:   Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Message-ID: <b91a6f78-43c2-796c-62f1-f84f2973c174@linux.intel.com>
+Date:   Tue, 21 May 2019 12:56:30 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190521104949.GE219653@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190520082216.26273-30-daniel.vetter@ffwll.ch>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 21-05-19 19:49:49, Minchan Kim wrote:
-> On Tue, May 21, 2019 at 08:36:28AM +0200, Oleksandr Natalenko wrote:
-> > Hi.
-> > 
-> > On Tue, May 21, 2019 at 10:26:49AM +0900, Minchan Kim wrote:
-> > > On Mon, May 20, 2019 at 04:26:33PM +0200, Oleksandr Natalenko wrote:
-> > > > Hi.
-> > > > 
-> > > > On Mon, May 20, 2019 at 12:52:51PM +0900, Minchan Kim wrote:
-> > > > > This patch factor out madvise's core functionality so that upcoming
-> > > > > patch can reuse it without duplication.
-> > > > > 
-> > > > > It shouldn't change any behavior.
-> > > > > 
-> > > > > Signed-off-by: Minchan Kim <minchan@kernel.org>
-> > > > > ---
-> > > > >  mm/madvise.c | 168 +++++++++++++++++++++++++++------------------------
-> > > > >  1 file changed, 89 insertions(+), 79 deletions(-)
-> > > > > 
-> > > > > diff --git a/mm/madvise.c b/mm/madvise.c
-> > > > > index 9a6698b56845..119e82e1f065 100644
-> > > > > --- a/mm/madvise.c
-> > > > > +++ b/mm/madvise.c
-> > > > > @@ -742,7 +742,8 @@ static long madvise_dontneed_single_vma(struct vm_area_struct *vma,
-> > > > >  	return 0;
-> > > > >  }
-> > > > >  
-> > > > > -static long madvise_dontneed_free(struct vm_area_struct *vma,
-> > > > > +static long madvise_dontneed_free(struct task_struct *tsk,
-> > > > > +				  struct vm_area_struct *vma,
-> > > > >  				  struct vm_area_struct **prev,
-> > > > >  				  unsigned long start, unsigned long end,
-> > > > >  				  int behavior)
-> > > > > @@ -754,8 +755,8 @@ static long madvise_dontneed_free(struct vm_area_struct *vma,
-> > > > >  	if (!userfaultfd_remove(vma, start, end)) {
-> > > > >  		*prev = NULL; /* mmap_sem has been dropped, prev is stale */
-> > > > >  
-> > > > > -		down_read(&current->mm->mmap_sem);
-> > > > > -		vma = find_vma(current->mm, start);
-> > > > > +		down_read(&tsk->mm->mmap_sem);
-> > > > > +		vma = find_vma(tsk->mm, start);
-> > > > >  		if (!vma)
-> > > > >  			return -ENOMEM;
-> > > > >  		if (start < vma->vm_start) {
-> > > > > @@ -802,7 +803,8 @@ static long madvise_dontneed_free(struct vm_area_struct *vma,
-> > > > >   * Application wants to free up the pages and associated backing store.
-> > > > >   * This is effectively punching a hole into the middle of a file.
-> > > > >   */
-> > > > > -static long madvise_remove(struct vm_area_struct *vma,
-> > > > > +static long madvise_remove(struct task_struct *tsk,
-> > > > > +				struct vm_area_struct *vma,
-> > > > >  				struct vm_area_struct **prev,
-> > > > >  				unsigned long start, unsigned long end)
-> > > > >  {
-> > > > > @@ -836,13 +838,13 @@ static long madvise_remove(struct vm_area_struct *vma,
-> > > > >  	get_file(f);
-> > > > >  	if (userfaultfd_remove(vma, start, end)) {
-> > > > >  		/* mmap_sem was not released by userfaultfd_remove() */
-> > > > > -		up_read(&current->mm->mmap_sem);
-> > > > > +		up_read(&tsk->mm->mmap_sem);
-> > > > >  	}
-> > > > >  	error = vfs_fallocate(f,
-> > > > >  				FALLOC_FL_PUNCH_HOLE | FALLOC_FL_KEEP_SIZE,
-> > > > >  				offset, end - start);
-> > > > >  	fput(f);
-> > > > > -	down_read(&current->mm->mmap_sem);
-> > > > > +	down_read(&tsk->mm->mmap_sem);
-> > > > >  	return error;
-> > > > >  }
-> > > > >  
-> > > > > @@ -916,12 +918,13 @@ static int madvise_inject_error(int behavior,
-> > > > >  #endif
-> > > > 
-> > > > What about madvise_inject_error() and get_user_pages_fast() in it
-> > > > please?
-> > > 
-> > > Good point. Maybe, there more places where assume context is "current" so
-> > > I'm thinking to limit hints we could allow from external process.
-> > > It would be better for maintainance point of view in that we could know
-> > > the workload/usecases when someone ask new advises from external process
-> > > without making every hints works both contexts.
-> > 
-> > Well, for madvise_inject_error() we still have a remote variant of
-> > get_user_pages(), and that should work, no?
-> 
-> Regardless of madvise_inject_error, it seems to be risky to expose all
-> of hints for external process, I think. For example, MADV_DONTNEED with
-> race, it's critical for stability. So, until we could get the way to
-> prevent the race, I want to restrict hints.
+Op 20-05-2019 om 10:22 schreef Daniel Vetter:
+> Create a new wrapper function for this, feels like there's some
+> refactoring room here between the two modes.
+>
+> Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+> Cc: Lee Jones <lee.jones@linaro.org>
+> Cc: Daniel Thompson <daniel.thompson@linaro.org>
+> Cc: Jingoo Han <jingoohan1@gmail.com>
+> Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+> Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+> Cc: Hans de Goede <hdegoede@redhat.com>
+> Cc: Yisheng Xie <ysxie@foxmail.com>
+> Cc: "Michał Mirosław" <mirq-linux@rere.qmqm.pl>
+> Cc: Peter Rosin <peda@axentia.se>
+> Cc: Mikulas Patocka <mpatocka@redhat.com>
+> Cc: linux-fbdev@vger.kernel.org
+> ---
+>  drivers/video/backlight/lcd.c          |  2 --
+>  drivers/video/fbdev/core/fbcon.c       | 15 +++++++++------
+>  drivers/video/fbdev/core/fbmem.c       | 13 ++-----------
+>  drivers/video/fbdev/sh_mobile_lcdcfb.c | 11 +----------
+>  include/linux/fb.h                     |  4 ----
+>  include/linux/fbcon.h                  |  2 ++
+>  6 files changed, 14 insertions(+), 33 deletions(-)
+>
+> diff --git a/drivers/video/backlight/lcd.c b/drivers/video/backlight/lcd.c
+> index 4b40c6a4d441..16298041b141 100644
+> --- a/drivers/video/backlight/lcd.c
+> +++ b/drivers/video/backlight/lcd.c
+> @@ -32,8 +32,6 @@ static int fb_notifier_callback(struct notifier_block *self,
+>  	/* If we aren't interested in this event, skip it immediately ... */
+>  	switch (event) {
+>  	case FB_EVENT_BLANK:
+> -	case FB_EVENT_MODE_CHANGE:
+> -	case FB_EVENT_MODE_CHANGE_ALL:
+>  	case FB_EARLY_EVENT_BLANK:
+>  	case FB_R_EARLY_EVENT_BLANK:
+>  		break;
 
-Well, if you allow the full ptrace access then you can shoot the target
-whatever you like.
+Below it performs a call to set_mode() if it's none of the blanking events; it can be removed. :)
 
-> > Regarding restricting the hints, I'm definitely interested in having
-> > remote MADV_MERGEABLE/MADV_UNMERGEABLE. But, OTOH, doing it via remote
-> > madvise() introduces another issue with traversing remote VMAs reliably.
-> 
-> How is it signifiact when the race happens? It could waste CPU cycle
-> and make unncessary break of that merged pages but expect it should be
-> rare so such non-desruptive hint could be exposed via process_madvise, I think.
-> 
-> If the hint is critical for the race, yes, as Michal suggested, we need a way
-> to close it and I guess non-cooperative userfaultfd with synchronous support
-> would help private anonymous vma.
+> diff --git a/drivers/video/fbdev/core/fbcon.c b/drivers/video/fbdev/core/fbcon.c
+> index c1a7476e980f..8cc62d340387 100644
+> --- a/drivers/video/fbdev/core/fbcon.c
+> +++ b/drivers/video/fbdev/core/fbcon.c
+> @@ -3005,6 +3005,15 @@ static void fbcon_set_all_vcs(struct fb_info *info)
+>  		fbcon_modechanged(info);
+>  }
+>  
+> +
+> +void fbcon_update_vcs(struct fb_info *info, bool all)
+> +{
+> +	if (all)
+> +		fbcon_set_all_vcs(info);
+> +	else
+> +		fbcon_modechanged(info);
+> +}
+> +
+>  int fbcon_mode_deleted(struct fb_info *info,
+>  		       struct fb_videomode *mode)
+>  {
+> @@ -3314,12 +3323,6 @@ static int fbcon_event_notify(struct notifier_block *self,
+>  	int idx, ret = 0;
+>  
+>  	switch(action) {
+> -	case FB_EVENT_MODE_CHANGE:
+> -		fbcon_modechanged(info);
+> -		break;
+> -	case FB_EVENT_MODE_CHANGE_ALL:
+> -		fbcon_set_all_vcs(info);
+> -		break;
+>  	case FB_EVENT_SET_CONSOLE_MAP:
+>  		/* called with console lock held */
+>  		con2fb = event->data;
+> diff --git a/drivers/video/fbdev/core/fbmem.c b/drivers/video/fbdev/core/fbmem.c
+> index cbd58ba8a59d..55b88163edc2 100644
+> --- a/drivers/video/fbdev/core/fbmem.c
+> +++ b/drivers/video/fbdev/core/fbmem.c
+> @@ -1039,17 +1039,8 @@ fb_set_var(struct fb_info *info, struct fb_var_screeninfo *var)
+>  	    !list_empty(&info->modelist))
+>  		ret = fb_add_videomode(&mode, &info->modelist);
+>  
+> -	if (!ret && (flags & FBINFO_MISC_USEREVENT)) {
+> -		struct fb_event event;
+> -		int evnt = (activate & FB_ACTIVATE_ALL) ?
+> -			FB_EVENT_MODE_CHANGE_ALL :
+> -			FB_EVENT_MODE_CHANGE;
+> -
+> -		info->flags &= ~FBINFO_MISC_USEREVENT;
+> -		event.info = info;
+> -		event.data = &mode;
+> -		fb_notifier_call_chain(evnt, &event);
+> -	}
+> +	if (!ret && (flags & FBINFO_MISC_USEREVENT))
+> +		fbcon_update_vcs(info, activate & FB_ACTIVATE_ALL);
+>  
+>  	return ret;
+>  }
+> diff --git a/drivers/video/fbdev/sh_mobile_lcdcfb.c b/drivers/video/fbdev/sh_mobile_lcdcfb.c
+> index 0d7a044852d7..bb1a610d0363 100644
+> --- a/drivers/video/fbdev/sh_mobile_lcdcfb.c
+> +++ b/drivers/video/fbdev/sh_mobile_lcdcfb.c
+> @@ -1776,8 +1776,6 @@ static void sh_mobile_fb_reconfig(struct fb_info *info)
+>  	struct sh_mobile_lcdc_chan *ch = info->par;
+>  	struct fb_var_screeninfo var;
+>  	struct fb_videomode mode;
+> -	struct fb_event event;
+> -	int evnt = FB_EVENT_MODE_CHANGE_ALL;
+>  
+>  	if (ch->use_count > 1 || (ch->use_count == 1 && !info->fbcon_par))
+>  		/* More framebuffer users are active */
+> @@ -1799,14 +1797,7 @@ static void sh_mobile_fb_reconfig(struct fb_info *info)
+>  		/* Couldn't reconfigure, hopefully, can continue as before */
+>  		return;
+>  
+> -	/*
+> -	 * fb_set_var() calls the notifier change internally, only if
+> -	 * FBINFO_MISC_USEREVENT flag is set. Since we do not want to fake a
+> -	 * user event, we have to call the chain ourselves.
+> -	 */
+> -	event.info = info;
+> -	event.data = &ch->display.mode;
+> -	fb_notifier_call_chain(evnt, &event);
+> +	fbcon_update_vcs(info, true);
+>  }
+>  
+>  /*
+> diff --git a/include/linux/fb.h b/include/linux/fb.h
+> index 4b9b882f8f52..54d6bee09121 100644
+> --- a/include/linux/fb.h
+> +++ b/include/linux/fb.h
+> @@ -124,16 +124,12 @@ struct fb_cursor_user {
+>   * Register/unregister for framebuffer events
+>   */
+>  
+> -/*	The resolution of the passed in fb_info about to change */ 
+> -#define FB_EVENT_MODE_CHANGE		0x01
+>  /*      CONSOLE-SPECIFIC: get console to framebuffer mapping */
+>  #define FB_EVENT_GET_CONSOLE_MAP        0x07
+>  /*      CONSOLE-SPECIFIC: set console to framebuffer mapping */
+>  #define FB_EVENT_SET_CONSOLE_MAP        0x08
+>  /*      A display blank is requested       */
+>  #define FB_EVENT_BLANK                  0x09
+> -/*      Private modelist is to be replaced */
+> -#define FB_EVENT_MODE_CHANGE_ALL	0x0B
+>  /*      CONSOLE-SPECIFIC: remap all consoles to new fb - for vga_switcheroo */
+>  #define FB_EVENT_REMAP_ALL_CONSOLE      0x0F
+>  /*      A hardware display blank early change occurred */
+> diff --git a/include/linux/fbcon.h b/include/linux/fbcon.h
+> index 90e196c835dd..daaa97b0c9e6 100644
+> --- a/include/linux/fbcon.h
+> +++ b/include/linux/fbcon.h
+> @@ -15,6 +15,7 @@ void fbcon_new_modelist(struct fb_info *info);
+>  void fbcon_get_requirement(struct fb_info *info,
+>  			   struct fb_blit_caps *caps);
+>  void fbcon_fb_blanked(struct fb_info *info, int blank);
+> +void fbcon_update_vcs(struct fb_info *info, bool all);
+>  #else
+>  static inline void fb_console_init(void) {}
+>  static inline void fb_console_exit(void) {}
+> @@ -29,6 +30,7 @@ void fbcon_new_modelist(struct fb_info *info) {}
+>  void fbcon_get_requirement(struct fb_info *info,
+>  			   struct fb_blit_caps *caps) {}
+>  void fbcon_fb_blanked(struct fb_info *info, int blank) {}
+> +void fbcon_update_vcs(struct fb_info *info, bool all) {}
+>  #endif
+>  
+>  #endif /* _LINUX_FBCON_H */
 
-If we have a per vma fd approach then we can revalidate atomically and
-make sure the operation is performed on the range that was really
-requested. I do not think we want to provide a more specific guarantees.
-Monitor process has to be careful same way ptrace doesn't want to harm
-the target.
 
--- 
-Michal Hocko
-SUSE Labs
