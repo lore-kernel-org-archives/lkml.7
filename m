@@ -2,98 +2,118 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E571CC072B5
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 21:43:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E062AC18E7C
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 21:43:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6D07217F9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 21:43:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB263217F9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 21:43:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="bVfVn6vC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RTh7zDv9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728098AbfEUVnU (ORCPT
+        id S1728285AbfEUVna (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 17:43:20 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:37481 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727525AbfEUVnU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 17:43:20 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 457q5022KZz9s3Z;
-        Wed, 22 May 2019 07:43:16 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1558474998;
-        bh=VLslGDXi1nLS5zOC5e0unUn83VnGb1HeqayhR5MbjPY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=bVfVn6vCR58ksGTm3Kz62mvFD/aP9HM8dyGBXIH3kCo+noYxJKuNjqMHduISxr3Zz
-         JAvv9T0uL+iBybdOBQioSUVBMudd6JuroiJGJ/at8j7IcG6K312zjXIdI8fqXKoWqY
-         YNBNj7VA6JjU1ZMHCylxbfCoe4Qnl2qIQ1G8njC+0xIZn9JNeimdr4p2jt/+m3aV5J
-         YfoT/TViq3MHC8mnivf70wb4ekHfXmTCkhPLM2JWh9o5UxEXjuaQgULB5m31ssiwtt
-         hsDHW31paQ7k0I0GI3aiZYmOOH1rqxIY88G/2otEjSUv6ik4Oj+qKMmaN2QvrYdOXi
-         jviTLZ4q8fMLQ==
-Date:   Wed, 22 May 2019 07:43:13 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
-Cc:     DRI <dri-devel@lists.freedesktop.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Chris Wilson <chris@chris-wilson.co.uk>
-Subject: Re: Comments in Fixes: line (Was: Re: linux-next: Fixes tag needs
- some work in the drm-intel tree)
-Message-ID: <20190522074313.347f039a@canb.auug.org.au>
-In-Reply-To: <155844385673.15761.3434506339174536733@jlahtine-desk.ger.corp.intel.com>
-References: <20190520221526.0e103916@canb.auug.org.au>
-        <155844385673.15761.3434506339174536733@jlahtine-desk.ger.corp.intel.com>
+        Tue, 21 May 2019 17:43:30 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:33793 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727525AbfEUVn3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 17:43:29 -0400
+Received: by mail-pg1-f195.google.com with SMTP id c13so176977pgt.1;
+        Tue, 21 May 2019 14:43:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=e7IKvyivpndLhr4yI3VpbyOaZKIBT4zTT+7VEzq4/yg=;
+        b=RTh7zDv9ySF4qF7LWS+cwTOhCwHO5zR779oCHDbwI9D1YTzO8vo0ZLAvIhSGrouFqA
+         8+Uog6NRFZPdzwFuJzg07cQc582DJe67ocOk7Zi0h17KTC48SgIFpoDBf/NhdaAO81nr
+         qOp9sZnXRMU+LVk6MmLojAfzW/9d4Bwdujg1ziINY+H5Dfn9QPgdAguR0WK6ozcmwD36
+         NeTD9LNwz51pW0wEKunht8NuVihGEpO+nFtviNbK7Lnx8UlLzcjXk16CAGQlCo94E7d4
+         InnByzySabp62mQsB3iRyUYNBnGWPtGZXt3RzNER/fB7CeHlBl1hbnY81nEUGQ2CWbMP
+         218g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=e7IKvyivpndLhr4yI3VpbyOaZKIBT4zTT+7VEzq4/yg=;
+        b=hP8tV0R8zl4oSluGSNQP0ppwRezBL61dsRvrJgc/XSvix2d4t6x+UZMebNB6lNzdoP
+         iJkc5XYDdFmrk+MvCxm/1dqAEnRRwWOaig3FtVXbzF7zgYC1nHbHpO0BOJFGnaBW0mlU
+         RU+eJ5HQMbDdSsxP0hOzyN3NSkD/A6RnDOFn9IQfQXzx+ye6MG+BdMfsDUp7SESqSTDa
+         VwNE0xy/0NoIk7FrA8g4Ma7rS342tNsPIcdbWauqsLyOee71QMhv6OhGcby3p8nYotwm
+         VVEc+PMz53dtRsiEFmyeK58y9kYw1+8W1sZdJXPijTfOn13/br6IdV+Kaf8dflmH1SFN
+         1KGA==
+X-Gm-Message-State: APjAAAXU8qhGZYntftH77IfYR/0nLru7tCHKqkiOK6OudZBoeWsX/KlL
+        U6wV1AFPV4ivx4OabdApX/A=
+X-Google-Smtp-Source: APXvYqyXCHh8uXQFP3KQv0j0ixsVq6rBqUAMPDz8rLx8VFeIluYAifcXl8GKq0dYSta6Z3il8XawEg==
+X-Received: by 2002:a62:62c1:: with SMTP id w184mr89353146pfb.95.1558475008888;
+        Tue, 21 May 2019 14:43:28 -0700 (PDT)
+Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:200::1:1eff])
+        by smtp.gmail.com with ESMTPSA id q125sm36497281pfq.62.2019.05.21.14.43.27
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 21 May 2019 14:43:28 -0700 (PDT)
+Date:   Tue, 21 May 2019 14:43:26 -0700
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Kris Van Hees <kris.van.hees@oracle.com>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, dtrace-devel@oss.oracle.com,
+        linux-kernel@vger.kernel.org, mhiramat@kernel.org, acme@kernel.org,
+        ast@kernel.org, daniel@iogearbox.net, peterz@infradead.org
+Subject: Re: [RFC PATCH 00/11] bpf, trace, dtrace: DTrace BPF program type
+ implementation and sample use
+Message-ID: <20190521214325.rr7emn5z3b7wqiiy@ast-mbp.dhcp.thefacebook.com>
+References: <201905202347.x4KNl0cs030532@aserv0121.oracle.com>
+ <20190521175617.ipry6ue7o24a2e6n@ast-mbp.dhcp.thefacebook.com>
+ <20190521184137.GH2422@oracle.com>
+ <20190521205533.evfszcjvdouby7vp@ast-mbp.dhcp.thefacebook.com>
+ <20190521173618.2ebe8c1f@gandalf.local.home>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/=1dxdUJ9WnawpF7=6CXdUXL"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190521173618.2ebe8c1f@gandalf.local.home>
+User-Agent: NeoMutt/20180223
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/=1dxdUJ9WnawpF7=6CXdUXL
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Tue, May 21, 2019 at 05:36:18PM -0400, Steven Rostedt wrote:
+> On Tue, 21 May 2019 13:55:34 -0700
+> Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
+> 
+> > > The reasons for these patches is because I cannot do the same with the existing
+> > > implementation.  Yes, I can do some of it or use some workarounds to accomplish
+> > > kind of the same thing, but at the expense of not being able to do what I need
+> > > to do but rather do some kind of best effort alternative.  That is not the goal
+> > > here.  
+> > 
+> > what you call 'workaround' other people call 'feature'.
+> > The kernel community doesn't accept extra code into the kernel
+> > when user space can do the same.
+> 
+> If that was really true, all file systems would be implemented on
+> FUSE ;-)
+> 
+> I was just at a technical conference that was not Linux focused, and I
+> talked to a lot of admins that said they would love to have Dtrace
+> scripts working on Linux unmodified.
+> 
+> I need to start getting more familiar with the workings of eBPF and
+> then look at what Dtrace has to see where something like this can be
+> achieved, but right now just NACKing patches outright isn't being
+> helpful. If you are not happy with this direction, I would love to see
+> conversations where Kris shows you exactly what is required (from a
+> feature perspective, not an implementation one) and we come up with a
+> solution.
 
-Hi Joonas,
+Steve,
+sounds like you've missed all prior threads.
+The feedback was given to Kris it was very clear:
+implement dtrace the same way as bpftrace is working with bpf.
+No changes are necessary to dtrace scripts
+and no kernel changes are necessary.
 
-On Tue, 21 May 2019 16:04:16 +0300 Joonas Lahtinen <joonas.lahtinen@linux.i=
-ntel.com> wrote:
->
-> We also have an incoming patch where the Fixes: line has a comment in
-> it. Does your tooling account for this when checking the Fixes: line?
-
-I will make sure mine does.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/=1dxdUJ9WnawpF7=6CXdUXL
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzkcPEACgkQAVBC80lX
-0GzFlwf+MRLCmFgKUnLP3fJYw0qVudP2JJ2+wXN3AJcl4p302jwHHLs34RTTSeN7
-pxoR0xFFeaAIqytLYGfizowqX86Qv6dxiRTckoPuE3uw+SH76lcwQtZzgDTppYgo
-axsQxTaRStKFYun8p8SNZdFfZF8BuI9kTl8OhUcrysVs+57v8etyZ+XyZspvzVQN
-XR9Z4bIb1aufYEVJq0ygaQ0iCXzvfZOoeZdqrAJ+YWVwaG5D2G/JruOuDOU62E/D
-tcYcQmFSO9Ry3hsbOWAgzAL4nU8XR9Xwem2gJmg+1rqBRIOhCj3/ZTtR5ODnFA8Q
-IV3Uyqjc277gqQaOeVjGG8KCP+x4cQ==
-=fjIr
------END PGP SIGNATURE-----
-
---Sig_/=1dxdUJ9WnawpF7=6CXdUXL--
