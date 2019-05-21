@@ -2,103 +2,257 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F26BC04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 06:22:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC736C04E87
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 06:23:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9C36217F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 06:22:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7ED22173C
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 06:23:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="l9FHorTu"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VwHbUzfo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727909AbfEUGWw (ORCPT
+        id S1727952AbfEUGXL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 02:22:52 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:33997 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726252AbfEUGWv (ORCPT
+        Tue, 21 May 2019 02:23:11 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:40065 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726252AbfEUGXK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 02:22:51 -0400
-Received: by mail-pl1-f195.google.com with SMTP id w7so7927385plz.1
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 23:22:51 -0700 (PDT)
+        Tue, 21 May 2019 02:23:10 -0400
+Received: by mail-wr1-f67.google.com with SMTP id f10so1673405wre.7
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 23:23:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=y2m5dpNz16ZybgYk5tQ8GutOzZqz8vAuz2rdBiTBnjw=;
-        b=l9FHorTul2Tyg2dOrb6zBPnqrZNmerYqH7eUWz8QrYYH0IhCHHLfh32l4hP3eIA/X7
-         vAjYlCEuZb1wqfD9LentK6vgUI8A/1mrqJ9S052A1vrO93c315n4VxO7f9kRYZ/dwhpt
-         a2aJmXtu4Ef1cIkwGn8dhSCJPXp5lNBa9khww/rmBXfha/2d2tEcDNaiPXcmM3XDnEaQ
-         mx1DNLV+4klz/BgBK87ZGo3hmiGMX2Wio0auyYuss6yzMBipwqekj/2uRHVRH1p/MxLn
-         /xGx4aZ9zZwmOx4XOBcEUeoMV+xdaLp+hhXsm7XNYpMPkIwBvPkWXUbq5Wi0Owu0YWlS
-         uo5w==
+        h=from:message-id:mime-version:subject:date:in-reply-to:cc:to
+         :references;
+        bh=/X0F6+Y1M8EwDKgr5lTkilasanWcGGf9Uo6k3RZbCKw=;
+        b=VwHbUzfo4DJkvfdMV4YIu2Nde66nwtQg6g+dyzYEjTSgSz+mJMekwN6PPBO31+2KVT
+         BOtGp0P4zSllC9qMbrug9bRvbAlttCTL/pnfI/7z13XGmZ5WJP7HfZE0PS309aeRJoKe
+         d1KZ2ZMzVWt9FzdlYLpPgbivOKkriJmWQn8ALfj+GrGda3nKrsbqrnScXDtV7ZU62Cu/
+         Zh3erY3LVaRf5+wDGkaovAcVPlRXCAN58YGxSHFG0xoDHuikpz3zqYWSCy/layAC29YF
+         o+A1jfGJTv7BSQXDR87PD5fDirURdbeNBtvvqlGY+VrgCDJ9esO6VoAZG1LcW/a8kWJn
+         ozIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=y2m5dpNz16ZybgYk5tQ8GutOzZqz8vAuz2rdBiTBnjw=;
-        b=hDu7Jwt1Ir2T4dRDsDyG3TUSEJuhMMyzLZKYTm7tHhKw7Dxh0Ycjke1TwR+BnmIACX
-         SHVCT+pDVl6LXEqkWLWAWeU9U15lndsiOXtKOBRQlyrlcr4MbDpVPz7uqQ+YAxaEnEnW
-         C+BFzgwAb9hoGaHXZrlgn8AvLaR2y+106MFb3O9SBelUxBR7mVRpjF8dubTPJsJHREj1
-         DtjIn5TYKSK9LSE8QnSCZC3SlExc+k1KzQHtdRQU7reenUgABUP+hg3ZXVcPN/stq9PN
-         lQu5EhPKuSfTWUDbcXfvzQybsA1x8ycDzxf04Ej7oy/Yf0VQYUIvXfWFy1KPEAye9w2M
-         ACuQ==
-X-Gm-Message-State: APjAAAUOUXVlTSmJ+H+iQDHdl5CmtcHsg1tt3MUPFqWUi+f06mzJXiH4
-        2wD3hceAgYxmvt2Pf6+39nn+Rw==
-X-Google-Smtp-Source: APXvYqz2YMCSRvKN2MJ+jWniKEVRU5sQ/FMpg7ookR4wjHFWBAIZ3T0Rpg+BvD1LhysbsKdoQyBKgQ==
-X-Received: by 2002:a17:902:8d96:: with SMTP id v22mr5073943plo.282.1558419770837;
-        Mon, 20 May 2019 23:22:50 -0700 (PDT)
-Received: from localhost ([122.172.118.99])
-        by smtp.gmail.com with ESMTPSA id n27sm42589245pfb.129.2019.05.20.23.22.49
+        h=x-gm-message-state:from:message-id:mime-version:subject:date
+         :in-reply-to:cc:to:references;
+        bh=/X0F6+Y1M8EwDKgr5lTkilasanWcGGf9Uo6k3RZbCKw=;
+        b=r1VhmIz9Db/rd5PrW9PKdT9D24XI01D95l0CKwF2KJaU1J/v5QCGqEEyL+hGlpasso
+         /r8Ej4mPviMk5/FMSYTjozOG1nfHAk6HGfissgWvYsj2PiGgU6/LIBLLOtlhi5Tcrd3X
+         RkjjEtv8rYH4LkxrlCaPHwCfhvPewPi75ppvnSwRWKAnVQTHgiwljnpwO8lZTtWfu41e
+         HpLX2gnhRZvi6Rp5z3sn8g3urfRMi3gbO6nN7zIMYFrFFhm2E8FJCAFwZSPPHjIefqas
+         V5eI7+qVA5fSmVWfUlooCxUsnrwCQWfgBBfhVK1xCgZcR4x4UpZZoXi6mSvWZd5h90aw
+         7Y0Q==
+X-Gm-Message-State: APjAAAXKsYk/W6hOeGTFpsQCd/Vb4gckyMXtoF0dGfd7KsQiQuEKhGqq
+        sKjsd4R8I7UBrZ3pMQbPCX8X/w==
+X-Google-Smtp-Source: APXvYqxpsV5aiVbr4ZuDEsq9JrXf6GX4gu3XpLbruwNnAOR15W2RwibXjMCak6RDzuHCjNhI+KaCFg==
+X-Received: by 2002:a5d:6cae:: with SMTP id a14mr33366716wra.214.1558419788392;
+        Mon, 20 May 2019 23:23:08 -0700 (PDT)
+Received: from [192.168.0.101] ([88.147.35.136])
+        by smtp.gmail.com with ESMTPSA id z1sm5734685wrl.91.2019.05.20.23.23.06
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 20 May 2019 23:22:50 -0700 (PDT)
-Date:   Tue, 21 May 2019 11:52:48 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Rajendra Nayak <rnayak@codeaurora.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-spi@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-scsi@vger.kernel.org, swboyd@chromium.org,
-        ulf.hansson@linaro.org, dianders@chromium.org, rafael@kernel.org,
-        vincent.guittot@linaro.org
-Subject: Re: [RFC v2 00/11] DVFS in the OPP core
-Message-ID: <20190521062248.ogjetb2rwtqekflx@vireshk-i7>
-References: <20190320094918.20234-1-rnayak@codeaurora.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190320094918.20234-1-rnayak@codeaurora.org>
-User-Agent: NeoMutt/20180716-391-311a52
+        Mon, 20 May 2019 23:23:07 -0700 (PDT)
+From:   Paolo Valente <paolo.valente@linaro.org>
+Message-Id: <6EB6C9D2-E774-48FA-AC95-BC98D97645D0@linaro.org>
+Content-Type: multipart/signed;
+        boundary="Apple-Mail=_8AD55980-F0C1-42FC-843D-9D3AFDD1A996";
+        protocol="application/pgp-signature";
+        micalg=pgp-sha256
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
+Subject: Re: CFQ idling kills I/O performance on ext4 with blkio cgroup
+ controller
+Date:   Tue, 21 May 2019 08:23:05 +0200
+In-Reply-To: <238e14ff-68d1-3b21-a291-28de4f2d77af@csail.mit.edu>
+Cc:     linux-fsdevel@vger.kernel.org,
+        linux-block <linux-block@vger.kernel.org>,
+        linux-ext4@vger.kernel.org, cgroups@vger.kernel.org,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Jens Axboe <axboe@kernel.dk>, Jan Kara <jack@suse.cz>,
+        jmoyer@redhat.com, Theodore Ts'o <tytso@mit.edu>,
+        amakhalov@vmware.com, anishs@vmware.com, srivatsab@vmware.com
+To:     "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
+References: <8d72fcf7-bbb4-2965-1a06-e9fc177a8938@csail.mit.edu>
+ <1812E450-14EF-4D5A-8F31-668499E13652@linaro.org>
+ <46c6a4be-f567-3621-2e16-0e341762b828@csail.mit.edu>
+ <07D11833-8285-49C2-943D-E4C1D23E8859@linaro.org>
+ <238e14ff-68d1-3b21-a291-28de4f2d77af@csail.mit.edu>
+X-Mailer: Apple Mail (2.3445.104.8)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20-03-19, 15:19, Rajendra Nayak wrote:
-> This is a v2 of the RFC posted earlier by Stephen Boyd [1]
-> 
-> As part of v2 I still follow the same approach of dev_pm_opp_set_rate()
-> API using clk framework to round the frequency passed and making it
-> accept 0 as a valid frequency indicating the frequency isn't required
-> anymore. It just has a few more drivers converted to use this approach
-> like dsi/dpu and ufs.
-> ufs demonstrates the case of having to handle multiple power domains, one
-> of which is scalable.
-> 
-> The patches are based on 5.1-rc1 and depend on some ufs fixes I posted
-> earlier [2] and a DT patch to include the rpmpd header [3]
-> 
-> [1] https://lkml.org/lkml/2019/1/28/2086
-> [2] https://lkml.org/lkml/2019/3/8/70
-> [3] https://lkml.org/lkml/2019/3/20/120
 
-Hi Rajendra,
+--Apple-Mail=_8AD55980-F0C1-42FC-843D-9D3AFDD1A996
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset=us-ascii
 
-I am inclined to apply/push this series for 5.3-rc1, will it be
-possible for you to spend some time on this at priority ?
 
--- 
-viresh
+
+> Il giorno 21 mag 2019, alle ore 00:45, Srivatsa S. Bhat =
+<srivatsa@csail.mit.edu> ha scritto:
+>=20
+> On 5/20/19 3:19 AM, Paolo Valente wrote:
+>>=20
+>>=20
+>>> Il giorno 18 mag 2019, alle ore 22:50, Srivatsa S. Bhat =
+<srivatsa@csail.mit.edu> ha scritto:
+>>>=20
+>>> On 5/18/19 11:39 AM, Paolo Valente wrote:
+>>>> I've addressed these issues in my last batch of improvements for =
+BFQ,
+>>>> which landed in the upcoming 5.2. If you give it a try, and still =
+see
+>>>> the problem, then I'll be glad to reproduce it, and hopefully fix =
+it
+>>>> for you.
+>>>>=20
+>>>=20
+>>> Hi Paolo,
+>>>=20
+>>> Thank you for looking into this!
+>>>=20
+>>> I just tried current mainline at commit 72cf0b07, but unfortunately
+>>> didn't see any improvement:
+>>>=20
+>>> dd if=3D/dev/zero of=3D/root/test.img bs=3D512 count=3D10000 =
+oflag=3Ddsync
+>>>=20
+>>> With mq-deadline, I get:
+>>>=20
+>>> 5120000 bytes (5.1 MB, 4.9 MiB) copied, 3.90981 s, 1.3 MB/s
+>>>=20
+>>> With bfq, I get:
+>>> 5120000 bytes (5.1 MB, 4.9 MiB) copied, 84.8216 s, 60.4 kB/s
+>>>=20
+>>=20
+>> Hi Srivatsa,
+>> thanks for reproducing this on mainline.  I seem to have reproduced a
+>> bonsai-tree version of this issue.  Before digging into the block
+>> trace, I'd like to ask you for some feedback.
+>>=20
+>> First, in my test, the total throughput of the disk happens to be
+>> about 20 times as high as that enjoyed by dd, regardless of the I/O
+>> scheduler.  I guess this massive overhead is normal with dsync, but
+>> I'd like know whether it is about the same on your side.  This will
+>> help me understand whether I'll actually be analyzing about the same
+>> problem as yours.
+>>=20
+>=20
+> Do you mean to say the throughput obtained by dd'ing directly to the
+> block device (bypassing the filesystem)?
+
+No no, I mean simply what follows.
+
+1) in one terminal:
+[root@localhost tmp]# dd if=3D/dev/zero of=3D/root/test.img bs=3D512 =
+count=3D10000 oflag=3Ddsync
+10000+0 record dentro
+10000+0 record fuori
+5120000 bytes (5,1 MB, 4,9 MiB) copied, 14,6892 s, 349 kB/s
+
+2) In a second terminal, while the dd is in progress in the first
+terminal:
+$ iostat -tmd /dev/sda 3
+Linux 5.1.0+ (localhost.localdomain) 	20/05/2019 	_x86_64_	=
+(2 CPU)
+
+...
+20/05/2019 11:40:17
+Device             tps    MB_read/s    MB_wrtn/s    MB_read    MB_wrtn
+sda            2288,00         0,00         9,77          0         29
+
+20/05/2019 11:40:20
+Device             tps    MB_read/s    MB_wrtn/s    MB_read    MB_wrtn
+sda            2325,33         0,00         9,93          0         29
+
+20/05/2019 11:40:23
+Device             tps    MB_read/s    MB_wrtn/s    MB_read    MB_wrtn
+sda            2351,33         0,00        10,05          0         30
+...
+
+As you can see, the overall throughput (~10 MB/s) is more than 20
+times as high as the dd throughput (~350 KB/s).  But the dd is the
+only source of I/O.
+
+Do you also see such a huge difference?
+
+Thanks,
+Paolo
+
+> That does give me a 20x
+> speedup with bs=3D512, but much more with a bigger block size =
+(achieving
+> a max throughput of about 110 MB/s).
+>=20
+> dd if=3D/dev/zero of=3D/dev/sdc bs=3D512 count=3D10000 conv=3Dfsync
+> 10000+0 records in
+> 10000+0 records out
+> 5120000 bytes (5.1 MB, 4.9 MiB) copied, 0.15257 s, 33.6 MB/s
+>=20
+> dd if=3D/dev/zero of=3D/dev/sdc bs=3D4k count=3D10000 conv=3Dfsync
+> 10000+0 records in
+> 10000+0 records out
+> 40960000 bytes (41 MB, 39 MiB) copied, 0.395081 s, 104 MB/s
+>=20
+> I'm testing this on a Toshiba MG03ACA1 (1TB) hard disk.
+>=20
+>> Second, the commands I used follow.  Do they implement your test case
+>> correctly?
+>>=20
+>> [root@localhost tmp]# mkdir /sys/fs/cgroup/blkio/testgrp
+>> [root@localhost tmp]# echo $BASHPID > =
+/sys/fs/cgroup/blkio/testgrp/cgroup.procs
+>> [root@localhost tmp]# cat /sys/block/sda/queue/scheduler
+>> [mq-deadline] bfq none
+>> [root@localhost tmp]# dd if=3D/dev/zero of=3D/root/test.img bs=3D512 =
+count=3D10000 oflag=3Ddsync
+>> 10000+0 record dentro
+>> 10000+0 record fuori
+>> 5120000 bytes (5,1 MB, 4,9 MiB) copied, 14,6892 s, 349 kB/s
+>> [root@localhost tmp]# echo bfq > /sys/block/sda/queue/scheduler
+>> [root@localhost tmp]# dd if=3D/dev/zero of=3D/root/test.img bs=3D512 =
+count=3D10000 oflag=3Ddsync
+>> 10000+0 record dentro
+>> 10000+0 record fuori
+>> 5120000 bytes (5,1 MB, 4,9 MiB) copied, 20,1953 s, 254 kB/s
+>>=20
+>=20
+> Yes, this is indeed the testcase, although I see a much bigger
+> drop in performance with bfq, compared to the results from
+> your setup.
+>=20
+> Regards,
+> Srivatsa
+
+
+--Apple-Mail=_8AD55980-F0C1-42FC-843D-9D3AFDD1A996
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+	filename=signature.asc
+Content-Type: application/pgp-signature;
+	name=signature.asc
+Content-Description: Message signed with OpenPGP
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEpYoduex+OneZyvO8OAkCLQGo9oMFAlzjmUkACgkQOAkCLQGo
+9oO3FQ/+Jv+JpkDN4rqwR/5YS99ksO/DlU7NJ61C7pK03vuGrei46Qei6u0MSATN
+aB8HTp39V50NsnqyWHUdYN2eX8TsK3SXXfYLr1JLh69f/tzcGmtG1+nWab5eBope
+8CKi6bREmxs4VPFrsiwflWspuOHxr0cSfTKjVG7vi+IAILRiAep3vcHbfp26Qehx
+Z8RCNQhaAgMX15XWl7SnAPOvispB8OkXyZxtKA4VgzZ4mA6IxcBeioW78U9bAUaQ
+zFD+Wmplj5U2yWo5MbBYmiRFeYlaLNdgZjAZlpdt/dYlxPuNSJ6oMNCu5QwlBU1G
+b01D84AlHyNC/9RQAMf4+WIuFG8OhekGoswddB3B8xgKQp20beD1D4lUuTl6V0Bt
+7WAAUT5G8wrzOFjbcnZcOqUEOh7Z2nEj7hstYnp3l35Ou20BJttg7D4G9qmnGnvI
+zp49gutGftl1ElB/WT1BavkgIfd8WA7TUs1c4FGKnEC13MtjjGNPsuW6rWjFlLn+
+XUlSgKys/O+sEKyeK7jmune5WTXoqxIe9cQg/qi8alFU/qfqAZXsPYrRNVkYDBgd
+oLflkGK75Qfwkrkz02kLQ9aHTS5hv+XwXDfDQwmkaH/5ZpUDGNYo+4SJgbWbQwr7
+TtVg+9h5g50wQRd8pNRnaQRemEBrSrNYyIOR6l+6PaP0h8MVaJ0=
+=6wO1
+-----END PGP SIGNATURE-----
+
+--Apple-Mail=_8AD55980-F0C1-42FC-843D-9D3AFDD1A996--
