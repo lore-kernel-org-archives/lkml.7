@@ -1,136 +1,129 @@
 Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B357C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:52:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DECBC46470
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:53:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BB1C21773
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:52:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="NcJ+cu+a"
+	by mail.kernel.org (Postfix) with ESMTP id 14364217D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:53:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558435985;
+	bh=NieFekJpcls3cvStkVQ4lObIOw1rZWqS833M5xNAwgg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=oi0fRFN4MobqqJRXoc219QjnquW3o9QG6pz4ZDMG4broy8vBwNSGN6tC/oy2zcwTz
+	 sI0vOhfLYSLzt888wH8Rm0gyFgI11unhe7eukbCoQlE7ucIBrzoRhqCXqaOJBVTzZN
+	 Esin7oAv0Sc9fqPsPbbxfokmh4Fms3PtArVoD30o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727938AbfEUKwn (ORCPT
+        id S1727947AbfEUKxD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 06:52:43 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:48317 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727060AbfEUKwU (ORCPT
+        Tue, 21 May 2019 06:53:03 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:46627 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726289AbfEUKxD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 06:52:20 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190521105219euoutp02b05c9b08a1d03a60be3c740ac8c68c67~grTrdA_6I1480014800euoutp02N
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 10:52:19 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190521105219euoutp02b05c9b08a1d03a60be3c740ac8c68c67~grTrdA_6I1480014800euoutp02N
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1558435939;
-        bh=a4rhZ7HDvqEXTse02KOkCIPOpiX/GoXFahUQjVRjFLg=;
-        h=From:Subject:To:Cc:Date:References:From;
-        b=NcJ+cu+aKZ3+h5RKQrrpUzr0mvBakOdHXoTYYtfxF609Eqv5N1Hq3heFaFm0fh2ue
-         VqxXojXBwlTfohpZlVBgeciVnvatgkSCgS+Asv/O8xtuRLa0i84KjiP2nkR6XD0DFr
-         WYeMXfZGd+8uIbNGoTbsK8ze1nmOqMFXuYYbM17U=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190521105218eucas1p223bcb596e0f5151933429035226d649c~grTqvaKul3024630246eucas1p2B;
-        Tue, 21 May 2019 10:52:18 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id CE.05.04298.268D3EC5; Tue, 21
-        May 2019 11:52:18 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190521105217eucas1p19796d2969c1a568fecb0750818226241~grTp_qUlh0212202122eucas1p1L;
-        Tue, 21 May 2019 10:52:17 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190521105217eusmtrp10af3bb8c9b7bf448b194ab3dfa026eef~grTpvH-dp1584715847eusmtrp1S;
-        Tue, 21 May 2019 10:52:17 +0000 (GMT)
-X-AuditID: cbfec7f2-f13ff700000010ca-79-5ce3d86229b6
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id DA.F4.04140.168D3EC5; Tue, 21
-        May 2019 11:52:17 +0100 (BST)
-Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190521105217eusmtip13906abf5ab5422044daf75a93ee3213b~grTpZV8cU2619726197eusmtip1F;
-        Tue, 21 May 2019 10:52:17 +0000 (GMT)
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: [PATCH v2] video: fbdev: atmel_lcdfb: add COMPILE_TEST support
-To:     Nicolas Ferre <nicolas.ferre@microchip.com>
-Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Message-ID: <f9d56fc1-3e02-9716-b764-82e9600e5919@samsung.com>
-Date:   Tue, 21 May 2019 12:52:17 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.6.1
+        Tue, 21 May 2019 06:53:03 -0400
+Received: by mail-pf1-f193.google.com with SMTP id y11so8860033pfm.13
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 03:53:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=2Sic2O7wb52L5CR9NZn4I8czhdSoXaChDb/juZvSzjk=;
+        b=kqar2URpzHjwHZxhz9FhJySyjNcvp48Yvzwkmxf2VubqeURESj6Vff0i/jsIthS7y9
+         fPRjulw8tqg5W/oB23bfQ6UFnd8nscb2aa5s8AAzR6x2gUQbSsbmCcBbB7K1Uh/hzbiv
+         ZeoxCNKSzYQ80A1lxxKgGkbjkN61+GLe0vQUUtixqAl/tDRPbShOiB0e1oWE/ejNmBFv
+         dqBUvs9CRSKIAN4+yxm1aYazKW+oNgGlzkPpuhdWb4Z3w7wGKiYDfQlj3WlYFi/as9VJ
+         VFMSyRQc0lXkd32xUqS1qV7HC6vxnJFGeLEI1qV1TDkfxSHCiLUZ0ohK/bMC56iKFykQ
+         9XTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2Sic2O7wb52L5CR9NZn4I8czhdSoXaChDb/juZvSzjk=;
+        b=JMfnlsuXu8JIfhQJG9u8+YXWZMO2sSOMRNHzdbhtbgl3foV+FHe+Co61lgM1Wkdkj5
+         MTcS6KGGUhvx7EzSpyhU2+YUWLrHXDoeTg3YqlJhUBQXfv7HGCMca5+k1oZmMX1GQbaT
+         r9PJKe2voPG638Ey5ECcvrXRrrzFu40wK4WhC0pRx/0SVle+u/eE8eYPPvNijtcPuAuy
+         vH8OfMPFaQBulr89qTms5ictAZOAdXuKml/exb0c/vNhNpvO40HIMYiABBZu7ZcABFFC
+         +iT+7dOPdRfmfHx4qCel3RpHO18R5leHIf3slqFrFg/ToInZWXLLwFh4FE7J2DOjxRVG
+         Yohw==
+X-Gm-Message-State: APjAAAVFjTynL2lGRMXVM8OPpzEj4x2FxYWPSWSecSa+Uh7cCsr2W0sm
+        ax07f4ivYMlmjo5xAbUFB7w=
+X-Google-Smtp-Source: APXvYqzWwsWL/43VXabxfdXeVLd95/lm6etnN5YVFlIWX66F8XbYX0NSYXLCPcewwlk31OvvzN3rhw==
+X-Received: by 2002:a63:ba5a:: with SMTP id l26mr80865856pgu.183.1558435982668;
+        Tue, 21 May 2019 03:53:02 -0700 (PDT)
+Received: from google.com ([2401:fa00:d:0:98f1:8b3d:1f37:3e8])
+        by smtp.gmail.com with ESMTPSA id j64sm37602676pfb.126.2019.05.21.03.52.58
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 21 May 2019 03:53:01 -0700 (PDT)
+Date:   Tue, 21 May 2019 19:52:56 +0900
+From:   Minchan Kim <minchan@kernel.org>
+To:     Oleksandr Natalenko <oleksandr@redhat.com>
+Cc:     Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tim Murray <timmurray@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>
+Subject: Re: [RFC 4/7] mm: factor out madvise's core functionality
+Message-ID: <20190521105256.GF219653@google.com>
+References: <20190520035254.57579-1-minchan@kernel.org>
+ <20190520035254.57579-5-minchan@kernel.org>
+ <20190520142633.x5d27gk454qruc4o@butterfly.localdomain>
+ <20190521012649.GE10039@google.com>
+ <20190521063628.x2npirvs75jxjilx@butterfly.localdomain>
+ <20190521065000.GH32329@dhcp22.suse.cz>
+ <20190521070638.yhn3w4lpohwcqbl3@butterfly.localdomain>
 MIME-Version: 1.0
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrBKsWRmVeSWpSXmKPExsWy7djP87pJNx7HGFz7LmLR/m4Zu8WVr+/Z
-        LDY9vsZqcaLvA6vF5V1z2CxerL3OarF980JmB3aPeWuqPe53H2fy2Lyk3uPOj6WMHp83yQWw
-        RnHZpKTmZJalFunbJXBlbL62kqVgNlvFmy8rmBsYZ7N2MXJySAiYSJy8d5Spi5GLQ0hgBaPE
-        8msTmCGcL4wSO9dNZAGpEhL4zCjRdtAPpmPh+ensEPHljBLHbopBNLxllDjw6TfYWDYBK4mJ
-        7asYQWxhAXeJOY33gFZwcIgI6Ev86VIEqWcW+MQo0T5rLVgNr4CdxNRzO9hAbBYBVYnJP6aB
-        zREViJC4f2wDK0SNoMTJmU/ADmIWEJe49WQ+E4QtL7H97RywqyUEprNLnF54ixniUheJL22v
-        2CFsYYlXx7dA2TISpyf3sEA0rGOU+NvxAqp7OzAAJv9jg6iyljh8/CIryNnMApoS63fpQ4Qd
-        JV48/MkIEpYQ4JO48VYQ4gg+iUnbpjNDhHklOtqEIKrVJDYs28AGs7Zr50qo0zwk3qz4xz6B
-        UXEWktdmIXltFpLXZiHcsICRZRWjeGppcW56arFhXmq5XnFibnFpXrpecn7uJkZg+jn97/in
-        HYxfLyUdYhTgYFTi4c2Y8ihGiDWxrLgy9xCjBAezkgjv6VNAId6UxMqq1KL8+KLSnNTiQ4zS
-        HCxK4rzVDA+ihQTSE0tSs1NTC1KLYLJMHJxSDYzsulFGexkWLFRn4yw+x3/z5KOqUqcapTi7
-        GPYDdezTA5ds7teOvLG2+NrbMP+lfz5omq6M8mubu+HUg4WbWvY8k34Yd/1vRLWNkd3TdL39
-        F/09vOTy3wRZhfpM3jUnnv91xffGx++2iXxuLepr/BbHk2rSdShL6rBVmNa88BkNsqfWPuxt
-        V1JiKc5INNRiLipOBAA6lT9SOwMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrEIsWRmVeSWpSXmKPExsVy+t/xu7qJNx7HGLxskLdof7eM3eLK1/ds
-        FpseX2O1ONH3gdXi8q45bBYv1l5ntdi+eSGzA7vHvDXVHve7jzN5bF5S73Hnx1JGj8+b5AJY
-        o/RsivJLS1IVMvKLS2yVog0tjPQMLS30jEws9QyNzWOtjEyV9O1sUlJzMstSi/TtEvQyNl9b
-        yVIwm63izZcVzA2Ms1m7GDk5JARMJBaen87excjFISSwlFHi26ajjF2MHEAJGYnj68sgaoQl
-        /lzrYoOoec0osaN1AxNIgk3ASmJi+ypGEFtYwF1iTuM9JpBeEQF9iT9diiD1zAKfGCV+PW8H
-        q+EVsJOYem4HG4jNIqAqMfnHNLAjRAUiJM68X8ECUSMocXLmEzCbWUBd4s+8S8wQtrjErSfz
-        mSBseYntb+cwT2AUmIWkZRaSlllIWmYhaVnAyLKKUSS1tDg3PbfYSK84Mbe4NC9dLzk/dxMj
-        MH62Hfu5ZQdj17vgQ4wCHIxKPLwZUx7FCLEmlhVX5h5ilOBgVhLhPX0KKMSbklhZlVqUH19U
-        mpNafIjRFOihicxSosn5wNjOK4k3NDU0t7A0NDc2NzazUBLn7RA4GCMkkJ5YkpqdmlqQWgTT
-        x8TBKdXA2Ljyua/uNWaHaZsOxvNvPSk/e5V3/nYjS4dyhT0Cse97nmYk6N9JOO78O9ljWm4m
-        L8+a4/XcGtHrf0/ROz8pfOf9T04dS3+tVp+rtnv1br5FAvOYQhMkFkxdt44ht599/vbkoLnq
-        6SY1Ly0uXPO41/pxukmOxP0J1l9VrcoNZAOLc4032ZpqKbEUZyQaajEXFScCADhftqO1AgAA
-X-CMS-MailID: 20190521105217eucas1p19796d2969c1a568fecb0750818226241
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190521105217eucas1p19796d2969c1a568fecb0750818226241
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190521105217eucas1p19796d2969c1a568fecb0750818226241
-References: <CGME20190521105217eucas1p19796d2969c1a568fecb0750818226241@eucas1p1.samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190521070638.yhn3w4lpohwcqbl3@butterfly.localdomain>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add COMPILE_TEST support to atmel_lcdfb driver for better compile
-testing coverage.
+On Tue, May 21, 2019 at 09:06:38AM +0200, Oleksandr Natalenko wrote:
+> Hi.
+> 
+> On Tue, May 21, 2019 at 08:50:00AM +0200, Michal Hocko wrote:
+> > On Tue 21-05-19 08:36:28, Oleksandr Natalenko wrote:
+> > [...]
+> > > Regarding restricting the hints, I'm definitely interested in having
+> > > remote MADV_MERGEABLE/MADV_UNMERGEABLE. But, OTOH, doing it via remote
+> > > madvise() introduces another issue with traversing remote VMAs reliably.
+> > > IIUC, one can do this via userspace by parsing [s]maps file only, which
+> > > is not very consistent, and once some range is parsed, and then it is
+> > > immediately gone, a wrong hint will be sent.
+> > > 
+> > > Isn't this a problem we should worry about?
+> > 
+> > See http://lkml.kernel.org/r/20190520091829.GY6836@dhcp22.suse.cz
+> 
+> Oh, thanks for the pointer.
+> 
+> Indeed, for my specific task with remote KSM I'd go with map_files
+> instead. This doesn't solve the task completely in case of traversal
+> through all the VMAs in one pass, but makes it easier comparing to a
+> remote syscall.
 
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
----
-v2: add missing HAVE_CLK && HAS IOMEM dependencies
+I'm wondering how map_files can solve your concern exactly if you have
+a concern about the race of vma unmap/remap even there are anonymous
+vma which map_files doesn't support.
 
- drivers/video/fbdev/Kconfig |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-Index: b/drivers/video/fbdev/Kconfig
-===================================================================
---- a/drivers/video/fbdev/Kconfig
-+++ b/drivers/video/fbdev/Kconfig
-@@ -856,7 +856,8 @@ config FB_S1D13XXX
- 
- config FB_ATMEL
- 	tristate "AT91 LCD Controller support"
--	depends on FB && OF && HAVE_FB_ATMEL
-+	depends on FB && OF && HAVE_CLK && HAS_IOMEM
-+	depends on HAVE_FB_ATMEL || COMPILE_TEST
- 	select FB_BACKLIGHT
- 	select FB_CFB_FILLRECT
- 	select FB_CFB_COPYAREA
+> 
+> -- 
+>   Best regards,
+>     Oleksandr Natalenko (post-factum)
+>     Senior Software Maintenance Engineer
