@@ -2,143 +2,101 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70F22C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:28:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18C4AC04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:30:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 428EF2173C
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:28:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C4OYf+iJ"
+	by mail.kernel.org (Postfix) with ESMTP id EA39F2173C
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:30:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728449AbfEUN2w (ORCPT
+        id S1728232AbfEUNaR convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 09:28:52 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:35979 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728045AbfEUN2v (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 09:28:51 -0400
-Received: by mail-qk1-f195.google.com with SMTP id c14so11041554qke.3
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 06:28:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=cvvOQE23MwdFnUZeKL2gbjCzqL3FWxm72jrOP4dw27c=;
-        b=C4OYf+iJYkz3nPxU1Ucd7ro+3tXceXoYuWDEukvbB8WML7GWvsSqAvR2hCcesl4kLb
-         ADvMyFCOo3Y44d+Bo3B3vb2FaZ4cRU1JNGRnNjHgIG42JLIWft7ndbqpU2CSVFL/Xj5P
-         /QZzX+Mqrh1gAyerbY70T/L+Za3lye4ks0CFrr8SHqSJScFuzXg0xPYBeD5nRiygFgfd
-         yX0UYM3PJ86Hy06kfu2CrBqRpkqM1UgNVS2VoYLoJGwu76/afH/iNUwngn2q25ZzHsRJ
-         z83FzgfaN+5GT+9vTHA7ss5xdlmyYRY+H7+SaQ5I4DUidbOweNXO/W6Zpf+LBWYAtJKb
-         KbWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cvvOQE23MwdFnUZeKL2gbjCzqL3FWxm72jrOP4dw27c=;
-        b=aTZWh7I2ColIRqn64o+htAZb54l9JZiaHUqG6KxNchm4c2n27F8WijSCiMHuWAL3PS
-         eHYzfBXGlgHYzWUF71mkhn7OdkTlTvHQ63sMm0M3UN/AvP15xtg+gTHxXRhbK1tqx1TT
-         krD5QRcmrG9mFXiik809X0ofArF1Smws9XWOU5Amw4k/m65nKz+tQreZ+L66s4tVUezA
-         uQ7t/JeQ7avRnPfdBHlHOJzfO9OMK+Q8Ri7CXb6sG8Bp25U+7nE9Pz0yYcRjWz4Za8Nv
-         XtpJ0fFAj4kW6IqVzLOuuEifH85m8ASTnYQQTUll+mlEVC7CznEYIclXvtEpWjLAvvFu
-         Nrlw==
-X-Gm-Message-State: APjAAAXszhQaZ0n44PYE8CdLsW++igmxYcRusiOsALvCztyzn3eqsS9X
-        wWMqjuE98ipibATXswcrUq0=
-X-Google-Smtp-Source: APXvYqwDnfz226jOrtJBd0bC8BawGSJzb9m+9TVxmsHrZ0B9wq0YgRc6/wZnJDIXOCQFmMqsUYII/g==
-X-Received: by 2002:ae9:e642:: with SMTP id x2mr32611140qkl.181.1558445330702;
-        Tue, 21 May 2019 06:28:50 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.35.11])
-        by smtp.gmail.com with ESMTPSA id j5sm9833203qtb.30.2019.05.21.06.28.47
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 21 May 2019 06:28:50 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id C6117404A1; Tue, 21 May 2019 10:28:38 -0300 (-03)
-Date:   Tue, 21 May 2019 10:28:38 -0300
-To:     Vitaly Chikunov <vt@altlinux.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Hendrik Brueckner <brueckner@linux.ibm.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Kim Phillips <kim.phillips@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
-Subject: Re: [PATCH] perf arm64: Fix mksyscalltbl when system kernel headers
- are ahead of the kernel
-Message-ID: <20190521132838.GB26253@kernel.org>
-References: <20190521030203.1447-1-vt@altlinux.org>
+        Tue, 21 May 2019 09:30:17 -0400
+Received: from unicorn.mansr.com ([81.2.72.234]:37392 "EHLO unicorn.mansr.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726995AbfEUNaQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 09:30:16 -0400
+Received: by unicorn.mansr.com (Postfix, from userid 51770)
+        id 6E34217102; Tue, 21 May 2019 14:30:14 +0100 (BST)
+From:   =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans@mansr.com>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Markus Reichl <m.reichl@fivetechno.de>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Peter Chen <peter.chen@nxp.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 0/5] Exynos EHCI/OHCI: resolve conflict with the generic USB device bindings
+References: <CGME20190521120015eucas1p1da2f3f32d6b8af8cb550463686fd4e12@eucas1p1.samsung.com>
+        <20190521115849.9882-1-m.szyprowski@samsung.com>
+Date:   Tue, 21 May 2019 14:30:14 +0100
+In-Reply-To: <20190521115849.9882-1-m.szyprowski@samsung.com> (Marek
+        Szyprowski's message of "Tue, 21 May 2019 13:58:44 +0200")
+Message-ID: <yw1xk1ekszo9.fsf@mansr.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.3 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190521030203.1447-1-vt@altlinux.org>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, May 21, 2019 at 06:02:03AM +0300, Vitaly Chikunov escreveu:
-> When a host system has kernel headers that are newer than a compiling
-> kernel, mksyscalltbl fails with errors such as:
-> 
->   <stdin>: In function 'main':
->   <stdin>:271:44: error: '__NR_kexec_file_load' undeclared (first use in this function)
->   <stdin>:271:44: note: each undeclared identifier is reported only once for each function it appears in
->   <stdin>:272:46: error: '__NR_pidfd_send_signal' undeclared (first use in this function)
->   <stdin>:273:43: error: '__NR_io_uring_setup' undeclared (first use in this function)
->   <stdin>:274:43: error: '__NR_io_uring_enter' undeclared (first use in this function)
->   <stdin>:275:46: error: '__NR_io_uring_register' undeclared (first use in this function)
->   tools/perf/arch/arm64/entry/syscalls//mksyscalltbl: line 48: /tmp/create-table-xvUQdD: Permission denied
-> 
-> mksyscalltbl is compiled with default host includes, but run with
+Marek Szyprowski <m.szyprowski@samsung.com> writes:
 
-It shouldn't :-\ So with this you're making it use the ones shipped in
-tools/include? Good, I'll test it, thanks!
+> Dear All,
+>
+> Commit 69bec7259853 ("USB: core: let USB device know device node") added
+> support for attaching devicetree node for USB devices. Those nodes are
+> children of their USB host controller. However Exynos EHCI and OHCI
+> driver bindings already define child-nodes for each physical root hub
+> port and assigns respective PHY controller and parameters to them. This
+> leads to the conflict. A workaround for it has been merged as commit
+> 01d4071486fe ("usb: exynos: add workaround for the USB device bindings
+> conflict"), but it disabled support for USB device binding for Exynos
+> EHCI/OHCI controllers.
+>
+> This patchset tries to resolve this binding conflict by changing Exynos
+> EHCI/OHCI bindings: PHYs are moved from the sub-nodes to a standard array
+> under the 'phys' property. Such solution has been suggested by Måns
+> Rullgård in the following thread: https://lkml.org/lkml/2019/5/13/228
+>
+> To keep everything working during the transitional time, the changes has
+> been split into 2 steps. First step (patches 1-3) need to be merged before
+> the second one (patches 4-5). Patches from each step can be merged to
+> respective trees without any dependencies - the only requirement is that
+> second step has to be merged after merging all patches from the first one.
+>
+> This patchset has been tested on various Exynos4 boards with different
+> USB host controller configurations (Odroids family: X2, U3, XU3).
+>
+> Best regards
+> Marek Szyprowski
+> Samsung R&D Institute Poland
+>
+> Marek Szyprowski (5):
+>   dt-bindings: switch Exynos EHCI/OHCI bindings to use array of generic
+>     PHYs
+>   ARM: dts: exynos: Add array of generic PHYs to EHCI/OHCI devices
+>   usb: exynos: add support for getting PHYs from the standard dt array
+>   ARM: dts: exynos: Remove obsolete port sub-nodes from EHCI/OHCI
+>     devices
+>   usb: exynos: Remove support for legacy PHY bindings
 
-- Arnaldo
+You could retain compatibility with old devicetrees (which may be
+useful) by using the "phys" property if it exists and falling back
+on the old method if it doesn't.  Then you would get this sequence
+of changes:
 
-> compiling kernel tree includes, causing some syscall numbers being
-> undeclared.
-> 
-> Signed-off-by: Vitaly Chikunov <vt@altlinux.org>
-> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-> Cc: Hendrik Brueckner <brueckner@linux.ibm.com>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Jiri Olsa <jolsa@redhat.com>
-> Cc: Kim Phillips <kim.phillips@arm.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
-> ---
->  tools/perf/arch/arm64/entry/syscalls/mksyscalltbl | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl b/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl
-> index c88fd32563eb..459469b7222c 100755
-> --- a/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl
-> +++ b/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl
-> @@ -56,7 +56,7 @@ create_table()
->  	echo "};"
->  }
->  
-> -$gcc -E -dM -x c  $input	       \
-> +$gcc -E -dM -x c -I $incpath/include/uapi $input \
->  	|sed -ne 's/^#define __NR_//p' \
->  	|sort -t' ' -k2 -nu	       \
->  	|create_table
-> -- 
-> 2.11.0
+1. Update binding definition.
+2. Support new binding in driver, with fallback to old.
+3. Switch dts files to new binding.
 
 -- 
-
-- Arnaldo
+Måns Rullgård
