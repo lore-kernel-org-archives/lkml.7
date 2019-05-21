@@ -2,85 +2,70 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE13EC04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 19:15:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D546C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 19:20:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95683217D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 19:15:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="yWkDv5Pz"
+	by mail.kernel.org (Postfix) with ESMTP id 7CE0F217D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 19:20:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727047AbfEUTPC (ORCPT
+        id S1727335AbfEUTUX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 15:15:02 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:42596 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726466AbfEUTPC (ORCPT
+        Tue, 21 May 2019 15:20:23 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:37620 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726525AbfEUTUW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 15:15:02 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4LJF1Q9023935;
-        Tue, 21 May 2019 14:15:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1558466101;
-        bh=3WysA2VpJ32YviVM2gWhIYoGciz0aznDNykj2COnt3k=;
-        h=Subject:To:References:From:Date:In-Reply-To;
-        b=yWkDv5PzlXiE3eGkM+4Y1pOOLcwUP0LjtJp09S34CWHEkW5ppUjjGryhwah4W4E5Y
-         fd/RKVpmUm6or8d8aeed8XwgLqSoaYajq7Ar4uzl4t6axZCKAw1xb8DT4NUBf0KIJo
-         V11DPljVVWiwBJb3sLxYYRbadPTqjUilOPgkoNoQ=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4LJF19o081898
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 21 May 2019 14:15:01 -0500
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 21
- May 2019 14:15:01 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 21 May 2019 14:15:01 -0500
-Received: from [10.8.44.208] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4LJF11R004869;
-        Tue, 21 May 2019 14:15:01 -0500
-Subject: Re: Generic PHY "unload" crash
-To:     Alan Cooper <alcooperx@gmail.com>,
-        ": Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>
-References: <CAOGqxeWTh0NJ177cH5a4ph-W49pFehjdEcVv+SLm__TiHJc_aQ@mail.gmail.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <9f0becda-4ee1-1330-91c4-df919507cb2c@ti.com>
-Date:   Tue, 21 May 2019 14:15:01 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 21 May 2019 15:20:22 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hTAIz-0003v8-BX; Tue, 21 May 2019 19:20:09 +0000
+Date:   Tue, 21 May 2019 20:20:09 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     David Howells <dhowells@redhat.com>
+Cc:     Christian Brauner <christian@brauner.io>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-api@vger.kernel.org, jannh@google.com, fweimer@redhat.com,
+        oleg@redhat.com, tglx@linutronix.de, torvalds@linux-foundation.org,
+        arnd@arndb.de, shuah@kernel.org, tkjos@android.com,
+        ldv@altlinux.org, miklos@szeredi.hu, linux-alpha@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        x86@kernel.org
+Subject: Re: [PATCH 1/2] open: add close_range()
+Message-ID: <20190521192009.GK17978@ZenIV.linux.org.uk>
+References: <20190521150006.GJ17978@ZenIV.linux.org.uk>
+ <20190521113448.20654-1-christian@brauner.io>
+ <28114.1558456227@warthog.procyon.org.uk>
 MIME-Version: 1.0
-In-Reply-To: <CAOGqxeWTh0NJ177cH5a4ph-W49pFehjdEcVv+SLm__TiHJc_aQ@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <28114.1558456227@warthog.procyon.org.uk>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alan,
+On Tue, May 21, 2019 at 05:30:27PM +0100, David Howells wrote:
 
-On 21/05/19 1:40 PM, Alan Cooper wrote:
-> I'm seeing an issue on a system where I have a generic PHY that is
-> used by a USB XHCI driver. The XHCI driver does the phy_init() in
-> probe and the phy_exit() in remove. The problem happens when I use
-> sysfs to "unload" the PHY driver before doing an unload of the XHCI
-> driver. This is a result of the XHCI driver calling into the PHY
-> driver's phy_exit routine after it's been removed. It seems like this
-> issue will exist for other PHY provider/user pairs and I don't see an
-> easy solution. I was wondering if anyone had any suggestions on how to
-> solve this problem.
+> If we can live with close_from(int first) rather than close_range(), then this
+> can perhaps be done a lot more efficiently by:
+> 
+> 	new = alloc_fdtable(first);
+> 	spin_lock(&files->file_lock);
+> 	old = files_fdtable(files);
+> 	copy_fds(new, old, 0, first - 1);
+> 	rcu_assign_pointer(files->fdt, new);
+> 	spin_unlock(&files->file_lock);
+> 	clear_fds(old, 0, first - 1);
+> 	close_fdt_from(old, first);
+> 	kfree_rcu(old);
 
-Can you share the crash dump please?
-
-Thanks
-Kishon
+I really hate to think how that would interact with POSIX locks...
