@@ -1,230 +1,137 @@
 Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06383C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 11:23:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F8D8C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 11:24:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25AD3216B7
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 11:23:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="tgVJYRM7"
+	by mail.kernel.org (Postfix) with ESMTP id 65CE4216B7
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 11:24:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558437871;
+	bh=LPz/8bnSOocyng6G1JsrkcWmG8OLv9Hua93ZPja6LPY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hGcVwi6neKNONE1iPwxT+LwuoHhBQr2gyrii8tQyHtTFAT89dx4/qUIzGn/Wd7e5l
+	 C9YQ4zXQTvu6VVEfMDuKep6j0FUUFIkf65wev/Jg9n6xnVqeFIkKVuE0HOp/aRGWZ6
+	 GaUTuR4AOQYkOx8jLsFEcQHifFDPDxanjsdJrr1g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727571AbfEULXn (ORCPT
+        id S1727827AbfEULYa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 07:23:43 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.52]:22632 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726525AbfEULXn (ORCPT
+        Tue, 21 May 2019 07:24:30 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:37935 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726525AbfEULYa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 07:23:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1558437817;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=rpbeDq7wzqmt9ft7sRkHSisqWNEwxI9L5yEX6LlBXnk=;
-        b=tgVJYRM7IetLtTdQ7X3IEEBR/3XGIOedL5CRzFh3CKsswYG7eUSGhBd+DtKcbhgegt
-        +N1R/KTgUy9bT17QMk2LhJ9Kr9P26uSGB0vl14FlLjJ2XyRqvG1U5tRbKOS8MZQGLhv8
-        LmA8gIjEriyrTKBiR1WpEP5vzF+PVi4/sVhXTeM1IioI7fRzwRvHbFyFYU1LWZJp3FBg
-        /NBdDHjVq/H1XwwtdJHQ8N7iz41ZStSZqvTu4R6cdbyHMTITOLFc6pWja/O9YhpvwMKB
-        11s8XHWpJ6OqNDjXK0L/8w2ZIbHiUTdkhXTjs+7s1o47uiy8fCyeQsd5gGfI4bjCDJXy
-        x/Sg==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj4Qpw9iZeHmMkw43tdeo="
-X-RZG-CLASS-ID: mo00
-Received: from mbp-13-nikolaus.fritz.box
-        by smtp.strato.de (RZmta 44.18 DYNA|AUTH)
-        with ESMTPSA id j04dc1v4LBNNHTA
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Tue, 21 May 2019 13:23:23 +0200 (CEST)
+        Tue, 21 May 2019 07:24:30 -0400
+Received: by mail-pg1-f194.google.com with SMTP id j26so8448627pgl.5
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 04:24:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=19lOUlmB0BXO2qy5+86EiFCLj8kI8GOhTNcbKNP7IO4=;
+        b=P6sVSJ8VYNp1+Lx4Dxzurk25CX9vkVoXH08GrauyQziSWr+fupC7M+k6u4UTyrGsbY
+         jBDI1AiX+THg04/RNegnkFskFWc2Hde+r/6tC2DP+zcvIs4X2lQyrOQ2m6quf3I3IrDK
+         7n5vzbRA0a6/LqCBIQsIMR/vnOEKPgxN7hl3hjGnf6LP0JrsutNyi9WSvdtj+Jw6mZQG
+         MwxVmfse/1ttaoz24+lxlrWvFBtGZK+tuT51jRdv/4s+Uwa881cOKdhgis/0g1V47XZI
+         RbKI0PyKuB5zZ1JKkzFhG9SfJxo2OfzwDIt009bJF5uw3P2FiSKwodIxOuirOUnvDbcO
+         A2aw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=19lOUlmB0BXO2qy5+86EiFCLj8kI8GOhTNcbKNP7IO4=;
+        b=S1A49C+HintLz0B+SoljY1DZ+r/eIEs4KFC28suXS3959nT/6EWXp4DI2Hc+Tlen8S
+         vB+Qbpsv2m5qgoK8CmilOeTDl8V6y9hbS4CItRdQtUmjRDMklWE23CCYc/0peS+xw6+Y
+         cnkJOjOcCPgHD2SboZUNH2YsKQGSFeNtzSDHGRf76hqRxwrK4u1xD2aU/DTQHelRa57l
+         BLGQK5JNVAwyZQ0HLm4LO0V7qyiFOLynSszkeDhbIiLPW8XQO0skywk3p3ztbc7FsVAM
+         KpukQKuW1LrrRVbM/UXWBtKLOH70x7UncQ55LJ1dMTNyuWiD2Li+Dqgxj1piX/e4sg2B
+         hNvQ==
+X-Gm-Message-State: APjAAAUi/s5FKMFHDKpuEd8ryHPTOVYfUt0Pf++8RNZ9GS1Grc5EYT7n
+        CZfGU9hpvxiNGRd/PN7fsyQ=
+X-Google-Smtp-Source: APXvYqzO8k/cpniPZ4As3COPVMn1h85852mwAsWD2KOvHeEb0TcpcFBsTAgm3gjNSBmuXcimHbfaBA==
+X-Received: by 2002:a63:1657:: with SMTP id 23mr30125895pgw.98.1558437869394;
+        Tue, 21 May 2019 04:24:29 -0700 (PDT)
+Received: from google.com ([2401:fa00:d:0:98f1:8b3d:1f37:3e8])
+        by smtp.gmail.com with ESMTPSA id k13sm17361700pgr.90.2019.05.21.04.24.25
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 21 May 2019 04:24:28 -0700 (PDT)
+Date:   Tue, 21 May 2019 20:24:23 +0900
+From:   Minchan Kim <minchan@kernel.org>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Oleksandr Natalenko <oleksandr@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tim Murray <timmurray@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>
+Subject: Re: [RFC 4/7] mm: factor out madvise's core functionality
+Message-ID: <20190521112423.GH219653@google.com>
+References: <20190520035254.57579-1-minchan@kernel.org>
+ <20190520035254.57579-5-minchan@kernel.org>
+ <20190520142633.x5d27gk454qruc4o@butterfly.localdomain>
+ <20190521012649.GE10039@google.com>
+ <20190521063628.x2npirvs75jxjilx@butterfly.localdomain>
+ <20190521065000.GH32329@dhcp22.suse.cz>
+ <20190521070638.yhn3w4lpohwcqbl3@butterfly.localdomain>
+ <20190521105256.GF219653@google.com>
+ <20190521110030.GR32329@dhcp22.suse.cz>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Subject: Re: [BUG v5.2-rc1] ARM build broken
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <3610cb7ca542479d8eb124e9c9dd6796@svr-chch-ex1.atlnz.lc>
-Date:   Tue, 21 May 2019 13:23:36 +0200
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <A22646AB-300F-4E0A-95DE-06633C2A2986@goldelico.com>
-References: <4DB08A04-D03A-4441-85DE-64A13E6D709C@goldelico.com> <201905200855.391A921AB@keescook> <D8F987B2-8F41-46DE-B298-89541D7A9774@goldelico.com> <201905201142.CF71598A@keescook> <3610cb7ca542479d8eb124e9c9dd6796@svr-chch-ex1.atlnz.lc>
-To:     Chris Packham <Chris.Packham@alliedtelesis.co.nz>,
-        Kees Cook <keescook@chromium.org>
-X-Mailer: Apple Mail (2.3124)
+Content-Disposition: inline
+In-Reply-To: <20190521110030.GR32329@dhcp22.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Chris,
+On Tue, May 21, 2019 at 01:00:30PM +0200, Michal Hocko wrote:
+> On Tue 21-05-19 19:52:56, Minchan Kim wrote:
+> > On Tue, May 21, 2019 at 09:06:38AM +0200, Oleksandr Natalenko wrote:
+> > > Hi.
+> > > 
+> > > On Tue, May 21, 2019 at 08:50:00AM +0200, Michal Hocko wrote:
+> > > > On Tue 21-05-19 08:36:28, Oleksandr Natalenko wrote:
+> > > > [...]
+> > > > > Regarding restricting the hints, I'm definitely interested in having
+> > > > > remote MADV_MERGEABLE/MADV_UNMERGEABLE. But, OTOH, doing it via remote
+> > > > > madvise() introduces another issue with traversing remote VMAs reliably.
+> > > > > IIUC, one can do this via userspace by parsing [s]maps file only, which
+> > > > > is not very consistent, and once some range is parsed, and then it is
+> > > > > immediately gone, a wrong hint will be sent.
+> > > > > 
+> > > > > Isn't this a problem we should worry about?
+> > > > 
+> > > > See http://lkml.kernel.org/r/20190520091829.GY6836@dhcp22.suse.cz
+> > > 
+> > > Oh, thanks for the pointer.
+> > > 
+> > > Indeed, for my specific task with remote KSM I'd go with map_files
+> > > instead. This doesn't solve the task completely in case of traversal
+> > > through all the VMAs in one pass, but makes it easier comparing to a
+> > > remote syscall.
+> > 
+> > I'm wondering how map_files can solve your concern exactly if you have
+> > a concern about the race of vma unmap/remap even there are anonymous
+> > vma which map_files doesn't support.
+> 
+> See http://lkml.kernel.org/r/20190521105503.GQ32329@dhcp22.suse.cz
 
-> Am 20.05.2019 um 23:21 schrieb Chris Packham =
-<Chris.Packham@alliedtelesis.co.nz>:
->=20
-> On 21/05/19 6:54 AM, Kees Cook wrote:
->> [Adding Chris and Ard, who might have more compiler versions that =
-me...]
->=20
-> Late to the thread but ...
->=20
->>=20
->> On Mon, May 20, 2019 at 07:08:39PM +0200, H. Nikolaus Schaller wrote:
->>>> Am 20.05.2019 um 17:59 schrieb Kees Cook <keescook@chromium.org>:
->>>>=20
->>>> On Mon, May 20, 2019 at 05:15:02PM +0200, H. Nikolaus Schaller =
-wrote:
->>>>> Hi,
->>>>> it seems as if ARM build is broken since ARM now hard enables =
-CONFIG_HAVE_GCC_PLUGINS
->>>>> which indirectly enables CONFIG_GCC_PLUGIN_ARM_SSP_PER_TASK. =
-Compiling this breaks
->>>>> on my system (Darwin build host) due to conflicts in system =
-headers and Linux headers.
->>>>>=20
->>>>> So how can I turn off all these GCC_PLUGINS?
->>>>>=20
->>>>> The offending patch seems to be
->>>>>=20
->>>>> 	security: Create "kernel hardening" config area
->>>>>=20
->>>>> especially the new "default y" for GCC_PLUGINS. After removing =
-that line from
->>>>> scripts/gcc-plugins/Kconfig makes my compile succeed.
->>>>=20
->>>> The intention is to enable it _if_ the plugins are available as =
-part of
->>>> the build environment. The "default y" on GCC_PLUGINS is mediated =
-by:
->>>>        depends on HAVE_GCC_PLUGINS
->>>=20
->>> HAVE_GCC_PLUGINS has the following description:
->>>=20
->>> 	An arch should select this symbol if it supports building with
->>>           GCC plugins.
->>>=20
->>> So an ARCH (ARM) selects it unconditionally of the build =
-environment.
->>>=20
->>>>        depends on PLUGIN_HOSTCC !=3D ""
->>>=20
->>> Well, we have it set to "g++" for ages and it was not a problem.
->>> So both conditions are true.
->>=20
->> PLUGIN_HOSTCC should have passed the scripts/gcc-plugin.sh test, so
->> that's correct. And the result (CONFIG_GCC_PLUGINS) is correct: it
->> doesn't enable or disable anything itself.
->>=20
->> What you want is to disable CONFIG_STACKPROTECTOR_PER_TASK, which
->> is the knob for the feature:
->>=20
->> config STACKPROTECTOR_PER_TASK
->>         bool "Use a unique stack canary value for each task"
->>         depends on GCC_PLUGINS && STACKPROTECTOR && SMP && =
-!XIP_DEFLATED_DATA
->>         select GCC_PLUGIN_ARM_SSP_PER_TASK
->>         default y
->>=20
->>> Build error:
->>>=20
->>>  HOSTCXX -fPIC scripts/gcc-plugins/arm_ssp_per_task_plugin.o - due =
-to: scripts/gcc-plugins/gcc-common.h
->>> In file included from =
-scripts/gcc-plugins/arm_ssp_per_task_plugin.c:3:0:
->>> scripts/gcc-plugins/gcc-common.h:153:0: warning: "__unused" =
-redefined
->>> #define __unused __attribute__((__unused__))
->>> ^
->>=20
->> Does the following patch fix your build? (I assume that line is just =
-a
->> warning, but if not...)
->>=20
->> diff --git a/scripts/gcc-plugins/gcc-common.h =
-b/scripts/gcc-plugins/gcc-common.h
->> index 552d5efd7cb7..17f06079a712 100644
->> --- a/scripts/gcc-plugins/gcc-common.h
->> +++ b/scripts/gcc-plugins/gcc-common.h
->> @@ -150,8 +150,12 @@ void print_gimple_expr(FILE *, gimple, int, =
-int);
->>  void dump_gimple_stmt(pretty_printer *, gimple, int, int);
->>  #endif
->>=20
->> +#ifndef __unused
->>  #define __unused __attribute__((__unused__))
->> +#endif
->> +#ifndef __visible
->>  #define __visible __attribute__((visibility("default")))
->> +#endif
->>=20
->>  #define DECL_NAME_POINTER(node) IDENTIFIER_POINTER(DECL_NAME(node))
->>  #define DECL_NAME_LENGTH(node) IDENTIFIER_LENGTH(DECL_NAME(node))
->>=20
->>>  HOSTLLD -shared scripts/gcc-plugins/arm_ssp_per_task_plugin.so - =
-due to target missing
->>> Undefined symbols for architecture x86_64:
->>>  "gen_reg_rtx(machine_mode)", referenced from:
->>>      (anonymous namespace)::arm_pertask_ssp_rtl_pass::execute() in =
-arm_ssp_per_task_plugin.o
->>=20
->> However, this part sounds more like what was fixed with
->> 259799ea5a9a ("gcc-plugins: arm_ssp_per_task_plugin: Fix for older =
-GCC < 6")
->>=20
->> And maybe some additional fixes for 4.9 are needed?
->>=20
->>> This is because CONFIG_GCC_PLUGIN_ARM_SSP_PER_TASK became =
-automatically enabled and was never
->>> before. So the compiler may lack some library search path for =
-building this plugin (which we
->>> did never miss).
->>=20
->> Right -- maybe CONFIG_STACKPROTECTOR_PER_TASK doesn't work with old =
-gcc
->> 4.9.2? I'll see if I can find that compiler version...
->>=20
->=20
-> My build environment is based on debian-jessie
->=20
-> $ g++ --version
-> g++ (Debian 4.9.2-10) 4.9.2
->=20
-> After the fix I posted (which is now commit 259799ea5a9a =
-("gcc-plugins:=20
-> arm_ssp_per_task_plugin: Fix for older GCC < 6")) I wasn't having any=20=
+Question is how it works for anonymous vma which don't have backing
+file.
 
-> more problems.
-
-Ok, fine.
-
-So it indeed looks as if my host-g++ can not properly build gcc-plugins =
-for
-the arm cross-gcc. This may come from using Darwin as the build host... =
-So
-it may have/use/need a different gcc for building the gcc-plugin for
-cross-building the kernel.
-
-Hm. Yes. The cross-toolchain was bootstrapped from scratch. The HOSTCC
-comes from Macports and may be a different version. So it is likely that
-the HOSTCC from Macports can not build a compatible gcc-plugin for the
-cross-gcc.
-
-That seems to be a significant assumption about the build infrastructure
-which now became permanently enabled by the "default y" for GCC_PLUGINS.
-
-I am not sure what the right way forward is. Probably for me it is to =
-find
-out if I can fix my cross-toolchain. Or if the kernel should better =
-check
-if gcc-plugins can really be built, if they are automatically enabled.
-Or keep all gcc-plugins disabled until explicitly configured for?
-
-BR and thanks,
-Nikolaus
-
+> 
+> -- 
+> Michal Hocko
+> SUSE Labs
