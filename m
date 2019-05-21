@@ -2,143 +2,128 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32F86C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 17:55:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30FD2C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 17:55:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 048EC217D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 17:55:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED5A0217D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 17:55:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="eloylbcn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j0FisOER"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729210AbfEURzJ (ORCPT
+        id S1729228AbfEURzg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 13:55:09 -0400
-Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:52602 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729179AbfEURzI (ORCPT
+        Tue, 21 May 2019 13:55:36 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:46948 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728055AbfEURzf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 13:55:08 -0400
-Received: from mailhost.synopsys.com (dc8-mailhost2.synopsys.com [10.13.135.210])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 8089CC01AB;
-        Tue, 21 May 2019 17:55:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1558461314; bh=j4xujey4oHXPlAqqw8enUk4zgpaPtQQZ7GJiAvqvb5U=;
-        h=From:To:Cc:Subject:Date:From;
-        b=eloylbcnJ5MpMfQi3KVwoX5gi5BDGCqQPL8z4WMUQcXQHnMQOVApwjnTEeFez0qmB
-         d6NJqsP0wb5smfnJ6XhiXvzisPlCWIokP2AMecXdPzgRaR6QHo++0d3Bs51SiGYiIu
-         j8ZP/V2gni2nGmExJZoWo+wD9oCoajeM9sVFCDS39xXEjX+4MfhmVFe2e60wuDqSA0
-         11/9hUwL1yvzUafjjGSken9CgX8TXK5P+reyKlRZvLPnuZyY3IFcyOTdthXuSBQvOi
-         8hFyqFec8nE4WhXEBYeIVzn0F14im7y4r6ZbTlWAbp9NT0Nz51JjHe2lTJvcdB6i5f
-         24PZOehyvdr2w==
-Received: from paltsev-e7480.internal.synopsys.com (paltsev-e7480.internal.synopsys.com [10.121.8.106])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 240D6A0067;
-        Tue, 21 May 2019 17:55:03 +0000 (UTC)
-From:   Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-To:     linux-snps-arc@lists.infradead.org,
-        Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Subject: [PATCH v3] ARC: [plat-hsdk]: Add support of Vivante GPU
-Date:   Tue, 21 May 2019 20:54:39 +0300
-Message-Id: <20190521175439.15723-1-Eugeniy.Paltsev@synopsys.com>
-X-Mailer: git-send-email 2.14.5
+        Tue, 21 May 2019 13:55:35 -0400
+Received: by mail-lf1-f65.google.com with SMTP id l26so13741753lfh.13;
+        Tue, 21 May 2019 10:55:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=IfC90GLWAL5buzqpB3Hhmc94gWiD9YxrxMTKQ1rMyRM=;
+        b=j0FisOER1y/L+6LkfBt8YXZO/d0LHxfgfibIXMagQRz8eZuFtPr0xsdxx2UDbih1BO
+         t+M6Fpu2GA34I8qh+suppEju4J9ej11udj/cd4wftrK1/goHeAqOU/EQBZU75bBqx6yY
+         0pisnKM4YolPLuFaAjssSdxnSsVc68/sveBiOMX1FOUvDdnCBqoIYbxGB6l9wp8dgPkb
+         2KrXe+32kRCKSQvlRIrK2Y7KT2Trc97RFF628Lv9HMLvyqS91s/hZ54WeduaZyBqBtsZ
+         xE3rlPeLNnTTRLi2YHNPDY6trmPtfDlBjcf1Do0NcWfe4gCpZbc8rd4v0YRs728qYpdC
+         aA4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=IfC90GLWAL5buzqpB3Hhmc94gWiD9YxrxMTKQ1rMyRM=;
+        b=RHXjkAmgleZDVpD9w8kauGgZX2t3iXs6fHEqNvZCW4fd97pZlhmrRj2mQMpZ6msI9B
+         GKEK9oRiNYMzYjz1BQOyO6iLJowOof8/xcnhfn/HQFB9dtVyH1BgJkoYBOt8JmV4EklL
+         mIWb0nxQ86Q3E3taRrJjomYSG+kcQ4uvXoo+MAClXSbNCiuQAY+8jDmZdrOGdYnBW+yX
+         fJ1uShNtXOa+RAMQBBHvP3L/mn5kMKLwKfNY5voThk1CtD5KjV+RHRqALwOT+GlbkVC/
+         6lDjfih0PTaRfOyqUbn9zkaYG0+PXeQ0TMlyNpXic+p9ITRT3G2WnF0H6OL+UZhDMgK8
+         8hVw==
+X-Gm-Message-State: APjAAAVvZgtgS//Mz9Bo0+F5O0M/3g2qZ8UFGtI7G8OGjpbu/eur/ber
+        G8WkMhMINqhk6++zZqVYKQc=
+X-Google-Smtp-Source: APXvYqwO6dtTEgUYcoodZ/ORFTKcLy5c4fhJsQj3OtLXPCDDB+PojqiaceAFBupQdJWkjIAB8kaKXQ==
+X-Received: by 2002:ac2:50c4:: with SMTP id h4mr22359011lfm.105.1558461333023;
+        Tue, 21 May 2019 10:55:33 -0700 (PDT)
+Received: from z50.localnet (109241207190.gdansk.vectranet.pl. [109.241.207.190])
+        by smtp.gmail.com with ESMTPSA id s6sm4741081lje.89.2019.05.21.10.55.31
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 21 May 2019 10:55:32 -0700 (PDT)
+From:   Janusz Krzysztofik <jmkrzyszt@gmail.com>
+To:     Greg KH <greg@kroah.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH v2 1/9] media: ov6650: Fix MODDULE_DESCRIPTION
+Date:   Tue, 21 May 2019 19:55:30 +0200
+Message-ID: <1658715.gUuAbo05IQ@z50>
+In-Reply-To: <20190521051537.GA8325@kroah.com>
+References: <20190520225007.2308-1-jmkrzyszt@gmail.com> <20190520225007.2308-2-jmkrzyszt@gmail.com> <20190521051537.GA8325@kroah.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-HSDK board has built-in Vivante GPU IP which works perfectly fine
-with Etnaviv driver, so let's use it.
+On Tuesday, May 21, 2019 7:15:37 AM CEST Greg KH wrote:
+> On Tue, May 21, 2019 at 12:49:59AM +0200, Janusz Krzysztofik wrote:
+> > Commit 23a52386fabe ("media: ov6650: convert to standalone v4l2
+> > subdevice") converted the driver from a soc_camera sensor to a
+> > standalone V4L subdevice driver.  Unfortunately, module description was
+> > not updated to reflect the change.  Fix it.
+> > 
+> > While being at it, update email address of the module author.
+> > 
+> > Fixes: 23a52386fabe ("media: ov6650: convert to standalone v4l2 subdevice")
+> > Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
+> > cc: stable@vger.kernel.org
+> > ---
+> >  drivers/media/i2c/ov6650.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/media/i2c/ov6650.c b/drivers/media/i2c/ov6650.c
+> > index 1b972e591b48..a3d00afcb0c8 100644
+> > --- a/drivers/media/i2c/ov6650.c
+> > +++ b/drivers/media/i2c/ov6650.c
+> > @@ -1045,6 +1045,6 @@ static struct i2c_driver ov6650_i2c_driver = {
+> >  
+> >  module_i2c_driver(ov6650_i2c_driver);
+> >  
+> > -MODULE_DESCRIPTION("SoC Camera driver for OmniVision OV6650");
+> > -MODULE_AUTHOR("Janusz Krzysztofik <jkrzyszt@tis.icnet.pl>");
+> > +MODULE_DESCRIPTION("V4L2 subdevice driver for OmniVision OV6650 camera sensor");
+> > +MODULE_AUTHOR("Janusz Krzysztofik <jmkrzyszt@gmail.com");
+> >  MODULE_LICENSE("GPL v2");
+> 
+> is this _really_ a patch that meets the stable kernel requirements?
+> Same for this whole series...
 
-Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
----
-Changes v2->v3:
- * Rebase onto latest kernel. No functional change intended.
+Hi Greg,
 
-Changes v1->v2:
- * Add clock inputs to etnaviv device tree node (reported by Lucas Stach)
+My bad, I'm sorry.  Please ignore the whole series, and I'll be more careful
+in the future.
 
- arch/arc/boot/dts/hsdk.dts      | 29 +++++++++++++++++++++++++++++
- arch/arc/configs/hsdk_defconfig |  2 +-
- 2 files changed, 30 insertions(+), 1 deletion(-)
+Thanks,
+Janusz
 
-diff --git a/arch/arc/boot/dts/hsdk.dts b/arch/arc/boot/dts/hsdk.dts
-index 7425bb0f2d1b..32b3974ae4e2 100644
---- a/arch/arc/boot/dts/hsdk.dts
-+++ b/arch/arc/boot/dts/hsdk.dts
-@@ -167,6 +167,24 @@
- 			#clock-cells = <0>;
- 		};
- 
-+		gpu_core_clk: gpu-core-clk {
-+			compatible = "fixed-clock";
-+			clock-frequency = <400000000>;
-+			#clock-cells = <0>;
-+		};
-+
-+		gpu_dma_clk: gpu-dma-clk {
-+			compatible = "fixed-clock";
-+			clock-frequency = <400000000>;
-+			#clock-cells = <0>;
-+		};
-+
-+		gpu_cfg_clk: gpu-cfg-clk {
-+			compatible = "fixed-clock";
-+			clock-frequency = <200000000>;
-+			#clock-cells = <0>;
-+		};
-+
- 		dmac_core_clk: dmac-core-clk {
- 			compatible = "fixed-clock";
- 			clock-frequency = <400000000>;
-@@ -252,6 +270,17 @@
- 			};
- 		};
- 
-+		gpu_3d: gpu@90000 {
-+			compatible = "vivante,gc";
-+			reg = <0x90000 0x4000>;
-+			clocks = <&gpu_dma_clk>,
-+				 <&gpu_cfg_clk>,
-+				 <&gpu_core_clk>,
-+				 <&gpu_core_clk>;
-+			clock-names = "bus", "reg", "core", "shader";
-+			interrupts = <28>;
-+		};
-+
- 		dmac: dmac@80000 {
- 			compatible = "snps,axi-dma-1.01a";
- 			reg = <0x80000 0x400>;
-diff --git a/arch/arc/configs/hsdk_defconfig b/arch/arc/configs/hsdk_defconfig
-index 0e5fd29ed238..643b58be022d 100644
---- a/arch/arc/configs/hsdk_defconfig
-+++ b/arch/arc/configs/hsdk_defconfig
-@@ -53,6 +53,7 @@ CONFIG_GPIO_DWAPB=y
- CONFIG_DRM=y
- # CONFIG_DRM_FBDEV_EMULATION is not set
- CONFIG_DRM_UDL=y
-+CONFIG_DRM_ETNAVIV=y
- CONFIG_FB=y
- CONFIG_FRAMEBUFFER_CONSOLE=y
- CONFIG_USB_EHCI_HCD=y
-@@ -64,7 +65,6 @@ CONFIG_MMC=y
- CONFIG_MMC_SDHCI=y
- CONFIG_MMC_SDHCI_PLTFM=y
- CONFIG_MMC_DW=y
--# CONFIG_IOMMU_SUPPORT is not set
- CONFIG_EXT3_FS=y
- CONFIG_VFAT_FS=y
- CONFIG_TMPFS=y
--- 
-2.14.5
+> 
+> thanks,
+> 
+> greg k-h
+> 
+
+
+
 
