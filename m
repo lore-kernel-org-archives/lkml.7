@@ -2,87 +2,99 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38D61C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 18:09:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27B85C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 18:10:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EBF12173C
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 18:09:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="gKRtWWGp"
+	by mail.kernel.org (Postfix) with ESMTP id 02136217D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 18:10:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729173AbfEUSJD (ORCPT
+        id S1729148AbfEUSK6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 14:09:03 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:52502 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728271AbfEUSJC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 14:09:02 -0400
-Received: from cz.tnic (unknown [165.204.77.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 819B11EC0A6C;
-        Tue, 21 May 2019 20:09:00 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1558462141;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=gXUfsJPPjyhWdbSDhgOu4fBLlmMRmcDQJ/8G4/xdGUM=;
-        b=gKRtWWGpaa58ggMpqsx5YcdaQvz0P4gZMiGSObW5QbNvINkYGtmQAemYfBd6UZBnHuH8FT
-        fTguA8ATQMpTXVhjwRcaHKxeCOiwUalaibPW0Qrd7TkSDnbh2+hxYi4HtfHULW4UWnqYgk
-        +Lb9Z8bvf1/35CDVZZciZKCtmF2P2BI=
-Date:   Tue, 21 May 2019 20:09:33 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Kairui Song <kasong@redhat.com>, Ingo Molnar <mingo@kernel.org>
-Cc:     Junichi Nomura <j-nomura@ce.jp.nec.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Baoquan He <bhe@redhat.com>,
-        "dyoung@redhat.com" <dyoung@redhat.com>,
-        "fanc.fnst@cn.fujitsu.com" <fanc.fnst@cn.fujitsu.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>
-Subject: Re: [PATCH v6 1/2] x86/kexec: Build identity mapping for EFI systab
- and ACPI tables
-Message-ID: <20190521180855.GA7793@cz.tnic>
-References: <20190429135536.GC2324@zn.tnic>
- <20190513014248.GA16774@MiWiFi-R3L-srv>
- <20190513070725.GA20105@zn.tnic>
- <20190513073254.GB16774@MiWiFi-R3L-srv>
- <20190513075006.GB20105@zn.tnic>
- <20190513080210.GC16774@MiWiFi-R3L-srv>
- <20190515051717.GA13703@jeru.linux.bs1.fc.nec.co.jp>
- <20190515065843.GA24212@zn.tnic>
- <20190515070942.GA17154@jeru.linux.bs1.fc.nec.co.jp>
- <CACPcB9cyiPc8JYmt1QhYNipSsJ5z3wTOJ90LS5LTx4YqwaG8rA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CACPcB9cyiPc8JYmt1QhYNipSsJ5z3wTOJ90LS5LTx4YqwaG8rA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 21 May 2019 14:10:58 -0400
+Received: from smtprelay0210.hostedemail.com ([216.40.44.210]:43079 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728103AbfEUSK5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 14:10:57 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay03.hostedemail.com (Postfix) with ESMTP id 55C4A837F27F;
+        Tue, 21 May 2019 18:10:56 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: boy77_25271b82e5354
+X-Filterd-Recvd-Size: 2508
+Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf14.hostedemail.com (Postfix) with ESMTPA;
+        Tue, 21 May 2019 18:10:55 +0000 (UTC)
+Message-ID: <3bd9fef9b11ccf49171227e9507cda0a899f8f9d.camel@perches.com>
+Subject: Re: [PATCH v1 02/15] crypto: talitos - rename alternative AEAD
+ algos.
+From:   Joe Perches <joe@perches.com>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Andy Whitcroft <apw@canonical.com>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Tue, 21 May 2019 11:10:54 -0700
+In-Reply-To: <3ac55e59-a75c-0b9a-be24-148007bb522e@c-s.fr>
+References: <cover.1558445259.git.christophe.leroy@c-s.fr>
+         <1449c1a24e2e06ac6c8c2e1b7f73feedfd51894c.1558445259.git.christophe.leroy@c-s.fr>
+         <3ac55e59-a75c-0b9a-be24-148007bb522e@c-s.fr>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.1-1build1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 21, 2019 at 05:02:59PM +0800, Kairui Song wrote:
-> Hi Boris, would you prefer to just fold Junichi update patch into the
-> previous one or I should send an updated patch?
+On Tue, 2019-05-21 at 17:54 +0000, Christophe Leroy wrote:
+> Hi Joe & Andy
+[]
+> diff --git a/drivers/crypto/talitos.c b/drivers/crypto/talitos.c
+[]
+> > @@ -2356,7 +2356,7 @@ static struct talitos_alg_template driver_algs[] = {
+> >   			.base = {
+> >   				.cra_name = "authenc(hmac(sha1),cbc(aes))",
+> >   				.cra_driver_name = "authenc-hmac-sha1-"
+> > -						   "cbc-aes-talitos",
+> > +						   "cbc-aes-talitos-hsna",
+> 
+> checkpatch reports the following warning on the above:
+> 
+> WARNING: quoted string split across lines
+> #27: FILE: drivers/crypto/talitos.c:2359:
+>   				.cra_driver_name = "authenc-hmac-sha1-"
+> +						   "cbc-aes-talitos-hsna",
+> 
+> 
+> But when I fixes the patch as follows, I get another warning:
+> 
+> @@ -2355,8 +2355,7 @@ static struct talitos_alg_template driver_algs[] = {
+>   		.alg.aead = {
+>   			.base = {
+>   				.cra_name = "authenc(hmac(sha1),cbc(aes))",
+> -				.cra_driver_name = "authenc-hmac-sha1-"
+> -						   "cbc-aes-talitos",
+> +				.cra_driver_name = "authenc-hmac-sha1-cbc-aes-talitos-hsna",
+>   				.cra_blocksize = AES_BLOCK_SIZE,
+>   				.cra_flags = CRYPTO_ALG_ASYNC,
+>   			},
+> 
+> 
+> 
+> WARNING: line over 80 characters
+> #28: FILE: drivers/crypto/talitos.c:2358:
+> +				.cra_driver_name = "authenc-hmac-sha1-cbc-aes-talitos-hsna",
+> 
+> 
+> So, how should this be fixed ?
 
-Please send a patch ontop after Ingo queues your old one, which should
-happen soon. This way it would also document the fact that there are
-machines with NVS regions only.
+For at least now, by ignoring this checkpatch message.
 
-Thx.
+It's a brainless script.  You are not brainless.
 
--- 
-Regards/Gruss,
-    Boris.
-
-ECO tip #101: Trim your mails when you reply. Srsly.
