@@ -2,199 +2,81 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB145C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 14:27:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D667C46470
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 14:28:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C990E217D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 14:27:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE5B821773
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 14:28:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=skidata.com header.i=@skidata.com header.b="JGoE6Xbu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728476AbfEUO1p (ORCPT
+        id S1728529AbfEUO2C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 10:27:45 -0400
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:56469 "EHLO
-        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726750AbfEUO1o (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 10:27:44 -0400
-X-Originating-IP: 90.88.22.185
-Received: from localhost (aaubervilliers-681-1-80-185.w90-88.abo.wanadoo.fr [90.88.22.185])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id A52961C000A;
-        Tue, 21 May 2019 14:27:34 +0000 (UTC)
-Date:   Tue, 21 May 2019 16:27:34 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Frank Lee <tiny.windzz@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        catalin.marinas@arm.com, will.deacon@arm.com,
-        bjorn.andersson@linaro.org,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        paulmck@linux.ibm.com, stefan.wahren@i2se.com,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Andy Gross <andy.gross@linaro.org>, rui.zhang@intel.com,
-        devicetree@vger.kernel.org, marc.w.gonzalez@free.fr,
-        Eduardo Valentin <edubezval@gmail.com>,
-        enric.balletbo@collabora.com, robh+dt@kernel.org,
-        Jonathan.Cameron@huawei.com,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        olof@lixom.net, David Miller <davem@davemloft.net>
-Subject: Re: [PATCH 2/3] thermal: sun50i: add thermal driver for h6
-Message-ID: <20190521142734.fvhdomqhuntpop52@flea>
-References: <20190512082614.9045-1-tiny.windzz@gmail.com>
- <20190512082614.9045-3-tiny.windzz@gmail.com>
- <20190512133930.t5txssl7mou2gljt@flea>
- <CAEExFWvcMbiCJ4HD0UAtv1P6AuBJ=oUdmhu886BNZhrRz483Ug@mail.gmail.com>
- <20190517073634.izdmba3yqvxviyg3@flea>
- <CAEExFWtNhTqLR+v3o6vn0Y4L65i_XsrEeiex6DNLEPEkhseCjA@mail.gmail.com>
- <20190521080515.qlni2lnmcwh7itl7@flea>
- <20190521102721.5hgks6guzlhubj6d@core.my.home>
+        Tue, 21 May 2019 10:28:02 -0400
+Received: from mail2.skidata.com ([91.230.2.91]:32652 "EHLO mail2.skidata.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726750AbfEUO2B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 10:28:01 -0400
+X-Greylist: delayed 428 seconds by postgrey-1.27 at vger.kernel.org; Tue, 21 May 2019 10:28:00 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=skidata.com; i=@skidata.com; q=dns/txt; s=selector1;
+  t=1558448903; x=1589984903;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=tZprcqh9LXoNlxO8gu2/EPEJEdKFxz91AfnZIELZi24=;
+  b=JGoE6XbuYBoVl0P6cwUeUVyz5qAnahyEDot1GFFYag6twOIni4MrlZVV
+   VLtwoQR3gZZA1XII77FnhRGJc29iMvv3zG3wUEtFTDCXxFLGaltSxnRkf
+   9AyYPQkr7TzJcjTBCg5VFIqfBQ/lXUBewfRlTtp4gOWPiV/sjpaeN1ims
+   4A7g+4U3qh4zTAeY5vbqWUvBoqGt8vB4wjltm9Zw0LSkh2zKACMaOgoKL
+   gJrbWlP06/DGV1aFFXUSN1Rf7Ke7FzE83XZRox2e/LTMjvKyehUK7zBdB
+   mFABFeesdxvtBYyocteObWHstG114D5OUaea9IF0t/K8QmihftQfPVDrz
+   Q==;
+IronPort-SDR: R9oJvERd0WsFqarg5Vu7T2H4biQbG7n/GQ2SjYFPrZgZiM+UnwDlsvITezDtGFRkpWH5YYwm42
+ 4C5HdUYQcmtpiFDkQeHKjSbBAnnTl3S2czdi+0AJnxUMgfvn91cFGfkgbVw3K8iy+Yjyd0kgka
+ RSA2GgjO+H3FIiJcSbZWbA0a9FXQYW4KvxRpHcZ5S0S4fQGvqp/R8o6Yj45z0LFMYtngq0GJjt
+ 02neaZoH0kDPZe1asN/q5H/922IOUINggRacKHjqYrMIr8vWuvk8jMbGeoglubhzJYxyxcqaui
+ i58=
+X-IronPort-AV: E=Sophos;i="5.60,495,1549926000"; 
+   d="scan'208";a="2150343"
+From:   Richard Leitner <richard.leitner@skidata.com>
+To:     <a.zummo@towertech.it>, <alexandre.belloni@bootlin.com>
+CC:     <linux-rtc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Richard Leitner <richard.leitner@skidata.com>
+Subject: [PATCH 0/3] rtc: s35390a: uie_unsupported and minor fixes
+Date:   Tue, 21 May 2019 16:20:21 +0200
+Message-ID: <20190521142024.25894-1-richard.leitner@skidata.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="mvmiwnrklxk7dcbu"
-Content-Disposition: inline
-In-Reply-To: <20190521102721.5hgks6guzlhubj6d@core.my.home>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [192.168.111.252]
+X-ClientProxiedBy: sdex6srv.skidata.net (192.168.111.84) To
+ sdex5srv.skidata.net (192.168.111.83)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+As the s35390a does only support per-minute based alarms we have to
+set the uie_unsupported flag. Otherwise it delays for 10sec and 
+fails afterwards with modern hwclock versions.
 
---mvmiwnrklxk7dcbu
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Furthermore some other minor changes are made.
 
-On Tue, May 21, 2019 at 12:27:21PM +0200, Ond=C5=99ej Jirman wrote:
-> On Tue, May 21, 2019 at 10:05:15AM +0200, Maxime Ripard wrote:
-> > On Sat, May 18, 2019 at 01:27:39AM +0800, Frank Lee wrote:
-> > > On Fri, May 17, 2019 at 3:36 PM Maxime Ripard <maxime.ripard@bootlin.=
-com> wrote:
-> > > >
-> > > > On Fri, May 17, 2019 at 01:51:56AM +0800, Frank Lee wrote:
-> > > > > > > +struct sun50i_thermal_chip {
-> > > > > > > +     int     sensor_num;
-> > > > > > > +     int     offset;
-> > > > > > > +     int     scale;
-> > > > > > > +     int     ft_deviation;
-> > > > > > > +     int     temp_calib_base;
-> > > > > > > +     int     temp_data_base;
-> > > > > > > +     int     (*enable)(struct tsens_device *tmdev);
-> > > > > > > +     int     (*disable)(struct tsens_device *tmdev);
-> > > > > > > +};
-> > > > > >
-> > > > > > I'm not super fond of having a lot of quirks that are not neede=
-d. If
-> > > > > > we ever need those quirks when adding support for a new SoC, th=
-en
-> > > > > > yeah, we should totally have some, but only when and if it's ne=
-eded.
-> > > > > >
-> > > > > > Otherwise, the driver is more complicated for no particular rea=
-son.
-> > > > >
-> > > > > This is unavoidable because of the difference in soc.
-> > > >
-> > > > I know, but this isn't my point.
-> > > >
-> > > > My point is that at this time of the driver development, we don't k=
-now
-> > > > what is going to be needed to support all of those SoCs.
-> > > >
-> > > > Some of the parameters you added might not be needed, some paramete=
-rs
-> > > > might be missing, we don't know. So let's keep it simple for now.
-> > > >
-> > > > > > > +static int tsens_probe(struct platform_device *pdev)
-> > > > > > > +{
-> > > > > > > +     struct tsens_device *tmdev;
-> > > > > > > +     struct device *dev =3D &pdev->dev;
-> > > > > > > +     int ret;
-> > > > > > > +
-> > > > > > > +     tmdev =3D devm_kzalloc(dev, sizeof(*tmdev), GFP_KERNEL);
-> > > > > > > +     if (!tmdev)
-> > > > > > > +             return -ENOMEM;
-> > > > > > > +
-> > > > > > > +     tmdev->dev =3D dev;
-> > > > > > > +     tmdev->chip =3D of_device_get_match_data(&pdev->dev);
-> > > > > > > +     if (!tmdev->chip)
-> > > > > > > +             return -EINVAL;
-> > > > > > > +
-> > > > > > > +     ret =3D tsens_init(tmdev);
-> > > > > > > +     if (ret)
-> > > > > > > +             return ret;
-> > > > > > > +
-> > > > > > > +     ret =3D tsens_register(tmdev);
-> > > > > > > +     if (ret)
-> > > > > > > +             return ret;
-> > > > > > > +
-> > > > > > > +     ret =3D tmdev->chip->enable(tmdev);
-> > > > > > > +     if (ret)
-> > > > > > > +             return ret;
-> > > > > > >
-> > > > > > > +     platform_set_drvdata(pdev, tmdev);
-> > > > > >
-> > > > > > Your registration should be the very last thing you do. Otherwi=
-se, you
-> > > > > > have a small window where the get_temp callback can be called, =
-but the
-> > > > > > driver will not be functional yet.
-> > > > >
-> > > > > No. Anyway, ths data qcquisition is ms level.
-> > > >
-> > > > That's kind of irrelevant. There's nothing preventing get_temp to be
-> > > > called right away.
-> > >
-> > > As Ond=C5=99ej said,
-> > >
-> > > Registration after enabling will lead to call tz update on non-regist=
-ered tz
-> > > from an interrupt handler.
-> >
-> > I'm probably missing something but you're not using the interrupts, so
-> > how could an interrupt handler call it?
-> >
-> > Also, other drivers seem to be doing that just fine (mtk_thermal for
-> > example), so surely there's a way?
->
-> Last version is using the interrupts.
->
-> Drivers do it in various ways. For example imx_thermal (and others like
-> hisi_thermal) does it the suggested way. It enables interrupts after ther=
-mal
-> zone registration, so that IRQ handler doesn't get invoked before the tzd=
- is
-> registered.
+All patches were tested on an i.MX6 platform.
 
-Enabling the interrupts after the registration makes sense, yes, but
-filling the device private pointer with the private structure,
-enabling the clocks, setting up the controller and so on can be done
-before.
+Richard Leitner (3):
+  rtc: s35390a: clarify INT2 pin output modes
+  rtc: s35390a: set uie_unsupported
+  rtc: s35390a: introduce struct device in probe
 
-Maxime
+ drivers/rtc/rtc-s35390a.c | 43 +++++++++++++++++++++------------------
+ 1 file changed, 23 insertions(+), 20 deletions(-)
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+-- 
+2.20.1
 
---mvmiwnrklxk7dcbu
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXOQK1gAKCRDj7w1vZxhR
-xaQIAQCkBPqHwCa6/NpbfkPd6mG52czynrHCcU7cjXcL596AWwEA3MeGcwawbKsZ
-o97K9dmQ8waHGYenijOIsp37ffbo/Aw=
-=G2Q2
------END PGP SIGNATURE-----
-
---mvmiwnrklxk7dcbu--
