@@ -2,107 +2,112 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7910EC04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 08:57:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22C15C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 08:58:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E31721019
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 08:57:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED68A2173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 08:58:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="OGaKD9fk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727125AbfEUI5e (ORCPT
+        id S1727219AbfEUI6H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 04:57:34 -0400
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:39016 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726242AbfEUI5e (ORCPT
+        Tue, 21 May 2019 04:58:07 -0400
+Received: from mail-ua1-f66.google.com ([209.85.222.66]:40848 "EHLO
+        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726242AbfEUI6H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 04:57:34 -0400
-Received: by mail-vs1-f65.google.com with SMTP id m1so10657421vsr.6;
-        Tue, 21 May 2019 01:57:33 -0700 (PDT)
+        Tue, 21 May 2019 04:58:07 -0400
+Received: by mail-ua1-f66.google.com with SMTP id d4so6330572uaj.7
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 01:58:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ASCK5QEsgPSM1g1u7FGizuNcDI5mfe6ouhE1b8rzrSY=;
+        b=OGaKD9fkwz/Uh1otcyfhnq5/11wcGhDIMBsJWSCFGVzL84pS/hohwFfTIPr0f3C7Ss
+         TCzV+PrZ/UE1xdmLWaFz6PlGI/iF3RtRcVfLUtdvGvPDcDjQ6ZWUuw7/hqHnzw4aVDq1
+         T+TY5Hf5SwxBmY4jlUIN7MgSgWIeGv9WeCgHuKRb6Ws8uWAfz87GnLQtfCKnhwCm5Ijl
+         7AT6oOuPUrKCta8mX1J86JEXXy7ICqIg+BDY8PRPDNIGX4oA5flVrgmU0Joi7mCEt2Wr
+         R+xJmID9TmfovxsKCZZJ9RzeZZ/7PNIBdrrTxN3UIyhoLQvh5nHJEXpJfG6LmHecnXdD
+         QFTg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=MWFrnsjcMZzOTmITsHfZDdO5f966+UMJICUhzqvq5h0=;
-        b=EHJYHbmfJ/Ce9Bofif58B++QmpKjWb1asJFeRpictQME4umq1MXbqwyOrPN2A8O0WU
-         dS1Q5yXnVeEpd17XFKVHJTVKtd7zFjqjxGVqHrfSS5vOjY29R3pe7bydOmCw9vuzp+ld
-         uTa/mrdHUcJJifa1DqLQVpoItWiy8Fac8ULwZ14XMgEKMs0rrXbD2I0lcSHB9ruM4BnE
-         ycTFdcRIZBj2pSO9I1RQl0fWUM6dXFfSbspL7bok0hvr/rjBLp7BVuXF49GsF/Y+rA9x
-         eCpu8u8YIGkq0iTLyfxD/roA80N1tK724nbuF8fqMX1SRkZn6ZY7VaZH07cKTFymN6XD
-         dtNQ==
-X-Gm-Message-State: APjAAAWJfjfkAZ+S4N0RSHizqUNWjah5QCJeuSTiGiK7bbYTaOzkVDdQ
-        /AQEZJS03x2aE80bONm1rY8EfteEk/kuLfZIQGg=
-X-Google-Smtp-Source: APXvYqyKZ9voK/cBbfTTXNvd4b2tLuD8JGb4aR0X6oA2nKaW2C6ZwK0EDtOV6rN+FFV/9oMnPctGM0nmJDs2gCaq+BU=
-X-Received: by 2002:a67:770f:: with SMTP id s15mr30405388vsc.11.1558429053082;
- Tue, 21 May 2019 01:57:33 -0700 (PDT)
+        bh=ASCK5QEsgPSM1g1u7FGizuNcDI5mfe6ouhE1b8rzrSY=;
+        b=SY19SqwwO5DiNbWfkFu6qSenb1LtwwuCJ7bRXhxcl21QlzQwUhcvl9iulDhwwOoftd
+         BAIj2zM8AYszU1uU+lSbEfEIgoxEkmNnjY6aJOVVwbiorxvwhPapxS9jfA60f68kKAXd
+         n1LjNxnECePH/4S8mky9oDQzUsfKw1co/dGDbFOwmbIkxr91vF8Gd+QnBbG+jexyO/ME
+         rG3zDhL7OlcKYQzzQSHGtqR672g/miUhZBsFsKIdKpx8F9XqFWRS3gfhL2hbuo5MkSlA
+         KvmI0r3BDy+p35BR4tC2++MnjggmhmagYiXhaQV2ZSlncc74CHeygqLVWjooAETaNg1Z
+         NHcA==
+X-Gm-Message-State: APjAAAVd6Mrsetq4+LFynKJNXSpca/KICDdsUiIlw/JEKcoiXgyjivuD
+        cKkcq/PtxNdXgbVatb0lXIC+eCR94ctBaPjy2mIcNg==
+X-Google-Smtp-Source: APXvYqzkKcNaCd+xd63rL6haTKxCeW8/LcqpqGKBrmCWjM1IJegwyk74C67ww1GqqytfFzxidHgluiDjyzYYhL10aqk=
+X-Received: by 2002:ab0:45e9:: with SMTP id u96mr17987279uau.75.1558429085797;
+ Tue, 21 May 2019 01:58:05 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190514153341.22540-1-chris.paterson2@renesas.com>
- <155786877257.14659.6751252865489860937@swboyd.mtv.corp.google.com>
- <CAMuHMdWPSyrhYx5Z5mgmKrR68cHL6owcRT=B3+DD3GhhxuG4zw@mail.gmail.com> <20190516215406.75E5D2082E@mail.kernel.org>
-In-Reply-To: <20190516215406.75E5D2082E@mail.kernel.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 21 May 2019 10:57:20 +0200
-Message-ID: <CAMuHMdVOKDRYjzmyRq-KXW8d+dYmAxnM+=y2yOh85YDcCEDMuw@mail.gmail.com>
-Subject: Re: [PATCH] scripts/spelling.txt: Add spelling fix for prohibited
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Chris Paterson <chris.paterson2@renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Biju Das <biju.das@bp.renesas.com>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <1558361478-4381-1-git-send-email-sagar.kadam@sifive.com>
+ <1558361478-4381-4-git-send-email-sagar.kadam@sifive.com> <mvm7eakjjf7.fsf@suse.de>
+In-Reply-To: <mvm7eakjjf7.fsf@suse.de>
+From:   Sagar Kadam <sagar.kadam@sifive.com>
+Date:   Tue, 21 May 2019 14:27:54 +0530
+Message-ID: <CAARK3Hn4-amRV-knDa5UR8J68DKxWaBnC3O98KvciNpbwbsAGA@mail.gmail.com>
+Subject: Re: [PATCH v5 3/3] i2c-ocores: sifive: add polling mode workaround
+ for FU540-C000 SoC.
+To:     Andreas Schwab <schwab@suse.de>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, peter@korsgaard.com,
+        Andrew Lunn <andrew@lunn.ch>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephen, Andrew,
+Thanks Andreas,
+Yes, I rebased to v5.2-rc1 and observed that there have been changes
+in polling interface, and i2c->flags is not longer being used for
+setting the polling mode. I am working on a way to hook in the fix for
+broken IRQ and will submit it in v6.
 
-On Thu, May 16, 2019 at 11:54 PM Stephen Boyd <sboyd@kernel.org> wrote:
-> Quoting Geert Uytterhoeven (2019-05-15 00:32:46)
-> > On Tue, May 14, 2019 at 11:19 PM Stephen Boyd <sboyd@kernel.org> wrote:
-> > > Quoting Chris Paterson (2019-05-14 08:33:41)
-> > > > Misspelling 'prohibited' is quite common in the real world, although
-> > > > surprisingly not so much in the Linux Kernel. In addition to fixing the
-> > > > typo we may as well add it to the spelling checker.
-> > > >
-> > > > Also adding the present participle (prohibiting).
-> > > >
-> > > > Fixes: 5bf2fbbef50c ("clk: renesas: cpg-mssr: Add r8a77470 support")
-> > > >
-> > > > Signed-off-by: Chris Paterson <chris.paterson2@renesas.com>
-> >
-> > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> >
-> > > Acked-by: Stephen Boyd <sboyd@kernel.org>
-> >
-> > Thanks!
-> >
-> > So I guess I'll queue this in clk-renesas-for-v5.3?
-> >
+Thanks & BR,
+Sagar Kadam
+
+On Tue, May 21, 2019 at 2:03 PM Andreas Schwab <schwab@suse.de> wrote:
 >
-> Guess so! Or Andrew does it.
-
-Given the change to scripts/spelling.txt conflicts with b937856a5db2cb7a
-("scripts/spelling.txt: add more typos to spelling.txt and sort") in
-linux-next, and the risk of conflict with future changes to
-drivers/clk/renesas/r8a77470-cpg-mssr.c is slim, I'd like to defer this
-to Andrew.
-
-Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> On Mai 20 2019, Sagar Shrikant Kadam <sagar.kadam@sifive.com> wrote:
+>
+> > The i2c-ocore driver already has a polling mode interface.But it needs
+> > a workaround for FU540 Chipset on HiFive unleashed board (RevA00).
+> > There is an erratum in FU540 chip that prevents interrupt driven i2c
+> > transfers from working, and also the I2C controller's interrupt bit
+> > cannot be cleared if set, due to this the existing i2c polling mode
+> > interface added in mainline earlier doesn't work, and CPU stall's
+> > infinitely, when-ever i2c transfer is initiated.
+> >
+> > Ref:previous polling mode support in mainline
+> >
+> >       commit 69c8c0c0efa8 ("i2c: ocores: add polling interface")
+> >
+> > The workaround / fix under OCORES_FLAG_BROKEN_IRQ is particularly for
+> > FU540-COOO SoC.
+>
+> After commit dd7dbf0eb090 this no longer fits.
+>
+> Andreas.
+>
+> --
+> Andreas Schwab, SUSE Labs, schwab@suse.de
+> GPG Key fingerprint = 0196 BAD8 1CE9 1970 F4BE  1748 E4D4 88E3 0EEA B9D7
+> "And now for something completely different."
