@@ -2,113 +2,106 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FB18C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:01:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97031C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:01:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E42B2173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:01:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5ECE621743
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:01:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="j+UCJZlm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728782AbfEUPBe (ORCPT
+        id S1728810AbfEUPBg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 11:01:34 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:54320 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728269AbfEUPBe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 11:01:34 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id DB08430842A8;
-        Tue, 21 May 2019 15:01:33 +0000 (UTC)
-Received: from horse.redhat.com (unknown [10.18.25.29])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9B432704DF;
-        Tue, 21 May 2019 15:01:31 +0000 (UTC)
-Received: by horse.redhat.com (Postfix, from userid 10451)
-        id 34034220A60; Tue, 21 May 2019 11:01:31 -0400 (EDT)
-Date:   Tue, 21 May 2019 11:01:31 -0400
-From:   Vivek Goyal <vgoyal@redhat.com>
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, linux-nvdimm@lists.01.org,
-        stefanha@redhat.com, dgilbert@redhat.com, swhiteho@redhat.com
-Subject: Re: [PATCH v2 02/30] fuse: Clear setuid bit even in cache=never path
-Message-ID: <20190521150131.GB29075@redhat.com>
-References: <20190515192715.18000-1-vgoyal@redhat.com>
- <20190515192715.18000-3-vgoyal@redhat.com>
- <20190520144137.GA24093@localhost.localdomain>
+        Tue, 21 May 2019 11:01:36 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:38306 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728784AbfEUPBg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 11:01:36 -0400
+Received: by mail-wr1-f67.google.com with SMTP id d18so19025618wrs.5
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 08:01:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=BF2CDs8GJndud+tJOwAui4kXWvWdLcOJYF5JUOigmaI=;
+        b=j+UCJZlmQX3NC+lUmPI+K/5t1BBpvYyat/5tw8TlJITObCeJXzQv5JA3sYpUsJjKi5
+         w7QG2E6DoLMRMlQR9I1PQ+FTWxIK4jC9vRYueXaSWq2I+tzmzCGUWS+KHHWDCa3QJuEr
+         OGurZvGKMb4DkUlJExtPXFAlxEgUCSFf37sanZKDY6pp47RMTBQTa6i1EAFzad8uboxa
+         NqVMRVjvthtOrN0UM2vSPys/bdXWr3CBldD6JiBNPPcMxZJg75gRQ23oyuNUXCBjoT3g
+         yJu7UO3DoOrpup1u8QmDD/elHa4U80tLW3pb4wT+Y4TwQk2MFMrUUKBOt82qR840O2dK
+         ipyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=BF2CDs8GJndud+tJOwAui4kXWvWdLcOJYF5JUOigmaI=;
+        b=jkiAYI/KBV2I0+Fo5jC6CNTgW/nC580QuS+qJSUWEAbe9RY63pptxkrBzX5VOHPeXR
+         nShcOLWTTw1cwfcU6BFmvXDaRJqlBsh8ZIrdDwxJxScbKA6wNzoslXe33YCGAhTezbKs
+         AodhxRhCuaWuAJTzC9nbxvQZXsXPVsW6NhbdIlOXRDPxn+JDM9j7fVo/V+WVU10ii/tg
+         A/XJT3nxCNtHgYS25CB8pKPNkaOp/PglkqMoPuguKx66CIevZ2njf9oAHAgoIyx8rqa5
+         Apj05n3+1ZTbLp7irwns7/CJW4bNLG8cYSJtxHpZRnAHYC7cgq7xLZuJj5AkfdEW5zwf
+         bJkg==
+X-Gm-Message-State: APjAAAV0AVUIUdW6DmTDujGR5gyslncgE4tp5jbGuKTwCptETBzP8kBR
+        PSflwIIeXxMr+JGUi/IsV/yY7Q==
+X-Google-Smtp-Source: APXvYqzc/ULB/4zVvRVJIncLQNslSLkrcgQiE0igOHAgUp0J6NZfXBnW15l5WJWrBOBUyVM9G9e7Sg==
+X-Received: by 2002:adf:cc8e:: with SMTP id p14mr35315046wrj.82.1558450893970;
+        Tue, 21 May 2019 08:01:33 -0700 (PDT)
+Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id b194sm3407505wmb.23.2019.05.21.08.01.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 21 May 2019 08:01:32 -0700 (PDT)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     jbrunet@baylibre.com
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] clk: meson: add support for Amlogic G12A
+Date:   Tue, 21 May 2019 17:01:27 +0200
+Message-Id: <20190521150130.31684-1-narmstrong@baylibre.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190520144137.GA24093@localhost.localdomain>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Tue, 21 May 2019 15:01:34 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 20, 2019 at 04:41:37PM +0200, Miklos Szeredi wrote:
-> On Wed, May 15, 2019 at 03:26:47PM -0400, Vivek Goyal wrote:
-> > If fuse daemon is started with cache=never, fuse falls back to direct IO.
-> > In that write path we don't call file_remove_privs() and that means setuid
-> > bit is not cleared if unpriviliged user writes to a file with setuid bit set.
-> > 
-> > pjdfstest chmod test 12.t tests this and fails.
-> 
-> I think better sulution is to tell the server if the suid bit needs to be
-> removed, so it can do so in a race free way.
-> 
-> Here's the kernel patch, and I'll reply with the libfuse patch.
+The Amlogic G12B SoC is very similar with the G12A SoC, sharing
+most of the features and architecture.
+G12B clock tree is very close, the main differences are :
+- SYS_PLL is used for the second cluster (otherwise used fir the first on G12a)
+- SYS_PLL1 is used for the first cluster (instead of SYS_PLL on G12a)
+- A duplicate CPU tree is added for the second cluster
+- G12A has additional clocks like for CSI an other components, not handled yet
 
-Hi Miklos,
+Dependencies :
+- Patch 1, 3 : None
+- Patch 2 : Depends on Guillaume's Temperature sensor Clock patches at [1]
 
-I tested and it works for me.
+This patchset is a spinoff of the v2 Odroid-N2 megapatchset at [2]
 
-Vivek
+Changes since original pathset :
+- Added missing sys1_pll div16, cpub div16 and cpub atb/axi/ahb/trace clocks
+- Rewrote "This patch .." in commit messages
 
-> 
-> ---
->  fs/fuse2/file.c           |    2 ++
->  include/uapi/linux/fuse.h |    3 +++
->  2 files changed, 5 insertions(+)
-> 
-> --- a/fs/fuse2/file.c
-> +++ b/fs/fuse2/file.c
-> @@ -363,6 +363,8 @@ static ssize_t fuse_send_write(struct fu
->  		inarg->flags |= O_DSYNC;
->  	if (iocb->ki_flags & IOCB_SYNC)
->  		inarg->flags |= O_SYNC;
-> +	if (!capable(CAP_FSETID))
-> +		inarg->write_flags |= FUSE_WRITE_KILL_PRIV;
->  	req->inh.opcode = FUSE_WRITE;
->  	req->inh.nodeid = ff->nodeid;
->  	req->inh.len = req->inline_inlen + count;
-> --- a/include/uapi/linux/fuse.h
-> +++ b/include/uapi/linux/fuse.h
-> @@ -125,6 +125,7 @@
->   *
->   *  7.29
->   *  - add FUSE_NO_OPENDIR_SUPPORT flag
-> + *  - add FUSE_WRITE_KILL_PRIV flag
->   */
->  
->  #ifndef _LINUX_FUSE_H
-> @@ -318,9 +319,11 @@ struct fuse_file_lock {
->   *
->   * FUSE_WRITE_CACHE: delayed write from page cache, file handle is guessed
->   * FUSE_WRITE_LOCKOWNER: lock_owner field is valid
-> + * FUSE_WRITE_KILL_PRIV: kill suid and sgid bits
->   */
->  #define FUSE_WRITE_CACHE	(1 << 0)
->  #define FUSE_WRITE_LOCKOWNER	(1 << 1)
-> +#define FUSE_WRITE_KILL_PRIV	(1 << 2)
->  
->  /**
->   * Read flags
-> 
-> 
+[1] https://lkml.kernel.org/r/20190412100221.26740-1-glaroque@baylibre.com
+[2] https://lkml.kernel.org/r/20190423091503.10847-1-narmstrong@baylibre.com
+
+Neil Armstrong (3):
+  dt-bindings: clk: meson: add g12b periph clock controller bindings
+  clk: meson: g12a: Add support for G12B CPUB clocks
+  clk: meson: g12a: mark fclk_div3 as critical
+
+ .../bindings/clock/amlogic,gxbb-clkc.txt      |   1 +
+ drivers/clk/meson/g12a.c                      | 659 ++++++++++++++++++
+ drivers/clk/meson/g12a.h                      |  33 +-
+ 3 files changed, 692 insertions(+), 1 deletion(-)
+
+-- 
+2.21.0
+
