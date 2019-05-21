@@ -2,108 +2,164 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56BDCC04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 09:56:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43D2AC04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 09:58:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BEF42173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 09:56:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="aQxlmz+L"
+	by mail.kernel.org (Postfix) with ESMTP id 1BCC52173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 09:58:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727106AbfEUJ4e (ORCPT
+        id S1727297AbfEUJ6r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 05:56:34 -0400
-Received: from vps.xff.cz ([195.181.215.36]:37802 "EHLO vps.xff.cz"
+        Tue, 21 May 2019 05:58:47 -0400
+Received: from mga02.intel.com ([134.134.136.20]:35815 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726242AbfEUJ4d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 05:56:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1558432591; bh=1nbvGwWgSb1jI/P1ZT27Mo4T3fhSGGa/u2NrHc/bhEY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=aQxlmz+L5OjzAbaGr0IgpRjnbM2RyEQ9ga6eu6t3E1wgEuRsrhjeZ3D6nbtxshUqQ
-         EFtz03J7GkN8M0jpVIqGGEF95yxB7bHBJWFoHkXR0AupOG3A5VI/5BhgWHf71ZAzVl
-         J10mK1Th7bIsLg6pDXlJsqz4NYBtfHlHzsAteH3k=
-Date:   Tue, 21 May 2019 11:56:31 +0200
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc:     linux-sunxi@googlegroups.com,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
+        id S1726242AbfEUJ6q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 05:58:46 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 May 2019 02:58:45 -0700
+X-ExtLoop1: 1
+Received: from kuha.fi.intel.com ([10.237.72.189])
+  by fmsmga001.fm.intel.com with SMTP; 21 May 2019 02:58:40 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Tue, 21 May 2019 12:58:39 +0300
+Date:   Tue, 21 May 2019 12:58:39 +0300
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Biju Das <biju.das@bp.renesas.com>
+Cc:     Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [PATCH v5 2/6] net: stmmac: sun8i: force select external PHY
- when no internal one
-Message-ID: <20190521095631.v5n3qml5ujofufk4@core.my.home>
-Mail-Followup-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        linux-sunxi@googlegroups.com,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Icenowy Zheng <icenowy@aosc.io>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
-References: <20190520235009.16734-1-megous@megous.com>
- <20190520235009.16734-3-megous@megous.com>
- <4e031eeb-2819-a97f-73bf-af84b04aa7b2@cogentembedded.com>
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        Li Jun <jun.li@nxp.com>,
+        Badhri Jagan Sridharan <badhri@google.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Min Guo <min.guo@mediatek.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v5 4/6] usb: roles: add API to get usb_role_switch by node
+Message-ID: <20190521095839.GI1887@kuha.fi.intel.com>
+References: <1557823643-8616-1-git-send-email-chunfeng.yun@mediatek.com>
+ <1557823643-8616-5-git-send-email-chunfeng.yun@mediatek.com>
+ <20190517103736.GA1490@kuha.fi.intel.com>
+ <20190517130511.GA1887@kuha.fi.intel.com>
+ <1558319951.10179.352.camel@mhfsdcap03>
+ <20190520080359.GC1887@kuha.fi.intel.com>
+ <OSBPR01MB2103385D996762FA54F8E437B8060@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+ <20190520083601.GE1887@kuha.fi.intel.com>
+ <OSBPR01MB2103C4C8920C40E42BC1B2A9B8060@OSBPR01MB2103.jpnprd01.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <4e031eeb-2819-a97f-73bf-af84b04aa7b2@cogentembedded.com>
+In-Reply-To: <OSBPR01MB2103C4C8920C40E42BC1B2A9B8060@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Sergei,
-
-On Tue, May 21, 2019 at 12:27:24PM +0300, Sergei Shtylyov wrote:
-> Hello!
+On Mon, May 20, 2019 at 09:45:46AM +0000, Biju Das wrote:
 > 
-> On 21.05.2019 2:50, megous@megous.com wrote:
 > 
-> > From: Icenowy Zheng <icenowy@aosc.io>
-> > 
-> > The PHY selection bit also exists on SoCs without an internal PHY; if it's
-> > set to 1 (internal PHY, default value) then the MAC will not make use of
-> > any PHY such SoCs.
->          ^ "on" or "with" missing?
-
-It's missing 'on'.
-
-thank you,
-	Ondrej
-
-> > This problem appears when adapting for H6, which has no real internal PHY
-> > (the "internal PHY" on H6 is not on-die, but on a co-packaged AC200 chip,
-> > connected via RMII interface at GPIO bank A).
-> > 
-> > Force the PHY selection bit to 0 when the SOC doesn't have an internal PHY,
-> > to address the problem of a wrong default value.
-> > 
-> > Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-> > Signed-off-by: Ondrej Jirman <megous@megous.com>
-> [...]
+> Hi Heikki,
 > 
-> MBR, Sergei
+> Thanks for the feedback.
+> 
+> > Subject: Re: [PATCH v5 4/6] usb: roles: add API to get usb_role_switch by
+> > node
+> > 
+> > On Mon, May 20, 2019 at 08:06:41AM +0000, Biju Das wrote:
+> > > Hi Heikki,
+> > >
+> > > > Subject: Re: [PATCH v5 4/6] usb: roles: add API to get
+> > > > usb_role_switch by node
+> > > >
+> > > > On Mon, May 20, 2019 at 10:39:11AM +0800, Chunfeng Yun wrote:
+> > > > > Hi,
+> > > > > On Fri, 2019-05-17 at 16:05 +0300, Heikki Krogerus wrote:
+> > > > > > Hi,
+> > > > > >
+> > > > > > On Fri, May 17, 2019 at 01:37:36PM +0300, Heikki Krogerus wrote:
+> > > > > > > On Tue, May 14, 2019 at 04:47:21PM +0800, Chunfeng Yun wrote:
+> > > > > > > > Add fwnode_usb_role_switch_get() to make easier to get
+> > > > > > > > usb_role_switch by fwnode which register it.
+> > > > > > > > It's useful when there is not device_connection registered
+> > > > > > > > between two drivers and only knows the fwnode which register
+> > > > > > > > usb_role_switch.
+> > > > > > > >
+> > > > > > > > Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> > > > > > > > Tested-by: Biju Das <biju.das@bp.renesas.com>
+> > > > > > >
+> > > > > > > Acked-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> > > > > >
+> > > > > > Hold on. I just noticed Rob's comment on patch 2/6, where he
+> > > > > > points out that you don't need to use device graph since the
+> > > > > > controller is the parent of the connector. Doesn't that mean you
+> > > > > > don't really need this API?
+> > > > > No, I still need it.
+> > > > > The change is about the way how to get fwnode; when use device
+> > > > > graph, get fwnode by of_graph_get_remote_node(); but now will get
+> > > > > fwnode by of_get_parent();
+> > > >
+> > > > OK, I get that, but I'm still not convinced about if something like
+> > > > this function is needed at all. I also have concerns regarding how
+> > > > you are using the function. I'll explain in comment to the patch 5/6 in this
+> > series...
+> > >
+> > > FYI, Currently  I am also using this api in my patch series.
+> > > https://patchwork.kernel.org/patch/10944637/
+> > 
+> > Yes, and I have the same question for you I jusb asked in comment I added
+> > to the patch 5/6 of this series. Why isn't usb_role_switch_get() enough?
+> 
+> Currently no issue. It will work with this api as well, since the port node is part of controller node.
+> For eg:-
+> https://patchwork.kernel.org/patch/10944627/
+> 
+> However if any one adds port node inside the connector node, then this api may won't work as expected.
+> Currently I get below error
+> 
+> [    2.299703] OF: graph: no port node found in /soc/i2c@e6500000/hd3ss3220@47
+
+We need to understand why is that happening?
+
+It looks like we have an issue somewhere in the code, and instead of
+fixing that, you are working around it. Let's not do that.
+
+> For eg:-
+> 
+> 	hd3ss3220@47 {
+> 		compatible = "ti,hd3ss3220";
+> 		...
+> 		....
+> 		usb_con: connector {
+>                                      ....
+>                                      ....
+> 			port {
+> 				hd3ss3220_ep: endpoint@0 {
+> 					reg = <0>;
+> 					remote-endpoint = <&usb3peri_role_switch>;
+> 				};
+> 			};
+> 		};
+> 	};
+> 
+> Regards,
+> Biju
+
+thanks,
+
+-- 
+heikki
