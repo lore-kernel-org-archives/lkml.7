@@ -2,238 +2,253 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95B46C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 14:47:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D0EAC04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 14:47:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BD942173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 14:47:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC9B0217D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 14:47:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="fpCVJsMG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728721AbfEUOrv (ORCPT
+        id S1728733AbfEUOry (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 10:47:51 -0400
-Received: from out02.mta.xmission.com ([166.70.13.232]:57955 "EHLO
-        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727044AbfEUOrt (ORCPT
+        Tue, 21 May 2019 10:47:54 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:33362 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728715AbfEUOrw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 10:47:49 -0400
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1hT63P-0005gm-2v; Tue, 21 May 2019 08:47:47 -0600
-Received: from ip72-206-97-68.om.om.cox.net ([72.206.97.68] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1hT63C-0004QZ-9X; Tue, 21 May 2019 08:47:46 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     linux-usb@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Oliver Neukum <oneukum@suse.com>,
-        <linux-kernel@vger.kernel.org>
-References: <Pine.LNX.4.44L0.1905211000310.1634-100000@iolanthe.rowland.org>
-Date:   Tue, 21 May 2019 09:47:29 -0500
-In-Reply-To: <Pine.LNX.4.44L0.1905211000310.1634-100000@iolanthe.rowland.org>
-        (Alan Stern's message of "Tue, 21 May 2019 10:02:43 -0400 (EDT)")
-Message-ID: <87zhnfooe6.fsf@xmission.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.1 (gnu/linux)
+        Tue, 21 May 2019 10:47:52 -0400
+Received: by mail-ed1-f66.google.com with SMTP id n17so29871244edb.0
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 07:47:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=ORiID9Ap1Ob1uAeKkaBEOgmrOkRFTz441mfPcwfeVdo=;
+        b=fpCVJsMGbVo4GpzstOvt8j2+d91/EMWbNCdaBUHhz7PfDrfsbmYFj936b3DTgwnHL3
+         2uoQ8oWlpW6PBeEvByLI+hamcbjZf/Bd92NU6WxXZvOa1xc2hvdotOLIYpZEj3rogl8X
+         NhpXPJa4dNEj21vwsB5tLPXadJz1t4Y0lktR8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=ORiID9Ap1Ob1uAeKkaBEOgmrOkRFTz441mfPcwfeVdo=;
+        b=F3E0sGbOrg9JGe+rIUt8bQpjqRnegM3/Zeh67d89N8Mj1U0IGe5WM6yN6PsutKcLeS
+         8bFlT3o9ItUMI86gCNHOUPlxvG+BgM+GUwBr8gNuSx8bhUScU9aG0MYsA6XFjO9rsGJR
+         AacxQ5V0fQeAK1DV5x6LCJmtdjjttDR4KtnQFvuO7XpaVWhTpECexJvTN7iAo8FNwbHS
+         rQ8KlrR0CdWXv8qtDe/VDqa9wJswD4McIzlwQsqNdZykcnJH665RrxRF1EV9EYV3psx4
+         rFC0aaO2aD6xdgZRPGlP5HwGJWXaAIoT0pTlM1mDGGHYUAZdpqujD9ibEOgR72zIoywG
+         3k4Q==
+X-Gm-Message-State: APjAAAVnjOCDM/Ld3l3rzaKUSvFF5qv5fFxGJQZEoFXc9QE6dtUPU41O
+        JrvfblSlXXU69kr8eMEUx7/m3w==
+X-Google-Smtp-Source: APXvYqxERFtQFlyIJ7giopEydDDWTX5kk1Gf0ci+hNclUSwmbRui3nZHrUHxGCfgmxEnBmWtycq59A==
+X-Received: by 2002:a50:896a:: with SMTP id f39mr82284940edf.293.1558450070057;
+        Tue, 21 May 2019 07:47:50 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
+        by smtp.gmail.com with ESMTPSA id p27sm3510990ejf.65.2019.05.21.07.47.48
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 21 May 2019 07:47:48 -0700 (PDT)
+From:   Daniel Vetter <daniel.vetter@ffwll.ch>
+To:     DRI Development <dri-devel@lists.freedesktop.org>
+Cc:     Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        David Rientjes <rientjes@google.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Wei Wang <wvw@google.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jann Horn <jannh@google.com>, Feng Tang <feng.tang@intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Daniel Vetter <daniel.vetter@intel.com>
+Subject: [PATCH] kernel.h: Add non_block_start/end()
+Date:   Tue, 21 May 2019 16:47:43 +0200
+Message-Id: <20190521144743.6895-1-daniel.vetter@ffwll.ch>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190520213945.17046-2-daniel.vetter@ffwll.ch>
+References: <20190520213945.17046-2-daniel.vetter@ffwll.ch>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1hT63C-0004QZ-9X;;;mid=<87zhnfooe6.fsf@xmission.com>;;;hst=in01.mta.xmission.com;;;ip=72.206.97.68;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1+/c3NBIL+ppiSxLizbCrB9d9a8MdWVWbM=
-X-SA-Exim-Connect-IP: 72.206.97.68
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH] signal/usb: Replace kill_pid_info_as_cred with kill_pid_usb_asyncio
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Alan Stern <stern@rowland.harvard.edu> writes:
+In some special cases we must not block, but there's not a
+spinlock, preempt-off, irqs-off or similar critical section already
+that arms the might_sleep() debug checks. Add a non_block_start/end()
+pair to annotate these.
 
-> On Tue, 21 May 2019, Eric W. Biederman wrote:
->
->> The usb support for asyncio encoded one of it's values in the wrong
->> field.  It should have used si_value but instead used si_addr which is
->> not present in the _rt union member of struct siginfo.
->> 
->> The practical result of this is that on a 64bit big endian kernel
->> when delivering a signal to a 32bit process the si_addr field
->> is set to NULL, instead of the expected pointer value.
->> 
->> This issue can not be fixed in copy_siginfo_to_user32 as the usb
->> usage of the the _sigfault (aka si_addr) member of the siginfo
->> union when SI_ASYNCIO is set is incompatible with the POSIX and
->> glibc usage of the _rt member of the siginfo union.
->> 
->> Therefore replace kill_pid_info_as_cred with kill_pid_usb_asyncio a
->> dedicated function for this one specific case.  There are no other
->> users of kill_pid_info_as_cred so this specialization should have no
->> impact on the amount of code in the kernel.  Have kill_pid_usb_asyncio
->> take instead of a siginfo_t which is difficult and error prone, 3
->> arguments, a signal number, an errno value, and an address enconded as
->> a sigval_t.  The encoding of the address as a sigval_t allows the
->> code that reads the userspace request for a signal to handle this
->> compat issue along with all of the other compat issues.
->> 
->> Add BUILD_BUG_ONs in kernel/signal.c to ensure that we can now place
->> the pointer value at the in si_pid (instead of si_addr).  That is the
->> code now verifies that si_pid and si_addr always occur at the same
->> location.  Further the code veries that for native structures a value
->> placed in si_pid and spilling into si_uid will appear in userspace in
->> si_addr (on a byte by byte copy of siginfo or a field by field copy of
->> siginfo).  The code also verifies that for a 64bit kernel and a 32bit
->> userspace the 32bit pointer will fit in si_pid.
->> 
->> I have used the usbsig.c program below written by Alan Stern and
->> slightly tweaked by me to run on a big endian machine to verify the
->> issue exists (on sparc64) and to confirm the patch below fixes the issue.
->> 
->> /* usbsig.c -- test USB async signal delivery */
+This will be used in the oom paths of mmu-notifiers, where blocking is
+not allowed to make sure there's forward progress. Quoting Michal:
 
-Sigh git commit ate the includes...
+"The notifier is called from quite a restricted context - oom_reaper -
+which shouldn't depend on any locks or sleepable conditionals. The code
+should be swift as well but we mostly do care about it to make a forward
+progress. Checking for sleepable context is the best thing we could come
+up with that would describe these demands at least partially."
 
->> static struct usbdevfs_urb urb;
->> static struct usbdevfs_disconnectsignal ds;
->> static volatile sig_atomic_t done = 0;
->> 
->> void urb_handler(int sig, siginfo_t *info , void *ucontext)
->> {
->> 	printf("Got signal %d, signo %d errno %d code %d addr: %p urb: %p\n",
->> 	       sig, info->si_signo, info->si_errno, info->si_code,
->> 	       info->si_addr, &urb);
->> 
->> 	printf("%s\n", (info->si_addr == &urb) ? "Good" : "Bad");
->> }
->> 
->> void ds_handler(int sig, siginfo_t *info , void *ucontext)
->> {
->> 	printf("Got signal %d, signo %d errno %d code %d addr: %p ds: %p\n",
->> 	       sig, info->si_signo, info->si_errno, info->si_code,
->> 	       info->si_addr, &ds);
->> 
->> 	printf("%s\n", (info->si_addr == &ds) ? "Good" : "Bad");
->> 	done = 1;
->> }
->> 
->> int main(int argc, char **argv)
->> {
->> 	char *devfilename;
->> 	int fd;
->> 	int rc;
->> 	struct sigaction act;
->> 	struct usb_ctrlrequest *req;
->> 	void *ptr;
->> 	char buf[80];
->> 
->> 	if (argc != 2) {
->> 		fprintf(stderr, "Usage: usbsig device-file-name\n");
->> 		return 1;
->> 	}
->> 
->> 	devfilename = argv[1];
->> 	fd = open(devfilename, O_RDWR);
->> 	if (fd == -1) {
->> 		perror("Error opening device file");
->> 		return 1;
->> 	}
->> 
->> 	act.sa_sigaction = urb_handler;
->> 	sigemptyset(&act.sa_mask);
->> 	act.sa_flags = SA_SIGINFO;
->> 
->> 	rc = sigaction(SIGUSR1, &act, NULL);
->> 	if (rc == -1) {
->> 		perror("Error in sigaction");
->> 		return 1;
->> 	}
->> 
->> 	act.sa_sigaction = ds_handler;
->> 	sigemptyset(&act.sa_mask);
->> 	act.sa_flags = SA_SIGINFO;
->> 
->> 	rc = sigaction(SIGUSR2, &act, NULL);
->> 	if (rc == -1) {
->> 		perror("Error in sigaction");
->> 		return 1;
->> 	}
->> 
->> 	memset(&urb, 0, sizeof(urb));
->> 	urb.type = USBDEVFS_URB_TYPE_CONTROL;
->> 	urb.endpoint = USB_DIR_IN | 0;
->> 	urb.buffer = buf;
->> 	urb.buffer_length = sizeof(buf);
->> 	urb.signr = SIGUSR1;
->> 
->> 	req = (struct usb_ctrlrequest *) buf;
->> 	req->bRequestType = USB_DIR_IN | USB_TYPE_STANDARD | USB_RECIP_DEVICE;
->> 	req->bRequest = USB_REQ_GET_DESCRIPTOR;
->> 	req->wValue = htole16(USB_DT_DEVICE << 8);
->> 	req->wIndex = htole16(0);
->> 	req->wLength = htole16(sizeof(buf) - sizeof(*req));
->
-> In fact, these values are supposed to be in host-endian order, not 
-> necessarily little-endian.  The USB core converts them if necessary.
+Peter also asked whether we want to catch spinlocks on top, but Michal
+said those are less of a problem because spinlocks can't have an
+indirect dependency upon the page allocator and hence close the loop
+with the oom reaper.
 
-Please look again.  In include/uapi/linux/ch9.h those fields are
-explicitly defined as little endian and the code in devio.c for
-USBDEVFS_URB_TYPE_CONTROL treats them as little endian.   Perhaps there
-is a mismatch here but I haven't seen it and I needed this change to get
-the code to work on big endian.
+Suggested by Michal Hocko.
 
->> 	rc = ioctl(fd, USBDEVFS_SUBMITURB, &urb);
->> 	if (rc == -1) {
->> 		perror("Error in SUBMITURB ioctl");
->> 		return 1;
->> 	}
->> 
->> 	rc = ioctl(fd, USBDEVFS_REAPURB, &ptr);
->> 	if (rc == -1) {
->> 		perror("Error in REAPURB ioctl");
->> 		return 1;
->> 	}
->> 
->> 	memset(&ds, 0, sizeof(ds));
->> 	ds.signr = SIGUSR2;
->> 	ds.context = &ds;
->> 	rc = ioctl(fd, USBDEVFS_DISCSIGNAL, &ds);
->> 	if (rc == -1) {
->> 		perror("Error in DISCSIGNAL ioctl");
->> 		return 1;
->> 	}
->> 
->> 	printf("Waiting for usb disconnect\n");
->> 	while (!done) {
->> 		sleep(1);
->> 	}
->> 
->> 	close(fd);
->> 	return 0;
->> }
->> 
->> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->> Cc: linux-usb@vger.kernel.org
->> Cc: Alan Stern <stern@rowland.harvard.edu>
->> Cc: Oliver Neukum <oneukum@suse.com>
->> Fixes: v2.3.39
->> Cc: stable@vger.kernel.org
->> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
->> ---
->> 
->> I managed to wrestle a sparc64 qemu to the ground so I could verify this
->> bug exists and the patch below fixes it.
->> 
->> Can I get an Ack from the usb side of things?
->
-> Give me some time to review the description and the changes.
+v2:
+- Improve commit message (Michal)
+- Also check in schedule, not just might_sleep (Peter)
 
-Please, it always helps when more people understand these things.
+v3: It works better when I actually squash in the fixup I had lying
+around :-/
 
-Eric
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: David Rientjes <rientjes@google.com>
+Cc: "Christian König" <christian.koenig@amd.com>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc: "Jérôme Glisse" <jglisse@redhat.com>
+Cc: linux-mm@kvack.org
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Wei Wang <wvw@google.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Jann Horn <jannh@google.com>
+Cc: Feng Tang <feng.tang@intel.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Randy Dunlap <rdunlap@infradead.org>
+Cc: linux-kernel@vger.kernel.org
+Acked-by: Christian König <christian.koenig@amd.com> (v1)
+Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+---
+ include/linux/kernel.h | 10 +++++++++-
+ include/linux/sched.h  |  4 ++++
+ kernel/sched/core.c    | 19 ++++++++++++++-----
+ 3 files changed, 27 insertions(+), 6 deletions(-)
+
+diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+index 74b1ee9027f5..b5f2c2ff0eab 100644
+--- a/include/linux/kernel.h
++++ b/include/linux/kernel.h
+@@ -214,7 +214,9 @@ extern void __cant_sleep(const char *file, int line, int preempt_offset);
+  * might_sleep - annotation for functions that can sleep
+  *
+  * this macro will print a stack trace if it is executed in an atomic
+- * context (spinlock, irq-handler, ...).
++ * context (spinlock, irq-handler, ...). Additional sections where blocking is
++ * not allowed can be annotated with non_block_start() and non_block_end()
++ * pairs.
+  *
+  * This is a useful debugging help to be able to catch problems early and not
+  * be bitten later when the calling function happens to sleep when it is not
+@@ -230,6 +232,10 @@ extern void __cant_sleep(const char *file, int line, int preempt_offset);
+ # define cant_sleep() \
+ 	do { __cant_sleep(__FILE__, __LINE__, 0); } while (0)
+ # define sched_annotate_sleep()	(current->task_state_change = 0)
++# define non_block_start() \
++	do { current->non_block_count++; } while (0)
++# define non_block_end() \
++	do { WARN_ON(current->non_block_count-- == 0); } while (0)
+ #else
+   static inline void ___might_sleep(const char *file, int line,
+ 				   int preempt_offset) { }
+@@ -238,6 +244,8 @@ extern void __cant_sleep(const char *file, int line, int preempt_offset);
+ # define might_sleep() do { might_resched(); } while (0)
+ # define cant_sleep() do { } while (0)
+ # define sched_annotate_sleep() do { } while (0)
++# define non_block_start() do { } while (0)
++# define non_block_end() do { } while (0)
+ #endif
+ 
+ #define might_sleep_if(cond) do { if (cond) might_sleep(); } while (0)
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 11837410690f..7f5b293e72df 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -908,6 +908,10 @@ struct task_struct {
+ 	struct mutex_waiter		*blocked_on;
+ #endif
+ 
++#ifdef CONFIG_DEBUG_ATOMIC_SLEEP
++	int				non_block_count;
++#endif
++
+ #ifdef CONFIG_TRACE_IRQFLAGS
+ 	unsigned int			irq_events;
+ 	unsigned long			hardirq_enable_ip;
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 102dfcf0a29a..ed7755a28465 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -3264,13 +3264,22 @@ static noinline void __schedule_bug(struct task_struct *prev)
+ /*
+  * Various schedule()-time debugging checks and statistics:
+  */
+-static inline void schedule_debug(struct task_struct *prev)
++static inline void schedule_debug(struct task_struct *prev, bool preempt)
+ {
+ #ifdef CONFIG_SCHED_STACK_END_CHECK
+ 	if (task_stack_end_corrupted(prev))
+ 		panic("corrupted stack end detected inside scheduler\n");
+ #endif
+ 
++#ifdef CONFIG_DEBUG_ATOMIC_SLEEP
++	if (!preempt && prev->state && prev->non_block_count) {
++		printk(KERN_ERR "BUG: scheduling in a non-blocking section: %s/%d/%i\n",
++			prev->comm, prev->pid, prev->non_block_count);
++		dump_stack();
++		add_taint(TAINT_WARN, LOCKDEP_STILL_OK);
++	}
++#endif
++
+ 	if (unlikely(in_atomic_preempt_off())) {
+ 		__schedule_bug(prev);
+ 		preempt_count_set(PREEMPT_DISABLED);
+@@ -3377,7 +3386,7 @@ static void __sched notrace __schedule(bool preempt)
+ 	rq = cpu_rq(cpu);
+ 	prev = rq->curr;
+ 
+-	schedule_debug(prev);
++	schedule_debug(prev, preempt);
+ 
+ 	if (sched_feat(HRTICK))
+ 		hrtick_clear(rq);
+@@ -6102,7 +6111,7 @@ void ___might_sleep(const char *file, int line, int preempt_offset)
+ 	rcu_sleep_check();
+ 
+ 	if ((preempt_count_equals(preempt_offset) && !irqs_disabled() &&
+-	     !is_idle_task(current)) ||
++	     !is_idle_task(current) && !current->non_block_count) ||
+ 	    system_state == SYSTEM_BOOTING || system_state > SYSTEM_RUNNING ||
+ 	    oops_in_progress)
+ 		return;
+@@ -6118,8 +6127,8 @@ void ___might_sleep(const char *file, int line, int preempt_offset)
+ 		"BUG: sleeping function called from invalid context at %s:%d\n",
+ 			file, line);
+ 	printk(KERN_ERR
+-		"in_atomic(): %d, irqs_disabled(): %d, pid: %d, name: %s\n",
+-			in_atomic(), irqs_disabled(),
++		"in_atomic(): %d, irqs_disabled(): %d, non_block: %d, pid: %d, name: %s\n",
++			in_atomic(), irqs_disabled(), current->non_block_count,
+ 			current->pid, current->comm);
+ 
+ 	if (task_stack_end_corrupted(current))
+-- 
+2.20.1
+
