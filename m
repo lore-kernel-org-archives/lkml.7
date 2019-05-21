@@ -1,103 +1,140 @@
 Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71AD3C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 09:12:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B74CCC04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 09:13:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 454332173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 09:12:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W644JxlB"
+	by mail.kernel.org (Postfix) with ESMTP id 88E312173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 09:13:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558430018;
+	bh=hEodck0PHUci82G0DrThRwlUG8VXpR99ixIRD4m7GJ4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ByNKJLiGe4ijMgKEtdVUfgyjMdX6YMVTP6QIvbCYmVkZrSsnAvAbCx+sVyTa7ryi0
+	 klWKGHFfHJECoRXr03kE+IJ8fySX9WFEqKUe3WRl7p+ukAxEbLNVSpLujTHKkaqS8v
+	 QnfV9g5fAQjPMVwktVLWg3ajtcMT+zYfMOfDdU34=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727382AbfEUJMc (ORCPT
+        id S1727086AbfEUJNh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 05:12:32 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:33066 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726296AbfEUJMb (ORCPT
+        Tue, 21 May 2019 05:13:37 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:33834 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726006AbfEUJNg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 05:12:31 -0400
-Received: by mail-pf1-f195.google.com with SMTP id z28so8768842pfk.0;
-        Tue, 21 May 2019 02:12:31 -0700 (PDT)
+        Tue, 21 May 2019 05:13:36 -0400
+Received: by mail-pg1-f196.google.com with SMTP id c13so8279322pgt.1;
+        Tue, 21 May 2019 02:13:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=WFNnK9H0K3Ber2neUCNJ4Uwp9UCDDXpkHqDNEykoK1U=;
-        b=W644JxlBVI3+KbYZ/4msgiMKep2yUr1vVE8T9T59526jPWWcWIAodg0uZrPmJmvQ2P
-         JGI1l5zrMJpy+g1HaUtg9Do8pAKqYRUHUUxrDP9n1RUWZzrHJQeIZJ2yN/g9YIoMY8LN
-         gKr1o3vOv4ployX/pkhR4dwSEh8YzODeZp57kseFQ5jr8achYT3s5L6tY2Q17D476kFM
-         R3f750EXEkhfDIEDlJFpmoaV3GtUmgxmWr/BMGE79REiPKy8RmnsNhZtQayV5S0OmPuw
-         /eZKGY2dbp3HZtONbwJ/iycJXh2ifSCI07nfof9iRV9xEpnr3XIkqu4hJ30xthX1gj5u
-         oPfw==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=FtiVzriB2PhlcNAnz836XBuHzMztzkTorf7MJccM2OU=;
+        b=nLpAdWELdczUu+3lNyH6LfAl0QPj3HY+ylBRF+etXwbxLii/AXVKvL8Z2X2jUNDnDZ
+         oOLUXjIgc+XGGxCeO17/IM2C1kUUN3SNtqpO/c6t/XJsrP0Ux7ktXDgHHS6EZdf8LFek
+         gT5vJlMs8DrcCOeK7IrChtx97Zx1dbwWji6WwZBR8fpQRjgPj38fDcpr2Gtlrgd8zy8I
+         uNh+aVGyi3WWAXJOrRiWrfeXZD4lN9bimqQB27OGtybJ0B3hz4egDMmNJDLGMpWTnPEQ
+         4Vkk7lk+1VlnoIdxFYKpwVNCusuZtNP1TBbUsXL6/pt0+8CzePg6WX5gMb7XebjpDCG2
+         xUQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=WFNnK9H0K3Ber2neUCNJ4Uwp9UCDDXpkHqDNEykoK1U=;
-        b=BBgeVD+maijPnOoo5YMOdPzzh7hQfqWB4qL8FG92785zmZS4B0w4I8ZFIlS9GfG7am
-         NLllu2fbcuieiD890dZnOYgVEbLHa1KU7EAzGgZNmFM7FQE688Tq+orCBP/L4Wq407Tw
-         Srnx+aQAX1dJv/znkGrEkB1pmIX7KZIegmlH3eTtcobwGsf0EZBJyH4rcWPpGjNdLGUU
-         f7z5J5sN/M+7nVa3ewWakAm+LfH3qUcN8UPyjb+mlEIfC/m5Ebo0b6bunSDqPuaLOn+U
-         /tLKy8kNrV3xmLgmzi+X82UceWBn0glD/Ks1YDDq2UFQBwv1ZoA98xrR1fgkW2LymfFA
-         OmLQ==
-X-Gm-Message-State: APjAAAWU2b39BcABs0mlGdHqs7i2BQw83loIDoEWoHVyq6qANLiL2NMM
-        tLVsjzgwxHIJF6l/0NoTZ/0=
-X-Google-Smtp-Source: APXvYqzOAOrYS9rJhvcv1i/2h2CrHY8ltTh6nYiFU1m7HP097CbBxTgHa0DVHHQxMdoRZvpYb2g74Q==
-X-Received: by 2002:a65:42ca:: with SMTP id l10mr27448771pgp.181.1558429951093;
-        Tue, 21 May 2019 02:12:31 -0700 (PDT)
-Received: from localhost ([115.82.227.102])
-        by smtp.gmail.com with ESMTPSA id 129sm23870702pff.140.2019.05.21.02.12.30
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 21 May 2019 02:12:30 -0700 (PDT)
-From:   neojou@gmail.com
-To:     arend.vanspriel@broadcom.com, franky.lin@broadcom.com,
-        hante.meuleman@broadcom.com, chi-hsien.lin@cypress.com,
-        wright.feng@cypress.com, kvalo@codeaurora.org, davem@davemloft.net,
-        rafal@milecki.pl, hdegoedg@redhat.com,
-        p.figiel@camlintechnologies.com
-Cc:     linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@braodcom.com,
-        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Neo Jou <neojou@gmail.com>
-Subject: [PATCH] brcmfmac: use strlcpy() instead of strcpy()
-Date:   Tue, 21 May 2019 17:12:20 +0800
-Message-Id: <1558429940-8709-1-git-send-email-neojou@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=FtiVzriB2PhlcNAnz836XBuHzMztzkTorf7MJccM2OU=;
+        b=K1UjvX2EKJN8qqwd/nkTc4gZSC+m0xe+FAeqv40VRNVBcGYRxQjnw7QH5Ha6clnfih
+         V0jMSKmNWcVUJ/NTeEuDA7pDr8/rqrpbmA8DEc9YNobgYG4VvOQXsp7DGROrciPYtOYI
+         5sVsg5qB3QwBP/svb3MX4gFrpiyqOyLqRzENdD0QRp4LZjXWIMWGocDQQmEUp3S2ibU4
+         +Z0aVV8fUq8yujlQ4HcPMj9iaojJ8YsHOalMDL1d6aVDct+27b0EqO3eKkIMUYBFomLV
+         2bYw24S5RjsD8/+oxwfg21NLLEd3ZMu4YXER+Z90PAabS5abSFpEmCD/Xe5eT2/9oYDD
+         o7ww==
+X-Gm-Message-State: APjAAAWWYD1xlOW9eWMHiyFODRo1wc2ZRW9LhYrj6his8JGX+0B8ZGsx
+        J9uXwsR6Irg7Wve/5qBBUkg=
+X-Google-Smtp-Source: APXvYqzVkDpZ7bX2Y7PzruSEK13LfO/mpDsKUUI4C9vtExA5uiJNVqQNkd9lzLO29jDx3IZd8nI4Sg==
+X-Received: by 2002:a62:1ec1:: with SMTP id e184mr18958178pfe.185.1558430015975;
+        Tue, 21 May 2019 02:13:35 -0700 (PDT)
+Received: from google.com ([2401:fa00:d:0:98f1:8b3d:1f37:3e8])
+        by smtp.gmail.com with ESMTPSA id u1sm31870394pfh.85.2019.05.21.02.13.31
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 21 May 2019 02:13:34 -0700 (PDT)
+Date:   Tue, 21 May 2019 18:13:29 +0900
+From:   Minchan Kim <minchan@kernel.org>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tim Murray <timmurray@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>, linux-api@vger.kernel.org
+Subject: Re: [RFC 3/7] mm: introduce MADV_COLD
+Message-ID: <20190521091329.GB219653@google.com>
+References: <20190520035254.57579-1-minchan@kernel.org>
+ <20190520035254.57579-4-minchan@kernel.org>
+ <20190520082703.GX6836@dhcp22.suse.cz>
+ <20190520230038.GD10039@google.com>
+ <20190521060820.GB32329@dhcp22.suse.cz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190521060820.GB32329@dhcp22.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Neo Jou <neojou@gmail.com>
+On Tue, May 21, 2019 at 08:08:20AM +0200, Michal Hocko wrote:
+> On Tue 21-05-19 08:00:38, Minchan Kim wrote:
+> > On Mon, May 20, 2019 at 10:27:03AM +0200, Michal Hocko wrote:
+> > > [Cc linux-api]
+> > > 
+> > > On Mon 20-05-19 12:52:50, Minchan Kim wrote:
+> > > > When a process expects no accesses to a certain memory range
+> > > > for a long time, it could hint kernel that the pages can be
+> > > > reclaimed instantly but data should be preserved for future use.
+> > > > This could reduce workingset eviction so it ends up increasing
+> > > > performance.
+> > > > 
+> > > > This patch introduces the new MADV_COLD hint to madvise(2)
+> > > > syscall. MADV_COLD can be used by a process to mark a memory range
+> > > > as not expected to be used for a long time. The hint can help
+> > > > kernel in deciding which pages to evict proactively.
+> > > 
+> > > As mentioned in other email this looks like a non-destructive
+> > > MADV_DONTNEED alternative.
+> > > 
+> > > > Internally, it works via reclaiming memory in process context
+> > > > the syscall is called. If the page is dirty but backing storage
+> > > > is not synchronous device, the written page will be rotate back
+> > > > into LRU's tail once the write is done so they will reclaim easily
+> > > > when memory pressure happens. If backing storage is
+> > > > synchrnous device(e.g., zram), hte page will be reclaimed instantly.
+> > > 
+> > > Why do we special case async backing storage? Please always try to
+> > > explain _why_ the decision is made.
+> > 
+> > I didn't make any decesion. ;-) That's how current reclaim works to
+> > avoid latency of freeing page in interrupt context. I had a patchset
+> > to resolve the concern a few years ago but got distracted.
+> 
+> Please articulate that in the changelog then. Or even do not go into
+> implementation details and stick with - reuse the current reclaim
+> implementation. If you call out some of the specific details you are
+> risking people will start depending on them. The fact that this reuses
+> the currect reclaim logic is enough from the review point of view
+> because we know that there is no additional special casing to worry
+> about.
 
-The function strcpy() is inherently not safe. Though the function
-works without problems here, it would be better to use other safer
-function, e.g. strlcpy(), to replace strcpy() still.
+I should have clarified. I will remove those lines in respin.
 
-Signed-off-by: Neo Jou <neojou@gmail.com>
----
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/common.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/common.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/common.c
-index 96b8d5b..9e0bd2b 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/common.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/common.c
-@@ -269,7 +269,7 @@ int brcmf_c_preinit_dcmds(struct brcmf_if *ifp)
- 
- 	/* query for 'ver' to get version info from firmware */
- 	memset(buf, 0, sizeof(buf));
--	strcpy(buf, "ver");
-+	strlcpy(buf, "ver", sizeof(buf));
- 	err = brcmf_fil_iovar_data_get(ifp, "ver", buf, sizeof(buf));
- 	if (err < 0) {
- 		bphy_err(drvr, "Retrieving version information failed, %d\n",
--- 
-2.7.4
-
+> -- 
+> Michal Hocko
+> SUSE Labs
