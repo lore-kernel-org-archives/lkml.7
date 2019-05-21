@@ -1,82 +1,176 @@
 Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04D7AC04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:31:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9DDEC04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:32:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C326C217D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:31:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85E642075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:32:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558434683;
-	bh=mb4gcRCdlc4t1BxrH1KDO67uUQe97itsvMsgFVRR+oI=;
+	s=default; t=1558434752;
+	bh=Uv4WUBN4S7yJdaLBxKYXrJH/6pCfFBba7mXjI8/lTtI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=EdiyrArj+6uHn74KHZodCvRAOsi1u6HC+q906Q1GNQZoN/EvhM+NKOESLtoRAqxSf
-	 gN7eUu/CwB+PY12OAI6Pcqpfo/7cqaCjC1SoqFHYmHFZBtWWH8s1sGxn1pMMFEFET4
-	 7m6QMhpTBk1XxUMa3GJZ0vcJiBc59A4PXCTXzDc0=
+	b=q7qILh3f/eJ5dU26fP+Jb4rNx9wYZkJ1igSuJIF4NWIcFooBJ9AqfBysGsuA7lTwT
+	 NH4m1s19+8qP3+VNIRcnu0U4/W2ygALxMd1VHsD6RYvrMT8n8sXcW6+BYnkae+uasd
+	 SySsxeVtwXZvXzzIL36EnfCAVnL+GO+LRV9SCxro=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727637AbfEUKbW (ORCPT
+        id S1727648AbfEUKcb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 06:31:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47430 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726344AbfEUKbW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 06:31:22 -0400
-Received: from localhost (unknown [49.207.56.136])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C20FE21743;
-        Tue, 21 May 2019 10:31:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558434681;
-        bh=mb4gcRCdlc4t1BxrH1KDO67uUQe97itsvMsgFVRR+oI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=1T3azC+0XgH3xEp8zysLMOSu8S++YutNokP4axowBzBYutjJuCkzQ7/lP7XAaYOlW
-         Snz0V6hyebzOKq70E2UHDr5QECQvx96Tszf1olmuzgFudaQ7kHEldkcMOj8WN96mF8
-         MlGCXvuGWzq8EJexNscqQiGDglTT3tQZ38Y/WuxQ=
-Date:   Tue, 21 May 2019 16:01:17 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Cc:     agross@kernel.org, david.brown@linaro.org,
-        gregkh@linuxfoundation.org, sboyd@kernel.org,
-        bjorn.andersson@linaro.org, jslaby@suse.com, keescook@chromium.org,
-        anton@enomsg.org, ccross@android.com, tony.luck@intel.com,
-        linux-arm-msm@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] tty: serial: msm_serial: Fix XON/XOFF
-Message-ID: <20190521103117.GD15118@vkoul-mobl>
-References: <20190520183848.27719-1-jorge.ramirez-ortiz@linaro.org>
+        Tue, 21 May 2019 06:32:31 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:46932 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726344AbfEUKcb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 06:32:31 -0400
+Received: by mail-pf1-f194.google.com with SMTP id y11so8834642pfm.13;
+        Tue, 21 May 2019 03:32:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=iEpABD/nsZz33E7K8kq0g1PtAPqQkfDdFrRiuwAA8wE=;
+        b=ra87JvwgK/Zau+lFTPoxO3sEsrDEs7bq3v+sP8khYi/R1y9BVFkLV0dtEgBCALl1RC
+         BvmEvtF2rbLRX5/jiSCOP+edg7XsEcCiVRRFaSnESZebX/VPzbmKlp/+aunsJ/v8Parl
+         zrcdnW3a1IXgZk6c//4kQeR8tFYRhFUXYriqNaXMoWw0cDaMocbQgQA6Pcp4kd7G6HQZ
+         T7MzDB7FhNfA6dyV0HLfz9g77EKMvjmYfEfy+E8AK6V/3RY2BW+5nn/dAdXYqXCi5hNU
+         GBnMuqUhUnCSndbZX3Cg8l2DiU5iNOqkoMiMEqqSEluqMbZtYAdXTUJe05W+pf9dG8o8
+         xwuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=iEpABD/nsZz33E7K8kq0g1PtAPqQkfDdFrRiuwAA8wE=;
+        b=M1qf4PnE59X4Ks0v+Ip4tNWXtKroOkGRkHepQPuqx7YH4hDdbq/f7lW570UgNggHvC
+         7UXXRM4Gbz3hRptdfIksVdkBg7XjYt+TNMAZftBB0glvUDNfIQDrDfKRq4Bma23S8TPe
+         4ZHC4+U4sAl81Cm7RZJrTcW4KrA+lxKNO8fY5ECbNJ8cCk++CkgW+/N436k7n8mwBCg+
+         EBX0qgcBS26XrAxH6o06zbwkLjKD8UXNsoSOCHeOJmhNtJZCsHwurnYROCx9ilNwCald
+         +2KsikznCdZveHhKM4NFdt2I5W2FSTy8vzyb6f9yyResyNvpVrkJ2WTITBvTa2GlEIEV
+         j9JQ==
+X-Gm-Message-State: APjAAAUst2pd93CFF0oQNHbC1yzCls9ihtCVLMnWzaOfLiuXmM7LLfSy
+        A1kVPawk+HTVALX6v6Xcb1s=
+X-Google-Smtp-Source: APXvYqwiCEhrh1gNZKYql1ciR0mfuAlQeUIx5uOvluMiBVcOnNC/dxSyCtOOCo7BXHPxdLEX8zMfmQ==
+X-Received: by 2002:a63:1212:: with SMTP id h18mr31397904pgl.266.1558434750297;
+        Tue, 21 May 2019 03:32:30 -0700 (PDT)
+Received: from google.com ([2401:fa00:d:0:98f1:8b3d:1f37:3e8])
+        by smtp.gmail.com with ESMTPSA id k6sm24835382pfi.86.2019.05.21.03.32.26
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 21 May 2019 03:32:29 -0700 (PDT)
+Date:   Tue, 21 May 2019 19:32:23 +0900
+From:   Minchan Kim <minchan@kernel.org>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tim Murray <timmurray@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>, linux-api@vger.kernel.org
+Subject: Re: [RFC 5/7] mm: introduce external memory hinting API
+Message-ID: <20190521103223.GD219653@google.com>
+References: <20190520035254.57579-1-minchan@kernel.org>
+ <20190520035254.57579-6-minchan@kernel.org>
+ <20190520091829.GY6836@dhcp22.suse.cz>
+ <20190521024107.GF10039@google.com>
+ <20190521061743.GC32329@dhcp22.suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190520183848.27719-1-jorge.ramirez-ortiz@linaro.org>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190521061743.GC32329@dhcp22.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20-05-19, 20:38, Jorge Ramirez-Ortiz wrote:
-> When the tty layer requests the uart to throttle, the current code
-> executing in msm_serial will trigger "Bad mode in Error Handler" and
-> generate an invalid stack frame in pstore before rebooting (that is if
-> pstore is indeed configured: otherwise the user shall just notice a
-> reboot with no further information dumped to the console).
+On Tue, May 21, 2019 at 08:17:43AM +0200, Michal Hocko wrote:
+> On Tue 21-05-19 11:41:07, Minchan Kim wrote:
+> > On Mon, May 20, 2019 at 11:18:29AM +0200, Michal Hocko wrote:
+> > > [Cc linux-api]
+> > > 
+> > > On Mon 20-05-19 12:52:52, Minchan Kim wrote:
+> > > > There is some usecase that centralized userspace daemon want to give
+> > > > a memory hint like MADV_[COOL|COLD] to other process. Android's
+> > > > ActivityManagerService is one of them.
+> > > > 
+> > > > It's similar in spirit to madvise(MADV_WONTNEED), but the information
+> > > > required to make the reclaim decision is not known to the app. Instead,
+> > > > it is known to the centralized userspace daemon(ActivityManagerService),
+> > > > and that daemon must be able to initiate reclaim on its own without
+> > > > any app involvement.
+> > > 
+> > > Could you expand some more about how this all works? How does the
+> > > centralized daemon track respective ranges? How does it synchronize
+> > > against parallel modification of the address space etc.
+> > 
+> > Currently, we don't track each address ranges because we have two
+> > policies at this moment:
+> > 
+> > 	deactive file pages and reclaim anonymous pages of the app.
+> > 
+> > Since the daemon has a ability to let background apps resume(IOW, process
+> > will be run by the daemon) and both hints are non-disruptive stabilty point
+> > of view, we are okay for the race.
 > 
-> This patch replaces the PIO byte accessor with the word accessor
-> already used in PIO mode.
+> Fair enough but the API should consider future usecases where this might
+> be a problem. So we should really think about those potential scenarios
+> now. If we are ok with that, fine, but then we should be explicit and
+> document it that way. Essentially say that any sort of synchronization
+> is supposed to be done by monitor. This will make the API less usable
+> but maybe that is enough.
+
+Okay, I will add more about that in the description.
+
+>  
+> > > > To solve the issue, this patch introduces new syscall process_madvise(2)
+> > > > which works based on pidfd so it could give a hint to the exeternal
+> > > > process.
+> > > > 
+> > > > int process_madvise(int pidfd, void *addr, size_t length, int advise);
+> > > 
+> > > OK, this makes some sense from the API point of view. When we have
+> > > discussed that at LSFMM I was contemplating about something like that
+> > > except the fd would be a VMA fd rather than the process. We could extend
+> > > and reuse /proc/<pid>/map_files interface which doesn't support the
+> > > anonymous memory right now. 
+> > > 
+> > > I am not saying this would be a better interface but I wanted to mention
+> > > it here for a further discussion. One slight advantage would be that
+> > > you know the exact object that you are operating on because you have a
+> > > fd for the VMA and we would have a more straightforward way to reject
+> > > operation if the underlying object has changed (e.g. unmapped and reused
+> > > for a different mapping).
+> > 
+> > I agree your point. If I didn't miss something, such kinds of vma level
+> > modify notification doesn't work even file mapped vma at this moment.
+> > For anonymous vma, I think we could use userfaultfd, pontentially.
+> > It would be great if someone want to do with disruptive hints like
+> > MADV_DONTNEED.
+> > 
+> > I'd like to see it further enhancement after landing address range based
+> > operation via limiting hints process_madvise supports to non-disruptive
+> > only(e.g., MADV_[COOL|COLD]) so that we could catch up the usercase/workload
+> > when someone want to extend the API.
 > 
-> Fixes: 68252424a7c7 ("tty: serial: msm: Support big-endian CPUs")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> So do you think we want both interfaces (process_madvise and madvisefd)?
 
-Reviewed-by: Vinod Koul <vkoul@kernel.org>
+What I have in mind is to extend process_madvise later like this
 
--- 
-~Vinod
+struct pr_madvise_param {
+    int size;                       /* the size of this structure */
+    union {
+    	const struct iovec __user *vec; /* address range array */
+	int fd;				/* supported from 6.0 */
+    }
+}
+
+with introducing new hint Or-able PR_MADV_RANGE_FD, so that process_madvise
+can go with fd instead of address range.
