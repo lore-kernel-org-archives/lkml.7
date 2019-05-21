@@ -2,139 +2,158 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 076C2C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 18:43:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F3A3C072AD
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 18:44:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C029B217D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 18:43:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35E68217D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 18:44:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="UQamTczc"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ElKbZ4cz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729283AbfEUSni (ORCPT
+        id S1729299AbfEUSoi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 14:43:38 -0400
-Received: from esa2.microchip.iphmx.com ([68.232.149.84]:62723 "EHLO
-        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727969AbfEUSnh (ORCPT
+        Tue, 21 May 2019 14:44:38 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:44544 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727969AbfEUSoh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 14:43:37 -0400
-Received-SPF: Pass (esa2.microchip.iphmx.com: domain of
-  Adham.Abozaeid@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
-  envelope-from="Adham.Abozaeid@microchip.com";
-  x-sender="Adham.Abozaeid@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa2.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
-  envelope-from="Adham.Abozaeid@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa2.microchip.iphmx.com; spf=Pass smtp.mailfrom=Adham.Abozaeid@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
-X-IronPort-AV: E=Sophos;i="5.60,496,1549954800"; 
-   d="scan'208";a="34046847"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 21 May 2019 11:43:36 -0700
-Received: from NAM03-CO1-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.76.38) with Microsoft SMTP Server (TLS) id
- 14.3.352.0; Tue, 21 May 2019 11:43:35 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector1-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=O8L7sQcUUreJzvv+KdquaYGZ3YdkFj/9QthmEThiJJY=;
- b=UQamTczc0Psv7OgHGjHPvAV3XBPUw17YR4UXAFlVcTuxupCIsOd4JBBPYptiVTmsEg8h0FUpr+0IuyEHkKgthlsg9WcPEsGFztbprFWbis638IagC4iGSCdNG2Ghg6pazeHlAmaidjams8+jTvZywaeWbQpsRaz99ZYSoX/pznc=
-Received: from MWHPR11MB1373.namprd11.prod.outlook.com (10.169.234.141) by
- MWHPR11MB1327.namprd11.prod.outlook.com (10.169.237.9) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1922.15; Tue, 21 May 2019 18:43:27 +0000
-Received: from MWHPR11MB1373.namprd11.prod.outlook.com
- ([fe80::9ce9:4621:3c3f:a961]) by MWHPR11MB1373.namprd11.prod.outlook.com
- ([fe80::9ce9:4621:3c3f:a961%4]) with mapi id 15.20.1900.019; Tue, 21 May 2019
- 18:43:27 +0000
-From:   <Adham.Abozaeid@microchip.com>
-To:     <colin.king@canonical.com>, <Ajay.Kathat@microchip.com>,
-        <gregkh@linuxfoundation.org>, <linux-wireless@vger.kernel.org>,
-        <devel@driverdev.osuosl.org>
-CC:     <kernel-janitors@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] staging: wilc1000: remove redundant masking of pkt_offset
-Thread-Topic: [PATCH] staging: wilc1000: remove redundant masking of
- pkt_offset
-Thread-Index: AQHVD9egnn/gbMbCgE+l/pOShkDQxKZ16nWA
-Date:   Tue, 21 May 2019 18:43:27 +0000
-Message-ID: <f7460c62-2a44-df0d-afaf-04d1c990d2a1@microchip.com>
-References: <20190521131706.30236-1-colin.king@canonical.com>
-In-Reply-To: <20190521131706.30236-1-colin.king@canonical.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [198.175.253.81]
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.3.0
-x-clientproxiedby: BYAPR08CA0043.namprd08.prod.outlook.com
- (2603:10b6:a03:117::20) To MWHPR11MB1373.namprd11.prod.outlook.com
- (2603:10b6:300:25::13)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 667d34e9-56cf-40e5-3e11-08d6de1c368a
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:MWHPR11MB1327;
-x-ms-traffictypediagnostic: MWHPR11MB1327:
-x-microsoft-antispam-prvs: <MWHPR11MB13272826BF33DD4C3F7F4F848D070@MWHPR11MB1327.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1091;
-x-forefront-prvs: 0044C17179
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(346002)(376002)(366004)(136003)(39860400002)(199004)(189003)(54906003)(53546011)(68736007)(4326008)(6506007)(256004)(110136005)(305945005)(386003)(7736002)(58126008)(64126003)(316002)(6116002)(3846002)(53936002)(14454004)(102836004)(52116002)(6512007)(5660300002)(6246003)(65826007)(2501003)(73956011)(25786009)(11346002)(76176011)(486006)(2616005)(66946007)(66446008)(64756008)(66556008)(66476007)(6436002)(476003)(71200400001)(71190400001)(26005)(31696002)(6486002)(86362001)(2201001)(8676002)(36756003)(478600001)(66066001)(65806001)(72206003)(81166006)(446003)(81156014)(8936002)(31686004)(99286004)(2906002)(65956001)(14444005)(229853002)(186003);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR11MB1327;H:MWHPR11MB1373.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 8eCPFPERT7ZPRGwIFBzvDQMs5IzEce6BPjMHoArICZXRmho5o0xhS8OVZu5ASKNUFE21ydfsZdNZKPGFgUmcaqjBAKJb6WL14wj5i4jwRey8MYH+r9GfaD1sY6P1PXfcI3ZKb2TlCmNrgeoIZQ1VrZuHPvJLFVxt94khm1ba6pgDc9iOIiZil0xR7Ah0xiopg6kXiTjNBIsLp0wq+EPJDEDfz4aiZceyyP6VQOhEjXuwoTFCN5iNMB9q7D0JEoaLA8Z6xZzukPN6E98C4LCquVQ1KME+Js8PIGenQAJYKxR0GH5XdXE5rmugYHbbXKdCS9t+1ax8kdDfsJzzRoRBB+R3ZMRMSJjgKkxS8rwJ/ZPlfLDcFa0anfAfeGgemScUYTslWVgc5H5105kEToZLMdgLOQgKVaQVBNjjsLdi/x8=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <BFFFBADA9DF8FD4CB170D5E21D1F32BC@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Tue, 21 May 2019 14:44:37 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4LIcXvZ101084;
+        Tue, 21 May 2019 18:43:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=TNyL8LpIbOB4LoFMqrfRxE8ZeFvo438h9vL46i7IfL8=;
+ b=ElKbZ4czVRuis3YinIVdhot4CeceOrkC7Uc5X51zATLnYt6VqBqdIy1f3Xrg9dsnKMtk
+ s47WaZXBw0tMWP9P8zzJ5ohYPqM+kb/dD36WWvclhVDioQOx8ge/zBqQVgAMSTeY3bwC
+ 7uu0l6h8q8EqMKT27pVkm5X40BLCymj68q2HgqoOnph+kBC5E7uIAaa9TV7uDgmYIbuz
+ Yn5BwFU8D2zy52lyWqjEWOE3pMSe7hiEQTDncUwbJ7Iml/EQl7+MAfYeik0+wbAzpZZm
+ ywFLL0x4ElJS+B+pNk3BnDeMBnlL2X4QGtXsMEc8Fa29aXeHGMc+5JgmC5Et5OlUKFYQ BA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2sjapqf9pt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 21 May 2019 18:43:45 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4LIfUgm051904;
+        Tue, 21 May 2019 18:41:44 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by aserp3030.oracle.com with ESMTP id 2sks1yc2cm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 21 May 2019 18:41:44 +0000
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x4LIfi04052401;
+        Tue, 21 May 2019 18:41:44 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 2sks1yc2cc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 21 May 2019 18:41:44 +0000
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x4LIfept013238;
+        Tue, 21 May 2019 18:41:41 GMT
+Received: from localhost (/10.159.211.99)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 21 May 2019 18:41:40 +0000
+Date:   Tue, 21 May 2019 14:41:37 -0400
+From:   Kris Van Hees <kris.van.hees@oracle.com>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Kris Van Hees <kris.van.hees@oracle.com>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, dtrace-devel@oss.oracle.com,
+        linux-kernel@vger.kernel.org, rostedt@goodmis.org,
+        mhiramat@kernel.org, acme@kernel.org, ast@kernel.org,
+        daniel@iogearbox.net, peterz@infradead.org
+Subject: Re: [RFC PATCH 00/11] bpf, trace, dtrace: DTrace BPF program type
+ implementation and sample use
+Message-ID: <20190521184137.GH2422@oracle.com>
+References: <201905202347.x4KNl0cs030532@aserv0121.oracle.com>
+ <20190521175617.ipry6ue7o24a2e6n@ast-mbp.dhcp.thefacebook.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 667d34e9-56cf-40e5-3e11-08d6de1c368a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 May 2019 18:43:27.8596
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB1327
-X-OriginatorOrg: microchip.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190521175617.ipry6ue7o24a2e6n@ast-mbp.dhcp.thefacebook.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9264 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905210115
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQpPbiA1LzIxLzE5IDY6MTcgQU0sIENvbGluIEtpbmcgd3JvdGU6DQo+IEV4dGVybmFsIEUtTWFp
-bA0KPg0KPg0KPiBGcm9tOiBDb2xpbiBJYW4gS2luZyA8Y29saW4ua2luZ0BjYW5vbmljYWwuY29t
-Pg0KPg0KPiBUaGUgbWFza2luZyB1cGRhdGUgb2YgcGtnX29mZnNldCBpcyByZWR1bmRhbnQgYXMg
-dGhlIHVwZGF0ZWQNCj4gdmFsdWUgaXMgbmV2ZXIgcmVhZCBhbmQgcGtnX29mZnNldCBpcyByZS1h
-c3NpZ25lZCBvbiB0aGUgbmV4dA0KPiBpdGVyYXRpb24gb2YgdGhlIGxvb3AuICBDbGVhbiB0aGlz
-IHVwIGJ5IHJlbW92aW5nIHRoZSByZWR1bmRhbnQNCj4gYXNzaWdubWVudC4NCj4NCj4gQWRkcmVz
-c2VzLUNvdmVyaXR5OiAoIlVudXNlZCB2YWx1ZSIpDQo+IFNpZ25lZC1vZmYtYnk6IENvbGluIElh
-biBLaW5nIDxjb2xpbi5raW5nQGNhbm9uaWNhbC5jb20+DQoNClJldmlld2VkLWJ5OiBBZGhhbSBB
-Ym96YWVpZCA8YWRoYW0uYWJvemFlaWRAbWljcm9jaGlwLmNvbT4NCg0KDQpUaGFua3MsDQoNCkFk
-aGFtDQoNCj4gLS0tDQo+ICBkcml2ZXJzL3N0YWdpbmcvd2lsYzEwMDAvd2lsY193bGFuLmMgfCAz
-IC0tLQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDMgZGVsZXRpb25zKC0pDQo+DQo+IGRpZmYgLS1naXQg
-YS9kcml2ZXJzL3N0YWdpbmcvd2lsYzEwMDAvd2lsY193bGFuLmMgYi9kcml2ZXJzL3N0YWdpbmcv
-d2lsYzEwMDAvd2lsY193bGFuLmMNCj4gaW5kZXggOTVlYWY4ZmRmNGYyLi5kY2Q3Mjg1NTc5NTgg
-MTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvc3RhZ2luZy93aWxjMTAwMC93aWxjX3dsYW4uYw0KPiAr
-KysgYi9kcml2ZXJzL3N0YWdpbmcvd2lsYzEwMDAvd2lsY193bGFuLmMNCj4gQEAgLTcwOSw5ICs3
-MDksNiBAQCBzdGF0aWMgdm9pZCB3aWxjX3dsYW5faGFuZGxlX3J4X2J1ZmYoc3RydWN0IHdpbGMg
-KndpbGMsIHU4ICpidWZmZXIsIGludCBzaXplKQ0KPiAgCQkJYnJlYWs7DQo+ICANCj4gIAkJaWYg
-KHBrdF9vZmZzZXQgJiBJU19NQU5BR01FTUVOVCkgew0KPiAtCQkJcGt0X29mZnNldCAmPSB+KElT
-X01BTkFHTUVNRU5UIHwNCj4gLQkJCQkJSVNfTUFOQUdNRU1FTlRfQ0FMTEJBQ0sgfA0KPiAtCQkJ
-CQlJU19NR01UX1NUQVRVU19TVUNDRVMpOw0KPiAgCQkJYnVmZl9wdHIgKz0gSE9TVF9IRFJfT0ZG
-U0VUOw0KPiAgCQkJd2lsY193ZmlfbWdtdF9yeCh3aWxjLCBidWZmX3B0ciwgcGt0X2xlbik7DQo+
-ICAJCX0gZWxzZSB7DQo=
+On Tue, May 21, 2019 at 10:56:18AM -0700, Alexei Starovoitov wrote:
+> On Mon, May 20, 2019 at 11:47:00PM +0000, Kris Van Hees wrote:
+> > 
+> >     2. bpf: add BPF_PROG_TYPE_DTRACE
+> > 
+> > 	This patch adds BPF_PROG_TYPE_DTRACE as a new BPF program type, without
+> > 	actually providing an implementation.  The actual implementation is
+> > 	added in patch 4 (see below).  We do it this way because the
+> > 	implementation is being added to the tracing subsystem as a component
+> > 	that I would be happy to maintain (if merged) whereas the declaration
+> > 	of the program type must be in the bpf subsystem.  Since the two
+> > 	subsystems are maintained by different people, we split the
+> > 	implementing patches across maintainer boundaries while ensuring that
+> > 	the kernel remains buildable between patches.
+> 
+> None of these kernel patches are necessary for what you want to achieve.
+
+I disagree.  The current support for BPF programs for probes associates a
+specific BPF program type with a specific set of probes, which means that I
+cannot write BPF programs based on a more general concept of a 'DTrace probe'
+and provide functionality based on that.  It also means that if I have a D
+clause (DTrace probe action code associated with probes) that is to be executed
+for a list of probes of different types, I need to duplicate the program
+because I cannot cross program type boundaries.
+
+By implementing a program type for DTrace, and making it possible for
+tail-calls to be made from various probe-specific program types to the DTrace
+program type, I can accomplish what I described above.  More details are in
+the cover letter and the commit messages of the individual patches.
+
+The reasons for these patches is because I cannot do the same with the existing
+implementation.  Yes, I can do some of it or use some workarounds to accomplish
+kind of the same thing, but at the expense of not being able to do what I need
+to do but rather do some kind of best effort alternative.  That is not the goal
+here.
+
+> Feel free to add tools/dtrace/ directory and maintain it though.
+
+Thank you.
+
+> The new dtrace_buffer doesn't need to replicate existing bpf+kernel functionality
+> and no changes are necessary in kernel/events/ring_buffer.c either.
+> tools/dtrace/ user space component can use either per-cpu array map
+> or hash map as a buffer to store arbitrary data into and use
+> existing bpf_perf_event_output() to send it to user space via perf ring buffer.
+> 
+> See, for example, how bpftrace does that.
+
+When using bpf_perf_event_output() you need to construct the sample first,
+and then send it off to user space using the perf ring-buffer.  That is extra
+work that is unnecessary.  Also, storing arbitrary data from userspace in maps
+is not relevant here because this is about data that is generated at the level
+of the kernel and sent to userspace as part of the probe action that is
+executed when the probe fires.
+
+Bpftrace indeed uses maps and ways to construct the sample and then uses the
+perf ring-buffer to pass data to userspace.  And that is not the way DTrace
+works and that is not the mechanism that we need here,  So, while this may be
+satisfactory for bpftrace, it is not for DTrace.  We need more fine-grained
+control over how we write data to the buffer (doing direct stores from BPF
+code) and without the overhead of constructing a complete sample that can just
+be handed over to bpf_perf_event_output().
+
+Also, please note that I am not duplicating any kernel functionality when it
+comes to buffer handling, and in fact, I found it very easy to be able to
+tap into the perf event ring-buffer implementation and add a feature that I
+need for DTrace.  That was a very pleasant experience for sure!
+
+Kris
