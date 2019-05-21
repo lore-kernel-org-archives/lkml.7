@@ -2,165 +2,172 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FECEC04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:27:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6585DC04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:28:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 547BF21743
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:27:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39FE521743
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:28:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D8LItHFK"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZkSCYeAz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727666AbfEUK1e (ORCPT
+        id S1727699AbfEUK2b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 06:27:34 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:45212 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726344AbfEUK1e (ORCPT
+        Tue, 21 May 2019 06:28:31 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:33147 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726466AbfEUK2a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 06:27:34 -0400
-Received: by mail-wr1-f68.google.com with SMTP id b18so17902049wrq.12;
-        Tue, 21 May 2019 03:27:32 -0700 (PDT)
+        Tue, 21 May 2019 06:28:30 -0400
+Received: by mail-lf1-f66.google.com with SMTP id x132so12684936lfd.0
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 03:28:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=0u/cElypM0FGg3NqoZhyM4kF6/Suy0Ma6wulSB8WXxk=;
-        b=D8LItHFK56peyyh2BjRqAE0QSAEGdSuOdY3ELK8p1Hhn5BM9FXVbU86E6K/HZsME4Q
-         kHxex2HC0xFWg1SKMIR4tfPjBRgdVtKvZrgxhcFOegMcSlR6PXY1ltWAeq30PVJW+5pr
-         JyGEHwl5V5uQgY8SL3EobnEVHoXBqeCE+qrDisHX2aNXlYhLWWBe2pFQ0Pdv+YfVLUa+
-         DjCnkr7yZEpXOUcbGJ2XDk7rxsCR7+0WMQH4rHinDXNYEg7lkKw9htiyCO5h/M8RKIHU
-         bzpH+S2sOLpNaDPHgHaMqdCRpquZokbZZ5HGDmMmeP4MNYNkdDvDntLPD1bS6T1SYkY0
-         UtfA==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ypEC6tDgKAfHuEBHsi8HF1SX5FcgwInmJVlMmX/EfCU=;
+        b=ZkSCYeAzMi0thhRrnIvfYIQJ8rn7TLQ8Z7DxodHlKXwnrL5Ijd3ZlHAyRC04x3+LW+
+         riiRoAflqyMdLnpDjaG6FeZZtAQC/7FXkkvYZfLCPPOEps0Ua+Ue21OpyP0xdXeh75j1
+         GFnLnUbWZztTc00PaJDSiatCDXDAYlnxzb12xdE2fCNQH2fWnWFtcvvT+QH4d53sMlPp
+         jlzjJ9gI+RgEq2/mL5DCdHtFfbXQhzy7OY/jgZ+gkrnICsONpZ5v95a7YYdq0rxXccxa
+         7LkcMaelW0RyOzZYZ2n4V6k2/8dTgP46LKHKpDKhKTt6+s1Y3B4DivFCD7jBUrW6PS9x
+         yxZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0u/cElypM0FGg3NqoZhyM4kF6/Suy0Ma6wulSB8WXxk=;
-        b=K+7ej3yHs+pI2QTaIDdwaG2hE3Rjk5eef5dv4Kc3WGglfFKk+vlmJjtf7GzGcU+Oy9
-         Ep7AiMSDh2gaWyDlmVFeLZ8zOMm7bMs59MuIvMimUa7PtYaa9YAmB04I6UWlOt2SXTys
-         cu2koDkztSyBS5JVaVcOP4TRrz/merRF8zLjv9vpviPub5va9V5yeVueuWhrqY6EOr64
-         DgO1CZQtFroHEpRUZ0VpaW7qtc/ZhYlqhrusRQcVuih823vyPku1ZfKuIrAWD7yPo+2+
-         hK4TKd1dpHyqSJuKlRZE9GVP99VGuTIOi2+4unFuq3zRcowk+wf5JpP9GpmZdDcMD5va
-         nCXw==
-X-Gm-Message-State: APjAAAV0mJM76Nng3mBv8OCP7zexnhyWlfcCmhGnHDQgflJLQRY30xaF
-        zB2rnz12symFsFgta0iaQ+E=
-X-Google-Smtp-Source: APXvYqzN0aFxhFPXBCSNKpdXBwYkCaswfe1f/2Sol7iXRMG9CaRzPkEF9jISqZ9I4geyOBywAICB0Q==
-X-Received: by 2002:adf:cf05:: with SMTP id o5mr34219199wrj.262.1558434451659;
-        Tue, 21 May 2019 03:27:31 -0700 (PDT)
-Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
-        by smtp.gmail.com with ESMTPSA id k8sm7135873wrp.74.2019.05.21.03.27.30
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 21 May 2019 03:27:30 -0700 (PDT)
-Date:   Tue, 21 May 2019 12:27:29 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, jonathanh@nvidia.com, kishon@ti.com,
-        catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com,
-        gustavo.pimentel@synopsys.com, mperttunen@nvidia.com,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, kthota@nvidia.com,
-        mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V7 02/15] PCI: Disable MSI for Tegra194 root port
-Message-ID: <20190521102729.GB29166@ulmo>
-References: <20190517123846.3708-1-vidyas@nvidia.com>
- <20190517123846.3708-3-vidyas@nvidia.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ypEC6tDgKAfHuEBHsi8HF1SX5FcgwInmJVlMmX/EfCU=;
+        b=VP8u45pW+jKSPPLyzkj5MYtO+o+kPRLqHXmcazQSz5zBLE2kIax1NWVzTiTiM39DB6
+         ixmi0WG7sXf6hy8e6fHFOEwF5H/yOdLvf4PFHc0129OLtSLe1CrI+gJAAn63AN7zLJVc
+         ik2+hLmU2lK6we8dI8U9VxrhbdkO4gm6SYpuOXk0MtAEvhnV8XoDBL3GT9fKlZa1PLoN
+         knZLg6eBwxjnRW3cL0qoYwprR8CznI5D+m60Uc0ZeC6+7rFMNVzkE3wmC085Gw+Qi7D2
+         v4RrogBJy2OTxh6Q4m04emsyjfwxvh8SXreCT3AoAf25ZJKWBQpHOoGavNAdipsPpIbA
+         GhKQ==
+X-Gm-Message-State: APjAAAU/pOAK7jArLoPUP/31U3y9oe8whBSp9iqTnSnGFroLMjaiH0H3
+        9rZgKafAYxZmk4U/qJFuepOst8B51tiajeMN+ntcFw==
+X-Google-Smtp-Source: APXvYqxaPoajSLqDQ5wespjdeGowGUfBiNAuDTnpRIMI85N/n48zuFdCpcv8LtcEdpCbkRjFqW/KclwazMexHAvBwM8=
+X-Received: by 2002:ac2:429a:: with SMTP id m26mr1408107lfh.152.1558434507185;
+ Tue, 21 May 2019 03:28:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="hHWLQfXTYDoKhP50"
-Content-Disposition: inline
-In-Reply-To: <20190517123846.3708-3-vidyas@nvidia.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+References: <20190520115247.060821231@linuxfoundation.org> <20190520222342.wtsjx227c6qbkuua@xps.therub.org>
+ <20190521085956.GC31445@kroah.com> <CA+G9fYvHmUimtwszwo=9fDQLn+MNh8Vq3UGPaPUdhH=dEKzqxg@mail.gmail.com>
+ <20190521093849.GA9806@kroah.com>
+In-Reply-To: <20190521093849.GA9806@kroah.com>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Tue, 21 May 2019 15:58:15 +0530
+Message-ID: <CA+G9fYveeg_FMsL31aunJ2A9XLYk908Y1nSFw4kwkFk3h3uEiA@mail.gmail.com>
+Subject: Re: ext4 regression (was Re: [PATCH 4.19 000/105] 4.19.45-stable review)
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     "Theodore Ts'o" <tytso@mit.edu>,
+        open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>,
+        linux-ext4@vger.kernel.org,
+        Arthur Marsh <arthur.marsh@internode.on.net>,
+        Richard Weinberger <richard.weinberger@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 21 May 2019 at 15:08, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Tue, May 21, 2019 at 02:58:58PM +0530, Naresh Kamboju wrote:
+> > On Tue, 21 May 2019 at 14:30, Greg Kroah-Hartman
+> > <gregkh@linuxfoundation.org> wrote:
+> > >
+> > > On Mon, May 20, 2019 at 05:23:42PM -0500, Dan Rue wrote:
+> > > > On Mon, May 20, 2019 at 02:13:06PM +0200, Greg Kroah-Hartman wrote:
+> > > > > This is the start of the stable review cycle for the 4.19.45 release.
+> > > > > There are 105 patches in this series, all will be posted as a response
+> > > > > to this one.  If anyone has any issues with these being applied, please
+> > > > > let me know.
+> > > > >
+> > > > > Responses should be made by Wed 22 May 2019 11:50:49 AM UTC.
+> > > > > Anything received after that time might be too late.
+> > > >
+> > > > We're seeing an ext4 issue previously reported at
+> > > > https://lore.kernel.org/lkml/20190514092054.GA6949@osiris.
+> > > >
+> > > > [ 1916.032087] EXT4-fs error (device sda): ext4_find_extent:909: inode #8: comm jbd2/sda-8: pblk 121667583 bad header/extent: invalid extent entries - magic f30a, entries 8, max 340(340), depth 0(0)
+> > > > [ 1916.073840] jbd2_journal_bmap: journal block not found at offset 4455 on sda-8
+> > > > [ 1916.081071] Aborting journal on device sda-8.
+> > > > [ 1916.348652] EXT4-fs error (device sda): ext4_journal_check_start:61: Detected aborted journal
+> > > > [ 1916.357222] EXT4-fs (sda): Remounting filesystem read-only
+> > > >
+> > > > This is seen on 4.19-rc, 5.0-rc, mainline, and next. We don't have data
+> > > > for 5.1-rc yet, which is presumably also affected in this RC round.
+> > > >
+> > > > We only see this on x86_64 and i386 devices - though our hardware setups
+> > > > vary so it could be coincidence.
+> > > >
+> > > > I have to run out now, but I'll come back and work on a reproducer and
+> > > > bisection later tonight and tomorrow.
+> > > >
+> > > > Here is an example test run; link goes to the spot in the ltp syscalls
+> > > > test where the disk goes into read-only mode.
+> > > > https://lkft.validation.linaro.org/scheduler/job/735468#L8081
+> > >
+> > > Odd, I keep hearing rumors of ext4 issues right now, but nothing
+> > > actually solid that I can point to.  Any help you can provide here would
+> > > be great.
+> > >
+> >
+> > git bisect helped me to land on this commit,
+> >
+> > # git bisect bad
+> > e8fd3c9a5415f9199e3fc5279e0f1dfcc0a80ab2 is the first bad commit
+> > commit e8fd3c9a5415f9199e3fc5279e0f1dfcc0a80ab2
+> > Author: Theodore Ts'o <tytso@mit.edu>
+> > Date:   Tue Apr 9 23:37:08 2019 -0400
+> >
+> >     ext4: protect journal inode's blocks using block_validity
+> >
+> >     commit 345c0dbf3a30872d9b204db96b5857cd00808cae upstream.
+> >
+> >     Add the blocks which belong to the journal inode to block_validity's
+> >     system zone so attempts to deallocate or overwrite the journal due a
+> >     corrupted file system where the journal blocks are also claimed by
+> >     another inode.
+> >
+> >     Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=202879
+> >     Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+> >     Cc: stable@kernel.org
+> >     Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> >
+> > :040000 040000 b8b6ce2577d60c65021e5cc1c3a38b32e0cbb2ff
+> > 747c67b159b33e4e1da414b1d33567a5da9ae125 M fs
+>
+> Ah, many thanks for this bisection.
+>
+> Ted, any ideas here?  Should I drop this from the stable trees, and you
+> revert it from Linus's?  Or something else?
+>
+> Note, I do also have 170417c8c7bb ("ext4: fix block validity checks for
+> journal inodes using indirect blocks") in the trees, which was supposed
+> to fix the problem with this patch, am I missing another one as well?
 
---hHWLQfXTYDoKhP50
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+FYI,
+I have applied fix patch 170417c8c7bb ("ext4: fix block validity checks for
+ journal inodes using indirect blocks") but did not fix this problem.
 
-On Fri, May 17, 2019 at 06:08:33PM +0530, Vidya Sagar wrote:
-> Tegra194 rootports don't generate MSI interrupts for PME events and hence
-> MSI needs to be disabled for them to avoid root ports service drivers
-> registering their respective ISRs with MSI interrupt.
->=20
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> ---
-> Changes since [v6]:
-> * This is a new patch
->=20
->  drivers/pci/quirks.c | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
->=20
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index 0f16acc323c6..28f9a0380df5 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -2592,6 +2592,20 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NVIDIA,
->  			PCI_DEVICE_ID_NVIDIA_NVENET_15,
->  			nvenet_msi_disable);
-> =20
-> +/*
-> + * Tegra194's PCIe root ports don't generate MSI interrupts for PME even=
-ts
-> + * instead legacy interrupts are generated. Hence, to avoid service driv=
-ers
-> + * registering their respective ISRs for MSIs, need to disable MSI inter=
-rupts
-> + * for root ports.
-> + */
-> +static void disable_tegra194_rp_msi(struct pci_dev *dev)
-> +{
-> +	dev->no_msi =3D 1;
-> +}
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NVIDIA, 0x1ad0, disable_tegra194_r=
-p_msi);
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NVIDIA, 0x1ad1, disable_tegra194_r=
-p_msi);
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NVIDIA, 0x1ad2, disable_tegra194_r=
-p_msi);
-> +
+>
+> (side note, it was mean not to mark 170417c8c7bb for stable, when the
+> patch it was fixing was marked for stable, I'm lucky I caught it...)
+>
 
-Later functions in this file seem to use a more consistent naming
-pattern, according to which the name for this would become:
+This problem occurring on stable rc 4.19, 5.0, 5.1 branches
+and master branch of mainline and -next trees also.
 
-	pci_quirk_nvidia_tegra194_disable_rp_msi
 
-Might be worth considering making this consistent.
-
-This could also be moved to the DWC driver to restrict this to where it
-is needed. In either case, this seems like a good solution, so:
-
-Reviewed-by: Thierry Reding <treding@nvidia.com>
-
---hHWLQfXTYDoKhP50
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlzj0pEACgkQ3SOs138+
-s6GqcxAAjaEUM9FTNPbKl4kQsquEnKIrVyDWV9lxJqFh1YaQGK005Nk/f1oJcuOn
-CEP8HrtYIpZk1wn1cUsT+ec9j7qxlu9ihEhKBXxsFOf6njXoBnc+QjscO28UJ4tu
-HYHDpvEK98bDBRMJhaZuBEClqBuFAH5Zrp8909NaUgaka7ut6PZqQC6XymRa6aX8
-5z8GSfR/FSNdUnhJ0gboYdliYQc+/co73YJUPVWKimKkRKnfD6OYNjR9+YfncIPU
-cFkBWnqCFzLVg6NIIOXpcEftFstLcTSJeC4XZ4bVa442Wbnz2dsgqHJMBy2wuR1z
-vwtnw+94Coa8E7Zsa5NCwTOiqyqhjsJGsS5IcI3OEbjh2aue7ScypriufK4Dyept
-hITWFgp0ZX1UxT2/QCLHfue3qNgSdOTYtomYFATqyHPD3BrgDAG8XZKKSDUVty8h
-PE7MLQfsgWWdqFn0SaHeiCGMlc/1n5JvBRzfO04dPNH62G80YoJ5/WqkZ15pTQFW
-FCbfApM2DekXpRsJaQvkPuXOAJOsUhR//WSLEMJQWfTl2pfRq2HPwWbSAgriL++k
-VnsA4LBL4dKx8eqQJO/6SGJHmeHEjEnugbm9vsxQmiajUFl3LdVt6PfGeaSMq9oy
-ggLSXlC+pTaWmPnBKEKh5aLNtSCCz+lT2cKkLq24YbX3YnLaC4g=
-=PTXE
------END PGP SIGNATURE-----
-
---hHWLQfXTYDoKhP50--
+- Naresh
