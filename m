@@ -2,82 +2,189 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7FBDC04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 14:43:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 663D4C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 14:44:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B55121743
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 14:43:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="BQ+JycJd"
+	by mail.kernel.org (Postfix) with ESMTP id 249ED217D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 14:44:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558449852;
+	bh=UXFXrEA/XzWJSiUo9Qp4UMS3ywgS7m/ucbmbFiKpKdg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=PgbK4cYp0yhYRROYcG8zNYf83vPrlItUzjYnG+p5/U7FfvYnXw++r07bRAlOcG6kU
+	 TuwO4nD5hpsjjv5Zm+31Od9aLJnXtW3wnXSuiY1M85UpcE7BoupKlk4z+xwt9XnB5O
+	 AALC21ELYUIvbeXgdIRaiRehFQi3vTZFJYuD8fRY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728582AbfEUOnj (ORCPT
+        id S1728614AbfEUOoL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 10:43:39 -0400
-Received: from a9-114.smtp-out.amazonses.com ([54.240.9.114]:38116 "EHLO
-        a9-114.smtp-out.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728053AbfEUOnj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 10:43:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=6gbrjpgwjskckoa6a5zn6fwqkn67xbtw; d=amazonses.com; t=1558449818;
-        h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type:Feedback-ID;
-        bh=ugj1TnF91z5+PBr8jQIJ7x5EpDifHr/zSRpWbpp1ovs=;
-        b=BQ+JycJdcpCjIkVBFXG/uI/HVL5jFnPpTJt1wuepkBL/uNGFdX/hN68BkswpWFGW
-        mg/FuCt9SExcgAO0Eslvkkk3XzdUBUdiRTWU+zp5YFpHW7RGAhGngcQtn5shOZF0VN/
-        nOqFCUJNNa5hHtr4UGwVSyLKP9qAjIfWUg7eWWug=
-Date:   Tue, 21 May 2019 14:43:38 +0000
-From:   Christopher Lameter <cl@linux.com>
-X-X-Sender: cl@nuc-kabylake
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>
-cc:     DRI Development <dri-devel@lists.freedesktop.org>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        David Rientjes <rientjes@google.com>,
-        =?ISO-8859-15?Q?Christian_K=F6nig?= <christian.koenig@amd.com>,
-        =?ISO-8859-15?Q?J=E9r=F4me_Glisse?= <jglisse@redhat.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Wei Wang <wvw@google.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jann Horn <jannh@google.com>, Feng Tang <feng.tang@intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Daniel Vetter <daniel.vetter@intel.com>
-Subject: Re: [PATCH] kernel.h: Add non_block_start/end()
-In-Reply-To: <20190521100611.10089-1-daniel.vetter@ffwll.ch>
-Message-ID: <0100016adad909d8-e6c9c310-36e0-4bdd-80fd-5df1a1660041-000000@email.amazonses.com>
-References: <20190521100611.10089-1-daniel.vetter@ffwll.ch>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Tue, 21 May 2019 10:44:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54852 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727534AbfEUOoK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 10:44:10 -0400
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C2ED21851
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 14:44:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558449849;
+        bh=UXFXrEA/XzWJSiUo9Qp4UMS3ywgS7m/ucbmbFiKpKdg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=ggdw0BLYs+MUWCzaemnKs7kSn7TwV/Z1WyTZ21WH/Jz1MnoGDQXLI9sEuswTUvuTS
+         8pQ9c8rrHOkToDiNw4MOcaMc2FDInI4T5EHyUjCtb3CIFqXtP49Sw4Q953xH/Y7U+O
+         DkHtReRVA2CdJGsCfXC19OMfPrqWV+XYmG7ky4Kc=
+Received: by mail-wm1-f46.google.com with SMTP id j187so3187318wmj.1
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 07:44:09 -0700 (PDT)
+X-Gm-Message-State: APjAAAWZxD47oqNVL+Mm1ks+6Jc1mFz63j/bUu/OzIfxHCatX5FJ8+PU
+        nOnqFFHNp+w+ir0MOA7ckTDBvjRc5SosfAgs8F2DRg==
+X-Google-Smtp-Source: APXvYqw05JswjNvqBUGl7gXKRzK+1KXPBZ3mlltGiRg3F6iRofmtTtwuivIZNqWiZcVx294tPDvD+1kLa6+lbLtQJT0=
+X-Received: by 2002:a1c:e906:: with SMTP id q6mr3923719wmc.47.1558449846202;
+ Tue, 21 May 2019 07:44:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-SES-Outgoing: 2019.05.21-54.240.9.114
-Feedback-ID: 1.us-east-1.fQZZZ0Xtj2+TD7V5apTT/NrT6QKuPgzCT/IC7XYgDKI=:AmazonSES
+References: <155836064844.2441.10911127801797083064.stgit@localhost.localdomain>
+In-Reply-To: <155836064844.2441.10911127801797083064.stgit@localhost.localdomain>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Tue, 21 May 2019 07:43:54 -0700
+X-Gmail-Original-Message-ID: <CALCETrU221N6uPmdaj4bRDDsf+Oc5tEfPERuyV24wsYKHn+spA@mail.gmail.com>
+Message-ID: <CALCETrU221N6uPmdaj4bRDDsf+Oc5tEfPERuyV24wsYKHn+spA@mail.gmail.com>
+Subject: Re: [PATCH v2 0/7] mm: process_vm_mmap() -- syscall for duplication a
+ process mapping
+To:     Kirill Tkhai <ktkhai@virtuozzo.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Keith Busch <keith.busch@intel.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        alexander.h.duyck@linux.intel.com, Weiny Ira <ira.weiny@intel.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        arunks@codeaurora.org, Vlastimil Babka <vbabka@suse.cz>,
+        Christoph Lameter <cl@linux.com>,
+        Rik van Riel <riel@surriel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Roman Gushchin <guro@fb.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Hugh Dickins <hughd@google.com>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        daniel.m.jordan@oracle.com, Jann Horn <jannh@google.com>,
+        Adam Borowski <kilobyte@angband.pl>,
+        Linux API <linux-api@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 21 May 2019, Daniel Vetter wrote:
+On Mon, May 20, 2019 at 7:01 AM Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
+>
 
-> In some special cases we must not block, but there's not a
-> spinlock, preempt-off, irqs-off or similar critical section already
-> that arms the might_sleep() debug checks. Add a non_block_start/end()
-> pair to annotate these.
+> [Summary]
+>
+> New syscall, which allows to clone a remote process VMA
+> into local process VM. The remote process's page table
+> entries related to the VMA are cloned into local process's
+> page table (in any desired address, which makes this different
+> from that happens during fork()). Huge pages are handled
+> appropriately.
+>
+> This allows to improve performance in significant way like
+> it's shows in the example below.
+>
+> [Description]
+>
+> This patchset adds a new syscall, which makes possible
+> to clone a VMA from a process to current process.
+> The syscall supplements the functionality provided
+> by process_vm_writev() and process_vm_readv() syscalls,
+> and it may be useful in many situation.
+>
+> For example, it allows to make a zero copy of data,
+> when process_vm_writev() was previously used:
+>
+>         struct iovec local_iov, remote_iov;
+>         void *buf;
+>
+>         buf = mmap(NULL, n * PAGE_SIZE, PROT_READ|PROT_WRITE,
+>                    MAP_PRIVATE|MAP_ANONYMOUS, ...);
+>         recv(sock, buf, n * PAGE_SIZE, 0);
+>
+>         local_iov->iov_base = buf;
+>         local_iov->iov_len = n * PAGE_SIZE;
+>         remove_iov = ...;
+>
+>         process_vm_writev(pid, &local_iov, 1, &remote_iov, 1 0);
+>         munmap(buf, n * PAGE_SIZE);
+>
+>         (Note, that above completely ignores error handling)
+>
+> There are several problems with process_vm_writev() in this example:
+>
+> 1)it causes pagefault on remote process memory, and it forces
+>   allocation of a new page (if was not preallocated);
 
-Just putting preempt on/off around these is not sufficient?
+I don't see how your new syscall helps.  You're writing to remote
+memory.  If that memory wasn't allocated, it's going to get allocated
+regardless of whether you use a write-like interface or an mmap-like
+interface.  Keep in mind that, on x86, just the hardware part of a
+page fault is very slow -- populating the memory with a syscall
+instead of a fault may well be faster.
 
-If not and you need to add another type of critical section then would
-this not need to be added to the preempt counters? See
-include/linux/preempt.h? Looks like there are sufficient bits left to put
-the counter in there.
+>
+> 2)amount of memory for this example is doubled in a moment --
+>   n pages in current and n pages in remote tasks are occupied
+>   at the same time;
 
+This seems disingenuous.  If you're writing p pages total in chunks of
+n pages, you will use a total of p pages if you use mmap and p+n if
+you use write.  That only doubles the amount of memory if you let n
+scale linearly with p, which seems unlikely.
 
+>
+> 3)received data has no a chance to be properly swapped for
+>   a long time.
+
+...
+
+> a)kernel moves @buf pages into swap right after recv();
+> b)process_vm_writev() reads the data back from swap to pages;
+
+If you're under that much memory pressure and thrashing that badly,
+your performance is going to be awful no matter what you're doing.  If
+you indeed observe this behavior under normal loads, then this seems
+like a VM issue that should be addressed in its own right.
+
+>         buf = mmap(NULL, n * PAGE_SIZE, PROT_READ|PROT_WRITE,
+>                    MAP_PRIVATE|MAP_ANONYMOUS, ...);
+>         recv(sock, buf, n * PAGE_SIZE, 0);
+>
+> [Task 2]
+>         buf2 = process_vm_mmap(pid_of_task1, buf, n * PAGE_SIZE, NULL, 0);
+>
+> This creates a copy of VMA related to buf from task1 in task2's VM.
+> Task1's page table entries are copied into corresponding page table
+> entries of VM of task2.
+
+You need to fully explain a whole bunch of details that you're
+ignored.  For example, if the remote VMA is MAP_ANONYMOUS, do you get
+a CoW copy of it?  I assume you don't since the whole point is to
+write to remote memory, but it's at the very least quite unusual in
+Linux to have two different anonymous VMAs such that writing one of
+them changes the other one.  But there are plenty of other questions.
+What happens if the remote VMA is a gate area or other special mapping
+(vDSO, vvar area, etc)?  What if the remote memory comes from a driver
+that wasn't expecting the mapping to get magically copied to a
+different process?
+
+This new API seems quite dangerous and complex to me, and I don't
+think the value has been adequately demonstrated.
