@@ -2,202 +2,193 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89DEFC04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 17:07:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 532A1C04E87
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 17:14:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5386C208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 17:07:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 249F6217D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 17:14:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="iDZLE7yN"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="At4Xdpw0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729090AbfEURH0 (ORCPT
+        id S1728917AbfEUROP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 13:07:26 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:36583 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728980AbfEURH0 (ORCPT
+        Tue, 21 May 2019 13:14:15 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:3463 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726900AbfEUROO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 13:07:26 -0400
-Received: by mail-qt1-f196.google.com with SMTP id a17so21417444qth.3
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 10:07:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=9uPTbP2BF+UpteaL2KhM3aAj7QjRcnMmKHeI6Yh9EPI=;
-        b=iDZLE7yNQ4lDtD0XYGkkl4K2STILfN2iFJ4sfOJWHZcNwYcoj01MXQAuZDOz8ypaRK
-         gQ2al+DExF3ndweDKlzGJ6S8sh3a4I1jE9yZebCzr/OaHgirNisBjWSFzzZ0aN37o2PE
-         bQq5ubtJDozzrq4fm4E7hHtO8mLFyoaA8Qex24dH+DQ36QAkCCXKVyOKiuGyL+WEUoit
-         I0O7bjcNirgWpLwqrE3kiuzk0lVusS/1S4J8ZocRTyM1V2+Hm8DaSmHQcZFgHDmya+Bv
-         hRISJqciG/x9jHFQJfYLXz+UjXrCfL/2L4BytVMEOGs4abeYw5KrgDt4gbfB+1SGo49B
-         /xHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=9uPTbP2BF+UpteaL2KhM3aAj7QjRcnMmKHeI6Yh9EPI=;
-        b=jnUfe7D/Ihzg66W6OJWrQPgX89zeQ2exVuigKyTMIzjR8K7rpGaSUuV61QWix9fYYi
-         jk2NiGtkYHnKlsTDfRlCfknre+JR0e7c/Sz260vKG43TvUWR/gaanJ4WkfGRc43IXNmi
-         KLZkzeif4BKYXNXNI473jscH6G6x/P0npRd8yAz1ePp9TQ+gGFovmSPNEqUSJzfi9BX1
-         ap4Nyxxe3bRfWyCOIav9v4/6zP3MGFavoMZjqq8iofSkZ56PTYRKdVlO4x67COr7xp7h
-         7FOjl6MyhVkEsnxt0GEwhN9b1FS4VFgzO2KQgB9fXZ6YOFFMb0Bs7SerXR9h1Ku0F07w
-         ghvQ==
-X-Gm-Message-State: APjAAAXkc+z5peT7l6zmTqksuTFUxgsBa0EFY5MC7D/XvtBSejS8VmCP
-        kYylNqIEtgRoo47JQU822R9n4Q==
-X-Google-Smtp-Source: APXvYqxcQMuxnmJbIw2a9Sa0BNYiUuGeK0GKVudpfcvZwyO/XpF8PgnhrbotuKRw055g6yJA5t4Tkw==
-X-Received: by 2002:ac8:1671:: with SMTP id x46mr47261518qtk.240.1558458444792;
-        Tue, 21 May 2019 10:07:24 -0700 (PDT)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id l127sm9247563qkc.81.2019.05.21.10.07.23
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 21 May 2019 10:07:24 -0700 (PDT)
-Date:   Tue, 21 May 2019 10:06:48 -0700
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Matteo Croce <mcroce@redhat.com>
-Cc:     Daniel Borkmann <daniel@iogearbox.net>,
-        xdp-newbies@vger.kernel.org, bpf@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>
-Subject: Re: [PATCH 1/5] samples/bpf: fix test_lru_dist build
-Message-ID: <20190521100648.1ce9b5be@cakuba.netronome.com>
-In-Reply-To: <CAGnkfhxZPXUvBemRxAFfoq+y-UmtdQH=dvnyeLBJQo43U2=sTg@mail.gmail.com>
-References: <20190518004639.20648-1-mcroce@redhat.com>
-        <CAGnkfhxt=nq-JV+D5Rrquvn8BVOjHswEJmuVVZE78p9HvAg9qQ@mail.gmail.com>
-        <20190520133830.1ac11fc8@cakuba.netronome.com>
-        <dfb6cf40-81f4-237e-9a43-646077e020f7@iogearbox.net>
-        <CAGnkfhxZPXUvBemRxAFfoq+y-UmtdQH=dvnyeLBJQo43U2=sTg@mail.gmail.com>
-Organization: Netronome Systems, Ltd.
+        Tue, 21 May 2019 13:14:14 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ce431e40002>; Tue, 21 May 2019 10:14:12 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Tue, 21 May 2019 10:14:12 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Tue, 21 May 2019 10:14:12 -0700
+Received: from [10.25.72.115] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 21 May
+ 2019 17:14:06 +0000
+Subject: Re: [PATCH V7 05/15] PCI: dwc: Add ext config space capability search
+ API
+To:     Thierry Reding <thierry.reding@gmail.com>
+CC:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <jonathanh@nvidia.com>, <kishon@ti.com>, <catalin.marinas@arm.com>,
+        <will.deacon@arm.com>, <jingoohan1@gmail.com>,
+        <gustavo.pimentel@synopsys.com>, <mperttunen@nvidia.com>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
+References: <20190517123846.3708-1-vidyas@nvidia.com>
+ <20190517123846.3708-6-vidyas@nvidia.com> <20190521103629.GE29166@ulmo>
+X-Nvconfidentiality: public
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <d70ac7e8-d04e-5195-3808-fca520ad23f6@nvidia.com>
+Date:   Tue, 21 May 2019 22:44:04 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190521103629.GE29166@ulmo>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL103.nvidia.com (172.20.187.11) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1558458852; bh=BcyBWuXsiZPLocS6gKpgICDF6NfMYJFTJoNUnlHyJbA=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=At4Xdpw0Zrn5NsJ2CRKYABUSOeeEfKMEt9N1cZC7IFh4aB1Xzp5/eiDTcuV0z5mjP
+         +Rbrzd8Fajyae9wCzljeqfSzm5JLySCJAff9YBdPaLgv2ZH/aThQlJ/9cnr+rFQnbi
+         zNiOaCci50OPFXQ1eukzFALbhyGokGYgBpkANGMkwOuYTK3SpNSszTSDZWWI4ri6oX
+         +iCI/vHaoU+/DiFzRcflgqoK+oD4Fnik1RKZzbqptYuA+Keb4XnZ22V/s9bkkTGs8k
+         4TyGgUsgh/YnX95Pd9LfGJKmgUAfAZnW0LaisxnZ5WbcGLvIN0Tf0wMI53UXAIPeSK
+         McpPwR6MFnj9Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 21 May 2019 17:36:17 +0200, Matteo Croce wrote:
-> On Tue, May 21, 2019 at 5:21 PM Daniel Borkmann <daniel@iogearbox.net> wr=
-ote:
-> >
-> > On 05/20/2019 10:38 PM, Jakub Kicinski wrote: =20
-> > > On Mon, 20 May 2019 19:46:27 +0200, Matteo Croce wrote: =20
-> > >> On Sat, May 18, 2019 at 2:46 AM Matteo Croce <mcroce@redhat.com> wro=
-te: =20
-> > >>>
-> > >>> Fix the following error by removing a duplicate struct definition: =
-=20
-> > >>
-> > >> Hi all,
-> > >>
-> > >> I forget to send a cover letter for this series, but basically what I
-> > >> wanted to say is that while patches 1-3 are very straightforward,
-> > >> patches 4-5 are a bit rough and I accept suggstions to make a cleaner
-> > >> work. =20
-> > >
-> > > samples depend on headers being locally installed:
-> > >
-> > > make headers_install
-> > >
-> > > Are you intending to change that? =20
-> >
-> > +1, Matteo, could you elaborate?
-> >
-> > On latest bpf tree, everything compiles just fine:
-> >
-> > [root@linux bpf]# make headers_install
-> > [root@linux bpf]# make -C samples/bpf/
-> > make: Entering directory '/home/darkstar/trees/bpf/samples/bpf'
-> > make -C ../../ /home/darkstar/trees/bpf/samples/bpf/ BPF_SAMPLES_PATH=
-=3D/home/darkstar/trees/bpf/samples/bpf
-> > make[1]: Entering directory '/home/darkstar/trees/bpf'
-> >   CALL    scripts/checksyscalls.sh
-> >   CALL    scripts/atomic/check-atomics.sh
-> >   DESCEND  objtool
-> > make -C /home/darkstar/trees/bpf/samples/bpf/../../tools/lib/bpf/ RM=3D=
-'rm -rf' LDFLAGS=3D srctree=3D/home/darkstar/trees/bpf/samples/bpf/../../ O=
-=3D
-> >   HOSTCC  /home/darkstar/trees/bpf/samples/bpf/test_lru_dist
-> >   HOSTCC  /home/darkstar/trees/bpf/samples/bpf/sock_example
-> > =20
->=20
-> Hi all,
->=20
-> I have kernel-headers installed from master, but yet the samples fail to =
-build:
->=20
-> matteo@turbo:~/src/linux/samples/bpf$ rpm -q kernel-headers
-> kernel-headers-5.2.0_rc1-38.x86_64
->=20
-> matteo@turbo:~/src/linux/samples/bpf$ git describe HEAD
-> v5.2-rc1-97-g5bdd9ad875b6
->=20
-> matteo@turbo:~/src/linux/samples/bpf$ make
-> make -C ../../ /home/matteo/src/linux/samples/bpf/
-> BPF_SAMPLES_PATH=3D/home/matteo/src/linux/samples/bpf
-> make[1]: Entering directory '/home/matteo/src/linux'
->   CALL    scripts/checksyscalls.sh
->   CALL    scripts/atomic/check-atomics.sh
->   DESCEND  objtool
-> make -C /home/matteo/src/linux/samples/bpf/../../tools/lib/bpf/ RM=3D'rm
-> -rf' LDFLAGS=3D srctree=3D/home/matteo/src/linux/samples/bpf/../../ O=3D
->   HOSTCC  /home/matteo/src/linux/samples/bpf/test_lru_dist
-> /home/matteo/src/linux/samples/bpf/test_lru_dist.c:39:8: error:
-> redefinition of =E2=80=98struct list_head=E2=80=99
->    39 | struct list_head {
->       |        ^~~~~~~~~
-> In file included from /home/matteo/src/linux/samples/bpf/test_lru_dist.c:=
-9:
-> ./tools/include/linux/types.h:69:8: note: originally defined here
->    69 | struct list_head {
->       |        ^~~~~~~~~
-> make[2]: *** [scripts/Makefile.host:90:
-> /home/matteo/src/linux/samples/bpf/test_lru_dist] Error 1
-> make[1]: *** [Makefile:1762: /home/matteo/src/linux/samples/bpf/] Error 2
-> make[1]: Leaving directory '/home/matteo/src/linux'
-> make: *** [Makefile:231: all] Error 2
->=20
-> Am I missing something obvious?
+On 5/21/2019 4:06 PM, Thierry Reding wrote:
+> On Fri, May 17, 2019 at 06:08:36PM +0530, Vidya Sagar wrote:
+>> Add extended configuration space capability search API using struct dw_pcie *
+>> pointer
+>>
+>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+>> Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+>> ---
+>> Changes since [v6]:
+>> * None
+>>
+>> Changes since [v5]:
+>> * None
+>>
+>> Changes since [v4]:
+>> * None
+>>
+>> Changes since [v3]:
+>> * None
+>>
+>> Changes since [v2]:
+>> * None
+>>
+>> Changes since [v1]:
+>> * This is a new patch in v2 series
+>>
+>>   drivers/pci/controller/dwc/pcie-designware.c | 41 ++++++++++++++++++++
+>>   drivers/pci/controller/dwc/pcie-designware.h |  1 +
+>>   2 files changed, 42 insertions(+)
+>>
+>> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+>> index 8f53ce63d17e..3b7d50888caa 100644
+>> --- a/drivers/pci/controller/dwc/pcie-designware.c
+>> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+>> @@ -54,6 +54,47 @@ u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap)
+>>   }
+>>   EXPORT_SYMBOL_GPL(dw_pcie_find_capability);
+>>   
+>> +static int dw_pcie_find_next_ext_capability(struct dw_pcie *pci, int start,
+>> +					    int cap)
+> 
+> Perhaps make this more consistent with the existing regular
+> configuration space capability search API? Something like this perhaps:
+> 
+> 	static u16 dw_pcie_find_next_ext_capability(struct dw_pcie *pci,
+> 						    u16 start, u8 cap)
+> 
+> ? I guess your variant above is consistent with the existing generic
+> capability search API, so another alternative might be to make the old
+> dw_pcie_find_capability() API consistent with everything else. It's
+> confusing if we keep having to jump between the two variants.
+Ok. I'll change it to the format being followed in this file i.e. using u16 and u8
 
-Yes ;)  Samples use a local installation of headers in $objtree/usr (I
-think, maybe $srctree/usr).  So you need to do make headers_install in
-your kernel source tree, otherwise the include path from tools/ takes
-priority over your global /usr/include and causes these issues.  I had
-this path in my tree for some time, but I don't like enough to post it:
+> 
+> Thierry
+> 
+>> +{
+>> +	u32 header;
+>> +	int ttl;
+>> +	int pos = PCI_CFG_SPACE_SIZE;
+>> +
+>> +	/* minimum 8 bytes per capability */
+>> +	ttl = (PCI_CFG_SPACE_EXP_SIZE - PCI_CFG_SPACE_SIZE) / 8;
+>> +
+>> +	if (start)
+>> +		pos = start;
+>> +
+>> +	header = dw_pcie_readl_dbi(pci, pos);
+>> +	/*
+>> +	 * If we have no capabilities, this is indicated by cap ID,
+>> +	 * cap version and next pointer all being 0.
+>> +	 */
+>> +	if (header == 0)
+>> +		return 0;
+>> +
+>> +	while (ttl-- > 0) {
+>> +		if (PCI_EXT_CAP_ID(header) == cap && pos != start)
+>> +			return pos;
+>> +
+>> +		pos = PCI_EXT_CAP_NEXT(header);
+>> +		if (pos < PCI_CFG_SPACE_SIZE)
+>> +			break;
+>> +
+>> +		header = dw_pcie_readl_dbi(pci, pos);
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +int dw_pcie_find_ext_capability(struct dw_pcie *pci, int cap)
+>> +{
+>> +	return dw_pcie_find_next_ext_capability(pci, 0, cap);
+>> +}
+>> +EXPORT_SYMBOL_GPL(dw_pcie_find_ext_capability);
+>> +
+>>   int dw_pcie_read(void __iomem *addr, int size, u32 *val)
+>>   {
+>>   	if (!IS_ALIGNED((uintptr_t)addr, size)) {
+>> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+>> index 6cb978132469..fff284098117 100644
+>> --- a/drivers/pci/controller/dwc/pcie-designware.h
+>> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+>> @@ -252,6 +252,7 @@ struct dw_pcie {
+>>   		container_of((endpoint), struct dw_pcie, ep)
+>>   
+>>   u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap);
+>> +int dw_pcie_find_ext_capability(struct dw_pcie *pci, int cap);
+>>   
+>>   int dw_pcie_read(void __iomem *addr, int size, u32 *val);
+>>   int dw_pcie_write(void __iomem *addr, int size, u32 val);
+>> -- 
+>> 2.17.1
+>>
 
-commit 35fb614049e93d46af708c0eaae6601df54017b3
-Author: Jakub Kicinski <jakub.kicinski@netronome.com>
-Date:   Mon Dec 3 15:00:24 2018 -0800
-
-    bpf: maybe warn ppl about hrds_install
-   =20
-    Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-
-diff --git a/samples/bpf/Makefile b/samples/bpf/Makefile
-index 4f0a1cdbfe7c..f79a4ed2f9f7 100644
---- a/samples/bpf/Makefile
-+++ b/samples/bpf/Makefile
-@@ -208,6 +208,15 @@ HOSTCC =3D $(CROSS_COMPILE)gcc
- CLANG_ARCH_ARGS =3D -target $(ARCH)
- endif
-=20
-+HDR_PROBE :=3D $(shell echo "\#include <linux/types.h>\n struct list_head =
-{ int a; }; int main() { return 0; }" | \
-+       gcc $(KBUILD_HOSTCFLAGS) -x c - -o /dev/null 2>/dev/null && \
-+       echo okay)
-+
-+ifeq ($(HDR_PROBE),)
-+$(warning Detected possible issues with include path.)
-+$(warning Please install kernel headers locally (make headers_install))
-+endif
-+
- BTF_LLC_PROBE :=3D $(shell $(LLC) -march=3Dbpf -mattr=3Dhelp 2>&1 | grep d=
-warfris)
- BTF_PAHOLE_PROBE :=3D $(shell $(BTF_PAHOLE) --help 2>&1 | grep BTF)
- BTF_OBJCOPY_PROBE :=3D $(shell $(LLVM_OBJCOPY) --help 2>&1 | grep -i 'usag=
-e.*llvm')
