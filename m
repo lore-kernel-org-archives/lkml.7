@@ -2,161 +2,164 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1013DC072AD
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 04:53:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E24CC04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 04:53:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D937D2184C
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 04:53:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2CC521783
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 04:53:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727784AbfEUExG (ORCPT
+        id S1727793AbfEUExP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 00:53:06 -0400
-Received: from smtp.nue.novell.com ([195.135.221.5]:58412 "EHLO
-        smtp.nue.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725835AbfEUExF (ORCPT
-        <rfc822;groupwise-linux-kernel@vger.kernel.org:0:0>);
-        Tue, 21 May 2019 00:53:05 -0400
-Received: from emea4-mta.ukb.novell.com ([10.120.13.87])
-        by smtp.nue.novell.com with ESMTP (TLS encrypted); Tue, 21 May 2019 06:53:04 +0200
-Received: from linux-r8p5.suse.de (nwb-a10-snat.microfocus.com [10.120.13.201])
-        by emea4-mta.ukb.novell.com with ESMTP (TLS encrypted); Tue, 21 May 2019 05:52:57 +0100
-From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Cc:     akpm@linux-foundation.org, willy@infradead.org, mhocko@kernel.org,
-        mgorman@techsingularity.net, jglisse@redhat.com,
-        ldufour@linux.vnet.ibm.com, dave@stgolabs.net,
-        Davidlohr Bueso <dbueso@suse.de>
-Subject: [PATCH 01/14] interval-tree: build unconditionally
-Date:   Mon, 20 May 2019 21:52:29 -0700
-Message-Id: <20190521045242.24378-2-dave@stgolabs.net>
-X-Mailer: git-send-email 2.16.4
-In-Reply-To: <20190521045242.24378-1-dave@stgolabs.net>
-References: <20190521045242.24378-1-dave@stgolabs.net>
+        Tue, 21 May 2019 00:53:15 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:44768 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725835AbfEUExP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 00:53:15 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4L4qPwM022521
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 00:53:14 -0400
+Received: from e32.co.us.ibm.com (e32.co.us.ibm.com [32.97.110.150])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2sm97wtrd4-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 00:53:14 -0400
+Received: from localhost
+        by e32.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <bauerman@linux.ibm.com>;
+        Tue, 21 May 2019 05:53:13 +0100
+Received: from b03cxnp08025.gho.boulder.ibm.com (9.17.130.17)
+        by e32.co.us.ibm.com (192.168.1.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 21 May 2019 05:53:10 +0100
+Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
+        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4L4r8jW16974156
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 21 May 2019 04:53:09 GMT
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D865DC6055;
+        Tue, 21 May 2019 04:53:08 +0000 (GMT)
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EC21DC6057;
+        Tue, 21 May 2019 04:52:58 +0000 (GMT)
+Received: from morokweng.localdomain.com (unknown [9.80.203.157])
+        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Tue, 21 May 2019 04:52:57 +0000 (GMT)
+From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
+To:     linuxppc-dev@lists.ozlabs.org
+Cc:     linux-kernel@vger.kernel.org, Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Anshuman Khandual <anshuman.linux@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Mike Anderson <andmike@linux.ibm.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Ram Pai <linuxram@us.ibm.com>,
+        Claudio Carvalho <cclaudio@linux.ibm.com>,
+        Ryan Grimm <grimm@linux.vnet.ibm.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>
+Subject: [PATCH 08/12] powerpc/pseries/svm: Export guest SVM status to user space via sysfs
+Date:   Tue, 21 May 2019 01:49:08 -0300
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190521044912.1375-1-bauerman@linux.ibm.com>
+References: <20190521044912.1375-1-bauerman@linux.ibm.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19052104-0004-0000-0000-000015120A43
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011134; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01206343; UDB=6.00633450; IPR=6.00987310;
+ MB=3.00026980; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-21 04:53:13
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19052104-0005-0000-0000-00008BBE4C66
+Message-Id: <20190521044912.1375-9-bauerman@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-20_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905210031
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In preparation for range locking, this patch gets rid of
-CONFIG_INTERVAL_TREE option as we will unconditionally
-build it.
+From: Ryan Grimm <grimm@linux.vnet.ibm.com>
 
-Signed-off-by: Davidlohr Bueso <dbueso@suse.de>
+User space might want to know it's running in a secure VM.  It can't do
+a mfmsr because mfmsr is a privileged instruction.
+
+The solution here is to create a cpu attribute:
+
+/sys/devices/system/cpu/svm
+
+which will read 0 or 1 based on the S bit of the guest's CPU 0.
+
+Signed-off-by: Ryan Grimm <grimm@linux.vnet.ibm.com>
+Reviewed-by: Ram Pai <linuxram@us.ibm.com>
+Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
 ---
- drivers/gpu/drm/Kconfig      |  2 --
- drivers/gpu/drm/i915/Kconfig |  1 -
- drivers/iommu/Kconfig        |  1 -
- lib/Kconfig                  | 14 --------------
- lib/Kconfig.debug            |  1 -
- lib/Makefile                 |  3 +--
- 6 files changed, 1 insertion(+), 21 deletions(-)
+ arch/powerpc/kernel/sysfs.c | 29 +++++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
-diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
-index e360a4a131e1..3405336175ed 100644
---- a/drivers/gpu/drm/Kconfig
-+++ b/drivers/gpu/drm/Kconfig
-@@ -200,7 +200,6 @@ config DRM_RADEON
- 	select POWER_SUPPLY
- 	select HWMON
- 	select BACKLIGHT_CLASS_DEVICE
--	select INTERVAL_TREE
- 	help
- 	  Choose this option if you have an ATI Radeon graphics card.  There
- 	  are both PCI and AGP versions.  You don't need to choose this to
-@@ -220,7 +219,6 @@ config DRM_AMDGPU
- 	select POWER_SUPPLY
- 	select HWMON
- 	select BACKLIGHT_CLASS_DEVICE
--	select INTERVAL_TREE
- 	select CHASH
- 	help
- 	  Choose this option if you have a recent AMD Radeon graphics card.
-diff --git a/drivers/gpu/drm/i915/Kconfig b/drivers/gpu/drm/i915/Kconfig
-index 3d5f1cb6a76c..54d4bc8d141f 100644
---- a/drivers/gpu/drm/i915/Kconfig
-+++ b/drivers/gpu/drm/i915/Kconfig
-@@ -3,7 +3,6 @@ config DRM_I915
- 	depends on DRM
- 	depends on X86 && PCI
- 	select INTEL_GTT
--	select INTERVAL_TREE
- 	# we need shmfs for the swappable backing store, and in particular
- 	# the shmem_readpage() which depends upon tmpfs
- 	select SHMEM
-diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
-index a2ed2b51a0f7..d21e6dc2adae 100644
---- a/drivers/iommu/Kconfig
-+++ b/drivers/iommu/Kconfig
-@@ -477,7 +477,6 @@ config VIRTIO_IOMMU
- 	depends on VIRTIO=y
- 	depends on ARM64
- 	select IOMMU_API
--	select INTERVAL_TREE
- 	help
- 	  Para-virtualised IOMMU driver with virtio.
+diff --git a/arch/powerpc/kernel/sysfs.c b/arch/powerpc/kernel/sysfs.c
+index e8e93c2c7d03..8fdab134e9ae 100644
+--- a/arch/powerpc/kernel/sysfs.c
++++ b/arch/powerpc/kernel/sysfs.c
+@@ -18,6 +18,7 @@
+ #include <asm/smp.h>
+ #include <asm/pmc.h>
+ #include <asm/firmware.h>
++#include <asm/svm.h>
  
-diff --git a/lib/Kconfig b/lib/Kconfig
-index 8d9239a4156c..e089ac40c062 100644
---- a/lib/Kconfig
-+++ b/lib/Kconfig
-@@ -409,20 +409,6 @@ config TEXTSEARCH_FSM
- config BTREE
- 	bool
+ #include "cacheinfo.h"
+ #include "setup.h"
+@@ -714,6 +715,32 @@ static struct device_attribute pa6t_attrs[] = {
+ #endif /* HAS_PPC_PMC_PA6T */
+ #endif /* HAS_PPC_PMC_CLASSIC */
  
--config INTERVAL_TREE
--	bool
--	help
--	  Simple, embeddable, interval-tree. Can find the start of an
--	  overlapping range in log(n) time and then iterate over all
--	  overlapping nodes. The algorithm is implemented as an
--	  augmented rbtree.
--
--	  See:
--
--		Documentation/rbtree.txt
--
--	  for more information.
--
- config XARRAY_MULTI
- 	bool
- 	help
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index 4c35e52c5a2e..54bafed8ba70 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -1759,7 +1759,6 @@ config RBTREE_TEST
- config INTERVAL_TREE_TEST
- 	tristate "Interval tree test"
- 	depends on DEBUG_KERNEL
--	select INTERVAL_TREE
- 	help
- 	  A benchmark measuring the performance of the interval tree library
++#ifdef CONFIG_PPC_SVM
++static void get_svm(void *val)
++{
++	u32 *value = val;
++
++	*value = is_secure_guest();
++}
++
++static ssize_t show_svm(struct device *dev, struct device_attribute *attr, char *buf)
++{
++	u32 val;
++	smp_call_function_single(0, get_svm, &val, 1);
++	return sprintf(buf, "%u\n", val);
++}
++static DEVICE_ATTR(svm, 0444, show_svm, NULL);
++
++static void create_svm_file(void)
++{
++	device_create_file(cpu_subsys.dev_root, &dev_attr_svm);
++}
++#else
++static void create_svm_file(void)
++{
++}
++#endif /* CONFIG_PPC_SVM */
++
+ static int register_cpu_online(unsigned int cpu)
+ {
+ 	struct cpu *c = &per_cpu(cpu_devices, cpu);
+@@ -1057,6 +1084,8 @@ static int __init topology_init(void)
+ 	sysfs_create_dscr_default();
+ #endif /* CONFIG_PPC64 */
  
-diff --git a/lib/Makefile b/lib/Makefile
-index fb7697031a79..39fd34156692 100644
---- a/lib/Makefile
-+++ b/lib/Makefile
-@@ -50,7 +50,7 @@ obj-y += bcd.o sort.o parser.o debug_locks.o random32.o \
- 	 bsearch.o find_bit.o llist.o memweight.o kfifo.o \
- 	 percpu-refcount.o rhashtable.o \
- 	 once.o refcount.o usercopy.o errseq.o bucket_locks.o \
--	 generic-radix-tree.o
-+	 generic-radix-tree.o interval_tree.o
- obj-$(CONFIG_STRING_SELFTEST) += test_string.o
- obj-y += string_helpers.o
- obj-$(CONFIG_TEST_STRING_HELPERS) += test-string_helpers.o
-@@ -115,7 +115,6 @@ obj-y += logic_pio.o
- obj-$(CONFIG_GENERIC_HWEIGHT) += hweight.o
- 
- obj-$(CONFIG_BTREE) += btree.o
--obj-$(CONFIG_INTERVAL_TREE) += interval_tree.o
- obj-$(CONFIG_ASSOCIATIVE_ARRAY) += assoc_array.o
- obj-$(CONFIG_DEBUG_PREEMPT) += smp_processor_id.o
- obj-$(CONFIG_DEBUG_LIST) += list_debug.o
--- 
-2.16.4
++	create_svm_file();
++
+ 	return 0;
+ }
+ subsys_initcall(topology_init);
 
