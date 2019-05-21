@@ -2,110 +2,83 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5D5CC072B5
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 22:34:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5E99C18E7C
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 22:40:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8832021841
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 22:34:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558478064;
-	bh=pZ+GmprOIPMKVHznS5PeYKSvzuUDeLO82OImjZ+x7pQ=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=P96WIggqRnoNpxNK9HeGTqkIJOPDvZdx+9IFxJVlB6ntgWVmBxsx8tUl3xUS4OLLu
-	 rI/c06GnveJnsTousuWFqvdyFri1lTMUZSkDOThL4kDYqIGQfX/B8oJ/rRjTSVk7OC
-	 t4ngRWZsjgpb5dyfABrIegMxgmPRtRQTcdJj0alQ=
+	by mail.kernel.org (Postfix) with ESMTP id 8096721773
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 22:40:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="a2KTTUPY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727174AbfEUWeY (ORCPT
+        id S1726741AbfEUWkR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 18:34:24 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:42614 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725797AbfEUWeX (ORCPT
+        Tue, 21 May 2019 18:40:17 -0400
+Received: from mail-qt1-f202.google.com ([209.85.160.202]:38953 "EHLO
+        mail-qt1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726017AbfEUWkR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 18:34:23 -0400
-Received: by mail-ot1-f66.google.com with SMTP id i2so273054otr.9;
-        Tue, 21 May 2019 15:34:23 -0700 (PDT)
+        Tue, 21 May 2019 18:40:17 -0400
+Received: by mail-qt1-f202.google.com with SMTP id b46so170586qte.6
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 15:40:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=CxR5AlWDpArVLEx0HLe6lnTbiemspwxzj3fum4FdAg8=;
+        b=a2KTTUPYY68mgnwLoZX7NpSamuPKa/UmPwh3ZXp/yHmS1liRwwJzfEOpVjkQVsGegs
+         6StcJObJONEMW4BoSCAz3v0V84ruIgUSBpAkqjHte5mNxudvhWYOXjWrr1yAaOo70Ni2
+         B+PnJGvCbugteJbXDXPpmFTtHbkNAYDPGoC4vaPDhxWwa3zD+c5WuQCs6jw/IrwcEBg4
+         pN9GNTEhvTAO0EF2pA2C09Z2ieNP0ea7otA4B6ezj2yTvTslcHkPjU7pUrUV9nws7uJO
+         7FJiK0RqG/f4trm++BfAF10+spOplapIV1LzayaMkLF19AnC2OhAMwPE3Ck//7irDXC/
+         L3Eg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=dwXcIawwOJbg33tAciXd9w9L8qNu8uCxICVV/lS1QUA=;
-        b=t0Lcf3liHv9ae8DXNAJ+MTrJgXlCiOw35oSFAGEReMrN9t9/zd/n2OuxzotS5kpygK
-         wgfTFf7gN4CEWJyK053fq7iHeNPB91mk+cm5vtzX4Jk53ZTW6GABcpxL43Q8VLAMnEFR
-         3uRRgIj84MVHGu8gLVBH0Hifa8fMfWUFcT831/FBucOlJapvC01ZG8W+V2GRENLtOHv4
-         CwZpziVASfNc3/vLntmPsfLVduFw/XRhH8AbHW9Nsix8+WBh7cDpEM6tEf57Y8vkPTbF
-         y7YujWQFwq7N3CVHDUaiznO+RkxFk+MY1kKxq/AS0QxFZGsCQutOzVQnYc3hqvmvDbWo
-         bjkA==
-X-Gm-Message-State: APjAAAUsb5jYozkvNPnWuk++IvJdAr9nFikJecJdfOIYAOxTlHnXuxAO
-        jBrrilgM/DgbTeWFMXS8TMsdUk4=
-X-Google-Smtp-Source: APXvYqwkfMhDNn37GikrZ0INjRQJDy89xtYIPA3fNsJFoltHFKIiwE/kfRTckATxDJL0yTh8zJZBMg==
-X-Received: by 2002:a05:6830:1389:: with SMTP id d9mr571115otq.329.1558478062679;
-        Tue, 21 May 2019 15:34:22 -0700 (PDT)
-Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.googlemail.com with ESMTPSA id d70sm8764783oih.18.2019.05.21.15.34.21
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 21 May 2019 15:34:22 -0700 (PDT)
-From:   Rob Herring <robh@kernel.org>
-To:     devicetree@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kbuild@vger.kernel.org
-Subject: [PATCH] dt-bindings: Pass binding directory to validation tools
-Date:   Tue, 21 May 2019 17:34:21 -0500
-Message-Id: <20190521223421.10514-1-robh@kernel.org>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=CxR5AlWDpArVLEx0HLe6lnTbiemspwxzj3fum4FdAg8=;
+        b=JHojxZRVoFQLw+fkneno2u/xFa/33k1/HhkCZHPaVCUqMiMY22IJwm8gCBFHZf3HLS
+         Y6jGM9XNMmMXi6Qt4agGjNrZb/NeRKurrxPlhz19QwKXv2d/4nhCzx7EBjFpvuc5wdVC
+         VpOh2oyu9rf0OgRUmScoN+neEHDSKcciY4ezJnzeafFEI3FhuNyn7/AKcfcP6kPWdVba
+         ka8e0hDbCeSKLoeYF2ph3vQNFZV2rLeqw9CU3kEKecqZWFO9WWPQF/yOqIIqRIhZA2pH
+         pSrQFS0sb0uBpVIAcuIjYBkxR2BrJeVCXWkUaTMzfnuEUz3Y4zuNsABbODUMiZX0KS1p
+         XZDA==
+X-Gm-Message-State: APjAAAVX4ZNwddjN64IzUz4frHI6tzciSJtKPSyYar2GogUggXMLqBnq
+        3OqeD3Qi4T4Kvm/DVFN6vsyP448PzhtJm7N7T2N5pQ==
+X-Google-Smtp-Source: APXvYqz4gdnvVuv7br9Lscej3ltCpnqgHO2bJjQda55zn6GOiF+J20YzxwBnrBHrqmZD6gAn0V2OPJ8Zkw9G2OvLC8Cs7Q==
+X-Received: by 2002:a37:660d:: with SMTP id a13mr28849673qkc.347.1558478416387;
+ Tue, 21 May 2019 15:40:16 -0700 (PDT)
+Date:   Tue, 21 May 2019 15:40:11 -0700
+Message-Id: <20190521224013.3782-1-matthewgarrett@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
+Subject: [RFC] Turn lockdown into an LSM
+From:   Matthew Garrett <matthewgarrett@google.com>
+To:     jmorris@namei.org
+Cc:     linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to have $ref's to schema files within the kernel, we need to
-pass the base path of bindings to the schema validation tools.
+Hi James,
 
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Michal Marek <michal.lkml@markovi.net>
-Cc: devicetree@vger.kernel.org
-Cc: linux-kbuild@vger.kernel.org
-Signed-off-by: Rob Herring <robh@kernel.org>
----
- Documentation/devicetree/bindings/Makefile | 2 +-
- scripts/Makefile.lib                       | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+This is a quick attempt to integrate lockdown into the existing LSM
+framework. It adds a new lockdown security hook and an LSM that defines
+the existing coarse-grained policy, and also adds a new
+DEFINE_EARLY_LSM() definition in order to permit lockdown (and
+potentially other modules) to be initialised at the top of kernel init
+in order to allow policy to be imposed on stuff that happens in
+setup_arch(). The goal here is to allow policy to be devolved to other
+LSMs on systems that have a secure mechanism for loading LSM policy
+early in boot, allowing creation of arbitrarily complicated policies
+without interfering with the common-case coarse-grained approach.
 
-diff --git a/Documentation/devicetree/bindings/Makefile b/Documentation/devicetree/bindings/Makefile
-index 63b139f9ae28..8a2774b5834b 100644
---- a/Documentation/devicetree/bindings/Makefile
-+++ b/Documentation/devicetree/bindings/Makefile
-@@ -5,7 +5,7 @@ DT_MK_SCHEMA ?= dt-mk-schema
- DT_MK_SCHEMA_FLAGS := $(if $(DT_SCHEMA_FILES), -u)
- 
- quiet_cmd_chk_binding = CHKDT   $(patsubst $(srctree)/%,%,$<)
--      cmd_chk_binding = $(DT_DOC_CHECKER) $< ; \
-+      cmd_chk_binding = $(DT_DOC_CHECKER) -u $(srctree)/$(src) $< ; \
-                         $(DT_EXTRACT_EX) $< > $@
- 
- $(obj)/%.example.dts: $(src)/%.yaml FORCE
-diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-index 1b412d4394ae..f1f38c8cdc74 100644
---- a/scripts/Makefile.lib
-+++ b/scripts/Makefile.lib
-@@ -298,7 +298,7 @@ DT_BINDING_DIR := Documentation/devicetree/bindings
- DT_TMP_SCHEMA := $(objtree)/$(DT_BINDING_DIR)/processed-schema.yaml
- 
- quiet_cmd_dtb_check =	CHECK   $@
--      cmd_dtb_check =	$(DT_CHECKER) -p $(DT_TMP_SCHEMA) $@ ;
-+      cmd_dtb_check =	$(DT_CHECKER) -u $(srctree)/$(DT_BINDING_DIR) -p $(DT_TMP_SCHEMA) $@ ;
- 
- define rule_dtc_dt_yaml
- 	$(call cmd_and_fixdep,dtc,yaml)
--- 
-2.20.1
+This should probably be extended so a uapi-exposed constant is passed to
+the hook in order to make it easier to write policy in other LSMs, but
+does this broadly look like you were imagining?
+
 
