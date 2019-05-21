@@ -2,109 +2,102 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D077C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 08:52:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECD35C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 08:53:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0194820863
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 08:52:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="mJ5KySve"
+	by mail.kernel.org (Postfix) with ESMTP id C7B5720863
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 08:53:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727348AbfEUIw1 (ORCPT
+        id S1727056AbfEUIxH convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 04:52:27 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:5155 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726347AbfEUIw0 (ORCPT
+        Tue, 21 May 2019 04:53:07 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:40947 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726347AbfEUIxG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 04:52:26 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ce3bc460001>; Tue, 21 May 2019 01:52:22 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 21 May 2019 01:52:25 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 21 May 2019 01:52:25 -0700
-Received: from [10.21.132.148] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 21 May
- 2019 08:52:22 +0000
-Subject: Re: [PATCH 5.0 000/123] 5.0.18-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
-        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
-References: <20190520115245.439864225@linuxfoundation.org>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <38bbf46f-484c-3777-cb89-3e946fe49be4@nvidia.com>
-Date:   Tue, 21 May 2019 09:52:21 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 21 May 2019 04:53:06 -0400
+X-Originating-IP: 90.88.22.185
+Received: from xps13 (aaubervilliers-681-1-80-185.w90-88.abo.wanadoo.fr [90.88.22.185])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id AD52520003;
+        Tue, 21 May 2019 08:53:02 +0000 (UTC)
+Date:   Tue, 21 May 2019 10:53:01 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Kamal Dasu <kdasu.kdev@gmail.com>, linux-mtd@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-kernel@vger.kernel.org,
+        Brian Norris <computersforpeace@gmail.com>,
+        Richard Weinberger <richard@nod.at>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>
+Subject: Re: [PATCH v2 2/2] mtd: nand: raw: brcmnand: fallback to detected
+ ecc-strength, ecc-step-size
+Message-ID: <20190521105301.26e049b5@xps13>
+In-Reply-To: <63bbd3eb-60c1-042c-633c-cfa6fbef528c@gmail.com>
+References: <1558379144-28283-1-git-send-email-kdasu.kdev@gmail.com>
+        <1558379144-28283-2-git-send-email-kdasu.kdev@gmail.com>
+        <63bbd3eb-60c1-042c-633c-cfa6fbef528c@gmail.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20190520115245.439864225@linuxfoundation.org>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1558428742; bh=m3Xqf0zjUtyVG46uo8sJWsyXf+Gj94yu/RwzmPq9bEk=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=mJ5KySveNt7xy4hya03j4ZqZugyzmhSkXwF6OR7UHGHyjiaUKm+xXyJ4f0iULgvwG
-         4RlDzfmJJCaGYc0T6lXPSW/6mBRoz0usk4FJxFQBwK89enaidri2lvCglZa/nTZtrg
-         M8QiLMdaBlThvct32wWGET484hQsGJwb6A94ebGZXrTdNRZAlBNejN1pSmzJIDnR9Z
-         rGPNndbpolSbnOMwhOja4jk8tembxUKpXjdZMckt4fTdpWGtXQYMkuul5zuTmP1EIK
-         M61sz14Q7oFfiejkJk/JV5Q29LQAj6of9nhi1Q49FSke62hiF1rqrCyoals2QgsoS8
-         mN+PIyonYUjzw==
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Florian,
 
-On 20/05/2019 13:13, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.0.18 release.
-> There are 123 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+Florian Fainelli <f.fainelli@gmail.com> wrote on Mon, 20 May 2019
+12:11:42 -0700:
+
+> On 5/20/19 12:05 PM, Kamal Dasu wrote:
+> > This change supports nand-ecc-step-size and nand-ecc-strength fields in
+> > brcmnand DT node to be optional.
+> > see: Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
+> > 
+> > If both nand-ecc-strength and nand-ecc-step-size are not specified in
+> > device tree node for NAND, raw NAND layer does detect ECC information by
+> > reading ONFI extended parameter page for parts using ONFI >= 2.1.
+> > In case of non-ONFI NAND parts there could be a nand_id table entry with
+> > ECC information. If there is valid device tree entry for nand-ecc-strength
+> > and nand-ecc-step-size fields it still shall override the detected values.
+> > 
+> > Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
+> > ---
+> >  drivers/mtd/nand/raw/brcmnand/brcmnand.c | 11 +++++++++++
+> >  1 file changed, 11 insertions(+)
+> > 
+> > diff --git a/drivers/mtd/nand/raw/brcmnand/brcmnand.c b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+> > index ce0b8ff..a4d2057 100644
+> > --- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+> > +++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+> > @@ -2144,6 +2144,17 @@ static int brcmnand_setup_dev(struct brcmnand_host *host)
+> >  		return -EINVAL;
+> >  	}
+> >  
+> > +	if (chip->ecc.mode != NAND_ECC_NONE &&
+> > +	    (!chip->ecc.size || !chip->ecc.strength)) {
+> > +		if (chip->base.eccreq.step_size && chip->base.eccreq.strength) {
+> > +			/* use detected ECC parameters */
+> > +			chip->ecc.size = chip->base.eccreq.step_size;
+> > +			chip->ecc.strength = chip->base.eccreq.strength;
+> > +			pr_info("Using ECC step-size %d, strength %d\n",
+> > +				chip->ecc.size, chip->ecc.strength);  
 > 
-> Responses should be made by Wed 22 May 2019 11:50:46 AM UTC.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.0.18-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.0.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+> Nit: should not we use dev_info(&host->pdev->dev) for printing the
+> message in case we have multiple NAND controllers on chip, that way we
+> can still differentiate them from the prints?
 
-All tests are passing for Tegra ...
+Yes, that would fit what the rest of the driver does. After that I
+think the patchset will be ready.
 
-Test results for stable-v5.0:
-    12 builds:	12 pass, 0 fail
-    22 boots:	22 pass, 0 fail
-    32 tests:	32 pass, 0 fail
-
-Linux version:	5.0.18-rc1-gbb27727
-Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
-                tegra194-p2972-0000, tegra20-ventana,
-                tegra210-p2371-2180, tegra30-cardhu-a04
-
-Cheers
-Jon
-
--- 
-nvpublic
+Thanks,
+Miquèl
