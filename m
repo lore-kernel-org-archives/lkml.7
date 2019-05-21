@@ -2,107 +2,180 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74098C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:03:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C6D7C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:05:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46FD3217D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:03:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T+vYrdTm"
+	by mail.kernel.org (Postfix) with ESMTP id 09B9F2173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:05:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728833AbfEUQDm (ORCPT
+        id S1729040AbfEUQFH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 12:03:42 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:39818 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727990AbfEUQDl (ORCPT
+        Tue, 21 May 2019 12:05:07 -0400
+Received: from mailgate2.uni-hannover.de ([130.75.2.114]:53604 "EHLO
+        mailgate2.uni-hannover.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728067AbfEUQFG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 12:03:41 -0400
-Received: by mail-wm1-f66.google.com with SMTP id n25so1625003wmk.4;
-        Tue, 21 May 2019 09:03:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=SyE9kuP93puOVa5bnxKzAz6P/q7rG15j4OqWFA5YadY=;
-        b=T+vYrdTmZN/Md8Sf9dvxQNA0o0nZohyfU6cEOhtm/9KKtsEci4xzTwF5wwha/RbDcm
-         hxWNAf+NMA09hM4YjOJI6kvZvazFJlDKG8ray2p2qXbvjxFyenWsP6msDiRkdpIIeTsc
-         7lyZXOUNLnq/6d3I9HejXYYGL8HP+rpU3lsXxGPVEr5rQS8NJUxSKsFnMXer/ab76net
-         atdfJRW7SM9srR81IAT/KY7wstpxt3hKyaRVFk9qzTyDpIGuYYgInFzk9/58pfWWERSr
-         QtJRL7WPoVW/8/MKODfl5ocUuejtytfVzNMK2KaALG/t82pQfmBIVhNH4O7OJHx2A/s9
-         05aQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=SyE9kuP93puOVa5bnxKzAz6P/q7rG15j4OqWFA5YadY=;
-        b=HSZu6Vg45O1N/HP3Lyf8QEmAqCe0hcq95LmLaeRJT3C1ZcroBvSYlrXeQ7Dy2SAm+C
-         rCmfjAu1vLmuAJW00gm3IIASkeE/++mbYHQ1JhIjbFLBLy6ofbngCrrNKZvjdx4aYQPf
-         G/9LN6X1NBtThzT+g4tCSC8HFjLTCcWZGHW+b9UqoCeNqDk21we0/I5r76TQh9Jx3ycu
-         S9vukTF1WCIq8vm/PEb98UoDlHLGoCJoQlLTskH7qFBIXj3q5CBYo61JSmTksaJ/uSXA
-         Sct4E7YXHtDIe3nIU9JbsboIsEQ5WqPf3tyZOwMTWAllVX0jbJxHCcfgD4jaCtGjFKhu
-         8V1Q==
-X-Gm-Message-State: APjAAAULsYG42M9jYgCr62knyUf2VolBVUTfJgb4Rir9agw/5Z35bSoR
-        1DlibGER0fknrTwJDyQrcsMM0vQLSTA7Sg==
-X-Google-Smtp-Source: APXvYqwUHxJAUHN1YLpD84q4B8bKA40ChffErOtsXq3i2Uq3kGPqvW+6jtuDA211uTmP3GAi8TqfxA==
-X-Received: by 2002:a1c:4087:: with SMTP id n129mr4099381wma.14.1558454618926;
-        Tue, 21 May 2019 09:03:38 -0700 (PDT)
-Received: from localhost.localdomain (18.189-60-37.rdns.acropolistelecom.net. [37.60.189.18])
-        by smtp.gmail.com with ESMTPSA id g11sm6853811wrq.89.2019.05.21.09.03.37
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 21 May 2019 09:03:38 -0700 (PDT)
-From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-To:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>
-Cc:     linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v4 1/5] dt-bindings: watchdog: add Allwinner H6 watchdog
-Date:   Tue, 21 May 2019 18:03:26 +0200
-Message-Id: <20190521160330.28402-2-peron.clem@gmail.com>
+        Tue, 21 May 2019 12:05:06 -0400
+X-Greylist: delayed 558 seconds by postgrey-1.27 at vger.kernel.org; Tue, 21 May 2019 12:05:03 EDT
+Received: from kolab.sra.uni-hannover.de (kolab.sra.uni-hannover.de [130.75.33.6])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mailgate2.uni-hannover.de (Postfix) with ESMTPS id 6426A2087;
+        Tue, 21 May 2019 17:55:43 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at sra.uni-hannover.de
+Received: from lab.sra.uni-hannover.de (aerobus.sra.uni-hannover.de
+ [130.75.33.87])
+ by kolab.sra.uni-hannover.de (Postfix) with SMTP id 1984B3E027C;
+ Tue, 21 May 2019 17:55:22 +0200 (CEST)
+Received: (nullmailer pid 14993 invoked by uid 20151);
+ Tue, 21 May 2019 15:55:41 -0000
+From:   Lukas Prause <langspielplatte@black-mesa.xyz>
+To:     lizefan@huawei.com, tj@kernel.org, hannes@cmpxchg.org,
+        peterz@infradead.org, mingo@redhat.com, will.deacon@arm.com,
+        rjw@rjwysocki.net, len.brown@intel.com, pavel@ucw.cz,
+        rostedt@goodmis.org
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        cgroups@vger.kernel.org, linux-pm@vger.kernel.org,
+        Lukas Prause <langspielplatte@black-mesa.xyz>,
+        Lennart Glauer <mail@lennart-glauer.de>
+Subject: [PATCH] Fix comments with paths pointing to renamed or moved files.
+Date:   Tue, 21 May 2019 17:54:30 +0200
+Message-Id: <20190521155430.14941-1-langspielplatte@black-mesa.xyz>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190521160330.28402-1-peron.clem@gmail.com>
-References: <20190521160330.28402-1-peron.clem@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allwinner H6 has a similar watchdog as the A64 which is already
-a compatible of the A31.
+This patch corrects renamed or moved paths in comments.
 
-This commit add the H6 compatible.
-
-Signed-off-by: Clément Péron <peron.clem@gmail.com>
+Signed-off-by: Lukas Prause <langspielplatte@black-mesa.xyz>
+Signed-off-by: Lennart Glauer <mail@lennart-glauer.de>
 ---
- Documentation/devicetree/bindings/watchdog/sunxi-wdt.txt | 1 +
- 1 file changed, 1 insertion(+)
+ kernel/cgroup/cpuset.c       |  2 +-
+ kernel/locking/mutex-debug.h |  2 +-
+ kernel/power/power.h         |  2 +-
+ kernel/sched/core.c          |  2 +-
+ kernel/trace/trace.h         | 14 +++++++-------
+ 5 files changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/watchdog/sunxi-wdt.txt b/Documentation/devicetree/bindings/watchdog/sunxi-wdt.txt
-index 46055254e8dd..e65198d82a2b 100644
---- a/Documentation/devicetree/bindings/watchdog/sunxi-wdt.txt
-+++ b/Documentation/devicetree/bindings/watchdog/sunxi-wdt.txt
-@@ -6,6 +6,7 @@ Required properties:
- 	"allwinner,sun4i-a10-wdt"
- 	"allwinner,sun6i-a31-wdt"
- 	"allwinner,sun50i-a64-wdt","allwinner,sun6i-a31-wdt"
-+	"allwinner,sun50i-h6-wdt","allwinner,sun6i-a31-wdt"
- 	"allwinner,suniv-f1c100s-wdt", "allwinner,sun4i-a10-wdt"
- - reg : Specifies base physical address and size of the registers.
+diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
+index 6a1942ed781c..6381622e2f2f 100644
+--- a/kernel/cgroup/cpuset.c
++++ b/kernel/cgroup/cpuset.c
+@@ -329,7 +329,7 @@ static struct cpuset top_cpuset = {
+  * cpumasks and nodemasks.
+  *
+  * Accessing a task's cpuset should be done in accordance with the
+- * guidelines for accessing subsystem state in kernel/cgroup.c
++ * guidelines for accessing subsystem state in kernel/cgroup/cgroup.c
+  */
  
+ static DEFINE_MUTEX(cpuset_mutex);
+diff --git a/kernel/locking/mutex-debug.h b/kernel/locking/mutex-debug.h
+index 1edd3f45a4ec..0dee0a07cd4c 100644
+--- a/kernel/locking/mutex-debug.h
++++ b/kernel/locking/mutex-debug.h
+@@ -8,7 +8,7 @@
+  *
+  * This file contains mutex debugging related internal declarations,
+  * prototypes and inline functions, for the CONFIG_DEBUG_MUTEXES case.
+- * More details are in kernel/mutex-debug.c.
++ * More details are in kernel/locking/mutex-debug.c.
+  */
+ 
+ /*
+diff --git a/kernel/power/power.h b/kernel/power/power.h
+index 9e58bdc8a562..5de8b0c7f657 100644
+--- a/kernel/power/power.h
++++ b/kernel/power/power.h
+@@ -182,7 +182,7 @@ extern int swsusp_unmark(void);
+ #endif
+ 
+ struct timeval;
+-/* kernel/power/swsusp.c */
++/* kernel/power/hibernate.c */
+ extern void swsusp_show_speed(ktime_t, ktime_t, unsigned int, char *);
+ 
+ #ifdef CONFIG_SUSPEND
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 102dfcf0a29a..0ce0dc44ffc3 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -3334,7 +3334,7 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
+  *   1. Explicit blocking: mutex, semaphore, waitqueue, etc.
+  *
+  *   2. TIF_NEED_RESCHED flag is checked on interrupt and userspace return
+- *      paths. For example, see arch/x86/entry_64.S.
++ *      paths. For example, see arch/x86/entry/entry_64.S.
+  *
+  *      To drive preemption between tasks, the scheduler sets the flag in timer
+  *      interrupt handler scheduler_tick().
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index 1974ce818ddb..0c304d6f5b31 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -1684,7 +1684,7 @@ extern int register_trigger_hist_enable_disable_cmds(void);
+  *	initialization such as incrementing a per-trigger reference
+  *	count, for instance.  This is usually implemented by the
+  *	generic utility function @event_trigger_init() (see
+- *	trace_event_triggers.c).
++ *	trace_events_trigger.c).
+  *
+  * @free: An optional de-initialization function called for the
+  *	trigger when the trigger is unregistered (via the
+@@ -1693,12 +1693,12 @@ extern int register_trigger_hist_enable_disable_cmds(void);
+  *	per-trigger reference count and freeing corresponding trigger
+  *	data, for instance.  This is usually implemented by the
+  *	generic utility function @event_trigger_free() (see
+- *	trace_event_triggers.c).
++ *	trace_events_trigger.c).
+  *
+  * @print: The callback function invoked to have the trigger print
+  *	itself.  This is usually implemented by a wrapper function
+  *	that calls the generic utility function @event_trigger_print()
+- *	(see trace_event_triggers.c).
++ *	(see trace_events_trigger.c).
+  */
+ struct event_trigger_ops {
+ 	void			(*func)(struct event_trigger_data *data,
+@@ -1758,7 +1758,7 @@ struct event_trigger_ops {
+  *	the appropriate trace event.  It makes use of the other
+  *	event_command callback functions to orchestrate this, and is
+  *	usually implemented by the generic utility function
+- *	@event_trigger_callback() (see trace_event_triggers.c).
++ *	@event_trigger_callback() (see trace_events_trigger.c).
+  *
+  * @reg: Adds the trigger to the list of triggers associated with the
+  *	event, and enables the event trigger itself, after
+@@ -1767,13 +1767,13 @@ struct event_trigger_ops {
+  *	make the decision as to whether or not multiple instances of
+  *	the trigger should be allowed.  This is usually implemented by
+  *	the generic utility function @register_trigger() (see
+- *	trace_event_triggers.c).
++ *	trace_events_trigger.c).
+  *
+  * @unreg: Removes the trigger from the list of triggers associated
+  *	with the event, and disables the event trigger itself, after
+  *	initializing it (via the event_trigger_ops @free() function).
+  *	This is usually implemented by the generic utility function
+- *	@unregister_trigger() (see trace_event_triggers.c).
++ *	@unregister_trigger() (see trace_events_trigger.c).
+  *
+  * @unreg_all: An optional function called to remove all the triggers
+  *	from the list of triggers associated with the event.  Called
+@@ -1783,7 +1783,7 @@ struct event_trigger_ops {
+  *	for the trigger.  If no @set_filter() method is set for the
+  *	event command, filters set by the user for the command will be
+  *	ignored.  This is usually implemented by the generic utility
+- *	function @set_trigger_filter() (see trace_event_triggers.c).
++ *	function @set_trigger_filter() (see trace_events_trigger.c).
+  *
+  * @get_trigger_ops: The callback function invoked to retrieve the
+  *	event_trigger_ops implementation associated with the command.
 -- 
 2.17.1
-
