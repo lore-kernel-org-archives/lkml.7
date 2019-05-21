@@ -2,103 +2,124 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FFDEC04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:42:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47899C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:44:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D82421743
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:42:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558435339;
-	bh=rVM3KmjOp0zK7/WO0Do7OaoRxedBm1NHHJ8zm8Mz0M0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cmKaOnxMsSFP34AwUAkp5koaQtQBWnL/E1RgtbN9gGN+k9hN4s39X31Ta1bvQLOZ4
-	 mKhswMqbUAfFdQ1Io5JkYPQaakU6fKHFvcEMriet58eWkpUCwu9BSN35z/EF1QWnPO
-	 5lBH1KpJEKDgMBBiXS52abESrZ8ltBexMVY4vMLg=
+	by mail.kernel.org (Postfix) with ESMTP id 1D10320856
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:44:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727728AbfEUKmS (ORCPT
+        id S1727541AbfEUKog (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 06:42:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52598 "EHLO mail.kernel.org"
+        Tue, 21 May 2019 06:44:36 -0400
+Received: from mga05.intel.com ([192.55.52.43]:45533 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727571AbfEUKmS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 06:42:18 -0400
-Received: from localhost (unknown [223.186.130.65])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E2CF2173E;
-        Tue, 21 May 2019 10:42:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558435337;
-        bh=rVM3KmjOp0zK7/WO0Do7OaoRxedBm1NHHJ8zm8Mz0M0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=0/xS6lfDoYXfzlDvsgRro4RFoQ2YBk3FFxStoiSPFrKZ1Pqax59Go7YMi67M9vGeM
-         SvLpkqjz2i3L09HtDC6FiVbiGEfffMfe1kXxMb+obkVMmRC3G19lLFJWVy4Jfke0Yz
-         heUaSiFJmDHL6+GXeVZnXGVp5+3YXv4/Ee3jqPBg=
-Date:   Tue, 21 May 2019 16:12:11 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        David Brown <david.brown@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 1/4] dt-bindings: soc: qcom: Add AOSS QMP binding
-Message-ID: <20190521104211.GF15118@vkoul-mobl>
-References: <20190501043734.26706-1-bjorn.andersson@linaro.org>
- <20190501043734.26706-2-bjorn.andersson@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190501043734.26706-2-bjorn.andersson@linaro.org>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+        id S1726296AbfEUKof (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 06:44:35 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 May 2019 03:44:35 -0700
+X-ExtLoop1: 1
+Received: from skl-s2.bj.intel.com ([10.240.192.109])
+  by orsmga006.jf.intel.com with ESMTP; 21 May 2019 03:44:32 -0700
+From:   Luwei Kang <luwei.kang@intel.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     pbonzini@redhat.com, rkrcmar@redhat.com, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        Luwei Kang <luwei.kang@intel.com>
+Subject: [PATCH] KVM: LAPIC: Do not mask the local interrupts when LAPIC is sw disabled
+Date:   Tue, 21 May 2019 18:44:15 +0800
+Message-Id: <1558435455-233679-1-git-send-email-luwei.kang@intel.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30-04-19, 21:37, Bjorn Andersson wrote:
-> Add binding for the QMP based side-channel communication mechanism to
-> the AOSS, which is used to control resources not exposed through the
-> RPMh interface.
-> 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
-> 
-> Changes since v6:
-> - Added #clock-cells
-> 
->  .../bindings/soc/qcom/qcom,aoss-qmp.txt       | 81 +++++++++++++++++++
->  include/dt-bindings/power/qcom-aoss-qmp.h     | 14 ++++
->  2 files changed, 95 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.txt
->  create mode 100644 include/dt-bindings/power/qcom-aoss-qmp.h
-> 
-> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.txt
-> new file mode 100644
-> index 000000000000..14a45b3dc059
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.txt
-> @@ -0,0 +1,81 @@
-> +Qualcomm Always-On Subsystem side channel binding
-> +
-> +This binding describes the hardware component responsible for side channel
-> +requests to the always-on subsystem (AOSS), used for certain power management
-> +requests that is not handled by the standard RPMh interface. Each client in the
-> +SoC has it's own block of message RAM and IRQ for communication with the AOSS.
-> +The protocol used to communicate in the message RAM is known as Qualcomm
-> +Messagin Protocol (QMP)
+The current code will mask all the local interrupts in the local
+vector table when the LAPIC is disabled by SVR (Spurious-Interrupt
+Vector Register) "APIC Software Enable/Disable" flag (bit8).
+This may block local interrupt be delivered to target vCPU
+even if LAPIC is enabled by set SVR (bit8 == 1) after.
 
-s/Messagin/Messaging?
+For example, reset vCPU will mask all the local interrupts and
+set the SVR to default value FFH (LAPIC is disabled because
+SVR[bit8] == 0). Guest may try to enable some local interrupts
+(e.g. LVTPC) by clear bit16 of LVT entry before enable LAPIC.
+But bit16 can't be cleared when LAPIC is "software disabled"
+and this local interrupt still disabled after LAPIC "software
+enabled".
 
-Rest lgtm:
-Reviewed-by: Vinod Koul <vkoul@kernel.org>
+This patch will not mask the local interrupts when LAPIC
+is "software disabled" and add LAPIC "software enabled" checking
+before deliver local interrupt.
 
+Signed-off-by: Luwei Kang <luwei.kang@intel.com>
+---
+ arch/x86/kvm/lapic.c | 19 ++-----------------
+ 1 file changed, 2 insertions(+), 17 deletions(-)
+
+diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+index fcf42a3..a199f47 100644
+--- a/arch/x86/kvm/lapic.c
++++ b/arch/x86/kvm/lapic.c
+@@ -1892,15 +1892,6 @@ int kvm_lapic_reg_write(struct kvm_lapic *apic, u32 reg, u32 val)
+ 			mask |= APIC_SPIV_DIRECTED_EOI;
+ 		apic_set_spiv(apic, val & mask);
+ 		if (!(val & APIC_SPIV_APIC_ENABLED)) {
+-			int i;
+-			u32 lvt_val;
+-
+-			for (i = 0; i < KVM_APIC_LVT_NUM; i++) {
+-				lvt_val = kvm_lapic_get_reg(apic,
+-						       APIC_LVTT + 0x10 * i);
+-				kvm_lapic_set_reg(apic, APIC_LVTT + 0x10 * i,
+-					     lvt_val | APIC_LVT_MASKED);
+-			}
+ 			apic_update_lvtt(apic);
+ 			atomic_set(&apic->lapic_timer.pending, 0);
+ 
+@@ -1926,18 +1917,12 @@ int kvm_lapic_reg_write(struct kvm_lapic *apic, u32 reg, u32 val)
+ 	case APIC_LVTPC:
+ 	case APIC_LVT1:
+ 	case APIC_LVTERR:
+-		/* TODO: Check vector */
+-		if (!kvm_apic_sw_enabled(apic))
+-			val |= APIC_LVT_MASKED;
+-
+ 		val &= apic_lvt_mask[(reg - APIC_LVTT) >> 4];
+ 		kvm_lapic_set_reg(apic, reg, val);
+ 
+ 		break;
+ 
+ 	case APIC_LVTT:
+-		if (!kvm_apic_sw_enabled(apic))
+-			val |= APIC_LVT_MASKED;
+ 		val &= (apic_lvt_mask[0] | apic->lapic_timer.timer_mode_mask);
+ 		kvm_lapic_set_reg(apic, APIC_LVTT, val);
+ 		apic_update_lvtt(apic);
+@@ -2260,7 +2245,7 @@ int kvm_apic_local_deliver(struct kvm_lapic *apic, int lvt_type)
+ 	u32 reg = kvm_lapic_get_reg(apic, lvt_type);
+ 	int vector, mode, trig_mode;
+ 
+-	if (kvm_apic_hw_enabled(apic) && !(reg & APIC_LVT_MASKED)) {
++	if (apic_enabled(apic) && !(reg & APIC_LVT_MASKED)) {
+ 		vector = reg & APIC_VECTOR_MASK;
+ 		mode = reg & APIC_MODE_MASK;
+ 		trig_mode = reg & APIC_LVT_LEVEL_TRIGGER;
+@@ -2363,7 +2348,7 @@ int kvm_apic_accept_pic_intr(struct kvm_vcpu *vcpu)
+ 	u32 lvt0 = kvm_lapic_get_reg(vcpu->arch.apic, APIC_LVT0);
+ 	int r = 0;
+ 
+-	if (!kvm_apic_hw_enabled(vcpu->arch.apic))
++	if (!apic_enabled(vcpu->arch.apic))
+ 		r = 1;
+ 	if ((lvt0 & APIC_LVT_MASKED) == 0 &&
+ 	    GET_APIC_DELIVERY_MODE(lvt0) == APIC_MODE_EXTINT)
 -- 
-~Vinod
+1.8.3.1
+
