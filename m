@@ -2,106 +2,80 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C79CC04E87
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 09:26:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FFD6C04E87
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 09:26:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 121A821773
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 09:26:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7469321743
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 09:26:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558430813;
+	bh=yJitaLZyoZ+8o5l/q6XZcqgmB28rAAVSJTNI5sXlS4U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tJMkl+/llM65x7AJzPI6GYRYCcGDnfgzIwiZtJ+CGFm2UBP4JvAYnPQioEIL35svL
+	 5d/IZr/TxJUZByqYmB2lVdd+vmZUg+7LMC8LLoSTt2LCYhj6YQ07plDft6T/4K3AOx
+	 HvwUjJTlHEi2wCtgiZfrNHtyRiV+skczocIvj4XA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727353AbfEUJ03 (ORCPT
+        id S1727448AbfEUJ0w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 05:26:29 -0400
-Received: from alexa-out-tai-01.qualcomm.com ([103.229.16.226]:52564 "EHLO
-        alexa-out-tai-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726242AbfEUJ02 (ORCPT
+        Tue, 21 May 2019 05:26:52 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:36809 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726242AbfEUJ0w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 05:26:28 -0400
-X-Greylist: delayed 366 seconds by postgrey-1.27 at vger.kernel.org; Tue, 21 May 2019 05:26:27 EDT
-Received: from ironmsg03-tai.qualcomm.com ([10.249.140.8])
-  by alexa-out-tai-01.qualcomm.com with ESMTP; 21 May 2019 17:20:20 +0800
-X-IronPort-AV: E=McAfee;i="5900,7806,9263"; a="29754389"
-Received: from c-fan-gv.ap.qualcomm.com (HELO c-fan-gv) ([10.231.253.105])
-  by ironmsg03-tai.qualcomm.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 21 May 2019 17:20:08 +0800
-From:   Tengfei Fan <tengfeif@codeaurora.org>
-To:     catalin.marinas@arm.com, will.deacon@arm.com
-Cc:     mark.rutland@arm.com, marc.zyngier@arm.com,
-        anshuman.khandual@arm.com, andreyknvl@google.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        tengfei@codeaurora.org, Tengfei Fan <tengfeif@codeaurora.org>
-Subject: [PATCH] arm64: break while loop if task had been rescheduled
-Date:   Tue, 21 May 2019 17:20:04 +0800
-Message-Id: <1558430404-4840-1-git-send-email-tengfeif@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Tue, 21 May 2019 05:26:52 -0400
+Received: by mail-lj1-f193.google.com with SMTP id z1so15206488ljb.3;
+        Tue, 21 May 2019 02:26:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=jqkCAzcDBAVsT/gX9w1UAejB6xZQAwav9MJN5UCwHY8=;
+        b=IWIqd0C96bJThCDMX9WhN9Dc0WnGlGGSLy1mubGz4rntQWW+d6/xdIxlThEO3gMIGZ
+         2GMG92IieCSrNMtJ74ERMFmKKGv1uiIsIEx085EZtqyVqaQIjBU9Z9XBYnBJW1n4XNG8
+         Wg6CKIeGao2QwZAwFMFTGgrhn3Vj2bwCiulq2FYBCBlsJuf6gukhsSp1hGw8wuLGt/tm
+         KWwY2v/pvaQf3w5re4tC8IrnLovpNc142cdHdL32XmFPk6eXb4lpTtA7038jjdK9dpwS
+         2y/vxxZ6UoqByIpEReyLoNpEQpbP32SwTamPVNK0SDyqJ7iLxpJQvvJCBC1qZKVfGu8o
+         qnaA==
+X-Gm-Message-State: APjAAAVS+l0T9hUUBR2Jff04DARxlyf6kJTHfeKUZT2FabZSOeWKtV1N
+        W7rNgexlVstEP+lStxcV+BQ=
+X-Google-Smtp-Source: APXvYqxiFm1Nhplm0aBpDjW+CtMLh8UI9p7lo+6fwkCCxahVt+Msy5VPviPpPChfxIeg3iUeROtNjQ==
+X-Received: by 2002:a2e:655b:: with SMTP id z88mr36540813ljb.108.1558430810192;
+        Tue, 21 May 2019 02:26:50 -0700 (PDT)
+Received: from xi.terra (c-74bee655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.190.116])
+        by smtp.gmail.com with ESMTPSA id m5sm4604581lfb.47.2019.05.21.02.26.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 21 May 2019 02:26:49 -0700 (PDT)
+Received: from johan by xi.terra with local (Exim 4.91)
+        (envelope-from <johan@kernel.org>)
+        id 1hT12i-000677-Vd; Tue, 21 May 2019 11:26:45 +0200
+Date:   Tue, 21 May 2019 11:26:44 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
+Cc:     johan@kernel.org, gregkh@linuxfoundation.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] USB: serial: pl2303: add Allied Telesis VT-Kit3
+Message-ID: <20190521092644.GO568@localhost>
+References: <20190514053542.28047-1-chris.packham@alliedtelesis.co.nz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190514053542.28047-1-chris.packham@alliedtelesis.co.nz>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While printing a task's backtrace and this task isn't
-current task, it is possible that task's fp and fp+8
-have the same value, so cannot break the while loop.
-This can break while loop if this task had been
-rescheduled during print this task's backtrace.
+On Tue, May 14, 2019 at 05:35:42PM +1200, Chris Packham wrote:
+> This is adds the vendor and device id for the AT-VT-Kit3 which is a
+> pl2303-based device.
+> 
+> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
 
-Signed-off-by: Tengfei Fan <tengfeif@codeaurora.org>
----
- arch/arm64/kernel/traps.c | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+Now applied, thanks.
 
-diff --git a/arch/arm64/kernel/traps.c b/arch/arm64/kernel/traps.c
-index 2975598..9df6e02 100644
---- a/arch/arm64/kernel/traps.c
-+++ b/arch/arm64/kernel/traps.c
-@@ -103,6 +103,9 @@ void dump_backtrace(struct pt_regs *regs, struct task_struct *tsk)
- {
- 	struct stackframe frame;
- 	int skip = 0;
-+	long cur_state = 0;
-+	unsigned long cur_sp = 0;
-+	unsigned long cur_fp = 0;
- 
- 	pr_debug("%s(regs = %p tsk = %p)\n", __func__, regs, tsk);
- 
-@@ -127,6 +130,9 @@ void dump_backtrace(struct pt_regs *regs, struct task_struct *tsk)
- 		 */
- 		frame.fp = thread_saved_fp(tsk);
- 		frame.pc = thread_saved_pc(tsk);
-+		cur_state = tsk->state;
-+		cur_sp = thread_saved_sp(tsk);
-+		cur_fp = frame.fp;
- 	}
- #ifdef CONFIG_FUNCTION_GRAPH_TRACER
- 	frame.graph = 0;
-@@ -134,6 +140,23 @@ void dump_backtrace(struct pt_regs *regs, struct task_struct *tsk)
- 
- 	printk("Call trace:\n");
- 	do {
-+		if (tsk != current && (cur_state != tsk->state
-+			/*
-+			 * We would not be printing backtrace for the task
-+			 * that has changed state from uninterruptible to
-+			 * running before hitting the do-while loop but after
-+			 * saving the current state. If task is in running
-+			 * state before saving the state, then we may print
-+			 * wrong call trace or end up in infinite while loop
-+			 * if *(fp) and *(fp+8) are same. While the situation
-+			 * will stop print when that task schedule out.
-+			 */
-+			|| cur_sp != thread_saved_sp(tsk)
-+			|| cur_fp != thread_saved_fp(tsk))) {
-+			printk("The task:%s had been rescheduled!\n",
-+				tsk->comm);
-+			break;
-+		}
- 		/* skip until specified stack frame */
- 		if (!skip) {
- 			dump_backtrace_entry(frame.pc);
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
-
+Johan
