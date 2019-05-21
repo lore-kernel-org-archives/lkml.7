@@ -2,87 +2,132 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF83BC04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 05:36:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91E26C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 05:37:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B53E821743
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 05:36:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EDD821743
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 05:37:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ExmJpkxF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L5QsMohp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727778AbfEUFgx (ORCPT
+        id S1727836AbfEUFhJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 01:36:53 -0400
-Received: from ozlabs.org ([203.11.71.1]:36039 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725794AbfEUFgx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 01:36:53 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 457Pdt4sSTz9s55;
-        Tue, 21 May 2019 15:36:50 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1558417011;
-        bh=rBU5D62blCLj/Fiq/B6fGBj5k3UWnAQ5l4vb3sjsMEI=;
-        h=Date:From:To:Cc:Subject:From;
-        b=ExmJpkxFMa1F19+q1jjebqFJtIwCgSM5OdZDg8i355KN4vIwLCy19+zeB3/rvkEf4
-         PSFKDQgvdcESOkxduGHWtZbsisa+iyfMIrAa8OqyajMv/0krBtdi3331udGAekktJA
-         APQ363TEoZ4u8l8L8lltQLJoVIqXEQhrrlwXsk4bO29IisTWLvAivK+0iI0QcaCcyN
-         yagQJOMtBY8JYs+4vYkx6YUf3W+JsWZCnjc5byRWXJSBLX4ISSgxLvkySKyaAeYqTp
-         Zz7mD2Jw0vXicnybcxqX2JL72NtVjezpjwE/HFOs8z+QcyzlbDHZdFjmUY9/MxSc5J
-         5m5rqo89+mchA==
-Date:   Tue, 21 May 2019 15:36:49 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Kevin Hilman <khilman@baylibre.com>,
-        Carlo Caione <carlo@caione.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: Signed-off-by missing for commit in the amlogic tree
-Message-ID: <20190521153649.0f44f3c8@canb.auug.org.au>
+        Tue, 21 May 2019 01:37:09 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:36475 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725794AbfEUFhJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 01:37:09 -0400
+Received: by mail-pf1-f194.google.com with SMTP id v80so8450265pfa.3;
+        Mon, 20 May 2019 22:37:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=BZUFffhvoZ/3VV5Du2sO0r+/XHpzujtgwYRf59q1Hiw=;
+        b=L5QsMohpY5jUu8A6YvYaTiZm+TCX58rPXL32paqhvK7XnxN0t+Ewr6vKXTtoOaPBjV
+         byTNG8bGdahP89ZEwxlWek0z2kWfFar5NqPSBwWeP7zk4PYsgvBOSLMdhvTe5xNzON53
+         hJlDfOnJdTlj653JJZ52clPD9Kb28QVtgHCwkw6WYHzFVphHDLt5MlJhoU1uDV+fYZrq
+         MbcG9YaAuRa6+Z/Wr+UXvG4D3AO5zBvlMjvs2XhjaNAxFiL0a1rXAJBE5bbOS0LIsM41
+         GJKn+DmrQ7j1vuxD3zWuJQB3wMdSaPVBCFzadC1YO1tRi2e9KKn+YYUIJ40PYNm8/ESN
+         r1zQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=BZUFffhvoZ/3VV5Du2sO0r+/XHpzujtgwYRf59q1Hiw=;
+        b=rtlKBKr0XnsLNlYALzsWjwxz4aeTD/A5TUZX0IqXSac0QpAuK+2/iavssb7eDl57hA
+         0eEWA69GSrJU9wUBmoRsgdZ6TMnH9nEX6J6p96FrNuWJzThnIDxXJwyprLS4mkehpw2P
+         0l+7uxcAA0ueq0d006CCXPdeOWUe4D6OZ2gn7OfEGLMuZ/R8STremRcMasbtEaz/sApw
+         m1qQB0XnX6SGYruEjBPOUC/THAHeR7DT0f4MjGpax9rliYxFXxGIV508CGPRPUpKaCDP
+         vDRn3s21xpTV1J/c31vL00I7OssbB6PGvYzFQd8ExpLWyhfN2GtxHeLB3TXKckriRgu+
+         /0Vg==
+X-Gm-Message-State: APjAAAV1aNFPsdOwsNKyt1fbwLfIsA+SxaA4YtR31/xBhgikMZpQeOKs
+        C/UWV0AirJ3kkVZ4hAFuUkc=
+X-Google-Smtp-Source: APXvYqw0bKYE74PZgt9Ba0AIyCqYptbQcv12MrPVNzS4PMJxIQQBQT2SlwqIPX7lL5dRwwoFaTXx7g==
+X-Received: by 2002:a65:4806:: with SMTP id h6mr5663188pgs.299.1558417027972;
+        Mon, 20 May 2019 22:37:07 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id l21sm27768199pff.40.2019.05.20.22.37.07
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 20 May 2019 22:37:07 -0700 (PDT)
+Date:   Mon, 20 May 2019 22:37:05 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Michal =?utf-8?B?Vm9rw6HEjQ==?= <michal.vokac@ysoft.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Pengutronix Kernel Team <kernel@pengutronix.de>
+Subject: Re: [RFC PATCH v2 0/4] Input: mpr121-polled: Add polled driver for
+ MPR121
+Message-ID: <20190521053705.GI183429@dtor-ws>
+References: <1558098773-47416-1-git-send-email-michal.vokac@ysoft.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/pvHOUmZAjcS7WnHy7=FWu5R"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1558098773-47416-1-git-send-email-michal.vokac@ysoft.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/pvHOUmZAjcS7WnHy7=FWu5R
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Michal,
 
-Hi all,
+On Fri, May 17, 2019 at 03:12:49PM +0200, Michal Vokáč wrote:
+> Hi,
+> 
+> I have to deal with a situation where we have a custom i.MX6 based
+> platform in production that uses the MPR121 touchkey controller.
+> Unfortunately the chip is connected using only the I2C interface.
+> The interrupt line is not used. Back in 2015 (Linux v3.14), my
+> colleague modded the existing mpr121_touchkey.c driver to use polling
+> instead of interrupt.
+> 
+> For quite some time yet I am in a process of updating the product from
+> the ancient Freescale v3.14 kernel to the latest mainline and pushing
+> any needed changes upstream. The DT files for our imx6dl-yapp4 platform
+> already made it into v5.1-rc.
+> 
+> I rebased and updated our mpr121 patch to the latest mainline.
+> It is created as a separate driver, similarly to gpio_keys_polled.
+> 
+> The I2C device is quite susceptible to ESD. An ESD test quite often
+> causes reset of the chip or some register randomly changes its value.
+> The [PATCH 3/4] adds a write-through register cache. With the cache
+> this state can be detected and the device can be re-initialied.
+> 
+> The main question is: Is there any chance that such a polled driver
+> could be accepted? Is it correct to implement it as a separate driver
+> or should it be done as an option in the existing driver? I can not
+> really imagine how I would do that though..
+> 
+> There are also certain worries that the MPR121 chip may no longer be
+> available in nonspecifically distant future. In case of EOL I will need
+> to add a polled driver for an other touchkey chip. May it be already
+> in mainline or a completely new one.
 
-Commit
+I think that my addition of input_polled_dev was ultimately a wrong
+thing to do. I am looking into enabling polling mode for regular input
+devices as we then can enable polling mode in existing drivers.
 
-  5d32a77c6e2e ("arm64: dts: meson-g12a: Add PWM nodes")
+As far as gpio-keys vs gpio-key-polled, I feel that the capabilities of
+polling driver is sufficiently different from interrupt-driven one, so
+we will likely keep them separate.
 
-is missing a Signed-off-by from its committer.
+Thanks.
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/pvHOUmZAjcS7WnHy7=FWu5R
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzjjnEACgkQAVBC80lX
-0GwT9Af/avLEl+T3sdiLDURsN7zi55ubXrf7NuzdGrbHYrzqnaPCFAsYy/nhd1s5
-+5oYj50vt8Ku+KRUSusfE3aSghZGym5eh79WTW2klrcFKr30uRBWOa2FpRTLsYKP
-X2amzZgZertOyYXsc1iXu1X4o+z9otuPg4c/JXNmujTpAVqAPJSUe9zV4B0m8APB
-Cx3t4t97Cxi+OyKsAte2S5K7kJiJLmJ97/NIg8iumeUA9lAv38of/Sy27TwAy1el
-9Y2s286gicRgQt+6cgmZB8ot5w+C1h2JXCh3vqXQDKDAUVnqBv30ZwwVOXLKgsbL
-O7OuVgoL7CIoXhrjqqjvZ6EZTl/WbQ==
-=qxv+
------END PGP SIGNATURE-----
-
---Sig_/pvHOUmZAjcS7WnHy7=FWu5R--
+-- 
+Dmitry
