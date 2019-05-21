@@ -2,97 +2,82 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA38FC04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:11:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74E8EC04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:11:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C81652173C
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:11:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EFA02173C
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:11:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558444295;
+	bh=PswCI7qaEh7te+WzS2oP8fteQs8KoBFwCF8/BdVQ8Cw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=wbcoCi8+EuzTI7bEfpb0uCrV8mbof9LirqE5f2xcZabaYlIHMLPzQcvgDyEACKWqv
+	 j0UEo9x2c+B6UfidOxvmZAtWqr4EQTBbbed3gvg8Ld8xJbGIASiEs2brwHPYBGZw54
+	 uwl+muLDuuKkeXHCPYg6rceNIBYAzFh+VBBvWUJI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728245AbfEUNLa (ORCPT
+        id S1728267AbfEUNLe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 09:11:30 -0400
-Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:53126 "EHLO
-        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726900AbfEUNL3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 09:11:29 -0400
-Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-        by mx0b-001ae601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4LD52Bd011448;
-        Tue, 21 May 2019 08:11:06 -0500
-Authentication-Results: ppops.net;
-        spf=none smtp.mailfrom=ckeepax@opensource.cirrus.com
-Received: from mail4.cirrus.com ([87.246.98.35])
-        by mx0b-001ae601.pphosted.com with ESMTP id 2sjefmuv88-1;
-        Tue, 21 May 2019 08:11:05 -0500
-Received: from EDIEX02.ad.cirrus.com (ediex02.ad.cirrus.com [198.61.84.81])
-        by mail4.cirrus.com (Postfix) with ESMTP id 8AC20611C8AC;
-        Tue, 21 May 2019 08:12:10 -0500 (CDT)
-Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX02.ad.cirrus.com
- (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Tue, 21 May
- 2019 14:11:05 +0100
-Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
- Transport; Tue, 21 May 2019 14:11:04 +0100
-Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id E177845;
-        Tue, 21 May 2019 14:11:04 +0100 (BST)
-Date:   Tue, 21 May 2019 14:11:04 +0100
-From:   Charles Keepax <ckeepax@opensource.cirrus.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-CC:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        <wsa@the-dreams.de>, <linux-i2c@vger.kernel.org>,
-        <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <benjamin.tissoires@redhat.com>, <jbroadus@gmail.com>,
-        <patches@opensource.cirrus.com>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Subject: Re: [PATCH 3/5] i2c: core: Move ACPI IRQ handling to probe time
-Message-ID: <20190521131104.GB99937@ediswmail.ad.cirrus.com>
-References: <20190520084936.10590-1-ckeepax@opensource.cirrus.com>
- <20190520084936.10590-4-ckeepax@opensource.cirrus.com>
- <20190521112728.GX2781@lahna.fi.intel.com>
- <20190521125704.GF9224@smile.fi.intel.com>
+        Tue, 21 May 2019 09:11:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51456 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726900AbfEUNLd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 09:11:33 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA77620856;
+        Tue, 21 May 2019 13:11:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558444293;
+        bh=PswCI7qaEh7te+WzS2oP8fteQs8KoBFwCF8/BdVQ8Cw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=NzLJV1RaZC8MshHxDBTshU7//9I8vU3RdIHJuIP9aN8FzCHsfhNnYC26m/PHnsimt
+         jRXq4FBdoFgvF+3kA+jnUCFEpGpAEe2wQSUoSZSAJWStyO9Fi1xMPdWt8GGBF4OmAH
+         b7s+/Y2Lw6fQRDI+D7lsYUdTghpWTrC2pQRnrdiU=
+Date:   Tue, 21 May 2019 15:11:31 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Esben Haabendal <esben@geanix.com>
+Cc:     linux-serial@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        Enrico Weigelt <lkml@metux.net>, Jiri Slaby <jslaby@suse.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Darwin Dingel <darwin.dingel@alliedtelesis.co.nz>,
+        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        He Zhe <zhe.he@windriver.com>, Marek Vasut <marex@denx.de>,
+        Douglas Anderson <dianders@chromium.org>,
+        Paul Burton <paul.burton@mips.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH resend] serial: 8250: Add support for using
+ platform_device resources
+Message-ID: <20190521131131.GA19685@kroah.com>
+References: <20190430140416.4707-1-esben@geanix.com>
+ <20190521113426.16790-1-esben@geanix.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190521125704.GF9224@smile.fi.intel.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=856 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905210083
+In-Reply-To: <20190521113426.16790-1-esben@geanix.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 21, 2019 at 03:57:04PM +0300, Andy Shevchenko wrote:
-> On Tue, May 21, 2019 at 02:27:28PM +0300, Mika Westerberg wrote:
-> > On Mon, May 20, 2019 at 09:49:34AM +0100, Charles Keepax wrote:
-> > > Bring the ACPI path in sync with the device tree path and handle all the
-> > > IRQ fetching at probe time. This leaves the only IRQ handling at device
-> > > registration time being that which is passed directly through the board
-> > > info as either a resource or an actual IRQ number.
-> > 
-> > I don't see issues with this approach. Cc'd Jarkko and Andy just in case
-> > I missed something.
+On Tue, May 21, 2019 at 01:34:26PM +0200, Esben Haabendal wrote:
+> Allow getting memory resource (mapbase or iobase) as well as irq from
+> platform_device resources.
 > 
-> I failed to see the i2c_acpi_get_irq() in the current code.
-> What kernel version do you use?
-> Can we see the changes against vanilla / i2c-next?
-> 
+> The UPF_DEV_RESOURCES flag must be set for devices where platform_device
+> resources are to be used.  When not set, driver behaves as before.
 
-It's added by the first patch in the chain:
+Nothing actually sets this flag in this patch, so I can't take this as
+you are adding new features that no one uses :(
 
-https://lkml.org/lkml/2019/5/20/281
+Where is the driver that sets this?
 
-I could resend the series with you and Jarkko on CC if that would
-be better.
+thanks,
 
-Thanks,
-Charles
+greg k-h
