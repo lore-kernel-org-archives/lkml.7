@@ -2,106 +2,86 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1139C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 07:51:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAFADC04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 07:51:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDE3C216B7
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 07:51:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBCFE216B7
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 07:51:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726994AbfEUHu7 (ORCPT
+        id S1727100AbfEUHvP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 03:50:59 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:45598 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725790AbfEUHu7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 03:50:59 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 582B72841E1
-Subject: Re: [PATCH v4 3/3] platform/chrome: cros_ec_spi: Request the SPI
- thread be realtime
-To:     Douglas Anderson <dianders@chromium.org>,
-        Mark Brown <broonie@kernel.org>,
-        Benson Leung <bleung@chromium.org>
-Cc:     linux-rockchip@lists.infradead.org, drinkcat@chromium.org,
-        Guenter Roeck <groeck@chromium.org>, briannorris@chromium.org,
-        mka@chromium.org, linux-kernel@vger.kernel.org
-References: <20190515164814.258898-1-dianders@chromium.org>
- <20190515164814.258898-4-dianders@chromium.org>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <74a31886-fa49-cabf-aa11-25b402e80414@collabora.com>
-Date:   Tue, 21 May 2019 09:50:54 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 21 May 2019 03:51:15 -0400
+Received: from dcvr.yhbt.net ([64.71.152.64]:35804 "EHLO dcvr.yhbt.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725790AbfEUHvP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 03:51:15 -0400
+Received: from localhost (dcvr.yhbt.net [127.0.0.1])
+        by dcvr.yhbt.net (Postfix) with ESMTP id ABD7C1F462;
+        Tue, 21 May 2019 07:51:14 +0000 (UTC)
+Date:   Tue, 21 May 2019 07:51:14 +0000
+From:   Eric Wong <e@80x24.org>
+To:     Roman Penyaev <rpenyaev@suse.de>
+Cc:     Azat Khuzhin <azat@libevent.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 05/13] epoll: offload polling to a work in case of
+ epfd polled from userspace
+Message-ID: <20190521075114.if4urjezominbojj@dcvr>
+References: <20190516085810.31077-1-rpenyaev@suse.de>
+ <20190516085810.31077-6-rpenyaev@suse.de>
 MIME-Version: 1.0
-In-Reply-To: <20190515164814.258898-4-dianders@chromium.org>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20190516085810.31077-6-rpenyaev@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 15/5/19 18:48, Douglas Anderson wrote:
-> All currently known ECs in the wild are very sensitive to timing.
-> Specifically the ECs are known to drop a transfer if more than 8 ms
-> passes from the assertion of the chip select until the transfer
-> finishes.
-> 
-> Let's use the new feature introduced in the patch (spi: Allow SPI
-> devices to request the pumping thread be realtime") to request the SPI
-> pumping thread be realtime.  This means that if we get shunted off to
-> the SPI thread for whatever reason we won't get downgraded to low
-> priority.
-> 
-> NOTES:
-> - We still need to keep ourselves as high priority since the SPI core
->   doesn't guarantee that all transfers end up on the pumping thread
->   (in fact, it tries pretty hard to do them in the calling context).
-> - If future Chrome OS ECs ever fix themselves to be less sensitive
->   then we could consider adding a property (or compatible string) to
->   not set this property.  For now we need it across the board.
-> 
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> Reviewed-by: Guenter Roeck <groeck@chromium.org>
-
-For my own reference:
-
-Acked-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-
-Thanks,
- Enric
-
-> ---
-> 
-> Changes in v4: None
-> Changes in v3:
-> - Updated description and variable name since we no longer force.
-> 
-> Changes in v2:
-> - Renamed variable to "force_rt_transfers".
-> 
->  drivers/platform/chrome/cros_ec_spi.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/platform/chrome/cros_ec_spi.c b/drivers/platform/chrome/cros_ec_spi.c
-> index 1e38a885c539..daf3119191c8 100644
-> --- a/drivers/platform/chrome/cros_ec_spi.c
-> +++ b/drivers/platform/chrome/cros_ec_spi.c
-> @@ -740,6 +740,7 @@ static int cros_ec_spi_probe(struct spi_device *spi)
+Roman Penyaev <rpenyaev@suse.de> wrote:
+> diff --git a/fs/eventpoll.c b/fs/eventpoll.c
+> index 81da4571f1e0..9d3905c0afbf 100644
+> --- a/fs/eventpoll.c
+> +++ b/fs/eventpoll.c
+> @@ -44,6 +44,7 @@
+>  #include <linux/seq_file.h>
+>  #include <linux/compat.h>
+>  #include <linux/rculist.h>
+> +#include <linux/workqueue.h>
+>  #include <net/busy_poll.h>
 >  
->  	spi->bits_per_word = 8;
->  	spi->mode = SPI_MODE_0;
-> +	spi->rt = true;
->  	err = spi_setup(spi);
->  	if (err < 0)
->  		return err;
-> 
+>  /*
+> @@ -185,6 +186,9 @@ struct epitem {
+>  
+>  	/* The structure that describe the interested events and the source fd */
+>  	struct epoll_event event;
+> +
+> +	/* Work for offloading event callback */
+> +	struct work_struct work;
+>  };
+>  
+>  /*
+
+Can we avoid the size regression for existing epoll users?
+
+> @@ -2547,12 +2601,6 @@ static int __init eventpoll_init(void)
+>  	ep_nested_calls_init(&poll_safewake_ncalls);
+>  #endif
+>  
+> -	/*
+> -	 * We can have many thousands of epitems, so prevent this from
+> -	 * using an extra cache line on 64-bit (and smaller) CPUs
+> -	 */
+> -	BUILD_BUG_ON(sizeof(void *) <= 8 && sizeof(struct epitem) > 128);
+> -
+>  	/* Allocates slab cache used to allocate "struct epitem" items */
+>  	epi_cache = kmem_cache_create("eventpoll_epi", sizeof(struct epitem),
+>  			0, SLAB_HWCACHE_ALIGN|SLAB_PANIC|SLAB_ACCOUNT, NULL);
+
+Perhaps a "struct uepitem" transparent union and separate slab cache.
