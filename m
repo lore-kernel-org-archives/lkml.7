@@ -2,230 +2,99 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 156C7C04E87
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:00:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C821C04E87
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:00:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDC8C2173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:00:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 303552173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:00:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uP7vqaIw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728732AbfEUPAP (ORCPT
+        id S1728745AbfEUPAh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 11:00:15 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:34486 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727969AbfEUPAN (ORCPT
+        Tue, 21 May 2019 11:00:37 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:35816 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727969AbfEUPAh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 11:00:13 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hT6FK-0007FT-IR; Tue, 21 May 2019 15:00:06 +0000
-Date:   Tue, 21 May 2019 16:00:06 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Christian Brauner <christian@brauner.io>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-api@vger.kernel.org, jannh@google.com, fweimer@redhat.com,
-        oleg@redhat.com, tglx@linutronix.de, torvalds@linux-foundation.org,
-        arnd@arndb.de, shuah@kernel.org, dhowells@redhat.com,
-        tkjos@android.com, ldv@altlinux.org, miklos@szeredi.hu,
-        linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, linux-arch@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH 1/2] open: add close_range()
-Message-ID: <20190521150006.GJ17978@ZenIV.linux.org.uk>
-References: <20190521113448.20654-1-christian@brauner.io>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190521113448.20654-1-christian@brauner.io>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+        Tue, 21 May 2019 11:00:37 -0400
+Received: by mail-pl1-f195.google.com with SMTP id p1so3198475plo.2;
+        Tue, 21 May 2019 08:00:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=B164xY76PAaJHCklCGNK3/SigqrJDxrGxeTBSbiHos0=;
+        b=uP7vqaIw/npd7e9gEqOrinrFsec9BTKODKGoZw61tOTGtHv4J/zw6OoVoXR0SviAZV
+         +LZcJE/hbKYJEDNrozCL4FmpeB3jfQy4sMvHqtD/VBY0isLxcZutvrJciXzHq2B7NtSX
+         3CL7Q7mhAvwk60CRUIyminErcMpt3cLicPyVhcmNvL8VwXbfVloRGGGDrO5Dp9dKPtqC
+         WcPVWVpQssCutPdW/q0Niz+F30qJ37fCwwG8Mh078qzf5RsqBm/HMzytuxuO51eqim1l
+         2BbOXujOAUngh7QWZ7znHGq5ubIJQMYn4qE+B8Ar3YCHAM1GlFQvl6lemCCUr3gdabKH
+         e1MQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=B164xY76PAaJHCklCGNK3/SigqrJDxrGxeTBSbiHos0=;
+        b=jlHqNkMGrC+wQK7nskgtHlOvGbU24Re4/kqS61he3AB/wKlrWHgYHZaa9BAGU0DYd3
+         7A51MAHl9VincCOily8CBB9I6xdphXL3gcXFFBn/Q44z6uWR6kj6452SAXETHPSkXVRA
+         gQfN/cVd4rOtFHVE8m9HlbSTJTJLOEGaH0qe6FYAPSuy2NNJZyLBkGiTSNxjmxEt+4PW
+         /G1SHt28QwCDbALOs5REvEdJZhjySM6MTY8CLosQ6ThOfv52lxUr0HOc5aNlKcmcRPUR
+         MaczXmP8cL8iYAdoacxSbop0QQUlsO/a+efNFqObLOAUhyPnArjp4Dl5sq8KF90YFbkp
+         4cqA==
+X-Gm-Message-State: APjAAAUR3caEVKMcHlPe8iq3NTYXWrFIPjzT8sXII9mVo6Uh542blIAp
+        MN85qfDotZheOHcF7YfHyb3PP7yU
+X-Google-Smtp-Source: APXvYqzZAZ+CyXG++ETYiVutSDrWxMIRF6XbmMWbrbKrMC0t8jGXSbHoO7Vuuee7o49qROXqWKttfw==
+X-Received: by 2002:a17:902:294a:: with SMTP id g68mr58170042plb.169.1558450836681;
+        Tue, 21 May 2019 08:00:36 -0700 (PDT)
+Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
+        by smtp.gmail.com with ESMTPSA id v2sm19953381pgr.2.2019.05.21.08.00.35
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 21 May 2019 08:00:36 -0700 (PDT)
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+To:     robdclark@gmail.com, sean@poorly.run, airlied@linux.ie,
+        daniel@ffwll.ch
+Cc:     linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Subject: [PATCH RESEND] drm/msm/mdp5: Fix mdp5_cfg_init error return
+Date:   Tue, 21 May 2019 08:00:30 -0700
+Message-Id: <20190521150030.13609-1-jeffrey.l.hugo@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 21, 2019 at 01:34:47PM +0200, Christian Brauner wrote:
+If mdp5_cfg_init fails because of an unknown major version, a null pointer
+dereference occurs.  This is because the caller of init expects error
+pointers, but init returns NULL on error.  Fix this by returning the
+expected values on error.
 
-> This adds the close_range() syscall. It allows to efficiently close a range
-> of file descriptors up to all file descriptors of a calling task.
-> 
-> The syscall came up in a recent discussion around the new mount API and
-> making new file descriptor types cloexec by default. During this
-> discussion, Al suggested the close_range() syscall (cf. [1]). Note, a
-> syscall in this manner has been requested by various people over time.
-> 
-> First, it helps to close all file descriptors of an exec()ing task. This
-> can be done safely via (quoting Al's example from [1] verbatim):
-> 
->         /* that exec is sensitive */
->         unshare(CLONE_FILES);
->         /* we don't want anything past stderr here */
->         close_range(3, ~0U);
->         execve(....);
-> 
-> The code snippet above is one way of working around the problem that file
-> descriptors are not cloexec by default. This is aggravated by the fact that
-> we can't just switch them over without massively regressing userspace. For
-> a whole class of programs having an in-kernel method of closing all file
-> descriptors is very helpful (e.g. demons, service managers, programming
-> language standard libraries, container managers etc.).
-> (Please note, unshare(CLONE_FILES) should only be needed if the calling
->  task is multi-threaded and shares the file descriptor table with another
->  thread in which case two threads could race with one thread allocating
->  file descriptors and the other one closing them via close_range(). For the
->  general case close_range() before the execve() is sufficient.)
-> 
-> Second, it allows userspace to avoid implementing closing all file
-> descriptors by parsing through /proc/<pid>/fd/* and calling close() on each
-> file descriptor. From looking at various large(ish) userspace code bases
-> this or similar patterns are very common in:
-> - service managers (cf. [4])
-> - libcs (cf. [6])
-> - container runtimes (cf. [5])
-> - programming language runtimes/standard libraries
->   - Python (cf. [2])
->   - Rust (cf. [7], [8])
-> As Dmitry pointed out there's even a long-standing glibc bug about missing
-> kernel support for this task (cf. [3]).
-> In addition, the syscall will also work for tasks that do not have procfs
-> mounted and on kernels that do not have procfs support compiled in. In such
-> situations the only way to make sure that all file descriptors are closed
-> is to call close() on each file descriptor up to UINT_MAX or RLIMIT_NOFILE,
-> OPEN_MAX trickery (cf. comment [8] on Rust).
-> 
-> The performance is striking. For good measure, comparing the following
-> simple close_all_fds() userspace implementation that is essentially just
-> glibc's version in [6]:
-> 
-> static int close_all_fds(void)
-> {
->         DIR *dir;
->         struct dirent *direntp;
-> 
->         dir = opendir("/proc/self/fd");
->         if (!dir)
->                 return -1;
-> 
->         while ((direntp = readdir(dir))) {
->                 int fd;
->                 if (strcmp(direntp->d_name, ".") == 0)
->                         continue;
->                 if (strcmp(direntp->d_name, "..") == 0)
->                         continue;
->                 fd = atoi(direntp->d_name);
->                 if (fd == 0 || fd == 1 || fd == 2)
->                         continue;
->                 close(fd);
->         }
-> 
->         closedir(dir); /* cannot fail */
->         return 0;
-> }
-> 
-> to close_range() yields:
-> 1. closing 4 open files:
->    - close_all_fds(): ~280 us
->    - close_range():    ~24 us
-> 
-> 2. closing 1000 open files:
->    - close_all_fds(): ~5000 us
->    - close_range():   ~800 us
-> 
-> close_range() is designed to allow for some flexibility. Specifically, it
-> does not simply always close all open file descriptors of a task. Instead,
-> callers can specify an upper bound.
-> This is e.g. useful for scenarios where specific file descriptors are
-> created with well-known numbers that are supposed to be excluded from
-> getting closed.
-> For extra paranoia close_range() comes with a flags argument. This can e.g.
-> be used to implement extension. Once can imagine userspace wanting to stop
-> at the first error instead of ignoring errors under certain circumstances.
-> There might be other valid ideas in the future. In any case, a flag
-> argument doesn't hurt and keeps us on the safe side.
-> 
-> >From an implementation side this is kept rather dumb. It saw some input
-> from David and Jann but all nonsense is obviously my own!
-> - Errors to close file descriptors are currently ignored. (Could be changed
->   by setting a flag in the future if needed.)
-> - __close_range() is a rather simplistic wrapper around __close_fd().
->   My reasoning behind this is based on the nature of how __close_fd() needs
->   to release an fd. But maybe I misunderstood specifics:
->   We take the files_lock and rcu-dereference the fdtable of the calling
->   task, we find the entry in the fdtable, get the file and need to release
->   files_lock before calling filp_close().
->   In the meantime the fdtable might have been altered so we can't just
->   retake the spinlock and keep the old rcu-reference of the fdtable
->   around. Instead we need to grab a fresh reference to the fdtable.
->   If my reasoning is correct then there's really no point in fancyfying
->   __close_range(): We just need to rcu-dereference the fdtable of the
->   calling task once to cap the max_fd value correctly and then go on
->   calling __close_fd() in a loop.
+Fixes: 2e362e1772b8 (drm/msm/mdp5: introduce mdp5_cfg module)
+Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
+ drivers/gpu/drm/msm/disp/mdp5/mdp5_cfg.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> +/**
-> + * __close_range() - Close all file descriptors in a given range.
-> + *
-> + * @fd:     starting file descriptor to close
-> + * @max_fd: last file descriptor to close
-> + *
-> + * This closes a range of file descriptors. All file descriptors
-> + * from @fd up to and including @max_fd are closed.
-> + */
-> +int __close_range(struct files_struct *files, unsigned fd, unsigned max_fd)
-> +{
-> +	unsigned int cur_max;
-> +
-> +	if (fd > max_fd)
-> +		return -EINVAL;
-> +
-> +	rcu_read_lock();
-> +	cur_max = files_fdtable(files)->max_fds;
-> +	rcu_read_unlock();
-> +
-> +	/* cap to last valid index into fdtable */
-> +	if (max_fd >= cur_max)
-> +		max_fd = cur_max - 1;
-> +
-> +	while (fd <= max_fd)
-> +		__close_fd(files, fd++);
-> +
-> +	return 0;
-> +}
-
-Umm...  That's going to be very painful if you dup2() something to MAX_INT and
-then run that; roughly 2G iterations of bouncing ->file_lock up and down,
-without anything that would yield CPU in process.
-
-If anything, I would suggest something like
-
-	fd = *start_fd;
-	grab the lock
-        fdt = files_fdtable(files);
-more:
-	look for the next eviction candidate in ->open_fds, starting at fd
-	if there's none up to max_fd
-		drop the lock
-		return NULL
-	*start_fd = fd + 1;
-	if the fscker is really opened and not just reserved
-		rcu_assign_pointer(fdt->fd[fd], NULL);
-		__put_unused_fd(files, fd);
-		drop the lock
-		return the file we'd got
-	if (unlikely(need_resched()))
-		drop lock
-		cond_resched();
-		grab lock
-		fdt = files_fdtable(files);
-	goto more;
-
-with the main loop being basically
-	while ((file = pick_next(files, &start_fd, max_fd)) != NULL)
-		filp_close(file, files);
-
+diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_cfg.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_cfg.c
+index ea8f7d7daf7f..52e23780fce1 100644
+--- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_cfg.c
++++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_cfg.c
+@@ -721,7 +721,7 @@ struct mdp5_cfg_handler *mdp5_cfg_init(struct mdp5_kms *mdp5_kms,
+ 	if (cfg_handler)
+ 		mdp5_cfg_destroy(cfg_handler);
+ 
+-	return NULL;
++	return ERR_PTR(ret);
+ }
+ 
+ static struct mdp5_cfg_platform *mdp5_get_config(struct platform_device *dev)
+-- 
+2.17.1
 
