@@ -2,147 +2,307 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA21AC04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 05:28:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5796AC04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 05:30:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 818A721743
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 05:28:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2609421743
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 05:30:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727257AbfEUF2w (ORCPT
+        id S1727615AbfEUFam (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 01:28:52 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:52366 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725794AbfEUF2w (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 01:28:52 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4L5MNhH155791
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 01:28:50 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2sm6px0fag-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 01:28:50 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <sbobroff@linux.ibm.com>;
-        Tue, 21 May 2019 06:28:48 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 21 May 2019 06:28:45 +0100
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4L5SiV059572378
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 21 May 2019 05:28:44 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DA05AAE05D;
-        Tue, 21 May 2019 05:28:41 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 88D5EAE078;
-        Tue, 21 May 2019 05:28:41 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 21 May 2019 05:28:41 +0000 (GMT)
-Received: from tungsten.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 49FC8A01D2;
-        Tue, 21 May 2019 15:28:39 +1000 (AEST)
-From:   Sam Bobroff <sbobroff@linux.ibm.com>
-To:     kraxel@redhat.com, airlied@linux.ie, daniel@ffwll.ch,
-        virtualization@lists.linux-foundation.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/1] drm/bochs: Fix connector leak during driver unload
-Date:   Tue, 21 May 2019 15:28:39 +1000
-X-Mailer: git-send-email 2.19.0.2.gcad72f5712
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19052105-0016-0000-0000-0000027DD57A
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19052105-0017-0000-0000-000032DABD87
-Message-Id: <93b363ad62f4938d9ddf3e05b2a61e3f66b2dcd3.1558416473.git.sbobroff@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-20_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905210035
+        Tue, 21 May 2019 01:30:42 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46596 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725794AbfEUFal (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 01:30:41 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id CA4A1AD7B;
+        Tue, 21 May 2019 05:30:38 +0000 (UTC)
+Date:   Tue, 21 May 2019 07:30:38 +0200
+Message-ID: <s5hk1ek74sh.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/5] firmware: Add support for loading compressed files
+In-Reply-To: <s5htvdpe9fs.wl-tiwai@suse.de>
+References: <20190520092647.8622-1-tiwai@suse.de>
+        <20190520093929.GB15326@kroah.com>
+        <s5htvdpe9fs.wl-tiwai@suse.de>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When unloading the bochs-drm driver, a warning message is printed by
-drm_mode_config_cleanup() because a reference is still held to one of
-the drm_connector structs.
+On Mon, 20 May 2019 11:56:07 +0200,
+Takashi Iwai wrote:
+> 
+> On Mon, 20 May 2019 11:39:29 +0200,
+> Greg Kroah-Hartman wrote:
+> > 
+> > On Mon, May 20, 2019 at 11:26:42AM +0200, Takashi Iwai wrote:
+> > > Hi,
+> > > 
+> > > this is a patch set to add the support for loading compressed firmware
+> > > files.
+> > > 
+> > > The primary motivation is to reduce the storage size; e.g. currently
+> > > the amount of /lib/firmware on my machine counts up to 419MB, and this
+> > > can be reduced to 130MB file compression.  No bad deal.
+> > > 
+> > > The feature adds only fallback to the compressed file, so it should
+> > > work as it was as long as the normal firmware file is present.  The
+> > > f/w loader decompresses the content, so that there is no change needed
+> > > in the caller side.
+> > > 
+> > > Currently only XZ format is supported.  A caveat is that the kernel XZ
+> > > helper code supports only CRC32 (or none) integrity check type, so
+> > > you'll have to compress the files via xz -C crc32 option.
+> > > 
+> > > The patch set begins with a few other improvements and refactoring,
+> > > followed by the compression support.
+> > > 
+> > > In addition to this, dracut needs a small fix to deal with the *.xz
+> > > files.
+> > > 
+> > > Also, the latest patchset is found in topic/fw-decompress branch of my
+> > > sound.git tree:
+> > >   git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git
+> > 
+> > After a quick review, these all look good to me, nice job.
+> > 
+> > One recommendation, can we add support for testing this to the
+> > tools/testing/selftests/firmware/ tests?  And you did run those
+> > regression tests to verify that you didn't get any of the config options
+> > messed up, right? :)
+> 
+> Oh, do you believe I'm a so modern person who lets computer working on
+> everything? ;)  I only tested manually, so far, this will be my
+> homework today.
 
-Correct this by calling drm_atomic_helper_shutdown() in
-bochs_pci_remove().
+After fixing the regression in kselftest, I could verify and confirm
+that no regression was introduced by my patchset.
 
-The issue is caused by the interaction of two previous commits. Both
-together are required to cause it:
-Fixes: 846c7dfc1193 ("drm/atomic: Try to preserve the crtc enabled state in drm_atomic_remove_fb, v2.")
-Fixes: 6579c39594ae ("drm/bochs: atomic: switch planes to atomic, wire up helpers.")
+Also, below is the patch to add tests for the compressed firmware
+load.  I'll add to the series at the next respin, if needed.
 
-Signed-off-by: Sam Bobroff <sbobroff@linux.ibm.com>
+
+thanks,
+
+Takashi
+
+-- 8< --
+From: Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH] selftests: firmware: Add compressed firmware tests
+
+This patch adds the test cases for checking compressed firmware load.
+Two more cases are added to fw_filesystem.sh:
+- Both a plain file and an xz file are present, and load the former
+- Only an xz file is present, and load without '.xz' suffix
+
+The tests are enabled only when CONFIG_FW_LOADER_COMPRESS is enabled
+and xz program is installed.
+
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 ---
-Hello,
+ tools/testing/selftests/firmware/fw_filesystem.sh | 73 +++++++++++++++++++----
+ tools/testing/selftests/firmware/fw_lib.sh        |  7 +++
+ tools/testing/selftests/firmware/fw_run_tests.sh  |  1 +
+ 3 files changed, 71 insertions(+), 10 deletions(-)
 
-This seems to be similar to an issue I recently fixed for the AST driver:
-1e613f3c630c ("drm/ast: Fix connector leak during driver unload")
-Which is similar to at least one other recent fix:
-192b4af6cd28 ("drm/tegra: Shutdown on driver unbind")
-
-The fix seems to be the same, but this time I've tried to dig a little deeper
-and use an appropriate Fixes tag to assist backporting.
-
-Bisecting the issue for commits to drivers/gpu/drm/bochs/ points to:
-6579c39594ae ("drm/bochs: atomic: switch planes to atomic, wire up helpers.")
-... but the issue also seems to be due to a change in the generic drm code
-(reverting it separately fixes the issue):
-846c7dfc1193 ("drm/atomic: Try to preserve the crtc enabled state in drm_atomic_remove_fb, v2.")
-... so I've included both in the commit.  Is that the right thing to do?
-
-I couldn't help wondering if we should also update the comment for
-drm_fbdev_generic_setup(), because it says:
-"The fbdev is destroyed by drm_dev_unregister()"
-... which implies to me that cleanup only requires that call, but actually
-since 846c7dfc1193 you will always(?) need to use drm_atomic_helper_shutdown()
-as well. (Is it actually always the case?)
-
-Cheers,
-Sam.
-
- drivers/gpu/drm/bochs/bochs_drv.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/gpu/drm/bochs/bochs_drv.c b/drivers/gpu/drm/bochs/bochs_drv.c
-index 6b6e037258c3..7031f0168795 100644
---- a/drivers/gpu/drm/bochs/bochs_drv.c
-+++ b/drivers/gpu/drm/bochs/bochs_drv.c
-@@ -10,6 +10,7 @@
- #include <linux/slab.h>
- #include <drm/drm_fb_helper.h>
- #include <drm/drm_probe_helper.h>
-+#include <drm/drm_atomic_helper.h>
+diff --git a/tools/testing/selftests/firmware/fw_filesystem.sh b/tools/testing/selftests/firmware/fw_filesystem.sh
+index a4320c4b44dc..f901076aa2ea 100755
+--- a/tools/testing/selftests/firmware/fw_filesystem.sh
++++ b/tools/testing/selftests/firmware/fw_filesystem.sh
+@@ -153,13 +153,18 @@ config_set_read_fw_idx()
  
- #include "bochs.h"
- 
-@@ -174,6 +175,7 @@ static void bochs_pci_remove(struct pci_dev *pdev)
+ read_firmwares()
  {
- 	struct drm_device *dev = pci_get_drvdata(pdev);
++	if [ "$1" = "xzonly" ]; then
++		fwfile="${FW}-orig"
++	else
++		fwfile="$FW"
++	fi
+ 	for i in $(seq 0 3); do
+ 		config_set_read_fw_idx $i
+ 		# Verify the contents are what we expect.
+ 		# -Z required for now -- check for yourself, md5sum
+ 		# on $FW and DIR/read_firmware will yield the same. Even
+ 		# cmp agrees, so something is off.
+-		if ! diff -q -Z "$FW" $DIR/read_firmware 2>/dev/null ; then
++		if ! diff -q -Z "$fwfile" $DIR/read_firmware 2>/dev/null ; then
+ 			echo "request #$i: firmware was not loaded" >&2
+ 			exit 1
+ 		fi
+@@ -246,17 +251,17 @@ test_request_firmware_nowait_custom_nofile()
  
-+	drm_atomic_helper_shutdown(dev);
- 	drm_dev_unregister(dev);
- 	bochs_unload(dev);
- 	drm_dev_put(dev);
+ test_batched_request_firmware()
+ {
+-	echo -n "Batched request_firmware() try #$1: "
++	echo -n "Batched request_firmware() $2 try #$1: "
+ 	config_reset
+ 	config_trigger_sync
+-	read_firmwares
++	read_firmwares $2
+ 	release_all_firmware
+ 	echo "OK"
+ }
+ 
+ test_batched_request_firmware_direct()
+ {
+-	echo -n "Batched request_firmware_direct() try #$1: "
++	echo -n "Batched request_firmware_direct() $2 try #$1: "
+ 	config_reset
+ 	config_set_sync_direct
+ 	config_trigger_sync
+@@ -266,7 +271,7 @@ test_batched_request_firmware_direct()
+ 
+ test_request_firmware_nowait_uevent()
+ {
+-	echo -n "Batched request_firmware_nowait(uevent=true) try #$1: "
++	echo -n "Batched request_firmware_nowait(uevent=true) $2 try #$1: "
+ 	config_reset
+ 	config_trigger_async
+ 	release_all_firmware
+@@ -275,11 +280,16 @@ test_request_firmware_nowait_uevent()
+ 
+ test_request_firmware_nowait_custom()
+ {
+-	echo -n "Batched request_firmware_nowait(uevent=false) try #$1: "
++	echo -n "Batched request_firmware_nowait(uevent=false) $2 try #$1: "
+ 	config_reset
+ 	config_unset_uevent
+ 	RANDOM_FILE_PATH=$(setup_random_file)
+ 	RANDOM_FILE="$(basename $RANDOM_FILE_PATH)"
++	if [ "$2" = "both" ]; then
++		xz -9 -C crc32 -k $RANDOM_FILE_PATH
++	elif [ "$2" = "xzonly" ]; then
++		xz -9 -C crc32 $RANDOM_FILE_PATH
++	fi
+ 	config_set_name $RANDOM_FILE
+ 	config_trigger_async
+ 	release_all_firmware
+@@ -294,19 +304,19 @@ test_config_present
+ echo
+ echo "Testing with the file present..."
+ for i in $(seq 1 5); do
+-	test_batched_request_firmware $i
++	test_batched_request_firmware $i normal
+ done
+ 
+ for i in $(seq 1 5); do
+-	test_batched_request_firmware_direct $i
++	test_batched_request_firmware_direct $i normal
+ done
+ 
+ for i in $(seq 1 5); do
+-	test_request_firmware_nowait_uevent $i
++	test_request_firmware_nowait_uevent $i normal
+ done
+ 
+ for i in $(seq 1 5); do
+-	test_request_firmware_nowait_custom $i
++	test_request_firmware_nowait_custom $i normal
+ done
+ 
+ # Test for file not found, errors are expected, the failure would be
+@@ -329,4 +339,47 @@ for i in $(seq 1 5); do
+ 	test_request_firmware_nowait_custom_nofile $i
+ done
+ 
++test "$HAS_FW_LOADER_COMPRESS" != "yes" && exit 0
++
++# test with both files present
++xz -9 -C crc32 -k $FW
++config_set_name $NAME
++echo
++echo "Testing with both plain and xz files present..."
++for i in $(seq 1 5); do
++	test_batched_request_firmware $i both
++done
++
++for i in $(seq 1 5); do
++	test_batched_request_firmware_direct $i both
++done
++
++for i in $(seq 1 5); do
++	test_request_firmware_nowait_uevent $i both
++done
++
++for i in $(seq 1 5); do
++	test_request_firmware_nowait_custom $i both
++done
++
++# test with only xz file present
++mv "$FW" "${FW}-orig"
++echo
++echo "Testing with only xz file present..."
++for i in $(seq 1 5); do
++	test_batched_request_firmware $i xzonly
++done
++
++for i in $(seq 1 5); do
++	test_batched_request_firmware_direct $i xzonly
++done
++
++for i in $(seq 1 5); do
++	test_request_firmware_nowait_uevent $i xzonly
++done
++
++for i in $(seq 1 5); do
++	test_request_firmware_nowait_custom $i xzonly
++done
++
+ exit 0
+diff --git a/tools/testing/selftests/firmware/fw_lib.sh b/tools/testing/selftests/firmware/fw_lib.sh
+index 1cbb12e284a6..f236cc295450 100755
+--- a/tools/testing/selftests/firmware/fw_lib.sh
++++ b/tools/testing/selftests/firmware/fw_lib.sh
+@@ -50,6 +50,7 @@ check_setup()
+ {
+ 	HAS_FW_LOADER_USER_HELPER="$(kconfig_has CONFIG_FW_LOADER_USER_HELPER=y)"
+ 	HAS_FW_LOADER_USER_HELPER_FALLBACK="$(kconfig_has CONFIG_FW_LOADER_USER_HELPER_FALLBACK=y)"
++	HAS_FW_LOADER_COMPRESS="$(kconfig_has CONFIG_FW_LOADER_COMPRESS=y)"
+ 	PROC_FW_IGNORE_SYSFS_FALLBACK="0"
+ 	PROC_FW_FORCE_SYSFS_FALLBACK="0"
+ 
+@@ -84,6 +85,12 @@ check_setup()
+ 	fi
+ 
+ 	OLD_FWPATH="$(cat /sys/module/firmware_class/parameters/path)"
++
++	if [ "$HAS_FW_LOADER_COMPRESS" = "yes" ]; then
++		if ! which xz 2> /dev/null > /dev/null; then
++			HAS_FW_LOADER_COMPRESS=""
++		fi
++	fi
+ }
+ 
+ verify_reqs()
+diff --git a/tools/testing/selftests/firmware/fw_run_tests.sh b/tools/testing/selftests/firmware/fw_run_tests.sh
+index cffdd4eb0a57..8e14d555c197 100755
+--- a/tools/testing/selftests/firmware/fw_run_tests.sh
++++ b/tools/testing/selftests/firmware/fw_run_tests.sh
+@@ -11,6 +11,7 @@ source $TEST_DIR/fw_lib.sh
+ 
+ export HAS_FW_LOADER_USER_HELPER=""
+ export HAS_FW_LOADER_USER_HELPER_FALLBACK=""
++export HAS_FW_LOADER_COMPRESS=""
+ 
+ run_tests()
+ {
 -- 
-2.19.0.2.gcad72f5712
+2.16.4
 
