@@ -2,93 +2,89 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EEAFC18E7C
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 20:49:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7837CC072B5
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 20:49:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30123217D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 20:49:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40C19217D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 20:49:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Hp7I1RCW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727974AbfEUUtE (ORCPT
+        id S1728052AbfEUUta (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 16:49:04 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:4837 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727218AbfEUUtD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 16:49:03 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 3A2BBC002965;
-        Tue, 21 May 2019 20:48:55 +0000 (UTC)
-Received: from llong.com (dhcp-17-85.bos.redhat.com [10.18.17.85])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8D45D5C69A;
-        Tue, 21 May 2019 20:48:51 +0000 (UTC)
-From:   Waiman Long <longman@redhat.com>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>
-Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Waiman Long <longman@redhat.com>
-Subject: [PATCH] rcu: Force inlining of rcu_read_lock()
-Date:   Tue, 21 May 2019 16:48:43 -0400
-Message-Id: <20190521204843.11060-1-longman@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Tue, 21 May 2019 20:49:03 +0000 (UTC)
+        Tue, 21 May 2019 16:49:30 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:52876 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727136AbfEUUta (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 16:49:30 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4LKmrSI015459;
+        Tue, 21 May 2019 20:48:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=phgqE6fdqs3ROYc+sPKMzsrsofgmUur4zWbpaCoGN6U=;
+ b=Hp7I1RCWSh6e5DirEehZ3K29lkyiTEC3HaCHZSIEYBjjGsuo2zvkAqkr8ykF7Lrs1Bu0
+ bdXrMEfQoxUWOJ+5TZzD4e/XqmomK3uugNM96vuTxSSAkPqwNrNu1PrEvb4rTU+e3vim
+ hCpx/9zOMU28ADQIkPoKES9J+iROIzndPpt8totgiJ0HQzsidmqZcciv7N/r0dLPJUEA
+ yEGZNv+fACQY5Fd8P5rcrMPk1jplEdm2hURWAdYP3VAfUor6V7lJV5OS3pirb4JrfC88
+ t4BiNgJ5CE5hauNBsZYFvFV+/MAgDUgJQoYpSTpulybBR6ne+djGAGSV/cWlwxXsWKmJ gw== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 2sjapqfx6g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 21 May 2019 20:48:53 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4LKmHAb171225;
+        Tue, 21 May 2019 20:48:52 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by aserp3020.oracle.com with ESMTP id 2sm0476npf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 21 May 2019 20:48:52 +0000
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x4LKmqLn172245;
+        Tue, 21 May 2019 20:48:52 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 2sm0476npb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 21 May 2019 20:48:52 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x4LKmoWX030095;
+        Tue, 21 May 2019 20:48:50 GMT
+Received: from localhost (/10.159.211.99)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 21 May 2019 20:48:50 +0000
+Date:   Tue, 21 May 2019 16:48:48 -0400
+From:   Kris Van Hees <kris.van.hees@oracle.com>
+To:     dtrace-devel@oss.oracle.com
+Cc:     netdev@vger.kernel.org, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org, daniel@iogearbox.net,
+        acme@kernel.org, mhiramat@kernel.org, rostedt@goodmis.org,
+        ast@kernel.org
+Subject: Re: [RFC PATCH 00/11] bpf, trace, dtrace: DTrace BPF program type
+ implementation and sample use
+Message-ID: <20190521204848.GJ2422@oracle.com>
+References: <201905202347.x4KNl0cs030532@aserv0121.oracle.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <201905202347.x4KNl0cs030532@aserv0121.oracle.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9264 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=503 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905210130
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is found that when debugging options are turned on, the
-rcu_read_lock() function may not be inlined at all. That will make
-it harder to debug RCU related problem as the print_lock() function
-in lockdep will print "rcu_read_lock()" instead of the caller of
-rcu_read_lock() function. For example,
-
-[   10.579995] =============================
-[   10.584033] WARNING: suspicious RCU usage
-[   10.588074] 4.18.0.memcg_v2+ #1 Not tainted
-[   10.593162] -----------------------------
-[   10.597203] include/linux/rcupdate.h:281 Illegal context switch in
-RCU read-side critical section!
-[   10.606220]
-[   10.606220] other info that might help us debug this:
-[   10.606220]
-[   10.614280]
-[   10.614280] rcu_scheduler_active = 2, debug_locks = 1
-[   10.620853] 3 locks held by systemd/1:
-[   10.624632]  #0: (____ptrval____) (&type->i_mutex_dir_key#5){.+.+}, at: lookup_slow+0x42/0x70
-[   10.633232]  #1: (____ptrval____) (rcu_read_lock){....}, at: rcu_read_lock+0x0/0x70
-[   10.640954]  #2: (____ptrval____) (rcu_read_lock){....}, at: rcu_read_lock+0x0/0x70
-
-To make sure that the proper caller of rcu_read_lock() is shown, we
-have to force the inlining of the rcu_read_lock() function.
-
-Signed-off-by: Waiman Long <longman@redhat.com>
----
- include/linux/rcupdate.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
-index 922bb6848813..44f80aced02b 100644
---- a/include/linux/rcupdate.h
-+++ b/include/linux/rcupdate.h
-@@ -588,7 +588,7 @@ static inline void rcu_preempt_sleep_check(void) { }
-  * read-side critical sections may be preempted and they may also block, but
-  * only when acquiring spinlocks that are subject to priority inheritance.
-  */
--static inline void rcu_read_lock(void)
-+static __always_inline void rcu_read_lock(void)
- {
- 	__rcu_read_lock();
- 	__acquire(RCU);
--- 
-2.18.1
-
+As suggested, I resent the patch set as replies to the cover letter post
+to support threaded access to the patches.
