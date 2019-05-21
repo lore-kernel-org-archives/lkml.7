@@ -2,178 +2,114 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7735C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:47:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E2CEC04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:51:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A366A21019
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:47:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="gbBFvw9P"
+	by mail.kernel.org (Postfix) with ESMTP id 27E44208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:51:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729024AbfEUPr1 (ORCPT
+        id S1728485AbfEUPvl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 11:47:27 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:35802 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728212AbfEUPr1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 11:47:27 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4LFkWKv028109;
-        Tue, 21 May 2019 17:46:46 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=/FwJ1TQFru+32XoeDMyEaHFno8vBWsvjxdibmbx8Z44=;
- b=gbBFvw9PfoW4Jz1Z5DI5evS/YoZjHP52RrV3HaNP/qCmI+pE+lF5J1aHrDRpoiRo8ugv
- eueMNl8Oed88Ojs9BomX52FAr+86xmAVlTb9LN5sy2P9u4FK5YumzMcNjrr7SufkZR2e
- s2G6lVfq6UDuTD0jexrlTomUSgiG7BYulNcqB8pStV9yxmtnsQCovd8Z7d2gdfE/KgsU
- eakofKIn0tJPCHqWS23ZnEOHpj+aJmX0aJNXEkobP+WRF5gl+WuhgS06y2i44abJAAq9
- sRnfNEMpyLqUOp/PiFW5kJlJB9el1v4bkkep7gvNuXihyWVl6NKXkdnokN0IN0vEncKF kA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2sj7h0tkyr-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Tue, 21 May 2019 17:46:46 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 522913A;
-        Tue, 21 May 2019 15:46:45 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas24.st.com [10.75.90.94])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 35CBE2CED;
-        Tue, 21 May 2019 15:46:45 +0000 (GMT)
-Received: from SAFEX1HUBCAS23.st.com (10.75.90.46) by Safex1hubcas24.st.com
- (10.75.90.94) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 21 May
- 2019 17:46:45 +0200
-Received: from localhost (10.201.23.31) by webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 21 May 2019 17:46:43
- +0200
-From:   Erwan Le Ray <erwan.leray@st.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        "Alexandre Torgue" <alexandre.torgue@st.com>
-CC:     <linux-serial@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        "Erwan Le Ray" <erwan.leray@st.com>,
-        Fabrice Gasnier <fabrice.gasnier@st.com>,
-        "Fabien Dessenne" <fabien.dessenne@st.com>
-Subject: [PATCH 7/7] serial: stm32: fix the get_irq error case
-Date:   Tue, 21 May 2019 17:45:47 +0200
-Message-ID: <1558453547-22866-8-git-send-email-erwan.leray@st.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1558453547-22866-1-git-send-email-erwan.leray@st.com>
-References: <1558453547-22866-1-git-send-email-erwan.leray@st.com>
+        Tue, 21 May 2019 11:51:41 -0400
+Received: from mga02.intel.com ([134.134.136.20]:55893 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727941AbfEUPvl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 11:51:41 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 May 2019 08:51:40 -0700
+X-ExtLoop1: 1
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
+  by orsmga005.jf.intel.com with ESMTP; 21 May 2019 08:51:40 -0700
+Date:   Tue, 21 May 2019 08:51:40 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
+        Jethro Beekman <jethro@fortanix.com>,
+        "Xing, Cedric" <cedric.xing@intel.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Dr. Greg" <greg@enjellic.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>
+Subject: Re: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
+Message-ID: <20190521155140.GE22089@linux.intel.com>
+References: <20190514104323.GA7591@linux.intel.com>
+ <CALCETrVbgTCnPo=PAq0-KoaRwt--urrPzn==quAJ8wodCpkBkw@mail.gmail.com>
+ <20190514204527.GC1977@linux.intel.com>
+ <CALCETrX6aL367mMJh5+Y1Seznfu-AvhPV6P7GkWF4Dhu0GV8cw@mail.gmail.com>
+ <20190515013031.GF1977@linux.intel.com>
+ <CALCETrXf8mSK45h7sTK5Wf+pXLVn=Bjsc_RLpgO-h-qdzBRo5Q@mail.gmail.com>
+ <20190517000331.GD11204@linux.intel.com>
+ <CALCETrWxw7xALE0kmiYBzomaSMAeXEVq-7rX7xeqPtDPeDQiCA@mail.gmail.com>
+ <20190520114105.GD27805@linux.intel.com>
+ <20190521151836.GA4843@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.201.23.31]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-21_03:,,
- signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190521151836.GA4843@linux.intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Checks the returned values of platform_get_irq() for both required
-"event" and optional "wakeup" IRQs during probe. This allows the driver
-probe to be deferred if needed.
-Removes redundant checks for 'cfg.has_wakeup'.
+On Tue, May 21, 2019 at 06:19:37PM +0300, Jarkko Sakkinen wrote:
+> On Mon, May 20, 2019 at 02:41:05PM +0300, Jarkko Sakkinen wrote:
+> > On Thu, May 16, 2019 at 05:26:15PM -0700, Andy Lutomirski wrote:
+> > > Is userspace actually requred to mmap() the enclave prior to EADDing things?
+> > 
+> > Nope, not since v20. Here is what I wrote about API to the kernel
+> > documentation:
+> > 
+> > "The enclave life-cycle starts by opening `/dev/sgx/enclave`. After this
+> > there is already a data structure inside kernel tracking the enclave
+> > that is initially uncreated. After this a set of ioctl's can be used to
+> > create, populate and initialize the enclave.
+> > 
+> > You can close (if you want) the fd after you've mmap()'d. As long as the
+> > file is open the enclave stays alive so you might want to do that after
+> > you don't need it anymore. Even munmap() won't destruct the enclave if
+> > the file is open.  Neither will closing the fd as long as you have
+> > mmap() done over the fd (even if it does not across the range defined in
+> > SECS)."
+> > 
+> > Enclave can be created and initialized without doing a single mmap()
+> > call.
+> 
+> We could even disallow mmap() before EINIT done. The way enclave
+> management internally works right now is quite robust and completely
+> detached from requiring process address space for anything.
 
-Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
-Signed-off-by: Erwan Le Ray <erwan.leray@st.com>
+Except that mmap() is more or less required to guarantee that ELRANGE
+established by ECREATE is available.  And we want to disallow mmap() as
+soon as the first EADD is done so that userspace can't remap the enclave's
+VMAs via munmap()->mmap() and gain execute permissions to pages that were
+EADD'd as NX.
 
-diff --git a/drivers/tty/serial/stm32-usart.c b/drivers/tty/serial/stm32-usart.c
-index 1334e42..9c2b04e 100644
---- a/drivers/tty/serial/stm32-usart.c
-+++ b/drivers/tty/serial/stm32-usart.c
-@@ -852,12 +852,31 @@ static int stm32_init_port(struct stm32_port *stm32port,
- 	port->flags	= UPF_BOOT_AUTOCONF;
- 	port->ops	= &stm32_uart_ops;
- 	port->dev	= &pdev->dev;
--	port->irq	= platform_get_irq(pdev, 0);
-+
-+	ret = platform_get_irq(pdev, 0);
-+	if (ret <= 0) {
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(&pdev->dev, "Can't get event IRQ: %d\n", ret);
-+		return ret ? ret : -ENODEV;
-+	}
-+	port->irq = ret;
-+
- 	port->rs485_config = stm32_config_rs485;
- 
- 	stm32_init_rs485(port, pdev);
- 
--	stm32port->wakeirq = platform_get_irq(pdev, 1);
-+	if (stm32port->info->cfg.has_wakeup) {
-+		stm32port->wakeirq = platform_get_irq(pdev, 1);
-+		if (stm32port->wakeirq <= 0 && stm32port->wakeirq != -ENXIO) {
-+			if (stm32port->wakeirq != -EPROBE_DEFER)
-+				dev_err(&pdev->dev,
-+					"Can't get event wake IRQ: %d\n",
-+					stm32port->wakeirq);
-+			return stm32port->wakeirq ? stm32port->wakeirq :
-+				-ENODEV;
-+		}
-+	}
-+
- 	stm32port->fifoen = stm32port->info->cfg.has_fifo;
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-@@ -1064,7 +1083,7 @@ static int stm32_serial_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
- 
--	if (stm32port->info->cfg.has_wakeup && stm32port->wakeirq >= 0) {
-+	if (stm32port->wakeirq > 0) {
- 		ret = device_init_wakeup(&pdev->dev, true);
- 		if (ret)
- 			goto err_uninit;
-@@ -1094,11 +1113,11 @@ static int stm32_serial_probe(struct platform_device *pdev)
- 	return 0;
- 
- err_wirq:
--	if (stm32port->info->cfg.has_wakeup && stm32port->wakeirq >= 0)
-+	if (stm32port->wakeirq > 0)
- 		dev_pm_clear_wake_irq(&pdev->dev);
- 
- err_nowup:
--	if (stm32port->info->cfg.has_wakeup && stm32port->wakeirq >= 0)
-+	if (stm32port->wakeirq > 0)
- 		device_init_wakeup(&pdev->dev, false);
- 
- err_uninit:
-@@ -1112,7 +1131,6 @@ static int stm32_serial_remove(struct platform_device *pdev)
- 	struct uart_port *port = platform_get_drvdata(pdev);
- 	struct stm32_port *stm32_port = to_stm32_port(port);
- 	struct stm32_usart_offsets *ofs = &stm32_port->info->ofs;
--	struct stm32_usart_config *cfg = &stm32_port->info->cfg;
- 
- 	stm32_clr_bits(port, ofs->cr3, USART_CR3_DMAR);
- 
-@@ -1134,7 +1152,7 @@ static int stm32_serial_remove(struct platform_device *pdev)
- 				  TX_BUF_L, stm32_port->tx_buf,
- 				  stm32_port->tx_dma_buf);
- 
--	if (cfg->has_wakeup && stm32_port->wakeirq >= 0) {
-+	if (stm32_port->wakeirq > 0) {
- 		dev_pm_clear_wake_irq(&pdev->dev);
- 		device_init_wakeup(&pdev->dev, false);
- 	}
-@@ -1252,7 +1270,7 @@ static void stm32_serial_enable_wakeup(struct uart_port *port, bool enable)
- 	struct stm32_usart_config *cfg = &stm32_port->info->cfg;
- 	u32 val;
- 
--	if (!cfg->has_wakeup || stm32_port->wakeirq < 0)
-+	if (stm32_port->wakeirq <= 0)
- 		return;
- 
- 	if (enable) {
--- 
-1.9.1
-
+Actually, conceptually it's probably more intuitive to disallow mmap() at
+ECREATE, i.e. the act of creating an enclave pins the associated virtual
+address range until the enclave is destroyed.
