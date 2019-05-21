@@ -2,85 +2,76 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 560A3C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 14:54:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0C2FC04E87
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 14:56:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 204452173C
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 14:54:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558450476;
-	bh=q76YsG3uawMWYs8CZinrfkZpJKQnocFUK8DNC48Mgd0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=oa3moLQOJ446nnE7LIr64iVrP6ddIEWWfJuZ9yhg0sKBlf/rlRPkipKsi1rnhJxgv
-	 wXuMvGDAhWZHJVXWsQ4QIrfCh7co6aXnIiNIfcLShIbSDmxQgcj7R0qquInah/I2WT
-	 BjnI62shdtfJ+oCz61vA3A7Dt2GOKzTqJFUbpxPA=
+	by mail.kernel.org (Postfix) with ESMTP id 742872173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 14:56:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728672AbfEUOyf (ORCPT
+        id S1728503AbfEUO4i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 10:54:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58656 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727986AbfEUOyf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 10:54:35 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41A02208C3;
-        Tue, 21 May 2019 14:54:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558450474;
-        bh=q76YsG3uawMWYs8CZinrfkZpJKQnocFUK8DNC48Mgd0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=E9FUmk28xmIgNCQi/vDn0xepr+T+p7uLIIF5bV8DO2WUu1vV9DdkChNyZc0jBXCwK
-         iM26xnUlj7JRW9hTmIcv116tGGhAJIxUQ9oWjSDpx04pHoym9ocHvTzPd5nO7XIExG
-         uDQYlTYcEcTBwBegwx44ukDY15riNqUIEo2bor1E=
-Date:   Tue, 21 May 2019 16:54:32 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     houweitao <houweitaoo@gmail.com>
-Cc:     linus.walleij@linaro.org, yamada.masahiro@socionext.com,
-        a.zummo@towertech.it, alexandre.belloni@bootlin.com,
-        baohua@kernel.org, jslaby@suse.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        linux-imx@nxp.com, davem@davemloft.net, rostedt@goodmis.org,
-        mingo@redhat.com, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
-        sparclinux@vger.kernel.org, houweitao <houweitao@xiaomi.com>
-Subject: Re: [PATCH] tracing: fix typos in code and comments
-Message-ID: <20190521145432.GB3491@kroah.com>
-References: <20190521144740.22490-1-houweitao@xiaomi.com>
+        Tue, 21 May 2019 10:56:38 -0400
+Received: from www62.your-server.de ([213.133.104.62]:52614 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727986AbfEUO4h (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 10:56:37 -0400
+Received: from [78.46.172.2] (helo=sslproxy05.your-server.de)
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1hT6Bv-0002I1-KH; Tue, 21 May 2019 16:56:35 +0200
+Received: from [178.197.249.20] (helo=linux.home)
+        by sslproxy05.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1hT6Bv-000M6d-Cs; Tue, 21 May 2019 16:56:35 +0200
+Subject: Re: [PATCH bpf] samples/bpf: suppress compiler warning
+To:     Matteo Croce <mcroce@redhat.com>, xdp-newbies@vger.kernel.org,
+        bpf@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>
+References: <20190520214938.16889-1-mcroce@redhat.com>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <f874efcb-f2a2-1d5f-7c43-cebdb828e465@iogearbox.net>
+Date:   Tue, 21 May 2019 16:56:34 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190521144740.22490-1-houweitao@xiaomi.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190520214938.16889-1-mcroce@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.100.3/25456/Tue May 21 09:56:54 2019)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 21, 2019 at 10:47:40PM +0800, houweitao wrote:
-> fix ingore to ignore in kernel; since there are other
-> mistakes can be found with "git grep ",fix all
+On 05/20/2019 11:49 PM, Matteo Croce wrote:
+> GCC 9 fails to calculate the size of local constant strings and produces a
+> false positive:
 > 
-> Signed-off-by: houweitao <houweitao@xiaomi.com>
-> ---
->  drivers/pinctrl/uniphier/pinctrl-uniphier-core.c | 2 +-
->  drivers/rtc/rtc-sirfsoc.c                        | 2 +-
->  drivers/tty/serial/mxs-auart.c                   | 2 +-
->  drivers/tty/serial/serial_txx9.c                 | 2 +-
->  drivers/tty/serial/sunsab.c                      | 2 +-
->  kernel/trace/trace.c                             | 2 +-
->  6 files changed, 6 insertions(+), 6 deletions(-)
+> samples/bpf/task_fd_query_user.c: In function ‘test_debug_fs_uprobe’:
+> samples/bpf/task_fd_query_user.c:242:67: warning: ‘%s’ directive output may be truncated writing up to 255 bytes into a region of size 215 [-Wformat-truncation=]
+>   242 |  snprintf(buf, sizeof(buf), "/sys/kernel/debug/tracing/events/%ss/%s/id",
+>       |                                                                   ^~
+>   243 |    event_type, event_alias);
+>       |                ~~~~~~~~~~~
+> samples/bpf/task_fd_query_user.c:242:2: note: ‘snprintf’ output between 45 and 300 bytes into a destination of size 256
+>   242 |  snprintf(buf, sizeof(buf), "/sys/kernel/debug/tracing/events/%ss/%s/id",
+>       |  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>   243 |    event_type, event_alias);
+>       |    ~~~~~~~~~~~~~~~~~~~~~~~~
+> 
+> Workaround this by lowering the buffer size to a reasonable value.
+> Related GCC Bugzilla: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=83431
+> 
+> Signed-off-by: Matteo Croce <mcroce@redhat.com>
 
-You have to split this up into patches for different subsystems, and use
-your real name.
-
-thanks,
-
-greg k-h
+Applied, thanks!
