@@ -2,131 +2,401 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD5BDC04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:50:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 051A8C04E87
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:52:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82B74216B7
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:50:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7178217D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:52:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="K9qcd+B4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gk8AMrS6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727791AbfEUKuE (ORCPT
+        id S1727688AbfEUKwC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 06:50:04 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:57979 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726138AbfEUKuD (ORCPT
+        Tue, 21 May 2019 06:52:02 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:52393 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726692AbfEUKwB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 06:50:03 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190521105000euoutp01d25ae0a95f44c59f5604827ab28ba069~grRqh4vGe2274522745euoutp01-
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 10:50:00 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190521105000euoutp01d25ae0a95f44c59f5604827ab28ba069~grRqh4vGe2274522745euoutp01-
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1558435801;
-        bh=dVrDy17Ux0GSIhBmM0IvoBwOz6MznLg3cinUw4GbxOo=;
-        h=From:Subject:To:Date:References:From;
-        b=K9qcd+B4uliM1SdbWUU9xgYfyrmXde/mkuP9wKRyrViUnCcSlEwfRpMS1jSOYQ1tW
-         RV3j/OQU5Qc7z7f/Y/+WN1egpIum3nTyFAHPjPZlwvdTYfYgcS/8BoeHRX8yrcrIbx
-         M00YzUeVDMLUqH6yxnxvfm2VZhyK3GLpgxUVm8Lo=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190521105000eucas1p2de8daa7b95a6cb95f22c55b0aa3017a0~grRqJEwjG2901629016eucas1p2t;
-        Tue, 21 May 2019 10:50:00 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 7C.B4.04298.8D7D3EC5; Tue, 21
-        May 2019 11:50:00 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190521104959eucas1p14de9d183967e7f50bfede732d3fd8764~grRpWSfWJ0449704497eucas1p17;
-        Tue, 21 May 2019 10:49:59 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190521104959eusmtrp1125d2801ddbdde695f772d7737f1f3a5~grRpVQ2wS1426514265eusmtrp1n;
-        Tue, 21 May 2019 10:49:59 +0000 (GMT)
-X-AuditID: cbfec7f2-f13ff700000010ca-e4-5ce3d7d898ab
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id FA.A4.04140.7D7D3EC5; Tue, 21
-        May 2019 11:49:59 +0100 (BST)
-Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190521104959eusmtip19adb8d743f0d05719dbe628d27bb5007~grRpIn8l22509625096eusmtip1C;
-        Tue, 21 May 2019 10:49:59 +0000 (GMT)
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: [PATCH v2] video: fbdev: pxa168fb: add COMPILE_TEST support
-To:     linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Message-ID: <1059f924-7bbb-37b1-42ee-52cad878f572@samsung.com>
-Date:   Tue, 21 May 2019 12:49:59 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.6.1
+        Tue, 21 May 2019 06:52:01 -0400
+Received: by mail-wm1-f67.google.com with SMTP id y3so2481290wmm.2;
+        Tue, 21 May 2019 03:51:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=HBcDMKCLoxH9JY160lWGF8D+AoJf2h9sY0HtKRx1ARI=;
+        b=Gk8AMrS6UzHlFPo2QVg1y3zeVjWzbW2RZ659opvhClCtlY8/k6aYWj/M8yDixP4yxX
+         cKj8keaIu3Eb8nfEyQNP4cMIqlcqpz6I9CopYT4b8haSqbRXpI3FdIEwWMqhO5cKEbxF
+         MEm5ZCVOzRDcmGfRRrgaYuMwl2Z6M5+0ZKveNxtSRcNDQAaXsUUKtU3Q29KJvQParRKG
+         AGcXRV8fA6vVVNTk7P60iMvG5htvzWWEmkjy4uUQDPRLWGgQR76mcPY7mwJKXqQBwGP4
+         2fAHNuJpVLR7ZapVHPEfq2C7MgZEPSztQnscyeSn1tDgpbU/IHP7JV0XWz473rdNIq7U
+         eKiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=HBcDMKCLoxH9JY160lWGF8D+AoJf2h9sY0HtKRx1ARI=;
+        b=nvg+9zV712YUoRKEmXIveGSy7TODV+B6gEAqHLZB2QzKA0r/sgyyJkk+x6CkaKskRF
+         GyIKETOAQ9Sshs/5fSS7WCCHBI/60IPMZA9Ju/FhFfbrRccr87otMozLvgqwP7w6F7gM
+         6KPyhMBYhwQmIICphNvX//9spguv4xfDvfDJ58GKeZE8mQmk6hDXn7vUFAVDEVndL7gs
+         rW0WTZF88NhwZaC4LYIR44imwui5JJ1pYTwOIIO6NUg5u7aR9htJgCwTFMlWxQTW5aLw
+         JNx3Pdqe/4kBc/b6K1uApIxF9FRin22f7QgNhO7e/zMMU6BYt+5CXd9Uh1ULl1+A/ZjR
+         QxYg==
+X-Gm-Message-State: APjAAAXt0bsWorB9H2XHFEYaeggXisjcFC3w8meKgP81dVGh8FbxBD3r
+        ZD2Laq1Sn539/Ig4xhkRjWA=
+X-Google-Smtp-Source: APXvYqzQ9NR+3sx3iS2dl05Sv1JlhuBHyb/XnFrcv32mSv4hkJ962qmqmBdC4mZgy+TkXS2DEuEQYQ==
+X-Received: by 2002:a1c:c1c8:: with SMTP id r191mr2624904wmf.99.1558435917381;
+        Tue, 21 May 2019 03:51:57 -0700 (PDT)
+Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
+        by smtp.gmail.com with ESMTPSA id x187sm3098357wmg.11.2019.05.21.03.51.56
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 21 May 2019 03:51:56 -0700 (PDT)
+Date:   Tue, 21 May 2019 12:51:55 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, jonathanh@nvidia.com, kishon@ti.com,
+        catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com, mperttunen@nvidia.com,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, kthota@nvidia.com,
+        mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V7 09/15] dt-bindings: PCI: tegra: Add device tree
+ support for Tegra194
+Message-ID: <20190521105155.GI29166@ulmo>
+References: <20190517123846.3708-1-vidyas@nvidia.com>
+ <20190517123846.3708-10-vidyas@nvidia.com>
 MIME-Version: 1.0
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpjleLIzCtJLcpLzFFi42LZduznOd0b1x/HGPz8JmBx5et7NosTfR9Y
-        LS7vmsPmwOxxv/s4k8fnTXIBTFFcNimpOZllqUX6dglcGQ2njzEXrGer2Nwa08C4nrWLkZND
-        QsBE4urvCyxdjFwcQgIrGCXOnTwJ5XxhlNi66i0bhPOZUeLonfMsMC27Hk2CqlrOKNH4fB0j
-        hPMWqP/YS0aQKjYBK4mJ7auAbA4OYQEXiSVPKkHCIgIJEiumzwAr4RWwk7j59wPYHSwCqhKf
-        N+xkB7FFBSIk7h/bwApRIyhxcuYTsMXMAuISt57MZ4Kw5SW2v53DDLJXQuA6m8SHX9cYIa5z
-        kVh+5xzUpcISr45vYYewZSROT+5hgWhYxyjxt+MFVPd2Ronlk/+xQVRZSxw+fpEV5GpmAU2J
-        9bv0IcKOEk1PNzGBhCUE+CRuvBWEOIJPYtK26cwQYV6JjjYhiGo1iQ3LNrDBrO3auZIZwvaQ
-        +Hr2GgtIuZBArMTJKwETGBVmIflyFpIvZyH5chbCOQsYWVYxiqeWFuempxYb5qWW6xUn5haX
-        5qXrJefnbmIEpo7T/45/2sH49VLSIUYBDkYlHt6MKY9ihFgTy4orcw8xSnAwK4nwnj4FFOJN
-        SaysSi3Kjy8qzUktPsQozcGiJM5bzfAgWkggPbEkNTs1tSC1CCbLxMEp1cDI2hR19F3fMeWe
-        OLkFJbEus97eV5yirCBeY7r3T+WkmVmSZUqZqz/Neiu41c0n5UbQ7uJ5WSG7mO/82jUrm4cr
-        /mmCsq7c0oDySvVDmvNWRK39rPXnaNIGx9q3M+d9MV0rMeWI1JQ0xYOh0krLdCMK+xLEv+73
-        f1ny7Unh+Xlzf9/4eL7nUckEJZbijERDLeai4kQAzCkFnRkDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrMLMWRmVeSWpSXmKPExsVy+t/xu7rXrz+OMXj7Qt3iytf3bBYn+j6w
-        WlzeNYfNgdnjfvdxJo/Pm+QCmKL0bIryS0tSFTLyi0tslaINLYz0DC0t9IxMLPUMjc1jrYxM
-        lfTtbFJSczLLUov07RL0MhpOH2MuWM9Wsbk1poFxPWsXIyeHhICJxK5Hk1i6GLk4hASWMkr0
-        3t7H3MXIAZSQkTi+vgyiRljiz7UuNoia14wSc8+dAmtmE7CSmNi+ihGkXljARWLJk0qQsIhA
-        gsTT1/PZQGxeATuJm38/gJWzCKhKfN6wkx3EFhWIkDjzfgULRI2gxMmZT8BsZgF1iT/zLjFD
-        2OISt57MZ4Kw5SW2v53DPIGRfxaSlllIWmYhaZmFpGUBI8sqRpHU0uLc9NxiI73ixNzi0rx0
-        veT83E2MwADfduznlh2MXe+CDzEKcDAq8fBmTHkUI8SaWFZcmXuIUYKDWUmE9/QpoBBvSmJl
-        VWpRfnxRaU5q8SFGU6CHJjJLiSbnA6MvryTe0NTQ3MLS0NzY3NjMQkmct0PgYIyQQHpiSWp2
-        ampBahFMHxMHp1QD4xUTfv5ZD86lykWaX96y6azDO74daxd/9DdiOM+0+q/VgoacG/mMaUeX
-        f5Gv3TjPTP13f2rpJPlF6hFBZVxsJ3M/p4kcna7hcfCM0TLjME47nulv7/5Z1e/ae1ft8ALX
-        e7b/9CTknohy6XxZ3/wk+ogkA+/r+wvETzt9TPzLdc6/c2/JaZUnN5VYijMSDbWYi4oTAXSw
-        6R+GAgAA
-X-CMS-MailID: 20190521104959eucas1p14de9d183967e7f50bfede732d3fd8764
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190521104959eucas1p14de9d183967e7f50bfede732d3fd8764
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190521104959eucas1p14de9d183967e7f50bfede732d3fd8764
-References: <CGME20190521104959eucas1p14de9d183967e7f50bfede732d3fd8764@eucas1p1.samsung.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="YrQNB5Deg1WGKZi3"
+Content-Disposition: inline
+In-Reply-To: <20190517123846.3708-10-vidyas@nvidia.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add COMPILE_TEST support to pxa168fb driver for better compile
-testing coverage.
 
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
----
-v2: add missing HAVE_CLK && HAS IOMEM dependencies
+--YrQNB5Deg1WGKZi3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
- drivers/video/fbdev/Kconfig |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+On Fri, May 17, 2019 at 06:08:40PM +0530, Vidya Sagar wrote:
+> Add support for Tegra194 PCIe controllers. These controllers are based
+> on Synopsys DesignWare core IP.
+>=20
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> ---
+> Changes since [v6]:
+> * Changed description of the property "nvidia,bpmp".
+> * Removed property "nvidia,disable-aspm-states".
+>=20
+> Changes since [v5]:
+> * Removed 'max-link-speed' as it is going to be a common sub-system prope=
+rty
+> * Removed 'nvidia,init-link-speed' as there isn't much value addition
+> * Removed 'nvidia,wake-gpios' for now
+> * Addressed review comments from Thierry and Rob in general
+>=20
+> Changes since [v4]:
+> * None
+>=20
+> Changes since [v3]:
+> * None
+>=20
+> Changes since [v2]:
+> * Using only 'Cx' (x-being controller number) format to represent a contr=
+oller
+> * Changed to 'value: description' format where applicable
+> * Changed 'nvidia,init-speed' to 'nvidia,init-link-speed'
+> * Provided more documentation for 'nvidia,init-link-speed' property
+> * Changed 'nvidia,pex-wake' to 'nvidia,wake-gpios'
+>=20
+> Changes since [v1]:
+> * Added documentation for 'power-domains' property
+> * Removed 'window1' and 'window2' properties
+> * Removed '_clk' and '_rst' from clock and reset names
+> * Dropped 'pcie' from phy-names
+> * Added entry for BPMP-FW handle
+> * Removed offsets for some of the registers and added them in code and wo=
+uld be pickedup based on
+>   controller ID
+> * Changed 'nvidia,max-speed' to 'max-link-speed' and is made as an option=
+al
+> * Changed 'nvidia,disable-clock-request' to 'supports-clkreq' with invert=
+ed operation
+> * Added more documentation for 'nvidia,update-fc-fixup' property
+> * Removed 'nvidia,enable-power-down' and 'nvidia,plat-gpios' properties
+> * Added '-us' to all properties that represent time in microseconds
+> * Moved P2U documentation to a separate file
+>=20
+>  .../bindings/pci/nvidia,tegra194-pcie.txt     | 158 ++++++++++++++++++
+>  1 file changed, 158 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/nvidia,tegra194=
+-pcie.txt
+>=20
+> diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.t=
+xt b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
+> new file mode 100644
+> index 000000000000..0119f40bbd11
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
+> @@ -0,0 +1,158 @@
+> +NVIDIA Tegra PCIe controller (Synopsys DesignWare Core based)
+> +
+> +This PCIe host controller is based on the Synopsis Designware PCIe IP
+> +and thus inherits all the common properties defined in designware-pcie.t=
+xt.
+> +
+> +Required properties:
+> +- compatible: For Tegra19x, must contain "nvidia,tegra194-pcie".
+> +- device_type: Must be "pci"
+> +- power-domains: A phandle to the node that controls power to the respec=
+tive
+> +  PCIe controller and a specifier name for the PCIe controller. Followin=
+g are
+> +  the specifiers for the different PCIe controllers
+> +    TEGRA194_POWER_DOMAIN_PCIEX8B: C0
+> +    TEGRA194_POWER_DOMAIN_PCIEX1A: C1
+> +    TEGRA194_POWER_DOMAIN_PCIEX1A: C2
+> +    TEGRA194_POWER_DOMAIN_PCIEX1A: C3
+> +    TEGRA194_POWER_DOMAIN_PCIEX4A: C4
+> +    TEGRA194_POWER_DOMAIN_PCIEX8A: C5
+> +  these specifiers are defined in
+> +  "include/dt-bindings/power/tegra194-powergate.h" file.
+> +- reg: A list of physical base address and length pairs for each set of
+> +  controller registers. Must contain an entry for each entry in the reg-=
+names
+> +  property.
+> +- reg-names: Must include the following entries:
+> +  "appl": Controller's application logic registers
+> +  "config": As per the definition in designware-pcie.txt
+> +  "atu_dma": iATU and DMA registers. This is where the iATU (internal Ad=
+dress
+> +             Translation Unit) registers of the PCIe core are made avail=
+able
+> +             for SW access.
+> +  "dbi": The aperture where root port's own configuration registers are
+> +         available
+> +- interrupts: A list of interrupt outputs of the controller. Must contai=
+n an
+> +  entry for each entry in the interrupt-names property.
+> +- interrupt-names: Must include the following entries:
+> +  "intr": The Tegra interrupt that is asserted for controller interrupts
+> +  "msi": The Tegra interrupt that is asserted when an MSI is received
+> +- bus-range: Range of bus numbers associated with this controller
+> +- #address-cells: Address representation for root ports (must be 3)
+> +  - cell 0 specifies the bus and device numbers of the root port:
+> +    [23:16]: bus number
+> +    [15:11]: device number
+> +  - cell 1 denotes the upper 32 address bits and should be 0
+> +  - cell 2 contains the lower 32 address bits and is used to translate t=
+o the
+> +    CPU address space
+> +- #size-cells: Size representation for root ports (must be 2)
+> +- ranges: Describes the translation of addresses for root ports and stan=
+dard
+> +  PCI regions. The entries must be 7 cells each, where the first three c=
+ells
+> +  correspond to the address as described for the #address-cells property
+> +  above, the fourth and fifth cells are for the physical CPU address to
+> +  translate to and the sixth and seventh cells are as described for the
+> +  #size-cells property above.
+> +  - Entries setup the mapping for the standard I/O, memory and
+> +    prefetchable PCI regions. The first cell determines the type of regi=
+on
+> +    that is setup:
+> +    - 0x81000000: I/O memory region
+> +    - 0x82000000: non-prefetchable memory region
+> +    - 0xc2000000: prefetchable memory region
+> +  Please refer to the standard PCI bus binding document for a more detai=
+led
+> +  explanation.
+> +- #interrupt-cells: Size representation for interrupts (must be 1)
+> +- interrupt-map-mask and interrupt-map: Standard PCI IRQ mapping propert=
+ies
+> +  Please refer to the standard PCI bus binding document for a more detai=
+led
+> +  explanation.
+> +- clocks: Must contain an entry for each entry in clock-names.
+> +  See ../clocks/clock-bindings.txt for details.
+> +- clock-names: Must include the following entries:
+> +  - core
+> +- resets: Must contain an entry for each entry in reset-names.
+> +  See ../reset/reset.txt for details.
+> +- reset-names: Must include the following entries:
+> +  - core_apb
 
-Index: b/drivers/video/fbdev/Kconfig
-===================================================================
---- a/drivers/video/fbdev/Kconfig
-+++ b/drivers/video/fbdev/Kconfig
-@@ -1729,7 +1729,8 @@ config FB_68328
- 
- config FB_PXA168
- 	tristate "PXA168/910 LCD framebuffer support"
--	depends on FB && (CPU_PXA168 || CPU_PXA910)
-+	depends on FB && HAVE_CLK && HAS_IOMEM
-+	depends on CPU_PXA168 || CPU_PXA910 || COMPILE_TEST
- 	select FB_CFB_FILLRECT
- 	select FB_CFB_COPYAREA
- 	select FB_CFB_IMAGEBLIT
+Perhaps leave away the "core_" prefix here and simply call this "apb"?
+
+> +  - core
+> +- phys: Must contain a phandle to P2U PHY for each entry in phy-names.
+> +- phy-names: Must include an entry for each active lane.
+> +  "p2u-N": where N ranges from 0 to one less than the total number of la=
+nes
+> +- nvidia,bpmp: Must contain a pair of phandle to BPMP controller node fo=
+llowed
+> +  by controller-id. Following are the controller ids for each controller.
+> +    0: C0
+> +    1: C1
+> +    2: C2
+> +    3: C3
+> +    4: C4
+> +    5: C5
+> +- vddio-pex-ctl-supply: Regulator supply for PCIe side band signals
+> +
+> +Optional properties:
+> +- supports-clkreq: Refer to Documentation/devicetree/bindings/pci/pci.txt
+> +- nvidia,update-fc-fixup: This is a boolean property and needs to be pre=
+sent to
+> +    improve perf when a platform is designed in such a way that it satis=
+fies at
+
+This is a descriptive text, so it makes sense to spell out "performance"
+for better readability.
+
+> +    least one of the following conditions thereby enabling root port to
+> +    exchange optimum number of FC (Flow Control) credits with downstream=
+ devices
+> +    1. If C0/C4/C5 run at x1/x2 link widths (irrespective of speed and M=
+PS)
+> +    2. If C0/C1/C2/C3/C4/C5 operate at their respective max link widths =
+and
+> +       a) speed is Gen-2 and MPS is 256B
+> +       b) speed is >=3D Gen-3 with any MPS
+
+I'm not sure if I asked this before, but can we not determine that the
+configuration matches one of these conditions and select FC fixup mode
+at runtime in that case?
+
+> +- "nvidia,aspm-cmrt-us": Common Mode Restore time for proper operation o=
+f ASPM
+
+You can drop the quotes around the property names. Also, perhaps also
+capitalize "Time" since it's part of the acronym expansion for CMRT.
+
+> +   to be specified in microseconds
+> +- "nvidia,aspm-pwr-on-t-us": Power On time for proper operation of ASPM =
+to be
+> +   specified in microseconds
+> +- "nvidia,aspm-l0s-entrance-latency-us": ASPM L0s entrance latency to be
+> +   specified in microseconds
+> +
+> +Examples:
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +
+> +Tegra194:
+> +--------
+> +
+> +SoC DTSI:
+
+The example below looks like it's got board specific bits in it, so
+perhaps just drop the "SoC DTSI:" caption.
+
+> +
+> +	pcie@14180000 {
+> +		compatible =3D "nvidia,tegra194-pcie", "snps,dw-pcie";
+> +		power-domains =3D <&bpmp TEGRA194_POWER_DOMAIN_PCIEX8B>;
+> +		reg =3D <0x00 0x14180000 0x0 0x00020000   /* appl registers (128K)    =
+  */
+> +		       0x00 0x38000000 0x0 0x00040000   /* configuration space (256K) =
+*/
+> +		       0x00 0x38040000 0x0 0x00040000>; /* iATU_DMA reg space (256K)  =
+*/
+> +		reg-names =3D "appl", "config", "atu_dma";
+> +
+> +		#address-cells =3D <3>;
+> +		#size-cells =3D <2>;
+> +		device_type =3D "pci";
+> +		num-lanes =3D <8>;
+> +		linux,pci-domain =3D <0>;
+> +
+> +		clocks =3D <&bpmp TEGRA194_CLK_PEX0_CORE_0>;
+> +		clock-names =3D "core";
+> +
+> +		resets =3D <&bpmp TEGRA194_RESET_PEX0_CORE_0_APB>,
+> +			 <&bpmp TEGRA194_RESET_PEX0_CORE_0>;
+> +		reset-names =3D "core_apb", "core";
+> +
+> +		interrupts =3D <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>,	/* controller interru=
+pt */
+> +			     <GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>;	/* MSI interrupt */
+> +		interrupt-names =3D "intr", "msi";
+> +
+> +		#interrupt-cells =3D <1>;
+> +		interrupt-map-mask =3D <0 0 0 0>;
+> +		interrupt-map =3D <0 0 0 0 &gic 0 72 0x04>;
+
+Use the symbolic definitions GIC_SPI and IRQ_TYPE_LEVEL_HIGH here as
+well.
+
+> +
+> +		nvidia,bpmp =3D <&bpmp>;
+
+This should contain a controller ID according to the bindings.
+
+> +
+> +		supports-clkreq;
+> +		nvidia,disable-aspm-states =3D <0xf>;
+
+This is no longer documented above.
+
+> +		nvidia,controller-id =3D <0>;
+
+This is no longer documented above.
+
+> +		nvidia,aspm-cmrt-us =3D <60>;
+> +		nvidia,aspm-pwr-on-t-us =3D <20>;
+> +		nvidia,aspm-l0s-entrance-latency-us =3D <3>;
+> +
+> +		bus-range =3D <0x0 0xff>;
+> +		ranges =3D <0x81000000 0x0 0x38100000 0x0 0x38100000 0x0 0x00100000   =
+   /* downstream I/O (1MB) */
+> +			  0x82000000 0x0 0x38200000 0x0 0x38200000 0x0 0x01E00000      /* non=
+-prefetchable memory (30MB) */
+> +			  0xc2000000 0x18 0x00000000 0x18 0x00000000 0x4 0x00000000>;  /* pre=
+fetchable memory (16GB) */
+
+Perhaps align the individual cells to make this more readable?
+
+> +
+> +		vddio-pex-ctl-supply =3D <&vdd_1v8ao>;
+> +
+> +		phys =3D <&p2u_hsio_2>, <&p2u_hsio_3>, <&p2u_hsio_4>,
+> +		       <&p2u_hsio_5>;
+> +		phy-names =3D "p2u-0", "p2u-1", "p2u-2", "p2u-3";
+> +	};
+
+Thanks,
+Thierry
+
+--YrQNB5Deg1WGKZi3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlzj2EgACgkQ3SOs138+
+s6F9Tg/8DULF5J6wf4eLdR6TpIhskN1tAT8nstaTXpMBEHmwMjcwaqwuaftOvwam
+/hNUDZL2yRsp5AmMcxgPVxQ7yxEIKDT37QLce+U636G79pcXQfPoRoqeuwq7QgcU
+dPGUkN+qI/E9XLojwtL/T6yO4ZSxaySuRmedsTdMqT5TcppXkULGqrWQtAMdv5T4
+J0uIayb9tuqcVVkYPLVeMnaCaaAiRsD6BBnPFBcDe+LE2W8EJeJBOdMbDNp0YdBN
+ut/qrVdhzz6nwE71ZzmJLZ8LPHJqX0+uZc8ohApqt4JtTMv3shnwGYIYhnOfo0wI
+hSe+oM2E1jiVokxl5hPqvLve+KZIMilHHDjhuSB+JMh25md/I9PoVB4XEd3WrEOw
+can1kZgM/SOK5SOxMFDAWuSLMkFJzeG78rlBvdhWVukW+TCk1moLkhCzeDvtcFRl
+0wEXGfC/tlQ0CLDMQYJJqYZSxBDSdVpGVXWplX1y2fyH4R4BqGY8cvtc1yLXG3F1
+W6yspptSYmYX1BsnSwKQpifyC/eAyuuzk7ux8pPfyKObiglX+XNjJR5VkaJ8jcZQ
+UzDRamMhNNnnGQNU4OTgnQccI1GqBZfSI1yUQVkSkouC7HVSYXDRGnIdHVc9eait
+1aMstvSz0U1Zld6Qpvys0LI8X+rms4cgJ+8leovTNo+hyBEscTY=
+=onc4
+-----END PGP SIGNATURE-----
+
+--YrQNB5Deg1WGKZi3--
