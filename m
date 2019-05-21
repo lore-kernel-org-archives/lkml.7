@@ -2,121 +2,114 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D160DC04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 04:30:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AADAC04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 04:33:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D72D21743
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 04:30:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 137D02173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 04:33:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="fwSjWzWQ";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="sCTvjVqC"
+	dkim=pass (2048-bit key) header.d=russell.cc header.i=@russell.cc header.b="n4hFcBI7";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Ppy3lDs/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727092AbfEUEat (ORCPT
+        id S1726377AbfEUEd1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 00:30:49 -0400
-Received: from pb-smtp21.pobox.com ([173.228.157.53]:55368 "EHLO
-        pb-smtp21.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726377AbfEUEat (ORCPT
+        Tue, 21 May 2019 00:33:27 -0400
+Received: from wout4-smtp.messagingengine.com ([64.147.123.20]:46933 "EHLO
+        wout4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725793AbfEUEd0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 00:30:49 -0400
-Received: from pb-smtp21.pobox.com (unknown [127.0.0.1])
-        by pb-smtp21.pobox.com (Postfix) with ESMTP id F271D73D94;
-        Tue, 21 May 2019 00:30:43 -0400 (EDT)
-        (envelope-from nico@fluxnic.net)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=date:from:to
-        :cc:subject:in-reply-to:message-id:references:mime-version
-        :content-type; s=sasl; bh=yqe15pYqMrJHBvSX/s3j44LVOkQ=; b=fwSjWz
-        WQpmiYrLk36MxEzxqXEQVDiuPhga1SeKlaEhWarV4ZzURcGHL+jnhtgYeNWItTws
-        kcna0FFQ3+zW+yWUTsPYW/wm/fYUmIevRhZ/1PSjaFLwZYGTX89VUql3e/i01BIc
-        OUPS8+PA+seOPnZjkXzTHs3Cxq6xC5T1sWE6g=
-Received: from pb-smtp21.sea.icgroup.com (unknown [127.0.0.1])
-        by pb-smtp21.pobox.com (Postfix) with ESMTP id E0C5373D93;
-        Tue, 21 May 2019 00:30:43 -0400 (EDT)
-        (envelope-from nico@fluxnic.net)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=fluxnic.net;
- h=date:from:to:cc:subject:in-reply-to:message-id:references:mime-version:content-type; s=2016-12.pbsmtp; bh=Fnj6Iyu+QqlQ5VqudM+YbKXA9WmWzolnl8KrXhNrnoE=; b=sCTvjVqC3q8hzkI6/f3jbuF8DaN3V6uWQ8Vyv1xHFX5bb+IwR6dsSFN6gbDjkF2An4KxEmsMFdLrSPv57xwSaxU5XhAuGXTiLOG+J9yBQtWGYtKwSCmkSHBchzP6CerkBQnepEkIrviivzGsemu8DxOk5QGoIRYy9LfAC92IXgo=
-Received: from yoda.home (unknown [70.82.130.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by pb-smtp21.pobox.com (Postfix) with ESMTPSA id 9F45973D92;
-        Tue, 21 May 2019 00:30:40 -0400 (EDT)
-        (envelope-from nico@fluxnic.net)
-Received: from xanadu.home (xanadu.home [192.168.2.2])
-        by yoda.home (Postfix) with ESMTPSA id 18BD02DA01F4;
-        Tue, 21 May 2019 00:30:38 -0400 (EDT)
-Date:   Tue, 21 May 2019 00:30:38 -0400 (EDT)
-From:   Nicolas Pitre <nico@fluxnic.net>
-To:     Gen Zhang <blackgod016574@gmail.com>
-cc:     linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] vt: Fix a missing-check bug in drivers/tty/vt/vt.c
-In-Reply-To: <20190521040019.GD5263@zhanggen-UX430UQ>
-Message-ID: <nycvar.YSQ.7.76.1905210022050.1558@knanqh.ubzr>
-References: <20190521022940.GA4858@zhanggen-UX430UQ> <nycvar.YSQ.7.76.1905202242410.1558@knanqh.ubzr> <20190521030905.GB5263@zhanggen-UX430UQ> <nycvar.YSQ.7.76.1905202323290.1558@knanqh.ubzr> <20190521040019.GD5263@zhanggen-UX430UQ>
-User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
+        Tue, 21 May 2019 00:33:26 -0400
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailout.west.internal (Postfix) with ESMTP id 1168068D;
+        Tue, 21 May 2019 00:33:25 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute6.internal (MEProxy); Tue, 21 May 2019 00:33:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=russell.cc; h=
+        message-id:subject:from:to:cc:date:in-reply-to:references
+        :content-type:mime-version:content-transfer-encoding; s=fm1; bh=
+        AlWrfBTrcpPv2MHnZ7Kz+KHi+IVsVLeNo9zFDUGz76Y=; b=n4hFcBI7t383uVyf
+        rn6SAFOdBocVIvP2WYVx9mCubIyxB52Fsxt6YEBCpVuomjIZbvKpXxwtm2jigzHG
+        7hoJmQm8fzT37fif6X/aKk9Bb/VZxaNn6tBoCqPfE3WV2GCpLQE/R3ULig/iHe7a
+        SYZMEDuEqGoW4SYYOQKVA4f+nv+mdUc7l8NnHwES6OOeYkAwChvON11E2+pVmBIe
+        rP1oGN5lqS9Ge5kpJtoPDN6I4IUABmdYRLgBy+v3Ek6/g7MpkEU+1uza35hgzWpn
+        oaTX60NkF1VAO5nL8YYlaAeQwjWue0WobbecPq9wKHB1KPFRyMbsJtAT9BOmtHvA
+        HQ4HOA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm2; bh=AlWrfBTrcpPv2MHnZ7Kz+KHi+IVsVLeNo9zFDUGz7
+        6Y=; b=Ppy3lDs/uAXuwh6Bfhz2pMFRedUu6AdzAc+Uyn2tBzLL0/wIYhLd8WshG
+        FyjdQNKYqsei7uqFdcRNYOpeRwQ6MICh/qM/27gS+YCp2u8do03efOrZuPjC1vDV
+        F2ebVYbGrlAvTkUsNIS5ry9wS0TKtPl3YDN90xGOeMNbGyfKunBIqYWnrhRDhZln
+        LizlfsSpbRZCCX9Ygl9gaIBJlqa/1OxJ634FMy08YdgyZY2t9LkvHuvwDiXqV1nL
+        5rgYYP0jYKoSL21ZvvholK+xDdDoWXTlQxv7Dg3Qgs50bA39Cc3gizTEJwpLsX69
+        Bd/1BgzEezuG7WfqLsuDe0pRu+sKQ==
+X-ME-Sender: <xms:k3_jXDg75Llg6VcPCl5wWvcnNSHfaYWJN5wYY_8z4eSQeZMwsw583A>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddruddtledgkeegucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    gfrhhlucfvnfffucdludehmdenucfjughrpefkuffhvfffjghftggfggfgsehtjeertddt
+    reejnecuhfhrohhmpeftuhhsshgvlhhlucevuhhrrhgvhicuoehruhhstghurhesrhhush
+    hsvghllhdrtggtqeenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppeduvddv
+    rdelledrkedvrddutdenucfrrghrrghmpehmrghilhhfrhhomheprhhushgtuhhrsehruh
+    hsshgvlhhlrdgttgenucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:k3_jXEkafT24d5MddrYm-5I2xa8VYHejmOeUC9W7NnP4fQFvTTyXfA>
+    <xmx:k3_jXANHDl4rw_mFtE2sgFaPs8Wkl9LqweSfOSFwayKMcC6INLjTrw>
+    <xmx:k3_jXHF_YDP0pcKsWRH0_D_ld2mg37PygOwtC2W9q9_kBzaHv7XOXw>
+    <xmx:lH_jXBd6lIprkHfLs2QimfROtqsr62W8b2oHghmEtxyugbpnrIzEvg>
+Received: from crackle.ozlabs.ibm.com (unknown [122.99.82.10])
+        by mail.messagingengine.com (Postfix) with ESMTPA id A7D778005B;
+        Tue, 21 May 2019 00:33:20 -0400 (EDT)
+Message-ID: <6a90db30c8543d547ab8543fbdba02f7fe6a4898.camel@russell.cc>
+Subject: Re: [RFC PATCH] powerpc/mm: Implement STRICT_MODULE_RWX
+From:   Russell Currey <ruscur@russell.cc>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Tue, 21 May 2019 14:33:17 +1000
+In-Reply-To: <df502ffe07caa38c46b0144fc824fff447f4105b.1557901092.git.christophe.leroy@c-s.fr>
+References: <df502ffe07caa38c46b0144fc824fff447f4105b.1557901092.git.christophe.leroy@c-s.fr>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Pobox-Relay-ID: 3086D0A4-7B81-11E9-8580-8D86F504CC47-78420484!pb-smtp21.pobox.com
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 21 May 2019, Gen Zhang wrote:
+On Wed, 2019-05-15 at 06:20 +0000, Christophe Leroy wrote:
 
-> On Mon, May 20, 2019 at 11:26:20PM -0400, Nicolas Pitre wrote:
-> > On Tue, 21 May 2019, Gen Zhang wrote:
-> > 
-> > > On Mon, May 20, 2019 at 10:55:40PM -0400, Nicolas Pitre wrote:
-> > > > On Tue, 21 May 2019, Gen Zhang wrote:
-> > > > 
-> > > > > In function con_init(), the pointer variable vc_cons[currcons].d, vc and
-> > > > > vc->vc_screenbuf is allocated a memory space via kzalloc(). And they are
-> > > > > used in the following codes.
-> > > > > However, when there is a memory allocation error, kzalloc() can fail.
-> > > > > Thus null pointer (vc_cons[currcons].d, vc and vc->vc_screenbuf)
-> > > > > dereference may happen. And it will cause the kernel to crash. Therefore,
-> > > > > we should check return value and handle the error.
-> > > > > Further,the loop condition MIN_NR_CONSOLES is defined as 1 in
-> > > > > include/uapi/linux/vt.h. So there is no need to unwind the loop.
-> > > > 
-> > > > But what if someone changes that define? It won't be obvious that some 
-> > > > code did rely on it to be defined to 1.
-> > > I re-examine the source code. MIN_NR_CONSOLES is only defined once and
-> > > no other changes to it.
-> > 
-> > Yes, that is true today.  But if someone changes that in the future, how 
-> > will that person know that you relied on it to be 1 for not needing to 
-> > unwind the loop?
-> > 
-> > 
-> > Nicolas
-> Hi Nicolas,
-> Thanks for your explaination! And I got your point. And is this way 
-> proper?
+Confirming this works on hash and radix book3s64.
 
-Not quite.
+> +
+> +	// only operate on VM areas for now
+> +	area = find_vm_area((void *)addr);
+> +	if (!area || end > (unsigned long)area->addr + area->size ||
+> +	    !(area->flags & VM_ALLOC))
+> +		return -EINVAL;
 
-> err_vc_screenbuf:
->         kfree(vc);
-> 	for (currcons = 0; currcons < MIN_NR_CONSOLES; currcons++)
-> 		vc_cons[currcons].d = NULL;
-> 	return -ENOMEM;
-> err_vc:
-> 	console_unlock();
-> 	return -ENOMEM;
+https://lore.kernel.org/patchwork/project/lkml/list/?series=391470
 
-Now imagine that MIN_NR_CONSOLES is defined to 10 instead of 1.
+With this patch, the above series causes crashes on (at least) Hash,
+since it adds another user of change_page_rw() and change_page_nx()
+that for reasons I don't understand yet, we can't handle.  I can work
+around this with:
 
-What happens with allocated memory if the err_vc condition is met on the 
-5th loop?
+	if (area->flags & VM_FLUSH_RESET_PERMS)
+		return 0;
 
-If err_vc_screenbuf condition is encountered on the 5th loop (curcons = 
-4), what is the value of vc_cons[4].d? Isn't it the same as vc that you 
-just freed?
+so this is broken on at least one platform as of 5.2-rc1.  We're going
+to look into this more to see if there's anything else we have to do as
+a result of this series before the next merge window, or if just
+working around it like this is good enough.
 
+- Russell
 
-Nicolas
