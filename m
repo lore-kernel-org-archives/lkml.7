@@ -4,102 +4,108 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A33D9C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 06:08:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86AE1C46470
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 06:12:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F8E021743
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 06:08:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57AF221773
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 06:12:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558418903;
-	bh=dXyQKvVAAS2PMMvZGhgQTK3uZ6zmRariexjEwh6Fs7E=;
+	s=default; t=1558419162;
+	bh=4VC9bKP9QU7iVDFMtdo9WoMzmY1tJYqXCWxT9T/NUpY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RCNb1mYUcYvdfx+dlQbFT5FiSAekTpk2ytm/yHLjfS8lQCvZ/SkcAI7YWfMiwK/sx
-	 zvg0AAE0SMEeR6OjtORHi1hSx4pmNb0Oc/U5e9XYO/xgb0qx04QPztSP0c8+MjpqIC
-	 6zFW+FQKTu38KTLexxQzSoQ3Brb3nROUK1rKMrK0=
+	b=pfrIyovQO0m9sOPGznbXOimTvZcsjdcyAd7Uj1rwPJcpgsclk1ySofUph2Yf5X6Ef
+	 A4K7lm3XBbKtxZ717FKqsxC/iptLLLq+ey1Dd94V0DBD7a+6Vxwd5CP+UW06fZYtBf
+	 MoXx2ap/EUd9fW1/6Ikd46Fh6B5UoeGEnSlSL3aI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727945AbfEUGIX (ORCPT
+        id S1727865AbfEUGMl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 02:08:23 -0400
-Received: from mx2.suse.de ([195.135.220.15]:50878 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725798AbfEUGIW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 02:08:22 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 6A6FDAD45;
-        Tue, 21 May 2019 06:08:21 +0000 (UTC)
-Date:   Tue, 21 May 2019 08:08:20 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Minchan Kim <minchan@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tim Murray <timmurray@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>, linux-api@vger.kernel.org
-Subject: Re: [RFC 3/7] mm: introduce MADV_COLD
-Message-ID: <20190521060820.GB32329@dhcp22.suse.cz>
-References: <20190520035254.57579-1-minchan@kernel.org>
- <20190520035254.57579-4-minchan@kernel.org>
- <20190520082703.GX6836@dhcp22.suse.cz>
- <20190520230038.GD10039@google.com>
+        Tue, 21 May 2019 02:12:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49188 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725798AbfEUGMl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 02:12:41 -0400
+Received: from localhost (unknown [106.201.107.13])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DDFC920863;
+        Tue, 21 May 2019 06:12:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558419160;
+        bh=4VC9bKP9QU7iVDFMtdo9WoMzmY1tJYqXCWxT9T/NUpY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lJzLTxcVnQlcC8g5MlkXWsEtukxQJremgG+7zcGYuVRwfHSSl/CjVbwp62oapFxjZ
+         RB3v+k7IXX6G0ix1zRMQJ2OvmqFFR1LCVcZnUWQFvAHionw5nVJu6KU8/EW2X/ujcW
+         XyM9/dqc3r3hrt7uRZc5BRuGjG8gjJF0yevCkmSg=
+Date:   Tue, 21 May 2019 11:42:36 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Robin Gong <yibin.gong@nxp.com>
+Cc:     "robh@kernel.org" <robh@kernel.org>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        "plyatov@gmail.com" <plyatov@gmail.com>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>
+Subject: Re: Re: Re: [PATCH v3 11/14] dmaengine: imx-sdma: fix ecspi1 rx dma
+ not work on i.mx8mm
+Message-ID: <20190521061236.GA15118@vkoul-mobl>
+References: <VI1PR04MB4543DEEC702531ED69616B8C89070@VI1PR04MB4543.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190520230038.GD10039@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <VI1PR04MB4543DEEC702531ED69616B8C89070@VI1PR04MB4543.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 21-05-19 08:00:38, Minchan Kim wrote:
-> On Mon, May 20, 2019 at 10:27:03AM +0200, Michal Hocko wrote:
-> > [Cc linux-api]
+On 21-05-19, 05:41, Robin Gong wrote:
+> > -----Original Message-----
+> > From: Vinod Koul <vkoul@kernel.org>
+> > Sent: 2019年5月21日 13:13
 > > 
-> > On Mon 20-05-19 12:52:50, Minchan Kim wrote:
-> > > When a process expects no accesses to a certain memory range
-> > > for a long time, it could hint kernel that the pages can be
-> > > reclaimed instantly but data should be preserved for future use.
-> > > This could reduce workingset eviction so it ends up increasing
-> > > performance.
-> > > 
-> > > This patch introduces the new MADV_COLD hint to madvise(2)
-> > > syscall. MADV_COLD can be used by a process to mark a memory range
-> > > as not expected to be used for a long time. The hint can help
-> > > kernel in deciding which pages to evict proactively.
+> > On 21-05-19, 04:58, Robin Gong wrote:
+> > > > -----Original Message-----
+> > > > From: Vinod Koul <vkoul@kernel.org>
+> > > > Sent: 2019年5月21日 12:18
+> > > >
+> > > > On 07-05-19, 09:16, Robin Gong wrote:
+> > > > > Because the number of ecspi1 rx event on i.mx8mm is 0, the
+> > > > > condition check ignore such special case without dma channel
+> > > > > enabled, which caused
+> > > > > ecspi1 rx works failed. Actually, no need to check event_id0,
+> > > > > checking
+> > > > > event_id1 is enough for DEV_2_DEV case because it's so lucky that
+> > > > > event_id1 never be 0.
+> > > >
+> > > > Well is that by chance or design that event_id1 will be never 0?
+> > > >
+> > > That's by chance. DEV_2_DEV is just for Audio case and non-zero for
+> > event_id1 on current i.MX family.
 > > 
-> > As mentioned in other email this looks like a non-destructive
-> > MADV_DONTNEED alternative.
-> > 
-> > > Internally, it works via reclaiming memory in process context
-> > > the syscall is called. If the page is dirty but backing storage
-> > > is not synchronous device, the written page will be rotate back
-> > > into LRU's tail once the write is done so they will reclaim easily
-> > > when memory pressure happens. If backing storage is
-> > > synchrnous device(e.g., zram), hte page will be reclaimed instantly.
-> > 
-> > Why do we special case async backing storage? Please always try to
-> > explain _why_ the decision is made.
-> 
-> I didn't make any decesion. ;-) That's how current reclaim works to
-> avoid latency of freeing page in interrupt context. I had a patchset
-> to resolve the concern a few years ago but got distracted.
+> > Then it wont be fgood to rely on chance :)
+> Yes, I knew that. May I create another independent patch for event_id1 since that's potential issue is not related with this ecspi patch set?
 
-Please articulate that in the changelog then. Or even do not go into
-implementation details and stick with - reuse the current reclaim
-implementation. If you call out some of the specific details you are
-risking people will start depending on them. The fact that this reuses
-the currect reclaim logic is enough from the review point of view
-because we know that there is no additional special casing to worry
-about.
+Sure a patch should change one thing but I think it should come before
+this one. The log for this should be fixed up as well
+
 -- 
-Michal Hocko
-SUSE Labs
+~Vinod
