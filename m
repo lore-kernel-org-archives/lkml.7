@@ -2,373 +2,145 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 500BEC04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 17:02:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EDDDC04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 17:03:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2195A21773
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 17:02:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C47C21773
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 17:03:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728897AbfEURCQ (ORCPT
+        id S1729013AbfEURD4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 13:02:16 -0400
-Received: from mga04.intel.com ([192.55.52.120]:30576 "EHLO mga04.intel.com"
+        Tue, 21 May 2019 13:03:56 -0400
+Received: from mga12.intel.com ([192.55.52.136]:30950 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728175AbfEURCQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 13:02:16 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
+        id S1728175AbfEURD4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 13:03:56 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 May 2019 10:02:15 -0700
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 May 2019 10:03:55 -0700
 X-ExtLoop1: 1
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
-  by fmsmga001.fm.intel.com with ESMTP; 21 May 2019 10:02:15 -0700
-Date:   Tue, 21 May 2019 10:05:12 -0700
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     Auger Eric <eric.auger@redhat.com>
-Cc:     iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        Yi Liu <yi.l.liu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Andriy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH v3 03/16] iommu: Add I/O ASID allocator
-Message-ID: <20190521100512.2d6ccf5a@jacob-builder>
-In-Reply-To: <faf475ce-8645-9d05-663d-8d090cd4ac05@redhat.com>
-References: <1556922737-76313-1-git-send-email-jacob.jun.pan@linux.intel.com>
-        <1556922737-76313-4-git-send-email-jacob.jun.pan@linux.intel.com>
-        <faf475ce-8645-9d05-663d-8d090cd4ac05@redhat.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
+  by orsmga006.jf.intel.com with ESMTP; 21 May 2019 10:03:51 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1hT8B4-0001g3-AK; Tue, 21 May 2019 20:03:50 +0300
+Date:   Tue, 21 May 2019 20:03:50 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Esben Haabendal <esben@haabendal.dk>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-serial@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        Enrico Weigelt <lkml@metux.net>, Jiri Slaby <jslaby@suse.com>,
+        Darwin Dingel <darwin.dingel@alliedtelesis.co.nz>,
+        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        He Zhe <zhe.he@windriver.com>, Marek Vasut <marex@denx.de>,
+        Douglas Anderson <dianders@chromium.org>,
+        Paul Burton <paul.burton@mips.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH resend] serial: 8250: Add support for using
+ platform_device resources
+Message-ID: <20190521170350.GL9224@smile.fi.intel.com>
+References: <20190430140416.4707-1-esben@geanix.com>
+ <20190521113426.16790-1-esben@geanix.com>
+ <20190521124202.GE9224@smile.fi.intel.com>
+ <87d0kbna0p.fsf@haabendal.dk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87d0kbna0p.fsf@haabendal.dk>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 21 May 2019 11:41:52 +0200
-Auger Eric <eric.auger@redhat.com> wrote:
+On Tue, May 21, 2019 at 04:43:18PM +0200, Esben Haabendal wrote:
+> Andy Shevchenko <andriy.shevchenko@linux.intel.com> writes:
+> 
+> > On Tue, May 21, 2019 at 01:34:26PM +0200, Esben Haabendal wrote:
+> >> Allow getting memory resource (mapbase or iobase) as well as irq from
+> >> platform_device resources.
+> >> 
+> >> The UPF_DEV_RESOURCES flag must be set for devices where platform_device
+> >> resources are to be used.  When not set, driver behaves as before.
+> >> 
+> >> This allows use of the serial8250 driver together with devices with
+> >> resources added by platform_device_add_resources(), such as mfd child
+> >> devices added with mfd_add_devices().
+> >> 
+> >> When UPF_DEV_RESOURCES flag is set, the following platform_data fields should
+> >> not be used: mapbase, iobase, mapsize, and irq.  They are superseded by the
+> >> resources attached to the device.
+> >> 
+> >
+> > Same comment here: Requesting resource is orthogonal to the retrieving or
+> > slicing them.
+> 
+> Yes.  But for MFD devices, I do think it makes sense for the MFD parent
+> device to request the entire memory resource, and then split it.
 
-> Hi,
-> 
-> On 5/4/19 12:32 AM, Jacob Pan wrote:
-> > From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-> > 
-> > Some devices might support multiple DMA address spaces, in
-> > particular those that have the PCI PASID feature. PASID (Process
-> > Address Space ID) allows to share process address spaces with
-> > devices (SVA), partition a device into VM-assignable entities (VFIO
-> > mdev) or simply provide multiple DMA address space to kernel
-> > drivers. Add a global PASID allocator usable by different drivers
-> > at the same time. Name it I/O ASID to avoid confusion with ASIDs
-> > allocated by arch code, which are usually a separate ID space.
-> > 
-> > The IOASID space is global. Each device can have its own PASID
-> > space, but by convention the IOMMU ended up having a global PASID
-> > space, so that with SVA, each mm_struct is associated to a single
-> > PASID.
-> > 
-> > The allocator is primarily used by IOMMU subsystem but in rare
-> > occasions drivers would like to allocate PASIDs for devices that
-> > aren't managed by an IOMMU, using the same ID space as IOMMU.
-> > 
-> > Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > Link: https://lkml.org/lkml/2019/4/26/462
-> > ---
-> >  drivers/iommu/Kconfig  |   6 +++
-> >  drivers/iommu/Makefile |   1 +
-> >  drivers/iommu/ioasid.c | 140
-> > +++++++++++++++++++++++++++++++++++++++++++++++++
-> > include/linux/ioasid.h |  67 +++++++++++++++++++++++ 4 files
-> > changed, 214 insertions(+) create mode 100644 drivers/iommu/ioasid.c
-> >  create mode 100644 include/linux/ioasid.h
-> > 
-> > diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
-> > index 6f07f3b..75e7f97 100644
-> > --- a/drivers/iommu/Kconfig
-> > +++ b/drivers/iommu/Kconfig
-> > @@ -2,6 +2,12 @@
-> >  config IOMMU_IOVA
-> >  	tristate
-> >  
-> > +config IOASID
-> > +	bool
-> > +	help
-> > +	  Enable the I/O Address Space ID allocator. A single ID
-> > space shared
-> > +	  between different users.
-> > +
-> >  # IOMMU_API always gets selected by whoever wants it.
-> >  config IOMMU_API
-> >  	bool
-> > diff --git a/drivers/iommu/Makefile b/drivers/iommu/Makefile
-> > index 8c71a15..0efac6f 100644
-> > --- a/drivers/iommu/Makefile
-> > +++ b/drivers/iommu/Makefile
-> > @@ -7,6 +7,7 @@ obj-$(CONFIG_IOMMU_DMA) += dma-iommu.o
-> >  obj-$(CONFIG_IOMMU_IO_PGTABLE) += io-pgtable.o
-> >  obj-$(CONFIG_IOMMU_IO_PGTABLE_ARMV7S) += io-pgtable-arm-v7s.o
-> >  obj-$(CONFIG_IOMMU_IO_PGTABLE_LPAE) += io-pgtable-arm.o
-> > +obj-$(CONFIG_IOASID) += ioasid.o
-> >  obj-$(CONFIG_IOMMU_IOVA) += iova.o
-> >  obj-$(CONFIG_OF_IOMMU)	+= of_iommu.o
-> >  obj-$(CONFIG_MSM_IOMMU) += msm_iommu.o
-> > diff --git a/drivers/iommu/ioasid.c b/drivers/iommu/ioasid.c
-> > new file mode 100644
-> > index 0000000..99f5e0a
-> > --- /dev/null
-> > +++ b/drivers/iommu/ioasid.c
-> > @@ -0,0 +1,140 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * I/O Address Space ID allocator. There is one global IOASID
-> > space, split into
-> > + * subsets. Users create a subset with DECLARE_IOASID_SET, then
-> > allocate and
-> > + * free IOASIDs with ioasid_alloc and ioasid_free.
-> > + */
-> > +#include <linux/xarray.h>
-> > +#include <linux/ioasid.h>
-> > +#include <linux/slab.h>
-> > +#include <linux/spinlock.h>
-> > +
-> > +struct ioasid_data {
-> > +	ioasid_t id;
-> > +	struct ioasid_set *set;
-> > +	void *private;
-> > +	struct rcu_head rcu;
-> > +};
-> > +
-> > +static DEFINE_XARRAY_ALLOC(ioasid_xa);
-> > +
-> > +/**
-> > + * ioasid_set_data - Set private data for an allocated ioasid
-> > + * @ioasid: the ID to set data
-> > + * @data:   the private data
-> > + *
-> > + * For IOASID that is already allocated, private data can be set
-> > + * via this API. Future lookup can be done via ioasid_find.
-> > + */
-> > +int ioasid_set_data(ioasid_t ioasid, void *data)
-> > +{
-> > +	struct ioasid_data *ioasid_data;
-> > +	int ret = 0;
-> > +
-> > +	ioasid_data = xa_load(&ioasid_xa, ioasid);
-> > +	if (ioasid_data)
-> > +		ioasid_data->private = data;
-> > +	else
-> > +		ret = -ENOENT;
-> > +
-> > +	/* getter may use the private data */
-> > +	synchronize_rcu();
-> > +
-> > +	return ret;
-> > +}
-> > +EXPORT_SYMBOL_GPL(ioasid_set_data);
-> > +
-> > +/**
-> > + * ioasid_alloc - Allocate an IOASID
-> > + * @set: the IOASID set
-> > + * @min: the minimum ID (inclusive)
-> > + * @max: the maximum ID (inclusive)
-> > + * @private: data private to the caller
-> > + *
-> > + * Allocate an ID between @min and @max (or %0 and %INT_MAX).
-> > Return the
-> > + * allocated ID on success, or INVALID_IOASID on failure. The
-> > @private pointer
-> > + * is stored internally and can be retrieved with ioasid_find().
-> > + */
-> > +ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min,
-> > ioasid_t max,
-> > +		      void *private)
-> > +{
-> > +	int id = INVALID_IOASID;
-> > +	struct ioasid_data *data;
-> > +
-> > +	data = kzalloc(sizeof(*data), GFP_KERNEL);
-> > +	if (!data)
-> > +		return INVALID_IOASID;
-> > +
-> > +	data->set = set;
-> > +	data->private = private;
-> > +
-> > +	if (xa_alloc(&ioasid_xa, &id, data, XA_LIMIT(min, max),
-> > GFP_KERNEL)) {
-> > +		pr_err("Failed to alloc ioasid from %d to %d\n",
-> > min, max);
-> > +		goto exit_free;
-> > +	}
-> > +	data->id = id;
-> > +
-> > +exit_free:
-> > +	if (id < 0 || id == INVALID_IOASID) {
-> > +		kfree(data);
-> > +		return INVALID_IOASID;
-> > +	}
-> > +	return id;
-> > +}
-> > +EXPORT_SYMBOL_GPL(ioasid_alloc);
-> > +
-> > +/**
-> > + * ioasid_free - Free an IOASID
-> > + * @ioasid: the ID to remove
-> > + */
-> > +void ioasid_free(ioasid_t ioasid)
-> > +{
-> > +	struct ioasid_data *ioasid_data;
-> > +
-> > +	ioasid_data = xa_erase(&ioasid_xa, ioasid);
-> > +
-> > +	kfree_rcu(ioasid_data, rcu);
-> > +}
-> > +EXPORT_SYMBOL_GPL(ioasid_free);
-> > +
-> > +/**
-> > + * ioasid_find - Find IOASID data
-> > + * @set: the IOASID set
-> > + * @ioasid: the IOASID to find
-> > + * @getter: function to call on the found object
-> > + *
-> > + * The optional getter function allows to take a reference to the
-> > found object
-> > + * under the rcu lock. The function can also check if the object
-> > is still valid:
-> > + * if @getter returns false, then the object is invalid and NULL
-> > is returned.
-> > + *
-> > + * If the IOASID has been allocated for this set, return the
-> > private pointer
-> > + * passed to ioasid_alloc. Private data can be NULL if not set.
-> > Return an error
-> > + * if the IOASID is not found or not belong to the set.
-> > + */
-> > +void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid,
-> > +		  bool (*getter)(void *))
-> > +{
-> > +	void *priv = NULL;
-> > +	struct ioasid_data *ioasid_data;
-> > +
-> > +	rcu_read_lock();
-> > +	ioasid_data = xa_load(&ioasid_xa, ioasid);
-> > +	if (!ioasid_data) {
-> > +		priv = ERR_PTR(-ENOENT);
-> > +		goto unlock;
-> > +	}
-> > +	if (set && ioasid_data->set != set) {
-> > +		/* data found but does not belong to the set */
-> > +		priv = ERR_PTR(-EACCES);
-> > +		goto unlock;
-> > +	}
-> > +	/* Now IOASID and its set is verified, we can return the
-> > private data */
-> > +	priv = ioasid_data->private;
-> > +	if (getter && !getter(priv))
-> > +		priv = NULL;
-> > +unlock:
-> > +	rcu_read_unlock();
-> > +
-> > +	return priv;
-> > +}
-> > +EXPORT_SYMBOL_GPL(ioasid_find);
-> > diff --git a/include/linux/ioasid.h b/include/linux/ioasid.h
-> > new file mode 100644
-> > index 0000000..41de5e4
-> > --- /dev/null
-> > +++ b/include/linux/ioasid.h
-> > @@ -0,0 +1,67 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +#ifndef __LINUX_IOASID_H
-> > +#define __LINUX_IOASID_H
-> > +
-> > +#define INVALID_IOASID ((ioasid_t)-1)
-> > +typedef unsigned int ioasid_t;
-> > +typedef int (*ioasid_iter_t)(ioasid_t ioasid, void *private, void
-> > *data);  
-> not used as reported during v2 review:
-> https://lkml.org/lkml/2019/4/25/341
-> 
-I missed it, thanks.
-> Thanks
-> 
-> Eric
-> > +typedef ioasid_t (*ioasid_alloc_fn_t)(ioasid_t min, ioasid_t max,
-> > void *data); +typedef void (*ioasid_free_fn_t)(ioasid_t ioasid,
-> > void *data); +
-> > +struct ioasid_set {
-> > +	int dummy;
-> > +};
-> > +
-> > +struct ioasid_allocator {
-> > +	ioasid_alloc_fn_t alloc;
-> > +	ioasid_free_fn_t free;
-> > +	void *pdata;
-> > +	struct list_head list;
-> > +};
-> > +
-> > +#define DECLARE_IOASID_SET(name) struct ioasid_set name = { 0 }
-> > +
-> > +#ifdef CONFIG_IOASID
-> > +ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min,
-> > ioasid_t max,
-> > +		      void *private);
-> > +void ioasid_free(ioasid_t ioasid);
-> > +
-> > +void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid,
-> > +		  bool (*getter)(void *));
-> > +int ioasid_register_allocator(struct ioasid_allocator *allocator);
-> > +void ioasid_unregister_allocator(struct ioasid_allocator
-> > *allocator); +
-> > +int ioasid_set_data(ioasid_t ioasid, void *data);
-> > +
-> > +#else /* !CONFIG_IOASID */
-> > +static inline ioasid_t ioasid_alloc(struct ioasid_set *set,
-> > ioasid_t min,
-> > +				    ioasid_t max, void *private)
-> > +{
-> > +	return INVALID_IOASID;
-> > +}
-> > +
-> > +static inline void ioasid_free(ioasid_t ioasid)
-> > +{
-> > +}
-> > +
-> > +static inline void *ioasid_find(struct ioasid_set *set, ioasid_t
-> > ioasid,
-> > +				bool (*getter)(void *))
-> > +{
-> > +	return NULL;
-> > +}
-> > +static inline int ioasid_register_allocator(struct
-> > ioasid_allocator *allocator) +{
-> > +	return -ENODEV;
-> > +}
-> > +
-> > +static inline void ioasid_unregister_allocator(struct
-> > ioasid_allocator *allocator) +{
-> > +}
-> > +
-> > +static inline int ioasid_set_data(ioasid_t ioasid, void *data)
-> > +{
-> > +	return -ENODEV;
-> > +}
-> > +
-> > +#endif /* CONFIG_IOASID */
-> > +#endif /* __LINUX_IOASID_H */
-> >   
+Nope. This is layering violation here: The user of the resources is not
+handling them in full.
 
-[Jacob Pan]
+> And for drivers that actually are aware of the struct resource given,
+> both approaches work.  Throwing away the resource.parent information
+> and calling out request_mem_region() manually breaks the idea of
+> managing IORESOURCE_MEM as a tree structure.
+
+How come? Can you show an example of output without and with your patches?
+
+> Are we not supposed to be using the parent/child part of struct
+> resource?
+
+It's about slicing, no-one prevents you to do that. I don't see a problem.
+Show the output!
+
+> >> -		if (!request_mem_region(port->mapbase, size, "serial")) {
+> >> +		if (!(port->flags & UPF_DEV_RESOURCES) &&
+> >> +		    !request_mem_region(port->mapbase, size, "serial")) {
+> >
+> >> -				release_mem_region(port->mapbase, size);
+> >> +				if (!(port->flags & UPF_DEV_RESOURCES))
+> >> +					release_mem_region(port->mapbase, size);
+> >
+> >> -		if (!request_region(port->iobase, size, "serial"))
+> >> +		if (!(port->flags & UPF_DEV_RESOURCES) &&
+> >> +		    !request_region(port->iobase, size, "serial"))
+> >
+> >> -		release_mem_region(port->mapbase, size);
+> >> +		if (!(port->flags & UPF_DEV_RESOURCES))
+> >> +			release_mem_region(port->mapbase, size);
+> >
+> >> -		release_region(port->iobase, size);
+> >> +		if (!(port->flags & UPF_DEV_RESOURCES))
+> >> +			release_region(port->iobase, size);
+> >
+> > All these changes are not related to what you describe in the commit message.
+> > is a workaround for the bug in the parent MFD driver of the 8250.
+> 
+> You are right, this is not adequately described in commit message.
+> But unless we are not supposed to allow parent/child memory resource
+> management, I don't think it is a workaround, but a fix.
+> 
+> But I can split it out in a separate patch.  Would be nice if I at least
+> can get the other part of the change merged.
+
+Like Lee said, and I agree, nothing prevents us to switch to
+platform_get_resource().
+
+The stumbling block here is the *requesting* in parent which I strongly
+disagree with (at least in a form of this change, I already told you, that this
+has to be "fixed" on generic level, not as a hack in one certain driver).
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
