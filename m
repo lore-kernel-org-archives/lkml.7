@@ -2,75 +2,80 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D02DAC04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 18:40:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93374C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 18:43:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9814520856
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 18:40:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uMTHaU+n"
+	by mail.kernel.org (Postfix) with ESMTP id 6139F217F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 18:43:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558464193;
+	bh=L96gEwhzXS8dH76O3LoMeL1+YYnNfRATLa7ZW46Bgpw=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=TxncpbJdQvaAEwAXOwhHC02Xau6U1LSAhNcYOAdHMIwP7xr/BfVwD6X5RfZWmHbko
+	 avteF+g0PBp10fcWoWxeGwwtZ67Irw4RMbMt5dQR7UIJeoyfeNU8P0d+EUa+MwSSnr
+	 P7N5h9Q8TUPmpFQEpe7k0DbnRLAbQmjQ+L/YKZ08=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729282AbfEUSkp (ORCPT
+        id S1729192AbfEUSnM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 14:40:45 -0400
-Received: from mail-ua1-f54.google.com ([209.85.222.54]:37573 "EHLO
-        mail-ua1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727969AbfEUSkp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 14:40:45 -0400
-Received: by mail-ua1-f54.google.com with SMTP id t18so7003121uar.4
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 11:40:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=2+tv+y1o8dBk5cC3wMn4pe61w3NNgSIr6Vgz49bBOZc=;
-        b=uMTHaU+nO1fyXF17yaLqfbzq2tUqIwa56+SC2isNEGdGhobva1c/DvWl8FqMip9KUk
-         sHMJERBsNJFgzbYwHNbV9J7d5nQiuQcOxA7I0hVjpR3fvjHx4if3u6invBsnPtSoDb/D
-         O+WCzp8IcT35Fxrf9Y/T0bMMC4rJ32wwRRxxxpg7s7mkSJjrhj3Up9XOmyXy9ZNwdYRC
-         IZmUgcrVQUTIyTVh1qgh61qO1DuHWWkVTZsPDjGaHhrvPaCoGRVDz1XmZzOj0Nf4jrd/
-         Tefs7JmXbD5vsFDDdAbsIdAc7utp2RvVlVtdSDQ1jSuvl181+erafKbpwfvZAVbsKhFJ
-         /6YA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=2+tv+y1o8dBk5cC3wMn4pe61w3NNgSIr6Vgz49bBOZc=;
-        b=p+3fzJQR1JMgTiwNeOnVOhLwl4ZTDvm8AHNRH/LMlmM7LYsA3QmH1tMZ2GeVu5R7vd
-         ii42DnFg2zVodgGruYRDprSUe8uBfBQThKK8xLekDX4XCVPLP3CghamHr06KvgUzsQMQ
-         3fd57X+tz8hV9N7Ten3LjdB2zLOewx2Xy8hYTQfJS6U+irQLTKW5SwOaNDvt+HGM0Imd
-         Cutd5vlV1wh5ubGbY0KaJ7REyhAcMpQDyqBVZsrVTouxw8ElIyasfUlhbszVt7D1Nily
-         fH+OxzDkzNf9h0pP7gzV5HzkEtJcZewT3haL599Kx66End1XE5RFOcjRfaU2ACbaSiQH
-         GGoQ==
-X-Gm-Message-State: APjAAAVWeDMBthuUTPPAbCmOxut8FZ0CKlAjQPJxS8gntXWKrpIAllFR
-        icN8/USPZu5bDmQ9DjJBo3B+LG0tcfgh3ffcTHSZ8g==
-X-Google-Smtp-Source: APXvYqznRmNxF5T0UZr4kNxatVC0iC4FHSs5B8j2YnlwrOaasVjY9yEgIj9iWTApqQbQdqEg1zW/z+CzI6sCKitybvI=
-X-Received: by 2002:ab0:413:: with SMTP id 19mr35464397uav.93.1558464044213;
- Tue, 21 May 2019 11:40:44 -0700 (PDT)
+        Tue, 21 May 2019 14:43:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33698 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727969AbfEUSnM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 14:43:12 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B4A020862;
+        Tue, 21 May 2019 18:43:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558464191;
+        bh=L96gEwhzXS8dH76O3LoMeL1+YYnNfRATLa7ZW46Bgpw=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=rSOf6TJR+EkwkNLjOUJe0ei0k40QHpSAzC8q98LT1tfx5vNIzZzEB8CTXEtbSw4gA
+         yH96MX+btZpGrqyqsT3TQo/3RevmwXX4mQAiFnsF7IDCQSbWGm++YUC2rXW3c2HWYW
+         t+psVXKLJCCNY/JLTFfMLmUjpKCFIqeWjAiLarfY=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-From:   Alan Cooper <alcooperx@gmail.com>
-Date:   Tue, 21 May 2019 14:40:49 -0400
-Message-ID: <CAOGqxeWTh0NJ177cH5a4ph-W49pFehjdEcVv+SLm__TiHJc_aQ@mail.gmail.com>
-Subject: Generic PHY "unload" crash
-To:     ": Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190520021702.3531-1-peng.fan@nxp.com>
+References: <20190520021702.3531-1-peng.fan@nxp.com>
+Subject: Re: [PATCH V3] clk: imx: imx8mm: fix int pll clk gate
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Peng Fan <peng.fan@nxp.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+To:     "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Peng Fan <peng.fan@nxp.com>
+User-Agent: alot/0.8.1
+Date:   Tue, 21 May 2019 11:43:10 -0700
+Message-Id: <20190521184311.6B4A020862@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I'm seeing an issue on a system where I have a generic PHY that is
-used by a USB XHCI driver. The XHCI driver does the phy_init() in
-probe and the phy_exit() in remove. The problem happens when I use
-sysfs to "unload" the PHY driver before doing an unload of the XHCI
-driver. This is a result of the XHCI driver calling into the PHY
-driver's phy_exit routine after it's been removed. It seems like this
-issue will exist for other PHY provider/user pairs and I don't see an
-easy solution. I was wondering if anyone had any suggestions on how to
-solve this problem.
+Quoting Peng Fan (2019-05-19 19:03:19)
+> To Frac pll, the gate shift is 13, however to Int PLL the gate shift
+> is 11.
+>=20
+> Cc: <stable@vger.kernel.org>
+> Fixes: ba5625c3e27 ("clk: imx: Add clock driver support for imx8mm")
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> Reviewed-by: Fabio Estevam <festevam@gmail.com>
+> Reviewed-by: Jacky Bai <ping.bai@nxp.com>
+> ---
 
-Al
+Applied to clk-fixes
+
