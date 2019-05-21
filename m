@@ -2,102 +2,105 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11408C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 11:18:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EF97C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 11:19:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D755B217D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 11:18:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558437501;
-	bh=idCdpfIphgwsyBJcVnG3Lf/jXFBiv1TH26SgUIodjC4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=z0CkvM0cxgryiIfyClQhCMCxRFfVyjN/tHvedpS2YtjJRwVHgy0CjiVBzKYPGVM5N
-	 v323XH9J3brcTEUOf05Sxq4lksoATCmw03CeT5yRakXyQBp5VdBs4jDs+g/bCMDaGk
-	 EmODy9Eq1DTsvynur601yktB9I2ksyXrI/koDFvk=
+	by mail.kernel.org (Postfix) with ESMTP id 4FB2820863
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 11:19:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="JmHUemTb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727880AbfEULSV (ORCPT
+        id S1727980AbfEULTV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 07:18:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39392 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726138AbfEULSU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 07:18:20 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 60C3020863;
-        Tue, 21 May 2019 11:18:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558437499;
-        bh=idCdpfIphgwsyBJcVnG3Lf/jXFBiv1TH26SgUIodjC4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ILtZKTg0ksXwd6/6eguMea6fBdLiBag3w79CdHvOQPFNZvAagS+st52LaYQv9xbsY
-         N70qfNzbMae4PJbZpfyGrJmFfzu6Nus9rzYzLe4tF+H5U5MQpy2UmfEwEufpqJIgj1
-         F0XFVjUZufD/DJOKVawTwKyr1A79X1G5wQIHHeCY=
-Date:   Tue, 21 May 2019 13:18:17 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Esben Haabendal <esben@haabendal.dk>
-Cc:     Lee Jones <lee.jones@linaro.org>, linux-serial@vger.kernel.org,
-        Jiri Slaby <jslaby@suse.com>, Nishanth Menon <nm@ti.com>,
-        Vignesh R <vigneshr@ti.com>, Tony Lindgren <tony@atomide.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] serial: 8250: Add support for 8250/16550 as MFD
- function
-Message-ID: <20190521111817.GA24911@kroah.com>
-References: <20190426084038.6377-3-esben@geanix.com>
- <20190507114905.GB29524@dell>
- <87o94ejwrx.fsf@haabendal.dk>
- <20190507133844.GA6194@dell>
- <87bm05mpmx.fsf@haabendal.dk>
- <20190514104741.GO4319@dell>
- <20190514122618.GA18859@kroah.com>
- <87imudky2o.fsf@haabendal.dk>
- <20190521100904.GA13612@kroah.com>
- <87pnocm59v.fsf@haabendal.dk>
+        Tue, 21 May 2019 07:19:21 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:34948 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726344AbfEULTV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 07:19:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
+        Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=PewI+qr+FzkZGyMnmOEx8flWAwSCMRgcYSeVi2xaIu0=; b=JmHUemTbsJjHFKH8LAh6uuUcf
+        kjfVVKy4nBa+JqUgvV6PFYa4Yisl8K0MmJJskQ7RKQecJ8rn8+dpwwYFb8MFq/c4aEqVANOP3gfsc
+        H8IWtN2O42oN4dlFWvq/i+xnj8qV/QX6D97j3Px+BxsC69tHDvTm7vSfz+NBEWzB+gkKU3Add8TeC
+        JNJd91u4/5akCxcEPwPxfxu8yhUlCyKksXJspBBlpBEojvwO7MvyNIV3DdoNTM6DUVwD5MfHMwzJ7
+        zkoJMuXXCZbNp0VhPUZPSnEUmiW0aW7wDSlXEFmdRMYsIHNMnRtCrbWQMDyaq+BXRqijvP2KfgiAy
+        wlbYEj96Q==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:52562)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1hT2nc-0000ih-Fb; Tue, 21 May 2019 12:19:16 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.89)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1hT2nb-0005mq-KF; Tue, 21 May 2019 12:19:15 +0100
+Date:   Tue, 21 May 2019 12:19:15 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+Cc:     Jo-Philipp Wich <jo@mein.io>,
+        Network Development <netdev@vger.kernel.org>,
+        John Crispin <john@phrozen.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-block@vger.kernel.org, Jonas Gorski <jonas.gorski@gmail.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Felix Fietkau <nbd@nbd.name>
+Subject: Re: ARM router NAT performance affected by random/unrelated commits
+Message-ID: <20190521111915.3hklypo5pwi3fcgh@shell.armlinux.org.uk>
+References: <9a9ba4c9-3cb7-eb64-4aac-d43b59224442@gmail.com>
+ <20190521104512.2r67fydrgniwqaja@shell.armlinux.org.uk>
+ <CACna6ryVxFr8ho3ekY4Q_J=TamVLv9ZMDaHJFUGcEGSRrSVaHA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <87pnocm59v.fsf@haabendal.dk>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACna6ryVxFr8ho3ekY4Q_J=TamVLv9ZMDaHJFUGcEGSRrSVaHA@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 21, 2019 at 01:11:08PM +0200, Esben Haabendal wrote:
-> Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
-> 
-> >> I will try ad hold back with this thread until you get back to it.
+On Tue, May 21, 2019 at 01:16:12PM +0200, Rafał Miłecki wrote:
+> On Tue, 21 May 2019 at 12:45, Russell King - ARM Linux admin
+> <linux@armlinux.org.uk> wrote:
+> > On Tue, May 21, 2019 at 12:28:48PM +0200, Rafał Miłecki wrote:
+> > > I work on home routers based on Broadcom's Northstar SoCs. Those devices
+> > > have ARM Cortex-A9 and most of them are dual-core.
+> > >
+> > > As for home routers, my main concern is network performance. That CPU
+> > > isn't powerful enough to handle gigabit traffic so all kind of
+> > > optimizations do matter. I noticed some unexpected changes in NAT
+> > > performance when switching between kernels.
+> > >
+> > > My hardware is BCM47094 SoC (dual core ARM) with integrated network
+> > > controller and external BCM53012 switch.
 > >
-> > Ok, I have no idea what is going on here, sorry.  This is a really long
-> > and meandering thread, and I can't even find the original patches in my
-> > queue.
-> >
-> > So can you resend things and we can start over?  :)
+> > Guessing, I'd say it's to do with the placement of code wrt cachelines.
 > 
-> Will do.
+> That was my guess as well, that's why I tried "cachestat" tool.
 > 
-> > But note, using a mfd for a uart seems VERY odd to me...
 > 
-> Ok.  In my case, I have a pcie card with an fpga which includes 5 uart
-> ports, 3 ethernet interfaces and a number of custom IP blocks.
-> I believe that an mfd driver for that pcie card in that case.
+> > You could try aligning some of the cache flushing code to a cache line
+> > and see what effect that has.
+> 
+> Can you give me some extra hint on how to do that, please? I tried
+> searching for it a bit but I didn't find any clear article on that
+> matter.
 
-I believe you need to fix that fpga to expose individual pci devices
-such that you can properly bind the individual devices to the expected
-drivers :)
+IIRC, the cache line size on Cortex A9 is 32 bytes, so the assembler
+directive would be ".align 5".  Place that in arch/arm/mm/cache-v7.S
+before v7_dma_clean_range and v7_dma_inv_range.
 
-Seriously, who makes such a broken fpga device that goes against the PCI
-spec that way?  Well, not so much as "goes against it", as "ignores all
-of the proper ideas of the past 20 years for working with PCI devices".
-
-thanks,
-
-greg k-h
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
