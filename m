@@ -2,69 +2,71 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98D18C04E87
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:54:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB4A5C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:54:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DA0721743
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:54:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558446858;
-	bh=mV50Au8ZG+x0O2R6KdtDn2lUTMG7xVfB1PQk8wR02NM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jCp+uIy4XiDfIygihs5fI0zqA1jN0zTc8FXjZiDU1ast7rmDSpku0LYAI97qUbtWW
-	 r3hUux5Wep3Z2hWjjiXufB2L3tYNGwO/73U9M2sgAEww2KpkEJJUDvHcqfch5DCfWF
-	 TcYmk8uwfhnODcJ6Sm1fRuea1jNDRhz1p+3yskRo=
+	by mail.kernel.org (Postfix) with ESMTP id 7FFB5217D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:54:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Xyy6tae4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728223AbfEUNyR (ORCPT
+        id S1728321AbfEUNyx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 09:54:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36984 "EHLO mail.kernel.org"
+        Tue, 21 May 2019 09:54:53 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:41934 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727534AbfEUNyR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 09:54:17 -0400
-Received: from localhost (unknown [106.51.105.51])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D964521479;
-        Tue, 21 May 2019 13:54:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558446856;
-        bh=mV50Au8ZG+x0O2R6KdtDn2lUTMG7xVfB1PQk8wR02NM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PSukCtB0J22xf1jquuK8n4kzLvi0Hj8V8hPkzkazkhVxKC9Dsq7QuGcUVKwWzAhv0
-         qgD9UlS7JoWOCTsY9fr2yX+7JOYE+FUqTOHCz+6oO8PoAjPQIXNxhqyVjRNxPKNgQZ
-         AoeXfqD1YFAO3En1n+4oVVdwQC2wEKHo4VWc9h9E=
-Date:   Tue, 21 May 2019 19:24:11 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Baolin Wang <baolin.wang@linaro.org>
-Cc:     dan.j.williams@intel.com, eric.long@unisoc.com,
-        orsonzhai@gmail.com, zhang.lyra@gmail.com,
-        vincent.guittot@linaro.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/6] Fix some bugs and add new feature for Spreadtrum
- DMA engine
-Message-ID: <20190521135411.GM15118@vkoul-mobl>
-References: <cover.1557127239.git.baolin.wang@linaro.org>
+        id S1728104AbfEUNyx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 09:54:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=UGCJIN4YC7PwWtW6V8R3e7Y9bx1SazYljWZoygW/HSE=; b=Xyy6tae4c0JF3FPYCIWZ95xYPI
+        y+wPD3IVVm4BuYuiroMjJGK0gP/J651/FZFvksMVM1VicCjpHsC44CnpwS6nnuaJFONG+p6WPmSwI
+        nclb+1LdtMwCRql6rvzzj2DA5e6fLTjAqXu5QzcVeKoo3t5hZ3dOEAi2AMwgglSYthbE=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hT5Dz-0002yK-JF; Tue, 21 May 2019 15:54:39 +0200
+Date:   Tue, 21 May 2019 15:54:39 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Sagar Shrikant Kadam <sagar.kadam@sifive.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, peter@korsgaard.com,
+        palmer@sifive.com, paul.walmsley@sifive.com,
+        linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 3/3] i2c-ocores: sifive: add polling mode workaround
+ for FU540-C000 SoC.
+Message-ID: <20190521135439.GM22024@lunn.ch>
+References: <1558445574-16471-1-git-send-email-sagar.kadam@sifive.com>
+ <1558445574-16471-4-git-send-email-sagar.kadam@sifive.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cover.1557127239.git.baolin.wang@linaro.org>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <1558445574-16471-4-git-send-email-sagar.kadam@sifive.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06-05-19, 15:28, Baolin Wang wrote:
-> Hi,
-> 
-> This patch set fixes some DMA engine bugs and adds interrupt support
-> for 2-stage transfer.
+>  static void ocores_process_polling(struct ocores_i2c *i2c)
+>  {
+> +	const struct of_device_id *match;
+> +
+> +	match = of_match_node(ocores_i2c_match, i2c->adap.dev.of_node);
+> +
+>  	while (1) {
+>  		irqreturn_t ret;
+>  		int err;
 
-Applied all, thanks
--- 
-~Vinod
+Please keep with the idea of i2c->flags, which is set during probe.
+Just because it was removed because it was no longer needed does not
+stop you from putting it back again if it is needed.
+
+       Andrew
