@@ -2,148 +2,135 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BFE6C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 18:46:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64FD2C04E87
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 18:49:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72E3A217D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 18:46:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A0E0217D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 18:49:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ko+3HCp8"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="JYscqSP1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729316AbfEUSqo (ORCPT
+        id S1729272AbfEUStA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 14:46:44 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:41129 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729240AbfEUSqn (ORCPT
+        Tue, 21 May 2019 14:49:00 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:46008 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728175AbfEUSs7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 14:46:43 -0400
-Received: by mail-lf1-f66.google.com with SMTP id d8so13872553lfb.8;
-        Tue, 21 May 2019 11:46:42 -0700 (PDT)
+        Tue, 21 May 2019 14:48:59 -0400
+Received: by mail-qk1-f194.google.com with SMTP id j1so11689528qkk.12
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 11:48:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=QauUjdnp9yGFnxXAzu+JIWLAgnuLKOd5eUrMlHdNl0c=;
-        b=ko+3HCp84aZL1+k1Bb5stEsCb77OeNwCB7QehQN7jUJegHiejDn/BTPnxE6pn2vST/
-         F2Ac8mCYqqCIr6YuV0aFV+kTpzpju8L4prSJIwmeUAc3sRtOuK+F4ojeB4l4ORbJANCS
-         fNONAbH2Z3zJGTTVXaY3RjjgEVmMX2tG92T+sABXr85eUGX3+bKwDq67IzPjHThMoRqC
-         yr/LaBPR5HfX3am7ivToJi+vYVOAZ/AfpbwVS1uZJ6iR5HCqRVJQr+ktNRRcUcKQVGjA
-         SY3VmSfo6B+VKVg+Ywm5w+gm+WaEs3VwaMmdeWQ+KmB41RrqeklOmKGRqWp4abuKVLtp
-         ilCQ==
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Brh6Wum1Zthj/uQ2mtyHFIq9uQlvrAXKSZbEsVapKL8=;
+        b=JYscqSP1HPPRVqGuMd5owD3l/IDlGmL6FFL67m798Jm2AP4qGcOTqtawfRNo+5kAFu
+         iEJ0vUz9qOZ+rvajt/fb76zKILX2m7sPHzCjQLxU/xpu8s+X3lkRy9CgqtNpDaf0XFJu
+         m/SIilww4DfdKs62gi8wE4MGevsPrJgDS2TyvhL/7eUtavobHZ7DqCVwKBcDulDJUjVu
+         MVt0CUr2fUDTtnd4Vvag66g4rnBT/cZ1xH3t4yZwYbfafoegD76V6HRafoLD0R1dZ62Z
+         EbRvObIPEul9wb7eEhcBGsIGomq6YRkOd3NfdawsXW6Hn11cNpJ1sY5CjCpDM4tjfGZL
+         aezw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=QauUjdnp9yGFnxXAzu+JIWLAgnuLKOd5eUrMlHdNl0c=;
-        b=O9kwMfYVt9nh6e3G/wHcdN4bHuPlAmMvfAougob8QoNOxgjv/Z6pZjDPAkL4CPRpsU
-         +wZuq2E4LzLil1FQHWK/12pZohULtoSzi7BjzA44+yHDL/SbBSj62aJQSliYRs1qrOOM
-         eOK5m0CKMplQgDWbvKMWOsUBShqXIggu838PzVB8DslCuHzC+6EfKUOpqRPGaWc3Em0v
-         il2TV5E5EZWUR89+tllHqMCM74c3B7+jVLUSEbWP4RxcyFigiBPxGsp4X4z/oXCP3JZT
-         Hjua2OGeWGF5yqLsxfII98lCHxva/gVmujLZOlIBvzU3J/mAsL2K5fYZznVjn+a2aL6C
-         PmIw==
-X-Gm-Message-State: APjAAAUea/gKy/B3c+H+btE+7ZqIGLPwK260OFEHHase+F6db/5VebKg
-        QeMxqZ1o6eLi3wdLxjnzShmhpa+f
-X-Google-Smtp-Source: APXvYqzIU2HImHolYaU1unbZJ3pRmSx81HGBlZv2lSH/uhyASopmO/4EABvzjnlH7Sn0B3R49X5rnQ==
-X-Received: by 2002:ac2:48a8:: with SMTP id u8mr18792983lfg.141.1558464401520;
-        Tue, 21 May 2019 11:46:41 -0700 (PDT)
-Received: from [192.168.1.17] (dkv215.neoplus.adsl.tpnet.pl. [83.24.25.215])
-        by smtp.gmail.com with ESMTPSA id y14sm1297129ljh.60.2019.05.21.11.46.39
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 21 May 2019 11:46:40 -0700 (PDT)
-Subject: Re: [PATCH v4 6/6] leds: lm36274: Introduce the TI LM36274 LED driver
-To:     Dan Murphy <dmurphy@ti.com>, pavel@ucw.cz
-Cc:     lee.jones@linaro.org, rdunlap@infradead.org,
-        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190507201159.13940-1-dmurphy@ti.com>
- <20190507201159.13940-7-dmurphy@ti.com>
- <77f1ed5b-bfd2-510c-edd5-1b702f2d1d45@gmail.com>
- <8d126925-9e71-dba4-eb88-50fd6e6c06d8@ti.com>
- <a7cb6628-e501-b580-f714-0e5de78ea39c@gmail.com>
- <d0c49197-984d-5cd8-032a-27d9c5ca6d29@ti.com>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Message-ID: <97ff2f48-9ec0-06f1-b667-56fcdef8bf03@gmail.com>
-Date:   Tue, 21 May 2019 20:46:38 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Brh6Wum1Zthj/uQ2mtyHFIq9uQlvrAXKSZbEsVapKL8=;
+        b=CfmoLhCKSxnpSG7l+ekXITJ4yfQnbH7ovAP+fM7Xtcy7BgAh3OCt1iNNPFKgP0ZEbN
+         wWmqS34fY+wpBvXpaOtaYQ1zboYsj/IZTeBCHEAjvfeT//THXcMCgKxmqrAJQaYiIvg4
+         VHsPej3bTCuSXmXdTJYaP3AIouq1Hh/ATGDNCZLL4j9op74wahABmwPBpWdLe3LWtU0z
+         wGD+YPRVHHW4nTsSBxyojEKCdYnasc/dQL7JB4Rrbmbb82GbKyLxVRip9nuLS3PxGgLw
+         GltNNtI5NJ2PaH54uVMDpWQ+nhtaeUqICYUcyQ3CKLU9FVtULandGCszCTDw0Yamkhns
+         zlvw==
+X-Gm-Message-State: APjAAAU3rIDNqPKt5WUqFZUje/EDQCLiUm3m+g16JtxsjtFKoLxqN4et
+        HxpEHslFSZfVneeoSPF59rdW7w==
+X-Google-Smtp-Source: APXvYqwU77tWKnZY68/uvl8nI3fxF+k0K8AI67X6RVtQAbCKMK/pPRLs+1/gDbqNIuNCiuScF9EnOQ==
+X-Received: by 2002:a37:358:: with SMTP id 85mr63206066qkd.174.1558464538599;
+        Tue, 21 May 2019 11:48:58 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-49-251.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.49.251])
+        by smtp.gmail.com with ESMTPSA id u2sm5545370qtq.45.2019.05.21.11.48.57
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 21 May 2019 11:48:57 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hT9om-0004QR-Qs; Tue, 21 May 2019 15:48:56 -0300
+Date:   Tue, 21 May 2019 15:48:56 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Andrey Konovalov <andreyknvl@google.com>,
+        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
+        linux-media@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alexander Deucher <Alexander.Deucher@amd.com>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
+Subject: Re: [PATCH v15 00/17] arm64: untag user pointers passed to the kernel
+Message-ID: <20190521184856.GC2922@ziepe.ca>
+References: <cover.1557160186.git.andreyknvl@google.com>
+ <20190517144931.GA56186@arrakis.emea.arm.com>
 MIME-Version: 1.0
-In-Reply-To: <d0c49197-984d-5cd8-032a-27d9c5ca6d29@ti.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190517144931.GA56186@arrakis.emea.arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dan,
+On Fri, May 17, 2019 at 03:49:31PM +0100, Catalin Marinas wrote:
 
-On 5/21/19 8:25 PM, Dan Murphy wrote:
-> Jacek
-> 
-> On 5/21/19 12:40 PM, Jacek Anaszewski wrote:
->> On 5/20/19 11:19 PM, Dan Murphy wrote:
->>> Jacek
->>>
->>> On 5/20/19 2:54 PM, Jacek Anaszewski wrote:
->>>> Hi Dan,
->>>>
->>>> On 5/7/19 10:11 PM, Dan Murphy wrote:
->>>>> Introduce the LM36274 LED driver.  This driver uses the ti-lmu
->>>>> MFD driver to probe this LED driver.  The driver configures only the
->>>>> LED registers and enables the outputs according to the config file.
->>>>>
->>>>> The driver utilizes the TI LMU (Lighting Management Unit) LED common
->>>>> framework to set the brightness bits.
->>>>>
->>>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->>>>> ---
->>>>>     drivers/leds/Kconfig        |   7 ++
->>>>>     drivers/leds/Makefile       |   1 +
->>>>>     drivers/leds/leds-lm36274.c | 174 ++++++++++++++++++++++++++++++++++++
->>>>>     3 files changed, 182 insertions(+)
->>>>>     create mode 100644 drivers/leds/leds-lm36274.c
->>>>>
->>>>> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
->>>>> index 255fdd5e8491..db83a3feca01 100644
->>>>> --- a/drivers/leds/Kconfig
->>>>> +++ b/drivers/leds/Kconfig
->>>>> @@ -791,6 +791,13 @@ config LEDS_LM3697
->>>>>           Say Y to enable the LM3697 LED driver for TI LMU devices.
->>>>>           This supports the LED device LM3697.
->>>>>     +config LEDS_LM36274
->>>>> +    tristate "LED driver for LM36274"
->>>>> +    depends on LEDS_TI_LMU_COMMON
->>>>
->>>> Shouldn't we have "depends on MFD_TI_LMU" as well here?
->>>>
->>>
->>> Actually the LEDS_TI_LMU_COMMON flag should depend on MFD_TI_LMU.
->>> Then it would inherit that dependency.
->>
->> LEDS_TI_LMU_COMMON does not seem too have any dependency on MFD_TI_LMU,
->> and it would be incorrect to require enabling MFD_TI_LMU for all drivers
->> depending on TI_LMU_COMMON, that can be probed on their own, like
->> leds-lm3697.c .
->>
-> 
-> Correct.
-> 
-> I can update the Kconfigs unless you want to ammend the commits.
+> The tagged pointers (whether hwasan or MTE) should ideally be a
+> transparent feature for the application writer but I don't think we can
+> solve it entirely and make it seamless for the multitude of ioctls().
+> I'd say you only opt in to such feature if you know what you are doing
+> and the user code takes care of specific cases like ioctl(), hence the
+> prctl() proposal even for the hwasan.
 
-I added "depends on MFD_TI_LMU" to "config LEDS_LM36274".
-Please verify your patch sets pushed to [0].
+I'm not sure such a dire view is warrented.. 
 
-[0] 
-https://git.kernel.org/pub/scm/linux/kernel/git/j.anaszewski/linux-leds.git/log/?h=ib-leds-mfd-regulator
+The ioctl situation is not so bad, other than a few special cases,
+most drivers just take a 'void __user *' and pass it as an argument to
+some function that accepts a 'void __user *'. sparse et al verify
+this. 
 
--- 
-Best regards,
-Jacek Anaszewski
+As long as the core functions do the right thing the drivers will be
+OK.
+
+The only place things get dicy is if someone casts to unsigned long
+(ie for vma work) but I think that reflects that our driver facing
+APIs for VMAs are compatible with static analysis (ie I have no
+earthly idea why get_user_pages() accepts an unsigned long), not that
+this is too hard.
+
+Jason
