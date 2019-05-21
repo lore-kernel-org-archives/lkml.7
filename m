@@ -2,147 +2,173 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7609BC04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 19:35:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3886C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 19:35:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32340217F9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 19:35:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Pr4XuljV"
+	by mail.kernel.org (Postfix) with ESMTP id 84566217D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 19:35:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727547AbfEUTfJ (ORCPT
+        id S1727610AbfEUTf4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 15:35:09 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:14132 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727377AbfEUTfJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 15:35:09 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ce452eb0000>; Tue, 21 May 2019 12:35:07 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 21 May 2019 12:35:06 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 21 May 2019 12:35:06 -0700
-Received: from [10.25.72.115] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 21 May
- 2019 19:35:01 +0000
-Subject: Re: [PATCH V7 02/15] PCI: Disable MSI for Tegra194 root port
-From:   Vidya Sagar <vidyas@nvidia.com>
-To:     Thierry Reding <thierry.reding@gmail.com>
-CC:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <jonathanh@nvidia.com>, <kishon@ti.com>, <catalin.marinas@arm.com>,
-        <will.deacon@arm.com>, <jingoohan1@gmail.com>,
-        <gustavo.pimentel@synopsys.com>, <mperttunen@nvidia.com>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
-References: <20190517123846.3708-1-vidyas@nvidia.com>
- <20190517123846.3708-3-vidyas@nvidia.com> <20190521102729.GB29166@ulmo>
- <f63051b0-a220-125b-219e-25156d65ea6d@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <220fcb99-c3b5-58dc-a37a-57cbe9efa072@nvidia.com>
-Date:   Wed, 22 May 2019 01:04:58 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+        Tue, 21 May 2019 15:35:56 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58548 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726771AbfEUTf4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 15:35:56 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 02EA43078AAC;
+        Tue, 21 May 2019 19:35:51 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-85.bos.redhat.com [10.18.17.85])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 26DA118786;
+        Tue, 21 May 2019 19:35:46 +0000 (UTC)
+Subject: Re: [PATCH v4 5/7] mm: rework non-root kmem_cache lifecycle
+ management
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Shakeel Butt <shakeelb@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Rik van Riel <riel@surriel.com>,
+        Christoph Lameter <cl@linux.com>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Cgroups <cgroups@vger.kernel.org>
+References: <20190514213940.2405198-1-guro@fb.com>
+ <20190514213940.2405198-6-guro@fb.com>
+ <CALvZod6Zb_kYHyG02jXBY9gvvUn_gOug7kq_hVa8vuCbXdPdjQ@mail.gmail.com>
+ <7d06354d-4542-af42-d83d-2bc4639b56f2@redhat.com>
+ <20190521192320.GA6658@tower.DHCP.thefacebook.com>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <e94301ee-b12d-597f-d195-6716b0af1363@redhat.com>
+Date:   Tue, 21 May 2019 15:35:45 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <f63051b0-a220-125b-219e-25156d65ea6d@nvidia.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+In-Reply-To: <20190521192320.GA6658@tower.DHCP.thefacebook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1558467307; bh=BZ2BIbzj5D7Ss2aLhzoWXgSRs8f/dBCrJl7cBh1DHuw=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=Pr4XuljVobWvPLT6veT/0/GmsErJZdmsGM1t1ifHwtcsEWiKNszVBeFNivXaGp6WG
-         /XfrDcL8vAj6aAb63WyGlpAjMEgAFVybAo9eaRma55mRch4OGR7qNNvr1BPO0ktTza
-         FJnN6agdqSzG4cMcsZI+che0lf+S/Zw2UYeumX0MXvm2Jaz4Vz8HlY7N4WTyR1nZCP
-         /HwUWL4t1SbuCFsfew2zu5pyeABkANCRPx1lKbHAJQt7HtYGgSH0zWsYM47FGlVlOI
-         o7MchRfrlBKGhTM2vtQGZ9WlWg1+J5IU/83DRd6iUmv+5tibGVE+ktHnY9+yZYBacZ
-         6oE0nozZhIVhg==
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Tue, 21 May 2019 19:35:55 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/21/2019 10:17 PM, Vidya Sagar wrote:
-> On 5/21/2019 3:57 PM, Thierry Reding wrote:
->> On Fri, May 17, 2019 at 06:08:33PM +0530, Vidya Sagar wrote:
->>> Tegra194 rootports don't generate MSI interrupts for PME events and hen=
-ce
->>> MSI needs to be disabled for them to avoid root ports service drivers
->>> registering their respective ISRs with MSI interrupt.
+On 5/21/19 3:23 PM, Roman Gushchin wrote:
+> On Tue, May 21, 2019 at 02:39:50PM -0400, Waiman Long wrote:
+>> On 5/14/19 8:06 PM, Shakeel Butt wrote:
+>>>> @@ -2651,20 +2652,35 @@ struct kmem_cache *memcg_kmem_get_cache(struct kmem_cache *cachep)
+>>>>         struct mem_cgroup *memcg;
+>>>>         struct kmem_cache *memcg_cachep;
+>>>>         int kmemcg_id;
+>>>> +       struct memcg_cache_array *arr;
+>>>>
+>>>>         VM_BUG_ON(!is_root_cache(cachep));
+>>>>
+>>>>         if (memcg_kmem_bypass())
+>>>>                 return cachep;
+>>>>
+>>>> -       memcg = get_mem_cgroup_from_current();
+>>>> +       rcu_read_lock();
+>>>> +
+>>>> +       if (unlikely(current->active_memcg))
+>>>> +               memcg = current->active_memcg;
+>>>> +       else
+>>>> +               memcg = mem_cgroup_from_task(current);
+>>>> +
+>>>> +       if (!memcg || memcg == root_mem_cgroup)
+>>>> +               goto out_unlock;
+>>>> +
+>>>>         kmemcg_id = READ_ONCE(memcg->kmemcg_id);
+>>>>         if (kmemcg_id < 0)
+>>>> -               goto out;
+>>>> +               goto out_unlock;
+>>>>
+>>>> -       memcg_cachep = cache_from_memcg_idx(cachep, kmemcg_id);
+>>>> -       if (likely(memcg_cachep))
+>>>> -               return memcg_cachep;
+>>>> +       arr = rcu_dereference(cachep->memcg_params.memcg_caches);
+>>>> +
+>>>> +       /*
+>>>> +        * Make sure we will access the up-to-date value. The code updating
+>>>> +        * memcg_caches issues a write barrier to match this (see
+>>>> +        * memcg_create_kmem_cache()).
+>>>> +        */
+>>>> +       memcg_cachep = READ_ONCE(arr->entries[kmemcg_id]);
+>>>>
+>>>>         /*
+>>>>          * If we are in a safe context (can wait, and not in interrupt
+>>>> @@ -2677,10 +2693,20 @@ struct kmem_cache *memcg_kmem_get_cache(struct kmem_cache *cachep)
+>>>>          * memcg_create_kmem_cache, this means no further allocation
+>>>>          * could happen with the slab_mutex held. So it's better to
+>>>>          * defer everything.
+>>>> +        *
+>>>> +        * If the memcg is dying or memcg_cache is about to be released,
+>>>> +        * don't bother creating new kmem_caches. Because memcg_cachep
+>>>> +        * is ZEROed as the fist step of kmem offlining, we don't need
+>>>> +        * percpu_ref_tryget() here. css_tryget_online() check in
+>>> *percpu_ref_tryget_live()
 >>>
->>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->>> ---
->>> Changes since [v6]:
->>> * This is a new patch
->>>
->>> =A0 drivers/pci/quirks.c | 14 ++++++++++++++
->>> =A0 1 file changed, 14 insertions(+)
->>>
->>> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
->>> index 0f16acc323c6..28f9a0380df5 100644
->>> --- a/drivers/pci/quirks.c
->>> +++ b/drivers/pci/quirks.c
->>> @@ -2592,6 +2592,20 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NVIDIA,
->>> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 PCI_DEVICE_ID_NVIDIA_NVENET_15,
->>> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 nvenet_msi_disable);
->>> +/*
->>> + * Tegra194's PCIe root ports don't generate MSI interrupts for PME ev=
-ents
->>> + * instead legacy interrupts are generated. Hence, to avoid service dr=
-ivers
->>> + * registering their respective ISRs for MSIs, need to disable MSI int=
-errupts
->>> + * for root ports.
->>> + */
->>> +static void disable_tegra194_rp_msi(struct pci_dev *dev)
->>> +{
->>> +=A0=A0=A0 dev->no_msi =3D 1;
->>> +}
->>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NVIDIA, 0x1ad0, disable_tegra194=
-_rp_msi);
->>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NVIDIA, 0x1ad1, disable_tegra194=
-_rp_msi);
->>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NVIDIA, 0x1ad2, disable_tegra194=
-_rp_msi);
->>> +
+>>>> +        * memcg_schedule_kmem_cache_create() will prevent us from
+>>>> +        * creation of a new kmem_cache.
+>>>>          */
+>>>> -       memcg_schedule_kmem_cache_create(memcg, cachep);
+>>>> -out:
+>>>> -       css_put(&memcg->css);
+>>>> +       if (unlikely(!memcg_cachep))
+>>>> +               memcg_schedule_kmem_cache_create(memcg, cachep);
+>>>> +       else if (percpu_ref_tryget(&memcg_cachep->memcg_params.refcnt))
+>>>> +               cachep = memcg_cachep;
+>>>> +out_unlock:
+>>>> +       rcu_read_lock();
+>> There is one more bug that causes the kernel to panic on bootup when I
+>> turned on debugging options.
 >>
->> Later functions in this file seem to use a more consistent naming
->> pattern, according to which the name for this would become:
+>> [   49.871437] =============================
+>> [   49.875452] WARNING: suspicious RCU usage
+>> [   49.879476] 5.2.0-rc1.bz1699202_memcg_test+ #2 Not tainted
+>> [   49.884967] -----------------------------
+>> [   49.888991] include/linux/rcupdate.h:268 Illegal context switch in
+>> RCU read-side critical section!
+>> [   49.897950]
+>> [   49.897950] other info that might help us debug this:
+>> [   49.897950]
+>> [   49.905958]
+>> [   49.905958] rcu_scheduler_active = 2, debug_locks = 1
+>> [   49.912492] 3 locks held by systemd/1:
+>> [   49.916252]  #0: 00000000633673c5 (&type->i_mutex_dir_key#5){.+.+},
+>> at: lookup_slow+0x42/0x70
+>> [   49.924788]  #1: 0000000029fa8c75 (rcu_read_lock){....}, at:
+>> memcg_kmem_get_cache+0x12b/0x910
+>> [   49.933316]  #2: 0000000029fa8c75 (rcu_read_lock){....}, at:
+>> memcg_kmem_get_cache+0x3da/0x910
 >>
->> =A0=A0=A0=A0pci_quirk_nvidia_tegra194_disable_rp_msi
->>
->> Might be worth considering making this consistent.
->>
->> This could also be moved to the DWC driver to restrict this to where it
->> is needed. In either case, this seems like a good solution, so:
->>
->> Reviewed-by: Thierry Reding <treding@nvidia.com>
->>
-> Ok. I'll move it to DWC driver along with name change for the quirk API.
->=20
-I see that if quirk macros and API are present in pcie-tegra194.c file and =
-driver is built
-as a module, quirk API is not getting invoked by the system, whereas it get=
-s invoked if driver
-is built into kernel. Is this behavior expected? I think it is because of q=
-uirk API symbol
-not available as part of global quirk symbol table when driver is built as =
-a module?
-for now, I'm going to keep quirk macros and API in pci/quirks.c file itself=
-.
+>> It should be "rcu_read_unlock();" at the end.
+> Oops. Good catch, thanks Waiman!
+>
+> I'm somewhat surprised it didn't get up in my tests, neither any of test
+> bots caught it. Anyway, I'll fix it and send v5.
+
+In non-preempt kernel rcu_read_lock() is almost a no-op. So you probably
+won't see any ill effect with this bug.
+
+>
+> Does the rest of the patchset looks sane to you?
+
+I haven't done a full review of the patch, but it looks sane to me from
+my cursory look at it. We hit similar problem in Red Hat. That is why I
+am looking at your patch. Looking forward to your v5 patch.
+
+Cheers,
+Longman
+
