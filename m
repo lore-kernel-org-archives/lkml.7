@@ -2,105 +2,153 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB15AC46470
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 09:09:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B13D6C04E87
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 09:10:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C4AC217D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 09:09:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84BF3216B7
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 09:10:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="bRe5RYF7"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LRgF3QOd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726941AbfEUJJx (ORCPT
+        id S1727205AbfEUJKC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 05:09:53 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:5894 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726289AbfEUJJx (ORCPT
+        Tue, 21 May 2019 05:10:02 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:33707 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726562AbfEUJKC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 05:09:53 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4L97hoe017768;
-        Tue, 21 May 2019 11:09:38 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : references
- : from : message-id : date : mime-version : in-reply-to : content-type :
- content-transfer-encoding; s=STMicroelectronics;
- bh=lanOOaJJhF0ZBJh2G1RjFUX4Qzrh7K+TLtAOvfetblM=;
- b=bRe5RYF7j5mqLmuY9w5O4gw2YTeWuQsf0Yas7I8oqr5kIb/Afh3Tb2KdNndOsQ0c9jZ6
- YxvrwN0FJ1LquPYJZZA8u4T79Y0uMMv0Ec8dehaccLUDmAgXIvy0n5bMwZ/A+sRIUxjo
- u9pLG3l9p3NRyxT16VfNwX5vtUxC4vYp0cgBgqKZClFi57CeufA3uwPWMw7FcyWqJgaw
- BpLteRODvp+WvY1T3GvDdAX0DEsEA2SF7Tr7NHjI/nPqb5KMCbhYjUW0L6ES/uANOQjr
- vfH7tCyzqNN74F7vA/Jugg6Ko1ytcrbIf1YnUpnLqauMurEEAv0lmiWtBzngS1LN9iJG hg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2sj7740qgk-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Tue, 21 May 2019 11:09:38 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 44ADA38;
-        Tue, 21 May 2019 09:09:37 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id CFB4824D3;
-        Tue, 21 May 2019 09:09:36 +0000 (GMT)
-Received: from [10.48.0.204] (10.75.127.48) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 21 May
- 2019 11:09:36 +0200
-Subject: Re: [RESEND v2 0/3] Add Vivante GPU support on STM32MP157c
-To:     Pierre-Yves MORDRET <pierre-yves.mordret@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1558082528-12889-1-git-send-email-pierre-yves.mordret@st.com>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <c565693a-a7fe-4361-0e1f-6bf09e2d8b84@st.com>
-Date:   Tue, 21 May 2019 11:09:35 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 21 May 2019 05:10:02 -0400
+Received: by mail-ed1-f68.google.com with SMTP id n17so28355757edb.0
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 02:10:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PSdPOItR/QwQaJqAWDzyHjSOY0FhX0Q6RByw0iZfWqY=;
+        b=LRgF3QOdZRfOdkdcevF4kHXKpLVf+DmgnDacDANvUI/gJ05zyHF+rFhWral3BX2t5a
+         AJ+s8NZT0eJHefNlxPmxnDRpDW3x3YNDwEXIYtO228pxHr+jNhr45VMKgvEdUUF0YW8k
+         t3rsUQityMohQJFpsxx9FCJ4P2P235mLpB1no=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PSdPOItR/QwQaJqAWDzyHjSOY0FhX0Q6RByw0iZfWqY=;
+        b=nzdaCP6DYnqo+gSiIWN4evM15v9GBJcRy3PDt2XWcjQ6vM0OK7g6kZZeg0vA3qUyBo
+         aZMZiWLR1h/9HC0gJpfUM6wv4JYgyzJvXOvAB35zbX7F1CBesECv0+E2PYw6X/uqnnsZ
+         1c4osa1OrCNjxMuvSdoe0CRcKPTSRcTOnU2Ni7dqXPl7/EHMg9Fd+k3MAdeSDvesMHvZ
+         h4mkGLQmDNKAz/lOpC2vZgZBJyyOsXzuzP2Gy/goaT6RErl0sGjMkFfFKV9gR5vfjpJu
+         auM1eZwP+WuUc7nCViPN2d4dRJqkUVKN4UWKy302JtVX6pEjj0Rzjwn1oTOVqJK7TVqP
+         9RIw==
+X-Gm-Message-State: APjAAAU/dm6WcKB2cyhWTjwVEj7kcO407TNf+Y5EsqfvmL4IcWVJ+7qw
+        m9cO/LL+Lu32IceCz5P1bZkxkcdEyUs//x+N
+X-Google-Smtp-Source: APXvYqzyM2+evbT5zDcn90m3mCtX83pfhDORxAQ5KNJl89ORXJ1cmJXtHaQISRqGD56KpPqm9wGxdA==
+X-Received: by 2002:a17:906:7cd2:: with SMTP id h18mr27069746ejp.267.1558429799438;
+        Tue, 21 May 2019 02:09:59 -0700 (PDT)
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com. [209.85.221.41])
+        by smtp.gmail.com with ESMTPSA id y20sm3434194ejb.40.2019.05.21.02.09.58
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Tue, 21 May 2019 02:09:58 -0700 (PDT)
+Received: by mail-wr1-f41.google.com with SMTP id f10so2249080wre.7
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 02:09:58 -0700 (PDT)
+X-Received: by 2002:a5d:5048:: with SMTP id h8mr681332wrt.177.1558429797759;
+ Tue, 21 May 2019 02:09:57 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1558082528-12889-1-git-send-email-pierre-yves.mordret@st.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.48]
-X-ClientProxiedBy: SFHDAG1NODE2.st.com (10.75.127.2) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-21_01:,,
- signatures=0
+References: <20190117162008.25217-1-stanimir.varbanov@linaro.org>
+ <20190117162008.25217-11-stanimir.varbanov@linaro.org> <60b3efff-31c1-bc04-8af9-deebb8bc013a@xs4all.nl>
+ <fe51ae1e-6d2e-36bd-485a-d85520ad2386@linaro.org> <CAAFQd5Co3G1J4+HOcjtCb7p3rhLcm+1E=mPr2d=AtdOSuF_eKg@mail.gmail.com>
+ <c56930e0-be6f-2ade-fcea-8ee0ff6247ec@linaro.org>
+In-Reply-To: <c56930e0-be6f-2ade-fcea-8ee0ff6247ec@linaro.org>
+From:   Tomasz Figa <tfiga@chromium.org>
+Date:   Tue, 21 May 2019 18:09:45 +0900
+X-Gmail-Original-Message-ID: <CAAFQd5CNGsnqjpLsWSTf=8r+hSfyOgD8SU-tn5EbHCCuuSgH6A@mail.gmail.com>
+Message-ID: <CAAFQd5CNGsnqjpLsWSTf=8r+hSfyOgD8SU-tn5EbHCCuuSgH6A@mail.gmail.com>
+Subject: Re: [PATCH 10/10] venus: dec: make decoder compliant with stateful
+ codec API
+To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Cc:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Vikash Garodia <vgarodia@codeaurora.org>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Malathi Gottam <mgottam@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Pierre-Yves,
+Hi Stan,
 
-On 5/17/19 10:42 AM, Pierre-Yves MORDRET wrote:
-> Add and enable Vivante GPU on stm32mp157c for ED1, DK1 and DK2 boards.
-> ---
->    Version history:
->      v2:
->         * move GPU reserved memeory out of bottom DDR to let free this area for
->           U-Boot
->      v1:
->         * Initial
-> ---
-> Pierre-Yves MORDRET (3):
->    ARM: dts: stm32: Add Vivante GPU support on STM32MP157c
->    ARM: dts: stm32: enable Vivante GPU support on stm32mp157c-ed1 board
->    ARM: dts: stm32: enable Vivante GPU support on stm32mp157a-dk1 board
-> 
->   arch/arm/boot/dts/stm32mp157a-dk1.dts | 16 ++++++++++++++++
->   arch/arm/boot/dts/stm32mp157c-ed1.dts | 16 ++++++++++++++++
->   arch/arm/boot/dts/stm32mp157c.dtsi    | 10 ++++++++++
->   3 files changed, 42 insertions(+)
-> 
+On Mon, May 20, 2019 at 11:47 PM Stanimir Varbanov
+<stanimir.varbanov@linaro.org> wrote:
+>
+> Hi Tomasz,
+>
+> On 4/24/19 3:39 PM, Tomasz Figa wrote:
+> > On Wed, Apr 24, 2019 at 9:15 PM Stanimir Varbanov
+> > <stanimir.varbanov@linaro.org> wrote:
+> >>
+> >> Hi Hans,
+> >>
+> >> On 2/15/19 3:44 PM, Hans Verkuil wrote:
+> >>> Hi Stanimir,
+> >>>
+> >>> I never paid much attention to this patch series since others were busy
+> >>> discussing it and I had a lot of other things on my plate, but then I heard
+> >>> that this patch made G_FMT blocking.
+> >>
+> >> OK, another option could be to block REQBUF(CAPTURE) until event from hw
+> >> is received that the stream is parsed and the resolution is correctly
+> >> set by application. Just to note that I'd think to this like a temporal
+> >> solution until gstreamer implements v4l events.
+> >>
+> >> Is that looks good to you?
+> >
+> > Hmm, I thought we concluded that gstreamer sets the width and height
+> > in OUTPUT queue before querying the CAPTURE queue and so making the
+> > driver calculate the CAPTURE format based on what's set on OUTPUT
+> > would work fine. Did I miss something?
+>
+> Nobody is miss something.
+>
+> First some background about how Venus implements stateful codec API.
+>
+> The Venus firmware can generate two events "sufficient" and
+> "insufficient" buffer requirements (this includes decoder output buffer
+> size and internal/scratch buffer sizes). Presently I always set minimum
+> possible decoder resolution no matter what the user said, and by that
+> way I'm sure that "insufficient" event will always be triggered by the
+> firmware (the other reason to take this path is because this is the
+> least-common-divider for all supported Venus hw/fw versions thus common
+> code in the driver). The reconfiguration (during codec Initialization
+> sequence) is made from STREAMON(CAPTURE) context. Now, to make that
+> re-configuration happen I need to wait for "insufficient" event from
+> firmware in order to know the real coded resolution.
+>
+> In the case of gstreamer where v4l2_events support is missing I have to
+> block (wait for firmware event) REQBUF(CAPTURE) (vb2::queue_setup) or
+> STREAMON(CAPTURE) (vb2::start_streaming).
+>
+> I tried to set the coded resolution to the firmware as-is it set by
+> gstreamer but then I cannot receive the "sufficient" event for VP8 and
+> VP9 codecs. So I return back to the solution with minimum resolution above.
+>
+> I'm open for suggestions.
 
-Series applied on stm32-next.
+I think you could still keep setting the minimum size and wait for the
+"insufficient" event. At the same time, you could speculatively
+advertise the expected "sufficient" size on the CAPTURE queue before
+the hardware signals those. Even if you mispredict them, you'll get
+the event, update the CAPTURE resolution and send the source change
+event to the application, which would then give you the correct
+buffers. Would that work for you?
 
-Thanks
-Alex
+Best regards,
+Tomasz
