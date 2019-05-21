@@ -2,96 +2,97 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFD82C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:10:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA38FC04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:11:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B57842173C
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:10:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C81652173C
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:11:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728230AbfEUNKt (ORCPT
+        id S1728245AbfEUNLa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 09:10:49 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36728 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726900AbfEUNKs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 09:10:48 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A31313086231;
-        Tue, 21 May 2019 13:10:24 +0000 (UTC)
-Received: from oldenburg2.str.redhat.com (dhcp-192-219.str.redhat.com [10.33.192.219])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 52692665F4;
-        Tue, 21 May 2019 13:10:13 +0000 (UTC)
-From:   Florian Weimer <fweimer@redhat.com>
-To:     Christian Brauner <christian@brauner.io>
-Cc:     viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
-        jannh@google.com, oleg@redhat.com, tglx@linutronix.de,
-        torvalds@linux-foundation.org, arnd@arndb.de, shuah@kernel.org,
-        dhowells@redhat.com, tkjos@android.com, ldv@altlinux.org,
-        miklos@szeredi.hu, linux-alpha@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        x86@kernel.org
-Subject: Re: [PATCH 1/2] open: add close_range()
-References: <20190521113448.20654-1-christian@brauner.io>
-        <87tvdoau12.fsf@oldenburg2.str.redhat.com>
-        <20190521130438.q3u4wvve7p6md6cm@brauner.io>
-Date:   Tue, 21 May 2019 15:10:11 +0200
-In-Reply-To: <20190521130438.q3u4wvve7p6md6cm@brauner.io> (Christian Brauner's
-        message of "Tue, 21 May 2019 15:04:39 +0200")
-Message-ID: <87h89o9cng.fsf@oldenburg2.str.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Tue, 21 May 2019 09:11:30 -0400
+Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:53126 "EHLO
+        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726900AbfEUNL3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 09:11:29 -0400
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+        by mx0b-001ae601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4LD52Bd011448;
+        Tue, 21 May 2019 08:11:06 -0500
+Authentication-Results: ppops.net;
+        spf=none smtp.mailfrom=ckeepax@opensource.cirrus.com
+Received: from mail4.cirrus.com ([87.246.98.35])
+        by mx0b-001ae601.pphosted.com with ESMTP id 2sjefmuv88-1;
+        Tue, 21 May 2019 08:11:05 -0500
+Received: from EDIEX02.ad.cirrus.com (ediex02.ad.cirrus.com [198.61.84.81])
+        by mail4.cirrus.com (Postfix) with ESMTP id 8AC20611C8AC;
+        Tue, 21 May 2019 08:12:10 -0500 (CDT)
+Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX02.ad.cirrus.com
+ (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Tue, 21 May
+ 2019 14:11:05 +0100
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
+ Transport; Tue, 21 May 2019 14:11:04 +0100
+Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id E177845;
+        Tue, 21 May 2019 14:11:04 +0100 (BST)
+Date:   Tue, 21 May 2019 14:11:04 +0100
+From:   Charles Keepax <ckeepax@opensource.cirrus.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+CC:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        <wsa@the-dreams.de>, <linux-i2c@vger.kernel.org>,
+        <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <benjamin.tissoires@redhat.com>, <jbroadus@gmail.com>,
+        <patches@opensource.cirrus.com>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Subject: Re: [PATCH 3/5] i2c: core: Move ACPI IRQ handling to probe time
+Message-ID: <20190521131104.GB99937@ediswmail.ad.cirrus.com>
+References: <20190520084936.10590-1-ckeepax@opensource.cirrus.com>
+ <20190520084936.10590-4-ckeepax@opensource.cirrus.com>
+ <20190521112728.GX2781@lahna.fi.intel.com>
+ <20190521125704.GF9224@smile.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Tue, 21 May 2019 13:10:47 +0000 (UTC)
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20190521125704.GF9224@smile.fi.intel.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=856 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905210083
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Christian Brauner:
+On Tue, May 21, 2019 at 03:57:04PM +0300, Andy Shevchenko wrote:
+> On Tue, May 21, 2019 at 02:27:28PM +0300, Mika Westerberg wrote:
+> > On Mon, May 20, 2019 at 09:49:34AM +0100, Charles Keepax wrote:
+> > > Bring the ACPI path in sync with the device tree path and handle all the
+> > > IRQ fetching at probe time. This leaves the only IRQ handling at device
+> > > registration time being that which is passed directly through the board
+> > > info as either a resource or an actual IRQ number.
+> > 
+> > I don't see issues with this approach. Cc'd Jarkko and Andy just in case
+> > I missed something.
+> 
+> I failed to see the i2c_acpi_get_irq() in the current code.
+> What kernel version do you use?
+> Can we see the changes against vanilla / i2c-next?
+> 
 
->> Solaris has an fdwalk function:
->> 
->>   <https://docs.oracle.com/cd/E88353_01/html/E37843/closefrom-3c.html>
->> 
->> So a different way to implement this would expose a nextfd system call
->
-> Meh. If nextfd() then I would like it to be able to:
-> - get the nextfd(fd) >= fd
-> - get highest open fd e.g. nextfd(-1)
+It's added by the first patch in the chain:
 
-The highest open descriptor isn't istering for fdwalk because nextfd
-would just fail.
+https://lkml.org/lkml/2019/5/20/281
 
-> But then I wonder if nextfd() needs to be a syscall and isn't just
-> either:
-> fcntl(fd, F_GET_NEXT)?
-> or
-> prctl(PR_GET_NEXT)?
-
-I think the fcntl route is a bit iffy because you might need it to get
-the *first* valid descriptor.
-
->> to userspace, so that we can use that to implement both fdwalk and
->> closefrom.  But maybe fdwalk is just too obscure, given the existence of
->> /proc.
->
-> Yeah we probably don't need fdwalk.
-
-Agreed.  Just wanted to bring it up for completeness.  I certainly don't
-want to derail the implementation of close_range.
+I could resend the series with you and Jarkko on CC if that would
+be better.
 
 Thanks,
-Florian
+Charles
