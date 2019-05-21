@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2ACCC04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:27:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 873A4C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:27:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F0272173C
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:27:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 675BB2173C
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:27:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728329AbfEUN1q (ORCPT
+        id S1728361AbfEUN1u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 09:27:46 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:35280 "EHLO mx1.redhat.com"
+        Tue, 21 May 2019 09:27:50 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:34898 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726995AbfEUN1n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 09:27:43 -0400
+        id S1728334AbfEUN1s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 09:27:48 -0400
 Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 969AB30044CC;
-        Tue, 21 May 2019 13:27:38 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id D1F868831E;
+        Tue, 21 May 2019 13:27:47 +0000 (UTC)
 Received: from plouf.redhat.com (ovpn-116-49.ams2.redhat.com [10.36.116.49])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8D5CE60F8D;
-        Tue, 21 May 2019 13:27:35 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CD9CC60F8D;
+        Tue, 21 May 2019 13:27:45 +0000 (UTC)
 From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
 To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         KT Liao <kt.liao@emc.com.tw>, Rob Herring <robh+dt@kernel.org>,
@@ -35,92 +35,111 @@ To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
 Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org,
         Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Subject: [PATCH v2 03/10] Input: elantech - detect middle button based on firmware version
-Date:   Tue, 21 May 2019 15:27:05 +0200
-Message-Id: <20190521132712.2818-4-benjamin.tissoires@redhat.com>
+Subject: [PATCH v2 05/10] Input: elan_i2c - do not query the info if they are provided
+Date:   Tue, 21 May 2019 15:27:07 +0200
+Message-Id: <20190521132712.2818-6-benjamin.tissoires@redhat.com>
 In-Reply-To: <20190521132712.2818-1-benjamin.tissoires@redhat.com>
 References: <20190521132712.2818-1-benjamin.tissoires@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Tue, 21 May 2019 13:27:43 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Tue, 21 May 2019 13:27:47 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Looks like the new generation of Lenovo machine also need to
-be added to the PnPID whitelist. This is definitively not going
-to scale, as there is nothing that tells us currently if a
-touchpad supports a true physical middle button.
+See the previous patch for a long explanation.
 
-Consider that all new touchpads that are not clickpads
-(so matching ETP_NEW_IC_SMBUS_HOST_NOTIFY) are handling 3 physical
-buttons.
+TL;DR: the P52 and the t480s from Lenovo can't rely on I2C to fetch
+the information, so we need it from PS/2.
 
 Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
 
 --
 
-new in v2
+changes in v2:
+- updated accroding to previous patch
 ---
- drivers/input/mouse/elantech.c | 16 ++++++----------
- drivers/input/mouse/elantech.h |  1 +
- 2 files changed, 7 insertions(+), 10 deletions(-)
+ drivers/input/mouse/elan_i2c_core.c | 56 ++++++++++++++++++++++-------
+ 1 file changed, 44 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/input/mouse/elantech.c b/drivers/input/mouse/elantech.c
-index 34b96b96fc96..057a3cf01eec 100644
---- a/drivers/input/mouse/elantech.c
-+++ b/drivers/input/mouse/elantech.c
-@@ -1107,14 +1107,6 @@ static const struct dmi_system_id elantech_dmi_has_middle_button[] = {
- 	{ }
- };
+diff --git a/drivers/input/mouse/elan_i2c_core.c b/drivers/input/mouse/elan_i2c_core.c
+index f9525d6f0bfe..53cac610ba33 100644
+--- a/drivers/input/mouse/elan_i2c_core.c
++++ b/drivers/input/mouse/elan_i2c_core.c
+@@ -366,27 +366,59 @@ static unsigned int elan_convert_resolution(u8 val)
  
--static const char * const middle_button_pnp_ids[] = {
--	"LEN2131", /* ThinkPad P52 w/ NFC */
--	"LEN2132", /* ThinkPad P52 */
--	"LEN2133", /* ThinkPad P72 w/ NFC */
--	"LEN2134", /* ThinkPad P72 */
--	NULL
--};
+ static int elan_query_device_parameters(struct elan_tp_data *data)
+ {
++	struct i2c_client *client = data->client;
+ 	unsigned int x_traces, y_traces;
++	u32 x_mm, y_mm;
+ 	u8 hw_x_res, hw_y_res;
+ 	int error;
+ 
+-	error = data->ops->get_max(data->client, &data->max_x, &data->max_y);
+-	if (error)
+-		return error;
 -
- /*
-  * Set the appropriate event bits for the input subsystem
-  */
-@@ -1133,8 +1125,7 @@ static int elantech_set_input_params(struct psmouse *psmouse)
- 	__clear_bit(EV_REL, dev->evbit);
+-	error = data->ops->get_num_traces(data->client, &x_traces, &y_traces);
+-	if (error)
+-		return error;
++	if (device_property_read_u32(&client->dev,
++				     "touchscreen-size-x", &data->max_x) ||
++	    device_property_read_u32(&client->dev,
++				     "touchscreen-size-y", &data->max_y)) {
++		error = data->ops->get_max(data->client,
++					   &data->max_x,
++					   &data->max_y);
++		if (error)
++			return error;
++	} else {
++		/* size is the maximum + 1 */
++		--data->max_x;
++		--data->max_y;
++	}
  
- 	__set_bit(BTN_LEFT, dev->keybit);
--	if (dmi_check_system(elantech_dmi_has_middle_button) ||
--			psmouse_matches_pnp_id(psmouse, middle_button_pnp_ids))
-+	if (info->has_middle_button)
- 		__set_bit(BTN_MIDDLE, dev->keybit);
- 	__set_bit(BTN_RIGHT, dev->keybit);
++	if (device_property_read_u32(&client->dev,
++				     "elan,x_traces",
++				     &x_traces) ||
++	    device_property_read_u32(&client->dev,
++				     "elan,y_traces",
++				     &y_traces)) {
++		error = data->ops->get_num_traces(data->client,
++						  &x_traces, &y_traces);
++		if (error)
++			return error;
++	}
+ 	data->width_x = data->max_x / x_traces;
+ 	data->width_y = data->max_y / y_traces;
  
-@@ -1748,6 +1739,11 @@ static int elantech_query_info(struct psmouse *psmouse,
- 		break;
- 	}
- 
-+	/* check for the middle button: DMI matching or new v4 firmwares */
-+	info->has_middle_button = dmi_check_system(elantech_dmi_has_middle_button) ||
-+				  (ETP_NEW_IC_SMBUS_HOST_NOTIFY(info->fw_version) &&
-+				   !elantech_is_buttonpad(info));
+-	error = data->ops->get_resolution(data->client, &hw_x_res, &hw_y_res);
+-	if (error)
+-		return error;
++	if (device_property_read_u32(&client->dev,
++				     "touchscreen-x-mm", &x_mm) ||
++	    device_property_read_u32(&client->dev,
++				     "touchscreen-y-mm", &y_mm)) {
++		error = data->ops->get_resolution(data->client,
++						  &hw_x_res, &hw_y_res);
++		if (error)
++			return error;
 +
++		data->x_res = elan_convert_resolution(hw_x_res);
++		data->y_res = elan_convert_resolution(hw_y_res);
++	} else {
++		data->x_res = (data->max_x + 1) / x_mm;
++		data->y_res = (data->max_y + 1) / y_mm;
++	}
+ 
+-	data->x_res = elan_convert_resolution(hw_x_res);
+-	data->y_res = elan_convert_resolution(hw_y_res);
++	if (device_property_read_bool(&client->dev, "elan,clickpad"))
++		data->clickpad = 1;
+ 
  	return 0;
  }
- 
-diff --git a/drivers/input/mouse/elantech.h b/drivers/input/mouse/elantech.h
-index 194503ed59c5..16174b54ffc3 100644
---- a/drivers/input/mouse/elantech.h
-+++ b/drivers/input/mouse/elantech.h
-@@ -158,6 +158,7 @@ struct elantech_device_info {
- 	bool crc_enabled;
- 	bool set_hw_resolution;
- 	bool has_trackpoint;
-+	bool has_middle_button;
- 	int (*send_cmd)(struct psmouse *psmouse, unsigned char c,
- 			unsigned char *param);
- };
 -- 
 2.21.0
 
