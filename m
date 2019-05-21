@@ -2,136 +2,171 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BB37C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 07:38:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80F30C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 07:38:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A25D21019
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 07:38:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nqw8oc68"
+	by mail.kernel.org (Postfix) with ESMTP id 6077E21019
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 07:38:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727052AbfEUHij (ORCPT
+        id S1727099AbfEUHi6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 03:38:39 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:46978 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726006AbfEUHii (ORCPT
+        Tue, 21 May 2019 03:38:58 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:36522 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726730AbfEUHi5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 03:38:38 -0400
-Received: by mail-wr1-f68.google.com with SMTP id r7so17270170wrr.13;
-        Tue, 21 May 2019 00:38:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=5ryJbbZodXACWTO9xzLjJVVDfVukY2SjZqE/RR5ZRyY=;
-        b=nqw8oc680iMAXhEvqTRlU54E1joqR2AvVBhvZfLCL7BBx/cJuYXEsr2tIKWi9s/noe
-         OyAh63/DLuZBsMo4BQnTIiH7d2J3BTTStDZ11VOlWi6H4zlhecsZStdaOK9Y/gUzRgcj
-         7SLMARSMr3T9KqOGhrDNMx8/4OdVO6LE2S1HO/maHyEHUbEHu9/H6GWOkYa6upqiwApD
-         Ys5KRsRW9HudhzP/+KX9j1ouXQsqo0IdByIvhVy2ZWMEtNnWtMiPZA/xxFeFKc56E5zH
-         4RbOk04KtUI/edTwJzfndt6RAb47JGe5IUqvSXD3ZKeEIlLc0NeynN1bNwcoj9tjOb4x
-         xXbw==
+        Tue, 21 May 2019 03:38:57 -0400
+Received: from mail-wm1-f70.google.com ([209.85.128.70])
+        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <andrea.righi@canonical.com>)
+        id 1hSzMM-0004o6-4h
+        for linux-kernel@vger.kernel.org; Tue, 21 May 2019 07:38:54 +0000
+Received: by mail-wm1-f70.google.com with SMTP id y139so704526wmd.0
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 00:38:54 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=5ryJbbZodXACWTO9xzLjJVVDfVukY2SjZqE/RR5ZRyY=;
-        b=rIk/juNHOGO4R6U4lq4A/nw9k3zT15uuE8dvfRE26lmIzylSfIUFjMeIHdbWvO6qwA
-         bK5ggfGExwXI5k2JiThIni+2lFenQxvBFCgUgXQIvOO+HjadmmmMyMz58Z/AxZOUBl/v
-         DTuB830xGjnAc5p8GXBelQETnQWwdHhybnsyRYRX6ztP9dXDs8mb6pgx0pxnMFNJmoWy
-         ako96+pfiB+wOspdqIe7QFi1ZhF6+IKNcRFT+NqNnd+tX9GEYDa2amUI8p+EQkVLX5jP
-         9PTBisJEfGEZ9xL1tejn9ZOUrtnVOhAxWHQuPjkyc56hr3LO6CsRYsN7xJMtoIVp22df
-         UfVQ==
-X-Gm-Message-State: APjAAAXYhszrq01JE45z7uDkgLpfHRnEtB2Wn7uaL7N+/tBtFSCp5R8x
-        EQHvFahiqyCBOmT0Ka4fPr/ML6cnJG4=
-X-Google-Smtp-Source: APXvYqwfLIm49NnDDXdp9jn68Vl7JSM+PaLLfYbbHu9fobHWezVc5/071lrqi5iSH9Bh8drGE7n0mA==
-X-Received: by 2002:a5d:4002:: with SMTP id n2mr13890891wrp.187.1558424316584;
-        Tue, 21 May 2019 00:38:36 -0700 (PDT)
-Received: from [10.43.17.31] (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id a10sm23974617wrm.94.2019.05.21.00.38.35
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 21 May 2019 00:38:36 -0700 (PDT)
-Subject: Re: [RFC 1/1] Add dm verity root hash pkcs7 sig validation.
-To:     Jaskaran Khurana <jaskarankhurana@linux.microsoft.com>,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     agk@redhat.com, snitzer@redhat.com, dm-devel@redhat.com,
-        jmorris@namei.org
-References: <20190520215422.23939-1-jaskarankhurana@linux.microsoft.com>
- <20190520215422.23939-2-jaskarankhurana@linux.microsoft.com>
-From:   Milan Broz <gmazyland@gmail.com>
-Openpgp: preference=signencrypt
-Message-ID: <7e922983-7716-e215-a29b-3154f7afb493@gmail.com>
-Date:   Tue, 21 May 2019 09:38:35 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=PD3gnvomtD5VhdkV7Q4c3V/xyYHglmxFg3mfhMbpkIs=;
+        b=eVv4cbLtONMsZsDgEzmWYHOVt2BJvnef6ISD7Sj6REhkwwnBEOP7ilEkCGNTsaVAO1
+         Yilhg9K11piDWuhpvmc9nmvQXBv8iA1SJ4MmohNWNNz7otjV30d80rJNJW5ZCPJVUinZ
+         YqVc+ET6neDHSyO/PVL2RjKt7TVIhrSw1WJR3fKrbBsvEtsf0en/a3Ea6ur3u/UcfPbC
+         EZHkMqSi+q9J+Js0KylavuLVtTO8BW0YVfycP4ZVZIME56q0cHDG28eghxYU8oIKwCYz
+         JwFKYgGYQu1YWaI8gVesgYUUG9G0kOMGjVCRQK1yDElsXvnaGYA6SJfN1zbu3iPbrloz
+         tsmg==
+X-Gm-Message-State: APjAAAUqxrEei0vaMJOjF6AR9qk7F/38O5FFVb3B1bQtoPmoDomiouHe
+        6NhZpUP+S/9xqJz+aN90X0L7U86hJMIwp7aHXs6bR6SzansCImBZ5k8CcCvozbzSCT/gBlORh1N
+        i78Aa9E0Pw3u6QqcG4AsQCLKZg9qJ789Pk7rYRBSAZQ==
+X-Received: by 2002:a1c:23d2:: with SMTP id j201mr2189825wmj.139.1558424333858;
+        Tue, 21 May 2019 00:38:53 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwmsb8RKYyDOM0lxwOMDTTxlykFnx0YegvtoEzcpA1XoYR24SX3p81b1TVlQrtMAdKIJPWHpA==
+X-Received: by 2002:a1c:23d2:: with SMTP id j201mr2189806wmj.139.1558424333602;
+        Tue, 21 May 2019 00:38:53 -0700 (PDT)
+Received: from localhost (host157-126-dynamic.32-79-r.retail.telecomitalia.it. [79.32.126.157])
+        by smtp.gmail.com with ESMTPSA id 34sm35567853wre.32.2019.05.21.00.38.52
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 21 May 2019 00:38:52 -0700 (PDT)
+Date:   Tue, 21 May 2019 09:38:51 +0200
+From:   Andrea Righi <andrea.righi@canonical.com>
+To:     Paolo Valente <paolo.valente@linaro.org>
+Cc:     Theodore Ts'o <tytso@mit.edu>,
+        "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>,
+        linux-fsdevel@vger.kernel.org,
+        linux-block <linux-block@vger.kernel.org>,
+        linux-ext4@vger.kernel.org, cgroups@vger.kernel.org,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Jens Axboe <axboe@kernel.dk>, Jan Kara <jack@suse.cz>,
+        jmoyer@redhat.com, amakhalov@vmware.com, anishs@vmware.com,
+        srivatsab@vmware.com, Josef Bacik <josef@toxicpanda.com>,
+        Tejun Heo <tj@kernel.org>
+Subject: Re: CFQ idling kills I/O performance on ext4 with blkio cgroup
+ controller
+Message-ID: <20190521073851.GA15262@xps-13>
+References: <8d72fcf7-bbb4-2965-1a06-e9fc177a8938@csail.mit.edu>
+ <1812E450-14EF-4D5A-8F31-668499E13652@linaro.org>
+ <20190518192847.GB14277@mit.edu>
+ <98612748-8454-43E8-9915-BAEBA19A6FD7@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20190520215422.23939-2-jaskarankhurana@linux.microsoft.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <98612748-8454-43E8-9915-BAEBA19A6FD7@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20/05/2019 23:54, Jaskaran Khurana wrote:
-> Adds in-kernel pkcs7 signature checking for the roothash of
-> the dm-verity hash tree.
-> 
-> The verification is to support cases where the roothash is not secured by
-> Trusted Boot, UEFI Secureboot or similar technologies.
-> One of the use cases for this is for dm-verity volumes mounted after boot,
-> the root hash provided during the creation of the dm-verity volume has to
-> be secure and thus in-kernel validation implemented here will be used
-> before we trust the root hash and allow the block device to be created.
-> 
-> The signature being provided for verification must verify the root hash and 
-> must be trusted by the builtin keyring for verification to succeed.
-> 
-> Adds DM_VERITY_VERIFY_ROOTHASH_SIG: roothash verification
-> against the roothash signature file *if* specified, if signature file is
-> specified verification must succeed prior to creation of device mapper 
-> block device.
-> 
-> Adds DM_VERITY_VERIFY_ROOTHASH_SIG_FORCE: roothash signature *must* be
-> specified for all dm verity volumes and verification must succeed prior
-> to creation of device mapper block device.
-
-I am not sure this is a good idea. If I understand it correctly, this will
-block creating another dm-verity mappings without PKCS7 signature, and these
-are used in many other environments and applications that could possibly
-run on that system later.
-
-(But I have no idea how to solve it better though :-)
-
+On Mon, May 20, 2019 at 12:38:32PM +0200, Paolo Valente wrote:
 ...
+> > I was considering adding support so that if userspace calls fsync(2)
+> > or fdatasync(2), to attach the process's CSS to the transaction, and
+> > then charge all of the journal metadata writes the process's CSS.  If
+> > there are multiple fsync's batched into the transaction, the first
+> > process which forced the early transaction commit would get charged
+> > the entire journal write.  OTOH, journal writes are sequential I/O, so
+> > the amount of disk time for writing the journal is going to be
+> > relatively small, and especially, the fact that work from other
+> > cgroups is going to be minimal, especially if hadn't issued an
+> > fsync().
+> > 
+> 
+> Yeah, that's a longstanding and difficult instance of the general
+> too-short-blanket problem.  Jan has already highlighted one of the
+> main issues in his reply.  I'll add a design issue (from my point of
+> view): I'd find a little odd that explicit sync transactions have an
+> owner to charge, while generic buffered writes have not.
+> 
+> I think Andrea Righi addressed related issues in his recent patch
+> proposal [1], so I've CCed him too.
+> 
+> [1] https://lkml.org/lkml/2019/3/9/220
 
-> +	/* Root hash signature is  a optional parameter*/
-> +	r = verity_verify_root_hash(root_hash_digest_to_validate,
-> +				    strlen(root_hash_digest_to_validate),
-> +				    verify_args.sig,
-> +				    verify_args.sig_size);
-> +	if (r < 0) {
-> +		ti->error = "Root hash verification failed";
-> +		goto bad;
-> +	}
+If journal metadata writes are submitted using a process's CSS, the
+commit may be throttled and that can also throttle indirectly other
+"high-priority" blkio cgroups, so I think that logic alone isn't enough.
 
-You are sending the PKCS7 signature as a (quite large) binary blob inside the mapping table.
+We have discussed this priorty-inversion problem with Josef and Tejun
+(adding both of them in cc), the idea that seemed most reasonable was to
+temporarily boost the priority of blkio cgroups when there are multiple
+sync(2) waiters in the system.
 
-I am not sure if it is possible here (I guess so), but why not put this it kernel keyring
-and then just reference it from mapping table?
-(We use kernel keyring in libcryptsetup already for dm-crypt.)
+More exactly, when I/O is going to be throttled for a specific blkio
+cgroup, if there's any other blkio cgroup waiting for writeback I/O,
+no throttling is applied (this logic can be refined by saving a list of
+blkio sync(2) waiters and taking the highest I/O rate among them).
 
-It will also solve an issue in userspace patch, when you are reading the signature
-file too late (devices can be suspended in that moment, so I would prefer to download
-sig file to keyring in advance, and then just reference it in mapping table).
+In addition to that Tejun mentioned that he would like to see a better
+sync(2) isolation done at the fs namespace level. This last part still
+needs to be defined and addressed.
 
-(I guess you will send merge request for veritysetup userspace part later.)
+However, even the simple logic above "no throttling if there's any other
+sync(2) waiter" can already prevent big system lockups (see for example
+the simple test case that I suggested here https://lkml.org/lkml/2019/),
+so I think having this change alone would be a nice improvement already:
 
-Milan
+ https://lkml.org/lkml/2019/3/9/220
+
+Thanks,
+-Andrea
+
+> 
+> > In the case where you have three cgroups all issuing fsync(2) and they
+> > all landed in the same jbd2 transaction thanks to commit batching, in
+> > the ideal world we would split up the disk time usage equally across
+> > those three cgroups.  But it's probably not worth doing that...
+> > 
+> > That being said, we probably do need some BFQ support, since in the
+> > case where we have multiple processes doing buffered writes w/o fsync,
+> > we do charnge the data=ordered writeback to each block cgroup.  Worse,
+> > the commit can't complete until the all of the data integrity
+> > writebacks have completed.  And if there are N cgroups with dirty
+> > inodes, and slice_idle set to 8ms, there is going to be 8*N ms worth
+> > of idle time tacked onto the commit time.
+> > 
+> 
+> Jan already wrote part of what I wanted to reply here, so I'll
+> continue from his reply.
+> 
+> Thanks,
+> Paolo
+> 
+> > If we charge the journal I/O to the cgroup, and there's only one
+> > process doing the
+> > 
+> >   dd if=/dev/zero of=/root/test.img bs=512 count=10000 oflags=dsync
+> > 
+> > then we don't need to worry about this failure mode, since both the
+> > journal I/O and the data writeback will be hitting the same cgroup.
+> > But that's arguably an artificial use case, and much more commonly
+> > there will be multiple cgroups all trying to at least some file system
+> > I/O.
+> > 
+> > 						- Ted
+> 
+
+
