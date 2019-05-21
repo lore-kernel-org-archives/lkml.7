@@ -2,62 +2,70 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE0D4C04AAC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 00:33:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4937C04AAC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 00:35:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9001B2173C
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 00:33:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6DCF2173C
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 00:35:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558398921;
+	bh=z6NOTvvulacTSYVvx8uPfBCliSTXjBhnEQAWNN2vPY8=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=uFHzDP1DFVyQVnBqK1rSoGOrE41uUIakWvARwyOlc+imFif8V6QjEkoremOh8qNV3
+	 CMRoMYnNpVAEU+eCN+YuEowPqI2aMDK3F6tpaiLFEHdhGXpGzk7MsCUAJi96oVq8wQ
+	 ICOTdFly9nB+PnS9z3agJNPl570D6cHENUtvvuSs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727242AbfEUAdW (ORCPT
+        id S1727320AbfEUAfV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 20:33:22 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:59966 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726370AbfEUAdV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 20:33:21 -0400
-Received: from localhost (50-78-161-185-static.hfc.comcastbusiness.net [50.78.161.185])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id B81BD1400F7CA;
-        Mon, 20 May 2019 17:33:20 -0700 (PDT)
-Date:   Mon, 20 May 2019 20:33:20 -0400 (EDT)
-Message-Id: <20190520.203320.621504228022195532.davem@davemloft.net>
-To:     rick.p.edgecombe@intel.com
-Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org,
-        linux-mm@kvack.org, mroos@linux.ee, mingo@redhat.com,
-        namit@vmware.com, luto@kernel.org, bp@alien8.de,
-        netdev@vger.kernel.org, dave.hansen@intel.com,
-        sparclinux@vger.kernel.org
-Subject: Re: [PATCH v2] vmalloc: Fix issues with flush flag
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <3e7e674c1fe094cd8dbe0c8933db18be1a37d76d.camel@intel.com>
-References: <c6020a01e81d08342e1a2b3ae7e03d55858480ba.camel@intel.com>
-        <20190520.154855.2207738976381931092.davem@davemloft.net>
-        <3e7e674c1fe094cd8dbe0c8933db18be1a37d76d.camel@intel.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 20 May 2019 17:33:21 -0700 (PDT)
+        Mon, 20 May 2019 20:35:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36832 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726677AbfEUAfU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 20:35:20 -0400
+Subject: Re: [GIT PULL] Kbuild fixes for v5.2-rc2
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558398920;
+        bh=z6NOTvvulacTSYVvx8uPfBCliSTXjBhnEQAWNN2vPY8=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=Jawnx0JpykrzqPkTbLocvbil+m1KZaGedLfTHptbBMgZms9DOyUtVGmqL3l5ymZ26
+         wGIk2VTHitYF70FpxT2saXAmZ+Tq+zLV75waCySxNv0viTPaoua7jMcBxQ/stFEhv5
+         8aAWTFuEuZWcM71q9b6gFY6gOwyFH9RRGH258bhk=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <CAK7LNAT2wVBP_yV3P=Eg_0_UUo8xCRZdJK5x1kOufKiYFv=A+Q@mail.gmail.com>
+References: <CAK7LNAT2wVBP_yV3P=Eg_0_UUo8xCRZdJK5x1kOufKiYFv=A+Q@mail.gmail.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <CAK7LNAT2wVBP_yV3P=Eg_0_UUo8xCRZdJK5x1kOufKiYFv=A+Q@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git
+ tags/kbuild-fixes-v5.2
+X-PR-Tracked-Commit-Id: 4a33d4f17a19ece50ccf5ccbb8bc4ee539fb492e
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 5bdd9ad875b6edf213f54ec3986ed9e8640c5cf9
+Message-Id: <155839891992.19845.18319962963190148837.pr-tracker-bot@kernel.org>
+Date:   Tue, 21 May 2019 00:35:19 +0000
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        masahiroy@kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
-Date: Tue, 21 May 2019 00:20:13 +0000
+The pull request you sent on Tue, 21 May 2019 09:01:51 +0900:
 
-> This behavior shouldn't happen until modules or BPF are being freed.
+> git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git tags/kbuild-fixes-v5.2
 
-Then that would rule out my theory.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/5bdd9ad875b6edf213f54ec3986ed9e8640c5cf9
 
-The only thing left is whether the permissions are actually set
-properly.  If they aren't we'll take an exception when the BPF program
-is run and I'm not %100 sure that kernel execute permission violations
-are totally handled cleanly.
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
