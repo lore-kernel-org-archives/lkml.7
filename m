@@ -2,121 +2,68 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E736C18E7C
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 20:42:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4E66C18E7C
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 20:42:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63784217D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 20:42:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="O8kjLWp4"
+	by mail.kernel.org (Postfix) with ESMTP id B45EF217D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 20:42:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727853AbfEUUmc (ORCPT
+        id S1727978AbfEUUml (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 16:42:32 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:59260 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726907AbfEUUmc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 16:42:32 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4LKdJWv008336;
-        Tue, 21 May 2019 20:41:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id :
- mime-version : date : from : to : cc : subject : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=O+tJxqlUjzABw3lOkORNAtDMSCN0ydyzH7rxMfH7MEg=;
- b=O8kjLWp4wdQwI/AUeRdGw/paIxJqB1nRHg2QYhKWKVeFWuKMIQNmzfPbmtjEFHMY/SZW
- fhzu/bg2Q9lBd6fO+JvlCvEmF6Wn6yrzJjmc02/0JQmmPkKc5pn8dbCnbv2wQzefV4wk
- MIyV+boNfBW7mB5qEqvEiddzVVND4qSLe7GKqE/aYjEwpfkB9NnrBLeWFIjvh4LyZxbu
- g3S2o345fper3ass/alVCmnacg7aODmPdhD22xRkPMaXwG2BPgVBbuhCIzV3WJW2Fn3P
- gzOcaBawCGRMYOFu4c2sqTOvfCXc2IbjWrNvHpF9t+a+lnQtgPYi8ec4Bph/pAgFNjmm Rg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2130.oracle.com with ESMTP id 2sj7jdr7p9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 21 May 2019 20:41:47 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4LKcvXa078542;
-        Tue, 21 May 2019 20:39:46 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by userp3030.oracle.com with ESMTP id 2skudbknqk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 21 May 2019 20:39:46 +0000
-Received: from userp3030.oracle.com (userp3030.oracle.com [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x4LKdjLl080451;
-        Tue, 21 May 2019 20:39:45 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2skudbknqd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 21 May 2019 20:39:45 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x4LKdiiu023260;
-        Tue, 21 May 2019 20:39:44 GMT
-Message-Id: <201905212039.x4LKdiiu023260@aserv0121.oracle.com>
-Received: from localhost (/10.159.211.99) by default (Oracle Beehive Gateway
- v4.0) with ESMTP ; Tue, 21 May 2019 20:39:44 +0000
+        Tue, 21 May 2019 16:42:41 -0400
+Received: from mga05.intel.com ([192.55.52.43]:18009 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727222AbfEUUmk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 16:42:40 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 May 2019 13:42:40 -0700
+X-ExtLoop1: 1
+Received: from agluck-desk.sc.intel.com (HELO agluck-desk) ([10.3.52.160])
+  by FMSMGA003.fm.intel.com with ESMTP; 21 May 2019 13:42:40 -0700
+Date:   Tue, 21 May 2019 13:42:40 -0700
+From:   "Luck, Tony" <tony.luck@intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     "Ghannam, Yazen" <Yazen.Ghannam@amd.com>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>
+Subject: Re: [PATCH v3 4/6] x86/MCE: Make number of MCA banks per_cpu
+Message-ID: <20190521204239.GA11029@agluck-desk>
+References: <20190430203206.104163-1-Yazen.Ghannam@amd.com>
+ <20190430203206.104163-5-Yazen.Ghannam@amd.com>
+ <20190518112530.GA26276@zn.tnic>
+ <SN6PR12MB2639571E33EBC7342A0607F8F8070@SN6PR12MB2639.namprd12.prod.outlook.com>
+ <20190521202902.GC7793@cz.tnic>
 MIME-Version: 1.0
-Date:   Tue, 21 May 2019 20:39:44 +0000 (UTC)
-From:   Kris Van Hees <kris.van.hees@oracle.com>
-To:     netdev@vger.kernel.org, bpf@vger.kernel.org,
-        dtrace-devel@oss.oracle.com, linux-kernel@vger.kernel.org
-Cc:     rostedt@goodmis.org, mhiramat@kernel.org, acme@kernel.org,
-        ast@kernel.org, daniel@iogearbox.net
-Subject: [RFC PATCH 05/11] trace: update Kconfig and Makefile to include
- DTrace
-In-Reply-To: <201905202347.x4KNl0cs030532@aserv0121.oracle.com>
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9264 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=971 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905210129
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190521202902.GC7793@cz.tnic>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commit adds the dtrace implementation in kernel/trace/dtrace to
-the trace Kconfig and Makefile.
+On Tue, May 21, 2019 at 10:29:02PM +0200, Borislav Petkov wrote:
+> 
+> Can we do instead:
+> 
+> -static DEFINE_PER_CPU_READ_MOSTLY(struct mce_bank *, mce_banks_array);
+> +static DEFINE_PER_CPU_READ_MOSTLY(struct mce_bank, mce_banks_array[MAX_NR_BANKS]);
+> 
+> which should be something like 9*32 = 288 bytes per CPU.
+> 
 
-Signed-off-by: Kris Van Hees <kris.van.hees@oracle.com>
-Reviewed-by: Nick Alcock <nick.alcock@oracle.com>
----
- kernel/trace/Kconfig  | 2 ++
- kernel/trace/Makefile | 1 +
- 2 files changed, 3 insertions(+)
+Where did you get the "9" from?  struct mce_bank looks to
+be over 50 bytes.
 
-diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
-index 5d965cef6c77..59c3bdfbaffc 100644
---- a/kernel/trace/Kconfig
-+++ b/kernel/trace/Kconfig
-@@ -786,6 +786,8 @@ config GCOV_PROFILE_FTRACE
- 	  Note that on a kernel compiled with this config, ftrace will
- 	  run significantly slower.
- 
-+source "kernel/trace/dtrace/Kconfig"
-+
- endif # FTRACE
- 
- endif # TRACING_SUPPORT
-diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
-index c2b2148bb1d2..e643c4eac8f6 100644
---- a/kernel/trace/Makefile
-+++ b/kernel/trace/Makefile
-@@ -82,6 +82,7 @@ endif
- obj-$(CONFIG_DYNAMIC_EVENTS) += trace_dynevent.o
- obj-$(CONFIG_PROBE_EVENTS) += trace_probe.o
- obj-$(CONFIG_UPROBE_EVENTS) += trace_uprobe.o
-+obj-$(CONFIG_DTRACE) += dtrace/
- 
- obj-$(CONFIG_TRACEPOINT_BENCHMARK) += trace_benchmark.o
- 
--- 
-2.20.1
+Still only 1.5K per cpu though.
 
+-Tony
