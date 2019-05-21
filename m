@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADBD6C072B5
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 23:31:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3174C072B5
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 23:31:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6542621773
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 23:31:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCCBC21773
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 23:31:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="jeC3eyzm"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="g/JEyZal"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728163AbfEUXb3 (ORCPT
+        id S1728133AbfEUXb2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 19:31:29 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:8580 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727816AbfEUXbV (ORCPT
+        Tue, 21 May 2019 19:31:28 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:8294 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727733AbfEUXbV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 21 May 2019 19:31:21 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ce48a440000>; Tue, 21 May 2019 16:31:16 -0700
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ce48a470000>; Tue, 21 May 2019 16:31:19 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 21 May 2019 16:31:19 -0700
+  Tue, 21 May 2019 16:31:18 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 21 May 2019 16:31:19 -0700
-Received: from HQMAIL112.nvidia.com (172.18.146.18) by HQMAIL103.nvidia.com
- (172.20.187.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 21 May
+        by hqpgpgate102.nvidia.com on Tue, 21 May 2019 16:31:18 -0700
+Received: from HQMAIL102.nvidia.com (172.18.146.10) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 21 May
  2019 23:31:18 +0000
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL112.nvidia.com
- (172.18.146.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 21 May
+Received: from HQMAIL104.nvidia.com (172.18.146.11) by HQMAIL102.nvidia.com
+ (172.18.146.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 21 May
  2019 23:31:18 +0000
-Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL104.nvidia.com
+ (172.18.146.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
  Transport; Tue, 21 May 2019 23:31:18 +0000
 Received: from skomatineni-linux.nvidia.com (Not Verified[10.110.102.174]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5ce48a45000c>; Tue, 21 May 2019 16:31:17 -0700
+        id <B5ce48a460003>; Tue, 21 May 2019 16:31:18 -0700
 From:   Sowjanya Komatineni <skomatineni@nvidia.com>
 To:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>
 CC:     <jckuo@nvidia.com>, <talho@nvidia.com>, <josephl@nvidia.com>,
         <skomatineni@nvidia.com>, <linux-tegra@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH V1 07/12] clk: tegra: support for Tegra210 clocks suspend-resume
-Date:   Tue, 21 May 2019 16:31:18 -0700
-Message-ID: <1558481483-22254-8-git-send-email-skomatineni@nvidia.com>
+Subject: [PATCH V1 10/12] gpio: tegra: implement wake event support for Tegra210 and prior GPIO
+Date:   Tue, 21 May 2019 16:31:21 -0700
+Message-ID: <1558481483-22254-11-git-send-email-skomatineni@nvidia.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1558481483-22254-1-git-send-email-skomatineni@nvidia.com>
 References: <1558481483-22254-1-git-send-email-skomatineni@nvidia.com>
@@ -56,470 +56,196 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1558481476; bh=Do9xE48DzoI0s2vOPh1lbLxEP7Ag5+Tzi57J8kcPVsc=;
+        t=1558481479; bh=ExiJeA8xgoubQVl+RE6ANcLUd8QRDyP6miirB8jIpLk=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=jeC3eyzmgkTivTo9h3T6ZB+BJqWls7SP9iwiz8hNcI3DhV7MGy9xAMYIBLH7mZzc/
-         Rtzmc/BrQKV8V8nfRQbqr0CPpUwhP08vKNjpbh09BMcyNTzLq96fHREByqs6HWAkSp
-         xExTCjNLuxTr4ELiHdAj1PK1y1Z06+wrw02wkqeg+XUZe3uTZBROJhEd6M07lH5J6L
-         CkSbAivBJSjGmcTp5APSkPJrv22FZG4X+vxDrZdtANCnQZMKImMl3vLONWkHLCnheH
-         3M1XYbb5lZ6u2aETU/Lmp//iEjXoQsw3hzDgreoV38zhM0QsJ7gL6JZAbGaMR2N3wR
-         1+zw31nS8NFtw==
+        b=g/JEyZalwv/EMUZ4iImIObKXvQGg5wqbH34xV2dNhmyFZ1k3lIMRhVfNZeEMFijec
+         nGWc6S2XroJ5Cc0eZe/wRMHQL9ynW0I7C1T8hrrW4sL3zyQR4Kcm1/mAsRxAblUMwS
+         WTq/+EpKv4G3tSSFyK9hbpWBWD1972TY1ITNz3rMd/PrXu4MWeJJrhiEw+k+Alj3sP
+         MvF8CpONd5G1FkVyWA0euGHR1zg4iGlOqvDBGVbqLmjvBgPTh7ZLKtj60ANqfPhbhz
+         uyZSiLtksB+C4kLg/mXfj0MMdoCicJpwhWusQR8vsyacfMZJhwxLzzhRFgPmiqpnT/
+         FCU0KbUehch8w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds system suspend and resume support for Tegra210
-clocks.
+The GPIO controller doesn't have any controls to enable the system to
+wake up from low power states based on activity on GPIO pins. An extra
+hardware block that is part of the power management controller (PMC)
+contains these controls. In order for the GPIO controller to be able
+to cooperate with the PMC, obtain a reference to the PMC's IRQ domain
+and make it a parent to the GPIO controller's IRQ domain. This way the
+PMC gets an opportunity to program the additional registers required
+to enable wakeup sources on suspend.
 
 Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 ---
- drivers/clk/tegra/clk-tegra210.c | 382 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 382 insertions(+)
+ drivers/gpio/gpio-tegra.c | 109 +++++++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 103 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/clk/tegra/clk-tegra210.c b/drivers/clk/tegra/clk-tegra210.c
-index ed3c7df75d1e..d012b53ca132 100644
---- a/drivers/clk/tegra/clk-tegra210.c
-+++ b/drivers/clk/tegra/clk-tegra210.c
-@@ -20,10 +20,12 @@
- #include <linux/clkdev.h>
- #include <linux/of.h>
- #include <linux/of_address.h>
-+#include <linux/of_platform.h>
- #include <linux/delay.h>
- #include <linux/export.h>
- #include <linux/mutex.h>
- #include <linux/clk/tegra.h>
-+#include <linux/syscore_ops.h>
- #include <dt-bindings/clock/tegra210-car.h>
- #include <dt-bindings/reset/tegra210-car.h>
- #include <linux/iopoll.h>
-@@ -31,6 +33,7 @@
- #include <soc/tegra/pmc.h>
+diff --git a/drivers/gpio/gpio-tegra.c b/drivers/gpio/gpio-tegra.c
+index 6d9b6906b9d0..d57e33050d0c 100644
+--- a/drivers/gpio/gpio-tegra.c
++++ b/drivers/gpio/gpio-tegra.c
+@@ -32,6 +32,8 @@
+ #include <linux/pinctrl/consumer.h>
+ #include <linux/pm.h>
  
- #include "clk.h"
-+#include "clk-dfll.h"
- #include "clk-id.h"
- 
- /*
-@@ -48,6 +51,9 @@
- #define CLK_SOURCE_SDMMC2 0x154
- #define CLK_SOURCE_SDMMC4 0x164
- 
-+#define CLK_OUT_ENB_Y 0x298
-+#define CLK_ENB_PLLP_OUT_CPU BIT(31)
++#include <dt-bindings/interrupt-controller/arm-gic.h>
 +
- #define PLLC_BASE 0x80
- #define PLLC_OUT 0x84
- #define PLLC_MISC0 0x88
-@@ -71,6 +77,8 @@
- #define PLLM_MISC1 0x98
- #define PLLM_MISC2 0x9c
- #define PLLP_BASE 0xa0
-+#define PLLP_OUTA 0xa4
-+#define PLLP_OUTB 0xa8
- #define PLLP_MISC0 0xac
- #define PLLP_MISC1 0x680
- #define PLLA_BASE 0xb0
-@@ -227,9 +235,18 @@
- #define XUSB_PLL_CFG0_UTMIPLL_LOCK_DLY		0x3ff
- #define XUSB_PLL_CFG0_PLLU_LOCK_DLY_MASK	(0x3ff << 14)
+ #define GPIO_BANK(x)		((x) >> 5)
+ #define GPIO_PORT(x)		(((x) >> 3) & 0x3)
+ #define GPIO_BIT(x)		((x) & 0x7)
+@@ -275,8 +277,22 @@ static int tegra_gpio_set_config(struct gpio_chip *chip, unsigned int offset,
+ static int tegra_gpio_to_irq(struct gpio_chip *chip, unsigned int offset)
+ {
+ 	struct tegra_gpio_info *tgi = gpiochip_get_data(chip);
++	struct irq_domain *domain = tgi->irq_domain;
++
++	if (!gpiochip_irqchip_irq_valid(chip, offset))
++		return -ENXIO;
++
++	if (irq_domain_is_hierarchy(domain)) {
++		struct irq_fwspec spec;
++
++		spec.fwnode = domain->fwnode;
++		spec.param_count = 2;
++		spec.param[0] = offset;
++		spec.param[1] = IRQ_TYPE_NONE;
++		return irq_domain_alloc_irqs(domain, 1, NUMA_NO_NODE, &spec);
++	}
  
-+#define SCLK_BURST_POLICY	0x28
-+#define SYSTEM_CLK_RATE		0x30
-+#define CLK_MASK_ARM		0x44
-+#define MISC_CLK_ENB		0x48
-+#define CCLKG_BURST_POLICY	0x368
-+#define CCLKLP_BURST_POLICY	0x370
-+#define CPU_SOFTRST_CTRL	0x380
-+#define SYS_CLK_DIV		0x400
- #define SPARE_REG0 0x55c
- #define CLK_M_DIVISOR_SHIFT 2
- #define CLK_M_DIVISOR_MASK 0x3
-+#define BURST_POLICY_REG_SIZE 2
+-	return irq_find_mapping(tgi->irq_domain, offset);
++	return irq_find_mapping(domain, offset);
+ }
  
- #define RST_DFLL_DVCO 0x2f4
- #define DVFS_DFLL_RESET_SHIFT 0
-@@ -3381,6 +3398,367 @@ static struct tegra_clk_init_table init_table[] __initdata = {
- 	{ TEGRA210_CLK_CLK_MAX, TEGRA210_CLK_CLK_MAX, 0, 0 },
+ static void tegra_gpio_irq_ack(struct irq_data *d)
+@@ -365,7 +381,10 @@ static int tegra_gpio_irq_set_type(struct irq_data *d, unsigned int type)
+ 	else if (type & (IRQ_TYPE_EDGE_FALLING | IRQ_TYPE_EDGE_RISING))
+ 		irq_set_handler_locked(d, handle_edge_irq);
+ 
+-	return 0;
++	if (d->parent_data)
++		return irq_chip_set_type_parent(d, type);
++	else
++		return 0;
+ }
+ 
+ static void tegra_gpio_irq_shutdown(struct irq_data *d)
+@@ -566,10 +585,79 @@ static const struct dev_pm_ops tegra_gpio_pm_ops = {
+ 	SET_SYSTEM_SLEEP_PM_OPS(tegra_gpio_suspend, tegra_gpio_resume)
  };
  
-+#ifdef CONFIG_PM_SLEEP
-+static unsigned long pll_c_rate, pll_c2_rate, pll_c3_rate, pll_x_rate;
-+static unsigned long pll_c4_rate, pll_d2_rate, pll_dp_rate;
-+static unsigned long pll_re_vco_rate, pll_d_rate, pll_a_rate, pll_a1_rate;
-+static unsigned long pll_c_out1_rate;
-+static unsigned long pll_a_out0_rate, pll_c4_out3_rate;
-+static unsigned long pll_p_out_rate[5];
-+static unsigned long pll_u_out1_rate, pll_u_out2_rate;
-+static unsigned long pll_mb_rate;
-+static u32 pll_m_v;
-+static u32 pll_p_outa, pll_p_outb;
-+static u32 pll_re_out_div, pll_re_out_1;
-+static u32 cpu_softrst_ctx[3];
-+static u32 cclkg_burst_policy_ctx[2];
-+static u32 cclklp_burst_policy_ctx[2];
-+static u32 sclk_burst_policy_ctx[3];
-+static u32 sclk_ctx, spare_ctx, misc_clk_enb_ctx, clk_arm_ctx;
-+
-+static struct platform_device *dfll_pdev;
-+#define car_readl(_base, _off) \
-+	readl_relaxed(clk_base + (_base) + ((_off) * 4))
-+#define car_writel(_val, _base, _off) \
-+	writel_relaxed(_val, clk_base + (_base) + ((_off) * 4))
-+
-+static u32 *periph_clk_src_ctx;
-+struct periph_source_bank {
-+	u32 start;
-+	u32 end;
-+};
-+
-+static struct periph_source_bank periph_srcs[] = {
-+	[0] = {
-+		.start = 0x100,
-+		.end = 0x198,
-+	},
-+	[1] = {
-+		.start = 0x1a0,
-+		.end = 0x1f8,
-+	},
-+	[2] = {
-+		.start = 0x3b4,
-+		.end = 0x42c,
-+	},
-+	[3] = {
-+		.start = 0x49c,
-+		.end = 0x4b4,
-+	},
-+	[4] = {
-+		.start = 0x560,
-+		.end = 0x564,
-+	},
-+	[5] = {
-+		.start = 0x600,
-+		.end = 0x678,
-+	},
-+	[6] = {
-+		.start = 0x694,
-+		.end = 0x6a0,
-+	},
-+	[7] = {
-+		.start = 0x6b8,
-+		.end = 0x718,
-+	},
-+};
-+
-+/* This array lists the valid clocks for each periph clk bank */
-+static u32 periph_clks_on[] = {
-+	0xdcd7dff9,
-+	0x87d1f3e7,
-+	0xf3fed3fa,
-+	0xffc18cfb,
-+	0x793fb7ff,
-+	0x3fe66fff,
-+	0xfc1fc7ff,
-+};
-+
-+static inline unsigned long clk_get_rate_nolock(struct clk *clk)
++static int tegra_gpio_irq_domain_translate(struct irq_domain *domain,
++					   struct irq_fwspec *fwspec,
++					   unsigned long *hwirq,
++					   unsigned int *type)
 +{
-+	if (IS_ERR_OR_NULL(clk)) {
-+		WARN_ON(1);
-+		return 0;
-+	}
++	if (WARN_ON(fwspec->param_count < 2))
++		return -EINVAL;
 +
-+	return clk_hw_get_rate(__clk_get_hw(clk));
-+}
++	*type = fwspec->param[1] & IRQ_TYPE_SENSE_MASK;
++	*hwirq = fwspec->param[0];
 +
-+static inline struct clk *pll_p_clk(unsigned int x)
-+{
-+	if (x < 4) {
-+		return clks[TEGRA210_CLK_PLL_P_OUT1 + x];
-+	} else if (x != 4) {
-+		WARN_ON(1);
-+		return NULL;
-+	} else {
-+		return clks[TEGRA210_CLK_PLL_P_OUT5];
-+	}
-+}
-+
-+static u32 * __init tegra210_init_suspend_ctx(void)
-+{
-+	int i, size = 0;
-+
-+	for (i = 0; i < ARRAY_SIZE(periph_srcs); i++)
-+		size += periph_srcs[i].end - periph_srcs[i].start + 4;
-+
-+	periph_clk_src_ctx = kmalloc(size, GFP_KERNEL);
-+
-+	return periph_clk_src_ctx;
-+}
-+
-+static int tegra210_clk_suspend(void)
-+{
-+	int i;
-+	unsigned long off;
-+	struct device_node *node;
-+	u32 *clk_rst_ctx = periph_clk_src_ctx;
-+	u32 val;
-+
-+	pll_a_rate = clk_get_rate_nolock(clks[TEGRA210_CLK_PLL_A]);
-+	pll_a_out0_rate = clk_get_rate_nolock(clks[TEGRA210_CLK_PLL_A_OUT0]);
-+	pll_a1_rate = clk_get_rate_nolock(clks[TEGRA210_CLK_PLL_A1]);
-+	pll_c2_rate = clk_get_rate_nolock(clks[TEGRA210_CLK_PLL_C2]);
-+	pll_c3_rate = clk_get_rate_nolock(clks[TEGRA210_CLK_PLL_C3]);
-+	pll_c_rate = clk_get_rate_nolock(clks[TEGRA210_CLK_PLL_C]);
-+	pll_c_out1_rate = clk_get_rate_nolock(clks[TEGRA210_CLK_PLL_C_OUT1]);
-+	pll_x_rate = clk_get_rate_nolock(clks[TEGRA210_CLK_PLL_X]);
-+	pll_c4_rate = clk_get_rate_nolock(clks[TEGRA210_CLK_PLL_C4]);
-+	pll_c4_out3_rate = clk_get_rate_nolock(clks[TEGRA210_CLK_PLL_C4_OUT3]);
-+	pll_dp_rate = clk_get_rate_nolock(clks[TEGRA210_CLK_PLL_DP]);
-+	pll_d_rate = clk_get_rate_nolock(clks[TEGRA210_CLK_PLL_D]);
-+	pll_d2_rate = clk_get_rate_nolock(clks[TEGRA210_CLK_PLL_D2]);
-+	pll_re_vco_rate = clk_get_rate_nolock(clks[TEGRA210_CLK_PLL_RE_VCO]);
-+	pll_re_out_div = car_readl(PLLRE_BASE, 0) & (0xf << 16);
-+	pll_re_out_1 = car_readl(PLLRE_OUT1, 0);
-+	pll_u_out1_rate = clk_get_rate_nolock(clks[TEGRA210_CLK_PLL_U_OUT1]);
-+	pll_u_out2_rate = clk_get_rate_nolock(clks[TEGRA210_CLK_PLL_U_OUT2]);
-+	pll_mb_rate = clk_get_rate_nolock(clks[TEGRA210_CLK_PLL_MB]);
-+	pll_m_v = car_readl(PLLM_BASE, 0);
-+	pll_p_outa = car_readl(PLLP_OUTA, 0);
-+	pll_p_outb = car_readl(PLLP_OUTB, 0);
-+
-+	for (i = 0; i < ARRAY_SIZE(cpu_softrst_ctx); i++)
-+		cpu_softrst_ctx[i] = car_readl(CPU_SOFTRST_CTRL, i);
-+
-+	for (i = 0; i < ARRAY_SIZE(pll_p_out_rate); i++)
-+		pll_p_out_rate[i] = clk_get_rate_nolock(pll_p_clk(i));
-+
-+	for (i = 0; i < BURST_POLICY_REG_SIZE; i++) {
-+		cclkg_burst_policy_ctx[i] = car_readl(CCLKG_BURST_POLICY, i);
-+		cclklp_burst_policy_ctx[i] = car_readl(CCLKLP_BURST_POLICY, i);
-+		sclk_burst_policy_ctx[i] = car_readl(SCLK_BURST_POLICY, i);
-+	}
-+	sclk_burst_policy_ctx[i] = car_readl(SYS_CLK_DIV, 0);
-+
-+	sclk_ctx = car_readl(SYSTEM_CLK_RATE, 0);
-+	spare_ctx = car_readl(SPARE_REG0, 0);
-+	misc_clk_enb_ctx = car_readl(MISC_CLK_ENB, 0);
-+	clk_arm_ctx = car_readl(CLK_MASK_ARM, 0);
-+
-+	for (i = 0; i < ARRAY_SIZE(periph_srcs); i++)
-+		for (off = periph_srcs[i].start; off <= periph_srcs[i].end;
-+			off += 4)
-+			*clk_rst_ctx++ = car_readl(off, 0);
-+
-+	if (!dfll_pdev) {
-+		node = of_find_compatible_node(NULL, NULL,
-+					       "nvidia,tegra210-dfll");
-+		if (node)
-+			dfll_pdev = of_find_device_by_node(node);
-+		of_node_put(node);
-+		if (!dfll_pdev)
-+			pr_err("dfll node not found. no suspend for dfll\n");
-+	}
-+
-+	if (dfll_pdev)
-+		tegra_dfll_suspend(dfll_pdev);
-+
-+	/* Enable PLLP_OUT_CPU after dfll suspend */
-+	val = car_readl(CLK_OUT_ENB_Y, 0);
-+	val |= CLK_ENB_PLLP_OUT_CPU;
-+	car_writel(val, CLK_OUT_ENB_Y, 0);
-+
-+	tegra_clk_periph_suspend(clk_base);
 +	return 0;
 +}
 +
-+static void tegra210_clk_resume(void)
++static int tegra_gpio_irq_domain_alloc(struct irq_domain *domain,
++				       unsigned int virq,
++				       unsigned int num_irqs, void *data)
 +{
-+	int i;
-+	unsigned long off;
-+	u32 val;
-+	u32 *clk_rst_ctx = periph_clk_src_ctx;
-+	struct clk_hw *parent;
++	struct tegra_gpio_info *tgi = gpiochip_get_data(domain->host_data);
++	struct irq_fwspec *fwspec = data;
++	struct irq_fwspec spec;
++	struct tegra_gpio_bank *bank;
++	unsigned long hwirq;
++	unsigned int type;
++	int err = 0;
 +
-+	tegra_clk_osc_resume(clk_base);
++	if (WARN_ON(fwspec->param_count < 2))
++		return -EINVAL;
 +
-+	for (i = 0; i < ARRAY_SIZE(cpu_softrst_ctx); i++)
-+		car_writel(cpu_softrst_ctx[i], CPU_SOFTRST_CTRL, i);
++	if (!irq_domain_get_of_node(domain->parent))
++		return -EINVAL;
 +
-+	/*
-+	 * Since we are going to reset devices and switch clock sources in this
-+	 * function, plls and secondary dividers is required to be enabled. The
-+	 * actual value will be restored back later.
-+	 */
-+	tegra_clk_pll_out_resume(clks[TEGRA210_CLK_PLL_P_OUT1],
-+				 pll_p_out_rate[0]);
-+	tegra_clk_pll_out_resume(clks[TEGRA210_CLK_PLL_P_OUT3],
-+				 pll_p_out_rate[2]);
-+	tegra_clk_pll_out_resume(clks[TEGRA210_CLK_PLL_P_OUT4],
-+				 pll_p_out_rate[3]);
-+	tegra_clk_pll_out_resume(clks[TEGRA210_CLK_PLL_P_OUT5],
-+				 pll_p_out_rate[4]);
++	err = tegra_gpio_irq_domain_translate(domain, fwspec, &hwirq, &type);
++	if (err)
++		return err;
 +
-+	tegra_clk_pll_resume(clks[TEGRA210_CLK_PLL_A1], pll_a1_rate);
-+	tegra_clk_pll_resume(clks[TEGRA210_CLK_PLL_C2], pll_c2_rate);
-+	tegra_clk_pll_resume(clks[TEGRA210_CLK_PLL_C3], pll_c3_rate);
-+	tegra_clk_pll_resume(clks[TEGRA210_CLK_PLL_C], pll_c_rate);
-+	tegra_clk_pll_resume(clks[TEGRA210_CLK_PLL_X], pll_x_rate);
++	bank = &tgi->bank_info[GPIO_BANK(hwirq)];
++	err = irq_domain_set_hwirq_and_chip(domain, virq, hwirq,
++					    &tgi->ic, bank);
 +
-+	tegra_clk_pll_resume(clks[TEGRA210_CLK_PLL_A], pll_a_rate);
-+	tegra_clk_pll_resume(clks[TEGRA210_CLK_PLL_D], pll_d_rate);
-+	tegra_clk_pll_resume(clks[TEGRA210_CLK_PLL_D2], pll_d2_rate);
-+	tegra_clk_pll_resume(clks[TEGRA210_CLK_PLL_DP], pll_dp_rate);
-+	tegra_clk_pll_resume(clks[TEGRA210_CLK_PLL_C4], pll_c4_rate);
++	if (err < 0)
++		return err;
 +
-+	/* enable the PLLD */
-+	val = car_readl(PLLD_MISC0, 0);
-+	val |= PLLD_MISC0_DSI_CLKENABLE;
-+	car_writel(val, PLLD_MISC0, 0);
++	spec.fwnode = domain->parent->fwnode;
++	spec.param_count = 3;
++	spec.param[0] = GIC_SPI;
++	spec.param[1] = fwspec->param[0];
++	spec.param[2] = fwspec->param[1];
 +
-+	/* reprogram PLLRE post divider, VCO, 2ndary divider (in this order) */
-+	if (!__clk_is_enabled(clks[TEGRA210_CLK_PLL_RE_VCO])) {
-+		val = car_readl(PLLRE_BASE, 0);
-+		val &= ~(0xf << 16);
-+		car_writel(val | pll_re_out_div, PLLRE_BASE, 0);
-+	}
-+	tegra_clk_pll_resume(clks[TEGRA210_CLK_PLL_RE_VCO], pll_re_vco_rate);
-+
-+	car_writel(pll_re_out_1, PLLRE_OUT1, 0);
-+
-+	/* resume PLLU */
-+	tegra210_init_pllu();
-+
-+	tegra_clk_pll_out_resume(clks[TEGRA210_CLK_PLL_U_OUT1],
-+				 pll_u_out1_rate);
-+	tegra_clk_pll_out_resume(clks[TEGRA210_CLK_PLL_U_OUT2],
-+				 pll_u_out2_rate);
-+
-+	tegra_clk_pll_out_resume(clks[TEGRA210_CLK_PLL_C_OUT1],
-+				 pll_c_out1_rate);
-+	tegra_clk_pll_out_resume(clks[TEGRA210_CLK_PLL_A_OUT0],
-+				 pll_a_out0_rate);
-+	tegra_clk_pll_out_resume(clks[TEGRA210_CLK_PLL_C4_OUT3],
-+				 pll_c4_out3_rate);
-+	/*
-+	 * resume SCLK and CPULP clocks
-+	 * for SCLk 1st set safe dividers values, then restore source,
-+	 * then restore dividers
-+	 */
-+	car_writel(0x1, SYSTEM_CLK_RATE, 0);
-+	val = car_readl(SYS_CLK_DIV, 0);
-+	i = BURST_POLICY_REG_SIZE;
-+	if (val < sclk_burst_policy_ctx[i])
-+		car_writel(sclk_burst_policy_ctx[i], SYS_CLK_DIV, 0);
-+	fence_udelay(2, clk_base);
-+	for (i = 0; i < BURST_POLICY_REG_SIZE; i++) {
-+		car_writel(cclklp_burst_policy_ctx[i], CCLKLP_BURST_POLICY, i);
-+		car_writel(sclk_burst_policy_ctx[i], SCLK_BURST_POLICY, i);
-+	}
-+	car_writel(sclk_burst_policy_ctx[i], SYS_CLK_DIV, 0);
-+
-+	car_writel(sclk_ctx, SYSTEM_CLK_RATE, 0);
-+	car_writel(spare_ctx, SPARE_REG0, 0);
-+	car_writel(misc_clk_enb_ctx, MISC_CLK_ENB, 0);
-+	car_writel(clk_arm_ctx, CLK_MASK_ARM, 0);
-+
-+	/* enable all clocks before configuring clock sources */
-+	tegra_clk_periph_force_on(periph_clks_on, ARRAY_SIZE(periph_clks_on),
-+				  clk_base);
-+
-+	wmb();
-+	fence_udelay(2, clk_base);
-+
-+	for (i = 0; i < ARRAY_SIZE(periph_srcs); i++)
-+		for (off = periph_srcs[i].start; off <= periph_srcs[i].end;
-+		     off += 4)
-+			car_writel(*clk_rst_ctx++, off, 0);
-+
-+	/* propagate and restore resets, restore clock state */
-+	fence_udelay(5, clk_base);
-+	tegra_clk_periph_resume(clk_base);
-+
-+	/* restore (sync) the actual PLL and secondary divider values */
-+	car_writel(pll_p_outa, PLLP_OUTA, 0);
-+	car_writel(pll_p_outb, PLLP_OUTB, 0);
-+
-+	tegra_clk_sync_state_pll_out(clks[TEGRA210_CLK_PLL_U_OUT1]);
-+	tegra_clk_sync_state_pll_out(clks[TEGRA210_CLK_PLL_U_OUT2]);
-+
-+	tegra_clk_sync_state_pll(clks[TEGRA210_CLK_PLL_A1]);
-+	tegra_clk_sync_state_pll(clks[TEGRA210_CLK_PLL_C2]);
-+	tegra_clk_sync_state_pll(clks[TEGRA210_CLK_PLL_C3]);
-+	tegra_clk_sync_state_pll(clks[TEGRA210_CLK_PLL_C]);
-+
-+	tegra_clk_sync_state_pll(clks[TEGRA210_CLK_PLL_RE_VCO]);
-+	tegra_clk_sync_state_pll(clks[TEGRA210_CLK_PLL_C4]);
-+	tegra_clk_sync_state_pll(clks[TEGRA210_CLK_PLL_D2]);
-+	tegra_clk_sync_state_pll(clks[TEGRA210_CLK_PLL_DP]);
-+	tegra_clk_sync_state_pll(clks[TEGRA210_CLK_PLL_A]);
-+	tegra_clk_sync_state_pll(clks[TEGRA210_CLK_PLL_D]);
-+
-+	tegra_clk_sync_state_pll_out(clks[TEGRA210_CLK_PLL_C_OUT1]);
-+	tegra_clk_sync_state_pll_out(clks[TEGRA210_CLK_PLL_A_OUT0]);
-+
-+	/*
-+	 * restore CPUG clocks:
-+	 * - enable DFLL in open loop mode
-+	 * - switch CPUG to DFLL clock source
-+	 * - close DFLL loop
-+	 * - sync PLLX state
-+	 */
-+	if (dfll_pdev)
-+		tegra_dfll_resume(dfll_pdev, false);
-+
-+	for (i = 0; i < BURST_POLICY_REG_SIZE; i++)
-+		car_writel(cclkg_burst_policy_ctx[i], CCLKG_BURST_POLICY, i);
-+	fence_udelay(2, clk_base);
-+
-+	if (dfll_pdev)
-+		tegra_dfll_resume(dfll_pdev, true);
-+
-+	parent = clk_hw_get_parent(__clk_get_hw(clks[TEGRA210_CLK_CCLK_G]));
-+	if (parent != __clk_get_hw(clks[TEGRA210_CLK_PLL_X]))
-+		tegra_clk_sync_state_pll(clks[TEGRA210_CLK_PLL_X]);
-+
-+	/* Disable PLL_OUT_CPU after DFLL resume */
-+	val = car_readl(CLK_OUT_ENB_Y, 0);
-+	val &= ~CLK_ENB_PLLP_OUT_CPU;
-+	car_writel(val, CLK_OUT_ENB_Y, 0);
-+
-+	car_writel(pll_m_v, PLLM_BASE, 0);
-+	tegra_clk_pll_resume(clks[TEGRA210_CLK_PLL_MB], pll_mb_rate);
-+	tegra_clk_sync_state_pll(clks[TEGRA210_CLK_PLL_M]);
-+	tegra_clk_sync_state_pll(clks[TEGRA210_CLK_PLL_MB]);
-+
-+	tegra_clk_plle_tegra210_resume(clks[TEGRA210_CLK_PLL_E]);
++	return irq_domain_alloc_irqs_parent(domain, virq, 1, &spec);
 +}
-+#else
-+#define tegra210_clk_suspend	NULL
-+#define tegra210_clk_resume	NULL
-+static inline u32 *tegra210_init_suspend_ctx(void)
-+{
-+	return NULL;
-+}
-+#endif
 +
-+static struct syscore_ops tegra_clk_syscore_ops = {
-+	.suspend = tegra210_clk_suspend,
-+	.resume = tegra210_clk_resume,
++static const struct irq_domain_ops tegra_gpio_irq_domain_ops = {
++	.translate = tegra_gpio_irq_domain_translate,
++	.alloc = tegra_gpio_irq_domain_alloc,
 +};
 +
- /**
-  * tegra210_clock_apply_init_table - initialize clocks on Tegra210 SoCs
-  *
-@@ -3591,5 +3969,9 @@ static void __init tegra210_clock_init(struct device_node *np)
- 	tegra210_mbist_clk_init();
++static const struct of_device_id tegra_pmc_of_match[] = {
++	{ .compatible = "nvidia,tegra210-pmc" },
++	{ .compatible = "nvidia,tegra132-pmc" },
++	{ .compatible = "nvidia,tegra124-pmc" },
++	{ .compatible = "nvidia,tegra114-pmc" },
++	{ .compatible = "nvidia,tegra30-pmc" },
++	{ .compatible = "nvidia,tegra20-pmc" },
++	{ }
++};
++
+ static int tegra_gpio_probe(struct platform_device *pdev)
+ {
+ 	struct tegra_gpio_info *tgi;
+ 	struct tegra_gpio_bank *bank;
++	struct device_node *np;
++	struct irq_domain *parent_domain = NULL;
+ 	unsigned int gpio, i, j;
+ 	int ret;
  
- 	tegra_cpu_car_ops = &tegra210_cpu_car_ops;
-+
-+	if (tegra210_init_suspend_ctx())
-+		register_syscore_ops(&tegra_clk_syscore_ops);
-+
- }
- CLK_OF_DECLARE(tegra210, "nvidia,tegra210-car", tegra210_clock_init);
+@@ -612,8 +700,15 @@ static int tegra_gpio_probe(struct platform_device *pdev)
+ 	tgi->ic.irq_set_type		= tegra_gpio_irq_set_type;
+ 	tgi->ic.irq_shutdown		= tegra_gpio_irq_shutdown;
+ #ifdef CONFIG_PM_SLEEP
+-	tgi->ic.irq_set_wake		= tegra_gpio_irq_set_wake;
++	tgi->ic.irq_set_wake		= irq_chip_set_wake_parent;
+ #endif
++	np = of_find_matching_node(NULL, tegra_pmc_of_match);
++	if (np) {
++		parent_domain = irq_find_host(np);
++		of_node_put(np);
++		if (!parent_domain)
++			return -EPROBE_DEFER;
++	}
+ 
+ 	platform_set_drvdata(pdev, tgi);
+ 
+@@ -625,9 +720,11 @@ static int tegra_gpio_probe(struct platform_device *pdev)
+ 	if (!tgi->bank_info)
+ 		return -ENOMEM;
+ 
+-	tgi->irq_domain = irq_domain_add_linear(pdev->dev.of_node,
+-						tgi->gc.ngpio,
+-						&irq_domain_simple_ops, NULL);
++	tgi->irq_domain = irq_domain_add_hierarchy(parent_domain, 0,
++						   tgi->gc.ngpio,
++						   pdev->dev.of_node,
++						   &tegra_gpio_irq_domain_ops,
++						   &tgi->gc);
+ 	if (!tgi->irq_domain)
+ 		return -ENODEV;
+ 
 -- 
 2.7.4
 
