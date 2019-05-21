@@ -2,219 +2,81 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF27CC04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 08:05:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CA57C04E87
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 08:06:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94FAB2173C
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 08:05:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3698A217D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 08:06:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="U9IxRev8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727039AbfEUIFh (ORCPT
+        id S1727146AbfEUIGi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 04:05:37 -0400
-Received: from relay11.mail.gandi.net ([217.70.178.231]:41615 "EHLO
-        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726138AbfEUIFh (ORCPT
+        Tue, 21 May 2019 04:06:38 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:40574 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726138AbfEUIGi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 04:05:37 -0400
-Received: from localhost (aaubervilliers-681-1-80-185.w90-88.abo.wanadoo.fr [90.88.22.185])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 5170D10002B;
-        Tue, 21 May 2019 08:05:16 +0000 (UTC)
-Date:   Tue, 21 May 2019 10:05:15 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Frank Lee <tiny.windzz@gmail.com>
-Cc:     rui.zhang@intel.com, Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>, robh+dt@kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>, catalin.marinas@arm.com,
-        will.deacon@arm.com, David Miller <davem@davemloft.net>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan.Cameron@huawei.com,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        paulmck@linux.ibm.com, Andy Gross <andy.gross@linaro.org>,
-        olof@lixom.net, bjorn.andersson@linaro.org,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        marc.w.gonzalez@free.fr, stefan.wahren@i2se.com,
-        enric.balletbo@collabora.com, Linux PM <linux-pm@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/3] thermal: sun50i: add thermal driver for h6
-Message-ID: <20190521080515.qlni2lnmcwh7itl7@flea>
-References: <20190512082614.9045-1-tiny.windzz@gmail.com>
- <20190512082614.9045-3-tiny.windzz@gmail.com>
- <20190512133930.t5txssl7mou2gljt@flea>
- <CAEExFWvcMbiCJ4HD0UAtv1P6AuBJ=oUdmhu886BNZhrRz483Ug@mail.gmail.com>
- <20190517073634.izdmba3yqvxviyg3@flea>
- <CAEExFWtNhTqLR+v3o6vn0Y4L65i_XsrEeiex6DNLEPEkhseCjA@mail.gmail.com>
+        Tue, 21 May 2019 04:06:38 -0400
+Received: by mail-qt1-f193.google.com with SMTP id k24so19444379qtq.7
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 01:06:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JNAOtEoAZMPZZoa5GUaVYIK7Z6bfPkstoCwpa4KLdsU=;
+        b=U9IxRev8oSId9mHKIJv+d53QN59t1EllDgBux00QyjPdIWkW2pSV1eNS+pFg/Brcbs
+         f5CpZdM7uH2Ks16A2L3DaM9kpzVHfSqmYBXQBtsnokuaksF2dwTcEIRL3e6wLKhL6lGn
+         QPhNyXJb0HX9RgbbFd3OrOYHR06mmX5Aw1iIw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JNAOtEoAZMPZZoa5GUaVYIK7Z6bfPkstoCwpa4KLdsU=;
+        b=bS6MjZwN23h1FGYAoS+kpkQrZuQEF5WjMBjFsJVcPX24cRZuLc9yQg3U/hP6khsDRf
+         VhtEJzmhoT/gBvHKkYVBjlc6KCMthD6B0E+4WjiGMo07gCTG4roI+GBlH7qKrxSjs/Y6
+         d5VSfVoqmJ7KKRe0YndQIzoTX0TYeYoDoAeNO88+suU6pCyWtZS5uuqv8lfHWplQ3qc6
+         U/UqBmcMvKp2zH1Mz3QX7BapSwlufmOPd7lH1qnmWPT9UQ+0GVSKK4/g8JbU7ghZyySC
+         ml4NdiBFHykzlI9sAHfqf2EphWjw/MvL//ugRB7TCkcuOtfzQPzE596QY1bQSyJa+5j0
+         ccFw==
+X-Gm-Message-State: APjAAAWLZNHsDsnUdBR6EX4x6y7JneMhxZzHtEJkzXziQURtJ73QlWsH
+        gk2SqsQ0Idx32D4GTEoN+Z18EegzXSzcm+u+xUUFIw==
+X-Google-Smtp-Source: APXvYqz9hTNmVrZyrR1MFTVtToaRak51rm3XYKvAnie36nNwGE2XxgXwPcxAHngcippuPrEfmIUlT8qgLefYJeW3SJE=
+X-Received: by 2002:ac8:2907:: with SMTP id y7mr32599676qty.278.1558425997177;
+ Tue, 21 May 2019 01:06:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="wynwzlv2suaup6a4"
-Content-Disposition: inline
-In-Reply-To: <CAEExFWtNhTqLR+v3o6vn0Y4L65i_XsrEeiex6DNLEPEkhseCjA@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+References: <20190520044951.248096-1-drinkcat@chromium.org> <201905211524.RpQYbGWw%lkp@intel.com>
+In-Reply-To: <201905211524.RpQYbGWw%lkp@intel.com>
+From:   Nicolas Boichat <drinkcat@chromium.org>
+Date:   Tue, 21 May 2019 16:06:26 +0800
+Message-ID: <CANMq1KDT1WpPksLw5M0OyujF2XnSM0F7gkhWLi4VAa6je48qsw@mail.gmail.com>
+Subject: Re: [PATCH] mm/failslab: By default, do not fail allocations with
+ direct reclaim only
+To:     kbuild test robot <lkp@intel.com>
+Cc:     kbuild-all@01.org, Andrew Morton <akpm@linux-foundation.org>,
+        David Rientjes <rientjes@google.com>,
+        Michal Hocko <mhocko@suse.com>, Joe Perches <joe@perches.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-mm@kvack.org, Akinobu Mita <akinobu.mita@gmail.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---wynwzlv2suaup6a4
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Sat, May 18, 2019 at 01:27:39AM +0800, Frank Lee wrote:
-> On Fri, May 17, 2019 at 3:36 PM Maxime Ripard <maxime.ripard@bootlin.com>=
- wrote:
-> >
-> > On Fri, May 17, 2019 at 01:51:56AM +0800, Frank Lee wrote:
-> > > > > +struct sun50i_thermal_chip {
-> > > > > +     int     sensor_num;
-> > > > > +     int     offset;
-> > > > > +     int     scale;
-> > > > > +     int     ft_deviation;
-> > > > > +     int     temp_calib_base;
-> > > > > +     int     temp_data_base;
-> > > > > +     int     (*enable)(struct tsens_device *tmdev);
-> > > > > +     int     (*disable)(struct tsens_device *tmdev);
-> > > > > +};
-> > > >
-> > > > I'm not super fond of having a lot of quirks that are not needed. If
-> > > > we ever need those quirks when adding support for a new SoC, then
-> > > > yeah, we should totally have some, but only when and if it's needed.
-> > > >
-> > > > Otherwise, the driver is more complicated for no particular reason.
-> > >
-> > > This is unavoidable because of the difference in soc.
-> >
-> > I know, but this isn't my point.
-> >
-> > My point is that at this time of the driver development, we don't know
-> > what is going to be needed to support all of those SoCs.
-> >
-> > Some of the parameters you added might not be needed, some parameters
-> > might be missing, we don't know. So let's keep it simple for now.
-> >
-> > > > > +static int tsens_probe(struct platform_device *pdev)
-> > > > > +{
-> > > > > +     struct tsens_device *tmdev;
-> > > > > +     struct device *dev =3D &pdev->dev;
-> > > > > +     int ret;
-> > > > > +
-> > > > > +     tmdev =3D devm_kzalloc(dev, sizeof(*tmdev), GFP_KERNEL);
-> > > > > +     if (!tmdev)
-> > > > > +             return -ENOMEM;
-> > > > > +
-> > > > > +     tmdev->dev =3D dev;
-> > > > > +     tmdev->chip =3D of_device_get_match_data(&pdev->dev);
-> > > > > +     if (!tmdev->chip)
-> > > > > +             return -EINVAL;
-> > > > > +
-> > > > > +     ret =3D tsens_init(tmdev);
-> > > > > +     if (ret)
-> > > > > +             return ret;
-> > > > > +
-> > > > > +     ret =3D tsens_register(tmdev);
-> > > > > +     if (ret)
-> > > > > +             return ret;
-> > > > > +
-> > > > > +     ret =3D tmdev->chip->enable(tmdev);
-> > > > > +     if (ret)
-> > > > > +             return ret;
-> > > > >
-> > > > > +     platform_set_drvdata(pdev, tmdev);
-> > > >
-> > > > Your registration should be the very last thing you do. Otherwise, =
-you
-> > > > have a small window where the get_temp callback can be called, but =
-the
-> > > > driver will not be functional yet.
-> > >
-> > > No. Anyway, ths data qcquisition is ms level.
-> >
-> > That's kind of irrelevant. There's nothing preventing get_temp to be
-> > called right away.
+On Tue, May 21, 2019 at 4:01 PM kbuild test robot <lkp@intel.com> wrote:
+> sparse warnings: (new ones prefixed by >>)
 >
-> As Ond=C5=99ej said,
->
-> Registration after enabling will lead to call tz update on non-registered=
- tz
-> from an interrupt handler.
+> >> mm/failslab.c:27:26: sparse: sparse: restricted gfp_t degrades to integer
+>     26          if (failslab.ignore_gfp_reclaim &&
+>   > 27                          (gfpflags & ___GFP_DIRECT_RECLAIM))
 
-I'm probably missing something but you're not using the interrupts, so
-how could an interrupt handler call it?
-
-Also, other drivers seem to be doing that just fine (mtk_thermal for
-example), so surely there's a way?
-
-> > > > > +     ret =3D tsens_calibrate(tmdev);
-> > > > > +     if (ret)
-> > > > > +             return ret;
-> > > > > +
-> > > > > +     /*
-> > > > > +      * clkin =3D 24MHz
-> > > > > +      * T acquire =3D clkin / (SUN50I_THS_CTRL0_T_ACQ + 1)
-> > > > > +      *           =3D 20us
-> > > > > +      */
-> > > > > +     regmap_write(tmdev->regmap, SUN50I_THS_CTRL0,
-> > > > > +                  SUN50I_THS_CTRL0_T_ACQ(479));
-> > > > > +     /* average over 4 samples */
-> > > > > +     regmap_write(tmdev->regmap, SUN50I_H6_THS_MFC,
-> > > > > +                  SUN50I_THS_FILTER_EN |
-> > > > > +                  SUN50I_THS_FILTER_TYPE(1));
-> > > > > +     /* period =3D (SUN50I_H6_THS_PC_TEMP_PERIOD + 1) * 4096 / c=
-lkin; ~10ms */
-> > > > > +     regmap_write(tmdev->regmap, SUN50I_H6_THS_PC,
-> > > > > +                  SUN50I_H6_THS_PC_TEMP_PERIOD(58));
-> > > > > +     /* enable sensor */
-> > > > > +     val =3D GENMASK(tmdev->chip->sensor_num - 1, 0);
-> > > > > +     regmap_write(tmdev->regmap, SUN50I_H6_THS_ENABLE, val);
-> > > > > +
-> > > > > +     return 0;
-> > > > > +
-> > > > > +assert_reset:
-> > > > > +     reset_control_assert(tmdev->reset);
-> > > > > +
-> > > > > +     return ret;
-> > > >
-> > > > Can't we do that with runtime_pm?
-> > >
-> > > Saving energy doesn't make much sense compared to system security.
-> >
-> > I'm not sure what you mean by security.
->
-> Protect system hardware from damage.
-
-The point of runtime_pm is to keep the device on as long as it is
-used, so it wouldn't change anything there.
-
-I mean, you can even enable it in the probe if you want, my point is
-that the hooks that you have are exact equivalents to the one provided
-by runtime_pm already, so there's no need to define them in the first
-place.
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---wynwzlv2suaup6a4
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXOOxOwAKCRDj7w1vZxhR
-xRMtAP91ilrEN2/Up1pDVPYLzGtsG5/5TylmGwA16kfxTf866gEA4vv7/OZHgBoU
-X5DcfJ4w/u+4LrKYfnWPnhbt0ITqrAY=
-=2LZ/
------END PGP SIGNATURE-----
-
---wynwzlv2suaup6a4--
+That was for v1, fixed in v2 already.
