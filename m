@@ -2,103 +2,168 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07D96C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:13:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB726C04E87
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:13:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D05A2217D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:13:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558433612;
-	bh=OufmRIYJQ0nbYLIvqyUNnOhI9i9mkYrk0LMrip+KEiI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=dIpTobFCX76ykihNMuJqdiEZ+o3wAnL3LHVZ9jinNWFs/Y5zApv3A+OLiAZtL2UgK
-	 EvYLDKy6Tn6iOMMvGOCg+usuY/dyAOsn0LD9q5mTQdGXTNr/wLYZjhKRcSGGT6tFT7
-	 2UH9KIElPBzSXohpVp3PhibfelSk/iHnt2yBV2RI=
+	by mail.kernel.org (Postfix) with ESMTP id AF71C21773
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:13:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dkbaEWk2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727427AbfEUKNb (ORCPT
+        id S1727619AbfEUKNm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 06:13:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43986 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726138AbfEUKNb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 06:13:31 -0400
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A6400217D9;
-        Tue, 21 May 2019 10:13:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558433610;
-        bh=OufmRIYJQ0nbYLIvqyUNnOhI9i9mkYrk0LMrip+KEiI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ryfrH3Wpwo2adEt4OeWEHICRHYnhpBhlyK66YfjCP0puw45cAuqNoYm8thn9W3mkd
-         kWQ4RlSa8sMKzjuBwR/QImifJYSWp8Q0Slhnu6jVxxtfSmQWup7R5D05uId9XdsFuM
-         AxlIZzHLF+n+PEvOThSGF8l08U2XN+RCqv/PXWJk=
-Received: by mail-wr1-f45.google.com with SMTP id w8so17920365wrl.6;
-        Tue, 21 May 2019 03:13:30 -0700 (PDT)
-X-Gm-Message-State: APjAAAVWgMuhgwjbXfo2jBiwytazeYtcIxzPSXYgNJRXkt5BDom62/gF
-        ZaiB8udKmjOegIEqVEzwJSqi5D7iPF0sPGdYja8=
-X-Google-Smtp-Source: APXvYqzmTjjOL9v8MqfbpV2G5sAp6vg4KFpwg98Fgc4v9EVuXBUC7juwUBRFOmLuLrdEoaon7lkrW6QqVeiKkYCEMQ4=
-X-Received: by 2002:adf:ee0c:: with SMTP id y12mr24087711wrn.34.1558433609178;
- Tue, 21 May 2019 03:13:29 -0700 (PDT)
+        Tue, 21 May 2019 06:13:42 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:43668 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726750AbfEUKNm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 06:13:42 -0400
+Received: by mail-wr1-f67.google.com with SMTP id r4so17873971wro.10
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 03:13:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ExhtHOYixmQ3q1DaWe84tRAbBCksXA4j7ETOHrXNd7Q=;
+        b=dkbaEWk2jBQbR2GXBgbKgYnKBf4wzflpQsQOwwuKmqRzR1jvkdKuv2V+0nBXcugw+R
+         qXUJerGUfUdd5U6RpUHhd80mWpaIQNZtNG1EF94VpiH3RouLOtgwk8FPGjevHWQqUQiv
+         P1GLowr79+uCtGnhfosMrt0RDOEKIqxydGMHIgVZiqu3UcNua3uuzzC9wDELw02RQDA/
+         kRU9OCqDZixLi1R/iqMkpbCGpUC1rkuG03reORC/GqPQEV2zw0q7dxAn5/XbXuK9OEUt
+         M0VlbIi4UDk2nGgfaxvIvYgYtPcxWyFJuQpV265MkTnTC0mYWol6BAAWZyDXqcS2ptae
+         5VJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ExhtHOYixmQ3q1DaWe84tRAbBCksXA4j7ETOHrXNd7Q=;
+        b=BLb1ZjCYbNUzpIa3TxZUh0ueiB/1/FR/GYo8iwOEbqHNxo9BrGFYyXroLQVMuaTepA
+         ApiqObs975GOm/V+74xbIVKNNeVwy6bpfGvqROuMZPDPowfKuG52zxL+ct9s0wv0UKSc
+         vlXpwkjO9KRjWPptyswpPMsLe3pDXMSbzBvliK3LVk+139GZKqb8JaXDmEEXXnV7vhOo
+         0lgzcMF44O3fXbVUH7Mj3uviQ0pWj7/lPv9vIHF1CHyoDY5Ml1VPvQqN6SJWQIU+ktvY
+         iqm5t7vDFbSMzHwJINuspyvhMhKcomhdfXlzTlTTleQoJS2YmcylLL+qrG+cmh8nfl1X
+         T1fw==
+X-Gm-Message-State: APjAAAX62IFezz7wg7WLzjBZwc/wPJhHs5+BarrCFWt9BDin74trSun2
+        TpJd/awdTewxacArjPs2/5iuEQ==
+X-Google-Smtp-Source: APXvYqx6nGhjKpD8X1e8RNKlkcPEHA0wu1fWgProf887xpQF5o3CDXBEqtzPwSaBYOyhclFuYvUG+w==
+X-Received: by 2002:adf:cf0e:: with SMTP id o14mr13521746wrj.230.1558433620515;
+        Tue, 21 May 2019 03:13:40 -0700 (PDT)
+Received: from [10.1.203.87] (nat-wifi.sssup.it. [193.205.81.22])
+        by smtp.googlemail.com with ESMTPSA id y8sm2751112wmi.8.2019.05.21.03.13.39
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 21 May 2019 03:13:39 -0700 (PDT)
+Subject: Re: [PATCH v2 6/9] arm64: dts: qcom: msm8996: Add PSCI cpuidle low
+ power states
+To:     Amit Kucheria <amit.kucheria@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        bjorn.andersson@linaro.org, agross@kernel.org,
+        niklas.cassel@linaro.org, marc.w.gonzalez@free.fr,
+        sibis@codeaurora.org, Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>
+Cc:     devicetree@vger.kernel.org
+References: <cover.1558430617.git.amit.kucheria@linaro.org>
+ <2ffbb3f32484c03360ff7d6fa4668581ef298c9e.1558430617.git.amit.kucheria@linaro.org>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <10d95552-0a0c-3e8a-62c3-80a307fed0c9@linaro.org>
+Date:   Tue, 21 May 2019 12:13:39 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190508073331.27475-1-drinkcat@chromium.org> <CACRpkdZb73vNyepcfjzEGAopc7BBxde_N1wxn7PSJ3aGC0=Gig@mail.gmail.com>
-In-Reply-To: <CACRpkdZb73vNyepcfjzEGAopc7BBxde_N1wxn7PSJ3aGC0=Gig@mail.gmail.com>
-From:   Sean Wang <sean.wang@kernel.org>
-Date:   Tue, 21 May 2019 03:13:17 -0700
-X-Gmail-Original-Message-ID: <CAGp9LzriFJTf_pqUDx3Tmp2dbJBy7Rv1y73Tq+Rw5WeXPT94aA@mail.gmail.com>
-Message-ID: <CAGp9LzriFJTf_pqUDx3Tmp2dbJBy7Rv1y73Tq+Rw5WeXPT94aA@mail.gmail.com>
-Subject: Re: [PATCH v2 0/2] pinctrl: mediatek: mt8183: Add support for wake sources
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Nicolas Boichat <drinkcat@chromium.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Chuanjia Liu <Chuanjia.Liu@mediatek.com>,
-        Evan Green <evgreen@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <2ffbb3f32484c03360ff7d6fa4668581ef298c9e.1558430617.git.amit.kucheria@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 16, 2019 at 4:56 AM Linus Walleij <linus.walleij@linaro.org> wrote:
->
-> On Wed, May 8, 2019 at 9:33 AM Nicolas Boichat <drinkcat@chromium.org> wrote:
->
-> > This adds support for wake sources in pinctrl-mtk-common-v2, and
-> > pinctrl-mt8183. Without this patch, all interrupts that are left
-> > enabled on suspend act as wake sources (and wake sources without
-> > interrupt enabled do not).
-> >
-> > Changes since v1:
-> >  - Move changes from mtk-common-v2 to mtk-pinctrl-paris, as
-> >    recommended by Sean, to keep better separation between eint
-> >    and pinctrl-common features.
-> >
-> > Nicolas Boichat (2):
-> >   pinctrl: mediatek: Add pm_ops to pinctrl-paris
-> >   pinctrl: mediatek: mt8183: Add mtk_pinctrl_paris_pm_ops
->
-> All seems to look fair to me, but I need some official ACK from
-> Sean on these.
->
+On 21/05/2019 11:35, Amit Kucheria wrote:
+> Add device bindings for cpuidle states for cpu devices.
+> 
+> msm8996 features 4 cpus - 2 in each cluster. However, all cpus implement
+> the same microarchitecture and the two clusters only differ in the
+> maximum frequency attainable by the CPUs.
+> 
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
 
-sure, it looks good to me and thanks for Nicolas' help
+Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 
-Acked-by: Sean Wang <sean.wang@kernel.org>
 
-> I see there is some discussion on a related patch set which
-> also has two patches so I am a but confused how mature the
-> two patch sets are? Are they at all related?
->
-> Yours,
-> Linus Walleij
+
+> ---
+>  arch/arm64/boot/dts/qcom/msm8996.dtsi | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+> index c761269caf80..4f2fb7885f39 100644
+> --- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+> @@ -95,6 +95,7 @@
+>  			compatible = "qcom,kryo";
+>  			reg = <0x0 0x0>;
+>  			enable-method = "psci";
+> +			cpu-idle-states = <&CPU_SLEEP_0>;
+>  			next-level-cache = <&L2_0>;
+>  			L2_0: l2-cache {
+>  			      compatible = "cache";
+> @@ -107,6 +108,7 @@
+>  			compatible = "qcom,kryo";
+>  			reg = <0x0 0x1>;
+>  			enable-method = "psci";
+> +			cpu-idle-states = <&CPU_SLEEP_0>;
+>  			next-level-cache = <&L2_0>;
+>  		};
+>  
+> @@ -115,6 +117,7 @@
+>  			compatible = "qcom,kryo";
+>  			reg = <0x0 0x100>;
+>  			enable-method = "psci";
+> +			cpu-idle-states = <&CPU_SLEEP_0>;
+>  			next-level-cache = <&L2_1>;
+>  			L2_1: l2-cache {
+>  			      compatible = "cache";
+> @@ -127,6 +130,7 @@
+>  			compatible = "qcom,kryo";
+>  			reg = <0x0 0x101>;
+>  			enable-method = "psci";
+> +			cpu-idle-states = <&CPU_SLEEP_0>;
+>  			next-level-cache = <&L2_1>;
+>  		};
+>  
+> @@ -151,6 +155,19 @@
+>  				};
+>  			};
+>  		};
+> +
+> +		idle-states {
+> +			entry-method = "psci";
+> +
+> +			CPU_SLEEP_0: cpu-sleep-0 {
+> +				compatible = "arm,idle-state";
+> +				idle-state-name = "standalone-power-collapse";
+> +				arm,psci-suspend-param = <0x00000004>;
+> +				entry-latency-us = <40>;
+> +				exit-latency-us = <80>;
+> +				min-residency-us = <300>;
+> +			};
+> +		};
+>  	};
+>  
+>  	thermal-zones {
+> 
+
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
