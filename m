@@ -2,188 +2,132 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B1EDC04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 09:18:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C146C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 09:18:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDE202173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 09:18:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16DAD21743
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 09:18:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="zu0FNCpQ"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="gZYCgIsm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726562AbfEUJSA (ORCPT
+        id S1727202AbfEUJSs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 05:18:00 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:40872 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726006AbfEUJSA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 05:18:00 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4L96iJ0014021;
-        Tue, 21 May 2019 11:17:51 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=4RTuKGHCLsvh6APcX9ZvfmHkgHj7OwihyknGBu1Dl3k=;
- b=zu0FNCpQ3k5YZ+Hsbbr3+WOhETEEI/gIOo8/DQQg6XhVOH+wQN5fmQxRdPoCRMQl5YHP
- BXFwqOgCQeT/O3uvkr/R1btmto74WK/L9rN8UnYKQwZC6LfYnCeswjgmf0wBmOOQ72ir
- HTGEDPHbl3+VDiPOrxUgouddIuxMgctnPwiTu5l9Ssm+sdJOvMDGmYaWJCNFq/8AP21Y
- NRJfA5saQo7a+yG5I5A4LjLOrqk74BBnHvNZfK2ealDkR4PahOAymzNzuVwKd1LkSaDJ
- T881Rf3ep8OKCnHgANMCr9YhMkR7PBygemChfoWMJoXEYrd+Rz/tnM6pM3JXW+ZSRigb VQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2sj8xg8bpr-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Tue, 21 May 2019 11:17:51 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 4ECC531;
-        Tue, 21 May 2019 09:17:50 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag6node1.st.com [10.75.127.16])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 1DB7C24EC;
-        Tue, 21 May 2019 09:17:50 +0000 (GMT)
-Received: from [10.48.0.237] (10.75.127.44) by SFHDAG6NODE1.st.com
- (10.75.127.16) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 21 May
- 2019 11:17:49 +0200
-Subject: Re: [PATCH V2 0/5] mmc: mmci: add busy detect for stm32 sdmmc variant
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-References: <1556264798-18540-1-git-send-email-ludovic.Barre@st.com>
- <CAPDyKFqbn=UcbwoH_z+yjrjvHQZaMtmsD=n0yrBV7DAK5VRJEQ@mail.gmail.com>
- <74b91eb4-e5a3-38b2-f732-29cdd058eb6a@st.com>
- <CAPDyKFoURwnai1hbCbO+Uh6+hc7A4dYHjWkqeFAEgMQET-BzwA@mail.gmail.com>
- <e884b614-14d4-1cae-5b77-c6aacabb764a@st.com>
- <CAPDyKFo4Y9PF_QL47rO2c_szUHahPMuzHV=j_SL9dxvAzst17w@mail.gmail.com>
-From:   Ludovic BARRE <ludovic.barre@st.com>
-Message-ID: <7e15c8ec-f851-b0d3-a3ce-dfad2a398e78@st.com>
-Date:   Tue, 21 May 2019 11:17:48 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <CAPDyKFo4Y9PF_QL47rO2c_szUHahPMuzHV=j_SL9dxvAzst17w@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+        Tue, 21 May 2019 05:18:48 -0400
+Received: from mail-eopbgr70083.outbound.protection.outlook.com ([40.107.7.83]:18693
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726006AbfEUJSr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 05:18:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YSzlrVus6h4wgDGfi7rOg2cKnK8z3Gki/jd2MrlQMb4=;
+ b=gZYCgIsmPgoF3ROdvs/CawdERYiy92dvA8TC2dU8aHz/1T/thRFlMGDkgYy8AjxhnhElYVJj04ouduWHuPTav1tbeeG0V0JBHv1+ro/go4KYb595Cp/LtzCYC9+2nztWBrr74zyNfqPu/Dzx3gxUQA9zPvZb7rpZB0Gt79+I5cU=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
+ DB3PR0402MB3836.eurprd04.prod.outlook.com (52.134.71.139) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1900.16; Tue, 21 May 2019 09:18:43 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::5835:e874:bd94:fec]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::5835:e874:bd94:fec%5]) with mapi id 15.20.1900.020; Tue, 21 May 2019
+ 09:18:43 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     dl-linux-imx <linux-imx@nxp.com>
+Subject: [PATCH 1/2] soc: imx: soc-imx8: Avoid unnecessary of_node_put() in
+ error handling
+Thread-Topic: [PATCH 1/2] soc: imx: soc-imx8: Avoid unnecessary of_node_put()
+ in error handling
+Thread-Index: AQHVD7YvdNtmZ2uz6UeyYdwfC+FzEA==
+Date:   Tue, 21 May 2019 09:18:43 +0000
+Message-ID: <1558430013-18346-1-git-send-email-Anson.Huang@nxp.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.44]
-X-ClientProxiedBy: SFHDAG3NODE1.st.com (10.75.127.7) To SFHDAG6NODE1.st.com
- (10.75.127.16)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-21_01:,,
- signatures=0
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.7.4
+x-clientproxiedby: HK2PR0401CA0005.apcprd04.prod.outlook.com
+ (2603:1096:202:2::15) To DB3PR0402MB3916.eurprd04.prod.outlook.com
+ (2603:10a6:8:10::18)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=anson.huang@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 92db3c01-4687-4cb2-5f4b-08d6ddcd517e
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DB3PR0402MB3836;
+x-ms-traffictypediagnostic: DB3PR0402MB3836:
+x-microsoft-antispam-prvs: <DB3PR0402MB38360E22BA9C55A00701AFB9F5070@DB3PR0402MB3836.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3383;
+x-forefront-prvs: 0044C17179
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(366004)(376002)(136003)(346002)(396003)(199004)(189003)(4326008)(486006)(256004)(14454004)(26005)(81156014)(8676002)(81166006)(8936002)(6486002)(2201001)(2501003)(6436002)(6512007)(7736002)(86362001)(53936002)(3846002)(36756003)(25786009)(6116002)(71200400001)(71190400001)(4744005)(5660300002)(66066001)(64756008)(66446008)(102836004)(50226002)(52116002)(99286004)(2616005)(66556008)(66476007)(73956011)(66946007)(186003)(476003)(386003)(6506007)(478600001)(2906002)(305945005)(316002)(68736007)(110136005);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3836;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: OhrtVyWcq7jHAm/gdy2b/sT2EbBOqcTHgH1rK2xcPl/eEjGFcNKyAA2LO4ChIj+23ryuYzWlKZiW1Pr29RGjwefSqb7iwimlm9PPH7XKXkA5k+CChNEnb7Dnq+KCgD07QcO1kn9vjyo77Sb67cZpJKvLdoymFVPNdFBtZooHAvgo8hRUpdjX9YSbn1UFrigx/EYIEkdIKc3O9FnrOQaowZbk6mBj7eCM7BGkwe0oESVjUtBWY0LmLev6/UaOolrvYtzBi0d4+NYtfiTN+gmMQuFYAEQllFCxRzD5Twe2LO78Hnwt8k05P2/1VLuuxPJKJ3q6peilEgLCduG6G1xXxJqoHPARCIOmZQmsW3N4s4ht8HNj1FkwVSGf1bo3uqEyAswgWsMP7Ko2lzTeKY1QOiQeghZPR0y/+jcFW1pjggw=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-ID: <CF5C1AA984D9574AB2DA00BC5C569C7D@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 92db3c01-4687-4cb2-5f4b-08d6ddcd517e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 May 2019 09:18:43.1360
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3836
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+of_node_put() is called after of_match_node() successfully called,
+then in the following error handling, of_node_put() is called again
+which is unnecessary, this patch adjusts the location of of_node_put()
+to avoid such scenario.
 
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ drivers/soc/imx/soc-imx8.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-On 5/21/19 9:56 AM, Ulf Hansson wrote:
-> On Tue, 21 May 2019 at 09:38, Ludovic BARRE <ludovic.barre@st.com> wrote:
->>
->> hi Ulf
->>
->> Just a "gentleman ping" about the rest of series.
->> "mmc: mmci: add busy detect for stm32 sdmmc variant"
-> 
-> Thanks!
-> 
-> It's been a busy period and I am currently traveling. My plan is to
-> look at in detail beginning of next week when get back home. I hope
-> that's okay.
+diff --git a/drivers/soc/imx/soc-imx8.c b/drivers/soc/imx/soc-imx8.c
+index b1bd8e2..944add2 100644
+--- a/drivers/soc/imx/soc-imx8.c
++++ b/drivers/soc/imx/soc-imx8.c
+@@ -86,8 +86,6 @@ static int __init imx8_soc_init(void)
+ 	if (!id)
+ 		goto free_soc;
+=20
+-	of_node_put(root);
+-
+ 	data =3D id->data;
+ 	if (data) {
+ 		soc_dev_attr->soc_id =3D data->name;
+@@ -106,6 +104,8 @@ static int __init imx8_soc_init(void)
+ 	if (IS_ENABLED(CONFIG_ARM_IMX_CPUFREQ_DT))
+ 		platform_device_register_simple("imx-cpufreq-dt", -1, NULL, 0);
+=20
++	of_node_put(root);
++
+ 	return 0;
+=20
+ free_rev:
+--=20
+2.7.4
 
-yes, I understand, it's just to not forget me :-)
-
-> 
-> Kind regards
-> Uffe
-> 
->>
->> Regards
->> Ludo
->>
->> On 5/3/19 3:29 PM, Ulf Hansson wrote:
->>> On Tue, 30 Apr 2019 at 14:06, Ludovic BARRE <ludovic.barre@st.com> wrote:
->>>>
->>>>
->>>>
->>>> On 4/30/19 1:13 PM, Ulf Hansson wrote:
->>>>> On Fri, 26 Apr 2019 at 09:46, Ludovic Barre <ludovic.Barre@st.com> wrote:
->>>>>>
->>>>>> From: Ludovic Barre <ludovic.barre@st.com>
->>>>>>
->>>>>> This patch series adds busy detect for stm32 sdmmc variant.
->>>>>> Some adaptations are required:
->>>>>> -Avoid to check and poll busy status when is not expected.
->>>>>> -Clear busy status bit if busy_detect_flag and busy_detect_mask are
->>>>>>     different.
->>>>>> -Add hardware busy timeout with MMCIDATATIMER register.
->>>>>>
->>>>>> V2:
->>>>>> -mmci_cmd_irq cleanup in separate patch.
->>>>>> -simplify the busy_detect_flag exclude
->>>>>> -replace sdmmc specific comment in
->>>>>> "mmc: mmci: avoid fake busy polling in mmci_irq"
->>>>>> to focus on common behavior
->>>>>>
->>>>>> Ludovic Barre (5):
->>>>>>      mmc: mmci: cleanup mmci_cmd_irq for busy detect feature
->>>>>>      mmc: mmci: avoid fake busy polling in mmci_irq
->>>>>>      mmc: mmci: fix clear of busy detect status
->>>>>>      mmc: mmci: add hardware busy timeout feature
->>>>>>      mmc: mmci: add busy detect for stm32 sdmmc variant
->>>>>>
->>>>>>     drivers/mmc/host/mmci.c | 61 ++++++++++++++++++++++++++++++++++++++-----------
->>>>>>     drivers/mmc/host/mmci.h |  3 +++
->>>>>>     2 files changed, 51 insertions(+), 13 deletions(-)
->>>>>>
->>>>>> --
->>>>>> 2.7.4
->>>>>>
->>>>>
->>>>> Ludovic, just wanted to let you know that I am reviewing and testing
->>>>> this series.
->>>>>
->>>>> However, while running some tests on Ux500 for validating the busy
->>>>> detection code, even without your series applied, I encounter some odd
->>>>> behaviors. I am looking into the problem to understand better and will
->>>>> let you know as soon as I have some more data to share.
->>>>
->>>> Oops, don't hesitate to share your status, if I could help.
->>>
->>> Thanks! Good and bad news here, then.
->>>
->>> I now understand what is going on - and there is certainly room for
->>> improvements here, but more importantly the actual mmci busy detection
->>> works as expected.
->>>
->>> When it comes to improvements, the main issue I have found is how we
->>> treat DATA WRITES. In many cases we simply don't use the HW busy
->>> detection at all, but instead rely on the mmc core to send CMD13 in a
->>> loop to poll. Well, then if the polling would have consisted of a
->>> couple of CMD13s that wouldn't be an issue, but my observations is
->>> rather that the numbers of CMD13 sent to poll is in the range or
->>> hundreds/thousands - per each WRITE request!
->>>
->>> I am going to send a patch (or two) that improves the behavior. It
->>> might even involve changing parts in core layer, not sure how the end
->>> result will look like yet.
->>>
->>> In any case, I have applied patch 1 and patch2 for next, as the tests
->>> turned out well at my side. I also took the liberty of updating some
->>> of the comments/changelogs, please have look and tell if there is
->>> something you want to change.
->>>
->>> I will continue with the rest of series next week.
->>>
->>> Kind regards
->>> Uffe
->>>
