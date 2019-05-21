@@ -2,153 +2,75 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 436F6C04E87
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 18:19:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E8B5C04E87
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 18:21:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14B72217D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 18:19:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1C29217D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 18:21:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=toxicpanda-com.20150623.gappssmtp.com header.i=@toxicpanda-com.20150623.gappssmtp.com header.b="hFu6RUdV"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="RIsC4iZI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729247AbfEUST6 (ORCPT
+        id S1729259AbfEUSVE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 14:19:58 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:44378 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728055AbfEUST5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 14:19:57 -0400
-Received: by mail-qt1-f194.google.com with SMTP id f24so21607815qtk.11
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 11:19:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=L4tC0jELcf8YEx069L5KgHyV51lzWFzvRfaNX5ISk+4=;
-        b=hFu6RUdVqnw5buZBDvetwN24AhoYHJdyJYuJQmiFTnhdXsdmT1FI7YFc6Q/MvLL/tr
-         mC4dQiwQp6AN8KTg4BdgTwvhTkhllToa62yL2aUQs2GJ0Gzei3FRn4phhtcdebsLxzbp
-         TsUFDvzOSEGAuMqqOGNHjo1akyrfd07j8uJSoO1u/v2QePRcy52lZVN5BdxFiLWef5hV
-         MNJJcE6SY/B6RCMocIEHo3ZnfNpMVdFTVy0IXyeuTRAhYuULeMkg3LEG5wSOwl7gNZWj
-         cAQ/rbSNix+kujrDm2S15KFkniqLTb7AWtT2f3Ya4Zv43YpB9y6UuLCifBvvDEN8tdvc
-         ZiVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=L4tC0jELcf8YEx069L5KgHyV51lzWFzvRfaNX5ISk+4=;
-        b=H9ucMPLtPaWLtYokmBVMEvqOyMaOgGXE8NtNhSbFUt0O34ITYUqr0TrEh+H1PIRxdi
-         pix8F/D16vhj9Z95fhxSDTVFyWPYLNvsiKfIueprgL8e7W00uSohbFm94ld3+0rpUZYh
-         BUiFJQaVBEH8XILrpnJFSJMwmIsmtc6iCzfLb4ng8h91KgxaY6w6vxJCdEoAVoe4OOTO
-         Pijk5lZGC5OW8jRpAFYK40JnxdxjgXOYdA+QOmsEQ/DoNQAPHzb1pMewC7NPfzJD4koP
-         xXkGsAeFg1GpBypT4rmv28CuGBieFtBgn60GM9cDfzWDn6dro5KkjqHWwODU1uQt99MN
-         lBBg==
-X-Gm-Message-State: APjAAAUXqDmGj9KE5+8k9WeRvrpDps+cWAsi+PtuAfvEDdPY8aqwWJxG
-        H1J6ImoucPOzcr9mTuCd6vP9UA==
-X-Google-Smtp-Source: APXvYqzqnNC3r0IufslOaWTqAuMUGIxBl1FW84w5B79zfVMLqcu2JkCCb9GiYVwl2sCQ/VgdhRQmvA==
-X-Received: by 2002:ac8:1205:: with SMTP id x5mr54003801qti.284.1558462796368;
-        Tue, 21 May 2019 11:19:56 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::744])
-        by smtp.gmail.com with ESMTPSA id c9sm13855830qtc.39.2019.05.21.11.19.55
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 21 May 2019 11:19:55 -0700 (PDT)
-Date:   Tue, 21 May 2019 14:19:53 -0400
-From:   Josef Bacik <josef@toxicpanda.com>
-To:     Theodore Ts'o <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        Paolo Valente <paolo.valente@linaro.org>,
-        "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>,
-        linux-fsdevel@vger.kernel.org,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-ext4@vger.kernel.org, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org, axboe@kernel.dk, jmoyer@redhat.com,
-        amakhalov@vmware.com, anishs@vmware.com, srivatsab@vmware.com
-Subject: Re: CFQ idling kills I/O performance on ext4 with blkio cgroup
- controller
-Message-ID: <20190521181952.4vpruone2mzbczpw@MacBook-Pro-91.local>
-References: <8d72fcf7-bbb4-2965-1a06-e9fc177a8938@csail.mit.edu>
- <1812E450-14EF-4D5A-8F31-668499E13652@linaro.org>
- <20190518192847.GB14277@mit.edu>
- <20190520091558.GC2172@quack2.suse.cz>
- <20190521164814.GC2591@mit.edu>
+        Tue, 21 May 2019 14:21:04 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:54174 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728114AbfEUSVD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 14:21:03 -0400
+Received: from cz.tnic (unknown [165.204.77.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 5A1C71EC06E5;
+        Tue, 21 May 2019 20:21:02 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1558462862;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=KHFgAkXxYFk3wROuJ38oqfD4+nr2gZuGxXCjmm/Kcds=;
+        b=RIsC4iZIDA4w2oW1aV/cdXmYt+a9pn/rD6DcJVcqFWRUR0fvqCDU/3khIzZefkdGuOPrrP
+        UFKwbPRcrtkR0+edGSuEmW4qUeptTdioUPee6LNGP/6PNB6MH4vmbvhSoCncgucJqTOoKB
+        uJtNsh5xRcjI2G+Gp/gsmDMNbkibaNw=
+Date:   Tue, 21 May 2019 20:21:32 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Yash Shah <yash.shah@sifive.com>, James Morse <james.morse@arm.com>
+Cc:     linux-edac@vger.kernel.org, linux-riscv@lists.infradead.org,
+        Palmer Dabbelt <palmer@sifive.com>,
+        James Morse <james.morse@arm.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        linux-kernel@vger.kernel.org, aou@eecs.berkeley.edu,
+        mchehab@kernel.org, Sachin Ghadi <sachin.ghadi@sifive.com>,
+        davem@davemloft.net, gregkh@linuxfoundation.org,
+        nicolas.ferre@microchip.com, paulmck@linux.ibm.com
+Subject: Re: [PATCH v2] edac: sifive: Add EDAC platform driver for SiFive SoCs
+Message-ID: <20190521182132.GB7793@cz.tnic>
+References: <1557142026-15949-1-git-send-email-yash.shah@sifive.com>
+ <1557142026-15949-2-git-send-email-yash.shah@sifive.com>
+ <CAJ2_jOG9Ag0spbh3YCxavUE5XEAUP1pHcgCZ56Nu2u4TqfrzHQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190521164814.GC2591@mit.edu>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <CAJ2_jOG9Ag0spbh3YCxavUE5XEAUP1pHcgCZ56Nu2u4TqfrzHQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 21, 2019 at 12:48:14PM -0400, Theodore Ts'o wrote:
-> On Mon, May 20, 2019 at 11:15:58AM +0200, Jan Kara wrote:
-> > But this makes priority-inversion problems with ext4 journal worse, doesn't
-> > it? If we submit journal commit in blkio cgroup of some random process, it
-> > may get throttled which then effectively blocks the whole filesystem. Or do
-> > you want to implement a more complex back-pressure mechanism where you'd
-> > just account to different blkio cgroup during journal commit and then
-> > throttle as different point where you are not blocking other tasks from
-> > progress?
-> 
-> Good point, yes, it can.  It depends in what cgroup the file system is
-> mounted (and hence what cgroup the jbd2 kernel thread is on).  If it
-> was mounted in the root cgroup, then jbd2 thread is going to be
-> completely unthrottled (except for the data=ordered writebacks, which
-> will be charged to the cgroup which write those pages) so the only
-> thing which is nuking us will be the slice_idle timeout --- both for
-> the writebacks (which could get charged to N different cgroups, with
-> disastrous effects --- and this is going to be true for any file
-> system on a syncfs(2) call as well) and switching between the jbd2
-> thread's cgroup and the writeback cgroup.
-> 
-> One thing the I/O scheduler could do is use the synchronous flag as a
-> hint that it should ix-nay on the idle-way.  Or maybe we need to have
-> a different way to signal this to the jbd2 thread, since I do
-> recognize that this issue is ext4-specific, *because* we do the
-> transaction handling in a separate thread, and because of the
-> data=ordered scheme, both of which are unique to ext4.  So exempting
-> synchronous writes from cgroup control doesn't make sense for other
-> file systems.
-> 
-> So maybe a special flag meaning "entangled writes", where the
-> sched_idle hacks should get suppressed for the data=ordered
-> writebacks, but we still charge the block I/O to the relevant CSS's?
-> 
-> I could also imagine if there was some way that file system could
-> track whether all of the file system modifications were charged to a
-> single cgroup, we could in that case charge it to that cgroup?
-> 
-> > Yeah. At least in some cases, we know there won't be any more IO from a
-> > particular cgroup in the near future (e.g. transaction commit completing,
-> > or when the layers above IO scheduler already know which IO they are going
-> > to submit next) and in that case idling is just a waste of time. But so far
-> > I haven't decided how should look a reasonably clean interface for this
-> > that isn't specific to a particular IO scheduler implementation.
-> 
-> The best I've come up with is some way of signalling that all of the
-> writes coming from the jbd2 commit are entangled, probably via a bio
-> flag.
-> 
-> If we don't have cgroup support, the other thing we could do is assume
-> that the jbd2 thread should always be in the root (unconstrained)
-> cgroup, and then force all writes, include data=ordered writebacks, to
-> be in the jbd2's cgroup.  But that would make the block cgroup
-> controls trivially bypassable by an application, which could just be
-> fsync-happy and exempt all of its buffered I/O writes from cgroup
-> control.  So that's probably not a great way to go --- but it would at
-> least fix this particular performance issue.  :-/
-> 
+On Tue, May 21, 2019 at 11:00:59AM +0530, Yash Shah wrote:
+> The prerequisite patch (sifive_l2_cache driver) has been merged into
+> mainline v5.2-rc1
+> It should be OK to merge this edac driver now.
 
-Chris is adding a REQ_ROOT (or something) flag that means don't throttle me now,
-but the the blkcg attached to the bio is the one that is responsible for this
-IO.  Then for io.latency we'll let the io go through unmolested but it gets
-counted to the right cgroup, and if then we're exceeding latency guarantees we
-have the ability to schedule throttling for that cgroup in a safer place.  This
-would eliminate the data=ordered issue for ext4, you guys keep doing what you
-are doing and we'll handle throttling elsewhere, just so long as the bio's are
-tagged with the correct source then all is well.  Thanks,
+James?
 
-Josef
+-- 
+Regards/Gruss,
+    Boris.
+
+ECO tip #101: Trim your mails when you reply. Srsly.
