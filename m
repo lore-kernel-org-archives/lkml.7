@@ -2,274 +2,160 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D394C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 12:59:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09429C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:00:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4DA5217D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 12:59:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C541821773
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:00:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="HhjylbEc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728200AbfEUM7g (ORCPT
+        id S1728172AbfEUNAg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 08:59:36 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:7667 "EHLO huawei.com"
+        Tue, 21 May 2019 09:00:36 -0400
+Received: from mail-eopbgr140053.outbound.protection.outlook.com ([40.107.14.53]:2786
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726995AbfEUM7f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 08:59:35 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 91EAB237052C217B51B8;
-        Tue, 21 May 2019 20:59:32 +0800 (CST)
-Received: from [127.0.0.1] (10.202.227.238) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Tue, 21 May 2019
- 20:59:23 +0800
-Subject: Re: [PATCH v7 1/1] iommu: enhance IOMMU dma mode build options
-To:     Zhen Lei <thunder.leizhen@huawei.com>,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        "Will Deacon" <will.deacon@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        linux-doc <linux-doc@vger.kernel.org>,
-        Sebastian Ott <sebott@linux.ibm.com>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        "Martin Schwidefsky" <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        "Michael Ellerman" <mpe@ellerman.id.au>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        iommu <iommu@lists.linux-foundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        x86 <x86@kernel.org>, linux-ia64 <linux-ia64@vger.kernel.org>
-References: <20190520135947.14960-1-thunder.leizhen@huawei.com>
- <20190520135947.14960-2-thunder.leizhen@huawei.com>
-CC:     Hanjun Guo <guohanjun@huawei.com>, Linuxarm <linuxarm@huawei.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <1a12ce97-2e21-0b28-b852-31f21626c378@huawei.com>
-Date:   Tue, 21 May 2019 13:59:06 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.3.0
+        id S1727534AbfEUNAf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 09:00:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=I/ZV8p8q9Aqxs67uDwsgEY4TuldAmy4Jpb+TOrDqtkM=;
+ b=HhjylbEcnZsV1TIlOzMCf/2gq4NdkQ8Y+anIrGKzXdQNV9UI+cVjUfLS0THt+gOdsV/q9O2LC1LLCkC/FR+v02W6K01j1CSv6iF6TclrN7/MEJ3rV6/DjCuY433J6ehwqPWe6kP+VmIkgZ/qeD5Z/5vduEqCxDmUlvQnL0ACFwo=
+Received: from AM6PR04MB4357.eurprd04.prod.outlook.com (52.135.167.33) by
+ AM6PR04MB5205.eurprd04.prod.outlook.com (20.177.35.157) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1922.15; Tue, 21 May 2019 13:00:29 +0000
+Received: from AM6PR04MB4357.eurprd04.prod.outlook.com
+ ([fe80::d877:33b5:bfa6:30ce]) by AM6PR04MB4357.eurprd04.prod.outlook.com
+ ([fe80::d877:33b5:bfa6:30ce%6]) with mapi id 15.20.1900.020; Tue, 21 May 2019
+ 13:00:29 +0000
+From:   Chuanhua Han <chuanhua.han@nxp.com>
+To:     Leo Li <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>
+CC:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Ying Zhang <ying.zhang22455@nxp.com>
+Subject: RE: [EXT] Re: [PATCH] arm64: dts: ls1028a: fix watchdog device node
+Thread-Topic: [EXT] Re: [PATCH] arm64: dts: ls1028a: fix watchdog device node
+Thread-Index: AQHVBjWLU5tDmMzveEaz3RlKVqbc5aZupocAgAA6wsCAAQpVgIAFsPwA
+Date:   Tue, 21 May 2019 13:00:29 +0000
+Message-ID: <AM6PR04MB435758E1498B6A2BE0C0ACE397070@AM6PR04MB4357.eurprd04.prod.outlook.com>
+References: <20190509070657.18281-1-chuanhua.han@nxp.com>
+ <20190517023728.GA15856@dragon>
+ <AM6PR04MB4357C78FCEBA1B00AA42ED2E970B0@AM6PR04MB4357.eurprd04.prod.outlook.com>
+ <AM6PR04MB586341334E62A663EE5E8BD18F0B0@AM6PR04MB5863.eurprd04.prod.outlook.com>
+In-Reply-To: <AM6PR04MB586341334E62A663EE5E8BD18F0B0@AM6PR04MB5863.eurprd04.prod.outlook.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=chuanhua.han@nxp.com; 
+x-originating-ip: [92.121.36.198]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 211504f5-a86b-4e82-27eb-08d6ddec4d3a
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:AM6PR04MB5205;
+x-ms-traffictypediagnostic: AM6PR04MB5205:
+x-microsoft-antispam-prvs: <AM6PR04MB520573140B6B0B8E41B24E5597070@AM6PR04MB5205.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1332;
+x-forefront-prvs: 0044C17179
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(396003)(346002)(376002)(136003)(39860400002)(13464003)(199004)(189003)(110136005)(54906003)(7736002)(316002)(55016002)(66476007)(66556008)(14444005)(256004)(446003)(76176011)(305945005)(14454004)(6436002)(7696005)(102836004)(53546011)(6506007)(53936002)(66066001)(5660300002)(99286004)(68736007)(52536014)(2906002)(6246003)(74316002)(44832011)(8676002)(86362001)(4326008)(81166006)(71200400001)(486006)(8936002)(71190400001)(81156014)(25786009)(33656002)(6116002)(229853002)(3846002)(66446008)(476003)(66946007)(11346002)(9686003)(76116006)(64756008)(73956011)(26005)(186003)(478600001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR04MB5205;H:AM6PR04MB4357.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 43bmUm8Ez0yHTrgxShDD6tmbYUcyhq7uJJ2QfbuHppPK2eXK73wp9cj2clcZ8Ffw/TY2TdwdAg5SXIy4j99Q7CfJbr+C/dCx81RhEg2mbrVKhp2qJ3lIVm1phSazsK44wpCB94jyc9u9gNtr1UG0W6anL4uo/nCANqwWCpRE+rsaInKjyNWRivx0JiEOBmmhza1AAwb5i7q8VFvsDUJ3PuNPOch8JCLWlqSBJ7jo9RZPY+j2Z/3syahyA10pNoLJw6aQ2Ix0LRSjEdLe1QWoGuB+GhIk//GKQ2cAhbTOVIZF+jmr50cBbAR8yfyezzQHqXEnGHlc78xsx0eYtai14w77eNXj9O5Hkyw3t/aQd5oD4bzfYGuJQWNAVvr4+UA8w6rPoisJorHLXaujKN5aFz65lZU7X5inqDtQLcL/Tqg=
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <20190520135947.14960-2-thunder.leizhen@huawei.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.238]
-X-CFilter-Loop: Reflected
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 211504f5-a86b-4e82-27eb-08d6ddec4d3a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 May 2019 13:00:29.5502
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB5205
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20/05/2019 14:59, Zhen Lei wrote:
-> First, add build option IOMMU_DEFAULT_{LAZY|STRICT}, so that we have the
-> opportunity to set {lazy|strict} mode as default at build time. Then put
-> the three config options in an choice, make people can only choose one of
-> the three at a time.
->
-> The default IOMMU dma modes on each ARCHs have no change.
->
-> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
-
-Apart from more minor comments, FWIW:
-
-Reviewed-by: John Garry <john.garry@huawei.com>
-
-> ---
->  arch/ia64/kernel/pci-dma.c                |  2 +-
->  arch/powerpc/platforms/powernv/pci-ioda.c |  3 ++-
->  arch/s390/pci/pci_dma.c                   |  2 +-
->  arch/x86/kernel/pci-dma.c                 |  7 ++---
->  drivers/iommu/Kconfig                     | 44 ++++++++++++++++++++++++++-----
->  drivers/iommu/amd_iommu_init.c            |  3 ++-
->  drivers/iommu/intel-iommu.c               |  2 +-
->  drivers/iommu/iommu.c                     |  3 ++-
->  8 files changed, 48 insertions(+), 18 deletions(-)
->
-> diff --git a/arch/ia64/kernel/pci-dma.c b/arch/ia64/kernel/pci-dma.c
-> index fe988c49f01ce6a..655511dbf3c3b34 100644
-> --- a/arch/ia64/kernel/pci-dma.c
-> +++ b/arch/ia64/kernel/pci-dma.c
-> @@ -22,7 +22,7 @@
->  int force_iommu __read_mostly;
->  #endif
->
-> -int iommu_pass_through;
-> +int iommu_pass_through = IS_ENABLED(CONFIG_IOMMU_DEFAULT_PASSTHROUGH);
-
-As commented privately, I could never see this set for ia64, and it 
-seems to exist just to keep the linker happy. Anyway, I am not sure if 
-ever suitable to be set.
-
->
->  static int __init pci_iommu_init(void)
->  {
-> diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
-> index 3ead4c237ed0ec9..383e082a9bb985c 100644
-> --- a/arch/powerpc/platforms/powernv/pci-ioda.c
-> +++ b/arch/powerpc/platforms/powernv/pci-ioda.c
-> @@ -85,7 +85,8 @@ void pe_level_printk(const struct pnv_ioda_pe *pe, const char *level,
->  	va_end(args);
->  }
->
-> -static bool pnv_iommu_bypass_disabled __read_mostly;
-> +static bool pnv_iommu_bypass_disabled __read_mostly =
-> +			!IS_ENABLED(CONFIG_IOMMU_DEFAULT_PASSTHROUGH);
->  static bool pci_reset_phbs __read_mostly;
->
->  static int __init iommu_setup(char *str)
-> diff --git a/arch/s390/pci/pci_dma.c b/arch/s390/pci/pci_dma.c
-> index 9e52d1527f71495..784ad1e0acecfb1 100644
-> --- a/arch/s390/pci/pci_dma.c
-> +++ b/arch/s390/pci/pci_dma.c
-> @@ -17,7 +17,7 @@
->
->  static struct kmem_cache *dma_region_table_cache;
->  static struct kmem_cache *dma_page_table_cache;
-> -static int s390_iommu_strict;
-> +static int s390_iommu_strict = IS_ENABLED(CONFIG_IOMMU_DEFAULT_STRICT);
->
->  static int zpci_refresh_global(struct zpci_dev *zdev)
->  {
-> diff --git a/arch/x86/kernel/pci-dma.c b/arch/x86/kernel/pci-dma.c
-> index d460998ae828514..fb2bab42a0a3173 100644
-> --- a/arch/x86/kernel/pci-dma.c
-> +++ b/arch/x86/kernel/pci-dma.c
-> @@ -43,11 +43,8 @@
->   * It is also possible to disable by default in kernel config, and enable with
->   * iommu=nopt at boot time.
->   */
-> -#ifdef CONFIG_IOMMU_DEFAULT_PASSTHROUGH
-> -int iommu_pass_through __read_mostly = 1;
-> -#else
-> -int iommu_pass_through __read_mostly;
-> -#endif
-> +int iommu_pass_through __read_mostly =
-> +			IS_ENABLED(CONFIG_IOMMU_DEFAULT_PASSTHROUGH);
->
->  extern struct iommu_table_entry __iommu_table[], __iommu_table_end[];
->
-> diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
-> index 6f07f3b21816c64..8a1f1793cde76b4 100644
-> --- a/drivers/iommu/Kconfig
-> +++ b/drivers/iommu/Kconfig
-> @@ -74,17 +74,47 @@ config IOMMU_DEBUGFS
->  	  debug/iommu directory, and then populate a subdirectory with
->  	  entries as required.
->
-> -config IOMMU_DEFAULT_PASSTHROUGH
-> -	bool "IOMMU passthrough by default"
-> +choice
-> +	prompt "IOMMU default DMA mode"
->  	depends on IOMMU_API
-> -        help
-> -	  Enable passthrough by default, removing the need to pass in
-> -	  iommu.passthrough=on or iommu=pt through command line. If this
-> -	  is enabled, you can still disable with iommu.passthrough=off
-> -	  or iommu=nopt depending on the architecture.
-> +	default IOMMU_DEFAULT_PASSTHROUGH if (PPC_POWERNV && PCI)
-> +	default IOMMU_DEFAULT_LAZY if (AMD_IOMMU || INTEL_IOMMU || S390_IOMMU)
-> +	default IOMMU_DEFAULT_STRICT
-> +	help
-> +	  This option allows IOMMU DMA mode to be chose at build time, to
-
-I'd say /s/allows IOMMU/allows an IOMMU/, /s/chose/chosen/
-
-> +	  override the default DMA mode of each ARCHs, removing the need to
-
-ARCHs should be singular
-
-> +	  pass in kernel parameters through command line. You can still use
-> +	  ARCHs specific boot options to override this option again.
-> +
-> +config IOMMU_DEFAULT_PASSTHROUGH
-> +	bool "passthrough"
-> +	help
-> +	  In this mode, the DMA access through IOMMU without any addresses
-> +	  translation. That means, the wrong or illegal DMA access can not
-> +	  be caught, no error information will be reported.
->
->  	  If unsure, say N here.
->
-> +config IOMMU_DEFAULT_LAZY
-> +	bool "lazy"
-> +	help
-> +	  Support lazy mode, where for every IOMMU DMA unmap operation, the
-> +	  flush operation of IOTLB and the free operation of IOVA are deferred.
-> +	  They are only guaranteed to be done before the related IOVA will be
-> +	  reused.
-> +
-> +config IOMMU_DEFAULT_STRICT
-> +	bool "strict"
-> +	help
-> +	  For every IOMMU DMA unmap operation, the flush operation of IOTLB and
-> +	  the free operation of IOVA are guaranteed to be done in the unmap
-> +	  function.
-> +
-> +	  This mode is safer than the two above, but it maybe slower in some
-> +	  high performace scenarios.
-> +
-> +endchoice
-> +
->  config OF_IOMMU
->         def_bool y
->         depends on OF && IOMMU_API
-> diff --git a/drivers/iommu/amd_iommu_init.c b/drivers/iommu/amd_iommu_init.c
-> index ff40ba758cf365e..16c02b08adb4cb2 100644
-> --- a/drivers/iommu/amd_iommu_init.c
-> +++ b/drivers/iommu/amd_iommu_init.c
-> @@ -166,7 +166,8 @@ struct ivmd_header {
->  					   to handle */
->  LIST_HEAD(amd_iommu_unity_map);		/* a list of required unity mappings
->  					   we find in ACPI */
-> -bool amd_iommu_unmap_flush;		/* if true, flush on every unmap */
-> +bool amd_iommu_unmap_flush = IS_ENABLED(CONFIG_IOMMU_DEFAULT_STRICT);
-> +					/* if true, flush on every unmap */
->
->  LIST_HEAD(amd_iommu_list);		/* list of all AMD IOMMUs in the
->  					   system */
-> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-> index 28cb713d728ceef..0c3cc716210f35a 100644
-> --- a/drivers/iommu/intel-iommu.c
-> +++ b/drivers/iommu/intel-iommu.c
-> @@ -362,7 +362,7 @@ static int domain_detach_iommu(struct dmar_domain *domain,
->
->  static int dmar_map_gfx = 1;
->  static int dmar_forcedac;
-> -static int intel_iommu_strict;
-> +static int intel_iommu_strict = IS_ENABLED(CONFIG_IOMMU_DEFAULT_STRICT);
->  static int intel_iommu_superpage = 1;
->  static int intel_iommu_sm;
->  static int iommu_identity_mapping;
-> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-> index 109de67d5d727c2..0ec5952ac60e2a3 100644
-> --- a/drivers/iommu/iommu.c
-> +++ b/drivers/iommu/iommu.c
-> @@ -43,7 +43,8 @@
->  #else
->  static unsigned int iommu_def_domain_type = IOMMU_DOMAIN_DMA;
->  #endif
-> -static bool iommu_dma_strict __read_mostly = true;
-> +static bool iommu_dma_strict __read_mostly =
-> +			IS_ENABLED(CONFIG_IOMMU_DEFAULT_STRICT);
->
->  struct iommu_group {
->  	struct kobject kobj;
-> --
-> 1.8.3
->
->
->
-> .
->
-
-
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTGVvIExpDQo+IFNlbnQ6
+IDIwMTnE6jXUwjE4yNUgNjowMQ0KPiBUbzogQ2h1YW5odWEgSGFuIDxjaHVhbmh1YS5oYW5Abnhw
+LmNvbT47IFNoYXduIEd1bw0KPiA8c2hhd25ndW9Aa2VybmVsLm9yZz4NCj4gQ2M6IG1hcmsucnV0
+bGFuZEBhcm0uY29tOyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7DQo+IGRl
+dmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBZ
+aW5nIFpoYW5nDQo+IDx5aW5nLnpoYW5nMjI0NTVAbnhwLmNvbT4NCj4gU3ViamVjdDogUkU6IFtF
+WFRdIFJlOiBbUEFUQ0hdIGFybTY0OiBkdHM6IGxzMTAyOGE6IGZpeCB3YXRjaGRvZyBkZXZpY2Ug
+bm9kZQ0KPiANCj4gDQo+IA0KPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4gRnJv
+bTogQ2h1YW5odWEgSGFuDQo+ID4gU2VudDogRnJpZGF5LCBNYXkgMTcsIDIwMTkgMToxMSBBTQ0K
+PiA+IFRvOiBTaGF3biBHdW8gPHNoYXduZ3VvQGtlcm5lbC5vcmc+DQo+ID4gQ2M6IExlbyBMaSA8
+bGVveWFuZy5saUBueHAuY29tPjsgbWFyay5ydXRsYW5kQGFybS5jb207IGxpbnV4LWFybS0NCj4g
+PiBrZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7
+IGxpbnV4LQ0KPiA+IGtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IFlpbmcgWmhhbmcgPHlpbmcuemhh
+bmcyMjQ1NUBueHAuY29tPg0KPiA+IFN1YmplY3Q6IFJFOiBbRVhUXSBSZTogW1BBVENIXSBhcm02
+NDogZHRzOiBsczEwMjhhOiBmaXggd2F0Y2hkb2cNCj4gPiBkZXZpY2Ugbm9kZQ0KPiA+DQo+ID4N
+Cj4gPg0KPiA+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiA+IEZyb206IFNoYXdu
+IEd1byA8c2hhd25ndW9Aa2VybmVsLm9yZz4NCj4gPiA+IFNlbnQ6IDIwMTnE6jXUwjE3yNUgMTA6
+MzgNCj4gPiA+IFRvOiBDaHVhbmh1YSBIYW4gPGNodWFuaHVhLmhhbkBueHAuY29tPg0KPiA+ID4g
+Q2M6IExlbyBMaSA8bGVveWFuZy5saUBueHAuY29tPjsgbWFyay5ydXRsYW5kQGFybS5jb207DQo+
+ID4gPiBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGRldmljZXRyZWVAdmdl
+ci5rZXJuZWwub3JnOw0KPiA+ID4gbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgWWluZyBa
+aGFuZyA8eWluZy56aGFuZzIyNDU1QG54cC5jb20+DQo+ID4gPiBTdWJqZWN0OiBbRVhUXSBSZTog
+W1BBVENIXSBhcm02NDogZHRzOiBsczEwMjhhOiBmaXggd2F0Y2hkb2cgZGV2aWNlDQo+ID4gPiBu
+b2RlDQo+ID4gPg0KPiA+ID4gQ2F1dGlvbjogRVhUIEVtYWlsDQo+ID4gPg0KPiA+ID4gT24gVGh1
+LCBNYXkgMDksIDIwMTkgYXQgMDM6MDY6NTdQTSArMDgwMCwgQ2h1YW5odWEgSGFuIHdyb3RlOg0K
+PiA+ID4gPiBsczEwMjhhIHBsYXRmb3JtIHVzZXMgc3A4MDUgd2F0Y2hkb2csIGFuZCB1c2UgMS8x
+NiBwbGF0Zm9ybSBjbG9jaw0KPiA+ID4gPiBhcyB0aW1lciBjbG9jaywgdGhpcyBwYXRjaCBmaXgg
+ZGV2aWNlIHRyZWUgbm9kZS4NCj4gPiA+ID4NCj4gPiA+ID4gU2lnbmVkLW9mZi1ieTogWmhhbmcg
+WWluZy0yMjQ1NSA8eWluZy56aGFuZzIyNDU1QG54cC5jb20+DQo+ID4gPiA+IFNpZ25lZC1vZmYt
+Ynk6IENodWFuaHVhIEhhbiA8Y2h1YW5odWEuaGFuQG54cC5jb20+DQo+ID4gPiA+IC0tLQ0KPiA+
+ID4gPiAgLi4uL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDI4YS5kdHNpIHwgMTkN
+Cj4gPiA+ID4gKysrKysrKysrKysrLS0tLS0tLQ0KPiA+ID4gPiAgMSBmaWxlIGNoYW5nZWQsIDEy
+IGluc2VydGlvbnMoKyksIDcgZGVsZXRpb25zKC0pDQo+ID4gPiA+DQo+ID4gPiA+IGRpZmYgLS1n
+aXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDI4YS5kdHNpDQo+ID4g
+PiA+IGIvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAyOGEuZHRzaQ0KPiA+
+ID4gPiBpbmRleCBiMDQ1ODEyNDlmMGIuLjE1MTBiMTg1ODI0NiAxMDA2NDQNCj4gPiA+ID4gLS0t
+IGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAyOGEuZHRzaQ0KPiA+ID4g
+PiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDI4YS5kdHNpDQo+
+ID4gPiA+IEBAIC0yODUsMTMgKzI4NSwxOCBAQA0KPiA+ID4gPiAgICAgICAgICAgICAgICAgICAg
+ICAgI2ludGVycnVwdC1jZWxscyA9IDwyPjsNCj4gPiA+ID4gICAgICAgICAgICAgICB9Ow0KPiA+
+ID4gPg0KPiA+ID4gPiAtICAgICAgICAgICAgIHdkb2cwOiB3YXRjaGRvZ0AyM2MwMDAwIHsNCj4g
+PiA+ID4gLSAgICAgICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAiZnNsLGxzMTAyOGEtd2R0
+IiwgImZzbCxpbXgyMS13ZHQiOw0KPiA+ID4gPiAtICAgICAgICAgICAgICAgICAgICAgcmVnID0g
+PDB4MCAweDIzYzAwMDAgMHgwIDB4MTAwMDA+Ow0KPiA+ID4gPiAtICAgICAgICAgICAgICAgICAg
+ICAgaW50ZXJydXB0cyA9IDxHSUNfU1BJIDU5DQo+IElSUV9UWVBFX0xFVkVMX0hJR0g+Ow0KPiA+
+ID4gPiAtICAgICAgICAgICAgICAgICAgICAgY2xvY2tzID0gPCZjbG9ja2dlbiA0IDE+Ow0KPiA+
+ID4gPiAtICAgICAgICAgICAgICAgICAgICAgYmlnLWVuZGlhbjsNCj4gPiA+ID4gLSAgICAgICAg
+ICAgICAgICAgICAgIHN0YXR1cyA9ICJkaXNhYmxlZCI7DQo+ID4gPiA+ICsgICAgICAgICAgICAg
+Y2x1c3RlcjFfY29yZTBfd2F0Y2hkb2c6IHdkdEBjMDAwMDAwIHsNCj4gPiA+DQo+ID4gPiBLZWVw
+ICd3YXRjaGRvZycgYXMgdGhlIG5vZGUgbmFtZSwNCj4gPiBUaGFua3MgZm9yIHlvdXIgcmVwbGF5
+DQo+ID4gRG8geW91IG1lYW4gcmVwbGFjZSB0aGUgoa53ZHShryB3aXRoIKGud2F0Y2hkb2ehrz8N
+Cj4gPiBhbmQga2VlcCBub2RlcyBzb3J0IGluIHVuaXQtYWRkcmVzcy4NCj4gPiBXaGF0IGRvZXMg
+dGhpcyBtZWFuPw0KPiANCj4gVGhhdCBtZWFucyBvcmRlciB0aGUgbm9kZXMgYnkgdGhlIGFkZHJl
+c3NlcyAoZS5nLiBjMDAwMDAwLCBjMDEwMDAwKQ0KVGhlIGN1cnJlbnQgb3JkZXIgaXMgY29ycmVj
+dKOoVGhlIGZpcnN0IGlzIGMwMDAwMDAsIHRoZW4gYzAwMDAwMKOpLg0KPiANCj4gPiA+DQo+ID4g
+PiBTaGF3bg0KPiA+ID4NCj4gPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgIGNvbXBhdGlibGUg
+PSAiYXJtLHNwODA1IiwgImFybSxwcmltZWNlbGwiOw0KPiA+ID4gPiArICAgICAgICAgICAgICAg
+ICAgICAgcmVnID0gPDB4MCAweGMwMDAwMDAgMHgwIDB4MTAwMD47DQo+ID4gPiA+ICsgICAgICAg
+ICAgICAgICAgICAgICBjbG9ja3MgPSA8JmNsb2NrZ2VuIDQgMTU+LCA8JmNsb2NrZ2VuIDQgMTU+
+Ow0KPiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAgY2xvY2stbmFtZXMgPSAiYXBiX3BjbGsi
+LCAid2RvZ19jbGsiOw0KPiA+ID4gPiArICAgICAgICAgICAgIH07DQo+ID4gPiA+ICsNCj4gPiA+
+ID4gKyAgICAgICAgICAgICBjbHVzdGVyMV9jb3JlMV93YXRjaGRvZzogd2R0QGMwMTAwMDAgew0K
+PiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJhcm0sc3A4MDUiLCAi
+YXJtLHByaW1lY2VsbCI7DQo+ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgICByZWcgPSA8MHgw
+IDB4YzAxMDAwMCAweDAgMHgxMDAwPjsNCj4gPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgIGNs
+b2NrcyA9IDwmY2xvY2tnZW4gNCAxNT4sIDwmY2xvY2tnZW4gNCAxNT47DQo+ID4gPiA+ICsgICAg
+ICAgICAgICAgICAgICAgICBjbG9jay1uYW1lcyA9ICJhcGJfcGNsayIsICJ3ZG9nX2NsayI7DQo+
+ID4gPiA+ICAgICAgICAgICAgICAgfTsNCj4gPiA+ID4NCj4gPiA+ID4gICAgICAgICAgICAgICBz
+YXRhOiBzYXRhQDMyMDAwMDAgew0KPiA+ID4gPiAtLQ0KPiA+ID4gPiAyLjE3LjENCj4gPiA+ID4N
+Cg==
