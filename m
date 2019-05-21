@@ -2,68 +2,73 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25E43C072B5
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 21:16:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 569A3C072B5
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 21:17:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 005FF21873
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 21:16:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27E9A2182B
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 21:17:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727815AbfEUVQF (ORCPT
+        id S1727838AbfEUVR2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 17:16:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44270 "EHLO mail.kernel.org"
+        Tue, 21 May 2019 17:17:28 -0400
+Received: from ms.lwn.net ([45.79.88.28]:42952 "EHLO ms.lwn.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727222AbfEUVQF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 17:16:05 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1AAEB2173E;
-        Tue, 21 May 2019 21:16:04 +0000 (UTC)
-Date:   Tue, 21 May 2019 17:16:02 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     Michael Jeanson <mjeanson@efficios.com>,
-        lttng-dev <lttng-dev@lists.lttng.org>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH lttng-modules 4/5] fix: mm: move recent_rotated pages
- calculation to shrink_inactive_list() (v5.2)
-Message-ID: <20190521171602.09481e99@gandalf.local.home>
-In-Reply-To: <1045726286.6695.1558472016130.JavaMail.zimbra@efficios.com>
-References: <20190521203314.8577-1-mjeanson@efficios.com>
-        <20190521203314.8577-4-mjeanson@efficios.com>
-        <1045726286.6695.1558472016130.JavaMail.zimbra@efficios.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1726907AbfEUVR1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 17:17:27 -0400
+Received: from meer.lwn.net (localhost [127.0.0.1])
+        by ms.lwn.net (Postfix) with ESMTPA id 09C8A6D9;
+        Tue, 21 May 2019 21:17:27 +0000 (UTC)
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     linux-doc@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Markus Heiser <markus.heiser@darmarit.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>
+Subject: [PATCH RFC 0/2] docs: Deal with some Sphinx deprecation warnings
+Date:   Tue, 21 May 2019 15:17:12 -0600
+Message-Id: <20190521211714.1395-1-corbet@lwn.net>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 21 May 2019 16:53:36 -0400 (EDT)
-Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
+The Sphinx folks are deprecating some interfaces in the upcoming 2.0
+release; one immediate result of that is a bunch of warnings that show up
+when building with 1.8.  These two patches make those warnings go away,
+but at a cost:
 
-> So I recommend we do the following in lttng-modules:
-> 
-> Rename the field nr_activate0 to nr_activate_anon,
-> Rename the field nr_activate1 to nr_activate_file.
-> 
-> So users can make something out of those tracepoints without digging
-> into the kernel source code.
-> 
-> Even if Steven and Kirill end up choosing to change the name of those
-> fields upstream in trace-event, it won't have any impact on lttng-modules.
-> 
-> It would make sense to change those newly introduced exposed names in the
-> upstream kernel as well though.
+ - It introduces a couple of Sphinx version checks, which are always
+   ugly, but the alternative would be to stop supporting versions
+   before 1.7.  For now, I think we can carry that cruft.
 
-I'm fine with whatever Kirill decides.
+ - The second patch causes the build to fail horribly on newer
+   Sphinx installations.  The change to switch_source_input() seems
+   to make the parser much more finicky, increasing warnings and
+   eventually failing the build altogether.  In particular, it will
+   scream about problems in .rst files that are not included in the
+   TOC tree at all.  The complaints appear to be legitimate, but it's
+   a bunch of stuff to clean up.
 
--- Steve
+I've tested these with 1.4 and 1.8, but not various versions in between.
+
+Jonathan Corbet (2):
+  doc: Cope with Sphinx logging deprecations
+  doc: Cope with the deprecation of AutoReporter
+
+ Documentation/sphinx/kerneldoc.py | 48 ++++++++++++++++++++++++-------
+ Documentation/sphinx/kernellog.py | 28 ++++++++++++++++++
+ Documentation/sphinx/kfigure.py   | 38 +++++++++++++-----------
+ 3 files changed, 87 insertions(+), 27 deletions(-)
+ create mode 100644 Documentation/sphinx/kernellog.py
+
+-- 
+2.21.0
+
