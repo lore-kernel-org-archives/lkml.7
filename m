@@ -2,280 +2,149 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92235C04E87
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 19:38:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCFE8C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 19:41:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68986217F9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 19:38:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA70221019
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 19:41:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="i4T0HLTZ"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="mHVKvikD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727695AbfEUTiB (ORCPT
+        id S1727388AbfEUTll (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 15:38:01 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:14279 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726771AbfEUTiB (ORCPT
+        Tue, 21 May 2019 15:41:41 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:45346 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726525AbfEUTll (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 15:38:01 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ce453930000>; Tue, 21 May 2019 12:37:55 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 21 May 2019 12:37:58 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 21 May 2019 12:37:58 -0700
-Received: from [10.25.72.115] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 21 May
- 2019 19:37:52 +0000
-Subject: Re: [PATCH V7 13/15] phy: tegra: Add PCIe PIPE2UPHY support
-To:     Thierry Reding <thierry.reding@gmail.com>
-CC:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <jonathanh@nvidia.com>, <kishon@ti.com>, <catalin.marinas@arm.com>,
-        <will.deacon@arm.com>, <jingoohan1@gmail.com>,
-        <gustavo.pimentel@synopsys.com>, <mperttunen@nvidia.com>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
-References: <20190517123846.3708-1-vidyas@nvidia.com>
- <20190517123846.3708-14-vidyas@nvidia.com> <20190521110011.GL29166@ulmo>
-X-Nvconfidentiality: public
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <40509b95-0e64-f533-cc78-6ebc81daf321@nvidia.com>
-Date:   Wed, 22 May 2019 01:07:49 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+        Tue, 21 May 2019 15:41:41 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4LJfURx030004;
+        Tue, 21 May 2019 14:41:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1558467690;
+        bh=PM4L/D9FpKZ0tK5lsvnI3Q3CMgTLS/K4k7JDMM7uGss=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=mHVKvikDrWIG4uUrkIMU0HwH/RUGaNzKckcW+9yE7apqfHK1nHEfAAF9jhTGaWeVD
+         O1Zlk+8v66NN+Y3IMPrmECilUThwtooGEXjJ8W//CUJyWlBaGtvVijIVm+0rRY9Jik
+         MhhJyS5c/D0wpS2D9GCQK1KScvbyc2zYmUwzBczQ=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4LJfUZU107622
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 21 May 2019 14:41:30 -0500
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 21
+ May 2019 14:41:30 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 21 May 2019 14:41:30 -0500
+Received: from [10.250.90.63] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4LJfUqt115545;
+        Tue, 21 May 2019 14:41:30 -0500
+Subject: Re: [PATCH v4 6/6] leds: lm36274: Introduce the TI LM36274 LED driver
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
+CC:     <lee.jones@linaro.org>, <rdunlap@infradead.org>,
+        <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20190507201159.13940-1-dmurphy@ti.com>
+ <20190507201159.13940-7-dmurphy@ti.com>
+ <77f1ed5b-bfd2-510c-edd5-1b702f2d1d45@gmail.com>
+ <8d126925-9e71-dba4-eb88-50fd6e6c06d8@ti.com>
+ <a7cb6628-e501-b580-f714-0e5de78ea39c@gmail.com>
+ <d0c49197-984d-5cd8-032a-27d9c5ca6d29@ti.com>
+ <97ff2f48-9ec0-06f1-b667-56fcdef8bf03@gmail.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <65c656cd-1b16-0960-fbeb-8172087b88f2@ti.com>
+Date:   Tue, 21 May 2019 14:41:24 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190521110011.GL29166@ulmo>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+In-Reply-To: <97ff2f48-9ec0-06f1-b667-56fcdef8bf03@gmail.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1558467475; bh=dTx73Mz9zMheAjEyoEiq898TZNv2XaBnZjXZ3mOkt+o=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=i4T0HLTZIoLnJxvcHgX82Te0EvwiSRl/a/isR4rifeLpkeItkYIRndge+fzJgnq6j
-         SNajbngr346yhLuom3HXExhM+4mRUIE+tMxyJARBl3HoklL2ZiPYBSG6wMK1QBtu//
-         x1G4LNFWiX7GbHN8G0mPGwSXsGKBYlo8tgVrzjPY0H4DgqXOUFLmIqiJJvxipjWeQA
-         j7hv9YV0lUrB9W/q+UdPbiBn3tICoYjxvl9SLUVkN86moLRm8T227kdt7FmDHy5j1D
-         61cfwWNh4vmWHaY1blwiXm/SP1dKKXifrTrqr0ZzSYFQZw0INIhnPv0yegev9V7+kl
-         Hr9dyQQvn4XgQ==
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/21/2019 4:30 PM, Thierry Reding wrote:
-> On Fri, May 17, 2019 at 06:08:44PM +0530, Vidya Sagar wrote:
->> Synopsys DesignWare core based PCIe controllers in Tegra 194 SoC interface
->> with Universal PHY (UPHY) module through a PIPE2UPHY (P2U) module.
->> For each PCIe lane of a controller, there is a P2U unit instantiated at
->> hardware level. This driver provides support for the programming required
->> for each P2U that is going to be used for a PCIe controller.
->>
->> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->> ---
->> Changes since [v6]:
->> * None
->>
->> Changes since [v5]:
->> * Addressed review comments from Thierry
->>
->> Changes since [v4]:
->> * None
->>
->> Changes since [v3]:
->> * Rebased on top of linux-next top of the tree
->>
->> Changes since [v2]:
->> * Replaced spaces with tabs in Kconfig file
->> * Sorted header file inclusion alphabetically
->>
->> Changes since [v1]:
->> * Added COMPILE_TEST in Kconfig
->> * Removed empty phy_ops implementations
->> * Modified code according to DT documentation file modifications
->>
->>   drivers/phy/tegra/Kconfig             |   7 ++
->>   drivers/phy/tegra/Makefile            |   1 +
->>   drivers/phy/tegra/pcie-p2u-tegra194.c | 109 ++++++++++++++++++++++++++
->>   3 files changed, 117 insertions(+)
->>   create mode 100644 drivers/phy/tegra/pcie-p2u-tegra194.c
->>
->> diff --git a/drivers/phy/tegra/Kconfig b/drivers/phy/tegra/Kconfig
->> index a3b1de953fb7..06d423fa85b4 100644
->> --- a/drivers/phy/tegra/Kconfig
->> +++ b/drivers/phy/tegra/Kconfig
->> @@ -6,3 +6,10 @@ config PHY_TEGRA_XUSB
->>   
->>   	  To compile this driver as a module, choose M here: the module will
->>   	  be called phy-tegra-xusb.
->> +
->> +config PHY_TEGRA194_PCIE_P2U
->> +	tristate "NVIDIA Tegra P2U PHY Driver"
-> 
-> The Kconfig symbol and driver are named inconsistently. That's not
-> inherently wrong, but I think it unnecessarily complicates things. Why
-> not just do something like:
-> 
-> 	config PHY_TEGRA194_P2U
-> 
-> and name the driver...
-Ok. Done.
+Jacek
 
+On 5/21/19 1:46 PM, Jacek Anaszewski wrote:
+> Dan,
 > 
->> +	depends on ARCH_TEGRA || COMPILE_TEST
->> +	select GENERIC_PHY
->> +	help
->> +	  Enable this to support the P2U (PIPE to UPHY) that is part of Tegra 19x SOCs.
->> diff --git a/drivers/phy/tegra/Makefile b/drivers/phy/tegra/Makefile
->> index a93cd9a499b2..1aaca794f40c 100644
->> --- a/drivers/phy/tegra/Makefile
->> +++ b/drivers/phy/tegra/Makefile
->> @@ -5,3 +5,4 @@ phy-tegra-xusb-$(CONFIG_ARCH_TEGRA_124_SOC) += xusb-tegra124.o
->>   phy-tegra-xusb-$(CONFIG_ARCH_TEGRA_132_SOC) += xusb-tegra124.o
->>   phy-tegra-xusb-$(CONFIG_ARCH_TEGRA_210_SOC) += xusb-tegra210.o
->>   phy-tegra-xusb-$(CONFIG_ARCH_TEGRA_186_SOC) += xusb-tegra186.o
->> +obj-$(CONFIG_PHY_TEGRA194_PCIE_P2U) += pcie-p2u-tegra194.o
-> 
-> ... phy-tegra194-p2u here? Or perhaps even leave away the 194 and make
-> it just phy-tegra-p2u. That would make it consistent with the
-> phy-tegra-xusb driver.
-I'll go with phy-tegra194-p2u here as P2U is present only starting from T194.
-
-> 
-> Looks good otherwise.
-> 
-> Thierry
-> 
->> diff --git a/drivers/phy/tegra/pcie-p2u-tegra194.c b/drivers/phy/tegra/pcie-p2u-tegra194.c
->> new file mode 100644
->> index 000000000000..fae2afe1a1aa
->> --- /dev/null
->> +++ b/drivers/phy/tegra/pcie-p2u-tegra194.c
->> @@ -0,0 +1,109 @@
->> +// SPDX-License-Identifier: GPL-2.0+
->> +/*
->> + * P2U (PIPE to UPHY) driver for Tegra T194 SoC
->> + *
->> + * Copyright (C) 2019 NVIDIA Corporation.
->> + *
->> + * Author: Vidya Sagar <vidyas@nvidia.com>
->> + */
->> +
->> +#include <linux/err.h>
->> +#include <linux/io.h>
->> +#include <linux/module.h>
->> +#include <linux/of.h>
->> +#include <linux/of_platform.h>
->> +#include <linux/phy/phy.h>
->> +
->> +#define P2U_PERIODIC_EQ_CTRL_GEN3	0xc0
->> +#define P2U_PERIODIC_EQ_CTRL_GEN3_PERIODIC_EQ_EN		BIT(0)
->> +#define P2U_PERIODIC_EQ_CTRL_GEN3_INIT_PRESET_EQ_TRAIN_EN	BIT(1)
->> +#define P2U_PERIODIC_EQ_CTRL_GEN4	0xc4
->> +#define P2U_PERIODIC_EQ_CTRL_GEN4_INIT_PRESET_EQ_TRAIN_EN	BIT(1)
->> +
->> +#define P2U_RX_DEBOUNCE_TIME				0xa4
->> +#define P2U_RX_DEBOUNCE_TIME_DEBOUNCE_TIMER_MASK	0xffff
->> +#define P2U_RX_DEBOUNCE_TIME_DEBOUNCE_TIMER_VAL		160
->> +
->> +struct tegra_p2u {
->> +	void __iomem *base;
->> +};
->> +
->> +static int tegra_p2u_power_on(struct phy *x)
->> +{
->> +	struct tegra_p2u *phy = phy_get_drvdata(x);
->> +	u32 val;
->> +
->> +	val = readl(phy->base + P2U_PERIODIC_EQ_CTRL_GEN3);
->> +	val &= ~P2U_PERIODIC_EQ_CTRL_GEN3_PERIODIC_EQ_EN;
->> +	val |= P2U_PERIODIC_EQ_CTRL_GEN3_INIT_PRESET_EQ_TRAIN_EN;
->> +	writel(val, phy->base + P2U_PERIODIC_EQ_CTRL_GEN3);
->> +
->> +	val = readl(phy->base + P2U_PERIODIC_EQ_CTRL_GEN4);
->> +	val |= P2U_PERIODIC_EQ_CTRL_GEN4_INIT_PRESET_EQ_TRAIN_EN;
->> +	writel(val, phy->base + P2U_PERIODIC_EQ_CTRL_GEN4);
->> +
->> +	val = readl(phy->base + P2U_RX_DEBOUNCE_TIME);
->> +	val &= ~P2U_RX_DEBOUNCE_TIME_DEBOUNCE_TIMER_MASK;
->> +	val |= P2U_RX_DEBOUNCE_TIME_DEBOUNCE_TIMER_VAL;
->> +	writel(val, phy->base + P2U_RX_DEBOUNCE_TIME);
->> +
->> +	return 0;
->> +}
->> +
->> +static const struct phy_ops ops = {
->> +	.power_on = tegra_p2u_power_on,
->> +	.owner = THIS_MODULE,
->> +};
->> +
->> +static int tegra_p2u_probe(struct platform_device *pdev)
->> +{
->> +	struct phy_provider *phy_provider;
->> +	struct device *dev = &pdev->dev;
->> +	struct phy *generic_phy;
->> +	struct tegra_p2u *phy;
->> +	struct resource *res;
->> +
->> +	phy = devm_kzalloc(dev, sizeof(*phy), GFP_KERNEL);
->> +	if (!phy)
->> +		return -ENOMEM;
->> +
->> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ctl");
->> +	phy->base = devm_ioremap_resource(dev, res);
->> +	if (IS_ERR(phy->base))
->> +		return PTR_ERR_OR_ZERO(phy->base);
->> +
->> +	platform_set_drvdata(pdev, phy);
->> +
->> +	generic_phy = devm_phy_create(dev, NULL, &ops);
->> +	if (IS_ERR(generic_phy))
->> +		return PTR_ERR_OR_ZERO(generic_phy);
->> +
->> +	phy_set_drvdata(generic_phy, phy);
->> +
->> +	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
->> +	if (IS_ERR(phy_provider))
->> +		return PTR_ERR_OR_ZERO(phy_provider);
->> +
->> +	return 0;
->> +}
->> +
->> +static const struct of_device_id tegra_p2u_id_table[] = {
->> +	{
->> +		.compatible = "nvidia,tegra194-p2u",
->> +	},
->> +	{}
->> +};
->> +MODULE_DEVICE_TABLE(of, tegra_p2u_id_table);
->> +
->> +static struct platform_driver tegra_p2u_driver = {
->> +	.probe = tegra_p2u_probe,
->> +	.driver = {
->> +		.name = "tegra194-p2u",
->> +		.of_match_table = tegra_p2u_id_table,
->> +	},
->> +};
->> +module_platform_driver(tegra_p2u_driver);
->> +
->> +MODULE_AUTHOR("Vidya Sagar <vidyas@nvidia.com>");
->> +MODULE_DESCRIPTION("NVIDIA Tegra PIPE2UPHY PHY driver");
->> +MODULE_LICENSE("GPL v2");
->> -- 
->> 2.17.1
+> On 5/21/19 8:25 PM, Dan Murphy wrote:
+>> Jacek
 >>
+>> On 5/21/19 12:40 PM, Jacek Anaszewski wrote:
+>>> On 5/20/19 11:19 PM, Dan Murphy wrote:
+>>>> Jacek
+>>>>
+>>>> On 5/20/19 2:54 PM, Jacek Anaszewski wrote:
+>>>>> Hi Dan,
+>>>>>
+>>>>> On 5/7/19 10:11 PM, Dan Murphy wrote:
+>>>>>> Introduce the LM36274 LED driver.  This driver uses the ti-lmu
+>>>>>> MFD driver to probe this LED driver.  The driver configures only the
+>>>>>> LED registers and enables the outputs according to the config file.
+>>>>>>
+>>>>>> The driver utilizes the TI LMU (Lighting Management Unit) LED common
+>>>>>> framework to set the brightness bits.
+>>>>>>
+>>>>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>>>>>> ---
+>>>>>>     drivers/leds/Kconfig        |   7 ++
+>>>>>>     drivers/leds/Makefile       |   1 +
+>>>>>>     drivers/leds/leds-lm36274.c | 174 ++++++++++++++++++++++++++++++++++++
+>>>>>>     3 files changed, 182 insertions(+)
+>>>>>>     create mode 100644 drivers/leds/leds-lm36274.c
+>>>>>>
+>>>>>> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+>>>>>> index 255fdd5e8491..db83a3feca01 100644
+>>>>>> --- a/drivers/leds/Kconfig
+>>>>>> +++ b/drivers/leds/Kconfig
+>>>>>> @@ -791,6 +791,13 @@ config LEDS_LM3697
+>>>>>>           Say Y to enable the LM3697 LED driver for TI LMU devices.
+>>>>>>           This supports the LED device LM3697.
+>>>>>>     +config LEDS_LM36274
+>>>>>> +    tristate "LED driver for LM36274"
+>>>>>> +    depends on LEDS_TI_LMU_COMMON
+>>>>>
+>>>>> Shouldn't we have "depends on MFD_TI_LMU" as well here?
+>>>>>
+>>>>
+>>>> Actually the LEDS_TI_LMU_COMMON flag should depend on MFD_TI_LMU.
+>>>> Then it would inherit that dependency.
+>>>
+>>> LEDS_TI_LMU_COMMON does not seem too have any dependency on MFD_TI_LMU,
+>>> and it would be incorrect to require enabling MFD_TI_LMU for all drivers
+>>> depending on TI_LMU_COMMON, that can be probed on their own, like
+>>> leds-lm3697.c .
+>>>
+>>
+>> Correct.
+>>
+>> I can update the Kconfigs unless you want to ammend the commits.
+> 
+> I added "depends on MFD_TI_LMU" to "config LEDS_LM36274".
+> Please verify your patch sets pushed to [0].
+> 
 
+Pulled
+Built
+tested
+verified
+
+Good to go
+
+Dan
+
+> [0] https://git.kernel.org/pub/scm/linux/kernel/git/j.anaszewski/linux-leds.git/log/?h=ib-leds-mfd-regulator
+> 
