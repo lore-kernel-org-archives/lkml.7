@@ -2,123 +2,105 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 716A3C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 08:23:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 653BAC04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 08:25:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44EE1216B7
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 08:23:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B3CB216B7
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 08:25:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WCoq8md8"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="GR3zcVuD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726722AbfEUIXs (ORCPT
+        id S1726761AbfEUIZW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 04:23:48 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:42398 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726289AbfEUIXs (ORCPT
+        Tue, 21 May 2019 04:25:22 -0400
+Received: from esa5.hgst.iphmx.com ([216.71.153.144]:9020 "EHLO
+        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726391AbfEUIZW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 04:23:48 -0400
-Received: by mail-pl1-f196.google.com with SMTP id x15so8069136pln.9;
-        Tue, 21 May 2019 01:23:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=cftAPYrP8xYfrEicUsBv/taLJMOWX61KyJ1eZP8Jk2c=;
-        b=WCoq8md8uakBDOCs5WHQPe/1x7hMfDToFnqS4FA0hiBLKR5/uil7/Agc3ieY7g8xzR
-         tEO5p9RDtOvHhovXx8jq6uFajiOKaBo5fve0sGXi7oE+P6Lu/UuyeHEQftKz/zWh5S9t
-         +i8/uCLs9yrtJ7Y+jQUfIcKKign1FpLZCWNCRU6QVX8j/o41pIzqtNyLMNKZcnNj/am9
-         Joj4cBDfUT9pvTL+m03X7eLPs3wnqCTjN/fe7gmnrfoW3KmFbZsz2MAY51nvfMQ27R1d
-         TI5XnszP5e7E19sOPbDZ0oCCrtzTU4+xxnpmx+VYqp/8rgvXJvBs9oabDxHydoGOMiKg
-         BE/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=cftAPYrP8xYfrEicUsBv/taLJMOWX61KyJ1eZP8Jk2c=;
-        b=InRl96K968xBilgZ+sbkygakI9ChywYgRJlp1EbtHl7Qrgv5lL3cumrXhjG8hOmsiX
-         Ay53M+d/Ld3ak5j89uF3j8JYvNDeuliIczF+kqWnpGtCf/gEsYm5WfORA7+2m2B5NVJq
-         HMMFfzYCYy+vohXL+b0Xgrmw3bGQUeYvufTQrOFHc+hgftpU5OJ6lTl0kKU5YlkMTnym
-         mHrKN3C2xv+Dgfif9+EKq8qSK/QPy30S52GihRiMRChhsdrL9XtU/Pyn5v31vq+kZFnO
-         G61JOmvo23Zs+IurL/LXIuP5Pp8iUPWx17jLnD4zyy/q2OU+RFQVQD2964yOu7fKtqL+
-         +q3Q==
-X-Gm-Message-State: APjAAAUNyi35+gxQgvPXEgvilTsGeRk7DD9ckF1CdbX1U8x9Q8HX+zr9
-        thIsmlwMTUbj0+kWS5ds5QODgsHMKM0=
-X-Google-Smtp-Source: APXvYqzGCM0ZCfBiZtjUqwJQ3ceeRB/ZZireHclCD98P6PSL83QdcV1wUHaVrzmfGs6ruTnjKVVc0Q==
-X-Received: by 2002:a17:902:a70f:: with SMTP id w15mr10911141plq.222.1558427027468;
-        Tue, 21 May 2019 01:23:47 -0700 (PDT)
-Received: from localhost.localdomain ([27.61.168.215])
-        by smtp.googlemail.com with ESMTPSA id k22sm16700325pfk.54.2019.05.21.01.23.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 21 May 2019 01:23:46 -0700 (PDT)
-From:   Anirudh Gupta <anirudhrudr@gmail.com>
-X-Google-Original-From: Anirudh Gupta <anirudh.gupta@sophos.com>
-To:     Steffen Klassert <steffen.klassert@secunet.com>
-Cc:     Anirudh Gupta <anirudh.gupta@sophos.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH net] xfrm: Fix xfrm sel prefix length validation
-Date:   Tue, 21 May 2019 13:52:47 +0530
-Message-Id: <20190521082247.67732-1-anirudh.gupta@sophos.com>
-X-Mailer: git-send-email 2.19.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 21 May 2019 04:25:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1558427122; x=1589963122;
+  h=from:to:cc:subject:date:message-id;
+  bh=65KZ7sJTsRbX3pS79RSgjwLcSrvi8CtRoaxKAs9egSo=;
+  b=GR3zcVuDLIABF+70CQkTr74sI9tQmK7NBj0vxQu23znknpGISwOwTlhE
+   wFUrBkJpsg629DudQbndHv9rvY2vgnX2itxOodKtPM4FYcSf6jFwo2Ir6
+   Ba3joB9/6tE2+W64dPUIxisMP68mXQZGbDY2hPVUQsjPOeoGwZsADvw1C
+   dhqDtUamUjQdOvpjWIXceALmMIsWwZpIE7q0kNf5JV5fsd/qv1XYgUXPV
+   X5VOR1bds+8gfFZ3FM4VuU71k7SYihNnQ5cMJRMUnvkUpfpZJG59u6k3f
+   BnS+Zl00XOpBbuPuf3uaeX+XeZD3hjo3vBUjMKsY4qbha9+wh9YwTWPlg
+   A==;
+X-IronPort-AV: E=Sophos;i="5.60,494,1549900800"; 
+   d="scan'208";a="109972692"
+Received: from h199-255-45-15.hgst.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
+  by ob1.hgst.iphmx.com with ESMTP; 21 May 2019 16:25:22 +0800
+IronPort-SDR: i8ZF7zt3gEWlhKEFYDT12J7gGPMZvlpKydiB9xnjZ7rXgiAbZmdegb8gECUMsVgaU8TC23LdkF
+ CXynEHNVP3GBLws9vlQFA/Bki00YPmrSnK/xxbqeUuIcTUED6opb/P4DUC6VSIcQsP92TVm//L
+ nVHCg1b/gph2sm4xEDmJwmsc0ts/rLLxcxNbifra+XJ+EpKIK0IXuw9ooNtoUbmIEghr8PDXT3
+ HKwxVc9WJDfdop4X4BSBqDmO4xsoBtntdzdKZVjFIi9vi4RA/HV4coh9URc5n6OU6Cl0WVxJFb
+ kNTP8uUQZnffQjaw1jJrnFoH
+Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
+  by uls-op-cesaep02.wdc.com with ESMTP; 21 May 2019 01:03:07 -0700
+IronPort-SDR: 2qLVFTksDCcaCyDOkcRgkmxoYUEOCq5YBS+vbIVAhSPzggC3j98bUZKCEKxgbYH3rRaT9XqgbU
+ JOghUtyTbQSL8Iei4OUmTweH3v5m7LW16k8M1mDNFI0HnFog3x+/INI5XsxYNoV8qDP8IzN+4I
+ ItJmf+ZZH/DVqhf9ESr6ZSEUGeo3Lwjm3rq3bmK8FtgQPRtogFMMmV7JA0nHUamq/k+4j2rTJO
+ gRoG9xR0D4+o6PafU+S4CEelvVtJWU0+iPnbfMYjzbbo2s1w47oY0KTinZe0uD78JgIz53QVZP
+ aDg=
+Received: from kfae422988.sdcorp.global.sandisk.com ([10.0.230.227])
+  by uls-op-cesaip02.wdc.com with ESMTP; 21 May 2019 01:25:18 -0700
+From:   Avri Altman <avri.altman@wdc.com>
+To:     "James E.J. Bottomley" <jejb@linux.vnet.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Evan Green <evgreen@chromium.org>,
+        Bean Huo <beanhuo@micron.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>
+Cc:     Avi Shchislowski <avi.shchislowski@wdc.com>,
+        Alex Lemberg <alex.lemberg@wdc.com>,
+        Avri Altman <avri.altman@wdc.com>
+Subject: [PATCH] scsi: ufs: Check that space was properly alloced in copy_query_response
+Date:   Tue, 21 May 2019 11:24:22 +0300
+Message-Id: <1558427062-5084-1-git-send-email-avri.altman@wdc.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Family of src/dst can be different from family of selector src/dst.
-Use xfrm selector family to validate address prefix length,
-while verifying new sa from userspace.
+struct ufs_dev_cmd is the main container that supports device management
+commands. In the case of a read descriptor request, we assume that the
+proper space was allocated in dev_cmd to hold the returning descriptor.
 
-Validated patch with this command:
-ip xfrm state add src 1.1.6.1 dst 1.1.6.2 proto esp spi 4260196 \
-reqid 20004 mode tunnel aead "rfc4106(gcm(aes))" \
-0x1111016400000000000000000000000044440001 128 \
-sel src 1011:1:4::2/128 sel dst 1021:1:4::2/128 dev Port5
+This is no longer true, as there are flows that doesn't use dev_cmd
+for device management requests, and was wrong in the first place.
 
-Fixes: 07bf7908950a ("xfrm: Validate address prefix lengths in the xfrm selector.")
-Signed-off-by: Anirudh Gupta <anirudh.gupta@sophos.com>
+fixes: d44a5f98bb49 (ufs: query descriptor API)
+
+Signed-off-by: Avri Altman <avri.altman@wdc.com>
 ---
- net/xfrm/xfrm_user.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ drivers/scsi/ufs/ufshcd.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/net/xfrm/xfrm_user.c b/net/xfrm/xfrm_user.c
-index eb8d14389601..1d1fe2208ab5 100644
---- a/net/xfrm/xfrm_user.c
-+++ b/net/xfrm/xfrm_user.c
-@@ -150,6 +150,23 @@ static int verify_newsa_info(struct xfrm_usersa_info *p,
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index 8c1c551..3fe3029 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -1917,7 +1917,8 @@ int ufshcd_copy_query_response(struct ufs_hba *hba, struct ufshcd_lrb *lrbp)
+ 	memcpy(&query_res->upiu_res, &lrbp->ucd_rsp_ptr->qr, QUERY_OSF_SIZE);
  
- 	err = -EINVAL;
- 	switch (p->family) {
-+	case AF_INET:
-+		break;
-+
-+	case AF_INET6:
-+#if IS_ENABLED(CONFIG_IPV6)
-+		break;
-+#else
-+		err = -EAFNOSUPPORT;
-+		goto out;
-+#endif
-+
-+	default:
-+		goto out;
-+	}
-+
-+	err = -EINVAL;
-+	switch (p->sel.family) {
- 	case AF_INET:
- 		if (p->sel.prefixlen_d > 32 || p->sel.prefixlen_s > 32)
- 			goto out;
+ 	/* Get the descriptor */
+-	if (lrbp->ucd_rsp_ptr->qr.opcode == UPIU_QUERY_OPCODE_READ_DESC) {
++	if (hba->dev_cmd.query.descriptor &&
++	    lrbp->ucd_rsp_ptr->qr.opcode == UPIU_QUERY_OPCODE_READ_DESC) {
+ 		u8 *descp = (u8 *)lrbp->ucd_rsp_ptr +
+ 				GENERAL_UPIU_REQUEST_SIZE;
+ 		u16 resp_len;
 -- 
-2.19.0
+1.9.1
 
