@@ -2,114 +2,103 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89E60C04E87
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:54:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F09FC04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:54:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 602D221019
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:54:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40B4221019
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:54:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729019AbfEUPyb (ORCPT
+        id S1729028AbfEUPyp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 11:54:31 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:48569 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727969AbfEUPyb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 11:54:31 -0400
-Received: from localhost (lfbn-1-3034-80.w90-66.abo.wanadoo.fr [90.66.53.80])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 5003F200015;
-        Tue, 21 May 2019 15:54:25 +0000 (UTC)
-Date:   Tue, 21 May 2019 17:54:24 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Richard Leitner <richard.leitner@skidata.com>
-Cc:     a.zummo@towertech.it, linux-rtc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] rtc: s35390a: clarify INT2 pin output modes
-Message-ID: <20190521155424.GH3274@piout.net>
-References: <20190521142024.25894-1-richard.leitner@skidata.com>
- <20190521142024.25894-2-richard.leitner@skidata.com>
+        Tue, 21 May 2019 11:54:45 -0400
+Received: from mail-oln040092069092.outbound.protection.outlook.com ([40.92.69.92]:48613
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727969AbfEUPyn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 11:54:43 -0400
+Received: from HE1EUR02FT018.eop-EUR02.prod.protection.outlook.com
+ (10.152.10.53) by HE1EUR02HT070.eop-EUR02.prod.protection.outlook.com
+ (10.152.11.51) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1900.16; Tue, 21 May
+ 2019 15:54:40 +0000
+Received: from VI1PR07MB4432.eurprd07.prod.outlook.com (10.152.10.56) by
+ HE1EUR02FT018.mail.protection.outlook.com (10.152.10.248) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.1900.16 via Frontend Transport; Tue, 21 May 2019 15:54:40 +0000
+Received: from VI1PR07MB4432.eurprd07.prod.outlook.com
+ ([fe80::91f:b1bb:a60a:fdc3]) by VI1PR07MB4432.eurprd07.prod.outlook.com
+ ([fe80::91f:b1bb:a60a:fdc3%7]) with mapi id 15.20.1922.013; Tue, 21 May 2019
+ 15:54:36 +0000
+From:   Philippe Mazenauer <philippe.mazenauer@outlook.de>
+CC:     Philippe Mazenauer <philippe.mazenauer@outlook.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        "Ard Biesheuvel" <ard.biesheuvel@linaro.org>,
+        "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: [PATCH] arm: add missing include <linux/elf-randomize.h>
+Thread-Topic: [PATCH] arm: add missing include <linux/elf-randomize.h>
+Thread-Index: AQHVD+196VQxVFzkxUm6hIWwPiiwhw==
+Date:   Tue, 21 May 2019 15:54:36 +0000
+Message-ID: <VI1PR07MB44324E07A6AFE89A920444AFFD070@VI1PR07MB4432.eurprd07.prod.outlook.com>
+Accept-Language: de-CH, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MWHPR04CA0061.namprd04.prod.outlook.com
+ (2603:10b6:300:6c::23) To VI1PR07MB4432.eurprd07.prod.outlook.com
+ (2603:10a6:802:67::17)
+x-incomingtopheadermarker: OriginalChecksum:1B20B10E0D37E672A2A37032CC990F06044B38EB367D1C78112B8A0A12F11ADF;UpperCasedChecksum:D6A7E7506F0D5C558B5E9FCFB493E8F104A525A8B45A64B21960325CF08A7F68;SizeAsReceived:7703;Count:47
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.17.1
+x-tmn:  [0/mt7oT42HkDkcphSArYfbly3ntQ7FEF]
+x-microsoft-original-message-id: <20190521155408.176794-1-philippe.mazenauer@outlook.de>
+x-ms-publictraffictype: Email
+x-incomingheadercount: 47
+x-eopattributedmessage: 0
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(5050001)(7020095)(20181119110)(201702061078)(5061506573)(5061507331)(1603103135)(2017031320274)(2017031323274)(2017031324274)(2017031322404)(1601125500)(1603101475)(1701031045);SRVR:HE1EUR02HT070;
+x-ms-traffictypediagnostic: HE1EUR02HT070:
+x-microsoft-antispam-message-info: W493sq3XOzztmL+wkxZ1mIpQe+TyOvYilerCH0Ud4Fu0B9NSriFJiKz7b/bKGcoju7J4O1fgCiiWXSZHAklcFjlFp/xjVhE5TI3KcyODu9DhAHSKR8AGhFR7gS/TxY0LVwucK/wbHYmqnxnbDIuln3TUG3aPO+rRQG/w84FZfIxGaIWEM7MJR5sUtk2azI2u
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <42BCE344A2286F4E8170B11CBAEB83E0@eurprd07.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190521142024.25894-2-richard.leitner@skidata.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1d1fff71-75ec-4e53-59c3-08d6de049efa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 May 2019 15:54:36.6515
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1EUR02HT070
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-This seems good to me but...
-
-On 21/05/2019 16:20:22+0200, Richard Leitner wrote:
-> Fix the INT2 mode mask to not include the "TEST" flag. Furthermore
-> remove the not needed reversion of bits when parsing the INT2 modes.
-> Instead reverse the INT2_MODE defines.
-> 
-> Additionally mention the flag names from the datasheet for the different
-> modes in the comments.
-> 
-> Signed-off-by: Richard Leitner <richard.leitner@skidata.com>
-> ---
->  drivers/rtc/rtc-s35390a.c | 16 +++++++---------
->  1 file changed, 7 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/rtc/rtc-s35390a.c b/drivers/rtc/rtc-s35390a.c
-> index 3c64dbb08109..6fb6d835b178 100644
-> --- a/drivers/rtc/rtc-s35390a.c
-> +++ b/drivers/rtc/rtc-s35390a.c
-> @@ -45,12 +45,13 @@
->  /* flag for STATUS2 */
->  #define S35390A_FLAG_TEST	0x01
->  
-> -#define S35390A_INT2_MODE_MASK		0xF0
-> -
-> +/* INT2 pin output mode */
-> +#define S35390A_INT2_MODE_MASK		0x0E
->  #define S35390A_INT2_MODE_NOINTR	0x00
-> -#define S35390A_INT2_MODE_FREQ		0x10
-> -#define S35390A_INT2_MODE_ALARM		0x40
-> -#define S35390A_INT2_MODE_PMIN_EDG	0x20
-> +#define S35390A_INT2_MODE_ALARM		0x02 /* INT2AE */
-> +#define S35390A_INT2_MODE_PMIN_EDG	0x04 /* INT2ME */
-> +#define S35390A_INT2_MODE_FREQ		0x08 /* INT2FE */
-> +#define S35390A_INT2_MODE_PMIN		0x0C /* INT2ME | INT2FE */
->  
-
-While you are at it you may as well use BIT().
-
->  static const struct i2c_device_id s35390a_id[] = {
->  	{ "s35390a", 0 },
-> @@ -303,9 +304,6 @@ static int s35390a_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alm)
->  	else
->  		sts = S35390A_INT2_MODE_NOINTR;
->  
-> -	/* This chip expects the bits of each byte to be in reverse order */
-> -	sts = bitrev8(sts);
-> -
->  	/* set interupt mode*/
->  	err = s35390a_set_reg(s35390a, S35390A_CMD_STATUS2, &sts, sizeof(sts));
->  	if (err < 0)
-> @@ -343,7 +341,7 @@ static int s35390a_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alm)
->  	if (err < 0)
->  		return err;
->  
-> -	if ((bitrev8(sts) & S35390A_INT2_MODE_MASK) != S35390A_INT2_MODE_ALARM) {
-> +	if ((sts & S35390A_INT2_MODE_MASK) != S35390A_INT2_MODE_ALARM) {
->  		/*
->  		 * When the alarm isn't enabled, the register to configure
->  		 * the alarm time isn't accessible.
-> -- 
-> 2.20.1
-> 
-
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+SW5jbHVkZSBjb3JyZXNwb25kaW5nIGhlYWRlciBmaWxlIDxsaW51eC9lbGYtcmFuZG9taXplLmg+
+IGZvciBmdW5jdGlvbg0KYXJjaF9yYW5kb21pemVfYnJrKCkuDQoNCi4uL2FyY2gvYXJtL2tlcm5l
+bC9wcm9jZXNzLmM6MzI1OjE1OiB3YXJuaW5nOiBubyBwcmV2aW91cyBwcm90b3R5cGUgZm9yIOKA
+mGFyY2hfcmFuZG9taXplX2Jya+KAmSBbLVdtaXNzaW5nLXByb3RvdHlwZXNdDQogdW5zaWduZWQg
+bG9uZyBhcmNoX3JhbmRvbWl6ZV9icmsoc3RydWN0IG1tX3N0cnVjdCAqbW0pDQogICAgICAgICAg
+ICAgICBefn5+fn5+fn5+fn5+fn5+fn4NCg0KU2lnbmVkLW9mZi1ieTogUGhpbGlwcGUgTWF6ZW5h
+dWVyIDxwaGlsaXBwZS5tYXplbmF1ZXJAb3V0bG9vay5kZT4NCi0tLQ0KIGFyY2gvYXJtL2tlcm5l
+bC9wcm9jZXNzLmMgfCAxICsNCiAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKykNCg0KZGlm
+ZiAtLWdpdCBhL2FyY2gvYXJtL2tlcm5lbC9wcm9jZXNzLmMgYi9hcmNoL2FybS9rZXJuZWwvcHJv
+Y2Vzcy5jDQppbmRleCA3MmNjMDg2MmEzMGUuLjczNzgyMDEyZDQwMyAxMDA2NDQNCi0tLSBhL2Fy
+Y2gvYXJtL2tlcm5lbC9wcm9jZXNzLmMNCisrKyBiL2FyY2gvYXJtL2tlcm5lbC9wcm9jZXNzLmMN
+CkBAIC0yMyw2ICsyMyw3IEBADQogI2luY2x1ZGUgPGxpbnV4L2ludGVycnVwdC5oPg0KICNpbmNs
+dWRlIDxsaW51eC9pbml0Lmg+DQogI2luY2x1ZGUgPGxpbnV4L2VsZmNvcmUuaD4NCisjaW5jbHVk
+ZSA8bGludXgvZWxmLXJhbmRvbWl6ZS5oPg0KICNpbmNsdWRlIDxsaW51eC9wbS5oPg0KICNpbmNs
+dWRlIDxsaW51eC90aWNrLmg+DQogI2luY2x1ZGUgPGxpbnV4L3V0c25hbWUuaD4NCi0tIA0KMi4x
+Ny4xDQoNCg==
