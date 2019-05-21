@@ -2,211 +2,131 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B9AEC04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:49:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD5BDC04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:50:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6D5A216B7
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:49:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558435799;
-	bh=bDfPzQL6A3wOwmb0E61DltYFgSPWMTpFFUtFma8Mw6U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ynA5QX9fpwQ8jIwaLvoDNVl89tNIdn9Xfxi9D1W/1yEYxP6c/1nGRBiJBpaMBTy2W
-	 J2vknV0mglFk/BOfQEPJFy+0c5prPl+t9NIH+uD1/ylWbyCNjHU67FjtO+xp/Wv7fH
-	 Min32m/MjSsQAsb1tM8yF8FXeMg2Ft3hUSqf/umI=
+	by mail.kernel.org (Postfix) with ESMTP id 82B74216B7
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:50:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="K9qcd+B4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727671AbfEUKt6 (ORCPT
+        id S1727791AbfEUKuE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 06:49:58 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:40081 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726138AbfEUKt5 (ORCPT
+        Tue, 21 May 2019 06:50:04 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:57979 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726138AbfEUKuD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 06:49:57 -0400
-Received: by mail-pf1-f196.google.com with SMTP id u17so8876995pfn.7
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 03:49:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Stm0C6YcpMXYSmn/MRE96nYtm0sE3cLGz18Bicx3vkY=;
-        b=iIN5PRr2hhNy5miQal2uGj/iuK5FmlUMC9h2UEPsfJeTZju++lqBt+VYJDK9rKDdjC
-         d+/cjsV2pGDIU4DDOVYwu0ysyBmR0aU5skWSm8VCVT0YCVByWj7Ej0BUb1MoaVN4FwhD
-         ve/wwArQeyg3pYsNH3YRSPnltb8ptahfbBNSqSx7ui/rgUPwX3w7xo38gGlRC8hohIHK
-         Q20WLiy8bPg42TX01v2UIP8MbTprSMe6tI927OHDRqRk8KfeKgmjJF8wqYhmXp6TYdhT
-         YM7sJeyPGmdz12RWrnG7b2EUBYFAGYy9JWq/npboH53iH0aQBko+NJf6ryHJlb0fgsfB
-         ZXig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Stm0C6YcpMXYSmn/MRE96nYtm0sE3cLGz18Bicx3vkY=;
-        b=DlAzdsqJPBPp6FH8Wl/bjnORBO/IBbNyWD1/tiE9CJ1vFM2CkPUuF0Pb44T+0abQ9B
-         6geID+JhTm2uMZLIcreOcAx3H0xbqYhCYeSx/N5JnQCNyrnZpn2FapS63wzPRHQZxK8G
-         BF6MJaY5EoNBrxE2gBLhRydDfGD/7bTBDazrdBZ1i75pr9hyYSP3fi0ag7L3rfv9pdRe
-         VdMB7z5IMy2ZDT2pB0P0pvAv6n9AfxUoyY+6G0J5Bio5+jW8HHQMHJP0YI76qV/JJ4eX
-         Y6bXU+J4RRFMIzbp+AmGuT6I72UqgMroGyP8mO0rj7gHy+jlnALhehv+c7A76SXYv2b9
-         wupw==
-X-Gm-Message-State: APjAAAXRVE8u9WonPeII2J3AMLmqDLacKlx0X5T2D3Gn8J3/qISDIkrC
-        bLdLtx5FCPVEJ6dgsqZCp2E=
-X-Google-Smtp-Source: APXvYqxGi76NyYcWDtIEDaY2syL993S0wFdNZNV0ypOc260KhQBGfoSIl0aV4GKSCP+mvB5L7Z0TGw==
-X-Received: by 2002:a62:81c1:: with SMTP id t184mr85481313pfd.221.1558435796458;
-        Tue, 21 May 2019 03:49:56 -0700 (PDT)
-Received: from google.com ([2401:fa00:d:0:98f1:8b3d:1f37:3e8])
-        by smtp.gmail.com with ESMTPSA id l21sm29029996pff.40.2019.05.21.03.49.52
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 21 May 2019 03:49:55 -0700 (PDT)
-Date:   Tue, 21 May 2019 19:49:49 +0900
-From:   Minchan Kim <minchan@kernel.org>
-To:     Oleksandr Natalenko <oleksandr@redhat.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tim Murray <timmurray@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>
-Subject: Re: [RFC 4/7] mm: factor out madvise's core functionality
-Message-ID: <20190521104949.GE219653@google.com>
-References: <20190520035254.57579-1-minchan@kernel.org>
- <20190520035254.57579-5-minchan@kernel.org>
- <20190520142633.x5d27gk454qruc4o@butterfly.localdomain>
- <20190521012649.GE10039@google.com>
- <20190521063628.x2npirvs75jxjilx@butterfly.localdomain>
+        Tue, 21 May 2019 06:50:03 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190521105000euoutp01d25ae0a95f44c59f5604827ab28ba069~grRqh4vGe2274522745euoutp01-
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 10:50:00 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190521105000euoutp01d25ae0a95f44c59f5604827ab28ba069~grRqh4vGe2274522745euoutp01-
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1558435801;
+        bh=dVrDy17Ux0GSIhBmM0IvoBwOz6MznLg3cinUw4GbxOo=;
+        h=From:Subject:To:Date:References:From;
+        b=K9qcd+B4uliM1SdbWUU9xgYfyrmXde/mkuP9wKRyrViUnCcSlEwfRpMS1jSOYQ1tW
+         RV3j/OQU5Qc7z7f/Y/+WN1egpIum3nTyFAHPjPZlwvdTYfYgcS/8BoeHRX8yrcrIbx
+         M00YzUeVDMLUqH6yxnxvfm2VZhyK3GLpgxUVm8Lo=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190521105000eucas1p2de8daa7b95a6cb95f22c55b0aa3017a0~grRqJEwjG2901629016eucas1p2t;
+        Tue, 21 May 2019 10:50:00 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 7C.B4.04298.8D7D3EC5; Tue, 21
+        May 2019 11:50:00 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190521104959eucas1p14de9d183967e7f50bfede732d3fd8764~grRpWSfWJ0449704497eucas1p17;
+        Tue, 21 May 2019 10:49:59 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190521104959eusmtrp1125d2801ddbdde695f772d7737f1f3a5~grRpVQ2wS1426514265eusmtrp1n;
+        Tue, 21 May 2019 10:49:59 +0000 (GMT)
+X-AuditID: cbfec7f2-f13ff700000010ca-e4-5ce3d7d898ab
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id FA.A4.04140.7D7D3EC5; Tue, 21
+        May 2019 11:49:59 +0100 (BST)
+Received: from [106.120.51.71] (unknown [106.120.51.71]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190521104959eusmtip19adb8d743f0d05719dbe628d27bb5007~grRpIn8l22509625096eusmtip1C;
+        Tue, 21 May 2019 10:49:59 +0000 (GMT)
+From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: [PATCH v2] video: fbdev: pxa168fb: add COMPILE_TEST support
+To:     linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Message-ID: <1059f924-7bbb-37b1-42ee-52cad878f572@samsung.com>
+Date:   Tue, 21 May 2019 12:49:59 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190521063628.x2npirvs75jxjilx@butterfly.localdomain>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpjleLIzCtJLcpLzFFi42LZduznOd0b1x/HGPz8JmBx5et7NosTfR9Y
+        LS7vmsPmwOxxv/s4k8fnTXIBTFFcNimpOZllqUX6dglcGQ2njzEXrGer2Nwa08C4nrWLkZND
+        QsBE4urvCyxdjFwcQgIrGCXOnTwJ5XxhlNi66i0bhPOZUeLonfMsMC27Hk2CqlrOKNH4fB0j
+        hPMWqP/YS0aQKjYBK4mJ7auAbA4OYQEXiSVPKkHCIgIJEiumzwAr4RWwk7j59wPYHSwCqhKf
+        N+xkB7FFBSIk7h/bwApRIyhxcuYTsMXMAuISt57MZ4Kw5SW2v53DDLJXQuA6m8SHX9cYIa5z
+        kVh+5xzUpcISr45vYYewZSROT+5hgWhYxyjxt+MFVPd2Ronlk/+xQVRZSxw+fpEV5GpmAU2J
+        9bv0IcKOEk1PNzGBhCUE+CRuvBWEOIJPYtK26cwQYV6JjjYhiGo1iQ3LNrDBrO3auZIZwvaQ
+        +Hr2GgtIuZBArMTJKwETGBVmIflyFpIvZyH5chbCOQsYWVYxiqeWFuempxYb5qWW6xUn5haX
+        5qXrJefnbmIEpo7T/45/2sH49VLSIUYBDkYlHt6MKY9ihFgTy4orcw8xSnAwK4nwnj4FFOJN
+        SaysSi3Kjy8qzUktPsQozcGiJM5bzfAgWkggPbEkNTs1tSC1CCbLxMEp1cDI2hR19F3fMeWe
+        OLkFJbEus97eV5yirCBeY7r3T+WkmVmSZUqZqz/Neiu41c0n5UbQ7uJ5WSG7mO/82jUrm4cr
+        /mmCsq7c0oDySvVDmvNWRK39rPXnaNIGx9q3M+d9MV0rMeWI1JQ0xYOh0krLdCMK+xLEv+73
+        f1ny7Unh+Xlzf9/4eL7nUckEJZbijERDLeai4kQAzCkFnRkDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrMLMWRmVeSWpSXmKPExsVy+t/xu7rXrz+OMXj7Qt3iytf3bBYn+j6w
+        WlzeNYfNgdnjfvdxJo/Pm+QCmKL0bIryS0tSFTLyi0tslaINLYz0DC0t9IxMLPUMjc1jrYxM
+        lfTtbFJSczLLUov07RL0MhpOH2MuWM9Wsbk1poFxPWsXIyeHhICJxK5Hk1i6GLk4hASWMkr0
+        3t7H3MXIAZSQkTi+vgyiRljiz7UuNoia14wSc8+dAmtmE7CSmNi+ihGkXljARWLJk0qQsIhA
+        gsTT1/PZQGxeATuJm38/gJWzCKhKfN6wkx3EFhWIkDjzfgULRI2gxMmZT8BsZgF1iT/zLjFD
+        2OISt57MZ4Kw5SW2v53DPIGRfxaSlllIWmYhaZmFpGUBI8sqRpHU0uLc9NxiI73ixNzi0rx0
+        veT83E2MwADfduznlh2MXe+CDzEKcDAq8fBmTHkUI8SaWFZcmXuIUYKDWUmE9/QpoBBvSmJl
+        VWpRfnxRaU5q8SFGU6CHJjJLiSbnA6MvryTe0NTQ3MLS0NzY3NjMQkmct0PgYIyQQHpiSWp2
+        ampBahFMHxMHp1QD4xUTfv5ZD86lykWaX96y6azDO74daxd/9DdiOM+0+q/VgoacG/mMaUeX
+        f5Gv3TjPTP13f2rpJPlF6hFBZVxsJ3M/p4kcna7hcfCM0TLjME47nulv7/5Z1e/ae1ft8ALX
+        e7b/9CTknohy6XxZ3/wk+ogkA+/r+wvETzt9TPzLdc6/c2/JaZUnN5VYijMSDbWYi4oTAXSw
+        6R+GAgAA
+X-CMS-MailID: 20190521104959eucas1p14de9d183967e7f50bfede732d3fd8764
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190521104959eucas1p14de9d183967e7f50bfede732d3fd8764
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190521104959eucas1p14de9d183967e7f50bfede732d3fd8764
+References: <CGME20190521104959eucas1p14de9d183967e7f50bfede732d3fd8764@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 21, 2019 at 08:36:28AM +0200, Oleksandr Natalenko wrote:
-> Hi.
-> 
-> On Tue, May 21, 2019 at 10:26:49AM +0900, Minchan Kim wrote:
-> > On Mon, May 20, 2019 at 04:26:33PM +0200, Oleksandr Natalenko wrote:
-> > > Hi.
-> > > 
-> > > On Mon, May 20, 2019 at 12:52:51PM +0900, Minchan Kim wrote:
-> > > > This patch factor out madvise's core functionality so that upcoming
-> > > > patch can reuse it without duplication.
-> > > > 
-> > > > It shouldn't change any behavior.
-> > > > 
-> > > > Signed-off-by: Minchan Kim <minchan@kernel.org>
-> > > > ---
-> > > >  mm/madvise.c | 168 +++++++++++++++++++++++++++------------------------
-> > > >  1 file changed, 89 insertions(+), 79 deletions(-)
-> > > > 
-> > > > diff --git a/mm/madvise.c b/mm/madvise.c
-> > > > index 9a6698b56845..119e82e1f065 100644
-> > > > --- a/mm/madvise.c
-> > > > +++ b/mm/madvise.c
-> > > > @@ -742,7 +742,8 @@ static long madvise_dontneed_single_vma(struct vm_area_struct *vma,
-> > > >  	return 0;
-> > > >  }
-> > > >  
-> > > > -static long madvise_dontneed_free(struct vm_area_struct *vma,
-> > > > +static long madvise_dontneed_free(struct task_struct *tsk,
-> > > > +				  struct vm_area_struct *vma,
-> > > >  				  struct vm_area_struct **prev,
-> > > >  				  unsigned long start, unsigned long end,
-> > > >  				  int behavior)
-> > > > @@ -754,8 +755,8 @@ static long madvise_dontneed_free(struct vm_area_struct *vma,
-> > > >  	if (!userfaultfd_remove(vma, start, end)) {
-> > > >  		*prev = NULL; /* mmap_sem has been dropped, prev is stale */
-> > > >  
-> > > > -		down_read(&current->mm->mmap_sem);
-> > > > -		vma = find_vma(current->mm, start);
-> > > > +		down_read(&tsk->mm->mmap_sem);
-> > > > +		vma = find_vma(tsk->mm, start);
-> > > >  		if (!vma)
-> > > >  			return -ENOMEM;
-> > > >  		if (start < vma->vm_start) {
-> > > > @@ -802,7 +803,8 @@ static long madvise_dontneed_free(struct vm_area_struct *vma,
-> > > >   * Application wants to free up the pages and associated backing store.
-> > > >   * This is effectively punching a hole into the middle of a file.
-> > > >   */
-> > > > -static long madvise_remove(struct vm_area_struct *vma,
-> > > > +static long madvise_remove(struct task_struct *tsk,
-> > > > +				struct vm_area_struct *vma,
-> > > >  				struct vm_area_struct **prev,
-> > > >  				unsigned long start, unsigned long end)
-> > > >  {
-> > > > @@ -836,13 +838,13 @@ static long madvise_remove(struct vm_area_struct *vma,
-> > > >  	get_file(f);
-> > > >  	if (userfaultfd_remove(vma, start, end)) {
-> > > >  		/* mmap_sem was not released by userfaultfd_remove() */
-> > > > -		up_read(&current->mm->mmap_sem);
-> > > > +		up_read(&tsk->mm->mmap_sem);
-> > > >  	}
-> > > >  	error = vfs_fallocate(f,
-> > > >  				FALLOC_FL_PUNCH_HOLE | FALLOC_FL_KEEP_SIZE,
-> > > >  				offset, end - start);
-> > > >  	fput(f);
-> > > > -	down_read(&current->mm->mmap_sem);
-> > > > +	down_read(&tsk->mm->mmap_sem);
-> > > >  	return error;
-> > > >  }
-> > > >  
-> > > > @@ -916,12 +918,13 @@ static int madvise_inject_error(int behavior,
-> > > >  #endif
-> > > 
-> > > What about madvise_inject_error() and get_user_pages_fast() in it
-> > > please?
-> > 
-> > Good point. Maybe, there more places where assume context is "current" so
-> > I'm thinking to limit hints we could allow from external process.
-> > It would be better for maintainance point of view in that we could know
-> > the workload/usecases when someone ask new advises from external process
-> > without making every hints works both contexts.
-> 
-> Well, for madvise_inject_error() we still have a remote variant of
-> get_user_pages(), and that should work, no?
+Add COMPILE_TEST support to pxa168fb driver for better compile
+testing coverage.
 
-Regardless of madvise_inject_error, it seems to be risky to expose all
-of hints for external process, I think. For example, MADV_DONTNEED with
-race, it's critical for stability. So, until we could get the way to
-prevent the race, I want to restrict hints.
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+---
+v2: add missing HAVE_CLK && HAS IOMEM dependencies
 
-> 
-> Regarding restricting the hints, I'm definitely interested in having
-> remote MADV_MERGEABLE/MADV_UNMERGEABLE. But, OTOH, doing it via remote
-> madvise() introduces another issue with traversing remote VMAs reliably.
+ drivers/video/fbdev/Kconfig |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-How is it signifiact when the race happens? It could waste CPU cycle
-and make unncessary break of that merged pages but expect it should be
-rare so such non-desruptive hint could be exposed via process_madvise, I think.
-
-If the hint is critical for the race, yes, as Michal suggested, we need a way
-to close it and I guess non-cooperative userfaultfd with synchronous support
-would help private anonymous vma.
-
-> IIUC, one can do this via userspace by parsing [s]maps file only, which
-> is not very consistent, and once some range is parsed, and then it is
-> immediately gone, a wrong hint will be sent.
-> 
-> Isn't this a problem we should worry about?
-
-I think it depends on the hint and usecase.
-
-> 
-> > 
-> > Thanks.
-> 
-> -- 
->   Best regards,
->     Oleksandr Natalenko (post-factum)
->     Senior Software Maintenance Engineer
+Index: b/drivers/video/fbdev/Kconfig
+===================================================================
+--- a/drivers/video/fbdev/Kconfig
++++ b/drivers/video/fbdev/Kconfig
+@@ -1729,7 +1729,8 @@ config FB_68328
+ 
+ config FB_PXA168
+ 	tristate "PXA168/910 LCD framebuffer support"
+-	depends on FB && (CPU_PXA168 || CPU_PXA910)
++	depends on FB && HAVE_CLK && HAS_IOMEM
++	depends on CPU_PXA168 || CPU_PXA910 || COMPILE_TEST
+ 	select FB_CFB_FILLRECT
+ 	select FB_CFB_COPYAREA
+ 	select FB_CFB_IMAGEBLIT
