@@ -2,98 +2,432 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E63C8C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 09:29:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35DD2C04E87
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 09:30:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACC0321743
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 09:29:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D787B217D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 09:30:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e9vlX7kV"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UTq/WQWR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727380AbfEUJ3x (ORCPT
+        id S1727528AbfEUJaA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 05:29:53 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:34931 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726347AbfEUJ3x (ORCPT
+        Tue, 21 May 2019 05:30:00 -0400
+Received: from mail-it1-f193.google.com ([209.85.166.193]:34301 "EHLO
+        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727420AbfEUJ37 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 05:29:53 -0400
-Received: by mail-pf1-f194.google.com with SMTP id t87so8771826pfa.2
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 02:29:53 -0700 (PDT)
+        Tue, 21 May 2019 05:29:59 -0400
+Received: by mail-it1-f193.google.com with SMTP id g23so2260997iti.1
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 02:29:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=ZKWnUydwFd4s05EBLm5iMxF297ZzlKXFCehjvJXWjk8=;
-        b=e9vlX7kVoNvwUUcgwDBY5fB667kO9XBHwD8KpydyKQAaX0klw9kT36dKV69vqYcvCS
-         19Rgy+GqZF/oC+7GiIO3TAM98YLtCG64As89C8aBihLH5Vpx+9MflgDEvkEvsmVwTgtV
-         NjvbORswyRC2C/WqtyIFvWK8aAOSOSYRsWjRTQ6sMmk148bdOCg7hetsaoJX3M58FGIm
-         Zi3zSQkuRa2hSqVNTTV/b1bba2R/CV1LJQEE0QG3rDHunOllqDvzmJVKZbi4oYEIrTP0
-         xnDEg9BXPC69PnpL1Do6tpOgGBN1xRl7XZOZyWW/YUn8y4KVnrPHgAACJxsBIYWdnxBf
-         PPNA==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=c1X7RPyDDh/5LU3TKjTQyaNcPFI+lus2fRNzZlC+wAQ=;
+        b=UTq/WQWRhNKLecTeiHcYuq5MEo+veMAQHD+tz7nj16YdLHQG8S/TaFf5PieSOHM/BZ
+         d212GNVnR5VjOtWyEC05eLM+qr3llTerx1t7OQgnim3op76MlUIfTt0wBQdQdywAgRvx
+         jeC0crRHgn0GsznDCPHN0tdaguqYXjBeNs8nLKWUzaZtrLeDpIM/A43SqokfJnAS1BYr
+         +mO2mzbcH5gc8zF5wDN/XaCOpnDKxvTLAeV5w8NIFUD5wIJmi/SeP7maq9LGpXRAT1Kk
+         ve9TeeJcGMkhIPz7Bsk/NQbL3+RCrgqrOck74IDzV22G5dQaib5FCBOolSxmAs9G/W6m
+         iCjg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=ZKWnUydwFd4s05EBLm5iMxF297ZzlKXFCehjvJXWjk8=;
-        b=D8Hm8Gs7OsYbeGCg6fiE//5aa1KxyVw3Ci7NjbhzzfdAqqJ3JDFWXYq1ixOwpwsver
-         S+WS+xlq1hTX23auK/BSfPyLmqfAUg/Nh1+A+EY2gl6hY0gVzv+0mojmxCH/Zse50WL1
-         ocjd1ZfOON686oKlGZ9BkT8o+WpjBKcg1WhGxQlimnqZL0sOCexZs1TGyfaKzzpBCQ+K
-         L/uzIRAMET8sfT5+IJKVAXuqWxFTmPdnz3xfNlyn41rYMxV1weiyfx/BKImi6KZtsP67
-         0O59VZFCzQld2JzMbEGxTnE9idWzJDMSpqvXcGIarfkT+1PDXNuIdzSKLq0yyLAg7nih
-         fH5g==
-X-Gm-Message-State: APjAAAUNzAvZTIBnZinK2nm+09SbWjPSymzMFCdvICw/z5KdcBDHWZy/
-        K8bzb6FFbRW65vN3BIfTnNFQLNCBJ+A=
-X-Google-Smtp-Source: APXvYqzlSQC+YZ+UGNJK8+c6TSAy6P94Vtm61zQ7fh1tJxdmVuDb9fscPci2+HrOD3rmKFf0v/rCwg==
-X-Received: by 2002:a63:495e:: with SMTP id y30mr37856765pgk.185.1558430992855;
-        Tue, 21 May 2019 02:29:52 -0700 (PDT)
-Received: from zhanggen-UX430UQ ([66.42.35.75])
-        by smtp.gmail.com with ESMTPSA id s80sm55935631pfs.117.2019.05.21.02.29.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 21 May 2019 02:29:52 -0700 (PDT)
-Date:   Tue, 21 May 2019 17:29:35 +0800
-From:   Gen Zhang <blackgod016574@gmail.com>
-To:     keescook@chromium.org
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH] consolemap: Fix a memory leaking bug in
- drivers/tty/vt/consolemap.c
-Message-ID: <20190521092935.GA2297@zhanggen-UX430UQ>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=c1X7RPyDDh/5LU3TKjTQyaNcPFI+lus2fRNzZlC+wAQ=;
+        b=bFzl7l+xsAZbCfkk/rZ+B2KmJpXg/RHER9iqQVMfymaQx+pT+mP2wxWQiSbSPIrdqM
+         46JOFg9P9W/k0CSWAT/c9y15iqVOLaxEZ1hMyV9O0R/eSSEOQMBVdzSs2lxg1o7iHOjr
+         7w5wYg4p20O3iEI5gDKxuEl0RM46E3B3kM4UOBMU7ahuKH4r2lIqK6ZPRvWfjaQYcGPX
+         XTsF7qhY7KfX7J3J1kHZGh3+aycRNOU9YPSd0nLVEFJdpRBGyoJFm/FOtNr6AApjH43R
+         VDJK00RAK9CUmg5Fx1OPw32WRjog8THTMMvjqHXtxT3Sw+5XVK6loiEqcetZvW3tYlZS
+         HppA==
+X-Gm-Message-State: APjAAAU/lt/QGlGuFjKgHxbinwYysvwUVjsXUfuO0RAkXuK+QjjrUDkp
+        11J+JMmyR0Sedw2CNjZT4hl7mimm8hgt/plnqlWr5w==
+X-Google-Smtp-Source: APXvYqxobjoRHd2DJzZU+eTKwPAU+2v8nden+IAXKosaOj3W1wy3uq2/SYh9+tlKJC6BYmNIlpoaXiBPIyIupu2Vxw8=
+X-Received: by 2002:a24:ca84:: with SMTP id k126mr2801293itg.104.1558430998765;
+ Tue, 21 May 2019 02:29:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20190520205501.177637-1-matthewgarrett@google.com> <20190520205501.177637-3-matthewgarrett@google.com>
+In-Reply-To: <20190520205501.177637-3-matthewgarrett@google.com>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Tue, 21 May 2019 10:29:47 +0100
+Message-ID: <CAKv+Gu8Wpjq90xVkRxSd2JhJxwk7z+SaGhsX=-LvVvDNBWMdNg@mail.gmail.com>
+Subject: Re: [PATCH V7 2/4] tpm: Reserve the TPM final events table
+To:     Matthew Garrett <matthewgarrett@google.com>
+Cc:     linux-integrity <linux-integrity@vger.kernel.org>,
+        =?UTF-8?Q?Peter_H=C3=BCwe?= <peterhuewe@gmx.de>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Roberto Sassu <roberto.sassu@huawei.com>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thiebaud Weksteen <tweek@google.com>,
+        Bartosz Szczepanek <bsz@semihalf.com>,
+        Matthew Garrett <mjg59@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In function con_insert_unipair(), when allocation for p2 and p1[n]
-fails, ENOMEM is returned, but previously allocated p1 is not freed, 
-remains as leaking memory. Thus we should free p1 as well when this
-allocation fails.
+On Mon, 20 May 2019 at 21:55, Matthew Garrett <matthewgarrett@google.com> wrote:
+>
+> From: Matthew Garrett <mjg59@google.com>
+>
+> UEFI systems provide a boot services protocol for obtaining the TPM
+> event log, but this is unusable after ExitBootServices() is called.
+> Unfortunately ExitBootServices() itself triggers additional TPM events
+> that then can't be obtained using this protocol. The platform provides a
+> mechanism for the OS to obtain these events by recording them to a
+> separate UEFI configuration table which the OS can then map.
+>
+> Unfortunately this table isn't self describing in terms of providing its
+> length, so we need to parse the events inside it to figure out how long
+> it is. Since the table isn't mapped at this point, we need to extend the
+> length calculation function to be able to map the event as it goes
+> along.
+>
+> (Fixes by Bartosz Szczepanek <bsz@semihalf.com>)
+>
+> Signed-off-by: Matthew Garrett <mjg59@google.com>
 
-Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
+Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 
----
-diff --git a/drivers/tty/vt/consolemap.c b/drivers/tty/vt/consolemap.c
-index b28aa0d..47fbd73 100644
---- a/drivers/tty/vt/consolemap.c
-+++ b/drivers/tty/vt/consolemap.c
-@@ -489,7 +489,10 @@ con_insert_unipair(struct uni_pagedir *p, u_short unicode, u_short fontpos)
- 	p2 = p1[n = (unicode >> 6) & 0x1f];
- 	if (!p2) {
- 		p2 = p1[n] = kmalloc_array(64, sizeof(u16), GFP_KERNEL);
--		if (!p2) return -ENOMEM;
-+		if (!p2) {
-+			kfree(p1);
-+			return -ENOMEM;
-+		}
- 		memset(p2, 0xff, 64*sizeof(u16)); /* No glyphs for the characters (yet) */
- 	}
- 
+> ---
+>  drivers/char/tpm/eventlog/tpm2.c |   2 +-
+>  drivers/firmware/efi/efi.c       |   2 +
+>  drivers/firmware/efi/tpm.c       |  62 ++++++++++++++++++-
+>  include/linux/efi.h              |   9 +++
+>  include/linux/tpm_eventlog.h     | 102 ++++++++++++++++++++++++++++---
+>  5 files changed, 164 insertions(+), 13 deletions(-)
+>
+> diff --git a/drivers/char/tpm/eventlog/tpm2.c b/drivers/char/tpm/eventlog/tpm2.c
+> index 1a977bdd3bd2..de1d9f7e5a92 100644
+> --- a/drivers/char/tpm/eventlog/tpm2.c
+> +++ b/drivers/char/tpm/eventlog/tpm2.c
+> @@ -40,7 +40,7 @@
+>  static size_t calc_tpm2_event_size(struct tcg_pcr_event2_head *event,
+>                                    struct tcg_pcr_event *event_header)
+>  {
+> -       return __calc_tpm2_event_size(event, event_header);
+> +       return __calc_tpm2_event_size(event, event_header, false);
+>  }
+>
+>  static void *tpm2_bios_measurements_start(struct seq_file *m, loff_t *pos)
+> diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
+> index 55b77c576c42..6b11c41e0575 100644
+> --- a/drivers/firmware/efi/efi.c
+> +++ b/drivers/firmware/efi/efi.c
+> @@ -53,6 +53,7 @@ struct efi __read_mostly efi = {
+>         .mem_attr_table         = EFI_INVALID_TABLE_ADDR,
+>         .rng_seed               = EFI_INVALID_TABLE_ADDR,
+>         .tpm_log                = EFI_INVALID_TABLE_ADDR,
+> +       .tpm_final_log          = EFI_INVALID_TABLE_ADDR,
+>         .mem_reserve            = EFI_INVALID_TABLE_ADDR,
+>  };
+>  EXPORT_SYMBOL(efi);
+> @@ -485,6 +486,7 @@ static __initdata efi_config_table_type_t common_tables[] = {
+>         {EFI_MEMORY_ATTRIBUTES_TABLE_GUID, "MEMATTR", &efi.mem_attr_table},
+>         {LINUX_EFI_RANDOM_SEED_TABLE_GUID, "RNG", &efi.rng_seed},
+>         {LINUX_EFI_TPM_EVENT_LOG_GUID, "TPMEventLog", &efi.tpm_log},
+> +       {LINUX_EFI_TPM_FINAL_LOG_GUID, "TPMFinalLog", &efi.tpm_final_log},
+>         {LINUX_EFI_MEMRESERVE_TABLE_GUID, "MEMRESERVE", &efi.mem_reserve},
+>         {NULL_GUID, NULL, NULL},
+>  };
+> diff --git a/drivers/firmware/efi/tpm.c b/drivers/firmware/efi/tpm.c
+> index 3a689b40ccc0..2c912ea08166 100644
+> --- a/drivers/firmware/efi/tpm.c
+> +++ b/drivers/firmware/efi/tpm.c
+> @@ -4,34 +4,90 @@
+>   *     Thiebaud Weksteen <tweek@google.com>
+>   */
+>
+> +#define TPM_MEMREMAP(start, size) early_memremap(start, size)
+> +#define TPM_MEMUNMAP(start, size) early_memunmap(start, size)
+> +
+>  #include <linux/efi.h>
+>  #include <linux/init.h>
+>  #include <linux/memblock.h>
+> +#include <linux/tpm_eventlog.h>
+>
+>  #include <asm/early_ioremap.h>
+>
+> +int efi_tpm_final_log_size;
+> +EXPORT_SYMBOL(efi_tpm_final_log_size);
+> +
+> +static int tpm2_calc_event_log_size(void *data, int count, void *size_info)
+> +{
+> +       struct tcg_pcr_event2_head *header;
+> +       int event_size, size = 0;
+> +
+> +       while (count > 0) {
+> +               header = data + size;
+> +               event_size = __calc_tpm2_event_size(header, size_info, true);
+> +               if (event_size == 0)
+> +                       return -1;
+> +               size += event_size;
+> +               count--;
+> +       }
+> +
+> +       return size;
+> +}
+> +
+>  /*
+>   * Reserve the memory associated with the TPM Event Log configuration table.
+>   */
+>  int __init efi_tpm_eventlog_init(void)
+>  {
+>         struct linux_efi_tpm_eventlog *log_tbl;
+> +       struct efi_tcg2_final_events_table *final_tbl;
+>         unsigned int tbl_size;
+> +       int ret = 0;
+>
+> -       if (efi.tpm_log == EFI_INVALID_TABLE_ADDR)
+> +       if (efi.tpm_log == EFI_INVALID_TABLE_ADDR) {
+> +               /*
+> +                * We can't calculate the size of the final events without the
+> +                * first entry in the TPM log, so bail here.
+> +                */
+>                 return 0;
+> +       }
+>
+>         log_tbl = early_memremap(efi.tpm_log, sizeof(*log_tbl));
+>         if (!log_tbl) {
+>                 pr_err("Failed to map TPM Event Log table @ 0x%lx\n",
+> -                       efi.tpm_log);
+> +                      efi.tpm_log);
+>                 efi.tpm_log = EFI_INVALID_TABLE_ADDR;
+>                 return -ENOMEM;
+>         }
+>
+>         tbl_size = sizeof(*log_tbl) + log_tbl->size;
+>         memblock_reserve(efi.tpm_log, tbl_size);
+> +
+> +       if (efi.tpm_final_log == EFI_INVALID_TABLE_ADDR)
+> +               goto out;
+> +
+> +       final_tbl = early_memremap(efi.tpm_final_log, sizeof(*final_tbl));
+> +
+> +       if (!final_tbl) {
+> +               pr_err("Failed to map TPM Final Event Log table @ 0x%lx\n",
+> +                      efi.tpm_final_log);
+> +               efi.tpm_final_log = EFI_INVALID_TABLE_ADDR;
+> +               ret = -ENOMEM;
+> +               goto out;
+> +       }
+> +
+> +       tbl_size = tpm2_calc_event_log_size(efi.tpm_final_log
+> +                                           + sizeof(final_tbl->version)
+> +                                           + sizeof(final_tbl->nr_events),
+> +                                           final_tbl->nr_events,
+> +                                           log_tbl->log);
+> +       memblock_reserve((unsigned long)final_tbl,
+> +                        tbl_size + sizeof(*final_tbl));
+> +       early_memunmap(final_tbl, sizeof(*final_tbl));
+> +       efi_tpm_final_log_size = tbl_size;
+> +
+> +out:
+>         early_memunmap(log_tbl, sizeof(*log_tbl));
+> -       return 0;
+> +       return ret;
+>  }
+>
+> diff --git a/include/linux/efi.h b/include/linux/efi.h
+> index 54357a258b35..e33c70a52a9d 100644
+> --- a/include/linux/efi.h
+> +++ b/include/linux/efi.h
+> @@ -689,6 +689,7 @@ void efi_native_runtime_setup(void);
+>  #define LINUX_EFI_LOADER_ENTRY_GUID            EFI_GUID(0x4a67b082, 0x0a4c, 0x41cf,  0xb6, 0xc7, 0x44, 0x0b, 0x29, 0xbb, 0x8c, 0x4f)
+>  #define LINUX_EFI_RANDOM_SEED_TABLE_GUID       EFI_GUID(0x1ce1e5bc, 0x7ceb, 0x42f2,  0x81, 0xe5, 0x8a, 0xad, 0xf1, 0x80, 0xf5, 0x7b)
+>  #define LINUX_EFI_TPM_EVENT_LOG_GUID           EFI_GUID(0xb7799cb0, 0xeca2, 0x4943,  0x96, 0x67, 0x1f, 0xae, 0x07, 0xb7, 0x47, 0xfa)
+> +#define LINUX_EFI_TPM_FINAL_LOG_GUID           EFI_GUID(0x1e2ed096, 0x30e2, 0x4254,  0xbd, 0x89, 0x86, 0x3b, 0xbe, 0xf8, 0x23, 0x25)
+>  #define LINUX_EFI_MEMRESERVE_TABLE_GUID                EFI_GUID(0x888eb0c6, 0x8ede, 0x4ff5,  0xa8, 0xf0, 0x9a, 0xee, 0x5c, 0xb9, 0x77, 0xc2)
+>
+>  typedef struct {
+> @@ -996,6 +997,7 @@ extern struct efi {
+>         unsigned long mem_attr_table;   /* memory attributes table */
+>         unsigned long rng_seed;         /* UEFI firmware random seed */
+>         unsigned long tpm_log;          /* TPM2 Event Log table */
+> +       unsigned long tpm_final_log;    /* TPM2 Final Events Log table */
+>         unsigned long mem_reserve;      /* Linux EFI memreserve table */
+>         efi_get_time_t *get_time;
+>         efi_set_time_t *set_time;
+> @@ -1707,6 +1709,13 @@ struct linux_efi_tpm_eventlog {
+>
+>  extern int efi_tpm_eventlog_init(void);
+>
+> +struct efi_tcg2_final_events_table {
+> +       u64 version;
+> +       u64 nr_events;
+> +       u8 events[];
+> +};
+> +extern int efi_tpm_final_log_size;
+> +
+>  /*
+>   * efi_runtime_service() function identifiers.
+>   * "NONE" is used by efi_recover_from_page_fault() to check if the page
+> diff --git a/include/linux/tpm_eventlog.h b/include/linux/tpm_eventlog.h
+> index 6a86144e13f1..63238c84dc0b 100644
+> --- a/include/linux/tpm_eventlog.h
+> +++ b/include/linux/tpm_eventlog.h
+> @@ -112,10 +112,35 @@ struct tcg_pcr_event2_head {
+>         struct tpm_digest digests[];
+>  } __packed;
+>
+> +struct tcg_algorithm_size {
+> +       u16 algorithm_id;
+> +       u16 algorithm_size;
+> +};
+> +
+> +struct tcg_algorithm_info {
+> +       u8 signature[16];
+> +       u32 platform_class;
+> +       u8 spec_version_minor;
+> +       u8 spec_version_major;
+> +       u8 spec_errata;
+> +       u8 uintn_size;
+> +       u32 number_of_algorithms;
+> +       struct tcg_algorithm_size digest_sizes[];
+> +};
+> +
+> +#ifndef TPM_MEMREMAP
+> +#define TPM_MEMREMAP(start, size) NULL
+> +#endif
+> +
+> +#ifndef TPM_MEMUNMAP
+> +#define TPM_MEMUNMAP(start, size) do{} while(0)
+> +#endif
+> +
+>  /**
+>   * __calc_tpm2_event_size - calculate the size of a TPM2 event log entry
+>   * @event:        Pointer to the event whose size should be calculated
+>   * @event_header: Pointer to the initial event containing the digest lengths
+> + * @do_mapping:   Whether or not the event needs to be mapped
+>   *
+>   * The TPM2 event log format can contain multiple digests corresponding to
+>   * separate PCR banks, and also contains a variable length of the data that
+> @@ -131,10 +156,13 @@ struct tcg_pcr_event2_head {
+>   */
+>
+>  static inline int __calc_tpm2_event_size(struct tcg_pcr_event2_head *event,
+> -                                        struct tcg_pcr_event *event_header)
+> +                                        struct tcg_pcr_event *event_header,
+> +                                        bool do_mapping)
+>  {
+>         struct tcg_efi_specid_event_head *efispecid;
+>         struct tcg_event_field *event_field;
+> +       void *mapping = NULL;
+> +       int mapping_size;
+>         void *marker;
+>         void *marker_start;
+>         u32 halg_size;
+> @@ -148,16 +176,49 @@ static inline int __calc_tpm2_event_size(struct tcg_pcr_event2_head *event,
+>         marker = marker + sizeof(event->pcr_idx) + sizeof(event->event_type)
+>                 + sizeof(event->count);
+>
+> +       /* Map the event header */
+> +       if (do_mapping) {
+> +               mapping_size = marker - marker_start;
+> +               mapping = TPM_MEMREMAP((unsigned long)marker_start,
+> +                                      mapping_size);
+> +               if (!mapping) {
+> +                       size = 0;
+> +                       goto out;
+> +               }
+> +       } else {
+> +               mapping = marker_start;
+> +       }
+> +
+> +       event = (struct tcg_pcr_event2_head *)mapping;
+> +
+>         efispecid = (struct tcg_efi_specid_event_head *)event_header->event;
+>
+>         /* Check if event is malformed. */
+> -       if (event->count > efispecid->num_algs)
+> -               return 0;
+> +       if (event->count > efispecid->num_algs) {
+> +               size = 0;
+> +               goto out;
+> +       }
+>
+>         for (i = 0; i < event->count; i++) {
+>                 halg_size = sizeof(event->digests[i].alg_id);
+> -               memcpy(&halg, marker, halg_size);
+> +
+> +               /* Map the digest's algorithm identifier */
+> +               if (do_mapping) {
+> +                       TPM_MEMUNMAP(mapping, mapping_size);
+> +                       mapping_size = halg_size;
+> +                       mapping = TPM_MEMREMAP((unsigned long)marker,
+> +                                            mapping_size);
+> +                       if (!mapping) {
+> +                               size = 0;
+> +                               goto out;
+> +                       }
+> +               } else {
+> +                       mapping = marker;
+> +               }
+> +
+> +               memcpy(&halg, mapping, halg_size);
+>                 marker = marker + halg_size;
+> +
+>                 for (j = 0; j < efispecid->num_algs; j++) {
+>                         if (halg == efispecid->digest_sizes[j].alg_id) {
+>                                 marker +=
+> @@ -166,18 +227,41 @@ static inline int __calc_tpm2_event_size(struct tcg_pcr_event2_head *event,
+>                         }
+>                 }
+>                 /* Algorithm without known length. Such event is unparseable. */
+> -               if (j == efispecid->num_algs)
+> -                       return 0;
+> +               if (j == efispecid->num_algs) {
+> +                       size = 0;
+> +                       goto out;
+> +               }
+> +       }
+> +
+> +       /*
+> +        * Map the event size - we don't read from the event itself, so
+> +        * we don't need to map it
+> +        */
+> +       if (do_mapping) {
+> +               TPM_MEMUNMAP(mapping, mapping_size);
+> +               mapping_size += sizeof(event_field->event_size);
+> +               mapping = TPM_MEMREMAP((unsigned long)marker,
+> +                                      mapping_size);
+> +               if (!mapping) {
+> +                       size = 0;
+> +                       goto out;
+> +               }
+> +       } else {
+> +               mapping = marker;
+>         }
+>
+> -       event_field = (struct tcg_event_field *)marker;
+> +       event_field = (struct tcg_event_field *)mapping;
+> +
+>         marker = marker + sizeof(event_field->event_size)
+>                 + event_field->event_size;
+>         size = marker - marker_start;
+>
+>         if ((event->event_type == 0) && (event_field->event_size == 0))
+> -               return 0;
+> -
+> +               size = 0;
+> +out:
+> +       if (do_mapping)
+> +               TPM_MEMUNMAP(mapping, mapping_size);
+>         return size;
+>  }
+> +
+>  #endif
+> --
+> 2.21.0.1020.gf2820cf01a-goog
+>
