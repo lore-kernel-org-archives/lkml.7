@@ -2,279 +2,181 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8924C04E87
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:44:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E66CCC04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:44:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B635B2182B
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:44:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558457054;
-	bh=qQZm8Nb/SzGNYia6YWo9lmooe1BQu0rQ4dsfiiwy4L0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=oVSrHsqASLhGricT0Vc/oozZZIw9EybDc3jeqSPxzr0s10Ykfj18cd86s7qAXogiM
-	 g5fXSdFrs+wZ0DLORLcCbyVClNfgBnGHZ3PgqLaQ1RVe5BA159+MlBmki6NqUQZwxQ
-	 iPPJrNIjkKhtuEdOH7o8A0Hfn0eD18AakUpCU20k=
+	by mail.kernel.org (Postfix) with ESMTP id BFFCA2173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:44:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729047AbfEUQoN (ORCPT
+        id S1729066AbfEUQot (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 12:44:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34298 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728103AbfEUQoM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 12:44:12 -0400
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83B4621872
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 16:44:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558457051;
-        bh=qQZm8Nb/SzGNYia6YWo9lmooe1BQu0rQ4dsfiiwy4L0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=zpIgXxDCkoO2vVHWlTYLw1c5wyXjd3sIECQdfG1SeUtg/azv7nVZmt5nge5TvMFGf
-         /HflMm9yUHf3EmK+ynkHa4lj7QPGPUSkpCcfalXiSy9ZfBMMleMmq0OHcZXWrkh7D5
-         arfTpmXPHGf9FtxafSrOwRlr9Il24S3QN3O5gHkM=
-Received: by mail-wr1-f52.google.com with SMTP id b18so19346338wrq.12
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 09:44:11 -0700 (PDT)
-X-Gm-Message-State: APjAAAV+CossqlCajKm+RYTnd4R8HEfqjX+C0997OURox2U5h0/NO50+
-        vun6g4Nytlx/o+RrrmsklVcu5zPKY3jmOm69UeMndw==
-X-Google-Smtp-Source: APXvYqyiAsj6k2lelSuLzA8lDaQTA5IuKvejy22iJ5REZyntNBokRByJ8IeZaodL+yAi+2uA4IBjt6XmnPRl80KDcsU=
-X-Received: by 2002:a5d:4a92:: with SMTP id o18mr7798645wrq.80.1558457048163;
- Tue, 21 May 2019 09:44:08 -0700 (PDT)
+        Tue, 21 May 2019 12:44:49 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:38660 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727925AbfEUQos (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 12:44:48 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 60B49374;
+        Tue, 21 May 2019 09:44:48 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EAC5F3F718;
+        Tue, 21 May 2019 09:44:47 -0700 (PDT)
+Date:   Tue, 21 May 2019 17:44:46 +0100
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Xiang Zheng <zhengxiang9@huawei.com>
+Cc:     linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        linux-kernel@vger.kernel.org, marc.zyngier@arm.com
+Subject: Re: [PATCH] KVM: ARM64: Update perf event when setting PMU count
+ value
+Message-ID: <20190521164445.GW8268@e119886-lin.cambridge.arm.com>
+References: <20190519100559.7188-1-zhengxiang9@huawei.com>
 MIME-Version: 1.0
-References: <155836064844.2441.10911127801797083064.stgit@localhost.localdomain>
- <CALCETrU221N6uPmdaj4bRDDsf+Oc5tEfPERuyV24wsYKHn+spA@mail.gmail.com> <9638a51c-4295-924f-1852-1783c7f3e82d@virtuozzo.com>
-In-Reply-To: <9638a51c-4295-924f-1852-1783c7f3e82d@virtuozzo.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Tue, 21 May 2019 09:43:56 -0700
-X-Gmail-Original-Message-ID: <CALCETrUMDTGRtLFocw6vnN___7rkb6r82ULehs0=yQO5PZL8MA@mail.gmail.com>
-Message-ID: <CALCETrUMDTGRtLFocw6vnN___7rkb6r82ULehs0=yQO5PZL8MA@mail.gmail.com>
-Subject: Re: [PATCH v2 0/7] mm: process_vm_mmap() -- syscall for duplication a
- process mapping
-To:     Kirill Tkhai <ktkhai@virtuozzo.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Keith Busch <keith.busch@intel.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        alexander.h.duyck@linux.intel.com, Weiny Ira <ira.weiny@intel.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        arunks@codeaurora.org, Vlastimil Babka <vbabka@suse.cz>,
-        Christoph Lameter <cl@linux.com>,
-        Rik van Riel <riel@surriel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Roman Gushchin <guro@fb.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Hugh Dickins <hughd@google.com>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        daniel.m.jordan@oracle.com, Jann Horn <jannh@google.com>,
-        Adam Borowski <kilobyte@angband.pl>,
-        Linux API <linux-api@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190519100559.7188-1-zhengxiang9@huawei.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 21, 2019 at 8:52 AM Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
->
-> On 21.05.2019 17:43, Andy Lutomirski wrote:
-> > On Mon, May 20, 2019 at 7:01 AM Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
-> >>
-> >
-> >> [Summary]
-> >>
-> >> New syscall, which allows to clone a remote process VMA
-> >> into local process VM. The remote process's page table
-> >> entries related to the VMA are cloned into local process's
-> >> page table (in any desired address, which makes this different
-> >> from that happens during fork()). Huge pages are handled
-> >> appropriately.
-> >>
-> >> This allows to improve performance in significant way like
-> >> it's shows in the example below.
-> >>
-> >> [Description]
-> >>
-> >> This patchset adds a new syscall, which makes possible
-> >> to clone a VMA from a process to current process.
-> >> The syscall supplements the functionality provided
-> >> by process_vm_writev() and process_vm_readv() syscalls,
-> >> and it may be useful in many situation.
-> >>
-> >> For example, it allows to make a zero copy of data,
-> >> when process_vm_writev() was previously used:
-> >>
-> >>         struct iovec local_iov, remote_iov;
-> >>         void *buf;
-> >>
-> >>         buf = mmap(NULL, n * PAGE_SIZE, PROT_READ|PROT_WRITE,
-> >>                    MAP_PRIVATE|MAP_ANONYMOUS, ...);
-> >>         recv(sock, buf, n * PAGE_SIZE, 0);
-> >>
-> >>         local_iov->iov_base = buf;
-> >>         local_iov->iov_len = n * PAGE_SIZE;
-> >>         remove_iov = ...;
-> >>
-> >>         process_vm_writev(pid, &local_iov, 1, &remote_iov, 1 0);
-> >>         munmap(buf, n * PAGE_SIZE);
-> >>
-> >>         (Note, that above completely ignores error handling)
-> >>
-> >> There are several problems with process_vm_writev() in this example:
-> >>
-> >> 1)it causes pagefault on remote process memory, and it forces
-> >>   allocation of a new page (if was not preallocated);
-> >
-> > I don't see how your new syscall helps.  You're writing to remote
-> > memory.  If that memory wasn't allocated, it's going to get allocated
-> > regardless of whether you use a write-like interface or an mmap-like
-> > interface.
->
-> No, the talk is not about just another interface for copying memory.
-> The talk is about borrowing of remote task's VMA and corresponding
-> page table's content. Syscall allows to copy part of page table
-> with preallocated pages from remote to local process. See here:
->
-> [task1]                                                        [task2]
->
-> buf = mmap(NULL, n * PAGE_SIZE, PROT_READ|PROT_WRITE,
->            MAP_PRIVATE|MAP_ANONYMOUS, ...);
->
-> <task1 populates buf>
->
->                                                                buf = process_vm_mmap(pid_of_task1, addr, n * PAGE_SIZE, ...);
-> munmap(buf);
->
->
-> process_vm_mmap() copies PTEs related to memory of buf in task1 to task2
-> just like in the way we do during fork syscall.
+On Sun, May 19, 2019 at 06:05:59PM +0800, Xiang Zheng wrote:
+> Guest will adjust the sample period and set PMU counter value when
+> it takes a long time to handle the PMU interrupts.
+> 
+> However, we don't have a corresponding change on the virtual PMU
+> which is emulated via a perf event. It could cause a large number
+> of PMU interrupts injected to guest. Then guest will get hang for
+> handling these interrupts.
 
-If I understand this correctly, your intended use is to have one task
-allocate memory and fill it, have the other task clone the VMA, and
-have the first task free the VMA?  If so, that wasn't at all obvious
-from your original email.
+Yes this is indeed an issue. I believe I've addressed this in my 'chained
+pmu' series - the relevant patch is here...
 
-Why don't you use splice() instead?  splice() the data to the remote
-task and have the remove task read() it?  All these VMA games will
-result in a lot of flushes, which is bad for performance.  Or,
-depending on your exact constraints, you could map a memfd in both
-tasks instead, which has the same flushing issues but at least has a
-sensible API.
+https://lists.cs.columbia.edu/pipermail/kvmarm/2019-May/035933.html
 
->
-> There is no copying of buf memory content, unless COW happens. This is
-> the principal difference to process_vm_writev(), which just allocates
-> pages in remote VM.
->
-> > Keep in mind that, on x86, just the hardware part of a
-> > page fault is very slow -- populating the memory with a syscall
-> > instead of a fault may well be faster.
->
-> It is not as slow, as disk IO has. Just compare, what happens in case of anonymous
-> pages related to buf of task1 are swapped:
->
-> 1)process_vm_writev() reads them back into memory;
->
-> 2)process_vm_mmap() just copies swap PTEs from task1 page table
->   to task2 page table.
->
-> Also, for faster page faults one may use huge pages for the mappings.
-> But really, it's funny to think about page faults, when there are
-> disk IO problems I shown.
+Some other comments below.
 
-What are you doing that is causing *disk* IO in any of this?  I
-suspect your real problem is that you are using far too large of a
-buffer. See below.
+> 
+> So update the sample_period of perf event if the counter value is
+> changed to avoid this case.
+> 
+> Signed-off-by: Xiang Zheng <zhengxiang9@huawei.com>
+> ---
+>  virt/kvm/arm/pmu.c | 54 +++++++++++++++++++++++++++++++++++++++++++++---------
+>  1 file changed, 45 insertions(+), 9 deletions(-)
+> 
+> diff --git a/virt/kvm/arm/pmu.c b/virt/kvm/arm/pmu.c
+> index 1c5b76c..cbad3ec 100644
+> --- a/virt/kvm/arm/pmu.c
+> +++ b/virt/kvm/arm/pmu.c
+> @@ -24,6 +24,11 @@
+>  #include <kvm/arm_pmu.h>
+>  #include <kvm/arm_vgic.h>
+>  
+> +static void kvm_pmu_stop_counter(struct kvm_vcpu *vcpu, struct kvm_pmc *pmc);
+> +static struct perf_event *kvm_pmu_create_perf_event(struct kvm_vcpu *vcpu,
+> +						    struct kvm_pmc *pmc,
+> +						    struct perf_event_attr *attr);
+> +
+>  /**
+>   * kvm_pmu_get_counter_value - get PMU counter value
+>   * @vcpu: The vcpu pointer
+> @@ -57,11 +62,29 @@ u64 kvm_pmu_get_counter_value(struct kvm_vcpu *vcpu, u64 select_idx)
+>   */
+>  void kvm_pmu_set_counter_value(struct kvm_vcpu *vcpu, u64 select_idx, u64 val)
+>  {
+> -	u64 reg;
+> +	u64 reg, counter, old_sample_period;
+> +	struct kvm_pmu *pmu = &vcpu->arch.pmu;
+> +	struct kvm_pmc *pmc = &pmu->pmc[select_idx];
+> +	struct perf_event *event;
+> +	struct perf_event_attr attr;
+>  
+>  	reg = (select_idx == ARMV8_PMU_CYCLE_IDX)
+>  	      ? PMCCNTR_EL0 : PMEVCNTR0_EL0 + select_idx;
+>  	__vcpu_sys_reg(vcpu, reg) += (s64)val - kvm_pmu_get_counter_value(vcpu, select_idx);
+> +
+> +	if (pmc->perf_event) {
+> +		attr = pmc->perf_event->attr;
+> +		old_sample_period = attr.sample_period;
+> +		counter = kvm_pmu_get_counter_value(vcpu, select_idx);
+> +		attr.sample_period = (-counter) & pmc->bitmask;
+> +		if (attr.sample_period == old_sample_period)
+> +			return;
 
->
-> >>
-> >> 2)amount of memory for this example is doubled in a moment --
-> >>   n pages in current and n pages in remote tasks are occupied
-> >>   at the same time;
-> >
-> > This seems disingenuous.  If you're writing p pages total in chunks of
-> > n pages, you will use a total of p pages if you use mmap and p+n if
-> > you use write.
->
-> I didn't understand this sentence because of many ifs, sorry. Could you
-> please explain your thought once again?
+I'd be interested to know how often this would evaluate to true.
 
-You seem to have a function that tries to populate p pages of memory
-with data received from a socket.  It looks like you're doing
-something like this:
+> +
+> +		kvm_pmu_stop_counter(vcpu, pmc);
+> +		event = kvm_pmu_create_perf_event(vcpu, pmc, &attr);
 
-void copy_p_pages(size_t p)
-{
-  size_t n = some_value(p);
-  char *buf = malloc(n * PAGE_SIZE);
-  for (int i = 0; i < p; i += n*PAGE_SIZE) {
-    read(fd, buf, n*PAGE_SIZE);  /* check return value, etc */
-    process_vm_writev(write n*PAGE_SIZE bytes to remote process);
-  }
-  free(buf);
-}
+I'm not sure it's necessary to change the prototype of kvm_pmu_create_perf_event
+as this function will recalculate the sample period based on the updated counter
+value anyway.
 
-If you have a *constant* n (i.e. some_value(p) is just a number like
-16)), then you aren't doubling memory usage.  If you have
-some_value(p) return p, then you are indeed doubling memory usage.  So
-don't do that!
-If buf is getting swapped out, you are very likely doing something
-wrong.  If you're using a 100MB buffer or a 10GB, then I'm not
-surprised you have problems.  Try something reasonable like 128kB. For
-extra fun, you could mlock() that buf, but if you're thrashing on
-access to a 128kB working set, you will probably also get your *code*
-swapped out, in which case you pretty much lose.
+Thanks,
 
+Andrew Murray
 
-> > For example, if the remote VMA is MAP_ANONYMOUS, do you get
-> > a CoW copy of it? I assume you don't since the whole point is to
-> > write to remote memory
->
-> But, no, there *is* COW semantic. We do not copy memory. We copy
-> page table content. This is just the same we have on fork(), when
-> children duplicates parent's VMA and related page table subset,
-> and parent's PTEs lose _PAGE_RW flag.
-
-Then you need to document this very carefully, because other people
-will use your syscall in different ways than you use it.
-
-And, if you are doing CoW like this, then your syscall is basically
-only useful for your really weird use case in which you're using it to
-import an already-populated VMA.  Maybe this is a reasonable feature
-to add to the kernel, but it needs a benchmark against a reasonable
-alternative.
-
->
-> There is all copy_page_range() code reused for that. Please, see [3/7]
-> for the details.
-
-You can't as users of a syscall to read the nitty gritty mm code to
-figure out what the syscall does from a user's perspective.
-
-> > But there are plenty of other questions.
-> > What happens if the remote VMA is a gate area or other special mapping
-> > (vDSO, vvar area, etc)?  What if the remote memory comes from a driver
-> > that wasn't expecting the mapping to get magically copied to a
-> > different process?
->
-> In case of someone wants to duplicate such the mappings, we may consider
-> that, and extend the interface in the future for VMA types, which are
-> safe for that.
-
-Do you mean that the code you sent rejects this case?  If so, please
-document it.  In any case, I looked at the code, and it seems to be
-trying to handle MAP_SHARED and MAP_ANONYMOUS.  I don't see where it
-would reject copying a vDSO.
+> +		if (event)
+> +			pmc->perf_event = event;
+> +	}
+>  }
+>  
+>  /**
+> @@ -303,6 +326,24 @@ static void kvm_pmu_perf_overflow(struct perf_event *perf_event,
+>  	}
+>  }
+>  
+> +static struct perf_event *kvm_pmu_create_perf_event(struct kvm_vcpu *vcpu,
+> +						    struct kvm_pmc *pmc,
+> +						    struct perf_event_attr *attr)
+> +{
+> +	struct perf_event *event;
+> +
+> +	event = perf_event_create_kernel_counter(attr, -1, current,
+> +						 kvm_pmu_perf_overflow, pmc);
+> +
+> +	if (IS_ERR(event)) {
+> +		pr_err_once("kvm: pmu event creation failed %ld\n",
+> +			    PTR_ERR(event));
+> +		return NULL;
+> +	}
+> +
+> +	return event;
+> +}
+> +
+>  /**
+>   * kvm_pmu_software_increment - do software increment
+>   * @vcpu: The vcpu pointer
+> @@ -416,15 +457,10 @@ void kvm_pmu_set_counter_event_type(struct kvm_vcpu *vcpu, u64 data,
+>  	/* The initial sample period (overflow count) of an event. */
+>  	attr.sample_period = (-counter) & pmc->bitmask;
+>  
+> -	event = perf_event_create_kernel_counter(&attr, -1, current,
+> -						 kvm_pmu_perf_overflow, pmc);
+> -	if (IS_ERR(event)) {
+> -		pr_err_once("kvm: pmu event creation failed %ld\n",
+> -			    PTR_ERR(event));
+> -		return;
+> -	}
+> +	event = kvm_pmu_create_perf_event(vcpu, pmc, &attr);
+>  
+> -	pmc->perf_event = event;
+> +	if (event)
+> +		pmc->perf_event = event;
+>  }
+>  
+>  bool kvm_arm_support_pmu_v3(void)
+> -- 
+> 1.8.3.1
+> 
+> 
+> _______________________________________________
+> kvmarm mailing list
+> kvmarm@lists.cs.columbia.edu
+> https://lists.cs.columbia.edu/mailman/listinfo/kvmarm
