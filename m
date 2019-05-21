@@ -2,180 +2,131 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C6D7C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:05:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50E6BC04E87
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:07:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09B9F2173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:05:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 306DF217F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:07:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729040AbfEUQFH (ORCPT
+        id S1728317AbfEUQHp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 12:05:07 -0400
-Received: from mailgate2.uni-hannover.de ([130.75.2.114]:53604 "EHLO
-        mailgate2.uni-hannover.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728067AbfEUQFG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 12:05:06 -0400
-X-Greylist: delayed 558 seconds by postgrey-1.27 at vger.kernel.org; Tue, 21 May 2019 12:05:03 EDT
-Received: from kolab.sra.uni-hannover.de (kolab.sra.uni-hannover.de [130.75.33.6])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mailgate2.uni-hannover.de (Postfix) with ESMTPS id 6426A2087;
-        Tue, 21 May 2019 17:55:43 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at sra.uni-hannover.de
-Received: from lab.sra.uni-hannover.de (aerobus.sra.uni-hannover.de
- [130.75.33.87])
- by kolab.sra.uni-hannover.de (Postfix) with SMTP id 1984B3E027C;
- Tue, 21 May 2019 17:55:22 +0200 (CEST)
-Received: (nullmailer pid 14993 invoked by uid 20151);
- Tue, 21 May 2019 15:55:41 -0000
-From:   Lukas Prause <langspielplatte@black-mesa.xyz>
-To:     lizefan@huawei.com, tj@kernel.org, hannes@cmpxchg.org,
-        peterz@infradead.org, mingo@redhat.com, will.deacon@arm.com,
-        rjw@rjwysocki.net, len.brown@intel.com, pavel@ucw.cz,
-        rostedt@goodmis.org
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        cgroups@vger.kernel.org, linux-pm@vger.kernel.org,
-        Lukas Prause <langspielplatte@black-mesa.xyz>,
-        Lennart Glauer <mail@lennart-glauer.de>
-Subject: [PATCH] Fix comments with paths pointing to renamed or moved files.
-Date:   Tue, 21 May 2019 17:54:30 +0200
-Message-Id: <20190521155430.14941-1-langspielplatte@black-mesa.xyz>
-X-Mailer: git-send-email 2.17.1
+        Tue, 21 May 2019 12:07:45 -0400
+Received: from foss.arm.com ([217.140.101.70]:37874 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727044AbfEUQHp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 12:07:45 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CAF7F15A2;
+        Tue, 21 May 2019 09:07:44 -0700 (PDT)
+Received: from [10.1.196.129] (ostrya.cambridge.arm.com [10.1.196.129])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4A22B3F718;
+        Tue, 21 May 2019 09:07:42 -0700 (PDT)
+From:   Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Subject: Re: [RFC/PATCH 0/4] Initial support for modular IOMMU drivers
+To:     "Isaac J. Manjarres" <isaacm@codeaurora.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     kernel-team@android.com, robin.murphy@arm.com, joro@8bytes.org,
+        will.deacon@arm.com, lmark@codeaurora.org, robh+dt@kernel.org,
+        bhelgaas@google.com, frowand.list@gmail.com, pratikp@codeaurora.org
+References: <1558118857-16912-1-git-send-email-isaacm@codeaurora.org>
+Message-ID: <2379c1cf-be1b-503f-7dbc-51110650e91f@arm.com>
+Date:   Tue, 21 May 2019 17:07:18 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <1558118857-16912-1-git-send-email-isaacm@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch corrects renamed or moved paths in comments.
+Hi Isaac,
 
-Signed-off-by: Lukas Prause <langspielplatte@black-mesa.xyz>
-Signed-off-by: Lennart Glauer <mail@lennart-glauer.de>
----
- kernel/cgroup/cpuset.c       |  2 +-
- kernel/locking/mutex-debug.h |  2 +-
- kernel/power/power.h         |  2 +-
- kernel/sched/core.c          |  2 +-
- kernel/trace/trace.h         | 14 +++++++-------
- 5 files changed, 11 insertions(+), 11 deletions(-)
+On 17/05/2019 19:47, Isaac J. Manjarres wrote:
+> This series adds initial support for being able to use the ARM
+> SMMU driver as a loadable kernel module. The series also adds
+> to the IOMMU framework, so that it can defer probing for devices
+> that depend on an IOMMU driver that may be a loadable module.
+> 
+> The primary reason behind these changes is that having the ARM
+> SMMU driver as a module allows for the same kernel image to be
+> used across different platforms. For example, if one platform
+> contains an IOMMU that implements one version of the ARM SMMU
+> specification, and another platform simply does not have an
+> IOMMU, the only way that these platforms can share the same
+> kernel image is if the ARM SMMU driver is compiled into the
+> kernel image.
+> 
+> This solution is not scalable, as it will lead to bloating the
+> kernel image with support for several future versions of the
+> SMMU specification to maintain a common kernel image that works
+> across all platforms. Having the ARM SMMU driver as a module allows
+> for a common kernel image to be supported across all platforms,
+> while yielding a smaller kernel image size, since the correct
+> SMMU driver can be loaded at runtime, if necessary.
 
-diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
-index 6a1942ed781c..6381622e2f2f 100644
---- a/kernel/cgroup/cpuset.c
-+++ b/kernel/cgroup/cpuset.c
-@@ -329,7 +329,7 @@ static struct cpuset top_cpuset = {
-  * cpumasks and nodemasks.
-  *
-  * Accessing a task's cpuset should be done in accordance with the
-- * guidelines for accessing subsystem state in kernel/cgroup.c
-+ * guidelines for accessing subsystem state in kernel/cgroup/cgroup.c
-  */
- 
- static DEFINE_MUTEX(cpuset_mutex);
-diff --git a/kernel/locking/mutex-debug.h b/kernel/locking/mutex-debug.h
-index 1edd3f45a4ec..0dee0a07cd4c 100644
---- a/kernel/locking/mutex-debug.h
-+++ b/kernel/locking/mutex-debug.h
-@@ -8,7 +8,7 @@
-  *
-  * This file contains mutex debugging related internal declarations,
-  * prototypes and inline functions, for the CONFIG_DEBUG_MUTEXES case.
-- * More details are in kernel/mutex-debug.c.
-+ * More details are in kernel/locking/mutex-debug.c.
-  */
- 
- /*
-diff --git a/kernel/power/power.h b/kernel/power/power.h
-index 9e58bdc8a562..5de8b0c7f657 100644
---- a/kernel/power/power.h
-+++ b/kernel/power/power.h
-@@ -182,7 +182,7 @@ extern int swsusp_unmark(void);
- #endif
- 
- struct timeval;
--/* kernel/power/swsusp.c */
-+/* kernel/power/hibernate.c */
- extern void swsusp_show_speed(ktime_t, ktime_t, unsigned int, char *);
- 
- #ifdef CONFIG_SUSPEND
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 102dfcf0a29a..0ce0dc44ffc3 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -3334,7 +3334,7 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
-  *   1. Explicit blocking: mutex, semaphore, waitqueue, etc.
-  *
-  *   2. TIF_NEED_RESCHED flag is checked on interrupt and userspace return
-- *      paths. For example, see arch/x86/entry_64.S.
-+ *      paths. For example, see arch/x86/entry/entry_64.S.
-  *
-  *      To drive preemption between tasks, the scheduler sets the flag in timer
-  *      interrupt handler scheduler_tick().
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 1974ce818ddb..0c304d6f5b31 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -1684,7 +1684,7 @@ extern int register_trigger_hist_enable_disable_cmds(void);
-  *	initialization such as incrementing a per-trigger reference
-  *	count, for instance.  This is usually implemented by the
-  *	generic utility function @event_trigger_init() (see
-- *	trace_event_triggers.c).
-+ *	trace_events_trigger.c).
-  *
-  * @free: An optional de-initialization function called for the
-  *	trigger when the trigger is unregistered (via the
-@@ -1693,12 +1693,12 @@ extern int register_trigger_hist_enable_disable_cmds(void);
-  *	per-trigger reference count and freeing corresponding trigger
-  *	data, for instance.  This is usually implemented by the
-  *	generic utility function @event_trigger_free() (see
-- *	trace_event_triggers.c).
-+ *	trace_events_trigger.c).
-  *
-  * @print: The callback function invoked to have the trigger print
-  *	itself.  This is usually implemented by a wrapper function
-  *	that calls the generic utility function @event_trigger_print()
-- *	(see trace_event_triggers.c).
-+ *	(see trace_events_trigger.c).
-  */
- struct event_trigger_ops {
- 	void			(*func)(struct event_trigger_data *data,
-@@ -1758,7 +1758,7 @@ struct event_trigger_ops {
-  *	the appropriate trace event.  It makes use of the other
-  *	event_command callback functions to orchestrate this, and is
-  *	usually implemented by the generic utility function
-- *	@event_trigger_callback() (see trace_event_triggers.c).
-+ *	@event_trigger_callback() (see trace_events_trigger.c).
-  *
-  * @reg: Adds the trigger to the list of triggers associated with the
-  *	event, and enables the event trigger itself, after
-@@ -1767,13 +1767,13 @@ struct event_trigger_ops {
-  *	make the decision as to whether or not multiple instances of
-  *	the trigger should be allowed.  This is usually implemented by
-  *	the generic utility function @register_trigger() (see
-- *	trace_event_triggers.c).
-+ *	trace_events_trigger.c).
-  *
-  * @unreg: Removes the trigger from the list of triggers associated
-  *	with the event, and disables the event trigger itself, after
-  *	initializing it (via the event_trigger_ops @free() function).
-  *	This is usually implemented by the generic utility function
-- *	@unregister_trigger() (see trace_event_triggers.c).
-+ *	@unregister_trigger() (see trace_events_trigger.c).
-  *
-  * @unreg_all: An optional function called to remove all the triggers
-  *	from the list of triggers associated with the event.  Called
-@@ -1783,7 +1783,7 @@ struct event_trigger_ops {
-  *	for the trigger.  If no @set_filter() method is set for the
-  *	event command, filters set by the user for the command will be
-  *	ignored.  This is usually implemented by the generic utility
-- *	function @set_trigger_filter() (see trace_event_triggers.c).
-+ *	function @set_trigger_filter() (see trace_events_trigger.c).
-  *
-  * @get_trigger_ops: The callback function invoked to retrieve the
-  *	event_trigger_ops implementation associated with the command.
--- 
-2.17.1
+It can also be useful if IOMMU drivers want to rely on components that
+distros usually build as modules. I have that problem with virtio-iommu,
+where the whole virtio transport is usually modular.
+
+> Patchset Summary:
+> 
+> 1. Since the ARM SMMU driver depends on symbols being exported from
+> several subsystems, the first three patches are dedicated to exporting
+> the necessary symbols.
+> 
+> 2. Similar to how the pinctrl framework handles deferring probes,
+> the subsequent patch makes it so that the IOMMU framework will defer
+> probes indefinitely if there is a chance that the IOMMU driver that a
+> device is waiting for is a module. Otherwise, it upholds the current
+> behavior of stopping probe deferrals once all of the builtin drivers
+> have finished probing.
+> 
+> The ARM SMMU driver currently has support for the deprecated
+> "mmu-masters" binding, which relies on the notion of initcall
+> ordering for setting the bus ops to ensure that all SMMU devices
+> have been bound to the driver. This poses a problem with
+> making the driver a module, as there is no such notion with
+> loadable modules. Will support for this be completely deprecated?
+> If not, might it be useful to leverage the device tree ordering,
+> and assign a property to the last SMMU device, and set the bus ops
+> at that point? Or perhaps have some deferred timer based approach
+> to know when to set the bus ops? 
+
+Another problem is module unloading: if the user calls rmmod on an IOMMU
+module, we have to ensure that endpoints aren't performing DMA anymore.
+It could be solved by declaring consumers of an IOMMU with
+device_link_add(), so that device drivers are unbound before the IOMMU
+module is unloaded.
+
+Thanks,
+Jean
+
+> 
+> Thanks,
+> Isaac
+> 
+> Isaac J. Manjarres (4):
+>   of: Export of_phandle_iterator_args() to modules
+>   PCI: Export PCI ACS and DMA searching functions to modules
+>   iommu: Export core IOMMU functions to kernel modules
+>   iommu: Add probe deferral support for IOMMU kernel modules
+> 
+>  drivers/iommu/iommu-sysfs.c | 3 +++
+>  drivers/iommu/iommu.c       | 6 ++++++
+>  drivers/iommu/of_iommu.c    | 8 ++++++--
+>  drivers/of/base.c           | 1 +
+>  drivers/pci/pci.c           | 1 +
+>  drivers/pci/search.c        | 1 +
+>  6 files changed, 18 insertions(+), 2 deletions(-)
+> 
+
