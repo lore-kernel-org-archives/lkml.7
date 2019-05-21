@@ -2,86 +2,81 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFB8FC04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 18:01:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99900C46460
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 18:01:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACE13217D7
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 18:01:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="HPSi78pG"
+	by mail.kernel.org (Postfix) with ESMTP id 66CBD217D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 18:01:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558461699;
+	bh=FLZhdWunrjebuUQrgaFqGqa/3rfm/mslltrgtD0N4gs=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=G13cY/cJXzdX0vCVDZaOWtw1kWFCxEZUyK78nK2MSPILAaeMFAmgJfgd+6A1UztSf
+	 6Wm69iPudoILgE1Uj990JtB9kvpxPTYSSdDqByOB5Jiv/TS1MFLzMV/jg2Nefvvxnq
+	 AWcL6a3Yd8NyrbtQQKlmQcDXadjPcYvcK8jc5COo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729165AbfEUSBS (ORCPT
+        id S1729202AbfEUSBi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 14:01:18 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:39784 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729098AbfEUSBR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 14:01:17 -0400
-Received: by mail-pg1-f193.google.com with SMTP id w22so8960373pgi.6
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 11:01:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=wfNC/NYy0BskrQ/DkTSlCao3lZYzBhPki8kG+5l93Q0=;
-        b=HPSi78pGI79hPLxeVu+FPg0TVmzHtILVm1cB89VfjMUPZUr8Z9vk1C1qzJ9xdFjk5e
-         ijoMPkQz8AN5V5AgDGw3838yHVhhfy0NOfm3Dk970+yncc9lvviEjIQ6pKCZNJjd5EjI
-         ecbXjaExaMOtUL97VjhUIcjB/Jw/94ZsCCqQnLWK/nN0LqCLLCtJNxwfgjPP4Ar9PX9z
-         FoP8K3RpVkjmQpfkVhejk0+POrUBOGkGMiGh1XKKkXhcyUsz236ij7W/paKuTrpkD4Ly
-         h6X3DmwzMfmy6SYjyPjKjj4hBIQeZJlrojttCnBeXg8Lq/CaBC8N1IG1lQ0FP2FPfkor
-         /rKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=wfNC/NYy0BskrQ/DkTSlCao3lZYzBhPki8kG+5l93Q0=;
-        b=lN0iX/DaHCMoaltsNXl5hoEZLfpW2AMoHo356GIO2PF78HRGqZtPJEJ/43D5BIGCxJ
-         uQnBcUQJZLxjM/t8FQKTEm+OJmDI62uBATecq/tTSuFYiyPwve6hqDZIqZ+X88S8Wrp5
-         Pk1YL63YQT10N3uOdX14KDVrtaTznigcMfNx5w6XXu7i56p1rygfYdGOsPfRkvjKd+W3
-         cyKbuZhfBK0vaQnIFzNT+9bB653ewHURfj08cMjAMfxjrRr1u9v+W3RKCU2dbr3t1fw+
-         t2tYobQnYOChOsCPtFOAPiL1yBVLxsu8B8U4YrKaAeMZNNHkPEPtwZ2Lk1yjeSiGEX5O
-         K+6g==
-X-Gm-Message-State: APjAAAVx5NeHivuXiuiuPVa4kGJfXpNp/n3oE4itAVXslnqED9YrV0vF
-        +Wp12Oit3zz/uTDuQ76cUtt0Og==
-X-Google-Smtp-Source: APXvYqzV452vOvimAjVBDph0HeRrnJrZRkvgN3WuialU5BfF5U6r7mhxn5+jLHCsQqm6YkVT7RXR/w==
-X-Received: by 2002:a63:6a42:: with SMTP id f63mr84295608pgc.377.1558461676934;
-        Tue, 21 May 2019 11:01:16 -0700 (PDT)
-Received: from localhost ([2601:602:9200:a1a5:b1ca:3800:3284:d770])
-        by smtp.googlemail.com with ESMTPSA id 194sm19462422pgd.33.2019.05.21.11.01.16
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 21 May 2019 11:01:16 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Carlo Caione <carlo@caione.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: Signed-off-by missing for commit in the amlogic tree
-In-Reply-To: <20190521153649.0f44f3c8@canb.auug.org.au>
-References: <20190521153649.0f44f3c8@canb.auug.org.au>
-Date:   Tue, 21 May 2019 11:01:15 -0700
-Message-ID: <7hh89n7klw.fsf@baylibre.com>
+        Tue, 21 May 2019 14:01:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53802 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729098AbfEUSBi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 14:01:38 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A7A30217D7;
+        Tue, 21 May 2019 18:01:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558461697;
+        bh=FLZhdWunrjebuUQrgaFqGqa/3rfm/mslltrgtD0N4gs=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=wS2iQRdgmag5T8KZvfo76T4L2N8wQBpCRchW2qiTLxHhUwzNJL3O++yzcPmBvnjZA
+         r+yVm3fzoyYi+cNk3Rmmu16l6Z4vxzBmdVkKgBgHqJz2eacSya9ozeO6PsoZZGgJwK
+         PlC/1IU3tBqdzdMFjeMaY9LVmBs9ewvAhKrfX0wA=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAMuHMdVOKDRYjzmyRq-KXW8d+dYmAxnM+=y2yOh85YDcCEDMuw@mail.gmail.com>
+References: <20190514153341.22540-1-chris.paterson2@renesas.com> <155786877257.14659.6751252865489860937@swboyd.mtv.corp.google.com> <CAMuHMdWPSyrhYx5Z5mgmKrR68cHL6owcRT=B3+DD3GhhxuG4zw@mail.gmail.com> <20190516215406.75E5D2082E@mail.kernel.org> <CAMuHMdVOKDRYjzmyRq-KXW8d+dYmAxnM+=y2yOh85YDcCEDMuw@mail.gmail.com>
+Subject: Re: [PATCH] scripts/spelling.txt: Add spelling fix for prohibited
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Chris Paterson <chris.paterson2@renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Biju Das <biju.das@bp.renesas.com>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+User-Agent: alot/0.8.1
+Date:   Tue, 21 May 2019 11:01:36 -0700
+Message-Id: <20190521180137.A7A30217D7@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Stephen Rothwell <sfr@canb.auug.org.au> writes:
+Quoting Geert Uytterhoeven (2019-05-21 01:57:20)
+> Hi Stephen, Andrew,
+>=20
+> On Thu, May 16, 2019 at 11:54 PM Stephen Boyd <sboyd@kernel.org> wrote:
+> >
+> > Guess so! Or Andrew does it.
+>=20
+> Given the change to scripts/spelling.txt conflicts with b937856a5db2cb7a
+> ("scripts/spelling.txt: add more typos to spelling.txt and sort") in
+> linux-next, and the risk of conflict with future changes to
+> drivers/clk/renesas/r8a77470-cpg-mssr.c is slim, I'd like to defer this
+> to Andrew.
+>=20
+> Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-> Hi all,
->
-> Commit
->
->   5d32a77c6e2e ("arm64: dts: meson-g12a: Add PWM nodes")
->
-> is missing a Signed-off-by from its committer.
+Ok. Or Chris can split the patch into the clk part and the scripts/
+part?  They're only loosely related to each other, so I'm not sure why
+they were sent in one patch besides for ease of transport.
 
-Thanks, fixed.
-
-Kevin
