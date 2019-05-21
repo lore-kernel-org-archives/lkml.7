@@ -2,117 +2,124 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE959C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:13:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A2FFC04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:14:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAC702075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:13:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F38A82173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:13:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="vbLZCEXG"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="vvF2ly7Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728462AbfEUPNM (ORCPT
+        id S1728544AbfEUPN7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 11:13:12 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:35980 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727986AbfEUPNM (ORCPT
+        Tue, 21 May 2019 11:13:59 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:35836 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727969AbfEUPN6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 11:13:12 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4LF1pIG100322;
-        Tue, 21 May 2019 15:13:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=iO87e8oapsoYBD3zmv3BtHcDp0cXYi516sKUqZMvPys=;
- b=vbLZCEXGMm5UNDj4qRSgu28oVsptVtrdFpa5OHgJ5PLPFjEtl5CrsoUu5+w2g1hH1S63
- dyi10F/801xUQ514nWbHn7MwsVhyytAV72cqXevdoLnyJZrgWICVuxVhLg2oRx5VwEfQ
- sM5hpShJRVSiJbVlPb9d+TeeENsRHbVAmwXSZxPb6tH6++cufZg0a/7fYy7DV/DHqMlM
- 9s+xU9bH97oCbwpGkm+Th8b3UXR5rHD89QXLdS8juFFQjbUSb4FUSYOYJ0m5aPAlW6AV
- HavjjsV4uRE/yArWHiYC6QqROJmit91lsAnvsPKZPHPEHlZ1+yk/QoyWsfmwYZpNtqzl BA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2130.oracle.com with ESMTP id 2sj7jdpadn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 21 May 2019 15:13:07 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4LFA3ft126309;
-        Tue, 21 May 2019 15:11:07 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 2sm0471jqh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 21 May 2019 15:11:06 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x4LFB6HG032315;
-        Tue, 21 May 2019 15:11:06 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 21 May 2019 15:11:06 +0000
-Date:   Tue, 21 May 2019 18:10:59 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Sven Van Asbroeck <thesven73@gmail.com>
-Cc:     Greg KH <gregkh@linuxfoundation.org>, devel@driverdev.osuosl.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] staging: fieldbus: anybuss: force address space
- conversion
-Message-ID: <20190521151059.GM31203@kadam>
-References: <20190521145116.24378-1-TheSven73@gmail.com>
+        Tue, 21 May 2019 11:13:58 -0400
+Received: by mail-pg1-f195.google.com with SMTP id t1so7327222pgc.2
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 08:13:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=6Cne2bRYNPxMo5lmC9R59wEbEO25DcAAnjTK4xwTSsw=;
+        b=vvF2ly7Y0wh8rEKGoM/nP1Sr+IzMtLX6R8YZKQNaoZMuxDzWF30t1pjXXrwMnFWtYU
+         YPWEZdFYsOK4jjKc7lSLLpkq6Yolzu8OeeVDtpOjFeEHbWwXnwS0tZF71Ehoz7SRP8JH
+         cd/7Q7FGWBLP3qUx2SyBht7VsbmWCvyoNSx+VI3mtX2xszi2+EnRY7//0hd08r3oxfsd
+         d5HYrRPLE/yGLtVUYPvR4RO9dwirfQf+IZ9Q3KgZuTre9w+IWg9nzYLAFViv+/hhiILl
+         zgxCceVehFZmIea/bZtgKWoXByvQJpPyneRLY+kqq9XWyno/AUFyx3TJ/SsxpZHg7Lqc
+         WOBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=6Cne2bRYNPxMo5lmC9R59wEbEO25DcAAnjTK4xwTSsw=;
+        b=QSkAqQU5/lLwzAg0MAZxEysHG+NAiM3No1nbMb8A7Q7hI5T2hMSwiv5A04PHgPHhJb
+         tbRgBrTyMXGXvjUUZMrdU441o8DXHMzZ2J4Rhuw/wDG/SYQB6vmRWB2mcVaJZKyBJ0ke
+         Ieo1AW7nAuCEHKmxApKIMZx7s76903XmcKZJQxGEvzhr1WXY3Q0ibtDU52ZnnCLjIUYt
+         v5vYi79lQA3/+5ePWNSxsrbew4OnMS1dYGRps2eRNXN/KuxDdmGKLVV4yfFkRbjUGQsu
+         +CxzlSPqUK5abkFrVn61xv/19HpNXFL7wfFjlCMaGFbsG0Pla/1aBq7LXJ/Ze6f8wxPm
+         jNMQ==
+X-Gm-Message-State: APjAAAVx5EnfAISK+O8mig4ByhEkTx5LB/yTRoO0JTrhztKGMz74p8cH
+        Jfl43bA00CeiDoP8MMJI8KsQZg==
+X-Google-Smtp-Source: APXvYqyZQId8yWqAlUm2SopVKQGWh4BCL659CihessrNtjNEiWmXlf6koJd2gpBMpnBH3euqpXn59A==
+X-Received: by 2002:a62:cdc6:: with SMTP id o189mr61458362pfg.74.1558451638227;
+        Tue, 21 May 2019 08:13:58 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::2:5a76])
+        by smtp.gmail.com with ESMTPSA id v1sm22978952pgb.85.2019.05.21.08.13.57
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 21 May 2019 08:13:57 -0700 (PDT)
+Date:   Tue, 21 May 2019 11:13:55 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     kernel test robot <rong.a.chen@intel.com>
+Cc:     lkp@01.org, LKML <linux-kernel@vger.kernel.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>
+Subject: Re: [LKP] [mm] 42a3003535: will-it-scale.per_process_ops -25.9%
+ regression
+Message-ID: <20190521151355.GA2870@cmpxchg.org>
+References: <20190520063534.GB19312@shao2-debian>
+ <20190520215328.GA1186@cmpxchg.org>
+ <20190521134646.GE19312@shao2-debian>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190521145116.24378-1-TheSven73@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9264 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1905210094
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9264 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905210094
+In-Reply-To: <20190521134646.GE19312@shao2-debian>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 21, 2019 at 10:51:16AM -0400, Sven Van Asbroeck wrote:
-> The regmap's context (stored as 'void *') consists of a pointer to
-> __iomem. Mixing __iomem and non-__iomem addresses generates
-> sparse warnings.
+On Tue, May 21, 2019 at 09:46:46PM +0800, kernel test robot wrote:
+> On Mon, May 20, 2019 at 05:53:28PM -0400, Johannes Weiner wrote:
+> > Hello,
+> > 
+> > On Mon, May 20, 2019 at 02:35:34PM +0800, kernel test robot wrote:
+> > > Greeting,
+> > > 
+> > > FYI, we noticed a -25.9% regression of will-it-scale.per_process_ops due to commit:
+> > > 
+> > > 
+> > > commit: 42a300353577ccc17ecc627b8570a89fa1678bec ("mm: memcontrol: fix recursive statistics correctness & scalabilty")
+> > > https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
+> > > 
+> > > in testcase: will-it-scale
+> > > on test machine: 192 threads Skylake-SP with 256G memory
+> > > with following parameters:
+> > 
+> > Ouch. That has to be the additional cache footprint of the split
+> > local/recursive stat counters, rather than the extra instructions.
+> > 
+> > Could you please try re-running the test on that host with the below
+> > patch applied?
 > 
-> Fix by using __force when converting to/from 'void __iomem *' and
-> the regmap's context.
+> Hi,
 > 
-> Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
-> ---
->  drivers/staging/fieldbus/anybuss/arcx-anybus.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+> The patch can fix the regression.
 > 
-> diff --git a/drivers/staging/fieldbus/anybuss/arcx-anybus.c b/drivers/staging/fieldbus/anybuss/arcx-anybus.c
-> index a167fb68e355..8126e5535ada 100644
-> --- a/drivers/staging/fieldbus/anybuss/arcx-anybus.c
-> +++ b/drivers/staging/fieldbus/anybuss/arcx-anybus.c
-> @@ -114,7 +114,7 @@ static void export_reset_1(struct device *dev, bool assert)
->  static int read_reg_bus(void *context, unsigned int reg,
->  			unsigned int *val)
->  {
-> -	void __iomem *base = context;
-> +	void __iomem *base = (__force void __iomem *)context;
+> tests: 1
+> testcase/path_params/tbox_group/run: will-it-scale/performance-process-100%-page_fault3/lkp-skl-4sp1
+> 
+> db9adbcbe7 ("mm: memcontrol: move stat/event counting functions out-of-line")
+> 8d8245997d ("mm: memcontrol: don't batch updates of local VM stats and events")
+> 
+> db9adbcbe740e098  8d8245997dbd17c5056094f15c  
+> ----------------  --------------------------  
+>          %stddev      change         %stddev
+>              \          |                \  
+>   87819982                    85307742        will-it-scale.workload
+>     457395                      444310        will-it-scale.per_process_ops
 
-
-There is no need to use __force.  Just:
-
-	void __iomem *base = (void __iomem *)context;
-
-For the rest as well.
-
-regards,
-dan carpenter
-
+Fantastic, thank you for verifying! I'm going to take that as a
+Tested-by.
