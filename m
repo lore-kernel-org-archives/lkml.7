@@ -2,122 +2,94 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1844AC04AAC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 00:07:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E7FAC04AAC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 00:07:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCD7D21479
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 00:07:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XJDRGlQM"
+	by mail.kernel.org (Postfix) with ESMTP id 183D221743
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 00:07:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727364AbfEUAG7 (ORCPT
+        id S1727395AbfEUAH0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 20:06:59 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:44202 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727319AbfEUAG4 (ORCPT
+        Mon, 20 May 2019 20:07:26 -0400
+Received: from smtprelay0201.hostedemail.com ([216.40.44.201]:58630 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726584AbfEUAH0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 20:06:56 -0400
-Received: by mail-pg1-f195.google.com with SMTP id n2so886247pgp.11;
-        Mon, 20 May 2019 17:06:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=1yoN/ic+Auw9uJWvyGTewovBaYwnACSuIGV6GIUz8AQ=;
-        b=XJDRGlQMlUosJ5Mg5JKUcAqICzEoZ6fnxeJ1mRBakghEeIMs2cHJSh7F1xmFUcSCzT
-         8vSLW7x0GHT82mQu5d/K0U/Qc1B9b0ENB7hSLas40ByixsHSjefZrGwZXjWax5d317CV
-         IA6oekMu/WPPGvus26xUalii1CK2XqBqINVdZkTC+r/UwIXYSEqYEmSJz5ynxtUi5oNJ
-         ZLQYdBr/r6C8dg9wPzPT+oAY6JvKZyW5iCXSrD02JamMSiHagVsidJNDiHbaGxoCvYbk
-         6ujGUPqL9Iy9vvrmJEzNIDjWLCXdo0q6RB6TsBODAZF/NDfjMIuGdjAgDF4XbKy2Fg02
-         QZgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=1yoN/ic+Auw9uJWvyGTewovBaYwnACSuIGV6GIUz8AQ=;
-        b=PN+Ng8SxixTEURAXRnjolPtFL270IFsewO+P0m+JOrFeDqypH2LWbtWZpuFZNn232H
-         gaP+5N8wdbn6LoJ5opB+eDR1Sey3XDusSqUOJCndRCYQyAZAE1A/iMwXGIyQ+TpaUORB
-         KabOtrDXjTLTIS3zmPdLp0ohGCTV0v1jqrQV3om62UrKbjAopBl5FCcLPECF40d2mNxv
-         z6OZ78lt2oA15O/gHwZZZ2PZUxfoEkfLBwldSCeF5nK6AkMNly+h9XJeXeBTMbgyDz1e
-         9jLPVgvic7OhEPN3imYCdfz/PqyvIIqVPpYF8qdPywgUI9Aa1g4PKJn+1pOmcmAL4bBj
-         VOdA==
-X-Gm-Message-State: APjAAAUXYxc04radiAqo9wLc+8lRFSl44PRx7LfrMgUXAVuOmk3nH8re
-        GaPf0thPA/VZ9SiOzFWRX5YZdrY+IAt88A==
-X-Google-Smtp-Source: APXvYqz5McZmyf02dFOcHsmr8oHPkuNwM1ouhKJ3ecm085qvCV4DpjQW8xBrJ/mXtDpkZ4rlxln7NA==
-X-Received: by 2002:a63:40b:: with SMTP id 11mr62107358pge.31.1558397215422;
-        Mon, 20 May 2019 17:06:55 -0700 (PDT)
-Received: from prsriva-Precision-Tower-5810.corp.microsoft.com ([2001:4898:80e8:1:e5e3:4312:180a:c25e])
-        by smtp.gmail.com with ESMTPSA id i16sm5939149pfd.100.2019.05.20.17.06.54
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 20 May 2019 17:06:54 -0700 (PDT)
-From:   Prakhar Srivastava <prsriva02@gmail.com>
-To:     linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     mjg59@google.com, zohar@linux.ibm.com, roberto.sassu@huawei.com,
-        vgoyal@redhat.com, Prakhar Srivastava <prsriva02@gmail.com>
-Subject: [PATCH v6 3/3] call ima_kexec_cmdline to measure the cmdline args
-Date:   Mon, 20 May 2019 17:06:45 -0700
-Message-Id: <20190521000645.16227-4-prsriva02@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190521000645.16227-1-prsriva02@gmail.com>
-References: <20190521000645.16227-1-prsriva02@gmail.com>
+        Mon, 20 May 2019 20:07:26 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay03.hostedemail.com (Postfix) with ESMTP id AC7CA837F24D;
+        Tue, 21 May 2019 00:07:24 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: power90_2371a2faf914a
+X-Filterd-Recvd-Size: 2784
+Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf13.hostedemail.com (Postfix) with ESMTPA;
+        Tue, 21 May 2019 00:07:23 +0000 (UTC)
+Message-ID: <1522228b6c9c7ec89ce14f3f3cf1fe221a315371.camel@perches.com>
+Subject: Re: [EXT] Re: [PATCH] checkpatch: add test for empty line after
+ Fixes statement
+From:   Joe Perches <joe@perches.com>
+To:     Leon Romanovsky <leon@kernel.org>
+Cc:     Michal Kalderon <mkalderon@marvell.com>,
+        "apw@canonical.com" <apw@canonical.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        David Miller <davem@davemloft.net>
+Date:   Mon, 20 May 2019 17:07:22 -0700
+In-Reply-To: <20190520135214.GM4573@mtr-leonro.mtl.com>
+References: <20190520124238.10298-1-michal.kalderon@marvell.com>
+         <ed26df86d7d0e12263404842895460b1611def61.camel@perches.com>
+         <MN2PR18MB318292E37F3AB9383D9FBE0FA1060@MN2PR18MB3182.namprd18.prod.outlook.com>
+         <60717bc4cdf327ffe671c328d47c315eefd385c8.camel@perches.com>
+         <20190520135214.GM4573@mtr-leonro.mtl.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.1-1build1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-During soft reboot(kexec_file_load) boot cmdline args
-are not measured.Thus the new kernel on load boots with
-an assumption of cold reboot.
+On Mon, 2019-05-20 at 16:52 +0300, Leon Romanovsky wrote:
+> On Mon, May 20, 2019 at 06:34:49AM -0700, Joe Perches wrote:
+> > On Mon, 2019-05-20 at 13:16 +0000, Michal Kalderon wrote:
+> > > > From: Joe Perches <joe@perches.com>
+> > > > Sent: Monday, May 20, 2019 3:57 PM
+> > > > Subject: [EXT] Re: [PATCH] checkpatch: add test for empty line after Fixes
+> > > > statement
+> > > > 
+> > > > External Email
+> > > > 
+> > > > ----------------------------------------------------------------------
+> > > > On Mon, 2019-05-20 at 15:42 +0300, Michal Kalderon wrote:
+> > > > > Check that there is no empty line after a fixes statement
+> > > > 
+> > > > why?
+> > > > 
+> > > This comment is given a lot on the netdev and rdma mailing lists when patches are submitted with
+> > > an empty line between Fixes: tag and SOB tags. Since "Fixes:" is just another tag and should be kept
+> > > together with the other ones.
+> > 
+> > So test that all signature blocks and Fixes do not have
+> > blank lines between them instead of just the "Fixes:" line.
+> > 
+> > And if there is some specific ordering required, perhaps a
+> > test for that ordering should be added as well.
+> 
+> I'm aware of only one request - Fixes above SOB.
 
-This patch makes a call to the ima hook ima_kexec_cmdline,
-added in "Add a new ima hook ima_kexec_cmdline to measure
-cmdline args"
-to measure the boot cmdline args into the ima log.
+Well, nack for the suggested patch.
 
-- call ima_kexec_cmdline from kexec_file_load.
-- move the call ima_add_kexec_buffer after the cmdline 
-args have been measured.
+If there are signature blocks, then there should not be blank lines
+between entries and there should be a blank line before the
+signature block.
 
-Signed-off-by: Prakhar Srivastava <prsriva02@gmail.com>
----
- kernel/kexec_file.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+The current documentation in Documentation/process/submitting-patches.rst
+doesn't state anything about blank lines above or below Fixes: lines.
 
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index f1d0e00a3971..fcc04a230925 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -198,9 +198,6 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
- 		return ret;
- 	image->kernel_buf_len = size;
- 
--	/* IMA needs to pass the measurement list to the next kernel. */
--	ima_add_kexec_buffer(image);
--
- 	/* Call arch image probe handlers */
- 	ret = arch_kexec_kernel_image_probe(image, image->kernel_buf,
- 					    image->kernel_buf_len);
-@@ -241,8 +238,13 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
- 			ret = -EINVAL;
- 			goto out;
- 		}
-+
-+		ima_kexec_cmdline(image->cmdline_buf, image->cmdline_buf_len - 1);
- 	}
- 
-+	/* IMA needs to pass the measurement list to the next kernel. */
-+	ima_add_kexec_buffer(image);
-+
- 	/* Call arch image load handlers */
- 	ldata = arch_kexec_kernel_image_load(image);
- 
--- 
-2.17.1
 
