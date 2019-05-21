@@ -2,89 +2,173 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D9B6C04AAC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 03:26:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DA40C04AAC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 03:30:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C912B213F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 03:26:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="BgGP1FIV";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="yZ/D4gWH"
+	by mail.kernel.org (Postfix) with ESMTP id 1CE482075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 03:30:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727410AbfEUD0X (ORCPT
+        id S1727539AbfEUDaf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 23:26:23 -0400
-Received: from pb-smtp2.pobox.com ([64.147.108.71]:54430 "EHLO
-        pb-smtp2.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726335AbfEUD0X (ORCPT
+        Mon, 20 May 2019 23:30:35 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:42512 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726511AbfEUDaf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 23:26:23 -0400
-Received: from pb-smtp2.pobox.com (unknown [127.0.0.1])
-        by pb-smtp2.pobox.com (Postfix) with ESMTP id 5BCBF151420;
-        Mon, 20 May 2019 23:26:22 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=date:from:to
-        :cc:subject:in-reply-to:message-id:references:mime-version
-        :content-type; s=sasl; bh=LVuPGpXr80mFouDhZEE1IjAN6jw=; b=BgGP1F
-        IVT8K9uI4GkRommMJwMDnWP59DaDWWqxkLFICYYswPxFLn7/Crtvb9zqliN73XtJ
-        9xAX+GoPwBAT3+BnWd3jIYFy/rCH1F9bVohs7n9Mvj2g9JKOFpdfGAIFHYUM1xVL
-        LjJHF5Y04W3qRYzkSyOR7K9uKKQkzx53mavhI=
-Received: from pb-smtp2.nyi.icgroup.com (unknown [127.0.0.1])
-        by pb-smtp2.pobox.com (Postfix) with ESMTP id 536CD15141E;
-        Mon, 20 May 2019 23:26:22 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=fluxnic.net;
- h=date:from:to:cc:subject:in-reply-to:message-id:references:mime-version:content-type; s=2016-12.pbsmtp; bh=oVvGLlqFaKaJTDSYhHZSKXhIQqqadHQ/RfPlc0WJLwQ=; b=yZ/D4gWH/UsL7VX9SUehU1p/R22XTdy8vXXXqD7BOCzdXptKZN8knqLe3ncDo86uqCijZwdIVGTUToUwWmpSka1tTitpMIxiDD45cekeVWpNtRnReQbt/FDDwM9zHyIYB2A2ZtwYOu5yDWzNWTgepkoWlEOFJdGkUCicz3/Q59A=
-Received: from yoda.home (unknown [70.82.130.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by pb-smtp2.pobox.com (Postfix) with ESMTPSA id CAEAF15141C;
-        Mon, 20 May 2019 23:26:21 -0400 (EDT)
-Received: from xanadu.home (xanadu.home [192.168.2.2])
-        by yoda.home (Postfix) with ESMTPSA id E193C2DA01F4;
-        Mon, 20 May 2019 23:26:20 -0400 (EDT)
-Date:   Mon, 20 May 2019 23:26:20 -0400 (EDT)
-From:   Nicolas Pitre <nico@fluxnic.net>
-To:     Gen Zhang <blackgod016574@gmail.com>
-cc:     linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] vt: Fix a missing-check bug in drivers/tty/vt/vt.c
-In-Reply-To: <20190521030905.GB5263@zhanggen-UX430UQ>
-Message-ID: <nycvar.YSQ.7.76.1905202323290.1558@knanqh.ubzr>
-References: <20190521022940.GA4858@zhanggen-UX430UQ> <nycvar.YSQ.7.76.1905202242410.1558@knanqh.ubzr> <20190521030905.GB5263@zhanggen-UX430UQ>
-User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
+        Mon, 20 May 2019 23:30:35 -0400
+X-UUID: 7d869cde9c4749b087a8b3304ded80b8-20190521
+X-UUID: 7d869cde9c4749b087a8b3304ded80b8-20190521
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 77106509; Tue, 21 May 2019 11:30:29 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 21 May 2019 11:30:25 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 21 May 2019 11:30:25 +0800
+Message-ID: <1558409425.25526.13.camel@mtksdaap41>
+Subject: Re: [PATCH v7 11/12] soc: mediatek: cmdq: add
+ cmdq_dev_get_client_reg function
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Bibby Hsieh <bibby.hsieh@mediatek.com>
+CC:     Jassi Brar <jassisinghbrar@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Daniel Kurtz <djkurtz@chromium.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        "Philipp Zabel" <p.zabel@pengutronix.de>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        "YT Shen" <yt.shen@mediatek.com>,
+        Daoyuan Huang <daoyuan.huang@mediatek.com>,
+        Jiaguang Zhang <jiaguang.zhang@mediatek.com>,
+        Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        <ginny.chen@mediatek.com>
+Date:   Tue, 21 May 2019 11:30:25 +0800
+In-Reply-To: <20190521011108.40428-12-bibby.hsieh@mediatek.com>
+References: <20190521011108.40428-1-bibby.hsieh@mediatek.com>
+         <20190521011108.40428-12-bibby.hsieh@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Pobox-Relay-ID: 347E308E-7B78-11E9-B326-E828E74BB12D-78420484!pb-smtp2.pobox.com
+Content-Transfer-Encoding: 7bit
+X-TM-SNTS-SMTP: 798B638221290F7BC5D8959C66269264E402B2FA60D529F582211C428B8D881B2000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 21 May 2019, Gen Zhang wrote:
+On Tue, 2019-05-21 at 09:11 +0800, Bibby Hsieh wrote:
+> GCE cannot know the register base address, this function
+> can help cmdq client to get the cmdq_client_reg structure.
+> 
+> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+> ---
+>  drivers/soc/mediatek/mtk-cmdq-helper.c | 25 +++++++++++++++++++++++++
+>  include/linux/soc/mediatek/mtk-cmdq.h  | 18 ++++++++++++++++++
+>  2 files changed, 43 insertions(+)
+> 
+> diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
+> index 70ad4d806fac..815845bb5982 100644
+> --- a/drivers/soc/mediatek/mtk-cmdq-helper.c
+> +++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
+> @@ -27,6 +27,31 @@ struct cmdq_instruction {
+>  	u8 op;
+>  };
+>  
+> +struct cmdq_client_reg  *cmdq_dev_get_client_reg(struct device *dev, int idx)
+> +{
+> +	struct cmdq_client_reg *client_reg;
+> +	struct of_phandle_args spec;
+> +
+> +	client_reg  = devm_kzalloc(dev, sizeof(*client_reg), GFP_KERNEL);
+> +	if (!client_reg)
+> +		return NULL;
+> +
+> +	if (of_parse_phandle_with_args(dev->of_node, "mediatek,gce-client-reg",
+> +				       "#subsys-cells", idx, &spec)) {
+> +		dev_err(dev, "can't parse gce-client-reg property (%d)", idx);
 
-> On Mon, May 20, 2019 at 10:55:40PM -0400, Nicolas Pitre wrote:
-> > On Tue, 21 May 2019, Gen Zhang wrote:
-> > 
-> > > In function con_init(), the pointer variable vc_cons[currcons].d, vc and
-> > > vc->vc_screenbuf is allocated a memory space via kzalloc(). And they are
-> > > used in the following codes.
-> > > However, when there is a memory allocation error, kzalloc() can fail.
-> > > Thus null pointer (vc_cons[currcons].d, vc and vc->vc_screenbuf)
-> > > dereference may happen. And it will cause the kernel to crash. Therefore,
-> > > we should check return value and handle the error.
-> > > Further,the loop condition MIN_NR_CONSOLES is defined as 1 in
-> > > include/uapi/linux/vt.h. So there is no need to unwind the loop.
-> > 
-> > But what if someone changes that define? It won't be obvious that some 
-> > code did rely on it to be defined to 1.
-> I re-examine the source code. MIN_NR_CONSOLES is only defined once and
-> no other changes to it.
+I think you should call devm_kfree(client_reg) here because this
+function may not be called in client driver's probe function. But in
+another view point, I would like you to move the memory allocation out
+of this function. When client call cmdq_dev_get_client_reg() to get a
+pointer, it's easy that client does not free it because you does not
+provide free API, Some client may embed struct cmdq_client_reg with its
+client structure together,
 
-Yes, that is true today.  But if someone changes that in the future, how 
-will that person know that you relied on it to be 1 for not needing to 
-unwind the loop?
+struct client {
+	struct cmdq_client_reg client_reg;
+};
+
+Because each client may have different memory allocation strategy, so I
+would like you to move memory allocation out of this function to let
+client driver have the flexibility.
+
+Regards,
+CK
+
+> +
+> +		return NULL;
+> +	}
+> +
+> +	client_reg->subsys = spec.args[0];
+> +	client_reg->offset = spec.args[1];
+> +	client_reg->size = spec.args[2];
+> +	of_node_put(spec.np);
+> +
+> +	return client_reg;
+> +}
+> +EXPORT_SYMBOL(cmdq_dev_get_client_reg);
+> +
+>  static void cmdq_client_timeout(struct timer_list *t)
+>  {
+>  	struct cmdq_client *client = from_timer(client, t, timer);
+> diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
+> index a345870a6d10..d0dea3780f7a 100644
+> --- a/include/linux/soc/mediatek/mtk-cmdq.h
+> +++ b/include/linux/soc/mediatek/mtk-cmdq.h
+> @@ -15,6 +15,12 @@
+>  
+>  struct cmdq_pkt;
+>  
+> +struct cmdq_client_reg {
+> +	u8 subsys;
+> +	u16 offset;
+> +	u16 size;
+> +};
+> +
+>  struct cmdq_client {
+>  	spinlock_t lock;
+>  	u32 pkt_cnt;
+> @@ -142,4 +148,16 @@ int cmdq_pkt_flush_async(struct cmdq_pkt *pkt, cmdq_async_flush_cb cb,
+>   */
+>  int cmdq_pkt_flush(struct cmdq_pkt *pkt);
+>  
+> +/**
+> + * cmdq_dev_get_client_reg() - parse cmdq client reg from the device node of CMDQ client
+> + * @dev:	device of CMDQ mailbox client
+> + * @idx:	the index of desired reg
+> + *
+> + * Return: CMDQ client reg pointer
+> + *
+> + * Help CMDQ client pasing the cmdq client reg
+> + * from the device node of CMDQ client.
+> + */
+> +struct cmdq_client_reg  *cmdq_dev_get_client_reg(struct device *dev, int idx);
+> +
+>  #endif	/* __MTK_CMDQ_H__ */
 
 
-Nicolas
