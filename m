@@ -2,99 +2,86 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68CE5C072B5
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 21:08:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11522C46460
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 21:11:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39FD42173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 21:08:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDCDB2183F
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 21:11:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558472928;
-	bh=12uReeewHL7MncXBZs+WJpGMmKhnomSC6GnU4rigTAU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kX1P7Ysaa74Ho1aYsJcgyB4xby7/bU0L50o74eKiQZ3DG2cmx+kMTRcw3gcUYXHtU
-	 jj2a/xSuwN3CZzsYh/ViALjIrEeVt3WySxmASvI3oWPH8U+IaifBjQdJGoA8hShIyK
-	 kKK35iooH+2n3fm97ipwXoDYAN83pgWcjDiQo+H0=
+	s=default; t=1558473077;
+	bh=8qi/YvlhmCAXgUmePEX/QgMDajatGm28B3apQAGlpUc=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=n8pESFE2D75bwvvM+mOIMh2uXm7lUppJSZchgCsJULaqc2cwCOozMcSmJNAbt5OeX
+	 hDBctL51d66W7o4JxO8UEIxcayo6mEUU1tDBFJdu+TXy2Xx/kTI9axyW/2gZL4wzzL
+	 xsL+mAWV6URElgPFu8YoQpCpgb4mSuw7L/lE0jeQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727833AbfEUVIr (ORCPT
+        id S1727641AbfEUVLR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 17:08:47 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:42096 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727641AbfEUVIq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 17:08:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=y7ibEasnNlMrg0Cg0u1uA8kjMpvwkTqXDxhIGJ97fKY=; b=fHihLTsTBRj8VjaQKfcECHqjH
-        7QaAYGF0BGdUc3CQdB5hmMpvxPaU8ozn9e1eWwM9GVrWUlF8NH5Sr26Hwo0fxYOQ+nebRdpf2VUrZ
-        x8CMS1QorssZj9YtUqQHVVsNebaHWlNgE0Eh8o87e4P89Jw5JOfi3mPbtF1Doevl4hAPQ=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hTC03-0002FI-Um; Tue, 21 May 2019 21:08:43 +0000
-Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 643A11126D13; Tue, 21 May 2019 22:08:43 +0100 (BST)
-Date:   Tue, 21 May 2019 22:08:43 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Olof Johansson <olof@lixom.net>
-Cc:     linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Rajan Vaja <rajan.vaja@xilinx.com>,
-        Jolly Shah <jollys@xilinx.com>,
-        Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCH] spi: zynqmp: Fix build break
-Message-ID: <20190521210843.GC1580@sirena.org.uk>
-References: <2bb66114-c976-9c44-6db3-33a5dd12edde@monstr.eu>
- <20190429162246.6061-1-olof@lixom.net>
+        Tue, 21 May 2019 17:11:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43790 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727136AbfEUVLQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 17:11:16 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C411D2173E;
+        Tue, 21 May 2019 21:11:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558473076;
+        bh=8qi/YvlhmCAXgUmePEX/QgMDajatGm28B3apQAGlpUc=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=Vg3yGk+/jxD3V42ypO5ZZARpPR6s80nBJsdXp+++hwfJRgkeoCh8Sz4oMjwwGl9Qs
+         ymm97PXU1s3zEtYSgAq7Tzz6qtJytdsS4HVZ91zWHT2W0xhO4CpTQj7KSxFw5DXYL7
+         QVSiJTRNE2CYBFuX+/UKIeP09blR/kswVGWr/Aoo=
+Subject: Re: [PATCH 5.1 000/128] 5.1.4-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20190520115249.449077487@linuxfoundation.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <0c574740-e2be-b2ee-4b0e-f17e5b08d342@kernel.org>
+Date:   Tue, 21 May 2019 15:11:15 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="4jXrM3lyYWu4nBt5"
-Content-Disposition: inline
-In-Reply-To: <20190429162246.6061-1-olof@lixom.net>
-X-Cookie: Klatu barada nikto.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190520115249.449077487@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 5/20/19 6:13 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.1.4 release.
+> There are 128 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Wed 22 May 2019 11:50:41 AM UTC.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.1.4-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.1.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
---4jXrM3lyYWu4nBt5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Compiled and booted on the test system. No dmesg regressions.
 
-On Mon, Apr 29, 2019 at 09:22:46AM -0700, Olof Johansson wrote:
-> Missing include:
-> drivers/spi/spi-zynqmp-gqspi.c:1025:13: error: implicit declaration of
->   function 'zynqmp_pm_get_eemi_ops'; did you mean
->   'zynqmp_process_dma_irq'? [-Werror=3Dimplicit-function-declaration]
->=20
-> Fixes: 3d0313786470a ('drivers: Defer probe if firmware is not ready')
-
-Please copy maintainers on patches so they aren't surprised when they
-get mails saying they accepted patches they never heard of before!
-
---4jXrM3lyYWu4nBt5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlzkaNoACgkQJNaLcl1U
-h9CBfwgAgbLrAnQDkYTUpP7MdSDSiv8ppwZ4R/EN9OCgQb6Cjms4xG6hrxkbloPA
-+oUebvqpcjb2wzduZU8tdCKx2CSU/uGlqTxG55BLy+pyrGHmFDY3MBpWr0aAj8hi
-XZGbyLoZWQYWTWorcXeC50RTLzX+fRTPx0A5KJzjXU8pjUmjnA+hjDeruCcW2JNN
-Suy2LE8ivUVCFUAOHVhM0bVXIbteUPRu08p3XGd3aTsfzJRn35GWepyfhnzAKX1g
-OwIBgEZFHVzQ0AZh4jm4c4YdkrF/vpawZdC+48BCVtfsdreTlVzBZ8OvKfC9j4jX
-q0QdP42x5IWG+4mrek1zsa3JoYmsJA==
-=tUfm
------END PGP SIGNATURE-----
-
---4jXrM3lyYWu4nBt5--
+thanks,
+-- Shuah
