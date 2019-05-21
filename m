@@ -2,206 +2,95 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E92E6C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 07:45:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57B78C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 07:45:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C017721019
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 07:45:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2174521019
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 07:45:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ztqxpie7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727010AbfEUHpR (ORCPT
+        id S1727028AbfEUHp2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 03:45:17 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:19606 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726719AbfEUHpR (ORCPT
+        Tue, 21 May 2019 03:45:28 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:36888 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726028AbfEUHp1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 03:45:17 -0400
-X-UUID: abed8824c125450b9678ab85644ecc39-20190521
-X-UUID: abed8824c125450b9678ab85644ecc39-20190521
-Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <chunfeng.yun@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1337020285; Tue, 21 May 2019 15:44:55 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31N1.mediatek.inc
- (172.27.4.69) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Tue, 21 May
- 2019 15:44:54 +0800
-Received: from [10.17.3.153] (172.27.4.253) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 21 May 2019 15:44:53 +0800
-Message-ID: <1558424693.10179.374.camel@mhfsdcap03>
-Subject: Re: [PATCH v5 5/6] usb: roles: add USB Type-B GPIO connector driver
-From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
-To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Matthias Brugger" <matthias.bgg@gmail.com>,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        Li Jun <jun.li@nxp.com>,
-        "Badhri Jagan Sridharan" <badhri@google.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Min Guo <min.guo@mediatek.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 21 May 2019 15:44:53 +0800
-In-Reply-To: <20190520083151.GD1887@kuha.fi.intel.com>
-References: <1557823643-8616-1-git-send-email-chunfeng.yun@mediatek.com>
-         <1557823643-8616-6-git-send-email-chunfeng.yun@mediatek.com>
-         <20190520083151.GD1887@kuha.fi.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 7bit
+        Tue, 21 May 2019 03:45:27 -0400
+Received: by mail-wm1-f65.google.com with SMTP id 7so1756562wmo.2
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 00:45:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=7W2uW0GKbANg0YRRJwfDi3S83JuyE8bC4TgR386g+ig=;
+        b=Ztqxpie7c7XA0ZxhayhLFU5YfLTiyHUepsEAmGYq+FUlQAfXb3LwgAtRxGq3DBMLDp
+         sAAXnOa9PYGcZ2g3jo2609OGB/QROfchy98+Lz36qwm1cKApYb3XTOi+Fp9cR8bVxbXX
+         QV+o57b8E7XeETrpYw4/yQsK5KmNqLoEwQFrC4dJdS3WKZ6c1N5mTanXGuLa48ZI4/Ju
+         kuXzRua9Q0TL1j1xdYisI51IrpaRbwBKzlhgJLH1nVvULMnfAGM+/MOoxzlW5IpXIvk7
+         nD1ATrlT7CCZu3wOLugC1MEkaGYXRLATx+0g0WSbNuhvwOd2J1mwx5rEy2A8ApafFmxY
+         7ImQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=7W2uW0GKbANg0YRRJwfDi3S83JuyE8bC4TgR386g+ig=;
+        b=ovTKTpJcmMuGCU938JwjAV6MdFzSqP/vi9NX5IUkUePiDNrS8VohM9HK3xlemuXmdT
+         8NHXSQt4FB/nyaJp37IYGB4uLrhMUlLEyIjMmZ8fUnQcMtjYGWwxtK581svOAHo/i5wm
+         ahTlrP8d907RhKalS2HAqbf8YSt7dg8x6s8NCun0x6lO5wm0xz8aZf7IHrTKLy99EO+c
+         UJHEnf21DSQAL5S041xp0llcSrSxqAkQPMGVs8+J0UTcuTEWrhUZ8RUzEghZDqijHTJY
+         3fH9s6cDxd5aKheGtfGM4ZVEPMpAHr0JHoS2x2Ziz/d7PMAvOGESZq9nqRHlFh4Bzv8N
+         Z1Rg==
+X-Gm-Message-State: APjAAAXOf5L74C6+YCwBuuBINX+4/4M/cCjHqwICmw06PPZflwnzAPIl
+        ow7QN+WukMvsBbtwF1hjRPWq9IVJRQNfHQ==
+X-Google-Smtp-Source: APXvYqyxfn6nygtboQpBoFArmbb8LvGA5vlw84HB75QJRhHbSdB1cLdCnbsbPzvasZc5W/5o+FBHzg==
+X-Received: by 2002:a1c:9e8e:: with SMTP id h136mr2140540wme.29.1558424725333;
+        Tue, 21 May 2019 00:45:25 -0700 (PDT)
+Received: from [10.1.203.87] (nat-wifi.sssup.it. [193.205.81.22])
+        by smtp.googlemail.com with ESMTPSA id u7sm6381826wmg.25.2019.05.21.00.45.24
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 21 May 2019 00:45:24 -0700 (PDT)
+Subject: Re: [PATCH] clocksource: timer-meson6: update with SPDX Licence
+ identifier
+To:     Neil Armstrong <narmstrong@baylibre.com>, tglx@linutronix.de
+Cc:     linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20190520140007.29042-1-narmstrong@baylibre.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <4262cc03-51eb-67fd-b899-61a2ed03dffa@linaro.org>
+Date:   Tue, 21 May 2019 09:45:24 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-MTK:  N
+In-Reply-To: <20190520140007.29042-1-narmstrong@baylibre.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 20/05/2019 16:00, Neil Armstrong wrote:
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
 
-On Mon, 2019-05-20 at 11:31 +0300, Heikki Krogerus wrote:
-> On Tue, May 14, 2019 at 04:47:22PM +0800, Chunfeng Yun wrote:
-> > +static int usb_conn_probe(struct platform_device *pdev)
-> > +{
-> > +	struct device *dev = &pdev->dev;
-> > +	struct device_node *node = dev->of_node;
-> > +	struct device_node *remote_node;
-> > +	struct usb_conn_info *info;
-> > +	int ret = 0;
-> > +
-> > +	info = devm_kzalloc(dev, sizeof(*info), GFP_KERNEL);
-> > +	if (!info)
-> > +		return -ENOMEM;
-> > +
-> > +	info->dev = dev;
-> > +	info->id_gpiod = devm_gpiod_get_optional(dev, "id", GPIOD_IN);
-> > +	if (IS_ERR(info->id_gpiod))
-> > +		return PTR_ERR(info->id_gpiod);
-> > +
-> > +	info->vbus_gpiod = devm_gpiod_get_optional(dev, "vbus", GPIOD_IN);
-> > +	if (IS_ERR(info->vbus_gpiod))
-> > +		return PTR_ERR(info->vbus_gpiod);
-> > +
-> > +	if (!info->id_gpiod && !info->vbus_gpiod) {
-> > +		dev_err(dev, "failed to get gpios\n");
-> > +		return -ENODEV;
-> > +	}
-> > +
-> > +	if (info->id_gpiod)
-> > +		ret = gpiod_set_debounce(info->id_gpiod, USB_GPIO_DEB_US);
-> > +	if (!ret && info->vbus_gpiod)
-> > +		ret = gpiod_set_debounce(info->vbus_gpiod, USB_GPIO_DEB_US);
-> > +	if (ret < 0)
-> > +		info->debounce_jiffies = msecs_to_jiffies(USB_GPIO_DEB_MS);
-> > +
-> > +	INIT_DELAYED_WORK(&info->dw_det, usb_conn_detect_cable);
-> > +
-> > +	info->vbus = devm_regulator_get(dev, "vbus");
-> > +	if (IS_ERR(info->vbus)) {
-> > +		dev_err(dev, "failed to get vbus\n");
-> > +		return PTR_ERR(info->vbus);
-> > +	}
-> > +
-> > +	remote_node = of_graph_get_remote_node(node, -1, 0);
-> 
-> This is really not ideal. In practice this code will only work if
-> there is only one endpoint described for this device, or if the first
-> endpoint is always the one we are looking for. There is no way to
-> guarantee that.
-Yes, it is.
-I'll modify it as case 2, see reply [v5, 4/6] in this series.
+Applied, thanks.
 
-> 
-> The code really has to walk through the entire graph, and identify the
-> remote endpoint it's looking for (and for that we have the boolean
-> device property).
-> 
-> > +	if (!remote_node) {
-> > +		dev_err(dev, "failed to get remote node\n");
-> > +		return -ENODEV;
-> > +	}
-> > +
-> > +	info->role_sw =
-> > +		fwnode_usb_role_switch_get(of_fwnode_handle(remote_node));
-> 
-> So fwnode_usb_role_switch_get() needs be the one that walks through
-> the graph, not the drivers. Otherwise every driver will do the same
-> exact steps (boilerplate). Here you need to be able to just pass the
-> node of this device, not the remote endpoint:
-> 
->         info->role_sw = fwnode_usb_role_switch_get(dev_fwnode(&client->dev));
-> 
-> But why do you need that function at all? Why wouldn't
-> usb_role_switch_get() work?
-> 
->         info->role_sw = usb_role_switch_get(&client->dev);
-> 
-see reply [v5, 4/6] in this series
+  -- Daniel
 
-Thanks a lot.
 
-> > +	of_node_put(remote_node);
-> > +	if (IS_ERR(info->role_sw)) {
-> > +		dev_err(dev, "failed to get role switch\n");
-> > +		return PTR_ERR(info->role_sw);
-> > +	}
-> > +
-> > +	if (info->id_gpiod) {
-> > +		info->id_irq = gpiod_to_irq(info->id_gpiod);
-> > +		if (info->id_irq < 0) {
-> > +			dev_err(dev, "failed to get ID IRQ\n");
-> > +			ret = info->id_irq;
-> > +			goto put_role_sw;
-> > +		}
-> > +
-> > +		ret = devm_request_threaded_irq(dev, info->id_irq, NULL,
-> > +						usb_conn_isr, USB_CONN_IRQF,
-> > +						pdev->name, info);
-> > +		if (ret < 0) {
-> > +			dev_err(dev, "failed to request ID IRQ\n");
-> > +			goto put_role_sw;
-> > +		}
-> > +	}
-> > +
-> > +	if (info->vbus_gpiod) {
-> > +		info->vbus_irq = gpiod_to_irq(info->vbus_gpiod);
-> > +		if (info->vbus_irq < 0) {
-> > +			dev_err(dev, "failed to get VBUS IRQ\n");
-> > +			ret = info->vbus_irq;
-> > +			goto put_role_sw;
-> > +		}
-> > +
-> > +		ret = devm_request_threaded_irq(dev, info->vbus_irq, NULL,
-> > +						usb_conn_isr, USB_CONN_IRQF,
-> > +						pdev->name, info);
-> > +		if (ret < 0) {
-> > +			dev_err(dev, "failed to request VBUS IRQ\n");
-> > +			goto put_role_sw;
-> > +		}
-> > +	}
-> > +
-> > +	platform_set_drvdata(pdev, info);
-> > +
-> > +	/* Perform initial detection */
-> > +	usb_conn_queue_dwork(info, 0);
-> > +
-> > +	return 0;
-> > +
-> > +put_role_sw:
-> > +	usb_role_switch_put(info->role_sw);
-> > +	return ret;
-> > +}
-> 
-> thanks,
-> 
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
