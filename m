@@ -2,214 +2,285 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69067C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 04:52:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBDDFC04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 04:53:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B21121019
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 04:52:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0E95217D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 04:53:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727766AbfEUEwn (ORCPT
+        id S1727772AbfEUExF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 00:52:43 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:41338 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725804AbfEUEwn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 00:52:43 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4L4qOh6022495
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 00:52:42 -0400
-Received: from e36.co.us.ibm.com (e36.co.us.ibm.com [32.97.110.154])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2sm97wtqvb-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 00:52:42 -0400
-Received: from localhost
-        by e36.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <bauerman@linux.ibm.com>;
-        Tue, 21 May 2019 05:52:41 +0100
-Received: from b03cxnp08028.gho.boulder.ibm.com (9.17.130.20)
-        by e36.co.us.ibm.com (192.168.1.136) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 21 May 2019 05:52:37 +0100
-Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
-        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4L4qZh327591130
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 21 May 2019 04:52:35 GMT
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 73CBFC605A;
-        Tue, 21 May 2019 04:52:35 +0000 (GMT)
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 27B1FC6055;
-        Tue, 21 May 2019 04:52:23 +0000 (GMT)
-Received: from morokweng.localdomain.com (unknown [9.80.203.157])
-        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Tue, 21 May 2019 04:52:21 +0000 (GMT)
-From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
-To:     linuxppc-dev@lists.ozlabs.org
-Cc:     linux-kernel@vger.kernel.org, Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Anshuman Khandual <anshuman.linux@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Mike Anderson <andmike@linux.ibm.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Ram Pai <linuxram@us.ibm.com>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>,
-        Anshuman Khandual <khandual@linux.vnet.ibm.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Subject: [PATCH 06/12] powerpc/pseries/svm: Use shared memory for LPPACA structures
-Date:   Tue, 21 May 2019 01:49:06 -0300
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190521044912.1375-1-bauerman@linux.ibm.com>
-References: <20190521044912.1375-1-bauerman@linux.ibm.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19052104-0020-0000-0000-00000EEE0A74
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011134; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01206343; UDB=6.00633450; IPR=6.00987310;
- MB=3.00026980; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-21 04:52:40
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19052104-0021-0000-0000-000065E84D5E
-Message-Id: <20190521044912.1375-7-bauerman@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-20_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905210031
+        Tue, 21 May 2019 00:53:05 -0400
+Received: from smtp.nue.novell.com ([195.135.221.5]:49283 "EHLO
+        smtp.nue.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725804AbfEUExF (ORCPT
+        <rfc822;groupwise-linux-kernel@vger.kernel.org:0:0>);
+        Tue, 21 May 2019 00:53:05 -0400
+Received: from emea4-mta.ukb.novell.com ([10.120.13.87])
+        by smtp.nue.novell.com with ESMTP (TLS encrypted); Tue, 21 May 2019 06:53:03 +0200
+Received: from linux-r8p5.suse.de (nwb-a10-snat.microfocus.com [10.120.13.201])
+        by emea4-mta.ukb.novell.com with ESMTP (TLS encrypted); Tue, 21 May 2019 05:52:55 +0100
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Cc:     akpm@linux-foundation.org, willy@infradead.org, mhocko@kernel.org,
+        mgorman@techsingularity.net, jglisse@redhat.com,
+        ldufour@linux.vnet.ibm.com, dave@stgolabs.net
+Subject: [RFC PATCH 00/14] mmap_sem range locking
+Date:   Mon, 20 May 2019 21:52:28 -0700
+Message-Id: <20190521045242.24378-1-dave@stgolabs.net>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anshuman Khandual <khandual@linux.vnet.ibm.com>
+Hi,
 
-LPPACA structures need to be shared with the host. Hence they need to be in
-shared memory. Instead of allocating individual chunks of memory for a
-given structure from memblock, a contiguous chunk of memory is allocated
-and then converted into shared memory. Subsequent allocation requests will
-come from the contiguous chunk which will be always shared memory for all
-structures.
+The following is a summarized repost of the range locking mmap_sem idea[1]
+and is _not_ intended for being considered upstream as there are quite a few
+issues that arise with this approach of tackling mmap_sem contention (keep reading).
 
-While we are able to use a kmem_cache constructor for the Debug Trace Log,
-LPPACAs are allocated very early in the boot process (before SLUB is
-available) so we need to use a simpler scheme here.
+In fact this patch is quite incomplete and will break compiling on anything
+non-x86, and is also _completely broken_ for ksm and hmm.  That being said, this
+does build an enterprise kernel and survives a number of workloads as well as
+'runltp -f syscalls'. The previous series is a complete range locking conversion,
+which ensured we had all the range locking apis we needed. The changelog also
+included a number of performance numbers and overall design.
 
-Introduce helper is_svm_platform() which uses the S bit of the MSR to tell
-whether we're running as a secure guest.
+While finding issues with the code itself is always welcome, the idea of this series
+is to discuss what can be done on top of it, if anything.
 
-Signed-off-by: Anshuman Khandual <khandual@linux.vnet.ibm.com>
-Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
----
- arch/powerpc/include/asm/svm.h | 26 ++++++++++++++++++++
- arch/powerpc/kernel/paca.c     | 43 +++++++++++++++++++++++++++++++++-
- 2 files changed, 68 insertions(+), 1 deletion(-)
+From a locking pov, most recently there has been a revival in the interest of the
+range lock code for dchinner's plans of range locking the i_rwsem. However, it
+showed that xfs's extent tree significantly outperformed[2] the (full) range lock.
+The performance differences when doing 1:1 rwsem comparisons, have already been shown
+in [1].
 
-diff --git a/arch/powerpc/include/asm/svm.h b/arch/powerpc/include/asm/svm.h
-new file mode 100644
-index 000000000000..fef3740f46a6
---- /dev/null
-+++ b/arch/powerpc/include/asm/svm.h
-@@ -0,0 +1,26 @@
-+/* SPDX-License-Identifier: GPL-2.0+ */
-+/*
-+ * SVM helper functions
-+ *
-+ * Copyright 2019 Anshuman Khandual, IBM Corporation.
-+ */
-+
-+#ifndef _ASM_POWERPC_SVM_H
-+#define _ASM_POWERPC_SVM_H
-+
-+#ifdef CONFIG_PPC_SVM
-+
-+static inline bool is_secure_guest(void)
-+{
-+	return mfmsr() & MSR_S;
-+}
-+
-+#else /* CONFIG_PPC_SVM */
-+
-+static inline bool is_secure_guest(void)
-+{
-+	return false;
-+}
-+
-+#endif /* CONFIG_PPC_SVM */
-+#endif /* _ASM_POWERPC_SVM_H */
-diff --git a/arch/powerpc/kernel/paca.c b/arch/powerpc/kernel/paca.c
-index 854105db5cff..a9622f4b45bb 100644
---- a/arch/powerpc/kernel/paca.c
-+++ b/arch/powerpc/kernel/paca.c
-@@ -18,6 +18,8 @@
- #include <asm/sections.h>
- #include <asm/pgtable.h>
- #include <asm/kexec.h>
-+#include <asm/svm.h>
-+#include <asm/ultravisor.h>
- 
- #include "setup.h"
- 
-@@ -58,6 +60,41 @@ static void *__init alloc_paca_data(unsigned long size, unsigned long align,
- 
- #define LPPACA_SIZE 0x400
- 
-+static void *__init alloc_shared_lppaca(unsigned long size, unsigned long align,
-+					unsigned long limit, int cpu)
-+{
-+	size_t shared_lppaca_total_size = PAGE_ALIGN(nr_cpu_ids * LPPACA_SIZE);
-+	static unsigned long shared_lppaca_size;
-+	static void *shared_lppaca;
-+	void *ptr;
-+
-+	if (!shared_lppaca) {
-+		memblock_set_bottom_up(true);
-+
-+		shared_lppaca =
-+			memblock_alloc_try_nid(shared_lppaca_total_size,
-+					       PAGE_SIZE, MEMBLOCK_LOW_LIMIT,
-+					       limit, NUMA_NO_NODE);
-+		if (!shared_lppaca)
-+			panic("cannot allocate shared data");
-+
-+		memblock_set_bottom_up(false);
-+		uv_share_page(PHYS_PFN(__pa(shared_lppaca)),
-+			      shared_lppaca_total_size >> PAGE_SHIFT);
-+	}
-+
-+	ptr = shared_lppaca + shared_lppaca_size;
-+	shared_lppaca_size += size;
-+
-+	/*
-+	 * This is very early in boot, so no harm done if the kernel crashes at
-+	 * this point.
-+	 */
-+	BUG_ON(shared_lppaca_size >= shared_lppaca_total_size);
-+
-+	return ptr;
-+}
-+
- /*
-  * See asm/lppaca.h for more detail.
-  *
-@@ -87,7 +124,11 @@ static struct lppaca * __init new_lppaca(int cpu, unsigned long limit)
- 	if (early_cpu_has_feature(CPU_FTR_HVMODE))
- 		return NULL;
- 
--	lp = alloc_paca_data(LPPACA_SIZE, 0x400, limit, cpu);
-+	if (is_secure_guest())
-+		lp = alloc_shared_lppaca(LPPACA_SIZE, 0x400, limit, cpu);
-+	else
-+		lp = alloc_paca_data(LPPACA_SIZE, 0x400, limit, cpu);
-+
- 	init_lppaca(lp);
- 
- 	return lp;
+Considering both the range lock and the extent tree lock the whole tree, most of this
+performance penalties are due to the fact that rbtrees' depth is a lot larger than
+btree's, so the latter avoids most of the pointer chasing which is a common performance
+issue. This was a trade-off for not having to allocate memory for the range nodes.
+
+However, on the _positive side_, and which is what we care most about for mmap_sem,
+when actually using the lock as intended, the range locking did show its purpose:
+
+			IOPS read/write (buffered IO)
+fio processes		rwsem			rangelock
+ 1			57k / 57k		64k / 64k
+ 2			61k / 61k		111k / 111k
+ 4			61k / 61k		228k / 228k
+ 8			55k / 55k		195k / 195k
+ 16			15k / 15k		 40k /  40k
+
+So it would be nice to apply this concept to our address space and allow mmaps, munmaps
+and pagefaults to all work concurrently in non-overlapping scenarios -- which is what
+is provided by userspace mm related syscalls. However, when using the range lock without
+a full range, a number of issues around the vma immediately popup as a consequence of
+this *top-down* approach to solving scalability:
+
+Races within a vma: non-overlapping regions can still belong to the same vma, hence
+wrecking merges and splits. One popular idea is to have a vma->rwsem (taken, for example,
+after a find_vma()), however, this throws out the window any potential scalability gains
+for large vmas as we just end up just moving down the point of contention. The same
+problem occurs when refcouting the vma (such as with speculative pfs). There's also
+the fact that we can end up taking numerous vma locks as the vma list is later traversed
+once the first vma is found.
+
+Alternatively, we could just expand the passed range such that it covers the whole first
+and last vma(s) endpoints; of course we don't have that information aprori (protected by
+mmap_sem :), and enlarging the range _after_ acquiring the lock opens a can of worms
+because now we have to inform userspace and/or deadlock, among others.
+
+Similarly, there's the issue of keeping the vma tree correct during modifications as well
+as regular find_vma()s. Laurent has already pointed out that we have too many ways of
+getting a vma: the tree, the list and the vmacache, all currently protected by mmap_sem
+and breaks because of the above when not using full ranges. This also touches a bit in
+a more *bottom-up* approach to mmap_sem performance, which scales from within, instead
+of putting a big rangelock tree on top of the address space.
+
+Matthew has pointed out a the xarray as well as an rcu based maple tree[3] replacement
+of the rbtree, however we already have the vmacache so most of the benefits of a shallower
+data structure are unnecessary, in cache-hot situations, naturally. The vma-list is easily
+removable once we have O(1) next/prev pointers, which for rbtrees can be done via threading
+the data structure (at the cost of extra branch for every level down the tree when
+inserting). Maple trees already give us this. So all in all, if we were going to go down
+this path of a cache friendlier tree, we'd end up needing comparisons of the maple tree vs
+the current vmacache+rbtree combo. Regarding rcu-ifying the vma tree and replacing read
+locking (and therefore plays nicer with cachelines), I sounds nice, it does not seem
+practical considering that the page tables cannot be rcu-ified.
+
+I'm sure I'm missing a lot more, but I'm hoping to kickstart the conversation again.
+
+Patches 1-2: adds the range locking machinery. This is rebased on the rbtree optimizations
+for interval trees such that we can quickly detect overlapping ranges. Some bug fixes and
+more documentation as also been added, with an ordering example in the source code.
+
+Patch 3: adds new mm locking wrappers around mmap_sem.
+
+Patches 4: teaches page fault paths about mmrange (specifically adding the range in question
+to the struct vm_fault). In addition, most of these patches update mmap_sem callers.
+
+Patch 5: is mostly a collection of shameless hacks to avoid for now teaching callers about
+range locking and just enlarging the series needlessly.
+
+Patches 6-13: adds most of the trivial conversions; most of this is generated with a cocinelle
+script[4], it's rather lame but gets most of the job done. Fix ups are pretty straightforward,
+yet manual.
+
+Patch 14: finally do the actual conversion and replace mmap_sem with the full range mmap_lock.
+
+Applies on top of today's linux-next tree.
+
+
+[1] https://lkml.org/lkml/2018/2/4/235
+[2] https://lore.kernel.org/linux-fsdevel/20190416122240.GN29573@dread.disaster.area/
+[3] https://lore.kernel.org/lkml/20190314195452.GN19508@bombadil.infradead.org/
+[4] http://linux-scalability.org/range-mmap_lock/mmap_sem.cocci
+
+Thanks!
+
+Davidlohr Bueso (14):
+  interval-tree: build unconditionally
+  Introduce range reader/writer lock
+  mm: introduce mm locking wrappers
+  mm: teach pagefault paths about range locking
+  mm: remove some BUG checks wrt mmap_sem
+  mm: teach the mm about range locking
+  fs: teach the mm about range locking
+  arch/x86: teach the mm about range locking
+  virt: teach the mm about range locking
+  net: teach the mm about range locking
+  ipc: teach the mm about range locking
+  kernel: teach the mm about range locking
+  drivers: teach the mm about range locking
+  mm: convert mmap_sem to range mmap_lock
+
+ arch/x86/entry/vdso/vma.c                        |  12 +-
+ arch/x86/events/core.c                           |   2 +-
+ arch/x86/kernel/tboot.c                          |   2 +-
+ arch/x86/kernel/vm86_32.c                        |   5 +-
+ arch/x86/kvm/paging_tmpl.h                       |   9 +-
+ arch/x86/mm/debug_pagetables.c                   |   8 +-
+ arch/x86/mm/fault.c                              |  37 +-
+ arch/x86/mm/mpx.c                                |  15 +-
+ arch/x86/um/vdso/vma.c                           |   5 +-
+ drivers/android/binder_alloc.c                   |   7 +-
+ drivers/firmware/efi/efi.c                       |   2 +-
+ drivers/gpu/drm/Kconfig                          |   2 -
+ drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c |   4 +-
+ drivers/gpu/drm/amd/amdgpu/amdgpu_mn.c           |   7 +-
+ drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c          |  11 +-
+ drivers/gpu/drm/amd/amdkfd/kfd_events.c          |   5 +-
+ drivers/gpu/drm/i915/Kconfig                     |   1 -
+ drivers/gpu/drm/i915/i915_gem.c                  |   5 +-
+ drivers/gpu/drm/i915/i915_gem_userptr.c          |  13 +-
+ drivers/gpu/drm/nouveau/nouveau_svm.c            |  23 +-
+ drivers/gpu/drm/radeon/radeon_cs.c               |   5 +-
+ drivers/gpu/drm/radeon/radeon_gem.c              |   8 +-
+ drivers/gpu/drm/radeon/radeon_mn.c               |   7 +-
+ drivers/gpu/drm/ttm/ttm_bo_vm.c                  |   4 +-
+ drivers/infiniband/core/umem.c                   |   7 +-
+ drivers/infiniband/core/umem_odp.c               |  14 +-
+ drivers/infiniband/core/uverbs_main.c            |   5 +-
+ drivers/infiniband/hw/mlx4/mr.c                  |   5 +-
+ drivers/infiniband/hw/qib/qib_user_pages.c       |   7 +-
+ drivers/infiniband/hw/usnic/usnic_uiom.c         |   5 +-
+ drivers/iommu/Kconfig                            |   1 -
+ drivers/iommu/amd_iommu_v2.c                     |   7 +-
+ drivers/iommu/intel-svm.c                        |   7 +-
+ drivers/media/v4l2-core/videobuf-core.c          |   5 +-
+ drivers/media/v4l2-core/videobuf-dma-contig.c    |   5 +-
+ drivers/media/v4l2-core/videobuf-dma-sg.c        |   5 +-
+ drivers/misc/cxl/cxllib.c                        |   5 +-
+ drivers/misc/cxl/fault.c                         |   5 +-
+ drivers/misc/sgi-gru/grufault.c                  |  20 +-
+ drivers/misc/sgi-gru/grufile.c                   |   5 +-
+ drivers/misc/sgi-gru/grukservices.c              |   4 +-
+ drivers/misc/sgi-gru/grumain.c                   |   6 +-
+ drivers/misc/sgi-gru/grutables.h                 |   5 +-
+ drivers/oprofile/buffer_sync.c                   |  12 +-
+ drivers/staging/kpc2000/kpc_dma/fileops.c        |   5 +-
+ drivers/tee/optee/call.c                         |   5 +-
+ drivers/vfio/vfio_iommu_type1.c                  |  11 +-
+ drivers/xen/gntdev.c                             |   5 +-
+ drivers/xen/privcmd.c                            |  17 +-
+ fs/aio.c                                         |   5 +-
+ fs/coredump.c                                    |   5 +-
+ fs/exec.c                                        |  21 +-
+ fs/io_uring.c                                    |   5 +-
+ fs/proc/base.c                                   |  23 +-
+ fs/proc/internal.h                               |   2 +
+ fs/proc/task_mmu.c                               |  32 +-
+ fs/proc/task_nommu.c                             |  22 +-
+ fs/userfaultfd.c                                 |  50 +-
+ include/linux/hmm.h                              |   7 +-
+ include/linux/huge_mm.h                          |   2 -
+ include/linux/hugetlb.h                          |   9 +-
+ include/linux/lockdep.h                          |  33 ++
+ include/linux/mm.h                               | 108 +++-
+ include/linux/mm_types.h                         |   4 +-
+ include/linux/pagemap.h                          |   6 +-
+ include/linux/range_lock.h                       | 189 +++++++
+ include/linux/userfaultfd_k.h                    |   5 +-
+ ipc/shm.c                                        |  10 +-
+ kernel/acct.c                                    |   5 +-
+ kernel/bpf/stackmap.c                            |  16 +-
+ kernel/events/core.c                             |   5 +-
+ kernel/events/uprobes.c                          |  27 +-
+ kernel/exit.c                                    |   9 +-
+ kernel/fork.c                                    |  18 +-
+ kernel/futex.c                                   |   7 +-
+ kernel/locking/Makefile                          |   2 +-
+ kernel/locking/range_lock.c                      | 667 +++++++++++++++++++++++
+ kernel/sched/fair.c                              |   5 +-
+ kernel/sys.c                                     |  22 +-
+ kernel/trace/trace_output.c                      |   5 +-
+ lib/Kconfig                                      |  14 -
+ lib/Kconfig.debug                                |   1 -
+ lib/Makefile                                     |   3 +-
+ mm/filemap.c                                     |  10 +-
+ mm/frame_vector.c                                |  10 +-
+ mm/gup.c                                         |  86 +--
+ mm/hmm.c                                         |   7 +-
+ mm/hugetlb.c                                     |  14 +-
+ mm/init-mm.c                                     |   2 +-
+ mm/internal.h                                    |   3 +-
+ mm/khugepaged.c                                  |  78 +--
+ mm/ksm.c                                         |  45 +-
+ mm/madvise.c                                     |  36 +-
+ mm/memcontrol.c                                  |  10 +-
+ mm/memory.c                                      |  28 +-
+ mm/mempolicy.c                                   |  34 +-
+ mm/migrate.c                                     |  10 +-
+ mm/mincore.c                                     |   6 +-
+ mm/mlock.c                                       |  20 +-
+ mm/mmap.c                                        |  73 +--
+ mm/mmu_notifier.c                                |   9 +-
+ mm/mprotect.c                                    |  17 +-
+ mm/mremap.c                                      |   9 +-
+ mm/msync.c                                       |   9 +-
+ mm/nommu.c                                       |  25 +-
+ mm/oom_kill.c                                    |   5 +-
+ mm/pagewalk.c                                    |   3 -
+ mm/process_vm_access.c                           |   8 +-
+ mm/shmem.c                                       |   2 +-
+ mm/swapfile.c                                    |   5 +-
+ mm/userfaultfd.c                                 |  21 +-
+ mm/util.c                                        |  10 +-
+ net/ipv4/tcp.c                                   |   5 +-
+ net/xdp/xdp_umem.c                               |   5 +-
+ security/tomoyo/domain.c                         |   2 +-
+ virt/kvm/arm/mmu.c                               |  17 +-
+ virt/kvm/async_pf.c                              |   7 +-
+ virt/kvm/kvm_main.c                              |  18 +-
+ 118 files changed, 1776 insertions(+), 594 deletions(-)
+ create mode 100644 include/linux/range_lock.h
+ create mode 100644 kernel/locking/range_lock.c
+
+-- 
+2.16.4
 
