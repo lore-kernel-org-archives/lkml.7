@@ -2,205 +2,94 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 258C3C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:43:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07D10C04E87
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:44:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDDF72173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:42:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hFNtdVKE"
+	by mail.kernel.org (Postfix) with ESMTP id C34262173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:44:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558457051;
+	bh=cnhJrPpeJuzusBIhFXegbzFOtTFC0S7R/WX16vsOaT8=;
+	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
+	b=rQCLmwFyUJYJvwTxGfEihHfg/FkTePHw50J357GUL6/Hg48bglEaqyU3XXY+Zd8HZ
+	 xn7tRHjPwJhHqnhZlUeiodYL3aEbbbPpdd2u1AXEZdxLNZhsD2STwe9MqI10YA8eIw
+	 CK8YFCTAv/wcaUvuMNuGFSaFl5negRI1YAQkj0wk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728992AbfEUQm7 (ORCPT
+        id S1729014AbfEUQoL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 12:42:59 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:34804 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728911AbfEUQm6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 12:42:58 -0400
-Received: by mail-pl1-f193.google.com with SMTP id w7so8719666plz.1
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 09:42:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=WtZw+fdpaZbjOuInBI+L534tlDp+rXop9p/+kf7XV9Y=;
-        b=hFNtdVKEgvRPdSC5PDgOq8ZO64S/5OEgXmRLL+urCT25WMrrztgtN7uEjQhFZ0x1q9
-         472j6PCFOpSu9GCbELpRPLoXI8edMyQZO9oXOOQOa+9qDynglftR9FIBF2samkT3ZMRl
-         sHNelQEizfXadKEq6bQQCkKPxdxLXYjIq0ztKCNXaEOYZ0aDxKy95VjgvSjCPhavUKDZ
-         +PovVhwCZCVANcIkrWpNQS53G5pOdvhUXu1EEYb/M9G+qQAg75c48u5RSg3Lz8TP6JSQ
-         N9oToM2QuyrevbIkGevB/nzQC9E5I4kcBx49z+Zp5GdyivvaLDDlAX5AJ9+4j/bVAoKG
-         ueeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WtZw+fdpaZbjOuInBI+L534tlDp+rXop9p/+kf7XV9Y=;
-        b=PBHLvz84BXdeyx/qwx7sNBEYwt6Fgjn5HxGt1dYgtxO6REQtASxfzEiIUuXlNmTyyS
-         TRPfeH5NCHysBQdl/OgkCMxHudktbiVxkYGGQB6EaB4G4+NIkRzNsv+6IpYqGczPjZSu
-         tmJsrIUM0ZPhLldsQz1k64Wa0cvZeapk+8e3E0nlbrdoSwOjZSKb+mIgW5HyEG4xyKts
-         DKALoUycsMxTxOb2fiwltPQ6mTCJ5K+IaICZEMybKIsbKhGrxtLgFDc0gF9vCjdBoDxs
-         Q7I6vvEuOUfYqASeC4Nm+8hESwZ1miMx6jUCs9MU9BHMpxaUos7IxK6/dtkHIdqQ312F
-         hYCQ==
-X-Gm-Message-State: APjAAAXU546+9pyGpnGVBG5UA2ZeeY2fdazt5B1q4fpnYYq8fq+5XAD3
-        38kop7/4Ughof/mnTEXi8vWrqpJRZzM=
-X-Google-Smtp-Source: APXvYqz6hkQggncGw2amqhWyINM+2IIHUlaiyyx3bhaLSiib6GgTf9AkL4kdRJODyIfrRQHDBRKiyw==
-X-Received: by 2002:a17:902:20ca:: with SMTP id v10mr44805389plg.296.1558456977499;
-        Tue, 21 May 2019 09:42:57 -0700 (PDT)
-Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id t78sm46216148pfa.154.2019.05.21.09.42.56
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 21 May 2019 09:42:56 -0700 (PDT)
-Date:   Tue, 21 May 2019 09:43:24 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc:     dmitry.torokhov@gmail.com, jikos@kernel.org,
-        benjamin.tissoires@redhat.com, lee.jones@linaro.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, agross@kernel.org,
-        david.brown@linaro.org, hdegoede@redhat.com,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/2] HID: quirks: Refactor ELAN 400 and 401 handling
-Message-ID: <20190521164324.GA2085@tuxbook-pro>
-References: <20190423160543.9922-1-jeffrey.l.hugo@gmail.com>
- <20190423160605.9970-1-jeffrey.l.hugo@gmail.com>
+        Tue, 21 May 2019 12:44:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34116 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728103AbfEUQoK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 12:44:10 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A44D5217F5;
+        Tue, 21 May 2019 16:44:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558457050;
+        bh=cnhJrPpeJuzusBIhFXegbzFOtTFC0S7R/WX16vsOaT8=;
+        h=Date:From:To:Subject:References:In-Reply-To:From;
+        b=aNdUcuUT7jtsNc6sRDguYTPaHbpT5BTFukGRE3CA7L9/NIBIi0z6PWdPt0cjsXSYX
+         N0bDMp+2T5BoM3gAijBhen3HPJCYsK8qEyhlNPBqBISqkFADzybVgC7XF+0nnuzUWO
+         tlsS+4mrNjqFRxgYNR0pzlGM4wW4suSu5zMIMWc0=
+Date:   Tue, 21 May 2019 18:44:07 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Theodore Ts'o <tytso@mit.edu>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>,
+        linux-ext4@vger.kernel.org,
+        Arthur Marsh <arthur.marsh@internode.on.net>,
+        Richard Weinberger <richard.weinberger@gmail.com>
+Subject: Re: ext4 regression (was Re: [PATCH 4.19 000/105] 4.19.45-stable
+ review)
+Message-ID: <20190521164407.GA20674@kroah.com>
+References: <20190520115247.060821231@linuxfoundation.org>
+ <20190520222342.wtsjx227c6qbkuua@xps.therub.org>
+ <20190521085956.GC31445@kroah.com>
+ <CA+G9fYvHmUimtwszwo=9fDQLn+MNh8Vq3UGPaPUdhH=dEKzqxg@mail.gmail.com>
+ <20190521093849.GA9806@kroah.com>
+ <CA+G9fYveeg_FMsL31aunJ2A9XLYk908Y1nSFw4kwkFk3h3uEiA@mail.gmail.com>
+ <20190521162142.GA2591@mit.edu>
+ <20190521163012.GA19986@kroah.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190423160605.9970-1-jeffrey.l.hugo@gmail.com>
+In-Reply-To: <20190521163012.GA19986@kroah.com>
 User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 23 Apr 09:06 PDT 2019, Jeffrey Hugo wrote:
-
-> There needs to be coordination between hid-quirks and the elan_i2c driver
-> about which devices are handled by what drivers.  Currently, both use
-> whitelists, which results in valid devices being unhandled by default,
-> when they should not be rejected by hid-quirks.  This is quickly becoming
-> an issue.
+On Tue, May 21, 2019 at 06:30:12PM +0200, Greg Kroah-Hartman wrote:
+> On Tue, May 21, 2019 at 12:21:42PM -0400, Theodore Ts'o wrote:
+> > On Tue, May 21, 2019 at 03:58:15PM +0530, Naresh Kamboju wrote:
+> > > > Ted, any ideas here?  Should I drop this from the stable trees, and you
+> > > > revert it from Linus's?  Or something else?
+> > 
+> > It's safe to drop this from the stable trees while we investigate.  It
+> > was always borderline for stable anyway.  (See below).
 > 
-> Since elan_i2c has a maintained whitelist of what devices it will handle,
-> use that to implement a blacklist in hid-quirks so that only the devices
-> that need to be handled by elan_i2c get rejected by hid-quirks, and
-> everything else is handled by default.  The downside is the whitelist and
-> blacklist need to be kept in sync.
-> 
+> Ok, will go drop both of these now, thanks.
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+I have now pushed out -rc2 releases for 5.1, 5.0, and 4.19 with 3 ext4
+patches dropped from each series as there was the original patch here,
+and then 2 others on top of that.
 
-Jiri, the two patches in this series doesn't have a build time
-dependency, so if you take this one through your tree I'll take 2/2
-through arm-soc.
+thanks,
 
-Regards,
-Bjorn
-
-> Suggested-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-> Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-> ---
->  drivers/hid/hid-quirks.c            | 64 ++++++++++++++++++++++++-----
->  drivers/input/mouse/elan_i2c_core.c |  4 ++
->  2 files changed, 58 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
-> index 77ffba48cc73..656485e08eb7 100644
-> --- a/drivers/hid/hid-quirks.c
-> +++ b/drivers/hid/hid-quirks.c
-> @@ -987,17 +987,61 @@ bool hid_ignore(struct hid_device *hdev)
->  		break;
->  	case USB_VENDOR_ID_ELAN:
->  		/*
-> -		 * Many Elan devices have a product id of 0x0401 and are handled
-> -		 * by the elan_i2c input driver. But the ACPI HID ELAN0800 dev
-> -		 * is not (and cannot be) handled by that driver ->
-> -		 * Ignore all 0x0401 devs except for the ELAN0800 dev.
-> +		 * Blacklist of everything that gets handled by the elan_i2c
-> +		 * input driver.  This should be kept in sync with the whitelist
-> +		 * that exists in that driver.  This avoids disabling valid
-> +		 * touchpads and other ELAN devices.
->  		 */
-> -		if (hdev->product == 0x0401 &&
-> -		    strncmp(hdev->name, "ELAN0800", 8) != 0)
-> -			return true;
-> -		/* Same with product id 0x0400 */
-> -		if (hdev->product == 0x0400 &&
-> -		    strncmp(hdev->name, "QTEC0001", 8) != 0)
-> +		if ((hdev->product == 0x0401 || hdev->product == 0x0400) &&
-> +		   (strncmp(hdev->name, "ELAN0000", 8) == 0 ||
-> +		    strncmp(hdev->name, "ELAN0100", 8) == 0 ||
-> +		    strncmp(hdev->name, "ELAN0600", 8) == 0 ||
-> +		    strncmp(hdev->name, "ELAN0601", 8) == 0 ||
-> +		    strncmp(hdev->name, "ELAN0602", 8) == 0 ||
-> +		    strncmp(hdev->name, "ELAN0603", 8) == 0 ||
-> +		    strncmp(hdev->name, "ELAN0604", 8) == 0 ||
-> +		    strncmp(hdev->name, "ELAN0605", 8) == 0 ||
-> +		    strncmp(hdev->name, "ELAN0606", 8) == 0 ||
-> +		    strncmp(hdev->name, "ELAN0607", 8) == 0 ||
-> +		    strncmp(hdev->name, "ELAN0608", 8) == 0 ||
-> +		    strncmp(hdev->name, "ELAN0609", 8) == 0 ||
-> +		    strncmp(hdev->name, "ELAN060B", 8) == 0 ||
-> +		    strncmp(hdev->name, "ELAN060C", 8) == 0 ||
-> +		    strncmp(hdev->name, "ELAN060F", 8) == 0 ||
-> +		    strncmp(hdev->name, "ELAN0610", 8) == 0 ||
-> +		    strncmp(hdev->name, "ELAN0611", 8) == 0 ||
-> +		    strncmp(hdev->name, "ELAN0612", 8) == 0 ||
-> +		    strncmp(hdev->name, "ELAN0613", 8) == 0 ||
-> +		    strncmp(hdev->name, "ELAN0614", 8) == 0 ||
-> +		    strncmp(hdev->name, "ELAN0615", 8) == 0 ||
-> +		    strncmp(hdev->name, "ELAN0616", 8) == 0 ||
-> +		    strncmp(hdev->name, "ELAN0617", 8) == 0 ||
-> +		    strncmp(hdev->name, "ELAN0618", 8) == 0 ||
-> +		    strncmp(hdev->name, "ELAN0619", 8) == 0 ||
-> +		    strncmp(hdev->name, "ELAN061A", 8) == 0 ||
-> +		    strncmp(hdev->name, "ELAN061B", 8) == 0 ||
-> +		    strncmp(hdev->name, "ELAN061C", 8) == 0 ||
-> +		    strncmp(hdev->name, "ELAN061D", 8) == 0 ||
-> +		    strncmp(hdev->name, "ELAN061E", 8) == 0 ||
-> +		    strncmp(hdev->name, "ELAN061F", 8) == 0 ||
-> +		    strncmp(hdev->name, "ELAN0620", 8) == 0 ||
-> +		    strncmp(hdev->name, "ELAN0621", 8) == 0 ||
-> +		    strncmp(hdev->name, "ELAN0622", 8) == 0 ||
-> +		    strncmp(hdev->name, "ELAN0623", 8) == 0 ||
-> +		    strncmp(hdev->name, "ELAN0624", 8) == 0 ||
-> +		    strncmp(hdev->name, "ELAN0625", 8) == 0 ||
-> +		    strncmp(hdev->name, "ELAN0626", 8) == 0 ||
-> +		    strncmp(hdev->name, "ELAN0627", 8) == 0 ||
-> +		    strncmp(hdev->name, "ELAN0628", 8) == 0 ||
-> +		    strncmp(hdev->name, "ELAN0629", 8) == 0 ||
-> +		    strncmp(hdev->name, "ELAN062A", 8) == 0 ||
-> +		    strncmp(hdev->name, "ELAN062B", 8) == 0 ||
-> +		    strncmp(hdev->name, "ELAN062C", 8) == 0 ||
-> +		    strncmp(hdev->name, "ELAN062D", 8) == 0 ||
-> +		    strncmp(hdev->name, "ELAN0631", 8) == 0 ||
-> +		    strncmp(hdev->name, "ELAN0632", 8) == 0 ||
-> +		    strncmp(hdev->name, "ELAN1000", 8) == 0 ||
-> +		    strncmp(hdev->name, "elan,ekth3000", 13) == 0))
->  			return true;
->  		break;
->  	}
-> diff --git a/drivers/input/mouse/elan_i2c_core.c b/drivers/input/mouse/elan_i2c_core.c
-> index f9525d6f0bfe..3ded19528cd4 100644
-> --- a/drivers/input/mouse/elan_i2c_core.c
-> +++ b/drivers/input/mouse/elan_i2c_core.c
-> @@ -1332,6 +1332,10 @@ static const struct i2c_device_id elan_id[] = {
->  };
->  MODULE_DEVICE_TABLE(i2c, elan_id);
->  
-> +/*
-> + * when these whtielists get updated, the corresponding blacklist in hid-quirks
-> + * needs to be updated to match.
-> + */
->  #ifdef CONFIG_ACPI
->  static const struct acpi_device_id elan_acpi_id[] = {
->  	{ "ELAN0000", 0 },
-> -- 
-> 2.17.1
-> 
+greg k-h
