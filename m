@@ -2,338 +2,299 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EF29C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 14:48:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEB05C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 14:49:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC8BD2173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 14:48:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A08A7217D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 14:49:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="UAuF6OE7";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="iE68u/Vc"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="K2u0HR8G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728673AbfEUOst (ORCPT
+        id S1728676AbfEUOtA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 10:48:49 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:46118 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726900AbfEUOsr (ORCPT
+        Tue, 21 May 2019 10:49:00 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:34270 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726900AbfEUOtA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 10:48:47 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 327016087F; Tue, 21 May 2019 14:48:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1558450125;
-        bh=hglMagyN+UajbCn9FbyKSD1iEoaq1vxaX02HXwPV1dA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UAuF6OE7hso/99/ac8RB0rGRObGLeONEO6FmFNRpFaBUahcGbaHqTmkFZkYXo6mIR
-         xaxqbmjpWpWYwxN1RSqBLDVXGPu3IbpCxHaOK3piuCbY7sDxHL0fJqd/1bYLhwg/bp
-         clPwWJ5z+HKKBSdZ1mL2rWI1NfEmiZMeQ1PLVta8=
-Received: from jhugo-perf-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jhugo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0F887605FC;
-        Tue, 21 May 2019 14:48:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1558450122;
-        bh=hglMagyN+UajbCn9FbyKSD1iEoaq1vxaX02HXwPV1dA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iE68u/VcP+pmD0YZ9Ojg8hWKrKojHkmsf6mzzvnHkpKkbuoHO1TtKrUNbiMXbf9MH
-         POq7tyxns+uhRpYFYF2EuIv70LZR0L7ddaU7DeS+y/GwSEOdoNWpDEdjLopzp/31V4
-         yhzYNL3A7XpaaVmK41bh4to23x1/JRpDiLGJDD+E=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0F887605FC
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
-From:   Jeffrey Hugo <jhugo@codeaurora.org>
-To:     mturquette@baylibre.com, sboyd@kernel.org
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
-        marc.w.gonzalez@free.fr, david.brown@linaro.org,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Jeffrey Hugo <jhugo@codeaurora.org>
-Subject: [PATCH v4 4/6] dt-bindings: clock: Add support for the MSM8998 mmcc
-Date:   Tue, 21 May 2019 08:48:32 -0600
-Message-Id: <1558450112-21018-1-git-send-email-jhugo@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1558449843-19971-1-git-send-email-jhugo@codeaurora.org>
-References: <1558449843-19971-1-git-send-email-jhugo@codeaurora.org>
+        Tue, 21 May 2019 10:49:00 -0400
+Received: by mail-ed1-f65.google.com with SMTP id p27so29854054eda.1
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 07:48:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=7IOMcNShzp88plVKB970+NE4F+uWKbqTavdIwV9VTZU=;
+        b=K2u0HR8GjjPph9aWDUMgbUTkdaGHORgnlhQ5O+jE9OPB0bYVQnJ1ODz4blADryQtdX
+         pa0G0gEFYE0rz9UvMpOgqbe+rbO0ivH/HD50iXsv/+brZ/19ysThpf/RfyS0dqkSUiG2
+         Of+EbAXOcS1PLLjYqc3MNnAPJwN2wV4XxglRA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=7IOMcNShzp88plVKB970+NE4F+uWKbqTavdIwV9VTZU=;
+        b=lU/NJ7Q4x4VYWsvTt6Cy1FoWc6xjS+FP/qbeSaMY9vWOQKxYZEz0qM8ftUOP7knR78
+         PMhJJ1ndU3+WjJYT+NggSucFxASbBbLrP+p53xdB+giB02itwcsgSn1R8keFrVnQKoSJ
+         UCHysHQOzpBuVtP6NLqP+6+8Vr4ge7pXmEKKmCm6tWi0bN2Pm/RgCgV4DSpG5ruaejMz
+         tLSi+B/aZzKVFXiyzhvwA08InB1L6MVZHlbOZaxhMcU4pXq1QP1yl8IVGbNQUvjefyfT
+         T/58T8tskAEdoqmEeNJWGqJf6U/wfZb/hu2ce0qhTzAjtq33ZoxNL8LGf0PxpMV/PKRf
+         jA8Q==
+X-Gm-Message-State: APjAAAWP7+RIRi7JBjCyuitFm5EULudhd2ftqzMCGG6nMAc/JOxXQ770
+        z+foYdFNoZrU20oFVnRAfEf89w==
+X-Google-Smtp-Source: APXvYqytIZu/6anacKvD69vhQKlzZMTSzIMEvW9ZHTiye+AtpdGee4CjEbWTItKCYEIqDaw+ejs+4Q==
+X-Received: by 2002:a50:8808:: with SMTP id b8mr54195428edb.202.1558450137617;
+        Tue, 21 May 2019 07:48:57 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
+        by smtp.gmail.com with ESMTPSA id t19sm3558423ejq.51.2019.05.21.07.48.56
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 21 May 2019 07:48:56 -0700 (PDT)
+Date:   Tue, 21 May 2019 16:48:54 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Rientjes <rientjes@google.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Wei Wang <wvw@google.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jann Horn <jannh@google.com>, Feng Tang <feng.tang@intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Daniel Vetter <daniel.vetter@intel.com>
+Subject: Re: [PATCH] kernel.h: Add non_block_start/end()
+Message-ID: <20190521144854.GP21222@phenom.ffwll.local>
+Mail-Followup-To: Michal Hocko <mhocko@kernel.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Rientjes <rientjes@google.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Wei Wang <wvw@google.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>, Jann Horn <jannh@google.com>,
+        Feng Tang <feng.tang@intel.com>, Kees Cook <keescook@chromium.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Daniel Vetter <daniel.vetter@intel.com>
+References: <20190521100611.10089-1-daniel.vetter@ffwll.ch>
+ <20190521104638.GO32329@dhcp22.suse.cz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190521104638.GO32329@dhcp22.suse.cz>
+X-Operating-System: Linux phenom 4.14.0-3-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Document the multimedia clock controller found on MSM8998.
+On Tue, May 21, 2019 at 12:46:38PM +0200, Michal Hocko wrote:
+> On Tue 21-05-19 12:06:11, Daniel Vetter wrote:
+> > In some special cases we must not block, but there's not a
+> > spinlock, preempt-off, irqs-off or similar critical section already
+> > that arms the might_sleep() debug checks. Add a non_block_start/end()
+> > pair to annotate these.
+> > 
+> > This will be used in the oom paths of mmu-notifiers, where blocking is
+> > not allowed to make sure there's forward progress. Quoting Michal:
+> > 
+> > "The notifier is called from quite a restricted context - oom_reaper -
+> > which shouldn't depend on any locks or sleepable conditionals. The code
+> > should be swift as well but we mostly do care about it to make a forward
+> > progress. Checking for sleepable context is the best thing we could come
+> > up with that would describe these demands at least partially."
+> > 
+> > Peter also asked whether we want to catch spinlocks on top, but Michal
+> > said those are less of a problem because spinlocks can't have an
+> > indirect dependency upon the page allocator and hence close the loop
+> > with the oom reaper.
+> > 
+> > Suggested by Michal Hocko.
+> > 
+> > v2:
+> > - Improve commit message (Michal)
+> > - Also check in schedule, not just might_sleep (Peter)
+> > 
+> > v3: It works better when I actually squash in the fixup I had lying
+> > around :-/
+> > 
+> > Cc: Peter Zijlstra <peterz@infradead.org>
+> > Cc: Ingo Molnar <mingo@redhat.com>
+> > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > Cc: Michal Hocko <mhocko@suse.com>
+> > Cc: David Rientjes <rientjes@google.com>
+> > Cc: "Christian König" <christian.koenig@amd.com>
+> > Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+> > Cc: "Jérôme Glisse" <jglisse@redhat.com>
+> > Cc: linux-mm@kvack.org
+> > Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+> > Cc: Wei Wang <wvw@google.com>
+> > Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > Cc: Jann Horn <jannh@google.com>
+> > Cc: Feng Tang <feng.tang@intel.com>
+> > Cc: Kees Cook <keescook@chromium.org>
+> > Cc: Randy Dunlap <rdunlap@infradead.org>
+> > Cc: linux-kernel@vger.kernel.org
+> > Acked-by: Christian König <christian.koenig@amd.com> (v1)
+> > Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+> 
+> I like this in general. The implementation looks reasonable to me but I
+> didn't check deeply enough to give my R-by or A-by.
 
-Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- .../devicetree/bindings/clock/qcom,mmcc.txt        |  21 +++
- include/dt-bindings/clock/qcom,mmcc-msm8998.h      | 210 +++++++++++++++++++++
- 2 files changed, 231 insertions(+)
- create mode 100644 include/dt-bindings/clock/qcom,mmcc-msm8998.h
+Thanks for all your comments. I'll ask Jerome Glisse to look into this, I
+think it'd could be useful for all the HMM work too.
 
-diff --git a/Documentation/devicetree/bindings/clock/qcom,mmcc.txt b/Documentation/devicetree/bindings/clock/qcom,mmcc.txt
-index 8b0f784..a92f3cb 100644
---- a/Documentation/devicetree/bindings/clock/qcom,mmcc.txt
-+++ b/Documentation/devicetree/bindings/clock/qcom,mmcc.txt
-@@ -10,11 +10,32 @@ Required properties :
- 			"qcom,mmcc-msm8960"
- 			"qcom,mmcc-msm8974"
- 			"qcom,mmcc-msm8996"
-+			"qcom,mmcc-msm8998"
- 
- - reg : shall contain base register location and length
- - #clock-cells : shall contain 1
- - #reset-cells : shall contain 1
- 
-+For MSM8998 only:
-+	- clocks: a list of phandles and clock-specifier pairs,
-+		  one for each entry in clock-names.
-+	- clock-names: "xo" for the xo clock.
-+		       "gpll0" for the global pll 0 clock.
-+		       "dsi0dsi" for the dsi0 pll dsi clock (required if dsi is
-+				enabled, optional otherwise).
-+		       "dsi0byte" for the dsi0 pll byte clock (required if dsi
-+				is enabled, optional otherwise).
-+		       "dsi1dsi" for the dsi1 pll dsi clock (required if dsi is
-+				enabled, optional otherwise).
-+		       "dsi1byte" for the dsi1 pll byte clock (required if dsi
-+				is enabled, optional otherwise).
-+		       "hdmipll" for the hdmi pll clock (required if hdmi is
-+				enabled, optional otherwise).
-+		       "dpvco" for the displayport pll vco clock (required if
-+				dp is enabled, optional otherwise).
-+		       "dplink" for the displayport pll link clock (required if
-+				dp is enabled, optional otherwise).
-+
- Optional properties :
- - #power-domain-cells : shall contain 1
- 
-diff --git a/include/dt-bindings/clock/qcom,mmcc-msm8998.h b/include/dt-bindings/clock/qcom,mmcc-msm8998.h
-new file mode 100644
-index 0000000..ecbafdb
---- /dev/null
-+++ b/include/dt-bindings/clock/qcom,mmcc-msm8998.h
-@@ -0,0 +1,210 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (c) 2019, The Linux Foundation. All rights reserved.
-+ */
-+
-+#ifndef _DT_BINDINGS_CLK_MSM_MMCC_8998_H
-+#define _DT_BINDINGS_CLK_MSM_MMCC_8998_H
-+
-+#define MMPLL0						0
-+#define MMPLL0_OUT_EVEN					1
-+#define MMPLL1						2
-+#define MMPLL1_OUT_EVEN					3
-+#define MMPLL3						4
-+#define MMPLL3_OUT_EVEN					5
-+#define MMPLL4						6
-+#define MMPLL4_OUT_EVEN					7
-+#define MMPLL5						8
-+#define MMPLL5_OUT_EVEN					9
-+#define MMPLL6						10
-+#define MMPLL6_OUT_EVEN					11
-+#define MMPLL7						12
-+#define MMPLL7_OUT_EVEN					13
-+#define MMPLL10						14
-+#define MMPLL10_OUT_EVEN				15
-+#define BYTE0_CLK_SRC					16
-+#define BYTE1_CLK_SRC					17
-+#define CCI_CLK_SRC					18
-+#define CPP_CLK_SRC					19
-+#define CSI0_CLK_SRC					20
-+#define CSI1_CLK_SRC					21
-+#define CSI2_CLK_SRC					22
-+#define CSI3_CLK_SRC					23
-+#define CSIPHY_CLK_SRC					24
-+#define CSI0PHYTIMER_CLK_SRC				25
-+#define CSI1PHYTIMER_CLK_SRC				26
-+#define CSI2PHYTIMER_CLK_SRC				27
-+#define DP_AUX_CLK_SRC					28
-+#define DP_CRYPTO_CLK_SRC				29
-+#define DP_LINK_CLK_SRC					30
-+#define DP_PIXEL_CLK_SRC				31
-+#define ESC0_CLK_SRC					32
-+#define ESC1_CLK_SRC					33
-+#define EXTPCLK_CLK_SRC					34
-+#define FD_CORE_CLK_SRC					35
-+#define HDMI_CLK_SRC					36
-+#define JPEG0_CLK_SRC					37
-+#define MAXI_CLK_SRC					38
-+#define MCLK0_CLK_SRC					39
-+#define MCLK1_CLK_SRC					40
-+#define MCLK2_CLK_SRC					41
-+#define MCLK3_CLK_SRC					42
-+#define MDP_CLK_SRC					43
-+#define VSYNC_CLK_SRC					44
-+#define AHB_CLK_SRC					45
-+#define AXI_CLK_SRC					46
-+#define PCLK0_CLK_SRC					47
-+#define PCLK1_CLK_SRC					48
-+#define ROT_CLK_SRC					49
-+#define VIDEO_CORE_CLK_SRC				50
-+#define VIDEO_SUBCORE0_CLK_SRC				51
-+#define VIDEO_SUBCORE1_CLK_SRC				52
-+#define VFE0_CLK_SRC					53
-+#define VFE1_CLK_SRC					54
-+#define MISC_AHB_CLK					55
-+#define VIDEO_CORE_CLK					56
-+#define VIDEO_AHB_CLK					57
-+#define VIDEO_AXI_CLK					58
-+#define VIDEO_MAXI_CLK					59
-+#define VIDEO_SUBCORE0_CLK				60
-+#define VIDEO_SUBCORE1_CLK				61
-+#define MDSS_AHB_CLK					62
-+#define MDSS_HDMI_DP_AHB_CLK				63
-+#define MDSS_AXI_CLK					64
-+#define MDSS_PCLK0_CLK					65
-+#define MDSS_PCLK1_CLK					66
-+#define MDSS_MDP_CLK					67
-+#define MDSS_MDP_LUT_CLK				68
-+#define MDSS_EXTPCLK_CLK				69
-+#define MDSS_VSYNC_CLK					70
-+#define MDSS_HDMI_CLK					71
-+#define MDSS_BYTE0_CLK					72
-+#define MDSS_BYTE1_CLK					73
-+#define MDSS_ESC0_CLK					74
-+#define MDSS_ESC1_CLK					75
-+#define MDSS_ROT_CLK					76
-+#define MDSS_DP_LINK_CLK				77
-+#define MDSS_DP_LINK_INTF_CLK				78
-+#define MDSS_DP_CRYPTO_CLK				79
-+#define MDSS_DP_PIXEL_CLK				80
-+#define MDSS_DP_AUX_CLK					81
-+#define MDSS_BYTE0_INTF_CLK				82
-+#define MDSS_BYTE1_INTF_CLK				83
-+#define CAMSS_CSI0PHYTIMER_CLK				84
-+#define CAMSS_CSI1PHYTIMER_CLK				85
-+#define CAMSS_CSI2PHYTIMER_CLK				86
-+#define CAMSS_CSI0_CLK					87
-+#define CAMSS_CSI0_AHB_CLK				88
-+#define CAMSS_CSI0RDI_CLK				89
-+#define CAMSS_CSI0PIX_CLK				90
-+#define CAMSS_CSI1_CLK					91
-+#define CAMSS_CSI1_AHB_CLK				92
-+#define CAMSS_CSI1RDI_CLK				93
-+#define CAMSS_CSI1PIX_CLK				94
-+#define CAMSS_CSI2_CLK					95
-+#define CAMSS_CSI2_AHB_CLK				96
-+#define CAMSS_CSI2RDI_CLK				97
-+#define CAMSS_CSI2PIX_CLK				98
-+#define CAMSS_CSI3_CLK					99
-+#define CAMSS_CSI3_AHB_CLK				100
-+#define CAMSS_CSI3RDI_CLK				101
-+#define CAMSS_CSI3PIX_CLK				102
-+#define CAMSS_ISPIF_AHB_CLK				103
-+#define CAMSS_CCI_CLK					104
-+#define CAMSS_CCI_AHB_CLK				105
-+#define CAMSS_MCLK0_CLK					106
-+#define CAMSS_MCLK1_CLK					107
-+#define CAMSS_MCLK2_CLK					108
-+#define CAMSS_MCLK3_CLK					109
-+#define CAMSS_TOP_AHB_CLK				110
-+#define CAMSS_AHB_CLK					111
-+#define CAMSS_MICRO_AHB_CLK				112
-+#define CAMSS_JPEG0_CLK					113
-+#define CAMSS_JPEG_AHB_CLK				114
-+#define CAMSS_JPEG_AXI_CLK				115
-+#define CAMSS_VFE0_AHB_CLK				116
-+#define CAMSS_VFE1_AHB_CLK				117
-+#define CAMSS_VFE0_CLK					118
-+#define CAMSS_VFE1_CLK					119
-+#define CAMSS_CPP_CLK					120
-+#define CAMSS_CPP_AHB_CLK				121
-+#define CAMSS_VFE_VBIF_AHB_CLK				122
-+#define CAMSS_VFE_VBIF_AXI_CLK				123
-+#define CAMSS_CPP_AXI_CLK				124
-+#define CAMSS_CPP_VBIF_AHB_CLK				125
-+#define CAMSS_CSI_VFE0_CLK				126
-+#define CAMSS_CSI_VFE1_CLK				127
-+#define CAMSS_VFE0_STREAM_CLK				128
-+#define CAMSS_VFE1_STREAM_CLK				129
-+#define CAMSS_CPHY_CSID0_CLK				130
-+#define CAMSS_CPHY_CSID1_CLK				131
-+#define CAMSS_CPHY_CSID2_CLK				132
-+#define CAMSS_CPHY_CSID3_CLK				133
-+#define CAMSS_CSIPHY0_CLK				134
-+#define CAMSS_CSIPHY1_CLK				135
-+#define CAMSS_CSIPHY2_CLK				136
-+#define FD_CORE_CLK					137
-+#define FD_CORE_UAR_CLK					138
-+#define FD_AHB_CLK					139
-+#define MNOC_AHB_CLK					140
-+#define BIMC_SMMU_AHB_CLK				141
-+#define BIMC_SMMU_AXI_CLK				142
-+#define MNOC_MAXI_CLK					143
-+#define VMEM_MAXI_CLK					144
-+#define VMEM_AHB_CLK					145
-+
-+#define SPDM_BCR					0
-+#define SPDM_RM_BCR					1
-+#define MISC_BCR					2
-+#define VIDEO_TOP_BCR					3
-+#define THROTTLE_VIDEO_BCR				4
-+#define MDSS_BCR					5
-+#define THROTTLE_MDSS_BCR				6
-+#define CAMSS_PHY0_BCR					7
-+#define CAMSS_PHY1_BCR					8
-+#define CAMSS_PHY2_BCR					9
-+#define CAMSS_CSI0_BCR					10
-+#define CAMSS_CSI0RDI_BCR				11
-+#define CAMSS_CSI0PIX_BCR				12
-+#define CAMSS_CSI1_BCR					13
-+#define CAMSS_CSI1RDI_BCR				14
-+#define CAMSS_CSI1PIX_BCR				15
-+#define CAMSS_CSI2_BCR					16
-+#define CAMSS_CSI2RDI_BCR				17
-+#define CAMSS_CSI2PIX_BCR				18
-+#define CAMSS_CSI3_BCR					19
-+#define CAMSS_CSI3RDI_BCR				20
-+#define CAMSS_CSI3PIX_BCR				21
-+#define CAMSS_ISPIF_BCR					22
-+#define CAMSS_CCI_BCR					23
-+#define CAMSS_TOP_BCR					24
-+#define CAMSS_AHB_BCR					25
-+#define CAMSS_MICRO_BCR					26
-+#define CAMSS_JPEG_BCR					27
-+#define CAMSS_VFE0_BCR					28
-+#define CAMSS_VFE1_BCR					29
-+#define CAMSS_VFE_VBIF_BCR				30
-+#define CAMSS_CPP_TOP_BCR				31
-+#define CAMSS_CPP_BCR					32
-+#define CAMSS_CSI_VFE0_BCR				33
-+#define CAMSS_CSI_VFE1_BCR				34
-+#define CAMSS_FD_BCR					35
-+#define THROTTLE_CAMSS_BCR				36
-+#define MNOCAHB_BCR					37
-+#define MNOCAXI_BCR					38
-+#define BMIC_SMMU_BCR					39
-+#define MNOC_MAXI_BCR					40
-+#define VMEM_BCR					41
-+#define BTO_BCR						42
-+
-+#define VIDEO_TOP_GDSC		1
-+#define VIDEO_SUBCORE0_GDSC	2
-+#define VIDEO_SUBCORE1_GDSC	3
-+#define MDSS_GDSC		4
-+#define CAMSS_TOP_GDSC		5
-+#define CAMSS_VFE0_GDSC		6
-+#define CAMSS_VFE1_GDSC		7
-+#define CAMSS_CPP_GDSC		8
-+#define BIMC_SMMU_GDSC		9
-+
-+#endif
+And I sent this out without reply-to the patch it's supposed to replace,
+will need to do that again so patchwork and 0day pick up the correct
+series. Sry about that noise :-/
+-Daniel
+
+> 
+> > ---
+> >  include/linux/kernel.h | 10 +++++++++-
+> >  include/linux/sched.h  |  4 ++++
+> >  kernel/sched/core.c    | 19 ++++++++++++++-----
+> >  3 files changed, 27 insertions(+), 6 deletions(-)
+> > 
+> > diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+> > index 74b1ee9027f5..b5f2c2ff0eab 100644
+> > --- a/include/linux/kernel.h
+> > +++ b/include/linux/kernel.h
+> > @@ -214,7 +214,9 @@ extern void __cant_sleep(const char *file, int line, int preempt_offset);
+> >   * might_sleep - annotation for functions that can sleep
+> >   *
+> >   * this macro will print a stack trace if it is executed in an atomic
+> > - * context (spinlock, irq-handler, ...).
+> > + * context (spinlock, irq-handler, ...). Additional sections where blocking is
+> > + * not allowed can be annotated with non_block_start() and non_block_end()
+> > + * pairs.
+> >   *
+> >   * This is a useful debugging help to be able to catch problems early and not
+> >   * be bitten later when the calling function happens to sleep when it is not
+> > @@ -230,6 +232,10 @@ extern void __cant_sleep(const char *file, int line, int preempt_offset);
+> >  # define cant_sleep() \
+> >  	do { __cant_sleep(__FILE__, __LINE__, 0); } while (0)
+> >  # define sched_annotate_sleep()	(current->task_state_change = 0)
+> > +# define non_block_start() \
+> > +	do { current->non_block_count++; } while (0)
+> > +# define non_block_end() \
+> > +	do { WARN_ON(current->non_block_count-- == 0); } while (0)
+> >  #else
+> >    static inline void ___might_sleep(const char *file, int line,
+> >  				   int preempt_offset) { }
+> > @@ -238,6 +244,8 @@ extern void __cant_sleep(const char *file, int line, int preempt_offset);
+> >  # define might_sleep() do { might_resched(); } while (0)
+> >  # define cant_sleep() do { } while (0)
+> >  # define sched_annotate_sleep() do { } while (0)
+> > +# define non_block_start() do { } while (0)
+> > +# define non_block_end() do { } while (0)
+> >  #endif
+> >  
+> >  #define might_sleep_if(cond) do { if (cond) might_sleep(); } while (0)
+> > diff --git a/include/linux/sched.h b/include/linux/sched.h
+> > index 11837410690f..7f5b293e72df 100644
+> > --- a/include/linux/sched.h
+> > +++ b/include/linux/sched.h
+> > @@ -908,6 +908,10 @@ struct task_struct {
+> >  	struct mutex_waiter		*blocked_on;
+> >  #endif
+> >  
+> > +#ifdef CONFIG_DEBUG_ATOMIC_SLEEP
+> > +	int				non_block_count;
+> > +#endif
+> > +
+> >  #ifdef CONFIG_TRACE_IRQFLAGS
+> >  	unsigned int			irq_events;
+> >  	unsigned long			hardirq_enable_ip;
+> > diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> > index 102dfcf0a29a..ed7755a28465 100644
+> > --- a/kernel/sched/core.c
+> > +++ b/kernel/sched/core.c
+> > @@ -3264,13 +3264,22 @@ static noinline void __schedule_bug(struct task_struct *prev)
+> >  /*
+> >   * Various schedule()-time debugging checks and statistics:
+> >   */
+> > -static inline void schedule_debug(struct task_struct *prev)
+> > +static inline void schedule_debug(struct task_struct *prev, bool preempt)
+> >  {
+> >  #ifdef CONFIG_SCHED_STACK_END_CHECK
+> >  	if (task_stack_end_corrupted(prev))
+> >  		panic("corrupted stack end detected inside scheduler\n");
+> >  #endif
+> >  
+> > +#ifdef CONFIG_DEBUG_ATOMIC_SLEEP
+> > +	if (!preempt && prev->state && prev->non_block_count) {
+> > +		printk(KERN_ERR "BUG: scheduling in a non-blocking section: %s/%d/%i\n",
+> > +			prev->comm, prev->pid, prev->non_block_count);
+> > +		dump_stack();
+> > +		add_taint(TAINT_WARN, LOCKDEP_STILL_OK);
+> > +	}
+> > +#endif
+> > +
+> >  	if (unlikely(in_atomic_preempt_off())) {
+> >  		__schedule_bug(prev);
+> >  		preempt_count_set(PREEMPT_DISABLED);
+> > @@ -3377,7 +3386,7 @@ static void __sched notrace __schedule(bool preempt)
+> >  	rq = cpu_rq(cpu);
+> >  	prev = rq->curr;
+> >  
+> > -	schedule_debug(prev);
+> > +	schedule_debug(prev, preempt);
+> >  
+> >  	if (sched_feat(HRTICK))
+> >  		hrtick_clear(rq);
+> > @@ -6102,7 +6111,7 @@ void ___might_sleep(const char *file, int line, int preempt_offset)
+> >  	rcu_sleep_check();
+> >  
+> >  	if ((preempt_count_equals(preempt_offset) && !irqs_disabled() &&
+> > -	     !is_idle_task(current)) ||
+> > +	     !is_idle_task(current) && !current->non_block_count) ||
+> >  	    system_state == SYSTEM_BOOTING || system_state > SYSTEM_RUNNING ||
+> >  	    oops_in_progress)
+> >  		return;
+> > @@ -6118,8 +6127,8 @@ void ___might_sleep(const char *file, int line, int preempt_offset)
+> >  		"BUG: sleeping function called from invalid context at %s:%d\n",
+> >  			file, line);
+> >  	printk(KERN_ERR
+> > -		"in_atomic(): %d, irqs_disabled(): %d, pid: %d, name: %s\n",
+> > -			in_atomic(), irqs_disabled(),
+> > +		"in_atomic(): %d, irqs_disabled(): %d, non_block: %d, pid: %d, name: %s\n",
+> > +			in_atomic(), irqs_disabled(), current->non_block_count,
+> >  			current->pid, current->comm);
+> >  
+> >  	if (task_stack_end_corrupted(current))
+> > -- 
+> > 2.20.1
+> > 
+> 
+> -- 
+> Michal Hocko
+> SUSE Labs
+
 -- 
-Qualcomm Datacenter Technologies as an affiliate of Qualcomm Technologies, Inc.
-Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
-
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
