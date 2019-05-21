@@ -2,256 +2,230 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABF63C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 14:59:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 156C7C04E87
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:00:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 812C821743
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 14:59:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDC8C2173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:00:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728664AbfEUO7j convert rfc822-to-8bit (ORCPT
+        id S1728732AbfEUPAP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 10:59:39 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:57750 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728505AbfEUO7i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 10:59:38 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 96625C057F3E;
-        Tue, 21 May 2019 14:59:34 +0000 (UTC)
-Received: from x1.home (ovpn-117-92.phx2.redhat.com [10.3.117.92])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 63B7C19C71;
-        Tue, 21 May 2019 14:59:31 +0000 (UTC)
-Date:   Tue, 21 May 2019 08:59:30 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Pierre Morel <pmorel@linux.ibm.com>
-Cc:     Cornelia Huck <cohuck@redhat.com>, sebott@linux.vnet.ibm.com,
-        gerald.schaefer@de.ibm.com, pasic@linux.vnet.ibm.com,
-        borntraeger@de.ibm.com, walling@linux.ibm.com,
-        linux-s390@vger.kernel.org, iommu@lists.linux-foundation.org,
-        joro@8bytes.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
-        robin.murphy@arm.com
-Subject: Re: [PATCH v2 4/4] vfio: vfio_iommu_type1: implement
- VFIO_IOMMU_INFO_CAPABILITIES
-Message-ID: <20190521085930.4d91842c@x1.home>
-In-Reply-To: <9dc0a8de-b850-df21-e3b7-21b7c2a373a3@linux.ibm.com>
-References: <1558109810-18683-1-git-send-email-pmorel@linux.ibm.com>
-        <1558109810-18683-5-git-send-email-pmorel@linux.ibm.com>
-        <20190517104143.240082b5@x1.home>
-        <92b6ad4e-9a49-636b-9225-acca0bec4bb7@linux.ibm.com>
-        <ed193353-56f0-14b5-f1fb-1835d0a6c603@linux.ibm.com>
-        <20190520162737.7560ad7c.cohuck@redhat.com>
-        <23f6a739-be4f-7eda-2227-2994fdc2325a@linux.ibm.com>
-        <20190520122352.73082e52@x1.home>
-        <9dc0a8de-b850-df21-e3b7-21b7c2a373a3@linux.ibm.com>
-Organization: Red Hat
+        Tue, 21 May 2019 11:00:15 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:34486 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727969AbfEUPAN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 11:00:13 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hT6FK-0007FT-IR; Tue, 21 May 2019 15:00:06 +0000
+Date:   Tue, 21 May 2019 16:00:06 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Christian Brauner <christian@brauner.io>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-api@vger.kernel.org, jannh@google.com, fweimer@redhat.com,
+        oleg@redhat.com, tglx@linutronix.de, torvalds@linux-foundation.org,
+        arnd@arndb.de, shuah@kernel.org, dhowells@redhat.com,
+        tkjos@android.com, ldv@altlinux.org, miklos@szeredi.hu,
+        linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, linux-arch@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH 1/2] open: add close_range()
+Message-ID: <20190521150006.GJ17978@ZenIV.linux.org.uk>
+References: <20190521113448.20654-1-christian@brauner.io>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Tue, 21 May 2019 14:59:37 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190521113448.20654-1-christian@brauner.io>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 21 May 2019 11:14:38 +0200
-Pierre Morel <pmorel@linux.ibm.com> wrote:
+On Tue, May 21, 2019 at 01:34:47PM +0200, Christian Brauner wrote:
 
-> On 20/05/2019 20:23, Alex Williamson wrote:
-> > On Mon, 20 May 2019 18:31:08 +0200
-> > Pierre Morel <pmorel@linux.ibm.com> wrote:
-> >   
-> >> On 20/05/2019 16:27, Cornelia Huck wrote:  
-> >>> On Mon, 20 May 2019 13:19:23 +0200
-> >>> Pierre Morel <pmorel@linux.ibm.com> wrote:
-> >>>      
-> >>>> On 17/05/2019 20:04, Pierre Morel wrote:  
-> >>>>> On 17/05/2019 18:41, Alex Williamson wrote:  
-> >>>>>> On Fri, 17 May 2019 18:16:50 +0200
-> >>>>>> Pierre Morel <pmorel@linux.ibm.com> wrote:
-> >>>>>>        
-> >>>>>>> We implement the capability interface for VFIO_IOMMU_GET_INFO.
-> >>>>>>>
-> >>>>>>> When calling the ioctl, the user must specify
-> >>>>>>> VFIO_IOMMU_INFO_CAPABILITIES to retrieve the capabilities and
-> >>>>>>> must check in the answer if capabilities are supported.
-> >>>>>>>
-> >>>>>>> The iommu get_attr callback will be used to retrieve the specific
-> >>>>>>> attributes and fill the capabilities.
-> >>>>>>>
-> >>>>>>> Currently two Z-PCI specific capabilities will be queried and
-> >>>>>>> filled by the underlying Z specific s390_iommu:
-> >>>>>>> VFIO_IOMMU_INFO_CAP_QFN for the PCI query function attributes
-> >>>>>>> and
-> >>>>>>> VFIO_IOMMU_INFO_CAP_QGRP for the PCI query function group.
-> >>>>>>>
-> >>>>>>> Other architectures may add new capabilities in the same way
-> >>>>>>> after enhancing the architecture specific IOMMU driver.
-> >>>>>>>
-> >>>>>>> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
-> >>>>>>> ---
-> >>>>>>>     drivers/vfio/vfio_iommu_type1.c | 122
-> >>>>>>> +++++++++++++++++++++++++++++++++++++++-
-> >>>>>>>     1 file changed, 121 insertions(+), 1 deletion(-)
-> >>>>>>>
-> >>>>>>> diff --git a/drivers/vfio/vfio_iommu_type1.c
-> >>>>>>> b/drivers/vfio/vfio_iommu_type1.c
-> >>>>>>> index d0f731c..9435647 100644
-> >>>>>>> --- a/drivers/vfio/vfio_iommu_type1.c
-> >>>>>>> +++ b/drivers/vfio/vfio_iommu_type1.c
-> >>>>>>> @@ -1658,6 +1658,97 @@ static int
-> >>>>>>> vfio_domains_have_iommu_cache(struct vfio_iommu *iommu)
-> >>>>>>>         return ret;
-> >>>>>>>     }
-> >>>>>>> +static int vfio_iommu_type1_zpci_fn(struct iommu_domain *domain,
-> >>>>>>> +                    struct vfio_info_cap *caps, size_t size)
-> >>>>>>> +{
-> >>>>>>> +    struct vfio_iommu_type1_info_pcifn *info_fn;
-> >>>>>>> +    int ret;
-> >>>>>>> +
-> >>>>>>> +    info_fn = kzalloc(size, GFP_KERNEL);
-> >>>>>>> +    if (!info_fn)
-> >>>>>>> +        return -ENOMEM;
-> >>>>>>> +
-> >>>>>>> +    ret = iommu_domain_get_attr(domain, DOMAIN_ATTR_ZPCI_FN,
-> >>>>>>> +                    &info_fn->response);  
-> >>>>>>
-> >>>>>> What ensures that the 'struct clp_rsp_query_pci' returned from this
-> >>>>>> get_attr remains consistent with a 'struct vfio_iommu_pci_function'?
-> >>>>>> Why does the latter contains so many reserved fields (beyond simply
-> >>>>>> alignment) for a user API?  What fields of these structures are
-> >>>>>> actually useful to userspace?  Should any fields not be exposed to the
-> >>>>>> user?  Aren't BAR sizes redundant to what's available through the vfio
-> >>>>>> PCI API?  I'm afraid that simply redefining an internal structure as
-> >>>>>> the API leaves a lot to be desired too.  Thanks,
-> >>>>>>
-> >>>>>> Alex
-> >>>>>>        
-> >>>>> Hi Alex,
-> >>>>>
-> >>>>> I simply used the structure returned by the firmware to be sure to be
-> >>>>> consistent with future evolutions and facilitate the copy from CLP and
-> >>>>> to userland.
-> >>>>>
-> >>>>> If you prefer, and I understand that this is the case, I can define a
-> >>>>> specific VFIO_IOMMU structure with only the fields relevant to the user,
-> >>>>> leaving future enhancement of the user's interface being implemented in
-> >>>>> another kernel patch when the time has come.  
-> > 
-> > TBH, I had no idea that CLP is an s390 firmware interface and this is
-> > just dumping that to userspace.  The cover letter says:
-> > 
-> >    Using the PCI VFIO interface allows userland, a.k.a. QEMU, to
-> >    retrieve ZPCI specific information without knowing Z specific
-> >    identifiers like the function ID or the function handle of the zPCI
-> >    function hidden behind the PCI interface.
-> > 
-> > But what does this allow userland to do and what specific pieces of
-> > information do they need?  We do have a case already where Intel
-> > graphics devices have a table (OpRegion) living in host system memory
-> > that we expose via a vfio region, so it wouldn't be unprecedented to do
-> > something like this, but as Connie suggests, if we knew what was being
-> > consumed here and why, maybe we could generalize it into something
-> > useful for others.  
+> This adds the close_range() syscall. It allows to efficiently close a range
+> of file descriptors up to all file descriptors of a calling task.
 > 
-> OK, sorry I try to explain better.
+> The syscall came up in a recent discussion around the new mount API and
+> making new file descriptor types cloexec by default. During this
+> discussion, Al suggested the close_range() syscall (cf. [1]). Note, a
+> syscall in this manner has been requested by various people over time.
 > 
-> 1) A short description, of zPCI functions and groups
+> First, it helps to close all file descriptors of an exec()ing task. This
+> can be done safely via (quoting Al's example from [1] verbatim):
 > 
-> IN Z, PCI cards, leave behind an adapter between subchannels and PCI.
-> We access PCI cards through 2 ways:
-> - dedicated PCI instructions (pci_load/pci_store/pci/store_block)
-> - DMA
-> We receive events through
-> - Adapter interrupts
-> - CHSC events
+>         /* that exec is sensitive */
+>         unshare(CLONE_FILES);
+>         /* we don't want anything past stderr here */
+>         close_range(3, ~0U);
+>         execve(....);
 > 
-> The adapter propose an IOMMU to protect the DMA
-> and the interrupt handling goes through a MSIX like interface handled by 
-> the adapter.
+> The code snippet above is one way of working around the problem that file
+> descriptors are not cloexec by default. This is aggravated by the fact that
+> we can't just switch them over without massively regressing userspace. For
+> a whole class of programs having an in-kernel method of closing all file
+> descriptors is very helpful (e.g. demons, service managers, programming
+> language standard libraries, container managers etc.).
+> (Please note, unshare(CLONE_FILES) should only be needed if the calling
+>  task is multi-threaded and shares the file descriptor table with another
+>  thread in which case two threads could race with one thread allocating
+>  file descriptors and the other one closing them via close_range(). For the
+>  general case close_range() before the execve() is sufficient.)
 > 
-> The architecture specific PCI do the interface between the standard PCI 
-> level and the zPCI function (PCI + DMA/IOMMU/Interrupt)
+> Second, it allows userspace to avoid implementing closing all file
+> descriptors by parsing through /proc/<pid>/fd/* and calling close() on each
+> file descriptor. From looking at various large(ish) userspace code bases
+> this or similar patterns are very common in:
+> - service managers (cf. [4])
+> - libcs (cf. [6])
+> - container runtimes (cf. [5])
+> - programming language runtimes/standard libraries
+>   - Python (cf. [2])
+>   - Rust (cf. [7], [8])
+> As Dmitry pointed out there's even a long-standing glibc bug about missing
+> kernel support for this task (cf. [3]).
+> In addition, the syscall will also work for tasks that do not have procfs
+> mounted and on kernels that do not have procfs support compiled in. In such
+> situations the only way to make sure that all file descriptors are closed
+> is to call close() on each file descriptor up to UINT_MAX or RLIMIT_NOFILE,
+> OPEN_MAX trickery (cf. comment [8] on Rust).
 > 
-> To handle the communication through the "zPCI way" the CLP interface 
-> provides instructions to retrieve informations from the adapters.
+> The performance is striking. For good measure, comparing the following
+> simple close_all_fds() userspace implementation that is essentially just
+> glibc's version in [6]:
 > 
-> There are different group of functions having same functionalities.
+> static int close_all_fds(void)
+> {
+>         DIR *dir;
+>         struct dirent *direntp;
 > 
-> clp_list give us a list from zPCI functions
-> clp_query_pci_function returns informations specific to a function
-> clp_query_group returns information on a function group
+>         dir = opendir("/proc/self/fd");
+>         if (!dir)
+>                 return -1;
 > 
+>         while ((direntp = readdir(dir))) {
+>                 int fd;
+>                 if (strcmp(direntp->d_name, ".") == 0)
+>                         continue;
+>                 if (strcmp(direntp->d_name, "..") == 0)
+>                         continue;
+>                 fd = atoi(direntp->d_name);
+>                 if (fd == 0 || fd == 1 || fd == 2)
+>                         continue;
+>                 close(fd);
+>         }
 > 
-> 2) Why do we need it in the guest
+>         closedir(dir); /* cannot fail */
+>         return 0;
+> }
 > 
-> We need to provide the guest with information on the adapters and zPCI 
-> functions returned by the clp_query instruction so that the guest's 
-> driver gets the right information on how the way to the zPCI function 
-> has been built in the host.
+> to close_range() yields:
+> 1. closing 4 open files:
+>    - close_all_fds(): ~280 us
+>    - close_range():    ~24 us
 > 
+> 2. closing 1000 open files:
+>    - close_all_fds(): ~5000 us
+>    - close_range():   ~800 us
 > 
-> When a guest issues the CLP instructions we intercept the clp command in 
-> QEMU and we need to feed the response with the right values for the guest.
-> The "right" values are not the raw CLP response values:
+> close_range() is designed to allow for some flexibility. Specifically, it
+> does not simply always close all open file descriptors of a task. Instead,
+> callers can specify an upper bound.
+> This is e.g. useful for scenarios where specific file descriptors are
+> created with well-known numbers that are supposed to be excluded from
+> getting closed.
+> For extra paranoia close_range() comes with a flags argument. This can e.g.
+> be used to implement extension. Once can imagine userspace wanting to stop
+> at the first error instead of ignoring errors under certain circumstances.
+> There might be other valid ideas in the future. In any case, a flag
+> argument doesn't hurt and keeps us on the safe side.
 > 
-> - some identifier must be virtualized, like UID and FID,
-> 
-> - some values must match what the host received from the CLP response, 
-> like the size of the transmited blocks, the DMA Address Space Mask, 
-> number of interrupt, MSIA
-> 
-> - some other must match what the host handled with the adapter and 
-> function, the start and end of DMA,
-> 
-> - some what the host IOMMU driver supports (frame size),
+> >From an implementation side this is kept rather dumb. It saw some input
+> from David and Jann but all nonsense is obviously my own!
+> - Errors to close file descriptors are currently ignored. (Could be changed
+>   by setting a flag in the future if needed.)
+> - __close_range() is a rather simplistic wrapper around __close_fd().
+>   My reasoning behind this is based on the nature of how __close_fd() needs
+>   to release an fd. But maybe I misunderstood specifics:
+>   We take the files_lock and rcu-dereference the fdtable of the calling
+>   task, we find the entry in the fdtable, get the file and need to release
+>   files_lock before calling filp_close().
+>   In the meantime the fdtable might have been altered so we can't just
+>   retake the spinlock and keep the old rcu-reference of the fdtable
+>   around. Instead we need to grab a fresh reference to the fdtable.
+>   If my reasoning is correct then there's really no point in fancyfying
+>   __close_range(): We just need to rcu-dereference the fdtable of the
+>   calling task once to cap the max_fd value correctly and then go on
+>   calling __close_fd() in a loop.
 
-This seems very reminiscent of virtualizing PCI config space... so why
-is this being proposed as a VFIO IOMMU ioctl extension?  These are all
-function level characteristics, right?  Should this be a capability on
-the VFIO device, or perhaps a region like we used for the Intel
-OpRegion (though the structure size seems more akin to a capability
-here)?  As I mentioned in my previous reply, tying this into the IOMMU
-interface seemed to rely on (I assume) an one-to-one-to-one mapping of
-PCI function to IOMMU group to IOMMU domain, but that doesn't still
-doesn't necessarily lend itself to using the IOMMU for device level
-information.  If there is IOMMU info, perhaps it needs to be split, ie.
-expose a frame size via domain_get_attr, expose device level features
-via a device capability, let QEMU assemble these into something
-coherent to emulate the clp interface.
+> +/**
+> + * __close_range() - Close all file descriptors in a given range.
+> + *
+> + * @fd:     starting file descriptor to close
+> + * @max_fd: last file descriptor to close
+> + *
+> + * This closes a range of file descriptors. All file descriptors
+> + * from @fd up to and including @max_fd are closed.
+> + */
+> +int __close_range(struct files_struct *files, unsigned fd, unsigned max_fd)
+> +{
+> +	unsigned int cur_max;
+> +
+> +	if (fd > max_fd)
+> +		return -EINVAL;
+> +
+> +	rcu_read_lock();
+> +	cur_max = files_fdtable(files)->max_fds;
+> +	rcu_read_unlock();
+> +
+> +	/* cap to last valid index into fdtable */
+> +	if (max_fd >= cur_max)
+> +		max_fd = cur_max - 1;
+> +
+> +	while (fd <= max_fd)
+> +		__close_fd(files, fd++);
+> +
+> +	return 0;
+> +}
 
-> 3) We have three different way to get This information:
-> 
-> The PCI Linux interface is a standard PCI interface and some Z specific 
-> information is available in sysfs.
-> Not all the information needed to be returned inside the CLP response is 
-> available.
-> So we can not use the sysfs interface to get all the information.
-> 
-> There is a CLP ioctl interface but this interface is not secure in that 
-> it returns the information for all adapters in the system.
-> 
-> The VFIO interface offers the advantage to point to a single PCI 
-> function, so more secure than the clp ioctl interface.
-> Coupled with the s390_iommu we get access to the zPCI CLP instruction 
-> and to the values handled by the zPCI driver.
-> 
-> 
-> 4) Until now we used to fill the CLP response to the guest inside QEMU 
-> with fixed values corresponding to the only PCI card we supported.
-> To support new cards we need to get the right values from the kernel out.
+Umm...  That's going to be very painful if you dup2() something to MAX_INT and
+then run that; roughly 2G iterations of bouncing ->file_lock up and down,
+without anything that would yield CPU in process.
 
-If it's already emulated, I much prefer figuring out how to expose the
-right pieces of information via an appropriate interface to virtualize
-fields that are actually necessary rather than simply providing an
-interface to dump the clp info straight to userspace and pipe it to the
-VM.  Thanks,
+If anything, I would suggest something like
 
-Alex
+	fd = *start_fd;
+	grab the lock
+        fdt = files_fdtable(files);
+more:
+	look for the next eviction candidate in ->open_fds, starting at fd
+	if there's none up to max_fd
+		drop the lock
+		return NULL
+	*start_fd = fd + 1;
+	if the fscker is really opened and not just reserved
+		rcu_assign_pointer(fdt->fd[fd], NULL);
+		__put_unused_fd(files, fd);
+		drop the lock
+		return the file we'd got
+	if (unlikely(need_resched()))
+		drop lock
+		cond_resched();
+		grab lock
+		fdt = files_fdtable(files);
+	goto more;
+
+with the main loop being basically
+	while ((file = pick_next(files, &start_fd, max_fd)) != NULL)
+		filp_close(file, files);
+
+
