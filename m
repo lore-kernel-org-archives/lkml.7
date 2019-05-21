@@ -1,76 +1,151 @@
 Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6900C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 09:10:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2230BC04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 09:11:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F4E42173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 09:10:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E129A216B7
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 09:11:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558429856;
-	bh=C7Rp8wqYBXqZ6fFn2WYWodrvowsp7TonAqKyhtYkULc=;
+	s=default; t=1558429904;
+	bh=yx7cV8f32un9LEMO+jl8EoRCPsZ6Ci32BCw0MBrlhDU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=A3Nt1Y1v2cXyDO0nQvuu/MZBsCYDuvrBGmwNxb2LO1/iKbO9CGLeYr7GYqnZEvYpI
-	 5vFhuL26uGxdaZApUO0dbcBcLVlx5+ppNNvUENbQSg+1l69rZHRYjplzUSuJfnRspZ
-	 tDtnXRO8niI12gEcfSGcHqHgeazHiHPrF0hoCTnA=
+	b=zwCrBtRHfPZuAWHJeoVBtlmPPrG276s2EYFJQnACWKjibVS3dkvymquOZU6V6ssNy
+	 UaAmqHIXW7hrLoGQM12u/qHOPiWFvr28scz43tRmocmKfMV3qfCd/m7o3dACydkhe8
+	 fXA6LKrGoVLGPvGoDddL1AhPbwzMz5JuBByk5G0Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727446AbfEUJKz (ORCPT
+        id S1727451AbfEUJLn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 05:10:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53702 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726296AbfEUJKz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 05:10:55 -0400
-Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 17195216B7;
-        Tue, 21 May 2019 09:10:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558429854;
-        bh=C7Rp8wqYBXqZ6fFn2WYWodrvowsp7TonAqKyhtYkULc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PewuD7bWJaE45Jz4ZUpufsZWbKYpS40BRFVcsxx40r10NLzxS//kXp/Pb7F9zd+Z6
-         2KLO6/ScDrLRVLPz4SxG3bYO5lu5U6sz2NImkfjpdf74Wj5CFfCvIFt8EnUq635lcv
-         JAmx7r1jQHBrZ3kk1BcfJY8rlYEZLjbpNAeBelBI=
-Date:   Tue, 21 May 2019 17:09:57 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Anson Huang <anson.huang@nxp.com>
-Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Peng Fan <peng.fan@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH V2] arm64: dts: imx8qxp: Add gpio alias
-Message-ID: <20190521090956.GF15856@dragon>
-References: <1558426311-14082-1-git-send-email-Anson.Huang@nxp.com>
+        Tue, 21 May 2019 05:11:43 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:35338 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726296AbfEUJLm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 05:11:42 -0400
+Received: by mail-pf1-f196.google.com with SMTP id t87so8746750pfa.2;
+        Tue, 21 May 2019 02:11:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=aOt4vo5keUTXDvxZZjRtcBm1aK7jMfHXMFBxDuIODzA=;
+        b=P5we8Zz6H+6S4VTlk2sRyHDyYEYpXZzybP9tIIBSzd43r9y5MSZBdRXPlBJ3lryTA+
+         FWOEAmz8w+mqOLE+LcNWuJ/ve9kPQPP8/phO01R+hpObYwiJzOU+mo9bnHu8oNM243hL
+         clYHRejJlOIAMzdHvAOiJEhHVDOa2d3OqbZ7SHHr7QP9bdRstiaxodxpUI3z/JqLn0l4
+         CuVATlGmo/EyAaq4qPMaqhxYBgbZoh/4BquhmIPGWKdQjcfQP+ng4zk+hWfL7XFYdTlr
+         x1rygty1O865cqXgXvCFhBnp7eKJuEOmFIKJmbeFTSlJ6axhVPY/QRu6T1S+43OepZ+a
+         qeZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=aOt4vo5keUTXDvxZZjRtcBm1aK7jMfHXMFBxDuIODzA=;
+        b=IWiM2Mq9+pg5bAF5xG1HRGTS+i2Er+q7WP8zuqyb3/e7h8K/8NnaPU8Wn490o22OPs
+         gW64O1ZWTOzxtig9Q+TheHEks2vykxAjqXukr7hZKgkYmI+4GFhFLAU8boZSKfWIEFsd
+         tZnA/UmdWOgrrU79c2myfXzNTUTyEIP+c5gVYYqkDKfxLRbScDEUh3OkzTzUiE4NiGt9
+         dqobrjTOEEEPOFmOeDYyos/eTFbxg9EcBpq5EiBybkNGRMhgRQbCHt2UW3eWfT2YyoI+
+         CjTBt5ccno5D+RdADqgR1GEdCdfyS8wcBPJznwwCIIPXjZmngpDhsMC2VWp8cLVQrQo7
+         HYJQ==
+X-Gm-Message-State: APjAAAU2FJtWHrDFVh9IZsdlikKwOW/FWU5z1iW+XYtH8USe0kPGfyQk
+        LttTk225t0xHDJsXa6J1AcE=
+X-Google-Smtp-Source: APXvYqzQ29qPyHCPNtNMZdW9Eoc/R5M5CuB8zMitb7IkSgZN/cNPBHHU2P0y4NCtkKDQjLnHnvvwbA==
+X-Received: by 2002:aa7:980e:: with SMTP id e14mr86228912pfl.142.1558429901695;
+        Tue, 21 May 2019 02:11:41 -0700 (PDT)
+Received: from google.com ([2401:fa00:d:0:98f1:8b3d:1f37:3e8])
+        by smtp.gmail.com with ESMTPSA id s19sm20707713pfh.176.2019.05.21.02.11.36
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 21 May 2019 02:11:40 -0700 (PDT)
+Date:   Tue, 21 May 2019 18:11:34 +0900
+From:   Minchan Kim <minchan@kernel.org>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tim Murray <timmurray@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>, linux-api@vger.kernel.org
+Subject: Re: [RFC 1/7] mm: introduce MADV_COOL
+Message-ID: <20190521091134.GA219653@google.com>
+References: <20190520035254.57579-1-minchan@kernel.org>
+ <20190520035254.57579-2-minchan@kernel.org>
+ <20190520081621.GV6836@dhcp22.suse.cz>
+ <20190520225419.GA10039@google.com>
+ <20190521060443.GA32329@dhcp22.suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1558426311-14082-1-git-send-email-Anson.Huang@nxp.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20190521060443.GA32329@dhcp22.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 21, 2019 at 08:17:02AM +0000, Anson Huang wrote:
-> Add i.MX8QXP GPIO alias for kernel GPIO driver usage.
+On Tue, May 21, 2019 at 08:04:43AM +0200, Michal Hocko wrote:
+> On Tue 21-05-19 07:54:19, Minchan Kim wrote:
+> > On Mon, May 20, 2019 at 10:16:21AM +0200, Michal Hocko wrote:
+> [...]
+> > > > Internally, it works via deactivating memory from active list to
+> > > > inactive's head so when the memory pressure happens, they will be
+> > > > reclaimed earlier than other active pages unless there is no
+> > > > access until the time.
+> > > 
+> > > Could you elaborate about the decision to move to the head rather than
+> > > tail? What should happen to inactive pages? Should we move them to the
+> > > tail? Your implementation seems to ignore those completely. Why?
+> > 
+> > Normally, inactive LRU could have used-once pages without any mapping
+> > to user's address space. Such pages would be better candicate to
+> > reclaim when the memory pressure happens. With deactivating only
+> > active LRU pages of the process to the head of inactive LRU, we will
+> > keep them in RAM longer than used-once pages and could have more chance
+> > to be activated once the process is resumed.
 > 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> You are making some assumptions here. You have an explicit call what is
+> cold now you are assuming something is even colder. Is this assumption a
+> general enough to make people depend on it? Not that we wouldn't be able
+> to change to logic later but that will always be risky - especially in
+> the area when somebody want to make a user space driven memory
+> management.
 
-Applied, thanks.
+Think about MADV_FREE. It moves those pages into inactive file LRU's head.
+See the get_scan_count which makes forceful scanning of inactive file LRU
+if it has enough size based on the memory pressure.
+The reason is it's likely to have used-once pages in inactive file LRU,
+generally. Those pages has been top-priority candidate to be reclaimed
+for a long time.
+
+Only parts I am aware of moving pages into tail of inactive LRU are places
+writeback is done for pages VM already decide to reclaim by LRU aging or
+destructive operation like invalidating but couldn't completed. It's
+really strong hints with no doubt.
+
+>  
+> > > What should happen for shared pages? In other words do we want to allow
+> > > less privileged process to control evicting of shared pages with a more
+> > > privileged one? E.g. think of all sorts of side channel attacks. Maybe
+> > > we want to do the same thing as for mincore where write access is
+> > > required.
+> > 
+> > It doesn't work with shared pages(ie, page_mapcount > 1). I will add it
+> > in the description.
+> 
+> OK, this is good for the starter. It makes the implementation simpler
+> and we can add shared mappings coverage later.
+> 
+> Although I would argue that touching only writeable mappings should be
+> reasonably safe.
+> 
+> -- 
+> Michal Hocko
+> SUSE Labs
