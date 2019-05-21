@@ -2,150 +2,98 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE8C4C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 09:29:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E63C8C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 09:29:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3B5C21743
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 09:29:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACC0321743
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 09:29:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qrm95ot6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e9vlX7kV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727469AbfEUJ3N (ORCPT
+        id S1727380AbfEUJ3x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 05:29:13 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:42489 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726347AbfEUJ3M (ORCPT
+        Tue, 21 May 2019 05:29:53 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:34931 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726347AbfEUJ3x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 05:29:12 -0400
-Received: by mail-lf1-f66.google.com with SMTP id y13so12495729lfh.9
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 02:29:10 -0700 (PDT)
+        Tue, 21 May 2019 05:29:53 -0400
+Received: by mail-pf1-f194.google.com with SMTP id t87so8771826pfa.2
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 02:29:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5bDhuqyWQOugAB2J2IW4o9KvvRVuCaOEFqCaZHsR2lo=;
-        b=qrm95ot6Cg+5UvFW4o/vicOnL7utM3Fk1hl2VAQvbAcWY3DaDiHAbMJUfNbSbmBGKP
-         bS+/eAmBn2Et6qNt9R0c4JmZdZuovSkHdtbqsGegevZ6aVtUp0qINvXQ5PnmDY/nhmTH
-         l5LX9UNjoleeXiVDFmA2axbTca9t8BWSiLqgy7cuq3gaWopo36mV8A307+JirXMj8jPg
-         WxH2v7bc3wY6rXn+7OCF2ZKUfg2AKczNbALEwWYCGEQThrITWHaYLr27FVPDnVj7Gjea
-         tMTgi94jYOvtWGlfvS+olWwnozp47LjfG7GEpdw9iE8g/7jlCe69c5+Gc+0U3fayOTGQ
-         pJQA==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=ZKWnUydwFd4s05EBLm5iMxF297ZzlKXFCehjvJXWjk8=;
+        b=e9vlX7kVoNvwUUcgwDBY5fB667kO9XBHwD8KpydyKQAaX0klw9kT36dKV69vqYcvCS
+         19Rgy+GqZF/oC+7GiIO3TAM98YLtCG64As89C8aBihLH5Vpx+9MflgDEvkEvsmVwTgtV
+         NjvbORswyRC2C/WqtyIFvWK8aAOSOSYRsWjRTQ6sMmk148bdOCg7hetsaoJX3M58FGIm
+         Zi3zSQkuRa2hSqVNTTV/b1bba2R/CV1LJQEE0QG3rDHunOllqDvzmJVKZbi4oYEIrTP0
+         xnDEg9BXPC69PnpL1Do6tpOgGBN1xRl7XZOZyWW/YUn8y4KVnrPHgAACJxsBIYWdnxBf
+         PPNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5bDhuqyWQOugAB2J2IW4o9KvvRVuCaOEFqCaZHsR2lo=;
-        b=UthdZWuWwHkwltcWM1FLWOGvHZSk6ACJkVKMyEl6P0TeGzuhT8xJ01Nw8RXNKnkb9j
-         TI2In2QEJ2VpRpDVPEg7AV/5NqGtZJf123S2UnPFTvnAJCZdi7DZA2sdQKkRimGZfGrU
-         grX8weeWaR7O2ZJu4nTlNxhNxh4xVu8PVCkjsT+k2QeBAL5/2+bkxIAfljTrgP7VJg/9
-         2Jt/PnJqL94Iu+jv8+mJmoX8DiniRl6pCeTlkXxAJ8hc1f29K+mFUtADoEPm5UBgmKA1
-         IY/i/DYrlp7pVoTfeewRyn57/cJQRGZF7R3TTG+23dZ2AwqFEcuiaAE9CZYrOa+4W9AE
-         WNUw==
-X-Gm-Message-State: APjAAAXvFbfx3D3rTDyDDQDqC2crIV/+j+jidYFjvFMjVptKKsvqNx5K
-        g17L9KIRfTNVe+LR4ruW73MMovvC0n0HODIUEjIyGA==
-X-Google-Smtp-Source: APXvYqx+IN2EjSUfvaaTz/kgVZcP6y31/EIWrDgZcpvYvTh3XkDT9atG8F4bORoEemzmNXf/5z4b0FkkJySERKhSUZo=
-X-Received: by 2002:a19:ee0a:: with SMTP id g10mr3722695lfb.127.1558430950013;
- Tue, 21 May 2019 02:29:10 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=ZKWnUydwFd4s05EBLm5iMxF297ZzlKXFCehjvJXWjk8=;
+        b=D8Hm8Gs7OsYbeGCg6fiE//5aa1KxyVw3Ci7NjbhzzfdAqqJ3JDFWXYq1ixOwpwsver
+         S+WS+xlq1hTX23auK/BSfPyLmqfAUg/Nh1+A+EY2gl6hY0gVzv+0mojmxCH/Zse50WL1
+         ocjd1ZfOON686oKlGZ9BkT8o+WpjBKcg1WhGxQlimnqZL0sOCexZs1TGyfaKzzpBCQ+K
+         L/uzIRAMET8sfT5+IJKVAXuqWxFTmPdnz3xfNlyn41rYMxV1weiyfx/BKImi6KZtsP67
+         0O59VZFCzQld2JzMbEGxTnE9idWzJDMSpqvXcGIarfkT+1PDXNuIdzSKLq0yyLAg7nih
+         fH5g==
+X-Gm-Message-State: APjAAAUNzAvZTIBnZinK2nm+09SbWjPSymzMFCdvICw/z5KdcBDHWZy/
+        K8bzb6FFbRW65vN3BIfTnNFQLNCBJ+A=
+X-Google-Smtp-Source: APXvYqzlSQC+YZ+UGNJK8+c6TSAy6P94Vtm61zQ7fh1tJxdmVuDb9fscPci2+HrOD3rmKFf0v/rCwg==
+X-Received: by 2002:a63:495e:: with SMTP id y30mr37856765pgk.185.1558430992855;
+        Tue, 21 May 2019 02:29:52 -0700 (PDT)
+Received: from zhanggen-UX430UQ ([66.42.35.75])
+        by smtp.gmail.com with ESMTPSA id s80sm55935631pfs.117.2019.05.21.02.29.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 21 May 2019 02:29:52 -0700 (PDT)
+Date:   Tue, 21 May 2019 17:29:35 +0800
+From:   Gen Zhang <blackgod016574@gmail.com>
+To:     keescook@chromium.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH] consolemap: Fix a memory leaking bug in
+ drivers/tty/vt/consolemap.c
+Message-ID: <20190521092935.GA2297@zhanggen-UX430UQ>
 MIME-Version: 1.0
-References: <20190520115247.060821231@linuxfoundation.org> <20190520222342.wtsjx227c6qbkuua@xps.therub.org>
- <20190521085956.GC31445@kroah.com>
-In-Reply-To: <20190521085956.GC31445@kroah.com>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Tue, 21 May 2019 14:58:58 +0530
-Message-ID: <CA+G9fYvHmUimtwszwo=9fDQLn+MNh8Vq3UGPaPUdhH=dEKzqxg@mail.gmail.com>
-Subject: Re: [PATCH 4.19 000/105] 4.19.45-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>,
-        linux-ext4@vger.kernel.org,
-        Arthur Marsh <arthur.marsh@internode.on.net>,
-        Richard Weinberger <richard.weinberger@gmail.com>,
-        "Theodore Ts'o" <tytso@mit.edu>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 21 May 2019 at 14:30, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Mon, May 20, 2019 at 05:23:42PM -0500, Dan Rue wrote:
-> > On Mon, May 20, 2019 at 02:13:06PM +0200, Greg Kroah-Hartman wrote:
-> > > This is the start of the stable review cycle for the 4.19.45 release.
-> > > There are 105 patches in this series, all will be posted as a response
-> > > to this one.  If anyone has any issues with these being applied, please
-> > > let me know.
-> > >
-> > > Responses should be made by Wed 22 May 2019 11:50:49 AM UTC.
-> > > Anything received after that time might be too late.
-> >
-> > We're seeing an ext4 issue previously reported at
-> > https://lore.kernel.org/lkml/20190514092054.GA6949@osiris.
-> >
-> > [ 1916.032087] EXT4-fs error (device sda): ext4_find_extent:909: inode #8: comm jbd2/sda-8: pblk 121667583 bad header/extent: invalid extent entries - magic f30a, entries 8, max 340(340), depth 0(0)
-> > [ 1916.073840] jbd2_journal_bmap: journal block not found at offset 4455 on sda-8
-> > [ 1916.081071] Aborting journal on device sda-8.
-> > [ 1916.348652] EXT4-fs error (device sda): ext4_journal_check_start:61: Detected aborted journal
-> > [ 1916.357222] EXT4-fs (sda): Remounting filesystem read-only
-> >
-> > This is seen on 4.19-rc, 5.0-rc, mainline, and next. We don't have data
-> > for 5.1-rc yet, which is presumably also affected in this RC round.
-> >
-> > We only see this on x86_64 and i386 devices - though our hardware setups
-> > vary so it could be coincidence.
-> >
-> > I have to run out now, but I'll come back and work on a reproducer and
-> > bisection later tonight and tomorrow.
-> >
-> > Here is an example test run; link goes to the spot in the ltp syscalls
-> > test where the disk goes into read-only mode.
-> > https://lkft.validation.linaro.org/scheduler/job/735468#L8081
->
-> Odd, I keep hearing rumors of ext4 issues right now, but nothing
-> actually solid that I can point to.  Any help you can provide here would
-> be great.
->
+In function con_insert_unipair(), when allocation for p2 and p1[n]
+fails, ENOMEM is returned, but previously allocated p1 is not freed, 
+remains as leaking memory. Thus we should free p1 as well when this
+allocation fails.
 
-git bisect helped me to land on this commit,
+Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
 
-# git bisect bad
-e8fd3c9a5415f9199e3fc5279e0f1dfcc0a80ab2 is the first bad commit
-commit e8fd3c9a5415f9199e3fc5279e0f1dfcc0a80ab2
-Author: Theodore Ts'o <tytso@mit.edu>
-Date:   Tue Apr 9 23:37:08 2019 -0400
-
-    ext4: protect journal inode's blocks using block_validity
-
-    commit 345c0dbf3a30872d9b204db96b5857cd00808cae upstream.
-
-    Add the blocks which belong to the journal inode to block_validity's
-    system zone so attempts to deallocate or overwrite the journal due a
-    corrupted file system where the journal blocks are also claimed by
-    another inode.
-
-    Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=202879
-    Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-    Cc: stable@kernel.org
-    Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
-:040000 040000 b8b6ce2577d60c65021e5cc1c3a38b32e0cbb2ff
-747c67b159b33e4e1da414b1d33567a5da9ae125 M fs
-
-- Naresh
-
-> thanks,
->
-> greg k-h
+---
+diff --git a/drivers/tty/vt/consolemap.c b/drivers/tty/vt/consolemap.c
+index b28aa0d..47fbd73 100644
+--- a/drivers/tty/vt/consolemap.c
++++ b/drivers/tty/vt/consolemap.c
+@@ -489,7 +489,10 @@ con_insert_unipair(struct uni_pagedir *p, u_short unicode, u_short fontpos)
+ 	p2 = p1[n = (unicode >> 6) & 0x1f];
+ 	if (!p2) {
+ 		p2 = p1[n] = kmalloc_array(64, sizeof(u16), GFP_KERNEL);
+-		if (!p2) return -ENOMEM;
++		if (!p2) {
++			kfree(p1);
++			return -ENOMEM;
++		}
+ 		memset(p2, 0xff, 64*sizeof(u16)); /* No glyphs for the characters (yet) */
+ 	}
+ 
