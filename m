@@ -2,255 +2,74 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B4BCC04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 14:52:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E99E6C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 14:52:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E96E8208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 14:52:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF2F621743
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 14:52:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="ax+OwyfL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rMcvSaT2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728947AbfEUOw1 (ORCPT
+        id S1728962AbfEUOw3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 10:52:27 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:41340 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728539AbfEUOwU (ORCPT
+        Tue, 21 May 2019 10:52:29 -0400
+Received: from mail-io1-f45.google.com ([209.85.166.45]:37466 "EHLO
+        mail-io1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728841AbfEUOwT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 10:52:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1558450338; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=+B18APaxvHsp3HPUtJiRP9lFp/hR6r7x1rtqKumiKiM=;
-        b=ax+OwyfLOM8ZdjPX8gVfeoD39JKJTqcBvVDrGbazKu4KRC9R4nw3xojBtGuHLjHwmroqIZ
-        5VIYrXslA78URBExlzuhtFfFhdS/4o597z7shkq2jTb4kw1hqq5L4Q6mVm56e/02Vq7et4
-        1DTREOThqlN5sNdA2Z3DNCdByblCMBY=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Lee Jones <lee.jones@linaro.org>
-Cc:     Mathieu Malaterre <malat@debian.org>, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-clk@vger.kernel.org, od@zcrc.me,
-        Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v12 13/13] MIPS: jz4740: Drop obsolete code
-Date:   Tue, 21 May 2019 16:51:41 +0200
-Message-Id: <20190521145141.9813-14-paul@crapouillou.net>
-In-Reply-To: <20190521145141.9813-1-paul@crapouillou.net>
-References: <20190521145141.9813-1-paul@crapouillou.net>
+        Tue, 21 May 2019 10:52:19 -0400
+Received: by mail-io1-f45.google.com with SMTP id u2so14163487ioc.4
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 07:52:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VEBQT5hPNY+WmxZoXIy8e/pcweb5kfeZeD0sBTptdRA=;
+        b=rMcvSaT2NO+jmP8g6QeQrSTTPSv/OllfHnw4LphrinwMsbbuwCDWJdphYEBhZvg2X5
+         7rRoVkFnX9ZhbtxvhW+DiPHkO7Dv1a5hLPI5KOK2msqNVGlJL3ZQ2m6hcgvu/nc2ksK0
+         +mv3obz7DDPx+LQxEqQB9uIQTu4iLnp26+osEXmGI8Pos2TdAxbLGdiGCf6RsbAiJbZ8
+         /yQRrcifSQ0F0WRNxOwb0rYDY1RJNtPAaIgh1YsskS6ZjoYG62pQjWBDgs01Qwkx9Z12
+         qcqa6RO8hDt1BUrfcRyqXImJ8U+RpPJapFxQqszg/GCqAhEwe7ZawBaQ9LvVd4w7RaLG
+         pRXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VEBQT5hPNY+WmxZoXIy8e/pcweb5kfeZeD0sBTptdRA=;
+        b=AM+4K/kIA5AoHE4vG2kP62kkMKgdFiou7NrTYF92Uh08JymXI85lzScK824zUnhLBu
+         8jeC7ot9BCm+u+bW7YpH/sJdIXXy83YHUtU+CuPkWirA6SA40wOx5/cb73eVdvb1Ae6j
+         hwVyCKKsXMKrZXirItPjg2tN6eMWxzNJreh1EfmzgxGJXCOhx+NckshzZptYSEAuNvHC
+         sMx7rOjWo38Spc3UlVE/4guOvafJrysFB+Jd9rKwUt/x73oY9/oztQoEdkyYIG3BkcUn
+         D75zxqTdUloSZpKORW7MrCaR+9bMu11otL73+DrjZTI9WD9HRsl3y8RnvB5VGaOqqEJr
+         f0cw==
+X-Gm-Message-State: APjAAAWaDD3/t+8l2y8ei8nV1Wp2+/MKGwDdRRkkEgR8wba53BGko3k+
+        FU+FfHPKSw1Vv3DnFcdZ/RuYwbvQSukucGOj118=
+X-Google-Smtp-Source: APXvYqw1FQrNhSL/UOS0iNSoSsah/qfUsbU8ohoRfTN+LWooDGMyeqRDC7CCfWjpG2/i4o6DwpRDUFhZGUzRDYT3P3A=
+X-Received: by 2002:a6b:790a:: with SMTP id i10mr4425841iop.2.1558450338532;
+ Tue, 21 May 2019 07:52:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1558115396-3244-1-git-send-email-oscargomezf@gmail.com>
+ <CAGngYiVNQrr2nKfGCdi8FzS5UnmGaDj_Gu_F0ZeOTMKX6_1Zuw@mail.gmail.com>
+ <20190521141715.GA25603@kroah.com> <CAGngYiUxd15xVkcbFm4cC+0a+UU+VODTKC0z4p=NoW+pTXoYzA@mail.gmail.com>
+In-Reply-To: <CAGngYiUxd15xVkcbFm4cC+0a+UU+VODTKC0z4p=NoW+pTXoYzA@mail.gmail.com>
+From:   Oscar Gomez Fuente <oscargomezf@gmail.com>
+Date:   Tue, 21 May 2019 16:51:43 +0200
+Message-ID: <CALtfCQaiT0p_cWgKS66ExS0_Uqe2Ltv7v-dV7sLarBgZNUGzHQ@mail.gmail.com>
+Subject: Re: [PATCH] staging: fieldbus: solve warning incorrect type dev_core.c
+To:     Sven Van Asbroeck <thesven73@gmail.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>, devel@driverdev.osuosl.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The old clocksource/timer platform code is now obsoleted by the newly
-introduced TCU drivers.
+Ok, perfect!
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
----
-
-Notes:
-    v5: New patch
-    
-    v6-v11: No change
-    
-    v12: Only remove clocksource code. The rest will eventually be
-    	 removed in a future patchset when the PWM/watchdog drivers
-    	 are updated.
-
- arch/mips/jz4740/time.c | 154 +---------------------------------------
- 1 file changed, 2 insertions(+), 152 deletions(-)
-
-diff --git a/arch/mips/jz4740/time.c b/arch/mips/jz4740/time.c
-index 2ca9160f642a..9a61bca8e9f0 100644
---- a/arch/mips/jz4740/time.c
-+++ b/arch/mips/jz4740/time.c
-@@ -13,164 +13,14 @@
-  *
-  */
- 
--#include <linux/clk.h>
- #include <linux/clk-provider.h>
--#include <linux/interrupt.h>
--#include <linux/kernel.h>
--#include <linux/time.h>
-+#include <linux/clocksource.h>
- 
--#include <linux/clockchips.h>
--#include <linux/sched_clock.h>
--
--#include <asm/mach-jz4740/clock.h>
--#include <asm/mach-jz4740/irq.h>
- #include <asm/mach-jz4740/timer.h>
--#include <asm/time.h>
--
--#include "clock.h"
--
--#define TIMER_CLOCKEVENT 0
--#define TIMER_CLOCKSOURCE 1
--
--static uint16_t jz4740_jiffies_per_tick;
--
--static u64 jz4740_clocksource_read(struct clocksource *cs)
--{
--	return jz4740_timer_get_count(TIMER_CLOCKSOURCE);
--}
--
--static struct clocksource jz4740_clocksource = {
--	.name = "jz4740-timer",
--	.rating = 200,
--	.read = jz4740_clocksource_read,
--	.mask = CLOCKSOURCE_MASK(16),
--	.flags = CLOCK_SOURCE_IS_CONTINUOUS,
--};
--
--static u64 notrace jz4740_read_sched_clock(void)
--{
--	return jz4740_timer_get_count(TIMER_CLOCKSOURCE);
--}
--
--static irqreturn_t jz4740_clockevent_irq(int irq, void *devid)
--{
--	struct clock_event_device *cd = devid;
--
--	jz4740_timer_ack_full(TIMER_CLOCKEVENT);
--
--	if (!clockevent_state_periodic(cd))
--		jz4740_timer_disable(TIMER_CLOCKEVENT);
--
--	cd->event_handler(cd);
--
--	return IRQ_HANDLED;
--}
--
--static int jz4740_clockevent_set_periodic(struct clock_event_device *evt)
--{
--	jz4740_timer_set_count(TIMER_CLOCKEVENT, 0);
--	jz4740_timer_set_period(TIMER_CLOCKEVENT, jz4740_jiffies_per_tick);
--	jz4740_timer_irq_full_enable(TIMER_CLOCKEVENT);
--	jz4740_timer_enable(TIMER_CLOCKEVENT);
--
--	return 0;
--}
--
--static int jz4740_clockevent_resume(struct clock_event_device *evt)
--{
--	jz4740_timer_irq_full_enable(TIMER_CLOCKEVENT);
--	jz4740_timer_enable(TIMER_CLOCKEVENT);
--
--	return 0;
--}
--
--static int jz4740_clockevent_shutdown(struct clock_event_device *evt)
--{
--	jz4740_timer_disable(TIMER_CLOCKEVENT);
--
--	return 0;
--}
--
--static int jz4740_clockevent_set_next(unsigned long evt,
--	struct clock_event_device *cd)
--{
--	jz4740_timer_set_count(TIMER_CLOCKEVENT, 0);
--	jz4740_timer_set_period(TIMER_CLOCKEVENT, evt);
--	jz4740_timer_enable(TIMER_CLOCKEVENT);
--
--	return 0;
--}
--
--static struct clock_event_device jz4740_clockevent = {
--	.name = "jz4740-timer",
--	.features = CLOCK_EVT_FEAT_PERIODIC | CLOCK_EVT_FEAT_ONESHOT,
--	.set_next_event = jz4740_clockevent_set_next,
--	.set_state_shutdown = jz4740_clockevent_shutdown,
--	.set_state_periodic = jz4740_clockevent_set_periodic,
--	.set_state_oneshot = jz4740_clockevent_shutdown,
--	.tick_resume = jz4740_clockevent_resume,
--	.rating = 200,
--#ifdef CONFIG_MACH_JZ4740
--	.irq = JZ4740_IRQ_TCU0,
--#endif
--#if defined(CONFIG_MACH_JZ4770) || defined(CONFIG_MACH_JZ4780)
--	.irq = JZ4780_IRQ_TCU2,
--#endif
--};
--
--static struct irqaction timer_irqaction = {
--	.handler	= jz4740_clockevent_irq,
--	.flags		= IRQF_PERCPU | IRQF_TIMER,
--	.name		= "jz4740-timerirq",
--	.dev_id		= &jz4740_clockevent,
--};
- 
- void __init plat_time_init(void)
- {
--	int ret;
--	uint32_t clk_rate;
--	uint16_t ctrl;
--	struct clk *ext_clk;
--
- 	of_clk_init(NULL);
- 	jz4740_timer_init();
--
--	ext_clk = clk_get(NULL, "ext");
--	if (IS_ERR(ext_clk))
--		panic("unable to get ext clock");
--	clk_rate = clk_get_rate(ext_clk) >> 4;
--	clk_put(ext_clk);
--
--	jz4740_jiffies_per_tick = DIV_ROUND_CLOSEST(clk_rate, HZ);
--
--	clockevent_set_clock(&jz4740_clockevent, clk_rate);
--	jz4740_clockevent.min_delta_ns = clockevent_delta2ns(100, &jz4740_clockevent);
--	jz4740_clockevent.min_delta_ticks = 100;
--	jz4740_clockevent.max_delta_ns = clockevent_delta2ns(0xffff, &jz4740_clockevent);
--	jz4740_clockevent.max_delta_ticks = 0xffff;
--	jz4740_clockevent.cpumask = cpumask_of(0);
--
--	clockevents_register_device(&jz4740_clockevent);
--
--	ret = clocksource_register_hz(&jz4740_clocksource, clk_rate);
--
--	if (ret)
--		printk(KERN_ERR "Failed to register clocksource: %d\n", ret);
--
--	sched_clock_register(jz4740_read_sched_clock, 16, clk_rate);
--
--	setup_irq(jz4740_clockevent.irq, &timer_irqaction);
--
--	ctrl = JZ_TIMER_CTRL_PRESCALE_16 | JZ_TIMER_CTRL_SRC_EXT;
--
--	jz4740_timer_set_ctrl(TIMER_CLOCKEVENT, ctrl);
--	jz4740_timer_set_ctrl(TIMER_CLOCKSOURCE, ctrl);
--
--	jz4740_timer_set_period(TIMER_CLOCKEVENT, jz4740_jiffies_per_tick);
--	jz4740_timer_irq_full_enable(TIMER_CLOCKEVENT);
--
--	jz4740_timer_set_period(TIMER_CLOCKSOURCE, 0xffff);
--
--	jz4740_timer_enable(TIMER_CLOCKEVENT);
--	jz4740_timer_enable(TIMER_CLOCKSOURCE);
-+	timer_probe();
- }
--- 
-2.21.0.593.g511ec345e18
-
+Oscar Gomez Fuente
