@@ -2,236 +2,348 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C4CBC04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 09:41:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 028E0C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 09:42:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22B1021783
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 09:41:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFC2621479
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 09:42:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727308AbfEUJlC (ORCPT
+        id S1727400AbfEUJmK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 05:41:02 -0400
-Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:36783 "EHLO
-        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726006AbfEUJk7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 05:40:59 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R241e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04400;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0TSIe59t_1558431642;
-Received: from e19h19392.et15sqa.tbsite.net(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TSIe59t_1558431642)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 21 May 2019 17:40:55 +0800
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-To:     ying.huang@intel.com, hannes@cmpxchg.org, mhocko@suse.com,
-        mgorman@techsingularity.net, kirill.shutemov@linux.intel.com,
-        josef@toxicpanda.com, hughd@google.com, shakeelb@google.com,
-        akpm@linux-foundation.org
-Cc:     yang.shi@linux.alibaba.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: [v3 PATCH 2/2] mm: vmscan: correct some vmscan counters for THP swapout
-Date:   Tue, 21 May 2019 17:40:42 +0800
-Message-Id: <1558431642-52120-2-git-send-email-yang.shi@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1558431642-52120-1-git-send-email-yang.shi@linux.alibaba.com>
-References: <1558431642-52120-1-git-send-email-yang.shi@linux.alibaba.com>
+        Tue, 21 May 2019 05:42:10 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:36804 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726242AbfEUJmK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 05:42:10 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 64A283086228;
+        Tue, 21 May 2019 09:42:04 +0000 (UTC)
+Received: from [10.36.116.113] (ovpn-116-113.ams2.redhat.com [10.36.116.113])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4979D60FE6;
+        Tue, 21 May 2019 09:41:55 +0000 (UTC)
+Subject: Re: [PATCH v3 03/16] iommu: Add I/O ASID allocator
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Cc:     Yi Liu <yi.l.liu@intel.com>, "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Andriy Shevchenko <andriy.shevchenko@linux.intel.com>
+References: <1556922737-76313-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1556922737-76313-4-git-send-email-jacob.jun.pan@linux.intel.com>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <faf475ce-8645-9d05-663d-8d090cd4ac05@redhat.com>
+Date:   Tue, 21 May 2019 11:41:52 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
+MIME-Version: 1.0
+In-Reply-To: <1556922737-76313-4-git-send-email-jacob.jun.pan@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Tue, 21 May 2019 09:42:09 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit bd4c82c22c36 ("mm, THP, swap: delay splitting THP after
-swapped out"), THP can be swapped out in a whole.  But, nr_reclaimed
-and some other vm counters still get inc'ed by one even though a whole
-THP (512 pages) gets swapped out.
+Hi,
 
-This doesn't make too much sense to memory reclaim.  For example, direct
-reclaim may just need reclaim SWAP_CLUSTER_MAX pages, reclaiming one THP
-could fulfill it.  But, if nr_reclaimed is not increased correctly,
-direct reclaim may just waste time to reclaim more pages,
-SWAP_CLUSTER_MAX * 512 pages in worst case.
+On 5/4/19 12:32 AM, Jacob Pan wrote:
+> From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+> 
+> Some devices might support multiple DMA address spaces, in particular
+> those that have the PCI PASID feature. PASID (Process Address Space ID)
+> allows to share process address spaces with devices (SVA), partition a
+> device into VM-assignable entities (VFIO mdev) or simply provide
+> multiple DMA address space to kernel drivers. Add a global PASID
+> allocator usable by different drivers at the same time. Name it I/O ASID
+> to avoid confusion with ASIDs allocated by arch code, which are usually
+> a separate ID space.
+> 
+> The IOASID space is global. Each device can have its own PASID space,
+> but by convention the IOMMU ended up having a global PASID space, so
+> that with SVA, each mm_struct is associated to a single PASID.
+> 
+> The allocator is primarily used by IOMMU subsystem but in rare occasions
+> drivers would like to allocate PASIDs for devices that aren't managed by
+> an IOMMU, using the same ID space as IOMMU.
+> 
+> Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> Link: https://lkml.org/lkml/2019/4/26/462
+> ---
+>  drivers/iommu/Kconfig  |   6 +++
+>  drivers/iommu/Makefile |   1 +
+>  drivers/iommu/ioasid.c | 140 +++++++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/ioasid.h |  67 +++++++++++++++++++++++
+>  4 files changed, 214 insertions(+)
+>  create mode 100644 drivers/iommu/ioasid.c
+>  create mode 100644 include/linux/ioasid.h
+> 
+> diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
+> index 6f07f3b..75e7f97 100644
+> --- a/drivers/iommu/Kconfig
+> +++ b/drivers/iommu/Kconfig
+> @@ -2,6 +2,12 @@
+>  config IOMMU_IOVA
+>  	tristate
+>  
+> +config IOASID
+> +	bool
+> +	help
+> +	  Enable the I/O Address Space ID allocator. A single ID space shared
+> +	  between different users.
+> +
+>  # IOMMU_API always gets selected by whoever wants it.
+>  config IOMMU_API
+>  	bool
+> diff --git a/drivers/iommu/Makefile b/drivers/iommu/Makefile
+> index 8c71a15..0efac6f 100644
+> --- a/drivers/iommu/Makefile
+> +++ b/drivers/iommu/Makefile
+> @@ -7,6 +7,7 @@ obj-$(CONFIG_IOMMU_DMA) += dma-iommu.o
+>  obj-$(CONFIG_IOMMU_IO_PGTABLE) += io-pgtable.o
+>  obj-$(CONFIG_IOMMU_IO_PGTABLE_ARMV7S) += io-pgtable-arm-v7s.o
+>  obj-$(CONFIG_IOMMU_IO_PGTABLE_LPAE) += io-pgtable-arm.o
+> +obj-$(CONFIG_IOASID) += ioasid.o
+>  obj-$(CONFIG_IOMMU_IOVA) += iova.o
+>  obj-$(CONFIG_OF_IOMMU)	+= of_iommu.o
+>  obj-$(CONFIG_MSM_IOMMU) += msm_iommu.o
+> diff --git a/drivers/iommu/ioasid.c b/drivers/iommu/ioasid.c
+> new file mode 100644
+> index 0000000..99f5e0a
+> --- /dev/null
+> +++ b/drivers/iommu/ioasid.c
+> @@ -0,0 +1,140 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * I/O Address Space ID allocator. There is one global IOASID space, split into
+> + * subsets. Users create a subset with DECLARE_IOASID_SET, then allocate and
+> + * free IOASIDs with ioasid_alloc and ioasid_free.
+> + */
+> +#include <linux/xarray.h>
+> +#include <linux/ioasid.h>
+> +#include <linux/slab.h>
+> +#include <linux/spinlock.h>
+> +
+> +struct ioasid_data {
+> +	ioasid_t id;
+> +	struct ioasid_set *set;
+> +	void *private;
+> +	struct rcu_head rcu;
+> +};
+> +
+> +static DEFINE_XARRAY_ALLOC(ioasid_xa);
+> +
+> +/**
+> + * ioasid_set_data - Set private data for an allocated ioasid
+> + * @ioasid: the ID to set data
+> + * @data:   the private data
+> + *
+> + * For IOASID that is already allocated, private data can be set
+> + * via this API. Future lookup can be done via ioasid_find.
+> + */
+> +int ioasid_set_data(ioasid_t ioasid, void *data)
+> +{
+> +	struct ioasid_data *ioasid_data;
+> +	int ret = 0;
+> +
+> +	ioasid_data = xa_load(&ioasid_xa, ioasid);
+> +	if (ioasid_data)
+> +		ioasid_data->private = data;
+> +	else
+> +		ret = -ENOENT;
+> +
+> +	/* getter may use the private data */
+> +	synchronize_rcu();
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(ioasid_set_data);
+> +
+> +/**
+> + * ioasid_alloc - Allocate an IOASID
+> + * @set: the IOASID set
+> + * @min: the minimum ID (inclusive)
+> + * @max: the maximum ID (inclusive)
+> + * @private: data private to the caller
+> + *
+> + * Allocate an ID between @min and @max (or %0 and %INT_MAX). Return the
+> + * allocated ID on success, or INVALID_IOASID on failure. The @private pointer
+> + * is stored internally and can be retrieved with ioasid_find().
+> + */
+> +ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min, ioasid_t max,
+> +		      void *private)
+> +{
+> +	int id = INVALID_IOASID;
+> +	struct ioasid_data *data;
+> +
+> +	data = kzalloc(sizeof(*data), GFP_KERNEL);
+> +	if (!data)
+> +		return INVALID_IOASID;
+> +
+> +	data->set = set;
+> +	data->private = private;
+> +
+> +	if (xa_alloc(&ioasid_xa, &id, data, XA_LIMIT(min, max), GFP_KERNEL)) {
+> +		pr_err("Failed to alloc ioasid from %d to %d\n", min, max);
+> +		goto exit_free;
+> +	}
+> +	data->id = id;
+> +
+> +exit_free:
+> +	if (id < 0 || id == INVALID_IOASID) {
+> +		kfree(data);
+> +		return INVALID_IOASID;
+> +	}
+> +	return id;
+> +}
+> +EXPORT_SYMBOL_GPL(ioasid_alloc);
+> +
+> +/**
+> + * ioasid_free - Free an IOASID
+> + * @ioasid: the ID to remove
+> + */
+> +void ioasid_free(ioasid_t ioasid)
+> +{
+> +	struct ioasid_data *ioasid_data;
+> +
+> +	ioasid_data = xa_erase(&ioasid_xa, ioasid);
+> +
+> +	kfree_rcu(ioasid_data, rcu);
+> +}
+> +EXPORT_SYMBOL_GPL(ioasid_free);
+> +
+> +/**
+> + * ioasid_find - Find IOASID data
+> + * @set: the IOASID set
+> + * @ioasid: the IOASID to find
+> + * @getter: function to call on the found object
+> + *
+> + * The optional getter function allows to take a reference to the found object
+> + * under the rcu lock. The function can also check if the object is still valid:
+> + * if @getter returns false, then the object is invalid and NULL is returned.
+> + *
+> + * If the IOASID has been allocated for this set, return the private pointer
+> + * passed to ioasid_alloc. Private data can be NULL if not set. Return an error
+> + * if the IOASID is not found or not belong to the set.
+> + */
+> +void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid,
+> +		  bool (*getter)(void *))
+> +{
+> +	void *priv = NULL;
+> +	struct ioasid_data *ioasid_data;
+> +
+> +	rcu_read_lock();
+> +	ioasid_data = xa_load(&ioasid_xa, ioasid);
+> +	if (!ioasid_data) {
+> +		priv = ERR_PTR(-ENOENT);
+> +		goto unlock;
+> +	}
+> +	if (set && ioasid_data->set != set) {
+> +		/* data found but does not belong to the set */
+> +		priv = ERR_PTR(-EACCES);
+> +		goto unlock;
+> +	}
+> +	/* Now IOASID and its set is verified, we can return the private data */
+> +	priv = ioasid_data->private;
+> +	if (getter && !getter(priv))
+> +		priv = NULL;
+> +unlock:
+> +	rcu_read_unlock();
+> +
+> +	return priv;
+> +}
+> +EXPORT_SYMBOL_GPL(ioasid_find);
+> diff --git a/include/linux/ioasid.h b/include/linux/ioasid.h
+> new file mode 100644
+> index 0000000..41de5e4
+> --- /dev/null
+> +++ b/include/linux/ioasid.h
+> @@ -0,0 +1,67 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef __LINUX_IOASID_H
+> +#define __LINUX_IOASID_H
+> +
+> +#define INVALID_IOASID ((ioasid_t)-1)
+> +typedef unsigned int ioasid_t;
+> +typedef int (*ioasid_iter_t)(ioasid_t ioasid, void *private, void *data);
+not used as reported during v2 review: https://lkml.org/lkml/2019/4/25/341
 
-And, it may cause pgsteal_{kswapd|direct} is greater than
-pgscan_{kswapd|direct}, like the below:
+Thanks
 
-pgsteal_kswapd 122933
-pgsteal_direct 26600225
-pgscan_kswapd 174153
-pgscan_direct 14678312
-
-nr_reclaimed and nr_scanned must be fixed in parallel otherwise it would
-break some page reclaim logic, e.g.
-
-vmpressure: this looks at the scanned/reclaimed ratio so it won't
-change semantics as long as scanned & reclaimed are fixed in parallel.
-
-compaction/reclaim: compaction wants a certain number of physical pages
-freed up before going back to compacting.
-
-kswapd priority raising: kswapd raises priority if we scan fewer pages
-than the reclaim target (which itself is obviously expressed in order-0
-pages). As a result, kswapd can falsely raise its aggressiveness even
-when it's making great progress.
-
-Other than nr_scanned and nr_reclaimed, some other counters, e.g.
-pgactivate, nr_skipped, nr_ref_keep and nr_unmap_fail need to be fixed
-too since they are user visible via cgroup, /proc/vmstat or trace
-points, otherwise they would be underreported.
-
-When isolating pages from LRUs, nr_taken has been accounted in base
-page, but nr_scanned and nr_skipped are still accounted in THP.  It
-doesn't make too much sense too since this may cause trace point
-underreport the numbers as well.
-
-So accounting those counters in base page instead of accounting THP as
-one page.
-
-This change may result in lower steal/scan ratio in some cases since
-THP may get split during page reclaim, then a part of tail pages get
-reclaimed instead of the whole 512 pages, but nr_scanned is accounted
-by 512, particularly for direct reclaim.  But, this should be not a
-significant issue.
-
-Cc: "Huang, Ying" <ying.huang@intel.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Mel Gorman <mgorman@techsingularity.net>
-Cc: "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Hugh Dickins <hughd@google.com>
-Cc: Shakeel Butt <shakeelb@google.com>
-Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
----
-v3: Removed Shakeel's Reviewed-by since the patch has been changed significantly
-    Switched back to use compound_order per Matthew
-    Fixed more counters per Johannes
-v2: Added Shakeel's Reviewed-by
-    Use hpage_nr_pages instead of compound_order per Huang Ying and William Kucharski
-
- mm/vmscan.c | 40 ++++++++++++++++++++++++++++------------
- 1 file changed, 28 insertions(+), 12 deletions(-)
-
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index b65bc50..1044834 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -1250,7 +1250,7 @@ static unsigned long shrink_page_list(struct list_head *page_list,
- 		case PAGEREF_ACTIVATE:
- 			goto activate_locked;
- 		case PAGEREF_KEEP:
--			stat->nr_ref_keep++;
-+			stat->nr_ref_keep += (1 << compound_order(page));
- 			goto keep_locked;
- 		case PAGEREF_RECLAIM:
- 		case PAGEREF_RECLAIM_CLEAN:
-@@ -1294,6 +1294,17 @@ static unsigned long shrink_page_list(struct list_head *page_list,
- 						goto activate_locked;
- 				}
- 
-+				/*
-+				 * Account all tail pages when THP is added
-+				 * into swap cache successfully.
-+				 * The head page has been accounted at the
-+				 * first place.
-+				 */
-+				if (PageTransHuge(page))
-+					sc->nr_scanned +=
-+						((1 << compound_order(page)) -
-+							1);
-+
- 				may_enter_fs = 1;
- 
- 				/* Adding to swap updated mapping */
-@@ -1315,7 +1326,8 @@ static unsigned long shrink_page_list(struct list_head *page_list,
- 			if (unlikely(PageTransHuge(page)))
- 				flags |= TTU_SPLIT_HUGE_PMD;
- 			if (!try_to_unmap(page, flags)) {
--				stat->nr_unmap_fail++;
-+				stat->nr_unmap_fail +=
-+					(1 << compound_order(page));
- 				goto activate_locked;
- 			}
- 		}
-@@ -1442,7 +1454,11 @@ static unsigned long shrink_page_list(struct list_head *page_list,
- 
- 		unlock_page(page);
- free_it:
--		nr_reclaimed++;
-+		/*
-+		 * THP may get swapped out in a whole, need account
-+		 * all base pages.
-+		 */
-+		nr_reclaimed += (1 << compound_order(page));
- 
- 		/*
- 		 * Is there need to periodically free_page_list? It would
-@@ -1464,7 +1480,6 @@ static unsigned long shrink_page_list(struct list_head *page_list,
- 		if (!PageMlocked(page)) {
- 			int type = page_is_file_cache(page);
- 			SetPageActive(page);
--			pgactivate++;
- 			stat->nr_activate[type] += hpage_nr_pages(page);
- 			count_memcg_page_event(page, PGACTIVATE);
- 		}
-@@ -1475,6 +1490,8 @@ static unsigned long shrink_page_list(struct list_head *page_list,
- 		VM_BUG_ON_PAGE(PageLRU(page) || PageUnevictable(page), page);
- 	}
- 
-+	pgactivate = stat->nr_activate[0] + stat->nr_activate[1];
-+
- 	mem_cgroup_uncharge_list(&free_pages);
- 	try_to_unmap_flush();
- 	free_unref_page_list(&free_pages);
-@@ -1642,14 +1659,12 @@ static unsigned long isolate_lru_pages(unsigned long nr_to_scan,
- 	unsigned long nr_zone_taken[MAX_NR_ZONES] = { 0 };
- 	unsigned long nr_skipped[MAX_NR_ZONES] = { 0, };
- 	unsigned long skipped = 0;
--	unsigned long scan, total_scan, nr_pages;
-+	unsigned long scan, nr_pages;
- 	LIST_HEAD(pages_skipped);
- 	isolate_mode_t mode = (sc->may_unmap ? 0 : ISOLATE_UNMAPPED);
- 
- 	scan = 0;
--	for (total_scan = 0;
--	     scan < nr_to_scan && nr_taken < nr_to_scan && !list_empty(src);
--	     total_scan++) {
-+	while (scan < nr_to_scan && nr_taken < nr_to_scan && !list_empty(src)) {
- 		struct page *page;
- 
- 		page = lru_to_page(src);
-@@ -1659,7 +1674,8 @@ static unsigned long isolate_lru_pages(unsigned long nr_to_scan,
- 
- 		if (page_zonenum(page) > sc->reclaim_idx) {
- 			list_move(&page->lru, &pages_skipped);
--			nr_skipped[page_zonenum(page)]++;
-+			nr_skipped[page_zonenum(page)] +=
-+				(1 << compound_order(page));
- 			continue;
- 		}
- 
-@@ -1669,7 +1685,7 @@ static unsigned long isolate_lru_pages(unsigned long nr_to_scan,
- 		 * ineligible pages.  This causes the VM to not reclaim any
- 		 * pages, triggering a premature OOM.
- 		 */
--		scan++;
-+		scan += (1 << compound_order(page));
- 		switch (__isolate_lru_page(page, mode)) {
- 		case 0:
- 			nr_pages = hpage_nr_pages(page);
-@@ -1707,9 +1723,9 @@ static unsigned long isolate_lru_pages(unsigned long nr_to_scan,
- 			skipped += nr_skipped[zid];
- 		}
- 	}
--	*nr_scanned = total_scan;
-+	*nr_scanned = scan;
- 	trace_mm_vmscan_lru_isolate(sc->reclaim_idx, sc->order, nr_to_scan,
--				    total_scan, skipped, nr_taken, mode, lru);
-+				    scan, skipped, nr_taken, mode, lru);
- 	update_lru_sizes(lruvec, lru, nr_zone_taken);
- 	return nr_taken;
- }
--- 
-1.8.3.1
-
+Eric
+> +typedef ioasid_t (*ioasid_alloc_fn_t)(ioasid_t min, ioasid_t max, void *data);
+> +typedef void (*ioasid_free_fn_t)(ioasid_t ioasid, void *data);
+> +
+> +struct ioasid_set {
+> +	int dummy;
+> +};
+> +
+> +struct ioasid_allocator {
+> +	ioasid_alloc_fn_t alloc;
+> +	ioasid_free_fn_t free;
+> +	void *pdata;
+> +	struct list_head list;
+> +};
+> +
+> +#define DECLARE_IOASID_SET(name) struct ioasid_set name = { 0 }
+> +
+> +#ifdef CONFIG_IOASID
+> +ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min, ioasid_t max,
+> +		      void *private);
+> +void ioasid_free(ioasid_t ioasid);
+> +
+> +void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid,
+> +		  bool (*getter)(void *));
+> +int ioasid_register_allocator(struct ioasid_allocator *allocator);
+> +void ioasid_unregister_allocator(struct ioasid_allocator *allocator);
+> +
+> +int ioasid_set_data(ioasid_t ioasid, void *data);
+> +
+> +#else /* !CONFIG_IOASID */
+> +static inline ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min,
+> +				    ioasid_t max, void *private)
+> +{
+> +	return INVALID_IOASID;
+> +}
+> +
+> +static inline void ioasid_free(ioasid_t ioasid)
+> +{
+> +}
+> +
+> +static inline void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid,
+> +				bool (*getter)(void *))
+> +{
+> +	return NULL;
+> +}
+> +static inline int ioasid_register_allocator(struct ioasid_allocator *allocator)
+> +{
+> +	return -ENODEV;
+> +}
+> +
+> +static inline void ioasid_unregister_allocator(struct ioasid_allocator *allocator)
+> +{
+> +}
+> +
+> +static inline int ioasid_set_data(ioasid_t ioasid, void *data)
+> +{
+> +	return -ENODEV;
+> +}
+> +
+> +#endif /* CONFIG_IOASID */
+> +#endif /* __LINUX_IOASID_H */
+> 
