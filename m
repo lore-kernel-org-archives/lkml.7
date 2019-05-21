@@ -2,201 +2,119 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06C2DC04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:18:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01BB4C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:19:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D83192173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:18:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C90C021743
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:19:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rBxldnqW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728709AbfEUPSM (ORCPT
+        id S1728639AbfEUPTX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 11:18:12 -0400
-Received: from kirsty.vergenet.net ([202.4.237.240]:45758 "EHLO
-        kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727969AbfEUPSL (ORCPT
+        Tue, 21 May 2019 11:19:23 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:43098 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727534AbfEUPTW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 11:18:11 -0400
-Received: from reginn.horms.nl (watermunt.horms.nl [80.127.179.77])
-        by kirsty.vergenet.net (Postfix) with ESMTPA id 34F5625AD7A;
-        Wed, 22 May 2019 01:18:08 +1000 (AEST)
-Received: by reginn.horms.nl (Postfix, from userid 7100)
-        id 38869940553; Tue, 21 May 2019 17:18:06 +0200 (CEST)
-Date:   Tue, 21 May 2019 17:18:06 +0200
-From:   Simon Horman <horms@verge.net.au>
-To:     Julian Anastasov <ja@ssi.bg>
-Cc:     YueHaibing <yuehaibing@huawei.com>, davem@davemloft.net,
-        wensong@linux-vs.org, pablo@netfilter.org,
-        kadlec@blackhole.kfki.hu, fw@strlen.de,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        lvs-devel@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        coreteam@netfilter.org
-Subject: Re: [PATCH v2] ipvs: Fix use-after-free in ip_vs_in
-Message-ID: <20190521151805.xidqtvohi4sfgaja@verge.net.au>
-References: <alpine.LFD.2.21.1905171015040.2233@ja.home.ssi.bg>
- <20190517143149.17016-1-yuehaibing@huawei.com>
- <alpine.LFD.2.21.1905191258160.2448@ja.home.ssi.bg>
+        Tue, 21 May 2019 11:19:22 -0400
+Received: by mail-qt1-f193.google.com with SMTP id i26so20875779qtr.10
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 08:19:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=sWMC8cFNF9NAAGYCE/e0IaWpCRmXZGuoE47LOE7jw0c=;
+        b=rBxldnqW042v/nsNwK4R1exHq9mUpoBxBpbew1lhjFnHl8WveODpC+urx9ymeaHloN
+         fMyUKN0Y/FM6Nup9T1Hgl0sxOnXLT3icEOmceE/GbiRF4u3eGXwjGYGeXaS2btv21cOd
+         3/FUBrDxi10o7P2Upk8QowxIQOjWaTnOk04m0lZsRc+0Qo+iqQ6oHPzJuZOjUWVre2tH
+         4ZzIgK1cXFBiaGx7T7WKlYlMDkZvywjAQU7OYAvlQmCywCKgt2HhCEKUv/MjqfhL4h1F
+         ViwVPe9h+gNvtfJ7z5PKEo9do1ijVb2LnMIzDg8VK3nxZX2bLV9eqIzTh7XlspvCnvrF
+         nhfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=sWMC8cFNF9NAAGYCE/e0IaWpCRmXZGuoE47LOE7jw0c=;
+        b=uPFYTZM45WREDISt+iCkKe/Ho0Qcrq6jQOJmFcmTFG1jvq63AjtrP9j2MV1tgBA0ng
+         a9O/pnECv+SgOIPOZFuHGLuyR5B77+haaEqg4qH0pe4Jr3tb4I1E7qmoXwHGXUsFDzVS
+         67tw+JCUgze1aOD/HA+uVnd4OV+CsnHpuL4i3RghqgDFM4Mz94QzgshlbJw64sJZYpxT
+         Ho8lVJGeojhctSr3CbEMjZer7J6xfXs0aMIiQ/Q1p1LsP4HDSJbmxmd/sWeZoXKMLZcP
+         ECCg2p6eutmYVLx/lV9PvrFg+2AFOYGgpxTA7PRGLsgFjCgOaVZMjfENE5vhlkPlROUA
+         ZuFA==
+X-Gm-Message-State: APjAAAVCkU+FqAdlZJEknFr1AKgbzAhDvdRbkTldJTG3Y6w6ora78AbR
+        c24f+Zl18BtJe4icpJu4s0k=
+X-Google-Smtp-Source: APXvYqwoycOORnzL9Bo74lb4jnqC8dfq3cdzCS6MLEXQ5iWANYs36MomhOjO/NAy3FAzm0A68b+AkQ==
+X-Received: by 2002:a0c:ad46:: with SMTP id v6mr45747851qvc.82.1558451961776;
+        Tue, 21 May 2019 08:19:21 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.35.11])
+        by smtp.gmail.com with ESMTPSA id e20sm9699565qkm.42.2019.05.21.08.19.20
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 21 May 2019 08:19:20 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 93F2B404A1; Tue, 21 May 2019 12:19:18 -0300 (-03)
+Date:   Tue, 21 May 2019 12:19:18 -0300
+To:     Michael Petlan <mpetlan@redhat.com>
+Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Vitaly Chikunov <vt@altlinux.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Hendrik Brueckner <brueckner@linux.ibm.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Kim Phillips <kim.phillips@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ravi Bangoria <ravi.bangoria@linux.vnet.ibm.com>
+Subject: Re: [PATCH] perf arm64: Fix mksyscalltbl when system kernel headers
+ are ahead of the kernel
+Message-ID: <20190521151918.GD26253@kernel.org>
+References: <20190521030203.1447-1-vt@altlinux.org>
+ <20190521132838.GB26253@kernel.org>
+ <alpine.LRH.2.20.1905211632300.4243@Diego>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <alpine.LFD.2.21.1905191258160.2448@ja.home.ssi.bg>
-Organisation: Horms Solutions BV
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <alpine.LRH.2.20.1905211632300.4243@Diego>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 19, 2019 at 01:09:24PM +0300, Julian Anastasov wrote:
+Em Tue, May 21, 2019 at 04:34:47PM +0200, Michael Petlan escreveu:
+> On Tue, 21 May 2019, Arnaldo Carvalho de Melo wrote:
+> > Em Tue, May 21, 2019 at 06:02:03AM +0300, Vitaly Chikunov escreveu:
+> > > When a host system has kernel headers that are newer than a compiling
+> > > kernel, mksyscalltbl fails with errors such as:
+> > > 
+> > >   <stdin>: In function 'main':
+> > >   <stdin>:271:44: error: '__NR_kexec_file_load' undeclared (first use in this function)
+> > >   <stdin>:271:44: note: each undeclared identifier is reported only once for each function it appears in
+> > >   <stdin>:272:46: error: '__NR_pidfd_send_signal' undeclared (first use in this function)
+> > >   <stdin>:273:43: error: '__NR_io_uring_setup' undeclared (first use in this function)
+> > >   <stdin>:274:43: error: '__NR_io_uring_enter' undeclared (first use in this function)
+> > >   <stdin>:275:46: error: '__NR_io_uring_register' undeclared (first use in this function)
+> > >   tools/perf/arch/arm64/entry/syscalls//mksyscalltbl: line 48: /tmp/create-table-xvUQdD: Permission denied
+> > > 
+> > > mksyscalltbl is compiled with default host includes, but run with
+> > 
+> > It shouldn't :-\ So with this you're making it use the ones shipped in
+> > tools/include? Good, I'll test it, thanks!
+> > 
+> > - Arnaldo
+> > 
 > 
-> 	Hello,
-> 
-> On Fri, 17 May 2019, YueHaibing wrote:
-> 
-> > BUG: KASAN: use-after-free in ip_vs_in.part.29+0xe8/0xd20 [ip_vs]
-> > Read of size 4 at addr ffff8881e9b26e2c by task sshd/5603
-> > 
-> > CPU: 0 PID: 5603 Comm: sshd Not tainted 4.19.39+ #30
-> > Hardware name: Red Hat KVM, BIOS 0.5.1 01/01/2011
-> > Call Trace:
-> >  dump_stack+0x71/0xab
-> >  print_address_description+0x6a/0x270
-> >  kasan_report+0x179/0x2c0
-> >  ip_vs_in.part.29+0xe8/0xd20 [ip_vs]
-> >  ip_vs_in+0xd8/0x170 [ip_vs]
-> >  nf_hook_slow+0x5f/0xe0
-> >  __ip_local_out+0x1d5/0x250
-> >  ip_local_out+0x19/0x60
-> >  __tcp_transmit_skb+0xba1/0x14f0
-> >  tcp_write_xmit+0x41f/0x1ed0
-> >  ? _copy_from_iter_full+0xca/0x340
-> >  __tcp_push_pending_frames+0x52/0x140
-> >  tcp_sendmsg_locked+0x787/0x1600
-> >  ? tcp_sendpage+0x60/0x60
-> >  ? inet_sk_set_state+0xb0/0xb0
-> >  tcp_sendmsg+0x27/0x40
-> >  sock_sendmsg+0x6d/0x80
-> >  sock_write_iter+0x121/0x1c0
-> >  ? sock_sendmsg+0x80/0x80
-> >  __vfs_write+0x23e/0x370
-> >  vfs_write+0xe7/0x230
-> >  ksys_write+0xa1/0x120
-> >  ? __ia32_sys_read+0x50/0x50
-> >  ? __audit_syscall_exit+0x3ce/0x450
-> >  do_syscall_64+0x73/0x200
-> >  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> > RIP: 0033:0x7ff6f6147c60
-> > Code: 73 01 c3 48 8b 0d 28 12 2d 00 f7 d8 64 89 01 48 83 c8 ff c3 66 0f 1f 44 00 00 83 3d 5d 73 2d 00 00 75 10 b8 01 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 31 c3 48 83
-> > RSP: 002b:00007ffd772ead18 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-> > RAX: ffffffffffffffda RBX: 0000000000000034 RCX: 00007ff6f6147c60
-> > RDX: 0000000000000034 RSI: 000055df30a31270 RDI: 0000000000000003
-> > RBP: 000055df30a31270 R08: 0000000000000000 R09: 0000000000000000
-> > R10: 00007ffd772ead70 R11: 0000000000000246 R12: 00007ffd772ead74
-> > R13: 00007ffd772eae20 R14: 00007ffd772eae24 R15: 000055df2f12ddc0
-> > 
-> > Allocated by task 6052:
-> >  kasan_kmalloc+0xa0/0xd0
-> >  __kmalloc+0x10a/0x220
-> >  ops_init+0x97/0x190
-> >  register_pernet_operations+0x1ac/0x360
-> >  register_pernet_subsys+0x24/0x40
-> >  0xffffffffc0ea016d
-> >  do_one_initcall+0x8b/0x253
-> >  do_init_module+0xe3/0x335
-> >  load_module+0x2fc0/0x3890
-> >  __do_sys_finit_module+0x192/0x1c0
-> >  do_syscall_64+0x73/0x200
-> >  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> > 
-> > Freed by task 6067:
-> >  __kasan_slab_free+0x130/0x180
-> >  kfree+0x90/0x1a0
-> >  ops_free_list.part.7+0xa6/0xc0
-> >  unregister_pernet_operations+0x18b/0x1f0
-> >  unregister_pernet_subsys+0x1d/0x30
-> >  ip_vs_cleanup+0x1d/0xd2f [ip_vs]
-> >  __x64_sys_delete_module+0x20c/0x300
-> >  do_syscall_64+0x73/0x200
-> >  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> > 
-> > The buggy address belongs to the object at ffff8881e9b26600 which belongs to the cache kmalloc-4096 of size 4096
-> > The buggy address is located 2092 bytes inside of 4096-byte region [ffff8881e9b26600, ffff8881e9b27600)
-> > The buggy address belongs to the page:
-> > page:ffffea0007a6c800 count:1 mapcount:0 mapping:ffff888107c0e600 index:0x0 compound_mapcount: 0
-> > flags: 0x17ffffc0008100(slab|head)
-> > raw: 0017ffffc0008100 dead000000000100 dead000000000200 ffff888107c0e600
-> > raw: 0000000000000000 0000000080070007 00000001ffffffff 0000000000000000
-> > page dumped because: kasan: bad access detected
-> > 
-> > while unregistering ipvs module, ops_free_list calls
-> > __ip_vs_cleanup, then nf_unregister_net_hooks be called to
-> > do remove nf hook entries. It need a RCU period to finish,
-> > however net->ipvs is set to NULL immediately, which will
-> > trigger NULL pointer dereference when a packet is hooked
-> > and handled by ip_vs_in where net->ipvs is dereferenced.
-> > 
-> > Another scene is ops_free_list call ops_free to free the
-> > net_generic directly while __ip_vs_cleanup finished, then
-> > calling ip_vs_in will triggers use-after-free.
-> > 
-> > This patch moves nf_unregister_net_hooks from __ip_vs_cleanup()
-> > to __ip_vs_dev_cleanup(),  where rcu_barrier() is called by
-> > unregister_pernet_device -> unregister_pernet_operations,
-> > that will do the needed grace period.
-> > 
-> > Reported-by: Hulk Robot <hulkci@huawei.com>
-> > Fixes: efe41606184e ("ipvs: convert to use pernet nf_hook api")
-> > Suggested-by: Julian Anastasov <ja@ssi.bg>
-> > Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> 
-> 	Looks good to me, thanks!
-> 
-> Acked-by: Julian Anastasov <ja@ssi.bg>
-> 
-> 	It should restore the order of unregistrations before
-> the mentioned commit and to ensure grace period before stopping
-> the traffic and unregistering ipvs_core_ops where traffic is not
-> expected.
+> I've hit the issue too, this patch fixes it for me.
+> Tested.
 
-Signed-off-by: Simon Horman <horms@verge.net.au>
+Thanks, I'll add your Tested-by, appreciated.
 
-Pablo, could you consider applying this to nf?
-
-> 
-> > ---
-> > v2: fix by moving nf_unregister_net_hooks from __ip_vs_cleanup() to __ip_vs_dev_cleanup()
-> > ---
-> >  net/netfilter/ipvs/ip_vs_core.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/net/netfilter/ipvs/ip_vs_core.c b/net/netfilter/ipvs/ip_vs_core.c
-> > index 14457551bcb4..8ebf21149ec3 100644
-> > --- a/net/netfilter/ipvs/ip_vs_core.c
-> > +++ b/net/netfilter/ipvs/ip_vs_core.c
-> > @@ -2312,7 +2312,6 @@ static void __net_exit __ip_vs_cleanup(struct net *net)
-> >  {
-> >  	struct netns_ipvs *ipvs = net_ipvs(net);
-> >  
-> > -	nf_unregister_net_hooks(net, ip_vs_ops, ARRAY_SIZE(ip_vs_ops));
-> >  	ip_vs_service_net_cleanup(ipvs);	/* ip_vs_flush() with locks */
-> >  	ip_vs_conn_net_cleanup(ipvs);
-> >  	ip_vs_app_net_cleanup(ipvs);
-> > @@ -2327,6 +2326,7 @@ static void __net_exit __ip_vs_dev_cleanup(struct net *net)
-> >  {
-> >  	struct netns_ipvs *ipvs = net_ipvs(net);
-> >  	EnterFunction(2);
-> > +	nf_unregister_net_hooks(net, ip_vs_ops, ARRAY_SIZE(ip_vs_ops));
-> >  	ipvs->enable = 0;	/* Disable packet reception */
-> >  	smp_wmb();
-> >  	ip_vs_sync_net_cleanup(ipvs);
-> > -- 
-> > 2.20.1
-> 
-> Regards
-> 
-> --
-> Julian Anastasov <ja@ssi.bg>
-> 
+- Arnaldo
