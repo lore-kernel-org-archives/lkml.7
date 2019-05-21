@@ -2,77 +2,76 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF365C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 08:28:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67301C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 08:29:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8D8321783
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 08:28:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HBJ7MsNn"
+	by mail.kernel.org (Postfix) with ESMTP id 3C4D721783
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 08:29:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726996AbfEUI2t (ORCPT
+        id S1727068AbfEUI3Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 04:28:49 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:43554 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726138AbfEUI2t (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 04:28:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=dzgDZjQNK4+WfEDvGGwqugQnmKy730vEONl7eH1nok4=; b=HBJ7MsNn+aPvz98REpWd9DgMm
-        dmnQ22k0MVUdI1ghk5enllEkjxUbxymVaLD7NVE6XpFXuVuv4deanC9rt+7COcMZ/bSTF3cHs6XrG
-        EeZg8OP2FHkZjEbwkKC1aTNGB4Ls0/51AIQzi3f/1Uci5dQ16U1VCCzTGWzYbCKXJmEwGKkHgrvK5
-        EoXiYMJYKCyp/V8tyOXRvKhNzvYGACLupH4EflRc6z6y3dqh4E2dd9Tw/PbH2SBxltIIjqpv96KkO
-        f46PoXLEVplgIBXtbi95kuZgzMTGZdJsCqab99Yadc2yzaoJ544SH8krtRYiN4SSqSQlm+px8h5ZO
-        VZdh3LauA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hT08c-0005iu-QJ; Tue, 21 May 2019 08:28:46 +0000
-Date:   Tue, 21 May 2019 01:28:46 -0700
-From:   'Christoph Hellwig' <hch@infradead.org>
-To:     Jan Kara <jack@suse.cz>
-Cc:     'Christoph Hellwig' <hch@infradead.org>,
-        kanchan <joshi.k@samsung.com>, linux-kernel@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
-        prakash.v@samsung.com, anshul@samsung.com,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: Re: [PATCH v5 0/7] Extend write-hint framework, and add write-hint
- for Ext4 journal
-Message-ID: <20190521082846.GA11024@infradead.org>
-References: <CGME20190425112347epcas2p1f7be48b8f0d2203252b8c9dd510c1b61@epcas2p1.samsung.com>
- <1556191202-3245-1-git-send-email-joshi.k@samsung.com>
- <20190510170249.GA26907@infradead.org>
- <00fb01d50c71$dd358e50$97a0aaf0$@samsung.com>
- <20190520142719.GA15705@infradead.org>
- <20190521082528.GA17709@quack2.suse.cz>
+        Tue, 21 May 2019 04:29:24 -0400
+Received: from relay.sw.ru ([185.231.240.75]:47178 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726138AbfEUI3X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 04:29:23 -0400
+Received: from [172.16.25.169]
+        by relay.sw.ru with esmtp (Exim 4.91)
+        (envelope-from <ktkhai@virtuozzo.com>)
+        id 1hT08z-0003cM-KX; Tue, 21 May 2019 11:29:09 +0300
+Subject: Re: [PATCH v2 1/7] mm: Add process_vm_mmap() syscall declaration
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     akpm@linux-foundation.org, dan.j.williams@intel.com,
+        mhocko@suse.com, keith.busch@intel.com,
+        kirill.shutemov@linux.intel.com, alexander.h.duyck@linux.intel.com,
+        andreyknvl@google.com, arunks@codeaurora.org, vbabka@suse.cz,
+        cl@linux.com, riel@surriel.com, keescook@chromium.org,
+        hannes@cmpxchg.org, npiggin@gmail.com,
+        mathieu.desnoyers@efficios.com, shakeelb@google.com, guro@fb.com,
+        aarcange@redhat.com, hughd@google.com, jglisse@redhat.com,
+        mgorman@techsingularity.net, daniel.m.jordan@oracle.com,
+        jannh@google.com, kilobyte@angband.pl, linux-api@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+References: <155836064844.2441.10911127801797083064.stgit@localhost.localdomain>
+ <155836080726.2441.11153759042802992469.stgit@localhost.localdomain>
+ <20190521002827.GA30518@iweiny-DESK2.sc.intel.com>
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+Message-ID: <4c35e953-5f59-0202-3f75-f9ccf7df798f@virtuozzo.com>
+Date:   Tue, 21 May 2019 11:29:09 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190521082528.GA17709@quack2.suse.cz>
-User-Agent: Mutt/1.9.2 (2017-12-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20190521002827.GA30518@iweiny-DESK2.sc.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 21, 2019 at 10:25:28AM +0200, Jan Kara wrote:
-> performance benefits for some drives. After all you can just think about it
-> like RWH_WRITE_LIFE_JOURNAL type of hint available for the kernel...
+Hi, Ira,
 
-Except that it actuallys adds a parallel insfrastructure.  A
-RWH_WRITE_LIFE_JOURNAL would be much more palatable, but someone needs
-to explain how that is:
+On 21.05.2019 03:28, Ira Weiny wrote:
+> On Mon, May 20, 2019 at 05:00:07PM +0300, Kirill Tkhai wrote:
+>> Similar to process_vm_readv() and process_vm_writev(),
+>> add declarations of a new syscall, which will allow
+>> to map memory from or to another process.
+> 
+> Shouldn't this be the last patch in the series so that the syscall is actually
+> implemented first?
 
- a) different from RWH_WRITE_LIFE_SHORT
- b) would not apply to a log/journal maintained in userspace that works
-    exactly the same
+It looks like there is no dependencies in the last patch to declarations made
+in the first patch, so we really can move it.
+
+I'll make this after there are accumulated some commentaries about the logic
+to reduce number of patch series.
+
+[...]
+
+Thanks,
+Kirill
