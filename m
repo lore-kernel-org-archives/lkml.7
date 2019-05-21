@@ -2,87 +2,146 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82DA0C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 11:26:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77897C04E87
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 11:27:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FC4F217D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 11:26:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="xa+Fjufb"
+	by mail.kernel.org (Postfix) with ESMTP id 581A6216B7
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 11:27:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727993AbfEUL0w (ORCPT
+        id S1727998AbfEUL1d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 07:26:52 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:45514 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726692AbfEUL0v (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 07:26:51 -0400
-Received: by mail-wr1-f65.google.com with SMTP id b18so18114424wrq.12
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 04:26:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=sGys3Iol5dLtdbxkyfPp6BlafjDFlyvcTnF3At5Y2mY=;
-        b=xa+Fjufbb1lWW90PQCIg5/2U9zdLS45WWo284k/724/94OQArbEEdhI/a5ceLz5BqQ
-         HDJxwMdbf9ZqeaCxJr4pSLAdMLyyGogqX9KXyrPMQcznwEaOzNvZ5HGhNMgRoCPUgCr3
-         Di9zgN6DxWACkL3qM55JjMKXdPnxBjt0hHo3iFfupTGIC84YrZNvrorSSol8pCumbxfm
-         Ix8Ry0dJi87fXjYcZWVfk397WxTeISlVtOirazL2iLflcXfQ4gMDA4TRw+EizoNnwIS2
-         JdGGoDXwcpPOxIgiefi0BgUhoI+jQVf6XANV3wPxfj96YHNXPmGb5DfQIiwtQ2gHOxCP
-         YxiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=sGys3Iol5dLtdbxkyfPp6BlafjDFlyvcTnF3At5Y2mY=;
-        b=MNdUg66/TCzBFwVqMvnX1aOh82fZDCm1MlZegDT5sgvwAQfIuYNFzfbzCwhmqoW6/n
-         xBVTqBTPJXQKRASo1CfjmJaPfGsWvsnk5luW/Cv2Bv7ZWS+k1GQlNuFic1POmQwlPomE
-         v/sv/dkCzsmTU8adjgSg6T80HYE9ZCmVv/3oHZ/P4sVfd22uWFOYnyqDbuLORzcGbBcs
-         9fD14qHOAsuSIbr7xSWAHWzCjdfl8MB1LTru+VSUiCdfKaqAAD+bUGrsLM4fRV2JTuCy
-         mrZEC2CCVDsLoIQ3yEX+DjhWzGrzvWjIOOZ6oftbAgM99ZzsAlBtnSg7cokXszVN6JLP
-         lJrA==
-X-Gm-Message-State: APjAAAWyGDB9IjLC0QcFevJ3z5LUPsezkABlAaKTB2p0dLNwRxQVIF85
-        +OUgHbzGBNjxUe6gm2kICTmDlg==
-X-Google-Smtp-Source: APXvYqy2jCv/tcKI8+hfC11XMcNd1yvILVIneSyvMJ+o/81tlqCa0r3Pmi7nB08kvuSCuvJysQ6YWA==
-X-Received: by 2002:adf:f34e:: with SMTP id e14mr30178782wrp.215.1558438010594;
-        Tue, 21 May 2019 04:26:50 -0700 (PDT)
-Received: from [192.168.0.31] (abo-99-183-68.mtp.modulonet.fr. [85.68.183.99])
-        by smtp.gmail.com with ESMTPSA id b10sm49421373wrh.59.2019.05.21.04.26.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 21 May 2019 04:26:50 -0700 (PDT)
-Subject: Re: [PATCH v2 1/5] dt-bindings: soc: amlogic: canvas: document
- support for Meson8/8b/8m2
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        linux-amlogic@lists.infradead.org, khilman@baylibre.com,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20190520194353.24445-1-martin.blumenstingl@googlemail.com>
- <20190520194353.24445-2-martin.blumenstingl@googlemail.com>
-From:   Maxime Jourdan <mjourdan@baylibre.com>
-Message-ID: <5b2d9cf4-aaaf-706e-3a0a-96cd3c003e52@baylibre.com>
-Date:   Tue, 21 May 2019 13:26:49 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 21 May 2019 07:27:33 -0400
+Received: from mga04.intel.com ([192.55.52.120]:9229 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727044AbfEUL1d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 07:27:33 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 May 2019 04:27:32 -0700
+X-ExtLoop1: 1
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 21 May 2019 04:27:29 -0700
+Received: by lahna (sSMTP sendmail emulation); Tue, 21 May 2019 14:27:28 +0300
+Date:   Tue, 21 May 2019 14:27:28 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc:     wsa@the-dreams.de, linux-i2c@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        benjamin.tissoires@redhat.com, jbroadus@gmail.com,
+        patches@opensource.cirrus.com,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH 3/5] i2c: core: Move ACPI IRQ handling to probe time
+Message-ID: <20190521112728.GX2781@lahna.fi.intel.com>
+References: <20190520084936.10590-1-ckeepax@opensource.cirrus.com>
+ <20190520084936.10590-4-ckeepax@opensource.cirrus.com>
 MIME-Version: 1.0
-In-Reply-To: <20190520194353.24445-2-martin.blumenstingl@googlemail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: tl
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190520084936.10590-4-ckeepax@opensource.cirrus.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, May 20, 2019 at 09:49:34AM +0100, Charles Keepax wrote:
+> Bring the ACPI path in sync with the device tree path and handle all the
+> IRQ fetching at probe time. This leaves the only IRQ handling at device
+> registration time being that which is passed directly through the board
+> info as either a resource or an actual IRQ number.
 
+I don't see issues with this approach. Cc'd Jarkko and Andy just in case
+I missed something.
 
-On 20/05/2019 21:43, Martin Blumenstingl wrote:
+One minor stylistic comment, see below.
+
+> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+> ---
+>  drivers/i2c/i2c-core-acpi.c | 6 ++----
+>  drivers/i2c/i2c-core-base.c | 6 +++++-
+>  drivers/i2c/i2c-core.h      | 7 +++++++
+>  3 files changed, 14 insertions(+), 5 deletions(-)
 > 
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Acked-by: Maxime Jourdan <mjourdan@baylibre.com>
+> diff --git a/drivers/i2c/i2c-core-acpi.c b/drivers/i2c/i2c-core-acpi.c
+> index 764cd10420a74..e332760bf9ebc 100644
+> --- a/drivers/i2c/i2c-core-acpi.c
+> +++ b/drivers/i2c/i2c-core-acpi.c
+> @@ -148,8 +148,9 @@ static int i2c_acpi_add_resource(struct acpi_resource *ares, void *data)
+>  	return 1; /* No need to add resource to the list */
+>  }
+>  
+> -static int i2c_acpi_get_irq(struct acpi_device *adev, int *irq)
+> +int i2c_acpi_get_irq(struct i2c_client *client, int *irq)
+>  {
+> +	struct acpi_device *adev = ACPI_COMPANION(&client->adapter->dev);
+>  	struct list_head resource_list;
+>  	int ret;
+>  
+> @@ -201,9 +202,6 @@ static int i2c_acpi_get_info(struct acpi_device *adev,
+>  	if (adapter_handle)
+>  		*adapter_handle = lookup.adapter_handle;
+>  
+> -	/* Then fill IRQ number if any */
+> -	i2c_acpi_get_irq(adev, &info->irq);
+> -
+>  	acpi_set_modalias(adev, dev_name(&adev->dev), info->type,
+>  			  sizeof(info->type));
+>  
+> diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
+> index 84bf11b25a120..c1afa17a76bfc 100644
+> --- a/drivers/i2c/i2c-core-base.c
+> +++ b/drivers/i2c/i2c-core-base.c
+> @@ -335,7 +335,11 @@ static int i2c_device_probe(struct device *dev)
+>  			if (irq == -EINVAL || irq == -ENODATA)
+>  				irq = of_irq_get(dev->of_node, 0);
+>  		} else if (ACPI_COMPANION(dev)) {
+> -			irq = acpi_dev_gpio_irq_get(ACPI_COMPANION(dev), 0);
+> +			i2c_acpi_get_irq(client, &irq);
+> +
+> +			if (irq == -ENOENT)
+> +				irq = acpi_dev_gpio_irq_get(ACPI_COMPANION(dev),
+> +							    0);
+
+I think this looks better if you put everything one line:
+
+				irq = acpi_dev_gpio_irq_get(ACPI_COMPANION(dev), 0);
+
+>  		}
+>  		if (irq == -EPROBE_DEFER)
+>  			return irq;
+> diff --git a/drivers/i2c/i2c-core.h b/drivers/i2c/i2c-core.h
+> index 8f3a08dc73a25..6bec145ab7d74 100644
+> --- a/drivers/i2c/i2c-core.h
+> +++ b/drivers/i2c/i2c-core.h
+> @@ -72,6 +72,8 @@ const struct acpi_device_id *
+>  i2c_acpi_match_device(const struct acpi_device_id *matches,
+>  		      struct i2c_client *client);
+>  void i2c_acpi_register_devices(struct i2c_adapter *adap);
+> +
+> +int i2c_acpi_get_irq(struct i2c_client *client, int *irq);
+>  #else /* CONFIG_ACPI */
+>  static inline void i2c_acpi_register_devices(struct i2c_adapter *adap) { }
+>  static inline const struct acpi_device_id *
+> @@ -80,6 +82,11 @@ i2c_acpi_match_device(const struct acpi_device_id *matches,
+>  {
+>  	return NULL;
+>  }
+> +
+> +static inline int i2c_acpi_get_irq(struct i2c_client *client, int *irq)
+> +{
+> +	return 0;
+> +}
+>  #endif /* CONFIG_ACPI */
+>  extern struct notifier_block i2c_acpi_notifier;
+>  
+> -- 
+> 2.11.0
