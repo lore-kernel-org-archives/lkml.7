@@ -2,76 +2,96 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAF3EC04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 14:12:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EB90C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 14:12:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEAC521773
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 14:12:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01C8F217D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 14:12:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558447978;
+	bh=uwra/JKga2ionRs42M1c8l3BWk/ikA/Yd/7mumUTucs=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=kCbBrGPIE+wQurZZWwe0UCA1sDCUwUurKjIoXIXJWgklzF03UOg20GZR+NPEYryNb
+	 LdJGHnFjCm6n9xKHtcyq+R3KD0lWh1T99RrXYegj6V1oClY7i2E8SArnyKOXfaZgKB
+	 ruV2UXJ7SUzJOtQJsUlZqOMaNYRzy3YK+WL17X+k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728369AbfEUOMz (ORCPT
+        id S1728429AbfEUOM5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 21 May 2019 10:12:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41036 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728269AbfEUOMz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 21 May 2019 10:12:55 -0400
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:39279 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728244AbfEUOMy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 10:12:54 -0400
-Received: by mail-vs1-f67.google.com with SMTP id m1so11205771vsr.6;
-        Tue, 21 May 2019 07:12:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=meuwVDcWiHzKd3QLlto0JwOFJrZ32Pszf+ArvDouslQ=;
-        b=pqef8omwxkDWoCqZX8cMEp4TDVoKsXf4MAsPd4I9QxxYBZIbbfgM7Y5UP0veI2LiGh
-         QmkNiZlWWtVCoWXqNiv90Lnxi6Okl11EyO0hb+OvSA6yge9XcUvSP77XA2L8NDliEpIn
-         csFvEZG1Mo1AdjP5swiUWwpdT3NHZ9DzEm9kgatxV4O+/aQzss5Bvi7bza1ZLO1D+69G
-         Ld37mcjLDbtc27izCuutLLJo1AHZAGRxBa6Dc3Sh+4ZuGFA//ggUoChaD9t40tvoQebz
-         RR3Xzd9ZWoza3bLr8xPhCf1QBXFDrL8/wcXF+1Ro8rENPr/2ih1Ox0hX6DD8wwFEq08O
-         OqFg==
-X-Gm-Message-State: APjAAAWdXYDB5H1NmvBpxymY4mdi+NPVpwNaXZJrWtIPo4ezllHdT6wk
-        8DSBeEEUtfuxomnxcbA83su5ND4eubRLKrM3Wxo=
-X-Google-Smtp-Source: APXvYqwgTAAhKI1NXLdbqAMXLmcBRGxa1dy1X2cOKTmSVbVHteKudBaqituHCBTIggl5J5pblm4A0uFUEyZw0ler8Ys=
-X-Received: by 2002:a67:770f:: with SMTP id s15mr31142617vsc.11.1558447973350;
- Tue, 21 May 2019 07:12:53 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0EB042173C;
+        Tue, 21 May 2019 14:12:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558447974;
+        bh=uwra/JKga2ionRs42M1c8l3BWk/ikA/Yd/7mumUTucs=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=InrOCWr3zavWXHydsL/SXX38I3acl9WDeDEb+x1PIlZT2hiJU76sg8XX+kPTUAUuw
+         jjBV/WQN3bLwKHd6t/XHeEF1b4gMKR08dwW0bl9jMN+y+XnJ/c+HB8zun3+2+/uyHd
+         c8WcSWh2oNB61F+VPBsSlT/1D9bufXPHM4zrE1h4=
+Subject: Re: [PATCH 1/2] selftests: Remove forced unbuffering for test running
+To:     Takashi Iwai <tiwai@suse.de>, Kees Cook <keescook@chromium.org>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        shuah <shuah@kernel.org>
+References: <20190520223749.13476-1-keescook@chromium.org>
+ <20190520223749.13476-2-keescook@chromium.org> <s5hlfz0757d.wl-tiwai@suse.de>
+From:   shuah <shuah@kernel.org>
+Message-ID: <e6a41345-7c98-751a-80bd-34d96e6de001@kernel.org>
+Date:   Tue, 21 May 2019 08:12:43 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <CGME20190521140244eucas1p244e5e1306a52021a4a0c3910098c4f7c@eucas1p2.samsung.com>
- <50411fd1-9da0-aab6-709e-749d5e0ce509@samsung.com>
-In-Reply-To: <50411fd1-9da0-aab6-709e-749d5e0ce509@samsung.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 21 May 2019 16:12:41 +0200
-Message-ID: <CAMuHMdVbFaY583xJMd9kkW=-dQDY_yPAeToQT854kWFvokECLw@mail.gmail.com>
-Subject: Re: [PATCH] video: fbdev: atafb: remove superfluous function prototypes
-To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc:     DRI Development <dri-devel@lists.freedesktop.org>,
-        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <s5hlfz0757d.wl-tiwai@suse.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 21, 2019 at 4:02 PM Bartlomiej Zolnierkiewicz
-<b.zolnierkie@samsung.com> wrote:
-> No need for them.
->
-> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-> Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+On 5/20/19 11:21 PM, Takashi Iwai wrote:
+> On Tue, 21 May 2019 00:37:48 +0200,
+> Kees Cook wrote:
+>>
+>> As it turns out, the "stdbuf" command will actually force all
+>> subprocesses into unbuffered output, and some implementations of "echo"
+>> turn into single-character writes, which utterly wrecks writes to /sys
+>> and /proc files.
+>>
+>> Instead, drop the "stdbuf" usage, and for any tests that want explicit
+>> flushing between newlines, they'll have to add "fflush(stdout);" as
+>> needed.
+>>
+>> Reported-by: Takashi Iwai <tiwai@suse.de>
+>> Fixes: 5c069b6dedef ("selftests: Move test output to diagnostic lines")
+>> Signed-off-by: Kees Cook <keescook@chromium.org>
+> 
+> Tested-by: Takashi Iwai <tiwai@suse.de>
+> 
+> BTW, this might be specific to shell invocation.  As in the original
+> discussion thread, it starts working when I replace "echo" with
+> "/usr/bin/echo".
+> 
+> Still it's not easy to control in a script itself, so dropping the
+> unbuffered mode is certainly safer, yes.
+> 
+> Thanks!
 
-Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Thank you both.
 
-Gr{oetje,eeting}s,
+I will get this in for next rc.
 
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+-- Shuah
