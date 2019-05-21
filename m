@@ -2,105 +2,107 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5727FC04AAC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 03:35:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC683C04AAC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 03:37:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 217A02081C
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 03:35:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9D9621479
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 03:37:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727418AbfEUDf0 (ORCPT
+        id S1727579AbfEUDhV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 23:35:26 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:56468 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726338AbfEUDf0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 23:35:26 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5A671341;
-        Mon, 20 May 2019 20:35:25 -0700 (PDT)
-Received: from p8cg001049571a15.blr.arm.com (p8cg001049571a15.blr.arm.com [10.162.42.136])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 10D603F718;
-        Mon, 20 May 2019 20:35:22 -0700 (PDT)
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Steve Capper <steve.capper@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: [PATCH] arm64/hugetlb: Use macros for contiguous huge page sizes
-Date:   Tue, 21 May 2019 09:05:03 +0530
-Message-Id: <1558409703-31894-1-git-send-email-anshuman.khandual@arm.com>
-X-Mailer: git-send-email 2.7.4
+        Mon, 20 May 2019 23:37:21 -0400
+Received: from mga14.intel.com ([192.55.52.115]:26339 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726265AbfEUDhV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 20 May 2019 23:37:21 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 May 2019 20:37:20 -0700
+X-ExtLoop1: 1
+Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.239.13.123]) ([10.239.13.123])
+  by orsmga006.jf.intel.com with ESMTP; 20 May 2019 20:37:18 -0700
+Subject: Re: [PATCH] kvm: x86: refine kvm_get_arch_capabilities()
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        kvm@vger.kernel.org
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190419021624.186106-1-xiaoyao.li@linux.intel.com>
+From:   Xiaoyao Li <xiaoyao.li@linux.intel.com>
+Message-ID: <be5bb1d6-ca22-8480-1bf9-b60b617df8cf@linux.intel.com>
+Date:   Tue, 21 May 2019 11:37:18 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <20190419021624.186106-1-xiaoyao.li@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace all open encoded contiguous huge page size computations with
-available macro encodings CONT_PTE_SIZE and CONT_PMD_SIZE. There are other
-instances where these macros are used in the file and this change makes it
-consistently use the same mnemonic.
+Ping.
 
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: Steve Capper <steve.capper@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
----
- arch/arm64/mm/hugetlbpage.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
-
-diff --git a/arch/arm64/mm/hugetlbpage.c b/arch/arm64/mm/hugetlbpage.c
-index 6b4a47b..05b5dda 100644
---- a/arch/arm64/mm/hugetlbpage.c
-+++ b/arch/arm64/mm/hugetlbpage.c
-@@ -236,7 +236,7 @@ pte_t *huge_pte_alloc(struct mm_struct *mm,
- 
- 	if (sz == PUD_SIZE) {
- 		ptep = (pte_t *)pudp;
--	} else if (sz == (PAGE_SIZE * CONT_PTES)) {
-+	} else if (sz == (CONT_PTE_SIZE)) {
- 		pmdp = pmd_alloc(mm, pudp, addr);
- 
- 		WARN_ON(addr & (sz - 1));
-@@ -254,7 +254,7 @@ pte_t *huge_pte_alloc(struct mm_struct *mm,
- 			ptep = huge_pmd_share(mm, addr, pudp);
- 		else
- 			ptep = (pte_t *)pmd_alloc(mm, pudp, addr);
--	} else if (sz == (PMD_SIZE * CONT_PMDS)) {
-+	} else if (sz == (CONT_PMD_SIZE)) {
- 		pmdp = pmd_alloc(mm, pudp, addr);
- 		WARN_ON(addr & (sz - 1));
- 		return (pte_t *)pmdp;
-@@ -462,9 +462,9 @@ static int __init hugetlbpage_init(void)
- #ifdef CONFIG_ARM64_4K_PAGES
- 	add_huge_page_size(PUD_SIZE);
- #endif
--	add_huge_page_size(PMD_SIZE * CONT_PMDS);
-+	add_huge_page_size(CONT_PMD_SIZE);
- 	add_huge_page_size(PMD_SIZE);
--	add_huge_page_size(PAGE_SIZE * CONT_PTES);
-+	add_huge_page_size(CONT_PTE_SIZE);
- 
- 	return 0;
- }
-@@ -478,9 +478,9 @@ static __init int setup_hugepagesz(char *opt)
- #ifdef CONFIG_ARM64_4K_PAGES
- 	case PUD_SIZE:
- #endif
--	case PMD_SIZE * CONT_PMDS:
-+	case CONT_PMD_SIZE:
- 	case PMD_SIZE:
--	case PAGE_SIZE * CONT_PTES:
-+	case CONT_PTE_SIZE:
- 		add_huge_page_size(ps);
- 		return 1;
- 	}
--- 
-2.7.4
-
+On 4/19/2019 10:16 AM, Xiaoyao Li wrote:
+> 1. Using X86_FEATURE_ARCH_CAPABILITIES to enumerate the existence of
+> MSR_IA32_ARCH_CAPABILITIES to avoid using rdmsrl_safe().
+> 
+> 2. Since kvm_get_arch_capabilities() is only used in this file, making
+> it static.
+> 
+> Signed-off-by: Xiaoyao Li <xiaoyao.li@linux.intel.com>
+> ---
+>   arch/x86/include/asm/kvm_host.h | 1 -
+>   arch/x86/kvm/x86.c              | 8 ++++----
+>   2 files changed, 4 insertions(+), 5 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> index a9d03af34030..d4ae67870764 100644
+> --- a/arch/x86/include/asm/kvm_host.h
+> +++ b/arch/x86/include/asm/kvm_host.h
+> @@ -1526,7 +1526,6 @@ int kvm_pv_send_ipi(struct kvm *kvm, unsigned long ipi_bitmap_low,
+>   		    unsigned long ipi_bitmap_high, u32 min,
+>   		    unsigned long icr, int op_64_bit);
+>   
+> -u64 kvm_get_arch_capabilities(void);
+>   void kvm_define_shared_msr(unsigned index, u32 msr);
+>   int kvm_set_shared_msr(unsigned index, u64 val, u64 mask);
+>   
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index a0d1fc80ac5a..ba8e269a8cd2 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -1205,11 +1205,12 @@ static u32 msr_based_features[] = {
+>   
+>   static unsigned int num_msr_based_features;
+>   
+> -u64 kvm_get_arch_capabilities(void)
+> +static u64 kvm_get_arch_capabilities(void)
+>   {
+> -	u64 data;
+> +	u64 data = 0;
+>   
+> -	rdmsrl_safe(MSR_IA32_ARCH_CAPABILITIES, &data);
+> +	if (boot_cpu_has(X86_FEATURE_ARCH_CAPABILITIES))
+> +		rdmsrl(MSR_IA32_ARCH_CAPABILITIES, data);
+>   
+>   	/*
+>   	 * If we're doing cache flushes (either "always" or "cond")
+> @@ -1225,7 +1226,6 @@ u64 kvm_get_arch_capabilities(void)
+>   
+>   	return data;
+>   }
+> -EXPORT_SYMBOL_GPL(kvm_get_arch_capabilities);
+>   
+>   static int kvm_get_msr_feature(struct kvm_msr_entry *msr)
+>   {
+> 
