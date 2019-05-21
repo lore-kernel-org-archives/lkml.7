@@ -2,240 +2,112 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07E41C04E87
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:46:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4140C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:47:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5EEB21743
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:46:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558435603;
-	bh=QG1eZwyycnH4wggKV/FPYI6zwO4ITj+m1kljotJjWME=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XBU+C48mlO/OEDbVvKADouG61o1X7DkdJ7Gs+ZgGQlp3SVWlwK9bmCLD70FoiTMkp
-	 hPHrzk9TcK5xJkzeOUK0lei2P0BUR816Y0XqP6tY5yPHnj5qvKL+25Rp2eG1B7N0iD
-	 je1DDOwmLhOEXgfRu6G3AlEYP4NVejzcX9v6B6qs=
+	by mail.kernel.org (Postfix) with ESMTP id B72F020856
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:47:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=fixposition.ch header.i=@fixposition.ch header.b="UTCAoaam";
+	dkim=pass (2048-bit key) header.d=fixposition.ch header.i=@fixposition.ch header.b="NGhMBksE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727551AbfEUKqn (ORCPT
+        id S1727780AbfEUKrB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 06:46:43 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39740 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726242AbfEUKqm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 06:46:42 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 4AB4BAF1C;
-        Tue, 21 May 2019 10:46:39 +0000 (UTC)
-Date:   Tue, 21 May 2019 12:46:38 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc:     DRI Development <dri-devel@lists.freedesktop.org>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Rientjes <rientjes@google.com>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Wei Wang <wvw@google.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jann Horn <jannh@google.com>, Feng Tang <feng.tang@intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Daniel Vetter <daniel.vetter@intel.com>
-Subject: Re: [PATCH] kernel.h: Add non_block_start/end()
-Message-ID: <20190521104638.GO32329@dhcp22.suse.cz>
-References: <20190521100611.10089-1-daniel.vetter@ffwll.ch>
+        Tue, 21 May 2019 06:47:01 -0400
+Received: from mail.fixposition.ch ([212.51.146.252]:55560 "EHLO
+        mail.fixposition.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726242AbfEUKrB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 06:47:01 -0400
+X-Greylist: delayed 384 seconds by postgrey-1.27 at vger.kernel.org; Tue, 21 May 2019 06:47:00 EDT
+Received: from localhost (localhost [127.0.0.1])
+        by mail.fixposition.ch (Postfix) with ESMTP id 4137B1FD7B;
+        Tue, 21 May 2019 12:40:34 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fixposition.ch;
+        s=mail; t=1558435234;
+        bh=bOSkK/vNPryyZLjRMMEEJCn1BxVNeEYE9p3piwO4zbk=;
+        h=Cc:Date:Subject:From:From;
+        b=UTCAoaam8Xc7tpAre8Aq8HJJuXQkJY0eccHMO7Njz3/h5DPUAQxDV4A8/zlRk3zU1
+         VsjCUlZeoNpLNP3/83o55Lj6gVIc8IbysWkk0k7AyJwIAf0InYPTFctbjJjMVJcMDc
+         wCLc3Zj1ZkF7RwSU6GQqoTlwM2pldtqUpI9qEtrhxDiXJoaOEW1dFnjKb+FIS6m2Fa
+         nvwY1Y89+WmGMwCt5cy0R3ylSwy3oadKR9aDxewFQ5v30mtEXo2uRj9AI7ruAAwjuH
+         jkasSqW/bAFkzPvMpgQM3Cn1Z+NROzyiLfZybz8qgbjchQPUvx0Er/CvwSYbkKtnjA
+         IXcY93y6VbSFQ==
+X-Virus-Scanned: Debian amavisd-new at fixposition.ch
+Received: from mail.fixposition.ch ([127.0.0.1])
+        by localhost (mail.fixposition.ch [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id Jvi6qqwKv7Dj; Tue, 21 May 2019 12:40:33 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.fixposition.ch (Postfix) with ESMTP id EC7631FF92;
+        Tue, 21 May 2019 12:40:32 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fixposition.ch;
+        s=mail; t=1558435233;
+        bh=bOSkK/vNPryyZLjRMMEEJCn1BxVNeEYE9p3piwO4zbk=;
+        h=Cc:Date:Subject:From:From;
+        b=NGhMBksEhbrCerat69geTtlvDw7lyu+So0tEagXaTZXiWPu2zAaJPjZg+6Pg3aEVf
+         siH5b+iU73asT7gnOLm1piWdUawBgaCmR/zxGrIJ2VWXQEnFv3v38gkgY+oKdaAJlz
+         ICAKGnQyT/RUl5V4fHxxGTdFi0isBTeaVBhAIV3sccdxUAz4T5oNXM4FjL8hI8CArV
+         O3lx5w3/zwQd2X/swxLoTWdo3m2Vb+FJ9I5m6PbM4NX9AR6Bf2/Qdl2cDOKaoLBPRE
+         dYuqYFybitbEEXGCy4jaR4TjoTDcNFFb/40sdoGN9sgvlAWU3QgpqFLcgMz6dPFUWz
+         QNC+dLwXaBw+Q==
+Content-Type: text/plain; charset="utf-8"
+Cc:     jmaneyrol@invensense.com, stevemo@skydio.com, jic23@kernel.org,
+        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+User-Agent: SOGoMail 4.0.7
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190521100611.10089-1-daniel.vetter@ffwll.ch>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Date:   Tue, 21 May 2019 12:40:32 +0200
+Subject: ICM20602 buffer issues with the =?utf-8?q?inv=5Fmpu6050?= driver
+Message-ID: <42bd-5ce3d580-2b-ca9e8b0@181689754>
+X-Forward: 213.55.184.190
+From:   "Andreea Lutac" <andreea.lutac@fixposition.ch>
+Content-Transfer-Encoding: quoted-printable
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 21-05-19 12:06:11, Daniel Vetter wrote:
-> In some special cases we must not block, but there's not a
-> spinlock, preempt-off, irqs-off or similar critical section already
-> that arms the might_sleep() debug checks. Add a non_block_start/end()
-> pair to annotate these.
-> 
-> This will be used in the oom paths of mmu-notifiers, where blocking is
-> not allowed to make sure there's forward progress. Quoting Michal:
-> 
-> "The notifier is called from quite a restricted context - oom_reaper -
-> which shouldn't depend on any locks or sleepable conditionals. The code
-> should be swift as well but we mostly do care about it to make a forward
-> progress. Checking for sleepable context is the best thing we could come
-> up with that would describe these demands at least partially."
-> 
-> Peter also asked whether we want to catch spinlocks on top, but Michal
-> said those are less of a problem because spinlocks can't have an
-> indirect dependency upon the page allocator and hence close the loop
-> with the oom reaper.
-> 
-> Suggested by Michal Hocko.
-> 
-> v2:
-> - Improve commit message (Michal)
-> - Also check in schedule, not just might_sleep (Peter)
-> 
-> v3: It works better when I actually squash in the fixup I had lying
-> around :-/
-> 
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: David Rientjes <rientjes@google.com>
-> Cc: "Christian König" <christian.koenig@amd.com>
-> Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-> Cc: "Jérôme Glisse" <jglisse@redhat.com>
-> Cc: linux-mm@kvack.org
-> Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-> Cc: Wei Wang <wvw@google.com>
-> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Jann Horn <jannh@google.com>
-> Cc: Feng Tang <feng.tang@intel.com>
-> Cc: Kees Cook <keescook@chromium.org>
-> Cc: Randy Dunlap <rdunlap@infradead.org>
-> Cc: linux-kernel@vger.kernel.org
-> Acked-by: Christian König <christian.koenig@amd.com> (v1)
-> Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+Hello,
 
-I like this in general. The implementation looks reasonable to me but I
-didn't check deeply enough to give my R-by or A-by.
+I've been trying to get some data samples from the ICM20602 IMU using t=
+he mpu6050 driver which recently added support for it, but I'm encounte=
+ring an issue with the ordering of the data in the FIFO. 
+According to the specs of the device, if the accel and gyro XYZ channel=
+s are enabled, then the hardware FIFO is filled with 14 bytes correspon=
+ding to the following channels: accel=5Fx, accel=5Fy, accel=5Fz, temp, =
+anglvel=5Fx, anglvel=5Fy, anglvel=5Fz. However, when reading out the bu=
+ffer, the value I get for anglvel=5Fx seems to actually be the temperat=
+ure. This  occurs both when reading with iio=5Fchannel=5Fread (via libi=
+io) and also if I read directly from /dev/iio:device with only in=5Fang=
+lvel=5Fx=5Fen set. But in=5Fanglvel=5Fx=5Fraw reports correct values, w=
+hich made me suspect that maybe somewhere in the driver this interleave=
+d temp channel is not accounted for in the buffer structure.
 
-> ---
->  include/linux/kernel.h | 10 +++++++++-
->  include/linux/sched.h  |  4 ++++
->  kernel/sched/core.c    | 19 ++++++++++++++-----
->  3 files changed, 27 insertions(+), 6 deletions(-)
-> 
-> diff --git a/include/linux/kernel.h b/include/linux/kernel.h
-> index 74b1ee9027f5..b5f2c2ff0eab 100644
-> --- a/include/linux/kernel.h
-> +++ b/include/linux/kernel.h
-> @@ -214,7 +214,9 @@ extern void __cant_sleep(const char *file, int line, int preempt_offset);
->   * might_sleep - annotation for functions that can sleep
->   *
->   * this macro will print a stack trace if it is executed in an atomic
-> - * context (spinlock, irq-handler, ...).
-> + * context (spinlock, irq-handler, ...). Additional sections where blocking is
-> + * not allowed can be annotated with non_block_start() and non_block_end()
-> + * pairs.
->   *
->   * This is a useful debugging help to be able to catch problems early and not
->   * be bitten later when the calling function happens to sleep when it is not
-> @@ -230,6 +232,10 @@ extern void __cant_sleep(const char *file, int line, int preempt_offset);
->  # define cant_sleep() \
->  	do { __cant_sleep(__FILE__, __LINE__, 0); } while (0)
->  # define sched_annotate_sleep()	(current->task_state_change = 0)
-> +# define non_block_start() \
-> +	do { current->non_block_count++; } while (0)
-> +# define non_block_end() \
-> +	do { WARN_ON(current->non_block_count-- == 0); } while (0)
->  #else
->    static inline void ___might_sleep(const char *file, int line,
->  				   int preempt_offset) { }
-> @@ -238,6 +244,8 @@ extern void __cant_sleep(const char *file, int line, int preempt_offset);
->  # define might_sleep() do { might_resched(); } while (0)
->  # define cant_sleep() do { } while (0)
->  # define sched_annotate_sleep() do { } while (0)
-> +# define non_block_start() do { } while (0)
-> +# define non_block_end() do { } while (0)
->  #endif
->  
->  #define might_sleep_if(cond) do { if (cond) might_sleep(); } while (0)
-> diff --git a/include/linux/sched.h b/include/linux/sched.h
-> index 11837410690f..7f5b293e72df 100644
-> --- a/include/linux/sched.h
-> +++ b/include/linux/sched.h
-> @@ -908,6 +908,10 @@ struct task_struct {
->  	struct mutex_waiter		*blocked_on;
->  #endif
->  
-> +#ifdef CONFIG_DEBUG_ATOMIC_SLEEP
-> +	int				non_block_count;
-> +#endif
-> +
->  #ifdef CONFIG_TRACE_IRQFLAGS
->  	unsigned int			irq_events;
->  	unsigned long			hardirq_enable_ip;
-> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> index 102dfcf0a29a..ed7755a28465 100644
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -3264,13 +3264,22 @@ static noinline void __schedule_bug(struct task_struct *prev)
->  /*
->   * Various schedule()-time debugging checks and statistics:
->   */
-> -static inline void schedule_debug(struct task_struct *prev)
-> +static inline void schedule_debug(struct task_struct *prev, bool preempt)
->  {
->  #ifdef CONFIG_SCHED_STACK_END_CHECK
->  	if (task_stack_end_corrupted(prev))
->  		panic("corrupted stack end detected inside scheduler\n");
->  #endif
->  
-> +#ifdef CONFIG_DEBUG_ATOMIC_SLEEP
-> +	if (!preempt && prev->state && prev->non_block_count) {
-> +		printk(KERN_ERR "BUG: scheduling in a non-blocking section: %s/%d/%i\n",
-> +			prev->comm, prev->pid, prev->non_block_count);
-> +		dump_stack();
-> +		add_taint(TAINT_WARN, LOCKDEP_STILL_OK);
-> +	}
-> +#endif
-> +
->  	if (unlikely(in_atomic_preempt_off())) {
->  		__schedule_bug(prev);
->  		preempt_count_set(PREEMPT_DISABLED);
-> @@ -3377,7 +3386,7 @@ static void __sched notrace __schedule(bool preempt)
->  	rq = cpu_rq(cpu);
->  	prev = rq->curr;
->  
-> -	schedule_debug(prev);
-> +	schedule_debug(prev, preempt);
->  
->  	if (sched_feat(HRTICK))
->  		hrtick_clear(rq);
-> @@ -6102,7 +6111,7 @@ void ___might_sleep(const char *file, int line, int preempt_offset)
->  	rcu_sleep_check();
->  
->  	if ((preempt_count_equals(preempt_offset) && !irqs_disabled() &&
-> -	     !is_idle_task(current)) ||
-> +	     !is_idle_task(current) && !current->non_block_count) ||
->  	    system_state == SYSTEM_BOOTING || system_state > SYSTEM_RUNNING ||
->  	    oops_in_progress)
->  		return;
-> @@ -6118,8 +6127,8 @@ void ___might_sleep(const char *file, int line, int preempt_offset)
->  		"BUG: sleeping function called from invalid context at %s:%d\n",
->  			file, line);
->  	printk(KERN_ERR
-> -		"in_atomic(): %d, irqs_disabled(): %d, pid: %d, name: %s\n",
-> -			in_atomic(), irqs_disabled(),
-> +		"in_atomic(): %d, irqs_disabled(): %d, non_block: %d, pid: %d, name: %s\n",
-> +			in_atomic(), irqs_disabled(), current->non_block_count,
->  			current->pid, current->comm);
->  
->  	if (task_stack_end_corrupted(current))
-> -- 
-> 2.20.1
-> 
+I had a look at the driver code and inv=5Fmpu6050=5Fread=5Ffifo() in pa=
+rticular, but I can't identify anything amiss. I've applied the recent =
+patch that added the extra 2 temperature bytes (https://patchwork.kerne=
+l.org/patch/10882883/), but the problem persists. So far I've tried cha=
+nging the size of the data buffer, defined in inv=5Fmpu=5Fiio.h: 
 
--- 
-Michal Hocko
-SUSE Labs
+/* 6 + 6 round up and plus 8 */
+#define INV=5FMPU6050=5FOUTPUT=5FDATA=5FSIZE     24 
+
+from 24 to 32, according to the intuition that 24 corresponds to readin=
+gs without temperature (i.e. 6 bytes for accel, rounded up to 8 + 6 byt=
+es for gyro, rounded up to 8 + 8 bytes for the timestamp =3D 24) and th=
+us another 8 bytes would be needed, but that doesn't seem to have solve=
+d it.
+
+I'm quite new to driver development though, so I think there might be s=
+omething I'm not getting. I would be really grateful if anyone could sh=
+ed some light over what's happening here or give some advice as to what=
+ I could be doing wrong.
+
+Best regards,
+Andreea Lutac
+
