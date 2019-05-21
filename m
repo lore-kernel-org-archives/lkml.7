@@ -2,97 +2,97 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90ECBC04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 07:54:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D66FC04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 07:56:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59D1121743
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 07:54:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E32C21743
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 07:56:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558425292;
-	bh=SITPpVCwi11SHOs3XUanWu/wOsT6fGEWvQJoKRZQEKk=;
+	s=default; t=1558425383;
+	bh=qxHfr4Hi+PajQcYj2TJLTrbR4UOul7CUgMlD8k0p1Uk=;
 	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=RXAYb4JgXCUXwqiPMbFYlzNdkygN00RHXTMXkfMoDKsOvXdXTA0Zjq6c/qwVw7DHS
-	 zzZDotnTPu994m7rAqA4Uh8MBQCVl4h1ymQTIMQA9y/vZiCLf6NMD3gD5ltQwg8Z+0
-	 0uwJ4mEtcwgkB3sVNjiRgyE4rvrT9JFYKt0SVqtA=
+	b=mrfrAeZHZ+H4FD6aJLFqtLB3esfyE8GqepvuX6TWarAX0HR9nL2ptY3Src+n+CK9q
+	 4QHIZrjrKFmchFmv2SLGXfCztHE380aIEhUoGZWGe2I+F2WNvD50h7qGAPG3FPFoOW
+	 kS64oqU//1r85SMhAt96o3c2sNeuuA9R3YYbrL/A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726992AbfEUHyv (ORCPT
+        id S1726991AbfEUH4W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 03:54:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56674 "EHLO mail.kernel.org"
+        Tue, 21 May 2019 03:56:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56854 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725809AbfEUHyv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 03:54:51 -0400
-Received: from localhost.localdomain (unknown [115.193.166.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        id S1725809AbfEUH4W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 03:56:22 -0400
+Received: from localhost.localdomain (unknown [153.145.222.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 513242173C;
-        Tue, 21 May 2019 07:54:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 770812173C;
+        Tue, 21 May 2019 07:56:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558425290;
-        bh=SITPpVCwi11SHOs3XUanWu/wOsT6fGEWvQJoKRZQEKk=;
+        s=default; t=1558425381;
+        bh=qxHfr4Hi+PajQcYj2TJLTrbR4UOul7CUgMlD8k0p1Uk=;
         h=From:To:Cc:Subject:Date:From;
-        b=u6K8ne0r7WvAQtC1DvFhLAl43XEbLlYnNmeooy0jvEtBScAamXSACMRg+q9XcF6sA
-         BRRrEPGNBt4z4riYe6VYx6LoS2ZtVHr8IrZAX7DrhVok/L0cIaXX3uYQ0JIMZr86Nq
-         Wle4cvpK50QxgLuZI0i5zNXTbd8JDTxxT7lHHtJM=
-From:   guoren@kernel.org
-To:     marc.zyngier@arm.com, mark.rutland@arm.com, tglx@linutronix.de
-Cc:     linux-kernel@vger.kernel.org, jason@lakedaemon.net,
-        guoren@kernel.org, ren_guo@c-sky.com, linux-csky@vger.kernel.org
-Subject: [PATCH] irqchip/irq-csky-mpintc: Support auto irq deliver to all cpus
-Date:   Tue, 21 May 2019 15:54:05 +0800
-Message-Id: <1558425245-20995-1-git-send-email-guoren@kernel.org>
-X-Mailer: git-send-email 2.7.4
+        b=M5xfmM1GavKb9nurGX+Yp2PsQhpBXjDrWGrKk+3lupqFtW28sr8bOzycJ2pkJaz8g
+         TuYZUfu+UDUYtrdtLJOFLfloJ2VN3SybEBNnhY1xCdeFJeRmxtrcU32Xig0wxPKztv
+         In+FBSYhDhkxB0BmPXwZYnmQNHZGb4ttCxLGsX9M=
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: [PATCH 0/2] Enable new kprobe event at boot
+Date:   Tue, 21 May 2019 16:56:16 +0900
+Message-Id: <155842537599.4253.14690293652007233645.stgit@devnote2>
+X-Mailer: git-send-email 2.17.1
+User-Agent: StGit/0.17.1-dirty
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guo Ren <ren_guo@c-sky.com>
+This series adds a kernel parameter, 'kprobe_event=' to add and enable
+new kprobe events at boot time.
 
-The csky,mpintc could deliver a external irq to one cpu or all cpus, but
-it couldn't deliver a external irq to a group of cpus with cpu_mask. So
-we only use auto deliver mode when affinity mask_val is equal to
-cpu_present_mask.
+Currently ftrace can enable some existing trace events at boot time.
+This also allows admin/developer to add new kprobe-events at boot
+time to debug device drivers etc.
 
-There is no limitation for only two cpus in SMP system.
+The syntax is similar to tracing/kprobe_events interface, but
+uses ',' and ';' instead of ' ' and '\n' respectively. e.g.
 
-Signed-off-by: Guo Ren <ren_guo@c-sky.com>
-Cc: Marc Zyngier <marc.zyngier@arm.com>
+  kprobe_event=p,func1,$arg1,$arg2;p,func2,$arg1
+
+will add probes on func1 with the 1st and the 2nd arguments and on
+func2 with the 1st argument.
+
+Note that 'trace_event=' option enables trace event at very early
+timing, but the events added by 'kprobe_event=' are enabled right
+before enabling device drivers at this point. It is enough for
+tracing device driver initialization etc.
+
+Thank you,
+
 ---
- drivers/irqchip/irq-csky-mpintc.c | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/irqchip/irq-csky-mpintc.c b/drivers/irqchip/irq-csky-mpintc.c
-index 5bc0868..a3dbc6b 100644
---- a/drivers/irqchip/irq-csky-mpintc.c
-+++ b/drivers/irqchip/irq-csky-mpintc.c
-@@ -159,8 +159,19 @@ static int csky_irq_set_affinity(struct irq_data *d,
- 	if (cpu >= nr_cpu_ids)
- 		return -EINVAL;
- 
--	/* Enable interrupt destination */
--	cpu |= BIT(31);
-+	/*
-+	 * The csky,mpintc could support auto irq deliver, but it only
-+	 * could deliver external irq to one cpu or all cpus. So it
-+	 * doesn't support deliver external irq to a group of cpus
-+	 * with cpu_mask.
-+	 * SO we only use auto deliver mode when affinity mask_val is
-+	 * equal to cpu_present_mask.
-+	 *
-+	 */
-+	if (cpumask_equal(mask_val, cpu_present_mask))
-+		cpu = 0;
-+	else
-+		cpu |= BIT(31);
- 
- 	writel_relaxed(cpu, INTCG_base + INTCG_CIDSTR + offset);
- 
--- 
-2.7.4
+Masami Hiramatsu (2):
+      kprobes: Initialize kprobes at subsys_initcall
+      tracing/kprobe: Add kprobe_event= boot parameter
 
+
+ Documentation/admin-guide/kernel-parameters.txt |   13 ++++++
+ Documentation/trace/kprobetrace.rst             |   14 ++++++
+ kernel/kprobes.c                                |    2 -
+ kernel/trace/trace_kprobe.c                     |   54 +++++++++++++++++++++++
+ 4 files changed, 82 insertions(+), 1 deletion(-)
+
+--
+Masami Hiramatsu (Linaro)
