@@ -2,87 +2,129 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2C3BC04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:31:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 635B7C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:32:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80B572173C
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:31:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 427332173C
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:32:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728741AbfEUPb1 (ORCPT
+        id S1728748AbfEUPcN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 11:31:27 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60858 "EHLO mx1.redhat.com"
+        Tue, 21 May 2019 11:32:13 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:60358 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728628AbfEUPb1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 11:31:27 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        id S1728137AbfEUPcM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 11:32:12 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9E2FC356F2;
-        Tue, 21 May 2019 15:31:19 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.159])
-        by smtp.corp.redhat.com (Postfix) with SMTP id D8BD959154;
-        Tue, 21 May 2019 15:31:14 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Tue, 21 May 2019 17:31:18 +0200 (CEST)
-Date:   Tue, 21 May 2019 17:31:13 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Minchan Kim <minchan@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        by mx1.redhat.com (Postfix) with ESMTPS id 18E00883D7;
+        Tue, 21 May 2019 15:32:05 +0000 (UTC)
+Received: from redhat.com (unknown [10.20.6.178])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1505C5378A;
+        Tue, 21 May 2019 15:32:02 +0000 (UTC)
+Date:   Tue, 21 May 2019 11:32:00 -0400
+From:   Jerome Glisse <jglisse@redhat.com>
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc:     DRI Development <dri-devel@lists.freedesktop.org>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tim Murray <timmurray@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>
-Subject: Re: [RFC 5/7] mm: introduce external memory hinting API
-Message-ID: <20190521153113.GA2235@redhat.com>
-References: <20190520035254.57579-1-minchan@kernel.org>
- <20190520035254.57579-6-minchan@kernel.org>
+        Linux MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        David Rientjes <rientjes@google.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        Daniel Vetter <daniel.vetter@intel.com>
+Subject: Re: [PATCH 3/4] mm, notifier: Catch sleeping/blocking for !blockable
+Message-ID: <20190521153200.GB3836@redhat.com>
+References: <20190520213945.17046-1-daniel.vetter@ffwll.ch>
+ <20190520213945.17046-3-daniel.vetter@ffwll.ch>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20190520035254.57579-6-minchan@kernel.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Tue, 21 May 2019 15:31:27 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190520213945.17046-3-daniel.vetter@ffwll.ch>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Tue, 21 May 2019 15:32:12 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/20, Minchan Kim wrote:
->
-> +	rcu_read_lock();
-> +	tsk = pid_task(pid, PIDTYPE_PID);
-> +	if (!tsk) {
-> +		rcu_read_unlock();
-> +		goto err;
-> +	}
-> +	get_task_struct(tsk);
-> +	rcu_read_unlock();
-> +	mm = mm_access(tsk, PTRACE_MODE_ATTACH_REALCREDS);
-> +	if (!mm || IS_ERR(mm)) {
-> +		ret = IS_ERR(mm) ? PTR_ERR(mm) : -ESRCH;
-> +		if (ret == -EACCES)
-> +			ret = -EPERM;
-> +		goto err;
-> +	}
-> +	ret = madvise_core(tsk, start, len_in, behavior);
+On Mon, May 20, 2019 at 11:39:44PM +0200, Daniel Vetter wrote:
+> We need to make sure implementations don't cheat and don't have a
+> possible schedule/blocking point deeply burried where review can't
+> catch it.
+> 
+> I'm not sure whether this is the best way to make sure all the
+> might_sleep() callsites trigger, and it's a bit ugly in the code flow.
+> But it gets the job done.
+> 
+> Inspired by an i915 patch series which did exactly that, because the
+> rules haven't been entirely clear to us.
+> 
+> v2: Use the shiny new non_block_start/end annotations instead of
+> abusing preempt_disable/enable.
+> 
+> v3: Rebase on top of Glisse's arg rework.
+> 
+> v4: Rebase on top of more Glisse rework.
+> 
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: David Rientjes <rientjes@google.com>
+> Cc: "Christian König" <christian.koenig@amd.com>
+> Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+> Cc: "Jérôme Glisse" <jglisse@redhat.com>
+> Cc: linux-mm@kvack.org
+> Reviewed-by: Christian König <christian.koenig@amd.com>
+> Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+> ---
+>  mm/mmu_notifier.c | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+> 
+> diff --git a/mm/mmu_notifier.c b/mm/mmu_notifier.c
+> index c05e406a7cd7..a09e737711d5 100644
+> --- a/mm/mmu_notifier.c
+> +++ b/mm/mmu_notifier.c
+> @@ -176,7 +176,13 @@ int __mmu_notifier_invalidate_range_start(struct mmu_notifier_range *range)
+>  	id = srcu_read_lock(&srcu);
+>  	hlist_for_each_entry_rcu(mn, &range->mm->mmu_notifier_mm->list, hlist) {
+>  		if (mn->ops->invalidate_range_start) {
+> -			int _ret = mn->ops->invalidate_range_start(mn, range);
+> +			int _ret;
+> +
+> +			if (!mmu_notifier_range_blockable(range))
+> +				non_block_start();
+> +			_ret = mn->ops->invalidate_range_start(mn, range);
+> +			if (!mmu_notifier_range_blockable(range))
+> +				non_block_end();
 
-IIUC, madvise_core(tsk) plays with tsk->mm->mmap_sem. But this tsk can exit and
-nullify its ->mm right after mm_access() succeeds.
+This is a taste thing so feel free to ignore it as maybe other
+will dislike more what i prefer:
 
-another problem is that pid_task(pid) can return a zombie leader, in this case
-mm_access() will fail while it shouldn't.
++			if (!mmu_notifier_range_blockable(range)) {
++				non_block_start();
++				_ret = mn->ops->invalidate_range_start(mn, range);
++				non_block_end();
++			} else
++				_ret = mn->ops->invalidate_range_start(mn, range);
 
-Oleg.
+If only we had predicate on CPU like on GPU :)
 
+In any case:
+
+Reviewed-by: Jérôme Glisse <jglisse@redhat.com>
+
+
+>  			if (_ret) {
+>  				pr_info("%pS callback failed with %d in %sblockable context.\n",
+>  					mn->ops->invalidate_range_start, _ret,
+> -- 
+> 2.20.1
+> 
