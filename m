@@ -2,118 +2,136 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 099AEC04E87
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 07:38:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BB37C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 07:38:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2FBD21019
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 07:38:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A25D21019
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 07:38:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="2JxvFy0Z"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nqw8oc68"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727023AbfEUHi3 (ORCPT
+        id S1727052AbfEUHij (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 03:38:29 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:32966 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726006AbfEUHi1 (ORCPT
+        Tue, 21 May 2019 03:38:39 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:46978 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726006AbfEUHii (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 03:38:27 -0400
-Received: by mail-wm1-f65.google.com with SMTP id c66so1646332wme.0
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 00:38:26 -0700 (PDT)
+        Tue, 21 May 2019 03:38:38 -0400
+Received: by mail-wr1-f68.google.com with SMTP id r7so17270170wrr.13;
+        Tue, 21 May 2019 00:38:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Hyv8dbu1hXdVe8oH/C/wgPhiFce8VkAWKoNE8lVkSkE=;
-        b=2JxvFy0ZoOzBLDEIiB+zZywTTKxMZm8uWiW4+G2QZV9sw9JxK1R9VdWTIXtCLg1n+w
-         nAMaeaocUuXeeHDF2xPoj/C9FWwLpOI9ywmD7LiOJ8OwG7c//6QVdfNtg74bHeM1R7Pe
-         v1xEHkVaQqBDCGJYNl2QDNL7qqG4if2mvXLPT2ruJWXyyVHUmdIkZTzv/E9hv+0qZsLW
-         GCHuhRGIi531rD0AN1hToSSqWuBHrEBXJDvbP+BqsaqNMuk6GH3kbjyiXVR5TebJRHQr
-         7mMA4U1Ld45CAI226Na4YMcm2/qxMDEqEQZO6yLrbeyvnxJ6zlaxyo/zYkK/RDdPqrbj
-         oWCg==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=5ryJbbZodXACWTO9xzLjJVVDfVukY2SjZqE/RR5ZRyY=;
+        b=nqw8oc680iMAXhEvqTRlU54E1joqR2AvVBhvZfLCL7BBx/cJuYXEsr2tIKWi9s/noe
+         OyAh63/DLuZBsMo4BQnTIiH7d2J3BTTStDZ11VOlWi6H4zlhecsZStdaOK9Y/gUzRgcj
+         7SLMARSMr3T9KqOGhrDNMx8/4OdVO6LE2S1HO/maHyEHUbEHu9/H6GWOkYa6upqiwApD
+         Ys5KRsRW9HudhzP/+KX9j1ouXQsqo0IdByIvhVy2ZWMEtNnWtMiPZA/xxFeFKc56E5zH
+         4RbOk04KtUI/edTwJzfndt6RAb47JGe5IUqvSXD3ZKeEIlLc0NeynN1bNwcoj9tjOb4x
+         xXbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Hyv8dbu1hXdVe8oH/C/wgPhiFce8VkAWKoNE8lVkSkE=;
-        b=E0AdVnJs9F/Z5ePxnsZm2zm7gwEt+E4l4aOgnXeeq3aHL9gezB3lMaugDHW0epOEYZ
-         5gKY9k4rOrYvvLraxHnmRzPUPQPZQFDXKd27RbcV4sfiAP8WrBwNlYQLgV/GAmP4b6SN
-         joO4LW9uIl1JEHs+pIgZLESY76hGKNkJrCdKJjSnfK0F99mlkABRzd79kOr3FbnKMyoD
-         /mY3Hjg1NbrdrzRfjFkDllsLCPa9yVWb/yOvfEd1o3Dk7aZyS4qUARrf4M5QlWh+DNd8
-         WcAYPso7LJv/e4yawHd6b67kkyINR7m/LdCU8rff3DKAH+ZBchaXIJdW5NdS0oOlJ8Iz
-         5Adg==
-X-Gm-Message-State: APjAAAXkAwZTvZbdiAH9TCwiX8tDKQmobcgB0yE2IA1LPbEjiVSf+u/C
-        GNLA87BaP3Fdx1zkORxAuasExCmx5LxcAJS4FwqAUg==
-X-Google-Smtp-Source: APXvYqyP/kpDyd3HWL14CFb1aLrUrRlH/V5SRi6DWJCY7A1hpuXU2SkaVukqmredWu44P35iRvx6HnyqGZhTa6UVc8Q=
-X-Received: by 2002:a1c:eb0c:: with SMTP id j12mr2117204wmh.55.1558424305961;
- Tue, 21 May 2019 00:38:25 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=5ryJbbZodXACWTO9xzLjJVVDfVukY2SjZqE/RR5ZRyY=;
+        b=rIk/juNHOGO4R6U4lq4A/nw9k3zT15uuE8dvfRE26lmIzylSfIUFjMeIHdbWvO6qwA
+         bK5ggfGExwXI5k2JiThIni+2lFenQxvBFCgUgXQIvOO+HjadmmmMyMz58Z/AxZOUBl/v
+         DTuB830xGjnAc5p8GXBelQETnQWwdHhybnsyRYRX6ztP9dXDs8mb6pgx0pxnMFNJmoWy
+         ako96+pfiB+wOspdqIe7QFi1ZhF6+IKNcRFT+NqNnd+tX9GEYDa2amUI8p+EQkVLX5jP
+         9PTBisJEfGEZ9xL1tejn9ZOUrtnVOhAxWHQuPjkyc56hr3LO6CsRYsN7xJMtoIVp22df
+         UfVQ==
+X-Gm-Message-State: APjAAAXYhszrq01JE45z7uDkgLpfHRnEtB2Wn7uaL7N+/tBtFSCp5R8x
+        EQHvFahiqyCBOmT0Ka4fPr/ML6cnJG4=
+X-Google-Smtp-Source: APXvYqwfLIm49NnDDXdp9jn68Vl7JSM+PaLLfYbbHu9fobHWezVc5/071lrqi5iSH9Bh8drGE7n0mA==
+X-Received: by 2002:a5d:4002:: with SMTP id n2mr13890891wrp.187.1558424316584;
+        Tue, 21 May 2019 00:38:36 -0700 (PDT)
+Received: from [10.43.17.31] (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id a10sm23974617wrm.94.2019.05.21.00.38.35
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 21 May 2019 00:38:36 -0700 (PDT)
+Subject: Re: [RFC 1/1] Add dm verity root hash pkcs7 sig validation.
+To:     Jaskaran Khurana <jaskarankhurana@linux.microsoft.com>,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     agk@redhat.com, snitzer@redhat.com, dm-devel@redhat.com,
+        jmorris@namei.org
+References: <20190520215422.23939-1-jaskarankhurana@linux.microsoft.com>
+ <20190520215422.23939-2-jaskarankhurana@linux.microsoft.com>
+From:   Milan Broz <gmazyland@gmail.com>
+Openpgp: preference=signencrypt
+Message-ID: <7e922983-7716-e215-a29b-3154f7afb493@gmail.com>
+Date:   Tue, 21 May 2019 09:38:35 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190502050206.23373-1-anup.patel@wdc.com> <20190502050206.23373-3-anup.patel@wdc.com>
- <20190520114352.GA5372@infradead.org>
-In-Reply-To: <20190520114352.GA5372@infradead.org>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Tue, 21 May 2019 13:08:14 +0530
-Message-ID: <CAAhSdy2SRxMEaJE6WsP87KeXw_J1X-6eYAMV7j0bhEGgNcLiyg@mail.gmail.com>
-Subject: Re: [PATCH v4 2/2] RISC-V: Setup initial page tables in two stages
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Anup Patel <Anup.Patel@wdc.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190520215422.23939-2-jaskarankhurana@linux.microsoft.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 20, 2019 at 5:13 PM Christoph Hellwig <hch@infradead.org> wrote:
->
-> >  void __init parse_dtb(unsigned int hartid, void *dtb)
-> >  {
-> > -     if (early_init_dt_scan(__va(dtb)))
-> > +     dtb = (void *)fix_to_virt(FIX_FDT) + ((uintptr_t)dtb & ~PAGE_MASK);
-> > +     if (early_init_dt_scan(dtb))
->
-> FYI, parse_dtb in mainline now lost the hartid argument and takes a
-> phys_addr_t for the dtb address.
+On 20/05/2019 23:54, Jaskaran Khurana wrote:
+> Adds in-kernel pkcs7 signature checking for the roothash of
+> the dm-verity hash tree.
+> 
+> The verification is to support cases where the roothash is not secured by
+> Trusted Boot, UEFI Secureboot or similar technologies.
+> One of the use cases for this is for dm-verity volumes mounted after boot,
+> the root hash provided during the creation of the dm-verity volume has to
+> be secure and thus in-kernel validation implemented here will be used
+> before we trust the root hash and allow the block device to be created.
+> 
+> The signature being provided for verification must verify the root hash and 
+> must be trusted by the builtin keyring for verification to succeed.
+> 
+> Adds DM_VERITY_VERIFY_ROOTHASH_SIG: roothash verification
+> against the roothash signature file *if* specified, if signature file is
+> specified verification must succeed prior to creation of device mapper 
+> block device.
+> 
+> Adds DM_VERITY_VERIFY_ROOTHASH_SIG_FORCE: roothash signature *must* be
+> specified for all dm verity volumes and verification must succeed prior
+> to creation of device mapper block device.
 
-Okay, this patch is based on 5.1 kernel. I guess I will have to rebase
-it anyway.
+I am not sure this is a good idea. If I understand it correctly, this will
+block creating another dm-verity mappings without PKCS7 signature, and these
+are used in many other environments and applications that could possibly
+run on that system later.
 
->
-> That being said I find the above way to magic.  So we take the fixmap
-> address and then only the offset from something passed as a pointer?
-> This just looks very weird.  The way FIX_FDT is defined to add to my
-> confusion, which might partially be due to not understanding fixmaps
-> very well.  But it seems like at very least we should set up an
-> actual kernel pointer for the dtb in setup_vm based on what that
-> gets passed and stop passing any arguments to parse_dtb to keep
-> that magic in one place.  And possibly add some comment.
+(But I have no idea how to solve it better though :-)
 
-I agree with your suggestion. I will setup early_dtb_ptr in setup_vm()
-and use it here.
+...
 
-FYI, the fixmap virtual address range is not covered by linear va-to-pa
-translation (i.e. __va() and __pa() cannot be used). The mapping
-granularity of fixmap is always PAGE_SIZE hence add offset to
-fix_to_virt(FIX_FDT).
+> +	/* Root hash signature is  a optional parameter*/
+> +	r = verity_verify_root_hash(root_hash_digest_to_validate,
+> +				    strlen(root_hash_digest_to_validate),
+> +				    verify_args.sig,
+> +				    verify_args.sig_size);
+> +	if (r < 0) {
+> +		ti->error = "Root hash verification failed";
+> +		goto bad;
+> +	}
 
->
-> > +#if MAX_EARLY_MAPPING_SIZE < PGDIR_SIZE
->
-> It seems MAX_EARLY_MAPPING_SIZE is defined to a fix constant,
-> why do we need these conditionals?
+You are sending the PKCS7 signature as a (quite large) binary blob inside the mapping table.
 
-Sure, I will remove the conditional. It's totally redundant. I forgot to
-remove it previously.
+I am not sure if it is possible here (I guess so), but why not put this it kernel keyring
+and then just reference it from mapping table?
+(We use kernel keyring in libcryptsetup already for dm-crypt.)
 
-Regards,
-Anup
+It will also solve an issue in userspace patch, when you are reading the signature
+file too late (devices can be suspended in that moment, so I would prefer to download
+sig file to keyring in advance, and then just reference it in mapping table).
+
+(I guess you will send merge request for veritysetup userspace part later.)
+
+Milan
