@@ -2,169 +2,98 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C75D5C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:33:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CD02C04E87
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:34:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DCE12173C
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:33:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22164217F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:34:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="VlOYu1dr"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="v5L0ne9l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728356AbfEUNdc (ORCPT
+        id S1728384AbfEUNeI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 09:33:32 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:34177 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728339AbfEUNdb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 09:33:31 -0400
-Received: by mail-pl1-f194.google.com with SMTP id w7so8487377plz.1
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 06:33:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:subject:date:message-id:in-reply-to:references;
-        bh=q9ZIgayitHYinuwIIIQjmbyGj4R/0KKMdcZ9auHzvr8=;
-        b=VlOYu1drdYLZpHJV9yk0qWwSSx5N4LCVyuAnvbVQ2maCo9bVARUiY89bZ1yKPhQCcH
-         uNvDtxSgCuPt3Ou37gyoxRCm/9qexGEjOWipubkYFzvm6+F4Fazk2Q5S1WHGsW3SOYis
-         C7cPoFIqYa4MEZ1trtTOhUXsiHoAjNl4bkEJe06N6edwmKhwXdq5wWmH2yEKnVMIaKR4
-         AwbUMSTsfTlj43zrdVGSUl2wkrPrzteOPZScOYgg/PEXBq8b2vzftNajJPqmkNpNfcxq
-         gF1EJ26O7OCpQEhcta7+PRX1PRcD7FZzYeHylUeNWK4DQk8rBl7ohWSoPx9cIVRf/1Sd
-         fHqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references;
-        bh=q9ZIgayitHYinuwIIIQjmbyGj4R/0KKMdcZ9auHzvr8=;
-        b=jj7jREmgoGPp8JSwsdJhrx+RtWqiK/gLPDxMQbswmVmV68HB2fVtn51cq+4hv7aqzn
-         z8yuhx/wNsiO5kKZntWX8+RM9IjPimBwDvDdSfIORWwaQBB1vwLvJV59Uco0kedBytzY
-         4p9fFnrREd4xxoLN65wH/gecL3G6vk1OyjF+o5D/MEEHSTKpCTRYhXfz2nXBc6z59apj
-         8XzJMH+MhcTt/wgmmlsRaiC41jqeA4/mUtKepVlJ2vZs/GuvZA18Kr8FZ5FYgpKBjQYS
-         Z19o0/sNxbM+tQUu4KiT76EjuqhuNWcsLIgbAXE4/300/ylQEISeGaAT3Kol9bv3WUDl
-         523w==
-X-Gm-Message-State: APjAAAW9drth3ntB58KF1G9c3XeroictkLqbNmCPH69q//AoRp/fHg7K
-        LsIrhFHiwxjS5B96slHhe1BviA==
-X-Google-Smtp-Source: APXvYqwosybVnv92iOwCWSgxiLTjp16vqLrYP4NZArVA1GDu0mXZO7aPxnIG51uYXApdUCoO0dkHxQ==
-X-Received: by 2002:a17:902:2aa6:: with SMTP id j35mr503646plb.189.1558445610576;
-        Tue, 21 May 2019 06:33:30 -0700 (PDT)
-Received: from buildserver-90.open-silicon.com ([114.143.65.226])
-        by smtp.googlemail.com with ESMTPSA id d15sm65368906pfm.186.2019.05.21.06.33.26
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 21 May 2019 06:33:29 -0700 (PDT)
-From:   Sagar Shrikant Kadam <sagar.kadam@sifive.com>
-To:     robh+dt@kernel.org, mark.rutland@arm.com, peter@korsgaard.com,
-        andrew@lunn.ch, palmer@sifive.com, paul.walmsley@sifive.com,
-        sagar.kadam@sifive.com, linux-i2c@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v6 3/3] i2c-ocores: sifive: add polling mode workaround for FU540-C000 SoC.
-Date:   Tue, 21 May 2019 19:02:54 +0530
-Message-Id: <1558445574-16471-4-git-send-email-sagar.kadam@sifive.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1558445574-16471-1-git-send-email-sagar.kadam@sifive.com>
-References: <1558445574-16471-1-git-send-email-sagar.kadam@sifive.com>
+        Tue, 21 May 2019 09:34:08 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:51174 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727986AbfEUNeI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 09:34:08 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 457cDY6p7wz9v1nn;
+        Tue, 21 May 2019 15:34:05 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=v5L0ne9l; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id n2tkmpse9POB; Tue, 21 May 2019 15:34:05 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 457cDY5mh8z9v1nh;
+        Tue, 21 May 2019 15:34:05 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1558445645; bh=4k6PLmXdY0SvqmTbZLBIzVnywVWKh7ktdtBKLg7zhR0=;
+        h=From:Subject:To:Cc:Date:From;
+        b=v5L0ne9l7IeJ6j1RlEtDlB3tznGmL91nYxqqzqAQ9628UCkLw7a61V7lU7BlOMeaI
+         b0O1Pfn3sC/WTzObfEfPlukMzbiQDm5GZ/6SBtxI8+0WZYgmM+uRDgWxmfFVG8vyhS
+         VJTPMoNWaUD4+epVtwrFHblur8GZGQQvo7qCoHJ0=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 455248B80D;
+        Tue, 21 May 2019 15:34:07 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id 45QZsARu0znr; Tue, 21 May 2019 15:34:07 +0200 (CEST)
+Received: from po16846vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 0F4598B803;
+        Tue, 21 May 2019 15:34:07 +0200 (CEST)
+Received: by po16846vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id A260268458; Tue, 21 May 2019 13:34:06 +0000 (UTC)
+Message-Id: <cover.1558445259.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH v1 00/15] Fixing selftests failure on Talitos driver
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>, horia.geanta@nxp.com
+Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Date:   Tue, 21 May 2019 13:34:06 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The i2c-ocore driver already has a polling mode interface.But it needs
-a workaround for FU540 Chipset on HiFive unleashed board (RevA00).
-There is an erratum in FU540 chip that prevents interrupt driven i2c
-transfers from working, and also the I2C controller's interrupt bit
-cannot be cleared if set, due to this the existing i2c polling mode
-interface added in mainline earlier doesn't work, and CPU stall's
-infinitely, when-ever i2c transfer is initiated.
+Several test failures have popped up following recent changes to crypto
+selftests.
 
-Ref:
-	commit dd7dbf0eb090 ("i2c: ocores: refactor setup for polling")
+This series fixes (most of) them.
 
-The workaround / fix under OCORES_FLAG_BROKEN_IRQ is particularly for
-FU540-COOO SoC.
+The last three patches are trivial cleanups.
 
-The polling function identifies a SiFive device based on the device node
-and enables the workaround.
+Christophe Leroy (15):
+  crypto: talitos - fix skcipher failure due to wrong output IV
+  crypto: talitos - rename alternative AEAD algos.
+  crypto: talitos - reduce max key size for SEC1
+  crypto: talitos - check AES key size
+  crypto: talitos - fix CTR alg blocksize
+  crypto: talitos - check data blocksize in ablkcipher.
+  crypto: talitos - fix ECB algs ivsize
+  crypto: talitos - Do not modify req->cryptlen on decryption.
+  crypto: talitos - HMAC SNOOP NO AFEU mode requires SW icv checking.
+  crypto: talitos - properly handle split ICV.
+  crypto: talitos - Align SEC1 accesses to 32 bits boundaries.
+  crypto: talitos - fix AEAD processing.
+  Revert "crypto: talitos - export the talitos_submit function"
+  crypto: talitos - use IS_ENABLED() in has_ftr_sec1()
+  crypto: talitos - use SPDX-License-Identifier
 
-Signed-off-by: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
----
- drivers/i2c/busses/i2c-ocores.c | 38 +++++++++++++++++++++++++++++++++-----
- 1 file changed, 33 insertions(+), 5 deletions(-)
+ drivers/crypto/talitos.c | 281 ++++++++++++++++++++++-------------------------
+ drivers/crypto/talitos.h |  45 ++------
+ 2 files changed, 139 insertions(+), 187 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-ocores.c b/drivers/i2c/busses/i2c-ocores.c
-index b334fa2..3175c72 100644
---- a/drivers/i2c/busses/i2c-ocores.c
-+++ b/drivers/i2c/busses/i2c-ocores.c
-@@ -84,6 +84,10 @@ struct ocores_i2c {
- #define TYPE_GRLIB		1
- #define TYPE_SIFIVE_REV0	2
- 
-+#define OCORES_FLAG_BROKEN_IRQ BIT(1) /* Broken IRQ for FU540-C000 SoC */
-+
-+static const struct of_device_id ocores_i2c_match[];
-+
- static void oc_setreg_8(struct ocores_i2c *i2c, int reg, u8 value)
- {
- 	iowrite8(value, i2c->base + (reg << i2c->reg_shift));
-@@ -236,9 +240,13 @@ static irqreturn_t ocores_isr(int irq, void *dev_id)
- 	struct ocores_i2c *i2c = dev_id;
- 	u8 stat = oc_getreg(i2c, OCI2C_STATUS);
- 
--	if (!(stat & OCI2C_STAT_IF))
-+	if (irq == OCORES_FLAG_BROKEN_IRQ) {
-+		if (stat & OCI2C_STAT_IF)
-+			if (!(stat & OCI2C_STAT_BUSY))
-+				return IRQ_NONE;
-+	} else if (!(stat & OCI2C_STAT_IF)) {
- 		return IRQ_NONE;
--
-+	}
- 	ocores_process(i2c, stat);
- 
- 	return IRQ_HANDLED;
-@@ -340,6 +348,10 @@ static int ocores_poll_wait(struct ocores_i2c *i2c)
-  */
- static void ocores_process_polling(struct ocores_i2c *i2c)
- {
-+	const struct of_device_id *match;
-+
-+	match = of_match_node(ocores_i2c_match, i2c->adap.dev.of_node);
-+
- 	while (1) {
- 		irqreturn_t ret;
- 		int err;
-@@ -350,9 +362,25 @@ static void ocores_process_polling(struct ocores_i2c *i2c)
- 			break; /* timeout */
- 		}
- 
--		ret = ocores_isr(-1, i2c);
--		if (ret == IRQ_NONE)
--			break; /* all messages have been transferred */
-+		/*
-+		 * If it's a SiFive Device(FU540-C000 SoC ) use
-+		 * OCORES_FLAG_BROKEN_IRQ to enable workaround in
-+		 * polling mode.
-+		 */
-+		if (match && (long)match->data == TYPE_SIFIVE_REV0) {
-+			ret = ocores_isr(OCORES_FLAG_BROKEN_IRQ, i2c);
-+			if (ret == IRQ_NONE)
-+				break; /* all messages have been transferred */
-+			else
-+				if (i2c->state == STATE_DONE)
-+					break;
-+		} else {
-+			ret = ocores_isr(-1, i2c);
-+			if (ret == IRQ_NONE)
-+				break; /* all messages have been transferred */
-+
-+		}
-+
- 	}
- }
- 
 -- 
-1.9.1
+2.13.3
 
