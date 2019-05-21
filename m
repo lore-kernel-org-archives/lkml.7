@@ -2,220 +2,108 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AD49C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 14:06:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 007A7C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 14:07:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0159721743
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 14:06:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF8C321479
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 14:07:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728400AbfEUOGO (ORCPT
+        id S1728194AbfEUOH4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 10:06:14 -0400
-Received: from mail-oln040092071021.outbound.protection.outlook.com ([40.92.71.21]:47107
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726750AbfEUOGN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 10:06:13 -0400
-Received: from DB5EUR03FT032.eop-EUR03.prod.protection.outlook.com
- (10.152.20.55) by DB5EUR03HT196.eop-EUR03.prod.protection.outlook.com
- (10.152.20.188) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1900.16; Tue, 21 May
- 2019 14:06:05 +0000
-Received: from VI1PR07MB4432.eurprd07.prod.outlook.com (10.152.20.54) by
- DB5EUR03FT032.mail.protection.outlook.com (10.152.20.162) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.1900.16 via Frontend Transport; Tue, 21 May 2019 14:06:05 +0000
-Received: from VI1PR07MB4432.eurprd07.prod.outlook.com
- ([fe80::91f:b1bb:a60a:fdc3]) by VI1PR07MB4432.eurprd07.prod.outlook.com
- ([fe80::91f:b1bb:a60a:fdc3%7]) with mapi id 15.20.1922.013; Tue, 21 May 2019
- 14:06:05 +0000
-From:   Philippe Mazenauer <philippe.mazenauer@outlook.de>
-CC:     Philippe Mazenauer <philippe.mazenauer@outlook.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Robin Murphy" <robin.murphy@arm.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Laura Abbott <labbott@redhat.com>,
-        "Wolfram Sang (Renesas)" <wsa+renesas@sang-engineering.com>,
-        Thierry Reding <treding@nvidia.com>,
-        "Kees Cook" <keescook@chromium.org>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        "Souptick Joarder" <jrdr.linux@gmail.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: [PATCH] arm: mm: make functions static
-Thread-Topic: [PATCH] arm: mm: make functions static
-Thread-Index: AQHVD95UHd2wkdrwnU2lxr/COaONRw==
-Date:   Tue, 21 May 2019 14:06:05 +0000
-Message-ID: <VI1PR07MB443201D1B671A91954303FBAFD070@VI1PR07MB4432.eurprd07.prod.outlook.com>
-Accept-Language: de-CH, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MWHPR17CA0063.namprd17.prod.outlook.com
- (2603:10b6:300:93::25) To VI1PR07MB4432.eurprd07.prod.outlook.com
- (2603:10a6:802:67::17)
-x-incomingtopheadermarker: OriginalChecksum:DCF5842D9BA2BD81011D5098F50580B6CD51F9AD7DE2815A3953E11EB1BD26DE;UpperCasedChecksum:5B0B27C373F52E56C70D753D543F0CA6C6DAB5128CACF0AD959D99BBF591181F;SizeAsReceived:7846;Count:47
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-tmn:  [XOPQls4JtjWjdUYOfVUsiWj61tikXdcx]
-x-microsoft-original-message-id: <20190521140535.76782-1-philippe.mazenauer@outlook.de>
-x-ms-publictraffictype: Email
-x-incomingheadercount: 47
-x-eopattributedmessage: 0
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(5050001)(7020095)(20181119110)(201702061078)(5061506573)(5061507331)(1603103135)(2017031320274)(2017031323274)(2017031324274)(2017031322404)(1601125500)(1603101475)(1701031045);SRVR:DB5EUR03HT196;
-x-ms-traffictypediagnostic: DB5EUR03HT196:
-x-microsoft-antispam-message-info: wHY/AcF1H/asL5WmDKp8L+ReQ92ZJZUMbpsBhLOI8VoQ1pw6O0mIqPZDYwM/YNjEWXFon1MtUAbOcIaEfCCQkTo2N6o3R/buKpKLicVQoWxkk3XNsu9YJrsnIRCZmhjAEAz3ojFSiySHsl8oVh4STZ/Y+1wlb1D0s7gN3TQPykkMPvPkjToCAya+m5E74i5m
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <3B0F72B3E6324E47949C00AEC83C2873@eurprd07.prod.outlook.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6bb33838-e194-4c7e-2446-08d6ddf576e0
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 May 2019 14:06:05.7386
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB5EUR03HT196
-To:     unlisted-recipients:; (no To-header on input)
+        Tue, 21 May 2019 10:07:56 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:48096 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726900AbfEUOH4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 10:07:56 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 3F5C5200100;
+        Tue, 21 May 2019 16:07:54 +0200 (CEST)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 30CAA200020;
+        Tue, 21 May 2019 16:07:54 +0200 (CEST)
+Received: from fsr-ub1864-101.ea.freescale.net (fsr-ub1864-101.ea.freescale.net [10.171.82.13])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id A3B8520612;
+        Tue, 21 May 2019 16:07:53 +0200 (CEST)
+From:   laurentiu.tudor@nxp.com
+To:     hch@lst.de, stern@rowland.harvard.edu, gregkh@linuxfoundation.org,
+        linux-usb@vger.kernel.org, marex@denx.de
+Cc:     leoyang.li@nxp.com, linux-kernel@vger.kernel.org,
+        robin.murphy@arm.com, noring@nocrew.org, JuergenUrban@gmx.de,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>
+Subject: [PATCH v5 0/5] prerequisites for device reserved local mem rework
+Date:   Tue, 21 May 2019 17:07:43 +0300
+Message-Id: <20190521140748.20012-1-laurentiu.tudor@nxp.com>
+X-Mailer: git-send-email 2.17.1
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-TWFrZSBmdW5jdGlvbnMgX19hcm1faW9tbXVfZnJlZV9hdHRycygpLCBhcm1faW9tbXVfZnJlZV9h
-dHRycygpLA0KYXJtX2NvaGVyZW50X2lvbW11X2ZyZWVfYXR0cnMoKSwgYXJtX2NvaGVyZW50X2lv
-bW11X21hcF9zZygpLA0KYXJtX2lvbW11X21hcF9zZygpLCBhcm1fY29oZXJlbnRfaW9tbXVfdW5t
-YXBfc2coKSwgYXJtX2lvbW11X3VubWFwX3NnKCksDQphcm1faW9tbXVfc3luY19zZ19mb3JfY3B1
-KCkgYW5kIGFybV9pb21tdV9zeW5jX3NnX2Zvcl9kZXZpY2UoKSBzdGF0aWMsDQphcyB0aGV5IGFy
-ZSBvbmx5IHJlZmVyZW5jZWQgaW4gdGhpcyBmaWxlLg0KDQouLi9hcmNoL2FybS9tbS9kbWEtbWFw
-cGluZy5jOjE2MTY6Njogd2FybmluZzogbm8gcHJldmlvdXMgcHJvdG90eXBlIGZvciDigJhfX2Fy
-bV9pb21tdV9mcmVlX2F0dHJz4oCZIFstV21pc3NpbmctcHJvdG90eXBlc10NCiB2b2lkIF9fYXJt
-X2lvbW11X2ZyZWVfYXR0cnMoc3RydWN0IGRldmljZSAqZGV2LCBzaXplX3Qgc2l6ZSwgdm9pZCAq
-Y3B1X2FkZHIsDQogICAgICBefn5+fn5+fn5+fn5+fn5+fn5+fn5+DQouLi9hcmNoL2FybS9tbS9k
-bWEtbWFwcGluZy5jOjE2NDI6Njogd2FybmluZzogbm8gcHJldmlvdXMgcHJvdG90eXBlIGZvciDi
-gJhhcm1faW9tbXVfZnJlZV9hdHRyc+KAmSBbLVdtaXNzaW5nLXByb3RvdHlwZXNdDQogdm9pZCBh
-cm1faW9tbXVfZnJlZV9hdHRycyhzdHJ1Y3QgZGV2aWNlICpkZXYsIHNpemVfdCBzaXplLA0KICAg
-ICAgXn5+fn5+fn5+fn5+fn5+fn5+fn4NCi4uL2FyY2gvYXJtL21tL2RtYS1tYXBwaW5nLmM6MTY0
-ODo2OiB3YXJuaW5nOiBubyBwcmV2aW91cyBwcm90b3R5cGUgZm9yIOKAmGFybV9jb2hlcmVudF9p
-b21tdV9mcmVlX2F0dHJz4oCZIFstV21pc3NpbmctcHJvdG90eXBlc10NCiB2b2lkIGFybV9jb2hl
-cmVudF9pb21tdV9mcmVlX2F0dHJzKHN0cnVjdCBkZXZpY2UgKmRldiwgc2l6ZV90IHNpemUsDQog
-ICAgICBefn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fg0KLi4vYXJjaC9hcm0vbW0vZG1hLW1h
-cHBpbmcuYzoxNzcyOjU6IHdhcm5pbmc6IG5vIHByZXZpb3VzIHByb3RvdHlwZSBmb3Ig4oCYYXJt
-X2NvaGVyZW50X2lvbW11X21hcF9zZ+KAmSBbLVdtaXNzaW5nLXByb3RvdHlwZXNdDQogaW50IGFy
-bV9jb2hlcmVudF9pb21tdV9tYXBfc2coc3RydWN0IGRldmljZSAqZGV2LCBzdHJ1Y3Qgc2NhdHRl
-cmxpc3QgKnNnLA0KICAgICBefn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+DQouLi9hcmNoL2FybS9t
-bS9kbWEtbWFwcGluZy5jOjE3OTA6NTogd2FybmluZzogbm8gcHJldmlvdXMgcHJvdG90eXBlIGZv
-ciDigJhhcm1faW9tbXVfbWFwX3Nn4oCZIFstV21pc3NpbmctcHJvdG90eXBlc10NCiBpbnQgYXJt
-X2lvbW11X21hcF9zZyhzdHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBzY2F0dGVybGlzdCAqc2cs
-DQogICAgIF5+fn5+fn5+fn5+fn5+fn4NCi4uL2FyY2gvYXJtL21tL2RtYS1tYXBwaW5nLmM6MTgy
-Mzo2OiB3YXJuaW5nOiBubyBwcmV2aW91cyBwcm90b3R5cGUgZm9yIOKAmGFybV9jb2hlcmVudF9p
-b21tdV91bm1hcF9zZ+KAmSBbLVdtaXNzaW5nLXByb3RvdHlwZXNdDQogdm9pZCBhcm1fY29oZXJl
-bnRfaW9tbXVfdW5tYXBfc2coc3RydWN0IGRldmljZSAqZGV2LCBzdHJ1Y3Qgc2NhdHRlcmxpc3Qg
-KnNnLA0KICAgICAgXn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+DQouLi9hcmNoL2FybS9tbS9k
-bWEtbWFwcGluZy5jOjE4NDA6Njogd2FybmluZzogbm8gcHJldmlvdXMgcHJvdG90eXBlIGZvciDi
-gJhhcm1faW9tbXVfdW5tYXBfc2figJkgWy1XbWlzc2luZy1wcm90b3R5cGVzXQ0KIHZvaWQgYXJt
-X2lvbW11X3VubWFwX3NnKHN0cnVjdCBkZXZpY2UgKmRldiwgc3RydWN0IHNjYXR0ZXJsaXN0ICpz
-ZywgaW50IG5lbnRzLA0KICAgICAgXn5+fn5+fn5+fn5+fn5+fn5+DQouLi9hcmNoL2FybS9tbS9k
-bWEtbWFwcGluZy5jOjE4NTQ6Njogd2FybmluZzogbm8gcHJldmlvdXMgcHJvdG90eXBlIGZvciDi
-gJhhcm1faW9tbXVfc3luY19zZ19mb3JfY3B14oCZIFstV21pc3NpbmctcHJvdG90eXBlc10NCiB2
-b2lkIGFybV9pb21tdV9zeW5jX3NnX2Zvcl9jcHUoc3RydWN0IGRldmljZSAqZGV2LCBzdHJ1Y3Qg
-c2NhdHRlcmxpc3QgKnNnLA0KICAgICAgXn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fg0KLi4vYXJj
-aC9hcm0vbW0vZG1hLW1hcHBpbmcuYzoxODcyOjY6IHdhcm5pbmc6IG5vIHByZXZpb3VzIHByb3Rv
-dHlwZSBmb3Ig4oCYYXJtX2lvbW11X3N5bmNfc2dfZm9yX2RldmljZeKAmSBbLVdtaXNzaW5nLXBy
-b3RvdHlwZXNdDQogdm9pZCBhcm1faW9tbXVfc3luY19zZ19mb3JfZGV2aWNlKHN0cnVjdCBkZXZp
-Y2UgKmRldiwgc3RydWN0IHNjYXR0ZXJsaXN0ICpzZywNCiAgICAgIF5+fn5+fn5+fn5+fn5+fn5+
-fn5+fn5+fn5+fn4NCg0KU2lnbmVkLW9mZi1ieTogUGhpbGlwcGUgTWF6ZW5hdWVyIDxwaGlsaXBw
-ZS5tYXplbmF1ZXJAb3V0bG9vay5kZT4NCi0tLQ0KIGFyY2gvYXJtL21tL2RtYS1tYXBwaW5nLmMg
-fCAzMCArKysrKysrKysrKysrKystLS0tLS0tLS0tLS0tLS0NCiAxIGZpbGUgY2hhbmdlZCwgMTUg
-aW5zZXJ0aW9ucygrKSwgMTUgZGVsZXRpb25zKC0pDQoNCmRpZmYgLS1naXQgYS9hcmNoL2FybS9t
-bS9kbWEtbWFwcGluZy5jIGIvYXJjaC9hcm0vbW0vZG1hLW1hcHBpbmcuYw0KaW5kZXggMGE3NTA1
-OGMxMWYzLi41MzBiNjIzNWEyNzAgMTAwNjQ0DQotLS0gYS9hcmNoL2FybS9tbS9kbWEtbWFwcGlu
-Zy5jDQorKysgYi9hcmNoL2FybS9tbS9kbWEtbWFwcGluZy5jDQpAQCAtMTYxMyw4ICsxNjEzLDkg
-QEAgc3RhdGljIGludCBhcm1fY29oZXJlbnRfaW9tbXVfbW1hcF9hdHRycyhzdHJ1Y3QgZGV2aWNl
-ICpkZXYsDQogICogZnJlZSBhIHBhZ2UgYXMgZGVmaW5lZCBieSB0aGUgYWJvdmUgbWFwcGluZy4N
-CiAgKiBNdXN0IG5vdCBiZSBjYWxsZWQgd2l0aCBJUlFzIGRpc2FibGVkLg0KICAqLw0KLXZvaWQg
-X19hcm1faW9tbXVfZnJlZV9hdHRycyhzdHJ1Y3QgZGV2aWNlICpkZXYsIHNpemVfdCBzaXplLCB2
-b2lkICpjcHVfYWRkciwNCi0JZG1hX2FkZHJfdCBoYW5kbGUsIHVuc2lnbmVkIGxvbmcgYXR0cnMs
-IGludCBjb2hlcmVudF9mbGFnKQ0KK3N0YXRpYyB2b2lkIF9fYXJtX2lvbW11X2ZyZWVfYXR0cnMo
-c3RydWN0IGRldmljZSAqZGV2LCBzaXplX3Qgc2l6ZSwNCisJCXZvaWQgKmNwdV9hZGRyLCBkbWFf
-YWRkcl90IGhhbmRsZSwgdW5zaWduZWQgbG9uZyBhdHRycywNCisJCWludCBjb2hlcmVudF9mbGFn
-KQ0KIHsNCiAJc3RydWN0IHBhZ2UgKipwYWdlczsNCiAJc2l6ZSA9IFBBR0VfQUxJR04oc2l6ZSk7
-DQpAQCAtMTYzOSwxMyArMTY0MCwxMyBAQCB2b2lkIF9fYXJtX2lvbW11X2ZyZWVfYXR0cnMoc3Ry
-dWN0IGRldmljZSAqZGV2LCBzaXplX3Qgc2l6ZSwgdm9pZCAqY3B1X2FkZHIsDQogCV9faW9tbXVf
-ZnJlZV9idWZmZXIoZGV2LCBwYWdlcywgc2l6ZSwgYXR0cnMpOw0KIH0NCiANCi12b2lkIGFybV9p
-b21tdV9mcmVlX2F0dHJzKHN0cnVjdCBkZXZpY2UgKmRldiwgc2l6ZV90IHNpemUsDQorc3RhdGlj
-IHZvaWQgYXJtX2lvbW11X2ZyZWVfYXR0cnMoc3RydWN0IGRldmljZSAqZGV2LCBzaXplX3Qgc2l6
-ZSwNCiAJCSAgICB2b2lkICpjcHVfYWRkciwgZG1hX2FkZHJfdCBoYW5kbGUsIHVuc2lnbmVkIGxv
-bmcgYXR0cnMpDQogew0KIAlfX2FybV9pb21tdV9mcmVlX2F0dHJzKGRldiwgc2l6ZSwgY3B1X2Fk
-ZHIsIGhhbmRsZSwgYXR0cnMsIE5PUk1BTCk7DQogfQ0KIA0KLXZvaWQgYXJtX2NvaGVyZW50X2lv
-bW11X2ZyZWVfYXR0cnMoc3RydWN0IGRldmljZSAqZGV2LCBzaXplX3Qgc2l6ZSwNCitzdGF0aWMg
-dm9pZCBhcm1fY29oZXJlbnRfaW9tbXVfZnJlZV9hdHRycyhzdHJ1Y3QgZGV2aWNlICpkZXYsIHNp
-emVfdCBzaXplLA0KIAkJICAgIHZvaWQgKmNwdV9hZGRyLCBkbWFfYWRkcl90IGhhbmRsZSwgdW5z
-aWduZWQgbG9uZyBhdHRycykNCiB7DQogCV9fYXJtX2lvbW11X2ZyZWVfYXR0cnMoZGV2LCBzaXpl
-LCBjcHVfYWRkciwgaGFuZGxlLCBhdHRycywgQ09IRVJFTlQpOw0KQEAgLTE3NjksNyArMTc3MCw3
-IEBAIHN0YXRpYyBpbnQgX19pb21tdV9tYXBfc2coc3RydWN0IGRldmljZSAqZGV2LCBzdHJ1Y3Qg
-c2NhdHRlcmxpc3QgKnNnLCBpbnQgbmVudHMsDQogICogcG9zc2libGUpIGFuZCB0YWdnZWQgd2l0
-aCB0aGUgYXBwcm9wcmlhdGUgZG1hIGFkZHJlc3MgYW5kIGxlbmd0aC4gVGhleSBhcmUNCiAgKiBv
-YnRhaW5lZCB2aWEgc2dfZG1hX3thZGRyZXNzLGxlbmd0aH0uDQogICovDQotaW50IGFybV9jb2hl
-cmVudF9pb21tdV9tYXBfc2coc3RydWN0IGRldmljZSAqZGV2LCBzdHJ1Y3Qgc2NhdHRlcmxpc3Qg
-KnNnLA0KK3N0YXRpYyBpbnQgYXJtX2NvaGVyZW50X2lvbW11X21hcF9zZyhzdHJ1Y3QgZGV2aWNl
-ICpkZXYsIHN0cnVjdCBzY2F0dGVybGlzdCAqc2csDQogCQlpbnQgbmVudHMsIGVudW0gZG1hX2Rh
-dGFfZGlyZWN0aW9uIGRpciwgdW5zaWduZWQgbG9uZyBhdHRycykNCiB7DQogCXJldHVybiBfX2lv
-bW11X21hcF9zZyhkZXYsIHNnLCBuZW50cywgZGlyLCBhdHRycywgdHJ1ZSk7DQpAQCAtMTc4Nyw3
-ICsxNzg4LDcgQEAgaW50IGFybV9jb2hlcmVudF9pb21tdV9tYXBfc2coc3RydWN0IGRldmljZSAq
-ZGV2LCBzdHJ1Y3Qgc2NhdHRlcmxpc3QgKnNnLA0KICAqIHRhZ2dlZCB3aXRoIHRoZSBhcHByb3By
-aWF0ZSBkbWEgYWRkcmVzcyBhbmQgbGVuZ3RoLiBUaGV5IGFyZSBvYnRhaW5lZCB2aWENCiAgKiBz
-Z19kbWFfe2FkZHJlc3MsbGVuZ3RofS4NCiAgKi8NCi1pbnQgYXJtX2lvbW11X21hcF9zZyhzdHJ1
-Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBzY2F0dGVybGlzdCAqc2csDQorc3RhdGljIGludCBhcm1f
-aW9tbXVfbWFwX3NnKHN0cnVjdCBkZXZpY2UgKmRldiwgc3RydWN0IHNjYXR0ZXJsaXN0ICpzZywN
-CiAJCWludCBuZW50cywgZW51bSBkbWFfZGF0YV9kaXJlY3Rpb24gZGlyLCB1bnNpZ25lZCBsb25n
-IGF0dHJzKQ0KIHsNCiAJcmV0dXJuIF9faW9tbXVfbWFwX3NnKGRldiwgc2csIG5lbnRzLCBkaXIs
-IGF0dHJzLCBmYWxzZSk7DQpAQCAtMTgyMCw4ICsxODIxLDggQEAgc3RhdGljIHZvaWQgX19pb21t
-dV91bm1hcF9zZyhzdHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBzY2F0dGVybGlzdCAqc2csDQog
-ICogVW5tYXAgYSBzZXQgb2Ygc3RyZWFtaW5nIG1vZGUgRE1BIHRyYW5zbGF0aW9ucy4gIEFnYWlu
-LCBDUFUgYWNjZXNzDQogICogcnVsZXMgY29uY2VybmluZyBjYWxscyBoZXJlIGFyZSB0aGUgc2Ft
-ZSBhcyBmb3IgZG1hX3VubWFwX3NpbmdsZSgpLg0KICAqLw0KLXZvaWQgYXJtX2NvaGVyZW50X2lv
-bW11X3VubWFwX3NnKHN0cnVjdCBkZXZpY2UgKmRldiwgc3RydWN0IHNjYXR0ZXJsaXN0ICpzZywN
-Ci0JCWludCBuZW50cywgZW51bSBkbWFfZGF0YV9kaXJlY3Rpb24gZGlyLA0KK3N0YXRpYyB2b2lk
-IGFybV9jb2hlcmVudF9pb21tdV91bm1hcF9zZyhzdHJ1Y3QgZGV2aWNlICpkZXYsDQorCQlzdHJ1
-Y3Qgc2NhdHRlcmxpc3QgKnNnLCBpbnQgbmVudHMsIGVudW0gZG1hX2RhdGFfZGlyZWN0aW9uIGRp
-ciwNCiAJCXVuc2lnbmVkIGxvbmcgYXR0cnMpDQogew0KIAlfX2lvbW11X3VubWFwX3NnKGRldiwg
-c2csIG5lbnRzLCBkaXIsIGF0dHJzLCB0cnVlKTsNCkBAIC0xODM3LDkgKzE4MzgsOCBAQCB2b2lk
-IGFybV9jb2hlcmVudF9pb21tdV91bm1hcF9zZyhzdHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBz
-Y2F0dGVybGlzdCAqc2csDQogICogVW5tYXAgYSBzZXQgb2Ygc3RyZWFtaW5nIG1vZGUgRE1BIHRy
-YW5zbGF0aW9ucy4gIEFnYWluLCBDUFUgYWNjZXNzDQogICogcnVsZXMgY29uY2VybmluZyBjYWxs
-cyBoZXJlIGFyZSB0aGUgc2FtZSBhcyBmb3IgZG1hX3VubWFwX3NpbmdsZSgpLg0KICAqLw0KLXZv
-aWQgYXJtX2lvbW11X3VubWFwX3NnKHN0cnVjdCBkZXZpY2UgKmRldiwgc3RydWN0IHNjYXR0ZXJs
-aXN0ICpzZywgaW50IG5lbnRzLA0KLQkJCWVudW0gZG1hX2RhdGFfZGlyZWN0aW9uIGRpciwNCi0J
-CQl1bnNpZ25lZCBsb25nIGF0dHJzKQ0KK3N0YXRpYyB2b2lkIGFybV9pb21tdV91bm1hcF9zZyhz
-dHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBzY2F0dGVybGlzdCAqc2csDQorCQlpbnQgbmVudHMs
-IGVudW0gZG1hX2RhdGFfZGlyZWN0aW9uIGRpciwgdW5zaWduZWQgbG9uZyBhdHRycykNCiB7DQog
-CV9faW9tbXVfdW5tYXBfc2coZGV2LCBzZywgbmVudHMsIGRpciwgYXR0cnMsIGZhbHNlKTsNCiB9
-DQpAQCAtMTg1MSw4ICsxODUxLDggQEAgdm9pZCBhcm1faW9tbXVfdW5tYXBfc2coc3RydWN0IGRl
-dmljZSAqZGV2LCBzdHJ1Y3Qgc2NhdHRlcmxpc3QgKnNnLCBpbnQgbmVudHMsDQogICogQG5lbnRz
-OiBudW1iZXIgb2YgYnVmZmVycyB0byBtYXAgKHJldHVybmVkIGZyb20gZG1hX21hcF9zZykNCiAg
-KiBAZGlyOiBETUEgdHJhbnNmZXIgZGlyZWN0aW9uIChzYW1lIGFzIHdhcyBwYXNzZWQgdG8gZG1h
-X21hcF9zZykNCiAgKi8NCi12b2lkIGFybV9pb21tdV9zeW5jX3NnX2Zvcl9jcHUoc3RydWN0IGRl
-dmljZSAqZGV2LCBzdHJ1Y3Qgc2NhdHRlcmxpc3QgKnNnLA0KLQkJCWludCBuZW50cywgZW51bSBk
-bWFfZGF0YV9kaXJlY3Rpb24gZGlyKQ0KK3N0YXRpYyB2b2lkIGFybV9pb21tdV9zeW5jX3NnX2Zv
-cl9jcHUoc3RydWN0IGRldmljZSAqZGV2LA0KKwkJc3RydWN0IHNjYXR0ZXJsaXN0ICpzZywgaW50
-IG5lbnRzLCBlbnVtIGRtYV9kYXRhX2RpcmVjdGlvbiBkaXIpDQogew0KIAlzdHJ1Y3Qgc2NhdHRl
-cmxpc3QgKnM7DQogCWludCBpOw0KQEAgLTE4NjksOCArMTg2OSw4IEBAIHZvaWQgYXJtX2lvbW11
-X3N5bmNfc2dfZm9yX2NwdShzdHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBzY2F0dGVybGlzdCAq
-c2csDQogICogQG5lbnRzOiBudW1iZXIgb2YgYnVmZmVycyB0byBtYXAgKHJldHVybmVkIGZyb20g
-ZG1hX21hcF9zZykNCiAgKiBAZGlyOiBETUEgdHJhbnNmZXIgZGlyZWN0aW9uIChzYW1lIGFzIHdh
-cyBwYXNzZWQgdG8gZG1hX21hcF9zZykNCiAgKi8NCi12b2lkIGFybV9pb21tdV9zeW5jX3NnX2Zv
-cl9kZXZpY2Uoc3RydWN0IGRldmljZSAqZGV2LCBzdHJ1Y3Qgc2NhdHRlcmxpc3QgKnNnLA0KLQkJ
-CWludCBuZW50cywgZW51bSBkbWFfZGF0YV9kaXJlY3Rpb24gZGlyKQ0KK3N0YXRpYyB2b2lkIGFy
-bV9pb21tdV9zeW5jX3NnX2Zvcl9kZXZpY2Uoc3RydWN0IGRldmljZSAqZGV2LA0KKwkJc3RydWN0
-IHNjYXR0ZXJsaXN0ICpzZywgaW50IG5lbnRzLCBlbnVtIGRtYV9kYXRhX2RpcmVjdGlvbiBkaXIp
-DQogew0KIAlzdHJ1Y3Qgc2NhdHRlcmxpc3QgKnM7DQogCWludCBpOw0KLS0gDQoyLjE3LjENCg0K
+From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+
+For HCs that have local memory, replace the current DMA API usage
+with a genalloc generic allocator to manage the mappings for these
+devices.
+This is in preparation for dropping the existing "coherent" dma
+mem declaration APIs. Current implementation was relying on a short
+circuit in the DMA API that in the end, was acting as an allocator
+for these type of devices.
+
+Only compiled tested, so any volunteers willing to test are most welcome.
+
+Thank you!
+
+For context, see thread here: https://lkml.org/lkml/2019/4/22/357
+
+Changes in v5:
+ - updated first patch to preserve bisectability (Christoph, Greg)
+ - fixed a few more places where dma api was still being
+   used (e.g. td_alloc, ed_alloc) (Fredrik)
+ - included patch from Fredrik adding gen_pool_dma_zalloc() api
+ - added patch that drops HCD_LOCAL_MEM altogether (Greg)
+ - set td_cache / ed_cache to null for devices with local mem (Fredrik)
+ - introduce usb_hcd_setup_local_mem() that sets up the genalloc
+   pool for drivers and updated drivers to use it
+
+Changes in v4:
+ - created mapping for local mem
+ - fix genalloc misuse
+
+Changes in v3:
+ - rearranged calls into genalloc simplifying the code a bit (Christoph)
+ - dropped RFC prefix
+
+Changes in v2:
+ - use genalloc also in core usb (based on comment from Robin)
+ - moved genpool decl to usb_hcd to be accesible from core usb
+Fredrik Noring (1):
+  lib/genalloc.c: Add gen_pool_dma_zalloc() for zeroed DMA allocations
+
+Laurentiu Tudor (4):
+  USB: use genalloc for USB HCs with local memory
+  usb: host: ohci-sm501: init genalloc for local memory
+  usb: host: ohci-tmio: init genalloc for local memory
+  USB: drop HCD_LOCAL_MEM flag
+
+ drivers/usb/core/buffer.c      | 17 ++++++++----
+ drivers/usb/core/hcd.c         | 51 ++++++++++++++++++++++++++++------
+ drivers/usb/host/ehci-hcd.c    |  2 +-
+ drivers/usb/host/fotg210-hcd.c |  2 +-
+ drivers/usb/host/ohci-hcd.c    | 25 +++++++++++++----
+ drivers/usb/host/ohci-mem.c    | 34 ++++++++++++++++++++---
+ drivers/usb/host/ohci-sm501.c  | 50 +++++++++++++++------------------
+ drivers/usb/host/ohci-tmio.c   | 15 ++++------
+ drivers/usb/host/uhci-hcd.c    |  2 +-
+ include/linux/genalloc.h       |  1 +
+ include/linux/usb/hcd.h        |  6 +++-
+ lib/genalloc.c                 | 29 ++++++++++++++++++-
+ 12 files changed, 168 insertions(+), 66 deletions(-)
+
+-- 
+2.17.1
+
