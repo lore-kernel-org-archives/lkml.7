@@ -2,113 +2,95 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 855E7C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 08:17:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BAC7C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 08:17:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52E802173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 08:17:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558426622;
-	bh=thn2H1f9CIZ6hWQVZADteKdDowyl9OcvTM0UA5T1Cos=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xWOpElBIkrk7Q/8p4G8aZdUJRV4Uxhkdsyft/uXIIBIawIUIW301D+4yuiMfZ/egn
-	 kgNhTxu3FwBAy1L1cW5Q84JZKtpH3CSBEN3QFw0gAKN0RCIpW8Bac8P/Sj949x7LUg
-	 5ElUUOIPAYIxXKI/d953Cdw37xx/MTHSynge4FBw=
+	by mail.kernel.org (Postfix) with ESMTP id 5B38D20863
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 08:17:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="j1fa/TGz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726495AbfEUIRB (ORCPT
+        id S1726974AbfEUIRJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 04:17:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37934 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725790AbfEUIRA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 04:17:00 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 039D820863;
-        Tue, 21 May 2019 08:16:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558426620;
-        bh=thn2H1f9CIZ6hWQVZADteKdDowyl9OcvTM0UA5T1Cos=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AXonSeynjqm7rjrNJvtMKR2Sw1dDLR0BC/RAfEMSZ3bKhjZg9cXDulpAycKaMTvyl
-         AvPxuo9RTEcJoFSiiQxTOfKJozijpnIhsj+HFjIkzuVb/8aC93gzmRr1o2NleOtOSB
-         tiX4abrS1L/eoX+S+0pWJCSWOVlnuQbRgv58+w5M=
-Date:   Tue, 21 May 2019 10:16:57 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     laurentiu.tudor@nxp.com
-Cc:     hch@lst.de, stern@rowland.harvard.edu, linux-usb@vger.kernel.org,
-        marex@denx.de, leoyang.li@nxp.com, linux-kernel@vger.kernel.org,
-        robin.murphy@arm.com, noring@nocrew.org, JuergenUrban@gmx.de
-Subject: Re: [PATCH v4 1/3] USB: use genalloc for USB HCs with local memory
-Message-ID: <20190521081657.GA10639@kroah.com>
-References: <20190516114721.27694-1-laurentiu.tudor@nxp.com>
- <20190516114721.27694-2-laurentiu.tudor@nxp.com>
+        Tue, 21 May 2019 04:17:09 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:33067 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726826AbfEUIRI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 04:17:08 -0400
+Received: by mail-wr1-f67.google.com with SMTP id d9so4496306wrx.0
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 01:17:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=dm92NMg/irWYm67dt8+YBn2/6jTQ9TzkOqtUWA6VrWI=;
+        b=j1fa/TGzBbqgrrCXjtZgS+zq0QNWVwbDEU5c8TPHQ1e1b3kP/JPu1UYjeVj2+LrHDz
+         fdfW3UE1IRUnx7dH5zHt0LBNPH/5v2BmxQTuVLWeblOmO9mDAq+j7hMs4jOiho+KBW0X
+         kbyQ5lfQxwcYaStadZkLqKyv013QlA9TRAWhGiU8Xh63I1XeX4994xv0fUVS2IC9W9zY
+         YHc5o370GHLpL7uI8+p/5f4P7oK1jAVHtsvEaAhJgF8YSmDPh/noT8XEfnbcPQDks3b7
+         gxNzGEYNQLLZchP3HQb12ETLXt/8dFTyCcWTppIQlF2TeQraqDw4p2L+4yZ7PDXUr6ay
+         JkNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=dm92NMg/irWYm67dt8+YBn2/6jTQ9TzkOqtUWA6VrWI=;
+        b=QhODhAw7P8PWB45Shz/FXsb2yBRGwD/JywLj4Sf3G+HKp8ugt5SMnlepDP7LmOmu0/
+         3LMscd9BBgtZSpXuzEZmD8F31kclSFXH2MFdEx3dLpP2jTU0D5wpFdtg4SaI/lY9D+Ax
+         h+kBza+5yhabr5c0GgQNLj2cMGk5qiEp+DPetsNUQg5YIffUbMZeVWOxP6wDuJ65eCuU
+         NhSdbSOHxYaacjcMT0l31/M6F/vTdW011vgtDBo5232fZUo7dn2CQ1+u7T2F3EIlXwKw
+         u0LtIoIreJ3hwYiQXhVL2j5k1CDXDu14XWv/sWUXBe1ngHfdb5Syvc1MG0++l6ZRXdWg
+         bq6w==
+X-Gm-Message-State: APjAAAU8L8ErRqP70/5WF4yT9oVfVG9KEME3cTPJI7X7rTgw7q8ba3J0
+        vu5Ozd8aWQtlF1951qd3jFlcx6mzp1U=
+X-Google-Smtp-Source: APXvYqz2SUUxfTRXqHXtROHqq1m4xLNgV7VQvQ3ExC8VNSaEKLn8PruSvg/xWzUGxMEw6RaeEAWrIg==
+X-Received: by 2002:a5d:45d2:: with SMTP id b18mr14652442wrs.219.1558426626015;
+        Tue, 21 May 2019 01:17:06 -0700 (PDT)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id j28sm35644979wrd.64.2019.05.21.01.17.04
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 21 May 2019 01:17:04 -0700 (PDT)
+Subject: Re: [PATCH 0/2] nvmem: meson: update with SPDX Licence identifier
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20190520143732.2701-1-narmstrong@baylibre.com>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <fccd03e5-98a6-90dc-a7bc-889fb0575712@linaro.org>
+Date:   Tue, 21 May 2019 09:17:04 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190516114721.27694-2-laurentiu.tudor@nxp.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190520143732.2701-1-narmstrong@baylibre.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 16, 2019 at 02:47:19PM +0300, laurentiu.tudor@nxp.com wrote:
-> From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+
+
+On 20/05/2019 15:37, Neil Armstrong wrote:
+> Update the SPDX Licence identifier for the Amlogic NVMEM drivers.
 > 
-> For HCs that have local memory, replace the current DMA API usage
-> with a genalloc generic allocator to manage the mappings for these
-> devices.
-> This is in preparation for dropping the existing "coherent" dma
-> mem declaration APIs. Current implementation was relying on a short
-> circuit in the DMA API that in the end, was acting as an allocator
-> for these type of devices.
+> Neil Armstrong (2):
+>    nvmem: meson-efuse: update with SPDX Licence identifier
+>    nvmem: meson-mx-efuse: update with SPDX Licence identifier
 > 
-> For context, see thread here: https://lkml.org/lkml/2019/4/22/357
+>   drivers/nvmem/meson-efuse.c    | 10 +---------
+>   drivers/nvmem/meson-mx-efuse.c | 10 +---------
+>   2 files changed, 2 insertions(+), 18 deletions(-)
 > 
-> Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
-> ---
->  drivers/usb/core/buffer.c   | 15 +++++++++++----
->  drivers/usb/host/ohci-hcd.c | 23 ++++++++++++++++++-----
->  include/linux/usb/hcd.h     |  3 +++
->  3 files changed, 32 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/usb/core/buffer.c b/drivers/usb/core/buffer.c
-> index f641342cdec0..22a8f3f5679b 100644
-> --- a/drivers/usb/core/buffer.c
-> +++ b/drivers/usb/core/buffer.c
-> @@ -16,6 +16,7 @@
->  #include <linux/io.h>
->  #include <linux/dma-mapping.h>
->  #include <linux/dmapool.h>
-> +#include <linux/genalloc.h>
->  #include <linux/usb.h>
->  #include <linux/usb/hcd.h>
->  
-> @@ -124,10 +125,12 @@ void *hcd_buffer_alloc(
->  	if (size == 0)
->  		return NULL;
->  
-> +	if (hcd->driver->flags & HCD_LOCAL_MEM)
-> +		return gen_pool_dma_alloc(hcd->localmem_pool, size, dma);
+Applied!
 
-Does this patch now break things?  hcd->localmem_pool at this point in
-time is NULL, so this call will fail.  There's no chance for any host
-controller driver to actually set up this pool in this patch, so is
-bisection broken?
 
-I think you fix this up in later patches, right?
-
-And if so, why do we even need HCD_LOCAL_MEM anymore?  Can't we just
-test for the presence of hcd->localmem_pool in order to determine which
-allocation method to use?
-
-thanks,
-
-greg k-h
+Thanks,
+srini
