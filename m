@@ -2,117 +2,259 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FROM_EXCESS_BASE64,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23FCDC04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 06:51:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B86AEC04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 06:53:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E92DB217D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 06:51:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66C1420863
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 06:53:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ysoft.com header.i=@ysoft.com header.b="V+Aq01Nl"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="RWg5v/0n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726883AbfEUGvV (ORCPT
+        id S1726606AbfEUGxc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 02:51:21 -0400
-Received: from uho.ysoft.cz ([81.19.3.130]:46984 "EHLO uho.ysoft.cz"
+        Tue, 21 May 2019 02:53:32 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:14879 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725920AbfEUGvU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 02:51:20 -0400
-Received: from [10.1.8.111] (unknown [10.1.8.111])
-        by uho.ysoft.cz (Postfix) with ESMTP id 01578A0321;
-        Tue, 21 May 2019 08:51:17 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ysoft.com;
-        s=20160406-ysoft-com; t=1558421478;
-        bh=yKuLFO5c0pIATImt1F6opFt/j/RZIkm+UdT3+v1Lrt8=;
+        id S1725920AbfEUGxc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 02:53:32 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 457RLK0qmVz9tyky;
+        Tue, 21 May 2019 08:53:29 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=RWg5v/0n; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id zZ2AhrY8pjzv; Tue, 21 May 2019 08:53:29 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 457RLJ6stjz9tykt;
+        Tue, 21 May 2019 08:53:28 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1558421609; bh=pmaiN8J5Ym0ioInPLVMER7oqbn8dqC0ancP3yOcPwqU=;
         h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=V+Aq01Nl//1U31g13yaQWyymSWwTobre2xlitCsrsCLZXLyl5vJROlWjekK48eMNw
-         pcOAeytozucET5skYDo8acxUTUsVUsxrtcHbs1k+pxRTopzLHfmg16/y+Wt+9AMhmg
-         ddh3AXsxTAPWVi6wLW/pb+GIU7oT2J8HS+oD3Vz8=
-Subject: Re: [RFC PATCH v2 0/4] Input: mpr121-polled: Add polled driver for
- MPR121
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Pengutronix Kernel Team <kernel@pengutronix.de>
-References: <1558098773-47416-1-git-send-email-michal.vokac@ysoft.com>
- <20190521053705.GI183429@dtor-ws>
-From:   =?UTF-8?B?TWljaGFsIFZva8OhxI0=?= <michal.vokac@ysoft.com>
-Message-ID: <ef172b24-cd27-5bb0-d8b1-718f835d0647@ysoft.com>
-Date:   Tue, 21 May 2019 08:51:17 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        b=RWg5v/0ng+xXCfVQGTmaLGZcdjub2jTULl9pDDStyP0tYVNOTfgTDrJe90FrM8Xv2
+         uNm1Nb4xu5Te55BkyFO+5vQKzIsJipCjSrWRhupTZsd7jl/aqvGYJap3hU/WJrKKNK
+         uI6CDmH+p6oqgzNw2bjNh/OmXRJ8eJRlJcs/+vbE=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id E33458B7EA;
+        Tue, 21 May 2019 08:53:29 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id ukI0T5QBRGaZ; Tue, 21 May 2019 08:53:29 +0200 (CEST)
+Received: from PO15451 (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 1C52F8B74F;
+        Tue, 21 May 2019 08:53:28 +0200 (CEST)
+Subject: Re: [PATCH] powerpc/mm: mark more tlb functions as __always_inline
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linuxppc-dev@lists.ozlabs.org,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Paul Mackerras <paulus@samba.org>, linux-kernel@vger.kernel.org
+References: <20190521061659.6073-1-yamada.masahiro@socionext.com>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <16d967dd-9f8f-4e9e-97fd-3f9761e5d97c@c-s.fr>
+Date:   Tue, 21 May 2019 08:53:28 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190521053705.GI183429@dtor-ws>
+In-Reply-To: <20190521061659.6073-1-yamada.masahiro@socionext.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Language: fr
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21. 05. 19 7:37, Dmitry Torokhov wrote:
-> Hi Michal,
+
+
+Le 21/05/2019 à 08:16, Masahiro Yamada a écrit :
+> With CONFIG_OPTIMIZE_INLINING enabled, Laura Abbott reported error
+> with gcc 9.1.1:
 > 
-> On Fri, May 17, 2019 at 03:12:49PM +0200, Michal Vokáč wrote:
->> Hi,
->>
->> I have to deal with a situation where we have a custom i.MX6 based
->> platform in production that uses the MPR121 touchkey controller.
->> Unfortunately the chip is connected using only the I2C interface.
->> The interrupt line is not used. Back in 2015 (Linux v3.14), my
->> colleague modded the existing mpr121_touchkey.c driver to use polling
->> instead of interrupt.
->>
->> For quite some time yet I am in a process of updating the product from
->> the ancient Freescale v3.14 kernel to the latest mainline and pushing
->> any needed changes upstream. The DT files for our imx6dl-yapp4 platform
->> already made it into v5.1-rc.
->>
->> I rebased and updated our mpr121 patch to the latest mainline.
->> It is created as a separate driver, similarly to gpio_keys_polled.
->>
->> The I2C device is quite susceptible to ESD. An ESD test quite often
->> causes reset of the chip or some register randomly changes its value.
->> The [PATCH 3/4] adds a write-through register cache. With the cache
->> this state can be detected and the device can be re-initialied.
->>
->> The main question is: Is there any chance that such a polled driver
->> could be accepted? Is it correct to implement it as a separate driver
->> or should it be done as an option in the existing driver? I can not
->> really imagine how I would do that though..
->>
->> There are also certain worries that the MPR121 chip may no longer be
->> available in nonspecifically distant future. In case of EOL I will need
->> to add a polled driver for an other touchkey chip. May it be already
->> in mainline or a completely new one.
+>    arch/powerpc/mm/book3s64/radix_tlb.c: In function '_tlbiel_pid':
+>    arch/powerpc/mm/book3s64/radix_tlb.c:104:2: warning: asm operand 3 probably doesn't match constraints
+>      104 |  asm volatile(PPC_TLBIEL(%0, %4, %3, %2, %1)
+>          |  ^~~
+>    arch/powerpc/mm/book3s64/radix_tlb.c:104:2: error: impossible constraint in 'asm'
 > 
-> I think that my addition of input_polled_dev was ultimately a wrong
-> thing to do. I am looking into enabling polling mode for regular input
-> devices as we then can enable polling mode in existing drivers.
+> Fixing _tlbiel_pid() is enough to address the warning above, but I
+> inlined more functions to fix all potential issues.
+> 
+> To meet the 'i' (immediate) constraint for the asm operands, functions
+> propagating propagated 'ric' must be always inlined.
+> 
+> Fixes: 9012d011660e ("compiler: allow all arches to enable CONFIG_OPTIMIZE_INLINING")
+> Reported-by: Laura Abbott <labbott@redhat.com>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> ---
+> 
+>   arch/powerpc/mm/book3s64/hash_native.c |  8 +++--
+>   arch/powerpc/mm/book3s64/radix_tlb.c   | 44 +++++++++++++++-----------
+>   2 files changed, 30 insertions(+), 22 deletions(-)
+> 
+> diff --git a/arch/powerpc/mm/book3s64/hash_native.c b/arch/powerpc/mm/book3s64/hash_native.c
+> index aaa28fd918fe..bc2c35c0d2b1 100644
+> --- a/arch/powerpc/mm/book3s64/hash_native.c
+> +++ b/arch/powerpc/mm/book3s64/hash_native.c
+> @@ -60,9 +60,11 @@ static inline void tlbiel_hash_set_isa206(unsigned int set, unsigned int is)
+>    * tlbiel instruction for hash, set invalidation
+>    * i.e., r=1 and is=01 or is=10 or is=11
+>    */
+> -static inline void tlbiel_hash_set_isa300(unsigned int set, unsigned int is,
+> -					unsigned int pid,
+> -					unsigned int ric, unsigned int prs)
+> +static __always_inline void tlbiel_hash_set_isa300(unsigned int set,
+> +						   unsigned int is,
+> +						   unsigned int pid,
+> +						   unsigned int ric,
+> +						   unsigned int prs)
 
-OK, that sounds good. Especially when one needs to switch from one chip
-to another that is already in tree, the need for a whole new polling
-driver is eliminated.
+Please don't split the line more than it is.
 
-I am still quite a novice in all kernel areas as I literally jump from
-one subsystem to another to fix issues related to our platform. Anyway,
-do you see any opportunity to help with that work?
+powerpc accepts lines up to 90 chars, see arch/powerpc/tools/checkpatch.pl
 
-> As far as gpio-keys vs gpio-key-polled, I feel that the capabilities of
-> polling driver is sufficiently different from interrupt-driven one, so
-> we will likely keep them separate.
+>   {
+>   	unsigned long rb;
+>   	unsigned long rs;
+> diff --git a/arch/powerpc/mm/book3s64/radix_tlb.c b/arch/powerpc/mm/book3s64/radix_tlb.c
+> index 4d841369399f..91c4242c1be3 100644
+> --- a/arch/powerpc/mm/book3s64/radix_tlb.c
+> +++ b/arch/powerpc/mm/book3s64/radix_tlb.c
+> @@ -29,9 +29,11 @@
+>    * tlbiel instruction for radix, set invalidation
+>    * i.e., r=1 and is=01 or is=10 or is=11
+>    */
+> -static inline void tlbiel_radix_set_isa300(unsigned int set, unsigned int is,
+> -					unsigned int pid,
+> -					unsigned int ric, unsigned int prs)
+> +static __always_inline void tlbiel_radix_set_isa300(unsigned int set,
+> +						    unsigned int is,
+> +						    unsigned int pid,
+> +						    unsigned int ric,
+> +						    unsigned int prs)
 
-OK, understand.
+Please don't split the line more than it is.
 
-Thank you,
-Michal
+>   {
+>   	unsigned long rb;
+>   	unsigned long rs;
+> @@ -150,8 +152,8 @@ static __always_inline void __tlbie_lpid(unsigned long lpid, unsigned long ric)
+>   	trace_tlbie(lpid, 0, rb, rs, ric, prs, r);
+>   }
+>   
+> -static inline void __tlbiel_lpid_guest(unsigned long lpid, int set,
+> -				unsigned long ric)
+> +static __always_inline void __tlbiel_lpid_guest(unsigned long lpid, int set,
+> +						unsigned long ric)
+>   {
+>   	unsigned long rb,rs,prs,r;
+>   
+> @@ -167,8 +169,8 @@ static inline void __tlbiel_lpid_guest(unsigned long lpid, int set,
+>   }
+>   
+>   
+> -static inline void __tlbiel_va(unsigned long va, unsigned long pid,
+> -			       unsigned long ap, unsigned long ric)
+> +static __always_inline void __tlbiel_va(unsigned long va, unsigned long pid,
+> +					unsigned long ap, unsigned long ric)
+>   {
+>   	unsigned long rb,rs,prs,r;
+>   
+> @@ -183,8 +185,8 @@ static inline void __tlbiel_va(unsigned long va, unsigned long pid,
+>   	trace_tlbie(0, 1, rb, rs, ric, prs, r);
+>   }
+>   
+> -static inline void __tlbie_va(unsigned long va, unsigned long pid,
+> -			      unsigned long ap, unsigned long ric)
+> +static __always_inline void __tlbie_va(unsigned long va, unsigned long pid,
+> +				       unsigned long ap, unsigned long ric)
+>   {
+>   	unsigned long rb,rs,prs,r;
+>   
+> @@ -199,8 +201,10 @@ static inline void __tlbie_va(unsigned long va, unsigned long pid,
+>   	trace_tlbie(0, 0, rb, rs, ric, prs, r);
+>   }
+>   
+> -static inline void __tlbie_lpid_va(unsigned long va, unsigned long lpid,
+> -			      unsigned long ap, unsigned long ric)
+> +static __always_inline void __tlbie_lpid_va(unsigned long va,
+> +					    unsigned long lpid,
+> +					    unsigned long ap,
+> +					    unsigned long ric)
+
+Please don't split the line more than it is.
+
+
+>   {
+>   	unsigned long rb,rs,prs,r;
+>   
+> @@ -239,7 +243,7 @@ static inline void fixup_tlbie_lpid(unsigned long lpid)
+>   /*
+>    * We use 128 set in radix mode and 256 set in hpt mode.
+>    */
+> -static inline void _tlbiel_pid(unsigned long pid, unsigned long ric)
+> +static __always_inline void _tlbiel_pid(unsigned long pid, unsigned long ric)
+>   {
+>   	int set;
+>   
+> @@ -341,7 +345,8 @@ static inline void _tlbie_lpid(unsigned long lpid, unsigned long ric)
+>   	asm volatile("eieio; tlbsync; ptesync": : :"memory");
+>   }
+>   
+> -static inline void _tlbiel_lpid_guest(unsigned long lpid, unsigned long ric)
+> +static __always_inline void _tlbiel_lpid_guest(unsigned long lpid,
+> +					       unsigned long ric)
+
+Please don't split the line more than it is.
+
+>   {
+>   	int set;
+>   
+> @@ -381,8 +386,8 @@ static inline void __tlbiel_va_range(unsigned long start, unsigned long end,
+>   		__tlbiel_va(addr, pid, ap, RIC_FLUSH_TLB);
+>   }
+>   
+> -static inline void _tlbiel_va(unsigned long va, unsigned long pid,
+> -			      unsigned long psize, unsigned long ric)
+> +static __always_inline void _tlbiel_va(unsigned long va, unsigned long pid,
+> +				       unsigned long psize, unsigned long ric)
+>   {
+>   	unsigned long ap = mmu_get_ap(psize);
+>   
+> @@ -413,8 +418,8 @@ static inline void __tlbie_va_range(unsigned long start, unsigned long end,
+>   		__tlbie_va(addr, pid, ap, RIC_FLUSH_TLB);
+>   }
+>   
+> -static inline void _tlbie_va(unsigned long va, unsigned long pid,
+> -			      unsigned long psize, unsigned long ric)
+> +static __always_inline void _tlbie_va(unsigned long va, unsigned long pid,
+> +				      unsigned long psize, unsigned long ric)
+>   {
+>   	unsigned long ap = mmu_get_ap(psize);
+>   
+> @@ -424,8 +429,9 @@ static inline void _tlbie_va(unsigned long va, unsigned long pid,
+>   	asm volatile("eieio; tlbsync; ptesync": : :"memory");
+>   }
+>   
+> -static inline void _tlbie_lpid_va(unsigned long va, unsigned long lpid,
+> -			      unsigned long psize, unsigned long ric)
+> +static __always_inline void _tlbie_lpid_va(unsigned long va, unsigned long lpid,
+> +					   unsigned long psize,
+> +					   unsigned long ric)
+
+Please don't split the line more than it is.
+
+>   {
+>   	unsigned long ap = mmu_get_ap(psize);
+>   
+> 
+
+Christophe
