@@ -2,145 +2,81 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21639C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:30:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04D7AC04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:31:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E696E21743
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:30:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J49fNcrb"
+	by mail.kernel.org (Postfix) with ESMTP id C326C217D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 10:31:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558434683;
+	bh=mb4gcRCdlc4t1BxrH1KDO67uUQe97itsvMsgFVRR+oI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=EdiyrArj+6uHn74KHZodCvRAOsi1u6HC+q906Q1GNQZoN/EvhM+NKOESLtoRAqxSf
+	 gN7eUu/CwB+PY12OAI6Pcqpfo/7cqaCjC1SoqFHYmHFZBtWWH8s1sGxn1pMMFEFET4
+	 7m6QMhpTBk1XxUMa3GJZ0vcJiBc59A4PXCTXzDc0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726557AbfEUKaD (ORCPT
+        id S1727637AbfEUKbW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 06:30:03 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:35210 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726466AbfEUKaD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 06:30:03 -0400
-Received: by mail-wm1-f65.google.com with SMTP id q15so2328714wmj.0;
-        Tue, 21 May 2019 03:30:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=rELwzUOME0nlXCIo3VT64vICZ+hEYunauyHNK3UtMYc=;
-        b=J49fNcrbf1jjE+Q+vGOqxez9Ao4CNjCedtLwf1SqxU2wwJOJKoEYvdGCMsmwCz5pL9
-         xTpqIcvF7Wx3LOP2kDfW7apVSfpppmMEZvS8lMzps3oqI0/3rvePn3lLR5DV5/pjdd2R
-         cIuia49ANqKngtTbH9uckKIHfjSSgxKseNLmwXgyp/qTqs/HhIeJ7iNuGtlOUVHxDJ7L
-         0ZkLI17STbKVMfw/4ee1VIoJ2g/71jb6CUofBaab+xqeGNXs9keyqznSjYnS5mc60ZGz
-         1RUiPGOIK8q5rnIVWhH7x1p00o9689XH6293wxwtIVRo1mYzvo/ZSkz/+qSxvHNcH0vC
-         Z5qA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rELwzUOME0nlXCIo3VT64vICZ+hEYunauyHNK3UtMYc=;
-        b=tQ5hQjtM0lZ1izLfZuNd9Lvm6wDwpECRUdMpGlNgjOap7dKT+7OOTUIZxC+SNmDSaX
-         N/DbiGu/RjxFewS7WHbycSTaSnKl3eG3f59kXOPMhWroWfX6XiJ8bm7tXZTSpN1idyW5
-         /ekg/G0k+1f7e5/Sdlwf0f4ZOUhQ7Bt7ZS84AorBJ1129bKV3bRr682QVg62cUVtCjoS
-         B/x6dLgTpu8RM0rtbPENBTZANtD0a3uqAsztVfrK6ZILmIfloB4zJhJybuzJ/nZCVdov
-         tN1lrJ8AkO8kU7xVet/FEwDr25XMk5+eef6QCF5NB4cbUju0E2P4dCRDrf67urw0hvI5
-         WmUA==
-X-Gm-Message-State: APjAAAUwL8IJ6YpU0WFpENfDMFr7jsWqo2V4cBjdg3HwpZ/wGKfmlXa0
-        zIj4Q4/YVwNAk7bHDf4z6J4=
-X-Google-Smtp-Source: APXvYqy9UeRYtG1/M1PRspNpKIbKeyoSPzcQxlWSbDUvnaFhZtLU4xlrNZOzT2PDdg4PlNIhhN+Jkg==
-X-Received: by 2002:a1c:ef05:: with SMTP id n5mr2922416wmh.149.1558434600856;
-        Tue, 21 May 2019 03:30:00 -0700 (PDT)
-Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
-        by smtp.gmail.com with ESMTPSA id h17sm2683157wrq.79.2019.05.21.03.29.59
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 21 May 2019 03:30:00 -0700 (PDT)
-Date:   Tue, 21 May 2019 12:29:59 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, jonathanh@nvidia.com, kishon@ti.com,
-        catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com,
-        gustavo.pimentel@synopsys.com, mperttunen@nvidia.com,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, kthota@nvidia.com,
-        mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V7 04/15] PCI: dwc: Move config space capability search
- API
-Message-ID: <20190521102959.GD29166@ulmo>
-References: <20190517123846.3708-1-vidyas@nvidia.com>
- <20190517123846.3708-5-vidyas@nvidia.com>
+        Tue, 21 May 2019 06:31:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47430 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726344AbfEUKbW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 06:31:22 -0400
+Received: from localhost (unknown [49.207.56.136])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C20FE21743;
+        Tue, 21 May 2019 10:31:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558434681;
+        bh=mb4gcRCdlc4t1BxrH1KDO67uUQe97itsvMsgFVRR+oI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=1T3azC+0XgH3xEp8zysLMOSu8S++YutNokP4axowBzBYutjJuCkzQ7/lP7XAaYOlW
+         Snz0V6hyebzOKq70E2UHDr5QECQvx96Tszf1olmuzgFudaQ7kHEldkcMOj8WN96mF8
+         MlGCXvuGWzq8EJexNscqQiGDglTT3tQZ38Y/WuxQ=
+Date:   Tue, 21 May 2019 16:01:17 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+Cc:     agross@kernel.org, david.brown@linaro.org,
+        gregkh@linuxfoundation.org, sboyd@kernel.org,
+        bjorn.andersson@linaro.org, jslaby@suse.com, keescook@chromium.org,
+        anton@enomsg.org, ccross@android.com, tony.luck@intel.com,
+        linux-arm-msm@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] tty: serial: msm_serial: Fix XON/XOFF
+Message-ID: <20190521103117.GD15118@vkoul-mobl>
+References: <20190520183848.27719-1-jorge.ramirez-ortiz@linaro.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="5p8PegU4iirBW1oA"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190517123846.3708-5-vidyas@nvidia.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190520183848.27719-1-jorge.ramirez-ortiz@linaro.org>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 20-05-19, 20:38, Jorge Ramirez-Ortiz wrote:
+> When the tty layer requests the uart to throttle, the current code
+> executing in msm_serial will trigger "Bad mode in Error Handler" and
+> generate an invalid stack frame in pstore before rebooting (that is if
+> pstore is indeed configured: otherwise the user shall just notice a
+> reboot with no further information dumped to the console).
+> 
+> This patch replaces the PIO byte accessor with the word accessor
+> already used in PIO mode.
+> 
+> Fixes: 68252424a7c7 ("tty: serial: msm: Support big-endian CPUs")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
---5p8PegU4iirBW1oA
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Reviewed-by: Vinod Koul <vkoul@kernel.org>
 
-On Fri, May 17, 2019 at 06:08:35PM +0530, Vidya Sagar wrote:
-> Move PCIe config space capability search API to common DesignWare file
-> as this can be used by both host and ep mode codes.
->=20
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-> ---
-> Changes since [v6]:
-> * Exported dw_pcie_find_capability() API
->=20
-> Changes since [v5]:
-> * None
->=20
-> Changes since [v4]:
-> * Removed redundant APIs in pcie-designware-ep.c file after moving them
->   to pcie-designware.c file based on Bjorn's comments.
->=20
-> Changes since [v3]:
-> * Rebased to linux-next top of the tree
->=20
-> Changes since [v2]:
-> * None
->=20
-> Changes since [v1]:
-> * Removed dw_pcie_find_next_ext_capability() API from here and made a
->   separate patch for that
->=20
->  .../pci/controller/dwc/pcie-designware-ep.c   | 37 +----------------
->  drivers/pci/controller/dwc/pcie-designware.c  | 40 +++++++++++++++++++
->  drivers/pci/controller/dwc/pcie-designware.h  |  2 +
->  3 files changed, 44 insertions(+), 35 deletions(-)
-
-Reviewed-by: Thierry Reding <treding@nvidia.com>
-
---5p8PegU4iirBW1oA
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlzj0ycACgkQ3SOs138+
-s6Et4BAAkzOyahrHoqB04OU7kbCFa+2VAYqoXjgDQvu1RjouQbsh+UdAzNrLWTeX
-ChYzsu6i3jeymB0oD/WAOCtHx9SbLP/4YEwlBQ5Y9U5SoHy16bSiC1fJ2+IrTKoj
-2G50K3ILtwZHuDFBL9D/NRtwdrGxu4txjtB6ch6sJDKRvr8UbtXvLO1Rija3oaut
-31nP2HoCqZ8ZW+Ku7D15BPxdcLYidJJqWELWw251PitQkixGV2JEjv/MYoKBMIhD
-jCIo+b5o1yS36PUf5I0Piuz4vbDmiJOUjKsjMbkKniN+l9bBtNwPepBdSxxYl+CN
-QbYbDw1mPUBLP/mlhEsMgBGDUp+auR+vMrCsXaK+BQIoLHQeslhKpWwIsGOBZDka
-5iNo8zxXK2FC8yHNjgz7sIWI9dfA4dX+8YJEnEVRjuhcQG+aE5B5NXDrqtTMYN1Z
-Hoe+q16UNDLmsq2siAD6r7ENyzUVzaCdjg/q/P8v3H7PZWFgPO49v+xZdDq37cqi
-j/Z5/gTH0v07hu5dtXQLfQ5+8KszcexKRfkGlYCBYG8BFVTdMmF3sR7XIY4tE2lt
-muOCI7ajeYAq/bDP9vibl1O7o7Myry716uTwfGGAB8w9/g+Fm7BKpa+Wj9MuZWtW
-CYi8auqMTnAh11SDNQeakXNHranXpLvBhMKpfIBfNYaUDFbjdd8=
-=LWc3
------END PGP SIGNATURE-----
-
---5p8PegU4iirBW1oA--
+-- 
+~Vinod
