@@ -2,100 +2,120 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F006CC04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 12:41:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33E63C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 12:42:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF197217D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 12:41:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 103892173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 12:42:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728047AbfEUMl2 (ORCPT
+        id S1728080AbfEUMmI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 08:41:28 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:50737 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726750AbfEUMl1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 08:41:27 -0400
-Received: from [192.168.178.167] ([109.104.45.223]) by
- mrelayeu.kundenserver.de (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis)
- id 1Mz9lL-1gfcTu2sbL-00wEc7; Tue, 21 May 2019 14:41:01 +0200
-Subject: Re: [RFC v2 3/5] clk: bcm2835: use firmware interface to update pllb
-From:   Stefan Wahren <stefan.wahren@i2se.com>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Eric Anholt <eric@anholt.net>
-Cc:     linux-arm-kernel@lists.infradead.org, ptesarik@suse.com,
-        sboyd@kernel.org, viresh.kumar@linaro.org, mturquette@baylibre.com,
-        linux-pm@vger.kernel.org, rjw@rjwysocki.net,
-        linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-clk@vger.kernel.org, mbrugger@suse.de, ssuloev@orpaltech.com
-References: <20190520104708.11980-1-nsaenzjulienne@suse.de>
- <20190520104708.11980-4-nsaenzjulienne@suse.de>
- <ebc78880-418f-f507-021c-41295113e041@i2se.com>
-Message-ID: <6383b357-3f7e-f031-f59f-61c598e44763@i2se.com>
-Date:   Tue, 21 May 2019 14:40:58 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 21 May 2019 08:42:08 -0400
+Received: from mga06.intel.com ([134.134.136.31]:37645 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727819AbfEUMmH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 08:42:07 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 May 2019 05:42:07 -0700
+X-ExtLoop1: 1
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
+  by fmsmga006.fm.intel.com with ESMTP; 21 May 2019 05:42:03 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1hT45i-00081U-Q2; Tue, 21 May 2019 15:42:02 +0300
+Date:   Tue, 21 May 2019 15:42:02 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Esben Haabendal <esben@geanix.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-serial@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        Enrico Weigelt <lkml@metux.net>, Jiri Slaby <jslaby@suse.com>,
+        Darwin Dingel <darwin.dingel@alliedtelesis.co.nz>,
+        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        He Zhe <zhe.he@windriver.com>, Marek Vasut <marex@denx.de>,
+        Douglas Anderson <dianders@chromium.org>,
+        Paul Burton <paul.burton@mips.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH resend] serial: 8250: Add support for using
+ platform_device resources
+Message-ID: <20190521124202.GE9224@smile.fi.intel.com>
+References: <20190430140416.4707-1-esben@geanix.com>
+ <20190521113426.16790-1-esben@geanix.com>
 MIME-Version: 1.0
-In-Reply-To: <ebc78880-418f-f507-021c-41295113e041@i2se.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Provags-ID: V03:K1:tiKWVTmj0/g6cApKXUC8RRsZ+jzrxl/tRzq9vOMKmDYvP0avI57
- S32E8AJVOWyViyljIeairozBYEi/9tS3d9Quw2v/CXkw1a6Ar/crQaVR2APWjjJGUJ60Nmz
- nZxhLgGefhNTSdMfJ5IvnUvMZRFoS2G0atk28i59/4Gi004Fp1AZZlWoUamsxO3xaRfcezn
- ZcSESHjDxbmzXOZpl4Oaw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:VAEVr3c8/0g=:H9FaA9a655WuE86lTBUiV4
- 2OJ0EepMNcKZDh29WOG6N+37XmL8YWraPTsNDcx7Rcf5OUR9+v1spI6wGk3DqpqMAcbBTkYXU
- irJhNgFzv/ehQJyoulSGeHTVIaCj/69YyDXUVPakRsvPb7fytYzSd+G/oU6+D9e+I2KQlcdBs
- CJqaFK1sW1UAEZQ13+kumPGYC463OkExAGsUsNvLNfw7i/a7IVT/0V5OD6zYs11hHtvV0SSIl
- wdjummx1yyjp5j2WYl1h9O7/QQZ1uo50V+AjtmGZx9gT//W9WmNnykfdJuAXgkCtZ6hNlXB7X
- F3nBUgXaNIb80nqocavO2b/2Fg+Bk2Q+bVTG47IHHKdD4hLsum7dMGUaBLs7oyJWJzXHE3/CU
- OX7QgcXooNyVJLSNQ649qi9KFPjYrgeg0+HK8MJKM+f9zggdSGXrdiHl34vhA30lVkJ2JT4wE
- gQr9/s/obESz4h4X9wyILrQf0Q8t//x1ONi9NubbHANW7XBAlGLRL9KvUdOhGrmQ2Ofl76kJi
- NZ0/Iu0opHBvrEUr5CQrCYE4zcOFa4ydGZSKAoPjmuCKM/3N1igCCedn6fTdp9RR6UVIVrieM
- 3QMxnrsaGyx4qt+BtEe1ikMK6T6EVLQGOb7jkCxsoKFPYmuLJicghwwAhW7FVaDgGHGSIGYus
- a+KY2w+DQWj7xERtmRI3FaqGxWQGHAc9NkezH98aiMdImPcbmDSiHr0xWsZ3HBlI27xs4GHAD
- 4v+WV6ijitxntnFIA4En+ZvAntlNK5t+0DuJDVlop7vKvyiX4ON55G5Lljo=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190521113426.16790-1-esben@geanix.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nicolas,
+On Tue, May 21, 2019 at 01:34:26PM +0200, Esben Haabendal wrote:
+> Allow getting memory resource (mapbase or iobase) as well as irq from
+> platform_device resources.
+> 
+> The UPF_DEV_RESOURCES flag must be set for devices where platform_device
+> resources are to be used.  When not set, driver behaves as before.
+> 
+> This allows use of the serial8250 driver together with devices with
+> resources added by platform_device_add_resources(), such as mfd child
+> devices added with mfd_add_devices().
+> 
+> When UPF_DEV_RESOURCES flag is set, the following platform_data fields should
+> not be used: mapbase, iobase, mapsize, and irq.  They are superseded by the
+> resources attached to the device.
+> 
 
-On 20.05.19 14:11, Stefan Wahren wrote:
-> Hi Nicolas,
->
-> the following comments applies only in case Eric is fine with the whole
-> approach.
->
-> On 20.05.19 12:47, Nicolas Saenz Julienne wrote:
->> Raspberry Pi's firmware, which runs in a dedicated processor, keeps
-> maybe we should clarify that the firmware is running in the VPU
->> track of the board's temperature and voltage. It's resposible for
->> scaling the CPU frequency whenever it deems the device reached an unsafe
->> state. On top of that the firmware provides an interface which allows
->> Linux to to query the clock's state or change it's frequency.
-> I think this requires a separate update of the devicetree binding.
->> Being the sole user of the bcm2835 clock driver, this integrates the
->> firmware interface into the clock driver and adds a first user: the CPU
->> pll, also known as 'pllb'.
-> Please verify that the kernel still works (and this clock driver probe)
-> under the following conditions:
->
-> - CONFIG_RASPBERRYPI_FIRMWARE=n
-> - CONFIG_RASPBERRYPI_FIRMWARE=m
-> - older DTBs without patch #1
-i thought about this and the case this driver would return
--EPROBE_DEFER. The clock driver is too essential for doing such a thing.
-So i think the best solution would be to move these changes into a
-separate driver which should be register by the clock driver (similiar
-to vchiq). This also avoid the need of a new device tree binding.
+Same comment here: Requesting resource is orthogonal to the retrieving or
+slicing them.
+
+> +		if (p->flags & UPF_DEV_RESOURCES) {
+> +			serial8250_probe_resources(dev, i, p, &uart);
+
+This can be easily detected by checking for the resources directly, like
+
+	res = platform_get_resource(...);
+	if (res)
+		new_scheme();
+	else
+		old_scheme();
+
+Otherwise looks good.
+
+
+> -		if (!request_mem_region(port->mapbase, size, "serial")) {
+> +		if (!(port->flags & UPF_DEV_RESOURCES) &&
+> +		    !request_mem_region(port->mapbase, size, "serial")) {
+
+> -				release_mem_region(port->mapbase, size);
+> +				if (!(port->flags & UPF_DEV_RESOURCES))
+> +					release_mem_region(port->mapbase, size);
+
+> -		if (!request_region(port->iobase, size, "serial"))
+> +		if (!(port->flags & UPF_DEV_RESOURCES) &&
+> +		    !request_region(port->iobase, size, "serial"))
+
+> -		release_mem_region(port->mapbase, size);
+> +		if (!(port->flags & UPF_DEV_RESOURCES))
+> +			release_mem_region(port->mapbase, size);
+
+> -		release_region(port->iobase, size);
+> +		if (!(port->flags & UPF_DEV_RESOURCES))
+> +			release_region(port->iobase, size);
+
+All these changes are not related to what you describe in the commit message.
+is a workaround for the bug in the parent MFD driver of the 8250.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
