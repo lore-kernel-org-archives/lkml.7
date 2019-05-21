@@ -2,145 +2,116 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B794C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 18:51:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1241EC04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 18:52:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFC5E217D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 18:51:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558464665;
-	bh=h5jgN6tNwdBAOYZ+b5ZiyLSFUM+cRLP1+lI0YeLN9Dk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xK0+VI2n37lGgmO0wfXHd/8m8TX44ohlZBb7bTQE3dcJJk75Eq6c5vK51SUMzvFqy
-	 nbkoEJbCsdA7xgmF97lh6Cbvc+Gp5XPySaFlALTEsvXaFYLGqUW7h1hBtvTZKgQyth
-	 WicBUyt2JLjXRaR7jf9f5KbLW1blnWHh7/Z72O78=
+	by mail.kernel.org (Postfix) with ESMTP id CF3062184B
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 18:52:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=narfation.org header.i=@narfation.org header.b="o9i4hKrp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729205AbfEUSvE (ORCPT
+        id S1729279AbfEUSwy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 14:51:04 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:41260 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727990AbfEUSvE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 14:51:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=uyW5JgqktOeQEaUw+A116CMaNFtMso5q/Jn1XmiRdLk=; b=dDdIXaNASaq3WoLuurvMj9md7
-        p/iCtcLueRbPFYhFf0qk0VBRZWlhE5Aqp7tYt6UcvEUf6Tb5msHtjIncicKr2PpEcj4FlFzAv/dwH
-        uyMFgIiKCI/cZQ7iFeglH7xxmiEBlishs+UuXJv/3+LNnC3icSCCPBwRg7RQrMJYcBJCM=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hT9qk-0000WF-5e; Tue, 21 May 2019 18:50:58 +0000
-Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 8B8F51126D13; Tue, 21 May 2019 19:50:54 +0100 (BST)
-Date:   Tue, 21 May 2019 19:50:54 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc:     lgirdwood@gmail.com, agross@kernel.org, david.brown@linaro.org,
-        bjorn.andersson@linaro.org, jcrouse@codeaurora.org,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Subject: Re: [PATCH 2/3] regulator: qcom_spmi: Add support for PM8005
-Message-ID: <20190521185054.GD16633@sirena.org.uk>
-References: <20190521164932.14265-1-jeffrey.l.hugo@gmail.com>
- <20190521165315.14379-1-jeffrey.l.hugo@gmail.com>
+        Tue, 21 May 2019 14:52:54 -0400
+Received: from narfation.org ([79.140.41.39]:37122 "EHLO v3-1039.vlinux.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727990AbfEUSwx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 14:52:53 -0400
+Received: from sven-edge.localnet (unknown [IPv6:2a00:1ca0:1480:f1fc::4065])
+        by v3-1039.vlinux.de (Postfix) with ESMTPSA id BFAAF1100E8;
+        Tue, 21 May 2019 20:52:50 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=narfation.org;
+        s=20121; t=1558464770;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=XLFOHAz+9Cusm8AESNgaYqugxzsv1C53Vsv9e7W7l2w=;
+        b=o9i4hKrpLUDmlI9Y1Qvg382eLd2vDmWuWjEIwL7Q+Mm23dv8FDBpZxo8nceOjL6V+Hpw9R
+        tALoa5O0bddzavHLpbywSEehQ2/AQQ12LLw0dCAIMtyhGgCsYOcH1AQKgZISB5uyIdt5qV
+        Wtb8Pqb/s2xNkRQKL6SCINACKz4d1Ko=
+From:   Sven Eckelmann <sven@narfation.org>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: Fixes tag needs some work in the jc_docs tree
+Date:   Tue, 21 May 2019 20:52:46 +0200
+Message-ID: <1640847.rHWZmc4HWd@sven-edge>
+In-Reply-To: <20190521124603.658acbd3@lwn.net>
+References: <20190521074435.7a277fd6@canb.auug.org.au> <1654747.HbZAs67LzE@sven-edge> <20190521124603.658acbd3@lwn.net>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="C+ts3FVlLX8+P6JN"
-Content-Disposition: inline
-In-Reply-To: <20190521165315.14379-1-jeffrey.l.hugo@gmail.com>
-X-Cookie: Do I have a lifestyle yet?
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: multipart/signed; boundary="nextPart2552761.yTD1mybP9e"; micalg="pgp-sha512"; protocol="application/pgp-signature"
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=narfation.org;
+        s=20121; t=1558464771;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=XLFOHAz+9Cusm8AESNgaYqugxzsv1C53Vsv9e7W7l2w=;
+        b=M5N2MHouZnOvwYoyMe59t4aQB0m726MsalhECwnd0SnOXKyWHbfq41sq5RdniiC6/kcvor
+        uAK8yBgEBP6qkkvbMXEboxdXw5Q84oWlt7rsgUqVimyE30SDz/+uLLjyxdcg33DMkl0KMR
+        3+ZBxW0U+f3Vc4KrbACvaB36utHknt0=
+ARC-Seal: i=1; s=20121; d=narfation.org; t=1558464771; a=rsa-sha256;
+        cv=none;
+        b=sGDHk/O8aWsOeVg1ZMKUIqhRVeaSzK+iVxXFZuwdLFJ2XdwVref+f7xBjbBLRGLXhoJMSY
+        jj8yTGOnEOHtl9FHc/QiJCeyYetiy+qyICR8UZz29Q7zlvGI7ihh2XcCcAW2DkjFFO3BxP
+        Ro9jqS6fVl8gs4x+3ajHYfbNJDkIZqw=
+ARC-Authentication-Results: i=1;
+        ORIGINATING;
+        auth=pass smtp.auth=sven smtp.mailfrom=sven@narfation.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--nextPart2552761.yTD1mybP9e
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
---C+ts3FVlLX8+P6JN
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Tuesday, 21 May 2019 20:46:03 CEST Jonathan Corbet wrote:
+> On Tue, 21 May 2019 20:23:48 +0200
+> Sven Eckelmann <sven@narfation.org> wrote:
+> 
+> > > <sigh>  
+> > 
+> > It is ok, I will never send you any patch again.
+> 
+> I'm hoping that's meant to be a joke...?  This is certainly not a big
+> problem on any scale...
 
-On Tue, May 21, 2019 at 09:53:15AM -0700, Jeffrey Hugo wrote:
+Not really. If you are so frustrated that you start your reply with "<sigh>" 
+then I think that it was not enough for me to explain what I did wrong and 
+that I am sorry about copying the wrong git commit + not noticing it when 
+pasting it to the commit message. What else should I do? Jump back in time?
 
-> -	spmi_vreg_read(vreg, SPMI_COMMON_REG_VOLTAGE_RANGE, &range_sel, 1);
-> +	/* second common devices don't have VOLTAGE_RANGE register */
-> +	if (vreg->logical_type == SPMI_REGULATOR_LOGICAL_TYPE_FTSMPS2) {
-> +		spmi_vreg_read(vreg, SPMI_COMMON2_REG_VOLTAGE_LSB, &lsb, 1);
-> +		spmi_vreg_read(vreg, SPMI_COMMON2_REG_VOLTAGE_MSB, &msb, 1);
-> +
-> +		uV = (((int)msb << 8) | (int)lsb) * 1000;
-
-This overlaps with some changes that Jorge (CCed) was sending for the
-PMS405.  As I was saying to him rather than shoving special cases for
-different regulator types into the ops (especially ones that don't have
-any of the range stuff) it'd be better to just define separate ops for
-the regulators that look quite different to the existing ones.
-
-> +static int spmi_regulator_common_list_voltage(struct regulator_dev *rdev,
-> +					      unsigned selector);
-> +
-> +static int spmi_regulator_common2_set_voltage(struct regulator_dev *rdev,
-> +					      unsigned selector)
-
-Eeew, can we not have better names?
-
-> +static unsigned int spmi_regulator_common2_get_mode(struct regulator_dev *rdev)
-> +{
-> +	struct spmi_regulator *vreg = rdev_get_drvdata(rdev);
-> +	u8 reg;
-> +
-> +	spmi_vreg_read(vreg, SPMI_COMMON2_REG_MODE, &reg, 1);
-> +
-> +	if (reg == SPMI_COMMON2_MODE_HPM_MASK)
-> +		return REGULATOR_MODE_NORMAL;
-> +
-> +	if (reg == SPMI_COMMON2_MODE_AUTO_MASK)
-> +		return REGULATOR_MODE_FAST;
-> +
-> +	return REGULATOR_MODE_IDLE;
-> +}
-
-This looks like you want to write a switch statement.
-
-> +spmi_regulator_common2_set_mode(struct regulator_dev *rdev, unsigned int mode)
-> +{
-> +	struct spmi_regulator *vreg = rdev_get_drvdata(rdev);
-> +	u8 mask = SPMI_COMMON2_MODE_MASK;
-> +	u8 val = SPMI_COMMON2_MODE_LPM_MASK;
-> +
-> +	if (mode == REGULATOR_MODE_NORMAL)
-> +		val = SPMI_COMMON2_MODE_HPM_MASK;
-> +	else if (mode == REGULATOR_MODE_FAST)
-> +		val = SPMI_COMMON2_MODE_AUTO_MASK;
-
-This needs to be a switch statement, then it can have a default case to
-catch errors too.
-
---C+ts3FVlLX8+P6JN
+Kind regards,
+	Sven
+--nextPart2552761.yTD1mybP9e
 Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlzkSI0ACgkQJNaLcl1U
-h9D4Pwf+N0VEAMaUrHu9DiDBqWU4jYSrQlR7BPtYN4DHzRzhYd/GSW4c1RhNMsz4
-og7GQSz83ppbsfv22Sf1/2ivsR/0VihEhoOVduEnH2MJcowZwd4vUnNfTvOuAcvN
-nN/THjD7Nz4GpP9QBetIwsInrafl+bbpMedq0fI/u6EsUSNOmoHnFxgJM8aXxYJQ
-WzquUkwu8XTUi5UNspFDXXTRYmjfKAiY0fYSsATVZOZHtSCktsijI35IN77oxvSB
-l2UT7XH3xXPQ7UyeF64U4Yp7L+NeYrh7eX6qZGb5NaUq1k/CiruEZK/OUkNkkNsR
-sQWT5yGgYmgS2BOIlXy3SsNbouafeQ==
-=vCWU
+iQIzBAABCgAdFiEEF10rh2Elc9zjMuACXYcKB8Eme0YFAlzkSP4ACgkQXYcKB8Em
+e0bn6w//Yl3IZ4QEd+FpOkQix5YPM7pvHUiEb+azTHURtsTlLAy5w1DZfBWDTf14
+kN9mmMovAZ/UIgb0/n6W0LUzn4GcHzzYKx9jRBTUfV8JIRwrXXpbomjBzfp6B8/r
+pAV7ibsubdwtco58oOilvVHTIJQ3nSHYj/0aL/bZzaj0ZnXaMOODB2CifF0boEsZ
+BuwRjobkCr/hR7jrtm4PzsK4WuCbNiTNJJw/x2YUYs3AmDyjjrySiR1LFgt2t+5l
+NUt9Zl6jprOqeElzNzaC1eMFGqefll4UFnWSBsWiFgKVQ72RClYY1F29lbhsMKKz
+4lTVpjGAlX5WrYTEeitq2/+SD12IsGW0wOsQof/RoVxyJb8zdkUXXS0JIA0g9TWE
+2Wu/UCmgEchDIkDToNCebhuM9Mv/38A4dm9QlYMGASzz2sRNJollB4pZLr/cy7Jr
+xypJ3FiX2ufC3+4OJY+nGhs92saoVAGW43oZQ7xf6Up+BgyXsBjUtx/CWOd/SL/d
+Gy4OUfSk65gjZnEe1GrGtD9szVjoYJ0YYCj6gC3krzcv4HGRvROTQPjUgaHIT0i7
+ICLAcYIjL0c5+D2PNgSgdd1PF5tub5IrVoDz+i0Huw7wYfSo7JK2/giTPXVWbVO3
+zXnYRFLQ+3HJ1GyMwLgdLZznpiwSJUnBzF9yHp13mUnhXtlfLJM=
+=+2S5
 -----END PGP SIGNATURE-----
 
---C+ts3FVlLX8+P6JN--
+--nextPart2552761.yTD1mybP9e--
+
+
+
