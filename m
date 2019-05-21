@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D4DCC04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:11:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA455C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:11:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63A0C21743
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:11:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD65721743
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:11:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ARZFb59f"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B/jtMfdc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729002AbfEUQLQ (ORCPT
+        id S1729031AbfEUQLT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 12:11:16 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:38087 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728899AbfEUQLN (ORCPT
+        Tue, 21 May 2019 12:11:19 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:36251 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728968AbfEUQLP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 12:11:13 -0400
-Received: by mail-wm1-f67.google.com with SMTP id t5so3488746wmh.3;
-        Tue, 21 May 2019 09:11:11 -0700 (PDT)
+        Tue, 21 May 2019 12:11:15 -0400
+Received: by mail-wr1-f66.google.com with SMTP id s17so19305076wru.3;
+        Tue, 21 May 2019 09:11:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=r8viNroRA5goE0iPj/ap53EgAXBGfEQtlqx5YkjMMp0=;
-        b=ARZFb59f/TEGR4dKn2zPIsVrlQpgAN3MkGdMyYoenwZrYx//1w/GS1vxb/zR0DiMu4
-         kFpEmoMA86LR7oMglGgowJVUCRWcB4uFwzjEjBzB/TClFDnUCsAYsZGfse3m9d3Elf0X
-         LZXgLoTvu2klwbc97GLhdfLn9ItpsQuHfWTsjUtfW9vQRNNk+uobllA6qAZTnTm99Ugm
-         n1r7iW/h9mU0lcFEX1q+b4LjCRuTE9urqhkK56b9ItVJIMrgMcJ4E0gF0t7oqfqCy6WU
-         IMfY/wZLsXkxMjbx6rkgIiucVgB9E+aq2VD6BVtbZIJW4Dj9fkmrj2Upj/QMFHowPrYh
-         TkYw==
+        bh=Btaw5CgxhYac28zaC8EYgFvIIeyjC0ToJx7hPAKP9QY=;
+        b=B/jtMfdcj/dmaTXVPTvxgNcwlKCsgqy9ZhcgBVcfw/M8F+FPXVO9xN/dsc8qjR+qGX
+         wlT8gSuqfvPrYaFZO9iBZFczHY0DerEBjxIaTywINIhQtH4FH+wv19g2c5/kWbwmQtJT
+         X2Z1EZJr7BLY9iXwP+T4K/wju0vwaB8a6BNRhraKUMsnEOuxptYmFWbk6dvX8lJSc9sH
+         vq8tf5kmrs+CVMIdAsHJfgaFAsnHwVKuXD2M2XhWIse8GTOBt+S/JoylD8jY/AfQkmAo
+         2E6fSN28+1qgWz5XWqDSYu9H6l5NyiG8hDop7DeLyGEiP9MydI1kne0gnBENOh10PhDc
+         8OCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=r8viNroRA5goE0iPj/ap53EgAXBGfEQtlqx5YkjMMp0=;
-        b=nt1bGZN8tclvvd7QfhnKztowjBBbuLWMbtolJcP0ZArZFpA+Q0HhN32Jl4NQaoFOFw
-         boNVRNU40WIVrHtcRsp1JbnjRk2lfUh7VzDBxpnjHscGmCv3Ws206rmvvZxj8D2JXFka
-         jBGWtdZSvZxNBoBii6ABfiMPou/GsdxlnHBCMREAbREx8AHnV+PTiyAxYjkWtXx2OpPp
-         CDHzZ1t7VM8EX55dm7e9p9WszPaIk755xJHTU5itfJPuBoApy8m/1vJR5MOtRZ8ZXWXz
-         yJ9kadMn0RAWx2Yq+YdBe+ruQUEkQ70abgW6NifgkzN6zW/gDf+GQK6NwN8txYBTTz3P
-         2IYQ==
-X-Gm-Message-State: APjAAAXUN83GTtEViKW35NrfFmEvHc6X/vGQaP2zp0GVuNR0zST3VEZS
-        QbzWi2GT8fXFMFAGXvZquog=
-X-Google-Smtp-Source: APXvYqxfxJ6RsSMMKEQ8Whf7wf2BBbNOZyqWjeSvLocsSoko9vuDWmS1j0CXAq8lGvRTLD6FP4Blfw==
-X-Received: by 2002:a7b:c4d2:: with SMTP id g18mr4212516wmk.78.1558455070526;
-        Tue, 21 May 2019 09:11:10 -0700 (PDT)
+        bh=Btaw5CgxhYac28zaC8EYgFvIIeyjC0ToJx7hPAKP9QY=;
+        b=J7ZAidd1EArBHoNFY4MDL1bUO/sFEmmFIi6vUmR7nmzJPOAzyaMRteYMbW3hcF2//o
+         SFqJaYl02E/8IIFmvyxo1mxWbcK/nUI2Vl9mmmEmUoGnPjvtaOSliJEWa85peqW/SvH7
+         UHrF2+mp0i9dBudFXEkqeAex3CKdjPvIF+ciInv82HqFZigomL5GrbrphUHBGHZu4MpU
+         HPN90XnYbXw964/nb7AySdgz4Z1QTwAsBfFM6j+ktEAmiSxgQ45cRDdQ6pTrysbCLyWk
+         wxAaIgVEPBP0UGHkRMCXpEvHiCTS4cWMG2u1nzNBZjlM0v7dNFwv5ljnwZcGRwirWa24
+         /qSg==
+X-Gm-Message-State: APjAAAVDRc0+EpGlGHwAzmh/rdk3zHwjs4dwfqRixOPO+mjDdui82YIA
+        wfn7dEoBPBFOZU7zWPfu+tY=
+X-Google-Smtp-Source: APXvYqwVGxivnAT1rOZ1NLI0pVzHPTuwtsi/68dewsIH9xOuVl2rdWSn1rWNqkO1JUH72ACvEdzDJQ==
+X-Received: by 2002:adf:f811:: with SMTP id s17mr19122623wrp.72.1558455074155;
+        Tue, 21 May 2019 09:11:14 -0700 (PDT)
 Received: from localhost.localdomain (18.189-60-37.rdns.acropolistelecom.net. [37.60.189.18])
-        by smtp.gmail.com with ESMTPSA id n63sm3891094wmn.38.2019.05.21.09.11.09
+        by smtp.gmail.com with ESMTPSA id n63sm3891094wmn.38.2019.05.21.09.11.13
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 21 May 2019 09:11:09 -0700 (PDT)
+        Tue, 21 May 2019 09:11:13 -0700 (PDT)
 From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
 To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         Rob Herring <robh+dt@kernel.org>,
@@ -73,9 +73,9 @@ Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         iommu@lists.linux-foundation.org,
         =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v6 2/6] iommu: io-pgtable: fix sanity check for non 48-bit mali iommu
-Date:   Tue, 21 May 2019 18:10:58 +0200
-Message-Id: <20190521161102.29620-3-peron.clem@gmail.com>
+Subject: [PATCH v6 5/6] arm64: dts: allwinner: Add ARM Mali GPU node for H6
+Date:   Tue, 21 May 2019 18:11:01 +0200
+Message-Id: <20190521161102.29620-6-peron.clem@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190521161102.29620-1-peron.clem@gmail.com>
 References: <20190521161102.29620-1-peron.clem@gmail.com>
@@ -87,30 +87,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allwinner H6 SoC has a Mali T720MP2 with a 33-bit iommu which
-trig the sanity check during the alloc of the pgtable.
+Add the mali gpu node to the H6 device-tree.
 
-Change the sanity check to allow non 48-bit configuration.
-
-Suggested-by: Robin Murphy <robin.murphy@arm.com>
 Signed-off-by: Clément Péron <peron.clem@gmail.com>
 ---
- drivers/iommu/io-pgtable-arm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/drivers/iommu/io-pgtable-arm.c b/drivers/iommu/io-pgtable-arm.c
-index 4e21efbc4459..74f2ce802e6f 100644
---- a/drivers/iommu/io-pgtable-arm.c
-+++ b/drivers/iommu/io-pgtable-arm.c
-@@ -1016,7 +1016,7 @@ arm_mali_lpae_alloc_pgtable(struct io_pgtable_cfg *cfg, void *cookie)
- {
- 	struct io_pgtable *iop;
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+index 16c5c3d0fd81..6aad06095c40 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+@@ -157,6 +157,20 @@
+ 			allwinner,sram = <&ve_sram 1>;
+ 		};
  
--	if (cfg->ias != 48 || cfg->oas > 40)
-+	if (cfg->ias > 48 || cfg->oas > 40)
- 		return NULL;
- 
- 	cfg->pgsize_bitmap &= (SZ_4K | SZ_2M | SZ_1G);
++		gpu: gpu@1800000 {
++			compatible = "allwinner,sun50i-h6-mali",
++				     "arm,mali-t720";
++			reg = <0x01800000 0x4000>;
++			interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "job", "mmu", "gpu";
++			clocks = <&ccu CLK_GPU>, <&ccu CLK_BUS_GPU>;
++			clock-names = "core", "bus";
++			resets = <&ccu RST_BUS_GPU>;
++			status = "disabled";
++		};
++
+ 		syscon: syscon@3000000 {
+ 			compatible = "allwinner,sun50i-h6-system-control",
+ 				     "allwinner,sun50i-a64-system-control";
 -- 
 2.17.1
 
