@@ -2,98 +2,135 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C86B4C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 05:12:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50383C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 05:13:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9581D2173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 05:12:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558415575;
-	bh=yRdHJ2XmIK1WbEUMMgmxiCl4z/bvxpUafqfuQkwnoXY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=umeWh+QllySH2DNs6+jaaUwHkABUdPN3gFUoigtlwSMxV91pzj+L1SDvLUr6eKzd9
-	 zC0JK45rEbpj+UtB+Lm380zz9mms9Ya+8AyDkrV0pQqznK3GBWaR7cBhHpKwznQg0j
-	 7dqKiSmHRD62lX0CPffA8gK7cWDqN03JNdECw60c=
+	by mail.kernel.org (Postfix) with ESMTP id 2368821743
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 05:13:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qxs4+yxX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727788AbfEUFMz (ORCPT
+        id S1727810AbfEUFND (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 01:12:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58566 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725798AbfEUFMy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 01:12:54 -0400
-Received: from localhost (unknown [106.201.107.13])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D867D21743;
-        Tue, 21 May 2019 05:12:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558415573;
-        bh=yRdHJ2XmIK1WbEUMMgmxiCl4z/bvxpUafqfuQkwnoXY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LVwjL/13xrfaEJ6AUBwZQFm+fa/btvzfRm/Y8CBLxx/5AoMRHbrbnsRRTHdWq8A+B
-         6T40TTcYmIo6qFDmhzoTdegDWImPKepEQAkT+lfqy2H7mC97xyNji7IBtdE04bEq1u
-         quivMZvg2u2AG9QBormnpyQNetqMXa1KkJD1lM3A=
-Date:   Tue, 21 May 2019 10:42:50 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Robin Gong <yibin.gong@nxp.com>
-Cc:     "robh@kernel.org" <robh@kernel.org>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Tue, 21 May 2019 01:13:03 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:41491 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725798AbfEUFNC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 01:13:02 -0400
+Received: by mail-pg1-f194.google.com with SMTP id z3so7931140pgp.8;
+        Mon, 20 May 2019 22:13:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=KAB9o9XbO2dEKEPGZm81AqLjqGSvYkvcgsj2QybWv7g=;
+        b=Qxs4+yxX0aU1YO8P4wah4CVDUe6g4GlvnquXlHWXovOugNiUrwiu2zJ9Fmu3e25/hK
+         5jEOLc/bSkDsO8cce3GwOKXUzCAEHrxKWgeBbzegW7hqQyqAIC6Qcbb4knv+J9nayLYH
+         R5LhRwNke0nyAY8RI1KZgPUuJ9He54TEqelTWo2jzaKzLnXpde2+xwzifkob9CzaHc7G
+         npys+K2PEpmmQNIl06S86FOk1xhbTkzLIwQCsGaYtCk9NdLF95UKvQZ+eHZNOtdvIqar
+         mAyANeBBOA9LXy/pIAEsYo5T/h2gAfDBbkfevPTPtmfxXvOuv4JfR5Y+O2b9F8EFDoOa
+         xOrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=KAB9o9XbO2dEKEPGZm81AqLjqGSvYkvcgsj2QybWv7g=;
+        b=gCOjKPUafkl2DPdbDlJS2fEGE9qOHIwG0f5kwhf5oaQCUo4JlS90iRS1DrU1o3xn+q
+         ZvWdu0d6Y2wQwCo7mVGkVBIPkOEPQjV34uYwDBB1QCK5+LqpE4GSby7Z1EFHvUfi29hO
+         Q6WF1y+bsyBjpBbYrRfkfcspi9W+31XfHj/5Wcq63w9nYWg+vHC+4Zeuhs+WNJauOyhk
+         5hNQOV/tG0fesqwFxvuPpntazsRl5hSkknZ0SKmmE84fl880yDzxGCWY/CX6+pfYn2Nn
+         lDJ45S7fEZ+Z+4nTLjbuDDfjCz4f1eY7j4+oziZfOtgj3vqHxPEF8ZmKhYq5RkAyf3WM
+         cVUQ==
+X-Gm-Message-State: APjAAAVrBRjAEe4gPCO5aSKX/sgKDsVpKJeQezQXeCC4Q0BvBkwiLwbc
+        oRPeYifizl03QJcxH2rM9Qk=
+X-Google-Smtp-Source: APXvYqzW9mIERiYyDXIieMEXITq6MNtJd+g8DMbTmXNK7qyLbq5vimxsdHJv5wCyuC47d1PQuVSGTQ==
+X-Received: by 2002:a63:9d83:: with SMTP id i125mr73946177pgd.229.1558415582198;
+        Mon, 20 May 2019 22:13:02 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id r11sm22483769pgb.31.2019.05.20.22.13.01
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 20 May 2019 22:13:01 -0700 (PDT)
+Date:   Mon, 20 May 2019 22:13:00 -0700
+From:   "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>
+To:     Anson Huang <anson.huang@nxp.com>
+Cc:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
         "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
         "festevam@gmail.com" <festevam@gmail.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-        "plyatov@gmail.com" <plyatov@gmail.com>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
         "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>
-Subject: Re: Re: [PATCH v3 11/14] dmaengine: imx-sdma: fix ecspi1 rx dma not
- work on i.mx8mm
-Message-ID: <20190521051250.GY15118@vkoul-mobl>
-References: <VI1PR04MB45436C98D70C16635CF3CFDE89070@VI1PR04MB4543.eurprd04.prod.outlook.com>
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH] input: imx6ul_tsc: use devm_platform_ioremap_resource()
+ to simplify code
+Message-ID: <20190521051300.GF183429@dtor-ws>
+References: <1554095712-15413-1-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <VI1PR04MB45436C98D70C16635CF3CFDE89070@VI1PR04MB4543.eurprd04.prod.outlook.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <1554095712-15413-1-git-send-email-Anson.Huang@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21-05-19, 04:58, Robin Gong wrote:
-> > -----Original Message-----
-> > From: Vinod Koul <vkoul@kernel.org>
-> > Sent: 2019年5月21日 12:18
-> > 
-> > On 07-05-19, 09:16, Robin Gong wrote:
-> > > Because the number of ecspi1 rx event on i.mx8mm is 0, the condition
-> > > check ignore such special case without dma channel enabled, which
-> > > caused
-> > > ecspi1 rx works failed. Actually, no need to check event_id0, checking
-> > > event_id1 is enough for DEV_2_DEV case because it's so lucky that
-> > > event_id1 never be 0.
-> > 
-> > Well is that by chance or design that event_id1 will be never 0?
-> > 
-> That's by chance. DEV_2_DEV is just for Audio case and non-zero for event_id1 on current i.MX family.
+On Mon, Apr 01, 2019 at 05:19:55AM +0000, Anson Huang wrote:
+> Use the new helper devm_platform_ioremap_resource() which wraps the
+> platform_get_resource() and devm_ioremap_resource() together, to
+> simplify the code.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-Then it wont be fgood to rely on chance :)
+Applied, thank you.
+
+> ---
+>  drivers/input/touchscreen/imx6ul_tsc.c | 8 ++------
+>  1 file changed, 2 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/input/touchscreen/imx6ul_tsc.c b/drivers/input/touchscreen/imx6ul_tsc.c
+> index c10fc59..e04eecd 100644
+> --- a/drivers/input/touchscreen/imx6ul_tsc.c
+> +++ b/drivers/input/touchscreen/imx6ul_tsc.c
+> @@ -364,8 +364,6 @@ static int imx6ul_tsc_probe(struct platform_device *pdev)
+>  	struct device_node *np = pdev->dev.of_node;
+>  	struct imx6ul_tsc *tsc;
+>  	struct input_dev *input_dev;
+> -	struct resource *tsc_mem;
+> -	struct resource *adc_mem;
+>  	int err;
+>  	int tsc_irq;
+>  	int adc_irq;
+> @@ -403,16 +401,14 @@ static int imx6ul_tsc_probe(struct platform_device *pdev)
+>  		return err;
+>  	}
+>  
+> -	tsc_mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -	tsc->tsc_regs = devm_ioremap_resource(&pdev->dev, tsc_mem);
+> +	tsc->tsc_regs = devm_platform_ioremap_resource(pdev, 0);
+>  	if (IS_ERR(tsc->tsc_regs)) {
+>  		err = PTR_ERR(tsc->tsc_regs);
+>  		dev_err(&pdev->dev, "failed to remap tsc memory: %d\n", err);
+>  		return err;
+>  	}
+>  
+> -	adc_mem = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+> -	tsc->adc_regs = devm_ioremap_resource(&pdev->dev, adc_mem);
+> +	tsc->adc_regs = devm_platform_ioremap_resource(pdev, 1);
+>  	if (IS_ERR(tsc->adc_regs)) {
+>  		err = PTR_ERR(tsc->adc_regs);
+>  		dev_err(&pdev->dev, "failed to remap adc memory: %d\n", err);
+> -- 
+> 2.7.4
+> 
 
 -- 
-~Vinod
+Dmitry
