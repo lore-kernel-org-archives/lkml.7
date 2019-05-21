@@ -5,57 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F553C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 09:35:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E18AC04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 09:35:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37BB0217D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 09:35:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 631D021773
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 09:35:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FFvJMEer"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mwHzEwi0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727604AbfEUJff (ORCPT
+        id S1727630AbfEUJfh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 05:35:35 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:42475 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727571AbfEUJfc (ORCPT
+        Tue, 21 May 2019 05:35:37 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:41362 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727606AbfEUJfg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 05:35:32 -0400
-Received: by mail-pf1-f196.google.com with SMTP id 13so8768530pfw.9
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 02:35:32 -0700 (PDT)
+        Tue, 21 May 2019 05:35:36 -0400
+Received: by mail-pg1-f193.google.com with SMTP id z3so8296757pgp.8
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 02:35:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :in-reply-to:references;
-        bh=FnxOSFCClFXBL/MQEoj2x4esQGTm7evFd77Wm/m1NK4=;
-        b=FFvJMEerPN6RTzJ+NEOY16l+7iMM0ppRraH6BWkcq2lCBKg0mIogK7V9VC0mYcnoFC
-         lpcwM2Gk+YfdcAdRsD1nkSSdLsZUylUpeLVeBwh0oBruUCaG9/tx8N6CnMySTJwPQVOp
-         4Zcw1MxuGUvdcMaMWCGCeZXje44wam6ITlpgXVwK6Dc87G6IaG/nRabVCKTEJLTppkUO
-         i3lgHNB01l3pm9EN1IpqlE91qR/FgJv4Ca/zhN6x8+WEkKKyLjd2ZBLFT4BAeggnr2C9
-         7U7qr/o1nxk0MfPBf5UVzNw3gO95qTis3Vw3EEfBCyjpdLtzvF/AH8mrQuUsFr4CIwaK
-         Q+Zg==
+        bh=d2eIpxSdjsX7/lLIjpHMiJAHo+aeKfpvFXdzoX+BN1U=;
+        b=mwHzEwi0iE+xHqdlGaQ1uBp1E2gATH9uWQYVYVWfQbo0ZivXmmXxi9T16+MZ4cSTlc
+         dE9SYzVSLdHtJkAvihlnFayERaA/U5IsZkgqvwS46h+DkD8XNkpsgGzYM6TZ04/Uhjxc
+         rUeWTaaAzNg1KDPSjRJLiQlBLCvkZ4IDEvXIMFYE3xK9BIVLnWa4CyXfacqqWdxidcQw
+         jHBVP1Kssmpj3OD0ym3GodXS3tVqgLLluIusM7ndAYXTfCoQW6PI3pK5MmBsfOGVZOE/
+         stghyRWSzMcYUqvpK4g+KqXDYJoQLa7I4pHxcqpJ2LrmqTxSL9L154vI1N5hoyRI7FAu
+         3VhQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:in-reply-to:references;
-        bh=FnxOSFCClFXBL/MQEoj2x4esQGTm7evFd77Wm/m1NK4=;
-        b=I6w3hVZqSrRP6yZPHAzUfvX/KCQt8npzlEFbCTLSGClloozrrODN2SsL2RDpPKi9kS
-         WvdHsM4neV0gc/2lbOeI9pr/grNp+C+kvBQdyewftNhiOh/CjBijrTb+Vfuinq9Rg9EQ
-         wGgbIe2OHVMPzH9ITsmJ2njCMcwO9YrPzK2/I1JOeOYixJ0ND2Y+/K9eZJyg2WSoDCZP
-         Bv4tQL7OgFgXcyD1GPztcUEUmgR6z0CDlfkE/RenrBLR9sNs/9erb7PgvzaL6ZhXICIw
-         vpUfjcB8QLOmrGy8iRaEHq1L9xQFFD35UZVmNrW0bniLBbFbhQLLX/GQt2ilQHaj0i/G
-         fY+g==
-X-Gm-Message-State: APjAAAUGqVZPoZUtz0/WGfnjSrYEVDi84y/PKjNzX95oaCRjROIrDFss
-        fnLqxa392AEox9HYo6K/p6GX57bqz5bHTQ==
-X-Google-Smtp-Source: APXvYqwADQFmBLmMydAb2ax1jzlS0xwcSIkCQrM5GCjaAteOFtjZewJqH81wNhkrczg63VjCnLukfA==
-X-Received: by 2002:a63:1354:: with SMTP id 20mr79407935pgt.356.1558431331764;
-        Tue, 21 May 2019 02:35:31 -0700 (PDT)
+        bh=d2eIpxSdjsX7/lLIjpHMiJAHo+aeKfpvFXdzoX+BN1U=;
+        b=OggRmI0UHOTVXy/Q+2mD6NLX/DWJhP5KzWJcPviCmta4XsD5oN+zKgRM6qwB60Bgnj
+         sNEDkxSQzoA8fkB1A3WLBk1fDgg6J5XpCVyB4EoG2sGg5wh2+xBJDOUUc5SfmfIZmtQl
+         0GXCao73wA6TEk7SuT15S/HhEMYF54PcBvW8VKcYCcgNCJWvO0C7/Wigzi+ToLi1WOzS
+         kaPycRPWzUwNwxi9EGy+nxOSR6ukj+5wdsv5Zjl1O+8eDyNuz3hKU8MRBQ6HmQx8aw2L
+         rjiOjKU9l2C41RQZs0BpycaYPy/9IBZ2NGrFhgfUe2MPCIGCj3q3fYyZonLVG5UZigCI
+         FSkA==
+X-Gm-Message-State: APjAAAXfJa7knFALeV5zXKA5pFTtmoNIcD+hlLVyxRxqrZhZ+VB4Qdab
+        oyz7Yus6FcKPcarrmPiN88qBtUC5E9AW9w==
+X-Google-Smtp-Source: APXvYqxU/eR8zo/KSsNzGchOV9mx0K9b7ckVoQsRSRsfOQfU5x4fKkjXosmVzTMhVKHuzaVfE+caqw==
+X-Received: by 2002:a62:d286:: with SMTP id c128mr86829674pfg.159.1558431335265;
+        Tue, 21 May 2019 02:35:35 -0700 (PDT)
 Received: from localhost ([49.248.189.249])
-        by smtp.gmail.com with ESMTPSA id l21sm28759496pff.40.2019.05.21.02.35.30
+        by smtp.gmail.com with ESMTPSA id y10sm17012625pfm.68.2019.05.21.02.35.34
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 21 May 2019 02:35:31 -0700 (PDT)
+        Tue, 21 May 2019 02:35:34 -0700 (PDT)
 From:   Amit Kucheria <amit.kucheria@linaro.org>
 To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         bjorn.andersson@linaro.org, agross@kernel.org,
@@ -65,9 +65,9 @@ To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         David Brown <david.brown@linaro.org>,
         Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>
 Cc:     devicetree@vger.kernel.org
-Subject: [PATCH v2 2/9] Documentation: arm: Link idle-states binding to "enable-method" property
-Date:   Tue, 21 May 2019 15:05:12 +0530
-Message-Id: <9dc4ce06143de48039e841c337fafa7cb9c8d7d2.1558430617.git.amit.kucheria@linaro.org>
+Subject: [PATCH v2 3/9] arm64: dts: qcom: msm8916: Add entry-method property for the idle-states node
+Date:   Tue, 21 May 2019 15:05:13 +0530
+Message-Id: <0374669560d13bba30dfa33cd10a0ad8a65b604b.1558430617.git.amit.kucheria@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <cover.1558430617.git.amit.kucheria@linaro.org>
 References: <cover.1558430617.git.amit.kucheria@linaro.org>
@@ -78,46 +78,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The "enable-method" property for cpu nodes needs to be "psci" for CPU
-idle management to be setup correctly.
+The idle-states binding documentation[1] mentions that the
+'entry-method' property is required on 64-bit platforms and must be set
+to "psci".
 
-Add a note to the binding documentation to this effect to make it
-obvious.
+[1] Documentation/devicetree/bindings/arm/idle-states.txt (see
+idle-states node)
 
 Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-Acked-by: Sudeep Holla <sudeep.holla@arm.com>
+Reviewed-by: Niklas Cassel <niklas.cassel@linaro.org>
+Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 ---
- .../devicetree/bindings/arm/idle-states.txt         | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+ arch/arm64/boot/dts/qcom/msm8916.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/idle-states.txt b/Documentation/devicetree/bindings/arm/idle-states.txt
-index 45730ba60af5..3bdbe675b9e6 100644
---- a/Documentation/devicetree/bindings/arm/idle-states.txt
-+++ b/Documentation/devicetree/bindings/arm/idle-states.txt
-@@ -241,9 +241,13 @@ processor idle states, defined as device tree nodes, are listed.
- 			   - "psci"
- 			# On ARM 32-bit systems this property is optional
+diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+index 0803ca8c02da..82ea5b8b37a2 100644
+--- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+@@ -158,6 +158,8 @@
+ 		};
  
--The nodes describing the idle states (state) can only be defined within the
--idle-states node, any other configuration is considered invalid and therefore
--must be ignored.
-+This assumes that the "enable-method" property is set to "psci" in the cpu
-+node[6] that is responsible for setting up CPU idle management in the OS
-+implementation.
+ 		idle-states {
++			entry-method = "psci";
 +
-+The nodes describing the idle states (state) can only be defined
-+within the idle-states node, any other configuration is considered invalid
-+and therefore must be ignored.
- 
- ===========================================
- 4 - state node
-@@ -697,3 +701,6 @@ cpus {
- 
- [5] Devicetree Specification
-     https://www.devicetree.org/specifications/
-+
-+[6] ARM Linux Kernel documentation - Booting AArch64 Linux
-+    Documentation/arm64/booting.txt
+ 			CPU_SPC: spc {
+ 				compatible = "arm,idle-state";
+ 				arm,psci-suspend-param = <0x40000002>;
 -- 
 2.17.1
 
