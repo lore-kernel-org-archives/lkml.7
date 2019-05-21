@@ -2,133 +2,211 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E9F3C04AAC
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 01:12:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BA4FC04E87
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 01:16:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A6CE2173C
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 01:12:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1144A2173C
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 01:16:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=tobin.cc header.i=@tobin.cc header.b="j4LseY1X";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="s4fSs2Sb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727752AbfEUBMD (ORCPT
+        id S1727342AbfEUBQL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 21:12:03 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:10386 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726879AbfEUBLV (ORCPT
+        Mon, 20 May 2019 21:16:11 -0400
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:46877 "EHLO
+        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726677AbfEUBQK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 21:11:21 -0400
-X-UUID: 3498edffed0f4067a9caf7af1df527c5-20190521
-X-UUID: 3498edffed0f4067a9caf7af1df527c5-20190521
-Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw01.mediatek.com
-        (envelope-from <bibby.hsieh@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 55171592; Tue, 21 May 2019 09:11:11 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 21 May 2019 09:11:10 +0800
-Received: from mtkslt302.mediatek.inc (10.21.14.115) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 21 May 2019 09:11:11 +0800
-From:   Bibby Hsieh <bibby.hsieh@mediatek.com>
-To:     Jassi Brar <jassisinghbrar@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, CK HU <ck.hu@mediatek.com>
-CC:     Daniel Kurtz <djkurtz@chromium.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        YT Shen <yt.shen@mediatek.com>,
-        Daoyuan Huang <daoyuan.huang@mediatek.com>,
-        Jiaguang Zhang <jiaguang.zhang@mediatek.com>,
-        Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        <ginny.chen@mediatek.com>, Bibby Hsieh <bibby.hsieh@mediatek.com>
-Subject: [PATCH v7 04/12] mailbox: mediatek: cmdq: move the CMDQ_IRQ_MASK into cmdq driver data
-Date:   Tue, 21 May 2019 09:11:00 +0800
-Message-ID: <20190521011108.40428-5-bibby.hsieh@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20190521011108.40428-1-bibby.hsieh@mediatek.com>
-References: <20190521011108.40428-1-bibby.hsieh@mediatek.com>
+        Mon, 20 May 2019 21:16:10 -0400
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 22CAF1553F;
+        Mon, 20 May 2019 21:16:09 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute5.internal (MEProxy); Mon, 20 May 2019 21:16:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tobin.cc; h=date
+        :from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=Bb3i2g5iLhW0rmPyvqaurkiFFVn
+        YGWCbB02MW+Mdyaw=; b=j4LseY1XOGAJNMMt7eUBUwX3kkfceM1KRv7Rjk+0nXL
+        VcXZFU216iMv12ehaUrMVquDtpvjclKcLDSKfpoe/e0cwc7XFF0GghXcaakp29ot
+        mX5bN2R8BvJVgEIp9O5o1Xz7rxjmNEPHLIqibb8tY09jU1YNSfLWTce31Q4GS81q
+        tZEoyc9KeoUfurL2X3ZCCeSf7KLfC6CqsVGLUyOKBR+TK6Xq6vXav67S11VtEyPQ
+        +y7PcGR+0IbWi4Ub37UDd78A4+AZLh9FEb8+4bHKqqRB2NmAinU6h0OFvRLMBouJ
+        HEyzBGPHSCCCrXsGsKQTToj9Yynl9yWqCZ2sEJzQAVw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=Bb3i2g
+        5iLhW0rmPyvqaurkiFFVnYGWCbB02MW+Mdyaw=; b=s4fSs2SbLddlRxt/R2eqDF
+        x4j1USTUxMBO7rKXmhWWp352gttz3T2G4t4mB9jSGRNmkYbcXh+5VvxMdpV5eSWo
+        QmeUmpGNsN5yGDEVF6uosl+huN7/4/ve8JmcKxPzv9NWAJnajMqPkl/hyXjr62jb
+        mQNKC3uSBDxRUaxCUmZLq+uyhfi5JDbwKPwUv7czDUOoj4dBAz59RNADGioyn9UO
+        qaziTaEz4bQIRf87VkAzZmziMQKLvAhSkEcxYTQ7hNhMEdTyhxRHoA8im8tHi97C
+        VqRrtUdwaHK2BYQulVMDv5HDWnmXpuDk4+od6KdH0RYNt1TwrJrLQsFb+lBr2Z9w
+        ==
+X-ME-Sender: <xms:VlHjXMCMgW9cifHQrSoUiw6Xd-Gve4Vg4FmEb0GITuHOouVq9Y8znA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddruddtledggeefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    gfrhhlucfvnfffucdluddtmdenucfjughrpeffhffvuffkfhggtggujgfofgesthdtredt
+    ofervdenucfhrhhomhepfdfvohgsihhnucevrdcujfgrrhguihhnghdfuceomhgvsehtoh
+    gsihhnrdgttgeqnecukfhppeduvdegrdduieelrdduheeirddvtdefnecurfgrrhgrmhep
+    mhgrihhlfhhrohhmpehmvgesthhosghinhdrtggtnecuvehluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:VlHjXPQ8E4bf48I8mgqL1Pjq5EDtFiOKT0sVAsbxWw1gz0h9b4tFRg>
+    <xmx:VlHjXLtKFLfaCkp7NXzhd5df9CDRIt-SqGjb6BEs0zo2nlBAX8X4ww>
+    <xmx:VlHjXD1KNEs5xxsUJ-SESozYPYsaPR-wemp0Bjt09okhJEQUHzSijQ>
+    <xmx:WVHjXKeEHxTZWxeQFZjkOfT5TnyoE6otRKm1_2cJP0uzkUGY9pEEdQ>
+Received: from localhost (124-169-156-203.dyn.iinet.net.au [124.169.156.203])
+        by mail.messagingengine.com (Postfix) with ESMTPA id C3AB68005C;
+        Mon, 20 May 2019 21:16:05 -0400 (EDT)
+Date:   Tue, 21 May 2019 11:15:25 +1000
+From:   "Tobin C. Harding" <me@tobin.cc>
+To:     Roman Gushchin <guro@fb.com>
+Cc:     "Tobin C. Harding" <tobin@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Alexander Viro <viro@ftp.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>,
+        Pekka Enberg <penberg@cs.helsinki.fi>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Christopher Lameter <cl@linux.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Andreas Dilger <adilger@dilger.ca>,
+        Waiman Long <longman@redhat.com>,
+        Tycho Andersen <tycho@tycho.ws>, Theodore Ts'o <tytso@mit.edu>,
+        Andi Kleen <ak@linux.intel.com>,
+        David Chinner <david@fromorbit.com>,
+        Nick Piggin <npiggin@gmail.com>,
+        Rik van Riel <riel@redhat.com>,
+        Hugh Dickins <hughd@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH v5 04/16] slub: Slab defrag core
+Message-ID: <20190521011525.GA25898@eros.localdomain>
+References: <20190520054017.32299-1-tobin@kernel.org>
+ <20190520054017.32299-5-tobin@kernel.org>
+ <20190521005152.GC21811@tower.DHCP.thefacebook.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190521005152.GC21811@tower.DHCP.thefacebook.com>
+X-Mailer: Mutt 1.11.4 (2019-03-13)
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The interrupt mask and thread number has positive correlation,
-so we move the CMDQ_IRQ_MASK into cmdq driver data and calculate
-it by thread number.
+On Tue, May 21, 2019 at 12:51:57AM +0000, Roman Gushchin wrote:
+> On Mon, May 20, 2019 at 03:40:05PM +1000, Tobin C. Harding wrote:
+> > Internal fragmentation can occur within pages used by the slub
+> > allocator.  Under some workloads large numbers of pages can be used by
+> > partial slab pages.  This under-utilisation is bad simply because it
+> > wastes memory but also because if the system is under memory pressure
+> > higher order allocations may become difficult to satisfy.  If we can
+> > defrag slab caches we can alleviate these problems.
+> > 
+> > Implement Slab Movable Objects in order to defragment slab caches.
+> > 
+> > Slab defragmentation may occur:
+> > 
+> > 1. Unconditionally when __kmem_cache_shrink() is called on a slab cache
+> >    by the kernel calling kmem_cache_shrink().
+> > 
+> > 2. Unconditionally through the use of the slabinfo command.
+> > 
+> > 	slabinfo <cache> -s
+> > 
+> > 3. Conditionally via the use of kmem_cache_defrag()
+> > 
+> > - Use Slab Movable Objects when shrinking cache.
+> > 
+> > Currently when the kernel calls kmem_cache_shrink() we curate the
+> > partial slabs list.  If object migration is not enabled for the cache we
+> > still do this, if however, SMO is enabled we attempt to move objects in
+> > partially full slabs in order to defragment the cache.  Shrink attempts
+> > to move all objects in order to reduce the cache to a single partial
+> > slab for each node.
+> > 
+> > - Add conditional per node defrag via new function:
+> > 
+> > 	kmem_defrag_slabs(int node).
+> > 
+> > kmem_defrag_slabs() attempts to defragment all slab caches for
+> > node. Defragmentation is done conditionally dependent on MAX_PARTIAL
+> > _and_ defrag_used_ratio.
+> > 
+> >    Caches are only considered for defragmentation if the number of
+> >    partial slabs exceeds MAX_PARTIAL (per node).
+> > 
+> >    Also, defragmentation only occurs if the usage ratio of the slab is
+> >    lower than the configured percentage (sysfs field added in this
+> >    patch).  Fragmentation ratios are measured by calculating the
+> >    percentage of objects in use compared to the total number of objects
+> >    that the slab page can accommodate.
+> > 
+> >    The scanning of slab caches is optimized because the defragmentable
+> >    slabs come first on the list. Thus we can terminate scans on the
+> >    first slab encountered that does not support defragmentation.
+> > 
+> >    kmem_defrag_slabs() takes a node parameter. This can either be -1 if
+> >    defragmentation should be performed on all nodes, or a node number.
+> > 
+> >    Defragmentation may be disabled by setting defrag ratio to 0
+> > 
+> > 	echo 0 > /sys/kernel/slab/<cache>/defrag_used_ratio
+> > 
+> > - Add a defrag ratio sysfs field and set it to 30% by default. A limit
+> > of 30% specifies that more than 3 out of 10 available slots for objects
+> > need to be in use otherwise slab defragmentation will be attempted on
+> > the remaining objects.
+> > 
+> > In order for a cache to be defragmentable the cache must support object
+> > migration (SMO).  Enabling SMO for a cache is done via a call to the
+> > recently added function:
+> > 
+> > 	void kmem_cache_setup_mobility(struct kmem_cache *,
+> > 				       kmem_cache_isolate_func,
+> > 			               kmem_cache_migrate_func);
+> > 
+> > Co-developed-by: Christoph Lameter <cl@linux.com>
+> > Signed-off-by: Tobin C. Harding <tobin@kernel.org>
+> > ---
+> >  Documentation/ABI/testing/sysfs-kernel-slab |  14 +
+> >  include/linux/slab.h                        |   1 +
+> >  include/linux/slub_def.h                    |   7 +
+> >  mm/slub.c                                   | 385 ++++++++++++++++----
+> >  4 files changed, 334 insertions(+), 73 deletions(-)
+> 
+> Hi Tobin!
+> 
+> Overall looks very good to me! I'll take another look when you'll post
+> a non-RFC version, but so far I can't find any issues.
 
-Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-Reviewed-by: CK Hu <ck.hu@mediatek.com>
----
- drivers/mailbox/mtk-cmdq-mailbox.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+Thanks for the reviews.
 
-diff --git a/drivers/mailbox/mtk-cmdq-mailbox.c b/drivers/mailbox/mtk-cmdq-mailbox.c
-index 22811784dc7d..87617dc7504d 100644
---- a/drivers/mailbox/mtk-cmdq-mailbox.c
-+++ b/drivers/mailbox/mtk-cmdq-mailbox.c
-@@ -17,7 +17,6 @@
- #include <linux/of_device.h>
- 
- #define CMDQ_OP_CODE_MASK		(0xff << CMDQ_OP_CODE_SHIFT)
--#define CMDQ_IRQ_MASK			0xffff
- #define CMDQ_NUM_CMD(t)			(t->cmd_buf_size / CMDQ_INST_SIZE)
- 
- #define CMDQ_CURR_IRQ_STATUS		0x10
-@@ -71,6 +70,7 @@ struct cmdq {
- 	void __iomem		*base;
- 	u32			irq;
- 	u32			thread_nr;
-+	u32			irq_mask;
- 	struct cmdq_thread	*thread;
- 	struct clk		*clock;
- 	bool			suspended;
-@@ -284,11 +284,11 @@ static irqreturn_t cmdq_irq_handler(int irq, void *dev)
- 	unsigned long irq_status, flags = 0L;
- 	int bit;
- 
--	irq_status = readl(cmdq->base + CMDQ_CURR_IRQ_STATUS) & CMDQ_IRQ_MASK;
--	if (!(irq_status ^ CMDQ_IRQ_MASK))
-+	irq_status = readl(cmdq->base + CMDQ_CURR_IRQ_STATUS) & cmdq->irq_mask;
-+	if (!(irq_status ^ cmdq->irq_mask))
- 		return IRQ_NONE;
- 
--	for_each_clear_bit(bit, &irq_status, fls(CMDQ_IRQ_MASK)) {
-+	for_each_clear_bit(bit, &irq_status, cmdq->thread_nr) {
- 		struct cmdq_thread *thread = &cmdq->thread[bit];
- 
- 		spin_lock_irqsave(&thread->chan->lock, flags);
-@@ -472,6 +472,9 @@ static int cmdq_probe(struct platform_device *pdev)
- 		dev_err(dev, "failed to get irq\n");
- 		return -EINVAL;
- 	}
-+
-+	cmdq->thread_nr = (u32)(unsigned long)of_device_get_match_data(dev);
-+	cmdq->irq_mask = GENMASK(cmdq->thread_nr - 1, 0);
- 	err = devm_request_irq(dev, cmdq->irq, cmdq_irq_handler, IRQF_SHARED,
- 			       "mtk_cmdq", cmdq);
- 	if (err < 0) {
-@@ -488,7 +491,6 @@ static int cmdq_probe(struct platform_device *pdev)
- 		return PTR_ERR(cmdq->clock);
- 	}
- 
--	cmdq->thread_nr = (u32)(unsigned long)of_device_get_match_data(dev);
- 	cmdq->mbox.dev = dev;
- 	cmdq->mbox.chans = devm_kcalloc(dev, cmdq->thread_nr,
- 					sizeof(*cmdq->mbox.chans), GFP_KERNEL);
--- 
-2.18.0
+> A generic question: as I understand, you do support only root kmemcaches now.
+> Is kmemcg support in plans?
 
+I know very little about cgroups, I have no plans for this work.
+However, I'm not the architect behind this - Christoph is guiding the
+direction on this one.  Perhaps he will comment.
+
+> Without it the patchset isn't as attractive to anyone using cgroups,
+> as it could be. Also, I hope it can solve (or mitigate) the memcg-specific
+> problem of scattering vfs cache workingset over multiple generations of the
+> same cgroup (their kmem_caches).
+
+I'm keen to work on anything that makes this more useful so I'll do some
+research.  Thanks for the idea.
+
+Regards,
+Tobin.
