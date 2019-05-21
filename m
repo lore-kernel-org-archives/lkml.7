@@ -2,118 +2,102 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A70E3C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:47:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42AB8C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:47:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D5E621743
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:47:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VUnf2o+V"
+	by mail.kernel.org (Postfix) with ESMTP id 1797221019
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:47:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728524AbfEUNrW (ORCPT
+        id S1728621AbfEUNrg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 09:47:22 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:39192 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726995AbfEUNrV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 09:47:21 -0400
-Received: by mail-lj1-f194.google.com with SMTP id a10so15943174ljf.6;
-        Tue, 21 May 2019 06:47:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=In5PRp85Hdp7mJFze1AHQkeVW9zdgNgdDH3L4mddjfI=;
-        b=VUnf2o+ViCCTsf9a7aQEus8kSVExtQxa2qJjTwk++BreeX0+tlkonkHafflrc2y0fB
-         1rHXxl/zAK4hq1UyWtGk0jEoSeLbn6+vvGibilMBecXBuhFBbrjuiiToz/ZISMLHnKcH
-         IACydUqrVt18rQggUf27Dz3vV6T1XLI+h8cdTWe/VsLGdB1kntXnaiBxuvnFRvNQBvLt
-         SbIRp6CMl9m82GbIMCmHULKrv+pz8qyCf5fH5qNRSSaOziJH4Vad8ft/jxhEHeXZAY5Z
-         am9v3E4Zlbc9PIVVt4mRzGXOZqPLJwRczdLa58G9y/d1lkfdi058ZOJZvQq8E3YCP++x
-         55Wg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=In5PRp85Hdp7mJFze1AHQkeVW9zdgNgdDH3L4mddjfI=;
-        b=CluZ5x+rLdaNyyo5T2ebvBYlYcuxVRSm2NJLMEOi0geOVwgie6ZCLCqJlWjj88UDLk
-         aHj0KJxlZuJg0PhnYQ+FaPvBwwq7Num3YllvP2CO5KXGvtgEkZVa4iUajqjmXYyFxBFE
-         w+iKYak+7KIr0YPKK54ECjjRgjLYVl+uNXzzzG8ptRceaIy7P1jkDo27G49ArvE3XD4X
-         x3b/JVsZHqTYWqAXU25/iYhejw4jmjG/xI/fVkxi9fJ2RRNaAEzCuNt+dewRb2Q/H+6C
-         Mvq0yv+jRatmg1V0uimH/uzRzS2LWt1A4aoAbzyV12Ij6VZSOMChBTwjIvi+4tqtP5Hv
-         iIaA==
-X-Gm-Message-State: APjAAAXePh2TEom58JMUJsmUWSbyHh6E1FOhm3g3Owb+Qf+vh4QZjOHm
-        MFXqkv/tfW5ww7te56BiITPPuhPb
-X-Google-Smtp-Source: APXvYqy/MngDy/oMQUQBSli0p3w5nw/8PnfFEKecb2nSAakgxPyzjNmCOnf8QHRDDe7bp2cQVFO/ww==
-X-Received: by 2002:a2e:730c:: with SMTP id o12mr39365811ljc.61.1558446438471;
-        Tue, 21 May 2019 06:47:18 -0700 (PDT)
-Received: from [192.168.2.145] ([94.29.32.140])
-        by smtp.googlemail.com with ESMTPSA id z6sm4601722ljh.61.2019.05.21.06.47.14
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 21 May 2019 06:47:15 -0700 (PDT)
-Subject: Re: [PATCH v1] dmaengine: tegra-apb: Handle DMA_PREP_INTERRUPT flag
- properly
-To:     Vinod Koul <vkoul@kernel.org>, Jon Hunter <jonathanh@nvidia.com>
-Cc:     Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Ben Dooks <ben.dooks@codethink.co.uk>,
-        dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190505181235.14798-1-digetx@gmail.com>
- <287d7e67-1572-b4f2-d4bb-b1f02f534d47@nvidia.com>
- <20190521045545.GP15118@vkoul-mobl>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <973513f9-0d87-4c39-6b29-f98a1d9dc00c@gmail.com>
-Date:   Tue, 21 May 2019 16:46:24 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 21 May 2019 09:47:36 -0400
+Received: from mx2.suse.de ([195.135.220.15]:54202 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726995AbfEUNrg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 09:47:36 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id E6B11AECE;
+        Tue, 21 May 2019 13:47:34 +0000 (UTC)
+Date:   Tue, 21 May 2019 15:47:30 +0200
+From:   Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
+To:     Song Liu <songliubraving@fb.com>
+Cc:     Morten Rasmussen <morten.rasmussen@arm.com>,
+        Kernel Team <Kernel-team@fb.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "vincent.guittot@linaro.org" <vincent.guittot@linaro.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/7] introduce cpu.headroom knob to cpu controller
+Message-ID: <20190521134730.GA12346@blackbody.suse.cz>
+References: <20190408214539.2705660-1-songliubraving@fb.com>
+ <20190410115907.GE19434@e105550-lin.cambridge.arm.com>
+ <A2E9A149-9EAA-478D-A096-1D4D4BA442B3@fb.com>
 MIME-Version: 1.0
-In-Reply-To: <20190521045545.GP15118@vkoul-mobl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="r5Pyd7+fXNt84Ff3"
+Content-Disposition: inline
+In-Reply-To: <A2E9A149-9EAA-478D-A096-1D4D4BA442B3@fb.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-21.05.2019 7:55, Vinod Koul пишет:
-> On 08-05-19, 10:24, Jon Hunter wrote:
->>
->> On 05/05/2019 19:12, Dmitry Osipenko wrote:
->>> The DMA_PREP_INTERRUPT flag means that descriptor's callback should be
->>> invoked upon transfer completion and that's it. For some reason driver
->>> completely disables the hardware interrupt handling, leaving channel in
->>> unusable state if transfer is issued with the flag being unset. Note
->>> that there are no occurrences in the relevant drivers that do not set
->>> the flag, hence this patch doesn't fix any actual bug and merely fixes
->>> potential problem.
->>>
->>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->>
->> >From having a look at this, I am guessing that we have never really
->> tested the case where DMA_PREP_INTERRUPT flag is not set because as you
->> mentioned it does not look like this will work at all!
-> 
-> That is a fair argument
->>
->> Is there are use-case you are looking at where you don't set the
->> DMA_PREP_INTERRUPT flag?
->>
->> If not I am wondering if we should even bother supporting this and warn
->> if it is not set. AFAICT it does not appear to be mandatory, but maybe
->> Vinod can comment more on this.
-> 
-> This is supposed to be used in the cases where you submit a bunch of
-> descriptors and selectively dont want an interrupt in few cases...
-> 
-> Is this such a case?
 
-The flag is set by device drivers. AFAIK, none of the drivers that are
-used on Tegra SoC's make a use of that flag, at least not in upstream.
+--r5Pyd7+fXNt84Ff3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hello Song.
+
+On Wed, Apr 10, 2019 at 07:43:35PM +0000, Song Liu <songliubraving@fb.com> =
+wrote:
+> The load level above is measured as requests-per-second.=20
+>=20
+> When there is no side workload, the system has about 45% busy CPU with=20
+> load level of 1.0; and about 75% busy CPU at load level of 1.5.=20
+>=20
+> The saturation starts before the system hitting 100% utilization. This is
+> true for many different resources: ALUs in SMT systems, cache lines,=20
+> memory bandwidths, etc.=20
+I have read through the thread continuation and it appears to me there
+is some misunderstanding on the latency metric (scheduler latency <=3D
+your latency <=3D request wall time?).
+
+Could you please describe how is the latency that you report defined and
+measured?
+
+Thanks,
+Michal
+
+
+--r5Pyd7+fXNt84Ff3
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEE+amhwRV4jZeXdUhoK2l36XSZ9y4FAlzkAW4ACgkQK2l36XSZ
+9y6i5Q/+PtvIsPw08gmvSIO/fdv4U5u+tI7WHJcUXGWD+sTVdVSlB+MWDfdlblUH
+HIyGgIBDGL184mq4kiYzxvSMPyorrtlI2Nbvq9SYqLJWPnZGMTWtOgVgb7roVJQG
+xk96LUF3nmWjy6wU5wY0GD3J1yaygsqMLOuCP9LQLx8Mqv7yZ5xY+J98Sdm6s1Uo
+y9ePTJLq8r8vA/oHSaLyRTiQeN+QYnFmqJvMaqdImM9FH9pO6WADa1Hp/UfN6KT5
+06NwWzaqPJ1e5JZqZ5DZMKZSCaLHNS7pywwuTgHgxoGacbBYywQ3VOF67SDwb5zK
+oOsE0YL//9Wd2cH6qh3i5301z+lx+WvFyXu3hnKBUKt2RzlT/CqwickpZxamJ3Pk
+PtV/7U/gJV404Z2TXE1cMOwfEfgjIE2WanjfMSyIuhkdxGjruQ0Ik+9DDIWMed08
+lgH33hEOLGu1qK4TKVXR/MJjdsUNAR60c4SgAWB5oc9hSjrdFDV9wD+UWviizgjM
+WMasTRwVoOaP2H9iiXlXQXX2Tei04aHR2fbW0XawsFO/bne47S/r4eHL2TvxuRZR
+W/6Q5p5o4nHvOuRQpZ2zTQ5/SXpcRSMHM7xnvxNzFJxjiR3LJmVb1fsGv7D+xIY4
+J74b5569lroFCynIj+8XxVv21JHeVtBgYEH2HKUowuk6/DyftnE=
+=vB4R
+-----END PGP SIGNATURE-----
+
+--r5Pyd7+fXNt84Ff3--
