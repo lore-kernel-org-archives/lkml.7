@@ -2,45 +2,60 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09A92C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 11:49:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D846FC04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 11:50:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCE012173C
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 11:49:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A635D21773
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 11:50:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=haabendal.dk header.i=@haabendal.dk header.b="nwqFvBDK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728029AbfEULtp (ORCPT
+        id S1728056AbfEULu3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 07:49:45 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:47623 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726740AbfEULto (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 07:49:44 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 457Yw527Kzz9s7h;
-        Tue, 21 May 2019 21:49:40 +1000 (AEST)
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Andrew Donnellan <ajd@linux.ibm.com>,
-        Eric Piel <eric.piel@tremplin-utc.net>,
-        Frank Haverkamp <haver@linux.ibm.com>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        =?utf-8?Q?Micha=C5=82_Miros?= =?utf-8?Q?=C5=82aw?= 
-        <mirq-linux@rere.qmqm.pl>, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH] misc: remove redundant 'default n' from Kconfig-s
-In-Reply-To: <1ab818ae-4d9f-d17a-f11f-7caaa5bf98bc@samsung.com>
-References: <CGME20190520141047eucas1p2c6006d1ecfc3eb287b6b33d131f66180@eucas1p2.samsung.com> <1ab818ae-4d9f-d17a-f11f-7caaa5bf98bc@samsung.com>
-Date:   Tue, 21 May 2019 21:49:38 +1000
-Message-ID: <87pnoc6n8t.fsf@concordia.ellerman.id.au>
+        Tue, 21 May 2019 07:50:29 -0400
+Received: from mailrelay1-1.pub.mailoutpod1-cph3.one.com ([46.30.210.182]:48214
+        "EHLO mailrelay1-1.pub.mailoutpod1-cph3.one.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727743AbfEULu3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 07:50:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=haabendal.dk; s=20140924;
+        h=content-type:mime-version:message-id:in-reply-to:date:references:subject:cc:
+         to:from:from;
+        bh=eEuX7iutFvi1HOGEPs3UIDtx4qkK8OvCvI0OJsFeod4=;
+        b=nwqFvBDK3fqszHkd0uNt2gYOdVmI4rKnl55oFSOB004/238Qo9tuSBi76k5fzsXp0ooR0KTAp1OPF
+         9FDwdQ67qmf9DKj+wceYctN0d/y+GxYqAEojl1RRAm79+cCxsbHTgMyeucBMcBC61BgTMl/bQ5P3c9
+         15Iz2cMv3JgJCNqo=
+X-HalOne-Cookie: 9767e542c6c60036e2d58a9f057583b96d4064d7
+X-HalOne-ID: 9efd9c0d-7bbe-11e9-bc27-d0431ea8a283
+Received: from localhost (unknown [193.163.1.7])
+        by mailrelay1.pub.mailoutpod1-cph3.one.com (Halon) with ESMTPSA
+        id 9efd9c0d-7bbe-11e9-bc27-d0431ea8a283;
+        Tue, 21 May 2019 11:50:25 +0000 (UTC)
+From:   Esben Haabendal <esben@haabendal.dk>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Lee Jones <lee.jones@linaro.org>, linux-serial@vger.kernel.org,
+        Jiri Slaby <jslaby@suse.com>, Nishanth Menon <nm@ti.com>,
+        Vignesh R <vigneshr@ti.com>, Tony Lindgren <tony@atomide.com>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] serial: 8250: Add support for 8250/16550 as MFD function
+References: <20190426084038.6377-3-esben@geanix.com>
+        <20190507114905.GB29524@dell> <87o94ejwrx.fsf@haabendal.dk>
+        <20190507133844.GA6194@dell> <87bm05mpmx.fsf@haabendal.dk>
+        <20190514104741.GO4319@dell> <20190514122618.GA18859@kroah.com>
+        <87imudky2o.fsf@haabendal.dk> <20190521100904.GA13612@kroah.com>
+        <87pnocm59v.fsf@haabendal.dk> <20190521111817.GA24911@kroah.com>
+Date:   Tue, 21 May 2019 13:50:25 +0200
+In-Reply-To: <20190521111817.GA24911@kroah.com> (Greg Kroah-Hartman's message
+        of "Tue, 21 May 2019 13:18:17 +0200")
+Message-ID: <87lfz0m3ge.fsf@haabendal.dk>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
 MIME-Version: 1.0
 Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
@@ -48,46 +63,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com> writes:
-> 'default n' is the default value for any bool or tristate Kconfig
-> setting so there is no need to write it explicitly.
->
-> Also since commit f467c5640c29 ("kconfig: only write '# CONFIG_FOO
-> is not set' for visible symbols") the Kconfig behavior is the same
-> regardless of 'default n' being present or not:
->
->     ...
->     One side effect of (and the main motivation for) this change is making
->     the following two definitions behave exactly the same:
->     
->         config FOO
->                 bool
->     
->         config FOO
->                 bool
->                 default n
->     
->     With this change, neither of these will generate a
->     '# CONFIG_FOO is not set' line (assuming FOO isn't selected/implied).
->     That might make it clearer to people that a bare 'default n' is
->     redundant.
->     ...
->
-> Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-...
-> Index: b/drivers/misc/ocxl/Kconfig
-> ===================================================================
-> --- a/drivers/misc/ocxl/Kconfig
-> +++ b/drivers/misc/ocxl/Kconfig
-> @@ -4,7 +4,6 @@
->  
->  config OCXL_BASE
->  	bool
-> -	default n
->  	select PPC_COPRO_BASE
->  
->  config OCXL
+Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
 
-Acked-by: Michael Ellerman <mpe@ellerman.id.au> (ocxl)
+> On Tue, May 21, 2019 at 01:11:08PM +0200, Esben Haabendal wrote:
+>> Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
+>> 
+>> >> I will try ad hold back with this thread until you get back to it.
+>> >
+>> > Ok, I have no idea what is going on here, sorry.  This is a really long
+>> > and meandering thread, and I can't even find the original patches in my
+>> > queue.
+>> >
+>> > So can you resend things and we can start over?  :)
+>> 
+>> Will do.
+>> 
+>> > But note, using a mfd for a uart seems VERY odd to me...
+>> 
+>> Ok.  In my case, I have a pcie card with an fpga which includes 5 uart
+>> ports, 3 ethernet interfaces and a number of custom IP blocks.
+>> I believe that an mfd driver for that pcie card in that case.
+>
+> I believe you need to fix that fpga to expose individual pci devices
+> such that you can properly bind the individual devices to the expected
+> drivers :)
 
-cheers
+Well, that is really out-of-scope of what I am doing here.
+
+> Seriously, who makes such a broken fpga device that goes against the PCI
+> spec that way?  Well, not so much as "goes against it", as "ignores all
+> of the proper ideas of the past 20 years for working with PCI devices".
+
+Might be.  But that is the firmware I have to work with here, and I
+still hope we can find a good solution for implementing a driver without
+having to maintain out-of-tree patches.
+
+/Esben
