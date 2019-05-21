@@ -2,162 +2,112 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4816C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 11:46:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CD93C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 11:49:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80EE12173C
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 11:46:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F14DB2173C
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 11:49:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728014AbfEULqW (ORCPT
+        id S1728025AbfEULtE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 07:46:22 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:51117 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726318AbfEULqW (ORCPT
+        Tue, 21 May 2019 07:49:04 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:52882 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727208AbfEULtD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 07:46:22 -0400
-X-Originating-IP: 90.88.22.185
-Received: from localhost (aaubervilliers-681-1-80-185.w90-88.abo.wanadoo.fr [90.88.22.185])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id A025C2000B;
-        Tue, 21 May 2019 11:46:11 +0000 (UTC)
-Date:   Tue, 21 May 2019 13:46:11 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     megous@megous.com
-Cc:     linux-sunxi@googlegroups.com, Chen-Yu Tsai <wens@csie.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [PATCH v5 5/6] drm: sun4i: Add support for enabling DDC I2C bus
- to sun8i_dw_hdmi glue
-Message-ID: <20190521114611.ylmbo2oqeanveil4@flea>
-References: <20190520235009.16734-1-megous@megous.com>
- <20190520235009.16734-6-megous@megous.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="rjlukvbwopyqxnek"
-Content-Disposition: inline
-In-Reply-To: <20190520235009.16734-6-megous@megous.com>
-User-Agent: NeoMutt/20180716
+        Tue, 21 May 2019 07:49:03 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4LBmi20140823
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 07:49:02 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2smfa7kvu7-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 07:49:02 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Tue, 21 May 2019 12:48:59 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 21 May 2019 12:48:56 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4LBmtK133161418
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 21 May 2019 11:48:55 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9085EAE053;
+        Tue, 21 May 2019 11:48:55 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6BEFBAE045;
+        Tue, 21 May 2019 11:48:54 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.80.126])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 21 May 2019 11:48:54 +0000 (GMT)
+Subject: Re: [PATCH 3/4] ima: don't ignore INTEGRITY_UNKNOWN EVM status
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Roberto Sassu <roberto.sassu@huawei.com>,
+        dmitry.kasatkin@huawei.com, mjg59@google.com
+Cc:     linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, silviu.vlasceanu@huawei.com,
+        stable@vger.kernel.org
+Date:   Tue, 21 May 2019 07:48:43 -0400
+In-Reply-To: <e81b761c-9133-a432-4d06-3cfe57e29e4b@huawei.com>
+References: <20190516161257.6640-1-roberto.sassu@huawei.com>
+         <20190516161257.6640-3-roberto.sassu@huawei.com>
+         <1558387212.4039.77.camel@linux.ibm.com>
+         <e81b761c-9133-a432-4d06-3cfe57e29e4b@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19052111-0008-0000-0000-000002E8EB58
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19052111-0009-0000-0000-00002255A150
+Message-Id: <1558439323.4039.141.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-21_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905210073
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 2019-05-21 at 09:26 +0200, Roberto Sassu wrote:
+> On 5/20/2019 11:20 PM, Mimi Zohar wrote:
+> > On Thu, 2019-05-16 at 18:12 +0200, Roberto Sassu wrote:
+> >> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> >> index 52e6fbb042cc..80e1c233656b 100644
+> >> --- a/Documentation/admin-guide/kernel-parameters.txt
+> >> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> >> @@ -1588,6 +1588,9 @@
+> >>   			Format: { "off" | "enforce" | "fix" | "log" }
+> >>   			default: "enforce"
+> >>   
+> >> +	ima_appraise_req_evm
+> >> +			[IMA] require EVM for appraisal with file digests.
+> > 
+> > As much as possible we want to limit the number of new boot command
+> > line options as possible.  Is there a reason for not extending
+> > "ima_appraise=" with "require-evm" or "enforce-evm"?
+> 
+> ima-appraise= can be disabled with CONFIG_IMA_APPRAISE_BOOTPARAM, which
+> probably is done when the system is in production.
+> 
+> Should I allow to use ima-appraise=require-evm even if
+> CONFIG_IMA_APPRAISE_BOOTPARAM=n?
 
---rjlukvbwopyqxnek
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Yes, that should be fine.  It's making "ima_appraise" stricter.
 
-Hi,
+Mimi
 
-On Tue, May 21, 2019 at 01:50:08AM +0200, megous@megous.com wrote:
-> From: Ondrej Jirman <megous@megous.com>
->
-> Orange Pi 3 board requires enabling a voltage shifting circuit via GPIO
-> for the DDC bus to be usable.
->
-> Add support for hdmi-connector node's optional ddc-en-gpios property to
-> support this use case.
->
-> Signed-off-by: Ondrej Jirman <megous@megous.com>
-> ---
->  drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c | 55 +++++++++++++++++++++++++--
->  drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h |  3 ++
->  2 files changed, 55 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
-> index 39d8509d96a0..59b81ba02d96 100644
-> --- a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
-> +++ b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
-> @@ -98,6 +98,30 @@ static u32 sun8i_dw_hdmi_find_possible_crtcs(struct drm_device *drm,
->  	return crtcs;
->  }
->
-> +static int sun8i_dw_hdmi_find_connector_pdev(struct device *dev,
-> +					     struct platform_device **pdev_out)
-> +{
-> +	struct platform_device *pdev;
-> +	struct device_node *remote;
-> +
-> +	remote = of_graph_get_remote_node(dev->of_node, 1, -1);
-> +	if (!remote)
-> +		return -ENODEV;
-> +
-> +	if (!of_device_is_compatible(remote, "hdmi-connector")) {
-> +		of_node_put(remote);
-> +		return -ENODEV;
-> +	}
-> +
-> +	pdev = of_find_device_by_node(remote);
-> +	of_node_put(remote);
-> +	if (!pdev)
-> +		return -ENODEV;
-> +
-> +	*pdev_out = pdev;
-> +	return 0;
-> +}
-> +
->  static int sun8i_dw_hdmi_bind(struct device *dev, struct device *master,
->  			      void *data)
->  {
-> @@ -151,16 +175,29 @@ static int sun8i_dw_hdmi_bind(struct device *dev, struct device *master,
->  		return PTR_ERR(hdmi->regulator);
->  	}
->
-> +	ret = sun8i_dw_hdmi_find_connector_pdev(dev, &hdmi->connector_pdev);
-> +	if (!ret) {
-> +		hdmi->ddc_en = gpiod_get_optional(&hdmi->connector_pdev->dev,
-> +						  "ddc-en", GPIOD_OUT_HIGH);
-> +		if (IS_ERR(hdmi->ddc_en)) {
-> +			platform_device_put(hdmi->connector_pdev);
-> +			dev_err(dev, "Couldn't get ddc-en gpio\n");
-> +			return PTR_ERR(hdmi->ddc_en);
-> +		}
-> +	}
-> +
->  	ret = regulator_enable(hdmi->regulator);
->  	if (ret) {
->  		dev_err(dev, "Failed to enable regulator\n");
-> -		return ret;
-> +		goto err_unref_ddc_en;
->  	}
->
-> +	gpiod_set_value(hdmi->ddc_en, 1);
-> +
-
-Do you really need this to be done all the time? I'm guessing you
-would only need this when running .get_modes, right?
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---rjlukvbwopyqxnek
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXOPlAwAKCRDj7w1vZxhR
-xXfLAPkBCXreeTOBxlliLT+vNeIHXqJAXge39oQ9DnnSMZXH+QEA8gYAqMyb5uND
-MB0Ogchlc9aPOpC+/ynIMTSFjk0AgQU=
-=yRtx
------END PGP SIGNATURE-----
-
---rjlukvbwopyqxnek--
