@@ -2,87 +2,158 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62AC5C072B5
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 23:16:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DBD1C18E7C
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 23:16:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EA6B217D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 23:16:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F4C521851
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 23:16:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ozlabs.org header.i=@ozlabs.org header.b="v6DWPkD5"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="QoAgv0uv";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="TVnemmSH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727210AbfEUXQA (ORCPT
+        id S1727697AbfEUXQK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 19:16:00 -0400
-Received: from ozlabs.org ([203.11.71.1]:56745 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726083AbfEUXQA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 19:16:00 -0400
-Received: by ozlabs.org (Postfix, from userid 1003)
-        id 457s7x3n3fz9sBV; Wed, 22 May 2019 09:15:57 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ozlabs.org; s=201707;
-        t=1558480557; bh=EcL5jNMwirXTp1nwjLDv8azqx1af2nZDnWeeqODaWl0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=v6DWPkD5rk7OkfCPQ49WmTUhjcF2pXpXnUrZJUWrYhes3yM7IQ52M3VzX4qFS5OS1
-         ZLXtu3eTdfgvc5SRKiQEs4sFrzRizQg+Qhx03pOJfaxieNKjuocfy+7fsSbXrEuVbI
-         ndHDx1830swdI81Tpp1TR4NaPYsFMu4/hM/C4MSsbI9ftiMyBrjJXQoadH96F4BeTB
-         VriDTasIUIp6n14H05L2JNHNYBYj4wi+mq13YJ0avuuAvPw1OeU7HuwNs3C4iWhzaa
-         mqmgipgEwEJFSYPyfUjwqceWTuTVHBUhSaVv59RXGsH0hSMA996B8k5Sl6r59r71de
-         SRXEa4pymY3CA==
-Date:   Wed, 22 May 2019 09:15:54 +1000
-From:   Paul Mackerras <paulus@ozlabs.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Anshuman Khandual <anshuman.linux@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Mike Anderson <andmike@linux.ibm.com>,
-        Ram Pai <linuxram@us.ibm.com>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>
-Subject: Re: [RFC PATCH 02/12] powerpc: Add support for adding an ESM blob to
- the zImage wrapper
-Message-ID: <20190521231554.GB3874@blackberry>
-References: <20190521044912.1375-1-bauerman@linux.ibm.com>
- <20190521044912.1375-3-bauerman@linux.ibm.com>
- <20190521051326.GC29120@lst.de>
+        Tue, 21 May 2019 19:16:10 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:43332 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726083AbfEUXQK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 19:16:10 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 86E71607B9; Tue, 21 May 2019 23:16:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1558480568;
+        bh=+jSNZFHR8oxhJlcKZe3RijVp+XSrRaP7ibrFVpJPGYo=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=QoAgv0uvrwdWIzPUE3akGuiwYdRS7NFcTwloRo7FlI1H49f+on5eGjsHQHui0L2JS
+         6spjX900DDK1L7I73QAjbF1Wb7ivSi61MWqdwu/k6jCp3IIKQkpIW5Pci7SYXTClYM
+         +MFMgBWwW2Ah4RfeKONlG1gBZDI8LKRf6aZLaZLM=
+Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jhugo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B9A5D60709;
+        Tue, 21 May 2019 23:16:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1558480567;
+        bh=+jSNZFHR8oxhJlcKZe3RijVp+XSrRaP7ibrFVpJPGYo=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=TVnemmSHEL3rVzGL2SUldtcMbo/f1NjShoAsHNfn1ecsobie8qQU7z4momS4pF6w4
+         FgxHD8E9AQV7c9os/aEtV7OCTjXYuw9s5hsg4mxY3Vduxf9X2gPY3Gx6xihOXs7GH6
+         Mm1Kjan5DbB74sETz3+33+hfcOEHrXM9tfELOCAE=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B9A5D60709
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
+Subject: Re: [PATCH 2/3] regulator: qcom_spmi: Add support for PM8005
+To:     Mark Brown <broonie@kernel.org>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc:     lgirdwood@gmail.com, agross@kernel.org, david.brown@linaro.org,
+        bjorn.andersson@linaro.org, jcrouse@codeaurora.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+References: <20190521164932.14265-1-jeffrey.l.hugo@gmail.com>
+ <20190521165315.14379-1-jeffrey.l.hugo@gmail.com>
+ <20190521185054.GD16633@sirena.org.uk>
+From:   Jeffrey Hugo <jhugo@codeaurora.org>
+Message-ID: <51caaee4-dfc9-5b5a-07c7-b1406c178ca3@codeaurora.org>
+Date:   Tue, 21 May 2019 17:16:06 -0600
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190521051326.GC29120@lst.de>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190521185054.GD16633@sirena.org.uk>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 21, 2019 at 07:13:26AM +0200, Christoph Hellwig wrote:
-> On Tue, May 21, 2019 at 01:49:02AM -0300, Thiago Jung Bauermann wrote:
-> > From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> > 
-> > For secure VMs, the signing tool will create a ticket called the "ESM blob"
-> > for the Enter Secure Mode ultravisor call with the signatures of the kernel
-> > and initrd among other things.
-> > 
-> > This adds support to the wrapper script for adding that blob via the "-e"
-> > option to the zImage.pseries.
-> > 
-> > It also adds code to the zImage wrapper itself to retrieve and if necessary
-> > relocate the blob, and pass its address to Linux via the device-tree, to be
-> > later consumed by prom_init.
+On 5/21/2019 12:50 PM, Mark Brown wrote:
+> On Tue, May 21, 2019 at 09:53:15AM -0700, Jeffrey Hugo wrote:
 > 
-> Where does the "BLOB" come from?  How is it licensed and how can we
-> satisfy the GPL with it?
+>> -	spmi_vreg_read(vreg, SPMI_COMMON_REG_VOLTAGE_RANGE, &range_sel, 1);
+>> +	/* second common devices don't have VOLTAGE_RANGE register */
+>> +	if (vreg->logical_type == SPMI_REGULATOR_LOGICAL_TYPE_FTSMPS2) {
+>> +		spmi_vreg_read(vreg, SPMI_COMMON2_REG_VOLTAGE_LSB, &lsb, 1);
+>> +		spmi_vreg_read(vreg, SPMI_COMMON2_REG_VOLTAGE_MSB, &msb, 1);
+>> +
+>> +		uV = (((int)msb << 8) | (int)lsb) * 1000;
+> 
+> This overlaps with some changes that Jorge (CCed) was sending for the
+> PMS405.  As I was saying to him rather than shoving special cases for
+> different regulator types into the ops (especially ones that don't have
+> any of the range stuff) it'd be better to just define separate ops for
+> the regulators that look quite different to the existing ones.
 
-The blob is data, not code, and it will be created by a tool that will
-be open source.  My understanding is that most of it will be encrypted
-with a session key that is encrypted with the secret key of the
-ultravisor.  Ram Pai's KVM Forum talk last year explained how this
-works.
+Sorry, I hadn't paid attention to that discussion.  Reviewing it now.
+> 
+>> +static int spmi_regulator_common_list_voltage(struct regulator_dev *rdev,
+>> +					      unsigned selector);
+>> +
+>> +static int spmi_regulator_common2_set_voltage(struct regulator_dev *rdev,
+>> +					      unsigned selector)
+> 
+> Eeew, can we not have better names?
 
-Paul.
+I'm open to suggestions.  Apparently there are two register common 
+register schemes - the old one and the new one.  PMIC designs after some 
+random point in time are all the new register scheme per the 
+documentation I see.
+
+As far as I an aware, the FT426 design is the first design to be added 
+to this driver to make use of the new scheme, but I expect more to be 
+supported in future, thus I'm reluctant to make these ft426 specific in 
+the name.
+
+> 
+>> +static unsigned int spmi_regulator_common2_get_mode(struct regulator_dev *rdev)
+>> +{
+>> +	struct spmi_regulator *vreg = rdev_get_drvdata(rdev);
+>> +	u8 reg;
+>> +
+>> +	spmi_vreg_read(vreg, SPMI_COMMON2_REG_MODE, &reg, 1);
+>> +
+>> +	if (reg == SPMI_COMMON2_MODE_HPM_MASK)
+>> +		return REGULATOR_MODE_NORMAL;
+>> +
+>> +	if (reg == SPMI_COMMON2_MODE_AUTO_MASK)
+>> +		return REGULATOR_MODE_FAST;
+>> +
+>> +	return REGULATOR_MODE_IDLE;
+>> +}
+> 
+> This looks like you want to write a switch statement.
+
+It follows the existing style in the driver, but sure I can make this a 
+switch.
+
+> 
+>> +spmi_regulator_common2_set_mode(struct regulator_dev *rdev, unsigned int mode)
+>> +{
+>> +	struct spmi_regulator *vreg = rdev_get_drvdata(rdev);
+>> +	u8 mask = SPMI_COMMON2_MODE_MASK;
+>> +	u8 val = SPMI_COMMON2_MODE_LPM_MASK;
+>> +
+>> +	if (mode == REGULATOR_MODE_NORMAL)
+>> +		val = SPMI_COMMON2_MODE_HPM_MASK;
+>> +	else if (mode == REGULATOR_MODE_FAST)
+>> +		val = SPMI_COMMON2_MODE_AUTO_MASK;
+> 
+> This needs to be a switch statement, then it can have a default case to
+> catch errors too.
+> 
+
+
+-- 
+Jeffrey Hugo
+Qualcomm Datacenter Technologies as an affiliate of Qualcomm 
+Technologies, Inc.
+Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
