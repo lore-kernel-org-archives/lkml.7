@@ -2,121 +2,96 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38B49C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:10:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFD82C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:10:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17A5020856
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:10:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B57842173C
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:10:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728158AbfEUNKA (ORCPT
+        id S1728230AbfEUNKt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 09:10:00 -0400
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:56543 "EHLO
-        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727624AbfEUNJ7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 09:09:59 -0400
-X-Originating-IP: 90.88.22.185
-Received: from localhost (aaubervilliers-681-1-80-185.w90-88.abo.wanadoo.fr [90.88.22.185])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 2E4871C000A;
-        Tue, 21 May 2019 13:09:55 +0000 (UTC)
-Date:   Tue, 21 May 2019 15:09:55 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     luca@z3ntu.xyz
-Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "moderated list:ARM/Allwinner sunXi SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] arm64: dts: allwinner: a64: Add lradc node
-Message-ID: <20190521130955.3omqwpx3i7njsb3t@flea>
-References: <20190518170929.24789-1-luca@z3ntu.xyz>
- <20190520110742.ykgxwaabzzwovgpl@flea>
- <9B2B83DF-2C91-4DDA-B707-664A792A8BCF@z3ntu.xyz>
+        Tue, 21 May 2019 09:10:49 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:36728 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726900AbfEUNKs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 09:10:48 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id A31313086231;
+        Tue, 21 May 2019 13:10:24 +0000 (UTC)
+Received: from oldenburg2.str.redhat.com (dhcp-192-219.str.redhat.com [10.33.192.219])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 52692665F4;
+        Tue, 21 May 2019 13:10:13 +0000 (UTC)
+From:   Florian Weimer <fweimer@redhat.com>
+To:     Christian Brauner <christian@brauner.io>
+Cc:     viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
+        jannh@google.com, oleg@redhat.com, tglx@linutronix.de,
+        torvalds@linux-foundation.org, arnd@arndb.de, shuah@kernel.org,
+        dhowells@redhat.com, tkjos@android.com, ldv@altlinux.org,
+        miklos@szeredi.hu, linux-alpha@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        x86@kernel.org
+Subject: Re: [PATCH 1/2] open: add close_range()
+References: <20190521113448.20654-1-christian@brauner.io>
+        <87tvdoau12.fsf@oldenburg2.str.redhat.com>
+        <20190521130438.q3u4wvve7p6md6cm@brauner.io>
+Date:   Tue, 21 May 2019 15:10:11 +0200
+In-Reply-To: <20190521130438.q3u4wvve7p6md6cm@brauner.io> (Christian Brauner's
+        message of "Tue, 21 May 2019 15:04:39 +0200")
+Message-ID: <87h89o9cng.fsf@oldenburg2.str.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="o4dueejzfmmapbjw"
-Content-Disposition: inline
-In-Reply-To: <9B2B83DF-2C91-4DDA-B707-664A792A8BCF@z3ntu.xyz>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Tue, 21 May 2019 13:10:47 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+* Christian Brauner:
 
---o4dueejzfmmapbjw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Tue, May 21, 2019 at 08:43:45AM +0200, luca@z3ntu.xyz wrote:
-> On May 20, 2019 1:07:42 PM GMT+02:00, Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> >On Sat, May 18, 2019 at 07:09:30PM +0200, Luca Weiss wrote:
-> >> Add a node describing the KEYADC on the A64.
-> >>
-> >> Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
-> >> ---
-> >>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 7 +++++++
-> >>  1 file changed, 7 insertions(+)
-> >>
-> >> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> >b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> >> index 7734f70e1057..dc1bf8c1afb5 100644
-> >> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> >> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> >> @@ -704,6 +704,13 @@
-> >>  			status = "disabled";
-> >>  		};
-> >>
-> >> +		lradc: lradc@1c21800 {
-> >> +			compatible = "allwinner,sun4i-a10-lradc-keys";
-> >> +			reg = <0x01c21800 0x100>;
-> >> +			interrupts = <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
-> >> +			status = "disabled";
-> >> +		};
-> >> +
-> >
-> >The controller is pretty different on the A64 compared to the A10. The
-> >A10 has two channels for example, while the A64 has only one.
-> >
-> >It looks like the one in the A83t though, so you can use that
-> >compatible instead.
+>> Solaris has an fdwalk function:
+>> 
+>>   <https://docs.oracle.com/cd/E88353_01/html/E37843/closefrom-3c.html>
+>> 
+>> So a different way to implement this would expose a nextfd system call
 >
-> Looking at the patch for the A83t, the only difference is that it
-> uses a 3/4 instead of a 2/3 voltage divider, nothing is changed with
-> the channels.
+> Meh. If nextfd() then I would like it to be able to:
+> - get the nextfd(fd) >= fd
+> - get highest open fd e.g. nextfd(-1)
 
-I guess you can reuse the A83t compatible here then, and a more
-specific a64 compatible in case we ever need to fix this.
+The highest open descriptor isn't istering for fdwalk because nextfd
+would just fail.
 
-> But I'm also not sure which one (or a different one)
-> is used from looking at the "A64 User Manual".
+> But then I wonder if nextfd() needs to be a syscall and isn't just
+> either:
+> fcntl(fd, F_GET_NEXT)?
+> or
+> prctl(PR_GET_NEXT)?
 
-I'm sorry, what are you referring to with "one" in that sentence?
+I think the fcntl route is a bit iffy because you might need it to get
+the *first* valid descriptor.
 
-Maxime
+>> to userspace, so that we can use that to implement both fdwalk and
+>> closefrom.  But maybe fdwalk is just too obscure, given the existence of
+>> /proc.
+>
+> Yeah we probably don't need fdwalk.
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Agreed.  Just wanted to bring it up for completeness.  I certainly don't
+want to derail the implementation of close_range.
 
---o4dueejzfmmapbjw
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXOP4owAKCRDj7w1vZxhR
-xZkvAQCd5wzD/xjw3laO9nxjD2QxKl1qIHQW5BZeiCHbM1DA5wD/VtDKwN19wKfS
-efcYJj1jUOQM495DpaIysQG3XvYg3AA=
-=08Dd
------END PGP SIGNATURE-----
-
---o4dueejzfmmapbjw--
+Thanks,
+Florian
