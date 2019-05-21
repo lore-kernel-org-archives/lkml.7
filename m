@@ -2,145 +2,210 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A92EBC04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:15:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6B6BC04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:15:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8307220856
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:15:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C77920856
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 13:15:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="byDN3URg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728132AbfEUNP2 (ORCPT
+        id S1728192AbfEUNPe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 09:15:28 -0400
-Received: from verein.lst.de ([213.95.11.211]:60305 "EHLO newverein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726740AbfEUNP2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 09:15:28 -0400
-Received: by newverein.lst.de (Postfix, from userid 2407)
-        id 4C85168AFE; Tue, 21 May 2019 15:15:04 +0200 (CEST)
-Date:   Tue, 21 May 2019 15:15:03 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Christoph Hellwig <hch@lst.de>, iommu@lists.linux-foundation.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
+        Tue, 21 May 2019 09:15:34 -0400
+Received: from conuserg-09.nifty.com ([210.131.2.76]:42776 "EHLO
+        conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726740AbfEUNPe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 09:15:34 -0400
+Received: from grover.flets-west.jp (softbank126125154139.bbtec.net [126.125.154.139]) (authenticated)
+        by conuserg-09.nifty.com with ESMTP id x4LDDYAd004855;
+        Tue, 21 May 2019 22:13:34 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com x4LDDYAd004855
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1558444415;
+        bh=ahqbC92DL/pM+EvNd4RugG8jQvrt9otxZH6g7EH9AdY=;
+        h=From:To:Cc:Subject:Date:From;
+        b=byDN3URgP1aFiKBf13O4eB3IcCRmRHdS4w/Vsk71gfIMjCTpQlM9x+pTrWYxKD6xD
+         V9VH0X04qL3lZtOUfsrhQBsiJk6csDQXXVUjQ5+uCPagVEG7fWaXK52ua2aETjKK0M
+         XJBCDyN1+HfIrqq14MuJoUdVthou2qSoYfOre6SZViNDt8nEYf7GoZg7rNW8Dw2tNh
+         YYah8oMxK2FXgGkEVEphUKIna2of4Et7E+xJuLal9Z4afYm3hMxjRQeL9FQlOvFsdX
+         svjA5A9a8iW0Z2C/nqYiS0rqRctgK33ezsq1t3T5mDDH55zWryW003qi4NZml1meAb
+         PH79Wg2BhesJA==
+X-Nifty-SrcIP: [126.125.154.139]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org
+Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Gibson <david@gibson.dropbear.id.au>,
+        Suraj Jitindar Singh <sjitindarsingh@gmail.com>,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] dma-mapping: truncate dma masks to what dma_addr_t
- can hold
-Message-ID: <20190521131503.GA5258@lst.de>
-References: <20190521124729.23559-1-hch@lst.de> <20190521124729.23559-2-hch@lst.de> <20190521130436.bgt53bf7nshz62ip@shell.armlinux.org.uk>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190521130436.bgt53bf7nshz62ip@shell.armlinux.org.uk>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Subject: [PATCH v2] powerpc/mm: mark more tlb functions as __always_inline
+Date:   Tue, 21 May 2019 22:13:24 +0900
+Message-Id: <1558444404-12254-1-git-send-email-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 21, 2019 at 02:04:37PM +0100, Russell King - ARM Linux admin wrote:
-> So how does the driver negotiation for >32bit addresses work if we don't
-> fail for large masks?
-> 
-> I'm thinking about all those PCI drivers that need DAC cycles for >32bit
-> addresses, such as e1000, which negotiate via (eg):
-> 
->         /* there is a workaround being applied below that limits
->          * 64-bit DMA addresses to 64-bit hardware.  There are some
->          * 32-bit adapters that Tx hang when given 64-bit DMA addresses
->          */
->         pci_using_dac = 0;
->         if ((hw->bus_type == e1000_bus_type_pcix) &&
->             !dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64))) {
->                 pci_using_dac = 1;
->         } else {
->                 err = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
->                 if (err) {
->                         pr_err("No usable DMA config, aborting\n");
->                         goto err_dma;
->                 }
->         }
-> 
-> and similar.  If we blindly trunate the 64-bit to 32-bit, aren't we
-> going to end up with PCI cards using DAC cycles to a host bridge that
-> do not support DAC cycles?
+With CONFIG_OPTIMIZE_INLINING enabled, Laura Abbott reported error
+with gcc 9.1.1:
 
-In general PCI devices just use DAC cycles when they need it.  I only
-know of about a handful of devices that need to negotiate their
-addressing mode, and those already use the proper API for that, which
-is dma_get_required_mask.
+  arch/powerpc/mm/book3s64/radix_tlb.c: In function '_tlbiel_pid':
+  arch/powerpc/mm/book3s64/radix_tlb.c:104:2: warning: asm operand 3 probably doesn't match constraints
+    104 |  asm volatile(PPC_TLBIEL(%0, %4, %3, %2, %1)
+        |  ^~~
+  arch/powerpc/mm/book3s64/radix_tlb.c:104:2: error: impossible constraint in 'asm'
 
-The e1000 example is a good case of how the old API confused people.
-First it only sets the 64-bit mask for devices which can support it,
-which is good, but then it sets the NETIF_F_HIGHDMA flag only if we
-set a 64-bit mask, which is completely unrelated to the DMA mask,
-it just means the driver can handle sk_buff fragments that do not
-have a kernel mapping, which really is a driver and not a hardware
-issue.
+Fixing _tlbiel_pid() is enough to address the warning above, but I
+inlined more functions to fix all potential issues.
 
-So what this driver really should do is something like:
+To meet the "i" (immediate) constraint for the asm operands, functions
+propagating "ric" must be always inlined.
 
+Fixes: 9012d011660e ("compiler: allow all arches to enable CONFIG_OPTIMIZE_INLINING")
+Reported-by: Laura Abbott <labbott@redhat.com>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
-diff --git a/drivers/net/ethernet/intel/e1000/e1000_main.c b/drivers/net/ethernet/intel/e1000/e1000_main.c
-index 551de8c2fef2..d9236083da94 100644
---- a/drivers/net/ethernet/intel/e1000/e1000_main.c
-+++ b/drivers/net/ethernet/intel/e1000/e1000_main.c
-@@ -925,7 +925,7 @@ static int e1000_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+Changes in v2:
+  - Do not split lines
+
+ arch/powerpc/mm/book3s64/hash_native.c |  2 +-
+ arch/powerpc/mm/book3s64/radix_tlb.c   | 32 ++++++++++++++++----------------
+ 2 files changed, 17 insertions(+), 17 deletions(-)
+
+diff --git a/arch/powerpc/mm/book3s64/hash_native.c b/arch/powerpc/mm/book3s64/hash_native.c
+index aaa28fd..c854151 100644
+--- a/arch/powerpc/mm/book3s64/hash_native.c
++++ b/arch/powerpc/mm/book3s64/hash_native.c
+@@ -60,7 +60,7 @@ static inline void tlbiel_hash_set_isa206(unsigned int set, unsigned int is)
+  * tlbiel instruction for hash, set invalidation
+  * i.e., r=1 and is=01 or is=10 or is=11
+  */
+-static inline void tlbiel_hash_set_isa300(unsigned int set, unsigned int is,
++static __always_inline void tlbiel_hash_set_isa300(unsigned int set, unsigned int is,
+ 					unsigned int pid,
+ 					unsigned int ric, unsigned int prs)
+ {
+diff --git a/arch/powerpc/mm/book3s64/radix_tlb.c b/arch/powerpc/mm/book3s64/radix_tlb.c
+index 4d84136..4d3dc10 100644
+--- a/arch/powerpc/mm/book3s64/radix_tlb.c
++++ b/arch/powerpc/mm/book3s64/radix_tlb.c
+@@ -29,7 +29,7 @@
+  * tlbiel instruction for radix, set invalidation
+  * i.e., r=1 and is=01 or is=10 or is=11
+  */
+-static inline void tlbiel_radix_set_isa300(unsigned int set, unsigned int is,
++static __always_inline void tlbiel_radix_set_isa300(unsigned int set, unsigned int is,
+ 					unsigned int pid,
+ 					unsigned int ric, unsigned int prs)
+ {
+@@ -150,8 +150,8 @@ static __always_inline void __tlbie_lpid(unsigned long lpid, unsigned long ric)
+ 	trace_tlbie(lpid, 0, rb, rs, ric, prs, r);
+ }
  
- 	static int cards_found;
- 	static int global_quad_port_a; /* global ksp3 port a indication */
--	int i, err, pci_using_dac;
-+	int i, err;
- 	u16 eeprom_data = 0;
- 	u16 tmp = 0;
- 	u16 eeprom_apme_mask = E1000_EEPROM_APME;
-@@ -996,16 +996,11 @@ static int e1000_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 	 * 64-bit DMA addresses to 64-bit hardware.  There are some
- 	 * 32-bit adapters that Tx hang when given 64-bit DMA addresses
- 	 */
--	pci_using_dac = 0;
--	if ((hw->bus_type == e1000_bus_type_pcix) &&
--	    !dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64))) {
--		pci_using_dac = 1;
--	} else {
--		err = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
--		if (err) {
--			pr_err("No usable DMA config, aborting\n");
--			goto err_dma;
--		}
-+	err = dma_set_mask_and_coherent(&pdev->dev,
-+		DMA_BIT_MASK(hw->bus_type == e1000_bus_type_pcix ? 64 : 32));
-+	if (err) {
-+		pr_err("No usable DMA config, aborting\n");
-+		goto err_dma;
- 	}
+-static inline void __tlbiel_lpid_guest(unsigned long lpid, int set,
+-				unsigned long ric)
++static __always_inline void __tlbiel_lpid_guest(unsigned long lpid, int set,
++						unsigned long ric)
+ {
+ 	unsigned long rb,rs,prs,r;
  
- 	netdev->netdev_ops = &e1000_netdev_ops;
-@@ -1047,19 +1042,15 @@ static int e1000_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+@@ -167,8 +167,8 @@ static inline void __tlbiel_lpid_guest(unsigned long lpid, int set,
+ }
  
- 	netdev->priv_flags |= IFF_SUPP_NOFCS;
  
--	netdev->features |= netdev->hw_features;
-+	netdev->features |= netdev->hw_features | NETIF_F_HIGHDMA;
- 	netdev->hw_features |= (NETIF_F_RXCSUM |
- 				NETIF_F_RXALL |
- 				NETIF_F_RXFCS);
+-static inline void __tlbiel_va(unsigned long va, unsigned long pid,
+-			       unsigned long ap, unsigned long ric)
++static __always_inline void __tlbiel_va(unsigned long va, unsigned long pid,
++					unsigned long ap, unsigned long ric)
+ {
+ 	unsigned long rb,rs,prs,r;
  
--	if (pci_using_dac) {
--		netdev->features |= NETIF_F_HIGHDMA;
--		netdev->vlan_features |= NETIF_F_HIGHDMA;
--	}
--
- 	netdev->vlan_features |= (NETIF_F_TSO |
- 				  NETIF_F_HW_CSUM |
--				  NETIF_F_SG);
-+				  NETIF_F_SG |
-+				  NETIF_F_HIGHDMA);
+@@ -183,8 +183,8 @@ static inline void __tlbiel_va(unsigned long va, unsigned long pid,
+ 	trace_tlbie(0, 1, rb, rs, ric, prs, r);
+ }
  
- 	/* Do not set IFF_UNICAST_FLT for VMWare's 82545EM */
- 	if (hw->device_id != E1000_DEV_ID_82545EM_COPPER ||
+-static inline void __tlbie_va(unsigned long va, unsigned long pid,
+-			      unsigned long ap, unsigned long ric)
++static __always_inline void __tlbie_va(unsigned long va, unsigned long pid,
++				       unsigned long ap, unsigned long ric)
+ {
+ 	unsigned long rb,rs,prs,r;
+ 
+@@ -199,8 +199,8 @@ static inline void __tlbie_va(unsigned long va, unsigned long pid,
+ 	trace_tlbie(0, 0, rb, rs, ric, prs, r);
+ }
+ 
+-static inline void __tlbie_lpid_va(unsigned long va, unsigned long lpid,
+-			      unsigned long ap, unsigned long ric)
++static __always_inline void __tlbie_lpid_va(unsigned long va, unsigned long lpid,
++					    unsigned long ap, unsigned long ric)
+ {
+ 	unsigned long rb,rs,prs,r;
+ 
+@@ -239,7 +239,7 @@ static inline void fixup_tlbie_lpid(unsigned long lpid)
+ /*
+  * We use 128 set in radix mode and 256 set in hpt mode.
+  */
+-static inline void _tlbiel_pid(unsigned long pid, unsigned long ric)
++static __always_inline void _tlbiel_pid(unsigned long pid, unsigned long ric)
+ {
+ 	int set;
+ 
+@@ -341,7 +341,7 @@ static inline void _tlbie_lpid(unsigned long lpid, unsigned long ric)
+ 	asm volatile("eieio; tlbsync; ptesync": : :"memory");
+ }
+ 
+-static inline void _tlbiel_lpid_guest(unsigned long lpid, unsigned long ric)
++static __always_inline void _tlbiel_lpid_guest(unsigned long lpid, unsigned long ric)
+ {
+ 	int set;
+ 
+@@ -381,8 +381,8 @@ static inline void __tlbiel_va_range(unsigned long start, unsigned long end,
+ 		__tlbiel_va(addr, pid, ap, RIC_FLUSH_TLB);
+ }
+ 
+-static inline void _tlbiel_va(unsigned long va, unsigned long pid,
+-			      unsigned long psize, unsigned long ric)
++static __always_inline void _tlbiel_va(unsigned long va, unsigned long pid,
++				       unsigned long psize, unsigned long ric)
+ {
+ 	unsigned long ap = mmu_get_ap(psize);
+ 
+@@ -413,8 +413,8 @@ static inline void __tlbie_va_range(unsigned long start, unsigned long end,
+ 		__tlbie_va(addr, pid, ap, RIC_FLUSH_TLB);
+ }
+ 
+-static inline void _tlbie_va(unsigned long va, unsigned long pid,
+-			      unsigned long psize, unsigned long ric)
++static __always_inline void _tlbie_va(unsigned long va, unsigned long pid,
++				      unsigned long psize, unsigned long ric)
+ {
+ 	unsigned long ap = mmu_get_ap(psize);
+ 
+@@ -424,7 +424,7 @@ static inline void _tlbie_va(unsigned long va, unsigned long pid,
+ 	asm volatile("eieio; tlbsync; ptesync": : :"memory");
+ }
+ 
+-static inline void _tlbie_lpid_va(unsigned long va, unsigned long lpid,
++static __always_inline void _tlbie_lpid_va(unsigned long va, unsigned long lpid,
+ 			      unsigned long psize, unsigned long ric)
+ {
+ 	unsigned long ap = mmu_get_ap(psize);
+-- 
+2.7.4
 
