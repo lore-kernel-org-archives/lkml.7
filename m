@@ -2,153 +2,146 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B13D6C04E87
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 09:10:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11188C04E87
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 09:10:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84BF3216B7
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 09:10:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LRgF3QOd"
+	by mail.kernel.org (Postfix) with ESMTP id DF8702173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 09:10:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727205AbfEUJKC (ORCPT
+        id S1727330AbfEUJKa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 05:10:02 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:33707 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726562AbfEUJKC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 05:10:02 -0400
-Received: by mail-ed1-f68.google.com with SMTP id n17so28355757edb.0
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 02:10:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PSdPOItR/QwQaJqAWDzyHjSOY0FhX0Q6RByw0iZfWqY=;
-        b=LRgF3QOdZRfOdkdcevF4kHXKpLVf+DmgnDacDANvUI/gJ05zyHF+rFhWral3BX2t5a
-         AJ+s8NZT0eJHefNlxPmxnDRpDW3x3YNDwEXIYtO228pxHr+jNhr45VMKgvEdUUF0YW8k
-         t3rsUQityMohQJFpsxx9FCJ4P2P235mLpB1no=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PSdPOItR/QwQaJqAWDzyHjSOY0FhX0Q6RByw0iZfWqY=;
-        b=nzdaCP6DYnqo+gSiIWN4evM15v9GBJcRy3PDt2XWcjQ6vM0OK7g6kZZeg0vA3qUyBo
-         aZMZiWLR1h/9HC0gJpfUM6wv4JYgyzJvXOvAB35zbX7F1CBesECv0+E2PYw6X/uqnnsZ
-         1c4osa1OrCNjxMuvSdoe0CRcKPTSRcTOnU2Ni7dqXPl7/EHMg9Fd+k3MAdeSDvesMHvZ
-         h4mkGLQmDNKAz/lOpC2vZgZBJyyOsXzuzP2Gy/goaT6RErl0sGjMkFfFKV9gR5vfjpJu
-         auM1eZwP+WuUc7nCViPN2d4dRJqkUVKN4UWKy302JtVX6pEjj0Rzjwn1oTOVqJK7TVqP
-         9RIw==
-X-Gm-Message-State: APjAAAU/dm6WcKB2cyhWTjwVEj7kcO407TNf+Y5EsqfvmL4IcWVJ+7qw
-        m9cO/LL+Lu32IceCz5P1bZkxkcdEyUs//x+N
-X-Google-Smtp-Source: APXvYqzyM2+evbT5zDcn90m3mCtX83pfhDORxAQ5KNJl89ORXJ1cmJXtHaQISRqGD56KpPqm9wGxdA==
-X-Received: by 2002:a17:906:7cd2:: with SMTP id h18mr27069746ejp.267.1558429799438;
-        Tue, 21 May 2019 02:09:59 -0700 (PDT)
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com. [209.85.221.41])
-        by smtp.gmail.com with ESMTPSA id y20sm3434194ejb.40.2019.05.21.02.09.58
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 21 May 2019 02:09:58 -0700 (PDT)
-Received: by mail-wr1-f41.google.com with SMTP id f10so2249080wre.7
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 02:09:58 -0700 (PDT)
-X-Received: by 2002:a5d:5048:: with SMTP id h8mr681332wrt.177.1558429797759;
- Tue, 21 May 2019 02:09:57 -0700 (PDT)
+        Tue, 21 May 2019 05:10:30 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46344 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726289AbfEUJK3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 05:10:29 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id D5BFBAC0C;
+        Tue, 21 May 2019 09:10:26 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 33C381E3C72; Tue, 21 May 2019 11:10:26 +0200 (CEST)
+Date:   Tue, 21 May 2019 11:10:26 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Paolo Valente <paolo.valente@linaro.org>
+Cc:     "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>,
+        linux-fsdevel@vger.kernel.org,
+        linux-block <linux-block@vger.kernel.org>,
+        linux-ext4@vger.kernel.org, cgroups@vger.kernel.org,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Jens Axboe <axboe@kernel.dk>, Jan Kara <jack@suse.cz>,
+        jmoyer@redhat.com, Theodore Ts'o <tytso@mit.edu>,
+        amakhalov@vmware.com, anishs@vmware.com, srivatsab@vmware.com
+Subject: Re: CFQ idling kills I/O performance on ext4 with blkio cgroup
+ controller
+Message-ID: <20190521091026.GA17019@quack2.suse.cz>
+References: <8d72fcf7-bbb4-2965-1a06-e9fc177a8938@csail.mit.edu>
+ <1812E450-14EF-4D5A-8F31-668499E13652@linaro.org>
+ <46c6a4be-f567-3621-2e16-0e341762b828@csail.mit.edu>
+ <07D11833-8285-49C2-943D-E4C1D23E8859@linaro.org>
+ <238e14ff-68d1-3b21-a291-28de4f2d77af@csail.mit.edu>
+ <6EB6C9D2-E774-48FA-AC95-BC98D97645D0@linaro.org>
 MIME-Version: 1.0
-References: <20190117162008.25217-1-stanimir.varbanov@linaro.org>
- <20190117162008.25217-11-stanimir.varbanov@linaro.org> <60b3efff-31c1-bc04-8af9-deebb8bc013a@xs4all.nl>
- <fe51ae1e-6d2e-36bd-485a-d85520ad2386@linaro.org> <CAAFQd5Co3G1J4+HOcjtCb7p3rhLcm+1E=mPr2d=AtdOSuF_eKg@mail.gmail.com>
- <c56930e0-be6f-2ade-fcea-8ee0ff6247ec@linaro.org>
-In-Reply-To: <c56930e0-be6f-2ade-fcea-8ee0ff6247ec@linaro.org>
-From:   Tomasz Figa <tfiga@chromium.org>
-Date:   Tue, 21 May 2019 18:09:45 +0900
-X-Gmail-Original-Message-ID: <CAAFQd5CNGsnqjpLsWSTf=8r+hSfyOgD8SU-tn5EbHCCuuSgH6A@mail.gmail.com>
-Message-ID: <CAAFQd5CNGsnqjpLsWSTf=8r+hSfyOgD8SU-tn5EbHCCuuSgH6A@mail.gmail.com>
-Subject: Re: [PATCH 10/10] venus: dec: make decoder compliant with stateful
- codec API
-To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Cc:     Hans Verkuil <hverkuil@xs4all.nl>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Vikash Garodia <vgarodia@codeaurora.org>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Malathi Gottam <mgottam@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6EB6C9D2-E774-48FA-AC95-BC98D97645D0@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stan,
+On Tue 21-05-19 08:23:05, Paolo Valente wrote:
+> > Il giorno 21 mag 2019, alle ore 00:45, Srivatsa S. Bhat <srivatsa@csail.mit.edu> ha scritto:
+> > 
+> > On 5/20/19 3:19 AM, Paolo Valente wrote:
+> >> 
+> >> 
+> >>> Il giorno 18 mag 2019, alle ore 22:50, Srivatsa S. Bhat <srivatsa@csail.mit.edu> ha scritto:
+> >>> 
+> >>> On 5/18/19 11:39 AM, Paolo Valente wrote:
+> >>>> I've addressed these issues in my last batch of improvements for BFQ,
+> >>>> which landed in the upcoming 5.2. If you give it a try, and still see
+> >>>> the problem, then I'll be glad to reproduce it, and hopefully fix it
+> >>>> for you.
+> >>>> 
+> >>> 
+> >>> Hi Paolo,
+> >>> 
+> >>> Thank you for looking into this!
+> >>> 
+> >>> I just tried current mainline at commit 72cf0b07, but unfortunately
+> >>> didn't see any improvement:
+> >>> 
+> >>> dd if=/dev/zero of=/root/test.img bs=512 count=10000 oflag=dsync
+> >>> 
+> >>> With mq-deadline, I get:
+> >>> 
+> >>> 5120000 bytes (5.1 MB, 4.9 MiB) copied, 3.90981 s, 1.3 MB/s
+> >>> 
+> >>> With bfq, I get:
+> >>> 5120000 bytes (5.1 MB, 4.9 MiB) copied, 84.8216 s, 60.4 kB/s
+> >>> 
+> >> 
+> >> Hi Srivatsa,
+> >> thanks for reproducing this on mainline.  I seem to have reproduced a
+> >> bonsai-tree version of this issue.  Before digging into the block
+> >> trace, I'd like to ask you for some feedback.
+> >> 
+> >> First, in my test, the total throughput of the disk happens to be
+> >> about 20 times as high as that enjoyed by dd, regardless of the I/O
+> >> scheduler.  I guess this massive overhead is normal with dsync, but
+> >> I'd like know whether it is about the same on your side.  This will
+> >> help me understand whether I'll actually be analyzing about the same
+> >> problem as yours.
+> >> 
+> > 
+> > Do you mean to say the throughput obtained by dd'ing directly to the
+> > block device (bypassing the filesystem)?
+> 
+> No no, I mean simply what follows.
+> 
+> 1) in one terminal:
+> [root@localhost tmp]# dd if=/dev/zero of=/root/test.img bs=512 count=10000 oflag=dsync
+> 10000+0 record dentro
+> 10000+0 record fuori
+> 5120000 bytes (5,1 MB, 4,9 MiB) copied, 14,6892 s, 349 kB/s
+> 
+> 2) In a second terminal, while the dd is in progress in the first
+> terminal:
+> $ iostat -tmd /dev/sda 3
+> Linux 5.1.0+ (localhost.localdomain) 	20/05/2019 	_x86_64_	(2 CPU)
+> 
+> ...
+> 20/05/2019 11:40:17
+> Device             tps    MB_read/s    MB_wrtn/s    MB_read    MB_wrtn
+> sda            2288,00         0,00         9,77          0         29
+> 
+> 20/05/2019 11:40:20
+> Device             tps    MB_read/s    MB_wrtn/s    MB_read    MB_wrtn
+> sda            2325,33         0,00         9,93          0         29
+> 
+> 20/05/2019 11:40:23
+> Device             tps    MB_read/s    MB_wrtn/s    MB_read    MB_wrtn
+> sda            2351,33         0,00        10,05          0         30
+> ...
+> 
+> As you can see, the overall throughput (~10 MB/s) is more than 20
+> times as high as the dd throughput (~350 KB/s).  But the dd is the
+> only source of I/O.
 
-On Mon, May 20, 2019 at 11:47 PM Stanimir Varbanov
-<stanimir.varbanov@linaro.org> wrote:
->
-> Hi Tomasz,
->
-> On 4/24/19 3:39 PM, Tomasz Figa wrote:
-> > On Wed, Apr 24, 2019 at 9:15 PM Stanimir Varbanov
-> > <stanimir.varbanov@linaro.org> wrote:
-> >>
-> >> Hi Hans,
-> >>
-> >> On 2/15/19 3:44 PM, Hans Verkuil wrote:
-> >>> Hi Stanimir,
-> >>>
-> >>> I never paid much attention to this patch series since others were busy
-> >>> discussing it and I had a lot of other things on my plate, but then I heard
-> >>> that this patch made G_FMT blocking.
-> >>
-> >> OK, another option could be to block REQBUF(CAPTURE) until event from hw
-> >> is received that the stream is parsed and the resolution is correctly
-> >> set by application. Just to note that I'd think to this like a temporal
-> >> solution until gstreamer implements v4l events.
-> >>
-> >> Is that looks good to you?
-> >
-> > Hmm, I thought we concluded that gstreamer sets the width and height
-> > in OUTPUT queue before querying the CAPTURE queue and so making the
-> > driver calculate the CAPTURE format based on what's set on OUTPUT
-> > would work fine. Did I miss something?
->
-> Nobody is miss something.
->
-> First some background about how Venus implements stateful codec API.
->
-> The Venus firmware can generate two events "sufficient" and
-> "insufficient" buffer requirements (this includes decoder output buffer
-> size and internal/scratch buffer sizes). Presently I always set minimum
-> possible decoder resolution no matter what the user said, and by that
-> way I'm sure that "insufficient" event will always be triggered by the
-> firmware (the other reason to take this path is because this is the
-> least-common-divider for all supported Venus hw/fw versions thus common
-> code in the driver). The reconfiguration (during codec Initialization
-> sequence) is made from STREAMON(CAPTURE) context. Now, to make that
-> re-configuration happen I need to wait for "insufficient" event from
-> firmware in order to know the real coded resolution.
->
-> In the case of gstreamer where v4l2_events support is missing I have to
-> block (wait for firmware event) REQBUF(CAPTURE) (vb2::queue_setup) or
-> STREAMON(CAPTURE) (vb2::start_streaming).
->
-> I tried to set the coded resolution to the firmware as-is it set by
-> gstreamer but then I cannot receive the "sufficient" event for VP8 and
-> VP9 codecs. So I return back to the solution with minimum resolution above.
->
-> I'm open for suggestions.
+Yes and that's expected. It just shows how inefficient small synchronous IO
+is. Look, dd(1) writes 512-bytes. From FS point of view we have to write:
+full fs block with data (+4KB), inode to journal (+4KB), journal descriptor
+block (+4KB), journal superblock (+4KB), transaction commit block (+4KB) -
+so that's 20KB just from top of my head to write 512 bytes...
 
-I think you could still keep setting the minimum size and wait for the
-"insufficient" event. At the same time, you could speculatively
-advertise the expected "sufficient" size on the CAPTURE queue before
-the hardware signals those. Even if you mispredict them, you'll get
-the event, update the CAPTURE resolution and send the source change
-event to the application, which would then give you the correct
-buffers. Would that work for you?
+								Honza
 
-Best regards,
-Tomasz
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
