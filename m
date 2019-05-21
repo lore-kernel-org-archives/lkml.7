@@ -2,107 +2,134 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B30CAC04E87
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:19:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6060DC04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:19:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92CAA2173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:19:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36983217D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:19:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="W4uTbkPU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728723AbfEUPTy (ORCPT
+        id S1728763AbfEUPT5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 11:19:54 -0400
-Received: from mga04.intel.com ([192.55.52.120]:23051 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727534AbfEUPTy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 11:19:54 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 May 2019 08:19:53 -0700
-X-ExtLoop1: 1
-Received: from hupe-mobl.ger.corp.intel.com (HELO localhost) ([10.252.46.220])
-  by orsmga002.jf.intel.com with ESMTP; 21 May 2019 08:19:38 -0700
-Date:   Tue, 21 May 2019 18:19:37 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Paul Moore <paul@paul-moore.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
-        Jethro Beekman <jethro@fortanix.com>,
-        "Xing, Cedric" <cedric.xing@intel.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Dr. Greg" <greg@enjellic.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>
-Subject: Re: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
-Message-ID: <20190521151836.GA4843@linux.intel.com>
-References: <20190513102926.GD8743@linux.intel.com>
- <20190514104323.GA7591@linux.intel.com>
- <CALCETrVbgTCnPo=PAq0-KoaRwt--urrPzn==quAJ8wodCpkBkw@mail.gmail.com>
- <20190514204527.GC1977@linux.intel.com>
- <CALCETrX6aL367mMJh5+Y1Seznfu-AvhPV6P7GkWF4Dhu0GV8cw@mail.gmail.com>
- <20190515013031.GF1977@linux.intel.com>
- <CALCETrXf8mSK45h7sTK5Wf+pXLVn=Bjsc_RLpgO-h-qdzBRo5Q@mail.gmail.com>
- <20190517000331.GD11204@linux.intel.com>
- <CALCETrWxw7xALE0kmiYBzomaSMAeXEVq-7rX7xeqPtDPeDQiCA@mail.gmail.com>
- <20190520114105.GD27805@linux.intel.com>
+        Tue, 21 May 2019 11:19:57 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:37725 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727534AbfEUPT4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 11:19:56 -0400
+Received: by mail-wr1-f65.google.com with SMTP id e15so19108552wrs.4
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 08:19:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6IPAsBd9aqCnJMjXkUOTpKCD1VaCTy3cgfSntX0acqU=;
+        b=W4uTbkPUsgy+wYyacFG5KBeV711U/EZ2erMd0a6GAG803PewiGEmhbAhhzHsjcy0m1
+         CsbGHRURSiZa+kz0fSOiY3OTQhFg+Kbgde6fCvinBuXVbMBJaobR/5YCUJG4/NSKBO2l
+         BnJ1HJYBnRhJFMCuAX8i8A7bePJ7di2YHuYLXsyZGxuycgM3y9wUzhcqFhThueQIrHs9
+         ZCEfekei8R7wo99oD6OrhQQaO4cZi3shl8JY7w7M0fQGDNmi1w66jyTEZM05HyD8mi6K
+         GTSMPUKplmxnnj0s+OvunZrl1qIkYeVTdBJNMdNfhb/jcFe6EejkTzIE/GLnMQNxLBsH
+         DaEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6IPAsBd9aqCnJMjXkUOTpKCD1VaCTy3cgfSntX0acqU=;
+        b=pMAynj6kOedYRy71aKQ9rBhNdAIqtknSxvrSH3O8DRUUnkl1jzlXA9smQUg+Tv0R4P
+         Zm6plyokZpytB7O0pZsThfUklHXmvSYY/08R5tYwXc0sbw6nZdwmHcTfQ5Ryh2Jj8Su0
+         UyaQZ9uFnQHx/ejLKQWM36OV6hUyTc60fEl2+/Er3fJVZ7gFslNV6RBjx9IaSj3ArUd2
+         rgxcNx4kZBKkCLJNJT9CQSnDXHDcgzc2ZI7MBZRcxJfdR5vOSjQ+5ylZuOx58TA/l8HP
+         +5rZqnl9DAND/1BBmJo4MpHIqVp4pnFKR6bufg11v/jCQLYmOH2THzx58eRoIRi65+Cy
+         COdg==
+X-Gm-Message-State: APjAAAV0KwGtU8i8e/QPBVIil6iGhN1bpmfuEH4zc/jeEXsBkorVTF7w
+        ZSdvnPnAR+noKSt9wLCEkFIgGg==
+X-Google-Smtp-Source: APXvYqzv+0iUJ8V/1uMD79siZs9BDYvq/ZwRew6+bi21TmFVB8cSfm5Z0uUKS8YoH8d3R6LTjYy+eQ==
+X-Received: by 2002:adf:c60e:: with SMTP id n14mr18774059wrg.255.1558451994318;
+        Tue, 21 May 2019 08:19:54 -0700 (PDT)
+Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id p17sm3945677wrq.95.2019.05.21.08.19.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 21 May 2019 08:19:53 -0700 (PDT)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     khilman@baylibre.com
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/3] arm64: Add initial support for Odroid-N2
+Date:   Tue, 21 May 2019 17:19:49 +0200
+Message-Id: <20190521151952.2779-1-narmstrong@baylibre.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190520114105.GD27805@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 20, 2019 at 02:41:05PM +0300, Jarkko Sakkinen wrote:
-> On Thu, May 16, 2019 at 05:26:15PM -0700, Andy Lutomirski wrote:
-> > Is userspace actually requred to mmap() the enclave prior to EADDing things?
-> 
-> Nope, not since v20. Here is what I wrote about API to the kernel
-> documentation:
-> 
-> "The enclave life-cycle starts by opening `/dev/sgx/enclave`. After this
-> there is already a data structure inside kernel tracking the enclave
-> that is initially uncreated. After this a set of ioctl's can be used to
-> create, populate and initialize the enclave.
-> 
-> You can close (if you want) the fd after you've mmap()'d. As long as the
-> file is open the enclave stays alive so you might want to do that after
-> you don't need it anymore. Even munmap() won't destruct the enclave if
-> the file is open.  Neither will closing the fd as long as you have
-> mmap() done over the fd (even if it does not across the range defined in
-> SECS)."
-> 
-> Enclave can be created and initialized without doing a single mmap()
-> call.
+This patchset adds basic support for :
+- Amlogic G12B, which is very similar to G12A
+- The HardKernel Odroid-N2 based on the S922X SoC
 
-We could even disallow mmap() before EINIT done. The way enclave
-management internally works right now is quite robust and completely
-detached from requiring process address space for anything.
+The Amlogic G12B SoC is very similar with the G12A SoC, sharing
+most of the features and architecture, but with these differences :
+- The first CPU cluster only has 2xCortex-A53 instead of 4
+- G12B has a second cluster of 4xCortex-A73
+- Both cluster can achieve 2GHz instead of 1,8GHz for G12A
+- CPU Clock architecture is difference, thus needing a different
+  compatible to handle this slight difference
+- Supports a MIPI CSI input
+- Embeds a Mali-G52 instead of a Mali-G31, but integration is the same
 
-/Jarkko
+Actual support is done in the same way as for the GXM support, including
+the G12A dtsi and redefining the CPU clusters.
+Unlike GXM, the first cluster is different, thus needing to remove
+the last 2 cpu nodes of the first cluster.
+
+Dependencies :
+- Patch 1, 2 : YAML rewrite of amlogic.txt bindings at [7]
+- Patch 3 : None since clock + g12b bindings has been acked
+
+Changes since v2 at [5]:
+- sent the clk patches in standalone at [6]
+- rewrote the bindings on top of the YAML rewrite at [7]
+- Added MMC, SDCard and Network support to Odroid-N2
+
+Changes since v1 at [3]:
+- Renamed the g12b cpu clocks like g12a counterparts
+- Rebased clock patches on top of Guillaume's Temperature sensor Clock patches at [4]
+- Added AO-CEC-B support to N2 DTS
+
+Changes since RFC at [1]:
+- Added bindings review tags
+- Moved the fclk_div3 CRITICAL flags to the gate
+- Removed invalid CRITICAL flags on the cpu clocks
+
+[1] https://lkml.kernel.org/r/20190327103308.25058-1-narmstrong@baylibre.com
+[2] https://lkml.kernel.org/r/20190325145914.32391-1-narmstrong@baylibre.com
+[3] https://lkml.kernel.org/r/20190404150518.30337-1-narmstrong@baylibre.com
+[4] https://lkml.kernel.org/r/20190412100221.26740-1-glaroque@baylibre.com
+[5] https://lkml.kernel.org/r/20190423091503.10847-1-narmstrong@baylibre.com
+[6] https://lkml.kernel.org/r/20190521150130.31684-1-narmstrong@baylibre.com
+[7] https://lkml.kernel.org/r/20190517152723.28518-2-robh@kernel.org
+
+Neil Armstrong (3):
+  dt-bindings: arm: amlogic: add G12B bindings
+  dt-bindings: arm: amlogic: add Odroid-N2 binding
+  arm64: dts: meson: Add minimal support for Odroid-N2
+
+ .../devicetree/bindings/arm/amlogic.yaml      |   6 +
+ arch/arm64/boot/dts/amlogic/Makefile          |   1 +
+ .../boot/dts/amlogic/meson-g12b-odroid-n2.dts | 286 ++++++++++++++++++
+ arch/arm64/boot/dts/amlogic/meson-g12b.dtsi   |  82 +++++
+ 4 files changed, 375 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
+ create mode 100644 arch/arm64/boot/dts/amlogic/meson-g12b.dtsi
+
+-- 
+2.21.0
+
