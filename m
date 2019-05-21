@@ -2,72 +2,102 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FA10C04E87
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 11:17:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11408C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 11:18:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 447912081C
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 11:17:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D755B217D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 11:18:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558437501;
+	bh=idCdpfIphgwsyBJcVnG3Lf/jXFBiv1TH26SgUIodjC4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=z0CkvM0cxgryiIfyClQhCMCxRFfVyjN/tHvedpS2YtjJRwVHgy0CjiVBzKYPGVM5N
+	 v323XH9J3brcTEUOf05Sxq4lksoATCmw03CeT5yRakXyQBp5VdBs4jDs+g/bCMDaGk
+	 EmODy9Eq1DTsvynur601yktB9I2ksyXrI/koDFvk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727971AbfEULRP (ORCPT
+        id S1727880AbfEULSV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 07:17:15 -0400
-Received: from mga03.intel.com ([134.134.136.65]:58530 "EHLO mga03.intel.com"
+        Tue, 21 May 2019 07:18:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39392 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726138AbfEULRP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 07:17:15 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 May 2019 04:17:14 -0700
-X-ExtLoop1: 1
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by fmsmga001.fm.intel.com with SMTP; 21 May 2019 04:17:11 -0700
-Received: by lahna (sSMTP sendmail emulation); Tue, 21 May 2019 14:17:10 +0300
-Date:   Tue, 21 May 2019 14:17:10 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc:     wsa@the-dreams.de, linux-i2c@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        benjamin.tissoires@redhat.com, jbroadus@gmail.com,
-        patches@opensource.cirrus.com
-Subject: Re: [PATCH 1/5] i2c: acpi: Factor out getting the IRQ from ACPI
-Message-ID: <20190521111710.GW2781@lahna.fi.intel.com>
-References: <20190520084936.10590-1-ckeepax@opensource.cirrus.com>
- <20190520084936.10590-2-ckeepax@opensource.cirrus.com>
+        id S1726138AbfEULSU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 07:18:20 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 60C3020863;
+        Tue, 21 May 2019 11:18:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558437499;
+        bh=idCdpfIphgwsyBJcVnG3Lf/jXFBiv1TH26SgUIodjC4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ILtZKTg0ksXwd6/6eguMea6fBdLiBag3w79CdHvOQPFNZvAagS+st52LaYQv9xbsY
+         N70qfNzbMae4PJbZpfyGrJmFfzu6Nus9rzYzLe4tF+H5U5MQpy2UmfEwEufpqJIgj1
+         F0XFVjUZufD/DJOKVawTwKyr1A79X1G5wQIHHeCY=
+Date:   Tue, 21 May 2019 13:18:17 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Esben Haabendal <esben@haabendal.dk>
+Cc:     Lee Jones <lee.jones@linaro.org>, linux-serial@vger.kernel.org,
+        Jiri Slaby <jslaby@suse.com>, Nishanth Menon <nm@ti.com>,
+        Vignesh R <vigneshr@ti.com>, Tony Lindgren <tony@atomide.com>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] serial: 8250: Add support for 8250/16550 as MFD
+ function
+Message-ID: <20190521111817.GA24911@kroah.com>
+References: <20190426084038.6377-3-esben@geanix.com>
+ <20190507114905.GB29524@dell>
+ <87o94ejwrx.fsf@haabendal.dk>
+ <20190507133844.GA6194@dell>
+ <87bm05mpmx.fsf@haabendal.dk>
+ <20190514104741.GO4319@dell>
+ <20190514122618.GA18859@kroah.com>
+ <87imudky2o.fsf@haabendal.dk>
+ <20190521100904.GA13612@kroah.com>
+ <87pnocm59v.fsf@haabendal.dk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190520084936.10590-2-ckeepax@opensource.cirrus.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <87pnocm59v.fsf@haabendal.dk>
 User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 20, 2019 at 09:49:32AM +0100, Charles Keepax wrote:
-> In preparation for future refactoring factor out the fetch of the IRQ
-> into its own helper function.
+On Tue, May 21, 2019 at 01:11:08PM +0200, Esben Haabendal wrote:
+> Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
 > 
-> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-> ---
->  drivers/i2c/i2c-core-acpi.c | 40 +++++++++++++++++++++++++---------------
->  1 file changed, 25 insertions(+), 15 deletions(-)
+> >> I will try ad hold back with this thread until you get back to it.
+> >
+> > Ok, I have no idea what is going on here, sorry.  This is a really long
+> > and meandering thread, and I can't even find the original patches in my
+> > queue.
+> >
+> > So can you resend things and we can start over?  :)
 > 
-> diff --git a/drivers/i2c/i2c-core-acpi.c b/drivers/i2c/i2c-core-acpi.c
-> index 2728006920888..c3ac3ea184317 100644
-> --- a/drivers/i2c/i2c-core-acpi.c
-> +++ b/drivers/i2c/i2c-core-acpi.c
-> @@ -137,13 +137,35 @@ static int i2c_acpi_do_lookup(struct acpi_device *adev,
->  	return 0;
->  }
->  
-> +static int i2c_acpi_get_irq(struct acpi_device *adev, int *irq)
+> Will do.
+> 
+> > But note, using a mfd for a uart seems VERY odd to me...
+> 
+> Ok.  In my case, I have a pcie card with an fpga which includes 5 uart
+> ports, 3 ethernet interfaces and a number of custom IP blocks.
+> I believe that an mfd driver for that pcie card in that case.
 
-I think here the function should return irq instead, and negative errno
-in case of failure.
+I believe you need to fix that fpga to expose individual pci devices
+such that you can properly bind the individual devices to the expected
+drivers :)
+
+Seriously, who makes such a broken fpga device that goes against the PCI
+spec that way?  Well, not so much as "goes against it", as "ignores all
+of the proper ideas of the past 20 years for working with PCI devices".
+
+thanks,
+
+greg k-h
