@@ -2,158 +2,89 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DBD1C18E7C
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 23:16:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D2A1C18E7C
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 23:18:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F4C521851
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 23:16:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="QoAgv0uv";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="TVnemmSH"
+	by mail.kernel.org (Postfix) with ESMTP id D526121841
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 23:18:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558480708;
+	bh=OqZTLBGMOxuOEC5Xxc6vRFdatZp8Y6uYyV+vbDmpUTw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=knXXrHt+gQN1oQv9C0Xa3qzIkyTkfdfh0piJOUThjd4g+3Y6INXvjaYPXRsgBvvw4
+	 AOkvASjDGbPYejjzBgQltTRSmAl5IToGh9BsauG9aVnSQ64E55Sodi8Sn3M1LBeBhk
+	 w0wb95HRwZh2FHNAjptDFNzEi7FMOOfam7N7hvpY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727697AbfEUXQK (ORCPT
+        id S1727532AbfEUXS2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 19:16:10 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:43332 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726083AbfEUXQK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 19:16:10 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 86E71607B9; Tue, 21 May 2019 23:16:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1558480568;
-        bh=+jSNZFHR8oxhJlcKZe3RijVp+XSrRaP7ibrFVpJPGYo=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=QoAgv0uvrwdWIzPUE3akGuiwYdRS7NFcTwloRo7FlI1H49f+on5eGjsHQHui0L2JS
-         6spjX900DDK1L7I73QAjbF1Wb7ivSi61MWqdwu/k6jCp3IIKQkpIW5Pci7SYXTClYM
-         +MFMgBWwW2Ah4RfeKONlG1gBZDI8LKRf6aZLaZLM=
-Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Tue, 21 May 2019 19:18:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33630 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725797AbfEUXS1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 19:18:27 -0400
+Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: jhugo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B9A5D60709;
-        Tue, 21 May 2019 23:16:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1558480567;
-        bh=+jSNZFHR8oxhJlcKZe3RijVp+XSrRaP7ibrFVpJPGYo=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=TVnemmSHEL3rVzGL2SUldtcMbo/f1NjShoAsHNfn1ecsobie8qQU7z4momS4pF6w4
-         FgxHD8E9AQV7c9os/aEtV7OCTjXYuw9s5hsg4mxY3Vduxf9X2gPY3Gx6xihOXs7GH6
-         Mm1Kjan5DbB74sETz3+33+hfcOEHrXM9tfELOCAE=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B9A5D60709
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
-Subject: Re: [PATCH 2/3] regulator: qcom_spmi: Add support for PM8005
-To:     Mark Brown <broonie@kernel.org>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc:     lgirdwood@gmail.com, agross@kernel.org, david.brown@linaro.org,
-        bjorn.andersson@linaro.org, jcrouse@codeaurora.org,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-References: <20190521164932.14265-1-jeffrey.l.hugo@gmail.com>
- <20190521165315.14379-1-jeffrey.l.hugo@gmail.com>
- <20190521185054.GD16633@sirena.org.uk>
-From:   Jeffrey Hugo <jhugo@codeaurora.org>
-Message-ID: <51caaee4-dfc9-5b5a-07c7-b1406c178ca3@codeaurora.org>
-Date:   Tue, 21 May 2019 17:16:06 -0600
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190521185054.GD16633@sirena.org.uk>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
+        by mail.kernel.org (Postfix) with ESMTPSA id A07CF217D9;
+        Tue, 21 May 2019 23:18:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558480707;
+        bh=OqZTLBGMOxuOEC5Xxc6vRFdatZp8Y6uYyV+vbDmpUTw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=yTbP1ahdfFWzH7+xIWDO3zK+bnX+jdec5gDJ+S/QtXR2kr6MEbshxQ6mcMgnmMNGy
+         gn2nS3dR3xPTuzc8voQ3m6rV/qgZf9Cl8sN876UHucJAhZtf+5WgXTAQKk4R571MbI
+         7ZTGPXgAWWaaaW5Wme4VZ07yTB531bWnJZwnlzWI=
+Date:   Tue, 21 May 2019 16:18:26 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Yang Shi <yang.shi@linux.alibaba.com>
+Cc:     jstancek@redhat.com, peterz@infradead.org, will.deacon@arm.com,
+        npiggin@gmail.com, aneesh.kumar@linux.ibm.com, namit@vmware.com,
+        minchan@kernel.org, mgorman@suse.de, stable@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [v3 PATCH] mm: mmu_gather: remove __tlb_reset_range() for force
+ flush
+Message-Id: <20190521161826.029782de0750c8f5cd2e5dd6@linux-foundation.org>
+In-Reply-To: <1558322252-113575-1-git-send-email-yang.shi@linux.alibaba.com>
+References: <1558322252-113575-1-git-send-email-yang.shi@linux.alibaba.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/21/2019 12:50 PM, Mark Brown wrote:
-> On Tue, May 21, 2019 at 09:53:15AM -0700, Jeffrey Hugo wrote:
-> 
->> -	spmi_vreg_read(vreg, SPMI_COMMON_REG_VOLTAGE_RANGE, &range_sel, 1);
->> +	/* second common devices don't have VOLTAGE_RANGE register */
->> +	if (vreg->logical_type == SPMI_REGULATOR_LOGICAL_TYPE_FTSMPS2) {
->> +		spmi_vreg_read(vreg, SPMI_COMMON2_REG_VOLTAGE_LSB, &lsb, 1);
->> +		spmi_vreg_read(vreg, SPMI_COMMON2_REG_VOLTAGE_MSB, &msb, 1);
->> +
->> +		uV = (((int)msb << 8) | (int)lsb) * 1000;
-> 
-> This overlaps with some changes that Jorge (CCed) was sending for the
-> PMS405.  As I was saying to him rather than shoving special cases for
-> different regulator types into the ops (especially ones that don't have
-> any of the range stuff) it'd be better to just define separate ops for
-> the regulators that look quite different to the existing ones.
+On Mon, 20 May 2019 11:17:32 +0800 Yang Shi <yang.shi@linux.alibaba.com> wrote:
 
-Sorry, I hadn't paid attention to that discussion.  Reviewing it now.
+> A few new fields were added to mmu_gather to make TLB flush smarter for
+> huge page by telling what level of page table is changed.
 > 
->> +static int spmi_regulator_common_list_voltage(struct regulator_dev *rdev,
->> +					      unsigned selector);
->> +
->> +static int spmi_regulator_common2_set_voltage(struct regulator_dev *rdev,
->> +					      unsigned selector)
+> __tlb_reset_range() is used to reset all these page table state to
+> unchanged, which is called by TLB flush for parallel mapping changes for
+> the same range under non-exclusive lock (i.e. read mmap_sem).  Before
+> commit dd2283f2605e ("mm: mmap: zap pages with read mmap_sem in
+> munmap"), the syscalls (e.g. MADV_DONTNEED, MADV_FREE) which may update
+> PTEs in parallel don't remove page tables.  But, the forementioned
+> commit may do munmap() under read mmap_sem and free page tables.  This
+> may result in program hang on aarch64 reported by Jan Stancek.  The
+> problem could be reproduced by his test program with slightly modified
+> below.
 > 
-> Eeew, can we not have better names?
-
-I'm open to suggestions.  Apparently there are two register common 
-register schemes - the old one and the new one.  PMIC designs after some 
-random point in time are all the new register scheme per the 
-documentation I see.
-
-As far as I an aware, the FT426 design is the first design to be added 
-to this driver to make use of the new scheme, but I expect more to be 
-supported in future, thus I'm reluctant to make these ft426 specific in 
-the name.
-
+> ...
 > 
->> +static unsigned int spmi_regulator_common2_get_mode(struct regulator_dev *rdev)
->> +{
->> +	struct spmi_regulator *vreg = rdev_get_drvdata(rdev);
->> +	u8 reg;
->> +
->> +	spmi_vreg_read(vreg, SPMI_COMMON2_REG_MODE, &reg, 1);
->> +
->> +	if (reg == SPMI_COMMON2_MODE_HPM_MASK)
->> +		return REGULATOR_MODE_NORMAL;
->> +
->> +	if (reg == SPMI_COMMON2_MODE_AUTO_MASK)
->> +		return REGULATOR_MODE_FAST;
->> +
->> +	return REGULATOR_MODE_IDLE;
->> +}
+> Use fullmm flush since it yields much better performance on aarch64 and
+> non-fullmm doesn't yields significant difference on x86.
 > 
-> This looks like you want to write a switch statement.
+> The original proposed fix came from Jan Stancek who mainly debugged this
+> issue, I just wrapped up everything together.
 
-It follows the existing style in the driver, but sure I can make this a 
-switch.
+Thanks.  I'll add
 
-> 
->> +spmi_regulator_common2_set_mode(struct regulator_dev *rdev, unsigned int mode)
->> +{
->> +	struct spmi_regulator *vreg = rdev_get_drvdata(rdev);
->> +	u8 mask = SPMI_COMMON2_MODE_MASK;
->> +	u8 val = SPMI_COMMON2_MODE_LPM_MASK;
->> +
->> +	if (mode == REGULATOR_MODE_NORMAL)
->> +		val = SPMI_COMMON2_MODE_HPM_MASK;
->> +	else if (mode == REGULATOR_MODE_FAST)
->> +		val = SPMI_COMMON2_MODE_AUTO_MASK;
-> 
-> This needs to be a switch statement, then it can have a default case to
-> catch errors too.
-> 
+Fixes: dd2283f2605e ("mm: mmap: zap pages with read mmap_sem in munmap")
 
-
--- 
-Jeffrey Hugo
-Qualcomm Datacenter Technologies as an affiliate of Qualcomm 
-Technologies, Inc.
-Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
+to this.
