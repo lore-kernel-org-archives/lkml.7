@@ -4,35 +4,36 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9371AC072B3
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 04:53:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DC9DC46470
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 04:53:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54C90217D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 04:53:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63BDA217D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 04:53:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727905AbfEUExr (ORCPT
+        id S1727874AbfEUExo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 00:53:47 -0400
-Received: from smtp.nue.novell.com ([195.135.221.5]:32895 "EHLO
+        Tue, 21 May 2019 00:53:44 -0400
+Received: from smtp.nue.novell.com ([195.135.221.5]:50305 "EHLO
         smtp.nue.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727876AbfEUExq (ORCPT
+        with ESMTP id S1725835AbfEUExl (ORCPT
         <rfc822;groupwise-linux-kernel@vger.kernel.org:0:0>);
-        Tue, 21 May 2019 00:53:46 -0400
+        Tue, 21 May 2019 00:53:41 -0400
 Received: from emea4-mta.ukb.novell.com ([10.120.13.87])
-        by smtp.nue.novell.com with ESMTP (TLS encrypted); Tue, 21 May 2019 06:53:44 +0200
+        by smtp.nue.novell.com with ESMTP (TLS encrypted); Tue, 21 May 2019 06:53:40 +0200
 Received: from linux-r8p5.suse.de (nwb-a10-snat.microfocus.com [10.120.13.201])
-        by emea4-mta.ukb.novell.com with ESMTP (TLS encrypted); Tue, 21 May 2019 05:53:21 +0100
+        by emea4-mta.ukb.novell.com with ESMTP (TLS encrypted); Tue, 21 May 2019 05:53:13 +0100
 From:   Davidlohr Bueso <dave@stgolabs.net>
 To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
 Cc:     akpm@linux-foundation.org, willy@infradead.org, mhocko@kernel.org,
         mgorman@techsingularity.net, jglisse@redhat.com,
         ldufour@linux.vnet.ibm.com, dave@stgolabs.net,
         Davidlohr Bueso <dbueso@suse.de>
-Subject: [PATCH 12/14] kernel: teach the mm about range locking
-Date:   Mon, 20 May 2019 21:52:40 -0700
-Message-Id: <20190521045242.24378-13-dave@stgolabs.net>
+Subject: [PATCH 08/14] arch/x86: teach the mm about range locking
+Date:   Mon, 20 May 2019 21:52:36 -0700
+Message-Id: <20190521045242.24378-9-dave@stgolabs.net>
 X-Mailer: git-send-email 2.16.4
 In-Reply-To: <20190521045242.24378-1-dave@stgolabs.net>
 References: <20190521045242.24378-1-dave@stgolabs.net>
@@ -47,488 +48,288 @@ semantics.
 
 Signed-off-by: Davidlohr Bueso <dbueso@suse.de>
 ---
- kernel/acct.c               |  5 +++--
- kernel/bpf/stackmap.c       |  7 +++++--
- kernel/events/core.c        |  5 +++--
- kernel/events/uprobes.c     | 20 ++++++++++++--------
- kernel/exit.c               |  9 +++++----
- kernel/fork.c               | 16 ++++++++++------
- kernel/futex.c              |  5 +++--
- kernel/sched/fair.c         |  5 +++--
- kernel/sys.c                | 22 +++++++++++++---------
- kernel/trace/trace_output.c |  5 +++--
- 10 files changed, 60 insertions(+), 39 deletions(-)
+ arch/x86/entry/vdso/vma.c      | 12 +++++++-----
+ arch/x86/kernel/vm86_32.c      |  5 +++--
+ arch/x86/kvm/paging_tmpl.h     |  9 +++++----
+ arch/x86/mm/debug_pagetables.c |  8 ++++----
+ arch/x86/mm/fault.c            |  8 ++++----
+ arch/x86/mm/mpx.c              | 15 +++++++++------
+ arch/x86/um/vdso/vma.c         |  5 +++--
+ 7 files changed, 35 insertions(+), 27 deletions(-)
 
-diff --git a/kernel/acct.c b/kernel/acct.c
-index 81f9831a7859..2bbcecbd78ef 100644
---- a/kernel/acct.c
-+++ b/kernel/acct.c
-@@ -538,14 +538,15 @@ void acct_collect(long exitcode, int group_dead)
- 
- 	if (group_dead && current->mm) {
- 		struct vm_area_struct *vma;
-+		DEFINE_RANGE_LOCK_FULL(mmrange);
- 
--		down_read(&current->mm->mmap_sem);
-+		mm_read_lock(current->mm, &mmrange);
- 		vma = current->mm->mmap;
- 		while (vma) {
- 			vsize += vma->vm_end - vma->vm_start;
- 			vma = vma->vm_next;
- 		}
--		up_read(&current->mm->mmap_sem);
-+		mm_read_unlock(current->mm, &mmrange);
- 	}
- 
- 	spin_lock_irq(&current->sighand->siglock);
-diff --git a/kernel/bpf/stackmap.c b/kernel/bpf/stackmap.c
-index 950ab2f28922..fdb352bea7e8 100644
---- a/kernel/bpf/stackmap.c
-+++ b/kernel/bpf/stackmap.c
-@@ -37,6 +37,7 @@ struct bpf_stack_map {
- struct stack_map_irq_work {
- 	struct irq_work irq_work;
- 	struct rw_semaphore *sem;
-+	struct range_lock *mmrange;
- };
- 
- static void do_up_read(struct irq_work *entry)
-@@ -291,6 +292,7 @@ static void stack_map_get_build_id_offset(struct bpf_stack_build_id *id_offs,
- 	struct vm_area_struct *vma;
- 	bool irq_work_busy = false;
- 	struct stack_map_irq_work *work = NULL;
-+	DEFINE_RANGE_LOCK_FULL(mmrange);
- 
- 	if (in_nmi()) {
- 		work = this_cpu_ptr(&up_read_work);
-@@ -309,7 +311,7 @@ static void stack_map_get_build_id_offset(struct bpf_stack_build_id *id_offs,
- 	 * with build_id.
- 	 */
- 	if (!user || !current || !current->mm || irq_work_busy ||
--	    down_read_trylock(&current->mm->mmap_sem) == 0) {
-+	    mm_read_trylock(current->mm, &mmrange) == 0) {
- 		/* cannot access current->mm, fall back to ips */
- 		for (i = 0; i < trace_nr; i++) {
- 			id_offs[i].status = BPF_STACK_BUILD_ID_IP;
-@@ -334,9 +336,10 @@ static void stack_map_get_build_id_offset(struct bpf_stack_build_id *id_offs,
- 	}
- 
- 	if (!work) {
--		up_read(&current->mm->mmap_sem);
-+		mm_read_unlock(current->mm, &mmrange);
- 	} else {
- 		work->sem = &current->mm->mmap_sem;
-+		work->mmrange = &mmrange;
- 		irq_work_queue(&work->irq_work);
- 		/*
- 		 * The irq_work will release the mmap_sem with
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index abbd4b3b96c2..3b43cfe63b54 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -9079,6 +9079,7 @@ static void perf_event_addr_filters_apply(struct perf_event *event)
- 	struct mm_struct *mm = NULL;
- 	unsigned int count = 0;
- 	unsigned long flags;
-+	DEFINE_RANGE_LOCK_FULL(mmrange);
- 
- 	/*
- 	 * We may observe TASK_TOMBSTONE, which means that the event tear-down
-@@ -9092,7 +9093,7 @@ static void perf_event_addr_filters_apply(struct perf_event *event)
- 		if (!mm)
- 			goto restart;
- 
--		down_read(&mm->mmap_sem);
-+		mm_read_lock(mm, &mmrange);
- 	}
- 
- 	raw_spin_lock_irqsave(&ifh->lock, flags);
-@@ -9118,7 +9119,7 @@ static void perf_event_addr_filters_apply(struct perf_event *event)
- 	raw_spin_unlock_irqrestore(&ifh->lock, flags);
- 
- 	if (ifh->nr_file_filters) {
--		up_read(&mm->mmap_sem);
-+		mm_read_unlock(mm, &mmrange);
- 
- 		mmput(mm);
- 	}
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index 3689eceb8d0c..6779c237799a 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -997,6 +997,7 @@ register_for_each_vma(struct uprobe *uprobe, struct uprobe_consumer *new)
- 	bool is_register = !!new;
- 	struct map_info *info;
- 	int err = 0;
-+	DEFINE_RANGE_LOCK_FULL(mmrange);
- 
- 	percpu_down_write(&dup_mmap_sem);
- 	info = build_map_info(uprobe->inode->i_mapping,
-@@ -1013,7 +1014,7 @@ register_for_each_vma(struct uprobe *uprobe, struct uprobe_consumer *new)
- 		if (err && is_register)
- 			goto free;
- 
--		down_write(&mm->mmap_sem);
-+		mm_write_lock(mm, &mmrange);
- 		vma = find_vma(mm, info->vaddr);
- 		if (!vma || !valid_vma(vma, is_register) ||
- 		    file_inode(vma->vm_file) != uprobe->inode)
-@@ -1035,7 +1036,7 @@ register_for_each_vma(struct uprobe *uprobe, struct uprobe_consumer *new)
- 		}
- 
-  unlock:
--		up_write(&mm->mmap_sem);
-+		mm_write_unlock(mm, &mmrange);
-  free:
- 		mmput(mm);
- 		info = free_map_info(info);
-@@ -1189,8 +1190,9 @@ static int unapply_uprobe(struct uprobe *uprobe, struct mm_struct *mm)
- {
- 	struct vm_area_struct *vma;
- 	int err = 0;
-+	DEFINE_RANGE_LOCK_FULL(mmrange);
- 
--	down_read(&mm->mmap_sem);
-+	mm_read_lock(mm, &mmrange);
- 	for (vma = mm->mmap; vma; vma = vma->vm_next) {
- 		unsigned long vaddr;
- 		loff_t offset;
-@@ -1207,7 +1209,7 @@ static int unapply_uprobe(struct uprobe *uprobe, struct mm_struct *mm)
- 		vaddr = offset_to_vaddr(vma, uprobe->offset);
- 		err |= remove_breakpoint(uprobe, mm, vaddr);
- 	}
--	up_read(&mm->mmap_sem);
-+	mm_read_unlock(mm, &mmrange);
- 
- 	return err;
- }
-@@ -1391,10 +1393,11 @@ void uprobe_munmap(struct vm_area_struct *vma, unsigned long start, unsigned lon
- /* Slot allocation for XOL */
- static int xol_add_vma(struct mm_struct *mm, struct xol_area *area)
+diff --git a/arch/x86/entry/vdso/vma.c b/arch/x86/entry/vdso/vma.c
+index babc4e7a519c..f6d8950f37b8 100644
+--- a/arch/x86/entry/vdso/vma.c
++++ b/arch/x86/entry/vdso/vma.c
+@@ -145,12 +145,13 @@ static const struct vm_special_mapping vvar_mapping = {
+  */
+ static int map_vdso(const struct vdso_image *image, unsigned long addr)
  {
 +	DEFINE_RANGE_LOCK_FULL(mmrange);
+ 	struct mm_struct *mm = current->mm;
  	struct vm_area_struct *vma;
- 	int ret;
+ 	unsigned long text_start;
+ 	int ret = 0;
  
 -	if (down_write_killable(&mm->mmap_sem))
 +	if (mm_write_lock_killable(mm, &mmrange))
  		return -EINTR;
  
- 	if (mm->uprobes_state.xol_area) {
-@@ -1424,7 +1427,7 @@ static int xol_add_vma(struct mm_struct *mm, struct xol_area *area)
- 	/* pairs with get_xol_area() */
- 	smp_store_release(&mm->uprobes_state.xol_area, area); /* ^^^ */
-  fail:
+ 	addr = get_unmapped_area(NULL, addr,
+@@ -193,7 +194,7 @@ static int map_vdso(const struct vdso_image *image, unsigned long addr)
+ 	}
+ 
+ up_fail:
 -	up_write(&mm->mmap_sem);
 +	mm_write_unlock(mm, &mmrange);
- 
  	return ret;
  }
-@@ -1993,8 +1996,9 @@ static struct uprobe *find_active_uprobe(unsigned long bp_vaddr, int *is_swbp)
- 	struct mm_struct *mm = current->mm;
- 	struct uprobe *uprobe = NULL;
- 	struct vm_area_struct *vma;
-+	DEFINE_RANGE_LOCK_FULL(mmrange);
  
--	down_read(&mm->mmap_sem);
-+	mm_read_lock(mm, &mmrange);
- 	vma = find_vma(mm, bp_vaddr);
- 	if (vma && vma->vm_start <= bp_vaddr) {
- 		if (valid_vma(vma, false)) {
-@@ -2012,7 +2016,7 @@ static struct uprobe *find_active_uprobe(unsigned long bp_vaddr, int *is_swbp)
- 
- 	if (!uprobe && test_and_clear_bit(MMF_RECALC_UPROBES, &mm->flags))
- 		mmf_recalc_uprobes(mm);
--	up_read(&mm->mmap_sem);
-+	mm_read_unlock(mm, &mmrange);
- 
- 	return uprobe;
- }
-diff --git a/kernel/exit.c b/kernel/exit.c
-index 8361a560cd1d..79bc5ec20694 100644
---- a/kernel/exit.c
-+++ b/kernel/exit.c
-@@ -497,6 +497,7 @@ static void exit_mm(void)
+@@ -254,8 +255,9 @@ int map_vdso_once(const struct vdso_image *image, unsigned long addr)
  {
  	struct mm_struct *mm = current->mm;
- 	struct core_state *core_state;
-+	DEFINE_RANGE_LOCK_FULL(mmrange);
- 
- 	mm_release(current, mm);
- 	if (!mm)
-@@ -509,12 +510,12 @@ static void exit_mm(void)
- 	 * will increment ->nr_threads for each thread in the
- 	 * group with ->mm != NULL.
- 	 */
--	down_read(&mm->mmap_sem);
-+	mm_read_lock(mm, &mmrange);
- 	core_state = mm->core_state;
- 	if (core_state) {
- 		struct core_thread self;
- 
--		up_read(&mm->mmap_sem);
-+		mm_read_unlock(mm, &mmrange);
- 
- 		self.task = current;
- 		self.next = xchg(&core_state->dumper.next, &self);
-@@ -532,14 +533,14 @@ static void exit_mm(void)
- 			freezable_schedule();
- 		}
- 		__set_current_state(TASK_RUNNING);
--		down_read(&mm->mmap_sem);
-+		mm_read_lock(mm, &mmrange);
- 	}
- 	mmgrab(mm);
- 	BUG_ON(mm != current->active_mm);
- 	/* more a memory barrier than a real lock */
- 	task_lock(current);
- 	current->mm = NULL;
--	up_read(&mm->mmap_sem);
-+	mm_read_unlock(mm, &mmrange);
- 	enter_lazy_tlb(mm, current);
- 	task_unlock(current);
- 	mm_update_next_owner(mm);
-diff --git a/kernel/fork.c b/kernel/fork.c
-index 45fde571c5dd..cc24e3690532 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -468,10 +468,12 @@ static __latent_entropy int dup_mmap(struct mm_struct *mm,
- 	struct rb_node **rb_link, *rb_parent;
- 	int retval;
- 	unsigned long charge;
-+	DEFINE_RANGE_LOCK_FULL(old_mmrange);
-+	DEFINE_RANGE_LOCK_FULL(mmrange);
- 	LIST_HEAD(uf);
- 
- 	uprobe_start_dup_mmap();
--	if (down_write_killable(&oldmm->mmap_sem)) {
-+	if (mm_write_lock_killable(oldmm, &old_mmrange)) {
- 		retval = -EINTR;
- 		goto fail_uprobe_end;
- 	}
-@@ -480,7 +482,7 @@ static __latent_entropy int dup_mmap(struct mm_struct *mm,
- 	/*
- 	 * Not linked in yet - no deadlock potential:
- 	 */
--	down_write_nested(&mm->mmap_sem, SINGLE_DEPTH_NESTING);
-+	mm_write_lock_nested(mm, &mmrange, SINGLE_DEPTH_NESTING);
- 
- 	/* No ordering required: file already has been exposed. */
- 	RCU_INIT_POINTER(mm->exe_file, get_mm_exe_file(oldmm));
-@@ -595,9 +597,9 @@ static __latent_entropy int dup_mmap(struct mm_struct *mm,
- 	/* a new mm has just been created */
- 	retval = arch_dup_mmap(oldmm, mm);
- out:
--	up_write(&mm->mmap_sem);
-+	mm_write_unlock(mm, &mmrange);
- 	flush_tlb_mm(oldmm);
--	up_write(&oldmm->mmap_sem);
-+	mm_write_unlock(oldmm, &old_mmrange);
- 	dup_userfaultfd_complete(&uf);
- fail_uprobe_end:
- 	uprobe_end_dup_mmap();
-@@ -627,9 +629,11 @@ static inline void mm_free_pgd(struct mm_struct *mm)
- #else
- static int dup_mmap(struct mm_struct *mm, struct mm_struct *oldmm)
- {
--	down_write(&oldmm->mmap_sem);
-+	DEFINE_RANGE_LOCK_FULL(mmrange);
-+
-+	mm_write_lock(oldmm, &mmrange);
- 	RCU_INIT_POINTER(mm->exe_file, get_mm_exe_file(oldmm));
--	up_write(&oldmm->mmap_sem);
-+	mm_write_unlock(oldmm, &mmrange);
- 	return 0;
- }
- #define mm_alloc_pgd(mm)	(0)
-diff --git a/kernel/futex.c b/kernel/futex.c
-index 4615f9371a6f..53829040791b 100644
---- a/kernel/futex.c
-+++ b/kernel/futex.c
-@@ -730,11 +730,12 @@ static int fault_in_user_writeable(u32 __user *uaddr)
- {
- 	struct mm_struct *mm = current->mm;
- 	int ret;
-+	DEFINE_RANGE_LOCK_FULL(mmrange);
- 
--	down_read(&mm->mmap_sem);
-+	mm_read_lock(mm, &mmrange);
- 	ret = fixup_user_fault(current, mm, (unsigned long)uaddr,
- 			       FAULT_FLAG_WRITE, NULL, NULL);
--	up_read(&mm->mmap_sem);
-+	mm_read_unlock(mm, &mmrange);
- 
- 	return ret < 0 ? ret : 0;
- }
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index f35930f5e528..222b554bf928 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -2461,6 +2461,7 @@ void task_numa_work(struct callback_head *work)
  	struct vm_area_struct *vma;
- 	unsigned long start, end;
- 	unsigned long nr_pte_updates = 0;
 +	DEFINE_RANGE_LOCK_FULL(mmrange);
- 	long pages, virtpages;
- 
- 	SCHED_WARN_ON(p != container_of(work, struct task_struct, numa_work));
-@@ -2512,7 +2513,7 @@ void task_numa_work(struct callback_head *work)
- 		return;
- 
- 
--	if (!down_read_trylock(&mm->mmap_sem))
-+	if (!mm_read_trylock(mm, &mmrange))
- 		return;
- 	vma = find_vma(mm, start);
- 	if (!vma) {
-@@ -2580,7 +2581,7 @@ void task_numa_work(struct callback_head *work)
- 		mm->numa_scan_offset = start;
- 	else
- 		reset_ptenuma_scan(p);
--	up_read(&mm->mmap_sem);
-+	mm_read_unlock(mm, &mmrange);
- 
- 	/*
- 	 * Make sure tasks use at least 32x as much time to run other code
-diff --git a/kernel/sys.c b/kernel/sys.c
-index bdbfe8d37418..c769293f8a79 100644
---- a/kernel/sys.c
-+++ b/kernel/sys.c
-@@ -1825,6 +1825,7 @@ static int prctl_set_mm_exe_file(struct mm_struct *mm, unsigned int fd)
- 	struct file *old_exe, *exe_file;
- 	struct inode *inode;
- 	int err;
-+	DEFINE_RANGE_LOCK_FULL(mmrange);
- 
- 	exe = fdget(fd);
- 	if (!exe.file)
-@@ -1853,7 +1854,7 @@ static int prctl_set_mm_exe_file(struct mm_struct *mm, unsigned int fd)
- 	if (exe_file) {
- 		struct vm_area_struct *vma;
- 
--		down_read(&mm->mmap_sem);
-+		mm_read_lock(mm, &mmrange);
- 		for (vma = mm->mmap; vma; vma = vma->vm_next) {
- 			if (!vma->vm_file)
- 				continue;
-@@ -1862,7 +1863,7 @@ static int prctl_set_mm_exe_file(struct mm_struct *mm, unsigned int fd)
- 				goto exit_err;
- 		}
- 
--		up_read(&mm->mmap_sem);
-+		mm_read_unlock(mm, &mmrange);
- 		fput(exe_file);
- 	}
- 
-@@ -1876,7 +1877,7 @@ static int prctl_set_mm_exe_file(struct mm_struct *mm, unsigned int fd)
- 	fdput(exe);
- 	return err;
- exit_err:
--	up_read(&mm->mmap_sem);
-+	mm_read_unlock(mm, &mmrange);
- 	fput(exe_file);
- 	goto exit;
- }
-@@ -1979,6 +1980,7 @@ static int prctl_set_mm_map(int opt, const void __user *addr, unsigned long data
- 	unsigned long user_auxv[AT_VECTOR_SIZE];
- 	struct mm_struct *mm = current->mm;
- 	int error;
-+	DEFINE_RANGE_LOCK_FULL(mmrange);
- 
- 	BUILD_BUG_ON(sizeof(user_auxv) != sizeof(mm->saved_auxv));
- 	BUILD_BUG_ON(sizeof(struct prctl_mm_map) > 256);
-@@ -2019,7 +2021,7 @@ static int prctl_set_mm_map(int opt, const void __user *addr, unsigned long data
- 	 * arg_lock protects concurent updates but we still need mmap_sem for
- 	 * read to exclude races with sys_brk.
- 	 */
--	down_read(&mm->mmap_sem);
-+	mm_read_lock(mm, &mmrange);
- 
- 	/*
- 	 * We don't validate if these members are pointing to
-@@ -2058,7 +2060,7 @@ static int prctl_set_mm_map(int opt, const void __user *addr, unsigned long data
- 	if (prctl_map.auxv_size)
- 		memcpy(mm->saved_auxv, user_auxv, sizeof(user_auxv));
- 
--	up_read(&mm->mmap_sem);
-+	mm_read_unlock(mm, &mmrange);
- 	return 0;
- }
- #endif /* CONFIG_CHECKPOINT_RESTORE */
-@@ -2100,6 +2102,7 @@ static int prctl_set_mm(int opt, unsigned long addr,
- 	struct prctl_mm_map prctl_map;
- 	struct vm_area_struct *vma;
- 	int error;
-+	DEFINE_RANGE_LOCK_FULL(mmrange);
- 
- 	if (arg5 || (arg4 && (opt != PR_SET_MM_AUXV &&
- 			      opt != PR_SET_MM_MAP &&
-@@ -2125,7 +2128,7 @@ static int prctl_set_mm(int opt, unsigned long addr,
- 
- 	error = -EINVAL;
  
 -	down_write(&mm->mmap_sem);
 +	mm_write_lock(mm, &mmrange);
- 	vma = find_vma(mm, addr);
+ 	/*
+ 	 * Check if we have already mapped vdso blob - fail to prevent
+ 	 * abusing from userspace install_speciall_mapping, which may
+@@ -266,11 +268,11 @@ int map_vdso_once(const struct vdso_image *image, unsigned long addr)
+ 	for (vma = mm->mmap; vma; vma = vma->vm_next) {
+ 		if (vma_is_special_mapping(vma, &vdso_mapping) ||
+ 				vma_is_special_mapping(vma, &vvar_mapping)) {
+-			up_write(&mm->mmap_sem);
++			mm_write_unlock(mm, &mmrange);
+ 			return -EEXIST;
+ 		}
+ 	}
+-	up_write(&mm->mmap_sem);
++	mm_write_unlock(mm, &mmrange);
  
- 	prctl_map.start_code	= mm->start_code;
-@@ -2218,7 +2221,7 @@ static int prctl_set_mm(int opt, unsigned long addr,
+ 	return map_vdso(image, addr);
+ }
+diff --git a/arch/x86/kernel/vm86_32.c b/arch/x86/kernel/vm86_32.c
+index 6a38717d179c..39eecee07dcd 100644
+--- a/arch/x86/kernel/vm86_32.c
++++ b/arch/x86/kernel/vm86_32.c
+@@ -171,8 +171,9 @@ static void mark_screen_rdonly(struct mm_struct *mm)
+ 	pmd_t *pmd;
+ 	pte_t *pte;
+ 	int i;
++	DEFINE_RANGE_LOCK_FULL(mmrange);
  
- 	error = 0;
+-	down_write(&mm->mmap_sem);
++	mm_write_lock(mm, &mmrange);
+ 	pgd = pgd_offset(mm, 0xA0000);
+ 	if (pgd_none_or_clear_bad(pgd))
+ 		goto out;
+@@ -198,7 +199,7 @@ static void mark_screen_rdonly(struct mm_struct *mm)
+ 	}
+ 	pte_unmap_unlock(pte, ptl);
  out:
 -	up_write(&mm->mmap_sem);
 +	mm_write_unlock(mm, &mmrange);
- 	return error;
+ 	flush_tlb_mm_range(mm, 0xA0000, 0xA0000 + 32*PAGE_SIZE, PAGE_SHIFT, false);
  }
  
-@@ -2266,6 +2269,7 @@ int __weak arch_prctl_spec_ctrl_set(struct task_struct *t, unsigned long which,
- SYSCALL_DEFINE5(prctl, int, option, unsigned long, arg2, unsigned long, arg3,
- 		unsigned long, arg4, unsigned long, arg5)
- {
-+	DEFINE_RANGE_LOCK_FULL(mmrange);
- 	struct task_struct *me = current;
- 	unsigned char comm[sizeof(me->comm)];
- 	long error;
-@@ -2441,13 +2445,13 @@ SYSCALL_DEFINE5(prctl, int, option, unsigned long, arg2, unsigned long, arg3,
- 	case PR_SET_THP_DISABLE:
- 		if (arg3 || arg4 || arg5)
- 			return -EINVAL;
--		if (down_write_killable(&me->mm->mmap_sem))
-+		if (mm_write_lock_killable(me->mm, &mmrange))
- 			return -EINTR;
- 		if (arg2)
- 			set_bit(MMF_DISABLE_THP, &me->mm->flags);
- 		else
- 			clear_bit(MMF_DISABLE_THP, &me->mm->flags);
--		up_write(&me->mm->mmap_sem);
-+		mm_write_unlock(me->mm, &mmrange);
- 		break;
- 	case PR_MPX_ENABLE_MANAGEMENT:
- 		if (arg2 || arg3 || arg4 || arg5)
-diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
-index 54373d93e251..0dbdab621f17 100644
---- a/kernel/trace/trace_output.c
-+++ b/kernel/trace/trace_output.c
-@@ -377,8 +377,9 @@ static int seq_print_user_ip(struct trace_seq *s, struct mm_struct *mm,
- 
- 	if (mm) {
- 		const struct vm_area_struct *vma;
+diff --git a/arch/x86/kvm/paging_tmpl.h b/arch/x86/kvm/paging_tmpl.h
+index 367a47df4ba0..347d3ba41974 100644
+--- a/arch/x86/kvm/paging_tmpl.h
++++ b/arch/x86/kvm/paging_tmpl.h
+@@ -152,23 +152,24 @@ static int FNAME(cmpxchg_gpte)(struct kvm_vcpu *vcpu, struct kvm_mmu *mmu,
+ 		unsigned long vaddr = (unsigned long)ptep_user & PAGE_MASK;
+ 		unsigned long pfn;
+ 		unsigned long paddr;
 +		DEFINE_RANGE_LOCK_FULL(mmrange);
  
+-		down_read(&current->mm->mmap_sem);
++		mm_read_lock(current->mm, &mmrange);
+ 		vma = find_vma_intersection(current->mm, vaddr, vaddr + PAGE_SIZE);
+ 		if (!vma || !(vma->vm_flags & VM_PFNMAP)) {
+-			up_read(&current->mm->mmap_sem);
++			mm_read_unlock(current->mm, &mmrange);
+ 			return -EFAULT;
+ 		}
+ 		pfn = ((vaddr - vma->vm_start) >> PAGE_SHIFT) + vma->vm_pgoff;
+ 		paddr = pfn << PAGE_SHIFT;
+ 		table = memremap(paddr, PAGE_SIZE, MEMREMAP_WB);
+ 		if (!table) {
+-			up_read(&current->mm->mmap_sem);
++			mm_read_unlock(current->mm, &mmrange);
+ 			return -EFAULT;
+ 		}
+ 		ret = CMPXCHG(&table[index], orig_pte, new_pte);
+ 		memunmap(table);
+-		up_read(&current->mm->mmap_sem);
++		mm_read_unlock(current->mm, &mmrange);
+ 	}
+ 
+ 	return (ret != orig_pte);
+diff --git a/arch/x86/mm/debug_pagetables.c b/arch/x86/mm/debug_pagetables.c
+index cd84f067e41d..0d131edc6a75 100644
+--- a/arch/x86/mm/debug_pagetables.c
++++ b/arch/x86/mm/debug_pagetables.c
+@@ -15,9 +15,9 @@ DEFINE_SHOW_ATTRIBUTE(ptdump);
+ static int ptdump_curknl_show(struct seq_file *m, void *v)
+ {
+ 	if (current->mm->pgd) {
+-		down_read(&current->mm->mmap_sem);
++		mm_read_lock(current->mm, &mmrange);
+ 		ptdump_walk_pgd_level_debugfs(m, current->mm->pgd, false);
+-		up_read(&current->mm->mmap_sem);
++		mm_read_unlock(current->mm, &mmrange);
+ 	}
+ 	return 0;
+ }
+@@ -30,9 +30,9 @@ static struct dentry *pe_curusr;
+ static int ptdump_curusr_show(struct seq_file *m, void *v)
+ {
+ 	if (current->mm->pgd) {
+-		down_read(&current->mm->mmap_sem);
++		mm_read_lock(current->mm, &mmrange);
+ 		ptdump_walk_pgd_level_debugfs(m, current->mm->pgd, true);
+-		up_read(&current->mm->mmap_sem);
++		mm_read_unlock(current->mm, &mmrange);
+ 	}
+ 	return 0;
+ }
+diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
+index fb869c292b91..fbb060c89e7d 100644
+--- a/arch/x86/mm/fault.c
++++ b/arch/x86/mm/fault.c
+@@ -946,7 +946,7 @@ __bad_area(struct pt_regs *regs, unsigned long error_code,
+ 	 * Something tried to access memory that isn't in our memory map..
+ 	 * Fix it, but check if it's kernel or user first..
+ 	 */
+-	up_read(&mm->mmap_sem);
++        mm_read_unlock(mm, mmrange);
+ 
+ 	__bad_area_nosemaphore(regs, error_code, address, pkey, si_code);
+ }
+@@ -1399,7 +1399,7 @@ void do_user_addr_fault(struct pt_regs *regs,
+ 	 * 1. Failed to acquire mmap_sem, and
+ 	 * 2. The access did not originate in userspace.
+ 	 */
+-	if (unlikely(!down_read_trylock(&mm->mmap_sem))) {
++	if (unlikely(!mm_read_trylock(mm, &mmrange))) {
+ 		if (!user_mode(regs) && !search_exception_tables(regs->ip)) {
+ 			/*
+ 			 * Fault from code in kernel from
+@@ -1409,7 +1409,7 @@ void do_user_addr_fault(struct pt_regs *regs,
+ 			return;
+ 		}
+ retry:
 -		down_read(&mm->mmap_sem);
 +		mm_read_lock(mm, &mmrange);
- 		vma = find_vma(mm, ip);
- 		if (vma) {
- 			file = vma->vm_file;
-@@ -390,7 +391,7 @@ static int seq_print_user_ip(struct trace_seq *s, struct mm_struct *mm,
- 				trace_seq_printf(s, "[+0x%lx]",
- 						 ip - vmstart);
- 		}
--		up_read(&mm->mmap_sem);
-+		mm_read_unlock(mm, &mmrange);
+ 	} else {
+ 		/*
+ 		 * The above down_read_trylock() might have succeeded in
+@@ -1485,7 +1485,7 @@ void do_user_addr_fault(struct pt_regs *regs,
+ 		return;
  	}
- 	if (ret && ((sym_flags & TRACE_ITER_SYM_ADDR) || !file))
- 		trace_seq_printf(s, " <" IP_FMT ">", ip);
+ 
+-	up_read(&mm->mmap_sem);
++	mm_read_unlock(mm, &mmrange);
+ 	if (unlikely(fault & VM_FAULT_ERROR)) {
+ 		mm_fault_error(regs, hw_error_code, address, fault);
+ 		return;
+diff --git a/arch/x86/mm/mpx.c b/arch/x86/mm/mpx.c
+index 0d1c47cbbdd6..5f0a4af29920 100644
+--- a/arch/x86/mm/mpx.c
++++ b/arch/x86/mm/mpx.c
+@@ -46,16 +46,17 @@ static inline unsigned long mpx_bt_size_bytes(struct mm_struct *mm)
+ static unsigned long mpx_mmap(unsigned long len)
+ {
+ 	struct mm_struct *mm = current->mm;
++	DEFINE_RANGE_LOCK_FULL(mmrange);
+ 	unsigned long addr, populate;
+ 
+ 	/* Only bounds table can be allocated here */
+ 	if (len != mpx_bt_size_bytes(mm))
+ 		return -EINVAL;
+ 
+-	down_write(&mm->mmap_sem);
++	mm_write_lock(mm, &mmrange);
+ 	addr = do_mmap(NULL, 0, len, PROT_READ | PROT_WRITE,
+ 		       MAP_ANONYMOUS | MAP_PRIVATE, VM_MPX, 0, &populate, NULL);
+-	up_write(&mm->mmap_sem);
++	mm_write_unlock(mm, &mmrange);
+ 	if (populate)
+ 		mm_populate(addr, populate);
+ 
+@@ -214,6 +215,7 @@ int mpx_enable_management(void)
+ 	void __user *bd_base = MPX_INVALID_BOUNDS_DIR;
+ 	struct mm_struct *mm = current->mm;
+ 	int ret = 0;
++	DEFINE_RANGE_LOCK_FULL(mmrange);
+ 
+ 	/*
+ 	 * runtime in the userspace will be responsible for allocation of
+@@ -227,7 +229,7 @@ int mpx_enable_management(void)
+ 	 * unmap path; we can just use mm->context.bd_addr instead.
+ 	 */
+ 	bd_base = mpx_get_bounds_dir();
+-	down_write(&mm->mmap_sem);
++	mm_write_lock(mm, &mmrange);
+ 
+ 	/* MPX doesn't support addresses above 47 bits yet. */
+ 	if (find_vma(mm, DEFAULT_MAP_WINDOW)) {
+@@ -241,20 +243,21 @@ int mpx_enable_management(void)
+ 	if (mm->context.bd_addr == MPX_INVALID_BOUNDS_DIR)
+ 		ret = -ENXIO;
+ out:
+-	up_write(&mm->mmap_sem);
++	mm_write_unlock(mm, &mmrange);
+ 	return ret;
+ }
+ 
+ int mpx_disable_management(void)
+ {
+ 	struct mm_struct *mm = current->mm;
++	DEFINE_RANGE_LOCK_FULL(mmrange);
+ 
+ 	if (!cpu_feature_enabled(X86_FEATURE_MPX))
+ 		return -ENXIO;
+ 
+-	down_write(&mm->mmap_sem);
++	mm_write_lock(mm, &mmrange);
+ 	mm->context.bd_addr = MPX_INVALID_BOUNDS_DIR;
+-	up_write(&mm->mmap_sem);
++	mm_write_unlock(mm, &mmrange);
+ 	return 0;
+ }
+ 
+diff --git a/arch/x86/um/vdso/vma.c b/arch/x86/um/vdso/vma.c
+index 6be22f991b59..d65d82b967c7 100644
+--- a/arch/x86/um/vdso/vma.c
++++ b/arch/x86/um/vdso/vma.c
+@@ -55,13 +55,14 @@ subsys_initcall(init_vdso);
+ 
+ int arch_setup_additional_pages(struct linux_binprm *bprm, int uses_interp)
+ {
++	DEFINE_RANGE_LOCK_FULL(mmrange);
+ 	int err;
+ 	struct mm_struct *mm = current->mm;
+ 
+ 	if (!vdso_enabled)
+ 		return 0;
+ 
+-	if (down_write_killable(&mm->mmap_sem))
++	if (mm_write_lock_killable(mm, &mmrange))
+ 		return -EINTR;
+ 
+ 	err = install_special_mapping(mm, um_vdso_addr, PAGE_SIZE,
+@@ -69,7 +70,7 @@ int arch_setup_additional_pages(struct linux_binprm *bprm, int uses_interp)
+ 		VM_MAYREAD|VM_MAYWRITE|VM_MAYEXEC,
+ 		vdsop);
+ 
+-	up_write(&mm->mmap_sem);
++	mm_write_unlock(mm, &mmrange);
+ 
+ 	return err;
+ }
 -- 
 2.16.4
 
