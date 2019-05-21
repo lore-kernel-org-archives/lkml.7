@@ -2,97 +2,283 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF8BAC04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:57:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D07D1C04E87
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:59:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B428221743
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:57:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558454268;
-	bh=1Bh1Tg7s/wagirS6dPhNWQg4keyX0vwUofJoXOufznw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=eamNZQfYrX40KnTMIMxTyQq13yd3bEM15SJOlGRkW6MG3uVk2zLdEQdflH1Ro/6Hp
-	 48VIwsKEmKIrZPT9rTjeHEqeYichnmvTUq0w6o6t6cK6/QWFP9WT3zGgIGD7m+XFIv
-	 8DjQcHpPKWbIfPEzCPJ3QY8/eVrtUbfC6LtRVZCE=
+	by mail.kernel.org (Postfix) with ESMTP id A23CA2173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:59:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728413AbfEUP5r (ORCPT
+        id S1728431AbfEUP7g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 11:57:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48198 "EHLO mail.kernel.org"
+        Tue, 21 May 2019 11:59:36 -0400
+Received: from relay.sw.ru ([185.231.240.75]:38170 "EHLO relay.sw.ru"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727941AbfEUP5r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 11:57:47 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 237B321019;
-        Tue, 21 May 2019 15:57:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558454267;
-        bh=1Bh1Tg7s/wagirS6dPhNWQg4keyX0vwUofJoXOufznw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=B1855i2dCLbv4nj0YTcUyIET8vG/CjPa9pw/gA5SHx17bcQBrqUlcVKzKhu8tuyla
-         KYKrk67j+WgSbryQScFh2QjbPJI/yBVXnrRLdgPFkDG/pURH3BKF8jNbbdzRC83p9h
-         sTqffmx0/5x8kYXweguxnuTaF+l45vTt2mVodE8I=
-Date:   Wed, 22 May 2019 00:57:41 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org,
-        Andy Lutomirski <luto@amacapital.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Changbin Du <changbin.du@gmail.com>,
-        Jann Horn <jannh@google.com>,
+        id S1727941AbfEUP7f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 11:59:35 -0400
+Received: from [172.16.25.169]
+        by relay.sw.ru with esmtp (Exim 4.91)
+        (envelope-from <ktkhai@virtuozzo.com>)
+        id 1hT7Ao-0007Cl-2V; Tue, 21 May 2019 18:59:30 +0300
+Subject: Re: [PATCH v2 0/7] mm: process_vm_mmap() -- syscall for duplication a
+ process mapping
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Keith Busch <keith.busch@intel.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        alexander.h.duyck@linux.intel.com, Weiny Ira <ira.weiny@intel.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        arunks@codeaurora.org, Vlastimil Babka <vbabka@suse.cz>,
+        Christoph Lameter <cl@linux.com>,
+        Rik van Riel <riel@surriel.com>,
         Kees Cook <keescook@chromium.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Nadav Amit <namit@vmware.com>,
-        Joel Fernandes <joel@joelfernandes.org>, yhs@fb.com
-Subject: Re: [PATCH -tip v9 0/6] tracing/probes: uaccess: Add support
- user-space access
-Message-Id: <20190522005741.5bc134a712970cac8e260b01@kernel.org>
-In-Reply-To: <20190521085741.7305dc78@gandalf.local.home>
-References: <155789866428.26965.8344923934342528416.stgit@devnote2>
-        <20190515055534.GA39270@gmail.com>
-        <20190520112605.421bda88@gandalf.local.home>
-        <20190521082809.GA112373@gmail.com>
-        <20190521085741.7305dc78@gandalf.local.home>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Roman Gushchin <guro@fb.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Hugh Dickins <hughd@google.com>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        daniel.m.jordan@oracle.com, Jann Horn <jannh@google.com>,
+        Adam Borowski <kilobyte@angband.pl>,
+        Linux API <linux-api@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>
+References: <155836064844.2441.10911127801797083064.stgit@localhost.localdomain>
+ <CALCETrU221N6uPmdaj4bRDDsf+Oc5tEfPERuyV24wsYKHn+spA@mail.gmail.com>
+ <9638a51c-4295-924f-1852-1783c7f3e82d@virtuozzo.com>
+Message-ID: <6483b75c-9725-126e-6fb3-ce05fb703a87@virtuozzo.com>
+Date:   Tue, 21 May 2019 18:59:29 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <9638a51c-4295-924f-1852-1783c7f3e82d@virtuozzo.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 21 May 2019 08:57:41 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
-> On Tue, 21 May 2019 10:28:09 +0200
-> Ingo Molnar <mingo@kernel.org> wrote:
+On 21.05.2019 18:52, Kirill Tkhai wrote:
+> On 21.05.2019 17:43, Andy Lutomirski wrote:
+>> On Mon, May 20, 2019 at 7:01 AM Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
+>>>
+>>
+>>> [Summary]
+>>>
+>>> New syscall, which allows to clone a remote process VMA
+>>> into local process VM. The remote process's page table
+>>> entries related to the VMA are cloned into local process's
+>>> page table (in any desired address, which makes this different
+>>> from that happens during fork()). Huge pages are handled
+>>> appropriately.
+>>>
+>>> This allows to improve performance in significant way like
+>>> it's shows in the example below.
+>>>
+>>> [Description]
+>>>
+>>> This patchset adds a new syscall, which makes possible
+>>> to clone a VMA from a process to current process.
+>>> The syscall supplements the functionality provided
+>>> by process_vm_writev() and process_vm_readv() syscalls,
+>>> and it may be useful in many situation.
+>>>
+>>> For example, it allows to make a zero copy of data,
+>>> when process_vm_writev() was previously used:
+>>>
+>>>         struct iovec local_iov, remote_iov;
+>>>         void *buf;
+>>>
+>>>         buf = mmap(NULL, n * PAGE_SIZE, PROT_READ|PROT_WRITE,
+>>>                    MAP_PRIVATE|MAP_ANONYMOUS, ...);
+>>>         recv(sock, buf, n * PAGE_SIZE, 0);
+>>>
+>>>         local_iov->iov_base = buf;
+>>>         local_iov->iov_len = n * PAGE_SIZE;
+>>>         remove_iov = ...;
+>>>
+>>>         process_vm_writev(pid, &local_iov, 1, &remote_iov, 1 0);
+>>>         munmap(buf, n * PAGE_SIZE);
+>>>
+>>>         (Note, that above completely ignores error handling)
+>>>
+>>> There are several problems with process_vm_writev() in this example:
+>>>
+>>> 1)it causes pagefault on remote process memory, and it forces
+>>>   allocation of a new page (if was not preallocated);
+>>
+>> I don't see how your new syscall helps.  You're writing to remote
+>> memory.  If that memory wasn't allocated, it's going to get allocated
+>> regardless of whether you use a write-like interface or an mmap-like
+>> interface.
 > 
-> > > Hi Ingo,
-> > > 
-> > > Do you want me to take this through my tree, or do you want to take it
-> > > through yours?  
-> > 
-> > Since these changes are more heavy on the kernel/tracing/ side I suspect 
-> > your tree is the better match for this series?
+> No, the talk is not about just another interface for copying memory.
+> The talk is about borrowing of remote task's VMA and corresponding
+> page table's content. Syscall allows to copy part of page table
+> with preallocated pages from remote to local process. See here:
 > 
-> No problem. Will do, and thanks for the Ack.
+> [task1]                                                        [task2]
+> 
+> buf = mmap(NULL, n * PAGE_SIZE, PROT_READ|PROT_WRITE,
+>            MAP_PRIVATE|MAP_ANONYMOUS, ...);
+> 
+> <task1 populates buf>
+> 
+>                                                                buf = process_vm_mmap(pid_of_task1, addr, n * PAGE_SIZE, ...);
+> munmap(buf);
+> 
+> 
+> process_vm_mmap() copies PTEs related to memory of buf in task1 to task2
+> just like in the way we do during fork syscall.
+> 
+> There is no copying of buf memory content, unless COW happens. This is
+> the principal difference to process_vm_writev(), which just allocates
+> pages in remote VM.
+> 
+>> Keep in mind that, on x86, just the hardware part of a
+>> page fault is very slow -- populating the memory with a syscall
+>> instead of a fault may well be faster.
+> 
+> It is not as slow, as disk IO has. Just compare, what happens in case of anonymous
+> pages related to buf of task1 are swapped:
+> 
+> 1)process_vm_writev() reads them back into memory;
+> 
+> 2)process_vm_mmap() just copies swap PTEs from task1 page table
+>   to task2 page table.
+> 
+> Also, for faster page faults one may use huge pages for the mappings.
+> But really, it's funny to think about page faults, when there are
+> disk IO problems I shown.
+> 
+>>>
+>>> 2)amount of memory for this example is doubled in a moment --
+>>>   n pages in current and n pages in remote tasks are occupied
+>>>   at the same time;
+>>
+>> This seems disingenuous.  If you're writing p pages total in chunks of
+>> n pages, you will use a total of p pages if you use mmap and p+n if
+>> you use write.
+> 
+> I didn't understand this sentence because of many ifs, sorry. Could you
+> please explain your thought once again?
+> 
+>> That only doubles the amount of memory if you let n
+>> scale linearly with p, which seems unlikely.
+>>
+>>>
+>>> 3)received data has no a chance to be properly swapped for
+>>>   a long time.
+>>
+>> ...
+>>
+>>> a)kernel moves @buf pages into swap right after recv();
+>>> b)process_vm_writev() reads the data back from swap to pages;
+>>
+>> If you're under that much memory pressure and thrashing that badly,
+>> your performance is going to be awful no matter what you're doing.  If
+>> you indeed observe this behavior under normal loads, then this seems
+>> like a VM issue that should be addressed in its own right.
+> 
+> I don't think so. Imagine: a container migrates from one node to another.
+> The nodes are the same, say, every of them has 4GB of RAM.
+> 
+> Before the migration, the container's tasks used 4GB of RAM and 8GB of swap.
+> After the page server on the second node received the pages, we want these
+> pages become swapped as soon as possible, and we don't want to read them from
+> swap to pass a read consumer.
 
-Thank you Steve for picking it up!
+Should be "to pass a *real* consumer".
 
+> 
+> The page server is task1 in the example. The real consumer is task2.
+> 
+> This is a rather normal load, I think.
+> 
+>>>         buf = mmap(NULL, n * PAGE_SIZE, PROT_READ|PROT_WRITE,
+>>>                    MAP_PRIVATE|MAP_ANONYMOUS, ...);
+>>>         recv(sock, buf, n * PAGE_SIZE, 0);
+>>>
+>>> [Task 2]
+>>>         buf2 = process_vm_mmap(pid_of_task1, buf, n * PAGE_SIZE, NULL, 0);
+>>>
+>>> This creates a copy of VMA related to buf from task1 in task2's VM.
+>>> Task1's page table entries are copied into corresponding page table
+>>> entries of VM of task2.
+>>
+>> You need to fully explain a whole bunch of details that you're
+>> ignored.
+> 
+> Yeah, it's not a problem :) I'm ready to explain and describe everything,
+> what may cause a question. Just ask ;) 
+> 
+>> For example, if the remote VMA is MAP_ANONYMOUS, do you get
+>> a CoW copy of it? I assume you don't since the whole point is to
+>> write to remote memory
+> 
+> But, no, there *is* COW semantic. We do not copy memory. We copy
+> page table content. This is just the same we have on fork(), when
+> children duplicates parent's VMA and related page table subset,
+> and parent's PTEs lose _PAGE_RW flag.
+> 
+> There is all copy_page_range() code reused for that. Please, see [3/7]
+> for the details.
+> 
+> I'm going to get special performance using THP, when number of entries
+> to copy is smaller than in case of PTE.
+> 
+> Copy several of PMD from one task page table to another's is much much much faster,
+> than process_vm_write() copies pages (even not mention about its reading from swap).
+> 
+>> ,but it's at the very least quite unusual in
+>> Linux to have two different anonymous VMAs such that writing one of
+>> them changes the other one.
+> Writing to a new VMA does not affect old VMA. Old VMA is just used to
+> get vma->anon_vma and vma->vm_file from there. Two VMAs remain independent
+> each other.
+> 
+>> But there are plenty of other questions.
+>> What happens if the remote VMA is a gate area or other special mapping
+>> (vDSO, vvar area, etc)?  What if the remote memory comes from a driver
+>> that wasn't expecting the mapping to get magically copied to a
+>> different process?
+> 
+> In case of someone wants to duplicate such the mappings, we may consider
+> that, and extend the interface in the future for VMA types, which are
+> safe for that.
+> 
+> But now the logic is very overprotective, and all the unusual mappings
+> like you mentioned (also AIO, etc) is prohibited. Please, see [7/7]
+> for the details.
+> 
+>> This new API seems quite dangerous and complex to me, and I don't
+>> think the value has been adequately demonstrated.
+> 
+> I don't think it's dangerous and complex, because of I haven't introduced
+> any principal VMA conceptions different to what we have now. We just
+> borrow vma->anon_vma and vma->vm_file from remote process to local
+> like we did on fork() (borrowing of vma->anon_vma means not blindly
+> copying, but ordinary anon_vma_fork()).
+> 
+> Maybe I had to focus the description more on copying of PTE/PMD
+> instead of vma duplication. So, it's unexpected for me, that people
+> think about simple memory copying after reading the example I gave.
+> But I gave more explanation here, so I hope the situation became
+> clearer for a reader. Anyway, if you have any questions, please
+> ask me.
+> 
+> Thanks,
+> Kirill
+> 
 
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
