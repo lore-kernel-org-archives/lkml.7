@@ -2,119 +2,159 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57333C04E87
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 03:06:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F8D8C04AAC
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 03:09:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 260D821783
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 03:06:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62FD02173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 03:09:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="W6bBtDCk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uHJB40d9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727457AbfEUDGs (ORCPT
+        id S1727290AbfEUDJS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 23:06:48 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:37555 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727108AbfEUDGs (ORCPT
+        Mon, 20 May 2019 23:09:18 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:36435 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726335AbfEUDJS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 23:06:48 -0400
-Received: by mail-pl1-f196.google.com with SMTP id p15so7677888pll.4
-        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 20:06:47 -0700 (PDT)
+        Mon, 20 May 2019 23:09:18 -0400
+Received: by mail-pf1-f196.google.com with SMTP id v80so8258315pfa.3
+        for <linux-kernel@vger.kernel.org>; Mon, 20 May 2019 20:09:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=L6rmQq+gPSXmZQ1NvJ0gt7vzdglgYRZhWO69QkEpq4s=;
-        b=W6bBtDCkqYW+zUT8OZDmpyZxkn80Lc5l/c/oKtPUNJ/Kf6PgRimqdFjIQbncOk7fh5
-         uYnAKbkqSZ7tVUNbuLEqncLfTRPi5Is43mR2JEYtRcG1t1SZAzePFKWgH6xnawODxmK0
-         QroNahzP9a6jAF1W4Pth5Tgj0PIxaMcpp8hYfBklE3RaX+aCIIOzTzaucF7eM3GwBNUo
-         hT+Y/7FmqMZN7gat7B6SKwWAJnZDkuUcICEJqPGe/fpH4xzE7pdWFqyxmIHoTCsYU5dP
-         UNYBefeKrmr0bR+UA0lNvzOU1WLfngLD8+kBThTdGUeCMUGJ4Iubv69I497uOuZFGmYJ
-         lrRQ==
+         :content-disposition:in-reply-to:user-agent;
+        bh=vlVg84AY8ugXg02xlbmBAokwN2Lcn0W+vNZv6kTrf3s=;
+        b=uHJB40d9xNnfz1IHMsTSJwl8e7VrbujgRrcHjHx2mhAaKB7/PzuJZXEKkdJJE3iAUQ
+         E3PlAqq27yHOKULYb+1ZOhXLOipPgR9/InMzK6NnShpX5X76kc4t6yFhNbeKFI5B91QY
+         RcrnyHs+S83SgwzvFT+BLyztcpFxiTqxd2O40m0aUS4RZvsrO3smI2WyeMwlFfeuANBb
+         ii1BssR0dBTbAQzjbvbWsEuYrBGRAFKXcnJB1KNjVePboQVxVkqHybvSFOlZivOSye3O
+         t6TfhUENJqGV+FuEZ6jWJDpJ3QxN9lKDKk16gWYKUHc9sDAJndz2vzgIETxzg7nrAixJ
+         Drsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=L6rmQq+gPSXmZQ1NvJ0gt7vzdglgYRZhWO69QkEpq4s=;
-        b=VjzBeZEnsjL++qkr3yj2Akcb44K5jJSMPeGMbQBdjaeSZT0osjjt7z8JPyw17XtcfW
-         639OwNvid6k/6BufdF2y/xu6Zji7xcNtJtnmhUqUOmUHEkafgGaGFadiP3CkK8UtFmon
-         43vaxxaD6LQYuXC87vedZ2bBpXelVKZ4DtlT/Yj6pxU2uV+3bEN3HwkUUYkHopDKfgLv
-         j9G4Rhm/0KKkL6tUX5Kw1DoQTrzXiGXu/kk119jy5jiTZTa7nAa1wg16j7BxPPxaLfQe
-         jjxq7U58N9onn74hMQGej00dok5fRJxlmlpaYBI+Y1QK0bxc2vN0hjX8fosv1Skv5Ao2
-         Fa+w==
-X-Gm-Message-State: APjAAAVA1GecIZu7NVhRVsexfVT0P3JtvAFClwZxMjdP0vYngQXHsuwO
-        6U9GKdaFLM5hd8yX5mFoMKKBcQ==
-X-Google-Smtp-Source: APXvYqzw9GX4e6zEdn2jIoJXmVbu/zG5ngWRViST01bGmBuzxZn00fba7Cq1NDzVTnzZ4PDpCaTlUw==
-X-Received: by 2002:a17:902:b191:: with SMTP id s17mr57530171plr.262.1558408007225;
-        Mon, 20 May 2019 20:06:47 -0700 (PDT)
-Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id n1sm18491693pgv.15.2019.05.20.20.06.45
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 20 May 2019 20:06:46 -0700 (PDT)
-Date:   Mon, 20 May 2019 20:07:12 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Alex Elder <elder@linaro.org>
-Cc:     Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>,
-        arnd@arndb.de, david.brown@linaro.org, agross@kernel.org,
-        davem@davemloft.net, ilias.apalodimas@linaro.org,
-        cpratapa@codeaurora.org, syadagir@codeaurora.org,
-        evgreen@chromium.org, benchan@google.com, ejcaruso@google.com,
-        netdev@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/8] net: qualcomm: rmnet: fix struct rmnet_map_header
-Message-ID: <20190521030712.GY2085@tuxbook-pro>
-References: <20190520135354.18628-1-elder@linaro.org>
- <20190520135354.18628-2-elder@linaro.org>
- <b0edef36555877350cfbab2248f8baac@codeaurora.org>
- <81fd1e01-b8e3-f86a-fcc9-2bcbc51bd679@linaro.org>
- <d90f8ccdc1f76f9166f269eb71a14f7f@codeaurora.org>
- <cd839826-639d-2419-0941-333055e26e37@linaro.org>
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=vlVg84AY8ugXg02xlbmBAokwN2Lcn0W+vNZv6kTrf3s=;
+        b=Y39yHqUDf0bd1MOtS0Ej2gtfCCi4QU55gh+HOwG0aORk4Uc5YKrkZOdo474CQqRZv3
+         Qtcc/3gjQDrjoF91rPtdPN30hs8Lc+3Kgac5jZBa4llKzo5ZTcyIAZaVXWMwgUcoP6OX
+         tQwm9k8tEV2E8LapGUhs3dbGO+irDAXVwRR0RxwygkWqbtDjvKvwz+jLgqISYUeTYqdl
+         GgMO2QeHraxLMtHMfWzpDkHZpLh8MQnJRW2pXPwiMemxT7Ysx0sz3ckJowLuCnMIP3LV
+         BGQBZo5hiOl9a2T+sXIJX50DgzkhvBbV0n8gNDEHO+5rzxOgztgah1WTQQgHxOn5bPLy
+         GIUg==
+X-Gm-Message-State: APjAAAUGqGXVBvPJ5+Aiq1k9wmTnyOSNZqhqTRkklDEu7L65dr4Onp06
+        bz8AZ3NnWpx8UX3CyKMFQodqsOVTm0Y=
+X-Google-Smtp-Source: APXvYqweNFk2PpQow3nKboR8yrMVsRTS6XktlyoEcIjCkyeHUL5h3BvEZoos27CgqtNhE5C2jhccWw==
+X-Received: by 2002:a62:ed09:: with SMTP id u9mr85836014pfh.23.1558408157749;
+        Mon, 20 May 2019 20:09:17 -0700 (PDT)
+Received: from zhanggen-UX430UQ ([66.42.35.75])
+        by smtp.gmail.com with ESMTPSA id r29sm16518643pga.62.2019.05.20.20.09.14
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 20 May 2019 20:09:17 -0700 (PDT)
+Date:   Tue, 21 May 2019 11:09:05 +0800
+From:   Gen Zhang <blackgod016574@gmail.com>
+To:     Nicolas Pitre <nico@fluxnic.net>
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] vt: Fix a missing-check bug in drivers/tty/vt/vt.c
+Message-ID: <20190521030905.GB5263@zhanggen-UX430UQ>
+References: <20190521022940.GA4858@zhanggen-UX430UQ>
+ <nycvar.YSQ.7.76.1905202242410.1558@knanqh.ubzr>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <cd839826-639d-2419-0941-333055e26e37@linaro.org>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <nycvar.YSQ.7.76.1905202242410.1558@knanqh.ubzr>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 20 May 19:30 PDT 2019, Alex Elder wrote:
+On Mon, May 20, 2019 at 10:55:40PM -0400, Nicolas Pitre wrote:
+> On Tue, 21 May 2019, Gen Zhang wrote:
+> 
+> > In function con_init(), the pointer variable vc_cons[currcons].d, vc and
+> > vc->vc_screenbuf is allocated a memory space via kzalloc(). And they are
+> > used in the following codes.
+> > However, when there is a memory allocation error, kzalloc() can fail.
+> > Thus null pointer (vc_cons[currcons].d, vc and vc->vc_screenbuf)
+> > dereference may happen. And it will cause the kernel to crash. Therefore,
+> > we should check return value and handle the error.
+> > Further,the loop condition MIN_NR_CONSOLES is defined as 1 in
+> > include/uapi/linux/vt.h. So there is no need to unwind the loop.
+> 
+> But what if someone changes that define? It won't be obvious that some 
+> code did rely on it to be defined to 1.
+I re-examine the source code. MIN_NR_CONSOLES is only defined once and
+no other changes to it.
 
-> On 5/20/19 8:32 PM, Subash Abhinov Kasiviswanathan wrote:
-> >>
-> >> If you are telling me that the command/data flag resides at bit
-> >> 7 of the first byte, I will update the field masks in a later
-> >> patch in this series to reflect that.
-> >>
+> 
+> > Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
 > > 
-> > Higher order bit is Command / Data.
+> > ---
+> > diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
+> > index fdd12f8..b756609 100644
+> > --- a/drivers/tty/vt/vt.c
+> > +++ b/drivers/tty/vt/vt.c
+> > @@ -3350,10 +3350,14 @@ static int __init con_init(void)
+> >  
+> >  	for (currcons = 0; currcons < MIN_NR_CONSOLES; currcons++) {
+> >  		vc_cons[currcons].d = vc = kzalloc(sizeof(struct vc_data), GFP_NOWAIT);
+> > +		if (!vc_cons[currcons].d || !vc)
 > 
-> So what this means is that to get the command/data bit we use:
-> 
-> 	first_byte & 0x80
-> 
-> If that is correct I will remove this patch from the series and
-> will update the subsequent patches so bit 7 is the command bit,
-> bit 6 is reserved, and bits 0-5 are the pad length.
-> 
-> I will post a v2 of the series with these changes, and will
-> incorporate Bjorn's "Reviewed-by".
-> 
+> Both vc_cons[currcons].d and vc are assigned the same value on the 
+> previous line. You don't have to test them both.
+Thanks for this comment!
 
-But didn't you say that your testing show that the current bit order is
-wrong?
-
-I still like the cleanup, if nothing else just to clarify and clearly
-document the actual content of this header.
-
-Regards,
-Bjorn
+> 
+> > +			goto err_vc;
+> >  		INIT_WORK(&vc_cons[currcons].SAK_work, vc_SAK);
+> >  		tty_port_init(&vc->port);
+> >  		visual_init(vc, currcons, 1);
+> >  		vc->vc_screenbuf = kzalloc(vc->vc_screenbuf_size, GFP_NOWAIT);
+> > +		if (!vc->vc_screenbuf)
+> > +			goto err_vc_screenbuf;
+> >  		vc_init(vc, vc->vc_rows, vc->vc_cols,
+> >  			currcons || !vc->vc_sw->con_save_screen);
+> >  	}
+> > @@ -3375,6 +3379,14 @@ static int __init con_init(void)
+> >  	register_console(&vt_console_driver);
+> >  #endif
+> >  	return 0;
+> > +err_vc:
+> > +	console_unlock();
+> > +	return -ENOMEM;
+> > +err_vc_screenbuf:
+> > +	console_unlock();
+> > +	kfree(vc);
+> > +	vc_cons[currcons].d = NULL;
+> > +	return -ENOMEM;
+> 
+> As soon as you release the lock, another thread could come along and 
+> start using the memory pointed by vc_cons[currcons].d you're about to 
+> free here. This is unlikely for an initcall, but still.
+> 
+> You should consider this ordering instead:
+> 
+> err_vc_screenbuf:
+> 	kfree(vc);
+> 	vc_cons[currcons].d = NULL;
+> err_vc:
+> 	console_unlock();
+> 	return -ENOMEM;
+> 
+> 
+Thanks for your patient reply, Nicolas!
+I will work on this patch and resubmit it.
+Thanks
+Gen
+> >  }
+> >  console_initcall(con_init);
+> >  
+> >  ---
+> > 
