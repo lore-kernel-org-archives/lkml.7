@@ -3,97 +3,126 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DC6CC04E87
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:32:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84AE8C04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:32:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E2F4217D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:32:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 628DB2173C
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 16:32:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729076AbfEUQcB (ORCPT
+        id S1728968AbfEUQci (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 12:32:01 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:41432 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728055AbfEUQcB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 12:32:01 -0400
-Received: from callcc.thunk.org (guestnat-104-133-0-109.corp.google.com [104.133.0.109] (may be forged))
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x4LGV973024567
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 21 May 2019 12:31:10 -0400
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id DF045420481; Tue, 21 May 2019 12:31:08 -0400 (EDT)
-Date:   Tue, 21 May 2019 12:31:08 -0400
-To:     Jan Kara <jack@suse.cz>
-Cc:     Paolo Valente <paolo.valente@linaro.org>,
-        "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>,
-        linux-fsdevel@vger.kernel.org,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-ext4@vger.kernel.org, cgroups@vger.kernel.org,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Jens Axboe <axboe@kernel.dk>, jmoyer@redhat.com,
-        amakhalov@vmware.com, anishs@vmware.com, srivatsab@vmware.com
-Subject: Re: CFQ idling kills I/O performance on ext4 with blkio cgroup
- controller
-Message-ID: <20190521163108.GB2591@mit.edu>
-Mail-Followup-To: tytso@mit.edu, Jan Kara <jack@suse.cz>,
-        Paolo Valente <paolo.valente@linaro.org>,
-        "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>,
-        linux-fsdevel@vger.kernel.org,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-ext4@vger.kernel.org, cgroups@vger.kernel.org,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Jens Axboe <axboe@kernel.dk>, jmoyer@redhat.com,
-        amakhalov@vmware.com, anishs@vmware.com, srivatsab@vmware.com
-References: <8d72fcf7-bbb4-2965-1a06-e9fc177a8938@csail.mit.edu>
- <1812E450-14EF-4D5A-8F31-668499E13652@linaro.org>
- <46c6a4be-f567-3621-2e16-0e341762b828@csail.mit.edu>
- <07D11833-8285-49C2-943D-E4C1D23E8859@linaro.org>
- <238e14ff-68d1-3b21-a291-28de4f2d77af@csail.mit.edu>
- <6EB6C9D2-E774-48FA-AC95-BC98D97645D0@linaro.org>
- <20190521091026.GA17019@quack2.suse.cz>
+        Tue, 21 May 2019 12:32:38 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:52130 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728055AbfEUQci (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 12:32:38 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 0D9CD5947D;
+        Tue, 21 May 2019 16:32:30 +0000 (UTC)
+Received: from redhat.com (unknown [10.20.6.178])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B0CEB1001E6C;
+        Tue, 21 May 2019 16:32:26 +0000 (UTC)
+Date:   Tue, 21 May 2019 12:32:24 -0400
+From:   Jerome Glisse <jglisse@redhat.com>
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc:     DRI Development <dri-devel@lists.freedesktop.org>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Rientjes <rientjes@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Daniel Vetter <daniel.vetter@intel.com>
+Subject: Re: [PATCH 4/4] mm, notifier: Add a lockdep map for
+ invalidate_range_start
+Message-ID: <20190521163224.GE3836@redhat.com>
+References: <20190520213945.17046-1-daniel.vetter@ffwll.ch>
+ <20190520213945.17046-4-daniel.vetter@ffwll.ch>
+ <20190521154059.GC3836@redhat.com>
+ <CAKMK7uEaKJiT__=dt=ROUP4Kkq1NgwScLJFQcMuBs2GYjMWOLw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20190521091026.GA17019@quack2.suse.cz>
->From:  Theodore Ts'o <tytso@mit.edu>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-From:   "Theodore Ts'o" <tytso@mit.edu>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAKMK7uEaKJiT__=dt=ROUP4Kkq1NgwScLJFQcMuBs2GYjMWOLw@mail.gmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Tue, 21 May 2019 16:32:37 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 21, 2019 at 11:10:26AM +0200, Jan Kara wrote:
-> > [root@localhost tmp]# dd if=/dev/zero of=/root/test.img bs=512 count=10000 oflag=dsync
+On Tue, May 21, 2019 at 06:00:36PM +0200, Daniel Vetter wrote:
+> On Tue, May 21, 2019 at 5:41 PM Jerome Glisse <jglisse@redhat.com> wrote:
+> >
+> > On Mon, May 20, 2019 at 11:39:45PM +0200, Daniel Vetter wrote:
+> > > This is a similar idea to the fs_reclaim fake lockdep lock. It's
+> > > fairly easy to provoke a specific notifier to be run on a specific
+> > > range: Just prep it, and then munmap() it.
+> > >
+> > > A bit harder, but still doable, is to provoke the mmu notifiers for
+> > > all the various callchains that might lead to them. But both at the
+> > > same time is really hard to reliable hit, especially when you want to
+> > > exercise paths like direct reclaim or compaction, where it's not
+> > > easy to control what exactly will be unmapped.
+> > >
+> > > By introducing a lockdep map to tie them all together we allow lockdep
+> > > to see a lot more dependencies, without having to actually hit them
+> > > in a single challchain while testing.
+> > >
+> > > Aside: Since I typed this to test i915 mmu notifiers I've only rolled
+> > > this out for the invaliate_range_start callback. If there's
+> > > interest, we should probably roll this out to all of them. But my
+> > > undestanding of core mm is seriously lacking, and I'm not clear on
+> > > whether we need a lockdep map for each callback, or whether some can
+> > > be shared.
+> >
+> > I need to read more on lockdep but it is legal to have mmu notifier
+> > invalidation within each other. For instance when you munmap you
+> > might split a huge pmd and it will trigger a second invalidate range
+> > while the munmap one is not done yet. Would that trigger the lockdep
+> > here ?
 > 
-> Yes and that's expected. It just shows how inefficient small synchronous IO
-> is. Look, dd(1) writes 512-bytes. From FS point of view we have to write:
-> full fs block with data (+4KB), inode to journal (+4KB), journal descriptor
-> block (+4KB), journal superblock (+4KB), transaction commit block (+4KB) -
-> so that's 20KB just from top of my head to write 512 bytes...
+> Depends how it's nesting. I'm wrapping the annotation only just around
+> the individual mmu notifier callback, so if the nesting is just
+> - munmap starts
+> - invalidate_range_start #1
+> - we noticed that there's a huge pmd we need to split
+> - invalidate_range_start #2
+> - invalidate_reange_end #2
+> - invalidate_range_end #1
+> - munmap is done
 
-Well, it's not *that* bad.  With fdatasync(), we're only having to do
-this worse case thing every 8 writes.  The other writes, we don't
-actually need to do any file-system level block allocation, so it's
-only a 512 byte write to the disk[1] seven out of eight writes.
+Yeah this is how it looks. All the callback from range_start #1 would
+happens before range_start #2 happens so we should be fine.
 
-That's also true for the slice_idle hit, of course, We only need to do
-a jbd2 transaction when there is a block allocation, and that's only
-going to happen one in eight writes.
+> 
+> But if otoh it's ok to trigger the 2nd invalidate range from within an
+> mmu_notifier->invalidate_range_start callback, then lockdep will be
+> pissed about that.
 
-       	   	      	     	     	   - Ted
+No that would be illegal for a callback to do that. There is no existing
+callback that would do that at least AFAIK. So we can just say that it
+is illegal. I would not see the point.
 
-[1] Of course, small synchronous writes to a HDD are *also* terrible
-for performance, just from the HDD's perspective.  For a random write
-workload, if you are using disks with a 4k physical sector size, it's
-having to do a read/modify/write for each 512 byte write.  And HDD
-vendors are talking about wanting to go to a 32k or 64k physical
-sector size...  In this sequential write workload, you'll mostly be
-shielded from this by the HDD's cache, but the fact that you have to
-wait for the bits to hit the platter is always going to be painful.
+> 
+> > Worst case i can think of is 2 invalidate_range_start chain one after
+> > the other. I don't think you can triggers a 3 levels nesting but maybe.
+> 
+> Lockdep has special nesting annotations. I think it'd be more an issue
+> of getting those funneled through the entire call chain, assuming we
+> really need that.
+
+I think we are fine. So this patch looks good.
+
+Reviewed-by: Jérôme Glisse <jglisse@redhat.com>
