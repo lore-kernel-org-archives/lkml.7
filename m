@@ -2,98 +2,266 @@ Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0122C04AAF
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:15:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C7BEC04AAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:15:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B26D22173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:15:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05C212173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 15:15:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ITfJiVja"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VTlcfnaK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728559AbfEUPPH (ORCPT
+        id S1728605AbfEUPP0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 11:15:07 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:42904 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727969AbfEUPPH (ORCPT
+        Tue, 21 May 2019 11:15:26 -0400
+Received: from mail-it1-f193.google.com ([209.85.166.193]:37829 "EHLO
+        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727969AbfEUPPZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 11:15:07 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4LF1qQ1087594;
-        Tue, 21 May 2019 15:14:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=Uqv3nKXWWkJ9B0A+oT8QlIR1q8DM2+THe+i7fy28Bj4=;
- b=ITfJiVjadmq6ClilKxKxon+dtJaovaW0GkxecG/dv90DcwQUhhq0gyY3qsDwBe2kMmWj
- 3yho1AgjU+mvWW3hrcd++ohKN/QHCfNcDYWZn3ZKeGyLQ8d1izdfOhny9qLzLTd4LiRS
- T9vcWliYo/Pu7OKatoilij9FlRp96r4WF62yPOimXY4Gg8dYi6GdCD4cTlD8metInNXS
- FhiKVHIr5OU4f9QQFzVGZeXrgR+7xA9LZewti0/fpP/5b9bGediB2FXBuxfqLeHN/CXJ
- D+gXJ5gar9Rg2cMK6VULlhoogzaKhuyhUQQVGYdTG08HrsOA4MYonzb2V6xTGMgf+8YM 6Q== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2sj9fte5h8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 21 May 2019 15:14:57 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4LFDUqm112774;
-        Tue, 21 May 2019 15:14:57 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 2sks1y8sw0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 21 May 2019 15:14:56 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x4LFEq2e002400;
-        Tue, 21 May 2019 15:14:52 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 21 May 2019 15:14:51 +0000
-Date:   Tue, 21 May 2019 18:14:44 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Tianzheng Li <ltz0302@gmail.com>
-Cc:     rspringer@google.com, devel@driverdev.osuosl.org,
-        zhangjie.cnde@gmail.com, linux-kernel@i4.cs.fau.de,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        toddpoynor@google.com
-Subject: Re: [PATCH] staging/gasket: Fix string split
-Message-ID: <20190521151444.GN31203@kadam>
-References: <20190521150728.25501-1-ltz0302@gmail.com>
+        Tue, 21 May 2019 11:15:25 -0400
+Received: by mail-it1-f193.google.com with SMTP id m140so5261973itg.2
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 08:15:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=L32FrJBxFxvtOKGImjEKesOZkV1TeoxEIa7SyWQbKVo=;
+        b=VTlcfnaKWeUBhCfF+Bq7ZCb8//nE5wr6n2I3F0CyYQRFITjBvvdXv70jvNQhXcVXVU
+         8pPzttTNmKoPX9TdRL4hn3LHpu+KkT8xBvl2nRucpzuPyHcpVWACAqkDSJ82OR4a12S7
+         xYQZkcFFeasnV2km0e05bfLog80oD4UKPUE1M=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=L32FrJBxFxvtOKGImjEKesOZkV1TeoxEIa7SyWQbKVo=;
+        b=r3DH/sFqYgE0sH7Xk/IJpgu6b57m6/HylXJBA69TAaLN9ke3WBv/3pdDDKzLVPMvGd
+         X2guqoINJ7A32+pK+IQmW5RpvVcekwC5uVnMYwEzYnvKezFO/lis5Ke7h9eZCx0n3iPG
+         gHVSFgQTpYKwk4zqEw6sY11zF+FbYGynUEB7OHQUXaiUsbH1MK6ioLLh7Oez42NinPTk
+         G/OmLkWs7TzNawe4pVJZHKBrjuJVV98Nz0XJ+RnTE2aL1JUmA/4+80Rh/brYYPEn4vqE
+         gEwTPVoKasiFwqW0pduYZfFVfflkeOJN99jnA8pbvmDQ2QjmB/cWpgcrYE/Zb+wTPs+t
+         w1hQ==
+X-Gm-Message-State: APjAAAW9QuXPw/JE12yz2+46bIg8qxj/2QAtn53zeG0PnPVqaS14oBcE
+        2SfWIOjcoTIlPSmt6JnC8Vi+rg==
+X-Google-Smtp-Source: APXvYqyu3pyTyw2vgeQymaZ8ABNHR2Dh2p0gOSVKduDgYqKZUAl0DI2tN0g72pFoz1Ad65nGKt2RMQ==
+X-Received: by 2002:a24:bd4:: with SMTP id 203mr4164033itd.119.1558451724985;
+        Tue, 21 May 2019 08:15:24 -0700 (PDT)
+Received: from localhost ([2620:15c:183:0:20b8:dee7:5447:d05])
+        by smtp.gmail.com with ESMTPSA id p23sm6832295ios.65.2019.05.21.08.15.23
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 21 May 2019 08:15:24 -0700 (PDT)
+From:   Raul E Rangel <rrangel@chromium.org>
+To:     enric.balletbo@collabora.com, ncrews@chromium.org
+Cc:     Raul E Rangel <rrangel@chromium.org>,
+        Simon Glass <sjg@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        linux-kernel@vger.kernel.org, Benson Leung <bleung@chromium.org>,
+        Daniel Kurtz <djkurtz@chromium.org>,
+        Olof Johansson <olof@lixom.net>,
+        Sean Paul <seanpaul@chromium.org>
+Subject: [PATCH] platform/chrome: wilco_ec: Add version sysfs entries
+Date:   Tue, 21 May 2019 09:15:19 -0600
+Message-Id: <20190521151519.158273-1-rrangel@chromium.org>
+X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190521150728.25501-1-ltz0302@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9264 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=799
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1905210094
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9264 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=851 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905210094
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 21, 2019 at 05:07:28PM +0200, Tianzheng Li wrote:
-> This patch removes unnecessary quoted string splits.
-> 
-> Signed-off-by: Tianzheng Li <ltz0302@gmail.com>
-> Signed-off-by: Jie Zhang <zhangjie.cnde@gmail.com>
+Add the ability to extract version information from the EC.
 
-What do the two sign off mean here?  What did Jie Zhang do?  Who wrote
-this patch?
+Signed-off-by: Raul E Rangel <rrangel@chromium.org>
+---
 
-Co-developed-by?  Reviewed-by?
+This patch is rebased on platform/chrome: wilco_ec: Add Boot on AC support.
+https://lkml.org/lkml/2019/4/16/1374
 
-regards,
-dan carpenter
+That patch wasn't in the for-next branch, so I'm not 100% sure if it
+applies cleanly to for-next.
+
+Example Output:
+/sys/bus/platform/devices/GOOG000C:00/version # tail *
+==> build_date <==
+04/25/19
+
+==> build_revision <==
+d2592cae0
+
+==> label <==
+00.00.14
+
+==> model_number <==
+08B6
+
+ .../ABI/testing/sysfs-platform-wilco-ec       | 33 +++++++
+ drivers/platform/chrome/wilco_ec/sysfs.c      | 97 ++++++++++++++++++-
+ 2 files changed, 128 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/ABI/testing/sysfs-platform-wilco-ec b/Documentation/ABI/testing/sysfs-platform-wilco-ec
+index 6694df8d4172f..00bc8e7c3b9c2 100644
+--- a/Documentation/ABI/testing/sysfs-platform-wilco-ec
++++ b/Documentation/ABI/testing/sysfs-platform-wilco-ec
+@@ -102,3 +102,36 @@ KernelVersion: 5.3
+ Description:
+ 		Read or write the battery percentage threshold for which the
+ 		peak shift policy is used. The valid range is [15, 100].
++
++What:          /sys/bus/platform/devices/GOOG000C\:00/version/label
++Date:          May 2019
++KernelVersion: 5.3
++Description:
++               Display Wilco Embedded Controller firmware version label.
++               Output will a version string be similar to the example below:
++               95.00.06
++
++What:          /sys/bus/platform/devices/GOOG000C\:00/version/build_revision
++
++Date:          May 2019
++KernelVersion: 5.3
++Description:
++               Display Wilco Embedded Controller build revision.
++               Output will a version string be similar to the example below:
++               d2592cae0
++
++What:          /sys/bus/platform/devices/GOOG000C\:00/version/model_number
++
++Date:          May 2019
++KernelVersion: 5.3
++Description:
++               Display Wilco Embedded Controller model number.
++               Output will a version string be similar to the example below:
++               08B6
++
++What:          /sys/bus/platform/devices/GOOG000C\:00/version/build_date
++Date:          May 2019
++KernelVersion: 5.3
++Description:
++               Display Wilco Embedded Controller firmware build date.
++               Output will a MM/DD/YY string.
+diff --git a/drivers/platform/chrome/wilco_ec/sysfs.c b/drivers/platform/chrome/wilco_ec/sysfs.c
+index 6573a6cf9cb31..9bfb9dfde73d1 100644
+--- a/drivers/platform/chrome/wilco_ec/sysfs.c
++++ b/drivers/platform/chrome/wilco_ec/sysfs.c
+@@ -43,6 +43,25 @@ struct usb_power_share_response {
+ 	u8 val;		/* When getting, set by EC to either 0 or 1 */
+ } __packed;
+ 
++#define CMD_EC_INFO			0x38
++enum get_ec_info_op {
++	CMD_GET_EC_LABEL	= 0,
++	CMD_GET_EC_REV		= 1,
++	CMD_GET_EC_MODEL	= 2,
++	CMD_GET_EC_BUILD_DATE	= 3,
++};
++
++struct get_ec_info_req {
++	u8 cmd;			/* Always CMD_EC_INFO */
++	u8 reserved;
++	u8 op;			/* One of enum get_ec_info_op */
++} __packed;
++
++struct get_ec_info_resp {
++	u8 reserved[2];
++	char value[9]; /* __nonstring: might not be null terminated */
++} __packed;
++
+ static ssize_t boot_on_ac_store(struct device *dev,
+ 				struct device_attribute *attr,
+ 				const char *buf, size_t count)
+@@ -158,12 +177,86 @@ static struct attribute_group wilco_dev_attr_group = {
+ 	.attrs = wilco_dev_attrs,
+ };
+ 
++static ssize_t get_info(struct device *dev, char *buf, enum get_ec_info_op op)
++{
++	struct wilco_ec_device *ec = dev_get_drvdata(dev);
++	struct get_ec_info_req req = { .cmd = CMD_EC_INFO, .op = op };
++	struct get_ec_info_resp resp;
++	int ret;
++
++	struct wilco_ec_message msg = {
++		.type = WILCO_EC_MSG_LEGACY,
++		.request_data = &req,
++		.request_size = sizeof(req),
++		.response_data = &resp,
++		.response_size = sizeof(resp),
++	};
++
++	ret = wilco_ec_mailbox(ec, &msg);
++	if (ret < 0)
++		return ret;
++
++	return scnprintf(buf, PAGE_SIZE, "%.*s\n", (int)sizeof(resp.value),
++			 (char *)&resp.value);
++}
++
++static ssize_t label_show(struct device *dev, struct device_attribute *attr,
++			  char *buf)
++{
++	return get_info(dev, buf, CMD_GET_EC_LABEL);
++}
++
++static DEVICE_ATTR_RO(label);
++
++static ssize_t build_revision_show(struct device *dev,
++				   struct device_attribute *attr, char *buf)
++{
++	return get_info(dev, buf, CMD_GET_EC_REV);
++}
++
++static DEVICE_ATTR_RO(build_revision);
++
++static ssize_t build_date_show(struct device *dev,
++			       struct device_attribute *attr, char *buf)
++{
++	return get_info(dev, buf, CMD_GET_EC_BUILD_DATE);
++}
++
++static DEVICE_ATTR_RO(build_date);
++
++static ssize_t model_number_show(struct device *dev,
++				 struct device_attribute *attr, char *buf)
++{
++	return get_info(dev, buf, CMD_GET_EC_MODEL);
++}
++
++static DEVICE_ATTR_RO(model_number);
++
++static struct attribute *wilco_version_attrs[] = {
++	&dev_attr_label.attr,
++	&dev_attr_build_revision.attr,
++	&dev_attr_build_date.attr,
++	&dev_attr_model_number.attr,
++	NULL,
++};
++
++static struct attribute_group wilco_version_group = {
++	.name = "version",
++	.attrs = wilco_version_attrs,
++};
++
++static const struct attribute_group *wilco_dev_attr_groups[] = {
++	&wilco_dev_attr_group,
++	&wilco_version_group,
++	NULL
++};
++
+ int wilco_ec_add_sysfs(struct wilco_ec_device *ec)
+ {
+-	return sysfs_create_group(&ec->dev->kobj, &wilco_dev_attr_group);
++	return sysfs_create_groups(&ec->dev->kobj, wilco_dev_attr_groups);
+ }
+ 
+ void wilco_ec_remove_sysfs(struct wilco_ec_device *ec)
+ {
+-	sysfs_remove_group(&ec->dev->kobj, &wilco_dev_attr_group);
++	sysfs_remove_groups(&ec->dev->kobj, wilco_dev_attr_groups);
+ }
+-- 
+2.21.0.1020.gf2820cf01a-goog
 
