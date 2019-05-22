@@ -2,133 +2,193 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 776DDC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 22:37:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1568C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 22:39:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C2A820881
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 22:37:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 936E120881
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 22:39:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="HPp1yf7U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727983AbfEVWhn (ORCPT
+        id S1728323AbfEVWjJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 18:37:43 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60606 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726218AbfEVWhn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 18:37:43 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 48586C057EC6;
-        Wed, 22 May 2019 22:37:42 +0000 (UTC)
-Received: from krava (ovpn-204-104.brq.redhat.com [10.40.204.104])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 240AF1001E81;
-        Wed, 22 May 2019 22:37:39 +0000 (UTC)
-Date:   Thu, 23 May 2019 00:37:38 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Vince Weaver <vincent.weaver@maine.edu>
-Cc:     Andi Kleen <ak@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Stephane Eranian <eranian@google.com>,
-        Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: perf: fuzzer causes crash in new XMM code
-Message-ID: <20190522223738.GC11325@krava>
-References: <alpine.DEB.2.21.1905221154300.22830@macbook-air>
+        Wed, 22 May 2019 18:39:09 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:34400 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726218AbfEVWjJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 18:39:09 -0400
+Received: by mail-qt1-f195.google.com with SMTP id h1so4505819qtp.1
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 15:39:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=UMLE3HAwx27IoVBbcznO88OARo8jwYRssCcya47nG+w=;
+        b=HPp1yf7UaNRX/NHm7Qrb6+fAjoR2gcBQuHExLlVFljSVAj6YPgk7u5skIrg1t+Q676
+         L+k/DF0Ep78EEOSTSdjakOaul6IT4peNpU0CBpdsaewjQM5qFjASu8RuDwae8Lkm2wgp
+         jm8zl83EuwQTP1qNxJMUNJPygZbR1PsHjnGhvWR3dYIyYw2wWZpKRqnHD/TpRw6n0FHS
+         3qvSUrjQ6yP/Pp8MSoZIhlXnd+WCyuzsdHTnwA++L7r5QQbNMt2cV3ivlSRvH1X6TNTH
+         2E9gAxB/pokrMV8S24PNfis99/Hc+RHOiv9NicXOZ4QkaAU4eZrpIg4BFNPp5GSW+Z44
+         b6Iw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=UMLE3HAwx27IoVBbcznO88OARo8jwYRssCcya47nG+w=;
+        b=HxwFINwE+9CVjeKQJNVugzmxv7kawNCzAcsn+oeDTrMNNAoTzj1JVaFmIQZnA33hfj
+         K3TozPLTa5P06i+gKpLtxeK9iz608i/GMmajuPcnWaJ2MwLi4pA9ZOLG5fvilwAJa8Dd
+         gSgBrkF6E4n1D73LoOTPC99fo5P+XW0ytKBS0HnceQtyPohT72fOxC1XMMQOyAIdZix2
+         XEoRzcbiE6Z5JlOpplWsOgwYFMYlidmZe0kV+T72X9AwgWa2X5nPPizpuOP6sZRrRZ/J
+         0IGvvC0paAzXApBXC3S6WMbDUy13wkWb40esdX7ILd4hntWMpmyiYbw1G0ADoKOi33Z7
+         vMQg==
+X-Gm-Message-State: APjAAAXrr9ENcXmGQdZ7WnEnVJFZn4SV+HSOjN5B+iguEg7m50kpmOIe
+        RrUSxUWJbZbm7M1ZII0jDVNmIA==
+X-Google-Smtp-Source: APXvYqxj4GChHyUq+eruEvlXXg5Xkh+OFkyniU+6VTOrc4UcOOoOthn42FnxYVAYbRcTGFHyw0omgw==
+X-Received: by 2002:a0c:9ac8:: with SMTP id k8mr73884142qvf.132.1558564747382;
+        Wed, 22 May 2019 15:39:07 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-49-251.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.49.251])
+        by smtp.gmail.com with ESMTPSA id x3sm14024223qtk.75.2019.05.22.15.39.06
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 22 May 2019 15:39:06 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hTZt4-00046O-2c; Wed, 22 May 2019 19:39:06 -0300
+Date:   Wed, 22 May 2019 19:39:06 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Jerome Glisse <jglisse@redhat.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-rdma@vger.kernel.org, Leon Romanovsky <leonro@mellanox.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Artemy Kovalyov <artemyko@mellanox.com>,
+        Moni Shoua <monis@mellanox.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Kaike Wan <kaike.wan@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>
+Subject: Re: [PATCH v4 0/1] Use HMM for ODP v4
+Message-ID: <20190522223906.GA15389@ziepe.ca>
+References: <20190411181314.19465-1-jglisse@redhat.com>
+ <20190506195657.GA30261@ziepe.ca>
+ <20190521205321.GC3331@redhat.com>
+ <20190522005225.GA30819@ziepe.ca>
+ <20190522174852.GA23038@redhat.com>
+ <20190522201247.GH6054@ziepe.ca>
+ <20190522220419.GB20179@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1905221154300.22830@macbook-air>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Wed, 22 May 2019 22:37:42 +0000 (UTC)
+In-Reply-To: <20190522220419.GB20179@redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 22, 2019 at 12:08:31PM -0400, Vince Weaver wrote:
+On Wed, May 22, 2019 at 06:04:20PM -0400, Jerome Glisse wrote:
+> On Wed, May 22, 2019 at 05:12:47PM -0300, Jason Gunthorpe wrote:
+> > On Wed, May 22, 2019 at 01:48:52PM -0400, Jerome Glisse wrote:
+> > 
+> > >  static void put_per_mm(struct ib_umem_odp *umem_odp)
+> > >  {
+> > >  	struct ib_ucontext_per_mm *per_mm = umem_odp->per_mm;
+> > > @@ -325,9 +283,10 @@ static void put_per_mm(struct ib_umem_odp *umem_odp)
+> > >  	up_write(&per_mm->umem_rwsem);
+> > >  
+> > >  	WARN_ON(!RB_EMPTY_ROOT(&per_mm->umem_tree.rb_root));
+> > > -	mmu_notifier_unregister_no_release(&per_mm->mn, per_mm->mm);
+> > > +	hmm_mirror_unregister(&per_mm->mirror);
+> > >  	put_pid(per_mm->tgid);
+> > > -	mmu_notifier_call_srcu(&per_mm->rcu, free_per_mm);
+> > > +
+> > > +	kfree(per_mm);
+> > 
+> > Notice that mmu_notifier only uses SRCU to fence in-progress ops
+> > callbacks, so I think hmm internally has the bug that this ODP
+> > approach prevents.
+> > 
+> > hmm should follow the same pattern ODP has and 'kfree_srcu' the hmm
+> > struct, use container_of in the mmu_notifier callbacks, and use the
+> > otherwise vestigal kref_get_unless_zero() to bail:
+> > 
+> > From 0cb536dc0150ba964a1d655151d7b7a84d0f915a Mon Sep 17 00:00:00 2001
+> > From: Jason Gunthorpe <jgg@mellanox.com>
+> > Date: Wed, 22 May 2019 16:52:52 -0300
+> > Subject: [PATCH] hmm: Fix use after free with struct hmm in the mmu notifiers
+> > 
+> > mmu_notifier_unregister_no_release() is not a fence and the mmu_notifier
+> > system will continue to reference hmm->mn until the srcu grace period
+> > expires.
+> > 
+> >          CPU0                                     CPU1
+> >                                                __mmu_notifier_invalidate_range_start()
+> >                                                  srcu_read_lock
+> >                                                  hlist_for_each ()
+> >                                                    // mn == hmm->mn
+> > hmm_mirror_unregister()
+> >   hmm_put()
+> >     hmm_free()
+> >       mmu_notifier_unregister_no_release()
+> >          hlist_del_init_rcu(hmm-mn->list)
+> > 			                           mn->ops->invalidate_range_start(mn, range);
+> > 					             mm_get_hmm()
+> >       mm->hmm = NULL;
+> >       kfree(hmm)
+> >                                                      mutex_lock(&hmm->lock);
+> > 
+> > Use SRCU to kfree the hmm memory so that the notifiers can rely on hmm
+> > existing. Get the now-safe hmm struct through container_of and directly
+> > check kref_get_unless_zero to lock it against free.
 > 
-> The perf fuzzer caused my skylake machine to crash hard with the trace at 
-> the end here.  (this is with current git)
-> 
-> It appears to be happening in new code introduced by:
-> 
-> commit 878068ea270ea82767ff1d26c91583263c81fba0
-> Author: Kan Liang <kan.liang@linux.intel.com>
-> Date:   Tue Apr 2 12:44:59 2019 -0700
-> 
->     perf/x86: Support outputting XMM registers
-> 
-> 
-> u64 perf_reg_value(struct pt_regs *regs, int idx)
-> {
->         struct x86_perf_regs *perf_regs;
-> 
->         if (idx >= PERF_REG_X86_XMM0 && idx < PERF_REG_X86_XMM_MAX) {
->                 perf_regs = container_of(regs, struct x86_perf_regs, regs);
-> ===>            if (!perf_regs->xmm_regs)
->                         return 0;
->                 return perf_regs->xmm_regs[idx - PERF_REG_X86_XMM0];
->         }
-> 
-> 
-> [ 9679.952236] BUG: stack guard page was hit at 00000000a58f0e2f (stack is 000000007d0772c9..00000000938c7501)
-> [ 9679.962289] kernel stack overflow (page fault): 0000 [#1] SMP PTI
-> [ 9679.968575] CPU: 1 PID: 18831 Comm: perf_fuzzer Tainted: G        W         5.2.0-rc1 #37
-> [ 9679.976966] Hardware name: LENOVO 10FY0017US/SKYBAY, BIOS FWKT53A   06/06/2016
-> [ 9679.984325] RIP: 0010:perf_reg_value+0xd/0x50
-> [ 9679.988799] Code: 45 14 48 83 c3 20 4c 39 e3 75 c3 5b 5d 41 5c 41 5d 41 5e c3 90 90 90 90 90 90 90 90 90 0f 1f 44 00 00 8d 46 e0 83 f8 1f 77 1d <48> 8b 97 a8 00 00 00 31 c0 48 85 d2 74 0e 48 63 f6 48 8b 84 f2 00
-> [ 9680.008003] RSP: 0000:ffffba6000dd0bc0 EFLAGS: 00010097
-> [ 9680.013339] RAX: 0000000000000001 RBX: 0000000000000021 RCX: 0000000000000021
-> [ 9680.020658] RDX: 0000000000000021 RSI: 0000000000000021 RDI: ffffba6008d2ff58
-> [ 9680.027952] RBP: ffffba6000dd0c78 R08: 0000000000000000 R09: 0000000000000000
-> [ 9680.035262] R10: 00000000bffffff0 R11: 0000000000000005 R12: ffffba6008d2ff58
-> [ 9680.042564] R13: ffff94a5ebde48b0 R14: 0000000000000030 R15: 0000000000000000
-> [ 9680.049830] FS:  00007fccbb62e540(0000) GS:ffff94a5f5a40000(0000) knlGS:0000000000000000
-> [ 9680.058069] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [ 9680.063934] CR2: ffffba6008d30000 CR3: 000000022b7a8006 CR4: 00000000003606e0
-> [ 9680.071227] DR0: 0000000000000000 DR1: 0000000081007f80 DR2: 0000000000000000
-> [ 9680.078521] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000600
-> [ 9680.085831] Call Trace:
-> [ 9680.088301]  <IRQ>
-> [ 9680.090363]  perf_output_sample_regs+0x43/0xa0
-> [ 9680.094928]  perf_output_sample+0x3aa/0x7a0
-> [ 9680.099181]  perf_event_output_forward+0x53/0x80
-> [ 9680.103917]  __perf_event_overflow+0x52/0xf0
-> [ 9680.108266]  ? perf_trace_run_bpf_submit+0xc0/0xc0
-> [ 9680.113108]  perf_swevent_hrtimer+0xe2/0x150
+> It is already badly handled with BUG_ON()
 
-shouldn't XMM* regs be allowed only for PEBS events?
+You can't crash the kernel because userspace forced a race, and no it
+isn't handled today because there is no RCU locking in mm_get_hmm nor
+is there a kfree_rcu for the struct hmm to make the
+kref_get_unless_zero work without use-after-free.
 
-jirka
+> i just need to convert those to return and to use
+> mmu_notifier_call_srcu() to free hmm struct.
 
-> [ 9680.117475]  ? check_preempt_wakeup+0x181/0x230
-> [ 9680.122091]  ? check_preempt_curr+0x62/0x90
-> [ 9680.126361]  ? ttwu_do_wakeup+0x19/0x140
-> [ 9680.130355]  ? try_to_wake_up+0x54/0x460
-> [ 9680.134366]  ? reweight_entity+0x15b/0x1a0
-> [ 9680.138559]  ? __queue_work+0x103/0x3f0
-> [ 9680.142472]  ? update_dl_rq_load_avg+0x1cd/0x270
-> [ 9680.147194]  ? timerqueue_del+0x1e/0x40
-> [ 9680.151092]  ? __remove_hrtimer+0x35/0x70
-> [ 9680.155191]  __hrtimer_run_queues+0x100/0x280
-> [ 9680.159658]  hrtimer_interrupt+0x100/0x220
-> [ 9680.163835]  smp_apic_timer_interrupt+0x6a/0x140
-> [ 9680.168555]  apic_timer_interrupt+0xf/0x20
-> [ 9680.172756]  </IRQ>
-> [ 9680.174905] RIP: 0033:0x55dad77a9927
-> [ 9680.178575] Code: 00 00 00 48 89 d1 31 c0 48 89 f2 89 fe bf 41 01 00 00 e9 4c 09 ff ff 66 2e 0f 1f 84 00 00 00 00 00 66 90 31 c9 b9 1f a1 07 00 <ff> c9 75 fc 31 c0 c3 66 90 48 8b 05 c9 96 00 00 48 89 44 24 f8 b9
-> [ 9680.197779] RSP: 002b:00007fff595603a8 EFLAGS: 00000206 ORIG_RAX: ffffffffffffff13
-> [ 9680.205489] RAX: 0000000000004985 RBX: 000000000000000c RCX: 00000000000365ca
-> [ 9680.212748] RDX: 00001e15d36cec84 RSI: 0000000000000000 RDI: 0000000000000001
-> [ 9680.220059] RBP: 00007fff595603c0 R08: 0000000000000000 R09: 00007fccbb62e540
-> [ 9680.227362] R10: fffffffffffffd4e R11: 0000000000000246 R12: 000055dad779a4c0
-> [ 9680.234630] R13: 00007fff595627b0 R14: 0000000000000000 R15: 0000000000000000
-> [ 9680.310017] ---[ end trace 511b9368cf14c65a ]---
-> 
+Isn't that what this patch does?
+
+> The way race is avoided is because mm->hmm will either be NULL or
+> point to another hmm struct before an existing hmm is free. 
+
+There is no locking on mm->hmm so it is useless to prevent races.
+
+> Also if range_start/range_end use kref_get_unless_zero() but right
+> now this is BUG_ON if it turn out to be NULL, it should just return
+> on NULL.
+
+Still needs rcu.
+
+Also the container_of is necessary to avoid some race where you could
+be doing:
+
+                  CPU0                                     CPU1                         CPU2
+                                                       hlist_for_each ()
+       mmu_notifier_unregister_no_release(hmm1)             
+       spin_lock(&mm->page_table_lock);                                
+       mm->hmm = NULL
+       spin_unlock(&mm->page_table_lock);                                                                                      
+                                                      				 hmm2 = hmm_get_or_create()
+                                                        mn == hmm1->mn
+                                                        mn->ops->invalidate_range_start(mn, range)
+							  mm_get_mm() == hmm2
+                                                      hist_for_each con't
+                                                        mn == hmm2->mn
+                                                        mn->ops->invalidate_range_start(mn, range)
+							  mm_get_mm() == hmm2
+
+Now we called the same notifier twice on hmm2. Ooops.
+
+There is no reason to risk this confusion just to avoid container_of.
+
+So we agree this patch is necessary? Can you test it an ack it please?
+
+Jason
