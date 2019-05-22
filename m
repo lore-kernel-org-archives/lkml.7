@@ -2,178 +2,132 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A988BC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 18:57:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9428FC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 18:57:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8317420645
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 18:57:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D75C2173C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 18:57:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="Ydf4kIIz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729598AbfEVS5h (ORCPT
+        id S1729742AbfEVS5n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 14:57:37 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:49848 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728533AbfEVS5g (ORCPT
+        Wed, 22 May 2019 14:57:43 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:40668 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728734AbfEVS5m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 14:57:36 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4MIuxjq019273
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 14:57:35 -0400
-Received: from e36.co.us.ibm.com (e36.co.us.ibm.com [32.97.110.154])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2snc22g8tj-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 14:57:35 -0400
-Received: from localhost
-        by e36.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <kgold@linux.ibm.com>;
-        Wed, 22 May 2019 19:57:34 +0100
-Received: from b03cxnp07028.gho.boulder.ibm.com (9.17.130.15)
-        by e36.co.us.ibm.com (192.168.1.136) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 22 May 2019 19:57:31 +0100
-Received: from b03ledav003.gho.boulder.ibm.com (b03ledav003.gho.boulder.ibm.com [9.17.130.234])
-        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4MIvUDL38338724
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 22 May 2019 18:57:30 GMT
-Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7D5DB6A054;
-        Wed, 22 May 2019 18:57:30 +0000 (GMT)
-Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DC0596A04F;
-        Wed, 22 May 2019 18:57:29 +0000 (GMT)
-Received: from [9.2.202.76] (unknown [9.2.202.76])
-        by b03ledav003.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Wed, 22 May 2019 18:57:29 +0000 (GMT)
-Subject: Re: [PATCH 0/2] public key: IMA signer logging: Log public key of IMA
- Signature signer in IMA log
-To:     Lakshmi <nramas@linux.microsoft.com>,
-        Linux Integrity <linux-integrity@vger.kernel.org>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        David Howells <dhowells@redhat.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-Cc:     Balaji Balasubramanyan <balajib@linux.microsoft.com>,
-        Prakhar Srivastava <prsriva@linux.microsoft.com>,
-        jorhand@linux.microsoft.com
-References: <6b69f115-96cf-890a-c92b-0b2b05798357@linux.microsoft.com>
- <750fdb9f-fc9b-24bf-42c3-32156ecdc16f@linux.ibm.com>
- <9c944ba6-f520-96e1-3631-1e21bbc4c327@linux.microsoft.com>
- <0b5ae493-6564-40e9-343b-e6781c229a25@linux.ibm.com>
- <54663a75-a601-ae6c-8068-bc2c3923a948@linux.microsoft.com>
-From:   Ken Goldman <kgold@linux.ibm.com>
-Date:   Wed, 22 May 2019 14:57:28 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 22 May 2019 14:57:42 -0400
+Received: by mail-pl1-f193.google.com with SMTP id g69so1506074plb.7
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 11:57:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brauner.io; s=google;
+        h=date:user-agent:in-reply-to:references:mime-version
+         :content-transfer-encoding:subject:to:cc:from:message-id;
+        bh=szkcRyxZ0C39yo4N6145DEUe6XyFUz0KBpbtt9TBfP0=;
+        b=Ydf4kIIzFGsRPeyDv/LD9jkV59ovbQan+Wd8fqIxMwCRJp/RVX+yZf4o+u6NibmZNb
+         RBaURj3qgOsxfsuBtJG6yAimX+7Bpo1Z58qe4I1GSlhbt4rdQlesJgqiVtNxukJHL9Ay
+         SCkEf9p4pFm6hpxZvAD0nuufFt6Z3LLCeyS7sMt3FF/ytzXY9FBgqYOrvXNeh66AeKL5
+         ffqluOQsspdvY8fIbgNl94Tft8wYYZvabj0kGgOv0BKMgwsPZ7rdvy4BVl3CESx+XYnK
+         dh+QwhYiKneyxjbioXF2+ggV65ZAle6Tnd2nqQo9lbgH534qL/JrOAw3laOTxvE8X7Hp
+         kLvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:user-agent:in-reply-to:references
+         :mime-version:content-transfer-encoding:subject:to:cc:from
+         :message-id;
+        bh=szkcRyxZ0C39yo4N6145DEUe6XyFUz0KBpbtt9TBfP0=;
+        b=F+ZxCk48wsQ9MA7QlhV5lRMfKLsOzsL6liu0su33bqlv4reivk2FCxvXxxJJkoLqXg
+         29XCvNssxH0HnJCSpk0PqHetLP+LWVMMtDzJdRRDhdqekLby4e69L1uCrAEvJ9HwKjUr
+         ew20RHggC3LTS2Xfr20/Eo7Ik7mPoqlWB7F9Adm1Agos0bJz9CrIic7O/fWsKIWFNgi5
+         6ofYo30IVRIHockem0rbBDFJfQ5ZZ5xlAbdUQ/rG89QqFeoIKRNdFuTlH3CQF84HvSHU
+         YxtaOBuiM39iDlpezf/3cp4AdJAhJRXX9reImoK3z8lKhRfRWaJGQSGC5o8dAjyNjd2i
+         Wayw==
+X-Gm-Message-State: APjAAAWQhrFjYx9MNFRwCty0VzuaS56nwxEr20WoY9f54+/AGqP7h9b2
+        mym3Qo0ielEJyqPZS4/W0ayWjA==
+X-Google-Smtp-Source: APXvYqyLoaZ7hqmXEwmUSc+mzFW9yrK692JNNFYKEoLiWemGI3SiDKNDvfmLElxz4983TVkj1cGfnQ==
+X-Received: by 2002:a17:902:56a:: with SMTP id 97mr53597607plf.20.1558551461185;
+        Wed, 22 May 2019 11:57:41 -0700 (PDT)
+Received: from [25.171.36.155] ([172.56.31.154])
+        by smtp.gmail.com with ESMTPSA id t78sm53489942pfa.154.2019.05.22.11.57.39
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 22 May 2019 11:57:40 -0700 (PDT)
+Date:   Wed, 22 May 2019 20:57:32 +0200
+User-Agent: K-9 Mail for Android
+In-Reply-To: <CAOQ4uxjV=7=FXuyccBK9Pu1B7o-w-pbc1FQXJxY4q6z8E93KOg@mail.gmail.com>
+References: <20190522163150.16849-1-christian@brauner.io> <CAOQ4uxjV=7=FXuyccBK9Pu1B7o-w-pbc1FQXJxY4q6z8E93KOg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <54663a75-a601-ae6c-8068-bc2c3923a948@linux.microsoft.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19052218-0020-0000-0000-00000EEECF45
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011144; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01207093; UDB=6.00633905; IPR=6.00988068;
- MB=3.00027007; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-22 18:57:33
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19052218-0021-0000-0000-000065ED7215
-Message-Id: <b1a2edc1-45c7-7a9f-7a77-e252b2f85a64@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-22_10:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905220132
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] fanotify: remove redundant capable(CAP_SYS_ADMIN)s
+To:     Amir Goldstein <amir73il@gmail.com>
+CC:     Jan Kara <jack@suse.cz>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+From:   Christian Brauner <christian@brauner.io>
+Message-ID: <EB97EF04-D44F-4320-ACDC-C536EED03BA4@brauner.io>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/20/2019 7:15 PM, Lakshmi wrote:
-> On 5/17/19 7:41 AM, Ken Goldman wrote:
-> 
-> Hi Ken,
-> 
-> Apologize for the delay in responding.
-> 
->> Since a platform typically uses only a few signing keys, 4 bytes makes 
->> the chance of a collision quite small.  The collision would have to be 
->> within the same log, not global.
+On May 22, 2019 8:29:37 PM GMT+02:00, Amir Goldstein <amir73il@gmail=2Ecom>=
+ wrote:
+>On Wed, May 22, 2019 at 7:32 PM Christian Brauner
+><christian@brauner=2Eio> wrote:
 >>
->> In that worst case, the verifier would have to try two keys.  It's a
->> slight performance penalty, but does anything break?
-> 
-> Problem Statement:
-> - If the attestation service has to re-validate the signature reported 
-> in the IMA log, the service has to maintain the hash\signature of all 
-> the binaries deployed on all the client nodes. This approach will not 
-> scale for large cloud deployments.
+>> This removes two redundant capable(CAP_SYS_ADMIN) checks from
+>> fanotify_init()=2E
+>> fanotify_init() guards the whole syscall with capable(CAP_SYS_ADMIN)
+>at the
+>> beginning=2E So the other two capable(CAP_SYS_ADMIN) checks are not
+>needed=2E
+>
+>It's intentional:
+>
+>commit e7099d8a5a34d2876908a9fab4952dabdcfc5909
+>Author: Eric Paris <eparis@redhat=2Ecom>
+>Date:   Thu Oct 28 17:21:57 2010 -0400
+>
+>    fanotify: limit the number of marks in a single fanotify group
+>
+>There is currently no limit on the number of marks a given fanotify
+>group
+>can have=2E  Since fanotify is gated on CAP_SYS_ADMIN this was not seen
+>as
+>a serious DoS threat=2E  This patch implements a default of 8192, the
+>same as
+>inotify to work towards removing the CAP_SYS_ADMIN gating and
+>eliminating
+>    the default DoS'able status=2E
+>
+>    Signed-off-by: Eric Paris <eparis@redhat=2Ecom>
+>
+>There idea is to eventually remove the gated CAP_SYS_ADMIN=2E
+>There is no reason that fanotify could not be used by unprivileged
+>users
+>to setup inotify style watch on an inode or directories children, see:
+>https://patchwork=2Ekernel=2Eorg/patch/10668299/
+>
+>>
+>> Fixes: 5dd03f55fd2 ("fanotify: allow userspace to override max queue
+>depth")
+>> Fixes: ac7e22dcfaf ("fanotify: allow userspace to override max
+>marks")
+>
+>Fixes is used to tag bug fixes for stable=2E
+>There is no bug=2E
+>
+>Thanks,
+>Amir=2E
 
-1 - How is your solution - including a public key with each event - 
-related to this issue?
-
-2 - I don't understand how a large cloud affects scale.  Wouldn't the 
-verifier would typically be checking known machines - those of their 
-enterprise - not every machine on the cloud?
-
-Can't we assume a typical attestation use case has a fairly locked down 
-OS with a limited number of applications.
-
-> - Possibility of collision of "Key Ids" is non-zero
-> - In the service if the "Key Id" alone is used to verify using a map of
-> "Key Id" to "Signing Key(s)", the service cannot determine if the 
-> trusted signing key was indeed used by the client for signature 
-> validation (Due to "Key Id" collision issue or malicious signature).
-
-Like I said, it should be rare.  In the worst case, can't the service 
-tell by trying both keys?
-
-> 
-> Proposed Solution:
-> - The service receives known\trusted signing key(s) from a trusted 
-> source (that is different from the client machines)
-> - The clients measure the keys in key rings such as IMA, Platform, 
-> BuiltIn Trusted, etc. as early as possible in the boot sequence.
-> - Leave all IMA measurements the same - i.e., we don't log public keys 
-> in the IMA log for each file, but just use what is currently available 
-> in IMA.
-
-I thought your solution was to change the IMA measurements, adding the 
-public key to each entry with a new template?  Did I misunderstand, or 
-do you have a new proposal?
-
-> 
-> Impact:
-> - The service can verify that the keyrings have only known\trusted keys.
-
-If the service already has trusted keys from a trusted source, why do 
-they have to come from the client at all?
-
-> - The service can cross check the "key id" with the key rings measured.
-> - The look up of keys using the key id would be simpler and faster on 
-> the service side.
-> - It can also handle collision of Key Ids.
-
-How does this solve the collision issue?  If there are two keys with the 
-same key ID, isn't there still a collision?
-
-> 
-> Note that the following is a key assumption:
-> 
-> - Only keys signed by a key in the "BuiltIn Trusted Keyring" can be 
-> added to IMA\Platform keyrings.
-
-I understand how the client keyring is used in IMA to check file
-signatures, but how is that related to the attestation service?
-
-> 
-> 
-> Thanks,
->   -lakshmi
-> 
-
+Interesting=2E When do you think the gate can be removed?
+I was looking into switching from inotify to fanotify but since it's not u=
+seable from
+non-initial userns it's a no-no
+since we support nested workloads=2E
