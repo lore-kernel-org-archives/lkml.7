@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0550C282DC
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:02:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8577EC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:02:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0C4620821
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:02:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B73320863
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:02:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558555359;
-	bh=QhdAarfzTmA6anoCvQ7Aa0lRiqrk8MkX1Str9Wrz+N8=;
+	s=default; t=1558555373;
+	bh=KpFcdmm4gIKg5OZzcPyu9/fqLfOfiTlvucJODDJESeY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U6oMxRZOkxBILJWknCBFdeKAFZIEcrkVh9ZoPGZ0w+cfCKEf+6lT8qG+TEhRMCZSe
-	 AdKSF9j8cBuifkmgQrc7gBftMs4w7CISXTro3GlgvBhO/+B8qF1AdrTVGuzimDczyZ
-	 4PkgVJhx/Q78t97wyQrODB9JMNnCod7C+jRtWaIg=
+	b=zrr0FhuaSMAfxYNQfDFoyzaPX0nqXvj5zREcBUbMKUNo4T1hanAN92s5eUBJ/TNqm
+	 pYPTotJ3M6ILfCZzVOoGiD+toRva4OaO1HfYswIuF8uFiGfr8P7ei+MQW+rBXq6526
+	 LnNM3S7s+FRai4jKx/2DqFZzpzZQy0TXj9DWfX2M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731230AbfEVUCj (ORCPT
+        id S1731359AbfEVUCv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 16:02:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42566 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 16:02:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42462 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730202AbfEVTVz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:21:55 -0400
+        id S1730091AbfEVTVv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:21:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2E9A2173E;
-        Wed, 22 May 2019 19:21:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 327FE2173E;
+        Wed, 22 May 2019 19:21:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558552914;
-        bh=QhdAarfzTmA6anoCvQ7Aa0lRiqrk8MkX1Str9Wrz+N8=;
+        s=default; t=1558552911;
+        bh=KpFcdmm4gIKg5OZzcPyu9/fqLfOfiTlvucJODDJESeY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oNuR5P5n8OCTXuUqH31t88zRUsl8f3NGAGsCoQkpJoVHzb5/CAjh8VQM+sOwdFa3z
-         P8ATSzFzS5C+ZqsEr+wgox68h13Y70Jhh/G4iEPkZzDDxw6h5gWVFgSpHXAJZszv5i
-         jih143yC6rCWhc7wy6XYxulCF2u1ZOtJGPifrVzQ=
+        b=BqnXnlxNpghaaSZ4MNxRKvexUor8MiTBJds/bQCU38K94T8Rca+ggfV1M0lJpfTK/
+         A/7AOzzy5kudJUn4UhsuMlCzNj87nZeQH9obK++nF7iP6jRSGKWQdndxkFyCEPAM3m
+         WCwh6C2kyZm58Uri3PxQqpesF+wP6dE9O4Xn6p/I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wen Yang <wen.yang99@zte.com.cn>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jun Nie <jun.nie@linaro.org>, linux-gpio@vger.kernel.org,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.1 027/375] pinctrl: zte: fix leaked of_node references
-Date:   Wed, 22 May 2019 15:15:27 -0400
-Message-Id: <20190522192115.22666-27-sashal@kernel.org>
+Cc:     Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephan Klein <stephan.klein@wegfinder.at>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, linux-hyperv@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 024/375] hv_netvsc: fix race that may miss tx queue wakeup
+Date:   Wed, 22 May 2019 15:15:24 -0400
+Message-Id: <20190522192115.22666-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192115.22666-1-sashal@kernel.org>
 References: <20190522192115.22666-1-sashal@kernel.org>
@@ -61,45 +61,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wen Yang <wen.yang99@zte.com.cn>
+From: Haiyang Zhang <haiyangz@microsoft.com>
 
-[ Upstream commit 02d15f0d80720545f1f4922a1550ea4aaad4e152 ]
+[ Upstream commit 93aa4792c3908eac87ddd368ee0fe0564148232b ]
 
-The call to of_parse_phandle returns a node pointer with refcount
-incremented thus it must be explicitly decremented after the last
-usage.
+When the ring buffer is almost full due to RX completion messages, a
+TX packet may reach the "low watermark" and cause the queue stopped.
+If the TX completion arrives earlier than queue stopping, the wakeup
+may be missed.
 
-Detected by coccinelle with the following warnings:
-./drivers/pinctrl/zte/pinctrl-zx.c:415:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 407, but without a corresponding object release within this function.
-./drivers/pinctrl/zte/pinctrl-zx.c:422:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 407, but without a corresponding object release within this function.
-./drivers/pinctrl/zte/pinctrl-zx.c:436:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 407, but without a corresponding object release within this function.
-./drivers/pinctrl/zte/pinctrl-zx.c:444:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 407, but without a corresponding object release within this function.
-./drivers/pinctrl/zte/pinctrl-zx.c:448:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 407, but without a corresponding object release within this function.
+This patch moves the check for the last pending packet to cover both
+EAGAIN and success cases, so the queue will be reliably waked up when
+necessary.
 
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Jun Nie <jun.nie@linaro.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Acked-by: Shawn Guo <shawnguo@kernel.org>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Reported-and-tested-by: Stephan Klein <stephan.klein@wegfinder.at>
+Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/zte/pinctrl-zx.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/hyperv/netvsc.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/pinctrl/zte/pinctrl-zx.c b/drivers/pinctrl/zte/pinctrl-zx.c
-index caa44dd2880a8..3cb69309912ba 100644
---- a/drivers/pinctrl/zte/pinctrl-zx.c
-+++ b/drivers/pinctrl/zte/pinctrl-zx.c
-@@ -411,6 +411,7 @@ int zx_pinctrl_init(struct platform_device *pdev,
+diff --git a/drivers/net/hyperv/netvsc.c b/drivers/net/hyperv/netvsc.c
+index e0dce373cdd9d..3d4a166a49d58 100644
+--- a/drivers/net/hyperv/netvsc.c
++++ b/drivers/net/hyperv/netvsc.c
+@@ -875,12 +875,6 @@ static inline int netvsc_send_pkt(
+ 	} else if (ret == -EAGAIN) {
+ 		netif_tx_stop_queue(txq);
+ 		ndev_ctx->eth_stats.stop_queue++;
+-		if (atomic_read(&nvchan->queue_sends) < 1 &&
+-		    !net_device->tx_disable) {
+-			netif_tx_wake_queue(txq);
+-			ndev_ctx->eth_stats.wake_queue++;
+-			ret = -ENOSPC;
+-		}
+ 	} else {
+ 		netdev_err(ndev,
+ 			   "Unable to send packet pages %u len %u, ret %d\n",
+@@ -888,6 +882,15 @@ static inline int netvsc_send_pkt(
+ 			   ret);
  	}
  
- 	zpctl->aux_base = of_iomap(np, 0);
-+	of_node_put(np);
- 	if (!zpctl->aux_base)
- 		return -ENOMEM;
++	if (netif_tx_queue_stopped(txq) &&
++	    atomic_read(&nvchan->queue_sends) < 1 &&
++	    !net_device->tx_disable) {
++		netif_tx_wake_queue(txq);
++		ndev_ctx->eth_stats.wake_queue++;
++		if (ret == -EAGAIN)
++			ret = -ENOSPC;
++	}
++
+ 	return ret;
+ }
  
 -- 
 2.20.1
