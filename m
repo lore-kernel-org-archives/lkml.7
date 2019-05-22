@@ -2,125 +2,232 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BEDAC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 16:18:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6072C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 16:21:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D9DB20868
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 16:18:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7195F20881
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 16:21:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="xs/vEush"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="fhNn1wp8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730094AbfEVQSz (ORCPT
+        id S1730071AbfEVQVI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 12:18:55 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:59405 "EHLO
-        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728638AbfEVQSz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 12:18:55 -0400
-Received: from [IPv6:2607:fb90:3635:972:9c5a:d1ae:8e8f:2fe7] ([IPv6:2607:fb90:3635:972:9c5a:d1ae:8e8f:2fe7])
-        (authenticated bits=0)
-        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id x4MGIdpA3692384
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
-        Wed, 22 May 2019 09:18:40 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com x4MGIdpA3692384
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1558541921;
-        bh=luHnu8/JMpI0wULaC++B/hvrgAGxTmtVWSgg46F+QLk=;
-        h=Date:In-Reply-To:References:Subject:To:CC:From:From;
-        b=xs/vEushcxReVdh/8g68Ic5EU0WidpTQJoNKzhKXTrehDSUxqizAS16k/S4DuKB1E
-         IIHyOkuW1wZfO09+WE/+XDKVAYVNgKzmzYsRiBPvP5ee//WRZhhTEGa/fhMhtRhWPW
-         kMuvzHcRcrKLGJ/HCparWiKhvDJ43vD4x+x71+8gj78HgvtqfOhFs5jtJkViqnyDNV
-         EmWwfqu/gQXCyD7SEqyfRavhklH+YjMptpT5RuCONJIjjV77bncOv+K3eFjyEZUvsg
-         QTEwDixFxXfgNGsPNMtmxIISM9jACHD2Uwyzh5Ga7+M5CtoqIM6MrVgW1pEqAcxz5E
-         owufomrAHnACQ==
-Date:   Wed, 22 May 2019 09:18:36 -0700
-User-Agent: K-9 Mail for Android
-In-Reply-To: <a0afd58f-c682-66b5-7478-c405a179d72a@landley.net>
-References: <20190517165519.11507-1-roberto.sassu@huawei.com> <20190517165519.11507-3-roberto.sassu@huawei.com> <CD9A4F89-7CA5-4329-A06A-F8DEB87905A5@zytor.com> <69ef1f55-9fc1-7ee0-371f-3dbc77551dc0@zytor.com> <a0afd58f-c682-66b5-7478-c405a179d72a@landley.net>
+        Wed, 22 May 2019 12:21:08 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:45622 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728638AbfEVQVH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 12:21:07 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4MGKd5N073728;
+        Wed, 22 May 2019 11:20:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1558542039;
+        bh=QXG5XFuSCA/eKjm6eAz/ccN4peIXTQp3/Ud3QfKb6II=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=fhNn1wp8crWYJ6iDZgNwO2GuexbMHyGTxN8IiSUFy8sFhz/W+eLyLpWbXp/9wM7PD
+         7uKO72YIa5m2NnVkv/CA4AtRbukV8LigCUVocLtBPLDRRG9YM6AfRiB3njXUVZRqQW
+         e8SD7cNCyG1sgQRmF4WGED8BCsB5CAHINy1VJduM=
+Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4MGKdcQ103304
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 22 May 2019 11:20:39 -0500
+Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 22
+ May 2019 11:20:38 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 22 May 2019 11:20:38 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4MGKc2P122874;
+        Wed, 22 May 2019 11:20:38 -0500
+From:   Nishanth Menon <nm@ti.com>
+To:     Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     <linux-serial@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>
+Subject: [PATCH 5/6] arm64: dts: ti: Add support for J721E Common Processor Board
+Date:   Wed, 22 May 2019 11:19:20 -0500
+Message-ID: <20190522161921.20750-6-nm@ti.com>
+X-Mailer: git-send-email 2.21.0.777.g83232e38648b
+In-Reply-To: <20190522161921.20750-1-nm@ti.com>
+References: <20190522161921.20750-1-nm@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v3 2/2] initramfs: introduce do_readxattrs()
-To:     Rob Landley <rob@landley.net>,
-        Roberto Sassu <roberto.sassu@huawei.com>,
-        viro@zeniv.linux.org.uk
-CC:     linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org, initramfs@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, zohar@linux.vnet.ibm.com,
-        silviu.vlasceanu@huawei.com, dmitry.kasatkin@huawei.com,
-        takondra@cisco.com, kamensky@cisco.com, arnd@arndb.de,
-        james.w.mcmechan@gmail.com, niveditas98@gmail.com
-From:   hpa@zytor.com
-Message-ID: <FAF78781-2684-4482-9D4D-445B91C15E97@zytor.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On May 17, 2019 7:16:04 PM PDT, Rob Landley <rob@landley=2Enet> wrote:
->On 5/17/19 4:41 PM, H=2E Peter Anvin wrote:
->> On 5/17/19 1:18 PM, hpa@zytor=2Ecom wrote:
->>>
->>> Ok=2E=2E=2E I just realized this does not work for a modular initramfs=
-,
->composed at load time from multiple files, which is a very real
->problem=2E Should be easy enough to deal with: instead of one large file,
->use one companion file per source file, perhaps something like
->filename=2E=2Exattrs (suggesting double dots to make it less likely to
->conflict with a "real" file=2E) No leading dot, as it makes it more
->likely that archivers will sort them before the file proper=2E
->>>
->>> A side benefit is that the format can be simpler as there is no need
->to encode the filename=2E
->>>
->>> A technically cleaner solution still, but which would need archiver
->modifications, would be to encode the xattrs as an optionally nameless
->file (just an empty string) with a new file mode value, immediately
->following the original file=2E The advantage there is that the archiver
->itself could support xattrs and other extended metadata (which has been
->requested elsewhere); the disadvantage obviously is that that it
->requires new support in the archiver=2E However, at least it ought to be
->simpler since it is still a higher protocol level than the cpio archive
->itself=2E
->>>
->>> There's already one special case in cpio, which is the
->"!!!TRAILER!!!" filename; although I don't think it is part of the
->formal spec, to the extent there is one, I would expect that in
->practice it is always encoded with a mode of 0, which incidentally
->could be used to unbreak the case where such a filename actually
->exists=2E So one way to support such extended metadata would be to set
->mode to 0 and use the filename to encode the type of metadata=2E I wonder
->how existing GNU or BSD cpio (the BSD one is better maintained these
->days) would deal with reading such a file; it would at least not be a
->regression if it just read it still, possibly with warnings=2E It could
->also be possible to use bits 17:16 in the mode, which are traditionally
->always zero (mode_t being 16 bits), but I believe are present in most
->or all of the cpio formats for historical reasons=2E It might be accepted
->better by existing implementations to use one of these high bits
->combined with S_IFREG, I dont know=2E
->>
->>=20
->> Correction: it's just !!!TRAILER!!!=2E
->
->We documented it as "TRAILER!!!" without leading !!!, and that its
->purpose is to
->flush hardlinks:
->
->https://www=2Ekernel=2Eorg/doc/Documentation/early-userspace/buffer-forma=
-t=2Etxt
->
->That's what toybox cpio has been producing=2E Kernel consumes it just
->fine=2E Just
->checked busybox cpio and that's what they're producing as well=2E=2E=2E
->
->Rob
+Add Support for J721E Common Processor board support.
+The EVM architecture is as follows:
 
-Yes, TRAILER!!! is correct=2E Somehow I managed to get it wrong twice=2E
---=20
-Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
++------------------------------------------------------+
+|   +-------------------------------------------+      |
+|   |                                           |      |
+|   |        Add-on Card 1 Options              |      |
+|   |                                           |      |
+|   +-------------------------------------------+      |
+|                                                      |
+|                                                      |
+|                     +-------------------+            |
+|                     |                   |            |
+|                     |   SOM             |            |
+|  +--------------+   |                   |            |
+|  |              |   |                   |            |
+|  |  Add-on      |   +-------------------+            |
+|  |  Card 2      |                                    |    Power Supply
+|  |  Options     |                                    |    |
+|  |              |                                    |    |
+|  +--------------+                                    | <---
++------------------------------------------------------+
+                                Common Processor Board
+
+Common Processor board is the baseboard that has most of the actual
+connectors, power supply etc. A SOM (System on Module) is plugged on
+to the common processor board and this contains the SoC, PMIC, DDR and
+basic high speed components necessary for functionality. Add-n card
+options add further functionality (such as additional Audio, Display,
+networking options).
+
+Note:
+A) The minimum configuration required to boot up the board is System On
+   Module(SOM) + Common Processor Board.
+B) Since there is just a single SOM and Common Processor Board, we are
+   maintaining common processor board as the base dts and SOM as the dtsi
+   that we include. In the future as more SOM's appear, we should move
+   common processor board as a dtsi and include configurations as dts.
+C) All daughter cards beyond the basic boards shall be maintained as
+   overlays.
+
+Signed-off-by: Nishanth Menon <nm@ti.com>
+---
+ arch/arm64/boot/dts/ti/Makefile               |  2 +
+ .../dts/ti/k3-j721e-common-proc-board.dts     | 50 +++++++++++++++++++
+ arch/arm64/boot/dts/ti/k3-j721e-som-p0.dtsi   | 29 +++++++++++
+ 3 files changed, 81 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
+ create mode 100644 arch/arm64/boot/dts/ti/k3-j721e-som-p0.dtsi
+
+diff --git a/arch/arm64/boot/dts/ti/Makefile b/arch/arm64/boot/dts/ti/Makefile
+index 63e619d0b5b8..b397945fdf73 100644
+--- a/arch/arm64/boot/dts/ti/Makefile
++++ b/arch/arm64/boot/dts/ti/Makefile
+@@ -7,3 +7,5 @@
+ #
+ 
+ dtb-$(CONFIG_ARCH_K3_AM6_SOC) += k3-am654-base-board.dtb
++
++dtb-$(CONFIG_ARCH_K3_J721E_SOC) += k3-j721e-common-proc-board.dtb
+diff --git a/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts b/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
+new file mode 100644
+index 000000000000..c680123f067c
+--- /dev/null
++++ b/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
+@@ -0,0 +1,50 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
++ */
++
++/dts-v1/;
++
++#include "k3-j721e-som-p0.dtsi"
++
++/ {
++	chosen {
++		stdout-path = "serial2:115200n8";
++		bootargs = "console=ttyS2,115200n8 earlycon=ns16550a,mmio32,0x02800000";
++	};
++};
++
++&wkup_uart0 {
++	/* Wakeup UART is used by System firmware */
++	status = "disabled";
++};
++
++&main_uart3 {
++	/* UART not brought out */
++	status = "disabled";
++};
++
++&main_uart5 {
++	/* UART not brought out */
++	status = "disabled";
++};
++
++&main_uart6 {
++	/* UART not brought out */
++	status = "disabled";
++};
++
++&main_uart7 {
++	/* UART not brought out */
++	status = "disabled";
++};
++
++&main_uart8 {
++	/* UART not brought out */
++	status = "disabled";
++};
++
++&main_uart9 {
++	/* UART not brought out */
++	status = "disabled";
++};
+diff --git a/arch/arm64/boot/dts/ti/k3-j721e-som-p0.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-som-p0.dtsi
+new file mode 100644
+index 000000000000..1884fc70148f
+--- /dev/null
++++ b/arch/arm64/boot/dts/ti/k3-j721e-som-p0.dtsi
+@@ -0,0 +1,29 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
++ */
++
++/dts-v1/;
++
++#include "k3-j721e.dtsi"
++
++/ {
++	memory@80000000 {
++		device_type = "memory";
++		/* 4G RAM */
++		reg = <0x00000000 0x80000000 0x00000000 0x80000000>,
++		      <0x00000008 0x80000000 0x00000000 0x80000000>;
++	};
++
++	reserved_memory: reserved-memory {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++
++		secure_ddr: optee@9e800000 {
++			reg = <0x00 0x9e800000 0x00 0x01800000>;
++			alignment = <0x1000>;
++			no-map;
++		};
++	};
++};
+-- 
+2.21.0.777.g83232e38648b
+
