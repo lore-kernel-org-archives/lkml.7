@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 036C1C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:34:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 498AFC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:34:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C033B20675
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:34:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AE3220675
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:34:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558553642;
-	bh=Z5M97+wnGla18P25MkB3sjrGHWb2JtxK/um22vBOWNQ=;
+	s=default; t=1558553656;
+	bh=ZfTatBLJEqsDdgixF1MsORsgzX27wevI8G4xIx/ifyU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VqOprXKdUGFfRDDsuYOZz6M/e4sQz7DgvQM+P+JUnqincOF7iogQ+DSfZh4w3gsR1
-	 9NrHbGcEDSVuDwLx+hO3rxUgEVHQFfVcyNvoeFhSFdtRndtUm2ILnn3ttN3s6PzbE7
-	 meeipdRdQ9gKIQ+cQ5GtdmBt/HRI2XCatPht1ago=
+	b=I9e3NtIWSuVRgpgJNvBrw8fHXU2ijfQIySy6SeJDhai/i9tVjDS/AZVI8arEp9bOX
+	 2RbE/2uF3a3F++2hGy42sB4tRtwcY8WTMM1qOGaOM4F7reOyN2y2Z/2CtWcpHAXuAt
+	 UmogqhcTdzzOdVaGIknLm93K38NiuabhtAlWJgsM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387446AbfEVTeB (ORCPT
+        id S2387452AbfEVTeP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:34:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55224 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:34:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387586AbfEVTbl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:31:41 -0400
+        id S1733214AbfEVTbg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:31:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3225A2173C;
-        Wed, 22 May 2019 19:31:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C58CD2173C;
+        Wed, 22 May 2019 19:31:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553500;
-        bh=Z5M97+wnGla18P25MkB3sjrGHWb2JtxK/um22vBOWNQ=;
+        s=default; t=1558553496;
+        bh=ZfTatBLJEqsDdgixF1MsORsgzX27wevI8G4xIx/ifyU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PvbRErWoTXFOLvwuGYgJVZ3dUU1zswSHi76dQTZimcomh84xbF4JpEzPC187FMD+f
-         n4ZLIlKmo2AcSXgmAaMsrh2q6aRtre6iVMsWDD+VURtXqt9dMphC1mUWsfLSXCkTOB
-         rRVVpYamVk3eULxbhI2bjd+ZO4fye5PuTNavL8QI=
+        b=tVMs83wb4tLf6KmEa552K2B1+HwfFi40qAejAkjXmlv2VEONT9bGKxNUQiv+aeMLo
+         ZxYIJOJC+xZBXHUR5ti2uxUHKcBsoUZNw9nJ6BjYhKVNSTOGKXcsFCocvOJM4i8FkZ
+         NvTwseBtEZ0WLLQK2gzS392cZtAolRxt9dNc69Ys=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sven Van Asbroeck <thesven73@gmail.com>,
-        Sven Van Asbroeck <TheSven73@gmail.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rtc@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 08/92] rtc: 88pm860x: prevent use-after-free on device remove
-Date:   Wed, 22 May 2019 15:30:03 -0400
-Message-Id: <20190522193127.27079-8-sashal@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 05/92] ASoC: imx: fix fiq dependencies
+Date:   Wed, 22 May 2019 15:30:00 -0400
+Message-Id: <20190522193127.27079-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522193127.27079-1-sashal@kernel.org>
 References: <20190522193127.27079-1-sashal@kernel.org>
@@ -60,44 +58,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sven Van Asbroeck <thesven73@gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit f22b1ba15ee5785aa028384ebf77dd39e8e47b70 ]
+[ Upstream commit ea751227c813ab833609afecfeedaf0aa26f327e ]
 
-The device's remove() attempts to shut down the delayed_work scheduled
-on the kernel-global workqueue by calling flush_scheduled_work().
+During randconfig builds, I occasionally run into an invalid configuration
+of the freescale FIQ sound support:
 
-Unfortunately, flush_scheduled_work() does not prevent the delayed_work
-from re-scheduling itself. The delayed_work might run after the device
-has been removed, and touch the already de-allocated info structure.
-This is a potential use-after-free.
+WARNING: unmet direct dependencies detected for SND_SOC_IMX_PCM_FIQ
+  Depends on [m]: SOUND [=y] && !UML && SND [=y] && SND_SOC [=y] && SND_IMX_SOC [=m]
+  Selected by [y]:
+  - SND_SOC_FSL_SPDIF [=y] && SOUND [=y] && !UML && SND [=y] && SND_SOC [=y] && SND_IMX_SOC [=m]!=n && (MXC_TZIC [=n] || MXC_AVIC [=y])
 
-Fix by calling cancel_delayed_work_sync() during remove(): this ensures
-that the delayed work is properly cancelled, is no longer running, and
-is not able to re-schedule itself.
+sound/soc/fsl/imx-ssi.o: In function `imx_ssi_remove':
+imx-ssi.c:(.text+0x28): undefined reference to `imx_pcm_fiq_exit'
+sound/soc/fsl/imx-ssi.o: In function `imx_ssi_probe':
+imx-ssi.c:(.text+0xa64): undefined reference to `imx_pcm_fiq_init'
 
-This issue was detected with the help of Coccinelle.
+The Kconfig warning is a result of the symbol being defined inside of
+the "if SND_IMX_SOC" block, and is otherwise harmless. The link error
+is more tricky and happens with SND_SOC_IMX_SSI=y, which may or may not
+imply FIQ support. However, if SND_SOC_FSL_SSI is set to =m at the same
+time, that selects SND_SOC_IMX_PCM_FIQ as a loadable module dependency,
+which then causes a link failure from imx-ssi.
 
-Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+The solution here is to make SND_SOC_IMX_PCM_FIQ built-in whenever
+one of its potential users is built-in.
+
+Fixes: ff40260f79dc ("ASoC: fsl: refine DMA/FIQ dependencies")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rtc/rtc-88pm860x.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/fsl/Kconfig | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/rtc/rtc-88pm860x.c b/drivers/rtc/rtc-88pm860x.c
-index 19e53b3b8e005..166faae3a59cd 100644
---- a/drivers/rtc/rtc-88pm860x.c
-+++ b/drivers/rtc/rtc-88pm860x.c
-@@ -414,7 +414,7 @@ static int pm860x_rtc_remove(struct platform_device *pdev)
- 	struct pm860x_rtc_info *info = platform_get_drvdata(pdev);
+diff --git a/sound/soc/fsl/Kconfig b/sound/soc/fsl/Kconfig
+index 3066e068aae5c..d420995ed45bf 100644
+--- a/sound/soc/fsl/Kconfig
++++ b/sound/soc/fsl/Kconfig
+@@ -171,16 +171,17 @@ config SND_MPC52xx_SOC_EFIKA
  
- #ifdef VRTC_CALIBRATION
--	flush_scheduled_work();
-+	cancel_delayed_work_sync(&info->calib_work);
- 	/* disable measurement */
- 	pm860x_set_bits(info->i2c, PM8607_MEAS_EN2, MEAS2_VRTC, 0);
- #endif	/* VRTC_CALIBRATION */
+ endif # SND_POWERPC_SOC
+ 
++config SND_SOC_IMX_PCM_FIQ
++	tristate
++	default y if SND_SOC_IMX_SSI=y && (SND_SOC_FSL_SSI=m || SND_SOC_FSL_SPDIF=m) && (MXC_TZIC || MXC_AVIC)
++	select FIQ
++
+ if SND_IMX_SOC
+ 
+ config SND_SOC_IMX_SSI
+ 	tristate
+ 	select SND_SOC_FSL_UTILS
+ 
+-config SND_SOC_IMX_PCM_FIQ
+-	tristate
+-	select FIQ
+-
+ comment "SoC Audio support for Freescale i.MX boards:"
+ 
+ config SND_MXC_SOC_WM1133_EV1
 -- 
 2.20.1
 
