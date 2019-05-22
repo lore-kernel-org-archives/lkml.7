@@ -2,81 +2,83 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CA06C46470
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 10:22:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBC06C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 10:25:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07539217D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 10:22:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558520539;
-	bh=GdVU8GXj/HLCpx/uNFanJPSI3OHYWjhnKshjuhSeYiQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=o8//Eyscg3mpJQQ4iTof+sup7SzQv+3io5l19lq6GrvRz5lBwsX1UTr2jlVr+eyMK
-	 XPfz7XeNAjPy+t2T2VT/G9v+hNAljX3VxjDRGUp4dWyZNV1NiZZbGVPBGZdIhGgM4q
-	 JlJis6Jzn23bb+NoJ4zXDbhk4N4ekPoeyeXN8oSo=
+	by mail.kernel.org (Postfix) with ESMTP id C1B1220868
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 10:25:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729099AbfEVKWS (ORCPT
+        id S1728975AbfEVKZd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 06:22:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38264 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728690AbfEVKWR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 06:22:17 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5E4120868;
-        Wed, 22 May 2019 10:22:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558520537;
-        bh=GdVU8GXj/HLCpx/uNFanJPSI3OHYWjhnKshjuhSeYiQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jkzNzJsy0qnUt0AwFLgYQ8j+QnVLy5Ofd9RRWwDQjw7s9ny2XWafHhGOkjXFa+Glb
-         l2ywDRo1impStZLVvQMvtBmwvs1QxkOvn8ONkTACdh8lrG4NrGzbFpn6NKw5Jdd6Oa
-         Z06PsV3uDS5oCn2IrQ55woNRAVfqFBasVml6uy40=
-Date:   Wed, 22 May 2019 12:22:14 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Pavel Machek <pavel@denx.de>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Jeremy Soller <jeremy@system76.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: Re: [PATCH 4.19 038/105] ALSA: hdea/realtek - Headset fixup for
- System76 Gazelle (gaze14)
-Message-ID: <20190522102214.GB6721@kroah.com>
-References: <20190520115247.060821231@linuxfoundation.org>
- <20190520115249.657128023@linuxfoundation.org>
- <20190522091506.GC8174@amd>
+        Wed, 22 May 2019 06:25:33 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60474 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727464AbfEVKZc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 06:25:32 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 35A53AEB6;
+        Wed, 22 May 2019 10:25:31 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 804F91E3C5F; Wed, 22 May 2019 12:25:30 +0200 (CEST)
+Date:   Wed, 22 May 2019 12:25:30 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     'Christoph Hellwig' <hch@infradead.org>
+Cc:     Jan Kara <jack@suse.cz>, kanchan <joshi.k@samsung.com>,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-fsdevel@vger.kernel.org,
+        linux-ext4@vger.kernel.org, prakash.v@samsung.com,
+        anshul@samsung.com,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: Re: [PATCH v5 0/7] Extend write-hint framework, and add write-hint
+ for Ext4 journal
+Message-ID: <20190522102530.GK17019@quack2.suse.cz>
+References: <CGME20190425112347epcas2p1f7be48b8f0d2203252b8c9dd510c1b61@epcas2p1.samsung.com>
+ <1556191202-3245-1-git-send-email-joshi.k@samsung.com>
+ <20190510170249.GA26907@infradead.org>
+ <00fb01d50c71$dd358e50$97a0aaf0$@samsung.com>
+ <20190520142719.GA15705@infradead.org>
+ <20190521082528.GA17709@quack2.suse.cz>
+ <20190521082846.GA11024@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190522091506.GC8174@amd>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190521082846.GA11024@infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 22, 2019 at 11:15:07AM +0200, Pavel Machek wrote:
-> On Mon 2019-05-20 14:13:44, Greg Kroah-Hartman wrote:
-> > From: Jeremy Soller <jeremy@system76.com>
-> > 
-> > commit 80a5052db75131423b67f38b21958555d7d970e4 upstream.
-> > 
-> > On the System76 Gazelle (gaze14), there is a headset microphone input
-> > attached to 0x1a that does not have a jack detect. In order to get it
-> > working, the pin configuration needs to be set correctly, and the
-> > ALC269_FIXUP_HEADSET_MODE_NO_HP_MIC fixup needs to be applied. This is
-> > identical to the patch already applied for the System76 Darter Pro
-> > (darp5).
+On Tue 21-05-19 01:28:46, 'Christoph Hellwig' wrote:
+> On Tue, May 21, 2019 at 10:25:28AM +0200, Jan Kara wrote:
+> > performance benefits for some drives. After all you can just think about it
+> > like RWH_WRITE_LIFE_JOURNAL type of hint available for the kernel...
 > 
-> Commit 89/ of the series fixes up this patch. Perhaps those two should
-> be merged together?
+> Except that it actuallys adds a parallel insfrastructure.  A
+> RWH_WRITE_LIFE_JOURNAL would be much more palatable, but someone needs
+> to explain how that is:
+> 
+>  a) different from RWH_WRITE_LIFE_SHORT
 
-Again, no, that is not how the stable kernel series has ever worked.
+The problem I have with this is: What does "short" mean? What if
+userspace's notion of short differs from the kernel notion? Also the
+journal block lifetime is somewhat hard to predict. It depends on the size
+of the journal and metadata load on the filesystem so there's big variance.
+So all we really know is that all journal blocks are the same.
 
-greg k-h
+>  b) would not apply to a log/journal maintained in userspace that works
+>     exactly the same
+
+Lifetime of userspace journal/log may be significantly different from the
+lifetime of the filesystem journal. So using the same hint for them does
+not look like a great idea?
+
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
