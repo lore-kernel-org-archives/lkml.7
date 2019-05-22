@@ -2,124 +2,105 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E930C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 21:30:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AF80C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 21:35:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CFE920881
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 21:30:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 989FE20863
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 21:35:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558560921;
+	bh=QilxRW6IOlwXC3Ay55HcviP6N/2/UqeeRdH/HG2P+Mo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=ufzdWCPguqCDEjjzSDTn98I/kN3aayJyr5iLofnWUZYBiJbMFOeNN2R5icrCRyq/6
+	 lJ2IPXlRoe5Gjq0PHVvyP9cqfkkAldC4o8L+IK0Var9/uwdqqIKMRATbKYF9SHkr75
+	 nmkNxzsYvB6DEdVb2a9tlO2PvWeAFn5zqtmAXNHg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730590AbfEVVab (ORCPT
+        id S1729935AbfEVVfV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 17:30:31 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:48346 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729896AbfEVVaa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 17:30:30 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7C6723082A28;
-        Wed, 22 May 2019 21:30:30 +0000 (UTC)
-Received: from krava (ovpn-204-104.brq.redhat.com [10.40.204.104])
-        by smtp.corp.redhat.com (Postfix) with SMTP id A56891001DE0;
-        Wed, 22 May 2019 21:30:27 +0000 (UTC)
-Date:   Wed, 22 May 2019 23:30:26 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>, lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Stanislav Fomichev <sdf@fomichev.me>,
-        Song Liu <songliubraving@fb.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Thomas Richter <tmricht@linux.ibm.com>
-Subject: Re: [PATCH 12/12] perf script: Add --show-all-events option
-Message-ID: <20190522213026.GB11325@krava>
-References: <20190508132010.14512-1-jolsa@kernel.org>
- <20190508132010.14512-13-jolsa@kernel.org>
- <20190522161804.GG30271@kernel.org>
+        Wed, 22 May 2019 17:35:21 -0400
+Received: from casper.infradead.org ([85.118.1.10]:59032 "EHLO
+        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729691AbfEVVfV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 17:35:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=pHTjN6wqc8g/ZIVk8Anky3A0M/XSsFSNE+YjZtKGi/c=; b=T1ea4h6nm160C0WMkvM1lESEY9
+        WXfv48hsTBFxwOSwjCtOO1+U/G1e53R5eWrzHofyLrtumixBqtfxzlz/vmPyMEoDWE7nb3xbEAlIj
+        LfD7cOyZgAxbyzxYho2+bCd0v0q3MO9VL8R06BdwQAEV76ABsu2O9/wU/C6+D2NPmYWd/nibp5wbN
+        k6fPfrFve/0vvs4B+03AcaU3pNy4uvKkDiVyQH2ZE1nbmw0lPYE6l1G5O7hC4nNzoyn3ElUeYzw3j
+        +euH4npnrYlNZKB2quntJlQFqJft+TfmVbr5zvd7oC7paQdPPvTddHMtv+E4c7ytp3Hslw5qCN0Y4
+        BolVrh3A==;
+Received: from [179.182.168.126] (helo=coco.lan)
+        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hTYtJ-0006n4-5u; Wed, 22 May 2019 21:35:17 +0000
+Date:   Wed, 22 May 2019 18:35:11 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Markus Heiser <markus.heiser@darmarit.de>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] scripts/sphinx-pre-install: make it handle Sphinx
+ versions
+Message-ID: <20190522183511.1c4a3317@coco.lan>
+In-Reply-To: <20190522143506.34049678@lwn.net>
+References: <a741574b7081c162d200bdead35302ccac6fd116.1558545958.git.mchehab+samsung@kernel.org>
+        <20190522143506.34049678@lwn.net>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190522161804.GG30271@kernel.org>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Wed, 22 May 2019 21:30:30 +0000 (UTC)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 22, 2019 at 01:18:04PM -0300, Arnaldo Carvalho de Melo wrote:
-> Em Wed, May 08, 2019 at 03:20:10PM +0200, Jiri Olsa escreveu:
-> > Adding --show-all-events option to show all
-> > side-bad events with single option, like:
+Em Wed, 22 May 2019 14:35:06 -0600
+Jonathan Corbet <corbet@lwn.net> escreveu:
+
+> On Wed, 22 May 2019 13:28:34 -0400
+> Mauro Carvalho Chehab <mchehab+samsung@kernel.org> wrote:
+> 
+> > As we want to switch to a newer Sphinx version in the future,
+> > add some version detected logic, checking if the current
+> > version meets the requirement and suggesting upgrade it the
+> > version is supported but too old.
 > > 
-> >   $ perf script --show-all-events
-> >   swapper     0 [000]     0.000000: PERF_RECORD_MMAP -1/0: [0xffffffffa6000000(0xc00e41) @ 0xffffffffa6000000]: x [kernel.kallsyms]_text
-> >   ...
-> >   swapper     0 [000]     0.000000: PERF_RECORD_KSYMBOL addr ffffffffc01bc362 len 229 type 1 flags 0x0 name bpf_prog_7be49e3934a125ba
-> >   swapper     0 [000]     0.000000: PERF_RECORD_BPF_EVENT type 1, flags 0, id 29
-> >   ...
-> >   swapper     0 [000]     0.000000: PERF_RECORD_FORK(1:1):(0:0)
-> >   systemd     0 [000]     0.000000: PERF_RECORD_COMM: systemd:1/1
-> >   ...
-> >   swapper     0 [000] 63587.039518:          1 cycles:  ffffffffa60698b4 [unknown] ([kernel.kallsyms])
-> >   swapper     0 [000] 63587.039522:          1 cycles:  ffffffffa60698b4 [unknown] ([kernel.kallsyms])
+> > Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>  
 > 
-> Strange:
-> 
-> [root@quaco pt]# 
-> [root@quaco pt]# perf evlist -v
-> intel_pt//ku: type: 8, size: 112, config: 0x300e601, { sample_period, sample_freq }: 1, sample_type: IP|TID|TIME|CPU|IDENTIFIER, read_format: ID, disabled: 1, inherit: 1, exclude_hv: 1, sample_id_all: 1
-> dummy:u: type: 1, size: 112, config: 0x9, { sample_period, sample_freq }: 1, sample_type: IP|TID|TIME|CPU|IDENTIFIER, read_format: ID, inherit: 1, exclude_kernel: 1, exclude_hv: 1, mmap: 1, comm: 1, task: 1, sample_id_all: 1, mmap2: 1, comm_exec: 1, context_switch: 1, ksymbol: 1, bpf_event: 1
-> [root@quaco pt]# 
-> 
-> Then:
-> 
-> [root@quaco pt]# perf script --show-bpf-events  | head
->     0 PERF_RECORD_KSYMBOL addr ffffffffc029a6c3 len 229 type 1 flags 0x0 name bpf_prog_7be49e3934a125ba
->     0 PERF_RECORD_BPF_EVENT type 1, flags 0, id 47
->     0 PERF_RECORD_KSYMBOL addr ffffffffc029c1ae len 229 type 1 flags 0x0 name bpf_prog_2a142ef67aaad174
->     0 PERF_RECORD_BPF_EVENT type 1, flags 0, id 48
->     0 PERF_RECORD_KSYMBOL addr ffffffffc02ddd1c len 229 type 1 flags 0x0 name bpf_prog_7be49e3934a125ba
->     0 PERF_RECORD_BPF_EVENT type 1, flags 0, id 49
->     0 PERF_RECORD_KSYMBOL addr ffffffffc02dfc11 len 229 type 1 flags 0x0 name bpf_prog_2a142ef67aaad174
->     0 PERF_RECORD_BPF_EVENT type 1, flags 0, id 50
->     0 PERF_RECORD_KSYMBOL addr ffffffffc045da0a len 229 type 1 flags 0x0 name bpf_prog_7be49e3934a125ba
->     0 PERF_RECORD_BPF_EVENT type 1, flags 0, id 51
-> [root@quaco pt]#
-> 
-> But:
-> 
-> [root@quaco pt]# perf script --show-all-events  | head
-> Intel Processor Trace requires ordered events
-> 0x2a0 [0x60]: failed to process type: 1 [Invalid argument]
-> [root@quaco pt]#
+> I've applied this in the branch with my other fixes (coming soon to a
+> mailing list near you), thanks.  I do think we eventually want to emit a
+> warning during a normal docs build as well, and to raise the recommended
+> version, but one step at a time...
 
-hum, so round events disable ordering, which is required by pt
+The enclosed patch should do the work. It will probably be too verbose, but
+it should be easy to add a "--silent" parameter to the script, making it
+only display a message with the version warning.
 
-        if (script->show_round_events) {
-                script->tool.ordered_events = false;
-	..
 
-so the --show-round-events option always fails on intel_pt data:
+Thanks,
+Mauro
 
-	[jolsa@krava perf]$ ./perf script --show-round-events
-	Intel Processor Trace requires ordered events
-	0x2e8 [0x38]: failed to process type: 3 [Invalid argument]
+diff --git a/Documentation/Makefile b/Documentation/Makefile
+index e889e7cb8511..9c80105995e7 100644
+--- a/Documentation/Makefile
++++ b/Documentation/Makefile
+@@ -70,6 +70,7 @@ quiet_cmd_sphinx = SPHINX  $@ --> file://$(abspath $(BUILDDIR)/$3/$4)
+ 	$(abspath $(BUILDDIR)/$3/$4)
+ 
+ htmldocs:
++	@./scripts/sphinx-pre-install
+ 	@+$(foreach var,$(SPHINXDIRS),$(call loop_cmd,sphinx,html,$(var),,$(var)))
+ 
+ linkcheckdocs:
 
-> 
-> So I have all patches but this last one, will test and push Ingo's way
-> so that we make progress, we can get this one later after we figure this
-> out.
 
-thanks,
-jirka
