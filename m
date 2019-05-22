@@ -2,193 +2,122 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DAB0C18E7D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 10:04:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1711AC18E7D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 10:05:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4A2620645
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 10:04:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D77232075E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 10:05:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="FAoXo7J6"
+	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="UU6Bj4oX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729318AbfEVKEj (ORCPT
+        id S1729204AbfEVKFM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 06:04:39 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:59702 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728424AbfEVKEi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 06:04:38 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190522100437euoutp0223bcbfe26fc7541136c75ef406655ddd~g_TT7o4ab2768627686euoutp02m
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 10:04:37 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190522100437euoutp0223bcbfe26fc7541136c75ef406655ddd~g_TT7o4ab2768627686euoutp02m
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1558519477;
-        bh=fha/Fx6x2WdnhswPE74xM2jkxqehQxZKcmhjFF3aSc4=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=FAoXo7J6mzVj4rICwz1WoBjzCATt0V5WgdZx+N6MPR1ApK8syDcjaQ5a5hFtRZZgB
-         C93OxcReeMn+UxIGDLPhD5jpI4dZqyRyTeUKYs0+CLPyxN1nz2WJVWGpx8gTQTz9GQ
-         1UWgyI9bUIYx12jGuIEdUJBqFPIqn6U4oFNLnAvU=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190522100436eucas1p1fc6e02a3132020cad281edb2f7c5c061~g_TTJEG0D2378323783eucas1p1g;
-        Wed, 22 May 2019 10:04:36 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id BA.57.04298.3BE15EC5; Wed, 22
-        May 2019 11:04:35 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190522100435eucas1p24398c029079c7a58e526299687bd1e61~g_TSa7tUX3161031610eucas1p2X;
-        Wed, 22 May 2019 10:04:35 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190522100435eusmtrp1f7461ef5592a01ba9ed0e1569e61ffa0~g_TSMwqlk0941609416eusmtrp1r;
-        Wed, 22 May 2019 10:04:35 +0000 (GMT)
-X-AuditID: cbfec7f2-f13ff700000010ca-22-5ce51eb3e78f
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id A7.EE.04140.3BE15EC5; Wed, 22
-        May 2019 11:04:35 +0100 (BST)
-Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190522100434eusmtip184c651f0e350b704d5486e7c496a33cf~g_TRpjFZY1044210442eusmtip1P;
-        Wed, 22 May 2019 10:04:34 +0000 (GMT)
-Subject: Re: [PATCH] fbcon: Remove fbcon_has_exited
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc:     DRI Development <dri-devel@lists.freedesktop.org>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>,
-        Yisheng Xie <ysxie@foxmail.com>,
-        Konstantin Khorenko <khorenko@virtuozzo.com>,
-        Prarit Bhargava <prarit@redhat.com>,
-        Kees Cook <keescook@chromium.org>
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Message-ID: <6b9747cf-8845-0eb9-878e-f2953665fcec@samsung.com>
-Date:   Wed, 22 May 2019 12:04:33 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190521142304.9652-1-daniel.vetter@ffwll.ch>
+        Wed, 22 May 2019 06:05:12 -0400
+Received: from mail-eopbgr810057.outbound.protection.outlook.com ([40.107.81.57]:36016
+        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728424AbfEVKFL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 06:05:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=Synaptics.onmicrosoft.com; s=selector1-Synaptics-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7UNfbEXsabz5kESBWA6ulrO4/whIWfxzgCO+ujPHTak=;
+ b=UU6Bj4oXvxfmuDrfOF0dkNxLjZ1ma41SH9MEIjyQPcVSN+hMKrZXHKl4NVUMq4NuHYg9+orRs6Ur6NNsMY22GOsScgRUiWgPYJ3naKkm8S9zP/f5zvb9DxUyp/3/1lPHVPXLGWPOqTCb5AySSJKGCQ6rhIgSrt5JnCFD2VxeBLk=
+Received: from BYAPR03MB4773.namprd03.prod.outlook.com (20.179.92.152) by
+ BYAPR03MB4152.namprd03.prod.outlook.com (20.177.184.161) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1900.17; Wed, 22 May 2019 10:05:09 +0000
+Received: from BYAPR03MB4773.namprd03.prod.outlook.com
+ ([fe80::e484:f15c:c415:5ff9]) by BYAPR03MB4773.namprd03.prod.outlook.com
+ ([fe80::e484:f15c:c415:5ff9%7]) with mapi id 15.20.1900.020; Wed, 22 May 2019
+ 10:05:09 +0000
+From:   Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+To:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH] net: stmmac: fix reset gpio free missing
+Thread-Topic: [PATCH] net: stmmac: fix reset gpio free missing
+Thread-Index: AQHVEIXW1Q99JUn5Pke19mHCbWn03A==
+Date:   Wed, 22 May 2019 10:05:09 +0000
+Message-ID: <20190522175558.59b21673@xhacker.debian>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrFKsWRmVeSWpSXmKPExsWy7djP87qb5Z7GGLTvMbdY+PAus8XyM+uY
-        La58fc9m8eb4dCaL2RM2M1mc6c61eLzzJavF5V1z2CwWftzKYjH11Dt2i3c/etktzu9KdODx
-        mN1wkcVj77cFLB4Les4zeyze85LJY97JQI/73ceZPN7vu8rmsb7nCKPH501yHq/3H2IM4Iri
-        sklJzcksSy3St0vgyrhy7x9LQYN4xfFFM9gaGK8LdTFyckgImEhcvf6YCcQWEljBKNH8Rr+L
-        kQvI/sIo0f33EQuE85lR4sq54ywwHd2b/zNDJJYzSsz4M5cdwnnLKLH42AdGkCphAWOJ3ndf
-        2EFsEQEtiY7/LWCjmAV+MEvcv/ARbCGbgJXExPZVYA28AnYSe77tYgaxWQRUJQ58mgRWIyoQ
-        IXH/2AZWiBpBiZMzn4CdwSlgLfHu9TqwemYBcYlbT+YzQdjyEs1bZzNDnPqXXWL3pkwI20Xi
-        b/92NghbWOLV8S3sELaMxOnJPWDHSQisY5T42/GCGcLZziixfPI/qA5ricPHLwJdwQG0QVNi
-        /S59iLCjxMNtp5lAwhICfBI33gpC3MAnMWnbdGaIMK9ERxs0rNUkNizbwAaztmvnSuYJjEqz
-        kHw2C8k3s5B8Mwth7wJGllWM4qmlxbnpqcWGeanlesWJucWleel6yfm5mxiBKe70v+OfdjB+
-        vZR0iFGAg1GJh9fi4eMYIdbEsuLK3EOMEhzMSiK8p089ihHiTUmsrEotyo8vKs1JLT7EKM3B
-        oiTOW83wIFpIID2xJDU7NbUgtQgmy8TBKdXAaMorlh8uOsvbXvAjO29LxwzTPXe/GGce3Wr2
-        IFR20itl3e9zFleUdjeW7NV70CHT7x2Tnn/y1YyczfaiP09OkknyWzI7x2tP/rU3Xmp6Ylt/
-        m6TGla+ITb1SoC/9+3+WNo9Y7v8j/seE45a0bRR8fkJmnevPVI2wvWFn58Ymz9tevsOhIfin
-        EktxRqKhFnNRcSIAoM++qW0DAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrDIsWRmVeSWpSXmKPExsVy+t/xu7qb5Z7GGNw6x2qx8OFdZovlZ9Yx
-        W1z5+p7N4s3x6UwWsydsZrI4051r8XjnS1aLy7vmsFks/LiVxWLqqXfsFu9+9LJbnN+V6MDj
-        MbvhIovH3m8LWDwW9Jxn9li85yWTx7yTgR73u48zebzfd5XNY33PEUaPz5vkPF7vP8QYwBWl
-        Z1OUX1qSqpCRX1xiqxRtaGGkZ2hpoWdkYqlnaGwea2VkqqRvZ5OSmpNZllqkb5egl3Hl3j+W
-        ggbxiuOLZrA1MF4X6mLk5JAQMJHo3vyfGcQWEljKKNG0IKaLkQMoLiNxfH0ZRImwxJ9rXWxd
-        jFxAJa8ZJT7ea2AFSQgLGEv0vvvCDmKLCGhJdPxvYQEpYhb4xSyx6d8nZoiOg4wSHzofM4FU
-        sQlYSUxsX8UIYvMK2Ens+bYLbDOLgKrEgU+TwGpEBSIkzrxfwQJRIyhxcuYTMJtTwFri3et1
-        YPXMAuoSf+ZdgrLFJW49mc8EYctLNG+dzTyBUWgWkvZZSFpmIWmZhaRlASPLKkaR1NLi3PTc
-        YiO94sTc4tK8dL3k/NxNjMCY3nbs55YdjF3vgg8xCnAwKvHwPrj3OEaINbGsuDL3EKMEB7OS
-        CO/pU49ihHhTEiurUovy44tKc1KLDzGaAj03kVlKNDkfmG7ySuINTQ3NLSwNzY3Njc0slMR5
-        OwQOxggJpCeWpGanphakFsH0MXFwSjUwqtZ6SfElSM4Q81ZicTc89UtZZKeA4Vn3f1feH7jX
-        /9Y9R3HNiytf8m7WnJDcnnrv/KX21tt7X7DUbQmddMlCtEuqo0zvd/LPiglr+cw6H4T6MYf9
-        M75mcMJhn35qafCDGYa3vxn5rDDqEZz3fd3SYPfi/Y0ZFpMb1kjGe/Ybhv6ZXb/qgpCAEktx
-        RqKhFnNRcSIAS5uLHf8CAAA=
-X-CMS-MailID: 20190522100435eucas1p24398c029079c7a58e526299687bd1e61
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190521142317epcas2p44d184ead3ec7d514a8fa6784abf30747
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190521142317epcas2p44d184ead3ec7d514a8fa6784abf30747
-References: <20190520082216.26273-10-daniel.vetter@ffwll.ch>
-        <CGME20190521142317epcas2p44d184ead3ec7d514a8fa6784abf30747@epcas2p4.samsung.com>
-        <20190521142304.9652-1-daniel.vetter@ffwll.ch>
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [124.74.246.114]
+x-clientproxiedby: TYAPR01CA0232.jpnprd01.prod.outlook.com
+ (2603:1096:404:11e::28) To BYAPR03MB4773.namprd03.prod.outlook.com
+ (2603:10b6:a03:134::24)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Jisheng.Zhang@synaptics.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 51926e20-f253-483b-8a7a-08d6de9cf8bc
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:BYAPR03MB4152;
+x-ms-traffictypediagnostic: BYAPR03MB4152:
+x-microsoft-antispam-prvs: <BYAPR03MB415246663852B812063A8923ED000@BYAPR03MB4152.namprd03.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3513;
+x-forefront-prvs: 0045236D47
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(136003)(39860400002)(346002)(396003)(376002)(199004)(189003)(53936002)(14454004)(72206003)(6506007)(486006)(81166006)(71190400001)(71200400001)(6512007)(9686003)(386003)(8676002)(81156014)(478600001)(476003)(8936002)(110136005)(50226002)(6116002)(99286004)(25786009)(54906003)(6486002)(68736007)(6436002)(52116002)(102836004)(4326008)(3846002)(66066001)(66556008)(64756008)(66446008)(256004)(66946007)(66476007)(316002)(14444005)(305945005)(7736002)(186003)(1076003)(86362001)(5660300002)(73956011)(26005)(2906002)(39210200001);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR03MB4152;H:BYAPR03MB4773.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
+received-spf: None (protection.outlook.com: synaptics.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: TEVoJoHFTV8reiVFD+srtEOlRMGGPxghghCLGyUSvtPOZeKJBAEzra+TLOtVYgTx6yvuJXrRgXfLhHwyEMkgjYxpwK2y7JyCEoNpxzbRBt9dCWRpzDpV8spiDbUt+9xoTdavlO1fia2bcwrEdbe3uuv0BifnWWqp6QxFnjHdCQvRM9BRCQ143FKjXhyai3L6XfxGvhdVkmSjI27Xhtfg/DcTq1aV8Xg6Rdpir2wshbMG/scX3kgTxvhUVtMqCBxh70WpIghSsipa5jSBhbrEjYUmbNWRVcSe+310iwVWWK6V6a0eI/RdxIaHet47WP6Cqc4D7nXXQiN0n+g2zZeW2FH9Yb6oqA7Hlz+9YYceVoGdG++TqjiONLvU4sXpYVHO/iunMYw2mKb5aNkItN1sX3FMfRIBFmFSwP61owlxV1I=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <95BC64B905AAEB45B689662B446B9877@namprd03.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: synaptics.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 51926e20-f253-483b-8a7a-08d6de9cf8bc
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 May 2019 10:05:09.3700
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 335d1fbc-2124-4173-9863-17e7051a2a0e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR03MB4152
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Commit 984203ceff27 ("net: stmmac: mdio: remove reset gpio free")
+removed the reset gpio free, when the driver is unbinded or rmmod,
+we miss the gpio free.
 
-Hi Daniel,
+This patch uses managed API to request the reset gpio, so that the
+gpio could be freed properly.
 
-On 5/21/19 4:23 PM, Daniel Vetter wrote:
-> This is unused code since
-> 
-> commit 6104c37094e729f3d4ce65797002112735d49cd1
-> Author: Daniel Vetter <daniel.vetter@ffwll.ch>
-> Date:   Tue Aug 1 17:32:07 2017 +0200
-> 
->     fbcon: Make fbcon a built-time depency for fbdev
-> 
-> when fbcon was made a compile-time static dependency of fbdev. We
-> can't exit fbcon anymore without exiting fbdev first, which only works
-> if all fbdev drivers have unloaded already. Hence this is all dead
-> code.
-> 
-> v2: I missed that fbcon_exit is also called from con_deinit stuff, and
-> there fbcon_has_exited prevents double-cleanup. But we can fix that
-> by properly resetting con2fb_map[] to all -1, which is used everywhere
-> else to indicate "no fb_info allocate to this console". With that
-> change the double-cleanup (which resulted in a module refcount underflow,
-> among other things) is prevented.
-> 
-> Aside: con2fb_map is a signed char, so don't register more than 128 fb_info
-> or hilarity will ensue.
-> 
-> v3: CI showed me that I still didn't fully understand what's going on
-> here. The leaked references in con2fb_map have been used upon
-> rebinding the fb console in fbcon_init. It worked because fbdev
-> unregistering still cleaned out con2fb_map, and reset it to info_idx.
-> If the last fbdev driver unregistered, then it also reset info_idx,
-> and unregistered the fbcon driver.
-> 
-> Imo that's all a bit fragile, so let's keep the con2fb_map reset to
-> -1, and in fbcon_init pick info_idx if we're starting fresh. That
-> means unbinding and rebinding will cleanse the mapping, but why are
-> you doing that if you want to retain the mapping, so should be fine.
-> 
-> Also, I think info_idx == -1 is impossible in fbcon_init - we
-> unregister the fbcon in that case. So catch&warn about that.
-> 
-> Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
-> Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-> Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-> Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-> Cc: Hans de Goede <hdegoede@redhat.com>
-> Cc: "Noralf Trønnes" <noralf@tronnes.org>
-> Cc: Yisheng Xie <ysxie@foxmail.com>
-> Cc: Konstantin Khorenko <khorenko@virtuozzo.com>
-> Cc: Prarit Bhargava <prarit@redhat.com>
-> Cc: Kees Cook <keescook@chromium.org>
-> ---
->  drivers/video/fbdev/core/fbcon.c | 39 +++++---------------------------
->  1 file changed, 6 insertions(+), 33 deletions(-)
-This patch was #09/33 in your patch series, now it is independent change.
+Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+Fixes: 984203ceff27 ("net: stmmac: mdio: remove reset gpio free")
+---
+ drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Do you want me to apply it now or should I wait for the new version of
-the whole series?
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c b/drivers/ne=
+t/ethernet/stmicro/stmmac/stmmac_mdio.c
+index bdd351597b55..093a223fe408 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
+@@ -267,7 +267,8 @@ int stmmac_mdio_reset(struct mii_bus *bus)
+ 			of_property_read_u32_array(np,
+ 				"snps,reset-delays-us", data->delays, 3);
+=20
+-			if (gpio_request(data->reset_gpio, "mdio-reset"))
++			if (devm_gpio_request(priv->device, data->reset_gpio,
++					      "mdio-reset"))
+ 				return 0;
+ 		}
+=20
+--=20
+2.20.1
 
-[ I looked at all patches in the series and they look fine to me.
-  After outstanding issues are fixed I'll be happy to apply them all
-  to fbdev-for-next (I can create immutable branch if needed). ]
-
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
