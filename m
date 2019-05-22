@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3C6AC282DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:23:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AEC5C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:23:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5C302184E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:23:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EC7E21851
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:23:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558553020;
-	bh=P+R2WS1P5K+edrz0F0rQKyDg6nYgS4/rJHr/X8Zb5kw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ci53qePiyHAzzHKvzslisg7aEJuGIAEO75E1UWG/NdBPKLV2E11QjQrUhm7I+Hv5T
-	 iQrhWf07SZ1kjAYAtVLWrU81Barrnq1xssWPhWHshz624oGZeH5AxpKQF1I9S2DNZ3
-	 Hp0aL62r9SzXeg4T/eUKn6ogY4PXygOWYvU4cn/0=
+	s=default; t=1558553025;
+	bh=bYbZnpEST5OqDf40yz3PDGsK3jix4uC/dgGuEMu5ppE=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=EU2XztWsNuepLuv3euP6yUiAU64f3VUymG34CXAFtqTSFeY5BkJGucwryQLRCmxKI
+	 h0PopiPvOjwFG86oJMeXRdjVSqxkXD5sERXnrTxTOigKJVTcTQJqokHXmWBlmSzsGl
+	 y3k7XV4l4skWVhFCtLEv9EKCgb6KLM3a7N4OHHBw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730931AbfEVTXe (ORCPT
+        id S1730968AbfEVTXo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:23:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44388 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:23:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44546 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730072AbfEVTXb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:23:31 -0400
+        id S1730190AbfEVTXl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:23:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00CB120879;
-        Wed, 22 May 2019 19:23:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 83E6F20879;
+        Wed, 22 May 2019 19:23:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553010;
-        bh=P+R2WS1P5K+edrz0F0rQKyDg6nYgS4/rJHr/X8Zb5kw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=peGvIh1jtRnM31XLtqHZTKxEfBckIK2MUOzWBek8DipbdVnqhEX94ZbWVA3V0OO+V
-         aKXO2L6s02265GP3CSudNpLAb0K14zAhnkk5BRVGmF3tA8u4dcg8CiuMeptUMeDn5s
-         zG7Te2npek3qMbXBrI5X8KWoTl7IYJBvAuKrK/jw=
+        s=default; t=1558553020;
+        bh=bYbZnpEST5OqDf40yz3PDGsK3jix4uC/dgGuEMu5ppE=;
+        h=From:To:Cc:Subject:Date:From;
+        b=XLxX0+1tM4PlkClD0qZy8hqcGpD5o78yqfW8mya4m2VnjUzP2a9I6ufb9ombd2nKR
+         +iGZRBx4cs8nj4YGRN6hDnw4NgvltXuReFS0dMFU2r5t3n51z7SnL7ilfCf9fIEtS7
+         XmmerZw6r+aLdzJ7CjnaXPIZMftiuUaP8vYjvouI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Huazhong Tan <tanhuazhong@huawei.com>,
-        Peng Li <lipeng321@huawei.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 074/375] net: hns3: use atomic_t replace u32 for arq's count
-Date:   Wed, 22 May 2019 15:16:14 -0400
-Message-Id: <20190522192115.22666-74-sashal@kernel.org>
+Cc:     Ross Lagerwall <ross.lagerwall@citrix.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, cluster-devel@redhat.com
+Subject: [PATCH AUTOSEL 5.0 001/317] gfs2: Fix lru_count going negative
+Date:   Wed, 22 May 2019 15:18:22 -0400
+Message-Id: <20190522192338.23715-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190522192115.22666-1-sashal@kernel.org>
-References: <20190522192115.22666-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,83 +57,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Huazhong Tan <tanhuazhong@huawei.com>
+From: Ross Lagerwall <ross.lagerwall@citrix.com>
 
-[ Upstream commit 30780a8b1677e7409b32ae52a9a84f7d41ae6b43 ]
+[ Upstream commit 7881ef3f33bb80f459ea6020d1e021fc524a6348 ]
 
-Since irq handler and mailbox task will both update arq's count,
-so arq's count should use atomic_t instead of u32, otherwise
-its value may go wrong finally.
+Under certain conditions, lru_count may drop below zero resulting in
+a large amount of log spam like this:
 
-Fixes: 07a0556a3a73 ("net: hns3: Changes to support ARQ(Asynchronous Receive Queue)")
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
-Signed-off-by: Peng Li <lipeng321@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+vmscan: shrink_slab: gfs2_dump_glock+0x3b0/0x630 [gfs2] \
+    negative objects to delete nr=-1
+
+This happens as follows:
+1) A glock is moved from lru_list to the dispose list and lru_count is
+   decremented.
+2) The dispose function calls cond_resched() and drops the lru lock.
+3) Another thread takes the lru lock and tries to add the same glock to
+   lru_list, checking if the glock is on an lru list.
+4) It is on a list (actually the dispose list) and so it avoids
+   incrementing lru_count.
+5) The glock is moved to lru_list.
+5) The original thread doesn't dispose it because it has been re-added
+   to the lru list but the lru_count has still decreased by one.
+
+Fix by checking if the LRU flag is set on the glock rather than checking
+if the glock is on some list and rearrange the code so that the LRU flag
+is added/removed precisely when the glock is added/removed from lru_list.
+
+Signed-off-by: Ross Lagerwall <ross.lagerwall@citrix.com>
+Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h          | 2 +-
- drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c | 2 +-
- drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c | 7 ++++---
- 3 files changed, 6 insertions(+), 5 deletions(-)
+ fs/gfs2/glock.c | 22 +++++++++++++---------
+ 1 file changed, 13 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h b/drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h
-index 299b277bc7ae9..589b7ee32bff8 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h
-@@ -107,7 +107,7 @@ struct hclgevf_mbx_arq_ring {
- 	struct hclgevf_dev *hdev;
- 	u32 head;
- 	u32 tail;
--	u32 count;
-+	atomic_t count;
- 	u16 msg_q[HCLGE_MBX_MAX_ARQ_MSG_NUM][HCLGE_MBX_MAX_ARQ_MSG_SIZE];
- };
+diff --git a/fs/gfs2/glock.c b/fs/gfs2/glock.c
+index 4b038f25f2564..2d25d89e77f9b 100644
+--- a/fs/gfs2/glock.c
++++ b/fs/gfs2/glock.c
+@@ -183,15 +183,19 @@ static int demote_ok(const struct gfs2_glock *gl)
  
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c
-index 9441b453d38df..9a0a501908aec 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c
-@@ -327,7 +327,7 @@ int hclgevf_cmd_init(struct hclgevf_dev *hdev)
- 	hdev->arq.hdev = hdev;
- 	hdev->arq.head = 0;
- 	hdev->arq.tail = 0;
--	hdev->arq.count = 0;
-+	atomic_set(&hdev->arq.count, 0);
- 	hdev->hw.cmq.csq.next_to_clean = 0;
- 	hdev->hw.cmq.csq.next_to_use = 0;
- 	hdev->hw.cmq.crq.next_to_clean = 0;
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c
-index 7dc3c9f79169f..4f2c77283cb43 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c
-@@ -208,7 +208,8 @@ void hclgevf_mbx_handler(struct hclgevf_dev *hdev)
- 			/* we will drop the async msg if we find ARQ as full
- 			 * and continue with next message
- 			 */
--			if (hdev->arq.count >= HCLGE_MBX_MAX_ARQ_MSG_NUM) {
-+			if (atomic_read(&hdev->arq.count) >=
-+			    HCLGE_MBX_MAX_ARQ_MSG_NUM) {
- 				dev_warn(&hdev->pdev->dev,
- 					 "Async Q full, dropping msg(%d)\n",
- 					 req->msg[1]);
-@@ -220,7 +221,7 @@ void hclgevf_mbx_handler(struct hclgevf_dev *hdev)
- 			memcpy(&msg_q[0], req->msg,
- 			       HCLGE_MBX_MAX_ARQ_MSG_SIZE * sizeof(u16));
- 			hclge_mbx_tail_ptr_move_arq(hdev->arq);
--			hdev->arq.count++;
-+			atomic_inc(&hdev->arq.count);
+ void gfs2_glock_add_to_lru(struct gfs2_glock *gl)
+ {
++	if (!(gl->gl_ops->go_flags & GLOF_LRU))
++		return;
++
+ 	spin_lock(&lru_lock);
  
- 			hclgevf_mbx_task_schedule(hdev);
+-	if (!list_empty(&gl->gl_lru))
+-		list_del_init(&gl->gl_lru);
+-	else
++	list_del(&gl->gl_lru);
++	list_add_tail(&gl->gl_lru, &lru_list);
++
++	if (!test_bit(GLF_LRU, &gl->gl_flags)) {
++		set_bit(GLF_LRU, &gl->gl_flags);
+ 		atomic_inc(&lru_count);
++	}
  
-@@ -308,7 +309,7 @@ void hclgevf_mbx_async_handler(struct hclgevf_dev *hdev)
- 		}
- 
- 		hclge_mbx_head_ptr_move_arq(hdev->arq);
--		hdev->arq.count--;
-+		atomic_dec(&hdev->arq.count);
- 		msg_q = hdev->arq.msg_q[hdev->arq.head];
- 	}
+-	list_add_tail(&gl->gl_lru, &lru_list);
+-	set_bit(GLF_LRU, &gl->gl_flags);
+ 	spin_unlock(&lru_lock);
  }
+ 
+@@ -201,7 +205,7 @@ static void gfs2_glock_remove_from_lru(struct gfs2_glock *gl)
+ 		return;
+ 
+ 	spin_lock(&lru_lock);
+-	if (!list_empty(&gl->gl_lru)) {
++	if (test_bit(GLF_LRU, &gl->gl_flags)) {
+ 		list_del_init(&gl->gl_lru);
+ 		atomic_dec(&lru_count);
+ 		clear_bit(GLF_LRU, &gl->gl_flags);
+@@ -1159,8 +1163,7 @@ void gfs2_glock_dq(struct gfs2_holder *gh)
+ 		    !test_bit(GLF_DEMOTE, &gl->gl_flags))
+ 			fast_path = 1;
+ 	}
+-	if (!test_bit(GLF_LFLUSH, &gl->gl_flags) && demote_ok(gl) &&
+-	    (glops->go_flags & GLOF_LRU))
++	if (!test_bit(GLF_LFLUSH, &gl->gl_flags) && demote_ok(gl))
+ 		gfs2_glock_add_to_lru(gl);
+ 
+ 	trace_gfs2_glock_queue(gh, 0);
+@@ -1456,6 +1459,7 @@ __acquires(&lru_lock)
+ 		if (!spin_trylock(&gl->gl_lockref.lock)) {
+ add_back_to_lru:
+ 			list_add(&gl->gl_lru, &lru_list);
++			set_bit(GLF_LRU, &gl->gl_flags);
+ 			atomic_inc(&lru_count);
+ 			continue;
+ 		}
+@@ -1463,7 +1467,6 @@ __acquires(&lru_lock)
+ 			spin_unlock(&gl->gl_lockref.lock);
+ 			goto add_back_to_lru;
+ 		}
+-		clear_bit(GLF_LRU, &gl->gl_flags);
+ 		gl->gl_lockref.count++;
+ 		if (demote_ok(gl))
+ 			handle_callback(gl, LM_ST_UNLOCKED, 0, false);
+@@ -1498,6 +1501,7 @@ static long gfs2_scan_glock_lru(int nr)
+ 		if (!test_bit(GLF_LOCK, &gl->gl_flags)) {
+ 			list_move(&gl->gl_lru, &dispose);
+ 			atomic_dec(&lru_count);
++			clear_bit(GLF_LRU, &gl->gl_flags);
+ 			freed++;
+ 			continue;
+ 		}
 -- 
 2.20.1
 
