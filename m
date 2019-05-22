@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86BEBC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:25:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14F0BC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:25:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B6EC2189F
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:25:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1E25217D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:25:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558553146;
-	bh=BPyaHdFdHRVysY+nekbwg00qYZ6CaFTtF+nA8OtWABU=;
+	s=default; t=1558553150;
+	bh=aU4CXQ1D+LlLoIV1mmGR+NNarxByWPbHFnIBHyz5C9o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gXLiR068E9rRp3LXZgvOSdEV7YIEARtI40eXKJckFSOTfvoG0Tus6mmTnTDl7yWSD
-	 DRQjpOpIC7uUy0OQryBklJ2zLAxRZtXza8dwVtQndE5dMrOBRRgwL7GCrntQKQgVkq
-	 SL3wh7mv2XGw55sAE+vGulN556UY6k1t3JbKmQl8=
+	b=Ro0LX6bpyGmPXKlb8xID+WZOGYHeLQHHsIP/ADBuSG6zxDnZWIBS5D6xSljw3Juqu
+	 5UwE/RsVkSwXBz7GbK+zKQ3jxp+ZYTFa4+SCNCk3SYIjlYqj420gIDaUC8xcqbqFTB
+	 X/kLuFM2F741L14dVOurwz0UhPmzRrqWuV9b0J4c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730922AbfEVTZp (ORCPT
+        id S1731753AbfEVTZu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:25:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46946 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:25:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47100 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731657AbfEVTZg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:25:36 -0400
+        id S1731719AbfEVTZo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:25:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76930217D9;
-        Wed, 22 May 2019 19:25:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 002D3217D9;
+        Wed, 22 May 2019 19:25:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553136;
-        bh=BPyaHdFdHRVysY+nekbwg00qYZ6CaFTtF+nA8OtWABU=;
+        s=default; t=1558553143;
+        bh=aU4CXQ1D+LlLoIV1mmGR+NNarxByWPbHFnIBHyz5C9o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yjB1/ptzfJPKFL2r9EkcMXNbBdth2TisuxgRe5Zbz/7WsqohoMNr0hxiOe7o+syez
-         J3EWDkp3y5u8H6oKYEtGpR9t5CmqZ6o+dLWy9Wjlh2OHxhElJQMgBlqBXVxXTQyfaA
-         CIC/jciqGAoHs4MK8FpXnwlBD9Jt2bewPzMu0T0I=
+        b=enJDO+kb2GKPbQbcZI3C4IEVISQaE2+mPHYbhG8lVDiiRw25WasNNxX8uxvcgsv87
+         TyqF5RlnNB1UbY7GgrPxcOz41fgEIjM3aiDomxB9UY6JZ8mGc3FMMjkxyS13Ak0257
+         2jCP32KXALZ8aXP9uLCkrP9DHY+NSSioY6R8HrTY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 066/317] mac80211/cfg80211: update bss channel on channel switch
-Date:   Wed, 22 May 2019 15:19:27 -0400
-Message-Id: <20190522192338.23715-66-sashal@kernel.org>
+Cc:     Xiaoli Feng <fengxiaoli0714@gmail.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 073/317] Fix nfs4.2 return -EINVAL when do dedupe operation
+Date:   Wed, 22 May 2019 15:19:34 -0400
+Message-Id: <20190522192338.23715-73-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192338.23715-1-sashal@kernel.org>
 References: <20190522192338.23715-1-sashal@kernel.org>
@@ -60,68 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
+From: Xiaoli Feng <fengxiaoli0714@gmail.com>
 
-[ Upstream commit 5dc8cdce1d722c733f8c7af14c5fb595cfedbfa8 ]
+[ Upstream commit ce96e888fe48ecfa868c9a39adc03292c78a80ff ]
 
-FullMAC STAs have no way to update bss channel after CSA channel switch
-completion. As a result, user-space tools may provide inconsistent
-channel info. For instance, consider the following two commands:
-$ sudo iw dev wlan0 link
-$ sudo iw dev wlan0 info
-The latter command gets channel info from the hardware, so most probably
-its output will be correct. However the former command gets channel info
-from scan cache, so its output will contain outdated channel info.
-In fact, current bss channel info will not be updated until the
-next [re-]connect.
+dedupe_file_range operations is combiled into remap_file_range.
+But in nfs42_remap_file_range, it's skiped for dedupe operations.
+Before this patch:
+  # dd if=/dev/zero of=nfs/file bs=1M count=1
+  # xfs_io -c "dedupe nfs/file 4k 64k 4k" nfs/file
+  XFS_IOC_FILE_EXTENT_SAME: Invalid argument
+After this patch:
+  # dd if=/dev/zero of=nfs/file bs=1M count=1
+  # xfs_io -c "dedupe nfs/file 4k 64k 4k" nfs/file
+  deduped 4096/4096 bytes at offset 65536
+  4 KiB, 1 ops; 0.0046 sec (865.988 KiB/sec and 216.4971 ops/sec)
 
-Note that mac80211 STAs have a workaround for this, but it requires
-access to internal cfg80211 data, see ieee80211_chswitch_work:
-
-	/* XXX: shouldn't really modify cfg80211-owned data! */
-	ifmgd->associated->channel = sdata->csa_chandef.chan;
-
-This patch suggests to convert mac80211 workaround into cfg80211 behavior
-and to update current bss channel in cfg80211_ch_switch_notify.
-
-Signed-off-by: Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Xiaoli Feng <fengxiaoli0714@gmail.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/mlme.c    | 3 ---
- net/wireless/nl80211.c | 5 +++++
- 2 files changed, 5 insertions(+), 3 deletions(-)
+ fs/nfs/nfs4file.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/mac80211/mlme.c b/net/mac80211/mlme.c
-index 6878215672871..715ab0e6579cb 100644
---- a/net/mac80211/mlme.c
-+++ b/net/mac80211/mlme.c
-@@ -1167,9 +1167,6 @@ static void ieee80211_chswitch_work(struct work_struct *work)
- 		goto out;
- 	}
+diff --git a/fs/nfs/nfs4file.c b/fs/nfs/nfs4file.c
+index 00d17198ee12a..f10b660805fc4 100644
+--- a/fs/nfs/nfs4file.c
++++ b/fs/nfs/nfs4file.c
+@@ -187,7 +187,7 @@ static loff_t nfs42_remap_file_range(struct file *src_file, loff_t src_off,
+ 	bool same_inode = false;
+ 	int ret;
  
--	/* XXX: shouldn't really modify cfg80211-owned data! */
--	ifmgd->associated->channel = sdata->csa_chandef.chan;
--
- 	ifmgd->csa_waiting_bcn = true;
+-	if (remap_flags & ~REMAP_FILE_ADVISORY)
++	if (remap_flags & ~(REMAP_FILE_DEDUP | REMAP_FILE_ADVISORY))
+ 		return -EINVAL;
  
- 	ieee80211_sta_reset_beacon_monitor(sdata);
-diff --git a/net/wireless/nl80211.c b/net/wireless/nl80211.c
-index 156ce708b5330..0044bfb526abc 100644
---- a/net/wireless/nl80211.c
-+++ b/net/wireless/nl80211.c
-@@ -15667,6 +15667,11 @@ void cfg80211_ch_switch_notify(struct net_device *dev,
- 
- 	wdev->chandef = *chandef;
- 	wdev->preset_chandef = *chandef;
-+
-+	if (wdev->iftype == NL80211_IFTYPE_STATION &&
-+	    !WARN_ON(!wdev->current_bss))
-+		wdev->current_bss->pub.channel = chandef->chan;
-+
- 	nl80211_ch_switch_notify(rdev, dev, chandef, GFP_KERNEL,
- 				 NL80211_CMD_CH_SWITCH_NOTIFY, 0);
- }
+ 	/* check alignment w.r.t. clone_blksize */
 -- 
 2.20.1
 
