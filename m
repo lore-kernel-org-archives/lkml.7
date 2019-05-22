@@ -4,53 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C0E8C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:32:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F171CC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:32:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FEA32089E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:32:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C51F52089E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:32:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558553568;
-	bh=3y4I0rUSwxML9pUm1vTUxrU9c0lu6C4aI58cHm3pulI=;
+	s=default; t=1558553570;
+	bh=E+ZE7vDcdP/vN6Zda4hseU3aCU164cE+hg599B+TFH8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nRD3Fh5+R1ONvV5xe9ErChqykI0mJSJ5W2c13G0APX8qdCZRnu+1wmf5yWZxOqViU
-	 Dv06FuoQ5eIg9NgxCawUpSxX6aCvrFWNzIgXa0SNJ1SPD8ApMvKiL4e05yMmv6tuPp
-	 jzmnXSBTaVZgqyxUcW0o6OWPV6r8Y7rEm4WfzKho=
+	b=V9KxobxIIm8wE4Dul5O5DbR8WQK6U+1rTEYTuVN5T3A9bum3b3w3+yWGn1jWzY3mJ
+	 WhpVXCT7ELyJK6F5HC1PLQDG0YgiEckKlJYa9liMMSjrW0euVQWaSTwoRWMVhsltqt
+	 CCKF6Xa38JhiEkgNfyCFsVw0FpJKoM1k7p3+oHjo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387764AbfEVTcH (ORCPT
+        id S1732351AbfEVTct (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:32:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55818 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:32:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55970 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732453AbfEVTcF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:32:05 -0400
+        id S1732564AbfEVTcM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:32:12 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E99021473;
-        Wed, 22 May 2019 19:32:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ACB1F217F9;
+        Wed, 22 May 2019 19:32:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553525;
-        bh=3y4I0rUSwxML9pUm1vTUxrU9c0lu6C4aI58cHm3pulI=;
+        s=default; t=1558553531;
+        bh=E+ZE7vDcdP/vN6Zda4hseU3aCU164cE+hg599B+TFH8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Aqz18kokV4B/jLZaPmeQEPItQA+ScMC9bH/v5vJ9z/kCM8Bw/XCcciV8fL8RPv5DN
-         3txnMf/UAUNoYbPUIyn83zrtpBGv1rvCZc86AX6onh4IxpVcfjvbfuS2eEnweIieJR
-         GlP/HKoiBBT1ZKJEZe93PB5+w5mRQ/Clrm8arDok=
+        b=lO1RKja7n3V52u9YK1RT+kM+kFtyyZnpBmZkJLVsmirCei1AtTYqpV85rNZnUn/Hv
+         EtxXOvHRcLfNd8aF+spI7fII3DX8GUM2okEg9vKz3Ah0qEIJYdplfqHrdqbh7Dj3ma
+         fdtBcsdeMt1eWf4ejh+H28rd91Sbyq2CqTJnjAyM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        kbuild test robot <lkp@intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Paul E . McKenney" <paulmck@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 24/92] smpboot: Place the __percpu annotation correctly
-Date:   Wed, 22 May 2019 15:30:19 -0400
-Message-Id: <20190522193127.27079-24-sashal@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 27/92] HID: logitech-hidpp: use RAP instead of FAP to get the protocol version
+Date:   Wed, 22 May 2019 15:30:22 -0400
+Message-Id: <20190522193127.27079-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522193127.27079-1-sashal@kernel.org>
 References: <20190522193127.27079-1-sashal@kernel.org>
@@ -63,47 +59,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit d4645d30b50d1691c26ff0f8fa4e718b08f8d3bb ]
+[ Upstream commit 096377525cdb8251e4656085efc988bdf733fb4c ]
 
-The test robot reported a wrong assignment of a per-CPU variable which
-it detected by using sparse and sent a report. The assignment itself is
-correct. The annotation for sparse was wrong and hence the report.
-The first pointer is a "normal" pointer and points to the per-CPU memory
-area. That means that the __percpu annotation has to be moved.
+According to the logitech_hidpp_2.0_specification_draft_2012-06-04.pdf doc:
+https://lekensteyn.nl/files/logitech/logitech_hidpp_2.0_specification_draft_2012-06-04.pdf
 
-Move the __percpu annotation to pointer which points to the per-CPU
-area. This change affects only the sparse tool (and is ignored by the
-compiler).
+We should use a register-access-protocol request using the short input /
+output report ids. This is necessary because 27MHz HID++ receivers have
+a max-packetsize on their HIP++ endpoint of 8, so they cannot support
+long reports. Using a feature-access-protocol request (which is always
+long or very-long) with these will cause a timeout error, followed by
+the hidpp driver treating the device as not being HID++ capable.
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Paul E. McKenney <paulmck@linux.ibm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Fixes: f97f8f06a49fe ("smpboot: Provide infrastructure for percpu hotplug threads")
-Link: http://lkml.kernel.org/r/20190424085253.12178-1-bigeasy@linutronix.de
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+This commit fixes this by switching to using a rap request to get the
+protocol version.
+
+Besides being tested with a (046d:c517) 27MHz receiver with various
+27MHz keyboards and mice, this has also been tested to not cause
+regressions on a non-unifying dual-HID++ nano receiver (046d:c534) with
+k270 and m185 HID++-2.0 devices connected and on a unifying/dj receiver
+(046d:c52b) with a HID++-2.0 Logitech Rechargeable Touchpad T650.
+
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/smpboot.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/hid/hid-logitech-hidpp.c | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/smpboot.h b/include/linux/smpboot.h
-index 12910cf19869c..12a4b09f4d08b 100644
---- a/include/linux/smpboot.h
-+++ b/include/linux/smpboot.h
-@@ -30,7 +30,7 @@ struct smpboot_thread_data;
-  * @thread_comm:	The base name of the thread
-  */
- struct smp_hotplug_thread {
--	struct task_struct __percpu	**store;
-+	struct task_struct		* __percpu *store;
- 	struct list_head		list;
- 	int				(*thread_should_run)(unsigned int cpu);
- 	void				(*thread_fn)(unsigned int cpu);
+diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-hidpp.c
+index 5fd97860aec4d..3666e5064d0d3 100644
+--- a/drivers/hid/hid-logitech-hidpp.c
++++ b/drivers/hid/hid-logitech-hidpp.c
+@@ -414,13 +414,16 @@ static int hidpp_root_get_feature(struct hidpp_device *hidpp, u16 feature,
+ 
+ static int hidpp_root_get_protocol_version(struct hidpp_device *hidpp)
+ {
++	const u8 ping_byte = 0x5a;
++	u8 ping_data[3] = { 0, 0, ping_byte };
+ 	struct hidpp_report response;
+ 	int ret;
+ 
+-	ret = hidpp_send_fap_command_sync(hidpp,
++	ret = hidpp_send_rap_command_sync(hidpp,
++			REPORT_ID_HIDPP_SHORT,
+ 			HIDPP_PAGE_ROOT_IDX,
+ 			CMD_ROOT_GET_PROTOCOL_VERSION,
+-			NULL, 0, &response);
++			ping_data, sizeof(ping_data), &response);
+ 
+ 	if (ret == HIDPP_ERROR_INVALID_SUBID) {
+ 		hidpp->protocol_major = 1;
+@@ -440,8 +443,14 @@ static int hidpp_root_get_protocol_version(struct hidpp_device *hidpp)
+ 	if (ret)
+ 		return ret;
+ 
+-	hidpp->protocol_major = response.fap.params[0];
+-	hidpp->protocol_minor = response.fap.params[1];
++	if (response.rap.params[2] != ping_byte) {
++		hid_err(hidpp->hid_dev, "%s: ping mismatch 0x%02x != 0x%02x\n",
++			__func__, response.rap.params[2], ping_byte);
++		return -EPROTO;
++	}
++
++	hidpp->protocol_major = response.rap.params[0];
++	hidpp->protocol_minor = response.rap.params[1];
+ 
+ 	return ret;
+ }
 -- 
 2.20.1
 
