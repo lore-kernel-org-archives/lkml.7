@@ -2,133 +2,134 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25CE6C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 14:16:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A785DC282DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 14:16:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0161120879
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 14:16:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C8E620879
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 14:16:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="JenUhgae";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="WaSzPfF5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729208AbfEVOQW (ORCPT
+        id S1729337AbfEVOQn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 10:16:22 -0400
-Received: from foss.arm.com ([217.140.101.70]:52330 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727284AbfEVOQV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 10:16:21 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E408280D;
-        Wed, 22 May 2019 07:16:20 -0700 (PDT)
-Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 57C233F718;
-        Wed, 22 May 2019 07:16:15 -0700 (PDT)
-Date:   Wed, 22 May 2019 15:16:12 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Andrey Konovalov <andreyknvl@google.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
-        linux-media@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
-Subject: Re: [PATCH v15 17/17] selftests, arm64: add a selftest for passing
- tagged pointers to kernel
-Message-ID: <20190522141612.GA28122@arrakis.emea.arm.com>
-References: <cover.1557160186.git.andreyknvl@google.com>
- <e31d9364eb0c2eba8ce246a558422e811d82d21b.1557160186.git.andreyknvl@google.com>
+        Wed, 22 May 2019 10:16:43 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:60248 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727284AbfEVOQm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 10:16:42 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id A3B1960746; Wed, 22 May 2019 14:16:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1558534601;
+        bh=Uo1NDvVI5hg+s8MO2B+ZunEJDNee1Tswu3TB2ofB0Wc=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=JenUhgaeMgNrF0YrkOdsdWO1YTuHp/Bc51S/BzQeIapjR96vW0QtRzCvbjUg03hp7
+         Er502ht2R5fr72E41TMIBbH5flB8fwsMAeNUC34dLK0vAnv/Sq2es0+Ac5DvwnegYQ
+         RvVqohd01yVQRhSa7PtE8pylXruV/lEit7MbWaJE=
+Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jhugo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id E33B060746;
+        Wed, 22 May 2019 14:16:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1558534600;
+        bh=Uo1NDvVI5hg+s8MO2B+ZunEJDNee1Tswu3TB2ofB0Wc=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=WaSzPfF56tMpDAzJoGn/0vDdZYTibnbQWOHcXpJMcnvHfC9TC1KICIlrTmudw69/y
+         vZeKj8Wty9Wrt5i/jgMZqOCRVju9sLjtVKj+SNwTDs9gSYJeOYJj9yfhr7hGG1Kw8t
+         WFrkLB2EWG6d0qaQQTV27EJERcS/iaDT4T6Y3eMs=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E33B060746
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
+Subject: Re: [PATCH 2/3] regulator: qcom_spmi: Add support for PM8005
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>, lgirdwood@gmail.com,
+        agross@kernel.org, david.brown@linaro.org,
+        bjorn.andersson@linaro.org, jcrouse@codeaurora.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+References: <20190521164932.14265-1-jeffrey.l.hugo@gmail.com>
+ <20190521165315.14379-1-jeffrey.l.hugo@gmail.com>
+ <20190521185054.GD16633@sirena.org.uk>
+ <51caaee4-dfc9-5b5a-07c7-b1406c178ca3@codeaurora.org>
+ <20190522110107.GB8582@sirena.org.uk>
+From:   Jeffrey Hugo <jhugo@codeaurora.org>
+Message-ID: <4e5bdf77-3141-bff6-e5b9-a81a5c73b4e4@codeaurora.org>
+Date:   Wed, 22 May 2019 08:16:38 -0600
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e31d9364eb0c2eba8ce246a558422e811d82d21b.1557160186.git.andreyknvl@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190522110107.GB8582@sirena.org.uk>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 06, 2019 at 06:31:03PM +0200, Andrey Konovalov wrote:
-> This patch is a part of a series that extends arm64 kernel ABI to allow to
-> pass tagged user pointers (with the top byte set to something else other
-> than 0x00) as syscall arguments.
+On 5/22/2019 5:01 AM, Mark Brown wrote:
+> On Tue, May 21, 2019 at 05:16:06PM -0600, Jeffrey Hugo wrote:
+>> On 5/21/2019 12:50 PM, Mark Brown wrote:
 > 
-> This patch adds a simple test, that calls the uname syscall with a
-> tagged user pointer as an argument. Without the kernel accepting tagged
-> user pointers the test fails with EFAULT.
+>>>> +static int spmi_regulator_common_list_voltage(struct regulator_dev *rdev,
+>>>> +					      unsigned selector);
+>>>> +
+>>>> +static int spmi_regulator_common2_set_voltage(struct regulator_dev *rdev,
+>>>> +					      unsigned selector)
+> 
+>>> Eeew, can we not have better names?
+> 
+>> I'm open to suggestions.  Apparently there are two register common register
+>> schemes - the old one and the new one.  PMIC designs after some random point
+>> in time are all the new register scheme per the documentation I see.
+> 
+>> As far as I an aware, the FT426 design is the first design to be added to
+>> this driver to make use of the new scheme, but I expect more to be supported
+>> in future, thus I'm reluctant to make these ft426 specific in the name.
+> 
+> If there's a completely new register map why are these even in the same
+> driver?
 
-That's probably sufficient for a simple example. Something we could add
-to Documentation maybe is a small library that can be LD_PRELOAD'ed so
-that you can run a lot more tests like LTP.
+Its not completely new, its a derivative of the old scheme.  Of the 104 
+registers, approximately 5 have been modified, therefore the new scheme 
+is 95% compatible with the old one.  Duplicating a 1883 line driver to 
+handle a change in 5% of the register space seems less than ideal. 
+Particularly considering your previous comments seem to indicate that 
+you feel its pretty trivial to handle the quirks associated with the 
+changes in this driver.
 
-We could add this to selftests but I think it's too glibc specific.
+> 
+>>>> +	if (reg == SPMI_COMMON2_MODE_HPM_MASK)
+>>>> +		return REGULATOR_MODE_NORMAL;
+>>>> +
+>>>> +	if (reg == SPMI_COMMON2_MODE_AUTO_MASK)
+>>>> +		return REGULATOR_MODE_FAST;
+>>>> +
+>>>> +	return REGULATOR_MODE_IDLE;
+>>>> +}
+> 
+>>> This looks like you want to write a switch statement.
+> 
+>> It follows the existing style in the driver, but sure I can make this a
+>> switch.
+> 
+> Please fix the rest of the driver as well then.
+> 
 
---------------------8<------------------------------------
-#include <stdlib.h>
 
-#define TAG_SHIFT	(56)
-#define TAG_MASK	(0xffUL << TAG_SHIFT)
-
-void *__libc_malloc(size_t size);
-void __libc_free(void *ptr);
-void *__libc_realloc(void *ptr, size_t size);
-void *__libc_calloc(size_t nmemb, size_t size);
-
-static void *tag_ptr(void *ptr)
-{
-	unsigned long tag = rand() & 0xff;
-	if (!ptr)
-		return ptr;
-	return (void *)((unsigned long)ptr | (tag << TAG_SHIFT));
-}
-
-static void *untag_ptr(void *ptr)
-{
-	return (void *)((unsigned long)ptr & ~TAG_MASK);
-}
-
-void *malloc(size_t size)
-{
-	return tag_ptr(__libc_malloc(size));
-}
-
-void free(void *ptr)
-{
-	__libc_free(untag_ptr(ptr));
-}
-
-void *realloc(void *ptr, size_t size)
-{
-	return tag_ptr(__libc_realloc(untag_ptr(ptr), size));
-}
-
-void *calloc(size_t nmemb, size_t size)
-{
-	return tag_ptr(__libc_calloc(nmemb, size));
-}
+-- 
+Jeffrey Hugo
+Qualcomm Datacenter Technologies as an affiliate of Qualcomm 
+Technologies, Inc.
+Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
