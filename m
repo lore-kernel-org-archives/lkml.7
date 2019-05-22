@@ -2,131 +2,286 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 851CAC16A69
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 06:34:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8933EC072A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 06:35:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63B3F217F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 06:34:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47FB320644
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 06:35:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZIt6g2hm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728775AbfEVGe1 (ORCPT
+        id S1728482AbfEVGfw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 02:34:27 -0400
-Received: from smtprelay0072.hostedemail.com ([216.40.44.72]:41314 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728367AbfEVGe0 (ORCPT
+        Wed, 22 May 2019 02:35:52 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:45860 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726214AbfEVGfv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 02:34:26 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay07.hostedemail.com (Postfix) with ESMTP id 3C2AE181D3419;
-        Wed, 22 May 2019 06:34:25 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: cart68_7d607343ca553
-X-Filterd-Recvd-Size: 3505
-Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf08.hostedemail.com (Postfix) with ESMTPA;
-        Wed, 22 May 2019 06:34:21 +0000 (UTC)
-Message-ID: <eae2d0e80824cc84965c571a0ea097e14d3f498c.camel@perches.com>
-Subject: Re: [GIT PULL] SPDX update for 5.2-rc1 - round 1
-From:   Joe Perches <joe@perches.com>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-spdx@vger.kernel.org
-Date:   Tue, 21 May 2019 23:34:19 -0700
-In-Reply-To: <CAK7LNASZWLwYC2E3vBkXhp7wt9zBWkFrR+NTnxTyLn1zO66a0w@mail.gmail.com>
-References: <20190521133257.GA21471@kroah.com>
-         <CAK7LNASZWLwYC2E3vBkXhp7wt9zBWkFrR+NTnxTyLn1zO66a0w@mail.gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.1-1build1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Wed, 22 May 2019 02:35:51 -0400
+Received: by mail-wr1-f68.google.com with SMTP id b18so826233wrq.12;
+        Tue, 21 May 2019 23:35:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Kx6N4jdhX8RY0QqPuMsZm0q9Xm7aAF1EKudqEUJtORI=;
+        b=ZIt6g2hmUIjpy+82xcoEACtIUwjzQvJzU2d3XEXxAeXrFV/zsLHIvVWSj2FN+7+eGS
+         kNI7u3mYtkZ+WSTR8MOQ3GmsmID0oxancyf+ZOVroNQVKAxYUTtlnjaq7l+s0g1gy21P
+         ZUMI0GG9wJuYrFa/UXJSY0isliUAloELnOtyGIirSnaklFJxXZ51sBsIVfdS58q14A1U
+         +atgoNX+RxXAqa6v7UA2P2tE5nWeOVFeMQm76Z7Y7MO/Hc3qICsQddmgDKmvceNubAfM
+         7/jrHVaFLC2SL2L34TO9IBdfWtCPVwFSUWfHd+qtKxULmEDTQJo8GJ3B5sEvlcSVrpKz
+         2I8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Kx6N4jdhX8RY0QqPuMsZm0q9Xm7aAF1EKudqEUJtORI=;
+        b=mrLP1OBblMkU2T2YyVf8P5mfvWCduDjZjRk0pZ4vqx6Zz2WQK+qEw9qY/4Abvp4m7U
+         fd6EEEtJW4HPGHrpTPNPUKy3g1psLFUm4pYzULQPVztcOE2xrR97DM+TWeaqCz05nIYv
+         yTHjtcK0r64tm+foXyh5T/x28RDx7gEkGp9oIe70R+hhr1ulR4mD/d8TC5pNOoOKqhMH
+         Rur2EkHdq8MG+opNyjqPRKh6r2+pr5T2cEwAzlIt+crqBsFTIjuMzlN36WZnUdlXFsRj
+         3AxUgk97rPFnZJ4RtBlLB+sEBb5UEKGSs7Lc3rbl4qgoKcNJUwvhTzdwbwC/3Ti93Lz/
+         RQFg==
+X-Gm-Message-State: APjAAAW1zl9ueR7xkIAvIm7D7ovNAmDtZOlS5HNZEusVHYnXpswq+dVG
+        so3OxmDJEBVpZiNLlgFTooA=
+X-Google-Smtp-Source: APXvYqz3vJOXmPLTEMFvVU01ZGxevc53HSKCm/l6QrVwFOYPHei0vknX8yUXBWPwp3wgsqKPLZA6QA==
+X-Received: by 2002:a5d:6a8c:: with SMTP id s12mr21229583wru.326.1558506949236;
+        Tue, 21 May 2019 23:35:49 -0700 (PDT)
+Received: from pali ([2a02:2b88:2:1::5cc6:2f])
+        by smtp.gmail.com with ESMTPSA id j82sm6010796wmj.40.2019.05.21.23.35.47
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 21 May 2019 23:35:48 -0700 (PDT)
+Date:   Wed, 22 May 2019 08:35:46 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+To:     Xiaoxiao Liu <xiaoxiao.liu-1@cn.alps.com>
+Cc:     Hui Wang <hui.wang@canonical.com>,
+        XiaoXiao Liu <sliuuxiaonxiao@gmail.com>,
+        "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Xiaojian Cao <xiaojian.cao@cn.alps.com>,
+        "zhangfp1@lenovo.com" <zhangfp1@lenovo.com>
+Subject: Re: =?utf-8?B?562U5aSNOiDnrZTlpI06IFtQQVRD?= =?utf-8?Q?H=5D_input?=
+ =?utf-8?Q?=3A?= alps-fix the issue the special alps trackpoint do not work.
+Message-ID: <20190522063546.kb74mxeprkauicul@pali>
+References: <20190520110149.27107-1-sliuuxiaonxiao@gmail.com>
+ <OSBPR01MB485510A2A32CD9D2CE5EF7A1DA070@OSBPR01MB4855.jpnprd01.prod.outlook.com>
+ <345b62e1-407e-7a03-9b03-486bbf5a0a8e@canonical.com>
+ <20190521094622.syeub6tcqhbyc7sg@pali>
+ <OSBPR01MB4855D744473149D037612506DA000@OSBPR01MB4855.jpnprd01.prod.outlook.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="gm5ekay5c65hegb3"
+Content-Disposition: inline
+In-Reply-To: <OSBPR01MB4855D744473149D037612506DA000@OSBPR01MB4855.jpnprd01.prod.outlook.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-05-22 at 13:32 +0900, Masahiro Yamada wrote:
-> On Tue, May 21, 2019 at 10:34 PM Greg KH <gregkh@linuxfoundation.org> wrote:
-[]
-> >  - Add GPL-2.0-only or GPL-2.0-or-later tags to files where our scan
-> >     tools can determine the license text in the file itself.  Where this
-> >     happens, the license text is removed, in order to cut down on the
-> >     700+ different ways we have in the kernel today, in a quest to get
-> >     rid of all of these.
-[]
-> I have been wondering for a while
-> which version of spdx tags I should use in my work.
-> 
-> I know the 'GPL-2.0' tag is already deprecated.
-> (https://spdx.org/licenses/GPL-2.0.html)
-> 
-> But, I saw negative reaction to this:
-> https://lore.kernel.org/patchwork/patch/975394/
-> 
-> Nor "-only" / "-or-later" are documented in
-> Documentation/process/license-rules.rst
-> 
-> In this patch series, Thomas used 'GPL-2.0-only' and 'GPL-2.0-or-later'
-> instead of 'GPL-2.0' and 'GPL-2.0+'.
-> 
-> Now, we have a great number of users of spdx v3 tags.
-> $ git grep -P 'SPDX-License-Identifier.*(?:-or-later|-only)'| wc -l
-> 4135
-> So, what I understood is:
-> 
->   For newly added tags, '*-only' and '*-or-later' are preferred.
-> 
-> (But, we do not convert existing spdx v2 tags globally.)
-> 
-> 
-> "
-> Joe's patch was not merged, but at least
-> Documentation/process/license-rules.rst
-> should be updated in my opinion.
-> 
-> (Perhaps, checkpatch.pl can suggest newer tags in case
-> patch submitters do not even know that deprecation.)
 
-I'd still prefer the kernel use of a single SPDX style.
+--gm5ekay5c65hegb3
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I don't know why the -only and -or-later forms were
-used for this patch, but I like it.
+Hi!
 
-I believe the -only and -or-later are more intelligible
-as a trivial reading of
+On Wednesday 22 May 2019 02:53:18 Xiaoxiao Liu wrote:
+> Hi Pali,
+>=20
+> Why it does not report input data?
+> --> The alps devices which detected to use the ALPS_PROTO_V8  contains AL=
+PS touchpad and ALPS track point.=20
+>      But the ALPS_PROTO_V8 do not support the track point device process.=
+=20
+>      When the track point was detected to use ALPS_PROTO_V8 ,the v8 proce=
+ss_packet method  alps_process_packet_ss4_v2 will reject to report the data=
+ because the v8 device is      not set the ALPS_DUALPOINT flag.=20
+>      You can refer below code.
 
-	SPDX-License-Identifier: GPL-2.0
+Ok, and cannot you set ALPS_DUALPOINT flag based on that
+alps_check_is_trackpoint() result and then update
+alps_process_packet_ss4_v3() code to supports also
+V8 trackpoint packets?
 
-would generally mean to me the original
-GPL-2.0 license without the elision of the
-(or at your option, any later version) bits
+> 	/* Report trackstick */
+> 	if (alps_get_pkt_id_ss4_v2(packet) =3D=3D SS4_PACKET_ID_STICK) {
+> 		if (!(priv->flags & ALPS_DUALPOINT)) {
+> 			psmouse_warn(psmouse,
+> 				     "Rejected trackstick packet from non DualPoint device");
+> 			return;
+> 		}
+> 		...
+> 		return;
+> 	}
+>=20
+> why is for non-ALPS trackpoints used ALPS driver?
+> --> the non-Alps track point is the ALPS touchpad, it is right to use the=
+ ALPS driver for ALPS touchpad.
 
-whereas
+Ok, now I got it.
 
-	SPDX-License-Identifier: GPL-2.0-only
+> The v8 protocol condition may modified  as below, it will be more easier =
+to understand.
+>=20
+> 	 if (e7[0] =3D=3D 0x73 && e7[1] =3D=3D 0x03 && (e7[2] =3D=3D 0x14 || e7[=
+2] =3D=3D 0x28) &&  (alps_check_is_trackpoint(psmouse) !=3D 0)  ) {
+>  		protocol =3D &alps_v8_protocol_data;
+> 	}
 
-seems fairly descriptive.
+Yes, this would be more easier to understand.
 
-Is it agreed that the GPL-<v>-only and GPL-<v>-or-later
-forms should be preferred for new SPDX identifiers?
+Anyway, more information should be in commit message.
 
-If so, I'll submit a checkpatch patch.
+> Best Regards
+> XiaoXiao Liu
+> sliuuxiaonxiao@gmail.com
+> xiaoxiao.liu-1@cn.alps.com
+>=20
+> -----=E9=82=AE=E4=BB=B6=E5=8E=9F=E4=BB=B6-----
+> =E5=8F=91=E4=BB=B6=E4=BA=BA: Pali Roh=C3=A1r <pali.rohar@gmail.com>=20
+> =E5=8F=91=E9=80=81=E6=97=B6=E9=97=B4: Tuesday, May 21, 2019 5:46 PM
+> =E6=94=B6=E4=BB=B6=E4=BA=BA: Hui Wang <hui.wang@canonical.com>
+> =E6=8A=84=E9=80=81: =E5=8A=89 =E6=9B=89=E6=9B=89 Xiaoxiao Liu <xiaoxiao.l=
+iu-1@cn.alps.com>; XiaoXiao Liu <sliuuxiaonxiao@gmail.com>; dmitry.torokhov=
+@gmail.com; linux-input@vger.kernel.org; linux-kernel@vger.kernel.org; =E6=
+=9B=B9 =E6=9B=89=E5=BB=BA Xiaojian Cao <xiaojian.cao@cn.alps.com>; zhangfp1=
+@lenovo.com
+> =E4=B8=BB=E9=A2=98: Re: =E7=AD=94=E5=A4=8D: [PATCH] input: alps-fix the i=
+ssue the special alps trackpoint do not work.
+>=20
+> Hello!
+>=20
+> On Tuesday 21 May 2019 10:26:47 Hui Wang wrote:
+> > Tested-by: Hui Wang <hui.wang@canonical.com>
+> >=20
+> > On 2019/5/21 =E4=B8=8A=E5=8D=889:07, Xiaoxiao Liu wrote:
+> > > Add Pali Roh=C3=A1r.
+> > >=20
+> > > -----=E9=82=AE=E4=BB=B6=E5=8E=9F=E4=BB=B6-----
+> > > =E5=8F=91=E4=BB=B6=E4=BA=BA: XiaoXiao Liu <sliuuxiaonxiao@gmail.com>
+> > > =E5=8F=91=E9=80=81=E6=97=B6=E9=97=B4: Monday, May 20, 2019 7:02 PM
+> > > =E6=94=B6=E4=BB=B6=E4=BA=BA: dmitry.torokhov@gmail.com
+> > > =E6=8A=84=E9=80=81: linux-input@vger.kernel.org; linux-kernel@vger.ke=
+rnel.org;=20
+> > > hui.wang@canonical.com; =E6=9B=B9 =E6=9B=89=E5=BB=BA Xiaojian Cao=20
+> > > <xiaojian.cao@cn.alps.com>; zhangfp1@lenovo.com; =E5=8A=89 =E6=9B=89=
+=E6=9B=89 Xiaoxiao Liu=20
+> > > <xiaoxiao.liu-1@cn.alps.com>; XiaoXiao Liu=20
+> > > <sliuuxiaonxiao@gmail.com>
+> > > =E4=B8=BB=E9=A2=98: [PATCH] input: alps-fix the issue the special alp=
+s trackpoint do not work.
+> > >=20
+> > > when the alps trackpoint is detected and using the=20
+> > > alps_v8_protocol_data procotol, the alps driver will not report the i=
+nput data.
+>=20
+> Why it does not report input data?
+>=20
+> > > solution: use standard mouse driver instead of alps driver when the s=
+pecail trackpoint was detected.
+>=20
+> This looks like an (undocumented) hack or workaround. Not a solution.
+>=20
+> > > Signed-off-by: XiaoXiao Liu <sliuuxiaonxiao@gmail.com>
+> > > ---
+> > >   drivers/input/mouse/alps.c | 23 ++++++++++++++++++++++-
+> > >   1 file changed, 22 insertions(+), 1 deletion(-)
+> > >=20
+> > > diff --git a/drivers/input/mouse/alps.c b/drivers/input/mouse/alps.c=
+=20
+> > > index 0a6f7ca883e7..516ae1d0eb17 100644
+> > > --- a/drivers/input/mouse/alps.c
+> > > +++ b/drivers/input/mouse/alps.c
+> > > @@ -24,7 +24,7 @@
+> > >   #include "psmouse.h"
+> > >   #include "alps.h"
+> > > -
+> > > +#include "trackpoint.h"
+> > >   /*
+> > >    * Definitions for ALPS version 3 and 4 command mode protocol
+> > >    */
+> > > @@ -2864,6 +2864,22 @@ static const struct alps_protocol_info *alps_m=
+atch_table(unsigned char *e7,
+> > >   	return NULL;
+> > >   }
+> > > +int alps_check_is_trackpoint(struct psmouse *psmouse) {
+> > > +	u8 param[2] =3D { 0 };
+> > > +	int error;
+> > > +
+> > > +	error =3D ps2_command(&psmouse->ps2dev,
+> > > +			    param, MAKE_PS2_CMD(0, 2, TP_READ_ID));
+> > > +	if (error)
+> > > +		return error;
+> > > +
+> > > +	if (param[0] =3D=3D TP_VARIANT_ALPS)
+> > > +		return 0;
+> > > +	psmouse_warn(psmouse, "It is not alps trackpoint.\n");
+> > > +	return -ENODEV;
+> > > +}
+>=20
+> So, this function returns 0 when detected ALPS trackpoint and -ENODEV whe=
+n not.
+>=20
+> > > +
+> > >   static int alps_identify(struct psmouse *psmouse, struct alps_data =
+*priv)  {
+> > >   	const struct alps_protocol_info *protocol; @@ -2912,6 +2928,11 @@ =
+static int alps_identify(struct psmouse *psmouse, struct alps_data *priv)
+> > >   			protocol =3D &alps_v3_protocol_data;
+> > >   		} else if (e7[0] =3D=3D 0x73 && e7[1] =3D=3D 0x03 &&
+> > >   			   (e7[2] =3D=3D 0x14 || e7[2] =3D=3D 0x28)) {
+> > > +				if (alps_check_is_trackpoint(psmouse) =3D=3D 0) {
+> > > +					psmouse_warn(psmouse,
+> > > +					"It is alps trackpoint, use the standard mouse driver.\n");
+> > > +					return -EINVAL;
+>=20
+> And here I'm lost. If we have *not* detected ALPS trackpoint then if bloc=
+k is not called which means that ALPS driver is used.
+>=20
+> So why is for non-ALPS trackpoints used ALPS driver? This does not seem l=
+ike a correct...
+>=20
+> And when we have detected ALPS trackpoint (return value 0) then standard =
+mouse driver is used and returned -EINVAL. This seems strange too.
+>=20
+> So either this code is wrong or there are missing more details for explai=
+ning this strange logic. But still this looks like a hack not a proper fix/=
+solution.
+>=20
+> > > +				}
+> > >   			protocol =3D &alps_v8_protocol_data;
+> > >   		} else if (e7[0] =3D=3D 0x73 && e7[1] =3D=3D 0x03 && e7[2] =3D=3D=
+ 0xc8) {
+> > >   			protocol =3D &alps_v9_protocol_data;
+> > > --
+> > > 2.20.1
+> > >=20
+>=20
+> --
+> Pali Roh=C3=A1r
+> pali.rohar@gmail.com
 
-I could also wire up a patch to checkpatch and docs to
-remove the /* */
-requirement for .h files and prefer
-the generic // form for both .c and
-.h files as the
-current minimum tooling versions now all allow //
-comments
-.
+--=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
 
+--gm5ekay5c65hegb3
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQS4VrIQdKium2krgIWL8Mk9A+RDUgUCXOTtwAAKCRCL8Mk9A+RD
+UjI7AJ9gRrW3aZluqJMt+jbv+ySNlyLNXgCfZrv27/6+ip9IC/P+/TZiVbnRDE4=
+=ErJL
+-----END PGP SIGNATURE-----
+
+--gm5ekay5c65hegb3--
