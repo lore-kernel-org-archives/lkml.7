@@ -2,169 +2,266 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87680C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 13:33:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50898C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 13:34:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 522EF21473
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 13:33:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AB3F20879
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 13:34:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WBijOQ5m"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ANWmTjXE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729338AbfEVNd5 (ORCPT
+        id S1729444AbfEVNeO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 09:33:57 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:44172 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727975AbfEVNd5 (ORCPT
+        Wed, 22 May 2019 09:34:14 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:32824 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727975AbfEVNeN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 09:33:57 -0400
-Received: by mail-wr1-f65.google.com with SMTP id w13so2311983wru.11;
-        Wed, 22 May 2019 06:33:55 -0700 (PDT)
+        Wed, 22 May 2019 09:34:13 -0400
+Received: by mail-lj1-f196.google.com with SMTP id w1so2140024ljw.0;
+        Wed, 22 May 2019 06:34:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=e/eilVLoEQqgBnvBe7r+LiENo1yLHv47YV+XQ5Ig/9o=;
-        b=WBijOQ5m34sH5yA41I6jfN56RJ3Ua4m3bxmfmZEqhuL1hG6cvt736LJU0/uU3snKbV
-         gHqRaohaeI56G74EYp6QWCaAZW2XYJvv02WhIeTBdA0aSLnfkkZUr6NzSP3sHdaEDyRK
-         gMsvZYEUP+TgG0qU3ckz3uz5ih0tkwGC/ohU49yuKsRS+kALpv1IH2pOj6W0n0y82Rpd
-         7RXs9zLqxU4kc+qhOpIQFDEaZ+NiOp3aU9ztn6MsVdr8kbulNAGqzlP7RlSP3k74zVC7
-         pxCdaNxbxZc3hBHVoQqQ+T8xMFFBfzWuxKt7fOQOA6dSXk5G/j9wqiNSM4NQ/xoDAze8
-         ZXDA==
+        bh=14QlJRJWq59KvU1Q1jnmbY57wwH1e/15veo4ydyj84A=;
+        b=ANWmTjXEV7vN5ajAq35aQmfEnGb1lfHDTKS9vcAfD7TqDmiPMKGmFHDpu8SfXJYXq8
+         P1zclsfr0+W2tMYsQgHLynYBe5GXBKdEJGu29wCdW1IM2XAWmoiBVd3fKV5/fVhy9Jj3
+         wcrWrFnW/T2urGVTL2RrhN54W1g08Eax+h2f5Yapc7/LczXL9Ef/4TZmPNSRGyxC4tpw
+         Gc5iUxd79nA/y6Pi1nYcYfM62awXNmUJv6ag6W1xWfWP077Jhw5PbvdH0XNL0r3SrpNl
+         TYgfY3SDqqFd01Mikcndfyo2UMlz+hqtdHhvshSpdx4AD1H4SZ6mQLaKiCt3yFOpoW4/
+         C6aA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=e/eilVLoEQqgBnvBe7r+LiENo1yLHv47YV+XQ5Ig/9o=;
-        b=rWGATVSRahIvd/EBzyKUK0uw+j63KPBW7eNAQ2SCzXY8f2vH5RLsBSvmGH8/gN02fR
-         QBWprb+9m9oWy0+bSvLDvgmuCRiQSHDU8HaJuVvg54mKKBi8n9uzL8KpEclKl7JxQGjg
-         WzXvUjl8h19xzJwmUnOxEnDfjA4INEZPp1ZTWupWtXsuzjgNpl2TXPkL2L9JBZkrkBw2
-         X0nvbn+brYwej3Pwqh2V5RIElp70PNtZyHDmi/9Vjj0qg09ohSyxK0QJoXmR+WKKcK8b
-         QgprSChLEGV3gWncAqjOIjQ0h6mEN4kzzN7XyDtLHY7fuZDYL57cFgi80wUNOjW6SCmC
-         Rx5g==
-X-Gm-Message-State: APjAAAWTjxzRaiOpA/d+bEdJycBPYYRmIk5hATU+Fdf9SMs3bHCTztjU
-        oFQuYJiNa18BxFe+tJjugf8=
-X-Google-Smtp-Source: APXvYqwr9CDQH7mNQcJWQ05wWtBxQGNrzDpDSpJqX2p7aELro278CPZQ4YQJgdce1amiAtV3+xMJFA==
-X-Received: by 2002:adf:fc8f:: with SMTP id g15mr1998390wrr.122.1558532034508;
-        Wed, 22 May 2019 06:33:54 -0700 (PDT)
-Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
-        by smtp.gmail.com with ESMTPSA id u15sm45042485wru.16.2019.05.22.06.33.53
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 22 May 2019 06:33:53 -0700 (PDT)
-Date:   Wed, 22 May 2019 15:33:52 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     jonathanh@nvidia.com, jckuo@nvidia.com, talho@nvidia.com,
-        josephl@nvidia.com, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V1 00/12] LP0 entry and exit support for Tegra210
-Message-ID: <20190522133352.GO30938@ulmo>
-References: <1558481483-22254-1-git-send-email-skomatineni@nvidia.com>
+        bh=14QlJRJWq59KvU1Q1jnmbY57wwH1e/15veo4ydyj84A=;
+        b=qnPxDK8xHS/rIMwzFf+gzp1tMoL5n/C1sZ/Z2nwes9hq/o0mFDQiJq9oSBI4b1tiQS
+         S/a6iUvMwpicawGpPrxRdcWHhe+c4atJhS0Uf3YHOnbBH8UtRvqYPmYF3LnH3cd8rn3m
+         DITQS2ZTLBWVYyu96gdFKjCFcTHCfpTK5y4XBW8GOTNXPIWtgaGZKaszFVzPzUsPGTNQ
+         tH0Ai3s/KlBqb6PFhhjXHgyjafvw4RKy2QtGzGxlmihYlmzqC1u1NUP/20sKLpFLWFj5
+         S4B33Od+sqbXEMrISVwpaVqARQ5X/mR/T9rplmCa5lPrLA4gSo2ZEv+n/jjCYFeMSSfT
+         H94w==
+X-Gm-Message-State: APjAAAUELRJUZRbwA2Zv4Tt/wiqD8rivsml9ssrueF6U1IIfASbpCMp1
+        NAHxdBXg3CS15Y5Y5j6mM4gt8H0mEVw=
+X-Google-Smtp-Source: APXvYqzBhqPPTj2BNTyxpb4Hji+gQdSf9AmROFUOdma1lW10NIbUM2X2o/bBLkO2SUBDHdSDKrElDg==
+X-Received: by 2002:a2e:9b46:: with SMTP id o6mr7891853ljj.76.1558532050686;
+        Wed, 22 May 2019 06:34:10 -0700 (PDT)
+Received: from mobilestation ([83.220.237.191])
+        by smtp.gmail.com with ESMTPSA id j14sm5496504lfb.76.2019.05.22.06.34.08
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 22 May 2019 06:34:09 -0700 (PDT)
+Date:   Wed, 22 May 2019 16:34:04 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Mike Rapoport <rppt@linux.ibm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Stefan Agner <stefan@agner.ch>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Juergen Gross <jgross@suse.com>, linux-mips@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Atsushi Nemoto <anemo@mba.ocn.ne.jp>,
+        "Maciej W. Rozycki" <macro@linux-mips.org>
+Subject: Re: [PATCH 04/12] mips: Reserve memory for the kernel image resources
+Message-ID: <20190522133402.duhybxf66oubx6ng@mobilestation>
+References: <20190423224748.3765-1-fancer.lancer@gmail.com>
+ <20190423224748.3765-5-fancer.lancer@gmail.com>
+ <CAMuHMdWPmL5Z86cgJ4N-U-3XKr4ys8Y7U85okDcXYEu7z4ybaw@mail.gmail.com>
+ <20190521155309.GB24470@rapoport-lnx>
+ <CAMuHMdWK6-ge-j1NbunDu_Jy7JOwbMfTzNQ767MViuTo4DNf+A@mail.gmail.com>
+ <20190522080802.GA31930@rapoport-lnx>
+ <CAMuHMdWS9vMUuWAbgZ9tpNcStXOvP2eRkA7WtPOERA3keLq9Eg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="B3NBd8mrXZtPJEYR"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1558481483-22254-1-git-send-email-skomatineni@nvidia.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <CAMuHMdWS9vMUuWAbgZ9tpNcStXOvP2eRkA7WtPOERA3keLq9Eg@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello folks,
 
---B3NBd8mrXZtPJEYR
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Wed, May 22, 2019 at 10:14:47AM +0200, Geert Uytterhoeven wrote:
+> Hi Mike,
+> 
+> On Wed, May 22, 2019 at 10:08 AM Mike Rapoport <rppt@linux.ibm.com> wrote:
+> > On Wed, May 22, 2019 at 09:47:04AM +0200, Geert Uytterhoeven wrote:
+> > > On Tue, May 21, 2019 at 5:53 PM Mike Rapoport <rppt@linux.ibm.com> wrote:
+> > > > On Tue, May 21, 2019 at 04:56:39PM +0200, Geert Uytterhoeven wrote:
+> > > > > On Wed, Apr 24, 2019 at 12:50 AM Serge Semin <fancer.lancer@gmail.com> wrote:
+> > > > > > The reserved_end variable had been used by the bootmem_init() code
+> > > > > > to find a lowest limit of memory available for memmap blob. The original
+> > > > > > code just tried to find a free memory space higher than kernel was placed.
+> > > > > > This limitation seems justified for the memmap ragion search process, but
+> > > > > > I can't see any obvious reason to reserve the unused space below kernel
+> > > > > > seeing some platforms place it much higher than standard 1MB. Moreover
+> > > > > > the RELOCATION config enables it to be loaded at any memory address.
+> > > > > > So lets reserve the memory occupied by the kernel only, leaving the region
+> > > > > > below being free for allocations. After doing this we can now discard the
+> > > > > > code freeing a space between kernel _text and VMLINUX_LOAD_ADDRESS symbols
+> > > > > > since it's going to be free anyway (unless marked as reserved by
+> > > > > > platforms).
+> > > > > >
+> > > > > > Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
+> > > > >
+> > > > > This is now commit b93ddc4f9156205e ("mips: Reserve memory for the kernel
+> > > > > image resources") in v5.2-rc1, which causes rbtx4927 to crash during boot:
+> > > > >
+> > > > >     VFS: Mounted root (nfs filesystem) on device 0:13.
+> > > > >     devtmpfs: mounted
+> > > > >     BUG: Bad page state in process swapper  pfn:00001
+> > > > >     page:804b7820 refcount:0 mapcount:-128 mapping:00000000 index:0x1
+> > > > >     flags: 0x0()
+> > > > >     raw: 00000000 00000100 00000200 00000000 00000001 00000000 ffffff7f 00000000
+> > > > >     page dumped because: nonzero mapcount
+> > > > >     Modules linked in:
+> > > > >     CPU: 0 PID: 1 Comm: swapper Not tainted
+> > > > > 5.2.0-rc1-rbtx4927-00468-g3c05ea3d4077b756-dirty #137
+> > > > >     Stack : 00000000 10008400 8040dd2c 87c1b974 8044af63 8040dd2c
+> > > > > 00000001 804a3490
+> > > > >             00000001 81000000 0030f231 80148558 00000003 10008400
+> > > > > 87c1dd80 7599ee13
+> > > > >             00000000 00000000 804b0000 00000000 00000007 00000000
+> > > > > 00000085 00000000
+> > > > >             62722d31 00000084 804b0000 39347874 00000000 804b7820
+> > > > > 8040cef8 81000010
+> > > > >             00000001 00000007 00000001 81000000 00000008 8021de24
+> > > > > 00000000 804a0000
+> > > > >             ...
+> > > > >     Call Trace:
+> > > > >     [<8010adec>] show_stack+0x74/0x104
+> > > > >     [<801a5e44>] bad_page+0x130/0x138
+> > > > >     [<801a654c>] free_pcppages_bulk+0x17c/0x3b0
+> > > > >     [<801a789c>] free_unref_page+0x40/0x68
+> > > > >     [<801120f4>] free_init_pages+0xec/0x104
+> > > > >     [<803bdde8>] free_initmem+0x10/0x58
+> > > > >     [<803bdb8c>] kernel_init+0x20/0x100
+> > > > >     [<801057c8>] ret_from_kernel_thread+0x14/0x1c
+> > > > >     Disabling lock debugging due to kernel taint
+> > > > >     BUG: Bad page state in process swapper  pfn:00002
+> > > > >     [...]
+> > > > >
+> > > > > CONFIG_RELOCATABLE is not set, so the only relevant part is the
+> > > > > change quoted below.
+> > > > >
+> > > > > > --- a/arch/mips/kernel/setup.c
+> > > > > > +++ b/arch/mips/kernel/setup.c
+> > > > > > @@ -371,7 +371,6 @@ static void __init bootmem_init(void)
+> > > > > >
+> > > > > >  static void __init bootmem_init(void)
+> > > > > >  {
+> > > > > > -       unsigned long reserved_end;
+> > > > > >         phys_addr_t ramstart = PHYS_ADDR_MAX;
+> > > > > >         int i;
+> > > > > >
+> > > > > > @@ -382,10 +381,10 @@ static void __init bootmem_init(void)
+> > > > > >          * will reserve the area used for the initrd.
+> > > > > >          */
+> > > > > >         init_initrd();
+> > > > > > -       reserved_end = (unsigned long) PFN_UP(__pa_symbol(&_end));
+> > > > > >
+> > > > > > -       memblock_reserve(PHYS_OFFSET,
+> > > > > > -                        (reserved_end << PAGE_SHIFT) - PHYS_OFFSET);
+> > > > > > +       /* Reserve memory occupied by kernel. */
+> > > > > > +       memblock_reserve(__pa_symbol(&_text),
+> > > > > > +                       __pa_symbol(&_end) - __pa_symbol(&_text));
+> > > > > >
+> > > > > >         /*
+> > > > > >          * max_low_pfn is not a number of pages. The number of pages
+> 
+> > > > > Hence the old code reserved 1 MiB extra at the beginning.
+> > > > >
+> > > > > Note that the new code also dropped the rounding up of the memory block
+> > > > > size to a multiple of PAGE_SIZE. I'm not sure the latter actually
+> > > > > matters or not.
+> > > >
+> > > > I'd say that bad page state for pfn 1 is caused by "freeing" the first 1M.
+> > >
+> > > Yes, by prom_free_prom_memory(), as pointed out by Serge.
+> >
+> > I wonder how other MIPS variants would react to the fact that the memory
+> > below the kernel is not reserved ;-)
+> 
+> Exactly...
+> 
+> Looks like at least arch/mips/dec/prom/memory.c needs a similar but\
+> more complicated fix, due to declance handling...
+> 
 
-On Tue, May 21, 2019 at 04:31:11PM -0700, Sowjanya Komatineni wrote:
-> This patch series includes Tegra210 deepsleep or LP0 support with
-> deep sleep exit through RTC alarm wake and power button wake events.
+The problem might be fixed there by the next patch:
+---
+diff --git a/arch/mips/dec/prom/memory.c b/arch/mips/dec/prom/memory.c
+index 5073d2ed78bb..5a0c734b5d04 100644
+--- a/arch/mips/dec/prom/memory.c
++++ b/arch/mips/dec/prom/memory.c
+@@ -91,29 +91,14 @@ void __init prom_meminit(u32 magic)
+ 		pmax_setup_memory_region();
+ 	else
+ 		rex_setup_memory_region();
+-}
+-
+-void __init prom_free_prom_memory(void)
+-{
+-	unsigned long end;
+-
+-	/*
+-	 * Free everything below the kernel itself but leave
+-	 * the first page reserved for the exception handlers.
+-	 */
+ 
+ #if IS_ENABLED(CONFIG_DECLANCE)
+ 	/*
+-	 * Leave 128 KB reserved for Lance memory for
+-	 * IOASIC DECstations.
++	 * Reserve 128 KB for Lance memory for IOASIC DECstations.
+ 	 *
+ 	 * XXX: save this address for use in dec_lance.c?
+ 	 */
+ 	if (IOASIC)
+-		end = __pa(&_text) - 0x00020000;
+-	else
++		memblock_reserve(__pa_symbol(&_text), 0x00020000);
+ #endif
+-		end = __pa(&_text);
+-
+-	free_init_pages("unused PROM memory", PAGE_SIZE, end);
+ }
+---
 
-There doesn't seem to be support for waking up from a power button
-press. Is that in a patch that you didn't send out yet, or are you still
-working on that?
+Didn't wanna use prom_FREE_prom_memory to actually reserve a memory
+chunk, so I moved the reservation into the prom_meminit() method.
 
-The recipient list on this is very trimmed. I'm not sure if this was on
-purpose. I'm fine if you want to keep it that way until things settle
-down a bit, but eventually the subsystem maintainers will need to see
-these, so make sure to Cc them when you think the patches are ready.
+Regarding the first page for the exception handlers. We don't need
+to reserve it here, since it is already done in arch/mips/kernel/traps.c .
 
-Thierry
+Regards,
+-Sergey
 
->=20
-> This series also includes save and restore of PLLs, clocks, OSC contexts
-> for basic LP0 exit.
->=20
-> This patch series is doesn't support for 100% suspend/resume to fully
-> functional state and we are working on some more drivers suspend and
-> resume implementations.
->=20
-> Sowjanya Komatineni (12):
->   irqchip: tegra: do not disable COP IRQ during suspend
->   pinctrl: tegra: add suspend and resume support
->   clk: tegra: save and restore PLLs state for system
->   clk: tegra: add support for peripheral clock suspend and resume
->   clk: tegra: add support for OSC clock resume
->   clk: tegra: add suspend resume support for DFLL clock
->   clk: tegra: support for Tegra210 clocks suspend-resume
->   soc/tegra: pmc: allow support for more tegra wake models
->   soc/tegra: pmc: add pmc wake support for tegra210
->   gpio: tegra: implement wake event support for Tegra210 and prior GPIO
->   soc/tegra: pmc: configure tegra deep sleep control settings
->   arm64: tegra: enable wake from deep sleep on RTC alarm.
->=20
->  arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi |   7 +
->  arch/arm64/boot/dts/nvidia/tegra210.dtsi       |   5 +-
->  drivers/clk/tegra/clk-dfll.c                   |  82 ++++++
->  drivers/clk/tegra/clk-dfll.h                   |   2 +
->  drivers/clk/tegra/clk-divider.c                |  19 ++
->  drivers/clk/tegra/clk-pll-out.c                |  25 ++
->  drivers/clk/tegra/clk-pll.c                    | 220 ++++++++++++--
->  drivers/clk/tegra/clk-tegra-fixed.c            |  15 +
->  drivers/clk/tegra/clk-tegra210.c               | 382 +++++++++++++++++++=
-++++++
->  drivers/clk/tegra/clk.c                        |  74 ++++-
->  drivers/clk/tegra/clk.h                        |  18 ++
->  drivers/gpio/gpio-tegra.c                      | 109 ++++++-
->  drivers/irqchip/irq-tegra.c                    |  10 +-
->  drivers/pinctrl/tegra/pinctrl-tegra.c          |  68 ++++-
->  drivers/pinctrl/tegra/pinctrl-tegra.h          |   3 +
->  drivers/pinctrl/tegra/pinctrl-tegra114.c       |   1 +
->  drivers/pinctrl/tegra/pinctrl-tegra124.c       |   1 +
->  drivers/pinctrl/tegra/pinctrl-tegra20.c        |   1 +
->  drivers/pinctrl/tegra/pinctrl-tegra210.c       |   1 +
->  drivers/pinctrl/tegra/pinctrl-tegra30.c        |   1 +
->  drivers/soc/tegra/pmc.c                        | 159 +++++++++-
->  21 files changed, 1167 insertions(+), 36 deletions(-)
->=20
-> --=20
-> 2.7.4
->=20
 
---B3NBd8mrXZtPJEYR
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlzlT8AACgkQ3SOs138+
-s6E/gxAAu98wY6tGYvONnepzK4edJe84108hoTkQo81y8IT5p0twCMrJCLSK3kbl
-Pw1K9ixrGK1cqV2mvTfaZAiF/Dt+ueZCIWrpqKSvyPRuGIYF6lVUEZ+PXak7J8t1
-uVHA8+M6/TvDOytvb4cjWwVv8bWoMkgbUU2AdYObEfvMjSrl54ZhCjk1TyuuOfFY
-Cg84ygIRe+EXFhrmahxWs3EgupHziiFDXMaZrctTgenmgGLWKV1F3wIWehDQ/HP/
-wPtxI4Vez7uX+JhArAtkXEVUusFce3e8j0plsWeXLhx1LVNNlpEEuBown/qaU4oA
-2neByqV3oTO30r2wtqjv3snwN2Eosu/66EZGkpDO0zKbQcf8LTqadnqja6zmzMQB
-TLFArTqpmH3oi6hmAhMNE/rYx4W4uMKKYaPfaugGrXn5a92byJ9kJEC1U+bh7dpH
-976Sm9ksAlVFfYH+YaChyrwIWOfhWiSZ8TgoqlJ7iSp6SpHGnNsGvR1ZOecg53YF
-s+VUjwfT/s+s9ykWyNHA/Swf+GsGey1L1glvbEcCBqCL0dp5PkI5A4DFigvEVnUK
-KaND7VQe7zfBC5v/+Nc5GjWBgt7SaOKs83kn/zzyWmsMjNRyY8CeplykBdCrHD+b
-Sik2p0It26u3IfQPEKHfTk9Jrt/BRiL+c6TeWwJGVz5zl/TBd+o=
-=3vyI
------END PGP SIGNATURE-----
-
---B3NBd8mrXZtPJEYR--
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> 
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
