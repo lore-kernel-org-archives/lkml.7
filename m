@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F454C282DC
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:38:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C21F9C282DC
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:38:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FACB20675
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:38:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9861420675
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:38:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558553901;
-	bh=2dpJVVjUM81EBe6QhbWbjJ73RcoPBXUoDjYWQjKmyxU=;
+	s=default; t=1558553909;
+	bh=L8nJfwBmn+WOOOT/IjjmXA7SpxSRH1CGk5f6VDZXDYM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ik+zBFMwxV+T55ew4irbWmlk768YjkhhtfSj7xUTjuLSJSCBtsligNTAthomfTwwU
-	 KXUPqM3JDF5skLg6gZVhwLiFFz4wMJWW40nWfpIPdK4Z1gQIg9hCZZGICbF4NEqw8D
-	 GMke8tH16Ev95Yhfo3o6YWAffT3wvzsQRXXK0eDE=
+	b=b6/ZJ+i9jNRhFSNRXIRJ+zYX4d9YPLG/0T0rruUGesjK88LOwMOwe33L6HpxhF4VX
+	 VVJ5gbZ5qqw3j/9OevGZNajzW2k3nq8odd5qL85T6lTJTsgBxRqNrbPCkyDRptmaHW
+	 WjLTsheeagojefsVbgl7+dU6CWGhBuvRfZ8NvCXQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732103AbfEVTiU (ORCPT
+        id S1733072AbfEVT3w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:38:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53094 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:29:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52986 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733032AbfEVT3y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:29:54 -0400
+        id S1733029AbfEVT3s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:29:48 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5240A20879;
-        Wed, 22 May 2019 19:29:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 397DE217D4;
+        Wed, 22 May 2019 19:29:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553394;
-        bh=2dpJVVjUM81EBe6QhbWbjJ73RcoPBXUoDjYWQjKmyxU=;
+        s=default; t=1558553387;
+        bh=L8nJfwBmn+WOOOT/IjjmXA7SpxSRH1CGk5f6VDZXDYM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uo2cmpaFr91xiw+M06UMdj9xnYo7MSCdjKuw/T1nhwN4VhlGsUIkQps6u5WU30aYg
-         han3XuJl1qM4NUpb97RdLhBp1DI1GGxrIYwJwEhQKTZ+cgmwZ86uDvoNA50HfCkiK/
-         17CCOoKjoK2v3pwjiv/giYL/Izc4qwrb1F5g4DzU=
+        b=F0G1obHr1JAqek4SZEcXq6inKqDPzA/ZKJ/P3WrMvUIb9nD995rI61nMLmGTVopYi
+         3WxUYVmEf7fmOR9dkzFZaBmyvGEGtNK0GyJwBJVNyUmNZAMUOiCY53rhRu6ZZG1jpE
+         79cL2/6svTG9nki+j5yw36eld3K7MmEwaAW3lDZc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Farhan Ali <alifm@linux.ibm.com>,
-        Eric Farman <farman@linux.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 049/167] vfio-ccw: Release any channel program when releasing/removing vfio-ccw mdev
-Date:   Wed, 22 May 2019 15:26:44 -0400
-Message-Id: <20190522192842.25858-49-sashal@kernel.org>
+Cc:     Tang Junhui <tang.junhui.linux@gmail.com>,
+        Dennis Schridde <devurandom@gmx.net>, Coly Li <colyli@suse.de>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-bcache@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 044/167] bcache: fix failure in journal relplay
+Date:   Wed, 22 May 2019 15:26:39 -0400
+Message-Id: <20190522192842.25858-44-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192842.25858-1-sashal@kernel.org>
 References: <20190522192842.25858-1-sashal@kernel.org>
@@ -61,94 +60,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Farhan Ali <alifm@linux.ibm.com>
+From: Tang Junhui <tang.junhui.linux@gmail.com>
 
-[ Upstream commit b49bdc8602b7c9c7a977758bee4125683f73e59f ]
+[ Upstream commit 631207314d88e9091be02fbdd1fdadb1ae2ed79a ]
 
-When releasing the vfio-ccw mdev, we currently do not release
-any existing channel program and its pinned pages. This can
-lead to the following warning:
+journal replay failed with messages:
+Sep 10 19:10:43 ceph kernel: bcache: error on
+bb379a64-e44e-4812-b91d-a5599871a3b1: bcache: journal entries
+2057493-2057567 missing! (replaying 2057493-2076601), disabling
+caching
 
-[1038876.561565] WARNING: CPU: 2 PID: 144727 at drivers/vfio/vfio_iommu_type1.c:1494 vfio_sanity_check_pfn_list+0x40/0x70 [vfio_iommu_type1]
+The reason is in journal_reclaim(), when discard is enabled, we send
+discard command and reclaim those journal buckets whose seq is old
+than the last_seq_now, but before we write a journal with last_seq_now,
+the machine is restarted, so the journal with the last_seq_now is not
+written to the journal bucket, and the last_seq_wrote in the newest
+journal is old than last_seq_now which we expect to be, so when we doing
+replay, journals from last_seq_wrote to last_seq_now are missing.
 
-....
+It's hard to write a journal immediately after journal_reclaim(),
+and it harmless if those missed journal are caused by discarding
+since those journals are already wrote to btree node. So, if miss
+seqs are started from the beginning journal, we treat it as normal,
+and only print a message to show the miss journal, and point out
+it maybe caused by discarding.
 
-1038876.561921] Call Trace:
-[1038876.561935] ([<00000009897fb870>] 0x9897fb870)
-[1038876.561949]  [<000003ff8013bf62>] vfio_iommu_type1_detach_group+0xda/0x2f0 [vfio_iommu_type1]
-[1038876.561965]  [<000003ff8007b634>] __vfio_group_unset_container+0x64/0x190 [vfio]
-[1038876.561978]  [<000003ff8007b87e>] vfio_group_put_external_user+0x26/0x38 [vfio]
-[1038876.562024]  [<000003ff806fc608>] kvm_vfio_group_put_external_user+0x40/0x60 [kvm]
-[1038876.562045]  [<000003ff806fcb9e>] kvm_vfio_destroy+0x5e/0xd0 [kvm]
-[1038876.562065]  [<000003ff806f63fc>] kvm_put_kvm+0x2a4/0x3d0 [kvm]
-[1038876.562083]  [<000003ff806f655e>] kvm_vm_release+0x36/0x48 [kvm]
-[1038876.562098]  [<00000000003c2dc4>] __fput+0x144/0x228
-[1038876.562113]  [<000000000016ee82>] task_work_run+0x8a/0xd8
-[1038876.562125]  [<000000000014c7a8>] do_exit+0x5d8/0xd90
-[1038876.562140]  [<000000000014d084>] do_group_exit+0xc4/0xc8
-[1038876.562155]  [<000000000015c046>] get_signal+0x9ae/0xa68
-[1038876.562169]  [<0000000000108d66>] do_signal+0x66/0x768
-[1038876.562185]  [<0000000000b9e37e>] system_call+0x1ea/0x2d8
-[1038876.562195] 2 locks held by qemu-system-s39/144727:
-[1038876.562205]  #0: 00000000537abaf9 (&container->group_lock){++++}, at: __vfio_group_unset_container+0x3c/0x190 [vfio]
-[1038876.562230]  #1: 00000000670008b5 (&iommu->lock){+.+.}, at: vfio_iommu_type1_detach_group+0x36/0x2f0 [vfio_iommu_type1]
-[1038876.562250] Last Breaking-Event-Address:
-[1038876.562262]  [<000003ff8013aa24>] vfio_sanity_check_pfn_list+0x3c/0x70 [vfio_iommu_type1]
-[1038876.562272] irq event stamp: 4236481
-[1038876.562287] hardirqs last  enabled at (4236489): [<00000000001cee7a>] console_unlock+0x6d2/0x740
-[1038876.562299] hardirqs last disabled at (4236496): [<00000000001ce87e>] console_unlock+0xd6/0x740
-[1038876.562311] softirqs last  enabled at (4234162): [<0000000000b9fa1e>] __do_softirq+0x556/0x598
-[1038876.562325] softirqs last disabled at (4234153): [<000000000014e4cc>] irq_exit+0xac/0x108
-[1038876.562337] ---[ end trace 6c96d467b1c3ca06 ]---
+Patch v2 add a judgement condition to ignore the missed journal
+only when discard enabled as Coly suggested.
 
-Similarly we do not free the channel program when we are removing
-the vfio-ccw device. Let's fix this by resetting the device and freeing
-the channel program and pinned pages in the release path. For the remove
-path we can just quiesce the device, since in the remove path the mediated
-device is going away for good and so we don't need to do a full reset.
+(Coly Li: rebase the patch with other changes in bch_journal_replay())
 
-Signed-off-by: Farhan Ali <alifm@linux.ibm.com>
-Message-Id: <ae9f20dc8873f2027f7b3c5d2aaa0bdfe06850b8.1554756534.git.alifm@linux.ibm.com>
-Acked-by: Eric Farman <farman@linux.ibm.com>
-Signed-off-by: Cornelia Huck <cohuck@redhat.com>
+Signed-off-by: Tang Junhui <tang.junhui.linux@gmail.com>
+Tested-by: Dennis Schridde <devurandom@gmx.net>
+Signed-off-by: Coly Li <colyli@suse.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/cio/vfio_ccw_ops.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ drivers/md/bcache/journal.c | 25 +++++++++++++++++++++----
+ 1 file changed, 21 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/s390/cio/vfio_ccw_ops.c b/drivers/s390/cio/vfio_ccw_ops.c
-index 41eeb57d68a3d..560013c8d2a48 100644
---- a/drivers/s390/cio/vfio_ccw_ops.c
-+++ b/drivers/s390/cio/vfio_ccw_ops.c
-@@ -130,11 +130,12 @@ static int vfio_ccw_mdev_remove(struct mdev_device *mdev)
- 
- 	if ((private->state != VFIO_CCW_STATE_NOT_OPER) &&
- 	    (private->state != VFIO_CCW_STATE_STANDBY)) {
--		if (!vfio_ccw_mdev_reset(mdev))
-+		if (!vfio_ccw_sch_quiesce(private->sch))
- 			private->state = VFIO_CCW_STATE_STANDBY;
- 		/* The state will be NOT_OPER on error. */
+diff --git a/drivers/md/bcache/journal.c b/drivers/md/bcache/journal.c
+index ec7856c06cbb0..42e20e9f9d1fd 100644
+--- a/drivers/md/bcache/journal.c
++++ b/drivers/md/bcache/journal.c
+@@ -310,6 +310,18 @@ void bch_journal_mark(struct cache_set *c, struct list_head *list)
  	}
- 
-+	cp_free(&private->cp);
- 	private->mdev = NULL;
- 	atomic_inc(&private->avail);
- 
-@@ -158,6 +159,14 @@ static void vfio_ccw_mdev_release(struct mdev_device *mdev)
- 	struct vfio_ccw_private *private =
- 		dev_get_drvdata(mdev_parent_dev(mdev));
- 
-+	if ((private->state != VFIO_CCW_STATE_NOT_OPER) &&
-+	    (private->state != VFIO_CCW_STATE_STANDBY)) {
-+		if (!vfio_ccw_mdev_reset(mdev))
-+			private->state = VFIO_CCW_STATE_STANDBY;
-+		/* The state will be NOT_OPER on error. */
-+	}
-+
-+	cp_free(&private->cp);
- 	vfio_unregister_notifier(mdev_dev(mdev), VFIO_IOMMU_NOTIFY,
- 				 &private->nb);
  }
+ 
++bool is_discard_enabled(struct cache_set *s)
++{
++	struct cache *ca;
++	unsigned int i;
++
++	for_each_cache(ca, s, i)
++		if (ca->discard)
++			return true;
++
++	return false;
++}
++
+ int bch_journal_replay(struct cache_set *s, struct list_head *list)
+ {
+ 	int ret = 0, keys = 0, entries = 0;
+@@ -324,10 +336,15 @@ int bch_journal_replay(struct cache_set *s, struct list_head *list)
+ 		BUG_ON(i->pin && atomic_read(i->pin) != 1);
+ 
+ 		if (n != i->j.seq) {
+-			pr_err("bcache: journal entries %llu-%llu missing! (replaying %llu-%llu)",
+-			n, i->j.seq - 1, start, end);
+-			ret = -EIO;
+-			goto err;
++			if (n == start && is_discard_enabled(s))
++				pr_info("bcache: journal entries %llu-%llu may be discarded! (replaying %llu-%llu)",
++					n, i->j.seq - 1, start, end);
++			else {
++				pr_err("bcache: journal entries %llu-%llu missing! (replaying %llu-%llu)",
++					n, i->j.seq - 1, start, end);
++				ret = -EIO;
++				goto err;
++			}
+ 		}
+ 
+ 		for (k = i->j.start;
 -- 
 2.20.1
 
