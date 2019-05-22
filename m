@@ -2,84 +2,93 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC581C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 21:14:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DA3AC46470
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 21:16:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60CD721773
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 21:14:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558559694;
-	bh=YqxAZ35p2dCb4ol3pLFSqCJ1k7KxyeByBxDmBp5VkbA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=XTqNowYUTugwwazfW7jkfCtflGm4uElW6L70RSANMccF84mBsFAkylBVcs1iNdQgK
-	 C8SBt+HutVD5qZImes7tzk3uz3mIezrAsecuXz/2LaroFv06+4Tp04Y2ie1CHUYHSt
-	 4AtBD/SfghmuD36pEQecRPu1NM9QYuwZ5uw6JaVE=
+	by mail.kernel.org (Postfix) with ESMTP id 0BACE21773
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 21:16:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730004AbfEVVOx (ORCPT
+        id S1730195AbfEVVQW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 17:14:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48314 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729720AbfEVVOx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 17:14:53 -0400
-Received: from localhost.localdomain (c-73-223-200-170.hsd1.ca.comcast.net [73.223.200.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93FCB2173E;
-        Wed, 22 May 2019 21:14:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558559692;
-        bh=YqxAZ35p2dCb4ol3pLFSqCJ1k7KxyeByBxDmBp5VkbA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Biw2BRIldASqZ6cE7U4pIVIimXdJqOYDrDywf8hjysNKnDbHBBRDCxBLaYFdxaREa
-         wBSWEY84IXYCS7lrImeeL7RnVcgPlquYbwbyzAGRrQU4RFM1HrzAqumYf9fCOUmrXb
-         HSPkkDTQc8Qx4QtRRP7kzgPAuGr1wtp6yzxFBj3w=
-Date:   Wed, 22 May 2019 14:14:52 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Qian Cai <cai@lca.pw>
-Cc:     jroedel@suse.de, dwmw2@infradead.org,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Subject: Re: [RESEND PATCH] iommu/intel: fix variable 'iommu' set but not
- used
-Message-Id: <20190522141452.9105fbd041ed24eedde950b9@linux-foundation.org>
-In-Reply-To: <1558557386-17160-1-git-send-email-cai@lca.pw>
-References: <1558557386-17160-1-git-send-email-cai@lca.pw>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Wed, 22 May 2019 17:16:22 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:37203 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729720AbfEVVQW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 17:16:22 -0400
+Received: by mail-qt1-f193.google.com with SMTP id o7so4248837qtp.4;
+        Wed, 22 May 2019 14:16:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IRDeg6juu9TInpGEUEsh12JdfkX4fbWASfCdn5kwEwo=;
+        b=l/GM5KjopFjgbnIKVrkQBcZQ7sudlrvhjbQ4BC0yhixsuYYj3KZxqvREtYjHssMFvV
+         c9zBIzzPTmU9Oz8V63hsEdABFGmxdYY6/QMb5DwdhcqEPBleWafiT7m32391zpKJHEPa
+         wKKZ7BxqWO6+nmPPBpKokLXZa6ld4hjH4mb1vajY0vpWVqp8wWcQtrc8oqIsLWurnEsk
+         DER9cebLKx3usmC4h0SxTAPh0gC4XmP9e/I4jN1qh3vUCYydiyoipWLzYQ9yRLQjgR4C
+         EeX0DOLeeowoI/QsIuMzenvb+CbSPugImu8Uj9T50geezggMW3IZg/FMgldGoKIhT074
+         RikQ==
+X-Gm-Message-State: APjAAAVvynSpr4/Desi1FEh3TfHd1iHdn+snK9mqP25eD4R7eDDoqfT1
+        Jk245gKmFIksvba66Qd8tqwQWmOs0TxkkfikrJI=
+X-Google-Smtp-Source: APXvYqxRHIuj8C7LagjHY5o0vw8tutrohkTAg2q5dHo9HC3r8+VsVxO6QVsI0OWyf9koBryzkBEG0/AKdXcmD+aAbnk=
+X-Received: by 2002:ac8:3319:: with SMTP id t25mr76253431qta.204.1558559781276;
+ Wed, 22 May 2019 14:16:21 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190522132250.26499-1-mark.rutland@arm.com> <20190522132250.26499-4-mark.rutland@arm.com>
+In-Reply-To: <20190522132250.26499-4-mark.rutland@arm.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 22 May 2019 23:16:04 +0200
+Message-ID: <CAK8P3a2jcXwyG2DRmKJfV5VF_R7c9H7L89ys-sx+qWEe_zBhCQ@mail.gmail.com>
+Subject: Re: [PATCH 03/18] locking/atomic: generic: use s64 for atomic64
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        David Miller <davem@davemloft.net>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        James Hogan <jhogan@kernel.org>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Matt Turner <mattst88@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Burton <paul.burton@mips.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Richard Henderson <rth@twiddle.net>,
+        "# 3.4.x" <stable@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tony Luck <tony.luck@intel.com>,
+        Vineet Gupta <vgupta@synopsys.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 22 May 2019 16:36:26 -0400 Qian Cai <cai@lca.pw> wrote:
+On Wed, May 22, 2019 at 3:23 PM Mark Rutland <mark.rutland@arm.com> wrote:
+>
+> As a step towards making the atomic64 API use consistent types treewide,
+> let's have the generic atomic64 implementation use s64 as the underlying
+> type for atomic64_t, rather than long long, matching the generated
+> headers.
+>
+> Otherwise, there should be no functional change as a result of this
+> patch.
+>
+> Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Will Deacon <will.deacon@arm.com>
 
-> The commit cf04eee8bf0e ("iommu/vt-d: Include ACPI devices in iommu=pt")
-> added for_each_active_iommu() in iommu_prepare_static_identity_mapping()
-> but never used the each element, i.e, "drhd->iommu".
-> 
-> drivers/iommu/intel-iommu.c: In function
-> 'iommu_prepare_static_identity_mapping':
-> drivers/iommu/intel-iommu.c:3037:22: warning: variable 'iommu' set but
-> not used [-Wunused-but-set-variable]
->   struct intel_iommu *iommu;
-> 
-> Fixed the warning by passing "drhd->iommu" directly to
-> for_each_active_iommu() which all subsequent self-assignments should be
-> ignored by a compiler anyway.
-> 
-
-Yes, assigning drhd->iommu to itself seems a bit nasty.  Maybe this is
-a case for __mabe_unused (with a comment explaining why), if that fixes
-the warning.  Dunno.
-
-btw, for_each_active_dev_scope() and for_each_dev_scope() should be
-dragged out and shot.  Or at least, should have those single-char
-identifiers changed into something meaningful so poor sods like me have
-a hope of understanding the code :(
-
+Acked-by: Arnd Bergmann <arnd@arndb.de>
