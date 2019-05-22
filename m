@@ -2,96 +2,80 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D14CC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 18:19:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AF44C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 18:19:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02B11216F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 18:19:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 174E9216F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 18:19:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558549156;
+	bh=Lj+UQSKOBWjtRSU8mmwyChOpiwRlOQuuXNdlNMg9qOk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=SpzK03T9sSG6UDXK/PV02R8UUiPImzPkaT/RqNkidbFKxQdKjCYdT3GcZDgkgnh4Q
+	 q5Yz6iNMxuru8k1jKHN9H6XghN8+JJPJ6+E71lo0/4FzC+r9IT0Pl3oR4sGFjiWMjU
+	 4gZ9a8u75qxne76CVxUB2Nzkh/hOIgFgNNCvLPdk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729581AbfEVSTI (ORCPT
+        id S1729615AbfEVSTP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 14:19:08 -0400
-Received: from emh02.mail.saunalahti.fi ([62.142.5.108]:50276 "EHLO
-        emh02.mail.saunalahti.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729517AbfEVSTH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 14:19:07 -0400
-Received: from darkstar.musicnaut.iki.fi (85-76-4-80-nat.elisa-mobile.fi [85.76.4.80])
-        by emh02.mail.saunalahti.fi (Postfix) with ESMTP id 939AB200A2;
-        Wed, 22 May 2019 21:19:04 +0300 (EEST)
-Date:   Wed, 22 May 2019 21:19:04 +0300
-From:   Aaro Koskinen <aaro.koskinen@iki.fi>
-To:     Corentin Labbe <clabbe.montjoie@gmail.com>
-Cc:     Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org,
-        qemu-devel@nongnu.org, linux-kernel@vger.kernel.org
-Subject: Re: Running linux on qemu omap
-Message-ID: <20190522181904.GE3621@darkstar.musicnaut.iki.fi>
-References: <20190520190533.GA28160@Red>
- <20190521232323.GD3621@darkstar.musicnaut.iki.fi>
- <20190522093341.GA32154@Red>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190522093341.GA32154@Red>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Wed, 22 May 2019 14:19:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48284 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729517AbfEVSTM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 14:19:12 -0400
+Received: from localhost.localdomain (c-73-223-200-170.hsd1.ca.comcast.net [73.223.200.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC36121473;
+        Wed, 22 May 2019 18:19:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558549152;
+        bh=Lj+UQSKOBWjtRSU8mmwyChOpiwRlOQuuXNdlNMg9qOk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Kxch2P6yoqn2ghOf6Zu5Akc+n+E7NcUW2VuwDGYxynrln25xvzIwwgleLCMAr+Cjd
+         dOpYDPHt3h+O0vEg9NqJj5RIaRl7eyVLSzCnpO2BOAZoeObsWf7Di/S85ZqKLTBoEt
+         zb5wpD9kIFFS/2atJeKvU6VaVWp18Dac0S4xG92k=
+Date:   Wed, 22 May 2019 11:19:11 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     "Uladzislau Rezki (Sony)" <urezki@gmail.com>
+Cc:     Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@suse.com>,
+        Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Thomas Garnier <thgarnie@google.com>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joelaf@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@elte.hu>, Tejun Heo <tj@kernel.org>
+Subject: Re: [PATCH 3/4] mm/vmap: get rid of one single unlink_va() when
+ merge
+Message-Id: <20190522111911.963fbb4950e051a35e92887c@linux-foundation.org>
+In-Reply-To: <20190522150939.24605-3-urezki@gmail.com>
+References: <20190522150939.24605-1-urezki@gmail.com>
+        <20190522150939.24605-3-urezki@gmail.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Wed, 22 May 2019 17:09:38 +0200 "Uladzislau Rezki (Sony)" <urezki@gmail.com> wrote:
 
-On Wed, May 22, 2019 at 11:33:41AM +0200, Corentin Labbe wrote:
-> qemu-system-arm -M help |grep OMAP
-> cheetah              Palm Tungsten|E aka. Cheetah PDA (OMAP310)
-> n800                 Nokia N800 tablet aka. RX-34 (OMAP2420)
-> n810                 Nokia N810 tablet aka. RX-44 (OMAP2420)
-> sx1                  Siemens SX1 (OMAP310) V2
-> sx1-v1               Siemens SX1 (OMAP310) V1
+> It does not make sense to try to "unlink" the node that is
+> definitely not linked with a list nor tree. On the first
+> merge step VA just points to the previously disconnected
+> busy area.
 > 
-> > > The maximum I can get with omap1_defconfig is
-> > > qemu-system-arm -kernel zImage -nographic -machine cheetah -append 'root=/dev/ram0 console=ttyO0'
-> > > Uncompressing Linux... done, booting the kernel.
-> > > then nothing more.
+> On the second step, check if the node has been merged and do
+> "unlink" if so, because now it points to an object that must
+> be linked.
 
-With N800/N810 omap2plus_defconfig should be used instead. However,
-I don't think that works either (but haven't tried recently). Also with
-N800/N810 you need to append the DTB file to the kernel image.
+Again, what is the motivation for this change?  Seems to be a bit of a
+code/logic cleanup, no significant runtime effect?
 
-> thanks, with your config I was able to boot both sx1 and cheetah
-> (by adding CONFIG_MACH_OMAP_PALMTE=y)
-
-Great!
-
-> Now I need to find what is missing (or in excess) in omap1_defconfig
-> to made it boot
-
-A simple (but slow) way would be to start adding config options from
-omap1_defconfig one by one to the working config, and see which one
-makes it fail.
-
-> Another obstacle is the disabling of the initrd, perhaps by using
-> sdcard as an "initrd" will do the trick, but the sdcard is ignored for
-> the moment.
-
-Using CONFIG_INITRAMFS_SOURCE it's possible to include a file system
-inside the kernel image.
-
-Based on your boot log, I think the kernel probably panics before the
-MMC/sdcard is found (asynchronous probe). You could try adding rootwait
-to the kernel command line. (My config has CONFIG_CMDLINE_FORCE=y, so
-you need to add it to CONFIG_CMDLINE, as QEMU -append gets ignored). Also
-the sdcard will appear as /dev/mmcblk0 instead of /dev/sda.
-
-The sdcard is working fine for me, and it can be used to run a full-blown
-distro rootfs; I don't know what is the capacity limit in the MMC driver
-but at least 16 GB image is working fine:
-
-[    2.011012] mmc0: new SDHC card at address 4567
-[    2.016419] mmcblk0: mmc0:4567 QEMU! 16.0 GiB
-
-A.
