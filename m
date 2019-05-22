@@ -2,94 +2,142 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBD15C282DC
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:30:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 511AEC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:30:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96B7B20879
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:30:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 217C820879
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:30:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558553419;
-	bh=oz+V7tcmo8AGoh4136gOSbIwMJrzNzom0l6EV8LkA4k=;
-	h=Date:From:To:Subject:List-ID:From;
-	b=l/tUH/6dl7TlZ73hSalxGVTf3axoqiTElmV1OiBWzbwAjJGd7WSh5Sbuyb0kQ6+rV
-	 Boh/0uFZddW9hFa8kWzJ37tur73ZEE4Uin6gMsW1JOwgM1HLW5sitGnmGcuNX3XyZZ
-	 ahB3u8tvjuh3aHfrBukCrm+ye6WWROuDGOmwGMI0=
+	s=default; t=1558553427;
+	bh=c9ljC1X2ktu91elIhaRhXBDMmfcaRhLgFlcxNrYZ3rQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=IT8kiWC5exIAurmZMBuCUs3txDVSVdjvLmUXC3dNW9sb0V2Vbjiv8wicCnaNMRIvu
+	 g/mz1TSn5IbH2imye+y98Wpan7NxTw20mXxIKG6V03H8w4Uxod4kD6yBbPZWaq3sZo
+	 j+/cUaMwqJFOWEvcS9oeNddRRpGW3s/93enczjkA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732740AbfEVTaS (ORCPT
+        id S1733235AbfEVTaZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:30:18 -0400
-Received: from mail-qt1-f175.google.com ([209.85.160.175]:32931 "EHLO
-        mail-qt1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733185AbfEVTaP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:30:15 -0400
-Received: by mail-qt1-f175.google.com with SMTP id m32so3870465qtf.0
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 12:30:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=XXMtmfD06zcDwQx0hvcfJIux8aKRhVdW16i73453GEM=;
-        b=ELELxw7VjTwqNjvY99Fi8KemSTL6yTDX2IVCt6P/+ATzrcEsJyK42hxgn/Y+ckigru
-         YH0ydn+bot1cCzh3kqvCecM44RyL0cYkncX7YuaaRgiecpU2HvzBMZV9vmVs4nhXIaCx
-         8qqPRtILZRspj5B6KumSwHJH2qV80l395Ws5o=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=XXMtmfD06zcDwQx0hvcfJIux8aKRhVdW16i73453GEM=;
-        b=GW3wQhupcWV1Sh1HsbIIp4IaQIfFPHLB0xH3OXhv3HAo55rrwb86J2gghH/QZM5VS2
-         arlsA20ruuggWEp50Ijprur0V17DDP7+HdRYMhe5XgYyKk0KpuWY3l+43qJBe8olx/jp
-         RDPU9x36U+Hlk4pGPZDeES4YmT7WJoTKWnKaG82C27IE5zFW6eqaT7MMncK6O4WUE2Vs
-         Ky31wXxEv3up7ZycCgSfEmOrpappQE9Iv4MHmHcXEE0SglG6cUbECOWkt4zW7DGrWLnk
-         AJts5d1YgVJJOA5J9Eb1nP6MTUYLeyjVi4Yj+MseTy8kf4IFN36buNiSIvpVluPXSA/e
-         NrRw==
-X-Gm-Message-State: APjAAAUmMPSNLj7F7n7QR4z/O1EOyRIn4VA8vULPYCjpDfsg5GxH3ODf
-        jX4z0UyIJL3Gn//2ahdX4fV5toi4cCu+Pg==
-X-Google-Smtp-Source: APXvYqy0LcxyTKzrA7fqyviU2+zlg0lfX+n6mqhBPOkMDXwp7Mr7KYwA7k/OZixZxbRYh6T9e2XKqg==
-X-Received: by 2002:a0c:d909:: with SMTP id p9mr60283913qvj.42.1558553413979;
-        Wed, 22 May 2019 12:30:13 -0700 (PDT)
-Received: from chatter.i7.local (192-0-228-88.cpe.teksavvy.com. [192.0.228.88])
-        by smtp.gmail.com with ESMTPSA id j29sm11466999qki.39.2019.05.22.12.30.13
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 22 May 2019 12:30:13 -0700 (PDT)
-Date:   Wed, 22 May 2019 15:30:11 -0400
-From:   Konstantin Ryabitsev <konstantin@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Subject: PSA: Do not use "Reported-By" without reporter's approval
-Message-ID: <20190522193011.GB21412@chatter.i7.local>
+        Wed, 22 May 2019 15:30:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53814 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731850AbfEVTaV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:30:21 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7137421473;
+        Wed, 22 May 2019 19:30:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558553420;
+        bh=c9ljC1X2ktu91elIhaRhXBDMmfcaRhLgFlcxNrYZ3rQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=oZC7gaMjeAPnlWgHxohN7pHEi1O+zNnJqh9Y2aF774ovdq3DZQyz0HTPEL42mWzj5
+         aZ0/cxUHv3rVnx6xMqnqIrSLLDPkHG9Rw+XqsWxF7b6HLHfYNlh6TnGF/M1rdrWqs7
+         H2IU5kHKmCKEDwypimWDlx8Ca2TCZt9yNQHQJuYU=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     YueHaibing <yuehaibing@huawei.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 002/114] cxgb4: Fix error path in cxgb4_init_module
+Date:   Wed, 22 May 2019 15:28:25 -0400
+Message-Id: <20190522193017.26567-2-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190522193017.26567-1-sashal@kernel.org>
+References: <20190522193017.26567-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-User-Agent: Mutt/1.11.4 (2019-03-13)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, all:
+From: YueHaibing <yuehaibing@huawei.com>
 
-It is common courtesy to include this tagline when submitting patches: 
+[ Upstream commit a3147770bea76c8dbad73eca3a24c2118da5e719 ]
 
-Reported-By: J. Doe <jdoe@example.com>
+BUG: unable to handle kernel paging request at ffffffffa016a270
+PGD 3270067 P4D 3270067 PUD 3271063 PMD 230bbd067 PTE 0
+Oops: 0000 [#1
+CPU: 0 PID: 6134 Comm: modprobe Not tainted 5.1.0+ #33
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.9.3-0-ge2fc41e-prebuilt.qemu-project.org 04/01/2014
+RIP: 0010:atomic_notifier_chain_register+0x24/0x60
+Code: 1f 80 00 00 00 00 55 48 89 e5 41 54 49 89 f4 53 48 89 fb e8 ae b4 38 01 48 8b 53 38 48 8d 4b 38 48 85 d2 74 20 45 8b 44 24 10 <44> 3b 42 10 7e 08 eb 13 44 39 42 10 7c 0d 48 8d 4a 08 48 8b 52 08
+RSP: 0018:ffffc90000e2bc60 EFLAGS: 00010086
+RAX: 0000000000000292 RBX: ffffffff83467240 RCX: ffffffff83467278
+RDX: ffffffffa016a260 RSI: ffffffff83752140 RDI: ffffffff83467240
+RBP: ffffc90000e2bc70 R08: 0000000000000000 R09: 0000000000000001
+R10: 0000000000000000 R11: 00000000014fa61f R12: ffffffffa01c8260
+R13: ffff888231091e00 R14: 0000000000000000 R15: ffffc90000e2be78
+FS:  00007fbd8d7cd540(0000) GS:ffff888237a00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffffffffa016a270 CR3: 000000022c7e3000 CR4: 00000000000006f0
+Call Trace:
+ register_inet6addr_notifier+0x13/0x20
+ cxgb4_init_module+0x6c/0x1000 [cxgb4
+ ? 0xffffffffa01d7000
+ do_one_initcall+0x6c/0x3cc
+ ? do_init_module+0x22/0x1f1
+ ? rcu_read_lock_sched_held+0x97/0xb0
+ ? kmem_cache_alloc_trace+0x325/0x3b0
+ do_init_module+0x5b/0x1f1
+ load_module+0x1db1/0x2690
+ ? m_show+0x1d0/0x1d0
+ __do_sys_finit_module+0xc5/0xd0
+ __x64_sys_finit_module+0x15/0x20
+ do_syscall_64+0x6b/0x1d0
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-Please ask the reporter's permission before doing so (even if they'd 
-submitted a public bugzilla report or sent a report to the mailing 
-list). They need to understand and agree that:
+If pci_register_driver fails, register inet6addr_notifier is
+pointless. This patch fix the error path in cxgb4_init_module.
 
-- their name and email address will become a permanent, non-excisable 
-  part of the Linux Kernel git history
-- their name and email address will be stored on multiple public 
-  archival copies of the linux kernel mailing list, collected and 
-  managed by different legal entities
+Fixes: b5a02f503caa ("cxgb4 : Update ipv6 address handling api")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
-With or without GDPR laws, this is something the reporter needs to be 
-aware of and they need to be okay with it, as a matter of courtesy.
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
+index c71a52a2f8017..5478a2ab45c4c 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
+@@ -5203,15 +5203,24 @@ static int __init cxgb4_init_module(void)
+ 
+ 	ret = pci_register_driver(&cxgb4_driver);
+ 	if (ret < 0)
+-		debugfs_remove(cxgb4_debugfs_root);
++		goto err_pci;
+ 
+ #if IS_ENABLED(CONFIG_IPV6)
+ 	if (!inet6addr_registered) {
+-		register_inet6addr_notifier(&cxgb4_inet6addr_notifier);
+-		inet6addr_registered = true;
++		ret = register_inet6addr_notifier(&cxgb4_inet6addr_notifier);
++		if (ret)
++			pci_unregister_driver(&cxgb4_driver);
++		else
++			inet6addr_registered = true;
+ 	}
+ #endif
+ 
++	if (ret == 0)
++		return ret;
++
++err_pci:
++	debugfs_remove(cxgb4_debugfs_root);
++
+ 	return ret;
+ }
+ 
+-- 
+2.20.1
 
--K
