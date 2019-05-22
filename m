@@ -2,219 +2,100 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B490EC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 22:04:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12CD2C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 22:06:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56EB121880
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 22:04:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B08BB21880
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 22:06:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727578AbfEVWEY (ORCPT
+        id S1727996AbfEVWGH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 18:04:24 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:55158 "EHLO mx1.redhat.com"
+        Wed, 22 May 2019 18:06:07 -0400
+Received: from mx.allycomm.com ([138.68.30.55]:28566 "EHLO mx.allycomm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726070AbfEVWEY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 18:04:24 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726390AbfEVWGH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 18:06:07 -0400
+Received: from allycomm.com (unknown [IPv6:2601:647:5401:2210::49])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id EA61059463;
-        Wed, 22 May 2019 22:04:22 +0000 (UTC)
-Received: from redhat.com (unknown [10.20.6.178])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id D79D917AC6;
-        Wed, 22 May 2019 22:04:21 +0000 (UTC)
-Date:   Wed, 22 May 2019 18:04:20 -0400
-From:   Jerome Glisse <jglisse@redhat.com>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-rdma@vger.kernel.org, Leon Romanovsky <leonro@mellanox.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Artemy Kovalyov <artemyko@mellanox.com>,
-        Moni Shoua <monis@mellanox.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Kaike Wan <kaike.wan@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>
-Subject: Re: [PATCH v4 0/1] Use HMM for ODP v4
-Message-ID: <20190522220419.GB20179@redhat.com>
-References: <20190411181314.19465-1-jglisse@redhat.com>
- <20190506195657.GA30261@ziepe.ca>
- <20190521205321.GC3331@redhat.com>
- <20190522005225.GA30819@ziepe.ca>
- <20190522174852.GA23038@redhat.com>
- <20190522201247.GH6054@ziepe.ca>
+        by mx.allycomm.com (Postfix) with ESMTPSA id 82C893CB13;
+        Wed, 22 May 2019 15:06:05 -0700 (PDT)
+From:   Jeff Kletsky <lede@allycomm.com>
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     Schrempf Frieder <frieder.schrempf@kontron.de>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Richard Weinberger <richard@nod.at>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kbuild-all@01.org
+Subject: [PATCH v4 0/3] mtd: spinand: Add support for GigaDevice GD5F1GQ4UFxxG
+Date:   Wed, 22 May 2019 15:05:52 -0700
+Message-Id: <20190522220555.11626-1-lede@allycomm.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190522201247.GH6054@ziepe.ca>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Wed, 22 May 2019 22:04:23 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 22, 2019 at 05:12:47PM -0300, Jason Gunthorpe wrote:
-> On Wed, May 22, 2019 at 01:48:52PM -0400, Jerome Glisse wrote:
-> 
-> >  static void put_per_mm(struct ib_umem_odp *umem_odp)
-> >  {
-> >  	struct ib_ucontext_per_mm *per_mm = umem_odp->per_mm;
-> > @@ -325,9 +283,10 @@ static void put_per_mm(struct ib_umem_odp *umem_odp)
-> >  	up_write(&per_mm->umem_rwsem);
-> >  
-> >  	WARN_ON(!RB_EMPTY_ROOT(&per_mm->umem_tree.rb_root));
-> > -	mmu_notifier_unregister_no_release(&per_mm->mn, per_mm->mm);
-> > +	hmm_mirror_unregister(&per_mm->mirror);
-> >  	put_pid(per_mm->tgid);
-> > -	mmu_notifier_call_srcu(&per_mm->rcu, free_per_mm);
-> > +
-> > +	kfree(per_mm);
-> 
-> Notice that mmu_notifier only uses SRCU to fence in-progress ops
-> callbacks, so I think hmm internally has the bug that this ODP
-> approach prevents.
-> 
-> hmm should follow the same pattern ODP has and 'kfree_srcu' the hmm
-> struct, use container_of in the mmu_notifier callbacks, and use the
-> otherwise vestigal kref_get_unless_zero() to bail:
-> 
-> From 0cb536dc0150ba964a1d655151d7b7a84d0f915a Mon Sep 17 00:00:00 2001
-> From: Jason Gunthorpe <jgg@mellanox.com>
-> Date: Wed, 22 May 2019 16:52:52 -0300
-> Subject: [PATCH] hmm: Fix use after free with struct hmm in the mmu notifiers
-> 
-> mmu_notifier_unregister_no_release() is not a fence and the mmu_notifier
-> system will continue to reference hmm->mn until the srcu grace period
-> expires.
-> 
->          CPU0                                     CPU1
->                                                __mmu_notifier_invalidate_range_start()
->                                                  srcu_read_lock
->                                                  hlist_for_each ()
->                                                    // mn == hmm->mn
-> hmm_mirror_unregister()
->   hmm_put()
->     hmm_free()
->       mmu_notifier_unregister_no_release()
->          hlist_del_init_rcu(hmm-mn->list)
-> 			                           mn->ops->invalidate_range_start(mn, range);
-> 					             mm_get_hmm()
->       mm->hmm = NULL;
->       kfree(hmm)
->                                                      mutex_lock(&hmm->lock);
-> 
-> Use SRCU to kfree the hmm memory so that the notifiers can rely on hmm
-> existing. Get the now-safe hmm struct through container_of and directly
-> check kref_get_unless_zero to lock it against free.
+Addresses changes in macros and related data structures introduced by
+  commit 377e517b5fa5
+      mtd: nand: Add max_bad_eraseblocks_per_lun info to memorg
 
-It is already badly handled with BUG_ON(), i just need to convert
-those to return and to use mmu_notifier_call_srcu() to free hmm
-struct.
+Resolves issue detected by kbuild test robot
+  Tue, 21 May 2019 17:28:09 +0800
+  Tue, 21 May 2019 18:17:28 +0800
 
-The way race is avoided is because mm->hmm will either be NULL or
-point to another hmm struct before an existing hmm is free. Also
-if range_start/range_end use kref_get_unless_zero() but right now
-this is BUG_ON if it turn out to be NULL, it should just return
-on NULL.
+GD5F1GQ4UFxxG data sheet on page 34 of gd5f1gq4xfxxg_v2.4_20190322.pdf
+indicates "Minumum number of valid blocks (Nvb)" 1004 out of 1024 total.
 
-> 
-> Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-> ---
->  include/linux/hmm.h |  1 +
->  mm/hmm.c            | 25 +++++++++++++++++++------
->  2 files changed, 20 insertions(+), 6 deletions(-)
-> 
-> diff --git a/include/linux/hmm.h b/include/linux/hmm.h
-> index 51ec27a8466816..8b91c90d3b88cb 100644
-> --- a/include/linux/hmm.h
-> +++ b/include/linux/hmm.h
-> @@ -102,6 +102,7 @@ struct hmm {
->  	struct mmu_notifier	mmu_notifier;
->  	struct rw_semaphore	mirrors_sem;
->  	wait_queue_head_t	wq;
-> +	struct rcu_head		rcu;
->  	long			notifiers;
->  	bool			dead;
->  };
-> diff --git a/mm/hmm.c b/mm/hmm.c
-> index 816c2356f2449f..824e7e160d8167 100644
-> --- a/mm/hmm.c
-> +++ b/mm/hmm.c
-> @@ -113,6 +113,11 @@ static struct hmm *hmm_get_or_create(struct mm_struct *mm)
->  	return NULL;
->  }
->  
-> +static void hmm_fee_rcu(struct rcu_head *rcu)
-> +{
-> +	kfree(container_of(rcu, struct hmm, rcu));
-> +}
-> +
->  static void hmm_free(struct kref *kref)
->  {
->  	struct hmm *hmm = container_of(kref, struct hmm, kref);
-> @@ -125,7 +130,7 @@ static void hmm_free(struct kref *kref)
->  		mm->hmm = NULL;
->  	spin_unlock(&mm->page_table_lock);
->  
-> -	kfree(hmm);
-> +	mmu_notifier_call_srcu(&hmm->rcu, hmm_fee_rcu);
->  }
->  
->  static inline void hmm_put(struct hmm *hmm)
-> @@ -153,10 +158,14 @@ void hmm_mm_destroy(struct mm_struct *mm)
->  
->  static void hmm_release(struct mmu_notifier *mn, struct mm_struct *mm)
->  {
-> -	struct hmm *hmm = mm_get_hmm(mm);
-> +	struct hmm *hmm = container_of(mn, struct hmm, mmu_notifier);
->  	struct hmm_mirror *mirror;
->  	struct hmm_range *range;
->  
-> +	/* hmm is in progress to free */
-> +	if (!kref_get_unless_zero(&hmm->kref))
-> +		return;
-> +
->  	/* Report this HMM as dying. */
->  	hmm->dead = true;
->  
-> @@ -194,13 +203,15 @@ static void hmm_release(struct mmu_notifier *mn, struct mm_struct *mm)
->  static int hmm_invalidate_range_start(struct mmu_notifier *mn,
->  			const struct mmu_notifier_range *nrange)
->  {
-> -	struct hmm *hmm = mm_get_hmm(nrange->mm);
-> +	struct hmm *hmm = container_of(mn, struct hmm, mmu_notifier);
->  	struct hmm_mirror *mirror;
->  	struct hmm_update update;
->  	struct hmm_range *range;
->  	int ret = 0;
->  
-> -	VM_BUG_ON(!hmm);
-> +	/* hmm is in progress to free */
-> +	if (!kref_get_unless_zero(&hmm->kref))
-> +		return 0;
->  
->  	update.start = nrange->start;
->  	update.end = nrange->end;
-> @@ -248,9 +259,11 @@ static int hmm_invalidate_range_start(struct mmu_notifier *mn,
->  static void hmm_invalidate_range_end(struct mmu_notifier *mn,
->  			const struct mmu_notifier_range *nrange)
->  {
-> -	struct hmm *hmm = mm_get_hmm(nrange->mm);
-> +	struct hmm *hmm = container_of(mn, struct hmm, mmu_notifier);
->  
-> -	VM_BUG_ON(!hmm);
-> +	/* hmm is in progress to free */
-> +	if (!kref_get_unless_zero(&hmm->kref))
-> +		return;
->  
->  	mutex_lock(&hmm->lock);
->  	hmm->notifiers--;
-> -- 
-> 2.21.0
-> 
+Newly introduced "max bad blocks" parameter set to 20 (1024-1020).
+
+Rebased on v5.2-rc1 and confirmed patch applies on master.
+
+
+Patches 1/3 and 2/3 are the same as in the previous series.
+
+Patch 3/3, mtd: spinand: Add support for GigaDevice GD5F1GQ4UFxxG,
+includes the additional parameter (compared here to v3 of the series):
+
+    SPINAND_INFO("GD5F1GQ4UFxxG", 0xb148,
+    -                    NAND_MEMORG(1, 2048, 128, 64, 1024, 1, 1, 1),
+    +                    NAND_MEMORG(1, 2048, 128, 64, 1024, 20, 1, 1, 1),
+                         NAND_ECCREQ(8, 512),
+                         SPINAND_INFO_OP_VARIANTS(&read_cache_variants_f,
+                         &write_cache_variants,
+
+R-b of Frieder Schrempf removed from [3/3] as a result this change.
+
+Supersedes series:
+
+mtd: spinand: Add support for GigaDevice GD5F1GQ4UFxxG
+https://patchwork.ozlabs.org/project/linux-mtd/list/?series=108868
+
+
+
+Jeff
+
+
+
+Cc: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: Schrempf Frieder <frieder.schrempf@kontron.de>
+Cc: Boris Brezillon <bbrezillon@kernel.org>
+Cc: Richard Weinberger <richard@nod.at>
+Cc: David Woodhouse <dwmw2@infradead.org>
+Cc: Brian Norris <computersforpeace@gmail.com>
+Cc: Marek Vasut <marek.vasut@gmail.com>
+Cc: linux-mtd@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Cc: kbuild-all@01.org
+
+
+
