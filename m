@@ -2,145 +2,135 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2E1EC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:51:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFEE1C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:51:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADE8A2081C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:51:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 819F12081C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:51:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558554705;
+	bh=yOhsyQTqkYTxs79K0nX4cX8ko3S4NO2At4xyAEBq690=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=w4Bikxw/ViyKdSM5Kgsh3zwxdb2lr8CcWXmXEpyMBImfCozA1+RMYh9zhkJ3/BYJy
+	 prG1OGCKKnbqXC1aAA3IiVRX0279kTx9SHoPjWai/TOBUJ6M+3uX5SHs7VUrbFU1i/
+	 IXspfFs1BU9c3V2KWyJK5kHLseEzypBB1JQVu98k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388024AbfEVTvd (ORCPT
+        id S1731007AbfEVT0Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:51:33 -0400
-Received: from mga02.intel.com ([134.134.136.20]:24848 "EHLO mga02.intel.com"
+        Wed, 22 May 2019 15:26:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47828 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732101AbfEVTv1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:51:27 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 May 2019 12:51:27 -0700
-X-ExtLoop1: 1
-Received: from ideak-desk.fi.intel.com ([10.237.72.204])
-  by orsmga003.jf.intel.com with ESMTP; 22 May 2019 12:51:26 -0700
-From:   Imre Deak <imre.deak@intel.com>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
-        <ville.syrjala@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH 2/2] lockdep: Fix merging of hlocks with non-zero references
-Date:   Wed, 22 May 2019 22:50:53 +0300
-Message-Id: <20190522195053.15079-2-imre.deak@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190522195053.15079-1-imre.deak@intel.com>
-References: <20190522195053.15079-1-imre.deak@intel.com>
+        id S1731913AbfEVT0V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:26:21 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E12E20879;
+        Wed, 22 May 2019 19:26:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558553180;
+        bh=yOhsyQTqkYTxs79K0nX4cX8ko3S4NO2At4xyAEBq690=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=dtljtiv7DxBPBEY6qiITJNyfYjqwQi5i6BjsiZdNNf2Jf1kdRO5O2LcFg0hPw7X/J
+         t2QvWZ4hBJYDtBBUwcuYiUyb5az/a93NgrHJZtAd5n9JKP4GNoKOYa3ow81gEguNY7
+         NfYcOsaq00BrwEost+5N/mN3guE3wjwSnY4PsAPM=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>, luto@kernel.org,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 096/317] mm/uaccess: Use 'unsigned long' to placate UBSAN warnings on older GCC versions
+Date:   Wed, 22 May 2019 15:19:57 -0400
+Message-Id: <20190522192338.23715-96-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190522192338.23715-1-sashal@kernel.org>
+References: <20190522192338.23715-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The sequence
+From: Peter Zijlstra <peterz@infradead.org>
 
-	static DEFINE_WW_CLASS(test_ww_class);
+[ Upstream commit 29da93fea3ea39ab9b12270cc6be1b70ef201c9e ]
 
-	struct ww_acquire_ctx ww_ctx;
-	struct ww_mutex ww_lock_a;
-	struct ww_mutex ww_lock_b;
-	struct ww_mutex ww_lock_c;
-	struct mutex lock_c;
+Randy reported objtool triggered on his (GCC-7.4) build:
 
-	ww_acquire_init(&ww_ctx, &test_ww_class);
+  lib/strncpy_from_user.o: warning: objtool: strncpy_from_user()+0x315: call to __ubsan_handle_add_overflow() with UACCESS enabled
+  lib/strnlen_user.o: warning: objtool: strnlen_user()+0x337: call to __ubsan_handle_sub_overflow() with UACCESS enabled
 
-	ww_mutex_init(&ww_lock_a, &test_ww_class);
-	ww_mutex_init(&ww_lock_b, &test_ww_class);
-	ww_mutex_init(&ww_lock_c, &test_ww_class);
+This is due to UBSAN generating signed-overflow-UB warnings where it
+should not. Prior to GCC-8 UBSAN ignored -fwrapv (which the kernel
+uses through -fno-strict-overflow).
 
-	mutex_init(&lock_c);
+Make the functions use 'unsigned long' throughout.
 
-	WARN_ON(ww_mutex_lock(&ww_lock_a, &ww_ctx));
-
-	WARN_ON(!mutex_trylock(&lock_c));
-
-	WARN_ON(ww_mutex_lock(&ww_lock_b, &ww_ctx));
-	WARN_ON(ww_mutex_lock(&ww_lock_c, &ww_ctx));
-
-	mutex_unlock(&lock_c);	(*)
-
-	ww_mutex_unlock(&ww_lock_c);
-	ww_mutex_unlock(&ww_lock_b);
-	ww_mutex_unlock(&ww_lock_a);
-
-	ww_acquire_fini(&ww_ctx); (**)
-
-will trigger the following error in __lock_release() when calling
-mutex_release() at **:
-
-	DEBUG_LOCKS_WARN_ON(depth <= 0)
-
-The problem is that the hlock merging happening at * updates the
-references for test_ww_class incorrectly to 3 whereas it should've
-updated it to 4 (representing all the instances for ww_ctx and
-ww_lock_[abc]).
-
-Fix this by updating the references during merging correctly taking into
-account that we can have non-zero references (both for the hlock that we
-merge into another hlock or for the hlock we are mering into).
-
-Cc: Ville Syrjälä <ville.syrjala@linux.intel.com>
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
+Acked-by: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Imre Deak <imre.deak@intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: luto@kernel.org
+Link: http://lkml.kernel.org/r/20190424072208.754094071@infradead.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/locking/lockdep.c | 23 +++++++++++++----------
- 1 file changed, 13 insertions(+), 10 deletions(-)
+ lib/strncpy_from_user.c | 5 +++--
+ lib/strnlen_user.c      | 4 ++--
+ 2 files changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 967352d32af1..9e2a4ab6c731 100644
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -3637,6 +3637,11 @@ print_lock_nested_lock_not_held(struct task_struct *curr,
+diff --git a/lib/strncpy_from_user.c b/lib/strncpy_from_user.c
+index 58eacd41526c5..023ba9f3b99f0 100644
+--- a/lib/strncpy_from_user.c
++++ b/lib/strncpy_from_user.c
+@@ -23,10 +23,11 @@
+  * hit it), 'max' is the address space maximum (and we return
+  * -EFAULT if we hit it).
+  */
+-static inline long do_strncpy_from_user(char *dst, const char __user *src, long count, unsigned long max)
++static inline long do_strncpy_from_user(char *dst, const char __user *src,
++					unsigned long count, unsigned long max)
+ {
+ 	const struct word_at_a_time constants = WORD_AT_A_TIME_CONSTANTS;
+-	long res = 0;
++	unsigned long res = 0;
  
- static int __lock_is_held(const struct lockdep_map *lock, int read);
+ 	/*
+ 	 * Truncate 'max' to the user-specified limit, so that
+diff --git a/lib/strnlen_user.c b/lib/strnlen_user.c
+index 1c1a1b0e38a5f..7f2db3fe311fd 100644
+--- a/lib/strnlen_user.c
++++ b/lib/strnlen_user.c
+@@ -28,7 +28,7 @@
+ static inline long do_strnlen_user(const char __user *src, unsigned long count, unsigned long max)
+ {
+ 	const struct word_at_a_time constants = WORD_AT_A_TIME_CONSTANTS;
+-	long align, res = 0;
++	unsigned long align, res = 0;
+ 	unsigned long c;
  
-+static int hlock_reference(int reference)
-+{
-+	return reference ? : 1;
-+}
-+
- /*
-  * This gets called for every mutex_lock*()/spin_lock*() operation.
-  * We maintain the dependency maps and validate the locking attempt:
-@@ -3702,17 +3707,15 @@ static int __lock_acquire(struct lockdep_map *lock, unsigned int subclass,
- 	if (depth) {
- 		hlock = curr->held_locks + depth - 1;
- 		if (hlock->class_idx == class_idx && nest_lock) {
--			if (hlock->references) {
--				/*
--				 * Check: unsigned int references overflow.
--				 */
--				if (DEBUG_LOCKS_WARN_ON(hlock->references == UINT_MAX))
--					return 0;
-+			/*
-+			 * Check: unsigned int references overflow.
-+			 */
-+			if (DEBUG_LOCKS_WARN_ON(hlock_reference(hlock->references) >
-+						UINT_MAX - hlock_reference(references)))
-+				return 0;
+ 	/*
+@@ -42,7 +42,7 @@ static inline long do_strnlen_user(const char __user *src, unsigned long count,
+ 	 * Do everything aligned. But that means that we
+ 	 * need to also expand the maximum..
+ 	 */
+-	align = (sizeof(long) - 1) & (unsigned long)src;
++	align = (sizeof(unsigned long) - 1) & (unsigned long)src;
+ 	src -= align;
+ 	max += align;
  
--				hlock->references++;
--			} else {
--				hlock->references = 2;
--			}
-+			hlock->references = hlock_reference(hlock->references) +
-+					    hlock_reference(references);
- 
- 			return 2;
- 		}
 -- 
-2.17.1
+2.20.1
 
