@@ -2,52 +2,51 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5F3FC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:56:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 017B0C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:57:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D70F20862
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:56:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C66D820856
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:57:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558555017;
-	bh=t5xengB7nNuo2KSH7Jj1ZxDwNMwXO7ggXnUm8qMUaWg=;
+	s=default; t=1558555032;
+	bh=olLlbsdVvG3O0pmW/Xs7F+gvHtWBPuONA/cLfOxDLcQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=182J9m2GuFJMJO9THtEPYzssfYXBXiGawiPCQaV459IVz4F5zCCHiio0Rb2UmO8nE
-	 SE5LV/i1tmBZz1GDohSNtBcDSQJFDscDpwUG9u3kZ4CN0Jek3BPVTUPaXVkWqzmWC9
-	 lwbzpaMr2ZS2yXY4xMx6/u8O7JR6RqyHClbch7xI=
+	b=T+mr4WGAATjfq5xm6ipNCHerAYiuI9WxC4Y24J79bVo62icC2JSgK9DRpCClsgfeW
+	 08RDfxLe4Uj34VWBWelSKTUNeL/ZHcGi6LLmW/6fK1EtoRYblJaJ2Y6eoQA9u0fBq5
+	 EBTfwfoeHLcER5WcYivaQBdEEA5wvfEng7MNS1kk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731686AbfEVT44 (ORCPT
+        id S1731715AbfEVT5M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:56:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45868 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:57:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45486 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731369AbfEVTYl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:24:41 -0400
+        id S1731273AbfEVTYW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:24:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8712020675;
-        Wed, 22 May 2019 19:24:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9DF5C21850;
+        Wed, 22 May 2019 19:24:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553081;
-        bh=t5xengB7nNuo2KSH7Jj1ZxDwNMwXO7ggXnUm8qMUaWg=;
+        s=default; t=1558553062;
+        bh=olLlbsdVvG3O0pmW/Xs7F+gvHtWBPuONA/cLfOxDLcQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cpGq74nhZkZAvlGyOeYseG3B54bTIb6iKyceKicJqyHy0C9iAoi6QrXQJ4x/GKY0Q
-         Cx8XoqqMUAyFokmXTweZw3y6qZY0iObevjMMNDKokoj4BC4XkPDtP2MfwCsPwQ20U9
-         n8TGHcP2DXmP4ZsT6u877lZ0NWBDWjmdHT2e+Hd0=
+        b=SryJerObdse5T/fFwFRFzGB0c9NI3vxYpuesyz+i8K1rjk6BO+mqZ+tjTwcUP+CTi
+         Xqe1gISRuwSdrdrXWNNLXrPRD49bfVH8peo16iZ4KfJy9xXzD6kIJMfdGgUnNRK+GL
+         75oDq84//PF7CYwcLfAgkzSl9gYrlwaomKZlxQYg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jon Derrick <jonathan.derrick@intel.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.0 037/317] drm/nouveau/bar/nv50: ensure BAR is mapped
-Date:   Wed, 22 May 2019 15:18:58 -0400
-Message-Id: <20190522192338.23715-37-sashal@kernel.org>
+Cc:     Pavel Machek <pavel@ucw.cz>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-leds@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 028/317] leds: avoid races with workqueue
+Date:   Wed, 22 May 2019 15:18:49 -0400
+Message-Id: <20190522192338.23715-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192338.23715-1-sashal@kernel.org>
 References: <20190522192338.23715-1-sashal@kernel.org>
@@ -60,58 +59,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jon Derrick <jonathan.derrick@intel.com>
+From: Pavel Machek <pavel@ucw.cz>
 
-[ Upstream commit f10b83de1fd49216a4c657816f48001437e4bdd5 ]
+[ Upstream commit 0db37915d912e8dc6588f25da76d3ed36718d92f ]
 
-If the BAR is zero size, it indicates it was never successfully mapped.
-Ensure that the BAR is valid during initialization before attempting to
-use it.
+There are races between "main" thread and workqueue. They manifest
+themselves on Thinkpad X60:
 
-Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
-Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+This should result in LED blinking, but it turns it off instead:
+
+    root@amd:/data/pavel# cd /sys/class/leds/tpacpi\:\:power
+    root@amd:/sys/class/leds/tpacpi::power# echo timer > trigger
+    root@amd:/sys/class/leds/tpacpi::power# echo timer > trigger
+
+It should be possible to transition from blinking to solid on by echo
+0 > brightness; echo 1 > brightness... but that does not work, either,
+if done too quickly.
+
+Synchronization of the workqueue fixes both.
+
+Fixes: 1afcadfcd184 ("leds: core: Use set_brightness_work for the blocking op")
+Signed-off-by: Pavel Machek <pavel@ucw.cz>
+Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/nouveau/nvkm/subdev/bar/nv50.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ drivers/leds/led-class.c | 1 +
+ drivers/leds/led-core.c  | 5 +++++
+ 2 files changed, 6 insertions(+)
 
-diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/bar/nv50.c b/drivers/gpu/drm/nouveau/nvkm/subdev/bar/nv50.c
-index 157b076a12723..38c9c086754b6 100644
---- a/drivers/gpu/drm/nouveau/nvkm/subdev/bar/nv50.c
-+++ b/drivers/gpu/drm/nouveau/nvkm/subdev/bar/nv50.c
-@@ -109,7 +109,7 @@ nv50_bar_oneinit(struct nvkm_bar *base)
- 	struct nvkm_device *device = bar->base.subdev.device;
- 	static struct lock_class_key bar1_lock;
- 	static struct lock_class_key bar2_lock;
--	u64 start, limit;
-+	u64 start, limit, size;
- 	int ret;
+diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
+index 3c7e3487b373b..85848c5da705f 100644
+--- a/drivers/leds/led-class.c
++++ b/drivers/leds/led-class.c
+@@ -57,6 +57,7 @@ static ssize_t brightness_store(struct device *dev,
+ 	if (state == LED_OFF)
+ 		led_trigger_remove(led_cdev);
+ 	led_set_brightness(led_cdev, state);
++	flush_work(&led_cdev->set_brightness_work);
  
- 	ret = nvkm_gpuobj_new(device, 0x20000, 0, false, NULL, &bar->mem);
-@@ -127,7 +127,10 @@ nv50_bar_oneinit(struct nvkm_bar *base)
- 
- 	/* BAR2 */
- 	start = 0x0100000000ULL;
--	limit = start + device->func->resource_size(device, 3);
-+	size = device->func->resource_size(device, 3);
-+	if (!size)
-+		return -ENOMEM;
-+	limit = start + size;
- 
- 	ret = nvkm_vmm_new(device, start, limit-- - start, NULL, 0,
- 			   &bar2_lock, "bar2", &bar->bar2_vmm);
-@@ -164,7 +167,10 @@ nv50_bar_oneinit(struct nvkm_bar *base)
- 
- 	/* BAR1 */
- 	start = 0x0000000000ULL;
--	limit = start + device->func->resource_size(device, 1);
-+	size = device->func->resource_size(device, 1);
-+	if (!size)
-+		return -ENOMEM;
-+	limit = start + size;
- 
- 	ret = nvkm_vmm_new(device, start, limit-- - start, NULL, 0,
- 			   &bar1_lock, "bar1", &bar->bar1_vmm);
+ 	ret = size;
+ unlock:
+diff --git a/drivers/leds/led-core.c b/drivers/leds/led-core.c
+index ede4fa0ac2cce..55dec67023599 100644
+--- a/drivers/leds/led-core.c
++++ b/drivers/leds/led-core.c
+@@ -162,6 +162,11 @@ static void led_blink_setup(struct led_classdev *led_cdev,
+ 		     unsigned long *delay_on,
+ 		     unsigned long *delay_off)
+ {
++	/*
++	 * If "set brightness to 0" is pending in workqueue, we don't
++	 * want that to be reordered after blink_set()
++	 */
++	flush_work(&led_cdev->set_brightness_work);
+ 	if (!test_bit(LED_BLINK_ONESHOT, &led_cdev->work_flags) &&
+ 	    led_cdev->blink_set &&
+ 	    !led_cdev->blink_set(led_cdev, delay_on, delay_off))
 -- 
 2.20.1
 
