@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A24C7C282DC
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:30:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71F6CC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:30:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6946A217F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:30:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39C4C21473
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:30:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558553434;
-	bh=UapYmnCpWuab03TBWLBB+gBSRoAtQj094QqbPvWrKzQ=;
+	s=default; t=1558553439;
+	bh=XNdipqEzOx7/+ADkM/ggmrOGx69uPcHMbMepM83nMs0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S1Wg/Jlxclh6Hg347Gth2VEoIgRJU1rCmP8IctQAB98e26SfpAjVgd5/amVgaX6Wq
-	 skrz6R09X0M4V+3qFHxWPH7sVQdWl/Y6sZ5XnUTksHlNGu3rhfhzumMf69UYFVmz5R
-	 KPSxUbyMkh//5s22fi9Cc2ZlUHzMBuPnbJhKrcLQ=
+	b=Zb9Y/BvXB0vqEfhT4UgESlRTTkrWlIsuscL0jEUkxbGcUx+eV+f9ZRDsYw8tNkAvA
+	 4Inwku6g1elLaujEiKTZ34aTuDOujgh+T54p7ncYOdkP4JrTXPJQTIYg/0zoiZXjlO
+	 qPoZqH+StBP+FhBBbfOJdyly8mNAfeLBhtcwIs1Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732789AbfEVTac (ORCPT
+        id S1733275AbfEVTai (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:30:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53852 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:30:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53898 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732749AbfEVTaX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:30:23 -0400
+        id S1731957AbfEVTa0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:30:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ACA7F20879;
-        Wed, 22 May 2019 19:30:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5345020879;
+        Wed, 22 May 2019 19:30:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553422;
-        bh=UapYmnCpWuab03TBWLBB+gBSRoAtQj094QqbPvWrKzQ=;
+        s=default; t=1558553426;
+        bh=XNdipqEzOx7/+ADkM/ggmrOGx69uPcHMbMepM83nMs0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OyVyfnCq+djQdsrGJ9W8kDaU9tKUXR+CIeDBLIJ1LVZdeexyLaU8x00+OqVIY4w9b
-         Lds4ihz26V2qlKQgrX5HywZpqZk5AIdiwi6C4Mx5Q0UxRy+ZWVTcHY+fG7zl6JnwWB
-         ltU2OJV1j8vIBBe29nSjr5Ly9RDr0NoB0ijY7MPE=
+        b=A23yZlGFflvlaSmrt/OHxL27E6Li4DHdEkd/IvhRlI0oaOB9q5pg9Zapp8dELhJ+U
+         BLV4ZmyuCTn4vH6tzPDcERPy/HolB8Z2WCq4fuHDFHNbN2SyNxfY4UGixQkLKXl143
+         bsSG6JLuLaVT7Z+3yvx9Srl7+pffYRJnHWgEHKwo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Raul E Rangel <rrangel@chromium.org>,
-        Avri Altman <avri.altman@wdc.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-mmc@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 003/114] mmc: core: Verify SD bus width
-Date:   Wed, 22 May 2019 15:28:26 -0400
-Message-Id: <20190522193017.26567-3-sashal@kernel.org>
+Cc:     Sameeh Jubran <sameehj@amazon.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 005/114] net: ena: gcc 8: fix compilation warning
+Date:   Wed, 22 May 2019 15:28:28 -0400
+Message-Id: <20190522193017.26567-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522193017.26567-1-sashal@kernel.org>
 References: <20190522193017.26567-1-sashal@kernel.org>
@@ -60,55 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Raul E Rangel <rrangel@chromium.org>
+From: Sameeh Jubran <sameehj@amazon.com>
 
-[ Upstream commit 9e4be8d03f50d1b25c38e2b59e73b194c130df7d ]
+[ Upstream commit f913308879bc6ae437ce64d878c7b05643ddea44 ]
 
-The SD Physical Layer Spec says the following: Since the SD Memory Card
-shall support at least the two bus modes 1-bit or 4-bit width, then any SD
-Card shall set at least bits 0 and 2 (SD_BUS_WIDTH="0101").
+GCC 8 contains a number of new warnings as well as enhancements to existing
+checkers. The warning - Wstringop-truncation - warns for calls to bounded
+string manipulation functions such as strncat, strncpy, and stpncpy that
+may either truncate the copied string or leave the destination unchanged.
 
-This change verifies the card has specified a bus width.
+In our case the destination string length (32 bytes) is much shorter than
+the source string (64 bytes) which causes this warning to show up. In
+general the destination has to be at least a byte larger than the length
+of the source string with strncpy for this warning not to showup.
 
-AMD SDHC Device 7806 can get into a bad state after a card disconnect
-where anything transferred via the DATA lines will always result in a
-zero filled buffer. Currently the driver will continue without error if
-the HC is in this condition. A block device will be created, but reading
-from it will result in a zero buffer. This makes it seem like the SD
-device has been erased, when in actuality the data is never getting
-copied from the DATA lines to the data buffer.
+This can be easily fixed by using strlcpy instead which already does the
+truncation to the string. Documentation for this function can be
+found here:
 
-SCR is the first command in the SD initialization sequence that uses the
-DATA lines. By checking that the response was invalid, we can abort
-mounting the card.
+https://elixir.bootlin.com/linux/latest/source/lib/string.c#L141
 
-Reviewed-by: Avri Altman <avri.altman@wdc.com>
-Signed-off-by: Raul E Rangel <rrangel@chromium.org>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
+Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/core/sd.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/net/ethernet/amazon/ena/ena_netdev.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/mmc/core/sd.c b/drivers/mmc/core/sd.c
-index f09148a4ab557..00ba8807dafe4 100644
---- a/drivers/mmc/core/sd.c
-+++ b/drivers/mmc/core/sd.c
-@@ -214,6 +214,14 @@ static int mmc_decode_scr(struct mmc_card *card)
+diff --git a/drivers/net/ethernet/amazon/ena/ena_netdev.c b/drivers/net/ethernet/amazon/ena/ena_netdev.c
+index 0c298878bf46f..0780900b37c72 100644
+--- a/drivers/net/ethernet/amazon/ena/ena_netdev.c
++++ b/drivers/net/ethernet/amazon/ena/ena_netdev.c
+@@ -2116,7 +2116,7 @@ static void ena_config_host_info(struct ena_com_dev *ena_dev)
  
- 	if (scr->sda_spec3)
- 		scr->cmds = UNSTUFF_BITS(resp, 32, 2);
-+
-+	/* SD Spec says: any SD Card shall set at least bits 0 and 2 */
-+	if (!(scr->bus_widths & SD_SCR_BUS_WIDTH_1) ||
-+	    !(scr->bus_widths & SD_SCR_BUS_WIDTH_4)) {
-+		pr_err("%s: invalid bus width\n", mmc_hostname(card->host));
-+		return -EINVAL;
-+	}
-+
- 	return 0;
- }
- 
+ 	host_info->os_type = ENA_ADMIN_OS_LINUX;
+ 	host_info->kernel_ver = LINUX_VERSION_CODE;
+-	strncpy(host_info->kernel_ver_str, utsname()->version,
++	strlcpy(host_info->kernel_ver_str, utsname()->version,
+ 		sizeof(host_info->kernel_ver_str) - 1);
+ 	host_info->os_dist = 0;
+ 	strncpy(host_info->os_dist_str, utsname()->release,
 -- 
 2.20.1
 
