@@ -2,106 +2,61 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD342C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 21:00:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60FDEC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 21:00:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78B2E21773
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 21:00:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558558841;
-	bh=DAAiD6IH0KlDghAVNPmVbeERdOtKivo01YxuNAw7Lv4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ojlpAg2GGSS6jiZXyrxGg+wblAUHdamLqEMw9hYAHd+eogezA8TWc7Xo1QHGmF4MB
-	 1VkCTduhwN2Ecx2maGcxLG1ytSryn10GRZ6SZjEVPdBpFNs2PaSeJ3gzK1m0ekRUxj
-	 uK1bYi7sW0Uin2qW1XuxP+WIJTulicXHVY8AwoGE=
+	by mail.kernel.org (Postfix) with ESMTP id 1009921019
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 21:00:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730336AbfEVVAl (ORCPT
+        id S1730446AbfEVVA5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 17:00:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41854 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729686AbfEVVAk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 17:00:40 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3FF2121019;
-        Wed, 22 May 2019 21:00:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558558839;
-        bh=DAAiD6IH0KlDghAVNPmVbeERdOtKivo01YxuNAw7Lv4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NMu4b6BJ6eGOg5zZMYjFoMJPEjwWgJzXYlUFNL/cVGdMfzr6eLQQV4fTw0oerv/D+
-         RP2brANDVsvcMxhzfOECmHSJFZ8Ghm4KstXuGdGVc+DEa3jtgRa2btaLFFe575w+TH
-         4i9jAAXLgNkFwSgCIMEOX1dAXlJtDolPRrkjQVhw=
-Date:   Wed, 22 May 2019 16:00:38 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Isaac J. Manjarres" <isaacm@codeaurora.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org,
-        frowand.list@gmail.com, joro@8bytes.org, robin.murphy@arm.com,
-        will.deacon@arm.com, kernel-team@android.com,
-        pratikp@codeaurora.org, lmark@codeaurora.org
-Subject: Re: [RFC/PATCH 2/4] PCI: Export PCI ACS and DMA searching functions
- to modules
-Message-ID: <20190522210038.GE79339@google.com>
-References: <1558118857-16912-1-git-send-email-isaacm@codeaurora.org>
- <1558118857-16912-3-git-send-email-isaacm@codeaurora.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1558118857-16912-3-git-send-email-isaacm@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 22 May 2019 17:00:57 -0400
+Received: from mx2.suse.de ([195.135.220.15]:56378 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729937AbfEVVA5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 17:00:57 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id E4870AD78;
+        Wed, 22 May 2019 21:00:55 +0000 (UTC)
+Message-ID: <1558558075.2470.2.camel@suse.com>
+Subject: Re: [RFC PATCH] usb: host: xhci: allow __GFP_FS in dma allocation
+From:   Oliver Neukum <oneukum@suse.com>
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     Jaewon Kim <jaewon31.kim@gmail.com>,
+        Christoph Hellwig <hch@infradead.org>, linux-mm@kvack.org,
+        gregkh@linuxfoundation.org, Jaewon Kim <jaewon31.kim@samsung.com>,
+        m.szyprowski@samsung.com, ytk.lee@samsung.com,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+Date:   Wed, 22 May 2019 22:47:55 +0200
+In-Reply-To: <Pine.LNX.4.44L0.1905221055190.1410-100000@iolanthe.rowland.org>
+References: <Pine.LNX.4.44L0.1905221055190.1410-100000@iolanthe.rowland.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 17, 2019 at 11:47:35AM -0700, Isaac J. Manjarres wrote:
-> IOMMU drivers that can be compiled as modules may
-> want to use pci_for_each_dma_alias() and pci_request_acs(),
-> so export those functions.
+On Mi, 2019-05-22 at 10:56 -0400, Alan Stern wrote:
+> On Wed, 22 May 2019, Oliver Neukum wrote:
 > 
-> Signed-off-by: Isaac J. Manjarres <isaacm@codeaurora.org>
+> > I agree with the problem, but I fail to see why this issue would be
+> > specific to USB. Shouldn't this be done in the device core layer?
+> 
+> Only for drivers that are on the block-device writeback path.  The 
+> device core doesn't know which drivers these are.
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+Neither does USB know. It is very hard to predict or even tell which
+devices are block device drivers. I think we must assume that
+any device may be affected.
 
-> ---
->  drivers/pci/pci.c    | 1 +
->  drivers/pci/search.c | 1 +
->  2 files changed, 2 insertions(+)
-> 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 766f577..3f354c1 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -3124,6 +3124,7 @@ void pci_request_acs(void)
->  {
->  	pci_acs_enable = 1;
->  }
-> +EXPORT_SYMBOL_GPL(pci_request_acs);
->  
->  static const char *disable_acs_redir_param;
->  
-> diff --git a/drivers/pci/search.c b/drivers/pci/search.c
-> index 2b5f720..cf9ede9 100644
-> --- a/drivers/pci/search.c
-> +++ b/drivers/pci/search.c
-> @@ -111,6 +111,7 @@ int pci_for_each_dma_alias(struct pci_dev *pdev,
->  
->  	return ret;
->  }
-> +EXPORT_SYMBOL_GPL(pci_for_each_dma_alias);
->  
->  static struct pci_bus *pci_do_find_bus(struct pci_bus *bus, unsigned char busnr)
->  {
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
-> 
+	Regards
+		Oliver
+
