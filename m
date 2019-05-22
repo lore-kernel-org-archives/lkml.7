@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1138C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:54:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EF21C282DC
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:54:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FE9C20856
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:54:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 416B020856
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:54:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558554858;
-	bh=Ehv9l5axy+rOHHmU2P3KIBGZ9yQcMadN9FTV6lXCmaI=;
+	s=default; t=1558554863;
+	bh=PE2HGYiRWYm3bWODRvBBRePCT8SPjWHWuR9jyCnMjGc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V+JgLq49cVmEDnortOR9kgAOWQEcCkJAqeb/prpPcuvLh552pnXqAX6pa8+Fgqix2
-	 POi/5lfmKTpHSrfy4LfZzJWeDAQBNyEsw7aX9iDOTeS4EmyushczEmWG9yiuZ4GNcA
-	 YpRlNbau/dayMYBf2NR5XhmQxGdsCQBxRw2Z6N+c=
+	b=Agn57EpiKl8IVDyqX5sFPvcikMiNzyfRJsMv/tQt6VvHq5P4q8KrvO0QxGb+OqnBc
+	 MGXckkX1IATqdnKdj96NTSxVnQPe3B+Nat6UQiO9itEvegKsYGhMfL8SsYiSrhLtg1
+	 2Ojo16kybB1RZUcWveYHgcY5eWDnYCDRNGMVFdkU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733020AbfEVTyS (ORCPT
+        id S1731695AbfEVTZm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:54:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47064 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730935AbfEVTZm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 22 May 2019 15:25:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46906 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731642AbfEVTZe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:25:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C0B79206BA;
-        Wed, 22 May 2019 19:25:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B094206BA;
+        Wed, 22 May 2019 19:25:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553141;
-        bh=Ehv9l5axy+rOHHmU2P3KIBGZ9yQcMadN9FTV6lXCmaI=;
+        s=default; t=1558553134;
+        bh=PE2HGYiRWYm3bWODRvBBRePCT8SPjWHWuR9jyCnMjGc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VgdVy1k2/Ab0eHdBjLpEo5nUFMa8f91Lc4RPVa4XELQO7x7z44N3H1ODvI180OM7g
-         9wIyXJvViLvxyAyoGeXxVgceRtOzFmQhBh1mrEVMz3sTa+WavAb+8KK+oEREDN8mKw
-         q78ReVlN78lR0/O3EJIjbcZK+3bTIrCWixRj3/30=
+        b=O0AoFZf7hIvYwk6cZa8RDNb/IfEF4GEDhWHoPPD2REtPOfbbbpIdoShvzqlM94Qga
+         EL/DiHyCK2jnJKJ8OQOo8J2n7VH8PpkQWy/fhO/+ndypvXmue50LNBoRAynnYC69II
+         i7vMPqpKWF8HcLKptC+rCQEsnXL7H+D6GS6mk2+4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     John Garry <john.garry@huawei.com>,
-        Xiang Chen <chenxiang66@hisilicon.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.0 071/317] driver core: Postpone DMA tear-down until after devres release for probe failure
-Date:   Wed, 22 May 2019 15:19:32 -0400
-Message-Id: <20190522192338.23715-71-sashal@kernel.org>
+Cc:     Huazhong Tan <tanhuazhong@huawei.com>,
+        Peng Li <lipeng321@huawei.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 064/317] net: hns3: use atomic_t replace u32 for arq's count
+Date:   Wed, 22 May 2019 15:19:25 -0400
+Message-Id: <20190522192338.23715-64-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192338.23715-1-sashal@kernel.org>
 References: <20190522192338.23715-1-sashal@kernel.org>
@@ -61,120 +60,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Garry <john.garry@huawei.com>
+From: Huazhong Tan <tanhuazhong@huawei.com>
 
-[ Upstream commit 0b777eee88d712256ba8232a9429edb17c4f9ceb ]
+[ Upstream commit 30780a8b1677e7409b32ae52a9a84f7d41ae6b43 ]
 
-In commit 376991db4b64 ("driver core: Postpone DMA tear-down until after
-devres release"), we changed the ordering of tearing down the device DMA
-ops and releasing all the device's resources; this was because the DMA ops
-should be maintained until we release the device's managed DMA memories.
+Since irq handler and mailbox task will both update arq's count,
+so arq's count should use atomic_t instead of u32, otherwise
+its value may go wrong finally.
 
-However, we have seen another crash on an arm64 system when a
-device driver probe fails:
-
-  hisi_sas_v3_hw 0000:74:02.0: Adding to iommu group 2
-  scsi host1: hisi_sas_v3_hw
-  BUG: Bad page state in process swapper/0  pfn:313f5
-  page:ffff7e0000c4fd40 count:1 mapcount:0
-  mapping:0000000000000000 index:0x0
-  flags: 0xfffe00000001000(reserved)
-  raw: 0fffe00000001000 ffff7e0000c4fd48 ffff7e0000c4fd48
-0000000000000000
-  raw: 0000000000000000 0000000000000000 00000001ffffffff
-0000000000000000
-  page dumped because: PAGE_FLAGS_CHECK_AT_FREE flag(s) set
-  bad because of flags: 0x1000(reserved)
-  Modules linked in:
-  CPU: 49 PID: 1 Comm: swapper/0 Not tainted
-5.1.0-rc1-43081-g22d97fd-dirty #1433
-  Hardware name: Huawei D06/D06, BIOS Hisilicon D06 UEFI
-RC0 - V1.12.01 01/29/2019
-  Call trace:
-  dump_backtrace+0x0/0x118
-  show_stack+0x14/0x1c
-  dump_stack+0xa4/0xc8
-  bad_page+0xe4/0x13c
-  free_pages_check_bad+0x4c/0xc0
-  __free_pages_ok+0x30c/0x340
-  __free_pages+0x30/0x44
-  __dma_direct_free_pages+0x30/0x38
-  dma_direct_free+0x24/0x38
-  dma_free_attrs+0x9c/0xd8
-  dmam_release+0x20/0x28
-  release_nodes+0x17c/0x220
-  devres_release_all+0x34/0x54
-  really_probe+0xc4/0x2c8
-  driver_probe_device+0x58/0xfc
-  device_driver_attach+0x68/0x70
-  __driver_attach+0x94/0xdc
-  bus_for_each_dev+0x5c/0xb4
-  driver_attach+0x20/0x28
-  bus_add_driver+0x14c/0x200
-  driver_register+0x6c/0x124
-  __pci_register_driver+0x48/0x50
-  sas_v3_pci_driver_init+0x20/0x28
-  do_one_initcall+0x40/0x25c
-  kernel_init_freeable+0x2b8/0x3c0
-  kernel_init+0x10/0x100
-  ret_from_fork+0x10/0x18
-  Disabling lock debugging due to kernel taint
-  BUG: Bad page state in process swapper/0  pfn:313f6
-  page:ffff7e0000c4fd80 count:1 mapcount:0
-mapping:0000000000000000 index:0x0
-[   89.322983] flags: 0xfffe00000001000(reserved)
-  raw: 0fffe00000001000 ffff7e0000c4fd88 ffff7e0000c4fd88
-0000000000000000
-  raw: 0000000000000000 0000000000000000 00000001ffffffff
-0000000000000000
-
-The crash occurs for the same reason.
-
-In this case, on the really_probe() failure path, we are still clearing
-the DMA ops prior to releasing the device's managed memories.
-
-This patch fixes this issue by reordering the DMA ops teardown and the
-call to devres_release_all() on the failure path.
-
-Reported-by: Xiang Chen <chenxiang66@hisilicon.com>
-Tested-by: Xiang Chen <chenxiang66@hisilicon.com>
-Signed-off-by: John Garry <john.garry@huawei.com>
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 07a0556a3a73 ("net: hns3: Changes to support ARQ(Asynchronous Receive Queue)")
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Signed-off-by: Peng Li <lipeng321@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/base/dd.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h          | 2 +-
+ drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c | 2 +-
+ drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c | 7 ++++---
+ 3 files changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/base/dd.c b/drivers/base/dd.c
-index d62487d024559..4add909e1a912 100644
---- a/drivers/base/dd.c
-+++ b/drivers/base/dd.c
-@@ -486,7 +486,7 @@ static int really_probe(struct device *dev, struct device_driver *drv)
- 	if (dev->bus->dma_configure) {
- 		ret = dev->bus->dma_configure(dev);
- 		if (ret)
--			goto dma_failed;
-+			goto probe_failed;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h b/drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h
+index 691d12174902c..3c7a26bb83222 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h
+@@ -102,7 +102,7 @@ struct hclgevf_mbx_arq_ring {
+ 	struct hclgevf_dev *hdev;
+ 	u32 head;
+ 	u32 tail;
+-	u32 count;
++	atomic_t count;
+ 	u16 msg_q[HCLGE_MBX_MAX_ARQ_MSG_NUM][HCLGE_MBX_MAX_ARQ_MSG_SIZE];
+ };
+ 
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c
+index 4e78e8812a045..b39ff5555a30e 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c
+@@ -327,7 +327,7 @@ int hclgevf_cmd_init(struct hclgevf_dev *hdev)
+ 	hdev->arq.hdev = hdev;
+ 	hdev->arq.head = 0;
+ 	hdev->arq.tail = 0;
+-	hdev->arq.count = 0;
++	atomic_set(&hdev->arq.count, 0);
+ 	hdev->hw.cmq.csq.next_to_clean = 0;
+ 	hdev->hw.cmq.csq.next_to_use = 0;
+ 	hdev->hw.cmq.crq.next_to_clean = 0;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c
+index 84653f58b2d10..fbba8b83b36c9 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c
+@@ -207,7 +207,8 @@ void hclgevf_mbx_handler(struct hclgevf_dev *hdev)
+ 			/* we will drop the async msg if we find ARQ as full
+ 			 * and continue with next message
+ 			 */
+-			if (hdev->arq.count >= HCLGE_MBX_MAX_ARQ_MSG_NUM) {
++			if (atomic_read(&hdev->arq.count) >=
++			    HCLGE_MBX_MAX_ARQ_MSG_NUM) {
+ 				dev_warn(&hdev->pdev->dev,
+ 					 "Async Q full, dropping msg(%d)\n",
+ 					 req->msg[1]);
+@@ -219,7 +220,7 @@ void hclgevf_mbx_handler(struct hclgevf_dev *hdev)
+ 			memcpy(&msg_q[0], req->msg,
+ 			       HCLGE_MBX_MAX_ARQ_MSG_SIZE * sizeof(u16));
+ 			hclge_mbx_tail_ptr_move_arq(hdev->arq);
+-			hdev->arq.count++;
++			atomic_inc(&hdev->arq.count);
+ 
+ 			hclgevf_mbx_task_schedule(hdev);
+ 
+@@ -296,7 +297,7 @@ void hclgevf_mbx_async_handler(struct hclgevf_dev *hdev)
+ 		}
+ 
+ 		hclge_mbx_head_ptr_move_arq(hdev->arq);
+-		hdev->arq.count--;
++		atomic_dec(&hdev->arq.count);
+ 		msg_q = hdev->arq.msg_q[hdev->arq.head];
  	}
- 
- 	if (driver_sysfs_add(dev)) {
-@@ -542,14 +542,13 @@ static int really_probe(struct device *dev, struct device_driver *drv)
- 	goto done;
- 
- probe_failed:
--	arch_teardown_dma_ops(dev);
--dma_failed:
- 	if (dev->bus)
- 		blocking_notifier_call_chain(&dev->bus->p->bus_notifier,
- 					     BUS_NOTIFY_DRIVER_NOT_BOUND, dev);
- pinctrl_bind_failed:
- 	device_links_no_driver(dev);
- 	devres_release_all(dev);
-+	arch_teardown_dma_ops(dev);
- 	driver_sysfs_remove(dev);
- 	dev->driver = NULL;
- 	dev_set_drvdata(dev, NULL);
+ }
 -- 
 2.20.1
 
