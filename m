@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B69ACC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:23:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAB60C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:23:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 800A5217D7
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:23:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7572F21473
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:23:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558552989;
-	bh=jF0IG8seK5yfPVv0jnKmDcjfxxH3S6pb05UYr0vEJKI=;
+	s=default; t=1558552994;
+	bh=coLhnFdunNlNCox0zklqPhKKWztDjhEktytSDXNgHB8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kZU8DTEdQbcaQ7Cg82xckkg5ibXvVB/Gp0ZzS0OyRcyfJp2RHVS8854jld8g6StTF
-	 SygjVwfJIfN2B8w384Dq0ghDHpa/fKf9ATfyXISGh9s2Efh5jOc2HVlNvhl+ns9kG6
-	 gBEy1pFIDNWOjOTe0wN4q0hVL1EYbo2JA3MZX1Ds=
+	b=HinNwbAKI4tRVWtijFbGAuHR08f7mC0cL9GtV+OsjyuKQoAg3N1r5VBG0onEyO8Aw
+	 ID5ocvFrLNfZaYVloTXgLQJIqsNSDLGe5qPypSHvEw0mrMmMXd1AsOlaRKheOblqeM
+	 27XH+B9wtKuQEvSLiR0ajZyU3IgVcO+sXoUTirv8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730771AbfEVTXI (ORCPT
+        id S1730819AbfEVTXN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:23:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43922 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:23:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44058 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729965AbfEVTXD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:23:03 -0400
+        id S1730776AbfEVTXK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:23:10 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7EB8121850;
-        Wed, 22 May 2019 19:23:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 22E6421473;
+        Wed, 22 May 2019 19:23:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558552983;
-        bh=jF0IG8seK5yfPVv0jnKmDcjfxxH3S6pb05UYr0vEJKI=;
+        s=default; t=1558552989;
+        bh=coLhnFdunNlNCox0zklqPhKKWztDjhEktytSDXNgHB8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yX9Rjnw2qZJIJy90nvEgmPD3ZDtLRvy2wg99B3p6BkRX6GmssCe+vDc81fkebOhVi
-         OZ1zvUJpv7PhxH+A+OeDcxxZyByYkFU7IpxUh/IgN6HcUnmLqCnIsCDeMKwdSwOjsd
-         5PKoV9jGiF4MrgQ1ZdKdmVNQGoNJD5raOjWLU684=
+        b=wFht6Ro65LAHpQncVseawe53YVttbqjVsfKfdxHT7CC2WTui+fwN6BPiTZKDgZ0ba
+         JFnySZnQOBZVOMUoSG7KE8MJHNxiwbMmmSb9g4QbOw6qlfTPeA7+x2tnUYHCMRRSVr
+         9MsVpMI+8ko24+cKnXpat1rLjlPxngZ5wa57Lpfs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sven Van Asbroeck <thesven73@gmail.com>,
-        Sven Van Asbroeck <TheSven73@gmail.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rtc@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 061/375] rtc: 88pm860x: prevent use-after-free on device remove
-Date:   Wed, 22 May 2019 15:16:01 -0400
-Message-Id: <20190522192115.22666-61-sashal@kernel.org>
+Cc:     Bard liao <yung-chuan.liao@linux.intel.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 065/375] ALSA: hda: fix unregister device twice on ASoC driver
+Date:   Wed, 22 May 2019 15:16:05 -0400
+Message-Id: <20190522192115.22666-65-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192115.22666-1-sashal@kernel.org>
 References: <20190522192115.22666-1-sashal@kernel.org>
@@ -60,44 +58,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sven Van Asbroeck <thesven73@gmail.com>
+From: Bard liao <yung-chuan.liao@linux.intel.com>
 
-[ Upstream commit f22b1ba15ee5785aa028384ebf77dd39e8e47b70 ]
+[ Upstream commit 4d95c51776b2edb4d4ebcea00b6e5a1fe538ce66 ]
 
-The device's remove() attempts to shut down the delayed_work scheduled
-on the kernel-global workqueue by calling flush_scheduled_work().
+snd_hda_codec_device_new() is used by both legacy HDA and ASoC
+driver. However, we will call snd_hdac_device_unregister() in
+snd_hdac_ext_bus_device_remove() for ASoC device. This patch uses
+the type flag in hdac_device struct to determine is it a ASoC device
+or legacy HDA device and call snd_hdac_device_unregister() in
+snd_hda_codec_dev_free() only if it is a legacy HDA device.
 
-Unfortunately, flush_scheduled_work() does not prevent the delayed_work
-from re-scheduling itself. The delayed_work might run after the device
-has been removed, and touch the already de-allocated info structure.
-This is a potential use-after-free.
-
-Fix by calling cancel_delayed_work_sync() during remove(): this ensures
-that the delayed work is properly cancelled, is no longer running, and
-is not able to re-schedule itself.
-
-This issue was detected with the help of Coccinelle.
-
-Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Bard liao <yung-chuan.liao@linux.intel.com>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rtc/rtc-88pm860x.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/pci/hda/hda_codec.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/rtc/rtc-88pm860x.c b/drivers/rtc/rtc-88pm860x.c
-index d25282b4a7dd1..73697e4b18a9d 100644
---- a/drivers/rtc/rtc-88pm860x.c
-+++ b/drivers/rtc/rtc-88pm860x.c
-@@ -421,7 +421,7 @@ static int pm860x_rtc_remove(struct platform_device *pdev)
- 	struct pm860x_rtc_info *info = platform_get_drvdata(pdev);
+diff --git a/sound/pci/hda/hda_codec.c b/sound/pci/hda/hda_codec.c
+index 701a69d856f5f..b20eb7fc83eb2 100644
+--- a/sound/pci/hda/hda_codec.c
++++ b/sound/pci/hda/hda_codec.c
+@@ -832,7 +832,13 @@ static int snd_hda_codec_dev_free(struct snd_device *device)
+ 	struct hda_codec *codec = device->device_data;
  
- #ifdef VRTC_CALIBRATION
--	flush_scheduled_work();
-+	cancel_delayed_work_sync(&info->calib_work);
- 	/* disable measurement */
- 	pm860x_set_bits(info->i2c, PM8607_MEAS_EN2, MEAS2_VRTC, 0);
- #endif	/* VRTC_CALIBRATION */
+ 	codec->in_freeing = 1;
+-	snd_hdac_device_unregister(&codec->core);
++	/*
++	 * snd_hda_codec_device_new() is used by legacy HDA and ASoC driver.
++	 * We can't unregister ASoC device since it will be unregistered in
++	 * snd_hdac_ext_bus_device_remove().
++	 */
++	if (codec->core.type == HDA_DEV_LEGACY)
++		snd_hdac_device_unregister(&codec->core);
+ 	codec_display_power(codec, false);
+ 	put_device(hda_codec_dev(codec));
+ 	return 0;
 -- 
 2.20.1
 
