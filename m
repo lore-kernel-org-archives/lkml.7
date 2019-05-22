@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98879C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:35:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D85F1C282DC
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:35:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E4C82081C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:35:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF00B2081C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:35:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558553710;
-	bh=Wj2O7b6t+o5bDf6SkMSLKrr5hVNCpdwJdU7FuwEH29U=;
+	s=default; t=1558553712;
+	bh=/z4pvG5BMzSHX+Zzf6J8UySYZ46trHLr3FMeC7wZZok=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E5nJ0aodSG6wQOJA6TXo8ClyUMwc/RYmhLwLwYDoNuuj2tCr4RNA3qknxNmQHI2BY
-	 oX4XSqFioc+0DGHrw52xA29rFUILF5qDaasfR+FpymbInz5cP3TzfLfVdmqX6H+GKH
-	 0vVDApRGEwrBtg+QL3iFWHbU2HMkDbLXpwqGAVgs=
+	b=nyXcy9ifQHvoyM0iKYClZQQ5l7JoaolVu+W42krmSeyhguyH8fETh+asA3xZ4a9b8
+	 EvP5XmXX2AGtCZKvC+GldV2PyD7O76MgcESjC0dN3iVL2PIyJHeQ8cuo7n340d3W+K
+	 fPFJEWwc5Fp034mXp9wyFuzwkbCoGSxbgGToJA3Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387464AbfEVTbO (ORCPT
+        id S1732270AbfEVTbL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:31:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54538 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:31:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387422AbfEVTbD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:31:03 -0400
+        id S2387399AbfEVTav (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:30:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4DF3C217D4;
-        Wed, 22 May 2019 19:31:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 21A4021473;
+        Wed, 22 May 2019 19:30:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553462;
-        bh=Wj2O7b6t+o5bDf6SkMSLKrr5hVNCpdwJdU7FuwEH29U=;
+        s=default; t=1558553450;
+        bh=/z4pvG5BMzSHX+Zzf6J8UySYZ46trHLr3FMeC7wZZok=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UO4HFbuHQapU4/ZZWlTMhg7U4gZcgCjYT7kMu4z6UiTckcj39nP4NulYQA3bXDfJP
-         j3lf7+QP6zJSAnDpVYw0Ol/tzXP1qNyvALPuMW2G4ZpxMD92e0ZNcJI0EW49fsovz0
-         f/uXVPP+7633rL+QZDSmkj9B0eiFt/0jQRzHwwi4=
+        b=e+3V0dKP4pZJE1SPuH3zX7fG3Hv3kXAaBUDKchEYSVZooOWKvSphxq5JVCWDktzKj
+         WtXVz/hlTivx6yEBZGpTAHRmmd1k5PrE68z9LH0zx32Kv7tf5KL0DTZeit0x/eoC7/
+         OOtfrecT76Bx0dsSsVLMarDN7P0C0i6w0Hu/t7SU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tang Junhui <tang.junhui.linux@gmail.com>,
-        Dennis Schridde <devurandom@gmx.net>, Coly Li <colyli@suse.de>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-bcache@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 029/114] bcache: fix failure in journal relplay
-Date:   Wed, 22 May 2019 15:28:52 -0400
-Message-Id: <20190522193017.26567-29-sashal@kernel.org>
+Cc:     Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 020/114] mac80211/cfg80211: update bss channel on channel switch
+Date:   Wed, 22 May 2019 15:28:43 -0400
+Message-Id: <20190522193017.26567-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522193017.26567-1-sashal@kernel.org>
 References: <20190522193017.26567-1-sashal@kernel.org>
@@ -60,88 +60,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tang Junhui <tang.junhui.linux@gmail.com>
+From: Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
 
-[ Upstream commit 631207314d88e9091be02fbdd1fdadb1ae2ed79a ]
+[ Upstream commit 5dc8cdce1d722c733f8c7af14c5fb595cfedbfa8 ]
 
-journal replay failed with messages:
-Sep 10 19:10:43 ceph kernel: bcache: error on
-bb379a64-e44e-4812-b91d-a5599871a3b1: bcache: journal entries
-2057493-2057567 missing! (replaying 2057493-2076601), disabling
-caching
+FullMAC STAs have no way to update bss channel after CSA channel switch
+completion. As a result, user-space tools may provide inconsistent
+channel info. For instance, consider the following two commands:
+$ sudo iw dev wlan0 link
+$ sudo iw dev wlan0 info
+The latter command gets channel info from the hardware, so most probably
+its output will be correct. However the former command gets channel info
+from scan cache, so its output will contain outdated channel info.
+In fact, current bss channel info will not be updated until the
+next [re-]connect.
 
-The reason is in journal_reclaim(), when discard is enabled, we send
-discard command and reclaim those journal buckets whose seq is old
-than the last_seq_now, but before we write a journal with last_seq_now,
-the machine is restarted, so the journal with the last_seq_now is not
-written to the journal bucket, and the last_seq_wrote in the newest
-journal is old than last_seq_now which we expect to be, so when we doing
-replay, journals from last_seq_wrote to last_seq_now are missing.
+Note that mac80211 STAs have a workaround for this, but it requires
+access to internal cfg80211 data, see ieee80211_chswitch_work:
 
-It's hard to write a journal immediately after journal_reclaim(),
-and it harmless if those missed journal are caused by discarding
-since those journals are already wrote to btree node. So, if miss
-seqs are started from the beginning journal, we treat it as normal,
-and only print a message to show the miss journal, and point out
-it maybe caused by discarding.
+	/* XXX: shouldn't really modify cfg80211-owned data! */
+	ifmgd->associated->channel = sdata->csa_chandef.chan;
 
-Patch v2 add a judgement condition to ignore the missed journal
-only when discard enabled as Coly suggested.
+This patch suggests to convert mac80211 workaround into cfg80211 behavior
+and to update current bss channel in cfg80211_ch_switch_notify.
 
-(Coly Li: rebase the patch with other changes in bch_journal_replay())
-
-Signed-off-by: Tang Junhui <tang.junhui.linux@gmail.com>
-Tested-by: Dennis Schridde <devurandom@gmx.net>
-Signed-off-by: Coly Li <colyli@suse.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/bcache/journal.c | 25 +++++++++++++++++++++----
- 1 file changed, 21 insertions(+), 4 deletions(-)
+ net/mac80211/mlme.c    | 3 ---
+ net/wireless/nl80211.c | 5 +++++
+ 2 files changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/md/bcache/journal.c b/drivers/md/bcache/journal.c
-index 8b3f76e1075ea..967a8dde72be9 100644
---- a/drivers/md/bcache/journal.c
-+++ b/drivers/md/bcache/journal.c
-@@ -309,6 +309,18 @@ void bch_journal_mark(struct cache_set *c, struct list_head *list)
+diff --git a/net/mac80211/mlme.c b/net/mac80211/mlme.c
+index 6e0aa296f1346..d787717140e54 100644
+--- a/net/mac80211/mlme.c
++++ b/net/mac80211/mlme.c
+@@ -1072,9 +1072,6 @@ static void ieee80211_chswitch_work(struct work_struct *work)
+ 		goto out;
  	}
+ 
+-	/* XXX: shouldn't really modify cfg80211-owned data! */
+-	ifmgd->associated->channel = sdata->csa_chandef.chan;
+-
+ 	ifmgd->csa_waiting_bcn = true;
+ 
+ 	ieee80211_sta_reset_beacon_monitor(sdata);
+diff --git a/net/wireless/nl80211.c b/net/wireless/nl80211.c
+index 09a353c6373a8..d6e6293157717 100644
+--- a/net/wireless/nl80211.c
++++ b/net/wireless/nl80211.c
+@@ -14014,6 +14014,11 @@ void cfg80211_ch_switch_notify(struct net_device *dev,
+ 
+ 	wdev->chandef = *chandef;
+ 	wdev->preset_chandef = *chandef;
++
++	if (wdev->iftype == NL80211_IFTYPE_STATION &&
++	    !WARN_ON(!wdev->current_bss))
++		wdev->current_bss->pub.channel = chandef->chan;
++
+ 	nl80211_ch_switch_notify(rdev, dev, chandef, GFP_KERNEL,
+ 				 NL80211_CMD_CH_SWITCH_NOTIFY, 0);
  }
- 
-+bool is_discard_enabled(struct cache_set *s)
-+{
-+	struct cache *ca;
-+	unsigned int i;
-+
-+	for_each_cache(ca, s, i)
-+		if (ca->discard)
-+			return true;
-+
-+	return false;
-+}
-+
- int bch_journal_replay(struct cache_set *s, struct list_head *list)
- {
- 	int ret = 0, keys = 0, entries = 0;
-@@ -323,10 +335,15 @@ int bch_journal_replay(struct cache_set *s, struct list_head *list)
- 		BUG_ON(i->pin && atomic_read(i->pin) != 1);
- 
- 		if (n != i->j.seq) {
--			pr_err("bcache: journal entries %llu-%llu missing! (replaying %llu-%llu)",
--			n, i->j.seq - 1, start, end);
--			ret = -EIO;
--			goto err;
-+			if (n == start && is_discard_enabled(s))
-+				pr_info("bcache: journal entries %llu-%llu may be discarded! (replaying %llu-%llu)",
-+					n, i->j.seq - 1, start, end);
-+			else {
-+				pr_err("bcache: journal entries %llu-%llu missing! (replaying %llu-%llu)",
-+					n, i->j.seq - 1, start, end);
-+				ret = -EIO;
-+				goto err;
-+			}
- 		}
- 
- 		for (k = i->j.start;
 -- 
 2.20.1
 
