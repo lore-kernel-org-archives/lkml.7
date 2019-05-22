@@ -4,59 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02B43C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:42:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EDFDC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:42:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C871B20675
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:42:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3C7320675
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:42:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558554134;
-	bh=9joVCPsCIdIOP0Qu1wOFot50TMUhJHlz4lHxkLomjMs=;
+	s=default; t=1558554137;
+	bh=q0iqfXqSsVsQgn1nzcmhyAhqDLUSaATH1tk86t9SNPc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gh3mhpK1dkYmMkfV6JX4Bldng9oCvUvhjgNzvfWpvvOwp531InzwqvJWgbMsEz7PU
-	 UD/yCM8D7axFZKVlZVN8QoPzE8aRrsctdthPQsqBGdwdMGGVpQYLzi2ISAZOin21Vh
-	 ZeG4TaDH0M9eG6FrBDtk2rf9o7o7z2EcpBO94ujg=
+	b=QYDCSVEiFZZ6mFDxabm7MKeZ6tyfuL7gmslsPyjsTGwqg06BAk7p/HV3tXUK//NvY
+	 vC8dUCPoMM1wAwh7gfETIiUvU4TwGHdkkAmzKJUQEi24meQKc9xf8IWhAyHvaPo/my
+	 Xvt2TeNCzYmn8iSDiaZ4XByfFpgp1iNxq3o8TLgU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732632AbfEVT2q (ORCPT
+        id S1733289AbfEVTmQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:28:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51208 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:42:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51538 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732568AbfEVT2b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:28:31 -0400
+        id S1732631AbfEVT2q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:28:46 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 88DDF2173C;
-        Wed, 22 May 2019 19:28:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AFE81217D7;
+        Wed, 22 May 2019 19:28:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553310;
-        bh=9joVCPsCIdIOP0Qu1wOFot50TMUhJHlz4lHxkLomjMs=;
+        s=default; t=1558553325;
+        bh=q0iqfXqSsVsQgn1nzcmhyAhqDLUSaATH1tk86t9SNPc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VwuNU1OWyRlOiVoZwKjkuXEBoHb8SjLRGg4ZDqS24BePnvtwaTqNCDUYfNsOgth/x
-         06Z/grXe3cnQ1pFs7iqdZbJvqCOGVHE+EfIioIWvkzgqII6m4qoCLsyGzGhVnY3bhN
-         JZ25bQcDgCtmQOXseOUU9zija76sUX+Yo1ZXrnBw=
+        b=fELkA9av+4G6LubbQJCn2Dp/rAp0PIHdlOAlx9OJz68m4WCuOrWKis1VgPldD+de3
+         +RLPNOy6PNaB9ZaESK1LVDYPrhJ/mQjvLdbgc6P9DmursxE7cboCKMZWGk/JCou6l9
+         YPtSWgkakfatOoQxxUXShbwouwl6vlTa/kOuKi+k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jiri Kosina <jkosina@suse.cz>, Nicolai Stange <nstange@suse.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 076/244] x86/mm: Remove in_nmi() warning from 64-bit implementation of vmalloc_fault()
-Date:   Wed, 22 May 2019 15:23:42 -0400
-Message-Id: <20190522192630.24917-76-sashal@kernel.org>
+Cc:     YueHaibing <yuehaibing@huawei.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 002/167] cxgb4: Fix error path in cxgb4_init_module
+Date:   Wed, 22 May 2019 15:25:57 -0400
+Message-Id: <20190522192842.25858-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190522192630.24917-1-sashal@kernel.org>
-References: <20190522192630.24917-1-sashal@kernel.org>
+In-Reply-To: <20190522192842.25858-1-sashal@kernel.org>
+References: <20190522192842.25858-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -66,61 +59,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Kosina <jkosina@suse.cz>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit a65c88e16f32aa9ef2e8caa68ea5c29bd5eb0ff0 ]
+[ Upstream commit a3147770bea76c8dbad73eca3a24c2118da5e719 ]
 
-In-NMI warnings have been added to vmalloc_fault() via:
+BUG: unable to handle kernel paging request at ffffffffa016a270
+PGD 3270067 P4D 3270067 PUD 3271063 PMD 230bbd067 PTE 0
+Oops: 0000 [#1
+CPU: 0 PID: 6134 Comm: modprobe Not tainted 5.1.0+ #33
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.9.3-0-ge2fc41e-prebuilt.qemu-project.org 04/01/2014
+RIP: 0010:atomic_notifier_chain_register+0x24/0x60
+Code: 1f 80 00 00 00 00 55 48 89 e5 41 54 49 89 f4 53 48 89 fb e8 ae b4 38 01 48 8b 53 38 48 8d 4b 38 48 85 d2 74 20 45 8b 44 24 10 <44> 3b 42 10 7e 08 eb 13 44 39 42 10 7c 0d 48 8d 4a 08 48 8b 52 08
+RSP: 0018:ffffc90000e2bc60 EFLAGS: 00010086
+RAX: 0000000000000292 RBX: ffffffff83467240 RCX: ffffffff83467278
+RDX: ffffffffa016a260 RSI: ffffffff83752140 RDI: ffffffff83467240
+RBP: ffffc90000e2bc70 R08: 0000000000000000 R09: 0000000000000001
+R10: 0000000000000000 R11: 00000000014fa61f R12: ffffffffa01c8260
+R13: ffff888231091e00 R14: 0000000000000000 R15: ffffc90000e2be78
+FS:  00007fbd8d7cd540(0000) GS:ffff888237a00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffffffffa016a270 CR3: 000000022c7e3000 CR4: 00000000000006f0
+Call Trace:
+ register_inet6addr_notifier+0x13/0x20
+ cxgb4_init_module+0x6c/0x1000 [cxgb4
+ ? 0xffffffffa01d7000
+ do_one_initcall+0x6c/0x3cc
+ ? do_init_module+0x22/0x1f1
+ ? rcu_read_lock_sched_held+0x97/0xb0
+ ? kmem_cache_alloc_trace+0x325/0x3b0
+ do_init_module+0x5b/0x1f1
+ load_module+0x1db1/0x2690
+ ? m_show+0x1d0/0x1d0
+ __do_sys_finit_module+0xc5/0xd0
+ __x64_sys_finit_module+0x15/0x20
+ do_syscall_64+0x6b/0x1d0
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-  ebc8827f75 ("x86: Barf when vmalloc and kmemcheck faults happen in NMI")
+If pci_register_driver fails, register inet6addr_notifier is
+pointless. This patch fix the error path in cxgb4_init_module.
 
-back in the time when our NMI entry code could not cope with nested NMIs.
-
-These days, it's perfectly fine to take a fault in NMI context and we
-don't have to care about the fact that IRET from the fault handler might
-cause NMI nesting.
-
-This warning has already been removed from 32-bit implementation of
-vmalloc_fault() in:
-
-  6863ea0cda8 ("x86/mm: Remove in_nmi() warning from vmalloc_fault()")
-
-but the 64-bit version was omitted.
-
-Remove the bogus warning also from 64-bit implementation of vmalloc_fault().
-
-Reported-by: Nicolai Stange <nstange@suse.de>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Frederic Weisbecker <fweisbec@gmail.com>
-Cc: Joerg Roedel <jroedel@suse.de>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Fixes: 6863ea0cda8 ("x86/mm: Remove in_nmi() warning from vmalloc_fault()")
-Link: http://lkml.kernel.org/r/nycvar.YFH.7.76.1904240902280.9803@cbobk.fhfr.pm
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Fixes: b5a02f503caa ("cxgb4 : Update ipv6 address handling api")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/mm/fault.c | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
-index 47bebfe6efa70..9d9765e4d1ef1 100644
---- a/arch/x86/mm/fault.c
-+++ b/arch/x86/mm/fault.c
-@@ -427,8 +427,6 @@ static noinline int vmalloc_fault(unsigned long address)
- 	if (!(address >= VMALLOC_START && address < VMALLOC_END))
- 		return -1;
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
+index 74a42f12064b6..0e13989608f19 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
+@@ -5399,15 +5399,24 @@ static int __init cxgb4_init_module(void)
  
--	WARN_ON_ONCE(in_nmi());
--
- 	/*
- 	 * Copy kernel mappings over when needed. This can also
- 	 * happen within a race in page table update. In the later
+ 	ret = pci_register_driver(&cxgb4_driver);
+ 	if (ret < 0)
+-		debugfs_remove(cxgb4_debugfs_root);
++		goto err_pci;
+ 
+ #if IS_ENABLED(CONFIG_IPV6)
+ 	if (!inet6addr_registered) {
+-		register_inet6addr_notifier(&cxgb4_inet6addr_notifier);
+-		inet6addr_registered = true;
++		ret = register_inet6addr_notifier(&cxgb4_inet6addr_notifier);
++		if (ret)
++			pci_unregister_driver(&cxgb4_driver);
++		else
++			inet6addr_registered = true;
+ 	}
+ #endif
+ 
++	if (ret == 0)
++		return ret;
++
++err_pci:
++	debugfs_remove(cxgb4_debugfs_root);
++
+ 	return ret;
+ }
+ 
 -- 
 2.20.1
 
