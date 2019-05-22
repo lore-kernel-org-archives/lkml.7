@@ -2,225 +2,138 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E143C282DC
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 13:49:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60E68C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 13:49:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68F8320863
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 13:49:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tc9v4nSB"
+	by mail.kernel.org (Postfix) with ESMTP id 412AD20863
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 13:49:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729463AbfEVNtB (ORCPT
+        id S1729119AbfEVNth (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 09:49:01 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:54431 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726770AbfEVNtA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 09:49:00 -0400
-Received: by mail-wm1-f67.google.com with SMTP id i3so2306939wml.4;
-        Wed, 22 May 2019 06:48:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=SnKhUBZrT/sPuCdV1Uv2QnIPymrUbdqHNXKAWe9qXx0=;
-        b=tc9v4nSBpMS7KH8OcDKfw9mE24cGP7vo4U5ys9Bsb6j1xdlQj5d5eyk9K4WsRAMU5G
-         JGAbivJF1QcHu10RfRUvkNTFA1LcMy5Lve2RTFrcNg6EYU2/OCJWeqLryddoQ8gzfKEr
-         OnDOD3EW9Im73HGQAkxhsSBmR+KNkVwkB1QtVchg6p+8CZZha8TIdkELcdcRQ1Ul/7Bm
-         6zI3vZigEptpEkpvZJ2KHLNN0as+VxWQtT/y0LU0A0f84ijXIkY3K5Cg6oIyQtYEYla+
-         x0r+EjSGD0ONdygV+aFyQaMNWrFC9wDjgDAlnCRTKe8KhPIWL55K5ep1NntIvz9h1Mhu
-         xrHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=SnKhUBZrT/sPuCdV1Uv2QnIPymrUbdqHNXKAWe9qXx0=;
-        b=GQZyKdi/Tq0DoSeZl2Hg/U4HUzmheD6wbKaQY/xVMd7KygzGSWugHkbGnZecTnlphQ
-         Y0EcCQhGByV2gdLKSHVZ0sdByfi3chzjskBDORbTVf77WHGQaoNvBobif9wBTls8wHng
-         7VlfxTDv2ylDx8v6LesemCGa+mYGNDHkew0AQcirvt+PBWXvgAPQRnpz+j53NzBzZ/4k
-         nfBFxGaJF2uEJuCpL+s01PcYov5BN6froXLv1lJS5zvj2FQznbvjyEDYMrOdr/vCklRg
-         kJTJmjmhOm+xiAAHMccxf63FA27TUjlg9vWEeMCi2lhtfmdQqftTiV0ZhzloWHV4Sj2W
-         ac7g==
-X-Gm-Message-State: APjAAAV68/iamrydpxGuZVnjyBylLB24Vo5osWg7AhkH14GSnvgRJcBf
-        0GHqQ5Ei1k4ZvIyRfio7FtA=
-X-Google-Smtp-Source: APXvYqyoUq0PiLCevdgg8MU0+OYTj4c8Uv/Is0aaVHA/cmny/YgEluTqa5TutJOH9d6+bzbC3brOgg==
-X-Received: by 2002:a05:600c:21d7:: with SMTP id x23mr8018674wmj.87.1558532936965;
-        Wed, 22 May 2019 06:48:56 -0700 (PDT)
-Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
-        by smtp.gmail.com with ESMTPSA id n1sm4623910wmc.19.2019.05.22.06.48.55
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 22 May 2019 06:48:56 -0700 (PDT)
-Date:   Wed, 22 May 2019 15:48:55 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, jonathanh@nvidia.com, kishon@ti.com,
-        catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com,
-        gustavo.pimentel@synopsys.com, mperttunen@nvidia.com,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, kthota@nvidia.com,
-        mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V7 12/15] arm64: tegra: Enable PCIe slots in P2972-0000
- board
-Message-ID: <20190522134855.GQ30938@ulmo>
-References: <20190517123846.3708-1-vidyas@nvidia.com>
- <20190517123846.3708-13-vidyas@nvidia.com>
- <20190521105455.GK29166@ulmo>
- <6a2c0a9a-1c37-3e32-535a-aaf0db2f101d@nvidia.com>
+        Wed, 22 May 2019 09:49:37 -0400
+Received: from foss.arm.com ([217.140.101.70]:51862 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726770AbfEVNth (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 09:49:37 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5198E80D;
+        Wed, 22 May 2019 06:49:36 -0700 (PDT)
+Received: from e103592.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 94CFA3F575;
+        Wed, 22 May 2019 06:49:30 -0700 (PDT)
+Date:   Wed, 22 May 2019 14:49:28 +0100
+From:   Dave Martin <Dave.Martin@arm.com>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>, kvm@vger.kernel.org,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        dri-devel@lists.freedesktop.org, linux-mm@kvack.org,
+        linux-kselftest@vger.kernel.org,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Leon Romanovsky <leon@kernel.org>, linux-rdma@vger.kernel.org,
+        amd-gfx@lists.freedesktop.org, Dmitry Vyukov <dvyukov@google.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        linux-media@vger.kernel.org, Kevin Brodsky <kevin.brodsky@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Kostya Serebryany <kcc@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        linux-kernel@vger.kernel.org,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Alexander Deucher <Alexander.Deucher@amd.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+Subject: Re: [PATCH v15 00/17] arm64: untag user pointers passed to the kernel
+Message-ID: <20190522134925.GV28398@e103592.cambridge.arm.com>
+References: <cover.1557160186.git.andreyknvl@google.com>
+ <20190517144931.GA56186@arrakis.emea.arm.com>
+ <20190521184856.GC2922@ziepe.ca>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="aNvCJ41Feu8IgPyB"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <6a2c0a9a-1c37-3e32-535a-aaf0db2f101d@nvidia.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190521184856.GC2922@ziepe.ca>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, May 21, 2019 at 03:48:56PM -0300, Jason Gunthorpe wrote:
+> On Fri, May 17, 2019 at 03:49:31PM +0100, Catalin Marinas wrote:
+> 
+> > The tagged pointers (whether hwasan or MTE) should ideally be a
+> > transparent feature for the application writer but I don't think we can
+> > solve it entirely and make it seamless for the multitude of ioctls().
+> > I'd say you only opt in to such feature if you know what you are doing
+> > and the user code takes care of specific cases like ioctl(), hence the
+> > prctl() proposal even for the hwasan.
+> 
+> I'm not sure such a dire view is warrented.. 
+> 
+> The ioctl situation is not so bad, other than a few special cases,
+> most drivers just take a 'void __user *' and pass it as an argument to
+> some function that accepts a 'void __user *'. sparse et al verify
+> this. 
+> 
+> As long as the core functions do the right thing the drivers will be
+> OK.
+> 
+> The only place things get dicy is if someone casts to unsigned long
+> (ie for vma work) but I think that reflects that our driver facing
+> APIs for VMAs are compatible with static analysis (ie I have no
+> earthly idea why get_user_pages() accepts an unsigned long), not that
+> this is too hard.
 
---aNvCJ41Feu8IgPyB
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+If multiple people will care about this, perhaps we should try to
+annotate types more explicitly in SYSCALL_DEFINEx() and ABI data
+structures.
 
-On Tue, May 21, 2019 at 11:47:45PM +0530, Vidya Sagar wrote:
-> On 5/21/2019 4:24 PM, Thierry Reding wrote:
-> > On Fri, May 17, 2019 at 06:08:43PM +0530, Vidya Sagar wrote:
-> > > Enable PCIe controller nodes to enable respective PCIe slots on
-> > > P2972-0000 board. Following is the ownership of slots by different
-> > > PCIe controllers.
-> > > Controller-0 : M.2 Key-M slot
-> > > Controller-1 : On-board Marvell eSATA controller
-> > > Controller-3 : M.2 Key-E slot
-> > >=20
-> > > Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> > > ---
-> > > Changes since [v6]:
-> > > * None
-> > >=20
-> > > Changes since [v5]:
-> > > * Arranged PCIe nodes in the order of their addresses
-> > >=20
-> > > Changes since [v4]:
-> > > * None
-> > >=20
-> > > Changes since [v3]:
-> > > * None
-> > >=20
-> > > Changes since [v2]:
-> > > * Changed P2U label names to reflect new format that includes 'hsio'/=
-'nvhs'
-> > >    strings to reflect UPHY brick they belong to
-> > >=20
-> > > Changes since [v1]:
-> > > * Dropped 'pcie-' from phy-names property strings
-> > >=20
-> > >   .../arm64/boot/dts/nvidia/tegra194-p2888.dtsi |  2 +-
-> > >   .../boot/dts/nvidia/tegra194-p2972-0000.dts   | 41 ++++++++++++++++=
-+++
-> > >   2 files changed, 42 insertions(+), 1 deletion(-)
-> > >=20
-> > > diff --git a/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi b/arch/ar=
-m64/boot/dts/nvidia/tegra194-p2888.dtsi
-> > > index 0fd5bd29fbf9..30a83d4c5b69 100644
-> > > --- a/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
-> > > +++ b/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
-> > > @@ -191,7 +191,7 @@
-> > >   						regulator-boot-on;
-> > >   					};
-> > > -					sd3 {
-> > > +					vdd_1v8ao: sd3 {
-> > >   						regulator-name =3D "VDD_1V8AO";
-> > >   						regulator-min-microvolt =3D <1800000>;
-> > >   						regulator-max-microvolt =3D <1800000>;
-> > > diff --git a/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts b/arc=
-h/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
-> > > index 73801b48d1d8..a22704e76a84 100644
-> > > --- a/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
-> > > +++ b/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
-> > > @@ -167,4 +167,45 @@
-> > >   			};
-> > >   		};
-> > >   	};
-> > > +
-> > > +	pcie@14100000 {
-> > > +		status =3D "okay";
-> > > +
-> > > +		vddio-pex-ctl-supply =3D <&vdd_1v8ao>;
-> > > +
-> > > +		phys =3D <&p2u_hsio_0>;
-> > > +		phy-names =3D "p2u-0";
-> > > +	};
-> > > +
-> > > +	pcie@14140000 {
-> > > +		status =3D "okay";
-> > > +
-> > > +		vddio-pex-ctl-supply =3D <&vdd_1v8ao>;
-> > > +
-> > > +		phys =3D <&p2u_hsio_7>;
-> > > +		phy-names =3D "p2u-0";
-> > > +	};
-> > > +
-> > > +	pcie@14180000 {
-> > > +		status =3D "okay";
-> > > +
-> > > +		vddio-pex-ctl-supply =3D <&vdd_1v8ao>;
-> > > +
-> > > +		phys =3D <&p2u_hsio_2>, <&p2u_hsio_3>, <&p2u_hsio_4>,
-> > > +		       <&p2u_hsio_5>;
-> > > +		phy-names =3D "p2u-0", "p2u-1", "p2u-2", "p2u-3";
-> > > +	};
-> > > +
-> > > +	pcie@141a0000 {
-> > > +		status =3D "disabled";
-> > > +
-> > > +		vddio-pex-ctl-supply =3D <&vdd_1v8ao>;
-> > > +
-> > > +		phys =3D <&p2u_nvhs_0>, <&p2u_nvhs_1>, <&p2u_nvhs_2>,
-> > > +		       <&p2u_nvhs_3>, <&p2u_nvhs_4>, <&p2u_nvhs_5>,
-> > > +		       <&p2u_nvhs_6>, <&p2u_nvhs_7>;
-> > > +
-> > > +		phy-names =3D "p2u-0", "p2u-1", "p2u-2", "p2u-3", "p2u-4",
-> > > +			    "p2u-5", "p2u-6", "p2u-7";
-> > > +	};
-> >=20
-> > This last controller is disabled by default. Why do we need to include
-> > all of this if it's not going to be used anyway?
-> I want to keep this entry ready by populating all the required fields. Wh=
-en pinctrl
-> driver is ready, I'll send out patches to enable this node as well.
+For example, we could have a couple of mutually exclusive modifiers
 
-Okay, makes sense.
+T __object *
+T __vaddr * (or U __vaddr)
 
-Thierry
+In the first case the pointer points to an object (in the C sense)
+that the call may dereference but not use for any other purpose.
 
---aNvCJ41Feu8IgPyB
-Content-Type: application/pgp-signature; name="signature.asc"
+In the latter case the pointer (or other type) is a virtual address
+that the call does not dereference but my do other things with.
 
------BEGIN PGP SIGNATURE-----
+Also
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlzlU0QACgkQ3SOs138+
-s6H22w/+NtFf3N+erJ1kmeI6iADQ1aPCyQLeYyKJnlpmga3nBTGjnWKcMOMvvKWJ
-dd5BJVw/2y4WG/4MPOHVwNWqgikVwh9bWC1hvozWqOCVTgLfKmuJFDCuhYeEbRvo
-IYvQ+1NC+9VOrsL/L4g9LprbvZaIcCjIRKlVJBuTddpjq9fKeNQq8eAuuronYKj4
-ahrHQ4Xahni/Qe8R2crqo8qltCHwd4qWVPnTwJ0N90seqIh2sB6ZyPTUhb8WKeiL
-NoGYw5w3VAVxgV8g6nXnWPcSbhV3lM7ju0M8g1d482EpNARag+nuFMyiKkBhO3uB
-SQJQuXSJaclaThtJmdRKoL/HGd3efiJQBysjmdOyTHLPZ4Kth3Rtk7JHXJgiRmsD
-zuh+P0KOe2aYUY4ZIx6jOG2SEHGghntBpGUpyZCpPoaVhmckstaRLxObmQAd/Q9a
-tBwzjs2D1uSRLvGPYnA7BmGxzuEVq0gkg+a7EIESiEiNnuht4eIyfpaNLXaTAafU
-RwDop6KWQk7Itcpt73agmOsXf5UyLJQpf6fT4yXX1kac4YdEr3gNLo2R0rENXgp+
-THNyLcvLPPZGeS2oScl0wvhTObeAPoM42ELGLrIoZl8S8LrGYueIVjmThbsTIX1P
-QuPXkfgLQNU6KQMzDMC9Dwa0+8lAH+ofvoEqihJkSre0uBwIMqY=
-=SO5k
------END PGP SIGNATURE-----
+U __really(T)
 
---aNvCJ41Feu8IgPyB--
+to tell static analysers the real type of pointers smuggled through
+UAPI disguised as other types (*cough* KVM, etc.)
+
+We could gradually make sparse more strict about the presence of
+annotations and allowed conversions, add get/put_user() variants
+that demand explicit annotation, etc.
+
+find_vma() wouldn't work with a __object pointer, for example.  A
+get_user_pages_for_dereference() might be needed for __object pointers
+(embodying a promise from the caller that only the object will be
+dereferenced within the mapped pages).
+
+Thoughts?
+
+This kind of thing would need widespread buy-in in order to be viable.
+
+Cheers
+---Dave
