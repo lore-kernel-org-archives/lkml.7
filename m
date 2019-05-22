@@ -2,113 +2,139 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 782D9C072A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 07:26:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACED4C072A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 07:29:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D2342173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 07:26:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EU9ngI2v"
+	by mail.kernel.org (Postfix) with ESMTP id 890FC2173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 07:29:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728526AbfEVH0s (ORCPT
+        id S1728565AbfEVH3Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 03:26:48 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:32803 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726514AbfEVH0r (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 03:26:47 -0400
-Received: by mail-pl1-f193.google.com with SMTP id g21so645137plq.0
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 00:26:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=LRKYo/Tg41WJvHbOGajmPW4pzDGr3pcsWkrKkayOv50=;
-        b=EU9ngI2vI1ZIMuoSPgRt7hDcn2B03I5/FgFeduVwXL2fApn3JCtuo8t0S7QrLOEXYU
-         LgqUo8iUNXpEbGZ6fNMdMBDk4hR+Fx9pbnMOKawF2Pju5XMQAKh9+o+QBLQwlmUbWN3P
-         rtsCIYie6aJsxeP77p+amfxf/cchNjQCMQvO/B556Sjw0daLpZ5wSIXbVBXJUwYYyRKV
-         5v+aSxbyS+yE98GvlYsWutQ3MP+B0smQiVlgQC7HAyd/Yf5VojoewHeEh0/NsyEcMaTF
-         7ZSS91vBwLkMcfNI6uXIYoZc5v8qAmqJZYnFKBlmhcma6MqySBbYc0lchqv+El4IUX1w
-         OzwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=LRKYo/Tg41WJvHbOGajmPW4pzDGr3pcsWkrKkayOv50=;
-        b=Jr+kc6qDLBxod5WWZsLuNrLPYlc5RBqkXv2O7EJwp/7nIGET53pQ7awsjSw7bBMEeR
-         cDwQPslntNL+v9otJOfQpkf7wDeFr+ngYlJyUlZtzoCfd16R2Yk+00Cs5Wr4vSE45dcB
-         8cBHHjQMQjgTK0+A03A6D8J0OGyyRHnfTZhhRj2ZPRogZdiHO/i1OYsYUt3I16zbaWg8
-         QLxgwg1mQi0GMfdT6dniGl5+rl5k06N+dqalEb8UP/Bw/8UPX4uGUFFElDLGc+fLOH0c
-         nXzRtiKKnY9gRGMZU8ULZlpFeX/6SBurjIZfOyB5Yhfa8qJQqCSAmqF5N3PVygS1MFNj
-         5UkQ==
-X-Gm-Message-State: APjAAAVmKqOaYriF9wvtPnbSNglicFWPLUH2zYWvL/qoCv5norLAuFvG
-        WIHOCn2hs/oqYOF9A56niAU=
-X-Google-Smtp-Source: APXvYqw2MhR3PoTL+g0hF0jLP1EoAyuW9jU96hanbaIdcw8WJkax+/N4789K9JnNcayS3JzydIrpYw==
-X-Received: by 2002:a17:902:4283:: with SMTP id h3mr66086052pld.214.1558510007281;
-        Wed, 22 May 2019 00:26:47 -0700 (PDT)
-Received: from zhanggen-UX430UQ ([66.42.35.75])
-        by smtp.gmail.com with ESMTPSA id c17sm20734793pfo.114.2019.05.22.00.26.43
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 22 May 2019 00:26:46 -0700 (PDT)
-Date:   Wed, 22 May 2019 15:26:36 +0800
-From:   Gen Zhang <blackgod016574@gmail.com>
-To:     Li Zhijian <zhijianx.li@intel.com>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH v2] initramfs: Fix a missing-check bug in init/initramfs.c
-Message-ID: <20190522072636.GA4221@zhanggen-UX430UQ>
-References: <20190522010455.GA4093@zhanggen-UX430UQ>
- <2c246472-bb1c-1063-1370-33da04af27d0@cn.fujitsu.com>
- <20190522062944.GA2426@zhanggen-UX430UQ>
- <fd0277b7-a9a1-d2f6-c8bc-d8b8619c647e@intel.com>
+        Wed, 22 May 2019 03:29:24 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:49522 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726514AbfEVH3X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 03:29:23 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 5487C3082E23;
+        Wed, 22 May 2019 07:29:23 +0000 (UTC)
+Received: from [10.36.117.97] (ovpn-117-97.ams2.redhat.com [10.36.117.97])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D84ED4B7;
+        Wed, 22 May 2019 07:29:21 +0000 (UTC)
+Subject: Re: [PATCH] docs: reorder memory-hotplug documentation
+To:     Oscar Salvador <osalvador@suse.de>
+Cc:     Mike Rapoport <rppt@linux.ibm.com>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <1557822213-19058-1-git-send-email-rppt@linux.ibm.com>
+ <43092504-a95f-374d-f3db-b961dd8ac428@redhat.com>
+ <20190521161101.GA2372@linux>
+From:   David Hildenbrand <david@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <2cd2bbde-e929-d730-30f3-a9419072a788@redhat.com>
+Date:   Wed, 22 May 2019 09:29:21 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fd0277b7-a9a1-d2f6-c8bc-d8b8619c647e@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190521161101.GA2372@linux>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Wed, 22 May 2019 07:29:23 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In dir_add() and do_name(), de->name and vcollected are allocated by
-kstrdup(). And de->name and vcollected are dereferenced in the following
-codes. However, memory allocation functions such as kstrdup() may fail. 
-Dereferencing this null pointer may cause the kernel go wrong. Thus we
-should check these two kstrdup() operations.
-Further, if kstrdup() returns NULL, we should free de in dir_add().
+On 21.05.19 18:11, Oscar Salvador wrote:
+> On Tue, May 21, 2019 at 12:41:50PM +0200, David Hildenbrand wrote:
+>>> +Future Work
+>>> +===========
+>>> +
+>>> +  - allowing memory hot-add to ZONE_MOVABLE. maybe we need some switch like
+>>> +    sysctl or new control file.
+>>
+>> ... that already works if I am not completely missing the point here
+> 
+> It does.
+> 
+>>> +  - support HugeTLB page migration and offlining.
+>>
+>> ... I remember that Oscar was doing something in that area, Oscar?
+> 
+> Yes, in general offlinining on hugetlb pages was already working, but we did not
+> allow to offline 1GB-hugetlb pages on x86_64.
+> I removed that limitation with
+> ("commit: 10eeadf3045c mm,memory_hotplug: unlock 1GB-hugetlb on x86_64") , so now
+> offlining on hugetlb pages should be fully operative.
+> 
+>> I'd vote for removing the future work part, this is pretty outdated.
+> 
+> Instead of removing it, I would rather make it consistent with the present.
+> E.g:
+> 
+> - Move page handling from memory-hotremove to offline stage
+> - Enable a way to allocate vmemmap pages from hot-added memory
+> etc.
+> 
+> 
 
-Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
----
-diff --git a/init/initramfs.c b/init/initramfs.c
-index 178130f..1421488 100644
---- a/init/initramfs.c
-+++ b/init/initramfs.c
-@@ -125,6 +125,10 @@ static void __init dir_add(const char *name, time64_t mtime)
- 		panic("can't allocate dir_entry buffer");
- 	INIT_LIST_HEAD(&de->list);
- 	de->name = kstrdup(name, GFP_KERNEL);
-+	if (!de->name) {
-+		kfree(de);
-+		panic("can't allocate dir_entry name buffer");
-+	}
- 	de->mtime = mtime;
- 	list_add(&de->list, &dir_list);
- }
-@@ -340,6 +344,10 @@ static int __init do_name(void)
- 				if (body_len)
- 					ksys_ftruncate(wfd, body_len);
- 				vcollected = kstrdup(collected, GFP_KERNEL);
-+				if (!vcollected) {
-+					panic("can't allocate vcollected buffer");
-+					return 0;
-+				}
- 				state = CopyFile;
- 			}
- 		}
+Fair enough, but at least the current content is absolutely useless and
+confusing/misleading.
+
+-- 
+
+Thanks,
+
+David / dhildenb
