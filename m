@@ -2,94 +2,93 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEA12C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:39:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF7EEC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:39:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 968D42081C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:39:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="fR1Gex2n"
+	by mail.kernel.org (Postfix) with ESMTP id A6FB22081C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:39:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558553971;
+	bh=dy+5KZ5Z6sM0uLoTtO033MuHDREOBbOfD0kSQTitNdI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=zolNMwOZWG4pMM2K0sVMmTfGxkwrdN6xu4TsIUSmZhhtL47+TJ38lsblUW/bxXDR5
+	 IvrHGNyn/WDO3bQuv1sRTLYVCTl9nQkzUtt0bNHrENlG/WdPJ8PsCqygf6GL7I+BDd
+	 EYIj6GKz/Lnx4Q/YkTpL7GM8wsfv1S41CsFGy7k0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732990AbfEVTjX (ORCPT
+        id S1733210AbfEVTja (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:39:23 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:42886 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730499AbfEVTjU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:39:20 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4MJdGYU019877;
-        Wed, 22 May 2019 14:39:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1558553956;
-        bh=tVnRlstl7Mo/U/69hUYQHMBs9wUpC3OGi4TdChwiOds=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=fR1Gex2n0/fUaqP5qx4+vDJ7f+Zm9QEzvkzu+pFhsQz8SxpTcr0gIA3ZCBhoojgaK
-         xjz8csMK9Sb0dM7KApU/VGKW850ylqc4qxbbkqV+8c84+Uktz6a8tGw03IEvENFkoD
-         I8ZJmGE1kaHYib/tnrtXwqgVXdFOE/GW++92snzw=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4MJdGoA022863
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 22 May 2019 14:39:16 -0500
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 22
- May 2019 14:39:16 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 22 May 2019 14:39:16 -0500
-Received: from [10.250.90.63] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4MJdFbJ046989;
-        Wed, 22 May 2019 14:39:15 -0500
-Subject: Re: [PATCH v4 0/6] LM36274 Introduction
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>,
-        <broonie@kernel.org>, <lgirdwood@gmail.com>
-CC:     <lee.jones@linaro.org>, <linux-leds@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20190522192733.13422-1-dmurphy@ti.com>
- <6501a8b5-8068-4c9d-6b51-ef00fa72c6d5@gmail.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <2a8a9fa5-9338-bb17-e273-b1e0278a566d@ti.com>
-Date:   Wed, 22 May 2019 14:39:05 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 22 May 2019 15:39:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52778 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732976AbfEVT3k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:29:40 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 342D1204FD;
+        Wed, 22 May 2019 19:29:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558553379;
+        bh=dy+5KZ5Z6sM0uLoTtO033MuHDREOBbOfD0kSQTitNdI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=yZwm7w6d9pt59wdRo0VX4mGLeOY5QcwMs1j3FEp3SJ8+nPKNKmyyG8q51F3p6Ieiu
+         J5vw1VPfgRShg8Zu2T2pmf11JBcc/3PqfV4vA2icE1cQoeYuxvG//FCtNmJGbeSbwH
+         YBFYmTNmMhySwgukBfk0u/LOeqCbJbLvUgAKp0EQ=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Kangjie Lu <kjlu@umn.edu>, Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 039/167] net: cw1200: fix a NULL pointer dereference
+Date:   Wed, 22 May 2019 15:26:34 -0400
+Message-Id: <20190522192842.25858-39-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190522192842.25858-1-sashal@kernel.org>
+References: <20190522192842.25858-1-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <6501a8b5-8068-4c9d-6b51-ef00fa72c6d5@gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jacek
+From: Kangjie Lu <kjlu@umn.edu>
 
-On 5/22/19 2:37 PM, Jacek Anaszewski wrote:
-> Hi Dan,
-> 
-> On 5/22/19 9:27 PM, Dan Murphy wrote:
->> Hello
->>
->> This is patch set v4 for the LM36274.  There were no changes made
->> to this patch set except to rebase this on top of the latest TI LMU common code
->> patchset.
-> 
-> Why the rebase was needed? leds-lm36274.c was already including
-> leds-ti-lmu-common.h.
-> 
+[ Upstream commit 0ed2a005347400500a39ea7c7318f1fea57fb3ca ]
 
-I just resent the patchset.
+In case create_singlethread_workqueue fails, the fix free the
+hardware and returns NULL to avoid NULL pointer dereference.
 
-This was the cover letter in the series I sent originally.
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/wireless/st/cw1200/main.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-Dan
+diff --git a/drivers/net/wireless/st/cw1200/main.c b/drivers/net/wireless/st/cw1200/main.c
+index dc478cedbde0d..84624c812a15f 100644
+--- a/drivers/net/wireless/st/cw1200/main.c
++++ b/drivers/net/wireless/st/cw1200/main.c
+@@ -345,6 +345,11 @@ static struct ieee80211_hw *cw1200_init_common(const u8 *macaddr,
+ 	mutex_init(&priv->wsm_cmd_mux);
+ 	mutex_init(&priv->conf_mutex);
+ 	priv->workqueue = create_singlethread_workqueue("cw1200_wq");
++	if (!priv->workqueue) {
++		ieee80211_free_hw(hw);
++		return NULL;
++	}
++
+ 	sema_init(&priv->scan.lock, 1);
+ 	INIT_WORK(&priv->scan.work, cw1200_scan_work);
+ 	INIT_DELAYED_WORK(&priv->scan.probe_work, cw1200_probe_work);
+-- 
+2.20.1
 
-<snip>
