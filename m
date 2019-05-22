@@ -2,587 +2,271 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6562CC282DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 15:53:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2CA8C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 15:55:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AD60216F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 15:53:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6548720879
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 15:55:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="O+XO3Uig"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OxmUNETV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729977AbfEVPxh (ORCPT
+        id S1729955AbfEVPzQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 11:53:37 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:33125 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729642AbfEVPxg (ORCPT
+        Wed, 22 May 2019 11:55:16 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:45607 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727975AbfEVPzQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 11:53:36 -0400
-Received: by mail-wr1-f67.google.com with SMTP id d9so2911234wrx.0
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 08:53:34 -0700 (PDT)
+        Wed, 22 May 2019 11:55:16 -0400
+Received: by mail-io1-f68.google.com with SMTP id b3so2234454iob.12;
+        Wed, 22 May 2019 08:55:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=S8UeXBVh2enxi8b2UKrEtBDsgoiSzVSjxdpker/xUYY=;
-        b=O+XO3UigSWsqbs5j6sZsXPe731G/OhyVatPo1YQD4bYT9tFYPlESgQl4q3Yyk9sIli
-         vE8+RWWHveXi8xi9xYgFGmw6bkbIPsH6IxMqY0gPV7G9VHnqTj/OCHYFHk5J7H6YA0xJ
-         3IdslwoYIGDHDDDF6+zY0IAQV3JzNTutImE2IEgMBbpGwXNMfViETYV0tRfUbacaGj9U
-         OiP8ctD0B1QMEk68Xeh0lvYJw1FSkJrJ2cyzH1gipDUp+/V/5q2ySrzHTOdguwgPCXjX
-         oC0aPgxfoGHqJO/4nqWVLvegG6cQlTZ/bWYdqOsmhhf8XBLe+LRwA3J1yIAPT2B2fe5F
-         tnVg==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kb3WM7gPCIFW1UnQ0vFC/8eKfBUUYf+CYSf6YWVRBUk=;
+        b=OxmUNETVTX2kM2b2am7Wt0QjqrpQ0WmM8pWApCtT1YJU0bKg/XUlMXMTV/JofMuoca
+         BYrVh/6/P9sf1sQM+fQ6aFifVXzK8kqMbKmx1Gz90nojXGrKzQJ0/CAxQI/TJZcfjSEA
+         Ug71MQ7dp0MUa6QZoapD4LK0lFEPTMRIejCOFm+H6wwkc9+SzBWNWNjzIctNudoZJRpR
+         KefPOz4SMD874EddtAQh6k3LqmHP3h7NYkqwDcOclqdP+PhRj2XLbICn8JhyYvLjYZ92
+         /kszDY9J8kE3jNsj8chBbQUoAEmfhZDvfU9rC2l/Zae6j9A0TzD5MHWJPXAiMuTB3LDG
+         cDig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=S8UeXBVh2enxi8b2UKrEtBDsgoiSzVSjxdpker/xUYY=;
-        b=Nph9gtWfPDDi1qoIaikDeKqE/LpktCakxx6y3pT6UtviXydzT5M3Aj7RdQ2dkKmU8B
-         xdlIkRIv2h1mkU8habep6PIkE5F4R5+a4BcuIg/o2NkMN+O4UhVDsit03OZfk5uFfRhP
-         Iexx0Fup+xEkjx0pm8yine/GSz5CriUm2JZryIJCwoUNpPphwsosiG9bh7IpxRUp63UJ
-         gc2eMkUa8xPn/9NXewsdckSceQ1akSRKXJiTzdi4CzdN43y3JYGa+qcCFPRFAsM9IYRb
-         VqjatFS1brEHxiYm9Gk+ThcnUZwXhZynKbRZSrsNhHFUlK0mpiMmb+xIRRaStDzENH9L
-         zbvg==
-X-Gm-Message-State: APjAAAUxACWXhe7eWrvbeMqaFEe1cOW95T8mTmAWb4RhmSpJO7Zvsiqz
-        4JMm9OKoZA4gfqfAKtZyWYwO/g==
-X-Google-Smtp-Source: APXvYqwK7WfL4+CYT1pk5nuCfg3hR6cOpQFBnTvkGuiCvFKRl0oxIMIm9MRZBxnP507MX79iKHD6Pg==
-X-Received: by 2002:a5d:4d92:: with SMTP id b18mr54858534wru.212.1558540413515;
-        Wed, 22 May 2019 08:53:33 -0700 (PDT)
-Received: from localhost.localdomain ([185.197.132.10])
-        by smtp.gmail.com with ESMTPSA id t12sm15677263wro.2.2019.05.22.08.53.31
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 22 May 2019 08:53:32 -0700 (PDT)
-From:   Christian Brauner <christian@brauner.io>
-To:     viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
-        torvalds@linux-foundation.org, fweimer@redhat.com
-Cc:     jannh@google.com, oleg@redhat.com, tglx@linutronix.de,
-        arnd@arndb.de, shuah@kernel.org, dhowells@redhat.com,
-        tkjos@android.com, ldv@altlinux.org, miklos@szeredi.hu,
-        linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, linux-arch@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, x86@kernel.org,
-        Christian Brauner <christian@brauner.io>
-Subject: [PATCH v1 1/2] open: add close_range()
-Date:   Wed, 22 May 2019 17:52:58 +0200
-Message-Id: <20190522155259.11174-1-christian@brauner.io>
-X-Mailer: git-send-email 2.21.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kb3WM7gPCIFW1UnQ0vFC/8eKfBUUYf+CYSf6YWVRBUk=;
+        b=WMeVf/xaHnMMgqts3LTO6tkzckRzodkVYs3VlsDNfzhlLKJ1HZ3T9goHlGRCjws8ye
+         LECz4e5RknD8MLaLZtUP+zKRInEDbHJ0tcrJlN61tunFs7hItXfhYePtzBKGB+LfvhuK
+         uXoNxhOpgKNL+A6xqLwRgHwZmSArdoOJlLi3qjN05DkaidHSH+PddEUQ35DtwgzGJnU/
+         o1fsXIc1RtcBTfsPO4acm8Lm39mXNR13O2LAI1FGE2RhrjcdUtLvfeq+gSzhicIQuGH4
+         ZopPdJQ4EdOQQJ0YPJaB5xMpy9+p41+za9Ud/CEKe2g75o71XV+RPCLg+m63awCwmGIz
+         HHHg==
+X-Gm-Message-State: APjAAAVhyKShl7tvlm/oVpPgiSDWBSmSTd59V0MrsG3t1GEJ40i7x/Nu
+        awckedibnDvejZi3aQRI2KZHx9QdLpTdQrv0JxU=
+X-Google-Smtp-Source: APXvYqz2u66DeVSCxgF0xIHaau9v4jAaesv4EGAF3nfS+zCIyKX2S86Vb9+yfpsBKCqrK3GzdTXTKxGwAodLTwQHfmQ=
+X-Received: by 2002:a5e:840c:: with SMTP id h12mr8740557ioj.81.1558540515228;
+ Wed, 22 May 2019 08:55:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190522032144.10995-1-deepa.kernel@gmail.com> <20190522150505.GA4915@redhat.com>
+In-Reply-To: <20190522150505.GA4915@redhat.com>
+From:   Deepa Dinamani <deepa.kernel@gmail.com>
+Date:   Wed, 22 May 2019 08:55:02 -0700
+Message-ID: <CABeXuvrPM5xvzqUydbREapvwgy6deYreHp0aaMoSHyLB6+HGRg@mail.gmail.com>
+Subject: Re: [PATCH v2] signal: Adjust error codes according to restore_user_sigmask()
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Arnd Bergmann <arnd@arndb.de>, dbueso@suse.de, axboe@kernel.dk,
+        Davidlohr Bueso <dave@stgolabs.net>, Eric Wong <e@80x24.org>,
+        Jason Baron <jbaron@akamai.com>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        linux-aio <linux-aio@kvack.org>,
+        Omar Kilani <omar.kilani@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds the close_range() syscall. It allows to efficiently close a range
-of file descriptors up to all file descriptors of a calling task.
+-Deepa
 
-The syscall came up in a recent discussion around the new mount API and
-making new file descriptor types cloexec by default. During this
-discussion, Al suggested the close_range() syscall (cf. [1]). Note, a
-syscall in this manner has been requested by various people over time.
+> On May 22, 2019, at 8:05 AM, Oleg Nesterov <oleg@redhat.com> wrote:
+>
+>> On 05/21, Deepa Dinamani wrote:
+>>
+>> Note that this patch returns interrupted errors (EINTR, ERESTARTNOHAND,
+>> etc) only when there is no other error. If there is a signal and an error
+>> like EINVAL, the syscalls return -EINVAL rather than the interrupted
+>> error codes.
+>
+> Ugh. I need to re-check, but at first glance I really dislike this change.
+>
+> I think we can fix the problem _and_ simplify the code. Something like below.
+> The patch is obviously incomplete, it changes only only one caller of
+> set_user_sigmask(), epoll_pwait() to explain what I mean.
+> restore_user_sigmask() should simply die. Although perhaps another helper
+> makes sense to add WARN_ON(test_tsk_restore_sigmask() && !signal_pending).
 
-First, it helps to close all file descriptors of an exec()ing task. This
-can be done safely via (quoting Al's example from [1] verbatim):
+restore_user_sigmask() was added because of all the variants of these
+syscalls we added because of y2038 as noted in commit message:
 
-        /* that exec is sensitive */
-        unshare(CLONE_FILES);
-        /* we don't want anything past stderr here */
-        close_range(3, ~0U);
-        execve(....);
+  signal: Add restore_user_sigmask()
 
-The code snippet above is one way of working around the problem that file
-descriptors are not cloexec by default. This is aggravated by the fact that
-we can't just switch them over without massively regressing userspace. For
-a whole class of programs having an in-kernel method of closing all file
-descriptors is very helpful (e.g. demons, service managers, programming
-language standard libraries, container managers etc.).
-(Please note, unshare(CLONE_FILES) should only be needed if the calling
- task is multi-threaded and shares the file descriptor table with another
- thread in which case two threads could race with one thread allocating
- file descriptors and the other one closing them via close_range(). For the
- general case close_range() before the execve() is sufficient.)
+    Refactor the logic to restore the sigmask before the syscall
+    returns into an api.
+    This is useful for versions of syscalls that pass in the
+    sigmask and expect the current->sigmask to be changed during
+    the execution and restored after the execution of the syscall.
 
-Second, it allows userspace to avoid implementing closing all file
-descriptors by parsing through /proc/<pid>/fd/* and calling close() on each
-file descriptor. From looking at various large(ish) userspace code bases
-this or similar patterns are very common in:
-- service managers (cf. [4])
-- libcs (cf. [6])
-- container runtimes (cf. [5])
-- programming language runtimes/standard libraries
-  - Python (cf. [2])
-  - Rust (cf. [7], [8])
-As Dmitry pointed out there's even a long-standing glibc bug about missing
-kernel support for this task (cf. [3]).
-In addition, the syscall will also work for tasks that do not have procfs
-mounted and on kernels that do not have procfs support compiled in. In such
-situations the only way to make sure that all file descriptors are closed
-is to call close() on each file descriptor up to UINT_MAX or RLIMIT_NOFILE,
-OPEN_MAX trickery (cf. comment [8] on Rust).
+    With the advent of new y2038 syscalls in the subsequent patches,
+    we add two more new versions of the syscalls (for pselect, ppoll
+    and io_pgetevents) in addition to the existing native and compat
+    versions. Adding such an api reduces the logic that would need to
+    be replicated otherwise.
 
-The performance is striking. For good measure, comparing the following
-simple close_all_fds() userspace implementation that is essentially just
-glibc's version in [6]:
 
-static int close_all_fds(void)
-{
-        int dir_fd;
-        DIR *dir;
-        struct dirent *direntp;
+>
+> diff --git a/fs/eventpoll.c b/fs/eventpoll.c
+> index 4a0e98d..85f56e4 100644
+> --- a/fs/eventpoll.c
+> +++ b/fs/eventpoll.c
+> @@ -2318,19 +2318,19 @@ SYSCALL_DEFINE6(epoll_pwait, int, epfd, struct epoll_event __user *, events,
+>        size_t, sigsetsize)
+> {
+>    int error;
+> -    sigset_t ksigmask, sigsaved;
+>
+>    /*
+>     * If the caller wants a certain signal mask to be set during the wait,
+>     * we apply it here.
+>     */
+> -    error = set_user_sigmask(sigmask, &ksigmask, &sigsaved, sigsetsize);
+> +    error = set_user_sigmask(sigmask, sigsetsize);
+>    if (error)
+>        return error;
+>
+>    error = do_epoll_wait(epfd, events, maxevents, timeout);
+>
+> -    restore_user_sigmask(sigmask, &sigsaved);
+> +    if (error != -EINTR)
 
-        dir = opendir("/proc/self/fd");
-        if (!dir)
-                return -1;
-        dir_fd = dirfd(dir);
-        while ((direntp = readdir(dir))) {
-                int fd;
-                if (strcmp(direntp->d_name, ".") == 0)
-                        continue;
-                if (strcmp(direntp->d_name, "..") == 0)
-                        continue;
-                fd = atoi(direntp->d_name);
-                if (fd == dir_fd || fd == 0 || fd == 1 || fd == 2)
-                        continue;
-                close(fd);
-        }
-        closedir(dir);
-        return 0;
-}
+As you address all the other syscalls this condition becomes more and
+more complicated.
 
-to close_range() yields:
-1. closing 4 open files:
-   - close_all_fds(): ~280 us
-   - close_range():    ~24 us
+> +        restore_saved_sigmask();
+>
+>    return error;
+> }
+> diff --git a/include/linux/sched/signal.h b/include/linux/sched/signal.h
+> index e412c09..1e82ae0 100644
+> --- a/include/linux/sched/signal.h
+> +++ b/include/linux/sched/signal.h
+> @@ -416,7 +416,6 @@ void task_join_group_stop(struct task_struct *task);
+> static inline void set_restore_sigmask(void)
+> {
+>    set_thread_flag(TIF_RESTORE_SIGMASK);
+> -    WARN_ON(!test_thread_flag(TIF_SIGPENDING));
 
-2. closing 1000 open files:
-   - close_all_fds(): ~5000 us
-   - close_range():   ~800 us
+So you always want do_signal() to be called?
+You will have to check each architecture's implementation of
+do_signal() to check if that has any side effects.
 
-close_range() is designed to allow for some flexibility. Specifically, it
-does not simply always close all open file descriptors of a task. Instead,
-callers can specify an upper bound.
-This is e.g. useful for scenarios where specific file descriptors are
-created with well-known numbers that are supposed to be excluded from
-getting closed.
-For extra paranoia close_range() comes with a flags argument. This can e.g.
-be used to implement extension. Once can imagine userspace wanting to stop
-at the first error instead of ignoring errors under certain circumstances.
-There might be other valid ideas in the future. In any case, a flag
-argument doesn't hurt and keeps us on the safe side.
+Although this is not what the patch is solving. What we want is to
+adjust return codes on all these syscalls to user and not drop
+signals. Please check v2/v3 of the patch. I've updated the commit text
+to provide more context into what is actually being fixed here.
 
-From an implementation side this is kept rather dumb. It saw some input
-from David and Jann but all nonsense is obviously my own!
-- Errors to close file descriptors are currently ignored. (Could be changed
-  by setting a flag in the future if needed.)
-- __close_range() is a rather simplistic wrapper around __close_fd().
-  My reasoning behind this is based on the nature of how __close_fd() needs
-  to release an fd. But maybe I misunderstood specifics:
-  We take the files_lock and rcu-dereference the fdtable of the calling
-  task, we find the entry in the fdtable, get the file and need to release
-  files_lock before calling filp_close().
-  In the meantime the fdtable might have been altered so we can't just
-  retake the spinlock and keep the old rcu-reference of the fdtable
-  around. Instead we need to grab a fresh reference to the fdtable.
-  If my reasoning is correct then there's really no point in fancyfying
-  __close_range(): We just need to rcu-dereference the fdtable of the
-  calling task once to cap the max_fd value correctly and then go on
-  calling __close_fd() in a loop.
+If we really want to simplify, we should rewrite all the internal
+logic of all the ppoll, epoll_pwait, io_pgetevent syscall internal
+handling where we set the error code.
+As new versions of syscalls were added, the internal logic got
+reworked rather hapazardly. But, as the current issue points out,
+these are delicate changes.
 
-/* References */
-[1]: https://lore.kernel.org/lkml/20190516165021.GD17978@ZenIV.linux.org.uk/
-[2]: https://github.com/python/cpython/blob/9e4f2f3a6b8ee995c365e86d976937c141d867f8/Modules/_posixsubprocess.c#L220
-[3]: https://sourceware.org/bugzilla/show_bug.cgi?id=10353#c7
-[4]: https://github.com/systemd/systemd/blob/5238e9575906297608ff802a27e2ff9effa3b338/src/basic/fd-util.c#L217
-[5]: https://github.com/lxc/lxc/blob/ddf4b77e11a4d08f09b7b9cd13e593f8c047edc5/src/lxc/start.c#L236
-[6]: https://sourceware.org/git/?p=glibc.git;a=blob;f=sysdeps/unix/sysv/linux/grantpt.c;h=2030e07fa6e652aac32c775b8c6e005844c3c4eb;hb=HEAD#l17
-     Note that this is an internal implementation that is not exported.
-     Currently, libc seems to not provide an exported version of this
-     because of missing kernel support to do this.
-[7]: https://github.com/rust-lang/rust/issues/12148
-[8]: https://github.com/rust-lang/rust/blob/5f47c0613ed4eb46fca3633c1297364c09e5e451/src/libstd/sys/unix/process2.rs#L303-L308
-     Rust's solution is slightly different but is equally unperformant.
-     Rust calls getdtablesize() which is a glibc library function that
-     simply returns the current RLIMIT_NOFILE or OPEN_MAX values. Rust then
-     goes on to call close() on each fd. That's obviously overkill for most
-     tasks. Rarely, tasks - especially non-demons - hit RLIMIT_NOFILE or
-     OPEN_MAX.
-     Let's be nice and assume an unprivileged user with RLIMIT_NOFILE set
-     to 1024. Even in this case, there's a very high chance that in the
-     common case Rust is calling the close() syscall 1021 times pointlessly
-     if the task just has 0, 1, and 2 open.
-
-Suggested-by: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Christian Brauner <christian@brauner.io>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Jann Horn <jannh@google.com>
-Cc: David Howells <dhowells@redhat.com>
-Cc: Dmitry V. Levin <ldv@altlinux.org>
-Cc: Oleg Nesterov <oleg@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Florian Weimer <fweimer@redhat.com>
-Cc: linux-api@vger.kernel.org
----
-v1:
-- Linus Torvalds <torvalds@linux-foundation.org>:
-  - add cond_resched() to yield cpu when closing a lot of file descriptors
-- Al Viro <viro@zeniv.linux.org.uk>:
-  - add cond_resched() to yield cpu when closing a lot of file descriptors
----
- arch/alpha/kernel/syscalls/syscall.tbl      |  1 +
- arch/arm/tools/syscall.tbl                  |  1 +
- arch/arm64/include/asm/unistd32.h           |  2 +
- arch/ia64/kernel/syscalls/syscall.tbl       |  1 +
- arch/m68k/kernel/syscalls/syscall.tbl       |  1 +
- arch/microblaze/kernel/syscalls/syscall.tbl |  1 +
- arch/mips/kernel/syscalls/syscall_n32.tbl   |  1 +
- arch/mips/kernel/syscalls/syscall_n64.tbl   |  1 +
- arch/mips/kernel/syscalls/syscall_o32.tbl   |  1 +
- arch/parisc/kernel/syscalls/syscall.tbl     |  1 +
- arch/powerpc/kernel/syscalls/syscall.tbl    |  1 +
- arch/s390/kernel/syscalls/syscall.tbl       |  1 +
- arch/sh/kernel/syscalls/syscall.tbl         |  1 +
- arch/sparc/kernel/syscalls/syscall.tbl      |  1 +
- arch/x86/entry/syscalls/syscall_32.tbl      |  1 +
- arch/x86/entry/syscalls/syscall_64.tbl      |  1 +
- arch/xtensa/kernel/syscalls/syscall.tbl     |  1 +
- fs/file.c                                   | 63 ++++++++++++++++++---
- fs/open.c                                   | 20 +++++++
- include/linux/fdtable.h                     |  2 +
- include/linux/syscalls.h                    |  2 +
- include/uapi/asm-generic/unistd.h           |  4 +-
- 22 files changed, 100 insertions(+), 9 deletions(-)
-
-diff --git a/arch/alpha/kernel/syscalls/syscall.tbl b/arch/alpha/kernel/syscalls/syscall.tbl
-index 9e7704e44f6d..b55d93af8096 100644
---- a/arch/alpha/kernel/syscalls/syscall.tbl
-+++ b/arch/alpha/kernel/syscalls/syscall.tbl
-@@ -473,3 +473,4 @@
- 541	common	fsconfig			sys_fsconfig
- 542	common	fsmount				sys_fsmount
- 543	common	fspick				sys_fspick
-+545	common	close_range			sys_close_range
-diff --git a/arch/arm/tools/syscall.tbl b/arch/arm/tools/syscall.tbl
-index aaf479a9e92d..0125c97c75dd 100644
---- a/arch/arm/tools/syscall.tbl
-+++ b/arch/arm/tools/syscall.tbl
-@@ -447,3 +447,4 @@
- 431	common	fsconfig			sys_fsconfig
- 432	common	fsmount				sys_fsmount
- 433	common	fspick				sys_fspick
-+435	common	close_range			sys_close_range
-diff --git a/arch/arm64/include/asm/unistd32.h b/arch/arm64/include/asm/unistd32.h
-index c39e90600bb3..9a3270d29b42 100644
---- a/arch/arm64/include/asm/unistd32.h
-+++ b/arch/arm64/include/asm/unistd32.h
-@@ -886,6 +886,8 @@ __SYSCALL(__NR_fsconfig, sys_fsconfig)
- __SYSCALL(__NR_fsmount, sys_fsmount)
- #define __NR_fspick 433
- __SYSCALL(__NR_fspick, sys_fspick)
-+#define __NR_close_range 435
-+__SYSCALL(__NR_close_range, sys_close_range)
- 
- /*
-  * Please add new compat syscalls above this comment and update
-diff --git a/arch/ia64/kernel/syscalls/syscall.tbl b/arch/ia64/kernel/syscalls/syscall.tbl
-index e01df3f2f80d..1a90b464e96f 100644
---- a/arch/ia64/kernel/syscalls/syscall.tbl
-+++ b/arch/ia64/kernel/syscalls/syscall.tbl
-@@ -354,3 +354,4 @@
- 431	common	fsconfig			sys_fsconfig
- 432	common	fsmount				sys_fsmount
- 433	common	fspick				sys_fspick
-+435	common	close_range			sys_close_range
-diff --git a/arch/m68k/kernel/syscalls/syscall.tbl b/arch/m68k/kernel/syscalls/syscall.tbl
-index 7e3d0734b2f3..2dee2050f9ef 100644
---- a/arch/m68k/kernel/syscalls/syscall.tbl
-+++ b/arch/m68k/kernel/syscalls/syscall.tbl
-@@ -433,3 +433,4 @@
- 431	common	fsconfig			sys_fsconfig
- 432	common	fsmount				sys_fsmount
- 433	common	fspick				sys_fspick
-+435	common	close_range			sys_close_range
-diff --git a/arch/microblaze/kernel/syscalls/syscall.tbl b/arch/microblaze/kernel/syscalls/syscall.tbl
-index 26339e417695..923ef69e5a76 100644
---- a/arch/microblaze/kernel/syscalls/syscall.tbl
-+++ b/arch/microblaze/kernel/syscalls/syscall.tbl
-@@ -439,3 +439,4 @@
- 431	common	fsconfig			sys_fsconfig
- 432	common	fsmount				sys_fsmount
- 433	common	fspick				sys_fspick
-+435	common	close_range			sys_close_range
-diff --git a/arch/mips/kernel/syscalls/syscall_n32.tbl b/arch/mips/kernel/syscalls/syscall_n32.tbl
-index 0e2dd68ade57..967ed9de51cd 100644
---- a/arch/mips/kernel/syscalls/syscall_n32.tbl
-+++ b/arch/mips/kernel/syscalls/syscall_n32.tbl
-@@ -372,3 +372,4 @@
- 431	n32	fsconfig			sys_fsconfig
- 432	n32	fsmount				sys_fsmount
- 433	n32	fspick				sys_fspick
-+435	n32	close_range			sys_close_range
-diff --git a/arch/mips/kernel/syscalls/syscall_n64.tbl b/arch/mips/kernel/syscalls/syscall_n64.tbl
-index 5eebfa0d155c..71de731102b1 100644
---- a/arch/mips/kernel/syscalls/syscall_n64.tbl
-+++ b/arch/mips/kernel/syscalls/syscall_n64.tbl
-@@ -348,3 +348,4 @@
- 431	n64	fsconfig			sys_fsconfig
- 432	n64	fsmount				sys_fsmount
- 433	n64	fspick				sys_fspick
-+435	n64	close_range			sys_close_range
-diff --git a/arch/mips/kernel/syscalls/syscall_o32.tbl b/arch/mips/kernel/syscalls/syscall_o32.tbl
-index 3cc1374e02d0..5a325ab29f88 100644
---- a/arch/mips/kernel/syscalls/syscall_o32.tbl
-+++ b/arch/mips/kernel/syscalls/syscall_o32.tbl
-@@ -421,3 +421,4 @@
- 431	o32	fsconfig			sys_fsconfig
- 432	o32	fsmount				sys_fsmount
- 433	o32	fspick				sys_fspick
-+435	o32	close_range			sys_close_range
-diff --git a/arch/parisc/kernel/syscalls/syscall.tbl b/arch/parisc/kernel/syscalls/syscall.tbl
-index c9e377d59232..dcc0a0879139 100644
---- a/arch/parisc/kernel/syscalls/syscall.tbl
-+++ b/arch/parisc/kernel/syscalls/syscall.tbl
-@@ -430,3 +430,4 @@
- 431	common	fsconfig			sys_fsconfig
- 432	common	fsmount				sys_fsmount
- 433	common	fspick				sys_fspick
-+435	common	close_range			sys_close_range
-diff --git a/arch/powerpc/kernel/syscalls/syscall.tbl b/arch/powerpc/kernel/syscalls/syscall.tbl
-index 103655d84b4b..ba2c1f078cbd 100644
---- a/arch/powerpc/kernel/syscalls/syscall.tbl
-+++ b/arch/powerpc/kernel/syscalls/syscall.tbl
-@@ -515,3 +515,4 @@
- 431	common	fsconfig			sys_fsconfig
- 432	common	fsmount				sys_fsmount
- 433	common	fspick				sys_fspick
-+435	common	close_range			sys_close_range
-diff --git a/arch/s390/kernel/syscalls/syscall.tbl b/arch/s390/kernel/syscalls/syscall.tbl
-index e822b2964a83..d7c9043d2902 100644
---- a/arch/s390/kernel/syscalls/syscall.tbl
-+++ b/arch/s390/kernel/syscalls/syscall.tbl
-@@ -436,3 +436,4 @@
- 431  common	fsconfig		sys_fsconfig			sys_fsconfig
- 432  common	fsmount			sys_fsmount			sys_fsmount
- 433  common	fspick			sys_fspick			sys_fspick
-+435  common	close_range		sys_close_range			sys_close_range
-diff --git a/arch/sh/kernel/syscalls/syscall.tbl b/arch/sh/kernel/syscalls/syscall.tbl
-index 016a727d4357..9b5e6bf0ce32 100644
---- a/arch/sh/kernel/syscalls/syscall.tbl
-+++ b/arch/sh/kernel/syscalls/syscall.tbl
-@@ -436,3 +436,4 @@
- 431	common	fsconfig			sys_fsconfig
- 432	common	fsmount				sys_fsmount
- 433	common	fspick				sys_fspick
-+435	common	close_range			sys_close_range
-diff --git a/arch/sparc/kernel/syscalls/syscall.tbl b/arch/sparc/kernel/syscalls/syscall.tbl
-index e047480b1605..8c674a1e0072 100644
---- a/arch/sparc/kernel/syscalls/syscall.tbl
-+++ b/arch/sparc/kernel/syscalls/syscall.tbl
-@@ -479,3 +479,4 @@
- 431	common	fsconfig			sys_fsconfig
- 432	common	fsmount				sys_fsmount
- 433	common	fspick				sys_fspick
-+435	common	close_range			sys_close_range
-diff --git a/arch/x86/entry/syscalls/syscall_32.tbl b/arch/x86/entry/syscalls/syscall_32.tbl
-index ad968b7bac72..7f7a89a96707 100644
---- a/arch/x86/entry/syscalls/syscall_32.tbl
-+++ b/arch/x86/entry/syscalls/syscall_32.tbl
-@@ -438,3 +438,4 @@
- 431	i386	fsconfig		sys_fsconfig			__ia32_sys_fsconfig
- 432	i386	fsmount			sys_fsmount			__ia32_sys_fsmount
- 433	i386	fspick			sys_fspick			__ia32_sys_fspick
-+435	i386	close_range		sys_close_range			__ia32_sys_close_range
-diff --git a/arch/x86/entry/syscalls/syscall_64.tbl b/arch/x86/entry/syscalls/syscall_64.tbl
-index b4e6f9e6204a..0f7d47ae921c 100644
---- a/arch/x86/entry/syscalls/syscall_64.tbl
-+++ b/arch/x86/entry/syscalls/syscall_64.tbl
-@@ -355,6 +355,7 @@
- 431	common	fsconfig		__x64_sys_fsconfig
- 432	common	fsmount			__x64_sys_fsmount
- 433	common	fspick			__x64_sys_fspick
-+435	common	close_range		__x64_sys_close_range
- 
- #
- # x32-specific system call numbers start at 512 to avoid cache impact
-diff --git a/arch/xtensa/kernel/syscalls/syscall.tbl b/arch/xtensa/kernel/syscalls/syscall.tbl
-index 5fa0ee1c8e00..b489532265d0 100644
---- a/arch/xtensa/kernel/syscalls/syscall.tbl
-+++ b/arch/xtensa/kernel/syscalls/syscall.tbl
-@@ -404,3 +404,4 @@
- 431	common	fsconfig			sys_fsconfig
- 432	common	fsmount				sys_fsmount
- 433	common	fspick				sys_fspick
-+435	common	close_range			sys_close_range
-diff --git a/fs/file.c b/fs/file.c
-index 3da91a112bab..54945efa046e 100644
---- a/fs/file.c
-+++ b/fs/file.c
-@@ -615,12 +615,9 @@ void fd_install(unsigned int fd, struct file *file)
- 
- EXPORT_SYMBOL(fd_install);
- 
--/*
-- * The same warnings as for __alloc_fd()/__fd_install() apply here...
-- */
--int __close_fd(struct files_struct *files, unsigned fd)
-+static struct file *pick_file(struct files_struct *files, unsigned fd)
- {
--	struct file *file;
-+	struct file *file = NULL;
- 	struct fdtable *fdt;
- 
- 	spin_lock(&files->file_lock);
-@@ -632,15 +629,65 @@ int __close_fd(struct files_struct *files, unsigned fd)
- 		goto out_unlock;
- 	rcu_assign_pointer(fdt->fd[fd], NULL);
- 	__put_unused_fd(files, fd);
--	spin_unlock(&files->file_lock);
--	return filp_close(file, files);
- 
- out_unlock:
- 	spin_unlock(&files->file_lock);
--	return -EBADF;
-+	return file;
-+}
-+
-+/*
-+ * The same warnings as for __alloc_fd()/__fd_install() apply here...
-+ */
-+int __close_fd(struct files_struct *files, unsigned fd)
-+{
-+	struct file *file;
-+
-+	file = pick_file(files, fd);
-+	if (!file)
-+		return -EBADF;
-+
-+	return filp_close(file, files);
- }
- EXPORT_SYMBOL(__close_fd); /* for ksys_close() */
- 
-+/**
-+ * __close_range() - Close all file descriptors in a given range.
-+ *
-+ * @fd:     starting file descriptor to close
-+ * @max_fd: last file descriptor to close
-+ *
-+ * This closes a range of file descriptors. All file descriptors
-+ * from @fd up to and including @max_fd are closed.
-+ */
-+int __close_range(struct files_struct *files, unsigned fd, unsigned max_fd)
-+{
-+	unsigned int cur_max;
-+
-+	if (fd > max_fd)
-+		return -EINVAL;
-+
-+	rcu_read_lock();
-+	cur_max = files_fdtable(files)->max_fds;
-+	rcu_read_unlock();
-+
-+	/* cap to last valid index into fdtable */
-+	if (max_fd >= cur_max)
-+		max_fd = cur_max - 1;
-+
-+	while (fd <= max_fd) {
-+		struct file *file;
-+
-+		file = pick_file(files, fd++);
-+		if (!file)
-+			continue;
-+
-+		filp_close(file, files);
-+		cond_resched();
-+	}
-+
-+	return 0;
-+}
-+
- /*
-  * variant of __close_fd that gets a ref on the file for later fput
-  */
-diff --git a/fs/open.c b/fs/open.c
-index 9c7d724a6f67..c7baaee7aa47 100644
---- a/fs/open.c
-+++ b/fs/open.c
-@@ -1174,6 +1174,26 @@ SYSCALL_DEFINE1(close, unsigned int, fd)
- 	return retval;
- }
- 
-+/**
-+ * close_range() - Close all file descriptors in a given range.
-+ *
-+ * @fd:     starting file descriptor to close
-+ * @max_fd: last file descriptor to close
-+ * @flags:  reserved for future extensions
-+ *
-+ * This closes a range of file descriptors. All file descriptors
-+ * from @fd up to and including @max_fd are closed.
-+ * Currently, errors to close a given file descriptor are ignored.
-+ */
-+SYSCALL_DEFINE3(close_range, unsigned int, fd, unsigned int, max_fd,
-+		unsigned int, flags)
-+{
-+	if (flags)
-+		return -EINVAL;
-+
-+	return __close_range(current->files, fd, max_fd);
-+}
-+
- /*
-  * This routine simulates a hangup on the tty, to arrange that users
-  * are given clean terminals at login time.
-diff --git a/include/linux/fdtable.h b/include/linux/fdtable.h
-index f07c55ea0c22..fcd07181a365 100644
---- a/include/linux/fdtable.h
-+++ b/include/linux/fdtable.h
-@@ -121,6 +121,8 @@ extern void __fd_install(struct files_struct *files,
- 		      unsigned int fd, struct file *file);
- extern int __close_fd(struct files_struct *files,
- 		      unsigned int fd);
-+extern int __close_range(struct files_struct *files, unsigned int fd,
-+			 unsigned int max_fd);
- extern int __close_fd_get_file(unsigned int fd, struct file **res);
- 
- extern struct kmem_cache *files_cachep;
-diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
-index e2870fe1be5b..c0189e223255 100644
---- a/include/linux/syscalls.h
-+++ b/include/linux/syscalls.h
-@@ -441,6 +441,8 @@ asmlinkage long sys_fchown(unsigned int fd, uid_t user, gid_t group);
- asmlinkage long sys_openat(int dfd, const char __user *filename, int flags,
- 			   umode_t mode);
- asmlinkage long sys_close(unsigned int fd);
-+asmlinkage long sys_close_range(unsigned int fd, unsigned int max_fd,
-+				unsigned int flags);
- asmlinkage long sys_vhangup(void);
- 
- /* fs/pipe.c */
-diff --git a/include/uapi/asm-generic/unistd.h b/include/uapi/asm-generic/unistd.h
-index a87904daf103..3f36c8745d24 100644
---- a/include/uapi/asm-generic/unistd.h
-+++ b/include/uapi/asm-generic/unistd.h
-@@ -844,9 +844,11 @@ __SYSCALL(__NR_fsconfig, sys_fsconfig)
- __SYSCALL(__NR_fsmount, sys_fsmount)
- #define __NR_fspick 433
- __SYSCALL(__NR_fspick, sys_fspick)
-+#define __NR_close_range 435
-+__SYSCALL(__NR_close_range, sys_close_range)
- 
- #undef __NR_syscalls
--#define __NR_syscalls 434
-+#define __NR_syscalls 436
- 
- /*
-  * 32 bit systems traditionally used different
--- 
-2.21.0
-
+-Deepa
+> }
+>
+> static inline void clear_tsk_restore_sigmask(struct task_struct *tsk)
+> @@ -447,7 +446,6 @@ static inline bool test_and_clear_restore_sigmask(void)
+> static inline void set_restore_sigmask(void)
+> {
+>    current->restore_sigmask = true;
+> -    WARN_ON(!test_thread_flag(TIF_SIGPENDING));
+> }
+> static inline void clear_tsk_restore_sigmask(struct task_struct *tsk)
+> {
+> diff --git a/include/linux/signal.h b/include/linux/signal.h
+> index 9702016..887cea6 100644
+> --- a/include/linux/signal.h
+> +++ b/include/linux/signal.h
+> @@ -273,8 +273,7 @@ extern int group_send_sig_info(int sig, struct kernel_siginfo *info,
+>                   struct task_struct *p, enum pid_type type);
+> extern int __group_send_sig_info(int, struct kernel_siginfo *, struct task_struct *);
+> extern int sigprocmask(int, sigset_t *, sigset_t *);
+> -extern int set_user_sigmask(const sigset_t __user *usigmask, sigset_t *set,
+> -    sigset_t *oldset, size_t sigsetsize);
+> +extern int set_user_sigmask(const sigset_t __user *umask, size_t sigsetsize);
+> extern void restore_user_sigmask(const void __user *usigmask,
+>                 sigset_t *sigsaved);
+> extern void set_current_blocked(sigset_t *);
+> diff --git a/kernel/signal.c b/kernel/signal.c
+> index 227ba17..76f4f9a 100644
+> --- a/kernel/signal.c
+> +++ b/kernel/signal.c
+> @@ -2801,19 +2801,21 @@ EXPORT_SYMBOL(sigprocmask);
+>  * This is useful for syscalls such as ppoll, pselect, io_pgetevents and
+>  * epoll_pwait where a new sigmask is passed from userland for the syscalls.
+>  */
+> -int set_user_sigmask(const sigset_t __user *usigmask, sigset_t *set,
+> -             sigset_t *oldset, size_t sigsetsize)
+> +int set_user_sigmask(const sigset_t __user *umask, size_t sigsetsize)
+> {
+> -    if (!usigmask)
+> +    sigset_t *kmask;
+> +
+> +    if (!umask)
+>        return 0;
+>
+>    if (sigsetsize != sizeof(sigset_t))
+>        return -EINVAL;
+> -    if (copy_from_user(set, usigmask, sizeof(sigset_t)))
+> +    if (copy_from_user(kmask, umask, sizeof(sigset_t)))
+>        return -EFAULT;
+>
+> -    *oldset = current->blocked;
+> -    set_current_blocked(set);
+> +    set_restore_sigmask();
+> +    current->saved_sigmask = current->blocked;
+> +    set_current_blocked(kmask);
+>
+>    return 0;
+> }
+> @@ -2840,39 +2842,6 @@ int set_compat_user_sigmask(const compat_sigset_t __user *usigmask,
+> EXPORT_SYMBOL(set_compat_user_sigmask);
+> #endif
+>
+> -/*
+> - * restore_user_sigmask:
+> - * usigmask: sigmask passed in from userland.
+> - * sigsaved: saved sigmask when the syscall started and changed the sigmask to
+> - *           usigmask.
+> - *
+> - * This is useful for syscalls such as ppoll, pselect, io_pgetevents and
+> - * epoll_pwait where a new sigmask is passed in from userland for the syscalls.
+> - */
+> -void restore_user_sigmask(const void __user *usigmask, sigset_t *sigsaved)
+> -{
+> -
+> -    if (!usigmask)
+> -        return;
+> -    /*
+> -     * When signals are pending, do not restore them here.
+> -     * Restoring sigmask here can lead to delivering signals that the above
+> -     * syscalls are intended to block because of the sigmask passed in.
+> -     */
+> -    if (signal_pending(current)) {
+> -        current->saved_sigmask = *sigsaved;
+> -        set_restore_sigmask();
+> -        return;
+> -    }
+> -
+> -    /*
+> -     * This is needed because the fast syscall return path does not restore
+> -     * saved_sigmask when signals are not pending.
+> -     */
+> -    set_current_blocked(sigsaved);
+> -}
+> -EXPORT_SYMBOL(restore_user_sigmask);
+> -
+> /**
+>  *  sys_rt_sigprocmask - change the list of currently blocked signals
+>  *  @how: whether to add, remove, or set signals
+>
