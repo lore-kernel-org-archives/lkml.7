@@ -2,116 +2,125 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1461CC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 14:27:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A598CC282DC
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 14:27:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E427C20863
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 14:27:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 806E921773
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 14:27:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729321AbfEVO1y (ORCPT
+        id S1729435AbfEVO15 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 10:27:54 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:42188 "EHLO inva020.nxp.com"
+        Wed, 22 May 2019 10:27:57 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:41960 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728491AbfEVO1y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 10:27:54 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 060FD1A0197;
+        id S1728761AbfEVO1z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 10:27:55 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 8DAB9200090;
         Wed, 22 May 2019 16:27:52 +0200 (CEST)
 Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id ED9B11A000F;
-        Wed, 22 May 2019 16:27:51 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 7FCAE20002F;
+        Wed, 22 May 2019 16:27:52 +0200 (CEST)
 Received: from fsr-ub1864-101.ea.freescale.net (fsr-ub1864-101.ea.freescale.net [10.171.82.13])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 6C72E205ED;
-        Wed, 22 May 2019 16:27:51 +0200 (CEST)
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 096B1205ED;
+        Wed, 22 May 2019 16:27:52 +0200 (CEST)
 From:   laurentiu.tudor@nxp.com
 To:     hch@lst.de, stern@rowland.harvard.edu, gregkh@linuxfoundation.org,
         linux-usb@vger.kernel.org, marex@denx.de
 Cc:     leoyang.li@nxp.com, linux-kernel@vger.kernel.org,
-        robin.murphy@arm.com, noring@nocrew.org, JuergenUrban@gmx.de,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>
-Subject: [PATCH v6 0/5] prerequisites for device reserved local mem rework
-Date:   Wed, 22 May 2019 17:27:43 +0300
-Message-Id: <20190522142748.10078-1-laurentiu.tudor@nxp.com>
+        robin.murphy@arm.com, noring@nocrew.org, JuergenUrban@gmx.de
+Subject: [PATCH v6 1/5] lib/genalloc.c: Add gen_pool_dma_zalloc() for zeroed DMA allocations
+Date:   Wed, 22 May 2019 17:27:44 +0300
+Message-Id: <20190522142748.10078-2-laurentiu.tudor@nxp.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190522142748.10078-1-laurentiu.tudor@nxp.com>
+References: <20190522142748.10078-1-laurentiu.tudor@nxp.com>
 X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+From: Fredrik Noring <noring@nocrew.org>
 
-For HCs that have local memory, replace the current DMA API usage
-with a genalloc generic allocator to manage the mappings for these
-devices.
-This is in preparation for dropping the existing "coherent" dma
-mem declaration APIs. Current implementation was relying on a short
-circuit in the DMA API that in the end, was acting as an allocator
-for these type of devices.
+gen_pool_dma_zalloc() is a zeroed memory variant of gen_pool_dma_alloc().
+Document return values of both, and indicate NULL as a "%NULL" constant.
 
-Only compiled tested, so any volunteers willing to test are most welcome.
+Signed-off-by: Fredrik Noring <noring@nocrew.org>
+Tested-by: Fredrik Noring <noring@nocrew.org>
+---
+ include/linux/genalloc.h |  1 +
+ lib/genalloc.c           | 29 ++++++++++++++++++++++++++++-
+ 2 files changed, 29 insertions(+), 1 deletion(-)
 
-Thank you!
-
-For context, see thread here: https://lkml.org/lkml/2019/4/22/357
-
-Changes in v6:
- - drop some unneeded initializations (Alan)
- - use device name for genpool instead of misleading "ohci-hcd" (Alan)
- - updated some comments (Alan, Fredrik)
- - added Tested-By tags
-
-Changes in v5:
- - updated first patch to preserve bisectability (Christoph, Greg)
- - fixed a few more places where dma api was still being
-   used (e.g. td_alloc, ed_alloc) (Fredrik)
- - included patch from Fredrik adding gen_pool_dma_zalloc() api
- - added patch that drops HCD_LOCAL_MEM altogether (Greg)
- - set td_cache / ed_cache to null for devices with local mem (Fredrik)
- - introduce usb_hcd_setup_local_mem() that sets up the genalloc
-   pool for drivers and updated drivers to use it
-
-Changes in v4:
- - created mapping for local mem
- - fix genalloc misuse
-
-Changes in v3:
- - rearranged calls into genalloc simplifying the code a bit (Christoph)
- - dropped RFC prefix
-
-Changes in v2:
- - use genalloc also in core usb (based on comment from Robin)
- - moved genpool decl to usb_hcd to be accesible from core usb
-
-Fredrik Noring (1):
-  lib/genalloc.c: Add gen_pool_dma_zalloc() for zeroed DMA allocations
-
-Laurentiu Tudor (4):
-  USB: use genalloc for USB HCs with local memory
-  usb: host: ohci-sm501: init genalloc for local memory
-  usb: host: ohci-tmio: init genalloc for local memory
-  USB: drop HCD_LOCAL_MEM flag
-
- drivers/usb/core/buffer.c      | 17 ++++++++----
- drivers/usb/core/hcd.c         | 51 ++++++++++++++++++++++++++++------
- drivers/usb/host/ehci-hcd.c    |  2 +-
- drivers/usb/host/fotg210-hcd.c |  2 +-
- drivers/usb/host/ohci-hcd.c    | 25 +++++++++++++----
- drivers/usb/host/ohci-mem.c    | 35 ++++++++++++++++++++---
- drivers/usb/host/ohci-sm501.c  | 50 +++++++++++++++------------------
- drivers/usb/host/ohci-tmio.c   | 15 ++++------
- drivers/usb/host/ohci.h        |  2 ++
- drivers/usb/host/uhci-hcd.c    |  2 +-
- include/linux/genalloc.h       |  1 +
- include/linux/usb/hcd.h        |  6 +++-
- lib/genalloc.c                 | 29 ++++++++++++++++++-
- 13 files changed, 171 insertions(+), 66 deletions(-)
-
+diff --git a/include/linux/genalloc.h b/include/linux/genalloc.h
+index dd0a452373e7..6c62eeca754f 100644
+--- a/include/linux/genalloc.h
++++ b/include/linux/genalloc.h
+@@ -121,6 +121,7 @@ extern unsigned long gen_pool_alloc_algo(struct gen_pool *, size_t,
+ 		genpool_algo_t algo, void *data);
+ extern void *gen_pool_dma_alloc(struct gen_pool *pool, size_t size,
+ 		dma_addr_t *dma);
++void *gen_pool_dma_zalloc(struct gen_pool *pool, size_t size, dma_addr_t *dma);
+ extern void gen_pool_free(struct gen_pool *, unsigned long, size_t);
+ extern void gen_pool_for_each_chunk(struct gen_pool *,
+ 	void (*)(struct gen_pool *, struct gen_pool_chunk *, void *), void *);
+diff --git a/lib/genalloc.c b/lib/genalloc.c
+index 7e85d1e37a6e..5db43476a19b 100644
+--- a/lib/genalloc.c
++++ b/lib/genalloc.c
+@@ -337,12 +337,14 @@ EXPORT_SYMBOL(gen_pool_alloc_algo);
+  * gen_pool_dma_alloc - allocate special memory from the pool for DMA usage
+  * @pool: pool to allocate from
+  * @size: number of bytes to allocate from the pool
+- * @dma: dma-view physical address return value.  Use NULL if unneeded.
++ * @dma: dma-view physical address return value.  Use %NULL if unneeded.
+  *
+  * Allocate the requested number of bytes from the specified pool.
+  * Uses the pool allocation function (with first-fit algorithm by default).
+  * Can not be used in NMI handler on architectures without
+  * NMI-safe cmpxchg implementation.
++ *
++ * Return: virtual address of the allocated memory, or %NULL on failure
+  */
+ void *gen_pool_dma_alloc(struct gen_pool *pool, size_t size, dma_addr_t *dma)
+ {
+@@ -362,6 +364,31 @@ void *gen_pool_dma_alloc(struct gen_pool *pool, size_t size, dma_addr_t *dma)
+ }
+ EXPORT_SYMBOL(gen_pool_dma_alloc);
+ 
++/**
++ * gen_pool_dma_zalloc - allocate special zeroed memory from the pool for
++ * DMA usage
++ * @pool: pool to allocate from
++ * @size: number of bytes to allocate from the pool
++ * @dma: dma-view physical address return value.  Use %NULL if unneeded.
++ *
++ * Allocate the requested number of zeroed bytes from the specified pool.
++ * Uses the pool allocation function (with first-fit algorithm by default).
++ * Can not be used in NMI handler on architectures without
++ * NMI-safe cmpxchg implementation.
++ *
++ * Return: virtual address of the allocated zeroed memory, or %NULL on failure
++ */
++void *gen_pool_dma_zalloc(struct gen_pool *pool, size_t size, dma_addr_t *dma)
++{
++	void *vaddr = gen_pool_dma_alloc(pool, size, dma);
++
++	if (vaddr)
++		memset(vaddr, 0, size);
++
++	return vaddr;
++}
++EXPORT_SYMBOL(gen_pool_dma_zalloc);
++
+ /**
+  * gen_pool_free - free allocated special memory back to the pool
+  * @pool: pool to free to
 -- 
 2.17.1
 
