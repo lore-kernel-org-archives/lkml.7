@@ -2,108 +2,104 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBD60C18E7D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 10:10:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01E6CC18E7D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 10:10:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70383217F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 10:10:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558519804;
-	bh=fjSUsl7+ylbVqp71Ri0/DWUzGL9Kyn1X+h1AuUerIOw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0Od2LXHN3PgYppCs44md1tFLo1Io59PwU8VLO+8kLeI9TcTHE6QwoeiVgHyTA2E3K
-	 c1PpfGw3rnIFJ+kjUIDxGbkXKcWE94+KeYkgjIk+SoRdLKT65a88CaXK3v0WWb0LXC
-	 8oLptqycZdbSU9m+3++MNYYhJPTberG5bXMi2pDQ=
+	by mail.kernel.org (Postfix) with ESMTP id D0E31217F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 10:10:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729001AbfEVKKD (ORCPT
+        id S1729118AbfEVKKn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 06:10:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60192 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728424AbfEVKKD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 06:10:03 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31A5020863;
-        Wed, 22 May 2019 10:10:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558519802;
-        bh=fjSUsl7+ylbVqp71Ri0/DWUzGL9Kyn1X+h1AuUerIOw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bhMoO9b4ACIo+GhJUTw/Xd/LmOG8DLNEmBSqsqwW5R4OrwMLJYbywTvXwm3uN52wh
-         VlSij/ZHtt2WmLffZY5pIyN9nxxv1CQYUbk+6u+boMJ8rjOyO28eUZDCHx66YsEHi3
-         DUzkQ6zG3a4vK0Zjob7LHVL6PqCUkmvyxeVJKxQQ=
-Date:   Wed, 22 May 2019 12:09:59 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Aleksa Sarai <cyphar@cyphar.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Rik van Riel <riel@surriel.com>,
-        Nicolai Stange <nstange@suse.de>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        zfs-devel@list.zfsonlinux.org, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] x86/fpu: allow kernel_fpu_{begin,end} to be used by
- non-GPL modules
-Message-ID: <20190522100959.GA15390@kroah.com>
-References: <20190522044204.24207-1-cyphar@cyphar.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190522044204.24207-1-cyphar@cyphar.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+        Wed, 22 May 2019 06:10:43 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:55623 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728424AbfEVKKm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 06:10:42 -0400
+Received: from kresse.hi.pengutronix.de ([2001:67c:670:100:1d::2a])
+        by metis.ext.pengutronix.de with esmtp (Exim 4.89)
+        (envelope-from <l.stach@pengutronix.de>)
+        id 1hTOCd-0003cl-Ks; Wed, 22 May 2019 12:10:31 +0200
+Message-ID: <1558519829.2624.40.camel@pengutronix.de>
+Subject: Re: [PATCH v4 00/14] add ecspi ERR009165 for i.mx6/7 soc family
+From:   Lucas Stach <l.stach@pengutronix.de>
+To:     Robin Gong <yibin.gong@nxp.com>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        "plyatov@gmail.com" <plyatov@gmail.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>
+Cc:     "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>
+Date:   Wed, 22 May 2019 12:10:29 +0200
+In-Reply-To: <1558548188-1155-1-git-send-email-yibin.gong@nxp.com>
+References: <1558548188-1155-1-git-send-email-yibin.gong@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6-1+deb9u1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::2a
+X-SA-Exim-Mail-From: l.stach@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 22, 2019 at 02:42:04PM +1000, Aleksa Sarai wrote:
-> Prior to [1], all non-GPL modules were able to make use of SIMD on x86
-> by making use of the __kernel_fpu_* API. Given that __kernel_fpu_* were
-> both EXPORT_SYMBOL'd and kernel_fpu_* are such trivial wrappers around
-> the now-static __kernel_fpu_*, it seems to me that there is no reason to
-> have different licensing rules for them.
-> 
-> In the case of OpenZFS, the lack of SIMD on newer Linux kernels has
-> caused significant performance problems (since ZFS uses SIMD for
-> calculation of blkptr checksums as well as raidz calculations).
-> 
-> [1]: commit 12209993e98c ("x86/fpu: Don't export __kernel_fpu_{begin,end}()")
-> 
-> Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>
-> Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
-> ---
->  arch/x86/kernel/fpu/core.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/x86/kernel/fpu/core.c b/arch/x86/kernel/fpu/core.c
-> index 2e5003fef51a..8de5687a470d 100644
-> --- a/arch/x86/kernel/fpu/core.c
-> +++ b/arch/x86/kernel/fpu/core.c
-> @@ -127,14 +127,14 @@ void kernel_fpu_begin(void)
->  	preempt_disable();
->  	__kernel_fpu_begin();
->  }
-> -EXPORT_SYMBOL_GPL(kernel_fpu_begin);
-> +EXPORT_SYMBOL(kernel_fpu_begin);
->  
->  void kernel_fpu_end(void)
->  {
->  	__kernel_fpu_end();
->  	preempt_enable();
->  }
-> -EXPORT_SYMBOL_GPL(kernel_fpu_end);
-> +EXPORT_SYMBOL(kernel_fpu_end);
+Hi Robin,
 
-No, please, we have gone over this before, we do not care at all about
-external kernel modules, ESPECIALLY ones that are not GPL compatible.
+Am Mittwoch, den 22.05.2019, 09:59 +0000 schrieb Robin Gong:
+>   There is ecspi ERR009165 on i.mx6/7 soc family, which cause FIFO
+> transfer to be send twice in DMA mode. Please get more information from:
+> https://www.nxp.com/docs/en/errata/IMX6DQCE.pdf. The workaround is adding
+> new sdma ram script which works in XCH  mode as PIO inside sdma instead
+> of SMC mode, meanwhile, 'TX_THRESHOLD' should be 0. The issue should be
+> exist on all legacy i.mx6/7 soc family before i.mx6ul.
+> NXP fix this design issue from i.mx6ul, so newer chips including i.mx6ul/
+> 6ull/6sll do not need this workaroud anymore. All other i.mx6/7/8 chips
+> still need this workaroud. This patch set add new 'fsl,imx6ul-ecspi'
+> for ecspi driver and 'ecspi_fixed' in sdma driver to choose if need errata
+> or not.
+>   The first two reverted patches should be the same issue, though, it
+> seems 'fixed' by changing to other shp script. Hope Sean or Sascha could
+> have the chance to test this patch set if could fix their issues.
+>   Besides, enable sdma support for i.mx8mm/8mq and fix ecspi1 not work
+> on i.mx8mm because the event id is zero.
+> 
+> PS:
+>   Please get sdma firmware from below linux-firmware and copy it to your
+> local rootfs /lib/firmware/imx/sdma.
+> https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/tree/imx/sdma
 
-greg k-h
+I haven't tested this so asking the obvious question: what happens when
+this series is applied without the RAM script being present on the
+system? Will it render SPI unusable? I guess so since it changes the
+flow between the SPI core and DMA controller. Can we somehow detect
+that SDMA isn't using the correct RAM script and fall back to PIO mode
+in the SPI driver in that case?
+
+Currently using the RAM script is not an option in a lot of use-cases,
+as it still breaks serial DMA support. The fix for the serial issue
+really needs to be remove the broken serial script from the RAM
+firmware, not change the serial driver to deal with the broken behavior
+introduced by the RAM script.
+
+Regards,
+Lucas
