@@ -2,196 +2,110 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AE3CC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 23:37:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19907C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 23:46:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 341AA21773
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 23:37:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA46B21019
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 23:46:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728717AbfEVXhl (ORCPT
+        id S1728091AbfEVXqj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 19:37:41 -0400
-Received: from outgoing4.flk.host-h.net ([188.40.0.90]:40251 "EHLO
-        outgoing4.flk.host-h.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726215AbfEVXhl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 19:37:41 -0400
-X-Greylist: delayed 2659 seconds by postgrey-1.27 at vger.kernel.org; Wed, 22 May 2019 19:37:40 EDT
-Received: from www31.flk1.host-h.net ([188.40.1.173])
-        by antispam1-flk1.host-h.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.89)
-        (envelope-from <justin.swartz@risingedge.co.za>)
-        id 1hTa6n-0000bT-Bw; Thu, 23 May 2019 00:53:18 +0200
-Received: from [130.255.73.16] (helo=v01.28459.vpscontrol.net)
-        by www31.flk1.host-h.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.84_2)
-        (envelope-from <justin.swartz@risingedge.co.za>)
-        id 1hTa6c-0007fD-EJ; Thu, 23 May 2019 00:53:06 +0200
-From:   Justin Swartz <justin.swartz@risingedge.co.za>
-To:     Sandy Huang <hjc@rock-chips.com>,
-        =?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko@sntech.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     Justin Swartz <justin.swartz@risingedge.co.za>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/rockchip: dw_hdmi: add basic rk3228 support
-Date:   Wed, 22 May 2019 22:46:29 +0000
-Message-Id: <20190522224631.25164-1-justin.swartz@risingedge.co.za>
-X-Mailer: git-send-email 2.11.0
-X-Authenticated-Sender: justin.swartz@risingedge.co.za
-X-Virus-Scanned: Clear (ClamAV 0.100.3/25457/Wed May 22 09:57:31 2019)
-X-Originating-IP: 188.40.1.173
-X-SpamExperts-Domain: risingedge.co.za
-X-SpamExperts-Username: 
-Authentication-Results: host-h.net; auth=pass (login) smtp.auth=@risingedge.co.za
-X-SpamExperts-Outgoing-Class: ham
-X-SpamExperts-Outgoing-Evidence: SB/global_tokens (0.000718690605145)
-X-Recommended-Action: accept
-X-Filter-ID: Mvzo4OR0dZXEDF/gcnlw0fHWENUdqj+4JDN3TQDP3eCpSDasLI4SayDByyq9LIhVur86TwL7jsv5
- m6+fjp/sxETNWdUk1Ol2OGx3IfrIJKyP9eGNFz9TW9u+Jt8z2T3K7uDjV/sFUXQr+CDrNQuIHgQg
- mAX8Bxy/iUu0ThNZg0h/RxVysY5Ye6+GGw0VqdJD7ren9RtRNyYim5e3GD8LGfWrcbYvelpuN/Pk
- qhBpvAyWwieZyauFYqHkIbFa+ipF21HJWO60ZqrvKy/1AXUV5oXt6ymoFHaG7BQtEYvFCSo5O9aO
- OPCZx1b2uMC/zMc3aAOV7ICS29ZskdEzgnmWc6FyCw2oLKHJClAYHcXyktNZ2XmZE6Ulo3Sg6/fH
- CWNxoaEnuBtnt6GUDDzwi0xE9ujBdjBi/EW6wTMO5aPWRLvv8qeRWs1kOo/p5GKJkWYAO3Aa5n+U
- cgHka3/viXjzcoj1m7f+vTE4JStv6WwSOoIjjjxJx7TjfIl9lT02e+bLG5tY/17Am1+3t6saIBBg
- jLL9CBTChXJpl1nl23cKb/28qAHF3ayYxbGdFos0fpCN/Zqe7k8tOuyC0ezetWWw8nL3mjAyuRnY
- YfqoF0qwBaWr31abV7tmT2g84edke3MdOkNjooab3HXOpUJdeB9FrcmwwJhZoFj1JrH8+3dIKm8T
- aJbF/DJ9xG35AyqkelXaj1B5NGYLZCD5qc9WTEIS3cJCoM1jZKVSdLKiMKeae175VNiXOYUQ+bYR
- OTnFZniyHwlqvaI+zok/BsKQK4gft9MTokp23oPCMeUu86GfQl/coNq5LDsD+gmtrHR34ik+dbYb
- 9IXfYGRpVS/0hA4MwqmkYLLjcD7HaYjxiQBclDtVrfG8Zd+nzbonxrsMSs4uYqsuNEW45+y/2kiU
- pWy9c+XovTjsJstHtBoNlKIuslv0d6pyfV7QOE1hL9j5OVSXNVTcvF4bYNCxBEiOkhGolglPmh6a
- ILJqM6WsXf7aQnmpO2ydeyFd1pMxtzaLrgiAa1jZ449c5QOSXHeR3E0E19yXIdNHJDPRcm8rLb1r
- h0PyzIaTXD+uKJkHA4nFPinpYeLTxNigHOV5GQgWJq64bnCnflZnbjDB2+RGRgaXth0ZHRqQruFr
- G/GlTGRDUHWt54s410cgWo1fMD6i15+WgVsQdC9uGg5IeWmPBYt4N47WgJgyTfy73B/Plf7FmTDV
- qY+pQN3pVbMWvtuGUnEh3DwJWw42swm4bO6gacpMpzKjPCVKQvBNmkphbV+6LqpSOVpogBsPfG5h
- jLRjd6kxWF4VLgIZIkTm0juO6rHlP/TihjA708Lg3Y2gXyaf+rItBxw1SWz0NFi7GeT33MAvp0E4
- hZvaIK8zWrz4lb7RoCsWna0PdfWBYPgYUN6vj8NApCcRaz+idK1HZy9Txmtmp2+U8T3Kfj7tHuHD
- vXqVSlU=
-X-Report-Abuse-To: spam@antispammaster.host-h.net
+        Wed, 22 May 2019 19:46:39 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38822 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726218AbfEVXqi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 19:46:38 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 5F88630832E6;
+        Wed, 22 May 2019 23:46:38 +0000 (UTC)
+Received: from treble (ovpn-120-127.rdu2.redhat.com [10.10.120.127])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id ECC1660857;
+        Wed, 22 May 2019 23:46:36 +0000 (UTC)
+Date:   Wed, 22 May 2019 18:46:35 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Alexei Starovoitov <ast@fb.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Kairui Song <kasong@redhat.com>,
+        Song Liu <songliubraving@fb.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>
+Subject: Re: Getting empty callchain from perf_callchain_kernel()
+Message-ID: <20190522234635.a47bettklcf5gt7c@treble>
+References: <3CD3EE63-0CD2-404A-A403-E11DCF2DF8D9@fb.com>
+ <20190517074600.GJ2623@hirez.programming.kicks-ass.net>
+ <20190517081057.GQ2650@hirez.programming.kicks-ass.net>
+ <CACPcB9cB5n1HOmZcVpusJq8rAV5+KfmZ-Lxv3tgsSoy7vNrk7w@mail.gmail.com>
+ <20190517091044.GM2606@hirez.programming.kicks-ass.net>
+ <CACPcB9cpNp5CBqoRs+XMCwufzAFa8Pj-gbmj9fb+g5wVdue=ig@mail.gmail.com>
+ <20190522140233.GC16275@worktop.programming.kicks-ass.net>
+ <ab047883-69f6-1175-153f-5ad9462c6389@fb.com>
+ <20190522174517.pbdopvookggen3d7@treble>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190522174517.pbdopvookggen3d7@treble>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Wed, 22 May 2019 23:46:38 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Like the RK3328, RK322x SoCs offer a Synopsis DesignWare HDMI transmitter
-and an Innosilicon HDMI PHY.
+On Wed, May 22, 2019 at 12:45:17PM -0500, Josh Poimboeuf wrote:
+> On Wed, May 22, 2019 at 02:49:07PM +0000, Alexei Starovoitov wrote:
+> > The one that is broken is prog_tests/stacktrace_map.c
+> > There we attach bpf to standard tracepoint where
+> > kernel suppose to collect pt_regs before calling into bpf.
+> > And that's what bpf_get_stackid_tp() is doing.
+> > It passes pt_regs (that was collected before any bpf)
+> > into bpf_get_stackid() which calls get_perf_callchain().
+> > Same thing with kprobes, uprobes.
+> 
+> Is it trying to unwind through ___bpf_prog_run()?
+> 
+> If so, that would at least explain why ORC isn't working.  Objtool
+> currently ignores that function because it can't follow the jump table.
 
-Add a new dw_hdmi_plat_data struct, rk3228_hdmi_drv_data.
-Assign a set of mostly generic rk3228_hdmi_phy_ops functions.
-Add dw_hdmi_rk3228_setup_hpd() to enable the HDMI HPD and DDC lines.
+Here's a tentative fix (for ORC, at least).  I'll need to make sure this
+doesn't break anything else.
 
-Signed-off-by: Justin Swartz <justin.swartz@risingedge.co.za>
----
- .../bindings/display/rockchip/dw_hdmi-rockchip.txt |  1 +
- drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c        | 53 ++++++++++++++++++++++
- 2 files changed, 54 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/display/rockchip/dw_hdmi-rockchip.txt b/Documentation/devicetree/bindings/display/rockchip/dw_hdmi-rockchip.txt
-index 39143424a..703503103 100644
---- a/Documentation/devicetree/bindings/display/rockchip/dw_hdmi-rockchip.txt
-+++ b/Documentation/devicetree/bindings/display/rockchip/dw_hdmi-rockchip.txt
-@@ -12,6 +12,7 @@ following device-specific properties.
- Required properties:
- 
- - compatible: should be one of the following:
-+		"rockchip,rk3228-dw-hdmi"
- 		"rockchip,rk3288-dw-hdmi"
- 		"rockchip,rk3328-dw-hdmi"
- 		"rockchip,rk3399-dw-hdmi"
-diff --git a/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c b/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
-index 4cdc9f86c..182a852af 100644
---- a/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
-+++ b/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
-@@ -23,6 +23,14 @@
- #include "rockchip_drm_drv.h"
- #include "rockchip_drm_vop.h"
- 
-+#define RK3228_GRF_SOC_CON2		0x0408
-+#define RK3228_HDMI_SDAIN_MSK		BIT(14)
-+#define RK3228_HDMI_SCLIN_MSK		BIT(13)
-+#define RK3228_GRF_SOC_CON6		0x0418
-+#define RK3228_HDMI_HPD_VSEL		BIT(6)
-+#define RK3228_HDMI_SDA_VSEL		BIT(5)
-+#define RK3228_HDMI_SCL_VSEL		BIT(4)
-+
- #define RK3288_GRF_SOC_CON6		0x025C
- #define RK3288_HDMI_LCDC_SEL		BIT(4)
- #define RK3328_GRF_SOC_CON2		0x0408
-@@ -325,6 +333,25 @@ static void dw_hdmi_rockchip_genphy_disable(struct dw_hdmi *dw_hdmi, void *data)
- 	phy_power_off(hdmi->phy);
+diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
+index 242a643af82f..1d9a7cc4b836 100644
+--- a/kernel/bpf/core.c
++++ b/kernel/bpf/core.c
+@@ -1562,7 +1562,6 @@ static u64 ___bpf_prog_run(u64 *regs, const struct bpf_insn *insn, u64 *stack)
+ 		BUG_ON(1);
+ 		return 0;
  }
+-STACK_FRAME_NON_STANDARD(___bpf_prog_run); /* jump table */
  
-+static void dw_hdmi_rk3228_setup_hpd(struct dw_hdmi *dw_hdmi, void *data)
-+{
-+	struct rockchip_hdmi *hdmi = (struct rockchip_hdmi *)data;
-+
-+	dw_hdmi_phy_setup_hpd(dw_hdmi, data);
-+
-+	regmap_write(hdmi->regmap,
-+		RK3228_GRF_SOC_CON6,
-+		HIWORD_UPDATE(RK3228_HDMI_HPD_VSEL | RK3228_HDMI_SDA_VSEL |
-+			      RK3228_HDMI_SCL_VSEL,
-+			      RK3228_HDMI_HPD_VSEL | RK3228_HDMI_SDA_VSEL |
-+			      RK3228_HDMI_SCL_VSEL));
-+
-+	regmap_write(hdmi->regmap,
-+		RK3228_GRF_SOC_CON2,
-+		HIWORD_UPDATE(RK3228_HDMI_SDAIN_MSK | RK3228_HDMI_SCLIN_MSK,
-+			      RK3228_HDMI_SDAIN_MSK | RK3228_HDMI_SCLIN_MSK));
-+}
-+
- static enum drm_connector_status
- dw_hdmi_rk3328_read_hpd(struct dw_hdmi *dw_hdmi, void *data)
- {
-@@ -370,6 +397,29 @@ static void dw_hdmi_rk3328_setup_hpd(struct dw_hdmi *dw_hdmi, void *data)
- 			      RK3328_HDMI_HPD_IOE));
- }
+ #define PROG_NAME(stack_size) __bpf_prog_run##stack_size
+ #define DEFINE_BPF_PROG_RUN(stack_size) \
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index 172f99195726..2567027fce95 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -1033,13 +1033,6 @@ static struct rela *find_switch_table(struct objtool_file *file,
+ 		if (text_rela->type == R_X86_64_PC32)
+ 			table_offset += 4;
  
-+static const struct dw_hdmi_phy_ops rk3228_hdmi_phy_ops = {
-+	.init		= dw_hdmi_rockchip_genphy_init,
-+	.disable	= dw_hdmi_rockchip_genphy_disable,
-+	.read_hpd	= dw_hdmi_phy_read_hpd,
-+	.update_hpd	= dw_hdmi_phy_update_hpd,
-+	.setup_hpd	= dw_hdmi_rk3228_setup_hpd,
-+};
-+
-+static struct rockchip_hdmi_chip_data rk3228_chip_data = {
-+	.lcdsel_grf_reg = -1,
-+};
-+
-+static const struct dw_hdmi_plat_data rk3228_hdmi_drv_data = {
-+	.mode_valid = dw_hdmi_rockchip_mode_valid,
-+	.mpll_cfg = rockchip_mpll_cfg,
-+	.cur_ctr = rockchip_cur_ctr,
-+	.phy_config = rockchip_phy_config,
-+	.phy_data = &rk3228_chip_data,
-+	.phy_ops = &rk3228_hdmi_phy_ops,
-+	.phy_name = "inno_dw_hdmi_phy2",
-+	.phy_force_vendor = true,
-+};
-+
- static struct rockchip_hdmi_chip_data rk3288_chip_data = {
- 	.lcdsel_grf_reg = RK3288_GRF_SOC_CON6,
- 	.lcdsel_big = HIWORD_UPDATE(0, RK3288_HDMI_LCDC_SEL),
-@@ -422,6 +472,9 @@ static const struct dw_hdmi_plat_data rk3399_hdmi_drv_data = {
- };
- 
- static const struct of_device_id dw_hdmi_rockchip_dt_ids[] = {
-+	{ .compatible = "rockchip,rk3228-dw-hdmi",
-+	  .data = &rk3228_hdmi_drv_data
-+	},
- 	{ .compatible = "rockchip,rk3288-dw-hdmi",
- 	  .data = &rk3288_hdmi_drv_data
- 	},
--- 
-2.11.0
-
+-		/*
+-		 * Make sure the .rodata address isn't associated with a
+-		 * symbol.  gcc jump tables are anonymous data.
+-		 */
+-		if (find_symbol_containing(rodata_sec, table_offset))
+-			continue;
+-
+ 		rodata_rela = find_rela_by_dest(rodata_sec, table_offset);
+ 		if (rodata_rela) {
+ 			/*
