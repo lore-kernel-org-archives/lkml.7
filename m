@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D457C46470
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:59:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 146D8C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:59:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E335320856
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:59:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8C9C20856
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:59:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558555147;
-	bh=2exSR2Nnkhck0kqyrIIIcnFhOeWL/t1JxLNownjldOE=;
+	s=default; t=1558555150;
+	bh=9kA7/3NfFEuzmb1BGqSNJEJHToYnF5TiQxVFRt+cegs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Gt5HJ7VtL+1G6lalygKTIcUhg4kdGqrYQ+9TowiTxfdy00wXrQvDNOIGEqAgIAzaY
-	 eBJOsE7s/cumJs0ix+4W63RGOI3xREu9pTmCOPFf3Bs3kpMBoC47ULKZthqcVSfRRK
-	 dRVI8zoIDCOaa/vbRd+uPYAB69gwVX7ORmdQ6Gm0=
+	b=qB6U8+fNG4YMWOArGTSq2BLAevkFCmjN+71sOe1g1cNa/L6+wHzy4e0C9e65QDees
+	 3rJrzv4jGXV45zFaiDjsETwFm92cwj9L3SKW/jcfQlwcJCb0i1fIt1eS/GX915YgFO
+	 NOtNKECtBGfJT5uctsQxeHP/uSyCLJeyraKr5qNk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731020AbfEVTXw (ORCPT
+        id S1730988AbfEVTXq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:23:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44672 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:23:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44436 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730235AbfEVTXp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:23:45 -0400
+        id S1730920AbfEVTXd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:23:33 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B987B21850;
-        Wed, 22 May 2019 19:23:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3187E21473;
+        Wed, 22 May 2019 19:23:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553024;
-        bh=2exSR2Nnkhck0kqyrIIIcnFhOeWL/t1JxLNownjldOE=;
+        s=default; t=1558553012;
+        bh=9kA7/3NfFEuzmb1BGqSNJEJHToYnF5TiQxVFRt+cegs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TPudtTCB/5H8v0DS9B9dVLlB1b2rm/fjBIRGz89aB7aRkAMbVDQrr7adFfTzicsYL
-         4VpNqY7ldG452bfKGSjbEVA4n7JO5UwcXywYCRP/7qpFbRmAoGhEdZs+QNA5pHsS5C
-         Ip7AazUqI4t6uqpwtCOGgc34PnmJhjv8Wt8jw0qI=
+        b=N7Hcjh1AOO9RclKxv9O30zyGewpf33YY5ebhaKXbwJykoqRTJCYuS9ESBGkTlGfoz
+         OIttdH9CDrw8YPf3dXEJAnfjY7AibfR5e5tKOQpJQMUjdsWu9MKz/fg3eExvl833fA
+         4KbPbYxZhfN6w/V8scE/LRCJVCUQZk1vh1/2Z3qM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Abhi Das <adas@redhat.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, cluster-devel@redhat.com
-Subject: [PATCH AUTOSEL 5.0 005/317] gfs2: fix race between gfs2_freeze_func and unmount
-Date:   Wed, 22 May 2019 15:18:26 -0400
-Message-Id: <20190522192338.23715-5-sashal@kernel.org>
+Cc:     Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 076/375] mac80211/cfg80211: update bss channel on channel switch
+Date:   Wed, 22 May 2019 15:16:16 -0400
+Message-Id: <20190522192115.22666-76-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190522192338.23715-1-sashal@kernel.org>
-References: <20190522192338.23715-1-sashal@kernel.org>
+In-Reply-To: <20190522192115.22666-1-sashal@kernel.org>
+References: <20190522192115.22666-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,89 +60,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Abhi Das <adas@redhat.com>
+From: Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
 
-[ Upstream commit 8f91821990fd6f170a5dca79697a441181a41b16 ]
+[ Upstream commit 5dc8cdce1d722c733f8c7af14c5fb595cfedbfa8 ]
 
-As part of the freeze operation, gfs2_freeze_func() is left blocking
-on a request to hold the sd_freeze_gl in SH. This glock is held in EX
-by the gfs2_freeze() code.
+FullMAC STAs have no way to update bss channel after CSA channel switch
+completion. As a result, user-space tools may provide inconsistent
+channel info. For instance, consider the following two commands:
+$ sudo iw dev wlan0 link
+$ sudo iw dev wlan0 info
+The latter command gets channel info from the hardware, so most probably
+its output will be correct. However the former command gets channel info
+from scan cache, so its output will contain outdated channel info.
+In fact, current bss channel info will not be updated until the
+next [re-]connect.
 
-A subsequent call to gfs2_unfreeze() releases the EXclusively held
-sd_freeze_gl, which allows gfs2_freeze_func() to acquire it in SH and
-resume its operation.
+Note that mac80211 STAs have a workaround for this, but it requires
+access to internal cfg80211 data, see ieee80211_chswitch_work:
 
-gfs2_unfreeze(), however, doesn't wait for gfs2_freeze_func() to complete.
-If a umount is issued right after unfreeze, it could result in an
-inconsistent filesystem because some journal data (statfs update) isn't
-written out.
+	/* XXX: shouldn't really modify cfg80211-owned data! */
+	ifmgd->associated->channel = sdata->csa_chandef.chan;
 
-Refer to commit 24972557b12c for a more detailed explanation of how
-freeze/unfreeze work.
+This patch suggests to convert mac80211 workaround into cfg80211 behavior
+and to update current bss channel in cfg80211_ch_switch_notify.
 
-This patch causes gfs2_unfreeze() to wait for gfs2_freeze_func() to
-complete before returning to the user.
-
-Signed-off-by: Abhi Das <adas@redhat.com>
-Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
+Signed-off-by: Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/gfs2/incore.h | 1 +
- fs/gfs2/super.c  | 8 +++++---
- 2 files changed, 6 insertions(+), 3 deletions(-)
+ net/mac80211/mlme.c    | 3 ---
+ net/wireless/nl80211.c | 5 +++++
+ 2 files changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/fs/gfs2/incore.h b/fs/gfs2/incore.h
-index e10e0b0a7cd58..e1a33d2881213 100644
---- a/fs/gfs2/incore.h
-+++ b/fs/gfs2/incore.h
-@@ -621,6 +621,7 @@ enum {
- 	SDF_SKIP_DLM_UNLOCK	= 8,
- 	SDF_FORCE_AIL_FLUSH     = 9,
- 	SDF_AIL1_IO_ERROR	= 10,
-+	SDF_FS_FROZEN           = 11,
- };
- 
- enum gfs2_freeze_state {
-diff --git a/fs/gfs2/super.c b/fs/gfs2/super.c
-index ca71163ff7cfd..360206704a14c 100644
---- a/fs/gfs2/super.c
-+++ b/fs/gfs2/super.c
-@@ -973,8 +973,7 @@ void gfs2_freeze_func(struct work_struct *work)
- 	if (error) {
- 		printk(KERN_INFO "GFS2: couldn't get freeze lock : %d\n", error);
- 		gfs2_assert_withdraw(sdp, 0);
--	}
--	else {
-+	} else {
- 		atomic_set(&sdp->sd_freeze_state, SFS_UNFROZEN);
- 		error = thaw_super(sb);
- 		if (error) {
-@@ -987,6 +986,8 @@ void gfs2_freeze_func(struct work_struct *work)
- 		gfs2_glock_dq_uninit(&freeze_gh);
+diff --git a/net/mac80211/mlme.c b/net/mac80211/mlme.c
+index 2dbcf5d5512ef..b7a9fe3d5fcb7 100644
+--- a/net/mac80211/mlme.c
++++ b/net/mac80211/mlme.c
+@@ -1188,9 +1188,6 @@ static void ieee80211_chswitch_work(struct work_struct *work)
+ 		goto out;
  	}
- 	deactivate_super(sb);
-+	clear_bit_unlock(SDF_FS_FROZEN, &sdp->sd_flags);
-+	wake_up_bit(&sdp->sd_flags, SDF_FS_FROZEN);
- 	return;
+ 
+-	/* XXX: shouldn't really modify cfg80211-owned data! */
+-	ifmgd->associated->channel = sdata->csa_chandef.chan;
+-
+ 	ifmgd->csa_waiting_bcn = true;
+ 
+ 	ieee80211_sta_reset_beacon_monitor(sdata);
+diff --git a/net/wireless/nl80211.c b/net/wireless/nl80211.c
+index 47e30a58566c2..d2a7459a5da43 100644
+--- a/net/wireless/nl80211.c
++++ b/net/wireless/nl80211.c
+@@ -15727,6 +15727,11 @@ void cfg80211_ch_switch_notify(struct net_device *dev,
+ 
+ 	wdev->chandef = *chandef;
+ 	wdev->preset_chandef = *chandef;
++
++	if (wdev->iftype == NL80211_IFTYPE_STATION &&
++	    !WARN_ON(!wdev->current_bss))
++		wdev->current_bss->pub.channel = chandef->chan;
++
+ 	nl80211_ch_switch_notify(rdev, dev, chandef, GFP_KERNEL,
+ 				 NL80211_CMD_CH_SWITCH_NOTIFY, 0);
  }
- 
-@@ -1029,6 +1030,7 @@ static int gfs2_freeze(struct super_block *sb)
- 		msleep(1000);
- 	}
- 	error = 0;
-+	set_bit(SDF_FS_FROZEN, &sdp->sd_flags);
- out:
- 	mutex_unlock(&sdp->sd_freeze_mutex);
- 	return error;
-@@ -1053,7 +1055,7 @@ static int gfs2_unfreeze(struct super_block *sb)
- 
- 	gfs2_glock_dq_uninit(&sdp->sd_freeze_gh);
- 	mutex_unlock(&sdp->sd_freeze_mutex);
--	return 0;
-+	return wait_on_bit(&sdp->sd_flags, SDF_FS_FROZEN, TASK_INTERRUPTIBLE);
- }
- 
- /**
 -- 
 2.20.1
 
