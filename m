@@ -2,89 +2,118 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FACCC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 14:30:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DACC6C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 14:30:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53F9B2173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 14:30:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rajagiritech-edu-in.20150623.gappssmtp.com header.i=@rajagiritech-edu-in.20150623.gappssmtp.com header.b="T2kYxw6M"
+	by mail.kernel.org (Postfix) with ESMTP id B98F721773
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 14:30:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729423AbfEVOaa (ORCPT
+        id S1729494AbfEVOag (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 10:30:30 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:46251 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728744AbfEVOaa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 10:30:30 -0400
-Received: by mail-pl1-f194.google.com with SMTP id r18so1160108pls.13
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 07:30:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rajagiritech-edu-in.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0m0QjYyjO2xHrKzFzTehhWEPphtJIzzFFRYPzTW3DMQ=;
-        b=T2kYxw6M4VFwvrSg9HRUF2uPooKZ2Dk6AmNuLHygKvbtjUp1C79ABGleU4NpWQgtG+
-         xyNerFhZb1XMy6mw5lQzehrEE7/NBqYQPzUt9jvyTeLj9vsYw3pAry+y23L3yjfCjhDJ
-         yoMBcgsNSAsgypmbF99mRLSytz+s/UDYzeuQUPzFC6WTuCtGRKRYUgQx6yvSE/FxlWH2
-         pqRUDuI5S4wSMke309nhIOWTIHwzEzKiKdSXZRidURLm26VHEBEOC1iIc3U2gexz0ynG
-         vOxHFexpwwsDmgzyeSI00gmNJ0WAnYhTVwEa0K2+6EZjiULYXI9ZcdenQdTGsT3HwctH
-         k3Pw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0m0QjYyjO2xHrKzFzTehhWEPphtJIzzFFRYPzTW3DMQ=;
-        b=QSRFBuKUKSQZr6ojKTsbOqXxUgP+wdCG962TYxTCCQuUmOBpchDIwBy60cXsrqkIRQ
-         CrEdBDZaSfI7Y21iM/2qZy+URaYHM5Gojn/Uj6A3SS7z4Jhcauhj0AFC/EyOrZtACEdo
-         DbiuJiu6w6qPu+5K3Xvh28ZRFQnomL0c4Qnri7KfQA5RF1yi+WFAgG2muaK+L25RWYt9
-         4OOCpek5vbRDJJ/rF1hRIYL/A/Cyhys0XbgmueqIMQ4k611AmJswFHyFCjr1unih9Ytx
-         xpVhoW5IJ5beXrRG8nTdZ49a5vF3HXm7jDT/qLWXZTy0MDMI8b9bDJdBWt8EEDJdtL6s
-         HRQA==
-X-Gm-Message-State: APjAAAWVxPKeZqjo2Qeu37R0x4TgvlMiqDjBI1O9Wzqn76qPXo19PPjh
-        IXQJCLYaYupJL/o1YLLuPI3lvdVl1TPC3vOqs1sEiQ==
-X-Google-Smtp-Source: APXvYqxvo1fFJOMp10yWhcwkQF+EVwPZOIUCu4QXMKCMejzytyZV3guibp+FcWp+LRDJRt9vDpZ3/2/a9GARbq9GNuo=
-X-Received: by 2002:a17:902:3103:: with SMTP id w3mr15769604plb.187.1558535429532;
- Wed, 22 May 2019 07:30:29 -0700 (PDT)
+        Wed, 22 May 2019 10:30:36 -0400
+Received: from mail-oln040092255016.outbound.protection.outlook.com ([40.92.255.16]:6036
+        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728744AbfEVOaf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 10:30:35 -0400
+Received: from HK2APC01FT049.eop-APC01.prod.protection.outlook.com
+ (10.152.248.56) by HK2APC01HT057.eop-APC01.prod.protection.outlook.com
+ (10.152.248.228) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1922.16; Wed, 22 May
+ 2019 14:30:31 +0000
+Received: from PS2P216MB0642.KORP216.PROD.OUTLOOK.COM (10.152.248.53) by
+ HK2APC01FT049.mail.protection.outlook.com (10.152.249.218) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.1922.16 via Frontend Transport; Wed, 22 May 2019 14:30:31 +0000
+Received: from PS2P216MB0642.KORP216.PROD.OUTLOOK.COM
+ ([fe80::1c5e:7ea0:b90c:65c9]) by PS2P216MB0642.KORP216.PROD.OUTLOOK.COM
+ ([fe80::1c5e:7ea0:b90c:65c9%10]) with mapi id 15.20.1922.016; Wed, 22 May
+ 2019 14:30:31 +0000
+From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Subject: [PATCH v6 0/4] PCI: Patch series to support Thunderbolt without any
+ BIOS support
+Thread-Topic: [PATCH v6 0/4] PCI: Patch series to support Thunderbolt without
+ any BIOS support
+Thread-Index: AQHVEKroekXmwO/8K0mZzVmJDM4t6Q==
+Date:   Wed, 22 May 2019 14:30:30 +0000
+Message-ID: <PS2P216MB0642AD5BCA377FDC5DCD8A7B80000@PS2P216MB0642.KORP216.PROD.OUTLOOK.COM>
+Accept-Language: en-AU, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: SY2PR01CA0014.ausprd01.prod.outlook.com
+ (2603:10c6:1:14::26) To PS2P216MB0642.KORP216.PROD.OUTLOOK.COM
+ (2603:1096:300:1c::16)
+x-incomingtopheadermarker: OriginalChecksum:C4307983063F48440F20EAA09C2EF6BFF2F6D6D33DB1DCB53E327E43DC49AA88;UpperCasedChecksum:30443D57D774F8953EE4467FAF466C77A8A1492E85ED2E4A4F3B362178614567;SizeAsReceived:7732;Count:48
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.19.1
+x-tmn:  [dY+zV4YCQko/3G5AxX56s7fTJGFZS24eib++1MX+Lhl5DKbVIgYlZ93oMDKSpAK/ubNGCg3gN4E=]
+x-microsoft-original-message-id: <20190522222928.2964-1-nicholas.johnson-opensource@outlook.com.au>
+x-ms-publictraffictype: Email
+x-incomingheadercount: 48
+x-eopattributedmessage: 0
+x-ms-exchange-slblob-mailprops: Zv/SX2iM+5Xt13fxl+LEE7dPPA5uzr/vHXTLIGhqyGuljXDuREJuqlOscJaqI7jWlFaf/BjaQbv9GeeNXYeO9fHtKya2HmU9lqQfPWO+briUupy2RJOdFSwWtW5ANehZQyritBxqLFg6FBRbg+6oohvdvVsDORip2zYSvdAcywth8y7iv1EYVvADfo95ze3g3GxyVNvEzckRschQozkxFIW1DReismJ3mjG/WR1Jqhbi8D5qT7K818/wuYw/W76ZlFWlkFTRo5l4LypSHRremV38/uUchBCqTlx/xNaB10yLBJx9uYc1n7nnjCk7FCZdDHsVbmtHsMnbfT4yTjnnJ231XdRzORrP2LT8FaxnZj8PVUkuBsxMlToZcrvLiuTMiEsL0EkKPrOmAbPJhk6RKpp6PCuMW2FtGc5I2Ww6pfQsAbKq+cB0Cf9l1PjgmUD74kgQLaC/ELcTiDbIJWyZkWuKarUmjzWr3FTBylqyBdBjWD6smCDMm33wQ5kD7W603Px9Hye/YJxnJBF2//xpOeEsGrAtgqXekmZyifivnwMaiQ1oUcLlVJNUllNTB9gQAOtxBuy8JjNIbZUDEl1ApStk6YeCXm8XrRSyy87UucBEKeFFBpLPW+I/ml0aodX7YlhAAoJuxmAjmo6/FtIJTfgkDTmMdmLZfLsP4tNbpYdgTLEmCayzKQegNSuKh8nxlmnQwlElSao=
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(5050001)(7020095)(20181119110)(201702061078)(5061506573)(5061507331)(1603103135)(2017031320274)(201702181274)(2017031323274)(2017031324274)(2017031322404)(1601125500)(1603101475)(1701031045);SRVR:HK2APC01HT057;
+x-ms-traffictypediagnostic: HK2APC01HT057:
+x-microsoft-antispam-message-info: FaAd5nriA33kNc+1q8SdiSoDnQMnh4I/76EjNXEaOYgW3gsp8jebUSOoTR1F546hg/GYUzAbwpAIXLGXij0PW80FsnIC6tb95pbch9FdDMtbJkXZjBph50AjHinvWJL9sErbXIwOwLoRUwWAttmdU62iMVA7Ds0nANFvXr0NK6Ng6bgTnDS7lqbGVR/OVxRI
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20190515064405.3981-1-jeffrin@rajagiritech.edu.in> <20190521181125.anqj32v3gcwjxs3z@salvia>
-In-Reply-To: <20190521181125.anqj32v3gcwjxs3z@salvia>
-From:   Jeffrin Thalakkottoor <jeffrin@rajagiritech.edu.in>
-Date:   Wed, 22 May 2019 19:59:53 +0530
-Message-ID: <CAG=yYwkAUzGZWdVpcjRScARyOyO9KaTCL_7LUxaav5os+6rsEA@mail.gmail.com>
-Subject: Re: [PATCH v2] selftests: netfilter: missing error check when setting
- up veth interface
-To:     Pablo Neira Ayuso <pablo@netfilter.org>
-Cc:     Florian Westphal <fw@strlen.de>, Shuah Khan <shuah@kernel.org>,
-        linux-kselftest@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>,
-        netfilter-devel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: e5be8faa-ccbf-434b-122a-08d6dec20a64
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 May 2019 14:30:31.1646
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK2APC01HT057
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks to all !
-
-On Tue, May 21, 2019 at 11:41 PM Pablo Neira Ayuso <pablo@netfilter.org> wrote:
->
-> On Wed, May 15, 2019 at 12:14:04PM +0530, Jeffrin Jose T wrote:
-> > A test for  the basic NAT functionality uses ip command which
-> > needs veth device.There is a condition where the kernel support
-> > for veth is not compiled into the kernel and the test script
-> > breaks.This patch contains code for reasonable error display
-> > and correct code exit.
->
-> Applied, thanks.
-
-
-
--- 
-software engineer
-rajagiri school of engineering and technology
+UmViYXNlIHBhdGNoZXMgdG8gYXBwbHkgY2xlYW5seSB0byA1LjItcmMxIHNvdXJjZS4gUmVtb3Zl
+IHBhdGNoIGZvciANCmNvbW1lbnQgc3R5bGUgY2xlYW51cCBhcyB0aGlzIGhhcyBhbHJlYWR5IGJl
+ZW4gYXBwbGllZC4NCg0KQW55Ym9keSBpbnRlcmVzdGVkIGluIHRlc3RpbmcsIHlvdSBjYW4gZG8g
+c28gd2l0aDoNCg0KYSkgSW50ZWwgc3lzdGVtIHdpdGggVGh1bmRlcmJvbHQgMyBhbmQgbmF0aXZl
+IGVudW1lcmF0aW9uLiBUaGUgR2lnYWJ5dGUgDQpaMzkwIERlc2lnbmFyZSBpcyBvbmUgb2YgdGhl
+IG1vc3QgcGVyZmVjdCBmb3IgdGhpcyB0aGF0IEkgaGF2ZSBuZXZlciBoYWQgDQp0aGUgb3Bwb3J0
+dW5pdHkgdG8gdXNlIC0gaXQgZG9lcyBub3QgZXZlbiBoYXZlIHRoZSBvcHRpb24gZm9yIEJJT1Mg
+DQphc3Npc3RlZCBlbnVtZXJhdGlvbiBwcmVzZW50IGluIHRoZSBCSU9TLg0KDQpiKSBBbnkgc3lz
+dGVtIHdpdGggUENJZSBhbmQgdGhlIEdpZ2FieXRlIEdDLVRJVEFOIFJJREdFIGFkZC1pbiBjYXJk
+LCANCmp1bXAgdGhlIGhlYWRlciBhcyBkZXNjcmliZWQgYW5kIHVzZSBrZXJuZWwgcGFyYW1ldGVy
+cyBsaWtlOg0KDQpwY2k9YXNzaWduLWJ1c3NlcyxocGJ1c3NpemU9MHgzMyxyZWFsbG9jLGhwbWVt
+c2l6ZT0xMjhNLGhwbWVtcHJlZnNpemU9MUcsbm9jcnMgDQpwY2llX3BvcnRzPW5hdGl2ZQ0KDQpb
+b3B0aW9uYWxdIHBjaS5keW5kYmcNCg0KICAgIF9fXw0KIF9fLyAgIFxfXw0KfG8gbyBvIG8gb3wg
+V2hlbiBsb29raW5nIGludG8gdGhlIHJlY2VwdGFjbGUgb24gYmFjayBvZiBQQ0llIGNhcmQuDQp8
+X19fX19fX19ffCBKdW1wIHBpbnMgMyBhbmQgNS4NCg0KIDEgMiAzIDQgNQ0KDQpUaGUgSW50ZWwg
+c3lzdGVtIGlzIG5pY2UgaW4gdGhhdCBpdCBzaG91bGQganVzdCB3b3JrLiBUaGUgYWRkLWluIGNh
+cmQgDQpzZXR1cCBpcyBuaWNlIGluIHRoYXQgeW91IGNhbiBnbyBudXRzIGFuZCBhc3NpZ24gY29w
+aW91cyBhbW91bnRzIG9mIA0KTU1JT19QUkVGIC0gY2FuIGFueWJvZHkgc2hvdyBhIFhlb24gUGhp
+IGNvcHJvY2Vzc29yIHdpdGggMTZHIEJBUiB3b3JraW5nIA0KaW4gYW4gZUdQVSBlbmNsb3N1cmUg
+d2l0aCB0aGVzZSBwYXRjaGVzPw0KDQpIb3dldmVyLCBpZiB5b3Ugc3BlY2lmeSB0aGUgYWJvdmUg
+a2VybmVsIHBhcmFtZXRlcnMgb24gdGhlIEludGVsIHN5c3RlbSwgDQp5b3Ugc2hvdWxkIGJlIGFi
+bGUgdG8gb3ZlcnJpZGUgaXQgdG8gYWxsb2NhdGUgbW9yZSBzcGFjZS4NCg0KTmljaG9sYXMgSm9o
+bnNvbiAoNCk6DQogIFBDSTogQ29uc2lkZXIgYWxpZ25tZW50IG9mIGhvdC1hZGRlZCBicmlkZ2Vz
+IHdoZW4gZGlzdHJpYnV0aW5nDQogICAgYXZhaWxhYmxlIHJlc291cmNlcw0KICBQQ0k6IE1vZGlm
+eSBleHRlbmRfYnJpZGdlX3dpbmRvdygpIHRvIHNldCByZXNvdXJjZSBzaXplIGRpcmVjdGx5DQog
+IFBDSTogRml4IGJ1ZyByZXN1bHRpbmcgaW4gZG91YmxlIGhwbWVtc2l6ZSBiZWluZyBhc3NpZ25l
+ZCB0byBNTUlPDQogICAgd2luZG93DQogIFBDSTogQWRkIHBjaT1ocG1lbXByZWZzaXplIHBhcmFt
+ZXRlciB0byBzZXQgTU1JT19QUkVGIHNpemUNCiAgICBpbmRlcGVuZGVudGx5DQoNCiAuLi4vYWRt
+aW4tZ3VpZGUva2VybmVsLXBhcmFtZXRlcnMudHh0ICAgICAgICAgfCAgIDcgKy0NCiBkcml2ZXJz
+L3BjaS9wY2kuYyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgMTggKy0NCiBkcml2ZXJz
+L3BjaS9zZXR1cC1idXMuYyAgICAgICAgICAgICAgICAgICAgICAgfCAyNjUgKysrKysrKysrKy0t
+LS0tLS0tDQogaW5jbHVkZS9saW51eC9wY2kuaCAgICAgICAgICAgICAgICAgICAgICAgICAgIHwg
+ICAzICstDQogNCBmaWxlcyBjaGFuZ2VkLCAxNjcgaW5zZXJ0aW9ucygrKSwgMTI2IGRlbGV0aW9u
+cygtKQ0KDQotLSANCjIuMjAuMQ0KDQo=
