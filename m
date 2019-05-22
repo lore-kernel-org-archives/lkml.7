@@ -2,84 +2,109 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01050C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 13:55:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 617CFC282DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 13:56:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8C62208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 13:55:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36A5A208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 13:56:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558533367;
+	bh=CpWRPFDFDeEz2FasTJpU7xC9m9MJZ5sBPRt83HEYgfo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=KDvAyKjSKFJGF9qo3QO6TDi4tX8WW8YYrEmM5DEAq3dhGLntorw98KqRXXVhRNLru
+	 e1QB13i5HXD4UHzAfdvqWe6mZxlk+aJah9g3eBZN7BTsQONIapF4VnXLmsjGeS8PDL
+	 rdn/giGfOe/uQPQc2wffoc44+7boL51P+07xrjK8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729034AbfEVNzz (ORCPT
+        id S1729346AbfEVN4G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 09:55:55 -0400
-Received: from foss.arm.com ([217.140.101.70]:52022 "EHLO foss.arm.com"
+        Wed, 22 May 2019 09:56:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47154 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726770AbfEVNzy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 09:55:54 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EE8DE80D;
-        Wed, 22 May 2019 06:55:53 -0700 (PDT)
-Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 58C903F575;
-        Wed, 22 May 2019 06:55:52 -0700 (PDT)
-Subject: Re: [PATCH] swiotlb: sync buffer when mapping FROM_DEVICE
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     =?UTF-8?Q?Horia_Geant=c4=83?= <horia.geanta@nxp.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-imx@nxp.com
-References: <20190522072018.10660-1-horia.geanta@nxp.com>
- <20190522123243.GA26390@lst.de>
- <6cbe5470-16a6-17e9-337d-6ba18b16b6e8@arm.com>
- <20190522130921.GA26874@lst.de>
- <fdfd7318-7999-1fe6-01b6-ae1fb7ba8c30@arm.com>
- <20190522133400.GA27229@lst.de>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <ed26de5e-aee4-4e19-095c-cc551012d475@arm.com>
-Date:   Wed, 22 May 2019 14:55:50 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1726770AbfEVN4G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 09:56:06 -0400
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C4C92173C;
+        Wed, 22 May 2019 13:56:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558533365;
+        bh=CpWRPFDFDeEz2FasTJpU7xC9m9MJZ5sBPRt83HEYgfo=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=duF47EnJ1olpUVNwqtjHV8UOkB/JftPjhDIWWr5H4ZMBt7IDtYQ1C/3BKouXzaL0v
+         f3jygMikKv5/BWPNiA3P92IWbjeorOYEupad+Hlhua/d6y7btM+ZP6HzFBgM/1PR/F
+         gF+k03o4CdD3kYEN6+YfFHKpbwJPIm2lkyOB1Qxs=
+Received: by mail-qk1-f173.google.com with SMTP id c15so1524668qkl.2;
+        Wed, 22 May 2019 06:56:05 -0700 (PDT)
+X-Gm-Message-State: APjAAAVS2HAzJ89IMmVXZJFQTXH+JWOPkg1sTUSD4T7X9LIXYH+2RVkw
+        gw6+ea53cbBEIOVLw2eAzSgI2jGGCX9/tfGk6A==
+X-Google-Smtp-Source: APXvYqzvt+EFGiFr6y2zsSRBs4qOUs7e+/z+bJpZu4CMkQbtQjvYCr7ioBnDYS6ibBsbagsPUO0sVjALMvR6IRu+67E=
+X-Received: by 2002:a37:dc03:: with SMTP id v3mr70538862qki.151.1558533364775;
+ Wed, 22 May 2019 06:56:04 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190522133400.GA27229@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <1558466890-45471-1-git-send-email-kdasu.kdev@gmail.com> <CAL_JsqKd53W1E33YdtJwagi4=7DrVQ5+N3rSY=Rxo5J0RiW46g@mail.gmail.com>
+In-Reply-To: <CAL_JsqKd53W1E33YdtJwagi4=7DrVQ5+N3rSY=Rxo5J0RiW46g@mail.gmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Wed, 22 May 2019 08:55:53 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJ+zNQ3CeBh8K=oBiZZsiBQ8w1w=6vs8zOQeqUf_qhqcg@mail.gmail.com>
+Message-ID: <CAL_JsqJ+zNQ3CeBh8K=oBiZZsiBQ8w1w=6vs8zOQeqUf_qhqcg@mail.gmail.com>
+Subject: Re: [PATCH] dt: bindings: mtd: replace references to nand.txt with nand-controller.yaml
+To:     Kamal Dasu <kdasu.kdev@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     MTD Maling List <linux-mtd@lists.infradead.org>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Liang Yang <liang.yang@amlogic.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Stefan Agner <stefan@agner.ch>, Lucas Stach <dev@lynxeye.de>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Andy Gross <agross@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        Mans Rullgard <mans@mansr.com>, devicetree@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-amlogic@lists.infradead.org, linux-tegra@vger.kernel.org,
+        linux-oxnas@groups.io,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22/05/2019 14:34, Christoph Hellwig wrote:
-> On Wed, May 22, 2019 at 02:25:38PM +0100, Robin Murphy wrote:
->> Sure, but that should be irrelevant since the effective problem here is in
->> the sync_*_for_cpu direction, and it's the unmap which nobbles the buffer.
->> If the driver does this:
->>
->> 	dma_map_single(whole buffer);
->> 	<device writes to part of buffer>
->> 	dma_unmap_single(whole buffer);
->> 	<contents of rest of buffer now undefined>
->>
->> then it could instead do this and be happy:
->>
->> 	dma_map_single(whole buffer, SKIP_CPU_SYNC);
->> 	<device writes to part of buffer>
->> 	dma_sync_single_for_cpu(updated part of buffer);
->> 	dma_unmap_single(whole buffer, SKIP_CPU_SYNC);
->> 	<contents of rest of buffer still valid>
-> 
-> Assuming the driver knows how much was actually DMAed this would
-> solve the issue.  Horia, does this work for you?
+On Wed, May 22, 2019 at 8:19 AM Rob Herring <robh+dt@kernel.org> wrote:
+>
+> On Tue, May 21, 2019 at 2:28 PM Kamal Dasu <kdasu.kdev@gmail.com> wrote:
+> >
+> > nand-controller.yaml replaced nand.txt however the references to it were
+> > not updated. This change updates these references wherever it appears in
+> > bindings documentation.
+> >
+> > Fixes: 212e49693592 ("dt-bindings: mtd: Add YAML schemas for the generic NAND options")
+> >
+> > Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
+>
+> Mauro already sent a similar patch.
 
-Ohhh, and now I've just twigged what you were suggesting - your 
-DMA_ATTR_PARTIAL flag would mean "treat this as a read-modify-write of 
-the buffer because we *don't* know exactly which parts the device may 
-write to". So indeed if we did go down that route we wouldn't need any 
-of the sync stuff I was worrying about (but I might suggest naming it 
-DMA_ATTR_UPDATE instead). Apologies for being slow :)
+Actually, Mauro's patch missed a bunch of cases that aren't full
+paths, so I'll take this one.
 
-Robin.
+Rob
