@@ -2,128 +2,101 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C43AC072B5
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 00:44:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37F07C072B5
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 00:47:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD6F6217D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 00:44:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 064A4217D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 00:47:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SfSWg9Te"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a9Xkv9Ps"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728036AbfEVAod (ORCPT
+        id S1728071AbfEVArR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 20:44:33 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:39127 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726434AbfEVAoc (ORCPT
+        Tue, 21 May 2019 20:47:17 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:36907 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726083AbfEVArQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 20:44:32 -0400
-Received: by mail-io1-f67.google.com with SMTP id m7so458149ioa.6;
-        Tue, 21 May 2019 17:44:32 -0700 (PDT)
+        Tue, 21 May 2019 20:47:16 -0400
+Received: by mail-qk1-f194.google.com with SMTP id d10so439636qko.4
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 17:47:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pWCi9dROwOfQvBvMAXELot1dHsDW9NHuGvLhfRnJ4hE=;
-        b=SfSWg9TeEu5DaP5TRGUM57CeTAi++dYX546ZT6YQE1GsntXdrEm80yuE3lgKb5R7hI
-         Fxj0EWfVmZFdIz8GxjIpdKO+gtBRBBpLtejZBPnrYL4gZejAh01OTXkKGk/ZWOeJLhY8
-         m9Z/pj1g6xv1c9tejcJjP4HFwp95EFIKLcOYDRyJJc9vGNOwoUSBjFmxy2yQhSuxRFtN
-         Zn4kg3aVuL+lM2Ze13lYlR3bhDPX3FhOB4iHPIKyVjkp6s0epY1/DyCUykGga/I3dBQF
-         e/JRdL3Vnx1SzeCcS2pZWHSjgpOXNUuUfCaPb7wutTP5guOmTphZc8f0CzptOO3mDluX
-         dUwQ==
+        h=from:to:cc:subject:date:message-id;
+        bh=hBzsh7RjbZaBI7Dj1vWsPMY7clgyplPvG9IzYiE5AEw=;
+        b=a9Xkv9PsmxK0qiE5pYsPclh6XiPQ/3PJ9Y2thxmu1/No9l6v/LNogVR5SIVLIditxT
+         pBhPWnmlBpKxNiOPYTKOuFpk7Hq3vSny9pTYD9LphgX9HtsCUnv7a4nytSj9gspyGVaF
+         2lu/Wl/L3QcabvKMWImNubBwnybtRQN9+k78kMUGbfFSlxpnda3jaE125+m7cb6MhE0o
+         oDiOXLO/wKbcrhh89hdePula6L/+G22VIq8PBRoBrg757pLV9ET0VxamM/a9yF8IVyLE
+         0c4ba4/B3/Ud9CUA6Te0/A9Dvy88Lun3+CS7pGGasHW6OauJbIfNvyaRCbaR/Pd2KArX
+         DYFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pWCi9dROwOfQvBvMAXELot1dHsDW9NHuGvLhfRnJ4hE=;
-        b=KnwN1q0ZrpQAN/B9St6PAjwRklU1+P8tGId/kwAhhJ37AP2mtGWdk8GDEp0w/BRRi6
-         Hv7yRKgzG23WRs+bJuOb5fqxL8264PKgACABrw+/pIHIOKRk6bw6HxnwhnHpcHCGEHzb
-         PJsMnvJOa176nRlA3ERaIr8H66SF4Uc92p4wQNsmi2Uq8Rg5eiabaDjFEoTD+hGllOxd
-         +wdzkVxwDNgQAzg5wZPSP2i5x51MVZ60voRQ7aS8F4wuQz5iYsPMTat478oIWzug9HD1
-         7j/58rFR3kNSFrZ5mbqgte7EbcphrizWyfi1ntiZAeZKyWwtztJzaNJOI19ewLE26AWm
-         IfCA==
-X-Gm-Message-State: APjAAAUUwbxpgrUJgXIbaVBSsNESNd4+FAoFCPfimDxV5JsjHtX9+snu
-        Q5HuwPecsGXYZ7QlrTz5S4GplmKUvz2OPUa75Bk=
-X-Google-Smtp-Source: APXvYqxUpoov/lRK+3Nk9QPmCfxT+tSQOmPVQFA6wQLCtgq80Rq1EUYHAzQ+cZQrAKyBAe/Hzp+PszAlQTvkghjq1Lc=
-X-Received: by 2002:a5e:840c:: with SMTP id h12mr6278956ioj.81.1558485871505;
- Tue, 21 May 2019 17:44:31 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190507043954.9020-1-deepa.kernel@gmail.com> <20190521092551.fwtb6recko3tahwj@dcvr>
- <20190521152748.6b4cd70cf83a1183caa6aae7@linux-foundation.org>
- <20190521233319.GA17957@dcvr> <CABeXuvoOGwOGmSz_vgTugLD1NPE=2ULvmESPTtK9d6r8S+WVdQ@mail.gmail.com>
-In-Reply-To: <CABeXuvoOGwOGmSz_vgTugLD1NPE=2ULvmESPTtK9d6r8S+WVdQ@mail.gmail.com>
-From:   Deepa Dinamani <deepa.kernel@gmail.com>
-Date:   Tue, 21 May 2019 17:44:19 -0700
-Message-ID: <CABeXuvrT-mHomeH-CnuLsWzNCQOfymW01s+HGRaBTNA+u2t28w@mail.gmail.com>
-Subject: Re: [PATCH 1/1] signal: Adjust error codes according to restore_user_sigmask()
-To:     Eric Wong <e@80x24.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>, dbueso@suse.de, axboe@kernel.dk,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Jason Baron <jbaron@akamai.com>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        linux-aio <linux-aio@kvack.org>,
-        Omar Kilani <omar.kilani@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>, stable@vger.kernel.org,
-        Oleg Nesterov <oleg@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=hBzsh7RjbZaBI7Dj1vWsPMY7clgyplPvG9IzYiE5AEw=;
+        b=SLLfGTMfPTpxyVY+WIeIbFZfi8qZ1Qc+lcG+Ozz9hCbtyELUQjrrd8qhPlJL52SDIZ
+         jAtlciSiak80Nm36PwouXs9XGWRBP5UMCOxPQJcJe98grdr5lvNOSNSatN5XNNURYfGq
+         F1A0Bk8KcgCcme2v9Yb+Uy4y+uSsS841BxBUOyiM5ZAeuVu+xpsT7TeVqaIASUhBbTsS
+         Rx/bo5s8kQShBpMEJxSqJz3ZGD85q2RJT8iu96jeiUYfAS7TS0TDP65BRzZW9g8TOssh
+         nszXZVFu9EzqE/N84MPIXE8nwp0TcHt5x/BK//Q2Pw6aTes/mL6UJFqUbA5513Fxqx87
+         UBpw==
+X-Gm-Message-State: APjAAAUVdSsb6gwBHqtlfKlFneeT++wQrT2J7/XbyM/GaD1EYJeb7OKw
+        L67CH4IxoGdbV/ugr00+l0c=
+X-Google-Smtp-Source: APXvYqxLc1VNx9VHbbR7lt5FbsTJZmCD6LNmgr8UeGXzyvS5HPcB4jztdQ6n5uCcRtESWokWmIn2Tw==
+X-Received: by 2002:a05:620a:3:: with SMTP id j3mr47497441qki.95.1558486035768;
+        Tue, 21 May 2019 17:47:15 -0700 (PDT)
+Received: from Void.ic.unicamp.br (wifi-177-220-85-147.wifi.ic.unicamp.br. [177.220.85.147])
+        by smtp.gmail.com with ESMTPSA id o10sm10115269qtg.5.2019.05.21.17.47.12
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 21 May 2019 17:47:14 -0700 (PDT)
+From:   Fabio Lima <fabiolima39@gmail.com>
+To:     gregkh@linuxfoundation.org, jeremy@azazel.net,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        lkcamp@lists.libreplanetbr.org
+Cc:     Fabio Lima <fabiolima39@gmail.com>
+Subject: [PATCH] staging: rtl8723bs: Add missing blank lines
+Date:   Tue, 21 May 2019 21:46:55 -0300
+Message-Id: <20190522004655.20138-1-fabiolima39@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 21, 2019 at 5:35 PM Deepa Dinamani <deepa.kernel@gmail.com> wrote:
->
-> > > > It's been 2 weeks and this fix hasn't appeared in mmots / mmotm.
-> > > > I also noticed it's missing Cc: for stable@ (below)
-> > >
-> > > Why is a -stable backport needed?  I see some talk above about lost
-> > > signals but it is unclear whether these are being observed after fixing
-> > > the regression caused by 854a6ed56839a.
-> >
-> > I guess Deepa's commit messages wasn't clear...
-> > I suggest prepending this as the first paragraph to Deepa's
-> > original message:
-> >
-> >   This fixes a bug introduced with 854a6ed56839a which caused
-> >   EINTR to not be reported to userspace on epoll_pwait.  Failure
-> >   to report EINTR to userspace caused problems with user code
-> >   which relies on EINTR to run signal handlers.
->
-> This is not what the patch fixed.
->
-> The notable change is userspace is that now whenever a signal is
-> delivered, the return value is adjusted to reflect the signal
-> delivery.
-> Prior to this patch, there was a window, however small it might have
-> been, when the signal was delivered but the errono was not adjusted
-> appropriately.
-> This is because of the regression caused by 854a6ed56839a, which
-> extended the window of delivery of signals that was delivered to
-> userspace.
-> The patch also fixes more than sys_epoll_pwait().
->
-> I will post a follow up patch.
->
-> >
-> > > IOW, can we please have a changelog which has a clear and complete
-> > > description of the user-visible effects of the change.
-> > >
-> > > And please Cc Oleg.
->
-> I will cc Oleg.
+This patch resolves the following warning from checkpatch.pl
+WARNING: Missing a blank line after declarations
 
-Also the commit message was brief because the issue was explained in
-the link that was quoted in the commit message.
+Signed-off-by: Fabio Lima <fabiolima39@gmail.com>
+---
+ drivers/staging/rtl8723bs/core/rtw_debug.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Detailed issue discussion permalink:
-https://lore.kernel.org/linux-fsdevel/20190427093319.sgicqik2oqkez3wk@dcvr/
+diff --git a/drivers/staging/rtl8723bs/core/rtw_debug.c b/drivers/staging/rtl8723bs/core/rtw_debug.c
+index 9f8446ccf..853362381 100644
+--- a/drivers/staging/rtl8723bs/core/rtw_debug.c
++++ b/drivers/staging/rtl8723bs/core/rtw_debug.c
+@@ -382,6 +382,7 @@ ssize_t proc_set_roam_tgt_addr(struct file *file, const char __user *buffer, siz
+ 	if (buffer && !copy_from_user(tmp, buffer, sizeof(tmp))) {
+ 
+ 		int num = sscanf(tmp, "%hhx:%hhx:%hhx:%hhx:%hhx:%hhx", addr, addr+1, addr+2, addr+3, addr+4, addr+5);
++
+ 		if (num == 6)
+ 			memcpy(adapter->mlmepriv.roam_tgt_addr, addr, ETH_ALEN);
+ 
+@@ -1348,6 +1349,7 @@ int proc_get_btcoex_dbg(struct seq_file *m, void *v)
+ 	struct net_device *dev = m->private;
+ 	struct adapter *padapter;
+ 	char buf[512] = {0};
++
+ 	padapter = (struct adapter *)rtw_netdev_priv(dev);
+ 
+ 	rtw_btcoex_GetDBG(padapter, buf, 512);
+-- 
+2.11.0
 
--Deepa
