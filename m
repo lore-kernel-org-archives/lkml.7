@@ -2,110 +2,83 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.5 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6CEAC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:58:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD86FC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:58:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 984DC20856
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:58:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558555110;
-	bh=NnjnBCFSojtYw67bWA3o/Gh/vuEZod/eDSGe2vdg5E0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S8IW67Nur3xnNZnTN15LyA0sTue3sRuTwQ+I05T779qqegLo5RW1ZdimBHq2XXznz
-	 4TPfw43giqZAEYJ2mzhP/NMAx9YwyI+WBtoY9mqlZfv8E3hx5twmQ2bY4k+V7b3TjB
-	 Lt/lPXK8xoI96Rl0JwBXvNeCJuzP9qVptp7Tcsq8=
+	by mail.kernel.org (Postfix) with ESMTP id ACE5E20862
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:58:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731350AbfEVT63 (ORCPT
+        id S1733248AbfEVT6s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:58:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44912 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:58:48 -0400
+Received: from mga06.intel.com ([134.134.136.31]:43062 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731062AbfEVTX5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:23:57 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 388B821850;
-        Wed, 22 May 2019 19:23:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553037;
-        bh=NnjnBCFSojtYw67bWA3o/Gh/vuEZod/eDSGe2vdg5E0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p6RXiiwZF37yolHvnzmlj6mm6bTn8ub0kQ6CGbQgufbRk3cFWr7W0TWbR7fefxAA6
-         Tm2dNL225AsCCldkQQZRKHr7yOqrpNlvbc+MdMjx281tllOd9Z4j6g15aylZYbYt0U
-         a5zEw2OTXNtik5UTKRfvqPrCAoM3nJCgKXO2irXE=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tony Nguyen <anthony.l.nguyen@intel.com>,
-        Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 013/317] ice: Separate if conditions for ice_set_features()
-Date:   Wed, 22 May 2019 15:18:34 -0400
-Message-Id: <20190522192338.23715-13-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190522192338.23715-1-sashal@kernel.org>
-References: <20190522192338.23715-1-sashal@kernel.org>
+        id S1729565AbfEVT6m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:58:42 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 May 2019 12:58:41 -0700
+X-ExtLoop1: 1
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga004.fm.intel.com with ESMTP; 22 May 2019 12:58:39 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1hTXNm-00073h-Ry; Thu, 23 May 2019 03:58:38 +0800
+Date:   Thu, 23 May 2019 03:58:15 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Geordan Neukum <gneukum1@gmail.com>
+Cc:     kbuild-all@01.org, devel@driverdev.osuosl.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] staging: kpc2000: kpc_i2c: fix platform_no_drv_owner.cocci
+ warnings
+Message-ID: <20190522195815.GA49400@lkp-kbuild22>
+References: <201905230355.OQnavbXj%lkp@intel.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <201905230355.OQnavbXj%lkp@intel.com>
+X-Patchwork-Hint: ignore
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Nguyen <anthony.l.nguyen@intel.com>
+From: kbuild test robot <lkp@intel.com>
 
-[ Upstream commit 8f529ff912073f778e3cd74e87fb69a36499fc2f ]
+drivers/staging/kpc2000/kpc2000_i2c.c:652:3-8: No need to set .owner here. The core will do it.
 
-Set features can have multiple features turned on|off in a single
-call.  Grouping these all in an if/else means after one condition
-is met, other conditions/features will not be evaluated.  Break
-the if/else statements by feature to ensure all features will be
-handled properly.
+ Remove .owner field if calls are used which set it automatically
 
-Signed-off-by: Tony Nguyen <anthony.l.nguyen@intel.com>
-Signed-off-by: Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Generated by: scripts/coccinelle/api/platform_no_drv_owner.cocci
+
+Fixes: 43ad38191816 ("staging: kpc2000: kpc_i2c: add static qual to local symbols in kpc_i2c.c")
+CC: Geordan Neukum <gneukum1@gmail.com>
+Signed-off-by: kbuild test robot <lkp@intel.com>
 ---
- drivers/net/ethernet/intel/ice/ice_main.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/ice/ice_main.c b/drivers/net/ethernet/intel/ice/ice_main.c
-index 8725569d11f0a..d083979acc22c 100644
---- a/drivers/net/ethernet/intel/ice/ice_main.c
-+++ b/drivers/net/ethernet/intel/ice/ice_main.c
-@@ -2490,6 +2490,9 @@ static int ice_set_features(struct net_device *netdev,
- 	struct ice_vsi *vsi = np->vsi;
- 	int ret = 0;
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/staging.git staging-next
+head:   43ad38191816a6b77cc4bd8222353320a71a1d2d
+commit: 43ad38191816a6b77cc4bd8222353320a71a1d2d [106/106] staging: kpc2000: kpc_i2c: add static qual to local symbols in kpc_i2c.c
+
+ kpc2000_i2c.c |    1 -
+ 1 file changed, 1 deletion(-)
+
+--- a/drivers/staging/kpc2000/kpc2000_i2c.c
++++ b/drivers/staging/kpc2000/kpc2000_i2c.c
+@@ -649,7 +649,6 @@ static struct platform_driver i2c_plat_d
+ 	.remove     = pi2c_remove,
+ 	.driver     = {
+ 		.name   = KP_DRIVER_NAME_I2C,
+-		.owner  = THIS_MODULE,
+ 	},
+ };
  
-+	/* Multiple features can be changed in one call so keep features in
-+	 * separate if/else statements to guarantee each feature is checked
-+	 */
- 	if (features & NETIF_F_RXHASH && !(netdev->features & NETIF_F_RXHASH))
- 		ret = ice_vsi_manage_rss_lut(vsi, true);
- 	else if (!(features & NETIF_F_RXHASH) &&
-@@ -2502,8 +2505,9 @@ static int ice_set_features(struct net_device *netdev,
- 	else if (!(features & NETIF_F_HW_VLAN_CTAG_RX) &&
- 		 (netdev->features & NETIF_F_HW_VLAN_CTAG_RX))
- 		ret = ice_vsi_manage_vlan_stripping(vsi, false);
--	else if ((features & NETIF_F_HW_VLAN_CTAG_TX) &&
--		 !(netdev->features & NETIF_F_HW_VLAN_CTAG_TX))
-+
-+	if ((features & NETIF_F_HW_VLAN_CTAG_TX) &&
-+	    !(netdev->features & NETIF_F_HW_VLAN_CTAG_TX))
- 		ret = ice_vsi_manage_vlan_insertion(vsi);
- 	else if (!(features & NETIF_F_HW_VLAN_CTAG_TX) &&
- 		 (netdev->features & NETIF_F_HW_VLAN_CTAG_TX))
--- 
-2.20.1
-
