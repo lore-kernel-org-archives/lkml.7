@@ -2,125 +2,100 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EEABC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:48:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FC9AC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:50:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2BB220821
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:48:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cKc2UJHG"
+	by mail.kernel.org (Postfix) with ESMTP id E9EF320821
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:50:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730285AbfEVUsu (ORCPT
+        id S1730183AbfEVUun (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 16:48:50 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:41329 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729844AbfEVUst (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 16:48:49 -0400
-Received: by mail-lj1-f196.google.com with SMTP id q16so3378153ljj.8;
-        Wed, 22 May 2019 13:48:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=smckmYiROd8TfrSlooS1zTGOXnlqxP3nKtXXuWXW1/w=;
-        b=cKc2UJHG/VNOdoqg3/aPA5d8s8mZerYxr/ngfA7kUj9qG8etw1VgQrgqUHClEt78kN
-         1VEpMABpiOoGTO9NymwafOeCFTaEeFbtN9M1/eQ1s/rzHxLuL+A2ccaNgOU9vV8VcD/q
-         Izp7yiWxaHt0eqvMFlJ3OIEY+ytZjtKbDYtAtbBHLTQg6rNyJsCaif2HXLtQ3OInVdzp
-         AsPb5Cs3RkCeZzVjvE0ej6phCyrLrnTsi19xYsBGr41XNbouv9lhekaQdDgQ/sWpW078
-         FZ4KWFYf/nCxGCNtRUw0ds12uz4T3NngYRkNpcv6i1LrQtLvD9e/S75Vv8zo6i8p+pjK
-         Sz0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=smckmYiROd8TfrSlooS1zTGOXnlqxP3nKtXXuWXW1/w=;
-        b=A6jff4Fvb374e5/ts8c0x0y24yUIwPfq59WxsUrfSK22qVwGN6k6G+vpYRqn/FgSR8
-         yxMe0P5b0esIVCYdn1SXUsb/BCxQh44vA7BhBviqPwvSKaabifgLa8k9mZoaRCVVfcBe
-         yqWo4W0KCOsTNT7xwnnUyQQPJA9uwcy7tV/bmdaazm7G/2MJs9IIhm/z3usNo8SRpHts
-         MHkC6O847qXcUxy800iQ4SPu0ucjJ2aCscGpGmx2NwT7PD16lOGhySr1GvERkkQl8VU4
-         vsNgI+5mBFziLkpmWImYc05HQ0drethzOaZl+yAlCPO1vnCK8Dt/RBIhVwa6JO6yb0hf
-         6Qag==
-X-Gm-Message-State: APjAAAXfUXajgrnASc09qjCvOnIIuEgGZTsy+/JD5X1eHOfzBFlrvoBp
-        FCa9ZhbIkw0bHyvQZ2JpSQ6E+e5u
-X-Google-Smtp-Source: APXvYqwVtcVCyb7sG+hTvRvcE9aLBetcccRb/2nMei/ndConFgTNMXsTkLyq/ngxorSZjBGhF9rXVA==
-X-Received: by 2002:a2e:1284:: with SMTP id 4mr16169111ljs.138.1558558127032;
-        Wed, 22 May 2019 13:48:47 -0700 (PDT)
-Received: from [192.168.1.17] (dma4.neoplus.adsl.tpnet.pl. [83.24.56.4])
-        by smtp.gmail.com with ESMTPSA id r3sm3238139ljr.76.2019.05.22.13.48.45
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 22 May 2019 13:48:46 -0700 (PDT)
-Subject: Re: [PATCH][V2] leds: TI LMU: fix u8 variable comparisons with less
- than zero
-To:     Colin King <colin.king@canonical.com>
-Cc:     Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        linux-leds@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190522101745.21828-1-colin.king@canonical.com>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Message-ID: <1dab790f-0b82-5fac-2081-7943379ccc54@gmail.com>
-Date:   Wed, 22 May 2019 22:48:44 +0200
+        Wed, 22 May 2019 16:50:43 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58124 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729848AbfEVUum (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 16:50:42 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 5CA2D307D963;
+        Wed, 22 May 2019 20:50:36 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-85.bos.redhat.com [10.18.17.85])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 51AB5648B3;
+        Wed, 22 May 2019 20:50:31 +0000 (UTC)
+Subject: Re: [PATCH] locking/lock_events: Use this_cpu_add() when necessary
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        huang ying <huang.ying.caritas@gmail.com>
+References: <20190522153953.30341-1-longman@redhat.com>
+ <CAHk-=wjit1=wf-JxUebS4_9WUCKbnfGPt0QF13-LijmumMEB-Q@mail.gmail.com>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <65f36604-898d-2649-5a41-078ccdc08dc4@redhat.com>
+Date:   Wed, 22 May 2019 16:50:30 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190522101745.21828-1-colin.king@canonical.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+In-Reply-To: <CAHk-=wjit1=wf-JxUebS4_9WUCKbnfGPt0QF13-LijmumMEB-Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Wed, 22 May 2019 20:50:42 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Colin,
+On 5/22/19 3:54 PM, Linus Torvalds wrote:
+> On Wed, May 22, 2019 at 8:40 AM Waiman Long <longman@redhat.com> wrote:
+>> +#if defined(CONFIG_PREEMPT) && \
+>> +   (defined(CONFIG_DEBUG_PREEMPT) || !defined(CONFIG_X86))
+>> +#define lockevent_percpu_inc(x)                this_cpu_inc(x)
+>> +#define lockevent_percpu_add(x, v)     this_cpu_add(x, v)
+> Why that CONFIG_X86 special case?
+>
+> On x86, the regular non-underscore versionm is perfectly fine, and the
+> underscore is no faster or simpler.
 
-Thank you for the patch.
+The condition is to use non-underscore version only when
 
-On 5/22/19 12:17 PM, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> The u8 variables ramp_ups and ramp_downs are being compared to less
-> than zero, this will always be false.  Fix this by making the ramp
-> variables ints.
-> 
-> Addresses-Coverity: ("Unsigned compared against 0")
-> Fixes: 9a8e66ebeaa2 ("leds: TI LMU: Add common code for TI LMU devices")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
-> 
-> V2: make u8 vars ints rather than removing the comparison. Thanks once
-> more to Dan Carpenter for spotting my clearly stupid V1 version and
-> correcting my mistake.
-> 
-> ---
->   drivers/leds/leds-ti-lmu-common.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/leds/leds-ti-lmu-common.c b/drivers/leds/leds-ti-lmu-common.c
-> index adc7293004f1..c9ab40d5a6ba 100644
-> --- a/drivers/leds/leds-ti-lmu-common.c
-> +++ b/drivers/leds/leds-ti-lmu-common.c
-> @@ -84,7 +84,7 @@ static int ti_lmu_common_convert_ramp_to_index(unsigned int usec)
->   int ti_lmu_common_set_ramp(struct ti_lmu_bank *lmu_bank)
->   {
->   	struct regmap *regmap = lmu_bank->regmap;
-> -	u8 ramp, ramp_up, ramp_down;
-> +	int ramp, ramp_up, ramp_down;
->   
->   	if (lmu_bank->ramp_up_usec == 0 && lmu_bank->ramp_down_usec == 0) {
->   		ramp_up = 0;
-> 
+1) It is a preempt kernel; AND
+2) It either have CONFIG_DEBUG_PREEMPT on, OR it is a non-x86 system.
 
-Applied.
 
--- 
-Best regards,
-Jacek Anaszewski
+> So just make it be
+>
+>    #if defined(CONFIG_PREEMPT)
+>      .. non-underscore versions..
+>    #else
+>      .. underscore versions ..
+>    #endif
+>
+> and realize that x86 simply doesn't _care_. On x86, it will be one
+> single instruction regardless.
+>
+> Non-x86 may prefer the underscore versions for the non-preempt case.
+
+I was thinking of doing that originally, but then change it so x86
+preempt kernel will also use the underscore version as long as
+CONFIG_DEBUG_PREEMPT is not set.
+
+I can change it back if that makes it less confusing.
+
+Cheers,
+Longman
+
