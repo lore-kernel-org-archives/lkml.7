@@ -2,132 +2,193 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9428FC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 18:57:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA81CC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:00:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D75C2173C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 18:57:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="Ydf4kIIz"
+	by mail.kernel.org (Postfix) with ESMTP id A7B0C20645
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:00:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729742AbfEVS5n (ORCPT
+        id S1729653AbfEVTAf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 14:57:43 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:40668 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728734AbfEVS5m (ORCPT
+        Wed, 22 May 2019 15:00:35 -0400
+Received: from smtprelay0106.hostedemail.com ([216.40.44.106]:35678 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728533AbfEVTAf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 14:57:42 -0400
-Received: by mail-pl1-f193.google.com with SMTP id g69so1506074plb.7
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 11:57:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:user-agent:in-reply-to:references:mime-version
-         :content-transfer-encoding:subject:to:cc:from:message-id;
-        bh=szkcRyxZ0C39yo4N6145DEUe6XyFUz0KBpbtt9TBfP0=;
-        b=Ydf4kIIzFGsRPeyDv/LD9jkV59ovbQan+Wd8fqIxMwCRJp/RVX+yZf4o+u6NibmZNb
-         RBaURj3qgOsxfsuBtJG6yAimX+7Bpo1Z58qe4I1GSlhbt4rdQlesJgqiVtNxukJHL9Ay
-         SCkEf9p4pFm6hpxZvAD0nuufFt6Z3LLCeyS7sMt3FF/ytzXY9FBgqYOrvXNeh66AeKL5
-         ffqluOQsspdvY8fIbgNl94Tft8wYYZvabj0kGgOv0BKMgwsPZ7rdvy4BVl3CESx+XYnK
-         dh+QwhYiKneyxjbioXF2+ggV65ZAle6Tnd2nqQo9lbgH534qL/JrOAw3laOTxvE8X7Hp
-         kLvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:user-agent:in-reply-to:references
-         :mime-version:content-transfer-encoding:subject:to:cc:from
-         :message-id;
-        bh=szkcRyxZ0C39yo4N6145DEUe6XyFUz0KBpbtt9TBfP0=;
-        b=F+ZxCk48wsQ9MA7QlhV5lRMfKLsOzsL6liu0su33bqlv4reivk2FCxvXxxJJkoLqXg
-         29XCvNssxH0HnJCSpk0PqHetLP+LWVMMtDzJdRRDhdqekLby4e69L1uCrAEvJ9HwKjUr
-         ew20RHggC3LTS2Xfr20/Eo7Ik7mPoqlWB7F9Adm1Agos0bJz9CrIic7O/fWsKIWFNgi5
-         6ofYo30IVRIHockem0rbBDFJfQ5ZZ5xlAbdUQ/rG89QqFeoIKRNdFuTlH3CQF84HvSHU
-         YxtaOBuiM39iDlpezf/3cp4AdJAhJRXX9reImoK3z8lKhRfRWaJGQSGC5o8dAjyNjd2i
-         Wayw==
-X-Gm-Message-State: APjAAAWQhrFjYx9MNFRwCty0VzuaS56nwxEr20WoY9f54+/AGqP7h9b2
-        mym3Qo0ielEJyqPZS4/W0ayWjA==
-X-Google-Smtp-Source: APXvYqyLoaZ7hqmXEwmUSc+mzFW9yrK692JNNFYKEoLiWemGI3SiDKNDvfmLElxz4983TVkj1cGfnQ==
-X-Received: by 2002:a17:902:56a:: with SMTP id 97mr53597607plf.20.1558551461185;
-        Wed, 22 May 2019 11:57:41 -0700 (PDT)
-Received: from [25.171.36.155] ([172.56.31.154])
-        by smtp.gmail.com with ESMTPSA id t78sm53489942pfa.154.2019.05.22.11.57.39
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 22 May 2019 11:57:40 -0700 (PDT)
-Date:   Wed, 22 May 2019 20:57:32 +0200
-User-Agent: K-9 Mail for Android
-In-Reply-To: <CAOQ4uxjV=7=FXuyccBK9Pu1B7o-w-pbc1FQXJxY4q6z8E93KOg@mail.gmail.com>
-References: <20190522163150.16849-1-christian@brauner.io> <CAOQ4uxjV=7=FXuyccBK9Pu1B7o-w-pbc1FQXJxY4q6z8E93KOg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] fanotify: remove redundant capable(CAP_SYS_ADMIN)s
-To:     Amir Goldstein <amir73il@gmail.com>
-CC:     Jan Kara <jack@suse.cz>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-From:   Christian Brauner <christian@brauner.io>
-Message-ID: <EB97EF04-D44F-4320-ACDC-C536EED03BA4@brauner.io>
+        Wed, 22 May 2019 15:00:35 -0400
+Received: from smtprelay.hostedemail.com (10.5.19.251.rfc1918.com [10.5.19.251])
+        by smtpgrave02.hostedemail.com (Postfix) with ESMTP id 90D6E18024508;
+        Wed, 22 May 2019 18:54:36 +0000 (UTC)
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay06.hostedemail.com (Postfix) with ESMTP id 60240182251DF;
+        Wed, 22 May 2019 18:54:36 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: beds74_27dc26fe10b2d
+X-Filterd-Recvd-Size: 5469
+Received: from XPS-9350 (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf20.hostedemail.com (Postfix) with ESMTPA;
+        Wed, 22 May 2019 18:54:33 +0000 (UTC)
+Message-ID: <8ae488765c8d441dbb444adaf89e59a2afa81298.camel@perches.com>
+Subject: Re: [PATCH] Fix comments with paths pointing to renamed or moved
+ files.
+From:   Joe Perches <joe@perches.com>
+To:     Pavel Machek <pavel@ucw.cz>,
+        Lukas Prause <langspielplatte@black-mesa.xyz>
+Cc:     lizefan@huawei.com, tj@kernel.org, hannes@cmpxchg.org,
+        peterz@infradead.org, mingo@redhat.com, will.deacon@arm.com,
+        rjw@rjwysocki.net, len.brown@intel.com, rostedt@goodmis.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        cgroups@vger.kernel.org, linux-pm@vger.kernel.org,
+        Lennart Glauer <mail@lennart-glauer.de>
+Date:   Wed, 22 May 2019 11:54:31 -0700
+In-Reply-To: <20190522183614.GD10003@amd>
+References: <20190521155430.14941-1-langspielplatte@black-mesa.xyz>
+         <20190522183614.GD10003@amd>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.1-1build1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On May 22, 2019 8:29:37 PM GMT+02:00, Amir Goldstein <amir73il@gmail=2Ecom>=
- wrote:
->On Wed, May 22, 2019 at 7:32 PM Christian Brauner
-><christian@brauner=2Eio> wrote:
->>
->> This removes two redundant capable(CAP_SYS_ADMIN) checks from
->> fanotify_init()=2E
->> fanotify_init() guards the whole syscall with capable(CAP_SYS_ADMIN)
->at the
->> beginning=2E So the other two capable(CAP_SYS_ADMIN) checks are not
->needed=2E
->
->It's intentional:
->
->commit e7099d8a5a34d2876908a9fab4952dabdcfc5909
->Author: Eric Paris <eparis@redhat=2Ecom>
->Date:   Thu Oct 28 17:21:57 2010 -0400
->
->    fanotify: limit the number of marks in a single fanotify group
->
->There is currently no limit on the number of marks a given fanotify
->group
->can have=2E  Since fanotify is gated on CAP_SYS_ADMIN this was not seen
->as
->a serious DoS threat=2E  This patch implements a default of 8192, the
->same as
->inotify to work towards removing the CAP_SYS_ADMIN gating and
->eliminating
->    the default DoS'able status=2E
->
->    Signed-off-by: Eric Paris <eparis@redhat=2Ecom>
->
->There idea is to eventually remove the gated CAP_SYS_ADMIN=2E
->There is no reason that fanotify could not be used by unprivileged
->users
->to setup inotify style watch on an inode or directories children, see:
->https://patchwork=2Ekernel=2Eorg/patch/10668299/
->
->>
->> Fixes: 5dd03f55fd2 ("fanotify: allow userspace to override max queue
->depth")
->> Fixes: ac7e22dcfaf ("fanotify: allow userspace to override max
->marks")
->
->Fixes is used to tag bug fixes for stable=2E
->There is no bug=2E
->
->Thanks,
->Amir=2E
+On Wed, 2019-05-22 at 20:36 +0200, Pavel Machek wrote:
+> On Tue 2019-05-21 17:54:30, Lukas Prause wrote:
+> > This patch corrects renamed or moved paths in comments.
+> > 
+> > Signed-off-by: Lukas Prause <langspielplatte@black-mesa.xyz>
+> > Signed-off-by: Lennart Glauer <mail@lennart-glauer.de>
+> 
+> Acked-by: Pavel Machek <pavel@ucw.cz>
+> 
+> > diff --git a/kernel/power/power.h b/kernel/power/power.h
+> > index 9e58bdc8a562..5de8b0c7f657 100644
+> > --- a/kernel/power/power.h
+> > +++ b/kernel/power/power.h
+> > @@ -182,7 +182,7 @@ extern int swsusp_unmark(void);
+> >  #endif
+> >  
+> >  struct timeval;
+> > -/* kernel/power/swsusp.c */
+> > +/* kernel/power/hibernate.c */
+> >  extern void swsusp_show_speed(ktime_t, ktime_t, unsigned int, char *);
+> >  
+> >  #ifdef CONFIG_SUSPEND
 
-Interesting=2E When do you think the gate can be removed?
-I was looking into switching from inotify to fanotify but since it's not u=
-seable from
-non-initial userns it's a no-no
-since we support nested workloads=2E
+I think all of these markings should be removed instead.
+Why are these useful?
+It seems many of these filenames in power.h aren't correct anyway.
+
+For instance power.h has:
+
+   /* kernel/power/hibernate.c */
+   extern int swsusp_check(void);
+   extern void swsusp_free(void);
+   extern int swsusp_read(unsigned int *flags_p);
+   extern int swsusp_write(unsigned int flags);
+   extern void swsusp_close(fmode_t);
+   #ifdef CONFIG_SUSPEND
+   extern int swsusp_unmark(void);
+   #endif
+
+but:
+
+swsusp_check is in swap.c
+swsusp_free is in snapshot.c
+swsusp_read is in swap.c
+
+etc...
+
+Perhaps:
+---
+ kernel/power/power.h | 10 ----------
+ 1 file changed, 10 deletions(-)
+
+diff --git a/kernel/power/power.h b/kernel/power/power.h
+index 9e58bdc8a562..52bcb72564e5 100644
+--- a/kernel/power/power.h
++++ b/kernel/power/power.h
+@@ -16,7 +16,6 @@ struct swsusp_info {
+ } __aligned(PAGE_SIZE);
+ 
+ #ifdef CONFIG_HIBERNATION
+-/* kernel/power/snapshot.c */
+ extern void __init hibernate_reserved_size_init(void);
+ extern void __init hibernate_image_size_init(void);
+ 
+@@ -55,7 +54,6 @@ extern int hibernate_resume_nonboot_cpu_disable(void);
+ 
+ asmlinkage int swsusp_save(void);
+ 
+-/* kernel/power/hibernate.c */
+ extern bool freezer_test_done;
+ 
+ extern int hibernation_snapshot(int platform_mode);
+@@ -63,7 +61,6 @@ extern int hibernation_restore(int platform_mode);
+ extern int hibernation_platform_enter(void);
+ 
+ #ifdef CONFIG_STRICT_KERNEL_RWX
+-/* kernel/power/snapshot.c */
+ extern void enable_restore_image_protection(void);
+ #else
+ static inline void enable_restore_image_protection(void) {}
+@@ -171,7 +168,6 @@ extern int swsusp_swap_in_use(void);
+ #define SF_NOCOMPRESS_MODE	2
+ #define SF_CRC32_MODE	        4
+ 
+-/* kernel/power/hibernate.c */
+ extern int swsusp_check(void);
+ extern void swsusp_free(void);
+ extern int swsusp_read(unsigned int *flags_p);
+@@ -182,11 +178,9 @@ extern int swsusp_unmark(void);
+ #endif
+ 
+ struct timeval;
+-/* kernel/power/swsusp.c */
+ extern void swsusp_show_speed(ktime_t, ktime_t, unsigned int, char *);
+ 
+ #ifdef CONFIG_SUSPEND
+-/* kernel/power/suspend.c */
+ extern const char * const pm_labels[];
+ extern const char *pm_states[];
+ extern const char *mem_sleep_states[];
+@@ -202,7 +196,6 @@ static inline int suspend_devices_and_enter(suspend_state_t state)
+ #endif /* !CONFIG_SUSPEND */
+ 
+ #ifdef CONFIG_PM_TEST_SUSPEND
+-/* kernel/power/suspend_test.c */
+ extern void suspend_test_start(void);
+ extern void suspend_test_finish(const char *label);
+ #else /* !CONFIG_PM_TEST_SUSPEND */
+@@ -211,7 +204,6 @@ static inline void suspend_test_finish(const char *label) {}
+ #endif /* !CONFIG_PM_TEST_SUSPEND */
+ 
+ #ifdef CONFIG_PM_SLEEP
+-/* kernel/power/main.c */
+ extern int __pm_notifier_call_chain(unsigned long val, int nr_to_call,
+ 				    int *nr_calls);
+ extern int pm_notifier_call_chain(unsigned long val);
+@@ -289,7 +281,6 @@ static inline void suspend_thaw_processes(void)
+ 
+ #ifdef CONFIG_PM_AUTOSLEEP
+ 
+-/* kernel/power/autosleep.c */
+ extern int pm_autosleep_init(void);
+ extern int pm_autosleep_lock(void);
+ extern void pm_autosleep_unlock(void);
+@@ -307,7 +298,6 @@ static inline suspend_state_t pm_autosleep_state(void) { return PM_SUSPEND_ON; }
+ 
+ #ifdef CONFIG_PM_WAKELOCKS
+ 
+-/* kernel/power/wakelock.c */
+ extern ssize_t pm_show_wakelocks(char *buf, bool show_active);
+ extern int pm_wake_lock(const char *buf);
+ extern int pm_wake_unlock(const char *buf);
+
+
