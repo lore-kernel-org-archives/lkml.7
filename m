@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CEC1C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:04:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39878C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:04:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38FC520821
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:04:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09AD220821
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:04:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558555477;
-	bh=s0l/tgZRf9wP9+usah4sgOOkjrNVWQ7BSH2zhqEC1XU=;
+	s=default; t=1558555485;
+	bh=Q8UKpjGDb2ITlctwKW2NZ1xpS7H/u4buCDzCXA3hG2I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UjHiKnjNVMkRCeIlxROQf9klazW4OMSLyFx7jboBGIigNYM4ketshRrW9juxhYXRa
-	 gXZjemofB9RiquOIElJw1GfAbkzP6dEZIT4Vm1AOqIk/R9i2biaRpF70X8EVIb4Q+7
-	 J8qZAlV0r1+2iRUWIj8JHNSe+gH6ZUyl3/SpeOhA=
+	b=BM/vc33DxB9g6/ZCtgw9yl8kfLySwosJKjgQHzv4nSfmRl01Bh4fp2ukvbBcTi9PT
+	 dSAKWkiN7/+Ib1N+GDKHA49Aip7LWfcm3UxyIN8HRgTjdd2wb+UoeeouUxLi6DCcVA
+	 M66Tm7nHFDKZOHNxdvcCEtUiLez9IpSbOBwwlBzw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730557AbfEVUEg (ORCPT
+        id S1730989AbfEVUEo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 16:04:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41840 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 16:04:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41782 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729859AbfEVTVY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:21:24 -0400
+        id S1729837AbfEVTVW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:21:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B4732173C;
-        Wed, 22 May 2019 19:21:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 086BD217D7;
+        Wed, 22 May 2019 19:21:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558552884;
-        bh=s0l/tgZRf9wP9+usah4sgOOkjrNVWQ7BSH2zhqEC1XU=;
+        s=default; t=1558552881;
+        bh=Q8UKpjGDb2ITlctwKW2NZ1xpS7H/u4buCDzCXA3hG2I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NJhgWjkgmU+PtGRPzZ2Do6jfDBxJwO1MdRjJuERyHcoJMywuWj9PiidU0seSkAfd+
-         8ogN0kTzPHT5fOuaIVAeru0iI9hKiw4FunNFnzOROsucobP9pDUOt4MjyxVBe11xbP
-         13M6hz8GvOrm4WpIrFmNHqfqW/lDRite+l/uhzEQ=
+        b=Cm5AVTr/ZxxTBnFz5/7cfd82h/r4b5CZEPtTWUuYesGQgpFkYQ9QQLxpndtty9GsG
+         RVMtTCvGUj1AoSDBJZt3zNhdpiVwYwbgdHFkKpgFoD6Eg1GNnTrNP3rvikjpYlPfMQ
+         0a3ii85ScDKMv+rJvCOyH70dA4F2kuTBJnJx96DA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        "Michael J . Ruhl" <michael.j.ruhl@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 007/375] IB/hfi1: Fix WQ_MEM_RECLAIM warning
-Date:   Wed, 22 May 2019 15:15:07 -0400
-Message-Id: <20190522192115.22666-7-sashal@kernel.org>
+Cc:     Abhi Das <adas@redhat.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, cluster-devel@redhat.com
+Subject: [PATCH AUTOSEL 5.1 005/375] gfs2: fix race between gfs2_freeze_func and unmount
+Date:   Wed, 22 May 2019 15:15:05 -0400
+Message-Id: <20190522192115.22666-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192115.22666-1-sashal@kernel.org>
 References: <20190522192115.22666-1-sashal@kernel.org>
@@ -61,62 +59,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Marciniszyn <mike.marciniszyn@intel.com>
+From: Abhi Das <adas@redhat.com>
 
-[ Upstream commit 4c4b1996b5db688e2dcb8242b0a3bf7b1e845e42 ]
+[ Upstream commit 8f91821990fd6f170a5dca79697a441181a41b16 ]
 
-The work_item cancels that occur when a QP is destroyed can elicit the
-following trace:
+As part of the freeze operation, gfs2_freeze_func() is left blocking
+on a request to hold the sd_freeze_gl in SH. This glock is held in EX
+by the gfs2_freeze() code.
 
- workqueue: WQ_MEM_RECLAIM ipoib_wq:ipoib_cm_tx_reap [ib_ipoib] is flushing !WQ_MEM_RECLAIM hfi0_0:_hfi1_do_send [hfi1]
- WARNING: CPU: 7 PID: 1403 at kernel/workqueue.c:2486 check_flush_dependency+0xb1/0x100
- Call Trace:
-  __flush_work.isra.29+0x8c/0x1a0
-  ? __switch_to_asm+0x40/0x70
-  __cancel_work_timer+0x103/0x190
-  ? schedule+0x32/0x80
-  iowait_cancel_work+0x15/0x30 [hfi1]
-  rvt_reset_qp+0x1f8/0x3e0 [rdmavt]
-  rvt_destroy_qp+0x65/0x1f0 [rdmavt]
-  ? _cond_resched+0x15/0x30
-  ib_destroy_qp+0xe9/0x230 [ib_core]
-  ipoib_cm_tx_reap+0x21c/0x560 [ib_ipoib]
-  process_one_work+0x171/0x370
-  worker_thread+0x49/0x3f0
-  kthread+0xf8/0x130
-  ? max_active_store+0x80/0x80
-  ? kthread_bind+0x10/0x10
-  ret_from_fork+0x35/0x40
+A subsequent call to gfs2_unfreeze() releases the EXclusively held
+sd_freeze_gl, which allows gfs2_freeze_func() to acquire it in SH and
+resume its operation.
 
-Since QP destruction frees memory, hfi1_wq should have the WQ_MEM_RECLAIM.
+gfs2_unfreeze(), however, doesn't wait for gfs2_freeze_func() to complete.
+If a umount is issued right after unfreeze, it could result in an
+inconsistent filesystem because some journal data (statfs update) isn't
+written out.
 
-The hfi1_wq does not allocate memory with GFP_KERNEL or otherwise become
-entangled with memory reclaim, so this flag is appropriate.
+Refer to commit 24972557b12c for a more detailed explanation of how
+freeze/unfreeze work.
 
-Fixes: 0a226edd203f ("staging/rdma/hfi1: Use parallel workqueue for SDMA engines")
-Reviewed-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
-Signed-off-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
-Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+This patch causes gfs2_unfreeze() to wait for gfs2_freeze_func() to
+complete before returning to the user.
+
+Signed-off-by: Abhi Das <adas@redhat.com>
+Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/hfi1/init.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/gfs2/incore.h | 1 +
+ fs/gfs2/super.c  | 8 +++++---
+ 2 files changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/infiniband/hw/hfi1/init.c b/drivers/infiniband/hw/hfi1/init.c
-index faaaac8fbc553..3af5eb10a5ffb 100644
---- a/drivers/infiniband/hw/hfi1/init.c
-+++ b/drivers/infiniband/hw/hfi1/init.c
-@@ -805,7 +805,8 @@ static int create_workqueues(struct hfi1_devdata *dd)
- 			ppd->hfi1_wq =
- 				alloc_workqueue(
- 				    "hfi%d_%d",
--				    WQ_SYSFS | WQ_HIGHPRI | WQ_CPU_INTENSIVE,
-+				    WQ_SYSFS | WQ_HIGHPRI | WQ_CPU_INTENSIVE |
-+				    WQ_MEM_RECLAIM,
- 				    HFI1_MAX_ACTIVE_WORKQUEUE_ENTRIES,
- 				    dd->unit, pidx);
- 			if (!ppd->hfi1_wq)
+diff --git a/fs/gfs2/incore.h b/fs/gfs2/incore.h
+index cdf07b408f54c..539e8dc5a3f6c 100644
+--- a/fs/gfs2/incore.h
++++ b/fs/gfs2/incore.h
+@@ -621,6 +621,7 @@ enum {
+ 	SDF_SKIP_DLM_UNLOCK	= 8,
+ 	SDF_FORCE_AIL_FLUSH     = 9,
+ 	SDF_AIL1_IO_ERROR	= 10,
++	SDF_FS_FROZEN           = 11,
+ };
+ 
+ enum gfs2_freeze_state {
+diff --git a/fs/gfs2/super.c b/fs/gfs2/super.c
+index ca71163ff7cfd..360206704a14c 100644
+--- a/fs/gfs2/super.c
++++ b/fs/gfs2/super.c
+@@ -973,8 +973,7 @@ void gfs2_freeze_func(struct work_struct *work)
+ 	if (error) {
+ 		printk(KERN_INFO "GFS2: couldn't get freeze lock : %d\n", error);
+ 		gfs2_assert_withdraw(sdp, 0);
+-	}
+-	else {
++	} else {
+ 		atomic_set(&sdp->sd_freeze_state, SFS_UNFROZEN);
+ 		error = thaw_super(sb);
+ 		if (error) {
+@@ -987,6 +986,8 @@ void gfs2_freeze_func(struct work_struct *work)
+ 		gfs2_glock_dq_uninit(&freeze_gh);
+ 	}
+ 	deactivate_super(sb);
++	clear_bit_unlock(SDF_FS_FROZEN, &sdp->sd_flags);
++	wake_up_bit(&sdp->sd_flags, SDF_FS_FROZEN);
+ 	return;
+ }
+ 
+@@ -1029,6 +1030,7 @@ static int gfs2_freeze(struct super_block *sb)
+ 		msleep(1000);
+ 	}
+ 	error = 0;
++	set_bit(SDF_FS_FROZEN, &sdp->sd_flags);
+ out:
+ 	mutex_unlock(&sdp->sd_freeze_mutex);
+ 	return error;
+@@ -1053,7 +1055,7 @@ static int gfs2_unfreeze(struct super_block *sb)
+ 
+ 	gfs2_glock_dq_uninit(&sdp->sd_freeze_gh);
+ 	mutex_unlock(&sdp->sd_freeze_mutex);
+-	return 0;
++	return wait_on_bit(&sdp->sd_flags, SDF_FS_FROZEN, TASK_INTERRUPTIBLE);
+ }
+ 
+ /**
 -- 
 2.20.1
 
