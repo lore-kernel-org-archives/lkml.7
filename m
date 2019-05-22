@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39878C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:04:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC459C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:04:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09AD220821
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:04:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD5DD20863
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:04:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558555485;
-	bh=Q8UKpjGDb2ITlctwKW2NZ1xpS7H/u4buCDzCXA3hG2I=;
+	s=default; t=1558555492;
+	bh=3peD/CkcjSNu0VTrh6HgoFoG440nXvSSSjaIN4aF1XQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BM/vc33DxB9g6/ZCtgw9yl8kfLySwosJKjgQHzv4nSfmRl01Bh4fp2ukvbBcTi9PT
-	 dSAKWkiN7/+Ib1N+GDKHA49Aip7LWfcm3UxyIN8HRgTjdd2wb+UoeeouUxLi6DCcVA
-	 M66Tm7nHFDKZOHNxdvcCEtUiLez9IpSbOBwwlBzw=
+	b=t+Ry1H3nRaubE0U9RetWv5o9k7BFUxzQn7EmgobHOvVuFLT5ajfeOE2KyVuyVM7Nd
+	 nJUhIHNXaYWRDC+A/j7whWr19KS1o8cfDmNchn1PNqP8yAuIcqL8HCKTahDupKFfm9
+	 U0exzFVt6Au9VrNMUUQF5goZww+2HlavNO2KwaG0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730989AbfEVUEo (ORCPT
+        id S1732238AbfEVUEv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 16:04:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41782 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 16:04:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41692 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729837AbfEVTVW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:21:22 -0400
+        id S1728761AbfEVTVT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:21:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 086BD217D7;
-        Wed, 22 May 2019 19:21:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E5CE62173C;
+        Wed, 22 May 2019 19:21:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558552881;
-        bh=Q8UKpjGDb2ITlctwKW2NZ1xpS7H/u4buCDzCXA3hG2I=;
+        s=default; t=1558552878;
+        bh=3peD/CkcjSNu0VTrh6HgoFoG440nXvSSSjaIN4aF1XQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Cm5AVTr/ZxxTBnFz5/7cfd82h/r4b5CZEPtTWUuYesGQgpFkYQ9QQLxpndtty9GsG
-         RVMtTCvGUj1AoSDBJZt3zNhdpiVwYwbgdHFkKpgFoD6Eg1GNnTrNP3rvikjpYlPfMQ
-         0a3ii85ScDKMv+rJvCOyH70dA4F2kuTBJnJx96DA=
+        b=FRqSiC22otW+ye9foEp9uRIQmOpxSZxCNXoDuQYHxzmjYObYgwZ5J4Pn5nMwAaBVZ
+         Uk8jcs9GE4zH/FpminbXGwcYPQZfuUxmyOe7D41FNhYSksM3f7jA7FBjnxHWYrhZIu
+         wbq/QK3F4G0N2sGn1m0Rpy+ugZVtdo4/yZwdnaXY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Abhi Das <adas@redhat.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, cluster-devel@redhat.com
-Subject: [PATCH AUTOSEL 5.1 005/375] gfs2: fix race between gfs2_freeze_func and unmount
-Date:   Wed, 22 May 2019 15:15:05 -0400
-Message-Id: <20190522192115.22666-5-sashal@kernel.org>
+Cc:     YueHaibing <yuehaibing@huawei.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 002/375] cxgb4: Fix error path in cxgb4_init_module
+Date:   Wed, 22 May 2019 15:15:02 -0400
+Message-Id: <20190522192115.22666-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192115.22666-1-sashal@kernel.org>
 References: <20190522192115.22666-1-sashal@kernel.org>
@@ -59,89 +59,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Abhi Das <adas@redhat.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 8f91821990fd6f170a5dca79697a441181a41b16 ]
+[ Upstream commit a3147770bea76c8dbad73eca3a24c2118da5e719 ]
 
-As part of the freeze operation, gfs2_freeze_func() is left blocking
-on a request to hold the sd_freeze_gl in SH. This glock is held in EX
-by the gfs2_freeze() code.
+BUG: unable to handle kernel paging request at ffffffffa016a270
+PGD 3270067 P4D 3270067 PUD 3271063 PMD 230bbd067 PTE 0
+Oops: 0000 [#1
+CPU: 0 PID: 6134 Comm: modprobe Not tainted 5.1.0+ #33
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.9.3-0-ge2fc41e-prebuilt.qemu-project.org 04/01/2014
+RIP: 0010:atomic_notifier_chain_register+0x24/0x60
+Code: 1f 80 00 00 00 00 55 48 89 e5 41 54 49 89 f4 53 48 89 fb e8 ae b4 38 01 48 8b 53 38 48 8d 4b 38 48 85 d2 74 20 45 8b 44 24 10 <44> 3b 42 10 7e 08 eb 13 44 39 42 10 7c 0d 48 8d 4a 08 48 8b 52 08
+RSP: 0018:ffffc90000e2bc60 EFLAGS: 00010086
+RAX: 0000000000000292 RBX: ffffffff83467240 RCX: ffffffff83467278
+RDX: ffffffffa016a260 RSI: ffffffff83752140 RDI: ffffffff83467240
+RBP: ffffc90000e2bc70 R08: 0000000000000000 R09: 0000000000000001
+R10: 0000000000000000 R11: 00000000014fa61f R12: ffffffffa01c8260
+R13: ffff888231091e00 R14: 0000000000000000 R15: ffffc90000e2be78
+FS:  00007fbd8d7cd540(0000) GS:ffff888237a00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffffffffa016a270 CR3: 000000022c7e3000 CR4: 00000000000006f0
+Call Trace:
+ register_inet6addr_notifier+0x13/0x20
+ cxgb4_init_module+0x6c/0x1000 [cxgb4
+ ? 0xffffffffa01d7000
+ do_one_initcall+0x6c/0x3cc
+ ? do_init_module+0x22/0x1f1
+ ? rcu_read_lock_sched_held+0x97/0xb0
+ ? kmem_cache_alloc_trace+0x325/0x3b0
+ do_init_module+0x5b/0x1f1
+ load_module+0x1db1/0x2690
+ ? m_show+0x1d0/0x1d0
+ __do_sys_finit_module+0xc5/0xd0
+ __x64_sys_finit_module+0x15/0x20
+ do_syscall_64+0x6b/0x1d0
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-A subsequent call to gfs2_unfreeze() releases the EXclusively held
-sd_freeze_gl, which allows gfs2_freeze_func() to acquire it in SH and
-resume its operation.
+If pci_register_driver fails, register inet6addr_notifier is
+pointless. This patch fix the error path in cxgb4_init_module.
 
-gfs2_unfreeze(), however, doesn't wait for gfs2_freeze_func() to complete.
-If a umount is issued right after unfreeze, it could result in an
-inconsistent filesystem because some journal data (statfs update) isn't
-written out.
-
-Refer to commit 24972557b12c for a more detailed explanation of how
-freeze/unfreeze work.
-
-This patch causes gfs2_unfreeze() to wait for gfs2_freeze_func() to
-complete before returning to the user.
-
-Signed-off-by: Abhi Das <adas@redhat.com>
-Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
+Fixes: b5a02f503caa ("cxgb4 : Update ipv6 address handling api")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/gfs2/incore.h | 1 +
- fs/gfs2/super.c  | 8 +++++---
- 2 files changed, 6 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
-diff --git a/fs/gfs2/incore.h b/fs/gfs2/incore.h
-index cdf07b408f54c..539e8dc5a3f6c 100644
---- a/fs/gfs2/incore.h
-+++ b/fs/gfs2/incore.h
-@@ -621,6 +621,7 @@ enum {
- 	SDF_SKIP_DLM_UNLOCK	= 8,
- 	SDF_FORCE_AIL_FLUSH     = 9,
- 	SDF_AIL1_IO_ERROR	= 10,
-+	SDF_FS_FROZEN           = 11,
- };
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
+index 89179e3166878..4bc0c357cb8ea 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
+@@ -6161,15 +6161,24 @@ static int __init cxgb4_init_module(void)
  
- enum gfs2_freeze_state {
-diff --git a/fs/gfs2/super.c b/fs/gfs2/super.c
-index ca71163ff7cfd..360206704a14c 100644
---- a/fs/gfs2/super.c
-+++ b/fs/gfs2/super.c
-@@ -973,8 +973,7 @@ void gfs2_freeze_func(struct work_struct *work)
- 	if (error) {
- 		printk(KERN_INFO "GFS2: couldn't get freeze lock : %d\n", error);
- 		gfs2_assert_withdraw(sdp, 0);
--	}
--	else {
-+	} else {
- 		atomic_set(&sdp->sd_freeze_state, SFS_UNFROZEN);
- 		error = thaw_super(sb);
- 		if (error) {
-@@ -987,6 +986,8 @@ void gfs2_freeze_func(struct work_struct *work)
- 		gfs2_glock_dq_uninit(&freeze_gh);
+ 	ret = pci_register_driver(&cxgb4_driver);
+ 	if (ret < 0)
+-		debugfs_remove(cxgb4_debugfs_root);
++		goto err_pci;
+ 
+ #if IS_ENABLED(CONFIG_IPV6)
+ 	if (!inet6addr_registered) {
+-		register_inet6addr_notifier(&cxgb4_inet6addr_notifier);
+-		inet6addr_registered = true;
++		ret = register_inet6addr_notifier(&cxgb4_inet6addr_notifier);
++		if (ret)
++			pci_unregister_driver(&cxgb4_driver);
++		else
++			inet6addr_registered = true;
  	}
- 	deactivate_super(sb);
-+	clear_bit_unlock(SDF_FS_FROZEN, &sdp->sd_flags);
-+	wake_up_bit(&sdp->sd_flags, SDF_FS_FROZEN);
- 	return;
+ #endif
+ 
++	if (ret == 0)
++		return ret;
++
++err_pci:
++	debugfs_remove(cxgb4_debugfs_root);
++
+ 	return ret;
  }
  
-@@ -1029,6 +1030,7 @@ static int gfs2_freeze(struct super_block *sb)
- 		msleep(1000);
- 	}
- 	error = 0;
-+	set_bit(SDF_FS_FROZEN, &sdp->sd_flags);
- out:
- 	mutex_unlock(&sdp->sd_freeze_mutex);
- 	return error;
-@@ -1053,7 +1055,7 @@ static int gfs2_unfreeze(struct super_block *sb)
- 
- 	gfs2_glock_dq_uninit(&sdp->sd_freeze_gh);
- 	mutex_unlock(&sdp->sd_freeze_mutex);
--	return 0;
-+	return wait_on_bit(&sdp->sd_flags, SDF_FS_FROZEN, TASK_INTERRUPTIBLE);
- }
- 
- /**
 -- 
 2.20.1
 
