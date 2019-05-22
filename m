@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6345AC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:53:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBAEAC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:53:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2739320862
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:53:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A231020856
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:53:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558554789;
-	bh=pO38k8VhxEzdquYnHIYEk/3gJ31kyCzgKZhOtvkygOk=;
+	s=default; t=1558554794;
+	bh=lmU9g21+k0C40muQus4b77NNYcsDPyTrcPmreAglkX8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uU34H/ckON8o1tAEyUJ1YieLeEpEhZQZb+Kt39K3kisXu8ZNkmpYZC0MB1CSEwqva
-	 hoYOJK5ioOQOJ73ndmQBx+UnbL4D2Yizplv9bEyIunDPFx1PNRBqeKTtXFak4zWvEa
-	 /BaqxvunB5itxkLPIAshObipyV1JHWPeCBlKPxcA=
+	b=owO9GMzHB4ypxr+vbKKI15oqccg0NRSPqDXszHXTBsP7XQaHDGgWwGmV2b6wbkDFw
+	 TSKDHOM8ptpMfa9b5KcnbpjEFFvzlk4EdjvxIxs90ykNgYY01IUUpPt8eNd2PFHDpI
+	 DAkic4miAI/kXZlYveAqREkQCBbfJEn5024iINKs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732985AbfEVTxI (ORCPT
+        id S1731956AbfEVTxN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:53:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47314 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:53:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731790AbfEVTZz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:25:55 -0400
+        id S1731781AbfEVTZx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:25:53 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9453F20675;
-        Wed, 22 May 2019 19:25:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4492A217F9;
+        Wed, 22 May 2019 19:25:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553155;
-        bh=pO38k8VhxEzdquYnHIYEk/3gJ31kyCzgKZhOtvkygOk=;
+        s=default; t=1558553152;
+        bh=lmU9g21+k0C40muQus4b77NNYcsDPyTrcPmreAglkX8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y9eyxvYY4/vQQCFTyH/+oJn1yA0U8RWTNKbOhaAeZeecNsEgEjCOGuEoSvIK4yL3o
-         Evmv4DRXz0bsLxKfWspTW4/tH/i41sbrLhQaJsgJUyUDh/gbwG5UKlvS+qib1Ugv3J
-         7ppqClsS3YBoD/nRYTKeSUn59WlC+q9ESh83j8l8=
+        b=0WN+tFWnCldHJFWb2VXDELux2bdm//DOEhGtqV3bQvwg/TQIe/3bG2FrWlgMe6USz
+         fOpjafnhj0sidNSz+ogi4sAhC7Y+4Sj3iDNIk8f9HeT3TMGM0dfepBi5cF1Ex+KZiZ
+         LQ2DhF6W2Y71tXVcj40OziXD+OzVJxMwJ2ZIp4pU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Corentin Labbe <clabbe.montjoie@gmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 082/317] crypto: sun4i-ss - Fix invalid calculation of hash end
-Date:   Wed, 22 May 2019 15:19:43 -0400
-Message-Id: <20190522192338.23715-82-sashal@kernel.org>
+Cc:     Sagi Grimberg <sagi@grimberg.me>, Christoph Hellwig <hch@lst.de>,
+        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.0 080/317] nvme-tcp: fix a NULL deref when an admin connect times out
+Date:   Wed, 22 May 2019 15:19:41 -0400
+Message-Id: <20190522192338.23715-80-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192338.23715-1-sashal@kernel.org>
 References: <20190522192338.23715-1-sashal@kernel.org>
@@ -59,40 +58,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Corentin Labbe <clabbe.montjoie@gmail.com>
+From: Sagi Grimberg <sagi@grimberg.me>
 
-[ Upstream commit f87391558acf816b48f325a493d81d45dec40da0 ]
+[ Upstream commit 7a42589654ae79e1177f0d74306a02d6cef7bddf ]
 
-When nbytes < 4, end is wronlgy set to a negative value which, due to
-uint, is then interpreted to a large value leading to a deadlock in the
-following code.
+If we timeout the admin startup sequence we might not yet have
+an I/O tagset allocated which causes the teardown sequence to crash.
+Make nvme_tcp_teardown_io_queues safe by not iterating inflight tags
+if the tagset wasn't allocated.
 
-This patch fix this problem.
-
-Fixes: 6298e948215f ("crypto: sunxi-ss - Add Allwinner Security System crypto accelerator")
-Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fixes: 39d57757467b ("nvme-tcp: fix timeout handler")
+Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/sunxi-ss/sun4i-ss-hash.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/nvme/host/tcp.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/crypto/sunxi-ss/sun4i-ss-hash.c b/drivers/crypto/sunxi-ss/sun4i-ss-hash.c
-index a4b5ff2b72f87..f6936bb3b7be4 100644
---- a/drivers/crypto/sunxi-ss/sun4i-ss-hash.c
-+++ b/drivers/crypto/sunxi-ss/sun4i-ss-hash.c
-@@ -240,7 +240,10 @@ static int sun4i_hash(struct ahash_request *areq)
- 		}
- 	} else {
- 		/* Since we have the flag final, we can go up to modulo 4 */
--		end = ((areq->nbytes + op->len) / 4) * 4 - op->len;
-+		if (areq->nbytes < 4)
-+			end = 0;
-+		else
-+			end = ((areq->nbytes + op->len) / 4) * 4 - op->len;
- 	}
- 
- 	/* TODO if SGlen % 4 and !op->len then DMA */
+diff --git a/drivers/nvme/host/tcp.c b/drivers/nvme/host/tcp.c
+index 5f0a004252422..e71b0058c57bd 100644
+--- a/drivers/nvme/host/tcp.c
++++ b/drivers/nvme/host/tcp.c
+@@ -1686,7 +1686,9 @@ static void nvme_tcp_teardown_admin_queue(struct nvme_ctrl *ctrl,
+ {
+ 	blk_mq_quiesce_queue(ctrl->admin_q);
+ 	nvme_tcp_stop_queue(ctrl, 0);
+-	blk_mq_tagset_busy_iter(ctrl->admin_tagset, nvme_cancel_request, ctrl);
++	if (ctrl->admin_tagset)
++		blk_mq_tagset_busy_iter(ctrl->admin_tagset,
++			nvme_cancel_request, ctrl);
+ 	blk_mq_unquiesce_queue(ctrl->admin_q);
+ 	nvme_tcp_destroy_admin_queue(ctrl, remove);
+ }
+@@ -1698,7 +1700,9 @@ static void nvme_tcp_teardown_io_queues(struct nvme_ctrl *ctrl,
+ 		return;
+ 	nvme_stop_queues(ctrl);
+ 	nvme_tcp_stop_io_queues(ctrl);
+-	blk_mq_tagset_busy_iter(ctrl->tagset, nvme_cancel_request, ctrl);
++	if (ctrl->tagset)
++		blk_mq_tagset_busy_iter(ctrl->tagset,
++			nvme_cancel_request, ctrl);
+ 	if (remove)
+ 		nvme_start_queues(ctrl);
+ 	nvme_tcp_destroy_io_queues(ctrl, remove);
 -- 
 2.20.1
 
