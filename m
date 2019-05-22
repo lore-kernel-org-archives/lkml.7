@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C48C2C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:42:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92A44C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:43:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9574B20862
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:42:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5988D20856
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:43:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558554179;
-	bh=Jg7mJJFzKpBd5jfzs5oGdFOk9sge79rCEWyi/VggR8U=;
+	s=default; t=1558554183;
+	bh=t0ELyZcHCkTHsnKm5byRNb6pPqbCrwMCLRiZIvw3gTc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nJnE/GYzPQDM7pdgGLbETRnqCpIjWnoj2WJEl0BQ10BDtxxB4rjGnEaY8AyuINLG4
-	 d7eE8myoH2N0BplJnRQvwCjPE2HVlafz2AEz5q4E/5d0quyDiVMM8LMPdNUnjXrg7A
-	 iGgX5YQVDzIae4MWccWonPGVj6FVNd2L8svt+Kyg=
+	b=R1nibBwe2YL71SZ29wUD2AY+0uvdFK10LLneelq1OZCeOlWBCoVp3KWBeC9F9O6/r
+	 WmhkDNoXGgMRR9kvY2c6z6Uqm5tBHX6W1oqziXnU5z/ijqa3vkUAnHI/zPypAIPrgl
+	 MdLVu1k8n2D1zDM89p5hyVgpG7r6l97NZT4UieNs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732576AbfEVT2c (ORCPT
+        id S1732930AbfEVTnC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:28:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50634 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:43:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51246 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730048AbfEVT2G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:28:06 -0400
+        id S1732573AbfEVT2c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:28:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BADE2217F9;
-        Wed, 22 May 2019 19:28:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E4F5217D9;
+        Wed, 22 May 2019 19:28:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553285;
-        bh=Jg7mJJFzKpBd5jfzs5oGdFOk9sge79rCEWyi/VggR8U=;
+        s=default; t=1558553311;
+        bh=t0ELyZcHCkTHsnKm5byRNb6pPqbCrwMCLRiZIvw3gTc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jvPPRp6D76bNTru9mWatsurg+2rRd1yKCG9SAyJxp6MiVcoFFDRqvL7l3MDIT3zhi
-         rZkMnm3WtQo/H8k/eK26sAsjHNHeQlc1cRj/Fd2IMV4SRxhJBeyWg9ain+n+SYiO/3
-         95zh9hUE1O7s/LyVjrtf7uSUUnMmDcn4ZntpBFwA=
+        b=gubNOFB/5632QJrziOLMgu9uWGylICgJgcjxEyc0sY233d+s5Go6Wn3B8927zNegX
+         a8coUBte5RaUGSluSfMf6YAGeX100BDiXO0owWR0kL4AAkZYinUNVrBFO52APg6qKh
+         Yr/DlEp5VRxfRT1TtfW4IMsh67bUKXbxQN2db8gI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Aditya Pakki <pakki001@umn.edu>, Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 059/244] rsi: Fix NULL pointer dereference in kmalloc
-Date:   Wed, 22 May 2019 15:23:25 -0400
-Message-Id: <20190522192630.24917-59-sashal@kernel.org>
+Cc:     David Ahern <dsahern@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 077/244] mlxsw: spectrum_router: Prevent ipv6 gateway with v4 route via replace and append
+Date:   Wed, 22 May 2019 15:23:43 -0400
+Message-Id: <20190522192630.24917-77-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192630.24917-1-sashal@kernel.org>
 References: <20190522192630.24917-1-sashal@kernel.org>
@@ -59,90 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aditya Pakki <pakki001@umn.edu>
+From: David Ahern <dsahern@gmail.com>
 
-[ Upstream commit d5414c2355b20ea8201156d2e874265f1cb0d775 ]
+[ Upstream commit 7973d9e76727aa42f0824f5569e96248a572d50b ]
 
-kmalloc can fail in rsi_register_rates_channels but memcpy still attempts
-to write to channels. The patch replaces these calls with kmemdup and
-passes the error upstream.
+mlxsw currently does not support v6 gateways with v4 routes. Commit
+19a9d136f198 ("ipv4: Flag fib_info with a fib_nh using IPv6 gateway")
+prevents a route from being added, but nothing stops the replace or
+append. Add a catch for them too.
+    $ ip  ro add 172.16.2.0/24 via 10.99.1.2
+    $ ip  ro replace 172.16.2.0/24 via inet6 fe80::202:ff:fe00:b dev swp1s0
+    Error: mlxsw_spectrum: IPv6 gateway with IPv4 route is not supported.
+    $ ip  ro append 172.16.2.0/24 via inet6 fe80::202:ff:fe00:b dev swp1s0
+    Error: mlxsw_spectrum: IPv6 gateway with IPv4 route is not supported.
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: David Ahern <dsahern@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/rsi/rsi_91x_mac80211.c | 30 ++++++++++++---------
- 1 file changed, 18 insertions(+), 12 deletions(-)
+ drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/wireless/rsi/rsi_91x_mac80211.c b/drivers/net/wireless/rsi/rsi_91x_mac80211.c
-index 4e510cbe0a89f..be59d66585d6d 100644
---- a/drivers/net/wireless/rsi/rsi_91x_mac80211.c
-+++ b/drivers/net/wireless/rsi/rsi_91x_mac80211.c
-@@ -188,27 +188,27 @@ bool rsi_is_cipher_wep(struct rsi_common *common)
-  * @adapter: Pointer to the adapter structure.
-  * @band: Operating band to be set.
-  *
-- * Return: None.
-+ * Return: int - 0 on success, negative error on failure.
-  */
--static void rsi_register_rates_channels(struct rsi_hw *adapter, int band)
-+static int rsi_register_rates_channels(struct rsi_hw *adapter, int band)
- {
- 	struct ieee80211_supported_band *sbands = &adapter->sbands[band];
- 	void *channels = NULL;
- 
- 	if (band == NL80211_BAND_2GHZ) {
--		channels = kmalloc(sizeof(rsi_2ghz_channels), GFP_KERNEL);
--		memcpy(channels,
--		       rsi_2ghz_channels,
--		       sizeof(rsi_2ghz_channels));
-+		channels = kmemdup(rsi_2ghz_channels, sizeof(rsi_2ghz_channels),
-+				   GFP_KERNEL);
-+		if (!channels)
-+			return -ENOMEM;
- 		sbands->band = NL80211_BAND_2GHZ;
- 		sbands->n_channels = ARRAY_SIZE(rsi_2ghz_channels);
- 		sbands->bitrates = rsi_rates;
- 		sbands->n_bitrates = ARRAY_SIZE(rsi_rates);
- 	} else {
--		channels = kmalloc(sizeof(rsi_5ghz_channels), GFP_KERNEL);
--		memcpy(channels,
--		       rsi_5ghz_channels,
--		       sizeof(rsi_5ghz_channels));
-+		channels = kmemdup(rsi_5ghz_channels, sizeof(rsi_5ghz_channels),
-+				   GFP_KERNEL);
-+		if (!channels)
-+			return -ENOMEM;
- 		sbands->band = NL80211_BAND_5GHZ;
- 		sbands->n_channels = ARRAY_SIZE(rsi_5ghz_channels);
- 		sbands->bitrates = &rsi_rates[4];
-@@ -227,6 +227,7 @@ static void rsi_register_rates_channels(struct rsi_hw *adapter, int band)
- 	sbands->ht_cap.mcs.rx_mask[0] = 0xff;
- 	sbands->ht_cap.mcs.tx_params = IEEE80211_HT_MCS_TX_DEFINED;
- 	/* sbands->ht_cap.mcs.rx_highest = 0x82; */
-+	return 0;
- }
- 
- /**
-@@ -1985,11 +1986,16 @@ int rsi_mac80211_attach(struct rsi_common *common)
- 	wiphy->available_antennas_rx = 1;
- 	wiphy->available_antennas_tx = 1;
- 
--	rsi_register_rates_channels(adapter, NL80211_BAND_2GHZ);
-+	status = rsi_register_rates_channels(adapter, NL80211_BAND_2GHZ);
-+	if (status)
-+		return status;
- 	wiphy->bands[NL80211_BAND_2GHZ] =
- 		&adapter->sbands[NL80211_BAND_2GHZ];
- 	if (common->num_supp_bands > 1) {
--		rsi_register_rates_channels(adapter, NL80211_BAND_5GHZ);
-+		status = rsi_register_rates_channels(adapter,
-+						     NL80211_BAND_5GHZ);
-+		if (status)
-+			return status;
- 		wiphy->bands[NL80211_BAND_5GHZ] =
- 			&adapter->sbands[NL80211_BAND_5GHZ];
- 	}
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c
+index 2ab9cf25a08ae..6d214db2ec22e 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c
+@@ -5927,6 +5927,8 @@ static int mlxsw_sp_router_fib_event(struct notifier_block *nb,
+ 			return notifier_from_errno(err);
+ 		break;
+ 	case FIB_EVENT_ENTRY_ADD:
++	case FIB_EVENT_ENTRY_REPLACE: /* fall through */
++	case FIB_EVENT_ENTRY_APPEND:  /* fall through */
+ 		if (router->aborted) {
+ 			NL_SET_ERR_MSG_MOD(info->extack, "FIB offload was aborted. Not configuring route");
+ 			return notifier_from_errno(-EINVAL);
 -- 
 2.20.1
 
