@@ -1,140 +1,206 @@
-Return-Path: <SRS0=9PYC=TV=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06728C18E7C
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 23:52:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFA25C072B5
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 00:04:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF69C2183F
-	for <linux-kernel@archiver.kernel.org>; Tue, 21 May 2019 23:52:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4844217D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 00:04:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=stackpath.com header.i=@stackpath.com header.b="cMPtQOly"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Zf9QLE33"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727941AbfEUXwr (ORCPT
+        id S1727911AbfEVAEn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 19:52:47 -0400
-Received: from mail-eopbgr700088.outbound.protection.outlook.com ([40.107.70.88]:28128
-        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726434AbfEUXwq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 19:52:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stackpath.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yXXOQhsgg5LPvRdht5kSoMp26m2VTfh23n8+xQGUTog=;
- b=cMPtQOlyl0fyrtSmjvF+c14TFYtQLO6qTTDMUhyJc1McMcD388DqCNJDwP1hOu3QxqWif72g6TkSYKA8cXlaTIvn21/sOsiC0tV8qbelbilsdL7ZQqH0JLPhhmKyW0ypNUf1OqmQLkYFhsn4qNaDnMmOBJmoy3WzuV+AgbI6fGA=
-Received: from BYAPR10MB2680.namprd10.prod.outlook.com (52.135.217.31) by
- BYAPR10MB3429.namprd10.prod.outlook.com (20.177.187.204) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1900.20; Tue, 21 May 2019 23:52:43 +0000
-Received: from BYAPR10MB2680.namprd10.prod.outlook.com
- ([fe80::ec8c:9c6a:c83f:43db]) by BYAPR10MB2680.namprd10.prod.outlook.com
- ([fe80::ec8c:9c6a:c83f:43db%7]) with mapi id 15.20.1900.020; Tue, 21 May 2019
- 23:52:43 +0000
-From:   Matthew Cover <matthew.cover@stackpath.com>
-To:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Matthew Cover <werekraken@gmail.com>
-Subject: tc_classid access in skb bpf context
-Thread-Topic: tc_classid access in skb bpf context
-Thread-Index: AQHVEC09Nj6ajF14HkezzoiQKGhG0Q==
-Date:   Tue, 21 May 2019 23:52:43 +0000
-Message-ID: <BYAPR10MB2680B63C684345098E6E7669E3070@BYAPR10MB2680.namprd10.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=matthew.cover@stackpath.com; 
-x-originating-ip: [24.56.44.135]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f3918b74-848a-47d1-c15a-08d6de476a8f
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:BYAPR10MB3429;
-x-ms-traffictypediagnostic: BYAPR10MB3429:
-x-microsoft-antispam-prvs: <BYAPR10MB34291AB998FDF23F58C62129E3070@BYAPR10MB3429.namprd10.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0044C17179
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(366004)(346002)(39850400004)(396003)(136003)(199004)(189003)(55016002)(9686003)(66066001)(26005)(44832011)(102836004)(99286004)(7696005)(71190400001)(81166006)(81156014)(8936002)(8676002)(53936002)(2906002)(7416002)(6116002)(6436002)(2201001)(86362001)(2501003)(71200400001)(316002)(305945005)(7736002)(3846002)(4326008)(478600001)(68736007)(186003)(74316002)(76116006)(66556008)(64756008)(66476007)(73956011)(66946007)(66446008)(14454004)(256004)(14444005)(5660300002)(52536014)(486006)(6506007)(25786009)(110136005)(476003)(33656002);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR10MB3429;H:BYAPR10MB2680.namprd10.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: stackpath.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: wkBwGHbzXDI8/GbNp6m8b1WWwWNrsFaIMYPdMWKw3EaYi3vV5NnbIp+6pN7HGVve2/e5UUrCkAT+jbldZSifdszr1ToelWDKvjuu/+CpTQSX0raGNZ/KMdjYgrugNMZjbrb5Hs3uvCsAYM3oM547GB61vhtVMbf5l4/MPAHYwMR3JtXe9a8zL+U5jCK0pEf9whdChIspzY/FAF6F/rCqwwKV8/ZE6YO+MphvgJF8LtNMQCu80iFFbncanRfEquNR6VWxgkJkfdi+Axei4L515pnVBZceRXEj8u0pmOkF06z+jjhmhH4zyltbyXV+KEgxd13ATPC3oIq8ZhtymNYlkD8z2Vdp/mhzaKGcuSpmGCY1NzBWRSClfSa9HY+zal3NRjc5hYE6zcIGc8DMMx2PwO7SDCUoUckMaz0V6fonA+o=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 21 May 2019 20:04:43 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:41138 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726271AbfEVAEn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 20:04:43 -0400
+Received: by mail-pf1-f196.google.com with SMTP id q17so286792pfq.8
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 17:04:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=h+HMpjJbOByDkcgcmqTFcjwM/Zjfkc20s8NGwt76Mr8=;
+        b=Zf9QLE33qmPluiR2OGF4dL2quucaUAVgN4YPizfJiTzAzfLxxGI5FlE9xizVc831A4
+         PZROfhtKhT/R7pMFQlHGrknlILzZeG3LHD5gyBNKzIo1iuXRcoC6OuM/wsNOYEBlL6Lp
+         KGXm5hniO64celTxThJARG41BLIiM0pmyycsI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=h+HMpjJbOByDkcgcmqTFcjwM/Zjfkc20s8NGwt76Mr8=;
+        b=gLBBKCMqjvZkTyccW35IkIT+/4DkMSXpYmUiIdtCHm6tKGsFEv4kyP67A+rJIvNsHs
+         zLMKJ+wNULdeKXLqyYHkRzn1/6Chg2wETqUqK3nR794gRgXHCuaTza+531PaJPbGl/MM
+         4HlJOmzejjWmuwVPxH8f1TofX8QfVrVlmUGVpZKsLxMCGrdeUJyfHmNTIBTu0muaJlNm
+         TT7FbcL8/sYoxjLamUWdWxe4poyAKv7zAJ6bMPcW/6BW3a1+nXCkMomg6Zrt/c+tvrST
+         raa4Cvu6kQOEClgAT2BXuoiB7R0bR/D1l8fejZA6G6BHuPd8A+oTWjKZKV2eLVvTRt7R
+         XZTA==
+X-Gm-Message-State: APjAAAV23ZdFEAvv5pkldg5Ba1e1VO4QUizqjiTHRypvGDhkomxGw/Op
+        WqNaKGenEDnXf8wRwg0UKhfRnQ==
+X-Google-Smtp-Source: APXvYqyRHlp4k1ARvHRDx6pnXWJEks1ZEDsNIbDRibBeuJSxc6NZrbRUP3gWhA9hXypH8RUrMs25NQ==
+X-Received: by 2002:a63:8dc8:: with SMTP id z191mr87505404pgd.9.1558483482349;
+        Tue, 21 May 2019 17:04:42 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id a11sm15675685pff.128.2019.05.21.17.04.40
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 21 May 2019 17:04:40 -0700 (PDT)
+Date:   Tue, 21 May 2019 17:04:39 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Evgenii Stepanov <eugenis@google.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Khalid Aziz <khalid.aziz@oracle.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
+        kvm@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alexander Deucher <Alexander.Deucher@amd.com>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
+        Elliott Hughes <enh@google.com>
+Subject: Re: [PATCH v15 00/17] arm64: untag user pointers passed to the kernel
+Message-ID: <201905211633.6C0BF0C2@keescook>
+References: <cover.1557160186.git.andreyknvl@google.com>
+ <20190517144931.GA56186@arrakis.emea.arm.com>
+ <CAFKCwrj6JEtp4BzhqO178LFJepmepoMx=G+YdC8sqZ3bcBp3EQ@mail.gmail.com>
+ <20190521182932.sm4vxweuwo5ermyd@mbp>
 MIME-Version: 1.0
-X-OriginatorOrg: stackpath.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f3918b74-848a-47d1-c15a-08d6de476a8f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 May 2019 23:52:43.0494
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: fd04f7e7-8712-48a5-bd2d-688fe1861f4b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR10MB3429
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190521182932.sm4vxweuwo5ermyd@mbp>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-__sk_buff has a member tc_classid which I'm interested in accessing from th=
-e skb bpf context.
+On Tue, May 21, 2019 at 07:29:33PM +0100, Catalin Marinas wrote:
+> On Mon, May 20, 2019 at 04:53:07PM -0700, Evgenii Stepanov wrote:
+> > On Fri, May 17, 2019 at 7:49 AM Catalin Marinas <catalin.marinas@arm.com> wrote:
+> > > IMO (RFC for now), I see two ways forward:
+> > > [...]
+> > > 2. Similar shim to the above libc wrapper but inside the kernel
+> > >    (arch/arm64 only; most pointer arguments could be covered with an
+> > >    __SC_CAST similar to the s390 one). There are two differences from
+> > >    what we've discussed in the past:
+> > >
+> > >    a) this is an opt-in by the user which would have to explicitly call
+> > >       prctl(). If it returns -ENOTSUPP etc., the user won't be allowed
+> > >       to pass tagged pointers to the kernel. This would probably be the
+> > >       responsibility of the C lib to make sure it doesn't tag heap
+> > >       allocations. If the user did not opt-in, the syscalls are routed
+> > >       through the normal path (no untagging address shim).
+> > >
+> > >    b) ioctl() and other blacklisted syscalls (prctl) will not accept
+> > >       tagged pointers (to be documented in Vicenzo's ABI patches).
+> >
+> > The way I see it, a patch that breaks handling of tagged pointers is
+> > not that different from, say, a patch that adds a wild pointer
+> > dereference. Both are bugs; the difference is that (a) the former
+> > breaks a relatively uncommon target and (b) it's arguably an easier
+> > mistake to make. If MTE adoption goes well, (a) will not be the case
+> > for long.
+> 
+> It's also the fact such patch would go unnoticed for a long time until
+> someone exercises that code path. And when they do, the user would be
+> pretty much in the dark trying to figure what what went wrong, why a
+> SIGSEGV or -EFAULT happened. What's worse, we can't even say we fixed
+> all the places where it matters in the current kernel codebase (ignoring
+> future patches).
 
-A bpf program which accesses skb->tc_classid compiles, but fails verificati=
-on; the specific failure is "invalid bpf_context access".
+So, looking forward a bit, this isn't going to be an ARM-specific issue
+for long. In fact, I think we shouldn't have arm-specific syscall wrappers
+in this series: I think untagged_addr() should likely be added at the
+top-level and have it be a no-op for other architectures. So given this
+becoming a kernel-wide multi-architecture issue (under the assumption
+that x86, RISC-V, and others will gain similar TBI or MTE things),
+we should solve it in a way that we can re-use.
 
-if (skb->tc_classid !=3D 0)
- return 1;
-return 0;
+We need something that is going to work everywhere. And it needs to be
+supported by the kernel for the simple reason that the kernel needs to
+do MTE checks during copy_from_user(): having that information stripped
+means we lose any userspace-assigned MTE protections if they get handled
+by the kernel, which is a total non-starter, IMO.
 
-Some of the tests in tools/testing/selftests/bpf/verifier/ (those on tc_cla=
-ssid) further confirm that this is, in all likelihood, intentional behavior=
-.
+As an aside: I think Sparc ADI support in Linux actually side-stepped
+this[1] (i.e. chose "solution 1"): "All addresses passed to kernel must
+be non-ADI tagged addresses." (And sadly, "Kernel does not enable ADI
+for kernel code.") I think this was a mistake we should not repeat for
+arm64 (we do seem to be at least in agreement about this, I think).
 
-The very similar bpf program which instead accesses skb->mark works as desi=
-red.
+[1] https://lore.kernel.org/patchwork/patch/654481/
 
-if (skb->mark !=3D 0)
- return 1;
-return 0;
+> > This is a bit of a chicken-and-egg problem. In a world where memory
+> > allocators on one or several popular platforms generate pointers with
+> > non-zero tags, any such breakage will be caught in testing.
+> > Unfortunately to reach that state we need the kernel to start
+> > accepting tagged pointers first, and then hold on for a couple of
+> > years until userspace catches up.
+> 
+> Would the kernel also catch up with providing a stable ABI? Because we
+> have two moving targets.
+> 
+> On one hand, you have Android or some Linux distro that stick to a
+> stable kernel version for some time, so they have better chance of
+> clearing most of the problems. On the other hand, we have mainline
+> kernel that gets over 500K lines every release. As maintainer, I can't
+> rely on my testing alone as this is on a limited number of platforms. So
+> my concern is that every kernel release has a significant chance of
+> breaking the ABI, unless we have a better way of identifying potential
+> issues.
 
-I built a kernel (v5.1) with 4 instances of the following line removed from=
- net/core/filter.c to test the behavior when the instructions pass verifica=
-tion.
+I just want to make sure I fully understand your concern about this
+being an ABI break, and I work best with examples. The closest situation
+I can see would be:
 
-    switch (off) {
--    case bpf_ctx_range(struct __sk_buff, tc_classid):
-...
-        return false;
+- some program has no idea about MTE
+- malloc() starts returning MTE-tagged addresses
+- program doesn't break from that change
+- program uses some syscall that is missing untagged_addr() and fails
+- kernel has now broken userspace that used to work
 
-It appears skb->tc_classid is always zero within my bpf program, even when =
-I verify by other means (e.g. netfilter) that the value is set non-zero.
+The trouble I see with this is that it is largely theoretical and
+requires part of userspace to collude to start using a new CPU feature
+that tickles a bug in the kernel. As I understand the golden rule,
+this is a bug in the kernel (a missed ioctl() or such) to be fixed,
+not a global breaking of some userspace behavior.
 
-I gather that sk_buff proper sometimes (i.e. at some layers) has qdisc_skb_=
-cb stored in skb->cb, but not always.
+I feel like I'm missing something about this being seen as an ABI
+break. The kernel already fails on userspace addresses that have high
+bits set -- are there things that _depend_ on this failure to operate?
 
-I suspect that the tc_classid is available at l3 (and therefore to utils li=
-ke netfilter, ip route, tc), but not at l2 (and not to AF_PACKET).
-
-Is it impractical to make skb->tc_classid available in this bpf context or =
-is there just some plumbing which hasn't been connected yet?
-
-Is my suspicion that skb->cb no longer contains qdisc_skb_cb due to crossin=
-g a layer boundary well founded?
-
-I'm willing to look into hooking things together as time permits if it's a =
-feasible task.
-
-It's trivial to have iptables match on tc_classid and set a mark which is a=
-vailable to bpf at l2, but I'd like to better understand this.
-
-Thanks,
-Matt C.=
+-- 
+Kees Cook
