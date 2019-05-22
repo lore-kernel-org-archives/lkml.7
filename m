@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91E9FC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:21:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFE92C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:21:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 690F32184E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:21:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 825652184E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:21:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558552886;
-	bh=0UCL52sMqSGxS7cfWNuiFXECeJ8AXVSDRIFJhr4+Kj8=;
+	s=default; t=1558552888;
+	bh=doNg1gXw6eyhwf7280nikzntpuqn8BhVuwpCh91jyuA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cj/YT+T2m/vJsiWfwXI0dXXzTTd74zVzCqgujw/Z++dk6kwG6Wi3UiIsS41OucgsY
-	 hS+L2Q+v0w7lQK/OrwspXZDmCKf6RXMjG2+b/FHY2doujM9SeK0vMsY31P0qFRHr2A
-	 i4/68Gy9ACBrxOW0JQNzVu1+SJIoXxFIONlqkUOw=
+	b=1U2N9nDXwPHocSUydG7xwr5/th3ZZnTQaq9c35fDW7l5kbeBcGaAgbZj1yXAwir+V
+	 CfjriRtqk3NpmeYPNrP/a7nAjxr2ecBQdeJSv8O/msVC8Os+Bk7/lDpLdI0s49JN1X
+	 1Ci9iuEBTnLlHx1fs2vGuGahiMgDmcFhk531Xduc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729880AbfEVTVZ (ORCPT
+        id S1729900AbfEVTV1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:21:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41734 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:21:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729832AbfEVTVV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:21:21 -0400
+        id S1729790AbfEVTVX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:21:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA164217D4;
-        Wed, 22 May 2019 19:21:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0DFD821841;
+        Wed, 22 May 2019 19:21:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558552880;
-        bh=0UCL52sMqSGxS7cfWNuiFXECeJ8AXVSDRIFJhr4+Kj8=;
+        s=default; t=1558552882;
+        bh=doNg1gXw6eyhwf7280nikzntpuqn8BhVuwpCh91jyuA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ab8scxmO8ryaZxhvUHdQfWJkBPO3uN8ayAHOIIVMp5ibg2cAJAgqIon3HgDCEa5UC
-         mMPwP8iUc83h4irvT1UYM7EV81F35sW02kJtZWvjgGhm2k+mYdvhintI/FOQpksqW1
-         UOyxzuIn1UUGCGRzE/voBOqj/ezb+v8+Bsa23U1M=
+        b=Yv5Viyw/JPFlMiGQY3QDwNVJMTJE9bwA0Jxb1HzkIdrry6rulvzV/FqGfFAqQvmqJ
+         21M63oxpODoH15MttF2Zs9tSaoLpo3wqPTZ+JV5V9j4XSIYUEPqmTmNPvGEr5bgMHu
+         h1IVlQNVnDFW7WMWHCIoT/CegtgwezVV4a+M8c3A=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Roberto Bergantinos Corpas <rbergant@redhat.com>,
-        Benjamin Coddington <bcodding@redhat.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 004/375] NFS: make nfs_match_client killable
-Date:   Wed, 22 May 2019 15:15:04 -0400
-Message-Id: <20190522192115.22666-4-sashal@kernel.org>
+Cc:     Shenghui Wang <shhuiw@foxmail.com>, Jeff Moyer <jmoyer@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 006/375] io_uring: use cpu_online() to check p->sq_thread_cpu instead of cpu_possible()
+Date:   Wed, 22 May 2019 15:15:06 -0400
+Message-Id: <20190522192115.22666-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192115.22666-1-sashal@kernel.org>
 References: <20190522192115.22666-1-sashal@kernel.org>
@@ -60,59 +59,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roberto Bergantinos Corpas <rbergant@redhat.com>
+From: Shenghui Wang <shhuiw@foxmail.com>
 
-[ Upstream commit 950a578c6128c2886e295b9c7ecb0b6b22fcc92b ]
+[ Upstream commit 7889f44dd9cee15aff1c3f7daf81ca4dfed48fc7 ]
 
-    Actually we don't do anything with return value from
-    nfs_wait_client_init_complete in nfs_match_client, as a
-    consequence if we get a fatal signal and client is not
-    fully initialised, we'll loop to "again" label
+This issue is found by running liburing/test/io_uring_setup test.
 
-    This has been proven to cause soft lockups on some scenarios
-    (no-carrier but configured network interfaces)
+When test run, the testcase "attempt to bind to invalid cpu" would not
+pass with messages like:
+   io_uring_setup(1, 0xbfc2f7c8), \
+flags: IORING_SETUP_SQPOLL|IORING_SETUP_SQ_AFF, \
+resv: 0x00000000 0x00000000 0x00000000 0x00000000 0x00000000, \
+sq_thread_cpu: 2
+   expected -1, got 3
+   FAIL
 
-Signed-off-by: Roberto Bergantinos Corpas <rbergant@redhat.com>
-Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+On my system, there is:
+   CPU(s) possible : 0-3
+   CPU(s) online   : 0-1
+   CPU(s) offline  : 2-3
+   CPU(s) present  : 0-1
+
+The sq_thread_cpu 2 is offline on my system, so the bind should fail.
+But cpu_possible() will pass the check. We shouldn't be able to bind
+to an offline cpu. Use cpu_online() to do the check.
+
+After the change, the testcase run as expected: EINVAL will be returned
+for cpu offlined.
+
+Reviewed-by: Jeff Moyer <jmoyer@redhat.com>
+Signed-off-by: Shenghui Wang <shhuiw@foxmail.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/client.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ fs/io_uring.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/nfs/client.c b/fs/nfs/client.c
-index 90d71fda65cec..350cfa561e0e8 100644
---- a/fs/nfs/client.c
-+++ b/fs/nfs/client.c
-@@ -284,6 +284,7 @@ static struct nfs_client *nfs_match_client(const struct nfs_client_initdata *dat
- 	struct nfs_client *clp;
- 	const struct sockaddr *sap = data->addr;
- 	struct nfs_net *nn = net_generic(data->net, nfs_net_id);
-+	int error;
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index 84efb8956734f..30a5687a17b65 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -2334,7 +2334,7 @@ static int io_sq_offload_start(struct io_ring_ctx *ctx,
+ 							nr_cpu_ids);
  
- again:
- 	list_for_each_entry(clp, &nn->nfs_client_list, cl_share_link) {
-@@ -296,8 +297,10 @@ static struct nfs_client *nfs_match_client(const struct nfs_client_initdata *dat
- 		if (clp->cl_cons_state > NFS_CS_READY) {
- 			refcount_inc(&clp->cl_count);
- 			spin_unlock(&nn->nfs_client_lock);
--			nfs_wait_client_init_complete(clp);
-+			error = nfs_wait_client_init_complete(clp);
- 			nfs_put_client(clp);
-+			if (error < 0)
-+				return ERR_PTR(error);
- 			spin_lock(&nn->nfs_client_lock);
- 			goto again;
- 		}
-@@ -407,6 +410,8 @@ struct nfs_client *nfs_get_client(const struct nfs_client_initdata *cl_init)
- 		clp = nfs_match_client(cl_init);
- 		if (clp) {
- 			spin_unlock(&nn->nfs_client_lock);
-+			if (IS_ERR(clp))
-+				return clp;
- 			if (new)
- 				new->rpc_ops->free_client(new);
- 			return nfs_found_client(cl_init, clp);
+ 			ret = -EINVAL;
+-			if (!cpu_possible(cpu))
++			if (!cpu_online(cpu))
+ 				goto err;
+ 
+ 			ctx->sqo_thread = kthread_create_on_cpu(io_sq_thread,
 -- 
 2.20.1
 
