@@ -2,115 +2,149 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE64DC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:54:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66457C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:54:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE56F2177E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:54:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F3AA20856
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:54:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558554880;
-	bh=G+X1IT1/gIA2eJj2CViH9vXVlPUhz9BYKtJ6b18vEW4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=1jqQmyByQEhb8O1q18e+j5zzm+yJ0RBr10E7ILvBKXd8/TXafW8h7R3UqsjnauCol
-	 piQL4GzwK42nDfVf0Esrl4lTJ+rtAs5kC7fIfo48SnXms75tRiaaFbpT5mZocAVNdR
-	 nifjvirlsDtDY98bp5QW+q99LYSb8hHD3T1gE9d8=
+	s=default; t=1558554897;
+	bh=JtjKtKDXX3bcYRXIWSnueYMGbBzLZTQv9kgYNNPNOE8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=yWli2Y3UrBpeDjb/FqF6rep8IWrQxwIfz8Oh81hBWoR2Q7dHhaX+sm0h3n44bs470
+	 QtMfscuKN265y5cMjczqFDVO54jYA4HNNtPQRWJHOS4EtSGlDaohk4U+7BTyeAtJlk
+	 odSuqR5xvikU36mkhQuqHHkX1+0nC76/9Xy+tZls=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731837AbfEVTyj (ORCPT
+        id S2387676AbfEVTy4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:54:39 -0400
-Received: from mail-lf1-f49.google.com ([209.85.167.49]:39874 "EHLO
-        mail-lf1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731968AbfEVTyf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:54:35 -0400
-Received: by mail-lf1-f49.google.com with SMTP id f1so2614115lfl.6
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 12:54:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rSl8fUdDFDfyL8GHvUBbjqhM8/vUZ1Z0aNKrbncvnVg=;
-        b=I7rWNrnNX3wccTccB1ppJMqr5FK+x7OqEVU1tDQA+lYJHkg7c4vyIBFqGNUIZLZvs5
-         tpyZGdKj0wcUncvf+7vkVpbilU6OJOJ6ue5lFLp3IrGPCemn4GoOvi1JGh/TCuHJQwk8
-         psMlmduBd3n7mEEEMYh/M8a73NPwVtxfq6OWg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rSl8fUdDFDfyL8GHvUBbjqhM8/vUZ1Z0aNKrbncvnVg=;
-        b=a/jBWdwhYynB3ep8G+M1DEojjVs4djHgyrHu3TJxhPIlV2qjWDAQQI9xZ6UyeJ3HEq
-         BBiAOn1M82vpipdd7NxSDu1JsTjPfY/x6k1cy7DNUrVa4owl7NcxGPyom/DxeG34JZrn
-         djZ5OMXBlMSrrmux1HOxiFjsE9UecU0j2/1eJH4SkwS0O5yVRFGIfVhCP56ZT96MREhP
-         8lkMy7GL3W1DU/+mnF2AGECXvvmOHQpW9FTC+ZmmLxP3rhthShTk7hIhLsR8KvjsatLT
-         AlqK4qoRYh5bRT2U1ZBrHfIwrekIoigq0Eee/Yyi/Oh5VeG53lXQ492w7tE7siW4de5o
-         3HDQ==
-X-Gm-Message-State: APjAAAXUvoN8kdNo5gL5YviuQED7HOsKieq3SL5zjW9IATX6vyuA0O+s
-        CwAay1fxM7RjGmn+55BosAJ6wrDm2UU=
-X-Google-Smtp-Source: APXvYqzUczs3nIhYkBx/5WNnRE+oYGT2FR2pGrTrhV5ffeZ87BV5v9Zld8SKbI+sTiVSqPqoeJvf1w==
-X-Received: by 2002:ac2:4c38:: with SMTP id u24mr27460024lfq.168.1558554872732;
-        Wed, 22 May 2019 12:54:32 -0700 (PDT)
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com. [209.85.208.170])
-        by smtp.gmail.com with ESMTPSA id x20sm5393941ljc.15.2019.05.22.12.54.29
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 22 May 2019 12:54:30 -0700 (PDT)
-Received: by mail-lj1-f170.google.com with SMTP id q16so3245215ljj.8
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 12:54:29 -0700 (PDT)
-X-Received: by 2002:a2e:8741:: with SMTP id q1mr23844320ljj.97.1558554869497;
- Wed, 22 May 2019 12:54:29 -0700 (PDT)
+        Wed, 22 May 2019 15:54:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46916 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731646AbfEVTZf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:25:35 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 667B42173C;
+        Wed, 22 May 2019 19:25:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558553135;
+        bh=JtjKtKDXX3bcYRXIWSnueYMGbBzLZTQv9kgYNNPNOE8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=xK+rYLGWFjBf3GOnHmlV3Djg2x0nm4Mvv9dW99Wdk2Cmu+k2IM8qWxd7w8b3HY8c4
+         aBt1G+lBl08BPlKBj4oUrI2r0KtfCWEp10CYdMh/O85SuyXbuRvTtJupsdWOW4qnjd
+         ThCt7P0AWuWSpruXCl5fRFTXfAdufPUMF6QTDro4=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Sugar Zhang <sugar.zhang@rock-chips.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        dmaengine@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 065/317] dmaengine: pl330: _stop: clear interrupt status
+Date:   Wed, 22 May 2019 15:19:26 -0400
+Message-Id: <20190522192338.23715-65-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190522192338.23715-1-sashal@kernel.org>
+References: <20190522192338.23715-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <20190522153953.30341-1-longman@redhat.com>
-In-Reply-To: <20190522153953.30341-1-longman@redhat.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 22 May 2019 12:54:13 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjit1=wf-JxUebS4_9WUCKbnfGPt0QF13-LijmumMEB-Q@mail.gmail.com>
-Message-ID: <CAHk-=wjit1=wf-JxUebS4_9WUCKbnfGPt0QF13-LijmumMEB-Q@mail.gmail.com>
-Subject: Re: [PATCH] locking/lock_events: Use this_cpu_add() when necessary
-To:     Waiman Long <longman@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        huang ying <huang.ying.caritas@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 22, 2019 at 8:40 AM Waiman Long <longman@redhat.com> wrote:
->
-> +#if defined(CONFIG_PREEMPT) && \
-> +   (defined(CONFIG_DEBUG_PREEMPT) || !defined(CONFIG_X86))
-> +#define lockevent_percpu_inc(x)                this_cpu_inc(x)
-> +#define lockevent_percpu_add(x, v)     this_cpu_add(x, v)
+From: Sugar Zhang <sugar.zhang@rock-chips.com>
 
-Why that CONFIG_X86 special case?
+[ Upstream commit 2da254cc7908105a60a6bb219d18e8dced03dcb9 ]
 
-On x86, the regular non-underscore versionm is perfectly fine, and the
-underscore is no faster or simpler.
+This patch kill instructs the DMAC to immediately terminate
+execution of a thread. and then clear the interrupt status,
+at last, stop generating interrupts for DMA_SEV. to guarantee
+the next dma start is clean. otherwise, one interrupt maybe leave
+to next start and make some mistake.
 
-So just make it be
+we can reporduce the problem as follows:
 
-   #if defined(CONFIG_PREEMPT)
-     .. non-underscore versions..
-   #else
-     .. underscore versions ..
-   #endif
+DMASEV: modify the event-interrupt resource, and if the INTEN sets
+function as interrupt, the DMAC will set irq<event_num> HIGH to
+generate interrupt. write INTCLR to clear interrupt.
 
-and realize that x86 simply doesn't _care_. On x86, it will be one
-single instruction regardless.
+	DMA EXECUTING INSTRUCTS		DMA TERMINATE
+		|				|
+		|				|
+	       ...			      _stop
+		|				|
+		|			spin_lock_irqsave
+	     DMASEV				|
+		|				|
+		|			    mask INTEN
+		|				|
+		|			     DMAKILL
+		|				|
+		|			spin_unlock_irqrestore
 
-Non-x86 may prefer the underscore versions for the non-preempt case.
+in above case, a interrupt was left, and if we unmask INTEN, the DMAC
+will set irq<event_num> HIGH to generate interrupt.
 
-             Linus
+to fix this, do as follows:
+
+	DMA EXECUTING INSTRUCTS		DMA TERMINATE
+		|				|
+		|				|
+	       ...			      _stop
+		|				|
+		|			spin_lock_irqsave
+	     DMASEV				|
+		|				|
+		|			     DMAKILL
+		|				|
+		|			   clear INTCLR
+		|			    mask INTEN
+		|				|
+		|			spin_unlock_irqrestore
+
+Signed-off-by: Sugar Zhang <sugar.zhang@rock-chips.com>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/dma/pl330.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/dma/pl330.c b/drivers/dma/pl330.c
+index cff1b143fff5d..9b7a49fc76971 100644
+--- a/drivers/dma/pl330.c
++++ b/drivers/dma/pl330.c
+@@ -966,6 +966,7 @@ static void _stop(struct pl330_thread *thrd)
+ {
+ 	void __iomem *regs = thrd->dmac->base;
+ 	u8 insn[6] = {0, 0, 0, 0, 0, 0};
++	u32 inten = readl(regs + INTEN);
+ 
+ 	if (_state(thrd) == PL330_STATE_FAULT_COMPLETING)
+ 		UNTIL(thrd, PL330_STATE_FAULTING | PL330_STATE_KILLING);
+@@ -978,10 +979,13 @@ static void _stop(struct pl330_thread *thrd)
+ 
+ 	_emit_KILL(0, insn);
+ 
+-	/* Stop generating interrupts for SEV */
+-	writel(readl(regs + INTEN) & ~(1 << thrd->ev), regs + INTEN);
+-
+ 	_execute_DBGINSN(thrd, insn, is_manager(thrd));
++
++	/* clear the event */
++	if (inten & (1 << thrd->ev))
++		writel(1 << thrd->ev, regs + INTCLR);
++	/* Stop generating interrupts for SEV */
++	writel(inten & ~(1 << thrd->ev), regs + INTEN);
+ }
+ 
+ /* Start doing req 'idx' of thread 'thrd' */
+-- 
+2.20.1
+
