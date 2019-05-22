@@ -2,125 +2,237 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E6DEC072A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 05:21:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A54A2C18E7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 05:24:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D63892075B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 05:21:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X4TZ9d/S"
+	by mail.kernel.org (Postfix) with ESMTP id 7A49120856
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 05:24:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728084AbfEVFVZ (ORCPT
+        id S1728031AbfEVFYb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 01:21:25 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:44352 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725796AbfEVFVY (ORCPT
+        Wed, 22 May 2019 01:24:31 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:53719 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725796AbfEVFYb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 01:21:24 -0400
-Received: by mail-pf1-f195.google.com with SMTP id g9so668634pfo.11;
-        Tue, 21 May 2019 22:21:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=A3GSMoFtIIu9gnm2oZly2q3vAs35Rn87VGmbBuylL+M=;
-        b=X4TZ9d/S3vWo07LOsHAjPNORAxOtuouzOUHa/G4iQLPSL3hN57UsUh84AqVWgiI+vU
-         P971S7BBSPaOD1ahjKh73WlKDa2S5ntc6IP5Nomo4ZSE5e8hotTFimwaYiAzCboEUhRr
-         Tco+ybvVge8XTmAys+Ta82JbS7udrsqPCFrOJ21LaKBF7gltIqugG6ngpe/rGchSxGlg
-         6EY7ICyUFhZ5ZrbaSD3vqHnxFXGLPaLcDhTtSEWblZCRb21QXOpxoQuYYHRSvVi4B+KI
-         0jdHwZ9KKFFe6BC+M7dXeRtfeEn+rxt5K/aqFCcCBaJVMqO2oqmHyCED8VyPbg2NDyP8
-         vmCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=A3GSMoFtIIu9gnm2oZly2q3vAs35Rn87VGmbBuylL+M=;
-        b=NJwxJ0b+OH7hyFjZ49jQSSLaFB8rK8NkqPnYqTCRxvh6EGyXdccI47v0n34hi3/Vx/
-         RAhYwNlWBtFk13TwkErqoPuO9JSwVUwLopeJAoY04YTrg41slLlBj5oekA1ANrZrBYdq
-         IHeP49/PLqrsphbWszUAVCS3Crhi1wKAUHMm0Jl+oxSSDZQKVZTbRLCuWHa00yXw4Gr6
-         56XMVgdkU+cwuzj7Gg5RKgBKi0sXOFq3g2u7j9k6HpFGHg8EX/0dfRyOE/WoSVzBpNmb
-         0b+GXXHFF3tyxme76ZdbiL8WbT7VP9lgjFOvwl1Ju3KDT4H6WcD2xjCH9RB3J3F/tX+6
-         P3CA==
-X-Gm-Message-State: APjAAAUr1G2Ho+b3HbJu7w3k0QkxLYniAsbxTYpilIZRhdJuqKPJSUcK
-        gG4OYCsyaArP6JDHX88wA+E=
-X-Google-Smtp-Source: APXvYqxSZ7EXEUPmJF3/IZH6oaVimhi52QTGFi31kHkYhOmIkXSS1LnhSRqDHbj40ar84kakjRjwjw==
-X-Received: by 2002:a63:9a52:: with SMTP id e18mr88157840pgo.335.1558502483806;
-        Tue, 21 May 2019 22:21:23 -0700 (PDT)
-Received: from anarsoul-thinkpad.lan (216-71-213-236.dyn.novuscom.net. [216.71.213.236])
-        by smtp.gmail.com with ESMTPSA id d9sm28138152pgj.34.2019.05.21.22.21.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 21 May 2019 22:21:23 -0700 (PDT)
-From:   Vasily Khoruzhick <anarsoul@gmail.com>
-To:     Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Vasily Khoruzhick <anarsoul@gmail.com>, stable@vger.kernel.org
-Subject: [PATCH] Revert "Bluetooth: Align minimum encryption key size for LE and BR/EDR connections"
-Date:   Tue, 21 May 2019 22:20:02 -0700
-Message-Id: <20190522052002.10411-1-anarsoul@gmail.com>
-X-Mailer: git-send-email 2.21.0
+        Wed, 22 May 2019 01:24:31 -0400
+X-UUID: c79c5609883e4e05bbfd9eabfb832317-20190522
+X-UUID: c79c5609883e4e05bbfd9eabfb832317-20190522
+Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw01.mediatek.com
+        (envelope-from <long.cheng@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 1054208324; Wed, 22 May 2019 13:24:25 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by mtkmbs08n1.mediatek.inc
+ (172.21.101.55) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Wed, 22 May
+ 2019 13:24:23 +0800
+Received: from [10.17.3.153] (172.27.4.253) by MTKCAS32.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 22 May 2019 13:24:22 +0800
+Message-ID: <1558502662.14150.31.camel@mhfsdcap03>
+Subject: Re: [PATCH 4/4] serial: 8250-mtk: modify uart DMA rx
+From:   Long Cheng <long.cheng@mediatek.com>
+To:     Nicolas Boichat <drinkcat@chromium.org>
+CC:     Vinod Koul <vkoul@kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Rob Herring" <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Ryder Lee" <ryder.lee@mediatek.com>,
+        Sean Wang <sean.wang@kernel.org>,
+        "Matthias Brugger" <matthias.bgg@gmail.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        "linux-arm Mailing List" <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        <linux-serial@vger.kernel.org>,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        Yingjoe Chen <yingjoe.chen@mediatek.com>,
+        YT Shen <yt.shen@mediatek.com>,
+        Zhenbao Liu <zhenbao.liu@mediatek.com>,
+        Long Cheng <long.cheng@mediatek.com>
+Date:   Wed, 22 May 2019 13:24:22 +0800
+In-Reply-To: <1558078602.14150.27.camel@mhfsdcap03>
+References: <1556336193-15198-1-git-send-email-long.cheng@mediatek.com>
+         <1556336193-15198-5-git-send-email-long.cheng@mediatek.com>
+         <CANMq1KDTyu48joV6uMksGBMz9EmjFH9SEpGAm93YCZ40jxgBpQ@mail.gmail.com>
+         <1558078602.14150.27.camel@mhfsdcap03>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit d5bb334a8e171b262e48f378bd2096c0ea458265.
+On Fri, 2019-05-17 at 15:36 +0800, Long Cheng wrote:
+> On Wed, 2019-05-15 at 21:48 +0800, Nicolas Boichat wrote:
+> > On Sat, Apr 27, 2019 at 11:36 AM Long Cheng <long.cheng@mediatek.com> wrote:
+> > >
+> > > Modify uart rx and complete for DMA.
+> > 
+> > I don't know much about the DMA framework, but can you please explain
+> > why you are making the changes in this CL? I see that you are dropping
+> > dma_sync_single_for_device calls, for example, why?
+> > 
+> 
+> the rx buffer is create by 'dma_alloc_coherent'. in the function, the
+> buffer is uncache. We don't need to sync between CPU and DMA. So I
+> remove it.
+> 
+> > >
+> > > Signed-off-by: Long Cheng <long.cheng@mediatek.com>
+> > > ---
+> > >  drivers/tty/serial/8250/8250_mtk.c |   53 ++++++++++++++++--------------------
+> > >  1 file changed, 23 insertions(+), 30 deletions(-)
+> > >
+> > > diff --git a/drivers/tty/serial/8250/8250_mtk.c b/drivers/tty/serial/8250/8250_mtk.c
+> > > index c1fdbc0..04081a6 100644
+> > > --- a/drivers/tty/serial/8250/8250_mtk.c
+> > > +++ b/drivers/tty/serial/8250/8250_mtk.c
+> > > @@ -30,7 +30,6 @@
+> > >  #define MTK_UART_DMA_EN_TX     0x2
+> > >  #define MTK_UART_DMA_EN_RX     0x5
+> > >
+> > > -#define MTK_UART_TX_SIZE       UART_XMIT_SIZE
+> > >  #define MTK_UART_RX_SIZE       0x8000
+> > >  #define MTK_UART_TX_TRIGGER    1
+> > >  #define MTK_UART_RX_TRIGGER    MTK_UART_RX_SIZE
+> > > @@ -64,28 +63,30 @@ static void mtk8250_dma_rx_complete(void *param)
+> > >         struct mtk8250_data *data = up->port.private_data;
+> > >         struct tty_port *tty_port = &up->port.state->port;
+> > >         struct dma_tx_state state;
+> > > +       int copied, cnt, tmp;
+> > >         unsigned char *ptr;
+> > > -       int copied;
+> > >
+> > > -       dma_sync_single_for_cpu(dma->rxchan->device->dev, dma->rx_addr,
+> > > -                               dma->rx_size, DMA_FROM_DEVICE);
+> > > +       if (data->rx_status == DMA_RX_SHUTDOWN)
+> > > +               return;
+> > >
+> > >         dmaengine_tx_status(dma->rxchan, dma->rx_cookie, &state);
+> > > +       cnt = dma->rx_size - state.residue;
+> > > +       tmp = cnt;
+> > 
+> > I ponder, maybe we should rename cnt to left? (like, how many bytes
+> > are left to transfer, in total) Or maybe "total"
+> > Then maybe rename tmp to cnt.
+> > 
+> like better.
+> 
+> > >
+> > > -       if (data->rx_status == DMA_RX_SHUTDOWN)
+> > > -               return;
+> > > +       if ((data->rx_pos + cnt) > dma->rx_size)
+> > > +               tmp = dma->rx_size - data->rx_pos;
+> > 
+> > Maybe replace this and the line above:
+> > tmp = max_t(int, cnt, dma->rx_size - data->rx_pos);
+> > 
+> Yes. It's better.
+> 
 
-This commit breaks some HID devices, see [1] for details
+can't replace by 'max_t'. So I will keep original code.
 
-https://bugzilla.kernel.org/show_bug.cgi?id=203643
+> > >
+> > > -       if ((data->rx_pos + state.residue) <= dma->rx_size) {
+> > > -               ptr = (unsigned char *)(data->rx_pos + dma->rx_buf);
+> > > -               copied = tty_insert_flip_string(tty_port, ptr, state.residue);
+> > > -       } else {
+> > > -               ptr = (unsigned char *)(data->rx_pos + dma->rx_buf);
+> > > -               copied = tty_insert_flip_string(tty_port, ptr,
+> > > -                                               dma->rx_size - data->rx_pos);
+> > > +       ptr = (unsigned char *)(data->rx_pos + dma->rx_buf);
+> > > +       copied = tty_insert_flip_string(tty_port, ptr, tmp);
+> > > +       data->rx_pos += tmp;
+> > > +
+> > > +       if (cnt > tmp) {
+> > >                 ptr = (unsigned char *)(dma->rx_buf);
+> > > -               copied += tty_insert_flip_string(tty_port, ptr,
+> > > -                               data->rx_pos + state.residue - dma->rx_size);
+> > > +               tmp = cnt - tmp;
+> > > +               copied += tty_insert_flip_string(tty_port, ptr, tmp);
+> > > +               data->rx_pos = tmp;
+> > >         }
+> > > +
+> > >         up->port.icount.rx += copied;
+> > >
+> > >         tty_flip_buffer_push(tty_port);
+> > > @@ -96,9 +97,7 @@ static void mtk8250_dma_rx_complete(void *param)
+> > >  static void mtk8250_rx_dma(struct uart_8250_port *up)
+> > >  {
+> > >         struct uart_8250_dma *dma = up->dma;
+> > > -       struct mtk8250_data *data = up->port.private_data;
+> > >         struct dma_async_tx_descriptor  *desc;
+> > > -       struct dma_tx_state      state;
+> > >
+> > >         desc = dmaengine_prep_slave_single(dma->rxchan, dma->rx_addr,
+> > >                                            dma->rx_size, DMA_DEV_TO_MEM,
+> > > @@ -113,12 +112,6 @@ static void mtk8250_rx_dma(struct uart_8250_port *up)
+> > >
+> > >         dma->rx_cookie = dmaengine_submit(desc);
+> > >
+> > > -       dmaengine_tx_status(dma->rxchan, dma->rx_cookie, &state);
+> > > -       data->rx_pos = state.residue;
+> > > -
+> > > -       dma_sync_single_for_device(dma->rxchan->device->dev, dma->rx_addr,
+> > > -                                  dma->rx_size, DMA_FROM_DEVICE);
+> > > -
+> > >         dma_async_issue_pending(dma->rxchan);
+> > >  }
+> > >
+> > > @@ -131,13 +124,13 @@ static void mtk8250_dma_enable(struct uart_8250_port *up)
+> > >         if (data->rx_status != DMA_RX_START)
+> > >                 return;
+> > >
+> > > -       dma->rxconf.direction           = DMA_DEV_TO_MEM;
+> > > -       dma->rxconf.src_addr_width      = dma->rx_size / 1024;
+> > > -       dma->rxconf.src_addr            = dma->rx_addr;
+> > > +       dma->rxconf.direction                           = DMA_DEV_TO_MEM;
+> > > +       dma->rxconf.src_port_window_size        = dma->rx_size;
+> > > +       dma->rxconf.src_addr                            = dma->rx_addr;
+> > >
+> > > -       dma->txconf.direction           = DMA_MEM_TO_DEV;
+> > > -       dma->txconf.dst_addr_width      = MTK_UART_TX_SIZE / 1024;
+> > > -       dma->txconf.dst_addr            = dma->tx_addr;
+> > > +       dma->txconf.direction                           = DMA_MEM_TO_DEV;
+> > > +       dma->txconf.dst_port_window_size        = UART_XMIT_SIZE;
+> > > +       dma->txconf.dst_addr                            = dma->tx_addr;
+> > >
+> > >         serial_out(up, UART_FCR, UART_FCR_ENABLE_FIFO | UART_FCR_CLEAR_RCVR |
+> > >                 UART_FCR_CLEAR_XMIT);
+> > > @@ -217,7 +210,7 @@ static void mtk8250_shutdown(struct uart_port *port)
+> > >          * Mediatek UARTs use an extra highspeed register (UART_MTK_HIGHS)
+> > >          *
+> > >          * We need to recalcualte the quot register, as the claculation depends
+> > > -        * on the vaule in the highspeed register.
+> > > +        * on the value in the highspeed register.
+> > 
+> > Since you're doing some cosmetic changes here, you might as well fix
+> > recalcualte => recalculate and claculation => calculation on the line
+> > above.
+> > 
+> 
+> I see.
+> 
+> > But technically, this should belong in another patch...
+> > 
+> > >          *
+> > >          * Some baudrates are not supported by the chip, so we use the next
+> > >          * lower rate supported and update termios c_flag.
+> > > --
+> > > 1.7.9.5
+> > >
+> 
 
-Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
-Cc: stable@vger.kernel.org
----
- include/net/bluetooth/hci_core.h | 3 ---
- net/bluetooth/hci_conn.c         | 8 --------
- 2 files changed, 11 deletions(-)
-
-diff --git a/include/net/bluetooth/hci_core.h b/include/net/bluetooth/hci_core.h
-index 05b1b96f4d9e..094e61e07030 100644
---- a/include/net/bluetooth/hci_core.h
-+++ b/include/net/bluetooth/hci_core.h
-@@ -190,9 +190,6 @@ struct adv_info {
- 
- #define HCI_MAX_SHORT_NAME_LENGTH	10
- 
--/* Min encryption key size to match with SMP */
--#define HCI_MIN_ENC_KEY_SIZE		7
--
- /* Default LE RPA expiry time, 15 minutes */
- #define HCI_DEFAULT_RPA_TIMEOUT		(15 * 60)
- 
-diff --git a/net/bluetooth/hci_conn.c b/net/bluetooth/hci_conn.c
-index 3cf0764d5793..bd4978ce8c45 100644
---- a/net/bluetooth/hci_conn.c
-+++ b/net/bluetooth/hci_conn.c
-@@ -1276,14 +1276,6 @@ int hci_conn_check_link_mode(struct hci_conn *conn)
- 	    !test_bit(HCI_CONN_ENCRYPT, &conn->flags))
- 		return 0;
- 
--	/* The minimum encryption key size needs to be enforced by the
--	 * host stack before establishing any L2CAP connections. The
--	 * specification in theory allows a minimum of 1, but to align
--	 * BR/EDR and LE transports, a minimum of 7 is chosen.
--	 */
--	if (conn->enc_key_size < HCI_MIN_ENC_KEY_SIZE)
--		return 0;
--
- 	return 1;
- }
- 
--- 
-2.21.0
 
