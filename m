@@ -2,126 +2,116 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55987C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:45:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BCCDC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:45:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 288AB21473
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:45:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558554322;
-	bh=5837nFyHbJXss00NJ/tvmuNT5piKv5Ig/GXnIhvv00E=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nEeDR3e27/2t9K8tZ3025siovFL9STpHsIypdwj0MePn8NRORvX8H7JKmFrEHJkeU
-	 NqE3qCDonxSujdBNKEzpSE8i36LSnSK42G9iJM8uZk/eyEpt/A2CWW/Z4YghT9RY/f
-	 mav/9g3HqYvQeY9PoqiO2Wbfoa9dkox/fy+w1+Vc=
+	by mail.kernel.org (Postfix) with ESMTP id 1DCE020862
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:45:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SpL/qYsN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387815AbfEVTpV (ORCPT
+        id S2387756AbfEVTpb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:45:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50444 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729961AbfEVT17 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:27:59 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FA282173C;
-        Wed, 22 May 2019 19:27:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553278;
-        bh=5837nFyHbJXss00NJ/tvmuNT5piKv5Ig/GXnIhvv00E=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DOD8UFL3v3iTXoPYxXpNKn/ndlUGruW9yFgnRcsikW+pXEo/14vvE3oW2ObkYC/Hm
-         NVWrJM9WcNDmthvf2n3Xs5DmCYOXrLnldSv/r5cXPQkFGArQXj05k/naaBnkZQW6XX
-         DkxweMlga2dH13QRoSU77IB0FbExkerY2ldTi8f8=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 052/244] mac80211/cfg80211: update bss channel on channel switch
-Date:   Wed, 22 May 2019 15:23:18 -0400
-Message-Id: <20190522192630.24917-52-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190522192630.24917-1-sashal@kernel.org>
-References: <20190522192630.24917-1-sashal@kernel.org>
+        Wed, 22 May 2019 15:45:31 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:42226 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729923AbfEVTp1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:45:27 -0400
+Received: by mail-pl1-f196.google.com with SMTP id go2so1555064plb.9
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 12:45:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=xu8Xfz1//w2ZzNsfNUbcmqz00XlQNm2CX6twe7k5oB4=;
+        b=SpL/qYsNz/7q6yoXxeofhfKWNOeNxFM1wJhkF4xMyF+ND93xkfki/hHZGqtDiecjIq
+         y3DDItEF+vWU5Weezwz+uASTJ8v8ibnAJOLjqf6UvHIEYtY0/dADtQvD23ldraYPKZw1
+         Rm32W/+3NgSUAGEFyEp4C3PD7eqEaUlg1i89S+la0C5kj9IP+2anERQj9IHdC2nO9ReQ
+         m+fvLw318OegoJ+pxP0vvH6oB5+WGfztfIHn8uOG+7E4tIqcstc2paaL7/mnukMkj25Q
+         KodbhaLgeJxTW1sY7k3WHz1a8iyZJZKmla7Fg/HdyUYH6LNJL0dKVQix6snM7q/fsMbm
+         jxvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=xu8Xfz1//w2ZzNsfNUbcmqz00XlQNm2CX6twe7k5oB4=;
+        b=kyk4AO/lymb9wd8y9yD/XSj5zO+xtWNZarEcH0PYsX8NZqDreXUuE7eetdYybDKCXz
+         0cz//Ljye4BumgJimKfU4dSx0gzHr4cW9NhMBk3L45txHXqbIKpz4J8AQtMqicXJTGcY
+         10yOMuGNjTCGNLdTk7trFj4ErE+Ec4pAVXCSPRjCGZ3U95GSk+Jff6HYQrBWG6ew2yvt
+         K8Mm0/cS+tfZ7e0nNVDWevMO+Fv4HHq9ih/yBH5o+h0seVBlBbsXHFUs87bzSlhRw7tt
+         PxYkMf+b9LZKeLoP+lH9iCEebOs4BA6KfdDE2M4XnXBnHUZhSw96bAyCCCPzyi4prfsf
+         +izA==
+X-Gm-Message-State: APjAAAUSBLsJ4m0cK0N5+iP5IeswfAg0jTjCwXVU2gnV3oKsVHldJwtz
+        3VqotdrP0DPpRBrJmWEawWU=
+X-Google-Smtp-Source: APXvYqxJl7eiZaUNXlyUGE1f1J9ER3gIBLLVf+MUPh3VvOxDZh0pS0eJUedewgdXa8RgYUhJuy0rkA==
+X-Received: by 2002:a17:902:b095:: with SMTP id p21mr40903202plr.270.1558554326511;
+        Wed, 22 May 2019 12:45:26 -0700 (PDT)
+Received: from bharath12345-Inspiron-5559 ([103.110.42.31])
+        by smtp.gmail.com with ESMTPSA id v16sm11490421pfc.26.2019.05.22.12.45.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 22 May 2019 12:45:25 -0700 (PDT)
+Date:   Thu, 23 May 2019 01:15:19 +0530
+From:   Bharath Vedartham <linux.bhar@gmail.com>
+To:     ericvh@gmail.com, asmadeus@codewreck.org, lucho@ionkov.net
+Cc:     linux-kernel@vger.kernel.org, v9fs-developer@lists.sourceforge.net,
+        linux.bhar@gmail.com
+Subject: [PATCH v2] 9p/cache.c: Fix memory leak in
+ v9fs_cache_session_get_cookie
+Message-ID: <20190522194519.GA5313@bharath12345-Inspiron-5559>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
+v9fs_cache_session_get_cookie assigns a random cachetag to v9ses->cachetag,
+if the cachetag is not assigned previously.
 
-[ Upstream commit 5dc8cdce1d722c733f8c7af14c5fb595cfedbfa8 ]
+v9fs_random_cachetag allocates memory to v9ses->cachetag with kmalloc and uses
+scnprintf to fill it up with a cachetag.
 
-FullMAC STAs have no way to update bss channel after CSA channel switch
-completion. As a result, user-space tools may provide inconsistent
-channel info. For instance, consider the following two commands:
-$ sudo iw dev wlan0 link
-$ sudo iw dev wlan0 info
-The latter command gets channel info from the hardware, so most probably
-its output will be correct. However the former command gets channel info
-from scan cache, so its output will contain outdated channel info.
-In fact, current bss channel info will not be updated until the
-next [re-]connect.
+But if scnprintf fails, v9ses->cachetag is not freed in the current
+code causing a memory leak.
 
-Note that mac80211 STAs have a workaround for this, but it requires
-access to internal cfg80211 data, see ieee80211_chswitch_work:
+Fix this by freeing v9ses->cachetag it v9fs_random_cachetag fails.
 
-	/* XXX: shouldn't really modify cfg80211-owned data! */
-	ifmgd->associated->channel = sdata->csa_chandef.chan;
+This was reported by syzbot, the link to the report is below:
+https://syzkaller.appspot.com/bug?id=f012bdf297a7a4c860c38a88b44fbee43fd9bbf3
 
-This patch suggests to convert mac80211 workaround into cfg80211 behavior
-and to update current bss channel in cfg80211_ch_switch_notify.
+Reported-by: syzbot+3a030a73b6c1e9833815@syzkaller.appspotmail.com
+Signed-off-by: Bharath Vedartham <linux.bhar@gmail.com>
 
-Signed-off-by: Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/mlme.c    | 3 ---
- net/wireless/nl80211.c | 5 +++++
- 2 files changed, 5 insertions(+), 3 deletions(-)
+Changes since v2
+	- Made v9ses->cachetag NULL after freeing to avoid any
+	  side effects.
+---
+ fs/9p/cache.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/net/mac80211/mlme.c b/net/mac80211/mlme.c
-index 3dbecae4be73c..2ac749c4a6b26 100644
---- a/net/mac80211/mlme.c
-+++ b/net/mac80211/mlme.c
-@@ -1156,9 +1156,6 @@ static void ieee80211_chswitch_work(struct work_struct *work)
- 		goto out;
+diff --git a/fs/9p/cache.c b/fs/9p/cache.c
+index 9eb3470..baf72da 100644
+--- a/fs/9p/cache.c
++++ b/fs/9p/cache.c
+@@ -66,6 +66,8 @@ void v9fs_cache_session_get_cookie(struct v9fs_session_info *v9ses)
+ 	if (!v9ses->cachetag) {
+ 		if (v9fs_random_cachetag(v9ses) < 0) {
+ 			v9ses->fscache = NULL;
++			kfree(v9ses->cachetag);
++			v9ses->cachetag = NULL; 
+ 			return;
+ 		}
  	}
- 
--	/* XXX: shouldn't really modify cfg80211-owned data! */
--	ifmgd->associated->channel = sdata->csa_chandef.chan;
--
- 	ifmgd->csa_waiting_bcn = true;
- 
- 	ieee80211_sta_reset_beacon_monitor(sdata);
-diff --git a/net/wireless/nl80211.c b/net/wireless/nl80211.c
-index 048e004ed0ee8..c6711ead5e591 100644
---- a/net/wireless/nl80211.c
-+++ b/net/wireless/nl80211.c
-@@ -15441,6 +15441,11 @@ void cfg80211_ch_switch_notify(struct net_device *dev,
- 
- 	wdev->chandef = *chandef;
- 	wdev->preset_chandef = *chandef;
-+
-+	if (wdev->iftype == NL80211_IFTYPE_STATION &&
-+	    !WARN_ON(!wdev->current_bss))
-+		wdev->current_bss->pub.channel = chandef->chan;
-+
- 	nl80211_ch_switch_notify(rdev, dev, chandef, GFP_KERNEL,
- 				 NL80211_CMD_CH_SWITCH_NOTIFY, 0);
- }
 -- 
-2.20.1
+2.7.4
 
