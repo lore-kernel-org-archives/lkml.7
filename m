@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB1F0C282DC
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:35:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCFBDC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:35:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A51602089E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:35:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A047A217D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:35:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558553715;
-	bh=dz2I2KucN3MRcnXwenNiNgtqfzzX5Xi8x2aQQrUdFC4=;
+	s=default; t=1558553717;
+	bh=7UQ8nCbr7CLhfG35J4sz4PaYKZN7msH+PRGQty9D3s0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CISea5ME2bDBucTeuJkz61DDsYt0ZEf39fKvuPSOGgnJExRepUR3asMEUJaY9lH7E
-	 x/WxaZmwDGNw8rX3SPWkOPG7HK+T/fcEC9ChMTO1LKSZ6w0yQpC+TLAtCjUQZQj3Sv
-	 X4YpqlUyusr+PRQdSCoW0P/ktsHZecJ3JXlN8F+Y=
+	b=Q6J3wy/kQCYWHx1Kk9ckeSrCqjQUY/Vd2qYg4iLkARdQid1t0tqDNqIznf8T+lwiL
+	 yiSXvLuWPxohyjQXHNj1z1Wnbl6fQvKLdMnBd2BRTQclGz2oL0cp12AwS5qb3lFXdD
+	 LZORHyAYtey3EwmclYeXfRQcmAsFpLwsaxX9mK2s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387534AbfEVTfP (ORCPT
+        id S2387586AbfEVTfR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:35:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54658 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:35:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54614 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387447AbfEVTbK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:31:10 -0400
+        id S1732971AbfEVTbH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:31:07 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3BE7B20879;
-        Wed, 22 May 2019 19:31:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF9B720675;
+        Wed, 22 May 2019 19:31:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553469;
-        bh=dz2I2KucN3MRcnXwenNiNgtqfzzX5Xi8x2aQQrUdFC4=;
+        s=default; t=1558553466;
+        bh=7UQ8nCbr7CLhfG35J4sz4PaYKZN7msH+PRGQty9D3s0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L9ONgMGPaQjQk1ikH+QA5OpRN4uK6I+NrnGJtpBL4WYWU8HtS4fEmILZ7m9Z5lGVF
-         E1IJT8OYE7j4EQvPMeufKW9SN2o6aY9EGs+bL8mZaWCIQN81CJ68lpb4J9JNq4ba8C
-         s5vdSfnyZZXaovCwvOUwxEKl8NkIbP6LrxPOnxMI=
+        b=MMTsFclcONxOrbEFWIesuLoeCC5pX6IOC6vRMOrySd+T3CC2z4bvjRsr7JBNhfkdc
+         NbZb4l9JP2z27cMo0u1wQNsvt30bs0mRlIXvH8/HyB09Lb8ulhSi6ncBhE+snTwYUU
+         MQFNsT+1Ae7hdXQMfSc+VaLLCtKSs1XX+b/DpMqY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kees Cook <keescook@chromium.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Borislav Petkov <bp@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 033/114] x86/build: Move _etext to actual end of .text
-Date:   Wed, 22 May 2019 15:28:56 -0400
-Message-Id: <20190522193017.26567-33-sashal@kernel.org>
+Cc:     Parav Pandit <parav@mellanox.com>,
+        Daniel Jurgens <danielj@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 032/114] RDMA/cma: Consider scope_id while binding to ipv6 ll address
+Date:   Wed, 22 May 2019 15:28:55 -0400
+Message-Id: <20190522193017.26567-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522193017.26567-1-sashal@kernel.org>
 References: <20190522193017.26567-1-sashal@kernel.org>
@@ -63,51 +61,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+From: Parav Pandit <parav@mellanox.com>
 
-[ Upstream commit 392bef709659abea614abfe53cf228e7a59876a4 ]
+[ Upstream commit 5d7ed2f27bbd482fd29e6b2e204b1a1ee8a0b268 ]
 
-When building x86 with Clang LTO and CFI, CFI jump regions are
-automatically added to the end of the .text section late in linking. As a
-result, the _etext position was being labelled before the appended jump
-regions, causing confusion about where the boundaries of the executable
-region actually are in the running kernel, and broke at least the fault
-injection code. This moves the _etext mark to outside (and immediately
-after) the .text area, as it already the case on other architectures
-(e.g. arm64, arm).
+When two netdev have same link local addresses (such as vlan and non
+vlan), two rdma cm listen id should be able to bind to following different
+addresses.
 
-Reported-and-tested-by: Sami Tolvanen <samitolvanen@google.com>
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Cc: Borislav Petkov <bp@suse.de>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: http://lkml.kernel.org/r/20190423183827.GA4012@beast
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+listener-1: addr=lla, scope_id=A, port=X
+listener-2: addr=lla, scope_id=B, port=X
+
+However while comparing the addresses only addr and port are considered,
+due to which 2nd listener fails to listen.
+
+In below example of two listeners, 2nd listener is failing with address in
+use error.
+
+$ rping -sv -a fe80::268a:7ff:feb3:d113%ens2f1 -p 4545&
+
+$ rping -sv -a fe80::268a:7ff:feb3:d113%ens2f1.200 -p 4545
+rdma_bind_addr: Address already in use
+
+To overcome this, consider the scope_ids as well which forms the accurate
+IPv6 link local address.
+
+Signed-off-by: Parav Pandit <parav@mellanox.com>
+Reviewed-by: Daniel Jurgens <danielj@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/vmlinux.lds.S | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/infiniband/core/cma.c | 25 +++++++++++++++++++------
+ 1 file changed, 19 insertions(+), 6 deletions(-)
 
-diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
-index 55f04875293fa..51b772f9d886a 100644
---- a/arch/x86/kernel/vmlinux.lds.S
-+++ b/arch/x86/kernel/vmlinux.lds.S
-@@ -111,11 +111,11 @@ SECTIONS
- 		*(.text.__x86.indirect_thunk)
- 		__indirect_thunk_end = .;
- #endif
--
--		/* End of text section */
--		_etext = .;
- 	} :text = 0x9090
+diff --git a/drivers/infiniband/core/cma.c b/drivers/infiniband/core/cma.c
+index 85d4ef319c905..0c7d63e0f0fde 100644
+--- a/drivers/infiniband/core/cma.c
++++ b/drivers/infiniband/core/cma.c
+@@ -1021,18 +1021,31 @@ static inline int cma_any_addr(struct sockaddr *addr)
+ 	return cma_zero_addr(addr) || cma_loopback_addr(addr);
+ }
  
-+	/* End of text section */
-+	_etext = .;
+-static int cma_addr_cmp(struct sockaddr *src, struct sockaddr *dst)
++static int cma_addr_cmp(const struct sockaddr *src, const struct sockaddr *dst)
+ {
+ 	if (src->sa_family != dst->sa_family)
+ 		return -1;
+ 
+ 	switch (src->sa_family) {
+ 	case AF_INET:
+-		return ((struct sockaddr_in *) src)->sin_addr.s_addr !=
+-		       ((struct sockaddr_in *) dst)->sin_addr.s_addr;
+-	case AF_INET6:
+-		return ipv6_addr_cmp(&((struct sockaddr_in6 *) src)->sin6_addr,
+-				     &((struct sockaddr_in6 *) dst)->sin6_addr);
++		return ((struct sockaddr_in *)src)->sin_addr.s_addr !=
++		       ((struct sockaddr_in *)dst)->sin_addr.s_addr;
++	case AF_INET6: {
++		struct sockaddr_in6 *src_addr6 = (struct sockaddr_in6 *)src;
++		struct sockaddr_in6 *dst_addr6 = (struct sockaddr_in6 *)dst;
++		bool link_local;
 +
- 	NOTES :text :note
- 
- 	EXCEPTION_TABLE(16) :text = 0x9090
++		if (ipv6_addr_cmp(&src_addr6->sin6_addr,
++					  &dst_addr6->sin6_addr))
++			return 1;
++		link_local = ipv6_addr_type(&dst_addr6->sin6_addr) &
++			     IPV6_ADDR_LINKLOCAL;
++		/* Link local must match their scope_ids */
++		return link_local ? (src_addr6->sin6_scope_id !=
++				     dst_addr6->sin6_scope_id) :
++				    0;
++	}
++
+ 	default:
+ 		return ib_addr_cmp(&((struct sockaddr_ib *) src)->sib_addr,
+ 				   &((struct sockaddr_ib *) dst)->sib_addr);
 -- 
 2.20.1
 
