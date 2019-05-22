@@ -4,54 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9920C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:21:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85A7CC282DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:21:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE6FF217F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:21:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EFE72186A
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:21:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558552890;
-	bh=ArSHjs28NdkfbTowzn7Wt6gNKxncZUHW8jAxRtOEqXQ=;
+	s=default; t=1558552895;
+	bh=q45bGC7eS5ClWtkYK6X1HWzi/ijAvwG+ED5Bqf85fyM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MPUAZJ3rYN9Koz8V9fE5hgLXLmBnIazfj3ZnuqWg3WMTfGvEz3iexXKklhe5yKoJ2
-	 mzDggoi3oQ9IQT1DyUAldwBKpCwGnHXfsvSQN3hG3/W/Z5j0LaPBhGoUtBrVB5vgwa
-	 xR/eiw7Se5sJMESdE31txLafiPMaPIgU8amY4MQw=
+	b=E5YoQg5gGcjp9Wt+lkCQRXY5VYnTMGRdz4gMxekzOmlG9r/oR2qbqO989lZ5439OW
+	 zb1DSwroI8TS1pVWQNDHPeXTvU2736/7SBBkXE2xj+SP4ieyBQqXEeoGR3E6lynAYT
+	 yZCfUaN+nfNTk1/peUebLNp5KuVt+uFlKbRNSbS0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729926AbfEVTV3 (ORCPT
+        id S1729973AbfEVTVe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:21:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41860 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:21:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41970 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729874AbfEVTV0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:21:26 -0400
+        id S1729924AbfEVTVb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:21:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D20F217D9;
-        Wed, 22 May 2019 19:21:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A82D2173C;
+        Wed, 22 May 2019 19:21:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558552885;
-        bh=ArSHjs28NdkfbTowzn7Wt6gNKxncZUHW8jAxRtOEqXQ=;
+        s=default; t=1558552889;
+        bh=q45bGC7eS5ClWtkYK6X1HWzi/ijAvwG+ED5Bqf85fyM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2I6H0gJ2SxVpooePrIkWJ84WThPuWAjVpkULP4Jw1UclrTdZ6xXvD6kzwpX9WBuLZ
-         oQvDeisgACpaPXftDCNRQyTNvHhAzrBDAFjT3L79VxpXJBf1Rt/IQ/LihlKkbOEGQy
-         yoGrxp/TnIFQ+z2ffVbWTT6340pVdSgiV98QlpHw=
+        b=MddxJICHIcH3ebIwRxE8h4ySOdzqcmjQco6MgsZf4J+MJgZZzWqHlwWsyEsIrGwXf
+         EGAbcmm8TOMRF37GBvyWBfttl/Aj2SuDz+KZxKo+qTSxGKZFu55psD3GHMFqMXIaN/
+         FEaBhI0wAFra+BkrQTJiVUd2n5xSthaMhUezKYv4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andreas Gruenbacher <agruenba@redhat.com>,
-        Ross Lagerwall <ross.lagerwall@citrix.com>,
-        Bob Peterson <rpeterso@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, cluster-devel@redhat.com
-Subject: [PATCH AUTOSEL 5.1 008/375] gfs2: Fix occasional glock use-after-free
-Date:   Wed, 22 May 2019 15:15:08 -0400
-Message-Id: <20190522192115.22666-8-sashal@kernel.org>
+Cc:     =?UTF-8?q?Linus=20L=C3=BCssing?= <linus.luessing@c0d3.blue>,
+        syzbot+83f2d54ec6b7e417e13f@syzkaller.appspotmail.com,
+        syzbot+050927a651272b145a5d@syzkaller.appspotmail.com,
+        syzbot+979ffc89b87309b1b94b@syzkaller.appspotmail.com,
+        syzbot+f9f3f388440283da2965@syzkaller.appspotmail.com,
+        Sven Eckelmann <sven@narfation.org>,
+        Simon Wunderlich <sw@simonwunderlich.de>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 010/375] batman-adv: mcast: fix multicast tt/tvlv worker locking
+Date:   Wed, 22 May 2019 15:15:10 -0400
+Message-Id: <20190522192115.22666-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192115.22666-1-sashal@kernel.org>
 References: <20190522192115.22666-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,97 +65,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andreas Gruenbacher <agruenba@redhat.com>
+From: Linus Lüssing <linus.luessing@c0d3.blue>
 
-[ Upstream commit 9287c6452d2b1f24ea8e84bd3cf6f3c6f267f712 ]
+[ Upstream commit a3c7cd0cdf1107f891aff847ad481e34df727055 ]
 
-This patch has to do with the life cycle of glocks and buffers.  When
-gfs2 metadata or journaled data is queued to be written, a gfs2_bufdata
-object is assigned to track the buffer, and that is queued to various
-lists, including the glock's gl_ail_list to indicate it's on the active
-items list.  Once the page associated with the buffer has been written,
-it is removed from the ail list, but its life isn't over until a revoke
-has been successfully written.
+Syzbot has reported some issues with the locking assumptions made for
+the multicast tt/tvlv worker: It was able to trigger the WARN_ON() in
+batadv_mcast_mla_tt_retract() and batadv_mcast_mla_tt_add().
+While hard/not reproduceable for us so far it seems that the
+delayed_work_pending() we use might not be quite safe from reordering.
 
-So after the block is written, its bufdata object is moved from the
-glock's gl_ail_list to a file-system-wide list of pending revokes,
-sd_log_le_revoke.  At that point the glock still needs to track how many
-revokes it contributed to that list (in gl_revokes) so that things like
-glock go_sync can ensure all the metadata has been not only written, but
-also revoked before the glock is granted to a different node.  This is
-to guarantee journal replay doesn't replay the block once the glock has
-been granted to another node.
+Therefore this patch adds an explicit, new spinlock to protect the
+update of the mla_list and flags in bat_priv and then removes the
+WARN_ON(delayed_work_pending()).
 
-Ross Lagerwall recently discovered a race in which an inode could be
-evicted, and its glock freed after its ail list had been synced, but
-while it still had unwritten revokes on the sd_log_le_revoke list.  The
-evict decremented the glock reference count to zero, which allowed the
-glock to be freed.  After the revoke was written, function
-revoke_lo_after_commit tried to adjust the glock's gl_revokes counter
-and clear its GLF_LFLUSH flag, at which time it referenced the freed
-glock.
-
-This patch fixes the problem by incrementing the glock reference count
-in gfs2_add_revoke when the glock's first bufdata object is moved from
-the glock to the global revokes list. Later, when the glock's last such
-bufdata object is freed, the reference count is decremented. This
-guarantees that whichever process finishes last (the revoke writing or
-the evict) will properly free the glock, and neither will reference the
-glock after it has been freed.
-
-Reported-by: Ross Lagerwall <ross.lagerwall@citrix.com>
-Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
-Signed-off-by: Bob Peterson <rpeterso@redhat.com>
+Reported-by: syzbot+83f2d54ec6b7e417e13f@syzkaller.appspotmail.com
+Reported-by: syzbot+050927a651272b145a5d@syzkaller.appspotmail.com
+Reported-by: syzbot+979ffc89b87309b1b94b@syzkaller.appspotmail.com
+Reported-by: syzbot+f9f3f388440283da2965@syzkaller.appspotmail.com
+Fixes: cbebd363b2e9 ("batman-adv: Use own timer for multicast TT and TVLV updates")
+Signed-off-by: Linus Lüssing <linus.luessing@c0d3.blue>
+Signed-off-by: Sven Eckelmann <sven@narfation.org>
+Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/gfs2/glock.c | 1 +
- fs/gfs2/log.c   | 3 ++-
- fs/gfs2/lops.c  | 6 ++++--
- 3 files changed, 7 insertions(+), 3 deletions(-)
+ net/batman-adv/main.c      |  1 +
+ net/batman-adv/multicast.c | 11 +++--------
+ net/batman-adv/types.h     |  5 +++++
+ 3 files changed, 9 insertions(+), 8 deletions(-)
 
-diff --git a/fs/gfs2/glock.c b/fs/gfs2/glock.c
-index e4f6d39500bcc..71c28ff98b564 100644
---- a/fs/gfs2/glock.c
-+++ b/fs/gfs2/glock.c
-@@ -140,6 +140,7 @@ void gfs2_glock_free(struct gfs2_glock *gl)
- {
- 	struct gfs2_sbd *sdp = gl->gl_name.ln_sbd;
+diff --git a/net/batman-adv/main.c b/net/batman-adv/main.c
+index 75750870cf048..f8725786b5961 100644
+--- a/net/batman-adv/main.c
++++ b/net/batman-adv/main.c
+@@ -161,6 +161,7 @@ int batadv_mesh_init(struct net_device *soft_iface)
+ 	spin_lock_init(&bat_priv->tt.commit_lock);
+ 	spin_lock_init(&bat_priv->gw.list_lock);
+ #ifdef CONFIG_BATMAN_ADV_MCAST
++	spin_lock_init(&bat_priv->mcast.mla_lock);
+ 	spin_lock_init(&bat_priv->mcast.want_lists_lock);
+ #endif
+ 	spin_lock_init(&bat_priv->tvlv.container_list_lock);
+diff --git a/net/batman-adv/multicast.c b/net/batman-adv/multicast.c
+index f91b1b6265cfe..1b985ab89c087 100644
+--- a/net/batman-adv/multicast.c
++++ b/net/batman-adv/multicast.c
+@@ -325,8 +325,6 @@ static void batadv_mcast_mla_list_free(struct hlist_head *mcast_list)
+  * translation table except the ones listed in the given mcast_list.
+  *
+  * If mcast_list is NULL then all are retracted.
+- *
+- * Do not call outside of the mcast worker! (or cancel mcast worker first)
+  */
+ static void batadv_mcast_mla_tt_retract(struct batadv_priv *bat_priv,
+ 					struct hlist_head *mcast_list)
+@@ -334,8 +332,6 @@ static void batadv_mcast_mla_tt_retract(struct batadv_priv *bat_priv,
+ 	struct batadv_hw_addr *mcast_entry;
+ 	struct hlist_node *tmp;
  
-+	BUG_ON(atomic_read(&gl->gl_revokes));
- 	rhashtable_remove_fast(&gl_hash_table, &gl->gl_node, ht_parms);
- 	smp_mb();
- 	wake_up_glock(gl);
-diff --git a/fs/gfs2/log.c b/fs/gfs2/log.c
-index b8830fda51e8f..0e04f87a7dddb 100644
---- a/fs/gfs2/log.c
-+++ b/fs/gfs2/log.c
-@@ -606,7 +606,8 @@ void gfs2_add_revoke(struct gfs2_sbd *sdp, struct gfs2_bufdata *bd)
- 	gfs2_remove_from_ail(bd); /* drops ref on bh */
- 	bd->bd_bh = NULL;
- 	sdp->sd_log_num_revoke++;
--	atomic_inc(&gl->gl_revokes);
-+	if (atomic_inc_return(&gl->gl_revokes) == 1)
-+		gfs2_glock_hold(gl);
- 	set_bit(GLF_LFLUSH, &gl->gl_flags);
- 	list_add(&bd->bd_list, &sdp->sd_log_le_revoke);
+-	WARN_ON(delayed_work_pending(&bat_priv->mcast.work));
+-
+ 	hlist_for_each_entry_safe(mcast_entry, tmp, &bat_priv->mcast.mla_list,
+ 				  list) {
+ 		if (mcast_list &&
+@@ -359,8 +355,6 @@ static void batadv_mcast_mla_tt_retract(struct batadv_priv *bat_priv,
+  *
+  * Adds multicast listener announcements from the given mcast_list to the
+  * translation table if they have not been added yet.
+- *
+- * Do not call outside of the mcast worker! (or cancel mcast worker first)
+  */
+ static void batadv_mcast_mla_tt_add(struct batadv_priv *bat_priv,
+ 				    struct hlist_head *mcast_list)
+@@ -368,8 +362,6 @@ static void batadv_mcast_mla_tt_add(struct batadv_priv *bat_priv,
+ 	struct batadv_hw_addr *mcast_entry;
+ 	struct hlist_node *tmp;
+ 
+-	WARN_ON(delayed_work_pending(&bat_priv->mcast.work));
+-
+ 	if (!mcast_list)
+ 		return;
+ 
+@@ -658,7 +650,10 @@ static void batadv_mcast_mla_update(struct work_struct *work)
+ 	priv_mcast = container_of(delayed_work, struct batadv_priv_mcast, work);
+ 	bat_priv = container_of(priv_mcast, struct batadv_priv, mcast);
+ 
++	spin_lock(&bat_priv->mcast.mla_lock);
+ 	__batadv_mcast_mla_update(bat_priv);
++	spin_unlock(&bat_priv->mcast.mla_lock);
++
+ 	batadv_mcast_start_timer(bat_priv);
  }
-diff --git a/fs/gfs2/lops.c b/fs/gfs2/lops.c
-index 8722c60b11feb..4b280611246df 100644
---- a/fs/gfs2/lops.c
-+++ b/fs/gfs2/lops.c
-@@ -669,8 +669,10 @@ static void revoke_lo_after_commit(struct gfs2_sbd *sdp, struct gfs2_trans *tr)
- 		bd = list_entry(head->next, struct gfs2_bufdata, bd_list);
- 		list_del_init(&bd->bd_list);
- 		gl = bd->bd_gl;
--		atomic_dec(&gl->gl_revokes);
--		clear_bit(GLF_LFLUSH, &gl->gl_flags);
-+		if (atomic_dec_return(&gl->gl_revokes) == 0) {
-+			clear_bit(GLF_LFLUSH, &gl->gl_flags);
-+			gfs2_glock_queue_put(gl);
-+		}
- 		kmem_cache_free(gfs2_bufdata_cachep, bd);
- 	}
- }
+ 
+diff --git a/net/batman-adv/types.h b/net/batman-adv/types.h
+index a21b34ed6548f..ed0f6a519de55 100644
+--- a/net/batman-adv/types.h
++++ b/net/batman-adv/types.h
+@@ -1223,6 +1223,11 @@ struct batadv_priv_mcast {
+ 	/** @bridged: whether the soft interface has a bridge on top */
+ 	unsigned char bridged:1;
+ 
++	/**
++	 * @mla_lock: a lock protecting mla_list and mla_flags
++	 */
++	spinlock_t mla_lock;
++
+ 	/**
+ 	 * @num_want_all_unsnoopables: number of nodes wanting unsnoopable IP
+ 	 *  traffic
 -- 
 2.20.1
 
