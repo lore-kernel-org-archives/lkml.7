@@ -2,225 +2,84 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AB0EC282DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 13:54:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01050C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 13:55:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34AC1208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 13:54:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gcrno6pL"
+	by mail.kernel.org (Postfix) with ESMTP id C8C62208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 13:55:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728971AbfEVNyc (ORCPT
+        id S1729034AbfEVNzz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 09:54:32 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:46299 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726770AbfEVNyb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 09:54:31 -0400
-Received: by mail-lf1-f68.google.com with SMTP id l26so1740041lfh.13;
-        Wed, 22 May 2019 06:54:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=3ZTrwMxN/5lsR/yBgeQOj8ooUaQuQVd2rlB+XWMlCww=;
-        b=gcrno6pLfvE1Y4bOELD/4ycqwW+20kE2jaeYTrHTrtfcQMlyRjjw24sDf+ht19fa6o
-         NfDlQydamNYxgIAIg4+D/jlZJYs6YUAf4opPIpYhxss3G81n/o5MxzH3lHX3tPXATjEw
-         OoFyO80YdiJy1KDj4X8OZLHuQuOAVlbxFGFd1JgspFLL8GsUlyOsMenh0ekW7/APgAr7
-         fzwJa7RM0346nVGN5677Dk71QzEZSf8kCE/E1dQAS/DlHAFzD5NbIggot6weqdBCPZGu
-         UQEREKUk7evskL4TivJjHxYXl+09zPQB+9QTYH1WxXqcpYWjfbmzgZaOTus1Vm8d8GGv
-         55uQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3ZTrwMxN/5lsR/yBgeQOj8ooUaQuQVd2rlB+XWMlCww=;
-        b=XQVsa/VYTFgqZ7ZQmm2PkzbE32K7M4MjyV98zmfUZvKG5zhQQFB5602yFf47P1Hxoh
-         0NctO96ZZmfN9BNpo8D2dpITskD6R4DNuNVUR6tJR8Us5rQugWf60yNfneab26Bu/KQf
-         VqgW14iBYnOcN+sdyNQbal5vGT2bvus1pytkm0veWRHUivhogbZkyUe6MV2nWT0IMYuz
-         56X5e8rbO2mHtSSgoDTo0bLjeCHPwGBp0fyAI3RHR6mt1OhpT8gawKQvTsqHurSPqMU7
-         ekk6aYB4lpkxlkLGcugfSpLYlNB+D/KNB8TiyhS3votgGlczxsJPh0olRGmjhZn2tvfh
-         VQPw==
-X-Gm-Message-State: APjAAAVjEK48Sx4HJvvmtH8HmBJhFmH2obv2zHz38ERrmaHRCj1tLz0T
-        +Y58HD3WVbN+KrNpaGW0P2k=
-X-Google-Smtp-Source: APXvYqyh7w7bH7z8KJW9Gi98UFsM6J9VYBV/15sxp5N9UEMUQBKHI8KSzd8ZmKelZDEJmV1lK3vfDw==
-X-Received: by 2002:ac2:43c2:: with SMTP id u2mr36442843lfl.159.1558533268909;
-        Wed, 22 May 2019 06:54:28 -0700 (PDT)
-Received: from mobilestation ([83.220.237.191])
-        by smtp.gmail.com with ESMTPSA id w11sm1938109lfe.32.2019.05.22.06.54.26
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 22 May 2019 06:54:28 -0700 (PDT)
-Date:   Wed, 22 May 2019 16:54:23 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Mike Rapoport <rppt@linux.ibm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Stefan Agner <stefan@agner.ch>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Juergen Gross <jgross@suse.com>, linux-mips@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Atsushi Nemoto <anemo@mba.ocn.ne.jp>,
-        "Maciej W. Rozycki" <macro@linux-mips.org>
-Subject: Re: [PATCH 04/12] mips: Reserve memory for the kernel image resources
-Message-ID: <20190522135422.q6w7lcvh5fgpf7a5@mobilestation>
-References: <20190423224748.3765-1-fancer.lancer@gmail.com>
- <20190423224748.3765-5-fancer.lancer@gmail.com>
- <CAMuHMdWPmL5Z86cgJ4N-U-3XKr4ys8Y7U85okDcXYEu7z4ybaw@mail.gmail.com>
- <20190521155309.GB24470@rapoport-lnx>
- <CAMuHMdWK6-ge-j1NbunDu_Jy7JOwbMfTzNQ767MViuTo4DNf+A@mail.gmail.com>
- <20190522080802.GA31930@rapoport-lnx>
- <CAMuHMdWS9vMUuWAbgZ9tpNcStXOvP2eRkA7WtPOERA3keLq9Eg@mail.gmail.com>
- <20190522133402.duhybxf66oubx6ng@mobilestation>
- <CAMuHMdUR90cabKys=ZAJxyH3okiof-7gu3k8TUer55LA_Nse5A@mail.gmail.com>
+        Wed, 22 May 2019 09:55:55 -0400
+Received: from foss.arm.com ([217.140.101.70]:52022 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726770AbfEVNzy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 09:55:54 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EE8DE80D;
+        Wed, 22 May 2019 06:55:53 -0700 (PDT)
+Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 58C903F575;
+        Wed, 22 May 2019 06:55:52 -0700 (PDT)
+Subject: Re: [PATCH] swiotlb: sync buffer when mapping FROM_DEVICE
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     =?UTF-8?Q?Horia_Geant=c4=83?= <horia.geanta@nxp.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-imx@nxp.com
+References: <20190522072018.10660-1-horia.geanta@nxp.com>
+ <20190522123243.GA26390@lst.de>
+ <6cbe5470-16a6-17e9-337d-6ba18b16b6e8@arm.com>
+ <20190522130921.GA26874@lst.de>
+ <fdfd7318-7999-1fe6-01b6-ae1fb7ba8c30@arm.com>
+ <20190522133400.GA27229@lst.de>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <ed26de5e-aee4-4e19-095c-cc551012d475@arm.com>
+Date:   Wed, 22 May 2019 14:55:50 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="qrcxxnjro5uvxfxh"
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdUR90cabKys=ZAJxyH3okiof-7gu3k8TUer55LA_Nse5A@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190522133400.GA27229@lst.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 22/05/2019 14:34, Christoph Hellwig wrote:
+> On Wed, May 22, 2019 at 02:25:38PM +0100, Robin Murphy wrote:
+>> Sure, but that should be irrelevant since the effective problem here is in
+>> the sync_*_for_cpu direction, and it's the unmap which nobbles the buffer.
+>> If the driver does this:
+>>
+>> 	dma_map_single(whole buffer);
+>> 	<device writes to part of buffer>
+>> 	dma_unmap_single(whole buffer);
+>> 	<contents of rest of buffer now undefined>
+>>
+>> then it could instead do this and be happy:
+>>
+>> 	dma_map_single(whole buffer, SKIP_CPU_SYNC);
+>> 	<device writes to part of buffer>
+>> 	dma_sync_single_for_cpu(updated part of buffer);
+>> 	dma_unmap_single(whole buffer, SKIP_CPU_SYNC);
+>> 	<contents of rest of buffer still valid>
+> 
+> Assuming the driver knows how much was actually DMAed this would
+> solve the issue.  Horia, does this work for you?
 
---qrcxxnjro5uvxfxh
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Ohhh, and now I've just twigged what you were suggesting - your 
+DMA_ATTR_PARTIAL flag would mean "treat this as a read-modify-write of 
+the buffer because we *don't* know exactly which parts the device may 
+write to". So indeed if we did go down that route we wouldn't need any 
+of the sync stuff I was worrying about (but I might suggest naming it 
+DMA_ATTR_UPDATE instead). Apologies for being slow :)
 
-On Wed, May 22, 2019 at 03:44:47PM +0200, Geert Uytterhoeven wrote:
-> Hi Serge,
->
-> ...
-> 
-> >
-> > The problem might be fixed there by the next patch:
-> > ---
-> > diff --git a/arch/mips/dec/prom/memory.c b/arch/mips/dec/prom/memory.c
-> > index 5073d2ed78bb..5a0c734b5d04 100644
-> > --- a/arch/mips/dec/prom/memory.c
-> > +++ b/arch/mips/dec/prom/memory.c
-> > @@ -91,29 +91,14 @@ void __init prom_meminit(u32 magic)
-> >                 pmax_setup_memory_region();
-> >         else
-> >                 rex_setup_memory_region();
-> > -}
-> > -
-> > -void __init prom_free_prom_memory(void)
-> > -{
-> > -       unsigned long end;
-> > -
-> > -       /*
-> > -        * Free everything below the kernel itself but leave
-> > -        * the first page reserved for the exception handlers.
-> > -        */
-> >
-> >  #if IS_ENABLED(CONFIG_DECLANCE)
-> >         /*
-> > -        * Leave 128 KB reserved for Lance memory for
-> > -        * IOASIC DECstations.
-> > +        * Reserve 128 KB for Lance memory for IOASIC DECstations.
-> >          *
-> >          * XXX: save this address for use in dec_lance.c?
-> >          */
-> >         if (IOASIC)
-> > -               end = __pa(&_text) - 0x00020000;
-> > -       else
-> > +               memblock_reserve(__pa_symbol(&_text), 0x00020000);
-> 
-> Shouldn't that be
-> 
->     memblock_reserve(__pa_symbol(&_text) - 0x00020000, 0x00020000);
-> 
-> ?
-> 
-
-Right. Thanks. The updated version of the patch is attached to this email.
-
--Sergey
-
-> >  #endif
-> > -               end = __pa(&_text);
-> > -
-> > -       free_init_pages("unused PROM memory", PAGE_SIZE, end);
-> >  }
-> > ---
-> >
-> > Didn't wanna use prom_FREE_prom_memory to actually reserve a memory
-> > chunk, so I moved the reservation into the prom_meminit() method.
-> 
-> I guess Maciej will test this on real hardware, eventually...
-> 
-> > Regarding the first page for the exception handlers. We don't need
-> > to reserve it here, since it is already done in arch/mips/kernel/traps.c .
-> 
-> Thanks for checking! That was actually something I was still wondering
-> about...
-> 
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-> 
-> -- 
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-> 
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
-
---qrcxxnjro5uvxfxh
-Content-Type: text/x-patch; charset=us-ascii
-Content-Disposition: attachment; filename="fix_dec.patch"
-
-diff --git a/arch/mips/dec/prom/memory.c b/arch/mips/dec/prom/memory.c
-index 5073d2ed78bb..031c0cd45d85 100644
---- a/arch/mips/dec/prom/memory.c
-+++ b/arch/mips/dec/prom/memory.c
-@@ -91,29 +91,14 @@ void __init prom_meminit(u32 magic)
- 		pmax_setup_memory_region();
- 	else
- 		rex_setup_memory_region();
--}
--
--void __init prom_free_prom_memory(void)
--{
--	unsigned long end;
--
--	/*
--	 * Free everything below the kernel itself but leave
--	 * the first page reserved for the exception handlers.
--	 */
- 
- #if IS_ENABLED(CONFIG_DECLANCE)
- 	/*
--	 * Leave 128 KB reserved for Lance memory for
--	 * IOASIC DECstations.
-+	 * Reserve 128 KB for Lance memory for IOASIC DECstations.
- 	 *
- 	 * XXX: save this address for use in dec_lance.c?
- 	 */
- 	if (IOASIC)
--		end = __pa(&_text) - 0x00020000;
--	else
-+		memblock_reserve(__pa_symbol(&_text) - 0x00020000, 0x00020000);
- #endif
--		end = __pa(&_text);
--
--	free_init_pages("unused PROM memory", PAGE_SIZE, end);
- }
-
---qrcxxnjro5uvxfxh--
+Robin.
