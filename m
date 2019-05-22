@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B70FC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:36:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F132AC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:37:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E39520675
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:36:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8C9920675
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:37:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558553814;
-	bh=irppVcgwRVsmn8gpyfP7T1YSfDasC28ynChgPB5Zhbk=;
+	s=default; t=1558553823;
+	bh=NiqXvwojC1D7C1RXV3saA1gnnXcxvKec8v+zqiUIXuc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t19mWVsrQ9yc4JJSeHwxKzpKRElyQnt3tOtSyB7pnd9nmz1Zf0VoSD7m3MjZUlYOV
-	 dIY67BNsT3JpyAyYdtE3df4FJTBOySbHZf8tw2KiKYFZkwYdApKj2PfQE9NYjADwRI
-	 M0qYXQ1fI6RMLb31pzbgfrq5iKq7jQWkM3L+ruyg=
+	b=fnovpeuNeLsbqRd+TuK0ac6Mu1vovHj/hcyQnRHeguPfEwLfm9xOjYEbbQ0G3FBKq
+	 OnY5NJ9Ia8E6e0z8R/ZHQ47Bg+Rh0uGYBkKrX9lM7rNvXDFJsVTDwa9Eh/FK4so/iU
+	 9xsEgHMWnz0wc5rmPsJIam4ZVaJJMjTjzXYbgXGU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732971AbfEVTgx (ORCPT
+        id S1732339AbfEVThD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:36:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54036 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:37:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53994 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733269AbfEVTae (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:30:34 -0400
+        id S1731471AbfEVTab (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:30:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 303C4217D7;
-        Wed, 22 May 2019 19:30:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3DE7C20879;
+        Wed, 22 May 2019 19:30:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553433;
-        bh=irppVcgwRVsmn8gpyfP7T1YSfDasC28ynChgPB5Zhbk=;
+        s=default; t=1558553430;
+        bh=NiqXvwojC1D7C1RXV3saA1gnnXcxvKec8v+zqiUIXuc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A9zhMOO+JWUk8lO82hr1UMjS9dFnoShYmO+2diNKjMn/pPDmavec51LC8seAcy0XE
-         QjQnkB/gqHbMNM9WDYPXUlniNS1wkRJGYs7IM61iRhxcuyAOucKAFQyvHhYU1nuN0Y
-         80CkhfKOiWxkNsBVzA4a6fT3ajZ02TPKKltblci4=
+        b=x8kl/r+26qoKyDAd78VGQDc7PsiJbXpZ1017EPZs61i0DRThntmP9awA3vCsF0Z1D
+         2B5rEPWZOKSUqp5nLcyNJB6yR/NY+DrW74627gxELTBVn0DANJ8A+lOVE8c+zL1PjE
+         asS4ENKCEryADt3GGlx1UtunnvtXWVi9fNC919Rw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Flavio Suligoi <f.suligoi@asem.it>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 010/114] spi: pxa2xx: fix SCR (divisor) calculation
-Date:   Wed, 22 May 2019 15:28:33 -0400
-Message-Id: <20190522193017.26567-10-sashal@kernel.org>
+Cc:     Bo YU <tsu.yubo@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.9 008/114] powerpc/boot: Fix missing check of lseek() return value
+Date:   Wed, 22 May 2019 15:28:31 -0400
+Message-Id: <20190522193017.26567-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522193017.26567-1-sashal@kernel.org>
 References: <20190522193017.26567-1-sashal@kernel.org>
@@ -60,61 +58,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Flavio Suligoi <f.suligoi@asem.it>
+From: Bo YU <tsu.yubo@gmail.com>
 
-[ Upstream commit 29f2133717c527f492933b0622a4aafe0b3cbe9e ]
+[ Upstream commit 5d085ec04a000fefb5182d3b03ee46ca96d8389b ]
 
-Calculate the divisor for the SCR (Serial Clock Rate), avoiding
-that the SSP transmission rate can be greater than the device rate.
+This is detected by Coverity scan: CID: 1440481
 
-When the division between the SSP clock and the device rate generates
-a reminder, we have to increment by one the divisor.
-In this way the resulting SSP clock will never be greater than the
-device SPI max frequency.
-
-For example, with:
-
- - ssp_clk  = 50 MHz
- - dev freq = 15 MHz
-
-without this patch the SSP clock will be greater than 15 MHz:
-
- - 25 MHz for PXA25x_SSP and CE4100_SSP
- - 16,56 MHz for the others
-
-Instead, with this patch, we have in both case an SSP clock of 12.5MHz,
-so the max rate of the SPI device clock is respected.
-
-Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
-Reviewed-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Reviewed-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Bo YU <tsu.yubo@gmail.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-pxa2xx.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ arch/powerpc/boot/addnote.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/spi/spi-pxa2xx.c b/drivers/spi/spi-pxa2xx.c
-index f2209ec4cb68d..8b618f0fa459f 100644
---- a/drivers/spi/spi-pxa2xx.c
-+++ b/drivers/spi/spi-pxa2xx.c
-@@ -921,10 +921,14 @@ static unsigned int ssp_get_clk_div(struct driver_data *drv_data, int rate)
+diff --git a/arch/powerpc/boot/addnote.c b/arch/powerpc/boot/addnote.c
+index 9d9f6f334d3cc..3da3e2b1b51bc 100644
+--- a/arch/powerpc/boot/addnote.c
++++ b/arch/powerpc/boot/addnote.c
+@@ -223,7 +223,11 @@ main(int ac, char **av)
+ 	PUT_16(E_PHNUM, np + 2);
  
- 	rate = min_t(int, ssp_clk, rate);
- 
-+	/*
-+	 * Calculate the divisor for the SCR (Serial Clock Rate), avoiding
-+	 * that the SSP transmission rate can be greater than the device rate
-+	 */
- 	if (ssp->type == PXA25x_SSP || ssp->type == CE4100_SSP)
--		return (ssp_clk / (2 * rate) - 1) & 0xff;
-+		return (DIV_ROUND_UP(ssp_clk, 2 * rate) - 1) & 0xff;
- 	else
--		return (ssp_clk / rate - 1) & 0xfff;
-+		return (DIV_ROUND_UP(ssp_clk, rate) - 1)  & 0xfff;
- }
- 
- static unsigned int pxa2xx_ssp_get_clk_div(struct driver_data *drv_data,
+ 	/* write back */
+-	lseek(fd, (long) 0, SEEK_SET);
++	i = lseek(fd, (long) 0, SEEK_SET);
++	if (i < 0) {
++		perror("lseek");
++		exit(1);
++	}
+ 	i = write(fd, buf, n);
+ 	if (i < 0) {
+ 		perror("write");
 -- 
 2.20.1
 
