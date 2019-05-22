@@ -2,338 +2,232 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C759FC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 21:12:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3D05C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 21:12:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E70720881
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 21:12:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C2C72054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 21:12:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CpcVdY8g"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="KQ4MO4k8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730256AbfEVVMS (ORCPT
+        id S1730352AbfEVVMi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 17:12:18 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:37943 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729720AbfEVVMR (ORCPT
+        Wed, 22 May 2019 17:12:38 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:9517 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729720AbfEVVMi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 17:12:17 -0400
-Received: by mail-lj1-f194.google.com with SMTP id 14so3438640ljj.5;
-        Wed, 22 May 2019 14:12:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=g1JDwv6DsF/R2W3Hhi+fRQf2Wpp35+okn4+cO0Bor4E=;
-        b=CpcVdY8gtYjb6P8gpIw0BmeeElTuj0Hhd7ZWfUbFtQh6nRggZpzCg8VDfzZfdDbGKY
-         pj41HkhH1UzqHQwstKCkJiCUarMb7jxu8gbPsQRq9hKkEYRzWjn/JBRFreTnFZkSbazt
-         l32yq9PFS20Iiy1PnyXBEOibLcc3ziZylXznA7vkFRSwovtHxHXybxTCb0WKYlGW9/qo
-         tOyxS/ZKwn9pQsAgz9nRGGy72rxrq9xE4TerGZ/lyYtyTzNlKPXOgpIoGs/8+3nsrI2Q
-         g5/ZupjYXqOrGyks2oIxgd5O7Kl24Wuh4EEVH9G1jRFGug+dsbOCHL2uOdSOVCUeXaZf
-         Q8JQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=g1JDwv6DsF/R2W3Hhi+fRQf2Wpp35+okn4+cO0Bor4E=;
-        b=EouD06qbCr0xioBKodrIhEVYrM5JMr4HJJ5UYvNofyHNEFm8AgUJQ5IOYuvXgyzEkh
-         R1h4gLLPrqjCg+KDROLvnjwhW7Ql5cGWd5Uw4gn4n5ZzMJIczs9ms0VmrV6OOgd20bcN
-         ZMFmKBZr6zA8IlXSuexnms2rcAtFiDDEIP8p2t2+DtM4bqVjgPQAihIFocHxeoslaxdM
-         1lsvSWOH/MZEcISFnLpKtoz2duPnjV3FRAi3Ok+sSzUlc7g0739fwa8hCMvDTGYjvDcQ
-         fYeVjlpLw/qRnjQA8b2v/wjKdwMweIKMV2wHoAcZdSXZ4ZvWpFpv3HuybxHBaxjfQ9S8
-         Zu4Q==
-X-Gm-Message-State: APjAAAXlos3lv7Hs4jvcvQGJA7iRx0tnMFAZbfZ9qDgv++MOtWssMKv+
-        O4N/pY9yldd6WSf93onZWQU=
-X-Google-Smtp-Source: APXvYqxHtRvDgngbiW+UmX4FEmTGxfk64Oa5UkQ+bxX8hf5+g9A0o8XZGm9SJRHhtch1fwU7a324Zw==
-X-Received: by 2002:a2e:5515:: with SMTP id j21mr20462954ljb.198.1558559534455;
-        Wed, 22 May 2019 14:12:14 -0700 (PDT)
-Received: from elitebook.lan (ip-194-187-74-233.konfederacka.maverick.com.pl. [194.187.74.233])
-        by smtp.googlemail.com with ESMTPSA id h2sm5670744lfm.17.2019.05.22.14.12.13
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Wed, 22 May 2019 14:12:13 -0700 (PDT)
-Subject: Re: ARM router NAT performance affected by random/unrelated commits
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Network Development <netdev@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-block@vger.kernel.org, John Crispin <john@phrozen.org>,
-        Jonas Gorski <jonas.gorski@gmail.com>,
-        Jo-Philipp Wich <jo@mein.io>
-References: <9a9ba4c9-3cb7-eb64-4aac-d43b59224442@gmail.com>
- <20190521104512.2r67fydrgniwqaja@shell.armlinux.org.uk>
- <de262f71-748f-d242-f1d4-ea10188a0438@gmail.com>
- <20190522121730.fhswxkw4gbflkhei@shell.armlinux.org.uk>
-From:   =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Message-ID: <d0d67f85-01e9-037a-3a18-6282a8bfce5c@gmail.com>
-Date:   Wed, 22 May 2019 23:12:12 +0200
+        Wed, 22 May 2019 17:12:38 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ce5bb430000>; Wed, 22 May 2019 14:12:35 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 22 May 2019 14:12:35 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 22 May 2019 14:12:35 -0700
+Received: from rcampbell-dev.nvidia.com (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 22 May
+ 2019 21:12:31 +0000
+Subject: Re: [PATCH v4 0/1] Use HMM for ODP v4
+To:     Jason Gunthorpe <jgg@ziepe.ca>, Jerome Glisse <jglisse@redhat.com>,
+        <linux-mm@kvack.org>
+CC:     <linux-kernel@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        "Leon Romanovsky" <leonro@mellanox.com>,
+        Doug Ledford <dledford@redhat.com>,
+        "Artemy Kovalyov" <artemyko@mellanox.com>,
+        Moni Shoua <monis@mellanox.com>,
+        "Mike Marciniszyn" <mike.marciniszyn@intel.com>,
+        Kaike Wan <kaike.wan@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>
+References: <20190411181314.19465-1-jglisse@redhat.com>
+ <20190506195657.GA30261@ziepe.ca> <20190521205321.GC3331@redhat.com>
+ <20190522005225.GA30819@ziepe.ca> <20190522174852.GA23038@redhat.com>
+ <20190522201247.GH6054@ziepe.ca>
+From:   Ralph Campbell <rcampbell@nvidia.com>
+Message-ID: <05e7f491-b8a4-4214-ab75-9ecf1128aaa6@nvidia.com>
+Date:   Wed, 22 May 2019 14:12:31 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.2
+ Thunderbird/60.6.0
 MIME-Version: 1.0
-In-Reply-To: <20190522121730.fhswxkw4gbflkhei@shell.armlinux.org.uk>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20190522201247.GH6054@ziepe.ca>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1558559555; bh=mX/CdrHkooQO7jjbW8rAIvvhdT+nRmphKetM9at3fl4=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=KQ4MO4k8l+72nJLn6i84C3CQ35IQKGD8fCmAUJnqiaH43emJ+Tq4QMnDM3at0c3oG
+         fKaiKcy3laigtGeONQU/lsCHwd+hKJwBy8kBAPM9CvkmalcPYHm8/SINlAY7n5SLLk
+         zw5vUeGhoN9s80rB8pwmqrzjT7VEK8mPmWOGD4k0CcAfOFOMxLZksmbNYWxU7hku78
+         VgBIGRWR7WGIPQ33NlYQNDB/zOJ9Phe2rNUIw723n+00aZn5TK99hVsVyz8gV9/ajv
+         Bw7OrdqLmaHMwWhtpVOsMF+1IQutmqv5wLHPEhWmgmdTUwyA542iZcapvY4q7VI2aD
+         ehyNrkOI11anw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22.05.2019 14:17, Russell King - ARM Linux admin wrote:
-> On Wed, May 22, 2019 at 01:51:01PM +0200, Rafał Miłecki wrote:
->> On 21.05.2019 12:45, Russell King - ARM Linux admin wrote:> On Tue, May 21, 2019 at 12:28:48PM +0200, Rafał Miłecki wrote:
->>>> I work on home routers based on Broadcom's Northstar SoCs. Those devices
->>>> have ARM Cortex-A9 and most of them are dual-core.
->>>>
->>>> As for home routers, my main concern is network performance. That CPU
->>>> isn't powerful enough to handle gigabit traffic so all kind of
->>>> optimizations do matter. I noticed some unexpected changes in NAT
->>>> performance when switching between kernels.
->>>>
->>>> My hardware is BCM47094 SoC (dual core ARM) with integrated network
->>>> controller and external BCM53012 switch.
->>>
->>> Guessing, I'd say it's to do with the placement of code wrt cachelines.
->>> You could try aligning some of the cache flushing code to a cache line
->>> and see what effect that has.
->>
->> Is System.map a good place to check for functions code alignment?
->>
->> With Linux 4.19 + OpenWrt mtd patches I have:
->> (...)
->> c010ea94 t v7_dma_inv_range
->> c010eae0 t v7_dma_clean_range
->> (...)
->> c02ca3d0 T blk_mq_update_nr_hw_queues
->> c02ca69c T blk_mq_alloc_tag_set
->> c02ca94c T blk_mq_release
->> c02ca9b4 T blk_mq_free_queue
->> c02caa88 T blk_mq_update_nr_requests
->> c02cab50 T blk_mq_unique_tag
->> (...)
->>
->> After cherry-picking 9316a9ed6895 ("blk-mq: provide helper for setting
->> up an SQ queue and tag set"):
->> (...)
->> c010ea94 t v7_dma_inv_range
->> c010eae0 t v7_dma_clean_range
->> (...)
->> c02ca3d0 T blk_mq_update_nr_hw_queues
->> c02ca69c T blk_mq_alloc_tag_set
->> c02ca94c T blk_mq_init_sq_queue <-- NEW
->> c02ca9c0 T blk_mq_release <-- Different address of this & all below
->> c02caa28 T blk_mq_free_queue
->> c02caafc T blk_mq_update_nr_requests
->> c02cabc4 T blk_mq_unique_tag
->> (...)
->>
->> As you can see blk_mq_init_sq_queue has appeared in the System.map and
->> it affected addresses of ~30000 symbols. I can believe some frequently
->> used symbols got luckily aligned and that improved overall performance.
->>
->> Interestingly v7_dma_inv_range() and v7_dma_clean_range() were not
->> relocated.
->>
->> *****
->>
->> I followed Russell's suggestion and added .align 5 to cache-v7.S (see
->> two attached diffs).
->>
->> 1) v4.19 + OpenWrt mtd patches
->>> egrep -B 1 -A 1 "v7_dma_(inv|clean)_range" System.map
->> c010ea58 T v7_flush_kern_dcache_area
->> c010ea94 t v7_dma_inv_range
->> c010eae0 t v7_dma_clean_range
->> c010eb18 T b15_dma_flush_range
->>
->> 2) v4.19 + OpenWrt mtd patches + two .align 5 in cache-v7.S
->> c010ea6c T v7_flush_kern_dcache_area
->> c010eac0 t v7_dma_inv_range
->> c010eb20 t v7_dma_clean_range
->> c010eb58 T b15_dma_flush_range
->> (actually 15 symbols above v7_dma_inv_range were replaced)
->>
->> This method seems to be somehow working (at least affects addresses in
->> System.map).
->>
->> *****
->>
->> I run 2 tests for each combination of changes. Each test consisted of
->> 10 sequences of: 30 seconds iperf session + reboot.
->>
->>
->>> git reset --hard v4.19
->>> git am OpenWrt-mtd-chages.patch
->> Test #1: 738 Mb/s
->> Test #2: 737 Mb/s
->>
->>> git reset --hard v4.19
->>> git am OpenWrt-mtd-chages.patch
->> patch -p1 < v7_dma_clean_range-align.diff
->> Test #1: 746 Mb/s
->> Test #2: 747 Mb/s
->>
->>> git reset --hard v4.19
->>> git am OpenWrt-mtd-chages.patch
->>> patch -p1 < v7_dma_inv_range-align.diff
->> Test #1: 745 Mb/s
->> Test #2: 746 Mb/s
->>
->>> git reset --hard v4.19
->>> git am OpenWrt-mtd-chages.patch
->>> patch -p1 < v7_dma_clean_range-align.diff
->>> patch -p1 < v7_dma_inv_range-align.diff
->> Test #1: 762 Mb/s
->> Test #2: 761 Mb/s
->>
->> As you can see I got a quite nice performance improvement after aligning
->> both: v7_dma_clean_range() and v7_dma_inv_range().
+
+On 5/22/19 1:12 PM, Jason Gunthorpe wrote:
+> On Wed, May 22, 2019 at 01:48:52PM -0400, Jerome Glisse wrote:
 > 
-> This is an improvement of about 3.3%.
+>>   static void put_per_mm(struct ib_umem_odp *umem_odp)
+>>   {
+>>   	struct ib_ucontext_per_mm *per_mm = umem_odp->per_mm;
+>> @@ -325,9 +283,10 @@ static void put_per_mm(struct ib_umem_odp *umem_odp)
+>>   	up_write(&per_mm->umem_rwsem);
+>>   
+>>   	WARN_ON(!RB_EMPTY_ROOT(&per_mm->umem_tree.rb_root));
+>> -	mmu_notifier_unregister_no_release(&per_mm->mn, per_mm->mm);
+>> +	hmm_mirror_unregister(&per_mm->mirror);
+>>   	put_pid(per_mm->tgid);
+>> -	mmu_notifier_call_srcu(&per_mm->rcu, free_per_mm);
+>> +
+>> +	kfree(per_mm);
 > 
->> It still wasn't as good as with 9316a9ed6895 cherry-picked but pretty
->> close.
->>
->>
->>> git reset --hard v4.19
->>> git am OpenWrt-mtd-chages.patch
->>> git cherry-pick -x 9316a9ed6895
->> Test #1: 770 Mb/s
->> Test #2: 766 Mb/s
->>
->>> git reset --hard v4.19
->>> git am OpenWrt-mtd-chages.patch
->>> git cherry-pick -x 9316a9ed6895
->>> patch -p1 < v7_dma_clean_range-align.diff
->> Test #1: 756 Mb/s
->> Test #2: 759 Mb/s
->>
->>> git reset --hard v4.19
->>> git am OpenWrt-mtd-chages.patch
->>> git cherry-pick -x 9316a9ed6895
->>> patch -p1 < v7_dma_inv_range-align.diff
->> Test #1: 758 Mb/s
->> Test #2: 759 Mb/s
->>
->>> git reset --hard v4.19
->>> git am OpenWrt-mtd-chages.patch
->>> git cherry-pick -x 9316a9ed6895
->>> patch -p1 < v7_dma_clean_range-align.diff
->>> patch -p1 < v7_dma_inv_range-align.diff
->> Test #1: 767 Mb/s
->> Test #2: 763 Mb/s
->>
->> Now you can see how unpredictable it is. If I cherry-pick 9316a9ed6895
->> and do an extra alignment of v7_dma_clean_range() and v7_dma_inv_range()
->> that extra alignment can actually *hurt* NAT performance.
+> Notice that mmu_notifier only uses SRCU to fence in-progress ops
+> callbacks, so I think hmm internally has the bug that this ODP
+> approach prevents.
 > 
-> You have a maximum variance of 4Mb/s in your tests which is around
-> 0.5%, and this shows a reduction of 3Mb/s, or 0.4%.
+> hmm should follow the same pattern ODP has and 'kfree_srcu' the hmm
+> struct, use container_of in the mmu_notifier callbacks, and use the
+> otherwise vestigal kref_get_unless_zero() to bail:
+
+You might also want to look at my patch where
+I try to fix some of these same issues (5/5).
+
+https://marc.info/?l=linux-mm&m=155718572908765&w=2
+
+
+>  From 0cb536dc0150ba964a1d655151d7b7a84d0f915a Mon Sep 17 00:00:00 2001
+> From: Jason Gunthorpe <jgg@mellanox.com>
+> Date: Wed, 22 May 2019 16:52:52 -0300
+> Subject: [PATCH] hmm: Fix use after free with struct hmm in the mmu notifiers
 > 
-> If we look at it a different way:
-> - Without the alignment patches, there is a difference of 4% in
->    performance depending on whether 9316a9ed6895 is applied.
-> - With the alignment patches, there is a difference of 0.4% in
->    performance depending on whether 9316a9ed6895 is applied.
+> mmu_notifier_unregister_no_release() is not a fence and the mmu_notifier
+> system will continue to reference hmm->mn until the srcu grace period
+> expires.
 > 
-> How can this not be beneficial?
-
-Aligning v7_dma_clean_range() and v7_dma_inv_range() is definitely
-beneficial! I'm sorry I wasn't clear enough.
-
-I redid testing of 2 most important setups with few more iterations.
-
- > git reset --hard v4.19
- > git am OpenWrt-mtd-chages.patch
- > git cherry-pick -x 9316a9ed6895
-[  3]  0.0-30.0 sec  2.71 GBytes   776 Mbits/sec
-[  3]  0.0-30.0 sec  2.71 GBytes   775 Mbits/sec
-[  3]  0.0-30.0 sec  2.70 GBytes   774 Mbits/sec
-[  3]  0.0-30.0 sec  2.70 GBytes   774 Mbits/sec
-[  3]  0.0-30.0 sec  2.70 GBytes   773 Mbits/sec
-[  3]  0.0-30.0 sec  2.70 GBytes   773 Mbits/sec
-[  3]  0.0-30.0 sec  2.70 GBytes   773 Mbits/sec
-[  3]  0.0-30.0 sec  2.69 GBytes   771 Mbits/sec
-[  3]  0.0-30.0 sec  2.69 GBytes   771 Mbits/sec
-[  3]  0.0-30.0 sec  2.69 GBytes   771 Mbits/sec
-[  3]  0.0-30.0 sec  2.69 GBytes   771 Mbits/sec
-[  3]  0.0-30.0 sec  2.69 GBytes   770 Mbits/sec
-[  3]  0.0-30.0 sec  2.69 GBytes   770 Mbits/sec
-[  3]  0.0-30.0 sec  2.69 GBytes   770 Mbits/sec
-[  3]  0.0-30.0 sec  2.69 GBytes   770 Mbits/sec
-[  3]  0.0-30.0 sec  2.69 GBytes   769 Mbits/sec
-[  3]  0.0-30.0 sec  2.69 GBytes   769 Mbits/sec
-[  3]  0.0-30.0 sec  2.68 GBytes   768 Mbits/sec
-[  3]  0.0-30.0 sec  2.68 GBytes   768 Mbits/sec
-[  3]  0.0-30.0 sec  2.68 GBytes   767 Mbits/sec
-[  3]  0.0-30.0 sec  2.68 GBytes   767 Mbits/sec
-[  3]  0.0-30.0 sec  2.68 GBytes   767 Mbits/sec
-[  3]  0.0-30.0 sec  2.67 GBytes   765 Mbits/sec
-[  3]  0.0-30.0 sec  2.67 GBytes   765 Mbits/sec
-[  3]  0.0-30.0 sec  2.67 GBytes   764 Mbits/sec
-[  3]  0.0-30.0 sec  2.67 GBytes   763 Mbits/sec
-[  3]  0.0-30.0 sec  2.67 GBytes   763 Mbits/sec
-[  3]  0.0-30.0 sec  2.66 GBytes   762 Mbits/sec
-[  3]  0.0-30.0 sec  2.66 GBytes   760 Mbits/sec
-[  3]  0.0-30.0 sec  2.66 GBytes   760 Mbits/sec
-Average: 769 Mb/s (+4,10%)
-Previous results: 773 Mb/s, 770 Mb/s, 766 Mb/s
-
- > git reset --hard v4.19
- > git am OpenWrt-mtd-chages.patch
- > patch -p1 < v7_dma_clean_range-align.diff
- > patch -p1 < v7_dma_inv_range-align.diff
-[  3]  0.0-30.0 sec  2.69 GBytes   769 Mbits/sec
-[  3]  0.0-30.0 sec  2.69 GBytes   769 Mbits/sec
-[  3]  0.0-30.0 sec  2.68 GBytes   767 Mbits/sec
-[  3]  0.0-30.0 sec  2.68 GBytes   766 Mbits/sec
-[  3]  0.0-30.0 sec  2.67 GBytes   766 Mbits/sec
-[  3]  0.0-30.0 sec  2.67 GBytes   765 Mbits/sec
-[  3]  0.0-30.0 sec  2.67 GBytes   765 Mbits/sec
-[  3]  0.0-30.0 sec  2.67 GBytes   765 Mbits/sec
-[  3]  0.0-30.0 sec  2.67 GBytes   764 Mbits/sec
-[  3]  0.0-30.0 sec  2.67 GBytes   763 Mbits/sec
-[  3]  0.0-30.0 sec  2.67 GBytes   763 Mbits/sec
-[  3]  0.0-30.0 sec  2.66 GBytes   762 Mbits/sec
-[  3]  0.0-30.0 sec  2.66 GBytes   762 Mbits/sec
-[  3]  0.0-30.0 sec  2.66 GBytes   762 Mbits/sec
-[  3]  0.0-30.0 sec  2.66 GBytes   762 Mbits/sec
-[  3]  0.0-30.0 sec  2.66 GBytes   761 Mbits/sec
-[  3]  0.0-30.0 sec  2.66 GBytes   761 Mbits/sec
-[  3]  0.0-30.0 sec  2.66 GBytes   760 Mbits/sec
-[  3]  0.0-30.0 sec  2.66 GBytes   760 Mbits/sec
-[  3]  0.0-30.0 sec  2.66 GBytes   760 Mbits/sec
-[  3]  0.0-30.0 sec  2.65 GBytes   760 Mbits/sec
-[  3]  0.0-30.0 sec  2.65 GBytes   759 Mbits/sec
-[  3]  0.0-30.0 sec  2.65 GBytes   759 Mbits/sec
-[  3]  0.0-30.0 sec  2.65 GBytes   758 Mbits/sec
-[  3]  0.0-30.0 sec  2.65 GBytes   758 Mbits/sec
-[  3]  0.0-30.0 sec  2.65 GBytes   757 Mbits/sec
-[  3]  0.0-30.0 sec  2.65 GBytes   757 Mbits/sec
-[  3]  0.0-30.0 sec  2.65 GBytes   757 Mbits/sec
-[  3]  0.0-30.0 sec  2.64 GBytes   757 Mbits/sec
-[  3]  0.0-30.0 sec  2.64 GBytes   756 Mbits/sec
-Average: 762 Mb/s (+3,16%)
-Previous results: 767 Mb/s, 763 Mb/s
-
-So let me explain why I keep researching on this. There are two reasons:
-
-1) Realignment done by cherry-picking 9316a9ed6895 was providing a
-*marginally* better performance than aligning v7_dma_clean_range() and
-v7_dma_inv_range(). It's a *very* minimal difference but I can't stop
-thinking I can still do better.
-
-2) Cherry-picking 9316a9ed6895 doesn't change v7_dma_clean_range or
-v7_dma_inv_range addresses at all. Yet it still improves NAT
-performance. That makes me believe there are more functions that (if
-properly aligned) can bump NAT performance.
-I hope that aligning all:
-* v7_dma_clean_range
-* v7_dma_inv_range
-* [some unrevealed functions]
-could result in even better NAT performance.
+>           CPU0                                     CPU1
+>                                                 __mmu_notifier_invalidate_range_start()
+>                                                   srcu_read_lock
+>                                                   hlist_for_each ()
+>                                                     // mn == hmm->mn
+> hmm_mirror_unregister()
+>    hmm_put()
+>      hmm_free()
+>        mmu_notifier_unregister_no_release()
+>           hlist_del_init_rcu(hmm-mn->list)
+> 			                           mn->ops->invalidate_range_start(mn, range);
+> 					             mm_get_hmm()
+>        mm->hmm = NULL;
+>        kfree(hmm)
+>                                                       mutex_lock(&hmm->lock);
+> 
+> Use SRCU to kfree the hmm memory so that the notifiers can rely on hmm
+> existing. Get the now-safe hmm struct through container_of and directly
+> check kref_get_unless_zero to lock it against free.
+> 
+> Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+> ---
+>   include/linux/hmm.h |  1 +
+>   mm/hmm.c            | 25 +++++++++++++++++++------
+>   2 files changed, 20 insertions(+), 6 deletions(-)
+> 
+> diff --git a/include/linux/hmm.h b/include/linux/hmm.h
+> index 51ec27a8466816..8b91c90d3b88cb 100644
+> --- a/include/linux/hmm.h
+> +++ b/include/linux/hmm.h
+> @@ -102,6 +102,7 @@ struct hmm {
+>   	struct mmu_notifier	mmu_notifier;
+>   	struct rw_semaphore	mirrors_sem;
+>   	wait_queue_head_t	wq;
+> +	struct rcu_head		rcu;
+>   	long			notifiers;
+>   	bool			dead;
+>   };
+> diff --git a/mm/hmm.c b/mm/hmm.c
+> index 816c2356f2449f..824e7e160d8167 100644
+> --- a/mm/hmm.c
+> +++ b/mm/hmm.c
+> @@ -113,6 +113,11 @@ static struct hmm *hmm_get_or_create(struct mm_struct *mm)
+>   	return NULL;
+>   }
+>   
+> +static void hmm_fee_rcu(struct rcu_head *rcu)
+> +{
+> +	kfree(container_of(rcu, struct hmm, rcu));
+> +}
+> +
+>   static void hmm_free(struct kref *kref)
+>   {
+>   	struct hmm *hmm = container_of(kref, struct hmm, kref);
+> @@ -125,7 +130,7 @@ static void hmm_free(struct kref *kref)
+>   		mm->hmm = NULL;
+>   	spin_unlock(&mm->page_table_lock);
+>   
+> -	kfree(hmm);
+> +	mmu_notifier_call_srcu(&hmm->rcu, hmm_fee_rcu);
+>   }
+>   
+>   static inline void hmm_put(struct hmm *hmm)
+> @@ -153,10 +158,14 @@ void hmm_mm_destroy(struct mm_struct *mm)
+>   
+>   static void hmm_release(struct mmu_notifier *mn, struct mm_struct *mm)
+>   {
+> -	struct hmm *hmm = mm_get_hmm(mm);
+> +	struct hmm *hmm = container_of(mn, struct hmm, mmu_notifier);
+>   	struct hmm_mirror *mirror;
+>   	struct hmm_range *range;
+>   
+> +	/* hmm is in progress to free */
+> +	if (!kref_get_unless_zero(&hmm->kref))
+> +		return;
+> +
+>   	/* Report this HMM as dying. */
+>   	hmm->dead = true;
+>   
+> @@ -194,13 +203,15 @@ static void hmm_release(struct mmu_notifier *mn, struct mm_struct *mm)
+>   static int hmm_invalidate_range_start(struct mmu_notifier *mn,
+>   			const struct mmu_notifier_range *nrange)
+>   {
+> -	struct hmm *hmm = mm_get_hmm(nrange->mm);
+> +	struct hmm *hmm = container_of(mn, struct hmm, mmu_notifier);
+>   	struct hmm_mirror *mirror;
+>   	struct hmm_update update;
+>   	struct hmm_range *range;
+>   	int ret = 0;
+>   
+> -	VM_BUG_ON(!hmm);
+> +	/* hmm is in progress to free */
+> +	if (!kref_get_unless_zero(&hmm->kref))
+> +		return 0;
+>   
+>   	update.start = nrange->start;
+>   	update.end = nrange->end;
+> @@ -248,9 +259,11 @@ static int hmm_invalidate_range_start(struct mmu_notifier *mn,
+>   static void hmm_invalidate_range_end(struct mmu_notifier *mn,
+>   			const struct mmu_notifier_range *nrange)
+>   {
+> -	struct hmm *hmm = mm_get_hmm(nrange->mm);
+> +	struct hmm *hmm = container_of(mn, struct hmm, mmu_notifier);
+>   
+> -	VM_BUG_ON(!hmm);
+> +	/* hmm is in progress to free */
+> +	if (!kref_get_unless_zero(&hmm->kref))
+> +		return;
+>   
+>   	mutex_lock(&hmm->lock);
+>   	hmm->notifiers--;
+> 
