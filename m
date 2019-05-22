@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0830BC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:59:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 453F7C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:59:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC42720862
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:59:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1490021019
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:59:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558555162;
-	bh=0UCL52sMqSGxS7cfWNuiFXECeJ8AXVSDRIFJhr4+Kj8=;
+	s=default; t=1558555173;
+	bh=1EXJJvCJ+NAbRvddgjpNMcGnlpzgu/UwopXQ7bzqsvg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y//vbw6DQufxxuI5DaDUfBeomGshO0JMIRnoC3G1v2UwtsLz6YlFVurVtGpAQ1Ax8
-	 1hMh8bI6P5AupL4SifqakAP/zK4doW1gtDwf1ZCPiISnbTyUvvSHfQqoNU3NkAni9u
-	 RI8ikneeD7iBEuzLUZZyGA3Y7Bd+NPzvNm2/ZONw=
+	b=oBLa1WOXrnW731C+F4BmfRm6t24iGrQ+002sn5TFItwvua3HZHV9JK0DwjXKO6GF/
+	 lP6WKWOdglkWGkuUjhGreoa55k3emTkhJTnEFk3U8dhv15sRp2FSTMTUzn4/cxSTwi
+	 DAcuIbQf2qZAbespzPSK9LRSXJwGLIXcPzdcR1wE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732286AbfEVT7V (ORCPT
+        id S1732483AbfEVT7c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:59:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44660 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:59:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44596 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730963AbfEVTXo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:23:44 -0400
+        id S1730192AbfEVTXm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:23:42 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E83821473;
-        Wed, 22 May 2019 19:23:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94317217D4;
+        Wed, 22 May 2019 19:23:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553023;
-        bh=0UCL52sMqSGxS7cfWNuiFXECeJ8AXVSDRIFJhr4+Kj8=;
+        s=default; t=1558553021;
+        bh=1EXJJvCJ+NAbRvddgjpNMcGnlpzgu/UwopXQ7bzqsvg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jd9TmS56NbfzR57Jpkp+jTssCHeMAD8Gr+3Ave524h4LlOwAddmcwe/eapVAA7i1t
-         ivoDGVIHAG4wox+x8vdwiwmQS9aUsjpopNTTyMZSsWX2HyDkpS+QYHq6cGPUTtAz/m
-         6QngxelyOAn2DqyzatXqERsVmkyIAwJE9vJuPc1w=
+        b=abNmww9odcdNcFDjiHqnvjoDuyzrMtCxKgi6IE3dUryiHe1yAZlSQfPEwy39MVwB6
+         CMpBUEYuK37fi+xHDdsNK7FA32Xgqj6UZjGubp3j5Q2EetzAQwRm/Mk3+O1YwUoBn0
+         Ggki0RdvGIjCv0DcKXqfu22jB6s3n9L+0dLifGGg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Roberto Bergantinos Corpas <rbergant@redhat.com>,
-        Benjamin Coddington <bcodding@redhat.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 004/317] NFS: make nfs_match_client killable
-Date:   Wed, 22 May 2019 15:18:25 -0400
-Message-Id: <20190522192338.23715-4-sashal@kernel.org>
+Cc:     YueHaibing <yuehaibing@huawei.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 002/317] cxgb4: Fix error path in cxgb4_init_module
+Date:   Wed, 22 May 2019 15:18:23 -0400
+Message-Id: <20190522192338.23715-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192338.23715-1-sashal@kernel.org>
 References: <20190522192338.23715-1-sashal@kernel.org>
@@ -60,59 +59,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roberto Bergantinos Corpas <rbergant@redhat.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 950a578c6128c2886e295b9c7ecb0b6b22fcc92b ]
+[ Upstream commit a3147770bea76c8dbad73eca3a24c2118da5e719 ]
 
-    Actually we don't do anything with return value from
-    nfs_wait_client_init_complete in nfs_match_client, as a
-    consequence if we get a fatal signal and client is not
-    fully initialised, we'll loop to "again" label
+BUG: unable to handle kernel paging request at ffffffffa016a270
+PGD 3270067 P4D 3270067 PUD 3271063 PMD 230bbd067 PTE 0
+Oops: 0000 [#1
+CPU: 0 PID: 6134 Comm: modprobe Not tainted 5.1.0+ #33
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.9.3-0-ge2fc41e-prebuilt.qemu-project.org 04/01/2014
+RIP: 0010:atomic_notifier_chain_register+0x24/0x60
+Code: 1f 80 00 00 00 00 55 48 89 e5 41 54 49 89 f4 53 48 89 fb e8 ae b4 38 01 48 8b 53 38 48 8d 4b 38 48 85 d2 74 20 45 8b 44 24 10 <44> 3b 42 10 7e 08 eb 13 44 39 42 10 7c 0d 48 8d 4a 08 48 8b 52 08
+RSP: 0018:ffffc90000e2bc60 EFLAGS: 00010086
+RAX: 0000000000000292 RBX: ffffffff83467240 RCX: ffffffff83467278
+RDX: ffffffffa016a260 RSI: ffffffff83752140 RDI: ffffffff83467240
+RBP: ffffc90000e2bc70 R08: 0000000000000000 R09: 0000000000000001
+R10: 0000000000000000 R11: 00000000014fa61f R12: ffffffffa01c8260
+R13: ffff888231091e00 R14: 0000000000000000 R15: ffffc90000e2be78
+FS:  00007fbd8d7cd540(0000) GS:ffff888237a00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffffffffa016a270 CR3: 000000022c7e3000 CR4: 00000000000006f0
+Call Trace:
+ register_inet6addr_notifier+0x13/0x20
+ cxgb4_init_module+0x6c/0x1000 [cxgb4
+ ? 0xffffffffa01d7000
+ do_one_initcall+0x6c/0x3cc
+ ? do_init_module+0x22/0x1f1
+ ? rcu_read_lock_sched_held+0x97/0xb0
+ ? kmem_cache_alloc_trace+0x325/0x3b0
+ do_init_module+0x5b/0x1f1
+ load_module+0x1db1/0x2690
+ ? m_show+0x1d0/0x1d0
+ __do_sys_finit_module+0xc5/0xd0
+ __x64_sys_finit_module+0x15/0x20
+ do_syscall_64+0x6b/0x1d0
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-    This has been proven to cause soft lockups on some scenarios
-    (no-carrier but configured network interfaces)
+If pci_register_driver fails, register inet6addr_notifier is
+pointless. This patch fix the error path in cxgb4_init_module.
 
-Signed-off-by: Roberto Bergantinos Corpas <rbergant@redhat.com>
-Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Fixes: b5a02f503caa ("cxgb4 : Update ipv6 address handling api")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/client.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
-diff --git a/fs/nfs/client.c b/fs/nfs/client.c
-index 90d71fda65cec..350cfa561e0e8 100644
---- a/fs/nfs/client.c
-+++ b/fs/nfs/client.c
-@@ -284,6 +284,7 @@ static struct nfs_client *nfs_match_client(const struct nfs_client_initdata *dat
- 	struct nfs_client *clp;
- 	const struct sockaddr *sap = data->addr;
- 	struct nfs_net *nn = net_generic(data->net, nfs_net_id);
-+	int error;
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
+index 6ba9099ca7fe4..8bc7a0738adbe 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
+@@ -6044,15 +6044,24 @@ static int __init cxgb4_init_module(void)
  
- again:
- 	list_for_each_entry(clp, &nn->nfs_client_list, cl_share_link) {
-@@ -296,8 +297,10 @@ static struct nfs_client *nfs_match_client(const struct nfs_client_initdata *dat
- 		if (clp->cl_cons_state > NFS_CS_READY) {
- 			refcount_inc(&clp->cl_count);
- 			spin_unlock(&nn->nfs_client_lock);
--			nfs_wait_client_init_complete(clp);
-+			error = nfs_wait_client_init_complete(clp);
- 			nfs_put_client(clp);
-+			if (error < 0)
-+				return ERR_PTR(error);
- 			spin_lock(&nn->nfs_client_lock);
- 			goto again;
- 		}
-@@ -407,6 +410,8 @@ struct nfs_client *nfs_get_client(const struct nfs_client_initdata *cl_init)
- 		clp = nfs_match_client(cl_init);
- 		if (clp) {
- 			spin_unlock(&nn->nfs_client_lock);
-+			if (IS_ERR(clp))
-+				return clp;
- 			if (new)
- 				new->rpc_ops->free_client(new);
- 			return nfs_found_client(cl_init, clp);
+ 	ret = pci_register_driver(&cxgb4_driver);
+ 	if (ret < 0)
+-		debugfs_remove(cxgb4_debugfs_root);
++		goto err_pci;
+ 
+ #if IS_ENABLED(CONFIG_IPV6)
+ 	if (!inet6addr_registered) {
+-		register_inet6addr_notifier(&cxgb4_inet6addr_notifier);
+-		inet6addr_registered = true;
++		ret = register_inet6addr_notifier(&cxgb4_inet6addr_notifier);
++		if (ret)
++			pci_unregister_driver(&cxgb4_driver);
++		else
++			inet6addr_registered = true;
+ 	}
+ #endif
+ 
++	if (ret == 0)
++		return ret;
++
++err_pci:
++	debugfs_remove(cxgb4_debugfs_root);
++
+ 	return ret;
+ }
+ 
 -- 
 2.20.1
 
