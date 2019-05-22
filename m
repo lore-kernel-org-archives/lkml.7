@@ -2,101 +2,95 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 592A7C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 18:10:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BFCEC46460
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 18:12:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30B2720863
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 18:10:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="frr1iTSy"
+	by mail.kernel.org (Postfix) with ESMTP id EB86F217D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 18:12:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558548730;
+	bh=3WQ3M9QP+2THWg2C9BAXf4+415QJkdpmvuQ16XUxwCE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zHyMnebUC1YJDd2evAGhqujpPKj2zJWZVsKAo1q8W+eMAYahIOHD6Pu8lCmv5Px13
+	 hql/SX9XzgTd6usYzpeSuLTO6tutHxfdFIco3DQLuj2um2B8f6KwkgwuYHLQxmK5uU
+	 cAMT6ZTRA5V3Sx+0nqo/kpXt9Rbd4SYZFAnrlx6s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729161AbfEVSKh (ORCPT
+        id S1729486AbfEVSMJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 14:10:37 -0400
-Received: from mail-it1-f196.google.com ([209.85.166.196]:54669 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727975AbfEVSKg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 14:10:36 -0400
-Received: by mail-it1-f196.google.com with SMTP id h20so5126752itk.4
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 11:10:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3TUaQnKxGVlpWSPefIyk2E07CFvwMDXGPaWjCwdOzPc=;
-        b=frr1iTSygWFPnr5/ey27pxt1cfBtzPKcb5lZDA/fu8dE9SjUZ0g+PVcc06KiQ9/wJp
-         HNO6AWj6TYApsqV+IK+BQsqd54H5A/bdFsoEMMgsXbs0nAv2poHnHbB45XVWALyR5Br5
-         ymgG+BfyWDKpG/NnKJ6OQjG2wMuS9A+Ofk4AE2P05OaUy1D2AgH5cr+HLItgD0A6epA2
-         zqkE3JWfzJvbob/DvPkPYG/u4MinzMxlP/cUqevtnoaIDimZ7e3vtLPo8dyZ/vmO0itS
-         jOLex57FcbLpUAhIXMukWVDiCsoPvAIAbP7eXp3BA6oUgC3ESC5KHfIMt2+21yv+A8mQ
-         Fafw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3TUaQnKxGVlpWSPefIyk2E07CFvwMDXGPaWjCwdOzPc=;
-        b=O7++32y1DsOHuImmxD+xQT/CXQ6FMQyWz6Eg9fLk5syYBf+E8hOJQwfVfHulbfLOG6
-         VbistFikCDUTD2ZVVpruhlfkBnKnyzxCliUh3kMkd18a6cyOMjqXvjR/I1yx9Ih3CeOM
-         qMLtGxLiZGQ8xut4ZRmkUFCTBxk2Sxy36IDBCXx5BHKEHS4VcqPZytA8UbQEOhk2c7cm
-         S5L1lB+iFU5NY6Yp3k7VbPcIbciYshM/LlvxNAyOmVETBkLn3QNofwI/AIRau3gKiq6D
-         qv8APDf97DwTVua1NeC3SGHQ9pXSV8088VhIhd2NELcirkx0yh7lmBsCjkbVXgpFD5nL
-         h4dw==
-X-Gm-Message-State: APjAAAWLq5rULYH5CdFpJl6g/R5bA1dC0qUQdj3vtU/MaRWg0Ui5qSBi
-        3xnc0xbyQwSQkOSR4w5zSmwzZ9AYPh6fw2P38dtPlsTK
-X-Google-Smtp-Source: APXvYqz9eLUgCjZxLo/vpG3af0L6etYrvYVd0GrTMp4ahq2xE4ZtnQGK9joeaxrO0qQ5Lx7oxC4w9UNyJNOsWgfJk0w=
-X-Received: by 2002:a02:ad09:: with SMTP id s9mr20093787jan.17.1558548636248;
- Wed, 22 May 2019 11:10:36 -0700 (PDT)
+        Wed, 22 May 2019 14:12:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46198 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727975AbfEVSMI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 14:12:08 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C75C120863;
+        Wed, 22 May 2019 18:12:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558548728;
+        bh=3WQ3M9QP+2THWg2C9BAXf4+415QJkdpmvuQ16XUxwCE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=l2iwC/N/iNoycLsezLmlaQWwbnSnNqiiwUoDCjjUFf2zie3wDN0zyfYi9cuSVEt6q
+         g+XZzv9XD2GR+hX8iP6OWjycEA06Uk9GWGtaFDaB62SCrlgfm4ze5MURwPulf9+XrF
+         Umc0gS/Op9bK2i+4Q5i6uNAfAAchOhVX0BLmSp0E=
+Date:   Wed, 22 May 2019 13:11:57 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Kai Heng Feng <kai.heng.feng@canonical.com>
+Cc:     Rafael Wysocki <rafael.j.wysocki@intel.com>,
+        linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        linux-usb@vger.kernel.org
+Subject: Re: [PATCH] PCI / PM: Don't runtime suspend when device only
+ supports wakeup from D0
+Message-ID: <20190522181157.GC79339@google.com>
+References: <20190521163104.15759-1-kai.heng.feng@canonical.com>
+ <20190521222300.GG57618@google.com>
+ <AE3B21D0-5BD9-40A5-B5A1-3E9A8B8E1327@canonical.com>
+ <20190522134854.GA79339@google.com>
+ <D5DC20F1-6B8F-466F-BAE7-65F0C8FB3D1D@canonical.com>
 MIME-Version: 1.0
-References: <20190522071227.31488-1-andrew.smirnov@gmail.com>
- <20190522071227.31488-3-andrew.smirnov@gmail.com> <1558517601.2624.32.camel@pengutronix.de>
- <CAHQ1cqHQWqpJdZjeBiOhEC5JjfcHdY+uA+kbCxzj6kRk9SLUXQ@mail.gmail.com>
-In-Reply-To: <CAHQ1cqHQWqpJdZjeBiOhEC5JjfcHdY+uA+kbCxzj6kRk9SLUXQ@mail.gmail.com>
-From:   Chris Healy <cphealy@gmail.com>
-Date:   Wed, 22 May 2019 11:10:25 -0700
-Message-ID: <CAFXsbZooc5=_8SQT6rUQ2cRnor_o0fpW8-C3hFtszuXK+PHGZQ@mail.gmail.com>
-Subject: Re: [PATCH 3/3] ARM: dts: imx6: rdu2: Limit USBH1 to Full Speed
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc:     Lucas Stach <l.stach@pengutronix.de>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <D5DC20F1-6B8F-466F-BAE7-65F0C8FB3D1D@canonical.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > Am Mittwoch, den 22.05.2019, 00:12 -0700 schrieb Andrey Smirnov:
-> > > Cabling used to connect devices to USBH1 on RDU2 does not meet USB
-> > > spec cable quality and cable length requirements to operate at High
-> > > Speed, so limit the port to Full Speed only.
-> >
-> > Really? I thought this issue is specific to the RDU1, but you've been
-> > looking at this USB stuff for a lot longer than me.
-> >
->
-> I am merely a messenger here. I didn't personally verify this to be
-> the case, so your knowledge is probably as good as mine. Chris
-> reported this based on feedback from their EE team, so he should know
-> all of the details better.
+On Wed, May 22, 2019 at 11:46:25PM +0800, Kai Heng Feng wrote:
+> > On May 22, 2019, at 9:48 PM, Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > On Wed, May 22, 2019 at 11:42:14AM +0800, Kai Heng Feng wrote:
+> >> at 6:23 AM, Bjorn Helgaas <helgaas@kernel.org> wrote:
+> >>> On Wed, May 22, 2019 at 12:31:04AM +0800, Kai-Heng Feng wrote:
+> >>>> There's an xHC device that doesn't wake when a USB device gets plugged
+> >>>> to its USB port. The driver's own runtime suspend callback was called,
+> >>>> PME signaling was enabled, but it stays at PCI D0.
 
-The issue is less about the internals of the device and more about the
-cabling that the device is connected to.  In the target application of
-this device, the USB cables are almost always longer than the spec
-limit of the USB standard for high speed.  Given our use cases, we
-don't have need for high speed so limiting the max speed to full speed
-is the way we work around cables that are too long for stable high
-speed operation.
+> > ...
+> > And I guess this patch basically means we wouldn't call the driver's
+> > suspend callback if we're merely going to stay at D0, so the driver
+> > would have no idea anything happened.  That might match
+> > Documentation/power/pci.txt better, because it suggests that the
+> > suspend callback is related to putting a device in a low-power state,
+> > and D0 is not a low-power state.
+> 
+> Yes, the patch is to let the device stay at D0 and don’t run driver’s own
+> runtime suspend routine.
+> 
+> I guess I’ll just proceed to send a V2 with updated commit message?
 
-We have validated that running with full speed does mitigate the
-problems experienced when attempting to run with high speed on the
-target application installations.
+Now that I understand what "runtime suspended to D0" means, help me
+understand what's actually wrong.
 
-Reviewed-by: Chris Healy <cphealy@gmail.com>
+The PCI core apparently *does* enable PME when we "suspend to D0".
+But somehow calling the xHCI runtime suspend callback makes the driver
+unable to notice when the PME is signaled?
+
+Bjorn
