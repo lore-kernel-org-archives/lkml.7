@@ -2,245 +2,266 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 520A6C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 22:46:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DC67C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 22:50:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08F5920881
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 22:46:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D572220881
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 22:50:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729749AbfEVWqs (ORCPT
+        id S1728638AbfEVWuO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 18:46:48 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41192 "EHLO mx1.redhat.com"
+        Wed, 22 May 2019 18:50:14 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:39430 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727121AbfEVWqs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 18:46:48 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        id S1726390AbfEVWuN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 18:50:13 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 13B2485539;
-        Wed, 22 May 2019 22:46:47 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-121-142.rdu2.redhat.com [10.10.121.142])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id F0BAD17AC6;
-        Wed, 22 May 2019 22:46:45 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
- Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
- Kingdom.
- Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH 6/6] afs: Support RCU pathwalk
-From:   David Howells <dhowells@redhat.com>
-To:     keyrings@vger.kernel.org
-Cc:     dhowells@redhat.com, linux-afs@lists.infradead.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Wed, 22 May 2019 23:46:45 +0100
-Message-ID: <155856520503.11737.9841245263615099582.stgit@warthog.procyon.org.uk>
-In-Reply-To: <155856516286.11737.11196637682919902718.stgit@warthog.procyon.org.uk>
-References: <155856516286.11737.11196637682919902718.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/unknown-version
+        by mx1.redhat.com (Postfix) with ESMTPS id AAD1D307D84B;
+        Wed, 22 May 2019 22:50:12 +0000 (UTC)
+Received: from krava (ovpn-204-104.brq.redhat.com [10.40.204.104])
+        by smtp.corp.redhat.com (Postfix) with SMTP id F01DA100200D;
+        Wed, 22 May 2019 22:50:06 +0000 (UTC)
+Date:   Thu, 23 May 2019 00:50:06 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     "Liang, Kan" <kan.liang@linux.intel.com>
+Cc:     Vince Weaver <vincent.weaver@maine.edu>,
+        Andi Kleen <ak@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Stephane Eranian <eranian@google.com>,
+        Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: perf: fuzzer causes crash in new XMM code
+Message-ID: <20190522225006.GD11325@krava>
+References: <alpine.DEB.2.21.1905221154300.22830@macbook-air>
+ <a7cde307-8c53-14b5-2272-03dd3a8985c6@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Wed, 22 May 2019 22:46:47 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a7cde307-8c53-14b5-2272-03dd3a8985c6@linux.intel.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Wed, 22 May 2019 22:50:12 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make afs_permission() and afs_d_revalidate() do initial checks in RCU-mode
-pathwalk to reduce latency in pathwalk elements that get done multiple
-times.  We don't need to query the server unless we've received a
-notification from it that something has changed or the callback has
-expired.
+On Wed, May 22, 2019 at 05:54:58PM -0400, Liang, Kan wrote:
 
-This requires that we can request a key and check permits under RCU
-conditions if we need to.
+SNIP
 
-Signed-off-by: David Howells <dhowells@redhat.com>
----
+> > [ 9680.197779] RSP: 002b:00007fff595603a8 EFLAGS: 00000206 ORIG_RAX: ffffffffffffff13
+> > [ 9680.205489] RAX: 0000000000004985 RBX: 000000000000000c RCX: 00000000000365ca
+> > [ 9680.212748] RDX: 00001e15d36cec84 RSI: 0000000000000000 RDI: 0000000000000001
+> > [ 9680.220059] RBP: 00007fff595603c0 R08: 0000000000000000 R09: 00007fccbb62e540
+> > [ 9680.227362] R10: fffffffffffffd4e R11: 0000000000000246 R12: 000055dad779a4c0
+> > [ 9680.234630] R13: 00007fff595627b0 R14: 0000000000000000 R15: 0000000000000000
+> > [ 9680.310017] ---[ end trace 511b9368cf14c65a ]---
+> > 
+> 
+> Hi Vince,
+> 
+> Thanks for the test.
+> 
+> XMM registers can only collected by hardware PEBS events. We should disable
+> it for all software/probe events.
 
- fs/afs/dir.c      |   54 +++++++++++++++++++++++++++++++++++++-
- fs/afs/security.c |   75 ++++++++++++++++++++++++++++++++++++++++++-----------
- 2 files changed, 112 insertions(+), 17 deletions(-)
+I think you should also include HW non-PEBS events
+in those checks below
 
-diff --git a/fs/afs/dir.c b/fs/afs/dir.c
-index 79d93a26759a..c394e7c1a8ab 100644
---- a/fs/afs/dir.c
-+++ b/fs/afs/dir.c
-@@ -961,6 +961,58 @@ static struct dentry *afs_lookup(struct inode *dir, struct dentry *dentry,
- 	return d;
- }
- 
-+/*
-+ * Check the validity of a dentry under RCU conditions.
-+ */
-+static int afs_d_revalidate_rcu(struct dentry *dentry)
-+{
-+	struct afs_vnode *dvnode, *vnode;
-+	struct dentry *parent;
-+	struct inode *dir, *inode;
-+	long dir_version, de_version;
-+
-+	_enter("%p", dentry);
-+
-+	/* Check the parent directory is still valid first. */
-+	parent = READ_ONCE(dentry->d_parent);
-+	dir = d_inode_rcu(parent);
-+	if (!dir)
-+		return -ECHILD;
-+	dvnode = AFS_FS_I(dir);
-+	if (test_bit(AFS_VNODE_DELETED, &dvnode->flags))
-+		return -ECHILD;
-+
-+	if (!afs_check_validity(dvnode))
-+		return -ECHILD;
-+
-+	/* We only need to invalidate a dentry if the server's copy changed
-+	 * behind our back.  If we made the change, it's no problem.  Note that
-+	 * on a 32-bit system, we only have 32 bits in the dentry to store the
-+	 * version.
-+	 */
-+	dir_version = (long)READ_ONCE(dvnode->status.data_version);
-+	de_version = (long)READ_ONCE(dentry->d_fsdata);
-+	if (de_version != dir_version) {
-+		dir_version = (long)READ_ONCE(dvnode->invalid_before);
-+		if (de_version - dir_version < 0)
-+			return -ECHILD;
-+	}
-+
-+	/* Check to see if the vnode referred to by the dentry still
-+	 * has a callback.
-+	 */
-+	if (d_really_is_positive(dentry)) {
-+		inode = d_inode_rcu(dentry);
-+		if (inode) {
-+			vnode = AFS_FS_I(inode);
-+			if (!afs_check_validity(vnode))
-+				return -ECHILD;
-+		}
-+	}
-+
-+	return 1; /* Still valid */
-+}
-+
- /*
-  * check that a dentry lookup hit has found a valid entry
-  * - NOTE! the hit can be a negative hit too, so we can't assume we have an
-@@ -977,7 +1029,7 @@ static int afs_d_revalidate(struct dentry *dentry, unsigned int flags)
- 	int ret;
- 
- 	if (flags & LOOKUP_RCU)
--		return -ECHILD;
-+		return afs_d_revalidate_rcu(dentry);
- 
- 	if (d_really_is_positive(dentry)) {
- 		vnode = AFS_FS_I(d_inode(dentry));
-diff --git a/fs/afs/security.c b/fs/afs/security.c
-index a6582d6a3882..fab44171344f 100644
---- a/fs/afs/security.c
-+++ b/fs/afs/security.c
-@@ -305,6 +305,40 @@ void afs_cache_permit(struct afs_vnode *vnode, struct key *key,
- 	return;
- }
- 
-+static bool afs_check_permit_rcu(struct afs_vnode *vnode, struct key *key,
-+				 afs_access_t *_access)
-+{
-+	const struct afs_permits *permits;
-+	int i;
-+
-+	_enter("{%llx:%llu},%x",
-+	       vnode->fid.vid, vnode->fid.vnode, key_serial(key));
-+
-+	/* check the permits to see if we've got one yet */
-+	if (key == vnode->volume->cell->anonymous_key) {
-+		*_access = vnode->status.anon_access;
-+		_leave(" = t [anon %x]", *_access);
-+		return true;
-+	}
-+
-+	permits = rcu_dereference(vnode->permit_cache);
-+	if (permits) {
-+		for (i = 0; i < permits->nr_permits; i++) {
-+			if (permits->permits[i].key < key)
-+				continue;
-+			if (permits->permits[i].key > key)
-+				break;
-+
-+			*_access = permits->permits[i].access;
-+			_leave(" = %u [perm %x]", !permits->invalidated, *_access);
-+			return !permits->invalidated;
-+		}
-+	}
-+
-+	_leave(" = f");
-+	return false;
-+}
-+
- /*
-  * check with the fileserver to see if the directory or parent directory is
-  * permitted to be accessed with this authorisation, and if so, what access it
-@@ -371,33 +405,42 @@ int afs_permission(struct inode *inode, int mask)
- 	struct afs_vnode *vnode = AFS_FS_I(inode);
- 	afs_access_t uninitialized_var(access);
- 	struct key *key;
--	int ret;
--
--	if (mask & MAY_NOT_BLOCK)
--		return -ECHILD;
-+	int ret = 0;
- 
- 	_enter("{{%llx:%llu},%lx},%x,",
- 	       vnode->fid.vid, vnode->fid.vnode, vnode->flags, mask);
- 
--	key = afs_request_key(vnode->volume->cell);
--	if (IS_ERR(key)) {
--		_leave(" = %ld [key]", PTR_ERR(key));
--		return PTR_ERR(key);
--	}
-+	if (mask & MAY_NOT_BLOCK) {
-+		key = afs_request_key_rcu(vnode->volume->cell);
-+		if (IS_ERR(key))
-+			return -ECHILD;
- 
--	ret = afs_validate(vnode, key);
--	if (ret < 0)
--		goto error;
-+		ret = -ECHILD;
-+		if (!afs_check_validity(vnode) ||
-+		    !afs_check_permit_rcu(vnode, key, &access))
-+			goto error;
-+	} else {
-+		key = afs_request_key(vnode->volume->cell);
-+		if (IS_ERR(key)) {
-+			_leave(" = %ld [key]", PTR_ERR(key));
-+			return PTR_ERR(key);
-+		}
- 
--	/* check the permits to see if we've got one yet */
--	ret = afs_check_permit(vnode, key, &access);
--	if (ret < 0)
--		goto error;
-+		ret = afs_validate(vnode, key);
-+		if (ret < 0)
-+			goto error;
-+
-+		/* check the permits to see if we've got one yet */
-+		ret = afs_check_permit(vnode, key, &access);
-+		if (ret < 0)
-+			goto error;
-+	}
- 
- 	/* interpret the access mask */
- 	_debug("REQ %x ACC %x on %s",
- 	       mask, access, S_ISDIR(inode->i_mode) ? "dir" : "file");
- 
-+	ret = 0;
- 	if (S_ISDIR(inode->i_mode)) {
- 		if (mask & (MAY_EXEC | MAY_READ | MAY_CHDIR)) {
- 			if (!(access & AFS_ACE_LOOKUP))
+jirka
 
+> 
+> Could you please try the patch as below?
+> 
+> Thanks,
+> Kan
+> 
+> From 0136d8374c2db65b125c8d92b661c96e8d21adb0 Mon Sep 17 00:00:00 2001
+> From: Kan Liang <kan.liang@linux.intel.com>
+> Date: Wed, 22 May 2019 12:14:16 -0700
+> Subject: [PATCH] perf/x86: Disable non generic regs for software/probe
+> events
+> 
+> The perf fuzzer caused skylake machine to crash.
+> 
+> [ 9680.085831] Call Trace:
+> [ 9680.088301]  <IRQ>
+> [ 9680.090363]  perf_output_sample_regs+0x43/0xa0
+> [ 9680.094928]  perf_output_sample+0x3aa/0x7a0
+> [ 9680.099181]  perf_event_output_forward+0x53/0x80
+> [ 9680.103917]  __perf_event_overflow+0x52/0xf0
+> [ 9680.108266]  ? perf_trace_run_bpf_submit+0xc0/0xc0
+> [ 9680.113108]  perf_swevent_hrtimer+0xe2/0x150
+> [ 9680.117475]  ? check_preempt_wakeup+0x181/0x230
+> [ 9680.122091]  ? check_preempt_curr+0x62/0x90
+> [ 9680.126361]  ? ttwu_do_wakeup+0x19/0x140
+> [ 9680.130355]  ? try_to_wake_up+0x54/0x460
+> [ 9680.134366]  ? reweight_entity+0x15b/0x1a0
+> [ 9680.138559]  ? __queue_work+0x103/0x3f0
+> [ 9680.142472]  ? update_dl_rq_load_avg+0x1cd/0x270
+> [ 9680.147194]  ? timerqueue_del+0x1e/0x40
+> [ 9680.151092]  ? __remove_hrtimer+0x35/0x70
+> [ 9680.155191]  __hrtimer_run_queues+0x100/0x280
+> [ 9680.159658]  hrtimer_interrupt+0x100/0x220
+> [ 9680.163835]  smp_apic_timer_interrupt+0x6a/0x140
+> [ 9680.168555]  apic_timer_interrupt+0xf/0x20
+> [ 9680.172756]  </IRQ>
+> 
+> The XMM registers can only be collected by hardware PEBS events, not
+> software/probe events.
+> 
+> Add has_non_generic_regs() to check if non-generic regs, e.g. XMM on
+> X86, are applied for software/probe events. If yes, return -EOPNOTSUPP.
+> 
+> Add __weak function non_generic_regs_mask() to return the mask of
+> non-generic regs. For X86, the mask of non-generic regs equals to the
+> mask of XMM registers.
+> 
+> Fixes: 878068ea270e ("perf/x86: Support outputting XMM registers")
+> Reported-by: Vince Weaver <vincent.weaver@maine.edu>
+> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+> ---
+>  arch/x86/kernel/perf_regs.c |  5 +++++
+>  include/linux/perf_regs.h   |  2 ++
+>  kernel/events/core.c        | 37 +++++++++++++++++++++++++++++++++++++
+>  3 files changed, 44 insertions(+)
+> 
+> diff --git a/arch/x86/kernel/perf_regs.c b/arch/x86/kernel/perf_regs.c
+> index 07c30ee..86ffe5a 100644
+> --- a/arch/x86/kernel/perf_regs.c
+> +++ b/arch/x86/kernel/perf_regs.c
+> @@ -57,6 +57,11 @@ static unsigned int pt_regs_offset[PERF_REG_X86_MAX] = {
+>  #endif
+>  };
+> 
+> +u64 non_generic_regs_mask(void)
+> +{
+> +	return (~((1ULL << PERF_REG_X86_XMM0) - 1));
+> +}
+> +
+>  u64 perf_reg_value(struct pt_regs *regs, int idx)
+>  {
+>  	struct x86_perf_regs *perf_regs;
+> diff --git a/include/linux/perf_regs.h b/include/linux/perf_regs.h
+> index 4767474..c1c3454 100644
+> --- a/include/linux/perf_regs.h
+> +++ b/include/linux/perf_regs.h
+> @@ -9,6 +9,8 @@ struct perf_regs {
+>  	struct pt_regs	*regs;
+>  };
+> 
+> +u64 non_generic_regs_mask(void);
+> +
+>  #ifdef CONFIG_HAVE_PERF_REGS
+>  #include <asm/perf_regs.h>
+>  u64 perf_reg_value(struct pt_regs *regs, int idx);
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index abbd4b3..14da1d9 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -8457,6 +8457,19 @@ static void sw_perf_event_destroy(struct perf_event
+> *event)
+>  	swevent_hlist_put();
+>  }
+> 
+> +u64 __weak non_generic_regs_mask(void)
+> +{
+> +	return 0;
+> +}
+> +
+> +static inline bool has_non_generic_regs(struct perf_event *event)
+> +{
+> +	u64 mask = non_generic_regs_mask();
+> +
+> +	return ((event->attr.sample_regs_user & mask) ||
+> +		(event->attr.sample_regs_intr & mask));
+> +}
+> +
+>  static int perf_swevent_init(struct perf_event *event)
+>  {
+>  	u64 event_id = event->attr.config;
+> @@ -8470,6 +8483,10 @@ static int perf_swevent_init(struct perf_event
+> *event)
+>  	if (has_branch_stack(event))
+>  		return -EOPNOTSUPP;
+> 
+> +	/* only support generic regs */
+> +	if (has_non_generic_regs(event))
+> +		return -EOPNOTSUPP;
+> +
+>  	switch (event_id) {
+>  	case PERF_COUNT_SW_CPU_CLOCK:
+>  	case PERF_COUNT_SW_TASK_CLOCK:
+> @@ -8633,6 +8650,10 @@ static int perf_tp_event_init(struct perf_event
+> *event)
+>  	if (has_branch_stack(event))
+>  		return -EOPNOTSUPP;
+> 
+> +	/* only support generic regs */
+> +	if (has_non_generic_regs(event))
+> +		return -EOPNOTSUPP;
+> +
+>  	err = perf_trace_init(event);
+>  	if (err)
+>  		return err;
+> @@ -8722,6 +8743,10 @@ static int perf_kprobe_event_init(struct perf_event
+> *event)
+>  	if (has_branch_stack(event))
+>  		return -EOPNOTSUPP;
+> 
+> +	/* only support generic regs */
+> +	if (has_non_generic_regs(event))
+> +		return -EOPNOTSUPP;
+> +
+>  	is_retprobe = event->attr.config & PERF_PROBE_CONFIG_IS_RETPROBE;
+>  	err = perf_kprobe_init(event, is_retprobe);
+>  	if (err)
+> @@ -8782,6 +8807,10 @@ static int perf_uprobe_event_init(struct perf_event
+> *event)
+>  	if (has_branch_stack(event))
+>  		return -EOPNOTSUPP;
+> 
+> +	/* only support generic regs */
+> +	if (has_non_generic_regs(event))
+> +		return -EOPNOTSUPP;
+> +
+>  	is_retprobe = event->attr.config & PERF_PROBE_CONFIG_IS_RETPROBE;
+>  	ref_ctr_offset = event->attr.config >> PERF_UPROBE_REF_CTR_OFFSET_SHIFT;
+>  	err = perf_uprobe_init(event, ref_ctr_offset, is_retprobe);
+> @@ -9562,6 +9591,10 @@ static int cpu_clock_event_init(struct perf_event
+> *event)
+>  	if (has_branch_stack(event))
+>  		return -EOPNOTSUPP;
+> 
+> +	/* only support generic regs */
+> +	if (has_non_generic_regs(event))
+> +		return -EOPNOTSUPP;
+> +
+>  	perf_swevent_init_hrtimer(event);
+> 
+>  	return 0;
+> @@ -9643,6 +9676,10 @@ static int task_clock_event_init(struct perf_event
+> *event)
+>  	if (has_branch_stack(event))
+>  		return -EOPNOTSUPP;
+> 
+> +	/* only support generic regs */
+> +	if (has_non_generic_regs(event))
+> +		return -EOPNOTSUPP;
+> +
+>  	perf_swevent_init_hrtimer(event);
+> 
+>  	return 0;
+> -- 
+> 2.7.4
+> 
+> 
+> 
