@@ -2,94 +2,66 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9651C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:45:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FC7CC282DC
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:45:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B44B2081C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:45:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558554309;
-	bh=/8Hl4knxiOx6qeODctPBRtxpqleFuvFFLcMbE7xdhVk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LoL0GJriRyNp6o5TPHfOIcDZDXr/aQcMRIOXWWXZeyPGdqmsq3hBZ2AJz27NMBQbp
-	 E3B+go+AVsnicbdhax0zOlaMX/lxm6R1VwQhFoy8q7TMSqVx4CrZI181wU+GMjWG0b
-	 AqycZR6PcPR7UPJ7n6WRTghqrRye3uimScfIuF34=
+	by mail.kernel.org (Postfix) with ESMTP id 7129120856
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:45:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732784AbfEVTpI (ORCPT
+        id S1733115AbfEVTpN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:45:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50516 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731413AbfEVT2B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:28:01 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D75520675;
-        Wed, 22 May 2019 19:28:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553281;
-        bh=/8Hl4knxiOx6qeODctPBRtxpqleFuvFFLcMbE7xdhVk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nwmx7PXXoq1CveQq2hNeYSCWw2uWAIQLjRLQ+lXJWrAaTN1BYl7KWbDOlEB4lZ1co
-         pOCefbHH2rrUxnqMwdn+KLfbavcAxMcKYE0j2+roL9qBETc3j7klvzUBLgPu4++kQS
-         ene7mD0QNgAxcgOux6FveX9ZIQ8KafZHwaYigTC8=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kangjie Lu <kjlu@umn.edu>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 055/244] slimbus: fix a potential NULL pointer dereference in of_qcom_slim_ngd_register
-Date:   Wed, 22 May 2019 15:23:21 -0400
-Message-Id: <20190522192630.24917-55-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190522192630.24917-1-sashal@kernel.org>
-References: <20190522192630.24917-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+        Wed, 22 May 2019 15:45:13 -0400
+Received: from smtprelay0164.hostedemail.com ([216.40.44.164]:47657 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731413AbfEVTpL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:45:11 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay06.hostedemail.com (Postfix) with ESMTP id 4EEC218224D70;
+        Wed, 22 May 2019 19:45:10 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: curve67_2d0c89522f351
+X-Filterd-Recvd-Size: 1329
+Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf14.hostedemail.com (Postfix) with ESMTPA;
+        Wed, 22 May 2019 19:45:09 +0000 (UTC)
+Message-ID: <7b7287463e830fa8d981dc440f8165622cbc628e.camel@perches.com>
+Subject: Re: PSA: Do not use "Reported-By" without reporter's approval
+From:   Joe Perches <joe@perches.com>
+To:     Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Date:   Wed, 22 May 2019 12:45:06 -0700
+In-Reply-To: <20190522193011.GB21412@chatter.i7.local>
+References: <20190522193011.GB21412@chatter.i7.local>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.1-1build1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kangjie Lu <kjlu@umn.edu>
+On Wed, 2019-05-22 at 15:30 -0400, Konstantin Ryabitsev wrote:
+> Hello, all:
+> 
+> It is common courtesy to include this tagline when submitting patches: 
+> 
+> Reported-By: J. Doe <jdoe@example.com>
+> 
+> Please ask the reporter's permission before doing so (even if they'd 
+> submitted a public bugzilla report or sent a report to the mailing 
+> list).
 
-[ Upstream commit 06d5d6b7f9948a89543e1160ef852d57892c750d ]
+I disagree with this.
 
-In case platform_device_alloc fails, the fix returns an error
-code to avoid the NULL pointer dereference.
+If the report is public, and lists like vger are public,
+then using a Reported-by: and/or a Link: are simply useful
+history and tracking information.
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/slimbus/qcom-ngd-ctrl.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/drivers/slimbus/qcom-ngd-ctrl.c b/drivers/slimbus/qcom-ngd-ctrl.c
-index 14a9d18306cbf..f63d1b8a09335 100644
---- a/drivers/slimbus/qcom-ngd-ctrl.c
-+++ b/drivers/slimbus/qcom-ngd-ctrl.c
-@@ -1331,6 +1331,10 @@ static int of_qcom_slim_ngd_register(struct device *parent,
- 			return -ENOMEM;
- 
- 		ngd->pdev = platform_device_alloc(QCOM_SLIM_NGD_DRV_NAME, id);
-+		if (!ngd->pdev) {
-+			kfree(ngd);
-+			return -ENOMEM;
-+		}
- 		ngd->id = id;
- 		ngd->pdev->dev.parent = parent;
- 		ngd->pdev->driver_override = QCOM_SLIM_NGD_DRV_NAME;
--- 
-2.20.1
 
