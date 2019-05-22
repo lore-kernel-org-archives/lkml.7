@@ -2,119 +2,98 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBF70C18E7D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 10:01:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2457C18E7D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 10:01:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C83520821
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 10:01:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="q958lJ09"
+	by mail.kernel.org (Postfix) with ESMTP id C1EC720821
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 10:01:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729421AbfEVKBe (ORCPT
+        id S1729449AbfEVKBg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 22 May 2019 06:01:36 -0400
+Received: from outgoing-stata.csail.mit.edu ([128.30.2.210]:48279 "EHLO
+        outgoing-stata.csail.mit.edu" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729414AbfEVKBe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 22 May 2019 06:01:34 -0400
-Received: from mail-eopbgr00063.outbound.protection.outlook.com ([40.107.0.63]:18971
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728668AbfEVKBa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 06:01:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=scAqqGt5yoPaSrcQ2/nd3cG8Kz6Tt66Vsg7Gk4jfTV0=;
- b=q958lJ0957X+Y3aolhJke15yf3ASKklhhkmRN2sW46v6x0UnzVoINstM8vaHHAFglRieDWLwFdC9qbDU83hrvvnrLrKwWVD4moeNZ90BT8GxdGe0+yChW7wMLzYmwF3PN43W7kc8GQAgvShTNcawH9DkdKa5Odo53kuhAvvrB5E=
-Received: from VI1PR04MB4543.eurprd04.prod.outlook.com (20.177.55.90) by
- VI1PR04MB3149.eurprd04.prod.outlook.com (10.170.229.23) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1900.18; Wed, 22 May 2019 10:00:56 +0000
-Received: from VI1PR04MB4543.eurprd04.prod.outlook.com
- ([fe80::5062:df97:a70b:93f8]) by VI1PR04MB4543.eurprd04.prod.outlook.com
- ([fe80::5062:df97:a70b:93f8%7]) with mapi id 15.20.1900.020; Wed, 22 May 2019
- 10:00:56 +0000
-From:   Robin Gong <yibin.gong@nxp.com>
-To:     "robh@kernel.org" <robh@kernel.org>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-        "plyatov@gmail.com" <plyatov@gmail.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "l.stach@pengutronix.de" <l.stach@pengutronix.de>
-CC:     "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>
-Subject: [PATCH v4 13/14] ARM: dts: imx6sll: correct sdma compatible
-Thread-Topic: [PATCH v4 13/14] ARM: dts: imx6sll: correct sdma compatible
-Thread-Index: AQHVEIU/6bsQAJL92kquJnq0ODVbAg==
-Date:   Wed, 22 May 2019 10:00:56 +0000
-Message-ID: <1558548188-1155-14-git-send-email-yibin.gong@nxp.com>
-References: <1558548188-1155-1-git-send-email-yibin.gong@nxp.com>
-In-Reply-To: <1558548188-1155-1-git-send-email-yibin.gong@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: git-send-email 2.7.4
-x-clientproxiedby: HK2PR04CA0045.apcprd04.prod.outlook.com
- (2603:1096:202:14::13) To VI1PR04MB4543.eurprd04.prod.outlook.com
- (2603:10a6:803:6d::26)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yibin.gong@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 0aa9e34f-c3a3-4b49-61f4-08d6de9c6206
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB3149;
-x-ms-traffictypediagnostic: VI1PR04MB3149:
-x-microsoft-antispam-prvs: <VI1PR04MB3149DD1979586AD32A51DECE89000@VI1PR04MB3149.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:392;
-x-forefront-prvs: 0045236D47
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(199004)(189003)(2501003)(446003)(11346002)(2616005)(186003)(68736007)(26005)(5660300002)(476003)(86362001)(71190400001)(50226002)(54906003)(110136005)(66066001)(76176011)(486006)(4326008)(7736002)(52116002)(2201001)(4744005)(71200400001)(36756003)(6512007)(99286004)(7416002)(386003)(8676002)(6506007)(305945005)(53936002)(81166006)(66446008)(25786009)(64756008)(81156014)(6436002)(256004)(6486002)(102836004)(14454004)(73956011)(8936002)(498600001)(2906002)(66946007)(66476007)(14444005)(66556008)(6116002)(3846002)(921003)(32563001)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB3149;H:VI1PR04MB4543.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: aPbnRP9iG0lunoEntZm+rATALlnr2R6WFM3s20vz5iSp07kyuzJbS24eg0vTolBOO4DxO/nhvh/nUDIi11BHsoXS9qQcmSuodf/vFp26JDYVz5Ztm0gm3NpJ0z7UlvU8gsSIPFOCOO1ynC5j5J+lef5aMpwSwNEYLuh4IpOPu5tJ13g9/L7Zr5V9oA0fqOmk1qCRtzFDyNyAnDYyoXGwmoRLPay209Hm3jYEbqbGpgl9M57wKLUWaQDDBrM+6GP2dQzGsEYOLEsqzy6h/ll4hwSBMYWqB8gy6qwh0pkfc9c8vCdVhRYwdmViAv1rFescvG1bv9nxQofGYx+JEuEaqYLUhPQLyY5W2ntmHck4JwFBPRXlB9nO43lNNKDfXVoQnTe1IdgvU3N9Sd4/Nf8zHEnavx28Lz2BeKNZ0qXBppU=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Received: from c-73-193-85-113.hsd1.wa.comcast.net ([73.193.85.113] helo=srivatsab-a01.vmware.com)
+        by outgoing-stata.csail.mit.edu with esmtpsa (TLS1.2:RSA_AES_128_CBC_SHA1:128)
+        (Exim 4.82)
+        (envelope-from <srivatsa@csail.mit.edu>)
+        id 1hTO3s-000DFW-EO; Wed, 22 May 2019 06:01:28 -0400
+Subject: Re: CFQ idling kills I/O performance on ext4 with blkio cgroup
+ controller
+To:     Paolo Valente <paolo.valente@linaro.org>
+Cc:     linux-fsdevel@vger.kernel.org,
+        linux-block <linux-block@vger.kernel.org>,
+        linux-ext4@vger.kernel.org, cgroups@vger.kernel.org,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Jens Axboe <axboe@kernel.dk>, Jan Kara <jack@suse.cz>,
+        jmoyer@redhat.com, Theodore Ts'o <tytso@mit.edu>,
+        amakhalov@vmware.com, anishs@vmware.com, srivatsab@vmware.com
+References: <8d72fcf7-bbb4-2965-1a06-e9fc177a8938@csail.mit.edu>
+ <1812E450-14EF-4D5A-8F31-668499E13652@linaro.org>
+ <46c6a4be-f567-3621-2e16-0e341762b828@csail.mit.edu>
+ <07D11833-8285-49C2-943D-E4C1D23E8859@linaro.org>
+ <A0DFE635-EFEC-4670-AD70-5D813E170BEE@linaro.org>
+ <5B6570A2-541A-4CF8-98E0-979EA6E3717D@linaro.org>
+ <2CB39B34-21EE-4A95-A073-8633CF2D187C@linaro.org>
+ <FC24E25F-4578-454D-AE2B-8D8D352478D8@linaro.org>
+ <0e3fdf31-70d9-26eb-7b42-2795d4b03722@csail.mit.edu>
+ <F5E29C98-6CC4-43B8-994D-0B5354EECBF3@linaro.org>
+ <686D6469-9DE7-4738-B92A-002144C3E63E@linaro.org>
+From:   "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
+Message-ID: <01d55216-5718-767a-e1e6-aadc67b632f4@csail.mit.edu>
+Date:   Wed, 22 May 2019 03:01:24 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
+ Gecko/20100101 Thunderbird/60.6.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0aa9e34f-c3a3-4b49-61f4-08d6de9c6206
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 May 2019 10:00:56.5370
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB3149
+In-Reply-To: <686D6469-9DE7-4738-B92A-002144C3E63E@linaro.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Q29ycmVjdCBzZG1hIGNvbXBhdGlibGUgc2luY2UgZWNzcGkgZXJyYXRhIEVSUjAwOTE2NSBoYXMg
-YmVlbiBmaXhlZA0Kb24gaS5teDZzbGwgYXMgaS5teDZ1bC4NCg0KU2lnbmVkLW9mZi1ieTogUm9i
-aW4gR29uZyA8eWliaW4uZ29uZ0BueHAuY29tPg0KLS0tDQogYXJjaC9hcm0vYm9vdC9kdHMvaW14
-NnNsbC5kdHNpIHwgMiArLQ0KIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBkZWxl
-dGlvbigtKQ0KDQpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnNsbC5kdHNpIGIv
-YXJjaC9hcm0vYm9vdC9kdHMvaW14NnNsbC5kdHNpDQppbmRleCAxYjQ4OTlmLi5kODEwZTEwIDEw
-MDY0NA0KLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnNsbC5kdHNpDQorKysgYi9hcmNoL2Fy
-bS9ib290L2R0cy9pbXg2c2xsLmR0c2kNCkBAIC02MTksNyArNjE5LDcgQEANCiAJCQl9Ow0KIA0K
-IAkJCXNkbWE6IGRtYS1jb250cm9sbGVyQDIwZWMwMDAgew0KLQkJCQljb21wYXRpYmxlID0gImZz
-bCxpbXg2c2xsLXNkbWEiLCAiZnNsLGlteDM1LXNkbWEiOw0KKwkJCQljb21wYXRpYmxlID0gImZz
-bCxpbXg2c2xsLXNkbWEiLCAiZnNsLGlteDZ1bC1zZG1hIjsNCiAJCQkJcmVnID0gPDB4MDIwZWMw
-MDAgMHg0MDAwPjsNCiAJCQkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDIgSVJRX1RZUEVfTEVWRUxf
-SElHSD47DQogCQkJCWNsb2NrcyA9IDwmY2xrcyBJTVg2U0xMX0NMS19JUEc+LA0KLS0gDQoyLjcu
-NA0KDQo=
+On 5/22/19 2:09 AM, Paolo Valente wrote:
+> 
+> First, thank you very much for testing my patches, and, above all, for
+> sharing those huge traces!
+> 
+> According to the your traces, the residual 20% lower throughput that you
+> record is due to the fact that the BFQ injection mechanism takes a few
+> hundredths of seconds to stabilize, at the beginning of the workload.
+> During that setup time, the throughput is equal to the dreadful ~60-90 KB/s
+> that you see without this new patch.  After that time, there
+> seems to be no loss according to the trace.
+> 
+> The problem is that a loss lasting only a few hundredths of seconds is
+> however not negligible for a write workload that lasts only 3-4
+> seconds.  Could you please try writing a larger file?
+> 
+
+I tried running dd for longer (about 100 seconds), but still saw around
+1.4 MB/s throughput with BFQ, and between 1.5 MB/s - 1.6 MB/s with
+mq-deadline and noop. But I'm not too worried about that difference.
+
+> In addition, I wanted to ask you whether you measured BFQ throughput
+> with traces disabled.  This may make a difference.
+> 
+
+The above result (1.4 MB/s) was obtained with traces disabled.
+
+> After trying writing a larger file, you can try with low_latency on.
+> On my side, it causes results to become a little unstable across
+> repetitions (which is expected).
+> 
+With low_latency on, I get between 60 KB/s - 100 KB/s.
+
+Regards,
+Srivatsa
+VMware Photon OS
