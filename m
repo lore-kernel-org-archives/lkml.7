@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BC80C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:32:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C0E8C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:32:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 251222081C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:32:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FEA32089E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:32:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558553559;
-	bh=BdG5MuK8Gcj2M2B0ZIrH4jnNhcheROp4Bvg0JUiVlP8=;
+	s=default; t=1558553568;
+	bh=3y4I0rUSwxML9pUm1vTUxrU9c0lu6C4aI58cHm3pulI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nM4frUH3QqylOHVyDjvrReqqGGs1NfcNwXtiShMVWKmPwOWKENUoeTwYLxOnp+0KZ
-	 WIC4i1VrYOHoR0TAnFwTtyJEL6pzxQ+EDABt13CaqdYvgC0t0Adv30j+O1Ja1+VQkV
-	 zxnLeQKkYv8ogSpEDOjpypJCQKSNj+KY3JlfVxms=
+	b=nRD3Fh5+R1ONvV5xe9ErChqykI0mJSJ5W2c13G0APX8qdCZRnu+1wmf5yWZxOqViU
+	 Dv06FuoQ5eIg9NgxCawUpSxX6aCvrFWNzIgXa0SNJ1SPD8ApMvKiL4e05yMmv6tuPp
+	 jzmnXSBTaVZgqyxUcW0o6OWPV6r8Y7rEm4WfzKho=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387807AbfEVTcT (ORCPT
+        id S2387764AbfEVTcH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:32:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55976 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:32:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55818 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733301AbfEVTcM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:32:12 -0400
+        id S1732453AbfEVTcF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:32:05 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF33E21841;
-        Wed, 22 May 2019 19:32:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E99021473;
+        Wed, 22 May 2019 19:32:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553532;
-        bh=BdG5MuK8Gcj2M2B0ZIrH4jnNhcheROp4Bvg0JUiVlP8=;
+        s=default; t=1558553525;
+        bh=3y4I0rUSwxML9pUm1vTUxrU9c0lu6C4aI58cHm3pulI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GDOcE0kWQAP1tdtaADwXP7RbtR9L0bn15tPGTRDEQbMDg/bEMc36bgAkiPJvkWhm+
-         MXitRrQK/p9BFeI5J5NzEDVA4LGMskUqJEjEpfaMjo3N/3TV56iFJrD5K/kmYUSEBx
-         1ipKBehDJPfIO3wGb4h67T2/fpVoWrU/Wyrb7MVY=
+        b=Aqz18kokV4B/jLZaPmeQEPItQA+ScMC9bH/v5vJ9z/kCM8Bw/XCcciV8fL8RPv5DN
+         3txnMf/UAUNoYbPUIyn83zrtpBGv1rvCZc86AX6onh4IxpVcfjvbfuS2eEnweIieJR
+         GlP/HKoiBBT1ZKJEZe93PB5+w5mRQ/Clrm8arDok=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wen Yang <wen.yang99@zte.com.cn>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 28/92] pinctrl: pistachio: fix leaked of_node references
-Date:   Wed, 22 May 2019 15:30:23 -0400
-Message-Id: <20190522193127.27079-28-sashal@kernel.org>
+Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        kbuild test robot <lkp@intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Paul E . McKenney" <paulmck@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 24/92] smpboot: Place the __percpu annotation correctly
+Date:   Wed, 22 May 2019 15:30:19 -0400
+Message-Id: <20190522193127.27079-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522193127.27079-1-sashal@kernel.org>
 References: <20190522193127.27079-1-sashal@kernel.org>
@@ -59,47 +63,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wen Yang <wen.yang99@zte.com.cn>
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
-[ Upstream commit 44a4455ac2c6b0981eace683a2b6eccf47689022 ]
+[ Upstream commit d4645d30b50d1691c26ff0f8fa4e718b08f8d3bb ]
 
-The call to of_get_child_by_name returns a node pointer with refcount
-incremented thus it must be explicitly decremented after the last
-usage.
+The test robot reported a wrong assignment of a per-CPU variable which
+it detected by using sparse and sent a report. The assignment itself is
+correct. The annotation for sparse was wrong and hence the report.
+The first pointer is a "normal" pointer and points to the per-CPU memory
+area. That means that the __percpu annotation has to be moved.
 
-Detected by coccinelle with the following warnings:
-./drivers/pinctrl/pinctrl-pistachio.c:1422:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 1360, but without a corresponding object release within this function.
+Move the __percpu annotation to pointer which points to the per-CPU
+area. This change affects only the sparse tool (and is ignored by the
+compiler).
 
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Paul E. McKenney <paulmck@linux.ibm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Fixes: f97f8f06a49fe ("smpboot: Provide infrastructure for percpu hotplug threads")
+Link: http://lkml.kernel.org/r/20190424085253.12178-1-bigeasy@linutronix.de
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/pinctrl-pistachio.c | 2 ++
- 1 file changed, 2 insertions(+)
+ include/linux/smpboot.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/pinctrl-pistachio.c b/drivers/pinctrl/pinctrl-pistachio.c
-index 98a459b1c095a..86e8d989092c8 100644
---- a/drivers/pinctrl/pinctrl-pistachio.c
-+++ b/drivers/pinctrl/pinctrl-pistachio.c
-@@ -1373,6 +1373,7 @@ static int pistachio_gpio_register(struct pistachio_pinctrl *pctl)
- 		if (!of_find_property(child, "gpio-controller", NULL)) {
- 			dev_err(pctl->dev,
- 				"No gpio-controller property for bank %u\n", i);
-+			of_node_put(child);
- 			ret = -ENODEV;
- 			goto err;
- 		}
-@@ -1380,6 +1381,7 @@ static int pistachio_gpio_register(struct pistachio_pinctrl *pctl)
- 		irq = irq_of_parse_and_map(child, 0);
- 		if (irq < 0) {
- 			dev_err(pctl->dev, "No IRQ for bank %u: %d\n", i, irq);
-+			of_node_put(child);
- 			ret = irq;
- 			goto err;
- 		}
+diff --git a/include/linux/smpboot.h b/include/linux/smpboot.h
+index 12910cf19869c..12a4b09f4d08b 100644
+--- a/include/linux/smpboot.h
++++ b/include/linux/smpboot.h
+@@ -30,7 +30,7 @@ struct smpboot_thread_data;
+  * @thread_comm:	The base name of the thread
+  */
+ struct smp_hotplug_thread {
+-	struct task_struct __percpu	**store;
++	struct task_struct		* __percpu *store;
+ 	struct list_head		list;
+ 	int				(*thread_should_run)(unsigned int cpu);
+ 	void				(*thread_fn)(unsigned int cpu);
 -- 
 2.20.1
 
