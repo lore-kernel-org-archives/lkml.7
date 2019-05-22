@@ -2,100 +2,109 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACDDFC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 15:00:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB752C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 15:01:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81255217F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 15:00:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AB9720879
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 15:01:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BD7xcKs/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729669AbfEVPAK (ORCPT
+        id S1729743AbfEVPBA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 11:00:10 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:49953 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727975AbfEVPAK (ORCPT
+        Wed, 22 May 2019 11:01:00 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:36885 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727975AbfEVPBA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 11:00:10 -0400
-Received: from fsav103.sakura.ne.jp (fsav103.sakura.ne.jp [27.133.134.230])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x4MEwU3L044008;
-        Wed, 22 May 2019 23:58:30 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav103.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav103.sakura.ne.jp);
- Wed, 22 May 2019 23:58:30 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav103.sakura.ne.jp)
-Received: from [192.168.1.8] (softbank126012062002.bbtec.net [126.12.62.2])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x4MEwEkC043762
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
-        Wed, 22 May 2019 23:58:30 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: [PATCH] kernel/hung_task.c: Monitor killed tasks.
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Liu Chuansheng <chuansheng.liu@intel.com>,
-        Valdis Kletnieks <valdis.kletnieks@vt.edu>,
-        linux-kernel@vger.kernel.org, Dmitry Vyukov <dvyukov@google.com>
-References: <1557745331-10367-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
- <20190515105540.vyzh6n62rqi5imqv@pathway.suse.cz>
- <ee7501c6-d996-1684-1652-f0f838ba69c3@i-love.sakura.ne.jp>
- <20190516115758.6v7oitg3vbkfhh5j@pathway.suse.cz>
- <a3d9de97-46e8-aa43-1743-ebf66b434830@i-love.sakura.ne.jp>
- <a6b6a5ef-c65c-6999-2bc1-7aaf9dd19fe8@i-love.sakura.ne.jp>
- <20190522234134.44327256@canb.auug.org.au>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <03b5834d-5f8f-9c7e-20df-cfdf5395d245@i-love.sakura.ne.jp>
-Date:   Wed, 22 May 2019 23:58:12 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 22 May 2019 11:01:00 -0400
+Received: by mail-it1-f196.google.com with SMTP id m140so3551010itg.2;
+        Wed, 22 May 2019 08:01:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=aIzrHS5nLBf6pyiovGTr1aWzg7NgzfwfpU/6nbGyolg=;
+        b=BD7xcKs/duZRRzHLDo7wNqdwMY5oXP4NZBypwS3LAI+SZ5LXCAKS+P8gltfDeN2Qrz
+         b4aAFqqRLy8Fx6zEai6NLkMqEbHB6GZwyk/B78K1P90RWGGGEdSAf8AwfOWAmqD2GUG2
+         NVzhGGXUk8xIoP4ns9cfeY5FYVPGpisQDXX6yD9Ot+rJ98osYrBokKhdIRUIoo5v7/H7
+         o3reQpJtdq9u47s5xyOEiY0DYIyeMtZ27dajDF1bRZEWM0HnU+wmhjr3XTIQngUAasHz
+         9lrOLvNjoopihTQJW2j3MRX2LqH1C1gz/MqRJH8SwC37noIL5bqhqK2+VcQG3KWnmsm2
+         RklA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aIzrHS5nLBf6pyiovGTr1aWzg7NgzfwfpU/6nbGyolg=;
+        b=gOOGt+U/0tES7DGG04Yho9WzOnk6pESmhZayVdWlS8B1UbvrCHuDE66+h2Z3XaCs+W
+         oS6Wj8fL3KmIYRDZFRCr7sEXnApKcD/hSwZZQyxWXQWqPuGUnzCdTSXkFseMJaDyHvxB
+         WGqv0ZXdqjqRQT2eVMD0l6n7C/e6QppCbiO1Y1jg3YXC4N9XVM4xB7ZyhculhPWokqDG
+         3wYw/rUPhpGVL4rbwwZIGcgtpxVvbeViVgsKZ7qpIp8DmB3J3/mInaVc3UfMwVaUAyEC
+         oZEOHfwrCzq55ZoOCYUzZz5eYzUlpmWJESUnIJg8LbiSVHkDO8Opm0WS/vsiKgsSUW3F
+         05tw==
+X-Gm-Message-State: APjAAAXWWM4x8W2XAHBBajTioa0R/3QNGLyGcZHIRQC9vMsWvswgzCSN
+        9sSL3JeREEbmjkDmp8CBdQBfG3rU45TDMhrwxkPGd2BG9AE=
+X-Google-Smtp-Source: APXvYqx4KcQotZMs/inGYcNvV6GW292VABI1Mzl46kBHGTl2TiKpifmJH/NUoivR+MQ5OQKRcC5GMJ9EwzfY5wRbIl0=
+X-Received: by 2002:a24:91d2:: with SMTP id i201mr9261893ite.88.1558537259711;
+ Wed, 22 May 2019 08:00:59 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190522234134.44327256@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190409120908.12079-1-alexandre.belloni@bootlin.com> <efaaff85-ac39-f0e2-e042-7d6fd0c59054@zaltys.org>
+In-Reply-To: <efaaff85-ac39-f0e2-e042-7d6fd0c59054@zaltys.org>
+From:   Sylvain Lemieux <slemieux.tyco@gmail.com>
+Date:   Wed, 22 May 2019 11:00:48 -0400
+Message-ID: <CA+rxa6qJDEvg6wCuaLo4yhqa6uZ45rKXcbGwE_XnWkjy2j9YAA@mail.gmail.com>
+Subject: Re: [PATCH 0/5] usb: gadget: udc: lpc32xx: add stotg04 phy support
+To:     James Grant <jamesg@zaltys.org>
+Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org,
+        "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/05/22 22:41, Stephen Rothwell wrote:
-> Hi Tetsuo,
-> 
-> On Wed, 22 May 2019 21:38:45 +0900 Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp> wrote:
->>
->> I want to send debug printk() patches to linux-next.git. Petr Mladek
->> is suggesting me to have a git tree for debug printk() patches.
->> But it seems that there is "git quiltimport" command, and I prefer
->> "subversion + quilt", and I don't have trees for sending "git pull"
->> requests. Therefore, just ignoring "git quiltimport" failure is fine.
->> What do you think?
-> 
-> Sure, we can try.  I already have one quilt tree (besides Andrew's) in
-> linux-next, but much prefer a git tree.  If you have to use a quilt
-> tree, I will import it into a local branch on the base you tell me to
-> and then fetch it every morning and reimport it if it changes.  I will
-> then merge it like any other git branch.  Let me know what you can deal
-> with.
-> 
+You can add my "Acked-by" on the 5 patches.
+Acked-by: Sylvain Lemieux <slemieux.tyco@gmail.com>
 
-What I do for making patches is:
-
-  git fetch --tags
-  git reset --hard next-$date
-  edit files
-  git commit -a -s
-  git format-patch -1
-  git send-email --to=$recipient 0001-*.patch
-
-I'm sure I will confuse git history/repository everyday if
-I try to send changes using git. For my skill level, managing
-0001-*.patch in a subversion repository is the simplest and safest.
+On Mon, May 13, 2019 at 7:32 AM James Grant <jamesg@zaltys.org> wrote:
+>
+> Tested with a board containing LPC3250 SOC and STOTG04 PHY by using
+> serial gadget.
+>
+> Needed patch "[PATCH] usb: gadget: udc: lpc32xx: allocate descriptor
+> with GFP_ATOMIC" also.
+>
+> Tested-by: James Grant <jamesg@zaltys.org>
+>
+> Regards,
+> James Grant.
+>
+> On 09/04/2019 14:09, Alexandre Belloni Wrote:
+> > Hi,
+> >
+> > This series starts to clean up the lpc32xx udc driver and also repairs
+> > interrupt handling so hotplugging actually works. The design I tested
+> > that on uses an stotg04 instead of the usual isp1301 so support for that
+> > is also added.
+> >
+> > A bit more work is needed to get the RNDIS gadget driver to work.
+> >
+> > Alexandre Belloni (5):
+> >    usb: gadget: udc: lpc32xx: simplify probe
+> >    usb: gadget: udc: lpc32xx: simplify vbus handling
+> >    usb: gadget: udc: lpc32xx: properly setup phy interrupts
+> >    usb: gadget: udc: lpc32xx: add support for stotg04 phy
+> >    usb: gadget: udc: lpc32xx: rework interrupt handling
+> >
+> >   drivers/usb/gadget/udc/lpc32xx_udc.c | 167 +++++++++++----------------
+> >   1 file changed, 66 insertions(+), 101 deletions(-)
