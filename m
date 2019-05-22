@@ -7,47 +7,53 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBD45C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:24:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D720C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:24:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A03F5217D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:24:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 618B6217D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:24:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558553094;
-	bh=mibAVy0PVVNwmlo5Q1CNdnmUfDT2lZ1LOSe4QVCbVEM=;
+	s=default; t=1558553098;
+	bh=TVgHAsyH4rPgT15fmHL2KXvgi3eWmCoEVO52DV8rrnA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g5vk0fT3nZs/6WIP6/28l+x15qSqGBbBuDhqx1I7ey484iwmFNOxNcyikDGzAbO4t
-	 0VEDqYxCBARkJjO70JoEKYGm6LWhV2AwntYVhD5Cp2Oe7XyJd5403v9UYEZSu2aeiU
-	 AOobgoHXvT8klMMlbgGYgqNXIfw5ZCe8+YpBp8OU=
+	b=ZM5fsQh/aXWrEPfTVHmNta6a+J0mz+WQMLYTYfjOxm2UiXxCudM9GXXATzTmQJBBz
+	 6exAGWUSDz848i5hk0/IS1HMZdNpPbHWCvNqilAve2/prntCAIbDbUYiwbW/mxNPEO
+	 xrhHGH5oJye6Ch52x7VMM4MWTMyUAU+lkZzofYzE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731444AbfEVTYx (ORCPT
+        id S1731466AbfEVTY5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:24:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45928 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:24:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46122 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731392AbfEVTYq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:24:46 -0400
+        id S1731446AbfEVTYy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:24:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CEDDF20879;
-        Wed, 22 May 2019 19:24:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D2EF2173C;
+        Wed, 22 May 2019 19:24:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553085;
-        bh=mibAVy0PVVNwmlo5Q1CNdnmUfDT2lZ1LOSe4QVCbVEM=;
+        s=default; t=1558553093;
+        bh=TVgHAsyH4rPgT15fmHL2KXvgi3eWmCoEVO52DV8rrnA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gW5igHF8QNPQhQLKu/TfP7/8XdNQqTOaubfCukgVgNSAV7roZgSeJ5JHjaVrBuqDO
-         KlLfcsF9Qbc0jALKUDmaf4x8iJMKymGPjrp7270sMkpK+74VRySHyLFQEkFmGRvmBM
-         o5gN0zTXGZ4VYYrjYoMBLaztf8CTP4+pWZiEIX4A=
+        b=r5IRXEaFQKOw/PU1o/48keqRnpSMxuEe/yR3j5QMzKdgKcSleaDyOL1jyeBBElcyd
+         Dwl6/YshI1cR3GtYDGmUPCaSyvaN+yd57AmaBFsdVQqWABY3TWJgjLg/MtxMXkJ7P8
+         zWI1lOrC1y32VDXNi6H7+S9m2fePfsWp8Me1G+Dc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marc Zyngier <marc.zyngier@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.0 039/317] ARM: vdso: Remove dependency with the arch_timer driver internals
-Date:   Wed, 22 May 2019 15:19:00 -0400
-Message-Id: <20190522192338.23715-39-sashal@kernel.org>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        "Tobin C . Harding" <tobin@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 043/317] sched/cpufreq: Fix kobject memleak
+Date:   Wed, 22 May 2019 15:19:04 -0400
+Message-Id: <20190522192338.23715-43-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192338.23715-1-sashal@kernel.org>
 References: <20190522192338.23715-1-sashal@kernel.org>
@@ -60,65 +66,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Zyngier <marc.zyngier@arm.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
 
-[ Upstream commit 1f5b62f09f6b314c8d70b9de5182dae4de1f94da ]
+[ Upstream commit 9a4f26cc98d81b67ecc23b890c28e2df324e29f3 ]
 
-The VDSO code uses the kernel helper that was originally designed
-to abstract the access between 32 and 64bit systems. It worked so
-far because this function is declared as 'inline'.
+Currently the error return path from kobject_init_and_add() is not
+followed by a call to kobject_put() - which means we are leaking
+the kobject.
 
-As we're about to revamp that part of the code, the VDSO would
-break. Let's fix it by doing what should have been done from
-the start, a proper system register access.
+Fix it by adding a call to kobject_put() in the error path of
+kobject_init_and_add().
 
-Reviewed-by: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
+Signed-off-by: Tobin C. Harding <tobin@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Tobin C. Harding <tobin@kernel.org>
+Cc: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>
+Link: http://lkml.kernel.org/r/20190430001144.24890-1-tobin@kernel.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/include/asm/cp15.h   | 2 ++
- arch/arm/vdso/vgettimeofday.c | 5 +++--
- 2 files changed, 5 insertions(+), 2 deletions(-)
+ drivers/cpufreq/cpufreq.c          | 1 +
+ drivers/cpufreq/cpufreq_governor.c | 2 ++
+ 2 files changed, 3 insertions(+)
 
-diff --git a/arch/arm/include/asm/cp15.h b/arch/arm/include/asm/cp15.h
-index 07e27f212dc75..d2453e2d3f1f3 100644
---- a/arch/arm/include/asm/cp15.h
-+++ b/arch/arm/include/asm/cp15.h
-@@ -68,6 +68,8 @@
- #define BPIALL				__ACCESS_CP15(c7, 0, c5, 6)
- #define ICIALLU				__ACCESS_CP15(c7, 0, c5, 0)
+diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+index ef0e33e21b988..97b094963253d 100644
+--- a/drivers/cpufreq/cpufreq.c
++++ b/drivers/cpufreq/cpufreq.c
+@@ -1103,6 +1103,7 @@ static struct cpufreq_policy *cpufreq_policy_alloc(unsigned int cpu)
+ 				   cpufreq_global_kobject, "policy%u", cpu);
+ 	if (ret) {
+ 		pr_err("%s: failed to init policy->kobj: %d\n", __func__, ret);
++		kobject_put(&policy->kobj);
+ 		goto err_free_real_cpus;
+ 	}
  
-+#define CNTVCT				__ACCESS_CP15_64(1, c14)
+diff --git a/drivers/cpufreq/cpufreq_governor.c b/drivers/cpufreq/cpufreq_governor.c
+index ffa9adeaba31b..9d1d9bf02710b 100644
+--- a/drivers/cpufreq/cpufreq_governor.c
++++ b/drivers/cpufreq/cpufreq_governor.c
+@@ -459,6 +459,8 @@ int cpufreq_dbs_governor_init(struct cpufreq_policy *policy)
+ 	/* Failure, so roll back. */
+ 	pr_err("initialization failed (dbs_data kobject init error %d)\n", ret);
+ 
++	kobject_put(&dbs_data->attr_set.kobj);
 +
- extern unsigned long cr_alignment;	/* defined in entry-armv.S */
+ 	policy->governor_data = NULL;
  
- static inline unsigned long get_cr(void)
-diff --git a/arch/arm/vdso/vgettimeofday.c b/arch/arm/vdso/vgettimeofday.c
-index a9dd619c6c290..7bdbf5d5c47d3 100644
---- a/arch/arm/vdso/vgettimeofday.c
-+++ b/arch/arm/vdso/vgettimeofday.c
-@@ -18,9 +18,9 @@
- #include <linux/compiler.h>
- #include <linux/hrtimer.h>
- #include <linux/time.h>
--#include <asm/arch_timer.h>
- #include <asm/barrier.h>
- #include <asm/bug.h>
-+#include <asm/cp15.h>
- #include <asm/page.h>
- #include <asm/unistd.h>
- #include <asm/vdso_datapage.h>
-@@ -123,7 +123,8 @@ static notrace u64 get_ns(struct vdso_data *vdata)
- 	u64 cycle_now;
- 	u64 nsec;
- 
--	cycle_now = arch_counter_get_cntvct();
-+	isb();
-+	cycle_now = read_sysreg(CNTVCT);
- 
- 	cycle_delta = (cycle_now - vdata->cs_cycle_last) & vdata->cs_mask;
- 
+ 	if (!have_governor_per_policy())
 -- 
 2.20.1
 
