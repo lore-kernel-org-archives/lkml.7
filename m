@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A7FFC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:32:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BC80C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:32:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E9B52081C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:32:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 251222081C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:32:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558553556;
-	bh=D200CXy67XjO1scPzvvOcxjzJGmSM2K1O0HZUnjQlWs=;
+	s=default; t=1558553559;
+	bh=BdG5MuK8Gcj2M2B0ZIrH4jnNhcheROp4Bvg0JUiVlP8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yrnOVc1uuy/esjkcb3TFmNmaVzCu6vaVMiJjGVKLCMLV9oJJXJ3nHyCwbs1u6b9iI
-	 FbaD2479gHVlU7kZyKq5NXmAuJGOgTPAeNq+X/jg7GQgwY8BFUhYsw4pzoKzBrx4p3
-	 XmHYEUoEZ5Y5TVxYXDoBp8iRtpb8c0+QrX3pTssE=
+	b=nM4frUH3QqylOHVyDjvrReqqGGs1NfcNwXtiShMVWKmPwOWKENUoeTwYLxOnp+0KZ
+	 WIC4i1VrYOHoR0TAnFwTtyJEL6pzxQ+EDABt13CaqdYvgC0t0Adv30j+O1Ja1+VQkV
+	 zxnLeQKkYv8ogSpEDOjpypJCQKSNj+KY3JlfVxms=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387813AbfEVTcW (ORCPT
+        id S2387807AbfEVTcT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:32:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56004 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:32:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387772AbfEVTcO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:32:14 -0400
+        id S1733301AbfEVTcM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:32:12 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B19E7204FD;
-        Wed, 22 May 2019 19:32:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF33E21841;
+        Wed, 22 May 2019 19:32:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553533;
-        bh=D200CXy67XjO1scPzvvOcxjzJGmSM2K1O0HZUnjQlWs=;
+        s=default; t=1558553532;
+        bh=BdG5MuK8Gcj2M2B0ZIrH4jnNhcheROp4Bvg0JUiVlP8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TZ9hQJCCJAigzgLO1frtTNAjgrVFwWiAoXoqPJwlsFigvcsZGvZnhnmBIg8W9rNUR
-         Clm1yeX09cE69XgEMz7pzxv83aRSwNshj5flUipzgKWsnI23NVImZEadiOUcKU0h+h
-         LQWRaOafvL6kjgWtPscS5lvLi3GvGIl8YWkg2PAY=
+        b=GDOcE0kWQAP1tdtaADwXP7RbtR9L0bn15tPGTRDEQbMDg/bEMc36bgAkiPJvkWhm+
+         MXitRrQK/p9BFeI5J5NzEDVA4LGMskUqJEjEpfaMjo3N/3TV56iFJrD5K/kmYUSEBx
+         1ipKBehDJPfIO3wGb4h67T2/fpVoWrU/Wyrb7MVY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 29/92] dmaengine: at_xdmac: remove BUG_ON macro in tasklet
-Date:   Wed, 22 May 2019 15:30:24 -0400
-Message-Id: <20190522193127.27079-29-sashal@kernel.org>
+Cc:     Wen Yang <wen.yang99@zte.com.cn>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 28/92] pinctrl: pistachio: fix leaked of_node references
+Date:   Wed, 22 May 2019 15:30:23 -0400
+Message-Id: <20190522193127.27079-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522193127.27079-1-sashal@kernel.org>
 References: <20190522193127.27079-1-sashal@kernel.org>
@@ -60,40 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Ferre <nicolas.ferre@microchip.com>
+From: Wen Yang <wen.yang99@zte.com.cn>
 
-[ Upstream commit e2c114c06da2d9ffad5b16690abf008d6696f689 ]
+[ Upstream commit 44a4455ac2c6b0981eace683a2b6eccf47689022 ]
 
-Even if this case shouldn't happen when controller is properly programmed,
-it's still better to avoid dumping a kernel Oops for this.
-As the sequence may happen only for debugging purposes, log the error and
-just finish the tasklet call.
+The call to of_get_child_by_name returns a node pointer with refcount
+incremented thus it must be explicitly decremented after the last
+usage.
 
-Signed-off-by: Nicolas Ferre <nicolas.ferre@microchip.com>
-Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Detected by coccinelle with the following warnings:
+./drivers/pinctrl/pinctrl-pistachio.c:1422:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 1360, but without a corresponding object release within this function.
+
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/at_xdmac.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/pinctrl/pinctrl-pistachio.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/dma/at_xdmac.c b/drivers/dma/at_xdmac.c
-index af24c5bf32d69..8aa3ccf42e55a 100644
---- a/drivers/dma/at_xdmac.c
-+++ b/drivers/dma/at_xdmac.c
-@@ -1608,7 +1608,11 @@ static void at_xdmac_tasklet(unsigned long data)
- 					struct at_xdmac_desc,
- 					xfer_node);
- 		dev_vdbg(chan2dev(&atchan->chan), "%s: desc 0x%p\n", __func__, desc);
--		BUG_ON(!desc->active_xfer);
-+		if (!desc->active_xfer) {
-+			dev_err(chan2dev(&atchan->chan), "Xfer not active: exiting");
-+			spin_unlock_bh(&atchan->lock);
-+			return;
-+		}
- 
- 		txd = &desc->tx_dma_desc;
- 
+diff --git a/drivers/pinctrl/pinctrl-pistachio.c b/drivers/pinctrl/pinctrl-pistachio.c
+index 98a459b1c095a..86e8d989092c8 100644
+--- a/drivers/pinctrl/pinctrl-pistachio.c
++++ b/drivers/pinctrl/pinctrl-pistachio.c
+@@ -1373,6 +1373,7 @@ static int pistachio_gpio_register(struct pistachio_pinctrl *pctl)
+ 		if (!of_find_property(child, "gpio-controller", NULL)) {
+ 			dev_err(pctl->dev,
+ 				"No gpio-controller property for bank %u\n", i);
++			of_node_put(child);
+ 			ret = -ENODEV;
+ 			goto err;
+ 		}
+@@ -1380,6 +1381,7 @@ static int pistachio_gpio_register(struct pistachio_pinctrl *pctl)
+ 		irq = irq_of_parse_and_map(child, 0);
+ 		if (irq < 0) {
+ 			dev_err(pctl->dev, "No IRQ for bank %u: %d\n", i, irq);
++			of_node_put(child);
+ 			ret = irq;
+ 			goto err;
+ 		}
 -- 
 2.20.1
 
