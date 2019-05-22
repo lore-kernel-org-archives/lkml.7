@@ -2,130 +2,117 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42AE2C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 11:01:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D10F9C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 11:08:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A30C21479
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 11:01:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558522879;
-	bh=T+pdBF6h5tbL0dEL/oT26pSo8Wcx5K1/zBlmSfWOyAE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PdwlxxZjLLpYnAiF24BxkRnW18kt/mibZIvNHzJ7Zc8IUGYFmMf/m/qwopkHouI0y
-	 tb7VEGUuaLYOJwkkctdUlNyEiICwveT0BlhF3gUeIrnURa1SYPR1u7jPRWuQRJJ3Dh
-	 HF7MoPYSdX6y6WcVw7poTfL1D0KcRTkPNycxc9gg=
+	by mail.kernel.org (Postfix) with ESMTP id A686A217D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 11:08:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dFfxQx0w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729314AbfEVLBS (ORCPT
+        id S1729087AbfEVLI1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 07:01:18 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:55612 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728406AbfEVLBR (ORCPT
+        Wed, 22 May 2019 07:08:27 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:41322 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727464AbfEVLI1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 07:01:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=zayKSYs/1H7s0xB/BM7u3QdiVVXr8vKW/624+3am8oI=; b=lBsZPNdl+N8oAgIkMsLdVrTnR
-        szN9nikklbIFhthxDf+7g9jkQU3hMZP0jTjniUsU2bUIUR8FCKydeCfHZ2YYXMCsjWG7T99RN+jjv
-        XCLG1c/qnj2jWwbvjAWB8553rHe7VwZMyoewf5+3MDRqQMna/HHUKeAPpMUWYk5pOp8Tc=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hTOzf-00043C-2o; Wed, 22 May 2019 11:01:11 +0000
-Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 678611126D0E; Wed, 22 May 2019 12:01:07 +0100 (BST)
-Date:   Wed, 22 May 2019 12:01:07 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Jeffrey Hugo <jhugo@codeaurora.org>
-Cc:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>, lgirdwood@gmail.com,
-        agross@kernel.org, david.brown@linaro.org,
-        bjorn.andersson@linaro.org, jcrouse@codeaurora.org,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Subject: Re: [PATCH 2/3] regulator: qcom_spmi: Add support for PM8005
-Message-ID: <20190522110107.GB8582@sirena.org.uk>
-References: <20190521164932.14265-1-jeffrey.l.hugo@gmail.com>
- <20190521165315.14379-1-jeffrey.l.hugo@gmail.com>
- <20190521185054.GD16633@sirena.org.uk>
- <51caaee4-dfc9-5b5a-07c7-b1406c178ca3@codeaurora.org>
+        Wed, 22 May 2019 07:08:27 -0400
+Received: by mail-qk1-f195.google.com with SMTP id m18so1148661qki.8
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 04:08:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=pMmkqCL3UPJrqwz90rzNGDcu6Lug81+3J4XTOSHnFoo=;
+        b=dFfxQx0w5CGo2K4bRdhb8YGzJbCf+ECw2Hk4Wy3KSZYqNBOr5W2RNLySFynk5joveK
+         4kwd1CY7+UukFn/O2e02XsMCaUqaz6Xe1ItyK5G7e6pGonGPVdOkzmXMCJLs6DBu9xdh
+         26L6t53862Vbe5F/GLgN1GgrGS6YUZL/Ff3A1bMLNEyX0y0Qk9dvbbeYYqt5GjZJzNOi
+         yoIx0BrtkCYyxc2Nyt5YP2cRiVxZARKU75TzcChfgV2edjAXk9r7piV3tlF6XGDscntJ
+         nAzP08z9ZbE3RkWqGtuQe5OE9wUch7VjI4z1k/Pj8JK7gUgA25OfLsduYR+3Sya1yZsq
+         P8Ww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=pMmkqCL3UPJrqwz90rzNGDcu6Lug81+3J4XTOSHnFoo=;
+        b=FyyXqUGvuoBRBvRFimm8dYb1PMBV3ojl9wZW28cR4KzYh4ZZqRpoPuRX3p63Vahso5
+         8IKeWLfRDsXJlauUurRpUfKv4N1b/1Ockf021fndmXlWz8sfDPYNakR7ec7PmgAybNgg
+         GDelLnPiVOK8ZZyQch/hoI9HCTj73ybI307fk0eUMqB6oQ91pVrvEtyxjM0bFxDledRk
+         Rv/lYmUUzBCp8Hi9hsGzaS0Bf3bzTbD4WYUh5DJWrPFxjb7y6fnsA6roRKQDB+6rsxGK
+         EUvQJpqMQyu26RxGo9gBDqH3MwNzqNP/8Al/8TyHqC0FmeO69naB885K3hHU9ajuqnHa
+         R58A==
+X-Gm-Message-State: APjAAAUkip4ec14W6ytB00YCaiWFwR6/Ym6JsvWHM75RT1Vt2DVigCld
+        NztnfaBu9VmI5BFsmgbQSUEFP39V
+X-Google-Smtp-Source: APXvYqyIBDi6YIxuX+OgrVhN1uuZqMDcAR4XgA814CJQJdlPt4msya5tSEbY9V+ODZFyQaY1pby1RA==
+X-Received: by 2002:a05:620a:1107:: with SMTP id o7mr61050709qkk.184.1558523306657;
+        Wed, 22 May 2019 04:08:26 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.35.11])
+        by smtp.gmail.com with ESMTPSA id k127sm10976158qkb.96.2019.05.22.04.08.25
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 22 May 2019 04:08:25 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 2B53F404A1; Wed, 22 May 2019 08:08:23 -0300 (-03)
+Date:   Wed, 22 May 2019 08:08:23 -0300
+To:     Wei Li <liwei391@huawei.com>
+Cc:     Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+        linux-kernel@vger.kernel.org, xiezhipeng1@huawei.com
+Subject: Re: [PATCH v2] fix use-after-free in perf_sched__lat
+Message-ID: <20190522110823.GR8945@kernel.org>
+References: <20190508143648.8153-1-liwei391@huawei.com>
+ <20190522065555.GA206606@google.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ftEhullJWpWg/VHq"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <51caaee4-dfc9-5b5a-07c7-b1406c178ca3@codeaurora.org>
-X-Cookie: Does the name Pavlov ring a bell?
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190522065555.GA206606@google.com>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Em Wed, May 22, 2019 at 03:56:10PM +0900, Namhyung Kim escreveu:
+> On Wed, May 08, 2019 at 10:36:48PM +0800, Wei Li wrote:
+> > After thread is added to machine->threads[i].dead in
+> > __machine__remove_thread, the machine->threads[i].dead is freed
+> > when calling free(session) in perf_session__delete(). So it get a
+> > Segmentation fault when accessing it in thread__put().
+> > 
+> > In this patch, we delay the perf_session__delete until all threads
+> > have been deleted.
+> > 
+> > This can be reproduced by following steps:
+> > 	ulimit -c unlimited
+> > 	export MALLOC_MMAP_THRESHOLD_=0
+> > 	perf sched record sleep 10
+> > 	perf sched latency --sort max
+> > 	Segmentation fault (core dumped)
+> > 
+> > Signed-off-by: Zhipeng Xie <xiezhipeng1@huawei.com>
+> > Signed-off-by: Wei Li <liwei391@huawei.com>
+> 
+> Acked-by: Namhyung Kim <namhyung@kernel.org>
 
---ftEhullJWpWg/VHq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I'll try to analyse this one soon, but my first impression was that we
+should just grab reference counts when keeping a pointer to those
+threads instead of keeping _all_ threads alive when supposedly we could
+trow away unreferenced data structures.
 
-On Tue, May 21, 2019 at 05:16:06PM -0600, Jeffrey Hugo wrote:
-> On 5/21/2019 12:50 PM, Mark Brown wrote:
+But this is just a first impression from just reading the patch
+description, probably I'm missing something.
 
-> > > +static int spmi_regulator_common_list_voltage(struct regulator_dev *rdev,
-> > > +					      unsigned selector);
-> > > +
-> > > +static int spmi_regulator_common2_set_voltage(struct regulator_dev *rdev,
-> > > +					      unsigned selector)
+Thanks for providing instructions on readily triggering the segfault.
 
-> > Eeew, can we not have better names?
-
-> I'm open to suggestions.  Apparently there are two register common register
-> schemes - the old one and the new one.  PMIC designs after some random point
-> in time are all the new register scheme per the documentation I see.
-
-> As far as I an aware, the FT426 design is the first design to be added to
-> this driver to make use of the new scheme, but I expect more to be supported
-> in future, thus I'm reluctant to make these ft426 specific in the name.
-
-If there's a completely new register map why are these even in the same
-driver?
-
-> > > +	if (reg == SPMI_COMMON2_MODE_HPM_MASK)
-> > > +		return REGULATOR_MODE_NORMAL;
-> > > +
-> > > +	if (reg == SPMI_COMMON2_MODE_AUTO_MASK)
-> > > +		return REGULATOR_MODE_FAST;
-> > > +
-> > > +	return REGULATOR_MODE_IDLE;
-> > > +}
-
-> > This looks like you want to write a switch statement.
-
-> It follows the existing style in the driver, but sure I can make this a
-> switch.
-
-Please fix the rest of the driver as well then.
-
---ftEhullJWpWg/VHq
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlzlK/IACgkQJNaLcl1U
-h9AXBAf+Mto6O8QugYdL/55lY+O0vvNOPBrb59BAFs7716IWtNgDrcYMV26RZQSH
-BzgdRdziDxkoGHoN5SW0+SMI4M3+P/z2H/27sIzWS9XVN1Sa2FWpY/YXuLbH2CZi
-X9ghBPTYAzoMuBUmYLFGtLIRdiO9010etKXNciGD2gFJfNNadNKO3J8hC3OqDgTZ
-bMxyC5g7MC3I9htRJ9yafXbbXHqahv65Ef6qJglqAab9l8lEYZUsinLDr0+RsDjA
-VK6zsNXyfMwkdUUWvLpzObIWE3LYAys1o/c62/nPfPdJp39K5ZVaN8oAKAQlcULk
-rvwI3qh/T/+DFRxCMIU+w/Hp9MLa5g==
-=jGLx
------END PGP SIGNATURE-----
-
---ftEhullJWpWg/VHq--
+- Arnaldo
