@@ -3,109 +3,197 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D861C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:45:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60994C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:45:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBCBC2089E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:45:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558554356;
-	bh=t5xRMUEEpDNJ3nOdGBJbwH704jBjmeeKEfBphf6hj0E=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vdw33RwD805uREQ42en6gVyhf1gvrvm2SyW4UjO6aemqnsZH7S08XIQlgo2iD6S6Z
-	 IqYVclpECleQs//gkILFDu6yrgMuHVSwXBEczzTaZpJfHo1Xnm71KGR5zCzPmtOsg8
-	 jzfzfE2snAdD3n/aDR+nxg0V2UmAAw14dTmVAOnM=
+	by mail.kernel.org (Postfix) with ESMTP id 263F42089E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:45:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="A+sMqwwy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387844AbfEVTpz (ORCPT
+        id S2387850AbfEVTp6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:45:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50292 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730359AbfEVT1w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:45:58 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:36710 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732407AbfEVT1w (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 22 May 2019 15:27:52 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C351620879;
-        Wed, 22 May 2019 19:27:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553272;
-        bh=t5xRMUEEpDNJ3nOdGBJbwH704jBjmeeKEfBphf6hj0E=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I8k7eU3poufG/YO/1pH4SiTwBxZebRokiZK07eU1Z27XIN7XKno7yBIrK5wcwJjrS
-         1xo3Z/aXR+Eb8L3/4vArnpWwQZfUG7VA90VI/3jbiK6SGvqFmPtyNh851Np18/wkSx
-         WhlVTNcsA5Kogvz9KWVGsvBZNIs5EEzKzCagiIvw=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Philipp Rudo <prudo@linux.ibm.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 047/244] s390/kexec_file: Fix detection of text segment in ELF loader
-Date:   Wed, 22 May 2019 15:23:13 -0400
-Message-Id: <20190522192630.24917-47-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190522192630.24917-1-sashal@kernel.org>
-References: <20190522192630.24917-1-sashal@kernel.org>
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4MJRk7t117824;
+        Wed, 22 May 2019 14:27:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1558553266;
+        bh=Yly9sJcWMeuDQbobJ18oTecNXjdhRo3R7wQ3SynYIJE=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=A+sMqwwyO3I+YfjO8Stpm6UTvls0i07hmznSWvo9upkpcAr+LKL8mGfsjGo9NZA+R
+         heOP4QbfyqzgPWZQrYlUEQfTrhlH0e7EPURGBqmLYSjkGOgl/XXqWk1zxFoMQU7+LR
+         5uy2WCDJFJ775Nb225gBw49ZyUz7j2xF7R+ZFkfk=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4MJRjpe032003
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 22 May 2019 14:27:45 -0500
+Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 22
+ May 2019 14:27:45 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 22 May 2019 14:27:45 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4MJRjLQ032996;
+        Wed, 22 May 2019 14:27:45 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <broonie@kernel.org>,
+        <lgirdwood@gmail.com>
+CC:     <lee.jones@linaro.org>, <linux-leds@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
+Subject: [RESEND PATCH v4 3/6] mfd: ti-lmu: Add LM36274 support to the ti-lmu
+Date:   Wed, 22 May 2019 14:27:30 -0500
+Message-ID: <20190522192733.13422-4-dmurphy@ti.com>
+X-Mailer: git-send-email 2.21.0.5.gaeb582a983
+In-Reply-To: <20190522192733.13422-1-dmurphy@ti.com>
+References: <20190522192733.13422-1-dmurphy@ti.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Philipp Rudo <prudo@linux.ibm.com>
+Add the LM36274 register support to the ti-lmu MFD driver.
 
-[ Upstream commit 729829d775c9a5217abc784b2f16087d79c4eec8 ]
-
-To register data for the next kernel (command line, oldmem_base, etc.) the
-current kernel needs to find the ELF segment that contains head.S. This is
-currently done by checking ifor 'phdr->p_paddr == 0'. This works fine for
-the current kernel build but in theory the first few pages could be
-skipped. Make the detection more robust by checking if the entry point lies
-within the segment.
-
-Signed-off-by: Philipp Rudo <prudo@linux.ibm.com>
-Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
 ---
- arch/s390/kernel/kexec_elf.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/mfd/Kconfig                 |  5 ++---
+ drivers/mfd/ti-lmu.c                | 14 ++++++++++++++
+ include/linux/mfd/ti-lmu-register.h | 23 +++++++++++++++++++++++
+ include/linux/mfd/ti-lmu.h          |  4 ++++
+ 4 files changed, 43 insertions(+), 3 deletions(-)
 
-diff --git a/arch/s390/kernel/kexec_elf.c b/arch/s390/kernel/kexec_elf.c
-index 5a286b012043b..602e7cc26d118 100644
---- a/arch/s390/kernel/kexec_elf.c
-+++ b/arch/s390/kernel/kexec_elf.c
-@@ -19,10 +19,15 @@ static int kexec_file_add_elf_kernel(struct kimage *image,
- 	struct kexec_buf buf;
- 	const Elf_Ehdr *ehdr;
- 	const Elf_Phdr *phdr;
-+	Elf_Addr entry;
- 	int i, ret;
+diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+index fcae244229b3..5606411038bb 100644
+--- a/drivers/mfd/Kconfig
++++ b/drivers/mfd/Kconfig
+@@ -1311,9 +1311,8 @@ config MFD_TI_LMU
+ 	select REGMAP_I2C
+ 	help
+ 	  Say yes here to enable support for TI LMU chips.
+-
+-	  TI LMU MFD supports LM3532, LM3631, LM3632, LM3633, and LM3695.
+-	  It consists of backlight, LED and regulator driver.
++	  TI LMU MFD supports LM3532, LM3631, LM3632, LM3633, LM3695 and
++	  LM36274.  It consists of backlight, LED and regulator driver.
+ 	  It provides consistent device controls for lighting functions.
  
- 	ehdr = (Elf_Ehdr *)kernel;
- 	buf.image = image;
-+	if (image->type == KEXEC_TYPE_CRASH)
-+		entry = STARTUP_KDUMP_OFFSET;
-+	else
-+		entry = ehdr->e_entry;
+ config MFD_OMAP_USB_HOST
+diff --git a/drivers/mfd/ti-lmu.c b/drivers/mfd/ti-lmu.c
+index 89b1c5b584af..691ab9dd6236 100644
+--- a/drivers/mfd/ti-lmu.c
++++ b/drivers/mfd/ti-lmu.c
+@@ -111,6 +111,17 @@ static const struct mfd_cell lm3695_devices[] = {
+ 	},
+ };
  
- 	phdr = (void *)ehdr + ehdr->e_phoff;
- 	for (i = 0; i < ehdr->e_phnum; i++, phdr++) {
-@@ -35,7 +40,7 @@ static int kexec_file_add_elf_kernel(struct kimage *image,
- 		buf.mem = ALIGN(phdr->p_paddr, phdr->p_align);
- 		buf.memsz = phdr->p_memsz;
++static const struct mfd_cell lm36274_devices[] = {
++	LM363X_REGULATOR(LM36274_BOOST),
++	LM363X_REGULATOR(LM36274_LDO_POS),
++	LM363X_REGULATOR(LM36274_LDO_NEG),
++	{
++		.name          = "lm36274-leds",
++		.id            = LM36274,
++		.of_compatible = "ti,lm36274-backlight",
++	},
++};
++
+ #define TI_LMU_DATA(chip, max_reg)		\
+ static const struct ti_lmu_data chip##_data =	\
+ {						\
+@@ -123,6 +134,7 @@ TI_LMU_DATA(lm3631, LM3631_MAX_REG);
+ TI_LMU_DATA(lm3632, LM3632_MAX_REG);
+ TI_LMU_DATA(lm3633, LM3633_MAX_REG);
+ TI_LMU_DATA(lm3695, LM3695_MAX_REG);
++TI_LMU_DATA(lm36274, LM36274_MAX_REG);
  
--		if (phdr->p_paddr == 0) {
-+		if (entry - phdr->p_paddr < phdr->p_memsz) {
- 			data->kernel_buf = buf.buffer;
- 			data->memsz += STARTUP_NORMAL_OFFSET;
+ static int ti_lmu_probe(struct i2c_client *cl, const struct i2c_device_id *id)
+ {
+@@ -191,6 +203,7 @@ static const struct of_device_id ti_lmu_of_match[] = {
+ 	{ .compatible = "ti,lm3632", .data = &lm3632_data },
+ 	{ .compatible = "ti,lm3633", .data = &lm3633_data },
+ 	{ .compatible = "ti,lm3695", .data = &lm3695_data },
++	{ .compatible = "ti,lm36274", .data = &lm36274_data },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, ti_lmu_of_match);
+@@ -200,6 +213,7 @@ static const struct i2c_device_id ti_lmu_ids[] = {
+ 	{ "lm3632", LM3632 },
+ 	{ "lm3633", LM3633 },
+ 	{ "lm3695", LM3695 },
++	{ "lm36274", LM36274 },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(i2c, ti_lmu_ids);
+diff --git a/include/linux/mfd/ti-lmu-register.h b/include/linux/mfd/ti-lmu-register.h
+index 76998b01764b..076d8dea38fd 100644
+--- a/include/linux/mfd/ti-lmu-register.h
++++ b/include/linux/mfd/ti-lmu-register.h
+@@ -189,4 +189,27 @@
+ #define LM3695_REG_BRT_MSB			0x14
  
+ #define LM3695_MAX_REG				0x14
++
++/* LM36274 */
++#define LM36274_REG_REV				0x01
++#define LM36274_REG_BL_CFG_1			0x02
++#define LM36274_REG_BL_CFG_2			0x03
++#define LM36274_REG_BRT_LSB			0x04
++#define LM36274_REG_BRT_MSB			0x05
++#define LM36274_REG_BL_EN			0x08
++
++#define LM36274_REG_BIAS_CONFIG_1		0x09
++#define LM36274_EXT_EN_MASK			BIT(0)
++#define LM36274_EN_VNEG_MASK			BIT(1)
++#define LM36274_EN_VPOS_MASK			BIT(2)
++
++#define LM36274_REG_BIAS_CONFIG_2		0x0a
++#define LM36274_REG_BIAS_CONFIG_3		0x0b
++#define LM36274_REG_VOUT_BOOST			0x0c
++#define LM36274_REG_VOUT_POS			0x0d
++#define LM36274_REG_VOUT_NEG			0x0e
++#define LM36274_VOUT_MASK			0x3F
++
++#define LM36274_MAX_REG				0x13
++
+ #endif
+diff --git a/include/linux/mfd/ti-lmu.h b/include/linux/mfd/ti-lmu.h
+index 54e9d272e81c..0957598c7d41 100644
+--- a/include/linux/mfd/ti-lmu.h
++++ b/include/linux/mfd/ti-lmu.h
+@@ -26,6 +26,7 @@ enum ti_lmu_id {
+ 	LM3632,
+ 	LM3633,
+ 	LM3695,
++	LM36274,
+ 	LMU_MAX_ID,
+ };
+ 
+@@ -67,6 +68,9 @@ enum lm363x_regulator_id {
+ 	LM3632_BOOST,		/* Boost output */
+ 	LM3632_LDO_POS,		/* Positive display bias output */
+ 	LM3632_LDO_NEG,		/* Negative display bias output */
++	LM36274_BOOST,		/* Boost output */
++	LM36274_LDO_POS,	/* Positive display bias output */
++	LM36274_LDO_NEG,	/* Negative display bias output */
+ };
+ 
+ /**
 -- 
-2.20.1
+2.21.0.5.gaeb582a983
 
