@@ -2,138 +2,77 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60E68C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 13:49:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 207A3C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 13:51:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 412AD20863
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 13:49:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF7E520863
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 13:51:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FRneyTJ1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729119AbfEVNth (ORCPT
+        id S1729156AbfEVNvZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 09:49:37 -0400
-Received: from foss.arm.com ([217.140.101.70]:51862 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726770AbfEVNth (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 09:49:37 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5198E80D;
-        Wed, 22 May 2019 06:49:36 -0700 (PDT)
-Received: from e103592.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 94CFA3F575;
-        Wed, 22 May 2019 06:49:30 -0700 (PDT)
-Date:   Wed, 22 May 2019 14:49:28 +0100
-From:   Dave Martin <Dave.Martin@arm.com>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>, kvm@vger.kernel.org,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        dri-devel@lists.freedesktop.org, linux-mm@kvack.org,
-        linux-kselftest@vger.kernel.org,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Leon Romanovsky <leon@kernel.org>, linux-rdma@vger.kernel.org,
-        amd-gfx@lists.freedesktop.org, Dmitry Vyukov <dvyukov@google.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        linux-media@vger.kernel.org, Kevin Brodsky <kevin.brodsky@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Kostya Serebryany <kcc@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        linux-kernel@vger.kernel.org,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Subject: Re: [PATCH v15 00/17] arm64: untag user pointers passed to the kernel
-Message-ID: <20190522134925.GV28398@e103592.cambridge.arm.com>
-References: <cover.1557160186.git.andreyknvl@google.com>
- <20190517144931.GA56186@arrakis.emea.arm.com>
- <20190521184856.GC2922@ziepe.ca>
+        Wed, 22 May 2019 09:51:25 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:40208 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726770AbfEVNvY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 09:51:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=7PcrUJpAN8FUR5Os5eZdN4/qfIg3FFf2/UF6cSYu22g=; b=FRneyTJ1KPX9uILNf6OYwDJke
+        r1sUw/VWN1m3p5ISAdhvMbPPFLADQ764Wp+ofMRLOF1Ixa1dwIVr6HuEH1GwdoVNpR1adztp+plZM
+        E5nO+VcZVOteXU3qtxUFly2BizAYJ05PghzY3RDhVnreLVIzynopkKDkQjFKDx8OYMYYkpUq+fTfC
+        VjvPSZzzwkCVzVocdTUB7rmIgRtTiiqU/QyTwWtgpOSbpOaQY5FJB/4+D3t1nvn7jqG8kGJ6dW53O
+        d5rXWNcHyUIkUJNOQMtQpHqRF3BK9F5pEp15zu04Mfn07X1V1MjGQYFVY14F6Zu2MJEDnGekXk3Hb
+        L8vU2JuXA==;
+Received: from [31.161.185.207] (helo=worktop.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hTRe7-0001EA-LX; Wed, 22 May 2019 13:51:08 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 9FCCB984E09; Wed, 22 May 2019 15:51:06 +0200 (CEST)
+Date:   Wed, 22 May 2019 15:51:06 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Song Liu <songliubraving@fb.com>
+Cc:     Kairui Song <kasong@redhat.com>, Alexei Starovoitov <ast@fb.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>
+Subject: Re: Getting empty callchain from perf_callchain_kernel()
+Message-ID: <20190522135106.GA16275@worktop.programming.kicks-ass.net>
+References: <3CD3EE63-0CD2-404A-A403-E11DCF2DF8D9@fb.com>
+ <20190517074600.GJ2623@hirez.programming.kicks-ass.net>
+ <20190517081057.GQ2650@hirez.programming.kicks-ass.net>
+ <CACPcB9cB5n1HOmZcVpusJq8rAV5+KfmZ-Lxv3tgsSoy7vNrk7w@mail.gmail.com>
+ <20190517091044.GM2606@hirez.programming.kicks-ass.net>
+ <8C814E68-B0B6-47E4-BDD6-917B01EC62D0@fb.com>
+ <c881767d-b6f3-c53e-5c70-556d09ea8d89@fb.com>
+ <8449BBF3-E754-4ABC-BFEF-A8F264297F2D@fb.com>
+ <CACPcB9emh9T23sixx-91mg2wL6kgrYF4MVfmuTCE0SsD=8efcQ@mail.gmail.com>
+ <842A0302-9B36-4FBF-ADF7-9C6749E8C5BE@fb.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190521184856.GC2922@ziepe.ca>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <842A0302-9B36-4FBF-ADF7-9C6749E8C5BE@fb.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 21, 2019 at 03:48:56PM -0300, Jason Gunthorpe wrote:
-> On Fri, May 17, 2019 at 03:49:31PM +0100, Catalin Marinas wrote:
-> 
-> > The tagged pointers (whether hwasan or MTE) should ideally be a
-> > transparent feature for the application writer but I don't think we can
-> > solve it entirely and make it seamless for the multitude of ioctls().
-> > I'd say you only opt in to such feature if you know what you are doing
-> > and the user code takes care of specific cases like ioctl(), hence the
-> > prctl() proposal even for the hwasan.
-> 
-> I'm not sure such a dire view is warrented.. 
-> 
-> The ioctl situation is not so bad, other than a few special cases,
-> most drivers just take a 'void __user *' and pass it as an argument to
-> some function that accepts a 'void __user *'. sparse et al verify
-> this. 
-> 
-> As long as the core functions do the right thing the drivers will be
-> OK.
-> 
-> The only place things get dicy is if someone casts to unsigned long
-> (ie for vma work) but I think that reflects that our driver facing
-> APIs for VMAs are compatible with static analysis (ie I have no
-> earthly idea why get_user_pages() accepts an unsigned long), not that
-> this is too hard.
+On Mon, May 20, 2019 at 05:22:12PM +0000, Song Liu wrote:
+> I think this is still the best fix/workaround here? And only one level 
+> of stack trace should be OK for tracepoint? 
 
-If multiple people will care about this, perhaps we should try to
-annotate types more explicitly in SYSCALL_DEFINEx() and ABI data
-structures.
-
-For example, we could have a couple of mutually exclusive modifiers
-
-T __object *
-T __vaddr * (or U __vaddr)
-
-In the first case the pointer points to an object (in the C sense)
-that the call may dereference but not use for any other purpose.
-
-In the latter case the pointer (or other type) is a virtual address
-that the call does not dereference but my do other things with.
-
-Also
-
-U __really(T)
-
-to tell static analysers the real type of pointers smuggled through
-UAPI disguised as other types (*cough* KVM, etc.)
-
-We could gradually make sparse more strict about the presence of
-annotations and allowed conversions, add get/put_user() variants
-that demand explicit annotation, etc.
-
-find_vma() wouldn't work with a __object pointer, for example.  A
-get_user_pages_for_dereference() might be needed for __object pointers
-(embodying a promise from the caller that only the object will be
-dereferenced within the mapped pages).
-
-Thoughts?
-
-This kind of thing would need widespread buy-in in order to be viable.
-
-Cheers
----Dave
+No. That's still completely broken.
