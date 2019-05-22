@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 516F5C282DC
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:47:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43021C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:47:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23E3B2075B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:47:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1495E2075B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:47:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558554462;
-	bh=PYjNQK/FrUQYHSYE6DZ6L1kZFOY+XTo5Qh+A+ryT02U=;
+	s=default; t=1558554469;
+	bh=KLUJ4LmcZdnFyiRN7XeY/pnBybtlHDKSj5RDFgQM75c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zK0hWA49v8cdiV8Rqdj0xDS4Qh2DvPzzP5kqBpJtr3nhdbratIMS1nFXHIxcSAfl/
-	 nDFGMJWzq4I4G9oLuwm2QR+hHoOpdmOC63dRq1vpz9sHoRGWOxxHGuLBXrMAHe8a2W
-	 od6BiymxyvH8xhHr2WJfXwB6f/6Fiths07HGdIaE=
+	b=Mcq7hNV4Ecy1q2nK9mS2Dxj8ReVnq8lo91R0tPwt7Be+/0j0FWEqDHQuNNumMXSzf
+	 8+h/tzvxPF+WDbOsZ7P7pUumEWOCguz/4yMn0adp0Y76l8vDiGJk9srcwHbCIrLMbL
+	 d9lyAwb3onXepWvi0vpgY7N+/MuHXVFutx8Pj9cE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387783AbfEVTrl (ORCPT
+        id S1732435AbfEVTrs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:47:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49066 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:47:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48988 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731574AbfEVT1N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:27:13 -0400
+        id S1730843AbfEVT1K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:27:10 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 69B0A2177E;
-        Wed, 22 May 2019 19:27:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2179920675;
+        Wed, 22 May 2019 19:27:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553233;
-        bh=PYjNQK/FrUQYHSYE6DZ6L1kZFOY+XTo5Qh+A+ryT02U=;
+        s=default; t=1558553229;
+        bh=KLUJ4LmcZdnFyiRN7XeY/pnBybtlHDKSj5RDFgQM75c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WXqLWKxEijKhQFdsZhhqENk4m8AklKU7QuNKccqM+O240kDtrXoR4reFcKe+pa3IT
-         eqmm+kpcVF9dshAuE7hTws2TW9e8DDtwdcoBhw3St16fpq46n9bggEsdOfYgemcfu+
-         baAC9L+UEMNGPJDNtI/FXf4wADhgo7d/gJphgbgw=
+        b=PaDm4vuqfddz2z9ntih+dnbE/JV0Dmt/UrN/sP6lWPmwizoZy5IpMu7EhmxSQd2c2
+         0/max5BTL+O3PGxQRpJSrgrzBUJA8XxwqTTr73pVltCtF+8riFVkJJoCGogfizg2wU
+         hLVQIdAycjdBNjhsBH43WY500D857BUcK7Osnng4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Flavio Suligoi <f.suligoi@asem.it>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 026/244] spi: pxa2xx: fix SCR (divisor) calculation
-Date:   Wed, 22 May 2019 15:22:52 -0400
-Message-Id: <20190522192630.24917-26-sashal@kernel.org>
+Cc:     Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.19 024/244] powerpc/perf: Fix loop exit condition in nest_imc_event_init
+Date:   Wed, 22 May 2019 15:22:50 -0400
+Message-Id: <20190522192630.24917-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192630.24917-1-sashal@kernel.org>
 References: <20190522192630.24917-1-sashal@kernel.org>
@@ -60,61 +61,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Flavio Suligoi <f.suligoi@asem.it>
+From: Anju T Sudhakar <anju@linux.vnet.ibm.com>
 
-[ Upstream commit 29f2133717c527f492933b0622a4aafe0b3cbe9e ]
+[ Upstream commit 860b7d2286236170a36f94946d03ca9888d32571 ]
 
-Calculate the divisor for the SCR (Serial Clock Rate), avoiding
-that the SSP transmission rate can be greater than the device rate.
+The data structure (i.e struct imc_mem_info) to hold the memory address
+information for nest imc units is allocated based on the number of nodes
+in the system.
 
-When the division between the SSP clock and the device rate generates
-a reminder, we have to increment by one the divisor.
-In this way the resulting SSP clock will never be greater than the
-device SPI max frequency.
+nest_imc_event_init() traverse this struct array to calculate the memory
+base address for the event-cpu. If we fail to find a match for the event
+cpu's chip-id in imc_mem_info struct array, then the do-while loop will
+iterate until we crash.
 
-For example, with:
+Fix this by changing the loop exit condition based on the number of
+non zero vbase elements in the array, since the allocation is done for
+nr_chips + 1.
 
- - ssp_clk  = 50 MHz
- - dev freq = 15 MHz
-
-without this patch the SSP clock will be greater than 15 MHz:
-
- - 25 MHz for PXA25x_SSP and CE4100_SSP
- - 16,56 MHz for the others
-
-Instead, with this patch, we have in both case an SSP clock of 12.5MHz,
-so the max rate of the SPI device clock is respected.
-
-Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
-Reviewed-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Reviewed-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Fixes: 885dcd709ba91 ("powerpc/perf: Add nest IMC PMU support")
+Signed-off-by: Anju T Sudhakar <anju@linux.vnet.ibm.com>
+Reviewed-by: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-pxa2xx.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ arch/powerpc/perf/imc-pmu.c               | 2 +-
+ arch/powerpc/platforms/powernv/opal-imc.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/spi/spi-pxa2xx.c b/drivers/spi/spi-pxa2xx.c
-index b624f6fb04ce5..729be74621e37 100644
---- a/drivers/spi/spi-pxa2xx.c
-+++ b/drivers/spi/spi-pxa2xx.c
-@@ -876,10 +876,14 @@ static unsigned int ssp_get_clk_div(struct driver_data *drv_data, int rate)
+diff --git a/arch/powerpc/perf/imc-pmu.c b/arch/powerpc/perf/imc-pmu.c
+index 3cebfdf362116..5553226770748 100644
+--- a/arch/powerpc/perf/imc-pmu.c
++++ b/arch/powerpc/perf/imc-pmu.c
+@@ -508,7 +508,7 @@ static int nest_imc_event_init(struct perf_event *event)
+ 			break;
+ 		}
+ 		pcni++;
+-	} while (pcni);
++	} while (pcni->vbase != 0);
  
- 	rate = min_t(int, ssp_clk, rate);
+ 	if (!flag)
+ 		return -ENODEV;
+diff --git a/arch/powerpc/platforms/powernv/opal-imc.c b/arch/powerpc/platforms/powernv/opal-imc.c
+index 58a07948c76e7..3d27f02695e41 100644
+--- a/arch/powerpc/platforms/powernv/opal-imc.c
++++ b/arch/powerpc/platforms/powernv/opal-imc.c
+@@ -127,7 +127,7 @@ static int imc_get_mem_addr_nest(struct device_node *node,
+ 								nr_chips))
+ 		goto error;
  
-+	/*
-+	 * Calculate the divisor for the SCR (Serial Clock Rate), avoiding
-+	 * that the SSP transmission rate can be greater than the device rate
-+	 */
- 	if (ssp->type == PXA25x_SSP || ssp->type == CE4100_SSP)
--		return (ssp_clk / (2 * rate) - 1) & 0xff;
-+		return (DIV_ROUND_UP(ssp_clk, 2 * rate) - 1) & 0xff;
- 	else
--		return (ssp_clk / rate - 1) & 0xfff;
-+		return (DIV_ROUND_UP(ssp_clk, rate) - 1)  & 0xfff;
- }
- 
- static unsigned int pxa2xx_ssp_get_clk_div(struct driver_data *drv_data,
+-	pmu_ptr->mem_info = kcalloc(nr_chips, sizeof(*pmu_ptr->mem_info),
++	pmu_ptr->mem_info = kcalloc(nr_chips + 1, sizeof(*pmu_ptr->mem_info),
+ 				    GFP_KERNEL);
+ 	if (!pmu_ptr->mem_info)
+ 		goto error;
 -- 
 2.20.1
 
