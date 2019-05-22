@@ -7,48 +7,62 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73974C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:27:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4CB5C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:27:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32C2D217F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:27:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A59212173C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:27:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558553270;
-	bh=lzQDYxnmPENw2IBbFBXDQ5RLNt5Efiy/LGcOLn6RGmE=;
+	s=default; t=1558553273;
+	bh=tzde87vjH/OTodmhhdhKDmFSXdB23EOAgIXssVc8a2E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RDKKJdGteegtQxtfABHpT2k5jkjwHuAlAVCnYIf+rBg8clanXnx5l6u3XzVFY6xzT
-	 1arImk9hW+w9w2H4DLXXw69xaNX/WzRxhzqVrL91qdYEQpg4tuuQB9ajYUz7RE+ISw
-	 kc+aIAkTUSFxL6FuUEE2PG3fkpyIKHPlV+Q+9XTY=
+	b=TAAy9imWTaKC5iIBgLhcvMkiB487RmnZogYf3d4Ub4ZqRyfrM26ANR2Y2g8P2Kn6m
+	 PzyvVhDfRC1jYbiz0MLXLcCEmxE/2q0Ye+Vz1jlymsBdScnRWBwiJ/n4DoE5aFolGz
+	 4lZ4Dyrsu5ONJm61TARculrbGZoa+ABcJWoi9590=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731373AbfEVT1t (ORCPT
+        id S1732420AbfEVT1w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:27:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49828 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:27:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49936 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732345AbfEVT1f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:27:35 -0400
+        id S1732356AbfEVT1l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:27:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3100A20675;
-        Wed, 22 May 2019 19:27:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EBC25204FD;
+        Wed, 22 May 2019 19:27:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553254;
-        bh=lzQDYxnmPENw2IBbFBXDQ5RLNt5Efiy/LGcOLn6RGmE=;
+        s=default; t=1558553260;
+        bh=tzde87vjH/OTodmhhdhKDmFSXdB23EOAgIXssVc8a2E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zXIHY8cxSc2HWTFlFWrcHACtfRJ0EgKTYEtKklvj9aT7ZtwgSsjE091zUfldFsAX3
-         TcaVZ4bijZ6r6HL2lOSwwrdIpSVAFVDwlICBM/LADxOBdM59tA59nrOLkrM37dimEA
-         65Ggf5GXZsaD0ck7iBnvUuYWKq5PWmmCfHAlmJCU=
+        b=UD51I8YluyIwujURi2vpeFD4NSvlsm9wvhscrhX+5iLZwJ7ylNWHG+uoniP+yRpNV
+         n3wW9KH+zabcbExb6BS9OR14LVoPrPwIuTwK28/oDQgVKGDr3W1Oz16Vd3wnsmImqN
+         ssvB0U12D8vY2EBx/Iwbmhn2wDIWozW9QixE22B4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bart Van Assche <bvanassche@acm.org>,
-        Himanshu Madhani <hmadhani@marvell.com>,
-        Giridhar Malavali <gmalavali@marvell.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 037/244] scsi: qla2xxx: Avoid that lockdep complains about unsafe locking in tcm_qla2xxx_close_session()
-Date:   Wed, 22 May 2019 15:23:03 -0400
-Message-Id: <20190522192630.24917-37-sashal@kernel.org>
+Cc:     Nadav Amit <namit@vmware.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        akpm@linux-foundation.org, ard.biesheuvel@linaro.org,
+        deneen.t.dock@intel.com, kernel-hardening@lists.openwall.com,
+        kristen@linux.intel.com, linux_dti@icloud.com, will.deacon@arm.com,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@intel.com>,
+        "H . Peter Anvin" <hpa@zytor.com>, Jessica Yu <jeyu@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Rik van Riel <riel@surriel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 039/244] x86/modules: Avoid breaking W^X while loading modules
+Date:   Wed, 22 May 2019 15:23:05 -0400
+Message-Id: <20190522192630.24917-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192630.24917-1-sashal@kernel.org>
 References: <20190522192630.24917-1-sashal@kernel.org>
@@ -61,260 +75,142 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Nadav Amit <namit@vmware.com>
 
-[ Upstream commit d4023db71108375e4194e92730ba0d32d7f07813 ]
+[ Upstream commit f2c65fb3221adc6b73b0549fc7ba892022db9797 ]
 
-This patch avoids that lockdep reports the following warning:
+When modules and BPF filters are loaded, there is a time window in
+which some memory is both writable and executable. An attacker that has
+already found another vulnerability (e.g., a dangling pointer) might be
+able to exploit this behavior to overwrite kernel code. Prevent having
+writable executable PTEs in this stage.
 
-=====================================================
-WARNING: HARDIRQ-safe -> HARDIRQ-unsafe lock order detected
-5.1.0-rc1-dbg+ #11 Tainted: G        W
------------------------------------------------------
-rmdir/1478 [HC0[0]:SC0[0]:HE0:SE1] is trying to acquire:
-00000000e7ac4607 (&(&k->k_lock)->rlock){+.+.}, at: klist_next+0x43/0x1d0
+In addition, avoiding having W+X mappings can also slightly simplify the
+patching of modules code on initialization (e.g., by alternatives and
+static-key), as would be done in the next patch. This was actually the
+main motivation for this patch.
 
-and this task is already holding:
-00000000cf0baf5e (&(&ha->tgt.sess_lock)->rlock){-...}, at: tcm_qla2xxx_close_session+0x57/0xb0 [tcm_qla2xxx]
-which would create a new lock dependency:
- (&(&ha->tgt.sess_lock)->rlock){-...} -> (&(&k->k_lock)->rlock){+.+.}
+To avoid having W+X mappings, set them initially as RW (NX) and after
+they are set as RO set them as X as well. Setting them as executable is
+done as a separate step to avoid one core in which the old PTE is cached
+(hence writable), and another which sees the updated PTE (executable),
+which would break the W^X protection.
 
-but this new dependency connects a HARDIRQ-irq-safe lock:
- (&(&ha->tgt.sess_lock)->rlock){-...}
-
-... which became HARDIRQ-irq-safe at:
-  lock_acquire+0xe3/0x200
-  _raw_spin_lock_irqsave+0x3d/0x60
-  qla2x00_fcport_event_handler+0x1f3d/0x22b0 [qla2xxx]
-  qla2x00_async_login_sp_done+0x1dc/0x1f0 [qla2xxx]
-  qla24xx_process_response_queue+0xa37/0x10e0 [qla2xxx]
-  qla24xx_msix_rsp_q+0x79/0xf0 [qla2xxx]
-  __handle_irq_event_percpu+0x79/0x3c0
-  handle_irq_event_percpu+0x70/0xf0
-  handle_irq_event+0x5a/0x8b
-  handle_edge_irq+0x12c/0x310
-  handle_irq+0x192/0x20a
-  do_IRQ+0x73/0x160
-  ret_from_intr+0x0/0x1d
-  default_idle+0x23/0x1f0
-  arch_cpu_idle+0x15/0x20
-  default_idle_call+0x35/0x40
-  do_idle+0x2bb/0x2e0
-  cpu_startup_entry+0x1d/0x20
-  start_secondary+0x24d/0x2d0
-  secondary_startup_64+0xa4/0xb0
-
-to a HARDIRQ-irq-unsafe lock:
- (&(&k->k_lock)->rlock){+.+.}
-
-... which became HARDIRQ-irq-unsafe at:
-...
-  lock_acquire+0xe3/0x200
-  _raw_spin_lock+0x32/0x50
-  klist_add_tail+0x33/0xb0
-  device_add+0x7f4/0xb60
-  device_create_groups_vargs+0x11c/0x150
-  device_create_with_groups+0x89/0xb0
-  vtconsole_class_init+0xb2/0x124
-  do_one_initcall+0xc5/0x3ce
-  kernel_init_freeable+0x295/0x32e
-  kernel_init+0x11/0x11b
-  ret_from_fork+0x3a/0x50
-
-other info that might help us debug this:
-
- Possible interrupt unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(&(&k->k_lock)->rlock);
-                               local_irq_disable();
-                               lock(&(&ha->tgt.sess_lock)->rlock);
-                               lock(&(&k->k_lock)->rlock);
-  <Interrupt>
-    lock(&(&ha->tgt.sess_lock)->rlock);
-
- *** DEADLOCK ***
-
-4 locks held by rmdir/1478:
- #0: 000000002c7f1ba4 (sb_writers#10){.+.+}, at: mnt_want_write+0x32/0x70
- #1: 00000000c85eb147 (&default_group_class[depth - 1]#2/1){+.+.}, at: do_rmdir+0x217/0x2d0
- #2: 000000002b164d6f (&sb->s_type->i_mutex_key#13){++++}, at: vfs_rmdir+0x7e/0x1d0
- #3: 00000000cf0baf5e (&(&ha->tgt.sess_lock)->rlock){-...}, at: tcm_qla2xxx_close_session+0x57/0xb0 [tcm_qla2xxx]
-
-the dependencies between HARDIRQ-irq-safe lock and the holding lock:
--> (&(&ha->tgt.sess_lock)->rlock){-...} ops: 127 {
-   IN-HARDIRQ-W at:
-                    lock_acquire+0xe3/0x200
-                    _raw_spin_lock_irqsave+0x3d/0x60
-                    qla2x00_fcport_event_handler+0x1f3d/0x22b0 [qla2xxx]
-                    qla2x00_async_login_sp_done+0x1dc/0x1f0 [qla2xxx]
-                    qla24xx_process_response_queue+0xa37/0x10e0 [qla2xxx]
-                    qla24xx_msix_rsp_q+0x79/0xf0 [qla2xxx]
-                    __handle_irq_event_percpu+0x79/0x3c0
-                    handle_irq_event_percpu+0x70/0xf0
-                    handle_irq_event+0x5a/0x8b
-                    handle_edge_irq+0x12c/0x310
-                    handle_irq+0x192/0x20a
-                    do_IRQ+0x73/0x160
-                    ret_from_intr+0x0/0x1d
-                    default_idle+0x23/0x1f0
-                    arch_cpu_idle+0x15/0x20
-                    default_idle_call+0x35/0x40
-                    do_idle+0x2bb/0x2e0
-                    cpu_startup_entry+0x1d/0x20
-                    start_secondary+0x24d/0x2d0
-                    secondary_startup_64+0xa4/0xb0
-   INITIAL USE at:
-                   lock_acquire+0xe3/0x200
-                   _raw_spin_lock_irqsave+0x3d/0x60
-                   qla2x00_loop_resync+0xb3d/0x2690 [qla2xxx]
-                   qla2x00_do_dpc+0xcee/0xf30 [qla2xxx]
-                   kthread+0x1d2/0x1f0
-                   ret_from_fork+0x3a/0x50
- }
- ... key      at: [<ffffffffa125f700>] __key.62804+0x0/0xfffffffffff7e900 [qla2xxx]
- ... acquired at:
-   __lock_acquire+0x11ed/0x1b60
-   lock_acquire+0xe3/0x200
-   _raw_spin_lock_irqsave+0x3d/0x60
-   klist_next+0x43/0x1d0
-   device_for_each_child+0x96/0x110
-   scsi_target_block+0x3c/0x40 [scsi_mod]
-   fc_remote_port_delete+0xe7/0x1c0 [scsi_transport_fc]
-   qla2x00_mark_device_lost+0x4d3/0x500 [qla2xxx]
-   qlt_unreg_sess+0x104/0x2c0 [qla2xxx]
-   tcm_qla2xxx_close_session+0xa2/0xb0 [tcm_qla2xxx]
-   target_shutdown_sessions+0x17b/0x190 [target_core_mod]
-   core_tpg_del_initiator_node_acl+0xf3/0x1f0 [target_core_mod]
-   target_fabric_nacl_base_release+0x25/0x30 [target_core_mod]
-   config_item_release+0x9f/0x120 [configfs]
-   config_item_put+0x29/0x2b [configfs]
-   configfs_rmdir+0x3d2/0x520 [configfs]
-   vfs_rmdir+0xb3/0x1d0
-   do_rmdir+0x25c/0x2d0
-   __x64_sys_rmdir+0x24/0x30
-   do_syscall_64+0x77/0x220
-   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-the dependencies between the lock to be acquired
- and HARDIRQ-irq-unsafe lock:
--> (&(&k->k_lock)->rlock){+.+.} ops: 14568 {
-   HARDIRQ-ON-W at:
-                    lock_acquire+0xe3/0x200
-                    _raw_spin_lock+0x32/0x50
-                    klist_add_tail+0x33/0xb0
-                    device_add+0x7f4/0xb60
-                    device_create_groups_vargs+0x11c/0x150
-                    device_create_with_groups+0x89/0xb0
-                    vtconsole_class_init+0xb2/0x124
-                    do_one_initcall+0xc5/0x3ce
-                    kernel_init_freeable+0x295/0x32e
-                    kernel_init+0x11/0x11b
-                    ret_from_fork+0x3a/0x50
-   SOFTIRQ-ON-W at:
-                    lock_acquire+0xe3/0x200
-                    _raw_spin_lock+0x32/0x50
-                    klist_add_tail+0x33/0xb0
-                    device_add+0x7f4/0xb60
-                    device_create_groups_vargs+0x11c/0x150
-                    device_create_with_groups+0x89/0xb0
-                    vtconsole_class_init+0xb2/0x124
-                    do_one_initcall+0xc5/0x3ce
-                    kernel_init_freeable+0x295/0x32e
-                    kernel_init+0x11/0x11b
-                    ret_from_fork+0x3a/0x50
-   INITIAL USE at:
-                   lock_acquire+0xe3/0x200
-                   _raw_spin_lock+0x32/0x50
-                   klist_add_tail+0x33/0xb0
-                   device_add+0x7f4/0xb60
-                   device_create_groups_vargs+0x11c/0x150
-                   device_create_with_groups+0x89/0xb0
-                   vtconsole_class_init+0xb2/0x124
-                   do_one_initcall+0xc5/0x3ce
-                   kernel_init_freeable+0x295/0x32e
-                   kernel_init+0x11/0x11b
-                   ret_from_fork+0x3a/0x50
- }
- ... key      at: [<ffffffff83f3d900>] __key.15805+0x0/0x40
- ... acquired at:
-   __lock_acquire+0x11ed/0x1b60
-   lock_acquire+0xe3/0x200
-   _raw_spin_lock_irqsave+0x3d/0x60
-   klist_next+0x43/0x1d0
-   device_for_each_child+0x96/0x110
-   scsi_target_block+0x3c/0x40 [scsi_mod]
-   fc_remote_port_delete+0xe7/0x1c0 [scsi_transport_fc]
-   qla2x00_mark_device_lost+0x4d3/0x500 [qla2xxx]
-   qlt_unreg_sess+0x104/0x2c0 [qla2xxx]
-   tcm_qla2xxx_close_session+0xa2/0xb0 [tcm_qla2xxx]
-   target_shutdown_sessions+0x17b/0x190 [target_core_mod]
-   core_tpg_del_initiator_node_acl+0xf3/0x1f0 [target_core_mod]
-   target_fabric_nacl_base_release+0x25/0x30 [target_core_mod]
-   config_item_release+0x9f/0x120 [configfs]
-   config_item_put+0x29/0x2b [configfs]
-   configfs_rmdir+0x3d2/0x520 [configfs]
-   vfs_rmdir+0xb3/0x1d0
-   do_rmdir+0x25c/0x2d0
-   __x64_sys_rmdir+0x24/0x30
-   do_syscall_64+0x77/0x220
-   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-stack backtrace:
-CPU: 7 PID: 1478 Comm: rmdir Tainted: G        W         5.1.0-rc1-dbg+ #11
-Hardware name: Bochs Bochs, BIOS Bochs 01/01/2011
-Call Trace:
- dump_stack+0x86/0xca
- check_usage.cold.59+0x473/0x563
- check_prev_add.constprop.43+0x1f1/0x1170
- __lock_acquire+0x11ed/0x1b60
- lock_acquire+0xe3/0x200
- _raw_spin_lock_irqsave+0x3d/0x60
- klist_next+0x43/0x1d0
- device_for_each_child+0x96/0x110
- scsi_target_block+0x3c/0x40 [scsi_mod]
- fc_remote_port_delete+0xe7/0x1c0 [scsi_transport_fc]
- qla2x00_mark_device_lost+0x4d3/0x500 [qla2xxx]
- qlt_unreg_sess+0x104/0x2c0 [qla2xxx]
- tcm_qla2xxx_close_session+0xa2/0xb0 [tcm_qla2xxx]
- target_shutdown_sessions+0x17b/0x190 [target_core_mod]
- core_tpg_del_initiator_node_acl+0xf3/0x1f0 [target_core_mod]
- target_fabric_nacl_base_release+0x25/0x30 [target_core_mod]
- config_item_release+0x9f/0x120 [configfs]
- config_item_put+0x29/0x2b [configfs]
- configfs_rmdir+0x3d2/0x520 [configfs]
- vfs_rmdir+0xb3/0x1d0
- do_rmdir+0x25c/0x2d0
- __x64_sys_rmdir+0x24/0x30
- do_syscall_64+0x77/0x220
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Cc: Himanshu Madhani <hmadhani@marvell.com>
-Cc: Giridhar Malavali <gmalavali@marvell.com>
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Acked-by: Himanshu Madhani <hmadhani@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Suggested-by: Thomas Gleixner <tglx@linutronix.de>
+Suggested-by: Andy Lutomirski <luto@amacapital.net>
+Signed-off-by: Nadav Amit <namit@vmware.com>
+Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: <akpm@linux-foundation.org>
+Cc: <ard.biesheuvel@linaro.org>
+Cc: <deneen.t.dock@intel.com>
+Cc: <kernel-hardening@lists.openwall.com>
+Cc: <kristen@linux.intel.com>
+Cc: <linux_dti@icloud.com>
+Cc: <will.deacon@arm.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@intel.com>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Jessica Yu <jeyu@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Rik van Riel <riel@surriel.com>
+Link: https://lkml.kernel.org/r/20190426001143.4983-12-namit@vmware.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/tcm_qla2xxx.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/x86/kernel/alternative.c | 28 +++++++++++++++++++++-------
+ arch/x86/kernel/module.c      |  2 +-
+ include/linux/filter.h        |  1 +
+ kernel/module.c               |  5 +++++
+ 4 files changed, 28 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/scsi/qla2xxx/tcm_qla2xxx.c b/drivers/scsi/qla2xxx/tcm_qla2xxx.c
-index 7ef549903124d..f425a9e5056bf 100644
---- a/drivers/scsi/qla2xxx/tcm_qla2xxx.c
-+++ b/drivers/scsi/qla2xxx/tcm_qla2xxx.c
-@@ -365,8 +365,9 @@ static void tcm_qla2xxx_close_session(struct se_session *se_sess)
- 
- 	spin_lock_irqsave(&vha->hw->tgt.sess_lock, flags);
- 	target_sess_cmd_list_set_waiting(se_sess);
--	tcm_qla2xxx_put_sess(sess);
- 	spin_unlock_irqrestore(&vha->hw->tgt.sess_lock, flags);
+diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+index b9d5e7c9ef43e..918a23704c0c5 100644
+--- a/arch/x86/kernel/alternative.c
++++ b/arch/x86/kernel/alternative.c
+@@ -662,15 +662,29 @@ void __init alternative_instructions(void)
+  * handlers seeing an inconsistent instruction while you patch.
+  */
+ void *__init_or_module text_poke_early(void *addr, const void *opcode,
+-					      size_t len)
++				       size_t len)
+ {
+ 	unsigned long flags;
+-	local_irq_save(flags);
+-	memcpy(addr, opcode, len);
+-	local_irq_restore(flags);
+-	sync_core();
+-	/* Could also do a CLFLUSH here to speed up CPU recovery; but
+-	   that causes hangs on some VIA CPUs. */
 +
-+	tcm_qla2xxx_put_sess(sess);
++	if (boot_cpu_has(X86_FEATURE_NX) &&
++	    is_module_text_address((unsigned long)addr)) {
++		/*
++		 * Modules text is marked initially as non-executable, so the
++		 * code cannot be running and speculative code-fetches are
++		 * prevented. Just change the code.
++		 */
++		memcpy(addr, opcode, len);
++	} else {
++		local_irq_save(flags);
++		memcpy(addr, opcode, len);
++		local_irq_restore(flags);
++		sync_core();
++
++		/*
++		 * Could also do a CLFLUSH here to speed up CPU recovery; but
++		 * that causes hangs on some VIA CPUs.
++		 */
++	}
+ 	return addr;
  }
  
- static u32 tcm_qla2xxx_sess_get_index(struct se_session *se_sess)
+diff --git a/arch/x86/kernel/module.c b/arch/x86/kernel/module.c
+index f58336af095c9..6645f123419c6 100644
+--- a/arch/x86/kernel/module.c
++++ b/arch/x86/kernel/module.c
+@@ -87,7 +87,7 @@ void *module_alloc(unsigned long size)
+ 	p = __vmalloc_node_range(size, MODULE_ALIGN,
+ 				    MODULES_VADDR + get_module_load_offset(),
+ 				    MODULES_END, GFP_KERNEL,
+-				    PAGE_KERNEL_EXEC, 0, NUMA_NO_NODE,
++				    PAGE_KERNEL, 0, NUMA_NO_NODE,
+ 				    __builtin_return_address(0));
+ 	if (p && (kasan_module_alloc(p, size) < 0)) {
+ 		vfree(p);
+diff --git a/include/linux/filter.h b/include/linux/filter.h
+index 037610845892b..6afc2e2d5aeda 100644
+--- a/include/linux/filter.h
++++ b/include/linux/filter.h
+@@ -684,6 +684,7 @@ static inline void bpf_prog_unlock_ro(struct bpf_prog *fp)
+ static inline void bpf_jit_binary_lock_ro(struct bpf_binary_header *hdr)
+ {
+ 	set_memory_ro((unsigned long)hdr, hdr->pages);
++	set_memory_x((unsigned long)hdr, hdr->pages);
+ }
+ 
+ static inline void bpf_jit_binary_unlock_ro(struct bpf_binary_header *hdr)
+diff --git a/kernel/module.c b/kernel/module.c
+index 38bf28b5cc202..f797c6ace7121 100644
+--- a/kernel/module.c
++++ b/kernel/module.c
+@@ -1949,8 +1949,13 @@ void module_enable_ro(const struct module *mod, bool after_init)
+ 		return;
+ 
+ 	frob_text(&mod->core_layout, set_memory_ro);
++	frob_text(&mod->core_layout, set_memory_x);
++
+ 	frob_rodata(&mod->core_layout, set_memory_ro);
++
+ 	frob_text(&mod->init_layout, set_memory_ro);
++	frob_text(&mod->init_layout, set_memory_x);
++
+ 	frob_rodata(&mod->init_layout, set_memory_ro);
+ 
+ 	if (after_init)
 -- 
 2.20.1
 
