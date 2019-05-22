@@ -2,99 +2,121 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C49F9C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 12:39:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31103C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 12:40:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9812421773
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 12:39:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bJ0iQKw1"
+	by mail.kernel.org (Postfix) with ESMTP id 0E66B21773
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 12:40:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729340AbfEVMjg (ORCPT
+        id S1729364AbfEVMkf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 08:39:36 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:38681 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728438AbfEVMjg (ORCPT
+        Wed, 22 May 2019 08:40:35 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:58277 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728438AbfEVMkf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 08:39:36 -0400
-Received: by mail-pf1-f196.google.com with SMTP id b76so1271638pfb.5
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 05:39:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=dc7HIox1GsMuz4SBq4z5Y4Rf5G0I0yZOZzYD3qgtYkk=;
-        b=bJ0iQKw1WpVz5o+fAWQbVQTRvyqZj/6Mirn0lL9A+ptZB/CHbOT2FixTnj4fc/NfrK
-         0JAhbnGR9zUz4Fo1hnQ+GrtTo7OEfzVNY36Fwan0FSE6Kc3c535Ny13OG4ZKPC2RJhKW
-         UhEpSp+NxC41s4Y9m+5Re0Ain+tENvUL6HfhP44K/gZiahcp94gVoH49moHpv14ffiQM
-         KX+A99qSVDYJGv1m0/JaC9ztwdqkmN6cLO87sVlG4hTTlulR1f4k8ouVCMxMeyoT/AaL
-         ZH4ckKIkO96lt0dRYoNO2AfOLRCy2qHasKE5gTdRrjIm/1QLfnFIaYLlZCA7jZAJ1O0r
-         oyOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=dc7HIox1GsMuz4SBq4z5Y4Rf5G0I0yZOZzYD3qgtYkk=;
-        b=F1zDPHUdiJlrDvb/eB9RyZ/UdnmIftaQFdIZdLHnQK7FrFpaEMFIvr6atFuhbM96nd
-         4f8P1X4UEPNCGfvgNc0JBJbVw3nX9uJRN+Vo1WRuqsk5dNj705WBVn4gTzh8uvi0XHd/
-         M/PziBxfBOIt1IDQDN1UfvoEoroPtCYJEEvTu4bIu9buym7/cY9sWRZBgWAotUlX//U5
-         /HijrmRco1FKBJOA5cErMj0cEe7M//ZAKUQyXZCN74axkFUZ5g6czqbTl3YKFudFsGap
-         v/1oWMUAs66lAxPYJO/WuzjRVwIT5WCwqca9pdrIyDrklDU8OnpB1hHHFgO2q/lBWin7
-         qmHQ==
-X-Gm-Message-State: APjAAAVPm6ZLbps3AjOtGLJOxewUqZZB0cdcACPyoJT34TWX3cra2FBX
-        M/Jw+KKZSj+3flyGOrkxlHxhgRYsO/2TyA==
-X-Google-Smtp-Source: APXvYqxqnL4m4W21i3wMRJGnCrMhpbAjue2VzlAFhr3P/pr64Je+zpBUV1ERw25chi2BkyvOo31N9w==
-X-Received: by 2002:a62:164f:: with SMTP id 76mr96965718pfw.172.1558528775567;
-        Wed, 22 May 2019 05:39:35 -0700 (PDT)
-Received: from zhanggen-UX430UQ ([66.42.35.75])
-        by smtp.gmail.com with ESMTPSA id p16sm7830380pff.35.2019.05.22.05.39.30
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 22 May 2019 05:39:35 -0700 (PDT)
-Date:   Wed, 22 May 2019 20:39:20 +0800
-From:   Gen Zhang <blackgod016574@gmail.com>
-To:     sean@poorly.run
-Cc:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
-Subject: [PATCH] drm_edid-load: Fix a missing-check bug in
- drivers/gpu/drm/drm_edid_load.c
-Message-ID: <20190522123920.GB6772@zhanggen-UX430UQ>
+        Wed, 22 May 2019 08:40:35 -0400
+Received: from fsav301.sakura.ne.jp (fsav301.sakura.ne.jp [153.120.85.132])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x4MCct1g079574;
+        Wed, 22 May 2019 21:38:55 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav301.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav301.sakura.ne.jp);
+ Wed, 22 May 2019 21:38:55 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav301.sakura.ne.jp)
+Received: from [192.168.1.8] (softbank126012062002.bbtec.net [126.12.62.2])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x4MCclHk079384
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
+        Wed, 22 May 2019 21:38:54 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Subject: Re: [PATCH] kernel/hung_task.c: Monitor killed tasks.
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Liu Chuansheng <chuansheng.liu@intel.com>,
+        Valdis Kletnieks <valdis.kletnieks@vt.edu>,
+        linux-kernel@vger.kernel.org, Dmitry Vyukov <dvyukov@google.com>
+References: <1557745331-10367-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
+ <20190515105540.vyzh6n62rqi5imqv@pathway.suse.cz>
+ <ee7501c6-d996-1684-1652-f0f838ba69c3@i-love.sakura.ne.jp>
+ <20190516115758.6v7oitg3vbkfhh5j@pathway.suse.cz>
+ <a3d9de97-46e8-aa43-1743-ebf66b434830@i-love.sakura.ne.jp>
+Message-ID: <a6b6a5ef-c65c-6999-2bc1-7aaf9dd19fe8@i-love.sakura.ne.jp>
+Date:   Wed, 22 May 2019 21:38:45 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <a3d9de97-46e8-aa43-1743-ebf66b434830@i-love.sakura.ne.jp>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In drm_load_edid_firmware(), fwstr is allocated by kstrdup(). And fwstr
-is dereferenced in the following codes. However, memory allocation 
-functions such as kstrdup() may fail and returns NULL. Dereferencing 
-this null pointer may cause the kernel go wrong. Thus we should check 
-this kstrdup() operation.
-Further, if kstrdup() returns NULL, we should return ERR_PTR(-ENOMEM) to
-the caller site.
+Hello, Stephen.
 
-Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
+I want to send debug printk() patches to linux-next.git. Petr Mladek
+is suggesting me to have a git tree for debug printk() patches.
+But it seems that there is "git quiltimport" command, and I prefer
+"subversion + quilt", and I don't have trees for sending "git pull"
+requests. Therefore, just ignoring "git quiltimport" failure is fine.
+What do you think?
 
----
-diff --git a/drivers/gpu/drm/drm_edid_load.c b/drivers/gpu/drm/drm_edid_load.c
-index a491509..a0e107a 100644
---- a/drivers/gpu/drm/drm_edid_load.c
-+++ b/drivers/gpu/drm/drm_edid_load.c
-@@ -290,6 +290,8 @@ struct edid *drm_load_edid_firmware(struct drm_connector *connector)
- 	 * the last one found one as a fallback.
- 	 */
- 	fwstr = kstrdup(edid_firmware, GFP_KERNEL);
-+	if (!fwstr)
-+		return ERR_PTR(-ENOMEM);
- 	edidstr = fwstr;
- 
- 	while ((edidname = strsep(&edidstr, ","))) {
----
+On 2019/05/16 21:38, Tetsuo Handa wrote:
+> On 2019/05/16 20:57, Petr Mladek wrote:
+>> CCed Stephen to discuss linux-next related question at the bottom
+>> of the mail.
+>>
+>> On Thu 2019-05-16 17:19:12, Tetsuo Handa wrote:
+>>> On 2019/05/15 19:55, Petr Mladek wrote:
+>>> But in the context of syzbot's testing where there are only 2 CPUs
+>>> in the target VM (which means that only small number of threads and
+>>> not so much memory) and threads get SIGKILL after 5 seconds from fork(),
+>>> being unable to reach do_exit() within 10 seconds is likely a sign of
+>>> something went wrong. For example, 6 out of 7 trials of a reproducer for
+>>> https://syzkaller.appspot.com/bug?id=835a0b9e75b14b55112661cbc61ca8b8f0edf767
+>>> resulted in "no output from test machine" rather than "task hung".
+>>> This patch is revealing that such killed threads are failing to reach
+>>> do_exit() because they are trapped at unkillable retry loop due to a
+>>> race bug.
+>>>
+>>> Therefore, I would like to try this patch in linux-next.git for feasibility
+>>> testing whether this patch helps finding more bugs and reproducers for such
+>>> bugs, by bringing "unable to terminate threads" reports out of "no output from
+>>> test machine" reports. We can add sysctl settings before sending to linux.git.
+>>
+>> In this case, the watchdog should get enabled on with
+>> CONFIG_DEBUG_AID_FOR_SYZBOT
+> 
+> Since "[PATCH] printk: Monitor change of console loglevel." is one time (only
+> needed until we find the reason of silence), testing on only linux-next.git
+> is sufficient and it gets enabled on with CONFIG_DEBUG_AID_FOR_SYZBOT.
+> 
+>>
+>> Also we should ask/inform Stephen about this. I am not sure
+>> if he is willing to resolve eventual conflicts for these
+>> syzboot-specific patches that are not upstream candidates.
+>>
+>> A solution might be to create sysbot-specific for-next branch
+>> that Stephen might simply ignore when there are conflicts.
+>> And you would be responsible for updating it.
+> 
+> syzbot tests not only linux-next.git but also various trees, and tests
+> attempted depends on target git tree. Therefore, apart from whether we
+> can introduce a kernel config option for fuzzing testing,
+> "[PATCH] kernel/hung_task.c: Monitor killed tasks." is expected to be
+> in linux.git. This patch will eventually become upstream candidate.
+> 
+
