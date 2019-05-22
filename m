@@ -2,129 +2,142 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FB72C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:16:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C56DC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:18:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EBB021473
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:16:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2492A21019
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:18:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pwyuDal8"
+	dkim=pass (4096-bit key) header.d=kolabnow.com header.i=@kolabnow.com header.b="Ug8tp6XK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730013AbfEVUQ3 (ORCPT
+        id S1729878AbfEVUSa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 16:16:29 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:39638 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729632AbfEVUQ3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 16:16:29 -0400
-Received: by mail-pl1-f196.google.com with SMTP id g9so1595673plm.6;
-        Wed, 22 May 2019 13:16:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=LFtb1aLHAoniHgO1XVMl+H7og93sXsDQP7kXz4xastQ=;
-        b=pwyuDal8T9u/cMqXs0chOoAJnigbdDXf4erfNfREXXtF8b+s/I+NI1yQrJ5h2YE2x3
-         J13plfkrlSBxLPtAP73cIifjo2DjFZlHFafe9g0E9WWP4fjLgyRuHTbNzrr4mWKQpXEr
-         O6NtOiEswNSbAzDyXKMO70at36tfMUOW/NUs0CNQIOf3hpolRdnl5VsCx0pZY8TCq7yd
-         J9sHu7nb7mMwIgJYSQYczgarQ85hRQstISHy2Rt+Oe4Fx3U1j74ULR8G0QYiCWemP8+o
-         AO2d3JYkhGVQ3jO27y0Lerk/ptCZ3AafxTBUOhjrfOJzKFs9V/vfrjOnUgHpfZU5Elts
-         X1VQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=LFtb1aLHAoniHgO1XVMl+H7og93sXsDQP7kXz4xastQ=;
-        b=o8/+fhG15A95IoOCRkaqW+lFGiGwVx7+Gc3g9hb+SV1nq2HQ6bGL758ri/C4aOcrpP
-         NgKtdCiVtJsHy9uoK0KrgNDxaI+I11x1YdEr3ThMqIio+r1Ar2uNgPXitzsW1JLArJt/
-         GQWuoFPtjkvE1UTng/nmb6wpMF/xMBYSiGESTH9zJGey2fv5N5/kATw5OvF+DlTeyDIb
-         PpYBhnxOT520MEb/Tnsr+HyBhaJc+7OE7DmrczKDvd5a+p8XwxUe/6xGd4PgQpbYwJBg
-         uWVFnCa86a3kK4LxHx8t2aNkZZdQf4Le76Hjz+hePmIeh/hok+arL6onJ/Pn6eUdvFi5
-         9sig==
-X-Gm-Message-State: APjAAAUl0jwR4T5t1i7qYXG21cLOLcSGrMbA+XpxnA6GRi/MVeshxy55
-        ccqYK9RAOIdACoM7EgdHEF8=
-X-Google-Smtp-Source: APXvYqx1cWhmgVEyuS/Eh6JMeDaGtMkspvblFEsUjIrH+1a4OPaEA/RAGpenifl2QKB8sclxRyN+DA==
-X-Received: by 2002:a17:902:ac90:: with SMTP id h16mr29233951plr.162.1558556188297;
-        Wed, 22 May 2019 13:16:28 -0700 (PDT)
-Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:180::6565])
-        by smtp.gmail.com with ESMTPSA id q5sm30530958pfb.51.2019.05.22.13.16.26
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 22 May 2019 13:16:27 -0700 (PDT)
-Date:   Wed, 22 May 2019 13:16:25 -0700
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     Kris Van Hees <kris.van.hees@oracle.com>
-Cc:     netdev@vger.kernel.org, bpf@vger.kernel.org,
-        dtrace-devel@oss.oracle.com, linux-kernel@vger.kernel.org,
-        rostedt@goodmis.org, mhiramat@kernel.org, acme@kernel.org,
-        ast@kernel.org, daniel@iogearbox.net, peterz@infradead.org
-Subject: Re: [RFC PATCH 00/11] bpf, trace, dtrace: DTrace BPF program type
- implementation and sample use
-Message-ID: <20190522201624.eza3pe2v55sn2t2w@ast-mbp.dhcp.thefacebook.com>
-References: <201905202347.x4KNl0cs030532@aserv0121.oracle.com>
- <20190521175617.ipry6ue7o24a2e6n@ast-mbp.dhcp.thefacebook.com>
- <20190521184137.GH2422@oracle.com>
- <20190521205533.evfszcjvdouby7vp@ast-mbp.dhcp.thefacebook.com>
- <20190521213648.GK2422@oracle.com>
- <20190521232618.xyo6w3e6nkwu3h5v@ast-mbp.dhcp.thefacebook.com>
- <20190522041253.GM2422@oracle.com>
+        Wed, 22 May 2019 16:18:30 -0400
+Received: from mx.kolabnow.com ([95.128.36.41]:35148 "EHLO mx.kolabnow.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729003AbfEVUS3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 16:18:29 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by ext-mx-out002.mykolab.com (Postfix) with ESMTP id 2CE96A30;
+        Wed, 22 May 2019 22:18:27 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kolabnow.com; h=
+        content-type:content-type:content-transfer-encoding:mime-version
+        :references:in-reply-to:message-id:date:date:subject:subject
+        :from:from:received:received:received; s=dkim20160331; t=
+        1558556305; x=1560370706; bh=nuiAT7a+WubQ1QBLbWqHmT5WyMcVembEwR6
+        mVvVMEiY=; b=Ug8tp6XKTpZa5LJXo7fm0ycgXuCPIDeLmjkirEb7bc3BHkVcv5j
+        DxAepKV6LWi/SZl6nec2N5/F3s+8uRgecJVQQzIwG8cueywEP/HnAnKFDOtHmAkc
+        vol3RzPQBr+o+9oONkj3ghVyuWNRhkRZg+5gaILM/JFII44Y83qtDYI70Z7Zb5wj
+        f/6xqoF0WhmidWnNA8cId8/2+YOqN2Lis0Qg7EQFp63vViF4/js2DcYM2IEJS2uJ
+        06efi7XWICVfjlwRADEEdt/pD+ZLNNVOr+deiKlDQTMhIPVxB8prz+xJ3KWpWezH
+        tmRxSxGHECEMwyM/qXrSL0MlR0Bp7QSd4ww0Ci9KggYLcT/BuPaVWS0NUI9Jul8r
+        i28OAj8+2FSa1/6qClljNA9eVDszn4hQGTOF5psjPhcBtNtS0DwC+Rlw5wcRlKpM
+        EyBhu58u11p7uz5bChSS2mdRSJO+rCPue18lgNamDUvISVJqHgKqXg1IcrX1wDXb
+        i8mnKOgnUt6hspj4L/5jpUWsYOIcQmLWs6EbL8lelrkjL5h0P8fffnoE7Zaf39oT
+        mtR7IymePL4/o7H7UOMWNETe2O9v5PJ2zdYkkUB5MnGsFNz7sykeS/kCcK4iQJgE
+        uQtp9ew3Dht6FGK5+66T9KSbMB7LdhbcGfTLGVMLL9IHmctLIAizL7F8=
+X-Virus-Scanned: amavisd-new at mykolab.com
+Received: from mx.kolabnow.com ([127.0.0.1])
+        by localhost (ext-mx-out002.mykolab.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 7BaCIysCNlh7; Wed, 22 May 2019 22:18:25 +0200 (CEST)
+Received: from int-mx003.mykolab.com (unknown [10.9.13.3])
+        by ext-mx-out002.mykolab.com (Postfix) with ESMTPS id 3A02B34B;
+        Wed, 22 May 2019 22:18:25 +0200 (CEST)
+Received: from ext-subm003.mykolab.com (unknown [10.9.6.3])
+        by int-mx003.mykolab.com (Postfix) with ESMTPS id C22B13D16;
+        Wed, 22 May 2019 22:18:24 +0200 (CEST)
+From:   Federico Vaga <federico.vaga@vaga.pv.it>
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
+Subject: Re: [PATCH 00/10] Fix broken documentation references at v5.2-rc1
+Date:   Wed, 22 May 2019 22:18:23 +0200
+Message-ID: <4613410.CTphFSq3dd@harkonnen>
+In-Reply-To: <20190521212600.39bc341c@coco.lan>
+References: <cover.1558362030.git.mchehab+samsung@kernel.org> <51951662.QppCrsbGrr@harkonnen> <20190521212600.39bc341c@coco.lan>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190522041253.GM2422@oracle.com>
-User-Agent: NeoMutt/20180223
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 22, 2019 at 12:12:53AM -0400, Kris Van Hees wrote:
+On Wednesday, May 22, 2019 2:26:00 AM CEST Mauro Carvalho Chehab wrote:
+> Hi Frederico,
 > 
-> Could you elaborate on why you believe my patches are not adding generic
-> features?  I can certainly agree that the DTrace-specific portions are less
-> generic (although they are certainly available for anyone to use), but I
-> don't quite understand why the new features are deemed non-generic and why
-> you believe no one else can use this?
+> Em Wed, 22 May 2019 00:54:48 +0200
+> 
+> Federico Vaga <federico.vaga@vaga.pv.it> escreveu:
+> > On Monday, May 20, 2019 4:47:29 PM CEST Mauro Carvalho Chehab wrote:
+> > > There are several broken Documentation/* references within the Kernel
+> > > tree. There are some reasons for several of them:
+> > > 
+> > > 1. The acpi and x86 documentation files were renamed, but the
+> > > 
+> > >    references weren't updated;
+> > > 
+> > > 2. The DT files have been converted to JSON format, causing them
+> > > 
+> > >    to be renamed;
+> > > 
+> > > 3. Translated files point to future translation work still pending merge
+> > > 
+> > >    or require some action from someone that it is fluent at the
+> > >    translated language;
+> > 
+> > Hi Mauro
+> 
+> My main goal with this patchset is to get as close as possible to zero
+> warnings, as this helps me on rebasing a documentation patch series
+> I wrote with renames hundreds of file from .txt to .rst.
+> 
+> In the case of (3), the scripts/documentation-file-ref-check was unable to
+> find some files pointed by Italian and Chinese translations. So, after
+> this series, it will keep pointing for broken links there.
+> 
+> > I am not sure to get what you mean in terms of actions but I think you are
+> > referring to the "empty" files I added in the Italian translations. I
+> > added
+> > those files to avoid broken links; the alternative would have been to not
+> > write those links or to point directly to the main document, but in both
+> > cases it easy to forget to update them later.
+> > I chose to have links to "empty" files so that the document does
+> > not need to be updated later.
+> > 
+> > If you are not referring to those files than I am not understanding, can
+> > you point to a clear example?
+> 
+> What I meant is that I can barely read Italian and have no glue on
+> Chinese. So, I can't really address those properly :-)
+> So, basically, it should be up to someone else fluent on such
+> languages to address those.
+> 
+> Btw, I understand why you pointed to some non-existing files:
+> translating the Kernel's documents takes a lot of time[1].
 
-And once again your statement above contradicts your own patches.
-The patch 2 adds new prog type BPF_PROG_TYPE_DTRACE and the rest of the patches
-are tying everything to it.
-This approach contradicts bpf philosophy of being generic execution engine
-and not favoriting one program type vs another.
+More than non-existing the file *should* be there, only that it says the 
+translation is pending. So the tool should find the file without complaining.
 
-I have nothing against dtrace language and dtrace scripts.
-Go ahead and compile them into bpf.
-All patches to improve bpf infrastructure are very welcomed.
+I did not pay enough attention; I was not aware about the existence of that 
+tool. Now that I filled my ignorance with a bit of knowledge I will use to fix 
+those documents. Thank you
 
-In particular you brought up a good point that there is a use case
-for sharing a piece of bpf program between kprobe and tracepoint events.
-The better way to do that is via bpf2bpf call.
-Example:
-void bpf_subprog(arbitrary args)
-{
-}
+> 
+> [1] If I was doing a translation, I would probably have opted to keep
+> pointing to the English doc and have a script to point me links to
+> non-translated docs, but your way also works. The only drawback is that
+> the script will keep pinpointing to translations with broken links,
+> while the translation is not complete.
+> 
+> Thanks,
+> Mauro
 
-SEC("kprobe/__set_task_comm")
-int bpf_prog_kprobe(struct pt_regs *ctx)
-{
-  bpf_subprog(...);
-}
 
-SEC("tracepoint/sched/sched_switch")
-int bpf_prog_tracepoint(struct sched_switch_args *ctx)
-{
-  bpf_subprog(...);
-}
 
-Such configuration is not supported by the verifier yet.
-We've been discussing it for some time, but no work has started,
-since there was no concrete use case.
-If you can work on adding support for it everyone will benefit.
-
-Could you please consider doing that as a step forward?
 
