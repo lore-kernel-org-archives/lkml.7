@@ -2,124 +2,130 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 583B7C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 16:04:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA030C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 16:04:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A14020879
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 16:04:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WN0qKKvC"
+	by mail.kernel.org (Postfix) with ESMTP id 9FDDE20879
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 16:04:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558541061;
+	bh=KL0xSRRx52pYQmOhsgghRmXFU/B5bb60ts9K/5Isplo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=q06FZJwJyr6gtj77nLTIKekfEe3D7xr4xmeDQV68RtcIg1H2mw79w4jvKVUlWzN28
+	 TP4bioCTx6mDVsYl/Led3FMH6UZqm3C1k0sDIxLHtOpcQluI/A8rWwlS8MxBQMNs8D
+	 4k8IO1I93AbbTfCcmKGOIulm6R2tUaV1BB4K7O0c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729636AbfEVQET (ORCPT
+        id S1729806AbfEVQEU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 12:04:19 -0400
-Received: from mail-it1-f196.google.com ([209.85.166.196]:36161 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727975AbfEVQES (ORCPT
+        Wed, 22 May 2019 12:04:20 -0400
+Received: from casper.infradead.org ([85.118.1.10]:54394 "EHLO
+        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728466AbfEVQET (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 12:04:18 -0400
-Received: by mail-it1-f196.google.com with SMTP id e184so3919189ite.1
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 09:04:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8u66aTMlghlwE0R/0etcbv7od+O8arnRDTZloXPsbsI=;
-        b=WN0qKKvCMEQ9wXLVklzYdIpUzxaAmYwFU+TrKNAFkVJl5ObnUU8T/c9+9YMC5VfEvX
-         HU6clxrMEMnKj9wWiDULcYlp/Q1DRQQHQkqVyCuXDNzcxVNdMO8YJFVdAxCsDIik7DFb
-         M5bZJCaPxd8MZYa5iidi837/o3QdNZwdod19hffBtA6fnC0CsSH3bh0WFLm6LXkbd27M
-         9J1yGmXtYfDfFvnSDwMfkkVvsCAA7OBfnl+9qojPV9aDQfs1WsjMQ1vbcAr0f2iTN3/L
-         JaJ/eJbhBlAMe7lEdqdhASKuvr+gvVKPjQoqiDfgT8Z7IghGyqwtv09WGbO3vd7+IYJI
-         00qQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8u66aTMlghlwE0R/0etcbv7od+O8arnRDTZloXPsbsI=;
-        b=OXiKPeWDCAlFBzFtgaWGn2OWfHMPXV+uklaliVYEpvgTlTta7WcZjMzPVRpPA9FStV
-         f/AksbyA2HfUjh54HYqwADCUhhAlREhfObA6LIjJBXL1OCsDaRqsm5kda4y3oPtfHLCw
-         iNb2KXMQy28o4vw3o11+nP/ylRGGHwkIbuW2myxQ3FZYIKrlOojzP6zy6gFYeIyvl04k
-         glFrgpHV1QDQ/Fiqk4Fb3jgzJBOZt0Souc9h6XdgrXV/s1bzh9T5FXWl1uwKaWvyfHSv
-         TG0rbrKGmz/akLMXr6qcYgBnrXMnkZH11RmK2fzMM54fZ+QM9Rv1WrnhkYVWiITkqqF2
-         Nk5A==
-X-Gm-Message-State: APjAAAVMnpgY7pDvS18fDnhP/MIxGuB0A/VBJd27i37zqPxiW6wvzpBN
-        j4WjX/kP+jl/AwlOlBoKpVlfncWlkUHlRZ6HlQvJgA==
-X-Google-Smtp-Source: APXvYqwJUUu35Pd7vmXvXZr8Kh7nnijKYTNRH7jrot/Aug4RrV8GKxgBBDQAiqv0AjIzGf7hDF2fv9L9qnCa2P+EIe8=
-X-Received: by 2002:a24:c204:: with SMTP id i4mr9004381itg.83.1558541057519;
- Wed, 22 May 2019 09:04:17 -0700 (PDT)
+        Wed, 22 May 2019 12:04:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=QRMlBTzg/wPc6H30GKyU4T0Dz4IABEqiLo1Mo/8ui3A=; b=I1sjJdFshzjkinDQ/kTE2Doovw
+        2g2XuMiGvdkQD/R++KBuVA2RXOINTa8QvuD9JW4tV4eCAk2on8Ow78/4wcfBKPBYJP+oenBPIw5Zm
+        tWVPEkEWHMYDJLBrSR1E6OAsPjVNDnOG0WH+UDmgnqBqaSxuB9yrOnz0p7WiRSW1bwqQVqV3qvUcQ
+        jQJ7C2YraRVyH5r2ZrdLi62xVOsAR7Gu4Z/4giZDRKa1Elrx0IabUixnsq95DCdcafysFEicWZMz5
+        GpaVjxK9yOIXIKHTuY0wEKeBvegAlx8rYSMs0OCje7dFr2ZX8lXYH4ytGAdJWHULjoBnWm6vRUqcL
+        Pw77RCtA==;
+Received: from [179.182.168.126] (helo=coco.lan)
+        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hTTiv-0002U0-Pe; Wed, 22 May 2019 16:04:14 +0000
+Date:   Wed, 22 May 2019 13:04:08 -0300
+From:   Mauro Carvalho Chehab <mchehab@kernel.org>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Markus Heiser <markus.heiser@darmarit.de>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC 0/2] docs: Deal with some Sphinx deprecation
+ warnings
+Message-ID: <20190522130408.5d8258de@coco.lan>
+In-Reply-To: <20190522094559.5ed8021e@lwn.net>
+References: <20190521211714.1395-1-corbet@lwn.net>
+        <87d0kb7xf6.fsf@intel.com>
+        <20190522071909.050bb227@coco.lan>
+        <39b12927-9bf9-a304-4108-8f471a204f89@darmarit.de>
+        <20190522094559.5ed8021e@lwn.net>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-References: <CAPhKKr_uVTFAzne0QkZFUGfb8RxQdVFx41G9kXRY7sFN-=pZ6w@mail.gmail.com>
- <199564879.15267174.1556199472004.JavaMail.zimbra@redhat.com>
- <CA+bK7J7tHOkz5KMVHpaV1x_dy6X6A7gtxcBYXJO8jj98qvWETw@mail.gmail.com>
- <20190516003915.GT11972@sasha-vm> <ECADFF3FD767C149AD96A924E7EA6EAF9771A6DF@USCULXMSG01.am.sony.com>
-In-Reply-To: <ECADFF3FD767C149AD96A924E7EA6EAF9771A6DF@USCULXMSG01.am.sony.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Wed, 22 May 2019 18:04:05 +0200
-Message-ID: <CACT4Y+aq0eu5gG=Xnc6nDkQoH+_Hh=q3iiivq4nOowG8ncG+Cw@mail.gmail.com>
-Subject: Re: Linux Testing Microconference at LPC
-To:     Tim Bird <Tim.Bird@sony.com>
-Cc:     sashal@kernel.org, Tim Bird <tbird20d@gmail.com>,
-        Veronika Kabatova <vkabatov@redhat.com>,
-        Dhaval Giani <dhaval.giani@gmail.com>,
-        Sasha Levin <alexander.levin@microsoft.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        gustavo padovan <gustavo.padovan@collabora.co.uk>,
-        knut omang <knut.omang@oracle.com>,
-        Eliska Slobodova <eslobodo@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 16, 2019 at 2:51 AM <Tim.Bird@sony.com> wrote:
-> > -----Original Message-----
-> > From: Sasha Levin
-> >
-> > On Fri, Apr 26, 2019 at 02:02:53PM -0700, Tim Bird wrote:
-> ...
-> > >
-> > >With regards to the Testing microconference at Plumbers, I would like
-> > >to do a presentation on the current status of test standards and test
-> > >framework interoperability.  We recently had some good meetings
-> > >between the LAVA and Fuego people at Linaro Connect
-> > >on this topic.
-> >
-> > Hi Tim,
-> >
-> > Sorry for the delayed response, this mail got marked as read as a result
-> > of fat fingers :(
-> >
-> > I'd want to avoid having an 'overview' talk as part of the MC. We have
-> > quite a few discussion topics this year and in the spirit of LPC I'd
-> > prefer to avoid presentations.
->
-> OK.  Sounds good.
->
-> > Maybe it's more appropriate for the refereed track?
-> I'll consider submitting it there, but there's a certain "fun" aspect
-> to attending a conference that I don't have to prepare a talk for. :-)
->
-> Thanks for getting back to me.  I'm already registered for Plumbers,
-> so I'll see you there.
->  -- Tim
+Em Wed, 22 May 2019 09:45:59 -0600
+Jonathan Corbet <corbet@lwn.net> escreveu:
 
+> On Wed, 22 May 2019 15:25:36 +0200
+> Markus Heiser <markus.heiser@darmarit.de> wrote:
+> 
+> > Lets use 1.7 :
+> > 
+> > - no need for Use_SSI wrapper
+> > - new log should work with 1.7 [1] --> no need for kernellog.py and
+> >    additional imports, instead include on top of python modules ::
+> > 
+> >      from sphinx.util import logging
+> >      logger = logging.getLogger('kerneldoc')  
+> 
+> I think we're going to have to drag things forward at some point in the
+> not-too-distant future, but I think I'd rather not do that quite yet.  The
+> cost of supporting older sphinx for a few releases while we warn people is
+> not all that high.  So I think we should:
+> 
+>  - Put in (a future version of) my hacks for now, plus whatever else might
+>    be needed to make 2.0 work right.
+> 
+>  - Fix the fallout with regard to out-of-toctree .rst files so that we can
+>    actually build again with current sphinx.
+> 
+>  - Update Documentation/sphinx/requirements.txt to ask for something a wee
+>    bit more recent than 1.4.9.
 
-I would like to give an update on syzkaller/syzbot and discuss:
- - testability of kernel components in this context
- - test coverage and what's still not tested
- - discussion of the process (again): what works, what doesn't work, feedback
+You should remember to also update conf.py (with currently points to 1.3):
 
-I also submitted a refereed track talk called "Reflections on kernel
-quality, development process and testing". If it's not accepted, I
-would like to do it on Testing MC.
+	# If your documentation needs a minimal Sphinx version, state it here.
+	needs_sphinx = '1.3'
+
+Also, if you touch there, you should also touch:
+
+	./scripts/sphinx-pre-install
+
+The change there won't be as trivial as just changing this line:
+
+	$virtenv_dir = "sphinx_1.4";
+
+as the script should now run sphinx-build --version, in order to check
+if the version is lower than the new minimal version. It probably makes
+sense to make it grep the version from needs_sphinx at conf.py.
+
+>  - Add a warning when building with an older version that (say) 1.7 will
+>    be required as of (say) 5.5.
+
+It probably makes sense to add such check at the pre-install script,
+and add a:
+
+	SPHINXOPTS="-jauto"
+
+somewhere if version is 1.7 or upper.
+
+> 
+> Does this make sense?
+
+It makes sense to me.
+
+Thanks,
+Mauro
