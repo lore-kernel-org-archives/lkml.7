@@ -2,141 +2,96 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FC3DC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:43:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41EA3C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:43:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 051EF2081C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:43:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558554219;
-	bh=DHyAsJ+haRqHnwS0ceeZpC3DrKTcWJEl59EiFs2lpcU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ml0PGKtMHzC8PbeBrB6kvd8EW67saP5apn2itEVNlfpdb/n5QtzxbbhA4iJbHSnVG
-	 2hPyK5DTPXadCDbXWUusshNW5zaQt7INQp1WGRL6d5r9LEsMJsk9ixkewOa/O8z1ME
-	 HO4bsYM0AN2Pn/i++ROGNms3bOPiuMbsWdk+aKto=
+	by mail.kernel.org (Postfix) with ESMTP id 154CF2081C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:43:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387508AbfEVTne (ORCPT
+        id S1732887AbfEVTnn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:43:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50992 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731592AbfEVT2W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:28:22 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD18120675;
-        Wed, 22 May 2019 19:28:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553301;
-        bh=DHyAsJ+haRqHnwS0ceeZpC3DrKTcWJEl59EiFs2lpcU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nG5IABCvfDXqEBKwFZMaZn1L3IMyW2mbdrzA/pld/f/7yShK0M4gUPbB3NNWr3W5U
-         AqHk7bp4aohHK3HvyFM8e9I0UALS6imDxWFLFFX4uE1RyO80/YYoYyEPvKElsEtnOP
-         xmHAKLb9/LNW6UaZLovWMYS9JeFv913sKeR0C/0E=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Parav Pandit <parav@mellanox.com>,
-        Daniel Jurgens <danielj@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 071/244] RDMA/cma: Consider scope_id while binding to ipv6 ll address
-Date:   Wed, 22 May 2019 15:23:37 -0400
-Message-Id: <20190522192630.24917-71-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190522192630.24917-1-sashal@kernel.org>
-References: <20190522192630.24917-1-sashal@kernel.org>
+        Wed, 22 May 2019 15:43:43 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:37834 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729616AbfEVTnc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:43:32 -0400
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1hTX93-00050n-IX; Wed, 22 May 2019 21:43:25 +0200
+Date:   Wed, 22 May 2019 21:43:24 +0200
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Mike Rapoport <rppt@linux.ibm.com>,
+        Andrea Arcangeli <aarcange@redhat.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Borislav Petkov <bp@suse.de>
+Subject: Re: [PATCH] mm/gup: continue VM_FAULT_RETRY processing event for
+ pre-faults
+Message-ID: <20190522194322.5k52docwgp5zkdcj@linutronix.de>
+References: <1557844195-18882-1-git-send-email-rppt@linux.ibm.com>
+ <20190522122113.a2edc8aba32f0fad189bae21@linux-foundation.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190522122113.a2edc8aba32f0fad189bae21@linux-foundation.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Parav Pandit <parav@mellanox.com>
+On 2019-05-22 12:21:13 [-0700], Andrew Morton wrote:
+> On Tue, 14 May 2019 17:29:55 +0300 Mike Rapoport <rppt@linux.ibm.com> wrote:
+> 
+> > When get_user_pages*() is called with pages = NULL, the processing of
+> > VM_FAULT_RETRY terminates early without actually retrying to fault-in all
+> > the pages.
+> > 
+> > If the pages in the requested range belong to a VMA that has userfaultfd
+> > registered, handle_userfault() returns VM_FAULT_RETRY *after* user space
+> > has populated the page, but for the gup pre-fault case there's no actual
+> > retry and the caller will get no pages although they are present.
+> > 
+> > This issue was uncovered when running post-copy memory restore in CRIU
+> > after commit d9c9ce34ed5c ("x86/fpu: Fault-in user stack if
+> > copy_fpstate_to_sigframe() fails").
+> > 
+> > After this change, the copying of FPU state to the sigframe switched from
+> > copy_to_user() variants which caused a real page fault to get_user_pages()
+> > with pages parameter set to NULL.
+> 
+> You're saying that argument buf_fx in copy_fpstate_to_sigframe() is NULL?
 
-[ Upstream commit 5d7ed2f27bbd482fd29e6b2e204b1a1ee8a0b268 ]
+buf_fx is user stack pointer and it should not be NULL.
 
-When two netdev have same link local addresses (such as vlan and non
-vlan), two rdma cm listen id should be able to bind to following different
-addresses.
+> If so was that expected by the (now cc'ed) developers of
+> d9c9ce34ed5c8923 ("x86/fpu: Fault-in user stack if
+> copy_fpstate_to_sigframe() fails")?
+> 
+> It seems rather odd.  copy_fpregs_to_sigframe() doesn't look like it's
+> expecting a NULL argument.
 
-listener-1: addr=lla, scope_id=A, port=X
-listener-2: addr=lla, scope_id=B, port=X
+exactly, this is not expected.
 
-However while comparing the addresses only addr and port are considered,
-due to which 2nd listener fails to listen.
+> Also, I wonder if copy_fpstate_to_sigframe() would be better using
+> fault_in_pages_writeable() rather than get_user_pages_unlocked().  That
+> seems like it operates at a more suitable level and I guess it will fix
+> this issue also.
 
-In below example of two listeners, 2nd listener is failing with address in
-use error.
+It looks, like fault_in_pages_writeable() would work. If this is the
+recommendation from the MM department than I can switch to that.
 
-$ rping -sv -a fe80::268a:7ff:feb3:d113%ens2f1 -p 4545&
+> > In post-copy mode of CRIU, the destination memory is managed with
+> > userfaultfd and lack of the retry for pre-fault case in get_user_pages()
+> > causes a crash of the restored process.
+> > 
+> > Making the pre-fault behavior of get_user_pages() the same as the "normal"
+> > one fixes the issue.
+> 
+> Should this be backported into -stable trees?
 
-$ rping -sv -a fe80::268a:7ff:feb3:d113%ens2f1.200 -p 4545
-rdma_bind_addr: Address already in use
-
-To overcome this, consider the scope_ids as well which forms the accurate
-IPv6 link local address.
-
-Signed-off-by: Parav Pandit <parav@mellanox.com>
-Reviewed-by: Daniel Jurgens <danielj@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/infiniband/core/cma.c | 25 +++++++++++++++++++------
- 1 file changed, 19 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/infiniband/core/cma.c b/drivers/infiniband/core/cma.c
-index 6f5be78024762..39dc7be56884a 100644
---- a/drivers/infiniband/core/cma.c
-+++ b/drivers/infiniband/core/cma.c
-@@ -1078,18 +1078,31 @@ static inline bool cma_any_addr(const struct sockaddr *addr)
- 	return cma_zero_addr(addr) || cma_loopback_addr(addr);
- }
- 
--static int cma_addr_cmp(struct sockaddr *src, struct sockaddr *dst)
-+static int cma_addr_cmp(const struct sockaddr *src, const struct sockaddr *dst)
- {
- 	if (src->sa_family != dst->sa_family)
- 		return -1;
- 
- 	switch (src->sa_family) {
- 	case AF_INET:
--		return ((struct sockaddr_in *) src)->sin_addr.s_addr !=
--		       ((struct sockaddr_in *) dst)->sin_addr.s_addr;
--	case AF_INET6:
--		return ipv6_addr_cmp(&((struct sockaddr_in6 *) src)->sin6_addr,
--				     &((struct sockaddr_in6 *) dst)->sin6_addr);
-+		return ((struct sockaddr_in *)src)->sin_addr.s_addr !=
-+		       ((struct sockaddr_in *)dst)->sin_addr.s_addr;
-+	case AF_INET6: {
-+		struct sockaddr_in6 *src_addr6 = (struct sockaddr_in6 *)src;
-+		struct sockaddr_in6 *dst_addr6 = (struct sockaddr_in6 *)dst;
-+		bool link_local;
-+
-+		if (ipv6_addr_cmp(&src_addr6->sin6_addr,
-+					  &dst_addr6->sin6_addr))
-+			return 1;
-+		link_local = ipv6_addr_type(&dst_addr6->sin6_addr) &
-+			     IPV6_ADDR_LINKLOCAL;
-+		/* Link local must match their scope_ids */
-+		return link_local ? (src_addr6->sin6_scope_id !=
-+				     dst_addr6->sin6_scope_id) :
-+				    0;
-+	}
-+
- 	default:
- 		return ib_addr_cmp(&((struct sockaddr_ib *) src)->sib_addr,
- 				   &((struct sockaddr_ib *) dst)->sib_addr);
--- 
-2.20.1
-
+Sebastian
