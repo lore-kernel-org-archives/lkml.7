@@ -6,69 +6,70 @@ X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55D57C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 23:25:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C458C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 23:26:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9DE62089E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 23:25:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1BBC20881
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 23:26:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="gwtgq5eL"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="F26eOOo4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729611AbfEVXZz (ORCPT
+        id S1729663AbfEVX0L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 19:25:55 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:39951 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726890AbfEVXZy (ORCPT
+        Wed, 22 May 2019 19:26:11 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:46235 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729155AbfEVX0L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 19:25:54 -0400
-Received: by mail-pl1-f193.google.com with SMTP id g69so1789635plb.7
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 16:25:54 -0700 (PDT)
+        Wed, 22 May 2019 19:26:11 -0400
+Received: by mail-pl1-f195.google.com with SMTP id r18so1777095pls.13
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 16:26:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:from:to:cc:references:message-id:date:user-agent
+        h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language;
-        bh=a3brF+YUmxTxk2F1brFTmo/foMcySfHuLXXD32dHStY=;
-        b=gwtgq5eLCEAfPcGa2FymfErf75k3wGr2WjTLIrpHm31UFI0S/n7X/XZiY5MuSEDtBE
-         UWM+j3NU5Dv9rhyKg6QRpRuDMwqmGf143pPCtuxjo2kp7NY09LUuotnHOyzM9St51Aim
-         BWvpba2PfQvnsS/uLwA2DV372rVWGhi8eqOWskMIpgdfGOd/3schiRKK35SRZ0XplImt
-         EAoBYGSHJAGzTsQHsjURRBk7aWnlbvJevqgUYRsgbKWNlVa4KIwpILxi/LmAp/OuxR2Z
-         h3roJNwyzgSnj+/+Zz+0Oa4Lmrey8ouzGaYMADZ4+UdPLmBos9bWz8DkSZ4lm85/TQlL
-         kuQA==
+        bh=uehHTXYQn9Rpfu7iFhfO5cIBT6aUyNHzsFlZ878dle4=;
+        b=F26eOOo4cw7gFngKNRhI+0VuNg20AyaubkXBO5IwnrQJs63MZZdF1Kslo0ClPg4KLg
+         zp16i504qgQPZ28/FGYs8AtQx7VRDH4LfyREcGxOdwRSBATy30vOE/upvoD+X/oHjwCg
+         nvAD29h6HfZPT1sY6wp45NNU7JV8NaM1UQZ3pM++6C5x55DCLZ54+9MTTZrK3NKwJvTm
+         +G58oxmXxJIMXIMQCuHep7U9rLnWB9liMWFGPlj+acdXegic6B5p3M208BscOoJ9yltp
+         XcDzefXrHhb0lNXMoiA0Fk4kvcntoL0WbuyUV7c1TyLT4Hn+dX9QaoaA4xch6a7N/VSO
+         VBaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language;
-        bh=a3brF+YUmxTxk2F1brFTmo/foMcySfHuLXXD32dHStY=;
-        b=FxDnr5QtBHyaL/d70j5EcHdflXocFQo381vmZBGA0E7XHeEJf+t4Z+dBJPbw5UneZ5
-         Nh5WBqwtpObwpOC9o0dMRQGSp7Gx0xAV9BCnBsNx9Fqb6q9SQN+bwQQUSpIJGHE0+myg
-         kESULtvg9BCX24l403mM1mXr/qiDez2/e4/uvzhA46aGIWr4pCGzLp/vKKJNgmQ/w+x0
-         tpo0dx4hWq7ECan6l1V0lHidf002RMr6GQ49fMqHX0Koja82SpAO6GwNkXgnFVRIaHs0
-         BdJPkwbCl5v/j6/xeGGm4XkZ6eVRZUsju2Iu11d067KNe+iGtZJeSFmwu3/H5vf4Kox4
-         +ZHQ==
-X-Gm-Message-State: APjAAAUdRGw6Q6xhzskFMZ/S1PiU/EwqaAaKN2lI44Gy1Twd4vx5YQVC
-        JsA1N7kSUTye1+u5e51/WOe1qxlV6CVVqA==
-X-Google-Smtp-Source: APXvYqwSZ6oz8BG0XqU4qh2v6AqWU6Ve4H3P8w+4sKKZC3D3dB2aggbkug8XxjmWf+VcWF8JHMVe+g==
-X-Received: by 2002:a17:902:758b:: with SMTP id j11mr35742229pll.191.1558567553229;
-        Wed, 22 May 2019 16:25:53 -0700 (PDT)
+        bh=uehHTXYQn9Rpfu7iFhfO5cIBT6aUyNHzsFlZ878dle4=;
+        b=a+CU8+MGM4AxcsCKREhRVKnx0DUNFtZuGo3qhoc+B+XmgH0v++xOqbyHP/WxY3oYNi
+         //ui+/YSQKKvMuFvj+h6947zP1W7YAVCsJrNxJy1J2VEYLhC91hqot8M5XFvGAGT3vX7
+         Pq5njSI3iJuQbUZRjXzX/s9HkX3O/I75D7G+c5gxfkPA/VBxG2FK8eILbprzdSPBUPqY
+         RW6GInB2Z0dK+Pqjwdpse286Qx5ZTusxB9ydPk2IIaZYj7wYu6LbiIYgP65U13YGeWcg
+         uaslUdEHEYaDpozekpVb3nrWJNzFh3KP0/t2IoSnS9dd2ZaGZJZMOq/AM6c798ejMAfJ
+         ii5g==
+X-Gm-Message-State: APjAAAXQBTMu6agnlOpxQ7DJE/IgnjA4OF6WNGo0V4qaodDbpezv8xmU
+        ytSMJkebomA7SpocKLALJlMjg/XpD0LC4w==
+X-Google-Smtp-Source: APXvYqziHi8oe1o5Uks6G6dRZHZ9mEWl8i3DQCoqrIKk8lezSC1zmQwU+xe6lOMBmmeZqs1zcGOrmA==
+X-Received: by 2002:a17:902:f24:: with SMTP id 33mr92529345ply.33.1558567570394;
+        Wed, 22 May 2019 16:26:10 -0700 (PDT)
 Received: from [192.168.1.121] (66.29.164.166.static.utbb.net. [66.29.164.166])
-        by smtp.gmail.com with ESMTPSA id a11sm19729840pff.128.2019.05.22.16.25.51
+        by smtp.gmail.com with ESMTPSA id k13sm22492302pgr.90.2019.05.22.16.26.08
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 22 May 2019 16:25:52 -0700 (PDT)
-Subject: Re: [PATCH] aoe: list new maintainer for aoe driver
+        Wed, 22 May 2019 16:26:09 -0700 (PDT)
+Subject: Re: linux-next: Signed-off-by missing for commit in the block tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ed Cashin <ed.cashin@acm.org>
+References: <20190523075059.31a2cdc4@canb.auug.org.au>
 From:   Jens Axboe <axboe@kernel.dk>
-To:     Ed Cashin <ed.cashin@acm.org>
-Cc:     Justin Sanders <justin@coraid.com>, linux-kernel@vger.kernel.org
-References: <1558125894.9571@cat.he.net>
- <856ae195-ceb8-5657-5ce7-9743f96845a5@kernel.dk>
-Message-ID: <2f5aa01b-86bc-ce12-deb6-98a0d68d3760@kernel.dk>
-Date:   Wed, 22 May 2019 17:25:50 -0600
+Message-ID: <98fc1427-ba7f-9ebc-bb81-e39d2787010c@kernel.dk>
+Date:   Wed, 22 May 2019 17:26:07 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <856ae195-ceb8-5657-5ce7-9743f96845a5@kernel.dk>
+In-Reply-To: <20190523075059.31a2cdc4@canb.auug.org.au>
 Content-Type: multipart/mixed;
- boundary="------------D7A20E346CE2DCB0725FBB66"
+ boundary="------------F9AAF0693B37FDB13B47EDE9"
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -76,27 +77,26 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 This is a multi-part message in MIME format.
---------------D7A20E346CE2DCB0725FBB66
-Content-Type: text/plain; charset=utf-8
+--------------F9AAF0693B37FDB13B47EDE9
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: quoted-printable
 
-On 5/17/19 3:16 PM, Jens Axboe wrote:
-> On 5/17/19 2:29 PM, Ed Cashin wrote:
->> Justin Sanders, who has extensive experience with ATA over Ethernet
->> in general and AoE SCSI and block-device drivers in particular, is
->> ready to take on the role of aoe maintainer.  The driver needs a more
->> active maintainer.
+On 5/22/19 3:50 PM, Stephen Rothwell wrote:
+> Hi all,
 >=20
-> Applied, thanks - and good luck to Justin.
+> Commit
+>=20
+>   04bc2bcccbd5 ("aoe: list new maintainer for aoe driver")
+>=20
+> is missing a Signed-off-by from its author.
 
-Ed, you didn't add your signed-off-by to that patch. Is it ok if I go
-ahead and add it?
+Will get this fixed up, waiting for Ed to respond.
 
 --=20
 Jens Axboe
 
 
---------------D7A20E346CE2DCB0725FBB66
+--------------F9AAF0693B37FDB13B47EDE9
 Content-Type: application/pgp-keys;
  name="pEpkey.asc"
 Content-Transfer-Encoding: quoted-printable
@@ -381,4 +381,4 @@ ZbJqtpQc/1yRQ/Ht/LGdeR622xbhCbx05PB9C2hcIP+jmRRKDma83Ii6Zg=3D=3D
 =3D5pK/
 -----END PGP PUBLIC KEY BLOCK-----
 
---------------D7A20E346CE2DCB0725FBB66--
+--------------F9AAF0693B37FDB13B47EDE9--
