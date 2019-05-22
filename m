@@ -2,83 +2,106 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD86FC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:58:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9882C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:58:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACE5E20862
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:58:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0B5A20856
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:58:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558555134;
+	bh=OCgOGzgStwTz7lu5NMIDpOv6BlemSwyqbSeXXy13NAA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=d9LiDQSQOM9tc7/vfojjYlioqNnU9VLj8EsIzUG/RpzUWQEAM5dSlqG31dytv4Sgp
+	 w+8xYgs+W+raWKilp7VNfaW7JMx0CBpNUVhhDDXWozxn42kRIygtHYhtUckUpyUiBx
+	 tqkUXsPOfIYZBm0kQ+GJyf/mErHNhbaIKHJnjsKY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733248AbfEVT6s (ORCPT
+        id S2387990AbfEVT6x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:58:48 -0400
-Received: from mga06.intel.com ([134.134.136.31]:43062 "EHLO mga06.intel.com"
+        Wed, 22 May 2019 15:58:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729565AbfEVT6m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:58:42 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 May 2019 12:58:41 -0700
-X-ExtLoop1: 1
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga004.fm.intel.com with ESMTP; 22 May 2019 12:58:39 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1hTXNm-00073h-Ry; Thu, 23 May 2019 03:58:38 +0800
-Date:   Thu, 23 May 2019 03:58:15 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Geordan Neukum <gneukum1@gmail.com>
-Cc:     kbuild-all@01.org, devel@driverdev.osuosl.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: kpc2000: kpc_i2c: fix platform_no_drv_owner.cocci
- warnings
-Message-ID: <20190522195815.GA49400@lkp-kbuild22>
-References: <201905230355.OQnavbXj%lkp@intel.com>
+        id S1731022AbfEVTXw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:23:52 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 434D4217D4;
+        Wed, 22 May 2019 19:23:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558553032;
+        bh=OCgOGzgStwTz7lu5NMIDpOv6BlemSwyqbSeXXy13NAA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=A8pvRXK1fsYQ0wVFEOZCnXJY422ru300Tj8tmDsA5+5tHtlH0mrTm4eUKZa8brJVj
+         FJU7fLs7O9rhc01/gIiPsA8xwZFa8JwrTLEbLgdLcyC9wj1R/8J45uEqUJMaX/p6vT
+         vTDmslSrK0Ivnw3E2AlIiBhyfFHmU/A1AJkk2+uE=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Vineet Gupta <Vineet.Gupta1@synopsys.com>,
+        Vineet Gupta <vgupta@synopsys.com>, Yonghong Song <yhs@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 010/317] tools/bpf: fix perf build error with uClibc (seen on ARC)
+Date:   Wed, 22 May 2019 15:18:31 -0400
+Message-Id: <20190522192338.23715-10-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190522192338.23715-1-sashal@kernel.org>
+References: <20190522192338.23715-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <201905230355.OQnavbXj%lkp@intel.com>
-X-Patchwork-Hint: ignore
-User-Agent: Mutt/1.5.23 (2014-03-12)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: kbuild test robot <lkp@intel.com>
+From: Vineet Gupta <Vineet.Gupta1@synopsys.com>
 
-drivers/staging/kpc2000/kpc2000_i2c.c:652:3-8: No need to set .owner here. The core will do it.
+[ Upstream commit ca31ca8247e2d3807ff5fa1d1760616a2292001c ]
 
- Remove .owner field if calls are used which set it automatically
+When build perf for ARC recently, there was a build failure due to lack
+of __NR_bpf.
 
-Generated by: scripts/coccinelle/api/platform_no_drv_owner.cocci
+| Auto-detecting system features:
+|
+| ...                     get_cpuid: [ OFF ]
+| ...                           bpf: [ on  ]
+|
+| #  error __NR_bpf not defined. libbpf does not support your arch.
+    ^~~~~
+| bpf.c: In function 'sys_bpf':
+| bpf.c:66:17: error: '__NR_bpf' undeclared (first use in this function)
+|  return syscall(__NR_bpf, cmd, attr, size);
+|                 ^~~~~~~~
+|                 sys_bpf
 
-Fixes: 43ad38191816 ("staging: kpc2000: kpc_i2c: add static qual to local symbols in kpc_i2c.c")
-CC: Geordan Neukum <gneukum1@gmail.com>
-Signed-off-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+Acked-by: Yonghong Song <yhs@fb.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
+ tools/lib/bpf/bpf.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/staging.git staging-next
-head:   43ad38191816a6b77cc4bd8222353320a71a1d2d
-commit: 43ad38191816a6b77cc4bd8222353320a71a1d2d [106/106] staging: kpc2000: kpc_i2c: add static qual to local symbols in kpc_i2c.c
+diff --git a/tools/lib/bpf/bpf.c b/tools/lib/bpf/bpf.c
+index 88cbd110ae580..ddeb46c9eef2f 100644
+--- a/tools/lib/bpf/bpf.c
++++ b/tools/lib/bpf/bpf.c
+@@ -45,6 +45,8 @@
+ #  define __NR_bpf 349
+ # elif defined(__s390__)
+ #  define __NR_bpf 351
++# elif defined(__arc__)
++#  define __NR_bpf 280
+ # else
+ #  error __NR_bpf not defined. libbpf does not support your arch.
+ # endif
+-- 
+2.20.1
 
- kpc2000_i2c.c |    1 -
- 1 file changed, 1 deletion(-)
-
---- a/drivers/staging/kpc2000/kpc2000_i2c.c
-+++ b/drivers/staging/kpc2000/kpc2000_i2c.c
-@@ -649,7 +649,6 @@ static struct platform_driver i2c_plat_d
- 	.remove     = pi2c_remove,
- 	.driver     = {
- 		.name   = KP_DRIVER_NAME_I2C,
--		.owner  = THIS_MODULE,
- 	},
- };
- 
