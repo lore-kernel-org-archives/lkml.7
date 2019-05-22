@@ -4,49 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EFF7C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:57:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77DA3C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:57:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61C6920862
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:57:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 486572089E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:57:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558555076;
-	bh=JafpiWdwV6RYJVqDR3Jq+YgbPzagx382DcumXQT5G8U=;
+	s=default; t=1558555079;
+	bh=t83Soi+NvuAnAjhnJ0RU3VwsJP2TMAEED2QcB4xYGNg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Zb5JYXzpTKKlY5fUxaN6fDz8UWorxSYc1A0ibjw51gOget7ifPoKwiee3cnKktnBk
-	 GkOhwpllGHvj74HlA0CUrKXVOA1Tc2kIhWvtRiiV7L/sNAcB0utZsIFJ0poDEbpDmV
-	 KqdZimSGEtscp2Qo3n6kF1EAAuddX+B8gedPalY8=
+	b=iBv4iS4UOlcvwy5uW2b6pf6JGq06cRaghw93PWYrnzhHjj8VU189p0rg5KDbqXydf
+	 wU3nqXMj+diwrEJqDknY9YnUg4EcqoVPnreUp1s+cq/K43jnErTpp5sPgBGQ6eH+cm
+	 XVh5/YbJX/Xtk0jh4I4p00kG5GyH+8EP6aDKTCo4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731702AbfEVT5z (ORCPT
+        id S1731114AbfEVTYE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:57:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45224 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:24:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45012 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729826AbfEVTYJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:24:09 -0400
+        id S1731089AbfEVTYB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:24:01 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4209E21473;
-        Wed, 22 May 2019 19:24:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1BB07217D4;
+        Wed, 22 May 2019 19:23:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553048;
-        bh=JafpiWdwV6RYJVqDR3Jq+YgbPzagx382DcumXQT5G8U=;
+        s=default; t=1558553040;
+        bh=t83Soi+NvuAnAjhnJ0RU3VwsJP2TMAEED2QcB4xYGNg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tPejkELeEz6WabvbKDMTbg0SbuZLZNWDMlhkXzCxZSW32NKO7JwkDZf0ME9ng67hb
-         b9RcL/TPcMvJmX5x+/E4QW4EG/5LIl3Z81bwKn0/3g/AFyJNhVD7YrH61xpVxU0878
-         8agxqk3lr8diUI+4OMMqHvUeA4Q0sS5G47NeM/dY=
+        b=FctIEpKUdrQcDIJ87jKol4SElf4i9QhRFhdlbYcM1I2jQcKaQy8SrcT/SxXrM/DbD
+         NV/DQ620EYUDqWI+0ODAMBC0b3aOMKd0U95uzGDeEldnSysQDWkBykepUtPQDXC/Se
+         u7HnLE3p8TZXGZ9O1+RXGVm4OxFdB2dFxc42YSr4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Martin Brandenburg <martin@omnibond.com>,
-        Mike Marshall <hubcap@omnibond.com>,
-        Sasha Levin <sashal@kernel.org>, devel@lists.orangefs.org
-Subject: [PATCH AUTOSEL 5.0 020/317] orangefs: truncate before updating size
-Date:   Wed, 22 May 2019 15:18:41 -0400
-Message-Id: <20190522192338.23715-20-sashal@kernel.org>
+Cc:     Ming Lei <ming.lei@redhat.com>,
+        Dongli Zhang <dongli.zhang@oracle.com>,
+        James Smart <james.smart@broadcom.com>,
+        linux-scsi@vger.kernel.org,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "James E . J . Bottomley" <jejb@linux.vnet.ibm.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 015/317] blk-mq: grab .q_usage_counter when queuing request from plug code path
+Date:   Wed, 22 May 2019 15:18:36 -0400
+Message-Id: <20190522192338.23715-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192338.23715-1-sashal@kernel.org>
 References: <20190522192338.23715-1-sashal@kernel.org>
@@ -59,39 +66,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Brandenburg <martin@omnibond.com>
+From: Ming Lei <ming.lei@redhat.com>
 
-[ Upstream commit 33713cd09ccdc1e01b10d0782ae60200d4989553 ]
+[ Upstream commit e87eb301bee183d82bb3d04bd71b6660889a2588 ]
 
-Otherwise we race with orangefs_writepage/orangefs_writepages
-which and does not expect i_size < page_offset.
+Just like aio/io_uring, we need to grab 2 refcount for queuing one
+request, one is for submission, another is for completion.
 
-Fixes xfstests generic/129.
+If the request isn't queued from plug code path, the refcount grabbed
+in generic_make_request() serves for submission. In theroy, this
+refcount should have been released after the sumission(async run queue)
+is done. blk_freeze_queue() works with blk_sync_queue() together
+for avoiding race between cleanup queue and IO submission, given async
+run queue activities are canceled because hctx->run_work is scheduled with
+the refcount held, so it is fine to not hold the refcount when
+running the run queue work function for dispatch IO.
 
-Signed-off-by: Martin Brandenburg <martin@omnibond.com>
-Signed-off-by: Mike Marshall <hubcap@omnibond.com>
+However, if request is staggered into plug list, and finally queued
+from plug code path, the refcount in submission side is actually missed.
+And we may start to run queue after queue is removed because the queue's
+kobject refcount isn't guaranteed to be grabbed in flushing plug list
+context, then kernel oops is triggered, see the following race:
+
+blk_mq_flush_plug_list():
+        blk_mq_sched_insert_requests()
+                insert requests to sw queue or scheduler queue
+                blk_mq_run_hw_queue
+
+Because of concurrent run queue, all requests inserted above may be
+completed before calling the above blk_mq_run_hw_queue. Then queue can
+be freed during the above blk_mq_run_hw_queue().
+
+Fixes the issue by grab .q_usage_counter before calling
+blk_mq_sched_insert_requests() in blk_mq_flush_plug_list(). This way is
+safe because the queue is absolutely alive before inserting request.
+
+Cc: Dongli Zhang <dongli.zhang@oracle.com>
+Cc: James Smart <james.smart@broadcom.com>
+Cc: linux-scsi@vger.kernel.org,
+Cc: Martin K . Petersen <martin.petersen@oracle.com>,
+Cc: Christoph Hellwig <hch@lst.de>,
+Cc: James E . J . Bottomley <jejb@linux.vnet.ibm.com>,
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Tested-by: James Smart <james.smart@broadcom.com>
+Signed-off-by: Ming Lei <ming.lei@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/orangefs/inode.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ block/blk-mq-sched.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/fs/orangefs/inode.c b/fs/orangefs/inode.c
-index f038235c64bdf..39cf45bf2cd84 100644
---- a/fs/orangefs/inode.c
-+++ b/fs/orangefs/inode.c
-@@ -172,7 +172,11 @@ static int orangefs_setattr_size(struct inode *inode, struct iattr *iattr)
+diff --git a/block/blk-mq-sched.c b/block/blk-mq-sched.c
+index 0c98b6c1ca49c..1213556a20dad 100644
+--- a/block/blk-mq-sched.c
++++ b/block/blk-mq-sched.c
+@@ -413,6 +413,14 @@ void blk_mq_sched_insert_requests(struct blk_mq_hw_ctx *hctx,
+ 				  struct list_head *list, bool run_queue_async)
+ {
+ 	struct elevator_queue *e;
++	struct request_queue *q = hctx->queue;
++
++	/*
++	 * blk_mq_sched_insert_requests() is called from flush plug
++	 * context only, and hold one usage counter to prevent queue
++	 * from being released.
++	 */
++	percpu_ref_get(&q->q_usage_counter);
+ 
+ 	e = hctx->queue->elevator;
+ 	if (e && e->type->ops.insert_requests)
+@@ -426,12 +434,14 @@ void blk_mq_sched_insert_requests(struct blk_mq_hw_ctx *hctx,
+ 		if (!hctx->dispatch_busy && !e && !run_queue_async) {
+ 			blk_mq_try_issue_list_directly(hctx, list);
+ 			if (list_empty(list))
+-				return;
++				goto out;
+ 		}
+ 		blk_mq_insert_requests(hctx, ctx, list);
  	}
- 	orig_size = i_size_read(inode);
  
--	truncate_setsize(inode, iattr->ia_size);
-+	/* This is truncate_setsize in a different order. */
-+	truncate_pagecache(inode, iattr->ia_size);
-+	i_size_write(inode, iattr->ia_size);
-+	if (iattr->ia_size > orig_size)
-+		pagecache_isize_extended(inode, orig_size, iattr->ia_size);
+ 	blk_mq_run_hw_queue(hctx, run_queue_async);
++ out:
++	percpu_ref_put(&q->q_usage_counter);
+ }
  
- 	new_op = op_alloc(ORANGEFS_VFS_OP_TRUNCATE);
- 	if (!new_op)
+ static void blk_mq_sched_free_tags(struct blk_mq_tag_set *set,
 -- 
 2.20.1
 
