@@ -2,125 +2,119 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BC86C46460
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 01:41:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F340C072B5
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 01:43:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52451217F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 01:41:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EA7621479
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 01:43:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PCPt8QOB"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="NzlaNQxf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728207AbfEVBlA (ORCPT
+        id S1728243AbfEVBnS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 21:41:00 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:35027 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726466AbfEVBlA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 21:41:00 -0400
-Received: by mail-pg1-f194.google.com with SMTP id t1so439641pgc.2;
-        Tue, 21 May 2019 18:40:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=eQzqkhxI3qa/Amfi4+MaJnGzxdoXyf8xsQLVTG3Nbzk=;
-        b=PCPt8QOBQDpcMqZX6Glkj72cW9ordL2aWMtZkCD7PBW0RitfmmYGOwQQ79pt27sHbH
-         j/kJ0VzC3gtNoMvnk3qIFgvRUf29MpwCpY5hvmjmHkIf70+cO5eHjhGPZ0Z8eEEoo/66
-         SpJQJ43epSEgyX4sFyj83zEITkHHcTi4vPjYK8bHnVTEr2IAIo8gkuX3V5g+EyOsj8oi
-         wgKPMglkF+MQvoLnR74SsNLCq+IMcMaWtRtvX0f9JnP21HICHJZ6W6aXXbEStfMLy1h/
-         SaFB0le6Ak807sR9Y4Q3OmaUOl68jGwXXwuBFfavv8w4U8tCKlmj5WVVxWc07cRzeiJx
-         EPSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=eQzqkhxI3qa/Amfi4+MaJnGzxdoXyf8xsQLVTG3Nbzk=;
-        b=qN2uTucygleE+yTR9973mJEuSerUN8WNl7DuwY41mH3iHNkRtAyMqDdavaTWcvdQn8
-         +QQ/EaiLVxKrs7UM66TvZzUN0jE+OzIrZSfjPXjp4FOZ/RBtK7vzCmx0C2NXVBAC8AxV
-         rMx2sMlEx40dwubK5W9J/ZqaIj4Lm+TOp6h1Nnn3DMMfCg2ol2lkJZbWS/WV71jR+RPr
-         45gCs4J9itAYB17NBESy9LCmSH0jPZ1ucujwl/NweiOUf7jVX1+KUShWvjs2xJqJp5zS
-         kwmvMu2jUNfSRtUkuToyyZjMnp03edyNyhVZND0FTKXAVY8uvNaUMmOGWFJ1qDKyfh6L
-         441Q==
-X-Gm-Message-State: APjAAAXzuFjx33kL3OZ6uFCPveD43GxIvU/AF/WRlQbGpAbUxFKJWQcs
-        oJ0CYlCQ+Y8Ms2Oaa9xT/z++ZKX6pIA=
-X-Google-Smtp-Source: APXvYqzBA5Pvd6xvdQuCUPZTCAEXx9tXL14n57MTorrnTzdZgh7ac2xw/SNW67qgq6do/h432NXo9Q==
-X-Received: by 2002:a63:ca4b:: with SMTP id o11mr1583500pgi.295.1558489258850;
-        Tue, 21 May 2019 18:40:58 -0700 (PDT)
-Received: from localhost.lan (c-24-22-235-96.hsd1.wa.comcast.net. [24.22.235.96])
-        by smtp.gmail.com with ESMTPSA id k67sm33489260pfb.44.2019.05.21.18.40.57
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 21 May 2019 18:40:57 -0700 (PDT)
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-To:     linux-input@vger.kernel.org
-Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        stable@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] Input: uinput - add compat ioctl number translation for UI_*_FF_UPLOAD
-Date:   Tue, 21 May 2019 18:39:22 -0700
-Message-Id: <20190522013922.25538-1-andrew.smirnov@gmail.com>
-X-Mailer: git-send-email 2.21.0
+        Tue, 21 May 2019 21:43:18 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:55029 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726466AbfEVBnR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 21:43:17 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 457wPt4ff2z9sML;
+        Wed, 22 May 2019 11:43:14 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1558489395;
+        bh=/+vz4nyDleFR9w+Hc2JgILnEclzB5fhZ1TMcpt7nMLc=;
+        h=Date:From:To:Cc:Subject:From;
+        b=NzlaNQxfZDbuzW2V0v/SA5EW2KjWk6/MA6vUlKMZ7+Ffdjx0GRAdxoeqNJ96/V38D
+         ksUT+chBsH9lhp/g6nyQT17W6nn61xKne89IC+jnbN6RJcr0xUQ5fYCZ0zSvXZfDkx
+         wx4lsXm7NFTuvbxWoPFzxs/GVpFwNk5D50+65WB/FBx9BCYAEe1YN0/QmDzQtLvZHH
+         kHx9YR+x1ePVbQGgkgPNxFCLj8JH+o6CwKCdcd74X6xKdizSHD3T5Yvc4Ns8E873Wr
+         J4aUYEOxDxIWP3snYrxQFTDwnPgC0/zPKmHuA69wOMnCp1YvAvsteZ/oMzFKFyYIEz
+         3k3cTg5CBTU9g==
+Date:   Wed, 22 May 2019 11:43:14 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Christian Brauner <christian@brauner.io>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Subject: linux-next: manual merge of the akpm-current tree with the pidfd
+ tree
+Message-ID: <20190522114314.515b410d@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_//JxyEEp0Z.6I8p35=DwmN0Z"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the case of compat syscall ioctl numbers for UI_BEGIN_FF_UPLOAD and
-UI_END_FF_UPLOAD need to be adjusted before being passed on
-uinput_ioctl_handler() since code built with -m32 will be passing
-slightly different values. Extend the code already covering
-UI_SET_PHYS to cover UI_BEGIN_FF_UPLOAD and UI_END_FF_UPLOAD as well.
+--Sig_//JxyEEp0Z.6I8p35=DwmN0Z
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Reported-by: Pierre-Loup A. Griffais <pgriffais@valvesoftware.com>
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: linux-input@vger.kernel.org
-Cc: stable@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
----
- drivers/input/misc/uinput.c | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+Hi all,
 
-diff --git a/drivers/input/misc/uinput.c b/drivers/input/misc/uinput.c
-index 1a6762fc38f9..1116d4cd5695 100644
---- a/drivers/input/misc/uinput.c
-+++ b/drivers/input/misc/uinput.c
-@@ -1051,13 +1051,24 @@ static long uinput_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
- 
- #ifdef CONFIG_COMPAT
- 
--#define UI_SET_PHYS_COMPAT	_IOW(UINPUT_IOCTL_BASE, 108, compat_uptr_t)
-+#define UI_SET_PHYS_COMPAT		_IOW(UINPUT_IOCTL_BASE, 108, compat_uptr_t)
-+#define UI_BEGIN_FF_UPLOAD_COMPAT	_IOWR(UINPUT_IOCTL_BASE, 200, struct uinput_ff_upload_compat)
-+#define UI_END_FF_UPLOAD_COMPAT		_IOW(UINPUT_IOCTL_BASE, 201, struct uinput_ff_upload_compat)
- 
- static long uinput_compat_ioctl(struct file *file,
- 				unsigned int cmd, unsigned long arg)
- {
--	if (cmd == UI_SET_PHYS_COMPAT)
-+	switch (cmd) {
-+	case UI_SET_PHYS_COMPAT:
- 		cmd = UI_SET_PHYS;
-+		break;
-+	case UI_BEGIN_FF_UPLOAD_COMPAT:
-+		cmd = UI_BEGIN_FF_UPLOAD;
-+		break;
-+	case UI_END_FF_UPLOAD_COMPAT:
-+		cmd = UI_END_FF_UPLOAD;
-+		break;
-+	}
- 
- 	return uinput_ioctl_handler(file, cmd, arg, compat_ptr(arg));
- }
--- 
-2.21.0
+Today's linux-next merge of the akpm-current tree got a conflict in:
 
+  kernel/pid.c
+
+between commit:
+
+  99e9da7f2796 ("pid: add pidfd_open()")
+
+from the pidfd tree and commit:
+
+  51c59c914840 ("kernel/pid.c: convert struct pid:count to refcount_t")
+
+from the akpm-current tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc kernel/pid.c
+index 39181ccca846,b59681973dd6..000000000000
+--- a/kernel/pid.c
++++ b/kernel/pid.c
+@@@ -37,8 -36,7 +37,8 @@@
+  #include <linux/init_task.h>
+  #include <linux/syscalls.h>
+  #include <linux/proc_ns.h>
+- #include <linux/proc_fs.h>
++ #include <linux/refcount.h>
+ +#include <linux/sched/signal.h>
+  #include <linux/sched/task.h>
+  #include <linux/idr.h>
+ =20
+
+--Sig_//JxyEEp0Z.6I8p35=DwmN0Z
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzkqTIACgkQAVBC80lX
+0GwcpAf8CwUenbm91eZ9ojHHXKB7XVoDgK8/TZpdnunIufJ/z8HiIogMBKznAmvp
+vqq/cgMC1AckNHQd8I552BV0pXIp2GeW05agg5+yPbaM0asQt4+J+xaclpTpQ6n6
+WTwZMVbgLLB9Z/enOekSqhRxcxdVljql9K5UDXmA6FmKdTaBgP8B3N+yQomTltL0
+jU2R699n1YzczNhBrvfKQinp7lUz/oQsH9nJ+hb6uE5m1D1P8RoT60z9XA5DUUBU
+ffcvid2in48ZtVVg3cFY5rd4G28a/dmJDfe9U6oqrX9c1Ue9RfDZK619DlO4+xEf
+e4WtD6zhML3q+bOVxBeO9nQrp/6d2w==
+=Rsmk
+-----END PGP SIGNATURE-----
+
+--Sig_//JxyEEp0Z.6I8p35=DwmN0Z--
