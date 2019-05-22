@@ -2,142 +2,111 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC459C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:04:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54D29C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:04:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD5DD20863
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:04:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25B2420863
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:04:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558555492;
-	bh=3peD/CkcjSNu0VTrh6HgoFoG440nXvSSSjaIN4aF1XQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t+Ry1H3nRaubE0U9RetWv5o9k7BFUxzQn7EmgobHOvVuFLT5ajfeOE2KyVuyVM7Nd
-	 nJUhIHNXaYWRDC+A/j7whWr19KS1o8cfDmNchn1PNqP8yAuIcqL8HCKTahDupKFfm9
-	 U0exzFVt6Au9VrNMUUQF5goZww+2HlavNO2KwaG0=
+	s=default; t=1558555497;
+	bh=aXHyFXPLU9IGpW3HEK+XYNrjGO/kpLN7fcvd6IyvNkI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=VgXlxcVia46DenOq6DfDdpPKgxe1thQtJMj0VYFlqoE92kGan/PBaQjlYJKn5DTtl
+	 3ylSObVsBwJ7ur5C9B0Js/KgJ0pNXr6OUQ2QAhyMZgpDKEou+lNfNnhUJLJ4upfWGy
+	 0cZ+/1c7XRU+CbyTTEmOuKUjQsD1E2i1eCkN0ZzM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732238AbfEVUEv (ORCPT
+        id S1732459AbfEVUE4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 16:04:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41692 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 16:04:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52554 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728761AbfEVTVT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:21:19 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1730435AbfEVUEz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 16:04:55 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E5CE62173C;
-        Wed, 22 May 2019 19:21:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B51D20863;
+        Wed, 22 May 2019 20:04:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558552878;
-        bh=3peD/CkcjSNu0VTrh6HgoFoG440nXvSSSjaIN4aF1XQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FRqSiC22otW+ye9foEp9uRIQmOpxSZxCNXoDuQYHxzmjYObYgwZ5J4Pn5nMwAaBVZ
-         Uk8jcs9GE4zH/FpminbXGwcYPQZfuUxmyOe7D41FNhYSksM3f7jA7FBjnxHWYrhZIu
-         wbq/QK3F4G0N2sGn1m0Rpy+ugZVtdo4/yZwdnaXY=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 002/375] cxgb4: Fix error path in cxgb4_init_module
-Date:   Wed, 22 May 2019 15:15:02 -0400
-Message-Id: <20190522192115.22666-2-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190522192115.22666-1-sashal@kernel.org>
-References: <20190522192115.22666-1-sashal@kernel.org>
+        s=default; t=1558555494;
+        bh=aXHyFXPLU9IGpW3HEK+XYNrjGO/kpLN7fcvd6IyvNkI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=hCj049p6mC4jBEqc//VLCF9O/YiqUtO7UzykZKjw4qelYSdHR+rsrG27eo0tw97yg
+         gEUnW/i/1NnUIWvWeEumIEnIDOTw1zxe6q2W3aGSgpUDThbc8KiFqZj5rfT5dQ2ZTG
+         TuLjCnVSEooeVPO2CReRpUooQ7UneWubXXjOCt1Y=
+Date:   Wed, 22 May 2019 22:04:52 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
+Subject: Re: [PATCH AUTOSEL 5.0 070/317] driver core: platform: Fix the usage
+ of platform device name(pdev->name)
+Message-ID: <20190522200452.GA3598@kroah.com>
+References: <20190522192338.23715-1-sashal@kernel.org>
+ <20190522192338.23715-70-sashal@kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190522192338.23715-70-sashal@kernel.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+On Wed, May 22, 2019 at 03:19:31PM -0400, Sasha Levin wrote:
+> From: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
+> 
+> [ Upstream commit edb16da34b084c66763f29bee42b4e6bb33c3d66 ]
+> 
+> Platform core is using pdev->name as the platform device name to do
+> the binding of the devices with the drivers. But, when the platform
+> driver overrides the platform device name with dev_set_name(),
+> the pdev->name is pointing to a location which is freed and becomes
+> an invalid parameter to do the binding match.
+> 
+> use-after-free instance:
+> 
+> [   33.325013] BUG: KASAN: use-after-free in strcmp+0x8c/0xb0
+> [   33.330646] Read of size 1 at addr ffffffc10beae600 by task modprobe
+> [   33.339068] CPU: 5 PID: 518 Comm: modprobe Tainted:
+> 			G S      W  O      4.19.30+ #3
+> [   33.346835] Hardware name: MTP (DT)
+> [   33.350419] Call trace:
+> [   33.352941]  dump_backtrace+0x0/0x3b8
+> [   33.356713]  show_stack+0x24/0x30
+> [   33.360119]  dump_stack+0x160/0x1d8
+> [   33.363709]  print_address_description+0x84/0x2e0
+> [   33.368549]  kasan_report+0x26c/0x2d0
+> [   33.372322]  __asan_report_load1_noabort+0x2c/0x38
+> [   33.377248]  strcmp+0x8c/0xb0
+> [   33.380306]  platform_match+0x70/0x1f8
+> [   33.384168]  __driver_attach+0x78/0x3a0
+> [   33.388111]  bus_for_each_dev+0x13c/0x1b8
+> [   33.392237]  driver_attach+0x4c/0x58
+> [   33.395910]  bus_add_driver+0x350/0x560
+> [   33.399854]  driver_register+0x23c/0x328
+> [   33.403886]  __platform_driver_register+0xd0/0xe0
+> 
+> So, use dev_name(&pdev->dev), which fetches the platform device name from
+> the kobject(dev->kobj->name) of the device instead of the pdev->name.
+> 
+> Signed-off-by: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  drivers/base/platform.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
 
-[ Upstream commit a3147770bea76c8dbad73eca3a24c2118da5e719 ]
+This patch was broken and got reverted in commit 391c0325cc5f ("Revert
+"driver core: platform: Fix the usage of platform device
+name(pdev->name)"") so please do not include it here, or anywhere.
 
-BUG: unable to handle kernel paging request at ffffffffa016a270
-PGD 3270067 P4D 3270067 PUD 3271063 PMD 230bbd067 PTE 0
-Oops: 0000 [#1
-CPU: 0 PID: 6134 Comm: modprobe Not tainted 5.1.0+ #33
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.9.3-0-ge2fc41e-prebuilt.qemu-project.org 04/01/2014
-RIP: 0010:atomic_notifier_chain_register+0x24/0x60
-Code: 1f 80 00 00 00 00 55 48 89 e5 41 54 49 89 f4 53 48 89 fb e8 ae b4 38 01 48 8b 53 38 48 8d 4b 38 48 85 d2 74 20 45 8b 44 24 10 <44> 3b 42 10 7e 08 eb 13 44 39 42 10 7c 0d 48 8d 4a 08 48 8b 52 08
-RSP: 0018:ffffc90000e2bc60 EFLAGS: 00010086
-RAX: 0000000000000292 RBX: ffffffff83467240 RCX: ffffffff83467278
-RDX: ffffffffa016a260 RSI: ffffffff83752140 RDI: ffffffff83467240
-RBP: ffffc90000e2bc70 R08: 0000000000000000 R09: 0000000000000001
-R10: 0000000000000000 R11: 00000000014fa61f R12: ffffffffa01c8260
-R13: ffff888231091e00 R14: 0000000000000000 R15: ffffc90000e2be78
-FS:  00007fbd8d7cd540(0000) GS:ffff888237a00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffffffa016a270 CR3: 000000022c7e3000 CR4: 00000000000006f0
-Call Trace:
- register_inet6addr_notifier+0x13/0x20
- cxgb4_init_module+0x6c/0x1000 [cxgb4
- ? 0xffffffffa01d7000
- do_one_initcall+0x6c/0x3cc
- ? do_init_module+0x22/0x1f1
- ? rcu_read_lock_sched_held+0x97/0xb0
- ? kmem_cache_alloc_trace+0x325/0x3b0
- do_init_module+0x5b/0x1f1
- load_module+0x1db1/0x2690
- ? m_show+0x1d0/0x1d0
- __do_sys_finit_module+0xc5/0xd0
- __x64_sys_finit_module+0x15/0x20
- do_syscall_64+0x6b/0x1d0
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
+thanks,
 
-If pci_register_driver fails, register inet6addr_notifier is
-pointless. This patch fix the error path in cxgb4_init_module.
-
-Fixes: b5a02f503caa ("cxgb4 : Update ipv6 address handling api")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
-index 89179e3166878..4bc0c357cb8ea 100644
---- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
-+++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
-@@ -6161,15 +6161,24 @@ static int __init cxgb4_init_module(void)
- 
- 	ret = pci_register_driver(&cxgb4_driver);
- 	if (ret < 0)
--		debugfs_remove(cxgb4_debugfs_root);
-+		goto err_pci;
- 
- #if IS_ENABLED(CONFIG_IPV6)
- 	if (!inet6addr_registered) {
--		register_inet6addr_notifier(&cxgb4_inet6addr_notifier);
--		inet6addr_registered = true;
-+		ret = register_inet6addr_notifier(&cxgb4_inet6addr_notifier);
-+		if (ret)
-+			pci_unregister_driver(&cxgb4_driver);
-+		else
-+			inet6addr_registered = true;
- 	}
- #endif
- 
-+	if (ret == 0)
-+		return ret;
-+
-+err_pci:
-+	debugfs_remove(cxgb4_debugfs_root);
-+
- 	return ret;
- }
- 
--- 
-2.20.1
-
+greg k-h
