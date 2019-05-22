@@ -2,105 +2,130 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BDD2C072A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 07:04:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B880C072A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 07:06:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 410D32173C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 07:04:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29EC820863
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 07:06:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="yWWvOAKA"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NCT1LOId"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728678AbfEVHEi (ORCPT
+        id S1728551AbfEVHGS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 03:04:38 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:33402 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726480AbfEVHEh (ORCPT
+        Wed, 22 May 2019 03:06:18 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:46861 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726358AbfEVHGR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 03:04:37 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4M6wl1Q044442;
-        Wed, 22 May 2019 07:04:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=dSL2k3WA3sCWVQjdlAEtqyhk4rfZ8LtxiTQMWRcgG70=;
- b=yWWvOAKA8vTjSJJb7aoNWfSv64ycNUjxrnrxPx55KEd69mUDrxXtjqhfUNIkX2/J/+uT
- hVe4k6D7Y9ze2UNu4qMAogwBYVIwown5aefDz4ynPrLH+/JiMpBuXszHYqVt9nKSQbm5
- oVm1hqrlfowkhhliUUleSG8hrIqV5I3pxr9uF4Atf/5yJWG4NPhju2XmUB0hrnYpU75O
- ZgbDfgpp4Y9yMKMXw1jxKtEP9gNOBeDYp7zpqvQ263m1kTFryvS7Lg5DkHcypK93lJMa
- oUwPy8bD9+0NkZKXH/GjceAy+qqj92umAVBjvb24W5KSJow6tYzu+Il3bDQ4S964+3eG Qg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 2smsk51mbr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 22 May 2019 07:04:29 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4M73V3H026224;
-        Wed, 22 May 2019 07:04:29 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 2smsgsean1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 22 May 2019 07:04:29 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x4M74RFx022760;
-        Wed, 22 May 2019 07:04:27 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 22 May 2019 07:04:26 +0000
-Date:   Wed, 22 May 2019 10:04:18 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        linux-kernel@vger.kernel.org,
-        John Whitmore <johnfwhitmore@gmail.com>,
-        clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] staging: rtl8192u: Remove an unnecessary NULL check
-Message-ID: <20190522070418.GP31203@kadam>
-References: <20190521174221.124459-1-natechancellor@gmail.com>
+        Wed, 22 May 2019 03:06:17 -0400
+Received: by mail-pl1-f193.google.com with SMTP id r18so593432pls.13
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 00:06:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=euUzaUZjQQvHcCyny1Ihtmol+djSm2u5xzcf8kf/Thc=;
+        b=NCT1LOIdOIFdV4B/JKCZSXABGZ7P568wX1X+hR6On5h2/CzYjEkP5bRCZTGjG+7J0v
+         kj5vOZBLqMQdFjseIA3ssc82FrOkVmnDptR0dvDmsb5t6Z/pGLquiYYkxK5e/UUitM38
+         4QNGjYb+zctwCs69ItfvyUrEPcJBAJiBRtJGXPj1+egezpBWt+TkX5MXkd4LTHdrqs3V
+         uIDD6xN0rfjaGMMjowsLtkgaHHaRyZcJgHHfEnTEE0aFIDZbkIqMKXcmZ8HVS5td4cCs
+         94cDip9FK/cDNo9VMYgPajmCjXn93aYAj7HXxZ1mbHlrs2kJMzaxxipouNzL9QTeDC7l
+         WLtw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=euUzaUZjQQvHcCyny1Ihtmol+djSm2u5xzcf8kf/Thc=;
+        b=QvZ0soh39dS5tgyIrYeUh/yFF6CWHqFlv6aF6kxCyYip0/Jn6VZOTIqInzR194Lpvu
+         ZfpgQJ1vSu0+BUQfhK/SLyB+zX4HhAZoIFEn81HLogpQRpaZEIIVl+wfYyc7KQZS+7rB
+         Ra/6blDnAFmnWOnkCczmGG/3NzlbVcql7346GQ/l94mKzLur/do3I7vJNL42qOnarV9L
+         JaOAF2XlaE62zxLjMJHeIFQtFu8zdw7p1P9ne3T4YnuVvvk9azHF+LCLsO8pgVW84XzT
+         PwUkuc/Ird/K4WtJXkMcBTXxbK6O0gZjjW350NV6kaxU8hwQMdNE0O9sJSkVukS3E9v2
+         hC6A==
+X-Gm-Message-State: APjAAAWK75Yqj+ZnDLoOD9Jmm1mx+w4f/QJqoge2Uvic5t7iDRY8KqkX
+        9kiKBfIopaWyW/vyL5RK63hp7Q==
+X-Google-Smtp-Source: APXvYqy30S3S5HqOpyNRhQG/1HfYb5UoEd/36HJBYTVpPN+mzh/G8thtMqdbxlhFpcEWj6R0+Jk4mg==
+X-Received: by 2002:a17:902:b584:: with SMTP id a4mr52232229pls.333.1558508777113;
+        Wed, 22 May 2019 00:06:17 -0700 (PDT)
+Received: from localhost ([122.172.118.99])
+        by smtp.gmail.com with ESMTPSA id p16sm56975123pfq.153.2019.05.22.00.06.15
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 22 May 2019 00:06:16 -0700 (PDT)
+Date:   Wed, 22 May 2019 12:36:14 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Ilias Apalodimas <ilias.apalodimas@linaro.org>
+Cc:     Gregory CLEMENT <gregory.clement@bootlin.com>,
+        Christian Neubert <christian.neubert.86@gmail.com>,
+        Stephen Boyd <sboyd@codeaurora.org>,
+        Mike Turquette <mturquette@baylibre.com>,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        =?utf-8?Q?Miqu=C3=A8l?= Raynal <miquel.raynal@bootlin.com>,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] clk: mvebu: armada-37xx-periph: Fix initialization for
+ cpu clocks
+Message-ID: <20190522070614.jhpo7nqrxinmlbcs@vireshk-i7>
+References: <CAC5LXJcCs4nr-qFOWzUJpUBAJ9ngG-cgeTCVCFBKFc1SPzHMuQ@mail.gmail.com>
+ <20190314134428.GA24768@apalos>
+ <874l85v8p6.fsf@FE-laptop>
+ <20190318112844.GA1708@apalos>
+ <87h8c0s955.fsf@FE-laptop>
+ <20190318122113.GA4834@apalos>
+ <20190424093015.rcr5auamfccxf6ei@vireshk-i7>
+ <20190425123303.GA12659@apalos>
+ <20190520112042.mpamnabxpwciih5m@vireshk-i7>
+ <20190522070341.GA32613@apalos>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190521174221.124459-1-natechancellor@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9264 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1905220052
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9264 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905220052
+In-Reply-To: <20190522070341.GA32613@apalos>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 21, 2019 at 10:42:21AM -0700, Nathan Chancellor wrote:
-> Clang warns:
-> 
-> drivers/staging/rtl8192u/ieee80211/ieee80211_softmac.c:2663:47: warning:
-> address of array 'param->u.wpa_ie.data' will always evaluate to 'true'
-> [-Wpointer-bool-conversion]
->             (param->u.wpa_ie.len && !param->u.wpa_ie.data))
->                                     ~~~~~~~~~~~~~~~~~^~~~
-> 
-> This was exposed by commit deabe03523a7 ("Staging: rtl8192u: ieee80211:
-> Use !x in place of NULL comparisons") because we disable the warning
-> that would have pointed out the comparison against NULL is also false:
-> 
+On 22-05-19, 10:03, Ilias Apalodimas wrote:
+> Hi Viresh, Gregory
+> On Mon, May 20, 2019 at 04:50:42PM +0530, Viresh Kumar wrote:
+> > On 25-04-19, 15:33, Ilias Apalodimas wrote:
+> > > Hi Viresh,
+> > > 
+> > > > > > Also, during this week-end, Christian suggested that the issue might
+> > > > > > come from the AVS support.
+> > > > > > 
+> > > > > > Could you disable it and check you still have the issue?
+> > > > > > 
+> > > > > > For this, you just have to remove the avs node in
+> > > > > > arch/arm64/boot/dts/marvell/armada-37xx.dtsi and rebuild the dtb.
+> > > > > Sure. You'll have to wait for a week though. Currently on a trip. I'll run that
+> > > > >  once i return
+> > > > 
+> > > > @Ilias: Can you please try this now and confirm to Gregory ?
+> > > I am more overloaded than usual and totally forgot about this. Apologies.
+> > > I'll try finding some time and do this.
+> > 
+> > Ping Ilias.
+> Sorry for the huge delay. 
+> Applying this patch and removing tha 'avs' node from
+> arch/arm64/boot/dts/marvell/armada-37xx.dtsi seems to work.
+> Changing between governors does not freeze the board any more. I haven't checked
+> the actual impact on the CPU speed but the values on 
+> /sys/devices/system/cpu/cpufreq/policy0/scaling_governor are correct
 
-Heh.  Weird.  Why would people disable one and not the other?
+Thanks for testing it out. Lets see what Gregory has to say now.
 
-regards,
-dan carpenter
-
+-- 
+viresh
