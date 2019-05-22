@@ -2,195 +2,124 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC426C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 21:30:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E930C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 21:30:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D28820881
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 21:30:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="c3fd0VNH"
+	by mail.kernel.org (Postfix) with ESMTP id 2CFE920881
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 21:30:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730574AbfEVVaR (ORCPT
+        id S1730590AbfEVVab (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 17:30:17 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:36703 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730555AbfEVVaO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 17:30:14 -0400
-Received: by mail-pf1-f193.google.com with SMTP id v80so2008963pfa.3
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 14:30:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=2TF5wBqEPfwtII57G09NFjtSOT12Df/ulltyqul+I94=;
-        b=c3fd0VNHS3cYGt7G8Sp7oGuQYSCSl9nUiKz4FKDIdBvSerPKMwG0ATynQ9uHD8Ix1M
-         wl7zZ1VRMKgx+UMw1dFR3DEIH2gN3AjoJtfN6Vp1UvzDGpl8jCGTsWLqOWV/GwOV/Joy
-         E/c8qwIDZbBYucklsCw5E4Ieo1MjJa3LBoG8s=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=2TF5wBqEPfwtII57G09NFjtSOT12Df/ulltyqul+I94=;
-        b=UGhfxbAg4yWZJ86JyXxNxexwmLjuds14ywGbve0TVSoyl/xOjw6DFKnlTvtjLIlLd7
-         JLBrhxaIj+uUF8M4tV6orUFOJ6Uv4RMlqcxPR3zb/m12iecdDP5wCEhy/psQzT0xEOZv
-         cVbunwtGRpNFAHmqWVbV5f1s84+GbN3AT8Uhfl7ZU2WChWNh93vPoAlEZ9XIeeKdjvBB
-         EsDxSmJIdM/8JXmy6VctUbrQI2Vld9j0OPjXfk7ny0bf8BfHQDPik2H+4yltiCALml0N
-         9lY25pt4R3REo4KaIawjSyBEYZPlWX285+GdX6III43m/LdWtgOGHZCzXFU1U9rFKTV6
-         nk5Q==
-X-Gm-Message-State: APjAAAUZXfv8R88R/qgK44Bf9cazoOBTcHMt3ub0E109jQx8xrAb8A32
-        4Vf9s/jM8atWJZNDPN7IDTqkSg==
-X-Google-Smtp-Source: APXvYqwGE8AikMohimZx119rGA4H9lW54C3uhROo02kUeuAING4Gdsj67jSdqEUttHH1Ci2yIOoMjg==
-X-Received: by 2002:a62:86c4:: with SMTP id x187mr15083928pfd.34.1558560613248;
-        Wed, 22 May 2019 14:30:13 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id d186sm26750721pgc.58.2019.05.22.14.30.12
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 22 May 2019 14:30:12 -0700 (PDT)
-Date:   Wed, 22 May 2019 14:30:11 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Kyungmin Park <kyungmin.park@samsung.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mtd: onenand_base: Avoid fall-through warnings
-Message-ID: <201905221403.642AF6092@keescook>
-References: <20190522180446.GA30082@embeddedor>
+        Wed, 22 May 2019 17:30:31 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:48346 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729896AbfEVVaa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 17:30:30 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 7C6723082A28;
+        Wed, 22 May 2019 21:30:30 +0000 (UTC)
+Received: from krava (ovpn-204-104.brq.redhat.com [10.40.204.104])
+        by smtp.corp.redhat.com (Postfix) with SMTP id A56891001DE0;
+        Wed, 22 May 2019 21:30:27 +0000 (UTC)
+Date:   Wed, 22 May 2019 23:30:26 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>, lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Stanislav Fomichev <sdf@fomichev.me>,
+        Song Liu <songliubraving@fb.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Thomas Richter <tmricht@linux.ibm.com>
+Subject: Re: [PATCH 12/12] perf script: Add --show-all-events option
+Message-ID: <20190522213026.GB11325@krava>
+References: <20190508132010.14512-1-jolsa@kernel.org>
+ <20190508132010.14512-13-jolsa@kernel.org>
+ <20190522161804.GG30271@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190522180446.GA30082@embeddedor>
+In-Reply-To: <20190522161804.GG30271@kernel.org>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Wed, 22 May 2019 21:30:30 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sorry for being late to speaking up on this. I missed something in the
-code the first time I read the thread, that now stood out to me. Notes
-below...
+On Wed, May 22, 2019 at 01:18:04PM -0300, Arnaldo Carvalho de Melo wrote:
+> Em Wed, May 08, 2019 at 03:20:10PM +0200, Jiri Olsa escreveu:
+> > Adding --show-all-events option to show all
+> > side-bad events with single option, like:
+> > 
+> >   $ perf script --show-all-events
+> >   swapper     0 [000]     0.000000: PERF_RECORD_MMAP -1/0: [0xffffffffa6000000(0xc00e41) @ 0xffffffffa6000000]: x [kernel.kallsyms]_text
+> >   ...
+> >   swapper     0 [000]     0.000000: PERF_RECORD_KSYMBOL addr ffffffffc01bc362 len 229 type 1 flags 0x0 name bpf_prog_7be49e3934a125ba
+> >   swapper     0 [000]     0.000000: PERF_RECORD_BPF_EVENT type 1, flags 0, id 29
+> >   ...
+> >   swapper     0 [000]     0.000000: PERF_RECORD_FORK(1:1):(0:0)
+> >   systemd     0 [000]     0.000000: PERF_RECORD_COMM: systemd:1/1
+> >   ...
+> >   swapper     0 [000] 63587.039518:          1 cycles:  ffffffffa60698b4 [unknown] ([kernel.kallsyms])
+> >   swapper     0 [000] 63587.039522:          1 cycles:  ffffffffa60698b4 [unknown] ([kernel.kallsyms])
+> 
+> Strange:
+> 
+> [root@quaco pt]# 
+> [root@quaco pt]# perf evlist -v
+> intel_pt//ku: type: 8, size: 112, config: 0x300e601, { sample_period, sample_freq }: 1, sample_type: IP|TID|TIME|CPU|IDENTIFIER, read_format: ID, disabled: 1, inherit: 1, exclude_hv: 1, sample_id_all: 1
+> dummy:u: type: 1, size: 112, config: 0x9, { sample_period, sample_freq }: 1, sample_type: IP|TID|TIME|CPU|IDENTIFIER, read_format: ID, inherit: 1, exclude_kernel: 1, exclude_hv: 1, mmap: 1, comm: 1, task: 1, sample_id_all: 1, mmap2: 1, comm_exec: 1, context_switch: 1, ksymbol: 1, bpf_event: 1
+> [root@quaco pt]# 
+> 
+> Then:
+> 
+> [root@quaco pt]# perf script --show-bpf-events  | head
+>     0 PERF_RECORD_KSYMBOL addr ffffffffc029a6c3 len 229 type 1 flags 0x0 name bpf_prog_7be49e3934a125ba
+>     0 PERF_RECORD_BPF_EVENT type 1, flags 0, id 47
+>     0 PERF_RECORD_KSYMBOL addr ffffffffc029c1ae len 229 type 1 flags 0x0 name bpf_prog_2a142ef67aaad174
+>     0 PERF_RECORD_BPF_EVENT type 1, flags 0, id 48
+>     0 PERF_RECORD_KSYMBOL addr ffffffffc02ddd1c len 229 type 1 flags 0x0 name bpf_prog_7be49e3934a125ba
+>     0 PERF_RECORD_BPF_EVENT type 1, flags 0, id 49
+>     0 PERF_RECORD_KSYMBOL addr ffffffffc02dfc11 len 229 type 1 flags 0x0 name bpf_prog_2a142ef67aaad174
+>     0 PERF_RECORD_BPF_EVENT type 1, flags 0, id 50
+>     0 PERF_RECORD_KSYMBOL addr ffffffffc045da0a len 229 type 1 flags 0x0 name bpf_prog_7be49e3934a125ba
+>     0 PERF_RECORD_BPF_EVENT type 1, flags 0, id 51
+> [root@quaco pt]#
+> 
+> But:
+> 
+> [root@quaco pt]# perf script --show-all-events  | head
+> Intel Processor Trace requires ordered events
+> 0x2a0 [0x60]: failed to process type: 1 [Invalid argument]
+> [root@quaco pt]#
 
-On Wed, May 22, 2019 at 01:04:46PM -0500, Gustavo A. R. Silva wrote:
-> diff --git a/drivers/mtd/nand/onenand/onenand_base.c b/drivers/mtd/nand/onenand/onenand_base.c
-> index f41d76248550..6cf4df9f8c01 100644
-> --- a/drivers/mtd/nand/onenand/onenand_base.c
-> +++ b/drivers/mtd/nand/onenand/onenand_base.c
-> @@ -3280,12 +3280,14 @@ static void onenand_check_features(struct mtd_info *mtd)
+hum, so round events disable ordering, which is required by pt
 
-Reverse-order review, second hunk first:
+        if (script->show_round_events) {
+                script->tool.ordered_events = false;
+	..
 
->  	case ONENAND_DEVICE_DENSITY_2Gb:
->  		/* 2Gb DDP does not have 2 plane */
->  		if (!ONENAND_IS_DDP(this))
->  			this->options |= ONENAND_HAS_2PLANE;
->  		this->options |= ONENAND_HAS_UNLOCK_ALL;
-> +		/* Fall through - ? */
->  
->  	case ONENAND_DEVICE_DENSITY_1Gb:
->  		/* A-Die has all block unlock */
+so the --show-round-events option always fails on intel_pt data:
 
-So, I think the ONENAND_DEVICE_DENSITY_2Gb should be a "break". Though,
-actually, it doesn't matter:
+	[jolsa@krava perf]$ ./perf script --show-round-events
+	Intel Processor Trace requires ordered events
+	0x2e8 [0x38]: failed to process type: 3 [Invalid argument]
 
-        case ONENAND_DEVICE_DENSITY_2Gb:
-                /* 2Gb DDP does not have 2 plane */
-                if (!ONENAND_IS_DDP(this))
-                        this->options |= ONENAND_HAS_2PLANE;
-                this->options |= ONENAND_HAS_UNLOCK_ALL;
+> 
+> So I have all patches but this last one, will test and push Ingo's way
+> so that we make progress, we can get this one later after we figure this
+> out.
 
-        case ONENAND_DEVICE_DENSITY_1Gb:
-                /* A-Die has all block unlock */
-                if (process)
-                        this->options |= ONENAND_HAS_UNLOCK_ALL;
-                break;
-
-Falling through from ONENAND_DEVICE_DENSITY_2Gb to
-ONENAND_DEVICE_DENSITY_1Gb will actually have no side-effects:
-ONENAND_HAS_UNLOCK_ALL was unconditionally set in ..._2Gb, so there is
-no reason to fall through to ..._1Gb. (But falling through is harmless.)
-
-Now the first hunk:
-
->  			if ((this->version_id & 0xf) == 0xe)
->  				this->options |= ONENAND_HAS_NOP_1;
->  		}
-> +		/* Fall through - ? */
->  
-
-        case ONENAND_DEVICE_DENSITY_4Gb:
-                if (ONENAND_IS_DDP(this))
-                        this->options |= ONENAND_HAS_2PLANE;
-                else if (numbufs == 1) {
-                        this->options |= ONENAND_HAS_4KB_PAGE;
-                        this->options |= ONENAND_HAS_CACHE_PROGRAM;
-                        /*
-                         * There are two different 4KiB pagesize chips
-                         * and no way to detect it by H/W config values.
-                         *
-                         * To detect the correct NOP for each chips,
-                         * It should check the version ID as workaround.
-                         *
-                         * Now it has as following
-                         * KFM4G16Q4M has NOP 4 with version ID 0x0131
-                         * KFM4G16Q5M has NOP 1 with versoin ID 0x013e
-                         */
-                        if ((this->version_id & 0xf) == 0xe)
-                                this->options |= ONENAND_HAS_NOP_1;
-                }
-
-Falling through from ONENAND_DEVICE_DENSITY_4Gb to
-ONENAND_DEVICE_DENSITY_2Gb looks like it would mean that
-ONENAND_HAS_2PLANE would be unconditionally set for ...4Gb, which seems
-very strange to expect:
-
-                if (ONENAND_IS_DDP(this))
-                        this->options |= ONENAND_HAS_2PLANE;
-...
-                if (!ONENAND_IS_DDP(this))
-                        this->options |= ONENAND_HAS_2PLANE;
-
-However! This happens later:
-
-        if (ONENAND_IS_4KB_PAGE(this))
-                this->options &= ~ONENAND_HAS_2PLANE;
-
-i.e. falling through to ...2Gb (which sets ONENAND_HAS_2PLANE) has no
-effect because when ONENAND_HAS_2PLANE isn't set (numbufs == 1), it gets
-_cleared_ by the above code due to ONENAND_HAS_4KB_PAGE getting set:
-
-#define ONENAND_IS_4KB_PAGE(this) \
-        (this->options & ONENAND_HAS_4KB_PAGE)
-
-
-Unfortunately, though, it's less clear about ONENAND_HAS_UNLOCK_ALL,
-which is getting set unconditionally for ...4Gb currently (due to the
-fallthrough to ...2Gb). However, this happens later:
-
-        if (FLEXONENAND(this)) {
-                this->options &= ~ONENAND_HAS_CONT_LOCK;
-                this->options |= ONENAND_HAS_UNLOCK_ALL;
-        }
-...
-#define FLEXONENAND(this) \
-        (this->device_id & DEVICE_IS_FLEXONENAND)
-
-So it's possible this fall through has no effect (are all 4Gb density
-devices also FLEXONENAND devices?)
-
-Setting a "break" after 4Gb may remove ONENAND_HAS_UNLOCK_ALL in the
-!FLEXONENAND(this) case. Does anyone have real hardware to test with?
-
-Thoughts?
-
--- 
-Kees Cook
+thanks,
+jirka
