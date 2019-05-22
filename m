@@ -2,81 +2,230 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F20C8C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 21:49:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0746C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 21:49:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A7B220868
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 21:49:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6825C20868
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 21:49:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730441AbfEVVtD (ORCPT
+        id S1730509AbfEVVth (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 17:49:03 -0400
-Received: from mail-it1-f198.google.com ([209.85.166.198]:42149 "EHLO
-        mail-it1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728615AbfEVVtB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 17:49:01 -0400
-Received: by mail-it1-f198.google.com with SMTP id s18so3303734itl.7
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 14:49:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=TIQGF/z6Uv9dk4W4KZtT8M62kZhnd/SllJeeMECtlHs=;
-        b=hTkuL1HEI9To9+6oPSZGaGg65+qCzffUCMLTqT1ZVR9YMN7zHZZwcieCQgU8ACkuG5
-         nXn2RI676YbLVe+MJetpeamujkcA2MA7p373QIhZ89+OLdQR0awB8ajZMoX8+WXZ5Mql
-         nvAfAbb5Ir0hRERkaBjEWHTKZ0RtvNzihS0eF+nRW56AieultcDMjWi4tOgts6/zci0P
-         adFlEgp8SySkGGGnOPfO3IpooKVsUL4gLiSyR/kuwVJgM7SMuG6wlZ+MgICwMtzUzOlv
-         casskPpSEyardXxyciKtAmAxWK0UXWX1mPYA7+yRhltUdKYjjVEuus/mxppm+ECHdHFJ
-         QhgQ==
-X-Gm-Message-State: APjAAAXKsNbQQEH74GczBRcgwL8LEwwVRJakDQQeb5dmLr27tiLhDiXM
-        rmo5BQvtSiIZyJsSYqZS1yO/4DkpMZfxMb+NIU5hHt/R14EC
-X-Google-Smtp-Source: APXvYqx3pKlCIWImXjwTHYPQ2q7elS7eFooEn3z9joINI2kGSb5fVGpbdl7LNLXsN/Yjq2bq1zV8ffOmpetSZX7ITiCgllSz/ztC
+        Wed, 22 May 2019 17:49:37 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42330 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728615AbfEVVth (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 17:49:37 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id E276837EEB;
+        Wed, 22 May 2019 21:49:22 +0000 (UTC)
+Received: from redhat.com (unknown [10.20.6.178])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id CADDF52E7;
+        Wed, 22 May 2019 21:49:19 +0000 (UTC)
+Date:   Wed, 22 May 2019 17:49:18 -0400
+From:   Jerome Glisse <jglisse@redhat.com>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Artemy Kovalyov <artemyko@mellanox.com>,
+        Moni Shoua <monis@mellanox.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Kaike Wan <kaike.wan@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        linux-mm@kvack.org
+Subject: Re: [PATCH v4 0/1] Use HMM for ODP v4
+Message-ID: <20190522214917.GA20179@redhat.com>
+References: <20190411181314.19465-1-jglisse@redhat.com>
+ <20190506195657.GA30261@ziepe.ca>
+ <20190521205321.GC3331@redhat.com>
+ <20190522005225.GA30819@ziepe.ca>
+ <20190522174852.GA23038@redhat.com>
+ <20190522192219.GF6054@ziepe.ca>
 MIME-Version: 1.0
-X-Received: by 2002:a24:6292:: with SMTP id d140mr10402926itc.132.1558561740544;
- Wed, 22 May 2019 14:49:00 -0700 (PDT)
-Date:   Wed, 22 May 2019 14:49:00 -0700
-In-Reply-To: <000000000000fd342e05791cc86f@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000e7e3a5058980ee7b@google.com>
-Subject: Re: KASAN: use-after-free Read in sk_psock_unlink
-From:   syzbot <syzbot+3acd9f67a6a15766686e@syzkaller.appspotmail.com>
-To:     ast@kernel.org, bpf@vger.kernel.org, daniel@iogearbox.net,
-        davem@davemloft.net, john.fastabend@gmail.com, kafai@fb.com,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        songliubraving@fb.com, syzkaller-bugs@googlegroups.com,
-        torvalds@linux-foundation.org, yhs@fb.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190522192219.GF6054@ziepe.ca>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Wed, 22 May 2019 21:49:36 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+On Wed, May 22, 2019 at 04:22:19PM -0300, Jason Gunthorpe wrote:
+> On Wed, May 22, 2019 at 01:48:52PM -0400, Jerome Glisse wrote:
+> 
+> > > > +long ib_umem_odp_map_dma_pages(struct ib_umem_odp *umem_odp,
+> > > > +			       struct hmm_range *range)
+> > > >  {
+> > > > +	struct device *device = umem_odp->umem.context->device->dma_device;
+> > > > +	struct ib_ucontext_per_mm *per_mm = umem_odp->per_mm;
+> > > >  	struct ib_umem *umem = &umem_odp->umem;
+> > > > -	struct task_struct *owning_process  = NULL;
+> > > > -	struct mm_struct *owning_mm = umem_odp->umem.owning_mm;
+> > > > -	struct page       **local_page_list = NULL;
+> > > > -	u64 page_mask, off;
+> > > > -	int j, k, ret = 0, start_idx, npages = 0, page_shift;
+> > > > -	unsigned int flags = 0;
+> > > > -	phys_addr_t p = 0;
+> > > > -
+> > > > -	if (access_mask == 0)
+> > > > +	struct mm_struct *mm = per_mm->mm;
+> > > > +	unsigned long idx, npages;
+> > > > +	long ret;
+> > > > +
+> > > > +	if (mm == NULL)
+> > > > +		return -ENOENT;
+> > > > +
+> > > > +	/* Only drivers with invalidate support can use this function. */
+> > > > +	if (!umem->context->invalidate_range)
+> > > >  		return -EINVAL;
+> > > >  
+> > > > -	if (user_virt < ib_umem_start(umem) ||
+> > > > -	    user_virt + bcnt > ib_umem_end(umem))
+> > > > -		return -EFAULT;
+> > > > +	/* Sanity checks. */
+> > > > +	if (range->default_flags == 0)
+> > > > +		return -EINVAL;
+> > > >  
+> > > > -	local_page_list = (struct page **)__get_free_page(GFP_KERNEL);
+> > > > -	if (!local_page_list)
+> > > > -		return -ENOMEM;
+> > > > +	if (range->start < ib_umem_start(umem) ||
+> > > > +	    range->end > ib_umem_end(umem))
+> > > > +		return -EINVAL;
+> > > >  
+> > > > -	page_shift = umem->page_shift;
+> > > > -	page_mask = ~(BIT(page_shift) - 1);
+> > > > -	off = user_virt & (~page_mask);
+> > > > -	user_virt = user_virt & page_mask;
+> > > > -	bcnt += off; /* Charge for the first page offset as well. */
+> > > > +	idx = (range->start - ib_umem_start(umem)) >> umem->page_shift;
+> > > 
+> > > Is this math OK? What is supposed to happen if the range->start is not
+> > > page aligned to the internal page size?
+> > 
+> > range->start is align on 1 << page_shift boundary within pagefault_mr
+> > thus the above math is ok. We can add a BUG_ON() and comments if you
+> > want.
+> 
+> OK
+> 
+> > > > +	range->pfns = &umem_odp->pfns[idx];
+> > > > +	range->pfn_shift = ODP_FLAGS_BITS;
+> > > > +	range->values = odp_hmm_values;
+> > > > +	range->flags = odp_hmm_flags;
+> > > >  
+> > > >  	/*
+> > > > -	 * owning_process is allowed to be NULL, this means somehow the mm is
+> > > > -	 * existing beyond the lifetime of the originating process.. Presumably
+> > > > -	 * mmget_not_zero will fail in this case.
+> > > > +	 * If mm is dying just bail out early without trying to take mmap_sem.
+> > > > +	 * Note that this might race with mm destruction but that is fine the
+> > > > +	 * is properly refcounted so are all HMM structure.
+> > > >  	 */
+> > > > -	owning_process = get_pid_task(umem_odp->per_mm->tgid, PIDTYPE_PID);
+> > > > -	if (!owning_process || !mmget_not_zero(owning_mm)) {
+> > > 
+> > > But we are not in a HMM context here, and per_mm is not a HMM
+> > > structure. 
+> > > 
+> > > So why is mm suddenly guarenteed valid? It was a bug report that
+> > > triggered the race the mmget_not_zero is fixing, so I need a better
+> > > explanation why it is now safe. From what I see the hmm_range_fault
+> > > is doing stuff like find_vma without an active mmget??
+> > 
+> > So the mm struct can not go away as long as we hold a reference on
+> > the hmm struct and we hold a reference on it through both hmm_mirror
+> > and hmm_range struct. So struct mm can not go away and thus it is
+> > safe to try to take its mmap_sem.
+> 
+> This was always true here, though, so long as the umem_odp exists the
+> the mm has a grab on it. But a grab is not a get..
+> 
+> The point here was the old code needed an mmget() in order to do
+> get_user_pages_remote()
+> 
+> If hmm does not need an external mmget() then fine, we delete this
+> stuff and rely on hmm.
+> 
+> But I don't think that is true as we have:
+> 
+>           CPU 0                                           CPU1
+>                                                        mmput()
+>                        				        __mmput()
+> 							 exit_mmap()
+> down_read(&mm->mmap_sem);
+> hmm_range_dma_map(range, device,..
+>   ret = hmm_range_fault(range, block);
+>      if (hmm->mm == NULL || hmm->dead)
+> 							   mmu_notifier_release()
+> 							     hmm->dead = true
+>      vma = find_vma(hmm->mm, start);
+>         .. rb traversal ..                                 while (vma) remove_vma()
+> 
+> *goes boom*
+> 
+> I think this is violating the basic constraint of the mm by acting on
+> a mm's VMA's without holding a mmget() to prevent concurrent
+> destruction.
+> 
+> In other words, mmput() destruction does not respect the mmap_sem - so
+> holding the mmap sem alone is not enough locking.
+> 
+> The unlucked hmm->dead simply can't save this. Frankly every time I
+> look a struct with 'dead' in it, I find races like this.
+> 
+> Thus we should put the mmget_notzero back in.
 
-commit 48a3c64b4649b5b23a4ca756af93b4ee820ff883
-Author: Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri Jun 29 14:11:03 2018 +0000
+So for some reason i thought exit_mmap() was setting the mm_rb
+to empty node and flushing vmacache so that find_vma() would
+fail. Might have been in some patch that never went upstream.
 
-     Merge tag 'drm-fixes-2018-06-29' of  
-git://anongit.freedesktop.org/drm/drm
+Note that right before find_vma() there is also range->valid
+check which will also intercept mm release.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=11f92d6ca00000
-start commit:   f49aa1de Merge tag 'for-5.2-rc1-tag' of git://git.kernel.o..
-git tree:       net-next
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=13f92d6ca00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=15f92d6ca00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=fc045131472947d7
-dashboard link: https://syzkaller.appspot.com/bug?extid=3acd9f67a6a15766686e
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13adf56ca00000
+Anyway the easy fix is to get ref on mm user in range_register.
 
-Reported-by: syzbot+3acd9f67a6a15766686e@syzkaller.appspotmail.com
-Fixes: 48a3c64b4649 ("Merge tag 'drm-fixes-2018-06-29' of  
-git://anongit.freedesktop.org/drm/drm")
+> 
+> I saw some other funky looking stuff in hmm as well..
+> 
+> > Hence it is safe to take mmap_sem and it is safe to call in hmm, if
+> > mm have been kill it will return EFAULT and this will propagate to
+> > RDMA.
+>  
+> > As per_mm i removed the per_mm->mm = NULL from release so that it is
+> > always safe to use that field even in face of racing mm "killing".
+> 
+> Yes, that certainly wasn't good.
+> 
+> > > > -	 * An array of the pages included in the on-demand paging umem.
+> > > > -	 * Indices of pages that are currently not mapped into the device will
+> > > > -	 * contain NULL.
+> > > > +	 * An array of the pages included in the on-demand paging umem. Indices
+> > > > +	 * of pages that are currently not mapped into the device will contain
+> > > > +	 * 0.
+> > > >  	 */
+> > > > -	struct page		**page_list;
+> > > > +	uint64_t *pfns;
+> > > 
+> > > Are these actually pfns, or are they mangled with some shift? (what is range->pfn_shift?)
+> > 
+> > They are not pfns they have flags (hence range->pfn_shift) at the
+> > bottoms i just do not have a better name for this.
+> 
+> I think you need to have a better name then
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+Suggestion ? i have no idea for a better name, it has pfn value
+in it.
+
+Cheers,
+Jérôme
