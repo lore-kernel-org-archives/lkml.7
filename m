@@ -2,149 +2,285 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50F45C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 23:23:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9BBDC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 23:23:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC30620881
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 23:23:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79DC220881
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 23:23:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="kC7XoFy4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729447AbfEVXXM (ORCPT
+        id S1729596AbfEVXXx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 19:23:12 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:34431 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726553AbfEVXXL (ORCPT
+        Wed, 22 May 2019 19:23:53 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:46422 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727691AbfEVXXx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 19:23:11 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69])
-        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <dann.frazier@canonical.com>)
-        id 1hTaZg-0004B3-Vo
-        for linux-kernel@vger.kernel.org; Wed, 22 May 2019 23:23:09 +0000
-Received: by mail-io1-f69.google.com with SMTP id v22so3103321ion.2
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 16:23:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=s85uEhKAu1jS0Q+P5fZlz+A7fx6iSmj4/T3oMaYK86c=;
-        b=OugQvK95itm8+ROx06zNW0pCXRdrZfjxdh8NvWTmvP30Uee3c4Vficl9KfWI4qAv0t
-         rUij8LvJ8gMrC0ldQJZ1dDd6jA9WJmVNeGkKkU9kEouklrtwJGWdm0l10qC+KauYDq58
-         XEd8A1WXi+32efQMs+M4T1egFS3pxp7AC6C8yv/khPo2OryGr41F+Mhlz5v37Nq06hpi
-         FRKTkE3agrWbr5/ZWOvQlGd5nth+aUugkbCq1Z/OC//MR5h4dJwkK7IDeryNs4GPCoTa
-         Hz8WAy8P7CAU24KbDsRxcrOPmh4Hc9Hb4RQfzp/cV5Fcu240hvpfoXA3PJofQWXcQoJB
-         bm8A==
-X-Gm-Message-State: APjAAAU1dNfE2jJrl7C/fUc1slRVB6O/O6OuSyYQGVl5jZ5irT5tSeYZ
-        TaN/OGCCmmEay1NL66qYy//vmpModk6pR8ClWs1t8HIjR8Wj00r9k3XljkH6986JWZw7z1EM0fo
-        92GyOasXPJSTsOCVN0S5pARah3FUSp1BovxQZGohmrQ==
-X-Received: by 2002:a24:1c8f:: with SMTP id c137mr11721311itc.165.1558567387394;
-        Wed, 22 May 2019 16:23:07 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxdHnME/HIKTNtYrhxUlkHJbYT/xO74MAdU3gQ2zPhx1GksIreKy7VV6aO1robz0W5ehzpp4A==
-X-Received: by 2002:a24:1c8f:: with SMTP id c137mr11721292itc.165.1558567387007;
-        Wed, 22 May 2019 16:23:07 -0700 (PDT)
-Received: from xps13.canonical.com (c-71-56-235-36.hsd1.co.comcast.net. [71.56.235.36])
-        by smtp.gmail.com with ESMTPSA id c22sm8517424ioa.41.2019.05.22.16.23.06
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 22 May 2019 16:23:06 -0700 (PDT)
-From:   dann frazier <dann.frazier@canonical.com>
-To:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Shannon Nelson <shannon.nelson@oracle.com>
-Cc:     intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] ixgbe: Avoid NULL pointer dereference with VF on non-IPsec hw
-Date:   Wed, 22 May 2019 17:22:58 -0600
-Message-Id: <20190522232258.10353-1-dann.frazier@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 22 May 2019 19:23:53 -0400
+Received: from pps.filterd (m0044008.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4MNEGTC008447
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 16:23:52 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=facebook; bh=7M3KTYgCtux1ge1QjiyZqAfJv7mn0dKoN8WOBcMq0W0=;
+ b=kC7XoFy4qr3w4O1V6gB92soMVy0wRfv/pWciH5b+ZcaCi9DckgEaqlx5SkNWF/s3r+UE
+ Lt72C/KRy4qVIjozS0r+ot00Lf2FC4Hr0SIE9bRUPx1MXBD1glfHrU1mtcJYLKuNTUbB
+ 1wgdF4EAPBPX+I2BDjnS6GmvwJImSYcDk4U= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 2sn8b0svx3-3
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 16:23:52 -0700
+Received: from mx-out.facebook.com (2620:10d:c0a8:1b::d) by
+ mail.thefacebook.com (2620:10d:c0a8:83::4) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 22 May 2019 16:23:50 -0700
+Received: by devvm2643.prn2.facebook.com (Postfix, from userid 111017)
+        id E262712526D46; Wed, 22 May 2019 16:20:53 -0700 (PDT)
+Smtp-Origin-Hostprefix: devvm
+From:   Roman Gushchin <guro@fb.com>
+Smtp-Origin-Hostname: devvm2643.prn2.facebook.com
+To:     Alexei Starovoitov <ast@kernel.org>, <bpf@vger.kernel.org>
+CC:     Daniel Borkmann <daniel@iogearbox.net>, <netdev@vger.kernel.org>,
+        Tejun Heo <tj@kernel.org>, <kernel-team@fb.com>,
+        <cgroups@vger.kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
+        <linux-kernel@vger.kernel.org>, Roman Gushchin <guro@fb.com>,
+        <jolsa@redhat.com>
+Smtp-Origin-Cluster: prn2c23
+Subject: [PATCH v2 bpf-next 1/4] bpf: decouple the lifetime of cgroup_bpf from cgroup itself
+Date:   Wed, 22 May 2019 16:20:48 -0700
+Message-ID: <20190522232051.2938491-2-guro@fb.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190522232051.2938491-1-guro@fb.com>
+References: <20190522232051.2938491-1-guro@fb.com>
+X-FB-Internal: Safe
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-22_14:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=717 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905220162
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-An ipsec structure will not be allocated if the hardware does not support
-offload. Fixes the following Oops:
+Currently the lifetime of bpf programs attached to a cgroup is bound
+to the lifetime of the cgroup itself. It means that if a user
+forgets (or intentionally avoids) to detach a bpf program before
+removing the cgroup, it will stay attached up to the release of the
+cgroup. Since the cgroup can stay in the dying state (the state
+between being rmdir()'ed and being released) for a very long time, it
+leads to a waste of memory. Also, it blocks a possibility to implement
+the memcg-based memory accounting for bpf objects, because a circular
+reference dependency will occur. Charged memory pages are pinning the
+corresponding memory cgroup, and if the memory cgroup is pinning
+the attached bpf program, nothing will be ever released.
 
-[  191.045452] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
-[  191.054232] Mem abort info:
-[  191.057014]   ESR = 0x96000004
-[  191.060057]   Exception class = DABT (current EL), IL = 32 bits
-[  191.065963]   SET = 0, FnV = 0
-[  191.069004]   EA = 0, S1PTW = 0
-[  191.072132] Data abort info:
-[  191.074999]   ISV = 0, ISS = 0x00000004
-[  191.078822]   CM = 0, WnR = 0
-[  191.081780] user pgtable: 4k pages, 48-bit VAs, pgdp = 0000000043d9e467
-[  191.088382] [0000000000000000] pgd=0000000000000000
-[  191.093252] Internal error: Oops: 96000004 [#1] SMP
-[  191.098119] Modules linked in: vhost_net vhost tap vfio_pci vfio_virqfd vfio_iommu_type1 vfio xt_CHECKSUM iptable_mangle ipt_MASQUERADE iptable_nat nf_nat_ipv4 nf_nat xt_conntrack nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 ipt_REJECT nf_reject_ipv4 xt_tcpudp bridge stp llc ebtable_filter devlink ebtables ip6table_filter ip6_tables iptable_filter bpfilter ipmi_ssif nls_iso8859_1 input_leds joydev ipmi_si hns_roce_hw_v2 ipmi_devintf hns_roce ipmi_msghandler cppc_cpufreq sch_fq_codel ib_iser rdma_cm iw_cm ib_cm ib_core iscsi_tcp libiscsi_tcp libiscsi scsi_transport_iscsi ip_tables x_tables autofs4 ses enclosure btrfs zstd_compress raid10 raid456 async_raid6_recov async_memcpy async_pq async_xor async_tx xor hid_generic usbhid hid raid6_pq libcrc32c raid1 raid0 multipath linear ixgbevf hibmc_drm ttm
-[  191.168607]  drm_kms_helper aes_ce_blk aes_ce_cipher syscopyarea crct10dif_ce sysfillrect ghash_ce qla2xxx sysimgblt sha2_ce sha256_arm64 hisi_sas_v3_hw fb_sys_fops sha1_ce uas nvme_fc mpt3sas ixgbe drm hisi_sas_main nvme_fabrics usb_storage hclge scsi_transport_fc ahci libsas hnae3 raid_class libahci xfrm_algo scsi_transport_sas mdio aes_neon_bs aes_neon_blk crypto_simd cryptd aes_arm64
-[  191.202952] CPU: 94 PID: 0 Comm: swapper/94 Not tainted 4.19.0-rc1+ #11
-[  191.209553] Hardware name: Huawei D06 /D06, BIOS Hisilicon D06 UEFI RC0 - V1.20.01 04/26/2019
-[  191.218064] pstate: 20400089 (nzCv daIf +PAN -UAO)
-[  191.222873] pc : ixgbe_ipsec_vf_clear+0x60/0xd0 [ixgbe]
-[  191.228093] lr : ixgbe_msg_task+0x2d0/0x1088 [ixgbe]
-[  191.233044] sp : ffff000009b3bcd0
-[  191.236346] x29: ffff000009b3bcd0 x28: 0000000000000000
-[  191.241647] x27: ffff000009628000 x26: 0000000000000000
-[  191.246946] x25: ffff803f652d7600 x24: 0000000000000004
-[  191.252246] x23: ffff803f6a718900 x22: 0000000000000000
-[  191.257546] x21: 0000000000000000 x20: 0000000000000000
-[  191.262845] x19: 0000000000000000 x18: 0000000000000000
-[  191.268144] x17: 0000000000000000 x16: 0000000000000000
-[  191.273443] x15: 0000000000000000 x14: 0000000100000026
-[  191.278742] x13: 0000000100000025 x12: ffff8a5f7fbe0df0
-[  191.284042] x11: 000000010000000b x10: 0000000000000040
-[  191.289341] x9 : 0000000000001100 x8 : ffff803f6a824fd8
-[  191.294640] x7 : ffff803f6a825098 x6 : 0000000000000001
-[  191.299939] x5 : ffff000000f0ffc0 x4 : 0000000000000000
-[  191.305238] x3 : ffff000028c00000 x2 : ffff803f652d7600
-[  191.310538] x1 : 0000000000000000 x0 : ffff000000f205f0
-[  191.315838] Process swapper/94 (pid: 0, stack limit = 0x00000000addfed5a)
-[  191.322613] Call trace:
-[  191.325055]  ixgbe_ipsec_vf_clear+0x60/0xd0 [ixgbe]
-[  191.329927]  ixgbe_msg_task+0x2d0/0x1088 [ixgbe]
-[  191.334536]  ixgbe_msix_other+0x274/0x330 [ixgbe]
-[  191.339233]  __handle_irq_event_percpu+0x78/0x270
-[  191.343924]  handle_irq_event_percpu+0x40/0x98
-[  191.348355]  handle_irq_event+0x50/0xa8
-[  191.352180]  handle_fasteoi_irq+0xbc/0x148
-[  191.356263]  generic_handle_irq+0x34/0x50
-[  191.360259]  __handle_domain_irq+0x68/0xc0
-[  191.364343]  gic_handle_irq+0x84/0x180
-[  191.368079]  el1_irq+0xe8/0x180
-[  191.371208]  arch_cpu_idle+0x30/0x1a8
-[  191.374860]  do_idle+0x1dc/0x2a0
-[  191.378077]  cpu_startup_entry+0x2c/0x30
-[  191.381988]  secondary_start_kernel+0x150/0x1e0
-[  191.386506] Code: 6b15003f 54000320 f1404a9f 54000060 (79400260)
+A dying cgroup can not contain any processes, so the only chance for
+an attached bpf program to be executed is a live socket associated
+with the cgroup. So in order to release all bpf data early, let's
+count associated sockets using a new percpu refcounter. On cgroup
+removal the counter is transitioned to the atomic mode, and as soon
+as it reaches 0, all bpf programs are detached.
 
-Fixes: eda0333ac2930 ("ixgbe: add VF IPsec management")
-Signed-off-by: dann frazier <dann.frazier@canonical.com>
+The reference counter is not socket specific, and can be used for any
+other types of programs, which can be executed from a cgroup-bpf hook
+outside of the process context, had such a need arise in the future.
+
+Signed-off-by: Roman Gushchin <guro@fb.com>
+Cc: jolsa@redhat.com
 ---
- drivers/net/ethernet/intel/ixgbe/ixgbe_ipsec.c | 3 +++
- 1 file changed, 3 insertions(+)
+ include/linux/bpf-cgroup.h |  8 ++++++--
+ include/linux/cgroup.h     | 18 ++++++++++++++++++
+ kernel/bpf/cgroup.c        | 25 ++++++++++++++++++++++---
+ kernel/cgroup/cgroup.c     | 11 ++++++++---
+ 4 files changed, 54 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_ipsec.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_ipsec.c
-index ff85ce5791a36..31629fc7e820f 100644
---- a/drivers/net/ethernet/intel/ixgbe/ixgbe_ipsec.c
-+++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_ipsec.c
-@@ -842,6 +842,9 @@ void ixgbe_ipsec_vf_clear(struct ixgbe_adapter *adapter, u32 vf)
- 	struct ixgbe_ipsec *ipsec = adapter->ipsec;
- 	int i;
+diff --git a/include/linux/bpf-cgroup.h b/include/linux/bpf-cgroup.h
+index cb3c6b3b89c8..a0945de9ba5f 100644
+--- a/include/linux/bpf-cgroup.h
++++ b/include/linux/bpf-cgroup.h
+@@ -6,6 +6,7 @@
+ #include <linux/errno.h>
+ #include <linux/jump_label.h>
+ #include <linux/percpu.h>
++#include <linux/percpu-refcount.h>
+ #include <linux/rbtree.h>
+ #include <uapi/linux/bpf.h>
  
-+	if (!ipsec)
-+		return;
+@@ -72,10 +73,13 @@ struct cgroup_bpf {
+ 
+ 	/* temp storage for effective prog array used by prog_attach/detach */
+ 	struct bpf_prog_array __rcu *inactive;
 +
- 	/* search rx sa table */
- 	for (i = 0; i < IXGBE_IPSEC_MAX_SA_COUNT && ipsec->num_rx_sa; i++) {
- 		if (!ipsec->rx_tbl[i].used)
++	/* reference counter used to detach bpf programs after cgroup removal */
++	struct percpu_ref refcnt;
+ };
+ 
+-void cgroup_bpf_put(struct cgroup *cgrp);
+ int cgroup_bpf_inherit(struct cgroup *cgrp);
++void cgroup_bpf_offline(struct cgroup *cgrp);
+ 
+ int __cgroup_bpf_attach(struct cgroup *cgrp, struct bpf_prog *prog,
+ 			enum bpf_attach_type type, u32 flags);
+@@ -283,8 +287,8 @@ int cgroup_bpf_prog_query(const union bpf_attr *attr,
+ 
+ struct bpf_prog;
+ struct cgroup_bpf {};
+-static inline void cgroup_bpf_put(struct cgroup *cgrp) {}
+ static inline int cgroup_bpf_inherit(struct cgroup *cgrp) { return 0; }
++static inline void cgroup_bpf_offline(struct cgroup *cgrp) {}
+ 
+ static inline int cgroup_bpf_prog_attach(const union bpf_attr *attr,
+ 					 enum bpf_prog_type ptype,
+diff --git a/include/linux/cgroup.h b/include/linux/cgroup.h
+index c0077adeea83..49e8facf7c4a 100644
+--- a/include/linux/cgroup.h
++++ b/include/linux/cgroup.h
+@@ -924,4 +924,22 @@ static inline bool cgroup_task_frozen(struct task_struct *task)
+ 
+ #endif /* !CONFIG_CGROUPS */
+ 
++#ifdef CONFIG_CGROUP_BPF
++static inline void cgroup_bpf_get(struct cgroup *cgrp)
++{
++	percpu_ref_get(&cgrp->bpf.refcnt);
++}
++
++static inline void cgroup_bpf_put(struct cgroup *cgrp)
++{
++	percpu_ref_put(&cgrp->bpf.refcnt);
++}
++
++#else /* CONFIG_CGROUP_BPF */
++
++static inline void cgroup_bpf_get(struct cgroup *cgrp) {}
++static inline void cgroup_bpf_put(struct cgroup *cgrp) {}
++
++#endif /* CONFIG_CGROUP_BPF */
++
+ #endif /* _LINUX_CGROUP_H */
+diff --git a/kernel/bpf/cgroup.c b/kernel/bpf/cgroup.c
+index fcde0f7b2585..65f5c482ed9d 100644
+--- a/kernel/bpf/cgroup.c
++++ b/kernel/bpf/cgroup.c
+@@ -22,12 +22,20 @@
+ DEFINE_STATIC_KEY_FALSE(cgroup_bpf_enabled_key);
+ EXPORT_SYMBOL(cgroup_bpf_enabled_key);
+ 
++void cgroup_bpf_offline(struct cgroup *cgrp)
++{
++	cgroup_get(cgrp);
++	percpu_ref_kill(&cgrp->bpf.refcnt);
++}
++
+ /**
+- * cgroup_bpf_put() - put references of all bpf programs
++ * cgroup_bpf_release() - put references of all bpf programs and
++ *                        release all cgroup bpf data
+  * @cgrp: the cgroup to modify
+  */
+-void cgroup_bpf_put(struct cgroup *cgrp)
++static void cgroup_bpf_release(struct percpu_ref *ref)
+ {
++	struct cgroup *cgrp = container_of(ref, struct cgroup, bpf.refcnt);
+ 	enum bpf_cgroup_storage_type stype;
+ 	unsigned int type;
+ 
+@@ -47,6 +55,9 @@ void cgroup_bpf_put(struct cgroup *cgrp)
+ 		}
+ 		bpf_prog_array_free(cgrp->bpf.effective[type]);
+ 	}
++
++	percpu_ref_exit(&cgrp->bpf.refcnt);
++	cgroup_put(cgrp);
+ }
+ 
+ /* count number of elements in the list.
+@@ -167,7 +178,12 @@ int cgroup_bpf_inherit(struct cgroup *cgrp)
+  */
+ #define	NR ARRAY_SIZE(cgrp->bpf.effective)
+ 	struct bpf_prog_array __rcu *arrays[NR] = {};
+-	int i;
++	int ret, i;
++
++	ret = percpu_ref_init(&cgrp->bpf.refcnt, cgroup_bpf_release, 0,
++			      GFP_KERNEL);
++	if (ret)
++		return -ENOMEM;
+ 
+ 	for (i = 0; i < NR; i++)
+ 		INIT_LIST_HEAD(&cgrp->bpf.progs[i]);
+@@ -183,6 +199,9 @@ int cgroup_bpf_inherit(struct cgroup *cgrp)
+ cleanup:
+ 	for (i = 0; i < NR; i++)
+ 		bpf_prog_array_free(arrays[i]);
++
++	percpu_ref_exit(&cgrp->bpf.refcnt);
++
+ 	return -ENOMEM;
+ }
+ 
+diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
+index 217cec4e22c6..ef9cfbfc82a9 100644
+--- a/kernel/cgroup/cgroup.c
++++ b/kernel/cgroup/cgroup.c
+@@ -4955,8 +4955,6 @@ static void css_release_work_fn(struct work_struct *work)
+ 		if (cgrp->kn)
+ 			RCU_INIT_POINTER(*(void __rcu __force **)&cgrp->kn->priv,
+ 					 NULL);
+-
+-		cgroup_bpf_put(cgrp);
+ 	}
+ 
+ 	mutex_unlock(&cgroup_mutex);
+@@ -5482,6 +5480,8 @@ static int cgroup_destroy_locked(struct cgroup *cgrp)
+ 
+ 	cgroup1_check_for_release(parent);
+ 
++	cgroup_bpf_offline(cgrp);
++
+ 	/* put the base reference */
+ 	percpu_ref_kill(&cgrp->self.refcnt);
+ 
+@@ -6221,6 +6221,7 @@ void cgroup_sk_alloc(struct sock_cgroup_data *skcd)
+ 		 * Don't use cgroup_get_live().
+ 		 */
+ 		cgroup_get(sock_cgroup_ptr(skcd));
++		cgroup_bpf_get(sock_cgroup_ptr(skcd));
+ 		return;
+ 	}
+ 
+@@ -6232,6 +6233,7 @@ void cgroup_sk_alloc(struct sock_cgroup_data *skcd)
+ 		cset = task_css_set(current);
+ 		if (likely(cgroup_tryget(cset->dfl_cgrp))) {
+ 			skcd->val = (unsigned long)cset->dfl_cgrp;
++			cgroup_bpf_get(cset->dfl_cgrp);
+ 			break;
+ 		}
+ 		cpu_relax();
+@@ -6242,7 +6244,10 @@ void cgroup_sk_alloc(struct sock_cgroup_data *skcd)
+ 
+ void cgroup_sk_free(struct sock_cgroup_data *skcd)
+ {
+-	cgroup_put(sock_cgroup_ptr(skcd));
++	struct cgroup *cgrp = sock_cgroup_ptr(skcd);
++
++	cgroup_bpf_put(cgrp);
++	cgroup_put(cgrp);
+ }
+ 
+ #endif	/* CONFIG_SOCK_CGROUP_DATA */
 -- 
 2.20.1
 
