@@ -2,100 +2,76 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 468C2C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:00:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5B35C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:00:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B9C720856
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:00:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558555224;
-	bh=3WjJSY7vZLVqoeVZv6ccOG1TIWOYqs8oAQ8eRPMkcSo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t6Kt4SpFksH2LmNEh/Aixi2hmnlytijmB+5tp2KatzX9Iy7+5+2rU2Lr6c0tvn9e6
-	 7vy31Jd9e3oP0OP9k1xVvhDsEakM5NnPBTIt6yXZbtmAjegL6N8Rj7LL+jRFw7CL7A
-	 /NAYcimVfG7CZc3yijMRvvtoGDxI6ycVfXqJsvq4=
+	by mail.kernel.org (Postfix) with ESMTP id 811712089E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:00:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731635AbfEVUAX (ORCPT
+        id S1732028AbfEVUAZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 16:00:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43944 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730740AbfEVTXE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:23:04 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9BD17217D7;
-        Wed, 22 May 2019 19:23:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558552984;
-        bh=3WjJSY7vZLVqoeVZv6ccOG1TIWOYqs8oAQ8eRPMkcSo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NzCspL8heCo0LrTg8MW1X3fwrZVqINcmO6psO2F4beNpyDVC0MkHEhMvSXvZXdpwz
-         RORv1VegIs3TOIv0cT6MATww2fALQCzuIZoVTKkXnsBl/pJeoIaDU3Sn2gZWO8ssX8
-         fBwxdaHfYfWgBuB/8d1fl5V+/O/SIvr3A8mbJi7c=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Fabien Dessenne <fabien.dessenne@st.com>,
-        Amelie Delaunay <amelie.delaunay@st.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rtc@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 062/375] rtc: stm32: manage the get_irq probe defer case
-Date:   Wed, 22 May 2019 15:16:02 -0400
-Message-Id: <20190522192115.22666-62-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190522192115.22666-1-sashal@kernel.org>
-References: <20190522192115.22666-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+        Wed, 22 May 2019 16:00:25 -0400
+Received: from smtprelay0074.hostedemail.com ([216.40.44.74]:56989 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731063AbfEVUAV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 16:00:21 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay03.hostedemail.com (Postfix) with ESMTP id 23506837F24A;
+        Wed, 22 May 2019 20:00:20 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: peace94_1fea29cb36c22
+X-Filterd-Recvd-Size: 1820
+Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf16.hostedemail.com (Postfix) with ESMTPA;
+        Wed, 22 May 2019 20:00:19 +0000 (UTC)
+Message-ID: <05f565be52179acd1128b51a6e0cf055882ce78b.camel@perches.com>
+Subject: Re: PSA: Do not use "Reported-By" without reporter's approval
+From:   Joe Perches <joe@perches.com>
+To:     Konstantin Ryabitsev <konstantin@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org
+Date:   Wed, 22 May 2019 13:00:17 -0700
+In-Reply-To: <20190522195804.GC21412@chatter.i7.local>
+References: <20190522193011.GB21412@chatter.i7.local>
+         <7b7287463e830fa8d981dc440f8165622cbc628e.camel@perches.com>
+         <20190522195804.GC21412@chatter.i7.local>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.1-1build1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fabien Dessenne <fabien.dessenne@st.com>
+On Wed, 2019-05-22 at 15:58 -0400, Konstantin Ryabitsev wrote:
+> On Wed, May 22, 2019 at 12:45:06PM -0700, Joe Perches wrote:
+> > > It is common courtesy to include this tagline when submitting 
+> > > patches:
+> > > 
+> > > Reported-By: J. Doe <jdoe@example.com>
+> > > 
+> > > Please ask the reporter's permission before doing so (even if they'd
+> > > submitted a public bugzilla report or sent a report to the mailing
+> > > list).
+> > 
+> > I disagree with this.
+> > 
+> > If the report is public, and lists like vger are public,
+> > then using a Reported-by: and/or a Link: are simply useful
+> > history and tracking information.
+> 
+> I'm perfectly fine with Link:, however Reported-By: usually has the 
+> person's name and email address (i.e. PII data per GDPR definition).
 
-[ Upstream commit cf612c5949aca2bd81a1e28688957c8149ea2693 ]
+So?
 
-Manage the -EPROBE_DEFER error case for the wake IRQ.
+Like I wrote, if that report came from a public list, that
+report _also_ contained the person's name and email address.
 
-Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
-Acked-by: Amelie Delaunay <amelie.delaunay@st.com>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/rtc/rtc-stm32.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/rtc/rtc-stm32.c b/drivers/rtc/rtc-stm32.c
-index c5908cfea2340..8e6c9b3bcc29a 100644
---- a/drivers/rtc/rtc-stm32.c
-+++ b/drivers/rtc/rtc-stm32.c
-@@ -788,11 +788,14 @@ static int stm32_rtc_probe(struct platform_device *pdev)
- 	ret = device_init_wakeup(&pdev->dev, true);
- 	if (rtc->data->has_wakeirq) {
- 		rtc->wakeirq_alarm = platform_get_irq(pdev, 1);
--		if (rtc->wakeirq_alarm <= 0)
--			ret = rtc->wakeirq_alarm;
--		else
-+		if (rtc->wakeirq_alarm > 0) {
- 			ret = dev_pm_set_dedicated_wake_irq(&pdev->dev,
- 							    rtc->wakeirq_alarm);
-+		} else {
-+			ret = rtc->wakeirq_alarm;
-+			if (rtc->wakeirq_alarm == -EPROBE_DEFER)
-+				goto err;
-+		}
- 	}
- 	if (ret)
- 		dev_warn(&pdev->dev, "alarm can't wake up the system: %d", ret);
--- 
-2.20.1
 
