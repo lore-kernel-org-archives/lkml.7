@@ -1,139 +1,99 @@
 Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03DEEC072B5
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 01:50:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99962C072B5
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 01:51:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C51E62173C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 01:50:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558489834;
-	bh=fcy5MOkCrEc/JdYcuzjvDy0FJk/XhZFxOlQxExjKMgM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kTYpv/Cg+Igm1A0jeQi27GXTFZRAkmzjw1RzHGsXRmN4qFeUPn0dQoY0aRRFFAagv
-	 i6+7XjS0XSOMWgiOXxoPoNZOSbgdvm2b5h6zCGe2FoiuTsoDaC6W1RF2IaB2h2WCX+
-	 A45BEhXjqlaAMqP8+Acokh5bR27SuEPH1wlv+iPA=
+	by mail.kernel.org (Postfix) with ESMTP id 6E2CA2173C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 01:51:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ay7EE+Lf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728254AbfEVBue (ORCPT
+        id S1728295AbfEVBvV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 21:50:34 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:40298 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727733AbfEVBud (ORCPT
+        Tue, 21 May 2019 21:51:21 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:46381 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727733AbfEVBvV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 21:50:33 -0400
-Received: by mail-pl1-f194.google.com with SMTP id g69so236934plb.7;
-        Tue, 21 May 2019 18:50:33 -0700 (PDT)
+        Tue, 21 May 2019 21:51:21 -0400
+Received: by mail-pl1-f196.google.com with SMTP id r18so225184pls.13
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 18:51:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+        h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=KEsTTRLdcPvr4DyB6nsvDnVWKWacN5V2AbAsyIXP34I=;
-        b=UjHLINqajyRyc03bkbJEwVX7nyyMpQmWAyv5W7+imFIOFa51iCIXk7CK/61xyyRIai
-         FGYl+HB0sIXMbUhOTJDJlmDRS2bCzV0qCGUqghC+DnZPDQp1xWuscp4ICweSbOG1v4p5
-         FMbXHwFzUmECuKMiVhzbb1ysJXHPR4w7qbNPVaEJxDG1Xc/OU5cYB1WHPyDB71x9sBqD
-         K+H+qxwPPSAbqOlZmB9z2Os4xKbVMMtHfZ06glc1KrU6zwbHYph/usPPsgWR5EvW2NFB
-         eSZRhhUszhkhdhGDKNcykyGEq6fUojSTYBiRH5bYQgPXAdTX6rN8GRTnhS29HUp8ht7t
-         9vyg==
+        bh=tzHrjRS92ZANYX17XXnDROsRuQC8/NkfxYyb1LR6j7Y=;
+        b=Ay7EE+LfbC4CS2hMLvVDWrxe7aWf6xecxgolLuXeb/rG0Uo1BpLuGx9rpVTPaf+AGx
+         qBg/dW5r+BoH3WfVcQodRQzJD9lDOe8JjtbCJyrTaOuHx9aUihUwEEkKiZE9ECgucdxP
+         UxO/dIWgo+7Uoq1jtqoCSPYcAJrmR2cDEaEDkBww1ZuaWN2eUBST7LVaQiumc3KD9a35
+         m+UtUqTJQ+jeIcdJ7i/ZuuCTj6hYRhByx1uxXJEFmdtwaAnTtUu73hyoEg+aqDu7leHU
+         EaHI9KN3NhUTIYNf5huUSPn6Rr+N3GGZCE4i5LCT6V/4ia4sn4Ejl7o5AVSNYczW8ur6
+         ku/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=KEsTTRLdcPvr4DyB6nsvDnVWKWacN5V2AbAsyIXP34I=;
-        b=eSKozO1mL9UnUFh1UhpLErfHJ1t6mzkLR1c6GPtBt2yjR2ytOlChYq85pAyNZS870k
-         CldqLzRkyKXn/z/J+oaia0Rs7LinXQeg/aXo7ZZAHvcukBoD1e2J2H0pWNAgHbxHftGE
-         Ir1p9VrzSCEYLgog+OfEoP9Y5Md7tT0oLdJBe4yYLTblvGcHesIe5IDvKnkxwJBqnf5i
-         Z8yxfeixeYxEFUPRHjCawSCBU7K6hf5kzoegNbftt4r30uQOldXg1VTsN5ZC9vpT0IxA
-         /LchyHPigxLRZJ43Q/eXiGvaEIn/zEab7r3ne9djH70QcMEbH55BW/2My0Z3+N6tPV6p
-         9HRw==
-X-Gm-Message-State: APjAAAUnaIDZJvn6xr8R08gP1q+CxIyR6RKkpA1PWWRWEV+XbTiuw5d3
-        hsl52nB7fxt2u/IRmgynimVZA9tf
-X-Google-Smtp-Source: APXvYqzxNfYUeQPKEfHm11BNLPHtdaRoG0oDRvWdcFYfHEy5dbahZDUKE2b+2g5lZcbEDfmXMxPRIQ==
-X-Received: by 2002:a17:902:b108:: with SMTP id q8mr81677417plr.110.1558489832732;
-        Tue, 21 May 2019 18:50:32 -0700 (PDT)
-Received: from google.com ([2401:fa00:d:0:98f1:8b3d:1f37:3e8])
-        by smtp.gmail.com with ESMTPSA id u134sm32855756pfc.61.2019.05.21.18.50.28
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 21 May 2019 18:50:31 -0700 (PDT)
-Date:   Wed, 22 May 2019 10:50:25 +0900
-From:   Minchan Kim <minchan@kernel.org>
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, Tim Murray <timmurray@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>, linux-api@vger.kernel.org
-Subject: Re: [RFC 7/7] mm: madvise support MADV_ANONYMOUS_FILTER and
- MADV_FILE_FILTER
-Message-ID: <20190522015025.GA29449@google.com>
-References: <20190520035254.57579-1-minchan@kernel.org>
- <20190520035254.57579-8-minchan@kernel.org>
- <20190520092801.GA6836@dhcp22.suse.cz>
- <20190521025533.GH10039@google.com>
- <20190521153310.GA3218@cmpxchg.org>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=tzHrjRS92ZANYX17XXnDROsRuQC8/NkfxYyb1LR6j7Y=;
+        b=mGEzARtusgTBcWmbnJdQ06uzZMdUIf8fVORJIzXaDQRyZs9t3cQAmGqeTrr8aizjTd
+         S75V+QJ7QAcif2XPdgHw2KuJ4Fik2suIZf8nFQbsx+4Zb1qXIixTzO6z4x5YiOE5Bwm6
+         MEHZFf7upmNG9dWOnjAIwoTK0QGuRaxJvaOjtulL/o5JPVbuRNwnP7cmweqQwA/mwD5i
+         6yq0L0DxQwaDVcOt3uhtUw2Qt7CIrJMWV1qu5ZIWMZPhC0LUd6MIoWQhaVFqXxvdrqX4
+         KUwlsBpoJUE1hsMF6w57LvIngVl6p2XKlqJBcgDWkit1w200DpQd94HPiObv/AJyBs58
+         YrGw==
+X-Gm-Message-State: APjAAAW7oUSbVwmnFWfpMoYMHKflKjMgGy40YXGah4EOYt7wTbbxU0os
+        sLQW+3KKgoXvY+MV7PA1l0XSMdbya+s=
+X-Google-Smtp-Source: APXvYqwwUP5b1+y7AnETZywLWoKux6CiWxk/ty9G4/TJs2HaWrtMUIVtxBry30vpE1dgJd2GgHu4jw==
+X-Received: by 2002:a17:902:18a:: with SMTP id b10mr61413462plb.277.1558489880665;
+        Tue, 21 May 2019 18:51:20 -0700 (PDT)
+Received: from zhanggen-UX430UQ ([66.42.35.75])
+        by smtp.gmail.com with ESMTPSA id q17sm37739216pfq.74.2019.05.21.18.51.14
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 21 May 2019 18:51:20 -0700 (PDT)
+Date:   Wed, 22 May 2019 09:50:55 +0800
+From:   Gen Zhang <blackgod016574@gmail.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] consolemap: Fix a memory leaking bug in
+ drivers/tty/vt/consolemap.c
+Message-ID: <20190522015055.GC4093@zhanggen-UX430UQ>
+References: <20190521092935.GA2297@zhanggen-UX430UQ>
+ <201905211342.DE554F0D@keescook>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190521153310.GA3218@cmpxchg.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <201905211342.DE554F0D@keescook>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 21, 2019 at 11:33:10AM -0400, Johannes Weiner wrote:
-> On Tue, May 21, 2019 at 11:55:33AM +0900, Minchan Kim wrote:
-> > On Mon, May 20, 2019 at 11:28:01AM +0200, Michal Hocko wrote:
-> > > [cc linux-api]
-> > > 
-> > > On Mon 20-05-19 12:52:54, Minchan Kim wrote:
-> > > > System could have much faster swap device like zRAM. In that case, swapping
-> > > > is extremely cheaper than file-IO on the low-end storage.
-> > > > In this configuration, userspace could handle different strategy for each
-> > > > kinds of vma. IOW, they want to reclaim anonymous pages by MADV_COLD
-> > > > while it keeps file-backed pages in inactive LRU by MADV_COOL because
-> > > > file IO is more expensive in this case so want to keep them in memory
-> > > > until memory pressure happens.
-> > > > 
-> > > > To support such strategy easier, this patch introduces
-> > > > MADV_ANONYMOUS_FILTER and MADV_FILE_FILTER options in madvise(2) like
-> > > > that /proc/<pid>/clear_refs already has supported same filters.
-> > > > They are filters could be Ored with other existing hints using top two bits
-> > > > of (int behavior).
-> > > 
-> > > madvise operates on top of ranges and it is quite trivial to do the
-> > > filtering from the userspace so why do we need any additional filtering?
-> > > 
-> > > > Once either of them is set, the hint could affect only the interested vma
-> > > > either anonymous or file-backed.
-> > > > 
-> > > > With that, user could call a process_madvise syscall simply with a entire
-> > > > range(0x0 - 0xFFFFFFFFFFFFFFFF) but either of MADV_ANONYMOUS_FILTER and
-> > > > MADV_FILE_FILTER so there is no need to call the syscall range by range.
-> > > 
-> > > OK, so here is the reason you want that. The immediate question is why
-> > > cannot the monitor do the filtering from the userspace. Slightly more
-> > > work, all right, but less of an API to expose and that itself is a
-> > > strong argument against.
-> > 
-> > What I should do if we don't have such filter option is to enumerate all of
-> > vma via /proc/<pid>/maps and then parse every ranges and inode from string,
-> > which would be painful for 2000+ vmas.
+On Tue, May 21, 2019 at 01:44:33PM -0700, Kees Cook wrote:
+> This doesn't look safe to me: p->uni_pgdir[n] will still have a handle
+> to the freed memory, won't it?
 > 
-> Just out of curiosity, how do you get to 2000+ distinct memory regions
-> in the address space of a mobile app? I'm assuming these aren't files,
-> but rather anon objects with poor grouping. Is that from guard pages
-> between individual heap allocations or something?
-
-Android uses preload library model to speed up app launch so it loads
-all of library in advance on zygote and forks new app based on it.
+Thanks for your reply, Kees!
+I think you are right. Maybe we should do this:
+	kfree(p1);
+	p->uni_pgdir[n] = NULL;
+Is this correct?
+> (And please direct these patches to Greg, as he's the current
+> maintainer; I'm happy to stay CCed, of course.)
+> 
+I will follow your suggestions, thanks!
+Gen
+> -Kees
+> 
+> >  		memset(p2, 0xff, 64*sizeof(u16)); /* No glyphs for the characters (yet) */
+> >  	}
+> >  
+> 
+> -- 
+> Kees Cook
