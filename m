@@ -2,72 +2,135 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0A76C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 14:12:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4B55C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 14:12:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFA702173C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 14:12:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B508120879
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 14:12:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728693AbfEVOMA (ORCPT
+        id S1728964AbfEVOMv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 10:12:00 -0400
-Received: from mga09.intel.com ([134.134.136.24]:55169 "EHLO mga09.intel.com"
+        Wed, 22 May 2019 10:12:51 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:46392 "EHLO gloria.sntech.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726770AbfEVOMA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 10:12:00 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 May 2019 07:11:59 -0700
-X-ExtLoop1: 1
-Received: from shao2-debian.sh.intel.com (HELO localhost) ([10.239.13.6])
-  by orsmga004.jf.intel.com with ESMTP; 22 May 2019 07:11:58 -0700
-Date:   Wed, 22 May 2019 22:12:18 +0800
-From:   kernel test robot <rong.a.chen@intel.com>
-To:     Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, lkp@01.org
-Subject: Re: [ubsan] f0996bc297: netperf.Throughput_total_tps -7.6% regression
-Message-ID: <20190522141218.GI19312@shao2-debian>
-References: <20190520053851.GY31424@shao2-debian>
- <4834add1-711e-b441-1956-1ab2b2d89353@virtuozzo.com>
+        id S1727284AbfEVOMv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 10:12:51 -0400
+Received: from we0524.dip.tu-dresden.de ([141.76.178.12] helo=phil.dip.tu-dresden.de)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1hTRyy-0001BD-5k; Wed, 22 May 2019 16:12:40 +0200
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     edubezval@gmail.com, rui.zhang@intel.com
+Cc:     daniel.lezcano@linaro.org, linux-pm@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        zhangqing@rock-chips.com, eballetbo@gmail.com,
+        Heiko Stuebner <heiko@sntech.de>
+Subject: [PATCH] Revert "thermal: rockchip: fix up the tsadc pinctrl setting error"
+Date:   Wed, 22 May 2019 16:12:36 +0200
+Message-Id: <20190522141236.26987-1-heiko@sntech.de>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <4834add1-711e-b441-1956-1ab2b2d89353@virtuozzo.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 20, 2019 at 12:50:30PM +0300, Andrey Ryabinin wrote:
-> 
-> 
-> On 5/20/19 8:38 AM, kernel test robot wrote:
-> > Greeting,
-> > 
-> > FYI, we noticed a -7.6% regression of netperf.Throughput_total_tps due to commit:
-> > 
-> > 
-> > commit: f0996bc2978e02d2ea898101462b960f6119b18f ("ubsan: Fix nasty -Wbuiltin-declaration-mismatch GCC-9 warnings")
-> > https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
-> > 
-> 
-> This can't be right. First of all the commit makes changes only lib/ubsan.c which is compiled only when CONFIG_UBSAN=y.
-> In your config:
-> # CONFIG_UBSAN is not set 
-> 
-> But even in the case of enabled UBSAN that commit doesn't change the generated machine code at all.
+This reverts commit 28694e009e512451ead5519dd801f9869acb1f60.
 
-Hi,
+The commit causes multiple issues in that:
+- the added call to ->control does potentially run unclocked
+  causing a hang of the machine
+- the added pinctrl-states are undocumented in the binding
+- the added pinctrl-states are not backwards compatible, breaking
+  old devicetrees.
 
-Sorry for bringing you inconvenience. We retested the commit and
-couldn't reproduce the regression, please ignore the invalid report.
+Fixes: 28694e009e51 ("thermal: rockchip: fix up the tsadc pinctrl setting error")
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+---
+ drivers/thermal/rockchip_thermal.c | 36 +++---------------------------
+ 1 file changed, 3 insertions(+), 33 deletions(-)
 
-Best Regards,
-Rong Chen
+diff --git a/drivers/thermal/rockchip_thermal.c b/drivers/thermal/rockchip_thermal.c
+index bda1ca199abd..7ef9c7efe950 100644
+--- a/drivers/thermal/rockchip_thermal.c
++++ b/drivers/thermal/rockchip_thermal.c
+@@ -172,9 +172,6 @@ struct rockchip_thermal_data {
+ 	int tshut_temp;
+ 	enum tshut_mode tshut_mode;
+ 	enum tshut_polarity tshut_polarity;
+-	struct pinctrl *pinctrl;
+-	struct pinctrl_state *gpio_state;
+-	struct pinctrl_state *otp_state;
+ };
+ 
+ /**
+@@ -1283,8 +1280,6 @@ static int rockchip_thermal_probe(struct platform_device *pdev)
+ 		return error;
+ 	}
+ 
+-	thermal->chip->control(thermal->regs, false);
+-
+ 	error = clk_prepare_enable(thermal->clk);
+ 	if (error) {
+ 		dev_err(&pdev->dev, "failed to enable converter clock: %d\n",
+@@ -1310,30 +1305,6 @@ static int rockchip_thermal_probe(struct platform_device *pdev)
+ 	thermal->chip->initialize(thermal->grf, thermal->regs,
+ 				  thermal->tshut_polarity);
+ 
+-	if (thermal->tshut_mode == TSHUT_MODE_GPIO) {
+-		thermal->pinctrl = devm_pinctrl_get(&pdev->dev);
+-		if (IS_ERR(thermal->pinctrl)) {
+-			dev_err(&pdev->dev, "failed to find thermal pinctrl\n");
+-			return PTR_ERR(thermal->pinctrl);
+-		}
+-
+-		thermal->gpio_state = pinctrl_lookup_state(thermal->pinctrl,
+-							   "gpio");
+-		if (IS_ERR_OR_NULL(thermal->gpio_state)) {
+-			dev_err(&pdev->dev, "failed to find thermal gpio state\n");
+-			return -EINVAL;
+-		}
+-
+-		thermal->otp_state = pinctrl_lookup_state(thermal->pinctrl,
+-							  "otpout");
+-		if (IS_ERR_OR_NULL(thermal->otp_state)) {
+-			dev_err(&pdev->dev, "failed to find thermal otpout state\n");
+-			return -EINVAL;
+-		}
+-
+-		pinctrl_select_state(thermal->pinctrl, thermal->otp_state);
+-	}
+-
+ 	for (i = 0; i < thermal->chip->chn_num; i++) {
+ 		error = rockchip_thermal_register_sensor(pdev, thermal,
+ 						&thermal->sensors[i],
+@@ -1404,8 +1375,8 @@ static int __maybe_unused rockchip_thermal_suspend(struct device *dev)
+ 
+ 	clk_disable(thermal->pclk);
+ 	clk_disable(thermal->clk);
+-	if (thermal->tshut_mode == TSHUT_MODE_GPIO)
+-		pinctrl_select_state(thermal->pinctrl, thermal->gpio_state);
++
++	pinctrl_pm_select_sleep_state(dev);
+ 
+ 	return 0;
+ }
+@@ -1450,8 +1421,7 @@ static int __maybe_unused rockchip_thermal_resume(struct device *dev)
+ 	for (i = 0; i < thermal->chip->chn_num; i++)
+ 		rockchip_thermal_toggle_sensor(&thermal->sensors[i], true);
+ 
+-	if (thermal->tshut_mode == TSHUT_MODE_GPIO)
+-		pinctrl_select_state(thermal->pinctrl, thermal->otp_state);
++	pinctrl_pm_select_default_state(dev);
+ 
+ 	return 0;
+ }
+-- 
+2.20.1
+
