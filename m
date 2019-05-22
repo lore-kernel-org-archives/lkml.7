@@ -2,234 +2,91 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04915C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 22:24:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7088FC282DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 22:28:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9106320868
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 22:24:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=fomichev-me.20150623.gappssmtp.com header.i=@fomichev-me.20150623.gappssmtp.com header.b="quVY0HJM"
+	by mail.kernel.org (Postfix) with ESMTP id 21B9A2184B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 22:28:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728598AbfEVWYl (ORCPT
+        id S1727899AbfEVW2F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 18:24:41 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:44335 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726775AbfEVWYk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 18:24:40 -0400
-Received: by mail-pl1-f193.google.com with SMTP id c5so1727657pll.11
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 15:24:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fomichev-me.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=E8hgoVg7Z24mHuKhx6PCXKnN1YCFRZlKI7hEdBBG7n4=;
-        b=quVY0HJMdq36jTE+oPCZRu2+0OMjilZHQzHr4/10w72TxfMi3ATKW0ufXorXHkICqe
-         luRKesQxx+PlINxvpYLGqkSklsX4zkRZ1I0gE9iYilbRoQFsx+E8XR7kBaliDeYBKaCA
-         R5wxkcTddQst2E6V6H/c8YgbqJkpQ1AN4TiNAKhYZvYyAOkp4yjEK8qwqBTRBc6UCKzF
-         xwuwSTprQHJswWcNOrtiYPCW2HOHmdh+H/zGCOdnXkSqN1XjrtjiNByYyB6z0jyZr7wu
-         U4/hnNvWSTpxH8TOHXmiQTxXIKDTqGLB8UYyAzqqNYKRfKZ1xrN/TS1A+PmMK0Tg4m+t
-         1Bkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=E8hgoVg7Z24mHuKhx6PCXKnN1YCFRZlKI7hEdBBG7n4=;
-        b=F5ifyiGSa1lLJNU5/j3pxRFt8VgtnBazbs/CUGGmV2jCYtnTEtZoNFWo0uHeu5EYgu
-         pz+BuxOiIAS2k0JDkROzqff6Z/YEBta7e6IpHqb02I8r+OOqnHDBeQ6MBLggpnnmiHUj
-         wszsxGljod9ObKu6UxUiXxibxnVkH3oUy824Hqmxy7Cz+401aTR2Llw/9+XxTVnyW1W6
-         gDRiruR3/zOWaADi7MeyILmDMpsw9oxUZhbnbl6WLydQ/ZDFsabAhwCuQaViunMUxdUd
-         Ahj1irlAFqIlMgGcT3YCHSKRsYyBCqLy3keKSPDaVj6i+Lv7K02nKlGHyuKjUVUzqVoI
-         S3DA==
-X-Gm-Message-State: APjAAAVnBNKijEf3scEG8z5MWxNxKk6cqEykbWXoZrv5GKJahNgBBoJa
-        8vOxWlfmy7M9H+rHvWcSH1jj3A==
-X-Google-Smtp-Source: APXvYqxkgZbzSmd6t8agbXVg5UXWApsR52ikdByEGUJsWpxNdG2MULr0UKlxHh0lnCaN6AHeDmw3yQ==
-X-Received: by 2002:a17:902:e104:: with SMTP id cc4mr92594084plb.254.1558563879723;
-        Wed, 22 May 2019 15:24:39 -0700 (PDT)
-Received: from localhost ([2601:646:8f00:18d9:d0fa:7a4b:764f:de48])
-        by smtp.gmail.com with ESMTPSA id l7sm28242494pfl.9.2019.05.22.15.24.38
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 22 May 2019 15:24:38 -0700 (PDT)
-Date:   Wed, 22 May 2019 15:24:38 -0700
-From:   Stanislav Fomichev <sdf@fomichev.me>
-To:     Roman Gushchin <guro@fb.com>
-Cc:     bpf@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>, netdev@vger.kernel.org,
-        Tejun Heo <tj@kernel.org>, kernel-team@fb.com,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH bpf-next 4/4] selftests/bpf: add auto-detach test
-Message-ID: <20190522222438.GB3032@mini-arch>
-References: <20190522212932.2646247-1-guro@fb.com>
- <20190522212932.2646247-5-guro@fb.com>
+        Wed, 22 May 2019 18:28:05 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:47740 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725823AbfEVW2F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 18:28:05 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id DF8043083047;
+        Wed, 22 May 2019 22:28:04 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-121-142.rdu2.redhat.com [10.10.121.142])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1BBCB607D8;
+        Wed, 22 May 2019 22:28:03 +0000 (UTC)
+Subject: [PATCH 0/7] keys: Miscellany
+From:   David Howells <dhowells@redhat.com>
+To:     keyrings@vger.kernel.org
+Cc:     dhowells@redhat.com, linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Wed, 22 May 2019 23:28:03 +0100
+Message-ID: <155856408314.10428.17035328117829912815.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/unknown-version
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190522212932.2646247-5-guro@fb.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Wed, 22 May 2019 22:28:04 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/22, Roman Gushchin wrote:
-> Add a kselftest to cover bpf auto-detachment functionality.
-> The test creates a cgroup, associates some resources with it,
-> attaches a couple of bpf programs and deletes the cgroup.
-> 
-> Then it checks that bpf programs are going away in 5 seconds.
-> 
-> Expected output:
->   $ ./test_cgroup_attach
->   #override:PASS
->   #multi:PASS
->   #autodetach:PASS
->   test_cgroup_attach:PASS
-> 
-> On a kernel without auto-detaching:
->   $ ./test_cgroup_attach
->   #override:PASS
->   #multi:PASS
->   #autodetach:FAIL
->   test_cgroup_attach:FAIL
-> 
-> Signed-off-by: Roman Gushchin <guro@fb.com>
-> ---
->  .../selftests/bpf/test_cgroup_attach.c        | 108 +++++++++++++++++-
->  1 file changed, 107 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/testing/selftests/bpf/test_cgroup_attach.c b/tools/testing/selftests/bpf/test_cgroup_attach.c
-> index 93d4fe295e7d..36441fd0f392 100644
-> --- a/tools/testing/selftests/bpf/test_cgroup_attach.c
-> +++ b/tools/testing/selftests/bpf/test_cgroup_attach.c
-> @@ -456,9 +456,115 @@ static int test_multiprog(void)
->  	return rc;
->  }
->  
-> +static int test_autodetach(void)
-> +{
-> +	__u32 prog_cnt = 4, attach_flags;
-> +	int allow_prog[2] = {0};
-> +	__u32 prog_ids[2] = {0};
-> +	int cg = 0, i, rc = -1;
-> +	void *ptr = NULL;
-> +	int attempts;
-> +
-> +
-> +	for (i = 0; i < ARRAY_SIZE(allow_prog); i++) {
-> +		allow_prog[i] = prog_load_cnt(1, 1 << i);
-> +		if (!allow_prog[i])
-> +			goto err;
-> +	}
-> +
-> +	if (setup_cgroup_environment())
-> +		goto err;
-> +
-> +	/* create a cgroup, attach two programs and remember their ids */
-> +	cg = create_and_get_cgroup("/cg_autodetach");
-> +	if (cg < 0)
-> +		goto err;
-> +
-> +	if (join_cgroup("/cg_autodetach"))
-> +		goto err;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(allow_prog); i++) {
-> +		if (bpf_prog_attach(allow_prog[i], cg, BPF_CGROUP_INET_EGRESS,
-> +				    BPF_F_ALLOW_MULTI)) {
-> +			log_err("Attaching prog[%d] to cg:egress", i);
-> +			goto err;
-> +		}
-> +	}
-> +
-> +	/* make sure that programs are attached and run some traffic */
-> +	assert(bpf_prog_query(cg, BPF_CGROUP_INET_EGRESS, 0, &attach_flags,
-> +			      prog_ids, &prog_cnt) == 0);
-> +	assert(system(PING_CMD) == 0);
-> +
-> +	/* allocate some memory (4Mb) to pin the original cgroup */
-> +	ptr = malloc(4 * (1 << 20));
-> +	if (!ptr)
-> +		goto err;
-> +
-> +	/* close programs and cgroup fd */
-> +	for (i = 0; i < ARRAY_SIZE(allow_prog); i++) {
-> +		close(allow_prog[i]);
-> +		allow_prog[i] = 0;
-> +	}
-> +
-> +	close(cg);
-> +	cg = 0;
-> +
-> +	/* leave the cgroup and remove it. don't detach programs */
-> +	cleanup_cgroup_environment();
-> +
 
-[..]
-> +	/* programs must stay pinned by the allocated memory */
-> +	for (i = 0; i < ARRAY_SIZE(prog_ids); i++) {
-> +		int fd = bpf_prog_get_fd_by_id(prog_ids[i]);
-> +
-> +		if (fd < 0)
-> +			goto err;
-> +		close(fd);
-> +	}
-This looks a bit flaky. It's essentially the same check you later
-do in a for loop. I guess there is a chance that async auto-detach
-might happen right after cleanup_cgroup_environment and before this for loop?
+Here are some miscellaneous keyrings fixes and improvements intended for
+the next merge window:
 
-> +
-> +	/* wait for the asynchronous auto-detachment.
-> +	 * wait for no more than 5 sec and give up.
-> +	 */
-> +	for (i = 0; i < ARRAY_SIZE(prog_ids); i++) {
-> +		for (attempts = 5; attempts >= 0; attempts--) {
-> +			int fd = bpf_prog_get_fd_by_id(prog_ids[i]);
-> +
-> +			if (fd < 0)
-> +				break;
-> +
-> +			/* don't leave the fd open */
-> +			close(fd);
-> +
-> +			if (!attempts)
-> +				goto err;
-> +
-> +			sleep(1);
-> +		}
-> +	}
-> +
-> +	rc = 0;
-> +err:
-> +	for (i = 0; i < ARRAY_SIZE(allow_prog); i++)
-> +		if (allow_prog[i] > 0)
-> +			close(allow_prog[i]);
-> +	if (cg)
-> +		close(cg);
-> +	free(ptr);
-> +	cleanup_cgroup_environment();
-> +	if (!rc)
-> +		printf("#autodetach:PASS\n");
-> +	else
-> +		printf("#autodetach:FAIL\n");
-> +	return rc;
-> +}
-> +
->  int main(int argc, char **argv)
->  {
-> -	int (*tests[])(void) = {test_foo_bar, test_multiprog};
-> +	int (*tests[])(void) = {
-> +		test_foo_bar,
-> +		test_multiprog,
-> +		test_autodetach,
-> +	};
->  	int errors = 0;
->  	int i;
->  
-> -- 
-> 2.20.1
-> 
+ (1) Fix a bunch of warnings from sparse, including missing RCU bits and
+     kdoc-function argument mismatches
+
+ (2) Implement a keyctl to allow a key to be moved from one keyring to
+     another, with the option of prohibiting key replacement in the
+     destination keyring.
+
+ (3) Grant Link permission to possessors of request_key_auth tokens so that
+     upcall servicing daemons can more easily arrange things such that only
+     the necessary auth key is passed to the actual service program, and
+     not all the auth keys a daemon might possesss.
+
+The patches can be found on the following branch:
+
+	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log/?h=keys-misc
+
+David
+---
+David Howells (7):
+      keys: sparse: Fix key_fs[ug]id_changed()
+      keys: sparse: Fix incorrect RCU accesses
+      keys: sparse: Fix kdoc mismatches
+      keys: Break bits out of key_unlink()
+      keys: Make __key_link_begin() handle lockdep nesting
+      keys: Add a keyctl to move a key between keyrings
+      keys: Grant Link permission to possessers of request_key auth keys
+
+
+ include/linux/key.h              |   13 ++-
+ include/uapi/linux/keyctl.h      |    3 +
+ kernel/cred.c                    |    4 -
+ security/keys/compat.c           |    3 +
+ security/keys/internal.h         |    3 -
+ security/keys/key.c              |    6 +
+ security/keys/keyctl.c           |   58 ++++++++++++
+ security/keys/keyring.c          |  178 ++++++++++++++++++++++++++++++++++----
+ security/keys/process_keys.c     |   22 ++---
+ security/keys/request_key.c      |    4 -
+ security/keys/request_key_auth.c |    4 -
+ 11 files changed, 250 insertions(+), 48 deletions(-)
+
