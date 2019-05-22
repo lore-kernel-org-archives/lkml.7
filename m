@@ -2,130 +2,99 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA030C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 16:04:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4D68C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 16:04:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FDDE20879
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 16:04:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558541061;
-	bh=KL0xSRRx52pYQmOhsgghRmXFU/B5bb60ts9K/5Isplo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=q06FZJwJyr6gtj77nLTIKekfEe3D7xr4xmeDQV68RtcIg1H2mw79w4jvKVUlWzN28
-	 TP4bioCTx6mDVsYl/Led3FMH6UZqm3C1k0sDIxLHtOpcQluI/A8rWwlS8MxBQMNs8D
-	 4k8IO1I93AbbTfCcmKGOIulm6R2tUaV1BB4K7O0c=
+	by mail.kernel.org (Postfix) with ESMTP id A11FA208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 16:04:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729806AbfEVQEU (ORCPT
+        id S1729871AbfEVQEW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 12:04:20 -0400
-Received: from casper.infradead.org ([85.118.1.10]:54394 "EHLO
-        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728466AbfEVQET (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 12:04:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=QRMlBTzg/wPc6H30GKyU4T0Dz4IABEqiLo1Mo/8ui3A=; b=I1sjJdFshzjkinDQ/kTE2Doovw
-        2g2XuMiGvdkQD/R++KBuVA2RXOINTa8QvuD9JW4tV4eCAk2on8Ow78/4wcfBKPBYJP+oenBPIw5Zm
-        tWVPEkEWHMYDJLBrSR1E6OAsPjVNDnOG0WH+UDmgnqBqaSxuB9yrOnz0p7WiRSW1bwqQVqV3qvUcQ
-        jQJ7C2YraRVyH5r2ZrdLi62xVOsAR7Gu4Z/4giZDRKa1Elrx0IabUixnsq95DCdcafysFEicWZMz5
-        GpaVjxK9yOIXIKHTuY0wEKeBvegAlx8rYSMs0OCje7dFr2ZX8lXYH4ytGAdJWHULjoBnWm6vRUqcL
-        Pw77RCtA==;
-Received: from [179.182.168.126] (helo=coco.lan)
-        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hTTiv-0002U0-Pe; Wed, 22 May 2019 16:04:14 +0000
-Date:   Wed, 22 May 2019 13:04:08 -0300
-From:   Mauro Carvalho Chehab <mchehab@kernel.org>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Markus Heiser <markus.heiser@darmarit.de>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC 0/2] docs: Deal with some Sphinx deprecation
- warnings
-Message-ID: <20190522130408.5d8258de@coco.lan>
-In-Reply-To: <20190522094559.5ed8021e@lwn.net>
-References: <20190521211714.1395-1-corbet@lwn.net>
-        <87d0kb7xf6.fsf@intel.com>
-        <20190522071909.050bb227@coco.lan>
-        <39b12927-9bf9-a304-4108-8f471a204f89@darmarit.de>
-        <20190522094559.5ed8021e@lwn.net>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Wed, 22 May 2019 12:04:22 -0400
+Received: from foss.arm.com ([217.140.101.70]:54496 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728466AbfEVQEV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 12:04:21 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5E97B341;
+        Wed, 22 May 2019 09:04:21 -0700 (PDT)
+Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 035BE3F718;
+        Wed, 22 May 2019 09:04:19 -0700 (PDT)
+Date:   Wed, 22 May 2019 17:04:17 +0100
+From:   Will Deacon <will.deacon@arm.com>
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     Jayachandran Chandrasekharan Nair <jnair@marvell.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        Jan Glauber <jglauber@marvell.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [RFC] Disable lockref on arm64
+Message-ID: <20190522160417.GF7876@fuggles.cambridge.arm.com>
+References: <20190429145159.GA29076@hc>
+ <CAHk-=wjPqcPYkiWKFc=R3+18DXqEhV+Nfbo=JWa32Xp8Nze67g@mail.gmail.com>
+ <20190502082741.GE13955@hc>
+ <CAHk-=wjmtMrxC1nSEHarBn8bW+hNXGv=2YeAWmTw1o54V8GKWA@mail.gmail.com>
+ <20190502231858.GB13168@dc5-eodlnx05.marvell.com>
+ <CAHk-=wiEahkwDXpoy=-SzJHNMRXKVSjPa870+eKKenufhO_Hgw@mail.gmail.com>
+ <20190506061100.GA8465@dc5-eodlnx05.marvell.com>
+ <20190506181039.GA2875@brain-police>
+ <20190518042424.GA28517@dc5-eodlnx05.marvell.com>
+ <CAKv+Gu9U9z3iAuz4V1c5zTHuz1As8FSNGY-TJon4OLErB8ts8Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKv+Gu9U9z3iAuz4V1c5zTHuz1As8FSNGY-TJon4OLErB8ts8Q@mail.gmail.com>
+User-Agent: Mutt/1.11.1+86 (6f28e57d73f2) ()
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, 22 May 2019 09:45:59 -0600
-Jonathan Corbet <corbet@lwn.net> escreveu:
-
-> On Wed, 22 May 2019 15:25:36 +0200
-> Markus Heiser <markus.heiser@darmarit.de> wrote:
+On Sat, May 18, 2019 at 12:00:34PM +0200, Ard Biesheuvel wrote:
+> On Sat, 18 May 2019 at 06:25, Jayachandran Chandrasekharan Nair
+> <jnair@marvell.com> wrote:
+> >
+> > On Mon, May 06, 2019 at 07:10:40PM +0100, Will Deacon wrote:
+> > > On Mon, May 06, 2019 at 06:13:12AM +0000, Jayachandran Chandrasekharan Nair wrote:
+> > > > Perhaps someone from ARM can chime in here how the cas/yield combo
+> > > > is expected to work when there is contention. ThunderX2 does not
+> > > > do much with the yield, but I don't expect any ARM implementation
+> > > > to treat YIELD as a hint not to yield, but to get/keep exclusive
+> > > > access to the last failed CAS location.
+> > >
+> > > Just picking up on this as "someone from ARM".
+> > >
+> > > The yield instruction in our implementation of cpu_relax() is *only* there
+> > > as a scheduling hint to QEMU so that it can treat it as an internal
+> > > scheduling hint and run some other thread; see 1baa82f48030 ("arm64:
+> > > Implement cpu_relax as yield"). We can't use WFE or WFI blindly here, as it
+> > > could be a long time before we see a wake-up event such as an interrupt. Our
+> > > implementation of smp_cond_load_acquire() is much better for that kind of
+> > > thing, but doesn't help at all for a contended CAS loop where the variable
+> > > is actually changing constantly.
+> >
+> > Looking thru the perf output of this case (open/close of a file from
+> > multiple CPUs), I see that refcount is a significant factor in most
+> > kernel configurations - and that too uses cmpxchg (without yield).
+> > x86 has an optimized inline version of refcount that helps
+> > significantly. Do you think this is worth looking at for arm64?
+> >
 > 
-> > Lets use 1.7 :
-> > 
-> > - no need for Use_SSI wrapper
-> > - new log should work with 1.7 [1] --> no need for kernellog.py and
-> >    additional imports, instead include on top of python modules ::
-> > 
-> >      from sphinx.util import logging
-> >      logger = logging.getLogger('kerneldoc')  
+> I looked into this a while ago [0], but at the time, we decided to
+> stick with the generic implementation until we encountered a use case
+> that benefits from it. Worth a try, I suppose ...
 > 
-> I think we're going to have to drag things forward at some point in the
-> not-too-distant future, but I think I'd rather not do that quite yet.  The
-> cost of supporting older sphinx for a few releases while we warn people is
-> not all that high.  So I think we should:
-> 
->  - Put in (a future version of) my hacks for now, plus whatever else might
->    be needed to make 2.0 work right.
-> 
->  - Fix the fallout with regard to out-of-toctree .rst files so that we can
->    actually build again with current sphinx.
-> 
->  - Update Documentation/sphinx/requirements.txt to ask for something a wee
->    bit more recent than 1.4.9.
+> [0] https://lore.kernel.org/linux-arm-kernel/20170903101622.12093-1-ard.biesheuvel@linaro.org/
 
-You should remember to also update conf.py (with currently points to 1.3):
+If JC can show that we benefit from this, it would be interesting to see if
+we can implement the refcount-full saturating arithmetic using the
+LDMIN/LDMAX instructions instead of the current cmpxchg() loops.
 
-	# If your documentation needs a minimal Sphinx version, state it here.
-	needs_sphinx = '1.3'
-
-Also, if you touch there, you should also touch:
-
-	./scripts/sphinx-pre-install
-
-The change there won't be as trivial as just changing this line:
-
-	$virtenv_dir = "sphinx_1.4";
-
-as the script should now run sphinx-build --version, in order to check
-if the version is lower than the new minimal version. It probably makes
-sense to make it grep the version from needs_sphinx at conf.py.
-
->  - Add a warning when building with an older version that (say) 1.7 will
->    be required as of (say) 5.5.
-
-It probably makes sense to add such check at the pre-install script,
-and add a:
-
-	SPHINXOPTS="-jauto"
-
-somewhere if version is 1.7 or upper.
-
-> 
-> Does this make sense?
-
-It makes sense to me.
-
-Thanks,
-Mauro
+Will
