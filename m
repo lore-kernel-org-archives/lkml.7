@@ -2,101 +2,130 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B21FC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 11:00:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42AE2C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 11:01:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4636A217D4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 11:00:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="AGZZdOV5"
+	by mail.kernel.org (Postfix) with ESMTP id 0A30C21479
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 11:01:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558522879;
+	bh=T+pdBF6h5tbL0dEL/oT26pSo8Wcx5K1/zBlmSfWOyAE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=PdwlxxZjLLpYnAiF24BxkRnW18kt/mibZIvNHzJ7Zc8IUGYFmMf/m/qwopkHouI0y
+	 tb7VEGUuaLYOJwkkctdUlNyEiICwveT0BlhF3gUeIrnURa1SYPR1u7jPRWuQRJJ3Dh
+	 HF7MoPYSdX6y6WcVw7poTfL1D0KcRTkPNycxc9gg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729311AbfEVLAi (ORCPT
+        id S1729314AbfEVLBS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 07:00:38 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:18815 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728743AbfEVLAh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 07:00:37 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 4588mz3Nsdz9v2JK;
-        Wed, 22 May 2019 13:00:35 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=AGZZdOV5; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id 1p8m7ConjVBO; Wed, 22 May 2019 13:00:35 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 4588mz28Wtz9v2JJ;
-        Wed, 22 May 2019 13:00:35 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1558522835; bh=k7gXDpgsRbDzPYykyp8yT+pXmsBZ7LxZ7ySJOQkqcXw=;
-        h=From:Subject:To:Cc:Date:From;
-        b=AGZZdOV5RUVapAjUuLLyoEBn8omopPog2JyYv4LASsAhWoXCdyU9I93TVKTjbPhLx
-         BgF3zcvxOIsUMriKEtcbgmJBnzV2xbvEeYGHovscztGKkFIOj3aqmSDax2qJxfIrV8
-         fMmKfkOYYtWdG1ZjhuQLnAgi583uvHmh3ojdsWZI=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 76CBB8B838;
-        Wed, 22 May 2019 13:00:36 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id C2x4lgf7MCwK; Wed, 22 May 2019 13:00:36 +0200 (CEST)
-Received: from po16846vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.231.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 54E698B823;
-        Wed, 22 May 2019 13:00:36 +0200 (CEST)
-Received: by po16846vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 2F081684F2; Wed, 22 May 2019 11:00:36 +0000 (UTC)
-Message-Id: <9c1b9545e6683666a795cd89070fa9491f33b9da.1558522754.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH] spi: spi-fsl-spi: call spi_finalize_current_message() at the
- end
-To:     Mark Brown <broonie@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-spi@vger.kernel.org
-Date:   Wed, 22 May 2019 11:00:36 +0000 (UTC)
+        Wed, 22 May 2019 07:01:18 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:55612 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728406AbfEVLBR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 07:01:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=zayKSYs/1H7s0xB/BM7u3QdiVVXr8vKW/624+3am8oI=; b=lBsZPNdl+N8oAgIkMsLdVrTnR
+        szN9nikklbIFhthxDf+7g9jkQU3hMZP0jTjniUsU2bUIUR8FCKydeCfHZ2YYXMCsjWG7T99RN+jjv
+        XCLG1c/qnj2jWwbvjAWB8553rHe7VwZMyoewf5+3MDRqQMna/HHUKeAPpMUWYk5pOp8Tc=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hTOzf-00043C-2o; Wed, 22 May 2019 11:01:11 +0000
+Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
+        id 678611126D0E; Wed, 22 May 2019 12:01:07 +0100 (BST)
+Date:   Wed, 22 May 2019 12:01:07 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Jeffrey Hugo <jhugo@codeaurora.org>
+Cc:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>, lgirdwood@gmail.com,
+        agross@kernel.org, david.brown@linaro.org,
+        bjorn.andersson@linaro.org, jcrouse@codeaurora.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+Subject: Re: [PATCH 2/3] regulator: qcom_spmi: Add support for PM8005
+Message-ID: <20190522110107.GB8582@sirena.org.uk>
+References: <20190521164932.14265-1-jeffrey.l.hugo@gmail.com>
+ <20190521165315.14379-1-jeffrey.l.hugo@gmail.com>
+ <20190521185054.GD16633@sirena.org.uk>
+ <51caaee4-dfc9-5b5a-07c7-b1406c178ca3@codeaurora.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ftEhullJWpWg/VHq"
+Content-Disposition: inline
+In-Reply-To: <51caaee4-dfc9-5b5a-07c7-b1406c178ca3@codeaurora.org>
+X-Cookie: Does the name Pavlov ring a bell?
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-spi_finalize_current_message() shall be called once all
-actions are finished, otherwise the last actions might
-step over a newly started transfer.
 
-Fixes: c592becbe704 ("spi: fsl-(e)spi: migrate to generic master queueing")
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
----
- drivers/spi/spi-fsl-spi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+--ftEhullJWpWg/VHq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/drivers/spi/spi-fsl-spi.c b/drivers/spi/spi-fsl-spi.c
-index b36ac6aa3b1f..7fbdaf066719 100644
---- a/drivers/spi/spi-fsl-spi.c
-+++ b/drivers/spi/spi-fsl-spi.c
-@@ -432,7 +432,6 @@ static int fsl_spi_do_one_msg(struct spi_master *master,
- 	}
- 
- 	m->status = status;
--	spi_finalize_current_message(master);
- 
- 	if (status || !cs_change) {
- 		ndelay(nsecs);
-@@ -440,6 +439,7 @@ static int fsl_spi_do_one_msg(struct spi_master *master,
- 	}
- 
- 	fsl_spi_setup_transfer(spi, NULL);
-+	spi_finalize_current_message(master);
- 	return 0;
- }
- 
--- 
-2.13.3
+On Tue, May 21, 2019 at 05:16:06PM -0600, Jeffrey Hugo wrote:
+> On 5/21/2019 12:50 PM, Mark Brown wrote:
 
+> > > +static int spmi_regulator_common_list_voltage(struct regulator_dev *rdev,
+> > > +					      unsigned selector);
+> > > +
+> > > +static int spmi_regulator_common2_set_voltage(struct regulator_dev *rdev,
+> > > +					      unsigned selector)
+
+> > Eeew, can we not have better names?
+
+> I'm open to suggestions.  Apparently there are two register common register
+> schemes - the old one and the new one.  PMIC designs after some random point
+> in time are all the new register scheme per the documentation I see.
+
+> As far as I an aware, the FT426 design is the first design to be added to
+> this driver to make use of the new scheme, but I expect more to be supported
+> in future, thus I'm reluctant to make these ft426 specific in the name.
+
+If there's a completely new register map why are these even in the same
+driver?
+
+> > > +	if (reg == SPMI_COMMON2_MODE_HPM_MASK)
+> > > +		return REGULATOR_MODE_NORMAL;
+> > > +
+> > > +	if (reg == SPMI_COMMON2_MODE_AUTO_MASK)
+> > > +		return REGULATOR_MODE_FAST;
+> > > +
+> > > +	return REGULATOR_MODE_IDLE;
+> > > +}
+
+> > This looks like you want to write a switch statement.
+
+> It follows the existing style in the driver, but sure I can make this a
+> switch.
+
+Please fix the rest of the driver as well then.
+
+--ftEhullJWpWg/VHq
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlzlK/IACgkQJNaLcl1U
+h9AXBAf+Mto6O8QugYdL/55lY+O0vvNOPBrb59BAFs7716IWtNgDrcYMV26RZQSH
+BzgdRdziDxkoGHoN5SW0+SMI4M3+P/z2H/27sIzWS9XVN1Sa2FWpY/YXuLbH2CZi
+X9ghBPTYAzoMuBUmYLFGtLIRdiO9010etKXNciGD2gFJfNNadNKO3J8hC3OqDgTZ
+bMxyC5g7MC3I9htRJ9yafXbbXHqahv65Ef6qJglqAab9l8lEYZUsinLDr0+RsDjA
+VK6zsNXyfMwkdUUWvLpzObIWE3LYAys1o/c62/nPfPdJp39K5ZVaN8oAKAQlcULk
+rvwI3qh/T/+DFRxCMIU+w/Hp9MLa5g==
+=jGLx
+-----END PGP SIGNATURE-----
+
+--ftEhullJWpWg/VHq--
