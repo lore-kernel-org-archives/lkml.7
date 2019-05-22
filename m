@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F171CC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:32:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A165C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:33:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C51F52089E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:32:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF7CA20675
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:33:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558553570;
-	bh=E+ZE7vDcdP/vN6Zda4hseU3aCU164cE+hg599B+TFH8=;
+	s=default; t=1558553581;
+	bh=r76SnZdYsqqjxF7jn7OHOjD4pNqn91ObB4C4LK5uPms=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V9KxobxIIm8wE4Dul5O5DbR8WQK6U+1rTEYTuVN5T3A9bum3b3w3+yWGn1jWzY3mJ
-	 WhpVXCT7ELyJK6F5HC1PLQDG0YgiEckKlJYa9liMMSjrW0euVQWaSTwoRWMVhsltqt
-	 CCKF6Xa38JhiEkgNfyCFsVw0FpJKoM1k7p3+oHjo=
+	b=sNvOXDzxx5C1Zs8RZUCChQEfKGOahKlLZm1bz5hZluiGxJfgwAveBJvGQPJEiwz3g
+	 FWNUFhRMZSS01XTdqk3lZNwWOCJ//zoiTbMWlcoP5RRCBoL2ix78jQN3iaqKA76mhU
+	 x7m0YJbWTAfLtFswkSC4gwGvR+4cqP0wWu4bJVg8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732351AbfEVTct (ORCPT
+        id S2387728AbfEVTcB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:32:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55970 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:32:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55606 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732564AbfEVTcM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:32:12 -0400
+        id S2387705AbfEVTb7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:31:59 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ACB1F217F9;
-        Wed, 22 May 2019 19:32:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1950821473;
+        Wed, 22 May 2019 19:31:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553531;
-        bh=E+ZE7vDcdP/vN6Zda4hseU3aCU164cE+hg599B+TFH8=;
+        s=default; t=1558553517;
+        bh=r76SnZdYsqqjxF7jn7OHOjD4pNqn91ObB4C4LK5uPms=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lO1RKja7n3V52u9YK1RT+kM+kFtyyZnpBmZkJLVsmirCei1AtTYqpV85rNZnUn/Hv
-         EtxXOvHRcLfNd8aF+spI7fII3DX8GUM2okEg9vKz3Ah0qEIJYdplfqHrdqbh7Dj3ma
-         fdtBcsdeMt1eWf4ejh+H28rd91Sbyq2CqTJnjAyM=
+        b=sgLotn9h9ZE2Euws+KkyCXU8PCK7X7ZtwWTjtXJBSFiTARlgOj8ev2p67l6vS5YVi
+         i82MgnsSijQ56cIL4EpiHWqZrwwCJ3JpuAWT/+ttUNmzvGeZ+aJ7xaDMQZxBKp1d7/
+         WS6xymqNMvTJwzOOqNl9fxZAl29myCjVwfvtoRhs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 27/92] HID: logitech-hidpp: use RAP instead of FAP to get the protocol version
-Date:   Wed, 22 May 2019 15:30:22 -0400
-Message-Id: <20190522193127.27079-27-sashal@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Coly Li <colyli@suse.de>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>, linux-bcache@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 21/92] bcache: avoid clang -Wunintialized warning
+Date:   Wed, 22 May 2019 15:30:16 -0400
+Message-Id: <20190522193127.27079-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522193127.27079-1-sashal@kernel.org>
 References: <20190522193127.27079-1-sashal@kernel.org>
@@ -59,76 +60,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 096377525cdb8251e4656085efc988bdf733fb4c ]
+[ Upstream commit 78d4eb8ad9e1d413449d1b7a060f50b6efa81ebd ]
 
-According to the logitech_hidpp_2.0_specification_draft_2012-06-04.pdf doc:
-https://lekensteyn.nl/files/logitech/logitech_hidpp_2.0_specification_draft_2012-06-04.pdf
+clang has identified a code path in which it thinks a
+variable may be unused:
 
-We should use a register-access-protocol request using the short input /
-output report ids. This is necessary because 27MHz HID++ receivers have
-a max-packetsize on their HIP++ endpoint of 8, so they cannot support
-long reports. Using a feature-access-protocol request (which is always
-long or very-long) with these will cause a timeout error, followed by
-the hidpp driver treating the device as not being HID++ capable.
+drivers/md/bcache/alloc.c:333:4: error: variable 'bucket' is used uninitialized whenever 'if' condition is false
+      [-Werror,-Wsometimes-uninitialized]
+                        fifo_pop(&ca->free_inc, bucket);
+                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/md/bcache/util.h:219:27: note: expanded from macro 'fifo_pop'
+ #define fifo_pop(fifo, i)       fifo_pop_front(fifo, (i))
+                                ^~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/md/bcache/util.h:189:6: note: expanded from macro 'fifo_pop_front'
+        if (_r) {                                                       \
+            ^~
+drivers/md/bcache/alloc.c:343:46: note: uninitialized use occurs here
+                        allocator_wait(ca, bch_allocator_push(ca, bucket));
+                                                                  ^~~~~~
+drivers/md/bcache/alloc.c:287:7: note: expanded from macro 'allocator_wait'
+                if (cond)                                               \
+                    ^~~~
+drivers/md/bcache/alloc.c:333:4: note: remove the 'if' if its condition is always true
+                        fifo_pop(&ca->free_inc, bucket);
+                        ^
+drivers/md/bcache/util.h:219:27: note: expanded from macro 'fifo_pop'
+ #define fifo_pop(fifo, i)       fifo_pop_front(fifo, (i))
+                                ^
+drivers/md/bcache/util.h:189:2: note: expanded from macro 'fifo_pop_front'
+        if (_r) {                                                       \
+        ^
+drivers/md/bcache/alloc.c:331:15: note: initialize the variable 'bucket' to silence this warning
+                        long bucket;
+                                   ^
 
-This commit fixes this by switching to using a rap request to get the
-protocol version.
+This cannot happen in practice because we only enter the loop
+if there is at least one element in the list.
 
-Besides being tested with a (046d:c517) 27MHz receiver with various
-27MHz keyboards and mice, this has also been tested to not cause
-regressions on a non-unifying dual-HID++ nano receiver (046d:c534) with
-k270 and m185 HID++-2.0 devices connected and on a unifying/dj receiver
-(046d:c52b) with a HID++-2.0 Logitech Rechargeable Touchpad T650.
+Slightly rearranging the code makes this clearer to both the
+reader and the compiler, which avoids the warning.
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Coly Li <colyli@suse.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-logitech-hidpp.c | 17 +++++++++++++----
- 1 file changed, 13 insertions(+), 4 deletions(-)
+ drivers/md/bcache/alloc.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-hidpp.c
-index 5fd97860aec4d..3666e5064d0d3 100644
---- a/drivers/hid/hid-logitech-hidpp.c
-+++ b/drivers/hid/hid-logitech-hidpp.c
-@@ -414,13 +414,16 @@ static int hidpp_root_get_feature(struct hidpp_device *hidpp, u16 feature,
+diff --git a/drivers/md/bcache/alloc.c b/drivers/md/bcache/alloc.c
+index 16c3390e5d9f3..d82ae445c9ee3 100644
+--- a/drivers/md/bcache/alloc.c
++++ b/drivers/md/bcache/alloc.c
+@@ -324,10 +324,11 @@ static int bch_allocator_thread(void *arg)
+ 		 * possibly issue discards to them, then we add the bucket to
+ 		 * the free list:
+ 		 */
+-		while (!fifo_empty(&ca->free_inc)) {
++		while (1) {
+ 			long bucket;
  
- static int hidpp_root_get_protocol_version(struct hidpp_device *hidpp)
- {
-+	const u8 ping_byte = 0x5a;
-+	u8 ping_data[3] = { 0, 0, ping_byte };
- 	struct hidpp_report response;
- 	int ret;
+-			fifo_pop(&ca->free_inc, bucket);
++			if (!fifo_pop(&ca->free_inc, bucket))
++				break;
  
--	ret = hidpp_send_fap_command_sync(hidpp,
-+	ret = hidpp_send_rap_command_sync(hidpp,
-+			REPORT_ID_HIDPP_SHORT,
- 			HIDPP_PAGE_ROOT_IDX,
- 			CMD_ROOT_GET_PROTOCOL_VERSION,
--			NULL, 0, &response);
-+			ping_data, sizeof(ping_data), &response);
- 
- 	if (ret == HIDPP_ERROR_INVALID_SUBID) {
- 		hidpp->protocol_major = 1;
-@@ -440,8 +443,14 @@ static int hidpp_root_get_protocol_version(struct hidpp_device *hidpp)
- 	if (ret)
- 		return ret;
- 
--	hidpp->protocol_major = response.fap.params[0];
--	hidpp->protocol_minor = response.fap.params[1];
-+	if (response.rap.params[2] != ping_byte) {
-+		hid_err(hidpp->hid_dev, "%s: ping mismatch 0x%02x != 0x%02x\n",
-+			__func__, response.rap.params[2], ping_byte);
-+		return -EPROTO;
-+	}
-+
-+	hidpp->protocol_major = response.rap.params[0];
-+	hidpp->protocol_minor = response.rap.params[1];
- 
- 	return ret;
- }
+ 			if (ca->discard) {
+ 				mutex_unlock(&ca->set->bucket_lock);
 -- 
 2.20.1
 
