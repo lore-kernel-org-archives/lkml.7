@@ -4,44 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E21A3C072B5
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 03:25:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B80AC16A69
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 03:26:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEC3F217F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 03:25:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79C43217D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 03:26:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728412AbfEVDZS (ORCPT
+        id S1728422AbfEVD02 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 23:25:18 -0400
-Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:52664 "EHLO
-        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727733AbfEVDZS (ORCPT
+        Tue, 21 May 2019 23:26:28 -0400
+Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:54643 "EHLO
+        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727733AbfEVD01 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 23:25:18 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0TSM7IGo_1558495511;
-Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TSM7IGo_1558495511)
+        Tue, 21 May 2019 23:26:27 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04400;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0TSM5PZQ_1558495581;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TSM5PZQ_1558495581)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 22 May 2019 11:25:12 +0800
+          Wed, 22 May 2019 11:26:22 +0800
 Subject: Re: [v3 PATCH 2/2] mm: vmscan: correct some vmscan counters for THP
  swapout
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     ying.huang@intel.com, mhocko@suse.com, mgorman@techsingularity.net,
+To:     "Huang, Ying" <ying.huang@intel.com>
+Cc:     hannes@cmpxchg.org, mhocko@suse.com, mgorman@techsingularity.net,
         kirill.shutemov@linux.intel.com, josef@toxicpanda.com,
         hughd@google.com, shakeelb@google.com, akpm@linux-foundation.org,
         linux-mm@kvack.org, linux-kernel@vger.kernel.org
 References: <1558431642-52120-1-git-send-email-yang.shi@linux.alibaba.com>
  <1558431642-52120-2-git-send-email-yang.shi@linux.alibaba.com>
- <20190521160038.GB3687@cmpxchg.org>
+ <87ftp7cmds.fsf@yhuang-dev.intel.com>
 From:   Yang Shi <yang.shi@linux.alibaba.com>
-Message-ID: <b3970971-1f2c-3c9b-d0e3-008f57c45b74@linux.alibaba.com>
-Date:   Wed, 22 May 2019 11:25:07 +0800
+Message-ID: <200a8dc9-f9cd-e039-fefe-1971271e27c3@linux.alibaba.com>
+Date:   Wed, 22 May 2019 11:26:17 +0800
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
  Gecko/20100101 Thunderbird/52.7.0
 MIME-Version: 1.0
-In-Reply-To: <20190521160038.GB3687@cmpxchg.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <87ftp7cmds.fsf@yhuang-dev.intel.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
@@ -51,8 +52,9 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 5/22/19 12:00 AM, Johannes Weiner wrote:
-> On Tue, May 21, 2019 at 05:40:42PM +0800, Yang Shi wrote:
+On 5/22/19 9:23 AM, Huang, Ying wrote:
+> Yang Shi <yang.shi@linux.alibaba.com> writes:
+>
 >> Since commit bd4c82c22c36 ("mm, THP, swap: delay splitting THP after
 >> swapped out"), THP can be swapped out in a whole.  But, nr_reclaimed
 >> and some other vm counters still get inc'ed by one even though a whole
@@ -151,123 +153,21 @@ On 5/22/19 12:00 AM, Johannes Weiner wrote:
 >> +						((1 << compound_order(page)) -
 >> +							1);
 >> +
->>   				may_enter_fs = 1;
-> Even if we don't split and reclaim the page, we should always account
-> the number of base pages in nr_scanned. Otherwise it's not clear what
-> nr_scanned means.
+> The "if" here could be changed to "else if" because if add_to_swap()
+> fails we don't need to call PageTransHuge() here.  But this isn't a big
+> deal.
 
-Sure.
-
->
->>   				/* Adding to swap updated mapping */
->> @@ -1315,7 +1326,8 @@ static unsigned long shrink_page_list(struct list_head *page_list,
->>   			if (unlikely(PageTransHuge(page)))
->>   				flags |= TTU_SPLIT_HUGE_PMD;
->>   			if (!try_to_unmap(page, flags)) {
->> -				stat->nr_unmap_fail++;
->> +				stat->nr_unmap_fail +=
->> +					(1 << compound_order(page));
->>   				goto activate_locked;
->>   			}
->>   		}
->> @@ -1442,7 +1454,11 @@ static unsigned long shrink_page_list(struct list_head *page_list,
->>   
->>   		unlock_page(page);
->>   free_it:
->> -		nr_reclaimed++;
->> +		/*
->> +		 * THP may get swapped out in a whole, need account
->> +		 * all base pages.
->> +		 */
->> +		nr_reclaimed += (1 << compound_order(page));
-> This expression is quite repetitive. Why not do
->
-> 		int nr_pages;
->
-> 		page = lru_to_page(page_list);
-> 		nr_pages = 1 << compound_order(page);
-> 		list_del(&page->lru);
->
-> 		if (!trylock_page(page))
-> 			...
->
-> at the head of the loop and add nr_pages to all these counters
-> instead?
-
-Because it is unknown whether the THP will be swapped out as a whole or 
-will be split at this point. nr_scanned is fine, but nr_reclaimed is not.
+This could be moved to the beginning according to Johannes.
 
 >
->> @@ -1642,14 +1659,12 @@ static unsigned long isolate_lru_pages(unsigned long nr_to_scan,
->>   	unsigned long nr_zone_taken[MAX_NR_ZONES] = { 0 };
->>   	unsigned long nr_skipped[MAX_NR_ZONES] = { 0, };
->>   	unsigned long skipped = 0;
->> -	unsigned long scan, total_scan, nr_pages;
->> +	unsigned long scan, nr_pages;
->>   	LIST_HEAD(pages_skipped);
->>   	isolate_mode_t mode = (sc->may_unmap ? 0 : ISOLATE_UNMAPPED);
->>   
->>   	scan = 0;
->> -	for (total_scan = 0;
->> -	     scan < nr_to_scan && nr_taken < nr_to_scan && !list_empty(src);
->> -	     total_scan++) {
->> +	while (scan < nr_to_scan && nr_taken < nr_to_scan && !list_empty(src)) {
->>   		struct page *page;
-> Once you fixed the units, scan < nr_to_scan && nr_taken >= nr_to_scan
-> is an impossible condition. You should be able to write:
->
-> 	while (scan < nr_to_scan && !list_empty(src))
+> You have analyzed the code and found that nr_dirty, nr_unqueued_dirty,
+> nr_congested and nr_writeback are file cache related and not impacted by
+> THP swap out.  How about add your findings in the patch description?
 
-Yes.
+Yes, sure. Will add in v4.
 
 >
-> Also, you need to keep total_scan. The trace point wants to know how
-> many pages were actually looked at, including the ones from ineligible
-> zones that were skipped over.
-
-Aha, yes. The total_scan includes both scanned and skipped. Will fix in v4.
-
+> Best Regards,
+> Huang, Ying
 >
->>   
->>   		page = lru_to_page(src);
->> @@ -1659,7 +1674,8 @@ static unsigned long isolate_lru_pages(unsigned long nr_to_scan,
->>   
->>   		if (page_zonenum(page) > sc->reclaim_idx) {
->>   			list_move(&page->lru, &pages_skipped);
->> -			nr_skipped[page_zonenum(page)]++;
->> +			nr_skipped[page_zonenum(page)] +=
->> +				(1 << compound_order(page));
->>   			continue;
->>   		}
->>   
->> @@ -1669,7 +1685,7 @@ static unsigned long isolate_lru_pages(unsigned long nr_to_scan,
->>   		 * ineligible pages.  This causes the VM to not reclaim any
->>   		 * pages, triggering a premature OOM.
->>   		 */
->> -		scan++;
->> +		scan += (1 << compound_order(page));
->>   		switch (__isolate_lru_page(page, mode)) {
->>   		case 0:
->>   			nr_pages = hpage_nr_pages(page);
-> Same here, you can calculate nr_pages at the top of the loop and use
-> it throughout.
-
-Yes. Will fix in v4.
-
->
->> @@ -1707,9 +1723,9 @@ static unsigned long isolate_lru_pages(unsigned long nr_to_scan,
->>   			skipped += nr_skipped[zid];
->>   		}
->>   	}
->> -	*nr_scanned = total_scan;
->> +	*nr_scanned = scan;
->>   	trace_mm_vmscan_lru_isolate(sc->reclaim_idx, sc->order, nr_to_scan,
->> -				    total_scan, skipped, nr_taken, mode, lru);
->> +				    scan, skipped, nr_taken, mode, lru);
->>   	update_lru_sizes(lruvec, lru, nr_zone_taken);
->>   	return nr_taken;
->>   }
->> -- 
->> 1.8.3.1
->>
 
