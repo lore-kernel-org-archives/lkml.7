@@ -2,42 +2,44 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12CD2C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 22:06:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6233DC282DC
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 22:06:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B08BB21880
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 22:06:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DD3321881
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 22:06:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727996AbfEVWGH (ORCPT
+        id S1728212AbfEVWGL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 18:06:07 -0400
-Received: from mx.allycomm.com ([138.68.30.55]:28566 "EHLO mx.allycomm.com"
+        Wed, 22 May 2019 18:06:11 -0400
+Received: from mx.allycomm.com ([138.68.30.55]:13329 "EHLO mx.allycomm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726390AbfEVWGH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 18:06:07 -0400
+        id S1726390AbfEVWGK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 18:06:10 -0400
 Received: from allycomm.com (unknown [IPv6:2601:647:5401:2210::49])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx.allycomm.com (Postfix) with ESMTPSA id 82C893CB13;
-        Wed, 22 May 2019 15:06:05 -0700 (PDT)
+        by mx.allycomm.com (Postfix) with ESMTPSA id 2E3713CB15;
+        Wed, 22 May 2019 15:06:08 -0700 (PDT)
 From:   Jeff Kletsky <lede@allycomm.com>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Schrempf Frieder <frieder.schrempf@kontron.de>,
-        Boris Brezillon <bbrezillon@kernel.org>,
+To:     Miquel Raynal <miquel.raynal@bootlin.com>,
         Richard Weinberger <richard@nod.at>,
         David Woodhouse <dwmw2@infradead.org>,
         Brian Norris <computersforpeace@gmail.com>,
         Marek Vasut <marek.vasut@gmail.com>,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kbuild-all@01.org
-Subject: [PATCH v4 0/3] mtd: spinand: Add support for GigaDevice GD5F1GQ4UFxxG
-Date:   Wed, 22 May 2019 15:05:52 -0700
-Message-Id: <20190522220555.11626-1-lede@allycomm.com>
+        Vignesh Raghavendra <vigneshr@ti.com>
+Cc:     Jeff Kletsky <git-commits@allycomm.com>,
+        Frieder Schrempf <frieder.schrempf@kontron.de>,
+        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v4 1/3] mtd: spinand: Define macros for page-read ops with three-byte addresses
+Date:   Wed, 22 May 2019 15:05:53 -0700
+Message-Id: <20190522220555.11626-2-lede@allycomm.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190522220555.11626-1-lede@allycomm.com>
+References: <20190522220555.11626-1-lede@allycomm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -45,57 +47,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Addresses changes in macros and related data structures introduced by
-  commit 377e517b5fa5
-      mtd: nand: Add max_bad_eraseblocks_per_lun info to memorg
+From: Jeff Kletsky <git-commits@allycomm.com>
 
-Resolves issue detected by kbuild test robot
-  Tue, 21 May 2019 17:28:09 +0800
-  Tue, 21 May 2019 18:17:28 +0800
+The GigaDevice GD5F1GQ4UFxxG SPI NAND utilizes three-byte addresses
+for its page-read ops.
 
-GD5F1GQ4UFxxG data sheet on page 34 of gd5f1gq4xfxxg_v2.4_20190322.pdf
-indicates "Minumum number of valid blocks (Nvb)" 1004 out of 1024 total.
+http://www.gigadevice.com/datasheet/gd5f1gq4xfxxg/
 
-Newly introduced "max bad blocks" parameter set to 20 (1024-1020).
+Signed-off-by: Jeff Kletsky <git-commits@allycomm.com>
 
-Rebased on v5.2-rc1 and confirmed patch applies on master.
+Reviewed-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+---
+ include/linux/mtd/spinand.h | 30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
-
-Patches 1/3 and 2/3 are the same as in the previous series.
-
-Patch 3/3, mtd: spinand: Add support for GigaDevice GD5F1GQ4UFxxG,
-includes the additional parameter (compared here to v3 of the series):
-
-    SPINAND_INFO("GD5F1GQ4UFxxG", 0xb148,
-    -                    NAND_MEMORG(1, 2048, 128, 64, 1024, 1, 1, 1),
-    +                    NAND_MEMORG(1, 2048, 128, 64, 1024, 20, 1, 1, 1),
-                         NAND_ECCREQ(8, 512),
-                         SPINAND_INFO_OP_VARIANTS(&read_cache_variants_f,
-                         &write_cache_variants,
-
-R-b of Frieder Schrempf removed from [3/3] as a result this change.
-
-Supersedes series:
-
-mtd: spinand: Add support for GigaDevice GD5F1GQ4UFxxG
-https://patchwork.ozlabs.org/project/linux-mtd/list/?series=108868
-
-
-
-Jeff
-
-
-
-Cc: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Schrempf Frieder <frieder.schrempf@kontron.de>
-Cc: Boris Brezillon <bbrezillon@kernel.org>
-Cc: Richard Weinberger <richard@nod.at>
-Cc: David Woodhouse <dwmw2@infradead.org>
-Cc: Brian Norris <computersforpeace@gmail.com>
-Cc: Marek Vasut <marek.vasut@gmail.com>
-Cc: linux-mtd@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Cc: kbuild-all@01.org
-
-
+diff --git a/include/linux/mtd/spinand.h b/include/linux/mtd/spinand.h
+index 507f7e289bd1..8aa39ac41e8e 100644
+--- a/include/linux/mtd/spinand.h
++++ b/include/linux/mtd/spinand.h
+@@ -68,30 +68,60 @@
+ 		   SPI_MEM_OP_DUMMY(ndummy, 1),				\
+ 		   SPI_MEM_OP_DATA_IN(len, buf, 1))
+ 
++#define SPINAND_PAGE_READ_FROM_CACHE_OP_3A(fast, addr, ndummy, buf, len) \
++	SPI_MEM_OP(SPI_MEM_OP_CMD(fast ? 0x0b : 0x03, 1),		\
++		   SPI_MEM_OP_ADDR(3, addr, 1),				\
++		   SPI_MEM_OP_DUMMY(ndummy, 1),				\
++		   SPI_MEM_OP_DATA_IN(len, buf, 1))
++
+ #define SPINAND_PAGE_READ_FROM_CACHE_X2_OP(addr, ndummy, buf, len)	\
+ 	SPI_MEM_OP(SPI_MEM_OP_CMD(0x3b, 1),				\
+ 		   SPI_MEM_OP_ADDR(2, addr, 1),				\
+ 		   SPI_MEM_OP_DUMMY(ndummy, 1),				\
+ 		   SPI_MEM_OP_DATA_IN(len, buf, 2))
+ 
++#define SPINAND_PAGE_READ_FROM_CACHE_X2_OP_3A(addr, ndummy, buf, len)	\
++	SPI_MEM_OP(SPI_MEM_OP_CMD(0x3b, 1),				\
++		   SPI_MEM_OP_ADDR(3, addr, 1),				\
++		   SPI_MEM_OP_DUMMY(ndummy, 1),				\
++		   SPI_MEM_OP_DATA_IN(len, buf, 2))
++
+ #define SPINAND_PAGE_READ_FROM_CACHE_X4_OP(addr, ndummy, buf, len)	\
+ 	SPI_MEM_OP(SPI_MEM_OP_CMD(0x6b, 1),				\
+ 		   SPI_MEM_OP_ADDR(2, addr, 1),				\
+ 		   SPI_MEM_OP_DUMMY(ndummy, 1),				\
+ 		   SPI_MEM_OP_DATA_IN(len, buf, 4))
+ 
++#define SPINAND_PAGE_READ_FROM_CACHE_X4_OP_3A(addr, ndummy, buf, len)	\
++	SPI_MEM_OP(SPI_MEM_OP_CMD(0x6b, 1),				\
++		   SPI_MEM_OP_ADDR(3, addr, 1),				\
++		   SPI_MEM_OP_DUMMY(ndummy, 1),				\
++		   SPI_MEM_OP_DATA_IN(len, buf, 4))
++
+ #define SPINAND_PAGE_READ_FROM_CACHE_DUALIO_OP(addr, ndummy, buf, len)	\
+ 	SPI_MEM_OP(SPI_MEM_OP_CMD(0xbb, 1),				\
+ 		   SPI_MEM_OP_ADDR(2, addr, 2),				\
+ 		   SPI_MEM_OP_DUMMY(ndummy, 2),				\
+ 		   SPI_MEM_OP_DATA_IN(len, buf, 2))
+ 
++#define SPINAND_PAGE_READ_FROM_CACHE_DUALIO_OP_3A(addr, ndummy, buf, len) \
++	SPI_MEM_OP(SPI_MEM_OP_CMD(0xbb, 1),				\
++		   SPI_MEM_OP_ADDR(3, addr, 2),				\
++		   SPI_MEM_OP_DUMMY(ndummy, 2),				\
++		   SPI_MEM_OP_DATA_IN(len, buf, 2))
++
+ #define SPINAND_PAGE_READ_FROM_CACHE_QUADIO_OP(addr, ndummy, buf, len)	\
+ 	SPI_MEM_OP(SPI_MEM_OP_CMD(0xeb, 1),				\
+ 		   SPI_MEM_OP_ADDR(2, addr, 4),				\
+ 		   SPI_MEM_OP_DUMMY(ndummy, 4),				\
+ 		   SPI_MEM_OP_DATA_IN(len, buf, 4))
+ 
++#define SPINAND_PAGE_READ_FROM_CACHE_QUADIO_OP_3A(addr, ndummy, buf, len) \
++	SPI_MEM_OP(SPI_MEM_OP_CMD(0xeb, 1),				\
++		   SPI_MEM_OP_ADDR(3, addr, 4),				\
++		   SPI_MEM_OP_DUMMY(ndummy, 4),				\
++		   SPI_MEM_OP_DATA_IN(len, buf, 4))
++
+ #define SPINAND_PROG_EXEC_OP(addr)					\
+ 	SPI_MEM_OP(SPI_MEM_OP_CMD(0x10, 1),				\
+ 		   SPI_MEM_OP_ADDR(3, addr, 1),				\
+-- 
+2.20.1
 
