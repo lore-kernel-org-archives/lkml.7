@@ -2,116 +2,104 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE677C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:39:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86702C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:44:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FBC721473
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:39:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 281D320821
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:44:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bAeFcgUd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LQwYJghn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730089AbfEVUj2 (ORCPT
+        id S1730058AbfEVUoV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 16:39:28 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:36792 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728761AbfEVUj2 (ORCPT
+        Wed, 22 May 2019 16:44:21 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:45303 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729720AbfEVUoV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 16:39:28 -0400
-Received: by mail-ed1-f68.google.com with SMTP id a8so5682561edx.3
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 13:39:26 -0700 (PDT)
+        Wed, 22 May 2019 16:44:21 -0400
+Received: by mail-wr1-f67.google.com with SMTP id b18so3747530wrq.12
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 13:44:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=5+9nllOgOqGcyGmrfvDcUmSOWrC8yFHggzrCe9UTYtE=;
-        b=bAeFcgUdf/5ML1E/MzzENtD5awT0MWiwgoQceHkJe6ahA/Fh2TvIRjjnOWkk2U9x7U
-         jFutO3QG2OzVXpVsN3gfeFQq2EYaRFrvgdb+8L4zNudZ/VZlkhKlu97/IA7kE/Uqlxjr
-         kkyuVrQ5PUTdtwGfH8LQs9b25v6q66tFD5jDwAVSGbEJ+ydXeBuHz/RdEdRUCTu0K49b
-         5F5e4cXTEz4zXk870+4pyKlTkr/ouldN08tNKlbYssamZRjcIt4uniIkuByd1KJxu/yB
-         X/MIDLxXzYirAb9vrQ7Pik/dbmE3Rgjf+LXpBiksEmsCs2sdGfi6d6B23L7siLv9iEv9
-         M8Lg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=esU+3qm17qrDuexe7jxN3EvAQX5MaY6ZoatueVdr3qQ=;
+        b=LQwYJghnsjhn591pkI1Li/RiGNLgcSIn+RKzEdMKdpMhy1XZToSM64anUNI9+saxK3
+         ODHzCEFRE5XfoiS1p/TWCDYIthlUJIhYCafNd+cdkCt2FHwqrVkiDp1/srtU/+1359CV
+         txZ5+WP6U+hiEJJHvBwIkHWRUKq/irVsr5+R2jyPac2VWFSABPEyi5GqcVp9/rAyKqud
+         ivB+KBcPmscp8HxxBctoQj2bYm+rDsp9FShbnqUrka9POWYktrtNnuaqc+BEt9Mv5EM0
+         CAGc29oBeJM56ZBnDgN2BCx4SrVkMck8aau30uIDwDZj6xI93LaWCiQSkJ4iIVp7cDgu
+         c60Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5+9nllOgOqGcyGmrfvDcUmSOWrC8yFHggzrCe9UTYtE=;
-        b=DaC3QYgR+EkqKphPY6ex8LU9QWINnBiUD0OzvnBREjGaxFkukrT4Qbfpzt7/MkBnqg
-         F42WUXAfmxAjK8Oen35wDxOtwtSlz7Paexq8HNDnM6BrugGUp0sp6Xp/m3vJHaFHR5wI
-         9AsWZybQytuiLX6NQnlrpLHvnIRfU8q2v2trm+aA60asMGnK0XrRizXOdkE6hVugV8pc
-         v83Ec2i83+FVI10aYZohH60NcJz6xOcE/2DaImQO6YXQKSeT0yrBFiTeO6TfHQM2oJNC
-         GifrCwpWUX7LcsGkZxJ6Rgfswn/7g4Fwh2g0e18TXT2g+5u6HfxP2DBcZgztWVHtF7LX
-         WaXg==
-X-Gm-Message-State: APjAAAXTkmkXiBK66JXhVqV7T7s6bUrDTLJr3gEMtvxPNYSy+74vjLXJ
-        at2NU5wQWl4JaHHf/+N+m8g=
-X-Google-Smtp-Source: APXvYqwdcYbffM8j3NtaUcd13nLdkMEMPS+kUm87hN0wNkX7ubA9YLhqMepwGFh4egh4KeMKQF+uJQ==
-X-Received: by 2002:a17:906:2518:: with SMTP id i24mr61244810ejb.169.1558557566207;
-        Wed, 22 May 2019 13:39:26 -0700 (PDT)
-Received: from archlinux-epyc ([2a01:4f9:2b:2b15::2])
-        by smtp.gmail.com with ESMTPSA id v16sm7360487edm.56.2019.05.22.13.39.24
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 22 May 2019 13:39:25 -0700 (PDT)
-Date:   Wed, 22 May 2019 13:39:23 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        linux-kernel@vger.kernel.org,
-        John Whitmore <johnfwhitmore@gmail.com>,
-        clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] staging: rtl8192u: Remove an unnecessary NULL check
-Message-ID: <20190522203923.GA95273@archlinux-epyc>
-References: <20190521174221.124459-1-natechancellor@gmail.com>
- <20190522070418.GP31203@kadam>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=esU+3qm17qrDuexe7jxN3EvAQX5MaY6ZoatueVdr3qQ=;
+        b=MT0MqaR6eoq+HDy2K3WOMTlZZk8JZ51HHX8KJT+QiDuW0aWmW3iNwPUY1Y9k5g6oNv
+         BS+jTscHId97Z4kKgq7ANy3myKhQimS0dIjvGSGyzX9q+yJcAlBncvUUud1oTXIKbejc
+         nxc41lGIEwuOol1/dZK12rv6M+GvCPG6oofRTcNgTiAvNPT2JwK91/6cS5awOEkFRrl0
+         74lweYoPMPCS6cZ4H9UbBX1/C2cW0mdVA6nH8b+L9QAxO36Y4MSQsd40KZRMiF55LE3u
+         V2YVnYtGcCzGWL//WIzh0amUnsMLjm77XdgwKzICZkWRp8eSoFDazVbEL5Az8u1kzGgK
+         kWTw==
+X-Gm-Message-State: APjAAAXDcpTkdXUiDP9CplF85anmmGqPP7sUVdTtKmP0W8QrncPlMTZO
+        LMDRczA7BzjCULxXyIerB52VjLTYGcqT6cYHGjI=
+X-Google-Smtp-Source: APXvYqxc45ky2GHi1FeZ+BIf3VnaFuT1mLCFliU3lSSeZiCzoTlqseE8pdpvOSSzz5iK6QZMeV6uMntQG00gwpjmjHI=
+X-Received: by 2002:a5d:4e09:: with SMTP id p9mr11738017wrt.218.1558557859722;
+ Wed, 22 May 2019 13:44:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190522070418.GP31203@kadam>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+References: <20190522000753.13300-1-chris.packham@alliedtelesis.co.nz> <20190522000753.13300-2-chris.packham@alliedtelesis.co.nz>
+In-Reply-To: <20190522000753.13300-2-chris.packham@alliedtelesis.co.nz>
+From:   Richard Weinberger <richard.weinberger@gmail.com>
+Date:   Wed, 22 May 2019 22:44:08 +0200
+Message-ID: <CAFLxGvy2c9KV1CyoFaD76jvThfPiotqfoeNchqjGcDp+uHie7Q@mail.gmail.com>
+Subject: Re: [PATCH 2/2] mtd: concat: implement _is_locked mtd operation
+To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
+Cc:     David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        linux-mtd@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 22, 2019 at 10:04:18AM +0300, Dan Carpenter wrote:
-> On Tue, May 21, 2019 at 10:42:21AM -0700, Nathan Chancellor wrote:
-> > Clang warns:
-> > 
-> > drivers/staging/rtl8192u/ieee80211/ieee80211_softmac.c:2663:47: warning:
-> > address of array 'param->u.wpa_ie.data' will always evaluate to 'true'
-> > [-Wpointer-bool-conversion]
-> >             (param->u.wpa_ie.len && !param->u.wpa_ie.data))
-> >                                     ~~~~~~~~~~~~~~~~~^~~~
-> > 
-> > This was exposed by commit deabe03523a7 ("Staging: rtl8192u: ieee80211:
-> > Use !x in place of NULL comparisons") because we disable the warning
-> > that would have pointed out the comparison against NULL is also false:
-> > 
-> 
-> Heh.  Weird.  Why would people disable one and not the other?
-> 
-> regards,
-> dan carpenter
-> 
+On Wed, May 22, 2019 at 2:08 AM Chris Packham
+<chris.packham@alliedtelesis.co.nz> wrote:
+>
+> Add an implementation of the _is_locked operation for concatenated mtd
+> devices. As with concat_lock/concat_unlock this can simply use the
+> common helper and pass mtd_is_locked as the operation.
+>
+> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> ---
+>  drivers/mtd/mtdconcat.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>
+> diff --git a/drivers/mtd/mtdconcat.c b/drivers/mtd/mtdconcat.c
+> index 9514cd2db63c..0e919f3423af 100644
+> --- a/drivers/mtd/mtdconcat.c
+> +++ b/drivers/mtd/mtdconcat.c
+> @@ -496,6 +496,11 @@ static int concat_unlock(struct mtd_info *mtd, loff_t ofs, uint64_t len)
+>         return __concat_xxlock(mtd, ofs, len, mtd_unlock);
+>  }
+>
+> +static int concat_is_locked(struct mtd_info *mtd, loff_t ofs, uint64_t len)
+> +{
+> +       return __concat_xxlock(mtd, ofs, len, mtd_is_locked);
+> +}
 
--Wtautological-compare has a lot of different sub-warnings under it,
-one of which is the one shown. -Wno-tautological-compare turns off all
-of those other sub-warnings. The reason that was done is there are quite
-a few of them:
+Hmm, here you start abusing your own new API. :(
 
-https://gist.github.com/nathanchance/3336adc6e796b57eadd53b106b96c569
-
-https://clang.llvm.org/docs/DiagnosticsReference.html#wtautological-compare
-
-It is probably worth looking into turning that on, I'm going to try to
-do that as I have time.
-
-Cheers,
-Nathan
+Did you verify that the unlock/lock-functions deal correctly with all
+semantics from mtd_is_locked?
+i.e. mtd_is_locked() with len = 0 returns 1 for spi-nor.
