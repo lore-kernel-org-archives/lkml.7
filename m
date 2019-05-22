@@ -2,52 +2,52 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B530C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:22:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DB9EC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:22:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05925217D7
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:22:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6209D206BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:22:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558552950;
-	bh=t5xengB7nNuo2KSH7Jj1ZxDwNMwXO7ggXnUm8qMUaWg=;
+	s=default; t=1558552954;
+	bh=mibAVy0PVVNwmlo5Q1CNdnmUfDT2lZ1LOSe4QVCbVEM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VmoTSCH63OEhhUfoXMVTeMaoSHiymyh9hwf1V5+IKsdVtsysoluWFhXNh2mwf3jrT
-	 cwkHDdw4uwpcJ6z73bs1103xJwrA26AKnAUJYuJ7SUa2nQ4KMigE1nw46DQDTt8W1K
-	 7OsPWk5phGKczXtFTqxvt72YIPUHpVaTmW3Gjljo=
+	b=Oha7gCboXCbY/yKUy27NxeG2B0LFRr+7mX+5JtCW/+wVwV3JvFgd6GvkzezN/26Gd
+	 D9MACdlMImk4vnu8zUJ8/MVUqBhhBUNmE0OAFxY1v9RvSCJC9CpdOzKnT0FjPdopiO
+	 GEN0PWrdgfzm2hYQO4gGNhg0DdKde+FtsKqsb6Po=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730494AbfEVTW3 (ORCPT
+        id S1730514AbfEVTWd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:22:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43136 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:22:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43216 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730460AbfEVTWZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:22:25 -0400
+        id S1730495AbfEVTWa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:22:30 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 267E420644;
-        Wed, 22 May 2019 19:22:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77D20206BA;
+        Wed, 22 May 2019 19:22:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558552944;
-        bh=t5xengB7nNuo2KSH7Jj1ZxDwNMwXO7ggXnUm8qMUaWg=;
+        s=default; t=1558552949;
+        bh=mibAVy0PVVNwmlo5Q1CNdnmUfDT2lZ1LOSe4QVCbVEM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P86AuJrAyjGNPkCOo5wvqwhZCddKJtLeF3xXWVWnTsWZlQGkuIJM2xcZVJUsdiiGL
-         /N2gIyqbGJuLCMxAs1JvixgpszUZIPMNWXPUFPofQbtQ45s3779XRFrxFWoR1tZ7H/
-         5KdmBoKt3JXwoygfa0Fqxo+ZFFv8FqV6tJnWnY7A=
+        b=kg8TWGePo6tRm4be0bQFbDT6EOqyG2IAP/bvYbnqKnP89pjWtVjQoZYgdHBgw3Ooc
+         zFdWU/esOBbq/22a+y1OMUanUqDub3GA/ieSTRrFA6hAytVOO/oOv1O1y2r9+Wn4mo
+         ODKqURbtCEaoFkCb+wwMKaLNJqzxtRyBS7SYzwXU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jon Derrick <jonathan.derrick@intel.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.1 043/375] drm/nouveau/bar/nv50: ensure BAR is mapped
-Date:   Wed, 22 May 2019 15:15:43 -0400
-Message-Id: <20190522192115.22666-43-sashal@kernel.org>
+Cc:     Marc Zyngier <marc.zyngier@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 045/375] ARM: vdso: Remove dependency with the arch_timer driver internals
+Date:   Wed, 22 May 2019 15:15:45 -0400
+Message-Id: <20190522192115.22666-45-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192115.22666-1-sashal@kernel.org>
 References: <20190522192115.22666-1-sashal@kernel.org>
@@ -60,58 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jon Derrick <jonathan.derrick@intel.com>
+From: Marc Zyngier <marc.zyngier@arm.com>
 
-[ Upstream commit f10b83de1fd49216a4c657816f48001437e4bdd5 ]
+[ Upstream commit 1f5b62f09f6b314c8d70b9de5182dae4de1f94da ]
 
-If the BAR is zero size, it indicates it was never successfully mapped.
-Ensure that the BAR is valid during initialization before attempting to
-use it.
+The VDSO code uses the kernel helper that was originally designed
+to abstract the access between 32 and 64bit systems. It worked so
+far because this function is declared as 'inline'.
 
-Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
-Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+As we're about to revamp that part of the code, the VDSO would
+break. Let's fix it by doing what should have been done from
+the start, a proper system register access.
+
+Reviewed-by: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/nouveau/nvkm/subdev/bar/nv50.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ arch/arm/include/asm/cp15.h   | 2 ++
+ arch/arm/vdso/vgettimeofday.c | 5 +++--
+ 2 files changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/bar/nv50.c b/drivers/gpu/drm/nouveau/nvkm/subdev/bar/nv50.c
-index 157b076a12723..38c9c086754b6 100644
---- a/drivers/gpu/drm/nouveau/nvkm/subdev/bar/nv50.c
-+++ b/drivers/gpu/drm/nouveau/nvkm/subdev/bar/nv50.c
-@@ -109,7 +109,7 @@ nv50_bar_oneinit(struct nvkm_bar *base)
- 	struct nvkm_device *device = bar->base.subdev.device;
- 	static struct lock_class_key bar1_lock;
- 	static struct lock_class_key bar2_lock;
--	u64 start, limit;
-+	u64 start, limit, size;
- 	int ret;
+diff --git a/arch/arm/include/asm/cp15.h b/arch/arm/include/asm/cp15.h
+index 07e27f212dc75..d2453e2d3f1f3 100644
+--- a/arch/arm/include/asm/cp15.h
++++ b/arch/arm/include/asm/cp15.h
+@@ -68,6 +68,8 @@
+ #define BPIALL				__ACCESS_CP15(c7, 0, c5, 6)
+ #define ICIALLU				__ACCESS_CP15(c7, 0, c5, 0)
  
- 	ret = nvkm_gpuobj_new(device, 0x20000, 0, false, NULL, &bar->mem);
-@@ -127,7 +127,10 @@ nv50_bar_oneinit(struct nvkm_bar *base)
++#define CNTVCT				__ACCESS_CP15_64(1, c14)
++
+ extern unsigned long cr_alignment;	/* defined in entry-armv.S */
  
- 	/* BAR2 */
- 	start = 0x0100000000ULL;
--	limit = start + device->func->resource_size(device, 3);
-+	size = device->func->resource_size(device, 3);
-+	if (!size)
-+		return -ENOMEM;
-+	limit = start + size;
+ static inline unsigned long get_cr(void)
+diff --git a/arch/arm/vdso/vgettimeofday.c b/arch/arm/vdso/vgettimeofday.c
+index a9dd619c6c290..7bdbf5d5c47d3 100644
+--- a/arch/arm/vdso/vgettimeofday.c
++++ b/arch/arm/vdso/vgettimeofday.c
+@@ -18,9 +18,9 @@
+ #include <linux/compiler.h>
+ #include <linux/hrtimer.h>
+ #include <linux/time.h>
+-#include <asm/arch_timer.h>
+ #include <asm/barrier.h>
+ #include <asm/bug.h>
++#include <asm/cp15.h>
+ #include <asm/page.h>
+ #include <asm/unistd.h>
+ #include <asm/vdso_datapage.h>
+@@ -123,7 +123,8 @@ static notrace u64 get_ns(struct vdso_data *vdata)
+ 	u64 cycle_now;
+ 	u64 nsec;
  
- 	ret = nvkm_vmm_new(device, start, limit-- - start, NULL, 0,
- 			   &bar2_lock, "bar2", &bar->bar2_vmm);
-@@ -164,7 +167,10 @@ nv50_bar_oneinit(struct nvkm_bar *base)
+-	cycle_now = arch_counter_get_cntvct();
++	isb();
++	cycle_now = read_sysreg(CNTVCT);
  
- 	/* BAR1 */
- 	start = 0x0000000000ULL;
--	limit = start + device->func->resource_size(device, 1);
-+	size = device->func->resource_size(device, 1);
-+	if (!size)
-+		return -ENOMEM;
-+	limit = start + size;
+ 	cycle_delta = (cycle_now - vdata->cs_cycle_last) & vdata->cs_mask;
  
- 	ret = nvkm_vmm_new(device, start, limit-- - start, NULL, 0,
- 			   &bar1_lock, "bar1", &bar->bar1_vmm);
 -- 
 2.20.1
 
