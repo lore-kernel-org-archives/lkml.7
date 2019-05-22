@@ -2,156 +2,226 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC4E9C282DC
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 16:58:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8120C282DC
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 16:58:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B664D2173C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 16:58:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A276206BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 16:58:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wK+Ags5f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730241AbfEVQ6T (ORCPT
+        id S1730266AbfEVQ6h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 12:58:19 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:42698 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729641AbfEVQ6S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 12:58:18 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 494B93053878;
-        Wed, 22 May 2019 16:57:52 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.159])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 69B5560BE5;
-        Wed, 22 May 2019 16:57:40 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Wed, 22 May 2019 18:57:50 +0200 (CEST)
-Date:   Wed, 22 May 2019 18:57:37 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Christian Brauner <christian@brauner.io>
-Cc:     viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
-        torvalds@linux-foundation.org, fweimer@redhat.com,
-        jannh@google.com, tglx@linutronix.de, arnd@arndb.de,
-        shuah@kernel.org, dhowells@redhat.com, tkjos@android.com,
-        ldv@altlinux.org, miklos@szeredi.hu, linux-alpha@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        x86@kernel.org
-Subject: Re: [PATCH v1 1/2] open: add close_range()
-Message-ID: <20190522165737.GC4915@redhat.com>
-References: <20190522155259.11174-1-christian@brauner.io>
+        Wed, 22 May 2019 12:58:37 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:41621 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730246AbfEVQ6h (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 12:58:37 -0400
+Received: by mail-lj1-f195.google.com with SMTP id q16so2768419ljj.8
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 09:58:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=iEj6Ff/H6E4VLiXQm6DO5BqKseElb7ler1ySMSlsz4I=;
+        b=wK+Ags5fi2Zh9VWkgyeKWGUKDczOLAxo6NEBDIkT47LLbY+0uPXQ20Ef3md4Je4YM7
+         yTt+Dnj+qvCgrr4bQbXebiU250PfvvmpvwxcaxOqBf5zn5CMszutRFHD1jRI8Y5V/CPs
+         jt+pv/yu85FknwLJ8Zo9R8XECA2KhoyXo2Diq4THdh7+NYacc5mTvAPuk8TOUmLqFwYn
+         AgFwdp2R8ztxIowcvgrh5IyXMpDzu2HT0gF+HDg31nzr0Ecz3Q04rvVhTpk7W+XmTJ5D
+         H6CtsOUOTi8rz1vPfB8hysSXAunrOlBx79JX28IwO3FUWoOi2wwQCUxMiiDLS3NePwQF
+         DnQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iEj6Ff/H6E4VLiXQm6DO5BqKseElb7ler1ySMSlsz4I=;
+        b=gwdRroXDpEeHOJ0XHOQ8dtWLm5b0ktnnDxc1nHGq0NNcdifzv+hbvBbBM+RjErEU4W
+         5jr2KABiqt/OTN+PxXcDvSka2BdxLsXkMLo/IMtZFCD8EBpONb7IrDG5dc7jwluci+SE
+         PnckoH8MYdgsTzu79aIXSRzc0AdYH9rNgVI8Q4Erc6nbzOiYgAu23ipHyhy0toQaE8dv
+         0/tFaTUwe/0pAwQjt7qPz6qjS1/204BqxVp3dfH6K87FxVxyZxtv9uffklpeiEtqYZ2l
+         exJGtR3wzr4krnq1LjZJeOjQkeYRmnw9tW/4d4kPwrTDuDVGqFt5HvbVW9kpTHz3Ihvm
+         tTBw==
+X-Gm-Message-State: APjAAAV8GqFFpxI9sp4QoLju7FGpE7DlusovWdO2KGBnbfq5ASnNnTmm
+        KzA/ZmUFFifaUqNikbifIPy3OCtwDtI1Adv7oUHVsQ==
+X-Google-Smtp-Source: APXvYqy5hQuwmu5sUHU1LdrMDZRl8vRMt+7oXELCei2Hw7KHmtQdp6HFikhxSbWr2LIYnAvYIHTeEegng6kT70Dc8d0=
+X-Received: by 2002:a2e:8614:: with SMTP id a20mr7690480lji.20.1558544313559;
+ Wed, 22 May 2019 09:58:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190522155259.11174-1-christian@brauner.io>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Wed, 22 May 2019 16:58:18 +0000 (UTC)
+References: <cover.1557160186.git.andreyknvl@google.com> <20190517144931.GA56186@arrakis.emea.arm.com>
+ <CAFKCwrj6JEtp4BzhqO178LFJepmepoMx=G+YdC8sqZ3bcBp3EQ@mail.gmail.com>
+ <20190521182932.sm4vxweuwo5ermyd@mbp> <201905211633.6C0BF0C2@keescook>
+ <20190522101110.m2stmpaj7seezveq@mbp> <CAJgzZoosKBwqXRyA6fb8QQSZXFqfHqe9qO9je5TogHhzuoGXJQ@mail.gmail.com>
+ <20190522163527.rnnc6t4tll7tk5zw@mbp>
+In-Reply-To: <20190522163527.rnnc6t4tll7tk5zw@mbp>
+From:   enh <enh@google.com>
+Date:   Wed, 22 May 2019 09:58:22 -0700
+Message-ID: <CAJgzZooc+wXBBXenm62n2zR8TVrv-y1pXMmHSdxeaNYhFLSzBA@mail.gmail.com>
+Subject: Re: [PATCH v15 00/17] arm64: untag user pointers passed to the kernel
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Evgenii Stepanov <eugenis@google.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Khalid Aziz <khalid.aziz@oracle.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
+        kvm@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alexander Deucher <Alexander.Deucher@amd.com>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/22, Christian Brauner wrote:
+On Wed, May 22, 2019 at 9:35 AM Catalin Marinas <catalin.marinas@arm.com> wrote:
 >
-> +static struct file *pick_file(struct files_struct *files, unsigned fd)
->  {
-> -	struct file *file;
-> +	struct file *file = NULL;
->  	struct fdtable *fdt;
->  
->  	spin_lock(&files->file_lock);
-> @@ -632,15 +629,65 @@ int __close_fd(struct files_struct *files, unsigned fd)
->  		goto out_unlock;
->  	rcu_assign_pointer(fdt->fd[fd], NULL);
->  	__put_unused_fd(files, fd);
-> -	spin_unlock(&files->file_lock);
-> -	return filp_close(file, files);
->  
->  out_unlock:
->  	spin_unlock(&files->file_lock);
-> -	return -EBADF;
-> +	return file;
+> On Wed, May 22, 2019 at 08:30:21AM -0700, enh wrote:
+> > On Wed, May 22, 2019 at 3:11 AM Catalin Marinas <catalin.marinas@arm.com> wrote:
+> > > On Tue, May 21, 2019 at 05:04:39PM -0700, Kees Cook wrote:
+> > > > I just want to make sure I fully understand your concern about this
+> > > > being an ABI break, and I work best with examples. The closest situation
+> > > > I can see would be:
+> > > >
+> > > > - some program has no idea about MTE
+> > >
+> > > Apart from some libraries like libc (and maybe those that handle
+> > > specific device ioctls), I think most programs should have no idea about
+> > > MTE. I wouldn't expect programmers to have to change their app just
+> > > because we have a new feature that colours heap allocations.
+> >
+> > obviously i'm biased as a libc maintainer, but...
+> >
+> > i don't think it helps to move this to libc --- now you just have an
+> > extra dependency where to have a guaranteed working system you need to
+> > update your kernel and libc together. (or at least update your libc to
+> > understand new ioctls etc _before_ you can update your kernel.)
+>
+> That's not what I meant (or I misunderstood you). If we have a relaxed
+> ABI in the kernel and a libc that returns tagged pointers on malloc() I
+> wouldn't expect the programmer to do anything different in the
+> application code like explicit untagging. Basically the program would
+> continue to run unmodified irrespective of whether you use an old libc
+> without tagged pointers or a new one which tags heap allocations.
+>
+> What I do expect is that the libc checks for the presence of the relaxed
+> ABI, currently proposed as an AT_FLAGS bit (for MTE we'd have a
+> HWCAP_MTE), and only tag the malloc() pointers if the kernel supports
+> the relaxed ABI. As you said, you shouldn't expect that the C library
+> and kernel are upgraded together, so they should be able to work in any
+> new/old version combination.
 
-...
+yes, that part makes sense. i do think we'd use the AT_FLAGS bit, for
+exactly this.
 
-> +int __close_range(struct files_struct *files, unsigned fd, unsigned max_fd)
-> +{
-> +	unsigned int cur_max;
-> +
-> +	if (fd > max_fd)
-> +		return -EINVAL;
-> +
-> +	rcu_read_lock();
-> +	cur_max = files_fdtable(files)->max_fds;
-> +	rcu_read_unlock();
-> +
-> +	/* cap to last valid index into fdtable */
-> +	if (max_fd >= cur_max)
-> +		max_fd = cur_max - 1;
-> +
-> +	while (fd <= max_fd) {
-> +		struct file *file;
-> +
-> +		file = pick_file(files, fd++);
+i was questioning the argument about the ioctl issues, and saying that
+from my perspective, untagging bugs are not really any different than
+any other kind of kernel bug.
 
-Well, how about something like
+> > > > The trouble I see with this is that it is largely theoretical and
+> > > > requires part of userspace to collude to start using a new CPU feature
+> > > > that tickles a bug in the kernel. As I understand the golden rule,
+> > > > this is a bug in the kernel (a missed ioctl() or such) to be fixed,
+> > > > not a global breaking of some userspace behavior.
+> > >
+> > > Yes, we should follow the rule that it's a kernel bug but it doesn't
+> > > help the user that a newly installed kernel causes user space to no
+> > > longer reach a prompt. Hence the proposal of an opt-in via personality
+> > > (for MTE we would need an explicit opt-in by the user anyway since the
+> > > top byte is no longer ignored but checked against the allocation tag).
+> >
+> > but realistically would this actually get used in this way? or would
+> > any given system either be MTE or non-MTE. in which case a kernel
+> > configuration option would seem to make more sense. (because either
+> > way, the hypothetical user basically needs to recompile the kernel to
+> > get back on their feet. or all of userspace.)
+>
+> The two hard requirements I have for supporting any new hardware feature
+> in Linux are (1) a single kernel image binary continues to run on old
+> hardware while making use of the new feature if available and (2) old
+> user space continues to run on new hardware while new user space can
+> take advantage of the new feature.
+>
+> The distro user space usually has a hard requirement that it continues
+> to run on (certain) old hardware. We can't enforce this in the kernel
+> but we offer the option to user space developers of checking feature
+> availability through HWCAP bits.
+>
+> The Android story may be different as you have more control about which
+> kernel configurations are deployed on specific SoCs. I'm looking more
+> from a Linux distro angle where you just get an off-the-shelf OS image
+> and install it on your hardware, either taking advantage of new features
+> or just not using them if the software was not updated. Or, if updated
+> software is installed on old hardware, it would just run.
+>
+> For MTE, we just can't enable it by default since there are applications
+> who use the top byte of a pointer and expect it to be ignored rather
+> than failing with a mismatched tag. Just think of a hwasan compiled
+> binary where TBI is expected to work and you try to run it with MTE
+> turned on.
+>
+> I would also expect the C library or dynamic loader to check for the
+> presence of a HWCAP_MTE bit before starting to tag memory allocations,
+> otherwise it would get SIGILL on the first MTE instruction it tries to
+> execute.
 
-	static unsigned int find_next_opened_fd(struct fdtable *fdt, unsigned start)
-	{
-		unsigned int maxfd = fdt->max_fds;
-		unsigned int maxbit = maxfd / BITS_PER_LONG;
-		unsigned int bitbit = start / BITS_PER_LONG;
+(a bit off-topic, but i thought the MTE instructions were encoded in
+the no-op space, to avoid this?)
 
-		bitbit = find_next_bit(fdt->full_fds_bits, maxbit, bitbit) * BITS_PER_LONG;
-		if (bitbit > maxfd)
-			return maxfd;
-		if (bitbit > start)
-			start = bitbit;
-		return find_next_bit(fdt->open_fds, maxfd, start);
-	}
+> > i'm not sure i see this new way for a kernel update to break my system
+> > and need to be fixed forward/rolled back as any different from any of
+> > the existing ways in which this can happen :-) as an end-user i have
+> > to rely on whoever's sending me software updates to test adequately
+> > enough that they find the problems. as an end user, there isn't any
+> > difference between "my phone rebooted when i tried to take a photo
+> > because of a kernel/driver leak", say, and "my phone rebooted when i
+> > tried to take a photo because of missing untagging of a pointer passed
+> > via ioctl".
+> >
+> > i suspect you and i have very different people in mind when we say "user" :-)
+>
+> Indeed, I think we have different users in mind. I didn't mean the end
+> user who doesn't really care which C library version it's running on
+> their phone but rather advanced users (not necessarily kernel
+> developers) that prefer to build their own kernels with every release.
+> We could extend this to kernel developers who don't have time to track
+> down why a new kernel triggers lots of SIGSEGVs during boot.
 
-	unsigned close_next_fd(struct files_struct *files, unsigned start, unsigned maxfd)
-	{
-		unsigned fd;
-		struct file *file;
-		struct fdtable *fdt;
-	
-		spin_lock(&files->file_lock);
-		fdt = files_fdtable(files);
-		fd = find_next_opened_fd(fdt, start);
-		if (fd >= fdt->max_fds || fd > maxfd) {
-			fd = -1;
-			goto out;
-		}
+i still don't see how this isn't just a regular testing/CI issue, the
+same as any other kind of kernel bug. it's already the case that i can
+get a bad kernel...
 
-		file = fdt->fd[fd];
-		rcu_assign_pointer(fdt->fd[fd], NULL);
-		__put_unused_fd(files, fd);
-	out:
-		spin_unlock(&files->file_lock);
-
-		if (fd == -1u)
-			return fd;
-
-		filp_close(file, files);
-		return fd + 1;
-	}
-
-?
-
-Then close_range() can do
-
-	while (fd < max_fd)
-		fd = close_next_fd(fd, maxfd);
-
-Oleg.
-
+> --
+> Catalin
