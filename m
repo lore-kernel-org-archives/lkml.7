@@ -2,66 +2,131 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FC7CC282DC
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:45:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14824C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:45:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7129120856
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:45:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB9F720862
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:45:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558554319;
+	bh=dg3D/9j+Nm9mDkaTgCRhMm7k1CVoFCTi2y+KqxZ7CUk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=mwOnXla49nR6Zzw34Vlf4EzzxssEuO7Uewr6P4xP6d8ZQbgeFp2qLdLMWII9z//w/
+	 3dY15rbJ0+22IoIvxg5YSqPEQRmhvwV5s8FnIBZBStt3/6vpHmsStfdHh563GUOqXo
+	 YIwSE6znGoj6iuE/xEJS9GiJf416Hs77LTBIZXno=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733115AbfEVTpN (ORCPT
+        id S2387790AbfEVTpS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:45:13 -0400
-Received: from smtprelay0164.hostedemail.com ([216.40.44.164]:47657 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731413AbfEVTpL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:45:11 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay06.hostedemail.com (Postfix) with ESMTP id 4EEC218224D70;
-        Wed, 22 May 2019 19:45:10 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: curve67_2d0c89522f351
-X-Filterd-Recvd-Size: 1329
-Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf14.hostedemail.com (Postfix) with ESMTPA;
-        Wed, 22 May 2019 19:45:09 +0000 (UTC)
-Message-ID: <7b7287463e830fa8d981dc440f8165622cbc628e.camel@perches.com>
-Subject: Re: PSA: Do not use "Reported-By" without reporter's approval
-From:   Joe Perches <joe@perches.com>
-To:     Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Date:   Wed, 22 May 2019 12:45:06 -0700
-In-Reply-To: <20190522193011.GB21412@chatter.i7.local>
-References: <20190522193011.GB21412@chatter.i7.local>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.1-1build1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Wed, 22 May 2019 15:45:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50482 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732432AbfEVT17 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:27:59 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7582B20879;
+        Wed, 22 May 2019 19:27:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558553279;
+        bh=dg3D/9j+Nm9mDkaTgCRhMm7k1CVoFCTi2y+KqxZ7CUk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=cQoPGJHJ15gv9vZRSTQGCowY172/jiqTxGl74vTJjHb1BUHkeMvyGHNSMLr/avIbz
+         mNIgz95JD0dH3aA+28ciw1se7XW2KWYQhdYov0GzK0xJ20+FGVCANl7/7CguP9SlqB
+         i1diYM5jtLfo/1cJTUM9DqNJ+wy1SaqsZ86O5CXI=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Johan Hovold <johan@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 053/244] USB: serial: fix initial-termios handling
+Date:   Wed, 22 May 2019 15:23:19 -0400
+Message-Id: <20190522192630.24917-53-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190522192630.24917-1-sashal@kernel.org>
+References: <20190522192630.24917-1-sashal@kernel.org>
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-05-22 at 15:30 -0400, Konstantin Ryabitsev wrote:
-> Hello, all:
-> 
-> It is common courtesy to include this tagline when submitting patches: 
-> 
-> Reported-By: J. Doe <jdoe@example.com>
-> 
-> Please ask the reporter's permission before doing so (even if they'd 
-> submitted a public bugzilla report or sent a report to the mailing 
-> list).
+From: Johan Hovold <johan@kernel.org>
 
-I disagree with this.
+[ Upstream commit 579bebe5dd522580019e7b10b07daaf500f9fb1e ]
 
-If the report is public, and lists like vger are public,
-then using a Reported-by: and/or a Link: are simply useful
-history and tracking information.
+The USB-serial driver init_termios callback is used to override the
+default initial terminal settings provided by USB-serial core.
 
+After a bug was fixed in the original implementation introduced by
+commit fe1ae7fdd2ee ("tty: USB serial termios bits"), the init_termios
+callback was no longer called just once on first use as intended but
+rather on every (first) open.
+
+This specifically meant that the terminal settings saved on (final)
+close were ignored when reopening a port for drivers overriding the
+initial settings.
+
+Also update the outdated function header referring to the creation of
+termios objects.
+
+Fixes: 7e29bb4b779f ("usb-serial: fix termios initialization logic")
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/usb/serial/usb-serial.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/usb/serial/usb-serial.c b/drivers/usb/serial/usb-serial.c
+index f7aaa7f079e1a..c709b6281df65 100644
+--- a/drivers/usb/serial/usb-serial.c
++++ b/drivers/usb/serial/usb-serial.c
+@@ -164,9 +164,9 @@ void usb_serial_put(struct usb_serial *serial)
+  * @driver: the driver (USB in our case)
+  * @tty: the tty being created
+  *
+- * Create the termios objects for this tty.  We use the default
++ * Initialise the termios structure for this tty.  We use the default
+  * USB serial settings but permit them to be overridden by
+- * serial->type->init_termios.
++ * serial->type->init_termios on first open.
+  *
+  * This is the first place a new tty gets used.  Hence this is where we
+  * acquire references to the usb_serial structure and the driver module,
+@@ -178,6 +178,7 @@ static int serial_install(struct tty_driver *driver, struct tty_struct *tty)
+ 	int idx = tty->index;
+ 	struct usb_serial *serial;
+ 	struct usb_serial_port *port;
++	bool init_termios;
+ 	int retval = -ENODEV;
+ 
+ 	port = usb_serial_port_get_by_minor(idx);
+@@ -192,14 +193,16 @@ static int serial_install(struct tty_driver *driver, struct tty_struct *tty)
+ 	if (retval)
+ 		goto error_get_interface;
+ 
++	init_termios = (driver->termios[idx] == NULL);
++
+ 	retval = tty_standard_install(driver, tty);
+ 	if (retval)
+ 		goto error_init_termios;
+ 
+ 	mutex_unlock(&serial->disc_mutex);
+ 
+-	/* allow the driver to update the settings */
+-	if (serial->type->init_termios)
++	/* allow the driver to update the initial settings */
++	if (init_termios && serial->type->init_termios)
+ 		serial->type->init_termios(tty);
+ 
+ 	tty->driver_data = port;
+-- 
+2.20.1
 
