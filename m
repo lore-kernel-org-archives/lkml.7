@@ -2,211 +2,195 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA377C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 12:20:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29514C46470
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 12:20:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F9B320675
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 12:20:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F12B020675
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 12:20:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KlvSGTvJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729415AbfEVMUF (ORCPT
+        id S1729312AbfEVMUz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 08:20:05 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:49338 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728438AbfEVMUF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 08:20:05 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A234780D;
-        Wed, 22 May 2019 05:20:04 -0700 (PDT)
-Received: from [10.1.196.129] (ostrya.cambridge.arm.com [10.1.196.129])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 247863F575;
-        Wed, 22 May 2019 05:20:03 -0700 (PDT)
-Subject: Re: [PATCH v3 03/16] iommu: Add I/O ASID allocator
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Auger Eric <eric.auger@redhat.com>
-Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Andriy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        David Woodhouse <dwmw2@infradead.org>
-References: <1556922737-76313-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <1556922737-76313-4-git-send-email-jacob.jun.pan@linux.intel.com>
- <bb31fbcb-2708-93e6-f11e-3018556fbc21@redhat.com>
- <20190521100300.4f224e68@jacob-builder>
-From:   Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Message-ID: <836caf0d-699e-33ba-5303-b1c9c949c9ca@arm.com>
-Date:   Wed, 22 May 2019 13:19:39 +0100
+        Wed, 22 May 2019 08:20:55 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:42079 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728971AbfEVMUz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 08:20:55 -0400
+Received: by mail-wr1-f66.google.com with SMTP id l2so2047079wrb.9
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 05:20:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=2ZhTk2acfpx8r4rFg+ynBi2h7n1lFX/B8oA8Vc1vWH4=;
+        b=KlvSGTvJ/VQA3qnYedKHobnQk8JkvV/4dnosj/hXZhcKYODa8MUB36fNKdt5ac2m15
+         /K5HRObcXkfT5oE73OIczs4h3yyFlnwNWpV0eIwpKeDQyqNXMBey1y4Kj+Gd6lt40yqb
+         Sskay6gQq9Do8FehTN8k+XFjwK3e4xkSLOZfv6X1Ik0hV+S/+NsFuVkJ5LFlkBRO5qTR
+         6W6Hd+nx6WMOg0TXQl/51Rtg5OgYxSjAWczXesMFFyA6BOmJ7gVGE5KvPLZTuTKX8atI
+         lw7A8PWcrPsN0G44hYBUtjWhFlfUSGQcRZKWwQP/5SaHhD2FXApIP+I5Omxfs/VSxdcy
+         UsTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=2ZhTk2acfpx8r4rFg+ynBi2h7n1lFX/B8oA8Vc1vWH4=;
+        b=sbioeIBQuOcjA4HIzlL0xFKKnMZ+uWfQPOVpr0tWSXUnK5fW4QtDtXaupusUKnIjwX
+         FpD+QIwnYBevO3fCkwFgV26moDT2JPPDIkgb1+fOmCWuU0+qlWbgZywdEelxccaFSNq7
+         9Ut+t6gqq5skX2xraKwlZ4TV6WNTcpdNujcWr2gXQFzQdQf08efIa4W4x3vNH8dchwBe
+         qb/nupEw03/xPLp+gXaUZKNV57VgchBdgFsecQdGGXPTw6N8KdBYtAJmkja8YAe+lh2M
+         4b/ZUvTyqomXSccvOAt69GYaxb4iw1fcdPFtClxpPPZszJlZHCgbn2FTFtBBGaDZzm4V
+         NnNA==
+X-Gm-Message-State: APjAAAXaJvWqNmLEUBOOa6KoEnBsbdU6Zt4r6T+ZOIxLakQ0UWmYas9m
+        lzPmBElM/wZXNjtUjQc/bw0WEw==
+X-Google-Smtp-Source: APXvYqwvz7JWD2HEdR5e4BkwVZV1oZMtKMC3nGM56TpQlUOa698nuBsd11/iLMyslPitIHxG5t1plA==
+X-Received: by 2002:a5d:6a8c:: with SMTP id s12mr22488097wru.326.1558527652486;
+        Wed, 22 May 2019 05:20:52 -0700 (PDT)
+Received: from [10.1.203.87] (nat-wifi.sssup.it. [193.205.81.22])
+        by smtp.googlemail.com with ESMTPSA id z8sm22338145wrs.84.2019.05.22.05.20.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 22 May 2019 05:20:51 -0700 (PDT)
+Subject: Re: [PATCH v3 1/3] thermal: rockchip: fix up the tsadc pinctrl
+ setting error
+To:     Elaine Zhang <zhangqing@rock-chips.com>, heiko@sntech.de
+Cc:     rui.zhang@intel.com, edubezval@gmail.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        xxx@rock-chips.com, xf@rock-chips.com, huangtao@rock-chips.com
+References: <1556618986-18923-1-git-send-email-zhangqing@rock-chips.com>
+ <1556618986-18923-2-git-send-email-zhangqing@rock-chips.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <1d1063a5-3ec8-f430-febe-7e1471cd1812@linaro.org>
+Date:   Wed, 22 May 2019 14:20:50 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190521100300.4f224e68@jacob-builder>
+In-Reply-To: <1556618986-18923-2-git-send-email-zhangqing@rock-chips.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/05/2019 18:03, Jacob Pan wrote:
-> On Tue, 21 May 2019 10:21:55 +0200
-> Auger Eric <eric.auger@redhat.com> wrote:
->>> +config IOASID
->>> +	bool  
->> don't we want a tristate here too?
->>
->> Also refering to the past discussions we could add "# The IOASID
->> library may also be used by non-IOMMU_API users"
-> I agree. For device driver modules to use ioasid w/o iommu, this does
-> not have to be built-in.
-> Jean, would you agree?
 
-Yes we can make it tristate. There is a couple of things missing to
-build it as a module:
-* Add MODULE_LICENSE("GPL") to ioasid.c
-* Use #if IS_ENABLED(CONFIG_IOASID) in ioasid.h rather than #ifdef
-CONFIG_IOASID
+Elaine,
 
->>> +	help
->>> +	  Enable the I/O Address Space ID allocator. A single ID
->>> space shared
->>> +	  between different users.
->>> +
->>>  # IOMMU_API always gets selected by whoever wants it.
->>>  config IOMMU_API
->>>  	bool
->>> diff --git a/drivers/iommu/Makefile b/drivers/iommu/Makefile
->>> index 8c71a15..0efac6f 100644
->>> --- a/drivers/iommu/Makefile
->>> +++ b/drivers/iommu/Makefile
->>> @@ -7,6 +7,7 @@ obj-$(CONFIG_IOMMU_DMA) += dma-iommu.o
->>>  obj-$(CONFIG_IOMMU_IO_PGTABLE) += io-pgtable.o
->>>  obj-$(CONFIG_IOMMU_IO_PGTABLE_ARMV7S) += io-pgtable-arm-v7s.o
->>>  obj-$(CONFIG_IOMMU_IO_PGTABLE_LPAE) += io-pgtable-arm.o
->>> +obj-$(CONFIG_IOASID) += ioasid.o
->>>  obj-$(CONFIG_IOMMU_IOVA) += iova.o
->>>  obj-$(CONFIG_OF_IOMMU)	+= of_iommu.o
->>>  obj-$(CONFIG_MSM_IOMMU) += msm_iommu.o
->>> diff --git a/drivers/iommu/ioasid.c b/drivers/iommu/ioasid.c
->>> new file mode 100644
->>> index 0000000..99f5e0a
->>> --- /dev/null
->>> +++ b/drivers/iommu/ioasid.c
->>> @@ -0,0 +1,140 @@
->>> +// SPDX-License-Identifier: GPL-2.0
->>> +/*
->>> + * I/O Address Space ID allocator. There is one global IOASID
->>> space, split into
->>> + * subsets. Users create a subset with DECLARE_IOASID_SET, then
->>> allocate and
->>> + * free IOASIDs with ioasid_alloc and ioasid_free.
->>> + */
->>> +#include <linux/xarray.h>
->>> +#include <linux/ioasid.h>
->>> +#include <linux/slab.h>
->>> +#include <linux/spinlock.h>
+are you taking care of the issue related to this patch. If not fixed, it
+will be reverted.
 
-nit: sort alphabetically
 
->>> +
->>> +struct ioasid_data {
->>> +	ioasid_t id;
->>> +	struct ioasid_set *set;
->>> +	void *private;
->>> +	struct rcu_head rcu;
->>> +};
->>> +
->>> +static DEFINE_XARRAY_ALLOC(ioasid_xa);
->>> +
->>> +/**
->>> + * ioasid_set_data - Set private data for an allocated ioasid
->>> + * @ioasid: the ID to set data
->>> + * @data:   the private data
->>> + *
->>> + * For IOASID that is already allocated, private data can be set
->>> + * via this API. Future lookup can be done via ioasid_find.
->>> + */
->>> +int ioasid_set_data(ioasid_t ioasid, void *data)
->>> +{
->>> +	struct ioasid_data *ioasid_data;
->>> +	int ret = 0;
->>> +
->>> +	ioasid_data = xa_load(&ioasid_xa, ioasid);
->>> +	if (ioasid_data)
->>> +		ioasid_data->private = data;
+On 30/04/2019 12:09, Elaine Zhang wrote:
+> Explicitly use the pinctrl to set/unset the right mode
+> instead of relying on the pinctrl init mode.
+> And it requires setting the tshut polarity before select pinctrl.
+> 
+> When the temperature sensor mode is set to 0, it will automatically
+> reset the board via the Clock-Reset-Unit (CRU) if the over temperature
+> threshold is reached. However, when the pinctrl initializes, it does a
+> transition to "otp_out" which may lead the SoC restart all the time.
+> 
+> "otp_out" IO may be connected to the RESET circuit on the hardware.
+> If the IO is in the wrong state, it will trigger RESET.
+> (similar to the effect of pressing the RESET button)
+> which will cause the soc to restart all the time.
+> 
+> Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
+> ---
+>  drivers/thermal/rockchip_thermal.c | 36 +++++++++++++++++++++++++++++++++---
+>  1 file changed, 33 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/thermal/rockchip_thermal.c b/drivers/thermal/rockchip_thermal.c
+> index 9c7643d62ed7..6dc7fc516abf 100644
+> --- a/drivers/thermal/rockchip_thermal.c
+> +++ b/drivers/thermal/rockchip_thermal.c
+> @@ -172,6 +172,9 @@ struct rockchip_thermal_data {
+>  	int tshut_temp;
+>  	enum tshut_mode tshut_mode;
+>  	enum tshut_polarity tshut_polarity;
+> +	struct pinctrl *pinctrl;
+> +	struct pinctrl_state *gpio_state;
+> +	struct pinctrl_state *otp_state;
+>  };
+>  
+>  /**
+> @@ -1242,6 +1245,8 @@ static int rockchip_thermal_probe(struct platform_device *pdev)
+>  		return error;
+>  	}
+>  
+> +	thermal->chip->control(thermal->regs, false);
+> +
+>  	error = clk_prepare_enable(thermal->clk);
+>  	if (error) {
+>  		dev_err(&pdev->dev, "failed to enable converter clock: %d\n",
+> @@ -1267,6 +1272,30 @@ static int rockchip_thermal_probe(struct platform_device *pdev)
+>  	thermal->chip->initialize(thermal->grf, thermal->regs,
+>  				  thermal->tshut_polarity);
+>  
+> +	if (thermal->tshut_mode == TSHUT_MODE_GPIO) {
+> +		thermal->pinctrl = devm_pinctrl_get(&pdev->dev);
+> +		if (IS_ERR(thermal->pinctrl)) {
+> +			dev_err(&pdev->dev, "failed to find thermal pinctrl\n");
+> +			return PTR_ERR(thermal->pinctrl);
+> +		}
+> +
+> +		thermal->gpio_state = pinctrl_lookup_state(thermal->pinctrl,
+> +							   "gpio");
+> +		if (IS_ERR_OR_NULL(thermal->gpio_state)) {
+> +			dev_err(&pdev->dev, "failed to find thermal gpio state\n");
+> +			return -EINVAL;
+> +		}
+> +
+> +		thermal->otp_state = pinctrl_lookup_state(thermal->pinctrl,
+> +							  "otpout");
+> +		if (IS_ERR_OR_NULL(thermal->otp_state)) {
+> +			dev_err(&pdev->dev, "failed to find thermal otpout state\n");
+> +			return -EINVAL;
+> +		}
+> +
+> +		pinctrl_select_state(thermal->pinctrl, thermal->otp_state);
+> +	}
+> +
+>  	for (i = 0; i < thermal->chip->chn_num; i++) {
+>  		error = rockchip_thermal_register_sensor(pdev, thermal,
+>  						&thermal->sensors[i],
+> @@ -1337,8 +1366,8 @@ static int __maybe_unused rockchip_thermal_suspend(struct device *dev)
+>  
+>  	clk_disable(thermal->pclk);
+>  	clk_disable(thermal->clk);
+> -
+> -	pinctrl_pm_select_sleep_state(dev);
+> +	if (thermal->tshut_mode == TSHUT_MODE_GPIO)
+> +		pinctrl_select_state(thermal->pinctrl, thermal->gpio_state);
+>  
+>  	return 0;
+>  }
+> @@ -1383,7 +1412,8 @@ static int __maybe_unused rockchip_thermal_resume(struct device *dev)
+>  	for (i = 0; i < thermal->chip->chn_num; i++)
+>  		rockchip_thermal_toggle_sensor(&thermal->sensors[i], true);
+>  
+> -	pinctrl_pm_select_default_state(dev);
+> +	if (thermal->tshut_mode == TSHUT_MODE_GPIO)
+> +		pinctrl_select_state(thermal->pinctrl, thermal->otp_state);
+>  
+>  	return 0;
+>  }
+> 
 
-I think we might be in trouble if this function runs concurrently with
-ioasid_free(). ioasid_data may be freed between xa_load() and this
-assignment. It's probably not a valid use at the moment but we might as
-well make this code robust (or describe the constraints of
-ioasid_set_data() in the comment).
 
-I'm still uneasy about this, but I think we need the following sequence:
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-	xa_lock();
-	ioasid_data = xa_load()
-	if (ioasid_data)
-		rcu_assign_pointer(ioasid_data->private, data);
-	else
-		ret = -ENOENT;
-	xa_unlock();
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
->>> +	else
->>> +		ret = -ENOENT;
->>> +
->>> +	/* getter may use the private data */
->>> +	synchronize_rcu();
-
-If I understand correctly, this allows our caller to safely free the old
-data, if any? Is there any other reason to have a synchronize_rcu()?
-Otherwise the comment could be more precise:
-
-/* Wait for readers to stop accessing the old private data so the caller
-can free it. */
-
->>> +
->>> +	return ret;
->>> +}
->>> +EXPORT_SYMBOL_GPL(ioasid_set_data);
-[...]
->>> +void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid,
->>> +		  bool (*getter)(void *))
->>> +{
->>> +	void *priv = NULL;
->>> +	struct ioasid_data *ioasid_data;
->>> +
->>> +	rcu_read_lock();
->>> +	ioasid_data = xa_load(&ioasid_xa, ioasid);
->>> +	if (!ioasid_data) {
->>> +		priv = ERR_PTR(-ENOENT);
->>> +		goto unlock;
->>> +	}
->>> +	if (set && ioasid_data->set != set) {
->>> +		/* data found but does not belong to the set */
->>> +		priv = ERR_PTR(-EACCES);
->>> +		goto unlock;
->>> +	}
->>> +	/* Now IOASID and its set is verified, we can return the
->>> private data */
->>> +	priv = ioasid_data->private;
-
-And here, I suppose we need:
-
-	priv = rcu_dereference(ioasid_data->private);
-
-Thanks,
-Jean
-
->>> +	if (getter && !getter(priv))
->>> +		priv = NULL;
->>> +unlock:
->>> +	rcu_read_unlock();
->>> +
->>> +	return priv;
->>> +}
