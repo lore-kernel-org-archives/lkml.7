@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61F17C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:28:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 737E4C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:28:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 342A6217D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:28:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C11021473
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:28:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558553310;
-	bh=DAQbjq52qcjt0fmV+XrBFXarb+DXrDg4uq76KyBSLSE=;
+	s=default; t=1558553316;
+	bh=vFVJuNYDSYKtnIIMZt+kTwaWA2+cmXyBrNjfobrAZeE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dibnbMa0ABIlgUbtYMT4jcVXgyaiJHKsfLQq4/DeCljJ9upoeKfwxSkomY3M3Qkt/
-	 0GW8QDL2Vx0hgCCgom+GRp0TQl3wY67B+BbEIPZJn+fRWWLf8U9Wt2HQ3JH4VVvk/e
-	 oJAG5s928bwBz3csZOMx2BvgwnQQJ6sQIh19h19Q=
+	b=BiJCXrpglXFHAwkqsSH+6/3eaEqjGrQInS9NwfMwtrb6ngU1CZPWC0lubPs6v/P3x
+	 Hmi9T4FeIn+AcwG4rxsdokaRN8JhxfcvIutX4MqF6YG7tS0tfYL7JrP7E5dXkfJCI0
+	 06jHaQ7aUQXqGjg+0mGAZPhvw7l1YrFvTwP3zfzw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732141AbfEVT23 (ORCPT
+        id S1732579AbfEVT2f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:28:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50672 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:28:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731995AbfEVT2H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:28:07 -0400
+        id S1732487AbfEVT2K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:28:10 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D032421841;
-        Wed, 22 May 2019 19:28:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F76F20675;
+        Wed, 22 May 2019 19:28:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553286;
-        bh=DAQbjq52qcjt0fmV+XrBFXarb+DXrDg4uq76KyBSLSE=;
+        s=default; t=1558553290;
+        bh=vFVJuNYDSYKtnIIMZt+kTwaWA2+cmXyBrNjfobrAZeE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E1DWe3hAxiJuNX/fA6AFR4T8EwYs0xG+TPvb+JYphx+zaFlq+48obwyqU2U7xBja+
-         i4Age4aLpfwVYlsLdkQBK8w4ah98Nc75Wb6bIRV+kn840MS1u92aCDZZzrObwTj0VP
-         vbTUtrxFIf4FqP2yZYRQ8gUfjSYN5GD+VuO/Rr+M=
+        b=fiTKZluYZgFhUkKSdwCi4jj7r7G1fJhOHkuvCOqrJC03RYNFAP/NwlEVUIDkFLFTF
+         Jz17dOWG76gkAfrwTGkK7kAHJRjg2FjLRsD7Tnbx91ksqT73nAU/4IFAJtobgnksQO
+         UO7r4tBKFSfBzUWVvhNhGLdVaBrQzUo26RGjeAk8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kangjie Lu <kjlu@umn.edu>, Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 060/244] net: cw1200: fix a NULL pointer dereference
-Date:   Wed, 22 May 2019 15:23:26 -0400
-Message-Id: <20190522192630.24917-60-sashal@kernel.org>
+Cc:     Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <keith.busch@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 062/244] nvme: set 0 capacity if namespace block size exceeds PAGE_SIZE
+Date:   Wed, 22 May 2019 15:23:28 -0400
+Message-Id: <20190522192630.24917-62-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192630.24917-1-sashal@kernel.org>
 References: <20190522192630.24917-1-sashal@kernel.org>
@@ -59,36 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kangjie Lu <kjlu@umn.edu>
+From: Sagi Grimberg <sagi@grimberg.me>
 
-[ Upstream commit 0ed2a005347400500a39ea7c7318f1fea57fb3ca ]
+[ Upstream commit 01fa017484ad98fccdeaab32db0077c574b6bd6f ]
 
-In case create_singlethread_workqueue fails, the fix free the
-hardware and returns NULL to avoid NULL pointer dereference.
+If our target exposed a namespace with a block size that is greater
+than PAGE_SIZE, set 0 capacity on the namespace as we do not support it.
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+This issue encountered when the nvmet namespace was backed by a tempfile.
+
+Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
+Reviewed-by: Keith Busch <keith.busch@intel.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/st/cw1200/main.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/nvme/host/core.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/st/cw1200/main.c b/drivers/net/wireless/st/cw1200/main.c
-index 90dc979f260b6..c1608f0bf6d01 100644
---- a/drivers/net/wireless/st/cw1200/main.c
-+++ b/drivers/net/wireless/st/cw1200/main.c
-@@ -345,6 +345,11 @@ static struct ieee80211_hw *cw1200_init_common(const u8 *macaddr,
- 	mutex_init(&priv->wsm_cmd_mux);
- 	mutex_init(&priv->conf_mutex);
- 	priv->workqueue = create_singlethread_workqueue("cw1200_wq");
-+	if (!priv->workqueue) {
-+		ieee80211_free_hw(hw);
-+		return NULL;
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index 2cdb3032ca0fc..abfb46378cc13 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -1480,6 +1480,10 @@ static void nvme_update_disk_info(struct gendisk *disk,
+ 	sector_t capacity = le64_to_cpup(&id->nsze) << (ns->lba_shift - 9);
+ 	unsigned short bs = 1 << ns->lba_shift;
+ 
++	if (ns->lba_shift > PAGE_SHIFT) {
++		/* unsupported block size, set capacity to 0 later */
++		bs = (1 << 9);
 +	}
-+
- 	sema_init(&priv->scan.lock, 1);
- 	INIT_WORK(&priv->scan.work, cw1200_scan_work);
- 	INIT_DELAYED_WORK(&priv->scan.probe_work, cw1200_probe_work);
+ 	blk_mq_freeze_queue(disk->queue);
+ 	blk_integrity_unregister(disk);
+ 
+@@ -1490,7 +1494,8 @@ static void nvme_update_disk_info(struct gendisk *disk,
+ 	if (ns->ms && !ns->ext &&
+ 	    (ns->ctrl->ops->flags & NVME_F_METADATA_SUPPORTED))
+ 		nvme_init_integrity(disk, ns->ms, ns->pi_type);
+-	if (ns->ms && !nvme_ns_has_pi(ns) && !blk_get_integrity(disk))
++	if ((ns->ms && !nvme_ns_has_pi(ns) && !blk_get_integrity(disk)) ||
++	    ns->lba_shift > PAGE_SHIFT)
+ 		capacity = 0;
+ 
+ 	set_capacity(disk, capacity);
 -- 
 2.20.1
 
