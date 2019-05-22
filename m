@@ -2,52 +2,52 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18313C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:56:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5F3FC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:56:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCD6920856
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:56:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D70F20862
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:56:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558555013;
-	bh=SW4cBt0iKxxCITgt9q1r/ch9ZCLoBZQxu34/LIDlRt4=;
+	s=default; t=1558555017;
+	bh=t5xengB7nNuo2KSH7Jj1ZxDwNMwXO7ggXnUm8qMUaWg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Rk++XXjqs0PlaiCP6Km1O/2Hldx5emvPacf5Ced8vGJMkBoIfCfS+LwGeTJpye9fL
-	 4DdviJHgL5NzYlx7Rj4zPryud5Yue7FqmtcWOdpYW+rlyiBAFemi6zuKVmK/qFD2f1
-	 Na9T41uKVXYGAu303CtLVle1dxbVndJer8oHI+hM=
+	b=182J9m2GuFJMJO9THtEPYzssfYXBXiGawiPCQaV459IVz4F5zCCHiio0Rb2UmO8nE
+	 SE5LV/i1tmBZz1GDohSNtBcDSQJFDscDpwUG9u3kZ4CN0Jek3BPVTUPaXVkWqzmWC9
+	 lwbzpaMr2ZS2yXY4xMx6/u8O7JR6RqyHClbch7xI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730630AbfEVTYm (ORCPT
+        id S1731686AbfEVT44 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:24:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45768 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:56:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45868 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731336AbfEVTYf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:24:35 -0400
+        id S1731369AbfEVTYl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:24:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4FE9121873;
-        Wed, 22 May 2019 19:24:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8712020675;
+        Wed, 22 May 2019 19:24:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553075;
-        bh=SW4cBt0iKxxCITgt9q1r/ch9ZCLoBZQxu34/LIDlRt4=;
+        s=default; t=1558553081;
+        bh=t5xengB7nNuo2KSH7Jj1ZxDwNMwXO7ggXnUm8qMUaWg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nMs6zhVe9N2H1pdShQLUV4YWp3KP7E6976tAxun/S3cA8Ie0E1zr5cavXbr3m1YhP
-         r8a6sPrUdiApMMLwvBP/c4f4LVfUoJe2N1FNUIdSpFPhHstbIZEh66g10lo3ZwkCxa
-         6Zmp5EGVDr/pEKk6gUBGcK/Xa4bzQk9I7GNbfEgE=
+        b=cpGq74nhZkZAvlGyOeYseG3B54bTIb6iKyceKicJqyHy0C9iAoi6QrXQJ4x/GKY0Q
+         Cx8XoqqMUAyFokmXTweZw3y6qZY0iObevjMMNDKokoj4BC4XkPDtP2MfwCsPwQ20U9
+         n8TGHcP2DXmP4ZsT6u877lZ0NWBDWjmdHT2e+Hd0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Flavio Suligoi <f.suligoi@asem.it>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 034/317] spi: pxa2xx: fix SCR (divisor) calculation
-Date:   Wed, 22 May 2019 15:18:55 -0400
-Message-Id: <20190522192338.23715-34-sashal@kernel.org>
+Cc:     Jon Derrick <jonathan.derrick@intel.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.0 037/317] drm/nouveau/bar/nv50: ensure BAR is mapped
+Date:   Wed, 22 May 2019 15:18:58 -0400
+Message-Id: <20190522192338.23715-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192338.23715-1-sashal@kernel.org>
 References: <20190522192338.23715-1-sashal@kernel.org>
@@ -60,61 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Flavio Suligoi <f.suligoi@asem.it>
+From: Jon Derrick <jonathan.derrick@intel.com>
 
-[ Upstream commit 29f2133717c527f492933b0622a4aafe0b3cbe9e ]
+[ Upstream commit f10b83de1fd49216a4c657816f48001437e4bdd5 ]
 
-Calculate the divisor for the SCR (Serial Clock Rate), avoiding
-that the SSP transmission rate can be greater than the device rate.
+If the BAR is zero size, it indicates it was never successfully mapped.
+Ensure that the BAR is valid during initialization before attempting to
+use it.
 
-When the division between the SSP clock and the device rate generates
-a reminder, we have to increment by one the divisor.
-In this way the resulting SSP clock will never be greater than the
-device SPI max frequency.
-
-For example, with:
-
- - ssp_clk  = 50 MHz
- - dev freq = 15 MHz
-
-without this patch the SSP clock will be greater than 15 MHz:
-
- - 25 MHz for PXA25x_SSP and CE4100_SSP
- - 16,56 MHz for the others
-
-Instead, with this patch, we have in both case an SSP clock of 12.5MHz,
-so the max rate of the SPI device clock is respected.
-
-Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
-Reviewed-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Reviewed-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
+Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-pxa2xx.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/nouveau/nvkm/subdev/bar/nv50.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/spi/spi-pxa2xx.c b/drivers/spi/spi-pxa2xx.c
-index 3e82eaad0f2d9..41aadb41a20bf 100644
---- a/drivers/spi/spi-pxa2xx.c
-+++ b/drivers/spi/spi-pxa2xx.c
-@@ -884,10 +884,14 @@ static unsigned int ssp_get_clk_div(struct driver_data *drv_data, int rate)
+diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/bar/nv50.c b/drivers/gpu/drm/nouveau/nvkm/subdev/bar/nv50.c
+index 157b076a12723..38c9c086754b6 100644
+--- a/drivers/gpu/drm/nouveau/nvkm/subdev/bar/nv50.c
++++ b/drivers/gpu/drm/nouveau/nvkm/subdev/bar/nv50.c
+@@ -109,7 +109,7 @@ nv50_bar_oneinit(struct nvkm_bar *base)
+ 	struct nvkm_device *device = bar->base.subdev.device;
+ 	static struct lock_class_key bar1_lock;
+ 	static struct lock_class_key bar2_lock;
+-	u64 start, limit;
++	u64 start, limit, size;
+ 	int ret;
  
- 	rate = min_t(int, ssp_clk, rate);
+ 	ret = nvkm_gpuobj_new(device, 0x20000, 0, false, NULL, &bar->mem);
+@@ -127,7 +127,10 @@ nv50_bar_oneinit(struct nvkm_bar *base)
  
-+	/*
-+	 * Calculate the divisor for the SCR (Serial Clock Rate), avoiding
-+	 * that the SSP transmission rate can be greater than the device rate
-+	 */
- 	if (ssp->type == PXA25x_SSP || ssp->type == CE4100_SSP)
--		return (ssp_clk / (2 * rate) - 1) & 0xff;
-+		return (DIV_ROUND_UP(ssp_clk, 2 * rate) - 1) & 0xff;
- 	else
--		return (ssp_clk / rate - 1) & 0xfff;
-+		return (DIV_ROUND_UP(ssp_clk, rate) - 1)  & 0xfff;
- }
+ 	/* BAR2 */
+ 	start = 0x0100000000ULL;
+-	limit = start + device->func->resource_size(device, 3);
++	size = device->func->resource_size(device, 3);
++	if (!size)
++		return -ENOMEM;
++	limit = start + size;
  
- static unsigned int pxa2xx_ssp_get_clk_div(struct driver_data *drv_data,
+ 	ret = nvkm_vmm_new(device, start, limit-- - start, NULL, 0,
+ 			   &bar2_lock, "bar2", &bar->bar2_vmm);
+@@ -164,7 +167,10 @@ nv50_bar_oneinit(struct nvkm_bar *base)
+ 
+ 	/* BAR1 */
+ 	start = 0x0000000000ULL;
+-	limit = start + device->func->resource_size(device, 1);
++	size = device->func->resource_size(device, 1);
++	if (!size)
++		return -ENOMEM;
++	limit = start + size;
+ 
+ 	ret = nvkm_vmm_new(device, start, limit-- - start, NULL, 0,
+ 			   &bar1_lock, "bar1", &bar->bar1_vmm);
 -- 
 2.20.1
 
