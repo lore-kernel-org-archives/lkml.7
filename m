@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BFABC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:23:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5B50C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:23:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E15632177E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:23:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B001E2173C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:23:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558553002;
-	bh=Na5zua+BMhBNFZNBRjS6szXtRLjVmifaB5T4ebTYgO0=;
+	s=default; t=1558553007;
+	bh=71QAfk99M4sfT3rVXD7gj5hEQZsBkP3Vcnj/0ePOejU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Al8x7K+eDey3kXnF9E6SONy12+yWSarr/owO5FAMI/UKIAwg2PVENtqq+XaU0sr93
-	 ABOzeaMJlfM54CxmIw2dFTPSLOd5JrKcaRxwV0ZiauKJNp1lRU17pqGdkmQSa2Rrik
-	 hKrESwWqh2uHQZv9abobhzrpkrx6nlRK6XNUailk=
+	b=pwYMWPLKNieKX1apGhE5MTaz/i3zzaCvwul2I7EMJEKn44EUcGzfqVqRB78AhwTrA
+	 im3hZOgJUIm008R86ON5eJPvUKiY5gIxeqkkAJdcixl9f0SXhCYN3Pnenyi4v5ZsY2
+	 x+V/cdF087+cCZ3HhQOzaJoDQ8+P3xitYB58MpDA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730852AbfEVTXU (ORCPT
+        id S1730898AbfEVTX1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:23:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44176 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:23:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44272 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729898AbfEVTXS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:23:18 -0400
+        id S1730031AbfEVTXX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:23:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8CFCC21473;
-        Wed, 22 May 2019 19:23:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 796652184E;
+        Wed, 22 May 2019 19:23:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558552997;
-        bh=Na5zua+BMhBNFZNBRjS6szXtRLjVmifaB5T4ebTYgO0=;
+        s=default; t=1558553003;
+        bh=71QAfk99M4sfT3rVXD7gj5hEQZsBkP3Vcnj/0ePOejU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=alVOEaX6foa6mn7l0lMrz1xYWC35/d/M1qFAMo7P0JG/lgl9LhZhXEMJey1ZH9o8P
-         v6ogVDJTmGU2+AK/kNj1RSVXCiYS4NRJFR7EV0NTL5oMvUVAG9LG7B/4qrizEtHC0+
-         Eg3IkPTOSFPSpGsRFDNklJw3kwUMVARn2LZcQRn8=
+        b=aZzR7YT7nnDY28GLMKZanOzBpKh81+N2G6H2EaQ6BxmzwCe5OECvRGP/IUy30/VMT
+         2SZGloHMqwAi4TEMFfYzgR+aQdKy+3RE0kFn+jZgg26R1OHFql8WtGpuhk3XumMfMt
+         DwCTBcjOJZnaubzoZ0PeeLajuLsFbDd7sXglnFE8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Grygorii Strashko <grygorii.strashko@ti.com>,
+Cc:     Heiner Kallweit <hkallweit1@gmail.com>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 067/375] net: ethernet: ti: cpsw: fix allmulti cfg in dual_mac mode
-Date:   Wed, 22 May 2019 15:16:07 -0400
-Message-Id: <20190522192115.22666-67-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 071/375] net: phy: improve genphy_soft_reset
+Date:   Wed, 22 May 2019 15:16:11 -0400
+Message-Id: <20190522192115.22666-71-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192115.22666-1-sashal@kernel.org>
 References: <20190522192115.22666-1-sashal@kernel.org>
@@ -60,123 +59,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Grygorii Strashko <grygorii.strashko@ti.com>
+From: Heiner Kallweit <hkallweit1@gmail.com>
 
-[ Upstream commit 06095f34f8a0a2c4c83a19514c272699edd5f80b ]
+[ Upstream commit 8c90b795e90f7753d23c18e8b95dd71b4a18c5d9 ]
 
-Now CPSW ALE will set/clean Host port bit in Unregistered Multicast Flood
-Mask (UNREG_MCAST_FLOOD_MASK) for every VLAN without checking if this port
-belongs to VLAN or not when ALLMULTI mode flag is set for nedev. This is
-working in non dual_mac mode, but in dual_mac - it causes
-enabling/disabling ALLMULTI flag for both ports.
+PHY's behave differently when being reset. Some reset registers to
+defaults, some don't. Some trigger an autoneg restart, some don't.
 
-Hence fix it by adding additional parameter to cpsw_ale_set_allmulti() to
-specify ALE port number for which ALLMULTI has to be enabled and check if
-port belongs to VLAN before modifying UNREG_MCAST_FLOOD_MASK.
+So let's also set the autoneg restart bit when resetting. Then PHY
+behavior should be more consistent. Clearing BMCR_ISOLATE serves the
+same purpose and is borrowed from genphy_restart_aneg.
 
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+BMCR holds the speed / duplex settings in fixed mode. Therefore
+we may have an issue if a soft reset resets BMCR to its default.
+So better call genphy_setup_forced() afterwards in fixed mode.
+We've seen no related complaint in the last >10 yrs, so let's
+treat it as an improvement.
+
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/ti/cpsw.c     | 12 +++++++++---
- drivers/net/ethernet/ti/cpsw_ale.c | 19 ++++++++++---------
- drivers/net/ethernet/ti/cpsw_ale.h |  3 +--
- 3 files changed, 20 insertions(+), 14 deletions(-)
+ drivers/net/phy/phy_device.c | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/ti/cpsw.c b/drivers/net/ethernet/ti/cpsw.c
-index a591583d120e1..dd12b73a88530 100644
---- a/drivers/net/ethernet/ti/cpsw.c
-+++ b/drivers/net/ethernet/ti/cpsw.c
-@@ -800,12 +800,17 @@ static int cpsw_purge_all_mc(struct net_device *ndev, const u8 *addr, int num)
- 
- static void cpsw_ndo_set_rx_mode(struct net_device *ndev)
+diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+index cd5966b0db571..f6a6cc5bf118d 100644
+--- a/drivers/net/phy/phy_device.c
++++ b/drivers/net/phy/phy_device.c
+@@ -1829,13 +1829,25 @@ EXPORT_SYMBOL(genphy_read_status);
+  */
+ int genphy_soft_reset(struct phy_device *phydev)
  {
--	struct cpsw_common *cpsw = ndev_to_cpsw(ndev);
-+	struct cpsw_priv *priv = netdev_priv(ndev);
-+	struct cpsw_common *cpsw = priv->cpsw;
-+	int slave_port = -1;
++	u16 res = BMCR_RESET;
+ 	int ret;
+ 
+-	ret = phy_set_bits(phydev, MII_BMCR, BMCR_RESET);
++	if (phydev->autoneg == AUTONEG_ENABLE)
++		res |= BMCR_ANRESTART;
 +
-+	if (cpsw->data.dual_emac)
-+		slave_port = priv->emac_port + 1;
++	ret = phy_modify(phydev, MII_BMCR, BMCR_ISOLATE, res);
+ 	if (ret < 0)
+ 		return ret;
  
- 	if (ndev->flags & IFF_PROMISC) {
- 		/* Enable promiscuous mode */
- 		cpsw_set_promiscious(ndev, true);
--		cpsw_ale_set_allmulti(cpsw->ale, IFF_ALLMULTI);
-+		cpsw_ale_set_allmulti(cpsw->ale, IFF_ALLMULTI, slave_port);
- 		return;
- 	} else {
- 		/* Disable promiscuous mode */
-@@ -813,7 +818,8 @@ static void cpsw_ndo_set_rx_mode(struct net_device *ndev)
- 	}
- 
- 	/* Restore allmulti on vlans if necessary */
--	cpsw_ale_set_allmulti(cpsw->ale, ndev->flags & IFF_ALLMULTI);
-+	cpsw_ale_set_allmulti(cpsw->ale,
-+			      ndev->flags & IFF_ALLMULTI, slave_port);
- 
- 	/* add/remove mcast address either for real netdev or for vlan */
- 	__hw_addr_ref_sync_dev(&ndev->mc, ndev, cpsw_add_mc_addr,
-diff --git a/drivers/net/ethernet/ti/cpsw_ale.c b/drivers/net/ethernet/ti/cpsw_ale.c
-index 798c989d5d934..b3d9591b4824a 100644
---- a/drivers/net/ethernet/ti/cpsw_ale.c
-+++ b/drivers/net/ethernet/ti/cpsw_ale.c
-@@ -482,24 +482,25 @@ int cpsw_ale_del_vlan(struct cpsw_ale *ale, u16 vid, int port_mask)
+-	return phy_poll_reset(phydev);
++	ret = phy_poll_reset(phydev);
++	if (ret)
++		return ret;
++
++	/* BMCR may be reset to defaults */
++	if (phydev->autoneg == AUTONEG_DISABLE)
++		ret = genphy_setup_forced(phydev);
++
++	return ret;
  }
- EXPORT_SYMBOL_GPL(cpsw_ale_del_vlan);
+ EXPORT_SYMBOL(genphy_soft_reset);
  
--void cpsw_ale_set_allmulti(struct cpsw_ale *ale, int allmulti)
-+void cpsw_ale_set_allmulti(struct cpsw_ale *ale, int allmulti, int port)
- {
- 	u32 ale_entry[ALE_ENTRY_WORDS];
--	int type, idx;
- 	int unreg_mcast = 0;
--
--	/* Only bother doing the work if the setting is actually changing */
--	if (ale->allmulti == allmulti)
--		return;
--
--	/* Remember the new setting to check against next time */
--	ale->allmulti = allmulti;
-+	int type, idx;
- 
- 	for (idx = 0; idx < ale->params.ale_entries; idx++) {
-+		int vlan_members;
-+
- 		cpsw_ale_read(ale, idx, ale_entry);
- 		type = cpsw_ale_get_entry_type(ale_entry);
- 		if (type != ALE_TYPE_VLAN)
- 			continue;
-+		vlan_members =
-+			cpsw_ale_get_vlan_member_list(ale_entry,
-+						      ale->vlan_field_bits);
-+
-+		if (port != -1 && !(vlan_members & BIT(port)))
-+			continue;
- 
- 		unreg_mcast =
- 			cpsw_ale_get_vlan_unreg_mcast(ale_entry,
-diff --git a/drivers/net/ethernet/ti/cpsw_ale.h b/drivers/net/ethernet/ti/cpsw_ale.h
-index cd07a3e96d576..1fe196d8a5e42 100644
---- a/drivers/net/ethernet/ti/cpsw_ale.h
-+++ b/drivers/net/ethernet/ti/cpsw_ale.h
-@@ -37,7 +37,6 @@ struct cpsw_ale {
- 	struct cpsw_ale_params	params;
- 	struct timer_list	timer;
- 	unsigned long		ageout;
--	int			allmulti;
- 	u32			version;
- 	/* These bits are different on NetCP NU Switch ALE */
- 	u32			port_mask_bits;
-@@ -116,7 +115,7 @@ int cpsw_ale_del_mcast(struct cpsw_ale *ale, const u8 *addr, int port_mask,
- int cpsw_ale_add_vlan(struct cpsw_ale *ale, u16 vid, int port, int untag,
- 			int reg_mcast, int unreg_mcast);
- int cpsw_ale_del_vlan(struct cpsw_ale *ale, u16 vid, int port);
--void cpsw_ale_set_allmulti(struct cpsw_ale *ale, int allmulti);
-+void cpsw_ale_set_allmulti(struct cpsw_ale *ale, int allmulti, int port);
- 
- int cpsw_ale_control_get(struct cpsw_ale *ale, int port, int control);
- int cpsw_ale_control_set(struct cpsw_ale *ale, int port,
 -- 
 2.20.1
 
