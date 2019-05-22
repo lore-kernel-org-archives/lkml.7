@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA235C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:30:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E45DC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:30:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD566204FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:30:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31FED217D7
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:30:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558553404;
-	bh=D5l7DCBdDPy0Wcsbs+ezBh4hdN29gMtYw7qlOBAZynM=;
+	s=default; t=1558553407;
+	bh=wZ0jozuRaDrYGCz/VJ43+6fxZgy24T+t1zY1SZi5jwg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GM/DpqyJZaBdEd3yhmNRK4G2Osw0YDfidxsc6EUgCfBBIp3qgGMPuc1h6KVdqCEJd
-	 fBRrQcjUCan1X3DOdwZcC6E5UaXV/a3X821g84gK39V3dtz4PioYjssPOY+moOkJRo
-	 cz3ZTnX2cC7c3tEPSLSpmT8BdcBgp1DBuT4BkOJs=
+	b=vCYt83Saffwl/6j4Y/INzAa0J4+OYs60BZ4TL3p45MdSHgmy1BjihAoTrlawwxjJA
+	 E91yG0NVpmr2OkwBZDhp3d7Hk7GDqFUabsum0bqWXe+/JRxqyJs/gRNZxt0lxNE5e7
+	 F7wQ8IAVrou3lR+46xiXujHgpHd+WPXkhAw1Fjko=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733142AbfEVTaD (ORCPT
+        id S1733154AbfEVTaG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:30:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53226 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:30:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53366 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730762AbfEVT37 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:29:59 -0400
+        id S1730762AbfEVTaF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:30:05 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 444B920675;
-        Wed, 22 May 2019 19:29:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 42DB821473;
+        Wed, 22 May 2019 19:30:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553399;
-        bh=D5l7DCBdDPy0Wcsbs+ezBh4hdN29gMtYw7qlOBAZynM=;
+        s=default; t=1558553404;
+        bh=wZ0jozuRaDrYGCz/VJ43+6fxZgy24T+t1zY1SZi5jwg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zfgqMxGcSGeZBzwSvojgLHztsdDYCeiVjr9cEV8vh2K3Ldc9bPoIwAb03DUFBSztC
-         TU2TKujnAzZKaKi8OxAYWPlZnQWWYhf8Ok4FH50i+7/bMoOPdVUkK+ddd+Ic8Z8YU5
-         4SJYiYy9C/HcFYtAFo4eNPaLGHbqcluc++DTx+5U=
+        b=dWlDti1Z8nSTcsYXvG6hQpaFY50/3yHHwo7b7JcJgnbnYMlv4Gtwgcem2//rRgtm1
+         iAP2vcbKceg6l/nZTqxpLs32evaseGxutfZ5Ep+GJjLGCgqEbIAFzMHypWY5/CVYAG
+         u9GOT9mpC1juReIQghMOdaX2st49P0nsalU7xGXk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        kbuild test robot <lkp@intel.com>,
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        "Paul E . McKenney" <paulmck@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>, luto@kernel.org,
         Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 051/167] smpboot: Place the __percpu annotation correctly
-Date:   Wed, 22 May 2019 15:26:46 -0400
-Message-Id: <20190522192842.25858-51-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 053/167] mm/uaccess: Use 'unsigned long' to placate UBSAN warnings on older GCC versions
+Date:   Wed, 22 May 2019 15:26:48 -0400
+Message-Id: <20190522192842.25858-53-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192842.25858-1-sashal@kernel.org>
 References: <20190522192842.25858-1-sashal@kernel.org>
@@ -63,47 +61,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+From: Peter Zijlstra <peterz@infradead.org>
 
-[ Upstream commit d4645d30b50d1691c26ff0f8fa4e718b08f8d3bb ]
+[ Upstream commit 29da93fea3ea39ab9b12270cc6be1b70ef201c9e ]
 
-The test robot reported a wrong assignment of a per-CPU variable which
-it detected by using sparse and sent a report. The assignment itself is
-correct. The annotation for sparse was wrong and hence the report.
-The first pointer is a "normal" pointer and points to the per-CPU memory
-area. That means that the __percpu annotation has to be moved.
+Randy reported objtool triggered on his (GCC-7.4) build:
 
-Move the __percpu annotation to pointer which points to the per-CPU
-area. This change affects only the sparse tool (and is ignored by the
-compiler).
+  lib/strncpy_from_user.o: warning: objtool: strncpy_from_user()+0x315: call to __ubsan_handle_add_overflow() with UACCESS enabled
+  lib/strnlen_user.o: warning: objtool: strnlen_user()+0x337: call to __ubsan_handle_sub_overflow() with UACCESS enabled
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Paul E. McKenney <paulmck@linux.ibm.com>
+This is due to UBSAN generating signed-overflow-UB warnings where it
+should not. Prior to GCC-8 UBSAN ignored -fwrapv (which the kernel
+uses through -fno-strict-overflow).
+
+Make the functions use 'unsigned long' throughout.
+
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
+Acked-by: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Fixes: f97f8f06a49fe ("smpboot: Provide infrastructure for percpu hotplug threads")
-Link: http://lkml.kernel.org/r/20190424085253.12178-1-bigeasy@linutronix.de
+Cc: luto@kernel.org
+Link: http://lkml.kernel.org/r/20190424072208.754094071@infradead.org
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/smpboot.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ lib/strncpy_from_user.c | 5 +++--
+ lib/strnlen_user.c      | 4 ++--
+ 2 files changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/smpboot.h b/include/linux/smpboot.h
-index c174844cf663e..585e777a7f6ef 100644
---- a/include/linux/smpboot.h
-+++ b/include/linux/smpboot.h
-@@ -31,7 +31,7 @@ struct smpboot_thread_data;
-  * @thread_comm:	The base name of the thread
+diff --git a/lib/strncpy_from_user.c b/lib/strncpy_from_user.c
+index b53e1b5d80f42..e304b54c9c7dd 100644
+--- a/lib/strncpy_from_user.c
++++ b/lib/strncpy_from_user.c
+@@ -23,10 +23,11 @@
+  * hit it), 'max' is the address space maximum (and we return
+  * -EFAULT if we hit it).
   */
- struct smp_hotplug_thread {
--	struct task_struct __percpu	**store;
-+	struct task_struct		* __percpu *store;
- 	struct list_head		list;
- 	int				(*thread_should_run)(unsigned int cpu);
- 	void				(*thread_fn)(unsigned int cpu);
+-static inline long do_strncpy_from_user(char *dst, const char __user *src, long count, unsigned long max)
++static inline long do_strncpy_from_user(char *dst, const char __user *src,
++					unsigned long count, unsigned long max)
+ {
+ 	const struct word_at_a_time constants = WORD_AT_A_TIME_CONSTANTS;
+-	long res = 0;
++	unsigned long res = 0;
+ 
+ 	/*
+ 	 * Truncate 'max' to the user-specified limit, so that
+diff --git a/lib/strnlen_user.c b/lib/strnlen_user.c
+index 60d0bbda8f5e5..184f80f7bacfa 100644
+--- a/lib/strnlen_user.c
++++ b/lib/strnlen_user.c
+@@ -28,7 +28,7 @@
+ static inline long do_strnlen_user(const char __user *src, unsigned long count, unsigned long max)
+ {
+ 	const struct word_at_a_time constants = WORD_AT_A_TIME_CONSTANTS;
+-	long align, res = 0;
++	unsigned long align, res = 0;
+ 	unsigned long c;
+ 
+ 	/*
+@@ -42,7 +42,7 @@ static inline long do_strnlen_user(const char __user *src, unsigned long count,
+ 	 * Do everything aligned. But that means that we
+ 	 * need to also expand the maximum..
+ 	 */
+-	align = (sizeof(long) - 1) & (unsigned long)src;
++	align = (sizeof(unsigned long) - 1) & (unsigned long)src;
+ 	src -= align;
+ 	max += align;
+ 
 -- 
 2.20.1
 
