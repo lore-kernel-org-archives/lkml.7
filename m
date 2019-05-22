@@ -2,104 +2,149 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 296D1C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 23:21:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50F45C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 23:23:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDFD42075E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 23:21:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="TfuFpW4L"
+	by mail.kernel.org (Postfix) with ESMTP id EC30620881
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 23:23:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729832AbfEVXVJ (ORCPT
+        id S1729447AbfEVXXM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 19:21:09 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:45676 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729683AbfEVXU6 (ORCPT
+        Wed, 22 May 2019 19:23:12 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:34431 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726553AbfEVXXL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 19:20:58 -0400
-Received: from pps.filterd (m0044008.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4MNEGmN008450
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 16:20:58 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=facebook;
- bh=X6P44zjZ47fHY3Lb/kucsCI8qXASyw0JnvINTZV+gOs=;
- b=TfuFpW4L8bxHJ7DQctRXJeWF5d9O646Y+aS27Chd/28P9CVv6t73NQ4c7xRQ73ukJrkX
- 94xZ2jUNnZcPR0c63EwPB539Tga5PwRMfVTNrKhOX6AtyJJW+mOLsvTYA6sYnRrKfi45
- M8K1GAEAMpyiDdMc/mZyKFvil+qWfczQg0U= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 2sn8b0svms-3
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 16:20:57 -0700
-Received: from mx-out.facebook.com (2620:10d:c0a8:1b::d) by
- mail.thefacebook.com (2620:10d:c0a8:82::d) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 22 May 2019 16:20:55 -0700
-Received: by devvm2643.prn2.facebook.com (Postfix, from userid 111017)
-        id DF3DC12526D44; Wed, 22 May 2019 16:20:53 -0700 (PDT)
-Smtp-Origin-Hostprefix: devvm
-From:   Roman Gushchin <guro@fb.com>
-Smtp-Origin-Hostname: devvm2643.prn2.facebook.com
-To:     Alexei Starovoitov <ast@kernel.org>, <bpf@vger.kernel.org>
-CC:     Daniel Borkmann <daniel@iogearbox.net>, <netdev@vger.kernel.org>,
-        Tejun Heo <tj@kernel.org>, <kernel-team@fb.com>,
-        <cgroups@vger.kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
-        <linux-kernel@vger.kernel.org>, Roman Gushchin <guro@fb.com>
-Smtp-Origin-Cluster: prn2c23
-Subject: [PATCH v2 bpf-next 0/4] cgroup bpf auto-detachment
-Date:   Wed, 22 May 2019 16:20:47 -0700
-Message-ID: <20190522232051.2938491-1-guro@fb.com>
-X-Mailer: git-send-email 2.17.1
-X-FB-Internal: Safe
+        Wed, 22 May 2019 19:23:11 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69])
+        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <dann.frazier@canonical.com>)
+        id 1hTaZg-0004B3-Vo
+        for linux-kernel@vger.kernel.org; Wed, 22 May 2019 23:23:09 +0000
+Received: by mail-io1-f69.google.com with SMTP id v22so3103321ion.2
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 16:23:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=s85uEhKAu1jS0Q+P5fZlz+A7fx6iSmj4/T3oMaYK86c=;
+        b=OugQvK95itm8+ROx06zNW0pCXRdrZfjxdh8NvWTmvP30Uee3c4Vficl9KfWI4qAv0t
+         rUij8LvJ8gMrC0ldQJZ1dDd6jA9WJmVNeGkKkU9kEouklrtwJGWdm0l10qC+KauYDq58
+         XEd8A1WXi+32efQMs+M4T1egFS3pxp7AC6C8yv/khPo2OryGr41F+Mhlz5v37Nq06hpi
+         FRKTkE3agrWbr5/ZWOvQlGd5nth+aUugkbCq1Z/OC//MR5h4dJwkK7IDeryNs4GPCoTa
+         Hz8WAy8P7CAU24KbDsRxcrOPmh4Hc9Hb4RQfzp/cV5Fcu240hvpfoXA3PJofQWXcQoJB
+         bm8A==
+X-Gm-Message-State: APjAAAU1dNfE2jJrl7C/fUc1slRVB6O/O6OuSyYQGVl5jZ5irT5tSeYZ
+        TaN/OGCCmmEay1NL66qYy//vmpModk6pR8ClWs1t8HIjR8Wj00r9k3XljkH6986JWZw7z1EM0fo
+        92GyOasXPJSTsOCVN0S5pARah3FUSp1BovxQZGohmrQ==
+X-Received: by 2002:a24:1c8f:: with SMTP id c137mr11721311itc.165.1558567387394;
+        Wed, 22 May 2019 16:23:07 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxdHnME/HIKTNtYrhxUlkHJbYT/xO74MAdU3gQ2zPhx1GksIreKy7VV6aO1robz0W5ehzpp4A==
+X-Received: by 2002:a24:1c8f:: with SMTP id c137mr11721292itc.165.1558567387007;
+        Wed, 22 May 2019 16:23:07 -0700 (PDT)
+Received: from xps13.canonical.com (c-71-56-235-36.hsd1.co.comcast.net. [71.56.235.36])
+        by smtp.gmail.com with ESMTPSA id c22sm8517424ioa.41.2019.05.22.16.23.06
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 22 May 2019 16:23:06 -0700 (PDT)
+From:   dann frazier <dann.frazier@canonical.com>
+To:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Shannon Nelson <shannon.nelson@oracle.com>
+Cc:     intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] ixgbe: Avoid NULL pointer dereference with VF on non-IPsec hw
+Date:   Wed, 22 May 2019 17:22:58 -0600
+Message-Id: <20190522232258.10353-1-dann.frazier@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-22_14:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=598 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905220162
-X-FB-Internal: deliver
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patchset implements a cgroup bpf auto-detachment functionality:
-bpf programs are attached as soon as possible after removal of the
-cgroup, without waiting for the release of all associated resources.
+An ipsec structure will not be allocated if the hardware does not support
+offload. Fixes the following Oops:
 
-Patches 2 and 3 are required to implement a corresponding kselftest
-in patch 4.
+[  191.045452] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
+[  191.054232] Mem abort info:
+[  191.057014]   ESR = 0x96000004
+[  191.060057]   Exception class = DABT (current EL), IL = 32 bits
+[  191.065963]   SET = 0, FnV = 0
+[  191.069004]   EA = 0, S1PTW = 0
+[  191.072132] Data abort info:
+[  191.074999]   ISV = 0, ISS = 0x00000004
+[  191.078822]   CM = 0, WnR = 0
+[  191.081780] user pgtable: 4k pages, 48-bit VAs, pgdp = 0000000043d9e467
+[  191.088382] [0000000000000000] pgd=0000000000000000
+[  191.093252] Internal error: Oops: 96000004 [#1] SMP
+[  191.098119] Modules linked in: vhost_net vhost tap vfio_pci vfio_virqfd vfio_iommu_type1 vfio xt_CHECKSUM iptable_mangle ipt_MASQUERADE iptable_nat nf_nat_ipv4 nf_nat xt_conntrack nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 ipt_REJECT nf_reject_ipv4 xt_tcpudp bridge stp llc ebtable_filter devlink ebtables ip6table_filter ip6_tables iptable_filter bpfilter ipmi_ssif nls_iso8859_1 input_leds joydev ipmi_si hns_roce_hw_v2 ipmi_devintf hns_roce ipmi_msghandler cppc_cpufreq sch_fq_codel ib_iser rdma_cm iw_cm ib_cm ib_core iscsi_tcp libiscsi_tcp libiscsi scsi_transport_iscsi ip_tables x_tables autofs4 ses enclosure btrfs zstd_compress raid10 raid456 async_raid6_recov async_memcpy async_pq async_xor async_tx xor hid_generic usbhid hid raid6_pq libcrc32c raid1 raid0 multipath linear ixgbevf hibmc_drm ttm
+[  191.168607]  drm_kms_helper aes_ce_blk aes_ce_cipher syscopyarea crct10dif_ce sysfillrect ghash_ce qla2xxx sysimgblt sha2_ce sha256_arm64 hisi_sas_v3_hw fb_sys_fops sha1_ce uas nvme_fc mpt3sas ixgbe drm hisi_sas_main nvme_fabrics usb_storage hclge scsi_transport_fc ahci libsas hnae3 raid_class libahci xfrm_algo scsi_transport_sas mdio aes_neon_bs aes_neon_blk crypto_simd cryptd aes_arm64
+[  191.202952] CPU: 94 PID: 0 Comm: swapper/94 Not tainted 4.19.0-rc1+ #11
+[  191.209553] Hardware name: Huawei D06 /D06, BIOS Hisilicon D06 UEFI RC0 - V1.20.01 04/26/2019
+[  191.218064] pstate: 20400089 (nzCv daIf +PAN -UAO)
+[  191.222873] pc : ixgbe_ipsec_vf_clear+0x60/0xd0 [ixgbe]
+[  191.228093] lr : ixgbe_msg_task+0x2d0/0x1088 [ixgbe]
+[  191.233044] sp : ffff000009b3bcd0
+[  191.236346] x29: ffff000009b3bcd0 x28: 0000000000000000
+[  191.241647] x27: ffff000009628000 x26: 0000000000000000
+[  191.246946] x25: ffff803f652d7600 x24: 0000000000000004
+[  191.252246] x23: ffff803f6a718900 x22: 0000000000000000
+[  191.257546] x21: 0000000000000000 x20: 0000000000000000
+[  191.262845] x19: 0000000000000000 x18: 0000000000000000
+[  191.268144] x17: 0000000000000000 x16: 0000000000000000
+[  191.273443] x15: 0000000000000000 x14: 0000000100000026
+[  191.278742] x13: 0000000100000025 x12: ffff8a5f7fbe0df0
+[  191.284042] x11: 000000010000000b x10: 0000000000000040
+[  191.289341] x9 : 0000000000001100 x8 : ffff803f6a824fd8
+[  191.294640] x7 : ffff803f6a825098 x6 : 0000000000000001
+[  191.299939] x5 : ffff000000f0ffc0 x4 : 0000000000000000
+[  191.305238] x3 : ffff000028c00000 x2 : ffff803f652d7600
+[  191.310538] x1 : 0000000000000000 x0 : ffff000000f205f0
+[  191.315838] Process swapper/94 (pid: 0, stack limit = 0x00000000addfed5a)
+[  191.322613] Call trace:
+[  191.325055]  ixgbe_ipsec_vf_clear+0x60/0xd0 [ixgbe]
+[  191.329927]  ixgbe_msg_task+0x2d0/0x1088 [ixgbe]
+[  191.334536]  ixgbe_msix_other+0x274/0x330 [ixgbe]
+[  191.339233]  __handle_irq_event_percpu+0x78/0x270
+[  191.343924]  handle_irq_event_percpu+0x40/0x98
+[  191.348355]  handle_irq_event+0x50/0xa8
+[  191.352180]  handle_fasteoi_irq+0xbc/0x148
+[  191.356263]  generic_handle_irq+0x34/0x50
+[  191.360259]  __handle_domain_irq+0x68/0xc0
+[  191.364343]  gic_handle_irq+0x84/0x180
+[  191.368079]  el1_irq+0xe8/0x180
+[  191.371208]  arch_cpu_idle+0x30/0x1a8
+[  191.374860]  do_idle+0x1dc/0x2a0
+[  191.378077]  cpu_startup_entry+0x2c/0x30
+[  191.381988]  secondary_start_kernel+0x150/0x1e0
+[  191.386506] Code: 6b15003f 54000320 f1404a9f 54000060 (79400260)
 
-v2:
-  1) removed a bogus check in patch 4
-  2) moved buf[len] = 0 in patch 2
+Fixes: eda0333ac2930 ("ixgbe: add VF IPsec management")
+Signed-off-by: dann frazier <dann.frazier@canonical.com>
+---
+ drivers/net/ethernet/intel/ixgbe/ixgbe_ipsec.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-
-Roman Gushchin (4):
-  bpf: decouple the lifetime of cgroup_bpf from cgroup itself
-  selftests/bpf: convert test_cgrp2_attach2 example into kselftest
-  selftests/bpf: enable all available cgroup v2 controllers
-  selftests/bpf: add auto-detach test
-
- include/linux/bpf-cgroup.h                    |   8 +-
- include/linux/cgroup.h                        |  18 +++
- kernel/bpf/cgroup.c                           |  25 ++-
- kernel/cgroup/cgroup.c                        |  11 +-
- samples/bpf/Makefile                          |   2 -
- tools/testing/selftests/bpf/Makefile          |   4 +-
- tools/testing/selftests/bpf/cgroup_helpers.c  |  57 +++++++
- .../selftests/bpf/test_cgroup_attach.c        | 145 ++++++++++++++++--
- 8 files changed, 243 insertions(+), 27 deletions(-)
- rename samples/bpf/test_cgrp2_attach2.c => tools/testing/selftests/bpf/test_cgroup_attach.c (79%)
-
+diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_ipsec.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_ipsec.c
+index ff85ce5791a36..31629fc7e820f 100644
+--- a/drivers/net/ethernet/intel/ixgbe/ixgbe_ipsec.c
++++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_ipsec.c
+@@ -842,6 +842,9 @@ void ixgbe_ipsec_vf_clear(struct ixgbe_adapter *adapter, u32 vf)
+ 	struct ixgbe_ipsec *ipsec = adapter->ipsec;
+ 	int i;
+ 
++	if (!ipsec)
++		return;
++
+ 	/* search rx sa table */
+ 	for (i = 0; i < IXGBE_IPSEC_MAX_SA_COUNT && ipsec->num_rx_sa; i++) {
+ 		if (!ipsec->rx_tbl[i].used)
 -- 
 2.20.1
 
