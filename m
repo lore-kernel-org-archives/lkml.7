@@ -2,118 +2,166 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 849D0C072A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 08:07:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E3FEC072A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 08:08:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5103120675
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 08:07:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 607FE20815
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 08:08:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mBSlYA70"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="AWdqHpM7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728718AbfEVIHI (ORCPT
+        id S1728700AbfEVIIJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 04:07:08 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:40308 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727946AbfEVIHI (ORCPT
+        Wed, 22 May 2019 04:08:09 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:12935 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726358AbfEVIIJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 04:07:08 -0400
-Received: by mail-pg1-f194.google.com with SMTP id d30so915122pgm.7
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 01:07:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=R9LcwzmisTS7r+q4SwIHnWG/B1+FQ56zuQk1IuY/Co0=;
-        b=mBSlYA7037o5LdH8eMdLpiuP/Z0aDaIBdqWhlZ1Aw1ZT8Q0ilpxCXWDmHOA94KAy4j
-         FOHOJChPrPKrQDhRVVxSvqgb5u2TH3sYCMxc9vIKl+/LVWRXQkSKIepTRb2fNuUhNwok
-         5GJaBXVx6qxIkP+yAmN81F5CjXh2AY/HjHNrMcCMuT5rBktHcEu3F0KIBuMrPLqBN4mz
-         6Im0gi+ueBW0CjxkTIDxaXEneaNuaUJ6T7knsVvc38tOcLSTPNG5Oyrur3gAggIT/UFE
-         ZdKU/mMrGxhRyeeOEUbp7nDUgWL9TTqt2YN1CsX+RcC3u90GjlqqeGMcJ+Zpw2DKQeHy
-         UegQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=R9LcwzmisTS7r+q4SwIHnWG/B1+FQ56zuQk1IuY/Co0=;
-        b=h1ZlNYwknak6QMqOGD9yZHM11+lZNvGG1fY4x33Md67pBWOlHdxSrB5oJqXmo3o+te
-         mbT4qe/ZmnWpDmQqJN8z6sD6eo3xXQY9dZMYP4y6nZ171Vd8CbgzTmZRE0no/iyUtDPT
-         wWf3lba3VO/z/NZymVoOBGRVyg0644vJDgqOKFbHuTFlZCl/BsHWhEZzzLI4rJlZDQIH
-         FMHNYXfz1NgQnJjzBpFtI3wlWx37wCJ8aAyN6jYGylCvj8tBWf10oYtMugHtKPKJ6vSu
-         sS0cru8YsKCTey+ptgJSQczs4OierAU9qC45h7K+QhA7gAFu9QsvnS60E9ThGPgDz0s8
-         lxjA==
-X-Gm-Message-State: APjAAAVwvcV+WquNhI55b3kSQw65RaSL8+FOjhpNAi2eaO3ggSFEUAGN
-        YIYyHKWNQ3csDVLmX5PN9Sed6PyOqHQ=
-X-Google-Smtp-Source: APXvYqzQNy8lcXx0lrcIRiJQ6ZfSoau8hQXBKZ8CDx9/qXMrvEXwAOkhvqcFadJHGimhxun18HFPMA==
-X-Received: by 2002:aa7:930e:: with SMTP id 14mr36801323pfj.262.1558512427215;
-        Wed, 22 May 2019 01:07:07 -0700 (PDT)
-Received: from zhanggen-UX430UQ ([66.42.35.75])
-        by smtp.gmail.com with ESMTPSA id e12sm43143956pfl.122.2019.05.22.01.07.04
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 22 May 2019 01:07:06 -0700 (PDT)
-Date:   Wed, 22 May 2019 16:06:56 +0800
-From:   Gen Zhang <blackgod016574@gmail.com>
-To:     Jiri Slaby <jslaby@suse.cz>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] tty_io: Fix a missing-check bug in drivers/tty/tty_io.c
-Message-ID: <20190522080656.GA5109@zhanggen-UX430UQ>
-References: <20190522014006.GB4093@zhanggen-UX430UQ>
- <abc68141-df99-1ae1-ea51-c83bd4480d92@suse.cz>
+        Wed, 22 May 2019 04:08:09 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ce503660001>; Wed, 22 May 2019 01:08:06 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 22 May 2019 01:08:06 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 22 May 2019 01:08:06 -0700
+Received: from [10.24.45.128] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 22 May
+ 2019 08:08:01 +0000
+Subject: Re: [PATCH V7 02/15] PCI: Disable MSI for Tegra194 root port
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     Thierry Reding <thierry.reding@gmail.com>,
+        <lorenzo.pieralisi@arm.com>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <jonathanh@nvidia.com>, <kishon@ti.com>,
+        <catalin.marinas@arm.com>, <will.deacon@arm.com>,
+        <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
+        <mperttunen@nvidia.com>, <linux-pci@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
+References: <20190517123846.3708-1-vidyas@nvidia.com>
+ <20190517123846.3708-3-vidyas@nvidia.com> <20190521102729.GB29166@ulmo>
+ <f63051b0-a220-125b-219e-25156d65ea6d@nvidia.com>
+ <20190521193616.GE57618@google.com>
+X-Nvconfidentiality: public
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <4a9dadc5-7e16-4893-c7c2-acd7f515e039@nvidia.com>
+Date:   Wed, 22 May 2019 13:37:58 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <abc68141-df99-1ae1-ea51-c83bd4480d92@suse.cz>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190521193616.GE57618@google.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1558512486; bh=S3qg1DZrsjj7dBknX1Sd7FnNcS0V5oTUC1xCslRcFBw=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=AWdqHpM7dtZkVRmsszQ5JLOgOMdjk5aT6OpjxRX0jVR5xOEnTKH41lFcfDeR+P9O+
+         qtsguVLnqrmnYEW8/NQel6Q3DzeTOHUZvNH8Kq6GEwq+DzFzO2QkzHF+2E8D0Yd6yX
+         3eF8tUSXtzYOtzSxaV0MV1eZ3xXND2FxoMI0b1pOKeTe4MEPG+FLgxbxIQHpP66J7O
+         CyXFXW+EYm7y1p+SaBekN2zSKWCnH8mR7V69+eUKC6GT2uXa9TME0qNIqytjTU8q7C
+         NHYLQ2rLjkAc9rQID0clnHLuYDL0yV8+yLrvFSorlRjswGFpWSpCRw7vO1GBXB1NE4
+         ddghXQzP14t7g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 22, 2019 at 06:25:36AM +0200, Jiri Slaby wrote:
-> On 22. 05. 19, 3:40, Gen Zhang wrote:
-> > In alloc_tty_struct(), tty->dev is assigned by tty_get_device(). And it
-> > calls class_find_device(). And class_find_device() may return NULL.
-> > And tty->dev is dereferenced in the following codes. When 
-> > tty_get_device() returns NULL, dereferencing this tty->dev null pointer
-> > may cause the kernel go wrong. Thus we should check tty->dev.
-> > Further, if tty_get_device() returns NULL, we should free tty and 
-> > return NULL.
-> > 
-> > Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
-> > 
-> > ---
-> > diff --git a/drivers/tty/tty_io.c b/drivers/tty/tty_io.c
-> > index 033ac7e..1444b59 100644
-> > --- a/drivers/tty/tty_io.c
-> > +++ b/drivers/tty/tty_io.c
-> > @@ -3008,6 +3008,10 @@ struct tty_struct *alloc_tty_struct(struct tty_driver *driver, int idx)
-> >  	tty->index = idx;
-> >  	tty_line_name(driver, idx, tty->name);
-> >  	tty->dev = tty_get_device(tty);
-> > +	if (!tty->dev) {
-> > +		kfree(tty);
-> > +		return NULL;
-> > +	}
+On 5/22/2019 1:06 AM, Bjorn Helgaas wrote:
+> On Tue, May 21, 2019 at 10:17:26PM +0530, Vidya Sagar wrote:
+>> On 5/21/2019 3:57 PM, Thierry Reding wrote:
+>>> On Fri, May 17, 2019 at 06:08:33PM +0530, Vidya Sagar wrote:
+>>>> Tegra194 rootports don't generate MSI interrupts for PME events and hence
+>>>> MSI needs to be disabled for them to avoid root ports service drivers
+>>>> registering their respective ISRs with MSI interrupt.
 > 
-> This is incorrect, you introduced an ldisc reference leak.
-Thanks for your reply, Jiri!
-And what do you mean by an ldisc reference leak? I did't get the reason
-of introducing it.
+> The service drivers (AER, hotplug, etc) don't know whether the
+> interrupt is INTx or MSI; they just register their ISRs with
+> pcie_device.irq.
 > 
-> And can this happen at all?
-I think tty_get_device() may happen to return NULL. Because it calls 
-class_find_device() and there's a chance class_find_device() returns
-NULL.
-Thanks
-Gen
+> The point of this patch is that the PCI core doesn't support devices
+> that use MSI and INTx at the same time, and since this device can't
+> generate MSI for PME, we have to use INTx for *all* its interrupts.
 > 
-> thanks,
-> -- 
-> js
-> suse labs
+>>>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+>>>> ---
+>>>> Changes since [v6]:
+>>>> * This is a new patch
+>>>>
+>>>>    drivers/pci/quirks.c | 14 ++++++++++++++
+>>>>    1 file changed, 14 insertions(+)
+>>>>
+>>>> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+>>>> index 0f16acc323c6..28f9a0380df5 100644
+>>>> --- a/drivers/pci/quirks.c
+>>>> +++ b/drivers/pci/quirks.c
+>>>> @@ -2592,6 +2592,20 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NVIDIA,
+>>>>    			PCI_DEVICE_ID_NVIDIA_NVENET_15,
+>>>>    			nvenet_msi_disable);
+>>>> +/*
+>>>> + * Tegra194's PCIe root ports don't generate MSI interrupts for PME events
+>>>> + * instead legacy interrupts are generated. Hence, to avoid service drivers
+>>>> + * registering their respective ISRs for MSIs, need to disable MSI interrupts
+>>>> + * for root ports.
+>>>> + */
+>>>> +static void disable_tegra194_rp_msi(struct pci_dev *dev)
+>>>> +{
+>>>> +	dev->no_msi = 1;
+>>>> +}
+>>>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NVIDIA, 0x1ad0, disable_tegra194_rp_msi);
+>>>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NVIDIA, 0x1ad1, disable_tegra194_rp_msi);
+>>>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NVIDIA, 0x1ad2, disable_tegra194_rp_msi);
+>>>> +
+>>>
+>>> Later functions in this file seem to use a more consistent naming
+>>> pattern, according to which the name for this would become:
+>>>
+>>> 	pci_quirk_nvidia_tegra194_disable_rp_msi
+>>>
+>>> Might be worth considering making this consistent.
+>>>
+>>> This could also be moved to the DWC driver to restrict this to where it
+>>> is needed. In either case, this seems like a good solution, so:
+>>>
+>>> Reviewed-by: Thierry Reding <treding@nvidia.com>
+>>>
+>> Ok. I'll move it to DWC driver along with name change for the quirk API.
+> 
+> Is there any possibility this hardware would be used in an ACPI
+> system?  If so, the quirk should probably stay in drivers/pci/quirks.c
+> because the DWC driver would not be present.
+Yes. There is a plan to boot kernel through UEFI (using ACPI) on this system.
+So, I'll move it to drivers/pci/quirks.c file.
+
+> 
+> Either way, please also add some PCIe spec references about this in
+> the changelog and a comment in the code about working around this
+> issue.  I think the MSI/MSI-X sections that prohibit a device from
+> using both INTx and MSI/MSI-X are probably the most pertinent.
+Ok. I'll take care of it in the next patch series.
+
+> 
+> The reason I want a comment about this is to discourage future
+> hardware from following this example because every device that *does*
+> follow this example requires a kernel update that would be otherwise
+> unnecessary.
+Ok. I'll take it up with our hardware engineers to have only MSI/MSI-X interrupts
+getting generated for all root port received events.
+
+> 
+> Bjorn
+> 
+
