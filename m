@@ -2,121 +2,79 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31103C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 12:40:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C34CC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 12:46:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E66B21773
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 12:40:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 123D0217F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 12:46:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558529217;
+	bh=4U9I/NIQVI//8jEbd8ZkohshHTF1sn59PS/Bq9njMLo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=X5TMyjt+SH5E1LEq/HZr2YfgK1hYES3vdoRR0bjVuMjgopKoq1ow8OUfoDYpDx36d
+	 wnCeWDe/Bvi6CqXdmnaOKMpKwgh2bp5L5ro1ZZYoE9ls3l2c0zmWOnohvMspnQFDlh
+	 UfgtwYpOR4r3XlyHJVPQIS5mxDKIpUZifDYN8K60=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729364AbfEVMkf (ORCPT
+        id S1729203AbfEVMq4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 08:40:35 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:58277 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728438AbfEVMkf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 08:40:35 -0400
-Received: from fsav301.sakura.ne.jp (fsav301.sakura.ne.jp [153.120.85.132])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x4MCct1g079574;
-        Wed, 22 May 2019 21:38:55 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav301.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav301.sakura.ne.jp);
- Wed, 22 May 2019 21:38:55 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav301.sakura.ne.jp)
-Received: from [192.168.1.8] (softbank126012062002.bbtec.net [126.12.62.2])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x4MCclHk079384
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
-        Wed, 22 May 2019 21:38:54 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: [PATCH] kernel/hung_task.c: Monitor killed tasks.
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Liu Chuansheng <chuansheng.liu@intel.com>,
-        Valdis Kletnieks <valdis.kletnieks@vt.edu>,
-        linux-kernel@vger.kernel.org, Dmitry Vyukov <dvyukov@google.com>
-References: <1557745331-10367-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
- <20190515105540.vyzh6n62rqi5imqv@pathway.suse.cz>
- <ee7501c6-d996-1684-1652-f0f838ba69c3@i-love.sakura.ne.jp>
- <20190516115758.6v7oitg3vbkfhh5j@pathway.suse.cz>
- <a3d9de97-46e8-aa43-1743-ebf66b434830@i-love.sakura.ne.jp>
-Message-ID: <a6b6a5ef-c65c-6999-2bc1-7aaf9dd19fe8@i-love.sakura.ne.jp>
-Date:   Wed, 22 May 2019 21:38:45 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 22 May 2019 08:46:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39736 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728468AbfEVMqz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 08:46:55 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD1E821773;
+        Wed, 22 May 2019 12:46:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558529215;
+        bh=4U9I/NIQVI//8jEbd8ZkohshHTF1sn59PS/Bq9njMLo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=AudOvINVOGb4x2bKnHS0cL/0I2MQxsxZE0I1RGx+QCjXy8AgPOMX/H5z7/buVmllm
+         YkOmvkLJwOYL39HC4UDzkQBw6bB/PlYXxH1eyMZePkHjE1Iz1vXav5ennBIQogRzQp
+         nQqso7OYwuKP2oQP4DsBFyS/tZHic/LM81X+f4o8=
+Date:   Wed, 22 May 2019 14:46:52 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Geordan Neukum <gneukum1@gmail.com>
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        Matt Sickler <Matt.Sickler@daktronics.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Subject: Re: [PATCH 3/6] staging: kpc2000: kpc_i2c: newline fixups to meet
+ linux style guide
+Message-ID: <20190522124652.GB22148@kroah.com>
+References: <cover.1558526487.git.gneukum1@gmail.com>
+ <1c1b8428a502e79f19af7bc2a98787ecc6a1ed5a.1558526487.git.gneukum1@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <a3d9de97-46e8-aa43-1743-ebf66b434830@i-love.sakura.ne.jp>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1c1b8428a502e79f19af7bc2a98787ecc6a1ed5a.1558526487.git.gneukum1@gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, Stephen.
+On Wed, May 22, 2019 at 12:13:59PM +0000, Geordan Neukum wrote:
+> The linux coding style document states:
+> 
+>   1) That braces should not be used where a single single statement
+>      will do. Therefore all instances of single block statements
+>      wrapped in braces that do not meet the qualifications of any
+>      of the exceptions to the rule should be fixed up.
+> 
+>   2) That the declaration of variables local to a given function
+>      should be immediately followed by a blank newline. Therefore,
+>      the single instance of this in kpc2000_i2c.c should be fixed
+>      up.
 
-I want to send debug printk() patches to linux-next.git. Petr Mladek
-is suggesting me to have a git tree for debug printk() patches.
-But it seems that there is "git quiltimport" command, and I prefer
-"subversion + quilt", and I don't have trees for sending "git pull"
-requests. Therefore, just ignoring "git quiltimport" failure is fine.
-What do you think?
+This really should be 2 different patches, but given that this file is
+so messy, I'll take it for now :)
 
-On 2019/05/16 21:38, Tetsuo Handa wrote:
-> On 2019/05/16 20:57, Petr Mladek wrote:
->> CCed Stephen to discuss linux-next related question at the bottom
->> of the mail.
->>
->> On Thu 2019-05-16 17:19:12, Tetsuo Handa wrote:
->>> On 2019/05/15 19:55, Petr Mladek wrote:
->>> But in the context of syzbot's testing where there are only 2 CPUs
->>> in the target VM (which means that only small number of threads and
->>> not so much memory) and threads get SIGKILL after 5 seconds from fork(),
->>> being unable to reach do_exit() within 10 seconds is likely a sign of
->>> something went wrong. For example, 6 out of 7 trials of a reproducer for
->>> https://syzkaller.appspot.com/bug?id=835a0b9e75b14b55112661cbc61ca8b8f0edf767
->>> resulted in "no output from test machine" rather than "task hung".
->>> This patch is revealing that such killed threads are failing to reach
->>> do_exit() because they are trapped at unkillable retry loop due to a
->>> race bug.
->>>
->>> Therefore, I would like to try this patch in linux-next.git for feasibility
->>> testing whether this patch helps finding more bugs and reproducers for such
->>> bugs, by bringing "unable to terminate threads" reports out of "no output from
->>> test machine" reports. We can add sysctl settings before sending to linux.git.
->>
->> In this case, the watchdog should get enabled on with
->> CONFIG_DEBUG_AID_FOR_SYZBOT
-> 
-> Since "[PATCH] printk: Monitor change of console loglevel." is one time (only
-> needed until we find the reason of silence), testing on only linux-next.git
-> is sufficient and it gets enabled on with CONFIG_DEBUG_AID_FOR_SYZBOT.
-> 
->>
->> Also we should ask/inform Stephen about this. I am not sure
->> if he is willing to resolve eventual conflicts for these
->> syzboot-specific patches that are not upstream candidates.
->>
->> A solution might be to create sysbot-specific for-next branch
->> that Stephen might simply ignore when there are conflicts.
->> And you would be responsible for updating it.
-> 
-> syzbot tests not only linux-next.git but also various trees, and tests
-> attempted depends on target git tree. Therefore, apart from whether we
-> can introduce a kernel config option for fuzzing testing,
-> "[PATCH] kernel/hung_task.c: Monitor killed tasks." is expected to be
-> in linux.git. This patch will eventually become upstream candidate.
-> 
+thanks,
 
+greg k-h
