@@ -2,270 +2,132 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C753C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 21:39:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EC2CC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 21:39:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10D7D2070D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 21:39:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9258D2070D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 21:39:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GDelsoqQ"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="bzKfJbDS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730455AbfEVVjD (ORCPT
+        id S1730486AbfEVVjv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 17:39:03 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:45479 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729691AbfEVVjC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 17:39:02 -0400
-Received: by mail-oi1-f196.google.com with SMTP id w144so2785700oie.12
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 14:39:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=X8iUa3mR7n1QUqI0vPloid9MGvfKcIGgUfFxnULZ5+U=;
-        b=GDelsoqQolX8vZ500TJnYRTrvx7UvzJ51bjddO3LDssDGEV/KLjn45OPSK1LoHb+pt
-         vMc4fO10d8rFO9cUXhUOasQS1z00mtA/aaww0itHgEjxtv6/EtX/A5C4yrS8r08gyITU
-         TA04J0efipr8o8Xl0BPEGjp/KEY0bIEgjzBYUxRrb7zqAvNHGycq9491MnB/928cEorF
-         vcRKUxoGSumKvZMwAn4LVEhN0I/8thaBrCFiTKXFw9vQen81eDnsqy70p43bZYFnR6bP
-         AEdEBccKUY3heoXvT17IcKdkpcaihfJ0EloODJeeR+bHCXp13wWqqLlXuKmTMbFs7kR8
-         kJzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=X8iUa3mR7n1QUqI0vPloid9MGvfKcIGgUfFxnULZ5+U=;
-        b=MP3nFbh5tM6WjSXqsfAEFsMZqebewgBGsVQVTc8RnVBDxVkMNiiNBblZEAaFHxAatk
-         eiaCWQOcIoTHN+fhc5wnkPNNRPV4V7z5N76Zo65E4G48/bdUAL8Tmgr28HQAUTfOex3T
-         lmVOOoKKdaeVQPP1vlcD10bk8nB+4mwDipW9eiMPeMcqiK+jL7ZGKXZ1AORpJ/5EHxJT
-         fOID5tSKRdFw96vw409ZtWqctpiLZewJVt9k9+byo2d8BCItkBTtnamDIv0hk3RYLkw0
-         1/8LiPR6ib4eO9nPteRnjFTyz8+cOYxaZWy5ZPTEqxIJhUbrhJxb/AaLG9QwvddMzQ2L
-         HsJw==
-X-Gm-Message-State: APjAAAVXN6edwWwbZ6y1ZX+W7y4wbw8llFRvDtwP3j7UezG6lCS2JwJp
-        aVnwigJyccbGI+Bec05DUtqq47CljI5/owj/TCEUJw==
-X-Google-Smtp-Source: APXvYqwhyT9IyVUG9lkFu5kWtgvlKVPb/Q03tyBe4vbXVaiSv8N9Jry7yPQvyfivwOs/aXwiHN39BhvkHSSieLsYpPE=
-X-Received: by 2002:aca:55d6:: with SMTP id j205mr565451oib.137.1558561141083;
- Wed, 22 May 2019 14:39:01 -0700 (PDT)
+        Wed, 22 May 2019 17:39:51 -0400
+Received: from ozlabs.org ([203.11.71.1]:59501 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729857AbfEVVju (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 17:39:50 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 458QyN6RQyz9s6w;
+        Thu, 23 May 2019 07:39:40 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1558561187;
+        bh=wRKrhXUTkO76zZP8yvjvak+7H46xVyw1PuWBiwkqSpM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=bzKfJbDS5X7VE7JUEe/IJvAiOzTtv/s5JAgaziL6JxyX4Glv7VzA0ioT9MbKTefgy
+         m6yoW8vRgSBt0ISzYudyvvkdO4r6ad3SQsrEBEFZjMFF+oGiazxImzqORC/5mbMxUs
+         bHGrQICqYSOvz/4+KsAB3KYJ7kBle3KcDltbv2lBWp6a9uR4/jNUoFi3wkbqYgGtrX
+         UOaGc9sF8et0tth04D2v06xJ1aWXDe155137YwW2mRtze7GN8TCVmYXTUm5zkPaPYy
+         VLHC9spUOZr5MtS4JYXJPfQ0qJtydtnMMlqpMP1neg7vPAa/p7lNk/aYrtwuokgY0D
+         5ZUd5R2KWmfBQ==
+Date:   Thu, 23 May 2019 07:39:25 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Liu Chuansheng <chuansheng.liu@intel.com>,
+        Valdis Kletnieks <valdis.kletnieks@vt.edu>,
+        linux-kernel@vger.kernel.org, Dmitry Vyukov <dvyukov@google.com>
+Subject: Re: [PATCH] kernel/hung_task.c: Monitor killed tasks.
+Message-ID: <20190523073925.169563ed@canb.auug.org.au>
+In-Reply-To: <abbfb5df-40da-63c8-0333-805083397533@i-love.sakura.ne.jp>
+References: <1557745331-10367-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
+        <20190515105540.vyzh6n62rqi5imqv@pathway.suse.cz>
+        <ee7501c6-d996-1684-1652-f0f838ba69c3@i-love.sakura.ne.jp>
+        <20190516115758.6v7oitg3vbkfhh5j@pathway.suse.cz>
+        <a3d9de97-46e8-aa43-1743-ebf66b434830@i-love.sakura.ne.jp>
+        <a6b6a5ef-c65c-6999-2bc1-7aaf9dd19fe8@i-love.sakura.ne.jp>
+        <20190522234134.44327256@canb.auug.org.au>
+        <03b5834d-5f8f-9c7e-20df-cfdf5395d245@i-love.sakura.ne.jp>
+        <abbfb5df-40da-63c8-0333-805083397533@i-love.sakura.ne.jp>
 MIME-Version: 1.0
-References: <20190509133551.GD29703@mit.edu> <ECADFF3FD767C149AD96A924E7EA6EAF9770D591@USCULXMSG01.am.sony.com>
- <875c546d-9713-bb59-47e4-77a1d2c69a6d@gmail.com> <20190509214233.GA20877@mit.edu>
- <80c72e64-2665-bd51-f78c-97f50f9a53ba@gmail.com> <20190511173344.GA8507@mit.edu>
- <20190513144451.GQ17751@phenom.ffwll.local> <20190514060433.GA181462@google.com>
- <CAKMK7uHqtSF_sazJTbFL+xmQJRk4iwukCKZHoDHhsKkLXk=ECQ@mail.gmail.com>
- <20190514183618.GC109557@google.com> <20190515074141.GY17751@phenom.ffwll.local>
-In-Reply-To: <20190515074141.GY17751@phenom.ffwll.local>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Wed, 22 May 2019 14:38:48 -0700
-Message-ID: <CAFd5g476Hc+6jL5sV=VJamXCbqGebwHqqN9N9RppQYMCoo052Q@mail.gmail.com>
-Subject: Re: [PATCH v2 00/17] kunit: introduce KUnit, the Linux kernel unit
- testing framework
-To:     Brendan Higgins <brendanhiggins@google.com>,
-        "Theodore Ts'o" <tytso@mit.edu>,
-        Frank Rowand <frowand.list@gmail.com>,
-        "Bird, Timothy" <Tim.Bird@sony.com>,
-        Knut Omang <knut.omang@oracle.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@google.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        "Luis R. Rodriguez" <mcgrof@kernel.org>,
-        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
-        Shuah Khan <shuah@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        kunit-dev@googlegroups.com,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-um@lists.infradead.org,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jeff Dike <jdike@addtoit.com>, Joel Stanley <joel@jms.id.au>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Petr Mladek <pmladek@suse.com>,
-        Richard Weinberger <richard@nod.at>,
-        David Rientjes <rientjes@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Daniel Vetter <daniel@ffwll.ch>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/N.../tmEjaT./BOsoQmrWom"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+Bjorn Helgaas
+--Sig_/N.../tmEjaT./BOsoQmrWom
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 15, 2019 at 12:41 AM Daniel Vetter <daniel@ffwll.ch> wrote:
+Hi Tetsuo,
+
+On Thu, 23 May 2019 06:09:07 +0900 Tetsuo Handa <penguin-kernel@i-love.saku=
+ra.ne.jp> wrote:
 >
-> On Tue, May 14, 2019 at 11:36:18AM -0700, Brendan Higgins wrote:
-> > On Tue, May 14, 2019 at 02:05:05PM +0200, Daniel Vetter wrote:
-> > > On Tue, May 14, 2019 at 8:04 AM Brendan Higgins
-> > > <brendanhiggins@google.com> wrote:
-> > > >
-> > > > On Mon, May 13, 2019 at 04:44:51PM +0200, Daniel Vetter wrote:
-> > > > > On Sat, May 11, 2019 at 01:33:44PM -0400, Theodore Ts'o wrote:
-> > > > > > On Fri, May 10, 2019 at 02:12:40PM -0700, Frank Rowand wrote:
-> > > > > > > However, the reply is incorrect.  Kselftest in-kernel tests (which
-> > > > > > > is the context here) can be configured as built in instead of as
-> > > > > > > a module, and built in a UML kernel.  The UML kernel can boot,
-> > > > > > > running the in-kernel tests before UML attempts to invoke the
-> > > > > > > init process.
-> > > > > >
-> > > > > > Um, Citation needed?
-> > > > > >
-> > > > > > I don't see any evidence for this in the kselftest documentation, nor
-> > > > > > do I see any evidence of this in the kselftest Makefiles.
-> > > > > >
-> > > > > > There exists test modules in the kernel that run before the init
-> > > > > > scripts run --- but that's not strictly speaking part of kselftests,
-> > > > > > and do not have any kind of infrastructure.  As noted, the
-> > > > > > kselftests_harness header file fundamentally assumes that you are
-> > > > > > running test code in userspace.
-> > > > >
-> > > > > Yeah I really like the "no userspace required at all" design of kunit,
-> > > > > while still collecting results in a well-defined way (unless the current
-> > > > > self-test that just run when you load the module, with maybe some
-> > > > > kselftest ad-hoc wrapper around to collect the results).
-> > > > >
-> > > > > What I want to do long-term is to run these kernel unit tests as part of
-> > > > > the build-testing, most likely in gitlab (sooner or later, for drm.git
-> > > >
-> > > > Totally! This is part of the reason I have been insisting on a minimum
-> > > > of UML compatibility for all unit tests. If you can suffiently constrain
-> > > > the environment that is required for tests to run in, it makes it much
-> > > > easier not only for a human to run your tests, but it also makes it a
-> > > > lot easier for an automated service to be able to run your tests.
-> > > >
-> > > > I actually have a prototype presubmit already working on my
-> > > > "stable/non-upstream" branch. You can checkout what presubmit results
-> > > > look like here[1][2].
-> > >
-> > > ug gerrit :-)
-> >
-> > Yeah, yeah, I know, but it is a lot easier for me to get a project set
-> > up here using Gerrit, when we already use that for a lot of other
-> > projects.
-> >
-> > Also, Gerrit has gotten a lot better over the last two years or so. Two
-> > years ago, I wouldn't touch it with a ten foot pole. It's not so bad
-> > anymore, at least if you are used to using a web UI to review code.
->
-> I was somewhat joking, I'm just not used to gerrit ... And seems to indeed
-> be a lot more polished than last time I looked at it seriously.
+> > What I do for making patches is:
+> >=20
+> >   git fetch --tags
+> >   git reset --hard next-$date
+> >   edit files
+> >   git commit -a -s
+> >   git format-patch -1
+> >   git send-email --to=3D$recipient 0001-*.patch
+> >=20
+> > I'm sure I will confuse git history/repository everyday if
+> > I try to send changes using git. For my skill level, managing
+> > 0001-*.patch in a subversion repository is the simplest and safest.
+> >  =20
+>=20
+> I put an example patch into my subversion repository:
+>=20
+>   svn checkout https://svn.osdn.net/svnroot/tomoyo/branches/syzbot-patche=
+s/
+>=20
+> To fetch up-to-date debug printk() patches:
+>=20
+>   cd syzbot-patches
+>   svn update
+>=20
+> Does this work for you?
 
-I mean, it is still not perfect, but I think it has finally gotten to
-the point where I prefer it over reviewing by email for high context
-patches where you don't expect a lot of deep discussion.
+Neither will fit into my normal workflow.
 
-Still not great for patches where you want to have a lot of discussion.
+So, tell me, what are you trying to do?  What does you work depend on?
+Just Linus' tree, or something already in linux-next?  Why would you
+want to keep moving your patch(es) on top of linux-next?
 
-> > > > > only ofc). So that people get their pull requests (and patch series, we
-> > > > > have some ideas to tie this into patchwork) automatically tested for this
-> > > >
-> > > > Might that be Snowpatch[3]? I talked to Russell, the creator of Snowpatch,
-> > > > and he seemed pretty open to collaboration.
-> > > >
-> > > > Before I heard about Snowpatch, I had an intern write a translation
-> > > > layer that made Prow (the presubmit service that I used in the prototype
-> > > > above) work with LKML[4].
-> > >
-> > > There's about 3-4 forks/clones of patchwork. snowpatch is one, we have
-> > > a different one on freedesktop.org. It's a bit a mess :-/
+--=20
+Cheers,
+Stephen Rothwell
 
-I think Snowpatch is an ozlabs project; at least the maintainer works at IBM.
+--Sig_/N.../tmEjaT./BOsoQmrWom
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-Patchwork originally was a ozlabs project, right?
+-----BEGIN PGP SIGNATURE-----
 
-Has any discussion taken place trying to consolidate some of the forks?
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzlwY0ACgkQAVBC80lX
+0GyJmggAolSyWYOkdjcXs5HtLn172YJJqPmawn81i51UmCz/OGcKgSQL13M84AR1
+6bLXIO/EJ+puXtghzhwwd1ujwsvSsrrZS4sI83HdWkr0anJkbN/byCpY49XpRvSL
+IY1D8FdnJqk2XxZqEF1fvTNwYtn8x4jbYzAz8bwVRTH7CbjVnBZlM53UPeXNCY6G
+g6hQHQq6ebc/Rm4+b8dZG7GPcCWdgBVgsXtJqw9dLc7J+5BXncZFwyJaEZ5YDsuC
+I6DQy7eT6K4ra0PpY99J8SvXOAqSox0hnXgMKtqsodbeNF0Nu4qWgmef5jifoUIo
+ioiASEPk+8auSU6IPryhuUZDGbKX4Q==
+=8eNo
+-----END PGP SIGNATURE-----
 
-Presubmit clearly seems like a feature that a number of people want.
-
-> > Oh, I didn't realize that. I found your patchwork instance here[5], but
-> > do you have a place where I can see the changes you have added to
-> > support presubmit?
->
-> Ok here's a few links. Aside from the usual patch view we've also added a
-> series view:
->
-> https://patchwork.freedesktop.org/project/intel-gfx/series/?ordering=-last_updated
->
-> This ties the patches + cover letter together, and it even (tries to at
-> least) track revisions. Here's an example which is currently at revision
-> 9:
->
-> https://patchwork.freedesktop.org/series/57232/
-
-Oooh, nice! That looks awesome! Looks like you have a number of presubmits too.
-
-> Below the patch list for each revision we also have the test result list.
-> If you click on the grey bar it'll expand with the summary from CI, the
-> "See full logs" is link to the full results from our CI. This is driven
-> with some REST api from our jenkins.
->
-> Patchwork also sends out mails for these results.
-
-Nice! There are obviously a lot of other bots on various kernel
-mailing lists. Do you think people would object to sending presubmit
-results to the mailing lists by default?
-
-> Source is on gitlab: https://gitlab.freedesktop.org/patchwork-fdo
-
-Err, looks like you forked from the ozlab's repo a good while ago.
-
-Still, this all looks great!
-
-> > > > I am not married to either approach, but I think between the two of
-> > > > them, most of the initial legwork has been done to make presubmit on
-> > > > LKML a reality.
-> > >
-> > > We do have presubmit CI working already with our freedesktop.org
-> > > patchwork. The missing glue is just tying that into gitlab CI somehow
-> > > (since we want to unify build testing more and make it easier for
-> > > contributors to adjust things).
-> >
-> > I checked out a couple of your projects on your patchwork instance: AMD
-> > X.Org drivers, DRI devel, and Wayland. I saw the tab you added for
-> > tests, but none of them actually had any test results. Can you point me
-> > at one that does?
->
-> Atm we use the CI stuff only on intel-gfx, with the our gpu CI farm, see
-> links above.
->
-> Cheers, Daniel
->
-> >
-> > Cheers!
-> >
-> > [5] https://patchwork.freedesktop.org/
-> >
-> > > > > super basic stuff.
-> > > >
-> > > > I am really excited to hear back on what you think!
-> > > >
-> > > > Cheers!
-> > > >
-> > > > [1] https://kunit-review.googlesource.com/c/linux/+/1509/10#message-7bfa40efb132e15c8388755c273837559911425c
-> > > > [2] https://kunit-review.googlesource.com/c/linux/+/1509/10#message-a6784496eafff442ac98fb068bf1a0f36ee73509
-> > > > [3] https://developer.ibm.com/open/projects/snowpatch/
-> > > > [4] https://kunit.googlesource.com/prow-lkml/
-> > > > _______________________________________________
-> > > > dri-devel mailing list
-> > > > dri-devel@lists.freedesktop.org
-> > > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
-
-Cheers!
+--Sig_/N.../tmEjaT./BOsoQmrWom--
