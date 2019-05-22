@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2F11C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:59:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0830BC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:59:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A024D2089E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:59:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC42720862
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:59:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558555154;
-	bh=ah1LNuIOPWVLPYR0jAnfJIm+cy9FWUH0OVgPtJI0Wco=;
+	s=default; t=1558555162;
+	bh=0UCL52sMqSGxS7cfWNuiFXECeJ8AXVSDRIFJhr4+Kj8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=db2+ePNYpLWGnGO7xq/gsFfZKiIWbkIehpGCCWzyI9Goh9lzS50eWuxjipFFUazos
-	 0eCYOLPiHMwaQId/SqPdMRcT2mEcvNdtbvzgEqq2Md546DzD9St61NUaE3cyzQ+HwM
-	 QUZ6SeZMzhPJJPiZZdNTMgJvpMVd1WJ/YyVN8+c0=
+	b=y//vbw6DQufxxuI5DaDUfBeomGshO0JMIRnoC3G1v2UwtsLz6YlFVurVtGpAQ1Ax8
+	 1hMh8bI6P5AupL4SifqakAP/zK4doW1gtDwf1ZCPiISnbTyUvvSHfQqoNU3NkAni9u
+	 RI8ikneeD7iBEuzLUZZyGA3Y7Bd+NPzvNm2/ZONw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731838AbfEVT7N (ORCPT
+        id S1732286AbfEVT7V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:59:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44712 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:59:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730979AbfEVTXq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:23:46 -0400
+        id S1730963AbfEVTXo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:23:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE12F217D4;
-        Wed, 22 May 2019 19:23:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E83821473;
+        Wed, 22 May 2019 19:23:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553025;
-        bh=ah1LNuIOPWVLPYR0jAnfJIm+cy9FWUH0OVgPtJI0Wco=;
+        s=default; t=1558553023;
+        bh=0UCL52sMqSGxS7cfWNuiFXECeJ8AXVSDRIFJhr4+Kj8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vLdP7N9w1AaF7NJXn6+4docczHEUhzA1xhXIhkxKE4TH2B/4zcQEFJZChb9ePEOvn
-         qZo8h2AkUT0kyoAJVhUbVmad17tw99/Nty/I227F2hcksJAzg17Aqx44yHDO2X+RO8
-         17IsWaULhPyxfmeRG7ijXY9FfSo8UFQG5OwnxpQU=
+        b=jd9TmS56NbfzR57Jpkp+jTssCHeMAD8Gr+3Ave524h4LlOwAddmcwe/eapVAA7i1t
+         ivoDGVIHAG4wox+x8vdwiwmQS9aUsjpopNTTyMZSsWX2HyDkpS+QYHq6cGPUTtAz/m
+         6QngxelyOAn2DqyzatXqERsVmkyIAwJE9vJuPc1w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        "Michael J . Ruhl" <michael.j.ruhl@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 006/317] IB/hfi1: Fix WQ_MEM_RECLAIM warning
-Date:   Wed, 22 May 2019 15:18:27 -0400
-Message-Id: <20190522192338.23715-6-sashal@kernel.org>
+Cc:     Roberto Bergantinos Corpas <rbergant@redhat.com>,
+        Benjamin Coddington <bcodding@redhat.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 004/317] NFS: make nfs_match_client killable
+Date:   Wed, 22 May 2019 15:18:25 -0400
+Message-Id: <20190522192338.23715-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192338.23715-1-sashal@kernel.org>
 References: <20190522192338.23715-1-sashal@kernel.org>
@@ -61,62 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Marciniszyn <mike.marciniszyn@intel.com>
+From: Roberto Bergantinos Corpas <rbergant@redhat.com>
 
-[ Upstream commit 4c4b1996b5db688e2dcb8242b0a3bf7b1e845e42 ]
+[ Upstream commit 950a578c6128c2886e295b9c7ecb0b6b22fcc92b ]
 
-The work_item cancels that occur when a QP is destroyed can elicit the
-following trace:
+    Actually we don't do anything with return value from
+    nfs_wait_client_init_complete in nfs_match_client, as a
+    consequence if we get a fatal signal and client is not
+    fully initialised, we'll loop to "again" label
 
- workqueue: WQ_MEM_RECLAIM ipoib_wq:ipoib_cm_tx_reap [ib_ipoib] is flushing !WQ_MEM_RECLAIM hfi0_0:_hfi1_do_send [hfi1]
- WARNING: CPU: 7 PID: 1403 at kernel/workqueue.c:2486 check_flush_dependency+0xb1/0x100
- Call Trace:
-  __flush_work.isra.29+0x8c/0x1a0
-  ? __switch_to_asm+0x40/0x70
-  __cancel_work_timer+0x103/0x190
-  ? schedule+0x32/0x80
-  iowait_cancel_work+0x15/0x30 [hfi1]
-  rvt_reset_qp+0x1f8/0x3e0 [rdmavt]
-  rvt_destroy_qp+0x65/0x1f0 [rdmavt]
-  ? _cond_resched+0x15/0x30
-  ib_destroy_qp+0xe9/0x230 [ib_core]
-  ipoib_cm_tx_reap+0x21c/0x560 [ib_ipoib]
-  process_one_work+0x171/0x370
-  worker_thread+0x49/0x3f0
-  kthread+0xf8/0x130
-  ? max_active_store+0x80/0x80
-  ? kthread_bind+0x10/0x10
-  ret_from_fork+0x35/0x40
+    This has been proven to cause soft lockups on some scenarios
+    (no-carrier but configured network interfaces)
 
-Since QP destruction frees memory, hfi1_wq should have the WQ_MEM_RECLAIM.
-
-The hfi1_wq does not allocate memory with GFP_KERNEL or otherwise become
-entangled with memory reclaim, so this flag is appropriate.
-
-Fixes: 0a226edd203f ("staging/rdma/hfi1: Use parallel workqueue for SDMA engines")
-Reviewed-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
-Signed-off-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
-Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Roberto Bergantinos Corpas <rbergant@redhat.com>
+Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/hfi1/init.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/nfs/client.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/hw/hfi1/init.c b/drivers/infiniband/hw/hfi1/init.c
-index c532ceb0bb9af..b66c4fe8151a1 100644
---- a/drivers/infiniband/hw/hfi1/init.c
-+++ b/drivers/infiniband/hw/hfi1/init.c
-@@ -797,7 +797,8 @@ static int create_workqueues(struct hfi1_devdata *dd)
- 			ppd->hfi1_wq =
- 				alloc_workqueue(
- 				    "hfi%d_%d",
--				    WQ_SYSFS | WQ_HIGHPRI | WQ_CPU_INTENSIVE,
-+				    WQ_SYSFS | WQ_HIGHPRI | WQ_CPU_INTENSIVE |
-+				    WQ_MEM_RECLAIM,
- 				    HFI1_MAX_ACTIVE_WORKQUEUE_ENTRIES,
- 				    dd->unit, pidx);
- 			if (!ppd->hfi1_wq)
+diff --git a/fs/nfs/client.c b/fs/nfs/client.c
+index 90d71fda65cec..350cfa561e0e8 100644
+--- a/fs/nfs/client.c
++++ b/fs/nfs/client.c
+@@ -284,6 +284,7 @@ static struct nfs_client *nfs_match_client(const struct nfs_client_initdata *dat
+ 	struct nfs_client *clp;
+ 	const struct sockaddr *sap = data->addr;
+ 	struct nfs_net *nn = net_generic(data->net, nfs_net_id);
++	int error;
+ 
+ again:
+ 	list_for_each_entry(clp, &nn->nfs_client_list, cl_share_link) {
+@@ -296,8 +297,10 @@ static struct nfs_client *nfs_match_client(const struct nfs_client_initdata *dat
+ 		if (clp->cl_cons_state > NFS_CS_READY) {
+ 			refcount_inc(&clp->cl_count);
+ 			spin_unlock(&nn->nfs_client_lock);
+-			nfs_wait_client_init_complete(clp);
++			error = nfs_wait_client_init_complete(clp);
+ 			nfs_put_client(clp);
++			if (error < 0)
++				return ERR_PTR(error);
+ 			spin_lock(&nn->nfs_client_lock);
+ 			goto again;
+ 		}
+@@ -407,6 +410,8 @@ struct nfs_client *nfs_get_client(const struct nfs_client_initdata *cl_init)
+ 		clp = nfs_match_client(cl_init);
+ 		if (clp) {
+ 			spin_unlock(&nn->nfs_client_lock);
++			if (IS_ERR(clp))
++				return clp;
+ 			if (new)
+ 				new->rpc_ops->free_client(new);
+ 			return nfs_found_client(cl_init, clp);
 -- 
 2.20.1
 
