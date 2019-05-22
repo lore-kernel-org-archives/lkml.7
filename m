@@ -2,206 +2,220 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE023C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 17:11:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D4EAC282DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 17:12:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A46F32081C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 17:11:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NBtY4bsE"
+	by mail.kernel.org (Postfix) with ESMTP id 64DE920851
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 17:12:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730326AbfEVRLq (ORCPT
+        id S1730344AbfEVRMh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 13:11:46 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:36473 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729851AbfEVRLq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 13:11:46 -0400
-Received: by mail-pl1-f195.google.com with SMTP id d21so1385927plr.3
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 10:11:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=t0UqOUcwsVfUne/Mk2u/aR+T7jIgf7upi5wewMeNKvY=;
-        b=NBtY4bsEqcw2XI65pq2MfduUROhh69qy25aq/qncLftq+hxQejrHWP2rMFp+ETd4se
-         WL8bKfyXlDncitC9Sr8SPRzO3Zz97RqTXz/DBtvu6et6rRKnUCrOAumbIBjANmMoTOVX
-         j1JplsIhT50FWog4pEGwf90cwfqIfdtcr54kbl5qybfnVlUvdb3oZmnJz5pcH6Y89CbE
-         Mzky6fAKrEyOZOANVgp3ab/x/r/g+wx1QouIwEylD9q46dFzTgZLQrB7SQexLxIjgqjN
-         eYHl+1WfLz4BQHiREHByeltkuxVASLUuDHwofets3OZiQvc1vHV1WSGRiJGt/ZgEOVGW
-         rwCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=t0UqOUcwsVfUne/Mk2u/aR+T7jIgf7upi5wewMeNKvY=;
-        b=fRGSezspszlkTGU75wEdVeywNWG8is2jlt5Q0p5DU4UPf+XbN97lcgDC8Ozdhf+sem
-         7WRQEuWr8QTZYfV67M/tB7h7b6QDcL/89jASYFIVTJVshhuBPSmFLosESsC7bznDaTv5
-         jWpPbYDK/kRKgQd/mpcaYMwtVBcEsMxTcO8L+uPEuv8MCBPp1bKXw0iXHGMeLBTB6ctY
-         lg/6LBzupizD7ZVrOM8ux+G2xJVoDzF0DDQYuQ3FTxE3q4NKzgmBD22C5clLkB9KCd4f
-         x4pD7HSzzzCWxiBiQF4QSb4PkLj3qqsaBVvWUwyoYiamLYb8X3SvCmP5O5KRqA7k8sKd
-         PJ7A==
-X-Gm-Message-State: APjAAAUbjv8xCzD7tuAJ0R2mAZfkcy6a5+zqV/MFrfGubzTgvkVIF3SM
-        9FJf5tixc3X0Pwnl1L2jZrg=
-X-Google-Smtp-Source: APXvYqzx7f17QFtXsUs4j+XXtPYR1e4ZWCrim9Se4T7aanOlSna2/sdZOolZW8zteVMmKvO7z30iXg==
-X-Received: by 2002:a17:902:6bc4:: with SMTP id m4mr15462401plt.266.1558545105482;
-        Wed, 22 May 2019 10:11:45 -0700 (PDT)
-Received: from hari-Inspiron-1545 ([183.83.92.73])
-        by smtp.gmail.com with ESMTPSA id h13sm25492704pgk.55.2019.05.22.10.11.40
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 22 May 2019 10:11:44 -0700 (PDT)
-Date:   Wed, 22 May 2019 22:41:37 +0530
-From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Murray McAllister <murray.mcallister@insomniasec.com>,
-        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
-        Nishka Dasgupta <nishka.dasgupta@yahoo.com>,
-        Kimberly Brown <kimbrownkd@gmail.com>,
-        Anirudh Rayabharam <anirudh.rayabharam@gmail.com>,
-        Hardik Singh Rathore <hardiksingh.k@gmail.com>,
-        Mamta Shukla <mamtashukla555@gmail.com>,
-        Quytelda Kahja <quytelda@tamalin.org>,
-        Omer Efrat <omer.efrat@tandemg.com>,
-        Larry Finger <Larry.Finger@lwfinger.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Michael Straube <straube.linux@gmail.com>,
-        Emanuel Bennici <benniciemanuel78@gmail.com>,
-        Jia-Ju Bai <baijiaju1990@gmail.com>,
-        Wen Yang <wen.yang99@zte.com.cn>, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3] staging: rtl8723bs: core: rtw_ap: fix Unneeded variable:
- "ret". Return "0
-Message-ID: <20190522171137.GA5579@hari-Inspiron-1545>
+        Wed, 22 May 2019 13:12:37 -0400
+Received: from mga04.intel.com ([192.55.52.120]:9655 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729486AbfEVRMh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 13:12:37 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 May 2019 10:12:36 -0700
+X-ExtLoop1: 1
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by orsmga007.jf.intel.com with ESMTP; 22 May 2019 10:12:35 -0700
+Date:   Wed, 22 May 2019 10:15:33 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Cc:     "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Eric Auger <eric.auger@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Andriy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v3 09/16] iommu: Introduce guest PASID bind function
+Message-ID: <20190522101533.335f155b@jacob-builder>
+In-Reply-To: <37d1eee7-92c1-7e07-b73d-7af82fdb1652@arm.com>
+References: <1556922737-76313-1-git-send-email-jacob.jun.pan@linux.intel.com>
+        <1556922737-76313-10-git-send-email-jacob.jun.pan@linux.intel.com>
+        <d652546a-c6ca-1cc6-1924-b016bd81a792@arm.com>
+        <20190516091429.6d06f7e1@jacob-builder>
+        <20190520122241.0db13f14@jacob-builder>
+        <7bf71437-d75b-c4f7-d705-fcd71fc75060@arm.com>
+        <20190521155029.0ab0a462@jacob-builder>
+        <37d1eee7-92c1-7e07-b73d-7af82fdb1652@arm.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Function "rtw_sta_flush" always returns 0 value.
-So change return type of rtw_sta_flush from int to void.
+On Wed, 22 May 2019 16:05:53 +0100
+Jean-Philippe Brucker <jean-philippe.brucker@arm.com> wrote:
 
-Same thing applies for rtw_hostapd_sta_flush
+> On 21/05/2019 23:50, Jacob Pan wrote:
+> >>> /**
+> >>>  * struct gpasid_bind_data - Information about device and guest
+> >>> PASID binding
+> >>>  * @version:	Version of this data structure
+> >>>  * @format:	PASID table entry format
+> >>>  * @flags:	Additional information on guest bind request
+> >>>  * @gpgd:	Guest page directory base of the guest mm to bind
+> >>>  * @hpasid:	Process address space ID used for the guest mm
+> >>> in host IOMMU
+> >>>  * @gpasid:	Process address space ID used for the guest mm
+> >>> in guest IOMMU    
+> >>
+> >> Trying to understand the full flow:
+> >> * @gpasid is the one allocated by the guest using a virtual
+> >> command. The guest writes @gpgd into the virtual PASID table at
+> >> index @gpasid, then sends an invalidate command to QEMU.  
+> > yes  
+> >> * QEMU issues a gpasid_bind ioctl (on the mdev or its container?).
+> >> VFIO forwards. The IOMMU driver installs @gpgd into the PASID table
+> >> using @hpasid, which is associated with the auxiliary domain.
+> >>
+> >> But why do we need the @hpasid field here? Does userspace know
+> >> about it at all, and does VFIO need to pass it to the IOMMU driver?
+> >>  
+> > We need to support two guest-host PASID mappings through this API.
+> > Idea comes from Kevin & Yi.
+> > 1. identity mapping between host and guest PASID
+> > 2. guest owns its own pasid space
+> > 
+> > For option 1, which will plan to support first in this series.
+> > There is no need for gpasid field since gpasid=hpasid. Guest
+> > allocates PASID using virtual command interface which gets a host
+> > PASID. Then PASID cache invalidation in the guest will result in
+> > bind_gpasid(), @gpasid is not valid in the bind data (indicated by
+> > the IOMMU_SVA_GPASID_VAL flag).
+> > 
+> > For option 2, guest still uses virtual command to allocate guest
+> > pasid, but this time QEMU does the allocation for gpasid, at the
+> > same time QEMU will allocate a host pasid then maintain a G->H
+> > PASID lookup. When guest invalidate its PASID cache with GPASID,
+> > QEMU will find the match host PASID then pass both gpasid and
+> > hpasid down to the host IOMMU driver.
+> > Host IOMMU driver will store the gpgd at the hpasid entry but keep
+> > track of the gpasid->hpasid mapping. Host will never program gpasid
+> > in the IOMMU HW. Host IOMMU driver provides G->H PASID translation
+> > for PF device drivers that emulates mdev config space, i.e. virtual
+> > device composition module
+> > (https://events.linuxfoundation.org/wp-content/uploads/2017/12/Hardware-Assisted-Mediated-Pass-Through-with-VFIO-Kevin-Tian-Intel.pdf).
+> > 
+> > These two options is a per VM choice. Hopefully the two diagrams
+> > below can help to explain. I will put them in the next patch
+> > headers.  
+> 
+> Thanks for the explanation, makes sense to me now. So the host kernel
+> needs to know G->H because the guest may write GPASID into the config
+> space emulated by the host device driver, and device driver then
+> retrieves the HPASID via an iommu_ops callback? But the device driver
+> keeps track of aux domains so isn't HPASID retrievable with
+> aux_get_pasid() already?
+> 
+aux_get_pasid() will get domain's default pasid, which is used for
+non-svm traffic on mdev. Here the gpasid bind is for svm only.
+> > 
+> > Option 1. Identity G-H PASID mapping diagram.
+> > 
+> >     .-------------.  .---------------------------.
+> >     |   vIOMMU    |  | Guest process mm, FL only |
+> >     |             |  '---------------------------'
+> >     .----------------/
+> >     | PASID Entry |--- PASID cache flush -
+> >     '-------------'\                      |
+> >     |             | \                     |
+> >     |             |  \                    |
+> >     '-------------'   \________________   |
+> >                         GPASID = HPASID   |
+> > Guest                  ^      ^           |
+> > ------| Shadow |-------| VCMD |-----------|------------
+> >       v        v       |      |           |
+> > QEMU                   v      v           |
+> > ------------------------------------------|------------
+> > Host             HPASID = ioasid_alloc()  |
+> >                     |                     v
+> >                     |       sva_bind_gpasid(HPASID)
+> >                     |
+> >     .-------------. |  .----------------------.
+> >     |   pIOMMU    | |  | Bind FL for GVA-GPA  |
+> >     |             | | /'----------------------'
+> >     .----------------'  |
+> >     | PASID Entry |     V (Nested xlate)
+> >     '----------------..---------------------.
+> >     |             |   |Set SL to GPA-HPA    |
+> >     |             |   '---------------------'
+> >     '-------------'
+> > 
+> > 
+> > 
+> > Option 2. Non-identity G-H PASID mapping diagram.
+> > 
+> >     .-------------.  .---------------------------.
+> >     |   vIOMMU    |  | Guest process mm, FL only |
+> >     |             |  '---------------------------'
+> >     .----------------/
+> >     | PASID Entry |--- PASID cache flush -
+> >     '-------------'\                      | .-------------.
+> >     |             | \                     | |Guest driver |
+> >     |             |  \                    | |writes GPASID|
+> >     '-------------'   \________________   | '-------------'
+> >                         GPASID            |             |
+> > Guest                  ^      ^           |             |
+> > ------| Shadow |-------| VCMD |-----------|------------ |
+> >       v        v       |      |           |             |
+> > QEMU                   v      v           |             |
+> > 	    GPASID = qemu_gpasid_alloc()  |             |
+> >             keep G->H PASID lookup        |             |
+> >                    ^                      v             |
+> > 		   |                 lookup G->H PASID  |
+> > -------------------|----------------------|------------ |
+> > Host             HPASID = ioasid_alloc()  |             |
+> >                     |                     v             |
+> >                     |     sva_bind_gpasid(HPASID,GPASID)|
+> >                     |     keep H-G PASID lookup         |
+> >                     |                          \
+> > -------------------. .-------------. |  .----------------------.
+> > \|    VDCM           | |   pIOMMU    | |  | Bind FL for GVA-GPA  |
+> > | H = lookup(GPASID)| |             | | /'----------------------'
+> > | write H to dev    | .----------------'  |
+> > '------------------' | PASID Entry |     V (Nested xlate)
+> >     '----------------..---------------------.
+> >     |             |   |Set SL to GPA-HPA    |
+> >     |             |   '---------------------'
+> >     '-------------'
+> > There is also implications in G-H pasid lookup for PRQ, that would
+> > be in the later series.
+> >   
+> >>>  * @addr_width:	Guest address width. Paging mode can also
+> >>> be derived.    
+> >>
+> >> What does the last sentence mean? @addr_width should probably be in
+> >> @vtd if it provides implicit information.
+> >>  
+> > Derive 4 or 5 level paging mode from the address width. It can be in
+> > @vtd but i thought this can be generic.  
+> 
+> Yes I think it's generic enough. It may be worth stating that this is
+> the *virtual* address width, and removing or clarifying what the
+> paging mode is (the sentence could be confusing on Arm, as we have
+> different page granules which cannot be derived from the address
+> width)
+>
+OK, will keep addr_width as a generic field, then remove the paging
+mode comment.
 
-Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
-------
- Changes v2 -
-       change return type of rtw_sta_flush
-------
- Changes v3 -
-       fix indentaion issue
----
- drivers/staging/rtl8723bs/core/rtw_ap.c           | 7 ++-----
- drivers/staging/rtl8723bs/include/rtw_ap.h        | 2 +-
- drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c | 4 ++--
- drivers/staging/rtl8723bs/os_dep/ioctl_linux.c    | 7 +++----
- 4 files changed, 8 insertions(+), 12 deletions(-)
+Thanks,
 
-diff --git a/drivers/staging/rtl8723bs/core/rtw_ap.c b/drivers/staging/rtl8723bs/core/rtw_ap.c
-index bc02306..19418ea 100644
---- a/drivers/staging/rtl8723bs/core/rtw_ap.c
-+++ b/drivers/staging/rtl8723bs/core/rtw_ap.c
-@@ -2189,10 +2189,9 @@ u8 ap_free_sta(
- 	return beacon_updated;
- }
- 
--int rtw_sta_flush(struct adapter *padapter)
-+void rtw_sta_flush(struct adapter *padapter)
- {
- 	struct list_head	*phead, *plist;
--	int ret = 0;
- 	struct sta_info *psta = NULL;
- 	struct sta_priv *pstapriv = &padapter->stapriv;
- 	struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
-@@ -2202,7 +2201,7 @@ int rtw_sta_flush(struct adapter *padapter)
- 	DBG_871X(FUNC_NDEV_FMT"\n", FUNC_NDEV_ARG(padapter->pnetdev));
- 
- 	if ((pmlmeinfo->state&0x03) != WIFI_FW_AP_STATE)
--		return ret;
-+		return;
- 
- 	spin_lock_bh(&pstapriv->asoc_list_lock);
- 	phead = &pstapriv->asoc_list;
-@@ -2226,8 +2225,6 @@ int rtw_sta_flush(struct adapter *padapter)
- 	issue_deauth(padapter, bc_addr, WLAN_REASON_DEAUTH_LEAVING);
- 
- 	associated_clients_update(padapter, true);
--
--	return ret;
- }
- 
- /* called > TSR LEVEL for USB or SDIO Interface*/
-diff --git a/drivers/staging/rtl8723bs/include/rtw_ap.h b/drivers/staging/rtl8723bs/include/rtw_ap.h
-index fd56c9db..d6f3a3a 100644
---- a/drivers/staging/rtl8723bs/include/rtw_ap.h
-+++ b/drivers/staging/rtl8723bs/include/rtw_ap.h
-@@ -31,7 +31,7 @@ u8 bss_cap_update_on_sta_leave(struct adapter *padapter, struct sta_info *psta);
- void sta_info_update(struct adapter *padapter, struct sta_info *psta);
- void ap_sta_info_defer_update(struct adapter *padapter, struct sta_info *psta);
- u8 ap_free_sta(struct adapter *padapter, struct sta_info *psta, bool active, u16 reason);
--int rtw_sta_flush(struct adapter *padapter);
-+void rtw_sta_flush(struct adapter *padapter);
- void start_ap_mode(struct adapter *padapter);
- void stop_ap_mode(struct adapter *padapter);
- 
-diff --git a/drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c b/drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c
-index db553f2..ce57e0e 100644
---- a/drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c
-+++ b/drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c
-@@ -2896,9 +2896,9 @@ static int cfg80211_rtw_del_station(struct wiphy *wiphy, struct net_device *ndev
- 
- 		flush_all_cam_entry(padapter);	/* clear CAM */
- 
--		ret = rtw_sta_flush(padapter);
-+		rtw_sta_flush(padapter);
- 
--		return ret;
-+		return 0;
- 	}
- 
- 
-diff --git a/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c b/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
-index e3d3569..a4d05f2 100644
---- a/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
-+++ b/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
-@@ -3754,7 +3754,7 @@ static int rtw_set_beacon(struct net_device *dev, struct ieee_param *param, int
- 
- }
- 
--static int rtw_hostapd_sta_flush(struct net_device *dev)
-+static void rtw_hostapd_sta_flush(struct net_device *dev)
- {
- 	/* _irqL irqL; */
- 	/* struct list_head	*phead, *plist; */
-@@ -3766,8 +3766,7 @@ static int rtw_hostapd_sta_flush(struct net_device *dev)
- 
- 	flush_all_cam_entry(padapter);	/* clear CAM */
- 
--	return rtw_sta_flush(padapter);
--
-+	rtw_sta_flush(padapter);
- }
- 
- static int rtw_add_sta(struct net_device *dev, struct ieee_param *param)
-@@ -4254,7 +4253,7 @@ static int rtw_hostapd_ioctl(struct net_device *dev, struct iw_point *p)
- 	switch (param->cmd) {
- 		case RTL871X_HOSTAPD_FLUSH:
- 
--			ret = rtw_hostapd_sta_flush(dev);
-+			rtw_hostapd_sta_flush(dev);
- 
- 			break;
- 
--- 
-2.7.4
-
+Jacob
