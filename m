@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82B6DC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:28:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0D58C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:28:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 566A72177E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:28:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 744F921473
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:28:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558553298;
-	bh=BZxP4YwrsFYW6JLf3Gh67aXw4JFEXbt4Y7CG85LEW1I=;
+	s=default; t=1558553302;
+	bh=TUZd8tnIqvYLooMkzM0AEvXcdKTVA1wVSgVbInwXR9g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Fsv9zc+SOcv5HeGcAk6rcY/s2DSLw6UHU1ZN/VpbUB0z7GLGgdGhoaqapclIXIaUR
-	 FYpm6FRV6WQXNGKu696YereVxzF6W2+iezGvdgLOvsQMpBxM01tgE1vXZEuVozFwCx
-	 CijHNZfuOZ/F/+yhRoBSL3jzNOn51VvtBUUl6Vk4=
+	b=HrK18Dz7OYuX663va0FG+mr9JxDW3uxYFqa2LSMshPJsB/A9fAgT8N37RhDhBmrJU
+	 TeRE+gIvNZWyITKjZ5xLgskYk9cJulI/25tkeP3tmeyDxcBLuDvtwMFCLZwUEcFcJr
+	 3/M9krodmvq1Tu15O1MdwzeSLpowAr74WTiwborw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730725AbfEVT2R (ORCPT
+        id S1732537AbfEVT2V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:28:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50422 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:28:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50492 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730501AbfEVT15 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:27:57 -0400
+        id S1729686AbfEVT2A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:28:00 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 51CEA20675;
-        Wed, 22 May 2019 19:27:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 645B921473;
+        Wed, 22 May 2019 19:27:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553277;
-        bh=BZxP4YwrsFYW6JLf3Gh67aXw4JFEXbt4Y7CG85LEW1I=;
+        s=default; t=1558553280;
+        bh=TUZd8tnIqvYLooMkzM0AEvXcdKTVA1wVSgVbInwXR9g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I1YrULlTbDBGx21Lr12g4qlOYBIhLOCt44HIlzz2A23ce96RAPfJSiFBpPu+pI6NN
-         IYBf3H00N00B0pejK73+6F8zvBuyJQMk/PVvN6lnsuhE++gv2WwuQFMKUYakHDXxYM
-         w1Z+atAJp2fPRbzyjm6118gClrcAHLvMNpi1Wmgc=
+        b=jGQ582fASdGLuHZRwnIdpyXntNl8JbNd7yS9JIfm7iogsNdv7cnwTHMTYpMaTN2NN
+         xcHS7jWeZ9MREGBGQq/XZs2fX3ghw0RvdHgnYlBU7+i2Djrm62JzoV/6Bc7x45n9Sq
+         y1Y1djt7TPvhQmqWnvCKi5svLg8GZV2dADUOXVAw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sugar Zhang <sugar.zhang@rock-chips.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 051/244] dmaengine: pl330: _stop: clear interrupt status
-Date:   Wed, 22 May 2019 15:23:17 -0400
-Message-Id: <20190522192630.24917-51-sashal@kernel.org>
+Cc:     "Daniel T. Lee" <danieltimlee@gmail.com>,
+        Yonghong Song <yhs@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 054/244] libbpf: fix samples/bpf build failure due to undefined UINT32_MAX
+Date:   Wed, 22 May 2019 15:23:20 -0400
+Message-Id: <20190522192630.24917-54-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192630.24917-1-sashal@kernel.org>
 References: <20190522192630.24917-1-sashal@kernel.org>
@@ -59,92 +61,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sugar Zhang <sugar.zhang@rock-chips.com>
+From: "Daniel T. Lee" <danieltimlee@gmail.com>
 
-[ Upstream commit 2da254cc7908105a60a6bb219d18e8dced03dcb9 ]
+[ Upstream commit 32e621e55496a0009f44fe4914cd4a23cade4984 ]
 
-This patch kill instructs the DMAC to immediately terminate
-execution of a thread. and then clear the interrupt status,
-at last, stop generating interrupts for DMA_SEV. to guarantee
-the next dma start is clean. otherwise, one interrupt maybe leave
-to next start and make some mistake.
+Currently, building bpf samples will cause the following error.
 
-we can reporduce the problem as follows:
+    ./tools/lib/bpf/bpf.h:132:27: error: 'UINT32_MAX' undeclared here (not in a function) ..
+     #define BPF_LOG_BUF_SIZE (UINT32_MAX >> 8) /* verifier maximum in kernels <= 5.1 */
+                               ^
+    ./samples/bpf/bpf_load.h:31:25: note: in expansion of macro 'BPF_LOG_BUF_SIZE'
+     extern char bpf_log_buf[BPF_LOG_BUF_SIZE];
+                             ^~~~~~~~~~~~~~~~
 
-DMASEV: modify the event-interrupt resource, and if the INTEN sets
-function as interrupt, the DMAC will set irq<event_num> HIGH to
-generate interrupt. write INTCLR to clear interrupt.
+Due to commit 4519efa6f8ea ("libbpf: fix BPF_LOG_BUF_SIZE off-by-one error")
+hard-coded size of BPF_LOG_BUF_SIZE has been replaced with UINT32_MAX which is
+defined in <stdint.h> header.
 
-	DMA EXECUTING INSTRUCTS		DMA TERMINATE
-		|				|
-		|				|
-	       ...			      _stop
-		|				|
-		|			spin_lock_irqsave
-	     DMASEV				|
-		|				|
-		|			    mask INTEN
-		|				|
-		|			     DMAKILL
-		|				|
-		|			spin_unlock_irqrestore
+Even with this change, bpf selftests are running fine since these are built
+with clang and it includes header(-idirafter) from clang/6.0.0/include.
+(it has <stdint.h>)
 
-in above case, a interrupt was left, and if we unmask INTEN, the DMAC
-will set irq<event_num> HIGH to generate interrupt.
+    clang -I. -I./include/uapi -I../../../include/uapi -idirafter /usr/local/include -idirafter /usr/include \
+    -idirafter /usr/lib/llvm-6.0/lib/clang/6.0.0/include -idirafter /usr/include/x86_64-linux-gnu \
+    -Wno-compare-distinct-pointer-types -O2 -target bpf -emit-llvm -c progs/test_sysctl_prog.c -o - | \
+    llc -march=bpf -mcpu=generic  -filetype=obj -o /linux/tools/testing/selftests/bpf/test_sysctl_prog.o
 
-to fix this, do as follows:
+But bpf samples are compiled with GCC, and it only searches and includes
+headers declared at the target file. As '#include <stdint.h>' hasn't been
+declared in tools/lib/bpf/bpf.h, it causes build failure of bpf samples.
 
-	DMA EXECUTING INSTRUCTS		DMA TERMINATE
-		|				|
-		|				|
-	       ...			      _stop
-		|				|
-		|			spin_lock_irqsave
-	     DMASEV				|
-		|				|
-		|			     DMAKILL
-		|				|
-		|			   clear INTCLR
-		|			    mask INTEN
-		|				|
-		|			spin_unlock_irqrestore
+    gcc -Wp,-MD,./samples/bpf/.sockex3_user.o.d -Wall -Wmissing-prototypes -Wstrict-prototypes \
+    -O2 -fomit-frame-pointer -std=gnu89 -I./usr/include -I./tools/lib/ -I./tools/testing/selftests/bpf/ \
+    -I./tools/  lib/ -I./tools/include -I./tools/perf -c -o ./samples/bpf/sockex3_user.o ./samples/bpf/sockex3_user.c;
 
-Signed-off-by: Sugar Zhang <sugar.zhang@rock-chips.com>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+This commit add declaration of '#include <stdint.h>' to tools/lib/bpf/bpf.h
+to fix this problem.
+
+Signed-off-by: Daniel T. Lee <danieltimlee@gmail.com>
+Acked-by: Yonghong Song <yhs@fb.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/pl330.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ tools/lib/bpf/bpf.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/dma/pl330.c b/drivers/dma/pl330.c
-index 88750a34e8598..bc8050c025b7b 100644
---- a/drivers/dma/pl330.c
-+++ b/drivers/dma/pl330.c
-@@ -961,6 +961,7 @@ static void _stop(struct pl330_thread *thrd)
- {
- 	void __iomem *regs = thrd->dmac->base;
- 	u8 insn[6] = {0, 0, 0, 0, 0, 0};
-+	u32 inten = readl(regs + INTEN);
+diff --git a/tools/lib/bpf/bpf.h b/tools/lib/bpf/bpf.h
+index 6f38164b26181..c3145ab3bdcac 100644
+--- a/tools/lib/bpf/bpf.h
++++ b/tools/lib/bpf/bpf.h
+@@ -26,6 +26,7 @@
+ #include <linux/bpf.h>
+ #include <stdbool.h>
+ #include <stddef.h>
++#include <stdint.h>
  
- 	if (_state(thrd) == PL330_STATE_FAULT_COMPLETING)
- 		UNTIL(thrd, PL330_STATE_FAULTING | PL330_STATE_KILLING);
-@@ -973,10 +974,13 @@ static void _stop(struct pl330_thread *thrd)
- 
- 	_emit_KILL(0, insn);
- 
--	/* Stop generating interrupts for SEV */
--	writel(readl(regs + INTEN) & ~(1 << thrd->ev), regs + INTEN);
--
- 	_execute_DBGINSN(thrd, insn, is_manager(thrd));
-+
-+	/* clear the event */
-+	if (inten & (1 << thrd->ev))
-+		writel(1 << thrd->ev, regs + INTCLR);
-+	/* Stop generating interrupts for SEV */
-+	writel(inten & ~(1 << thrd->ev), regs + INTEN);
- }
- 
- /* Start doing req 'idx' of thread 'thrd' */
+ struct bpf_create_map_attr {
+ 	const char *name;
 -- 
 2.20.1
 
