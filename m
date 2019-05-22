@@ -2,161 +2,205 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52769C46470
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 15:01:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 729EEC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 15:02:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DAE721473
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 15:01:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B4A2204EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 15:02:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729750AbfEVPBq (ORCPT
+        id S1729756AbfEVPCp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 11:01:46 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54214 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727975AbfEVPBq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 11:01:46 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 260D8B009;
-        Wed, 22 May 2019 15:01:44 +0000 (UTC)
-Subject: Re: [PATCH] proc/meminfo: add MemKernel counter
-To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, Roman Gushchin <guro@fb.com>
-Cc:     Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>
-References: <155853600919.381.8172097084053782598.stgit@buzz>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <529aa7fd-2dc2-6979-4ea0-d40dfc7e3fde@suse.cz>
-Date:   Wed, 22 May 2019 17:01:43 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <155853600919.381.8172097084053782598.stgit@buzz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Wed, 22 May 2019 11:02:45 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:53200 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729159AbfEVPCo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 11:02:44 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4733380D;
+        Wed, 22 May 2019 08:02:44 -0700 (PDT)
+Received: from e111045-lin.cambridge.arm.com (apickardsiphone.cambridge.arm.com [10.1.30.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EF30E3F718;
+        Wed, 22 May 2019 08:02:41 -0700 (PDT)
+From:   Ard Biesheuvel <ard.biesheuvel@arm.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     marc.zyngier@arm.com, james.morse@arm.com, will.deacon@arm.com,
+        guillaume.gardet@arm.com, mark.rutland@arm.com, mingo@kernel.org,
+        jeyu@kernel.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, arnd@arndb.de, x86@kernel.org,
+        Ard Biesheuvel <ard.biesheuvel@arm.com>
+Subject: [PATCH] module/ksymtab: use 64-bit relative reference for target symbol
+Date:   Wed, 22 May 2019 16:02:39 +0100
+Message-Id: <20190522150239.19314-1-ard.biesheuvel@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/22/19 4:40 PM, Konstantin Khlebnikov wrote:
-> Some kinds of kernel allocations are not accounted or not show in meminfo.
-> For example vmalloc allocations are tracked but overall size is not shown
+The following commit
 
-I think Roman's vmalloc patch [1] is on its way?
+  7290d5809571 ("module: use relative references for __ksymtab entries")
 
-> for performance reasons. There is no information about network buffers.
+updated the ksymtab handling of some KASLR capable architectures
+so that ksymtab entries are emitted as pairs of 32-bit relative
+references. This reduces the size of the entries, but more
+importantly, it gets rid of statically assigned absolute
+addresses, which require fixing up at boot time if the kernel
+is self relocating (which takes a 24 byte RELA entry for each
+member of the ksymtab struct).
 
-xfs buffers can also occupy a lot, from my experience
+Since ksymtab entries are always part of the same module as the
+symbol they export (or of the core kernel), it was assumed at the
+time that a 32-bit relative reference is always sufficient to
+capture the offset between a ksymtab entry and its target symbol.
 
-> In most cases detailed statistics is not required. At first place we need
-> information about overall kernel memory usage regardless of its structure.
-> 
-> This patch estimates kernel memory usage by subtracting known sizes of
-> free, anonymous, hugetlb and caches from total memory size: MemKernel =
-> MemTotal - MemFree - Buffers - Cached - SwapCached - AnonPages - Hugetlb.
-> 
-> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Unfortunately, this is not always true: in the case of per-CPU
+variables, a per-CPU variable's base address (which usually differs
+from the actual address of any of its per-CPU copies) could be at
+an arbitrary offset from the ksymtab entry, and so it may be out
+of range for a 32-bit relative reference.
 
-I've tried this once in [2]. The name was Unaccounted and one of the objections
-was that people would get worried. Yours is a bit better, perhaps MemKernMisc
-would be even more descriptive? Michal Hocko worried about maintainability, that
-we forget something, but I don't think that's a big issue.
+To make matters worse, we identified an issue in the arm64 module
+loader, where the overflow check applied to 32-bit place relative
+relocations uses the range that is specified in the AArch64 psABI,
+which is documented as having a 'blind spot' unless you explicitly
+narrow the range to match the signed vs unsigned interpretation of
+the relocation target [0]. This means that, in some cases, code
+importing those per-CPU variables from other modules may obtain a
+bogus reference and corrupt unrelated data.
 
-Vlastimil
+So let's fix this issue by switching to a 64-bit place relative
+reference on 64-bit architectures for the ksymtab entry's target
+symbol. This uses a bit more memory in the entry itself, which is
+unfortunate, but it preserves the original intent, which was to
+make the value invariant under runtime relocation of the core
+kernel.
 
-[1] https://lore.kernel.org/linux-mm/20190514235111.2817276-2-guro@fb.com/T/#u
-[2] https://lore.kernel.org/linux-mm/20161020121149.9935-1-vbabka@suse.cz/T/#u
+[0] https://lore.kernel.org/linux-arm-kernel/20190521125707.6115-1-ard.biesheuvel@arm.com
 
-> ---
->  Documentation/filesystems/proc.txt |    5 +++++
->  fs/proc/meminfo.c                  |   20 +++++++++++++++-----
->  2 files changed, 20 insertions(+), 5 deletions(-)
-> 
-> diff --git a/Documentation/filesystems/proc.txt b/Documentation/filesystems/proc.txt
-> index 66cad5c86171..a0ab7f273ea0 100644
-> --- a/Documentation/filesystems/proc.txt
-> +++ b/Documentation/filesystems/proc.txt
-> @@ -860,6 +860,7 @@ varies by architecture and compile options.  The following is from a
->  
->  MemTotal:     16344972 kB
->  MemFree:      13634064 kB
-> +MemKernel:      862600 kB
->  MemAvailable: 14836172 kB
->  Buffers:          3656 kB
->  Cached:        1195708 kB
-> @@ -908,6 +909,10 @@ MemAvailable: An estimate of how much memory is available for starting new
->                page cache to function well, and that not all reclaimable
->                slab will be reclaimable, due to items being in use. The
->                impact of those factors will vary from system to system.
-> +   MemKernel: The sum of all kinds of kernel memory allocations: Slab,
-> +              Vmalloc, Percpu, KernelStack, PageTables, socket buffers,
-> +              and some other untracked allocations. Does not include
-> +              MemFree, Buffers, Cached, SwapCached, AnonPages, Hugetlb.
->       Buffers: Relatively temporary storage for raw disk blocks
->                shouldn't get tremendously large (20MB or so)
->        Cached: in-memory cache for files read from the disk (the
-> diff --git a/fs/proc/meminfo.c b/fs/proc/meminfo.c
-> index 568d90e17c17..b27d56dd619a 100644
-> --- a/fs/proc/meminfo.c
-> +++ b/fs/proc/meminfo.c
-> @@ -39,17 +39,27 @@ static int meminfo_proc_show(struct seq_file *m, void *v)
->  	long available;
->  	unsigned long pages[NR_LRU_LISTS];
->  	unsigned long sreclaimable, sunreclaim;
-> +	unsigned long anon_pages, file_pages, swap_cached;
-> +	long kernel_pages;
->  	int lru;
->  
->  	si_meminfo(&i);
->  	si_swapinfo(&i);
->  	committed = percpu_counter_read_positive(&vm_committed_as);
->  
-> -	cached = global_node_page_state(NR_FILE_PAGES) -
-> -			total_swapcache_pages() - i.bufferram;
-> +	anon_pages = global_node_page_state(NR_ANON_MAPPED);
-> +	file_pages = global_node_page_state(NR_FILE_PAGES);
-> +	swap_cached = total_swapcache_pages();
-> +
-> +	cached = file_pages - swap_cached - i.bufferram;
->  	if (cached < 0)
->  		cached = 0;
->  
-> +	kernel_pages = i.totalram - i.freeram - anon_pages - file_pages -
-> +		       hugetlb_total_pages();
-> +	if (kernel_pages < 0)
-> +		kernel_pages = 0;
-> +
->  	for (lru = LRU_BASE; lru < NR_LRU_LISTS; lru++)
->  		pages[lru] = global_node_page_state(NR_LRU_BASE + lru);
->  
-> @@ -60,9 +70,10 @@ static int meminfo_proc_show(struct seq_file *m, void *v)
->  	show_val_kb(m, "MemTotal:       ", i.totalram);
->  	show_val_kb(m, "MemFree:        ", i.freeram);
->  	show_val_kb(m, "MemAvailable:   ", available);
-> +	show_val_kb(m, "MemKernel:      ", kernel_pages);
->  	show_val_kb(m, "Buffers:        ", i.bufferram);
->  	show_val_kb(m, "Cached:         ", cached);
-> -	show_val_kb(m, "SwapCached:     ", total_swapcache_pages());
-> +	show_val_kb(m, "SwapCached:     ", swap_cached);
->  	show_val_kb(m, "Active:         ", pages[LRU_ACTIVE_ANON] +
->  					   pages[LRU_ACTIVE_FILE]);
->  	show_val_kb(m, "Inactive:       ", pages[LRU_INACTIVE_ANON] +
-> @@ -92,8 +103,7 @@ static int meminfo_proc_show(struct seq_file *m, void *v)
->  		    global_node_page_state(NR_FILE_DIRTY));
->  	show_val_kb(m, "Writeback:      ",
->  		    global_node_page_state(NR_WRITEBACK));
-> -	show_val_kb(m, "AnonPages:      ",
-> -		    global_node_page_state(NR_ANON_MAPPED));
-> +	show_val_kb(m, "AnonPages:      ", anon_pages);
->  	show_val_kb(m, "Mapped:         ",
->  		    global_node_page_state(NR_FILE_MAPPED));
->  	show_val_kb(m, "Shmem:          ", i.sharedram);
-> 
+Cc: Jessica Yu <jeyu@kernel.org>
+Cc: <stable@vger.kernel.org> # v4.19+
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@arm.com>
+---
+
+Note that the name 'CONFIG_HAVE_ARCH_PREL32_RELOCATIONS' is no longer
+entirely accurate after this patch, so I will follow up with a patch
+to rename it to CONFIG_HAVE_ARCH_PREL_RELOCATIONS, but that doesn't
+require a backport to -stable so I have omitted it here.
+
+Also note that for x86, this patch depends on b40a142b12b5 ("x86: Add
+support for 64-bit place relative relocations"), which will need to
+be backported to v4.19 (from v4.20) if this patch is applied to
+-stable.
+
+ include/asm-generic/export.h |  9 +++++++--
+ include/linux/compiler.h     |  9 +++++++++
+ include/linux/export.h       | 14 ++++++++++----
+ kernel/module.c              |  2 +-
+ 4 files changed, 27 insertions(+), 7 deletions(-)
+
+diff --git a/include/asm-generic/export.h b/include/asm-generic/export.h
+index 294d6ae785d4..4d658b1e4707 100644
+--- a/include/asm-generic/export.h
++++ b/include/asm-generic/export.h
+@@ -4,7 +4,7 @@
+ #ifndef KSYM_FUNC
+ #define KSYM_FUNC(x) x
+ #endif
+-#ifdef CONFIG_64BIT
++#if defined(CONFIG_64BIT) && !defined(CONFIG_HAVE_ARCH_PREL32_RELOCATIONS)
+ #ifndef KSYM_ALIGN
+ #define KSYM_ALIGN 8
+ #endif
+@@ -19,7 +19,12 @@
+ 
+ .macro __put, val, name
+ #ifdef CONFIG_HAVE_ARCH_PREL32_RELOCATIONS
+-	.long	\val - ., \name - .
++#ifdef CONFIG_64BIT
++	.quad	\val - .
++#else
++	.long	\val - .
++#endif
++	.long	\name - .
+ #elif defined(CONFIG_64BIT)
+ 	.quad	\val, \name
+ #else
+diff --git a/include/linux/compiler.h b/include/linux/compiler.h
+index 8aaf7cd026b0..33c65ebb7cfe 100644
+--- a/include/linux/compiler.h
++++ b/include/linux/compiler.h
+@@ -305,6 +305,15 @@ static inline void *offset_to_ptr(const int *off)
+ 	return (void *)((unsigned long)off + *off);
+ }
+ 
++/**
++ * loffset_to_ptr - convert a relative memory offset to an absolute pointer
++ * @off:	the address of the signed long offset value
++ */
++static inline void *loffset_to_ptr(const long *off)
++{
++	return (void *)((unsigned long)off + *off);
++}
++
+ #endif /* __ASSEMBLY__ */
+ 
+ /* Compile time object size, -1 for unknown */
+diff --git a/include/linux/export.h b/include/linux/export.h
+index fd8711ed9ac4..8f805b9f1c25 100644
+--- a/include/linux/export.h
++++ b/include/linux/export.h
+@@ -43,6 +43,12 @@ extern struct module __this_module;
+ 
+ #ifdef CONFIG_HAVE_ARCH_PREL32_RELOCATIONS
+ #include <linux/compiler.h>
++#ifdef CONFIG_64BIT
++#define __KSYMTAB_REL	".quad "
++#else
++#define __KSYMTAB_REL	".long "
++#endif
++
+ /*
+  * Emit the ksymtab entry as a pair of relative references: this reduces
+  * the size by half on 64-bit architectures, and eliminates the need for
+@@ -52,16 +58,16 @@ extern struct module __this_module;
+ #define __KSYMTAB_ENTRY(sym, sec)					\
+ 	__ADDRESSABLE(sym)						\
+ 	asm("	.section \"___ksymtab" sec "+" #sym "\", \"a\"	\n"	\
+-	    "	.balign	8					\n"	\
++	    "	.balign	4					\n"	\
+ 	    "__ksymtab_" #sym ":				\n"	\
+-	    "	.long	" #sym "- .				\n"	\
++	    __KSYMTAB_REL #sym "- .				\n"	\
+ 	    "	.long	__kstrtab_" #sym "- .			\n"	\
+ 	    "	.previous					\n")
+ 
+ struct kernel_symbol {
+-	int value_offset;
++	long value_offset;
+ 	int name_offset;
+-};
++} __packed;
+ #else
+ #define __KSYMTAB_ENTRY(sym, sec)					\
+ 	static const struct kernel_symbol __ksymtab_##sym		\
+diff --git a/kernel/module.c b/kernel/module.c
+index 6e6712b3aaf5..43efd46feeee 100644
+--- a/kernel/module.c
++++ b/kernel/module.c
+@@ -541,7 +541,7 @@ static bool check_exported_symbol(const struct symsearch *syms,
+ static unsigned long kernel_symbol_value(const struct kernel_symbol *sym)
+ {
+ #ifdef CONFIG_HAVE_ARCH_PREL32_RELOCATIONS
+-	return (unsigned long)offset_to_ptr(&sym->value_offset);
++	return (unsigned long)loffset_to_ptr(&sym->value_offset);
+ #else
+ 	return sym->value;
+ #endif
+-- 
+2.17.1
 
