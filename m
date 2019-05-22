@@ -2,346 +2,196 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+X-Spam-Status: No, score=-6.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2E1DC282DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 23:36:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AE3CC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 23:37:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CF9F21773
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 23:36:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="htdxCbNT"
+	by mail.kernel.org (Postfix) with ESMTP id 341AA21773
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 23:37:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727975AbfEVXgb (ORCPT
+        id S1728717AbfEVXhl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 19:36:31 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:33665 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726215AbfEVXgb (ORCPT
+        Wed, 22 May 2019 19:37:41 -0400
+Received: from outgoing4.flk.host-h.net ([188.40.0.90]:40251 "EHLO
+        outgoing4.flk.host-h.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726215AbfEVXhl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 19:36:31 -0400
-Received: by mail-qk1-f196.google.com with SMTP id p18so2711266qkk.0
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 16:36:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=+NJHH7AAxaCESoWm3N87HnhYAXOqnHf8DIqecYdr+LY=;
-        b=htdxCbNT/oy07kfkDDIccfqzQKf6k1q73DmXAvVV3/iOa/EkF1+dmQ6HwByayAvpvO
-         otIdU1WZMVGuw8KeNaoEigiWCb4J0mFJ8xVKqBsc0IzAPufc+qKz6cYURDeIkX2/K2JY
-         95+wpElGkMy/PnkfSIT3XipCb+SDJCilWAIAULVsR4BgZwtmEnhzSFx95joC1fZ1BBA6
-         6lG1G++UBNcvkia56YJfjXQyOpij8aerPtqQAVmmswLJbBH6BD0O8s2qof3/UCMhZTqF
-         2j9TpnQPimj8uOHyS23EWQmvLY6wwtriN2o4UxP1hI0R4l4Pdli0XIrjpctAzp/t1Oj8
-         D4Xg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+NJHH7AAxaCESoWm3N87HnhYAXOqnHf8DIqecYdr+LY=;
-        b=JJ+ZEwP9oAXrVvFfH7kVWn9Qz8Nugmix9P91vjISfGBWKamMmIEXjIs7XoOqAnBBvM
-         FsPkGAbfAybvE1ztvD6ReBMxQ8K6o/opZHEm1/CFtWc6gytAZs1t4X7MNmNzMsV1KD9c
-         Cv36R8PGTUwnmmeabF6Xbpjv32LuYEp6C+AP6oiZ/bGI4WNdd66zqWASY39ctDsGeJBR
-         NnxnT2bjMUYKalwcSq2oPHj/e+L7qg6Eh8VXbDkNlN1FN9cqYmJDavcjV8Oj9ZbDoKow
-         lTVFBVS3jhv1PyeuZBVPaQNXVEAeiWU6lWQ88xu7796r/IULYGV9YrMcvchCqx4I4M03
-         bYKQ==
-X-Gm-Message-State: APjAAAU1nuvPFqueo6dqm0yLpfPobXHFvWnpe8pvwB9zlg1ThESbcNVD
-        pl8pcmw+rQsyhfd9IV9Jv1rhr18bUiE=
-X-Google-Smtp-Source: APXvYqyD20aSctQ1Ky7L3IexyMg2V3K58g60hVrurjFoUlG0qnm8teaLuvTADcFGeHUoNv8kRCEiHg==
-X-Received: by 2002:a37:404b:: with SMTP id n72mr69771301qka.98.1558568189805;
-        Wed, 22 May 2019 16:36:29 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-49-251.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.49.251])
-        by smtp.gmail.com with ESMTPSA id f35sm14354378qte.71.2019.05.22.16.36.28
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 22 May 2019 16:36:29 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1hTama-0006Dd-Fc; Wed, 22 May 2019 20:36:28 -0300
-Date:   Wed, 22 May 2019 20:36:28 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     rcampbell@nvidia.com
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        John Hubbard <jhubbard@nvidia.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Souptick Joarder <jrdr.linux@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH 5/5] mm/hmm: Fix mm stale reference use in hmm_free()
-Message-ID: <20190522233628.GA16137@ziepe.ca>
-References: <20190506233514.12795-1-rcampbell@nvidia.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190506233514.12795-1-rcampbell@nvidia.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Wed, 22 May 2019 19:37:41 -0400
+X-Greylist: delayed 2659 seconds by postgrey-1.27 at vger.kernel.org; Wed, 22 May 2019 19:37:40 EDT
+Received: from www31.flk1.host-h.net ([188.40.1.173])
+        by antispam1-flk1.host-h.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.89)
+        (envelope-from <justin.swartz@risingedge.co.za>)
+        id 1hTa6n-0000bT-Bw; Thu, 23 May 2019 00:53:18 +0200
+Received: from [130.255.73.16] (helo=v01.28459.vpscontrol.net)
+        by www31.flk1.host-h.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.84_2)
+        (envelope-from <justin.swartz@risingedge.co.za>)
+        id 1hTa6c-0007fD-EJ; Thu, 23 May 2019 00:53:06 +0200
+From:   Justin Swartz <justin.swartz@risingedge.co.za>
+To:     Sandy Huang <hjc@rock-chips.com>,
+        =?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko@sntech.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     Justin Swartz <justin.swartz@risingedge.co.za>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/rockchip: dw_hdmi: add basic rk3228 support
+Date:   Wed, 22 May 2019 22:46:29 +0000
+Message-Id: <20190522224631.25164-1-justin.swartz@risingedge.co.za>
+X-Mailer: git-send-email 2.11.0
+X-Authenticated-Sender: justin.swartz@risingedge.co.za
+X-Virus-Scanned: Clear (ClamAV 0.100.3/25457/Wed May 22 09:57:31 2019)
+X-Originating-IP: 188.40.1.173
+X-SpamExperts-Domain: risingedge.co.za
+X-SpamExperts-Username: 
+Authentication-Results: host-h.net; auth=pass (login) smtp.auth=@risingedge.co.za
+X-SpamExperts-Outgoing-Class: ham
+X-SpamExperts-Outgoing-Evidence: SB/global_tokens (0.000718690605145)
+X-Recommended-Action: accept
+X-Filter-ID: Mvzo4OR0dZXEDF/gcnlw0fHWENUdqj+4JDN3TQDP3eCpSDasLI4SayDByyq9LIhVur86TwL7jsv5
+ m6+fjp/sxETNWdUk1Ol2OGx3IfrIJKyP9eGNFz9TW9u+Jt8z2T3K7uDjV/sFUXQr+CDrNQuIHgQg
+ mAX8Bxy/iUu0ThNZg0h/RxVysY5Ye6+GGw0VqdJD7ren9RtRNyYim5e3GD8LGfWrcbYvelpuN/Pk
+ qhBpvAyWwieZyauFYqHkIbFa+ipF21HJWO60ZqrvKy/1AXUV5oXt6ymoFHaG7BQtEYvFCSo5O9aO
+ OPCZx1b2uMC/zMc3aAOV7ICS29ZskdEzgnmWc6FyCw2oLKHJClAYHcXyktNZ2XmZE6Ulo3Sg6/fH
+ CWNxoaEnuBtnt6GUDDzwi0xE9ujBdjBi/EW6wTMO5aPWRLvv8qeRWs1kOo/p5GKJkWYAO3Aa5n+U
+ cgHka3/viXjzcoj1m7f+vTE4JStv6WwSOoIjjjxJx7TjfIl9lT02e+bLG5tY/17Am1+3t6saIBBg
+ jLL9CBTChXJpl1nl23cKb/28qAHF3ayYxbGdFos0fpCN/Zqe7k8tOuyC0ezetWWw8nL3mjAyuRnY
+ YfqoF0qwBaWr31abV7tmT2g84edke3MdOkNjooab3HXOpUJdeB9FrcmwwJhZoFj1JrH8+3dIKm8T
+ aJbF/DJ9xG35AyqkelXaj1B5NGYLZCD5qc9WTEIS3cJCoM1jZKVSdLKiMKeae175VNiXOYUQ+bYR
+ OTnFZniyHwlqvaI+zok/BsKQK4gft9MTokp23oPCMeUu86GfQl/coNq5LDsD+gmtrHR34ik+dbYb
+ 9IXfYGRpVS/0hA4MwqmkYLLjcD7HaYjxiQBclDtVrfG8Zd+nzbonxrsMSs4uYqsuNEW45+y/2kiU
+ pWy9c+XovTjsJstHtBoNlKIuslv0d6pyfV7QOE1hL9j5OVSXNVTcvF4bYNCxBEiOkhGolglPmh6a
+ ILJqM6WsXf7aQnmpO2ydeyFd1pMxtzaLrgiAa1jZ449c5QOSXHeR3E0E19yXIdNHJDPRcm8rLb1r
+ h0PyzIaTXD+uKJkHA4nFPinpYeLTxNigHOV5GQgWJq64bnCnflZnbjDB2+RGRgaXth0ZHRqQruFr
+ G/GlTGRDUHWt54s410cgWo1fMD6i15+WgVsQdC9uGg5IeWmPBYt4N47WgJgyTfy73B/Plf7FmTDV
+ qY+pQN3pVbMWvtuGUnEh3DwJWw42swm4bO6gacpMpzKjPCVKQvBNmkphbV+6LqpSOVpogBsPfG5h
+ jLRjd6kxWF4VLgIZIkTm0juO6rHlP/TihjA708Lg3Y2gXyaf+rItBxw1SWz0NFi7GeT33MAvp0E4
+ hZvaIK8zWrz4lb7RoCsWna0PdfWBYPgYUN6vj8NApCcRaz+idK1HZy9Txmtmp2+U8T3Kfj7tHuHD
+ vXqVSlU=
+X-Report-Abuse-To: spam@antispammaster.host-h.net
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 06, 2019 at 04:35:14PM -0700, rcampbell@nvidia.com wrote:
-> From: Ralph Campbell <rcampbell@nvidia.com>
-> 
-> The last reference to struct hmm may be released long after the mm_struct
-> is destroyed because the struct hmm_mirror memory may be part of a
-> device driver open file private data pointer. The file descriptor close
-> is usually after the mm_struct is destroyed in do_exit(). This is a good
-> reason for making struct hmm a kref_t object [1] since its lifetime spans
-> the life time of mm_struct and struct hmm_mirror.
+Like the RK3328, RK322x SoCs offer a Synopsis DesignWare HDMI transmitter
+and an Innosilicon HDMI PHY.
 
-> The fix is to not use hmm->mm in hmm_free() and to clear mm->hmm and
-> hmm->mm pointers in hmm_destroy() when the mm_struct is
-> destroyed.
+Add a new dw_hdmi_plat_data struct, rk3228_hdmi_drv_data.
+Assign a set of mostly generic rk3228_hdmi_phy_ops functions.
+Add dw_hdmi_rk3228_setup_hpd() to enable the HDMI HPD and DDC lines.
 
-I think the right way to fix this is to have the struct hmm hold a
-mmgrab() on the mm so its memory cannot go away until all of the hmm
-users release the struct hmm, hmm_ranges/etc
+Signed-off-by: Justin Swartz <justin.swartz@risingedge.co.za>
+---
+ .../bindings/display/rockchip/dw_hdmi-rockchip.txt |  1 +
+ drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c        | 53 ++++++++++++++++++++++
+ 2 files changed, 54 insertions(+)
 
-Then we can properly use mmget_not_zero() instead of the racy/abnormal
-'if (hmm->xmm == NULL || hmm->dead)' pattern (see the other
-thread). Actually looking at this, all these tests look very
-questionable. If we hold the mmget() for the duration of the range
-object, as Jerome suggested, then they all get deleted.
+diff --git a/Documentation/devicetree/bindings/display/rockchip/dw_hdmi-rockchip.txt b/Documentation/devicetree/bindings/display/rockchip/dw_hdmi-rockchip.txt
+index 39143424a..703503103 100644
+--- a/Documentation/devicetree/bindings/display/rockchip/dw_hdmi-rockchip.txt
++++ b/Documentation/devicetree/bindings/display/rockchip/dw_hdmi-rockchip.txt
+@@ -12,6 +12,7 @@ following device-specific properties.
+ Required properties:
+ 
+ - compatible: should be one of the following:
++		"rockchip,rk3228-dw-hdmi"
+ 		"rockchip,rk3288-dw-hdmi"
+ 		"rockchip,rk3328-dw-hdmi"
+ 		"rockchip,rk3399-dw-hdmi"
+diff --git a/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c b/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
+index 4cdc9f86c..182a852af 100644
+--- a/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
++++ b/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
+@@ -23,6 +23,14 @@
+ #include "rockchip_drm_drv.h"
+ #include "rockchip_drm_vop.h"
+ 
++#define RK3228_GRF_SOC_CON2		0x0408
++#define RK3228_HDMI_SDAIN_MSK		BIT(14)
++#define RK3228_HDMI_SCLIN_MSK		BIT(13)
++#define RK3228_GRF_SOC_CON6		0x0418
++#define RK3228_HDMI_HPD_VSEL		BIT(6)
++#define RK3228_HDMI_SDA_VSEL		BIT(5)
++#define RK3228_HDMI_SCL_VSEL		BIT(4)
++
+ #define RK3288_GRF_SOC_CON6		0x025C
+ #define RK3288_HDMI_LCDC_SEL		BIT(4)
+ #define RK3328_GRF_SOC_CON2		0x0408
+@@ -325,6 +333,25 @@ static void dw_hdmi_rockchip_genphy_disable(struct dw_hdmi *dw_hdmi, void *data)
+ 	phy_power_off(hdmi->phy);
+ }
+ 
++static void dw_hdmi_rk3228_setup_hpd(struct dw_hdmi *dw_hdmi, void *data)
++{
++	struct rockchip_hdmi *hdmi = (struct rockchip_hdmi *)data;
++
++	dw_hdmi_phy_setup_hpd(dw_hdmi, data);
++
++	regmap_write(hdmi->regmap,
++		RK3228_GRF_SOC_CON6,
++		HIWORD_UPDATE(RK3228_HDMI_HPD_VSEL | RK3228_HDMI_SDA_VSEL |
++			      RK3228_HDMI_SCL_VSEL,
++			      RK3228_HDMI_HPD_VSEL | RK3228_HDMI_SDA_VSEL |
++			      RK3228_HDMI_SCL_VSEL));
++
++	regmap_write(hdmi->regmap,
++		RK3228_GRF_SOC_CON2,
++		HIWORD_UPDATE(RK3228_HDMI_SDAIN_MSK | RK3228_HDMI_SCLIN_MSK,
++			      RK3228_HDMI_SDAIN_MSK | RK3228_HDMI_SCLIN_MSK));
++}
++
+ static enum drm_connector_status
+ dw_hdmi_rk3328_read_hpd(struct dw_hdmi *dw_hdmi, void *data)
+ {
+@@ -370,6 +397,29 @@ static void dw_hdmi_rk3328_setup_hpd(struct dw_hdmi *dw_hdmi, void *data)
+ 			      RK3328_HDMI_HPD_IOE));
+ }
+ 
++static const struct dw_hdmi_phy_ops rk3228_hdmi_phy_ops = {
++	.init		= dw_hdmi_rockchip_genphy_init,
++	.disable	= dw_hdmi_rockchip_genphy_disable,
++	.read_hpd	= dw_hdmi_phy_read_hpd,
++	.update_hpd	= dw_hdmi_phy_update_hpd,
++	.setup_hpd	= dw_hdmi_rk3228_setup_hpd,
++};
++
++static struct rockchip_hdmi_chip_data rk3228_chip_data = {
++	.lcdsel_grf_reg = -1,
++};
++
++static const struct dw_hdmi_plat_data rk3228_hdmi_drv_data = {
++	.mode_valid = dw_hdmi_rockchip_mode_valid,
++	.mpll_cfg = rockchip_mpll_cfg,
++	.cur_ctr = rockchip_cur_ctr,
++	.phy_config = rockchip_phy_config,
++	.phy_data = &rk3228_chip_data,
++	.phy_ops = &rk3228_hdmi_phy_ops,
++	.phy_name = "inno_dw_hdmi_phy2",
++	.phy_force_vendor = true,
++};
++
+ static struct rockchip_hdmi_chip_data rk3288_chip_data = {
+ 	.lcdsel_grf_reg = RK3288_GRF_SOC_CON6,
+ 	.lcdsel_big = HIWORD_UPDATE(0, RK3288_HDMI_LCDC_SEL),
+@@ -422,6 +472,9 @@ static const struct dw_hdmi_plat_data rk3399_hdmi_drv_data = {
+ };
+ 
+ static const struct of_device_id dw_hdmi_rockchip_dt_ids[] = {
++	{ .compatible = "rockchip,rk3228-dw-hdmi",
++	  .data = &rk3228_hdmi_drv_data
++	},
+ 	{ .compatible = "rockchip,rk3288-dw-hdmi",
+ 	  .data = &rk3288_hdmi_drv_data
+ 	},
+-- 
+2.11.0
 
-That just leaves mmu_notifier_unregister_no_relase() as the remaining
-user of hmm->mm (everyone else is trying to do range->mm) - and it
-looks like it currently tries to call
-mmu_notifier_unregister_no_release on a NULL hmm->mm and crashes :(
-
-Holding the mmgrab fixes this as we can safely call
-mmu_notifier_unregister_no_relase() post exit_mmap on a grab'd mm.
-
-Also we can delete the hmm_mm_destroy() intrustion into fork.c as it
-can't be called when the mmgrab is active.
-
-This is the basic pattern we used in ODP when working with mmu
-notifiers, I don't know why hmm would need to be different.
-
-> index 2aa75dbed04a..4e42c282d334 100644
-> +++ b/mm/hmm.c
-> @@ -43,8 +43,10 @@ static inline struct hmm *mm_get_hmm(struct mm_struct *mm)
->  {
->  	struct hmm *hmm = READ_ONCE(mm->hmm);
->  
-> -	if (hmm && kref_get_unless_zero(&hmm->kref))
-> +	if (hmm && !hmm->dead) {
-> +		kref_get(&hmm->kref);
->  		return hmm;
-> +	}
-
-hmm->dead and mm->hmm are not being read under lock, so this went from
-something almost thread safe to something racy :(
-
-> @@ -53,25 +55,28 @@ static inline struct hmm *mm_get_hmm(struct mm_struct *mm)
->   * hmm_get_or_create - register HMM against an mm (HMM internal)
->   *
->   * @mm: mm struct to attach to
-> - * Returns: returns an HMM object, either by referencing the existing
-> - *          (per-process) object, or by creating a new one.
-> + * Return: an HMM object reference, either by referencing the existing
-> + *         (per-process) object, or by creating a new one.
->   *
-> - * This is not intended to be used directly by device drivers. If mm already
-> - * has an HMM struct then it get a reference on it and returns it. Otherwise
-> - * it allocates an HMM struct, initializes it, associate it with the mm and
-> - * returns it.
-> + * If the mm already has an HMM struct then return a new reference to it.
-> + * Otherwise, allocate an HMM struct, initialize it, associate it with the mm,
-> + * and return a new reference to it. If the return value is not NULL,
-> + * the caller is responsible for calling hmm_put().
->   */
->  static struct hmm *hmm_get_or_create(struct mm_struct *mm)
->  {
-> -	struct hmm *hmm = mm_get_hmm(mm);
-> -	bool cleanup = false;
-> +	struct hmm *hmm = mm->hmm;
->  
-> -	if (hmm)
-> -		return hmm;
-> +	if (hmm) {
-> +		if (hmm->dead)
-> +			goto error;
-
-Create shouldn't fail just because it is racing with something doing
-destroy
-
-The flow should be something like:
-
-spin_lock(&mm->page_table_lock); // or write side mmap_sem if you prefer
-if (mm->hmm)
-   if (kref_get_unless_zero(mm->hmm))
-        return mm->hmm;
-   mm->hmm = NULL
-
-
-> +		goto out;
-> +	}
->  
->  	hmm = kmalloc(sizeof(*hmm), GFP_KERNEL);
->  	if (!hmm)
-> -		return NULL;
-> +		goto error;
-> +
->  	init_waitqueue_head(&hmm->wq);
->  	INIT_LIST_HEAD(&hmm->mirrors);
->  	init_rwsem(&hmm->mirrors_sem);
-> @@ -83,47 +88,32 @@ static struct hmm *hmm_get_or_create(struct mm_struct *mm)
->  	hmm->dead = false;
->  	hmm->mm = mm;
->  
-> -	spin_lock(&mm->page_table_lock);
-> -	if (!mm->hmm)
-> -		mm->hmm = hmm;
-> -	else
-> -		cleanup = true;
-> -	spin_unlock(&mm->page_table_lock);
-
-BTW, Jerome this needs fixing too, it shouldn't fail the function just
-because it lost the race.
-
-More like
-
-spin_lock(&mm->page_table_lock);
-if (mm->hmm)
-   if (kref_get_unless_zero(mm->hmm)) {
-        kfree(hmm);
-        return mm->hmm;
-   }
-mm->hmm = hmm
-
-> -	if (cleanup)
-> -		goto error;
-> -
->  	/*
-> -	 * We should only get here if hold the mmap_sem in write mode ie on
-> -	 * registration of first mirror through hmm_mirror_register()
-> +	 * The mmap_sem should be held for write so no additional locking
-
-Please let us have proper lockdep assertions for this kind of stuff.
-
-> +	 * is needed. Note that struct_mm holds a reference to hmm.
-> +	 * It is cleared in hmm_release().
->  	 */
-> +	mm->hmm = hmm;
-
-Actually using the write side the mmap_sem seems sort of same if it is
-assured the write side is always held for this call..
-
-
-Hmm, there is a race with hmm_destroy touching mm->hmm that does
-hold the write lock.
-
-> +
->  	hmm->mmu_notifier.ops = &hmm_mmu_notifier_ops;
->  	if (__mmu_notifier_register(&hmm->mmu_notifier, mm))
->  		goto error_mm;
-
-And the error unwind here is problematic as it should do
-kref_put. Actually after my patch to use container_of this
-mmu_notifier_register should go before the mm->hmm = hmm to avoid
-having to do the sketchy error unwind at all.
-
-> +out:
-> +	/* Return a separate hmm reference for the caller. */
-> +	kref_get(&hmm->kref);
->  	return hmm;
->  
->  error_mm:
-> -	spin_lock(&mm->page_table_lock);
-> -	if (mm->hmm == hmm)
-> -		mm->hmm = NULL;
-> -	spin_unlock(&mm->page_table_lock);
-> -error:
-> +	mm->hmm = NULL;
->  	kfree(hmm);
-> +error:
->  	return NULL;
->  }
->  
->  static void hmm_free(struct kref *kref)
->  {
->  	struct hmm *hmm = container_of(kref, struct hmm, kref);
-> -	struct mm_struct *mm = hmm->mm;
-> -
-> -	mmu_notifier_unregister_no_release(&hmm->mmu_notifier, mm);
-
-Where did the unregister go?
-
-> -
-> -	spin_lock(&mm->page_table_lock);
-> -	if (mm->hmm == hmm)
-> -		mm->hmm = NULL;
-> -	spin_unlock(&mm->page_table_lock);
-
-Well, we still need to NULL mm->hmm if the hmm was put before the mm
-is destroyed.
-
->  	kfree(hmm);
->  }
-> @@ -135,25 +125,18 @@ static inline void hmm_put(struct hmm *hmm)
->  
->  void hmm_mm_destroy(struct mm_struct *mm)
->  {
-> -	struct hmm *hmm;
-> +	struct hmm *hmm = mm->hmm;
->  
-> -	spin_lock(&mm->page_table_lock);
-> -	hmm = mm_get_hmm(mm);
-> -	mm->hmm = NULL;
->  	if (hmm) {
-> +		mm->hmm = NULL;
-
-At this point The kref on mm is 0, so any other thread reading mm->hmm
-has a use-after-free bug. Not much point in doing this assignment , it
-is just confusing.
-
->  		hmm->mm = NULL;
-> -		hmm->dead = true;
-> -		spin_unlock(&mm->page_table_lock);
->  		hmm_put(hmm);
-> -		return;
->  	}
-> -
-> -	spin_unlock(&mm->page_table_lock);
->  }
->  
->  static void hmm_release(struct mmu_notifier *mn, struct mm_struct *mm)
->  {
-> -	struct hmm *hmm = mm_get_hmm(mm);
-> +	struct hmm *hmm = mm->hmm;
-
-container_of is much safer/better
-
-> @@ -931,20 +909,14 @@ int hmm_range_register(struct hmm_range *range,
->  		return -EINVAL;
->  	if (start >= end)
->  		return -EINVAL;
-> +	hmm = mm_get_hmm(mm);
-> +	if (!hmm)
-> +		return -EFAULT;
->  
->  	range->page_shift = page_shift;
->  	range->start = start;
->  	range->end = end;
-> -
-> -	range->hmm = mm_get_hmm(mm);
-> -	if (!range->hmm)
-> -		return -EFAULT;
-> -
-> -	/* Check if hmm_mm_destroy() was call. */
-> -	if (range->hmm->mm == NULL || range->hmm->dead) {
-
-This comment looks bogus too, we can't race with hmm_mm_destroy as the
-caller MUST have a mmgrab or mmget on the mm already to call this API
-- ie can't be destroyed. 
-
-As discussed in the other thread this should probably be
-mmget_not_zero.
-
-Jason
