@@ -2,210 +2,93 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_QP_LONG_LINE,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53D2FC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 17:29:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AE3EC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 17:35:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C16F20862
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 17:29:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558546140;
-	bh=tI77OwAxZV+m8EAIZACDiSUXSuFxXKcUy/VRtgk0/zI=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=1ujmh3t7SWhDJUalHLzpRRmiAnUcZlzQ3oyFXMoW1ptTllaUc/7nVTVkjvgKP9O2/
-	 pWUhtPYg/W6pBxJ8cSYxrSYo9DyBGWd6alZgR2lNQjDSd+dqVj4De7WImYIz4DWauA
-	 gGMefRXYhJ0r+JfxbQLhdqbXVEsqwvVzdTvC7jHc=
+	by mail.kernel.org (Postfix) with ESMTP id 285FF20863
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 17:35:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=jakemoroni.com header.i=@jakemoroni.com header.b="ZFbm55Ml";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="LM5XhQMo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729787AbfEVR27 (ORCPT
+        id S1729167AbfEVRfR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 13:28:59 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:37448 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727499AbfEVR26 (ORCPT
+        Wed, 22 May 2019 13:35:17 -0400
+Received: from out4-smtp.messagingengine.com ([66.111.4.28]:52317 "EHLO
+        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727499AbfEVRfR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 13:28:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
-        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-Type:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=UWF+0O1DMn3fjw5n3dlmwztB206X0RTJzr7XaVJzEJo=; b=l1k9Had6FinYJp0UHkOpnCuns
-        HcJfgtopDciAmbdkSgRDXaaamrDtj89nWniHJ1Zx0OkWJa8zG/gxTI5UWHCVPAJxs278+eeu2p4XQ
-        cFhERJHwtWS9xKQBy727xP6S9/6zcieOHlUnuiwtvGoAO1sM0ZA60mbL8tsgmqPuVljq5TL6lqnks
-        gbySJc3Yj8QaCZAaOLSQFMQ2nNie7nmebR1YxkKFsXmrDQ+mNiDdmA/jjmno5jpJIxIWia5qbrhHU
-        MBH9MhqepYOrVczUOxP4wj7VEoFudCuCCj6eKtlqJh29whiE+JxDCU+0rcJkw6r+XxDQmlA6llqN9
-        oA1xrQE4Q==;
-Received: from [179.182.168.126] (helo=bombadil.infradead.org)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hTV2s-0002IF-Fa; Wed, 22 May 2019 17:28:54 +0000
-Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
-        (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hTV2o-0008Of-3X; Wed, 22 May 2019 13:28:50 -0400
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Markus Heiser <markus.heiser@darmarit.de>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] scripts/sphinx-pre-install: make it handle Sphinx versions
-Date:   Wed, 22 May 2019 13:28:34 -0400
-Message-Id: <a741574b7081c162d200bdead35302ccac6fd116.1558545958.git.mchehab+samsung@kernel.org>
-X-Mailer: git-send-email 2.21.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 22 May 2019 13:35:17 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id D008120CB3
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 13:35:15 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Wed, 22 May 2019 13:35:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jakemoroni.com;
+         h=from:content-type:content-transfer-encoding:mime-version:date
+        :subject:message-id:to; s=fm3; bh=FfV+FE6CldNSY2p0Xo3j+sgr/sGrsY
+        uQuZTfRHU1Rg8=; b=ZFbm55Ml4AMlcXK2AZTJSFZAK3AbbmfXFxpzj2cDu8x+Cb
+        sN2tM5rtuV5qlBUW7lltfMpkjrgszh2JsV/v9GNptu2gY+pfBHdlryHDujsxgOpP
+        SU4dExVbzQq2EcDgDGa8SlPzN85fqOuAoq7ZZW3Vnp+FWnV4QHPP4XGPDia0WIBx
+        Gyf/3kPovQrquvl8IQy7sEB5VVWqtm5puj5JaL/OjHCcXxy+fFCHl9U4z+QjeFzd
+        mQvyXf/yIPqsiKkQmZ2YNRx81Ls2ezq2VPMRKlHNsri9MW6qL99ZqYU0Wo1kP8rj
+        FmlC76zxeCw5xVfAIpWe9YCO9SS+54Hag5xZ7Cvg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=content-transfer-encoding:content-type
+        :date:from:message-id:mime-version:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=FfV+FE
+        6CldNSY2p0Xo3j+sgr/sGrsYuQuZTfRHU1Rg8=; b=LM5XhQMoZWGKrGc2cTx+v6
+        kia4Gm4AYSIDcCLMSEO/qzk9Oy1GUoY/p1WXrtVo8eUHN5trzXeecGHyFJI5FFpK
+        0UDexXIuzeejqcnw/7rxLxB+qr6qLl7oVjat9OYzzvtqXaWFpP/V+yl0ekszO6uS
+        nfy3NPujcaj9uYxwZgrMPoizZ+l3urXKjWu9tyOpO5zDo2dm9nvzGNM5PEt2Dxzv
+        8ENcEpaCW4N7NlkEhi3iucP6/vPPY9y4zFo3mRcyPWqQJ6bEnjA6+2+PiTE7tefC
+        8BylCAmAXuss511cV2K7X0Zm3LHTroWvtPAOLgxLlpDlJ94jeozZD90l4PCQsbxQ
+        ==
+X-ME-Sender: <xms:U4jlXHcHFXDeZ6Xs-4A8UPoP64n90FgF8hpZbMl3TM5gug46qwG-Ow>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrudduvddgudduiecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecunecujfgurhephfgtgfggfffukffvofesthhqmh
+    dthhdtjeenucfhrhhomhepfdflrggtohgsucfurdcuofhorhhonhhifdcuoehmrghilhes
+    jhgrkhgvmhhorhhonhhirdgtohhmqeenucfkphepudejvddrheekrddvtdefrddvkeenuc
+    frrghrrghmpehmrghilhhfrhhomhepmhgrihhlsehjrghkvghmohhrohhnihdrtghomhen
+    ucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:U4jlXF-vvjR2ucIA1sNnzHJmKLcDhUa3KkhB2dRr6nOyQBou9_Ggvw>
+    <xmx:U4jlXCs7ycXW-EAqfW8hzqga9VqnTog7SnIdA4WSDb5iRVIX4woxYQ>
+    <xmx:U4jlXPyJPZcFS8Q-MoFuBnNry7mEBZ3uR7cxi98xnZnQodUNmJGKmA>
+    <xmx:U4jlXNObIIwD7E0M4qVCf-8Qr1cI39LacpvkhLOqmQsINx4CZXnJkw>
+Received: from [IPv6:2607:fb90:62b2:c453:e196:235f:f8b5:5298] (unknown [172.58.203.28])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 1CEBD80065
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 13:35:15 -0400 (EDT)
+From:   "Jacob S. Moroni" <mail@jakemoroni.com>
+Content-Type: text/plain;
+        charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0 (1.0)
+Date:   Wed, 22 May 2019 13:35:14 -0400
+Subject: Re: Linux 4.19.45
+Message-Id: <B288C346-785F-4453-A2BC-69A7C13CD328@jakemoroni.com>
+To:     linux-kernel@vger.kernel.org
+X-Mailer: iPhone Mail (16E227)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As we want to switch to a newer Sphinx version in the future,
-add some version detected logic, checking if the current
-version meets the requirement and suggesting upgrade it the
-version is supported but too old.
+Hello,
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
----
+4.19.45 doesn=E2=80=99t seem to build for me.
 
- scripts/sphinx-pre-install | 81 ++++++++++++++++++++++++++++++++++----
- 1 file changed, 74 insertions(+), 7 deletions(-)
+I get an error on line 1231 of fs/open.c regarding a missing definition for =E2=
+=80=9CFMODE_STREAM=E2=80=9D.
 
-diff --git a/scripts/sphinx-pre-install b/scripts/sphinx-pre-install
-index f6a5c0bae31e..e667db230d0a 100755
---- a/scripts/sphinx-pre-install
-+++ b/scripts/sphinx-pre-install
-@@ -13,7 +13,7 @@ use strict;
- # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- # GNU General Public License for more details.
- 
--my $virtenv_dir = "sphinx_1.4";
-+my $conf = "Documentation/conf.py";
- my $requirement_file = "Documentation/sphinx/requirements.txt";
- 
- #
-@@ -26,7 +26,9 @@ my $need = 0;
- my $optional = 0;
- my $need_symlink = 0;
- my $need_sphinx = 0;
-+my $rec_sphinx_upgrade = 0;
- my $install = "";
-+my $virtenv_dir = "sphinx_";
- 
- #
- # Command line arguments
-@@ -201,13 +203,15 @@ sub check_missing_tex($)
- 	}
- }
- 
--sub check_sphinx()
-+sub get_sphinx_fname()
- {
--	return if findprog("sphinx-build");
-+	my $fname = "sphinx-build";
-+	return $fname if findprog($fname);
- 
--	if (findprog("sphinx-build-3")) {
-+	$fname = "sphinx-build-3";
-+	if (findprog($fname)) {
- 		$need_symlink = 1;
--		return;
-+		return $fname;
- 	}
- 
- 	if ($virtualenv) {
-@@ -219,6 +223,68 @@ sub check_sphinx()
- 	} else {
- 		add_package("python-sphinx", 0);
- 	}
-+
-+	return "";
-+}
-+
-+sub check_sphinx()
-+{
-+	my $min_version;
-+	my $rec_version;
-+	my $cur_version;
-+
-+	open IN, $conf or die "Can't open $conf";
-+	while (<IN>) {
-+		if (m/^\s*needs_sphinx\s*=\s*[\'\"]([\d\.]+)[\'\"]/) {
-+			$min_version=$1;
-+			last;
-+		}
-+	}
-+	close IN;
-+
-+	die "Can't get needs_sphinx version from $conf" if (!$min_version);
-+
-+	open IN, $requirement_file or die "Can't open $requirement_file";
-+	while (<IN>) {
-+		if (m/^\s*Sphinx\s*==\s*([\d\.]+)$/) {
-+			$rec_version=$1;
-+			last;
-+		}
-+	}
-+	close IN;
-+
-+	die "Can't get recommended sphinx version from $requirement_file" if (!$min_version);
-+
-+	my $sphinx = get_sphinx_fname();
-+	return if ($sphinx eq "");
-+
-+	open IN, "$sphinx --version 2>&1 |" or die "$sphinx returned an error";
-+	while (<IN>) {
-+		if (m/^\s*sphinx-build\s+([\d\.]+)$/) {
-+			$cur_version=$1;
-+			last;
-+		}
-+	}
-+	close IN;
-+
-+	$virtenv_dir .= $rec_version;
-+
-+	die "$sphinx didn't return its version" if (!$cur_version);
-+
-+	printf "Sphinx version %s (minimal: %s, recommended >= %s)\n",
-+		$cur_version, $min_version, $rec_version;
-+
-+	if ($cur_version lt $min_version) {
-+		print "Warning: Sphinx version should be >= $min_version\n\n";
-+		$need_sphinx = 1;
-+		return;
-+	}
-+
-+	if ($cur_version lt $rec_version) {
-+		print "Warning: It is recommended at least Sphinx version $rec_version.\n";
-+		print "         To upgrade, use:\n\n";
-+		$rec_sphinx_upgrade = 1;
-+	}
- }
- 
- #
-@@ -540,7 +606,7 @@ sub check_needs()
- 		printf "\tsudo ln -sf %s /usr/bin/sphinx-build\n\n",
- 		       which("sphinx-build-3");
- 	}
--	if ($need_sphinx) {
-+	if ($need_sphinx || $rec_sphinx_upgrade) {
- 		my $activate = "$virtenv_dir/bin/activate";
- 		if (-e "$ENV{'PWD'}/$activate") {
- 			printf "\nNeed to activate virtualenv with:\n";
-@@ -554,7 +620,8 @@ sub check_needs()
- 			printf "\t$virtualenv $virtenv_dir\n";
- 			printf "\t. $activate\n";
- 			printf "\tpip install -r $requirement_file\n";
--			$need++;
-+
-+			$need++ if (!$rec_sphinx_upgrade);
- 		}
- 	}
- 	printf "\n";
--- 
-2.21.0
+I searched the entire tree for this definition and couldn=E2=80=99t find it d=
+efined anywhere.
 
+Thanks,
+Jake Moroni
 
