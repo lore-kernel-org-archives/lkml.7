@@ -8,64 +8,64 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEC6EC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 12:15:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47D58C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 12:15:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4DA920675
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 12:15:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05409217F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 12:15:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CFJHY4yh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hRYnE1JR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729344AbfEVMOx (ORCPT
+        id S1729414AbfEVMPI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 08:14:53 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:38920 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728466AbfEVMOv (ORCPT
+        Wed, 22 May 2019 08:15:08 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:38923 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729252AbfEVMOx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 08:14:51 -0400
-Received: by mail-qt1-f195.google.com with SMTP id y42so1976452qtk.6
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 05:14:50 -0700 (PDT)
+        Wed, 22 May 2019 08:14:53 -0400
+Received: by mail-qt1-f193.google.com with SMTP id y42so1976554qtk.6
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 05:14:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=bOnEH385qJy9U7avXqjM772xN5YJNh9FhvyEe0IH62U=;
-        b=CFJHY4yhlQ8WQ5VT/j2XOQS/u1Np/qwPH2yZ6t8jRZGLiOFavQ6OwOmcDWhCUGalia
-         Z8KOh4+8r39JgEf3TCB/tjv+Kuc/YvwZRebqCVE0NaGnkeZLPsHZJ0wgtctUP3OP7j7D
-         eDTFvgCljMUkqfhcMfbx17oN49L3RTF2hviHToYGZ0lkJ5Ps7TQyP+Y1+eAsQviQgcoa
-         H85NybTYPQvYyk8BDmKm273oc+SwqN74xhcM5SD4w3zo8LAGDwS8T2jmdgPVnNBjUbrr
-         PWbqlomebl+j6JEs6i/jxH9yD1wHRMbTfgWoUzWOcfHX+s0NnX1CTgiRMtbiijTf6YmF
-         hWKQ==
+        bh=hXh4bCmEwa+AxUGicBmFJFLbtCUNuHPP264+/JbrWoQ=;
+        b=hRYnE1JRE0jvpBvCDewt+osyr31YDeowLBP46ZWh8aRljBKC4/JG+YHt3RayQ13B1h
+         CltThGCPD3CdQEDp/ZssNgtYk0gE1LyQC7DTOs7E4psw/sa84ULDk12iJWAg5oyA8O3S
+         e/vh2+Wf1eajwy4JFiYQyVeXcO4Ium2pEaZkpDHz2tSY/M+P9RKzu7IKuYOfxAQLNxnP
+         bz7+KlZsV/jbG2jLieYxXsFvsy7VlQtGo6Bl/awFza2RxtYGYIlYmh7Xwqi3mL609IIw
+         yfBv+eAyFP3LCL/dvAHljFtRLmKOrBSt5WEvmSUYqrpAWuhcr+TOj2zbTtetzfnROhkb
+         Dy0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=bOnEH385qJy9U7avXqjM772xN5YJNh9FhvyEe0IH62U=;
-        b=pDmNK2z14nnfaqpYyJu31a3zrFV2zqN+2KIAqwi7nwuqoAx+8ugEED0HBifn+K/o4Z
-         FisL3yayd3engxAGvgtQ4PEQvZFJx9vircUicHMaatgCWaHWR/VdMRo5saN+/2kSjIjd
-         2sLgbDguO61I7OtW5FLJeYMbPlxL1zDb6EYlDUqLhqBXz3xQwUTnp2MtT/ns5rRZh1vH
-         rl5TPnicboF5Lc6OtfI5osFhA9MfF2/Ill7bNG6rII2QP6TNhEUB8pYcuqu99fuUe3Kk
-         sDYw3xRiZyT4zAVYSf2o0/OF/YMrx8r9zz7ZSK3JJ1yfXewJ8pMb+sOEzhlPBmyKZH6r
-         oHCw==
-X-Gm-Message-State: APjAAAVodgaUWbl3O1C7Ex3v2+V6JV06lDtTShXoxhVdeCuqHLJO1OP6
-        0KV0Hq4hDFbPWy31nhJRAX4P0R75/N8=
-X-Google-Smtp-Source: APXvYqzD14dCaLcFyDsK5YSTE9RD8xNQd9rCyeu87tr5lpVZ9BQvmmRvsgRxMnIonL5aZMbC3hMVgg==
-X-Received: by 2002:ac8:720a:: with SMTP id a10mr62057724qtp.164.1558527290518;
-        Wed, 22 May 2019 05:14:50 -0700 (PDT)
+        bh=hXh4bCmEwa+AxUGicBmFJFLbtCUNuHPP264+/JbrWoQ=;
+        b=I6Ulx4S6tHUebQOaxXpKwK1junGRiM8dhcTL2MMLG7vNvapbL291rMmwYb+z3rJ3MH
+         iR1MqnzXdTO25XG4pjGDFEWyVS9l4gR3UIOuLw27i4IfuoCg9IAJVeKxGUEONBvQYK2D
+         H+ph2JdVPvmE+sR2WfRCLPfP19L9Wa4PyS5pzV3Hwr+41v5B0TyabxCzLKfu3rRcmwEE
+         JMIAQLRqSD2lv3feQvjUx/FOOCnvP2fbzpVMviH3c23vHOd0fvaFc2wJNUeT0PkYmvij
+         iUFtgTrQkrK+MIsmuHJAHaiDLWh/adxNDQXT8ZBiCjv9DZw+7a1kE2pFizO4DIXj4cVq
+         zwvQ==
+X-Gm-Message-State: APjAAAUEnsfJOA9mw7PcL5QQibq/aiAtoOIYAozmcZmv1KmTWBD3dZKx
+        PTOHsmh6Zl56x/3ZzKof3TE=
+X-Google-Smtp-Source: APXvYqzhNFYWaMbIBmU3VAAID0mq8CCWphfSuFA7nGG5AABOJ5MGjM7sVs50lGCWOSe/kJTPQi2RvQ==
+X-Received: by 2002:ac8:3801:: with SMTP id q1mr73691746qtb.250.1558527291671;
+        Wed, 22 May 2019 05:14:51 -0700 (PDT)
 Received: from arch-01.home (c-73-132-202-198.hsd1.dc.comcast.net. [73.132.202.198])
-        by smtp.gmail.com with ESMTPSA id w2sm8742070qto.19.2019.05.22.05.14.49
+        by smtp.gmail.com with ESMTPSA id w2sm8742070qto.19.2019.05.22.05.14.50
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 22 May 2019 05:14:49 -0700 (PDT)
+        Wed, 22 May 2019 05:14:51 -0700 (PDT)
 From:   Geordan Neukum <gneukum1@gmail.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
 Cc:     Matt Sickler <Matt.Sickler@daktronics.com>,
         Dan Carpenter <dan.carpenter@oracle.com>,
         Geordan Neukum <gneukum1@gmail.com>
-Subject: [PATCH 2/6] staging: kpc2000: kpc_i2c: remove unused module param disable_features
-Date:   Wed, 22 May 2019 12:13:58 +0000
-Message-Id: <a4bbf48414a9b7cc2f2880ea1bf06f5d0b7719c3.1558526487.git.gneukum1@gmail.com>
+Subject: [PATCH 3/6] staging: kpc2000: kpc_i2c: newline fixups to meet linux style guide
+Date:   Wed, 22 May 2019 12:13:59 +0000
+Message-Id: <1c1b8428a502e79f19af7bc2a98787ecc6a1ed5a.1558526487.git.gneukum1@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.1558526487.git.gneukum1@gmail.com>
 References: <cover.1558526487.git.gneukum1@gmail.com>
@@ -76,29 +76,272 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The module parameter 'disable_features' is currently unused. Therefore,
-it should be removed.
+The linux coding style document states:
+
+  1) That braces should not be used where a single single statement
+     will do. Therefore all instances of single block statements
+     wrapped in braces that do not meet the qualifications of any
+     of the exceptions to the rule should be fixed up.
+
+  2) That the declaration of variables local to a given function
+     should be immediately followed by a blank newline. Therefore,
+     the single instance of this in kpc2000_i2c.c should be fixed
+     up.
 
 Signed-off-by: Geordan Neukum <gneukum1@gmail.com>
 ---
- drivers/staging/kpc2000/kpc2000_i2c.c | 4 ----
- 1 file changed, 4 deletions(-)
+ drivers/staging/kpc2000/kpc2000_i2c.c | 82 ++++++++++-----------------
+ 1 file changed, 29 insertions(+), 53 deletions(-)
 
 diff --git a/drivers/staging/kpc2000/kpc2000_i2c.c b/drivers/staging/kpc2000/kpc2000_i2c.c
-index 42061318d2d4..40a89998726e 100644
+index 40a89998726e..a1ebc2386d70 100644
 --- a/drivers/staging/kpc2000/kpc2000_i2c.c
 +++ b/drivers/staging/kpc2000/kpc2000_i2c.c
-@@ -126,10 +126,6 @@ struct i2c_device {
- /* Not really a feature, but it's convenient to handle it as such */
- #define FEATURE_IDF             (1 << 15)
+@@ -178,9 +178,8 @@ static int i801_check_post(struct i2c_device *priv, int status, int timeout)
  
--static unsigned int disable_features;
--module_param(disable_features, uint, S_IRUGO | S_IWUSR);
--MODULE_PARM_DESC(disable_features, "Disable selected driver features");
--
- // FIXME!
- #undef inb_p
- #define inb_p(a) readq((void*)a)
+ 		/* Check if it worked */
+ 		status = inb_p(SMBHSTSTS(priv));
+-		if ((status & SMBHSTSTS_HOST_BUSY) || !(status & SMBHSTSTS_FAILED)) {
++		if ((status & SMBHSTSTS_HOST_BUSY) || !(status & SMBHSTSTS_FAILED))
+ 			dev_err(&priv->adapter.dev, "Failed terminating the transaction\n");
+-		}
+ 		outb_p(STATUS_FLAGS, SMBHSTSTS(priv));
+ 		return -ETIMEDOUT;
+ 	}
+@@ -202,9 +201,8 @@ static int i801_check_post(struct i2c_device *priv, int status, int timeout)
+ 		/* Clear error flags */
+ 		outb_p(status & STATUS_FLAGS, SMBHSTSTS(priv));
+ 		status = inb_p(SMBHSTSTS(priv)) & STATUS_FLAGS;
+-		if (status) {
++		if (status)
+ 			dev_warn(&priv->adapter.dev, "Failed clearing status flags at end of transaction (%02x)\n", status);
+-		}
+ 	}
+ 
+ 	return result;
+@@ -219,9 +217,8 @@ static int i801_transaction(struct i2c_device *priv, int xact)
+ 	dev_dbg(&priv->adapter.dev, "%s\n", __func__);
+ 
+ 	result = i801_check_pre(priv);
+-	if (result < 0) {
++	if (result < 0)
+ 		return result;
+-	}
+ 	/* the current contents of SMBHSTCNT can be overwritten, since PEC,
+ 	 * INTREN, SMBSCMD are passed in xact
+ 	 */
+@@ -234,9 +231,8 @@ static int i801_transaction(struct i2c_device *priv, int xact)
+ 	} while ((status & SMBHSTSTS_HOST_BUSY) && (timeout++ < MAX_RETRIES));
+ 
+ 	result = i801_check_post(priv, status, timeout > MAX_RETRIES);
+-	if (result < 0) {
++	if (result < 0)
+ 		return result;
+-	}
+ 
+ 	outb_p(SMBHSTSTS_INTR, SMBHSTSTS(priv));
+ 	return 0;
+@@ -255,9 +251,8 @@ static void i801_wait_hwpec(struct i2c_device *priv)
+ 		status = inb_p(SMBHSTSTS(priv));
+ 	} while ((!(status & SMBHSTSTS_INTR)) && (timeout++ < MAX_RETRIES));
+ 
+-	if (timeout > MAX_RETRIES) {
++	if (timeout > MAX_RETRIES)
+ 		dev_dbg(&priv->adapter.dev, "PEC Timeout!\n");
+-	}
+ 
+ 	outb_p(status, SMBHSTSTS(priv));
+ }
+@@ -275,26 +270,22 @@ static int i801_block_transaction_by_block(struct i2c_device *priv, union i2c_sm
+ 	if (read_write == I2C_SMBUS_WRITE) {
+ 		len = data->block[0];
+ 		outb_p(len, SMBHSTDAT0(priv));
+-		for (i = 0; i < len; i++) {
++		for (i = 0; i < len; i++)
+ 			outb_p(data->block[i+1], SMBBLKDAT(priv));
+-		}
+ 	}
+ 
+ 	status = i801_transaction(priv, I801_BLOCK_DATA | ENABLE_INT9 | I801_PEC_EN * hwpec);
+-	if (status) {
++	if (status)
+ 		return status;
+-	}
+ 
+ 	if (read_write == I2C_SMBUS_READ) {
+ 		len = inb_p(SMBHSTDAT0(priv));
+-		if (len < 1 || len > I2C_SMBUS_BLOCK_MAX) {
++		if (len < 1 || len > I2C_SMBUS_BLOCK_MAX)
+ 			return -EPROTO;
+-		}
+ 
+ 		data->block[0] = len;
+-		for (i = 0; i < len; i++) {
++		for (i = 0; i < len; i++)
+ 			data->block[i + 1] = inb_p(SMBBLKDAT(priv));
+-		}
+ 	}
+ 	return 0;
+ }
+@@ -310,9 +301,8 @@ static int i801_block_transaction_byte_by_byte(struct i2c_device *priv, union i2
+ 	dev_dbg(&priv->adapter.dev, "%s\n", __func__);
+ 
+ 	result = i801_check_pre(priv);
+-	if (result < 0) {
++	if (result < 0)
+ 		return result;
+-	}
+ 
+ 	len = data->block[0];
+ 
+@@ -323,23 +313,20 @@ static int i801_block_transaction_byte_by_byte(struct i2c_device *priv, union i2
+ 
+ 	for (i = 1; i <= len; i++) {
+ 		if (i == len && read_write == I2C_SMBUS_READ) {
+-			if (command == I2C_SMBUS_I2C_BLOCK_DATA) {
++			if (command == I2C_SMBUS_I2C_BLOCK_DATA)
+ 				smbcmd = I801_I2C_BLOCK_LAST;
+-			} else {
++			else
+ 				smbcmd = I801_BLOCK_LAST;
+-			}
+ 		} else {
+-			if (command == I2C_SMBUS_I2C_BLOCK_DATA && read_write == I2C_SMBUS_READ) {
++			if (command == I2C_SMBUS_I2C_BLOCK_DATA && read_write == I2C_SMBUS_READ)
+ 				smbcmd = I801_I2C_BLOCK_DATA;
+-			} else {
++			else
+ 				smbcmd = I801_BLOCK_DATA;
+-			}
+ 		}
+ 		outb_p(smbcmd | ENABLE_INT9, SMBHSTCNT(priv));
+ 
+-		if (i == 1) {
++		if (i == 1)
+ 			outb_p(inb(SMBHSTCNT(priv)) | I801_START, SMBHSTCNT(priv));
+-		}
+ 		/* We will always wait for a fraction of a second! */
+ 		timeout = 0;
+ 		do {
+@@ -348,17 +335,15 @@ static int i801_block_transaction_byte_by_byte(struct i2c_device *priv, union i2
+ 		} while ((!(status & SMBHSTSTS_BYTE_DONE)) && (timeout++ < MAX_RETRIES));
+ 
+ 		result = i801_check_post(priv, status, timeout > MAX_RETRIES);
+-		if (result < 0) {
++		if (result < 0)
+ 			return result;
+-		}
+ 		if (i == 1 && read_write == I2C_SMBUS_READ && command != I2C_SMBUS_I2C_BLOCK_DATA) {
+ 			len = inb_p(SMBHSTDAT0(priv));
+ 			if (len < 1 || len > I2C_SMBUS_BLOCK_MAX) {
+ 				dev_err(&priv->adapter.dev, "Illegal SMBus block read size %d\n", len);
+ 				/* Recover */
+-				while (inb_p(SMBHSTSTS(priv)) & SMBHSTSTS_HOST_BUSY) {
++				while (inb_p(SMBHSTSTS(priv)) & SMBHSTSTS_HOST_BUSY)
+ 					outb_p(SMBHSTSTS_BYTE_DONE, SMBHSTSTS(priv));
+-				}
+ 				outb_p(SMBHSTSTS_INTR, SMBHSTSTS(priv));
+ 				return -EPROTO;
+ 			}
+@@ -366,12 +351,10 @@ static int i801_block_transaction_byte_by_byte(struct i2c_device *priv, union i2
+ 		}
+ 
+ 		/* Retrieve/store value in SMBBLKDAT */
+-		if (read_write == I2C_SMBUS_READ) {
++		if (read_write == I2C_SMBUS_READ)
+ 			data->block[i] = inb_p(SMBBLKDAT(priv));
+-		}
+-		if (read_write == I2C_SMBUS_WRITE && i+1 <= len) {
++		if (read_write == I2C_SMBUS_WRITE && i+1 <= len)
+ 			outb_p(data->block[i+1], SMBBLKDAT(priv));
+-		}
+ 		/* signals SMBBLKDAT ready */
+ 		outb_p(SMBHSTSTS_BYTE_DONE | SMBHSTSTS_INTR, SMBHSTSTS(priv));
+ 	}
+@@ -384,9 +367,8 @@ static int i801_set_block_buffer_mode(struct i2c_device *priv)
+ 	dev_dbg(&priv->adapter.dev, "%s\n", __func__);
+ 
+ 	outb_p(inb_p(SMBAUXCTL(priv)) | SMBAUXCTL_E32B, SMBAUXCTL(priv));
+-	if ((inb_p(SMBAUXCTL(priv)) & SMBAUXCTL_E32B) == 0) {
++	if ((inb_p(SMBAUXCTL(priv)) & SMBAUXCTL_E32B) == 0)
+ 		return -EIO;
+-	}
+ 	return 0;
+ }
+ 
+@@ -411,12 +393,10 @@ static int i801_block_transaction(struct i2c_device *priv, union i2c_smbus_data
+ 	}
+ 
+ 	if (read_write == I2C_SMBUS_WRITE || command == I2C_SMBUS_I2C_BLOCK_DATA) {
+-		if (data->block[0] < 1) {
++		if (data->block[0] < 1)
+ 			data->block[0] = 1;
+-		}
+-		if (data->block[0] > I2C_SMBUS_BLOCK_MAX) {
++		if (data->block[0] > I2C_SMBUS_BLOCK_MAX)
+ 			data->block[0] = I2C_SMBUS_BLOCK_MAX;
+-		}
+ 	} else {
+ 		data->block[0] = 32;	/* max for SMBus block reads */
+ 	}
+@@ -425,14 +405,12 @@ static int i801_block_transaction(struct i2c_device *priv, union i2c_smbus_data
+ 	 * SMBus (not I2C) block transactions, even though the datasheet
+ 	 * doesn't mention this limitation.
+ 	 */
+-	if ((priv->features & FEATURE_BLOCK_BUFFER) && command != I2C_SMBUS_I2C_BLOCK_DATA && i801_set_block_buffer_mode(priv) == 0) {
++	if ((priv->features & FEATURE_BLOCK_BUFFER) && command != I2C_SMBUS_I2C_BLOCK_DATA && i801_set_block_buffer_mode(priv) == 0)
+ 		result = i801_block_transaction_by_block(priv, data, read_write, hwpec);
+-	} else {
++	else
+ 		result = i801_block_transaction_byte_by_byte(priv, data, read_write, command, hwpec);
+-	}
+-	if (result == 0 && hwpec) {
++	if (result == 0 && hwpec)
+ 		i801_wait_hwpec(priv);
+-	}
+ 	if (command == I2C_SMBUS_I2C_BLOCK_DATA && read_write == I2C_SMBUS_WRITE) {
+ 		/* restore saved configuration register value */
+ 		//TODO: Figure out the right thing to do here...
+@@ -465,18 +443,16 @@ static s32 i801_access(struct i2c_adapter *adap, u16 addr, unsigned short flags,
+ 		dev_dbg(&priv->adapter.dev, "  [acc] SMBUS_BYTE\n");
+ 
+ 		outb_p(((addr & 0x7f) << 1) | (read_write & 0x01), SMBHSTADD(priv));
+-		if (read_write == I2C_SMBUS_WRITE) {
++		if (read_write == I2C_SMBUS_WRITE)
+ 			outb_p(command, SMBHSTCMD(priv));
+-		}
+ 		xact = I801_BYTE;
+ 		break;
+ 	case I2C_SMBUS_BYTE_DATA:
+ 		dev_dbg(&priv->adapter.dev, "  [acc] SMBUS_BYTE_DATA\n");
+ 		outb_p(((addr & 0x7f) << 1) | (read_write & 0x01), SMBHSTADD(priv));
+ 		outb_p(command, SMBHSTCMD(priv));
+-		if (read_write == I2C_SMBUS_WRITE) {
++		if (read_write == I2C_SMBUS_WRITE)
+ 			outb_p(data->byte, SMBHSTDAT0(priv));
+-		}
+ 		xact = I801_BYTE_DATA;
+ 		break;
+ 	case I2C_SMBUS_WORD_DATA:
+@@ -633,9 +609,8 @@ int pi2c_probe(struct platform_device *pldev)
+ 		pldev->name);
+ 
+ 	priv = devm_kzalloc(&pldev->dev, sizeof(*priv), GFP_KERNEL);
+-	if (!priv) {
++	if (!priv)
+ 		return -ENOMEM;
+-	}
+ 
+ 	i2c_set_adapdata(&priv->adapter, priv);
+ 	priv->adapter.owner = THIS_MODULE;
+@@ -677,6 +652,7 @@ int pi2c_probe(struct platform_device *pldev)
+ int pi2c_remove(struct platform_device *pldev)
+ {
+ 	struct i2c_device *lddev;
++
+ 	dev_dbg(&pldev->dev, "%s(pldev = %p '%s')\n", __func__, pldev,
+ 		pldev->name);
+ 
 -- 
 2.21.0
 
