@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA380C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:41:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D531C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:41:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94E562081C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:41:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B82B20675
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:41:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558554076;
-	bh=NiqXvwojC1D7C1RXV3saA1gnnXcxvKec8v+zqiUIXuc=;
+	s=default; t=1558554084;
+	bh=nbohXr6h3h8OSKBnDnEzE/1GdOue9o7EuLF85wUA6qs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=epASt251NlAaEodeCOtHA5LHsOjNOUluUT1YOgEyD+bC9Xa1uXRiMa7QuRl7AoMIk
-	 yjK790xERgjx2iW+VE22cXrJauwxPyDjFZN8a7Jhq4DiJaBtnCli/ObQTgkwwCF9Zr
-	 3bujdkZzTRqvW9wliryKa0ndvMQPaGf5B+OZYS+k=
+	b=P8jb1JN86gWAtBf5tWao0NY3fV53lTR/wvPuzaeOCQAmtPt6koLp7rdb9qGLuMuGO
+	 K3J5giaLoDuvXVRWGAJ0qnRxVEADJO+FCJI4C88LCYAbkm91YHPL7XVfbI2Rl4nmUZ
+	 edDmpiI8V2F8IKQEoh3u6W9kxY0cFL8snLgMFL6A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732446AbfEVTlP (ORCPT
+        id S1733058AbfEVTlX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:41:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51964 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:41:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732745AbfEVT3G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:29:06 -0400
+        id S1732721AbfEVT3C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:29:02 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D532217F9;
-        Wed, 22 May 2019 19:29:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AEA0F21841;
+        Wed, 22 May 2019 19:29:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553345;
-        bh=NiqXvwojC1D7C1RXV3saA1gnnXcxvKec8v+zqiUIXuc=;
+        s=default; t=1558553341;
+        bh=nbohXr6h3h8OSKBnDnEzE/1GdOue9o7EuLF85wUA6qs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sEWIpSrgpF08xeYZYoDuOYPCXDNaeJhl7BKQMEowdUUjxP1XgmCnwYV2z3N7a9oe1
-         i6zx/tYpcQEx6hEhkRzvLgB7KAeCkiXl2GUtWqZQtg0vbUDwkDkuGos4yuta4/KhzT
-         wRc+kSa3mTwx1M1DlL709Ch18+RtAtJEi6QsWQ4g=
+        b=h/m1zPYc4xxNrkcnuURCwLM2hm5oqLHsCsMQS6+xid6216JcIs5BbONt/t4hlg6ra
+         dGPO5u8fq0Mw7DD9oUg4g3t3W0IfYYGeA4LC84iCmrDhdx/lEAGHOsTwsQqAziY1q5
+         e7iWt27NfZv+X5Pr/PAGG3Q/lG7XPD3B3j7ZPOFY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bo YU <tsu.yubo@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.14 015/167] powerpc/boot: Fix missing check of lseek() return value
-Date:   Wed, 22 May 2019 15:26:10 -0400
-Message-Id: <20190522192842.25858-15-sashal@kernel.org>
+Cc:     Pavel Machek <pavel@ucw.cz>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-leds@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 013/167] leds: avoid races with workqueue
+Date:   Wed, 22 May 2019 15:26:08 -0400
+Message-Id: <20190522192842.25858-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192842.25858-1-sashal@kernel.org>
 References: <20190522192842.25858-1-sashal@kernel.org>
@@ -58,36 +59,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bo YU <tsu.yubo@gmail.com>
+From: Pavel Machek <pavel@ucw.cz>
 
-[ Upstream commit 5d085ec04a000fefb5182d3b03ee46ca96d8389b ]
+[ Upstream commit 0db37915d912e8dc6588f25da76d3ed36718d92f ]
 
-This is detected by Coverity scan: CID: 1440481
+There are races between "main" thread and workqueue. They manifest
+themselves on Thinkpad X60:
 
-Signed-off-by: Bo YU <tsu.yubo@gmail.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+This should result in LED blinking, but it turns it off instead:
+
+    root@amd:/data/pavel# cd /sys/class/leds/tpacpi\:\:power
+    root@amd:/sys/class/leds/tpacpi::power# echo timer > trigger
+    root@amd:/sys/class/leds/tpacpi::power# echo timer > trigger
+
+It should be possible to transition from blinking to solid on by echo
+0 > brightness; echo 1 > brightness... but that does not work, either,
+if done too quickly.
+
+Synchronization of the workqueue fixes both.
+
+Fixes: 1afcadfcd184 ("leds: core: Use set_brightness_work for the blocking op")
+Signed-off-by: Pavel Machek <pavel@ucw.cz>
+Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/boot/addnote.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/leds/led-class.c | 1 +
+ drivers/leds/led-core.c  | 5 +++++
+ 2 files changed, 6 insertions(+)
 
-diff --git a/arch/powerpc/boot/addnote.c b/arch/powerpc/boot/addnote.c
-index 9d9f6f334d3cc..3da3e2b1b51bc 100644
---- a/arch/powerpc/boot/addnote.c
-+++ b/arch/powerpc/boot/addnote.c
-@@ -223,7 +223,11 @@ main(int ac, char **av)
- 	PUT_16(E_PHNUM, np + 2);
+diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
+index b0e2d55acbd6f..80374c6c943ad 100644
+--- a/drivers/leds/led-class.c
++++ b/drivers/leds/led-class.c
+@@ -57,6 +57,7 @@ static ssize_t brightness_store(struct device *dev,
+ 	if (state == LED_OFF)
+ 		led_trigger_remove(led_cdev);
+ 	led_set_brightness(led_cdev, state);
++	flush_work(&led_cdev->set_brightness_work);
  
- 	/* write back */
--	lseek(fd, (long) 0, SEEK_SET);
-+	i = lseek(fd, (long) 0, SEEK_SET);
-+	if (i < 0) {
-+		perror("lseek");
-+		exit(1);
-+	}
- 	i = write(fd, buf, n);
- 	if (i < 0) {
- 		perror("write");
+ 	ret = size;
+ unlock:
+diff --git a/drivers/leds/led-core.c b/drivers/leds/led-core.c
+index 9ce6b32f52a19..cb84c35d64f97 100644
+--- a/drivers/leds/led-core.c
++++ b/drivers/leds/led-core.c
+@@ -162,6 +162,11 @@ static void led_blink_setup(struct led_classdev *led_cdev,
+ 		     unsigned long *delay_on,
+ 		     unsigned long *delay_off)
+ {
++	/*
++	 * If "set brightness to 0" is pending in workqueue, we don't
++	 * want that to be reordered after blink_set()
++	 */
++	flush_work(&led_cdev->set_brightness_work);
+ 	if (!test_bit(LED_BLINK_ONESHOT, &led_cdev->work_flags) &&
+ 	    led_cdev->blink_set &&
+ 	    !led_cdev->blink_set(led_cdev, delay_on, delay_off))
 -- 
 2.20.1
 
