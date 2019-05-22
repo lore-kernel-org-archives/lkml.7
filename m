@@ -2,145 +2,178 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF644C282DC
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:00:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 943FFC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:00:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD1CE2089E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:00:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UwrWn/u8"
+	by mail.kernel.org (Postfix) with ESMTP id 5F66E2089E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:00:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558555248;
+	bh=cn+i8pwWvdO9z6fGG740+eyt9TrgAHInVAPTUbO0EC4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=tehLaSbqMluUflvGBCPTWfFSvIIiCXS/QfQOF/wzCrUd5uNTEi8bcwclnNckKkRtQ
+	 8KXlhj/Zzqv4xK7g9TpluLgnaDDooiAOG1pC4H9Jdeyw+X/3zqA/tqP/LPSKmdfYeZ
+	 8jUtnd00vGn+jpQ1v3yBmoOx7oXJYUiSdm4Me0wM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731245AbfEVUAi (ORCPT
+        id S1731677AbfEVUAr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 16:00:38 -0400
-Received: from mail-yb1-f194.google.com ([209.85.219.194]:45481 "EHLO
-        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730417AbfEVUAg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 16:00:36 -0400
-Received: by mail-yb1-f194.google.com with SMTP id e128so1331355ybc.12;
-        Wed, 22 May 2019 13:00:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=C0nqHgtmLn6G5z3RJOs6vtscGJVqhj3bMBlmrel04/w=;
-        b=UwrWn/u8rZGHhLI1P6V35RgRkAPjVS/PxkAM7CyXBT57jgKfWPjOpICtY0LSDJ69R5
-         BR1pjI85gspBLojZnrGuHIoT7C1QYhMFQ8AzeX5PQxmtBJwl53tIIfhleT7WoP6SGPW3
-         jPdv59bh5Sa2ThqPAQ4OBK6GDwS6g8LbujSzQM3Tuw0ktnD94bnRHaBYgMKwC2kKWQQ6
-         5kzL/+N3o/Ng1GSLrlzTGO3gpwnvWtcdyUy9AFrcbALi0/YbADrfxNK2CgiEaggfncgI
-         tXzBRPf8wMX+N0XQhCjZ8BSZ0iVGeiFVdqV5bElUz8JFoV2ZwwYG9j8045SyZEvu8bbm
-         X2wQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=C0nqHgtmLn6G5z3RJOs6vtscGJVqhj3bMBlmrel04/w=;
-        b=OS6lK7/kXFyxq3Ltpi1R3wYqOD8HRQGktQYRmsLpm8PK5veUAP+7c6kgqgTq5iFzX/
-         EQA8/B1XAlHUX359aLo5JSZ4xe++Jc1Vsizj6XiHHSTmrCLy35PdnfFOYaP7fMTIlvKG
-         RU7ntNsgLyxx0JNOhw3gUpuFbqoiqJneOmMyQ8jil5QyQkacdkuczX+XgI7AJd0dxo7j
-         J3PWhgevfmzZbmOUG0h5rQC+58UiFxLa11BfbPUW+lZ56q8HBmtzeRAz03vQTEVGHtUE
-         MGbhlYTuWynjRkX6xC+7BaK5FlWEZK1jKK4MJ0cnJrj6om2hWfA+ZziNvAwrjnDNe/C5
-         Ji5A==
-X-Gm-Message-State: APjAAAUd8LYFYKlq/vy8TuSVKMja1eyo/RIbje4Ancdvu5wrmeoSTfVh
-        WtbG84EWh8hl/V0D2zd6elwMVnFETXjHfcplciRaehUE
-X-Google-Smtp-Source: APXvYqwdAn8/163JIv01+5q5jhQOxY8oXTq/RXsrw1M8Va4VH8MacySFCdZpVj8OETAqO7j5G2cNQQLwLLLgipcKhts=
-X-Received: by 2002:a25:7a41:: with SMTP id v62mr19992787ybc.14.1558555235261;
- Wed, 22 May 2019 13:00:35 -0700 (PDT)
+        Wed, 22 May 2019 16:00:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43770 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730669AbfEVTW5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:22:57 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C4CB21850;
+        Wed, 22 May 2019 19:22:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558552977;
+        bh=cn+i8pwWvdO9z6fGG740+eyt9TrgAHInVAPTUbO0EC4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Vqd7MmBfMcDtvL33HEAgTxwnSv/nKP3rIq5fOdzyNpJ86W7eysz4RFKj3NbewfUWV
+         nDi1mtJ5K9Y7GcUPImM9wp1iazYM9qzDa6vXHzWsUaL/Y1iLTj2UvHmF9aIintWet4
+         nqMXENVok5Opiyp3BQUymIUyXuxQRCQPzp1EGTe8=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Josef Bacik <josef@toxicpanda.com>,
+        Filipe Manana <fdmanana@suse.com>,
+        David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 057/375] btrfs: fix panic during relocation after ENOSPC before writeback happens
+Date:   Wed, 22 May 2019 15:15:57 -0400
+Message-Id: <20190522192115.22666-57-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190522192115.22666-1-sashal@kernel.org>
+References: <20190522192115.22666-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <20190522163150.16849-1-christian@brauner.io> <CAOQ4uxjV=7=FXuyccBK9Pu1B7o-w-pbc1FQXJxY4q6z8E93KOg@mail.gmail.com>
- <EB97EF04-D44F-4320-ACDC-C536EED03BA4@brauner.io>
-In-Reply-To: <EB97EF04-D44F-4320-ACDC-C536EED03BA4@brauner.io>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Wed, 22 May 2019 23:00:22 +0300
-Message-ID: <CAOQ4uxhodqVw0DVfcvXYH5vBf4LKcv7t388ZwXeZPBTcEMzGSw@mail.gmail.com>
-Subject: Re: [PATCH] fanotify: remove redundant capable(CAP_SYS_ADMIN)s
-To:     Christian Brauner <christian@brauner.io>
-Cc:     Jan Kara <jack@suse.cz>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 22, 2019 at 9:57 PM Christian Brauner <christian@brauner.io> wrote:
->
-> On May 22, 2019 8:29:37 PM GMT+02:00, Amir Goldstein <amir73il@gmail.com> wrote:
-> >On Wed, May 22, 2019 at 7:32 PM Christian Brauner
-> ><christian@brauner.io> wrote:
-> >>
-> >> This removes two redundant capable(CAP_SYS_ADMIN) checks from
-> >> fanotify_init().
-> >> fanotify_init() guards the whole syscall with capable(CAP_SYS_ADMIN)
-> >at the
-> >> beginning. So the other two capable(CAP_SYS_ADMIN) checks are not
-> >needed.
-> >
-> >It's intentional:
-> >
-> >commit e7099d8a5a34d2876908a9fab4952dabdcfc5909
-> >Author: Eric Paris <eparis@redhat.com>
-> >Date:   Thu Oct 28 17:21:57 2010 -0400
-> >
-> >    fanotify: limit the number of marks in a single fanotify group
-> >
-> >There is currently no limit on the number of marks a given fanotify
-> >group
-> >can have.  Since fanotify is gated on CAP_SYS_ADMIN this was not seen
-> >as
-> >a serious DoS threat.  This patch implements a default of 8192, the
-> >same as
-> >inotify to work towards removing the CAP_SYS_ADMIN gating and
-> >eliminating
-> >    the default DoS'able status.
-> >
-> >    Signed-off-by: Eric Paris <eparis@redhat.com>
-> >
-> >There idea is to eventually remove the gated CAP_SYS_ADMIN.
-> >There is no reason that fanotify could not be used by unprivileged
-> >users
-> >to setup inotify style watch on an inode or directories children, see:
-> >https://patchwork.kernel.org/patch/10668299/
-> >
-> >>
-> >> Fixes: 5dd03f55fd2 ("fanotify: allow userspace to override max queue
-> >depth")
-> >> Fixes: ac7e22dcfaf ("fanotify: allow userspace to override max
-> >marks")
-> >
-> >Fixes is used to tag bug fixes for stable.
-> >There is no bug.
-> >
-> >Thanks,
-> >Amir.
->
-> Interesting. When do you think the gate can be removed?
+From: Josef Bacik <josef@toxicpanda.com>
 
-Nobody is working on this AFAIK.
-What I posted was a simple POC, but I have no use case for this.
-In the patchwork link above, Jan has listed the prerequisites for
-removing the gate.
+[ Upstream commit ff612ba7849964b1898fd3ccd1f56941129c6aab ]
 
-One of the prerequisites is FAN_REPORT_FID, which is now merged.
-When events gets reported with fid instead of fd, unprivileged user
-(hopefully) cannot use fid for privilege escalation.
+We've been seeing the following sporadically throughout our fleet
 
-> I was looking into switching from inotify to fanotify but since it's not usable from
-> non-initial userns it's a no-no
-> since we support nested workloads.
+panic: kernel BUG at fs/btrfs/relocation.c:4584!
+netversion: 5.0-0
+Backtrace:
+ #0 [ffffc90003adb880] machine_kexec at ffffffff81041da8
+ #1 [ffffc90003adb8c8] __crash_kexec at ffffffff8110396c
+ #2 [ffffc90003adb988] crash_kexec at ffffffff811048ad
+ #3 [ffffc90003adb9a0] oops_end at ffffffff8101c19a
+ #4 [ffffc90003adb9c0] do_trap at ffffffff81019114
+ #5 [ffffc90003adba00] do_error_trap at ffffffff810195d0
+ #6 [ffffc90003adbab0] invalid_op at ffffffff81a00a9b
+    [exception RIP: btrfs_reloc_cow_block+692]
+    RIP: ffffffff8143b614  RSP: ffffc90003adbb68  RFLAGS: 00010246
+    RAX: fffffffffffffff7  RBX: ffff8806b9c32000  RCX: ffff8806aad00690
+    RDX: ffff880850b295e0  RSI: ffff8806b9c32000  RDI: ffff88084f205bd0
+    RBP: ffff880849415000   R8: ffffc90003adbbe0   R9: ffff88085ac90000
+    R10: ffff8805f7369140  R11: 0000000000000000  R12: ffff880850b295e0
+    R13: ffff88084f205bd0  R14: 0000000000000000  R15: 0000000000000000
+    ORIG_RAX: ffffffffffffffff  CS: 0010  SS: 0018
+ #7 [ffffc90003adbbb0] __btrfs_cow_block at ffffffff813bf1cd
+ #8 [ffffc90003adbc28] btrfs_cow_block at ffffffff813bf4b3
+ #9 [ffffc90003adbc78] btrfs_search_slot at ffffffff813c2e6c
 
-One of Jan's questions was what is the benefit of using inotify-compatible
-fanotify vs. using inotify.
-So what was the reason you were looking into switching from inotify to fanotify?
-Is it because of mount/filesystem watch? Because making those available for
-unprivileged user sounds risky...
+The way relocation moves data extents is by creating a reloc inode and
+preallocating extents in this inode and then copying the data into these
+preallocated extents.  Once we've done this for all of our extents,
+we'll write out these dirty pages, which marks the extent written, and
+goes into btrfs_reloc_cow_block().  From here we get our current
+reloc_control, which _should_ match the reloc_control for the current
+block group we're relocating.
 
-Thanks,
-Amir.
+However if we get an ENOSPC in this path at some point we'll bail out,
+never initiating writeback on this inode.  Not a huge deal, unless we
+happen to be doing relocation on a different block group, and this block
+group is now rc->stage == UPDATE_DATA_PTRS.  This trips the BUG_ON() in
+btrfs_reloc_cow_block(), because we expect to be done modifying the data
+inode.  We are in fact done modifying the metadata for the data inode
+we're currently using, but not the one from the failed block group, and
+thus we BUG_ON().
+
+(This happens when writeback finishes for extents from the previous
+group, when we are at btrfs_finish_ordered_io() which updates the data
+reloc tree (inode item, drops/adds extent items, etc).)
+
+Fix this by writing out the reloc data inode always, and then breaking
+out of the loop after that point to keep from tripping this BUG_ON()
+later.
+
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Reviewed-by: Filipe Manana <fdmanana@suse.com>
+[ add note from Filipe ]
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/btrfs/relocation.c | 31 ++++++++++++++++++++-----------
+ 1 file changed, 20 insertions(+), 11 deletions(-)
+
+diff --git a/fs/btrfs/relocation.c b/fs/btrfs/relocation.c
+index ddf0285099312..00c3dd92f088f 100644
+--- a/fs/btrfs/relocation.c
++++ b/fs/btrfs/relocation.c
+@@ -4330,27 +4330,36 @@ int btrfs_relocate_block_group(struct btrfs_fs_info *fs_info, u64 group_start)
+ 		mutex_lock(&fs_info->cleaner_mutex);
+ 		ret = relocate_block_group(rc);
+ 		mutex_unlock(&fs_info->cleaner_mutex);
+-		if (ret < 0) {
++		if (ret < 0)
+ 			err = ret;
+-			goto out;
+-		}
+-
+-		if (rc->extents_found == 0)
+-			break;
+-
+-		btrfs_info(fs_info, "found %llu extents", rc->extents_found);
+ 
++		/*
++		 * We may have gotten ENOSPC after we already dirtied some
++		 * extents.  If writeout happens while we're relocating a
++		 * different block group we could end up hitting the
++		 * BUG_ON(rc->stage == UPDATE_DATA_PTRS) in
++		 * btrfs_reloc_cow_block.  Make sure we write everything out
++		 * properly so we don't trip over this problem, and then break
++		 * out of the loop if we hit an error.
++		 */
+ 		if (rc->stage == MOVE_DATA_EXTENTS && rc->found_file_extent) {
+ 			ret = btrfs_wait_ordered_range(rc->data_inode, 0,
+ 						       (u64)-1);
+-			if (ret) {
++			if (ret)
+ 				err = ret;
+-				goto out;
+-			}
+ 			invalidate_mapping_pages(rc->data_inode->i_mapping,
+ 						 0, -1);
+ 			rc->stage = UPDATE_DATA_PTRS;
+ 		}
++
++		if (err < 0)
++			goto out;
++
++		if (rc->extents_found == 0)
++			break;
++
++		btrfs_info(fs_info, "found %llu extents", rc->extents_found);
++
+ 	}
+ 
+ 	WARN_ON(rc->block_group->pinned > 0);
+-- 
+2.20.1
+
