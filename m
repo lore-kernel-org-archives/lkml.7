@@ -2,137 +2,98 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B78DAC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 14:02:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06D06C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 14:02:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E03D21473
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 14:02:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558533759;
-	bh=KTu3NjSg2iiGDgoB9aRWVmkH5c55r6B+TEQSSjSQf3U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WB8+MB+q9OIVdsKy/pHFwnT4gN5YzknhiSg0cIxQgi6VZaSgLfkgll9LO1q94M7cs
-	 tyxaQ8UqQg/dfNWFzaL2KL4l8O9L94tq0u2mkxejKhxQbUwUQxFUxBa3vesidaxApr
-	 PmST3/IFGfj1HzdYDDuBwBSzgvRKpxdKH232oKos=
+	by mail.kernel.org (Postfix) with ESMTP id D124C20675
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 14:02:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jSylTx+d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729071AbfEVOCi (ORCPT
+        id S1729359AbfEVOCr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 10:02:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51272 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726770AbfEVOCi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 10:02:38 -0400
-Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C56320675;
-        Wed, 22 May 2019 14:02:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558533757;
-        bh=KTu3NjSg2iiGDgoB9aRWVmkH5c55r6B+TEQSSjSQf3U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=TiB5IfV+S9KxIVjx6O4i4vgHsQOlh+RmPNLDUeSKScVe/Ik1n+H4rDSt4n0688O7h
-         lNapBWDrWoQDfX/n8gtkEjdNgBr/q6eYeOZmzfMtERPy3LMVl33T2tZ5QrDXkTbzA0
-         iit2/21VJMjnlzoVA1c/tDP/mr6ZVU4mSkNK1WOQ=
-Date:   Wed, 22 May 2019 09:02:36 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     lorenzo.pieralisi@arm.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com,
-        will.deacon@arm.com, jingoohan1@gmail.com,
-        gustavo.pimentel@synopsys.com, mperttunen@nvidia.com,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, kthota@nvidia.com,
-        mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V7 04/15] PCI: dwc: Move config space capability search
- API
-Message-ID: <20190522140235.GB79339@google.com>
-References: <20190517123846.3708-1-vidyas@nvidia.com>
- <20190517123846.3708-5-vidyas@nvidia.com>
- <20190521211757.GF57618@google.com>
- <fd164d1f-cf99-fe81-c368-46e3a3742a59@nvidia.com>
+        Wed, 22 May 2019 10:02:47 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:48980 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726770AbfEVOCq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 10:02:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=pjByW6gfyq8J56QOG3nVPteOmnGd+8AJq7yqIOVeIW8=; b=jSylTx+dtDY27R/9zyAtnQuGd
+        2rpFdeiKeEUBOzSWnEjTXU0kWkDxxNhIio5aLeWAuTfZKggElDBRI1vEdPT6/ulUMBMWhoTvQY21G
+        qTESaXQyXEz9+onCPfz5Z9FYfK1MK5Y4SFc80kIeNP7YZC8moG9tw52NJJjl1jrvdX2i7RCV9OxQc
+        5ORLh13jaUCyCY5jdNCafQsoliiz7+zQT4yTExBCf0F+mLlKvQNwHI9jjOK4bz1M/Ph1zgJkNG6zU
+        kcCifdfk7O91hPfKIvTmS+QQzwhjXgkaNqFXpyHPa4DiY2/v7RwlA4JW72IkJCwAnVYc2FLx7vp1z
+        PGdr2DTig==;
+Received: from [31.161.185.207] (helo=worktop.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hTRpA-0005gp-DD; Wed, 22 May 2019 14:02:32 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id B9462984E09; Wed, 22 May 2019 16:02:33 +0200 (CEST)
+Date:   Wed, 22 May 2019 16:02:33 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Kairui Song <kasong@redhat.com>
+Cc:     Song Liu <songliubraving@fb.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>
+Subject: Re: Getting empty callchain from perf_callchain_kernel()
+Message-ID: <20190522140233.GC16275@worktop.programming.kicks-ass.net>
+References: <3CD3EE63-0CD2-404A-A403-E11DCF2DF8D9@fb.com>
+ <20190517074600.GJ2623@hirez.programming.kicks-ass.net>
+ <20190517081057.GQ2650@hirez.programming.kicks-ass.net>
+ <CACPcB9cB5n1HOmZcVpusJq8rAV5+KfmZ-Lxv3tgsSoy7vNrk7w@mail.gmail.com>
+ <20190517091044.GM2606@hirez.programming.kicks-ass.net>
+ <CACPcB9cpNp5CBqoRs+XMCwufzAFa8Pj-gbmj9fb+g5wVdue=ig@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <fd164d1f-cf99-fe81-c368-46e3a3742a59@nvidia.com>
+In-Reply-To: <CACPcB9cpNp5CBqoRs+XMCwufzAFa8Pj-gbmj9fb+g5wVdue=ig@mail.gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 22, 2019 at 02:26:08PM +0530, Vidya Sagar wrote:
-> On 5/22/2019 2:47 AM, Bjorn Helgaas wrote:
-> > On Fri, May 17, 2019 at 06:08:35PM +0530, Vidya Sagar wrote:
-> > > Move PCIe config space capability search API to common DesignWare file
-> > > as this can be used by both host and ep mode codes.
+On Mon, May 20, 2019 at 02:06:54AM +0800, Kairui Song wrote:
+> On Fri, May 17, 2019 at 5:10 PM Peter Zijlstra <peterz@infradead.org> wrote:
+> >
+> > On Fri, May 17, 2019 at 04:15:39PM +0800, Kairui Song wrote:
+> > > Hi, I think the actual problem is that bpf_get_stackid_tp (and maybe
+> > > some other bfp functions) is now broken, or, strating an unwind
+> > > directly inside a bpf program will end up strangely. It have following
+> > > kernel message:
+> >
+> > Urgh, what is that bpf_get_stackid_tp() doing to get the regs? I can't
+> > follow.
+> 
+> bpf_get_stackid_tp will just use the regs passed to it from the trace
+> point. And then it will eventually call perf_get_callchain to get the
+> call chain.
+> With a tracepoint we have the fake regs, so unwinder will start from
+> where it is called, and use the fake regs as the indicator of the
+> target frame it want, and keep unwinding until reached the actually
+> callsite.
+> 
+> But if the stack trace is started withing a bpf func call then it's broken...
 
-> > >   .../pci/controller/dwc/pcie-designware-ep.c   | 37 +----------------
-> > >   drivers/pci/controller/dwc/pcie-designware.c  | 40 +++++++++++++++++++
-> > >   drivers/pci/controller/dwc/pcie-designware.h  |  2 +
-> > >   3 files changed, 44 insertions(+), 35 deletions(-)
+I'm confused.. how is this broken? Surely we should eventually find the
+original stack frame and be good again, right?
 
-> > > --- a/drivers/pci/controller/dwc/pcie-designware.c
-> > > +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> > > @@ -14,6 +14,46 @@
-> > >   #include "pcie-designware.h"
-> > > +/*
-> > > + * These APIs are different from standard pci_find_*capability() APIs in the
-> > > + * sense that former can only be used post device enumeration as they require
-> > > + * 'struct pci_dev *' pointer whereas these APIs require 'struct dw_pcie *'
-> > > + * pointer and can be used before link up also.
-> > 
-> > I think this comment is slightly misleading because it suggests the
-> > reason we need these DW interfaces is because we're doing something
-> > before a pci_dev pointer is available.
-> > 
-> > But these DW interfaces are used on devices that will *never* have a
-> > pci_dev pointer because they are not PCI devices.  They're used on
-> > host controller devices, which have a PCIe link on the downstream
-> > side, but the host controller driver operates them using their
-> > upstream, non-PCI interfaces.  Logically, I think they would be
-> > considered parts of Root Complexes, not Root Ports.
-> > 
-> > There's actually no reason why that upstream interface should look
-> > anything like PCI; it doesn't need to organize registers into
-> > capability lists at all.  It might be convenient for the hardware to
-> > do that and share things with a Root Port device, which *is* a PCI
-> > device, but it's not required.
-> > 
-> > It also really has nothing to do with whether the link is up.  This
-> > code operates on hardware that is upstream from the link, so we can
-> > reach it regardless of the link.
->
-> I added this comment after receiving a review comment to justify why
-> standard pci_find_*capability() APIs can't be used here. Hence added
-> this.  I understand your comment that DW interface need not have to
-> be a PCI device, but what is present in the hardware is effectively
-> a root port implementation and post enumeration, we get a 'struct
-> pci_dev' created for it, hence I thought it is fine to bring 'struct
-> pci_dev' into picture.
+> If the unwinder could trace back through the bpf func call then there
+> will be no such problem.
 
-This code operates on the host controller.  It configures the bridge
-that leads *to* PCI devices.  Since that bridge is not a PCI device,
-the PCI specs don't say anything about how to program it.
-
-The fact that the host controller programming interface happens to
-resemble the PCI programming interface is purely coincidental.
-
-> Also, I agree that mention of 'link up' is unwarranted and could be
-> reworded in a better way.
->
-> Do you suggest to remove this comment altogether or reword it s/and
-> can be used before link up also/and can be used before 'struct
-> pci_dev' is available/ ?
-
-Maybe something like this?
-
-    These interfaces resemble the pci_find_*capability() interfaces,
-    but these are for configuring host controllers, which are bridges
-    *to* PCI devices but are not PCI devices themselves.
+Why couldn't it trace back through the bpf stuff? And how can we fix
+that?
