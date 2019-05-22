@@ -2,102 +2,268 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED3ADC18E7D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 10:03:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDD8BC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 10:04:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3F002075E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 10:03:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89EB62075E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 10:04:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729315AbfEVKDU (ORCPT
+        id S1729170AbfEVKEM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 06:03:20 -0400
-Received: from mail-oln040092071015.outbound.protection.outlook.com ([40.92.71.15]:38272
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728584AbfEVKDU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 06:03:20 -0400
-Received: from DB5EUR03FT027.eop-EUR03.prod.protection.outlook.com
- (10.152.20.60) by DB5EUR03HT010.eop-EUR03.prod.protection.outlook.com
- (10.152.20.73) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1922.16; Wed, 22 May
- 2019 10:03:18 +0000
-Received: from VI1PR07MB4432.eurprd07.prod.outlook.com (10.152.20.52) by
- DB5EUR03FT027.mail.protection.outlook.com (10.152.20.121) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.1922.16 via Frontend Transport; Wed, 22 May 2019 10:03:18 +0000
-Received: from VI1PR07MB4432.eurprd07.prod.outlook.com
- ([fe80::91f:b1bb:a60a:fdc3]) by VI1PR07MB4432.eurprd07.prod.outlook.com
- ([fe80::91f:b1bb:a60a:fdc3%7]) with mapi id 15.20.1922.013; Wed, 22 May 2019
- 10:03:17 +0000
-From:   Philippe Mazenauer <philippe.mazenauer@outlook.de>
-CC:     Philippe Mazenauer <philippe.mazenauer@outlook.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Rob Herring <robh@kernel.org>,
-        "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: [PATCH] arm: topology: make function static
-Thread-Topic: [PATCH] arm: topology: make function static
-Thread-Index: AQHVEIWUn/i0+75iwk+EnwEgRCDTcw==
-Date:   Wed, 22 May 2019 10:03:17 +0000
-Message-ID: <VI1PR07MB443207D4A7601168EC51C641FD000@VI1PR07MB4432.eurprd07.prod.outlook.com>
-Accept-Language: de-CH, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MWHPR15CA0050.namprd15.prod.outlook.com
- (2603:10b6:301:4c::12) To VI1PR07MB4432.eurprd07.prod.outlook.com
- (2603:10a6:802:67::17)
-x-incomingtopheadermarker: OriginalChecksum:B2CF39FDFDD89AAA0052F75E9B8DCBAE08792BD69B67008FB2B3B2D5119C3C7F;UpperCasedChecksum:62CEE253371D47573478AC960DC26245A833E06E5F2A90DC4E1016866B5C54CB;SizeAsReceived:7452;Count:47
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-tmn:  [Te3Kow79IK5edHwUwcUouDi32pwLaVe6]
-x-microsoft-original-message-id: <20190522100255.157960-1-philippe.mazenauer@outlook.de>
-x-ms-publictraffictype: Email
-x-incomingheadercount: 47
-x-eopattributedmessage: 0
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(5050001)(7020095)(20181119110)(201702061078)(5061506573)(5061507331)(1603103135)(2017031320274)(2017031323274)(2017031324274)(2017031322404)(1601125500)(1603101475)(1701031045);SRVR:DB5EUR03HT010;
-x-ms-traffictypediagnostic: DB5EUR03HT010:
-x-microsoft-antispam-message-info: 8WLtpJQc7MTNj3jj1KRuaXfkIkyIa7N5x35J8RRDo42SAEmVXeaDD0jvvl7OWX45A4ruKddmCyy1MPQxiN4pu7uMU+eP9g2SYMs6A1APSklzIyI5AP//bDhUXzjMAxABBY0vqLsAK/bhAaVnio36tkyFDn1DTXzXAmJnYTzS53a+Q+X2sXm2/K1URtOz+9Nb
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <2B3C6BEBC5B5E94FB67AC814F0603D07@eurprd07.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Wed, 22 May 2019 06:04:12 -0400
+Received: from relay.sw.ru ([185.231.240.75]:44208 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728424AbfEVKEM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 06:04:12 -0400
+Received: from [172.16.25.169]
+        by relay.sw.ru with esmtp (Exim 4.91)
+        (envelope-from <ktkhai@virtuozzo.com>)
+        id 1hTO6G-0002Ts-Q7; Wed, 22 May 2019 13:03:56 +0300
+Subject: Re: [PATCH v2 0/7] mm: process_vm_mmap() -- syscall for duplication a
+ process mapping
+To:     Jann Horn <jannh@google.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Keith Busch <keith.busch@intel.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Weiny Ira <ira.weiny@intel.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        arunks@codeaurora.org, Vlastimil Babka <vbabka@suse.cz>,
+        Christoph Lameter <cl@linux.com>,
+        Rik van Riel <riel@surriel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Roman Gushchin <guro@fb.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Hugh Dickins <hughd@google.com>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        daniel.m.jordan@oracle.com, Adam Borowski <kilobyte@angband.pl>,
+        Linux API <linux-api@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>
+References: <155836064844.2441.10911127801797083064.stgit@localhost.localdomain>
+ <CALCETrU221N6uPmdaj4bRDDsf+Oc5tEfPERuyV24wsYKHn+spA@mail.gmail.com>
+ <9638a51c-4295-924f-1852-1783c7f3e82d@virtuozzo.com>
+ <CAG48ez2BcVCwYGmAo4MwZ2crZ9f7=qKrORcN=fYz=K5xP2xfgQ@mail.gmail.com>
+ <069c90d6-924b-fa97-90d7-7d74f8785d9b@virtuozzo.com>
+ <CAG48ez31Kxukg7y4PU-+3RjsYZxEHfjvs2q0EFqxDM2KDcLUoA@mail.gmail.com>
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+Message-ID: <3e8177a1-29c9-8502-c78d-8a0743474331@virtuozzo.com>
+Date:   Wed, 22 May 2019 13:03:56 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9b07c1ee-b58f-479c-6977-08d6de9cb660
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 May 2019 10:03:17.9347
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB5EUR03HT010
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <CAG48ez31Kxukg7y4PU-+3RjsYZxEHfjvs2q0EFqxDM2KDcLUoA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-TWFrZSBmdW5jdGlvbiBjcHVfY29yZXBvd2VyX21hc2soKSBzdGF0aWMsIGFzIGl0IGlzIG9ubHkg
-cmVmZXJlbmNlZCBpbg0KdGhpcyBmaWxlLg0KDQouLi9hcmNoL2FybS9rZXJuZWwvdG9wb2xvZ3ku
-YzoxOTU6MjM6IHdhcm5pbmc6IG5vIHByZXZpb3VzIHByb3RvdHlwZSBmb3Ig4oCYY3B1X2NvcmVw
-b3dlcl9tYXNr4oCZIFstV21pc3NpbmctcHJvdG90eXBlc10NCiBjb25zdCBzdHJ1Y3QgY3B1bWFz
-ayAqY3B1X2NvcmVwb3dlcl9tYXNrKGludCBjcHUpDQogICAgICAgICAgICAgICAgICAgICAgIF5+
-fn5+fn5+fn5+fn5+fn5+fg0KDQpTaWduZWQtb2ZmLWJ5OiBQaGlsaXBwZSBNYXplbmF1ZXIgPHBo
-aWxpcHBlLm1hemVuYXVlckBvdXRsb29rLmRlPg0KLS0tDQogYXJjaC9hcm0va2VybmVsL3RvcG9s
-b2d5LmMgfCAyICstDQogMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0aW9u
-KC0pDQoNCmRpZmYgLS1naXQgYS9hcmNoL2FybS9rZXJuZWwvdG9wb2xvZ3kuYyBiL2FyY2gvYXJt
-L2tlcm5lbC90b3BvbG9neS5jDQppbmRleCA2MGUzNzVjZTFhYjIuLjVjODA3NWVjODA2NSAxMDA2
-NDQNCi0tLSBhL2FyY2gvYXJtL2tlcm5lbC90b3BvbG9neS5jDQorKysgYi9hcmNoL2FybS9rZXJu
-ZWwvdG9wb2xvZ3kuYw0KQEAgLTE5Miw3ICsxOTIsNyBAQCBjb25zdCBzdHJ1Y3QgY3B1bWFzayAq
-Y3B1X2NvcmVncm91cF9tYXNrKGludCBjcHUpDQogICogVGhlIGN1cnJlbnQgYXNzdW1wdGlvbiBp
-cyB0aGF0IHdlIGNhbiBwb3dlciBnYXRlIGVhY2ggY29yZSBpbmRlcGVuZGVudGx5Lg0KICAqIFRo
-aXMgd2lsbCBiZSBzdXBlcnNlZGVkIGJ5IERUIGJpbmRpbmcgb25jZSBhdmFpbGFibGUuDQogICov
-DQotY29uc3Qgc3RydWN0IGNwdW1hc2sgKmNwdV9jb3JlcG93ZXJfbWFzayhpbnQgY3B1KQ0KK3N0
-YXRpYyBjb25zdCBzdHJ1Y3QgY3B1bWFzayAqY3B1X2NvcmVwb3dlcl9tYXNrKGludCBjcHUpDQog
-ew0KIAlyZXR1cm4gJmNwdV90b3BvbG9neVtjcHVdLnRocmVhZF9zaWJsaW5nOw0KIH0NCi0tIA0K
-Mi4xNy4xDQoNCg==
+On 21.05.2019 20:28, Jann Horn wrote:
+> On Tue, May 21, 2019 at 7:04 PM Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
+>> On 21.05.2019 19:20, Jann Horn wrote:
+>>> On Tue, May 21, 2019 at 5:52 PM Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
+>>>> On 21.05.2019 17:43, Andy Lutomirski wrote:
+>>>>> On Mon, May 20, 2019 at 7:01 AM Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
+>>>>>> New syscall, which allows to clone a remote process VMA
+>>>>>> into local process VM. The remote process's page table
+>>>>>> entries related to the VMA are cloned into local process's
+>>>>>> page table (in any desired address, which makes this different
+>>>>>> from that happens during fork()). Huge pages are handled
+>>>>>> appropriately.
+>>> [...]
+>>>>>> There are several problems with process_vm_writev() in this example:
+>>>>>>
+>>>>>> 1)it causes pagefault on remote process memory, and it forces
+>>>>>>   allocation of a new page (if was not preallocated);
+>>>>>
+>>>>> I don't see how your new syscall helps.  You're writing to remote
+>>>>> memory.  If that memory wasn't allocated, it's going to get allocated
+>>>>> regardless of whether you use a write-like interface or an mmap-like
+>>>>> interface.
+>>>>
+>>>> No, the talk is not about just another interface for copying memory.
+>>>> The talk is about borrowing of remote task's VMA and corresponding
+>>>> page table's content. Syscall allows to copy part of page table
+>>>> with preallocated pages from remote to local process. See here:
+>>>>
+>>>> [task1]                                                        [task2]
+>>>>
+>>>> buf = mmap(NULL, n * PAGE_SIZE, PROT_READ|PROT_WRITE,
+>>>>            MAP_PRIVATE|MAP_ANONYMOUS, ...);
+>>>>
+>>>> <task1 populates buf>
+>>>>
+>>>>                                                                buf = process_vm_mmap(pid_of_task1, addr, n * PAGE_SIZE, ...);
+>>>> munmap(buf);
+>>>>
+>>>>
+>>>> process_vm_mmap() copies PTEs related to memory of buf in task1 to task2
+>>>> just like in the way we do during fork syscall.
+>>>>
+>>>> There is no copying of buf memory content, unless COW happens. This is
+>>>> the principal difference to process_vm_writev(), which just allocates
+>>>> pages in remote VM.
+>>>>
+>>>>> Keep in mind that, on x86, just the hardware part of a
+>>>>> page fault is very slow -- populating the memory with a syscall
+>>>>> instead of a fault may well be faster.
+>>>>
+>>>> It is not as slow, as disk IO has. Just compare, what happens in case of anonymous
+>>>> pages related to buf of task1 are swapped:
+>>>>
+>>>> 1)process_vm_writev() reads them back into memory;
+>>>>
+>>>> 2)process_vm_mmap() just copies swap PTEs from task1 page table
+>>>>   to task2 page table.
+>>>>
+>>>> Also, for faster page faults one may use huge pages for the mappings.
+>>>> But really, it's funny to think about page faults, when there are
+>>>> disk IO problems I shown.
+>>> [...]
+>>>>> That only doubles the amount of memory if you let n
+>>>>> scale linearly with p, which seems unlikely.
+>>>>>
+>>>>>>
+>>>>>> 3)received data has no a chance to be properly swapped for
+>>>>>>   a long time.
+>>>>>
+>>>>> ...
+>>>>>
+>>>>>> a)kernel moves @buf pages into swap right after recv();
+>>>>>> b)process_vm_writev() reads the data back from swap to pages;
+>>>>>
+>>>>> If you're under that much memory pressure and thrashing that badly,
+>>>>> your performance is going to be awful no matter what you're doing.  If
+>>>>> you indeed observe this behavior under normal loads, then this seems
+>>>>> like a VM issue that should be addressed in its own right.
+>>>>
+>>>> I don't think so. Imagine: a container migrates from one node to another.
+>>>> The nodes are the same, say, every of them has 4GB of RAM.
+>>>>
+>>>> Before the migration, the container's tasks used 4GB of RAM and 8GB of swap.
+>>>> After the page server on the second node received the pages, we want these
+>>>> pages become swapped as soon as possible, and we don't want to read them from
+>>>> swap to pass a read consumer.
+>>>
+>>> But you don't have to copy that memory into the container's tasks all
+>>> at once, right? Can't you, every time you've received a few dozen
+>>> kilobytes of data or whatever, shove them into the target task? That
+>>> way you don't have problems with swap because the time before the data
+>>> has arrived in its final VMA is tiny.
+>>
+>> We try to maintain online migration with as small downtime as possible,
+>> and the container on source node is completely stopped at the very end.
+>> Memory of container tasks is copied in background without container
+>> completely stop, and _PAGE_SOFT_DIRTY is used to track dirty pages.
+>>
+>> Container may create any new processes during the migration, and these
+>> processes may contain any memory mappings.
+>>
+>> Imagine the situation. We migrate a big web server with a lot of processes,
+>> and some of children processes have the same COW mapping as parent has.
+>> In case of all memory dump is available at the moment of the grand parent
+>> web server process creation, we populate the mapping in parent, and all
+>> the children may inherit the mapping in case of they want after fork.
+>> COW works here. But in case of some processes are created before all memory
+>> is available on destination node, we can't do such the COW inheritance.
+>> This will be the reason, the memory consumed by container grows many
+>> times after the migration. So, the only solution is to create process
+>> tree after memory is available and all mappings are known.
+> 
+> But if one of the processes modifies the memory after you've started
+> migrating it to the new machine, that memory can't be CoW anymore
+> anyway, right? So it should work if you first do a first pass of
+> copying the memory and creating the process hierarchy, and then copy
+> more recent changes into the individual processes, breaking the CoW
+> for those pages, right?
+
+Not so. We have to have all processes killed on source node, before
+creation the same process tree on destination machine. The process
+tree should be completely analyzed before a try of its recreation
+from ground. The analysis allows to choose the strategy and the sequence
+of each process creation and inheritance of entities like namespaces,
+mm, fdtables, etc. It's impossible to restore a process tree in case
+of you already have started to create it, but haven't stopped processes
+on source node. Also, we can restore only subset of process trees,
+but you never know what will happen with a live process tree in further.
+So, source process tree must be freezed before restore.
+
+A restore of arbitrary process tree in laws of all linux limitations
+on sequence of action to recreate an entity of a process makes this
+nontrivial mathematical problem, which has no a solution at the moment,
+and it's unknown whether it has a solution.
+
+So, at the moment of restore starts, we know all about all tasks and
+their relation ships. Yes, we start to copy memory from source to destination,
+when container on source is alive. But we track this memory with _PAGE_SOFT_DIRTY
+flag, and dirtied pages are repopulated with new content. Please, see the comment
+about hellish below.
+ 
+>> It's on of the examples. But believe me, there are a lot of another reasons,
+>> why process tree should be created only after all process tree is freezed,
+>> and no new tasks on source are possible. PGID and SSID inheritance, for
+>> example. All of this requires special order of tasks creation. In case of
+>> you try to restore process tree with correct namespaces and especial in
+>> case of many user namespaces in a container, you will just see like a hell
+>> will open before your eyes, and we never can think about this.
+> 
+> Could you elaborate on why that is so hellish?
+
+Because you never know the way, the system came into the state you're seeing
+at the moment. Even in a simple process chain like:
+
+          task1
+            |
+          task2
+            |
+          task3
+          /   \
+      task4  task5
+
+any of these processes may change its namespace, pgid, ssid, unshare mm,
+files, become a child subreaper, die and make its children reparented,
+do all of these before or after parent did one of its actions. All of
+these actions are not independent between each other, and some actions
+prohibit another actions. And you can restore the process tree only
+in case you repeat all of the sequence in the same order it was made
+by the container.
+
+It's impossible to say "task2, set your session to 5!", because the only
+way to set ssid is call setsid() syscall, which may be made only once in
+a process life. But setsid itself implies limitations on further setpgid()
+syscall (see the code, if interesting). And this limitation does not mean
+we always should call setpgid() before it, no, these are no such the simple
+rules. The same and moreover with inheritance of namespaces, when some of
+task's children may inherit old task's namespaces, some may inherit current,
+some will inherit further. A child will be able to assign a namespace, say,
+net ns, only in case of its userns allows to do this. This implies another
+limitation on process creation order, while this does not mean this gives
+a stable rule of choosing an order you create process tree. No, the only
+rule is "in the moment of time, one of tasks should made one of the above
+actions".
+
+This is a mathematical problem of ordering finite number of actors with
+finite number of rules and relationship between them, and the rules do not
+imply unambiguous replay from the ground by the end state.
+
+We behave well in limited and likely cases of process tree configurations,
+and this is enough for most cases. But common problem is very difficult,
+and currently it's not proven it even has a solution as a finite set of
+rules you may apply to restore any process tree.
+
+Kirill
