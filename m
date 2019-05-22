@@ -2,225 +2,155 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2AF0C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 14:52:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57B67C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 14:53:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B33AA20879
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 14:52:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 201D320879
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 14:53:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="U5XfVnBm"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="LHVMc+/T";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="tMVyY9n0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729704AbfEVOwZ (ORCPT
+        id S1729727AbfEVOxC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 10:52:25 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:52353 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728450AbfEVOwY (ORCPT
+        Wed, 22 May 2019 10:53:02 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:37148 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728450AbfEVOxB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 10:52:24 -0400
-Received: by mail-wm1-f66.google.com with SMTP id y3so2556565wmm.2
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 07:52:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=3DnnIUojWaR5YIA9yH08ChhAbPSeJyxJCDjrmsDfSsA=;
-        b=U5XfVnBmGagx0TH5T0dG1OqPauKyU5SKMZ0ZCqzNJVWYAOE2xwZX1eOtsD/mE39TZ4
-         y8LZldnII9DDg8vB4aM0k/zdTCrCrDOxon3Kwa/J5see9x1FkqPzjM24DintCwCthbN7
-         bZyxhiq93dym4w/djrwc9lbHYeN2pgd33TmXmnjjNIVla7rSQekCDM26dwNrGD8aSfe9
-         IfH8YO4PvSr3zglxjNZaOt7MTAtpT/gFGnUzlo5w9Mt8DXmGTKumgfZGENhLID52tBTE
-         Tvxa3Vuh+33sHwUExR+xszjMWJbWL+F0uQoJsN0xlxER+b/wPMX1i9mZ9Tj1PhMoUTxR
-         4v+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=3DnnIUojWaR5YIA9yH08ChhAbPSeJyxJCDjrmsDfSsA=;
-        b=THPtEBK3UOOiT7HOpNXL6Pp0DsvlvRWlWrfQce9NDdIyOfd+Pa8OgtNOFWJRxDzRyi
-         rch4hmUx6mV9Fs3eZ+HudMyE+S0cd/9UHjKTgWKg/uGel6baYzonKjf7gZYIS9U5uDJZ
-         nIz+ieL/HrLNZ0uSyIuIijfLpTIkDpxEI+DFGrQ4jFV86iqek1NTajwq6q7EYWLHwbst
-         yiYr89zvYhLetJ+xkUOWYyYEOXrcq0I4djIg6Qd+fTvRZv87OEM7+t8mCs8qBOq5AEJG
-         zMYATbSxHLpmKieG7gQsVEIAwvITaeHgI+wv/TfQ6axjhTqXhCO9lpvv1mCBshcPjNYg
-         CnCw==
-X-Gm-Message-State: APjAAAVnEB8Ym0wgv/kvICN/i1kjzxByfxgtoUuislbAaWsNCHD82IL0
-        wV5Q36Ei1TUjDRmffksgRvqORw==
-X-Google-Smtp-Source: APXvYqxe/48zJHcWQd1hbtgV5hwv5K4QMSu47Dx8duCnDwXSuhmOK/vOE163vDGsj42L8A/JRSS5kw==
-X-Received: by 2002:a1c:6c1a:: with SMTP id h26mr7609241wmc.89.1558536741141;
-        Wed, 22 May 2019 07:52:21 -0700 (PDT)
-Received: from brauner.io ([185.197.132.10])
-        by smtp.gmail.com with ESMTPSA id t19sm5255055wmi.42.2019.05.22.07.52.18
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 22 May 2019 07:52:20 -0700 (PDT)
-Date:   Wed, 22 May 2019 16:52:18 +0200
-From:   Christian Brauner <christian@brauner.io>
-To:     Daniel Colascione <dancol@google.com>
-Cc:     Minchan Kim <minchan@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tim Murray <timmurray@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>, Jann Horn <jannh@google.com>
-Subject: Re: [RFC 0/7] introduce memory hinting API for external process
-Message-ID: <20190522145216.jkimuudoxi6pder2@brauner.io>
-References: <20190520035254.57579-1-minchan@kernel.org>
- <20190521084158.s5wwjgewexjzrsm6@brauner.io>
- <20190521110552.GG219653@google.com>
- <20190521113029.76iopljdicymghvq@brauner.io>
- <20190521113911.2rypoh7uniuri2bj@brauner.io>
- <CAKOZuesjDcD3EM4PS7aO7yTa3KZ=FEzMP63MR0aEph4iW1NCYQ@mail.gmail.com>
- <CAHrFyr6iuoZ-r6e57zp1rz7b=Ee0Vko+syuUKW2an+TkAEz_iA@mail.gmail.com>
- <CAKOZueupb10vmm-bmL0j_b__qsC9ZrzhzHgpGhwPVUrfX0X-Og@mail.gmail.com>
+        Wed, 22 May 2019 10:53:01 -0400
+Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4MEiSk5015190;
+        Wed, 22 May 2019 07:51:23 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=sKbDtBGnVKIRUaCAczgStNECUOVI180S+3MwhCS8lFI=;
+ b=LHVMc+/Tw/xPFyA8DqbDJADpMXcHdwQ+9kPZs5iNgMKVElJAl6msaC6n2mlJ/c4f1bn8
+ DAlzFBQjtpyt1qJhyTuib1MmzuUz7stRYpMwIHhe+ce5QfiYvT3ybbuKrkee2mhcx8C4
+ +4qoCD51avfjv8ePMFyU5kLi9OPotCIXJTU= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 2smr4jty00-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Wed, 22 May 2019 07:51:23 -0700
+Received: from ash-exopmbx101.TheFacebook.com (2620:10d:c0a8:82::b) by
+ ash-exhub103.TheFacebook.com (2620:10d:c0a8:82::c) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 22 May 2019 07:51:22 -0700
+Received: from ash-exhub101.TheFacebook.com (2620:10d:c0a8:82::e) by
+ ash-exopmbx101.TheFacebook.com (2620:10d:c0a8:82::b) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 22 May 2019 07:51:22 -0700
+Received: from NAM05-BY2-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.35.173) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Wed, 22 May 2019 07:51:20 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector1-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sKbDtBGnVKIRUaCAczgStNECUOVI180S+3MwhCS8lFI=;
+ b=tMVyY9n0OBZG+Fk8wHU+QAOjOlCB5iYK/M0qLMex80YU3TEyKd9DuCYJverCDH42qKiiqag+X7aMELAOo0PpulwlD7tUaxmEEKbWI9+xTFGXALuOfE1EjYN5w17HcQfTGoG0OyMDtpX/YylI9F4Oq+uqvnzOn+QgBymy+najJ+8=
+Received: from BYAPR15MB2501.namprd15.prod.outlook.com (52.135.196.11) by
+ BYAPR15MB3384.namprd15.prod.outlook.com (20.179.59.17) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1900.22; Wed, 22 May 2019 14:49:08 +0000
+Received: from BYAPR15MB2501.namprd15.prod.outlook.com
+ ([fe80::140e:9c62:f2d3:7f27]) by BYAPR15MB2501.namprd15.prod.outlook.com
+ ([fe80::140e:9c62:f2d3:7f27%7]) with mapi id 15.20.1900.020; Wed, 22 May 2019
+ 14:49:08 +0000
+From:   Alexei Starovoitov <ast@fb.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Kairui Song <kasong@redhat.com>
+CC:     Song Liu <songliubraving@fb.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>
+Subject: Re: Getting empty callchain from perf_callchain_kernel()
+Thread-Topic: Getting empty callchain from perf_callchain_kernel()
+Thread-Index: AQHVDEJXYtrotGS6bU+cxwR7BKWjbKZu8J8AgAAG+ICAAAFQgIAAD2QAgAO6dwCABHK6gIAADP6A
+Date:   Wed, 22 May 2019 14:49:07 +0000
+Message-ID: <ab047883-69f6-1175-153f-5ad9462c6389@fb.com>
+References: <3CD3EE63-0CD2-404A-A403-E11DCF2DF8D9@fb.com>
+ <20190517074600.GJ2623@hirez.programming.kicks-ass.net>
+ <20190517081057.GQ2650@hirez.programming.kicks-ass.net>
+ <CACPcB9cB5n1HOmZcVpusJq8rAV5+KfmZ-Lxv3tgsSoy7vNrk7w@mail.gmail.com>
+ <20190517091044.GM2606@hirez.programming.kicks-ass.net>
+ <CACPcB9cpNp5CBqoRs+XMCwufzAFa8Pj-gbmj9fb+g5wVdue=ig@mail.gmail.com>
+ <20190522140233.GC16275@worktop.programming.kicks-ass.net>
+In-Reply-To: <20190522140233.GC16275@worktop.programming.kicks-ass.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: CO2PR07CA0072.namprd07.prod.outlook.com (2603:10b6:100::40)
+ To BYAPR15MB2501.namprd15.prod.outlook.com (2603:10b6:a02:88::11)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [2620:10d:c090:180::9fb6]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 0b423561-71ac-48fe-3bb5-08d6dec4a3f6
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:BYAPR15MB3384;
+x-ms-traffictypediagnostic: BYAPR15MB3384:
+x-microsoft-antispam-prvs: <BYAPR15MB338489B644EBFD81C185216CD7000@BYAPR15MB3384.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6108;
+x-forefront-prvs: 0045236D47
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(136003)(396003)(366004)(376002)(39860400002)(189003)(199004)(7736002)(305945005)(36756003)(6246003)(54906003)(99286004)(68736007)(14454004)(4326008)(6116002)(478600001)(25786009)(76176011)(2906002)(446003)(486006)(186003)(31686004)(52116002)(476003)(2616005)(386003)(6506007)(53546011)(11346002)(53936002)(46003)(102836004)(316002)(8676002)(6486002)(81156014)(31696002)(71190400001)(71200400001)(86362001)(81166006)(73956011)(256004)(66946007)(6436002)(5024004)(110136005)(5660300002)(229853002)(8936002)(66476007)(66556008)(64756008)(66446008)(6512007);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB3384;H:BYAPR15MB2501.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: sa+SP/LIBVUKgSLWeUKvRj0++KKVopvhhvUy8QAn0iaNyiK4WIfxi1veGtoM89mx817l/TfF7dM/aEGGVn3gE8YWNYmwFD7pU9+fej9UenCEHMs9MsBFJKMT/NifleBnYH9RxTtyljpWel5q3cQXQzyRfuGnlDNR3pOxDqbQ0jIxtafv9eYsBQtF7r7edz3e8IiFDgiNjPw8k6hedoplcSjGMDYXOhNBeaFps+E3z6MjhMx0HSkuGj1UU5ppeL2rQKbL+wEk6jztUVyBNEnpxJZUhxI3YZHK3+Q8iKVKEUxC4vTWMUBYt+SGZvK/X9XPx5SWqJe7Wbyb3QJrFCS4twzxVnS2JCOrW7xH5hj6zvGS99UZCvoUXmgkEW13wrropIKisk8CmXx5ZsdPmJV4AaCDc8np8W+tP+c2phVjdhY=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <2F061B130DBC5948B404DEA6DB676E69@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAKOZueupb10vmm-bmL0j_b__qsC9ZrzhzHgpGhwPVUrfX0X-Og@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0b423561-71ac-48fe-3bb5-08d6dec4a3f6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 May 2019 14:49:08.0274
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB3384
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-22_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905220105
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 22, 2019 at 06:16:35AM -0700, Daniel Colascione wrote:
-> On Wed, May 22, 2019 at 1:22 AM Christian Brauner <christian@brauner.io> wrote:
-> >
-> > On Wed, May 22, 2019 at 7:12 AM Daniel Colascione <dancol@google.com> wrote:
-> > >
-> > > On Tue, May 21, 2019 at 4:39 AM Christian Brauner <christian@brauner.io> wrote:
-> > > >
-> > > > On Tue, May 21, 2019 at 01:30:29PM +0200, Christian Brauner wrote:
-> > > > > On Tue, May 21, 2019 at 08:05:52PM +0900, Minchan Kim wrote:
-> > > > > > On Tue, May 21, 2019 at 10:42:00AM +0200, Christian Brauner wrote:
-> > > > > > > On Mon, May 20, 2019 at 12:52:47PM +0900, Minchan Kim wrote:
-> > > > > > > > - Background
-> > > > > > > >
-> > > > > > > > The Android terminology used for forking a new process and starting an app
-> > > > > > > > from scratch is a cold start, while resuming an existing app is a hot start.
-> > > > > > > > While we continually try to improve the performance of cold starts, hot
-> > > > > > > > starts will always be significantly less power hungry as well as faster so
-> > > > > > > > we are trying to make hot start more likely than cold start.
-> > > > > > > >
-> > > > > > > > To increase hot start, Android userspace manages the order that apps should
-> > > > > > > > be killed in a process called ActivityManagerService. ActivityManagerService
-> > > > > > > > tracks every Android app or service that the user could be interacting with
-> > > > > > > > at any time and translates that into a ranked list for lmkd(low memory
-> > > > > > > > killer daemon). They are likely to be killed by lmkd if the system has to
-> > > > > > > > reclaim memory. In that sense they are similar to entries in any other cache.
-> > > > > > > > Those apps are kept alive for opportunistic performance improvements but
-> > > > > > > > those performance improvements will vary based on the memory requirements of
-> > > > > > > > individual workloads.
-> > > > > > > >
-> > > > > > > > - Problem
-> > > > > > > >
-> > > > > > > > Naturally, cached apps were dominant consumers of memory on the system.
-> > > > > > > > However, they were not significant consumers of swap even though they are
-> > > > > > > > good candidate for swap. Under investigation, swapping out only begins
-> > > > > > > > once the low zone watermark is hit and kswapd wakes up, but the overall
-> > > > > > > > allocation rate in the system might trip lmkd thresholds and cause a cached
-> > > > > > > > process to be killed(we measured performance swapping out vs. zapping the
-> > > > > > > > memory by killing a process. Unsurprisingly, zapping is 10x times faster
-> > > > > > > > even though we use zram which is much faster than real storage) so kill
-> > > > > > > > from lmkd will often satisfy the high zone watermark, resulting in very
-> > > > > > > > few pages actually being moved to swap.
-> > > > > > > >
-> > > > > > > > - Approach
-> > > > > > > >
-> > > > > > > > The approach we chose was to use a new interface to allow userspace to
-> > > > > > > > proactively reclaim entire processes by leveraging platform information.
-> > > > > > > > This allowed us to bypass the inaccuracy of the kernel’s LRUs for pages
-> > > > > > > > that are known to be cold from userspace and to avoid races with lmkd
-> > > > > > > > by reclaiming apps as soon as they entered the cached state. Additionally,
-> > > > > > > > it could provide many chances for platform to use much information to
-> > > > > > > > optimize memory efficiency.
-> > > > > > > >
-> > > > > > > > IMHO we should spell it out that this patchset complements MADV_WONTNEED
-> > > > > > > > and MADV_FREE by adding non-destructive ways to gain some free memory
-> > > > > > > > space. MADV_COLD is similar to MADV_WONTNEED in a way that it hints the
-> > > > > > > > kernel that memory region is not currently needed and should be reclaimed
-> > > > > > > > immediately; MADV_COOL is similar to MADV_FREE in a way that it hints the
-> > > > > > > > kernel that memory region is not currently needed and should be reclaimed
-> > > > > > > > when memory pressure rises.
-> > > > > > > >
-> > > > > > > > To achieve the goal, the patchset introduce two new options for madvise.
-> > > > > > > > One is MADV_COOL which will deactive activated pages and the other is
-> > > > > > > > MADV_COLD which will reclaim private pages instantly. These new options
-> > > > > > > > complement MADV_DONTNEED and MADV_FREE by adding non-destructive ways to
-> > > > > > > > gain some free memory space. MADV_COLD is similar to MADV_DONTNEED in a way
-> > > > > > > > that it hints the kernel that memory region is not currently needed and
-> > > > > > > > should be reclaimed immediately; MADV_COOL is similar to MADV_FREE in a way
-> > > > > > > > that it hints the kernel that memory region is not currently needed and
-> > > > > > > > should be reclaimed when memory pressure rises.
-> > > > > > > >
-> > > > > > > > This approach is similar in spirit to madvise(MADV_WONTNEED), but the
-> > > > > > > > information required to make the reclaim decision is not known to the app.
-> > > > > > > > Instead, it is known to a centralized userspace daemon, and that daemon
-> > > > > > > > must be able to initiate reclaim on its own without any app involvement.
-> > > > > > > > To solve the concern, this patch introduces new syscall -
-> > > > > > > >
-> > > > > > > >         struct pr_madvise_param {
-> > > > > > > >                 int size;
-> > > > > > > >                 const struct iovec *vec;
-> > > > > > > >         }
-> > > > > > > >
-> > > > > > > >         int process_madvise(int pidfd, ssize_t nr_elem, int *behavior,
-> > > > > > > >                                 struct pr_madvise_param *restuls,
-> > > > > > > >                                 struct pr_madvise_param *ranges,
-> > > > > > > >                                 unsigned long flags);
-> > > > > > > >
-> > > > > > > > The syscall get pidfd to give hints to external process and provides
-> > > > > > > > pair of result/ranges vector arguments so that it could give several
-> > > > > > > > hints to each address range all at once.
-> > > > > > > >
-> > > > > > > > I guess others have different ideas about the naming of syscall and options
-> > > > > > > > so feel free to suggest better naming.
-> > > > > > >
-> > > > > > > Yes, all new syscalls making use of pidfds should be named
-> > > > > > > pidfd_<action>. So please make this pidfd_madvise.
-> > > > > >
-> > > > > > I don't have any particular preference but just wondering why pidfd is
-> > > > > > so special to have it as prefix of system call name.
-> > > > >
-> > > > > It's a whole new API to address processes. We already have
-> > > > > clone(CLONE_PIDFD) and pidfd_send_signal() as you have seen since you
-> > > > > exported pidfd_to_pid(). And we're going to have pidfd_open(). Your
-> > > > > syscall works only with pidfds so it's tied to this api as well so it
-> > > > > should follow the naming scheme. This also makes life easier for
-> > > > > userspace and is consistent.
-> > > >
-> > > > This is at least my reasoning. I'm not going to make this a whole big
-> > > > pedantic argument. If people have really strong feelings about not using
-> > > > this prefix then fine. But if syscalls can be grouped together and have
-> > > > consistent naming this is always a big plus.
-> > >
-> > > My hope has been that pidfd use becomes normalized enough that
-> > > prefixing "pidfd_" to pidfd-accepting system calls becomes redundant.
-> > > We write write(), not fd_write(), right? :-) pidfd_open() makes sense
-> > > because the primary purpose of this system call is to operate on a
-> > > pidfd, but I think process_madvise() is fine.
-> >
-> > This madvise syscall just operates on pidfds. It would make sense to
-> > name it process_madvise() if were to operate both on pid_t and int pidfd.
-> 
-> The name of the function ought to encode its purpose, not its
-> signature. The system call under discussion operates on processes and
-> so should be called "process_madvise". That this system call happens
-> to accept a pidfd to identify the process on which it operates is not
-> its most interesting aspect of the system call. The argument type
-> isn't important enough to spotlight in the permanent name of an API.
-> Pidfds are novel now, but they won't be novel in the future.
-
-I'm not going to go into yet another long argument. I prefer pidfd_*.
-It's tied to the api, transparent for userspace, and disambiguates it
-from process_vm_{read,write}v that both take a pid_t.
+T24gNS8yMi8xOSA3OjAyIEFNLCBQZXRlciBaaWpsc3RyYSB3cm90ZToNCj4gDQo+PiBJZiB0aGUg
+dW53aW5kZXIgY291bGQgdHJhY2UgYmFjayB0aHJvdWdoIHRoZSBicGYgZnVuYyBjYWxsIHRoZW4g
+dGhlcmUNCj4+IHdpbGwgYmUgbm8gc3VjaCBwcm9ibGVtLg0KPiANCj4gV2h5IGNvdWxkbid0IGl0
+IHRyYWNlIGJhY2sgdGhyb3VnaCB0aGUgYnBmIHN0dWZmPyBBbmQgaG93IGNhbiB3ZSBmaXgNCj4g
+dGhhdD8NCg0KTW9zdCBvZiB0aGUgdGltZSB0aGVyZSBpcyBubyAndHJhY2luZyB0aHJvdWdoIGJw
+ZiBzdHVmZicuDQpicGYgaW5mcmEgaXMgcHJlc2VydmluZyAncHRfcmVncyonIHRoYXQgd2FzIGNv
+bGxlY3RlZCBiZWZvcmUNCmFueSBicGYgdGhpbmdzIHN0YXJ0IGV4ZWN1dGluZy4NClRoZSByZWFz
+b24gaXMgdGhhdCBicGYgY2FuIGJlIGV4ZWN1dGVkIHZpYSBpbnRlcnByZXRlciBhbmQNCmRpcmVj
+dGx5IHdoZW4gSklUZWQuDQpJbiBib3RoIGNhc2VzIGNvbGxlY3RlZCBzdGFjayB0cmFjZXMgc2hv
+dWxkIGJlIHRoZSBzYW1lIG9yDQppdCdzIGNvbmZ1c2luZyB0aGUgdXNlcnMgYW5kIHRoZXkgY2Fu
+bm90IGNvbXBlbnNhdGUgZm9yIHN1Y2gNCmRpZmZlcmVuY2UuDQoNClRoZSBvbmx5IGV4Y2VwdGlv
+biBpcyByYXdfdHJhY2Vwb2ludCwgc2luY2UgaXQncyB0aGUgbW9zdA0KbWluaW1hbGlzdGljIHdh
+eSBvZiBjYWxsaW5nIGJwZiBhbmQga2VybmVsIHNpZGUgZG9lc24ndCBkbw0KYW55dGhpbmcgYmVm
+b3JlIGNhbGxpbmcgaW50byBicGYuDQpPbmx5IGluIHN1Y2ggY2FzZSBicGYgc2lkZSBoYXMgdG8g
+Y2FsbCBwZXJmX2ZldGNoX2NhbGxlcl9yZWdzKCkuDQpTZWUgYnBmX2dldF9zdGFja2lkX3Jhd190
+cCgpLg0KQnV0IHRoaXMgdGVzdCBjYXNlIGlzIGFjdHVhbGx5IHdvcmtpbmchDQpJdCdzIGNvdmVy
+ZWQgYnkgcHJvZ190ZXN0cy9zdGFja3RyYWNlX21hcF9yYXdfdHAuYyBhbmQNCml0IHBhc3Nlcy4N
+ClRoZSBvbmUgdGhhdCBpcyBicm9rZW4gaXMgcHJvZ190ZXN0cy9zdGFja3RyYWNlX21hcC5jDQpU
+aGVyZSB3ZSBhdHRhY2ggYnBmIHRvIHN0YW5kYXJkIHRyYWNlcG9pbnQgd2hlcmUNCmtlcm5lbCBz
+dXBwb3NlIHRvIGNvbGxlY3QgcHRfcmVncyBiZWZvcmUgY2FsbGluZyBpbnRvIGJwZi4NCkFuZCB0
+aGF0J3Mgd2hhdCBicGZfZ2V0X3N0YWNraWRfdHAoKSBpcyBkb2luZy4NCkl0IHBhc3NlcyBwdF9y
+ZWdzICh0aGF0IHdhcyBjb2xsZWN0ZWQgYmVmb3JlIGFueSBicGYpDQppbnRvIGJwZl9nZXRfc3Rh
+Y2tpZCgpIHdoaWNoIGNhbGxzIGdldF9wZXJmX2NhbGxjaGFpbigpLg0KU2FtZSB0aGluZyB3aXRo
+IGtwcm9iZXMsIHVwcm9iZXMuDQoNCg0K
