@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8820FC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:27:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 854C2C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:28:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B1C62177E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:27:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D2872173C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:28:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558553278;
-	bh=Z0M1Ru0jdwl8r/WKfcgsUwrussyr67JIQ72gfQBLf24=;
+	s=default; t=1558553286;
+	bh=KUHFrstY9xKfRid6AIdvydrKVOVwZMyZqRJWK+U/rYY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qebmZ6DIVwUYFdsljpUrQz/AdxLhZvgMQGP3Mq9pAvm/ZFR83Rk00pkajiHbvhO+x
-	 EEEpqs3UG1fDef1KYT1ErxND9LJJEz9L8QhfBOgi+l+QQFFMAB6lTsZRkKea3EpZ2B
-	 jRyyiMkQMNnc9tb7zhSxSKaF7GpYG9TP0GhOrfDk=
+	b=J4ohvkZDitf1jnJxxnm4hRTfnJm8zFe55EvrcNLphHxAPfx4Hey3kLkIXAYIzsgA0
+	 mLNdTyZNSxx4OnagS8u+i1QgwW2bQBkElIwPBG6fbos+Rt51kqyPpCqabvVJ5ECmU9
+	 70TlZasbKPT8Wbcf6cIv27CVG9/2AF4dG9l7J6cI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732428AbfEVT15 (ORCPT
+        id S1732452AbfEVT2F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:27:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49994 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:28:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50174 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730529AbfEVT1m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:27:42 -0400
+        id S1730048AbfEVT1r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:27:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC89F20675;
-        Wed, 22 May 2019 19:27:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A15120675;
+        Wed, 22 May 2019 19:27:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553261;
-        bh=Z0M1Ru0jdwl8r/WKfcgsUwrussyr67JIQ72gfQBLf24=;
+        s=default; t=1558553266;
+        bh=KUHFrstY9xKfRid6AIdvydrKVOVwZMyZqRJWK+U/rYY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MfjZFSGKzUAz9cs07Lorn7RtSMByalzoUSc3nV7L0zbGddjvbPdGF0lKXj4zm/lIW
-         vX5orcncL1xLcU8C5dv4kewlMYkpesGZ9+Zp16ACm9Aw2UOKObFy2GtTAWktApFmk+
-         Nf8HwZSKfKOEvI4bv2mE9tinVIq9C9mkDrB74ABY=
+        b=WEvs/MArc0AWbBNK9Ru8zmz5thQrKrNOq0fjKVYyPFfk1SjV15ffVOLEnZrF+gLIM
+         r4WVgHllTCka0DeQma0/73DS5Upx+6rplS4aQXdythI09mkLthcOvuWCXkPifoVozg
+         sPNy9OynTDb/CwPqgQ9vPvkywOK5LdvIp9r4wU3w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Robbie Ko <robbieko@synology.com>,
-        Filipe Manana <fdmanana@suse.com>,
-        David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 040/244] Btrfs: fix data bytes_may_use underflow with fallocate due to failed quota reserve
-Date:   Wed, 22 May 2019 15:23:06 -0400
-Message-Id: <20190522192630.24917-40-sashal@kernel.org>
+Cc:     Johannes Berg <johannes.berg@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 043/244] iwlwifi: pcie: don't crash on invalid RX interrupt
+Date:   Wed, 22 May 2019 15:23:09 -0400
+Message-Id: <20190522192630.24917-43-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192630.24917-1-sashal@kernel.org>
 References: <20190522192630.24917-1-sashal@kernel.org>
@@ -60,59 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robbie Ko <robbieko@synology.com>
+From: Johannes Berg <johannes.berg@intel.com>
 
-[ Upstream commit 39ad317315887c2cb9a4347a93a8859326ddf136 ]
+[ Upstream commit 30f24eabab8cd801064c5c37589d803cb4341929 ]
 
-When doing fallocate, we first add the range to the reserve_list and
-then reserve the quota.  If quota reservation fails, we'll release all
-reserved parts of reserve_list.
+If for some reason the device gives us an RX interrupt before we're
+ready for it, perhaps during device power-on with misconfigured IRQ
+causes mapping or so, we can crash trying to access the queues.
 
-However, cur_offset is not updated to indicate that this range is
-already been inserted into the list.  Therefore, the same range is freed
-twice.  Once at list_for_each_entry loop, and once at the end of the
-function.  This will result in WARN_ON on bytes_may_use when we free the
-remaining space.
+Prevent that by checking that we actually have RXQs and that they
+were properly allocated.
 
-At the end, under the 'out' label we have a call to:
-
-   btrfs_free_reserved_data_space(inode, data_reserved, alloc_start, alloc_end - cur_offset);
-
-The start offset, third argument, should be cur_offset.
-
-Everything from alloc_start to cur_offset was freed by the
-list_for_each_entry_safe_loop.
-
-Fixes: 18513091af94 ("btrfs: update btrfs_space_info's bytes_may_use timely")
-Reviewed-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: Robbie Ko <robbieko@synology.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/file.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/wireless/intel/iwlwifi/pcie/rx.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/fs/btrfs/file.c b/fs/btrfs/file.c
-index ca4902c66dc43..868da8566f84c 100644
---- a/fs/btrfs/file.c
-+++ b/fs/btrfs/file.c
-@@ -3151,6 +3151,7 @@ static long btrfs_fallocate(struct file *file, int mode,
- 			ret = btrfs_qgroup_reserve_data(inode, &data_reserved,
- 					cur_offset, last_byte - cur_offset);
- 			if (ret < 0) {
-+				cur_offset = last_byte;
- 				free_extent_map(em);
- 				break;
- 			}
-@@ -3200,7 +3201,7 @@ static long btrfs_fallocate(struct file *file, int mode,
- 	/* Let go of our reservation. */
- 	if (ret != 0 && !(mode & FALLOC_FL_ZERO_RANGE))
- 		btrfs_free_reserved_data_space(inode, data_reserved,
--				alloc_start, alloc_end - cur_offset);
-+				cur_offset, alloc_end - cur_offset);
- 	extent_changeset_free(data_reserved);
- 	return ret;
- }
+diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/rx.c b/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
+index b2905f01b7df3..6dcd5374d9b4d 100644
+--- a/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
++++ b/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
+@@ -1388,10 +1388,15 @@ static struct iwl_rx_mem_buffer *iwl_pcie_get_rxb(struct iwl_trans *trans,
+ static void iwl_pcie_rx_handle(struct iwl_trans *trans, int queue)
+ {
+ 	struct iwl_trans_pcie *trans_pcie = IWL_TRANS_GET_PCIE_TRANS(trans);
+-	struct iwl_rxq *rxq = &trans_pcie->rxq[queue];
++	struct iwl_rxq *rxq;
+ 	u32 r, i, count = 0;
+ 	bool emergency = false;
+ 
++	if (WARN_ON_ONCE(!trans_pcie->rxq || !trans_pcie->rxq[queue].bd))
++		return;
++
++	rxq = &trans_pcie->rxq[queue];
++
+ restart:
+ 	spin_lock(&rxq->lock);
+ 	/* uCode's read index (stored in shared DRAM) indicates the last Rx
 -- 
 2.20.1
 
