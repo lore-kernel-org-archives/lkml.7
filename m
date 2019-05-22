@@ -2,186 +2,92 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C460C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:53:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBD35C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:54:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CFA821019
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:53:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DEF72173C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:54:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="tKXqnvKm"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZsWbcteA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730395AbfEVUxn (ORCPT
+        id S1730421AbfEVUyv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 16:53:43 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:38642 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729528AbfEVUxm (ORCPT
+        Wed, 22 May 2019 16:54:51 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:39210 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729980AbfEVUyu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 16:53:42 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 6E53A886BF
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 08:53:38 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1558558418;
-        bh=DOEO3y2soOvXq8t/1GH0lADqJ6A3XwpUwCBU/Y2+CsU=;
-        h=From:To:CC:Subject:Date:References;
-        b=tKXqnvKm1e2jPtxiUAa9wBkNp5sPy3IrM8N13NfWSr/ObgLN3VIh7ZmkH4qjwe+01
-         i3gi8mbXgliFjD3Ceq5pSXJb9q8v0jQh1B4Y94ryyTMauKVP8wNxOrHVD2z9o0wQqv
-         lGgB4nIONrovafdDAmf5WXQhyKQ8Ze+xrnMG0/fIPWkt+0Naj2Ws9aDXlCyCdq7Gda
-         2ZE2yveMBtHBtZgXanpd6MaJvdEHbq2mRUA86Kdl5+AQdzcGnY++v+GQlIAL6qyTOd
-         9sBIzwC2sNiVKluVS7qt6sYBgMGPcBGWokc+/6/RbX5u0etwgtXbNsqVNuyzP9V6VR
-         Xe2cIy+F6eWXw==
-Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5ce5b6d00001>; Thu, 23 May 2019 08:53:36 +1200
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
- by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
- Microsoft SMTP Server (TLS) id 15.0.1156.6; Thu, 23 May 2019 08:53:37 +1200
-Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
- svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
- 15.00.1156.000; Thu, 23 May 2019 08:53:37 +1200
-From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To:     Richard Weinberger <richard.weinberger@gmail.com>
-CC:     David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        "Miquel Raynal" <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] mtd: concat: refactor concat_lock/concat_unlock
-Thread-Topic: [PATCH 1/2] mtd: concat: refactor concat_lock/concat_unlock
-Thread-Index: AQHVEDJo4rpNy/YxbUOF1g0LZpyjfw==
-Date:   Wed, 22 May 2019 20:53:36 +0000
-Message-ID: <86adfe1f5a18492fbdf4bbe26ca05a93@svr-chch-ex1.atlnz.lc>
-References: <20190522000753.13300-1-chris.packham@alliedtelesis.co.nz>
- <CAFLxGvzvAdhmNOaNmPCRXUR9GGgaQ1n2HuRLLCb4Nj-tUrm5yQ@mail.gmail.com>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [2001:df5:b000:22:3a2c:4aff:fe70:2b02]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 22 May 2019 16:54:50 -0400
+Received: by mail-pl1-f194.google.com with SMTP id g9so1638224plm.6
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 13:54:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=wb2xYG/vaqBuTYr8EC9pKNFA50F+MaGFUq5jU06hCpI=;
+        b=ZsWbcteAcKvqlbL0XchkDzsiNFbre5iRTaBErI2NbAVs8jKRHtRARU/OqojtisS531
+         GtdpDIRrtuYX0nWZXcY/9wTvm3k1T1dZRPFRdEODpKDr6ZAvgekbDN04nBo/ftMYfmTs
+         I7EN0j163Jn6QCRWL+EkKxp9pFFGyV/rSz/xk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=wb2xYG/vaqBuTYr8EC9pKNFA50F+MaGFUq5jU06hCpI=;
+        b=TpE9V22fCYd/Xc0cIEjddcl8FeVTdSGcVimoCjw6gZ7fPPpj5FmUioCPlIHrQdA9BV
+         EwVia6ZsrKnTdrmQHDMqaLteoJOGXXOH8CsZIP+Fz9OQKYoNiud+OC+BfO8FsKOIIa8b
+         XblXVWuy8hMGFSLNb8psaGSpi5UhZ3D6O+ulaq0xdVFrwrEvDButKJzH/vn5/ER28ZmW
+         j0FmpETwmO/0ooH+XS+Id0WwNirKerqAKocKCUQEcQCAg5uFy1wOMKAjqqd7DOHsuZJ8
+         OcI7fnJJb+s2WKIf6gOF7ZWQ0okozzq4nI7YeICCGWJTUdQGocnRsxKbcVTTwBatbN/O
+         Qh+w==
+X-Gm-Message-State: APjAAAXQrbySWHSgVICDUPFizpbdRC85HLGsyEweCEP8lq99GjUx7wJ2
+        rn4w8qj0UDSBneaqWD045jfNKA==
+X-Google-Smtp-Source: APXvYqwCkqu4EwdbWLMiMIXdPYdHE1XCksUDu28n26koT6oQ8HijpNqU3ghco+dpV8j7IrT9IT15mw==
+X-Received: by 2002:a17:902:e583:: with SMTP id cl3mr93651928plb.35.1558558490033;
+        Wed, 22 May 2019 13:54:50 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id w4sm28698723pfi.87.2019.05.22.13.54.48
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 22 May 2019 13:54:48 -0700 (PDT)
+Date:   Wed, 22 May 2019 13:54:47 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Gen Zhang <blackgod016574@gmail.com>
+Cc:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] consolemap: Fix a memory leaking bug in
+ drivers/tty/vt/consolemap.c
+Message-ID: <201905221353.AD8E585E6D@keescook>
+References: <20190521092935.GA2297@zhanggen-UX430UQ>
+ <201905211342.DE554F0D@keescook>
+ <20190522015055.GC4093@zhanggen-UX430UQ>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190522015055.GC4093@zhanggen-UX430UQ>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/05/19 8:30 AM, Richard Weinberger wrote:=0A=
-> On Wed, May 22, 2019 at 2:08 AM Chris Packham=0A=
-> <chris.packham@alliedtelesis.co.nz> wrote:=0A=
->>=0A=
->> concat_lock() and concat_unlock() only differed in terms of the mtd_xx=
-=0A=
->> operation they called. Refactor them to use a common helper function and=
-=0A=
->> pass mtd_lock or mtd_unlock as an argument.=0A=
->>=0A=
->> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>=0A=
->> ---=0A=
->>   drivers/mtd/mtdconcat.c | 41 +++++++++--------------------------------=
-=0A=
->>   1 file changed, 9 insertions(+), 32 deletions(-)=0A=
->>=0A=
->> diff --git a/drivers/mtd/mtdconcat.c b/drivers/mtd/mtdconcat.c=0A=
->> index cbc5925e6440..9514cd2db63c 100644=0A=
->> --- a/drivers/mtd/mtdconcat.c=0A=
->> +++ b/drivers/mtd/mtdconcat.c=0A=
->> @@ -451,7 +451,8 @@ static int concat_erase(struct mtd_info *mtd, struct=
- erase_info *instr)=0A=
->>          return err;=0A=
->>   }=0A=
->>=0A=
->> -static int concat_lock(struct mtd_info *mtd, loff_t ofs, uint64_t len)=
-=0A=
->> +static int __concat_xxlock(struct mtd_info *mtd, loff_t ofs, uint64_t l=
-en,=0A=
->> +                          int (*mtd_op)(struct mtd_info *mtd, loff_t of=
-s, uint64_t len))=0A=
->>   {=0A=
->>          struct mtd_concat *concat =3D CONCAT(mtd);=0A=
->>          int i, err =3D -EINVAL;=0A=
->> @@ -470,7 +471,7 @@ static int concat_lock(struct mtd_info *mtd, loff_t =
-ofs, uint64_t len)=0A=
->>                  else=0A=
->>                          size =3D len;=0A=
->>=0A=
->> -               err =3D mtd_lock(subdev, ofs, size);=0A=
->> +               err =3D mtd_op(subdev, ofs, size);=0A=
->>                  if (err)=0A=
->>                          break;=0A=
->>=0A=
->> @@ -485,38 +486,14 @@ static int concat_lock(struct mtd_info *mtd, loff_=
-t ofs, uint64_t len)=0A=
->>          return err;=0A=
->>   }=0A=
->>=0A=
->> -static int concat_unlock(struct mtd_info *mtd, loff_t ofs, uint64_t len=
-)=0A=
->> +static int concat_lock(struct mtd_info *mtd, loff_t ofs, uint64_t len)=
-=0A=
->>   {=0A=
->> -       struct mtd_concat *concat =3D CONCAT(mtd);=0A=
->> -       int i, err =3D 0;=0A=
->> -=0A=
->> -       for (i =3D 0; i < concat->num_subdev; i++) {=0A=
->> -               struct mtd_info *subdev =3D concat->subdev[i];=0A=
->> -               uint64_t size;=0A=
->> -=0A=
->> -               if (ofs >=3D subdev->size) {=0A=
->> -                       size =3D 0;=0A=
->> -                       ofs -=3D subdev->size;=0A=
->> -                       continue;=0A=
->> -               }=0A=
->> -               if (ofs + len > subdev->size)=0A=
->> -                       size =3D subdev->size - ofs;=0A=
->> -               else=0A=
->> -                       size =3D len;=0A=
->> -=0A=
->> -               err =3D mtd_unlock(subdev, ofs, size);=0A=
->> -               if (err)=0A=
->> -                       break;=0A=
->> -=0A=
->> -               len -=3D size;=0A=
->> -               if (len =3D=3D 0)=0A=
->> -                       break;=0A=
->> -=0A=
->> -               err =3D -EINVAL;=0A=
->> -               ofs =3D 0;=0A=
->> -       }=0A=
->> +       return __concat_xxlock(mtd, ofs, len, mtd_lock);=0A=
->> +}=0A=
->>=0A=
->> -       return err;=0A=
->> +static int concat_unlock(struct mtd_info *mtd, loff_t ofs, uint64_t len=
-)=0A=
->> +{=0A=
->> +       return __concat_xxlock(mtd, ofs, len, mtd_unlock);=0A=
->>   }=0A=
->>=0A=
->>   static void concat_sync(struct mtd_info *mtd)=0A=
-> =0A=
-> Not sure if it passing a function pointer is worth it. bool is_lock would=
-=0A=
-> also do it. But this is a matter of taste, I guess. :)=0A=
-=0A=
-I briefly considered that. But since mtd_lock(), mtd_unlock() and =0A=
-mtd_is_locked() all take the same arguments I figured it'd benefit from =0A=
-some type checking. A bool wouldn't work (assuming I can convince you =0A=
-about 2/2) but an enum mtd_op or int flags would do the trick if you =0A=
-want me to change it.=0A=
-=0A=
-> =0A=
-> Reviewed-by: Richard Weinberger <richard@nod.at>=0A=
-> =0A=
-=0A=
+On Wed, May 22, 2019 at 09:50:55AM +0800, Gen Zhang wrote:
+> On Tue, May 21, 2019 at 01:44:33PM -0700, Kees Cook wrote:
+> > This doesn't look safe to me: p->uni_pgdir[n] will still have a handle
+> > to the freed memory, won't it?
+> > 
+> Thanks for your reply, Kees!
+> I think you are right. Maybe we should do this:
+> 	kfree(p1);
+> 	p->uni_pgdir[n] = NULL;
+> Is this correct?
+
+That's what I'm not sure about. I *think* so, from reading the code, but
+I'd love to have Greg (or someone more familiar with the code) to
+double-check this.
+
+Otherwise, yeah, this looks right. Please send a v2 and we can debate
+the correctness there, if it turns out to be wrong. :)
+
+-- 
+Kees Cook
