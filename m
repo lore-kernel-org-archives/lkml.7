@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BCABC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:59:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56CA8C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:59:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0ABB20856
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:59:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1916A20856
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:59:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558555190;
-	bh=AGbvE1qAgHxbpS5g4jJ4OEIjLr+GAfO0a8RcO+5NDSA=;
+	s=default; t=1558555196;
+	bh=QePx1IMak/j1YkCE6t2wjbBLa/k4asf6AK8gETWFaGc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c/ji156c68njTEo/0KN+WyB3Dnccs9kohOj5wDAXyU40zqquESY/ikt8B3rOy+rJK
-	 SGqny6RJJAwi+8UcnU+HbtKJhSekvVPDiuTYQMR7+xWuOUE8d8K+8dGxnoOn698P1R
-	 3z2gsGkpa97HbdNV/h4O3S0mUQtXQOF13F775034=
+	b=P/MVhQ9V04/uo/2vz4Ao+jGIg+4pi37EKXAOG4FlETvQt2CUuHITCNz5uqUylBPSk
+	 +EXXd06KtcU/yr6q9woFscSMSeuG1EvP2N3MVmEydUTtt1Ffrjfl06ocgnTZfuHvCz
+	 NNvb21Y9Tohvh8XosGfIoZFPcKoeRmnwHp+Xlj0s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732848AbfEVT7t (ORCPT
+        id S1733269AbfEVT7z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:59:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44298 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:59:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44258 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730870AbfEVTXY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:23:24 -0400
+        id S1730034AbfEVTXW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:23:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D4DC2173C;
-        Wed, 22 May 2019 19:23:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C39E21473;
+        Wed, 22 May 2019 19:23:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553004;
-        bh=AGbvE1qAgHxbpS5g4jJ4OEIjLr+GAfO0a8RcO+5NDSA=;
+        s=default; t=1558553002;
+        bh=QePx1IMak/j1YkCE6t2wjbBLa/k4asf6AK8gETWFaGc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=InNxT5Yt0mtqRxt08qqHPgQlNfg0H4BYl2wrZ96DzDQxKTEj8I+8m8+5MssUQpgQB
-         O8NOF8/7s5+AtnnpjKeSD/SRkJzaOEHalvWHJSWPMImvtEThpOEiNhP6Ys5JA+miZ8
-         0O1c0YqWQv/xwX/hNcDEiWETR1j083fkCqJ8TGiQ=
+        b=DiJfk4gRAVwwrliMb2Oi9lMvlMrZQX76LLW24yzHfWatDX2Cfy7iABclH8c1w9ztS
+         8usCGbkGLPNEWPTejB5s4gkgucqt5QQPloH7NV3KLAEpzR9tquKtW8qImsiW1u7Rod
+         NZmUKdubpKu5nbRKo2JhCJhIKOIvMo5uJrpyD7W0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Julian Wiedmann <jwi@linux.ibm.com>,
+Cc:     Yunsheng Lin <linyunsheng@huawei.com>,
+        Peng Li <lipeng321@huawei.com>,
+        Huazhong Tan <tanhuazhong@huawei.com>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 072/375] s390: qeth: address type mismatch warning
-Date:   Wed, 22 May 2019 15:16:12 -0400
-Message-Id: <20190522192115.22666-72-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 070/375] net: hns3: fix for TX clean num when cleaning TX BD
+Date:   Wed, 22 May 2019 15:16:10 -0400
+Message-Id: <20190522192115.22666-70-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192115.22666-1-sashal@kernel.org>
 References: <20190522192115.22666-1-sashal@kernel.org>
@@ -61,62 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Yunsheng Lin <linyunsheng@huawei.com>
 
-[ Upstream commit 46b83629dede262315aa82179d105581f11763b6 ]
+[ Upstream commit 63380a1ae4ced8aef67659ff9547c69ef8b9613a ]
 
-clang produces a harmless warning for each use for the qeth_adp_supported
-macro:
+hns3_desc_unused() returns how many BD have been cleaned, but new
+buffer has not been attached to them. The register of
+HNS3_RING_RX_RING_FBDNUM_REG returns how many BD need allocating new
+buffer to or need to cleaned. So the remaining BD need to be clean
+is HNS3_RING_RX_RING_FBDNUM_REG - hns3_desc_unused().
 
-drivers/s390/net/qeth_l2_main.c:559:31: warning: implicit conversion from enumeration type 'enum qeth_ipa_setadp_cmd' to
-      different enumeration type 'enum qeth_ipa_funcs' [-Wenum-conversion]
-        if (qeth_adp_supported(card, IPA_SETADP_SET_PROMISC_MODE))
-            ~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/s390/net/qeth_core.h:179:41: note: expanded from macro 'qeth_adp_supported'
-        qeth_is_ipa_supported(&c->options.adp, f)
-        ~~~~~~~~~~~~~~~~~~~~~                  ^
+Also, new buffer can not attach to the pending BD when the last BD is
+not handled, because memcpy has not been done on the first pending BD.
 
-Add a version of this macro that uses the correct types, and
-remove the unused qeth_adp_enabled() macro that has the same
-problem.
+This patch fixes by subtracting the pending BD num from unused_count
+after 'HNS3_RING_RX_RING_FBDNUM_REG - unused_count' is used to calculate
+the BD bum need to be clean.
 
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
+Fixes: e55970950556 ("net: hns3: Add handling of GRO Pkts not fully RX'ed in NAPI poll")
+Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+Signed-off-by: Peng Li <lipeng321@huawei.com>
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/net/qeth_core.h | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/s390/net/qeth_core.h b/drivers/s390/net/qeth_core.h
-index c851cf6e01c43..d603dfea97ab2 100644
---- a/drivers/s390/net/qeth_core.h
-+++ b/drivers/s390/net/qeth_core.h
-@@ -163,6 +163,12 @@ struct qeth_vnicc_info {
- 	bool rx_bcast_enabled;
- };
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+index 162cb9afa0e70..0208efe282775 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+@@ -2705,7 +2705,7 @@ int hns3_clean_rx_ring(
+ #define RCB_NOF_ALLOC_RX_BUFF_ONCE 16
+ 	struct net_device *netdev = ring->tqp->handle->kinfo.netdev;
+ 	int recv_pkts, recv_bds, clean_count, err;
+-	int unused_count = hns3_desc_unused(ring) - ring->pending_buf;
++	int unused_count = hns3_desc_unused(ring);
+ 	struct sk_buff *skb = ring->skb;
+ 	int num;
  
-+static inline int qeth_is_adp_supported(struct qeth_ipa_info *ipa,
-+		enum qeth_ipa_setadp_cmd func)
-+{
-+	return (ipa->supported_funcs & func);
-+}
-+
- static inline int qeth_is_ipa_supported(struct qeth_ipa_info *ipa,
- 		enum qeth_ipa_funcs func)
- {
-@@ -176,9 +182,7 @@ static inline int qeth_is_ipa_enabled(struct qeth_ipa_info *ipa,
- }
+@@ -2714,6 +2714,7 @@ int hns3_clean_rx_ring(
  
- #define qeth_adp_supported(c, f) \
--	qeth_is_ipa_supported(&c->options.adp, f)
--#define qeth_adp_enabled(c, f) \
--	qeth_is_ipa_enabled(&c->options.adp, f)
-+	qeth_is_adp_supported(&c->options.adp, f)
- #define qeth_is_supported(c, f) \
- 	qeth_is_ipa_supported(&c->options.ipa4, f)
- #define qeth_is_enabled(c, f) \
+ 	recv_pkts = 0, recv_bds = 0, clean_count = 0;
+ 	num -= unused_count;
++	unused_count -= ring->pending_buf;
+ 
+ 	while (recv_pkts < budget && recv_bds < num) {
+ 		/* Reuse or realloc buffers */
 -- 
 2.20.1
 
