@@ -2,346 +2,135 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47D58C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 12:15:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA0F0C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 12:17:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05409217F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 12:15:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B034120675
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 12:17:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hRYnE1JR"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="aSA1itul"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729414AbfEVMPI (ORCPT
+        id S1729221AbfEVMRO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 08:15:08 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:38923 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729252AbfEVMOx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 08:14:53 -0400
-Received: by mail-qt1-f193.google.com with SMTP id y42so1976554qtk.6
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 05:14:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=hXh4bCmEwa+AxUGicBmFJFLbtCUNuHPP264+/JbrWoQ=;
-        b=hRYnE1JRE0jvpBvCDewt+osyr31YDeowLBP46ZWh8aRljBKC4/JG+YHt3RayQ13B1h
-         CltThGCPD3CdQEDp/ZssNgtYk0gE1LyQC7DTOs7E4psw/sa84ULDk12iJWAg5oyA8O3S
-         e/vh2+Wf1eajwy4JFiYQyVeXcO4Ium2pEaZkpDHz2tSY/M+P9RKzu7IKuYOfxAQLNxnP
-         bz7+KlZsV/jbG2jLieYxXsFvsy7VlQtGo6Bl/awFza2RxtYGYIlYmh7Xwqi3mL609IIw
-         yfBv+eAyFP3LCL/dvAHljFtRLmKOrBSt5WEvmSUYqrpAWuhcr+TOj2zbTtetzfnROhkb
-         Dy0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=hXh4bCmEwa+AxUGicBmFJFLbtCUNuHPP264+/JbrWoQ=;
-        b=I6Ulx4S6tHUebQOaxXpKwK1junGRiM8dhcTL2MMLG7vNvapbL291rMmwYb+z3rJ3MH
-         iR1MqnzXdTO25XG4pjGDFEWyVS9l4gR3UIOuLw27i4IfuoCg9IAJVeKxGUEONBvQYK2D
-         H+ph2JdVPvmE+sR2WfRCLPfP19L9Wa4PyS5pzV3Hwr+41v5B0TyabxCzLKfu3rRcmwEE
-         JMIAQLRqSD2lv3feQvjUx/FOOCnvP2fbzpVMviH3c23vHOd0fvaFc2wJNUeT0PkYmvij
-         iUFtgTrQkrK+MIsmuHJAHaiDLWh/adxNDQXT8ZBiCjv9DZw+7a1kE2pFizO4DIXj4cVq
-         zwvQ==
-X-Gm-Message-State: APjAAAUEnsfJOA9mw7PcL5QQibq/aiAtoOIYAozmcZmv1KmTWBD3dZKx
-        PTOHsmh6Zl56x/3ZzKof3TE=
-X-Google-Smtp-Source: APXvYqzhNFYWaMbIBmU3VAAID0mq8CCWphfSuFA7nGG5AABOJ5MGjM7sVs50lGCWOSe/kJTPQi2RvQ==
-X-Received: by 2002:ac8:3801:: with SMTP id q1mr73691746qtb.250.1558527291671;
-        Wed, 22 May 2019 05:14:51 -0700 (PDT)
-Received: from arch-01.home (c-73-132-202-198.hsd1.dc.comcast.net. [73.132.202.198])
-        by smtp.gmail.com with ESMTPSA id w2sm8742070qto.19.2019.05.22.05.14.50
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 22 May 2019 05:14:51 -0700 (PDT)
-From:   Geordan Neukum <gneukum1@gmail.com>
+        Wed, 22 May 2019 08:17:14 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:45745 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728680AbfEVMRO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 08:17:14 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 458BTM0ZB4z9v2JC;
+        Wed, 22 May 2019 14:17:11 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=aSA1itul; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id 2tBcVXNsQ-sn; Wed, 22 May 2019 14:17:11 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 458BTL6PbWz9v2JB;
+        Wed, 22 May 2019 14:17:10 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1558527430; bh=ULpgX9HYncfSaEjyyyTwrdNHRBTq+jrPPxiAH/Bi1aw=;
+        h=From:Subject:To:Cc:Date:From;
+        b=aSA1itulWnmknDSRHJhSq1WT91YKt9nFX1g2vucCgzWDHHhNM0nDTcVysFxUvQZic
+         1v9U+CpLqpd8blZoTTPh8TgLi0ZrXGB2y7lrwuGlEn9MQBjybBAVdsixui/i5AXygf
+         0bmPvZ5IMK1zkqvNUvDbvhChGB8o7760K93FkHZU=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 2F6C18B840;
+        Wed, 22 May 2019 14:17:12 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id a6HB5Dsaeycs; Wed, 22 May 2019 14:17:12 +0200 (CEST)
+Received: from po16846vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.231.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 0A5E98B83E;
+        Wed, 22 May 2019 14:17:12 +0200 (CEST)
+Received: by po16846vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id E04AD68430; Wed, 22 May 2019 12:17:11 +0000 (UTC)
+Message-Id: <d99f90e2107d7bff3adc187b5ce36a79cc786bfd.1558527014.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH] tty: serial: cpm_uart - fix init when SMC is relocated
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Cc:     Matt Sickler <Matt.Sickler@daktronics.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Geordan Neukum <gneukum1@gmail.com>
-Subject: [PATCH 3/6] staging: kpc2000: kpc_i2c: newline fixups to meet linux style guide
-Date:   Wed, 22 May 2019 12:13:59 +0000
-Message-Id: <1c1b8428a502e79f19af7bc2a98787ecc6a1ed5a.1558526487.git.gneukum1@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <cover.1558526487.git.gneukum1@gmail.com>
-References: <cover.1558526487.git.gneukum1@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Jiri Slaby <jslaby@suse.com>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-serial@vger.kernel.org
+Date:   Wed, 22 May 2019 12:17:11 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The linux coding style document states:
+SMC relocation can also be activated earlier by the bootloader,
+so the driver's behaviour cannot rely on selected kernel config.
 
-  1) That braces should not be used where a single single statement
-     will do. Therefore all instances of single block statements
-     wrapped in braces that do not meet the qualifications of any
-     of the exceptions to the rule should be fixed up.
+When the SMC is relocated, CPM_CR_INIT_TRX cannot be used.
 
-  2) That the declaration of variables local to a given function
-     should be immediately followed by a blank newline. Therefore,
-     the single instance of this in kpc2000_i2c.c should be fixed
-     up.
+But the only thing CPM_CR_INIT_TRX does is to clear the
+rstate and tstate registers, so this can be done manually,
+even when SMC is not relocated.
 
-Signed-off-by: Geordan Neukum <gneukum1@gmail.com>
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Fixes: 9ab921201444 ("cpm_uart: fix non-console port startup bug")
 ---
- drivers/staging/kpc2000/kpc2000_i2c.c | 82 ++++++++++-----------------
- 1 file changed, 29 insertions(+), 53 deletions(-)
+ drivers/tty/serial/cpm_uart/cpm_uart_core.c | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/staging/kpc2000/kpc2000_i2c.c b/drivers/staging/kpc2000/kpc2000_i2c.c
-index 40a89998726e..a1ebc2386d70 100644
---- a/drivers/staging/kpc2000/kpc2000_i2c.c
-+++ b/drivers/staging/kpc2000/kpc2000_i2c.c
-@@ -178,9 +178,8 @@ static int i801_check_post(struct i2c_device *priv, int status, int timeout)
- 
- 		/* Check if it worked */
- 		status = inb_p(SMBHSTSTS(priv));
--		if ((status & SMBHSTSTS_HOST_BUSY) || !(status & SMBHSTSTS_FAILED)) {
-+		if ((status & SMBHSTSTS_HOST_BUSY) || !(status & SMBHSTSTS_FAILED))
- 			dev_err(&priv->adapter.dev, "Failed terminating the transaction\n");
--		}
- 		outb_p(STATUS_FLAGS, SMBHSTSTS(priv));
- 		return -ETIMEDOUT;
- 	}
-@@ -202,9 +201,8 @@ static int i801_check_post(struct i2c_device *priv, int status, int timeout)
- 		/* Clear error flags */
- 		outb_p(status & STATUS_FLAGS, SMBHSTSTS(priv));
- 		status = inb_p(SMBHSTSTS(priv)) & STATUS_FLAGS;
--		if (status) {
-+		if (status)
- 			dev_warn(&priv->adapter.dev, "Failed clearing status flags at end of transaction (%02x)\n", status);
--		}
- 	}
- 
- 	return result;
-@@ -219,9 +217,8 @@ static int i801_transaction(struct i2c_device *priv, int xact)
- 	dev_dbg(&priv->adapter.dev, "%s\n", __func__);
- 
- 	result = i801_check_pre(priv);
--	if (result < 0) {
-+	if (result < 0)
- 		return result;
--	}
- 	/* the current contents of SMBHSTCNT can be overwritten, since PEC,
- 	 * INTREN, SMBSCMD are passed in xact
- 	 */
-@@ -234,9 +231,8 @@ static int i801_transaction(struct i2c_device *priv, int xact)
- 	} while ((status & SMBHSTSTS_HOST_BUSY) && (timeout++ < MAX_RETRIES));
- 
- 	result = i801_check_post(priv, status, timeout > MAX_RETRIES);
--	if (result < 0) {
-+	if (result < 0)
- 		return result;
--	}
- 
- 	outb_p(SMBHSTSTS_INTR, SMBHSTSTS(priv));
- 	return 0;
-@@ -255,9 +251,8 @@ static void i801_wait_hwpec(struct i2c_device *priv)
- 		status = inb_p(SMBHSTSTS(priv));
- 	} while ((!(status & SMBHSTSTS_INTR)) && (timeout++ < MAX_RETRIES));
- 
--	if (timeout > MAX_RETRIES) {
-+	if (timeout > MAX_RETRIES)
- 		dev_dbg(&priv->adapter.dev, "PEC Timeout!\n");
--	}
- 
- 	outb_p(status, SMBHSTSTS(priv));
- }
-@@ -275,26 +270,22 @@ static int i801_block_transaction_by_block(struct i2c_device *priv, union i2c_sm
- 	if (read_write == I2C_SMBUS_WRITE) {
- 		len = data->block[0];
- 		outb_p(len, SMBHSTDAT0(priv));
--		for (i = 0; i < len; i++) {
-+		for (i = 0; i < len; i++)
- 			outb_p(data->block[i+1], SMBBLKDAT(priv));
--		}
- 	}
- 
- 	status = i801_transaction(priv, I801_BLOCK_DATA | ENABLE_INT9 | I801_PEC_EN * hwpec);
--	if (status) {
-+	if (status)
- 		return status;
--	}
- 
- 	if (read_write == I2C_SMBUS_READ) {
- 		len = inb_p(SMBHSTDAT0(priv));
--		if (len < 1 || len > I2C_SMBUS_BLOCK_MAX) {
-+		if (len < 1 || len > I2C_SMBUS_BLOCK_MAX)
- 			return -EPROTO;
--		}
- 
- 		data->block[0] = len;
--		for (i = 0; i < len; i++) {
-+		for (i = 0; i < len; i++)
- 			data->block[i + 1] = inb_p(SMBBLKDAT(priv));
--		}
- 	}
- 	return 0;
- }
-@@ -310,9 +301,8 @@ static int i801_block_transaction_byte_by_byte(struct i2c_device *priv, union i2
- 	dev_dbg(&priv->adapter.dev, "%s\n", __func__);
- 
- 	result = i801_check_pre(priv);
--	if (result < 0) {
-+	if (result < 0)
- 		return result;
--	}
- 
- 	len = data->block[0];
- 
-@@ -323,23 +313,20 @@ static int i801_block_transaction_byte_by_byte(struct i2c_device *priv, union i2
- 
- 	for (i = 1; i <= len; i++) {
- 		if (i == len && read_write == I2C_SMBUS_READ) {
--			if (command == I2C_SMBUS_I2C_BLOCK_DATA) {
-+			if (command == I2C_SMBUS_I2C_BLOCK_DATA)
- 				smbcmd = I801_I2C_BLOCK_LAST;
--			} else {
-+			else
- 				smbcmd = I801_BLOCK_LAST;
--			}
- 		} else {
--			if (command == I2C_SMBUS_I2C_BLOCK_DATA && read_write == I2C_SMBUS_READ) {
-+			if (command == I2C_SMBUS_I2C_BLOCK_DATA && read_write == I2C_SMBUS_READ)
- 				smbcmd = I801_I2C_BLOCK_DATA;
--			} else {
-+			else
- 				smbcmd = I801_BLOCK_DATA;
--			}
+diff --git a/drivers/tty/serial/cpm_uart/cpm_uart_core.c b/drivers/tty/serial/cpm_uart/cpm_uart_core.c
+index b929c7ae3a27..7bab9a3eda92 100644
+--- a/drivers/tty/serial/cpm_uart/cpm_uart_core.c
++++ b/drivers/tty/serial/cpm_uart/cpm_uart_core.c
+@@ -407,7 +407,16 @@ static int cpm_uart_startup(struct uart_port *port)
+ 			clrbits16(&pinfo->sccp->scc_sccm, UART_SCCM_RX);
  		}
- 		outb_p(smbcmd | ENABLE_INT9, SMBHSTCNT(priv));
- 
--		if (i == 1) {
-+		if (i == 1)
- 			outb_p(inb(SMBHSTCNT(priv)) | I801_START, SMBHSTCNT(priv));
--		}
- 		/* We will always wait for a fraction of a second! */
- 		timeout = 0;
- 		do {
-@@ -348,17 +335,15 @@ static int i801_block_transaction_byte_by_byte(struct i2c_device *priv, union i2
- 		} while ((!(status & SMBHSTSTS_BYTE_DONE)) && (timeout++ < MAX_RETRIES));
- 
- 		result = i801_check_post(priv, status, timeout > MAX_RETRIES);
--		if (result < 0) {
-+		if (result < 0)
- 			return result;
--		}
- 		if (i == 1 && read_write == I2C_SMBUS_READ && command != I2C_SMBUS_I2C_BLOCK_DATA) {
- 			len = inb_p(SMBHSTDAT0(priv));
- 			if (len < 1 || len > I2C_SMBUS_BLOCK_MAX) {
- 				dev_err(&priv->adapter.dev, "Illegal SMBus block read size %d\n", len);
- 				/* Recover */
--				while (inb_p(SMBHSTSTS(priv)) & SMBHSTSTS_HOST_BUSY) {
-+				while (inb_p(SMBHSTSTS(priv)) & SMBHSTSTS_HOST_BUSY)
- 					outb_p(SMBHSTSTS_BYTE_DONE, SMBHSTSTS(priv));
--				}
- 				outb_p(SMBHSTSTS_INTR, SMBHSTSTS(priv));
- 				return -EPROTO;
- 			}
-@@ -366,12 +351,10 @@ static int i801_block_transaction_byte_by_byte(struct i2c_device *priv, union i2
- 		}
- 
- 		/* Retrieve/store value in SMBBLKDAT */
--		if (read_write == I2C_SMBUS_READ) {
-+		if (read_write == I2C_SMBUS_READ)
- 			data->block[i] = inb_p(SMBBLKDAT(priv));
--		}
--		if (read_write == I2C_SMBUS_WRITE && i+1 <= len) {
-+		if (read_write == I2C_SMBUS_WRITE && i+1 <= len)
- 			outb_p(data->block[i+1], SMBBLKDAT(priv));
--		}
- 		/* signals SMBBLKDAT ready */
- 		outb_p(SMBHSTSTS_BYTE_DONE | SMBHSTSTS_INTR, SMBHSTSTS(priv));
+ 		cpm_uart_initbd(pinfo);
+-		cpm_line_cr_cmd(pinfo, CPM_CR_INIT_TRX);
++		if (IS_SMC(pinfo)) {
++			out_be32(&pinfo->smcup->smc_rstate, 0);
++			out_be32(&pinfo->smcup->smc_tstate, 0);
++			out_be16(&pinfo->smcup->smc_rbptr,
++				 in_be16(&pinfo->smcup->smc_rbase));
++			out_be16(&pinfo->smcup->smc_tbptr,
++				 in_be16(&pinfo->smcup->smc_tbase));
++		} else {
++			cpm_line_cr_cmd(pinfo, CPM_CR_INIT_TRX);
++		}
  	}
-@@ -384,9 +367,8 @@ static int i801_set_block_buffer_mode(struct i2c_device *priv)
- 	dev_dbg(&priv->adapter.dev, "%s\n", __func__);
+ 	/* Install interrupt handler. */
+ 	retval = request_irq(port->irq, cpm_uart_int, 0, "cpm_uart", port);
+@@ -861,16 +870,14 @@ static void cpm_uart_init_smc(struct uart_cpm_port *pinfo)
+ 	         (u8 __iomem *)pinfo->tx_bd_base - DPRAM_BASE);
  
- 	outb_p(inb_p(SMBAUXCTL(priv)) | SMBAUXCTL_E32B, SMBAUXCTL(priv));
--	if ((inb_p(SMBAUXCTL(priv)) & SMBAUXCTL_E32B) == 0) {
-+	if ((inb_p(SMBAUXCTL(priv)) & SMBAUXCTL_E32B) == 0)
- 		return -EIO;
--	}
- 	return 0;
- }
+ /*
+- *  In case SMC1 is being relocated...
++ *  In case SMC is being relocated...
+  */
+-#if defined (CONFIG_I2C_SPI_SMC1_UCODE_PATCH)
+ 	out_be16(&up->smc_rbptr, in_be16(&pinfo->smcup->smc_rbase));
+ 	out_be16(&up->smc_tbptr, in_be16(&pinfo->smcup->smc_tbase));
+ 	out_be32(&up->smc_rstate, 0);
+ 	out_be32(&up->smc_tstate, 0);
+ 	out_be16(&up->smc_brkcr, 1);              /* number of break chars */
+ 	out_be16(&up->smc_brkec, 0);
+-#endif
  
-@@ -411,12 +393,10 @@ static int i801_block_transaction(struct i2c_device *priv, union i2c_smbus_data
- 	}
+ 	/* Set up the uart parameters in the
+ 	 * parameter ram.
+@@ -884,8 +891,6 @@ static void cpm_uart_init_smc(struct uart_cpm_port *pinfo)
+ 	out_be16(&up->smc_brkec, 0);
+ 	out_be16(&up->smc_brkcr, 1);
  
- 	if (read_write == I2C_SMBUS_WRITE || command == I2C_SMBUS_I2C_BLOCK_DATA) {
--		if (data->block[0] < 1) {
-+		if (data->block[0] < 1)
- 			data->block[0] = 1;
--		}
--		if (data->block[0] > I2C_SMBUS_BLOCK_MAX) {
-+		if (data->block[0] > I2C_SMBUS_BLOCK_MAX)
- 			data->block[0] = I2C_SMBUS_BLOCK_MAX;
--		}
- 	} else {
- 		data->block[0] = 32;	/* max for SMBus block reads */
- 	}
-@@ -425,14 +405,12 @@ static int i801_block_transaction(struct i2c_device *priv, union i2c_smbus_data
- 	 * SMBus (not I2C) block transactions, even though the datasheet
- 	 * doesn't mention this limitation.
+-	cpm_line_cr_cmd(pinfo, CPM_CR_INIT_TRX);
+-
+ 	/* Set UART mode, 8 bit, no parity, one stop.
+ 	 * Enable receive and transmit.
  	 */
--	if ((priv->features & FEATURE_BLOCK_BUFFER) && command != I2C_SMBUS_I2C_BLOCK_DATA && i801_set_block_buffer_mode(priv) == 0) {
-+	if ((priv->features & FEATURE_BLOCK_BUFFER) && command != I2C_SMBUS_I2C_BLOCK_DATA && i801_set_block_buffer_mode(priv) == 0)
- 		result = i801_block_transaction_by_block(priv, data, read_write, hwpec);
--	} else {
-+	else
- 		result = i801_block_transaction_byte_by_byte(priv, data, read_write, command, hwpec);
--	}
--	if (result == 0 && hwpec) {
-+	if (result == 0 && hwpec)
- 		i801_wait_hwpec(priv);
--	}
- 	if (command == I2C_SMBUS_I2C_BLOCK_DATA && read_write == I2C_SMBUS_WRITE) {
- 		/* restore saved configuration register value */
- 		//TODO: Figure out the right thing to do here...
-@@ -465,18 +443,16 @@ static s32 i801_access(struct i2c_adapter *adap, u16 addr, unsigned short flags,
- 		dev_dbg(&priv->adapter.dev, "  [acc] SMBUS_BYTE\n");
- 
- 		outb_p(((addr & 0x7f) << 1) | (read_write & 0x01), SMBHSTADD(priv));
--		if (read_write == I2C_SMBUS_WRITE) {
-+		if (read_write == I2C_SMBUS_WRITE)
- 			outb_p(command, SMBHSTCMD(priv));
--		}
- 		xact = I801_BYTE;
- 		break;
- 	case I2C_SMBUS_BYTE_DATA:
- 		dev_dbg(&priv->adapter.dev, "  [acc] SMBUS_BYTE_DATA\n");
- 		outb_p(((addr & 0x7f) << 1) | (read_write & 0x01), SMBHSTADD(priv));
- 		outb_p(command, SMBHSTCMD(priv));
--		if (read_write == I2C_SMBUS_WRITE) {
-+		if (read_write == I2C_SMBUS_WRITE)
- 			outb_p(data->byte, SMBHSTDAT0(priv));
--		}
- 		xact = I801_BYTE_DATA;
- 		break;
- 	case I2C_SMBUS_WORD_DATA:
-@@ -633,9 +609,8 @@ int pi2c_probe(struct platform_device *pldev)
- 		pldev->name);
- 
- 	priv = devm_kzalloc(&pldev->dev, sizeof(*priv), GFP_KERNEL);
--	if (!priv) {
-+	if (!priv)
- 		return -ENOMEM;
--	}
- 
- 	i2c_set_adapdata(&priv->adapter, priv);
- 	priv->adapter.owner = THIS_MODULE;
-@@ -677,6 +652,7 @@ int pi2c_probe(struct platform_device *pldev)
- int pi2c_remove(struct platform_device *pldev)
- {
- 	struct i2c_device *lddev;
-+
- 	dev_dbg(&pldev->dev, "%s(pldev = %p '%s')\n", __func__, pldev,
- 		pldev->name);
- 
 -- 
-2.21.0
+2.13.3
 
