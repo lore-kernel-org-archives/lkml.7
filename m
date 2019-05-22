@@ -2,109 +2,80 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 608B3C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:45:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43C03C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:45:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28C4D2089E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:45:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558554340;
-	bh=eHjR7WKf4S/nm5NSKt//euvYzwhQVvsxfSeDGz2iyFo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=otxgShz8JbhsJBjANCZhBAKekTz3vZvLSzsUOfpGlersO7xuIbYcsI9zN37MGhFL8
-	 GctLchdN+FxtdwDBglkr+f26zYZlgMn8El0/LIeuLKqJTW2EXvE7KJySoGD6sxqkrp
-	 TjuX+XlqWJXbfMdoDACwo8xJTkt/XKzdmbNTBHJU=
+	by mail.kernel.org (Postfix) with ESMTP id 159782081C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:45:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="ZDl33/CA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387822AbfEVTpi (ORCPT
+        id S2387843AbfEVTpm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:45:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50372 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:45:42 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:43775 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731901AbfEVT1z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:27:55 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 23E9920879;
-        Wed, 22 May 2019 19:27:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553274;
-        bh=eHjR7WKf4S/nm5NSKt//euvYzwhQVvsxfSeDGz2iyFo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GqQbDixfFiuId5yelEOPm2Xa84KaIx8KGGvaQ8PaHE2w+4GpLhNdXo80K3oB9SMAo
-         vEm2j9I6bgsiSjcqvrjABLPpPfoFeTcw2piWt0GJy4ljQU9pD+QgSZNTvi0FK+jtgP
-         tQOUoy0Xt+n46bUDsZA3Ts3PSpq2Z1/iztWSAM1A=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mariusz Bialonczyk <manio@skyboo.net>,
-        Jean-Francois Dagenais <jeff.dagenais@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 049/244] w1: fix the resume command API
-Date:   Wed, 22 May 2019 15:23:15 -0400
-Message-Id: <20190522192630.24917-49-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190522192630.24917-1-sashal@kernel.org>
-References: <20190522192630.24917-1-sashal@kernel.org>
+        id S2387826AbfEVTpk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:45:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=XNbOGS4rvkgdUZMHxmhjwr36ofxZ/LCzsygeLRYsvOg=; b=ZDl33/CAORcP7yl3ULlzFAQI8L
+        JOJdOn2+59ezvFK21YTIlmlziHliJKAvIV1dqoBczKcThUkRms3/jx7OJSNEKejqWgnGB92gCidUb
+        /yMZQQkxp14fp+ZmkJx0s4hl1yK44PjIQ1AUMKXgcUNOGjwFiKH37iwAZ4N2HT09W3sM=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hTXB3-0003JC-Ds; Wed, 22 May 2019 21:45:29 +0200
+Date:   Wed, 22 May 2019 21:45:29 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Sagar Shrikant Kadam <sagar.kadam@sifive.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, peter@korsgaard.com,
+        palmer@sifive.com, paul.walmsley@sifive.com,
+        linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 3/3] i2c-ocores: sifive: add polling mode workaround
+ for FU540-C000 SoC.
+Message-ID: <20190522194529.GJ7281@lunn.ch>
+References: <1558515574-11155-1-git-send-email-sagar.kadam@sifive.com>
+ <1558515574-11155-4-git-send-email-sagar.kadam@sifive.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1558515574-11155-4-git-send-email-sagar.kadam@sifive.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mariusz Bialonczyk <manio@skyboo.net>
+On Wed, May 22, 2019 at 02:29:34PM +0530, Sagar Shrikant Kadam wrote:
+> The i2c-ocore driver already has a polling mode interface.But it needs
+> a workaround for FU540 Chipset on HiFive unleashed board (RevA00).
+> There is an erratum in FU540 chip that prevents interrupt driven i2c
+> transfers from working, and also the I2C controller's interrupt bit
+> cannot be cleared if set, due to this the existing i2c polling mode
+> interface added in mainline earlier doesn't work, and CPU stall's
+> infinitely, when-ever i2c transfer is initiated.
+> 
+> Ref:
+> 	commit dd7dbf0eb090 ("i2c: ocores: refactor setup for polling")
+> 
+> The workaround / fix under OCORES_FLAG_BROKEN_IRQ is particularly for
+> FU540-COOO SoC.
+> 
+> The polling function identifies a SiFive device based on the device node
+> and enables the workaround.
+> 
+> Signed-off-by: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
 
-[ Upstream commit 62909da8aca048ecf9fbd7e484e5100608f40a63 ]
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
->From the DS2408 datasheet [1]:
-"Resume Command function checks the status of the RC flag and, if it is set,
- directly transfers control to the control functions, similar to a Skip ROM
- command. The only way to set the RC flag is through successfully executing
- the Match ROM, Search ROM, Conditional Search ROM, or Overdrive-Match ROM
- command"
-
-The function currently works perfectly fine in a multidrop bus, but when we
-have only a single slave connected, then only a Skip ROM is used and Match
-ROM is not called at all. This is leading to problems e.g. with single one
-DS2408 connected, as the Resume Command is not working properly and the
-device is responding with failing results after the Resume Command.
-
-This commit is fixing this by using a Skip ROM instead in those cases.
-The bandwidth / performance advantage is exactly the same.
-
-Refs:
-[1] https://datasheets.maximintegrated.com/en/ds/DS2408.pdf
-
-Signed-off-by: Mariusz Bialonczyk <manio@skyboo.net>
-Reviewed-by: Jean-Francois Dagenais <jeff.dagenais@gmail.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/w1/w1_io.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/drivers/w1/w1_io.c b/drivers/w1/w1_io.c
-index 0364d3329c526..3516ce6718d94 100644
---- a/drivers/w1/w1_io.c
-+++ b/drivers/w1/w1_io.c
-@@ -432,8 +432,7 @@ int w1_reset_resume_command(struct w1_master *dev)
- 	if (w1_reset_bus(dev))
- 		return -1;
- 
--	/* This will make only the last matched slave perform a skip ROM. */
--	w1_write_8(dev, W1_RESUME_CMD);
-+	w1_write_8(dev, dev->slave_count > 1 ? W1_RESUME_CMD : W1_SKIP_ROM);
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(w1_reset_resume_command);
--- 
-2.20.1
-
+    Andrew
