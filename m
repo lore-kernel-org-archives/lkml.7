@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A021EC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:46:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5AFFC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:46:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69A3120856
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:46:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E90720856
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:46:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558554397;
-	bh=kY6nnKcNmJPO49Acu53z4ErLu6Vs+4a1pFHpsxCrX80=;
+	s=default; t=1558554402;
+	bh=wxDps0BmPtbVLR9i/jAbCExIYWQsOIBDV1MbLOtlNuY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HoLqtqmrSTVZBN7pwoykENdaC9yVX42UvnNvcWi7JKLc7x0gSvbDpeTBjIf6kLUZx
-	 d8rKWuzLu/vMFysSBN47RD+NpuQhhadmeLNQq/z1kJM1mn/pXyKpXdihc3bYRwm+XX
-	 SP4TItG8LtuwBpFlgtQX53tHFHwa+n/9+oOpWzn8=
+	b=CGs1hOqI7khknT3A6Cr3Inll6hdLYdoQ/LpePoT14sSJop9m093us5Vv3INDhijPq
+	 97JNIeJZQITJIOOb3jPLcvTea7ocUI+2IWv8iVvQn/bBUxLxIXoBhxPxYZFf7cgNHK
+	 0UZs8eQ6w+H2/YyvfR+uBiD0i0dUT7KwH5rMNlO4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732832AbfEVTqg (ORCPT
+        id S1732388AbfEVT1p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:46:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50210 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:27:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49816 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731844AbfEVT1s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:27:48 -0400
+        id S1732339AbfEVT1d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:27:33 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 48395217F9;
-        Wed, 22 May 2019 19:27:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0475B204FD;
+        Wed, 22 May 2019 19:27:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553268;
-        bh=kY6nnKcNmJPO49Acu53z4ErLu6Vs+4a1pFHpsxCrX80=;
+        s=default; t=1558553252;
+        bh=wxDps0BmPtbVLR9i/jAbCExIYWQsOIBDV1MbLOtlNuY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MJmioQ084t7SwHH0HlON3MHamWSVLDcm477Kn54ZH4DUAB5dQxRK8Z27jQ4ew23Q0
-         jTxxP47Lp7QISXCKN1j/ebMtjekX3FJvkU/WKert74T2qdXkrfTVMaug/Ye/zLmBci
-         BXEFNKnDKMrNSPnj0D06Iz6EMKYf50NPXrbErusM=
+        b=Ouu3LYMHBNnVnDU84lt5xsFsCtyHPr5aty43/LaRFLsMCf3wKMd5v9sdtraRk2bxX
+         9LpYU4GGaqdToxE4z117RO6LsZ/L62y1YtP3WL+NAJPe/2qnXNkPOi2zq1uIaS0WPO
+         lhIRRHOAdEYESnBjzlp9FQAFQ59ELuchIrL/WBfI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sven Van Asbroeck <thesven73@gmail.com>,
-        Sven Van Asbroeck <TheSven73@gmail.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rtc@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 044/244] rtc: 88pm860x: prevent use-after-free on device remove
-Date:   Wed, 22 May 2019 15:23:10 -0400
-Message-Id: <20190522192630.24917-44-sashal@kernel.org>
+Cc:     Bart Van Assche <bvanassche@acm.org>,
+        Himanshu Madhani <hmadhani@marvell.com>,
+        Giridhar Malavali <gmalavali@marvell.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 036/244] scsi: qla2xxx: Fix abort handling in tcm_qla2xxx_write_pending()
+Date:   Wed, 22 May 2019 15:23:02 -0400
+Message-Id: <20190522192630.24917-36-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192630.24917-1-sashal@kernel.org>
 References: <20190522192630.24917-1-sashal@kernel.org>
@@ -60,44 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sven Van Asbroeck <thesven73@gmail.com>
+From: Bart Van Assche <bvanassche@acm.org>
 
-[ Upstream commit f22b1ba15ee5785aa028384ebf77dd39e8e47b70 ]
+[ Upstream commit e209783d66bca04b5fce4429e59338517ffc1a0b ]
 
-The device's remove() attempts to shut down the delayed_work scheduled
-on the kernel-global workqueue by calling flush_scheduled_work().
+Implementations of the .write_pending() callback functions must guarantee
+that an appropriate LIO core callback function will be called immediately or
+at a later time.  Make sure that this guarantee is met for aborted SCSI
+commands.
 
-Unfortunately, flush_scheduled_work() does not prevent the delayed_work
-from re-scheduling itself. The delayed_work might run after the device
-has been removed, and touch the already de-allocated info structure.
-This is a potential use-after-free.
+[mkp: typo]
 
-Fix by calling cancel_delayed_work_sync() during remove(): this ensures
-that the delayed work is properly cancelled, is no longer running, and
-is not able to re-schedule itself.
-
-This issue was detected with the help of Coccinelle.
-
-Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Himanshu Madhani <hmadhani@marvell.com>
+Cc: Giridhar Malavali <gmalavali@marvell.com>
+Fixes: 694833ee00c4 ("scsi: tcm_qla2xxx: Do not allow aborted cmd to advance.") # v4.13.
+Fixes: a07100e00ac4 ("qla2xxx: Fix TMR ABORT interaction issue between qla2xxx and TCM") # v4.5.
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Acked-by: Himanshu Madhani <hmadhani@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rtc/rtc-88pm860x.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/qla2xxx/tcm_qla2xxx.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/rtc/rtc-88pm860x.c b/drivers/rtc/rtc-88pm860x.c
-index 01ffc0ef8033f..fbcf13bbbd8d1 100644
---- a/drivers/rtc/rtc-88pm860x.c
-+++ b/drivers/rtc/rtc-88pm860x.c
-@@ -414,7 +414,7 @@ static int pm860x_rtc_remove(struct platform_device *pdev)
- 	struct pm860x_rtc_info *info = platform_get_drvdata(pdev);
- 
- #ifdef VRTC_CALIBRATION
--	flush_scheduled_work();
-+	cancel_delayed_work_sync(&info->calib_work);
- 	/* disable measurement */
- 	pm860x_set_bits(info->i2c, PM8607_MEAS_EN2, MEAS2_VRTC, 0);
- #endif	/* VRTC_CALIBRATION */
+diff --git a/drivers/scsi/qla2xxx/tcm_qla2xxx.c b/drivers/scsi/qla2xxx/tcm_qla2xxx.c
+index 64e2d859f6332..7ef549903124d 100644
+--- a/drivers/scsi/qla2xxx/tcm_qla2xxx.c
++++ b/drivers/scsi/qla2xxx/tcm_qla2xxx.c
+@@ -390,6 +390,8 @@ static int tcm_qla2xxx_write_pending(struct se_cmd *se_cmd)
+ 			cmd->se_cmd.transport_state,
+ 			cmd->se_cmd.t_state,
+ 			cmd->se_cmd.se_cmd_flags);
++		transport_generic_request_failure(&cmd->se_cmd,
++			TCM_CHECK_CONDITION_ABORT_CMD);
+ 		return 0;
+ 	}
+ 	cmd->trc_flags |= TRC_XFR_RDY;
 -- 
 2.20.1
 
