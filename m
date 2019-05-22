@@ -4,48 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CEA8C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:36:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FDD2C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:36:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0052920675
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:36:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F412A2081C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:36:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558553805;
-	bh=kFdMhJbg45pEiMeDQxbwgDi58ilkVziXlLeNv8Je0aM=;
+	s=default; t=1558553812;
+	bh=YzezW2Fba2Qpg5me27N4CVgznmETrqoWlEbAAN6ufFg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zDbu7vo49T9W/Soat+k9LEV4gq8IAii2UqWRMQotjwYESKgvzawGRXwFEwhZLkJIL
-	 cGJancLCNC3eDtInCBi9zJ7xHtkiBNxSHIDv5ujwCTw8nTHikC/UpUBNdkn1TxrEFg
-	 5sneCdCP3pvaBMdQutNAXPVTj+3xeDcbgtQSVMbk=
+	b=X7GOe69h+WYOq+CuVze24tUpjYcjCZxLJXPcjSeJMltXcTzo1LJV5uDSbysyTTK08
+	 dFXJ+yPFds2QxRrr3yiEsDOYM6+q4+dIg7McXbDAiA7dPonFRejgF+xc3nkDTQwWqs
+	 I6dYTR/Fw3q4zsvunhtqT/jdb3rzJb0TsXG4cqAQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387587AbfEVTgn (ORCPT
+        id S2387716AbfEVTgv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:36:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54158 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:36:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54088 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732492AbfEVTam (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:30:42 -0400
+        id S1732827AbfEVTah (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:30:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C77C520879;
-        Wed, 22 May 2019 19:30:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98B20217F9;
+        Wed, 22 May 2019 19:30:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553441;
-        bh=kFdMhJbg45pEiMeDQxbwgDi58ilkVziXlLeNv8Je0aM=;
+        s=default; t=1558553436;
+        bh=YzezW2Fba2Qpg5me27N4CVgznmETrqoWlEbAAN6ufFg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W/WYIPFRdIMBoCXsGj9YNSLnmsxYGXwykQdEJM92xuX5fVdOZZMsL6nGc8xlbIpKK
-         TNW2lYeMpNSco56DO8qWde8tlxjHP99D6hgHZvjJUmapS3PIEcXGJS8erEjXEEQ6Yx
-         ZNry751RbsQQrUjNycZdBipxQQCBMyV2he4s4gZA=
+        b=nMW+pBnYkTB6bOu3t0iS1IIqUdrfmqczj1loGgQsGVVJKKLV9Y+SUFcoOYDXK4uAE
+         vP5g5dSp03c955AE1RnmZ76T4iXh+uti+R3Rb3PSEylTg2Mo0kFc1VblLwkkAkJqlz
+         p4u7rmfL1Xxp2wDNPILfBNGbHqrMYBV37qLCEWNw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qian Cai <cai@lca.pw>, Will Deacon <will.deacon@arm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 013/114] arm64: Fix compiler warning from pte_unmap() with -Wunused-but-set-variable
-Date:   Wed, 22 May 2019 15:28:36 -0400
-Message-Id: <20190522193017.26567-13-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 011/114] brcm80211: potential NULL dereference in brcmf_cfg80211_vndr_cmds_dcmd_handler()
+Date:   Wed, 22 May 2019 15:28:34 -0400
+Message-Id: <20190522193017.26567-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522193017.26567-1-sashal@kernel.org>
 References: <20190522193017.26567-1-sashal@kernel.org>
@@ -58,61 +62,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 74dd022f9e6260c3b5b8d15901d27ebcc5f21eda ]
+[ Upstream commit e025da3d7aa4770bb1d1b3b0aa7cc4da1744852d ]
 
-When building with -Wunused-but-set-variable, the compiler shouts about
-a number of pte_unmap() users, since this expands to an empty macro on
-arm64:
+If "ret_len" is negative then it could lead to a NULL dereference.
 
-  | mm/gup.c: In function 'gup_pte_range':
-  | mm/gup.c:1727:16: warning: variable 'ptem' set but not used
-  | [-Wunused-but-set-variable]
-  | mm/gup.c: At top level:
-  | mm/memory.c: In function 'copy_pte_range':
-  | mm/memory.c:821:24: warning: variable 'orig_dst_pte' set but not used
-  | [-Wunused-but-set-variable]
-  | mm/memory.c:821:9: warning: variable 'orig_src_pte' set but not used
-  | [-Wunused-but-set-variable]
-  | mm/swap_state.c: In function 'swap_ra_info':
-  | mm/swap_state.c:641:15: warning: variable 'orig_pte' set but not used
-  | [-Wunused-but-set-variable]
-  | mm/madvise.c: In function 'madvise_free_pte_range':
-  | mm/madvise.c:318:9: warning: variable 'orig_pte' set but not used
-  | [-Wunused-but-set-variable]
+The "ret_len" value comes from nl80211_vendor_cmd(), if it's negative
+then we don't allocate the "dcmd_buf" buffer.  Then we pass "ret_len" to
+brcmf_fil_cmd_data_set() where it is cast to a very high u32 value.
+Most of the functions in that call tree check whether the buffer we pass
+is NULL but there are at least a couple places which don't such as
+brcmf_dbg_hex_dump() and brcmf_msgbuf_query_dcmd().  We memcpy() to and
+from the buffer so it would result in a NULL dereference.
 
-Rewrite pte_unmap() as a static inline function, which silences the
-warnings.
+The fix is to change the types so that "ret_len" can't be negative.  (If
+we memcpy() zero bytes to NULL, that's a no-op and doesn't cause an
+issue).
 
-Signed-off-by: Qian Cai <cai@lca.pw>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
+Fixes: 1bacb0487d0e ("brcmfmac: replace cfg80211 testmode with vendor command")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/include/asm/pgtable.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/vendor.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
-index 3a30a3994e4a2..73e3718356b05 100644
---- a/arch/arm64/include/asm/pgtable.h
-+++ b/arch/arm64/include/asm/pgtable.h
-@@ -413,6 +413,8 @@ static inline phys_addr_t pmd_page_paddr(pmd_t pmd)
- 	return pmd_val(pmd) & PHYS_MASK & (s32)PAGE_MASK;
- }
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/vendor.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/vendor.c
+index 8eff2753abade..d493021f60318 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/vendor.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/vendor.c
+@@ -35,9 +35,10 @@ static int brcmf_cfg80211_vndr_cmds_dcmd_handler(struct wiphy *wiphy,
+ 	struct brcmf_if *ifp;
+ 	const struct brcmf_vndr_dcmd_hdr *cmdhdr = data;
+ 	struct sk_buff *reply;
+-	int ret, payload, ret_len;
++	unsigned int payload, ret_len;
+ 	void *dcmd_buf = NULL, *wr_pointer;
+ 	u16 msglen, maxmsglen = PAGE_SIZE - 0x100;
++	int ret;
  
-+static inline void pte_unmap(pte_t *pte) { }
-+
- /* Find an entry in the third-level page table. */
- #define pte_index(addr)		(((addr) >> PAGE_SHIFT) & (PTRS_PER_PTE - 1))
- 
-@@ -421,7 +423,6 @@ static inline phys_addr_t pmd_page_paddr(pmd_t pmd)
- 
- #define pte_offset_map(dir,addr)	pte_offset_kernel((dir), (addr))
- #define pte_offset_map_nested(dir,addr)	pte_offset_kernel((dir), (addr))
--#define pte_unmap(pte)			do { } while (0)
- #define pte_unmap_nested(pte)		do { } while (0)
- 
- #define pte_set_fixmap(addr)		((pte_t *)set_fixmap_offset(FIX_PTE, addr))
+ 	if (len < sizeof(*cmdhdr)) {
+ 		brcmf_err("vendor command too short: %d\n", len);
+@@ -65,7 +66,7 @@ static int brcmf_cfg80211_vndr_cmds_dcmd_handler(struct wiphy *wiphy,
+ 			brcmf_err("oversize return buffer %d\n", ret_len);
+ 			ret_len = BRCMF_DCMD_MAXLEN;
+ 		}
+-		payload = max(ret_len, len) + 1;
++		payload = max_t(unsigned int, ret_len, len) + 1;
+ 		dcmd_buf = vzalloc(payload);
+ 		if (NULL == dcmd_buf)
+ 			return -ENOMEM;
 -- 
 2.20.1
 
