@@ -2,103 +2,98 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C04BC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 13:19:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 946C5C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 13:20:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F0E82173C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 13:19:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558531165;
-	bh=xZL000OlxXJ3Olb6ufE2AzjLi7N4hMQu+kQzQcbFNCE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=BywfXq4mVbKochpisi79DMwD4snGwaSpznyrFV0swLteaaOPbI7cAZEivOsk2a0z0
-	 lSJ8cM7tihbswn3gB+/A+1Y6zm62hDXDJoAu1CKaFmsuNsufeqIu82WGCAW9k9Gv0o
-	 x6X7lwmzFo6MH/LLA6mvVznOkqG7rVBp6s2pwvTM=
+	by mail.kernel.org (Postfix) with ESMTP id 71CA4208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 13:20:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729448AbfEVNTY (ORCPT
+        id S1729452AbfEVNUf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 09:19:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56770 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 09:20:35 -0400
+Received: from mga18.intel.com ([134.134.136.126]:53383 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729003AbfEVNTX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 09:19:23 -0400
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C7AC52187F;
-        Wed, 22 May 2019 13:19:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558531162;
-        bh=xZL000OlxXJ3Olb6ufE2AzjLi7N4hMQu+kQzQcbFNCE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=0mYeaIOisZLB0e2XA+n2+3BIXH94kWanrOCk0grtqaLO+lZvxY3UI7XggEwxwuQqh
-         vq/62sb27M9TkomToLDrAOJEMM7ci1rjoij0f3S6+ILn1ARCEMG0aZLvAXz4U57nd3
-         Bsy2TjvX8AeZkQy1Oa+uXn9+h2LRBrcSTjcCeEdI=
-Received: by mail-qt1-f174.google.com with SMTP id y42so2243463qtk.6;
-        Wed, 22 May 2019 06:19:22 -0700 (PDT)
-X-Gm-Message-State: APjAAAVdCVFds0Fnq6jTA+xS8dQbFcl39IMXD0oq4ZXUVTQJCCCGcGPs
-        g4ixs+6wButiDXtvq3O1ACJkXJv0FgWQYbwyzQ==
-X-Google-Smtp-Source: APXvYqyvYTuRn9kxbS1Z4NqODKeovcHPYdzWdAvI9bwxOBcedkYyTwND/I5vtUvsg9uaG6kVGsaTqAdvJBL/eqFqgL8=
-X-Received: by 2002:a0c:929a:: with SMTP id b26mr70772394qvb.148.1558531161859;
- Wed, 22 May 2019 06:19:21 -0700 (PDT)
+        id S1728447AbfEVNUf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 09:20:35 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 May 2019 06:20:34 -0700
+X-ExtLoop1: 1
+Received: from lbrom5-mobl.ger.corp.intel.com (HELO localhost) ([10.249.47.39])
+  by fmsmga006.fm.intel.com with ESMTP; 22 May 2019 06:20:24 -0700
+Date:   Wed, 22 May 2019 16:20:22 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
+        Jethro Beekman <jethro@fortanix.com>,
+        "Xing, Cedric" <cedric.xing@intel.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Dr. Greg" <greg@enjellic.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>
+Subject: Re: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
+Message-ID: <20190522132022.GC31176@linux.intel.com>
+References: <CALCETrVbgTCnPo=PAq0-KoaRwt--urrPzn==quAJ8wodCpkBkw@mail.gmail.com>
+ <20190514204527.GC1977@linux.intel.com>
+ <CALCETrX6aL367mMJh5+Y1Seznfu-AvhPV6P7GkWF4Dhu0GV8cw@mail.gmail.com>
+ <20190515013031.GF1977@linux.intel.com>
+ <CALCETrXf8mSK45h7sTK5Wf+pXLVn=Bjsc_RLpgO-h-qdzBRo5Q@mail.gmail.com>
+ <20190517000331.GD11204@linux.intel.com>
+ <CALCETrWxw7xALE0kmiYBzomaSMAeXEVq-7rX7xeqPtDPeDQiCA@mail.gmail.com>
+ <20190520114105.GD27805@linux.intel.com>
+ <20190521151836.GA4843@linux.intel.com>
+ <20190521155140.GE22089@linux.intel.com>
 MIME-Version: 1.0
-References: <1558466890-45471-1-git-send-email-kdasu.kdev@gmail.com>
-In-Reply-To: <1558466890-45471-1-git-send-email-kdasu.kdev@gmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 22 May 2019 08:19:09 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqKd53W1E33YdtJwagi4=7DrVQ5+N3rSY=Rxo5J0RiW46g@mail.gmail.com>
-Message-ID: <CAL_JsqKd53W1E33YdtJwagi4=7DrVQ5+N3rSY=Rxo5J0RiW46g@mail.gmail.com>
-Subject: Re: [PATCH] dt: bindings: mtd: replace references to nand.txt with nand-controller.yaml
-To:     Kamal Dasu <kdasu.kdev@gmail.com>
-Cc:     MTD Maling List <linux-mtd@lists.infradead.org>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Liang Yang <liang.yang@amlogic.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Stefan Agner <stefan@agner.ch>, Lucas Stach <dev@lynxeye.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Andy Gross <agross@kernel.org>,
-        David Brown <david.brown@linaro.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        Mans Rullgard <mans@mansr.com>, devicetree@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-amlogic@lists.infradead.org, linux-tegra@vger.kernel.org,
-        linux-oxnas@groups.io,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190521155140.GE22089@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 21, 2019 at 2:28 PM Kamal Dasu <kdasu.kdev@gmail.com> wrote:
->
-> nand-controller.yaml replaced nand.txt however the references to it were
-> not updated. This change updates these references wherever it appears in
-> bindings documentation.
->
-> Fixes: 212e49693592 ("dt-bindings: mtd: Add YAML schemas for the generic NAND options")
->
-> Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
+On Tue, May 21, 2019 at 08:51:40AM -0700, Sean Christopherson wrote:
+> Except that mmap() is more or less required to guarantee that ELRANGE
+> established by ECREATE is available.  And we want to disallow mmap() as
+> soon as the first EADD is done so that userspace can't remap the enclave's
+> VMAs via munmap()->mmap() and gain execute permissions to pages that were
+> EADD'd as NX.
 
-Mauro already sent a similar patch.
+We don't want to guarantee such thing and it is not guaranteed. It does
+not fit at all to the multi process work done. Enclaves are detached
+from any particular process addresse spaces. It is responsibility of
+process to open windows to them.
 
-Rob
+That would be completely against work that we've done lately.
+
+> Actually, conceptually it's probably more intuitive to disallow mmap() at
+> ECREATE, i.e. the act of creating an enclave pins the associated virtual
+> address range until the enclave is destroyed.
+
+/Jarkko
