@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED008C282DC
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:26:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A257DC282DC
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:27:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B820121841
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:26:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 769A620675
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:27:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558553219;
-	bh=eZoYOpEZZXBBGLzR1IIyocDg/nlN3NiCX+nI3TnIoso=;
+	s=default; t=1558553222;
+	bh=QhdAarfzTmA6anoCvQ7Aa0lRiqrk8MkX1Str9Wrz+N8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ldT3YCD7W7clY/cHVaPdqPt3eclMNgVD8k2amxzUFxOLUswezD/5mMkKEey3irv5i
-	 v87ZuQWbKzqmF0l66CG6od0nWZ/L7OD8l2EKXkxMnUDGQpVpR/TuJLzycIy3tV1v/8
-	 1VqfbHm/n/EEYXbgdnmuiplEcMMmcp8Jg7qiZR/M=
+	b=1s9qmH0OVPt0ERApcyIpCoIlH9B4w2/FU0yLdTIPnRbIuur/Y61SGoFDPtNH8/2+L
+	 yNSs3ykEYtqkbZziemoDzjv8ittNayzB8zrEBoEfAqXoafgRUJ7od/3ZepG3djfJIX
+	 q1+/h5HjkmSl8vpDhldYxyc97T4wkisS4HCqhyYg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732206AbfEVT06 (ORCPT
+        id S1732219AbfEVT1B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:26:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48532 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:27:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48618 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730262AbfEVT0v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:26:51 -0400
+        id S1731487AbfEVT0x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:26:53 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C91E21850;
-        Wed, 22 May 2019 19:26:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 72301217D7;
+        Wed, 22 May 2019 19:26:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553210;
-        bh=eZoYOpEZZXBBGLzR1IIyocDg/nlN3NiCX+nI3TnIoso=;
+        s=default; t=1558553213;
+        bh=QhdAarfzTmA6anoCvQ7Aa0lRiqrk8MkX1Str9Wrz+N8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZPfIx6S0hhGYgtUv1I689FAmF1ik2c8xdXG/pCRQ4Xq9uulA2iSDq2Ws50YprFT6b
-         Z/prwm3FuGmhflSPn8q4bB7K5YcMiRpLXi4zU4ZUWrhLhhM/iPyFpOan9/XmVkS37G
-         blg8bi10rR80Z6XxEiQhmLUhiNqXFvG43DE1yq9I=
+        b=OtVIDZ16cAup/WZaJDBx1annQQrVUeZhb9woo5GO7DSD5G1WDli44XRhMktX6/uAn
+         twY1QQADMSI2G1PK0JdG8GKWaMHdGOJe+uQlfWnZgAdhCMncMK0O5/A71cFHJuBBUa
+         R7kL8nGEaYowtPVzPeZFAZ03T0jMpQdNIy4h+OXw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Martin Brandenburg <martin@omnibond.com>,
-        Mike Marshall <hubcap@omnibond.com>,
-        Sasha Levin <sashal@kernel.org>, devel@lists.orangefs.org
-Subject: [PATCH AUTOSEL 4.19 014/244] orangefs: truncate before updating size
-Date:   Wed, 22 May 2019 15:22:40 -0400
-Message-Id: <20190522192630.24917-14-sashal@kernel.org>
+Cc:     Wen Yang <wen.yang99@zte.com.cn>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jun Nie <jun.nie@linaro.org>, linux-gpio@vger.kernel.org,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 016/244] pinctrl: zte: fix leaked of_node references
+Date:   Wed, 22 May 2019 15:22:42 -0400
+Message-Id: <20190522192630.24917-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192630.24917-1-sashal@kernel.org>
 References: <20190522192630.24917-1-sashal@kernel.org>
@@ -59,39 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Brandenburg <martin@omnibond.com>
+From: Wen Yang <wen.yang99@zte.com.cn>
 
-[ Upstream commit 33713cd09ccdc1e01b10d0782ae60200d4989553 ]
+[ Upstream commit 02d15f0d80720545f1f4922a1550ea4aaad4e152 ]
 
-Otherwise we race with orangefs_writepage/orangefs_writepages
-which and does not expect i_size < page_offset.
+The call to of_parse_phandle returns a node pointer with refcount
+incremented thus it must be explicitly decremented after the last
+usage.
 
-Fixes xfstests generic/129.
+Detected by coccinelle with the following warnings:
+./drivers/pinctrl/zte/pinctrl-zx.c:415:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 407, but without a corresponding object release within this function.
+./drivers/pinctrl/zte/pinctrl-zx.c:422:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 407, but without a corresponding object release within this function.
+./drivers/pinctrl/zte/pinctrl-zx.c:436:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 407, but without a corresponding object release within this function.
+./drivers/pinctrl/zte/pinctrl-zx.c:444:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 407, but without a corresponding object release within this function.
+./drivers/pinctrl/zte/pinctrl-zx.c:448:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 407, but without a corresponding object release within this function.
 
-Signed-off-by: Martin Brandenburg <martin@omnibond.com>
-Signed-off-by: Mike Marshall <hubcap@omnibond.com>
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Jun Nie <jun.nie@linaro.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Acked-by: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/orangefs/inode.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/pinctrl/zte/pinctrl-zx.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/orangefs/inode.c b/fs/orangefs/inode.c
-index 31932879b7162..9bf2ceed4f29b 100644
---- a/fs/orangefs/inode.c
-+++ b/fs/orangefs/inode.c
-@@ -172,7 +172,11 @@ static int orangefs_setattr_size(struct inode *inode, struct iattr *iattr)
+diff --git a/drivers/pinctrl/zte/pinctrl-zx.c b/drivers/pinctrl/zte/pinctrl-zx.c
+index caa44dd2880a8..3cb69309912ba 100644
+--- a/drivers/pinctrl/zte/pinctrl-zx.c
++++ b/drivers/pinctrl/zte/pinctrl-zx.c
+@@ -411,6 +411,7 @@ int zx_pinctrl_init(struct platform_device *pdev,
  	}
- 	orig_size = i_size_read(inode);
  
--	truncate_setsize(inode, iattr->ia_size);
-+	/* This is truncate_setsize in a different order. */
-+	truncate_pagecache(inode, iattr->ia_size);
-+	i_size_write(inode, iattr->ia_size);
-+	if (iattr->ia_size > orig_size)
-+		pagecache_isize_extended(inode, orig_size, iattr->ia_size);
+ 	zpctl->aux_base = of_iomap(np, 0);
++	of_node_put(np);
+ 	if (!zpctl->aux_base)
+ 		return -ENOMEM;
  
- 	new_op = op_alloc(ORANGEFS_VFS_OP_TRUNCATE);
- 	if (!new_op)
 -- 
 2.20.1
 
