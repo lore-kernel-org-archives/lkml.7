@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E132AC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:35:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07A09C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:35:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3C4020675
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:35:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE21020675
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:35:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558553728;
-	bh=bUV7btzIiYVMzojYWVtdJYvd+jQvuHheVwfOPfUHK5o=;
+	s=default; t=1558553731;
+	bh=EzDvjiOKCt9srdFonuBsCOG/U/jBGJTpvtnrW2mvkZU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HGWGvYbioVz3kfleduQCl0kRJsk21iFPL5H8MIS/LZDU/P2gmrOS/tiOIki1kpyPu
-	 lH/fZWKvbRWdv6Cj/a6BwB8VPV8kUYVyc43lJ7t699tXY891UqbQv4Bv0j0Vl7SkaG
-	 PYn8pRSt8uiK6WDAInD0Y/RHcfc8C6Z0mlTLVPpg=
+	b=fHorLVF2ojFsoqcw6VgrfMp44p4r9v+WoIZxtmDASNMZv32jWh3KHRNCDVvXhoulB
+	 74RYfabTuC66ZelHwilFuRlc7imTG09kxMP+Py3TgCULKb7TfoYILshOVL884ocJhM
+	 WOwEXSuRHNrND5cm7VVrU4IyAbX/b0LJDlWLS0N8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387600AbfEVTf2 (ORCPT
+        id S2387541AbfEVTf1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:35:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54470 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:35:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54528 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733000AbfEVTbA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:31:00 -0400
+        id S1731454AbfEVTbB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:31:01 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC6BC20879;
-        Wed, 22 May 2019 19:30:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 31AC72177E;
+        Wed, 22 May 2019 19:31:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553458;
-        bh=bUV7btzIiYVMzojYWVtdJYvd+jQvuHheVwfOPfUHK5o=;
+        s=default; t=1558553460;
+        bh=EzDvjiOKCt9srdFonuBsCOG/U/jBGJTpvtnrW2mvkZU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=owoVJJFW0NgUAlYQ2tqSml05tb/1ohZ4Py2sw4DlhCZPfjKWxc2P0fYfa2bhFG5Xo
-         gRcT2aFBWWYKHUwK7pE0q1waVw0heGwJieChjUGdsP5IbSUB5iGJX26qOk9MJ//Eu3
-         t7aUOS/SY/20oVNzzRnJlz7H+nJedkCtYf+wj7Bs=
+        b=NEfUks34yZ75Vwqd5lwtcHgmFlt1ExjRtSzbD7QyrkOwHUmZiYVSim5wZo+Y5EWIX
+         LHcTX/3gD+xtG0/VaYWpIR6VNZ1TmzLoPrvwws58cUdIOjFmRX9z1M3fRq+9zs7RK3
+         kI+fKsmlmcN7xPkF8qxEdjW1xv2q9LJlM5PFfRc0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 026/114] ssb: Fix possible NULL pointer dereference in ssb_host_pcmcia_exit
-Date:   Wed, 22 May 2019 15:28:49 -0400
-Message-Id: <20190522193017.26567-26-sashal@kernel.org>
+Cc:     Coly Li <colyli@suse.de>, Hannes Reinecke <hare@suse.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-bcache@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 028/114] bcache: return error immediately in bch_journal_replay()
+Date:   Wed, 22 May 2019 15:28:51 -0400
+Message-Id: <20190522193017.26567-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522193017.26567-1-sashal@kernel.org>
 References: <20190522193017.26567-1-sashal@kernel.org>
@@ -61,96 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Coly Li <colyli@suse.de>
 
-[ Upstream commit b2c01aab9646ed8ffb7c549afe55d5349c482425 ]
+[ Upstream commit 68d10e6979a3b59e3cd2e90bfcafed79c4cf180a ]
 
-Syzkaller report this:
+When failure happens inside bch_journal_replay(), calling
+cache_set_err_on() and handling the failure in async way is not a good
+idea. Because after bch_journal_replay() returns, registering code will
+continue to execute following steps, and unregistering code triggered
+by cache_set_err_on() is running in same time. First it is unnecessary
+to handle failure and unregister cache set in an async way, second there
+might be potential race condition to run register and unregister code
+for same cache set.
 
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] SMP KASAN PTI
-CPU: 0 PID: 4492 Comm: syz-executor.0 Not tainted 5.0.0-rc7+ #45
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
-RIP: 0010:sysfs_remove_file_ns+0x27/0x70 fs/sysfs/file.c:468
-Code: 00 00 00 41 54 55 48 89 fd 53 49 89 d4 48 89 f3 e8 ee 76 9c ff 48 8d 7d 30 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 00 75 2d 48 89 da 48 b8 00 00 00 00 00 fc ff df 48 8b 6d
-RSP: 0018:ffff8881e9d9fc00 EFLAGS: 00010206
-RAX: dffffc0000000000 RBX: ffffffff900367e0 RCX: ffffffff81a95952
-RDX: 0000000000000006 RSI: ffffc90001405000 RDI: 0000000000000030
-RBP: 0000000000000000 R08: fffffbfff1fa22ed R09: fffffbfff1fa22ed
-R10: 0000000000000001 R11: fffffbfff1fa22ec R12: 0000000000000000
-R13: ffffffffc1abdac0 R14: 1ffff1103d3b3f8b R15: 0000000000000000
-FS:  00007fe409dc1700(0000) GS:ffff8881f1200000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000001b2d721000 CR3: 00000001e98b6005 CR4: 00000000007606f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-PKRU: 55555554
-Call Trace:
- sysfs_remove_file include/linux/sysfs.h:519 [inline]
- driver_remove_file+0x40/0x50 drivers/base/driver.c:122
- pcmcia_remove_newid_file drivers/pcmcia/ds.c:163 [inline]
- pcmcia_unregister_driver+0x7d/0x2b0 drivers/pcmcia/ds.c:209
- ssb_modexit+0xa/0x1b [ssb]
- __do_sys_delete_module kernel/module.c:1018 [inline]
- __se_sys_delete_module kernel/module.c:961 [inline]
- __x64_sys_delete_module+0x3dc/0x5e0 kernel/module.c:961
- do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x462e99
-Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007fe409dc0c58 EFLAGS: 00000246 ORIG_RAX: 00000000000000b0
-RAX: ffffffffffffffda RBX: 000000000073bf00 RCX: 0000000000462e99
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00000000200000c0
-RBP: 0000000000000002 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007fe409dc16bc
-R13: 00000000004bccaa R14: 00000000006f6bc8 R15: 00000000ffffffff
-Modules linked in: ssb(-) 3c59x nvme_core macvlan tap pata_hpt3x3 rt2x00pci null_blk tsc40 pm_notifier_error_inject notifier_error_inject mdio cdc_wdm nf_reject_ipv4 ath9k_common ath9k_hw ath pppox ppp_generic slhc ehci_platform wl12xx wlcore tps6507x_ts ioc4 nf_synproxy_core ide_gd_mod ax25 can_dev iwlwifi can_raw atm tm2_touchkey can_gw can sundance adp5588_keys rt2800mmio rt2800lib rt2x00mmio rt2x00lib eeprom_93cx6 pn533 lru_cache elants_i2c ip_set nfnetlink gameport tipc hampshire nhc_ipv6 nhc_hop nhc_udp nhc_fragment nhc_routing nhc_mobility nhc_dest 6lowpan silead brcmutil nfc mt76_usb mt76 mac80211 iptable_security iptable_raw iptable_mangle iptable_nat nf_nat_ipv4 nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 iptable_filter bpfilter ip6_vti ip_gre sit hsr veth vxcan batman_adv cfg80211 rfkill chnl_net caif nlmon vcan bridge stp llc ip6_gre ip6_tunnel tunnel6 tun joydev mousedev serio_raw ide_pci_generic piix floppy ide_core sch_fq_codel ip_tables x_tables ipv6
- [last unloaded: 3c59x]
-Dumping ftrace buffer:
-   (ftrace buffer empty)
----[ end trace 3913cbf8011e1c05 ]---
+So in this patch, if failure happens in bch_journal_replay(), we don't
+call cache_set_err_on(), and just print out the same error message to
+kernel message buffer, then return -EIO immediately caller. Then caller
+can detect such failure and handle it in synchrnozied way.
 
-In ssb_modinit, it does not fail SSB init when ssb_host_pcmcia_init failed,
-however in ssb_modexit, ssb_host_pcmcia_exit calls pcmcia_unregister_driver
-unconditionally, which may tigger a NULL pointer dereference issue as above.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 399500da18f7 ("ssb: pick PCMCIA host code support from b43 driver")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Coly Li <colyli@suse.de>
+Reviewed-by: Hannes Reinecke <hare@suse.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ssb/bridge_pcmcia_80211.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/md/bcache/journal.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/ssb/bridge_pcmcia_80211.c b/drivers/ssb/bridge_pcmcia_80211.c
-index d70568ea02d53..2ff7d90e166ac 100644
---- a/drivers/ssb/bridge_pcmcia_80211.c
-+++ b/drivers/ssb/bridge_pcmcia_80211.c
-@@ -113,16 +113,21 @@ static struct pcmcia_driver ssb_host_pcmcia_driver = {
- 	.resume		= ssb_host_pcmcia_resume,
- };
+diff --git a/drivers/md/bcache/journal.c b/drivers/md/bcache/journal.c
+index 08f20b7cd1999..8b3f76e1075ea 100644
+--- a/drivers/md/bcache/journal.c
++++ b/drivers/md/bcache/journal.c
+@@ -322,9 +322,12 @@ int bch_journal_replay(struct cache_set *s, struct list_head *list)
+ 	list_for_each_entry(i, list, list) {
+ 		BUG_ON(i->pin && atomic_read(i->pin) != 1);
  
-+static int pcmcia_init_failed;
-+
- /*
-  * These are not module init/exit functions!
-  * The module_pcmcia_driver() helper cannot be used here.
-  */
- int ssb_host_pcmcia_init(void)
- {
--	return pcmcia_register_driver(&ssb_host_pcmcia_driver);
-+	pcmcia_init_failed = pcmcia_register_driver(&ssb_host_pcmcia_driver);
-+
-+	return pcmcia_init_failed;
- }
+-		cache_set_err_on(n != i->j.seq, s,
+-"bcache: journal entries %llu-%llu missing! (replaying %llu-%llu)",
+-				 n, i->j.seq - 1, start, end);
++		if (n != i->j.seq) {
++			pr_err("bcache: journal entries %llu-%llu missing! (replaying %llu-%llu)",
++			n, i->j.seq - 1, start, end);
++			ret = -EIO;
++			goto err;
++		}
  
- void ssb_host_pcmcia_exit(void)
- {
--	pcmcia_unregister_driver(&ssb_host_pcmcia_driver);
-+	if (!pcmcia_init_failed)
-+		pcmcia_unregister_driver(&ssb_host_pcmcia_driver);
- }
+ 		for (k = i->j.start;
+ 		     k < bset_bkey_last(&i->j);
 -- 
 2.20.1
 
