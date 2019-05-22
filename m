@@ -2,57 +2,44 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB890C18E7D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 09:02:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E1DBC18E7D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 09:04:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89FC3205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 09:02:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DA7D205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 09:04:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728940AbfEVJCs (ORCPT
+        id S1728899AbfEVJEi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 05:02:48 -0400
-Received: from outgoing-stata.csail.mit.edu ([128.30.2.210]:47935 "EHLO
-        outgoing-stata.csail.mit.edu" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727946AbfEVJCs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 05:02:48 -0400
-Received: from c-73-193-85-113.hsd1.wa.comcast.net ([73.193.85.113] helo=srivatsab-a01.vmware.com)
-        by outgoing-stata.csail.mit.edu with esmtpsa (TLS1.2:RSA_AES_128_CBC_SHA1:128)
-        (Exim 4.82)
-        (envelope-from <srivatsa@csail.mit.edu>)
-        id 1hTN8z-0009cO-OQ; Wed, 22 May 2019 05:02:41 -0400
-Subject: Re: CFQ idling kills I/O performance on ext4 with blkio cgroup
- controller
-To:     Paolo Valente <paolo.valente@linaro.org>
-Cc:     linux-fsdevel@vger.kernel.org,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-ext4@vger.kernel.org, cgroups@vger.kernel.org,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Jens Axboe <axboe@kernel.dk>, Jan Kara <jack@suse.cz>,
-        jmoyer@redhat.com, Theodore Ts'o <tytso@mit.edu>,
-        amakhalov@vmware.com, anishs@vmware.com, srivatsab@vmware.com
-References: <8d72fcf7-bbb4-2965-1a06-e9fc177a8938@csail.mit.edu>
- <1812E450-14EF-4D5A-8F31-668499E13652@linaro.org>
- <46c6a4be-f567-3621-2e16-0e341762b828@csail.mit.edu>
- <07D11833-8285-49C2-943D-E4C1D23E8859@linaro.org>
- <A0DFE635-EFEC-4670-AD70-5D813E170BEE@linaro.org>
- <5B6570A2-541A-4CF8-98E0-979EA6E3717D@linaro.org>
- <2CB39B34-21EE-4A95-A073-8633CF2D187C@linaro.org>
- <FC24E25F-4578-454D-AE2B-8D8D352478D8@linaro.org>
- <0e3fdf31-70d9-26eb-7b42-2795d4b03722@csail.mit.edu>
- <F5E29C98-6CC4-43B8-994D-0B5354EECBF3@linaro.org>
-From:   "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
-Message-ID: <f4b11315-144c-c67d-5143-50b5be950ede@csail.mit.edu>
-Date:   Wed, 22 May 2019 02:02:33 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
- Gecko/20100101 Thunderbird/60.6.1
+        Wed, 22 May 2019 05:04:38 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:45462 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728536AbfEVJEi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 05:04:38 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A043A374;
+        Wed, 22 May 2019 02:04:37 -0700 (PDT)
+Received: from [10.162.43.129] (p8cg001049571a15.blr.arm.com [10.162.43.129])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A4AC23F718;
+        Wed, 22 May 2019 02:04:34 -0700 (PDT)
+Subject: Re: [PATCH] arm64: break while loop if task had been rescheduled
+To:     Tengfei Fan <tengfeif@codeaurora.org>, catalin.marinas@arm.com,
+        will.deacon@arm.com
+Cc:     mark.rutland@arm.com, marc.zyngier@arm.com, andreyknvl@google.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        tengfei@codeaurora.org
+References: <1558430404-4840-1-git-send-email-tengfeif@codeaurora.org>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <f2d62227-4694-d973-cacc-8225e2b2baf4@arm.com>
+Date:   Wed, 22 May 2019 14:34:46 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-In-Reply-To: <F5E29C98-6CC4-43B8-994D-0B5354EECBF3@linaro.org>
-Content-Type: text/plain; charset=windows-1252
+In-Reply-To: <1558430404-4840-1-git-send-email-tengfeif@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -60,72 +47,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/22/19 1:05 AM, Paolo Valente wrote:
-> 
-> 
->> Il giorno 22 mag 2019, alle ore 00:51, Srivatsa S. Bhat <srivatsa@csail.mit.edu> ha scritto:
->>
->> [ Resending this mail with a dropbox link to the traces (instead
->> of a file attachment), since it didn't go through the last time. ]
->>
->> On 5/21/19 10:38 AM, Paolo Valente wrote:
->>>
->>>> So, instead of only sending me a trace, could you please:
->>>> 1) apply this new patch on top of the one I attached in my previous email
->>>> 2) repeat your test and report results
->>>
->>> One last thing (I swear!): as you can see from my script, I tested the
->>> case low_latency=0 so far.  So please, for the moment, do your test
->>> with low_latency=0.  You find the whole path to this parameter in,
->>> e.g., my script.
->>>
->> No problem! :) Thank you for sharing patches for me to test!
->>
->> I have good news :) Your patch improves the throughput significantly
->> when low_latency = 0.
->>
->> Without any patch:
->>
->> dd if=/dev/zero of=/root/test.img bs=512 count=10000 oflag=dsync
->> 10000+0 records in
->> 10000+0 records out
->> 5120000 bytes (5.1 MB, 4.9 MiB) copied, 58.0915 s, 88.1 kB/s
->>
->>
->> With both patches applied:
->>
->> dd if=/dev/zero of=/root/test0.img bs=512 count=10000 oflag=dsync
->> 10000+0 records in
->> 10000+0 records out
->> 5120000 bytes (5.1 MB, 4.9 MiB) copied, 3.87487 s, 1.3 MB/s
->>
->> The performance is still not as good as mq-deadline (which achieves
->> 1.6 MB/s), but this is a huge improvement for BFQ nonetheless!
->>
->> A tarball with the trace output from the 2 scenarios you requested,
->> one with only the debug patch applied (trace-bfq-add-logs-and-BUG_ONs),
->> and another with both patches applied (trace-bfq-boost-injection) is
->> available here:
->>
->> https://www.dropbox.com/s/pdf07vi7afido7e/bfq-traces.tar.gz?dl=0
->>
-> 
-> Hi Srivatsa,
-> I've seen the bugzilla you've created.  I'm a little confused on how
-> to better proceed.  Shall we move this discussion to the bugzilla, or
-> should we continue this discussion here, where it has started, and
-> then update the bugzilla?
-> 
+On 05/21/2019 02:50 PM, Tengfei Fan wrote:
+> While printing a task's backtrace and this task isn't
+> current task, it is possible that task's fp and fp+8
+> have the same value, so cannot break the while loop.
+> This can break while loop if this task had been
+> rescheduled during print this task's backtrace.
 
-Let's continue here on LKML itself. The only reason I created the
-bugzilla entry is to attach the tarball of the traces, assuming
-that it would allow me to upload a 20 MB file (since email attachment
-didn't work). But bugzilla's file restriction is much smaller than
-that, so it didn't work out either, and I resorted to using dropbox.
-So we don't need the bugzilla entry anymore; I might as well close it
-to avoid confusion.
+This is very confusing. IIUC it suggests that while printing
+the backtrace for non-current tasks the do/while loop does not
+exit because fp and fp+8 might have the same value ? When would
+this happen ? Even in that case the commit message here does not
+properly match the change in this patch.
 
-Regards,
-Srivatsa
-VMware Photon OS
+This patch tries to stop printing the stack for non-current tasks
+if their state change while there is one dump_backtrace() trying
+to print back trace. Dont we have any lock preventing a task in
+this situation (while dumping it's backtrace) from running again
+or changing state.
 
+> 
+> Signed-off-by: Tengfei Fan <tengfeif@codeaurora.org>
+> ---
+>  arch/arm64/kernel/traps.c | 23 +++++++++++++++++++++++
+>  1 file changed, 23 insertions(+)
+> 
+> diff --git a/arch/arm64/kernel/traps.c b/arch/arm64/kernel/traps.c
+> index 2975598..9df6e02 100644
+> --- a/arch/arm64/kernel/traps.c
+> +++ b/arch/arm64/kernel/traps.c
+> @@ -103,6 +103,9 @@ void dump_backtrace(struct pt_regs *regs, struct task_struct *tsk)
+>  {
+>  	struct stackframe frame;
+>  	int skip = 0;
+> +	long cur_state = 0;
+> +	unsigned long cur_sp = 0;
+> +	unsigned long cur_fp = 0;
+>  
+>  	pr_debug("%s(regs = %p tsk = %p)\n", __func__, regs, tsk);
+>  
+> @@ -127,6 +130,9 @@ void dump_backtrace(struct pt_regs *regs, struct task_struct *tsk)
+>  		 */
+>  		frame.fp = thread_saved_fp(tsk);
+>  		frame.pc = thread_saved_pc(tsk);
+> +		cur_state = tsk->state;
+> +		cur_sp = thread_saved_sp(tsk);
+> +		cur_fp = frame.fp;
+
+Should 'saved_state|sp|fp' instead as its applicable to non-current
+tasks only.
+
+>  	}
+>  #ifdef CONFIG_FUNCTION_GRAPH_TRACER
+>  	frame.graph = 0;
+> @@ -134,6 +140,23 @@ void dump_backtrace(struct pt_regs *regs, struct task_struct *tsk)
+>  
+>  	printk("Call trace:\n");
+>  	do {
+> +		if (tsk != current && (cur_state != tsk->state
+> +			/*
+> +			 * We would not be printing backtrace for the task
+> +			 * that has changed state from uninterruptible to
+> +			 * running before hitting the do-while loop but after
+> +			 * saving the current state. If task is in running
+
+This does not check any explicit task states like 'un-interruptible' or
+'running' but instead tracks change from any previously 'saved' state.
+
+
+> +			 * state before saving the state, then we may print
+> +			 * wrong call trace or end up in infinite while loop
+> +			 * if *(fp) and *(fp+8) are same. While the situation
+
+Then dump_backtrace() must detect it, should not save it and just abort.
+
+
+> +			 * will stop print when that task schedule out.
+
+Thats not a reliable solution. AFICS we should not proceed further if
+there is a chance of an wrong trace or an infinite loop. Hoping that
+the printing will stop when task gets scheduled out does not seem right.
+
+> +			 */
+> +			|| cur_sp != thread_saved_sp(tsk)
+> +			|| cur_fp != thread_saved_fp(tsk))) {
+
+Why does any of these three mismatches detect the problematic transition
+not just the state ?
