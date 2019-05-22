@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E7ECC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:29:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9B3FC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:29:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 378032173C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:29:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83650217D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:29:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558553379;
-	bh=x6bQV7iNWo3xutZM9ZnlhS0sVGxlqe649MMkWi5oFbM=;
+	s=default; t=1558553385;
+	bh=WRDWdcYe/dmdSqigJ92qRz3Bm1CJW3V6dtXb0v4xKY8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VnM7BVvflGTTSCsIb7e+ULhhIkre3Ct/KsdWxhnU9ryl3MGKHNLR+h0fcJtOYuHGz
-	 80S5iS3dC3hkMHFYIMzu555dwrQhOnoT0RnHbhVZnD113LflMMXKA6F2DTKcqq4SbQ
-	 OOVroyd72EieCj0ACHBFlg01sN/+qYRlQEORnvLY=
+	b=FFhoWYAe8Xa7N2wlOwxhFql+Lur32SeNpGs6MwZY0q2f1t0fv88gi0G9SOKt8OMHi
+	 TBRfkazFzbikCrQ1qxzt0QBaBGTAtuG6RFwKv1xeJAh+OSe4bOKsYZRNAf/a4d4RBT
+	 mssK3OPbB4DUOmUTIwQ76wFm7Edn8bsHv4A2dV1g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732966AbfEVT3h (ORCPT
+        id S1733019AbfEVT3o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:29:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52648 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:29:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52802 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732915AbfEVT3c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:29:32 -0400
+        id S1732968AbfEVT3j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:29:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A87A3217F9;
-        Wed, 22 May 2019 19:29:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 18EA92177E;
+        Wed, 22 May 2019 19:29:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553372;
-        bh=x6bQV7iNWo3xutZM9ZnlhS0sVGxlqe649MMkWi5oFbM=;
+        s=default; t=1558553378;
+        bh=WRDWdcYe/dmdSqigJ92qRz3Bm1CJW3V6dtXb0v4xKY8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eJ4hfXWnVFTPiHat32cciseenoHZaPM+dupv2Nr0SICo7s1RBf1LR3q2MiPV9Y1vS
-         ErVkiKpEJUj1S5vUpcMdl1eqCr6qDEiAXbOf2t7C7z+xeiNeuol2faDzsinMsn0gbQ
-         2OMcKvTfGg4EgfGHx0ZM/0wpLw4czVixL4mhd/ko=
+        b=zWqnZW7BlLWqZXMu5rRXxnaRdl9taiF6C01v2H2E6g5RJ84Coit7KVas9ZjiDi+yM
+         A8JoKe32/APCtMPZShrdLVhITm2jFFePlFMgVyCc3ZV1kbuPHVdFf1pauejiBRC0ei
+         wxMVxLSkCjq0ITXmyPWPIYY1fRF5LVYQ+VwXu6f4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mariusz Bialonczyk <manio@skyboo.net>,
-        Jean-Francois Dagenais <jeff.dagenais@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 032/167] w1: fix the resume command API
-Date:   Wed, 22 May 2019 15:26:27 -0400
-Message-Id: <20190522192842.25858-32-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 038/167] mwifiex: prevent an array overflow
+Date:   Wed, 22 May 2019 15:26:33 -0400
+Message-Id: <20190522192842.25858-38-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192842.25858-1-sashal@kernel.org>
 References: <20190522192842.25858-1-sashal@kernel.org>
@@ -60,51 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mariusz Bialonczyk <manio@skyboo.net>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 62909da8aca048ecf9fbd7e484e5100608f40a63 ]
+[ Upstream commit b4c35c17227fe437ded17ce683a6927845f8c4a4 ]
 
->From the DS2408 datasheet [1]:
-"Resume Command function checks the status of the RC flag and, if it is set,
- directly transfers control to the control functions, similar to a Skip ROM
- command. The only way to set the RC flag is through successfully executing
- the Match ROM, Search ROM, Conditional Search ROM, or Overdrive-Match ROM
- command"
+The "rate_index" is only used as an index into the phist_data->rx_rate[]
+array in the mwifiex_hist_data_set() function.  That array has
+MWIFIEX_MAX_AC_RX_RATES (74) elements and it's used to generate some
+debugfs information.  The "rate_index" variable comes from the network
+skb->data[] and it is a u8 so it's in the 0-255 range.  We need to cap
+it to prevent an array overflow.
 
-The function currently works perfectly fine in a multidrop bus, but when we
-have only a single slave connected, then only a Skip ROM is used and Match
-ROM is not called at all. This is leading to problems e.g. with single one
-DS2408 connected, as the Resume Command is not working properly and the
-device is responding with failing results after the Resume Command.
-
-This commit is fixing this by using a Skip ROM instead in those cases.
-The bandwidth / performance advantage is exactly the same.
-
-Refs:
-[1] https://datasheets.maximintegrated.com/en/ds/DS2408.pdf
-
-Signed-off-by: Mariusz Bialonczyk <manio@skyboo.net>
-Reviewed-by: Jean-Francois Dagenais <jeff.dagenais@gmail.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: cbf6e05527a7 ("mwifiex: add rx histogram statistics support")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/w1/w1_io.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/net/wireless/marvell/mwifiex/cfp.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/w1/w1_io.c b/drivers/w1/w1_io.c
-index d191e1f805799..661551c4ffa25 100644
---- a/drivers/w1/w1_io.c
-+++ b/drivers/w1/w1_io.c
-@@ -430,8 +430,7 @@ int w1_reset_resume_command(struct w1_master *dev)
- 	if (w1_reset_bus(dev))
- 		return -1;
+diff --git a/drivers/net/wireless/marvell/mwifiex/cfp.c b/drivers/net/wireless/marvell/mwifiex/cfp.c
+index bfe84e55df776..f1522fb1c1e87 100644
+--- a/drivers/net/wireless/marvell/mwifiex/cfp.c
++++ b/drivers/net/wireless/marvell/mwifiex/cfp.c
+@@ -531,5 +531,8 @@ u8 mwifiex_adjust_data_rate(struct mwifiex_private *priv,
+ 		rate_index = (rx_rate > MWIFIEX_RATE_INDEX_OFDM0) ?
+ 			      rx_rate - 1 : rx_rate;
  
--	/* This will make only the last matched slave perform a skip ROM. */
--	w1_write_8(dev, W1_RESUME_CMD);
-+	w1_write_8(dev, dev->slave_count > 1 ? W1_RESUME_CMD : W1_SKIP_ROM);
- 	return 0;
++	if (rate_index >= MWIFIEX_MAX_AC_RX_RATES)
++		rate_index = MWIFIEX_MAX_AC_RX_RATES - 1;
++
+ 	return rate_index;
  }
- EXPORT_SYMBOL_GPL(w1_reset_resume_command);
 -- 
 2.20.1
 
