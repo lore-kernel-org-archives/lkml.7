@@ -2,121 +2,145 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C3FEC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:37:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0146C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:37:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDF9720675
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:37:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71D2D20675
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:37:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558553843;
+	bh=N09jMq2spg9BBnOBVwJkzNW3m3MswQpPzbq01cnH42o=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=1cg5i3DG1hWj0Sh7yWY+NGDk/3VfAquCbC9Txf/10z07P0W/LMe/0EQHZaztRnvTC
+	 NRvxo3DqG1/FNAfPhp4chxNxAkqcaiW+26ltNOrE9uaOfmA6hphbGP3h9ofxfy/i1q
+	 hesJXN9N8kTw3R6yZbzn1SWrZzpHuG3eeBZDjaho=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387733AbfEVThH (ORCPT
+        id S2387754AbfEVThW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:37:07 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:40032 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731471AbfEVThF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:37:05 -0400
-Received: from [10.200.157.26] (unknown [131.107.160.154])
-        by linux.microsoft.com (Postfix) with ESMTPSA id E438020B7186;
-        Wed, 22 May 2019 12:37:03 -0700 (PDT)
-Subject: Re: [PATCH 0/2] public key: IMA signer logging: Log public key of IMA
- Signature signer in IMA log
-To:     Ken Goldman <kgold@linux.ibm.com>,
-        Linux Integrity <linux-integrity@vger.kernel.org>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        David Howells <dhowells@redhat.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-Cc:     Balaji Balasubramanyan <balajib@linux.microsoft.com>,
-        Prakhar Srivastava <prsriva@linux.microsoft.com>,
-        jorhand@linux.microsoft.com
-References: <6b69f115-96cf-890a-c92b-0b2b05798357@linux.microsoft.com>
- <750fdb9f-fc9b-24bf-42c3-32156ecdc16f@linux.ibm.com>
- <9c944ba6-f520-96e1-3631-1e21bbc4c327@linux.microsoft.com>
- <0b5ae493-6564-40e9-343b-e6781c229a25@linux.ibm.com>
- <54663a75-a601-ae6c-8068-bc2c3923a948@linux.microsoft.com>
- <b1a2edc1-45c7-7a9f-7a77-e252b2f85a64@linux.ibm.com>
-From:   Lakshmi <nramas@linux.microsoft.com>
-Message-ID: <2bf6f51f-a55b-9f7d-0e50-25d92fc95e8b@linux.microsoft.com>
-Date:   Wed, 22 May 2019 12:37:03 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 22 May 2019 15:37:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53870 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730606AbfEVTaY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:30:24 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C6150217D9;
+        Wed, 22 May 2019 19:30:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558553423;
+        bh=N09jMq2spg9BBnOBVwJkzNW3m3MswQpPzbq01cnH42o=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=MNlJA6CrhncIWtsr/KQEtyFAgCaOw/sVJ/N8XJka7ipbTnn/cfRw/kppRj2Vlv0af
+         flJ0Ycsdy1XpneNdAoP98cpFCn5smTr/Sza8Iz4pM8mNsQmDv5WFS0eYmygqbsO4mF
+         d2NHghgzvlme4mOj+Y4Q2r1fUY92/tLZ8nr6CjhU=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Sameer Pujar <spujar@nvidia.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 004/114] dmaengine: tegra210-dma: free dma controller in remove()
+Date:   Wed, 22 May 2019 15:28:27 -0400
+Message-Id: <20190522193017.26567-4-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190522193017.26567-1-sashal@kernel.org>
+References: <20190522193017.26567-1-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <b1a2edc1-45c7-7a9f-7a77-e252b2f85a64@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/22/19 11:57 AM, Ken Goldman wrote:
+From: Sameer Pujar <spujar@nvidia.com>
 
-> 
-> 1 - How is your solution - including a public key with each event - 
-> related to this issue?
-This a change from my earlier proposal. In the new proposal I am making 
-the public key is not included with each event. The data included in 
-each IMA event does not change. For instance, when IMA signature 
-validation is selected (ima-sig template, for instance), each event will 
-have the IMA signature (which includes the 4 Byte Key Identifier and the 
-Signature)
+[ Upstream commit f030e419501cb95e961e9ed35c493b5d46a04eca ]
 
-> 2 - I don't understand how a large cloud affects scale.  Wouldn't the 
-> verifier would typically be checking known machines - those of their 
-> enterprise - not every machine on the cloud?
-> 
-> Can't we assume a typical attestation use case has a fairly locked down 
-> OS with a limited number of applications.
-Yes - the attestation service (verifier) will be attesting only client 
-machines known to the enterprise. But such clients could be running 
-different versions of the OS and the kernel modules.
-We cannot assume that this would be a limited set. Therefore, 
-maintaining the hash\signature of all such components, for all versions 
-of the components, and re-validating that in the service is not a 
-scalable solution.
+Following kernel panic is seen during DMA driver unload->load sequence
+==========================================================================
+Unable to handle kernel paging request at virtual address ffffff8001198880
+Internal error: Oops: 86000007 [#1] PREEMPT SMP
+CPU: 0 PID: 5907 Comm: HwBinder:4123_1 Tainted: G C 4.9.128-tegra-g065839f
+Hardware name: galen (DT)
+task: ffffffc3590d1a80 task.stack: ffffffc3d0678000
+PC is at 0xffffff8001198880
+LR is at of_dma_request_slave_channel+0xd8/0x1f8
+pc : [<ffffff8001198880>] lr : [<ffffff8008746f30>] pstate: 60400045
+sp : ffffffc3d067b710
+x29: ffffffc3d067b710 x28: 000000000000002f
+x27: ffffff800949e000 x26: ffffff800949e750
+x25: ffffff800949e000 x24: ffffffbefe817d84
+x23: ffffff8009f77cb0 x22: 0000000000000028
+x21: ffffffc3ffda49c8 x20: 0000000000000029
+x19: 0000000000000001 x18: ffffffffffffffff
+x17: 0000000000000000 x16: ffffff80082b66a0
+x15: ffffff8009e78250 x14: 000000000000000a
+x13: 0000000000000038 x12: 0101010101010101
+x11: 0000000000000030 x10: 0101010101010101
+x9 : fffffffffffffffc x8 : 7f7f7f7f7f7f7f7f
+x7 : 62ff726b6b64622c x6 : 0000000000008064
+x5 : 6400000000000000 x4 : ffffffbefe817c44
+x3 : ffffffc3ffda3e08 x2 : ffffff8001198880
+x1 : ffffffc3d48323c0 x0 : ffffffc3d067b788
 
-Instead, we want the IMA sub-system on the clients to do the signature 
-validation (As it is done today). In addition to that, the clients will 
-log the public keys from keyrings such as IMA, Platform, and BuiltIn 
-Trusted Keys - this will be done only once and not in each IMA event 
-(This is a change from my earlier proposal).
+Process HwBinder:4123_1 (pid: 5907, stack limit = 0xffffffc3d0678028)
+Call trace:
+[<ffffff8001198880>] 0xffffff8001198880
+[<ffffff80087459f8>] dma_request_chan+0x50/0x1f0
+[<ffffff8008745bc0>] dma_request_slave_channel+0x28/0x40
+[<ffffff8001552c44>] tegra_alt_pcm_open+0x114/0x170
+[<ffffff8008d65fa4>] soc_pcm_open+0x10c/0x878
+[<ffffff8008d18618>] snd_pcm_open_substream+0xc0/0x170
+[<ffffff8008d1878c>] snd_pcm_open+0xc4/0x240
+[<ffffff8008d189e0>] snd_pcm_playback_open+0x58/0x80
+[<ffffff8008cfc6d4>] snd_open+0xb4/0x178
+[<ffffff8008250628>] chrdev_open+0xb8/0x1d0
+[<ffffff8008246fdc>] do_dentry_open+0x214/0x318
+[<ffffff80082485d0>] vfs_open+0x58/0x88
+[<ffffff800825bce0>] do_last+0x450/0xde0
+[<ffffff800825c718>] path_openat+0xa8/0x368
+[<ffffff800825dd84>] do_filp_open+0x8c/0x110
+[<ffffff8008248a74>] do_sys_open+0x164/0x220
+[<ffffff80082b66dc>] compat_SyS_openat+0x3c/0x50
+[<ffffff8008083040>] el0_svc_naked+0x34/0x38
+---[ end trace 67e6d544e65b5145 ]---
+Kernel panic - not syncing: Fatal exception
+==========================================================================
 
-Using this data the service will verify that the clients used only 
-trusted key(s) for signature validation.
+In device probe(), of_dma_controller_register() registers DMA controller.
+But when driver is removed, this is not freed. During driver reload this
+results in data abort and kernel panic. Add of_dma_controller_free() in
+driver remove path to fix the issue.
 
-> 
-> Like I said, it should be rare.  In the worst case, can't the service 
-> tell by trying both keys?If the service is validating the signature again it can try all the 
-keys. But we don't want to take that approach - instead we want to 
-verify the keys used by the client.
+Fixes: f46b195799b5 ("dmaengine: tegra-adma: Add support for Tegra210 ADMA")
+Signed-off-by: Sameer Pujar <spujar@nvidia.com>
+Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/dma/tegra210-adma.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-> 
-> I thought your solution was to change the IMA measurements, adding the 
-> public key to each entry with a new template?  Did I misunderstand, or 
-> do you have a new proposal?
-I have a new proposal as described above. Sorry if I had confused you.
+diff --git a/drivers/dma/tegra210-adma.c b/drivers/dma/tegra210-adma.c
+index b10cbaa82ff53..af3487538c191 100644
+--- a/drivers/dma/tegra210-adma.c
++++ b/drivers/dma/tegra210-adma.c
+@@ -786,6 +786,7 @@ static int tegra_adma_remove(struct platform_device *pdev)
+ 	struct tegra_adma *tdma = platform_get_drvdata(pdev);
+ 	int i;
+ 
++	of_dma_controller_free(pdev->dev.of_node);
+ 	dma_async_device_unregister(&tdma->dma_dev);
+ 
+ 	for (i = 0; i < tdma->nr_channels; ++i)
+-- 
+2.20.1
 
-
-> How does this solve the collision issue?  If there are two keys with the 
-> same key ID, isn't there still a collision?
-Like I have said above, the client will log all the keys from the 
-relevant keyrings (IMA, Platform, etc.) The service will verify that 
-they are all known\trusted keys - which gives the assurance that the IMA 
-signature validation done by the client was performed using trusted 
-signing key(s).
-
-
-> I understand how the client keyring is used in IMA to check file
-> signatures, but how is that related to the attestation service?
-In my new proposal, the keys in the client keyrings will be logged in 
-the IMA log. The attestation service will verify that they are 
-known\trusted keys.
-
-Thanks,
-  -lakshmi
