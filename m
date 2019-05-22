@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC3F0C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:30:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3515C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:31:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 951152177E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:30:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACB92204FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:31:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558553459;
-	bh=Z5M97+wnGla18P25MkB3sjrGHWb2JtxK/um22vBOWNQ=;
+	s=default; t=1558553467;
+	bh=f7dg84IkYaJn/zqFRfLVsVVP5Xb09Vvo51Ce1EFlCfw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qyPr8LJpLjZ28Erc+jmlRrocLvDHgxHBIRMV6gWKMPra0UAAWhzNwL/bbGXl/nPeG
-	 BBWpVzkqqa/azMRDqNeWAcE6fU9OHkbwBr3iPa+XzsF/GIVLS65KCoOf9GrXAo9L0N
-	 olfSFrlKhhybAs4zMphCj3NYUSDh31bwu3MJGI1k=
+	b=CIVBiXiEG6VVBUnzYtvQlmpiaghWlcnT2MjLx/qy4nlqpjIYS6BEj+t4AtN/S9n1k
+	 pPWZPC+9pW+UeZmKwwMM6RVnAchB1kFv9a32UesJKY430ccyeZ93v208sTsIEGI6Ls
+	 I0PraDdVisH0yFlr0inyIXbfp9HSjlq8Qukaa6iM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732989AbfEVTa6 (ORCPT
+        id S2387441AbfEVTbG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:30:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54254 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:31:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54366 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732913AbfEVTas (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:30:48 -0400
+        id S1732971AbfEVTax (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:30:53 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE23921473;
-        Wed, 22 May 2019 19:30:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2AD942177E;
+        Wed, 22 May 2019 19:30:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553447;
-        bh=Z5M97+wnGla18P25MkB3sjrGHWb2JtxK/um22vBOWNQ=;
+        s=default; t=1558553452;
+        bh=f7dg84IkYaJn/zqFRfLVsVVP5Xb09Vvo51Ce1EFlCfw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o+cy/+wVR8Q2Tuue1s+++sEaaVpbgChfOGkTX5Zuv1bNffzgui3BaCtEIM7kE96nu
-         FQd9jZRxZWUYB52eI2irCTR49EMJkKwZYOTrUXF4ndoMOJJOx+fPAqOrAipsdr+cI5
-         ZldGjhuCQqdPqKdUIg5QNwGUCj5eFjtSyBFYSKVA=
+        b=PMda66YQHECqZTPVRkZsFF98foXmS0FPI80hUrv5dYBN+gXUXpaELkcynenXsPeC7
+         TFCVVAzl/PoMnM4kSd2TnOj7mnq/mGkuZsA/enURAggPn+JhJ4O7pYNIuAqQv0VgkL
+         rvf4mHPM0Bgih9emVFaWUNEtk5uQFgXUrAjkmNp8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sven Van Asbroeck <thesven73@gmail.com>,
-        Sven Van Asbroeck <TheSven73@gmail.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rtc@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 017/114] rtc: 88pm860x: prevent use-after-free on device remove
-Date:   Wed, 22 May 2019 15:28:40 -0400
-Message-Id: <20190522193017.26567-17-sashal@kernel.org>
+Cc:     Daniel Baluta <daniel.baluta@nxp.com>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.9 022/114] ASoC: fsl_sai: Update is_slave_mode with correct value
+Date:   Wed, 22 May 2019 15:28:45 -0400
+Message-Id: <20190522193017.26567-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522193017.26567-1-sashal@kernel.org>
 References: <20190522193017.26567-1-sashal@kernel.org>
@@ -60,44 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sven Van Asbroeck <thesven73@gmail.com>
+From: Daniel Baluta <daniel.baluta@nxp.com>
 
-[ Upstream commit f22b1ba15ee5785aa028384ebf77dd39e8e47b70 ]
+[ Upstream commit ddb351145a967ee791a0fb0156852ec2fcb746ba ]
 
-The device's remove() attempts to shut down the delayed_work scheduled
-on the kernel-global workqueue by calling flush_scheduled_work().
+is_slave_mode defaults to false because sai structure
+that contains it is kzalloc'ed.
 
-Unfortunately, flush_scheduled_work() does not prevent the delayed_work
-from re-scheduling itself. The delayed_work might run after the device
-has been removed, and touch the already de-allocated info structure.
-This is a potential use-after-free.
+Anyhow, if we decide to set the following configuration
+SAI slave -> SAI master, is_slave_mode will remain set on true
+although SAI being master it should be set to false.
 
-Fix by calling cancel_delayed_work_sync() during remove(): this ensures
-that the delayed work is properly cancelled, is no longer running, and
-is not able to re-schedule itself.
+Fix this by updating is_slave_mode for each call of
+fsl_sai_set_dai_fmt.
 
-This issue was detected with the help of Coccinelle.
-
-Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rtc/rtc-88pm860x.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/fsl/fsl_sai.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/rtc/rtc-88pm860x.c b/drivers/rtc/rtc-88pm860x.c
-index 19e53b3b8e005..166faae3a59cd 100644
---- a/drivers/rtc/rtc-88pm860x.c
-+++ b/drivers/rtc/rtc-88pm860x.c
-@@ -414,7 +414,7 @@ static int pm860x_rtc_remove(struct platform_device *pdev)
- 	struct pm860x_rtc_info *info = platform_get_drvdata(pdev);
- 
- #ifdef VRTC_CALIBRATION
--	flush_scheduled_work();
-+	cancel_delayed_work_sync(&info->calib_work);
- 	/* disable measurement */
- 	pm860x_set_bits(info->i2c, PM8607_MEAS_EN2, MEAS2_VRTC, 0);
- #endif	/* VRTC_CALIBRATION */
+diff --git a/sound/soc/fsl/fsl_sai.c b/sound/soc/fsl/fsl_sai.c
+index 9fadf7e31c5f8..cb43f57f978b1 100644
+--- a/sound/soc/fsl/fsl_sai.c
++++ b/sound/soc/fsl/fsl_sai.c
+@@ -274,12 +274,14 @@ static int fsl_sai_set_dai_fmt_tr(struct snd_soc_dai *cpu_dai,
+ 	case SND_SOC_DAIFMT_CBS_CFS:
+ 		val_cr2 |= FSL_SAI_CR2_BCD_MSTR;
+ 		val_cr4 |= FSL_SAI_CR4_FSD_MSTR;
++		sai->is_slave_mode = false;
+ 		break;
+ 	case SND_SOC_DAIFMT_CBM_CFM:
+ 		sai->is_slave_mode = true;
+ 		break;
+ 	case SND_SOC_DAIFMT_CBS_CFM:
+ 		val_cr2 |= FSL_SAI_CR2_BCD_MSTR;
++		sai->is_slave_mode = false;
+ 		break;
+ 	case SND_SOC_DAIFMT_CBM_CFS:
+ 		val_cr4 |= FSL_SAI_CR4_FSD_MSTR;
 -- 
 2.20.1
 
