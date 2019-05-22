@@ -2,147 +2,230 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35804C18E7D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 09:09:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0EBAC18E7D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 09:09:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8CBA204EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 09:09:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99E3B204EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 09:09:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance-com.20150623.gappssmtp.com header.i=@bytedance-com.20150623.gappssmtp.com header.b="cZE7mPJd"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IiDefu5b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728710AbfEVJJD (ORCPT
+        id S1728890AbfEVJJd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 05:09:03 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:36795 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726244AbfEVJJC (ORCPT
+        Wed, 22 May 2019 05:09:33 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:51427 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728747AbfEVJJc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 05:09:02 -0400
-Received: by mail-pf1-f194.google.com with SMTP id v80so998488pfa.3
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 02:09:02 -0700 (PDT)
+        Wed, 22 May 2019 05:09:32 -0400
+Received: by mail-wm1-f68.google.com with SMTP id c77so1382355wmd.1
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 02:09:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id;
-        bh=77VWXjnj0J97wSyDWwRJhsJZaq/DQDIPWjSs9tQqrDc=;
-        b=cZE7mPJdiYHkEJt0ZeYDpctVeEVRzXK7dh1HLrav6uXS7j2YVwEb3KiRegPUVuF6rC
-         al5/Qgt5GKGHsZh0VzDr+aJjxyp7ns6xOoCMNFxNA4dJmwBcUnD+5MTbgiNuWhcCXOLG
-         rc9AMq1TuFgbhoJcZVQQ8sqGbts55toiqHR+RyPyJYXe/XXQx4Q2E8aZPycSBpO/W2yg
-         51QjGiFstomNo88c5E2ZARkocTvhjiIT2wWol5JrZwGmyAKbzPNZlPPeeJF4fMZYx8jU
-         g0tClu7yAG8QB8vtqR0NHdZdAx+/hyaE2RiU3OlgMzFgOn75qfViNsY/PbV3H1zwxbA7
-         Afnw==
+        d=linaro.org; s=google;
+        h=from:message-id:mime-version:subject:date:in-reply-to:cc:to
+         :references;
+        bh=Fs6G449Jswk/hH7c/uX6tzFFhtWXUq58A/0uXZEuWts=;
+        b=IiDefu5bqQEPWNEoq67LbPmJCSQoTwMZJxGkSqwRJ+Exp/XLQT5ktDPQpue90UV2VM
+         cwEl8DUj55krmLv7r9mUW/DR7BPIWxxJFg4I9eMMNZwBTjd+5HOtk7Otov9tMfse3Eb0
+         USrMI0mQORY3d1nVFZQTsqKVl+dRrTlUpDOaRZUMIPw81XSVNUqorUm1cJS/ecmDIbyr
+         kotvYGe77OXjbOIocNFZhNGfDjH5AEeY6Y22+R2lX5ffdDXhWdqyz1rkSiPuh3BuMIzY
+         TNdxCYTEIt7jM4zryq+udmPxM6TmxUZ7Cb5jSN6y738c1C4Zyf10ECyEMjF05J5b8KNX
+         5khQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=77VWXjnj0J97wSyDWwRJhsJZaq/DQDIPWjSs9tQqrDc=;
-        b=WUHLc+idQfy/0tFaNlWxkiLUrMAyLGWsf1Dnm3yi5QNRVFY1quKZmefgeBis5rYeGZ
-         eNqH1cePjQdiHT7mYN99atoebP2H8a8nrmlWtHGSmr4jr9+J/Efwn5M3i7Yp+MwSkAj6
-         W0E5gWIJSFUc4055lynwx/fNnnH2ruZUixIzIkdeWX1s27S0CU7dAGTfis/ZhZbRaJSU
-         Jj1vN6tSREUpO5FIO4H5jKd+dd/d3GB0Ko9QJpDX6lto3bggG+BNPFgur9hLXs8RS+fN
-         QzWOg2yvpHxIFYQUnS3gCYd73uS1Yj9SC5ODoVYBfHxXQFe6H4cqooou/8AXgrocVXef
-         bstQ==
-X-Gm-Message-State: APjAAAXdxowAwBz7NX9M06ms7UlTb/OU4NaLrgQuBxPqOH3Mu5G1eqAL
-        ex9gylWoRJ9uDogUByqbgEaW9g==
-X-Google-Smtp-Source: APXvYqynLczwVGfNprMN09ZwuPsza9FqdQpdLnOFcSHOQj4j1rUKb/RcGt686nvYsT99YeSr5jXaJw==
-X-Received: by 2002:a62:128a:: with SMTP id 10mr93717838pfs.225.1558516142213;
-        Wed, 22 May 2019 02:09:02 -0700 (PDT)
-Received: from always-ThinkPad-T480.bytedance.net ([61.120.150.76])
-        by smtp.gmail.com with ESMTPSA id a64sm24131408pgc.53.2019.05.22.02.08.59
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 22 May 2019 02:09:01 -0700 (PDT)
-From:   zhenwei pi <pizhenwei@bytedance.com>
-To:     mingo@redhat.com, peterz@infradead.org
-Cc:     linux-kernel@vger.kernel.org, pizhenwei@bytedance.com
-Subject: [PATCH] sched: idle: Support nohlt_list kernel parameter
-Date:   Wed, 22 May 2019 17:08:56 +0800
-Message-Id: <1558516136-17601-1-git-send-email-pizhenwei@bytedance.com>
-X-Mailer: git-send-email 2.7.4
+        h=x-gm-message-state:from:message-id:mime-version:subject:date
+         :in-reply-to:cc:to:references;
+        bh=Fs6G449Jswk/hH7c/uX6tzFFhtWXUq58A/0uXZEuWts=;
+        b=e3++s1jGaaE7r8UmdpUWt8OSxy55oG2tsH40l7j8UNlbKA+1G2X+3efLgO0ylCJfNA
+         hzgrEdk3ai9E9ynUKtw8FMQ0y8gUwrScEE/Uf1+/BZ9ZCfZk87BJD/MQFJxiFzSzM/pz
+         atbpgWcAMgSS++Yk9xtNQnDClOXpM5iczJPeC/1OYIPikaKuzZZ7i4KlP/xgxxcQKjrr
+         3ySqcCeio1TA4kCM4zh7rQZ8GgW8WL4ghIfVLcEmpIq6TiRwz8ADL7ycnzvmJUJNKhSC
+         eaFM/vs8rg/gi79rjoaFm2+ydegD34xKWk1Q+uq1KNbwNRQmTgajBlxPgn1BEM+mHM9b
+         WRoA==
+X-Gm-Message-State: APjAAAV7fmsT33BuL3hsCzxpuEKoJthDvtoE5PD4DuRb3RNvHQF19r24
+        Pldxg+NcsBgX4p3AYoH4kQj86g==
+X-Google-Smtp-Source: APXvYqwsdLWKTXlecXjTTY5sTEfZl/5WfZLsQZ++SMUSfStJ/qLyrQyz4ydIavTKGPfGzldSqDDplw==
+X-Received: by 2002:a1c:dc86:: with SMTP id t128mr6259490wmg.64.1558516169471;
+        Wed, 22 May 2019 02:09:29 -0700 (PDT)
+Received: from [192.168.0.100] (88-147-40-42.dyn.eolo.it. [88.147.40.42])
+        by smtp.gmail.com with ESMTPSA id u7sm13503722wmg.25.2019.05.22.02.09.28
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 22 May 2019 02:09:28 -0700 (PDT)
+From:   Paolo Valente <paolo.valente@linaro.org>
+Message-Id: <686D6469-9DE7-4738-B92A-002144C3E63E@linaro.org>
+Content-Type: multipart/signed;
+        boundary="Apple-Mail=_3DB989E2-874B-47C2-B6CC-3F154F79180F";
+        protocol="application/pgp-signature";
+        micalg=pgp-sha256
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
+Subject: Re: CFQ idling kills I/O performance on ext4 with blkio cgroup
+ controller
+Date:   Wed, 22 May 2019 11:09:26 +0200
+In-Reply-To: <F5E29C98-6CC4-43B8-994D-0B5354EECBF3@linaro.org>
+Cc:     linux-fsdevel@vger.kernel.org,
+        linux-block <linux-block@vger.kernel.org>,
+        linux-ext4@vger.kernel.org, cgroups@vger.kernel.org,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Jens Axboe <axboe@kernel.dk>, Jan Kara <jack@suse.cz>,
+        jmoyer@redhat.com, Theodore Ts'o <tytso@mit.edu>,
+        amakhalov@vmware.com, anishs@vmware.com, srivatsab@vmware.com
+To:     "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
+References: <8d72fcf7-bbb4-2965-1a06-e9fc177a8938@csail.mit.edu>
+ <1812E450-14EF-4D5A-8F31-668499E13652@linaro.org>
+ <46c6a4be-f567-3621-2e16-0e341762b828@csail.mit.edu>
+ <07D11833-8285-49C2-943D-E4C1D23E8859@linaro.org>
+ <A0DFE635-EFEC-4670-AD70-5D813E170BEE@linaro.org>
+ <5B6570A2-541A-4CF8-98E0-979EA6E3717D@linaro.org>
+ <2CB39B34-21EE-4A95-A073-8633CF2D187C@linaro.org>
+ <FC24E25F-4578-454D-AE2B-8D8D352478D8@linaro.org>
+ <0e3fdf31-70d9-26eb-7b42-2795d4b03722@csail.mit.edu>
+ <F5E29C98-6CC4-43B8-994D-0B5354EECBF3@linaro.org>
+X-Mailer: Apple Mail (2.3445.104.8)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently kernel only supports hlt&nohlt kernel parameters, all the
-CPUs would poll or not in idle. Guest OS can't control power in KVM
-virtualization, so we can only choose high performance by nohlt or
-CPU overcommit by hlt.
-nohlt_list kernel parameter allows the specified CPU(s) to poll,
-and other CPUs still halt in idle.
 
-We can config boot parameter in guest(Ex, 16vCPUs on x86) like this:
-    linux ... irqaffinity=0,2,4,6 nohlt_list=0,2,4,6
-it means that 25% of CPUs can always run in vm-mode and benefit
-from posted-interrupt.
+--Apple-Mail=_3DB989E2-874B-47C2-B6CC-3F154F79180F
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset=us-ascii
 
-Signed-off-by: zhenwei pi <pizhenwei@bytedance.com>
----
- kernel/sched/idle.c | 35 +++++++++++++++++++++++++++++++++--
- 1 file changed, 33 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/sched/idle.c b/kernel/sched/idle.c
-index 80940939b733..5a0c3498258b 100644
---- a/kernel/sched/idle.c
-+++ b/kernel/sched/idle.c
-@@ -50,6 +50,37 @@ static int __init cpu_idle_nopoll_setup(char *__unused)
- 	return 1;
- }
- __setup("hlt", cpu_idle_nopoll_setup);
-+
-+static cpumask_var_t cpu_nohlt_cpumask __cpumask_var_read_mostly;
-+static int __init cpu_idle_poll_list_setup(char *str)
-+{
-+	alloc_bootmem_cpumask_var(&cpu_nohlt_cpumask);
-+	if (cpulist_parse(str, cpu_nohlt_cpumask)) {
-+		pr_warn("idle: nohlt_list= incorrect CPU range\n");
-+		cpumask_clear(cpu_nohlt_cpumask);
-+	} else
-+		pr_info("idle: nohlt_list=%s\n", str);
-+
-+	return 1;
-+}
-+__setup("nohlt_list=", cpu_idle_poll_list_setup);
-+
-+static inline bool cpu_idle_should_poll(void)
-+{
-+	int cpu;
-+
-+	if (cpu_idle_force_poll)
-+		return !!cpu_idle_force_poll;
-+
-+	cpu = smp_processor_id();
-+	return (cpumask_available(cpu_nohlt_cpumask) &&
-+			!!cpumask_test_cpu(cpu, cpu_nohlt_cpumask));
-+}
-+#else
-+static inline bool cpu_idle_should_poll(void)
-+{
-+	return !!cpu_idle_force_poll;
-+}
- #endif
- 
- static noinline int __cpuidle cpu_idle_poll(void)
-@@ -60,7 +91,7 @@ static noinline int __cpuidle cpu_idle_poll(void)
- 	stop_critical_timings();
- 
- 	while (!tif_need_resched() &&
--		(cpu_idle_force_poll || tick_check_broadcast_expired()))
-+		(cpu_idle_should_poll() || tick_check_broadcast_expired()))
- 		cpu_relax();
- 	start_critical_timings();
- 	trace_cpu_idle_rcuidle(PWR_EVENT_EXIT, smp_processor_id());
-@@ -256,7 +287,7 @@ static void do_idle(void)
- 		 * broadcast device expired for us, we don't want to go deep
- 		 * idle as we know that the IPI is going to arrive right away.
- 		 */
--		if (cpu_idle_force_poll || tick_check_broadcast_expired()) {
-+		if (cpu_idle_should_poll() || tick_check_broadcast_expired()) {
- 			tick_nohz_idle_restart_tick();
- 			cpu_idle_poll();
- 		} else {
--- 
-2.11.0
 
+> Il giorno 22 mag 2019, alle ore 10:05, Paolo Valente =
+<paolo.valente@linaro.org> ha scritto:
+>=20
+>=20
+>=20
+>> Il giorno 22 mag 2019, alle ore 00:51, Srivatsa S. Bhat =
+<srivatsa@csail.mit.edu> ha scritto:
+>>=20
+>> [ Resending this mail with a dropbox link to the traces (instead
+>> of a file attachment), since it didn't go through the last time. ]
+>>=20
+>> On 5/21/19 10:38 AM, Paolo Valente wrote:
+>>>=20
+>>>> So, instead of only sending me a trace, could you please:
+>>>> 1) apply this new patch on top of the one I attached in my previous =
+email
+>>>> 2) repeat your test and report results
+>>>=20
+>>> One last thing (I swear!): as you can see from my script, I tested =
+the
+>>> case low_latency=3D0 so far.  So please, for the moment, do your =
+test
+>>> with low_latency=3D0.  You find the whole path to this parameter in,
+>>> e.g., my script.
+>>>=20
+>> No problem! :) Thank you for sharing patches for me to test!
+>>=20
+>> I have good news :) Your patch improves the throughput significantly
+>> when low_latency =3D 0.
+>>=20
+>> Without any patch:
+>>=20
+>> dd if=3D/dev/zero of=3D/root/test.img bs=3D512 count=3D10000 =
+oflag=3Ddsync
+>> 10000+0 records in
+>> 10000+0 records out
+>> 5120000 bytes (5.1 MB, 4.9 MiB) copied, 58.0915 s, 88.1 kB/s
+>>=20
+>>=20
+>> With both patches applied:
+>>=20
+>> dd if=3D/dev/zero of=3D/root/test0.img bs=3D512 count=3D10000 =
+oflag=3Ddsync
+>> 10000+0 records in
+>> 10000+0 records out
+>> 5120000 bytes (5.1 MB, 4.9 MiB) copied, 3.87487 s, 1.3 MB/s
+>>=20
+>> The performance is still not as good as mq-deadline (which achieves
+>> 1.6 MB/s), but this is a huge improvement for BFQ nonetheless!
+>>=20
+>> A tarball with the trace output from the 2 scenarios you requested,
+>> one with only the debug patch applied =
+(trace-bfq-add-logs-and-BUG_ONs),
+>> and another with both patches applied (trace-bfq-boost-injection) is
+>> available here:
+>>=20
+>> https://www.dropbox.com/s/pdf07vi7afido7e/bfq-traces.tar.gz?dl=3D0
+>>=20
+>=20
+> Hi Srivatsa,
+> I've seen the bugzilla you've created.  I'm a little confused on how
+> to better proceed.  Shall we move this discussion to the bugzilla, or
+> should we continue this discussion here, where it has started, and
+> then update the bugzilla?
+>=20
+
+Ok, I've received some feedback on this point, and I'll continue the
+discussion here.  Then I'll report back on the bugzilla.
+
+First, thank you very much for testing my patches, and, above all, for
+sharing those huge traces!
+
+According to the your traces, the residual 20% lower throughput that you
+record is due to the fact that the BFQ injection mechanism takes a few
+hundredths of seconds to stabilize, at the beginning of the workload.
+During that setup time, the throughput is equal to the dreadful ~60-90 =
+KB/s
+that you see without this new patch.  After that time, there
+seems to be no loss according to the trace.
+
+The problem is that a loss lasting only a few hundredths of seconds is
+however not negligible for a write workload that lasts only 3-4
+seconds.  Could you please try writing a larger file?
+
+In addition, I wanted to ask you whether you measured BFQ throughput
+with traces disabled.  This may make a difference.
+
+After trying writing a larger file, you can try with low_latency on.
+On my side, it causes results to become a little unstable across
+repetitions (which is expected).
+
+Thanks,
+Paolo
+
+
+> Let me know,
+> Paolo
+>=20
+>> Thank you!
+>>=20
+>> Regards,
+>> Srivatsa
+>> VMware Photon OS
+
+
+--Apple-Mail=_3DB989E2-874B-47C2-B6CC-3F154F79180F
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+	filename=signature.asc
+Content-Type: application/pgp-signature;
+	name=signature.asc
+Content-Description: Message signed with OpenPGP
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEpYoduex+OneZyvO8OAkCLQGo9oMFAlzlEcYACgkQOAkCLQGo
+9oNJ3Q//Sg7XcjVaaf3n1snyQH02p5UlfydhClnm/MruZLDVt8oB0HJMiP23IUwC
+m3LhFiSCOgV2+knSjwbk3jtUR2tnvkBVcko/G2luqxPxJrq7v5GjSfEb/hLjgwpB
+U7ufv14kR2EbE5C+2Qz9/JMsco9EOnGpCr3hO6/iWYkGBScu79iqoIH3wUuRdpg2
+m1SkP/NWcrtc4kydA09RHjQTeSFNLZeO9PLjAVR6tkUGEmwopqqE+toWYiqBtScs
+1Bf+eoQqAIxDr2OA98HpvUN6hYQxsDTNNbNn04wRLb+fK2BChcDDkM5MaJ/09YpK
+s4DXMjs+ifvLi3PTTbAscjujOLDnsWaAmmY/rufox97lXPxxt6UySkdENFUBFLNd
+bWvWMAb438p0Pz3hwNrU/tZh+nGYvqQT11oXq1Dlrks6kXS+iEfuZms34vz9tGfr
+r8XlqfImvkUSn4NI7YocIyqg76Rf2t5VGr59mR+7cN58y/vBbkPr7FkjXl/1LfGm
+bQsHL+D+NHb7NXgX91Jp97bKIX0yHnXdxrGZsjCH27C/HOzhtrncBzjcU2TPMEw+
+T9JmOJf8G2vXfR5G5voKot2wX1qZ9Nnpd9T5U0rHd4ami2oiOv0BV1rAkbjaH5Qd
+RcWZyGaSRBpzHuQQPi/jG18YzPbNt6szIflujQfdX38sPRcTXyk=
+=qTPQ
+-----END PGP SIGNATURE-----
+
+--Apple-Mail=_3DB989E2-874B-47C2-B6CC-3F154F79180F--
