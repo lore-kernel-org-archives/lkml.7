@@ -2,230 +2,183 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0746C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 21:49:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 441FEC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 21:50:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6825C20868
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 21:49:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAE732173C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 21:50:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730509AbfEVVth (ORCPT
+        id S1730538AbfEVVud (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 17:49:37 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:42330 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728615AbfEVVth (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 17:49:37 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E276837EEB;
-        Wed, 22 May 2019 21:49:22 +0000 (UTC)
-Received: from redhat.com (unknown [10.20.6.178])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id CADDF52E7;
-        Wed, 22 May 2019 21:49:19 +0000 (UTC)
-Date:   Wed, 22 May 2019 17:49:18 -0400
-From:   Jerome Glisse <jglisse@redhat.com>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Artemy Kovalyov <artemyko@mellanox.com>,
-        Moni Shoua <monis@mellanox.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Kaike Wan <kaike.wan@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        linux-mm@kvack.org
-Subject: Re: [PATCH v4 0/1] Use HMM for ODP v4
-Message-ID: <20190522214917.GA20179@redhat.com>
-References: <20190411181314.19465-1-jglisse@redhat.com>
- <20190506195657.GA30261@ziepe.ca>
- <20190521205321.GC3331@redhat.com>
- <20190522005225.GA30819@ziepe.ca>
- <20190522174852.GA23038@redhat.com>
- <20190522192219.GF6054@ziepe.ca>
+        Wed, 22 May 2019 17:50:33 -0400
+Received: from out03.mta.xmission.com ([166.70.13.233]:44733 "EHLO
+        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728615AbfEVVuc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 17:50:32 -0400
+Received: from in01.mta.xmission.com ([166.70.13.51])
+        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1hTZ82-0006en-KY; Wed, 22 May 2019 15:50:30 -0600
+Received: from ip72-206-97-68.om.om.cox.net ([72.206.97.68] helo=x220.xmission.com)
+        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1hTZ7s-0002cm-1j; Wed, 22 May 2019 15:50:30 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     linux-usb@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Oliver Neukum <oneukum@suse.com>,
+        <linux-kernel@vger.kernel.org>
+References: <Pine.LNX.4.44L0.1905221459170.1410-100000@iolanthe.rowland.org>
+Date:   Wed, 22 May 2019 16:50:11 -0500
+In-Reply-To: <Pine.LNX.4.44L0.1905221459170.1410-100000@iolanthe.rowland.org>
+        (Alan Stern's message of "Wed, 22 May 2019 15:02:29 -0400 (EDT)")
+Message-ID: <87o93ujh0s.fsf@xmission.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190522192219.GF6054@ziepe.ca>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Wed, 22 May 2019 21:49:36 +0000 (UTC)
+Content-Type: text/plain
+X-XM-SPF: eid=1hTZ7s-0002cm-1j;;;mid=<87o93ujh0s.fsf@xmission.com>;;;hst=in01.mta.xmission.com;;;ip=72.206.97.68;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1/KkZFIzOai1UbCldXVDvTfkpuB43MLQLU=
+X-SA-Exim-Connect-IP: 72.206.97.68
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH] signal/usb: Replace kill_pid_info_as_cred with kill_pid_usb_asyncio
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 22, 2019 at 04:22:19PM -0300, Jason Gunthorpe wrote:
-> On Wed, May 22, 2019 at 01:48:52PM -0400, Jerome Glisse wrote:
-> 
-> > > > +long ib_umem_odp_map_dma_pages(struct ib_umem_odp *umem_odp,
-> > > > +			       struct hmm_range *range)
-> > > >  {
-> > > > +	struct device *device = umem_odp->umem.context->device->dma_device;
-> > > > +	struct ib_ucontext_per_mm *per_mm = umem_odp->per_mm;
-> > > >  	struct ib_umem *umem = &umem_odp->umem;
-> > > > -	struct task_struct *owning_process  = NULL;
-> > > > -	struct mm_struct *owning_mm = umem_odp->umem.owning_mm;
-> > > > -	struct page       **local_page_list = NULL;
-> > > > -	u64 page_mask, off;
-> > > > -	int j, k, ret = 0, start_idx, npages = 0, page_shift;
-> > > > -	unsigned int flags = 0;
-> > > > -	phys_addr_t p = 0;
-> > > > -
-> > > > -	if (access_mask == 0)
-> > > > +	struct mm_struct *mm = per_mm->mm;
-> > > > +	unsigned long idx, npages;
-> > > > +	long ret;
-> > > > +
-> > > > +	if (mm == NULL)
-> > > > +		return -ENOENT;
-> > > > +
-> > > > +	/* Only drivers with invalidate support can use this function. */
-> > > > +	if (!umem->context->invalidate_range)
-> > > >  		return -EINVAL;
-> > > >  
-> > > > -	if (user_virt < ib_umem_start(umem) ||
-> > > > -	    user_virt + bcnt > ib_umem_end(umem))
-> > > > -		return -EFAULT;
-> > > > +	/* Sanity checks. */
-> > > > +	if (range->default_flags == 0)
-> > > > +		return -EINVAL;
-> > > >  
-> > > > -	local_page_list = (struct page **)__get_free_page(GFP_KERNEL);
-> > > > -	if (!local_page_list)
-> > > > -		return -ENOMEM;
-> > > > +	if (range->start < ib_umem_start(umem) ||
-> > > > +	    range->end > ib_umem_end(umem))
-> > > > +		return -EINVAL;
-> > > >  
-> > > > -	page_shift = umem->page_shift;
-> > > > -	page_mask = ~(BIT(page_shift) - 1);
-> > > > -	off = user_virt & (~page_mask);
-> > > > -	user_virt = user_virt & page_mask;
-> > > > -	bcnt += off; /* Charge for the first page offset as well. */
-> > > > +	idx = (range->start - ib_umem_start(umem)) >> umem->page_shift;
-> > > 
-> > > Is this math OK? What is supposed to happen if the range->start is not
-> > > page aligned to the internal page size?
-> > 
-> > range->start is align on 1 << page_shift boundary within pagefault_mr
-> > thus the above math is ok. We can add a BUG_ON() and comments if you
-> > want.
-> 
-> OK
-> 
-> > > > +	range->pfns = &umem_odp->pfns[idx];
-> > > > +	range->pfn_shift = ODP_FLAGS_BITS;
-> > > > +	range->values = odp_hmm_values;
-> > > > +	range->flags = odp_hmm_flags;
-> > > >  
-> > > >  	/*
-> > > > -	 * owning_process is allowed to be NULL, this means somehow the mm is
-> > > > -	 * existing beyond the lifetime of the originating process.. Presumably
-> > > > -	 * mmget_not_zero will fail in this case.
-> > > > +	 * If mm is dying just bail out early without trying to take mmap_sem.
-> > > > +	 * Note that this might race with mm destruction but that is fine the
-> > > > +	 * is properly refcounted so are all HMM structure.
-> > > >  	 */
-> > > > -	owning_process = get_pid_task(umem_odp->per_mm->tgid, PIDTYPE_PID);
-> > > > -	if (!owning_process || !mmget_not_zero(owning_mm)) {
-> > > 
-> > > But we are not in a HMM context here, and per_mm is not a HMM
-> > > structure. 
-> > > 
-> > > So why is mm suddenly guarenteed valid? It was a bug report that
-> > > triggered the race the mmget_not_zero is fixing, so I need a better
-> > > explanation why it is now safe. From what I see the hmm_range_fault
-> > > is doing stuff like find_vma without an active mmget??
-> > 
-> > So the mm struct can not go away as long as we hold a reference on
-> > the hmm struct and we hold a reference on it through both hmm_mirror
-> > and hmm_range struct. So struct mm can not go away and thus it is
-> > safe to try to take its mmap_sem.
-> 
-> This was always true here, though, so long as the umem_odp exists the
-> the mm has a grab on it. But a grab is not a get..
-> 
-> The point here was the old code needed an mmget() in order to do
-> get_user_pages_remote()
-> 
-> If hmm does not need an external mmget() then fine, we delete this
-> stuff and rely on hmm.
-> 
-> But I don't think that is true as we have:
-> 
->           CPU 0                                           CPU1
->                                                        mmput()
->                        				        __mmput()
-> 							 exit_mmap()
-> down_read(&mm->mmap_sem);
-> hmm_range_dma_map(range, device,..
->   ret = hmm_range_fault(range, block);
->      if (hmm->mm == NULL || hmm->dead)
-> 							   mmu_notifier_release()
-> 							     hmm->dead = true
->      vma = find_vma(hmm->mm, start);
->         .. rb traversal ..                                 while (vma) remove_vma()
-> 
-> *goes boom*
-> 
-> I think this is violating the basic constraint of the mm by acting on
-> a mm's VMA's without holding a mmget() to prevent concurrent
-> destruction.
-> 
-> In other words, mmput() destruction does not respect the mmap_sem - so
-> holding the mmap sem alone is not enough locking.
-> 
-> The unlucked hmm->dead simply can't save this. Frankly every time I
-> look a struct with 'dead' in it, I find races like this.
-> 
-> Thus we should put the mmget_notzero back in.
+Alan Stern <stern@rowland.harvard.edu> writes:
 
-So for some reason i thought exit_mmap() was setting the mm_rb
-to empty node and flushing vmacache so that find_vma() would
-fail. Might have been in some patch that never went upstream.
+> On Tue, 21 May 2019, Eric W. Biederman wrote:
+>
+>> The usb support for asyncio encoded one of it's values in the wrong
+>> field.  It should have used si_value but instead used si_addr which is
+>> not present in the _rt union member of struct siginfo.
+>> 
+>> The practical result of this is that on a 64bit big endian kernel
+>> when delivering a signal to a 32bit process the si_addr field
+>> is set to NULL, instead of the expected pointer value.
+>> 
+>> This issue can not be fixed in copy_siginfo_to_user32 as the usb
+>> usage of the the _sigfault (aka si_addr) member of the siginfo
+>> union when SI_ASYNCIO is set is incompatible with the POSIX and
+>> glibc usage of the _rt member of the siginfo union.
+>> 
+>> Therefore replace kill_pid_info_as_cred with kill_pid_usb_asyncio a
+>> dedicated function for this one specific case.  There are no other
+>> users of kill_pid_info_as_cred so this specialization should have no
+>> impact on the amount of code in the kernel.  Have kill_pid_usb_asyncio
+>> take instead of a siginfo_t which is difficult and error prone, 3
+>> arguments, a signal number, an errno value, and an address enconded as
+>> a sigval_t.  The encoding of the address as a sigval_t allows the
+>> code that reads the userspace request for a signal to handle this
+>> compat issue along with all of the other compat issues.
+>> 
+>> Add BUILD_BUG_ONs in kernel/signal.c to ensure that we can now place
+>> the pointer value at the in si_pid (instead of si_addr).  That is the
+>> code now verifies that si_pid and si_addr always occur at the same
+>> location.  Further the code veries that for native structures a value
+>> placed in si_pid and spilling into si_uid will appear in userspace in
+>> si_addr (on a byte by byte copy of siginfo or a field by field copy of
+>> siginfo).  The code also verifies that for a 64bit kernel and a 32bit
+>> userspace the 32bit pointer will fit in si_pid.
+>
+> Okay, I have gone through this.  Although I still don't really
+> understand the detailed issues concerning the layout of the data fields
+> (probably hopeless without seeing a diagram), the USB portions of the
+> patch look good and do what the patch description says.
+>
+> Acked-by: Alan Stern <stern@rowland.harvard.edu>
+>
+> Alan Stern
 
-Note that right before find_vma() there is also range->valid
-check which will also intercept mm release.
+Thanks.
 
-Anyway the easy fix is to get ref on mm user in range_register.
+Perhaps this will work as a diagram.  I don't know if there is a better
+way to say it in my patch description.  In struct siginfo there are 3
+fields in fixed positions:
 
-> 
-> I saw some other funky looking stuff in hmm as well..
-> 
-> > Hence it is safe to take mmap_sem and it is safe to call in hmm, if
-> > mm have been kill it will return EFAULT and this will propagate to
-> > RDMA.
->  
-> > As per_mm i removed the per_mm->mm = NULL from release so that it is
-> > always safe to use that field even in face of racing mm "killing".
-> 
-> Yes, that certainly wasn't good.
-> 
-> > > > -	 * An array of the pages included in the on-demand paging umem.
-> > > > -	 * Indices of pages that are currently not mapped into the device will
-> > > > -	 * contain NULL.
-> > > > +	 * An array of the pages included in the on-demand paging umem. Indices
-> > > > +	 * of pages that are currently not mapped into the device will contain
-> > > > +	 * 0.
-> > > >  	 */
-> > > > -	struct page		**page_list;
-> > > > +	uint64_t *pfns;
-> > > 
-> > > Are these actually pfns, or are they mangled with some shift? (what is range->pfn_shift?)
-> > 
-> > They are not pfns they have flags (hence range->pfn_shift) at the
-> > bottoms i just do not have a better name for this.
-> 
-> I think you need to have a better name then
+   int si_signo;
+   int si_errno;
+   int si_code;
 
-Suggestion ? i have no idea for a better name, it has pfn value
-in it.
+After that there is a union.  The si_signo and si_code fields are
+examined to see which union member is valid (see siginfo_layout).
+In every other case a si_code of SI_ASYNCIO corresponds to
+the the _rt union member which has the fields:
 
-Cheers,
-Jérôme
+   int si_pid;
+   int si_uid;
+   sigval_t si_sigval;
+
+However when usb started using SI_ASYNCIO the _sigfault union member
+that (except for special exceptions) only has the field:
+
+   void __user *si_addr;
+
+Or in short the relevant piece of the union looks like:
+
+         0   1  2   3    4   5   6  7
+       +---+---+---+---+---+---+---+---+
+       |    si_pid     |   si_uid      |
+       +---+---+---+---+---+---+---+---+
+       |             si_addr           | (64bit)
+       +---+---+---+---+---+---+---+---+
+       |     si_addr   | (32bit)
+       +---+---+---+---+
+
+Which means if siginfo is copied field by field on 32bit everything
+works because si_pid and si_addr are in the same location.
+
+Similarly if siginfo is copied field by field on 64bit everything
+works because there is no padding between si_pid and si_uid. So
+copying both of those fields results in the entire si_addr being
+copied.
+
+It is the compat case that gets tricky.  Half of the bits are
+zero.  If those zero bits show up in bytes 4-7 and the data
+shows up in bytes 0-3 (aka little endian) everything works.
+If those zero bits show in in bytes 0-3 (aka big endian) userspace sees
+a NULL pointer instead of the value it passed.
+
+
+
+Fixing this while maintaining some modicum of sanity is the tricky bit.
+The interface is made to kill_pid_usb_asyncio is made a sigval_t so the
+standard signal compat tricks can be used.  sigval_t is a union of:
+
+        int sival_int;
+        void __user *sival_ptr;
+
+         0   1  2   3    4   5   6  7
+       +---+---+---+---+---+---+---+---+
+       |            sival_ptr          | (64bit)
+       +---+---+---+---+---+---+---+---+ 
+       |    sival_ptr  | (32bit)
+       +---+---+---+---+
+       |    sival_int  |
+       +---+---+---+---+
+
+The signal code solves the compat issues for sigval_t by storing the
+32bit pointers in sival_int.  So they meaningful bits are guaranteed to
+be in the low 32bits, just like the 32bit sival_ptr.
+
+After a bunch of build BUG_ONs to verify my reasonable assumptions
+of but the siginfo layout are actually true, the code that generates
+the siginfo just copies a sigval_t to si_pid.  And assumes the code
+in the usb stack placed the pointer in the proper part of the sigval_t
+when it read the information from userspace.
+
+I don't know if that helps make it easy to understand but I figured I
+would give it a shot.
+
+Eric
