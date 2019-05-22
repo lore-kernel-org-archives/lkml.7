@@ -2,170 +2,104 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABA56C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:46:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A51BC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:46:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D0A32089E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:46:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BD6A2081C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:46:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="GEjctaRy"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ta1jPaeU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387881AbfEVTqO (ORCPT
+        id S2387641AbfEVTqY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:46:14 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:50656 "EHLO
+        Wed, 22 May 2019 15:46:24 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:50654 "EHLO
         lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732410AbfEVT1v (ORCPT
+        with ESMTP id S1732405AbfEVT1u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:27:51 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4MJRkhR079742;
-        Wed, 22 May 2019 14:27:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1558553266;
-        bh=DRVV299Ci0j5Cexq/cMMqdAHfnEZfgwA2Ei4XT3yojQ=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=GEjctaRyWoZOCQ7b7QHrQeDHev9z7Rf/i8aAZMlkqNSdxABMMKfX/NP3qlU5VDUcN
-         vTNuAeeTRpQf3TBCgkJR7+rfXml6xS8sysxr0xjkSuMmgeuAFoOaydKZ+IkwJknzcn
-         qyWSrDv2hUV6J0i/tni5eo+7o7qn+Qjr+vhMKJxo=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4MJRklT130161
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 22 May 2019 14:27:46 -0500
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 22
- May 2019 14:27:46 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 22 May 2019 14:27:46 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4MJRj0g033003;
+        Wed, 22 May 2019 15:27:50 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4MJRjqw079732;
         Wed, 22 May 2019 14:27:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1558553265;
+        bh=mb9DtpGK++v8kJ0PeDAjLnaIBJtP4888+bgXxUdkl88=;
+        h=From:To:CC:Subject:Date;
+        b=ta1jPaeU4FnSNZVQlH51XLxYFchglSs8CoDqyl1FdasyFYosfISgT6H2Du21gRtZ2
+         UIXRspA2dPO5w+Op2h2VNu2nuSVOhIY9uOBsHUIH2JgUTAn3PNQyjh2w/GOdwejE/k
+         zwaR9N1QMgEN2iCwFuDRHXWlB8gRKeNU1s90SedU=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4MJRj3O031994
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 22 May 2019 14:27:45 -0500
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 22
+ May 2019 14:27:44 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 22 May 2019 14:27:44 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4MJRid2096385;
+        Wed, 22 May 2019 14:27:44 -0500
 From:   Dan Murphy <dmurphy@ti.com>
 To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <broonie@kernel.org>,
         <lgirdwood@gmail.com>
 CC:     <lee.jones@linaro.org>, <linux-leds@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>,
-        Rob Herring <robh@kernel.org>
-Subject: [RESEND PATCH v4 5/6] dt-bindings: leds: Add LED bindings for the LM36274
-Date:   Wed, 22 May 2019 14:27:32 -0500
-Message-ID: <20190522192733.13422-6-dmurphy@ti.com>
+        <linux-kernel@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH v4 0/6] LM36274 Introduction
+Date:   Wed, 22 May 2019 14:27:27 -0500
+Message-ID: <20190522192733.13422-1-dmurphy@ti.com>
 X-Mailer: git-send-email 2.21.0.5.gaeb582a983
-In-Reply-To: <20190522192733.13422-1-dmurphy@ti.com>
-References: <20190522192733.13422-1-dmurphy@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=""
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the LM36274 LED specific bindings.
+Hello
 
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
----
- .../devicetree/bindings/leds/leds-lm36274.txt | 82 +++++++++++++++++++
- 1 file changed, 82 insertions(+)
+This is patch set v4 for the LM36274.  There were no changes made
+to this patch set except to rebase this on top of the latest TI LMU common code
+patchset.
+
+This patch set was rebased on the series at:
+https://lore.kernel.org/patchwork/project/lkml/list/?series=393071
+
+Dan
+
+Dan Murphy (6):
+  regulator: lm363x: Make the gpio register enable flexible
+  dt-bindings: mfd: Add lm36274 bindings to ti-lmu
+  mfd: ti-lmu: Add LM36274 support to the ti-lmu
+  regulator: lm363x: Add support for LM36274
+  dt-bindings: leds: Add LED bindings for the LM36274
+  leds: lm36274: Introduce the TI LM36274 LED driver
+
+ .../devicetree/bindings/leds/leds-lm36274.txt |  82 +++++++++
+ .../devicetree/bindings/mfd/ti-lmu.txt        |  54 ++++++
+ drivers/leds/Kconfig                          |   7 +
+ drivers/leds/Makefile                         |   1 +
+ drivers/leds/leds-lm36274.c                   | 174 ++++++++++++++++++
+ drivers/mfd/Kconfig                           |   5 +-
+ drivers/mfd/ti-lmu.c                          |  14 ++
+ drivers/regulator/Kconfig                     |   2 +-
+ drivers/regulator/lm363x-regulator.c          |  56 +++++-
+ include/linux/mfd/ti-lmu-register.h           |  23 +++
+ include/linux/mfd/ti-lmu.h                    |   4 +
+ 11 files changed, 416 insertions(+), 6 deletions(-)
  create mode 100644 Documentation/devicetree/bindings/leds/leds-lm36274.txt
+ create mode 100644 drivers/leds/leds-lm36274.c
 
-diff --git a/Documentation/devicetree/bindings/leds/leds-lm36274.txt b/Documentation/devicetree/bindings/leds/leds-lm36274.txt
-new file mode 100644
-index 000000000000..329393700191
---- /dev/null
-+++ b/Documentation/devicetree/bindings/leds/leds-lm36274.txt
-@@ -0,0 +1,82 @@
-+* Texas Instruments LM36274 4-Channel LCD Backlight Driver w/Integrated Bias
-+
-+The LM36274 is an integrated four-channel WLED driver and LCD bias supply.
-+The backlight boost provides the power to bias four parallel LED strings with
-+up to 29V total output voltage. The 11-bit LED current is programmable via
-+the I2C bus and/or controlled via a logic level PWM input from 60 μA to 30 mA.
-+
-+Parent device properties are documented in ../mfd/ti_lmu.txt
-+Regulator properties are documented in ../regulator/lm363x-regulator.txt
-+
-+Required backlight properties:
-+	- compatible:
-+		"ti,lm36274-backlight"
-+	- reg : 0
-+	- #address-cells : 1
-+	- #size-cells : 0
-+	- led-sources : Indicates which LED strings will be enabled.
-+			Values from 0-3, sources is 0 based so strings will be
-+			source value + 1.
-+
-+Optional backlight properties:
-+	- label : see Documentation/devicetree/bindings/leds/common.txt
-+	- linux,default-trigger :
-+	   see Documentation/devicetree/bindings/leds/common.txt
-+
-+Example:
-+
-+HVLED string 1 and 3 are controlled by control bank A and HVLED 2 string is
-+controlled by control bank B.
-+
-+lm36274@11 {
-+	compatible = "ti,lm36274";
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	reg = <0x11>;
-+
-+	enable-gpios = <&gpio1 28 GPIO_ACTIVE_HIGH>;
-+
-+	regulators {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		compatible = "ti,lm363x-regulator";
-+
-+		enable-gpios = <&pioC 0 GPIO_ACTIVE_HIGH>,
-+			       <&pioC 1 GPIO_ACTIVE_HIGH>;
-+
-+		vboost {
-+			regulator-name = "lcd_boost";
-+			regulator-min-microvolt = <4000000>;
-+			regulator-max-microvolt = <7150000>;
-+			regulator-always-on;
-+		};
-+
-+		vpos {
-+			regulator-name = "lcd_vpos";
-+			regulator-min-microvolt = <4000000>;
-+			regulator-max-microvolt = <6500000>;
-+		};
-+
-+		vneg {
-+			regulator-name = "lcd_vneg";
-+			regulator-min-microvolt = <4000000>;
-+			regulator-max-microvolt = <6500000>;
-+		};
-+	};
-+
-+	backlight {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		compatible = "ti,lm36274-backlight";
-+
-+		led@0 {
-+			reg = <0>;
-+			led-sources = <0 2>;
-+			label = "white:backlight_cluster";
-+			linux,default-trigger = "backlight";
-+		};
-+	};
-+};
-+
-+For more product information please see the link below:
-+http://www.ti.com/lit/ds/symlink/lm36274.pdf
 -- 
 2.21.0.5.gaeb582a983
 
