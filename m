@@ -2,114 +2,103 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A496C282DC
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:55:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EF0DC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:55:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF92820881
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:55:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HvudDPF+"
+	by mail.kernel.org (Postfix) with ESMTP id CB06620862
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:55:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558554946;
+	bh=W9506hB0FyDIu0O5kMHP/1RgFxBtuqfqLuHqnekpp5Y=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=B5oefYNjXy6XhIzW7Dpfcz2Bw0xjRU9/17tNMIB8bBiMk5G+TMjYt7QVNH016n+XI
+	 Vn+R76JcVb6mqYGIk7qvjvz8ZCG6j68QJsQhlScgxl1L6v0vpsnpOD4Yyx/Phcio24
+	 RqsJkXKmQ6hStYFt7/2Ki2DMCHXD4nG1J7l+S2PU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732065AbfEVTzf (ORCPT
+        id S1732151AbfEVTzp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:55:35 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:41857 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730197AbfEVTzb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:55:31 -0400
-Received: by mail-pf1-f193.google.com with SMTP id q17so1869182pfq.8;
-        Wed, 22 May 2019 12:55:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=dkz+uMfQ4vVtX4Z57u9xC58rrVWkexD1pHBhDv3CnWw=;
-        b=HvudDPF+KevQPPLS50w5VVfYbTyT/HSSccgs7KNEDiQlGjjGVza2G1drC4CnVs+CcJ
-         K2WQk3HlAiAiK7afohlFEfA7AmqIsaVgAEOb/bSfWVKDDnXCAaJzofoV15AGCWxN6UbC
-         wU60jUxa/ajyydKuvPWfILaGtLw7J25wuxlFfSpdELB0YHwA3v/NCE6BQsOVBzc2dky/
-         Aeb8EvG8EnI6Xwzx3V+dvOodQz1+jxAKvxPsaJwBrq5xzUX1ENgbt42IC3NE2T1OBVYp
-         u9AgscgfhH2vNiCQCKMtlrbj4WMghTu8RuMmZV2v5rvP4fGyM+PdThKoOAA9ad+orqQM
-         0pGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=dkz+uMfQ4vVtX4Z57u9xC58rrVWkexD1pHBhDv3CnWw=;
-        b=pCf3Wd6KgnBpoNYz8d6JYt2ZboL1hqmdiVufxpIfck1cjSrGxIiluuDlXb+u6ut7/s
-         9kh2BQqCqHu88DpRoxK25uJQ9yp3Kbta1UJAjmJMxcrv3Gtiq4NLeTjBbb0rwvG2PkWY
-         3TRgLPDk77i7OWvqCLaGuxoWLP1MrigWvHLgJRe7Xxgv/fYk8YuL+H/Ig/jwzI73o0La
-         84VJHKxnT7tmcfmjHw4OxnFwVg+AsGQyTC6vddb4G0zqSbAmmi7Il5HRfclmGcPciAkQ
-         ekkvpIzF8ybyjSogFu2lXoCPDWHgiPXilkiebQnJZP6SpI177y6R09+0cOEGSZ6g+hNY
-         q9Ng==
-X-Gm-Message-State: APjAAAUM2halQ+f2U0DdRgYQjfpxf5gC1j74b70NiJ7lgggdPYBnMn3s
-        EflODPgW0Y56bMUSzST5i0oMzSbH
-X-Google-Smtp-Source: APXvYqzuFNwwqWce3oARO3MYbQ8QDsnhxBa3bPsJce9d8mfJhpoeRGDAkM1CNEoTvjLbDrHsL1Pbjw==
-X-Received: by 2002:a63:7413:: with SMTP id p19mr89950878pgc.259.1558554930988;
-        Wed, 22 May 2019 12:55:30 -0700 (PDT)
-Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:180::6565])
-        by smtp.gmail.com with ESMTPSA id x18sm32697904pfj.17.2019.05.22.12.55.29
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 22 May 2019 12:55:30 -0700 (PDT)
-Date:   Wed, 22 May 2019 12:55:27 -0700
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     Kris Van Hees <kris.van.hees@oracle.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, dtrace-devel@oss.oracle.com,
-        linux-kernel@vger.kernel.org, rostedt@goodmis.org,
-        mhiramat@kernel.org, acme@kernel.org, ast@kernel.org,
-        daniel@iogearbox.net
-Subject: Re: [RFC PATCH 00/11] bpf, trace, dtrace: DTrace BPF program type
- implementation and sample use
-Message-ID: <20190522195526.mayamzc7gstqzcpr@ast-mbp.dhcp.thefacebook.com>
-References: <201905202347.x4KNl0cs030532@aserv0121.oracle.com>
- <20190521175617.ipry6ue7o24a2e6n@ast-mbp.dhcp.thefacebook.com>
- <20190522142531.GE16275@worktop.programming.kicks-ass.net>
- <20190522182215.GO2422@oracle.com>
+        Wed, 22 May 2019 15:55:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46470 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730793AbfEVTZK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:25:10 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1BA262173C;
+        Wed, 22 May 2019 19:25:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558553109;
+        bh=W9506hB0FyDIu0O5kMHP/1RgFxBtuqfqLuHqnekpp5Y=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Mp0QIZOAc07fglLwtPzPFYeOONHJ+LS2AaW3ZDzSDId5S+c4TwQz9ZGeP85Pmnkqe
+         bW0ylZSVt5k+PrG90f7gUdmD220gT7mQGW6bREk3jEs6ZUsHmvYdqz/YMnthL6ekYE
+         GNFKyJrzrJOw+8dA8YCJ4TScRYtAWXbCjry2OCuc=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Johannes Berg <johannes.berg@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 052/317] iwlwifi: pcie: don't crash on invalid RX interrupt
+Date:   Wed, 22 May 2019 15:19:13 -0400
+Message-Id: <20190522192338.23715-52-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190522192338.23715-1-sashal@kernel.org>
+References: <20190522192338.23715-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190522182215.GO2422@oracle.com>
-User-Agent: NeoMutt/20180223
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 22, 2019 at 02:22:15PM -0400, Kris Van Hees wrote:
-> On Wed, May 22, 2019 at 04:25:32PM +0200, Peter Zijlstra wrote:
-> > On Tue, May 21, 2019 at 10:56:18AM -0700, Alexei Starovoitov wrote:
-> > 
-> > > and no changes are necessary in kernel/events/ring_buffer.c either.
-> > 
-> > Let me just NAK them on the principle that I don't see them in my inbox.
-> 
-> My apologies for failing to include you on the Cc for the patches.  That was
-> an oversight on my end and certainly not intentional.
-> 
-> > Let me further NAK it for adding all sorts of garbage to the code --
-> > we're not going to do gaps and stay_in_page nonsense.
-> 
-> Could you give some guidance in terms of an alternative?  The ring buffer code
-> provides both non-contiguous page allocation support and a vmalloc-based
-> allocation, and the vmalloc version certainly would avoid the entire gap and
-> page boundary stuff.  But since the allocator is chosen at build time based on
-> the arch capabilities, there is no way to select a specific memory allocator.
-> I'd be happy to use an alternative approach that allows direct writing into
-> the ring buffer.
+From: Johannes Berg <johannes.berg@intel.com>
 
-You do not _need_ direct write from bpf prog.
-dtrace language doesn't mandate direct write.
-'direct write into ring buffer form bpf prog' is an interesting idea and
-may be nice performance optimization, but in no way it's a blocker for dtrace scripts.
-Also it's far from clear that it actually brings performance benefits.
-Letting bpf progs write directly into ring buffer comes with
-a lot of corner cases. It's something to carefully analyze.
-I suggest to proceed with user space dtrace conversion to bpf
-without introducing kernel changes.
+[ Upstream commit 30f24eabab8cd801064c5c37589d803cb4341929 ]
+
+If for some reason the device gives us an RX interrupt before we're
+ready for it, perhaps during device power-on with misconfigured IRQ
+causes mapping or so, we can crash trying to access the queues.
+
+Prevent that by checking that we actually have RXQs and that they
+were properly allocated.
+
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/wireless/intel/iwlwifi/pcie/rx.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/rx.c b/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
+index c596c7b13504d..4354c0fedda78 100644
+--- a/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
++++ b/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
+@@ -1384,10 +1384,15 @@ static struct iwl_rx_mem_buffer *iwl_pcie_get_rxb(struct iwl_trans *trans,
+ static void iwl_pcie_rx_handle(struct iwl_trans *trans, int queue)
+ {
+ 	struct iwl_trans_pcie *trans_pcie = IWL_TRANS_GET_PCIE_TRANS(trans);
+-	struct iwl_rxq *rxq = &trans_pcie->rxq[queue];
++	struct iwl_rxq *rxq;
+ 	u32 r, i, count = 0;
+ 	bool emergency = false;
+ 
++	if (WARN_ON_ONCE(!trans_pcie->rxq || !trans_pcie->rxq[queue].bd))
++		return;
++
++	rxq = &trans_pcie->rxq[queue];
++
+ restart:
+ 	spin_lock(&rxq->lock);
+ 	/* uCode's read index (stored in shared DRAM) indicates the last Rx
+-- 
+2.20.1
 
