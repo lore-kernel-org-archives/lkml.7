@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97E51C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:38:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E76DEC282DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:38:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6970B20675
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:38:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B180C20675
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:38:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558553922;
-	bh=DhmiDpaApVO07Y6QTOeqICdGFhTwm3yFOL1mbaF/OIs=;
+	s=default; t=1558553925;
+	bh=pO38k8VhxEzdquYnHIYEk/3gJ31kyCzgKZhOtvkygOk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VuLmQ8KcrtMtIScZbmwHWoIO0vCSWq8VDNwzPw1X4L61NEcwnat1QRKha4sEBQ8BI
-	 EUrjhAXdiIc90NGuL/B6S7HLyB1U270nrkLQHx5VHGfgwh6iXsWDLL43FRJdTcaJLs
-	 yaEqbHNEy9eHfrI3LXjlUafg43IQU0XecSefYbUA=
+	b=1tU3Z6rEtbyCkQtOFPYSGDEiP17A6ohejYJpS8Ht0LEeb4YWb/CgI1ycox68Bzmqk
+	 NRUTDSYbYZDlWjXOHQwfudXyIGjaodG+KllAsfdKubpu5FIBDjlV9oVMoJD9HeGwvs
+	 GnmT0Lj8g9225yWGYbK2VgaZ1OkRcxWuba2Lk2PA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733247AbfEVTik (ORCPT
+        id S1733045AbfEVT3t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:38:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53022 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:29:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52916 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733039AbfEVT3u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:29:50 -0400
+        id S1732968AbfEVT3p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:29:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6EAA221473;
-        Wed, 22 May 2019 19:29:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 183B32173C;
+        Wed, 22 May 2019 19:29:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553389;
-        bh=DhmiDpaApVO07Y6QTOeqICdGFhTwm3yFOL1mbaF/OIs=;
+        s=default; t=1558553384;
+        bh=pO38k8VhxEzdquYnHIYEk/3gJ31kyCzgKZhOtvkygOk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j5IRKbYM+k9djYp4aLrsKqsdux6Y8XS7RXqdV/xkP6SG7aYTk99cQe8iyDftF9MiZ
-         ZIYBfBSFJfR7IJNJXHLMUIDTN0j5ONUrTcwah1kBuOsyOF6w8eIgjk/fnhOnTSMZ3v
-         IoVpa6FX2WC7OajGry5WYRwwZgaBu3nz1m+BRoQc=
+        b=TfpDmu3R6WnpY+z31+Ic4evLB87SYo97+W4hac9nzU33BA7bAZ6K7zEOm5/M6H6xP
+         UMncA6QHNEZk7f3LI4AwamzjiLUKw8kxNOnPDr+ufhVnf6eRPaWyViudt3GPNy/t0i
+         uESzKFiuBTN8vQRfjzHuPZDcZKuleSQmqjzsKOwg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Coly Li <colyli@suse.de>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>, linux-bcache@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 046/167] bcache: avoid clang -Wunintialized warning
-Date:   Wed, 22 May 2019 15:26:41 -0400
-Message-Id: <20190522192842.25858-46-sashal@kernel.org>
+Cc:     Corentin Labbe <clabbe.montjoie@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 042/167] crypto: sun4i-ss - Fix invalid calculation of hash end
+Date:   Wed, 22 May 2019 15:26:37 -0400
+Message-Id: <20190522192842.25858-42-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192842.25858-1-sashal@kernel.org>
 References: <20190522192842.25858-1-sashal@kernel.org>
@@ -60,75 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Corentin Labbe <clabbe.montjoie@gmail.com>
 
-[ Upstream commit 78d4eb8ad9e1d413449d1b7a060f50b6efa81ebd ]
+[ Upstream commit f87391558acf816b48f325a493d81d45dec40da0 ]
 
-clang has identified a code path in which it thinks a
-variable may be unused:
+When nbytes < 4, end is wronlgy set to a negative value which, due to
+uint, is then interpreted to a large value leading to a deadlock in the
+following code.
 
-drivers/md/bcache/alloc.c:333:4: error: variable 'bucket' is used uninitialized whenever 'if' condition is false
-      [-Werror,-Wsometimes-uninitialized]
-                        fifo_pop(&ca->free_inc, bucket);
-                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/md/bcache/util.h:219:27: note: expanded from macro 'fifo_pop'
- #define fifo_pop(fifo, i)       fifo_pop_front(fifo, (i))
-                                ^~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/md/bcache/util.h:189:6: note: expanded from macro 'fifo_pop_front'
-        if (_r) {                                                       \
-            ^~
-drivers/md/bcache/alloc.c:343:46: note: uninitialized use occurs here
-                        allocator_wait(ca, bch_allocator_push(ca, bucket));
-                                                                  ^~~~~~
-drivers/md/bcache/alloc.c:287:7: note: expanded from macro 'allocator_wait'
-                if (cond)                                               \
-                    ^~~~
-drivers/md/bcache/alloc.c:333:4: note: remove the 'if' if its condition is always true
-                        fifo_pop(&ca->free_inc, bucket);
-                        ^
-drivers/md/bcache/util.h:219:27: note: expanded from macro 'fifo_pop'
- #define fifo_pop(fifo, i)       fifo_pop_front(fifo, (i))
-                                ^
-drivers/md/bcache/util.h:189:2: note: expanded from macro 'fifo_pop_front'
-        if (_r) {                                                       \
-        ^
-drivers/md/bcache/alloc.c:331:15: note: initialize the variable 'bucket' to silence this warning
-                        long bucket;
-                                   ^
+This patch fix this problem.
 
-This cannot happen in practice because we only enter the loop
-if there is at least one element in the list.
-
-Slightly rearranging the code makes this clearer to both the
-reader and the compiler, which avoids the warning.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Coly Li <colyli@suse.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: 6298e948215f ("crypto: sunxi-ss - Add Allwinner Security System crypto accelerator")
+Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/bcache/alloc.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/crypto/sunxi-ss/sun4i-ss-hash.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/md/bcache/alloc.c b/drivers/md/bcache/alloc.c
-index 8c13a9036d07f..ada94a01e1423 100644
---- a/drivers/md/bcache/alloc.c
-+++ b/drivers/md/bcache/alloc.c
-@@ -325,10 +325,11 @@ static int bch_allocator_thread(void *arg)
- 		 * possibly issue discards to them, then we add the bucket to
- 		 * the free list:
- 		 */
--		while (!fifo_empty(&ca->free_inc)) {
-+		while (1) {
- 			long bucket;
+diff --git a/drivers/crypto/sunxi-ss/sun4i-ss-hash.c b/drivers/crypto/sunxi-ss/sun4i-ss-hash.c
+index a4b5ff2b72f87..f6936bb3b7be4 100644
+--- a/drivers/crypto/sunxi-ss/sun4i-ss-hash.c
++++ b/drivers/crypto/sunxi-ss/sun4i-ss-hash.c
+@@ -240,7 +240,10 @@ static int sun4i_hash(struct ahash_request *areq)
+ 		}
+ 	} else {
+ 		/* Since we have the flag final, we can go up to modulo 4 */
+-		end = ((areq->nbytes + op->len) / 4) * 4 - op->len;
++		if (areq->nbytes < 4)
++			end = 0;
++		else
++			end = ((areq->nbytes + op->len) / 4) * 4 - op->len;
+ 	}
  
--			fifo_pop(&ca->free_inc, bucket);
-+			if (!fifo_pop(&ca->free_inc, bucket))
-+				break;
- 
- 			if (ca->discard) {
- 				mutex_unlock(&ca->set->bucket_lock);
+ 	/* TODO if SGlen % 4 and !op->len then DMA */
 -- 
 2.20.1
 
