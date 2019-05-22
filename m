@@ -2,222 +2,141 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D71F5C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:21:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8648CC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:21:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F0722173C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:21:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GFshwxVj"
+	by mail.kernel.org (Postfix) with ESMTP id 59FA22177E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:21:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558552903;
+	bh=NXduDLUHcBO0fbGKsSX8fKnqa2uju3P2hEwKRHBKAU0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=skZ2by+R7xHS1cTDkuhVlLmXbDiXdVqRp8AXwhvBesxwAnOUIFX+PNKO7Ka13tIqY
+	 VB9k53KWerHAeSMJVIBVXmkBPUKyOyWCc2PHEUXwpsxs4W47KXS+nCMAWW2028JKGl
+	 0ZzXbbygf9kz4Ultf41bdMdvZ0mXIZPMfFzmE6nQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730018AbfEVTVi (ORCPT
+        id S1730042AbfEVTVm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:21:38 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:46489 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729929AbfEVTVb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:21:31 -0400
-Received: by mail-pg1-f196.google.com with SMTP id o11so1603567pgm.13
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 12:21:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=NP4JWkHqbCIs5rs8MQbZ/rJv31PHu50+VP85AcMzbbU=;
-        b=GFshwxVjgFyTBuVsTzhm7IUt1UjnhWPD0MinKNguPB3el83BFNud8bHr5plz3emii+
-         cTc7Cjy2KfiVySMa4vl3S45MUDV6ughBv+eP5o9C9KIg6ntk97RzOYluREumaUsuEfOH
-         SjJgP3hh0ohPvQPPbSdKkfRYeqkQoVWPqO5e4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=NP4JWkHqbCIs5rs8MQbZ/rJv31PHu50+VP85AcMzbbU=;
-        b=kLKsKaxPI/280HTpItPtC6lxniQirEciigTIfbes1W3fatqTXR31wmu8ZIBncwSv5A
-         m4v7B7/yrwOX2xWsHdEc+jMIabESN0tEAaz+nGla+q0FAhkYq0bLI138CK68s0WFMmkY
-         RwtNBtu1yJRNrAJeO0nG1WRe5ISZQ2qJgfLiMi89hhl3kJy1+io9oDbrU1m5og7zfOhy
-         K5iL9bvciBw48siHrFUymFePlmzGJpwn8yjapp30OxG8JjEjDNpGblYzPjzf2KL9EuPA
-         Nf5YWK+NKUzITQCVkYLOm7L6s3YM1EpWHs04w2isNCh6VnnwwzxSK9jwLSj1JfAJAPpl
-         YHxg==
-X-Gm-Message-State: APjAAAUE0ImXtVmia7kwFpr/ehZ00Qj3HmXFR/sViV1OXwoG00HD1OSi
-        ysj2DdN2QpYIDTnRdPMDU0lksQ==
-X-Google-Smtp-Source: APXvYqzNjksdiGtBA2K0Yn7lD7hXz0a3WOc+KaCHe5Lfb///NUHl50P+zldmTZ4Tu8MFGQvOw+1qnw==
-X-Received: by 2002:a62:6456:: with SMTP id y83mr32990581pfb.71.1558552889913;
-        Wed, 22 May 2019 12:21:29 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id x10sm37135797pfj.136.2019.05.22.12.21.28
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 22 May 2019 12:21:28 -0700 (PDT)
-Date:   Wed, 22 May 2019 12:21:27 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     enh <enh@google.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Evgenii Stepanov <eugenis@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Khalid Aziz <khalid.aziz@oracle.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
-        kvm@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
-Subject: Re: [PATCH v15 00/17] arm64: untag user pointers passed to the kernel
-Message-ID: <201905221157.A9BAB1F296@keescook>
-References: <cover.1557160186.git.andreyknvl@google.com>
- <20190517144931.GA56186@arrakis.emea.arm.com>
- <CAFKCwrj6JEtp4BzhqO178LFJepmepoMx=G+YdC8sqZ3bcBp3EQ@mail.gmail.com>
- <20190521182932.sm4vxweuwo5ermyd@mbp>
- <201905211633.6C0BF0C2@keescook>
- <20190522101110.m2stmpaj7seezveq@mbp>
- <CAJgzZoosKBwqXRyA6fb8QQSZXFqfHqe9qO9je5TogHhzuoGXJQ@mail.gmail.com>
+        Wed, 22 May 2019 15:21:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42122 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729971AbfEVTVe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:21:34 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 697A92177E;
+        Wed, 22 May 2019 19:21:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558552893;
+        bh=NXduDLUHcBO0fbGKsSX8fKnqa2uju3P2hEwKRHBKAU0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=NiqyCYp4VY2/g4I69CeS1P0k8+vLFdDwpA1mrt2uq1WGhV9P0BpgXQSvl+WWgYrYH
+         BkSF+h1PLN6JWv0ygtJ13avVvdIoOf+xTB1IaoeXuuo07Jw7UAGFgXNxRl6TkNOsSh
+         H3GZSZbieAfqgoD8FQ5+R1oFuKSqacK38isqKw20=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Martyna Szapar <martyna.szapar@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 013/375] i40e: Fix of memory leak and integer truncation in i40e_virtchnl.c
+Date:   Wed, 22 May 2019 15:15:13 -0400
+Message-Id: <20190522192115.22666-13-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190522192115.22666-1-sashal@kernel.org>
+References: <20190522192115.22666-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJgzZoosKBwqXRyA6fb8QQSZXFqfHqe9qO9je5TogHhzuoGXJQ@mail.gmail.com>
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 22, 2019 at 08:30:21AM -0700, enh wrote:
-> On Wed, May 22, 2019 at 3:11 AM Catalin Marinas <catalin.marinas@arm.com> wrote:
-> > On Tue, May 21, 2019 at 05:04:39PM -0700, Kees Cook wrote:
-> > > I just want to make sure I fully understand your concern about this
-> > > being an ABI break, and I work best with examples. The closest situation
-> > > I can see would be:
-> > >
-> > > - some program has no idea about MTE
-> >
-> > Apart from some libraries like libc (and maybe those that handle
-> > specific device ioctls), I think most programs should have no idea about
-> > MTE. I wouldn't expect programmers to have to change their app just
-> > because we have a new feature that colours heap allocations.
+From: Martyna Szapar <martyna.szapar@intel.com>
 
-Right -- things should Just Work from the application perspective.
+[ Upstream commit 24474f2709af6729b9b1da1c5e160ab62e25e3a4 ]
 
-> obviously i'm biased as a libc maintainer, but...
-> 
-> i don't think it helps to move this to libc --- now you just have an
-> extra dependency where to have a guaranteed working system you need to
-> update your kernel and libc together. (or at least update your libc to
-> understand new ioctls etc _before_ you can update your kernel.)
+Fixed possible memory leak in i40e_vc_add_cloud_filter function:
+cfilter is being allocated and in some error conditions
+the function returns without freeing the memory.
 
-I think (hope?) we've all agreed that we shouldn't pass this off to
-userspace. At the very least, it reduces the utility of MTE, and at worst
-it complicates userspace when this is clearly a kernel/architecture issue.
+Fix of integer truncation from u16 (type of queue_id value) to u8
+when calling i40e_vc_isvalid_queue_id function.
 
-> 
-> > > - malloc() starts returning MTE-tagged addresses
-> > > - program doesn't break from that change
-> > > - program uses some syscall that is missing untagged_addr() and fails
-> > > - kernel has now broken userspace that used to work
-> >
-> > That's one aspect though probably more of a case of plugging in a new
-> > device (graphics card, network etc.) and the ioctl to the new device
-> > doesn't work.
+Signed-off-by: Martyna Szapar <martyna.szapar@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ .../net/ethernet/intel/i40e/i40e_virtchnl_pf.c   | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
-I think MTE will likely be rather like NX/PXN and SMAP/PAN: there will
-be glitches, and we can disable stuff either via CONFIG or (as is more
-common now) via a kernel commandline with untagged_addr() containing a
-static branch, etc. But I actually don't think we need to go this route
-(see below...)
-
-> > The other is that, assuming we reach a point where the kernel entirely
-> > supports this relaxed ABI, can we guarantee that it won't break in the
-> > future. Let's say some subsequent kernel change (some refactoring)
-> > misses out an untagged_addr(). This renders a previously TBI/MTE-capable
-> > syscall unusable. Can we rely only on testing?
-> >
-> > > The trouble I see with this is that it is largely theoretical and
-> > > requires part of userspace to collude to start using a new CPU feature
-> > > that tickles a bug in the kernel. As I understand the golden rule,
-> > > this is a bug in the kernel (a missed ioctl() or such) to be fixed,
-> > > not a global breaking of some userspace behavior.
-> >
-> > Yes, we should follow the rule that it's a kernel bug but it doesn't
-> > help the user that a newly installed kernel causes user space to no
-> > longer reach a prompt. Hence the proposal of an opt-in via personality
-> > (for MTE we would need an explicit opt-in by the user anyway since the
-> > top byte is no longer ignored but checked against the allocation tag).
-> 
-> but realistically would this actually get used in this way? or would
-> any given system either be MTE or non-MTE. in which case a kernel
-> configuration option would seem to make more sense. (because either
-> way, the hypothetical user basically needs to recompile the kernel to
-> get back on their feet. or all of userspace.)
-
-Right: the point is to design things so that we do our best to not break
-userspace that is using the new feature (which I think this series has
-done well). But supporting MTE/TBI is just like supporting PAN: if someone
-refactors a driver and swaps a copy_from_user() to a memcpy(), it's going
-to break under PAN. There will be the same long tail of these bugs like
-any other, but my sense is that they are small and rare. But I agree:
-they're going to be pretty weird bugs to track down. The final result,
-however, will be excellent annotation in the kernel for where userspace
-addresses get used and people make assumptions about them.
-
-The sooner we get the series landed and gain QEMU support (or real
-hardware), the faster we can hammer out these missed corner-cases.
-What's the timeline for either of those things, BTW?
-
-> > > I feel like I'm missing something about this being seen as an ABI
-> > > break. The kernel already fails on userspace addresses that have high
-> > > bits set -- are there things that _depend_ on this failure to operate?
-> >
-> > It's about providing a relaxed ABI which allows non-zero top byte and
-> > breaking it later inadvertently without having something better in place
-> > to analyse the kernel changes.
-
-It sounds like the question is how to switch a process in or out of this
-ABI (but I don't think that's the real issue: I think it's just a matter
-of whether or not a process uses tags at all). Doing it at the prctl()
-level doesn't make sense to me, except maybe to detect MTE support or
-something. ("Should I tag allocations?") And that state is controlled
-by the kernel: the kernel does it or it doesn't.
-
-If a process wants to not tag, that's also up to the allocator where
-it can decide not to ask the kernel, and just not tag. Nothing breaks in
-userspace if a process is NOT tagging and untagged_addr() exists or is
-missing. This, I think, is the core way this doesn't trip over the
-golden rule: an old system image will run fine (because it's not
-tagging). A *new* system may encounter bugs with tagging because it's a
-new feature: this is The Way Of Things. But we don't break old userspace
-because old userspace isn't using tags.
-
-So the agreement appears to be between the kernel and the allocator.
-Kernel says "I support this" or not. Telling the allocator to not tag if
-something breaks sounds like an entirely userspace decision, yes?
-
+diff --git a/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c b/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
+index 831d52bc3c9ae..0b5b867c9fbcb 100644
+--- a/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
++++ b/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
+@@ -181,7 +181,7 @@ static inline bool i40e_vc_isvalid_vsi_id(struct i40e_vf *vf, u16 vsi_id)
+  * check for the valid queue id
+  **/
+ static inline bool i40e_vc_isvalid_queue_id(struct i40e_vf *vf, u16 vsi_id,
+-					    u8 qid)
++					    u16 qid)
+ {
+ 	struct i40e_pf *pf = vf->pf;
+ 	struct i40e_vsi *vsi = i40e_find_vsi_from_id(pf, vsi_id);
+@@ -3374,7 +3374,7 @@ static int i40e_vc_add_cloud_filter(struct i40e_vf *vf, u8 *msg)
+ 
+ 	if (!test_bit(I40E_VF_STATE_ACTIVE, &vf->vf_states)) {
+ 		aq_ret = I40E_ERR_PARAM;
+-		goto err;
++		goto err_out;
+ 	}
+ 
+ 	if (!vf->adq_enabled) {
+@@ -3382,7 +3382,7 @@ static int i40e_vc_add_cloud_filter(struct i40e_vf *vf, u8 *msg)
+ 			 "VF %d: ADq is not enabled, can't apply cloud filter\n",
+ 			 vf->vf_id);
+ 		aq_ret = I40E_ERR_PARAM;
+-		goto err;
++		goto err_out;
+ 	}
+ 
+ 	if (i40e_validate_cloud_filter(vf, vcf)) {
+@@ -3390,7 +3390,7 @@ static int i40e_vc_add_cloud_filter(struct i40e_vf *vf, u8 *msg)
+ 			 "VF %d: Invalid input/s, can't apply cloud filter\n",
+ 			 vf->vf_id);
+ 		aq_ret = I40E_ERR_PARAM;
+-		goto err;
++		goto err_out;
+ 	}
+ 
+ 	cfilter = kzalloc(sizeof(*cfilter), GFP_KERNEL);
+@@ -3451,13 +3451,17 @@ static int i40e_vc_add_cloud_filter(struct i40e_vf *vf, u8 *msg)
+ 			"VF %d: Failed to add cloud filter, err %s aq_err %s\n",
+ 			vf->vf_id, i40e_stat_str(&pf->hw, ret),
+ 			i40e_aq_str(&pf->hw, pf->hw.aq.asq_last_status));
+-		goto err;
++		goto err_free;
+ 	}
+ 
+ 	INIT_HLIST_NODE(&cfilter->cloud_node);
+ 	hlist_add_head(&cfilter->cloud_node, &vf->cloud_filter_list);
++	/* release the pointer passing it to the collection */
++	cfilter = NULL;
+ 	vf->num_cloud_filters++;
+-err:
++err_free:
++	kfree(cfilter);
++err_out:
+ 	return i40e_vc_send_resp_to_vf(vf, VIRTCHNL_OP_ADD_CLOUD_FILTER,
+ 				       aq_ret);
+ }
 -- 
-Kees Cook
+2.20.1
+
