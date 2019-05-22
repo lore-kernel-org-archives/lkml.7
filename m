@@ -2,243 +2,113 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 925FCC282DE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:01:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09EB3C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:01:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 585C220856
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:01:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="DjBOxER0"
+	by mail.kernel.org (Postfix) with ESMTP id CC3EC20856
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:01:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558555299;
+	bh=1d31qTszdi2fYP3Hw1CE8fO2rZYLUMSnRKtGironcDA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=0i7Jw2PBNPDUfJB0nZ9JY6oZYMrTJfNFp6qM1seTiFSBPZVlQR0YtPfnc2OPKYcMM
+	 Xn6lZoBi/Ye5sIhMVW1YSLvNVPTYyNhG7yMCWAzsA/I236SaPtttiocuWecnWA80dx
+	 DB7noQBShMa+oZCIUgi9NKsw8M9C09hv0LR7Ljlo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730464AbfEVTWZ (ORCPT
+        id S1731166AbfEVUBj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:22:25 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:41901 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730426AbfEVTWW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 16:01:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43052 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730431AbfEVTWW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 22 May 2019 15:22:22 -0400
-Received: by mail-qt1-f196.google.com with SMTP id y22so3793451qtn.8
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 12:22:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Wp5Bk2EWMnEeaZmBlDupB+bkUiiMoEJBLermtXKU6bE=;
-        b=DjBOxER0Fvao/ulypH3vVJ/oVucLXSjayJw9Nr2jjTeFsa5xgys7H5j6rxAc6a2H6O
-         GINB3tTfFRVU5DHqiEk9ToIuXNIIsysLchZy8dtq0d61lp38rNggWokEJjZiMOO0IWcQ
-         ZtpxojpucG21nS0M6/CyF6elRwRpwbV8x/D5HwHg0aURFUn2YZJBnT20WFHicjrUEIEi
-         8SJ6/NI2P7fpMiNad/xQ2gRoGMa2heaz17S4UpGg3yWlSfxeVpn8ItEJ2Uq1INWKFB9X
-         6EVWxVdLQlMNZ/iSWWVFL7cdp+xN8WFIAUNn/X+d6XeMokIIeD19FoDBQNj5MFOxLDKM
-         pGUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Wp5Bk2EWMnEeaZmBlDupB+bkUiiMoEJBLermtXKU6bE=;
-        b=REnOxzIhSSBqw3g8VdTGX9o5Afa/gR2EpMACK+gVzbfhLWS7q6TwKNNYajCmkbffsV
-         eUN6+IMSELvr9LyNf9FCgCLW1aQZJZBx66ogbAM8f8vYLuJvtp88ae8XakA5DN3NdXRb
-         ciVW93/hRfqklCEH1ClCHtaw+q+uOob6NQmwbigJrUoYL9SalEwYE/XfWCwtYqbHOkpO
-         6MyuLkAPxWcXXdC37i71t2jfjaMTUXwJuC4GB60jvy+38XcXuGQ2Ww0+dclpQPhNiRmT
-         cXtlSp4pK3d1w8vo4g7iQh9ZZWvbyWZA8nBi6bVwuLsOljtdbHN4CobVBPa0oSgCEdi0
-         BNhQ==
-X-Gm-Message-State: APjAAAW8kTByIIv70hLpXxr578p3PSWiVF6rs2LcXzIJiaWNWSo/k3P0
-        bOmAxv/s9RxUQhuLWZDzFGUPmmgp7yc=
-X-Google-Smtp-Source: APXvYqzmD5P4HTxWxqgxqvxyUOxZzdUj2GNpERtvq7g9PrGtnyoDI6LEXT/0uPV4kfzJKGrM8nd/fQ==
-X-Received: by 2002:a0c:98a3:: with SMTP id f32mr73188614qvd.207.1558552941002;
-        Wed, 22 May 2019 12:22:21 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-49-251.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.49.251])
-        by smtp.gmail.com with ESMTPSA id p10sm742262qke.65.2019.05.22.12.22.19
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 22 May 2019 12:22:20 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1hTWod-0005iN-Ir; Wed, 22 May 2019 16:22:19 -0300
-Date:   Wed, 22 May 2019 16:22:19 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Jerome Glisse <jglisse@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Artemy Kovalyov <artemyko@mellanox.com>,
-        Moni Shoua <monis@mellanox.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Kaike Wan <kaike.wan@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        linux-mm@kvack.org
-Subject: Re: [PATCH v4 0/1] Use HMM for ODP v4
-Message-ID: <20190522192219.GF6054@ziepe.ca>
-References: <20190411181314.19465-1-jglisse@redhat.com>
- <20190506195657.GA30261@ziepe.ca>
- <20190521205321.GC3331@redhat.com>
- <20190522005225.GA30819@ziepe.ca>
- <20190522174852.GA23038@redhat.com>
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A3D6B2186A;
+        Wed, 22 May 2019 19:22:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558552942;
+        bh=1d31qTszdi2fYP3Hw1CE8fO2rZYLUMSnRKtGironcDA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=1QV0bJsv4Mn/IlCGsE/NexPoF82rM6HcGX+OgbJ99q8Ak/TIk120U9Q27VR5XdOax
+         ldFDrrJhLljJGLBG5EEbBFugCkN4StEluPYTbhYkXg8lQfmNk4SCvNB5uxLIPULTD6
+         T0eUOM+e4IsPhXmhlrb3M83D0iJ6HQTL2mt+L640=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 042/375] ACPI / property: fix handling of data_nodes in acpi_get_next_subnode()
+Date:   Wed, 22 May 2019 15:15:42 -0400
+Message-Id: <20190522192115.22666-42-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190522192115.22666-1-sashal@kernel.org>
+References: <20190522192115.22666-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190522174852.GA23038@redhat.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 22, 2019 at 01:48:52PM -0400, Jerome Glisse wrote:
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 
-> > > +long ib_umem_odp_map_dma_pages(struct ib_umem_odp *umem_odp,
-> > > +			       struct hmm_range *range)
-> > >  {
-> > > +	struct device *device = umem_odp->umem.context->device->dma_device;
-> > > +	struct ib_ucontext_per_mm *per_mm = umem_odp->per_mm;
-> > >  	struct ib_umem *umem = &umem_odp->umem;
-> > > -	struct task_struct *owning_process  = NULL;
-> > > -	struct mm_struct *owning_mm = umem_odp->umem.owning_mm;
-> > > -	struct page       **local_page_list = NULL;
-> > > -	u64 page_mask, off;
-> > > -	int j, k, ret = 0, start_idx, npages = 0, page_shift;
-> > > -	unsigned int flags = 0;
-> > > -	phys_addr_t p = 0;
-> > > -
-> > > -	if (access_mask == 0)
-> > > +	struct mm_struct *mm = per_mm->mm;
-> > > +	unsigned long idx, npages;
-> > > +	long ret;
-> > > +
-> > > +	if (mm == NULL)
-> > > +		return -ENOENT;
-> > > +
-> > > +	/* Only drivers with invalidate support can use this function. */
-> > > +	if (!umem->context->invalidate_range)
-> > >  		return -EINVAL;
-> > >  
-> > > -	if (user_virt < ib_umem_start(umem) ||
-> > > -	    user_virt + bcnt > ib_umem_end(umem))
-> > > -		return -EFAULT;
-> > > +	/* Sanity checks. */
-> > > +	if (range->default_flags == 0)
-> > > +		return -EINVAL;
-> > >  
-> > > -	local_page_list = (struct page **)__get_free_page(GFP_KERNEL);
-> > > -	if (!local_page_list)
-> > > -		return -ENOMEM;
-> > > +	if (range->start < ib_umem_start(umem) ||
-> > > +	    range->end > ib_umem_end(umem))
-> > > +		return -EINVAL;
-> > >  
-> > > -	page_shift = umem->page_shift;
-> > > -	page_mask = ~(BIT(page_shift) - 1);
-> > > -	off = user_virt & (~page_mask);
-> > > -	user_virt = user_virt & page_mask;
-> > > -	bcnt += off; /* Charge for the first page offset as well. */
-> > > +	idx = (range->start - ib_umem_start(umem)) >> umem->page_shift;
-> > 
-> > Is this math OK? What is supposed to happen if the range->start is not
-> > page aligned to the internal page size?
-> 
-> range->start is align on 1 << page_shift boundary within pagefault_mr
-> thus the above math is ok. We can add a BUG_ON() and comments if you
-> want.
+[ Upstream commit 23583f7795025e3c783b680d906509366b0906ad ]
 
-OK
+When the DSDT tables expose devices with subdevices and a set of
+hierarchical _DSD properties, the data returned by
+acpi_get_next_subnode() is incorrect, with the results suggesting a bad
+pointer assignment. The parser works fine with device_nodes or
+data_nodes, but not with a combination of the two.
 
-> > > +	range->pfns = &umem_odp->pfns[idx];
-> > > +	range->pfn_shift = ODP_FLAGS_BITS;
-> > > +	range->values = odp_hmm_values;
-> > > +	range->flags = odp_hmm_flags;
-> > >  
-> > >  	/*
-> > > -	 * owning_process is allowed to be NULL, this means somehow the mm is
-> > > -	 * existing beyond the lifetime of the originating process.. Presumably
-> > > -	 * mmget_not_zero will fail in this case.
-> > > +	 * If mm is dying just bail out early without trying to take mmap_sem.
-> > > +	 * Note that this might race with mm destruction but that is fine the
-> > > +	 * is properly refcounted so are all HMM structure.
-> > >  	 */
-> > > -	owning_process = get_pid_task(umem_odp->per_mm->tgid, PIDTYPE_PID);
-> > > -	if (!owning_process || !mmget_not_zero(owning_mm)) {
-> > 
-> > But we are not in a HMM context here, and per_mm is not a HMM
-> > structure. 
-> > 
-> > So why is mm suddenly guarenteed valid? It was a bug report that
-> > triggered the race the mmget_not_zero is fixing, so I need a better
-> > explanation why it is now safe. From what I see the hmm_range_fault
-> > is doing stuff like find_vma without an active mmget??
-> 
-> So the mm struct can not go away as long as we hold a reference on
-> the hmm struct and we hold a reference on it through both hmm_mirror
-> and hmm_range struct. So struct mm can not go away and thus it is
-> safe to try to take its mmap_sem.
+The problem is traced to an invalid pointer used when jumping from
+handling device_nodes to data nodes. The existing code looks for data
+nodes below the last subdevice found instead of the common root. Fix
+by forcing the acpi_device pointer to be derived from the same fwnode
+for the two types of subnodes.
 
-This was always true here, though, so long as the umem_odp exists the
-the mm has a grab on it. But a grab is not a get..
+This same problem of handling device and data nodes was already fixed
+in a similar way by 'commit bf4703fdd166 ("ACPI / property: fix data
+node parsing in acpi_get_next_subnode()")' but broken later by 'commit
+34055190b19 ("ACPI / property: Add fwnode_get_next_child_node()")', so
+this should probably go to linux-stable all the way to 4.12
 
-The point here was the old code needed an mmget() in order to do
-get_user_pages_remote()
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/acpi/property.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-If hmm does not need an external mmget() then fine, we delete this
-stuff and rely on hmm.
-
-But I don't think that is true as we have:
-
-          CPU 0                                           CPU1
-                                                       mmput()
-                       				        __mmput()
-							 exit_mmap()
-down_read(&mm->mmap_sem);
-hmm_range_dma_map(range, device,..
-  ret = hmm_range_fault(range, block);
-     if (hmm->mm == NULL || hmm->dead)
-							   mmu_notifier_release()
-							     hmm->dead = true
-     vma = find_vma(hmm->mm, start);
-        .. rb traversal ..                                 while (vma) remove_vma()
-
-*goes boom*
-
-I think this is violating the basic constraint of the mm by acting on
-a mm's VMA's without holding a mmget() to prevent concurrent
-destruction.
-
-In other words, mmput() destruction does not respect the mmap_sem - so
-holding the mmap sem alone is not enough locking.
-
-The unlucked hmm->dead simply can't save this. Frankly every time I
-look a struct with 'dead' in it, I find races like this.
-
-Thus we should put the mmget_notzero back in.
-
-I saw some other funky looking stuff in hmm as well..
-
-> Hence it is safe to take mmap_sem and it is safe to call in hmm, if
-> mm have been kill it will return EFAULT and this will propagate to
-> RDMA.
+diff --git a/drivers/acpi/property.c b/drivers/acpi/property.c
+index 77abe0ec40431..bd533f68b1dec 100644
+--- a/drivers/acpi/property.c
++++ b/drivers/acpi/property.c
+@@ -1031,6 +1031,14 @@ struct fwnode_handle *acpi_get_next_subnode(const struct fwnode_handle *fwnode,
+ 		const struct acpi_data_node *data = to_acpi_data_node(fwnode);
+ 		struct acpi_data_node *dn;
  
-> As per_mm i removed the per_mm->mm = NULL from release so that it is
-> always safe to use that field even in face of racing mm "killing".
++		/*
++		 * We can have a combination of device and data nodes, e.g. with
++		 * hierarchical _DSD properties. Make sure the adev pointer is
++		 * restored before going through data nodes, otherwise we will
++		 * be looking for data_nodes below the last device found instead
++		 * of the common fwnode shared by device_nodes and data_nodes.
++		 */
++		adev = to_acpi_device_node(fwnode);
+ 		if (adev)
+ 			head = &adev->data.subnodes;
+ 		else if (data)
+-- 
+2.20.1
 
-Yes, that certainly wasn't good.
-
-> > > -	 * An array of the pages included in the on-demand paging umem.
-> > > -	 * Indices of pages that are currently not mapped into the device will
-> > > -	 * contain NULL.
-> > > +	 * An array of the pages included in the on-demand paging umem. Indices
-> > > +	 * of pages that are currently not mapped into the device will contain
-> > > +	 * 0.
-> > >  	 */
-> > > -	struct page		**page_list;
-> > > +	uint64_t *pfns;
-> > 
-> > Are these actually pfns, or are they mangled with some shift? (what is range->pfn_shift?)
-> 
-> They are not pfns they have flags (hence range->pfn_shift) at the
-> bottoms i just do not have a better name for this.
-
-I think you need to have a better name then
-
-Jason
