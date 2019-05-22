@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCFBDC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:35:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97B1CC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:35:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A047A217D4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:35:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D4A220675
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:35:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558553717;
-	bh=7UQ8nCbr7CLhfG35J4sz4PaYKZN7msH+PRGQty9D3s0=;
+	s=default; t=1558553725;
+	bh=PgKnupQdYBqyAjhO6bP5I+70rfrYLfkOkbV+KSfxYYE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q6J3wy/kQCYWHx1Kk9ckeSrCqjQUY/Vd2qYg4iLkARdQid1t0tqDNqIznf8T+lwiL
-	 yiSXvLuWPxohyjQXHNj1z1Wnbl6fQvKLdMnBd2BRTQclGz2oL0cp12AwS5qb3lFXdD
-	 LZORHyAYtey3EwmclYeXfRQcmAsFpLwsaxX9mK2s=
+	b=suNeyVLNv2gBkOZOX0y2qYBOnCxPtqfKzEkfXYEvQle/HwLH9ElkOzzw7pPMI/wI/
+	 3NL7VAc/wbHg2DfZIeetbgy1xeioo1Ir2fUIubZiney4B1zXgudia+p5oYBA46yGUy
+	 1ZkqRpOW5jKsueJEUzuUZIXmbTsdRPBOWmH34Y7U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387586AbfEVTfR (ORCPT
+        id S2387427AbfEVTbD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:35:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54614 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:31:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54346 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732971AbfEVTbH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:31:07 -0400
+        id S2387400AbfEVTaw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:30:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF9B720675;
-        Wed, 22 May 2019 19:31:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 38726204FD;
+        Wed, 22 May 2019 19:30:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553466;
-        bh=7UQ8nCbr7CLhfG35J4sz4PaYKZN7msH+PRGQty9D3s0=;
+        s=default; t=1558553451;
+        bh=PgKnupQdYBqyAjhO6bP5I+70rfrYLfkOkbV+KSfxYYE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MMTsFclcONxOrbEFWIesuLoeCC5pX6IOC6vRMOrySd+T3CC2z4bvjRsr7JBNhfkdc
-         NbZb4l9JP2z27cMo0u1wQNsvt30bs0mRlIXvH8/HyB09Lb8ulhSi6ncBhE+snTwYUU
-         MQFNsT+1Ae7hdXQMfSc+VaLLCtKSs1XX+b/DpMqY=
+        b=bJetH/27Qef2bz0geLHTEHrJICh/tVGElJnzEWArCWK/tgWS9JZFObxhtRaMbMUvY
+         eeuFUfifJ1WSiSwuc6WxZfbIjewR02uMRIiXK69kvydm38cgWzLTUwhXa+CTsUWwPW
+         JTxiJMB7Ay70RCGJ39qRsmu4+NSfrJERY9kBq7Y0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Parav Pandit <parav@mellanox.com>,
-        Daniel Jurgens <danielj@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 032/114] RDMA/cma: Consider scope_id while binding to ipv6 ll address
-Date:   Wed, 22 May 2019 15:28:55 -0400
-Message-Id: <20190522193017.26567-32-sashal@kernel.org>
+Cc:     Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 021/114] driver core: platform: Fix the usage of platform device name(pdev->name)
+Date:   Wed, 22 May 2019 15:28:44 -0400
+Message-Id: <20190522193017.26567-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522193017.26567-1-sashal@kernel.org>
 References: <20190522193017.26567-1-sashal@kernel.org>
@@ -61,82 +59,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Parav Pandit <parav@mellanox.com>
+From: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
 
-[ Upstream commit 5d7ed2f27bbd482fd29e6b2e204b1a1ee8a0b268 ]
+[ Upstream commit edb16da34b084c66763f29bee42b4e6bb33c3d66 ]
 
-When two netdev have same link local addresses (such as vlan and non
-vlan), two rdma cm listen id should be able to bind to following different
-addresses.
+Platform core is using pdev->name as the platform device name to do
+the binding of the devices with the drivers. But, when the platform
+driver overrides the platform device name with dev_set_name(),
+the pdev->name is pointing to a location which is freed and becomes
+an invalid parameter to do the binding match.
 
-listener-1: addr=lla, scope_id=A, port=X
-listener-2: addr=lla, scope_id=B, port=X
+use-after-free instance:
 
-However while comparing the addresses only addr and port are considered,
-due to which 2nd listener fails to listen.
+[   33.325013] BUG: KASAN: use-after-free in strcmp+0x8c/0xb0
+[   33.330646] Read of size 1 at addr ffffffc10beae600 by task modprobe
+[   33.339068] CPU: 5 PID: 518 Comm: modprobe Tainted:
+			G S      W  O      4.19.30+ #3
+[   33.346835] Hardware name: MTP (DT)
+[   33.350419] Call trace:
+[   33.352941]  dump_backtrace+0x0/0x3b8
+[   33.356713]  show_stack+0x24/0x30
+[   33.360119]  dump_stack+0x160/0x1d8
+[   33.363709]  print_address_description+0x84/0x2e0
+[   33.368549]  kasan_report+0x26c/0x2d0
+[   33.372322]  __asan_report_load1_noabort+0x2c/0x38
+[   33.377248]  strcmp+0x8c/0xb0
+[   33.380306]  platform_match+0x70/0x1f8
+[   33.384168]  __driver_attach+0x78/0x3a0
+[   33.388111]  bus_for_each_dev+0x13c/0x1b8
+[   33.392237]  driver_attach+0x4c/0x58
+[   33.395910]  bus_add_driver+0x350/0x560
+[   33.399854]  driver_register+0x23c/0x328
+[   33.403886]  __platform_driver_register+0xd0/0xe0
 
-In below example of two listeners, 2nd listener is failing with address in
-use error.
+So, use dev_name(&pdev->dev), which fetches the platform device name from
+the kobject(dev->kobj->name) of the device instead of the pdev->name.
 
-$ rping -sv -a fe80::268a:7ff:feb3:d113%ens2f1 -p 4545&
-
-$ rping -sv -a fe80::268a:7ff:feb3:d113%ens2f1.200 -p 4545
-rdma_bind_addr: Address already in use
-
-To overcome this, consider the scope_ids as well which forms the accurate
-IPv6 link local address.
-
-Signed-off-by: Parav Pandit <parav@mellanox.com>
-Reviewed-by: Daniel Jurgens <danielj@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/core/cma.c | 25 +++++++++++++++++++------
- 1 file changed, 19 insertions(+), 6 deletions(-)
+ drivers/base/platform.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/infiniband/core/cma.c b/drivers/infiniband/core/cma.c
-index 85d4ef319c905..0c7d63e0f0fde 100644
---- a/drivers/infiniband/core/cma.c
-+++ b/drivers/infiniband/core/cma.c
-@@ -1021,18 +1021,31 @@ static inline int cma_any_addr(struct sockaddr *addr)
- 	return cma_zero_addr(addr) || cma_loopback_addr(addr);
+diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+index 14ff40371f013..ffa77b3df4ba2 100644
+--- a/drivers/base/platform.c
++++ b/drivers/base/platform.c
+@@ -845,7 +845,7 @@ static ssize_t modalias_show(struct device *dev, struct device_attribute *a,
+ 	if (len != -ENODEV)
+ 		return len;
+ 
+-	len = snprintf(buf, PAGE_SIZE, "platform:%s\n", pdev->name);
++	len = snprintf(buf, PAGE_SIZE, "platform:%s\n", dev_name(&pdev->dev));
+ 
+ 	return (len >= PAGE_SIZE) ? (PAGE_SIZE - 1) : len;
+ }
+@@ -921,7 +921,7 @@ static int platform_uevent(struct device *dev, struct kobj_uevent_env *env)
+ 		return rc;
+ 
+ 	add_uevent_var(env, "MODALIAS=%s%s", PLATFORM_MODULE_PREFIX,
+-			pdev->name);
++			dev_name(&pdev->dev));
+ 	return 0;
  }
  
--static int cma_addr_cmp(struct sockaddr *src, struct sockaddr *dst)
-+static int cma_addr_cmp(const struct sockaddr *src, const struct sockaddr *dst)
+@@ -930,7 +930,7 @@ static const struct platform_device_id *platform_match_id(
+ 			struct platform_device *pdev)
  {
- 	if (src->sa_family != dst->sa_family)
- 		return -1;
+ 	while (id->name[0]) {
+-		if (strcmp(pdev->name, id->name) == 0) {
++		if (strcmp(dev_name(&pdev->dev), id->name) == 0) {
+ 			pdev->id_entry = id;
+ 			return id;
+ 		}
+@@ -974,7 +974,7 @@ static int platform_match(struct device *dev, struct device_driver *drv)
+ 		return platform_match_id(pdrv->id_table, pdev) != NULL;
  
- 	switch (src->sa_family) {
- 	case AF_INET:
--		return ((struct sockaddr_in *) src)->sin_addr.s_addr !=
--		       ((struct sockaddr_in *) dst)->sin_addr.s_addr;
--	case AF_INET6:
--		return ipv6_addr_cmp(&((struct sockaddr_in6 *) src)->sin6_addr,
--				     &((struct sockaddr_in6 *) dst)->sin6_addr);
-+		return ((struct sockaddr_in *)src)->sin_addr.s_addr !=
-+		       ((struct sockaddr_in *)dst)->sin_addr.s_addr;
-+	case AF_INET6: {
-+		struct sockaddr_in6 *src_addr6 = (struct sockaddr_in6 *)src;
-+		struct sockaddr_in6 *dst_addr6 = (struct sockaddr_in6 *)dst;
-+		bool link_local;
-+
-+		if (ipv6_addr_cmp(&src_addr6->sin6_addr,
-+					  &dst_addr6->sin6_addr))
-+			return 1;
-+		link_local = ipv6_addr_type(&dst_addr6->sin6_addr) &
-+			     IPV6_ADDR_LINKLOCAL;
-+		/* Link local must match their scope_ids */
-+		return link_local ? (src_addr6->sin6_scope_id !=
-+				     dst_addr6->sin6_scope_id) :
-+				    0;
-+	}
-+
- 	default:
- 		return ib_addr_cmp(&((struct sockaddr_ib *) src)->sib_addr,
- 				   &((struct sockaddr_ib *) dst)->sib_addr);
+ 	/* fall-back to driver name match */
+-	return (strcmp(pdev->name, drv->name) == 0);
++	return (strcmp(dev_name(&pdev->dev), drv->name) == 0);
+ }
+ 
+ #ifdef CONFIG_PM_SLEEP
 -- 
 2.20.1
 
