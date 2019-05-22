@@ -2,206 +2,183 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E51C7C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 17:50:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC49BC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 17:55:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B893221473
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 17:50:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558547439;
-	bh=8l0wC+To+O/9i3Py9n5jB7vJaXBBrSeToGmiDJXpbCY=;
-	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
-	b=1DBjTfDx1ll3BLMgYp7yYn5jlGCSPuj8r5Pba7uOsuVgX0ay+kfx/fkpAOz9u9boJ
-	 tIffToKG51FjSTBoe+ytANgQtPBBpKNub6uBPGnQ4GS9nGXLnpRZGSD6aUCl0I39d/
-	 HSit2MAzYZ9yk4VvApE0+nM0FbelcnzzhYzjSeIo=
+	by mail.kernel.org (Postfix) with ESMTP id 7E7FD20879
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 17:55:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cKSYTSQ2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729505AbfEVRui (ORCPT
+        id S1729059AbfEVRzL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 13:50:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40070 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728450AbfEVRui (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 13:50:38 -0400
-Received: from localhost (unknown [104.132.1.68])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76C0521019;
-        Wed, 22 May 2019 17:50:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558547436;
-        bh=8l0wC+To+O/9i3Py9n5jB7vJaXBBrSeToGmiDJXpbCY=;
-        h=Date:From:To:Subject:References:In-Reply-To:From;
-        b=dpp4DZgZPiLdjl96mLdiiBYbBZ67BTR+pSgmh2eF5+NDxYZa8ykhtAv/e+F3qIdCd
-         f1TIxR6x7N/xOKcz2QJFTnkE/po7UYdhveFdaSxrJMJDbUcNzqbxQx5UPDA4ORGbjh
-         hIiuv9szNlbeKy7KjIDrLDekAtsDaKppU09avdXg=
-Date:   Wed, 22 May 2019 10:50:35 -0700
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: Re: [PATCH v2] f2fs: add missing sysfs entries in documentation
-Message-ID: <20190522175035.GB81051@jaegeuk-macbookpro.roam.corp.google.com>
-References: <20190521180606.10461-1-jaegeuk@kernel.org>
+        Wed, 22 May 2019 13:55:11 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:39453 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727975AbfEVRzL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 13:55:11 -0400
+Received: by mail-pf1-f196.google.com with SMTP id z26so1717782pfg.6
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 10:55:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=+3r9XlOPnzbK3z3FjSACcbiHwzswR8weMh25pGyOfPg=;
+        b=cKSYTSQ2RqjpU+ut04v7P9lRKYr4f/oXVOho0VAUSXsfjokUmRHHmAJx7uVYcZlFNs
+         Yoc5pbMzio+/c3pI79Y/uIdRelADA99uqMUacQ39zHo7SvOntPdDl/554luQ61etlkSR
+         OFNHxAn6e5RvdpcROYT+qpdJGhM0VUSXgeBro8mU7Nt7bpWpKF7NcsaL/q58AmsvElJi
+         L5505DXVd0A+DfV+gOYChvqxkLQoGAEIX5XEJqmynoWyFHpkU3e91Dlu9L5G6c6aGswS
+         yw7rllIaHJ1zWNQCgJ4JUBF08JbQliZ39cCCUMG/bYzTox+qxiHriI24xFi2cea548kG
+         OiVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=+3r9XlOPnzbK3z3FjSACcbiHwzswR8weMh25pGyOfPg=;
+        b=qD5ZkV31bHLmCMVjw2d3pskgyP+hk/VT1Dlbp322Tqv1zsUJ8JM0Xjr4dMF1vKMXeI
+         lAoXaP6Md2J1mYYUbYSe8A8vZESD3Cge5xBlaXhcli3izf5agBXwb+ZKQVWFju2a7pIq
+         pYDT+kO8SIs9+CrRJF6aaM/pXNbKPB2A/AHqeDHEhAQQvYhtzve619eXjkDcvj+RrzLU
+         Q2LBa0sWPgul8bLCcdpzaPvQ4PiJXrzBzEs1I3fVYGNYRm13cXM5GrkqPRMYKQlhK+m0
+         XvKeiwb98NiX4T+vYH5PSLGkeyReB7ovcTVjOfBaFrmCgUkYnEukdamffx5Y3oG7hixi
+         Dgug==
+X-Gm-Message-State: APjAAAUY9Y+C/8IFe42wNNKLPysAMMusfamDwxLLu1BovfGphNQfD/bh
+        jqE2mdlVjcGVovmwZZ69Y/Y=
+X-Google-Smtp-Source: APXvYqyikKBmSIVVx6oYXLSiiMTSDrugIobuXOc6xzwdi1VWYpkzMuV3zTuBFYnQ45LI4UEha21eLg==
+X-Received: by 2002:a63:8949:: with SMTP id v70mr91990157pgd.196.1558547710213;
+        Wed, 22 May 2019 10:55:10 -0700 (PDT)
+Received: from hari-Inspiron-1545 ([183.83.92.73])
+        by smtp.gmail.com with ESMTPSA id u134sm36730992pfc.61.2019.05.22.10.55.04
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 22 May 2019 10:55:09 -0700 (PDT)
+Date:   Wed, 22 May 2019 23:25:01 +0530
+From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nishka Dasgupta <nishka.dasgupta@yahoo.com>,
+        Vatsala Narang <vatsalanarang@gmail.com>,
+        Emanuel Bennici <benniciemanuel78@gmail.com>,
+        Henriette Hofmeier <passt@h-hofmeier.de>,
+        Payal Kshirsagar <payal.s.kshirsagar.98@gmail.com>,
+        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
+        Hardik Singh Rathore <hardiksingh.k@gmail.com>,
+        Madhumitha Prabakaran <madhumithabiw@gmail.com>,
+        Michael Straube <straube.linux@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Arnd Bergmann <arnd@arndb.de>, Paolo Abeni <pabeni@redhat.com>,
+        Alexander Duyck <alexander.h.duyck@intel.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] staging: rtl8723bs: core: rtw_mlme_ext: fix warning
+ Unneeded variable: "ret"
+Message-ID: <20190522175501.GA8383@hari-Inspiron-1545>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190521180606.10461-1-jaegeuk@kernel.org>
-User-Agent: Mutt/1.8.2 (2017-04-18)
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch cleans up documentation to cover missing sysfs entries.
+This patch fixes below warnings reported by coccicheck
 
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+drivers/staging/rtl8723bs/core/rtw_mlme_ext.c:1888:14-17: Unneeded
+variable: "ret". Return "_FAIL" on line 1920
+drivers/staging/rtl8723bs/core/rtw_mlme_ext.c:466:5-8: Unneeded
+variable: "res". Return "_SUCCESS" on line 494
+
+Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+----
+changes in v2:
+		change return type of init_mlme_ext_priv() from int to
+                void
+		We cant change return type of on_action_spct() it is a
+                call back function from action_handler.
+		So directly return _FAIL from this function.
+----
 ---
-v2 from v1:
- - fix some typos and adjust suggestions
+ drivers/staging/rtl8723bs/core/rtw_mlme_ext.c    | 9 ++-------
+ drivers/staging/rtl8723bs/include/rtw_mlme_ext.h | 2 +-
+ drivers/staging/rtl8723bs/os_dep/os_intfs.c      | 5 -----
+ 3 files changed, 3 insertions(+), 13 deletions(-)
 
- Documentation/filesystems/f2fs.txt | 89 +++++++++++++++++++++++++++---
- 1 file changed, 80 insertions(+), 9 deletions(-)
-
-diff --git a/Documentation/filesystems/f2fs.txt b/Documentation/filesystems/f2fs.txt
-index f7b5e4ff0de3..e4139af88d78 100644
---- a/Documentation/filesystems/f2fs.txt
-+++ b/Documentation/filesystems/f2fs.txt
-@@ -246,11 +246,14 @@ Files in /sys/fs/f2fs/<devname>
- ..............................................................................
-  File                         Content
+diff --git a/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c b/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c
+index d110d45..b240a40 100644
+--- a/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c
++++ b/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c
+@@ -461,9 +461,8 @@ static u8 init_channel_set(struct adapter *padapter, u8 ChannelPlan, RT_CHANNEL_
+ 	return chanset_size;
+ }
  
-- gc_max_sleep_time            This tuning parameter controls the maximum sleep
-+ gc_urgent_sleep_time         This parameter controls sleep time for gc_urgent.
-+                              500 ms is set by default. See above gc_urgent.
-+
-+ gc_min_sleep_time            This tuning parameter controls the minimum sleep
-                               time for the garbage collection thread. Time is
-                               in milliseconds.
- 
-- gc_min_sleep_time            This tuning parameter controls the minimum sleep
-+ gc_max_sleep_time            This tuning parameter controls the maximum sleep
-                               time for the garbage collection thread. Time is
-                               in milliseconds.
- 
-@@ -270,9 +273,6 @@ Files in /sys/fs/f2fs/<devname>
-                               to 1, background thread starts to do GC by given
-                               gc_urgent_sleep_time interval.
- 
-- gc_urgent_sleep_time         This parameter controls sleep time for gc_urgent.
--                              500 ms is set by default. See above gc_urgent.
+-int	init_mlme_ext_priv(struct adapter *padapter)
++void	init_mlme_ext_priv(struct adapter *padapter)
+ {
+-	int	res = _SUCCESS;
+ 	struct registry_priv *pregistrypriv = &padapter->registrypriv;
+ 	struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
+ 	struct mlme_priv *pmlmepriv = &(padapter->mlmepriv);
+@@ -490,9 +489,6 @@ int	init_mlme_ext_priv(struct adapter *padapter)
+ #ifdef DBG_FIXED_CHAN
+ 	pmlmeext->fixed_chan = 0xFF;
+ #endif
 -
-  reclaim_segments             This parameter controls the number of prefree
-                               segments to be reclaimed. If the number of prefree
- 			      segments is larger than the number of segments
-@@ -287,7 +287,16 @@ Files in /sys/fs/f2fs/<devname>
- 			      checkpoint is triggered, and issued during the
- 			      checkpoint. By default, it is disabled with 0.
+-	return res;
+-
+ }
  
-- trim_sections                This parameter controls the number of sections
-+ discard_granularity	      This parameter controls the granularity of discard
-+			      command size. It will issue discard commands iif
-+			      the size is larger than given granularity. Its
-+			      unit size is 4KB, and 4 (=16KB) is set by default.
-+			      The maximum value is 128 (=512KB).
-+
-+ reserved_blocks	      This parameter indicates the number of blocks that
-+			      f2fs reserves internally for root.
-+
-+ batched_trim_sections	      This parameter controls the number of sections
-                               to be trimmed out in batch mode when FITRIM
-                               conducts. 32 sections is set by default.
+ void free_mlme_ext_priv(struct mlme_ext_priv *pmlmeext)
+@@ -1885,7 +1881,6 @@ unsigned int OnAtim(struct adapter *padapter, union recv_frame *precv_frame)
  
-@@ -309,11 +318,35 @@ Files in /sys/fs/f2fs/<devname>
- 			      the number is less than this value, it triggers
- 			      in-place-updates.
+ unsigned int on_action_spct(struct adapter *padapter, union recv_frame *precv_frame)
+ {
+-	unsigned int ret = _FAIL;
+ 	struct sta_info *psta = NULL;
+ 	struct sta_priv *pstapriv = &padapter->stapriv;
+ 	u8 *pframe = precv_frame->u.hdr.rx_data;
+@@ -1917,7 +1912,7 @@ unsigned int on_action_spct(struct adapter *padapter, union recv_frame *precv_fr
+ 	}
  
-+ min_seq_blocks		      This parameter controls the threshold to serialize
-+			      write IOs issued by multiple threads in parallel.
-+
-+ min_hot_blocks		      This parameter controls the threshold to allocate
-+			      a hot data log for pending data blocks to write.
-+
-+ min_ssr_sections	      This parameter adds the threshold when deciding
-+			      SSR block allocation. If this is large, SSR mode
-+			      will be enabled early.
-+
-+ ram_thresh                   This parameter controls the memory footprint used
-+			      by free nids and cached nat entries. By default,
-+			      10 is set, which indicates 10 MB / 1 GB RAM.
-+
-+ ra_nid_pages		      When building free nids, F2FS reads NAT blocks
-+			      ahead for speed up. Default is 0.
-+
-+ dirty_nats_ratio	      Given dirty ratio of cached nat entries, F2FS
-+			      determines flushing them in background.
-+
-  max_victim_search	      This parameter controls the number of trials to
- 			      find a victim segment when conducting SSR and
- 			      cleaning operations. The default value is 4096
- 			      which covers 8GB block address range.
+ exit:
+-	return ret;
++	return _FAIL;
+ }
  
-+ migration_granularity	      For large-sized sections, F2FS can stop GC given
-+			      this granularity instead of reclaiming entire
-+			      section.
-+
-  dir_level                    This parameter controls the directory level to
- 			      support large directory. If a directory has a
- 			      number of files, it can reduce the file lookup
-@@ -321,9 +354,47 @@ Files in /sys/fs/f2fs/<devname>
- 			      Otherwise, it needs to decrease this value to
- 			      reduce the space overhead. The default value is 0.
+ unsigned int OnAction_back(struct adapter *padapter, union recv_frame *precv_frame)
+diff --git a/drivers/staging/rtl8723bs/include/rtw_mlme_ext.h b/drivers/staging/rtl8723bs/include/rtw_mlme_ext.h
+index f6eabad..0eb2da5 100644
+--- a/drivers/staging/rtl8723bs/include/rtw_mlme_ext.h
++++ b/drivers/staging/rtl8723bs/include/rtw_mlme_ext.h
+@@ -535,7 +535,7 @@ struct mlme_ext_priv
+ };
  
-- ram_thresh                   This parameter controls the memory footprint used
--			      by free nids and cached nat entries. By default,
--			      10 is set, which indicates 10 MB / 1 GB RAM.
-+ cp_interval		      F2FS tries to do checkpoint periodically, 60 secs
-+			      by default.
-+
-+ idle_interval		      F2FS detects system is idle, if there's no F2FS
-+			      operations during given interval, 5 secs by
-+			      default.
-+
-+ discard_idle_interval	      F2FS detects the discard thread is idle, given
-+			      time interval. Default is 5 secs.
-+
-+ gc_idle_interval	      F2FS detects the GC thread is idle, given time
-+			      interval. Default is 5 secs.
-+
-+ umount_discard_timeout       When unmounting the disk, F2FS waits for finishing
-+			      queued discard commands which can take huge time.
-+			      This gives time out for it, 5 secs by default.
-+
-+ iostat_enable		      This controls to enable/disable iostat in F2FS.
-+
-+ readdir_ra		      This enables/disabled readahead of inode blocks
-+			      in readdir, and default is enabled.
-+
-+ gc_pin_file_thresh	      This indicates how many GC can be failed for the
-+			      pinned file. If it exceeds this, F2FS doesn't
-+			      guarantee its pinning state. 2048 trials is set
-+			      by default.
-+
-+ extension_list		      This enables to change extension_list for hot/cold
-+			      files in runtime.
-+
-+ inject_rate		      This controls injection rate of arbitrary faults.
-+
-+ inject_type		      This controls injection type of arbitrary faults.
-+
-+ dirty_segments 	      This shows # of dirty segments.
-+
-+ lifetime_write_kbytes	      This shows # of data written to the disk.
-+
-+ features		      This shows current features enabled on F2FS.
-+
-+ reserved_blocks	      This shows # of blocks currently reserved.
+ void init_mlme_default_rate_set(struct adapter *padapter);
+-int init_mlme_ext_priv(struct adapter *padapter);
++void init_mlme_ext_priv(struct adapter *padapter);
+ int init_hw_mlme_ext(struct adapter *padapter);
+ void free_mlme_ext_priv (struct mlme_ext_priv *pmlmeext);
+ extern void init_mlme_ext_timer(struct adapter *padapter);
+diff --git a/drivers/staging/rtl8723bs/os_dep/os_intfs.c b/drivers/staging/rtl8723bs/os_dep/os_intfs.c
+index 8a9d838..c2422e5 100644
+--- a/drivers/staging/rtl8723bs/os_dep/os_intfs.c
++++ b/drivers/staging/rtl8723bs/os_dep/os_intfs.c
+@@ -774,11 +774,6 @@ u8 rtw_init_drv_sw(struct adapter *padapter)
+ 		goto exit;
+ 	}
  
- ================================================================================
- USAGE
+-	if (init_mlme_ext_priv(padapter) == _FAIL) {
+-		RT_TRACE(_module_os_intfs_c_, _drv_err_, ("\n Can't init mlme_ext_priv\n"));
+-		ret8 = _FAIL;
+-		goto exit;
+-	}
+ 
+ 	if (_rtw_init_xmit_priv(&padapter->xmitpriv, padapter) == _FAIL) {
+ 		DBG_871X("Can't _rtw_init_xmit_priv\n");
 -- 
-2.19.0.605.g01d371f741-goog
+2.7.4
 
