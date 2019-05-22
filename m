@@ -2,93 +2,140 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02C71C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:00:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 827E6C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:01:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C494C20645
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:00:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 550F420645
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:01:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q8GR7AyC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729716AbfEVTAo (ORCPT
+        id S1729738AbfEVTBz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:00:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33336 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728533AbfEVTAn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:00:43 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C222520868;
-        Wed, 22 May 2019 18:54:52 +0000 (UTC)
-Date:   Wed, 22 May 2019 14:54:50 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Leon Romanovsky <leon@kernel.org>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH] RDMA/mlx5: Use DIV_ROUND_UP_ULL macro to allow 32 bit to
- build
-Message-ID: <20190522145450.25ff483d@gandalf.local.home>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 22 May 2019 15:01:55 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:39434 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728615AbfEVTBz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:01:55 -0400
+Received: by mail-lf1-f68.google.com with SMTP id f1so2503567lfl.6;
+        Wed, 22 May 2019 12:01:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=uEoVEnOgoQIOVsUijdbKY5vuM1nX7A0dv6I/3RSy7ew=;
+        b=Q8GR7AyCgLLiDA4J1oHptuCGq2386/u829OxE/F/wSmCPL7tuT77T50TsbIMepsZ+l
+         9hIIEur2w3pOEFSEVkPD15+TtcHkjbT/x78AsgnQhTxkMXy6sB/Wc4DHXgS4kc3XmG77
+         9+zNnpQrQBWfzUnjSoUIem/ToLjKK8XmPdfRM7JCSE/XT4vVlcSdhaVnVJwvV//McFyH
+         o1/eVZiruvm5/Ykfqj1CHN9Sn9v3IBflAmOCFxtJPCWLvhv7pQOehlmk0hkerIUED4XF
+         v6LoxtTxm+Wteg5gyDwhhq6b9ngi0XAKvF7XI29EaDxslo4q5jKlO0IfAamH8hhbAzNc
+         mMhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=uEoVEnOgoQIOVsUijdbKY5vuM1nX7A0dv6I/3RSy7ew=;
+        b=cYgN5nSa5fZKT1IuJi2agCe2jpt7oLxWTEvsYIX46I6Jv/7xLYaA0o+qaPabJBgVNp
+         SPA+bmCE+eQ1dGo500VssdNHi7u0aqGmeq0t8Rze6Bz/VMkuQ92A+8N2SYn5nDZYb6o9
+         HZhuBLTaAoA3wW3Gd2Wy7jC3yzOsI/gYW0LCeiHzGUlPLDK4IhGqmE7mA0V+/JtnruOS
+         PFvoiaVBzRFq0HT89hB0cHLhRpaGctcRp40iRtT2Fd1UemG6XlfoxPmmgo7bwqOlXl+/
+         n8ub0Jjs9Vm1VlrsNTOe/JfZIRGEDCKGA7TGSfUTbF/8Scv6GHAcM29ZKS2lsskrkeEG
+         7c4Q==
+X-Gm-Message-State: APjAAAUo9b63psenJjNEMUQzwCTnNwI1oRljhjRRIVI5dpc/LapTXfvm
+        p1Ut3oJR+B0tJBzmSTI26hI=
+X-Google-Smtp-Source: APXvYqxBYdLOI2//w1W2gCTjZiE/KSvb+hglt6yWk7FOw9OymtOdhrugJi7UsI1c3vjk9A1WiZQ38A==
+X-Received: by 2002:a05:6512:507:: with SMTP id o7mr24052117lfb.137.1558551712814;
+        Wed, 22 May 2019 12:01:52 -0700 (PDT)
+Received: from [192.168.1.17] (dma4.neoplus.adsl.tpnet.pl. [83.24.56.4])
+        by smtp.gmail.com with ESMTPSA id d2sm4266204ljc.84.2019.05.22.12.01.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 22 May 2019 12:01:52 -0700 (PDT)
+Subject: Re: [GIT PULL] Immutable branch between LEDs, MFD and REGULATOR
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
+        lgirdwood@gmail.com, broonie@kernel.org
+References: <20190521203038.31946-1-jacek.anaszewski@gmail.com>
+ <20190522054256.GA4574@dell>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Message-ID: <3492171a-bcdc-bee2-684c-e1029653a811@gmail.com>
+Date:   Wed, 22 May 2019 21:01:49 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190522054256.GA4574@dell>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 5/22/19 7:42 AM, Lee Jones wrote:
+> On Tue, 21 May 2019, Jacek Anaszewski wrote:
+> 
+>> The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
+>>
+>>    Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
+>>
+>> are available in the git repository at:
+>>
+>>    git://git.kernel.org/pub/scm/linux/kernel/git/j.anaszewski/linux-leds.git tags/ti-lmu-led-drivers
+>>
+>> for you to fetch changes up to 13f5750a60b923d8f3f0e23902f2ece46dd733d7:
+>>
+>>    leds: lm36274: Introduce the TI LM36274 LED driver (2019-05-21 20:34:19 +0200)
+>>
+>> ----------------------------------------------------------------
+>> TI LMU LED support rework and introduction of two new drivers
+>> with DT bindings:
+>>
+>> - leds-lm3697 (entails additions to lm363x-regulator.c)
+>> - leds-lm36274
+>> ----------------------------------------------------------------
+>> Dan Murphy (12):
+> 
+>>        dt-bindings: mfd: LMU: Add the ramp up/down property
+>>        dt-bindings: mfd: LMU: Add ti,brightness-resolution
+>>        mfd: ti-lmu: Remove support for LM3697
+>>        mfd: ti-lmu: Add LM36274 support to the ti-lmu
+> 
+> These patches were Acked "for my own reference", which means I'd
+> at least expect a discussion on how/where they would be applied.
+> 
+> It's fine for them to go in via the LED tree in this instance and I do
+> thank you for sending a PR.  Next time can we at least agree on the
+> route-in though please?
 
-From: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Usually ack from the colliding subsystem maintainer means he
+acknowledges the patch and gives silent approval for merging
+it via the other tree.
 
-When testing 32 bit x86, my build failed with:
+This is the usual workflow e.g. in case of massive reworks
+of commonly shared kernel APIs.
 
-  ERROR: "__udivdi3" [drivers/infiniband/hw/mlx5/mlx5_ib.ko] undefined!
+Your Acked-for-MFD-by tag is not documented anywhere and I've just
+found out about its exact meaning :-) Note also that it percolated
+to the mainline git history probably because people mistakenly assumed
+it was some new convention (despite that checkpatch.pl complains about
+it). So far there are 12 occurrences thereof in git. I must admit that
+I once unduly made my contribution to that mess.
 
-It appears that a few non-ULL roundup() calls were made, which uses a
-normal division against a 64 bit number. This is fine for x86_64, but
-on 32 bit x86, it causes the compiler to look for a helper function
-__udivdi3, which we do not have in the kernel, and thus fails to build.
+Of course, now being taught about the exact meaning of the tag,
+I will proceed accordingly.
 
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
----
-diff --git a/drivers/infiniband/hw/mlx5/cmd.c b/drivers/infiniband/hw/mlx5/cmd.c
-index e3ec79b8f7f5..f080df9934e8 100644
---- a/drivers/infiniband/hw/mlx5/cmd.c
-+++ b/drivers/infiniband/hw/mlx5/cmd.c
-@@ -190,7 +190,7 @@ int mlx5_cmd_alloc_sw_icm(struct mlx5_dm *dm, int type, u64 length,
- 			  u16 uid, phys_addr_t *addr, u32 *obj_id)
- {
- 	struct mlx5_core_dev *dev = dm->dev;
--	u32 num_blocks = DIV_ROUND_UP(length, MLX5_SW_ICM_BLOCK_SIZE(dev));
-+	u32 num_blocks = DIV_ROUND_UP_ULL(length, MLX5_SW_ICM_BLOCK_SIZE(dev));
- 	u32 out[MLX5_ST_SZ_DW(general_obj_out_cmd_hdr)] = {};
- 	u32 in[MLX5_ST_SZ_DW(create_sw_icm_in)] = {};
- 	unsigned long *block_map;
-@@ -266,7 +266,7 @@ int mlx5_cmd_dealloc_sw_icm(struct mlx5_dm *dm, int type, u64 length,
- 			    u16 uid, phys_addr_t addr, u32 obj_id)
- {
- 	struct mlx5_core_dev *dev = dm->dev;
--	u32 num_blocks = DIV_ROUND_UP(length, MLX5_SW_ICM_BLOCK_SIZE(dev));
-+	u32 num_blocks = DIV_ROUND_UP_ULL(length, MLX5_SW_ICM_BLOCK_SIZE(dev));
- 	u32 out[MLX5_ST_SZ_DW(general_obj_out_cmd_hdr)] = {};
- 	u32 in[MLX5_ST_SZ_DW(general_obj_in_cmd_hdr)] = {};
- 	unsigned long *block_map;
-diff --git a/drivers/infiniband/hw/mlx5/main.c b/drivers/infiniband/hw/mlx5/main.c
-index abac70ad5c7c..40d4c5f7ea43 100644
---- a/drivers/infiniband/hw/mlx5/main.c
-+++ b/drivers/infiniband/hw/mlx5/main.c
-@@ -2344,7 +2344,7 @@ static int handle_alloc_dm_sw_icm(struct ib_ucontext *ctx,
- 	/* Allocation size must a multiple of the basic block size
- 	 * and a power of 2.
- 	 */
--	act_size = roundup(attr->length, MLX5_SW_ICM_BLOCK_SIZE(dm_db->dev));
-+	act_size = DIV_ROUND_UP_ULL(attr->length, MLX5_SW_ICM_BLOCK_SIZE(dm_db->dev));
- 	act_size = roundup_pow_of_two(act_size);
- 
- 	dm->size = act_size;
+Regarding this one - please hold on for a while with pulling
+the stuff, since we may have some updates from REGULATOR maintainers
+(hopefully Acked-by).
+
+-- 
+Best regards,
+Jacek Anaszewski
