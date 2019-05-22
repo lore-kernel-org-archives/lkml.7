@@ -2,114 +2,116 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AA30C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 13:11:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23F61C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 13:11:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51F2C2089E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 13:11:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED0042089E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 13:11:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WhyPoLIz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729432AbfEVNLG (ORCPT
+        id S1729446AbfEVNLY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 09:11:06 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:50208 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729145AbfEVNLG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 09:11:06 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B1DB580D;
-        Wed, 22 May 2019 06:11:05 -0700 (PDT)
-Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C55F33F575;
-        Wed, 22 May 2019 06:11:04 -0700 (PDT)
-Date:   Wed, 22 May 2019 14:11:02 +0100
-From:   Will Deacon <will.deacon@arm.com>
-To:     torvalds@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        catalin.marinas@arm.com
-Subject: [GIT PULL] arm64: First round of fixes for -rc2
-Message-ID: <20190522131102.GC7876@fuggles.cambridge.arm.com>
+        Wed, 22 May 2019 09:11:24 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:41515 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729145AbfEVNLX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 09:11:23 -0400
+Received: by mail-lj1-f194.google.com with SMTP id q16so2021926ljj.8
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 06:11:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2qFqSEgKvjm2FzdXcF6PCbM2rvp+ThItKS5Y3HKtAdA=;
+        b=WhyPoLIz7JsHlFh5bfGwDqCg6o2yNqnXl85UL9ajKIwKXWpHQ6Kc5eLkrq2FATTqdM
+         virhOK39PMXPIZlD0S0X+nKtpvrZknoOnJUXkCULCTolJibugB3h2K19kano4oM5kXTz
+         P/IzQpg4BFsNNw0gXrYkjCSE1Zrmj/Uxs9PupczdIAueC02Jbi0w6bJQG5gawQ1xEjjk
+         7HpcdSUAfTy6tMPDNROcaohAKsLYKuMTVyzUBbiHcM12gKKv0ha0o+zrsemL8Mxi66F5
+         ziybe9Exk164Vv8yOVYaGgk3PG3gAPyVILnYiUnxdFK6BKIxuwy06edLNnzbCzmD7ADh
+         LDEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2qFqSEgKvjm2FzdXcF6PCbM2rvp+ThItKS5Y3HKtAdA=;
+        b=mvZgzv+cC7CkZIFNz1OR9bWi0f5W0Vt9faBB1z1bShWmVp3ynyUvLIXQWitr2++x60
+         eLIGxjmlHw3Uy+HWT1Ar45gEg4AzRveg4aMaNiPyN0W1RZyspkD7axQ6M5VkT8rFRItb
+         BNUzCnSVSxbMUCS24oWw1FSA0ZjEDOg7pqdQzS6F6Jp5PFQMkXySYRVN/508MciZ8BtP
+         p4aN6X8cYd0nNgpRLoC2ERfZ3YZ9zCgoTolCv+48Qo6SzR/lQFB9MvFN1kqa1P/hzEXI
+         MvNgIoZ/22HeFgIbhNUIh4VaKjt39MoIjtigh936Spm03caV1RXdZhbu7f6caNTk+Dro
+         qgcQ==
+X-Gm-Message-State: APjAAAUdHsJS+ed792tFcJ6pjU9lIOinK2iqWk8auvdi9xSIdl7JWbcz
+        M4VqEzGzWfks5RhKsYwANk3Ptcqz0d8JijL9XDes7NoP
+X-Google-Smtp-Source: APXvYqwOOGVsZ6GSQK/aHBYHMFlRyEU0BXc3locCzh2oPGqPeuOufGxabLVD8QnkfOK4Eg8/PVmXB4Wj7sgLrGAyVXk=
+X-Received: by 2002:a2e:2b58:: with SMTP id q85mr46163360lje.179.1558530681812;
+ Wed, 22 May 2019 06:11:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.11.1+86 (6f28e57d73f2) ()
+References: <20190522095810.GA16110@gmail.com> <20190522075227.52ae4720@gandalf.local.home>
+In-Reply-To: <20190522075227.52ae4720@gandalf.local.home>
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date:   Wed, 22 May 2019 15:11:10 +0200
+Message-ID: <CANiq72=uRuyDuRvZgxYAHxKRCOyJ-KQew+R24tPwOJuQmaO1Yw@mail.gmail.com>
+Subject: Re: [PATCH v2] tracing: silence GCC 9 array bounds warning
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Wed, May 22, 2019 at 1:52 PM Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> On Wed, 22 May 2019 11:58:10 +0200
+> Miguel Ojeda <miguel.ojeda.sandonis@gmail.com> wrote:
+>
+> > +/* reset all but tr, trace, and overruns */
+> > +static __always_inline void trace_iterator_reset(struct trace_iterator *iter)
+> > +{
+> > +     /*
+> > +      * We do not simplify the start address to &iter->seq in order to let
+> > +      * GCC 9 know that we really want to overwrite more members than
+> > +      * just iter->seq (-Warray-bounds).
+>
+> This comment is fine for the change log, but here it is too specific.
+> Why does one care about GCC 9 when we are at version GCC 21? I care
+> more about why we are clearing the data and less about the way we are
+> doing it.
 
-Please pull these arm64 fixes for -rc2. The summary is in the tag.
+Since the code is not written the obvious way on purpose, the idea is
+to document why that is so -- otherwise the reader may wonder (and
+possibly re-introduce it back). Specifying when the warning started
+appearing tends to be clarifying, too.
 
-I was actually planning to send these in during the merge window, which
-is why the branch is based on top of the previous arm64 pull rather than
--rc1. Unfortunately, due to various goings on, my ability to send
-external email has been patchy (no pun intended) but here we are anyway.
+The commit message explains the change itself, but the comment
+explains why the current code is written like that.
 
-I'll probably send some more fixes in later this week, but based on -rc1
-to avoid conflicts.
+> A comment like:
+>
+>         /*
+>          * Reset the state of the trace_iterator so that it can read
+>          * consumed data. Normally, the trace_iterator is used for
+>          * reading the data when it is not consumed, and must retain
+>          * state.
+>          */
+>
+> That is more useful than why we have the offset hack.
+
+That comment would be great in the function's description, in my
+opinion, and it is a great addition to have nevertheless. I re-used
+the existing comment for that to keep the change as minimal as
+possible (and nevertheless I am not qualified to write it since I have
+not studied the tracing code). In other words, I'm not saying there
+are no further improvements :-)
 
 Cheers,
-
-Will
-
---->8
-
-The following changes since commit b33f908811b7627015238e0dee9baf2b4c9d720d:
-
-  Merge branch 'for-next/perf' of git://git.kernel.org/pub/scm/linux/kernel/git/will/linux into for-next/core (2019-05-03 10:18:08 +0100)
-
-are available in the git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git tags/arm64-fixes
-
-for you to fetch changes up to 7a0a93c51799edc45ee57c6cc1679aa94f1e03d5:
-
-  arm64: vdso: Explicitly add build-id option (2019-05-16 11:45:36 +0100)
-
-----------------------------------------------------------------
-First round of arm64 fixes for -rc2
-
-- Fix SPE probe failure when backing auxbuf with high-order pages
-
-- Fix handling of DMA allocations from outside of the vmalloc area
-
-- Fix generation of build-id ELF section for vDSO object
-
-- Disable huge I/O mappings if kernel page table dumping is enabled
-
-- A few other minor fixes (comments, kconfig etc)
-
-----------------------------------------------------------------
-Christoph Hellwig (1):
-      arm64/iommu: handle non-remapped addresses in ->mmap and ->get_sgtable
-
-Hillf Danton (1):
-      arm64: assembler: Update comment above cond_yield_neon() macro
-
-Laura Abbott (1):
-      arm64: vdso: Explicitly add build-id option
-
-Mark Rutland (1):
-      arm64/mm: Inhibit huge-vmap with ptdump
-
-Will Deacon (2):
-      drivers/perf: arm_spe: Don't error on high-order pages for aux buf
-      arm64: Print physical address of page table base in show_pte()
-
-Yury Norov (1):
-      arm64: don't trash config with compat symbol if COMPAT is disabled
-
- arch/arm64/Kconfig                 |  2 +-
- arch/arm64/include/asm/assembler.h | 11 +++++------
- arch/arm64/kernel/vdso/Makefile    |  4 ++--
- arch/arm64/mm/dma-mapping.c        | 10 ++++++++++
- arch/arm64/mm/fault.c              |  5 +++--
- arch/arm64/mm/mmu.c                | 11 ++++++++---
- drivers/perf/arm_spe_pmu.c         | 10 +---------
- 7 files changed, 30 insertions(+), 23 deletions(-)
+Miguel
