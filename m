@@ -2,109 +2,270 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0115EC072A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 08:54:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D54BC18E7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 08:56:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C342420856
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 08:54:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50BB1217D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 08:56:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="H7ig9Dkd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728653AbfEVIyj (ORCPT
+        id S1728735AbfEVI4T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 04:54:39 -0400
-Received: from mail-oln040092067104.outbound.protection.outlook.com ([40.92.67.104]:49111
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726552AbfEVIyi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 04:54:38 -0400
-Received: from AM5EUR02FT029.eop-EUR02.prod.protection.outlook.com
- (10.152.8.57) by AM5EUR02HT231.eop-EUR02.prod.protection.outlook.com
- (10.152.9.138) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1922.16; Wed, 22 May
- 2019 08:54:36 +0000
-Received: from VI1PR07MB4432.eurprd07.prod.outlook.com (10.152.8.57) by
- AM5EUR02FT029.mail.protection.outlook.com (10.152.8.161) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1922.16 via Frontend Transport; Wed, 22 May 2019 08:54:36 +0000
-Received: from VI1PR07MB4432.eurprd07.prod.outlook.com
- ([fe80::91f:b1bb:a60a:fdc3]) by VI1PR07MB4432.eurprd07.prod.outlook.com
- ([fe80::91f:b1bb:a60a:fdc3%7]) with mapi id 15.20.1922.013; Wed, 22 May 2019
- 08:54:35 +0000
-From:   Philippe Mazenauer <philippe.mazenauer@outlook.de>
-CC:     Philippe Mazenauer <philippe.mazenauer@outlook.de>,
-        Russell King <linux@armlinux.org.uk>,
-        "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: [PATCH] ARM: Add method to mach/pci.h
-Thread-Topic: [PATCH] ARM: Add method to mach/pci.h
-Thread-Index: AQHVEHv6lq8w7O7W1kuo9tizM8ubug==
-Date:   Wed, 22 May 2019 08:54:34 +0000
-Message-ID: <VI1PR07MB443283DF94F9F8942E6A3ADAFD000@VI1PR07MB4432.eurprd07.prod.outlook.com>
-Accept-Language: de-CH, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MWHPR0201CA0001.namprd02.prod.outlook.com
- (2603:10b6:301:74::14) To VI1PR07MB4432.eurprd07.prod.outlook.com
- (2603:10a6:802:67::17)
-x-incomingtopheadermarker: OriginalChecksum:AE6877DCB04B7A1ABB5EAE267A161E0BB157E0E7B953ABF9D704854FE2E1E338;UpperCasedChecksum:1F8AD31A4A089FF3C730F2C3E3FA88C354BFB6319A50B83F0A7CD44991D4E8C2;SizeAsReceived:7421;Count:47
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-tmn:  [cYBMpV7q8ymNh4KaOYE0WfZP4tigp1go]
-x-microsoft-original-message-id: <20190522085353.113717-1-philippe.mazenauer@outlook.de>
-x-ms-publictraffictype: Email
-x-incomingheadercount: 47
-x-eopattributedmessage: 0
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(5050001)(7020095)(20181119110)(201702061078)(5061506573)(5061507331)(1603103135)(2017031320274)(2017031323274)(2017031324274)(2017031322404)(1601125500)(1603101475)(1701031045);SRVR:AM5EUR02HT231;
-x-ms-traffictypediagnostic: AM5EUR02HT231:
-x-microsoft-antispam-message-info: h1vn1LmJtUMreQ0Pee7FC2pTadgObiOZKYK1dMviGlW+IATHSKa3dujBwCgjMMiofT6i2CXo/V5std3KWMCVAJn0lW0a+/QwMiniy8B6klV5TtS2KzhxR+7RNPeJvRNSXz1qWqXo9vfi9Zpl6kpT7M0tu/zUiNGf9DEfFuQYOgPklds+RejtnH5fhkM7Ashm
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <17B8CDA1DC5EF441B76A66E351EC577E@eurprd07.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Wed, 22 May 2019 04:56:19 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:15243 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727796AbfEVI4T (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 04:56:19 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ce50eb00000>; Wed, 22 May 2019 01:56:16 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 22 May 2019 01:56:16 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Wed, 22 May 2019 01:56:16 -0700
+Received: from [10.24.45.128] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 22 May
+ 2019 08:56:10 +0000
+Subject: Re: [PATCH V7 04/15] PCI: dwc: Move config space capability search
+ API
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     <lorenzo.pieralisi@arm.com>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <kishon@ti.com>, <catalin.marinas@arm.com>,
+        <will.deacon@arm.com>, <jingoohan1@gmail.com>,
+        <gustavo.pimentel@synopsys.com>, <mperttunen@nvidia.com>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
+References: <20190517123846.3708-1-vidyas@nvidia.com>
+ <20190517123846.3708-5-vidyas@nvidia.com> <20190521211757.GF57618@google.com>
+X-Nvconfidentiality: public
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <fd164d1f-cf99-fe81-c368-46e3a3742a59@nvidia.com>
+Date:   Wed, 22 May 2019 14:26:08 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: c8705529-ceb8-49a1-0466-08d6de931c0a
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 May 2019 08:54:35.6337
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5EUR02HT231
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <20190521211757.GF57618@google.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL106.nvidia.com (172.18.146.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1558515376; bh=N5UCTQ0Qf3AxzLE/m3Mt3Uz4MoUt0G5MVA4MUrcYgjU=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=H7ig9Dkd6/qCtoQSM9CHdizNJAtYYEgV880CAyRSPzwwAbd0ON5e2B2zSimxScECX
+         2DcyRpTM+hnuxBBHTwXrAUmH/6BaXys4QwUQZVttaMLscQ/FjGpOO7y3f6EoHtWHUw
+         mWaMYhpb0OBZJElgPwsoflDpGisEh0NMEcP85FK1+mol5oFRFWVIZ+gShKoSf+UDS7
+         nf+7bwdB9/3XFgpQpwXKk0nxuJZSEcX1RZ6nz1ZgxlDkehFQR7uongXo92t1s3Tofv
+         1Srxotb5+yfq6PQTxBiOIutjHsF7gU2XmdG1GgAFVaVaBJBYP9c8VtZ3FK2NwPLAMb
+         bAG/lQBsYN+2w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-QWRkaW5nIG1ldGhvZCBwY2liaW9zX3JlcG9ydF9zdGF0dXMoKSB0byBtYWNoL3BjaS5oLCBzbyBh
-cyB0byByZW1vdmUgdGhlDQpleHRlcm4gZGVjbGFyYXRpb24gaW4gZGMyMTI4NS5jLCBhbmQgcmVt
-b3ZlIG1pc3NpbmctcHJvdG90eXBlcyB3YXJuaW5nDQppbiBrZXJuZWwvYmlvczMyLmMuDQoNCi4u
-L2FyY2gvYXJtL2tlcm5lbC9iaW9zMzIuYzo1OTo2OiB3YXJuaW5nOiBubyBwcmV2aW91cyBwcm90
-b3R5cGUgZm9yIOKAmHBjaWJpb3NfcmVwb3J0X3N0YXR1c+KAmSBbLVdtaXNzaW5nLXByb3RvdHlw
-ZXNdDQogdm9pZCBwY2liaW9zX3JlcG9ydF9zdGF0dXModV9pbnQgc3RhdHVzX21hc2ssIGludCB3
-YXJuKQ0KICAgICAgXn5+fn5+fn5+fn5+fn5+fn5+fn5+DQoNClNpZ25lZC1vZmYtYnk6IFBoaWxp
-cHBlIE1hemVuYXVlciA8cGhpbGlwcGUubWF6ZW5hdWVyQG91dGxvb2suZGU+DQotLS0NCiBhcmNo
-L2FybS9pbmNsdWRlL2FzbS9tYWNoL3BjaS5oICAgIHwgMiArKw0KIGFyY2gvYXJtL21hY2gtZm9v
-dGJyaWRnZS9kYzIxMjg1LmMgfCAxIC0NCiAyIGZpbGVzIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygr
-KSwgMSBkZWxldGlvbigtKQ0KDQpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vaW5jbHVkZS9hc20vbWFj
-aC9wY2kuaCBiL2FyY2gvYXJtL2luY2x1ZGUvYXNtL21hY2gvcGNpLmgNCmluZGV4IDIzM2I0YjUw
-ZWZmMy4uMWUwNzYxMmJjYmRiIDEwMDY0NA0KLS0tIGEvYXJjaC9hcm0vaW5jbHVkZS9hc20vbWFj
-aC9wY2kuaA0KKysrIGIvYXJjaC9hcm0vaW5jbHVkZS9hc20vbWFjaC9wY2kuaA0KQEAgLTU3LDYg
-KzU3LDggQEAgc3RydWN0IHBjaV9zeXNfZGF0YSB7DQogCXZvaWQJCSpwcml2YXRlX2RhdGE7CS8q
-IHBsYXRmb3JtIGNvbnRyb2xsZXIgcHJpdmF0ZSBkYXRhCSovDQogfTsNCiANCit2b2lkIHBjaWJp
-b3NfcmVwb3J0X3N0YXR1cyh1X2ludCBzdGF0dXNfbWFzaywgaW50IHdhcm4pOw0KKw0KIC8qDQog
-ICogQ2FsbCB0aGlzIHdpdGggeW91ciBod19wY2kgc3RydWN0IHRvIGluaXRpYWxpc2UgdGhlIFBD
-SSBzeXN0ZW0uDQogICovDQpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vbWFjaC1mb290YnJpZGdlL2Rj
-MjEyODUuYyBiL2FyY2gvYXJtL21hY2gtZm9vdGJyaWRnZS9kYzIxMjg1LmMNCmluZGV4IDE2ZDcx
-YmFjMDA2MS4uNzVkOTdjZGU3NjU1IDEwMDY0NA0KLS0tIGEvYXJjaC9hcm0vbWFjaC1mb290YnJp
-ZGdlL2RjMjEyODUuYw0KKysrIGIvYXJjaC9hcm0vbWFjaC1mb290YnJpZGdlL2RjMjEyODUuYw0K
-QEAgLTM0LDcgKzM0LDYgQEANCiAJCQkJICBQQ0lfU1RBVFVTX1BBUklUWSkgPDwgMTYpDQogDQog
-ZXh0ZXJuIGludCBzZXR1cF9hcm1faXJxKGludCwgc3RydWN0IGlycWFjdGlvbiAqKTsNCi1leHRl
-cm4gdm9pZCBwY2liaW9zX3JlcG9ydF9zdGF0dXModV9pbnQgc3RhdHVzX21hc2ssIGludCB3YXJu
-KTsNCiANCiBzdGF0aWMgdW5zaWduZWQgbG9uZw0KIGRjMjEyODVfYmFzZV9hZGRyZXNzKHN0cnVj
-dCBwY2lfYnVzICpidXMsIHVuc2lnbmVkIGludCBkZXZmbikNCi0tIA0KMi4xNy4xDQoNCg==
+On 5/22/2019 2:47 AM, Bjorn Helgaas wrote:
+> On Fri, May 17, 2019 at 06:08:35PM +0530, Vidya Sagar wrote:
+>> Move PCIe config space capability search API to common DesignWare file
+>> as this can be used by both host and ep mode codes.
+>>
+>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+>> Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+>> ---
+>> Changes since [v6]:
+>> * Exported dw_pcie_find_capability() API
+>>
+>> Changes since [v5]:
+>> * None
+>>
+>> Changes since [v4]:
+>> * Removed redundant APIs in pcie-designware-ep.c file after moving them
+>>    to pcie-designware.c file based on Bjorn's comments.
+>>
+>> Changes since [v3]:
+>> * Rebased to linux-next top of the tree
+>>
+>> Changes since [v2]:
+>> * None
+>>
+>> Changes since [v1]:
+>> * Removed dw_pcie_find_next_ext_capability() API from here and made a
+>>    separate patch for that
+>>
+>>   .../pci/controller/dwc/pcie-designware-ep.c   | 37 +----------------
+>>   drivers/pci/controller/dwc/pcie-designware.c  | 40 +++++++++++++++++++
+>>   drivers/pci/controller/dwc/pcie-designware.h  |  2 +
+>>   3 files changed, 44 insertions(+), 35 deletions(-)
+>>
+>> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+>> index 2bf5a35c0570..65f479250087 100644
+>> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+>> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+>> @@ -40,39 +40,6 @@ void dw_pcie_ep_reset_bar(struct dw_pcie *pci, enum pci_barno bar)
+>>   	__dw_pcie_ep_reset_bar(pci, bar, 0);
+>>   }
+>>   
+>> -static u8 __dw_pcie_ep_find_next_cap(struct dw_pcie *pci, u8 cap_ptr,
+>> -			      u8 cap)
+>> -{
+>> -	u8 cap_id, next_cap_ptr;
+>> -	u16 reg;
+>> -
+>> -	if (!cap_ptr)
+>> -		return 0;
+>> -
+>> -	reg = dw_pcie_readw_dbi(pci, cap_ptr);
+>> -	cap_id = (reg & 0x00ff);
+>> -
+>> -	if (cap_id > PCI_CAP_ID_MAX)
+>> -		return 0;
+>> -
+>> -	if (cap_id == cap)
+>> -		return cap_ptr;
+>> -
+>> -	next_cap_ptr = (reg & 0xff00) >> 8;
+>> -	return __dw_pcie_ep_find_next_cap(pci, next_cap_ptr, cap);
+>> -}
+>> -
+>> -static u8 dw_pcie_ep_find_capability(struct dw_pcie *pci, u8 cap)
+>> -{
+>> -	u8 next_cap_ptr;
+>> -	u16 reg;
+>> -
+>> -	reg = dw_pcie_readw_dbi(pci, PCI_CAPABILITY_LIST);
+>> -	next_cap_ptr = (reg & 0x00ff);
+>> -
+>> -	return __dw_pcie_ep_find_next_cap(pci, next_cap_ptr, cap);
+>> -}
+>> -
+>>   static int dw_pcie_ep_write_header(struct pci_epc *epc, u8 func_no,
+>>   				   struct pci_epf_header *hdr)
+>>   {
+>> @@ -612,9 +579,9 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+>>   		dev_err(dev, "Failed to reserve memory for MSI/MSI-X\n");
+>>   		return -ENOMEM;
+>>   	}
+>> -	ep->msi_cap = dw_pcie_ep_find_capability(pci, PCI_CAP_ID_MSI);
+>> +	ep->msi_cap = dw_pcie_find_capability(pci, PCI_CAP_ID_MSI);
+>>   
+>> -	ep->msix_cap = dw_pcie_ep_find_capability(pci, PCI_CAP_ID_MSIX);
+>> +	ep->msix_cap = dw_pcie_find_capability(pci, PCI_CAP_ID_MSIX);
+>>   
+>>   	offset = dw_pcie_ep_find_ext_capability(pci, PCI_EXT_CAP_ID_REBAR);
+>>   	if (offset) {
+>> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+>> index 83cdd2ce2486..8f53ce63d17e 100644
+>> --- a/drivers/pci/controller/dwc/pcie-designware.c
+>> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+>> @@ -14,6 +14,46 @@
+>>   
+>>   #include "pcie-designware.h"
+>>   
+>> +/*
+>> + * These APIs are different from standard pci_find_*capability() APIs in the
+>> + * sense that former can only be used post device enumeration as they require
+>> + * 'struct pci_dev *' pointer whereas these APIs require 'struct dw_pcie *'
+>> + * pointer and can be used before link up also.
+> 
+> I think this comment is slightly misleading because it suggests the
+> reason we need these DW interfaces is because we're doing something
+> before a pci_dev pointer is available.
+> 
+> But these DW interfaces are used on devices that will *never* have a
+> pci_dev pointer because they are not PCI devices.  They're used on
+> host controller devices, which have a PCIe link on the downstream
+> side, but the host controller driver operates them using their
+> upstream, non-PCI interfaces.  Logically, I think they would be
+> considered parts of Root Complexes, not Root Ports.
+> 
+> There's actually no reason why that upstream interface should look
+> anything like PCI; it doesn't need to organize registers into
+> capability lists at all.  It might be convenient for the hardware to
+> do that and share things with a Root Port device, which *is* a PCI
+> device, but it's not required.
+> 
+> It also really has nothing to do with whether the link is up.  This
+> code operates on hardware that is upstream from the link, so we can
+> reach it regardless of the link.
+I added this comment after receiving a review comment to justify why standard
+pci_find_*capability() APIs can't be used here. Hence added this.
+I understand your comment that DW interface need not have to be a PCI device,
+but what is present in the hardware is effectively a root port implementation
+and post enumeration, we get a 'struct pci_dev' created for it, hence I thought
+it is fine to bring 'struct pci_dev' into picture.
+Also, I agree that mention of 'link up' is unwarranted and could be reworded in
+a better way.
+Do you suggest to remove this comment altogether or reword it
+s/and can be used before link up also/and can be used before 'struct pci_dev' is
+available/ ?
+
+> 
+>> + */
+>> +static u8 __dw_pcie_find_next_cap(struct dw_pcie *pci, u8 cap_ptr,
+>> +				  u8 cap)
+>> +{
+>> +	u8 cap_id, next_cap_ptr;
+>> +	u16 reg;
+>> +
+>> +	if (!cap_ptr)
+>> +		return 0;
+>> +
+>> +	reg = dw_pcie_readw_dbi(pci, cap_ptr);
+>> +	cap_id = (reg & 0x00ff);
+>> +
+>> +	if (cap_id > PCI_CAP_ID_MAX)
+>> +		return 0;
+>> +
+>> +	if (cap_id == cap)
+>> +		return cap_ptr;
+>> +
+>> +	next_cap_ptr = (reg & 0xff00) >> 8;
+>> +	return __dw_pcie_find_next_cap(pci, next_cap_ptr, cap);
+>> +}
+>> +
+>> +u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap)
+>> +{
+>> +	u8 next_cap_ptr;
+>> +	u16 reg;
+>> +
+>> +	reg = dw_pcie_readw_dbi(pci, PCI_CAPABILITY_LIST);
+>> +	next_cap_ptr = (reg & 0x00ff);
+>> +
+>> +	return __dw_pcie_find_next_cap(pci, next_cap_ptr, cap);
+>> +}
+>> +EXPORT_SYMBOL_GPL(dw_pcie_find_capability);
+>> +
+>>   int dw_pcie_read(void __iomem *addr, int size, u32 *val)
+>>   {
+>>   	if (!IS_ALIGNED((uintptr_t)addr, size)) {
+>> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+>> index 14762e262758..6cb978132469 100644
+>> --- a/drivers/pci/controller/dwc/pcie-designware.h
+>> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+>> @@ -251,6 +251,8 @@ struct dw_pcie {
+>>   #define to_dw_pcie_from_ep(endpoint)   \
+>>   		container_of((endpoint), struct dw_pcie, ep)
+>>   
+>> +u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap);
+>> +
+>>   int dw_pcie_read(void __iomem *addr, int size, u32 *val);
+>>   int dw_pcie_write(void __iomem *addr, int size, u32 val);
+>>   
+>> -- 
+>> 2.17.1
+>>
+
