@@ -3,182 +3,148 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 323F6C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:28:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82B6DC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:28:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05303204FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:28:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="KmawTsCW"
+	by mail.kernel.org (Postfix) with ESMTP id 566A72177E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:28:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558553298;
+	bh=BZxP4YwrsFYW6JLf3Gh67aXw4JFEXbt4Y7CG85LEW1I=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Fsv9zc+SOcv5HeGcAk6rcY/s2DSLw6UHU1ZN/VpbUB0z7GLGgdGhoaqapclIXIaUR
+	 FYpm6FRV6WQXNGKu696YereVxzF6W2+iezGvdgLOvsQMpBxM01tgE1vXZEuVozFwCx
+	 CijHNZfuOZ/F/+yhRoBSL3jzNOn51VvtBUUl6Vk4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732498AbfEVT2M (ORCPT
+        id S1730725AbfEVT2R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:28:12 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:41342 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732411AbfEVT1x (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:27:53 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4MJRjkm016902;
-        Wed, 22 May 2019 14:27:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1558553265;
-        bh=4lobOehpHKxAz9Z2v1fQplOERI0AEUJYx6XR9ln2I/Y=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=KmawTsCWlghFrolh4iPInogSpLFXphQXpwYPd9X4gXWOh2Kkqb95S1yx3Nq+KyrGo
-         ea5F+BoMPObh9v4IjxcXZlyI34umclWXf5ngV5vDxIl97XvgNpfU33UDoLKr1A6FVv
-         wPEXI3l9pGrABwDNeU2M96EjYMuAHhYDG3Fc4QWY=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4MJRjWH026144
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 22 May 2019 14:27:45 -0500
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 22
- May 2019 14:27:45 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 22 May 2019 14:27:45 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4MJRjAq096393;
-        Wed, 22 May 2019 14:27:45 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <broonie@kernel.org>,
-        <lgirdwood@gmail.com>
-CC:     <lee.jones@linaro.org>, <linux-leds@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>,
-        Rob Herring <robh@kernel.org>
-Subject: [RESEND PATCH v4 2/6] dt-bindings: mfd: Add lm36274 bindings to ti-lmu
-Date:   Wed, 22 May 2019 14:27:29 -0500
-Message-ID: <20190522192733.13422-3-dmurphy@ti.com>
-X-Mailer: git-send-email 2.21.0.5.gaeb582a983
-In-Reply-To: <20190522192733.13422-1-dmurphy@ti.com>
-References: <20190522192733.13422-1-dmurphy@ti.com>
+        Wed, 22 May 2019 15:28:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50422 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730501AbfEVT15 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:27:57 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 51CEA20675;
+        Wed, 22 May 2019 19:27:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558553277;
+        bh=BZxP4YwrsFYW6JLf3Gh67aXw4JFEXbt4Y7CG85LEW1I=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=I1YrULlTbDBGx21Lr12g4qlOYBIhLOCt44HIlzz2A23ce96RAPfJSiFBpPu+pI6NN
+         IYBf3H00N00B0pejK73+6F8zvBuyJQMk/PVvN6lnsuhE++gv2WwuQFMKUYakHDXxYM
+         w1Z+atAJp2fPRbzyjm6118gClrcAHLvMNpi1Wmgc=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Sugar Zhang <sugar.zhang@rock-chips.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        dmaengine@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 051/244] dmaengine: pl330: _stop: clear interrupt status
+Date:   Wed, 22 May 2019 15:23:17 -0400
+Message-Id: <20190522192630.24917-51-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190522192630.24917-1-sashal@kernel.org>
+References: <20190522192630.24917-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the LM36274 backlight driver with regulator support.
-This is a multi-function device for backlight applications.
+From: Sugar Zhang <sugar.zhang@rock-chips.com>
 
-Backlight properties will be documented in it's a supplemental
-bindings document.
+[ Upstream commit 2da254cc7908105a60a6bb219d18e8dced03dcb9 ]
 
-Regulator support is documented in the regulator/lm363x-regulator.txt
+This patch kill instructs the DMAC to immediately terminate
+execution of a thread. and then clear the interrupt status,
+at last, stop generating interrupts for DMA_SEV. to guarantee
+the next dma start is clean. otherwise, one interrupt maybe leave
+to next start and make some mistake.
 
-http://www.ti.com/lit/ds/symlink/lm36274.pdf
+we can reporduce the problem as follows:
 
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
+DMASEV: modify the event-interrupt resource, and if the INTEN sets
+function as interrupt, the DMAC will set irq<event_num> HIGH to
+generate interrupt. write INTCLR to clear interrupt.
+
+	DMA EXECUTING INSTRUCTS		DMA TERMINATE
+		|				|
+		|				|
+	       ...			      _stop
+		|				|
+		|			spin_lock_irqsave
+	     DMASEV				|
+		|				|
+		|			    mask INTEN
+		|				|
+		|			     DMAKILL
+		|				|
+		|			spin_unlock_irqrestore
+
+in above case, a interrupt was left, and if we unmask INTEN, the DMAC
+will set irq<event_num> HIGH to generate interrupt.
+
+to fix this, do as follows:
+
+	DMA EXECUTING INSTRUCTS		DMA TERMINATE
+		|				|
+		|				|
+	       ...			      _stop
+		|				|
+		|			spin_lock_irqsave
+	     DMASEV				|
+		|				|
+		|			     DMAKILL
+		|				|
+		|			   clear INTCLR
+		|			    mask INTEN
+		|				|
+		|			spin_unlock_irqrestore
+
+Signed-off-by: Sugar Zhang <sugar.zhang@rock-chips.com>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../devicetree/bindings/mfd/ti-lmu.txt        | 54 +++++++++++++++++++
- 1 file changed, 54 insertions(+)
+ drivers/dma/pl330.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mfd/ti-lmu.txt b/Documentation/devicetree/bindings/mfd/ti-lmu.txt
-index 782d3c9812ed..2296b8f24de4 100644
---- a/Documentation/devicetree/bindings/mfd/ti-lmu.txt
-+++ b/Documentation/devicetree/bindings/mfd/ti-lmu.txt
-@@ -8,6 +8,7 @@ TI LMU driver supports lighting devices below.
-   LM3632       Backlight and regulator
-   LM3633       Backlight, LED and fault monitor
-   LM3695       Backlight
-+  LM36274      Backlight and regulator
+diff --git a/drivers/dma/pl330.c b/drivers/dma/pl330.c
+index 88750a34e8598..bc8050c025b7b 100644
+--- a/drivers/dma/pl330.c
++++ b/drivers/dma/pl330.c
+@@ -961,6 +961,7 @@ static void _stop(struct pl330_thread *thrd)
+ {
+ 	void __iomem *regs = thrd->dmac->base;
+ 	u8 insn[6] = {0, 0, 0, 0, 0, 0};
++	u32 inten = readl(regs + INTEN);
  
- Required properties:
-   - compatible: Should be one of:
-@@ -15,11 +16,13 @@ Required properties:
-                 "ti,lm3632"
-                 "ti,lm3633"
-                 "ti,lm3695"
-+		"ti,lm36274"
-   - reg: I2C slave address.
-          0x11 for LM3632
-          0x29 for LM3631
-          0x36 for LM3633
-          0x63 for LM3695
-+         0x11 for LM36274
+ 	if (_state(thrd) == PL330_STATE_FAULT_COMPLETING)
+ 		UNTIL(thrd, PL330_STATE_FAULTING | PL330_STATE_KILLING);
+@@ -973,10 +974,13 @@ static void _stop(struct pl330_thread *thrd)
  
- Optional properties:
-   - enable-gpios: A GPIO specifier for hardware enable pin.
-@@ -50,12 +53,14 @@ Optional nodes:
-       - compatible: Should be one of:
-                     "ti,lm3633-fault-monitor"
-   - leds: LED properties for LM3633. Please refer to [2].
-+	  LED properties for LM36274. Please refer to [4].
-   - regulators: Regulator properties for LM3631 and LM3632.
-                 Please refer to [3].
+ 	_emit_KILL(0, insn);
  
- [1] ../leds/backlight/ti-lmu-backlight.txt
- [2] ../leds/leds-lm3633.txt
- [3] ../regulator/lm363x-regulator.txt
-+[4] ../leds/leds-lm36274.txt
+-	/* Stop generating interrupts for SEV */
+-	writel(readl(regs + INTEN) & ~(1 << thrd->ev), regs + INTEN);
+-
+ 	_execute_DBGINSN(thrd, insn, is_manager(thrd));
++
++	/* clear the event */
++	if (inten & (1 << thrd->ev))
++		writel(1 << thrd->ev, regs + INTCLR);
++	/* Stop generating interrupts for SEV */
++	writel(inten & ~(1 << thrd->ev), regs + INTEN);
+ }
  
- lm3631@29 {
- 	compatible = "ti,lm3631";
-@@ -213,3 +218,52 @@ lm3695@63 {
- 		};
- 	};
- };
-+
-+lm36274@11 {
-+	compatible = "ti,lm36274";
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	reg = <0x11>;
-+
-+	enable-gpios = <&pioC 2 GPIO_ACTIVE_HIGH>;
-+	regulators {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		compatible = "ti,lm363x-regulator";
-+
-+		enable-gpios = <&pioC 0 GPIO_ACTIVE_HIGH>,
-+			       <&pioC 1 GPIO_ACTIVE_HIGH>;
-+
-+		vboost {
-+			regulator-name = "lcd_boost";
-+			regulator-min-microvolt = <4000000>;
-+			regulator-max-microvolt = <7150000>;
-+			regulator-always-on;
-+		};
-+
-+		vpos {
-+			regulator-name = "lcd_vpos";
-+			regulator-min-microvolt = <4000000>;
-+			regulator-max-microvolt = <6500000>;
-+		};
-+
-+		vneg {
-+			regulator-name = "lcd_vneg";
-+			regulator-min-microvolt = <4000000>;
-+			regulator-max-microvolt = <6500000>;
-+		};
-+	};
-+
-+	backlight {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		compatible = "ti,lm36274-backlight";
-+
-+		led@0 {
-+			reg = <0>;
-+			led-sources = <0 2>;
-+			label = "white:backlight_cluster";
-+			linux,default-trigger = "backlight";
-+		};
-+	};
-+};
+ /* Start doing req 'idx' of thread 'thrd' */
 -- 
-2.21.0.5.gaeb582a983
+2.20.1
 
