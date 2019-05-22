@@ -2,101 +2,107 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1994EC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 18:27:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B375CC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 18:29:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D296A2173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 18:27:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8484C21473
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 18:29:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sqjSc+JZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gS+RIag0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729577AbfEVS1i (ORCPT
+        id S1729496AbfEVS3u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 14:27:38 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:34253 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728272AbfEVS1i (ORCPT
+        Wed, 22 May 2019 14:29:50 -0400
+Received: from mail-yb1-f195.google.com ([209.85.219.195]:44402 "EHLO
+        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728272AbfEVS3u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 14:27:38 -0400
-Received: by mail-lj1-f196.google.com with SMTP id j24so3037692ljg.1;
-        Wed, 22 May 2019 11:27:36 -0700 (PDT)
+        Wed, 22 May 2019 14:29:50 -0400
+Received: by mail-yb1-f195.google.com with SMTP id x187so1223935ybc.11;
+        Wed, 22 May 2019 11:29:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=xU0+H+L47el2KL8nstCLThsW4uph4L0CsVSGviTKcu8=;
-        b=sqjSc+JZO+eH9eldXTc/1xpxoJXpSqFYNk+Vr+PaFkjIT/uNrEY9714QmsGFNrfdxu
-         qwVRMVAa2I+s19UdT3EnqFczfOld0RJfSCYwP5O+iyYTUmljX6jX1hon8q4uQSCRs7Az
-         Pvcpub0XTDjYYH12ygu47Lt55yv4Ihc5N8oTc5O4Fggp1VNjbz0BfPV2EXMDm4nte02u
-         LOh6u79NSqs4V1Uo6H99SGpsZmMU1Et1YghbG4OgbN19EWH5HLAXJinYXmPabvweoUDF
-         oVdDOKoibMN2vKTbRcwOzCYwyEHU/7bMzB1f/2karKtXpse3dUPiM7hjKNnKjt2h42OP
-         7kfg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mNNHt7Z7ll37muKTAxbqGIESLdms47B625sz6OwZ88M=;
+        b=gS+RIag0j1EGY4wDhlTvibyOVNteJNKXBPtsOrOJesByGKR2Fuq4X6RhDbSo7QH9G7
+         KRnjke+GG3lc/4hxqh+KFtbvDMsLtpoByk3G9G8bwzcCfXJ2oCg77JRACh+DJK9pNMMk
+         RLYATRv8sU5DYSau9IUY3RI9CJ39VKRVdaLY2VsFEK9DBxvGidv7KL+DMtB/ZMPcVk9s
+         QZYPOM95xYbSo4RUkc8DpcXZ0tMFqnwQA5omAqkTeBvxW1wUTSS36oS6w8xdvbIVtv6u
+         Wc/2FDQqA02lI2Q288EkKNN1QjLX2K/gxQu326Gp+Fytagqqoe7JZko5HPTqeKZYUrrY
+         SMQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=xU0+H+L47el2KL8nstCLThsW4uph4L0CsVSGviTKcu8=;
-        b=DbMk1BGcmEBKf/VVU2uA1sYtiz6/8zwj7PbIWPYLHnx0PjOfrb1MdSMFh4zutQau1M
-         X/fwcQcHwJkmFnCK0NMtxuLLedNnXC6lf0FTVWiTatxFomFwqHhxT4qlTU9AM4XSQsdZ
-         iiuHUtgec8wishoi6j4YDE1Ao9si63rH0d4pGCVPzgaV7IgIOJv8ZFaVKfm+HeE8dAFF
-         2SHs978xEztSuqYSCLt5HnLdiN6vlQe8I/bXrC0uqc3WT23xYX2NKZ8WHsErIzxl+VS7
-         BJjrNeD085DCl3y4p3tmikevui1F3XgII+Iy4Ean0Ihu0+twOxvmRc/GQCxHqlaZBBc6
-         w52A==
-X-Gm-Message-State: APjAAAWIw0wKBjNA/oqZFrIZIy+WmhSC6yAMm+fpcmqPkWtc60SBgKIV
-        ZVvAXVESHLvc8VRqJLvgEZU=
-X-Google-Smtp-Source: APXvYqw5wv/o9g+YlL0coT5LaHe/xJ9ZbDxW5C20Ue5dQcqyh6RZtUtJazhlz0iHFb4tVbBheeaGCQ==
-X-Received: by 2002:a2e:89cb:: with SMTP id c11mr13335494ljk.16.1558549655595;
-        Wed, 22 May 2019 11:27:35 -0700 (PDT)
-Received: from [192.168.1.17] (dma4.neoplus.adsl.tpnet.pl. [83.24.56.4])
-        by smtp.gmail.com with ESMTPSA id f8sm3663332lfc.72.2019.05.22.11.27.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 22 May 2019 11:27:35 -0700 (PDT)
-Subject: Re: [GIT PULL] Immutable branch between LEDs, MFD and REGULATOR
-To:     Mark Brown <broonie@kernel.org>
-Cc:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
-        lee.jones@linaro.org, lgirdwood@gmail.com
-References: <20190521203038.31946-1-jacek.anaszewski@gmail.com>
- <20190521211504.GD1580@sirena.org.uk>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Message-ID: <0340dce2-87fb-938d-615e-376e29f37b54@gmail.com>
-Date:   Wed, 22 May 2019 20:27:32 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mNNHt7Z7ll37muKTAxbqGIESLdms47B625sz6OwZ88M=;
+        b=ZZ1EVHgKZ71q2KiuMpLGemlyUCyWWhD1k6/7Y/kVr5GDR0aLcaAA4yK8/x/Z5uHzO+
+         70emQQWl0ALBLev/Hf5LIHHbLKmWO2SSs2s28JKpu7p3akkcpIOI4IT88n9yghpEraBO
+         VQpDXBm1h0Z3VkDRxEuf+zp4XorBA0QkQup73XftlfoeGywy3GSetm0V0Y1OyLR2HKMq
+         exlChj6YmSLcY7RpCIUJWyjrL9BaDrYn9shGkb9Z6/GMxmZGucDl00MrWeuzFLQgJUky
+         qXAY+kKhsRJzQDECHdeg3eKa/9UyQt5qGyJazV9AWyxViqPROQPNEw7offO15NuYckII
+         4XqQ==
+X-Gm-Message-State: APjAAAXsvPeEorRiNQNx9fUynwoM+y1nvTeuHa0g2CQXD7Flfq9hwKRP
+        0hnYaWtdJwNjPDUD0OUt7kIbDt+wC0/aQPc3XvkpPCfx
+X-Google-Smtp-Source: APXvYqwsTkDSAsunnEIlGONN4y6SZSOWtqPzl+D0bsrRFAxyHTFt36u4qhuOcQFbp+BFEDxOaiKXidJf8gQKIuEp7oM=
+X-Received: by 2002:a25:a081:: with SMTP id y1mr15975318ybh.428.1558549789253;
+ Wed, 22 May 2019 11:29:49 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190521211504.GD1580@sirena.org.uk>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190522163150.16849-1-christian@brauner.io>
+In-Reply-To: <20190522163150.16849-1-christian@brauner.io>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Wed, 22 May 2019 21:29:37 +0300
+Message-ID: <CAOQ4uxjV=7=FXuyccBK9Pu1B7o-w-pbc1FQXJxY4q6z8E93KOg@mail.gmail.com>
+Subject: Re: [PATCH] fanotify: remove redundant capable(CAP_SYS_ADMIN)s
+To:     Christian Brauner <christian@brauner.io>
+Cc:     Jan Kara <jack@suse.cz>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/21/19 11:15 PM, Mark Brown wrote:
-> On Tue, May 21, 2019 at 10:30:38PM +0200, Jacek Anaszewski wrote:
-> 
->>        regulator: lm363x: Make the gpio register enable flexible
->>        regulator: lm363x: Add support for LM36274
-> 
-> Why have these been applied, I haven't reviewed them?  As far as I can
-> tell they were sent before the merge window so I'd expect a resend at
-> this point...
+On Wed, May 22, 2019 at 7:32 PM Christian Brauner <christian@brauner.io> wrote:
+>
+> This removes two redundant capable(CAP_SYS_ADMIN) checks from
+> fanotify_init().
+> fanotify_init() guards the whole syscall with capable(CAP_SYS_ADMIN) at the
+> beginning. So the other two capable(CAP_SYS_ADMIN) checks are not needed.
 
-The patch set have been floating around for some time and besides
-the v2 you were cc'ed by Dan, I also poked you a week ago for v4 [1].
-Don't be surprised that I assumed you simply don't care.
+It's intentional:
 
-Still, we're awaiting your comments
+commit e7099d8a5a34d2876908a9fab4952dabdcfc5909
+Author: Eric Paris <eparis@redhat.com>
+Date:   Thu Oct 28 17:21:57 2010 -0400
 
-[0] https://lkml.org/lkml/2019/4/10/547
-[1] https://lkml.org/lkml/2019/5/14/717
+    fanotify: limit the number of marks in a single fanotify group
 
--- 
-Best regards,
-Jacek Anaszewski
+    There is currently no limit on the number of marks a given fanotify group
+    can have.  Since fanotify is gated on CAP_SYS_ADMIN this was not seen as
+    a serious DoS threat.  This patch implements a default of 8192, the same as
+    inotify to work towards removing the CAP_SYS_ADMIN gating and eliminating
+    the default DoS'able status.
+
+    Signed-off-by: Eric Paris <eparis@redhat.com>
+
+There idea is to eventually remove the gated CAP_SYS_ADMIN.
+There is no reason that fanotify could not be used by unprivileged users
+to setup inotify style watch on an inode or directories children, see:
+https://patchwork.kernel.org/patch/10668299/
+
+>
+> Fixes: 5dd03f55fd2 ("fanotify: allow userspace to override max queue depth")
+> Fixes: ac7e22dcfaf ("fanotify: allow userspace to override max marks")
+
+Fixes is used to tag bug fixes for stable.
+There is no bug.
+
+Thanks,
+Amir.
