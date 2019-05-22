@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAC07C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:22:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A3B6C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:22:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B19F21850
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:22:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 003D220675
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:22:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558552929;
-	bh=lppw/64HvmLohAJsfFdr+4OyInEgXNUiC5sG1y5G9CM=;
+	s=default; t=1558552939;
+	bh=KFHw9rtYYbCuC9AmYBSNCisP0m9j+BNgf/8uwqrprtY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vZ7VejQHsmQhVOW1emaMDLRJ51nzfBEtj8kWctvuMf/sxVbHvuMpPtuWtrbMKkrhT
-	 D/8awFhicMF87yJDaHqBMYgmQJD8o63ndpnmHZp5a/tA4XmviGSMdnyI+V2WawmnmK
-	 DnpjJjst++hBL0EaELcEOHzAgq7d6tQStJpJ4T6M=
+	b=WC0Wxzmyz0rRE5p+Uj2hQLhqFCmC/ElITLy8NRXveMM2/+iIG0R4TmOpJ4+WJY54z
+	 5W2BDnDTmyYR1xWSlepLexoh5gC5Am+ThEVi06+fBZVLqzZYhUdZO6ntied8KWfxkU
+	 JJUqXXYUvyid1Xb+l9xybSFGtJcLzpRtmL9b2qn4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730314AbfEVTWI (ORCPT
+        id S1730392AbfEVTWS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:22:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42728 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:22:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42914 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730236AbfEVTWE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:22:04 -0400
+        id S1730363AbfEVTWO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:22:14 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 639192177E;
-        Wed, 22 May 2019 19:22:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B55C217F9;
+        Wed, 22 May 2019 19:22:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558552924;
-        bh=lppw/64HvmLohAJsfFdr+4OyInEgXNUiC5sG1y5G9CM=;
+        s=default; t=1558552934;
+        bh=KFHw9rtYYbCuC9AmYBSNCisP0m9j+BNgf/8uwqrprtY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=shdWSWD1t35atpaaCAorEaH9DBCrOo/vTNVPLsbDYVX/NVli9mqvZyM9UARVGmSZs
-         Jn0mkYU5a9TQkkiqudwit3GgWyn+cSfpWlg6g/775a5ugkMlNA83joDxI33NKshP4X
-         NEn7rCCCHeku3U2sHgWlSqTH0d32A4cbkak78nrk=
+        b=EB9+Qqs+xqE1oqVHgklf5Caf3AS+lWtP7mQJ7xI/p7tUChci2J/Rh4WVcGGQIJR1y
+         TG1mmwcpaRDt5+Lu929HEbqFs8ybuWNjj1UNYwyHkG4l7yXv9TpUgJumAoFAwyRobW
+         GyJULGeNCo+Cz489PCrGLxkT+qWL2mLk2hngfG90=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+Cc:     Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
         Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.1 032/375] ASoC: hdmi-codec: unlock the device on startup errors
-Date:   Wed, 22 May 2019 15:15:32 -0400
-Message-Id: <20190522192115.22666-32-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 037/375] spi: atmel-quadspi: fix crash while suspending
+Date:   Wed, 22 May 2019 15:15:37 -0400
+Message-Id: <20190522192115.22666-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192115.22666-1-sashal@kernel.org>
 References: <20190522192115.22666-1-sashal@kernel.org>
@@ -59,41 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jerome Brunet <jbrunet@baylibre.com>
+From: Claudiu Beznea <claudiu.beznea@microchip.com>
 
-[ Upstream commit 30180e8436046344b12813dc954b2e01dfdcd22d ]
+[ Upstream commit e5c27498a0403b270620b1a8a0a66e3efc222fb6 ]
 
-If the hdmi codec startup fails, it should clear the current_substream
-pointer to free the device. This is properly done for the audio_startup()
-callback but for snd_pcm_hw_constraint_eld().
+atmel_qspi objects are kept in spi_controller objects, so, first get
+pointer to spi_controller object and then get atmel_qspi object from
+spi_controller object.
 
-Make sure the pointer cleared if an error is reported.
-
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Fixes: 2d30ac5ed633 ("mtd: spi-nor: atmel-quadspi: Use spi-mem interface for atmel-quadspi driver")
+Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+Reviewed-by: Tudor Ambarus <tudor.ambarus@microchip.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/hdmi-codec.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/spi/atmel-quadspi.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/codecs/hdmi-codec.c b/sound/soc/codecs/hdmi-codec.c
-index 35df73e42cbc5..fb2f0ac1f16f3 100644
---- a/sound/soc/codecs/hdmi-codec.c
-+++ b/sound/soc/codecs/hdmi-codec.c
-@@ -439,8 +439,12 @@ static int hdmi_codec_startup(struct snd_pcm_substream *substream,
- 		if (!ret) {
- 			ret = snd_pcm_hw_constraint_eld(substream->runtime,
- 							hcp->eld);
--			if (ret)
-+			if (ret) {
-+				mutex_lock(&hcp->current_stream_lock);
-+				hcp->current_stream = NULL;
-+				mutex_unlock(&hcp->current_stream_lock);
- 				return ret;
-+			}
- 		}
- 		/* Select chmap supported */
- 		hdmi_codec_eld_chmap(hcp);
+diff --git a/drivers/spi/atmel-quadspi.c b/drivers/spi/atmel-quadspi.c
+index fffc21cd5f793..b3173ebddaded 100644
+--- a/drivers/spi/atmel-quadspi.c
++++ b/drivers/spi/atmel-quadspi.c
+@@ -570,7 +570,8 @@ static int atmel_qspi_remove(struct platform_device *pdev)
+ 
+ static int __maybe_unused atmel_qspi_suspend(struct device *dev)
+ {
+-	struct atmel_qspi *aq = dev_get_drvdata(dev);
++	struct spi_controller *ctrl = dev_get_drvdata(dev);
++	struct atmel_qspi *aq = spi_controller_get_devdata(ctrl);
+ 
+ 	clk_disable_unprepare(aq->qspick);
+ 	clk_disable_unprepare(aq->pclk);
+@@ -580,7 +581,8 @@ static int __maybe_unused atmel_qspi_suspend(struct device *dev)
+ 
+ static int __maybe_unused atmel_qspi_resume(struct device *dev)
+ {
+-	struct atmel_qspi *aq = dev_get_drvdata(dev);
++	struct spi_controller *ctrl = dev_get_drvdata(dev);
++	struct atmel_qspi *aq = spi_controller_get_devdata(ctrl);
+ 
+ 	clk_prepare_enable(aq->pclk);
+ 	clk_prepare_enable(aq->qspick);
 -- 
 2.20.1
 
