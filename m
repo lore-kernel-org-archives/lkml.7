@@ -2,122 +2,186 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17CD8C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:53:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C460C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:53:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF75221019
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:53:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CFA821019
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:53:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RjfDSqdM"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="tKXqnvKm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730367AbfEVUxf (ORCPT
+        id S1730395AbfEVUxn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 16:53:35 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:43323 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729528AbfEVUxe (ORCPT
+        Wed, 22 May 2019 16:53:43 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:38642 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729528AbfEVUxm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 16:53:34 -0400
-Received: by mail-pl1-f195.google.com with SMTP id gn7so1624844plb.10;
-        Wed, 22 May 2019 13:53:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=/Ss3XekhoAeJW501j2lZN9cRIVhRSBmA8AmuXwTseos=;
-        b=RjfDSqdM7JMfp+j0CLByP8ahJAWw1TNDM1Ig/33Xu+MNPw7uUoZlzfGFyiC1/rAXnw
-         bC9LRKWe99q/8iAuluWjaUwIsAWXloDLd2LpOh3T4hnwzNdFRWf0RCBefdvaxkNMAlan
-         lrpbYo12CMIlAtogUcyLXP3p7bvlL9ZksNTNb7j3HqeTG3dKGBTPQx+xTEY09zdzh6ZO
-         HA1AzXVmIV4k5BLBgXc5pNFFDyhDi6r3k4IC5A0Y+LKcmx7DTs3MZaekoWUeVF4OgaMx
-         clsjLITtQYnJPVC1/iizueodZvd5gA5QRIcsLS0FbphKeNoHbJzvlI3ge3UZuYbPouzC
-         Vi/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/Ss3XekhoAeJW501j2lZN9cRIVhRSBmA8AmuXwTseos=;
-        b=pUlRO0jcmoZXCg/uIGDh0OiP9FeIzTR/55HtJEVz05UIAB2vO2hMs06oDsjUXDW3WC
-         UB4Tf9amuUT0bWWaOmzaZNqyXFJyo2J5VrBHIlUiJ9dNucUsaAKKg3TOzbiB5QRm+fBZ
-         mYAiUHAzFTrxRy6wCFcTRjswHDvK8hr86jx3Uzopv9syAj36olfIO8qtf/jp7htCq2A0
-         ljSoHe5hrtWqR6sKzm2Lz7EcYsAOuC27C32RwC1HdmuvmtQJUcS5hQIJsNiUryUyQacF
-         t8+69jMuPMhkj4pfqjGP0m2Dz0M415v5E6/CPHfpyP3Rksk/9rVDhya++0FI0fmteW36
-         E+mw==
-X-Gm-Message-State: APjAAAVH7pzV8SGAOI5sEOZ9RRud+UhN4PsXZVxUyoZQKvvkPJIFO340
-        M7E7Qnmk6XXWj5tIXqJpnCwmw2oI
-X-Google-Smtp-Source: APXvYqzVG7hCS6Nzs2QqDdx1m8Y/SSCXSMRoPwHkzq4oMVA8lyuBeEmOOJAy6Q2Rx3dmKvansvlUMw==
-X-Received: by 2002:a17:902:e7:: with SMTP id a94mr67793430pla.182.1558558413947;
-        Wed, 22 May 2019 13:53:33 -0700 (PDT)
-Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:180::6565])
-        by smtp.gmail.com with ESMTPSA id y16sm3811085pfl.140.2019.05.22.13.53.32
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 22 May 2019 13:53:32 -0700 (PDT)
-Date:   Wed, 22 May 2019 13:53:31 -0700
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     Kris Van Hees <kris.van.hees@oracle.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, dtrace-devel@oss.oracle.com,
-        linux-kernel@vger.kernel.org, mhiramat@kernel.org, acme@kernel.org,
-        ast@kernel.org, daniel@iogearbox.net, peterz@infradead.org
-Subject: Re: [RFC PATCH 00/11] bpf, trace, dtrace: DTrace BPF program type
- implementation and sample use
-Message-ID: <20190522205329.uu26oq2saj56og5m@ast-mbp.dhcp.thefacebook.com>
-References: <201905202347.x4KNl0cs030532@aserv0121.oracle.com>
- <20190521175617.ipry6ue7o24a2e6n@ast-mbp.dhcp.thefacebook.com>
- <20190521184137.GH2422@oracle.com>
- <20190521205533.evfszcjvdouby7vp@ast-mbp.dhcp.thefacebook.com>
- <20190521173618.2ebe8c1f@gandalf.local.home>
- <20190521214325.rr7emn5z3b7wqiiy@ast-mbp.dhcp.thefacebook.com>
- <20190521174757.74ec8937@gandalf.local.home>
- <20190522052327.GN2422@oracle.com>
+        Wed, 22 May 2019 16:53:42 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 6E53A886BF
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 08:53:38 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1558558418;
+        bh=DOEO3y2soOvXq8t/1GH0lADqJ6A3XwpUwCBU/Y2+CsU=;
+        h=From:To:CC:Subject:Date:References;
+        b=tKXqnvKm1e2jPtxiUAa9wBkNp5sPy3IrM8N13NfWSr/ObgLN3VIh7ZmkH4qjwe+01
+         i3gi8mbXgliFjD3Ceq5pSXJb9q8v0jQh1B4Y94ryyTMauKVP8wNxOrHVD2z9o0wQqv
+         lGgB4nIONrovafdDAmf5WXQhyKQ8Ze+xrnMG0/fIPWkt+0Naj2Ws9aDXlCyCdq7Gda
+         2ZE2yveMBtHBtZgXanpd6MaJvdEHbq2mRUA86Kdl5+AQdzcGnY++v+GQlIAL6qyTOd
+         9sBIzwC2sNiVKluVS7qt6sYBgMGPcBGWokc+/6/RbX5u0etwgtXbNsqVNuyzP9V6VR
+         Xe2cIy+F6eWXw==
+Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5ce5b6d00001>; Thu, 23 May 2019 08:53:36 +1200
+Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
+ by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
+ Microsoft SMTP Server (TLS) id 15.0.1156.6; Thu, 23 May 2019 08:53:37 +1200
+Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
+ svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
+ 15.00.1156.000; Thu, 23 May 2019 08:53:37 +1200
+From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To:     Richard Weinberger <richard.weinberger@gmail.com>
+CC:     David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        "Miquel Raynal" <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] mtd: concat: refactor concat_lock/concat_unlock
+Thread-Topic: [PATCH 1/2] mtd: concat: refactor concat_lock/concat_unlock
+Thread-Index: AQHVEDJo4rpNy/YxbUOF1g0LZpyjfw==
+Date:   Wed, 22 May 2019 20:53:36 +0000
+Message-ID: <86adfe1f5a18492fbdf4bbe26ca05a93@svr-chch-ex1.atlnz.lc>
+References: <20190522000753.13300-1-chris.packham@alliedtelesis.co.nz>
+ <CAFLxGvzvAdhmNOaNmPCRXUR9GGgaQ1n2HuRLLCb4Nj-tUrm5yQ@mail.gmail.com>
+Accept-Language: en-NZ, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [2001:df5:b000:22:3a2c:4aff:fe70:2b02]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190522052327.GN2422@oracle.com>
-User-Agent: NeoMutt/20180223
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 22, 2019 at 01:23:27AM -0400, Kris Van Hees wrote:
-> 
-> Userspace aside, there are various features that are not currently available
-> such as retrieving the ppid of the current task, and various other data items
-> that relate to the current task that triggered a probe.  There are ways to
-> work around it (using the bpf_probe_read() helper, which actually performs a
-> probe_kernel_read()) but that is rather clunky
-
-Sounds like you're admiting that the access to all kernel data structures
-is actually available, but you don't want to change user space to use it?
-
-> triggered the execution.  Often, a single DTrace clause is associated with
-> multiple probes, of different types.  Probes in the kernel (kprobe, perf event,
-> tracepoint, ...) are associated with their own BPF program type, so it is not
-> possible to load the DTrace clause (translated into BPF code) once and
-> associate it with probes of different types.  Instead, I'd have to load it
-> as a BPF_PROG_TYPE_KPROBE program to associate it with a kprobe, and I'd have
-> to load it as a BPF_PROG_TYPE_TRACEPOINT program to associate it with a
-> tracepoint, and so on.  This also means that I suddenly have to add code to
-> the userspace component to know about the different program types with more
-> detail, like what helpers are available to specific program types.
-
-That also sounds that there is a solution, but you don't want to change user space ?
-
-> Another advantage of being able to operate on a more abstract probe concept
-> that is not tied to a specific probe type is that the userspace component does
-> not need to know about the implementation details of the specific probes.
-
-If that is indeed the case that dtrace is broken _by design_
-and nothing on the kernel side can fix it.
-
-bpf prog attached to NMI is running in NMI.
-That is very different execution context vs kprobe.
-kprobe execution context is also different from syscall.
-
-The user writing the script has to be aware in what context
-that script will be executing.
+On 23/05/19 8:30 AM, Richard Weinberger wrote:=0A=
+> On Wed, May 22, 2019 at 2:08 AM Chris Packham=0A=
+> <chris.packham@alliedtelesis.co.nz> wrote:=0A=
+>>=0A=
+>> concat_lock() and concat_unlock() only differed in terms of the mtd_xx=
+=0A=
+>> operation they called. Refactor them to use a common helper function and=
+=0A=
+>> pass mtd_lock or mtd_unlock as an argument.=0A=
+>>=0A=
+>> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>=0A=
+>> ---=0A=
+>>   drivers/mtd/mtdconcat.c | 41 +++++++++--------------------------------=
+=0A=
+>>   1 file changed, 9 insertions(+), 32 deletions(-)=0A=
+>>=0A=
+>> diff --git a/drivers/mtd/mtdconcat.c b/drivers/mtd/mtdconcat.c=0A=
+>> index cbc5925e6440..9514cd2db63c 100644=0A=
+>> --- a/drivers/mtd/mtdconcat.c=0A=
+>> +++ b/drivers/mtd/mtdconcat.c=0A=
+>> @@ -451,7 +451,8 @@ static int concat_erase(struct mtd_info *mtd, struct=
+ erase_info *instr)=0A=
+>>          return err;=0A=
+>>   }=0A=
+>>=0A=
+>> -static int concat_lock(struct mtd_info *mtd, loff_t ofs, uint64_t len)=
+=0A=
+>> +static int __concat_xxlock(struct mtd_info *mtd, loff_t ofs, uint64_t l=
+en,=0A=
+>> +                          int (*mtd_op)(struct mtd_info *mtd, loff_t of=
+s, uint64_t len))=0A=
+>>   {=0A=
+>>          struct mtd_concat *concat =3D CONCAT(mtd);=0A=
+>>          int i, err =3D -EINVAL;=0A=
+>> @@ -470,7 +471,7 @@ static int concat_lock(struct mtd_info *mtd, loff_t =
+ofs, uint64_t len)=0A=
+>>                  else=0A=
+>>                          size =3D len;=0A=
+>>=0A=
+>> -               err =3D mtd_lock(subdev, ofs, size);=0A=
+>> +               err =3D mtd_op(subdev, ofs, size);=0A=
+>>                  if (err)=0A=
+>>                          break;=0A=
+>>=0A=
+>> @@ -485,38 +486,14 @@ static int concat_lock(struct mtd_info *mtd, loff_=
+t ofs, uint64_t len)=0A=
+>>          return err;=0A=
+>>   }=0A=
+>>=0A=
+>> -static int concat_unlock(struct mtd_info *mtd, loff_t ofs, uint64_t len=
+)=0A=
+>> +static int concat_lock(struct mtd_info *mtd, loff_t ofs, uint64_t len)=
+=0A=
+>>   {=0A=
+>> -       struct mtd_concat *concat =3D CONCAT(mtd);=0A=
+>> -       int i, err =3D 0;=0A=
+>> -=0A=
+>> -       for (i =3D 0; i < concat->num_subdev; i++) {=0A=
+>> -               struct mtd_info *subdev =3D concat->subdev[i];=0A=
+>> -               uint64_t size;=0A=
+>> -=0A=
+>> -               if (ofs >=3D subdev->size) {=0A=
+>> -                       size =3D 0;=0A=
+>> -                       ofs -=3D subdev->size;=0A=
+>> -                       continue;=0A=
+>> -               }=0A=
+>> -               if (ofs + len > subdev->size)=0A=
+>> -                       size =3D subdev->size - ofs;=0A=
+>> -               else=0A=
+>> -                       size =3D len;=0A=
+>> -=0A=
+>> -               err =3D mtd_unlock(subdev, ofs, size);=0A=
+>> -               if (err)=0A=
+>> -                       break;=0A=
+>> -=0A=
+>> -               len -=3D size;=0A=
+>> -               if (len =3D=3D 0)=0A=
+>> -                       break;=0A=
+>> -=0A=
+>> -               err =3D -EINVAL;=0A=
+>> -               ofs =3D 0;=0A=
+>> -       }=0A=
+>> +       return __concat_xxlock(mtd, ofs, len, mtd_lock);=0A=
+>> +}=0A=
+>>=0A=
+>> -       return err;=0A=
+>> +static int concat_unlock(struct mtd_info *mtd, loff_t ofs, uint64_t len=
+)=0A=
+>> +{=0A=
+>> +       return __concat_xxlock(mtd, ofs, len, mtd_unlock);=0A=
+>>   }=0A=
+>>=0A=
+>>   static void concat_sync(struct mtd_info *mtd)=0A=
+> =0A=
+> Not sure if it passing a function pointer is worth it. bool is_lock would=
+=0A=
+> also do it. But this is a matter of taste, I guess. :)=0A=
+=0A=
+I briefly considered that. But since mtd_lock(), mtd_unlock() and =0A=
+mtd_is_locked() all take the same arguments I figured it'd benefit from =0A=
+some type checking. A bool wouldn't work (assuming I can convince you =0A=
+about 2/2) but an enum mtd_op or int flags would do the trick if you =0A=
+want me to change it.=0A=
+=0A=
+> =0A=
+> Reviewed-by: Richard Weinberger <richard@nod.at>=0A=
+> =0A=
+=0A=
