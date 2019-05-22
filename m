@@ -2,139 +2,81 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76F92C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:50:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BC42C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:51:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4979720862
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:50:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558554655;
-	bh=w/h0fskT49vQ4ExZ1FJ5Lv6c+71KEkngybl6K+BOtYQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NBlW34GWSzs1GlCCa7qeh0azpN7ltQep+R87CWuhpkCeA3Qoc23afSY5TjxRLJdWV
-	 jS9nyciMx+PREWv0YuzweNDyLktlFI3eXmwE/vGvtjz4C/WYLoj0XQIBZqVIhGJhaS
-	 qOmxKncpXTOp5byW995qPP0obZREUg8Jngm0/4yU=
+	by mail.kernel.org (Postfix) with ESMTP id 366462089E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:51:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Py5imB+c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387884AbfEVTuy (ORCPT
+        id S2387913AbfEVTu6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:50:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47936 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731292AbfEVT00 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:26:26 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E07EB21473;
-        Wed, 22 May 2019 19:26:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553185;
-        bh=w/h0fskT49vQ4ExZ1FJ5Lv6c+71KEkngybl6K+BOtYQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=df+jbF/AEhuhew79EIzo0r2CZ8tN+Ku2PYekmEvwjON+2kPbTijAagwXycjX7xLPU
-         LtMzHMWN8hn/es4/Au0/+WvchjuyUP9J0eQSsolWWfGosDx55qs79nCCtBbirXsjbQ
-         FRW1PyEY66XWqgAJQfXY0hIu7BRAADUethXVOu1o=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wen Yang <wen.yang99@zte.com.cn>,
-        Patrice Chotard <patrice.chotard@st.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.0 101/317] pinctrl: st: fix leaked of_node references
-Date:   Wed, 22 May 2019 15:20:02 -0400
-Message-Id: <20190522192338.23715-101-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190522192338.23715-1-sashal@kernel.org>
-References: <20190522192338.23715-1-sashal@kernel.org>
+        Wed, 22 May 2019 15:50:58 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:46059 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387853AbfEVTu4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:50:56 -0400
+Received: by mail-pg1-f194.google.com with SMTP id i21so1823290pgi.12
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 12:50:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=53aAc4kEic3W8LcByj9D1czfciT2GPYNahiN2QB6f+o=;
+        b=Py5imB+ccN7o6LXfkutFeYUWW139CLz2E1VxTs2FXquuFqOV908mn8GmCCogVKfVP7
+         U0UfBb1Aw7WEW8TgOBS8gBW0TR4pK21SIbiyho+nNveHwAggyHhCVdcsu0l+7ZzjDR01
+         +Ht0Ky4pHLeIli3ddDYSb8qoZaqRUJme/YIOGPuSUH+kTIIwzcMjf78hER7RWWdk7mxn
+         y75tPCC/S/EvS7tJRukNy2Y+VN4djxJOvFyOeSJShWuDKtkrbVp/6Yu46StX4Is7mG4a
+         SgS0mNUs4iFVXLfdL2gN1ULWXzz7AntbrLKMNDjUmoX671+8orBXQTVle2Y/HdNOr/uN
+         mqkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=53aAc4kEic3W8LcByj9D1czfciT2GPYNahiN2QB6f+o=;
+        b=gFZ7XJr9iDBfm5m9wlW2HvQTMGztj7NDO+16GWQMsdpzMepeZ4NTSKq3AzQHX5F7Wa
+         NzcWkplNWCqTZNsp155pz0oxV82txmx54hixa9oLYXwSzREK8Ox1qAwpwq/CFZeGZQz4
+         u4LEl6/Dykwvl6xiEpS4mnl3p3PX5VDlX9Msh1EwGFB+bk75bwt67YugI/kkH2NDycee
+         KnX3pqtaZ/qgnJxOKFFGpARb14dDK/4MA+qivSRbI2uk3S5iZYcFt2lFz74mHeozStx9
+         scgqdQNcBB24+5Bm/6r3UHbeP8cexLVAAQzF+yAfSnG5YVqv/niMH95o405u6kJuNFft
+         44Hw==
+X-Gm-Message-State: APjAAAXHmu0aSll3G3wXZvFlvGPzPv4SejQwRvrHjDka5ha3+BI7qdwH
+        cSsJGO28NWxHxpXiqe/rzTI=
+X-Google-Smtp-Source: APXvYqywlr35KcLDjQdk9Z84b/a2gL29NPf5ZP47XbE0nAbE4e5pr7hWtnxvnpZSKhoiqJ7q4CZn2w==
+X-Received: by 2002:a65:614a:: with SMTP id o10mr75217907pgv.258.1558554656229;
+        Wed, 22 May 2019 12:50:56 -0700 (PDT)
+Received: from bharath12345-Inspiron-5559 ([103.110.42.31])
+        by smtp.gmail.com with ESMTPSA id d9sm32099917pgj.34.2019.05.22.12.50.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 22 May 2019 12:50:55 -0700 (PDT)
+Date:   Thu, 23 May 2019 01:20:49 +0530
+From:   Bharath Vedartham <linux.bhar@gmail.com>
+To:     Dominique Martinet <asmadeus@codewreck.org>
+Cc:     ericvh@gmail.com, lucho@ionkov.net, linux-kernel@vger.kernel.org,
+        v9fs-developer@lists.sourceforge.net
+Subject: Re: [PATCH v2] 9p/cache.c: Fix memory leak in
+ v9fs_cache_session_get_cookie
+Message-ID: <20190522195049.GA5363@bharath12345-Inspiron-5559>
+References: <20190522194519.GA5313@bharath12345-Inspiron-5559>
+ <20190522194733.GA4766@nautica>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190522194733.GA4766@nautica>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wen Yang <wen.yang99@zte.com.cn>
+Cool! Thanks!
 
-[ Upstream commit 483d70d73beaecab55882fcd2a357af72674e24c ]
-
-The call to of_get_child_by_name returns a node pointer with refcount
-incremented thus it must be explicitly decremented after the last
-usage.
-
-Detected by coccinelle with the following warnings:
-./drivers/pinctrl/pinctrl-st.c:1188:3-9: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 1175, but without a corresponding object release within this function.
-./drivers/pinctrl/pinctrl-st.c:1188:3-9: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 1175, but without a corresponding object release within this function.
-./drivers/pinctrl/pinctrl-st.c:1199:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 1175, but without a corresponding object release within this function.
-./drivers/pinctrl/pinctrl-st.c:1199:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 1175, but without a corresponding object release within this function.
-
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Cc: Patrice Chotard <patrice.chotard@st.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org (open list)
-Reviewed-by: Patrice Chotard <patrice.chotard@st.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/pinctrl/pinctrl-st.c | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/pinctrl/pinctrl-st.c b/drivers/pinctrl/pinctrl-st.c
-index e66af93f2cbf8..195b442a23434 100644
---- a/drivers/pinctrl/pinctrl-st.c
-+++ b/drivers/pinctrl/pinctrl-st.c
-@@ -1170,7 +1170,7 @@ static int st_pctl_dt_parse_groups(struct device_node *np,
- 	struct property *pp;
- 	struct st_pinconf *conf;
- 	struct device_node *pins;
--	int i = 0, npins = 0, nr_props;
-+	int i = 0, npins = 0, nr_props, ret = 0;
- 
- 	pins = of_get_child_by_name(np, "st,pins");
- 	if (!pins)
-@@ -1185,7 +1185,8 @@ static int st_pctl_dt_parse_groups(struct device_node *np,
- 			npins++;
- 		} else {
- 			pr_warn("Invalid st,pins in %pOFn node\n", np);
--			return -EINVAL;
-+			ret = -EINVAL;
-+			goto out_put_node;
- 		}
- 	}
- 
-@@ -1195,8 +1196,10 @@ static int st_pctl_dt_parse_groups(struct device_node *np,
- 	grp->pin_conf = devm_kcalloc(info->dev,
- 					npins, sizeof(*conf), GFP_KERNEL);
- 
--	if (!grp->pins || !grp->pin_conf)
--		return -ENOMEM;
-+	if (!grp->pins || !grp->pin_conf) {
-+		ret = -ENOMEM;
-+		goto out_put_node;
-+	}
- 
- 	/* <bank offset mux direction rt_type rt_delay rt_clk> */
- 	for_each_property_of_node(pins, pp) {
-@@ -1229,9 +1232,11 @@ static int st_pctl_dt_parse_groups(struct device_node *np,
- 		}
- 		i++;
- 	}
-+
-+out_put_node:
- 	of_node_put(pins);
- 
--	return 0;
-+	return ret;
- }
- 
- static int st_pctl_parse_functions(struct device_node *np,
--- 
-2.20.1
-
+Thank you,
+Bharath
