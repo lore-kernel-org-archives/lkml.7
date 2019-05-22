@@ -2,193 +2,118 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AB72C072A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 08:05:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 849D0C072A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 08:07:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2505C20675
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 08:05:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5103120675
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 08:07:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nWl3XtfG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mBSlYA70"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728796AbfEVIFw (ORCPT
+        id S1728718AbfEVIHI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 04:05:52 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:45421 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728752AbfEVIFv (ORCPT
+        Wed, 22 May 2019 04:07:08 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:40308 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727946AbfEVIHI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 04:05:51 -0400
-Received: by mail-wr1-f67.google.com with SMTP id b18so1116970wrq.12
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 01:05:50 -0700 (PDT)
+        Wed, 22 May 2019 04:07:08 -0400
+Received: by mail-pg1-f194.google.com with SMTP id d30so915122pgm.7
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 01:07:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:message-id:mime-version:subject:date:in-reply-to:cc:to
-         :references;
-        bh=5IBIrmvVf6ccQNtdeu2yWc9LBHhhxGRdGfBVh0+028w=;
-        b=nWl3XtfGIqveSLzPdyEuAYRuA8O7EYCM0ZtEgQ98DXJsA2zQzynY9G9rSYeseu7ci5
-         5KOe7ue5VJv9/oJvslVlbwxovozJmUJVdfdiAwatZRNHOLWB605HT9Bht1bQhsJFoZ0h
-         O8Ew1carVKdmMVmYPwgVk523ad6Oonl8yVKfoZj1tw1DeQRbFyLA1HoOYSfd/eKsgKzQ
-         7RWbiLmAIak6Lu72/j5jH1NFhinktak81lGqNLQYBCAZxVHvcKAU457C1n52KVEAOBGV
-         B+iC9uipo0uWSS+ouPP7hYuVIetP/gSu/agvrI0QXpzU1JYl9nLLdXzXZEJDmP0Av+gV
-         LGFA==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=R9LcwzmisTS7r+q4SwIHnWG/B1+FQ56zuQk1IuY/Co0=;
+        b=mBSlYA7037o5LdH8eMdLpiuP/Z0aDaIBdqWhlZ1Aw1ZT8Q0ilpxCXWDmHOA94KAy4j
+         FOHOJChPrPKrQDhRVVxSvqgb5u2TH3sYCMxc9vIKl+/LVWRXQkSKIepTRb2fNuUhNwok
+         5GJaBXVx6qxIkP+yAmN81F5CjXh2AY/HjHNrMcCMuT5rBktHcEu3F0KIBuMrPLqBN4mz
+         6Im0gi+ueBW0CjxkTIDxaXEneaNuaUJ6T7knsVvc38tOcLSTPNG5Oyrur3gAggIT/UFE
+         ZdKU/mMrGxhRyeeOEUbp7nDUgWL9TTqt2YN1CsX+RcC3u90GjlqqeGMcJ+Zpw2DKQeHy
+         UegQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:message-id:mime-version:subject:date
-         :in-reply-to:cc:to:references;
-        bh=5IBIrmvVf6ccQNtdeu2yWc9LBHhhxGRdGfBVh0+028w=;
-        b=FS4lP5KKA84QiIdVUOVyB7hJbELhLZQ78byMDUyUO+2jd6v+ztGAzdM7WwX70s9XFV
-         nmzXeyAiMkrsCPrp/gZRVgb/2v3BuF4Awpx8N10nqz7nWr30nmV2bujTzS7aw1wwQNXA
-         j9M4L2hMMUtDRuO5LEYM8PPS3/kTHi/Z9uMbBBmKdb2eY8E3XuOzRbimav1bGJPrdDzq
-         xGgSD4gwvVsPyKA+kNAn62gytvNSOV8Aa5VoLHVUl5Oggh9EVrQqbINXNAyzlG1fsldK
-         4bKLaxtMVkdHbYCNilfByDn5F1RRMCHmyB/zi/1eLORKCuV2SRvk00OwammenDv83N2K
-         c+CQ==
-X-Gm-Message-State: APjAAAXL+JUev0OJpvj/psnXtuLswMXV87sa9nfekmuFZHJS4lArap/+
-        e56yeIe++RV3ccO9XzO2VlgUzA==
-X-Google-Smtp-Source: APXvYqyp3cwbjBT2OIymk4j5HSd2Mnu+CvGqClw/DIwkORgLNVvAuawEHWU5ZpivC/01GynCrEiJXQ==
-X-Received: by 2002:adf:f9c3:: with SMTP id w3mr6562625wrr.271.1558512349291;
-        Wed, 22 May 2019 01:05:49 -0700 (PDT)
-Received: from [192.168.0.100] (88-147-40-42.dyn.eolo.it. [88.147.40.42])
-        by smtp.gmail.com with ESMTPSA id 34sm42104331wre.32.2019.05.22.01.05.47
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=R9LcwzmisTS7r+q4SwIHnWG/B1+FQ56zuQk1IuY/Co0=;
+        b=h1ZlNYwknak6QMqOGD9yZHM11+lZNvGG1fY4x33Md67pBWOlHdxSrB5oJqXmo3o+te
+         mbT4qe/ZmnWpDmQqJN8z6sD6eo3xXQY9dZMYP4y6nZ171Vd8CbgzTmZRE0no/iyUtDPT
+         wWf3lba3VO/z/NZymVoOBGRVyg0644vJDgqOKFbHuTFlZCl/BsHWhEZzzLI4rJlZDQIH
+         FMHNYXfz1NgQnJjzBpFtI3wlWx37wCJ8aAyN6jYGylCvj8tBWf10oYtMugHtKPKJ6vSu
+         sS0cru8YsKCTey+ptgJSQczs4OierAU9qC45h7K+QhA7gAFu9QsvnS60E9ThGPgDz0s8
+         lxjA==
+X-Gm-Message-State: APjAAAVwvcV+WquNhI55b3kSQw65RaSL8+FOjhpNAi2eaO3ggSFEUAGN
+        YIYyHKWNQ3csDVLmX5PN9Sed6PyOqHQ=
+X-Google-Smtp-Source: APXvYqzQNy8lcXx0lrcIRiJQ6ZfSoau8hQXBKZ8CDx9/qXMrvEXwAOkhvqcFadJHGimhxun18HFPMA==
+X-Received: by 2002:aa7:930e:: with SMTP id 14mr36801323pfj.262.1558512427215;
+        Wed, 22 May 2019 01:07:07 -0700 (PDT)
+Received: from zhanggen-UX430UQ ([66.42.35.75])
+        by smtp.gmail.com with ESMTPSA id e12sm43143956pfl.122.2019.05.22.01.07.04
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 22 May 2019 01:05:48 -0700 (PDT)
-From:   Paolo Valente <paolo.valente@linaro.org>
-Message-Id: <F5E29C98-6CC4-43B8-994D-0B5354EECBF3@linaro.org>
-Content-Type: multipart/signed;
-        boundary="Apple-Mail=_D125924D-1FFE-4DC1-9485-B31EC5A3E5A7";
-        protocol="application/pgp-signature";
-        micalg=pgp-sha256
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
-Subject: Re: CFQ idling kills I/O performance on ext4 with blkio cgroup
- controller
-Date:   Wed, 22 May 2019 10:05:46 +0200
-In-Reply-To: <0e3fdf31-70d9-26eb-7b42-2795d4b03722@csail.mit.edu>
-Cc:     linux-fsdevel@vger.kernel.org,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-ext4@vger.kernel.org, cgroups@vger.kernel.org,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Jens Axboe <axboe@kernel.dk>, Jan Kara <jack@suse.cz>,
-        jmoyer@redhat.com, Theodore Ts'o <tytso@mit.edu>,
-        amakhalov@vmware.com, anishs@vmware.com, srivatsab@vmware.com
-To:     "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
-References: <8d72fcf7-bbb4-2965-1a06-e9fc177a8938@csail.mit.edu>
- <1812E450-14EF-4D5A-8F31-668499E13652@linaro.org>
- <46c6a4be-f567-3621-2e16-0e341762b828@csail.mit.edu>
- <07D11833-8285-49C2-943D-E4C1D23E8859@linaro.org>
- <A0DFE635-EFEC-4670-AD70-5D813E170BEE@linaro.org>
- <5B6570A2-541A-4CF8-98E0-979EA6E3717D@linaro.org>
- <2CB39B34-21EE-4A95-A073-8633CF2D187C@linaro.org>
- <FC24E25F-4578-454D-AE2B-8D8D352478D8@linaro.org>
- <0e3fdf31-70d9-26eb-7b42-2795d4b03722@csail.mit.edu>
-X-Mailer: Apple Mail (2.3445.104.8)
+        Wed, 22 May 2019 01:07:06 -0700 (PDT)
+Date:   Wed, 22 May 2019 16:06:56 +0800
+From:   Gen Zhang <blackgod016574@gmail.com>
+To:     Jiri Slaby <jslaby@suse.cz>
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] tty_io: Fix a missing-check bug in drivers/tty/tty_io.c
+Message-ID: <20190522080656.GA5109@zhanggen-UX430UQ>
+References: <20190522014006.GB4093@zhanggen-UX430UQ>
+ <abc68141-df99-1ae1-ea51-c83bd4480d92@suse.cz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <abc68141-df99-1ae1-ea51-c83bd4480d92@suse.cz>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---Apple-Mail=_D125924D-1FFE-4DC1-9485-B31EC5A3E5A7
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain;
-	charset=us-ascii
-
-
-
-> Il giorno 22 mag 2019, alle ore 00:51, Srivatsa S. Bhat =
-<srivatsa@csail.mit.edu> ha scritto:
->=20
-> [ Resending this mail with a dropbox link to the traces (instead
-> of a file attachment), since it didn't go through the last time. ]
->=20
-> On 5/21/19 10:38 AM, Paolo Valente wrote:
->>=20
->>> So, instead of only sending me a trace, could you please:
->>> 1) apply this new patch on top of the one I attached in my previous =
-email
->>> 2) repeat your test and report results
->>=20
->> One last thing (I swear!): as you can see from my script, I tested =
-the
->> case low_latency=3D0 so far.  So please, for the moment, do your test
->> with low_latency=3D0.  You find the whole path to this parameter in,
->> e.g., my script.
->>=20
-> No problem! :) Thank you for sharing patches for me to test!
->=20
-> I have good news :) Your patch improves the throughput significantly
-> when low_latency =3D 0.
->=20
-> Without any patch:
->=20
-> dd if=3D/dev/zero of=3D/root/test.img bs=3D512 count=3D10000 =
-oflag=3Ddsync
-> 10000+0 records in
-> 10000+0 records out
-> 5120000 bytes (5.1 MB, 4.9 MiB) copied, 58.0915 s, 88.1 kB/s
->=20
->=20
-> With both patches applied:
->=20
-> dd if=3D/dev/zero of=3D/root/test0.img bs=3D512 count=3D10000 =
-oflag=3Ddsync
-> 10000+0 records in
-> 10000+0 records out
-> 5120000 bytes (5.1 MB, 4.9 MiB) copied, 3.87487 s, 1.3 MB/s
->=20
-> The performance is still not as good as mq-deadline (which achieves
-> 1.6 MB/s), but this is a huge improvement for BFQ nonetheless!
->=20
-> A tarball with the trace output from the 2 scenarios you requested,
-> one with only the debug patch applied =
-(trace-bfq-add-logs-and-BUG_ONs),
-> and another with both patches applied (trace-bfq-boost-injection) is
-> available here:
->=20
-> https://www.dropbox.com/s/pdf07vi7afido7e/bfq-traces.tar.gz?dl=3D0
->=20
-
-Hi Srivatsa,
-I've seen the bugzilla you've created.  I'm a little confused on how
-to better proceed.  Shall we move this discussion to the bugzilla, or
-should we continue this discussion here, where it has started, and
-then update the bugzilla?
-
-Let me know,
-Paolo
-
-> Thank you!
->=20
-> Regards,
-> Srivatsa
-> VMware Photon OS
-
-
---Apple-Mail=_D125924D-1FFE-4DC1-9485-B31EC5A3E5A7
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
-	filename=signature.asc
-Content-Type: application/pgp-signature;
-	name=signature.asc
-Content-Description: Message signed with OpenPGP
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEpYoduex+OneZyvO8OAkCLQGo9oMFAlzlAtoACgkQOAkCLQGo
-9oMOew//baPEoy03FXyfpwRm+aDYCXZracwMcV8EWCYLxsc9h+OSDu7YSL3VY+ld
-2SyrH2br9GjVHPnM218Moh1g2pTGr9C2BtEzWT72DnGFmZqEYFOS3+KJ6D4FEK/l
-6qOtaYyYZDABc5D+wW1B+wouBFeDFH/V4QWpIgyAjKPHi+rTeerEFNzNmsx2SngT
-mn+AG8kUfecpNhThxEEJxPZN0Edso3t6vet2vsJ7FEmpxD+AW4V6h5oxRBMMlzks
-JeDs0/gvOV0wiRSAwlmQSecNSssSLLSeouHlLu3+ara3YxdNstDjBd7ODXiabUdX
-4NPn9U5baJ8XsC4s6ukMOm1Bc7Q97ZFS4cM5b9FoqTYgWuwL32vbHFPffe/0Ld2g
-hJcXoI7HmDyGvH4jAvlSQ4hDDkuLRjf0450Y75onK8uq/g6r0VhGXgntHl+ghMvI
-ykkrXo8cPp9Ii4MiOAbH4FaVj1/1yinJdiIbR7bCdj3kODB8wzLunSAB3GDVTqYr
-qqFfl6MYNxJi6mUpERhdFa8JsohkU9f/PK+hYh4HYjZNveV1YcSJfcuoCu2t1/yA
-04KNr+WG1JFQrrXe+iqXtu5EMD/K6QlH9iBXabq8V/JJ1TR/X3WXo2iPRhDfpKc7
-+kRGBjEtU+WJvdECyd4AfTpVuKBK8tUewLIBr7WchCBggJ/4sFg=
-=q2Kr
------END PGP SIGNATURE-----
-
---Apple-Mail=_D125924D-1FFE-4DC1-9485-B31EC5A3E5A7--
+On Wed, May 22, 2019 at 06:25:36AM +0200, Jiri Slaby wrote:
+> On 22. 05. 19, 3:40, Gen Zhang wrote:
+> > In alloc_tty_struct(), tty->dev is assigned by tty_get_device(). And it
+> > calls class_find_device(). And class_find_device() may return NULL.
+> > And tty->dev is dereferenced in the following codes. When 
+> > tty_get_device() returns NULL, dereferencing this tty->dev null pointer
+> > may cause the kernel go wrong. Thus we should check tty->dev.
+> > Further, if tty_get_device() returns NULL, we should free tty and 
+> > return NULL.
+> > 
+> > Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
+> > 
+> > ---
+> > diff --git a/drivers/tty/tty_io.c b/drivers/tty/tty_io.c
+> > index 033ac7e..1444b59 100644
+> > --- a/drivers/tty/tty_io.c
+> > +++ b/drivers/tty/tty_io.c
+> > @@ -3008,6 +3008,10 @@ struct tty_struct *alloc_tty_struct(struct tty_driver *driver, int idx)
+> >  	tty->index = idx;
+> >  	tty_line_name(driver, idx, tty->name);
+> >  	tty->dev = tty_get_device(tty);
+> > +	if (!tty->dev) {
+> > +		kfree(tty);
+> > +		return NULL;
+> > +	}
+> 
+> This is incorrect, you introduced an ldisc reference leak.
+Thanks for your reply, Jiri!
+And what do you mean by an ldisc reference leak? I did't get the reason
+of introducing it.
+> 
+> And can this happen at all?
+I think tty_get_device() may happen to return NULL. Because it calls 
+class_find_device() and there's a chance class_find_device() returns
+NULL.
+Thanks
+Gen
+> 
+> thanks,
+> -- 
+> js
+> suse labs
