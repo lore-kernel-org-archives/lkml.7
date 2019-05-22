@@ -2,76 +2,143 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5B35C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:00:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90835C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:00:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 811712089E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:00:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6406220856
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:00:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558555235;
+	bh=Nv5cGBCFnMfTv8Ai6NBu5Z5YCU0ScEgWsk8kly9DXlg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=UarkhCbifL7xQXj8A1RlPkONBp3/dq9p4HUtkeSrBjpJXLoWPcmyQp9eGc0/khC7T
+	 pdjwTphBCer9NeV6CI7cKgY7hgV0AqhWkK6IgMQ7LKLIUVNxN00tTnI0N71rqp4GoU
+	 iGq9yz2YUiEukdisYDHUbv6aqwGKdk/Xurld3m5w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732028AbfEVUAZ (ORCPT
+        id S1730700AbfEVTXB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 16:00:25 -0400
-Received: from smtprelay0074.hostedemail.com ([216.40.44.74]:56989 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731063AbfEVUAV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 16:00:21 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay03.hostedemail.com (Postfix) with ESMTP id 23506837F24A;
-        Wed, 22 May 2019 20:00:20 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: peace94_1fea29cb36c22
-X-Filterd-Recvd-Size: 1820
-Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf16.hostedemail.com (Postfix) with ESMTPA;
-        Wed, 22 May 2019 20:00:19 +0000 (UTC)
-Message-ID: <05f565be52179acd1128b51a6e0cf055882ce78b.camel@perches.com>
-Subject: Re: PSA: Do not use "Reported-By" without reporter's approval
-From:   Joe Perches <joe@perches.com>
-To:     Konstantin Ryabitsev <konstantin@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org
-Date:   Wed, 22 May 2019 13:00:17 -0700
-In-Reply-To: <20190522195804.GC21412@chatter.i7.local>
-References: <20190522193011.GB21412@chatter.i7.local>
-         <7b7287463e830fa8d981dc440f8165622cbc628e.camel@perches.com>
-         <20190522195804.GC21412@chatter.i7.local>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.1-1build1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Wed, 22 May 2019 15:23:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43804 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730677AbfEVTW7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:22:59 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76737217D7;
+        Wed, 22 May 2019 19:22:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558552978;
+        bh=Nv5cGBCFnMfTv8Ai6NBu5Z5YCU0ScEgWsk8kly9DXlg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=gEE10QKCic2vRrv9o00LjQzar9xLOJF40v5/ifLMpEPF72u1Kzu2iZmM2HILeHYlE
+         qQH5SncL/pIAeplBWdaZwnrgjfELSJ87G5wFBsvuLgzBEkUU/N5Lb5n9ZZq7qj1TsP
+         rCsmqJKQ3CQQB7ObWn+JunkaPDxJrhKGkFknnyH8=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Qu Wenruo <wqu@suse.com>, David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 058/375] btrfs: reloc: Fix NULL pointer dereference due to expanded reloc_root lifespan
+Date:   Wed, 22 May 2019 15:15:58 -0400
+Message-Id: <20190522192115.22666-58-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190522192115.22666-1-sashal@kernel.org>
+References: <20190522192115.22666-1-sashal@kernel.org>
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-05-22 at 15:58 -0400, Konstantin Ryabitsev wrote:
-> On Wed, May 22, 2019 at 12:45:06PM -0700, Joe Perches wrote:
-> > > It is common courtesy to include this tagline when submitting 
-> > > patches:
-> > > 
-> > > Reported-By: J. Doe <jdoe@example.com>
-> > > 
-> > > Please ask the reporter's permission before doing so (even if they'd
-> > > submitted a public bugzilla report or sent a report to the mailing
-> > > list).
-> > 
-> > I disagree with this.
-> > 
-> > If the report is public, and lists like vger are public,
-> > then using a Reported-by: and/or a Link: are simply useful
-> > history and tracking information.
-> 
-> I'm perfectly fine with Link:, however Reported-By: usually has the 
-> person's name and email address (i.e. PII data per GDPR definition).
+From: Qu Wenruo <wqu@suse.com>
 
-So?
+[ Upstream commit 10995c0491204c861948c9850939a7f4e90760a4 ]
 
-Like I wrote, if that report came from a public list, that
-report _also_ contained the person's name and email address.
+Commit d2311e698578 ("btrfs: relocation: Delay reloc tree deletion after
+merge_reloc_roots()") expands the life span of root->reloc_root.
 
+This breaks certain checs of fs_info->reloc_ctl.  Before that commit, if
+we have a root with valid reloc_root, then it's ensured to have
+fs_info->reloc_ctl.
+
+But now since reloc_root doesn't always mean a valid fs_info->reloc_ctl,
+such check is unreliable and can cause the following NULL pointer
+dereference:
+
+  BUG: unable to handle kernel NULL pointer dereference at 00000000000005c1
+  IP: btrfs_reloc_pre_snapshot+0x20/0x50 [btrfs]
+  PGD 0 P4D 0
+  Oops: 0000 [#1] SMP PTI
+  CPU: 0 PID: 10379 Comm: snapperd Not tainted
+  Call Trace:
+   create_pending_snapshot+0xd7/0xfc0 [btrfs]
+   create_pending_snapshots+0x8e/0xb0 [btrfs]
+   btrfs_commit_transaction+0x2ac/0x8f0 [btrfs]
+   btrfs_mksubvol+0x561/0x570 [btrfs]
+   btrfs_ioctl_snap_create_transid+0x189/0x190 [btrfs]
+   btrfs_ioctl_snap_create_v2+0x102/0x150 [btrfs]
+   btrfs_ioctl+0x5c9/0x1e60 [btrfs]
+   do_vfs_ioctl+0x90/0x5f0
+   SyS_ioctl+0x74/0x80
+   do_syscall_64+0x7b/0x150
+   entry_SYSCALL_64_after_hwframe+0x3d/0xa2
+  RIP: 0033:0x7fd7cdab8467
+
+Fix it by explicitly checking fs_info->reloc_ctl other than using the
+implied root->reloc_root.
+
+Fixes: d2311e698578 ("btrfs: relocation: Delay reloc tree deletion after merge_reloc_roots")
+Signed-off-by: Qu Wenruo <wqu@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/btrfs/relocation.c | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
+
+diff --git a/fs/btrfs/relocation.c b/fs/btrfs/relocation.c
+index 00c3dd92f088f..1d82ee4883eb3 100644
+--- a/fs/btrfs/relocation.c
++++ b/fs/btrfs/relocation.c
+@@ -4676,14 +4676,12 @@ int btrfs_reloc_cow_block(struct btrfs_trans_handle *trans,
+ void btrfs_reloc_pre_snapshot(struct btrfs_pending_snapshot *pending,
+ 			      u64 *bytes_to_reserve)
+ {
+-	struct btrfs_root *root;
+-	struct reloc_control *rc;
++	struct btrfs_root *root = pending->root;
++	struct reloc_control *rc = root->fs_info->reloc_ctl;
+ 
+-	root = pending->root;
+-	if (!root->reloc_root)
++	if (!root->reloc_root || !rc)
+ 		return;
+ 
+-	rc = root->fs_info->reloc_ctl;
+ 	if (!rc->merge_reloc_tree)
+ 		return;
+ 
+@@ -4712,10 +4710,10 @@ int btrfs_reloc_post_snapshot(struct btrfs_trans_handle *trans,
+ 	struct btrfs_root *root = pending->root;
+ 	struct btrfs_root *reloc_root;
+ 	struct btrfs_root *new_root;
+-	struct reloc_control *rc;
++	struct reloc_control *rc = root->fs_info->reloc_ctl;
+ 	int ret;
+ 
+-	if (!root->reloc_root)
++	if (!root->reloc_root || !rc)
+ 		return 0;
+ 
+ 	rc = root->fs_info->reloc_ctl;
+-- 
+2.20.1
 
