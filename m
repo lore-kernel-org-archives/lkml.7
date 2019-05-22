@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DF92C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:22:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A64BC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:22:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 187472177E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:22:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D85B220644
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:22:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558552967;
-	bh=PkZmfk0OqJyY0Cf/BSA2N55nGF6Y2FVS3Bi5FZ5MtjQ=;
+	s=default; t=1558552971;
+	bh=0zw7RmLjAK+ib5kdgkkLzNkiQo+eKZUo+C72b4IzmDM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c3V0aoviC1Pb43g50o3ZgWHrCoJV8OxHpgOloPksqCvcCkR4zShwNyxmCv21tvIIK
-	 KRSaOLeJ+8ONOl7kpL3SH5BmCO3FHkS8xwhU+KU3wzQDY3mhxvDxsU/VcMJ7NWemEV
-	 npnUJhpFxkMojAH9Q12kxU7TROkqJY2bMqYGiOUM=
+	b=YEqjlHy0erhGfTUDEI3bDgca10XbqETnae8htWzBiFmptGjSlvDfb6vcsp7GtcIHF
+	 dma24hHqmiQinMtY/wxe3ZwpvzIV+Bqi8qkxw07/SaqPRn9lcUlrATFoN2m+HJFYZQ
+	 2L88YkoabE7dUzz7ROhdVDBWiQiljf5X0q67WyYE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730583AbfEVTWq (ORCPT
+        id S1730622AbfEVTWt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:22:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43446 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:22:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43524 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729670AbfEVTWo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:22:44 -0400
+        id S1730585AbfEVTWr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:22:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 54CB7206BA;
-        Wed, 22 May 2019 19:22:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0CB6D20644;
+        Wed, 22 May 2019 19:22:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558552963;
-        bh=PkZmfk0OqJyY0Cf/BSA2N55nGF6Y2FVS3Bi5FZ5MtjQ=;
+        s=default; t=1558552966;
+        bh=0zw7RmLjAK+ib5kdgkkLzNkiQo+eKZUo+C72b4IzmDM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EH1N79G53983KEB3YJrVe84RFOQD04M2snPzwhZcbzvTvePx/15LFlwvcYYxiHuLt
-         vlFPwJoBeSUfLbfUZ9kH7xLf//aTwapLrsVmunK5we5xpH5mXAgXA8jrTFMngwbVGi
-         1N12FQ6s5Nl8gz9izV7oEkBmgmyfkphlC+SJgdRE=
+        b=wuGfdzu/0z1yNoxSpYm05rA/I9L1hztch3Zc6wWYYy4Hdp1N8p5XKABQRGC7Rgn4z
+         09S1iBjQciNL4y6VSV1tX4XJOQ70ReXLf101OpfWtPN8ep+YR3lLlCXzVvYbeKMZ9P
+         camf5iwXHxLL7Deqg3LHgNekUSzcu6mGxxHk3yBE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nicholas Piggin <npiggin@gmail.com>,
-        "Gautham R . Shenoy" <ego@linux.vnet.ibm.com>,
-        Ravikumar Bangoria <ravi.bangoria@in.ibm.com>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 5.1 049/375] powerpc/watchdog: Use hrtimers for per-CPU heartbeat
-Date:   Wed, 22 May 2019 15:15:49 -0400
-Message-Id: <20190522192115.22666-49-sashal@kernel.org>
+Cc:     Bart Van Assche <bvanassche@acm.org>,
+        Himanshu Madhani <hmadhani@marvell.com>,
+        Giridhar Malavali <gmalavali@marvell.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 052/375] scsi: qla2xxx: Fix abort handling in tcm_qla2xxx_write_pending()
+Date:   Wed, 22 May 2019 15:15:52 -0400
+Message-Id: <20190522192115.22666-52-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192115.22666-1-sashal@kernel.org>
 References: <20190522192115.22666-1-sashal@kernel.org>
@@ -62,196 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicholas Piggin <npiggin@gmail.com>
+From: Bart Van Assche <bvanassche@acm.org>
 
-[ Upstream commit 7ae3f6e130e8dc6188b59e3b4ebc2f16e9c8d053 ]
+[ Upstream commit e209783d66bca04b5fce4429e59338517ffc1a0b ]
 
-Using a jiffies timer creates a dependency on the tick_do_timer_cpu
-incrementing jiffies. If that CPU has locked up and jiffies is not
-incrementing, the watchdog heartbeat timer for all CPUs stops and
-creates false positives and confusing warnings on local CPUs, and
-also causes the SMP detector to stop, so the root cause is never
-detected.
+Implementations of the .write_pending() callback functions must guarantee
+that an appropriate LIO core callback function will be called immediately or
+at a later time.  Make sure that this guarantee is met for aborted SCSI
+commands.
 
-Fix this by using hrtimer based timers for the watchdog heartbeat,
-like the generic kernel hardlockup detector.
+[mkp: typo]
 
-Cc: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
-Reported-by: Ravikumar Bangoria <ravi.bangoria@in.ibm.com>
-Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
-Tested-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Reported-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Reviewed-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Himanshu Madhani <hmadhani@marvell.com>
+Cc: Giridhar Malavali <gmalavali@marvell.com>
+Fixes: 694833ee00c4 ("scsi: tcm_qla2xxx: Do not allow aborted cmd to advance.") # v4.13.
+Fixes: a07100e00ac4 ("qla2xxx: Fix TMR ABORT interaction issue between qla2xxx and TCM") # v4.5.
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Acked-by: Himanshu Madhani <hmadhani@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/watchdog.c | 81 +++++++++++++++++-----------------
- 1 file changed, 40 insertions(+), 41 deletions(-)
+ drivers/scsi/qla2xxx/tcm_qla2xxx.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/powerpc/kernel/watchdog.c b/arch/powerpc/kernel/watchdog.c
-index 3c6ab22a0c4e3..af3c15a1d41eb 100644
---- a/arch/powerpc/kernel/watchdog.c
-+++ b/arch/powerpc/kernel/watchdog.c
-@@ -77,7 +77,7 @@ static u64 wd_smp_panic_timeout_tb __read_mostly; /* panic other CPUs */
- 
- static u64 wd_timer_period_ms __read_mostly;  /* interval between heartbeat */
- 
--static DEFINE_PER_CPU(struct timer_list, wd_timer);
-+static DEFINE_PER_CPU(struct hrtimer, wd_hrtimer);
- static DEFINE_PER_CPU(u64, wd_timer_tb);
- 
- /* SMP checker bits */
-@@ -293,21 +293,21 @@ void soft_nmi_interrupt(struct pt_regs *regs)
- 	nmi_exit();
- }
- 
--static void wd_timer_reset(unsigned int cpu, struct timer_list *t)
--{
--	t->expires = jiffies + msecs_to_jiffies(wd_timer_period_ms);
--	if (wd_timer_period_ms > 1000)
--		t->expires = __round_jiffies_up(t->expires, cpu);
--	add_timer_on(t, cpu);
--}
--
--static void wd_timer_fn(struct timer_list *t)
-+static enum hrtimer_restart watchdog_timer_fn(struct hrtimer *hrtimer)
- {
- 	int cpu = smp_processor_id();
- 
-+	if (!(watchdog_enabled & NMI_WATCHDOG_ENABLED))
-+		return HRTIMER_NORESTART;
-+
-+	if (!cpumask_test_cpu(cpu, &watchdog_cpumask))
-+		return HRTIMER_NORESTART;
-+
- 	watchdog_timer_interrupt(cpu);
- 
--	wd_timer_reset(cpu, t);
-+	hrtimer_forward_now(hrtimer, ms_to_ktime(wd_timer_period_ms));
-+
-+	return HRTIMER_RESTART;
- }
- 
- void arch_touch_nmi_watchdog(void)
-@@ -323,37 +323,22 @@ void arch_touch_nmi_watchdog(void)
- }
- EXPORT_SYMBOL(arch_touch_nmi_watchdog);
- 
--static void start_watchdog_timer_on(unsigned int cpu)
--{
--	struct timer_list *t = per_cpu_ptr(&wd_timer, cpu);
--
--	per_cpu(wd_timer_tb, cpu) = get_tb();
--
--	timer_setup(t, wd_timer_fn, TIMER_PINNED);
--	wd_timer_reset(cpu, t);
--}
--
--static void stop_watchdog_timer_on(unsigned int cpu)
--{
--	struct timer_list *t = per_cpu_ptr(&wd_timer, cpu);
--
--	del_timer_sync(t);
--}
--
--static int start_wd_on_cpu(unsigned int cpu)
-+static void start_watchdog(void *arg)
- {
-+	struct hrtimer *hrtimer = this_cpu_ptr(&wd_hrtimer);
-+	int cpu = smp_processor_id();
- 	unsigned long flags;
- 
- 	if (cpumask_test_cpu(cpu, &wd_cpus_enabled)) {
- 		WARN_ON(1);
--		return 0;
-+		return;
+diff --git a/drivers/scsi/qla2xxx/tcm_qla2xxx.c b/drivers/scsi/qla2xxx/tcm_qla2xxx.c
+index 8a3075d17c63c..bddb573c88dd2 100644
+--- a/drivers/scsi/qla2xxx/tcm_qla2xxx.c
++++ b/drivers/scsi/qla2xxx/tcm_qla2xxx.c
+@@ -399,6 +399,8 @@ static int tcm_qla2xxx_write_pending(struct se_cmd *se_cmd)
+ 			cmd->se_cmd.transport_state,
+ 			cmd->se_cmd.t_state,
+ 			cmd->se_cmd.se_cmd_flags);
++		transport_generic_request_failure(&cmd->se_cmd,
++			TCM_CHECK_CONDITION_ABORT_CMD);
+ 		return 0;
  	}
- 
- 	if (!(watchdog_enabled & NMI_WATCHDOG_ENABLED))
--		return 0;
-+		return;
- 
- 	if (!cpumask_test_cpu(cpu, &watchdog_cpumask))
--		return 0;
-+		return;
- 
- 	wd_smp_lock(&flags);
- 	cpumask_set_cpu(cpu, &wd_cpus_enabled);
-@@ -363,27 +348,40 @@ static int start_wd_on_cpu(unsigned int cpu)
- 	}
- 	wd_smp_unlock(&flags);
- 
--	start_watchdog_timer_on(cpu);
-+	*this_cpu_ptr(&wd_timer_tb) = get_tb();
- 
--	return 0;
-+	hrtimer_init(hrtimer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
-+	hrtimer->function = watchdog_timer_fn;
-+	hrtimer_start(hrtimer, ms_to_ktime(wd_timer_period_ms),
-+		      HRTIMER_MODE_REL_PINNED);
- }
- 
--static int stop_wd_on_cpu(unsigned int cpu)
-+static int start_watchdog_on_cpu(unsigned int cpu)
- {
-+	return smp_call_function_single(cpu, start_watchdog, NULL, true);
-+}
-+
-+static void stop_watchdog(void *arg)
-+{
-+	struct hrtimer *hrtimer = this_cpu_ptr(&wd_hrtimer);
-+	int cpu = smp_processor_id();
- 	unsigned long flags;
- 
- 	if (!cpumask_test_cpu(cpu, &wd_cpus_enabled))
--		return 0; /* Can happen in CPU unplug case */
-+		return; /* Can happen in CPU unplug case */
- 
--	stop_watchdog_timer_on(cpu);
-+	hrtimer_cancel(hrtimer);
- 
- 	wd_smp_lock(&flags);
- 	cpumask_clear_cpu(cpu, &wd_cpus_enabled);
- 	wd_smp_unlock(&flags);
- 
- 	wd_smp_clear_cpu_pending(cpu, get_tb());
-+}
- 
--	return 0;
-+static int stop_watchdog_on_cpu(unsigned int cpu)
-+{
-+	return smp_call_function_single(cpu, stop_watchdog, NULL, true);
- }
- 
- static void watchdog_calc_timeouts(void)
-@@ -402,7 +400,7 @@ void watchdog_nmi_stop(void)
- 	int cpu;
- 
- 	for_each_cpu(cpu, &wd_cpus_enabled)
--		stop_wd_on_cpu(cpu);
-+		stop_watchdog_on_cpu(cpu);
- }
- 
- void watchdog_nmi_start(void)
-@@ -411,7 +409,7 @@ void watchdog_nmi_start(void)
- 
- 	watchdog_calc_timeouts();
- 	for_each_cpu_and(cpu, cpu_online_mask, &watchdog_cpumask)
--		start_wd_on_cpu(cpu);
-+		start_watchdog_on_cpu(cpu);
- }
- 
- /*
-@@ -423,7 +421,8 @@ int __init watchdog_nmi_probe(void)
- 
- 	err = cpuhp_setup_state_nocalls(CPUHP_AP_ONLINE_DYN,
- 					"powerpc/watchdog:online",
--					start_wd_on_cpu, stop_wd_on_cpu);
-+					start_watchdog_on_cpu,
-+					stop_watchdog_on_cpu);
- 	if (err < 0) {
- 		pr_warn("could not be initialized");
- 		return err;
+ 	cmd->trc_flags |= TRC_XFR_RDY;
 -- 
 2.20.1
 
