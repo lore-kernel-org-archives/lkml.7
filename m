@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C311C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:26:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE26BC282DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:26:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2C2D21872
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:26:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 916AD20879
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:26:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558553196;
-	bh=1e2ZxXyq6xUejxOhiDqPn0Rka+bJAvrPAXq8C4fzOZk=;
+	s=default; t=1558553198;
+	bh=pwoPlvmj+9knVBUrhv7le2wTL0tCghyhDMO6XBljEBI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p9DPrpfjIm7EH8Yoo1UnCi+GCkdnV52dOQHmLkriiDBeopSwEJWj5iWOS8DXwftHP
-	 2Nn3iV5mxNBbBxgb8HtFZgRQ2nYMkbmH8COrwJHDcbQtbaLdfdAsKUDY/42ipVNho8
-	 GxKDNT4vz2Tnp8CefrRf6j1b/EPL49UfukwuIQZY=
+	b=o0GkvhCI7uCMo/x8GDwBWeKPHiMY0MEQZA27WVlEaSP2w6YBvvgfd0iTh7MhrXMMG
+	 1w02iGGqjPj9X7fW/WNvLF7QwlmR8NgJvjSk329oHs2Fa2cmo/ZdQn1rXmMfXWoXcq
+	 bcamjZEu+QxWYRW7lRGH0UBk2L8DyD+77XiPPMm4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732041AbfEVT0e (ORCPT
+        id S1732057AbfEVT0h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:26:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48116 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:26:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48154 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731008AbfEVT0e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:26:34 -0400
+        id S1731376AbfEVT0g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:26:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3884A20879;
-        Wed, 22 May 2019 19:26:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5603521841;
+        Wed, 22 May 2019 19:26:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553192;
-        bh=1e2ZxXyq6xUejxOhiDqPn0Rka+bJAvrPAXq8C4fzOZk=;
+        s=default; t=1558553195;
+        bh=pwoPlvmj+9knVBUrhv7le2wTL0tCghyhDMO6XBljEBI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k4Bph2gAyP9uod0EQxbsPIlDJMdSDgtwMAHw7cOPDloMSwqQ30s3XZDfCy4i9yzgs
-         1FCk9/e2NLCC6D1WwUIkcn9SBEdZyjdi+XBG27lEgjnYj0d8ZN+MI0G3u8hvyWhoI5
-         9BwMfsX7VQeh+IHReDRYCtCSvrF4U4HElGqdc6MI=
+        b=UWbEbxcpooQ1tLKSuEH2Lz0Glke0zeGSSp5X5fdkazxybqjQ+RRE6BCvYdBdaSdKH
+         Q4ioelTNL8Bf5ZYIEbcCqjfGdnWiiSt41utrGfRjWT8B14QocgZ9rERV1BZNCBfnHW
+         Nt7p6nnTA09KgJQY1cwUTqHzEIxuIacFfckoBYng=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 002/244] cxgb4: Fix error path in cxgb4_init_module
-Date:   Wed, 22 May 2019 15:22:28 -0400
-Message-Id: <20190522192630.24917-2-sashal@kernel.org>
+Cc:     Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        "Michael J . Ruhl" <michael.j.ruhl@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 004/244] IB/hfi1: Fix WQ_MEM_RECLAIM warning
+Date:   Wed, 22 May 2019 15:22:30 -0400
+Message-Id: <20190522192630.24917-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192630.24917-1-sashal@kernel.org>
 References: <20190522192630.24917-1-sashal@kernel.org>
@@ -59,85 +61,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Mike Marciniszyn <mike.marciniszyn@intel.com>
 
-[ Upstream commit a3147770bea76c8dbad73eca3a24c2118da5e719 ]
+[ Upstream commit 4c4b1996b5db688e2dcb8242b0a3bf7b1e845e42 ]
 
-BUG: unable to handle kernel paging request at ffffffffa016a270
-PGD 3270067 P4D 3270067 PUD 3271063 PMD 230bbd067 PTE 0
-Oops: 0000 [#1
-CPU: 0 PID: 6134 Comm: modprobe Not tainted 5.1.0+ #33
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.9.3-0-ge2fc41e-prebuilt.qemu-project.org 04/01/2014
-RIP: 0010:atomic_notifier_chain_register+0x24/0x60
-Code: 1f 80 00 00 00 00 55 48 89 e5 41 54 49 89 f4 53 48 89 fb e8 ae b4 38 01 48 8b 53 38 48 8d 4b 38 48 85 d2 74 20 45 8b 44 24 10 <44> 3b 42 10 7e 08 eb 13 44 39 42 10 7c 0d 48 8d 4a 08 48 8b 52 08
-RSP: 0018:ffffc90000e2bc60 EFLAGS: 00010086
-RAX: 0000000000000292 RBX: ffffffff83467240 RCX: ffffffff83467278
-RDX: ffffffffa016a260 RSI: ffffffff83752140 RDI: ffffffff83467240
-RBP: ffffc90000e2bc70 R08: 0000000000000000 R09: 0000000000000001
-R10: 0000000000000000 R11: 00000000014fa61f R12: ffffffffa01c8260
-R13: ffff888231091e00 R14: 0000000000000000 R15: ffffc90000e2be78
-FS:  00007fbd8d7cd540(0000) GS:ffff888237a00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffffffa016a270 CR3: 000000022c7e3000 CR4: 00000000000006f0
-Call Trace:
- register_inet6addr_notifier+0x13/0x20
- cxgb4_init_module+0x6c/0x1000 [cxgb4
- ? 0xffffffffa01d7000
- do_one_initcall+0x6c/0x3cc
- ? do_init_module+0x22/0x1f1
- ? rcu_read_lock_sched_held+0x97/0xb0
- ? kmem_cache_alloc_trace+0x325/0x3b0
- do_init_module+0x5b/0x1f1
- load_module+0x1db1/0x2690
- ? m_show+0x1d0/0x1d0
- __do_sys_finit_module+0xc5/0xd0
- __x64_sys_finit_module+0x15/0x20
- do_syscall_64+0x6b/0x1d0
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
+The work_item cancels that occur when a QP is destroyed can elicit the
+following trace:
 
-If pci_register_driver fails, register inet6addr_notifier is
-pointless. This patch fix the error path in cxgb4_init_module.
+ workqueue: WQ_MEM_RECLAIM ipoib_wq:ipoib_cm_tx_reap [ib_ipoib] is flushing !WQ_MEM_RECLAIM hfi0_0:_hfi1_do_send [hfi1]
+ WARNING: CPU: 7 PID: 1403 at kernel/workqueue.c:2486 check_flush_dependency+0xb1/0x100
+ Call Trace:
+  __flush_work.isra.29+0x8c/0x1a0
+  ? __switch_to_asm+0x40/0x70
+  __cancel_work_timer+0x103/0x190
+  ? schedule+0x32/0x80
+  iowait_cancel_work+0x15/0x30 [hfi1]
+  rvt_reset_qp+0x1f8/0x3e0 [rdmavt]
+  rvt_destroy_qp+0x65/0x1f0 [rdmavt]
+  ? _cond_resched+0x15/0x30
+  ib_destroy_qp+0xe9/0x230 [ib_core]
+  ipoib_cm_tx_reap+0x21c/0x560 [ib_ipoib]
+  process_one_work+0x171/0x370
+  worker_thread+0x49/0x3f0
+  kthread+0xf8/0x130
+  ? max_active_store+0x80/0x80
+  ? kthread_bind+0x10/0x10
+  ret_from_fork+0x35/0x40
 
-Fixes: b5a02f503caa ("cxgb4 : Update ipv6 address handling api")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Since QP destruction frees memory, hfi1_wq should have the WQ_MEM_RECLAIM.
+
+The hfi1_wq does not allocate memory with GFP_KERNEL or otherwise become
+entangled with memory reclaim, so this flag is appropriate.
+
+Fixes: 0a226edd203f ("staging/rdma/hfi1: Use parallel workqueue for SDMA engines")
+Reviewed-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
+Signed-off-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+ drivers/infiniband/hw/hfi1/init.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
-index 961e3087d1d38..bb04c695ab9fd 100644
---- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
-+++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
-@@ -6010,15 +6010,24 @@ static int __init cxgb4_init_module(void)
- 
- 	ret = pci_register_driver(&cxgb4_driver);
- 	if (ret < 0)
--		debugfs_remove(cxgb4_debugfs_root);
-+		goto err_pci;
- 
- #if IS_ENABLED(CONFIG_IPV6)
- 	if (!inet6addr_registered) {
--		register_inet6addr_notifier(&cxgb4_inet6addr_notifier);
--		inet6addr_registered = true;
-+		ret = register_inet6addr_notifier(&cxgb4_inet6addr_notifier);
-+		if (ret)
-+			pci_unregister_driver(&cxgb4_driver);
-+		else
-+			inet6addr_registered = true;
- 	}
- #endif
- 
-+	if (ret == 0)
-+		return ret;
-+
-+err_pci:
-+	debugfs_remove(cxgb4_debugfs_root);
-+
- 	return ret;
- }
- 
+diff --git a/drivers/infiniband/hw/hfi1/init.c b/drivers/infiniband/hw/hfi1/init.c
+index da786eb18558d..368f4f08b6866 100644
+--- a/drivers/infiniband/hw/hfi1/init.c
++++ b/drivers/infiniband/hw/hfi1/init.c
+@@ -798,7 +798,8 @@ static int create_workqueues(struct hfi1_devdata *dd)
+ 			ppd->hfi1_wq =
+ 				alloc_workqueue(
+ 				    "hfi%d_%d",
+-				    WQ_SYSFS | WQ_HIGHPRI | WQ_CPU_INTENSIVE,
++				    WQ_SYSFS | WQ_HIGHPRI | WQ_CPU_INTENSIVE |
++				    WQ_MEM_RECLAIM,
+ 				    HFI1_MAX_ACTIVE_WORKQUEUE_ENTRIES,
+ 				    dd->unit, pidx);
+ 			if (!ppd->hfi1_wq)
 -- 
 2.20.1
 
