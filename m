@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86008C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:41:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA380C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:41:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5810C20675
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:41:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94E562081C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:41:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558554069;
-	bh=hwoXQsOzN/Ds7xtBfJiLeYpxCms8IWkxPTvOTOsjBn0=;
+	s=default; t=1558554076;
+	bh=NiqXvwojC1D7C1RXV3saA1gnnXcxvKec8v+zqiUIXuc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2PyqCcMHhbMDXc3lOj8Mr0GLnI0OXL2t/mFLGNmS67uvaMWv6+1lnJjkDwtpysJTp
-	 8WP4KoD9340BTl71iV/swFRCkkQB3CJVODRFHwq7mAlQKWv/1RI/dcp1vQTFrFdx7F
-	 4zXs/sb6SuRZ1yvnXbY0o+h+Ogvd9fAL3NBxXqww=
+	b=epASt251NlAaEodeCOtHA5LHsOjNOUluUT1YOgEyD+bC9Xa1uXRiMa7QuRl7AoMIk
+	 yjK790xERgjx2iW+VE22cXrJauwxPyDjFZN8a7Jhq4DiJaBtnCli/ObQTgkwwCF9Zr
+	 3bujdkZzTRqvW9wliryKa0ndvMQPaGf5B+OZYS+k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733144AbfEVTlI (ORCPT
+        id S1732446AbfEVTlP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:41:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52194 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:41:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51964 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729760AbfEVT3N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:29:13 -0400
+        id S1732745AbfEVT3G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:29:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E4E4C21473;
-        Wed, 22 May 2019 19:29:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D532217F9;
+        Wed, 22 May 2019 19:29:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553352;
-        bh=hwoXQsOzN/Ds7xtBfJiLeYpxCms8IWkxPTvOTOsjBn0=;
+        s=default; t=1558553345;
+        bh=NiqXvwojC1D7C1RXV3saA1gnnXcxvKec8v+zqiUIXuc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RdxtnSEmQFpNKFjNPEdn3Vj51rWVUZCWb5VekgJ44SAaZ9iTqWTWRlpoGzMO+YBNl
-         2eqPAYLqTleii1eVQkReH3QRzbpaNfy/i4qghOga9fCqZBBGz1C7wOjMa+CawbwT4Q
-         ePMmemxm+c1SYmiKvVPURl8Itpdn0PoHWa+FLiVM=
+        b=sEWIpSrgpF08xeYZYoDuOYPCXDNaeJhl7BKQMEowdUUjxP1XgmCnwYV2z3N7a9oe1
+         i6zx/tYpcQEx6hEhkRzvLgB7KAeCkiXl2GUtWqZQtg0vbUDwkDkuGos4yuta4/KhzT
+         wRc+kSa3mTwx1M1DlL709Ch18+RtAtJEi6QsWQ4g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 019/167] ACPI / property: fix handling of data_nodes in acpi_get_next_subnode()
-Date:   Wed, 22 May 2019 15:26:14 -0400
-Message-Id: <20190522192842.25858-19-sashal@kernel.org>
+Cc:     Bo YU <tsu.yubo@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.14 015/167] powerpc/boot: Fix missing check of lseek() return value
+Date:   Wed, 22 May 2019 15:26:10 -0400
+Message-Id: <20190522192842.25858-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192842.25858-1-sashal@kernel.org>
 References: <20190522192842.25858-1-sashal@kernel.org>
@@ -60,55 +58,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+From: Bo YU <tsu.yubo@gmail.com>
 
-[ Upstream commit 23583f7795025e3c783b680d906509366b0906ad ]
+[ Upstream commit 5d085ec04a000fefb5182d3b03ee46ca96d8389b ]
 
-When the DSDT tables expose devices with subdevices and a set of
-hierarchical _DSD properties, the data returned by
-acpi_get_next_subnode() is incorrect, with the results suggesting a bad
-pointer assignment. The parser works fine with device_nodes or
-data_nodes, but not with a combination of the two.
+This is detected by Coverity scan: CID: 1440481
 
-The problem is traced to an invalid pointer used when jumping from
-handling device_nodes to data nodes. The existing code looks for data
-nodes below the last subdevice found instead of the common root. Fix
-by forcing the acpi_device pointer to be derived from the same fwnode
-for the two types of subnodes.
-
-This same problem of handling device and data nodes was already fixed
-in a similar way by 'commit bf4703fdd166 ("ACPI / property: fix data
-node parsing in acpi_get_next_subnode()")' but broken later by 'commit
-34055190b19 ("ACPI / property: Add fwnode_get_next_child_node()")', so
-this should probably go to linux-stable all the way to 4.12
-
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Bo YU <tsu.yubo@gmail.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/property.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/powerpc/boot/addnote.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/acpi/property.c b/drivers/acpi/property.c
-index e26ea209b63ef..7a3194e2e0906 100644
---- a/drivers/acpi/property.c
-+++ b/drivers/acpi/property.c
-@@ -943,6 +943,14 @@ struct fwnode_handle *acpi_get_next_subnode(const struct fwnode_handle *fwnode,
- 		const struct acpi_data_node *data = to_acpi_data_node(fwnode);
- 		struct acpi_data_node *dn;
+diff --git a/arch/powerpc/boot/addnote.c b/arch/powerpc/boot/addnote.c
+index 9d9f6f334d3cc..3da3e2b1b51bc 100644
+--- a/arch/powerpc/boot/addnote.c
++++ b/arch/powerpc/boot/addnote.c
+@@ -223,7 +223,11 @@ main(int ac, char **av)
+ 	PUT_16(E_PHNUM, np + 2);
  
-+		/*
-+		 * We can have a combination of device and data nodes, e.g. with
-+		 * hierarchical _DSD properties. Make sure the adev pointer is
-+		 * restored before going through data nodes, otherwise we will
-+		 * be looking for data_nodes below the last device found instead
-+		 * of the common fwnode shared by device_nodes and data_nodes.
-+		 */
-+		adev = to_acpi_device_node(fwnode);
- 		if (adev)
- 			head = &adev->data.subnodes;
- 		else if (data)
+ 	/* write back */
+-	lseek(fd, (long) 0, SEEK_SET);
++	i = lseek(fd, (long) 0, SEEK_SET);
++	if (i < 0) {
++		perror("lseek");
++		exit(1);
++	}
+ 	i = write(fd, buf, n);
+ 	if (i < 0) {
+ 		perror("write");
 -- 
 2.20.1
 
