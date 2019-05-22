@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29B04C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:30:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85A73C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:30:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F148320879
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:30:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58F1C2177E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:30:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558553445;
-	bh=B7NYvC0ObKs2+BZPDMKWtI+XcjJXwV0A/crcwKiTMYU=;
+	s=default; t=1558553449;
+	bh=qtR83PQ7ruWBMdJdZYPRB1QbyflkCDjLydzMIArepxU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YA0kw4qbJV14yIWbEH198xCQsbhtExgakgOOr0f61ApL37cYX3GXX8Q8VWVNhUgwR
-	 UkRjs0CTRJS+anzNWPI1CNVQzd7D/wyDIo0u3i2P9xyQQEuCaP4zZdjew+mo07shrx
-	 EDh3WP5RT+gei2AOkjkReipPrwJ6OBIhHUB9ZUOY=
+	b=AUtFg4FHJGzr7dB35APQJb+otjpTDqu1IeEzaIV8LBpdANPan7v1/xg5irXXCBJfv
+	 6Dvi3S0XN66GoS3Ev0z7xrPLnrqHD/nOhK+U2s7BdyvBojP1HlnMMJs84CbJGDuLyv
+	 qpQnUZEvmrHoBsTBsUmR2LGwuLOZbF/hZtZsOf7o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733297AbfEVTan (ORCPT
+        id S1733312AbfEVTas (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:30:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54024 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:30:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54148 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732441AbfEVTad (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:30:33 -0400
+        id S1733279AbfEVTaj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:30:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 42CEA21841;
-        Wed, 22 May 2019 19:30:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB85C204FD;
+        Wed, 22 May 2019 19:30:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553432;
-        bh=B7NYvC0ObKs2+BZPDMKWtI+XcjJXwV0A/crcwKiTMYU=;
+        s=default; t=1558553439;
+        bh=qtR83PQ7ruWBMdJdZYPRB1QbyflkCDjLydzMIArepxU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LNckDID2FAAmATaTHYiRwTOqMw+wVTxqojkhTLfFV7piNgHfwRZjEEfoN7LRxpjS5
-         XJmhmNqhgf+TGhPEQw44roWGRR/HrYU3bD5YpYEUv4OaeXohHBAu+6jRqaZogArdpd
-         eisFrMVqVFch3WWfuc/Vh9hVJ9Y2971n0y0hA7I8=
+        b=wBpps7nk2FsohHJ26MaKyhXZ2SbMB1YcEXEF4kjMYdhwbMEXxKR15hfhZWN+6d0oO
+         vLzB3/emLt+aJeMemF+u70ZPxjHuLIZI4FTFGynKrf2VS/2nujOjjAdi8wsjCOv0Dz
+         ihZhPvsYtozKHNDFy2KmN7HBJ6T2Plem8Hd0R2iM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>,
+Cc:     Marc Zyngier <marc.zyngier@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 009/114] ASoC: imx: fix fiq dependencies
-Date:   Wed, 22 May 2019 15:28:32 -0400
-Message-Id: <20190522193017.26567-9-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 012/114] ARM: vdso: Remove dependency with the arch_timer driver internals
+Date:   Wed, 22 May 2019 15:28:35 -0400
+Message-Id: <20190522193017.26567-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522193017.26567-1-sashal@kernel.org>
 References: <20190522193017.26567-1-sashal@kernel.org>
@@ -58,67 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Marc Zyngier <marc.zyngier@arm.com>
 
-[ Upstream commit ea751227c813ab833609afecfeedaf0aa26f327e ]
+[ Upstream commit 1f5b62f09f6b314c8d70b9de5182dae4de1f94da ]
 
-During randconfig builds, I occasionally run into an invalid configuration
-of the freescale FIQ sound support:
+The VDSO code uses the kernel helper that was originally designed
+to abstract the access between 32 and 64bit systems. It worked so
+far because this function is declared as 'inline'.
 
-WARNING: unmet direct dependencies detected for SND_SOC_IMX_PCM_FIQ
-  Depends on [m]: SOUND [=y] && !UML && SND [=y] && SND_SOC [=y] && SND_IMX_SOC [=m]
-  Selected by [y]:
-  - SND_SOC_FSL_SPDIF [=y] && SOUND [=y] && !UML && SND [=y] && SND_SOC [=y] && SND_IMX_SOC [=m]!=n && (MXC_TZIC [=n] || MXC_AVIC [=y])
+As we're about to revamp that part of the code, the VDSO would
+break. Let's fix it by doing what should have been done from
+the start, a proper system register access.
 
-sound/soc/fsl/imx-ssi.o: In function `imx_ssi_remove':
-imx-ssi.c:(.text+0x28): undefined reference to `imx_pcm_fiq_exit'
-sound/soc/fsl/imx-ssi.o: In function `imx_ssi_probe':
-imx-ssi.c:(.text+0xa64): undefined reference to `imx_pcm_fiq_init'
-
-The Kconfig warning is a result of the symbol being defined inside of
-the "if SND_IMX_SOC" block, and is otherwise harmless. The link error
-is more tricky and happens with SND_SOC_IMX_SSI=y, which may or may not
-imply FIQ support. However, if SND_SOC_FSL_SSI is set to =m at the same
-time, that selects SND_SOC_IMX_PCM_FIQ as a loadable module dependency,
-which then causes a link failure from imx-ssi.
-
-The solution here is to make SND_SOC_IMX_PCM_FIQ built-in whenever
-one of its potential users is built-in.
-
-Fixes: ff40260f79dc ("ASoC: fsl: refine DMA/FIQ dependencies")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Reviewed-by: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/fsl/Kconfig | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ arch/arm/include/asm/cp15.h   | 2 ++
+ arch/arm/vdso/vgettimeofday.c | 5 +++--
+ 2 files changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/fsl/Kconfig b/sound/soc/fsl/Kconfig
-index a732b3a065c92..8a2873a7899a7 100644
---- a/sound/soc/fsl/Kconfig
-+++ b/sound/soc/fsl/Kconfig
-@@ -172,16 +172,17 @@ config SND_MPC52xx_SOC_EFIKA
+diff --git a/arch/arm/include/asm/cp15.h b/arch/arm/include/asm/cp15.h
+index b74b174ac9fcd..b458e41227943 100644
+--- a/arch/arm/include/asm/cp15.h
++++ b/arch/arm/include/asm/cp15.h
+@@ -67,6 +67,8 @@
+ #define BPIALL				__ACCESS_CP15(c7, 0, c5, 6)
+ #define ICIALLU				__ACCESS_CP15(c7, 0, c5, 0)
  
- endif # SND_POWERPC_SOC
- 
-+config SND_SOC_IMX_PCM_FIQ
-+	tristate
-+	default y if SND_SOC_IMX_SSI=y && (SND_SOC_FSL_SSI=m || SND_SOC_FSL_SPDIF=m) && (MXC_TZIC || MXC_AVIC)
-+	select FIQ
++#define CNTVCT				__ACCESS_CP15_64(1, c14)
 +
- if SND_IMX_SOC
+ extern unsigned long cr_alignment;	/* defined in entry-armv.S */
  
- config SND_SOC_IMX_SSI
- 	tristate
- 	select SND_SOC_FSL_UTILS
+ static inline unsigned long get_cr(void)
+diff --git a/arch/arm/vdso/vgettimeofday.c b/arch/arm/vdso/vgettimeofday.c
+index 79214d5ff0970..3af02d2a0b7f2 100644
+--- a/arch/arm/vdso/vgettimeofday.c
++++ b/arch/arm/vdso/vgettimeofday.c
+@@ -18,9 +18,9 @@
+ #include <linux/compiler.h>
+ #include <linux/hrtimer.h>
+ #include <linux/time.h>
+-#include <asm/arch_timer.h>
+ #include <asm/barrier.h>
+ #include <asm/bug.h>
++#include <asm/cp15.h>
+ #include <asm/page.h>
+ #include <asm/unistd.h>
+ #include <asm/vdso_datapage.h>
+@@ -123,7 +123,8 @@ static notrace u64 get_ns(struct vdso_data *vdata)
+ 	u64 cycle_now;
+ 	u64 nsec;
  
--config SND_SOC_IMX_PCM_FIQ
--	tristate
--	select FIQ
--
- comment "SoC Audio support for Freescale i.MX boards:"
+-	cycle_now = arch_counter_get_cntvct();
++	isb();
++	cycle_now = read_sysreg(CNTVCT);
  
- config SND_MXC_SOC_WM1133_EV1
+ 	cycle_delta = (cycle_now - vdata->cs_cycle_last) & vdata->cs_mask;
+ 
 -- 
 2.20.1
 
