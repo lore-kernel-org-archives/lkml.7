@@ -1,105 +1,103 @@
 Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86702C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:44:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C849C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:44:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 281D320821
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:44:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LQwYJghn"
+	by mail.kernel.org (Postfix) with ESMTP id 33AA221473
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:44:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558557877;
+	bh=u0vpqjRZCfZ1yomtUly1mF+4+X+k+4EtxlV6xG0hkYM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zM7svF8oCo5/jWmaabzIdjj3HxOlVEIWMhx+C16hyB+GiRZcYnswds9TBmQ6tUuuC
+	 xbZGl5bnf2zNFexErIO66BwwEZCut8duSbu3/q95wTNtHDyGIKuurp51NlSSTJAgmz
+	 bP7BCvDxMBD5Mkb13vIUP/l3bzRPt0qjTqAc6Nck=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730058AbfEVUoV (ORCPT
+        id S1730164AbfEVUog (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 16:44:21 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:45303 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729720AbfEVUoV (ORCPT
+        Wed, 22 May 2019 16:44:36 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:55292 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729844AbfEVUof (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 16:44:21 -0400
-Received: by mail-wr1-f67.google.com with SMTP id b18so3747530wrq.12
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 13:44:20 -0700 (PDT)
+        Wed, 22 May 2019 16:44:35 -0400
+Received: by mail-wm1-f68.google.com with SMTP id i3so3541138wml.4
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 13:44:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=esU+3qm17qrDuexe7jxN3EvAQX5MaY6ZoatueVdr3qQ=;
-        b=LQwYJghnsjhn591pkI1Li/RiGNLgcSIn+RKzEdMKdpMhy1XZToSM64anUNI9+saxK3
-         ODHzCEFRE5XfoiS1p/TWCDYIthlUJIhYCafNd+cdkCt2FHwqrVkiDp1/srtU/+1359CV
-         txZ5+WP6U+hiEJJHvBwIkHWRUKq/irVsr5+R2jyPac2VWFSABPEyi5GqcVp9/rAyKqud
-         ivB+KBcPmscp8HxxBctoQj2bYm+rDsp9FShbnqUrka9POWYktrtNnuaqc+BEt9Mv5EM0
-         CAGc29oBeJM56ZBnDgN2BCx4SrVkMck8aau30uIDwDZj6xI93LaWCiQSkJ4iIVp7cDgu
-         c60Q==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=S0ra+vNdOv3/9V7VGWXOVC+dvXqsahGY6CcRP5lsiNE=;
+        b=f9XaVUuchVtyI1LFsaB2lIJMGKQ8MmptzCbg/PGOPHcIVBvLiC0xUCbsJ4KIURUG+c
+         boeL7Yz/ZLdU6t+f3IrkmyBBY3jCshR8atJPYUctZoTUomiDUjfOd3v5w3IwfuoCF6mZ
+         GOw3veVPVJNR/CukN0z0A9WyQczNcYvO+6sLaO31bwYUe9bJMe+zOL71kIwNv1tN+S+s
+         4sq9eITKDsGGeqOhIlhK5q5NXIb0YkCOZcY+vRlNAaYPSLsvkRlSngj4I4Ef9fsCbs7g
+         hqwEhSbhHRYPCBzhUvTAd2TjyZzf+xCaxwvebnHwIB9xiyJkDWY1dxFIAi+wrNbYyxCx
+         sQbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=esU+3qm17qrDuexe7jxN3EvAQX5MaY6ZoatueVdr3qQ=;
-        b=MT0MqaR6eoq+HDy2K3WOMTlZZk8JZ51HHX8KJT+QiDuW0aWmW3iNwPUY1Y9k5g6oNv
-         BS+jTscHId97Z4kKgq7ANy3myKhQimS0dIjvGSGyzX9q+yJcAlBncvUUud1oTXIKbejc
-         nxc41lGIEwuOol1/dZK12rv6M+GvCPG6oofRTcNgTiAvNPT2JwK91/6cS5awOEkFRrl0
-         74lweYoPMPCS6cZ4H9UbBX1/C2cW0mdVA6nH8b+L9QAxO36Y4MSQsd40KZRMiF55LE3u
-         V2YVnYtGcCzGWL//WIzh0amUnsMLjm77XdgwKzICZkWRp8eSoFDazVbEL5Az8u1kzGgK
-         kWTw==
-X-Gm-Message-State: APjAAAXDcpTkdXUiDP9CplF85anmmGqPP7sUVdTtKmP0W8QrncPlMTZO
-        LMDRczA7BzjCULxXyIerB52VjLTYGcqT6cYHGjI=
-X-Google-Smtp-Source: APXvYqxc45ky2GHi1FeZ+BIf3VnaFuT1mLCFliU3lSSeZiCzoTlqseE8pdpvOSSzz5iK6QZMeV6uMntQG00gwpjmjHI=
-X-Received: by 2002:a5d:4e09:: with SMTP id p9mr11738017wrt.218.1558557859722;
- Wed, 22 May 2019 13:44:19 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=S0ra+vNdOv3/9V7VGWXOVC+dvXqsahGY6CcRP5lsiNE=;
+        b=HQwBrcCsji4nB34U3FwN7pU0+suh55gxphhq24Ofc+Ktz/LEw7Ut8bhhhyRJLoWzDC
+         FgZ0qn7ZdhphfLvI7O8svItCa3BfTPH3iTDcqanJewcB+XOS60DzAhJKN8xRD8TfarUz
+         q+vTnYfVgEeFvzUDtVIlsLWGJrsWRxpyXdTgTMG341iwCWHHzeL7f3Qm6RL83yDw5ESK
+         vM1biECEA7rGgD4vpvERyRspXEJnkhEVWaXCx9hWDVW9P/sWxP7/KNl3PyGF8EdsGB+Z
+         k0JqvpPtu0pCTlT/5AHu0zlKbayGuWr6Lpe4pB+L/JK3CherhpIKLVkBa1X3RJQnqbx1
+         h2mw==
+X-Gm-Message-State: APjAAAWh7WbKTvTdBLrXM4Pp9ld2wT3AUhmBbraUlqDvQK7d5s0WCNKg
+        OwNciHI7eJlp7bIEPxU51Wo=
+X-Google-Smtp-Source: APXvYqz5Z7YzrxRoncvYEdf+W2IrIxTCI8BxGMTdNdj2FzG0H8YWcsHQySKsRboZFH7R8MEcrv7ZLg==
+X-Received: by 2002:a1c:7511:: with SMTP id o17mr8426905wmc.39.1558557874006;
+        Wed, 22 May 2019 13:44:34 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id a5sm22867571wrt.10.2019.05.22.13.44.32
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 22 May 2019 13:44:33 -0700 (PDT)
+Date:   Wed, 22 May 2019 22:44:31 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Len Brown <lenb@kernel.org>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH 0/19] v6 multi-die/package topology support
+Message-ID: <20190522204431.GA18891@gmail.com>
+References: <20190513175903.8735-1-lenb@kernel.org>
 MIME-Version: 1.0
-References: <20190522000753.13300-1-chris.packham@alliedtelesis.co.nz> <20190522000753.13300-2-chris.packham@alliedtelesis.co.nz>
-In-Reply-To: <20190522000753.13300-2-chris.packham@alliedtelesis.co.nz>
-From:   Richard Weinberger <richard.weinberger@gmail.com>
-Date:   Wed, 22 May 2019 22:44:08 +0200
-Message-ID: <CAFLxGvy2c9KV1CyoFaD76jvThfPiotqfoeNchqjGcDp+uHie7Q@mail.gmail.com>
-Subject: Re: [PATCH 2/2] mtd: concat: implement _is_locked mtd operation
-To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc:     David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        linux-mtd@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190513175903.8735-1-lenb@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 22, 2019 at 2:08 AM Chris Packham
-<chris.packham@alliedtelesis.co.nz> wrote:
->
-> Add an implementation of the _is_locked operation for concatenated mtd
-> devices. As with concat_lock/concat_unlock this can simply use the
-> common helper and pass mtd_is_locked as the operation.
->
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-> ---
->  drivers/mtd/mtdconcat.c | 6 ++++++
->  1 file changed, 6 insertions(+)
->
-> diff --git a/drivers/mtd/mtdconcat.c b/drivers/mtd/mtdconcat.c
-> index 9514cd2db63c..0e919f3423af 100644
-> --- a/drivers/mtd/mtdconcat.c
-> +++ b/drivers/mtd/mtdconcat.c
-> @@ -496,6 +496,11 @@ static int concat_unlock(struct mtd_info *mtd, loff_t ofs, uint64_t len)
->         return __concat_xxlock(mtd, ofs, len, mtd_unlock);
->  }
->
-> +static int concat_is_locked(struct mtd_info *mtd, loff_t ofs, uint64_t len)
-> +{
-> +       return __concat_xxlock(mtd, ofs, len, mtd_is_locked);
-> +}
 
-Hmm, here you start abusing your own new API. :(
+* Len Brown <lenb@kernel.org> wrote:
 
-Did you verify that the unlock/lock-functions deal correctly with all
-semantics from mtd_is_locked?
-i.e. mtd_is_locked() with len = 0 returns 1 for spi-nor.
+> 
+> This patch series does 4 things.
+> 
+> 1. Parse the new CPUID.1F leaf to discover multi-die/package topology
+> 
+> 2. Export multi-die topology inside the kernel
+> 
+> 3. Update 4 places (coretemp, pkgtemp, rapl, perf) that that need to know
+>    the difference between die and package-scope MSR.
+> 
+> 4. Export multi-die topology to user-space via sysfs
+> 
+> These changes should have no impact on cache topology,
+> NUMA topology, Linux scheduler, or system performance.
+
+Thank you Len:
+
+Reviewed-by: Ingo Molnar <mingo@kernel.org>
+
+	Ingo
