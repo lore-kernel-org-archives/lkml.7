@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ADB6C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:33:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5932DC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:33:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33B342089E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:33:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23E6C2089E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:33:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558553597;
-	bh=8KZTDZ54WYIkBElXT17lXZRRcNJjwImuidbfSBpW8GM=;
+	s=default; t=1558553610;
+	bh=h1gIJdfP6NWnJFYxp8JvLaH8pKsFfB8sR6EQU87/iTc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tBV4mYJCvPRFJ9dgfMB7OuBsw3c7+3ALY4xgeZvu4rO+oTlWd907Rt5bmfNBSjjNT
-	 3haJeCuT4qsE+UUZIJ57rbp1v760pMDR3TqvBrFZqUtNUg+jtK8RcHRTzAt1DCy9Kr
-	 Zy4G24vfelZbXh2fhmsNSiNkavhYS1MDyFFF2Ejk=
+	b=I7l/ROwbSvnIXLkL7Oqw3VEm5WyNph6D8aH5NgLZ7jnXUWLtDkLadIrfF4LJihap+
+	 IGHGqHvIsEtyN9FNQELdj/sHyVQo8Re0mYYKlSSjYdX130tCW/fQ2VIEU+eraVNNgw
+	 1SjjZUdXr9+9GaYq1hvsabgWLpYmAfg9p1KR+vlA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733181AbfEVTdP (ORCPT
+        id S1733284AbfEVTd3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:33:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55580 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:33:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55480 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732821AbfEVTbz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:31:55 -0400
+        id S1732822AbfEVTbv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:31:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C487C2173C;
-        Wed, 22 May 2019 19:31:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3DA0F204FD;
+        Wed, 22 May 2019 19:31:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553514;
-        bh=8KZTDZ54WYIkBElXT17lXZRRcNJjwImuidbfSBpW8GM=;
+        s=default; t=1558553511;
+        bh=h1gIJdfP6NWnJFYxp8JvLaH8pKsFfB8sR6EQU87/iTc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sbcCmtBO1lTfdR2LxouN/WAlgqKnsndc/mrdP9vF2V9bnvWUHOKwF2n+Vme7fM8p2
-         JUx8fvklYXrxkH7urAbCCLmRNx1juAOPZYvdhHypdK+Mx/n2Xp1sDKt+L0QaSv9UAM
-         c8og95xPr7BREFHqHDmuFGsilfEnOCEETGAZnKok=
+        b=TR3FpaqhP1QUizqcaniyTqHhBvN9JxBbJAhWQ0/Cr5znq/6R61u6jM/QdG5KOZY4a
+         AB3efYUkPBgvW6Aj8z4L2LvndE/mEzg14Ld6E7o+UF04vL1ELSP/befsBwGBiezC3p
+         ToW22O4fxQfawfRrt7tHcbX/U19hOCvYrQpixzgE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Coly Li <colyli@suse.de>, Hannes Reinecke <hare@suse.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-bcache@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 18/92] bcache: return error immediately in bch_journal_replay()
-Date:   Wed, 22 May 2019 15:30:13 -0400
-Message-Id: <20190522193127.27079-18-sashal@kernel.org>
+Cc:     Kangjie Lu <kjlu@umn.edu>, Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 15/92] net: cw1200: fix a NULL pointer dereference
+Date:   Wed, 22 May 2019 15:30:10 -0400
+Message-Id: <20190522193127.27079-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522193127.27079-1-sashal@kernel.org>
 References: <20190522193127.27079-1-sashal@kernel.org>
@@ -59,52 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Coly Li <colyli@suse.de>
+From: Kangjie Lu <kjlu@umn.edu>
 
-[ Upstream commit 68d10e6979a3b59e3cd2e90bfcafed79c4cf180a ]
+[ Upstream commit 0ed2a005347400500a39ea7c7318f1fea57fb3ca ]
 
-When failure happens inside bch_journal_replay(), calling
-cache_set_err_on() and handling the failure in async way is not a good
-idea. Because after bch_journal_replay() returns, registering code will
-continue to execute following steps, and unregistering code triggered
-by cache_set_err_on() is running in same time. First it is unnecessary
-to handle failure and unregister cache set in an async way, second there
-might be potential race condition to run register and unregister code
-for same cache set.
+In case create_singlethread_workqueue fails, the fix free the
+hardware and returns NULL to avoid NULL pointer dereference.
 
-So in this patch, if failure happens in bch_journal_replay(), we don't
-call cache_set_err_on(), and just print out the same error message to
-kernel message buffer, then return -EIO immediately caller. Then caller
-can detect such failure and handle it in synchrnozied way.
-
-Signed-off-by: Coly Li <colyli@suse.de>
-Reviewed-by: Hannes Reinecke <hare@suse.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/bcache/journal.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/net/wireless/cw1200/main.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/md/bcache/journal.c b/drivers/md/bcache/journal.c
-index 6ed066a0e7c0a..dfedc2c1f1e15 100644
---- a/drivers/md/bcache/journal.c
-+++ b/drivers/md/bcache/journal.c
-@@ -322,9 +322,12 @@ int bch_journal_replay(struct cache_set *s, struct list_head *list)
- 	list_for_each_entry(i, list, list) {
- 		BUG_ON(i->pin && atomic_read(i->pin) != 1);
- 
--		cache_set_err_on(n != i->j.seq, s,
--"bcache: journal entries %llu-%llu missing! (replaying %llu-%llu)",
--				 n, i->j.seq - 1, start, end);
-+		if (n != i->j.seq) {
-+			pr_err("bcache: journal entries %llu-%llu missing! (replaying %llu-%llu)",
-+			n, i->j.seq - 1, start, end);
-+			ret = -EIO;
-+			goto err;
-+		}
- 
- 		for (k = i->j.start;
- 		     k < bset_bkey_last(&i->j);
+diff --git a/drivers/net/wireless/cw1200/main.c b/drivers/net/wireless/cw1200/main.c
+index 0e51e27d2e3f1..317daa968e037 100644
+--- a/drivers/net/wireless/cw1200/main.c
++++ b/drivers/net/wireless/cw1200/main.c
+@@ -345,6 +345,11 @@ static struct ieee80211_hw *cw1200_init_common(const u8 *macaddr,
+ 	mutex_init(&priv->wsm_cmd_mux);
+ 	mutex_init(&priv->conf_mutex);
+ 	priv->workqueue = create_singlethread_workqueue("cw1200_wq");
++	if (!priv->workqueue) {
++		ieee80211_free_hw(hw);
++		return NULL;
++	}
++
+ 	sema_init(&priv->scan.lock, 1);
+ 	INIT_WORK(&priv->scan.work, cw1200_scan_work);
+ 	INIT_DELAYED_WORK(&priv->scan.probe_work, cw1200_probe_work);
 -- 
 2.20.1
 
