@@ -2,103 +2,206 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1890BC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 17:16:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C32E7C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 17:22:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC04420851
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 17:16:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9703C204EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 17:22:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730338AbfEVRQr (ORCPT
+        id S1730153AbfEVRWk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 13:16:47 -0400
-Received: from smtprelay0007.hostedemail.com ([216.40.44.7]:37669 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729915AbfEVRQq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 13:16:46 -0400
-Received: from smtprelay.hostedemail.com (10.5.19.251.rfc1918.com [10.5.19.251])
-        by smtpgrave07.hostedemail.com (Postfix) with ESMTP id 689BF18011ADF;
-        Wed, 22 May 2019 17:16:45 +0000 (UTC)
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 799BB180A887B;
-        Wed, 22 May 2019 17:16:44 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: sock87_3abe498a27f2d
-X-Filterd-Recvd-Size: 2531
-Received: from XPS-9350 (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf07.hostedemail.com (Postfix) with ESMTPA;
-        Wed, 22 May 2019 17:16:43 +0000 (UTC)
-Message-ID: <2b4878de1404e71d3085ee4832a5abc3526f2cdf.camel@perches.com>
-Subject: Re: [PATCH] checkpatch.pl: Update DT vendor prefix check
-From:   Joe Perches <joe@perches.com>
-To:     Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org
-Cc:     devicetree@vger.kernel.org
-Date:   Wed, 22 May 2019 10:16:41 -0700
-In-Reply-To: <20190522151238.25176-1-robh@kernel.org>
-References: <20190522151238.25176-1-robh@kernel.org>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.1-1build1 
-Mime-Version: 1.0
+        Wed, 22 May 2019 13:22:40 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:32961 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727365AbfEVRWj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 13:22:39 -0400
+Received: from LHREML712-CAH.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id 05CF417966E92720806F;
+        Wed, 22 May 2019 18:22:37 +0100 (IST)
+Received: from [10.204.65.201] (10.204.65.201) by smtpsuk.huawei.com
+ (10.201.108.35) with Microsoft SMTP Server (TLS) id 14.3.408.0; Wed, 22 May
+ 2019 18:22:31 +0100
+Subject: Re: [PATCH v3 2/2] initramfs: introduce do_readxattrs()
+To:     <hpa@zytor.com>, Arvind Sankar <nivedita@alum.mit.edu>
+CC:     <viro@zeniv.linux.org.uk>, <linux-security-module@vger.kernel.org>,
+        <linux-integrity@vger.kernel.org>, <initramfs@vger.kernel.org>,
+        <linux-api@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <zohar@linux.vnet.ibm.com>,
+        <silviu.vlasceanu@huawei.com>, <dmitry.kasatkin@huawei.com>,
+        <takondra@cisco.com>, <kamensky@cisco.com>, <arnd@arndb.de>,
+        <rob@landley.net>, <james.w.mcmechan@gmail.com>,
+        <niveditas98@gmail.com>
+References: <20190517165519.11507-1-roberto.sassu@huawei.com>
+ <20190517165519.11507-3-roberto.sassu@huawei.com>
+ <CD9A4F89-7CA5-4329-A06A-F8DEB87905A5@zytor.com>
+ <20190517210219.GA5998@rani.riverdale.lan>
+ <d48f35a1-aab1-2f20-2e91-5e81a84b107f@zytor.com>
+ <20190517221731.GA11358@rani.riverdale.lan>
+ <7bdca169-7a01-8c55-40e4-a832e876a0e5@huawei.com>
+ <9C5B9F98-2067-43D3-B149-57613F38DCD4@zytor.com>
+From:   Roberto Sassu <roberto.sassu@huawei.com>
+Message-ID: <2ceb1f01-88fb-d383-daee-e38348a2f075@huawei.com>
+Date:   Wed, 22 May 2019 19:22:37 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.3.0
+MIME-Version: 1.0
+In-Reply-To: <9C5B9F98-2067-43D3-B149-57613F38DCD4@zytor.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.204.65.201]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-05-22 at 10:12 -0500, Rob Herring wrote:
-> In commit 8122de54602e ("dt-bindings: Convert vendor prefixes to
-> json-schema"), vendor-prefixes.txt has been converted to a DT schema.
-> Update the checkpatch.pl DT check to extract vendor prefixes from the new
-> vendor-prefixes.yaml file.
+On 5/22/2019 6:17 PM, hpa@zytor.com wrote:
+> On May 20, 2019 2:39:46 AM PDT, Roberto Sassu <roberto.sassu@huawei.com> wrote:
+>> On 5/18/2019 12:17 AM, Arvind Sankar wrote:
+>>> On Fri, May 17, 2019 at 02:47:31PM -0700, H. Peter Anvin wrote:
+>>>> On 5/17/19 2:02 PM, Arvind Sankar wrote:
+>>>>> On Fri, May 17, 2019 at 01:18:11PM -0700, hpa@zytor.com wrote:
+>>>>>>
+>>>>>> Ok... I just realized this does not work for a modular initramfs,
+>> composed at load time from multiple files, which is a very real
+>> problem. Should be easy enough to deal with: instead of one large file,
+>> use one companion file per source file, perhaps something like
+>> filename..xattrs (suggesting double dots to make it less likely to
+>> conflict with a "real" file.) No leading dot, as it makes it more
+>> likely that archivers will sort them before the file proper.
+>>>>> This version of the patch was changed from the previous one exactly
+>> to deal with this case --
+>>>>> it allows for the bootloader to load multiple initramfs archives,
+>> each
+>>>>> with its own .xattr-list file, and to have that work properly.
+>>>>> Could you elaborate on the issue that you see?
+>>>>>
+>>>>
+>>>> Well, for one thing, how do you define "cpio archive", each with its
+>> own
+>>>> .xattr-list file? Second, that would seem to depend on the ordering,
+>> no,
+>>>> in which case you depend critically on .xattr-list file following
+>> the
+>>>> files, which most archivers won't do.
+>>>>
+>>>> Either way it seems cleaner to have this per file; especially if/as
+>> it
+>>>> can be done without actually mucking up the format.
+>>>>
+>>>> I need to run, but I'll post a more detailed explanation of what I
+>> did
+>>>> in a little bit.
+>>>>
+>>>> 	-hpa
+>>>>
+>>> Not sure what you mean by how do I define it? Each cpio archive will
+>>> contain its own .xattr-list file with signatures for the files within
+>>> it, that was the idea.
+>>>
+>>> You need to review the code more closely I think -- it does not
+>> depend
+>>> on the .xattr-list file following the files to which it applies.
+>>>
+>>> The code first extracts .xattr-list as though it was a regular file.
+>> If
+>>> a later dupe shows up (presumably from a second archive, although the
+>>> patch will actually allow a second one in the same archive), it will
+>>> then process the existing .xattr-list file and apply the attributes
+>>> listed within it. It then will proceed to read the second one and
+>>> overwrite the first one with it (this is the normal behaviour in the
+>>> kernel cpio parser). At the end once all the archives have been
+>>> extracted, if there is an .xattr-list file in the rootfs it will be
+>>> parsed (it would've been the last one encountered, which hasn't been
+>>> parsed yet, just extracted).
+>>>
+>>> Regarding the idea to use the high 16 bits of the mode field in
+>>> the header that's another possibility. It would just require
+>> additional
+>>> support in the program that actually creates the archive though,
+>> which
+>>> the current patch doesn't.
+>>
+>> Yes, for adding signatures for a subset of files, no changes to the ram
+>> disk generator are necessary. Everything is done by a custom module. To
+>> support a generic use case, it would be necessary to modify the
+>> generator to execute getfattr and the awk script after files have been
+>> placed in the temporary directory.
+>>
+>> If I understood the new proposal correctly, it would be task for cpio
+>> to
+>> read file metadata after the content and create a new record for each
+>> file with mode 0x18000, type of metadata encoded in the file name and
+>> metadata as file content. I don't know how easy it would be to modify
+>> cpio. Probably the amount of changes would be reasonable.
+>>
+>> The kernel will behave in a similar way. It will call do_readxattrs()
+>> in
+>> do_copy() for each file. Since the only difference between the current
+>> and the new proposal would be two additional calls to do_readxattrs()
+>> in
+>> do_name() and unpack_to_rootfs(), maybe we could support both.
+>>
+>> Roberto
 > 
-> Fixes: 8122de54602e ("dt-bindings: Convert vendor prefixes to json-schema")
-> Cc: Joe Perches <joe@perches.com>
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
->  scripts/checkpatch.pl | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> The nice thing with explicit metadata is that it doesn't have to contain the filename per se, and each file is self-contained. There is a reason why each cpio header starts with the magic number: each cpio record is formally independent and can be processed in isolation.  The TRAILER!!! thing is a huge wart in the format, although in practice TRAILER!!! always has a mode of 0 and so can be distinguished from an actual file.
 > 
-> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-> index bb28b178d929..073051a4471b 100755
-> --- a/scripts/checkpatch.pl
-> +++ b/scripts/checkpatch.pl
-> @@ -3027,7 +3027,7 @@ sub process {
->  			my @compats = $rawline =~ /\"([a-zA-Z0-9\-\,\.\+_]+)\"/g;
->  
->  			my $dt_path = $root . "/Documentation/devicetree/bindings/";
-> -			my $vp_file = $dt_path . "vendor-prefixes.txt";
-> +			my $vp_file = $dt_path . "vendor-prefixes.yaml";
->  
->  			foreach my $compat (@compats) {
->  				my $compat2 = $compat;
-> @@ -3042,7 +3042,7 @@ sub process {
->  
->  				next if $compat !~ /^([a-zA-Z0-9\-]+)\,/;
->  				my $vendor = $1;
-> -				`grep -Eq "^$vendor\\b" $vp_file`;
-> +				`grep -oE "\\"\\^[a-zA-Z0-9]+" $vp_file | grep -q "$vendor"`;
+> The use of mode 0x18000 for metadata allows for optional backwards compatibility for extraction; for encoding this can be handled with very simple postprocessing.
+> 
+> So my suggestion would be to have mode 0x18000 indicate extended file metadata, with the filename of the form:
+> 
+> optional_filename!XXXXX!
+> 
+> ... where XXXXX indicates the type of metadata (e.g. !XATTR!). The optional_filename prefix allows an unaware decoder to extract to a well-defined name; simple postprocessing would be able to either remove (for size) or add (for compatibility) this prefix. It would be an error for this prefix, if present, to not match the name of the previous file.
 
-I think this does't work well as it loses the -
-in various vendor prefixes:
+Actually, I defined '..metadata..' as special name to indicate that the
+file contains metadata. Then, the content of the file is a set of:
 
-  "^active-semi,.*":
-  "^asahi-kasei,.*":
-  "^ebs-systart,.*":
-  "^inside-secure,.*":
-  "^multi-inno,.*":
-  "^netron-dy,.*":
-  "^si-en,.*":
-  "^si-linux,.*":
-  "^tbs-biometrics,.*":
-  "^u-blox,.*":
-  "^x-powers,.*":
+struct metadata_hdr {
+         char c_size[8];     /* total size including c_size field */
+         char c_version;     /* header version */
+         char c_type;        /* metadata type */
+         char c_metadata[];  /* metadata */
+} __packed;
 
-Perhaps the grep should be something like: (untested)
+init/initramfs.c now has a specific parser for c_type. Currently, I
+implemented a parser for xattrs, which expects data in the format:
 
-	`grep -Eq "\\"\\^\Q$vendor\E,\\.\\*\\":" $vp_file`;
+<xattr #N name>\0<xattr #N value>
 
+I checked if it is possible to use bit 17:16 to identify files with
+metadata, but both the cpio and the kernel use unsigned short.
+
+I already modified gen_init_cpio and cpio. I modify at run-time the list
+of files to be included in the image by adding a temporary file, that
+each time is set with the xattrs of the previously processed file.
+
+The output of cpio -t looks like:
+
+--
+.
+..metadata..
+bin
+..metadata..
+dev
+..metadata..
+dev/console
+..metadata..
+--
+
+Would it be ok? If you prefer that I add the format to the file name or
+you/anyone has a comment about this proposal, please let me know so that
+I make the changes before sending a new version of the patch set.
+
+Thanks
+
+Roberto
+
+-- 
+HUAWEI TECHNOLOGIES Duesseldorf GmbH, HRB 56063
+Managing Director: Bo PENG, Jian LI, Yanli SHI
