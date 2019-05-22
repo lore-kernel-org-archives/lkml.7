@@ -2,204 +2,102 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69942C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 18:32:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C9C6C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 18:33:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BC2821473
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 18:32:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="DOYEYXNF"
+	by mail.kernel.org (Postfix) with ESMTP id 045202173C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 18:33:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558549998;
+	bh=/z7Nk3RKquTaLh7LGUcYRr+01LS+V0BVfOEfOJekipI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=g2wLzVMmNeKDJRm76xo8HZ5LjovoU3GbeoR+cItssbst4ihccGLD5gwHtor2+8fdr
+	 o6O7POJ55sl69QWikyqKc4wheAu2ca1XlIx/VnfMdnxHLTQd5nGg+WGGM54ZnXFumC
+	 8eGRM+u1SBW0DqDOUeyhGFvc+Ct8xIsUPyechVXs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729622AbfEVScG (ORCPT
+        id S1729509AbfEVSdR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 14:32:06 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:37384 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728533AbfEVScG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 14:32:06 -0400
-Received: by mail-qt1-f194.google.com with SMTP id o7so3617140qtp.4
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 11:32:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=CaDjZ/LTZEWIV1k6jmaoesTLyIfde7eaoYVq6F0BEbE=;
-        b=DOYEYXNFXZtj3Fxv6GkbcrmxU5qsq07byb5Z/nKMwy5d7BkU/5zXVjPqNAaD0l6xyH
-         xlB+AdtKp1epaSxw5VkAKq4S8M3K7YgmevLZSH75UeUvXXQlWK90b5D/k+Nvf6ZKGqXj
-         TWtBp1hiphibJFzUinRHHxjMNpCRyVDdIkY+DSX07WsbkGoHGI2pLPzK4+CAvsrMzAEx
-         A30oAnOWmiUTpX+/9fNvXkEEyo1w3wikiXyWNCGgaJs+rdfODCsZexTq0hyq5k9GrnTa
-         75hribAj3aj4O1x0Zhj+2Q/GjAJBxqGS0eU9LrDXGTcw9licqCzF5A1gt0CFtCJ74HM4
-         1gSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=CaDjZ/LTZEWIV1k6jmaoesTLyIfde7eaoYVq6F0BEbE=;
-        b=CdDVd+A7D+zjiSDBgeWIjjvsRH2YF0MdaQN/jKYdUR5eE9TFWab50F3oglTocNf+tJ
-         qt/tyizJ2GPn1wl/xEXNxU2yi7WHmtykELf2Of/YMPtbpPbE7xsjIYtbKgXq+7ru7Yog
-         d0DnHBGjW+FQ44UAUsfF8U266B1K5oAYK5HwLqMscsztMFaoIB/EYNJeZ/edhs/47a8s
-         oAfOU0MVt94gIDI1753TIqlLnAftt6VioKHZVUZJXRXHo7ZJ/E6yWmwYn/BuQ/vNkolA
-         G0tQwV+zCozc0sP6h5H7QVmNhmFszuWX4IJucrqm7sBgbKb7WkTOhoiIHrQZg21fuauX
-         pz/g==
-X-Gm-Message-State: APjAAAUkxXYgEhJQUF0MO5YadODnvSv4cgpyvP6OJFTpYG/n+BAYqlWA
-        /s6otov37VDDgx0QDl20lRrO1w==
-X-Google-Smtp-Source: APXvYqzf05Cgzli4/sO/d45KwJM6VGf3KpJ+mO5Il0PMQODrgkuDAUi8F/XB67dWwlfl0xja9rPWRw==
-X-Received: by 2002:ac8:18c2:: with SMTP id o2mr77676877qtk.165.1558549924824;
-        Wed, 22 May 2019 11:32:04 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-49-251.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.49.251])
-        by smtp.gmail.com with ESMTPSA id g12sm11725833qkk.88.2019.05.22.11.32.04
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 22 May 2019 11:32:04 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1hTW1z-0005Gd-IY; Wed, 22 May 2019 15:32:03 -0300
-Date:   Wed, 22 May 2019 15:32:03 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Jerome Glisse <jglisse@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Artemy Kovalyov <artemyko@mellanox.com>,
-        Moni Shoua <monis@mellanox.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Kaike Wan <kaike.wan@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>
-Subject: Re: [PATCH v4 0/1] Use HMM for ODP v4
-Message-ID: <20190522183203.GE6054@ziepe.ca>
-References: <20190411181314.19465-1-jglisse@redhat.com>
- <20190506195657.GA30261@ziepe.ca>
- <20190521205321.GC3331@redhat.com>
- <20190522005225.GA30819@ziepe.ca>
- <20190522174852.GA23038@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190522174852.GA23038@redhat.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Wed, 22 May 2019 14:33:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52014 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728272AbfEVSdR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 14:33:17 -0400
+Received: from localhost.localdomain (c-73-223-200-170.hsd1.ca.comcast.net [73.223.200.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DACD221473;
+        Wed, 22 May 2019 18:33:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558549996;
+        bh=/z7Nk3RKquTaLh7LGUcYRr+01LS+V0BVfOEfOJekipI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=qc6ooJJqMW/TOTEEJs0mgLGcq/MVsfm/8GvlWWs9LT4wUO4b6UKknAx2oboANj7+q
+         6voZxPnNM595lMZPazAL9Ajnf53Oan1CXvtxHbpHSMnjiJ0sZ5bM/iZ8YyNuMp3jfr
+         q17Z5wbd05wBVP8yO2kqntJwVR+63yQtjvjNtGIo=
+Date:   Wed, 22 May 2019 11:33:15 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Boris Brezillon <boris.brezillon@collabora.com>
+Cc:     linux-kernel@vger.kernel.org, George Spelvin <lkml@sdf.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Andrey Abramov <st5pub@yandex.ru>, kernel@collabora.com
+Subject: Re: [PATCH] lib/sort: Add the sort_r() variant
+Message-Id: <20190522113315.08484a3942ec07793b7d6112@linux-foundation.org>
+In-Reply-To: <20190522112550.31814-1-boris.brezillon@collabora.com>
+References: <20190522112550.31814-1-boris.brezillon@collabora.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 22, 2019 at 01:48:52PM -0400, Jerome Glisse wrote:
+On Wed, 22 May 2019 13:25:50 +0200 Boris Brezillon <boris.brezillon@collabora.com> wrote:
 
-> From 0b429b2ffbec348e283693cb97d7ffce760d89da Mon Sep 17 00:00:00 2001
-> From: =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>
-> Date: Sat, 8 Dec 2018 15:47:55 -0500
-> Subject: [PATCH] RDMA/odp: convert to use HMM for ODP v5
-> MIME-Version: 1.0
-> Content-Type: text/plain; charset=UTF-8
-> Content-Transfer-Encoding: 8bit
+> Some users might need extra context to compare 2 elements. This patch
+> adds the sort_r() which is similar to the qsort_r() variant of qsort().
 > 
-> Convert ODP to use HMM so that we can build on common infrastructure
-> for different class of devices that want to mirror a process address
-> space into a device. There is no functional changes.
+> Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
+> ---
+> Hello,
 > 
-> Changes since v4:
->     - Rebase on top of rdma-next
-> Changes since v3:
->     - Rebase on top of 5.2-rc1
-> Changes since v2:
->     - Update to match changes to HMM API
-> Changes since v1:
->     - improved comments
->     - simplified page alignment computation
+> A few more details about this patch.
 > 
-> Signed-off-by: Jérôme Glisse <jglisse@redhat.com>
-> Cc: Jason Gunthorpe <jgg@mellanox.com>
-> Cc: Leon Romanovsky <leonro@mellanox.com>
-> Cc: Doug Ledford <dledford@redhat.com>
-> Cc: Artemy Kovalyov <artemyko@mellanox.com>
-> Cc: Moni Shoua <monis@mellanox.com>
-> Cc: Mike Marciniszyn <mike.marciniszyn@intel.com>
-> Cc: Kaike Wan <kaike.wan@intel.com>
-> Cc: Dennis Dalessandro <dennis.dalessandro@intel.com>
->  drivers/infiniband/core/umem_odp.c | 506 +++++++++--------------------
->  drivers/infiniband/hw/mlx5/mem.c   |  20 +-
->  drivers/infiniband/hw/mlx5/mr.c    |   2 +-
->  drivers/infiniband/hw/mlx5/odp.c   | 104 +++---
->  include/rdma/ib_umem_odp.h         |  47 +--
->  5 files changed, 233 insertions(+), 446 deletions(-)
+> Even though I post it as a standalone patch, I do intend to use it in
+> a real driver (v4l2 driver), just didn't want to have it burried in a
+> huge patch series.
+> 
+> Note that sort() and sort_r() are now implemented as wrappers around
+> do_sort() so that most of the code can be shared. I initially went for
+> a solution that implemented sort() as a wrapper around sort_r() (which
+> basically contained the do_sort() logic without the cmp_func arg)
+> but realized this was adding one extra indirect call (the compare func
+> wrapper), which I know are being chased.
 
-The kconfig stuff is missing, and it doesn't compile in various cases
-I tried.
+Please move the above text into the changelog.  It's probably useful
+and we can afford the disk space ;)
 
-The kconfig stuff for hmm is also really obnoxious, you can't just
-enabe HMM_MIRROR, you have to track down all the little required
-elements to get it to turn on..
+> There's another option, but I'm pretty sure other people already
+> considered it and thought it was not a good idea as it would make
+> the code size grow: move the code to sort.h as inline funcs/macros so
+> that the compiler can optimize things out and replace the indirect
+> cmp_func() calls by direct ones. I just tried it, and it makes my .o
+> file grow by 576 bytes, given that we currently have 122 users of
+> this function, that makes the kernel code grow by ~70k (that's kind
+> of a max estimate since not all users will be compiled in).
 
-Once I did get it to compile, I also get warnings:
+eep, let's not do that.
 
-mm/hmm.c: In function ‘hmm_vma_walk_pud’:
-mm/hmm.c:782:28: warning: unused variable ‘pfn’ [-Wunused-variable]
-   unsigned long i, npages, pfn;
-                            ^~~
-mm/hmm.c: In function ‘hmm_range_snapshot’:
-mm/hmm.c:1027:19: warning: unused variable ‘h’ [-Wunused-variable]
-    struct hstate *h = hstate_vma(vma);
+> --- a/include/linux/sort.h
+> +++ b/include/linux/sort.h
 
-Because this kernel doesn't have CONFIG_HUGETLB_PAGE
+Patch otherwise looks OK.  Please include it with the patch series
+which uses it.  Feel free to add
 
-Please fold this into your patch if it has to be resent.. I think it
-fixes the compilation problems.
-
-diff --git a/drivers/infiniband/Kconfig b/drivers/infiniband/Kconfig
-index cbfbea49f126cd..e3eefd0917985a 100644
---- a/drivers/infiniband/Kconfig
-+++ b/drivers/infiniband/Kconfig
-@@ -63,7 +63,7 @@ config INFINIBAND_USER_MEM
- config INFINIBAND_ON_DEMAND_PAGING
- 	bool "InfiniBand on-demand paging support"
- 	depends on INFINIBAND_USER_MEM
--	select MMU_NOTIFIER
-+	depends on HMM_MIRROR
- 	default y
- 	---help---
- 	  On demand paging support for the InfiniBand subsystem.
-diff --git a/include/rdma/ib_umem_odp.h b/include/rdma/ib_umem_odp.h
-index e1476e9ebb7906..f760103c07349a 100644
---- a/include/rdma/ib_umem_odp.h
-+++ b/include/rdma/ib_umem_odp.h
-@@ -115,6 +115,16 @@ static inline size_t ib_umem_odp_num_pages(struct ib_umem_odp *umem_odp)
- 
- #define ODP_DMA_ADDR_MASK (~(ODP_READ_ALLOWED_BIT | ODP_WRITE_ALLOWED_BIT))
- 
-+#define ODP_READ_BIT	(1<<0ULL)
-+#define ODP_WRITE_BIT	(1<<1ULL)
-+/*
-+ * The device bit is not use by ODP but is there to full-fill HMM API which
-+ * also support device with device memory (like GPU). So from ODP/RDMA POV
-+ * this can be ignored.
-+ */
-+#define ODP_DEVICE_BIT	(1<<2ULL)
-+#define ODP_FLAGS_BITS	3
-+
- #ifdef CONFIG_INFINIBAND_ON_DEMAND_PAGING
- 
- struct ib_ucontext_per_mm {
-@@ -138,16 +148,6 @@ struct ib_umem_odp *ib_alloc_odp_umem(struct ib_umem_odp *root_umem,
- 				      unsigned long addr, size_t size);
- void ib_umem_odp_release(struct ib_umem_odp *umem_odp);
- 
--#define ODP_READ_BIT	(1<<0ULL)
--#define ODP_WRITE_BIT	(1<<1ULL)
--/*
-- * The device bit is not use by ODP but is there to full-fill HMM API which
-- * also support device with device memory (like GPU). So from ODP/RDMA POV
-- * this can be ignored.
-- */
--#define ODP_DEVICE_BIT	(1<<2ULL)
--#define ODP_FLAGS_BITS	3
--
- long ib_umem_odp_map_dma_pages(struct ib_umem_odp *umem_odp,
- 			       struct hmm_range *range);
- 
+Acked-by: Andrew Morton <akpm@linux-foundation.org>
