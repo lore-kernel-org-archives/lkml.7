@@ -2,139 +2,336 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75105C072A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 04:25:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F584C072A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 04:29:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5052820675
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 04:25:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 483FB20675
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 04:29:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726555AbfEVEZl (ORCPT
+        id S1726641AbfEVE3O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 00:25:41 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:35584 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725770AbfEVEZk (ORCPT
+        Wed, 22 May 2019 00:29:14 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:39360 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725802AbfEVE3N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 00:25:40 -0400
-Received: by mail-wm1-f68.google.com with SMTP id q15so643361wmj.0
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 21:25:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=JoAKa5YbB2W/PNhCMdbh+KIVY8D49uG4igHlrkBg6lU=;
-        b=CddoQvvcwvXME8o6I0Tch/E5HAMYSkH8syozIlX3i1AWjZ85qeQpLt0EKDvqqNgNNj
-         1n9c6dK/z8yAdiDvWpQKRMKquXOWPZJFbdHXyxJ8HbyL0qiZB1wRadNEaWQfKt5kJ9a1
-         n/TpIWjA/14cYnpu+2+RNxqHvCW2tjoj4eZLmJzyBlMsuGVTlGDa2rCMle6BMB9zMnUs
-         EUZhJfbDOmy+Ml/PtVBHOtduQJkNZxN5kPixhKVl6npgyRZ1FoIhwfkCGSZVu9H1wbkM
-         SNXhGH8hAhPdNSm6Gsl/L/hcVxpzBP212GAB6DBVc7WSfiYHZpTcJRnUwwe8xvi3TXMD
-         sLog==
-X-Gm-Message-State: APjAAAXayC7kKcaHr+Wuu4CuXEgIZDUm0Velxpa1klwnyNO9/SlrjhQj
-        Grfq+GmnBzQNHKmQCptqPS9yNGKE
-X-Google-Smtp-Source: APXvYqx5EuRD6ma3J4DkMl6CtOJddxapVn+UySmJ5UyNSpa8SlpiyTAehTuYouO+04eHk1d/0C8LPg==
-X-Received: by 2002:a1c:98cf:: with SMTP id a198mr5979171wme.51.1558499138210;
-        Tue, 21 May 2019 21:25:38 -0700 (PDT)
-Received: from [192.168.1.49] (185-219-167-24-static.vivo.cz. [185.219.167.24])
-        by smtp.gmail.com with ESMTPSA id p17sm6261598wrq.95.2019.05.21.21.25.37
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 21 May 2019 21:25:37 -0700 (PDT)
-Subject: Re: [PATCH] tty_io: Fix a missing-check bug in drivers/tty/tty_io.c
-To:     Gen Zhang <blackgod016574@gmail.com>
-Cc:     linux-kernel@vger.kernel.org
-References: <20190522014006.GB4093@zhanggen-UX430UQ>
-From:   Jiri Slaby <jslaby@suse.cz>
-Openpgp: preference=signencrypt
-Autocrypt: addr=jslaby@suse.cz; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <abc68141-df99-1ae1-ea51-c83bd4480d92@suse.cz>
-Date:   Wed, 22 May 2019 06:25:36 +0200
+        Wed, 22 May 2019 00:29:13 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4M4NA8K064415
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 00:29:12 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2smtpkgncr-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 00:29:12 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <fbarrat@linux.ibm.com>;
+        Wed, 22 May 2019 05:29:10 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 22 May 2019 05:29:07 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4M4T5Ae57278636
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 22 May 2019 04:29:05 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 890F4A4051;
+        Wed, 22 May 2019 04:29:05 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2DDB2A404D;
+        Wed, 22 May 2019 04:29:05 +0000 (GMT)
+Received: from pic2.home (unknown [9.145.21.204])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 22 May 2019 04:29:05 +0000 (GMT)
+Subject: Re: [PATCH] misc: remove redundant 'default n' from Kconfig-s
+To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Andrew Donnellan <ajd@linux.ibm.com>,
+        Eric Piel <eric.piel@tremplin-utc.net>,
+        Frank Haverkamp <haver@linux.ibm.com>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+References: <CGME20190520141047eucas1p2c6006d1ecfc3eb287b6b33d131f66180@eucas1p2.samsung.com>
+ <1ab818ae-4d9f-d17a-f11f-7caaa5bf98bc@samsung.com>
+From:   Frederic Barrat <fbarrat@linux.ibm.com>
+Date:   Wed, 22 May 2019 06:29:04 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190522014006.GB4093@zhanggen-UX430UQ>
-Content-Type: text/plain; charset=iso-8859-2
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <1ab818ae-4d9f-d17a-f11f-7caaa5bf98bc@samsung.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr-MC
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19052204-0020-0000-0000-0000033F295D
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19052204-0021-0000-0000-000021920BEB
+Message-Id: <54415f18-223e-17a8-faaa-c1ffcc99e7eb@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-22_02:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905220030
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22. 05. 19, 3:40, Gen Zhang wrote:
-> In alloc_tty_struct(), tty->dev is assigned by tty_get_device(). And it
-> calls class_find_device(). And class_find_device() may return NULL.
-> And tty->dev is dereferenced in the following codes. When 
-> tty_get_device() returns NULL, dereferencing this tty->dev null pointer
-> may cause the kernel go wrong. Thus we should check tty->dev.
-> Further, if tty_get_device() returns NULL, we should free tty and 
-> return NULL.
+
+
+Le 20/05/2019 à 16:10, Bartlomiej Zolnierkiewicz a écrit :
+> 'default n' is the default value for any bool or tristate Kconfig
+> setting so there is no need to write it explicitly.
 > 
-> Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
+> Also since commit f467c5640c29 ("kconfig: only write '# CONFIG_FOO
+> is not set' for visible symbols") the Kconfig behavior is the same
+> regardless of 'default n' being present or not:
 > 
+>      ...
+>      One side effect of (and the main motivation for) this change is making
+>      the following two definitions behave exactly the same:
+>      
+>          config FOO
+>                  bool
+>      
+>          config FOO
+>                  bool
+>                  default n
+>      
+>      With this change, neither of these will generate a
+>      '# CONFIG_FOO is not set' line (assuming FOO isn't selected/implied).
+>      That might make it clearer to people that a bare 'default n' is
+>      redundant.
+>      ...
+> 
+> Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 > ---
-> diff --git a/drivers/tty/tty_io.c b/drivers/tty/tty_io.c
-> index 033ac7e..1444b59 100644
-> --- a/drivers/tty/tty_io.c
-> +++ b/drivers/tty/tty_io.c
-> @@ -3008,6 +3008,10 @@ struct tty_struct *alloc_tty_struct(struct tty_driver *driver, int idx)
->  	tty->index = idx;
->  	tty_line_name(driver, idx, tty->name);
->  	tty->dev = tty_get_device(tty);
-> +	if (!tty->dev) {
-> +		kfree(tty);
-> +		return NULL;
-> +	}
 
-This is incorrect, you introduced an ldisc reference leak.
+for cxl and ocxl:
+Acked-by: Frederic Barrat <fbarrat@linux.ibm.com>
 
-And can this happen at all?
 
-thanks,
--- 
-js
-suse labs
+>   drivers/misc/Kconfig              |   10 ----------
+>   drivers/misc/altera-stapl/Kconfig |    1 -
+>   drivers/misc/c2port/Kconfig       |    2 --
+>   drivers/misc/cb710/Kconfig        |    1 -
+>   drivers/misc/cxl/Kconfig          |    3 ---
+>   drivers/misc/echo/Kconfig         |    1 -
+>   drivers/misc/genwqe/Kconfig       |    1 -
+>   drivers/misc/lis3lv02d/Kconfig    |    2 --
+>   drivers/misc/ocxl/Kconfig         |    1 -
+>   9 files changed, 22 deletions(-)
+> 
+> Index: b/drivers/misc/Kconfig
+> ===================================================================
+> --- a/drivers/misc/Kconfig
+> +++ b/drivers/misc/Kconfig
+> @@ -8,7 +8,6 @@ config SENSORS_LIS3LV02D
+>   	tristate
+>   	depends on INPUT
+>   	select INPUT_POLLDEV
+> -	default n
+>   
+>   config AD525X_DPOT
+>   	tristate "Analog Devices Digital Potentiometers"
+> @@ -61,7 +60,6 @@ config ATMEL_TCLIB
+>   
+>   config DUMMY_IRQ
+>   	tristate "Dummy IRQ handler"
+> -	default n
+>   	---help---
+>   	  This module accepts a single 'irq' parameter, which it should register for.
+>   	  The sole purpose of this module is to help with debugging of systems on
+> @@ -117,7 +115,6 @@ config PHANTOM
+>   config INTEL_MID_PTI
+>   	tristate "Parallel Trace Interface for MIPI P1149.7 cJTAG standard"
+>   	depends on PCI && TTY && (X86_INTEL_MID || COMPILE_TEST)
+> -	default n
+>   	help
+>   	  The PTI (Parallel Trace Interface) driver directs
+>   	  trace data routed from various parts in the system out
+> @@ -193,7 +190,6 @@ config ATMEL_SSC
+>   
+>   config ENCLOSURE_SERVICES
+>   	tristate "Enclosure Services"
+> -	default n
+>   	help
+>   	  Provides support for intelligent enclosures (bays which
+>   	  contain storage devices).  You also need either a host
+> @@ -217,7 +213,6 @@ config SGI_XP
+>   config CS5535_MFGPT
+>   	tristate "CS5535/CS5536 Geode Multi-Function General Purpose Timer (MFGPT) support"
+>   	depends on MFD_CS5535
+> -	default n
+>   	help
+>   	  This driver provides access to MFGPT functionality for other
+>   	  drivers that need timers.  MFGPTs are available in the CS5535 and
+> @@ -250,7 +245,6 @@ config CS5535_CLOCK_EVENT_SRC
+>   config HP_ILO
+>   	tristate "Channel interface driver for the HP iLO processor"
+>   	depends on PCI
+> -	default n
+>   	help
+>   	  The channel interface driver allows applications to communicate
+>   	  with iLO management processors present on HP ProLiant servers.
+> @@ -285,7 +279,6 @@ config QCOM_FASTRPC
+>   config SGI_GRU
+>   	tristate "SGI GRU driver"
+>   	depends on X86_UV && SMP
+> -	default n
+>   	select MMU_NOTIFIER
+>   	---help---
+>   	The GRU is a hardware resource located in the system chipset. The GRU
+> @@ -300,7 +293,6 @@ config SGI_GRU
+>   config SGI_GRU_DEBUG
+>   	bool  "SGI GRU driver debug"
+>   	depends on SGI_GRU
+> -	default n
+>   	---help---
+>   	This option enables additional debugging code for the SGI GRU driver.
+>   	If you are unsure, say N.
+> @@ -358,7 +350,6 @@ config SENSORS_BH1770
+>   config SENSORS_APDS990X
+>   	 tristate "APDS990X combined als and proximity sensors"
+>   	 depends on I2C
+> -	 default n
+>   	 ---help---
+>   	   Say Y here if you want to build a driver for Avago APDS990x
+>   	   combined ambient light and proximity sensor chip.
+> @@ -386,7 +377,6 @@ config DS1682
+>   config SPEAR13XX_PCIE_GADGET
+>   	bool "PCIe gadget support for SPEAr13XX platform"
+>   	depends on ARCH_SPEAR13XX && BROKEN
+> -	default n
+>   	help
+>   	 This option enables gadget support for PCIe controller. If
+>   	 board file defines any controller as PCIe endpoint then a sysfs
+> Index: b/drivers/misc/altera-stapl/Kconfig
+> ===================================================================
+> --- a/drivers/misc/altera-stapl/Kconfig
+> +++ b/drivers/misc/altera-stapl/Kconfig
+> @@ -4,6 +4,5 @@ comment "Altera FPGA firmware download m
+>   config ALTERA_STAPL
+>   	tristate "Altera FPGA firmware download module"
+>   	depends on I2C
+> -	default n
+>   	help
+>   	  An Altera FPGA module. Say Y when you want to support this tool.
+> Index: b/drivers/misc/c2port/Kconfig
+> ===================================================================
+> --- a/drivers/misc/c2port/Kconfig
+> +++ b/drivers/misc/c2port/Kconfig
+> @@ -4,7 +4,6 @@
+>   
+>   menuconfig C2PORT
+>   	tristate "Silicon Labs C2 port support"
+> -	default n
+>   	help
+>   	  This option enables support for Silicon Labs C2 port used to
+>   	  program Silicon micro controller chips (and other 8051 compatible).
+> @@ -23,7 +22,6 @@ if C2PORT
+>   config C2PORT_DURAMAR_2150
+>   	tristate "C2 port support for Eurotech's Duramar 2150"
+>   	depends on X86
+> -	default n
+>   	help
+>   	  This option enables C2 support for the Eurotech's Duramar 2150
+>   	  on board micro controller.
+> Index: b/drivers/misc/cb710/Kconfig
+> ===================================================================
+> --- a/drivers/misc/cb710/Kconfig
+> +++ b/drivers/misc/cb710/Kconfig
+> @@ -14,7 +14,6 @@ config CB710_CORE
+>   config CB710_DEBUG
+>   	bool "Enable driver debugging"
+>   	depends on CB710_CORE != n
+> -	default n
+>   	help
+>   	  This is an option for use by developers; most people should
+>   	  say N here.  This adds a lot of debugging output to dmesg.
+> Index: b/drivers/misc/cxl/Kconfig
+> ===================================================================
+> --- a/drivers/misc/cxl/Kconfig
+> +++ b/drivers/misc/cxl/Kconfig
+> @@ -4,16 +4,13 @@
+>   
+>   config CXL_BASE
+>   	bool
+> -	default n
+>   	select PPC_COPRO_BASE
+>   
+>   config CXL_AFU_DRIVER_OPS
+>   	bool
+> -	default n
+>   
+>   config CXL_LIB
+>   	bool
+> -	default n
+>   
+>   config CXL
+>   	tristate "Support for IBM Coherent Accelerators (CXL)"
+> Index: b/drivers/misc/echo/Kconfig
+> ===================================================================
+> --- a/drivers/misc/echo/Kconfig
+> +++ b/drivers/misc/echo/Kconfig
+> @@ -1,6 +1,5 @@
+>   config ECHO
+>   	tristate "Line Echo Canceller support"
+> -	default n
+>   	---help---
+>   	  This driver provides line echo cancelling support for mISDN and
+>   	  Zaptel drivers.
+> Index: b/drivers/misc/genwqe/Kconfig
+> ===================================================================
+> --- a/drivers/misc/genwqe/Kconfig
+> +++ b/drivers/misc/genwqe/Kconfig
+> @@ -6,7 +6,6 @@ menuconfig GENWQE
+>   	tristate "GenWQE PCIe Accelerator"
+>   	depends on PCI && 64BIT
+>   	select CRC_ITU_T
+> -	default n
+>   	help
+>   	  Enables PCIe card driver for IBM GenWQE accelerators.
+>   	  The user-space interface is described in
+> Index: b/drivers/misc/lis3lv02d/Kconfig
+> ===================================================================
+> --- a/drivers/misc/lis3lv02d/Kconfig
+> +++ b/drivers/misc/lis3lv02d/Kconfig
+> @@ -6,7 +6,6 @@ config SENSORS_LIS3_SPI
+>   	tristate "STMicroeletronics LIS3LV02Dx three-axis digital accelerometer (SPI)"
+>   	depends on !ACPI && SPI_MASTER && INPUT
+>   	select SENSORS_LIS3LV02D
+> -	default n
+>   	help
+>   	  This driver provides support for the LIS3LV02Dx accelerometer connected
+>   	  via SPI. The accelerometer data is readable via
+> @@ -23,7 +22,6 @@ config SENSORS_LIS3_I2C
+>   	tristate "STMicroeletronics LIS3LV02Dx three-axis digital accelerometer (I2C)"
+>   	depends on I2C && INPUT
+>   	select SENSORS_LIS3LV02D
+> -	default n
+>   	help
+>   	  This driver provides support for the LIS3LV02Dx accelerometer connected
+>   	  via I2C. The accelerometer data is readable via
+> Index: b/drivers/misc/ocxl/Kconfig
+> ===================================================================
+> --- a/drivers/misc/ocxl/Kconfig
+> +++ b/drivers/misc/ocxl/Kconfig
+> @@ -4,7 +4,6 @@
+>   
+>   config OCXL_BASE
+>   	bool
+> -	default n
+>   	select PPC_COPRO_BASE
+>   
+>   config OCXL
+> 
+
