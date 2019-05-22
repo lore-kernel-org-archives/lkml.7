@@ -2,86 +2,85 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACF0FC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 11:51:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90B26C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 11:52:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 839A42173C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 11:51:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6046920851
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 11:52:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729284AbfEVLvs (ORCPT
+        id S1729191AbfEVLwa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 07:51:48 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:48742 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727464AbfEVLvs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 07:51:48 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 73C4E80D;
-        Wed, 22 May 2019 04:51:47 -0700 (PDT)
-Received: from mbp (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A731F3F575;
-        Wed, 22 May 2019 04:51:41 -0700 (PDT)
-Date:   Wed, 22 May 2019 12:51:39 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Andrey Konovalov <andreyknvl@google.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
-        linux-media@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
-Subject: Re: [PATCH v15 06/17] mm: untag user pointers in do_pages_move
-Message-ID: <20190522115138.52ew2totjd6i4aaq@mbp>
-References: <cover.1557160186.git.andreyknvl@google.com>
- <474b3c113edae1f2fa679dc7237ec070ff4efb70.1557160186.git.andreyknvl@google.com>
+        Wed, 22 May 2019 07:52:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45812 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728536AbfEVLwa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 07:52:30 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 38A8320815;
+        Wed, 22 May 2019 11:52:29 +0000 (UTC)
+Date:   Wed, 22 May 2019 07:52:27 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] tracing: silence GCC 9 array bounds warning
+Message-ID: <20190522075227.52ae4720@gandalf.local.home>
+In-Reply-To: <20190522095810.GA16110@gmail.com>
+References: <20190522095810.GA16110@gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <474b3c113edae1f2fa679dc7237ec070ff4efb70.1557160186.git.andreyknvl@google.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 06, 2019 at 06:30:52PM +0200, Andrey Konovalov wrote:
-> This patch is a part of a series that extends arm64 kernel ABI to allow to
-> pass tagged user pointers (with the top byte set to something else other
-> than 0x00) as syscall arguments.
-> 
-> do_pages_move() is used in the implementation of the move_pages syscall.
-> 
-> Untag user pointers in this function.
-> 
-> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+On Wed, 22 May 2019 11:58:10 +0200
+Miguel Ojeda <miguel.ojeda.sandonis@gmail.com> wrote:
 
-Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
+> +/* reset all but tr, trace, and overruns */
+> +static __always_inline void trace_iterator_reset(struct trace_iterator *iter)
+> +{
+> +	/*
+> +	 * We do not simplify the start address to &iter->seq in order to let
+> +	 * GCC 9 know that we really want to overwrite more members than
+> +	 * just iter->seq (-Warray-bounds).
+
+This comment is fine for the change log, but here it is too specific.
+Why does one care about GCC 9 when we are at version GCC 21? I care
+more about why we are clearing the data and less about the way we are
+doing it.
+
+A comment like:
+
+	/*
+	 * Reset the state of the trace_iterator so that it can read
+	 * consumed data. Normally, the trace_iterator is used for
+	 * reading the data when it is not consumed, and must retain
+	 * state.
+	 */
+
+That is more useful than why we have the offset hack.
+
+
+> +	 */
+> +	const size_t offset = offsetof(struct trace_iterator, seq);
+
+Need a empty line between these two.
+
+-- Steve
+
+> +	memset((char *)(iter) + offset, 0, sizeof(struct trace_iterator) - offset);
+> +
+> +	iter->pos = -1;
+> +}
+> +
+>  #endif /* _LINUX_KERNEL_TRACE_H */
