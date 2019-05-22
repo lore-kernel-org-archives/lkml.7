@@ -2,93 +2,281 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DA3AC46470
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 21:16:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F84BC282DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 21:17:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BACE21773
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 21:16:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3C4521773
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 21:17:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BozsRedf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730195AbfEVVQW (ORCPT
+        id S1730317AbfEVVRM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 17:16:22 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:37203 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729720AbfEVVQW (ORCPT
+        Wed, 22 May 2019 17:17:12 -0400
+Received: from mail-ua1-f68.google.com ([209.85.222.68]:37538 "EHLO
+        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729922AbfEVVRL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 17:16:22 -0400
-Received: by mail-qt1-f193.google.com with SMTP id o7so4248837qtp.4;
-        Wed, 22 May 2019 14:16:21 -0700 (PDT)
+        Wed, 22 May 2019 17:17:11 -0400
+Received: by mail-ua1-f68.google.com with SMTP id t18so1421347uar.4
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 14:17:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4dHniiz5Iec+zX/39XStbUXbmPxCKmuaK7gygHepfyc=;
+        b=BozsRedf7hxOrPEwc14/5gYKjPtcuYPfCzdL5Qh8eptxMopndG6sl6KK8l1wx0gHcO
+         fX9KUGo72jJQy2d1m1wZ3No1Qi2uQpl1cB2uKNXeTTE0y7bVHQRp3jZ8gNy6f12oUbuZ
+         9pqndA18D5HuCzEP7FakfNMcFjkFYSW5Qf6tTdWeb6YU5HYx7NFV4gOPaqZKnmwkQ5VN
+         K2fCVmPCADr0j8VP+wLoOUFpEpW6WISMm8/ajD25DfdGIBy1SiKGnwF+/Lt+nHE51rtB
+         vS7fbs1gYfPlwpTBaswd0RKzwzIK+7d4NhNx6dxPb1W6jd5YUGLoFQyi73p/mW3CKcJq
+         v2ig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=IRDeg6juu9TInpGEUEsh12JdfkX4fbWASfCdn5kwEwo=;
-        b=l/GM5KjopFjgbnIKVrkQBcZQ7sudlrvhjbQ4BC0yhixsuYYj3KZxqvREtYjHssMFvV
-         c9zBIzzPTmU9Oz8V63hsEdABFGmxdYY6/QMb5DwdhcqEPBleWafiT7m32391zpKJHEPa
-         wKKZ7BxqWO6+nmPPBpKokLXZa6ld4hjH4mb1vajY0vpWVqp8wWcQtrc8oqIsLWurnEsk
-         DER9cebLKx3usmC4h0SxTAPh0gC4XmP9e/I4jN1qh3vUCYydiyoipWLzYQ9yRLQjgR4C
-         EeX0DOLeeowoI/QsIuMzenvb+CbSPugImu8Uj9T50geezggMW3IZg/FMgldGoKIhT074
-         RikQ==
-X-Gm-Message-State: APjAAAVvynSpr4/Desi1FEh3TfHd1iHdn+snK9mqP25eD4R7eDDoqfT1
-        Jk245gKmFIksvba66Qd8tqwQWmOs0TxkkfikrJI=
-X-Google-Smtp-Source: APXvYqxRHIuj8C7LagjHY5o0vw8tutrohkTAg2q5dHo9HC3r8+VsVxO6QVsI0OWyf9koBryzkBEG0/AKdXcmD+aAbnk=
-X-Received: by 2002:ac8:3319:: with SMTP id t25mr76253431qta.204.1558559781276;
- Wed, 22 May 2019 14:16:21 -0700 (PDT)
+        bh=4dHniiz5Iec+zX/39XStbUXbmPxCKmuaK7gygHepfyc=;
+        b=g5szW4ypwPiIcriHHd7aSgV6cWPdcY+saeg9Pt9lYaP/JYrwBTzAELB4+dKMFm42FZ
+         em9CWxlm2CSwQwpwdc/Q5B0X/+zndSwPqOCSALKc2a9oqCpTtyODiWq4/dpTsnrjI6Nu
+         rmQJQNrN8y7XdV41o0Yi917m4o58YcBy1ulehmXIwuouxCRF4Qv4lyK3d69cbNZThve1
+         eSZpFxsVadpXCcgj2OE+Yq4nfXj58Oj3K7DdaaM+BUNqcOL2COxPvnrdeR+PZtRTP+q7
+         7RoD2pOTSISPYMAddbfPfuuXL8xmSYbaCyWaMbGX//w6v7S0huuwFVAVBU9uO0cJgzFv
+         DMZw==
+X-Gm-Message-State: APjAAAXn/qPmGbrGTWYPTYC/nO8RGKDUiCvRIl9Cwj9p3u2rxOuxVLXd
+        rne7U8mXy8yjk1kk/GCCvzOfWjcIuelXIY9ffmz18g==
+X-Google-Smtp-Source: APXvYqxH4+lXdvKeAKR6IcV6qRcWyD41x0RLMgowdC0uvePb1uyY7QqZdIceH4zhHD2Gn25pj1INm9uTZm6L2qnPIh8=
+X-Received: by 2002:ab0:115a:: with SMTP id g26mr16507991uac.84.1558559829704;
+ Wed, 22 May 2019 14:17:09 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190522132250.26499-1-mark.rutland@arm.com> <20190522132250.26499-4-mark.rutland@arm.com>
-In-Reply-To: <20190522132250.26499-4-mark.rutland@arm.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 22 May 2019 23:16:04 +0200
-Message-ID: <CAK8P3a2jcXwyG2DRmKJfV5VF_R7c9H7L89ys-sx+qWEe_zBhCQ@mail.gmail.com>
-Subject: Re: [PATCH 03/18] locking/atomic: generic: use s64 for atomic64
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
+References: <cover.1557160186.git.andreyknvl@google.com> <00eb4c63fefc054e2c8d626e8fedfca11d7c2600.1557160186.git.andreyknvl@google.com>
+ <20190522114910.emlckebwzv2qz42i@mbp>
+In-Reply-To: <20190522114910.emlckebwzv2qz42i@mbp>
+From:   Evgenii Stepanov <eugenis@google.com>
+Date:   Wed, 22 May 2019 14:16:57 -0700
+Message-ID: <CAFKCwrjyP+x0JJy=qpBFsp4pub3He6UkvU0qnf1UOKt6W1LPRQ@mail.gmail.com>
+Subject: Re: [PATCH v15 05/17] arms64: untag user pointers passed to memory syscalls
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Andrey Konovalov <andreyknvl@google.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
+        kvm@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
         Will Deacon <will.deacon@arm.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        David Miller <davem@davemloft.net>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        James Hogan <jhogan@kernel.org>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Matt Turner <mattst88@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Burton <paul.burton@mips.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Richard Henderson <rth@twiddle.net>,
-        "# 3.4.x" <stable@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tony Luck <tony.luck@intel.com>,
-        Vineet Gupta <vgupta@synopsys.com>
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alexander Deucher <Alexander.Deucher@amd.com>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 22, 2019 at 3:23 PM Mark Rutland <mark.rutland@arm.com> wrote:
+On Wed, May 22, 2019 at 4:49 AM Catalin Marinas <catalin.marinas@arm.com> wrote:
 >
-> As a step towards making the atomic64 API use consistent types treewide,
-> let's have the generic atomic64 implementation use s64 as the underlying
-> type for atomic64_t, rather than long long, matching the generated
-> headers.
+> On Mon, May 06, 2019 at 06:30:51PM +0200, Andrey Konovalov wrote:
+> > This patch is a part of a series that extends arm64 kernel ABI to allow to
+> > pass tagged user pointers (with the top byte set to something else other
+> > than 0x00) as syscall arguments.
+> >
+> > This patch allows tagged pointers to be passed to the following memory
+> > syscalls: brk, get_mempolicy, madvise, mbind, mincore, mlock, mlock2,
+> > mmap, mmap_pgoff, mprotect, mremap, msync, munlock, munmap,
+> > remap_file_pages, shmat and shmdt.
+> >
+> > This is done by untagging pointers passed to these syscalls in the
+> > prologues of their handlers.
 >
-> Otherwise, there should be no functional change as a result of this
-> patch.
+> I'll go through them one by one to see if we can tighten the expected
+> ABI while having the MTE in mind.
 >
-> Signed-off-by: Mark Rutland <mark.rutland@arm.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Will Deacon <will.deacon@arm.com>
+> > diff --git a/arch/arm64/kernel/sys.c b/arch/arm64/kernel/sys.c
+> > index b44065fb1616..933bb9f3d6ec 100644
+> > --- a/arch/arm64/kernel/sys.c
+> > +++ b/arch/arm64/kernel/sys.c
+> > @@ -35,10 +35,33 @@ SYSCALL_DEFINE6(mmap, unsigned long, addr, unsigned long, len,
+> >  {
+> >       if (offset_in_page(off) != 0)
+> >               return -EINVAL;
+> > -
+> > +     addr = untagged_addr(addr);
+> >       return ksys_mmap_pgoff(addr, len, prot, flags, fd, off >> PAGE_SHIFT);
+> >  }
+>
+> If user passes a tagged pointer to mmap() and the address is honoured
+> (or MAP_FIXED is given), what is the expected return pointer? Does it
+> need to be tagged with the value from the hint?
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
+For HWASan the most convenient would be to use the tag from the hint.
+But since in the TBI (not MTE) mode the kernel has no idea what
+meaning userspace assigns to pointer tags, perhaps it should not try
+to guess, and should return raw (zero-tagged) address instead.
+
+> With MTE, we may want to use this as a request for the default colour of
+> the mapped pages (still under discussion).
+
+I like this - and in that case it would make sense to return the
+pointer that can be immediately dereferenced without crashing the
+process, i.e. with the matching tag.
+
+> > +SYSCALL_DEFINE6(arm64_mmap_pgoff, unsigned long, addr, unsigned long, len,
+> > +             unsigned long, prot, unsigned long, flags,
+> > +             unsigned long, fd, unsigned long, pgoff)
+> > +{
+> > +     addr = untagged_addr(addr);
+> > +     return ksys_mmap_pgoff(addr, len, prot, flags, fd, pgoff);
+> > +}
+>
+> We don't have __NR_mmap_pgoff on arm64.
+>
+> > +SYSCALL_DEFINE5(arm64_mremap, unsigned long, addr, unsigned long, old_len,
+> > +             unsigned long, new_len, unsigned long, flags,
+> > +             unsigned long, new_addr)
+> > +{
+> > +     addr = untagged_addr(addr);
+> > +     new_addr = untagged_addr(new_addr);
+> > +     return ksys_mremap(addr, old_len, new_len, flags, new_addr);
+> > +}
+>
+> Similar comment as for mmap(), do we want the tag from new_addr to be
+> preserved? In addition, should we check that the two tags are identical
+> or mremap() should become a way to repaint a memory region?
+>
+> > +SYSCALL_DEFINE2(arm64_munmap, unsigned long, addr, size_t, len)
+> > +{
+> > +     addr = untagged_addr(addr);
+> > +     return ksys_munmap(addr, len);
+> > +}
+>
+> This looks fine.
+>
+> > +SYSCALL_DEFINE1(arm64_brk, unsigned long, brk)
+> > +{
+> > +     brk = untagged_addr(brk);
+> > +     return ksys_brk(brk);
+> > +}
+>
+> I wonder whether brk() should simply not accept tags, and should not
+> return them (similar to the prctl(PR_SET_MM) discussion). We could
+> document this in the ABI requirements.
+>
+> > +SYSCALL_DEFINE5(arm64_get_mempolicy, int __user *, policy,
+> > +             unsigned long __user *, nmask, unsigned long, maxnode,
+> > +             unsigned long, addr, unsigned long, flags)
+> > +{
+> > +     addr = untagged_addr(addr);
+> > +     return ksys_get_mempolicy(policy, nmask, maxnode, addr, flags);
+> > +}
+> > +
+> > +SYSCALL_DEFINE3(arm64_madvise, unsigned long, start,
+> > +             size_t, len_in, int, behavior)
+> > +{
+> > +     start = untagged_addr(start);
+> > +     return ksys_madvise(start, len_in, behavior);
+> > +}
+> > +
+> > +SYSCALL_DEFINE6(arm64_mbind, unsigned long, start, unsigned long, len,
+> > +             unsigned long, mode, const unsigned long __user *, nmask,
+> > +             unsigned long, maxnode, unsigned int, flags)
+> > +{
+> > +     start = untagged_addr(start);
+> > +     return ksys_mbind(start, len, mode, nmask, maxnode, flags);
+> > +}
+> > +
+> > +SYSCALL_DEFINE2(arm64_mlock, unsigned long, start, size_t, len)
+> > +{
+> > +     start = untagged_addr(start);
+> > +     return ksys_mlock(start, len, VM_LOCKED);
+> > +}
+> > +
+> > +SYSCALL_DEFINE2(arm64_mlock2, unsigned long, start, size_t, len)
+> > +{
+> > +     start = untagged_addr(start);
+> > +     return ksys_mlock(start, len, VM_LOCKED);
+> > +}
+> > +
+> > +SYSCALL_DEFINE2(arm64_munlock, unsigned long, start, size_t, len)
+> > +{
+> > +     start = untagged_addr(start);
+> > +     return ksys_munlock(start, len);
+> > +}
+> > +
+> > +SYSCALL_DEFINE3(arm64_mprotect, unsigned long, start, size_t, len,
+> > +             unsigned long, prot)
+> > +{
+> > +     start = untagged_addr(start);
+> > +     return ksys_mprotect_pkey(start, len, prot, -1);
+> > +}
+> > +
+> > +SYSCALL_DEFINE3(arm64_msync, unsigned long, start, size_t, len, int, flags)
+> > +{
+> > +     start = untagged_addr(start);
+> > +     return ksys_msync(start, len, flags);
+> > +}
+> > +
+> > +SYSCALL_DEFINE3(arm64_mincore, unsigned long, start, size_t, len,
+> > +             unsigned char __user *, vec)
+> > +{
+> > +     start = untagged_addr(start);
+> > +     return ksys_mincore(start, len, vec);
+> > +}
+>
+> These look fine.
+>
+> > +SYSCALL_DEFINE5(arm64_remap_file_pages, unsigned long, start,
+> > +             unsigned long, size, unsigned long, prot,
+> > +             unsigned long, pgoff, unsigned long, flags)
+> > +{
+> > +     start = untagged_addr(start);
+> > +     return ksys_remap_file_pages(start, size, prot, pgoff, flags);
+> > +}
+>
+> While this has been deprecated for some time, I presume user space still
+> invokes it?
+>
+> > +SYSCALL_DEFINE3(arm64_shmat, int, shmid, char __user *, shmaddr, int, shmflg)
+> > +{
+> > +     shmaddr = untagged_addr(shmaddr);
+> > +     return ksys_shmat(shmid, shmaddr, shmflg);
+> > +}
+> > +
+> > +SYSCALL_DEFINE1(arm64_shmdt, char __user *, shmaddr)
+> > +{
+> > +     shmaddr = untagged_addr(shmaddr);
+> > +     return ksys_shmdt(shmaddr);
+> > +}
+>
+> Do we actually want to allow shared tagged memory? Who's going to tag
+> it? If not, we can document it as not supported.
+>
+> --
+> Catalin
