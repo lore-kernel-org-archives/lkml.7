@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07A09C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:35:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D565CC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:35:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE21020675
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:35:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BF2A20675
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:35:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558553731;
-	bh=EzDvjiOKCt9srdFonuBsCOG/U/jBGJTpvtnrW2mvkZU=;
+	s=default; t=1558553741;
+	bh=M61L/6BGJAO/b4IL2zPrUUeO5cdIEunpER62ILyu/fI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fHorLVF2ojFsoqcw6VgrfMp44p4r9v+WoIZxtmDASNMZv32jWh3KHRNCDVvXhoulB
-	 74RYfabTuC66ZelHwilFuRlc7imTG09kxMP+Py3TgCULKb7TfoYILshOVL884ocJhM
-	 WOwEXSuRHNrND5cm7VVrU4IyAbX/b0LJDlWLS0N8=
+	b=CWTdfhqjdTIw0bB/fQxURLeXFVpn1Phvpu5YslCUZkmllFzp+en9x5KjI19HYQh2O
+	 u966/ImP0cg4Gl5xEKxu57eLrqmkZJ30jmqHB4H4iHd8ZulMiB5vDx7MpHrTWvx2RP
+	 UnwHVLKWE1s520YjPy7Fh68Ov9lYPZ7z/QGDkv6Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387541AbfEVTf1 (ORCPT
+        id S2387625AbfEVTfk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:35:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54528 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:35:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54510 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731454AbfEVTbB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:31:01 -0400
+        id S1731851AbfEVTbA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:31:00 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31AC72177E;
-        Wed, 22 May 2019 19:31:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 28D9B20675;
+        Wed, 22 May 2019 19:30:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553460;
-        bh=EzDvjiOKCt9srdFonuBsCOG/U/jBGJTpvtnrW2mvkZU=;
+        s=default; t=1558553459;
+        bh=M61L/6BGJAO/b4IL2zPrUUeO5cdIEunpER62ILyu/fI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NEfUks34yZ75Vwqd5lwtcHgmFlt1ExjRtSzbD7QyrkOwHUmZiYVSim5wZo+Y5EWIX
-         LHcTX/3gD+xtG0/VaYWpIR6VNZ1TmzLoPrvwws58cUdIOjFmRX9z1M3fRq+9zs7RK3
-         kI+fKsmlmcN7xPkF8qxEdjW1xv2q9LJlM5PFfRc0=
+        b=l/pD/prmw/Wnp3JpbUHi0stwBNwt6i6EbcIEn5/tdwvW9+l53UGc3QSmPJ+Ddp3hA
+         wzc7acWEFEVuyIqSbd+fff1dacN5BVI5FMQ8xnRG6Wcp2Uw2RDl+x2+4loceJJvqq3
+         H8UIF9qzhqM9gy/mVV/cs3KGXnkyAwaDxP0Tcieg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Coly Li <colyli@suse.de>, Hannes Reinecke <hare@suse.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-bcache@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 028/114] bcache: return error immediately in bch_journal_replay()
-Date:   Wed, 22 May 2019 15:28:51 -0400
-Message-Id: <20190522193017.26567-28-sashal@kernel.org>
+Cc:     Corentin Labbe <clabbe.montjoie@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 027/114] crypto: sun4i-ss - Fix invalid calculation of hash end
+Date:   Wed, 22 May 2019 15:28:50 -0400
+Message-Id: <20190522193017.26567-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522193017.26567-1-sashal@kernel.org>
 References: <20190522193017.26567-1-sashal@kernel.org>
@@ -59,52 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Coly Li <colyli@suse.de>
+From: Corentin Labbe <clabbe.montjoie@gmail.com>
 
-[ Upstream commit 68d10e6979a3b59e3cd2e90bfcafed79c4cf180a ]
+[ Upstream commit f87391558acf816b48f325a493d81d45dec40da0 ]
 
-When failure happens inside bch_journal_replay(), calling
-cache_set_err_on() and handling the failure in async way is not a good
-idea. Because after bch_journal_replay() returns, registering code will
-continue to execute following steps, and unregistering code triggered
-by cache_set_err_on() is running in same time. First it is unnecessary
-to handle failure and unregister cache set in an async way, second there
-might be potential race condition to run register and unregister code
-for same cache set.
+When nbytes < 4, end is wronlgy set to a negative value which, due to
+uint, is then interpreted to a large value leading to a deadlock in the
+following code.
 
-So in this patch, if failure happens in bch_journal_replay(), we don't
-call cache_set_err_on(), and just print out the same error message to
-kernel message buffer, then return -EIO immediately caller. Then caller
-can detect such failure and handle it in synchrnozied way.
+This patch fix this problem.
 
-Signed-off-by: Coly Li <colyli@suse.de>
-Reviewed-by: Hannes Reinecke <hare@suse.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: 6298e948215f ("crypto: sunxi-ss - Add Allwinner Security System crypto accelerator")
+Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/bcache/journal.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/crypto/sunxi-ss/sun4i-ss-hash.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/md/bcache/journal.c b/drivers/md/bcache/journal.c
-index 08f20b7cd1999..8b3f76e1075ea 100644
---- a/drivers/md/bcache/journal.c
-+++ b/drivers/md/bcache/journal.c
-@@ -322,9 +322,12 @@ int bch_journal_replay(struct cache_set *s, struct list_head *list)
- 	list_for_each_entry(i, list, list) {
- 		BUG_ON(i->pin && atomic_read(i->pin) != 1);
+diff --git a/drivers/crypto/sunxi-ss/sun4i-ss-hash.c b/drivers/crypto/sunxi-ss/sun4i-ss-hash.c
+index 0de2f62d51ff7..ec16ec2e284d0 100644
+--- a/drivers/crypto/sunxi-ss/sun4i-ss-hash.c
++++ b/drivers/crypto/sunxi-ss/sun4i-ss-hash.c
+@@ -250,7 +250,10 @@ static int sun4i_hash(struct ahash_request *areq)
+ 		}
+ 	} else {
+ 		/* Since we have the flag final, we can go up to modulo 4 */
+-		end = ((areq->nbytes + op->len) / 4) * 4 - op->len;
++		if (areq->nbytes < 4)
++			end = 0;
++		else
++			end = ((areq->nbytes + op->len) / 4) * 4 - op->len;
+ 	}
  
--		cache_set_err_on(n != i->j.seq, s,
--"bcache: journal entries %llu-%llu missing! (replaying %llu-%llu)",
--				 n, i->j.seq - 1, start, end);
-+		if (n != i->j.seq) {
-+			pr_err("bcache: journal entries %llu-%llu missing! (replaying %llu-%llu)",
-+			n, i->j.seq - 1, start, end);
-+			ret = -EIO;
-+			goto err;
-+		}
- 
- 		for (k = i->j.start;
- 		     k < bset_bkey_last(&i->j);
+ 	/* TODO if SGlen % 4 and op->len == 0 then DMA */
 -- 
 2.20.1
 
