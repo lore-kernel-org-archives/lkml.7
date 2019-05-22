@@ -6,33 +6,33 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 889A4C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 10:35:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62105C18E7D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 10:35:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68765217D4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 10:35:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 355B9217D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 10:35:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729464AbfEVKfx (ORCPT
+        id S1729479AbfEVKf4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 06:35:53 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:47168 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729398AbfEVKfu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 06:35:50 -0400
+        Wed, 22 May 2019 06:35:56 -0400
+Received: from foss.arm.com ([217.140.101.70]:47174 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729451AbfEVKfv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 06:35:51 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8A53315BF;
-        Wed, 22 May 2019 03:35:49 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D68001713;
+        Wed, 22 May 2019 03:35:50 -0700 (PDT)
 Received: from en101.cambridge.arm.com (en101.cambridge.arm.com [10.1.196.93])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 7A83D3F575;
-        Wed, 22 May 2019 03:35:48 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id C6E6D3F575;
+        Wed, 22 May 2019 03:35:49 -0700 (PDT)
 From:   Suzuki K Poulose <suzuki.poulose@arm.com>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     linux-kernel@vger.kernel.org, mathieu.poirier@linaro.org,
         coresight@lists.linaro.org,
         Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: [PATCH v4 24/30] coresight: platform: Use fwnode handle for device search
-Date:   Wed, 22 May 2019 11:34:57 +0100
-Message-Id: <1558521304-27469-25-git-send-email-suzuki.poulose@arm.com>
+Subject: [PATCH v4 25/30] coresight: Use fwnode handle instead of device names
+Date:   Wed, 22 May 2019 11:34:58 +0100
+Message-Id: <1558521304-27469-26-git-send-email-suzuki.poulose@arm.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1558521304-27469-1-git-send-email-suzuki.poulose@arm.com>
 References: <1558521304-27469-1-git-send-email-suzuki.poulose@arm.com>
@@ -41,78 +41,188 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We match of_node while searching for a device. Make this
-more generic in preparation for the ACPI support by using
-fwnode_handle.
+We rely on the device names to find a CoreSight device on the
+coresight bus. The device name however is obtained from the platform,
+which is bound to the real platform/amba device. As we are about
+to use different naming scheme for the coresight devices, we can't
+rely on the platform device name to find the corresponding
+coresight device. Instead we use the platform agnostic
+"fwnode handle" of the parent device to find the devices.
+We also reuse the same fwnode as the parent for the Coresight
+device we create.
 
 Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 ---
- drivers/hwtracing/coresight/coresight-platform.c | 16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
+ drivers/hwtracing/coresight/coresight-platform.c | 14 +++++---
+ drivers/hwtracing/coresight/coresight-priv.h     |  6 ++--
+ drivers/hwtracing/coresight/coresight.c          | 42 +++++++++++++++++++-----
+ include/linux/coresight.h                        |  4 +--
+ 4 files changed, 49 insertions(+), 17 deletions(-)
 
 diff --git a/drivers/hwtracing/coresight/coresight-platform.c b/drivers/hwtracing/coresight/coresight-platform.c
-index 53d6eed..4394095 100644
+index 4394095..49112a5 100644
 --- a/drivers/hwtracing/coresight/coresight-platform.c
 +++ b/drivers/hwtracing/coresight/coresight-platform.c
-@@ -36,14 +36,13 @@ static int coresight_alloc_conns(struct device *dev,
+@@ -36,7 +36,7 @@ static int coresight_alloc_conns(struct device *dev,
  	return 0;
  }
  
--#ifdef CONFIG_OF
--static int of_dev_node_match(struct device *dev, void *data)
-+static int coresight_device_fwnode_match(struct device *dev, void *fwnode)
+-static int coresight_device_fwnode_match(struct device *dev, void *fwnode)
++int coresight_device_fwnode_match(struct device *dev, void *fwnode)
  {
--	return dev->of_node == data;
-+	return dev_fwnode(dev) == fwnode;
+ 	return dev_fwnode(dev) == fwnode;
+ }
+@@ -219,9 +219,15 @@ static int of_coresight_parse_endpoint(struct device *dev,
+ 		}
+ 
+ 		conn->outport = endpoint.port;
+-		conn->child_name = devm_kstrdup(dev,
+-						dev_name(rdev),
+-						GFP_KERNEL);
++		/*
++		 * Hold the refcount to the target device. This could be
++		 * released via:
++		 * 1) coresight_release_platform_data() if the probe fails or
++		 *    this device is unregistered.
++		 * 2) While removing the target device via
++		 *    coresight_remove_match()
++		 */
++		conn->child_fwnode = fwnode_handle_get(rdev_fwnode);
+ 		conn->child_port = rendpoint.port;
+ 		/* Connection record updated */
+ 		ret = 1;
+diff --git a/drivers/hwtracing/coresight/coresight-priv.h b/drivers/hwtracing/coresight/coresight-priv.h
+index c216421..8b07fe5 100644
+--- a/drivers/hwtracing/coresight/coresight-priv.h
++++ b/drivers/hwtracing/coresight/coresight-priv.h
+@@ -200,8 +200,8 @@ static inline void *coresight_get_uci_data(const struct amba_id *id)
+ 	return 0;
  }
  
- static struct device *
--of_coresight_get_endpoint_device(struct device_node *endpoint)
-+coresight_find_device_by_fwnode(struct fwnode_handle *fwnode)
+-static inline void
+-coresight_release_platform_data(struct coresight_platform_data *pdata)
+-{}
++void coresight_release_platform_data(struct coresight_platform_data *pdata);
++
++int coresight_device_fwnode_match(struct device *dev, void *fwnode);
+ 
+ #endif
+diff --git a/drivers/hwtracing/coresight/coresight.c b/drivers/hwtracing/coresight/coresight.c
+index 526141c..1287778 100644
+--- a/drivers/hwtracing/coresight/coresight.c
++++ b/drivers/hwtracing/coresight/coresight.c
+@@ -978,6 +978,7 @@ static void coresight_device_release(struct device *dev)
  {
- 	struct device *dev = NULL;
+ 	struct coresight_device *csdev = to_coresight_device(dev);
  
-@@ -52,7 +51,7 @@ of_coresight_get_endpoint_device(struct device_node *endpoint)
- 	 * platform bus.
- 	 */
- 	dev = bus_find_device(&platform_bus_type, NULL,
--			      endpoint, of_dev_node_match);
-+			      fwnode, coresight_device_fwnode_match);
- 	if (dev)
- 		return dev;
- 
-@@ -61,9 +60,10 @@ of_coresight_get_endpoint_device(struct device_node *endpoint)
- 	 * looking for the device that matches the endpoint node.
- 	 */
- 	return bus_find_device(&amba_bustype, NULL,
--			       endpoint, of_dev_node_match);
-+			       fwnode, coresight_device_fwnode_match);
++	fwnode_handle_put(csdev->dev.fwnode);
+ 	kfree(csdev->refcnt);
+ 	kfree(csdev);
  }
+@@ -1009,13 +1010,11 @@ static int coresight_orphan_match(struct device *dev, void *data)
+ 		/* We have found at least one orphan connection */
+ 		if (conn->child_dev == NULL) {
+ 			/* Does it match this newly added device? */
+-			if (conn->child_name &&
+-			    !strcmp(dev_name(&csdev->dev), conn->child_name)) {
++			if (conn->child_fwnode == csdev->dev.fwnode)
+ 				conn->child_dev = csdev;
+-			} else {
++			else
+ 				/* This component still has an orphan */
+ 				still_orphan = true;
+-			}
+ 		}
+ 	}
  
-+#ifdef CONFIG_OF
- static inline bool of_coresight_legacy_ep_is_input(struct device_node *ep)
+@@ -1047,9 +1046,9 @@ static void coresight_fixup_device_conns(struct coresight_device *csdev)
+ 		struct coresight_connection *conn = &csdev->pdata->conns[i];
+ 		struct device *dev = NULL;
+ 
+-		if (conn->child_name)
+-			dev = bus_find_device_by_name(&coresight_bustype, NULL,
+-						      conn->child_name);
++		dev = bus_find_device(&coresight_bustype, NULL,
++				      (void *)conn->child_fwnode,
++				      coresight_device_fwnode_match);
+ 		if (dev) {
+ 			conn->child_dev = to_coresight_device(dev);
+ 			/* and put reference from 'bus_find_device()' */
+@@ -1084,9 +1083,15 @@ static int coresight_remove_match(struct device *dev, void *data)
+ 		if (conn->child_dev == NULL)
+ 			continue;
+ 
+-		if (!strcmp(dev_name(&csdev->dev), conn->child_name)) {
++		if (csdev->dev.fwnode == conn->child_fwnode) {
+ 			iterator->orphan = true;
+ 			conn->child_dev = NULL;
++			/*
++			 * Drop the reference to the handle for the remote
++			 * device acquired in parsing the connections from
++			 * platform data.
++			 */
++			fwnode_handle_put(conn->child_fwnode);
+ 			/* No need to continue */
+ 			break;
+ 		}
+@@ -1166,6 +1171,22 @@ static int __init coresight_init(void)
+ }
+ postcore_initcall(coresight_init);
+ 
++/*
++ * coresight_release_platform_data: Release references to the devices connected
++ * to the output port of this device.
++ */
++void coresight_release_platform_data(struct coresight_platform_data *pdata)
++{
++	int i;
++
++	for (i = 0; i < pdata->nr_outport; i++) {
++		if (pdata->conns[i].child_fwnode) {
++			fwnode_handle_put(pdata->conns[i].child_fwnode);
++			pdata->conns[i].child_fwnode = NULL;
++		}
++	}
++}
++
+ struct coresight_device *coresight_register(struct coresight_desc *desc)
  {
- 	return of_property_read_bool(ep, "slave-mode");
-@@ -191,6 +191,7 @@ static int of_coresight_parse_endpoint(struct device *dev,
- 	struct device_node *rparent = NULL;
- 	struct device_node *rep = NULL;
- 	struct device *rdev = NULL;
-+	struct fwnode_handle *rdev_fwnode;
+ 	int ret;
+@@ -1210,6 +1231,11 @@ struct coresight_device *coresight_register(struct coresight_desc *desc)
+ 	csdev->dev.parent = desc->dev;
+ 	csdev->dev.release = coresight_device_release;
+ 	csdev->dev.bus = &coresight_bustype;
++	/*
++	 * Hold the reference to our parent device. This will be
++	 * dropped only in coresight_device_release().
++	 */
++	csdev->dev.fwnode = fwnode_handle_get(dev_fwnode(desc->dev));
+ 	dev_set_name(&csdev->dev, "%s", desc->name);
  
- 	do {
- 		/* Parse the local port details */
-@@ -209,8 +210,9 @@ static int of_coresight_parse_endpoint(struct device *dev,
- 		if (of_graph_parse_endpoint(rep, &rendpoint))
- 			break;
+ 	ret = device_register(&csdev->dev);
+diff --git a/include/linux/coresight.h b/include/linux/coresight.h
+index b67d507..b40544b 100644
+--- a/include/linux/coresight.h
++++ b/include/linux/coresight.h
+@@ -126,15 +126,15 @@ struct coresight_desc {
+ /**
+  * struct coresight_connection - representation of a single connection
+  * @outport:	a connection's output port number.
+- * @chid_name:	remote component's name.
+  * @child_port:	remote component's port number @output is connected to.
++ * @chid_fwnode: remote component's fwnode handle.
+  * @child_dev:	a @coresight_device representation of the component
+ 		connected to @outport.
+  */
+ struct coresight_connection {
+ 	int outport;
+-	const char *child_name;
+ 	int child_port;
++	struct fwnode_handle *child_fwnode;
+ 	struct coresight_device *child_dev;
+ };
  
-+		rdev_fwnode = of_fwnode_handle(rparent);
- 		/* If the remote device is not available, defer probing */
--		rdev = of_coresight_get_endpoint_device(rparent);
-+		rdev = coresight_find_device_by_fwnode(rdev_fwnode);
- 		if (!rdev) {
- 			ret = -EPROBE_DEFER;
- 			break;
 -- 
 2.7.4
 
