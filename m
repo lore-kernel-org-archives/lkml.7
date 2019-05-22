@@ -2,103 +2,114 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 788CBC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 18:21:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 297D6C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 18:23:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BCDD20863
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 18:21:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED8C02173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 18:23:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="goDtFo0R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729527AbfEVSVz (ORCPT
+        id S1729563AbfEVSXX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 14:21:55 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:59660 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728272AbfEVSVz (ORCPT
+        Wed, 22 May 2019 14:23:23 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:34754 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728272AbfEVSXX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 14:21:55 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id A821780313; Wed, 22 May 2019 20:21:42 +0200 (CEST)
-Date:   Wed, 22 May 2019 20:21:52 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel@collabora.com
-Subject: Re: [PATCHv6 4/4] drm/omap: add support for manually updated displays
-Message-ID: <20190522182152.GA10003@amd>
-References: <20190403195413.djfrgzuj7povdksi@earth.universe>
- <20190403201326.3127-1-sebastian.reichel@collabora.com>
- <20190403201326.3127-5-sebastian.reichel@collabora.com>
- <20190404001109.GZ49658@atomide.com>
+        Wed, 22 May 2019 14:23:23 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4MIJ5uZ071020;
+        Wed, 22 May 2019 18:22:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=r5KZMuAu+51JUTI2ohhapWR6r+UgqS3aDYLLXOt7kLM=;
+ b=goDtFo0Rr/Ds1O+vpv8kzreIVzaXr2FwgjQ/MipPKL+JxYC4bAn329mQEOpa6Ky7VBjy
+ qpfzJWdvOvMbMACb6c8cVqsHSgZYWTsM7gYnJHSnNNXza+L3wAqSLhgIClBequuaoZ8R
+ a9BJ9lgJHsqs/lfkaZIPiW1Y6v8zzOGISsxwZkr/ceVxjfTCKt5g3e2RzyY2ytzJ969Z
+ Iuo7oTzQVEog543lhQ9fVgaAtHZk5LYKyrndey6nLACYxGLT4PdWq5BCteyBAmeFELyO
+ 8RwA3ln39aSxeoeWZBCEek/X1VJaXZnLIt0CWl/nJ5QEOVuZdpe1DrT+4/6JXZhu9znF 9g== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2smsk55syx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 22 May 2019 18:22:25 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4MILhUW043670;
+        Wed, 22 May 2019 18:22:25 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by userp3020.oracle.com with ESMTP id 2smsgv13ax-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 22 May 2019 18:22:25 +0000
+Received: from userp3020.oracle.com (userp3020.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x4MIMOoo045618;
+        Wed, 22 May 2019 18:22:24 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 2smsgv13aq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 22 May 2019 18:22:24 +0000
+Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x4MIMI50023367;
+        Wed, 22 May 2019 18:22:18 GMT
+Received: from localhost (/10.159.211.99)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 22 May 2019 18:22:17 +0000
+Date:   Wed, 22 May 2019 14:22:15 -0400
+From:   Kris Van Hees <kris.van.hees@oracle.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Kris Van Hees <kris.van.hees@oracle.com>,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        dtrace-devel@oss.oracle.com, linux-kernel@vger.kernel.org,
+        rostedt@goodmis.org, mhiramat@kernel.org, acme@kernel.org,
+        ast@kernel.org, daniel@iogearbox.net
+Subject: Re: [RFC PATCH 00/11] bpf, trace, dtrace: DTrace BPF program type
+ implementation and sample use
+Message-ID: <20190522182215.GO2422@oracle.com>
+References: <201905202347.x4KNl0cs030532@aserv0121.oracle.com>
+ <20190521175617.ipry6ue7o24a2e6n@ast-mbp.dhcp.thefacebook.com>
+ <20190522142531.GE16275@worktop.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="fUYQa+Pmc3FrFX/N"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190404001109.GZ49658@atomide.com>
+In-Reply-To: <20190522142531.GE16275@worktop.programming.kicks-ass.net>
 User-Agent: Mutt/1.5.23 (2014-03-12)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9265 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905220128
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, May 22, 2019 at 04:25:32PM +0200, Peter Zijlstra wrote:
+> On Tue, May 21, 2019 at 10:56:18AM -0700, Alexei Starovoitov wrote:
+> 
+> > and no changes are necessary in kernel/events/ring_buffer.c either.
+> 
+> Let me just NAK them on the principle that I don't see them in my inbox.
 
---fUYQa+Pmc3FrFX/N
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+My apologies for failing to include you on the Cc for the patches.  That was
+an oversight on my end and certainly not intentional.
 
-On Wed 2019-04-03 17:11:09, Tony Lindgren wrote:
-> * Sebastian Reichel <sebastian.reichel@collabora.com> [190403 20:14]:
-> > This adds the required infrastructure for manually updated displays,
-> > such as DSI command mode panels. While those panels often support
-> > partial updates we currently always do a full refresh.
-> >=20
-> > The display will be refreshed when something calls the dirty callback,
-> > such as libdrm's drmModeDirtyFB(). This is currently being done at least
-> > by the kernel console and Xorg (with modesetting driver) in their
-> > default configuration. Weston does not implement this and the fbdev
-> > backend does not work (display will not update). Weston's DRM backend
-> > uses double buffering and the page flip will also trigger a display
-> > refresh.
->=20
-> I've tested this with Linux next and the latest lm3532
-> patches and it works fine as long as we leave out the
-> backlight =3D <&lcd_backlight> entry from dts like I
-> replied in the lm3532 tread. So as far as I'm concerned,
-> we're good to go:
->=20
-> Tested-by: Tony Lindgren <tony@atomide.com>
+> Let me further NAK it for adding all sorts of garbage to the code --
+> we're not going to do gaps and stay_in_page nonsense.
 
-I've tested this on 5.2-rc1, and it is still neccessary, still needed,
-and still not merged.
+Could you give some guidance in terms of an alternative?  The ring buffer code
+provides both non-contiguous page allocation support and a vmalloc-based
+allocation, and the vmalloc version certainly would avoid the entire gap and
+page boundary stuff.  But since the allocator is chosen at build time based on
+the arch capabilities, there is no way to select a specific memory allocator.
+I'd be happy to use an alternative approach that allows direct writing into
+the ring buffer.
 
-How can I help? Can the patches simply be picked up for drm tree?
-
-Tested-by: Pavel Machek <pavel@ucw.cz>
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---fUYQa+Pmc3FrFX/N
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlzlk0AACgkQMOfwapXb+vJXQQCfQd2JMKV5aE0IX8qcHplWoUFq
-tQsAn2FpwuQw/t+w9mpUiAiZ/CP53ppT
-=FNwu
------END PGP SIGNATURE-----
-
---fUYQa+Pmc3FrFX/N--
+	Thanks,
+	Kris
