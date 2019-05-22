@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22EE5C282DC
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:45:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9651C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:45:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E93172081C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:45:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B44B2081C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:45:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558554307;
-	bh=1zjoZzRLkBDupvmr5evMoGuWRhBkUNF11UONvVoHDsE=;
+	s=default; t=1558554309;
+	bh=/8Hl4knxiOx6qeODctPBRtxpqleFuvFFLcMbE7xdhVk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S+p9mYvJlPDZO8B+JlR7WB0cM6fsupmg0Z/Exqzliuvf4wsb3oKV6eUTJ2Ulj9g0J
-	 DXTqkohyKVqvTi35u4gEwa1NsrhObiiReo2R8whK1FwTGsbwi6eEu/OcAHmggQ7chk
-	 qOOs1dZb33xxlfrZcc/Fy76DGQLdO4AcG5Mu7d2U=
+	b=LoL0GJriRyNp6o5TPHfOIcDZDXr/aQcMRIOXWWXZeyPGdqmsq3hBZ2AJz27NMBQbp
+	 E3B+go+AVsnicbdhax0zOlaMX/lxm6R1VwQhFoy8q7TMSqVx4CrZI181wU+GMjWG0b
+	 AqycZR6PcPR7UPJ7n6WRTghqrRye3uimScfIuF34=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729766AbfEVT2B (ORCPT
+        id S1732784AbfEVTpI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:28:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50008 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:45:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50516 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732367AbfEVT1n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:27:43 -0400
+        id S1731413AbfEVT2B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:28:01 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DEFF620879;
-        Wed, 22 May 2019 19:27:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D75520675;
+        Wed, 22 May 2019 19:28:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553262;
-        bh=1zjoZzRLkBDupvmr5evMoGuWRhBkUNF11UONvVoHDsE=;
+        s=default; t=1558553281;
+        bh=/8Hl4knxiOx6qeODctPBRtxpqleFuvFFLcMbE7xdhVk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e/xj36djPYjlDW2lubsxu0B82/M7MJJTc1I+f04x0LybfQdwzX8ZBUpavg1Fi71Eo
-         IISR3L7mqZHYAjBXtNJKDqmHZ9WToDnnNbHlLLkechuYUQGk/BwtAFqUi8uEQonSr7
-         TE1wdPs2TqnuMuyCArltKZJ6mcJx4vXdUtzMJ5sg=
+        b=nwmx7PXXoq1CveQq2hNeYSCWw2uWAIQLjRLQ+lXJWrAaTN1BYl7KWbDOlEB4lZ1co
+         pOCefbHH2rrUxnqMwdn+KLfbavcAxMcKYE0j2+roL9qBETc3j7klvzUBLgPu4++kQS
+         ene7mD0QNgAxcgOux6FveX9ZIQ8KafZHwaYigTC8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Josef Bacik <josef@toxicpanda.com>,
-        Filipe Manana <fdmanana@suse.com>,
-        David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 041/244] btrfs: fix panic during relocation after ENOSPC before writeback happens
-Date:   Wed, 22 May 2019 15:23:07 -0400
-Message-Id: <20190522192630.24917-41-sashal@kernel.org>
+Cc:     Kangjie Lu <kjlu@umn.edu>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 055/244] slimbus: fix a potential NULL pointer dereference in of_qcom_slim_ngd_register
+Date:   Wed, 22 May 2019 15:23:21 -0400
+Message-Id: <20190522192630.24917-55-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192630.24917-1-sashal@kernel.org>
 References: <20190522192630.24917-1-sashal@kernel.org>
@@ -60,120 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: Kangjie Lu <kjlu@umn.edu>
 
-[ Upstream commit ff612ba7849964b1898fd3ccd1f56941129c6aab ]
+[ Upstream commit 06d5d6b7f9948a89543e1160ef852d57892c750d ]
 
-We've been seeing the following sporadically throughout our fleet
+In case platform_device_alloc fails, the fix returns an error
+code to avoid the NULL pointer dereference.
 
-panic: kernel BUG at fs/btrfs/relocation.c:4584!
-netversion: 5.0-0
-Backtrace:
- #0 [ffffc90003adb880] machine_kexec at ffffffff81041da8
- #1 [ffffc90003adb8c8] __crash_kexec at ffffffff8110396c
- #2 [ffffc90003adb988] crash_kexec at ffffffff811048ad
- #3 [ffffc90003adb9a0] oops_end at ffffffff8101c19a
- #4 [ffffc90003adb9c0] do_trap at ffffffff81019114
- #5 [ffffc90003adba00] do_error_trap at ffffffff810195d0
- #6 [ffffc90003adbab0] invalid_op at ffffffff81a00a9b
-    [exception RIP: btrfs_reloc_cow_block+692]
-    RIP: ffffffff8143b614  RSP: ffffc90003adbb68  RFLAGS: 00010246
-    RAX: fffffffffffffff7  RBX: ffff8806b9c32000  RCX: ffff8806aad00690
-    RDX: ffff880850b295e0  RSI: ffff8806b9c32000  RDI: ffff88084f205bd0
-    RBP: ffff880849415000   R8: ffffc90003adbbe0   R9: ffff88085ac90000
-    R10: ffff8805f7369140  R11: 0000000000000000  R12: ffff880850b295e0
-    R13: ffff88084f205bd0  R14: 0000000000000000  R15: 0000000000000000
-    ORIG_RAX: ffffffffffffffff  CS: 0010  SS: 0018
- #7 [ffffc90003adbbb0] __btrfs_cow_block at ffffffff813bf1cd
- #8 [ffffc90003adbc28] btrfs_cow_block at ffffffff813bf4b3
- #9 [ffffc90003adbc78] btrfs_search_slot at ffffffff813c2e6c
-
-The way relocation moves data extents is by creating a reloc inode and
-preallocating extents in this inode and then copying the data into these
-preallocated extents.  Once we've done this for all of our extents,
-we'll write out these dirty pages, which marks the extent written, and
-goes into btrfs_reloc_cow_block().  From here we get our current
-reloc_control, which _should_ match the reloc_control for the current
-block group we're relocating.
-
-However if we get an ENOSPC in this path at some point we'll bail out,
-never initiating writeback on this inode.  Not a huge deal, unless we
-happen to be doing relocation on a different block group, and this block
-group is now rc->stage == UPDATE_DATA_PTRS.  This trips the BUG_ON() in
-btrfs_reloc_cow_block(), because we expect to be done modifying the data
-inode.  We are in fact done modifying the metadata for the data inode
-we're currently using, but not the one from the failed block group, and
-thus we BUG_ON().
-
-(This happens when writeback finishes for extents from the previous
-group, when we are at btrfs_finish_ordered_io() which updates the data
-reloc tree (inode item, drops/adds extent items, etc).)
-
-Fix this by writing out the reloc data inode always, and then breaking
-out of the loop after that point to keep from tripping this BUG_ON()
-later.
-
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: Filipe Manana <fdmanana@suse.com>
-[ add note from Filipe ]
-Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/relocation.c | 31 ++++++++++++++++++++-----------
- 1 file changed, 20 insertions(+), 11 deletions(-)
+ drivers/slimbus/qcom-ngd-ctrl.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/fs/btrfs/relocation.c b/fs/btrfs/relocation.c
-index 0526b6c473c79..5d57ed6293455 100644
---- a/fs/btrfs/relocation.c
-+++ b/fs/btrfs/relocation.c
-@@ -4289,27 +4289,36 @@ int btrfs_relocate_block_group(struct btrfs_fs_info *fs_info, u64 group_start)
- 		mutex_lock(&fs_info->cleaner_mutex);
- 		ret = relocate_block_group(rc);
- 		mutex_unlock(&fs_info->cleaner_mutex);
--		if (ret < 0) {
-+		if (ret < 0)
- 			err = ret;
--			goto out;
--		}
--
--		if (rc->extents_found == 0)
--			break;
--
--		btrfs_info(fs_info, "found %llu extents", rc->extents_found);
+diff --git a/drivers/slimbus/qcom-ngd-ctrl.c b/drivers/slimbus/qcom-ngd-ctrl.c
+index 14a9d18306cbf..f63d1b8a09335 100644
+--- a/drivers/slimbus/qcom-ngd-ctrl.c
++++ b/drivers/slimbus/qcom-ngd-ctrl.c
+@@ -1331,6 +1331,10 @@ static int of_qcom_slim_ngd_register(struct device *parent,
+ 			return -ENOMEM;
  
-+		/*
-+		 * We may have gotten ENOSPC after we already dirtied some
-+		 * extents.  If writeout happens while we're relocating a
-+		 * different block group we could end up hitting the
-+		 * BUG_ON(rc->stage == UPDATE_DATA_PTRS) in
-+		 * btrfs_reloc_cow_block.  Make sure we write everything out
-+		 * properly so we don't trip over this problem, and then break
-+		 * out of the loop if we hit an error.
-+		 */
- 		if (rc->stage == MOVE_DATA_EXTENTS && rc->found_file_extent) {
- 			ret = btrfs_wait_ordered_range(rc->data_inode, 0,
- 						       (u64)-1);
--			if (ret) {
-+			if (ret)
- 				err = ret;
--				goto out;
--			}
- 			invalidate_mapping_pages(rc->data_inode->i_mapping,
- 						 0, -1);
- 			rc->stage = UPDATE_DATA_PTRS;
- 		}
-+
-+		if (err < 0)
-+			goto out;
-+
-+		if (rc->extents_found == 0)
-+			break;
-+
-+		btrfs_info(fs_info, "found %llu extents", rc->extents_found);
-+
- 	}
- 
- 	WARN_ON(rc->block_group->pinned > 0);
+ 		ngd->pdev = platform_device_alloc(QCOM_SLIM_NGD_DRV_NAME, id);
++		if (!ngd->pdev) {
++			kfree(ngd);
++			return -ENOMEM;
++		}
+ 		ngd->id = id;
+ 		ngd->pdev->dev.parent = parent;
+ 		ngd->pdev->driver_override = QCOM_SLIM_NGD_DRV_NAME;
 -- 
 2.20.1
 
