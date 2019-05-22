@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6180C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:54:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58EB8C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:54:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F56020856
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:54:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B43120881
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:54:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558554872;
-	bh=z3MDV60291LlBWj453hvcf3H7YFDWQlBi73KyBFq4n0=;
+	s=default; t=1558554876;
+	bh=8TQcUMQCZVzH7mNHS/hd5ONN6+PvdivAyMMx2MV8PqA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=haVL1SoV6BQjuh9L5kZe7Yt9pGymleAvk9bSy9IEYkUadPEDcaB6EPjsG1IDom7Io
-	 XwbL90IJ4yvMX8Ev31nh3vtxNiRppfBIck3ktnPUebC50WX3XGlAoADIlCHxsBfhZy
-	 dYoLOrZzO4NskJOxX4xf8MhsaFCqVmO67OjFiYo4=
+	b=oPiAiASf0Zqm6D9zi7wI0GjNjKqSJ/ehRcpNPisg5MBjtN/Y642TXnhX4b9xPn9SW
+	 yuiU3+XaZji6QUzsgfWx06Rvkf05+yYgITd6K1kInk4MDhn9FgGPqwfgtde3QFQh5q
+	 qDVSJ6D27m0ZPvAXnp1FxfUGAMTVZf5lESDQXJeE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731680AbfEVTZj (ORCPT
+        id S1733052AbfEVTyf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:25:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46812 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:54:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47012 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731579AbfEVTZ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:25:29 -0400
+        id S1731671AbfEVTZj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:25:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B25D421473;
-        Wed, 22 May 2019 19:25:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 890E421851;
+        Wed, 22 May 2019 19:25:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553128;
-        bh=z3MDV60291LlBWj453hvcf3H7YFDWQlBi73KyBFq4n0=;
+        s=default; t=1558553138;
+        bh=8TQcUMQCZVzH7mNHS/hd5ONN6+PvdivAyMMx2MV8PqA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TIRXdsgMHdF5gKBSk1CUhWdqVSBGYgDoiJOLsMi57WSz6FF6uqbQv0y5wFa86JWD4
-         2XmMZ6G+EZSZD+XFa+MUungzh9X+rUfS4Oz5V5Njsk/yZzTajFirv8VodOas11mXuB
-         fCetvcJA3l401fum137EC5ux1bTTOaU3HnyvpxEE=
+        b=GVLWUMjQ0PcfJwGCGz29z233f1hIITsz7zLn/3CNOyVCIWtVeib8v2WNlKct9RviT
+         XmonaZIzCtxaG2lgtWqAqQto4KfDiHiieeoELaYAVblIXRWVuHbEJ1nMTlKscUuJcS
+         TEgTQIv9G26deK0v3EqmsJQkQMgLRhBxvwUQ2OsM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 062/317] net: phy: improve genphy_soft_reset
-Date:   Wed, 22 May 2019 15:19:23 -0400
-Message-Id: <20190522192338.23715-62-sashal@kernel.org>
+Cc:     "Daniel T. Lee" <danieltimlee@gmail.com>,
+        Yonghong Song <yhs@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 068/317] libbpf: fix samples/bpf build failure due to undefined UINT32_MAX
+Date:   Wed, 22 May 2019 15:19:29 -0400
+Message-Id: <20190522192338.23715-68-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192338.23715-1-sashal@kernel.org>
 References: <20190522192338.23715-1-sashal@kernel.org>
@@ -59,62 +61,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Heiner Kallweit <hkallweit1@gmail.com>
+From: "Daniel T. Lee" <danieltimlee@gmail.com>
 
-[ Upstream commit 8c90b795e90f7753d23c18e8b95dd71b4a18c5d9 ]
+[ Upstream commit 32e621e55496a0009f44fe4914cd4a23cade4984 ]
 
-PHY's behave differently when being reset. Some reset registers to
-defaults, some don't. Some trigger an autoneg restart, some don't.
+Currently, building bpf samples will cause the following error.
 
-So let's also set the autoneg restart bit when resetting. Then PHY
-behavior should be more consistent. Clearing BMCR_ISOLATE serves the
-same purpose and is borrowed from genphy_restart_aneg.
+    ./tools/lib/bpf/bpf.h:132:27: error: 'UINT32_MAX' undeclared here (not in a function) ..
+     #define BPF_LOG_BUF_SIZE (UINT32_MAX >> 8) /* verifier maximum in kernels <= 5.1 */
+                               ^
+    ./samples/bpf/bpf_load.h:31:25: note: in expansion of macro 'BPF_LOG_BUF_SIZE'
+     extern char bpf_log_buf[BPF_LOG_BUF_SIZE];
+                             ^~~~~~~~~~~~~~~~
 
-BMCR holds the speed / duplex settings in fixed mode. Therefore
-we may have an issue if a soft reset resets BMCR to its default.
-So better call genphy_setup_forced() afterwards in fixed mode.
-We've seen no related complaint in the last >10 yrs, so let's
-treat it as an improvement.
+Due to commit 4519efa6f8ea ("libbpf: fix BPF_LOG_BUF_SIZE off-by-one error")
+hard-coded size of BPF_LOG_BUF_SIZE has been replaced with UINT32_MAX which is
+defined in <stdint.h> header.
 
-Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Even with this change, bpf selftests are running fine since these are built
+with clang and it includes header(-idirafter) from clang/6.0.0/include.
+(it has <stdint.h>)
+
+    clang -I. -I./include/uapi -I../../../include/uapi -idirafter /usr/local/include -idirafter /usr/include \
+    -idirafter /usr/lib/llvm-6.0/lib/clang/6.0.0/include -idirafter /usr/include/x86_64-linux-gnu \
+    -Wno-compare-distinct-pointer-types -O2 -target bpf -emit-llvm -c progs/test_sysctl_prog.c -o - | \
+    llc -march=bpf -mcpu=generic  -filetype=obj -o /linux/tools/testing/selftests/bpf/test_sysctl_prog.o
+
+But bpf samples are compiled with GCC, and it only searches and includes
+headers declared at the target file. As '#include <stdint.h>' hasn't been
+declared in tools/lib/bpf/bpf.h, it causes build failure of bpf samples.
+
+    gcc -Wp,-MD,./samples/bpf/.sockex3_user.o.d -Wall -Wmissing-prototypes -Wstrict-prototypes \
+    -O2 -fomit-frame-pointer -std=gnu89 -I./usr/include -I./tools/lib/ -I./tools/testing/selftests/bpf/ \
+    -I./tools/  lib/ -I./tools/include -I./tools/perf -c -o ./samples/bpf/sockex3_user.o ./samples/bpf/sockex3_user.c;
+
+This commit add declaration of '#include <stdint.h>' to tools/lib/bpf/bpf.h
+to fix this problem.
+
+Signed-off-by: Daniel T. Lee <danieltimlee@gmail.com>
+Acked-by: Yonghong Song <yhs@fb.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/phy/phy_device.c | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+ tools/lib/bpf/bpf.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-index ff2426e00682c..67a06fa7566bd 100644
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -1830,13 +1830,25 @@ EXPORT_SYMBOL(genphy_read_status);
-  */
- int genphy_soft_reset(struct phy_device *phydev)
- {
-+	u16 res = BMCR_RESET;
- 	int ret;
+diff --git a/tools/lib/bpf/bpf.h b/tools/lib/bpf/bpf.h
+index 8f09de482839e..64762a62c008d 100644
+--- a/tools/lib/bpf/bpf.h
++++ b/tools/lib/bpf/bpf.h
+@@ -26,6 +26,7 @@
+ #include <linux/bpf.h>
+ #include <stdbool.h>
+ #include <stddef.h>
++#include <stdint.h>
  
--	ret = phy_set_bits(phydev, MII_BMCR, BMCR_RESET);
-+	if (phydev->autoneg == AUTONEG_ENABLE)
-+		res |= BMCR_ANRESTART;
-+
-+	ret = phy_modify(phydev, MII_BMCR, BMCR_ISOLATE, res);
- 	if (ret < 0)
- 		return ret;
- 
--	return phy_poll_reset(phydev);
-+	ret = phy_poll_reset(phydev);
-+	if (ret)
-+		return ret;
-+
-+	/* BMCR may be reset to defaults */
-+	if (phydev->autoneg == AUTONEG_DISABLE)
-+		ret = genphy_setup_forced(phydev);
-+
-+	return ret;
- }
- EXPORT_SYMBOL(genphy_soft_reset);
- 
+ #ifdef __cplusplus
+ extern "C" {
 -- 
 2.20.1
 
