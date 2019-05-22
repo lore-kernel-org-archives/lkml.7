@@ -2,105 +2,221 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F1E1C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 16:25:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 979B6C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 16:28:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0626620675
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 16:25:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FQFZQ5pL"
+	by mail.kernel.org (Postfix) with ESMTP id 6B8AD20868
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 16:28:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730109AbfEVQZi (ORCPT
+        id S1729999AbfEVQ2o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 12:25:38 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:39749 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729475AbfEVQZh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 12:25:37 -0400
-Received: by mail-wm1-f65.google.com with SMTP id n25so2858578wmk.4
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 09:25:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=AztR0YxQPjo+dl6FLzdHONEyjeweZt0zVC2E221XWlQ=;
-        b=FQFZQ5pLhc3+G+tTnarBWj9uCgHvf6MQVBOxmiQB84MjmbRYL3d9lr0xad3tVwk8Us
-         KBrk17D7HVu1WMERpxk6odDZFQxiXDopaksQeKlUNuYq7ZyHbsKfDGBajoJYU8L1O9Lp
-         iCjUt7y3UsBPgcPyZ9PlKEefGwcj5aKUxuSOclGe3gowAl3nU5/Ney9Q3IodZ7ZbGWTS
-         24uMV/lfJ01p2zjjMsk54w8H7v7gA6bNoMNIR//+Z/SHeppmnhUqCuZsW1ZS0QZEpBSw
-         CEwgWTUze6dsp6PxquA3kWgBIxrU8SuBShC89UFH77qqyEnAoFfQTaSw9H7snGzQACyQ
-         gV2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=AztR0YxQPjo+dl6FLzdHONEyjeweZt0zVC2E221XWlQ=;
-        b=G/JTZhsdtqKYrJrp6DIdk9YgQBfQhNFjseFUUOx9vIiteKFtxP63jdWkS6b7uUxQI8
-         MGqTU7e2nrAqk5TRF0T7HGmfZsQHAXRnMgTEvHQpd5Oc76UQHhhe1P1KbmYBcPRVhnrt
-         0KVaPu5VYz58g+haaWSoWjbYp+3xTMLR6S1OiYslYZDolpNjGgbrHbiy9vqBu9jmEWlp
-         987MYdpZpGJg4noNsDy8wxu83IqeI7zzXFwXc+yK9HXBDEx2QKIpOqE/QLBjFYQdqkUo
-         vYT/0XFMJQ5Chi4ID9N+yipvc1zqyyK2aNy53NU+lY5+x3kbt7ibm0OfMU6HaK0LoPH+
-         L+KQ==
-X-Gm-Message-State: APjAAAUCkv8XcQG/Itc7HhAHkZ49KiDK1Up2HRY6kDGJffvFOgTQT77E
-        EZbru13upd0NlNDjJzJn+Nx9JQ==
-X-Google-Smtp-Source: APXvYqwIODKI5c57KNCc8y6bUOIDanKrY+1pmIzGXwTstBFshTpXKRLQcFKf9Vf1xDgV4/+VGDHmmg==
-X-Received: by 2002:a1c:e009:: with SMTP id x9mr7976175wmg.117.1558542335118;
-        Wed, 22 May 2019 09:25:35 -0700 (PDT)
-Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.gmail.com with ESMTPSA id q15sm8462720wrr.19.2019.05.22.09.25.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 22 May 2019 09:25:34 -0700 (PDT)
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-To:     vkoul@kernel.org
-Cc:     sanyog.r.kale@intel.com, pierre-louis.bossart@linux.intel.com,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH] soundwire: stream: fix bad unlock balance
-Date:   Wed, 22 May 2019 17:25:28 +0100
-Message-Id: <20190522162528.5892-1-srinivas.kandagatla@linaro.org>
-X-Mailer: git-send-email 2.21.0
+        Wed, 22 May 2019 12:28:44 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:54950 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729475AbfEVQ2n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 12:28:43 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ECDAF341;
+        Wed, 22 May 2019 09:28:40 -0700 (PDT)
+Received: from [10.1.30.21] (apickardsiphone.cambridge.arm.com [10.1.30.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EC0113F5AF;
+        Wed, 22 May 2019 09:28:38 -0700 (PDT)
+Subject: Re: [PATCH] module/ksymtab: use 64-bit relative reference for target
+ symbol
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     marc.zyngier@arm.com, james.morse@arm.com, will.deacon@arm.com,
+        guillaume.gardet@arm.com, mark.rutland@arm.com, mingo@kernel.org,
+        jeyu@kernel.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, arnd@arndb.de, x86@kernel.org
+References: <20190522150239.19314-1-ard.biesheuvel@arm.com>
+From:   Ard Biesheuvel <ard.biesheuvel@arm.com>
+Message-ID: <293c9d0f-dc14-1413-e4b4-4299f0acfb9e@arm.com>
+Date:   Wed, 22 May 2019 17:28:37 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190522150239.19314-1-ard.biesheuvel@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch fixes below warning due to unlocking without locking.
 
- =====================================
- WARNING: bad unlock balance detected!
- 5.1.0-16506-gc1c383a6f0a2-dirty #1523 Tainted: G        W
- -------------------------------------
- aplay/2954 is trying to release lock (&bus->msg_lock) at:
- do_bank_switch+0x21c/0x480
- but there are no more locks to release!
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
----
- drivers/soundwire/stream.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+On 5/22/19 4:02 PM, Ard Biesheuvel wrote:
+> The following commit
+> 
+>    7290d5809571 ("module: use relative references for __ksymtab entries")
+> 
+> updated the ksymtab handling of some KASLR capable architectures
+> so that ksymtab entries are emitted as pairs of 32-bit relative
+> references. This reduces the size of the entries, but more
+> importantly, it gets rid of statically assigned absolute
+> addresses, which require fixing up at boot time if the kernel
+> is self relocating (which takes a 24 byte RELA entry for each
+> member of the ksymtab struct).
+> 
+> Since ksymtab entries are always part of the same module as the
+> symbol they export (or of the core kernel), it was assumed at the
+> time that a 32-bit relative reference is always sufficient to
+> capture the offset between a ksymtab entry and its target symbol.
+> 
+> Unfortunately, this is not always true: in the case of per-CPU
+> variables, a per-CPU variable's base address (which usually differs
+> from the actual address of any of its per-CPU copies) could be at
+> an arbitrary offset from the ksymtab entry, and so it may be out
+> of range for a 32-bit relative reference.
+> 
+> To make matters worse, we identified an issue in the arm64 module
+> loader, where the overflow check applied to 32-bit place relative
+> relocations uses the range that is specified in the AArch64 psABI,
+> which is documented as having a 'blind spot' unless you explicitly
+> narrow the range to match the signed vs unsigned interpretation of
+> the relocation target [0]. This means that, in some cases, code
+> importing those per-CPU variables from other modules may obtain a
+> bogus reference and corrupt unrelated data.
+> 
+> So let's fix this issue by switching to a 64-bit place relative
+> reference on 64-bit architectures for the ksymtab entry's target
+> symbol. This uses a bit more memory in the entry itself, which is
+> unfortunate, but it preserves the original intent, which was to
+> make the value invariant under runtime relocation of the core
+> kernel.
+> 
+> [0] https://lore.kernel.org/linux-arm-kernel/20190521125707.6115-1-ard.biesheuvel@arm.com
+> 
+> Cc: Jessica Yu <jeyu@kernel.org>
+> Cc: <stable@vger.kernel.org> # v4.19+
+> Signed-off-by: Ard Biesheuvel <ard.biesheuvel@arm.com>
+> ---
+> 
+> Note that the name 'CONFIG_HAVE_ARCH_PREL32_RELOCATIONS' is no longer
+> entirely accurate after this patch, so I will follow up with a patch
+> to rename it to CONFIG_HAVE_ARCH_PREL_RELOCATIONS, but that doesn't
+> require a backport to -stable so I have omitted it here.
+> 
+> Also note that for x86, this patch depends on b40a142b12b5 ("x86: Add
+> support for 64-bit place relative relocations"), which will need to
+> be backported to v4.19 (from v4.20) if this patch is applied to
+> -stable.
+> 
 
-diff --git a/drivers/soundwire/stream.c b/drivers/soundwire/stream.c
-index 544925ff0b40..d16268f30e4f 100644
---- a/drivers/soundwire/stream.c
-+++ b/drivers/soundwire/stream.c
-@@ -814,7 +814,8 @@ static int do_bank_switch(struct sdw_stream_runtime *stream)
- 			goto error;
- 		}
- 
--		mutex_unlock(&bus->msg_lock);
-+		if (mutex_is_locked(&bus->msg_lock))
-+			utex_unlock(&bus->msg_lock);
- 	}
- 
- 	return ret;
--- 
-2.21.0
+Unfortunately, this is not quite true. In addition to that patch, we 
+need some changes to the x86 'relocs' tool so it can handle 64-bit 
+relative references to per-CPU symbols, much like the support it has 
+today for 32-bit relative references. I have coded it up, and will send 
+it out as soon as I have confirmed that it works.
 
+
+>   include/asm-generic/export.h |  9 +++++++--
+>   include/linux/compiler.h     |  9 +++++++++
+>   include/linux/export.h       | 14 ++++++++++----
+>   kernel/module.c              |  2 +-
+>   4 files changed, 27 insertions(+), 7 deletions(-)
+> 
+> diff --git a/include/asm-generic/export.h b/include/asm-generic/export.h
+> index 294d6ae785d4..4d658b1e4707 100644
+> --- a/include/asm-generic/export.h
+> +++ b/include/asm-generic/export.h
+> @@ -4,7 +4,7 @@
+>   #ifndef KSYM_FUNC
+>   #define KSYM_FUNC(x) x
+>   #endif
+> -#ifdef CONFIG_64BIT
+> +#if defined(CONFIG_64BIT) && !defined(CONFIG_HAVE_ARCH_PREL32_RELOCATIONS)
+>   #ifndef KSYM_ALIGN
+>   #define KSYM_ALIGN 8
+>   #endif
+> @@ -19,7 +19,12 @@
+>   
+>   .macro __put, val, name
+>   #ifdef CONFIG_HAVE_ARCH_PREL32_RELOCATIONS
+> -	.long	\val - ., \name - .
+> +#ifdef CONFIG_64BIT
+> +	.quad	\val - .
+> +#else
+> +	.long	\val - .
+> +#endif
+> +	.long	\name - .
+>   #elif defined(CONFIG_64BIT)
+>   	.quad	\val, \name
+>   #else
+> diff --git a/include/linux/compiler.h b/include/linux/compiler.h
+> index 8aaf7cd026b0..33c65ebb7cfe 100644
+> --- a/include/linux/compiler.h
+> +++ b/include/linux/compiler.h
+> @@ -305,6 +305,15 @@ static inline void *offset_to_ptr(const int *off)
+>   	return (void *)((unsigned long)off + *off);
+>   }
+>   
+> +/**
+> + * loffset_to_ptr - convert a relative memory offset to an absolute pointer
+> + * @off:	the address of the signed long offset value
+> + */
+> +static inline void *loffset_to_ptr(const long *off)
+> +{
+> +	return (void *)((unsigned long)off + *off);
+> +}
+> +
+>   #endif /* __ASSEMBLY__ */
+>   
+>   /* Compile time object size, -1 for unknown */
+> diff --git a/include/linux/export.h b/include/linux/export.h
+> index fd8711ed9ac4..8f805b9f1c25 100644
+> --- a/include/linux/export.h
+> +++ b/include/linux/export.h
+> @@ -43,6 +43,12 @@ extern struct module __this_module;
+>   
+>   #ifdef CONFIG_HAVE_ARCH_PREL32_RELOCATIONS
+>   #include <linux/compiler.h>
+> +#ifdef CONFIG_64BIT
+> +#define __KSYMTAB_REL	".quad "
+> +#else
+> +#define __KSYMTAB_REL	".long "
+> +#endif
+> +
+>   /*
+>    * Emit the ksymtab entry as a pair of relative references: this reduces
+>    * the size by half on 64-bit architectures, and eliminates the need for
+> @@ -52,16 +58,16 @@ extern struct module __this_module;
+>   #define __KSYMTAB_ENTRY(sym, sec)					\
+>   	__ADDRESSABLE(sym)						\
+>   	asm("	.section \"___ksymtab" sec "+" #sym "\", \"a\"	\n"	\
+> -	    "	.balign	8					\n"	\
+> +	    "	.balign	4					\n"	\
+>   	    "__ksymtab_" #sym ":				\n"	\
+> -	    "	.long	" #sym "- .				\n"	\
+> +	    __KSYMTAB_REL #sym "- .				\n"	\
+>   	    "	.long	__kstrtab_" #sym "- .			\n"	\
+>   	    "	.previous					\n")
+>   
+>   struct kernel_symbol {
+> -	int value_offset;
+> +	long value_offset;
+>   	int name_offset;
+> -};
+> +} __packed;
+>   #else
+>   #define __KSYMTAB_ENTRY(sym, sec)					\
+>   	static const struct kernel_symbol __ksymtab_##sym		\
+> diff --git a/kernel/module.c b/kernel/module.c
+> index 6e6712b3aaf5..43efd46feeee 100644
+> --- a/kernel/module.c
+> +++ b/kernel/module.c
+> @@ -541,7 +541,7 @@ static bool check_exported_symbol(const struct symsearch *syms,
+>   static unsigned long kernel_symbol_value(const struct kernel_symbol *sym)
+>   {
+>   #ifdef CONFIG_HAVE_ARCH_PREL32_RELOCATIONS
+> -	return (unsigned long)offset_to_ptr(&sym->value_offset);
+> +	return (unsigned long)loffset_to_ptr(&sym->value_offset);
+>   #else
+>   	return sym->value;
+>   #endif
+> 
