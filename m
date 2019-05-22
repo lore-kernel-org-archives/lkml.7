@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44FDCC282DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:41:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0C38C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:41:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D02720675
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:41:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A19B620675
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:41:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558554088;
-	bh=18MxAVTl/iiuvP02E1646M/K3rUcGMjfccpCuaS7rPQ=;
+	s=default; t=1558554100;
+	bh=rAcvKwp2UduGNAUik+s6lh38sOxMN6Y08aQsqhokFCI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VUeqazFOqUcAKgmL0Tn7wLATNahtrv+gjKnAk2lrtoqfAYKWl4EvCdABQZQdFG6nc
-	 cyJbkwx54PeZQ7GnWVQx8rbXp/RKtPJRox9byEUjfOENMMW544Tf8ySd1A1HkzLivn
-	 lJ/uQ57Psud+L+ipHi/rlsWpQBqlcsr8BWhkgYsQ=
+	b=kYC8FxdlWI37qNuY3rN6l5HVT5KmnT+eBiPCjoOmtofnEbulYqQLz9k5yEpu/AbQt
+	 O+DkfEqNZJ9GzuNmAe3z9Lm+rXN/jjQX973Br6pq1BcT84IxtKhQlqf8zxt2sRT0Kf
+	 pFaKTZFPGAZiuJX2DRItBgPPQMC5CdCcDB/mDvFo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732723AbfEVT3B (ORCPT
+        id S1732906AbfEVTlj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:29:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51772 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:41:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732689AbfEVT25 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:28:57 -0400
+        id S1732681AbfEVT2y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:28:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7AEB82177E;
-        Wed, 22 May 2019 19:28:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C32A3217D7;
+        Wed, 22 May 2019 19:28:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553337;
-        bh=18MxAVTl/iiuvP02E1646M/K3rUcGMjfccpCuaS7rPQ=;
+        s=default; t=1558553333;
+        bh=rAcvKwp2UduGNAUik+s6lh38sOxMN6Y08aQsqhokFCI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Vg8XdK7zhB322VjbIqvoMY94ie3pL2wDv4P+mk4urUZD7Xo2Oy7ma9qrgC4DG1vYO
-         RG+g7v7xbNWmCGy4PPEFqfIPNlRdSHOGRcLKAAkNL1XuG+RnF+piSLGtw/nA+cQ09e
-         AnvhuJC7tTa1pdiZQsfAiBDPRzzgpfAH+Zn8RPvg=
+        b=H1A4O6udriyVKp17SbFcAih5HcszSmNLGn7a5W0mQVA29EOO1bJ3DdGHYg6b+NbwY
+         jnggIoCs5NgegMNgTqOP/rjgbqSqWuY9CHLjaJTTVtJnvK+H3BsfujP1lC8KWLwN/v
+         QnlqN8AXw1ruPg+w2Jl87YQFivjUQsgRIHopCBs4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Martin Brandenburg <martin@omnibond.com>,
-        Mike Marshall <hubcap@omnibond.com>,
-        Sasha Levin <sashal@kernel.org>, devel@lists.orangefs.org
-Subject: [PATCH AUTOSEL 4.14 010/167] orangefs: truncate before updating size
-Date:   Wed, 22 May 2019 15:26:05 -0400
-Message-Id: <20190522192842.25858-10-sashal@kernel.org>
+Cc:     Sameer Pujar <spujar@nvidia.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 008/167] dmaengine: tegra210-dma: free dma controller in remove()
+Date:   Wed, 22 May 2019 15:26:03 -0400
+Message-Id: <20190522192842.25858-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192842.25858-1-sashal@kernel.org>
 References: <20190522192842.25858-1-sashal@kernel.org>
@@ -59,39 +60,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Brandenburg <martin@omnibond.com>
+From: Sameer Pujar <spujar@nvidia.com>
 
-[ Upstream commit 33713cd09ccdc1e01b10d0782ae60200d4989553 ]
+[ Upstream commit f030e419501cb95e961e9ed35c493b5d46a04eca ]
 
-Otherwise we race with orangefs_writepage/orangefs_writepages
-which and does not expect i_size < page_offset.
+Following kernel panic is seen during DMA driver unload->load sequence
+==========================================================================
+Unable to handle kernel paging request at virtual address ffffff8001198880
+Internal error: Oops: 86000007 [#1] PREEMPT SMP
+CPU: 0 PID: 5907 Comm: HwBinder:4123_1 Tainted: G C 4.9.128-tegra-g065839f
+Hardware name: galen (DT)
+task: ffffffc3590d1a80 task.stack: ffffffc3d0678000
+PC is at 0xffffff8001198880
+LR is at of_dma_request_slave_channel+0xd8/0x1f8
+pc : [<ffffff8001198880>] lr : [<ffffff8008746f30>] pstate: 60400045
+sp : ffffffc3d067b710
+x29: ffffffc3d067b710 x28: 000000000000002f
+x27: ffffff800949e000 x26: ffffff800949e750
+x25: ffffff800949e000 x24: ffffffbefe817d84
+x23: ffffff8009f77cb0 x22: 0000000000000028
+x21: ffffffc3ffda49c8 x20: 0000000000000029
+x19: 0000000000000001 x18: ffffffffffffffff
+x17: 0000000000000000 x16: ffffff80082b66a0
+x15: ffffff8009e78250 x14: 000000000000000a
+x13: 0000000000000038 x12: 0101010101010101
+x11: 0000000000000030 x10: 0101010101010101
+x9 : fffffffffffffffc x8 : 7f7f7f7f7f7f7f7f
+x7 : 62ff726b6b64622c x6 : 0000000000008064
+x5 : 6400000000000000 x4 : ffffffbefe817c44
+x3 : ffffffc3ffda3e08 x2 : ffffff8001198880
+x1 : ffffffc3d48323c0 x0 : ffffffc3d067b788
 
-Fixes xfstests generic/129.
+Process HwBinder:4123_1 (pid: 5907, stack limit = 0xffffffc3d0678028)
+Call trace:
+[<ffffff8001198880>] 0xffffff8001198880
+[<ffffff80087459f8>] dma_request_chan+0x50/0x1f0
+[<ffffff8008745bc0>] dma_request_slave_channel+0x28/0x40
+[<ffffff8001552c44>] tegra_alt_pcm_open+0x114/0x170
+[<ffffff8008d65fa4>] soc_pcm_open+0x10c/0x878
+[<ffffff8008d18618>] snd_pcm_open_substream+0xc0/0x170
+[<ffffff8008d1878c>] snd_pcm_open+0xc4/0x240
+[<ffffff8008d189e0>] snd_pcm_playback_open+0x58/0x80
+[<ffffff8008cfc6d4>] snd_open+0xb4/0x178
+[<ffffff8008250628>] chrdev_open+0xb8/0x1d0
+[<ffffff8008246fdc>] do_dentry_open+0x214/0x318
+[<ffffff80082485d0>] vfs_open+0x58/0x88
+[<ffffff800825bce0>] do_last+0x450/0xde0
+[<ffffff800825c718>] path_openat+0xa8/0x368
+[<ffffff800825dd84>] do_filp_open+0x8c/0x110
+[<ffffff8008248a74>] do_sys_open+0x164/0x220
+[<ffffff80082b66dc>] compat_SyS_openat+0x3c/0x50
+[<ffffff8008083040>] el0_svc_naked+0x34/0x38
+---[ end trace 67e6d544e65b5145 ]---
+Kernel panic - not syncing: Fatal exception
+==========================================================================
 
-Signed-off-by: Martin Brandenburg <martin@omnibond.com>
-Signed-off-by: Mike Marshall <hubcap@omnibond.com>
+In device probe(), of_dma_controller_register() registers DMA controller.
+But when driver is removed, this is not freed. During driver reload this
+results in data abort and kernel panic. Add of_dma_controller_free() in
+driver remove path to fix the issue.
+
+Fixes: f46b195799b5 ("dmaengine: tegra-adma: Add support for Tegra210 ADMA")
+Signed-off-by: Sameer Pujar <spujar@nvidia.com>
+Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/orangefs/inode.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/dma/tegra210-adma.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/orangefs/inode.c b/fs/orangefs/inode.c
-index 902b72dac41a6..d4d887af600f6 100644
---- a/fs/orangefs/inode.c
-+++ b/fs/orangefs/inode.c
-@@ -172,7 +172,11 @@ static int orangefs_setattr_size(struct inode *inode, struct iattr *iattr)
- 	}
- 	orig_size = i_size_read(inode);
+diff --git a/drivers/dma/tegra210-adma.c b/drivers/dma/tegra210-adma.c
+index b26256f23d67f..08b10274284a8 100644
+--- a/drivers/dma/tegra210-adma.c
++++ b/drivers/dma/tegra210-adma.c
+@@ -786,6 +786,7 @@ static int tegra_adma_remove(struct platform_device *pdev)
+ 	struct tegra_adma *tdma = platform_get_drvdata(pdev);
+ 	int i;
  
--	truncate_setsize(inode, iattr->ia_size);
-+	/* This is truncate_setsize in a different order. */
-+	truncate_pagecache(inode, iattr->ia_size);
-+	i_size_write(inode, iattr->ia_size);
-+	if (iattr->ia_size > orig_size)
-+		pagecache_isize_extended(inode, orig_size, iattr->ia_size);
++	of_dma_controller_free(pdev->dev.of_node);
+ 	dma_async_device_unregister(&tdma->dma_dev);
  
- 	new_op = op_alloc(ORANGEFS_VFS_OP_TRUNCATE);
- 	if (!new_op)
+ 	for (i = 0; i < tdma->nr_channels; ++i)
 -- 
 2.20.1
 
