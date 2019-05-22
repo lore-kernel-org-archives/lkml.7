@@ -2,124 +2,119 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E465AC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 23:54:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 906FBC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 23:57:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 894EA20665
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 23:54:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A04C206B6
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 23:57:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="W45yq2L2"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="Q1hKWyHA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728097AbfEVXyH (ORCPT
+        id S1728404AbfEVX5k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 19:54:07 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:49535 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726218AbfEVXyG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 19:54:06 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 458TxP6JLxz9s55;
-        Thu, 23 May 2019 09:54:01 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1558569243;
-        bh=4Ie1TzLXQj8FI5hKG+wwp2NDJHkk7TzCx/TL7beKews=;
-        h=Date:From:To:Cc:Subject:From;
-        b=W45yq2L2Kflk4ySOTn67aogaWM+73l8VU19rLtVoJexA84dXjXZhLtzn3OnZL0Pu3
-         BcUQOTd9k4xgaMtcOSj3wpDzEW1QnaH4zqw3/y0sWRkR8GYz8+iTfQgGHjL+czT2zR
-         bfTdjRMMwhDOscBSX/mTir2fFQpGylg/xE0MrVGw4D1WSonE0cAtcIoTivsOoTbvmV
-         qttFnoDDh0ql8AQAm6CfR057fVCX+Lq7psr45pF530RhndZ+apC2SwvkJAJdwR5qYg
-         r/5vRg+HThw++3LGpYilhnHuL0VuPRpy0b246vLqdKmxVQvH5FcEBdW9PEeM4ZSIqD
-         zt3+HPT1U5s3A==
-Date:   Thu, 23 May 2019 09:53:41 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>,
-        DRI <dri-devel@lists.freedesktop.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ramalingam C <ramalingam.c@intel.com>,
-        Uma Shankar <uma.shankar@intel.com>,
-        Ville =?UTF-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>
-Subject: linux-next: manual merge of the drm-misc tree with the drm-intel
- tree
-Message-ID: <20190523095341.728a79b7@canb.auug.org.au>
+        Wed, 22 May 2019 19:57:40 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:36168 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727305AbfEVX5k (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 19:57:40 -0400
+Received: by mail-qt1-f195.google.com with SMTP id a17so4680558qth.3
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 16:57:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Ep9uVHpBGZswzwZ+H/eF/1/q1Yi9oKaegrCzMMn+v2w=;
+        b=Q1hKWyHArMJk0cuB6S0l9Ps4LFjPimg+ITsAv/pNx1HPV30Y0Dw5vtjo5ZJdvu6uDU
+         uPLkBnGxRltUikh5/RqnfW79NkePV+iLYOoOU2MZW0dGzUcIeDu2UjkmOW+72KOG+Z95
+         Os8nZL84gacPJsIDatNU8+oDl61IP9Wf+bHI48QXLL3m+HTuFfmqe0aTGUECJYAeXj1U
+         C6AYMQYiU26cdRliq/8oE9WKABTISlXuBsRwuKf6ehITMVfulLupiuy5N/Ac+bHWvVWh
+         9ESy3JVc3OeFWxRykU8wGeRnSFhJHV66xh0QhkSgpXG/QexM/GevHVjean7GbYVYi+8w
+         4y4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Ep9uVHpBGZswzwZ+H/eF/1/q1Yi9oKaegrCzMMn+v2w=;
+        b=fOAE5/tjcuuC6vVT39GlMeRYV7hOT8dS0GxAcZqrrgfQDN/9ivRTDRLp5ht4iLbFct
+         taZhiOcf02Klg2+9WKtKYziuj6xMeYoRyI/cXLAkttZ3p09wT2XBKWyEZnLJPtuo2lFn
+         TzzfSd0jL/Cb6zTPjyw0zBo9dF09sGC7yJizApbazVxV3zVzpBXcoOIWqAOtd4yF2OAm
+         6QUEfrfevEW8CBcLEDoabTWGC8a/0zHfiev8lamvfHujt1cIFKuMZogd2Bs3URqPyOlK
+         rJ4k1Be758S43Yw2BNXcnIuwQFRgKxV5q6sX1V4uOQNg+1kd3sCciDgA8h+ggg6edMn+
+         I3qw==
+X-Gm-Message-State: APjAAAWWEkJJ0lBUKL+rre7sCx0HBIbn6FRSJCkB+o6hsgteo/peK3CC
+        62Zr7PyLk2cbSfmSlGzIsyY6Wg==
+X-Google-Smtp-Source: APXvYqzaonhnkp/bUloxWlJ3maBzgQam/abanIz+C6FRxel/0h/X8xe2Qu7CLsQrUUqePsk4cAL/DQ==
+X-Received: by 2002:aed:2494:: with SMTP id t20mr75861244qtc.135.1558569459047;
+        Wed, 22 May 2019 16:57:39 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-49-251.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.49.251])
+        by smtp.gmail.com with ESMTPSA id q66sm12719518qke.66.2019.05.22.16.57.38
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 22 May 2019 16:57:38 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hTb73-0001PC-MU; Wed, 22 May 2019 20:57:37 -0300
+Date:   Wed, 22 May 2019 20:57:37 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Jerome Glisse <jglisse@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Artemy Kovalyov <artemyko@mellanox.com>,
+        Moni Shoua <monis@mellanox.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Kaike Wan <kaike.wan@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>
+Subject: Re: [PATCH v4 0/1] Use HMM for ODP v4
+Message-ID: <20190522235737.GD15389@ziepe.ca>
+References: <20190411181314.19465-1-jglisse@redhat.com>
+ <20190506195657.GA30261@ziepe.ca>
+ <20190521205321.GC3331@redhat.com>
+ <20190522005225.GA30819@ziepe.ca>
+ <20190522174852.GA23038@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/XP=lWq5qsA1xog0vpv4kTbS"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190522174852.GA23038@redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/XP=lWq5qsA1xog0vpv4kTbS
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed, May 22, 2019 at 01:48:52PM -0400, Jerome Glisse wrote:
 
-Hi all,
+> > > So attached is a rebase on top of 5.2-rc1, i have tested with pingpong
+> > > (prefetch and not and different sizes). Seems to work ok.
+> > 
+> > Urk, it already doesn't apply to the rdma tree :(
+> > 
+> > The conflicts are a little more extensive than I'd prefer to handle..
+> > Can I ask you to rebase it on top of this branch please:
+> > 
+> > https://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git/log/?h=wip/jgg-for-next
+> > 
+> > Specifically it conflicts with this patch:
+> > 
+> > https://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git/commit/?h=wip/jgg-for-next&id=d2183c6f1958e6b6dfdde279f4cee04280710e34
 
-Today's linux-next merge of the drm-misc tree got a conflict in:
+There is at least one more serious blocker here:
 
-  drivers/gpu/drm/drm_atomic_uapi.c
+config ARCH_HAS_HMM_MIRROR
+        bool
+        default y
+        depends on (X86_64 || PPC64)
+        depends on MMU && 64BIT
 
-between commit:
+I can't loose ARM64 support for ODP by merging this, that is too
+serious of a regression.
 
-  585b000de23b ("drm: move content protection property to mode_config")
+Can you fix it?
 
-from the drm-intel tree and commit:
-
-  fbb5d0353c62 ("drm: Add HDR source metadata property")
-
-from the drm-misc tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc drivers/gpu/drm/drm_atomic_uapi.c
-index 4131e669785a,125605ff45af..000000000000
---- a/drivers/gpu/drm/drm_atomic_uapi.c
-+++ b/drivers/gpu/drm/drm_atomic_uapi.c
-@@@ -814,7 -823,10 +823,10 @@@ drm_atomic_connector_get_property(struc
-  		*val =3D state->colorspace;
-  	} else if (property =3D=3D connector->scaling_mode_property) {
-  		*val =3D state->scaling_mode;
-+ 	} else if (property =3D=3D config->hdr_output_metadata_property) {
-+ 		*val =3D state->hdr_output_metadata ?
-+ 			state->hdr_output_metadata->base.id : 0;
- -	} else if (property =3D=3D connector->content_protection_property) {
- +	} else if (property =3D=3D config->content_protection_property) {
-  		*val =3D state->content_protection;
-  	} else if (property =3D=3D config->writeback_fb_id_property) {
-  		/* Writeback framebuffer is one-shot, write and forget */
-
---Sig_/XP=lWq5qsA1xog0vpv4kTbS
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzl4QUACgkQAVBC80lX
-0GxSWwf+MTWafkXTbuoTHRn6ceiKD4K1BQsTENaQOxEaubqh5y9mLJZFPSonoirH
-a/7tG2u3KTKKMI4fqHLWvnyHVUn7piAf7IU+rTFYHc1Mrfj8wYJzc8CbrS0AbQ14
-840CxOiUewJJtziqeL4KGIrkQXD7KmQYtc/CgYN1OImZc9L344VS919941yEz8ad
-MEEBPraKYvn4eYAVBhNmRGJR2H8/DSoprmJ26bCC/usFBLOI+Ux8yjIie1AF+Ev9
-AKxufmlfLF22L7tIXnPLbAm6xe2SpjerAYK8hCHAp1Uv5swqsXj1TxFuIa0Bo87w
-PmCWifWI4YNoD2JqY57vP2pS9eEWFQ==
-=bwN4
------END PGP SIGNATURE-----
-
---Sig_/XP=lWq5qsA1xog0vpv4kTbS--
+Thanks,
+Jason
