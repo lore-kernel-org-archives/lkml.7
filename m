@@ -2,178 +2,154 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CA34C46470
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 05:04:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7008CC18E7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 05:06:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CF9F217D7
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 05:04:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hEJmk03c"
+	by mail.kernel.org (Postfix) with ESMTP id 4BD7820657
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 05:06:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728236AbfEVFEs (ORCPT
+        id S1728313AbfEVFGL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 01:04:48 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:45634 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725796AbfEVFEs (ORCPT
+        Wed, 22 May 2019 01:06:11 -0400
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:38451 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725796AbfEVFGL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 01:04:48 -0400
-Received: by mail-lf1-f65.google.com with SMTP id n22so607763lfe.12
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 22:04:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=wQ83vV6Xzy7wYFkYEqzCiPkq4lX2zxIRrExWbBkR//4=;
-        b=hEJmk03cX0a0Qi5BPpCuVpLOWj/NGj8cbmDyxMxgFxrUqddQDWTYojzGgFQpijPAZz
-         Eai8a3aPOX1H8V49tjYtGGmVisNq+NjWY/aFM+Uh5/8zLRI+rm4Kc1ameaz37+Jg+QCU
-         ECt5tkhKGDiVSscse8r6u9heWT9P3RwF0uvp+A56BnQJjfpmKjlyKByFqmcgm3aqbAG9
-         m57POEzusllyL20cHUsGgVvSfqIGlu3VWhnE88IRQckQXxs7o/0oSqIMigfCbL5gm6jb
-         x02TryiJfFxE43hiZMZhb5tozag1eqWQ7kXSvoRvMv3aec1a1XKVA8mTr8gpz3QpHLbp
-         PeyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=wQ83vV6Xzy7wYFkYEqzCiPkq4lX2zxIRrExWbBkR//4=;
-        b=kY1E/poWrpySgeqLkOZa0+odHbhBXJHbCBOKqZ9nCY2AbUoTm7QUSx/M4s931L4ML6
-         BTKHb5Dc9sV0912KROp37WjqxaJluK8UReR/JQbLqvOFQw/aimjk5HymcY+3iZvuGAYL
-         Dlr6bJjwrFVmBO+2U1vpkULzhznEKtwfEjlXcGMRvOgX8mQT9r/Svh2dJJG0+U7PHJ6P
-         +8FBbC5jUHS4UM72dycQn510OMPtD/IgJckao8OWxHOsjBUKDWF3vKtr+gNYvz6xoQ7s
-         5Gjqz7Hy/fCXu5wqT6g4tU5JEy+nzJfbyjXf7hRYpvdQDnZt0mZjj+pnvLUqyl3fBtIP
-         Rt0A==
-X-Gm-Message-State: APjAAAUBqnzvWJx0nqyMLfGm6LVBOCCayiChA3TfhQ+2dnxvHnUiuTFh
-        ZIY0uuja1NjKWVqvUb1OHR4wJqx7SsFesZ3dt3Jtfg==
-X-Google-Smtp-Source: APXvYqw44ADoIV4ABsrg3W7afaX2YDIuemxMPKVCdCPTEPdveseKVKDQjwZMKF7MDLpdHtuNkmH4cIymAYXrAXdSZ64=
-X-Received: by 2002:ac2:490c:: with SMTP id n12mr13591539lfi.4.1558501486489;
- Tue, 21 May 2019 22:04:46 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190520115247.060821231@linuxfoundation.org>
-In-Reply-To: <20190520115247.060821231@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Wed, 22 May 2019 10:34:35 +0530
-Message-ID: <CA+G9fYux5rxbm64DUvy6S_xsVoSzAnT0t=nV4tdS4SaUP5aH5w@mail.gmail.com>
-Subject: Re: [PATCH 4.19 000/105] 4.19.45-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
+        Wed, 22 May 2019 01:06:11 -0400
+Received: from callcc.thunk.org ([66.31.38.53])
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x4M55BVA020853
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 22 May 2019 01:05:12 -0400
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id 61574420481; Wed, 22 May 2019 01:05:11 -0400 (EDT)
+Date:   Wed, 22 May 2019 01:05:11 -0400
+From:   "Theodore Ts'o" <tytso@mit.edu>
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        open list <linux-kernel@vger.kernel.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Guenter Roeck <linux@roeck-us.net>,
         Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
         Ben Hutchings <ben.hutchings@codethink.co.uk>,
         lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        linux- stable <stable@vger.kernel.org>,
+        linux-ext4@vger.kernel.org,
+        Arthur Marsh <arthur.marsh@internode.on.net>,
+        Richard Weinberger <richard.weinberger@gmail.com>,
+        ltp@lists.linux.it, Jan Stancek <jstancek@redhat.com>
+Subject: Re: ext4 regression (was Re: [PATCH 4.19 000/105] 4.19.45-stable
+ review)
+Message-ID: <20190522050511.GB4943@mit.edu>
+Mail-Followup-To: Theodore Ts'o <tytso@mit.edu>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>, Shuah Khan <shuah@kernel.org>,
+        patches@kernelci.org, Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>, linux-ext4@vger.kernel.org,
+        Arthur Marsh <arthur.marsh@internode.on.net>,
+        Richard Weinberger <richard.weinberger@gmail.com>,
+        ltp@lists.linux.it, Jan Stancek <jstancek@redhat.com>
+References: <20190520115247.060821231@linuxfoundation.org>
+ <20190520222342.wtsjx227c6qbkuua@xps.therub.org>
+ <20190521085956.GC31445@kroah.com>
+ <CA+G9fYvHmUimtwszwo=9fDQLn+MNh8Vq3UGPaPUdhH=dEKzqxg@mail.gmail.com>
+ <20190521093849.GA9806@kroah.com>
+ <CA+G9fYveeg_FMsL31aunJ2A9XLYk908Y1nSFw4kwkFk3h3uEiA@mail.gmail.com>
+ <20190521162142.GA2591@mit.edu>
+ <CA+G9fYunxonkqmkhz+zmZYuMTfyRMVBxn6PkTFfjd8tTT+bzHQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+G9fYunxonkqmkhz+zmZYuMTfyRMVBxn6PkTFfjd8tTT+bzHQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 20 May 2019 at 17:51, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 4.19.45 release.
-> There are 105 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Wed 22 May 2019 11:50:49 AM UTC.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.19.45-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.19.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+On Tue, May 21, 2019 at 11:27:21PM +0530, Naresh Kamboju wrote:
+> Steps to reproduce is,
+> running LTP three test cases in sequence on x86 device.
+> # cd ltp/runtest
+> # cat syscalls ( only three test case)
+> open12 open12
+> madvise06 madvise06
+> poll02 poll02
+> #
+> 
+> as Dan referring to,
+> 
+> LTP is run using '/opt/ltp/runltp -d /scratch -f syscalls', where the
+> syscalls file has been replaced with three test case names, and
+> /scratch is an ext4 SATA drive. /scratch is created using 'mkfs -t ext4
+> /dev/disk/by-id/ata-TOSHIBA_MG03ACA100_37O9KGKWF' and mounted to
+> /scratch.
 
-4.19.45-rc2 report,
+I'm still having trouble reproducing the problem.  I've followed the
+above exactly, and it doesn't trigger on my system.  I think I know
+what is happening, but even given my theory, I'm still not able to
+trigger it.  So, I'm not 100% sure this is the appropriate fix.  If
+you can reproduce it, can you see if this patch, applied on top of the
+Linus's tip, fixes the problem for you?
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+					- Ted
 
-Summary
-------------------------------------------------------------------------
+commit 3ad7621bfff343b16d59ed418f6d4420d4ec3e63
+Author: Theodore Ts'o <tytso@mit.edu>
+Date:   Tue May 21 17:01:01 2019 -0400
 
-kernel: 4.19.45-rc2
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.19.y
-git commit: 84889965d346f29e8d1614f9c3cb35c389a40eec
-git describe: v4.19.44-103-g84889965d346
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.19-oe/bu=
-ild/v4.19.44-103-g84889965d346
+    ext4: don't perform block validity checks on the journal inode
+    
+    Since the journal inode is already checked when we added it to the
+    block validity's system zone, if we check it again, we'll just trigger
+    a failure.
+    
+    This was causing failures like this:
+    
+    [   53.897001] EXT4-fs error (device sda): ext4_find_extent:909: inode
+    #8: comm jbd2/sda-8: pblk 121667583 bad header/extent: invalid extent entries - magic f30a, entries 8, max 340(340), depth 0(0)
+    [   53.931430] jbd2_journal_bmap: journal block not found at offset 49 on sda-8
+    [   53.938480] Aborting journal on device sda-8.
+    
+    ... but only if the system was under enough memory pressure that
+    logical->physical mapping for the journal inode gets pushed out of the
+    extent cache.  (This is why it wasn't noticed earlier.)
+    
+    Fixes: 345c0dbf3a30 ("ext4: protect journal inode's blocks using block_validity")
+    Reported-by: Dan Rue <dan.rue@linaro.org>
+    Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 
-
-No regressions (compared to build v4.19.44)
-
-No fixes (compared to build v4.19.44)
-
-
-Ran 21466 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c - arm64
-- i386
-- juno-r2 - arm64
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* libgpiod
-* libhugetlbfs
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* ltp-timers-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* ltp-open-posix-tests
-* kvm-unit-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-* ssuite
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
+diff --git a/fs/ext4/extents.c b/fs/ext4/extents.c
+index f2c62e2a0c98..d40ed940001e 100644
+--- a/fs/ext4/extents.c
++++ b/fs/ext4/extents.c
+@@ -518,10 +518,14 @@ __read_extent_tree_block(const char *function, unsigned int line,
+ 	}
+ 	if (buffer_verified(bh) && !(flags & EXT4_EX_FORCE_CACHE))
+ 		return bh;
+-	err = __ext4_ext_check(function, line, inode,
+-			       ext_block_hdr(bh), depth, pblk);
+-	if (err)
+-		goto errout;
++	if (!ext4_has_feature_journal(inode->i_sb) ||
++	    (inode->i_ino !=
++	     le32_to_cpu(EXT4_SB(inode->i_sb)->s_es->s_journal_inum))) {
++		err = __ext4_ext_check(function, line, inode,
++				       ext_block_hdr(bh), depth, pblk);
++		if (err)
++			goto errout;
++	}
+ 	set_buffer_verified(bh);
+ 	/*
+ 	 * If this is a leaf block, cache all of its entries
