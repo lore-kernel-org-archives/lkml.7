@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C07BC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:24:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0408C282DC
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:24:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CC9821872
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:24:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C25552173C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:24:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558553078;
-	bh=IoWvHBc4tBzjlAk72m/+qe+eQqCGNqN/lSyE/o9xWuo=;
+	s=default; t=1558553086;
+	bh=YzezW2Fba2Qpg5me27N4CVgznmETrqoWlEbAAN6ufFg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a7+ATXkobGs9N1Lufae9SaI9hbXYKifxXI1zwOWWtShuPgQno1qfLZzpvxPEcsJ1h
-	 1S7e92iYjO2rQd8A31ff56Aw5Oegl9a2UOW66pTISEpQTXnxrTDzJi6JEVFls05Fd/
-	 yzQ+6qsftTgNGToEoQxMCZWr6UxU1ATrQpvPQ6NU=
+	b=Mo+8yMRtDAG+v+oZF+3vhKN73DtUd6hKOCOpi1bUdlfQXZy06syrF938eN8OjvO94
+	 CApcUPmm/jxyhIQwU6+ZW4SBJ85zsMAP1Vdipg/TudvKyBJbQ2eTploRcqil6xGMtA
+	 NO6BlqSMAljS06yIwM6l12V91glY8EdwwJhc0pNY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731343AbfEVTYg (ORCPT
+        id S1731396AbfEVTYq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:24:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45710 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:24:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730590AbfEVTYc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:24:32 -0400
+        id S1730590AbfEVTYi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:24:38 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 42102217D9;
-        Wed, 22 May 2019 19:24:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BCD4A217D9;
+        Wed, 22 May 2019 19:24:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553072;
-        bh=IoWvHBc4tBzjlAk72m/+qe+eQqCGNqN/lSyE/o9xWuo=;
+        s=default; t=1558553077;
+        bh=YzezW2Fba2Qpg5me27N4CVgznmETrqoWlEbAAN6ufFg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g6ZUthM6RZ9wJlZL9o8qEi6wXkUAV7wYhJNkXpOlcgOIyXzUTWNsbUCL6rfA04dsW
-         WLOOAbVm9txS3wmC4/FWRA6x2/K/QyGmYx4xim7W9gvRDKmr7B1ZPZsqaI5wv6PDyq
-         4+8dVWmBudrnjYKLMIYoH1LLiepo068OQ0gVLiYw=
+        b=tPatB5nXOrE38Kq+rro743gElhOcd5qzdSzXzELRTL7A3FWKTn+OhqHVbJDTa2lt2
+         FRsjLN+6svzlFr9WUm2Q64z8vuOck8Gorhh43bdYtUpuBkTH0sKsW5GTsLSl5Zb7Vn
+         6obg1XEHX+ir11/i6FnNm7/Fc28EbUv/gRW5sCKw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 032/317] spi: atmel-quadspi: fix crash while suspending
-Date:   Wed, 22 May 2019 15:18:53 -0400
-Message-Id: <20190522192338.23715-32-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 035/317] brcm80211: potential NULL dereference in brcmf_cfg80211_vndr_cmds_dcmd_handler()
+Date:   Wed, 22 May 2019 15:18:56 -0400
+Message-Id: <20190522192338.23715-35-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192338.23715-1-sashal@kernel.org>
 References: <20190522192338.23715-1-sashal@kernel.org>
@@ -60,47 +62,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Claudiu Beznea <claudiu.beznea@microchip.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit e5c27498a0403b270620b1a8a0a66e3efc222fb6 ]
+[ Upstream commit e025da3d7aa4770bb1d1b3b0aa7cc4da1744852d ]
 
-atmel_qspi objects are kept in spi_controller objects, so, first get
-pointer to spi_controller object and then get atmel_qspi object from
-spi_controller object.
+If "ret_len" is negative then it could lead to a NULL dereference.
 
-Fixes: 2d30ac5ed633 ("mtd: spi-nor: atmel-quadspi: Use spi-mem interface for atmel-quadspi driver")
-Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-Reviewed-by: Tudor Ambarus <tudor.ambarus@microchip.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+The "ret_len" value comes from nl80211_vendor_cmd(), if it's negative
+then we don't allocate the "dcmd_buf" buffer.  Then we pass "ret_len" to
+brcmf_fil_cmd_data_set() where it is cast to a very high u32 value.
+Most of the functions in that call tree check whether the buffer we pass
+is NULL but there are at least a couple places which don't such as
+brcmf_dbg_hex_dump() and brcmf_msgbuf_query_dcmd().  We memcpy() to and
+from the buffer so it would result in a NULL dereference.
+
+The fix is to change the types so that "ret_len" can't be negative.  (If
+we memcpy() zero bytes to NULL, that's a no-op and doesn't cause an
+issue).
+
+Fixes: 1bacb0487d0e ("brcmfmac: replace cfg80211 testmode with vendor command")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/atmel-quadspi.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/vendor.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/spi/atmel-quadspi.c b/drivers/spi/atmel-quadspi.c
-index ddc7124108125..ec6e9970d7750 100644
---- a/drivers/spi/atmel-quadspi.c
-+++ b/drivers/spi/atmel-quadspi.c
-@@ -506,7 +506,8 @@ static int atmel_qspi_remove(struct platform_device *pdev)
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/vendor.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/vendor.c
+index 8eff2753abade..d493021f60318 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/vendor.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/vendor.c
+@@ -35,9 +35,10 @@ static int brcmf_cfg80211_vndr_cmds_dcmd_handler(struct wiphy *wiphy,
+ 	struct brcmf_if *ifp;
+ 	const struct brcmf_vndr_dcmd_hdr *cmdhdr = data;
+ 	struct sk_buff *reply;
+-	int ret, payload, ret_len;
++	unsigned int payload, ret_len;
+ 	void *dcmd_buf = NULL, *wr_pointer;
+ 	u16 msglen, maxmsglen = PAGE_SIZE - 0x100;
++	int ret;
  
- static int __maybe_unused atmel_qspi_suspend(struct device *dev)
- {
--	struct atmel_qspi *aq = dev_get_drvdata(dev);
-+	struct spi_controller *ctrl = dev_get_drvdata(dev);
-+	struct atmel_qspi *aq = spi_controller_get_devdata(ctrl);
- 
- 	clk_disable_unprepare(aq->clk);
- 
-@@ -515,7 +516,8 @@ static int __maybe_unused atmel_qspi_suspend(struct device *dev)
- 
- static int __maybe_unused atmel_qspi_resume(struct device *dev)
- {
--	struct atmel_qspi *aq = dev_get_drvdata(dev);
-+	struct spi_controller *ctrl = dev_get_drvdata(dev);
-+	struct atmel_qspi *aq = spi_controller_get_devdata(ctrl);
- 
- 	clk_prepare_enable(aq->clk);
- 
+ 	if (len < sizeof(*cmdhdr)) {
+ 		brcmf_err("vendor command too short: %d\n", len);
+@@ -65,7 +66,7 @@ static int brcmf_cfg80211_vndr_cmds_dcmd_handler(struct wiphy *wiphy,
+ 			brcmf_err("oversize return buffer %d\n", ret_len);
+ 			ret_len = BRCMF_DCMD_MAXLEN;
+ 		}
+-		payload = max(ret_len, len) + 1;
++		payload = max_t(unsigned int, ret_len, len) + 1;
+ 		dcmd_buf = vzalloc(payload);
+ 		if (NULL == dcmd_buf)
+ 			return -ENOMEM;
 -- 
 2.20.1
 
