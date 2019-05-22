@@ -2,117 +2,129 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6F2CC18E7D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 10:01:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6650CC18E7D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 10:01:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DBC120868
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 10:01:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B53B20821
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 10:01:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="qqOlTXMN"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="P9bdUFm9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729391AbfEVKBJ (ORCPT
+        id S1729403AbfEVKBa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 06:01:09 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:23941 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728406AbfEVKBJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 06:01:09 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 4587SL4VkZz9v2M2;
-        Wed, 22 May 2019 12:01:06 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=qqOlTXMN; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id htw2hqspO0bf; Wed, 22 May 2019 12:01:06 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 4587SL3TkDz9v2M1;
-        Wed, 22 May 2019 12:01:06 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1558519266; bh=pOJgHp/KMoeYEIwsOCZddIB2aTQYV+vwh0CSHycpDpI=;
-        h=From:Subject:To:Cc:Date:From;
-        b=qqOlTXMNNHJOMdk1N0HS5Hzpjr/2y4ypZNow5W/PI1QnLs7xTU5AODc1lbH+yW2YQ
-         4sE+CEJBwutOJwezWalBSKhSPl0OETTs8Qdl/cHuf7CvaUOTtcsf5OQ3d+mF1hdRn5
-         mbkCkumtsx09O8bpHrNBhw6w1FgIKFul1ZKY43uU=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 932128B82C;
-        Wed, 22 May 2019 12:01:07 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id g2u_VzR4Vwh9; Wed, 22 May 2019 12:01:07 +0200 (CEST)
-Received: from po16846vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.231.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 644268B823;
-        Wed, 22 May 2019 12:01:07 +0200 (CEST)
-Received: by po16846vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 2B677684F2; Wed, 22 May 2019 10:01:07 +0000 (UTC)
-Message-Id: <cf280b7ab1f513f03d3908ac9ad194e819f170f5.1558519026.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH] net: phy: lxt: Add suspend/resume support to LXT971 and
- LXT973.
-To:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Date:   Wed, 22 May 2019 10:01:07 +0000 (UTC)
+        Wed, 22 May 2019 06:01:30 -0400
+Received: from mail-eopbgr00044.outbound.protection.outlook.com ([40.107.0.44]:13764
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728406AbfEVKB2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 06:01:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=n6sqrqxqwTiZ4tbyJIcnvRvAcZq7pQfaNREQf2oUNJU=;
+ b=P9bdUFm9Xh6g4lFidqcCBEvsLuVmRknWle3E+Js7RNKfrv/Ntu4HPgCrM16nIkMDznMADns6vvIn+91HfT+YM6fyklkeZbmHXmDzOoC9T5iqOmhs5MJPYJpd29gdv1Fh03m5v3RVMuavGgAXw3BaP6EJOh8Nv65pzpL80aTiHxA=
+Received: from VI1PR04MB4543.eurprd04.prod.outlook.com (20.177.55.90) by
+ VI1PR04MB3149.eurprd04.prod.outlook.com (10.170.229.23) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1900.18; Wed, 22 May 2019 10:00:50 +0000
+Received: from VI1PR04MB4543.eurprd04.prod.outlook.com
+ ([fe80::5062:df97:a70b:93f8]) by VI1PR04MB4543.eurprd04.prod.outlook.com
+ ([fe80::5062:df97:a70b:93f8%7]) with mapi id 15.20.1900.020; Wed, 22 May 2019
+ 10:00:50 +0000
+From:   Robin Gong <yibin.gong@nxp.com>
+To:     "robh@kernel.org" <robh@kernel.org>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        "plyatov@gmail.com" <plyatov@gmail.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>
+CC:     "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>
+Subject: [PATCH v4 12/14] ARM: dts: imx6ul: add dma support on ecspi
+Thread-Topic: [PATCH v4 12/14] ARM: dts: imx6ul: add dma support on ecspi
+Thread-Index: AQHVEIU83qMigGqUGE6I8nfFNPDIVQ==
+Date:   Wed, 22 May 2019 10:00:50 +0000
+Message-ID: <1558548188-1155-13-git-send-email-yibin.gong@nxp.com>
+References: <1558548188-1155-1-git-send-email-yibin.gong@nxp.com>
+In-Reply-To: <1558548188-1155-1-git-send-email-yibin.gong@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.7.4
+x-clientproxiedby: HK2PR04CA0045.apcprd04.prod.outlook.com
+ (2603:1096:202:14::13) To VI1PR04MB4543.eurprd04.prod.outlook.com
+ (2603:10a6:803:6d::26)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yibin.gong@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: aa041148-5ce4-4bfe-e04c-08d6de9c5e5d
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB3149;
+x-ms-traffictypediagnostic: VI1PR04MB3149:
+x-microsoft-antispam-prvs: <VI1PR04MB31492FFCA87BCD36D2B6271F89000@VI1PR04MB3149.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:330;
+x-forefront-prvs: 0045236D47
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(199004)(189003)(2501003)(446003)(11346002)(2616005)(186003)(68736007)(26005)(5660300002)(476003)(86362001)(71190400001)(50226002)(54906003)(110136005)(66066001)(76176011)(486006)(4326008)(7736002)(52116002)(2201001)(71200400001)(36756003)(6512007)(99286004)(7416002)(386003)(8676002)(6506007)(305945005)(53936002)(81166006)(66446008)(25786009)(64756008)(81156014)(6436002)(256004)(6486002)(102836004)(14454004)(73956011)(8936002)(498600001)(2906002)(66946007)(66476007)(14444005)(66556008)(6116002)(3846002)(921003)(32563001)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB3149;H:VI1PR04MB4543.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 3ZMxYNrsqSdtPnHRridgmTzAbN9a6QLjf25dMBkv8KT7YscG0mP4mMoXwwBrAXeXMnXqSErlnn7UFxzOLlV3cGift+Ptx/232jVipD65zW4t8ryeIgtkWkZbr7XCYclldyC4da38ej7HRat5PWPHtuWYkljieUSYaVNugZ8LwIy+q7gqjj5SzhWAnUC7IU1eCGUUK7cU695gANaNtNUwZ/HlH7MIxGGe2OjGBNbG+HaM7ecmGQGHhiIeHg+rRoHk2Iv1s0HEIFncxxZQRSNwk1P78wF3VwPBBueTilFuApUvmuRorlwyv+cgjyvt3vxHWL8CYqQk6Zb7Ics9RjJ9fhmUUDLNKsFJ8Aw+TGU+jzdgOxRrq51diCUGUhywPspwUzt2NIRo+czwTonJFnnT9DV/linIlWMiuO3+CflVQCo=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: aa041148-5ce4-4bfe-e04c-08d6de9c5e5d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 May 2019 10:00:50.6544
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB3149
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All LXT PHYs implement the standard "power down" bit 11 of
-BMCR, so this patch adds support using the generic
-genphy_{suspend,resume} functions.
-
-LXT970 is left aside because all registers get cleared upon
-"power down" exit.
-
-Fixes: 0f0ca340e57b ("phy: power management support")
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
----
- drivers/net/phy/lxt.c | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/drivers/net/phy/lxt.c b/drivers/net/phy/lxt.c
-index 314486288119..356bd6472f49 100644
---- a/drivers/net/phy/lxt.c
-+++ b/drivers/net/phy/lxt.c
-@@ -262,6 +262,8 @@ static struct phy_driver lxt97x_driver[] = {
- 	/* PHY_BASIC_FEATURES */
- 	.ack_interrupt	= lxt971_ack_interrupt,
- 	.config_intr	= lxt971_config_intr,
-+	.suspend	= genphy_suspend,
-+	.resume		= genphy_resume,
- }, {
- 	.phy_id		= 0x00137a10,
- 	.name		= "LXT973-A2",
-@@ -271,6 +273,8 @@ static struct phy_driver lxt97x_driver[] = {
- 	.probe		= lxt973_probe,
- 	.config_aneg	= lxt973_config_aneg,
- 	.read_status	= lxt973a2_read_status,
-+	.suspend	= genphy_suspend,
-+	.resume		= genphy_resume,
- }, {
- 	.phy_id		= 0x00137a10,
- 	.name		= "LXT973",
-@@ -279,6 +283,8 @@ static struct phy_driver lxt97x_driver[] = {
- 	.flags		= 0,
- 	.probe		= lxt973_probe,
- 	.config_aneg	= lxt973_config_aneg,
-+	.suspend	= genphy_suspend,
-+	.resume		= genphy_resume,
- } };
- 
- module_phy_driver(lxt97x_driver);
--- 
-2.13.3
-
+QWRkIGRtYSBzdXBwb3J0IG9uIGVjc3BpLg0KDQpTaWduZWQtb2ZmLWJ5OiBSb2JpbiBHb25nIDx5
+aWJpbi5nb25nQG54cC5jb20+DQotLS0NCiBhcmNoL2FybS9ib290L2R0cy9pbXg2dWwuZHRzaSB8
+IDggKysrKysrKysNCiAxIGZpbGUgY2hhbmdlZCwgOCBpbnNlcnRpb25zKCspDQoNCmRpZmYgLS1n
+aXQgYS9hcmNoL2FybS9ib290L2R0cy9pbXg2dWwuZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lt
+eDZ1bC5kdHNpDQppbmRleCBiYmYwMTBjLi44ODBiOWVlIDEwMDY0NA0KLS0tIGEvYXJjaC9hcm0v
+Ym9vdC9kdHMvaW14NnVsLmR0c2kNCisrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZ1bC5kdHNp
+DQpAQCAtMjI2LDYgKzIyNiw4IEBADQogCQkJCQljbG9ja3MgPSA8JmNsa3MgSU1YNlVMX0NMS19F
+Q1NQSTE+LA0KIAkJCQkJCSA8JmNsa3MgSU1YNlVMX0NMS19FQ1NQSTE+Ow0KIAkJCQkJY2xvY2st
+bmFtZXMgPSAiaXBnIiwgInBlciI7DQorCQkJCQlkbWFzID0gPCZzZG1hIDMgNyAxPiwgPCZzZG1h
+IDQgNyAyPjsNCisJCQkJCWRtYS1uYW1lcyA9ICJyeCIsICJ0eCI7DQogCQkJCQlzdGF0dXMgPSAi
+ZGlzYWJsZWQiOw0KIAkJCQl9Ow0KIA0KQEAgLTIzOCw2ICsyNDAsOCBAQA0KIAkJCQkJY2xvY2tz
+ID0gPCZjbGtzIElNWDZVTF9DTEtfRUNTUEkyPiwNCiAJCQkJCQkgPCZjbGtzIElNWDZVTF9DTEtf
+RUNTUEkyPjsNCiAJCQkJCWNsb2NrLW5hbWVzID0gImlwZyIsICJwZXIiOw0KKwkJCQkJZG1hcyA9
+IDwmc2RtYSA1IDcgMT4sIDwmc2RtYSA2IDcgMj47DQorCQkJCQlkbWEtbmFtZXMgPSAicngiLCAi
+dHgiOw0KIAkJCQkJc3RhdHVzID0gImRpc2FibGVkIjsNCiAJCQkJfTsNCiANCkBAIC0yNTAsNiAr
+MjU0LDggQEANCiAJCQkJCWNsb2NrcyA9IDwmY2xrcyBJTVg2VUxfQ0xLX0VDU1BJMz4sDQogCQkJ
+CQkJIDwmY2xrcyBJTVg2VUxfQ0xLX0VDU1BJMz47DQogCQkJCQljbG9jay1uYW1lcyA9ICJpcGci
+LCAicGVyIjsNCisJCQkJCWRtYXMgPSA8JnNkbWEgNyA3IDE+LCA8JnNkbWEgOCA3IDI+Ow0KKwkJ
+CQkJZG1hLW5hbWVzID0gInJ4IiwgInR4IjsNCiAJCQkJCXN0YXR1cyA9ICJkaXNhYmxlZCI7DQog
+CQkJCX07DQogDQpAQCAtMjYyLDYgKzI2OCw4IEBADQogCQkJCQljbG9ja3MgPSA8JmNsa3MgSU1Y
+NlVMX0NMS19FQ1NQSTQ+LA0KIAkJCQkJCSA8JmNsa3MgSU1YNlVMX0NMS19FQ1NQSTQ+Ow0KIAkJ
+CQkJY2xvY2stbmFtZXMgPSAiaXBnIiwgInBlciI7DQorCQkJCQlkbWFzID0gPCZzZG1hIDkgNyAx
+PiwgPCZzZG1hIDEwIDcgMj47DQorCQkJCQlkbWEtbmFtZXMgPSAicngiLCAidHgiOw0KIAkJCQkJ
+c3RhdHVzID0gImRpc2FibGVkIjsNCiAJCQkJfTsNCiANCi0tIA0KMi43LjQNCg0K
