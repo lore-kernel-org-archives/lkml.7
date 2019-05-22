@@ -3,96 +3,99 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F4DBC072A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 07:55:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76206C18E7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 07:56:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2999221479
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 07:55:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 406C221479
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 07:56:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="cCC2AIeE"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=skidata.com header.i=@skidata.com header.b="dhSvzPEN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728619AbfEVHzH (ORCPT
+        id S1728682AbfEVH4l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 03:55:07 -0400
-Received: from mail-wm1-f46.google.com ([209.85.128.46]:53213 "EHLO
-        mail-wm1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728159AbfEVHzG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 03:55:06 -0400
-Received: by mail-wm1-f46.google.com with SMTP id y3so1119040wmm.2
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 00:55:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:user-agent:in-reply-to:references:mime-version
-         :content-transfer-encoding:subject:to:cc:from:message-id;
-        bh=ry1vtEMs73ySB4IEwRFPk9gg/6GEvmW81gAJ82XtyKU=;
-        b=cCC2AIeEsfYLIRfiGfOtmJBhJPhWGBOUCheRj8Cgesibj5/WKA3xQ4h2sfT2LmYxZ5
-         RxyiDIwu82X7Rx8mCWmjhJvXEOTwTB0pEZZN9B2izYYOQj2dLPiTET+uT+ke/nxLIADh
-         EiJbqIrarynTrYwvZOzkQO2iADLd6Ea+LcgXQxj34pwlmCwtPEBPz+JNtVCiw9JQKTfI
-         ErmBg4JOWIeVtmMN9SXAYEfwbp+9p3oxyIaTG+Bx60TDGK2sQZoakwlmeVKIUeP/RvAd
-         bUYxFxnzNXVFcs73iI3N0BgmNWyA47dkgmpZBVdOI4DoqS/fHOpz77RAYw5Z2hJEdubq
-         q51A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:user-agent:in-reply-to:references
-         :mime-version:content-transfer-encoding:subject:to:cc:from
-         :message-id;
-        bh=ry1vtEMs73ySB4IEwRFPk9gg/6GEvmW81gAJ82XtyKU=;
-        b=GUV3NYa0q3zflM1x9p2z3OYCsL4Lj5OcAkWOEXOxVexUiftVZJzBL0UF2FCT1X6kXD
-         v3kpiXEGOtjBPzQ626jkuuFjWqMSaFCWT7D9LkBCMpuC8tSmdDT0emiVNModZarIz3fI
-         5EjhqMHWkdUUR+aDVAT0boIR+SX92s/fJk7ZE3TdpSZ3ArD1On1rFDR79YFwHNgxFt7y
-         LwHYfuRu/csvhXuG3nBhUFzNoC9L+bNxOVdtHPxlMXV+VX6M6/ryStzEaC2LMmIocmxb
-         WKdNjfy/01/hkWv9RxX2HxUjg5qTox8C8mHOm6xAzlkS5rxdY/5HigJnrOOwdKwoqfvh
-         Ohng==
-X-Gm-Message-State: APjAAAVRxvtfJqum5AcxjW6QfCU4mBJhFeSnqgc/d+ZcqLpVsz36iIYl
-        kUe59RIUHKhXIEBlQC5FbcwU1PWgiborRA==
-X-Google-Smtp-Source: APXvYqxtKsUWUjbxbtXDH2OVSGWICDMPDDqQOpSsKeXv/wcmBemF7E9KFHMvbtMalq9XHlWPXsBAuQ==
-X-Received: by 2002:a1c:1d46:: with SMTP id d67mr6032224wmd.98.1558511704748;
-        Wed, 22 May 2019 00:55:04 -0700 (PDT)
-Received: from HUAWEI-nova-2-351a175292c.fritz.box ([212.91.227.56])
-        by smtp.gmail.com with ESMTPSA id y40sm44784272wrd.96.2019.05.22.00.55.03
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 22 May 2019 00:55:04 -0700 (PDT)
-Date:   Wed, 22 May 2019 09:55:00 +0200
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20190522174725.6bfd51bd@canb.auug.org.au>
-References: <20190522110115.7350be3e@canb.auug.org.au> <20190522055235.GC13702@kroah.com> <20190522174725.6bfd51bd@canb.auug.org.au>
+        Wed, 22 May 2019 03:56:41 -0400
+Received: from mail2.skidata.com ([91.230.2.91]:60680 "EHLO mail2.skidata.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728159AbfEVH4k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 03:56:40 -0400
+X-Greylist: delayed 429 seconds by postgrey-1.27 at vger.kernel.org; Wed, 22 May 2019 03:56:39 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=skidata.com; i=@skidata.com; q=dns/txt; s=selector1;
+  t=1558511822; x=1590047822;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=LJnYEKn5WOXECQB3sJrCxae4KRfYfQTS/G+vasBSN0I=;
+  b=dhSvzPENaIXPQ37kr5wOb5EcbT/sO8fSLvlTkzYG+s8gNEMhM6VfEVoi
+   fsqe20QodQjryMPX/KVAk5+PgLfl4LQiYYhKwgR/RDnM0mUnQyhCwS3MA
+   7PaEL5Uy45uYwRZcLMQUNovVR7lqK6MJL4/+CK5kijP2UsMiSZWyCPmaQ
+   f1Z+TSoLrOkqRbJqXBRpYAe/lXOIa8ojVx8q3U44/+fDISRnbxwoKJDSn
+   L8L3fAOR4U6LWL3FSM9Wrg0LRiOy2nVXa9ow6/Zt8FiV12jdePdG8gTjf
+   26QV/T1gxOsRTCaq4lgoaTtzhn5sQph6f2Q36bu8UxEeH3ZTIcUzU57hi
+   g==;
+IronPort-SDR: bHCkSqeNf+P5/1K1T9SeqcdO2jZ6RfDMFEkkWOvgFfGljXlAsK+mN7cPZD4UPrEWry9Y4CrCq7
+ 3tHDsDTiMdjl+Z5GVlvF1QuaQPIxQtrePu4/DFbImMH9kOnaXY1lsM6lQKqGgmP7WjV+zbCvlQ
+ oqim7Yp3D5rgQkHq+QwJfGyIX8PzPOs7lW1+LkA/ypuwEKe8WwyccERlirEDygjN73wm1Nacw5
+ yN17Dee6VRl5xOFVTagixJm998xZT8Qrp51Thvt6Q2LxB/plIa3THv3LCwDIGZZnfXUMKeVuUZ
+ 4UE=
+X-IronPort-AV: E=Sophos;i="5.60,498,1549926000"; 
+   d="scan'208";a="2151447"
+Subject: Re: [PATCH 1/3] rtc: s35390a: clarify INT2 pin output modes
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+CC:     <a.zummo@towertech.it>, <linux-rtc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20190521142024.25894-1-richard.leitner@skidata.com>
+ <20190521142024.25894-2-richard.leitner@skidata.com>
+ <20190521155424.GH3274@piout.net>
+From:   Richard Leitner <richard.leitner@skidata.com>
+Message-ID: <16bd943f-ccae-c3a5-59d3-b429c12c8155@skidata.com>
+Date:   Wed, 22 May 2019 09:49:33 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: linux-next: manual merge of the pidfd tree with Linus' tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>
-From:   Christian Brauner <christian@brauner.io>
-Message-ID: <CEB120FD-547A-4D92-92AE-43E6AF8E767B@brauner.io>
+In-Reply-To: <20190521155424.GH3274@piout.net>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [192.168.111.252]
+X-ClientProxiedBy: sdex4srv.skidata.net (192.168.111.82) To
+ sdex5srv.skidata.net (192.168.111.83)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On May 22, 2019 9:48:33 AM GMT+02:00, Stephen Rothwell <sfr@canb=2Eauug=2Eo=
-rg=2Eau> wrote:
->Hi Greg,
->
->On Wed, 22 May 2019 07:52:35 +0200 Greg Kroah-Hartman
-><gregkh@linuxfoundation=2Eorg> wrote:
->>
->> Sorry, you are going to get a number of these types of minor
->conflicts
->> now=2E  That's the problem of touching thousands of files :(
->
->Yeah, I expected that one I saw the commits=2E  At least is is just after
->-rc1, hopefully most maintainers will start their -next branches after
->today :-)
+On 21/05/2019 17:54, Alexandre Belloni wrote:
+> Hello,
+> 
+> This seems good to me but...
+> 
+> On 21/05/2019 16:20:22+0200, Richard Leitner wrote:
 
-I can just rebase if that helps you out=2E
+>> --- a/drivers/rtc/rtc-s35390a.c
+>> +++ b/drivers/rtc/rtc-s35390a.c
+>> @@ -45,12 +45,13 @@
+>>   /* flag for STATUS2 */
+>>   #define S35390A_FLAG_TEST	0x01
+>>   
+>> -#define S35390A_INT2_MODE_MASK		0xF0
+>> -
+>> +/* INT2 pin output mode */
+>> +#define S35390A_INT2_MODE_MASK		0x0E
+>>   #define S35390A_INT2_MODE_NOINTR	0x00
+>> -#define S35390A_INT2_MODE_FREQ		0x10
+>> -#define S35390A_INT2_MODE_ALARM		0x40
+>> -#define S35390A_INT2_MODE_PMIN_EDG	0x20
+>> +#define S35390A_INT2_MODE_ALARM		0x02 /* INT2AE */
+>> +#define S35390A_INT2_MODE_PMIN_EDG	0x04 /* INT2ME */
+>> +#define S35390A_INT2_MODE_FREQ		0x08 /* INT2FE */
+>> +#define S35390A_INT2_MODE_PMIN		0x0C /* INT2ME | INT2FE */
+>>   
+> 
+> While you are at it you may as well use BIT().
 
-Christian
+Sure, will change that for v2.
+
+regards;Richard.L
