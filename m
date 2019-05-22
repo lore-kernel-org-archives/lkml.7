@@ -2,112 +2,164 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C221C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:37:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EE62C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:38:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6B9521473
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:37:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="HkD1qDnP"
+	by mail.kernel.org (Postfix) with ESMTP id B0D8521473
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:38:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729942AbfEVUhH (ORCPT
+        id S1729987AbfEVUij (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 16:37:07 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:42575 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729528AbfEVUhH (ORCPT
+        Wed, 22 May 2019 16:38:39 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:56274 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729667AbfEVUij (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 16:37:07 -0400
-Received: by mail-qt1-f196.google.com with SMTP id j53so4079730qta.9
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 13:37:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=DDEc493zRRlIzxUABdOKVz8yZe5OqF7VHlzAHj5qgck=;
-        b=HkD1qDnPggcknOVzuyXItIMGjUV7me9Zi8Vwtpvs+Um5+AFZ9Q1zQ2gPUyHNB7vAgM
-         Js8drHBrwL9CchGi9PVmV/G4CGVAfBIkuWEUxvWo3bi5+Td4egvLTrqRKqeNySwHVAzr
-         PuVf7clTGSp/Vn5yBjTOCFVWAS2moFTjeF0hQl2MVbbrKINN5stXEScQU2GsAq1PDQ6u
-         5WnrsGzxPtBal9RVXslCFrc/3NhG5fCjV3YLlrGTlDFv7kTXxLadoavrU+0wmiKSydgx
-         xpQ5XFmJdtp9dqWiMft6z4rd+jYkY3X62rVSZsYBsT7nR5pgQgaDdhUF0aLvay4D8CRT
-         qIzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=DDEc493zRRlIzxUABdOKVz8yZe5OqF7VHlzAHj5qgck=;
-        b=B21BnLFJufsSwnjr7GIVF7HAHgrCP7loK0o9ZkoFev8xbRzCmMTewgiN23oqoGlosI
-         QpFDINlkvMo3lOiF9LmWZwxdiec1bEp+GXhBLYRKlAgXZz/qR+q1jWQYIX1xtv4iSoE1
-         TZmIafOtkIJkk81E4PKy9tHQlFMdOn4VBcbicyE9vp7CMHOhwew7VfOAkZDaFev7D5X+
-         bsKY+JAGRnFVX5NMfGXEMsHPwz/eOWn++2A5d3iqK+TEX6s66VTLM/QVaPongldQnPed
-         s4Cp/ap55oEuDf5V+g/MlmF+bZfEuw2y/6j9gZF3EMygDoS9tVj7DZUWWQne63O6PgPo
-         f5xw==
-X-Gm-Message-State: APjAAAXke+VfCK+zGqDWm4nKPsmz/krRQGMnBOHjx5CfXZzdXPbGR0H1
-        iEKtujK8RJK5y2bnhBMwWdYjGPsgf2A=
-X-Google-Smtp-Source: APXvYqwMYhS0u5PhrONFf+mvi1pBgngqWhuTqFo2JraK7yCZuFqDmAVoYIt4h+YtfkFs6KwzsgZsdw==
-X-Received: by 2002:ac8:2617:: with SMTP id u23mr75957842qtu.141.1558557426395;
-        Wed, 22 May 2019 13:37:06 -0700 (PDT)
-Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id f9sm7013886qkb.97.2019.05.22.13.37.05
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 22 May 2019 13:37:05 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-To:     akpm@linux-foundation.org
-Cc:     jroedel@suse.de, dwmw2@infradead.org,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Qian Cai <cai@lca.pw>
-Subject: [RESEND PATCH] iommu/intel: fix variable 'iommu' set but not used
-Date:   Wed, 22 May 2019 16:36:26 -0400
-Message-Id: <1558557386-17160-1-git-send-email-cai@lca.pw>
-X-Mailer: git-send-email 1.8.3.1
+        Wed, 22 May 2019 16:38:39 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4MKbQVZ110248
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 16:38:38 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2snbqtce8q-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 16:38:38 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
+        Wed, 22 May 2019 21:38:36 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 22 May 2019 21:38:33 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4MKcW4Y50397334
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 22 May 2019 20:38:32 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5E2C5AE045;
+        Wed, 22 May 2019 20:38:32 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 87F48AE04D;
+        Wed, 22 May 2019 20:38:31 +0000 (GMT)
+Received: from rapoport-lnx (unknown [9.148.205.81])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Wed, 22 May 2019 20:38:31 +0000 (GMT)
+Date:   Wed, 22 May 2019 23:38:29 +0300
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Andrea Arcangeli <aarcange@redhat.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Borislav Petkov <bp@suse.de>,
+        "Dr. David Alan Gilbert" <dgilbert@redhat.com>, kvm@vger.kernel.org
+Subject: Re: [PATCH] mm/gup: continue VM_FAULT_RETRY processing event for
+ pre-faults
+References: <1557844195-18882-1-git-send-email-rppt@linux.ibm.com>
+ <20190522122113.a2edc8aba32f0fad189bae21@linux-foundation.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190522122113.a2edc8aba32f0fad189bae21@linux-foundation.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-TM-AS-GCONF: 00
+x-cbid: 19052220-0020-0000-0000-0000033F6D06
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19052220-0021-0000-0000-0000219253D1
+Message-Id: <20190522203828.GC18865@rapoport-lnx>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-22_12:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905220144
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The commit cf04eee8bf0e ("iommu/vt-d: Include ACPI devices in iommu=pt")
-added for_each_active_iommu() in iommu_prepare_static_identity_mapping()
-but never used the each element, i.e, "drhd->iommu".
+(added kvm)
 
-drivers/iommu/intel-iommu.c: In function
-'iommu_prepare_static_identity_mapping':
-drivers/iommu/intel-iommu.c:3037:22: warning: variable 'iommu' set but
-not used [-Wunused-but-set-variable]
-  struct intel_iommu *iommu;
+On Wed, May 22, 2019 at 12:21:13PM -0700, Andrew Morton wrote:
+> On Tue, 14 May 2019 17:29:55 +0300 Mike Rapoport <rppt@linux.ibm.com> wrote:
+> 
+> > When get_user_pages*() is called with pages = NULL, the processing of
+> > VM_FAULT_RETRY terminates early without actually retrying to fault-in all
+> > the pages.
+> > 
+> > If the pages in the requested range belong to a VMA that has userfaultfd
+> > registered, handle_userfault() returns VM_FAULT_RETRY *after* user space
+> > has populated the page, but for the gup pre-fault case there's no actual
+> > retry and the caller will get no pages although they are present.
+> > 
+> > This issue was uncovered when running post-copy memory restore in CRIU
+> > after commit d9c9ce34ed5c ("x86/fpu: Fault-in user stack if
+> > copy_fpstate_to_sigframe() fails").
+> > 
+> > After this change, the copying of FPU state to the sigframe switched from
+> > copy_to_user() variants which caused a real page fault to get_user_pages()
+> > with pages parameter set to NULL.
+> 
+> You're saying that argument buf_fx in copy_fpstate_to_sigframe() is NULL?
 
-Fixed the warning by passing "drhd->iommu" directly to
-for_each_active_iommu() which all subsequent self-assignments should be
-ignored by a compiler anyway.
-
-Signed-off-by: Qian Cai <cai@lca.pw>
----
- drivers/iommu/intel-iommu.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-index a209199f3af6..86e1ddcb4a8e 100644
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -3034,7 +3034,6 @@ static int __init iommu_prepare_static_identity_mapping(int hw)
- {
- 	struct pci_dev *pdev = NULL;
- 	struct dmar_drhd_unit *drhd;
--	struct intel_iommu *iommu;
- 	struct device *dev;
- 	int i;
- 	int ret = 0;
-@@ -3045,7 +3044,7 @@ static int __init iommu_prepare_static_identity_mapping(int hw)
- 			return ret;
- 	}
+Apparently I haven't explained well. The 'pages' parameter in the call to
+get_user_pages_unlocked() is NULL.
  
--	for_each_active_iommu(iommu, drhd)
-+	for_each_active_iommu(drhd->iommu, drhd)
- 		for_each_active_dev_scope(drhd->devices, drhd->devices_cnt, i, dev) {
- 			struct acpi_device_physical_node *pn;
- 			struct acpi_device *adev;
+> If so was that expected by the (now cc'ed) developers of
+> d9c9ce34ed5c8923 ("x86/fpu: Fault-in user stack if
+> copy_fpstate_to_sigframe() fails")?
+> 
+> It seems rather odd.  copy_fpregs_to_sigframe() doesn't look like it's
+> expecting a NULL argument.
+> 
+> Also, I wonder if copy_fpstate_to_sigframe() would be better using
+> fault_in_pages_writeable() rather than get_user_pages_unlocked().  That
+> seems like it operates at a more suitable level and I guess it will fix
+> this issue also.
+
+If I understand correctly, one of the points of d9c9ce34ed5c8923 ("x86/fpu:
+Fault-in user stack if copy_fpstate_to_sigframe() fails") was to to avoid
+page faults, hence the use of get_user_pages().
+
+With fault_in_pages_writeable() there might be a page fault, unless I've
+completely mistaken.
+
+Unrelated to copy_fpstate_to_sigframe(), the issue could happen if any call
+to get_user_pages() with pages parameter set to NULL tries to access
+userfaultfd-managed memory. Currently, there are 4 in tree users:
+
+arch/x86/kernel/fpu/signal.c:198:8-31:  -> gup with !pages
+arch/x86/mm/mpx.c:423:11-25:  -> gup with !pages
+virt/kvm/async_pf.c:90:1-22:  -> gup with !pages
+virt/kvm/kvm_main.c:1437:6-20:  -> gup with !pages
+
+I don't know if anybody is using mpx with uffd and anyway mpx seems to go
+away.
+
+As for KVM, I think that post-copy live migration of L2 guest might trigger
+that as well. Not sure though, I'm not really familiar with KVM code.
+ 
+> > In post-copy mode of CRIU, the destination memory is managed with
+> > userfaultfd and lack of the retry for pre-fault case in get_user_pages()
+> > causes a crash of the restored process.
+> > 
+> > Making the pre-fault behavior of get_user_pages() the same as the "normal"
+> > one fixes the issue.
+> 
+> Should this be backported into -stable trees?
+
+I think that it depends on whether KVM affected by this or not.
+
+> > Fixes: d9c9ce34ed5c ("x86/fpu: Fault-in user stack if copy_fpstate_to_sigframe() fails")
+> > Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+> 
+> 
+
 -- 
-1.8.3.1
+Sincerely yours,
+Mike.
 
