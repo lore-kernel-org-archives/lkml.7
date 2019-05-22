@@ -2,92 +2,123 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F132AC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:37:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F49BC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:37:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8C9920675
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:37:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558553823;
-	bh=NiqXvwojC1D7C1RXV3saA1gnnXcxvKec8v+zqiUIXuc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fnovpeuNeLsbqRd+TuK0ac6Mu1vovHj/hcyQnRHeguPfEwLfm9xOjYEbbQ0G3FBKq
-	 OnY5NJ9Ia8E6e0z8R/ZHQ47Bg+Rh0uGYBkKrX9lM7rNvXDFJsVTDwa9Eh/FK4so/iU
-	 9xsEgHMWnz0wc5rmPsJIam4ZVaJJMjTjzXYbgXGU=
+	by mail.kernel.org (Postfix) with ESMTP id 6246020675
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:37:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i242Zrk+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732339AbfEVThD (ORCPT
+        id S2387753AbfEVThI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:37:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53994 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731471AbfEVTab (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:30:31 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3DE7C20879;
-        Wed, 22 May 2019 19:30:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553430;
-        bh=NiqXvwojC1D7C1RXV3saA1gnnXcxvKec8v+zqiUIXuc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x8kl/r+26qoKyDAd78VGQDc7PsiJbXpZ1017EPZs61i0DRThntmP9awA3vCsF0Z1D
-         2B5rEPWZOKSUqp5nLcyNJB6yR/NY+DrW74627gxELTBVn0DANJ8A+lOVE8c+zL1PjE
-         asS4ENKCEryADt3GGlx1UtunnvtXWVi9fNC919Rw=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bo YU <tsu.yubo@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.9 008/114] powerpc/boot: Fix missing check of lseek() return value
-Date:   Wed, 22 May 2019 15:28:31 -0400
-Message-Id: <20190522193017.26567-8-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190522193017.26567-1-sashal@kernel.org>
-References: <20190522193017.26567-1-sashal@kernel.org>
+        Wed, 22 May 2019 15:37:08 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:43407 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732618AbfEVThG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:37:06 -0400
+Received: by mail-lj1-f193.google.com with SMTP id z5so3189475lji.10;
+        Wed, 22 May 2019 12:37:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=kTgWZ3K7r6lt/65GKfZw+x+nRdHJpmGBMMkma7644Cc=;
+        b=i242Zrk+hzyQGkdfw6ojwHiLhqdtCJt7wsI94VAFO+mwxfAcUxvGjE0cXpVavvPGxp
+         NVHkOwxSCSPRHYtv0FmXIDMQaIQYhRADhnFxlByC85Agx2MQ/7Ql3Naj1RTGkOOyx9SY
+         zkGDiwl/Y3anJniDbA7CKZ8aM9VNyfSe93gZ3ogJzFBLBCJOQB4qPgdL5ceIzfN7gUI0
+         1Ox9LqaZ0vDHrbq3dTf7M9EAHYkUN4wTsf2aAJb8vX9F3Uh0CGkg3tgziF3M8QMotrRM
+         MN8ReZOdHd442VrzsAHYnsJvQGH9O0Rsu4Eo5qpAcgk6u4/3eeALC6V398UbR7GipvFw
+         7qxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=kTgWZ3K7r6lt/65GKfZw+x+nRdHJpmGBMMkma7644Cc=;
+        b=KHD0RiTtKu7wbtPa43egFQrRrgZnKxpxgX49d/kKYa23tXveTOAbgpFb3ev3/T+yry
+         9WrMRKa6hxxWeQwF906b9ULN0muWrD30wyHty2pNOkJThG0xrs8D2aN6nn3yhl5nVLe6
+         DNPjCrA2zfwJDbLHPImb/dIiun0hDAMdYiNHQLXr/4XebNCB0h4bm6uOhsuv+lsM7QiD
+         AqIabX8uO8aixMGSA80RV9LSW4v7IjZytNxkqMgN1ZZS2umZfLxFeKnhJ8El/LU8qRR+
+         a/CL7zDenDkga2zzL96UVxeJkNr21YLt/qKDl/oxellJ3lJnMer9p6+x0qesaKcrOVVt
+         3cTQ==
+X-Gm-Message-State: APjAAAWJlfmXHaD2XT7EEK/vTSRmoWYzgVHSfDg+m+H5TLRLDwzPEmUp
+        onSdBJ4pMQAdzSx2jZu2hg0EDGPt
+X-Google-Smtp-Source: APXvYqww7E+qykMqOU4l7XPoS+TDnZZfFMiOgj6vaK3ZeFXfOjy7KFBjxCC9vKaPrW5F57JpCN5pbA==
+X-Received: by 2002:a2e:890c:: with SMTP id d12mr41217504lji.107.1558553823588;
+        Wed, 22 May 2019 12:37:03 -0700 (PDT)
+Received: from [192.168.1.17] (dma4.neoplus.adsl.tpnet.pl. [83.24.56.4])
+        by smtp.gmail.com with ESMTPSA id m63sm5475047lje.44.2019.05.22.12.37.01
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 22 May 2019 12:37:02 -0700 (PDT)
+Subject: Re: [PATCH v4 0/6] LM36274 Introduction
+To:     Dan Murphy <dmurphy@ti.com>, pavel@ucw.cz, broonie@kernel.org,
+        lgirdwood@gmail.com
+Cc:     lee.jones@linaro.org, linux-leds@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190522192733.13422-1-dmurphy@ti.com>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Message-ID: <6501a8b5-8068-4c9d-6b51-ef00fa72c6d5@gmail.com>
+Date:   Wed, 22 May 2019 21:37:00 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190522192733.13422-1-dmurphy@ti.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bo YU <tsu.yubo@gmail.com>
+Hi Dan,
 
-[ Upstream commit 5d085ec04a000fefb5182d3b03ee46ca96d8389b ]
+On 5/22/19 9:27 PM, Dan Murphy wrote:
+> Hello
+> 
+> This is patch set v4 for the LM36274.  There were no changes made
+> to this patch set except to rebase this on top of the latest TI LMU common code
+> patchset.
 
-This is detected by Coverity scan: CID: 1440481
+Why the rebase was needed? leds-lm36274.c was already including
+leds-ti-lmu-common.h.
 
-Signed-off-by: Bo YU <tsu.yubo@gmail.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/powerpc/boot/addnote.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+> This patch set was rebased on the series at:
+> https://lore.kernel.org/patchwork/project/lkml/list/?series=393071
+> 
+> Dan
+> 
+> Dan Murphy (6):
+>    regulator: lm363x: Make the gpio register enable flexible
+>    dt-bindings: mfd: Add lm36274 bindings to ti-lmu
+>    mfd: ti-lmu: Add LM36274 support to the ti-lmu
+>    regulator: lm363x: Add support for LM36274
+>    dt-bindings: leds: Add LED bindings for the LM36274
+>    leds: lm36274: Introduce the TI LM36274 LED driver
+> 
+>   .../devicetree/bindings/leds/leds-lm36274.txt |  82 +++++++++
+>   .../devicetree/bindings/mfd/ti-lmu.txt        |  54 ++++++
+>   drivers/leds/Kconfig                          |   7 +
+>   drivers/leds/Makefile                         |   1 +
+>   drivers/leds/leds-lm36274.c                   | 174 ++++++++++++++++++
+>   drivers/mfd/Kconfig                           |   5 +-
+>   drivers/mfd/ti-lmu.c                          |  14 ++
+>   drivers/regulator/Kconfig                     |   2 +-
+>   drivers/regulator/lm363x-regulator.c          |  56 +++++-
+>   include/linux/mfd/ti-lmu-register.h           |  23 +++
+>   include/linux/mfd/ti-lmu.h                    |   4 +
+>   11 files changed, 416 insertions(+), 6 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/leds/leds-lm36274.txt
+>   create mode 100644 drivers/leds/leds-lm36274.c
+> 
 
-diff --git a/arch/powerpc/boot/addnote.c b/arch/powerpc/boot/addnote.c
-index 9d9f6f334d3cc..3da3e2b1b51bc 100644
---- a/arch/powerpc/boot/addnote.c
-+++ b/arch/powerpc/boot/addnote.c
-@@ -223,7 +223,11 @@ main(int ac, char **av)
- 	PUT_16(E_PHNUM, np + 2);
- 
- 	/* write back */
--	lseek(fd, (long) 0, SEEK_SET);
-+	i = lseek(fd, (long) 0, SEEK_SET);
-+	if (i < 0) {
-+		perror("lseek");
-+		exit(1);
-+	}
- 	i = write(fd, buf, n);
- 	if (i < 0) {
- 		perror("write");
 -- 
-2.20.1
-
+Best regards,
+Jacek Anaszewski
