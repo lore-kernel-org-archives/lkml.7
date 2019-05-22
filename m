@@ -2,213 +2,128 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4842AC193F2
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 10:54:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 762C6C18E7D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 10:54:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11D9721479
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 10:54:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Oru7bhxH"
+	by mail.kernel.org (Postfix) with ESMTP id 5282E21479
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 10:54:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729383AbfEVKyO (ORCPT
+        id S1729398AbfEVKyk convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 06:54:14 -0400
-Received: from mail-wm1-f54.google.com ([209.85.128.54]:53844 "EHLO
-        mail-wm1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729317AbfEVKyN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 06:54:13 -0400
-Received: by mail-wm1-f54.google.com with SMTP id 198so1728650wme.3
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 03:54:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:message-id:mime-version:subject:date:in-reply-to:cc:to
-         :references;
-        bh=CNhkQEJls3nT3iMkh1/CUssdVTSurGv5Rigbx0wo7U4=;
-        b=Oru7bhxHELgGgoBi4ETh1p8HocPNWexprBV9cag2KIgoyMzmaiNQwjb/C9rBPs3ZAI
-         1P+sgXAq+LJ7ARtyNTI4NCxWWJc6H0XdbdS3gzpWGbzWqv2mLRxF3XBKnfPksvNy4bmf
-         Z2N4R5yg3IW6OCechLbsRxdHCdJwHtT86JuAGc5439Udl1VwIBq11R8j6O3p7r2AEC/L
-         y1v3u8BSe0ElkJjp4CXNQJbH5m1IP5ENonLLsP0JZ/gAU5M5ED3KOUsrtv1TabKpJpZO
-         8pKF7hu2w25OO7PxveAEep+kbBQOfRiYMA7x6Nz3poDzw9PJimXfPoy8tpcYkqHNm+8K
-         Mrtg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:message-id:mime-version:subject:date
-         :in-reply-to:cc:to:references;
-        bh=CNhkQEJls3nT3iMkh1/CUssdVTSurGv5Rigbx0wo7U4=;
-        b=d1TaojyERIxRqtyM+VNPR5bPzdDZ4UjrsrCNfQ1FIKvpOfnTAK2ckkgJnOCtbqSxIN
-         EzdHN7ixXxajyq8gkXt4nHlS0P8UUa9TE4Nz6hbyL1QbMwA+QZpvYxJ7mFlQx3vNxRaA
-         2k+qqHTaGG0iShMQAk9YU712Mo+n/yk+YPPjp/GTNw9dqjDNiNZFHEDtpAN8hX2ma9CK
-         kf4WosVdVENA4tqUPhnnQW09VVU69cq1kSfDKBiGqhZpqHW6zxMm6DBCHIY1Ox33PE0V
-         TOHlXTYIc6wbxshCyDs4Gqw1ogn/R3vNdFa9g6Gvic2kZlusWlQFHgAHuvzb4GfICZRP
-         +iWg==
-X-Gm-Message-State: APjAAAXWDvVcv0UqPLsflI289tY+/6TcHY79NN6FLEjKS600RHl5gHUu
-        0rS7dM2qwqNrFQelhMLglFvwuA==
-X-Google-Smtp-Source: APXvYqxxWhUiT/XYL68wetT0/Xm1tLz2ltHVCg3kd/rCLbdKFVY5j4a0s9Q2rPyucIGz4zDbxnBm5Q==
-X-Received: by 2002:a7b:c458:: with SMTP id l24mr6858233wmi.53.1558522451312;
-        Wed, 22 May 2019 03:54:11 -0700 (PDT)
-Received: from [192.168.0.100] (88-147-40-42.dyn.eolo.it. [88.147.40.42])
-        by smtp.gmail.com with ESMTPSA id w9sm5480053wmg.7.2019.05.22.03.54.09
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 22 May 2019 03:54:10 -0700 (PDT)
-From:   Paolo Valente <paolo.valente@linaro.org>
-Message-Id: <CA8A23E2-6F22-4444-9A20-E052A94CAA9B@linaro.org>
-Content-Type: multipart/signed;
-        boundary="Apple-Mail=_53A52072-8428-4910-8FA8-7AAC6D010D2E";
-        protocol="application/pgp-signature";
-        micalg=pgp-sha256
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
-Subject: Re: CFQ idling kills I/O performance on ext4 with blkio cgroup
- controller
-Date:   Wed, 22 May 2019 12:54:07 +0200
-In-Reply-To: <01d55216-5718-767a-e1e6-aadc67b632f4@csail.mit.edu>
-Cc:     linux-fsdevel@vger.kernel.org,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-ext4@vger.kernel.org, cgroups@vger.kernel.org,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Jens Axboe <axboe@kernel.dk>, Jan Kara <jack@suse.cz>,
-        jmoyer@redhat.com, Theodore Ts'o <tytso@mit.edu>,
-        amakhalov@vmware.com, anishs@vmware.com, srivatsab@vmware.com
-To:     "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
-References: <8d72fcf7-bbb4-2965-1a06-e9fc177a8938@csail.mit.edu>
- <1812E450-14EF-4D5A-8F31-668499E13652@linaro.org>
- <46c6a4be-f567-3621-2e16-0e341762b828@csail.mit.edu>
- <07D11833-8285-49C2-943D-E4C1D23E8859@linaro.org>
- <A0DFE635-EFEC-4670-AD70-5D813E170BEE@linaro.org>
- <5B6570A2-541A-4CF8-98E0-979EA6E3717D@linaro.org>
- <2CB39B34-21EE-4A95-A073-8633CF2D187C@linaro.org>
- <FC24E25F-4578-454D-AE2B-8D8D352478D8@linaro.org>
- <0e3fdf31-70d9-26eb-7b42-2795d4b03722@csail.mit.edu>
- <F5E29C98-6CC4-43B8-994D-0B5354EECBF3@linaro.org>
- <686D6469-9DE7-4738-B92A-002144C3E63E@linaro.org>
- <01d55216-5718-767a-e1e6-aadc67b632f4@csail.mit.edu>
-X-Mailer: Apple Mail (2.3445.104.8)
+        Wed, 22 May 2019 06:54:40 -0400
+Received: from unicorn.mansr.com ([81.2.72.234]:44464 "EHLO unicorn.mansr.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728925AbfEVKyk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 06:54:40 -0400
+Received: by unicorn.mansr.com (Postfix, from userid 51770)
+        id 4946C17102; Wed, 22 May 2019 11:54:38 +0100 (BST)
+From:   =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans@mansr.com>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Markus Reichl <m.reichl@fivetechno.de>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Peter Chen <peter.chen@nxp.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 0/5] Exynos EHCI/OHCI: resolve conflict with the generic USB device bindings
+References: <CGME20190521120015eucas1p1da2f3f32d6b8af8cb550463686fd4e12@eucas1p1.samsung.com>
+        <20190521115849.9882-1-m.szyprowski@samsung.com>
+        <yw1xk1ekszo9.fsf@mansr.com>
+        <ff3f4b25-cbc0-4195-79b2-c00633f0c79c@samsung.com>
+Date:   Wed, 22 May 2019 11:54:38 +0100
+In-Reply-To: <ff3f4b25-cbc0-4195-79b2-c00633f0c79c@samsung.com> (Marek
+        Szyprowski's message of "Wed, 22 May 2019 08:01:28 +0200")
+Message-ID: <yw1x7eaiu5ch.fsf@mansr.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.3 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Marek Szyprowski <m.szyprowski@samsung.com> writes:
 
---Apple-Mail=_53A52072-8428-4910-8FA8-7AAC6D010D2E
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain;
-	charset=us-ascii
+> Hi Måns
+>
+> On 2019-05-21 15:30, Måns Rullgård wrote:
+>> Marek Szyprowski <m.szyprowski@samsung.com> writes:
+>>> Dear All,
+>>>
+>>> Commit 69bec7259853 ("USB: core: let USB device know device node") added
+>>> support for attaching devicetree node for USB devices. Those nodes are
+>>> children of their USB host controller. However Exynos EHCI and OHCI
+>>> driver bindings already define child-nodes for each physical root hub
+>>> port and assigns respective PHY controller and parameters to them. This
+>>> leads to the conflict. A workaround for it has been merged as commit
+>>> 01d4071486fe ("usb: exynos: add workaround for the USB device bindings
+>>> conflict"), but it disabled support for USB device binding for Exynos
+>>> EHCI/OHCI controllers.
+>>>
+>>> This patchset tries to resolve this binding conflict by changing Exynos
+>>> EHCI/OHCI bindings: PHYs are moved from the sub-nodes to a standard array
+>>> under the 'phys' property. Such solution has been suggested by Måns
+>>> Rullgård in the following thread: https://lkml.org/lkml/2019/5/13/228
+>>>
+>>> To keep everything working during the transitional time, the changes has
+>>> been split into 2 steps. First step (patches 1-3) need to be merged before
+>>> the second one (patches 4-5). Patches from each step can be merged to
+>>> respective trees without any dependencies - the only requirement is that
+>>> second step has to be merged after merging all patches from the first one.
+>>>
+>>> This patchset has been tested on various Exynos4 boards with different
+>>> USB host controller configurations (Odroids family: X2, U3, XU3).
+>>>
+>>> Best regards
+>>> Marek Szyprowski
+>>> Samsung R&D Institute Poland
+>>>
+>>> Marek Szyprowski (5):
+>>>    dt-bindings: switch Exynos EHCI/OHCI bindings to use array of generic
+>>>      PHYs
+>>>    ARM: dts: exynos: Add array of generic PHYs to EHCI/OHCI devices
+>>>    usb: exynos: add support for getting PHYs from the standard dt array
+>>>    ARM: dts: exynos: Remove obsolete port sub-nodes from EHCI/OHCI
+>>>      devices
+>>>    usb: exynos: Remove support for legacy PHY bindings
+>> You could retain compatibility with old devicetrees (which may be
+>> useful) by using the "phys" property if it exists and falling back
+>> on the old method if it doesn't.  Then you would get this sequence
+>> of changes:
+>>
+>> 1. Update binding definition.
+>> 2. Support new binding in driver, with fallback to old.
+>> 3. Switch dts files to new binding.
+>
+> This is exactly what I did in this patchset. Until Patch #5 is applied, 
+> Exynos EHCI/OHCI drivers supports both ways of getting PHYs and is fully 
+> compatible with existing DTBs. This last patch should be applied at 
+> least one release later that the first 3 patches to keep everything 
+> working during the -rcX time.
 
+I'm suggesting you keep the fallback in the driver.  It does no harm,
+and it's contained in one place.
 
+On the dts side, you're adding the new phys property without removing
+the old-style nodes at first.  If you put the driver change first, the
+dts could be switched to the new style in one patch without a confusing
+hybrid ever existing.
 
-> Il giorno 22 mag 2019, alle ore 12:01, Srivatsa S. Bhat =
-<srivatsa@csail.mit.edu> ha scritto:
->=20
-> On 5/22/19 2:09 AM, Paolo Valente wrote:
->>=20
->> First, thank you very much for testing my patches, and, above all, =
-for
->> sharing those huge traces!
->>=20
->> According to the your traces, the residual 20% lower throughput that =
-you
->> record is due to the fact that the BFQ injection mechanism takes a =
-few
->> hundredths of seconds to stabilize, at the beginning of the workload.
->> During that setup time, the throughput is equal to the dreadful =
-~60-90 KB/s
->> that you see without this new patch.  After that time, there
->> seems to be no loss according to the trace.
->>=20
->> The problem is that a loss lasting only a few hundredths of seconds =
-is
->> however not negligible for a write workload that lasts only 3-4
->> seconds.  Could you please try writing a larger file?
->>=20
->=20
-> I tried running dd for longer (about 100 seconds), but still saw =
-around
-> 1.4 MB/s throughput with BFQ, and between 1.5 MB/s - 1.6 MB/s with
-> mq-deadline and noop.
+> Compatibility with so called old DTBs is not so important, because there 
+> are no boards with Exynos4 and Exynos5 SoCs, which would not update DTB 
+> together with the kernel zImage. There have been already some 
+> significant compatibility breaks related to those SoCs during last years.
 
-Ok, then now the cause is the periodic reset of the mechanism.
+You can't possibly know what's out there.  Besides, isn't the general
+policy to not break compatibility without a very good reason?
 
-It would be super easy to fill this gap, by just gearing the mechanism
-toward a very aggressive injection.  The problem is maintaining
-control.  As you can imagine from the performance gap between CFQ (or
-BFQ with malfunctioning injection) and BFQ with this fix, it is very
-hard to succeed in maximizing the throughput while at the same time
-preserving control on per-group I/O.
-
-On the bright side, you might be interested in one of the benefits
-that BFQ gives in return for this ~10% loss of throughput, in a
-scenario that may be important for you (according to affiliation you
-report): from ~500% to ~1000% higher throughput when you have to serve
-the I/O of multiple VMs, and to guarantee at least no starvation to
-any VM [1].  The same holds with multiple clients or containers, and
-in general with any set of entities that may compete for storage.
-
-[1] =
-https://www.linaro.org/blog/io-bandwidth-management-for-production-quality=
--services/
-
-> But I'm not too worried about that difference.
->=20
->> In addition, I wanted to ask you whether you measured BFQ throughput
->> with traces disabled.  This may make a difference.
->>=20
->=20
-> The above result (1.4 MB/s) was obtained with traces disabled.
->=20
->> After trying writing a larger file, you can try with low_latency on.
->> On my side, it causes results to become a little unstable across
->> repetitions (which is expected).
->>=20
-> With low_latency on, I get between 60 KB/s - 100 KB/s.
->=20
-
-Gosh, full regression.  Fortunately, it is simply meaningless to use
-low_latency in a scenario where the goal is to guarantee per-group
-bandwidths.  Low-latency heuristics, to reach their (low-latency)
-goals, modify the I/O schedule compared to the best schedule for
-honoring group weights and boosting throughput.  So, as recommended in
-BFQ documentation, just switch low_latency off if you want to control
-I/O with groups.  It may still make sense to leave low_latency on
-in some specific case, which I don't want to bother you about.
-
-However, I feel bad with such a low throughput :)  Would you be so
-kind to provide me with a trace?
-
-Thanks,
-Paolo
-
-> Regards,
-> Srivatsa
-> VMware Photon OS
-
-
---Apple-Mail=_53A52072-8428-4910-8FA8-7AAC6D010D2E
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
-	filename=signature.asc
-Content-Type: application/pgp-signature;
-	name=signature.asc
-Content-Description: Message signed with OpenPGP
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEpYoduex+OneZyvO8OAkCLQGo9oMFAlzlKk8ACgkQOAkCLQGo
-9oM6/A//WCuWEiR1JltuM5aklvJR+eYW/8xLJ3rbu8+0GrZIuuF1iPSXcB9p5yBP
-Wv3z5VUoumSlsb9aQlq6M0TPc5htnj00mIIuKaOAXZOhLNjTCvIEaSm1K8CtAW2B
-03MrWYTQw50jvR6OxpKtU0SKcMQQLPweiJPdTjy4tWUGgYoswDXFg+en8HNgSLv4
-sNGJQ8NrBQHU13P2WBm/j0ikPdKUfrM5yt6SdP7fDiYxemuMCecvUHMQOqhS7bua
-bgzZ9Y0DJfNtkELmGxsrNgTehctLCc7AEaViSzQVZxLs+FPa7pFIv30D8Nt8Hx3b
-e9x2zS/LXryo/Nx5NFgeMCISd1FbU2+eVqNmJhnjdCzDFiMUEM4GaQ7MbDNKZ1sO
-6ud0S49AOKvX4AXp5W+lufgRhQIw6OmIopPcXmzhUI3NZ9AqK430a5PwMjaUMn67
-PL9RYaLBU3p/POExsr5beMhc7Z6yGPtWF/tTFZuzQx0j3SXNoLjolpHLc3T0R/06
-eC8iUx+IUhkcOKrlmq2p1cLHpqzCVX8wPa/2xxcDveg5MiKo/U8dxQ5xmGEa8sSs
-nuZKPU7SJKeXae0UtOB3H74NIJU0joKCKhRherD7zYiJdx9RwSAv40Vbbhnq1DBo
-XI57SYyx53LQmwIKLdHXOgE0EKCnxBzPxZIK3CQIuSR8bzYRe8o=
-=WeX3
------END PGP SIGNATURE-----
-
---Apple-Mail=_53A52072-8428-4910-8FA8-7AAC6D010D2E--
+-- 
+Måns Rullgård
