@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09EB3C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:01:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0905C282DC
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:01:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC3EC20856
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:01:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF31920862
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:01:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558555299;
-	bh=1d31qTszdi2fYP3Hw1CE8fO2rZYLUMSnRKtGironcDA=;
+	s=default; t=1558555306;
+	bh=UNA7ilmtExavjSLgp8JG4+7awfg75FhUCfWArenMdpU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0i7Jw2PBNPDUfJB0nZ9JY6oZYMrTJfNFp6qM1seTiFSBPZVlQR0YtPfnc2OPKYcMM
-	 Xn6lZoBi/Ye5sIhMVW1YSLvNVPTYyNhG7yMCWAzsA/I236SaPtttiocuWecnWA80dx
-	 DB7noQBShMa+oZCIUgi9NKsw8M9C09hv0LR7Ljlo=
+	b=VlpS22qGqWQvC6VQJr2NDK4SUBn7GFaoZ65BHQe52c6+A796x73uCVweZcroCMFdp
+	 O8fynvci52jz+U2zrY4gzyfY/5HPteSDhHpfFtB4ZWg5lDySHr+h98MZNzdpBAMQrI
+	 BXmiIlUtKh5wIciUrQKZG1Zov0Qc/FwR0LHb0Bbo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731166AbfEVUBj (ORCPT
+        id S1730414AbfEVTWU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 16:01:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43052 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:22:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730431AbfEVTWW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:22:22 -0400
+        id S1730387AbfEVTWR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:22:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A3D6B2186A;
-        Wed, 22 May 2019 19:22:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F0FC21851;
+        Wed, 22 May 2019 19:22:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558552942;
-        bh=1d31qTszdi2fYP3Hw1CE8fO2rZYLUMSnRKtGironcDA=;
+        s=default; t=1558552937;
+        bh=UNA7ilmtExavjSLgp8JG4+7awfg75FhUCfWArenMdpU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1QV0bJsv4Mn/IlCGsE/NexPoF82rM6HcGX+OgbJ99q8Ak/TIk120U9Q27VR5XdOax
-         ldFDrrJhLljJGLBG5EEbBFugCkN4StEluPYTbhYkXg8lQfmNk4SCvNB5uxLIPULTD6
-         T0eUOM+e4IsPhXmhlrb3M83D0iJ6HQTL2mt+L640=
+        b=q72SScEp+BbcVtlTT6Gp8BK2C0Kl3vkKpDW/95KrWCrLD5wnUpTibhee5jyNW11/J
+         umA1Kdrym8374hzA95HpST+SuGwtgAvZnaXvIV8Ujfk56+TzMpcDgrkFMVumHyaA7j
+         Pf4wI0HHmzX7lceqeBHvhkwsq/tOgOR0sAE4rRMY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 042/375] ACPI / property: fix handling of data_nodes in acpi_get_next_subnode()
-Date:   Wed, 22 May 2019 15:15:42 -0400
-Message-Id: <20190522192115.22666-42-sashal@kernel.org>
+Cc:     Flavio Suligoi <f.suligoi@asem.it>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 039/375] spi: pxa2xx: fix SCR (divisor) calculation
+Date:   Wed, 22 May 2019 15:15:39 -0400
+Message-Id: <20190522192115.22666-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192115.22666-1-sashal@kernel.org>
 References: <20190522192115.22666-1-sashal@kernel.org>
@@ -60,55 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+From: Flavio Suligoi <f.suligoi@asem.it>
 
-[ Upstream commit 23583f7795025e3c783b680d906509366b0906ad ]
+[ Upstream commit 29f2133717c527f492933b0622a4aafe0b3cbe9e ]
 
-When the DSDT tables expose devices with subdevices and a set of
-hierarchical _DSD properties, the data returned by
-acpi_get_next_subnode() is incorrect, with the results suggesting a bad
-pointer assignment. The parser works fine with device_nodes or
-data_nodes, but not with a combination of the two.
+Calculate the divisor for the SCR (Serial Clock Rate), avoiding
+that the SSP transmission rate can be greater than the device rate.
 
-The problem is traced to an invalid pointer used when jumping from
-handling device_nodes to data nodes. The existing code looks for data
-nodes below the last subdevice found instead of the common root. Fix
-by forcing the acpi_device pointer to be derived from the same fwnode
-for the two types of subnodes.
+When the division between the SSP clock and the device rate generates
+a reminder, we have to increment by one the divisor.
+In this way the resulting SSP clock will never be greater than the
+device SPI max frequency.
 
-This same problem of handling device and data nodes was already fixed
-in a similar way by 'commit bf4703fdd166 ("ACPI / property: fix data
-node parsing in acpi_get_next_subnode()")' but broken later by 'commit
-34055190b19 ("ACPI / property: Add fwnode_get_next_child_node()")', so
-this should probably go to linux-stable all the way to 4.12
+For example, with:
 
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+ - ssp_clk  = 50 MHz
+ - dev freq = 15 MHz
+
+without this patch the SSP clock will be greater than 15 MHz:
+
+ - 25 MHz for PXA25x_SSP and CE4100_SSP
+ - 16,56 MHz for the others
+
+Instead, with this patch, we have in both case an SSP clock of 12.5MHz,
+so the max rate of the SPI device clock is respected.
+
+Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
+Reviewed-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Reviewed-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/property.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/spi/spi-pxa2xx.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/acpi/property.c b/drivers/acpi/property.c
-index 77abe0ec40431..bd533f68b1dec 100644
---- a/drivers/acpi/property.c
-+++ b/drivers/acpi/property.c
-@@ -1031,6 +1031,14 @@ struct fwnode_handle *acpi_get_next_subnode(const struct fwnode_handle *fwnode,
- 		const struct acpi_data_node *data = to_acpi_data_node(fwnode);
- 		struct acpi_data_node *dn;
+diff --git a/drivers/spi/spi-pxa2xx.c b/drivers/spi/spi-pxa2xx.c
+index b6ddba833d021..d2076f2f468f0 100644
+--- a/drivers/spi/spi-pxa2xx.c
++++ b/drivers/spi/spi-pxa2xx.c
+@@ -884,10 +884,14 @@ static unsigned int ssp_get_clk_div(struct driver_data *drv_data, int rate)
  
-+		/*
-+		 * We can have a combination of device and data nodes, e.g. with
-+		 * hierarchical _DSD properties. Make sure the adev pointer is
-+		 * restored before going through data nodes, otherwise we will
-+		 * be looking for data_nodes below the last device found instead
-+		 * of the common fwnode shared by device_nodes and data_nodes.
-+		 */
-+		adev = to_acpi_device_node(fwnode);
- 		if (adev)
- 			head = &adev->data.subnodes;
- 		else if (data)
+ 	rate = min_t(int, ssp_clk, rate);
+ 
++	/*
++	 * Calculate the divisor for the SCR (Serial Clock Rate), avoiding
++	 * that the SSP transmission rate can be greater than the device rate
++	 */
+ 	if (ssp->type == PXA25x_SSP || ssp->type == CE4100_SSP)
+-		return (ssp_clk / (2 * rate) - 1) & 0xff;
++		return (DIV_ROUND_UP(ssp_clk, 2 * rate) - 1) & 0xff;
+ 	else
+-		return (ssp_clk / rate - 1) & 0xfff;
++		return (DIV_ROUND_UP(ssp_clk, rate) - 1)  & 0xfff;
+ }
+ 
+ static unsigned int pxa2xx_ssp_get_clk_div(struct driver_data *drv_data,
 -- 
 2.20.1
 
