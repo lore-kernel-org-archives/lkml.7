@@ -2,77 +2,75 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23FEBC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 18:25:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1994EC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 18:27:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFE762173C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 18:25:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D296A2173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 18:27:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DJjLEb3+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sqjSc+JZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729599AbfEVSZ0 (ORCPT
+        id S1729577AbfEVS1i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 14:25:26 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:34324 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728272AbfEVSZZ (ORCPT
+        Wed, 22 May 2019 14:27:38 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:34253 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728272AbfEVS1i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 14:25:25 -0400
-Received: by mail-wr1-f67.google.com with SMTP id f8so3406341wrt.1;
-        Wed, 22 May 2019 11:25:24 -0700 (PDT)
+        Wed, 22 May 2019 14:27:38 -0400
+Received: by mail-lj1-f196.google.com with SMTP id j24so3037692ljg.1;
+        Wed, 22 May 2019 11:27:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=+cjZu7UYIWfl3+uZkDA8MDVh/UHQTxR9rJwk+Staepk=;
-        b=DJjLEb3+UhJU/UYaj40YgmYzbvfNSNjqRjc8+oIJ5ybtqvOhHVpAqlLGWoW6Pms3du
-         LZKjemGcUzwORRb/s6Rl0XTz1OFtmoY3BjN60PkDwTlUWCLuHUu1iWKG0kyqfcNkYNY/
-         QotpBZVPdvQOlj3FZdchAOflX/fU5lAAr2xCw4Y4wJsTtAc36dBrDa6ULYVksrs2GzOT
-         PE7Y3K4OB5Wil4h7sCtQLuwltkqKS3IjG5Lhi3WMd6Qef7ANiNkDa0mscFdYq3dKVDrV
-         xTyALBI9negl33x7wiSH29FJOQINHs03kyWuYzIcUmPvU/JFV30z1t+wvidTH4asfEW8
-         DNRw==
+        bh=xU0+H+L47el2KL8nstCLThsW4uph4L0CsVSGviTKcu8=;
+        b=sqjSc+JZO+eH9eldXTc/1xpxoJXpSqFYNk+Vr+PaFkjIT/uNrEY9714QmsGFNrfdxu
+         qwVRMVAa2I+s19UdT3EnqFczfOld0RJfSCYwP5O+iyYTUmljX6jX1hon8q4uQSCRs7Az
+         Pvcpub0XTDjYYH12ygu47Lt55yv4Ihc5N8oTc5O4Fggp1VNjbz0BfPV2EXMDm4nte02u
+         LOh6u79NSqs4V1Uo6H99SGpsZmMU1Et1YghbG4OgbN19EWH5HLAXJinYXmPabvweoUDF
+         oVdDOKoibMN2vKTbRcwOzCYwyEHU/7bMzB1f/2karKtXpse3dUPiM7hjKNnKjt2h42OP
+         7kfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=+cjZu7UYIWfl3+uZkDA8MDVh/UHQTxR9rJwk+Staepk=;
-        b=gXxiiyWOrKyHwX9iT8y/sN0KC+8WRJFncaaXLirhKcAPjz5FrgVM79R7+mRxYf6pcp
-         WRSmFm+JvttG6BhmbahTrWt/1DY8/AJzPgt7xEVxyDBfSnF6+GJntPEtJa9wuSEg3GEt
-         0lvKGVWO8EAvEw8CrXS40j1M7Cr/73b3rsvlTs/JweHCXceXLoRQ3aK9VOECn/aOF0xg
-         E9D+duFbyAbLt5gxWoRiXZZ2lXslr4u/uLh8Ej8hZ3DknZ62EIZ5fY32TkUtOSc4AQZP
-         I/V3tlcebg28NHMh6WE2BaItnXrLpUhlST9izzD52nU2SFEXIbhal4cUyvtHRRc3c7zT
-         /a1A==
-X-Gm-Message-State: APjAAAUTjpDpEym/SBSnnDqutD2a8CS30O9BddSlaVoxWB8tsYn+ndto
-        y5+gEV9+0Txp9yT++gSOIhsAnnqi
-X-Google-Smtp-Source: APXvYqyzzkwROhPsi7oH5mLudlnI+30MushmdFRHQjnDInJoFrw1btnq/42pjSP3mnr0KWrY1koxAA==
-X-Received: by 2002:adf:b60f:: with SMTP id f15mr4507235wre.283.1558549523577;
-        Wed, 22 May 2019 11:25:23 -0700 (PDT)
-Received: from ?IPv6:2003:ea:8bd4:5700:3029:8954:1431:dc1e? (p200300EA8BD45700302989541431DC1E.dip0.t-ipconnect.de. [2003:ea:8bd4:5700:3029:8954:1431:dc1e])
-        by smtp.googlemail.com with ESMTPSA id v184sm11516461wma.6.2019.05.22.11.25.22
+        bh=xU0+H+L47el2KL8nstCLThsW4uph4L0CsVSGviTKcu8=;
+        b=DbMk1BGcmEBKf/VVU2uA1sYtiz6/8zwj7PbIWPYLHnx0PjOfrb1MdSMFh4zutQau1M
+         X/fwcQcHwJkmFnCK0NMtxuLLedNnXC6lf0FTVWiTatxFomFwqHhxT4qlTU9AM4XSQsdZ
+         iiuHUtgec8wishoi6j4YDE1Ao9si63rH0d4pGCVPzgaV7IgIOJv8ZFaVKfm+HeE8dAFF
+         2SHs978xEztSuqYSCLt5HnLdiN6vlQe8I/bXrC0uqc3WT23xYX2NKZ8WHsErIzxl+VS7
+         BJjrNeD085DCl3y4p3tmikevui1F3XgII+Iy4Ean0Ihu0+twOxvmRc/GQCxHqlaZBBc6
+         w52A==
+X-Gm-Message-State: APjAAAWIw0wKBjNA/oqZFrIZIy+WmhSC6yAMm+fpcmqPkWtc60SBgKIV
+        ZVvAXVESHLvc8VRqJLvgEZU=
+X-Google-Smtp-Source: APXvYqw5wv/o9g+YlL0coT5LaHe/xJ9ZbDxW5C20Ue5dQcqyh6RZtUtJazhlz0iHFb4tVbBheeaGCQ==
+X-Received: by 2002:a2e:89cb:: with SMTP id c11mr13335494ljk.16.1558549655595;
+        Wed, 22 May 2019 11:27:35 -0700 (PDT)
+Received: from [192.168.1.17] (dma4.neoplus.adsl.tpnet.pl. [83.24.56.4])
+        by smtp.gmail.com with ESMTPSA id f8sm3663332lfc.72.2019.05.22.11.27.34
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 22 May 2019 11:25:22 -0700 (PDT)
-Subject: Re: [PATCH] net: phy: lxt: Add suspend/resume support to LXT971 and
- LXT973.
-To:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-References: <cf280b7ab1f513f03d3908ac9ad194e819f170f5.1558519026.git.christophe.leroy@c-s.fr>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Message-ID: <15504aa9-092c-c3b0-4dbe-32b9cc8dff39@gmail.com>
-Date:   Wed, 22 May 2019 20:25:19 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+        Wed, 22 May 2019 11:27:35 -0700 (PDT)
+Subject: Re: [GIT PULL] Immutable branch between LEDs, MFD and REGULATOR
+To:     Mark Brown <broonie@kernel.org>
+Cc:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
+        lee.jones@linaro.org, lgirdwood@gmail.com
+References: <20190521203038.31946-1-jacek.anaszewski@gmail.com>
+ <20190521211504.GD1580@sirena.org.uk>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Message-ID: <0340dce2-87fb-938d-615e-376e29f37b54@gmail.com>
+Date:   Wed, 22 May 2019 20:27:32 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <cf280b7ab1f513f03d3908ac9ad194e819f170f5.1558519026.git.christophe.leroy@c-s.fr>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20190521211504.GD1580@sirena.org.uk>
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -80,18 +78,25 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22.05.2019 12:01, Christophe Leroy wrote:
-> All LXT PHYs implement the standard "power down" bit 11 of
-> BMCR, so this patch adds support using the generic
-> genphy_{suspend,resume} functions.
+On 5/21/19 11:15 PM, Mark Brown wrote:
+> On Tue, May 21, 2019 at 10:30:38PM +0200, Jacek Anaszewski wrote:
 > 
-> LXT970 is left aside because all registers get cleared upon
-> "power down" exit.
+>>        regulator: lm363x: Make the gpio register enable flexible
+>>        regulator: lm363x: Add support for LM36274
 > 
-> Fixes: 0f0ca340e57b ("phy: power management support")
-> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-The patch should be annotated net-next, and I would recommend
-to remove the Fixes tag, because it doesn't fix an actual issue
-and I see it rather as an improvement. Apart from that:
+> Why have these been applied, I haven't reviewed them?  As far as I can
+> tell they were sent before the merge window so I'd expect a resend at
+> this point...
 
-Reviewed-by: Heiner Kallweit <hkallweit1@gmail.com>
+The patch set have been floating around for some time and besides
+the v2 you were cc'ed by Dan, I also poked you a week ago for v4 [1].
+Don't be surprised that I assumed you simply don't care.
+
+Still, we're awaiting your comments
+
+[0] https://lkml.org/lkml/2019/4/10/547
+[1] https://lkml.org/lkml/2019/5/14/717
+
+-- 
+Best regards,
+Jacek Anaszewski
