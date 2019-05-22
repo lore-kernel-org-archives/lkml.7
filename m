@@ -2,135 +2,147 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E1DBC18E7D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 09:04:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35804C18E7D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 09:09:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DA7D205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 09:04:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8CBA204EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 09:09:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bytedance-com.20150623.gappssmtp.com header.i=@bytedance-com.20150623.gappssmtp.com header.b="cZE7mPJd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728899AbfEVJEi (ORCPT
+        id S1728710AbfEVJJD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 05:04:38 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:45462 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728536AbfEVJEi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 05:04:38 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A043A374;
-        Wed, 22 May 2019 02:04:37 -0700 (PDT)
-Received: from [10.162.43.129] (p8cg001049571a15.blr.arm.com [10.162.43.129])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A4AC23F718;
-        Wed, 22 May 2019 02:04:34 -0700 (PDT)
-Subject: Re: [PATCH] arm64: break while loop if task had been rescheduled
-To:     Tengfei Fan <tengfeif@codeaurora.org>, catalin.marinas@arm.com,
-        will.deacon@arm.com
-Cc:     mark.rutland@arm.com, marc.zyngier@arm.com, andreyknvl@google.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        tengfei@codeaurora.org
-References: <1558430404-4840-1-git-send-email-tengfeif@codeaurora.org>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <f2d62227-4694-d973-cacc-8225e2b2baf4@arm.com>
-Date:   Wed, 22 May 2019 14:34:46 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
-MIME-Version: 1.0
-In-Reply-To: <1558430404-4840-1-git-send-email-tengfeif@codeaurora.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Wed, 22 May 2019 05:09:03 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:36795 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726244AbfEVJJC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 05:09:02 -0400
+Received: by mail-pf1-f194.google.com with SMTP id v80so998488pfa.3
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 02:09:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=77VWXjnj0J97wSyDWwRJhsJZaq/DQDIPWjSs9tQqrDc=;
+        b=cZE7mPJdiYHkEJt0ZeYDpctVeEVRzXK7dh1HLrav6uXS7j2YVwEb3KiRegPUVuF6rC
+         al5/Qgt5GKGHsZh0VzDr+aJjxyp7ns6xOoCMNFxNA4dJmwBcUnD+5MTbgiNuWhcCXOLG
+         rc9AMq1TuFgbhoJcZVQQ8sqGbts55toiqHR+RyPyJYXe/XXQx4Q2E8aZPycSBpO/W2yg
+         51QjGiFstomNo88c5E2ZARkocTvhjiIT2wWol5JrZwGmyAKbzPNZlPPeeJF4fMZYx8jU
+         g0tClu7yAG8QB8vtqR0NHdZdAx+/hyaE2RiU3OlgMzFgOn75qfViNsY/PbV3H1zwxbA7
+         Afnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=77VWXjnj0J97wSyDWwRJhsJZaq/DQDIPWjSs9tQqrDc=;
+        b=WUHLc+idQfy/0tFaNlWxkiLUrMAyLGWsf1Dnm3yi5QNRVFY1quKZmefgeBis5rYeGZ
+         eNqH1cePjQdiHT7mYN99atoebP2H8a8nrmlWtHGSmr4jr9+J/Efwn5M3i7Yp+MwSkAj6
+         W0E5gWIJSFUc4055lynwx/fNnnH2ruZUixIzIkdeWX1s27S0CU7dAGTfis/ZhZbRaJSU
+         Jj1vN6tSREUpO5FIO4H5jKd+dd/d3GB0Ko9QJpDX6lto3bggG+BNPFgur9hLXs8RS+fN
+         QzWOg2yvpHxIFYQUnS3gCYd73uS1Yj9SC5ODoVYBfHxXQFe6H4cqooou/8AXgrocVXef
+         bstQ==
+X-Gm-Message-State: APjAAAXdxowAwBz7NX9M06ms7UlTb/OU4NaLrgQuBxPqOH3Mu5G1eqAL
+        ex9gylWoRJ9uDogUByqbgEaW9g==
+X-Google-Smtp-Source: APXvYqynLczwVGfNprMN09ZwuPsza9FqdQpdLnOFcSHOQj4j1rUKb/RcGt686nvYsT99YeSr5jXaJw==
+X-Received: by 2002:a62:128a:: with SMTP id 10mr93717838pfs.225.1558516142213;
+        Wed, 22 May 2019 02:09:02 -0700 (PDT)
+Received: from always-ThinkPad-T480.bytedance.net ([61.120.150.76])
+        by smtp.gmail.com with ESMTPSA id a64sm24131408pgc.53.2019.05.22.02.08.59
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 22 May 2019 02:09:01 -0700 (PDT)
+From:   zhenwei pi <pizhenwei@bytedance.com>
+To:     mingo@redhat.com, peterz@infradead.org
+Cc:     linux-kernel@vger.kernel.org, pizhenwei@bytedance.com
+Subject: [PATCH] sched: idle: Support nohlt_list kernel parameter
+Date:   Wed, 22 May 2019 17:08:56 +0800
+Message-Id: <1558516136-17601-1-git-send-email-pizhenwei@bytedance.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/21/2019 02:50 PM, Tengfei Fan wrote:
-> While printing a task's backtrace and this task isn't
-> current task, it is possible that task's fp and fp+8
-> have the same value, so cannot break the while loop.
-> This can break while loop if this task had been
-> rescheduled during print this task's backtrace.
+Currently kernel only supports hlt&nohlt kernel parameters, all the
+CPUs would poll or not in idle. Guest OS can't control power in KVM
+virtualization, so we can only choose high performance by nohlt or
+CPU overcommit by hlt.
+nohlt_list kernel parameter allows the specified CPU(s) to poll,
+and other CPUs still halt in idle.
 
-This is very confusing. IIUC it suggests that while printing
-the backtrace for non-current tasks the do/while loop does not
-exit because fp and fp+8 might have the same value ? When would
-this happen ? Even in that case the commit message here does not
-properly match the change in this patch.
+We can config boot parameter in guest(Ex, 16vCPUs on x86) like this:
+    linux ... irqaffinity=0,2,4,6 nohlt_list=0,2,4,6
+it means that 25% of CPUs can always run in vm-mode and benefit
+from posted-interrupt.
 
-This patch tries to stop printing the stack for non-current tasks
-if their state change while there is one dump_backtrace() trying
-to print back trace. Dont we have any lock preventing a task in
-this situation (while dumping it's backtrace) from running again
-or changing state.
+Signed-off-by: zhenwei pi <pizhenwei@bytedance.com>
+---
+ kernel/sched/idle.c | 35 +++++++++++++++++++++++++++++++++--
+ 1 file changed, 33 insertions(+), 2 deletions(-)
 
-> 
-> Signed-off-by: Tengfei Fan <tengfeif@codeaurora.org>
-> ---
->  arch/arm64/kernel/traps.c | 23 +++++++++++++++++++++++
->  1 file changed, 23 insertions(+)
-> 
-> diff --git a/arch/arm64/kernel/traps.c b/arch/arm64/kernel/traps.c
-> index 2975598..9df6e02 100644
-> --- a/arch/arm64/kernel/traps.c
-> +++ b/arch/arm64/kernel/traps.c
-> @@ -103,6 +103,9 @@ void dump_backtrace(struct pt_regs *regs, struct task_struct *tsk)
->  {
->  	struct stackframe frame;
->  	int skip = 0;
-> +	long cur_state = 0;
-> +	unsigned long cur_sp = 0;
-> +	unsigned long cur_fp = 0;
->  
->  	pr_debug("%s(regs = %p tsk = %p)\n", __func__, regs, tsk);
->  
-> @@ -127,6 +130,9 @@ void dump_backtrace(struct pt_regs *regs, struct task_struct *tsk)
->  		 */
->  		frame.fp = thread_saved_fp(tsk);
->  		frame.pc = thread_saved_pc(tsk);
-> +		cur_state = tsk->state;
-> +		cur_sp = thread_saved_sp(tsk);
-> +		cur_fp = frame.fp;
+diff --git a/kernel/sched/idle.c b/kernel/sched/idle.c
+index 80940939b733..5a0c3498258b 100644
+--- a/kernel/sched/idle.c
++++ b/kernel/sched/idle.c
+@@ -50,6 +50,37 @@ static int __init cpu_idle_nopoll_setup(char *__unused)
+ 	return 1;
+ }
+ __setup("hlt", cpu_idle_nopoll_setup);
++
++static cpumask_var_t cpu_nohlt_cpumask __cpumask_var_read_mostly;
++static int __init cpu_idle_poll_list_setup(char *str)
++{
++	alloc_bootmem_cpumask_var(&cpu_nohlt_cpumask);
++	if (cpulist_parse(str, cpu_nohlt_cpumask)) {
++		pr_warn("idle: nohlt_list= incorrect CPU range\n");
++		cpumask_clear(cpu_nohlt_cpumask);
++	} else
++		pr_info("idle: nohlt_list=%s\n", str);
++
++	return 1;
++}
++__setup("nohlt_list=", cpu_idle_poll_list_setup);
++
++static inline bool cpu_idle_should_poll(void)
++{
++	int cpu;
++
++	if (cpu_idle_force_poll)
++		return !!cpu_idle_force_poll;
++
++	cpu = smp_processor_id();
++	return (cpumask_available(cpu_nohlt_cpumask) &&
++			!!cpumask_test_cpu(cpu, cpu_nohlt_cpumask));
++}
++#else
++static inline bool cpu_idle_should_poll(void)
++{
++	return !!cpu_idle_force_poll;
++}
+ #endif
+ 
+ static noinline int __cpuidle cpu_idle_poll(void)
+@@ -60,7 +91,7 @@ static noinline int __cpuidle cpu_idle_poll(void)
+ 	stop_critical_timings();
+ 
+ 	while (!tif_need_resched() &&
+-		(cpu_idle_force_poll || tick_check_broadcast_expired()))
++		(cpu_idle_should_poll() || tick_check_broadcast_expired()))
+ 		cpu_relax();
+ 	start_critical_timings();
+ 	trace_cpu_idle_rcuidle(PWR_EVENT_EXIT, smp_processor_id());
+@@ -256,7 +287,7 @@ static void do_idle(void)
+ 		 * broadcast device expired for us, we don't want to go deep
+ 		 * idle as we know that the IPI is going to arrive right away.
+ 		 */
+-		if (cpu_idle_force_poll || tick_check_broadcast_expired()) {
++		if (cpu_idle_should_poll() || tick_check_broadcast_expired()) {
+ 			tick_nohz_idle_restart_tick();
+ 			cpu_idle_poll();
+ 		} else {
+-- 
+2.11.0
 
-Should 'saved_state|sp|fp' instead as its applicable to non-current
-tasks only.
-
->  	}
->  #ifdef CONFIG_FUNCTION_GRAPH_TRACER
->  	frame.graph = 0;
-> @@ -134,6 +140,23 @@ void dump_backtrace(struct pt_regs *regs, struct task_struct *tsk)
->  
->  	printk("Call trace:\n");
->  	do {
-> +		if (tsk != current && (cur_state != tsk->state
-> +			/*
-> +			 * We would not be printing backtrace for the task
-> +			 * that has changed state from uninterruptible to
-> +			 * running before hitting the do-while loop but after
-> +			 * saving the current state. If task is in running
-
-This does not check any explicit task states like 'un-interruptible' or
-'running' but instead tracks change from any previously 'saved' state.
-
-
-> +			 * state before saving the state, then we may print
-> +			 * wrong call trace or end up in infinite while loop
-> +			 * if *(fp) and *(fp+8) are same. While the situation
-
-Then dump_backtrace() must detect it, should not save it and just abort.
-
-
-> +			 * will stop print when that task schedule out.
-
-Thats not a reliable solution. AFICS we should not proceed further if
-there is a chance of an wrong trace or an infinite loop. Hoping that
-the printing will stop when task gets scheduled out does not seem right.
-
-> +			 */
-> +			|| cur_sp != thread_saved_sp(tsk)
-> +			|| cur_fp != thread_saved_fp(tsk))) {
-
-Why does any of these three mismatches detect the problematic transition
-not just the state ?
