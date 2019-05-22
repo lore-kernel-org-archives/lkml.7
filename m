@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0C38C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:41:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8005BC282DE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:41:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A19B620675
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:41:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52BCC20675
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:41:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558554100;
-	bh=rAcvKwp2UduGNAUik+s6lh38sOxMN6Y08aQsqhokFCI=;
+	s=default; t=1558554104;
+	bh=GWGQ7LyqMyF3msz3Dc3HSkHmIgeqCWLKj8slZybAwT8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kYC8FxdlWI37qNuY3rN6l5HVT5KmnT+eBiPCjoOmtofnEbulYqQLz9k5yEpu/AbQt
-	 O+DkfEqNZJ9GzuNmAe3z9Lm+rXN/jjQX973Br6pq1BcT84IxtKhQlqf8zxt2sRT0Kf
-	 pFaKTZFPGAZiuJX2DRItBgPPQMC5CdCcDB/mDvFo=
+	b=RIz5LADT4XrmQ+pJYH1KGrKPAupWuIWXqR2g/HBQHPxulylPCAjQcKixOqa4IRvD0
+	 KwfA/6CKLCHuQpDaU/FCxhk6AeiBjmS5kTHMpZIT5WfTAZiRI7NEq/XawpqT4kc28w
+	 fxCNRq/sQl45Kjtcx9hWfp4aWT7BbSoKn1QSI4ng=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732906AbfEVTlj (ORCPT
+        id S1732677AbfEVT2x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:41:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51666 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:28:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51554 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732681AbfEVT2y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:28:54 -0400
+        id S1732637AbfEVT2r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:28:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C32A3217D7;
-        Wed, 22 May 2019 19:28:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B4E9720879;
+        Wed, 22 May 2019 19:28:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553333;
-        bh=rAcvKwp2UduGNAUik+s6lh38sOxMN6Y08aQsqhokFCI=;
+        s=default; t=1558553326;
+        bh=GWGQ7LyqMyF3msz3Dc3HSkHmIgeqCWLKj8slZybAwT8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H1A4O6udriyVKp17SbFcAih5HcszSmNLGn7a5W0mQVA29EOO1bJ3DdGHYg6b+NbwY
-         jnggIoCs5NgegMNgTqOP/rjgbqSqWuY9CHLjaJTTVtJnvK+H3BsfujP1lC8KWLwN/v
-         QnlqN8AXw1ruPg+w2Jl87YQFivjUQsgRIHopCBs4=
+        b=dxblzuLMjcRqvcET937BxUAIHRpUSADG45B2UZQN+tudQXfdgd//w/f5GrjMzGQWp
+         +4G5Z6D7P8WJBAKwcAoNaszmirMvQ/dhgDWynvvsgnltTl3c6oDuS3coGnf6zAXwL8
+         mTnWl1DmjaR/OvUTWarzCymxiFl4sA7j9/923jW0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sameer Pujar <spujar@nvidia.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 008/167] dmaengine: tegra210-dma: free dma controller in remove()
-Date:   Wed, 22 May 2019 15:26:03 -0400
-Message-Id: <20190522192842.25858-8-sashal@kernel.org>
+Cc:     Roberto Bergantinos Corpas <rbergant@redhat.com>,
+        Benjamin Coddington <bcodding@redhat.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 003/167] NFS: make nfs_match_client killable
+Date:   Wed, 22 May 2019 15:25:58 -0400
+Message-Id: <20190522192842.25858-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192842.25858-1-sashal@kernel.org>
 References: <20190522192842.25858-1-sashal@kernel.org>
@@ -60,87 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sameer Pujar <spujar@nvidia.com>
+From: Roberto Bergantinos Corpas <rbergant@redhat.com>
 
-[ Upstream commit f030e419501cb95e961e9ed35c493b5d46a04eca ]
+[ Upstream commit 950a578c6128c2886e295b9c7ecb0b6b22fcc92b ]
 
-Following kernel panic is seen during DMA driver unload->load sequence
-==========================================================================
-Unable to handle kernel paging request at virtual address ffffff8001198880
-Internal error: Oops: 86000007 [#1] PREEMPT SMP
-CPU: 0 PID: 5907 Comm: HwBinder:4123_1 Tainted: G C 4.9.128-tegra-g065839f
-Hardware name: galen (DT)
-task: ffffffc3590d1a80 task.stack: ffffffc3d0678000
-PC is at 0xffffff8001198880
-LR is at of_dma_request_slave_channel+0xd8/0x1f8
-pc : [<ffffff8001198880>] lr : [<ffffff8008746f30>] pstate: 60400045
-sp : ffffffc3d067b710
-x29: ffffffc3d067b710 x28: 000000000000002f
-x27: ffffff800949e000 x26: ffffff800949e750
-x25: ffffff800949e000 x24: ffffffbefe817d84
-x23: ffffff8009f77cb0 x22: 0000000000000028
-x21: ffffffc3ffda49c8 x20: 0000000000000029
-x19: 0000000000000001 x18: ffffffffffffffff
-x17: 0000000000000000 x16: ffffff80082b66a0
-x15: ffffff8009e78250 x14: 000000000000000a
-x13: 0000000000000038 x12: 0101010101010101
-x11: 0000000000000030 x10: 0101010101010101
-x9 : fffffffffffffffc x8 : 7f7f7f7f7f7f7f7f
-x7 : 62ff726b6b64622c x6 : 0000000000008064
-x5 : 6400000000000000 x4 : ffffffbefe817c44
-x3 : ffffffc3ffda3e08 x2 : ffffff8001198880
-x1 : ffffffc3d48323c0 x0 : ffffffc3d067b788
+    Actually we don't do anything with return value from
+    nfs_wait_client_init_complete in nfs_match_client, as a
+    consequence if we get a fatal signal and client is not
+    fully initialised, we'll loop to "again" label
 
-Process HwBinder:4123_1 (pid: 5907, stack limit = 0xffffffc3d0678028)
-Call trace:
-[<ffffff8001198880>] 0xffffff8001198880
-[<ffffff80087459f8>] dma_request_chan+0x50/0x1f0
-[<ffffff8008745bc0>] dma_request_slave_channel+0x28/0x40
-[<ffffff8001552c44>] tegra_alt_pcm_open+0x114/0x170
-[<ffffff8008d65fa4>] soc_pcm_open+0x10c/0x878
-[<ffffff8008d18618>] snd_pcm_open_substream+0xc0/0x170
-[<ffffff8008d1878c>] snd_pcm_open+0xc4/0x240
-[<ffffff8008d189e0>] snd_pcm_playback_open+0x58/0x80
-[<ffffff8008cfc6d4>] snd_open+0xb4/0x178
-[<ffffff8008250628>] chrdev_open+0xb8/0x1d0
-[<ffffff8008246fdc>] do_dentry_open+0x214/0x318
-[<ffffff80082485d0>] vfs_open+0x58/0x88
-[<ffffff800825bce0>] do_last+0x450/0xde0
-[<ffffff800825c718>] path_openat+0xa8/0x368
-[<ffffff800825dd84>] do_filp_open+0x8c/0x110
-[<ffffff8008248a74>] do_sys_open+0x164/0x220
-[<ffffff80082b66dc>] compat_SyS_openat+0x3c/0x50
-[<ffffff8008083040>] el0_svc_naked+0x34/0x38
----[ end trace 67e6d544e65b5145 ]---
-Kernel panic - not syncing: Fatal exception
-==========================================================================
+    This has been proven to cause soft lockups on some scenarios
+    (no-carrier but configured network interfaces)
 
-In device probe(), of_dma_controller_register() registers DMA controller.
-But when driver is removed, this is not freed. During driver reload this
-results in data abort and kernel panic. Add of_dma_controller_free() in
-driver remove path to fix the issue.
-
-Fixes: f46b195799b5 ("dmaengine: tegra-adma: Add support for Tegra210 ADMA")
-Signed-off-by: Sameer Pujar <spujar@nvidia.com>
-Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Roberto Bergantinos Corpas <rbergant@redhat.com>
+Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/tegra210-adma.c | 1 +
- 1 file changed, 1 insertion(+)
+ fs/nfs/client.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/dma/tegra210-adma.c b/drivers/dma/tegra210-adma.c
-index b26256f23d67f..08b10274284a8 100644
---- a/drivers/dma/tegra210-adma.c
-+++ b/drivers/dma/tegra210-adma.c
-@@ -786,6 +786,7 @@ static int tegra_adma_remove(struct platform_device *pdev)
- 	struct tegra_adma *tdma = platform_get_drvdata(pdev);
- 	int i;
+diff --git a/fs/nfs/client.c b/fs/nfs/client.c
+index a98d64a6eda5c..65da2c105f434 100644
+--- a/fs/nfs/client.c
++++ b/fs/nfs/client.c
+@@ -290,6 +290,7 @@ static struct nfs_client *nfs_match_client(const struct nfs_client_initdata *dat
+ 	struct nfs_client *clp;
+ 	const struct sockaddr *sap = data->addr;
+ 	struct nfs_net *nn = net_generic(data->net, nfs_net_id);
++	int error;
  
-+	of_dma_controller_free(pdev->dev.of_node);
- 	dma_async_device_unregister(&tdma->dma_dev);
- 
- 	for (i = 0; i < tdma->nr_channels; ++i)
+ again:
+ 	list_for_each_entry(clp, &nn->nfs_client_list, cl_share_link) {
+@@ -302,8 +303,10 @@ static struct nfs_client *nfs_match_client(const struct nfs_client_initdata *dat
+ 		if (clp->cl_cons_state > NFS_CS_READY) {
+ 			atomic_inc(&clp->cl_count);
+ 			spin_unlock(&nn->nfs_client_lock);
+-			nfs_wait_client_init_complete(clp);
++			error = nfs_wait_client_init_complete(clp);
+ 			nfs_put_client(clp);
++			if (error < 0)
++				return ERR_PTR(error);
+ 			spin_lock(&nn->nfs_client_lock);
+ 			goto again;
+ 		}
+@@ -413,6 +416,8 @@ struct nfs_client *nfs_get_client(const struct nfs_client_initdata *cl_init)
+ 		clp = nfs_match_client(cl_init);
+ 		if (clp) {
+ 			spin_unlock(&nn->nfs_client_lock);
++			if (IS_ERR(clp))
++				return clp;
+ 			if (new)
+ 				new->rpc_ops->free_client(new);
+ 			return nfs_found_client(cl_init, clp);
 -- 
 2.20.1
 
