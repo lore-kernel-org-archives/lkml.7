@@ -2,102 +2,299 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E679C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 16:29:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4B16C282DC
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 16:32:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51CE421473
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 16:29:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 871232173C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 16:32:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="LfaGikSQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730085AbfEVQ3s (ORCPT
+        id S1730032AbfEVQcL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 12:29:48 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:53266 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729475AbfEVQ3s (ORCPT
+        Wed, 22 May 2019 12:32:11 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:46100 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728527AbfEVQcK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 12:29:48 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hTU7e-0002Ad-40; Wed, 22 May 2019 16:29:46 +0000
-Date:   Wed, 22 May 2019 17:29:46 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Vicente Bergas <vicencb@gmail.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: d_lookup: Unable to handle kernel paging request
-Message-ID: <20190522162945.GN17978@ZenIV.linux.org.uk>
-References: <23950bcb-81b0-4e07-8dc8-8740eb53d7fd@gmail.com>
- <20190522135331.GM17978@ZenIV.linux.org.uk>
- <bdc8b245-afca-4662-99e2-a082f25fc927@gmail.com>
+        Wed, 22 May 2019 12:32:10 -0400
+Received: by mail-lf1-f66.google.com with SMTP id l26so2154307lfh.13
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 09:32:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=qThinqX735sf8pV9gEurKexsu6v0KDCesOpmYS6C1nU=;
+        b=LfaGikSQzkfp3MTtTD2riyljAlYtgygqiQ76isa3QiDIAdNTkg9Psw2gEp57lgcaC9
+         hXjQYzoyg9a+kq67pScg7J/emNvgOW+2y1jaoct/Ur1ocYSI/5NGNGEnCvBMlFnuc8qM
+         lqKrn9Z35znXep5iHwzzV/gWqSWLC03boR0VrVXI/ZZAxTHijH+tSNR77NkL0BQmma0J
+         UlJBJA2OYAQDSaD24DiicMLJe5rNn8y7PyzLUjbfBzxl+K90QZJntGOyARexDhDr8VY9
+         s5FIGIA2dcOxR+igryXgPdS8i7Ypz9fLC10KN/KPb79JvSeIzU9NX9xqEZI5E8OhqCPa
+         86lg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=qThinqX735sf8pV9gEurKexsu6v0KDCesOpmYS6C1nU=;
+        b=DRuvem3zy33DyulEVYnp7ch15c0M/uJNGWwQ2GGd5T8zxaZYe/ZuV6XShwInLrE4co
+         WWel7RXIg7bshv/7mFHSKhlI8g8ZeNp/45jEYkrx+wZojYulKC8IfAsvI7qgLk9+qbou
+         ZhSSNnDhpX6HLwGPsoefc7vUW1lKXRch607waaiZVwVBVYcS4UA0SwmoT1Omt1oqMb3m
+         sSEgPkE5gSlJ+MkpCS6bbRyk8++QvB5XWq9s/H2Fd2/ffgnoIkfpRCyliAQFLORCllp6
+         oUdaxNOxQfMJs1WqNXPJGW5qdYT5N691ECr8OSoT0W2t4t1DVDx4v9P3Em4goJd+6gUS
+         pzww==
+X-Gm-Message-State: APjAAAWX2mHCsv9X9LLtT79eYWaym78ATUKbPER3OGryIk+iQF53TcaM
+        chyH5CuQPeUNavlC5Z+afdC29w==
+X-Google-Smtp-Source: APXvYqz93Mn96ebEH/DifbwBhBmr7sSu/xHP7uqRK6cUNes/iTbCorNF+sUo3nfTvqTFfsHOIWVLUA==
+X-Received: by 2002:ac2:4213:: with SMTP id y19mr35566420lfh.66.1558542727839;
+        Wed, 22 May 2019 09:32:07 -0700 (PDT)
+Received: from wasted.cogentembedded.com ([31.173.81.14])
+        by smtp.gmail.com with ESMTPSA id x16sm5367958lji.3.2019.05.22.09.32.06
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 22 May 2019 09:32:07 -0700 (PDT)
+Subject: Re: [PATCH v12 3/3] dt-bindings: mfd: Document Renesas R-Car Gen3
+ RPC-IF MFD bindings
+To:     masonccyang@mxic.com.tw, Geert Uytterhoeven <geert@linux-m68k.org>,
+        Lee Jones <lee.jones@linaro.org>
+Cc:     Boris Brezillon <bbrezillon@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms@verge.net.au>, juliensu@mxic.com.tw,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh@kernel.org>, zhengxunli@mxic.com.tw,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+References: <1556092536-17095-1-git-send-email-masonccyang@mxic.com.tw>
+ <20190424212356.GA27103@bogus>
+ <65853dc2-6f3c-1494-7e72-54877797cdd2@gmail.com>
+ <20190507125730.GD29524@dell>
+ <OF08A5650B.8AE8977C-ON482583F4.000E5B1E-482583F4.000F7215@mxic.com.tw>
+ <d229b19e-351c-c576-b5c4-716d10dad1a0@gmail.com> <20190508061119.GB7627@dell>
+ <OFE86674B9.06D723A0-ON482583F5.000AD50C-482583F5.000BA075@mxic.com.tw>
+ <a05cff8f-7df2-1938-c0e7-f9366bece607@cogentembedded.com>
+ <OFB19BCE91.6EBBAA77-ON482583F6.000234E2-482583F6.00061290@mxic.com.tw>
+ <CAMuHMdUP8KU3Dbv6cwOvrY0hWOcm1xqVcsi20+GvazYMDLGGZg@mail.gmail.com>
+ <OFD932ABFC.E3FFCEB8-ON482583F9.003412B1-482583F9.0034D5CA@mxic.com.tw>
+ <b51d1cb7-b3b5-208f-ab4c-145ecb57805d@cogentembedded.com> <OFAD9AA573.86373
+ <44bc8f0a-cbdc-db4a-9a46-b8bae5cc37a2@cogentembedded.com>
+ <OF5AF00898.3CE87C98-ON48258400.00259B16-48258400.0028A4F5@mxic.com.tw>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Organization: Cogent Embedded
+Message-ID: <5e718d9f-3aeb-c2ef-0723-400497b2b98f@cogentembedded.com>
+Date:   Wed, 22 May 2019 19:32:05 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bdc8b245-afca-4662-99e2-a082f25fc927@gmail.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <OF5AF00898.3CE87C98-ON48258400.00259B16-48258400.0028A4F5@mxic.com.tw>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-MW
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 22, 2019 at 05:44:30PM +0200, Vicente Bergas wrote:
+On 05/20/2019 10:23 AM, masonccyang@mxic.com.tw wrote:
 
->    2d30:	f8617893 	ldr	x19, [x4, x1, lsl #3]
->    2d34:	f27ffa73 	ands	x19, x19, #0xfffffffffffffffe
->    2d38:	54000920 	b.eq	2e5c <__d_lookup_rcu+0x15c>  // b.none
->    2d3c:	aa0003f5 	mov	x21, x0
->    2d40:	d360feda 	lsr	x26, x22, #32
->    2d44:	a90363f7 	stp	x23, x24, [sp, #48]
->    2d48:	aa0203f8 	mov	x24, x2
->    2d4c:	d3608ad7 	ubfx	x23, x22, #32, #3
->    2d50:	a90573fb 	stp	x27, x28, [sp, #80]
->    2d54:	2a1603fc 	mov	w28, w22
->    2d58:	9280001b 	mov	x27, #0xffffffffffffffff    	// #-1
->    2d5c:	14000003 	b	2d68 <__d_lookup_rcu+0x68>
->    2d60:	f9400273 	ldr	x19, [x19]
->    2d64:	b4000793 	cbz	x19, 2e54 <__d_lookup_rcu+0x154>
+>>>>> -------------------------------------------------------------->
+>>>>>
+>>>>> Renesas R-Car Gen3 RPC-IF controller Device Tree Bindings
+>>>>> ---------------------------------------------------------
+>>>>>
+>>>>>   RPC-IF supports both SPI NOR and HyperFlash (CFI-compliant flash)
+>>>>>
+>>>>>   Required properties:
+>>>>>   - compatible: should be an SoC-specific compatible value, followed 
+> 
+>>> by
+>>>>>                   "renesas,rcar-gen3-rpc" as a fallback.
+>>>>>                   supported SoC-specific values are:
+>>>>>                   "renesas,r8a77995-rpc"  (R-Car D3)
+>>>>>   - reg: should contain three register areas:
+>>>>>           first for the base address of RPC-IF registers,
+>>>>
+>>>>    I'd drop "the base address" here.
+>>>
+>>> okay.
+>>>
+>>>>>           second for the direct mapping read mode and
+>>>>>           third for the write buffer area.
+>>>>>   - reg-names: should contain "regs", "dirmap" and "wbuf"
+>>>>>   - clocks: should contain 1 entries for the module's clock
+>>>>>   - clock-names: should contain "rpc"
+>>>>
+>>>>    I suspect we'd need the RPC/RPCD2 clocks mentioned as well (not 
+> sure 
+>>> yet)...
+>>>
+>>> Need it ?
+>>
+>>    You seem to call clk_get_rate() on the module clock, I doubt that's
+>> correct topologically...
 
-OK, that looks like
-	hlist_bl_for_each_entry_rcu(dentry, node, b, d_hash)
-in there, x19 being 'node'.
+   clk_set_rate(), sorry.
 
->    2d68:	b85fc265 	ldur	w5, [x19, #-4]
->    2d6c:	d50339bf 	dmb	ishld
+> 
+> I think it's correct but just like Geert mentioned that there is no any 
+> patch
+> in drivers/clk/renesas/r8a77995-cpg-mssr.c adding RPC-related clocks.
+> 
+> 
+> I patched dt-bindings/clock/r8a77995-cpg-mssr.h for some simple testing
+> 
+> -#define R8A77995_CLK_RPC               29
+> -#define R8A77995_CLK_RPCD2             30
+> +#define R8A77995_CLK_RPC               31
+> +#define R8A77995_CLK_RPCD2             32
 
-... and that's seq = raw_seqcount_begin(&dentry->d_seq), with
-->d_seq being 4 bytes before ->d_hash.  So that one has stepped into
-0x1000000 (i.e. 1<<24) in hlist forward pointer (or head - either is
-possible).
+   Hm, what does this do?
 
-> 0000000000002e98 <__d_lookup>:
+> by clk_prepare_enable() & clk_disable_unprepare() with CPG_MOD 917 
+> on D3 draak board, it is working fine.
 
->    2ed0:	f8607833 	ldr	x19, [x1, x0, lsl #3]
->    2ed4:	f27ffa73 	ands	x19, x19, #0xfffffffffffffffe
->    2ed8:	54000320 	b.eq	2f3c <__d_lookup+0xa4>  // b.none
->    2edc:	5280001b 	mov	w27, #0x0                   	// #0
->    2ee0:	92800018 	mov	x24, #0xffffffffffffffff    	// #-1
->    2ee4:	a9025bf5 	stp	x21, x22, [sp, #32]
->    2ee8:	d2800016 	mov	x22, #0x0                   	// #0
->    2eec:	52800035 	mov	w21, #0x1                   	// #1
+>>>>>   - SPI mode:git
+>>>>>
+>>>>>           rpc: rpc-if@ee200000 {
+>>>>
+>>>>    The node names should be generic, based on the device class. And in 
+>>>> this
+>>>> case I'd like to use "spi@ee200000" as otherwise dtc keeps bitching like 
+>>>> below:
+>>>
+>>> okay, patch to
+>>>
+>>> rpc_if: spi@<...>
+>>
+>>    That, or just keep the node label.
+> 
+> okay.
+> 
+>>>>>   - HF mode:
+>>>>>           rpc: rpc-if@ee200000 {
+>>>>
+>>>>    Again, spi@<...>.
+>>>
+>>> what about rpc_if: hf@<...>
+>>
+>>    Can't change the node name, as it's declared in the .dtsi files, not *.dts
+>> ones. And "spi" works for the HF case as well -- no complaints from dtc. 
+> :-)
 
-That's
-        hlist_bl_for_each_entry_rcu(dentry, node, b, d_hash) {
+   Maybe it's possible using the "name" prop, don't know...
 
->    2ef0:	b9401a62 	ldr	w2, [x19, #24]
+> okay,
+>  
+> Patch DTS to
+> ===============================================================> 
+> +Renesas R-Car Gen3 RPC-IF controller Device Tree Bindings
+> +---------------------------------------------------------
+> +
+> +RPC-IF supports both SPI NOR and HyperFlash (CFI-compliant flash)
+> +
+> +Required properties:
+> +- compatible: should be an SoC-specific compatible value, followed by
+> +                                "renesas,rcar-gen3-rpc" as a fallback.
+> +                                supported SoC-specific values are:
+> +                                "renesas,r8a77995-rpc"          (R-Car 
+> D3)
+> +- reg: should contain three register areas:
+> +                first for RPC-IF registers,
+> +                second for the direct mapping read mode and
+> +                third for the write buffer area.
+> +- reg-names: should contain "regs", "dirmap" and "wbuf"
+> +- clocks: should contain 1 entries for the module's clock
 
-... and fetching dentry->d_name.hash for subsequent
-                if (dentry->d_name.hash != hash)
-                        continue;
+   1 entry (clock node phandle and specifier).
 
->    2ef4:	d1002274 	sub	x20, x19, #0x8
->    2ef8:	6b17005f 	cmp	w2, w23
->    2efc:	540001a1 	b.ne	2f30 <__d_lookup+0x98>  // b.any
+> +- clock-names: should contain "rpc"
+> +- power-domains: should contain system-controller(sysc) for 
+> power-domain-cell
 
-IOW, here we have also run into bogus hlist forward pointer or head -
-same 0x1000000 in one case and 0x0000880001000000 in two others.
+   What's "power-domain-cell"? I know "#power-domain-cells". I'd like this
+to be "the power domain node's phandle and specifier".
 
-Have you tried to see if KASAN catches anything on those loads?
-Use-after-free, for example...  Another thing to try: slap
-	WARN_ON(entry->d_flags & DCACHE_NORCU);
-in __d_rehash() and see if it triggers.
+> +- resets: should contain clock pulse generator(cpg) for reset-cell,
+
+   It's "#reset-cells" again. I'd like this to be "the reset node's phandle
+and specifier".
+
+> +                  power-domain-cell and clock-cell
+
+   Why mntion clock-cell at all here?
+
+> +- #address-cells: should be 1
+> +- #size-cells: should be 0
+> +
+> +Example:
+> +- SPI mode:
+> +
+> +                rpc: spi@ee200000 {
+> +                                compatible = "renesas,r8a77995-rpc", 
+> "renesas,rcar-gen3-rpc";
+> +                                reg = <0 0xee200000 0 0x200>, <0 
+> 0x08000000 0 0x4000000>,
+> +                                      <0 0xee208000 0 0x100>;
+> +                                reg-names = "regs", "dirmap", "wbuf";
+> +                                clocks = <&cpg CPG_MOD 917>;
+> +                                clock-names = "rpc";
+> +                                power-domains = <&sysc 
+> R8A77995_PD_ALWAYS_ON>;
+> +                                resets = <&cpg 917>;
+> +                                #address-cells = <1>;
+> +                                #size-cells = <0>;
+> +
+> +                                flash@0 {
+> +                                                compatible = 
+> "jedec,spi-nor";
+> +                                                reg = <0>;
+> +                                                spi-max-frequency = 
+> <40000000>;
+> +                                                spi-tx-bus-width = <1>;
+> +                                                spi-rx-bus-width = <1>;
+> +                                };
+> +                };
+> +
+> +- HF mode:
+
+   HyperFlash, please.
+
+> +                rpc: spi@ee200000 {
+> +                                compatible = "renesas,r8a77995-rpc", 
+> "renesas,rcar-gen3-rpc";
+> +                                reg = <0 0xee200000 0 0x200>, <0 
+> 0x08000000 0 0x4000000>,
+> +                                      <0 0xee208000 0 0x100>;
+> +                                reg-names = "regs", "dirmap", "wbuf";
+> +                                clocks = <&cpg CPG_MOD 917>;
+> +                                clock-names = "rpc";
+> +                                power-domains = <&sysc 
+> R8A77995_PD_ALWAYS_ON>;
+> +                                resets = <&cpg 917>;
+> +                                #address-cells = <1>;
+> +                                #size-cells = <0>;
+
+   And I don't think duplicating the same device node is a good idea...
+
+> +                                flash@0 {
+> +                                                compatible = 
+> "cypress,hyperflash", "cfi-flash";
+> +                                                reg = <0>;
+> +                                };
+> +                };
+> ===============================================================<
+> 
+> thanks & best regards,
+> Mason
+[...]
+
+MBR, Sergei
