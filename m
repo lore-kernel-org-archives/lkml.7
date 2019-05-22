@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F93DC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:34:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 656A1C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:34:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58B2F20675
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:34:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 388AC20675
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:34:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558553671;
-	bh=TnJ2bCfWpNnilFNi5is2KJP69mQPXJVdAWqct3X/4jk=;
+	s=default; t=1558553676;
+	bh=6e+J5S1j1KTcLpmr63lSOkWltFBuo7AeDUTGROpHAvM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=loBh6sMrgPXspoohRX3Q0MVQCOPr9Gk4+zjxuCDhKBXIoU47EwMfD+uXr8bzulGWB
-	 WyCZ1cQGTePv82TfWPiH8kiwj2DngpPLcrLQLXOBS/T0P70BuFXMQEyY8zrSNo7Il9
-	 FAPm282AhJP4wdAWwW+juoZKu8t9fqFJTXzUS90M=
+	b=tm9LXEBpg2s3XW2WD6d758WeONLnBb15Zxkv8k+ZVfREnvz+h8UX9UC7fddYmh9gm
+	 XaDwbqUOi4zkMPzGHFCFcF6oq1im2F2kV2hN79AIjYWwMO1bTpp6wkQ/7JuCQ8dY00
+	 6PcT43LIds1G+R09ZQ7sclaTS88ppTV8lfx5kIE4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730215AbfEVTb1 (ORCPT
+        id S1731410AbfEVTef (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:31:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54822 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:34:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54912 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731751AbfEVTbU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:31:20 -0400
+        id S2387507AbfEVTb0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:31:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4476A20675;
-        Wed, 22 May 2019 19:31:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B64220675;
+        Wed, 22 May 2019 19:31:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553480;
-        bh=TnJ2bCfWpNnilFNi5is2KJP69mQPXJVdAWqct3X/4jk=;
+        s=default; t=1558553486;
+        bh=6e+J5S1j1KTcLpmr63lSOkWltFBuo7AeDUTGROpHAvM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iwGhtQMreOW09cEdPrCRgaBvTCB3pUtKnWjVdvXpapZebgWKYYklV0SSppXG83U7M
-         c+n6JCBtZtM0eAv/7Et4AyVTlBm9HlTTev7HIg8caIxkdNRscKmIpgk7ECeOLsokaY
-         x95ZaNrrjSvJqju+pVZVxHcQIP+KtLeXD2dWU7S0=
+        b=tmYMxOK1FmOgGYLXA7hA0DE75zolrw/dhwhvObgMbPfL+gFWvfmrUh0+HWJAMMqvN
+         EXZq0or3GlB0VNWVH3ECVUNetqjcxLWgP8R1hLRrwPmnm0Fnab58KIV+4mh7G/2h5e
+         ZeoAp9ta/p+v404xgiXhy/MtpEg11061d3dVVwLw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 039/114] dmaengine: at_xdmac: remove BUG_ON macro in tasklet
-Date:   Wed, 22 May 2019 15:29:02 -0400
-Message-Id: <20190522193017.26567-39-sashal@kernel.org>
+Cc:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Shuah Khan <shuah@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 042/114] media: au0828: stop video streaming only when last user stops
+Date:   Wed, 22 May 2019 15:29:05 -0400
+Message-Id: <20190522193017.26567-42-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522193017.26567-1-sashal@kernel.org>
 References: <20190522193017.26567-1-sashal@kernel.org>
@@ -60,40 +61,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Ferre <nicolas.ferre@microchip.com>
+From: Hans Verkuil <hverkuil@xs4all.nl>
 
-[ Upstream commit e2c114c06da2d9ffad5b16690abf008d6696f689 ]
+[ Upstream commit f604f0f5afb88045944567f604409951b5eb6af8 ]
 
-Even if this case shouldn't happen when controller is properly programmed,
-it's still better to avoid dumping a kernel Oops for this.
-As the sequence may happen only for debugging purposes, log the error and
-just finish the tasklet call.
+If the application was streaming from both videoX and vbiX, and streaming
+from videoX was stopped, then the vbi streaming also stopped.
 
-Signed-off-by: Nicolas Ferre <nicolas.ferre@microchip.com>
-Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+The cause being that stop_streaming for video stopped the subdevs as well,
+instead of only doing that if dev->streaming_users reached 0.
+
+au0828_stop_vbi_streaming was also wrong since it didn't stop the subdevs
+at all when dev->streaming_users reached 0.
+
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Tested-by: Shuah Khan <shuah@kernel.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/at_xdmac.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/media/usb/au0828/au0828-video.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/dma/at_xdmac.c b/drivers/dma/at_xdmac.c
-index b222dd7afe8e2..12d9048293245 100644
---- a/drivers/dma/at_xdmac.c
-+++ b/drivers/dma/at_xdmac.c
-@@ -1608,7 +1608,11 @@ static void at_xdmac_tasklet(unsigned long data)
- 					struct at_xdmac_desc,
- 					xfer_node);
- 		dev_vdbg(chan2dev(&atchan->chan), "%s: desc 0x%p\n", __func__, desc);
--		BUG_ON(!desc->active_xfer);
-+		if (!desc->active_xfer) {
-+			dev_err(chan2dev(&atchan->chan), "Xfer not active: exiting");
-+			spin_unlock_bh(&atchan->lock);
-+			return;
-+		}
+diff --git a/drivers/media/usb/au0828/au0828-video.c b/drivers/media/usb/au0828/au0828-video.c
+index 85dd9a8e83ff1..40594c8a71f4f 100644
+--- a/drivers/media/usb/au0828/au0828-video.c
++++ b/drivers/media/usb/au0828/au0828-video.c
+@@ -852,9 +852,9 @@ int au0828_start_analog_streaming(struct vb2_queue *vq, unsigned int count)
+ 			return rc;
+ 		}
  
- 		txd = &desc->tx_dma_desc;
++		v4l2_device_call_all(&dev->v4l2_dev, 0, video, s_stream, 1);
++
+ 		if (vq->type == V4L2_BUF_TYPE_VIDEO_CAPTURE) {
+-			v4l2_device_call_all(&dev->v4l2_dev, 0, video,
+-						s_stream, 1);
+ 			dev->vid_timeout_running = 1;
+ 			mod_timer(&dev->vid_timeout, jiffies + (HZ / 10));
+ 		} else if (vq->type == V4L2_BUF_TYPE_VBI_CAPTURE) {
+@@ -874,10 +874,11 @@ static void au0828_stop_streaming(struct vb2_queue *vq)
  
+ 	dprintk(1, "au0828_stop_streaming called %d\n", dev->streaming_users);
+ 
+-	if (dev->streaming_users-- == 1)
++	if (dev->streaming_users-- == 1) {
+ 		au0828_uninit_isoc(dev);
++		v4l2_device_call_all(&dev->v4l2_dev, 0, video, s_stream, 0);
++	}
+ 
+-	v4l2_device_call_all(&dev->v4l2_dev, 0, video, s_stream, 0);
+ 	dev->vid_timeout_running = 0;
+ 	del_timer_sync(&dev->vid_timeout);
+ 
+@@ -906,8 +907,10 @@ void au0828_stop_vbi_streaming(struct vb2_queue *vq)
+ 	dprintk(1, "au0828_stop_vbi_streaming called %d\n",
+ 		dev->streaming_users);
+ 
+-	if (dev->streaming_users-- == 1)
++	if (dev->streaming_users-- == 1) {
+ 		au0828_uninit_isoc(dev);
++		v4l2_device_call_all(&dev->v4l2_dev, 0, video, s_stream, 0);
++	}
+ 
+ 	spin_lock_irqsave(&dev->slock, flags);
+ 	if (dev->isoc_ctl.vbi_buf != NULL) {
 -- 
 2.20.1
 
