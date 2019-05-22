@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DF57C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:00:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF359C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:01:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E08B221019
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:00:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88E9D20862
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:01:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558555256;
-	bh=5JJ0A4YTngVp1poDwCyZPpjaELnYqOmKSWSMbOpvHyE=;
+	s=default; t=1558555264;
+	bh=+ox4NppzbtphFNUl2fXhn2ijzOe1B7toVQh07jdcXFA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1KTbRy7f0Nq8+6iOBhWMF3FXS3lyZNHqotQqQgq2TslFpXg+PZ7xpIByWZbdV1uIh
-	 9mKw3Ar4qVJ46cd+wa+ELjE5YjJC3Ta3Y1Os0FGUFilTg1x6SO+xKLDMrGsZCUjX3Q
-	 Sp1MoTXooBmcMegB0F6x+9ttHjIVdBFU7t4P2yYY=
+	b=SE1cQIKmOmHTcDfPSg2MeBquSChVcci1epPt4cqu2wJeXOeeX7mlieevboEC7/w6e
+	 qlrE+FyMs6PDjzwRRP+TYEcnn7ChRsKeyFHnys1+4smqo15YEN6sfUnrdnn1dHynF/
+	 /DWVAM8x4Np7zNnTb5PEWkU/uGKka51r3e/ybYg8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732051AbfEVUAy (ORCPT
+        id S1730604AbfEVTWs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 16:00:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43732 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:22:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43510 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730653AbfEVTW4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:22:56 -0400
+        id S1730578AbfEVTWq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:22:46 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3FDAA20675;
-        Wed, 22 May 2019 19:22:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6CD9217D4;
+        Wed, 22 May 2019 19:22:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558552976;
-        bh=5JJ0A4YTngVp1poDwCyZPpjaELnYqOmKSWSMbOpvHyE=;
+        s=default; t=1558552965;
+        bh=+ox4NppzbtphFNUl2fXhn2ijzOe1B7toVQh07jdcXFA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q8hcDmIJp+F2RwoxChqPqPPVXn6ROpbTYpYHo8rkZwj61o8XgXmj1OGOa/6iy95Fx
-         KBKyQk9Ly2I/ddPa7BUEVlYk0rDpRAiSnmyBcPBmg3Q0vy+q/FqVUqE+XTNmyFW4xh
-         akImDO8qullPekPW4WaB3LHsL8XXxIdz+OS0O/kA=
+        b=ooClm0M3pp9nl4ENUINoHLQrML+aG9r42SL//HGwR+AbbwaNbvGhYaDps93yD8loH
+         7aGsnbR4ob1roKR2RkmFSvt5OidLFWZ1+5Rn9pHg3cQY5ZsQqfaxLctR2ChwVKq/uc
+         PaEmNvIvt0HgfoR6S/EDrcJpSHmu6oyjMPz91MsU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Robbie Ko <robbieko@synology.com>,
-        Filipe Manana <fdmanana@suse.com>,
-        David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 056/375] Btrfs: fix data bytes_may_use underflow with fallocate due to failed quota reserve
-Date:   Wed, 22 May 2019 15:15:56 -0400
-Message-Id: <20190522192115.22666-56-sashal@kernel.org>
+Cc:     Bart Van Assche <bvanassche@acm.org>,
+        Himanshu Madhani <hmadhani@marvell.com>,
+        Giridhar Malavali <gmalavali@marvell.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 051/375] scsi: qla2xxx: Fix a qla24xx_enable_msix() error path
+Date:   Wed, 22 May 2019 15:15:51 -0400
+Message-Id: <20190522192115.22666-51-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192115.22666-1-sashal@kernel.org>
 References: <20190522192115.22666-1-sashal@kernel.org>
@@ -60,59 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robbie Ko <robbieko@synology.com>
+From: Bart Van Assche <bvanassche@acm.org>
 
-[ Upstream commit 39ad317315887c2cb9a4347a93a8859326ddf136 ]
+[ Upstream commit 24afabdbd0b3553963a2bbf465895492b14d1107 ]
 
-When doing fallocate, we first add the range to the reserve_list and
-then reserve the quota.  If quota reservation fails, we'll release all
-reserved parts of reserve_list.
+Make sure that the allocated interrupts are freed if allocating memory for
+the msix_entries array fails.
 
-However, cur_offset is not updated to indicate that this range is
-already been inserted into the list.  Therefore, the same range is freed
-twice.  Once at list_for_each_entry loop, and once at the end of the
-function.  This will result in WARN_ON on bytes_may_use when we free the
-remaining space.
-
-At the end, under the 'out' label we have a call to:
-
-   btrfs_free_reserved_data_space(inode, data_reserved, alloc_start, alloc_end - cur_offset);
-
-The start offset, third argument, should be cur_offset.
-
-Everything from alloc_start to cur_offset was freed by the
-list_for_each_entry_safe_loop.
-
-Fixes: 18513091af94 ("btrfs: update btrfs_space_info's bytes_may_use timely")
-Reviewed-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: Robbie Ko <robbieko@synology.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Cc: Himanshu Madhani <hmadhani@marvell.com>
+Cc: Giridhar Malavali <gmalavali@marvell.com>
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Acked-by: Himanshu Madhani <hmadhani@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/file.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/scsi/qla2xxx/qla_isr.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/fs/btrfs/file.c b/fs/btrfs/file.c
-index 34fe8a58b0e9c..0832449722c12 100644
---- a/fs/btrfs/file.c
-+++ b/fs/btrfs/file.c
-@@ -3132,6 +3132,7 @@ static long btrfs_fallocate(struct file *file, int mode,
- 			ret = btrfs_qgroup_reserve_data(inode, &data_reserved,
- 					cur_offset, last_byte - cur_offset);
- 			if (ret < 0) {
-+				cur_offset = last_byte;
- 				free_extent_map(em);
- 				break;
- 			}
-@@ -3181,7 +3182,7 @@ static long btrfs_fallocate(struct file *file, int mode,
- 	/* Let go of our reservation. */
- 	if (ret != 0 && !(mode & FALLOC_FL_ZERO_RANGE))
- 		btrfs_free_reserved_data_space(inode, data_reserved,
--				alloc_start, alloc_end - cur_offset);
-+				cur_offset, alloc_end - cur_offset);
- 	extent_changeset_free(data_reserved);
+diff --git a/drivers/scsi/qla2xxx/qla_isr.c b/drivers/scsi/qla2xxx/qla_isr.c
+index 69bbea9239cc8..add17843148dd 100644
+--- a/drivers/scsi/qla2xxx/qla_isr.c
++++ b/drivers/scsi/qla2xxx/qla_isr.c
+@@ -3475,7 +3475,7 @@ qla24xx_enable_msix(struct qla_hw_data *ha, struct rsp_que *rsp)
+ 		ql_log(ql_log_fatal, vha, 0x00c8,
+ 		    "Failed to allocate memory for ha->msix_entries.\n");
+ 		ret = -ENOMEM;
+-		goto msix_out;
++		goto free_irqs;
+ 	}
+ 	ha->flags.msix_enabled = 1;
+ 
+@@ -3558,6 +3558,10 @@ qla24xx_enable_msix(struct qla_hw_data *ha, struct rsp_que *rsp)
+ 
+ msix_out:
  	return ret;
++
++free_irqs:
++	pci_free_irq_vectors(ha->pdev);
++	goto msix_out;
  }
+ 
+ int
 -- 
 2.20.1
 
