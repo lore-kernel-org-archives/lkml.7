@@ -2,99 +2,128 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0277CC18E7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 00:36:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C43AC072B5
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 00:44:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC07F217F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 00:36:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD6F6217D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 00:44:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PKkfQhz8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SfSWg9Te"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728113AbfEVAgI (ORCPT
+        id S1728036AbfEVAod (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 20:36:08 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:40700 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726083AbfEVAgH (ORCPT
+        Tue, 21 May 2019 20:44:33 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:39127 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726434AbfEVAoc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 20:36:07 -0400
-Received: by mail-pg1-f195.google.com with SMTP id d30so352553pgm.7;
-        Tue, 21 May 2019 17:36:07 -0700 (PDT)
+        Tue, 21 May 2019 20:44:32 -0400
+Received: by mail-io1-f67.google.com with SMTP id m7so458149ioa.6;
+        Tue, 21 May 2019 17:44:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=xbyzh1GJJ8m0Sm1ENljBkms7F5sprXDnDoT8XWgkBJE=;
-        b=PKkfQhz87VyLXywfWJU0zQCGTaOjfOsBWtuSXc8bcUmWt3ddU25a0weMhIItrXdrXY
-         a1AeEKPD19hJGoD92FnQM/EJugJaI6h3BfU7BDUvPHlCiyQm5/99wgOvDyKrSxuQKa74
-         Xf0x2HcIDuFdprsYOgziU9IYsdHigA56WAGBLyLFIF79sUV0fDZYrii1BuDEnaUYGU70
-         VoKttFxTbBrpnEy7zt++M9GgkngCSHpsb91dEamU2bXGia1tpm+AeaNu6jlT1MuD8YP1
-         pYgDQC3UJ3eyUWklehfS9FJHlaWf8A9jlEhYqILCeKMwPsRee4cWQPzao65Jt7TOMsHX
-         objw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pWCi9dROwOfQvBvMAXELot1dHsDW9NHuGvLhfRnJ4hE=;
+        b=SfSWg9TeEu5DaP5TRGUM57CeTAi++dYX546ZT6YQE1GsntXdrEm80yuE3lgKb5R7hI
+         Fxj0EWfVmZFdIz8GxjIpdKO+gtBRBBpLtejZBPnrYL4gZejAh01OTXkKGk/ZWOeJLhY8
+         m9Z/pj1g6xv1c9tejcJjP4HFwp95EFIKLcOYDRyJJc9vGNOwoUSBjFmxy2yQhSuxRFtN
+         Zn4kg3aVuL+lM2Ze13lYlR3bhDPX3FhOB4iHPIKyVjkp6s0epY1/DyCUykGga/I3dBQF
+         e/JRdL3Vnx1SzeCcS2pZWHSjgpOXNUuUfCaPb7wutTP5guOmTphZc8f0CzptOO3mDluX
+         dUwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=xbyzh1GJJ8m0Sm1ENljBkms7F5sprXDnDoT8XWgkBJE=;
-        b=BUUz30EBKXNaiKWGD2wKm57EOBBUnwR3orUuNkVtBmhQqCEFh1f7fgP2fQjtFDLifX
-         2VjQ7UB9/VmPGRZazw264Dl0RQG12SXhzhm9di2awlx0pkDH9kFv4/6VBB28q799yVvJ
-         S47orEtuDsQblpH3bKXylqYyJl5TlAmYSmhqR0cp8bQM2/CJBK7DRS5AGs8jvI3mOift
-         BWq27xq3OJsEiE+ElIm3THHEBziQUkhw4enRkdUnswGMzKzNX6pf5doscP+Z6anMCzcx
-         oiFWTw1Pgdd+wq5bk6byQ4tecrRyIFUt3+UGmzmIqyEKEwgTBU9YORt/YMgyKWaZjWqk
-         xjuQ==
-X-Gm-Message-State: APjAAAXrE7upY4VW6BDJsY8bv0AVrhx9z2tCeNaejPsLZHmQAMmRpMT5
-        0S8Cw9GKVkYKFWQcZWGsa6Q=
-X-Google-Smtp-Source: APXvYqyWEM2ys6h9C/EWx0uwlzEjQDxreysX5yp85RmjiTBxeSOaRxKQLGuzPsoBvtLxYOIjQeKCbw==
-X-Received: by 2002:a65:4649:: with SMTP id k9mr87616022pgr.239.1558485367175;
-        Tue, 21 May 2019 17:36:07 -0700 (PDT)
-Received: from localhost ([2601:640:4:f15a:d07:291f:4ccd:776a])
-        by smtp.gmail.com with ESMTPSA id u6sm33092780pfa.1.2019.05.21.17.36.06
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 21 May 2019 17:36:06 -0700 (PDT)
-From:   Yury Norov <yury.norov@gmail.com>
-X-Google-Original-From: Yury Norov <ynorov@marvell.com>
-To:     "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Helge Deller <deller@gmx.de>, linux-parisc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Yury Norov <ynorov@marvell.com>, Qian Cai <cai@lca.pw>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH] slab: cleanup after /proc/slab_allocators removal
-Date:   Tue, 21 May 2019 17:36:04 -0700
-Message-Id: <20190522003604.28236-1-ynorov@marvell.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pWCi9dROwOfQvBvMAXELot1dHsDW9NHuGvLhfRnJ4hE=;
+        b=KnwN1q0ZrpQAN/B9St6PAjwRklU1+P8tGId/kwAhhJ37AP2mtGWdk8GDEp0w/BRRi6
+         Hv7yRKgzG23WRs+bJuOb5fqxL8264PKgACABrw+/pIHIOKRk6bw6HxnwhnHpcHCGEHzb
+         PJsMnvJOa176nRlA3ERaIr8H66SF4Uc92p4wQNsmi2Uq8Rg5eiabaDjFEoTD+hGllOxd
+         +wdzkVxwDNgQAzg5wZPSP2i5x51MVZ60voRQ7aS8F4wuQz5iYsPMTat478oIWzug9HD1
+         7j/58rFR3kNSFrZ5mbqgte7EbcphrizWyfi1ntiZAeZKyWwtztJzaNJOI19ewLE26AWm
+         IfCA==
+X-Gm-Message-State: APjAAAUUwbxpgrUJgXIbaVBSsNESNd4+FAoFCPfimDxV5JsjHtX9+snu
+        Q5HuwPecsGXYZ7QlrTz5S4GplmKUvz2OPUa75Bk=
+X-Google-Smtp-Source: APXvYqxUpoov/lRK+3Nk9QPmCfxT+tSQOmPVQFA6wQLCtgq80Rq1EUYHAzQ+cZQrAKyBAe/Hzp+PszAlQTvkghjq1Lc=
+X-Received: by 2002:a5e:840c:: with SMTP id h12mr6278956ioj.81.1558485871505;
+ Tue, 21 May 2019 17:44:31 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190507043954.9020-1-deepa.kernel@gmail.com> <20190521092551.fwtb6recko3tahwj@dcvr>
+ <20190521152748.6b4cd70cf83a1183caa6aae7@linux-foundation.org>
+ <20190521233319.GA17957@dcvr> <CABeXuvoOGwOGmSz_vgTugLD1NPE=2ULvmESPTtK9d6r8S+WVdQ@mail.gmail.com>
+In-Reply-To: <CABeXuvoOGwOGmSz_vgTugLD1NPE=2ULvmESPTtK9d6r8S+WVdQ@mail.gmail.com>
+From:   Deepa Dinamani <deepa.kernel@gmail.com>
+Date:   Tue, 21 May 2019 17:44:19 -0700
+Message-ID: <CABeXuvrT-mHomeH-CnuLsWzNCQOfymW01s+HGRaBTNA+u2t28w@mail.gmail.com>
+Subject: Re: [PATCH 1/1] signal: Adjust error codes according to restore_user_sigmask()
+To:     Eric Wong <e@80x24.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Arnd Bergmann <arnd@arndb.de>, dbueso@suse.de, axboe@kernel.dk,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Jason Baron <jbaron@akamai.com>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        linux-aio <linux-aio@kvack.org>,
+        Omar Kilani <omar.kilani@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>, stable@vger.kernel.org,
+        Oleg Nesterov <oleg@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yury Norov <ynorov@marvell.com>
+On Tue, May 21, 2019 at 5:35 PM Deepa Dinamani <deepa.kernel@gmail.com> wrote:
+>
+> > > > It's been 2 weeks and this fix hasn't appeared in mmots / mmotm.
+> > > > I also noticed it's missing Cc: for stable@ (below)
+> > >
+> > > Why is a -stable backport needed?  I see some talk above about lost
+> > > signals but it is unclear whether these are being observed after fixing
+> > > the regression caused by 854a6ed56839a.
+> >
+> > I guess Deepa's commit messages wasn't clear...
+> > I suggest prepending this as the first paragraph to Deepa's
+> > original message:
+> >
+> >   This fixes a bug introduced with 854a6ed56839a which caused
+> >   EINTR to not be reported to userspace on epoll_pwait.  Failure
+> >   to report EINTR to userspace caused problems with user code
+> >   which relies on EINTR to run signal handlers.
+>
+> This is not what the patch fixed.
+>
+> The notable change is userspace is that now whenever a signal is
+> delivered, the return value is adjusted to reflect the signal
+> delivery.
+> Prior to this patch, there was a window, however small it might have
+> been, when the signal was delivered but the errono was not adjusted
+> appropriately.
+> This is because of the regression caused by 854a6ed56839a, which
+> extended the window of delivery of signals that was delivered to
+> userspace.
+> The patch also fixes more than sys_epoll_pwait().
+>
+> I will post a follow up patch.
+>
+> >
+> > > IOW, can we please have a changelog which has a clear and complete
+> > > description of the user-visible effects of the change.
+> > >
+> > > And please Cc Oleg.
+>
+> I will cc Oleg.
 
-The commit 7878c231dae0 ("slab: remove /proc/slab_allocators")
-removes DEBUG_SLAB_LEAK config everywhere but a parisc config.
-It doesn't look intentional. Fix it.
+Also the commit message was brief because the issue was explained in
+the link that was quoted in the commit message.
 
-Signed-off-by: Yury Norov <ynorov@marvell.com>
----
- arch/parisc/configs/c8000_defconfig | 1 -
- 1 file changed, 1 deletion(-)
+Detailed issue discussion permalink:
+https://lore.kernel.org/linux-fsdevel/20190427093319.sgicqik2oqkez3wk@dcvr/
 
-diff --git a/arch/parisc/configs/c8000_defconfig b/arch/parisc/configs/c8000_defconfig
-index 088ab948a5ca..900b00084953 100644
---- a/arch/parisc/configs/c8000_defconfig
-+++ b/arch/parisc/configs/c8000_defconfig
-@@ -225,7 +225,6 @@ CONFIG_UNUSED_SYMBOLS=y
- CONFIG_DEBUG_FS=y
- CONFIG_MAGIC_SYSRQ=y
- CONFIG_DEBUG_SLAB=y
--CONFIG_DEBUG_SLAB_LEAK=y
- CONFIG_DEBUG_MEMORY_INIT=y
- CONFIG_DEBUG_STACKOVERFLOW=y
- CONFIG_PANIC_ON_OOPS=y
--- 
-2.17.1
-
+-Deepa
