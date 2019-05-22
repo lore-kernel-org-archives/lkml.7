@@ -4,35 +4,35 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05749C18E7D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 10:37:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CC83C18E7D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 10:37:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9C20217D4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 10:37:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DD49217F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 10:37:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729607AbfEVKhM (ORCPT
+        id S1729216AbfEVKf1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 06:37:12 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:47042 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729271AbfEVKfc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 06:35:32 -0400
+        Wed, 22 May 2019 06:35:27 -0400
+Received: from foss.arm.com ([217.140.101.70]:46980 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728438AbfEVKfZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 06:35:25 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7678115BF;
-        Wed, 22 May 2019 03:35:32 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8B62A15BF;
+        Wed, 22 May 2019 03:35:24 -0700 (PDT)
 Received: from en101.cambridge.arm.com (en101.cambridge.arm.com [10.1.196.93])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 5D8843F575;
-        Wed, 22 May 2019 03:35:31 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 7BFCF3F575;
+        Wed, 22 May 2019 03:35:23 -0700 (PDT)
 From:   Suzuki K Poulose <suzuki.poulose@arm.com>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     linux-kernel@vger.kernel.org, mathieu.poirier@linaro.org,
         coresight@lists.linaro.org,
         Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: [PATCH v4 11/30] coresight: etm3x: Rearrange cp14 access detection
-Date:   Wed, 22 May 2019 11:34:44 +0100
-Message-Id: <1558521304-27469-12-git-send-email-suzuki.poulose@arm.com>
+Subject: [PATCH v4 05/30] coresight: tpiu: Clean up device specific data
+Date:   Wed, 22 May 2019 11:34:38 +0100
+Message-Id: <1558521304-27469-6-git-send-email-suzuki.poulose@arm.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1558521304-27469-1-git-send-email-suzuki.poulose@arm.com>
 References: <1558521304-27469-1-git-send-email-suzuki.poulose@arm.com>
@@ -41,30 +41,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As we are about to refactor the platform specific handling,
-move the DT property handling to generic helpers.
+Switch to using the coresight device instead of the parent
+amba device.
 
 Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 ---
- drivers/hwtracing/coresight/coresight-etm3x.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/hwtracing/coresight/coresight-tpiu.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/hwtracing/coresight/coresight-etm3x.c b/drivers/hwtracing/coresight/coresight-etm3x.c
-index 9c92491..fa2f141 100644
---- a/drivers/hwtracing/coresight/coresight-etm3x.c
-+++ b/drivers/hwtracing/coresight/coresight-etm3x.c
-@@ -802,9 +802,9 @@ static int etm_probe(struct amba_device *adev, const struct amba_id *id)
- 			return PTR_ERR(pdata);
+diff --git a/drivers/hwtracing/coresight/coresight-tpiu.c b/drivers/hwtracing/coresight/coresight-tpiu.c
+index 63d9af3..4dd3e7f 100644
+--- a/drivers/hwtracing/coresight/coresight-tpiu.c
++++ b/drivers/hwtracing/coresight/coresight-tpiu.c
+@@ -49,13 +49,11 @@
  
- 		adev->dev.platform_data = pdata;
--		drvdata->use_cp14 = of_property_read_bool(np, "arm,cp14");
- 	}
+ /**
+  * @base:	memory mapped base address for this component.
+- * @dev:	the device entity associated to this component.
+  * @atclk:	optional clock for the core parts of the TPIU.
+  * @csdev:	component vitals needed by the framework.
+  */
+ struct tpiu_drvdata {
+ 	void __iomem		*base;
+-	struct device		*dev;
+ 	struct clk		*atclk;
+ 	struct coresight_device	*csdev;
+ };
+@@ -75,7 +73,7 @@ static int tpiu_enable(struct coresight_device *csdev, u32 mode, void *__unused)
  
-+	drvdata->use_cp14 = fwnode_property_read_bool(dev->fwnode, "arm,cp14");
- 	dev_set_drvdata(dev, drvdata);
+ 	tpiu_enable_hw(drvdata);
+ 	atomic_inc(csdev->refcnt);
+-	dev_dbg(drvdata->dev, "TPIU enabled\n");
++	dev_dbg(&csdev->dev, "TPIU enabled\n");
+ 	return 0;
+ }
  
- 	/* Validity for the resource is already checked by the AMBA core */
+@@ -104,7 +102,7 @@ static int tpiu_disable(struct coresight_device *csdev)
+ 
+ 	tpiu_disable_hw(drvdata);
+ 
+-	dev_dbg(drvdata->dev, "TPIU disabled\n");
++	dev_dbg(&csdev->dev, "TPIU disabled\n");
+ 	return 0;
+ }
+ 
+@@ -139,7 +137,6 @@ static int tpiu_probe(struct amba_device *adev, const struct amba_id *id)
+ 	if (!drvdata)
+ 		return -ENOMEM;
+ 
+-	drvdata->dev = &adev->dev;
+ 	drvdata->atclk = devm_clk_get(&adev->dev, "atclk"); /* optional */
+ 	if (!IS_ERR(drvdata->atclk)) {
+ 		ret = clk_prepare_enable(drvdata->atclk);
 -- 
 2.7.4
 
