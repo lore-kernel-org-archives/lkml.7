@@ -2,129 +2,183 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CC4BC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 18:18:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E29EC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 18:19:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 480552173C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 18:18:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QlQaK2P+"
+	by mail.kernel.org (Postfix) with ESMTP id 57D7021473
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 18:19:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558549147;
+	bh=G3GMVM5Z9SEJ+DsCdXB8MywohW9z4T+H2D8ZFI7WiOI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=esn1VUkRaGh3Wn1LBYrUlHrem0o+69cxzuz+1YN59F6Mn+cDSMh8wag50F/vTXHio
+	 gMC84MPKiFJksYp+wuS3fVltRZPNjB2Ggh2KWYVcrkcvKveqlraXxFS5xQmOQRZtUy
+	 HyEopnqc/oelMXKGlpLCBiCNycKrfJDfoHQlYjag=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729512AbfEVSSt (ORCPT
+        id S1729554AbfEVSTG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 14:18:49 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:38729 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727984AbfEVSSt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 14:18:49 -0400
-Received: by mail-io1-f68.google.com with SMTP id x24so2651532ion.5
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 11:18:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Oc3bQLWhGweMis4fWbACzNfmEcHdr/Fqo1ToP3CI3js=;
-        b=QlQaK2P+0dNR9ypQ4OGuZYMLFCKkdci+YfCkVNBe6COsTQS2DPV11mNYcq7tRRrGLe
-         BmranLCA7JuTHZhPDItrCR7un7Bf5dse8rPrKQiPxy5jQ6KSDbW1FZ4QYfXqBwQPLCaI
-         aBXt+FVpPrQ/8RYXwLRRtk0LvP/mvejfYDbVke8SGGSkw6OTFK6pbs0cXrrOiEj8y+ec
-         huaq+5IPo6T/XOU05pTr7EP42hMjv4Q5fKyjdW9r7kCruNo5gFOY/w2gyBFYVEf/b9bG
-         gsiAXl93bu7o8el+3j8SkPdNGvtRZLp3MrswmlaPGFV48nfU7Qf2IndL9VZLA2pKlAz7
-         NXJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Oc3bQLWhGweMis4fWbACzNfmEcHdr/Fqo1ToP3CI3js=;
-        b=aFVSw8mQdoCNaxhgQt1tdINUZp3RZZbMk4NS/kez7pmHDAbHkwxBFaawsz3jFg5Gw0
-         /+8ArALuOn924Xhe0jz98SflATmmLddwztfxpVp7DfTIEpoDhZG5OZtyegJJxXwf0SqB
-         4cebPbDOIYDQvmGu4ySHjmP3yya5D3Zx6fFwNwgkWYV0tnl3lm1mlSOYvD+kwQ6+eEMB
-         xIKdEGtfLeC7bizvYygJibv/dMH3qw0UTX5XTSvmp+Y9uLQM0piCu2+R1U8/FBcV0GVd
-         mMKJuTDttItCQTQzS4KMTFTN+FPMMat4V8AuvysTxNeBLOq4uYFNitgHmg6E3YLTMutZ
-         YUPQ==
-X-Gm-Message-State: APjAAAUkb+FwfOh4z/m8gPRbq9oS7pIW3dOJGS6bw24KdOwfHpDPt0xX
-        f5bB2ICoS6ZzVfdWeHguasCZlBtmD7Yr/ufPMQY=
-X-Google-Smtp-Source: APXvYqzryR1p6C7aJHM3BCsQYpOhjrOy5oLO7EdNFedee6EaOmBlFfxoJBwTe7QkNoowKtV9thkMZTUBtYPqwqEtmW8=
-X-Received: by 2002:a6b:7a49:: with SMTP id k9mr34067950iop.73.1558549128373;
- Wed, 22 May 2019 11:18:48 -0700 (PDT)
-MIME-Version: 1.0
-References: <155853600919.381.8172097084053782598.stgit@buzz>
- <20190522155220.GB4374@dhcp22.suse.cz> <177f56cd-6e10-4d2e-7a3e-23276222ba19@yandex-team.ru>
- <20190522170342.GA11077@tower.DHCP.thefacebook.com>
-In-Reply-To: <20190522170342.GA11077@tower.DHCP.thefacebook.com>
-From:   Konstantin Khlebnikov <koct9i@gmail.com>
-Date:   Wed, 22 May 2019 21:18:36 +0300
-Message-ID: <CALYGNiM9K6CTL+d5fUDgMFxQ_6xqtABOUhzFwbSm8zErmPZdZg@mail.gmail.com>
-Subject: Re: [PATCH] proc/meminfo: add MemKernel counter
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Michal Hocko <mhocko@kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Johannes Weiner <hannes@cmpxchg.org>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 22 May 2019 14:19:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48144 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727984AbfEVSTG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 14:19:06 -0400
+Received: from localhost.localdomain (c-73-223-200-170.hsd1.ca.comcast.net [73.223.200.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A77C120863;
+        Wed, 22 May 2019 18:19:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558549145;
+        bh=G3GMVM5Z9SEJ+DsCdXB8MywohW9z4T+H2D8ZFI7WiOI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=NIM3ZNgr+w+rANybmt+oWUqxREmEIjZmuZPGeUFjBHeJ7w2WDo2hbQsABkc/eX4VF
+         FLnuOBI4MeZ3d95cvcVGEF2S9XrPN72H76vec3v/5dMdmgNBkUgV3gGR4Ir1MBp9jb
+         tGHk7S/jd3PxckYwQMqdxg7xd/FbKlkpc1BYAfvY=
+Date:   Wed, 22 May 2019 11:19:04 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     "Uladzislau Rezki (Sony)" <urezki@gmail.com>
+Cc:     Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@suse.com>,
+        Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Thomas Garnier <thgarnie@google.com>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joelaf@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@elte.hu>, Tejun Heo <tj@kernel.org>
+Subject: Re: [PATCH 2/4] mm/vmap: preload a CPU with one object for split
+ purpose
+Message-Id: <20190522111904.ff2cd5011c8c3b3207e3f3fa@linux-foundation.org>
+In-Reply-To: <20190522150939.24605-2-urezki@gmail.com>
+References: <20190522150939.24605-1-urezki@gmail.com>
+        <20190522150939.24605-2-urezki@gmail.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 22, 2019 at 8:04 PM Roman Gushchin <guro@fb.com> wrote:
->
-> On Wed, May 22, 2019 at 07:09:22PM +0300, Konstantin Khlebnikov wrote:
-> > On 22.05.2019 18:52, Michal Hocko wrote:
-> > > On Wed 22-05-19 17:40:09, Konstantin Khlebnikov wrote:
-> > > > Some kinds of kernel allocations are not accounted or not show in meminfo.
-> > > > For example vmalloc allocations are tracked but overall size is not shown
-> > > > for performance reasons. There is no information about network buffers.
-> > > >
-> > > > In most cases detailed statistics is not required. At first place we need
-> > > > information about overall kernel memory usage regardless of its structure.
-> > > >
-> > > > This patch estimates kernel memory usage by subtracting known sizes of
-> > > > free, anonymous, hugetlb and caches from total memory size: MemKernel =
-> > > > MemTotal - MemFree - Buffers - Cached - SwapCached - AnonPages - Hugetlb.
-> > >
-> > > Why do we need to export something that can be calculated in the
-> > > userspace trivially? Also is this really something the number really
-> > > meaningful? Say you have a driver that exports memory to the userspace
-> > > via mmap but that memory is not accounted. Is this really a kernel
-> > > memory?
-> > >
-> >
-> > It may be trivial right now but not fixed.
-> > Adding new kinds of memory may change this definition.
->
-> Right, and it's what causes me to agree with Michal here, and leave it
-> to the userspace calculation.
->
-> The real meaning of the counter is the size of the "gray zone",
-> basically the memory which we have no clue about.
+On Wed, 22 May 2019 17:09:37 +0200 "Uladzislau Rezki (Sony)" <urezki@gmail.com> wrote:
 
-Well, all kernel memory is a gray zone for normal programmers.
-They have direct control only over anon and file-cache.
+> Introduce ne_fit_preload()/ne_fit_preload_end() functions
+> for preloading one extra vmap_area object to ensure that
+> we have it available when fit type is NE_FIT_TYPE.
+> 
+> The preload is done per CPU and with GFP_KERNEL permissive
+> allocation masks, which allow to be more stable under low
+> memory condition and high memory pressure.
 
-I want to invent simple metrics for 'system' memory usage.
-It's about the same as separation cpu time to user and system.
+What is the reason for this change?  Presumably some workload is
+suffering from allocation failures?  Please provide a full description
+of when and how this occurs so others can judge the desirability of
+this change.
 
-> If we'll add accounting of some new type of memory, which now in this
-> gray zone (say, xfs buffers), we probably should exclude it too.
-> And this means that definition of this counter will change.
+> --- a/mm/vmalloc.c
+> +++ b/mm/vmalloc.c
+> @@ -364,6 +364,13 @@ static LIST_HEAD(free_vmap_area_list);
+>   */
+>  static struct rb_root free_vmap_area_root = RB_ROOT;
+>  
+> +/*
+> + * Preload a CPU with one object for "no edge" split case. The
+> + * aim is to get rid of allocations from the atomic context, thus
+> + * to use more permissive allocation masks.
+> + */
+> +static DEFINE_PER_CPU(struct vmap_area *, ne_fit_preload_node);
+> +
+>  static __always_inline unsigned long
+>  va_size(struct vmap_area *va)
+>  {
+> @@ -950,9 +957,24 @@ adjust_va_to_fit_type(struct vmap_area *va,
+>  		 *   L V  NVA  V R
+>  		 * |---|-------|---|
+>  		 */
+> -		lva = kmem_cache_alloc(vmap_area_cachep, GFP_NOWAIT);
+> -		if (unlikely(!lva))
+> -			return -1;
+> +		lva = __this_cpu_xchg(ne_fit_preload_node, NULL);
+> +		if (unlikely(!lva)) {
+> +			/*
+> +			 * For percpu allocator we do not do any pre-allocation
+> +			 * and leave it as it is. The reason is it most likely
+> +			 * never ends up with NE_FIT_TYPE splitting. In case of
+> +			 * percpu allocations offsets and sizes are aligned to
+> +			 * fixed align request, i.e. RE_FIT_TYPE and FL_FIT_TYPE
+> +			 * are its main fitting cases.
+> +			 *
+> +			 * There are few exceptions though, as en example it is
 
-I'm not very familiar with xfs internals, never digged into it.
-I've excluded buffers because this is simply file-cache for block devices.
-Filesystems use it as cache for metadata. But userspace has direct access to it.
+"a few"
 
->
-> So IMO the definition is way too implementation-defined to be a part
-> of procfs API.
->
+s/en/an/
 
-Ok. User/kernel memory separation could be redefined in more
-abstract manner depending on the data access.
+> +			 * a first allocation(early boot up) when we have "one"
+
+s/(/ (/
+
+> +			 * big free space that has to be split.
+> +			 */
+> +			lva = kmem_cache_alloc(vmap_area_cachep, GFP_NOWAIT);
+> +			if (!lva)
+> +				return -1;
+> +		}
+>  
+>  		/*
+>  		 * Build the remainder.
+> @@ -1023,6 +1045,50 @@ __alloc_vmap_area(unsigned long size, unsigned long align,
+>  }
+>  
+>  /*
+> + * Preload this CPU with one extra vmap_area object to ensure
+> + * that we have it available when fit type of free area is
+> + * NE_FIT_TYPE.
+> + *
+> + * The preload is done in non-atomic context thus, it allows us
+
+s/ thus,/, thus/
+
+> + * to use more permissive allocation masks, therefore to be more
+
+s/, therefore//
+
+> + * stable under low memory condition and high memory pressure.
+> + *
+> + * If success, it returns zero with preemption disabled. In case
+> + * of error, (-ENOMEM) is returned with preemption not disabled.
+> + * Note it has to be paired with alloc_vmap_area_preload_end().
+> + */
+> +static void
+> +ne_fit_preload(int *preloaded)
+> +{
+> +	preempt_disable();
+> +
+> +	if (!__this_cpu_read(ne_fit_preload_node)) {
+> +		struct vmap_area *node;
+> +
+> +		preempt_enable();
+> +		node = kmem_cache_alloc(vmap_area_cachep, GFP_KERNEL);
+> +		if (node == NULL) {
+> +			*preloaded = 0;
+> +			return;
+> +		}
+> +
+> +		preempt_disable();
+> +
+> +		if (__this_cpu_cmpxchg(ne_fit_preload_node, NULL, node))
+> +			kmem_cache_free(vmap_area_cachep, node);
+> +	}
+> +
+> +	*preloaded = 1;
+> +}
+
+Why not make it do `return preloaded;'?  The
+pass-and-return-by-reference seems unnecessary?
+
+Otherwise it all appears solid and sensible.
