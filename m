@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF359C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:01:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 276BDC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:01:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88E9D20862
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:01:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E07F720856
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:01:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558555264;
-	bh=+ox4NppzbtphFNUl2fXhn2ijzOe1B7toVQh07jdcXFA=;
+	s=default; t=1558555272;
+	bh=TP3iBva7O5ieEKp+E7ZEWUR+t6oPzbfSaYw1ksCHGyY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SE1cQIKmOmHTcDfPSg2MeBquSChVcci1epPt4cqu2wJeXOeeX7mlieevboEC7/w6e
-	 qlrE+FyMs6PDjzwRRP+TYEcnn7ChRsKeyFHnys1+4smqo15YEN6sfUnrdnn1dHynF/
-	 /DWVAM8x4Np7zNnTb5PEWkU/uGKka51r3e/ybYg8=
+	b=iVY4Py57aIngUkgyuUGhVo1KbAAY+WTvveFKVfDjtTXtjgcRk5v0lyRUx39Juptxk
+	 lT809l8ovbbtBDCdPHQUyqmJP3VwIP1q/g0gZlJf4VR5kgjGieyWJnJeVI5VJ9jzaW
+	 9SCPJVGw0fkJBmx2iI0bGKD0KFWk42/gXexQupLo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730604AbfEVTWs (ORCPT
+        id S1731036AbfEVUBL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:22:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43510 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 16:01:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43482 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730578AbfEVTWq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:22:46 -0400
+        id S1730570AbfEVTWp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:22:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B6CD9217D4;
-        Wed, 22 May 2019 19:22:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9EE3420644;
+        Wed, 22 May 2019 19:22:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558552965;
-        bh=+ox4NppzbtphFNUl2fXhn2ijzOe1B7toVQh07jdcXFA=;
+        s=default; t=1558552964;
+        bh=TP3iBva7O5ieEKp+E7ZEWUR+t6oPzbfSaYw1ksCHGyY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ooClm0M3pp9nl4ENUINoHLQrML+aG9r42SL//HGwR+AbbwaNbvGhYaDps93yD8loH
-         7aGsnbR4ob1roKR2RkmFSvt5OidLFWZ1+5Rn9pHg3cQY5ZsQqfaxLctR2ChwVKq/uc
-         PaEmNvIvt0HgfoR6S/EDrcJpSHmu6oyjMPz91MsU=
+        b=dlW9H9+hpBVnxHeyhkk9ydSlXq2IyjkK7MWudWHA2GC/6msvug/hNK4jSakhtXaOL
+         9QfL6V6ettK6mxRwATI8c2pTCODYTbCX2DS8YwAH24PfvGtgZKWoImOEJZzx4PiLeJ
+         lVr2nsq3KgrPImemhyKm8RZNjOQUrVmOz1nmBUKA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bart Van Assche <bvanassche@acm.org>,
-        Himanshu Madhani <hmadhani@marvell.com>,
-        Giridhar Malavali <gmalavali@marvell.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 051/375] scsi: qla2xxx: Fix a qla24xx_enable_msix() error path
-Date:   Wed, 22 May 2019 15:15:51 -0400
-Message-Id: <20190522192115.22666-51-sashal@kernel.org>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        "Tobin C . Harding" <tobin@kernel.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 050/375] cpufreq: Fix kobject memleak
+Date:   Wed, 22 May 2019 15:15:50 -0400
+Message-Id: <20190522192115.22666-50-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192115.22666-1-sashal@kernel.org>
 References: <20190522192115.22666-1-sashal@kernel.org>
@@ -61,47 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Viresh Kumar <viresh.kumar@linaro.org>
 
-[ Upstream commit 24afabdbd0b3553963a2bbf465895492b14d1107 ]
+[ Upstream commit 4ebe36c94aed95de71a8ce6a6762226d31c938ee ]
 
-Make sure that the allocated interrupts are freed if allocating memory for
-the msix_entries array fails.
+Currently the error return path from kobject_init_and_add() is not
+followed by a call to kobject_put() - which means we are leaking the
+kobject.
 
-Cc: Himanshu Madhani <hmadhani@marvell.com>
-Cc: Giridhar Malavali <gmalavali@marvell.com>
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Acked-by: Himanshu Madhani <hmadhani@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fix it by adding a call to kobject_put() in the error path of
+kobject_init_and_add().
+
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+Reviewed-by: Tobin C. Harding <tobin@kernel.org>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_isr.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/cpufreq/cpufreq.c          | 1 +
+ drivers/cpufreq/cpufreq_governor.c | 2 ++
+ 2 files changed, 3 insertions(+)
 
-diff --git a/drivers/scsi/qla2xxx/qla_isr.c b/drivers/scsi/qla2xxx/qla_isr.c
-index 69bbea9239cc8..add17843148dd 100644
---- a/drivers/scsi/qla2xxx/qla_isr.c
-+++ b/drivers/scsi/qla2xxx/qla_isr.c
-@@ -3475,7 +3475,7 @@ qla24xx_enable_msix(struct qla_hw_data *ha, struct rsp_que *rsp)
- 		ql_log(ql_log_fatal, vha, 0x00c8,
- 		    "Failed to allocate memory for ha->msix_entries.\n");
- 		ret = -ENOMEM;
--		goto msix_out;
-+		goto free_irqs;
+diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+index e10922709d139..bbf79544d0ad8 100644
+--- a/drivers/cpufreq/cpufreq.c
++++ b/drivers/cpufreq/cpufreq.c
+@@ -1098,6 +1098,7 @@ static struct cpufreq_policy *cpufreq_policy_alloc(unsigned int cpu)
+ 				   cpufreq_global_kobject, "policy%u", cpu);
+ 	if (ret) {
+ 		pr_err("%s: failed to init policy->kobj: %d\n", __func__, ret);
++		kobject_put(&policy->kobj);
+ 		goto err_free_real_cpus;
  	}
- 	ha->flags.msix_enabled = 1;
  
-@@ -3558,6 +3558,10 @@ qla24xx_enable_msix(struct qla_hw_data *ha, struct rsp_que *rsp)
+diff --git a/drivers/cpufreq/cpufreq_governor.c b/drivers/cpufreq/cpufreq_governor.c
+index ffa9adeaba31b..9d1d9bf02710b 100644
+--- a/drivers/cpufreq/cpufreq_governor.c
++++ b/drivers/cpufreq/cpufreq_governor.c
+@@ -459,6 +459,8 @@ int cpufreq_dbs_governor_init(struct cpufreq_policy *policy)
+ 	/* Failure, so roll back. */
+ 	pr_err("initialization failed (dbs_data kobject init error %d)\n", ret);
  
- msix_out:
- 	return ret;
++	kobject_put(&dbs_data->attr_set.kobj);
 +
-+free_irqs:
-+	pci_free_irq_vectors(ha->pdev);
-+	goto msix_out;
- }
+ 	policy->governor_data = NULL;
  
- int
+ 	if (!have_governor_per_policy())
 -- 
 2.20.1
 
