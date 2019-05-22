@@ -2,155 +2,279 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C34CCC072A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 07:43:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E2B1C16A69
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 07:47:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8115A217D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 07:43:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="kdoZgF9F"
+	by mail.kernel.org (Postfix) with ESMTP id 10320217D7
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 07:47:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728585AbfEVHnN (ORCPT
+        id S1728590AbfEVHrS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 03:43:13 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:50270 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726514AbfEVHnN (ORCPT
+        Wed, 22 May 2019 03:47:18 -0400
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:37916 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726358AbfEVHrR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 03:43:13 -0400
-Received: by mail-wm1-f67.google.com with SMTP id f204so1092441wme.0
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 00:43:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:openpgp:autocrypt:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=XVAzE2mPSq2iELTRLQJsJ55Y/zl8OiIKZaLHjoW/g7s=;
-        b=kdoZgF9F4RY9J2M0JWrE8wS1Y5nlfa6PNIaz2gMwVc3XwzPMSxGcQ2JReDL26dnlN9
-         2m2tNSKIrphss4IG2dtxeNaK7asLHUvg6yYrqLKqSCaQKVW++Db2S+qg9W1pjTy94XMH
-         WuqlCmwF4h4VcpsLAbCRHh1nwBh/YyqFYQx/tmS1eH6KFaGYCcaBTkdVcFAdLJOeX24o
-         FJkNRbUsEBAZkIVbASl7UZmtk3/JWUJ3pJH+5oN3AqgwReloq4yyVsRGCLUMxDlgiii8
-         pZDE87HEsJBtgWGKEtW1DV0a4fudJpZNc9atir5NUCy5qToOIPMcpIDQ+tSgkqHoJaHH
-         hxhg==
+        Wed, 22 May 2019 03:47:17 -0400
+Received: by mail-vs1-f65.google.com with SMTP id x184so835381vsb.5;
+        Wed, 22 May 2019 00:47:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=XVAzE2mPSq2iELTRLQJsJ55Y/zl8OiIKZaLHjoW/g7s=;
-        b=MTW5Ei3craTpi89aEc3WldRGH5utdsfzucjVTICBPVW8Fs822+MWn5r0sBmTCpWgTv
-         HasBOUxkQflJLl3pXOTGhPH/cLaIMzfirJv5qvbhZ5z++KyhPKf4DnKYjZmYcrjA/ieD
-         5hxpFruQRTBgwR844+HF1Y6887BTKa+Y/AldS/iA9VjUm7w0hxTK+si0eUrX9LTrWf7E
-         SP5gQGHqXnRJZpmvSmeOY451j+e+MIQCgHYiL3BRt05+Y2vPksLvyBdYko1VifLZ2yOY
-         b3j5fZ897vwXViMQiRaUc27i00mavNskQzSmj5YKCzzbXr20VFXP7ETHNGZPL6g8P62L
-         HH7A==
-X-Gm-Message-State: APjAAAVUuve21TQnP0+t/CMogCxW+PPVxMiilei+OPSNLtPFa6bmWVWR
-        6RGzw3Ei0slwaZhDNRk1+7YM8A==
-X-Google-Smtp-Source: APXvYqzaRnIdXa2efRdrsK5iGuhhQxi4Nb9tMOKzFZsE9E40jQExb5Mz5bA45zqormN/VU57ePAqhA==
-X-Received: by 2002:a7b:c084:: with SMTP id r4mr5973825wmh.14.1558510990897;
-        Wed, 22 May 2019 00:43:10 -0700 (PDT)
-Received: from [192.168.1.62] (wal59-h01-176-150-251-154.dsl.sta.abo.bbox.fr. [176.150.251.154])
-        by smtp.gmail.com with ESMTPSA id y18sm6472624wmd.29.2019.05.22.00.43.09
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 22 May 2019 00:43:10 -0700 (PDT)
-Subject: Re: [PATCH 1/3] dt-bindings: clk: meson: add g12b periph clock
- controller bindings
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     jbrunet@baylibre.com, devicetree@vger.kernel.org,
-        Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20190521150130.31684-1-narmstrong@baylibre.com>
- <20190521150130.31684-2-narmstrong@baylibre.com>
- <CAFBinCAwD7W1zQ2YZgecowZUEnoVpGXyGQnOKhB5T3OvOvvbkg@mail.gmail.com>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
- 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
- ZaTUOEkgIor5losDrePdPgE=
-Organization: Baylibre
-Message-ID: <6354e9f9-6c0e-68d9-93e9-a92d874f452a@baylibre.com>
-Date:   Wed, 22 May 2019 09:43:09 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GbgAE4EAd8osAGsmtLYnEIjMKRoWMwBKHGa/aNCkc44=;
+        b=luyK/kFpsAFMecplEe8+Ac9GpSk70/jAIp0lu6F3FbTPvSIB19ZuPXfCXzlt4THNe6
+         8JwQwWY9Z4nJE22Z2ba1EwciQhPG7ts/bb4WDCFwVxGp4axLvrUj3qVPbn85iN6LqjeN
+         yCjVBXnGMJKVHXurjvF8b02aJ5hKQeGBo8hmqEZwg1IVWm3dLAaJZPyFmKXqAOeBWUtl
+         3qTOE2YJV4b6LxkImaySXRgIAwICrCW6ZshzoLWSgZCmrHLxltR4UW/pDwH3mAA7puxu
+         s73HOtI97ByXy1fYE0cGcOhaBJe3u5xBSjJ0uQOfcGH9gDBWyrHAguvQ/STPjZmQDrPb
+         Uq7A==
+X-Gm-Message-State: APjAAAV6ef/T+OsoDI+0Pe7gKATO5y0TUtuc+UJ++fCayMpbuxnJ3rNJ
+        hpAwLAJQWYXgeutFY2dpgRIjKcK5JzVIVZwYCXM=
+X-Google-Smtp-Source: APXvYqw7oPQoYbogWoDA1rBHsGRroFebaWZUtvRBdPHyXlgTv6xz5np283C7zuFyLNRo3cMhKpzcrsjUfcPMWokVE4c=
+X-Received: by 2002:a67:f589:: with SMTP id i9mr11304088vso.152.1558511235981;
+ Wed, 22 May 2019 00:47:15 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAFBinCAwD7W1zQ2YZgecowZUEnoVpGXyGQnOKhB5T3OvOvvbkg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190423224748.3765-1-fancer.lancer@gmail.com>
+ <20190423224748.3765-5-fancer.lancer@gmail.com> <CAMuHMdWPmL5Z86cgJ4N-U-3XKr4ys8Y7U85okDcXYEu7z4ybaw@mail.gmail.com>
+ <20190521155309.GB24470@rapoport-lnx>
+In-Reply-To: <20190521155309.GB24470@rapoport-lnx>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 22 May 2019 09:47:04 +0200
+Message-ID: <CAMuHMdWK6-ge-j1NbunDu_Jy7JOwbMfTzNQ767MViuTo4DNf+A@mail.gmail.com>
+Subject: Re: [PATCH 04/12] mips: Reserve memory for the kernel image resources
+To:     Mike Rapoport <rppt@linux.ibm.com>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Matt Redfearn <matt.redfearn@mips.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Stefan Agner <stefan@agner.ch>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Juergen Gross <jgross@suse.com>, linux-mips@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Atsushi Nemoto <anemo@mba.ocn.ne.jp>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/05/2019 19:30, Martin Blumenstingl wrote:
-> On Tue, May 21, 2019 at 5:02 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
->>
->> Update the documentation to support clock driver for the Amlogic G12B SoC.
->>
->> G12B clock driver is very close, the main differences are :
->> - the clock tree is duplicated for the both clusters, and the
->>   SYS_PLL are swapped between the clusters
->> - G12A has additional clocks like for CSI an other components
-> I missed this in v1, it should be G12B?
+Hi Mike,
 
-Yes, thanks for spotting this
+On Tue, May 21, 2019 at 5:53 PM Mike Rapoport <rppt@linux.ibm.com> wrote:
+> On Tue, May 21, 2019 at 04:56:39PM +0200, Geert Uytterhoeven wrote:
+> > On Wed, Apr 24, 2019 at 12:50 AM Serge Semin <fancer.lancer@gmail.com> wrote:
+> > > The reserved_end variable had been used by the bootmem_init() code
+> > > to find a lowest limit of memory available for memmap blob. The original
+> > > code just tried to find a free memory space higher than kernel was placed.
+> > > This limitation seems justified for the memmap ragion search process, but
+> > > I can't see any obvious reason to reserve the unused space below kernel
+> > > seeing some platforms place it much higher than standard 1MB. Moreover
+> > > the RELOCATION config enables it to be loaded at any memory address.
+> > > So lets reserve the memory occupied by the kernel only, leaving the region
+> > > below being free for allocations. After doing this we can now discard the
+> > > code freeing a space between kernel _text and VMLINUX_LOAD_ADDRESS symbols
+> > > since it's going to be free anyway (unless marked as reserved by
+> > > platforms).
+> > >
+> > > Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
+> >
+> > This is now commit b93ddc4f9156205e ("mips: Reserve memory for the kernel
+> > image resources") in v5.2-rc1, which causes rbtx4927 to crash during boot:
+> >
+> >     VFS: Mounted root (nfs filesystem) on device 0:13.
+> >     devtmpfs: mounted
+> >     BUG: Bad page state in process swapper  pfn:00001
+> >     page:804b7820 refcount:0 mapcount:-128 mapping:00000000 index:0x1
+> >     flags: 0x0()
+> >     raw: 00000000 00000100 00000200 00000000 00000001 00000000 ffffff7f 00000000
+> >     page dumped because: nonzero mapcount
+> >     Modules linked in:
+> >     CPU: 0 PID: 1 Comm: swapper Not tainted
+> > 5.2.0-rc1-rbtx4927-00468-g3c05ea3d4077b756-dirty #137
+> >     Stack : 00000000 10008400 8040dd2c 87c1b974 8044af63 8040dd2c
+> > 00000001 804a3490
+> >             00000001 81000000 0030f231 80148558 00000003 10008400
+> > 87c1dd80 7599ee13
+> >             00000000 00000000 804b0000 00000000 00000007 00000000
+> > 00000085 00000000
+> >             62722d31 00000084 804b0000 39347874 00000000 804b7820
+> > 8040cef8 81000010
+> >             00000001 00000007 00000001 81000000 00000008 8021de24
+> > 00000000 804a0000
+> >             ...
+> >     Call Trace:
+> >     [<8010adec>] show_stack+0x74/0x104
+> >     [<801a5e44>] bad_page+0x130/0x138
+> >     [<801a654c>] free_pcppages_bulk+0x17c/0x3b0
+> >     [<801a789c>] free_unref_page+0x40/0x68
+> >     [<801120f4>] free_init_pages+0xec/0x104
+> >     [<803bdde8>] free_initmem+0x10/0x58
+> >     [<803bdb8c>] kernel_init+0x20/0x100
+> >     [<801057c8>] ret_from_kernel_thread+0x14/0x1c
+> >     Disabling lock debugging due to kernel taint
+> >     BUG: Bad page state in process swapper  pfn:00002
+> >     [...]
+> >
+> > CONFIG_RELOCATABLE is not set, so the only relevant part is the
+> > change quoted below.
+> >
+> > > --- a/arch/mips/kernel/setup.c
+> > > +++ b/arch/mips/kernel/setup.c
+> > > @@ -371,7 +371,6 @@ static void __init bootmem_init(void)
+> > >
+> > >  static void __init bootmem_init(void)
+> > >  {
+> > > -       unsigned long reserved_end;
+> > >         phys_addr_t ramstart = PHYS_ADDR_MAX;
+> > >         int i;
+> > >
+> > > @@ -382,10 +381,10 @@ static void __init bootmem_init(void)
+> > >          * will reserve the area used for the initrd.
+> > >          */
+> > >         init_initrd();
+> > > -       reserved_end = (unsigned long) PFN_UP(__pa_symbol(&_end));
+> > >
+> > > -       memblock_reserve(PHYS_OFFSET,
+> > > -                        (reserved_end << PAGE_SHIFT) - PHYS_OFFSET);
+> > > +       /* Reserve memory occupied by kernel. */
+> > > +       memblock_reserve(__pa_symbol(&_text),
+> > > +                       __pa_symbol(&_end) - __pa_symbol(&_text));
+> > >
+> > >         /*
+> > >          * max_low_pfn is not a number of pages. The number of pages
+> >
+> > With some debug code added:
+> >
+> >     Determined physical RAM map:
+> >      memory: 08000000 @ 00000000 (usable)
+> >     bootmem_init:390: PHYS_OFFSET = 0x0
+> >     bootmem_init:391: __pa_symbol(&_text) = 0x100000
+> >     bootmem_init:392: __pa_symbol(&_end) = 0x4b77c8
+> >     bootmem_init:393: PFN_UP(__pa_symbol(&_end)) = 0x4b8
+>
+> Have you tried adding memblock=debug to the command line?
+> Not sure it'll help, but still :)
 
-> 
->>
->> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
->> Reviewed-by: Rob Herring <robh@kernel.org>
-> with above typo fixed (assuming it is one):
-> Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> 
+Thanks! Output below...
 
+ Determined physical RAM map:
+  memory: 08000000 @ 00000000 (usable)
++memblock_reserve: [0x00100000-0x004b77c7] setup_arch+0x258/0x8e4
+ Initrd not found or empty - disabling initrd
++memblock_reserve: [0x00448000-0x00447fff] setup_arch+0x5ac/0x8e4
++MEMBLOCK configuration:
++ memory size = 0x08000000 reserved size = 0x003b77c8
++ memory.cnt  = 0x1
++ memory[0x0]    [0x00000000-0x07ffffff], 0x08000000 bytes on node 0 flags: 0x0
++ reserved.cnt  = 0x1
++ reserved[0x0]  [0x00100000-0x004b77c7], 0x003b77c8 bytes flags: 0x0
++memblock_alloc_try_nid: 32 bytes align=0x20 nid=-1 from=0x00000000
+max_addr=0x00000000 setup_arch+0x7ec/0x8e4
++memblock_reserve: [0x004b77e0-0x004b77ff] memblock_alloc_range_nid+0x130/0x178
+ Primary instruction cache 32kB, VIPT, 4-way, linesize 32 bytes.
+ Primary data cache 32kB, 4-way, VIPT, cache aliases, linesize 32 bytes
+ Zone ranges:
+@@ -16,10 +26,48 @@ Movable zone start for each node
+ Early memory node ranges
+   node   0: [mem 0x0000000000000000-0x0000000007ffffff]
+ Initmem setup node 0 [mem 0x0000000000000000-0x0000000007ffffff]
++memblock_alloc_try_nid: 1048576 bytes align=0x20 nid=0
+from=0x00000000 max_addr=0x00000000
+alloc_node_mem_map.constprop.31+0x6c/0xc8
++memblock_reserve: [0x004b7800-0x005b77ff] memblock_alloc_range_nid+0x130/0x178
++memblock_alloc_try_nid: 16 bytes align=0x20 nid=0 from=0x00000000
+max_addr=0x00000000 setup_usemap.isra.13+0x68/0xa0
++memblock_reserve: [0x005b7800-0x005b780f] memblock_alloc_range_nid+0x130/0x178
++memblock_alloc_try_nid: 116 bytes align=0x20 nid=-1 from=0x00000000
+max_addr=0x00000000 start_kernel+0xb0/0x508
++memblock_reserve: [0x005b7820-0x005b7893] memblock_alloc_range_nid+0x130/0x178
++memblock_alloc_try_nid: 116 bytes align=0x20 nid=-1 from=0x00000000
+max_addr=0x00000000 start_kernel+0xf0/0x508
++memblock_reserve: [0x005b78a0-0x005b7913] memblock_alloc_range_nid+0x130/0x178
++memblock_alloc_try_nid: 116 bytes align=0x20 nid=-1 from=0x00000000
+max_addr=0x00000000 start_kernel+0x114/0x508
++memblock_reserve: [0x005b7920-0x005b7993] memblock_alloc_range_nid+0x130/0x178
++memblock_alloc_try_nid: 4096 bytes align=0x1000 nid=-1
+from=0x00000000 max_addr=0x00000000 pcpu_alloc_alloc_info+0x60/0xb8
++memblock_reserve: [0x005b8000-0x005b8fff] memblock_alloc_range_nid+0x130/0x178
++memblock_alloc_try_nid: 32768 bytes align=0x1000 nid=-1
+from=0x01000000 max_addr=0x00000000 setup_per_cpu_areas+0x38/0xa8
++memblock_reserve: [0x01000000-0x01007fff] memblock_alloc_range_nid+0x130/0x178
++memblock_alloc_try_nid: 4 bytes align=0x20 nid=-1 from=0x00000000
+max_addr=0x00000000 pcpu_setup_first_chunk+0x200/0x588
++memblock_reserve: [0x005b79a0-0x005b79a3] memblock_alloc_range_nid+0x130/0x178
++memblock_alloc_try_nid: 4 bytes align=0x20 nid=-1 from=0x00000000
+max_addr=0x00000000 pcpu_setup_first_chunk+0x22c/0x588
++memblock_reserve: [0x005b79c0-0x005b79c3] memblock_alloc_range_nid+0x130/0x178
++memblock_alloc_try_nid: 4 bytes align=0x20 nid=-1 from=0x00000000
+max_addr=0x00000000 pcpu_setup_first_chunk+0x250/0x588
++memblock_reserve: [0x005b79e0-0x005b79e3] memblock_alloc_range_nid+0x130/0x178
++memblock_alloc_try_nid: 4 bytes align=0x20 nid=-1 from=0x00000000
+max_addr=0x00000000 pcpu_setup_first_chunk+0x288/0x588
++memblock_reserve: [0x005b7a00-0x005b7a03] memblock_alloc_range_nid+0x130/0x178
++memblock_alloc_try_nid: 120 bytes align=0x20 nid=-1 from=0x00000000
+max_addr=0x00000000 pcpu_setup_first_chunk+0x47c/0x588
++memblock_reserve: [0x005b7a20-0x005b7a97] memblock_alloc_range_nid+0x130/0x178
++memblock_alloc_try_nid: 89 bytes align=0x20 nid=-1 from=0x00000000
+max_addr=0x00000000 pcpu_alloc_first_chunk+0x88/0x2e0
++memblock_reserve: [0x005b7aa0-0x005b7af8] memblock_alloc_range_nid+0x130/0x178
++memblock_alloc_try_nid: 1024 bytes align=0x20 nid=-1 from=0x00000000
+max_addr=0x00000000 pcpu_alloc_first_chunk+0xd8/0x2e0
++memblock_reserve: [0x005b7b00-0x005b7eff] memblock_alloc_range_nid+0x130/0x178
++memblock_alloc_try_nid: 1028 bytes align=0x20 nid=-1 from=0x00000000
+max_addr=0x00000000 pcpu_alloc_first_chunk+0x118/0x2e0
++memblock_reserve: [0x005b9000-0x005b9403] memblock_alloc_range_nid+0x130/0x178
++memblock_alloc_try_nid: 256 bytes align=0x20 nid=-1 from=0x00000000
+max_addr=0x00000000 pcpu_alloc_first_chunk+0x154/0x2e0
++memblock_reserve: [0x005b7f00-0x005b7fff] memblock_alloc_range_nid+0x130/0x178
++   memblock_free: [0x005b8000-0x005b8fff] start_kernel+0x164/0x508
+ Built 1 zonelists, mobility grouping on.  Total pages: 32512
+-Kernel command line:   console=ttyS0,9600 ip=on root=/dev/nfs rw
+nfsroot=192.168.97.29:/nas/rbtx4927/debian-mipsel,tcp,v3
++Kernel command line:   console=ttyS0,9600 ip=on root=/dev/nfs rw
+nfsroot=192.168.97.29:/nas/rbtx4927/debian-mipsel,tcp,v3
+memblock=debug
++memblock_alloc_try_nid: 65536 bytes align=0x20 nid=-1 from=0x00000000
+max_addr=0x00000000 alloc_large_system_hash+0x270/0x478
++memblock_reserve: [0x005b9420-0x005c941f] memblock_alloc_range_nid+0x130/0x178
+ Dentry cache hash table entries: 16384 (order: 4, 65536 bytes)
++memblock_alloc_try_nid: 32768 bytes align=0x20 nid=-1 from=0x00000000
+max_addr=0x00000000 alloc_large_system_hash+0x270/0x478
++memblock_reserve: [0x005c9420-0x005d141f] memblock_alloc_range_nid+0x130/0x178
+ Inode-cache hash table entries: 8192 (order: 3, 32768 bytes)
++memblock_reserve: [0x00000000-0x000003ff] trap_init+0x58/0x474
+ Memory: 126100K/131072K available (2830K kernel code, 147K rwdata,
+508K rodata, 220K init, 93K bss, 4972K reserved, 0K cma-reserved)
+
+> > Hence the old code reserved 1 MiB extra at the beginning.
+> >
+> > Note that the new code also dropped the rounding up of the memory block
+> > size to a multiple of PAGE_SIZE. I'm not sure the latter actually
+> > matters or not.
+>
+> I'd say that bad page state for pfn 1 is caused by "freeing" the first 1M.
+
+Yes, by prom_free_prom_memory(), as pointed out by Serge.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
