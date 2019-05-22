@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B109C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:31:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FBA3C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:31:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0CA62089E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:31:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE29120879
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:31:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558553493;
-	bh=hQo1eYLvoR7XE7DvJDItM7yuvQ2SUftFpDLjThbizwY=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=eC0tu1dnFHElmDkLrCSjJRO+l3wIxPB+rvZX856z9iRUao3gFX7cxcrKnGPexwaAo
-	 WdpIRqalUCojAjZYFUpj4sBk2TWdr4FTqVe9RoYE585PtQOe5v3bPKDtSh50JFTny0
-	 sPbatzjQkbHi5dL7d+ETz30mAGjkX4E7dc4S9Yxk=
+	s=default; t=1558553498;
+	bh=NiqXvwojC1D7C1RXV3saA1gnnXcxvKec8v+zqiUIXuc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=y3fUrV6m/w2SKT1KE4NAOFtzCYW1yU5nRWfnPR8h30xsOrWK5azHJJL4Z3y9kcn9o
+	 ZSdMq+MOkD9pH28HesKxXY7Cez7MWw6PyS+dfsjNq57jLwyK4wKbwJqeN47msS60QS
+	 uImsjoUqr8coMa5x1XVueN3CFCjujGfNh2KN97p8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387528AbfEVTbc (ORCPT
+        id S2387561AbfEVTbh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:31:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55008 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:31:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55118 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731355AbfEVTba (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:31:30 -0400
+        id S2387541AbfEVTbe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:31:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 758082173C;
-        Wed, 22 May 2019 19:31:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C7B8420879;
+        Wed, 22 May 2019 19:31:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553489;
-        bh=hQo1eYLvoR7XE7DvJDItM7yuvQ2SUftFpDLjThbizwY=;
-        h=From:To:Cc:Subject:Date:From;
-        b=tJUV7lbFxaVbVC4Tf6GVpXMC7j+esjnlB6R+MSIQjo8THdgpxyAgu4NkMe3KFNJBc
-         4r/wUDibgezk4F9L46m24XR0d5d5LXr0C2K7MqrMGYuMKkRIB24dRJSPeODTM4Qsv4
-         AcJCF4OA6ui1hUX569XrKOQQGnhjgx6QSGew9eyE=
+        s=default; t=1558553494;
+        bh=NiqXvwojC1D7C1RXV3saA1gnnXcxvKec8v+zqiUIXuc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=wvEZL4xRbcqiqtQ83tR8Jv79fbyUjRaDSFqNKdVp1S/Tb5QYzZyXFpPH4CZzSz4ow
+         prRMR5OyR1irI3+c8QN08t3cphtWI0Vy6jKVSU5mD1Q+XitMCOLAq5cJDCmuunVEkH
+         xAUivBy9GNFEOHvQEOG9mco07k7MXkeCKB5u0t1s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ross Lagerwall <ross.lagerwall@citrix.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, cluster-devel@redhat.com
-Subject: [PATCH AUTOSEL 4.4 01/92] gfs2: Fix lru_count going negative
-Date:   Wed, 22 May 2019 15:29:56 -0400
-Message-Id: <20190522193127.27079-1-sashal@kernel.org>
+Cc:     Bo YU <tsu.yubo@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.4 04/92] powerpc/boot: Fix missing check of lseek() return value
+Date:   Wed, 22 May 2019 15:29:59 -0400
+Message-Id: <20190522193127.27079-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190522193127.27079-1-sashal@kernel.org>
+References: <20190522193127.27079-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -57,110 +58,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ross Lagerwall <ross.lagerwall@citrix.com>
+From: Bo YU <tsu.yubo@gmail.com>
 
-[ Upstream commit 7881ef3f33bb80f459ea6020d1e021fc524a6348 ]
+[ Upstream commit 5d085ec04a000fefb5182d3b03ee46ca96d8389b ]
 
-Under certain conditions, lru_count may drop below zero resulting in
-a large amount of log spam like this:
+This is detected by Coverity scan: CID: 1440481
 
-vmscan: shrink_slab: gfs2_dump_glock+0x3b0/0x630 [gfs2] \
-    negative objects to delete nr=-1
-
-This happens as follows:
-1) A glock is moved from lru_list to the dispose list and lru_count is
-   decremented.
-2) The dispose function calls cond_resched() and drops the lru lock.
-3) Another thread takes the lru lock and tries to add the same glock to
-   lru_list, checking if the glock is on an lru list.
-4) It is on a list (actually the dispose list) and so it avoids
-   incrementing lru_count.
-5) The glock is moved to lru_list.
-5) The original thread doesn't dispose it because it has been re-added
-   to the lru list but the lru_count has still decreased by one.
-
-Fix by checking if the LRU flag is set on the glock rather than checking
-if the glock is on some list and rearrange the code so that the LRU flag
-is added/removed precisely when the glock is added/removed from lru_list.
-
-Signed-off-by: Ross Lagerwall <ross.lagerwall@citrix.com>
-Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
+Signed-off-by: Bo YU <tsu.yubo@gmail.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/gfs2/glock.c | 22 +++++++++++++---------
- 1 file changed, 13 insertions(+), 9 deletions(-)
+ arch/powerpc/boot/addnote.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/fs/gfs2/glock.c b/fs/gfs2/glock.c
-index 09a0cf5f3dd86..1eb737c466ddc 100644
---- a/fs/gfs2/glock.c
-+++ b/fs/gfs2/glock.c
-@@ -136,22 +136,26 @@ static int demote_ok(const struct gfs2_glock *gl)
+diff --git a/arch/powerpc/boot/addnote.c b/arch/powerpc/boot/addnote.c
+index 9d9f6f334d3cc..3da3e2b1b51bc 100644
+--- a/arch/powerpc/boot/addnote.c
++++ b/arch/powerpc/boot/addnote.c
+@@ -223,7 +223,11 @@ main(int ac, char **av)
+ 	PUT_16(E_PHNUM, np + 2);
  
- void gfs2_glock_add_to_lru(struct gfs2_glock *gl)
- {
-+	if (!(gl->gl_ops->go_flags & GLOF_LRU))
-+		return;
-+
- 	spin_lock(&lru_lock);
- 
--	if (!list_empty(&gl->gl_lru))
--		list_del_init(&gl->gl_lru);
--	else
-+	list_del(&gl->gl_lru);
-+	list_add_tail(&gl->gl_lru, &lru_list);
-+
-+	if (!test_bit(GLF_LRU, &gl->gl_flags)) {
-+		set_bit(GLF_LRU, &gl->gl_flags);
- 		atomic_inc(&lru_count);
+ 	/* write back */
+-	lseek(fd, (long) 0, SEEK_SET);
++	i = lseek(fd, (long) 0, SEEK_SET);
++	if (i < 0) {
++		perror("lseek");
++		exit(1);
 +	}
- 
--	list_add_tail(&gl->gl_lru, &lru_list);
--	set_bit(GLF_LRU, &gl->gl_flags);
- 	spin_unlock(&lru_lock);
- }
- 
- static void gfs2_glock_remove_from_lru(struct gfs2_glock *gl)
- {
- 	spin_lock(&lru_lock);
--	if (!list_empty(&gl->gl_lru)) {
-+	if (test_bit(GLF_LRU, &gl->gl_flags)) {
- 		list_del_init(&gl->gl_lru);
- 		atomic_dec(&lru_count);
- 		clear_bit(GLF_LRU, &gl->gl_flags);
-@@ -1040,8 +1044,7 @@ void gfs2_glock_dq(struct gfs2_holder *gh)
- 		    !test_bit(GLF_DEMOTE, &gl->gl_flags))
- 			fast_path = 1;
- 	}
--	if (!test_bit(GLF_LFLUSH, &gl->gl_flags) && demote_ok(gl) &&
--	    (glops->go_flags & GLOF_LRU))
-+	if (!test_bit(GLF_LFLUSH, &gl->gl_flags) && demote_ok(gl))
- 		gfs2_glock_add_to_lru(gl);
- 
- 	trace_gfs2_glock_queue(gh, 0);
-@@ -1341,6 +1344,7 @@ __acquires(&lru_lock)
- 		if (!spin_trylock(&gl->gl_lockref.lock)) {
- add_back_to_lru:
- 			list_add(&gl->gl_lru, &lru_list);
-+			set_bit(GLF_LRU, &gl->gl_flags);
- 			atomic_inc(&lru_count);
- 			continue;
- 		}
-@@ -1348,7 +1352,6 @@ __acquires(&lru_lock)
- 			spin_unlock(&gl->gl_lockref.lock);
- 			goto add_back_to_lru;
- 		}
--		clear_bit(GLF_LRU, &gl->gl_flags);
- 		gl->gl_lockref.count++;
- 		if (demote_ok(gl))
- 			handle_callback(gl, LM_ST_UNLOCKED, 0, false);
-@@ -1384,6 +1387,7 @@ static long gfs2_scan_glock_lru(int nr)
- 		if (!test_bit(GLF_LOCK, &gl->gl_flags)) {
- 			list_move(&gl->gl_lru, &dispose);
- 			atomic_dec(&lru_count);
-+			clear_bit(GLF_LRU, &gl->gl_flags);
- 			freed++;
- 			continue;
- 		}
+ 	i = write(fd, buf, n);
+ 	if (i < 0) {
+ 		perror("write");
 -- 
 2.20.1
 
