@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79362C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:04:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CEC1C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:04:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F98220821
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:04:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38FC520821
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:04:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558555468;
-	bh=MOnbJw2T6l+CcenFyc9OMxxTCg3GPde1Po01t5+Nt6Q=;
+	s=default; t=1558555477;
+	bh=s0l/tgZRf9wP9+usah4sgOOkjrNVWQ7BSH2zhqEC1XU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z+1lIy2hTKfi0F+z/p4zCTGjlDmWvgQTnUNyaaf+7CgC0ebvLzfmSdUtASC5XKsiV
-	 5AMsbMe0RG9aoy2k37kMvC25iPt7S/c4pbW9V6sYHWTh57FsdoyHKRIpOG2QUy+i14
-	 oUPvvXdNYmZzL8n8y3aeKhXanTp0vdaQXd91gCHo=
+	b=UjHiKnjNVMkRCeIlxROQf9klazW4OMSLyFx7jboBGIigNYM4ketshRrW9juxhYXRa
+	 gXZjemofB9RiquOIElJw1GfAbkzP6dEZIT4Vm1AOqIk/R9i2biaRpF70X8EVIb4Q+7
+	 J8qZAlV0r1+2iRUWIj8JHNSe+gH6ZUyl3/SpeOhA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730984AbfEVUE1 (ORCPT
+        id S1730557AbfEVUEg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 16:04:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41904 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 16:04:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41840 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729790AbfEVTV2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:21:28 -0400
+        id S1729859AbfEVTVY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:21:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3EB8A217F9;
-        Wed, 22 May 2019 19:21:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B4732173C;
+        Wed, 22 May 2019 19:21:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558552888;
-        bh=MOnbJw2T6l+CcenFyc9OMxxTCg3GPde1Po01t5+Nt6Q=;
+        s=default; t=1558552884;
+        bh=s0l/tgZRf9wP9+usah4sgOOkjrNVWQ7BSH2zhqEC1XU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j0WKBQkAv5r1K5MPJPuLOZUK7wyF07s3CyvISZjmUfk2XlM4uO1drG1B2hm2OK3xw
-         wGGJTPkTCoYK3PCLLyi+BvepYE5EaI4FcWkxCO8+e35K/Ea+OMDGVKLuWAu5HuYPM0
-         2+zaFQMI0qhqggeE0PHVa88yWMUotXYSCORPZtaA=
+        b=NJhgWjkgmU+PtGRPzZ2Do6jfDBxJwO1MdRjJuERyHcoJMywuWj9PiidU0seSkAfd+
+         8ogN0kTzPHT5fOuaIVAeru0iI9hKiw4FunNFnzOROsucobP9pDUOt4MjyxVBe11xbP
+         13M6hz8GvOrm4WpIrFmNHqfqW/lDRite+l/uhzEQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Raul E Rangel <rrangel@chromium.org>,
-        Avri Altman <avri.altman@wdc.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-mmc@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 009/375] mmc: core: Verify SD bus width
-Date:   Wed, 22 May 2019 15:15:09 -0400
-Message-Id: <20190522192115.22666-9-sashal@kernel.org>
+Cc:     Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        "Michael J . Ruhl" <michael.j.ruhl@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 007/375] IB/hfi1: Fix WQ_MEM_RECLAIM warning
+Date:   Wed, 22 May 2019 15:15:07 -0400
+Message-Id: <20190522192115.22666-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192115.22666-1-sashal@kernel.org>
 References: <20190522192115.22666-1-sashal@kernel.org>
@@ -60,55 +61,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Raul E Rangel <rrangel@chromium.org>
+From: Mike Marciniszyn <mike.marciniszyn@intel.com>
 
-[ Upstream commit 9e4be8d03f50d1b25c38e2b59e73b194c130df7d ]
+[ Upstream commit 4c4b1996b5db688e2dcb8242b0a3bf7b1e845e42 ]
 
-The SD Physical Layer Spec says the following: Since the SD Memory Card
-shall support at least the two bus modes 1-bit or 4-bit width, then any SD
-Card shall set at least bits 0 and 2 (SD_BUS_WIDTH="0101").
+The work_item cancels that occur when a QP is destroyed can elicit the
+following trace:
 
-This change verifies the card has specified a bus width.
+ workqueue: WQ_MEM_RECLAIM ipoib_wq:ipoib_cm_tx_reap [ib_ipoib] is flushing !WQ_MEM_RECLAIM hfi0_0:_hfi1_do_send [hfi1]
+ WARNING: CPU: 7 PID: 1403 at kernel/workqueue.c:2486 check_flush_dependency+0xb1/0x100
+ Call Trace:
+  __flush_work.isra.29+0x8c/0x1a0
+  ? __switch_to_asm+0x40/0x70
+  __cancel_work_timer+0x103/0x190
+  ? schedule+0x32/0x80
+  iowait_cancel_work+0x15/0x30 [hfi1]
+  rvt_reset_qp+0x1f8/0x3e0 [rdmavt]
+  rvt_destroy_qp+0x65/0x1f0 [rdmavt]
+  ? _cond_resched+0x15/0x30
+  ib_destroy_qp+0xe9/0x230 [ib_core]
+  ipoib_cm_tx_reap+0x21c/0x560 [ib_ipoib]
+  process_one_work+0x171/0x370
+  worker_thread+0x49/0x3f0
+  kthread+0xf8/0x130
+  ? max_active_store+0x80/0x80
+  ? kthread_bind+0x10/0x10
+  ret_from_fork+0x35/0x40
 
-AMD SDHC Device 7806 can get into a bad state after a card disconnect
-where anything transferred via the DATA lines will always result in a
-zero filled buffer. Currently the driver will continue without error if
-the HC is in this condition. A block device will be created, but reading
-from it will result in a zero buffer. This makes it seem like the SD
-device has been erased, when in actuality the data is never getting
-copied from the DATA lines to the data buffer.
+Since QP destruction frees memory, hfi1_wq should have the WQ_MEM_RECLAIM.
 
-SCR is the first command in the SD initialization sequence that uses the
-DATA lines. By checking that the response was invalid, we can abort
-mounting the card.
+The hfi1_wq does not allocate memory with GFP_KERNEL or otherwise become
+entangled with memory reclaim, so this flag is appropriate.
 
-Reviewed-by: Avri Altman <avri.altman@wdc.com>
-Signed-off-by: Raul E Rangel <rrangel@chromium.org>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Fixes: 0a226edd203f ("staging/rdma/hfi1: Use parallel workqueue for SDMA engines")
+Reviewed-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
+Signed-off-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/core/sd.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/infiniband/hw/hfi1/init.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/mmc/core/sd.c b/drivers/mmc/core/sd.c
-index 265e1aeeb9d88..d3d32f9a2cb18 100644
---- a/drivers/mmc/core/sd.c
-+++ b/drivers/mmc/core/sd.c
-@@ -221,6 +221,14 @@ static int mmc_decode_scr(struct mmc_card *card)
- 
- 	if (scr->sda_spec3)
- 		scr->cmds = UNSTUFF_BITS(resp, 32, 2);
-+
-+	/* SD Spec says: any SD Card shall set at least bits 0 and 2 */
-+	if (!(scr->bus_widths & SD_SCR_BUS_WIDTH_1) ||
-+	    !(scr->bus_widths & SD_SCR_BUS_WIDTH_4)) {
-+		pr_err("%s: invalid bus width\n", mmc_hostname(card->host));
-+		return -EINVAL;
-+	}
-+
- 	return 0;
- }
- 
+diff --git a/drivers/infiniband/hw/hfi1/init.c b/drivers/infiniband/hw/hfi1/init.c
+index faaaac8fbc553..3af5eb10a5ffb 100644
+--- a/drivers/infiniband/hw/hfi1/init.c
++++ b/drivers/infiniband/hw/hfi1/init.c
+@@ -805,7 +805,8 @@ static int create_workqueues(struct hfi1_devdata *dd)
+ 			ppd->hfi1_wq =
+ 				alloc_workqueue(
+ 				    "hfi%d_%d",
+-				    WQ_SYSFS | WQ_HIGHPRI | WQ_CPU_INTENSIVE,
++				    WQ_SYSFS | WQ_HIGHPRI | WQ_CPU_INTENSIVE |
++				    WQ_MEM_RECLAIM,
+ 				    HFI1_MAX_ACTIVE_WORKQUEUE_ENTRIES,
+ 				    dd->unit, pidx);
+ 			if (!ppd->hfi1_wq)
 -- 
 2.20.1
 
