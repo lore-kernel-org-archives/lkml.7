@@ -2,110 +2,302 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DBC8C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:58:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDA73C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:58:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DB40217D7
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:58:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B066E20856
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:58:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558555092;
-	bh=N1u4K8lAKvK0Jq4HH61ZLx1vb3onUcqf2p8+OIoV9qk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=q5vfS09KVkpyHZgr9XjXjLJqXHwp4YPRNNMCqErrAwVGvtANRMkMEU5jySmOL7MwA
-	 7fWxE4GyUe4gcxmcSaeaCgXrSHTa8JP65sqLnXwJFkhKi+v1xcZXTl0aHAbte7QRz4
-	 zEAH4RiYPskji0QbJFgOKLtVEn2sVT7JfaClzODY=
+	s=default; t=1558555101;
+	bh=PvWXiiKXpe/GI6ueId2uEnf5h7m7h0RWUfr4V/JWjPI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=qriuYlabij402wBO6DbaocKHGiP4v8gDiratQAY5uL7mJP+4Ti+dIazgwfIm4wGl0
+	 2WjfJW1vXuWvjW2NLbLDlFPYQF/kyo351QZ6ccvt6U2dfrpkxB4vD9IP6J7RZ1sB/C
+	 AKCd8UZ+etGv60MqElsxRD4XQDHODFwzcAGV11cc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732254AbfEVT6K (ORCPT
+        id S1732432AbfEVT6U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:58:10 -0400
-Received: from mail-pg1-f170.google.com ([209.85.215.170]:35684 "EHLO
-        mail-pg1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730645AbfEVT6I (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:58:08 -0400
-Received: by mail-pg1-f170.google.com with SMTP id t1so1854404pgc.2
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 12:58:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Ti2gujd26XzQoLiTeDe8/05EiKdhekJsO0rEj6y07qw=;
-        b=YVVvBPJSZWF2y52mZXCQ82X6XtwoE27KpQxN2e1+7/BLzpnkKzo4WfwtQlpW4DxZXC
-         Z67wKIzeAiyJA1pQH5QV2tdY2eDnlhXJfsKd3LGeC8QvCUp05Qk2VaQAwwV5omSmetaF
-         okHRkhvoLrJ4mQhv0koADAwvUFNggZR4F8Fpk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Ti2gujd26XzQoLiTeDe8/05EiKdhekJsO0rEj6y07qw=;
-        b=dP70ReinqtFWEVUFSe+r4FR9r5Y4Ai376KGb6E1BjkjLUFgnyd5e29VGClNpkqrg43
-         vBmJg5yyBye2PSsoU+ozNxjRoEEFZ0nSqbnBAavThJeqmLYCewpYqKf59YFcvsUbYUo2
-         LPBhv+8asDkok+2Wildg6Rfau3L2WQp0a/j1SEqbCnXLYOLycRTtqzcW9QXUbdWP6sp6
-         5KXZ9SM9nyRywR1MDUK3CrbsOyRdH61+bp/8Rg/ARcDw49sCCImfcy8/L8YDHlmhZ20Q
-         2BKjOkWB8lF7Ov/hhaDrycK4kytlG4uX6yUO0TddIMP+Mn5mG3W/1vHYZJ/3Ddxe6LOw
-         P0Cw==
-X-Gm-Message-State: APjAAAWMwk1eMR2sGZB7xqQswssRFtSc2e5wpt0WuvSXHzRffPtdOJW9
-        qQCTmCYcYk5DyP1RuyunPScjoIBmYUdTmw==
-X-Google-Smtp-Source: APXvYqz4z3TuF7/ac+bExwZ2wU5kfchxpPVjwEREHBi7Mnvkm90pW5uwHRz4gWEmk2BfdPUU6stZzQ==
-X-Received: by 2002:a65:5c8c:: with SMTP id a12mr92237071pgt.452.1558555087658;
-        Wed, 22 May 2019 12:58:07 -0700 (PDT)
-Received: from chatter.i7.local (192-0-228-88.cpe.teksavvy.com. [192.0.228.88])
-        by smtp.gmail.com with ESMTPSA id n1sm24742643pgv.15.2019.05.22.12.58.06
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 22 May 2019 12:58:06 -0700 (PDT)
-Date:   Wed, 22 May 2019 15:58:04 -0400
-From:   Konstantin Ryabitsev <konstantin@linuxfoundation.org>
-To:     Joe Perches <joe@perches.com>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: PSA: Do not use "Reported-By" without reporter's approval
-Message-ID: <20190522195804.GC21412@chatter.i7.local>
-References: <20190522193011.GB21412@chatter.i7.local>
- <7b7287463e830fa8d981dc440f8165622cbc628e.camel@perches.com>
+        Wed, 22 May 2019 15:58:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44960 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730345AbfEVTYA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:24:00 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 66EC02184E;
+        Wed, 22 May 2019 19:23:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558553038;
+        bh=PvWXiiKXpe/GI6ueId2uEnf5h7m7h0RWUfr4V/JWjPI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=FmY0wqds6GH6pdM0Kiv/Yrk+d1EP/rb/VCaIkPTrtZ0nQxBuTHPns3o1wFa+nBS2y
+         NcKyUvJ4gdlP3JlQQX7MgPVUVcCZES3TfzNMEt3Go7iciojDeGTJdsjG8V1tuJHAOT
+         2nU4IkYutzY7S5rhSlxyLVgqhmBel3cbLbySj0ak=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Ming Lei <ming.lei@redhat.com>,
+        Dongli Zhang <dongli.zhang@oracle.com>,
+        James Smart <james.smart@broadcom.com>,
+        Bart Van Assche <bart.vanassche@wdc.com>,
+        linux-scsi@vger.kernel.org,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "James E . J . Bottomley" <jejb@linux.vnet.ibm.com>,
+        Hannes Reinecke <hare@suse.com>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 014/317] blk-mq: split blk_mq_alloc_and_init_hctx into two parts
+Date:   Wed, 22 May 2019 15:18:35 -0400
+Message-Id: <20190522192338.23715-14-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190522192338.23715-1-sashal@kernel.org>
+References: <20190522192338.23715-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-In-Reply-To: <7b7287463e830fa8d981dc440f8165622cbc628e.camel@perches.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 22, 2019 at 12:45:06PM -0700, Joe Perches wrote:
->> It is common courtesy to include this tagline when submitting 
->> patches:
->>
->> Reported-By: J. Doe <jdoe@example.com>
->>
->> Please ask the reporter's permission before doing so (even if they'd
->> submitted a public bugzilla report or sent a report to the mailing
->> list).
->
->I disagree with this.
->
->If the report is public, and lists like vger are public,
->then using a Reported-by: and/or a Link: are simply useful
->history and tracking information.
+From: Ming Lei <ming.lei@redhat.com>
 
-I'm perfectly fine with Link:, however Reported-By: usually has the 
-person's name and email address (i.e. PII data per GDPR definition). If 
-that person submitted the bug report via bugzilla.kernel.org or a 
-similar resource, their expectation is that they can delete their 
-account should they choose to to do so. However, if the patch containing 
-Reported-By is committed to git, their PII becomes permanently and 
-immutably recorded for any reasonable meaning of the word "forever."
+[ Upstream commit 7c6c5b7c9186e3fb5b10afb8e5f710ae661144c6 ]
 
-Now, I'm pretty sure that a request to rebase git history to edit a 
-commit message would be considered "unreasonable" under GDPR provisions, 
-but a) it still eats up valuable time handling such requests and b) it's 
-a consequence reporters are not aware of when they submit bug reports.  
-So, my request to ask for permission before using "Reported-By" is not 
-coming from any legal position, but from the perspective of courtesy to 
-people submitting those reports.
+Split blk_mq_alloc_and_init_hctx into two parts, and one is
+blk_mq_alloc_hctx() for allocating all hctx resources, another
+is blk_mq_init_hctx() for initializing hctx, which serves as
+counter-part of blk_mq_exit_hctx().
 
--K
+Cc: Dongli Zhang <dongli.zhang@oracle.com>
+Cc: James Smart <james.smart@broadcom.com>
+Cc: Bart Van Assche <bart.vanassche@wdc.com>
+Cc: linux-scsi@vger.kernel.org
+Cc: Martin K . Petersen <martin.petersen@oracle.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: James E . J . Bottomley <jejb@linux.vnet.ibm.com>
+Reviewed-by: Hannes Reinecke <hare@suse.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Tested-by: James Smart <james.smart@broadcom.com>
+Signed-off-by: Ming Lei <ming.lei@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ block/blk-mq.c | 139 ++++++++++++++++++++++++++-----------------------
+ 1 file changed, 75 insertions(+), 64 deletions(-)
+
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index 5b920a82bfe60..df6b5e45cd5c2 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -2292,15 +2292,65 @@ static void blk_mq_exit_hw_queues(struct request_queue *q,
+ 	}
+ }
+ 
++static int blk_mq_hw_ctx_size(struct blk_mq_tag_set *tag_set)
++{
++	int hw_ctx_size = sizeof(struct blk_mq_hw_ctx);
++
++	BUILD_BUG_ON(ALIGN(offsetof(struct blk_mq_hw_ctx, srcu),
++			   __alignof__(struct blk_mq_hw_ctx)) !=
++		     sizeof(struct blk_mq_hw_ctx));
++
++	if (tag_set->flags & BLK_MQ_F_BLOCKING)
++		hw_ctx_size += sizeof(struct srcu_struct);
++
++	return hw_ctx_size;
++}
++
+ static int blk_mq_init_hctx(struct request_queue *q,
+ 		struct blk_mq_tag_set *set,
+ 		struct blk_mq_hw_ctx *hctx, unsigned hctx_idx)
+ {
+-	int node;
++	hctx->queue_num = hctx_idx;
++
++	cpuhp_state_add_instance_nocalls(CPUHP_BLK_MQ_DEAD, &hctx->cpuhp_dead);
++
++	hctx->tags = set->tags[hctx_idx];
++
++	if (set->ops->init_hctx &&
++	    set->ops->init_hctx(hctx, set->driver_data, hctx_idx))
++		goto unregister_cpu_notifier;
+ 
+-	node = hctx->numa_node;
++	if (blk_mq_init_request(set, hctx->fq->flush_rq, hctx_idx,
++				hctx->numa_node))
++		goto exit_hctx;
++	return 0;
++
++ exit_hctx:
++	if (set->ops->exit_hctx)
++		set->ops->exit_hctx(hctx, hctx_idx);
++ unregister_cpu_notifier:
++	blk_mq_remove_cpuhp(hctx);
++	return -1;
++}
++
++static struct blk_mq_hw_ctx *
++blk_mq_alloc_hctx(struct request_queue *q, struct blk_mq_tag_set *set,
++		int node)
++{
++	struct blk_mq_hw_ctx *hctx;
++	gfp_t gfp = GFP_NOIO | __GFP_NOWARN | __GFP_NORETRY;
++
++	hctx = kzalloc_node(blk_mq_hw_ctx_size(set), gfp, node);
++	if (!hctx)
++		goto fail_alloc_hctx;
++
++	if (!zalloc_cpumask_var_node(&hctx->cpumask, gfp, node))
++		goto free_hctx;
++
++	atomic_set(&hctx->nr_active, 0);
+ 	if (node == NUMA_NO_NODE)
+-		node = hctx->numa_node = set->numa_node;
++		node = set->numa_node;
++	hctx->numa_node = node;
+ 
+ 	INIT_DELAYED_WORK(&hctx->run_work, blk_mq_run_work_fn);
+ 	spin_lock_init(&hctx->lock);
+@@ -2308,58 +2358,45 @@ static int blk_mq_init_hctx(struct request_queue *q,
+ 	hctx->queue = q;
+ 	hctx->flags = set->flags & ~BLK_MQ_F_TAG_SHARED;
+ 
+-	cpuhp_state_add_instance_nocalls(CPUHP_BLK_MQ_DEAD, &hctx->cpuhp_dead);
+-
+-	hctx->tags = set->tags[hctx_idx];
+-
+ 	/*
+ 	 * Allocate space for all possible cpus to avoid allocation at
+ 	 * runtime
+ 	 */
+ 	hctx->ctxs = kmalloc_array_node(nr_cpu_ids, sizeof(void *),
+-			GFP_NOIO | __GFP_NOWARN | __GFP_NORETRY, node);
++			gfp, node);
+ 	if (!hctx->ctxs)
+-		goto unregister_cpu_notifier;
++		goto free_cpumask;
+ 
+ 	if (sbitmap_init_node(&hctx->ctx_map, nr_cpu_ids, ilog2(8),
+-				GFP_NOIO | __GFP_NOWARN | __GFP_NORETRY, node))
++				gfp, node))
+ 		goto free_ctxs;
+-
+ 	hctx->nr_ctx = 0;
+ 
+ 	spin_lock_init(&hctx->dispatch_wait_lock);
+ 	init_waitqueue_func_entry(&hctx->dispatch_wait, blk_mq_dispatch_wake);
+ 	INIT_LIST_HEAD(&hctx->dispatch_wait.entry);
+ 
+-	if (set->ops->init_hctx &&
+-	    set->ops->init_hctx(hctx, set->driver_data, hctx_idx))
+-		goto free_bitmap;
+-
+ 	hctx->fq = blk_alloc_flush_queue(q, hctx->numa_node, set->cmd_size,
+-			GFP_NOIO | __GFP_NOWARN | __GFP_NORETRY);
++			gfp);
+ 	if (!hctx->fq)
+-		goto exit_hctx;
+-
+-	if (blk_mq_init_request(set, hctx->fq->flush_rq, hctx_idx, node))
+-		goto free_fq;
++		goto free_bitmap;
+ 
+ 	if (hctx->flags & BLK_MQ_F_BLOCKING)
+ 		init_srcu_struct(hctx->srcu);
++	blk_mq_hctx_kobj_init(hctx);
+ 
+-	return 0;
++	return hctx;
+ 
+- free_fq:
+-	blk_free_flush_queue(hctx->fq);
+- exit_hctx:
+-	if (set->ops->exit_hctx)
+-		set->ops->exit_hctx(hctx, hctx_idx);
+  free_bitmap:
+ 	sbitmap_free(&hctx->ctx_map);
+  free_ctxs:
+ 	kfree(hctx->ctxs);
+- unregister_cpu_notifier:
+-	blk_mq_remove_cpuhp(hctx);
+-	return -1;
++ free_cpumask:
++	free_cpumask_var(hctx->cpumask);
++ free_hctx:
++	kfree(hctx);
++ fail_alloc_hctx:
++	return NULL;
+ }
+ 
+ static void blk_mq_init_cpu_queues(struct request_queue *q,
+@@ -2696,51 +2733,25 @@ struct request_queue *blk_mq_init_sq_queue(struct blk_mq_tag_set *set,
+ }
+ EXPORT_SYMBOL(blk_mq_init_sq_queue);
+ 
+-static int blk_mq_hw_ctx_size(struct blk_mq_tag_set *tag_set)
+-{
+-	int hw_ctx_size = sizeof(struct blk_mq_hw_ctx);
+-
+-	BUILD_BUG_ON(ALIGN(offsetof(struct blk_mq_hw_ctx, srcu),
+-			   __alignof__(struct blk_mq_hw_ctx)) !=
+-		     sizeof(struct blk_mq_hw_ctx));
+-
+-	if (tag_set->flags & BLK_MQ_F_BLOCKING)
+-		hw_ctx_size += sizeof(struct srcu_struct);
+-
+-	return hw_ctx_size;
+-}
+-
+ static struct blk_mq_hw_ctx *blk_mq_alloc_and_init_hctx(
+ 		struct blk_mq_tag_set *set, struct request_queue *q,
+ 		int hctx_idx, int node)
+ {
+ 	struct blk_mq_hw_ctx *hctx;
+ 
+-	hctx = kzalloc_node(blk_mq_hw_ctx_size(set),
+-			GFP_NOIO | __GFP_NOWARN | __GFP_NORETRY,
+-			node);
++	hctx = blk_mq_alloc_hctx(q, set, node);
+ 	if (!hctx)
+-		return NULL;
+-
+-	if (!zalloc_cpumask_var_node(&hctx->cpumask,
+-				GFP_NOIO | __GFP_NOWARN | __GFP_NORETRY,
+-				node)) {
+-		kfree(hctx);
+-		return NULL;
+-	}
+-
+-	atomic_set(&hctx->nr_active, 0);
+-	hctx->numa_node = node;
+-	hctx->queue_num = hctx_idx;
++		goto fail;
+ 
+-	if (blk_mq_init_hctx(q, set, hctx, hctx_idx)) {
+-		free_cpumask_var(hctx->cpumask);
+-		kfree(hctx);
+-		return NULL;
+-	}
+-	blk_mq_hctx_kobj_init(hctx);
++	if (blk_mq_init_hctx(q, set, hctx, hctx_idx))
++		goto free_hctx;
+ 
+ 	return hctx;
++
++ free_hctx:
++	kobject_put(&hctx->kobj);
++ fail:
++	return NULL;
+ }
+ 
+ static void blk_mq_realloc_hw_ctxs(struct blk_mq_tag_set *set,
+-- 
+2.20.1
+
