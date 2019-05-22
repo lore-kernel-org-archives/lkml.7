@@ -2,225 +2,196 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E08D5C072A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 08:24:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEB6AC072A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 08:26:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CAB3217F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 08:24:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E0A821841
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 08:26:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="C8hwh3GX"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="EbGREjps"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728819AbfEVIYr (ORCPT
+        id S1728699AbfEVI0V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 04:24:47 -0400
-Received: from esa1.microchip.iphmx.com ([68.232.147.91]:15660 "EHLO
-        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728159AbfEVIYr (ORCPT
+        Wed, 22 May 2019 04:26:21 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:32826 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728406AbfEVI0V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 04:24:47 -0400
-Received-SPF: Pass (esa1.microchip.iphmx.com: domain of
-  Claudiu.Beznea@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
-  envelope-from="Claudiu.Beznea@microchip.com";
-  x-sender="Claudiu.Beznea@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa1.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
-  envelope-from="Claudiu.Beznea@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa1.microchip.iphmx.com; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
-X-IronPort-AV: E=Sophos;i="5.60,498,1549954800"; 
-   d="scan'208";a="35680728"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 22 May 2019 01:24:45 -0700
-Received: from NAM05-CO1-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.76.38) with Microsoft SMTP Server (TLS) id
- 14.3.352.0; Wed, 22 May 2019 01:24:45 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector1-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=X4+pmcMEFn9vBV0bpmtn7Xovht3/9uh9C+t5CnvgEoI=;
- b=C8hwh3GXtYcB1NLs60tSTguE7sXCG/380JblAyRVnDA3wuPFwPLrN8qpyBzy3CP2Om1pCWPL9r92620D8AvAHqQBuwevBkCwllwgsMFdbXJCi8I5TY3AUjDIparBtXiV/ArQR8iNj95hTI1rFnrSgD1XFprGYXJts9WbnYAviDI=
-Received: from DM5PR11MB1547.namprd11.prod.outlook.com (10.172.37.15) by
- DM5PR11MB1497.namprd11.prod.outlook.com (10.172.38.9) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1900.20; Wed, 22 May 2019 08:24:43 +0000
-Received: from DM5PR11MB1547.namprd11.prod.outlook.com
- ([fe80::9cd6:d50d:df79:f20f]) by DM5PR11MB1547.namprd11.prod.outlook.com
- ([fe80::9cd6:d50d:df79:f20f%9]) with mapi id 15.20.1900.020; Wed, 22 May 2019
- 08:24:43 +0000
-From:   <Claudiu.Beznea@microchip.com>
-To:     <Nicolas.Ferre@microchip.com>, <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <Claudiu.Beznea@microchip.com>
-Subject: [PATCH] net: macb: save/restore the remaining registers and features
-Thread-Topic: [PATCH] net: macb: save/restore the remaining registers and
- features
-Thread-Index: AQHVEHfOL2RjdulKHUKljL+yLxZJxw==
-Date:   Wed, 22 May 2019 08:24:43 +0000
-Message-ID: <1558513467-8424-1-git-send-email-claudiu.beznea@microchip.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: LO2P265CA0461.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:a2::17) To DM5PR11MB1547.namprd11.prod.outlook.com
- (2603:10b6:4:a::15)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.7.4
-x-originating-ip: [94.177.32.154]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f944f670-ae2a-40c4-b140-08d6de8ef120
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:DM5PR11MB1497;
-x-ms-traffictypediagnostic: DM5PR11MB1497:
-x-microsoft-antispam-prvs: <DM5PR11MB149793FF43732120E549E96787000@DM5PR11MB1497.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0045236D47
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(396003)(346002)(376002)(366004)(39860400002)(199004)(189003)(81156014)(72206003)(486006)(7736002)(14454004)(81166006)(8936002)(66066001)(26005)(2906002)(2616005)(476003)(305945005)(68736007)(8676002)(186003)(64756008)(66446008)(6512007)(6486002)(6436002)(86362001)(5660300002)(25786009)(110136005)(4326008)(54906003)(102836004)(99286004)(107886003)(386003)(6506007)(53936002)(52116002)(71190400001)(71200400001)(66946007)(66476007)(2501003)(3846002)(6116002)(66556008)(316002)(256004)(5024004)(14444005)(478600001)(36756003)(73956011)(50226002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR11MB1497;H:DM5PR11MB1547.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: gd16RqrBfR/KQFK7EjLDpa773ObXE3N9sxvUatKpJRHihJ+qpNDnG3RbGcDPiWTuzfhGYv4aLkHYuG3WqBOPxe6cFn4ro3A3ZSgbRSVwELIaHQKL02R9L3LemaWBHYjBb9rTxOw5hxM7o+mrgiaKcHWFn1t4vPE9xjglN9hVVT5bccRWn57Av2a6lWE1tBBVFG7qP9pqh2eAuG5KMfjDP34IgfcW024bfrKGouFIq9fh7HQdwey4UjWAM2Fs+Jj1OgCxYesaKp6QhFYZdy6Z8B84P0pc3mYDhUbNgGQVOe2FLGQxVdXrObgoowvnLkb/hfiUOlV73l93gm3yWCAYk96LZ89kjyc3k/outmfZhsTYqG1k1vAVQ/yj1rWVFExuKL2SuUKhyFA6W5RTpRlgmMi6xhQrvTvsCjGsvAqGLxs=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 22 May 2019 04:26:21 -0400
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4M8Gjp2016707;
+        Wed, 22 May 2019 10:25:53 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=95DbXIJbPEyjb+3HhxJUM/8t0wqdd7pQtBu4/qr7Suc=;
+ b=EbGREjpsIjyrZeuzjob0mWdmoQyx1V90ZeDFkUVJYWBzW4r6trY/JeAB2UVddK76tWfA
+ V1rLn3N2aIqoKvfym2FgaJ6Pnqf/CcUssjhLs/Wp7fWFwf4JDF7CrgnqmowLmGBFKYl2
+ dXSKYqlKgvD/rAq2Ue674LGcDPKDEk5orbg5SeK129nwRMgV5Ajg8i1AK2h6yAQmVgbk
+ zEbdyi/3u7eDmSwA0sBsPbEPUwz/rEpEjnWjiEMWQ/OWUZnMolPP9Hg/qfw4Adrdqjf8
+ mioz04sXjFUGeZ4E9IB7NOf7KRl2lz/nvK0gu2ZepPrljD0vdib78NlVyYLlOXNMgEmZ QQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2sj7h0y2bn-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Wed, 22 May 2019 10:25:53 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id F1C8D34;
+        Wed, 22 May 2019 08:25:52 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas23.st.com [10.75.90.46])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id D9A341E83;
+        Wed, 22 May 2019 08:25:51 +0000 (GMT)
+Received: from SAFEX1HUBCAS21.st.com (10.75.90.44) by SAFEX1HUBCAS23.st.com
+ (10.75.90.46) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 22 May
+ 2019 10:25:51 +0200
+Received: from localhost (10.48.0.131) by Webmail-ga.st.com (10.75.90.48) with
+ Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 22 May 2019 10:25:51 +0200
+From:   Arnaud Pouliquen <arnaud.pouliquen@st.com>
+To:     Jassi Brar <jassisinghbrar@gmail.com>,
+        Fabien DESSENNE <fabien.dessenne@st.com>
+CC:     <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <arnaud.pouliquen@st.com>
+Subject: [PATCH] mailbox: stm32_ipcc: add spinlock to fix channels concurrent access
+Date:   Wed, 22 May 2019 10:25:35 +0200
+Message-ID: <1558513535-16736-1-git-send-email-arnaud.pouliquen@st.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: f944f670-ae2a-40c4-b140-08d6de8ef120
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 May 2019 08:24:43.6341
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR11MB1497
-X-OriginatorOrg: microchip.com
+Content-Type: text/plain
+X-Originating-IP: [10.48.0.131]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-22_03:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogQ2xhdWRpdSBCZXpuZWEgPGNsYXVkaXUuYmV6bmVhQG1pY3JvY2hpcC5jb20+DQoNClNB
-TUE1RDIgU29DIGhhcyBhIHN1c3BlbmQgbW9kZSB3aGVyZSBTb0MncyBwb3dlciBpcyBjdXQgb2Zm
-LiBEdWUgdG8gdGhpcw0KdGhlIHJlZ2lzdGVycyBjb250ZW50IGlzIGxvc3QgYWZ0ZXIgYSBzdXNw
-ZW5kL3Jlc3VtZSBjeWNsZS4gVGhlIGN1cnJlbnQNCnN1c3BlbmQvcmVzdW1lIGltcGxlbWVudGF0
-aW9uIGNvdmVycyBzb21lIG9mIHRoZXNlIHJlZ2lzdGVycy4gSG93ZXZlcg0KdGhlcmUgYXJlIGZl
-dyB3aGljaCB3ZXJlIG5vdCB0cmVhdGVkIChlLmcuIFNDUlQyIGFuZCBVU1JJTykuIEFwYXJ0DQpm
-cm9tIHRoaXMsIG5ldGRldiBmZWF0dXJlcyBhcmUgbm90IHJlc3RvcmVkLiBUcmVhdCB0aGVzZSBp
-c3N1ZXMuDQoNClNpZ25lZC1vZmYtYnk6IENsYXVkaXUgQmV6bmVhIDxjbGF1ZGl1LmJlem5lYUBt
-aWNyb2NoaXAuY29tPg0KLS0tDQogZHJpdmVycy9uZXQvZXRoZXJuZXQvY2FkZW5jZS9tYWNiLmgg
-ICAgICB8ICAgNyArKw0KIGRyaXZlcnMvbmV0L2V0aGVybmV0L2NhZGVuY2UvbWFjYl9tYWluLmMg
-fCAxMTEgKysrKysrKysrKysrKysrKysrKysrKystLS0tLS0tLQ0KIDIgZmlsZXMgY2hhbmdlZCwg
-OTEgaW5zZXJ0aW9ucygrKSwgMjcgZGVsZXRpb25zKC0pDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJz
-L25ldC9ldGhlcm5ldC9jYWRlbmNlL21hY2IuaCBiL2RyaXZlcnMvbmV0L2V0aGVybmV0L2NhZGVu
-Y2UvbWFjYi5oDQppbmRleCBhY2M2NmE3ZTdiOTUuLjAwZWU1ZThlMGZmMCAxMDA2NDQNCi0tLSBh
-L2RyaXZlcnMvbmV0L2V0aGVybmV0L2NhZGVuY2UvbWFjYi5oDQorKysgYi9kcml2ZXJzL25ldC9l
-dGhlcm5ldC9jYWRlbmNlL21hY2IuaA0KQEAgLTEwODAsNiArMTA4MCwxMSBAQCBzdHJ1Y3QgbWFj
-Yl9wdHBfaW5mbyB7DQogCQkJIHN0cnVjdCBpZnJlcSAqaWZyLCBpbnQgY21kKTsNCiB9Ow0KIA0K
-K3N0cnVjdCBtYWNiX3BtX2RhdGEgew0KKwl1MzIgc2NydDI7DQorCXUzMiB1c3JpbzsNCit9Ow0K
-Kw0KIHN0cnVjdCBtYWNiX2NvbmZpZyB7DQogCXUzMgkJCWNhcHM7DQogCXVuc2lnbmVkIGludAkJ
-ZG1hX2J1cnN0X2xlbmd0aDsNCkBAIC0xMjIwLDYgKzEyMjUsOCBAQCBzdHJ1Y3QgbWFjYiB7DQog
-CWludAl0eF9iZF9yZF9wcmVmZXRjaDsNCiANCiAJdTMyCXJ4X2ludHJfbWFzazsNCisNCisJc3Ry
-dWN0IG1hY2JfcG1fZGF0YSBwbV9kYXRhOw0KIH07DQogDQogI2lmZGVmIENPTkZJR19NQUNCX1VT
-RV9IV1NUQU1QDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9uZXQvZXRoZXJuZXQvY2FkZW5jZS9tYWNi
-X21haW4uYyBiL2RyaXZlcnMvbmV0L2V0aGVybmV0L2NhZGVuY2UvbWFjYl9tYWluLmMNCmluZGV4
-IDVkNWM5ZDcwYjJiZS4uNWJkYjJiYTM1NTM5IDEwMDY0NA0KLS0tIGEvZHJpdmVycy9uZXQvZXRo
-ZXJuZXQvY2FkZW5jZS9tYWNiX21haW4uYw0KKysrIGIvZHJpdmVycy9uZXQvZXRoZXJuZXQvY2Fk
-ZW5jZS9tYWNiX21haW4uYw0KQEAgLTI4NDksMTAgKzI4NDksMTQgQEAgc3RhdGljIGludCBtYWNi
-X2dldF90c19pbmZvKHN0cnVjdCBuZXRfZGV2aWNlICpuZXRkZXYsDQogDQogc3RhdGljIHZvaWQg
-Z2VtX2VuYWJsZV9mbG93X2ZpbHRlcnMoc3RydWN0IG1hY2IgKmJwLCBib29sIGVuYWJsZSkNCiB7
-DQorCXN0cnVjdCBuZXRfZGV2aWNlICpuZXRkZXYgPSBicC0+ZGV2Ow0KIAlzdHJ1Y3QgZXRodG9v
-bF9yeF9mc19pdGVtICppdGVtOw0KIAl1MzIgdDJfc2NyOw0KIAlpbnQgbnVtX3QyX3NjcjsNCiAN
-CisJaWYgKCEobmV0ZGV2LT5mZWF0dXJlcyAmIE5FVElGX0ZfTlRVUExFKSkNCisJCXJldHVybjsN
-CisNCiAJbnVtX3QyX3NjciA9IEdFTV9CRkVYVChUMlNDUiwgZ2VtX3JlYWRsKGJwLCBEQ0ZHOCkp
-Ow0KIA0KIAlsaXN0X2Zvcl9lYWNoX2VudHJ5KGl0ZW0sICZicC0+cnhfZnNfbGlzdC5saXN0LCBs
-aXN0KSB7DQpAQCAtMzAxMiw4ICszMDE2LDcgQEAgc3RhdGljIGludCBnZW1fYWRkX2Zsb3dfZmls
-dGVyKHN0cnVjdCBuZXRfZGV2aWNlICpuZXRkZXYsDQogCWdlbV9wcm9nX2NtcF9yZWdzKGJwLCBm
-cyk7DQogCWJwLT5yeF9mc19saXN0LmNvdW50Kys7DQogCS8qIGVuYWJsZSBmaWx0ZXJpbmcgaWYg
-TlRVUExFIG9uICovDQotCWlmIChuZXRkZXYtPmZlYXR1cmVzICYgTkVUSUZfRl9OVFVQTEUpDQot
-CQlnZW1fZW5hYmxlX2Zsb3dfZmlsdGVycyhicCwgMSk7DQorCWdlbV9lbmFibGVfZmxvd19maWx0
-ZXJzKGJwLCAxKTsNCiANCiAJc3Bpbl91bmxvY2tfaXJxcmVzdG9yZSgmYnAtPnJ4X2ZzX2xvY2ss
-IGZsYWdzKTsNCiAJcmV0dXJuIDA7DQpAQCAtMzIwMSw2ICszMjA0LDUwIEBAIHN0YXRpYyBpbnQg
-bWFjYl9pb2N0bChzdHJ1Y3QgbmV0X2RldmljZSAqZGV2LCBzdHJ1Y3QgaWZyZXEgKnJxLCBpbnQg
-Y21kKQ0KIAl9DQogfQ0KIA0KK3N0YXRpYyBpbmxpbmUgdm9pZCBtYWNiX3NldF90eGNzdW1fZmVh
-dHVyZShzdHJ1Y3QgbWFjYiAqYnAsDQorCQkJCQkgICBuZXRkZXZfZmVhdHVyZXNfdCBmZWF0dXJl
-cykNCit7DQorCXUzMiB2YWw7DQorDQorCWlmICghbWFjYl9pc19nZW0oYnApKQ0KKwkJcmV0dXJu
-Ow0KKw0KKwl2YWwgPSBnZW1fcmVhZGwoYnAsIERNQUNGRyk7DQorCWlmIChmZWF0dXJlcyAmIE5F
-VElGX0ZfSFdfQ1NVTSkNCisJCXZhbCB8PSBHRU1fQklUKFRYQ09FTik7DQorCWVsc2UNCisJCXZh
-bCAmPSB+R0VNX0JJVChUWENPRU4pOw0KKw0KKwlnZW1fd3JpdGVsKGJwLCBETUFDRkcsIHZhbCk7
-DQorfQ0KKw0KK3N0YXRpYyBpbmxpbmUgdm9pZCBtYWNiX3NldF9yeGNzdW1fZmVhdHVyZShzdHJ1
-Y3QgbWFjYiAqYnAsDQorCQkJCQkgICBuZXRkZXZfZmVhdHVyZXNfdCBmZWF0dXJlcykNCit7DQor
-CXN0cnVjdCBuZXRfZGV2aWNlICpuZXRkZXYgPSBicC0+ZGV2Ow0KKwl1MzIgdmFsOw0KKw0KKwlp
-ZiAoIW1hY2JfaXNfZ2VtKGJwKSkNCisJCXJldHVybjsNCisNCisJdmFsID0gZ2VtX3JlYWRsKGJw
-LCBOQ0ZHUik7DQorCWlmICgoZmVhdHVyZXMgJiBORVRJRl9GX1JYQ1NVTSkgJiYgIShuZXRkZXYt
-PmZsYWdzICYgSUZGX1BST01JU0MpKQ0KKwkJdmFsIHw9IEdFTV9CSVQoUlhDT0VOKTsNCisJZWxz
-ZQ0KKwkJdmFsICY9IH5HRU1fQklUKFJYQ09FTik7DQorDQorCWdlbV93cml0ZWwoYnAsIE5DRkdS
-LCB2YWwpOw0KK30NCisNCitzdGF0aWMgaW5saW5lIHZvaWQgbWFjYl9zZXRfcnhmbG93X2ZlYXR1
-cmUoc3RydWN0IG1hY2IgKmJwLA0KKwkJCQkJICAgbmV0ZGV2X2ZlYXR1cmVzX3QgZmVhdHVyZXMp
-DQorew0KKwlpZiAoIW1hY2JfaXNfZ2VtKGJwKSkNCisJCXJldHVybjsNCisNCisJZ2VtX2VuYWJs
-ZV9mbG93X2ZpbHRlcnMoYnAsICEhKGZlYXR1cmVzICYgTkVUSUZfRl9OVFVQTEUpKTsNCit9DQor
-DQogc3RhdGljIGludCBtYWNiX3NldF9mZWF0dXJlcyhzdHJ1Y3QgbmV0X2RldmljZSAqbmV0ZGV2
-LA0KIAkJCSAgICAgbmV0ZGV2X2ZlYXR1cmVzX3QgZmVhdHVyZXMpDQogew0KQEAgLTMyMDgsMzkg
-KzMyNTUsMzUgQEAgc3RhdGljIGludCBtYWNiX3NldF9mZWF0dXJlcyhzdHJ1Y3QgbmV0X2Rldmlj
-ZSAqbmV0ZGV2LA0KIAluZXRkZXZfZmVhdHVyZXNfdCBjaGFuZ2VkID0gZmVhdHVyZXMgXiBuZXRk
-ZXYtPmZlYXR1cmVzOw0KIA0KIAkvKiBUWCBjaGVja3N1bSBvZmZsb2FkICovDQotCWlmICgoY2hh
-bmdlZCAmIE5FVElGX0ZfSFdfQ1NVTSkgJiYgbWFjYl9pc19nZW0oYnApKSB7DQotCQl1MzIgZG1h
-Y2ZnOw0KLQ0KLQkJZG1hY2ZnID0gZ2VtX3JlYWRsKGJwLCBETUFDRkcpOw0KLQkJaWYgKGZlYXR1
-cmVzICYgTkVUSUZfRl9IV19DU1VNKQ0KLQkJCWRtYWNmZyB8PSBHRU1fQklUKFRYQ09FTik7DQot
-CQllbHNlDQotCQkJZG1hY2ZnICY9IH5HRU1fQklUKFRYQ09FTik7DQotCQlnZW1fd3JpdGVsKGJw
-LCBETUFDRkcsIGRtYWNmZyk7DQotCX0NCisJaWYgKGNoYW5nZWQgJiBORVRJRl9GX0hXX0NTVU0p
-DQorCQltYWNiX3NldF90eGNzdW1fZmVhdHVyZShicCwgZmVhdHVyZXMpOw0KIA0KIAkvKiBSWCBj
-aGVja3N1bSBvZmZsb2FkICovDQotCWlmICgoY2hhbmdlZCAmIE5FVElGX0ZfUlhDU1VNKSAmJiBt
-YWNiX2lzX2dlbShicCkpIHsNCi0JCXUzMiBuZXRjZmc7DQotDQotCQluZXRjZmcgPSBnZW1fcmVh
-ZGwoYnAsIE5DRkdSKTsNCi0JCWlmIChmZWF0dXJlcyAmIE5FVElGX0ZfUlhDU1VNICYmDQotCQkg
-ICAgIShuZXRkZXYtPmZsYWdzICYgSUZGX1BST01JU0MpKQ0KLQkJCW5ldGNmZyB8PSBHRU1fQklU
-KFJYQ09FTik7DQotCQllbHNlDQotCQkJbmV0Y2ZnICY9IH5HRU1fQklUKFJYQ09FTik7DQotCQln
-ZW1fd3JpdGVsKGJwLCBOQ0ZHUiwgbmV0Y2ZnKTsNCi0JfQ0KKwlpZiAoY2hhbmdlZCAmIE5FVElG
-X0ZfUlhDU1VNKQ0KKwkJbWFjYl9zZXRfcnhjc3VtX2ZlYXR1cmUoYnAsIGZlYXR1cmVzKTsNCiAN
-CiAJLyogUlggRmxvdyBGaWx0ZXJzICovDQotCWlmICgoY2hhbmdlZCAmIE5FVElGX0ZfTlRVUExF
-KSAmJiBtYWNiX2lzX2dlbShicCkpIHsNCi0JCWJvb2wgdHVybl9vbiA9IGZlYXR1cmVzICYgTkVU
-SUZfRl9OVFVQTEU7DQorCWlmIChjaGFuZ2VkICYgTkVUSUZfRl9OVFVQTEUpDQorCQltYWNiX3Nl
-dF9yeGZsb3dfZmVhdHVyZShicCwgZmVhdHVyZXMpOw0KIA0KLQkJZ2VtX2VuYWJsZV9mbG93X2Zp
-bHRlcnMoYnAsIHR1cm5fb24pOw0KLQl9DQogCXJldHVybiAwOw0KIH0NCiANCitzdGF0aWMgdm9p
-ZCBtYWNiX3Jlc3RvcmVfZmVhdHVyZXMoc3RydWN0IG1hY2IgKmJwKQ0KK3sNCisJc3RydWN0IG5l
-dF9kZXZpY2UgKm5ldGRldiA9IGJwLT5kZXY7DQorCW5ldGRldl9mZWF0dXJlc190IGZlYXR1cmVz
-ID0gbmV0ZGV2LT5mZWF0dXJlczsNCisNCisJLyogVFggY2hlY2tzdW0gb2ZmbG9hZCAqLw0KKwlt
-YWNiX3NldF90eGNzdW1fZmVhdHVyZShicCwgZmVhdHVyZXMpOw0KKw0KKwkvKiBSWCBjaGVja3N1
-bSBvZmZsb2FkICovDQorCW1hY2Jfc2V0X3J4Y3N1bV9mZWF0dXJlKGJwLCBmZWF0dXJlcyk7DQor
-DQorCS8qIFJYIEZsb3cgRmlsdGVycyAqLw0KKwltYWNiX3NldF9yeGZsb3dfZmVhdHVyZShicCwg
-ZmVhdHVyZXMpOw0KK30NCisNCiBzdGF0aWMgY29uc3Qgc3RydWN0IG5ldF9kZXZpY2Vfb3BzIG1h
-Y2JfbmV0ZGV2X29wcyA9IHsNCiAJLm5kb19vcGVuCQk9IG1hY2Jfb3BlbiwNCiAJLm5kb19zdG9w
-CQk9IG1hY2JfY2xvc2UsDQpAQCAtNDI3Myw2ICs0MzE2LDEyIEBAIHN0YXRpYyBpbnQgX19tYXli
-ZV91bnVzZWQgbWFjYl9zdXNwZW5kKHN0cnVjdCBkZXZpY2UgKmRldikNCiAJCXNwaW5fbG9ja19p
-cnFzYXZlKCZicC0+bG9jaywgZmxhZ3MpOw0KIAkJbWFjYl9yZXNldF9odyhicCk7DQogCQlzcGlu
-X3VubG9ja19pcnFyZXN0b3JlKCZicC0+bG9jaywgZmxhZ3MpOw0KKw0KKwkJaWYgKCEoYnAtPmNh
-cHMgJiBNQUNCX0NBUFNfVVNSSU9fRElTQUJMRUQpKQ0KKwkJCWJwLT5wbV9kYXRhLnVzcmlvID0g
-bWFjYl9vcl9nZW1fcmVhZGwoYnAsIFVTUklPKTsNCisNCisJCWlmIChuZXRkZXYtPmh3X2ZlYXR1
-cmVzICYgTkVUSUZfRl9OVFVQTEUpDQorCQkJYnAtPnBtX2RhdGEuc2NydDIgPSBnZW1fcmVhZGxf
-bihicCwgRVRIVCwgU0NSVDJfRVRIVCk7DQogCX0NCiANCiAJbmV0aWZfY2Fycmllcl9vZmYobmV0
-ZGV2KTsNCkBAIC00MzAxLDYgKzQzNTAsMTMgQEAgc3RhdGljIGludCBfX21heWJlX3VudXNlZCBt
-YWNiX3Jlc3VtZShzdHJ1Y3QgZGV2aWNlICpkZXYpDQogCQlkaXNhYmxlX2lycV93YWtlKGJwLT5x
-dWV1ZXNbMF0uaXJxKTsNCiAJfSBlbHNlIHsNCiAJCW1hY2Jfd3JpdGVsKGJwLCBOQ1IsIE1BQ0Jf
-QklUKE1QRSkpOw0KKw0KKwkJaWYgKG5ldGRldi0+aHdfZmVhdHVyZXMgJiBORVRJRl9GX05UVVBM
-RSkNCisJCQlnZW1fd3JpdGVsX24oYnAsIEVUSFQsIFNDUlQyX0VUSFQsIGJwLT5wbV9kYXRhLnNj
-cnQyKTsNCisNCisJCWlmICghKGJwLT5jYXBzICYgTUFDQl9DQVBTX1VTUklPX0RJU0FCTEVEKSkN
-CisJCQltYWNiX29yX2dlbV93cml0ZWwoYnAsIFVTUklPLCBicC0+cG1fZGF0YS51c3Jpbyk7DQor
-DQogCQlmb3IgKHEgPSAwLCBxdWV1ZSA9IGJwLT5xdWV1ZXM7IHEgPCBicC0+bnVtX3F1ZXVlczsN
-CiAJCSAgICAgKytxLCArK3F1ZXVlKQ0KIAkJCW5hcGlfZW5hYmxlKCZxdWV1ZS0+bmFwaSk7DQpA
-QCAtNDMxMiw2ICs0MzY4LDcgQEAgc3RhdGljIGludCBfX21heWJlX3VudXNlZCBtYWNiX3Jlc3Vt
-ZShzdHJ1Y3QgZGV2aWNlICpkZXYpDQogCWJwLT5tYWNiZ2VtX29wcy5tb2dfaW5pdF9yaW5ncyhi
-cCk7DQogCW1hY2JfaW5pdF9odyhicCk7DQogCW1hY2Jfc2V0X3J4X21vZGUobmV0ZGV2KTsNCisJ
-bWFjYl9yZXN0b3JlX2ZlYXR1cmVzKGJwKTsNCiAJbmV0aWZfZGV2aWNlX2F0dGFjaChuZXRkZXYp
-Ow0KIAlpZiAoYnAtPnB0cF9pbmZvKQ0KIAkJYnAtPnB0cF9pbmZvLT5wdHBfaW5pdChuZXRkZXYp
-Ow0KLS0gDQoyLjcuNA0KDQo=
+Add spinlock protection on IPCC register update to avoid race condition.
+Without this fix, stm32_ipcc_set_bits and stm32_ipcc_clr_bits can be
+called in parallel for different channels. This results in register
+corruptions.
+
+Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+---
+ drivers/mailbox/stm32-ipcc.c | 37 +++++++++++++++++++++++++++----------
+ 1 file changed, 27 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/mailbox/stm32-ipcc.c b/drivers/mailbox/stm32-ipcc.c
+index f91dfb1327c7..5c2d1e1f988b 100644
+--- a/drivers/mailbox/stm32-ipcc.c
++++ b/drivers/mailbox/stm32-ipcc.c
+@@ -50,6 +50,7 @@ struct stm32_ipcc {
+ 	void __iomem *reg_base;
+ 	void __iomem *reg_proc;
+ 	struct clk *clk;
++	spinlock_t lock; /* protect access to IPCC registers */
+ 	int irqs[IPCC_IRQ_NUM];
+ 	int wkp;
+ 	u32 proc_id;
+@@ -58,14 +59,24 @@ struct stm32_ipcc {
+ 	u32 xmr;
+ };
+ 
+-static inline void stm32_ipcc_set_bits(void __iomem *reg, u32 mask)
++static inline void stm32_ipcc_set_bits(spinlock_t *lock, void __iomem *reg,
++				       u32 mask)
+ {
++	unsigned long flags;
++
++	spin_lock_irqsave(lock, flags);
+ 	writel_relaxed(readl_relaxed(reg) | mask, reg);
++	spin_unlock_irqrestore(lock, flags);
+ }
+ 
+-static inline void stm32_ipcc_clr_bits(void __iomem *reg, u32 mask)
++static inline void stm32_ipcc_clr_bits(spinlock_t *lock, void __iomem *reg,
++				       u32 mask)
+ {
++	unsigned long flags;
++
++	spin_lock_irqsave(lock, flags);
+ 	writel_relaxed(readl_relaxed(reg) & ~mask, reg);
++	spin_unlock_irqrestore(lock, flags);
+ }
+ 
+ static irqreturn_t stm32_ipcc_rx_irq(int irq, void *data)
+@@ -92,7 +103,7 @@ static irqreturn_t stm32_ipcc_rx_irq(int irq, void *data)
+ 
+ 		mbox_chan_received_data(&ipcc->controller.chans[chan], NULL);
+ 
+-		stm32_ipcc_set_bits(ipcc->reg_proc + IPCC_XSCR,
++		stm32_ipcc_set_bits(&ipcc->lock, ipcc->reg_proc + IPCC_XSCR,
+ 				    RX_BIT_CHAN(chan));
+ 
+ 		ret = IRQ_HANDLED;
+@@ -121,7 +132,7 @@ static irqreturn_t stm32_ipcc_tx_irq(int irq, void *data)
+ 		dev_dbg(dev, "%s: chan:%d tx\n", __func__, chan);
+ 
+ 		/* mask 'tx channel free' interrupt */
+-		stm32_ipcc_set_bits(ipcc->reg_proc + IPCC_XMR,
++		stm32_ipcc_set_bits(&ipcc->lock, ipcc->reg_proc + IPCC_XMR,
+ 				    TX_BIT_CHAN(chan));
+ 
+ 		mbox_chan_txdone(&ipcc->controller.chans[chan], 0);
+@@ -141,10 +152,12 @@ static int stm32_ipcc_send_data(struct mbox_chan *link, void *data)
+ 	dev_dbg(ipcc->controller.dev, "%s: chan:%d\n", __func__, chan);
+ 
+ 	/* set channel n occupied */
+-	stm32_ipcc_set_bits(ipcc->reg_proc + IPCC_XSCR, TX_BIT_CHAN(chan));
++	stm32_ipcc_set_bits(&ipcc->lock, ipcc->reg_proc + IPCC_XSCR,
++			    TX_BIT_CHAN(chan));
+ 
+ 	/* unmask 'tx channel free' interrupt */
+-	stm32_ipcc_clr_bits(ipcc->reg_proc + IPCC_XMR, TX_BIT_CHAN(chan));
++	stm32_ipcc_clr_bits(&ipcc->lock, ipcc->reg_proc + IPCC_XMR,
++			    TX_BIT_CHAN(chan));
+ 
+ 	return 0;
+ }
+@@ -163,7 +176,8 @@ static int stm32_ipcc_startup(struct mbox_chan *link)
+ 	}
+ 
+ 	/* unmask 'rx channel occupied' interrupt */
+-	stm32_ipcc_clr_bits(ipcc->reg_proc + IPCC_XMR, RX_BIT_CHAN(chan));
++	stm32_ipcc_clr_bits(&ipcc->lock, ipcc->reg_proc + IPCC_XMR,
++			    RX_BIT_CHAN(chan));
+ 
+ 	return 0;
+ }
+@@ -175,7 +189,7 @@ static void stm32_ipcc_shutdown(struct mbox_chan *link)
+ 					       controller);
+ 
+ 	/* mask rx/tx interrupt */
+-	stm32_ipcc_set_bits(ipcc->reg_proc + IPCC_XMR,
++	stm32_ipcc_set_bits(&ipcc->lock, ipcc->reg_proc + IPCC_XMR,
+ 			    RX_BIT_CHAN(chan) | TX_BIT_CHAN(chan));
+ 
+ 	clk_disable_unprepare(ipcc->clk);
+@@ -208,6 +222,8 @@ static int stm32_ipcc_probe(struct platform_device *pdev)
+ 	if (!ipcc)
+ 		return -ENOMEM;
+ 
++	spin_lock_init(&ipcc->lock);
++
+ 	/* proc_id */
+ 	if (of_property_read_u32(np, "st,proc-id", &ipcc->proc_id)) {
+ 		dev_err(dev, "Missing st,proc-id\n");
+@@ -259,9 +275,10 @@ static int stm32_ipcc_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	/* mask and enable rx/tx irq */
+-	stm32_ipcc_set_bits(ipcc->reg_proc + IPCC_XMR,
++	stm32_ipcc_set_bits(&ipcc->lock, ipcc->reg_proc + IPCC_XMR,
+ 			    RX_BIT_MASK | TX_BIT_MASK);
+-	stm32_ipcc_set_bits(ipcc->reg_proc + IPCC_XCR, XCR_RXOIE | XCR_TXOIE);
++	stm32_ipcc_set_bits(&ipcc->lock, ipcc->reg_proc + IPCC_XCR,
++			    XCR_RXOIE | XCR_TXOIE);
+ 
+ 	/* wakeup */
+ 	if (of_property_read_bool(np, "wakeup-source")) {
+-- 
+2.7.4
+
