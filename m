@@ -7,53 +7,48 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF7D7C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:03:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C474C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:03:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90C2320821
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:03:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 177982089E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:03:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558555404;
-	bh=BqFREttlpvHpkKLt6hvNGva987bDyHxt91ItdyW53v8=;
+	s=default; t=1558555408;
+	bh=idBNmJyCcOWF+hYiiCxlIFLuk87I9x07+aCyWP6EuiA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z5nN3CHOfY8szcTzoC4v9H35YIDq5UZapxnzpIIqpC+OZc2TY5xIDsO9+wc2nAKb2
-	 GBBmGUtEsI8yxciGu+ywe6Rhrq1v5/DoVTgo1cTpMJhJFCO/1/OZHVYoefuOP3u1MX
-	 0Y0W9uO8ClC3JwNFHyFmmWy/ZRzI+Xom10nFt9Ps=
+	b=0nfcXL04yUNFcQzv4mqLTbRqa3kKHHg+XsJLW6rRhqQChEaaC8ubtCgnDzp/bya3W
+	 XR9xK+viEq7+QX7H2KrWJ4glS78sTuj2Lde6USjS0R6XM3wfVvEUr9f7AFlAfJUHLh
+	 dxcDi1Y2vUx0KiO3yBGkxlrnSevhCRiQcqCFQL6U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731583AbfEVUDX (ORCPT
+        id S1731587AbfEVUD1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 16:03:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42360 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 16:03:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42254 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729971AbfEVTVo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:21:44 -0400
+        id S1730020AbfEVTVj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:21:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D6172173C;
-        Wed, 22 May 2019 19:21:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A43B21473;
+        Wed, 22 May 2019 19:21:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558552903;
-        bh=BqFREttlpvHpkKLt6hvNGva987bDyHxt91ItdyW53v8=;
+        s=default; t=1558552899;
+        bh=idBNmJyCcOWF+hYiiCxlIFLuk87I9x07+aCyWP6EuiA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wpuLr7FFOa2BNtBSNcTMjCqG6Yy9M7ZJLQG6zx86kgEJ5H+zLc9BUUcwhh5uFUIqE
-         gPxFDABqkrbQ6FBLNp9x54Z4FIlmNHZYjxSZFDcY1A4wLQpoevPWbrQ0qfgni7P57+
-         9xmXZGwBAvAK619qhYDTx4NDA3K4pLNgDfs8TpD8=
+        b=MRi6ACFUa6BhWMDJGy66jG25P0NGxegYayl8rHkPUEz1kp/meTryiLWkowE18ncj2
+         TqtMHLtnlKERknQFd6g0jOe9Z2tYaI+M092mPbvxkbwpdYdNGUVTMWbpjm+BhL1C4L
+         Evcjiw3kZWL8uOCbqPfqXNa6R5lE+0WlREh14vIA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ming Lei <ming.lei@redhat.com>,
-        Dongli Zhang <dongli.zhang@oracle.com>,
-        James Smart <james.smart@broadcom.com>,
-        linux-scsi@vger.kernel.org,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "James E . J . Bottomley" <jejb@linux.vnet.ibm.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 020/375] blk-mq: grab .q_usage_counter when queuing request from plug code path
-Date:   Wed, 22 May 2019 15:15:20 -0400
-Message-Id: <20190522192115.22666-20-sashal@kernel.org>
+Cc:     Tony Nguyen <anthony.l.nguyen@intel.com>,
+        Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 017/375] ice: Separate if conditions for ice_set_features()
+Date:   Wed, 22 May 2019 15:15:17 -0400
+Message-Id: <20190522192115.22666-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192115.22666-1-sashal@kernel.org>
 References: <20190522192115.22666-1-sashal@kernel.org>
@@ -66,91 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ming Lei <ming.lei@redhat.com>
+From: Tony Nguyen <anthony.l.nguyen@intel.com>
 
-[ Upstream commit e87eb301bee183d82bb3d04bd71b6660889a2588 ]
+[ Upstream commit 8f529ff912073f778e3cd74e87fb69a36499fc2f ]
 
-Just like aio/io_uring, we need to grab 2 refcount for queuing one
-request, one is for submission, another is for completion.
+Set features can have multiple features turned on|off in a single
+call.  Grouping these all in an if/else means after one condition
+is met, other conditions/features will not be evaluated.  Break
+the if/else statements by feature to ensure all features will be
+handled properly.
 
-If the request isn't queued from plug code path, the refcount grabbed
-in generic_make_request() serves for submission. In theroy, this
-refcount should have been released after the sumission(async run queue)
-is done. blk_freeze_queue() works with blk_sync_queue() together
-for avoiding race between cleanup queue and IO submission, given async
-run queue activities are canceled because hctx->run_work is scheduled with
-the refcount held, so it is fine to not hold the refcount when
-running the run queue work function for dispatch IO.
-
-However, if request is staggered into plug list, and finally queued
-from plug code path, the refcount in submission side is actually missed.
-And we may start to run queue after queue is removed because the queue's
-kobject refcount isn't guaranteed to be grabbed in flushing plug list
-context, then kernel oops is triggered, see the following race:
-
-blk_mq_flush_plug_list():
-        blk_mq_sched_insert_requests()
-                insert requests to sw queue or scheduler queue
-                blk_mq_run_hw_queue
-
-Because of concurrent run queue, all requests inserted above may be
-completed before calling the above blk_mq_run_hw_queue. Then queue can
-be freed during the above blk_mq_run_hw_queue().
-
-Fixes the issue by grab .q_usage_counter before calling
-blk_mq_sched_insert_requests() in blk_mq_flush_plug_list(). This way is
-safe because the queue is absolutely alive before inserting request.
-
-Cc: Dongli Zhang <dongli.zhang@oracle.com>
-Cc: James Smart <james.smart@broadcom.com>
-Cc: linux-scsi@vger.kernel.org,
-Cc: Martin K . Petersen <martin.petersen@oracle.com>,
-Cc: Christoph Hellwig <hch@lst.de>,
-Cc: James E . J . Bottomley <jejb@linux.vnet.ibm.com>,
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
-Tested-by: James Smart <james.smart@broadcom.com>
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Tony Nguyen <anthony.l.nguyen@intel.com>
+Signed-off-by: Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/blk-mq-sched.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/intel/ice/ice_main.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/block/blk-mq-sched.c b/block/blk-mq-sched.c
-index aa6bc5c026438..c59babca6857a 100644
---- a/block/blk-mq-sched.c
-+++ b/block/blk-mq-sched.c
-@@ -413,6 +413,14 @@ void blk_mq_sched_insert_requests(struct blk_mq_hw_ctx *hctx,
- 				  struct list_head *list, bool run_queue_async)
- {
- 	struct elevator_queue *e;
-+	struct request_queue *q = hctx->queue;
-+
-+	/*
-+	 * blk_mq_sched_insert_requests() is called from flush plug
-+	 * context only, and hold one usage counter to prevent queue
-+	 * from being released.
+diff --git a/drivers/net/ethernet/intel/ice/ice_main.c b/drivers/net/ethernet/intel/ice/ice_main.c
+index 47cc3f905b7ff..ac30288720f71 100644
+--- a/drivers/net/ethernet/intel/ice/ice_main.c
++++ b/drivers/net/ethernet/intel/ice/ice_main.c
+@@ -2545,6 +2545,9 @@ static int ice_set_features(struct net_device *netdev,
+ 	struct ice_vsi *vsi = np->vsi;
+ 	int ret = 0;
+ 
++	/* Multiple features can be changed in one call so keep features in
++	 * separate if/else statements to guarantee each feature is checked
 +	 */
-+	percpu_ref_get(&q->q_usage_counter);
- 
- 	e = hctx->queue->elevator;
- 	if (e && e->type->ops.insert_requests)
-@@ -426,12 +434,14 @@ void blk_mq_sched_insert_requests(struct blk_mq_hw_ctx *hctx,
- 		if (!hctx->dispatch_busy && !e && !run_queue_async) {
- 			blk_mq_try_issue_list_directly(hctx, list);
- 			if (list_empty(list))
--				return;
-+				goto out;
- 		}
- 		blk_mq_insert_requests(hctx, ctx, list);
- 	}
- 
- 	blk_mq_run_hw_queue(hctx, run_queue_async);
-+ out:
-+	percpu_ref_put(&q->q_usage_counter);
- }
- 
- static void blk_mq_sched_free_tags(struct blk_mq_tag_set *set,
+ 	if (features & NETIF_F_RXHASH && !(netdev->features & NETIF_F_RXHASH))
+ 		ret = ice_vsi_manage_rss_lut(vsi, true);
+ 	else if (!(features & NETIF_F_RXHASH) &&
+@@ -2557,8 +2560,9 @@ static int ice_set_features(struct net_device *netdev,
+ 	else if (!(features & NETIF_F_HW_VLAN_CTAG_RX) &&
+ 		 (netdev->features & NETIF_F_HW_VLAN_CTAG_RX))
+ 		ret = ice_vsi_manage_vlan_stripping(vsi, false);
+-	else if ((features & NETIF_F_HW_VLAN_CTAG_TX) &&
+-		 !(netdev->features & NETIF_F_HW_VLAN_CTAG_TX))
++
++	if ((features & NETIF_F_HW_VLAN_CTAG_TX) &&
++	    !(netdev->features & NETIF_F_HW_VLAN_CTAG_TX))
+ 		ret = ice_vsi_manage_vlan_insertion(vsi);
+ 	else if (!(features & NETIF_F_HW_VLAN_CTAG_TX) &&
+ 		 (netdev->features & NETIF_F_HW_VLAN_CTAG_TX))
 -- 
 2.20.1
 
