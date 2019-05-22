@@ -2,339 +2,132 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F06E5C16A69
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 06:33:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B062C072A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 06:33:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBEB420863
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 06:33:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558506786;
-	bh=wgKVZIQZh8Id9vt7Mz6Eiq6eO62ihitVU5FuMVmwOS8=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=zUoNVL7WfeffgBXEj/llluN/ey+RZNewXWqufhgsgX/UVsK35O3Jx6ofFkeqHIgtR
-	 Y2KRxd4m4DH4vYemk5VJLv2NQkdnDOkgpcEeP9okP5NxRg3UxLnxKvDvJ8cHzh6U/f
-	 GlYT5vYbwZ7+AeloRYf7x0g5xTfLpVvO1/kM3tT0=
+	by mail.kernel.org (Postfix) with ESMTP id 5698521851
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 06:33:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="GalRkEnF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728546AbfEVGdF (ORCPT
+        id S1728581AbfEVGdQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 02:33:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51548 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725796AbfEVGdF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 02:33:05 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0164920863;
-        Wed, 22 May 2019 06:33:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558506784;
-        bh=wgKVZIQZh8Id9vt7Mz6Eiq6eO62ihitVU5FuMVmwOS8=;
-        h=Date:From:To:Cc:Subject:From;
-        b=DqPN4Mn+EQmMFuJWHX4bFzK3A9UXDMPuLcEORw/EUwUJQy+nii9SKbC1/t54QrJR3
-         mboSL/pW19nqYY5uUGDHtfD5ROV9HDpw5QW/WD9hDGbbT3tLV/0kzXHhTPh3O1F1+F
-         +7d/M7vg1HLVjVAs5iE+Qvssd/YnIszoItUGzkAc=
-Date:   Wed, 22 May 2019 08:33:02 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        torvalds@linux-foundation.org, stable@vger.kernel.org
-Cc:     lwn@lwn.net, Jiri Slaby <jslaby@suse.cz>
-Subject: Linux 4.14.121
-Message-ID: <20190522063302.GA20625@kroah.com>
+        Wed, 22 May 2019 02:33:16 -0400
+Received: from mail-eopbgr60060.outbound.protection.outlook.com ([40.107.6.60]:55973
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725796AbfEVGdQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 02:33:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jeHjNQ/1noy2v+qVfWNBDIneeNtdHzDWFGoVDZQk64c=;
+ b=GalRkEnFY0RpFNPT2Y4/MYGR9o7qHIn7T5RcN8JVW1c9DZsXGwrk+PSzh5TWaakaG7RSl6RrRba6laK91durQl5FOiComFD4j4+3VKzcGrqxodbkjp/k0JPh9fKNgIenSXAftCTiur4q3y3Q+AMxtFdeaVMnzyj3XPAFZwYFehA=
+Received: from VI1PR04MB4431.eurprd04.prod.outlook.com (20.177.55.159) by
+ VI1PR04MB5135.eurprd04.prod.outlook.com (20.177.50.160) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1922.16; Wed, 22 May 2019 06:33:12 +0000
+Received: from VI1PR04MB4431.eurprd04.prod.outlook.com
+ ([fe80::2019:b65b:e862:7db3]) by VI1PR04MB4431.eurprd04.prod.outlook.com
+ ([fe80::2019:b65b:e862:7db3%3]) with mapi id 15.20.1900.020; Wed, 22 May 2019
+ 06:33:12 +0000
+From:   Peng Ma <peng.ma@nxp.com>
+To:     Vinod Koul <vkoul@kernel.org>
+CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        Leo Li <leoyang.li@nxp.com>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: RE: [EXT] Re: [PATCH 3/4] dmaengine: fsl-edma: support little endian
+ for edma driver
+Thread-Topic: [EXT] Re: [PATCH 3/4] dmaengine: fsl-edma: support little endian
+ for edma driver
+Thread-Index: AQHVA+u22k6DG9FKYUKGRuMuWXFXD6Z1FiGAgAGnp2A=
+Date:   Wed, 22 May 2019 06:33:12 +0000
+Message-ID: <VI1PR04MB44319B81D1DBBB4752822813ED000@VI1PR04MB4431.eurprd04.prod.outlook.com>
+References: <20190506090344.37784-1-peng.ma@nxp.com>
+ <20190506090344.37784-3-peng.ma@nxp.com> <20190521043807.GN15118@vkoul-mobl>
+In-Reply-To: <20190521043807.GN15118@vkoul-mobl>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peng.ma@nxp.com; 
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: c4f980ae-3e04-49c8-1132-08d6de7f5d14
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB5135;
+x-ms-traffictypediagnostic: VI1PR04MB5135:
+x-microsoft-antispam-prvs: <VI1PR04MB513572890E73E11842BD6790ED000@VI1PR04MB5135.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4303;
+x-forefront-prvs: 0045236D47
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(189003)(199004)(13464003)(71190400001)(71200400001)(8936002)(6916009)(66066001)(81156014)(81166006)(76176011)(8676002)(2906002)(86362001)(498600001)(99286004)(55016002)(14454004)(256004)(9686003)(305945005)(7736002)(6506007)(7696005)(66946007)(5660300002)(66476007)(66556008)(64756008)(66446008)(68736007)(186003)(44832011)(6246003)(229853002)(73956011)(4326008)(11346002)(52536014)(26005)(53936002)(54906003)(76116006)(3846002)(33656002)(486006)(6116002)(74316002)(102836004)(476003)(25786009)(6436002)(446003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5135;H:VI1PR04MB4431.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: V3TkbAsUM+/pOExkSEZiezb1XLwbiz5Ydkz2Hbix6n4iCrTVH7l6of9Q26E2lPRveZfhHb679dxZRfcXBprPB//1QD15JJgP6jRnp/3evaE1n9+y6RFycXBXHm/CqO0wzN+0BZiARujXuHsP/Hu70+T23LRU4Am5EiCQhSdRwG9aEwqDWki4mCRz3013acz56O3rjGMkAV8P9VJW38KBWOF6yZk0VirWMVzHAbSabkdEk6Z05kIMXbDnPoSIF/tYSNdosUinrS+w3LEPUzm+7taujGIESVZ3T1AlfIT8nx9DnfhFKiKnz1O/xvanHueKmUcX6NSql/uAn5WjzfaDSoyBbVOz2VwcIrUgYjOwd5M55KPQr43VMCr1EKtae7UBxTHm45T8qvrT4ML3WaIYgZgP0oCFJAENIYfE14fQBcc=
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="T4sUOijqQbZv57TR"
-Content-Disposition: inline
-User-Agent: Mutt/1.11.4 (2019-03-13)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c4f980ae-3e04-49c8-1132-08d6de7f5d14
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 May 2019 06:33:12.1953
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5135
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---T4sUOijqQbZv57TR
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-I'm announcing the release of the 4.14.121 kernel.
-
-All users of the 4.14 kernel series must upgrade.
-
-The updated 4.14.y git tree can be found at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linu=
-x-4.14.y
-and can be browsed at the normal kernel.org git web browser:
-	https://git.kernel.org/?p=3Dlinux/kernel/git/stable/linux-stable.git;a=3Ds=
-ummary
-
-thanks,
-
-greg k-h
-
-------------
-
- Documentation/x86/mds.rst                          |   44 ++-------------
- Makefile                                           |    2=20
- arch/arm/boot/dts/exynos5260.dtsi                  |    2=20
- arch/arm/boot/dts/exynos5422-odroidxu3-audio.dtsi  |    2=20
- arch/arm/crypto/aes-neonbs-glue.c                  |    2=20
- arch/arm/mach-exynos/firmware.c                    |    1=20
- arch/arm/mach-exynos/suspend.c                     |    2=20
- arch/arm64/crypto/aes-neonbs-glue.c                |    2=20
- arch/arm64/include/asm/processor.h                 |    8 ++
- arch/arm64/kernel/debug-monitors.c                 |    1=20
- arch/arm64/mm/proc.S                               |   34 ++++++-----
- arch/arm64/net/bpf_jit.h                           |    6 --
- arch/arm64/net/bpf_jit_comp.c                      |    1=20
- arch/x86/crypto/crct10dif-pclmul_glue.c            |   13 +---
- arch/x86/entry/entry_32.S                          |    2=20
- arch/x86/entry/entry_64.S                          |    2=20
- arch/x86/include/asm/switch_to.h                   |    1=20
- arch/x86/kernel/process_32.c                       |    7 ++
- arch/x86/kernel/process_64.c                       |    8 ++
- arch/x86/kernel/traps.c                            |    8 --
- arch/x86/kvm/x86.c                                 |   37 ++++++++----
- crypto/ccm.c                                       |   44 ++++++---------
- crypto/chacha20poly1305.c                          |    4 -
- crypto/crct10dif_generic.c                         |   11 +--
- crypto/gcm.c                                       |   34 +++--------
- crypto/salsa20_generic.c                           |    2=20
- crypto/skcipher.c                                  |    9 ++-
- drivers/char/ipmi/ipmi_ssif.c                      |    6 +-
- drivers/crypto/rockchip/rk3288_crypto_ablkcipher.c |   25 ++++++--
- drivers/crypto/vmx/aesp8-ppc.pl                    |    4 -
- drivers/md/bcache/journal.c                        |   11 ++-
- drivers/md/bcache/super.c                          |    2=20
- drivers/mtd/spi-nor/intel-spi.c                    |    8 ++
- drivers/pci/host/pci-hyperv.c                      |   21 +++++++
- drivers/power/supply/axp288_charger.c              |    4 +
- drivers/tty/vt/keyboard.c                          |   33 +++++++++--
- drivers/tty/vt/vt.c                                |    2=20
- fs/btrfs/backref.c                                 |   34 +++++++----
- fs/ext4/extents.c                                  |   17 +++++
- fs/ext4/file.c                                     |    7 ++
- fs/ext4/inode.c                                    |    2=20
- fs/ext4/ioctl.c                                    |    2=20
- fs/ext4/mballoc.c                                  |    2=20
- fs/ext4/namei.c                                    |    5 +
- fs/ext4/resize.c                                   |    1=20
- fs/ext4/super.c                                    |   60 ++++++++++++----=
------
- fs/ext4/xattr.c                                    |    2=20
- fs/fs-writeback.c                                  |   11 ++-
- fs/jbd2/journal.c                                  |    4 +
- fs/ocfs2/export.c                                  |   30 ++++++++++
- include/linux/list.h                               |   30 ++++++++++
- include/linux/mfd/da9063/registers.h               |    6 +-
- include/linux/mfd/max77620.h                       |    4 -
- kernel/fork.c                                      |   31 ++++++++++
- kernel/locking/rwsem-xadd.c                        |   44 ++++++++++-----
- lib/iov_iter.c                                     |   17 +++++
- mm/mincore.c                                       |   23 +++++++-
- net/core/fib_rules.c                               |    1=20
- sound/pci/hda/patch_hdmi.c                         |   11 +++
- sound/pci/hda/patch_realtek.c                      |    5 -
- sound/soc/codecs/max98090.c                        |   12 ++--
- sound/soc/codecs/rt5677-spi.c                      |   35 +++++-------
- sound/usb/mixer.c                                  |    2=20
- tools/objtool/check.c                              |    3 -
- 64 files changed, 526 insertions(+), 280 deletions(-)
-
-Alexander Sverdlin (1):
-      mtd: spi-nor: intel-spi: Avoid crossing 4K address boundary on read/w=
-rite
-
-Andrea Arcangeli (1):
-      userfaultfd: use RCU to free the task struct when fork fails
-
-Andy Lutomirski (2):
-      x86/speculation/mds: Revert CPU buffer clear on double fault exit
-      x86/speculation/mds: Improve CPU buffer clear documentation
-
-Barret Rhoden (1):
-      ext4: fix use-after-free race with debug_want_extra_isize
-
-Coly Li (1):
-      bcache: never set KEY_PTRS of journal key to 0 in journal_reclaim()
-
-Curtis Malainey (1):
-      ASoC: RT5677-SPI: Disable 16Bit SPI Transfers
-
-Daniel Axtens (1):
-      crypto: vmx - fix copy-paste error in CTR mode
-
-Daniel Borkmann (1):
-      bpf, arm64: remove prefetch insn in xadd mapping
-
-Debabrata Banerjee (1):
-      ext4: fix ext4_show_options for file systems w/o journal
-
-Dexuan Cui (3):
-      PCI: hv: Fix a memory leak in hv_eject_device_work()
-      PCI: hv: Add hv_pci_remove_slots() when we unload the driver
-      PCI: hv: Add pci_destroy_slot() in pci_devices_present_work(), if nec=
-essary
-
-Dmitry Osipenko (1):
-      mfd: max77620: Fix swapped FPS_PERIOD_MAX_US values
-
-Eric Biggers (9):
-      crypto: chacha20poly1305 - set cra_name correctly
-      crypto: skcipher - don't WARN on unprocessed data after slow walk step
-      crypto: crct10dif-generic - fix use via crypto_shash_digest()
-      crypto: x86/crct10dif-pcl - fix use via crypto_shash_digest()
-      crypto: gcm - fix incompatibility between "gcm" and "gcm_base"
-      crypto: arm/aes-neonbs - don't access already-freed walk.iv
-      crypto: arm64/aes-neonbs - don't access already-freed walk.iv
-      crypto: salsa20 - don't access already-freed walk.iv
-      crypto: ccm - fix incompatibility between "ccm" and "ccm_base"
-
-Eric Dumazet (1):
-      iov_iter: optimize page_copy_sane()
-
-Filipe Manana (2):
-      Btrfs: do not start a transaction during fiemap
-      Btrfs: do not start a transaction at iterate_extent_inodes()
-
-Greg Kroah-Hartman (2):
-      fib_rules: fix error in backport of e9919a24d302 ("fib_rules: return =
-0...")
-      Linux 4.14.121
-
-Gustavo A. R. Silva (1):
-      power: supply: axp288_charger: Fix unchecked return value
-
-Hui Wang (2):
-      ALSA: hda/hdmi - Read the pin sense from register when repolling
-      ALSA: hda/hdmi - Consider eld_valid when reporting jack event
-
-Jan Kara (1):
-      ext4: make sanity check in mballoc more strict
-
-Jean-Philippe Brucker (2):
-      arm64: Clear OSDLR_EL1 on CPU boot
-      arm64: Save and restore OSDLR_EL1 across suspend/resume
-
-Jiri Kosina (1):
-      mm/mincore.c: make mincore() more conservative
-
-Jiufei Xue (2):
-      jbd2: check superblock mapped prior to committing
-      fs/writeback.c: use rcu_barrier() to wait for inflight wb switches go=
-ing into workqueue when umount
-
-Jon Hunter (1):
-      ASoC: max98090: Fix restore of DAPM Muxes
-
-Josh Poimboeuf (1):
-      objtool: Fix function fallthrough detection
-
-Kailang Yang (1):
-      ALSA: hda/realtek - EAPD turn on later
-
-Kamlakant Patel (1):
-      ipmi:ssif: compare block number correctly for multi-part return messa=
-ges
-
-Kirill Tkhai (1):
-      ext4: actually request zeroing of inode table after grow
-
-Liang Chen (1):
-      bcache: fix a race between cache register and cacheset unregister
-
-Lukas Czerner (1):
-      ext4: fix data corruption caused by overlapping unaligned and aligned=
- IO
-
-Micha=C5=82 Wadowski (1):
-      ALSA: hda/realtek - Fix for Lenovo B50-70 inverted internal microphon=
-e bug
-
-Pan Bian (1):
-      ext4: avoid drop reference to iloc.bh twice
-
-Peter Zijlstra (1):
-      sched/x86: Save [ER]FLAGS on context switch
-
-Sahitya Tummala (1):
-      ext4: fix use-after-free in dx_release()
-
-Sasha Levin (1):
-      net: core: another layer of lists, around PF_MEMALLOC skb handling
-
-Sean Christopherson (1):
-      KVM: x86: Skip EFER vs. guest CPUID checks for host-initiated writes
-
-Sergei Trofimovich (1):
-      tty/vt: fix write/write race in ioctl(KDSKBSENT) handler
-
-Shuning Zhang (1):
-      ocfs2: fix ocfs2 read inode data panic in ocfs2_iget
-
-Sriram Rajagopalan (1):
-      ext4: zero out the unused memory region in the extent tree block
-
-Steve Twiss (1):
-      mfd: da9063: Fix OTP control register names to match datasheets for D=
-A9063/63L
-
-Stuart Menefy (1):
-      ARM: dts: exynos: Fix interrupt for shared EINTs on Exynos5260
-
-Sylwester Nawrocki (1):
-      ARM: dts: exynos: Fix audio (microphone) routing on Odroid XU3
-
-Theodore Ts'o (1):
-      ext4: ignore e_value_offs for xattrs with value-in-ea-inode
-
-Vincenzo Frascino (1):
-      arm64: compat: Reduce address limit
-
-Waiman Long (1):
-      locking/rwsem: Prevent decrement of reader count before increment
-
-Wen Yang (1):
-      ARM: exynos: Fix a leaked reference by adding missing of_node_put
-
-Wenwen Wang (1):
-      ALSA: usb-audio: Fix a memory leak bug
-
-Yifeng Li (1):
-      tty: vt.c: Fix TIOCL_BLANKSCREEN console blanking if blankinterval =
-=3D=3D 0
-
-Zhang Zhijie (1):
-      crypto: rockchip - update IV buffer to contain the next IV
-
-zhangyi (F) (1):
-      ext4: fix compile error when using BUFFER_TRACE
-
-
---T4sUOijqQbZv57TR
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEZH8oZUiU471FcZm+ONu9yGCSaT4FAlzk7R0ACgkQONu9yGCS
-aT7Fvw/+N286W9TmHERVAUAE0YaWT+XYMsSabYc6ZG0CxEfm+ubw07tTqIH3joWW
-7zKT7aUpRBEX7HvB9rUUs6xCCEvORpu3UOOhHYvLR5YvLXuVP+cWo2FWIjcAUlnb
-zr0F9U4r6N+8WIZVNB5HHnC6wboPY5mien70TGdZCelKMw8GcgIkyhhKSu/N+3LX
-swZMVCAwoGc/bmi6N50+7p8+p7x1hEWH2l/FfbxHeGihccagOUwr6fsiPf8qlK71
-/kbXoL6Iz22DgfeOu8uLvuU+s/62e/JdUqU20mdb/6HY7LDAl+dfeGY2kRW5pI/y
-hK7pV7jzaxCikIZ4K2E3m45yv+J8yxc5aE7QupEnZ2OIdAI4cvLAXdw7Ys/JrF2W
-Eifl9wWPDKc4mBxw60dpS+1v381AFM7NdMxrBna/P0zDv8CMbs9p97JH+73KhF1Y
-T5dvw1DPk38cJT/DdljdYzE4nNrB84CA5LjyP8vFa/TNWJ5gKILBhwFPcSQtls83
-nPkeXync2huKwduY39ELPvjeFUfS2S2PLRBAUdkNjxnl2KMA5maUl4T5FrpyiNd4
-jL14nKATiXC7xvibXkfcyWIPGT71ErfosBFDV2gq99b8HFLIJsE0mnuIGiySFwq3
-4sLdjoQJ/OutZ6t9bXwfdnsfMp1d5eVmP2ru7IsLxDyYb1wVQRk=
-=miwQ
------END PGP SIGNATURE-----
-
---T4sUOijqQbZv57TR--
+SGkgVmlub2QsDQoNClRoYW5rIGZvciB5b3UgcmVwbHkuDQp0aGUgcmVnaXN0ZXJzIChDSENGRzAg
+LSBDSENGRzE1KSBvbiBiaWcgZW5kaWFuIHNvY3MgYXMgZmFsbG93czoNCkNIQ0ZHMAkJMHgwDQpD
+SENGRzEJCTB4MQ0KQ0hDRkcyCQkweDINCkNIQ0ZHMwkJMHgzDQouLi4uLi4NCkNIQ0ZHMTIJCTB4
+Qw0KQ0hDRkcxMwkJMHhEDQpDSENGRzE0CQkweEUNCkNIQ0ZHMTUJCTB4Rg0KDQpPbiBsaXR0bGUg
+ZW5kaWFuIHNvY3MgYXMgZmFsbG93czoNCkNIQ0ZHMwkJMHgwDQpDSENGRzIJCTB4MQ0KQ0hDRkcx
+CQkweDINCkNIQ0ZHMAkJMHgzDQouLi4uLi4NCkNIQ0ZHMTUJCTB4Qw0KQ0hDRkcxNAkJMHhEDQpD
+SENGRzEzCQkweEUNCkNIQ0ZHMTIJCTB4Rg0KDQpUbyBmaXQgdGhpcyBtYXAgd2Ugc2hvdWxkIGFk
+ZCB0aGlzIHBhdGNoLg0KDQpCZXN0IFJlZ2FyZHMsDQpQZW5nDQo+LS0tLS1PcmlnaW5hbCBNZXNz
+YWdlLS0tLS0NCj5Gcm9tOiBWaW5vZCBLb3VsIDx2a291bEBrZXJuZWwub3JnPg0KPlNlbnQ6IDIw
+MTnE6jXUwjIxyNUgMTI6MzgNCj5UbzogUGVuZyBNYSA8cGVuZy5tYUBueHAuY29tPg0KPkNjOiBy
+b2JoK2R0QGtlcm5lbC5vcmc7IHNoYXduZ3VvQGtlcm5lbC5vcmc7IG1hcmsucnV0bGFuZEBhcm0u
+Y29tOyBMZW8NCj5MaSA8bGVveWFuZy5saUBueHAuY29tPjsgZGFuLmoud2lsbGlhbXNAaW50ZWwu
+Y29tOw0KPmRtYWVuZ2luZUB2Z2VyLmtlcm5lbC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwu
+b3JnOw0KPmxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS1rZXJuZWxAbGlz
+dHMuaW5mcmFkZWFkLm9yZw0KPlN1YmplY3Q6IFtFWFRdIFJlOiBbUEFUQ0ggMy80XSBkbWFlbmdp
+bmU6IGZzbC1lZG1hOiBzdXBwb3J0IGxpdHRsZSBlbmRpYW4gZm9yDQo+ZWRtYSBkcml2ZXINCj4N
+Cj5DYXV0aW9uOiBFWFQgRW1haWwNCj4NCj5PbiAwNi0wNS0xOSwgMDk6MDMsIFBlbmcgTWEgd3Jv
+dGU6DQo+PiBpbXByb3ZlIGVkbWEgZHJpdmVyIHRvIHN1cHBvcnQgbGl0dGxlIGVuZGlhbi4NCj4N
+Cj5DYW4geW91IGV4cGxhaW4gYSBiaXQgbW9yZSBob3cgYWRkaW5nIHRoZSBiZWxvdyBsaW5lcyBh
+ZGRzIGxpdHRsZSBlbmRpYW4NCj5zdXBwb3J0Li4uDQo+DQo+Pg0KPj4gU2lnbmVkLW9mZi1ieTog
+UGVuZyBNYSA8cGVuZy5tYUBueHAuY29tPg0KPj4gLS0tDQo+PiAgZHJpdmVycy9kbWEvZnNsLWVk
+bWEtY29tbW9uLmMgfCAgICA1ICsrKysrDQo+PiAgMSBmaWxlcyBjaGFuZ2VkLCA1IGluc2VydGlv
+bnMoKyksIDAgZGVsZXRpb25zKC0pDQo+Pg0KPj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZG1hL2Zz
+bC1lZG1hLWNvbW1vbi5jDQo+PiBiL2RyaXZlcnMvZG1hL2ZzbC1lZG1hLWNvbW1vbi5jIGluZGV4
+IDY4MGIyYTAuLjZiZjIzOGUgMTAwNjQ0DQo+PiAtLS0gYS9kcml2ZXJzL2RtYS9mc2wtZWRtYS1j
+b21tb24uYw0KPj4gKysrIGIvZHJpdmVycy9kbWEvZnNsLWVkbWEtY29tbW9uLmMNCj4+IEBAIC04
+Myw5ICs4MywxNCBAQCB2b2lkIGZzbF9lZG1hX2NoYW5fbXV4KHN0cnVjdCBmc2xfZWRtYV9jaGFu
+DQo+KmZzbF9jaGFuLA0KPj4gICAgICAgdTMyIGNoID0gZnNsX2NoYW4tPnZjaGFuLmNoYW4uY2hh
+bl9pZDsNCj4+ICAgICAgIHZvaWQgX19pb21lbSAqbXV4YWRkcjsNCj4+ICAgICAgIHVuc2lnbmVk
+IGludCBjaGFuc19wZXJfbXV4LCBjaF9vZmY7DQo+PiArICAgICBpbnQgZW5kaWFuX2RpZmZbNF0g
+PSB7MywgMSwgLTEsIC0zfTsNCj4+DQo+PiAgICAgICBjaGFuc19wZXJfbXV4ID0gZnNsX2NoYW4t
+PmVkbWEtPm5fY2hhbnMgLyBETUFNVVhfTlI7DQo+PiAgICAgICBjaF9vZmYgPSBmc2xfY2hhbi0+
+dmNoYW4uY2hhbi5jaGFuX2lkICUgY2hhbnNfcGVyX211eDsNCj4+ICsNCj4+ICsgICAgIGlmICgh
+ZnNsX2NoYW4tPmVkbWEtPmJpZ19lbmRpYW4pDQo+PiArICAgICAgICAgICAgIGNoX29mZiArPSBl
+bmRpYW5fZGlmZltjaF9vZmYgJSA0XTsNCj4+ICsNCj4+ICAgICAgIG11eGFkZHIgPSBmc2xfY2hh
+bi0+ZWRtYS0+bXV4YmFzZVtjaCAvIGNoYW5zX3Blcl9tdXhdOw0KPj4gICAgICAgc2xvdCA9IEVE
+TUFNVVhfQ0hDRkdfU09VUkNFKHNsb3QpOw0KPj4NCj4+IC0tDQo+PiAxLjcuMQ0KPg0KPi0tDQo+
+flZpbm9kDQo=
