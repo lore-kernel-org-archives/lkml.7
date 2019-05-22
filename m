@@ -2,268 +2,193 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDD8BC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 10:04:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DAB0C18E7D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 10:04:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89EB62075E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 10:04:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4A2620645
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 10:04:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="FAoXo7J6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729170AbfEVKEM (ORCPT
+        id S1729318AbfEVKEj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 06:04:12 -0400
-Received: from relay.sw.ru ([185.231.240.75]:44208 "EHLO relay.sw.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728424AbfEVKEM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 06:04:12 -0400
-Received: from [172.16.25.169]
-        by relay.sw.ru with esmtp (Exim 4.91)
-        (envelope-from <ktkhai@virtuozzo.com>)
-        id 1hTO6G-0002Ts-Q7; Wed, 22 May 2019 13:03:56 +0300
-Subject: Re: [PATCH v2 0/7] mm: process_vm_mmap() -- syscall for duplication a
- process mapping
-To:     Jann Horn <jannh@google.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Keith Busch <keith.busch@intel.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Weiny Ira <ira.weiny@intel.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        arunks@codeaurora.org, Vlastimil Babka <vbabka@suse.cz>,
-        Christoph Lameter <cl@linux.com>,
-        Rik van Riel <riel@surriel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Roman Gushchin <guro@fb.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Hugh Dickins <hughd@google.com>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        daniel.m.jordan@oracle.com, Adam Borowski <kilobyte@angband.pl>,
-        Linux API <linux-api@vger.kernel.org>,
+        Wed, 22 May 2019 06:04:39 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:59702 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728424AbfEVKEi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 06:04:38 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190522100437euoutp0223bcbfe26fc7541136c75ef406655ddd~g_TT7o4ab2768627686euoutp02m
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 10:04:37 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190522100437euoutp0223bcbfe26fc7541136c75ef406655ddd~g_TT7o4ab2768627686euoutp02m
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1558519477;
+        bh=fha/Fx6x2WdnhswPE74xM2jkxqehQxZKcmhjFF3aSc4=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=FAoXo7J6mzVj4rICwz1WoBjzCATt0V5WgdZx+N6MPR1ApK8syDcjaQ5a5hFtRZZgB
+         C93OxcReeMn+UxIGDLPhD5jpI4dZqyRyTeUKYs0+CLPyxN1nz2WJVWGpx8gTQTz9GQ
+         1UWgyI9bUIYx12jGuIEdUJBqFPIqn6U4oFNLnAvU=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190522100436eucas1p1fc6e02a3132020cad281edb2f7c5c061~g_TTJEG0D2378323783eucas1p1g;
+        Wed, 22 May 2019 10:04:36 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id BA.57.04298.3BE15EC5; Wed, 22
+        May 2019 11:04:35 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20190522100435eucas1p24398c029079c7a58e526299687bd1e61~g_TSa7tUX3161031610eucas1p2X;
+        Wed, 22 May 2019 10:04:35 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190522100435eusmtrp1f7461ef5592a01ba9ed0e1569e61ffa0~g_TSMwqlk0941609416eusmtrp1r;
+        Wed, 22 May 2019 10:04:35 +0000 (GMT)
+X-AuditID: cbfec7f2-f13ff700000010ca-22-5ce51eb3e78f
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id A7.EE.04140.3BE15EC5; Wed, 22
+        May 2019 11:04:35 +0100 (BST)
+Received: from [106.120.51.71] (unknown [106.120.51.71]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190522100434eusmtip184c651f0e350b704d5486e7c496a33cf~g_TRpjFZY1044210442eusmtip1P;
+        Wed, 22 May 2019 10:04:34 +0000 (GMT)
+Subject: Re: [PATCH] fbcon: Remove fbcon_has_exited
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc:     DRI Development <dri-devel@lists.freedesktop.org>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>
-References: <155836064844.2441.10911127801797083064.stgit@localhost.localdomain>
- <CALCETrU221N6uPmdaj4bRDDsf+Oc5tEfPERuyV24wsYKHn+spA@mail.gmail.com>
- <9638a51c-4295-924f-1852-1783c7f3e82d@virtuozzo.com>
- <CAG48ez2BcVCwYGmAo4MwZ2crZ9f7=qKrORcN=fYz=K5xP2xfgQ@mail.gmail.com>
- <069c90d6-924b-fa97-90d7-7d74f8785d9b@virtuozzo.com>
- <CAG48ez31Kxukg7y4PU-+3RjsYZxEHfjvs2q0EFqxDM2KDcLUoA@mail.gmail.com>
-From:   Kirill Tkhai <ktkhai@virtuozzo.com>
-Message-ID: <3e8177a1-29c9-8502-c78d-8a0743474331@virtuozzo.com>
-Date:   Wed, 22 May 2019 13:03:56 +0300
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>,
+        Yisheng Xie <ysxie@foxmail.com>,
+        Konstantin Khorenko <khorenko@virtuozzo.com>,
+        Prarit Bhargava <prarit@redhat.com>,
+        Kees Cook <keescook@chromium.org>
+From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Message-ID: <6b9747cf-8845-0eb9-878e-f2953665fcec@samsung.com>
+Date:   Wed, 22 May 2019 12:04:33 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <CAG48ez31Kxukg7y4PU-+3RjsYZxEHfjvs2q0EFqxDM2KDcLUoA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20190521142304.9652-1-daniel.vetter@ffwll.ch>
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrFKsWRmVeSWpSXmKPExsWy7djP87qb5Z7GGLTvMbdY+PAus8XyM+uY
+        La58fc9m8eb4dCaL2RM2M1mc6c61eLzzJavF5V1z2CwWftzKYjH11Dt2i3c/etktzu9KdODx
+        mN1wkcVj77cFLB4Les4zeyze85LJY97JQI/73ceZPN7vu8rmsb7nCKPH501yHq/3H2IM4Iri
+        sklJzcksSy3St0vgyrhy7x9LQYN4xfFFM9gaGK8LdTFyckgImEhcvf6YCcQWEljBKNH8Rr+L
+        kQvI/sIo0f33EQuE85lR4sq54ywwHd2b/zNDJJYzSsz4M5cdwnnLKLH42AdGkCphAWOJ3ndf
+        2EFsEQEtiY7/LWCjmAV+MEvcv/ARbCGbgJXExPZVYA28AnYSe77tYgaxWQRUJQ58mgRWIyoQ
+        IXH/2AZWiBpBiZMzn4CdwSlgLfHu9TqwemYBcYlbT+YzQdjyEs1bZzNDnPqXXWL3pkwI20Xi
+        b/92NghbWOLV8S3sELaMxOnJPWDHSQisY5T42/GCGcLZziixfPI/qA5ricPHLwJdwQG0QVNi
+        /S59iLCjxMNtp5lAwhICfBI33gpC3MAnMWnbdGaIMK9ERxs0rNUkNizbwAaztmvnSuYJjEqz
+        kHw2C8k3s5B8Mwth7wJGllWM4qmlxbnpqcWGeanlesWJucWleel6yfm5mxiBKe70v+OfdjB+
+        vZR0iFGAg1GJh9fi4eMYIdbEsuLK3EOMEhzMSiK8p089ihHiTUmsrEotyo8vKs1JLT7EKM3B
+        oiTOW83wIFpIID2xJDU7NbUgtQgmy8TBKdXAaMorlh8uOsvbXvAjO29LxwzTPXe/GGce3Wr2
+        IFR20itl3e9zFleUdjeW7NV70CHT7x2Tnn/y1YyczfaiP09OkknyWzI7x2tP/rU3Xmp6Ylt/
+        m6TGla+ITb1SoC/9+3+WNo9Y7v8j/seE45a0bRR8fkJmnevPVI2wvWFn58Ymz9tevsOhIfin
+        EktxRqKhFnNRcSIAoM++qW0DAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrDIsWRmVeSWpSXmKPExsVy+t/xu7qb5Z7GGNw6x2qx8OFdZovlZ9Yx
+        W1z5+p7N4s3x6UwWsydsZrI4051r8XjnS1aLy7vmsFks/LiVxWLqqXfsFu9+9LJbnN+V6MDj
+        MbvhIovH3m8LWDwW9Jxn9li85yWTx7yTgR73u48zebzfd5XNY33PEUaPz5vkPF7vP8QYwBWl
+        Z1OUX1qSqpCRX1xiqxRtaGGkZ2hpoWdkYqlnaGwea2VkqqRvZ5OSmpNZllqkb5egl3Hl3j+W
+        ggbxiuOLZrA1MF4X6mLk5JAQMJHo3vyfGcQWEljKKNG0IKaLkQMoLiNxfH0ZRImwxJ9rXWxd
+        jFxAJa8ZJT7ea2AFSQgLGEv0vvvCDmKLCGhJdPxvYQEpYhb4xSyx6d8nZoiOg4wSHzofM4FU
+        sQlYSUxsX8UIYvMK2Ens+bYLbDOLgKrEgU+TwGpEBSIkzrxfwQJRIyhxcuYTMJtTwFri3et1
+        YPXMAuoSf+ZdgrLFJW49mc8EYctLNG+dzTyBUWgWkvZZSFpmIWmZhaRlASPLKkaR1NLi3PTc
+        YiO94sTc4tK8dL3k/NxNjMCY3nbs55YdjF3vgg8xCnAwKvHwPrj3OEaINbGsuDL3EKMEB7OS
+        CO/pU49ihHhTEiurUovy44tKc1KLDzGaAj03kVlKNDkfmG7ySuINTQ3NLSwNzY3Njc0slMR5
+        OwQOxggJpCeWpGanphakFsH0MXFwSjUwqtZ6SfElSM4Q81ZicTc89UtZZKeA4Vn3f1feH7jX
+        /9Y9R3HNiytf8m7WnJDcnnrv/KX21tt7X7DUbQmddMlCtEuqo0zvd/LPiglr+cw6H4T6MYf9
+        M75mcMJhn35qafCDGYa3vxn5rDDqEZz3fd3SYPfi/Y0ZFpMb1kjGe/Ybhv6ZXb/qgpCAEktx
+        RqKhFnNRcSIAS5uLHf8CAAA=
+X-CMS-MailID: 20190522100435eucas1p24398c029079c7a58e526299687bd1e61
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190521142317epcas2p44d184ead3ec7d514a8fa6784abf30747
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190521142317epcas2p44d184ead3ec7d514a8fa6784abf30747
+References: <20190520082216.26273-10-daniel.vetter@ffwll.ch>
+        <CGME20190521142317epcas2p44d184ead3ec7d514a8fa6784abf30747@epcas2p4.samsung.com>
+        <20190521142304.9652-1-daniel.vetter@ffwll.ch>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21.05.2019 20:28, Jann Horn wrote:
-> On Tue, May 21, 2019 at 7:04 PM Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
->> On 21.05.2019 19:20, Jann Horn wrote:
->>> On Tue, May 21, 2019 at 5:52 PM Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
->>>> On 21.05.2019 17:43, Andy Lutomirski wrote:
->>>>> On Mon, May 20, 2019 at 7:01 AM Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
->>>>>> New syscall, which allows to clone a remote process VMA
->>>>>> into local process VM. The remote process's page table
->>>>>> entries related to the VMA are cloned into local process's
->>>>>> page table (in any desired address, which makes this different
->>>>>> from that happens during fork()). Huge pages are handled
->>>>>> appropriately.
->>> [...]
->>>>>> There are several problems with process_vm_writev() in this example:
->>>>>>
->>>>>> 1)it causes pagefault on remote process memory, and it forces
->>>>>>   allocation of a new page (if was not preallocated);
->>>>>
->>>>> I don't see how your new syscall helps.  You're writing to remote
->>>>> memory.  If that memory wasn't allocated, it's going to get allocated
->>>>> regardless of whether you use a write-like interface or an mmap-like
->>>>> interface.
->>>>
->>>> No, the talk is not about just another interface for copying memory.
->>>> The talk is about borrowing of remote task's VMA and corresponding
->>>> page table's content. Syscall allows to copy part of page table
->>>> with preallocated pages from remote to local process. See here:
->>>>
->>>> [task1]                                                        [task2]
->>>>
->>>> buf = mmap(NULL, n * PAGE_SIZE, PROT_READ|PROT_WRITE,
->>>>            MAP_PRIVATE|MAP_ANONYMOUS, ...);
->>>>
->>>> <task1 populates buf>
->>>>
->>>>                                                                buf = process_vm_mmap(pid_of_task1, addr, n * PAGE_SIZE, ...);
->>>> munmap(buf);
->>>>
->>>>
->>>> process_vm_mmap() copies PTEs related to memory of buf in task1 to task2
->>>> just like in the way we do during fork syscall.
->>>>
->>>> There is no copying of buf memory content, unless COW happens. This is
->>>> the principal difference to process_vm_writev(), which just allocates
->>>> pages in remote VM.
->>>>
->>>>> Keep in mind that, on x86, just the hardware part of a
->>>>> page fault is very slow -- populating the memory with a syscall
->>>>> instead of a fault may well be faster.
->>>>
->>>> It is not as slow, as disk IO has. Just compare, what happens in case of anonymous
->>>> pages related to buf of task1 are swapped:
->>>>
->>>> 1)process_vm_writev() reads them back into memory;
->>>>
->>>> 2)process_vm_mmap() just copies swap PTEs from task1 page table
->>>>   to task2 page table.
->>>>
->>>> Also, for faster page faults one may use huge pages for the mappings.
->>>> But really, it's funny to think about page faults, when there are
->>>> disk IO problems I shown.
->>> [...]
->>>>> That only doubles the amount of memory if you let n
->>>>> scale linearly with p, which seems unlikely.
->>>>>
->>>>>>
->>>>>> 3)received data has no a chance to be properly swapped for
->>>>>>   a long time.
->>>>>
->>>>> ...
->>>>>
->>>>>> a)kernel moves @buf pages into swap right after recv();
->>>>>> b)process_vm_writev() reads the data back from swap to pages;
->>>>>
->>>>> If you're under that much memory pressure and thrashing that badly,
->>>>> your performance is going to be awful no matter what you're doing.  If
->>>>> you indeed observe this behavior under normal loads, then this seems
->>>>> like a VM issue that should be addressed in its own right.
->>>>
->>>> I don't think so. Imagine: a container migrates from one node to another.
->>>> The nodes are the same, say, every of them has 4GB of RAM.
->>>>
->>>> Before the migration, the container's tasks used 4GB of RAM and 8GB of swap.
->>>> After the page server on the second node received the pages, we want these
->>>> pages become swapped as soon as possible, and we don't want to read them from
->>>> swap to pass a read consumer.
->>>
->>> But you don't have to copy that memory into the container's tasks all
->>> at once, right? Can't you, every time you've received a few dozen
->>> kilobytes of data or whatever, shove them into the target task? That
->>> way you don't have problems with swap because the time before the data
->>> has arrived in its final VMA is tiny.
->>
->> We try to maintain online migration with as small downtime as possible,
->> and the container on source node is completely stopped at the very end.
->> Memory of container tasks is copied in background without container
->> completely stop, and _PAGE_SOFT_DIRTY is used to track dirty pages.
->>
->> Container may create any new processes during the migration, and these
->> processes may contain any memory mappings.
->>
->> Imagine the situation. We migrate a big web server with a lot of processes,
->> and some of children processes have the same COW mapping as parent has.
->> In case of all memory dump is available at the moment of the grand parent
->> web server process creation, we populate the mapping in parent, and all
->> the children may inherit the mapping in case of they want after fork.
->> COW works here. But in case of some processes are created before all memory
->> is available on destination node, we can't do such the COW inheritance.
->> This will be the reason, the memory consumed by container grows many
->> times after the migration. So, the only solution is to create process
->> tree after memory is available and all mappings are known.
+
+Hi Daniel,
+
+On 5/21/19 4:23 PM, Daniel Vetter wrote:
+> This is unused code since
 > 
-> But if one of the processes modifies the memory after you've started
-> migrating it to the new machine, that memory can't be CoW anymore
-> anyway, right? So it should work if you first do a first pass of
-> copying the memory and creating the process hierarchy, and then copy
-> more recent changes into the individual processes, breaking the CoW
-> for those pages, right?
-
-Not so. We have to have all processes killed on source node, before
-creation the same process tree on destination machine. The process
-tree should be completely analyzed before a try of its recreation
-from ground. The analysis allows to choose the strategy and the sequence
-of each process creation and inheritance of entities like namespaces,
-mm, fdtables, etc. It's impossible to restore a process tree in case
-of you already have started to create it, but haven't stopped processes
-on source node. Also, we can restore only subset of process trees,
-but you never know what will happen with a live process tree in further.
-So, source process tree must be freezed before restore.
-
-A restore of arbitrary process tree in laws of all linux limitations
-on sequence of action to recreate an entity of a process makes this
-nontrivial mathematical problem, which has no a solution at the moment,
-and it's unknown whether it has a solution.
-
-So, at the moment of restore starts, we know all about all tasks and
-their relation ships. Yes, we start to copy memory from source to destination,
-when container on source is alive. But we track this memory with _PAGE_SOFT_DIRTY
-flag, and dirtied pages are repopulated with new content. Please, see the comment
-about hellish below.
- 
->> It's on of the examples. But believe me, there are a lot of another reasons,
->> why process tree should be created only after all process tree is freezed,
->> and no new tasks on source are possible. PGID and SSID inheritance, for
->> example. All of this requires special order of tasks creation. In case of
->> you try to restore process tree with correct namespaces and especial in
->> case of many user namespaces in a container, you will just see like a hell
->> will open before your eyes, and we never can think about this.
+> commit 6104c37094e729f3d4ce65797002112735d49cd1
+> Author: Daniel Vetter <daniel.vetter@ffwll.ch>
+> Date:   Tue Aug 1 17:32:07 2017 +0200
 > 
-> Could you elaborate on why that is so hellish?
+>     fbcon: Make fbcon a built-time depency for fbdev
+> 
+> when fbcon was made a compile-time static dependency of fbdev. We
+> can't exit fbcon anymore without exiting fbdev first, which only works
+> if all fbdev drivers have unloaded already. Hence this is all dead
+> code.
+> 
+> v2: I missed that fbcon_exit is also called from con_deinit stuff, and
+> there fbcon_has_exited prevents double-cleanup. But we can fix that
+> by properly resetting con2fb_map[] to all -1, which is used everywhere
+> else to indicate "no fb_info allocate to this console". With that
+> change the double-cleanup (which resulted in a module refcount underflow,
+> among other things) is prevented.
+> 
+> Aside: con2fb_map is a signed char, so don't register more than 128 fb_info
+> or hilarity will ensue.
+> 
+> v3: CI showed me that I still didn't fully understand what's going on
+> here. The leaked references in con2fb_map have been used upon
+> rebinding the fb console in fbcon_init. It worked because fbdev
+> unregistering still cleaned out con2fb_map, and reset it to info_idx.
+> If the last fbdev driver unregistered, then it also reset info_idx,
+> and unregistered the fbcon driver.
+> 
+> Imo that's all a bit fragile, so let's keep the con2fb_map reset to
+> -1, and in fbcon_init pick info_idx if we're starting fresh. That
+> means unbinding and rebinding will cleanse the mapping, but why are
+> you doing that if you want to retain the mapping, so should be fine.
+> 
+> Also, I think info_idx == -1 is impossible in fbcon_init - we
+> unregister the fbcon in that case. So catch&warn about that.
+> 
+> Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+> Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+> Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+> Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+> Cc: Hans de Goede <hdegoede@redhat.com>
+> Cc: "Noralf Trønnes" <noralf@tronnes.org>
+> Cc: Yisheng Xie <ysxie@foxmail.com>
+> Cc: Konstantin Khorenko <khorenko@virtuozzo.com>
+> Cc: Prarit Bhargava <prarit@redhat.com>
+> Cc: Kees Cook <keescook@chromium.org>
+> ---
+>  drivers/video/fbdev/core/fbcon.c | 39 +++++---------------------------
+>  1 file changed, 6 insertions(+), 33 deletions(-)
+This patch was #09/33 in your patch series, now it is independent change.
 
-Because you never know the way, the system came into the state you're seeing
-at the moment. Even in a simple process chain like:
+Do you want me to apply it now or should I wait for the new version of
+the whole series?
 
-          task1
-            |
-          task2
-            |
-          task3
-          /   \
-      task4  task5
+[ I looked at all patches in the series and they look fine to me.
+  After outstanding issues are fixed I'll be happy to apply them all
+  to fbdev-for-next (I can create immutable branch if needed). ]
 
-any of these processes may change its namespace, pgid, ssid, unshare mm,
-files, become a child subreaper, die and make its children reparented,
-do all of these before or after parent did one of its actions. All of
-these actions are not independent between each other, and some actions
-prohibit another actions. And you can restore the process tree only
-in case you repeat all of the sequence in the same order it was made
-by the container.
-
-It's impossible to say "task2, set your session to 5!", because the only
-way to set ssid is call setsid() syscall, which may be made only once in
-a process life. But setsid itself implies limitations on further setpgid()
-syscall (see the code, if interesting). And this limitation does not mean
-we always should call setpgid() before it, no, these are no such the simple
-rules. The same and moreover with inheritance of namespaces, when some of
-task's children may inherit old task's namespaces, some may inherit current,
-some will inherit further. A child will be able to assign a namespace, say,
-net ns, only in case of its userns allows to do this. This implies another
-limitation on process creation order, while this does not mean this gives
-a stable rule of choosing an order you create process tree. No, the only
-rule is "in the moment of time, one of tasks should made one of the above
-actions".
-
-This is a mathematical problem of ordering finite number of actors with
-finite number of rules and relationship between them, and the rules do not
-imply unambiguous replay from the ground by the end state.
-
-We behave well in limited and likely cases of process tree configurations,
-and this is enough for most cases. But common problem is very difficult,
-and currently it's not proven it even has a solution as a finite set of
-rules you may apply to restore any process tree.
-
-Kirill
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
