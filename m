@@ -2,83 +2,128 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0625CC072A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 05:52:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71494C16A69
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 05:53:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF51F2184B
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 05:52:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558504359;
-	bh=MOOvFks2X2/0Me/x7uUKuKfWslyU2/dV4Y1ZvWtG8Fk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OKk72FWHd5PNEzXkGDSu/C2uzt62nzm/lj50q6fhRDE2khZCi8UBEAKgQYIkOs/3f
-	 UTptCM4OEOdcDKFQ1l4TjXr6uAEPXzcaLZFGZK6D7aAy4zXeLFOrQdzwHo6HDXfowJ
-	 0Z0AgD80oIPyx/CjNFpMXRO6dkL4Jvn5LofTH5YM=
+	by mail.kernel.org (Postfix) with ESMTP id 198D521479
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 05:53:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rIvrTlaA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728426AbfEVFwj (ORCPT
+        id S1728477AbfEVFxK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 01:52:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38074 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725796AbfEVFwi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 01:52:38 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD27C2075B;
-        Wed, 22 May 2019 05:52:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558504358;
-        bh=MOOvFks2X2/0Me/x7uUKuKfWslyU2/dV4Y1ZvWtG8Fk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tquLToUxhpWNSQQ5bRsDNiT5VCMYBXGFhf3QCxP/K7r/9PGAMyYSNZM5U5CBYArSJ
-         lK3+0xRnm6uaFLiepxa/bFSUMsOhIucJnQcalVE1gLYj+66iRBpXMkKi/HCQFLRjFR
-         5NfvrXoOoy34nFIc9eTFC0atwCZD7SUvN6mdOPlA=
-Date:   Wed, 22 May 2019 07:52:35 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Christian Brauner <christian@brauner.io>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Subject: Re: linux-next: manual merge of the pidfd tree with Linus' tree
-Message-ID: <20190522055235.GC13702@kroah.com>
-References: <20190522110115.7350be3e@canb.auug.org.au>
+        Wed, 22 May 2019 01:53:10 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:35378 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725808AbfEVFxK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 01:53:10 -0400
+Received: by mail-wr1-f67.google.com with SMTP id m3so756692wrv.2
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 22:53:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=AHUIOEByr0m4e8bmYKW9unkrzC9v4z2NQ+RPUysVTIM=;
+        b=rIvrTlaAD1pLZoNAm/8UsZc40zqWwcdIuRSZI4meDNRFXqHG2OQD7koy1hVMkWXOUE
+         QNeK1pGllRWZxezOJHvyyQj5ZhV78Jr9a/gVLLQT+CBFO2WFbY4yfBz9v+AcE9xOScFp
+         pv8Lvkq6M9UF/PWeNFnfN9NJc5NeMgP2m9GZj11ejOkKQvKDETcDTQDYUNn9w9iu+i8w
+         dq0UfI1Lw+Sc+RMWwk0XfpfUtoVyvq+a+R0j1h6qBz3Tg37S+2YnPBuJZyOjcTriI4dr
+         G/XUSurOODzJOS0LSuuOzKp4euciSkNuFH6jPrfKWHrJQAZ65+5qJlaUM+bt+WFth7P+
+         W5ag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=AHUIOEByr0m4e8bmYKW9unkrzC9v4z2NQ+RPUysVTIM=;
+        b=OBzNhrgtUo3fbdby4bIlOtAL34DuLMDCewSKPIEdqRqSzWpXjsMAL27P4E36p+GbSi
+         XD/eRp5MKh+bbooGA+LtL+xwjbpbj4oht3Ov0xYIA4ZwLSaGU2CDLF2qJA8wZUz05BU/
+         6oqGAFWRizRkKbH5tvr+AntArZuuFeV2F39xRaky9tW9f9VBRkal54by7D9Ty04h8Kz/
+         UgsJ0x4uKcSxaxRlHblcEVHL3oUhWEGcG9TrNXwW4Ut7W1bJlBZuKIZ4sHUljzbaFAsf
+         3b20p80EjYVWO8pjdhdbDOL2xRL/jaXNqwGBka36GgeIYK7hda/9rZS5WwD/AzNrJnOI
+         rSfQ==
+X-Gm-Message-State: APjAAAWzGnwOXFOldBofRz4vE0Ttp2q+Odg3FNx1f8oCqZCgkLKI5ZiR
+        sppOlTkEJTCxN41qbwhk/6lPlQ==
+X-Google-Smtp-Source: APXvYqyXvQ6YlCncCaZyohVXqePSWI1HJn2NNbAQ6uQJ/JWVBjAhrtNXT3/rA0VJbHm2Bp8ks8sTHg==
+X-Received: by 2002:adf:fa88:: with SMTP id h8mr1612015wrr.32.1558504388344;
+        Tue, 21 May 2019 22:53:08 -0700 (PDT)
+Received: from dell ([2.27.167.43])
+        by smtp.gmail.com with ESMTPSA id h8sm9733712wmf.5.2019.05.21.22.53.07
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 21 May 2019 22:53:07 -0700 (PDT)
+Date:   Wed, 22 May 2019 06:53:06 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Benson Leung <bleung@google.com>
+Cc:     Gwendal Grignou <gwendal@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Cheng-Yi Chiang <cychiang@chromium.org>,
+        Takashi Iwai <tiwai@suse.com>, linux-iio@vger.kernel.org,
+        alsa-devel@alsa-project.org,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 00/30] Update cros_ec_commands.h
+Message-ID: <20190522055306.GC4574@dell>
+References: <20190509211353.213194-1-gwendal@chromium.org>
+ <CAPUE2ut4OUhrmbx6n8KCj7+ghXmC9iMnxGN8DMvyvZstznwwng@mail.gmail.com>
+ <20190518063949.GY4319@dell>
+ <20190521174438.GA2821@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190522110115.7350be3e@canb.auug.org.au>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190521174438.GA2821@google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 22, 2019 at 11:01:15AM +1000, Stephen Rothwell wrote:
-> Hi all,
-> 
-> Today's linux-next merge of the pidfd tree got a conflict in:
-> 
->   tools/testing/selftests/pidfd/Makefile
-> 
-> between commit:
-> 
->   ec8f24b7faaf ("treewide: Add SPDX license identifier - Makefile/Kconfig")
-> 
-> from Linus' tree and commit:
-> 
->   233ad92edbea ("pidfd: add polling selftests")
-> 
-> from the pidfd tree.
+On Tue, 21 May 2019, Benson Leung wrote:
 
-Sorry, you are going to get a number of these types of minor conflicts
-now.  That's the problem of touching thousands of files :(
+> Hi Lee,
+> 
+> On Sat, May 18, 2019 at 07:39:49AM +0100, Lee Jones wrote:
+> > On Fri, 17 May 2019, Gwendal Grignou wrote:
+> > 
+> > > Lee,
+> > > 
+> > > I verified and merged the changes on the kernels (3.18, 4.4 and 4.14)
+> > > used on chromebook using a squashed version of these patches.
+> > > (crrev.com/c/1583322, crrev.com/c/1583385, crrev.com/c/1583321
+> > > respectively)
+> > > Please let me know if you have any questions.
+> > 
+> > Is no one else from Chromium going to review?
+> > 
+> > These seem like quite important changes.
+> > 
+> 
+> I've gone ahead and acked the whole series. Enric and I are OK with this going
+> in for 5.3, and as Gwendal mentioned, he's landed these changes into our
+> production kernels for Chrome OS as well, so this is what we want to sync on.
 
-thanks,
+Wonderful, thank you.
 
-greg k-h
+> Let me know if you have any other concerns.
+> 
+> Thanks,
+> Benson
+> 
+
+
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
