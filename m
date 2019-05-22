@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5932DC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:33:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA686C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:33:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23E6C2089E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:33:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D29920675
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:33:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558553610;
-	bh=h1gIJdfP6NWnJFYxp8JvLaH8pKsFfB8sR6EQU87/iTc=;
+	s=default; t=1558553624;
+	bh=1B0Z3Z+ZgrnSvkongENlGpPWgEZtMXO/WX3vBpiNpwk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I7l/ROwbSvnIXLkL7Oqw3VEm5WyNph6D8aH5NgLZ7jnXUWLtDkLadIrfF4LJihap+
-	 IGHGqHvIsEtyN9FNQELdj/sHyVQo8Re0mYYKlSSjYdX130tCW/fQ2VIEU+eraVNNgw
-	 1SjjZUdXr9+9GaYq1hvsabgWLpYmAfg9p1KR+vlA=
+	b=1lyJACx0+8n8qZFiV3o5HjvklIBGlVnB3EmTcqZDPmM/dDJAVQ3nFH5559VHTvT/Z
+	 jrPtw5F24Jdack3ZvGJeSxlwj1rKx15J08PQwmZiSgoDxW/6t41ID6ATmvtxfiur8J
+	 W3Bwax3COEocBjP4CSFNiI8SJ3jF5s2liFHCOy8k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733284AbfEVTd3 (ORCPT
+        id S1733243AbfEVTdn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:33:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55480 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:33:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55366 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732822AbfEVTbv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:31:51 -0400
+        id S1732793AbfEVTbp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:31:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3DA0F204FD;
-        Wed, 22 May 2019 19:31:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 70D3721873;
+        Wed, 22 May 2019 19:31:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553511;
-        bh=h1gIJdfP6NWnJFYxp8JvLaH8pKsFfB8sR6EQU87/iTc=;
+        s=default; t=1558553505;
+        bh=1B0Z3Z+ZgrnSvkongENlGpPWgEZtMXO/WX3vBpiNpwk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TR3FpaqhP1QUizqcaniyTqHhBvN9JxBbJAhWQ0/Cr5znq/6R61u6jM/QdG5KOZY4a
-         AB3efYUkPBgvW6Aj8z4L2LvndE/mEzg14Ld6E7o+UF04vL1ELSP/befsBwGBiezC3p
-         ToW22O4fxQfawfRrt7tHcbX/U19hOCvYrQpixzgE=
+        b=psBe1s8PI5DFI8cbX9s0PfOjMrKcT+dZQNYVw2QbABIGCYcQOzJwhnhfg0MQI/VTL
+         IIV4gdq0TEv6XHHsfdNJUfg6SpzgU3QPUBCmXa8Qzan+fivPR7QH4MyDeWUfLvAHSR
+         ld1Wk4NBw91HBCoEXdCJd0kdGmM62tY9ORt0nCQw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kangjie Lu <kjlu@umn.edu>, Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 15/92] net: cw1200: fix a NULL pointer dereference
-Date:   Wed, 22 May 2019 15:30:10 -0400
-Message-Id: <20190522193127.27079-15-sashal@kernel.org>
+Cc:     Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 12/92] driver core: platform: Fix the usage of platform device name(pdev->name)
+Date:   Wed, 22 May 2019 15:30:07 -0400
+Message-Id: <20190522193127.27079-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522193127.27079-1-sashal@kernel.org>
 References: <20190522193127.27079-1-sashal@kernel.org>
@@ -59,36 +59,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kangjie Lu <kjlu@umn.edu>
+From: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
 
-[ Upstream commit 0ed2a005347400500a39ea7c7318f1fea57fb3ca ]
+[ Upstream commit edb16da34b084c66763f29bee42b4e6bb33c3d66 ]
 
-In case create_singlethread_workqueue fails, the fix free the
-hardware and returns NULL to avoid NULL pointer dereference.
+Platform core is using pdev->name as the platform device name to do
+the binding of the devices with the drivers. But, when the platform
+driver overrides the platform device name with dev_set_name(),
+the pdev->name is pointing to a location which is freed and becomes
+an invalid parameter to do the binding match.
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+use-after-free instance:
+
+[   33.325013] BUG: KASAN: use-after-free in strcmp+0x8c/0xb0
+[   33.330646] Read of size 1 at addr ffffffc10beae600 by task modprobe
+[   33.339068] CPU: 5 PID: 518 Comm: modprobe Tainted:
+			G S      W  O      4.19.30+ #3
+[   33.346835] Hardware name: MTP (DT)
+[   33.350419] Call trace:
+[   33.352941]  dump_backtrace+0x0/0x3b8
+[   33.356713]  show_stack+0x24/0x30
+[   33.360119]  dump_stack+0x160/0x1d8
+[   33.363709]  print_address_description+0x84/0x2e0
+[   33.368549]  kasan_report+0x26c/0x2d0
+[   33.372322]  __asan_report_load1_noabort+0x2c/0x38
+[   33.377248]  strcmp+0x8c/0xb0
+[   33.380306]  platform_match+0x70/0x1f8
+[   33.384168]  __driver_attach+0x78/0x3a0
+[   33.388111]  bus_for_each_dev+0x13c/0x1b8
+[   33.392237]  driver_attach+0x4c/0x58
+[   33.395910]  bus_add_driver+0x350/0x560
+[   33.399854]  driver_register+0x23c/0x328
+[   33.403886]  __platform_driver_register+0xd0/0xe0
+
+So, use dev_name(&pdev->dev), which fetches the platform device name from
+the kobject(dev->kobj->name) of the device instead of the pdev->name.
+
+Signed-off-by: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/cw1200/main.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/base/platform.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/wireless/cw1200/main.c b/drivers/net/wireless/cw1200/main.c
-index 0e51e27d2e3f1..317daa968e037 100644
---- a/drivers/net/wireless/cw1200/main.c
-+++ b/drivers/net/wireless/cw1200/main.c
-@@ -345,6 +345,11 @@ static struct ieee80211_hw *cw1200_init_common(const u8 *macaddr,
- 	mutex_init(&priv->wsm_cmd_mux);
- 	mutex_init(&priv->conf_mutex);
- 	priv->workqueue = create_singlethread_workqueue("cw1200_wq");
-+	if (!priv->workqueue) {
-+		ieee80211_free_hw(hw);
-+		return NULL;
-+	}
-+
- 	sema_init(&priv->scan.lock, 1);
- 	INIT_WORK(&priv->scan.work, cw1200_scan_work);
- 	INIT_DELAYED_WORK(&priv->scan.probe_work, cw1200_probe_work);
+diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+index 065fcc4be263a..071dd053a917b 100644
+--- a/drivers/base/platform.c
++++ b/drivers/base/platform.c
+@@ -796,7 +796,7 @@ static ssize_t modalias_show(struct device *dev, struct device_attribute *a,
+ 	if (len != -ENODEV)
+ 		return len;
+ 
+-	len = snprintf(buf, PAGE_SIZE, "platform:%s\n", pdev->name);
++	len = snprintf(buf, PAGE_SIZE, "platform:%s\n", dev_name(&pdev->dev));
+ 
+ 	return (len >= PAGE_SIZE) ? (PAGE_SIZE - 1) : len;
+ }
+@@ -872,7 +872,7 @@ static int platform_uevent(struct device *dev, struct kobj_uevent_env *env)
+ 		return rc;
+ 
+ 	add_uevent_var(env, "MODALIAS=%s%s", PLATFORM_MODULE_PREFIX,
+-			pdev->name);
++			dev_name(&pdev->dev));
+ 	return 0;
+ }
+ 
+@@ -881,7 +881,7 @@ static const struct platform_device_id *platform_match_id(
+ 			struct platform_device *pdev)
+ {
+ 	while (id->name[0]) {
+-		if (strcmp(pdev->name, id->name) == 0) {
++		if (strcmp(dev_name(&pdev->dev), id->name) == 0) {
+ 			pdev->id_entry = id;
+ 			return id;
+ 		}
+@@ -925,7 +925,7 @@ static int platform_match(struct device *dev, struct device_driver *drv)
+ 		return platform_match_id(pdrv->id_table, pdev) != NULL;
+ 
+ 	/* fall-back to driver name match */
+-	return (strcmp(pdev->name, drv->name) == 0);
++	return (strcmp(dev_name(&pdev->dev), drv->name) == 0);
+ }
+ 
+ #ifdef CONFIG_PM_SLEEP
 -- 
 2.20.1
 
