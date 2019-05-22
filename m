@@ -2,285 +2,107 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F315C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:10:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA99AC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:17:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A2A620868
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:10:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F49920879
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:17:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OIpjo6Ge"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kmr3ha07"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729740AbfEVTK1 (ORCPT
+        id S1729672AbfEVTRB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:10:27 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:41481 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729381AbfEVTK1 (ORCPT
+        Wed, 22 May 2019 15:17:01 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:37959 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729003AbfEVTRB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:10:27 -0400
-Received: by mail-io1-f65.google.com with SMTP id a17so2775364iot.8
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 12:10:26 -0700 (PDT)
+        Wed, 22 May 2019 15:17:01 -0400
+Received: by mail-pl1-f194.google.com with SMTP id f97so1527821plb.5
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 12:17:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JztsDPKwVSjjzVFJxCnAodsoYM1sI9+w+KE4psvk3Tw=;
-        b=OIpjo6GeYzLO9N7JZmCf7oLec+d5SKY9HgnRArn+FaQkKjL1vhpuJpfXCRPnVfQPD2
-         MsBN8zEHotlPHM/SJawlWqqjUHs8UdjfgKyXX9tmINOAmFqKZfgN5U5cDKgni9SJCvFX
-         +ws2LZ8ykSECyBD2fuq4DWKDuMk7aXfkqahIs=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=xjRRu/ivm7yiZ1o3qLhgJ4zcxl0tGsUkhCktbB4oPNk=;
+        b=kmr3ha07KpLkWeRssggZMzNfIFypCwymg1J4nTFghrFy8RSWvb3aiGxfhwvabLkGM+
+         U1zIRTCWWooqE6joJmhCmD9bcMLrg4tJ3Feh87C6AYzeItu0W+3nJFE59XHF/M+mk/Ff
+         s6zQOjHxfMsMPrYqQmVzLCH5g0jfXAX3IfYnQfMWZeHWM3rNVJfh3UnMb5ump5GBBLJS
+         jRUbPqFdOYrutU6esuhD6YokgysymCKp9gN/2lXVmMr6Ea2T4e9+wQIoh8pd9mxhEZcB
+         2Pgnr2z/Cq5ZbP7cmsoDiY4RFV4NTDqjgV8u35XKsria13ZFThv0oDq6Q80bkJl8M8Iv
+         o4zA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JztsDPKwVSjjzVFJxCnAodsoYM1sI9+w+KE4psvk3Tw=;
-        b=oLCwvG/DPYGoLVkIiclMjHPCwqHk6Nd0SwKUT7ioOnM6kgGxTxfEWpjqBMNykXafW8
-         qKHOWrc8a+WZ3lgzupZCpMKUR3cII3nkEBxhWrAkAS/2pBKIHDFWfxdcTT5QN8fhljF9
-         GxrplReJJF9sG13AM+w+r9Erd/T9ibEmD3CD1Lpb/YFUdYf01IV71b0cTqrHCUPJtrAk
-         oSljewGwAqpdRnDBsFWNOhADS9TGtp1HUpWI3sHaKxewB2MLxj4W6LqYio5Zq8/IZ0sk
-         KRYarHe81tIHBn7pgV1vpVWlAWXeQXKCmw/8KPH7DOG0PVFJ+gvH77wUTpudfZiWeAMW
-         GmNg==
-X-Gm-Message-State: APjAAAUvX2PxCUP8f2t3B5XiQcAJS3MrhmRDxIULQYhk/54Pp5wX3x2B
-        MLwtcpFPjc39s442vFgeDNegPn73i1GeMWPmyQjG3g==
-X-Google-Smtp-Source: APXvYqw9xWV+KzCJMKkerL3ddFMxInfh9UTBZXl4EYmy+vLwEW6vBMFfst9vJjUYfqb7/Gl5QP1VJGxDKw+tLkerHIA=
-X-Received: by 2002:a6b:e502:: with SMTP id y2mr34613621ioc.149.1558552225816;
- Wed, 22 May 2019 12:10:25 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=xjRRu/ivm7yiZ1o3qLhgJ4zcxl0tGsUkhCktbB4oPNk=;
+        b=X4RmeNFQxyYEX1cd2+mg+QInm7ct8h7mcIht467CuBEAynIoyeMBghAseRix+b0nat
+         1UfpuWRVT9UlkMb3i1IWpcE/lo04kWr7x1WC5dj60kb6KT9qQbQRzJYUNEEPwdG+J08k
+         x6dX/gOsXkke/s51XoxySvhEZ+qJt8sNv+myRLGa4cftCU7zKJL8A8QVcQm8Qsc35VNZ
+         lacG8ubjicO45xT6dkkh8YsHKeLPvGxC8l79T/Q3kaOyJ924iPyiWG74P4HSDSjT2q6m
+         MqT44z4QHH8/c8H14Ok079MdSVbp05xvjs8+ZWaylSmFICmiWXWb8Wxgy26MrVHS6mqr
+         aA3A==
+X-Gm-Message-State: APjAAAWTTKHGTgZxJPjsbgqmc2aYjoHXPSQ+1ko0oTxH7xWWeqjZlbe0
+        ENKu67AWzlqim6DxdoXE6poYCbhb
+X-Google-Smtp-Source: APXvYqxL3L0PS2t9QZj3d3yI+U1/rV4N9iz0LNF8aUN431cwGdSl5qdl5xQOwa0BHj4AsTmmTEFNmQ==
+X-Received: by 2002:a17:902:aa97:: with SMTP id d23mr92521131plr.313.1558552620844;
+        Wed, 22 May 2019 12:17:00 -0700 (PDT)
+Received: from bharath12345-Inspiron-5559 ([103.110.42.33])
+        by smtp.gmail.com with ESMTPSA id l68sm38347744pfb.20.2019.05.22.12.16.57
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 22 May 2019 12:17:00 -0700 (PDT)
+Date:   Thu, 23 May 2019 00:46:55 +0530
+From:   Bharath Vedartham <linux.bhar@gmail.com>
+To:     ericvh@gmail.com, lucho@ionkov.net, asmadeus@codewreck.org
+Cc:     v9fs-developer@lists.sourceforge.net, linux-kernel@vger.kernel.org
+Subject: [PATCH] 9p/cache.c: Fix memory leak in v9fs_cache_session_get_cookie
+Message-ID: <20190522191655.GA4657@bharath12345-Inspiron-5559>
 MIME-Version: 1.0
-References: <9d5dbba798410321177efa5d8a562105ff8cf429.1558533743.git.fabien.lahoudere@collabora.com>
-In-Reply-To: <9d5dbba798410321177efa5d8a562105ff8cf429.1558533743.git.fabien.lahoudere@collabora.com>
-From:   Gwendal Grignou <gwendal@chromium.org>
-Date:   Wed, 22 May 2019 12:10:14 -0700
-Message-ID: <CAPUE2uu-FEqk0iTQK3cBRQX+2dZZnqqnAeoJUK-dGAJYRKiftw@mail.gmail.com>
-Subject: Re: [PATCH 1/3] iio: common: cros_ec_sensors: support protocol v3 message
-To:     Fabien Lahoudere <fabien.lahoudere@collabora.com>
-Cc:     kernel@collabora.com, Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Lee Jones <lee.jones@linaro.org>, linux-iio@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove CROS_EC_FIFO_SIZE and "u32 fifo_max_event_count;" from the
-driver/iio/ code. This code is for a driver - cros-ec-sensor-ring -
-that is not upstreamable. [see
-http://lkml.iu.edu/hypermail/linux/kernel/1607.2/01335.html]. The EC
-interface is fine though, we are working on a new version of the
-driver that can be merged.
+v9fs_cache_session_get_cookie assigns a random cachetag to
+v9ses->cachetag, if the cachetag is not assigned previously.
 
-Gwendal.
+v9fs_random_cachetag allocates memory to v9ses->cachetag with kmalloc
+and uses scnprintf to fill it up with a cachetag.
 
-On Wed, May 22, 2019 at 7:10 AM Fabien Lahoudere
-<fabien.lahoudere@collabora.com> wrote:
->
-> Version 3 of the EC protocol provides min and max frequencies and fifo
-> size for EC sensors.
->
-> Signed-off-by: Fabien Lahoudere <fabien.lahoudere@collabora.com>
-> ---
->  .../cros_ec_sensors/cros_ec_sensors_core.c    | 98 ++++++++++++++++++-
->  .../linux/iio/common/cros_ec_sensors_core.h   |  7 ++
->  include/linux/mfd/cros_ec_commands.h          | 21 ++++
->  3 files changed, 125 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-> index 719a0df5aeeb..d5c8b4714ad6 100644
-> --- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-> +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-> @@ -19,12 +19,84 @@
->  #include <linux/slab.h>
->  #include <linux/platform_device.h>
->
-> +/*
-> + * Hard coded to the first device to support sensor fifo.  The EC has a 2048
-> + * byte fifo and will trigger an interrupt when fifo is 2/3 full.
-> + */
-> +#define CROS_EC_FIFO_SIZE (2048 * 2 / 3)
-> +
->  static char *cros_ec_loc[] = {
->         [MOTIONSENSE_LOC_BASE] = "base",
->         [MOTIONSENSE_LOC_LID] = "lid",
->         [MOTIONSENSE_LOC_MAX] = "unknown",
->  };
->
-> +static void get_default_min_max_freq_and_fifo_size(enum motionsensor_type type,
-> +                                                  u32 *min_freq,
-> +                                                  u32 *max_freq,
-> +                                                  u32 *max_fifo_events)
-> +{
-> +       /* we don't know fifo size, set to size previously used by sensor HAL */
-> +       *max_fifo_events = CROS_EC_FIFO_SIZE;
-> +
-> +       switch (type) {
-> +       case MOTIONSENSE_TYPE_ACCEL:
-> +       case MOTIONSENSE_TYPE_GYRO:
-> +               *min_freq = 12500;
-> +               *max_freq = 100000;
-> +               break;
-> +       case MOTIONSENSE_TYPE_MAG:
-> +               *min_freq = 5000;
-> +               *max_freq = 25000;
-> +               break;
-> +       case MOTIONSENSE_TYPE_PROX:
-> +       case MOTIONSENSE_TYPE_LIGHT:
-> +               *min_freq = 100;
-> +               *max_freq = 50000;
-> +               break;
-> +       case MOTIONSENSE_TYPE_BARO:
-> +               *min_freq = 250;
-> +               *max_freq = 20000;
-> +               break;
-> +       case MOTIONSENSE_TYPE_ACTIVITY:
-> +       default:
-> +               *max_fifo_events = 0;
-> +               *min_freq = 0;
-> +               *max_freq = 0;
-> +               break;
-> +       }
-> +}
-> +
-> +static int cros_ec_get_host_cmd_version_mask(struct cros_ec_device *ec_dev,
-> +                                            u16 cmd_offset, u16 cmd, u32 *mask)
-> +{
-> +       struct {
-> +               struct cros_ec_command msg;
-> +               union {
-> +                       struct ec_params_get_cmd_versions params;
-> +                       struct ec_response_get_cmd_versions resp;
-> +               };
-> +       } __packed buf;
-> +       struct ec_params_get_cmd_versions *params = &buf.params;
-> +       struct ec_response_get_cmd_versions *resp = &buf.resp;
-> +       struct cros_ec_command *msg = &buf.msg;
-> +       int ret;
-> +
-> +       memset(&buf, 0, sizeof(buf));
-> +       msg->command = EC_CMD_GET_CMD_VERSIONS + cmd_offset;
-> +       msg->insize = sizeof(*resp);
-> +       msg->outsize = sizeof(*params);
-> +       params->cmd = cmd;
-> +       ret = cros_ec_cmd_xfer_status(ec_dev, msg);
-> +       if (ret >= 0) {
-> +               if (msg->result == EC_RES_SUCCESS)
-> +                       *mask = resp->version_mask;
-> +               else
-> +                       *mask = 0;
-> +       }
-> +       return ret;
-> +}
-> +
->  int cros_ec_sensors_core_init(struct platform_device *pdev,
->                               struct iio_dev *indio_dev,
->                               bool physical_device)
-> @@ -33,6 +105,8 @@ int cros_ec_sensors_core_init(struct platform_device *pdev,
->         struct cros_ec_sensors_core_state *state = iio_priv(indio_dev);
->         struct cros_ec_dev *ec = dev_get_drvdata(pdev->dev.parent);
->         struct cros_ec_sensor_platform *sensor_platform = dev_get_platdata(dev);
-> +       u32 ver_mask;
-> +       int ret;
->
->         platform_set_drvdata(pdev, indio_dev);
->
-> @@ -47,8 +121,16 @@ int cros_ec_sensors_core_init(struct platform_device *pdev,
->
->         mutex_init(&state->cmd_lock);
->
-> +       /* determine what version of MOTIONSENSE CMD EC has */
-> +       ret = cros_ec_get_host_cmd_version_mask(state->ec,
-> +                                               ec->cmd_offset,
-> +                                               EC_CMD_MOTION_SENSE_CMD,
-> +                                               &ver_mask);
-> +       if (ret < 0 || ver_mask == 0)
-> +               return -ENODEV;
-> +
->         /* Set up the host command structure. */
-> -       state->msg->version = 2;
-> +       state->msg->version = fls(ver_mask) - 1;
->         state->msg->command = EC_CMD_MOTION_SENSE_CMD + ec->cmd_offset;
->         state->msg->outsize = sizeof(struct ec_params_motion_sense);
->
-> @@ -66,6 +148,20 @@ int cros_ec_sensors_core_init(struct platform_device *pdev,
->                 }
->                 state->type = state->resp->info.type;
->                 state->loc = state->resp->info.location;
-> +               if (state->msg->version < 3) {
-> +                       get_default_min_max_freq_and_fifo_size(
-> +                                       state->resp->info.type,
-> +                                       &state->min_freq,
-> +                                       &state->max_freq,
-> +                                       &state->fifo_max_event_count);
-> +               } else {
-> +                       state->min_freq =
-> +                               state->resp->info_3.min_frequency;
-> +                       state->max_freq =
-> +                               state->resp->info_3.max_frequency;
-> +                       state->fifo_max_event_count =
-> +                               state->resp->info_3.fifo_max_event_count;
-> +               }
->         }
->
->         return 0;
-> diff --git a/include/linux/iio/common/cros_ec_sensors_core.h b/include/linux/iio/common/cros_ec_sensors_core.h
-> index ce16445411ac..4742a9637a85 100644
-> --- a/include/linux/iio/common/cros_ec_sensors_core.h
-> +++ b/include/linux/iio/common/cros_ec_sensors_core.h
-> @@ -78,6 +78,13 @@ struct cros_ec_sensors_core_state {
->                                     unsigned long scan_mask, s16 *data);
->
->         int curr_sampl_freq;
-> +
-> +       /* Min and Max Sampling Frequency in mHz */
-> +       u32 min_freq;
-> +       u32 max_freq;
-> +
-> +       /* event fifo size represented in number of events */
-> +       u32 fifo_max_event_count;
->  };
->
->  /**
-> diff --git a/include/linux/mfd/cros_ec_commands.h b/include/linux/mfd/cros_ec_commands.h
-> index dcec96f01879..27d71cbf22f1 100644
-> --- a/include/linux/mfd/cros_ec_commands.h
-> +++ b/include/linux/mfd/cros_ec_commands.h
-> @@ -1744,6 +1744,27 @@ struct ec_response_motion_sense {
->                         uint8_t chip;
->                 } info;
->
-> +               /* Used for MOTIONSENSE_CMD_INFO version 3 */
-> +               struct __ec_todo_unpacked {
-> +                       /* Should be element of enum motionsensor_type. */
-> +                       uint8_t type;
-> +
-> +                       /* Should be element of enum motionsensor_location. */
-> +                       uint8_t location;
-> +
-> +                       /* Should be element of enum motionsensor_chip. */
-> +                       uint8_t chip;
-> +
-> +                       /* Minimum sensor sampling frequency */
-> +                       uint32_t min_frequency;
-> +
-> +                       /* Maximum sensor sampling frequency */
-> +                       uint32_t max_frequency;
-> +
-> +                       /* Max number of sensor events that could be in fifo */
-> +                       uint32_t fifo_max_event_count;
-> +               } info_3;
-> +
->                 /* Used for MOTIONSENSE_CMD_DATA */
->                 struct ec_response_motion_sensor_data data;
->
-> --
-> 2.20.1
->
+But if scnprintf fails, v9ses->cachetag is not freed in the current code causing a memory leak.
+
+Fix this by freeing v9ses->cachetag it v9fs_random_cachetag fails.
+
+This was reported by syzbot, the link to the report is below:
+https://syzkaller.appspot.com/bug?id=f012bdf297a7a4c860c38a88b44fbee43fd9bbf3
+
+Reported-by: syzbot+3a030a73b6c1e9833815@syzkaller.appspotmail.com 
+Signed-off-by: Bharath Vedartham <linux.bhar@gmail.com>
+---
+ fs/9p/cache.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/fs/9p/cache.c b/fs/9p/cache.c
+index 9eb3470..4463b91 100644
+--- a/fs/9p/cache.c
++++ b/fs/9p/cache.c
+@@ -66,6 +66,7 @@ void v9fs_cache_session_get_cookie(struct v9fs_session_info *v9ses)
+ 	if (!v9ses->cachetag) {
+ 		if (v9fs_random_cachetag(v9ses) < 0) {
+ 			v9ses->fscache = NULL;
++			kfree(v9ses->cachetag);
+ 			return;
+ 		}
+ 	}
+-- 
+2.7.4
+
