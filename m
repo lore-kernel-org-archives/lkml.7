@@ -2,162 +2,106 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE9CFC072B5
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 00:14:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B354FC072B5
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 00:22:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A44621841
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 00:14:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558484065;
-	bh=tBUlh7t4ziJIcxmShUGJnmzqdE/W3H7m9a3/sy7TF5I=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=krlo77zrwBSSbycVp6PeX+ZEsv1pmAqWkBegLZukr1srzlttwTTRPHGPaMra3E3UR
-	 9iyl3sXPMM466OPWJAjpw2DeaSKab9r52AfW9psAQaBnmiTzodrjuY9pd8sNCGvssC
-	 5947eznG4Gg2F1XBLandk51mI4tzsxJgkgFynXWc=
+	by mail.kernel.org (Postfix) with ESMTP id 7CF0321841
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 00:22:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="leU35Iyb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727857AbfEVAOY (ORCPT
+        id S1728061AbfEVAW5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 20:14:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45720 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725797AbfEVAOY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 20:14:24 -0400
-Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C84D921773;
-        Wed, 22 May 2019 00:14:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558484062;
-        bh=tBUlh7t4ziJIcxmShUGJnmzqdE/W3H7m9a3/sy7TF5I=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=oLSNEzDmqFj7jLXPvQ3g4WURAHlo6UFEUiGi0QquRUiCvNNoqotBiH3eypXFjfBg9
-         zPr8X2BLt365raBut96Q4gD5Q3ucP/BwXvLE+akh3yjczbESjFok9G6DFmgiKZLjWn
-         B8cZEIuTJHhGUS0cIITDrCXdx/oBKbKsBSV7naHI=
-Date:   Tue, 21 May 2019 17:14:22 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Paul Walmsley <paul.walmsley@sifive.com>
-Cc:     Joe Perches <joe@perches.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] scripts/spelling.txt: drop "sepc" from the misspelling
- list
-Message-Id: <20190521171422.c7ef965e39b27f6142788412@linux-foundation.org>
-In-Reply-To: <alpine.DEB.2.21.9999.1905191108180.10723@viisi.sifive.com>
-References: <20190518210037.13674-1-paul.walmsley@sifive.com>
-        <201b9ab622b8359225f3a3b673a05047ffce5744.camel@perches.com>
-        <alpine.DEB.2.21.9999.1905191108180.10723@viisi.sifive.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Tue, 21 May 2019 20:22:57 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:60062 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725797AbfEVAW5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 20:22:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Hm8KAS51FJgM/544BU4ZzW/jeZKKGVPb5yRLDzOERlY=; b=leU35Iybl8T8ZH3/2J0Fayieg
+        mN0/yeeBqOYuC1ZYQEHNHy+tTiuO6vwwKgp2pusxI1PCN1xOmyoCip2vAGQ82/HtdWs+jY8Knha44
+        GHz3WT4Gy/EWueH1O3bpM7XJ//tOIrptKYN2Pz9+Akp+IWOK39Emv9W9+3koZlzWlugA2xK4evtx7
+        CHq/WoxfPmVWTtmTub4WBz/x8vf+AAu/4nbu876cLK+Y1g6Ig5gouPbuMZis2Ds5Hi8Aey6EqEoMZ
+        uB45sUVwuTSVK1YPNx7l4oP/p6p2esbXtZ8Q1Li5u5A3J6a91keIpH8v8w1q/bV29aqVUvSEv+FzY
+        B7F7y1Dew==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hTF1v-0004pF-Gz; Wed, 22 May 2019 00:22:51 +0000
+Subject: Re: [PATCH] pinctrl: stmfx: Fix compile issue when CONFIG_OF_GPIO is
+ not defined
+To:     Amelie Delaunay <amelie.delaunay@st.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com, kbuild-all@01.org
+References: <1558338735-8444-1-git-send-email-amelie.delaunay@st.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <381dcecc-2ca9-c44f-5a83-a293372ecd1e@infradead.org>
+Date:   Tue, 21 May 2019 17:22:50 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <1558338735-8444-1-git-send-email-amelie.delaunay@st.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 19 May 2019 11:24:22 -0700 (PDT) Paul Walmsley <paul.walmsley@sifive.com> wrote:
-
-> On Sat, 18 May 2019, Joe Perches wrote:
+On 5/20/19 12:52 AM, Amelie Delaunay wrote:
+> When CONFIG_GPIO_OF is not defined, struct gpio_chip 'of_node' member does
+> not exist:
+> drivers/pinctrl/pinctrl-stmfx.c: In function 'stmfx_pinctrl_probe':
+> drivers/pinctrl/pinctrl-stmfx.c:652:17: error: 'struct gpio_chip' has no member named 'of_node'
+>      pctl->gpio_chip.of_node = np;
 > 
-> > On Sat, 2019-05-18 at 14:00 -0700, Paul Walmsley wrote:
-> > > The RISC-V architecture has a register named the "Supervisor Exception
-> > > Program Counter", or "sepc".  This abbreviation triggers
-> > > checkpatch.pl's misspelling detector, resulting in noise in the
-> > > checkpatch output.  The risk that this noise could cause more useful
-> > > warnings to be missed seems to outweigh the harm of an occasional
-> > > misspelling of "spec".  Thus drop the "sepc" entry from the
-> > > misspelling list.
-> > 
-> > I would agree if you first fixed the existing sepc/spec
-> > and sepcific/specific typos.
-> > 
-> > arch/powerpc/kvm/book3s_xics.c:	 * a pending interrupt, this is a SW error and PAPR sepcifies
-> > arch/unicore32/include/mach/regs-gpio.h: * Sepcial Voltage Detect Reg GPIO_GPIR.
-> > drivers/scsi/lpfc/lpfc_init.c:		/* Stop any OneConnect device sepcific driver timers */
-> > drivers/staging/rtl8723bs/hal/rtl8723b_phycfg.c:* OverView:	Read "sepcific bits" from BB register
-> > drivers/net/wireless/realtek/rtlwifi/wifi.h:/* Ref: 802.11i sepc D10.0 7.3.2.25.1
+> Fixes: 1490d9f841b1 ("pinctrl: Add STMFX GPIO expander Pinctrl/GPIO driver")
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+
+This is good as far as it goes, but I am also seeing a build error in
+pinctrl-stmfx.c when CONFIG_OF is not set/enabled (randconfig):
+
+../drivers/pinctrl/pinctrl-stmfx.c:409:20: error: ‘pinconf_generic_dt_node_to_map_pin’ undeclared here (not in a function)
+  .dt_node_to_map = pinconf_generic_dt_node_to_map_pin,
+                    ^
+
+> ---
+>  drivers/pinctrl/pinctrl-stmfx.c | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> Your agreement shouldn't be needed for the patch I sent.
+> diff --git a/drivers/pinctrl/pinctrl-stmfx.c b/drivers/pinctrl/pinctrl-stmfx.c
+> index eba872c..bb64aa0 100644
+> --- a/drivers/pinctrl/pinctrl-stmfx.c
+> +++ b/drivers/pinctrl/pinctrl-stmfx.c
+> @@ -648,7 +648,9 @@ static int stmfx_pinctrl_probe(struct platform_device *pdev)
+>  	pctl->gpio_chip.base = -1;
+>  	pctl->gpio_chip.ngpio = pctl->pctl_desc.npins;
+>  	pctl->gpio_chip.can_sleep = true;
+> +#ifdef CONFIG_OF_GPIO
+>  	pctl->gpio_chip.of_node = np;
+> +#endif
+>  	pctl->gpio_chip.need_valid_mask = true;
+>  
+>  	ret = devm_gpiochip_add_data(pctl->dev, &pctl->gpio_chip, pctl);
+> 
 
-I always find Joe's input to be very useful.
 
-Here:
-
-From: Andrew Morton <akpm@linux-foundation.org>
-Subject: scripts-spellingtxt-drop-sepc-from-the-misspelling-list-fix
-
-fix existing "sepc" instances, per Joe
-
-Cc: Joe Perches <joe@perches.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
----
-
- arch/powerpc/kvm/book3s_xics.c                  |    2 +-
- arch/unicore32/include/mach/regs-gpio.h         |    2 +-
- drivers/net/wireless/realtek/rtlwifi/wifi.h     |    2 +-
- drivers/scsi/lpfc/lpfc_init.c                   |    2 +-
- drivers/staging/rtl8723bs/hal/rtl8723b_phycfg.c |    2 +-
- 5 files changed, 5 insertions(+), 5 deletions(-)
-
---- a/arch/powerpc/kvm/book3s_xics.c~scripts-spellingtxt-drop-sepc-from-the-misspelling-list-fix
-+++ a/arch/powerpc/kvm/book3s_xics.c
-@@ -830,7 +830,7 @@ static noinline int kvmppc_h_eoi(struct
- 	 *
- 	 * Note: If EOI is incorrectly used by SW to lower the CPPR
- 	 * value (ie more favored), we do not check for rejection of
--	 * a pending interrupt, this is a SW error and PAPR sepcifies
-+	 * a pending interrupt, this is a SW error and PAPR specifies
- 	 * that we don't have to deal with it.
- 	 *
- 	 * The sending of an EOI to the ICS is handled after the
---- a/arch/unicore32/include/mach/regs-gpio.h~scripts-spellingtxt-drop-sepc-from-the-misspelling-list-fix
-+++ a/arch/unicore32/include/mach/regs-gpio.h
-@@ -32,7 +32,7 @@
-  */
- #define GPIO_GEDR	(PKUNITY_GPIO_BASE + 0x0018)
- /*
-- * Sepcial Voltage Detect Reg GPIO_GPIR.
-+ * Special Voltage Detect Reg GPIO_GPIR.
-  */
- #define GPIO_GPIR	(PKUNITY_GPIO_BASE + 0x0020)
- 
---- a/drivers/net/wireless/realtek/rtlwifi/wifi.h~scripts-spellingtxt-drop-sepc-from-the-misspelling-list-fix
-+++ a/drivers/net/wireless/realtek/rtlwifi/wifi.h
-@@ -597,7 +597,7 @@ enum ht_channel_width {
- 	HT_CHANNEL_WIDTH_MAX,
- };
- 
--/* Ref: 802.11i sepc D10.0 7.3.2.25.1
-+/* Ref: 802.11i spec D10.0 7.3.2.25.1
-  * Cipher Suites Encryption Algorithms
-  */
- enum rt_enc_alg {
---- a/drivers/scsi/lpfc/lpfc_init.c~scripts-spellingtxt-drop-sepc-from-the-misspelling-list-fix
-+++ a/drivers/scsi/lpfc/lpfc_init.c
-@@ -2963,7 +2963,7 @@ lpfc_stop_hba_timers(struct lpfc_hba *ph
- 		del_timer_sync(&phba->fcp_poll_timer);
- 		break;
- 	case LPFC_PCI_DEV_OC:
--		/* Stop any OneConnect device sepcific driver timers */
-+		/* Stop any OneConnect device specific driver timers */
- 		lpfc_sli4_stop_fcf_redisc_wait_timer(phba);
- 		break;
- 	default:
---- a/drivers/staging/rtl8723bs/hal/rtl8723b_phycfg.c~scripts-spellingtxt-drop-sepc-from-the-misspelling-list-fix
-+++ a/drivers/staging/rtl8723bs/hal/rtl8723b_phycfg.c
-@@ -45,7 +45,7 @@ static	u32 phy_CalculateBitShift(u32 Bit
- /**
- * Function:	PHY_QueryBBReg
- *
--* OverView:	Read "sepcific bits" from BB register
-+* OverView:	Read "specific bits" from BB register
- *
- * Input:
- *		struct adapter *	Adapter,
-_
-
+-- 
+~Randy
