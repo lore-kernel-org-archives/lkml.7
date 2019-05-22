@@ -2,127 +2,110 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71928C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:02:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77F7FC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:05:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4585120868
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:02:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558551755;
-	bh=7ZM5iEIOlF4YTFesSkJZ2PLom1e+sElpvyj/iV4+kfw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OwW+bclRJ3/lzDNlNJGaybJ2JEBp4TPn6V8cqCeEfPpTI+KCsBCHHqJ+/B/VlgKaI
-	 8juVEXCLdE/SxtIq9cBd6Ej+MD4hDcoeDoNA7CEIVj2H5FsH+uR5l9Rv1+2v1+dIAv
-	 U9NbUrksVRUsV/YYAOX930szhzehnsXYQFTHjT0A=
+	by mail.kernel.org (Postfix) with ESMTP id 54ACB20868
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:05:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729774AbfEVTCe (ORCPT
+        id S1729580AbfEVTFK convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:02:34 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:44832 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728615AbfEVTCd (ORCPT
+        Wed, 22 May 2019 15:05:10 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:58919 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729596AbfEVTFI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:02:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=9B8U3iqfxSIvyPWHXlqH8b3N5v5U2m5E4u+F+RrSRvo=; b=bnz2FssI+h0Va04qsA8s8eWL9
-        oDiga0Y1Y5PSIXQ4wdHLpzsEv/sDm9u/S8PFuh6H2s7FX6hJranqYP8hGGPcI1lIBzibbBWa6IwgT
-        zqBDjeGJ8vyZ7dKZSyNDiV5X9WsiThtnuEKkyhuqvulFc2i5Xrrm7tXACJ0pTgQm4SVMU=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hTWVR-00053O-LA; Wed, 22 May 2019 19:02:29 +0000
-Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id A2E0C11226BC; Wed, 22 May 2019 20:02:25 +0100 (BST)
-Date:   Wed, 22 May 2019 20:02:25 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
-        lee.jones@linaro.org, lgirdwood@gmail.com
-Subject: Re: [GIT PULL] Immutable branch between LEDs, MFD and REGULATOR
-Message-ID: <20190522190225.GH8582@sirena.org.uk>
-References: <20190521203038.31946-1-jacek.anaszewski@gmail.com>
- <20190521211504.GD1580@sirena.org.uk>
- <0340dce2-87fb-938d-615e-376e29f37b54@gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="r5lq+205vWdkqwtk"
-Content-Disposition: inline
-In-Reply-To: <0340dce2-87fb-938d-615e-376e29f37b54@gmail.com>
-X-Cookie: Does the name Pavlov ring a bell?
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 22 May 2019 15:05:08 -0400
+Received: from mail-pl1-f200.google.com ([209.85.214.200])
+        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1hTWXz-0001vu-DG
+        for linux-kernel@vger.kernel.org; Wed, 22 May 2019 19:05:07 +0000
+Received: by mail-pl1-f200.google.com with SMTP id b69so1895412plb.9
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 12:05:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=czfXF4X+WzadjYZP7hUsAFz3lA9BYtuDgy22wPY8BdM=;
+        b=JrvyWfcSe9m1dXc/PJCv5LgofgRO4+cyCRRR2b0AmD+W1Q46HKn+4i2RkWzi+e5qS1
+         c616zGlJyh2Khu1z2AtzKfNzplA/ihexpuKHmbLVnsGOvY/sBTqt5IA8LfN921qlMtID
+         aq6BF1LQ/XUM8SUNThsyj+4XkYjGSJ3KvfMBlHX5Gr9IRGtjLm4NqDbCq60G/8ntSWtT
+         lvzuUNwTN6hjBiVB1pReQmrSsx7b0y5/sAnuJL1MGdVsC+67VTKYBfm0ywmGqfV9ZU8h
+         bQAGk4oSTkGPY91IwyeF8CMSNpg08Azw7B6KH3o09iWZUcdFHozMyyCjhQz4N0vMZdQ5
+         qRIQ==
+X-Gm-Message-State: APjAAAWQxh8+AnRMLEHkuWoK3FmZWD7c002g9/7H+VGzdKTbcY7/WOQ7
+        dkkHNStHtAp4FHq4NRznBCzaPJjVFdOK2dHOs4pzlXhMtlTkf8b4s9gRCvVuVLpy4+vi2PCmU9U
+        zQB4GLeMlHFCuA4ZjyDYFu6XTm0FF8gqFJlGX1PUmqg==
+X-Received: by 2002:a17:902:9a4c:: with SMTP id x12mr21885951plv.298.1558551906123;
+        Wed, 22 May 2019 12:05:06 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwICiuaHiG2EomDuE5aveWHHAOjp0PRky8IYbMLukmRtN+STI+JHnlJPa1KkQOBxiMrcxBL6Q==
+X-Received: by 2002:a17:902:9a4c:: with SMTP id x12mr21885926plv.298.1558551905870;
+        Wed, 22 May 2019 12:05:05 -0700 (PDT)
+Received: from [192.168.1.220] (220-133-187-190.HINET-IP.hinet.net. [220.133.187.190])
+        by smtp.gmail.com with ESMTPSA id i27sm53077607pfk.162.2019.05.22.12.05.03
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 22 May 2019 12:05:05 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH] PCI / PM: Don't runtime suspend when device only supports
+ wakeup from D0
+From:   Kai Heng Feng <kai.heng.feng@canonical.com>
+In-Reply-To: <20190522185339.pfo5xeopyz2i5iem@wunner.de>
+Date:   Thu, 23 May 2019 03:05:08 +0800
+Cc:     Alan Stern <stern@rowland.harvard.edu>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Rafael Wysocki <rafael.j.wysocki@intel.com>,
+        linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        linux-usb@vger.kernel.org
+Content-Transfer-Encoding: 8BIT
+Message-Id: <850CC1CD-2043-4C32-8BB1-5F5BAC1DDF55@canonical.com>
+References: <20190522181157.GC79339@google.com>
+ <Pine.LNX.4.44L0.1905221433310.1410-100000@iolanthe.rowland.org>
+ <20190522185339.pfo5xeopyz2i5iem@wunner.de>
+To:     Lukas Wunner <lukas@wunner.de>
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---r5lq+205vWdkqwtk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-On Wed, May 22, 2019 at 08:27:32PM +0200, Jacek Anaszewski wrote:
-> On 5/21/19 11:15 PM, Mark Brown wrote:
-> > On Tue, May 21, 2019 at 10:30:38PM +0200, Jacek Anaszewski wrote:
+> On May 23, 2019, at 2:53 AM, Lukas Wunner <lukas@wunner.de> wrote:
+> 
+> On Wed, May 22, 2019 at 02:39:56PM -0400, Alan Stern wrote:
+>> According to Kai, PME signalling doesn't work in D0 -- or at least, it
+>> is _documented_ not to work in D0 -- even though it is enabled and the
+>> device claims to support it.
+>> 
+>> In any case, I don't really see any point in "runtime suspending" a 
+>> device while leaving it in D0.  We might as well just leave it alone.
+> 
+> There may be devices whose drivers are able to reduce power consumption
+> through some device-specific means when runtime suspending, even though
+> the device remains in PCI_D0.  The patch would cause a power regression
+> for those.
+> 
+> In particular, pci_target_state() returns PCI_D0 if the device lacks the
+> PM capability.
 
-> > >        regulator: lm363x: Make the gpio register enable flexible
-> > >        regulator: lm363x: Add support for LM36274
+So an explicit device_can_wakeup() check before calling pci_target_state()
+is needed to avoid the case you described.
 
-> > Why have these been applied, I haven't reviewed them?  As far as I can
-> > tell they were sent before the merge window so I'd expect a resend at
-> > this point...
+I’ll add this in patch v2.
 
-> The patch set have been floating around for some time and besides
+Kai-Heng
 
-Most of that time as far as I can tell they weren't being posted to
-subsystem maintainers, you can't expect people to be aware of patches
-that they are not being sent and single postings get missed or dropped
-for all sorts of reasons.
+> 
+> Thanks,
+> 
+> Lukas
 
-> the v2 you were cc'ed by Dan, I also poked you a week ago for v4 [1].
-
-That post from a week ago was you copying me into a thread I wasn't CCed
-on saying I should have been sent the patches.  My expectation would
-therefore be that someone would send me the patches, I'm obviously going
-to prioritize patches that actually get sent to me over ones where I
-have to go searching to try to turn up copies.
-
-> Don't be surprised that I assumed you simply don't care.
-
-You have unreasonable expectations here.  At the very least I would have
-expected something along the lines of "hey, you don't seem to have
-looked at these" before you just applied things, and ideally ensuring
-that the patches had actually been sent to everyone with a reasonable
-lead time so there was a good chance that review could happen.
-
-> Still, we're awaiting your comments
-
-If someone sends me the patches...
-
-> [0] https://lkml.org/lkml/2019/4/10/547
-> [1] https://lkml.org/lkml/2019/5/14/717
-
---r5lq+205vWdkqwtk
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlzlnMAACgkQJNaLcl1U
-h9A7/Af7BW6/ntmrX58R5eFypYlE09SLmBNBg+a4IISELqaWA0OV3d5EmEWxL013
-UtOTyvz1JbEfYkXUIOl+jlSScl639zYNnFZKw4UzqUTMevABc21Qq6uAA6kzhX2q
-X30wiQmtjq2ytsooyk1I+1gIhPJ9kUnlQ4UsdGqAx3oE9f51jV0BCAvCApiSijLw
-WDUNmuRBmdoIw3qOHcX9U0dAqrpWgLyJT1TOOBrOpO3YGFgeWbBZY99ERGw+lUNA
-jHHEdKYnXaZm4pjFs263gUHlqx7+UYhH+2TTqNOmfdtltWmkECHXCXlAiB8Q/2u2
-8hnzlwtfFXQIJRfLIQSUIdEWRXYmGg==
-=5wSb
------END PGP SIGNATURE-----
-
---r5lq+205vWdkqwtk--
