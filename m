@@ -2,207 +2,173 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52507C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:47:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 335A1C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:47:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF52A21773
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:47:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C29062177E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:47:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CdFiagMK"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Y8j7WD6z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730204AbfEVUrW (ORCPT
+        id S1730265AbfEVUrk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 16:47:22 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:33382 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729528AbfEVUrV (ORCPT
+        Wed, 22 May 2019 16:47:40 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:33824 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729961AbfEVUrj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 16:47:21 -0400
-Received: by mail-it1-f195.google.com with SMTP id j17so6470950itk.0
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 13:47:21 -0700 (PDT)
+        Wed, 22 May 2019 16:47:39 -0400
+Received: by mail-pl1-f196.google.com with SMTP id w7so1633014plz.1
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 13:47:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rc47Y/yTO/NnX63ktc56ZDAgFq92dgEIiG2a/RJnsPU=;
-        b=CdFiagMKJ+rrvta1/TgS2Rvg7RWYlmUxho1dpfSDiRDzm4hVVBdEPra1vC/WQje4Zj
-         c2zCIS84fXCMZTrX2HWn8Znd7rCRa1+UxXDf+kfRGnoq+f8ONsHwbLKngl6ZFF39Hd+D
-         tktTMExdTyhiy5j38Qin1IvzgHFDMCnjdR8DU=
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=zy3PazUIRm9Jc9PdJuB2u+ElFTk96lbYpo+oNBJZGCM=;
+        b=Y8j7WD6zpcc/2sEpj8EY6NRT1Dc510C1spsir21/hkUeu4mUUaoDDgjLww0pivEwF/
+         z6iJ0+f+gBw8re6q5xM6Dar0lLD7YYS2gJO3KPMVbNBtZ3Id3RkPfmb6s3Yr3rdRIcuf
+         rTPZw7otg9Z5O5b4Ojw+hEe7n4misMdps/iC8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rc47Y/yTO/NnX63ktc56ZDAgFq92dgEIiG2a/RJnsPU=;
-        b=fuX+4Jerlbx3TzUB7gcKq6AAGeq3HsWpGUyYVB1TfnC/dRDvvUOFwsgP7wdUeDAGb9
-         JcBIcSnr1x+EEpQzOXihwgnvqcoBwCP/JTta82PoCGyCpkeqhEvbZP0I+XIyliEA9MAr
-         JNJLy0g6KBNXLoXFykrvd4prX/FKXpxIuNR/S5JRH0w+jk/m1EcGi5gHii4cTCezQm1r
-         bGVNO8rQ29xRaWZ/fMwAbu5Y9mMa0aQxJ+rGRyFLiIAZReAr9axfa0NdFzLt8IUIrhKm
-         AiMbtrkoPfv4DojpDA0kk9XViflN5zhh5l8N+QRq9nPgUSHRP0K4Zr+7U7QFZQpo/Siv
-         W0IA==
-X-Gm-Message-State: APjAAAVtxhigCC5Mqu2AvrlSdzAHRM3mOQXBmVTLTBZ7Y7cKoOKRbZ9+
-        9f04ly4pIiXEDTIk+huvx/xWHPK+G6c=
-X-Google-Smtp-Source: APXvYqwRSFSqcuW9iGKM+plE4zL5Hc91DLcsSuLvlA3lX4fkXDi17TyCSVbcOB0Jir6+Euq2UGWmcQ==
-X-Received: by 2002:a24:91d2:: with SMTP id i201mr10779375ite.88.1558558040653;
-        Wed, 22 May 2019 13:47:20 -0700 (PDT)
-Received: from mail-it1-f177.google.com (mail-it1-f177.google.com. [209.85.166.177])
-        by smtp.gmail.com with ESMTPSA id h23sm8034283ior.70.2019.05.22.13.47.19
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Wed, 22 May 2019 13:47:19 -0700 (PDT)
-Received: by mail-it1-f177.google.com with SMTP id u186so5233295ith.0
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 13:47:19 -0700 (PDT)
-X-Received: by 2002:a24:1450:: with SMTP id 77mr10195382itg.24.1558558038889;
- Wed, 22 May 2019 13:47:18 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=zy3PazUIRm9Jc9PdJuB2u+ElFTk96lbYpo+oNBJZGCM=;
+        b=Aib7jRAFnWg7LzENTFkJPN7OGjqAuYZFj4VKyPWx3zMXo/puUZVos5p90L4UYNjCCx
+         QZ+LKKFIgfbb//16nytdz5l0hLev14br0xXlsUSSg5Z+upbeXfcXC6jkhAlACACEDr6/
+         HwpxlZqaApWJrJJ6FIo7JCN5ZEFTHPqwcCHlL4uxF274hhebcgoLFZWrDsOXTW0VczF7
+         nCxT5jHTy0fdjlQHNMv/gUwrby1YromCMD77Mqyxnp7xRJMgzOJhpkQi5Fh682fVByec
+         UW+jraPxbFmntk2HaDuv744C6OuU55qe95VX3ArWYm0mbwqcccBhDd/0kImDom2h6aeF
+         WhwA==
+X-Gm-Message-State: APjAAAWXUHubvDCDQa9I0ouVE0q/sM8i0bTzD/ZmnVwK9EJPB3n4yv/u
+        HITYFyCXNJmxYqQNu0n9PDsfPQ==
+X-Google-Smtp-Source: APXvYqxzAX+RobICkloaWYce4rx4oMkBv2QD394+NKxfoEao6LHAAvOlkD0rcjglQVK68ClP6ctquQ==
+X-Received: by 2002:a17:902:15c5:: with SMTP id a5mr93624265plh.39.1558558058259;
+        Wed, 22 May 2019 13:47:38 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id d13sm23312074pfh.113.2019.05.22.13.47.36
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 22 May 2019 13:47:37 -0700 (PDT)
+Date:   Wed, 22 May 2019 13:47:36 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     enh <enh@google.com>, Evgenii Stepanov <eugenis@google.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Khalid Aziz <khalid.aziz@oracle.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
+        kvm@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alexander Deucher <Alexander.Deucher@amd.com>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
+Subject: Re: [PATCH v15 00/17] arm64: untag user pointers passed to the kernel
+Message-ID: <201905221316.865581CF@keescook>
+References: <cover.1557160186.git.andreyknvl@google.com>
+ <20190517144931.GA56186@arrakis.emea.arm.com>
+ <CAFKCwrj6JEtp4BzhqO178LFJepmepoMx=G+YdC8sqZ3bcBp3EQ@mail.gmail.com>
+ <20190521182932.sm4vxweuwo5ermyd@mbp>
+ <201905211633.6C0BF0C2@keescook>
+ <20190522101110.m2stmpaj7seezveq@mbp>
+ <CAJgzZoosKBwqXRyA6fb8QQSZXFqfHqe9qO9je5TogHhzuoGXJQ@mail.gmail.com>
+ <20190522163527.rnnc6t4tll7tk5zw@mbp>
 MIME-Version: 1.0
-References: <20190520231948.49693-1-thgarnie@chromium.org> <20190520231948.49693-2-thgarnie@chromium.org>
- <20190521040634.GA32379@sol.localdomain>
-In-Reply-To: <20190521040634.GA32379@sol.localdomain>
-From:   Thomas Garnier <thgarnie@chromium.org>
-Date:   Wed, 22 May 2019 13:47:07 -0700
-X-Gmail-Original-Message-ID: <CAJcbSZGekB9Uc8PUoSCND+ZaAN9V60uyVv1bBeBGDQ_pHxzVnw@mail.gmail.com>
-Message-ID: <CAJcbSZGekB9Uc8PUoSCND+ZaAN9V60uyVv1bBeBGDQ_pHxzVnw@mail.gmail.com>
-Subject: Re: [PATCH v7 01/12] x86/crypto: Adapt assembly for PIE support
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Kristen Carlson Accardi <kristen@linux.intel.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190522163527.rnnc6t4tll7tk5zw@mbp>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 20, 2019 at 9:06 PM Eric Biggers <ebiggers@kernel.org> wrote:
->
-> On Mon, May 20, 2019 at 04:19:26PM -0700, Thomas Garnier wrote:
-> > diff --git a/arch/x86/crypto/sha256-avx2-asm.S b/arch/x86/crypto/sha256-avx2-asm.S
-> > index 1420db15dcdd..2ced4b2f6c76 100644
-> > --- a/arch/x86/crypto/sha256-avx2-asm.S
-> > +++ b/arch/x86/crypto/sha256-avx2-asm.S
-> > @@ -588,37 +588,42 @@ last_block_enter:
-> >       mov     INP, _INP(%rsp)
-> >
-> >       ## schedule 48 input dwords, by doing 3 rounds of 12 each
-> > -     xor     SRND, SRND
-> > +     leaq    K256(%rip), SRND
-> > +     ## loop1 upper bound
-> > +     leaq    K256+3*4*32(%rip), INP
-> >
-> >  .align 16
-> >  loop1:
-> > -     vpaddd  K256+0*32(SRND), X0, XFER
-> > +     vpaddd  0*32(SRND), X0, XFER
-> >       vmovdqa XFER, 0*32+_XFER(%rsp, SRND)
-> >       FOUR_ROUNDS_AND_SCHED   _XFER + 0*32
-> >
-> > -     vpaddd  K256+1*32(SRND), X0, XFER
-> > +     vpaddd  1*32(SRND), X0, XFER
-> >       vmovdqa XFER, 1*32+_XFER(%rsp, SRND)
-> >       FOUR_ROUNDS_AND_SCHED   _XFER + 1*32
-> >
-> > -     vpaddd  K256+2*32(SRND), X0, XFER
-> > +     vpaddd  2*32(SRND), X0, XFER
-> >       vmovdqa XFER, 2*32+_XFER(%rsp, SRND)
-> >       FOUR_ROUNDS_AND_SCHED   _XFER + 2*32
-> >
-> > -     vpaddd  K256+3*32(SRND), X0, XFER
-> > +     vpaddd  3*32(SRND), X0, XFER
-> >       vmovdqa XFER, 3*32+_XFER(%rsp, SRND)
-> >       FOUR_ROUNDS_AND_SCHED   _XFER + 3*32
-> >
-> >       add     $4*32, SRND
-> > -     cmp     $3*4*32, SRND
-> > +     cmp     INP, SRND
-> >       jb      loop1
-> >
-> > +     ## loop2 upper bound
-> > +     leaq    K256+4*4*32(%rip), INP
-> > +
-> >  loop2:
-> >       ## Do last 16 rounds with no scheduling
-> > -     vpaddd  K256+0*32(SRND), X0, XFER
-> > +     vpaddd  0*32(SRND), X0, XFER
-> >       vmovdqa XFER, 0*32+_XFER(%rsp, SRND)
-> >       DO_4ROUNDS      _XFER + 0*32
-> >
-> > -     vpaddd  K256+1*32(SRND), X1, XFER
-> > +     vpaddd  1*32(SRND), X1, XFER
-> >       vmovdqa XFER, 1*32+_XFER(%rsp, SRND)
-> >       DO_4ROUNDS      _XFER + 1*32
-> >       add     $2*32, SRND
-> > @@ -626,7 +631,7 @@ loop2:
-> >       vmovdqa X2, X0
-> >       vmovdqa X3, X1
-> >
-> > -     cmp     $4*4*32, SRND
-> > +     cmp     INP, SRND
-> >       jb      loop2
-> >
-> >       mov     _CTX(%rsp), CTX
->
-> There is a crash in sha256-avx2-asm.S with this patch applied.  Looks like the
-> %rsi register is being used for two different things at the same time: 'INP' and
-> 'y3'?  You should be able to reproduce by booting a kernel configured with:
->
->         CONFIG_CRYPTO_SHA256_SSSE3=y
->         # CONFIG_CRYPTO_MANAGER_DISABLE_TESTS is not set
+On Wed, May 22, 2019 at 05:35:27PM +0100, Catalin Marinas wrote:
+> The two hard requirements I have for supporting any new hardware feature
+> in Linux are (1) a single kernel image binary continues to run on old
+> hardware while making use of the new feature if available and (2) old
+> user space continues to run on new hardware while new user space can
+> take advantage of the new feature.
 
-Thanks for testing the patch. I couldn't reproduce this crash, can you
-share the whole .config or share any other specifics of your testing
-setup?
+Agreed! And I think the series meets these requirements, yes?
 
->
-> Crash report:
->
-> BUG: unable to handle page fault for address: ffffc8ff83b21a80
-> #PF: supervisor write access in kernel mode
-> #PF: error_code(0x0002) - not-present page
-> PGD 0 P4D 0
-> Oops: 0002 [#1] SMP
-> CPU: 3 PID: 359 Comm: cryptomgr_test Not tainted 5.2.0-rc1-00109-g9fb4fd100429b #5
-> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-20181126_142135-anatol 04/01/2014
-> RIP: 0010:loop1+0x4/0x888
-> Code: 83 c6 40 48 89 b4 24 08 02 00 00 48 8d 3d 94 d3 d0 00 48 8d 35 0d d5 d0 00 66 66 2e 0f 1f 84 00 00 00 00 00 66 90 c
-> RSP: 0018:ffffc90001d43880 EFLAGS: 00010286
-> RAX: 000000006a09e667 RBX: 00000000bb67ae85 RCX: 000000003c6ef372
-> RDX: 00000000510e527f RSI: ffffffff81dde380 RDI: ffffffff81dde200
-> RBP: ffffc90001d43b10 R08: 00000000a54ff53a R09: 000000009b05688c
-> R10: 000000001f83d9ab R11: 000000005be0cd19 R12: 0000000000000000
-> R13: ffff88807cfd4598 R14: ffffffff810d0da0 R15: ffffc90001d43cc0
-> FS:  0000000000000000(0000) GS:ffff88807fd80000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: ffffc8ff83b21a80 CR3: 000000000200f000 CR4: 00000000003406e0
-> Call Trace:
->  sha256_avx2_finup arch/x86/crypto/sha256_ssse3_glue.c:242 [inline]
->  sha256_avx2_final+0x17/0x20 arch/x86/crypto/sha256_ssse3_glue.c:247
->  crypto_shash_final+0x13/0x20 crypto/shash.c:166
->  shash_async_final+0x11/0x20 crypto/shash.c:265
->  crypto_ahash_op+0x24/0x60 crypto/ahash.c:373
->  crypto_ahash_final+0x11/0x20 crypto/ahash.c:384
->  do_ahash_op.constprop.13+0x10/0x40 crypto/testmgr.c:1049
->  test_hash_vec_cfg+0x5b1/0x610 crypto/testmgr.c:1225
->  test_hash_vec crypto/testmgr.c:1268 [inline]
->  __alg_test_hash.isra.8+0x115/0x1d0 crypto/testmgr.c:1498
->  alg_test_hash+0x7b/0x100 crypto/testmgr.c:1546
->  alg_test.part.12+0xa4/0x360 crypto/testmgr.c:4931
->  alg_test+0x12/0x30 crypto/testmgr.c:4895
->  cryptomgr_test+0x26/0x50 crypto/algboss.c:223
->  kthread+0x124/0x140 kernel/kthread.c:254
->  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-> Modules linked in:
-> CR2: ffffc8ff83b21a80
-> ---[ end trace ee8ece604888de3e ]---
->
-> - Eric
+> For MTE, we just can't enable it by default since there are applications
+> who use the top byte of a pointer and expect it to be ignored rather
+> than failing with a mismatched tag. Just think of a hwasan compiled
+> binary where TBI is expected to work and you try to run it with MTE
+> turned on.
+
+Ah! Okay, here's the use-case I wasn't thinking of: the concern is TBI
+conflicting with MTE. And anything that starts using TBI suddenly can't
+run in the future because it's being interpreted as MTE bits? (Is that
+the ABI concern? I feel like we got into the weeds about ioctl()s and
+one-off bugs...)
+
+So there needs to be some way to let the kernel know which of three
+things it should be doing:
+1- leaving userspace addresses as-is (present)
+2- wiping the top bits before using (this series)
+3- wiping the top bits for most things, but retaining them for MTE as
+   needed (the future)
+
+I expect MTE to be the "default" in the future. Once a system's libc has
+grown support for it, everything will be trying to use MTE. TBI will be
+the special case (but TBI is effectively a prerequisite).
+
+AFAICT, the only difference I see between 2 and 3 will be the tag handling
+in usercopy (all other places will continue to ignore the top bits). Is
+that accurate?
+
+Is "1" a per-process state we want to keep? (I assume not, but rather it
+is available via no TBI/MTE CONFIG or a boot-time option, if at all?)
+
+To choose between "2" and "3", it seems we need a per-process flag to
+opt into TBI (and out of MTE). For userspace, how would a future binary
+choose TBI over MTE? If it's a library issue, we can't use an ELF bit,
+since the choice may be "late" after ELF load (this implies the need
+for a prctl().) If it's binary-only ("built with HWKASan") then an ELF
+bit seems sufficient. And without the marking, I'd expect the kernel to
+enforce MTE when there are high bits.
+
+> I would also expect the C library or dynamic loader to check for the
+> presence of a HWCAP_MTE bit before starting to tag memory allocations,
+> otherwise it would get SIGILL on the first MTE instruction it tries to
+> execute.
+
+I've got the same question as Elliot: aren't MTE instructions just NOP
+to older CPUs? I.e. if the CPU (or kernel) don't support it, it just
+gets entirely ignored: checking is only needed to satisfy curiosity
+or behavioral expectations.
+
+To me, the conflict seems to be using TBI in the face of expecting MTE to
+be the default state of the future. (But the internal changes needed
+for TBI -- this series -- is a prereq for MTE.)
+
+-- 
+Kees Cook
