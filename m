@@ -2,102 +2,129 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0464C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:43:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C1A4C282DC
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:43:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EAFB2081C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:43:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="Ua7JRmVg"
+	by mail.kernel.org (Postfix) with ESMTP id 24A412081C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:43:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558554207;
+	bh=gh9zzXTRZHjIb5I+GARRWUDXgSVwhRNzOe2oFcbM0Jc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ZsNYJYPV91smiz9Gdb41IQJKFEwjLlgaj680P/Pphz8bYbXxWd3sjbenOJITScZHd
+	 7uReYA0Em9mKkeCL1pJWMoMphHuvFuxjC/PUv5ikz0fj+hxrUFO96qSA1FT8V4wFXe
+	 OeU72KLe+Yeo+ACsfZwtqmPi5SPhJ0RiDp6GKzsI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732679AbfEVTnX (ORCPT
+        id S1732052AbfEVTnU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:43:23 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:38302 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731580AbfEVT2X (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:43:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51038 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732540AbfEVT2X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 22 May 2019 15:28:23 -0400
-Received: by mail-qt1-f195.google.com with SMTP id l3so3837837qtj.5
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 12:28:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=3ZfKtMBwc5tkohkSpbvb3b5f3Ko8Dw0ybXpSQh5gt/E=;
-        b=Ua7JRmVg/PPLyjYi4zwoj4WunekYxL3tW795MlxsVvKdjcveG8GFMEG8wA/t/Opq58
-         7xNTL6iMvk6B3aKn6J6SvcJkKT11Q0a/HG+sGy6SZsikPtB/+ZylHjb/ddJodsrkPzf+
-         OWA3bjYid2hKY949LckGkjXCuCv5Nn4+ilz3f2KCJbwzgSBhj1eUUb+lXoskoJWlUtZW
-         d6uu4kVuXHiWGfya2X3zvyy9B5spYamL9cqhiKjzr/yuiduBoDjoJ/7QIvFRX2U6DSJp
-         5nQf7bimXoUDj6zDHNVPZE/BBaZhteVMTgwqoZ9fUWw+M8BPtUVMqAy45tBDyMQzSetZ
-         Oj7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3ZfKtMBwc5tkohkSpbvb3b5f3Ko8Dw0ybXpSQh5gt/E=;
-        b=ksKgU01TMCxFi/XMYqA3ut65P6cayMNg0KwV1Qlzv8k3A0DSmnTYtMiPj2uzMOSWjG
-         C4xh6WA5ZnygViI+1xf4/IgMYqkEG/LyLV21xKhu7rLyG9C9JwuZer7gXF3LEt00LbF5
-         kcx5FWHySo+YrxG+ke2hucyyUZ5VSlt64peQe3bhAQpO6lcD42gcM5Uf6Vgao4WOFFhL
-         EzZSYv/fXLE8KTBw8fiy/6e0vnhqKwuRqdFL5OOpWloQdIwmCiLx1Oy+N8nx+WN82eW6
-         d1Z0H/VE+dG7r9+gkVICZLSG5EKFgEFhHsPEXnLRhfIRKymIq0TYrgK8JWc49nM4sVXS
-         Sy6g==
-X-Gm-Message-State: APjAAAUO2Ck7OeirIwMjB/lneKTA3rxSNv9/E50Ub8kMEzCfZ5Kry/pa
-        YMJ/ucN2pjGrlH6/yMYcO/xUmg==
-X-Google-Smtp-Source: APXvYqzc1EkjVofK2ryq+qApOiRQDBnphGTKYrTx1+vwOy/VyDTwLBbYuBZjYqsGlyXiaiM/UHb2cw==
-X-Received: by 2002:aed:3a87:: with SMTP id o7mr23450420qte.310.1558553302565;
-        Wed, 22 May 2019 12:28:22 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-49-251.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.49.251])
-        by smtp.gmail.com with ESMTPSA id l47sm13161288qtk.22.2019.05.22.12.28.22
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 22 May 2019 12:28:22 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1hTWuT-0005oy-IJ; Wed, 22 May 2019 16:28:21 -0300
-Date:   Wed, 22 May 2019 16:28:21 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Leon Romanovsky <leon@kernel.org>,
-        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH] RDMA/mlx5: Use DIV_ROUND_UP_ULL macro to allow 32 bit to
- build
-Message-ID: <20190522192821.GG6054@ziepe.ca>
-References: <20190522145450.25ff483d@gandalf.local.home>
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 07B85204FD;
+        Wed, 22 May 2019 19:28:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558553302;
+        bh=gh9zzXTRZHjIb5I+GARRWUDXgSVwhRNzOe2oFcbM0Jc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=EZuX5DmNiIIYaqJPVRVX9wqoZ/PgwMypsMz/ExBAuxS3xE5DkMhzTFkRjhrhy575S
+         rBV37ZRcvOL6Mmi85P3J2DzUJfordLsMHAfROP/2mbsQd5j/GYGX5eNLdhk5qLhA4I
+         nvGKlD+5KV0hI7aoGmx6smPjzwrBbUBG+HLjUh20=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Farhan Ali <alifm@linux.ibm.com>,
+        Eric Farman <farman@linux.ibm.com>,
+        Pierre Morel <pmorel@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 072/244] vfio-ccw: Do not call flush_workqueue while holding the spinlock
+Date:   Wed, 22 May 2019 15:23:38 -0400
+Message-Id: <20190522192630.24917-72-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190522192630.24917-1-sashal@kernel.org>
+References: <20190522192630.24917-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190522145450.25ff483d@gandalf.local.home>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 22, 2019 at 02:54:50PM -0400, Steven Rostedt wrote:
-> 
-> From: Steven Rostedt (VMware) <rostedt@goodmis.org>
-> 
-> When testing 32 bit x86, my build failed with:
-> 
->   ERROR: "__udivdi3" [drivers/infiniband/hw/mlx5/mlx5_ib.ko] undefined!
-> 
-> It appears that a few non-ULL roundup() calls were made, which uses a
-> normal division against a 64 bit number. This is fine for x86_64, but
-> on 32 bit x86, it causes the compiler to look for a helper function
-> __udivdi3, which we do not have in the kernel, and thus fails to build.
-> 
-> Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-> ---
+From: Farhan Ali <alifm@linux.ibm.com>
 
-Do you like this version better?
+[ Upstream commit cea5dde42a83b5f0a039da672f8686455936b8d8 ]
 
-https://patchwork.kernel.org/patch/10950913/
+Currently we call flush_workqueue while holding the subchannel
+spinlock. But flush_workqueue function can go to sleep, so
+do not call the function while holding the spinlock.
 
-Jason
+Fixes the following bug:
+
+[  285.203430] BUG: scheduling while atomic: bash/14193/0x00000002
+[  285.203434] INFO: lockdep is turned off.
+....
+[  285.203485] Preemption disabled at:
+[  285.203488] [<000003ff80243e5c>] vfio_ccw_sch_quiesce+0xbc/0x120 [vfio_ccw]
+[  285.203496] CPU: 7 PID: 14193 Comm: bash Tainted: G        W
+....
+[  285.203504] Call Trace:
+[  285.203510] ([<0000000000113772>] show_stack+0x82/0xd0)
+[  285.203514]  [<0000000000b7a102>] dump_stack+0x92/0xd0
+[  285.203518]  [<000000000017b8be>] __schedule_bug+0xde/0xf8
+[  285.203524]  [<0000000000b95b5a>] __schedule+0x7a/0xc38
+[  285.203528]  [<0000000000b9678a>] schedule+0x72/0xb0
+[  285.203533]  [<0000000000b9bfbc>] schedule_timeout+0x34/0x528
+[  285.203538]  [<0000000000b97608>] wait_for_common+0x118/0x1b0
+[  285.203544]  [<0000000000166d6a>] flush_workqueue+0x182/0x548
+[  285.203550]  [<000003ff80243e6e>] vfio_ccw_sch_quiesce+0xce/0x120 [vfio_ccw]
+[  285.203556]  [<000003ff80245278>] vfio_ccw_mdev_reset+0x38/0x70 [vfio_ccw]
+[  285.203562]  [<000003ff802458b0>] vfio_ccw_mdev_remove+0x40/0x78 [vfio_ccw]
+[  285.203567]  [<000003ff801a499c>] mdev_device_remove_ops+0x3c/0x80 [mdev]
+[  285.203573]  [<000003ff801a4d5c>] mdev_device_remove+0xc4/0x130 [mdev]
+[  285.203578]  [<000003ff801a5074>] remove_store+0x6c/0xa8 [mdev]
+[  285.203582]  [<000000000046f494>] kernfs_fop_write+0x14c/0x1f8
+[  285.203588]  [<00000000003c1530>] __vfs_write+0x38/0x1a8
+[  285.203593]  [<00000000003c187c>] vfs_write+0xb4/0x198
+[  285.203597]  [<00000000003c1af2>] ksys_write+0x5a/0xb0
+[  285.203601]  [<0000000000b9e270>] system_call+0xdc/0x2d8
+
+Signed-off-by: Farhan Ali <alifm@linux.ibm.com>
+Reviewed-by: Eric Farman <farman@linux.ibm.com>
+Reviewed-by: Pierre Morel <pmorel@linux.ibm.com>
+Message-Id: <626bab8bb2958ae132452e1ddaf1b20882ad5a9d.1554756534.git.alifm@linux.ibm.com>
+Signed-off-by: Cornelia Huck <cohuck@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/s390/cio/vfio_ccw_drv.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/s390/cio/vfio_ccw_drv.c b/drivers/s390/cio/vfio_ccw_drv.c
+index fabd9798e4c47..0e0a743aeaf69 100644
+--- a/drivers/s390/cio/vfio_ccw_drv.c
++++ b/drivers/s390/cio/vfio_ccw_drv.c
+@@ -54,9 +54,9 @@ int vfio_ccw_sch_quiesce(struct subchannel *sch)
+ 
+ 			wait_for_completion_timeout(&completion, 3*HZ);
+ 
+-			spin_lock_irq(sch->lock);
+ 			private->completion = NULL;
+ 			flush_workqueue(vfio_ccw_work_q);
++			spin_lock_irq(sch->lock);
+ 			ret = cio_cancel_halt_clear(sch, &iretry);
+ 		};
+ 
+-- 
+2.20.1
+
