@@ -3,192 +3,92 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA81CC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:00:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02C71C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:00:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7B0C20645
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:00:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C494C20645
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:00:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729653AbfEVTAf (ORCPT
+        id S1729716AbfEVTAo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:00:35 -0400
-Received: from smtprelay0106.hostedemail.com ([216.40.44.106]:35678 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728533AbfEVTAf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:00:35 -0400
-Received: from smtprelay.hostedemail.com (10.5.19.251.rfc1918.com [10.5.19.251])
-        by smtpgrave02.hostedemail.com (Postfix) with ESMTP id 90D6E18024508;
-        Wed, 22 May 2019 18:54:36 +0000 (UTC)
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay06.hostedemail.com (Postfix) with ESMTP id 60240182251DF;
-        Wed, 22 May 2019 18:54:36 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: beds74_27dc26fe10b2d
-X-Filterd-Recvd-Size: 5469
-Received: from XPS-9350 (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf20.hostedemail.com (Postfix) with ESMTPA;
-        Wed, 22 May 2019 18:54:33 +0000 (UTC)
-Message-ID: <8ae488765c8d441dbb444adaf89e59a2afa81298.camel@perches.com>
-Subject: Re: [PATCH] Fix comments with paths pointing to renamed or moved
- files.
-From:   Joe Perches <joe@perches.com>
-To:     Pavel Machek <pavel@ucw.cz>,
-        Lukas Prause <langspielplatte@black-mesa.xyz>
-Cc:     lizefan@huawei.com, tj@kernel.org, hannes@cmpxchg.org,
-        peterz@infradead.org, mingo@redhat.com, will.deacon@arm.com,
-        rjw@rjwysocki.net, len.brown@intel.com, rostedt@goodmis.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        cgroups@vger.kernel.org, linux-pm@vger.kernel.org,
-        Lennart Glauer <mail@lennart-glauer.de>
-Date:   Wed, 22 May 2019 11:54:31 -0700
-In-Reply-To: <20190522183614.GD10003@amd>
-References: <20190521155430.14941-1-langspielplatte@black-mesa.xyz>
-         <20190522183614.GD10003@amd>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.1-1build1 
-Mime-Version: 1.0
+        Wed, 22 May 2019 15:00:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33336 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728533AbfEVTAn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:00:43 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C222520868;
+        Wed, 22 May 2019 18:54:52 +0000 (UTC)
+Date:   Wed, 22 May 2019 14:54:50 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Leon Romanovsky <leon@kernel.org>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH] RDMA/mlx5: Use DIV_ROUND_UP_ULL macro to allow 32 bit to
+ build
+Message-ID: <20190522145450.25ff483d@gandalf.local.home>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-05-22 at 20:36 +0200, Pavel Machek wrote:
-> On Tue 2019-05-21 17:54:30, Lukas Prause wrote:
-> > This patch corrects renamed or moved paths in comments.
-> > 
-> > Signed-off-by: Lukas Prause <langspielplatte@black-mesa.xyz>
-> > Signed-off-by: Lennart Glauer <mail@lennart-glauer.de>
-> 
-> Acked-by: Pavel Machek <pavel@ucw.cz>
-> 
-> > diff --git a/kernel/power/power.h b/kernel/power/power.h
-> > index 9e58bdc8a562..5de8b0c7f657 100644
-> > --- a/kernel/power/power.h
-> > +++ b/kernel/power/power.h
-> > @@ -182,7 +182,7 @@ extern int swsusp_unmark(void);
-> >  #endif
-> >  
-> >  struct timeval;
-> > -/* kernel/power/swsusp.c */
-> > +/* kernel/power/hibernate.c */
-> >  extern void swsusp_show_speed(ktime_t, ktime_t, unsigned int, char *);
-> >  
-> >  #ifdef CONFIG_SUSPEND
 
-I think all of these markings should be removed instead.
-Why are these useful?
-It seems many of these filenames in power.h aren't correct anyway.
+From: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-For instance power.h has:
+When testing 32 bit x86, my build failed with:
 
-   /* kernel/power/hibernate.c */
-   extern int swsusp_check(void);
-   extern void swsusp_free(void);
-   extern int swsusp_read(unsigned int *flags_p);
-   extern int swsusp_write(unsigned int flags);
-   extern void swsusp_close(fmode_t);
-   #ifdef CONFIG_SUSPEND
-   extern int swsusp_unmark(void);
-   #endif
+  ERROR: "__udivdi3" [drivers/infiniband/hw/mlx5/mlx5_ib.ko] undefined!
 
-but:
+It appears that a few non-ULL roundup() calls were made, which uses a
+normal division against a 64 bit number. This is fine for x86_64, but
+on 32 bit x86, it causes the compiler to look for a helper function
+__udivdi3, which we do not have in the kernel, and thus fails to build.
 
-swsusp_check is in swap.c
-swsusp_free is in snapshot.c
-swsusp_read is in swap.c
-
-etc...
-
-Perhaps:
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- kernel/power/power.h | 10 ----------
- 1 file changed, 10 deletions(-)
-
-diff --git a/kernel/power/power.h b/kernel/power/power.h
-index 9e58bdc8a562..52bcb72564e5 100644
---- a/kernel/power/power.h
-+++ b/kernel/power/power.h
-@@ -16,7 +16,6 @@ struct swsusp_info {
- } __aligned(PAGE_SIZE);
+diff --git a/drivers/infiniband/hw/mlx5/cmd.c b/drivers/infiniband/hw/mlx5/cmd.c
+index e3ec79b8f7f5..f080df9934e8 100644
+--- a/drivers/infiniband/hw/mlx5/cmd.c
++++ b/drivers/infiniband/hw/mlx5/cmd.c
+@@ -190,7 +190,7 @@ int mlx5_cmd_alloc_sw_icm(struct mlx5_dm *dm, int type, u64 length,
+ 			  u16 uid, phys_addr_t *addr, u32 *obj_id)
+ {
+ 	struct mlx5_core_dev *dev = dm->dev;
+-	u32 num_blocks = DIV_ROUND_UP(length, MLX5_SW_ICM_BLOCK_SIZE(dev));
++	u32 num_blocks = DIV_ROUND_UP_ULL(length, MLX5_SW_ICM_BLOCK_SIZE(dev));
+ 	u32 out[MLX5_ST_SZ_DW(general_obj_out_cmd_hdr)] = {};
+ 	u32 in[MLX5_ST_SZ_DW(create_sw_icm_in)] = {};
+ 	unsigned long *block_map;
+@@ -266,7 +266,7 @@ int mlx5_cmd_dealloc_sw_icm(struct mlx5_dm *dm, int type, u64 length,
+ 			    u16 uid, phys_addr_t addr, u32 obj_id)
+ {
+ 	struct mlx5_core_dev *dev = dm->dev;
+-	u32 num_blocks = DIV_ROUND_UP(length, MLX5_SW_ICM_BLOCK_SIZE(dev));
++	u32 num_blocks = DIV_ROUND_UP_ULL(length, MLX5_SW_ICM_BLOCK_SIZE(dev));
+ 	u32 out[MLX5_ST_SZ_DW(general_obj_out_cmd_hdr)] = {};
+ 	u32 in[MLX5_ST_SZ_DW(general_obj_in_cmd_hdr)] = {};
+ 	unsigned long *block_map;
+diff --git a/drivers/infiniband/hw/mlx5/main.c b/drivers/infiniband/hw/mlx5/main.c
+index abac70ad5c7c..40d4c5f7ea43 100644
+--- a/drivers/infiniband/hw/mlx5/main.c
++++ b/drivers/infiniband/hw/mlx5/main.c
+@@ -2344,7 +2344,7 @@ static int handle_alloc_dm_sw_icm(struct ib_ucontext *ctx,
+ 	/* Allocation size must a multiple of the basic block size
+ 	 * and a power of 2.
+ 	 */
+-	act_size = roundup(attr->length, MLX5_SW_ICM_BLOCK_SIZE(dm_db->dev));
++	act_size = DIV_ROUND_UP_ULL(attr->length, MLX5_SW_ICM_BLOCK_SIZE(dm_db->dev));
+ 	act_size = roundup_pow_of_two(act_size);
  
- #ifdef CONFIG_HIBERNATION
--/* kernel/power/snapshot.c */
- extern void __init hibernate_reserved_size_init(void);
- extern void __init hibernate_image_size_init(void);
- 
-@@ -55,7 +54,6 @@ extern int hibernate_resume_nonboot_cpu_disable(void);
- 
- asmlinkage int swsusp_save(void);
- 
--/* kernel/power/hibernate.c */
- extern bool freezer_test_done;
- 
- extern int hibernation_snapshot(int platform_mode);
-@@ -63,7 +61,6 @@ extern int hibernation_restore(int platform_mode);
- extern int hibernation_platform_enter(void);
- 
- #ifdef CONFIG_STRICT_KERNEL_RWX
--/* kernel/power/snapshot.c */
- extern void enable_restore_image_protection(void);
- #else
- static inline void enable_restore_image_protection(void) {}
-@@ -171,7 +168,6 @@ extern int swsusp_swap_in_use(void);
- #define SF_NOCOMPRESS_MODE	2
- #define SF_CRC32_MODE	        4
- 
--/* kernel/power/hibernate.c */
- extern int swsusp_check(void);
- extern void swsusp_free(void);
- extern int swsusp_read(unsigned int *flags_p);
-@@ -182,11 +178,9 @@ extern int swsusp_unmark(void);
- #endif
- 
- struct timeval;
--/* kernel/power/swsusp.c */
- extern void swsusp_show_speed(ktime_t, ktime_t, unsigned int, char *);
- 
- #ifdef CONFIG_SUSPEND
--/* kernel/power/suspend.c */
- extern const char * const pm_labels[];
- extern const char *pm_states[];
- extern const char *mem_sleep_states[];
-@@ -202,7 +196,6 @@ static inline int suspend_devices_and_enter(suspend_state_t state)
- #endif /* !CONFIG_SUSPEND */
- 
- #ifdef CONFIG_PM_TEST_SUSPEND
--/* kernel/power/suspend_test.c */
- extern void suspend_test_start(void);
- extern void suspend_test_finish(const char *label);
- #else /* !CONFIG_PM_TEST_SUSPEND */
-@@ -211,7 +204,6 @@ static inline void suspend_test_finish(const char *label) {}
- #endif /* !CONFIG_PM_TEST_SUSPEND */
- 
- #ifdef CONFIG_PM_SLEEP
--/* kernel/power/main.c */
- extern int __pm_notifier_call_chain(unsigned long val, int nr_to_call,
- 				    int *nr_calls);
- extern int pm_notifier_call_chain(unsigned long val);
-@@ -289,7 +281,6 @@ static inline void suspend_thaw_processes(void)
- 
- #ifdef CONFIG_PM_AUTOSLEEP
- 
--/* kernel/power/autosleep.c */
- extern int pm_autosleep_init(void);
- extern int pm_autosleep_lock(void);
- extern void pm_autosleep_unlock(void);
-@@ -307,7 +298,6 @@ static inline suspend_state_t pm_autosleep_state(void) { return PM_SUSPEND_ON; }
- 
- #ifdef CONFIG_PM_WAKELOCKS
- 
--/* kernel/power/wakelock.c */
- extern ssize_t pm_show_wakelocks(char *buf, bool show_active);
- extern int pm_wake_lock(const char *buf);
- extern int pm_wake_unlock(const char *buf);
-
-
+ 	dm->size = act_size;
