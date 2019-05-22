@@ -4,50 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AE70C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:37:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EB78C282DC
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:37:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3386620675
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:37:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3208020862
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:37:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558553867;
-	bh=f00Z042OxVO1lpGglNkqwDzP9Wehwz5cJyphswOCSj4=;
+	s=default; t=1558553874;
+	bh=9wYURvB6rQQAvedFZUg0/FddW7av8XxRmg8oVjOrHgM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oo6IeTax2rGHy1Gtx7ofX4kgfxZqO4QC9WWDWLEID8VLs6nnfGQglHmEQpjsWj+LO
-	 iNko+gL8O4Yoaq2oDA4l8kMCe8cu6yFo5Bz2OAhQfn4phjCBA5AETZtRmrUF/gBJMi
-	 tQ96rvEqHFa4pSKeYwvO9nqAzLcxNfdGLAtM7iPI=
+	b=aP/SRA72t2A78o9rM2uw6rs1LCC8niUWcs7E5idaWtNFm6pvIIkZkWQgZXzy+ByCI
+	 H8/fFe1e8ndiuooWIY9rBXnMDqC8sruQSOCSqf8HXtIMa44EgIFz7VTgjX8tkj72AT
+	 IlsxHGGq5HSd9cmYnXACJz1EixL3WAs0xoJiCUco=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729855AbfEVThq (ORCPT
+        id S2387484AbfEVThx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:37:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53552 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:37:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53488 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733150AbfEVTaK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:30:10 -0400
+        id S1730376AbfEVTaI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:30:08 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34042217D4;
-        Wed, 22 May 2019 19:30:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B4C320675;
+        Wed, 22 May 2019 19:30:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553410;
-        bh=f00Z042OxVO1lpGglNkqwDzP9Wehwz5cJyphswOCSj4=;
+        s=default; t=1558553407;
+        bh=9wYURvB6rQQAvedFZUg0/FddW7av8XxRmg8oVjOrHgM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AjIClk0dEqX6DgKVOAdpBcoFy9bVu9UCiZ49YcPkTyjMUJrkZF3BpCm7vMXMcwvct
-         RmB1qEyNtfqzOTPcdOKmIkHRb3I5dhx5D9rkrHZLzU3zqji8KRlMzUR14tdiKxc8vQ
-         AUVj+Wy6Vz69ATP3OUvSUBfshF3ntCCRoKhleHjA=
+        b=VRNVWE4aimxwTmG/MNm0BQEIL2kscYBpgNJUIeopQtUH6B0jFpBh1RLpWqwWvyuw7
+         ofRiFT6KSMWro0IZxDiIRNHAJ0pFqshEFW4+p4uao+gWkpH7793wMWAKBLwkiKZIm3
+         jHC262d4bEZXMr/x8dUPh2AD80rGRLcKZteucAPQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 058/167] dmaengine: at_xdmac: remove BUG_ON macro in tasklet
-Date:   Wed, 22 May 2019 15:26:53 -0400
-Message-Id: <20190522192842.25858-58-sashal@kernel.org>
+Cc:     Wen Yang <wen.yang99@zte.com.cn>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Tomasz Figa <tomasz.figa@gmail.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 056/167] pinctrl: samsung: fix leaked of_node references
+Date:   Wed, 22 May 2019 15:26:51 -0400
+Message-Id: <20190522192842.25858-56-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192842.25858-1-sashal@kernel.org>
 References: <20190522192842.25858-1-sashal@kernel.org>
@@ -60,40 +64,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Ferre <nicolas.ferre@microchip.com>
+From: Wen Yang <wen.yang99@zte.com.cn>
 
-[ Upstream commit e2c114c06da2d9ffad5b16690abf008d6696f689 ]
+[ Upstream commit 44b9f86cd41db6c522effa5aec251d664a52fbc0 ]
 
-Even if this case shouldn't happen when controller is properly programmed,
-it's still better to avoid dumping a kernel Oops for this.
-As the sequence may happen only for debugging purposes, log the error and
-just finish the tasklet call.
+The call to of_find_compatible_node returns a node pointer with refcount
+incremented thus it must be explicitly decremented after the last
+usage.
 
-Signed-off-by: Nicolas Ferre <nicolas.ferre@microchip.com>
-Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Detected by coccinelle with the following warnings:
+./drivers/pinctrl/samsung/pinctrl-exynos-arm.c:76:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 66, but without a corresponding object release within this function.
+./drivers/pinctrl/samsung/pinctrl-exynos-arm.c:82:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 66, but without a corresponding object release within this function.
+
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: Kukjin Kim <kgene@kernel.org>
+Cc: linux-samsung-soc@vger.kernel.org
+Cc: linux-gpio@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/at_xdmac.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/pinctrl/samsung/pinctrl-exynos-arm.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/dma/at_xdmac.c b/drivers/dma/at_xdmac.c
-index 4db2cd1c611de..22764cd30cc39 100644
---- a/drivers/dma/at_xdmac.c
-+++ b/drivers/dma/at_xdmac.c
-@@ -1606,7 +1606,11 @@ static void at_xdmac_tasklet(unsigned long data)
- 					struct at_xdmac_desc,
- 					xfer_node);
- 		dev_vdbg(chan2dev(&atchan->chan), "%s: desc 0x%p\n", __func__, desc);
--		BUG_ON(!desc->active_xfer);
-+		if (!desc->active_xfer) {
-+			dev_err(chan2dev(&atchan->chan), "Xfer not active: exiting");
-+			spin_unlock_bh(&atchan->lock);
-+			return;
-+		}
+diff --git a/drivers/pinctrl/samsung/pinctrl-exynos-arm.c b/drivers/pinctrl/samsung/pinctrl-exynos-arm.c
+index afeb4876ffb2c..07eb4f071fa87 100644
+--- a/drivers/pinctrl/samsung/pinctrl-exynos-arm.c
++++ b/drivers/pinctrl/samsung/pinctrl-exynos-arm.c
+@@ -76,6 +76,7 @@ s5pv210_retention_init(struct samsung_pinctrl_drv_data *drvdata,
+ 	}
  
- 		txd = &desc->tx_dma_desc;
- 
+ 	clk_base = of_iomap(np, 0);
++	of_node_put(np);
+ 	if (!clk_base) {
+ 		pr_err("%s: failed to map clock registers\n", __func__);
+ 		return ERR_PTR(-EINVAL);
 -- 
 2.20.1
 
