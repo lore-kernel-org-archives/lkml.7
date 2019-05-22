@@ -2,98 +2,82 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92705C072A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 08:44:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCBB1C072A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 08:44:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6782320821
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 08:44:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCA2E20821
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 08:44:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728692AbfEVIoM (ORCPT
+        id S1728773AbfEVIoV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 04:44:12 -0400
-Received: from relay.sw.ru ([185.231.240.75]:41254 "EHLO relay.sw.ru"
+        Wed, 22 May 2019 04:44:21 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:47566 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728491AbfEVIoM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 04:44:12 -0400
-Received: from [172.16.25.169] (helo=localhost.localdomain)
-        by relay.sw.ru with esmtp (Exim 4.91)
-        (envelope-from <ktkhai@virtuozzo.com>)
-        id 1hTMr0-00022D-Lf; Wed, 22 May 2019 11:44:06 +0300
-Subject: [PATCH] mm: Rename mm_vmscan_lru_shrink_inactive trace event
- variables
-From:   Kirill Tkhai <ktkhai@virtuozzo.com>
-To:     akpm@linux-foundation.org, mjeanson@efficios.com,
-        rostedt@goodmis.org, lttng-dev@lists.lttng.org,
-        linux-kernel@vger.kernel.org, ktkhai@virtuozzo.com
-Date:   Wed, 22 May 2019 11:44:06 +0300
-Message-ID: <155851455676.7870.1951762540769724271.stgit@localhost.localdomain>
-User-Agent: StGit/0.18
+        id S1727946AbfEVIoV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 04:44:21 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 0DCDC3082E42;
+        Wed, 22 May 2019 08:44:21 +0000 (UTC)
+Received: from kamzik.brq.redhat.com (ovpn-204-233.brq.redhat.com [10.40.204.233])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 33C00600C6;
+        Wed, 22 May 2019 08:44:14 +0000 (UTC)
+Date:   Wed, 22 May 2019 10:44:09 +0200
+From:   Andrew Jones <drjones@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Thomas Huth <thuth@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-s390@vger.kernel.org
+Subject: Re: [RFC PATCH 0/4] KVM selftests for s390x
+Message-ID: <20190522084409.qz5hs7lqj65qg6x5@kamzik.brq.redhat.com>
+References: <20190516111253.4494-1-thuth@redhat.com>
+ <b412e591-3983-ebef-510b-43f9b7be4147@redhat.com>
+ <9423ba89-b10e-5e6e-3cc8-8088f3088233@redhat.com>
+ <4d94124e-00f6-aa65-3a4a-bd8910480329@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4d94124e-00f6-aa65-3a4a-bd8910480329@redhat.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Wed, 22 May 2019 08:44:21 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rename nr_activate{0,1} into nr_activate{anon,file} since this
-is exported into userspace, e.g., it's shown here:
+On Mon, May 20, 2019 at 01:43:06PM +0200, Paolo Bonzini wrote:
+> On 20/05/19 13:30, Thomas Huth wrote:
+> >> No objections at all, though it would be like to have ucall plumbed in
+> >> from the beginning.
+> > I'm still looking at the ucall interface ... what I don't quite get yet
+> > is the question why the ucall_type there is selectable during runtime?
+> > 
+> > Are there plans to have test that could either use UCALL_PIO or
+> > UCALL_MMIO? If not, what about moving ucall_init() and ucall() to
+> > architecture specific code in tools/testing/selftests/kvm/lib/aarch64/
+> > and tools/testing/selftests/kvm/lib/x86_64 instead, and to remove the
+> > ucall_type stuff again (so that x86 is hard-wired to PIO and aarch64
+> > is hard-wired to MMIO)? ... then I could add a DIAG-based ucall
+> > on s390x more easily, I think.
+> 
+> Yes, that would work.  I think Andrew wanted the flexibility to use MMIO
+> on x86, but it's not really necessary to have it.
 
-/sys/kernel/debug/tracing/events/vmscan/mm_vmscan_lru_shrink_inactive/format.
+If the flexibility isn't necessary, then I agree that it'll be nicer to
+put the ucall_init() in arch setup code, avoiding the need to remember
+it in each unit test.
 
-Now we have:
-field:unsigned int nr_activate0;	offset:64;	size:4;	signed:0;
-field:unsigned int nr_activate1;	offset:68;	size:4;	signed:0;
-
-The patch changes these to:
-field:unsigned int nr_activate_anon;	offset:64;	size:4;	signed:0;
-field:unsigned int nr_activate_file;	offset:68;	size:4;	signed:0;
-
-which is better readable.
-
-Suggested-by: Michael Jeanson <mjeanson@efficios.com>
-Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
----
- include/trace/events/vmscan.h |   10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/include/trace/events/vmscan.h b/include/trace/events/vmscan.h
-index a5ab2973e8dc..c316279715f4 100644
---- a/include/trace/events/vmscan.h
-+++ b/include/trace/events/vmscan.h
-@@ -348,8 +348,8 @@ TRACE_EVENT(mm_vmscan_lru_shrink_inactive,
- 		__field(unsigned long, nr_writeback)
- 		__field(unsigned long, nr_congested)
- 		__field(unsigned long, nr_immediate)
--		__field(unsigned int, nr_activate0)
--		__field(unsigned int, nr_activate1)
-+		__field(unsigned int, nr_activate_anon)
-+		__field(unsigned int, nr_activate_file)
- 		__field(unsigned long, nr_ref_keep)
- 		__field(unsigned long, nr_unmap_fail)
- 		__field(int, priority)
-@@ -364,8 +364,8 @@ TRACE_EVENT(mm_vmscan_lru_shrink_inactive,
- 		__entry->nr_writeback = stat->nr_writeback;
- 		__entry->nr_congested = stat->nr_congested;
- 		__entry->nr_immediate = stat->nr_immediate;
--		__entry->nr_activate0 = stat->nr_activate[0];
--		__entry->nr_activate1 = stat->nr_activate[1];
-+		__entry->nr_activate_anon = stat->nr_activate[0];
-+		__entry->nr_activate_file = stat->nr_activate[1];
- 		__entry->nr_ref_keep = stat->nr_ref_keep;
- 		__entry->nr_unmap_fail = stat->nr_unmap_fail;
- 		__entry->priority = priority;
-@@ -377,7 +377,7 @@ TRACE_EVENT(mm_vmscan_lru_shrink_inactive,
- 		__entry->nr_scanned, __entry->nr_reclaimed,
- 		__entry->nr_dirty, __entry->nr_writeback,
- 		__entry->nr_congested, __entry->nr_immediate,
--		__entry->nr_activate0, __entry->nr_activate1,
-+		__entry->nr_activate_anon, __entry->nr_activate_file,
- 		__entry->nr_ref_keep, __entry->nr_unmap_fail,
- 		__entry->priority,
- 		show_reclaim_flags(__entry->reclaim_flags))
-
+Thanks,
+drew
