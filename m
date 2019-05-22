@@ -2,163 +2,300 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70E44C072A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 03:31:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6DDCC072A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 03:38:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4544A2184E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 03:31:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pbcHDo3x"
+	by mail.kernel.org (Postfix) with ESMTP id ABC65217F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 03:38:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728521AbfEVDbe (ORCPT
+        id S1728314AbfEVDiD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 23:31:34 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:35725 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728185AbfEVDbe (ORCPT
+        Tue, 21 May 2019 23:38:03 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:33743 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727681AbfEVDiD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 23:31:34 -0400
-Received: by mail-pf1-f193.google.com with SMTP id t87so559346pfa.2
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 20:31:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=70DJ6xEYXdyE5ONMBui8fhHROrLWF1i2GATP34gSzBE=;
-        b=pbcHDo3xPViuCzHm2rSbJYkI9lDRRhEKtkcVN/h8NeSGBWVbhQOz47Yj2hT+Tc06FV
-         xtASp0+1WdTHgsegau+V0DqUpx2Yr87Li75jrWQjs23pxqIsDWBWbPuPqy+EkOEPtzoj
-         mC5MlchKkNL00s3TyGX+HgATuaVkur5SydLyEft/6oiYTbp4hWvh3ygzYJ6nQkYee+bi
-         HRdtBzcJHBMQbw+MhhPbMPch2UGxBkFUbgpoTwsBDn3102BwxVYIwwHQYzrmAfpQACbo
-         ONKWAk6/fgbBFygsgPf5u3+/OEqcqzR3WxblPf4zWjXQ2OMAEL4nQ6UgKJuOkYXuvaAT
-         g+eA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=70DJ6xEYXdyE5ONMBui8fhHROrLWF1i2GATP34gSzBE=;
-        b=OUtEh17fXnVQ7atJMRu/rK3HjyyKGadzyr2I9tjxToeo1t0hkD8G23vk6fFSw4QLbL
-         ejV/eldA56YYf5S01yFpWVHEhRFfgWE5UFV8C/WLvaAk8dehZKE6j8HBQfEiuZThCE3Z
-         nXRql7gGvwZbvwC7GCgE+v3BWqHxLHQE2mUor1eZFp1j+Bz7bENjdZFFWipCHgfRioG9
-         Xqg/KIxB4ldQA5d8aOXARSrJY1MhqpUjSqBldn2xpapC5umjoZC0JYJ0FxMhCvyotmLz
-         H6jdtXcdNwZtiHxNpNCxL4VRfuOE7wfcAETIpIsjOkBHn251Lb4qHl2pHWZFdFOsk0et
-         XD4A==
-X-Gm-Message-State: APjAAAXUcWvfn/4IQz+HeTXrsSQB9KAPFPumaJnRge3exA76MCx673Xl
-        ngP+ti5iI7inupjlp1fghVpwzw==
-X-Google-Smtp-Source: APXvYqx/zst8wDzIb6P89YyExTovp2xI3XT920F4myuEeSrUm2I9hhhxwU5SxZOdntWJE79iRgVyXg==
-X-Received: by 2002:a62:5306:: with SMTP id h6mr35072808pfb.29.1558495893384;
-        Tue, 21 May 2019 20:31:33 -0700 (PDT)
-Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id w66sm45540879pfb.47.2019.05.21.20.31.32
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 21 May 2019 20:31:32 -0700 (PDT)
-Date:   Tue, 21 May 2019 20:31:30 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Amit Kucheria <amit.kucheria@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        agross@kernel.org, niklas.cassel@linaro.org,
-        marc.w.gonzalez@free.fr, sibis@codeaurora.org,
-        daniel.lezcano@linaro.org, Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 5/9] arm64: dts: qcom: qcs404: Add PSCI cpuidle low
- power states
-Message-ID: <20190522033130.GL3137@builder>
-References: <cover.1558430617.git.amit.kucheria@linaro.org>
- <cddc5957a510eef61284656fd1d739d4112a2daa.1558430617.git.amit.kucheria@linaro.org>
+        Tue, 21 May 2019 23:38:03 -0400
+X-UUID: 1af16d7cb5dc42c0abeb575eabeb4e99-20190522
+X-UUID: 1af16d7cb5dc42c0abeb575eabeb4e99-20190522
+Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <chunfeng.yun@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 2060629758; Wed, 22 May 2019 11:37:45 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31N1.mediatek.inc
+ (172.27.4.69) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Wed, 22 May
+ 2019 11:37:43 +0800
+Received: from [10.17.3.153] (172.27.4.253) by MTKCAS36.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 22 May 2019 11:37:42 +0800
+Message-ID: <1558496262.10179.379.camel@mhfsdcap03>
+Subject: Re: [PATCH v5 4/6] usb: roles: add API to get usb_role_switch by
+ node
+From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
+To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
+CC:     Biju Das <biju.das@bp.renesas.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "Adam Thomson" <Adam.Thomson.Opensource@diasemi.com>,
+        Li Jun <jun.li@nxp.com>,
+        Badhri Jagan Sridharan <badhri@google.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Min Guo <min.guo@mediatek.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 22 May 2019 11:37:42 +0800
+In-Reply-To: <20190521103304.GJ1887@kuha.fi.intel.com>
+References: <1557823643-8616-1-git-send-email-chunfeng.yun@mediatek.com>
+         <1557823643-8616-5-git-send-email-chunfeng.yun@mediatek.com>
+         <20190517103736.GA1490@kuha.fi.intel.com>
+         <20190517130511.GA1887@kuha.fi.intel.com>
+         <1558319951.10179.352.camel@mhfsdcap03>
+         <20190520080359.GC1887@kuha.fi.intel.com>
+         <OSBPR01MB2103385D996762FA54F8E437B8060@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+         <20190520083601.GE1887@kuha.fi.intel.com>
+         <OSBPR01MB2103C4C8920C40E42BC1B2A9B8060@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+         <1558424104.10179.365.camel@mhfsdcap03>
+         <20190521103304.GJ1887@kuha.fi.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cddc5957a510eef61284656fd1d739d4112a2daa.1558430617.git.amit.kucheria@linaro.org>
-User-Agent: Mutt/1.10.0 (2018-05-17)
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 21 May 02:35 PDT 2019, Amit Kucheria wrote:
-
-> From: Niklas Cassel <niklas.cassel@linaro.org>
+On Tue, 2019-05-21 at 13:33 +0300, Heikki Krogerus wrote:
+> On Tue, May 21, 2019 at 03:35:04PM +0800, Chunfeng Yun wrote:
+> > Hi,
+> > On Mon, 2019-05-20 at 09:45 +0000, Biju Das wrote:
+> > > 
+> > > Hi Heikki,
+> > > 
+> > > Thanks for the feedback.
+> > > 
+> > > > Subject: Re: [PATCH v5 4/6] usb: roles: add API to get usb_role_switch by
+> > > > node
+> > > > 
+> > > > On Mon, May 20, 2019 at 08:06:41AM +0000, Biju Das wrote:
+> > > > > Hi Heikki,
+> > > > >
+> > > > > > Subject: Re: [PATCH v5 4/6] usb: roles: add API to get
+> > > > > > usb_role_switch by node
+> > > > > >
+> > > > > > On Mon, May 20, 2019 at 10:39:11AM +0800, Chunfeng Yun wrote:
+> > > > > > > Hi,
+> > > > > > > On Fri, 2019-05-17 at 16:05 +0300, Heikki Krogerus wrote:
+> > > > > > > > Hi,
+> > > > > > > >
+> > > > > > > > On Fri, May 17, 2019 at 01:37:36PM +0300, Heikki Krogerus wrote:
+> > > > > > > > > On Tue, May 14, 2019 at 04:47:21PM +0800, Chunfeng Yun wrote:
+> > > > > > > > > > Add fwnode_usb_role_switch_get() to make easier to get
+> > > > > > > > > > usb_role_switch by fwnode which register it.
+> > > > > > > > > > It's useful when there is not device_connection registered
+> > > > > > > > > > between two drivers and only knows the fwnode which register
+> > > > > > > > > > usb_role_switch.
+> > > > > > > > > >
+> > > > > > > > > > Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> > > > > > > > > > Tested-by: Biju Das <biju.das@bp.renesas.com>
+> > > > > > > > >
+> > > > > > > > > Acked-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> > > > > > > >
+> > > > > > > > Hold on. I just noticed Rob's comment on patch 2/6, where he
+> > > > > > > > points out that you don't need to use device graph since the
+> > > > > > > > controller is the parent of the connector. Doesn't that mean you
+> > > > > > > > don't really need this API?
+> > > > > > > No, I still need it.
+> > > > > > > The change is about the way how to get fwnode; when use device
+> > > > > > > graph, get fwnode by of_graph_get_remote_node(); but now will get
+> > > > > > > fwnode by of_get_parent();
+> > > > > >
+> > > > > > OK, I get that, but I'm still not convinced about if something like
+> > > > > > this function is needed at all. I also have concerns regarding how
+> > > > > > you are using the function. I'll explain in comment to the patch 5/6 in this
+> > > > series...
+> > > > >
+> > > > > FYI, Currently  I am also using this api in my patch series.
+> > > > > https://patchwork.kernel.org/patch/10944637/
+> > > > 
+> > > > Yes, and I have the same question for you I jusb asked in comment I added
+> > > > to the patch 5/6 of this series. Why isn't usb_role_switch_get() enough?
+> > > 
+> > > Currently no issue. It will work with this api as well, since the port node is part of controller node.
+> > > For eg:-
+> > > https://patchwork.kernel.org/patch/10944627/
+> > > 
+> > > However if any one adds port node inside the connector node, then this api may won't work as expected.
+> > > Currently I get below error
+> > > 
+> > > [    2.299703] OF: graph: no port node found in /soc/i2c@e6500000/hd3ss3220@47
+> > > 
+> > > For eg:-
+> > > 
+> > > 	hd3ss3220@47 {
+> > > 		compatible = "ti,hd3ss3220";
+> > > 		...
+> > > 		....
+> > > 		usb_con: connector {
+> > >                                      ....
+> > >                                      ....
+> > > 			port {
+> > > 				hd3ss3220_ep: endpoint@0 {
+> > > 					reg = <0>;
+> > > 					remote-endpoint = <&usb3peri_role_switch>;
+> > > 				};
+> > > 			};
+> > > 		};
+> > > 	};
+> > > 
+> > > Regards,
+> > > Biju
+> > 
+> > I tested 3 cases:
+> > 
+> > case 1:
+> > 
+> > connector {
+> >     compatible = "linux,typeb-conn-gpio", "usb-b-connector";
+> >     label = "micro-USB";
+> >     type = "micro";
+> >     id-gpios = <&pio 12 GPIO_ACTIVE_HIGH>;
+> >     vbus-supply = <&usb_p0_vbus>;
+> > 
+> >     port {
+> >         bconn_ep: endpoint@0 {
+> >             remote-endpoint = <&usb_role_sw>;
+> >         };
+> >     };
+> > };
+> > 
+> > &mtu3 {
+> >     usb-role-switch;
+> > 
+> >     port {
+> >         usb_role_sw: endpoint@0 {
+> >             remote-endpoint = <&bconn_ep>;
+> >         };
+> >     };
+> > };
+> > 
+> > the driver of connector could use usb_role_switch_get(dev) to get
+> > mtu3's USB Role Switch. (dev is the device of connector)
+> > 
+> > case 2:
+> > 
+> > &mtu3 {
+> >     usb-role-switch;
+> > 
+> >     connector {
+> >         compatible = "linux,typeb-conn-gpio", "usb-b-connector";
+> >         label = "micro-USB";
+> >         type = "micro";
+> >         id-gpios = <&pio 12 GPIO_ACTIVE_HIGH>;
+> >         vbus-supply = <&usb_p0_vbus>;
+> >     };
+> > };
+> > 
+> > the driver of connector using usb_role_switch_get(dev) failed to get
+> > mtu3's USB Role Switch.
+> > error log:
+> > #OF: graph: no port node found in /usb@11271000/connector
+> > this is because connector hasn't child node connected to remote
+> > endpoint which register USB Role Switch
+> > 
+> > case 3:
+> > 
+> > rsw_iddig: role_sw_iddig {
+> >     compatible = "linux,typeb-conn-gpio";
+> >     status = "okay";
+> > 
+> >     connector {
+> >         compatible = "usb-b-connector";
+> >         label = "micro-USB";
+> >         type = "micro";
+> >         id-gpios = <&pio 12 GPIO_ACTIVE_HIGH>;
+> >         vbus-supply = <&usb_p0_vbus>;
+> > 
+> >         port {
+> >             bconn_ep: endpoint@0 {
+> >                 remote-endpoint = <&usb_role_sw>;
+> >             };
+> >         };
+> >     };
+> > };
+> > 
+> > &mtu3 {
+> >     usb-role-switch;
+> > 
+> >     port {
+> >         usb_role_sw: endpoint@0 {
+> >             remote-endpoint = <&bconn_ep>;
+> >         };
+> >     };
+> > };
+> > 
+> > 
+> > the driver of connector using usb_role_switch_get(dev) also failed to
+> > get mtu3's USB Role Switch. Because usb_role_switch_get() only search
+> > its child nodes (connector node), but not child's child (port node)
+> > This case is the same as Biju's
+> > 
+> > Usually type-c is similar with case 3;
+> > the next version v6 of this series will use case 2 as Rob suggested,
+> > see [v5, 2/6]
+> > 
+> > for case 2, will need the new API fwnode_usb_role_switch_get();
 > 
-> Add device bindings for cpuidle states for cpu devices.
+> Thanks for the explanation.
 > 
-> Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
-> Reviewed-by: Vinod Koul <vkoul@kernel.org>
-> [rename the idle-states to more generic names and fixups]
-> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> ---
-
-Applied
-
-Regards,
-Bjorn
-
->  arch/arm64/boot/dts/qcom/qcs404.dtsi | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
+> In this case, if I understood this correctly, the USB controller, which
+> is also the role switch, is the parent of the connector. So shouldn't
+> we simply consider that in the current API?
+It's better if can be added into the current API.
+I'll try it.
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-> index e8fd26633d57..0a9b29af64c2 100644
-> --- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-> @@ -30,6 +30,7 @@
->  			compatible = "arm,cortex-a53";
->  			reg = <0x100>;
->  			enable-method = "psci";
-> +			cpu-idle-states = <&CPU_SLEEP_0>;
->  			next-level-cache = <&L2_0>;
->  		};
->  
-> @@ -38,6 +39,7 @@
->  			compatible = "arm,cortex-a53";
->  			reg = <0x101>;
->  			enable-method = "psci";
-> +			cpu-idle-states = <&CPU_SLEEP_0>;
->  			next-level-cache = <&L2_0>;
->  		};
->  
-> @@ -46,6 +48,7 @@
->  			compatible = "arm,cortex-a53";
->  			reg = <0x102>;
->  			enable-method = "psci";
-> +			cpu-idle-states = <&CPU_SLEEP_0>;
->  			next-level-cache = <&L2_0>;
->  		};
->  
-> @@ -54,6 +57,7 @@
->  			compatible = "arm,cortex-a53";
->  			reg = <0x103>;
->  			enable-method = "psci";
-> +			cpu-idle-states = <&CPU_SLEEP_0>;
->  			next-level-cache = <&L2_0>;
->  		};
->  
-> @@ -61,6 +65,20 @@
->  			compatible = "cache";
->  			cache-level = <2>;
->  		};
+> diff --git a/drivers/usb/roles/class.c b/drivers/usb/roles/class.c
+> index f45d8df5cfb8..2f898167b99a 100644
+> --- a/drivers/usb/roles/class.c
+> +++ b/drivers/usb/roles/class.c
+> @@ -125,6 +125,13 @@ struct usb_role_switch *usb_role_switch_get(struct device *dev)
+>  {
+>         struct usb_role_switch *sw;
+> 
+> +       /*
+> +        * Simplest case is that a connector is looking for the controller,
+> +        * which is its parent.
+> +        */
+> +       if (device_property_present(dev->parent, "usb-role-switch"))
+> +               return to_role_switch(dev->parent);
 > +
-> +		idle-states {
-> +			entry-method = "psci";
-> +
-> +			CPU_SLEEP_0: cpu-sleep-0 {
-> +				compatible = "arm,idle-state";
-> +				idle-state-name = "standalone-power-collapse";
-> +				arm,psci-suspend-param = <0x40000003>;
-> +				entry-latency-us = <125>;
-> +				exit-latency-us = <180>;
-> +				min-residency-us = <595>;
-> +				local-timer-stop;
-> +			};
-> +		};
->  	};
->  
->  	firmware {
-> -- 
-> 2.17.1
+>         sw = device_connection_find_match(dev, "usb-role-switch", NULL,
+>                                           usb_role_switch_match);
 > 
+> 
+> > for case 3, use the new API, or need modify usb_role_switch_get();
+> 
+> I did not completely understand this case, but isn't it the same as
+> case 2 in the end, after you change it as Rob suggested?
+I'm afraid not, their bindings are different, see
+connector/usb-connector.txt
+> 
+> 
+> thanks,
+> 
+
+
