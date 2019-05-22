@@ -2,94 +2,62 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2709FC18E7D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 10:41:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E06F2C18E7D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 10:42:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0820A217D4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 10:41:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5D5120851
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 10:42:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729305AbfEVKlN (ORCPT
+        id S1729138AbfEVKma (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 06:41:13 -0400
-Received: from foss.arm.com ([217.140.101.70]:47710 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728744AbfEVKlM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 06:41:12 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 10655341;
-        Wed, 22 May 2019 03:41:12 -0700 (PDT)
-Received: from mbp (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3F3C13F575;
-        Wed, 22 May 2019 03:41:06 -0700 (PDT)
-Date:   Wed, 22 May 2019 11:41:03 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Andrey Konovalov <andreyknvl@google.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
-        linux-media@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
-Subject: Re: [PATCH v15 03/17] lib, arm64: untag user pointers in strn*_user
-Message-ID: <20190522104103.r5any4us4zz7gwvg@mbp>
-References: <cover.1557160186.git.andreyknvl@google.com>
- <861418ff7ed7253356cb8267de5ee2d4bd84196d.1557160186.git.andreyknvl@google.com>
+        Wed, 22 May 2019 06:42:30 -0400
+Received: from relay10.mail.gandi.net ([217.70.178.230]:57261 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727464AbfEVKm3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 06:42:29 -0400
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 666F2240009;
+        Wed, 22 May 2019 10:42:27 +0000 (UTC)
+Date:   Wed, 22 May 2019 12:42:26 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] spi: dt-bindings: Convert Arm pl022 to json-schema
+Message-ID: <20190522104226.nwcvx33akt6q576m@flea>
+References: <20190521212325.16639-1-robh@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <861418ff7ed7253356cb8267de5ee2d4bd84196d.1557160186.git.andreyknvl@google.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20190521212325.16639-1-robh@kernel.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 06, 2019 at 06:30:49PM +0200, Andrey Konovalov wrote:
-> This patch is a part of a series that extends arm64 kernel ABI to allow to
-> pass tagged user pointers (with the top byte set to something else other
-> than 0x00) as syscall arguments.
-> 
-> strncpy_from_user and strnlen_user accept user addresses as arguments, and
-> do not go through the same path as copy_from_user and others, so here we
-> need to handle the case of tagged user addresses separately.
-> 
-> Untag user pointers passed to these functions.
-> 
-> Note, that this patch only temporarily untags the pointers to perform
-> validity checks, but then uses them as is to perform user memory accesses.
-> 
-> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+Hi Rob,
 
-Just to keep track of where I am with the reviews while the ABI
-discussion continues:
+On Tue, May 21, 2019 at 04:23:24PM -0500, Rob Herring wrote:
+> +allOf:
+> +  - $ref: "spi-controller.yaml#"
 
-Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
+You're using a different construct on the spi-gpio binding you just
+sent (/schemas/spi/spi-controller.yaml).
+
+Is that on purpose?
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
