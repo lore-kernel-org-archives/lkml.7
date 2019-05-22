@@ -2,972 +2,141 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34024C18E7D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 08:58:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55861C18E7D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 08:59:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D74852173C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 08:58:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558515509;
-	bh=Kabrfh/NXMCszhYy7ftqVKpkvv83mahU2Fx+0Yle46Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OgRD7IWE9cklEh/DrLAnxqlD8CGxYP3wXzi7KbzbN9ZSrfHm+A0TR2Tla9QXuz68v
-	 DuRChFlR/GzaomIUzhb7KsHG8EfT2js5XpznlSKXjUDMSy7xuWIihDtmKnea4RGYnE
-	 Mu+zl2mdLrSca6ekj6KY/fVIt1DS3NcQGjx2wtro=
+	by mail.kernel.org (Postfix) with ESMTP id 24D8A20856
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 08:59:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Yfz27Rde"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728837AbfEVI62 (ORCPT
+        id S1728846AbfEVI7r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 04:58:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32848 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727796AbfEVI61 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 04:58:27 -0400
-Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0343120856;
-        Wed, 22 May 2019 08:58:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558515506;
-        bh=Kabrfh/NXMCszhYy7ftqVKpkvv83mahU2Fx+0Yle46Y=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=D40g4u6A/Nv/AiGlEqOxA3g2A5LV5J/aDlSFTBv2OgyqMQUJoQ49auOK/1sJsV9Hz
-         u9ZFGH9dny/WvI9Q/fZwxMs+cpWvo0UbMi3a7KjXLKq2rIUQAVaLr5+5vqZ2lEB7O3
-         2i/LoW+ZJWXeA4CAIPKESgqZCW/BKO4JEghdt09s=
-Date:   Wed, 22 May 2019 16:57:26 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     "Angus Ainslie (Purism)" <angus@akkea.ca>
-Cc:     angus.ainslie@puri.sm, Li Yang <leoyang.li@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        Wed, 22 May 2019 04:59:47 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:40613 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728406AbfEVI7q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 04:59:46 -0400
+Received: by mail-pf1-f194.google.com with SMTP id u17so971706pfn.7
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 01:59:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=from:to:subject:date:message-id;
+        bh=csdVERX8dSQ7qyBeUMoSzLfDNYik/H197bs1aUHpWEE=;
+        b=Yfz27RdeWay5eXTrkNYzPidWfd1s5Nxyvs2H5Kq5i0xkKQrLOgLeKpE9lAgXxRfbR4
+         MNKDjq3c22egxUNKz3/I44a0VD7WA32q3CLY/pqOVMMWfS442/5r16T5rkoME2VJXy68
+         dw+n0m8NKOPyXgzhXq8fmqCIR6GOMocxTs/iPS45cvwmSgLVzvh0m1lTeUAvOaDnhet2
+         8xfrtQsiDsyPMIOy1eK4MwJwYrg9c452iD1SRSyd+YpYVYbEUEwry36HeHnr9N6PFYQN
+         Lv7B73ooWsMXmdeKLHMyc+5rngow4IDFgfW1Nwg2pQL7lE/D8E+nGYirKURrvjiRb7IY
+         oaRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id;
+        bh=csdVERX8dSQ7qyBeUMoSzLfDNYik/H197bs1aUHpWEE=;
+        b=gfMgkwu4kFfG8M+qcKjFIj+0NPlFcgoMP5pUKxb7EQpepC5UsZTfOzDzikKNFdPGMG
+         AT4EFWUQVHxum1jrZrBGtvxhxYI1qY6n3WtpjfP6CvyvExyuETNym9QSbDub8lSYhFa4
+         VnCUR5Hi0J5g95lnAH4QX8+8UMGkfWxX5Lah055UIZ87PTenHqgSUxD5RV09zmQHO12i
+         GDvpVDyjbkQ0faz54EJOHUiFnWC5gwH9Fh4pj23lMUsH2LfpsTaKF8c88nwA4JfN2GuT
+         mVQYVYM8leXxefLDoyGN/W8V5v8e6NbuFYJOTODPo4OHO6VEYuwYAQlRYqn+CxdiaING
+         InMA==
+X-Gm-Message-State: APjAAAVKLy4iet2lernHBTJkBOkh7mrVFXZ5nrS5HmAKCrC9zt+5qpku
+        9IDEBPZThk6ih18Hq1gSKN31/g==
+X-Google-Smtp-Source: APXvYqzrS8Uu+raOf+5M2t7dHWXbMQZRQgl34nRj+XRx9eTVexFa5TS9MoWstoGp26MSi8ECnOxjhA==
+X-Received: by 2002:a63:1354:: with SMTP id 20mr87126477pgt.356.1558515586071;
+        Wed, 22 May 2019 01:59:46 -0700 (PDT)
+Received: from buildserver-90.open-silicon.com ([114.143.65.226])
+        by smtp.googlemail.com with ESMTPSA id z6sm42465905pfr.135.2019.05.22.01.59.42
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 22 May 2019 01:59:45 -0700 (PDT)
+From:   Sagar Shrikant Kadam <sagar.kadam@sifive.com>
+To:     robh+dt@kernel.org, mark.rutland@arm.com, peter@korsgaard.com,
+        andrew@lunn.ch, palmer@sifive.com, paul.walmsley@sifive.com,
+        sagar.kadam@sifive.com, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v12 2/4] arm64: dts: fsl: librem5: Add a device tree for
- the Librem5 devkit
-Message-ID: <20190522085723.GC9261@dragon>
-References: <20190514132822.27023-1-angus@akkea.ca>
- <20190514132822.27023-3-angus@akkea.ca>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190514132822.27023-3-angus@akkea.ca>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Subject: [PATCH v7 0/3] Extend dt bindings to support I2C on sifive devices and a fix broken IRQ in polling mode.
+Date:   Wed, 22 May 2019 14:29:31 +0530
+Message-Id: <1558515574-11155-1-git-send-email-sagar.kadam@sifive.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 14, 2019 at 06:28:20AM -0700, Angus Ainslie (Purism) wrote:
-> This is for the development kit board for the Librem 5. The current level
-> of support yields a working console and is able to boot userspace from
-> the network or eMMC.
-> 
-> Additional subsystems that are active :
-> 
-> - Both USB ports
-> - SD card socket
-> - WiFi usdhc
-> - WWAN modem
-> - GNSS
-> - GPIO keys
-> - LEDs
-> - gyro
-> - magnetometer
-> - touchscreen
-> - pwm
-> - backlight
-> - haptic motor
-> 
-> Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
-> Reviewed-by: Fabio Estevam <festevam@gmail.com>
-> ---
->  arch/arm64/boot/dts/freescale/Makefile        |   1 +
->  .../dts/freescale/imx8mq-librem5-devkit.dts   | 821 ++++++++++++++++++
->  2 files changed, 822 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
-> index 0bd122f60549..c043aca66572 100644
-> --- a/arch/arm64/boot/dts/freescale/Makefile
-> +++ b/arch/arm64/boot/dts/freescale/Makefile
-> @@ -22,6 +22,7 @@ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-lx2160a-rdb.dtb
->  
->  dtb-$(CONFIG_ARCH_MXC) += imx8mm-evk.dtb
->  dtb-$(CONFIG_ARCH_MXC) += imx8mq-evk.dtb
-> +dtb-$(CONFIG_ARCH_MXC) += imx8mq-librem5-devkit.dtb
->  dtb-$(CONFIG_ARCH_MXC) += imx8mq-zii-ultra-rmb3.dtb
->  dtb-$(CONFIG_ARCH_MXC) += imx8mq-zii-ultra-zest.dtb
->  dtb-$(CONFIG_ARCH_MXC) += imx8qxp-mek.dtb
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-> new file mode 100644
-> index 000000000000..64898daee644
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-> @@ -0,0 +1,821 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Copyright 2018-2019 Purism SPC
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "dt-bindings/input/input.h"
-> +#include "dt-bindings/usb/pd.h"
-> +#include "imx8mq.dtsi"
-> +
-> +/ {
-> +	model = "Purism Librem 5 devkit";
-> +	compatible = "purism,librem5-devkit", "fsl,imx8mq";
-> +
-> +	backlight_dsi: backlight-dsi {
-> +		compatible = "pwm-backlight";
-> +		/* 200 Hz for the PAM2841 */
-> +		pwms = <&pwm1 0 5000000>;
-> +		brightness-levels = <0 100>;
-> +		num-interpolated-steps = <100>;
-> +		/* Default brightness level (index into the array defined by */
-> +		/* the "brightness-levels" property) */
-> +		default-brightness-level = <0>;
-> +		power-supply = <&reg_22v4_p>;
-> +	};
-> +
-> +	chosen {
-> +		stdout-path = &uart1;
-> +	};
-> +
-> +	gpio-keys {
-> +		compatible = "gpio-keys";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_gpio_keys>;
-> +
-> +		btn1 {
-> +			label = "VOL_UP";
-> +			gpios = <&gpio4 21 GPIO_ACTIVE_LOW>;
-> +			wakeup-source;
-> +			linux,code = <KEY_VOLUMEUP>;
-> +		};
-> +
-> +		btn2 {
-> +			label = "VOL_DOWN";
-> +			gpios = <&gpio4 22 GPIO_ACTIVE_LOW>;
-> +			wakeup-source;
-> +			linux,code = <KEY_VOLUMEDOWN>;
-> +		};
-> +
-> +		hp_det {
+The patch is based on mainline v5.2-rc1 and extends DT-bindings for Opencore based I2C IP block reimplemented
+in FU540 SoC, available on HiFive unleashed board (Rev A00), and also provides a workaround for broken IRQ
+which affects the already available I2C polling mode interface in mainline, for FU540-C000 chipsets.
 
-We prefer to use hyphen than underscore in node name.
+The polling mode workaround patch fixes the CPU stall issue, when-ever i2c transfer are initiated.
 
-> +			label = "HP_DET";
-> +			gpios = <&gpio3 20 GPIO_ACTIVE_LOW>;
-> +			wakeup-source;
-> +			linux,code = <KEY_HP>;
-> +		};
-> +	};
-> +
-> +	leds {
-> +		compatible = "gpio-leds";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_gpio_leds>;
-> +
-> +		led1 {
-> +			label = "LED 1";
-> +			gpios = <&gpio1 13 GPIO_ACTIVE_HIGH>;
-> +			default-state = "off";
-> +		};
-> +	};
-> +
-> +	pmic_osc: pmic-osc {
+This workaround checks if it's a FU540 chipset based on device tree information, and check's for open
+core's IF(interrupt flag) and BUSY flags to break from the polling loop upon completion of transfer.
 
-clock-xxx as node name for fixed clock.
+To test the patch, a PMOD-AD2 sensor is connected to HiFive Unleashed board over J1 connector, and
+appropriate device node is added into board specific device tree as per the information provided in
+dt-bindings in Documentation/devicetree/bindings/i2c/i2c-ocores.txt.
+Without this workaround, the CPU stall's infinitely.
 
-> +		compatible = "fixed-clock";
-> +		#clock-cells = <0>;
-> +		clock-frequency = <32768>;
-> +		clock-output-names = "pmic_osc";
-> +	};
-> +
-> +	pwmleds {
-> +		compatible = "pwm-leds";
-> +
-> +		haptic {
-> +			label = "librem5::haptic";
-> +			pwms = <&pwm2 0 200000>;
-> +			active-low;
-> +			max-brightness = <255>;
-> +			power-supply = <&reg_3v3_p>;
+Busybox i2c utilities used to verify workaround : i2cdetect, i2cdump, i2cset, i2cget
 
-I do not see that 'power-supply' is a pwm led property in
-bindings/leds/leds-pwm.txt.  Is it something missed from bindings doc or
-that shouldn't be here?
 
-> +		};
-> +	};
-> +
-> +	reg_1v8_p: regulator-1v8-p {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "1v8_p";
-> +		regulator-min-microvolt = <1800000>;
-> +		regulator-max-microvolt = <1800000>;
-> +		vin-supply = <&reg_pwr_en>;
-> +	};
-> +
-> +	reg_2v8_p: regulator-2v8-p {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "2v8_p";
-> +		regulator-min-microvolt = <2800000>;
-> +		regulator-max-microvolt = <2800000>;
-> +		vin-supply = <&reg_pwr_en>;
-> +	};
-> +
-> +	reg_3v3_p: regulator-3v3-p {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "3v3_p";
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +		vin-supply = <&reg_pwr_en>;
-> +		regulator-state-mem {
-> +			regulator-on-in-suspend;
-> +		};
-> +	};
-> +
-> +	reg_5v_p: regulator-5v-p {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "5v_p";
-> +		regulator-min-microvolt = <5000000>;
-> +		regulator-max-microvolt = <5000000>;
-> +		vin-supply = <&reg_pwr_en>;
+Patch History:
+V6<->V7:
+-Rectified space and tab issue in dt bindings strings.
+-Implemented workaround based on i2c->flags, as per review comment on v6.
 
-Please have a newline between property list and child node.
+V5<->V6:
+-Incorporated suggestions on v5 patch as follows:
+-Reformatted compatibility strings in dt doc with one valid combination on each line.
+-Removed interrupt-parents from optional property list. 
+-With rebase to v5.2-rc1, the v5 variant of polling workaround PATCH becomes in-compatible.
+ Till kernel v5.1 the polling mode was enabled based on i2c->flags, wherease in kernel v5.2-rc1 polling mode is set as
+ master transfer algorithim at probe time itself, and i2c->flags checks are removed.
+-Modified v5 to check for SiFive device type in polling function and include the workaround/fix for broken IRQ.
 
-> +		regulator-state-mem {
-> +			regulator-on-in-suspend;
-> +		};
-> +	};
-> +
-> +	reg_22v4_p: regulator-22v4-p {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "22v4_P";
-> +		regulator-min-microvolt = <22400000>;
-> +		regulator-max-microvolt = <22400000>;
-> +		vin-supply = <&reg_pwr_en>;
-> +	};
-> +
-> +	reg_pwr_en: regulator-pwr-en {
-> +		compatible = "regulator-fixed";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_pwr_en>;
-> +		regulator-name = "PWR_EN";
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +		gpio = <&gpio1 8 GPIO_ACTIVE_HIGH>;
-> +		enable-active-high;
-> +		regulator-always-on;
-> +	};
-> +
-> +	reg_usdhc2_vmmc: regulator-usdhc2-vmmc {
-> +		compatible = "regulator-fixed";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_usdhc2_pwr>;
-> +		regulator-name = "VSD_3V3";
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +		gpio = <&gpio2 19 GPIO_ACTIVE_HIGH>;
-> +		enable-active-high;
-> +		regulator-always-on;
-> +	};
-> +
-> +	wifi_pwr_en: wifi-en {
+v4<->V5:
+-Removed un-necessary checks of OCORES_FLAG_BROKEN_IRQ.
 
-regulator-wifi-en
+V3<->V4:
+-Incorporated suggestions on v3 patch as follows:
+-OCORES_FLAG_BROKEN_IRQ BIT position rectified.
+-Updated BORKEN_IRQ flag checks such that if sifive device (Fu540-C000) is identified,then use polling mode as IRQ is broken.
 
-> +		compatible = "regulator-fixed";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_wifi_pwr_en>;
-> +		regulator-name = "WIFI_EN";
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +		gpio = <&gpio3 5 GPIO_ACTIVE_HIGH>;
-> +		enable-active-high;
-> +		regulator-always-on;
-> +	};
-> +};
-> +
-> +&clk {
-> +	assigned-clocks = <&clk IMX8MQ_AUDIO_PLL1>, <&clk IMX8MQ_AUDIO_PLL2>;
-> +	assigned-clock-rates = <786432000>, <722534400>;
-> +};
-> +
-> +&fec1 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_fec1>;
-> +	phy-mode = "rgmii-id";
-> +	phy-handle = <&ethphy0>;
-> +	fsl,magic-packet;
-> +	phy-supply = <&reg_3v3_p>;
-> +	status = "okay";
-> +
-> +	mdio {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		ethphy0: ethernet-phy@1 {
-> +			compatible = "ethernet-phy-ieee802.3-c22";
-> +			reg = <1>;
-> +		};
-> +	};
-> +};
-> +
-> +&i2c1 {
-> +	clock-frequency = <100000>;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_i2c1>;
-> +	status = "okay";
-> +
-> +	pmic: pmic@4b {
-> +		compatible = "rohm,bd71837";
-> +		reg = <0x4b>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_pmic>;
-> +		clocks = <&pmic_osc>;
-> +		clock-names = "osc";
-> +		clock-output-names = "pmic_clk";
-> +		interrupt-parent = <&gpio1>;
-> +		interrupts = <3 GPIO_ACTIVE_LOW>;
-> +		interrupt-names = "irq";
-> +		rohm,reset-snvs-powered;
-> +
-> +		regulators {
-> +
+V2<->V3:
+-Incorporated review comments on v2 patch as follows:
+-Rectified compatibility string sequence with the most specific one at the first (dt bindings). 
+-Moved interrupts and interrupt-parent under optional property list (dt-bindings).
+-Updated reference to sifive-blocks-ip-versioning.txt and URL to IP repository used (dt-bindings).
+-Removed example for i2c0 device node from binding doc (dt-bindings).
+-Included sifive,i2c0 device under compatibility table in i2c-ocores driver (i2c-ocores).
+-Updated polling mode hooks for SoC specific fix to handle broken IRQ (i2c-ocores).
 
-Unnecessary newline.
 
-> +			buck1_reg: BUCK1 {
-> +				regulator-name = "buck1";
-> +				regulator-min-microvolt = <700000>;
-> +				regulator-max-microvolt = <1300000>;
-> +				regulator-boot-on;
-> +				regulator-always-on;
-> +				regulator-ramp-delay = <1250>;
-> +				rohm,dvs-run-voltage = <900000>;
-> +				rohm,dvs-idle-voltage = <850000>;
-> +				rohm,dvs-suspend-voltage = <800000>;
-> +			};
-> +
-> +			buck2_reg: BUCK2 {
-> +				regulator-name = "buck2";
-> +				regulator-min-microvolt = <700000>;
-> +				regulator-max-microvolt = <1300000>;
-> +				regulator-boot-on;
-> +				regulator-always-on;
-> +				regulator-ramp-delay = <1250>;
-> +				rohm,dvs-run-voltage = <1000000>;
-> +				rohm,dvs-idle-voltage = <900000>;
-> +			};
-> +
-> +			buck3_reg: BUCK3 {
-> +				regulator-name = "buck3";
-> +				regulator-min-microvolt = <700000>;
-> +				regulator-max-microvolt = <1300000>;
-> +				rohm,dvs-run-voltage = <1000000>;
-> +			};
-> +
-> +			buck4_reg: BUCK4 {
-> +				regulator-name = "buck4";
-> +				regulator-min-microvolt = <700000>;
-> +				regulator-max-microvolt = <1300000>;
-> +				rohm,dvs-run-voltage = <1000000>;
-> +			};
-> +
-> +			buck5_reg: BUCK5 {
-> +				regulator-name = "buck5";
-> +				regulator-min-microvolt = <700000>;
-> +				regulator-max-microvolt = <1350000>;
-> +				regulator-boot-on;
-> +				regulator-always-on;
-> +			};
-> +
-> +			buck6_reg: BUCK6 {
-> +				regulator-name = "buck6";
-> +				regulator-min-microvolt = <3000000>;
-> +				regulator-max-microvolt = <3300000>;
-> +				regulator-boot-on;
-> +				regulator-always-on;
-> +			};
-> +
-> +			buck7_reg: BUCK7 {
-> +				regulator-name = "buck7";
-> +				regulator-min-microvolt = <1605000>;
-> +				regulator-max-microvolt = <1995000>;
-> +				regulator-boot-on;
-> +				regulator-always-on;
-> +			};
-> +
-> +			buck8_reg: BUCK8 {
-> +				regulator-name = "buck8";
-> +				regulator-min-microvolt = <800000>;
-> +				regulator-max-microvolt = <1400000>;
-> +				regulator-boot-on;
-> +				regulator-always-on;
-> +			};
-> +
-> +			ldo1_reg: LDO1 {
-> +				regulator-name = "ldo1";
-> +				regulator-min-microvolt = <3000000>;
-> +				regulator-max-microvolt = <3300000>;
-> +				regulator-boot-on;
-> +				regulator-always-on;
-> +			};
-> +
-> +			ldo2_reg: LDO2 {
-> +				regulator-name = "ldo2";
-> +				regulator-min-microvolt = <900000>;
-> +				regulator-max-microvolt = <900000>;
-> +				regulator-boot-on;
-> +				regulator-always-on;
-> +			};
-> +
-> +			ldo3_reg: LDO3 {
-> +				regulator-name = "ldo3";
-> +				regulator-min-microvolt = <1800000>;
-> +				regulator-max-microvolt = <3300000>;
-> +				regulator-boot-on;
-> +				regulator-always-on;
-> +			};
-> +
-> +			ldo4_reg: LDO4 {
-> +				regulator-name = "ldo4";
-> +				regulator-min-microvolt = <900000>;
-> +				regulator-max-microvolt = <1800000>;
-> +				regulator-boot-on;
-> +				regulator-always-on;
-> +			};
-> +
-> +			ldo5_reg: LDO5 {
-> +				regulator-name = "ldo5";
-> +				regulator-min-microvolt = <1800000>;
-> +				regulator-max-microvolt = <3300000>;
-> +			};
-> +
-> +			ldo6_reg: LDO6 {
-> +				regulator-name = "ldo6";
-> +				regulator-min-microvolt = <900000>;
-> +				regulator-max-microvolt = <1800000>;
-> +				regulator-boot-on;
-> +				regulator-always-on;
-> +			};
-> +
-> +			ldo7_reg: LDO7 {
-> +				regulator-name = "ldo7";
-> +				regulator-min-microvolt = <1800000>;
-> +				regulator-max-microvolt = <3300000>;
-> +				regulator-boot-on;
-> +				regulator-always-on;
-> +			};
-> +		};
-> +	};
-> +
-> +	typec_ptn5100: usb_typec@52 {
-> +		compatible = "nxp,ptn5110";
-> +		reg = <0x52>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_typec>;
-> +		interrupt-parent = <&gpio3>;
-> +		interrupts = <1 IRQ_TYPE_LEVEL_LOW>;
-> +
-> +		connector {
-> +			compatible = "usb-c-connector";
-> +			label = "USB-C";
-> +			data-role = "dual";
-> +			power-role = "dual";
-> +			try-power-role = "sink";
-> +			source-pdos = <PDO_FIXED(5000, 2000,
-> +				PDO_FIXED_USB_COMM |
-> +				PDO_FIXED_DUAL_ROLE |
-> +				PDO_FIXED_DATA_SWAP )>;
-> +			sink-pdos = <PDO_FIXED(5000, 2000, PDO_FIXED_USB_COMM |
-> +				PDO_FIXED_DUAL_ROLE |
-> +				PDO_FIXED_DATA_SWAP )
-> +			     PDO_VAR(5000, 12000, 2000)>;
-> +			op-sink-microwatt = <10000000>;
-> +
-> +			ports {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +
-> +				port@0 {
-> +					reg = <0>;
+V1<->V2:
+-Incorporate review comments from Andrew
+-Extend dt bindings into i2c-ocores.txt instead of adding new file
+-Rename SIFIVE_FLAG_POLL to OCORES_FLAG_BROKEN_IRQ
 
-Have a newline between properties and child node.
+V1:
+-Update dt bindings for sifive i2c devices
+-Fix broken IRQ affecting i2c polling mode interface.
 
-> +					usb_con_hs: endpoint {
-> +						remote-endpoint = <&typec_hs>;
-> +					};
-> +				};
-> +
-> +				port@1 {
-> +					reg = <1>;
-> +					usb_con_ss: endpoint {
-> +						remote-endpoint = <&typec_ss>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +	};
-> +
-> +	rtc@68 {
-> +		compatible = "microcrystal,rv4162";
-> +		reg = <0x68>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_rtc>;
-> +		interrupt-parent = <&gpio4>;
-> +		interrupts = <29 IRQ_TYPE_LEVEL_LOW>;
-> +	};
-> +
-> +	charger@6b { /* bq25896 */
-> +		compatible = "ti,bq25890";
-> +		reg = <0x6b>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_charger>;
-> +		interrupt-parent = <&gpio3>;
-> +		interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
-> +		ti,battery-regulation-voltage = <4192000>; /* 4.192V */
-> +		ti,charge-current = <1600000>; /* 1.6 A */
-> +		ti,termination-current = <66000>;  /* 66mA */
-> +		ti,precharge-current = <1300000>; /* 1.3A */
-> +		ti,minimum-sys-voltage = <2750000>; /* 2.75V */
-> +		ti,boost-voltage = <5000000>; /* 5V */
-> +		ti,boost-max-current = <50000>; /* 50mA */
-> +	};
-> +};
-> +
-> +&i2c3 {
-> +	clock-frequency = <100000>;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_i2c3>;
-> +	status = "okay";
-> +
-> +	magnetometer@1e	{
-> +		compatible = "st,lsm9ds1-magn";
-> +		reg = <0x1e>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_imu>;
-> +		interrupt-parent = <&gpio3>;
-> +		interrupts = <19 IRQ_TYPE_LEVEL_LOW>;
-> +		vdd-supply = <&reg_3v3_p>;
-> +		vddio-supply = <&reg_3v3_p>;
-> +	};
-> +
-> +	touchscreen@5d {
-> +		compatible = "goodix,gt5688";
-> +		reg = <0x5d>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_goodix_ts>;
-> +		interrupt-parent = <&gpio3>;
-> +		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
-> +		reset-gpios = <&gpio1 5 GPIO_ACTIVE_HIGH>;
-> +		irq-gpios = <&gpio3 0 GPIO_ACTIVE_HIGH>;
-> +		touchscreen-size-x = <720>;
-> +		touchscreen-size-y = <1440>;
-> +		AVDD28-supply = <&reg_2v8_p>;
-> +		VDDIO-supply = <&reg_1v8_p>;
-> +	};
-> +};
-> +
-> +&iomuxc {
-> +	pinctrl_backlight: pwm1 {
 
-Name the label and node more consistently, preferably like:
 
-	pinctrl_xxx: xxxgrp
+Sagar Shrikant Kadam (3):
+  dt-bindings: i2c: extend existing opencore bindings.
+  i2c-ocores: sifive: add support for i2c device on FU540-c000 SoC.
+  i2c-ocores: sifive: add polling mode workaround for FU540-C000 SoC.
 
-> +		fsl,pins = <
-> +		MX8MQ_IOMUXC_GPIO1_IO01_PWM1_OUT	0x6  /* DSI_BL_PWM */
+ .../devicetree/bindings/i2c/i2c-ocores.txt         |  9 ++++--
+ drivers/i2c/busses/i2c-ocores.c                    | 33 ++++++++++++++++++++--
+ 2 files changed, 38 insertions(+), 4 deletions(-)
 
-Please have one more level of indentation.  It's fine to get the lines
-longer than 80 columns in this case.
+-- 
+1.9.1
 
-Shawn
-
-> +		>;
-> +	};
-> +
-> +	pinctrl_bt: btgrp {
-> +		fsl,pins = <
-> +		/* nBT_DISABLE */
-> +		MX8MQ_IOMUXC_NAND_DATA05_GPIO3_IO11             0x16
-> +		/* BT_HOST_WAKE */
-> +		MX8MQ_IOMUXC_NAND_DATA01_GPIO3_IO7              0x10
-> +		>;
-> +	};
-> +
-> +	pinctrl_charger: chargernirq {
-> +		fsl,pins = <
-> +		/* CHRG_nINT */
-> +		MX8MQ_IOMUXC_SAI5_MCLK_GPIO3_IO25	0x80
-> +		>;
-> +	};
-> +
-> +	pinctrl_fec1: fec1grp {
-> +		fsl,pins = <
-> +		MX8MQ_IOMUXC_ENET_MDC_ENET1_MDC		0x3
-> +		MX8MQ_IOMUXC_ENET_MDIO_ENET1_MDIO	0x3
-> +		MX8MQ_IOMUXC_ENET_TD3_ENET1_RGMII_TD3	0x1f
-> +		MX8MQ_IOMUXC_ENET_TD2_ENET1_RGMII_TD2	0x1f
-> +		MX8MQ_IOMUXC_ENET_TD1_ENET1_RGMII_TD1	0x1f
-> +		MX8MQ_IOMUXC_ENET_TD0_ENET1_RGMII_TD0	0x1f
-> +		MX8MQ_IOMUXC_ENET_RD3_ENET1_RGMII_RD3	0x91
-> +		MX8MQ_IOMUXC_ENET_RD2_ENET1_RGMII_RD2	0x91
-> +		MX8MQ_IOMUXC_ENET_RD1_ENET1_RGMII_RD1	0x91
-> +		MX8MQ_IOMUXC_ENET_RD0_ENET1_RGMII_RD0	0x91
-> +		MX8MQ_IOMUXC_ENET_TXC_ENET1_RGMII_TXC	0x1f
-> +		MX8MQ_IOMUXC_ENET_RXC_ENET1_RGMII_RXC	0x91
-> +		MX8MQ_IOMUXC_ENET_RX_CTL_ENET1_RGMII_RX_CTL	0x91
-> +		MX8MQ_IOMUXC_ENET_TX_CTL_ENET1_RGMII_TX_CTL	0x1f
-> +		MX8MQ_IOMUXC_GPIO1_IO09_GPIO1_IO9	0x19
-> +		MX8MQ_IOMUXC_GPIO1_IO15_CCMSRCGPCMIX_CLKO2      0x1f
-> +		>;
-> +	};
-> +
-> +	pinctrl_goodix_ts: gt5688 {
-> +		fsl,pins = <
-> +		/* TOUCH INT */
-> +		MX8MQ_IOMUXC_NAND_ALE_GPIO3_IO0         0x16
-> +		/* TOUCH RST */
-> +		MX8MQ_IOMUXC_GPIO1_IO05_GPIO1_IO5	0x19
-> +		>;
-> +	};
-> +
-> +	pinctrl_gpio_leds: gpioleds {
-> +		fsl,pins = <
-> +		MX8MQ_IOMUXC_GPIO1_IO13_GPIO1_IO13	0x16
-> +		>;
-> +	};
-> +
-> +	pinctrl_gpio_keys: gpiokeys {
-> +		fsl,pins = <
-> +		MX8MQ_IOMUXC_SAI2_RXFS_GPIO4_IO21	0x16
-> +		MX8MQ_IOMUXC_SAI2_RXC_GPIO4_IO22	0x16
-> +		/* HP_DET */
-> +		MX8MQ_IOMUXC_SAI5_RXC_GPIO3_IO20	0x180
-> +		>;
-> +	};
-> +
-> +	pinctrl_haptic: hapticgrp {
-> +		fsl,pins = <
-> +		MX8MQ_IOMUXC_SPDIF_RX_PWM2_OUT		0xc6  /* nHAPTIC */
-> +		>;
-> +	};
-> +
-> +	pinctrl_i2c1: i2c1grp {
-> +		fsl,pins = <
-> +		MX8MQ_IOMUXC_I2C1_SCL_I2C1_SCL		0x4000001f
-> +		MX8MQ_IOMUXC_I2C1_SDA_I2C1_SDA		0x4000001f
-> +		>;
-> +	};
-> +
-> +	pinctrl_i2c3: i2c3grp {
-> +		fsl,pins = <
-> +		MX8MQ_IOMUXC_I2C3_SCL_I2C3_SCL		0x4000001f
-> +		MX8MQ_IOMUXC_I2C3_SDA_I2C3_SDA		0x4000001f
-> +		>;
-> +	};
-> +
-> +	pinctrl_imu: imugrp {
-> +		fsl,pins = <
-> +		/* IMU_INT */
-> +		MX8MQ_IOMUXC_SAI5_RXFS_GPIO3_IO19	0x8
-> +		>;
-> +	};
-> +
-> +	pinctrl_pmic: pmicint {
-> +		fsl,pins = <
-> +		MX8MQ_IOMUXC_GPIO1_IO03_GPIO1_IO3	0x80
-> +		>;
-> +	};
-> +
-> +	pinctrl_pwr_en: pwrengrp {
-> +		fsl,pins = <
-> +		MX8MQ_IOMUXC_GPIO1_IO08_GPIO1_IO8               0x06
-> +		>;
-> +	};
-> +
-> +	pinctrl_rtc: rtcirq {
-> +		fsl,pins = <
-> +		MX8MQ_IOMUXC_SAI3_RXC_GPIO4_IO29	0x80
-> +		>;
-> +	};
-> +
-> +	pinctrl_typec: typecgrp {
-> +		fsl,pins = <
-> +		MX8MQ_IOMUXC_NAND_DATA06_GPIO3_IO12	0x16
-> +		MX8MQ_IOMUXC_NAND_CE0_B_GPIO3_IO1	0x80
-> +		>;
-> +	};
-> +
-> +	pinctrl_uart1: uart1grp {
-> +		fsl,pins = <
-> +		MX8MQ_IOMUXC_UART1_RXD_UART1_DCE_RX		0x49
-> +		MX8MQ_IOMUXC_UART1_TXD_UART1_DCE_TX		0x49
-> +		>;
-> +	};
-> +
-> +	pinctrl_uart2: uart2grp {
-> +		fsl,pins = <
-> +		MX8MQ_IOMUXC_UART2_TXD_UART2_DCE_TX		0x49
-> +		MX8MQ_IOMUXC_UART2_RXD_UART2_DCE_RX		0x49
-> +		MX8MQ_IOMUXC_UART4_RXD_UART2_DCE_CTS_B		0x49
-> +		MX8MQ_IOMUXC_UART4_TXD_UART2_DCE_RTS_B		0x49
-> +		>;
-> +	};
-> +
-> +	pinctrl_uart3: uart3grp {
-> +		fsl,pins = <
-> +		MX8MQ_IOMUXC_UART3_RXD_UART3_DCE_RX		0x49
-> +		MX8MQ_IOMUXC_UART3_TXD_UART3_DCE_TX		0x49
-> +		>;
-> +	};
-> +
-> +	pinctrl_uart4: uart4grp {
-> +		fsl,pins = <
-> +		MX8MQ_IOMUXC_ECSPI2_SCLK_UART4_DCE_RX		0x49
-> +		MX8MQ_IOMUXC_ECSPI2_MOSI_UART4_DCE_TX		0x49
-> +		MX8MQ_IOMUXC_ECSPI2_MISO_UART4_DCE_CTS_B	0x49
-> +		MX8MQ_IOMUXC_ECSPI2_SS0_UART4_DCE_RTS_B		0x49
-> +		MX8MQ_IOMUXC_GPIO1_IO00_ANAMIX_REF_CLK_32K	0x49
-> +		>;
-> +	};
-> +
-> +	pinctrl_usdhc1: usdhc1grp {
-> +		fsl,pins = <
-> +		MX8MQ_IOMUXC_SD1_CLK_USDHC1_CLK			0x83
-> +		MX8MQ_IOMUXC_SD1_CMD_USDHC1_CMD			0xc3
-> +		MX8MQ_IOMUXC_SD1_DATA0_USDHC1_DATA0		0xc3
-> +		MX8MQ_IOMUXC_SD1_DATA1_USDHC1_DATA1		0xc3
-> +		MX8MQ_IOMUXC_SD1_DATA2_USDHC1_DATA2		0xc3
-> +		MX8MQ_IOMUXC_SD1_DATA3_USDHC1_DATA3		0xc3
-> +		MX8MQ_IOMUXC_SD1_DATA4_USDHC1_DATA4		0xc3
-> +		MX8MQ_IOMUXC_SD1_DATA5_USDHC1_DATA5		0xc3
-> +		MX8MQ_IOMUXC_SD1_DATA6_USDHC1_DATA6		0xc3
-> +		MX8MQ_IOMUXC_SD1_DATA7_USDHC1_DATA7		0xc3
-> +		MX8MQ_IOMUXC_SD1_STROBE_USDHC1_STROBE		0x83
-> +		MX8MQ_IOMUXC_SD1_RESET_B_USDHC1_RESET_B		0xc1
-> +		>;
-> +	};
-> +
-> +	pinctrl_usdhc1_100mhz: usdhc1grp100mhz {
-> +		fsl,pins = <
-> +		MX8MQ_IOMUXC_SD1_CLK_USDHC1_CLK			0x8d
-> +		MX8MQ_IOMUXC_SD1_CMD_USDHC1_CMD			0xcd
-> +		MX8MQ_IOMUXC_SD1_DATA0_USDHC1_DATA0		0xcd
-> +		MX8MQ_IOMUXC_SD1_DATA1_USDHC1_DATA1		0xcd
-> +		MX8MQ_IOMUXC_SD1_DATA2_USDHC1_DATA2		0xcd
-> +		MX8MQ_IOMUXC_SD1_DATA3_USDHC1_DATA3		0xcd
-> +		MX8MQ_IOMUXC_SD1_DATA4_USDHC1_DATA4		0xcd
-> +		MX8MQ_IOMUXC_SD1_DATA5_USDHC1_DATA5		0xcd
-> +		MX8MQ_IOMUXC_SD1_DATA6_USDHC1_DATA6		0xcd
-> +		MX8MQ_IOMUXC_SD1_DATA7_USDHC1_DATA7		0xcd
-> +		MX8MQ_IOMUXC_SD1_STROBE_USDHC1_STROBE		0x8d
-> +		MX8MQ_IOMUXC_SD1_RESET_B_USDHC1_RESET_B		0xc1
-> +		>;
-> +	};
-> +
-> +	pinctrl_usdhc1_200mhz: usdhc1grp200mhz {
-> +		fsl,pins = <
-> +		MX8MQ_IOMUXC_SD1_CLK_USDHC1_CLK			0x9f
-> +		MX8MQ_IOMUXC_SD1_CMD_USDHC1_CMD			0xdf
-> +		MX8MQ_IOMUXC_SD1_DATA0_USDHC1_DATA0		0xdf
-> +		MX8MQ_IOMUXC_SD1_DATA1_USDHC1_DATA1		0xdf
-> +		MX8MQ_IOMUXC_SD1_DATA2_USDHC1_DATA2		0xdf
-> +		MX8MQ_IOMUXC_SD1_DATA3_USDHC1_DATA3		0xdf
-> +		MX8MQ_IOMUXC_SD1_DATA4_USDHC1_DATA4		0xdf
-> +		MX8MQ_IOMUXC_SD1_DATA5_USDHC1_DATA5		0xdf
-> +		MX8MQ_IOMUXC_SD1_DATA6_USDHC1_DATA6		0xdf
-> +		MX8MQ_IOMUXC_SD1_DATA7_USDHC1_DATA7		0xdf
-> +		MX8MQ_IOMUXC_SD1_STROBE_USDHC1_STROBE		0x9f
-> +		MX8MQ_IOMUXC_SD1_RESET_B_USDHC1_RESET_B		0xc1
-> +		>;
-> +	};
-> +
-> +	pinctrl_usdhc2_pwr: usdhc2grppwr {
-> +		fsl,pins = <
-> +		MX8MQ_IOMUXC_SD2_RESET_B_GPIO2_IO19		0x41
-> +		>;
-> +	};
-> +
-> +	pinctrl_usdhc2_gpio: usdhc2grpgpio {
-> +		fsl,pins = <
-> +		/* WIFI_WAKE */
-> +		MX8MQ_IOMUXC_SD2_WP_GPIO2_IO20			0x80
-> +		>;
-> +	};
-> +
-> +	pinctrl_usdhc2: usdhc2grp {
-> +		fsl,pins = <
-> +		MX8MQ_IOMUXC_SD2_CLK_USDHC2_CLK			0x83
-> +		MX8MQ_IOMUXC_SD2_CMD_USDHC2_CMD			0xc3
-> +		MX8MQ_IOMUXC_SD2_DATA0_USDHC2_DATA0		0xc3
-> +		MX8MQ_IOMUXC_SD2_DATA1_USDHC2_DATA1		0xc3
-> +		MX8MQ_IOMUXC_SD2_DATA2_USDHC2_DATA2		0xc3
-> +		MX8MQ_IOMUXC_SD2_DATA3_USDHC2_DATA3		0xc3
-> +		>;
-> +	};
-> +
-> +	pinctrl_usdhc2_100mhz: usdhc2grp100mhz {
-> +		fsl,pins = <
-> +		MX8MQ_IOMUXC_SD2_CLK_USDHC2_CLK			0x8d
-> +		MX8MQ_IOMUXC_SD2_CMD_USDHC2_CMD			0xcd
-> +		MX8MQ_IOMUXC_SD2_DATA0_USDHC2_DATA0		0xcd
-> +		MX8MQ_IOMUXC_SD2_DATA1_USDHC2_DATA1		0xcd
-> +		MX8MQ_IOMUXC_SD2_DATA2_USDHC2_DATA2		0xcd
-> +		MX8MQ_IOMUXC_SD2_DATA3_USDHC2_DATA3		0xcd
-> +		>;
-> +	};
-> +
-> +	pinctrl_usdhc2_200mhz: usdhc2grp200mhz {
-> +		fsl,pins = <
-> +		MX8MQ_IOMUXC_SD2_CLK_USDHC2_CLK			0x9f
-> +		MX8MQ_IOMUXC_SD2_CMD_USDHC2_CMD			0xcf
-> +		MX8MQ_IOMUXC_SD2_DATA0_USDHC2_DATA0		0xcf
-> +		MX8MQ_IOMUXC_SD2_DATA1_USDHC2_DATA1		0xcf
-> +		MX8MQ_IOMUXC_SD2_DATA2_USDHC2_DATA2		0xcf
-> +		MX8MQ_IOMUXC_SD2_DATA3_USDHC2_DATA3		0xcf
-> +		>;
-> +	};
-> +
-> +	pinctrl_wdog: wdoggrp {
-> +		fsl,pins = <
-> +		MX8MQ_IOMUXC_GPIO1_IO02_WDOG1_WDOG_B	0xc6
-> +		>;
-> +	};
-> +
-> +	pinctrl_wifi_pwr_en: wifipwrengrp {
-> +		fsl,pins = <
-> +		MX8MQ_IOMUXC_NAND_CLE_GPIO3_IO5         0x06
-> +		>;
-> +	};
-> +
-> +	pinctrl_wwan: wwangrp {
-> +		fsl,pins = <
-> +		/* nWWAN_DISABLE */
-> +		MX8MQ_IOMUXC_NAND_CE3_B_GPIO3_IO4	0x09
-> +		/* nWoWWAN */
-> +		MX8MQ_IOMUXC_NAND_DATA02_GPIO3_IO8	0x80
-> +		/* WWAN_RESET */
-> +		MX8MQ_IOMUXC_NAND_DATA03_GPIO3_IO9	0x19
-> +		>;
-> +	};
-> +};
-> +
-> +&pwm1 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_backlight>;
-> +	status = "okay";
-> +};
-> +
-> +&pwm2 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_haptic>;
-> +	status = "okay";
-> +};
-> +
-> +&uart1 { /* console */
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_uart1>;
-> +	status = "okay";
-> +};
-> +
-> +&uart3 { /* GNSS */
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_uart3>;
-> +	status = "okay";
-> +};
-> +
-> +&uart4 { /* BT */
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_uart4>, <&pinctrl_bt>;
-> +	uart-has-rtscts;
-> +	status = "okay";
-> +};
-> +
-> +&usb3_phy0 {
-> +	status = "okay";
-> +};
-> +
-> +&usb3_phy1 {
-> +	vbus-supply = <&reg_5v_p>;
-> +	status = "okay";
-> +};
-> +
-> +&usb_dwc3_0 {
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +	dr_mode = "otg";
-> +	status = "okay";
-> +
-> +	port@0 {
-> +		reg = <0>;
-> +
-> +		typec_hs: endpoint {
-> +			remote-endpoint = <&usb_con_hs>;
-> +		};
-> +	};
-> +
-> +	port@1 {
-> +		reg = <1>;
-> +
-> +		typec_ss: endpoint {
-> +			remote-endpoint = <&usb_con_ss>;
-> +		};
-> +	};
-> +};
-> +
-> +&usb_dwc3_1 {
-> +	dr_mode = "host";
-> +	status = "okay";
-> +};
-> +
-> +&usdhc1 {
-> +	pinctrl-names = "default", "state_100mhz", "state_200mhz";
-> +	pinctrl-0 = <&pinctrl_usdhc1>;
-> +	pinctrl-1 = <&pinctrl_usdhc1_100mhz>;
-> +	pinctrl-2 = <&pinctrl_usdhc1_200mhz>;
-> +	bus-width = <8>;
-> +	non-removable;
-> +	status = "okay";
-> +};
-> +
-> +&usdhc2 {
-> +	pinctrl-names = "default", "state_100mhz", "state_200mhz";
-> +	pinctrl-0 = <&pinctrl_usdhc2>;
-> +	pinctrl-1 = <&pinctrl_usdhc2_100mhz>;
-> +	pinctrl-2 = <&pinctrl_usdhc2_200mhz>;
-> +	bus-width = <4>;
-> +	vmmc-supply = <&reg_usdhc2_vmmc>;
-> +	power-supply = <&wifi_pwr_en>;
-> +	non-removable;
-> +	disable-wp;
-> +	cap-sdio-irq;
-> +	keep-power-in-suspend;
-> +	wakeup-source;
-> +	status = "okay";
-> +};
-> +
-> +&wdog1 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_wdog>;
-> +	fsl,ext-reset-output;
-> +	status = "okay";
-> +};
-> -- 
-> 2.17.1
-> 
