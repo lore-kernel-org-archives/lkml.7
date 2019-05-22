@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D85F1C282DC
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:35:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB1F0C282DC
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:35:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF00B2081C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:35:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A51602089E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:35:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558553712;
-	bh=/z4pvG5BMzSHX+Zzf6J8UySYZ46trHLr3FMeC7wZZok=;
+	s=default; t=1558553715;
+	bh=dz2I2KucN3MRcnXwenNiNgtqfzzX5Xi8x2aQQrUdFC4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nyXcy9ifQHvoyM0iKYClZQQ5l7JoaolVu+W42krmSeyhguyH8fETh+asA3xZ4a9b8
-	 EvP5XmXX2AGtCZKvC+GldV2PyD7O76MgcESjC0dN3iVL2PIyJHeQ8cuo7n340d3W+K
-	 fPFJEWwc5Fp034mXp9wyFuzwkbCoGSxbgGToJA3Q=
+	b=CISea5ME2bDBucTeuJkz61DDsYt0ZEf39fKvuPSOGgnJExRepUR3asMEUJaY9lH7E
+	 x/WxaZmwDGNw8rX3SPWkOPG7HK+T/fcEC9ChMTO1LKSZ6w0yQpC+TLAtCjUQZQj3Sv
+	 X4YpqlUyusr+PRQdSCoW0P/ktsHZecJ3JXlN8F+Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732270AbfEVTbL (ORCPT
+        id S2387534AbfEVTfP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:31:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54332 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:35:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54658 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387399AbfEVTav (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:30:51 -0400
+        id S2387447AbfEVTbK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:31:10 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 21A4021473;
-        Wed, 22 May 2019 19:30:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3BE7B20879;
+        Wed, 22 May 2019 19:31:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553450;
-        bh=/z4pvG5BMzSHX+Zzf6J8UySYZ46trHLr3FMeC7wZZok=;
+        s=default; t=1558553469;
+        bh=dz2I2KucN3MRcnXwenNiNgtqfzzX5Xi8x2aQQrUdFC4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e+3V0dKP4pZJE1SPuH3zX7fG3Hv3kXAaBUDKchEYSVZooOWKvSphxq5JVCWDktzKj
-         WtXVz/hlTivx6yEBZGpTAHRmmd1k5PrE68z9LH0zx32Kv7tf5KL0DTZeit0x/eoC7/
-         OOtfrecT76Bx0dsSsVLMarDN7P0C0i6w0Hu/t7SU=
+        b=L9ONgMGPaQjQk1ikH+QA5OpRN4uK6I+NrnGJtpBL4WYWU8HtS4fEmILZ7m9Z5lGVF
+         E1IJT8OYE7j4EQvPMeufKW9SN2o6aY9EGs+bL8mZaWCIQN81CJ68lpb4J9JNq4ba8C
+         s5vdSfnyZZXaovCwvOUwxEKl8NkIbP6LrxPOnxMI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 020/114] mac80211/cfg80211: update bss channel on channel switch
-Date:   Wed, 22 May 2019 15:28:43 -0400
-Message-Id: <20190522193017.26567-20-sashal@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Borislav Petkov <bp@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 033/114] x86/build: Move _etext to actual end of .text
+Date:   Wed, 22 May 2019 15:28:56 -0400
+Message-Id: <20190522193017.26567-33-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522193017.26567-1-sashal@kernel.org>
 References: <20190522193017.26567-1-sashal@kernel.org>
@@ -60,68 +63,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
+From: Kees Cook <keescook@chromium.org>
 
-[ Upstream commit 5dc8cdce1d722c733f8c7af14c5fb595cfedbfa8 ]
+[ Upstream commit 392bef709659abea614abfe53cf228e7a59876a4 ]
 
-FullMAC STAs have no way to update bss channel after CSA channel switch
-completion. As a result, user-space tools may provide inconsistent
-channel info. For instance, consider the following two commands:
-$ sudo iw dev wlan0 link
-$ sudo iw dev wlan0 info
-The latter command gets channel info from the hardware, so most probably
-its output will be correct. However the former command gets channel info
-from scan cache, so its output will contain outdated channel info.
-In fact, current bss channel info will not be updated until the
-next [re-]connect.
+When building x86 with Clang LTO and CFI, CFI jump regions are
+automatically added to the end of the .text section late in linking. As a
+result, the _etext position was being labelled before the appended jump
+regions, causing confusion about where the boundaries of the executable
+region actually are in the running kernel, and broke at least the fault
+injection code. This moves the _etext mark to outside (and immediately
+after) the .text area, as it already the case on other architectures
+(e.g. arm64, arm).
 
-Note that mac80211 STAs have a workaround for this, but it requires
-access to internal cfg80211 data, see ieee80211_chswitch_work:
-
-	/* XXX: shouldn't really modify cfg80211-owned data! */
-	ifmgd->associated->channel = sdata->csa_chandef.chan;
-
-This patch suggests to convert mac80211 workaround into cfg80211 behavior
-and to update current bss channel in cfg80211_ch_switch_notify.
-
-Signed-off-by: Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Reported-and-tested-by: Sami Tolvanen <samitolvanen@google.com>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Cc: Borislav Petkov <bp@suse.de>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: http://lkml.kernel.org/r/20190423183827.GA4012@beast
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/mlme.c    | 3 ---
- net/wireless/nl80211.c | 5 +++++
- 2 files changed, 5 insertions(+), 3 deletions(-)
+ arch/x86/kernel/vmlinux.lds.S | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/net/mac80211/mlme.c b/net/mac80211/mlme.c
-index 6e0aa296f1346..d787717140e54 100644
---- a/net/mac80211/mlme.c
-+++ b/net/mac80211/mlme.c
-@@ -1072,9 +1072,6 @@ static void ieee80211_chswitch_work(struct work_struct *work)
- 		goto out;
- 	}
- 
--	/* XXX: shouldn't really modify cfg80211-owned data! */
--	ifmgd->associated->channel = sdata->csa_chandef.chan;
+diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
+index 55f04875293fa..51b772f9d886a 100644
+--- a/arch/x86/kernel/vmlinux.lds.S
++++ b/arch/x86/kernel/vmlinux.lds.S
+@@ -111,11 +111,11 @@ SECTIONS
+ 		*(.text.__x86.indirect_thunk)
+ 		__indirect_thunk_end = .;
+ #endif
 -
- 	ifmgd->csa_waiting_bcn = true;
+-		/* End of text section */
+-		_etext = .;
+ 	} :text = 0x9090
  
- 	ieee80211_sta_reset_beacon_monitor(sdata);
-diff --git a/net/wireless/nl80211.c b/net/wireless/nl80211.c
-index 09a353c6373a8..d6e6293157717 100644
---- a/net/wireless/nl80211.c
-+++ b/net/wireless/nl80211.c
-@@ -14014,6 +14014,11 @@ void cfg80211_ch_switch_notify(struct net_device *dev,
++	/* End of text section */
++	_etext = .;
++
+ 	NOTES :text :note
  
- 	wdev->chandef = *chandef;
- 	wdev->preset_chandef = *chandef;
-+
-+	if (wdev->iftype == NL80211_IFTYPE_STATION &&
-+	    !WARN_ON(!wdev->current_bss))
-+		wdev->current_bss->pub.channel = chandef->chan;
-+
- 	nl80211_ch_switch_notify(rdev, dev, chandef, GFP_KERNEL,
- 				 NL80211_CMD_CH_SWITCH_NOTIFY, 0);
- }
+ 	EXCEPTION_TABLE(16) :text = 0x9090
 -- 
 2.20.1
 
