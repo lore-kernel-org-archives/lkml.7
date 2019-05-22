@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EE25C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:29:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9F0EC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:29:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14D2621841
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:29:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B295C21473
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:29:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558553347;
-	bh=HYtcnejSjdCJsw5o0rxcwSJiFUIB6WG1tHilFWol0jM=;
+	s=default; t=1558553349;
+	bh=gv+FR0rS2TJQ3fIyX/u06tYIbVz2HjKxwq4USBy5tlw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F8fzSxu2GEl5chzhscdf3RyQhSTpqVwkrD2zOMWiySwU8h5pA3G5pgpj1hEx9UA7X
-	 d9ppcyiYswSf4xvagVovdPVCtm+qd7p6saglPLg3qPJyOh3pWhqFEXitFVa/cJ8Ynr
-	 APr5PbagnPxJ4pHd7tuUrL0Pjry6eeI5YR22sGFA=
+	b=y78RgX+mogII001BxiJynireLnBUnUw2gLVfHWjZz/S8qktBYG3YnyO3MH+HzyVJl
+	 Z1l9PLyRqfVvVai54vVuqpya7bVWWHDtlTxEMHK+bqRCf2Sp3zdDzYMskx6KTZcFZZ
+	 gPGpO3MmZoP0NnS7QCWnE85NQd6cMGDFhtMohDTA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732746AbfEVT3G (ORCPT
+        id S1732759AbfEVT3I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:29:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51860 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:29:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51898 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730041AbfEVT3A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:29:00 -0400
+        id S1732736AbfEVT3E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:29:04 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B47B720675;
-        Wed, 22 May 2019 19:28:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C2ED720675;
+        Wed, 22 May 2019 19:29:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553340;
-        bh=HYtcnejSjdCJsw5o0rxcwSJiFUIB6WG1tHilFWol0jM=;
+        s=default; t=1558553343;
+        bh=gv+FR0rS2TJQ3fIyX/u06tYIbVz2HjKxwq4USBy5tlw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OD1ZIpUAm7d1cSqN27Rf1C4mIIOT0R+fDCznhCAh9v7m54ixcuv3n7PXlsfD1lGai
-         IxP1salwN7bmg2zIrgW7x2RNciyTt0VpF8OiTviU3BtehzeFMwXBNY4polzY8Gz2J2
-         33vTijho47VjNEaZNopnjKW8y/8noHl89NkrXlZA=
+        b=lFfuDgi3si7YfYsImlzdZOKcr3H2kQ05m1/enwjhyDWU0DSPlmef/PzdLtZOSJ63+
+         CBoIZGcYBb+MKftQAQsfnKbBXolp0qKjsCt6E0E3Pe+iQC8iXfuxa7rQYcHKAmZjJG
+         a9OtBvZRuEzHGveDeW7ESgnWO+8CP9/vyZfy7Svc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jerome Brunet <jbrunet@baylibre.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 012/167] ASoC: hdmi-codec: unlock the device on startup errors
-Date:   Wed, 22 May 2019 15:26:07 -0400
-Message-Id: <20190522192842.25858-12-sashal@kernel.org>
+Cc:     Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.14 014/167] powerpc/perf: Return accordingly on invalid chip-id in
+Date:   Wed, 22 May 2019 15:26:09 -0400
+Message-Id: <20190522192842.25858-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192842.25858-1-sashal@kernel.org>
 References: <20190522192842.25858-1-sashal@kernel.org>
@@ -59,41 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jerome Brunet <jbrunet@baylibre.com>
+From: Anju T Sudhakar <anju@linux.vnet.ibm.com>
 
-[ Upstream commit 30180e8436046344b12813dc954b2e01dfdcd22d ]
+[ Upstream commit a913e5e8b43be1d3897a141ce61c1ec071cad89c ]
 
-If the hdmi codec startup fails, it should clear the current_substream
-pointer to free the device. This is properly done for the audio_startup()
-callback but for snd_pcm_hw_constraint_eld().
+Nest hardware counter memory resides in a per-chip reserve-memory.
+During nest_imc_event_init(), chip-id of the event-cpu is considered to
+calculate the base memory addresss for that cpu. Return, proper error
+condition if the chip_id calculated is invalid.
 
-Make sure the pointer cleared if an error is reported.
-
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Fixes: 885dcd709ba91 ("powerpc/perf: Add nest IMC PMU support")
+Reviewed-by: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
+Signed-off-by: Anju T Sudhakar <anju@linux.vnet.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/hdmi-codec.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ arch/powerpc/perf/imc-pmu.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/sound/soc/codecs/hdmi-codec.c b/sound/soc/codecs/hdmi-codec.c
-index 7406695ee5dc2..e00f5f49f21d1 100644
---- a/sound/soc/codecs/hdmi-codec.c
-+++ b/sound/soc/codecs/hdmi-codec.c
-@@ -446,8 +446,12 @@ static int hdmi_codec_startup(struct snd_pcm_substream *substream,
- 		if (!ret) {
- 			ret = snd_pcm_hw_constraint_eld(substream->runtime,
- 							hcp->eld);
--			if (ret)
-+			if (ret) {
-+				mutex_lock(&hcp->current_stream_lock);
-+				hcp->current_stream = NULL;
-+				mutex_unlock(&hcp->current_stream_lock);
- 				return ret;
-+			}
- 		}
- 		/* Select chmap supported */
- 		hdmi_codec_eld_chmap(hcp);
+diff --git a/arch/powerpc/perf/imc-pmu.c b/arch/powerpc/perf/imc-pmu.c
+index b73961b95c345..994e4392cac5c 100644
+--- a/arch/powerpc/perf/imc-pmu.c
++++ b/arch/powerpc/perf/imc-pmu.c
+@@ -481,6 +481,11 @@ static int nest_imc_event_init(struct perf_event *event)
+ 	 * Get the base memory addresss for this cpu.
+ 	 */
+ 	chip_id = cpu_to_chip_id(event->cpu);
++
++	/* Return, if chip_id is not valid */
++	if (chip_id < 0)
++		return -ENODEV;
++
+ 	pcni = pmu->mem_info;
+ 	do {
+ 		if (pcni->id == chip_id) {
 -- 
 2.20.1
 
