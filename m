@@ -2,77 +2,102 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 207A3C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 13:51:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D0CAC282DC
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 13:51:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF7E520863
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 13:51:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FRneyTJ1"
+	by mail.kernel.org (Postfix) with ESMTP id 2F11E20863
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 13:51:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558533092;
+	bh=twm53GIqNOW3f4RY4I3jAxu+p3QvXT7EvaA/aHLii1Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=C+sQEHoBV8+gQzWpXa3MGZCxpZ0yHp2ktB508udjGPcyRZ7n+LLpvUzTyf7pgTsR+
+	 lIBW3FlS678s0FCnlU4D4C1AB2cabGrwj8Ua0o0myZogi8C7srF2fTWCBGNJLUxwDd
+	 zkpE2kBeNkQaaG4WZiZkg4t3ac/Rpc1oVE7L7AP8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729156AbfEVNvZ (ORCPT
+        id S1728536AbfEVNvb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 09:51:25 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:40208 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726770AbfEVNvY (ORCPT
+        Wed, 22 May 2019 09:51:31 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:34344 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726770AbfEVNva (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 09:51:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=7PcrUJpAN8FUR5Os5eZdN4/qfIg3FFf2/UF6cSYu22g=; b=FRneyTJ1KPX9uILNf6OYwDJke
-        r1sUw/VWN1m3p5ISAdhvMbPPFLADQ764Wp+ofMRLOF1Ixa1dwIVr6HuEH1GwdoVNpR1adztp+plZM
-        E5nO+VcZVOteXU3qtxUFly2BizAYJ05PghzY3RDhVnreLVIzynopkKDkQjFKDx8OYMYYkpUq+fTfC
-        VjvPSZzzwkCVzVocdTUB7rmIgRtTiiqU/QyTwWtgpOSbpOaQY5FJB/4+D3t1nvn7jqG8kGJ6dW53O
-        d5rXWNcHyUIkUJNOQMtQpHqRF3BK9F5pEp15zu04Mfn07X1V1MjGQYFVY14F6Zu2MJEDnGekXk3Hb
-        L8vU2JuXA==;
-Received: from [31.161.185.207] (helo=worktop.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hTRe7-0001EA-LX; Wed, 22 May 2019 13:51:08 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 9FCCB984E09; Wed, 22 May 2019 15:51:06 +0200 (CEST)
-Date:   Wed, 22 May 2019 15:51:06 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Song Liu <songliubraving@fb.com>
-Cc:     Kairui Song <kasong@redhat.com>, Alexei Starovoitov <ast@fb.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>
-Subject: Re: Getting empty callchain from perf_callchain_kernel()
-Message-ID: <20190522135106.GA16275@worktop.programming.kicks-ass.net>
-References: <3CD3EE63-0CD2-404A-A403-E11DCF2DF8D9@fb.com>
- <20190517074600.GJ2623@hirez.programming.kicks-ass.net>
- <20190517081057.GQ2650@hirez.programming.kicks-ass.net>
- <CACPcB9cB5n1HOmZcVpusJq8rAV5+KfmZ-Lxv3tgsSoy7vNrk7w@mail.gmail.com>
- <20190517091044.GM2606@hirez.programming.kicks-ass.net>
- <8C814E68-B0B6-47E4-BDD6-917B01EC62D0@fb.com>
- <c881767d-b6f3-c53e-5c70-556d09ea8d89@fb.com>
- <8449BBF3-E754-4ABC-BFEF-A8F264297F2D@fb.com>
- <CACPcB9emh9T23sixx-91mg2wL6kgrYF4MVfmuTCE0SsD=8efcQ@mail.gmail.com>
- <842A0302-9B36-4FBF-ADF7-9C6749E8C5BE@fb.com>
+        Wed, 22 May 2019 09:51:30 -0400
+Received: by mail-ot1-f65.google.com with SMTP id l17so2138838otq.1;
+        Wed, 22 May 2019 06:51:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=WNC2JYWG7tWES9f64iNfx+WaqJ4vmOCp/0J1TeLz0p4=;
+        b=qvDEVPVqzuWN4+F1oBQDNBoUDdISpYKkJKEo2Cs6N45xy8S1Qpgw5EubdZDx2rAj6L
+         UErOCz8Oqxz5cnCMHZ0dtTO2laJzV+/lgvrymruRQ8MHh2sMklXJ0GuST0uUh1m+NSc/
+         uC0xWDV4Vr4ZggrxRWDE8JR31c04MeE65QiIC1vsQCQW2ZSP5ALRzQ4U8A/Kw7kdZvt/
+         GkDUmPxTCqJLm7VzhCH5FOYixAwKYtLS/dq0MWLq+jOyVG0+qOI/9IJxt2ehj6Wmp6As
+         0l+CggYmYmHtb+12+uL+zVm8Gz2DkkeOCg/aGZM4inOjHxeIcgKFAUzKRGW8KuU2sLqz
+         9f1w==
+X-Gm-Message-State: APjAAAX8TUFhDNgH6qjeyogUqQq5iBDzhAwUAieSbYJkiowI77w0tuAX
+        BcLFsp4pbtVJzdALtQjYug==
+X-Google-Smtp-Source: APXvYqyruJO4hpb5ERYDyy8YFYJg7Z8ngUs0aEUiTimEwLTJsVuVZ4S1t245qpR8qtmb7mfA8CLAFA==
+X-Received: by 2002:a05:6830:11ce:: with SMTP id v14mr23382616otq.184.1558533089709;
+        Wed, 22 May 2019 06:51:29 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id e8sm4849679otk.13.2019.05.22.06.51.28
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 22 May 2019 06:51:29 -0700 (PDT)
+Date:   Wed, 22 May 2019 08:51:28 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Robin Gong <yibin.gong@nxp.com>
+Cc:     "robh@kernel.org" <robh@kernel.org>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        "plyatov@gmail.com" <plyatov@gmail.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>
+Subject: Re: [PATCH v4 10/14] dma: imx-sdma: add i.mx6ul/6sx compatible name
+Message-ID: <20190522135128.GA24987@bogus>
+References: <1558548188-1155-1-git-send-email-yibin.gong@nxp.com>
+ <1558548188-1155-11-git-send-email-yibin.gong@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <842A0302-9B36-4FBF-ADF7-9C6749E8C5BE@fb.com>
+In-Reply-To: <1558548188-1155-11-git-send-email-yibin.gong@nxp.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 20, 2019 at 05:22:12PM +0000, Song Liu wrote:
-> I think this is still the best fix/workaround here? And only one level 
-> of stack trace should be OK for tracepoint? 
+On Wed, 22 May 2019 10:00:38 +0000, Robin Gong wrote:
+> Add i.mx6ul and i.mx6sx compatible name in binding doc.
+> 
+> Signed-off-by: Robin Gong <yibin.gong@nxp.com>
+> ---
+>  Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
 
-No. That's still completely broken.
+Please add Acked-by/Reviewed-by tags when posting new versions. However,
+there's no need to repost patches *only* to add the tags. The upstream
+maintainer will do that for acks received on the version they apply.
+
+If a tag was not added on purpose, please state why and what changed.
