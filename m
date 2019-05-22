@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6397C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:36:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CEA8C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:36:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 679C120675
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:36:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0052920675
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:36:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558553801;
-	bh=MNhVoFkf2AEfTAUPHCdj8znk6AzxQ8PvrDxKYZSy9LA=;
+	s=default; t=1558553805;
+	bh=kFdMhJbg45pEiMeDQxbwgDi58ilkVziXlLeNv8Je0aM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HYM2aCzcyulzXHWE44mH5exSDy+dCui4ONHJBHA5UmOEnd4Fsi15gtRefTHTo1eFr
-	 X9ifD+I9QvVVUTwgf5PjF3eYAq7uLROSs03DGF3bMB9kvCTbZC7+Hq9C68XoHa3PE7
-	 hziW9xQcgLm5OiSC/n8PbxvMqrnUnS/UcF7qEJtA=
+	b=zDbu7vo49T9W/Soat+k9LEV4gq8IAii2UqWRMQotjwYESKgvzawGRXwFEwhZLkJIL
+	 cGJancLCNC3eDtInCBi9zJ7xHtkiBNxSHIDv5ujwCTw8nTHikC/UpUBNdkn1TxrEFg
+	 5sneCdCP3pvaBMdQutNAXPVTj+3xeDcbgtQSVMbk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732870AbfEVTam (ORCPT
+        id S2387587AbfEVTgn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:30:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53942 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:36:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54158 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733256AbfEVTa3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:30:29 -0400
+        id S1732492AbfEVTam (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:30:42 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52E6520879;
-        Wed, 22 May 2019 19:30:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C77C520879;
+        Wed, 22 May 2019 19:30:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553428;
-        bh=MNhVoFkf2AEfTAUPHCdj8znk6AzxQ8PvrDxKYZSy9LA=;
+        s=default; t=1558553441;
+        bh=kFdMhJbg45pEiMeDQxbwgDi58ilkVziXlLeNv8Je0aM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JbCRlXb1/F+dZquAz6hyAXSSymxu2K2DUQ2C0aQarPQWUuGTw9fH/aiILEWjqtZqw
-         dQSkK+cwpXH70J9/Q1mxJSqecgPqiNzxMjfYmlsBsLBOBsdy3dpUTFpCCNV2PFLb/f
-         gwmH3gGMVT0dUudlk84UrT+pfJ93l0qKF0IJkA/E=
+        b=W/WYIPFRdIMBoCXsGj9YNSLnmsxYGXwykQdEJM92xuX5fVdOZZMsL6nGc8xlbIpKK
+         TNW2lYeMpNSco56DO8qWde8tlxjHP99D6hgHZvjJUmapS3PIEcXGJS8erEjXEEQ6Yx
+         ZNry751RbsQQrUjNycZdBipxQQCBMyV2he4s4gZA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jerome Brunet <jbrunet@baylibre.com>,
-        Mark Brown <broonie@kernel.org>,
+Cc:     Qian Cai <cai@lca.pw>, Will Deacon <will.deacon@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 007/114] ASoC: hdmi-codec: unlock the device on startup errors
-Date:   Wed, 22 May 2019 15:28:30 -0400
-Message-Id: <20190522193017.26567-7-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 013/114] arm64: Fix compiler warning from pte_unmap() with -Wunused-but-set-variable
+Date:   Wed, 22 May 2019 15:28:36 -0400
+Message-Id: <20190522193017.26567-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522193017.26567-1-sashal@kernel.org>
 References: <20190522193017.26567-1-sashal@kernel.org>
@@ -59,41 +58,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jerome Brunet <jbrunet@baylibre.com>
+From: Qian Cai <cai@lca.pw>
 
-[ Upstream commit 30180e8436046344b12813dc954b2e01dfdcd22d ]
+[ Upstream commit 74dd022f9e6260c3b5b8d15901d27ebcc5f21eda ]
 
-If the hdmi codec startup fails, it should clear the current_substream
-pointer to free the device. This is properly done for the audio_startup()
-callback but for snd_pcm_hw_constraint_eld().
+When building with -Wunused-but-set-variable, the compiler shouts about
+a number of pte_unmap() users, since this expands to an empty macro on
+arm64:
 
-Make sure the pointer cleared if an error is reported.
+  | mm/gup.c: In function 'gup_pte_range':
+  | mm/gup.c:1727:16: warning: variable 'ptem' set but not used
+  | [-Wunused-but-set-variable]
+  | mm/gup.c: At top level:
+  | mm/memory.c: In function 'copy_pte_range':
+  | mm/memory.c:821:24: warning: variable 'orig_dst_pte' set but not used
+  | [-Wunused-but-set-variable]
+  | mm/memory.c:821:9: warning: variable 'orig_src_pte' set but not used
+  | [-Wunused-but-set-variable]
+  | mm/swap_state.c: In function 'swap_ra_info':
+  | mm/swap_state.c:641:15: warning: variable 'orig_pte' set but not used
+  | [-Wunused-but-set-variable]
+  | mm/madvise.c: In function 'madvise_free_pte_range':
+  | mm/madvise.c:318:9: warning: variable 'orig_pte' set but not used
+  | [-Wunused-but-set-variable]
 
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Rewrite pte_unmap() as a static inline function, which silences the
+warnings.
+
+Signed-off-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/hdmi-codec.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ arch/arm64/include/asm/pgtable.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/sound/soc/codecs/hdmi-codec.c b/sound/soc/codecs/hdmi-codec.c
-index 90b5948e0ff36..cba5b5a29da0f 100644
---- a/sound/soc/codecs/hdmi-codec.c
-+++ b/sound/soc/codecs/hdmi-codec.c
-@@ -137,8 +137,12 @@ static int hdmi_codec_startup(struct snd_pcm_substream *substream,
- 		if (!ret) {
- 			ret = snd_pcm_hw_constraint_eld(substream->runtime,
- 							hcp->eld);
--			if (ret)
-+			if (ret) {
-+				mutex_lock(&hcp->current_stream_lock);
-+				hcp->current_stream = NULL;
-+				mutex_unlock(&hcp->current_stream_lock);
- 				return ret;
-+			}
- 		}
- 	}
- 	return 0;
+diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
+index 3a30a3994e4a2..73e3718356b05 100644
+--- a/arch/arm64/include/asm/pgtable.h
++++ b/arch/arm64/include/asm/pgtable.h
+@@ -413,6 +413,8 @@ static inline phys_addr_t pmd_page_paddr(pmd_t pmd)
+ 	return pmd_val(pmd) & PHYS_MASK & (s32)PAGE_MASK;
+ }
+ 
++static inline void pte_unmap(pte_t *pte) { }
++
+ /* Find an entry in the third-level page table. */
+ #define pte_index(addr)		(((addr) >> PAGE_SHIFT) & (PTRS_PER_PTE - 1))
+ 
+@@ -421,7 +423,6 @@ static inline phys_addr_t pmd_page_paddr(pmd_t pmd)
+ 
+ #define pte_offset_map(dir,addr)	pte_offset_kernel((dir), (addr))
+ #define pte_offset_map_nested(dir,addr)	pte_offset_kernel((dir), (addr))
+-#define pte_unmap(pte)			do { } while (0)
+ #define pte_unmap_nested(pte)		do { } while (0)
+ 
+ #define pte_set_fixmap(addr)		((pte_t *)set_fixmap_offset(FIX_PTE, addr))
 -- 
 2.20.1
 
