@@ -2,149 +2,128 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C270CC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 17:41:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 214B5C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 17:44:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9E6A21019
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 17:41:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0FB32173C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 17:44:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558547093;
+	bh=WGpxkLS3O1W5xJkPVT6OtlO6L0fjxSCDqpvjxfdM6e8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=RRm73oKSxeKmo72CcjN56NFqwUyp6/OwH0I4mKaLC4EMi+UwUNpClEJzdsSW6HpOa
+	 UexS9baOygmXpWu23b+E096ilyY48ixik27eMc1n9ckymEXzJRBSW5fWMjMtOzRC3L
+	 vWieShzCyi+D0YzWFrgccYgiC7gZlu6EZEOhGTYU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729575AbfEVRlE (ORCPT
+        id S1729054AbfEVRow (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 13:41:04 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:55906 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729172AbfEVRlD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 13:41:03 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 489EB341;
-        Wed, 22 May 2019 10:41:02 -0700 (PDT)
-Received: from e111045-lin.cambridge.arm.com (apickardsiphone.cambridge.arm.com [10.1.30.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 01C223F5AF;
-        Wed, 22 May 2019 10:40:59 -0700 (PDT)
-From:   Ard Biesheuvel <ard.biesheuvel@arm.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     marc.zyngier@arm.com, james.morse@arm.com, will.deacon@arm.com,
-        guillaume.gardet@arm.com, mark.rutland@arm.com, mingo@kernel.org,
-        jeyu@kernel.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, arnd@arndb.de, x86@kernel.org,
-        Ard Biesheuvel <ard.biesheuvel@arm.com>
-Subject: [PATCH] x86/tools: deal with 64-bit relative relocations for per-CPU symbols
-Date:   Wed, 22 May 2019 18:40:57 +0100
-Message-Id: <20190522174057.21770-1-ard.biesheuvel@arm.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 22 May 2019 13:44:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36548 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727984AbfEVRov (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 13:44:51 -0400
+Received: from localhost (unknown [104.132.1.68])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC5C121019;
+        Wed, 22 May 2019 17:44:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558547090;
+        bh=WGpxkLS3O1W5xJkPVT6OtlO6L0fjxSCDqpvjxfdM6e8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=SzL7buq0bAzafVDhOU8P3wAUmBGyHpJpmx/A+Wg9G+RBjrePwONfrzYdaLTQ6n0ke
+         xz8NKrRO3GWrfZTLu5+xIfiqvqPnf6DQ0cVkiooeJc32eSX+rfY8IFuTtOPMSTssKH
+         1IWqBJr6jhO9FgvLdW5ERpUg+ZbExknEYZH5aPHs=
+Date:   Wed, 22 May 2019 10:44:48 -0700
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Chao Yu <chao@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: Re: [f2fs-dev] [PATCH 1/2] Revert "f2fs: don't clear
+ CP_QUOTA_NEED_FSCK_FLAG"
+Message-ID: <20190522174448.GA81051@jaegeuk-macbookpro.roam.corp.google.com>
+References: <20190521180625.10562-1-jaegeuk@kernel.org>
+ <8e9a4cac-c81b-11ce-0a5a-c6f5caf716c4@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8e9a4cac-c81b-11ce-0a5a-c6f5caf716c4@kernel.org>
+User-Agent: Mutt/1.8.2 (2017-04-18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to fix an issue in the place relative ksymtab code, we
-need to switch to 64-bit place relative references, which
-require special handling in the x86 'relocs' tool. The reason
-is that per-CPU symbols on x86_64 live in a separate link time
-section, whose load time address is not reflected in the ELF
-metadata, and so relative references emitted by the toolchain
-are guaranteed to be wrong.
+On 05/22, Chao Yu wrote:
+> On 2019-5-22 2:06, Jaegeuk Kim wrote:
+> > This reverts commit fb40d618b03978b7cc5820697894461f4a2af98b.
+> > 
+> > The original patch introduced # of fsck triggers.
+> 
+> How about pointing out the old issue has been fixed with below patch:
+> 
+> f2fs-tools: fix to check total valid block count before block allocation
+> 
+> Otherwise, user should keep kernel commit "f2fs: don't clear
+> CP_QUOTA_NEED_FSCK_FLAG".
 
-So fix this by extending the handling of 32-bit relative references
-to per-CPU variables to support 64-bit relative references as
-well.
+Actually, that didn't fix my testing issue, but I found we were not using
+error control for quota_sysfile. Now I've seen no issue with the below patch.
 
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@arm.com>
+From e1b7de7050fd87b7c20e033b062b1cc6505679d3 Mon Sep 17 00:00:00 2001
+From: Jaegeuk Kim <jaegeuk@kernel.org>
+Date: Mon, 20 May 2019 16:17:56 -0700
+Subject: [PATCH] f2fs: link f2fs quota ops for sysfile
+
+This patch reverts:
+commit fb40d618b039 ("f2fs: don't clear CP_QUOTA_NEED_FSCK_FLAG").
+
+We were missing error handlers used in f2fs quota ops.
+
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 ---
-This is a follow-up to [0] and a prerequisite to the change it
-implements: using 64-bit relative references on x86_64 requires
-this handling in the 'relocs' tool and in the decompressor.
+ fs/f2fs/checkpoint.c | 6 ++----
+ fs/f2fs/super.c      | 5 +----
+ 2 files changed, 3 insertions(+), 8 deletions(-)
 
-[0] https://lore.kernel.org/linux-arm-kernel/20190522150239.19314-1-ard.biesheuvel@arm.com
-
-This patch plus [0] build and boot tested with x86_64_defconfig on QEMU/kvm + OVMF.
-
- arch/x86/boot/compressed/misc.c | 12 ++++++++++++
- arch/x86/tools/relocs.c         | 15 ++++++++++-----
- 2 files changed, 22 insertions(+), 5 deletions(-)
-
-diff --git a/arch/x86/boot/compressed/misc.c b/arch/x86/boot/compressed/misc.c
-index 5a237e8dbf8d..e089d78bd86a 100644
---- a/arch/x86/boot/compressed/misc.c
-+++ b/arch/x86/boot/compressed/misc.c
-@@ -218,6 +218,8 @@ static void handle_relocations(void *output, unsigned long output_len,
- 	 * Format is:
- 	 *
- 	 * kernel bits...
-+	 * 0 - zero terminator for inverse 64 bit relocations
-+	 * 64 bit inverse relocation repeated
- 	 * 0 - zero terminator for 64 bit relocations
- 	 * 64 bit relocation repeated
- 	 * 0 - zero terminator for inverse 32 bit relocations
-@@ -258,6 +260,16 @@ static void handle_relocations(void *output, unsigned long output_len,
+diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
+index d0539ddad6e2..89825261d474 100644
+--- a/fs/f2fs/checkpoint.c
++++ b/fs/f2fs/checkpoint.c
+@@ -1317,10 +1317,8 @@ static void update_ckpt_flags(struct f2fs_sb_info *sbi, struct cp_control *cpc)
  
- 		*(uint64_t *)ptr += delta;
- 	}
-+	while (*--reloc) {
-+		long extended = *reloc;
-+		extended += map;
-+
-+		ptr = (unsigned long)extended;
-+		if (ptr < min_addr || ptr > max_addr)
-+			error("inverse 64-bit relocation outside of kernel!\n");
-+
-+		*(uint64_t *)ptr -= delta;
-+	}
- #endif
- }
- #else
-diff --git a/arch/x86/tools/relocs.c b/arch/x86/tools/relocs.c
-index ce7188cbdae5..d6a2bb90dfa6 100644
---- a/arch/x86/tools/relocs.c
-+++ b/arch/x86/tools/relocs.c
-@@ -26,6 +26,7 @@ static struct relocs relocs32;
- #if ELF_BITS == 64
- static struct relocs relocs32neg;
- static struct relocs relocs64;
-+static struct relocs relocs64neg;
- #endif
+ 	if (is_sbi_flag_set(sbi, SBI_QUOTA_SKIP_FLUSH))
+ 		__set_ckpt_flags(ckpt, CP_QUOTA_NEED_FSCK_FLAG);
+-	/*
+-	 * TODO: we count on fsck.f2fs to clear this flag until we figure out
+-	 * missing cases which clear it incorrectly.
+-	 */
++	else
++		__clear_ckpt_flags(ckpt, CP_QUOTA_NEED_FSCK_FLAG);
  
- struct section {
-@@ -800,12 +801,8 @@ static int do_reloc64(struct section *sec, Elf_Rel *rel, ElfW(Sym) *sym,
- 		break;
+ 	if (is_sbi_flag_set(sbi, SBI_QUOTA_NEED_REPAIR))
+ 		__set_ckpt_flags(ckpt, CP_QUOTA_NEED_FSCK_FLAG);
+diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+index 856f9081c599..34f2adf191ed 100644
+--- a/fs/f2fs/super.c
++++ b/fs/f2fs/super.c
+@@ -3169,10 +3169,7 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
  
- 	case R_X86_64_PC64:
--		/*
--		 * Only used by jump labels
--		 */
- 		if (is_percpu_sym(sym, symname))
--			die("Invalid R_X86_64_PC64 relocation against per-CPU symbol %s\n",
--			    symname);
-+			add_reloc(&relocs64neg, offset);
- 		break;
+ #ifdef CONFIG_QUOTA
+ 	sb->dq_op = &f2fs_quota_operations;
+-	if (f2fs_sb_has_quota_ino(sbi))
+-		sb->s_qcop = &dquot_quotactl_sysfile_ops;
+-	else
+-		sb->s_qcop = &f2fs_quotactl_ops;
++	sb->s_qcop = &f2fs_quotactl_ops;
+ 	sb->s_quota_types = QTYPE_MASK_USR | QTYPE_MASK_GRP | QTYPE_MASK_PRJ;
  
- 	case R_X86_64_32:
-@@ -1027,6 +1024,7 @@ static void emit_relocs(int as_text, int use_real_mode)
- #if ELF_BITS == 64
- 	sort_relocs(&relocs32neg);
- 	sort_relocs(&relocs64);
-+	sort_relocs(&relocs64neg);
- #else
- 	sort_relocs(&relocs16);
- #endif
-@@ -1054,6 +1052,13 @@ static void emit_relocs(int as_text, int use_real_mode)
- 		/* Print a stop */
- 		write_reloc(0, stdout);
- 
-+		/* Now print each inverse 64-bit relocation */
-+		for (i = 0; i < relocs64neg.count; i++)
-+			write_reloc(relocs64neg.offset[i], stdout);
-+
-+		/* Print a stop */
-+		write_reloc(0, stdout);
-+
- 		/* Now print each relocation */
- 		for (i = 0; i < relocs64.count; i++)
- 			write_reloc(relocs64.offset[i], stdout);
+ 	if (f2fs_sb_has_quota_ino(sbi)) {
 -- 
-2.17.1
+2.19.0.605.g01d371f741-goog
 
