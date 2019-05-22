@@ -4,51 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEB50C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:32:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D30C8C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:32:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A201F204FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:32:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A70A52089E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:32:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558553535;
-	bh=B1vCH7X8vSqE9p5rvXvsVyhZo92iEF33oALO52MF+fA=;
+	s=default; t=1558553537;
+	bh=cxE51xDuQ99B+iO3+SW+CxV1y6ZoG6k/FmVMMKosy6E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s1r4SgWYeZxTBemR5FR6nmh7HKhc+EkwkfeJXEelQux0unAVMlT4e24Vs2m9BI86v
-	 5QNndjnmck8+lrzcmNqfREKeMAE0bUBM178RS9FWZdOkj8FW+CKPaz7UzrUC1Kl8J/
-	 hC0f1EiuGTzfDxcHuDIAOIE5lVTohooTSOKSAcvg=
+	b=16ZczYMb04oq+skn7L6jtKmLEnpuZPUFyJAmxRwVfXGFt1rnFF+svK3klTVc2FdKe
+	 OKLZD37IMjg0N6weywl+KRW9LA3XESAPYuk+k7Ei/5RhcT7cb3tgACvnUA7tRFaNjY
+	 /+GHQJ1/pgxQANuhuV1Q4UWc/xxc/qOAfniehdSs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387779AbfEVTcP (ORCPT
+        id S2387794AbfEVTcQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:32:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55946 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:32:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55868 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731460AbfEVTcL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:32:11 -0400
+        id S2387762AbfEVTcH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:32:07 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6860B217D4;
-        Wed, 22 May 2019 19:32:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B8E382089E;
+        Wed, 22 May 2019 19:32:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553530;
-        bh=B1vCH7X8vSqE9p5rvXvsVyhZo92iEF33oALO52MF+fA=;
+        s=default; t=1558553527;
+        bh=cxE51xDuQ99B+iO3+SW+CxV1y6ZoG6k/FmVMMKosy6E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=To4teIbefun8bp/t2VKWKLG0JvwZ5GTOFxWklkv2yreUk/h7MPFkIAMWmav/sUcdf
-         JjiZXU2u4Slm/plR3mjGC49YSgA77qtEH5gf6umzcVzRfLBQoOKRLRUbndl8+tcw0H
-         yAZV23p6iN+rjdPvcJUBaBlhJ5c+wti0c8NRuOhQ=
+        b=n8W+mZ6pYth4s8bvSWlxauNjNR36JhY5yuUlCvv2qM6I+uVWhFkllMSrF1zC43eQR
+         OV1+Mn2dZRwcfcWzmnvZ1RO3ATH+WM/vDmZQ7eF+0H5+sb+pZTCSIObH9cK7FFVyvW
+         nT3hEy0TJjKHroxD0DfX62GLvNQNem3UZfwkllAk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
+Cc:     Jiri Kosina <jkosina@suse.cz>, Nicolai Stange <nstange@suse.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Joerg Roedel <jroedel@suse.de>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>, luto@kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 26/92] mm/uaccess: Use 'unsigned long' to placate UBSAN warnings on older GCC versions
-Date:   Wed, 22 May 2019 15:30:21 -0400
-Message-Id: <20190522193127.27079-26-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 25/92] x86/mm: Remove in_nmi() warning from 64-bit implementation of vmalloc_fault()
+Date:   Wed, 22 May 2019 15:30:20 -0400
+Message-Id: <20190522193127.27079-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522193127.27079-1-sashal@kernel.org>
 References: <20190522193127.27079-1-sashal@kernel.org>
@@ -61,76 +66,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: Jiri Kosina <jkosina@suse.cz>
 
-[ Upstream commit 29da93fea3ea39ab9b12270cc6be1b70ef201c9e ]
+[ Upstream commit a65c88e16f32aa9ef2e8caa68ea5c29bd5eb0ff0 ]
 
-Randy reported objtool triggered on his (GCC-7.4) build:
+In-NMI warnings have been added to vmalloc_fault() via:
 
-  lib/strncpy_from_user.o: warning: objtool: strncpy_from_user()+0x315: call to __ubsan_handle_add_overflow() with UACCESS enabled
-  lib/strnlen_user.o: warning: objtool: strnlen_user()+0x337: call to __ubsan_handle_sub_overflow() with UACCESS enabled
+  ebc8827f75 ("x86: Barf when vmalloc and kmemcheck faults happen in NMI")
 
-This is due to UBSAN generating signed-overflow-UB warnings where it
-should not. Prior to GCC-8 UBSAN ignored -fwrapv (which the kernel
-uses through -fno-strict-overflow).
+back in the time when our NMI entry code could not cope with nested NMIs.
 
-Make the functions use 'unsigned long' throughout.
+These days, it's perfectly fine to take a fault in NMI context and we
+don't have to care about the fact that IRET from the fault handler might
+cause NMI nesting.
 
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
-Acked-by: Linus Torvalds <torvalds@linux-foundation.org>
+This warning has already been removed from 32-bit implementation of
+vmalloc_fault() in:
+
+  6863ea0cda8 ("x86/mm: Remove in_nmi() warning from vmalloc_fault()")
+
+but the 64-bit version was omitted.
+
+Remove the bogus warning also from 64-bit implementation of vmalloc_fault().
+
+Reported-by: Nicolai Stange <nstange@suse.de>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Frederic Weisbecker <fweisbec@gmail.com>
+Cc: Joerg Roedel <jroedel@suse.de>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: luto@kernel.org
-Link: http://lkml.kernel.org/r/20190424072208.754094071@infradead.org
+Fixes: 6863ea0cda8 ("x86/mm: Remove in_nmi() warning from vmalloc_fault()")
+Link: http://lkml.kernel.org/r/nycvar.YFH.7.76.1904240902280.9803@cbobk.fhfr.pm
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/strncpy_from_user.c | 5 +++--
- lib/strnlen_user.c      | 4 ++--
- 2 files changed, 5 insertions(+), 4 deletions(-)
+ arch/x86/mm/fault.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/lib/strncpy_from_user.c b/lib/strncpy_from_user.c
-index e0af6ff73d146..f8b1e3cb716b9 100644
---- a/lib/strncpy_from_user.c
-+++ b/lib/strncpy_from_user.c
-@@ -20,10 +20,11 @@
-  * hit it), 'max' is the address space maximum (and we return
-  * -EFAULT if we hit it).
-  */
--static inline long do_strncpy_from_user(char *dst, const char __user *src, long count, unsigned long max)
-+static inline long do_strncpy_from_user(char *dst, const char __user *src,
-+					unsigned long count, unsigned long max)
- {
- 	const struct word_at_a_time constants = WORD_AT_A_TIME_CONSTANTS;
--	long res = 0;
-+	unsigned long res = 0;
+diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
+index c4dffae5d9390..462c5c30b9a21 100644
+--- a/arch/x86/mm/fault.c
++++ b/arch/x86/mm/fault.c
+@@ -373,8 +373,6 @@ static noinline int vmalloc_fault(unsigned long address)
+ 	if (!(address >= VMALLOC_START && address < VMALLOC_END))
+ 		return -1;
  
+-	WARN_ON_ONCE(in_nmi());
+-
  	/*
- 	 * Truncate 'max' to the user-specified limit, so that
-diff --git a/lib/strnlen_user.c b/lib/strnlen_user.c
-index 3a5f2b366d84e..1c87bfa63db7f 100644
---- a/lib/strnlen_user.c
-+++ b/lib/strnlen_user.c
-@@ -27,7 +27,7 @@
- static inline long do_strnlen_user(const char __user *src, unsigned long count, unsigned long max)
- {
- 	const struct word_at_a_time constants = WORD_AT_A_TIME_CONSTANTS;
--	long align, res = 0;
-+	unsigned long align, res = 0;
- 	unsigned long c;
- 
- 	/*
-@@ -41,7 +41,7 @@ static inline long do_strnlen_user(const char __user *src, unsigned long count,
- 	 * Do everything aligned. But that means that we
- 	 * need to also expand the maximum..
- 	 */
--	align = (sizeof(long) - 1) & (unsigned long)src;
-+	align = (sizeof(unsigned long) - 1) & (unsigned long)src;
- 	src -= align;
- 	max += align;
- 
+ 	 * Copy kernel mappings over when needed. This can also
+ 	 * happen within a race in page table update. In the later
 -- 
 2.20.1
 
