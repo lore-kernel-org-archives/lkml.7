@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1610C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:24:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C80FEC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:24:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4236217D4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:24:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9270A21850
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:24:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558553057;
-	bh=iNmR0JZ46jXVV6tOtn7wO2t8f/KBToboSyKHCBh9JPY=;
+	s=default; t=1558553059;
+	bh=zq7F5NG0YjTA6lHRxXM2Sdf7SLU14kg2TWUsGbh0PNw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A2uGXR/MrmZgZ6MPeCtgV1uZ+X5P+64WX19WSRMUbptX15qJR3YIx7yEaazPOGrZP
-	 l3VDzPEciWEZm7MBhz94LJO+GIWQIT62kGgtIY9O4v/xfEFvAyBSoF2dolXTj90iH5
-	 BW+KAr/ifDK5wRVAMgfypVuHHCb/nmJR2fgD8ass=
+	b=cIMkZWAKR77rAReTYlsffu2Jb0JUQ0z6bvKJ2vWk7EsWzcrSGF6OWxNv3Y7yqiYGf
+	 ZtLGwthnx9KHu8n5sPmzphKz2diRzEyKQhY/Z6OTgCecyZva9BtKHv5J3y/ag3dZWE
+	 siJT4PDBhY8bJESVRfwEgC+3SdIquBVd63uCTS/0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731238AbfEVTYQ (ORCPT
+        id S1731252AbfEVTYS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:24:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45282 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:24:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45348 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730484AbfEVTYO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:24:14 -0400
+        id S1731235AbfEVTYR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:24:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00C5B20879;
-        Wed, 22 May 2019 19:24:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3CEDF2173C;
+        Wed, 22 May 2019 19:24:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553053;
-        bh=iNmR0JZ46jXVV6tOtn7wO2t8f/KBToboSyKHCBh9JPY=;
+        s=default; t=1558553055;
+        bh=zq7F5NG0YjTA6lHRxXM2Sdf7SLU14kg2TWUsGbh0PNw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HZICRzeRU3+Scf8NR6yCRkfnKnPJC3pDMHu1UEyXd4ezKZZRESb1GZpmImgFRxhrC
-         RG4rappzGEL4WC2gMATcMuremcriZhJHOS62gzooQoBxk7pEBuUaQU4K/WHXgqxwWE
-         ECfJbZiN9zQjmvNKxO3nmch+8xI20nsM/Sgn6eos=
+        b=VurrAXAS1au1Rw/LyfHSFdVeG6IZW3uII4IMVl38LzeWOXrrxz5FYCcrCDu9bw2Fh
+         3pLFryfm2nophEhy7gKvKd5SmJm4kCL4aLlhoNMaDGu0SHDq+exc73b/ev5A1iw1q0
+         N7zkUR7VpjnvDMPziAR1aa+GMkjo3PeflHeQLAfE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mac Chiang <mac.chiang@intel.com>,
-        Benson Leung <bleung@chromium.org>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.0 023/317] ASoC: Intel: kbl_da7219_max98357a: Map BTN_0 to KEY_PLAYPAUSE
-Date:   Wed, 22 May 2019 15:18:44 -0400
-Message-Id: <20190522192338.23715-23-sashal@kernel.org>
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 025/317] usb: dwc3: move synchronize_irq() out of the spinlock protected block
+Date:   Wed, 22 May 2019 15:18:46 -0400
+Message-Id: <20190522192338.23715-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192338.23715-1-sashal@kernel.org>
 References: <20190522192338.23715-1-sashal@kernel.org>
@@ -61,49 +59,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mac Chiang <mac.chiang@intel.com>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
 
-[ Upstream commit 16ec5dfe0327ddcf279957bffe4c8fe527088c63 ]
+[ Upstream commit 41a91c606e7d2b74358a944525267cc451c271e8 ]
 
-On kbl_rt5663_max98927, commit 38a5882e4292
-    ("ASoC: Intel: kbl_rt5663_max98927: Map BTN_0 to KEY_PLAYPAUSE")
-    This key pair mapping to play/pause when playing Youtube
+dwc3_gadget_suspend() is called under dwc->lock spinlock. In such context
+calling synchronize_irq() is not allowed. Move the problematic call out
+of the protected block to fix the following kernel BUG during system
+suspend:
 
-The Android 3.5mm Headset jack specification mentions that BTN_0 should
-be mapped to KEY_MEDIA, but this is less logical than KEY_PLAYPAUSE,
-which has much broader userspace support.
+BUG: sleeping function called from invalid context at kernel/irq/manage.c:112
+in_atomic(): 1, irqs_disabled(): 128, pid: 1601, name: rtcwake
+6 locks held by rtcwake/1601:
+ #0: f70ac2a2 (sb_writers#7){.+.+}, at: vfs_write+0x130/0x16c
+ #1: b5fe1270 (&of->mutex){+.+.}, at: kernfs_fop_write+0xc0/0x1e4
+ #2: 7e597705 (kn->count#60){.+.+}, at: kernfs_fop_write+0xc8/0x1e4
+ #3: 8b3527d0 (system_transition_mutex){+.+.}, at: pm_suspend+0xc4/0xc04
+ #4: fc7f1c42 (&dev->mutex){....}, at: __device_suspend+0xd8/0x74c
+ #5: 4b36507e (&(&dwc->lock)->rlock){....}, at: dwc3_gadget_suspend+0x24/0x3c
+irq event stamp: 11252
+hardirqs last  enabled at (11251): [<c09c54a4>] _raw_spin_unlock_irqrestore+0x6c/0x74
+hardirqs last disabled at (11252): [<c09c4d44>] _raw_spin_lock_irqsave+0x1c/0x5c
+softirqs last  enabled at (9744): [<c0102564>] __do_softirq+0x3a4/0x66c
+softirqs last disabled at (9737): [<c0128528>] irq_exit+0x140/0x168
+Preemption disabled at:
+[<00000000>]   (null)
+CPU: 7 PID: 1601 Comm: rtcwake Not tainted
+5.0.0-rc3-next-20190122-00039-ga3f4ee4f8a52 #5252
+Hardware name: SAMSUNG EXYNOS (Flattened Device Tree)
+[<c01110f0>] (unwind_backtrace) from [<c010d120>] (show_stack+0x10/0x14)
+[<c010d120>] (show_stack) from [<c09a4d04>] (dump_stack+0x90/0xc8)
+[<c09a4d04>] (dump_stack) from [<c014c700>] (___might_sleep+0x22c/0x2c8)
+[<c014c700>] (___might_sleep) from [<c0189d68>] (synchronize_irq+0x28/0x84)
+[<c0189d68>] (synchronize_irq) from [<c05cbbf8>] (dwc3_gadget_suspend+0x34/0x3c)
+[<c05cbbf8>] (dwc3_gadget_suspend) from [<c05bd020>] (dwc3_suspend_common+0x154/0x410)
+[<c05bd020>] (dwc3_suspend_common) from [<c05bd34c>] (dwc3_suspend+0x14/0x2c)
+[<c05bd34c>] (dwc3_suspend) from [<c051c730>] (platform_pm_suspend+0x2c/0x54)
+[<c051c730>] (platform_pm_suspend) from [<c05285d4>] (dpm_run_callback+0xa4/0x3dc)
+[<c05285d4>] (dpm_run_callback) from [<c0528a40>] (__device_suspend+0x134/0x74c)
+[<c0528a40>] (__device_suspend) from [<c052c508>] (dpm_suspend+0x174/0x588)
+[<c052c508>] (dpm_suspend) from [<c0182134>] (suspend_devices_and_enter+0xc0/0xe74)
+[<c0182134>] (suspend_devices_and_enter) from [<c0183658>] (pm_suspend+0x770/0xc04)
+[<c0183658>] (pm_suspend) from [<c0180ddc>] (state_store+0x6c/0xcc)
+[<c0180ddc>] (state_store) from [<c09a9a70>] (kobj_attr_store+0x14/0x20)
+[<c09a9a70>] (kobj_attr_store) from [<c02d6800>] (sysfs_kf_write+0x4c/0x50)
+[<c02d6800>] (sysfs_kf_write) from [<c02d594c>] (kernfs_fop_write+0xfc/0x1e4)
+[<c02d594c>] (kernfs_fop_write) from [<c02593d8>] (__vfs_write+0x2c/0x160)
+[<c02593d8>] (__vfs_write) from [<c0259694>] (vfs_write+0xa4/0x16c)
+[<c0259694>] (vfs_write) from [<c0259870>] (ksys_write+0x40/0x8c)
+[<c0259870>] (ksys_write) from [<c0101000>] (ret_fast_syscall+0x0/0x28)
+Exception stack(0xed55ffa8 to 0xed55fff0)
+...
 
-For example, the Chrome OS userspace now supports KEY_PLAYPAUSE to toggle
-play/pause of videos and audio, but does not handle KEY_MEDIA.
-
-Furthermore, Android itself now supports KEY_PLAYPAUSE equivalently, as the
-new USB headset spec requires KEY_PLAYPAUSE for BTN_0.
-https://source.android.com/devices/accessories/headset/usb-headset-spec
-
-The same fix is required on Chrome kbl_da7219_max98357a.
-
-Signed-off-by: Mac Chiang <mac.chiang@intel.com>
-Reviewed-by: Benson Leung <bleung@chromium.org>
-Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 01c10880d242 ("usb: dwc3: gadget: synchronize_irq dwc irq in suspend")
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/intel/boards/kbl_da7219_max98357a.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/dwc3/core.c   | 2 ++
+ drivers/usb/dwc3/gadget.c | 2 --
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/intel/boards/kbl_da7219_max98357a.c b/sound/soc/intel/boards/kbl_da7219_max98357a.c
-index 38f6ab74709d0..07491a0f8fb8b 100644
---- a/sound/soc/intel/boards/kbl_da7219_max98357a.c
-+++ b/sound/soc/intel/boards/kbl_da7219_max98357a.c
-@@ -188,7 +188,7 @@ static int kabylake_da7219_codec_init(struct snd_soc_pcm_runtime *rtd)
+diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+index f944cea4056bc..72110a8c49d68 100644
+--- a/drivers/usb/dwc3/core.c
++++ b/drivers/usb/dwc3/core.c
+@@ -1600,6 +1600,7 @@ static int dwc3_suspend_common(struct dwc3 *dwc, pm_message_t msg)
+ 		spin_lock_irqsave(&dwc->lock, flags);
+ 		dwc3_gadget_suspend(dwc);
+ 		spin_unlock_irqrestore(&dwc->lock, flags);
++		synchronize_irq(dwc->irq_gadget);
+ 		dwc3_core_exit(dwc);
+ 		break;
+ 	case DWC3_GCTL_PRTCAP_HOST:
+@@ -1632,6 +1633,7 @@ static int dwc3_suspend_common(struct dwc3 *dwc, pm_message_t msg)
+ 			spin_lock_irqsave(&dwc->lock, flags);
+ 			dwc3_gadget_suspend(dwc);
+ 			spin_unlock_irqrestore(&dwc->lock, flags);
++			synchronize_irq(dwc->irq_gadget);
+ 		}
  
- 	jack = &ctx->kabylake_headset;
+ 		dwc3_otg_exit(dwc);
+diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
+index 9f941cdb0691d..1227e8f5a5c87 100644
+--- a/drivers/usb/dwc3/gadget.c
++++ b/drivers/usb/dwc3/gadget.c
+@@ -3385,8 +3385,6 @@ int dwc3_gadget_suspend(struct dwc3 *dwc)
+ 	dwc3_disconnect_gadget(dwc);
+ 	__dwc3_gadget_stop(dwc);
  
--	snd_jack_set_key(jack->jack, SND_JACK_BTN_0, KEY_MEDIA);
-+	snd_jack_set_key(jack->jack, SND_JACK_BTN_0, KEY_PLAYPAUSE);
- 	snd_jack_set_key(jack->jack, SND_JACK_BTN_1, KEY_VOLUMEUP);
- 	snd_jack_set_key(jack->jack, SND_JACK_BTN_2, KEY_VOLUMEDOWN);
- 	snd_jack_set_key(jack->jack, SND_JACK_BTN_3, KEY_VOICECOMMAND);
+-	synchronize_irq(dwc->irq_gadget);
+-
+ 	return 0;
+ }
+ 
 -- 
 2.20.1
 
