@@ -6,33 +6,33 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E674AC18E7D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 10:35:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3830C18E7D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 10:35:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4F40217F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 10:35:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A13EE217D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 10:35:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729149AbfEVKfW (ORCPT
+        id S1729181AbfEVKfY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 06:35:22 -0400
-Received: from foss.arm.com ([217.140.101.70]:46948 "EHLO foss.arm.com"
+        Wed, 22 May 2019 06:35:24 -0400
+Received: from foss.arm.com ([217.140.101.70]:46936 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729035AbfEVKfU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 06:35:20 -0400
+        id S1728438AbfEVKfT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 06:35:19 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 755C215BF;
-        Wed, 22 May 2019 03:35:20 -0700 (PDT)
-Received: from en101.cambridge.arm.com (en101.cambridge.arm.com [10.1.196.93])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 65BBE3F575;
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2921B15AB;
         Wed, 22 May 2019 03:35:19 -0700 (PDT)
+Received: from en101.cambridge.arm.com (en101.cambridge.arm.com [10.1.196.93])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 19B063F575;
+        Wed, 22 May 2019 03:35:17 -0700 (PDT)
 From:   Suzuki K Poulose <suzuki.poulose@arm.com>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     linux-kernel@vger.kernel.org, mathieu.poirier@linaro.org,
         coresight@lists.linaro.org,
         Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: [PATCH v4 02/30] coresight: replicator: Cleanup device tracking
-Date:   Wed, 22 May 2019 11:34:35 +0100
-Message-Id: <1558521304-27469-3-git-send-email-suzuki.poulose@arm.com>
+Subject: [PATCH v4 01/30] coresight: funnel: Clean up device book keeping
+Date:   Wed, 22 May 2019 11:34:34 +0100
+Message-Id: <1558521304-27469-2-git-send-email-suzuki.poulose@arm.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1558521304-27469-1-git-send-email-suzuki.poulose@arm.com>
 References: <1558521304-27469-1-git-send-email-suzuki.poulose@arm.com>
@@ -42,7 +42,7 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 In preparation to use a consistent device naming scheme,
-clean up the device link tracking in replicator driver.
+clean up the device link tracking in funnel driver.
 Use the "coresight" device instead of the "real" parent device
 for all internal purposes. All other requests (e.g, power management,
 DMA operations) must use the "real" device which is the parent device.
@@ -50,46 +50,61 @@ DMA operations) must use the "real" device which is the parent device.
 Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 ---
- drivers/hwtracing/coresight/coresight-replicator.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+ drivers/hwtracing/coresight/coresight-funnel.c | 11 ++++-------
+ 1 file changed, 4 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/hwtracing/coresight/coresight-replicator.c b/drivers/hwtracing/coresight/coresight-replicator.c
-index 8c9ce74..ee6ad34 100644
---- a/drivers/hwtracing/coresight/coresight-replicator.c
-+++ b/drivers/hwtracing/coresight/coresight-replicator.c
-@@ -26,13 +26,11 @@
-  * struct replicator_drvdata - specifics associated to a replicator component
-  * @base:	memory mapped base address for this component. Also indicates
-  *		whether this one is programmable or not.
-- * @dev:	the device entity associated with this component
-  * @atclk:	optional clock for the core parts of the replicator.
-  * @csdev:	component vitals needed by the framework
+diff --git a/drivers/hwtracing/coresight/coresight-funnel.c b/drivers/hwtracing/coresight/coresight-funnel.c
+index 16b0c0e..6236a84 100644
+--- a/drivers/hwtracing/coresight/coresight-funnel.c
++++ b/drivers/hwtracing/coresight/coresight-funnel.c
+@@ -32,14 +32,12 @@
+ /**
+  * struct funnel_drvdata - specifics associated to a funnel component
+  * @base:	memory mapped base address for this component.
+- * @dev:	the device entity associated to this component.
+  * @atclk:	optional clock for the core parts of the funnel.
+  * @csdev:	component vitals needed by the framework.
+  * @priority:	port selection order.
   */
- struct replicator_drvdata {
+ struct funnel_drvdata {
  	void __iomem		*base;
 -	struct device		*dev;
  	struct clk		*atclk;
  	struct coresight_device	*csdev;
- };
-@@ -100,7 +98,7 @@ static int replicator_enable(struct coresight_device *csdev, int inport,
- 	if (drvdata->base)
- 		rc = dynamic_replicator_enable(drvdata, inport, outport);
+ 	unsigned long		priority;
+@@ -80,7 +78,7 @@ static int funnel_enable(struct coresight_device *csdev, int inport,
+ 		rc = dynamic_funnel_enable_hw(drvdata, inport);
+ 
  	if (!rc)
--		dev_dbg(drvdata->dev, "REPLICATOR enabled\n");
-+		dev_dbg(&csdev->dev, "REPLICATOR enabled\n");
+-		dev_dbg(drvdata->dev, "FUNNEL inport %d enabled\n", inport);
++		dev_dbg(&csdev->dev, "FUNNEL inport %d enabled\n", inport);
  	return rc;
  }
  
-@@ -139,7 +137,7 @@ static void replicator_disable(struct coresight_device *csdev, int inport,
- 
+@@ -110,7 +108,7 @@ static void funnel_disable(struct coresight_device *csdev, int inport,
  	if (drvdata->base)
- 		dynamic_replicator_disable(drvdata, inport, outport);
--	dev_dbg(drvdata->dev, "REPLICATOR disabled\n");
-+	dev_dbg(&csdev->dev, "REPLICATOR disabled\n");
+ 		dynamic_funnel_disable_hw(drvdata, inport);
+ 
+-	dev_dbg(drvdata->dev, "FUNNEL inport %d disabled\n", inport);
++	dev_dbg(&csdev->dev, "FUNNEL inport %d disabled\n", inport);
  }
  
- static const struct coresight_ops_link replicator_link_ops = {
-@@ -196,7 +194,6 @@ static int replicator_probe(struct device *dev, struct resource *res)
+ static const struct coresight_ops_link funnel_link_ops = {
+@@ -165,11 +163,11 @@ static ssize_t funnel_ctrl_show(struct device *dev,
+ 	u32 val;
+ 	struct funnel_drvdata *drvdata = dev_get_drvdata(dev->parent);
+ 
+-	pm_runtime_get_sync(drvdata->dev);
++	pm_runtime_get_sync(dev->parent);
+ 
+ 	val = get_funnel_ctrl_hw(drvdata);
+ 
+-	pm_runtime_put(drvdata->dev);
++	pm_runtime_put(dev->parent);
+ 
+ 	return sprintf(buf, "%#x\n", val);
+ }
+@@ -205,7 +203,6 @@ static int funnel_probe(struct device *dev, struct resource *res)
  	if (!drvdata)
  		return -ENOMEM;
  
