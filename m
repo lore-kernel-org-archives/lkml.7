@@ -2,106 +2,171 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EA5DC18E7D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 09:53:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91B16C18E7D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 09:54:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E02BE2070D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 09:53:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HGtpbo/c"
+	by mail.kernel.org (Postfix) with ESMTP id 61605206BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 09:54:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728998AbfEVJxm (ORCPT
+        id S1729026AbfEVJyj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 05:53:42 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:41367 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728424AbfEVJxl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 05:53:41 -0400
-Received: by mail-pf1-f194.google.com with SMTP id q17so1045157pfq.8;
-        Wed, 22 May 2019 02:53:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=/lhVdO3oJRAv/K0o2rwF57FW6eQgW9otKjhGHSr9m9s=;
-        b=HGtpbo/cP6dUgDCcydXQnFiwYrS51OTEMsvFsT1XCBv4yBvutnd9M6QNOoM3waPWjL
-         /kVPL/dLv2qoDbO1ociUxsb3XfX34573p2PjHt51D+6Nq0bwTP02btwxGhkNk/UBfwKw
-         Tcb75AlmpIVyIiMGWIEPPFXDSdSruFY/VTYraWvUD6HUrl4NqZRFkOaGhEl1Tdm/FFXn
-         nR2Bwa+25sICL8f9GzVk/kLAUJkz4/aicATPP5zoJDV7YX4TRpfoh8eISXHuPhuupYUD
-         Woc4/CX5QzidJMxs8OuO0b5Vhn+Lh6lswO0ufvfMoHvr/mh4QRuyX7ym/9AFDyBqNUij
-         8BbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=/lhVdO3oJRAv/K0o2rwF57FW6eQgW9otKjhGHSr9m9s=;
-        b=p20NowupNTB2pyR4+xbNSPv8rgIyA5FVpoalqLVtfRMizt8vI4eOpePjEvIF0UhfvX
-         +/yb/kYDtaC4x3VcFdV42A4XbgQKPaAO8QyEEa2f6Uz+jSnxERfFXZ3InT/zwf0JjRSq
-         VVTxHyfjKRMGuvAhzXZiE2XIy7yjKxn2LPQrvOzmF5Z6viMAFB+is8WipVwSkmiD8dOf
-         csJolT/6p6O3tls3r/OJic8ppWzU+YvZ5xzR5p7GTywepERCkRai38HzqI0kmH4cg6yz
-         qkq7+BC3+xSWAcsjpv1IfIDl9Va8JV5nYU9Jhmw2+4Uq9bJvLhx7Iklct4qYO8VbHI4Z
-         hW7A==
-X-Gm-Message-State: APjAAAW0o2IoyjJbJQzpAHc9zQhE7yR9xZ2qzObX9nmfkCH02jLNaCjC
-        k6rjbk+HYCjNlLSFNLAiL9E=
-X-Google-Smtp-Source: APXvYqzhQCkUeNiCISHoAM+EpyQpTGOYbl5erl6xd5ClzSZdcKsM3a04IQsg4BpGbH7nF+FYomm23g==
-X-Received: by 2002:a63:534f:: with SMTP id t15mr90409887pgl.445.1558518820862;
-        Wed, 22 May 2019 02:53:40 -0700 (PDT)
-Received: from bharath12345-Inspiron-5559 ([103.110.42.31])
-        by smtp.gmail.com with ESMTPSA id v66sm46749883pfa.38.2019.05.22.02.53.38
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 22 May 2019 02:53:40 -0700 (PDT)
-Date:   Wed, 22 May 2019 15:23:35 +0530
-From:   Bharath Vedartham <linux.bhar@gmail.com>
-To:     sathya.prakash@broadcom.com, chaitra.basappa@broadcom.com
-Cc:     MPT-FusionLinux.pdl@broadcom.com, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] message/fusion/mptbase.c: Use kmemdup instead of memcpy and
- kmalloc
-Message-ID: <20190522095335.GA3212@bharath12345-Inspiron-5559>
+        Wed, 22 May 2019 05:54:39 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:37654 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728406AbfEVJyj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 05:54:39 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 9B44D20276;
+        Wed, 22 May 2019 09:54:38 +0000 (UTC)
+Received: from gondolin (dhcp-192-213.str.redhat.com [10.33.192.213])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 619E65DDF6;
+        Wed, 22 May 2019 09:54:37 +0000 (UTC)
+Date:   Wed, 22 May 2019 11:54:35 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Parav Pandit <parav@mellanox.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kwankhede@nvidia.com, alex.williamson@redhat.com, cjia@nvidia.com
+Subject: Re: [PATCHv3 1/3] vfio/mdev: Improve the create/remove sequence
+Message-ID: <20190522115435.677b457c.cohuck@redhat.com>
+In-Reply-To: <20190516233034.16407-2-parav@mellanox.com>
+References: <20190516233034.16407-1-parav@mellanox.com>
+        <20190516233034.16407-2-parav@mellanox.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Wed, 22 May 2019 09:54:38 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace kmalloc + memcpy with kmemdup.
+On Thu, 16 May 2019 18:30:32 -0500
+Parav Pandit <parav@mellanox.com> wrote:
 
-This was reported by coccinelle.
+> This patch addresses below two issues and prepares the code to address
+> 3rd issue listed below.
+> 
+> 1. mdev device is placed on the mdev bus before it is created in the
+> vendor driver. Once a device is placed on the mdev bus without creating
+> its supporting underlying vendor device, mdev driver's probe() gets triggered.
+> However there isn't a stable mdev available to work on.
+> 
+>    create_store()
+>      mdev_create_device()
+>        device_register()
+>           ...
+>          vfio_mdev_probe()
+>         [...]
+>         parent->ops->create()
+>           vfio_ap_mdev_create()
+>             mdev_set_drvdata(mdev, matrix_mdev);
+>             /* Valid pointer set above */
+> 
+> Due to this way of initialization, mdev driver who wants to use the mdev,
+> doesn't have a valid mdev to work on.
+> 
+> 2. Current creation sequence is,
+>    parent->ops_create()
+>    groups_register()
+> 
+> Remove sequence is,
+>    parent->ops->remove()
+>    groups_unregister()
+> 
+> However, remove sequence should be exact mirror of creation sequence.
+> Once this is achieved, all users of the mdev will be terminated first
+> before removing underlying vendor device.
+> (Follow standard linux driver model).
+> At that point vendor's remove() ops shouldn't fail because taking the
+> device off the bus should terminate any usage.
+> 
+> 3. When remove operation fails, mdev sysfs removal attempts to add the
+> file back on already removed device. Following call trace [1] is observed.
+> 
+> [1] call trace:
+> kernel: WARNING: CPU: 2 PID: 9348 at fs/sysfs/file.c:327 sysfs_create_file_ns+0x7f/0x90
+> kernel: CPU: 2 PID: 9348 Comm: bash Kdump: loaded Not tainted 5.1.0-rc6-vdevbus+ #6
+> kernel: Hardware name: Supermicro SYS-6028U-TR4+/X10DRU-i+, BIOS 2.0b 08/09/2016
+> kernel: RIP: 0010:sysfs_create_file_ns+0x7f/0x90
+> kernel: Call Trace:
+> kernel: remove_store+0xdc/0x100 [mdev]
+> kernel: kernfs_fop_write+0x113/0x1a0
+> kernel: vfs_write+0xad/0x1b0
+> kernel: ksys_write+0x5a/0xe0
+> kernel: do_syscall_64+0x5a/0x210
+> kernel: entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> 
+> Therefore, mdev core is improved in following ways.
+> 
+> 1. Split the device registration/deregistration sequence so that some
+> things can be done between initialization of the device and
+> hooking it up to the bus respectively after deregistering it
+> from the bus but before giving up our final reference.
+> In particular, this means invoking the ->create and ->remove
+> callbacks in those new windows. This gives the vendor driver an
+> initialized mdev device to work with during creation.
+> At the same time, a bus driver who wish to bind to mdev driver also
 
-Signed-off-by: Bharath Vedartham <linux.bhar@gmail.com>
----
- drivers/message/fusion/mptbase.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+s/who wish/that wishes/
 
-diff --git a/drivers/message/fusion/mptbase.c b/drivers/message/fusion/mptbase.c
-index d8882b0..37876a7 100644
---- a/drivers/message/fusion/mptbase.c
-+++ b/drivers/message/fusion/mptbase.c
-@@ -6001,13 +6001,12 @@ mpt_findImVolumes(MPT_ADAPTER *ioc)
- 	if (mpt_config(ioc, &cfg) != 0)
- 		goto out;
- 
--	mem = kmalloc(iocpage2sz, GFP_KERNEL);
-+	mem = kmemdup((u8 *)pIoc2, iocpage2sz, GFP_KERNEL);
- 	if (!mem) {
- 		rc = -ENOMEM;
- 		goto out;
- 	}
- 
--	memcpy(mem, (u8 *)pIoc2, iocpage2sz);
- 	ioc->raid_data.pIocPg2 = (IOCPage2_t *) mem;
- 
- 	mpt_read_ioc_pg_3(ioc);
--- 
-2.7.4
+> gets initialized mdev device.
+> 
+> This follows standard Linux kernel bus and device model.
+> 
+> 2. During remove flow, first remove the device from the bus. This
+> ensures that any bus specific devices are removed.
+> Once device is taken off the mdev bus, invoke remove() of mdev
+> from the vendor driver.
+> 
+> 3. The driver core device model provides way to register and auto
+> unregister the device sysfs attribute groups at dev->groups.
+> Make use of dev->groups to let core create the groups and eliminate
+> code to avoid explicit groups creation and removal.
+> 
+> To ensure, that new sequence is solid, a below stack dump of a
+> process is taken who attempts to remove the device while device is in
+> use by vfio driver and user application.
+> This stack dump validates that vfio driver guards against such device
+> removal when device is in use.
+> 
+>  cat /proc/21962/stack
+> [<0>] vfio_del_group_dev+0x216/0x3c0 [vfio]
+> [<0>] mdev_remove+0x21/0x40 [mdev]
+> [<0>] device_release_driver_internal+0xe8/0x1b0
+> [<0>] bus_remove_device+0xf9/0x170
+> [<0>] device_del+0x168/0x350
+> [<0>] mdev_device_remove_common+0x1d/0x50 [mdev]
+> [<0>] mdev_device_remove+0x8c/0xd0 [mdev]
+> [<0>] remove_store+0x71/0x90 [mdev]
+> [<0>] kernfs_fop_write+0x113/0x1a0
+> [<0>] vfs_write+0xad/0x1b0
+> [<0>] ksys_write+0x5a/0xe0
+> [<0>] do_syscall_64+0x5a/0x210
+> [<0>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> [<0>] 0xffffffffffffffff
+> 
+> This prepares the code to eliminate calling device_create_file() in
+> subsquent patch.
+> 
+> Signed-off-by: Parav Pandit <parav@mellanox.com>
+> ---
+>  drivers/vfio/mdev/mdev_core.c    | 94 +++++++++-----------------------
+>  drivers/vfio/mdev/mdev_private.h |  2 +-
+>  drivers/vfio/mdev/mdev_sysfs.c   |  2 +-
+>  3 files changed, 27 insertions(+), 71 deletions(-)
 
+Personally, I'd do a more compact patch description, but there's
+nothing really wrong with yours, either.
+
+Patch also seems sane to me, although I'd probably have merged this and
+the next patch. But no reason to quibble further.
+
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
