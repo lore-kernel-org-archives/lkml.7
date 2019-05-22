@@ -2,88 +2,117 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21941C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 16:11:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1528C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 16:12:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB25E20868
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 16:11:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6764204EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 16:12:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oON3JTdB"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="OXsob//8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729860AbfEVQLt (ORCPT
+        id S1729945AbfEVQMb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 12:11:49 -0400
-Received: from mail-wm1-f50.google.com ([209.85.128.50]:51558 "EHLO
-        mail-wm1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728466AbfEVQLs (ORCPT
+        Wed, 22 May 2019 12:12:31 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:49332 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729740AbfEVQMa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 12:11:48 -0400
-Received: by mail-wm1-f50.google.com with SMTP id c77so2832554wmd.1
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 09:11:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FT0F6Pffz/vTvGV/espArxBdiGR9UmPiCRUu0pGnRXM=;
-        b=oON3JTdBwI2g3t4alGnJ7RfojjCsvTtUwCqsm4x+AtfxFOzF3Y/hs8KlydjbLClQOt
-         2Cbw91NYgaQHcUK/8y2bdzCgVdWHfzNLDsOlL04IwqxTaYurjjcuWAKQj22reSl4Ijed
-         /c2G0JBxZcnLtxPooe61NaW/6SOIZpQ7d5Be78TuUajkhkOJhHOMcCUCWlaMadDKairv
-         MEwlezeJcRRNS10hZX+9nZ2/nZHBEaTdOfPyNeT6RLDM70lOimDLPbWWBZ7BqakZF6RM
-         PuEw4K9v4DSFw7XJKnwrayL7chtXd55bH8rSebeqVc7+TpompzEG5TnUtvqF/GA8JXiZ
-         IqBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FT0F6Pffz/vTvGV/espArxBdiGR9UmPiCRUu0pGnRXM=;
-        b=XTYXz7kNzZ3i8BZhRaBSYxAd4/41T5ZB5gPA0FLm0ucfGQK7RGauifA7ahQvz3iV4j
-         aOQFoqT87YMAwgQAxZG9GjipWqytpJCo0Vhwxoj2CTrlxAX+5oDnZAcMnRDz8zlZ5oGn
-         IuUNddvWpFqZz7tfteF31qVy5FKUUvXeHkIiefaDn9NfQ5pCfW9e+m7zuOXMAlBbak/P
-         zzhwqt9rjInaPMuZJCst4dVdibez5ihOAlKQzREJgBIeO+zx1FoQOaLnU5HYKrL7gRbW
-         IZkFmW5k2r3cMyfzVgb+HWFgJ/CGbGDHcOpy54f1CoBnxD2A5QqTNkK1hh7jRfAwj475
-         LJww==
-X-Gm-Message-State: APjAAAWUZG3YAiqDSwYFE6ahE17hDV4NvdEhRCjWGgTbawuyvi9nYQWo
-        R8OQ1rAyaLbOrxi5lOPgRH7n4S2o96OlPMRnwBU=
-X-Google-Smtp-Source: APXvYqwF/SOWtLPINQQydtAWkZSJNKSSpKWM0hI2xQ4FwE0p6pVh20jZ75QH3MIXJSAozheypWv3nc/75bbUfzGPTFg=
-X-Received: by 2002:a1c:3c2:: with SMTP id 185mr8380580wmd.91.1558541506548;
- Wed, 22 May 2019 09:11:46 -0700 (PDT)
+        Wed, 22 May 2019 12:12:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1558541548; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:references; bh=ommTaJiiF1wEQejjgl2jDFfJkhMbVYAtU2wzIc7UzPA=;
+        b=OXsob//8E2wfBWl4R46XcNFX0M97JmIeGlwO8MdA9bqrgw/9dNhpxJ6DDdSTiXhaD1K53t
+        pLye01sif6jXdr29xdH+hzlqvWhTkmvNuffecCoNq6gc4X9V9DQa2S56O6/cIPxzOowbmJ
+        wTa0I6drPzcC0YOOY3ruZReOEBaI1U8=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     od@zcrc.me, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH] pinctrl: ingenic: Handle PIN_CONFIG_OUTPUT config
+Date:   Wed, 22 May 2019 18:12:24 +0200
+Message-Id: <20190522161224.6169-1-paul@crapouillou.net>
 MIME-Version: 1.0
-References: <CAPhKKr_uVTFAzne0QkZFUGfb8RxQdVFx41G9kXRY7sFN-=pZ6w@mail.gmail.com>
-In-Reply-To: <CAPhKKr_uVTFAzne0QkZFUGfb8RxQdVFx41G9kXRY7sFN-=pZ6w@mail.gmail.com>
-From:   Dhaval Giani <dhaval.giani@gmail.com>
-Date:   Wed, 22 May 2019 18:11:34 +0200
-Message-ID: <CAPhKKr9nm+JoLUu5g4ruop0589R0Mwbd+gqgG3T+WccjtUjw+g@mail.gmail.com>
-Subject: Re: Linux Testing Microconference at LPC
-To:     Sasha Levin <alexander.levin@microsoft.com>,
-        shuah <shuah@kernel.org>, Kevin Hilman <khilman@baylibre.com>,
-        Tim Bird <tbird20d@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>, douglas.raillard@arm.com,
-        ionela.voinescu@arm.com
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        "Carpenter,Dan" <dan.carpenter@oracle.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        gustavo padovan <gustavo.padovan@collabora.co.uk>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        knut omang <knut.omang@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Please let us know what topics you believe should be a part of the
-> micro conference this year.
+This enables devicetree bindings to specify that a given GPIO should be
+driven low or high.
 
-At OSPM right now, Douglas and Ionela were talking about their
-scheduler behavioral testing framework using LISA and rt-app. This is
-an interesting topic, and I think has a lot of scope for making
-scheduler testing/behaviour more predictable as well as
-analyze/validate scheduler behavior. I am hoping they are able to make
-it to LPC this year.
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+---
+ drivers/pinctrl/pinctrl-ingenic.c | 23 ++++++++++++++++++++++-
+ 1 file changed, 22 insertions(+), 1 deletion(-)
 
-Dhaval
+diff --git a/drivers/pinctrl/pinctrl-ingenic.c b/drivers/pinctrl/pinctrl-ingenic.c
+index a83ddd52efdd..07342bc769d1 100644
+--- a/drivers/pinctrl/pinctrl-ingenic.c
++++ b/drivers/pinctrl/pinctrl-ingenic.c
+@@ -1154,19 +1154,30 @@ static void ingenic_set_bias(struct ingenic_pinctrl *jzpc,
+ 		ingenic_config_pin(jzpc, pin, JZ4740_GPIO_PULL_DIS, !enabled);
+ }
+ 
++static void ingenic_set_output_level(struct ingenic_pinctrl *jzpc,
++				     unsigned int pin, bool high)
++{
++	if (jzpc->version >= ID_JZ4770)
++		ingenic_config_pin(jzpc, pin, JZ4770_GPIO_PAT0, high);
++	else
++		ingenic_config_pin(jzpc, pin, JZ4740_GPIO_DATA, high);
++}
++
+ static int ingenic_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
+ 		unsigned long *configs, unsigned int num_configs)
+ {
+ 	struct ingenic_pinctrl *jzpc = pinctrl_dev_get_drvdata(pctldev);
+ 	unsigned int idx = pin % PINS_PER_GPIO_CHIP;
+ 	unsigned int offt = pin / PINS_PER_GPIO_CHIP;
+-	unsigned int cfg;
++	unsigned int cfg, arg;
++	int ret;
+ 
+ 	for (cfg = 0; cfg < num_configs; cfg++) {
+ 		switch (pinconf_to_config_param(configs[cfg])) {
+ 		case PIN_CONFIG_BIAS_DISABLE:
+ 		case PIN_CONFIG_BIAS_PULL_UP:
+ 		case PIN_CONFIG_BIAS_PULL_DOWN:
++		case PIN_CONFIG_OUTPUT:
+ 			continue;
+ 		default:
+ 			return -ENOTSUPP;
+@@ -1174,6 +1185,8 @@ static int ingenic_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
+ 	}
+ 
+ 	for (cfg = 0; cfg < num_configs; cfg++) {
++		arg = pinconf_to_config_argument(configs[cfg]);
++
+ 		switch (pinconf_to_config_param(configs[cfg])) {
+ 		case PIN_CONFIG_BIAS_DISABLE:
+ 			dev_dbg(jzpc->dev, "disable pull-over for pin P%c%u\n",
+@@ -1197,6 +1210,14 @@ static int ingenic_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
+ 			ingenic_set_bias(jzpc, pin, true);
+ 			break;
+ 
++		case PIN_CONFIG_OUTPUT:
++			ret = pinctrl_gpio_direction_output(pin);
++			if (ret)
++				return ret;
++
++			ingenic_set_output_level(jzpc, pin, arg);
++			break;
++
+ 		default:
+ 			unreachable();
+ 		}
+-- 
+2.21.0.593.g511ec345e18
+
