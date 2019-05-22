@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9BFEC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:23:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D343C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:23:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7BB021871
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:23:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBB4B21874
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:23:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558552982;
-	bh=e6LFd7jmW39mo9lnQy+F1wiUYzgcCZS9C8c43hpfcvA=;
+	s=default; t=1558552987;
+	bh=JuG4cjSrEiAD9uqYd6JALzbBa+2Lcldn3NuzaOE46iY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Bxd4YlN3eAmtymOz630vHgN0kVEVDHhXSEALauffq71UuVw5N6czIghpWljXhgZKr
-	 egs49ZsrTA1KqOv5mkmIMqPXdCQvFwCZjfCXnPnseGr5y/5H82BgzC2SZATwfoI08+
-	 r658ORW7JRKnzNrQhRV1h6suJQd8CeSQHk7kLz+g=
+	b=LAUibntjsOlbnoww7D2aJ6vSaprBKJ8ONwRmfG53TdlNDJL4quOCwuvep2B4KmWa+
+	 iTSOxMubXEsgbnc6EAZAo3WI4WDd5DI7dwGQTvHATJrc4c+o/4Cn3xVulhV48TLbrC
+	 8hVkiTZ9tSzbCtptNiUaDjr2DISd40MPD/6zLmjE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730721AbfEVTXB (ORCPT
+        id S1730753AbfEVTXG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:23:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43838 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:23:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729958AbfEVTW7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:22:59 -0400
+        id S1729958AbfEVTXC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:23:02 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E30521855;
-        Wed, 22 May 2019 19:22:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 66E45217D7;
+        Wed, 22 May 2019 19:23:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558552979;
-        bh=e6LFd7jmW39mo9lnQy+F1wiUYzgcCZS9C8c43hpfcvA=;
+        s=default; t=1558552982;
+        bh=JuG4cjSrEiAD9uqYd6JALzbBa+2Lcldn3NuzaOE46iY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qEwvNOC+A72na9Ybm6HlIDKiCu5YJCm/B0nOAJLyNJsAchhHczqcBfxrRAPGMmKTC
-         9H6u1J4wHF0AiTrY6tvVz6ZkbpdrSAwkHNBym2EBCnLj4PqO14N7Yv6aNvTLjH8MD4
-         um0hj68xg6F00HHNg+TGz1O9cSphkzAcHUFSTXU8=
+        b=WQUSTudSoj39MiXHnicfsmGIWdcLNGugPZPj+tyIf/hRZCNaIw3s2kVXUh7VmALJg
+         Jsgy1Tu5CCyLOE2Ht207ogIil7vsYGHfNf+17bhncTgBdX68egWzj6x/j8ZcVt7FLi
+         8T3JpK4SnTWcRr+erAnKQVVz/ZRFzFZNCAEtXOgk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qu Wenruo <wqu@suse.com>, Filipe Manana <fdmanana@suse.com>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 059/375] btrfs: Don't panic when we can't find a root key
-Date:   Wed, 22 May 2019 15:15:59 -0400
-Message-Id: <20190522192115.22666-59-sashal@kernel.org>
+Cc:     Johannes Berg <johannes.berg@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 060/375] iwlwifi: pcie: don't crash on invalid RX interrupt
+Date:   Wed, 22 May 2019 15:16:00 -0400
+Message-Id: <20190522192115.22666-60-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192115.22666-1-sashal@kernel.org>
 References: <20190522192115.22666-1-sashal@kernel.org>
@@ -60,51 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qu Wenruo <wqu@suse.com>
+From: Johannes Berg <johannes.berg@intel.com>
 
-[ Upstream commit 7ac1e464c4d473b517bb784f30d40da1f842482e ]
+[ Upstream commit 30f24eabab8cd801064c5c37589d803cb4341929 ]
 
-When we failed to find a root key in btrfs_update_root(), we just panic.
+If for some reason the device gives us an RX interrupt before we're
+ready for it, perhaps during device power-on with misconfigured IRQ
+causes mapping or so, we can crash trying to access the queues.
 
-That's definitely not cool, fix it by outputting an unique error
-message, aborting current transaction and return -EUCLEAN. This should
-not normally happen as the root has been used by the callers in some
-way.
+Prevent that by checking that we actually have RXQs and that they
+were properly allocated.
 
-Reviewed-by: Filipe Manana <fdmanana@suse.com>
-Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
-Signed-off-by: Qu Wenruo <wqu@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/root-tree.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ drivers/net/wireless/intel/iwlwifi/pcie/rx.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/fs/btrfs/root-tree.c b/fs/btrfs/root-tree.c
-index 893d12fbfda07..1b9a5d0de1392 100644
---- a/fs/btrfs/root-tree.c
-+++ b/fs/btrfs/root-tree.c
-@@ -137,11 +137,14 @@ int btrfs_update_root(struct btrfs_trans_handle *trans, struct btrfs_root
- 		goto out;
- 	}
+diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/rx.c b/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
+index 8d4f0628622bb..12f02aaf923ed 100644
+--- a/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
++++ b/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
+@@ -1434,10 +1434,15 @@ static struct iwl_rx_mem_buffer *iwl_pcie_get_rxb(struct iwl_trans *trans,
+ static void iwl_pcie_rx_handle(struct iwl_trans *trans, int queue)
+ {
+ 	struct iwl_trans_pcie *trans_pcie = IWL_TRANS_GET_PCIE_TRANS(trans);
+-	struct iwl_rxq *rxq = &trans_pcie->rxq[queue];
++	struct iwl_rxq *rxq;
+ 	u32 r, i, count = 0;
+ 	bool emergency = false;
  
--	if (ret != 0) {
--		btrfs_print_leaf(path->nodes[0]);
--		btrfs_crit(fs_info, "unable to update root key %llu %u %llu",
--			   key->objectid, key->type, key->offset);
--		BUG_ON(1);
-+	if (ret > 0) {
-+		btrfs_crit(fs_info,
-+			"unable to find root key (%llu %u %llu) in tree %llu",
-+			key->objectid, key->type, key->offset,
-+			root->root_key.objectid);
-+		ret = -EUCLEAN;
-+		btrfs_abort_transaction(trans, ret);
-+		goto out;
- 	}
- 
- 	l = path->nodes[0];
++	if (WARN_ON_ONCE(!trans_pcie->rxq || !trans_pcie->rxq[queue].bd))
++		return;
++
++	rxq = &trans_pcie->rxq[queue];
++
+ restart:
+ 	spin_lock(&rxq->lock);
+ 	/* uCode's read index (stored in shared DRAM) indicates the last Rx
 -- 
 2.20.1
 
