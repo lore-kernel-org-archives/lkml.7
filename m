@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 255ADC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:23:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 276D3C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:23:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED9AE21873
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:23:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F03F22184E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:23:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558553030;
-	bh=lOAMxzkToxe3qagEy8KPYQKMxFkKtyRzcd+10Z2xQgw=;
+	s=default; t=1558553035;
+	bh=sS1Y0l35oqmFX6a5IioTu2h0Jv6eo9l1Z6TWaxd10As=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GsP5FK5M0in0jGGE2jdunWdn/ZU6UXqXyHYA0DC0shUVDZXb/WQKwIW2E+WakBx7W
-	 OrZweQANdKAqivRtImzeW9wOijFffryTzcXUmnA39TBPhezNAOVOGGg53Q94najEch
-	 95VnlpIrr6c1b910BfaBypEaz2xEebJJ883Z+FCc=
+	b=1O7dcPcmiwG5VC+KOGUFYBakeKd0SN7ap4z4sg07kdHHIwCB0F1QOPeq+BjtffjNf
+	 tPqI4Pwv5Sq7UCARfE7iObFu+IJ0Gbck9yWX4psEcRjb/a+gA1EUSPhCoHn7SzKg0m
+	 R5EmgY9DnmfMrEbtFl8s7P+xV7AjqK/4z/bI2qts=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731002AbfEVTXt (ORCPT
+        id S1731034AbfEVTXy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:23:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44624 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:23:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44722 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730947AbfEVTXn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:23:43 -0400
+        id S1730989AbfEVTXr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:23:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98F792184E;
-        Wed, 22 May 2019 19:23:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 093912186A;
+        Wed, 22 May 2019 19:23:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553022;
-        bh=lOAMxzkToxe3qagEy8KPYQKMxFkKtyRzcd+10Z2xQgw=;
+        s=default; t=1558553026;
+        bh=sS1Y0l35oqmFX6a5IioTu2h0Jv6eo9l1Z6TWaxd10As=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b3IahR/yeCE9IL2D+0OU/CTJjEg7aLswhJvbFeRsagErzDwZ7jpcwhQwVdnvXv02b
-         RtqAhTxy65j2ZRbWLVHyJlZncv3+qHOBUImlzbjKr6NCAsBvByBwr4FLKXFpFoQwsJ
-         i/hJO89EUTyQ+oCOCSCDuZgZKetEx6DNthu74fyw=
+        b=UFub2to8V7CUVo1/4jtGwQS2yqFeb+S6ZYXfYkQwfTUvCWS1c0WKuMDIfrFIWsvWL
+         XMdTYopkru7Oxx0rEHrcQuMJnRRLkHGtwswSg3VW9iTCLYXiMJfcPztX3VgQdN+EUB
+         aVobvyz/RLUrABuafzgH6o8SfcziJhZxGltaVw8w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Howells <dhowells@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-afs@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.0 003/317] afs: Fix getting the afs.fid xattr
-Date:   Wed, 22 May 2019 15:18:24 -0400
-Message-Id: <20190522192338.23715-3-sashal@kernel.org>
+Cc:     Andreas Gruenbacher <agruenba@redhat.com>,
+        Ross Lagerwall <ross.lagerwall@citrix.com>,
+        Bob Peterson <rpeterso@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, cluster-devel@redhat.com
+Subject: [PATCH AUTOSEL 5.0 007/317] gfs2: Fix occasional glock use-after-free
+Date:   Wed, 22 May 2019 15:18:28 -0400
+Message-Id: <20190522192338.23715-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192338.23715-1-sashal@kernel.org>
 References: <20190522192338.23715-1-sashal@kernel.org>
@@ -58,58 +60,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Andreas Gruenbacher <agruenba@redhat.com>
 
-[ Upstream commit a2f611a3dc317d8ea1c98ad6c54b911cf7f93193 ]
+[ Upstream commit 9287c6452d2b1f24ea8e84bd3cf6f3c6f267f712 ]
 
-The AFS3 FID is three 32-bit unsigned numbers and is represented as three
-up-to-8-hex-digit numbers separated by colons to the afs.fid xattr.
-However, with the advent of support for YFS, the FID is now a 64-bit volume
-number, a 96-bit vnode/inode number and a 32-bit uniquifier (as before).
-Whilst the sprintf in afs_xattr_get_fid() has been partially updated (it
-currently ignores the upper 32 bits of the 96-bit vnode number), the size
-of the stack-based buffer has not been increased to match, thereby allowing
-stack corruption to occur.
+This patch has to do with the life cycle of glocks and buffers.  When
+gfs2 metadata or journaled data is queued to be written, a gfs2_bufdata
+object is assigned to track the buffer, and that is queued to various
+lists, including the glock's gl_ail_list to indicate it's on the active
+items list.  Once the page associated with the buffer has been written,
+it is removed from the ail list, but its life isn't over until a revoke
+has been successfully written.
 
-Fix this by increasing the buffer size appropriately and conditionally
-including the upper part of the vnode number if it is non-zero.  The latter
-requires the lower part to be zero-padded if the upper part is non-zero.
+So after the block is written, its bufdata object is moved from the
+glock's gl_ail_list to a file-system-wide list of pending revokes,
+sd_log_le_revoke.  At that point the glock still needs to track how many
+revokes it contributed to that list (in gl_revokes) so that things like
+glock go_sync can ensure all the metadata has been not only written, but
+also revoked before the glock is granted to a different node.  This is
+to guarantee journal replay doesn't replay the block once the glock has
+been granted to another node.
 
-Fixes: 3b6492df4153 ("afs: Increase to 64-bit volume ID and 96-bit vnode ID for YFS")
-Signed-off-by: David Howells <dhowells@redhat.com>
+Ross Lagerwall recently discovered a race in which an inode could be
+evicted, and its glock freed after its ail list had been synced, but
+while it still had unwritten revokes on the sd_log_le_revoke list.  The
+evict decremented the glock reference count to zero, which allowed the
+glock to be freed.  After the revoke was written, function
+revoke_lo_after_commit tried to adjust the glock's gl_revokes counter
+and clear its GLF_LFLUSH flag, at which time it referenced the freed
+glock.
+
+This patch fixes the problem by incrementing the glock reference count
+in gfs2_add_revoke when the glock's first bufdata object is moved from
+the glock to the global revokes list. Later, when the glock's last such
+bufdata object is freed, the reference count is decremented. This
+guarantees that whichever process finishes last (the revoke writing or
+the evict) will properly free the glock, and neither will reference the
+glock after it has been freed.
+
+Reported-by: Ross Lagerwall <ross.lagerwall@citrix.com>
+Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
+Signed-off-by: Bob Peterson <rpeterso@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/afs/xattr.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+ fs/gfs2/glock.c | 1 +
+ fs/gfs2/log.c   | 3 ++-
+ fs/gfs2/lops.c  | 6 ++++--
+ 3 files changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/fs/afs/xattr.c b/fs/afs/xattr.c
-index a2cdf25573e24..706801c6c4c4c 100644
---- a/fs/afs/xattr.c
-+++ b/fs/afs/xattr.c
-@@ -69,11 +69,20 @@ static int afs_xattr_get_fid(const struct xattr_handler *handler,
- 			     void *buffer, size_t size)
+diff --git a/fs/gfs2/glock.c b/fs/gfs2/glock.c
+index 2d25d89e77f9b..c925e9ec68f44 100644
+--- a/fs/gfs2/glock.c
++++ b/fs/gfs2/glock.c
+@@ -140,6 +140,7 @@ void gfs2_glock_free(struct gfs2_glock *gl)
  {
- 	struct afs_vnode *vnode = AFS_FS_I(inode);
--	char text[8 + 1 + 8 + 1 + 8 + 1];
-+	char text[16 + 1 + 24 + 1 + 8 + 1];
- 	size_t len;
+ 	struct gfs2_sbd *sdp = gl->gl_name.ln_sbd;
  
--	len = sprintf(text, "%llx:%llx:%x",
--		      vnode->fid.vid, vnode->fid.vnode, vnode->fid.unique);
-+	/* The volume ID is 64-bit, the vnode ID is 96-bit and the
-+	 * uniquifier is 32-bit.
-+	 */
-+	len = sprintf(text, "%llx:", vnode->fid.vid);
-+	if (vnode->fid.vnode_hi)
-+		len += sprintf(text + len, "%x%016llx",
-+			       vnode->fid.vnode_hi, vnode->fid.vnode);
-+	else
-+		len += sprintf(text + len, "%llx", vnode->fid.vnode);
-+	len += sprintf(text + len, ":%x", vnode->fid.unique);
-+
- 	if (size == 0)
- 		return len;
- 	if (len > size)
++	BUG_ON(atomic_read(&gl->gl_revokes));
+ 	rhashtable_remove_fast(&gl_hash_table, &gl->gl_node, ht_parms);
+ 	smp_mb();
+ 	wake_up_glock(gl);
+diff --git a/fs/gfs2/log.c b/fs/gfs2/log.c
+index b8830fda51e8f..0e04f87a7dddb 100644
+--- a/fs/gfs2/log.c
++++ b/fs/gfs2/log.c
+@@ -606,7 +606,8 @@ void gfs2_add_revoke(struct gfs2_sbd *sdp, struct gfs2_bufdata *bd)
+ 	gfs2_remove_from_ail(bd); /* drops ref on bh */
+ 	bd->bd_bh = NULL;
+ 	sdp->sd_log_num_revoke++;
+-	atomic_inc(&gl->gl_revokes);
++	if (atomic_inc_return(&gl->gl_revokes) == 1)
++		gfs2_glock_hold(gl);
+ 	set_bit(GLF_LFLUSH, &gl->gl_flags);
+ 	list_add(&bd->bd_list, &sdp->sd_log_le_revoke);
+ }
+diff --git a/fs/gfs2/lops.c b/fs/gfs2/lops.c
+index 2295042bc6259..f09cd5d8ac631 100644
+--- a/fs/gfs2/lops.c
++++ b/fs/gfs2/lops.c
+@@ -667,8 +667,10 @@ static void revoke_lo_after_commit(struct gfs2_sbd *sdp, struct gfs2_trans *tr)
+ 		bd = list_entry(head->next, struct gfs2_bufdata, bd_list);
+ 		list_del_init(&bd->bd_list);
+ 		gl = bd->bd_gl;
+-		atomic_dec(&gl->gl_revokes);
+-		clear_bit(GLF_LFLUSH, &gl->gl_flags);
++		if (atomic_dec_return(&gl->gl_revokes) == 0) {
++			clear_bit(GLF_LFLUSH, &gl->gl_flags);
++			gfs2_glock_queue_put(gl);
++		}
+ 		kmem_cache_free(gfs2_bufdata_cachep, bd);
+ 	}
+ }
 -- 
 2.20.1
 
