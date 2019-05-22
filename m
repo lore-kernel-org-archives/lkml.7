@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A165C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:33:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0A04C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:33:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF7CA20675
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:33:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E8E82089E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:33:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558553581;
-	bh=r76SnZdYsqqjxF7jn7OHOjD4pNqn91ObB4C4LK5uPms=;
+	s=default; t=1558553588;
+	bh=mz9JaqIdFott20mW8XiibQZCw4WKHgtW1FXf6JzGZTE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sNvOXDzxx5C1Zs8RZUCChQEfKGOahKlLZm1bz5hZluiGxJfgwAveBJvGQPJEiwz3g
-	 FWNUFhRMZSS01XTdqk3lZNwWOCJ//zoiTbMWlcoP5RRCBoL2ix78jQN3iaqKA76mhU
-	 x7m0YJbWTAfLtFswkSC4gwGvR+4cqP0wWu4bJVg8=
+	b=lTwx/PXHGvhK7SvojGEcQDKsdhrGahC8ARrENjViQzZVi58JvDrXqP6NuzGAThCYt
+	 GJdGxWDdcYxvofQn5K5yinsIIyJbwD7Fk8vp74YRmIXp6jrB2FRAng4oF5XhgikBxp
+	 ozIzk8yHirGrlZXpg1AQKYraEKtbb/IaeISbKrr4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387728AbfEVTcB (ORCPT
+        id S1731366AbfEVTdH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:32:01 -0400
+        Wed, 22 May 2019 15:33:07 -0400
 Received: from mail.kernel.org ([198.145.29.99]:55606 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387705AbfEVTb7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:31:59 -0400
+        id S2387686AbfEVTb4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:31:56 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1950821473;
-        Wed, 22 May 2019 19:31:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC9972177E;
+        Wed, 22 May 2019 19:31:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553517;
-        bh=r76SnZdYsqqjxF7jn7OHOjD4pNqn91ObB4C4LK5uPms=;
+        s=default; t=1558553515;
+        bh=mz9JaqIdFott20mW8XiibQZCw4WKHgtW1FXf6JzGZTE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sgLotn9h9ZE2Euws+KkyCXU8PCK7X7ZtwWTjtXJBSFiTARlgOj8ev2p67l6vS5YVi
-         i82MgnsSijQ56cIL4EpiHWqZrwwCJ3JpuAWT/+ttUNmzvGeZ+aJ7xaDMQZxBKp1d7/
-         WS6xymqNMvTJwzOOqNl9fxZAl29myCjVwfvtoRhs=
+        b=nv9pypP7QUoe57gNbLlqkyNbx0mvbc3j/FEW8d1nWYMaJNBnZqCxgogAtgaDQCqtT
+         IDpr8LG4rUWB70qN30tjgOgVOF5XyZRUti61QkAVsnTL8XQMUWKG4lOykATyBGKPAS
+         zNWs1oxRmmCQd4/vxjhdk2YYMRs+7v4nctOOhKis=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Coly Li <colyli@suse.de>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>, linux-bcache@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 21/92] bcache: avoid clang -Wunintialized warning
-Date:   Wed, 22 May 2019 15:30:16 -0400
-Message-Id: <20190522193127.27079-21-sashal@kernel.org>
+Cc:     Tang Junhui <tang.junhui.linux@gmail.com>,
+        Dennis Schridde <devurandom@gmx.net>, Coly Li <colyli@suse.de>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-bcache@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 19/92] bcache: fix failure in journal relplay
+Date:   Wed, 22 May 2019 15:30:14 -0400
+Message-Id: <20190522193127.27079-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522193127.27079-1-sashal@kernel.org>
 References: <20190522193127.27079-1-sashal@kernel.org>
@@ -60,75 +60,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Tang Junhui <tang.junhui.linux@gmail.com>
 
-[ Upstream commit 78d4eb8ad9e1d413449d1b7a060f50b6efa81ebd ]
+[ Upstream commit 631207314d88e9091be02fbdd1fdadb1ae2ed79a ]
 
-clang has identified a code path in which it thinks a
-variable may be unused:
+journal replay failed with messages:
+Sep 10 19:10:43 ceph kernel: bcache: error on
+bb379a64-e44e-4812-b91d-a5599871a3b1: bcache: journal entries
+2057493-2057567 missing! (replaying 2057493-2076601), disabling
+caching
 
-drivers/md/bcache/alloc.c:333:4: error: variable 'bucket' is used uninitialized whenever 'if' condition is false
-      [-Werror,-Wsometimes-uninitialized]
-                        fifo_pop(&ca->free_inc, bucket);
-                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/md/bcache/util.h:219:27: note: expanded from macro 'fifo_pop'
- #define fifo_pop(fifo, i)       fifo_pop_front(fifo, (i))
-                                ^~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/md/bcache/util.h:189:6: note: expanded from macro 'fifo_pop_front'
-        if (_r) {                                                       \
-            ^~
-drivers/md/bcache/alloc.c:343:46: note: uninitialized use occurs here
-                        allocator_wait(ca, bch_allocator_push(ca, bucket));
-                                                                  ^~~~~~
-drivers/md/bcache/alloc.c:287:7: note: expanded from macro 'allocator_wait'
-                if (cond)                                               \
-                    ^~~~
-drivers/md/bcache/alloc.c:333:4: note: remove the 'if' if its condition is always true
-                        fifo_pop(&ca->free_inc, bucket);
-                        ^
-drivers/md/bcache/util.h:219:27: note: expanded from macro 'fifo_pop'
- #define fifo_pop(fifo, i)       fifo_pop_front(fifo, (i))
-                                ^
-drivers/md/bcache/util.h:189:2: note: expanded from macro 'fifo_pop_front'
-        if (_r) {                                                       \
-        ^
-drivers/md/bcache/alloc.c:331:15: note: initialize the variable 'bucket' to silence this warning
-                        long bucket;
-                                   ^
+The reason is in journal_reclaim(), when discard is enabled, we send
+discard command and reclaim those journal buckets whose seq is old
+than the last_seq_now, but before we write a journal with last_seq_now,
+the machine is restarted, so the journal with the last_seq_now is not
+written to the journal bucket, and the last_seq_wrote in the newest
+journal is old than last_seq_now which we expect to be, so when we doing
+replay, journals from last_seq_wrote to last_seq_now are missing.
 
-This cannot happen in practice because we only enter the loop
-if there is at least one element in the list.
+It's hard to write a journal immediately after journal_reclaim(),
+and it harmless if those missed journal are caused by discarding
+since those journals are already wrote to btree node. So, if miss
+seqs are started from the beginning journal, we treat it as normal,
+and only print a message to show the miss journal, and point out
+it maybe caused by discarding.
 
-Slightly rearranging the code makes this clearer to both the
-reader and the compiler, which avoids the warning.
+Patch v2 add a judgement condition to ignore the missed journal
+only when discard enabled as Coly suggested.
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+(Coly Li: rebase the patch with other changes in bch_journal_replay())
+
+Signed-off-by: Tang Junhui <tang.junhui.linux@gmail.com>
+Tested-by: Dennis Schridde <devurandom@gmx.net>
 Signed-off-by: Coly Li <colyli@suse.de>
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/bcache/alloc.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/md/bcache/journal.c | 25 +++++++++++++++++++++----
+ 1 file changed, 21 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/md/bcache/alloc.c b/drivers/md/bcache/alloc.c
-index 16c3390e5d9f3..d82ae445c9ee3 100644
---- a/drivers/md/bcache/alloc.c
-+++ b/drivers/md/bcache/alloc.c
-@@ -324,10 +324,11 @@ static int bch_allocator_thread(void *arg)
- 		 * possibly issue discards to them, then we add the bucket to
- 		 * the free list:
- 		 */
--		while (!fifo_empty(&ca->free_inc)) {
-+		while (1) {
- 			long bucket;
+diff --git a/drivers/md/bcache/journal.c b/drivers/md/bcache/journal.c
+index dfedc2c1f1e15..e12907fef597c 100644
+--- a/drivers/md/bcache/journal.c
++++ b/drivers/md/bcache/journal.c
+@@ -309,6 +309,18 @@ void bch_journal_mark(struct cache_set *c, struct list_head *list)
+ 	}
+ }
  
--			fifo_pop(&ca->free_inc, bucket);
-+			if (!fifo_pop(&ca->free_inc, bucket))
-+				break;
++bool is_discard_enabled(struct cache_set *s)
++{
++	struct cache *ca;
++	unsigned int i;
++
++	for_each_cache(ca, s, i)
++		if (ca->discard)
++			return true;
++
++	return false;
++}
++
+ int bch_journal_replay(struct cache_set *s, struct list_head *list)
+ {
+ 	int ret = 0, keys = 0, entries = 0;
+@@ -323,10 +335,15 @@ int bch_journal_replay(struct cache_set *s, struct list_head *list)
+ 		BUG_ON(i->pin && atomic_read(i->pin) != 1);
  
- 			if (ca->discard) {
- 				mutex_unlock(&ca->set->bucket_lock);
+ 		if (n != i->j.seq) {
+-			pr_err("bcache: journal entries %llu-%llu missing! (replaying %llu-%llu)",
+-			n, i->j.seq - 1, start, end);
+-			ret = -EIO;
+-			goto err;
++			if (n == start && is_discard_enabled(s))
++				pr_info("bcache: journal entries %llu-%llu may be discarded! (replaying %llu-%llu)",
++					n, i->j.seq - 1, start, end);
++			else {
++				pr_err("bcache: journal entries %llu-%llu missing! (replaying %llu-%llu)",
++					n, i->j.seq - 1, start, end);
++				ret = -EIO;
++				goto err;
++			}
+ 		}
+ 
+ 		for (k = i->j.start;
 -- 
 2.20.1
 
