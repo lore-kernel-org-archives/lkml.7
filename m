@@ -2,134 +2,350 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A785DC282DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 14:16:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 172E0C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 14:17:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C8E620879
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 14:16:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="JenUhgae";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="WaSzPfF5"
+	by mail.kernel.org (Postfix) with ESMTP id E1D7D20879
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 14:17:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729337AbfEVOQn (ORCPT
+        id S1729427AbfEVORD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 10:16:43 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:60248 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727284AbfEVOQm (ORCPT
+        Wed, 22 May 2019 10:17:03 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:39307 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728744AbfEVORC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 10:16:42 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id A3B1960746; Wed, 22 May 2019 14:16:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1558534601;
-        bh=Uo1NDvVI5hg+s8MO2B+ZunEJDNee1Tswu3TB2ofB0Wc=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=JenUhgaeMgNrF0YrkOdsdWO1YTuHp/Bc51S/BzQeIapjR96vW0QtRzCvbjUg03hp7
-         Er502ht2R5fr72E41TMIBbH5flB8fwsMAeNUC34dLK0vAnv/Sq2es0+Ac5DvwnegYQ
-         RvVqohd01yVQRhSa7PtE8pylXruV/lEit7MbWaJE=
-Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jhugo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E33B060746;
-        Wed, 22 May 2019 14:16:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1558534600;
-        bh=Uo1NDvVI5hg+s8MO2B+ZunEJDNee1Tswu3TB2ofB0Wc=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=WaSzPfF56tMpDAzJoGn/0vDdZYTibnbQWOHcXpJMcnvHfC9TC1KICIlrTmudw69/y
-         vZeKj8Wty9Wrt5i/jgMZqOCRVju9sLjtVKj+SNwTDs9gSYJeOYJj9yfhr7hGG1Kw8t
-         WFrkLB2EWG6d0qaQQTV27EJERcS/iaDT4T6Y3eMs=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E33B060746
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
-Subject: Re: [PATCH 2/3] regulator: qcom_spmi: Add support for PM8005
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>, lgirdwood@gmail.com,
-        agross@kernel.org, david.brown@linaro.org,
-        bjorn.andersson@linaro.org, jcrouse@codeaurora.org,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-References: <20190521164932.14265-1-jeffrey.l.hugo@gmail.com>
- <20190521165315.14379-1-jeffrey.l.hugo@gmail.com>
- <20190521185054.GD16633@sirena.org.uk>
- <51caaee4-dfc9-5b5a-07c7-b1406c178ca3@codeaurora.org>
- <20190522110107.GB8582@sirena.org.uk>
-From:   Jeffrey Hugo <jhugo@codeaurora.org>
-Message-ID: <4e5bdf77-3141-bff6-e5b9-a81a5c73b4e4@codeaurora.org>
-Date:   Wed, 22 May 2019 08:16:38 -0600
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 22 May 2019 10:17:02 -0400
+Received: from litschi.hi.pengutronix.de ([2001:67c:670:100:feaa:14ff:fe6a:8db5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <m.tretter@pengutronix.de>)
+        id 1hTS39-0006Rz-8d; Wed, 22 May 2019 16:16:59 +0200
+Date:   Wed, 22 May 2019 16:16:55 +0200
+From:   Michael Tretter <m.tretter@pengutronix.de>
+To:     Tomasz Figa <tfiga@chromium.org>
+Cc:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Pawel Osciak <posciak@chromium.org>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Kamil Debski <kamil@wypas.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Jeongtae Park <jtp.park@samsung.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "Tiffany Lin (=?UTF-8?B?5p6X5oWn54+K?=) " <tiffany.lin@mediatek.com>,
+        "Andrew-CT Chen (=?UTF-8?B?6Zmz5pm66L+q?=) " 
+        <andrew-ct.chen@mediatek.com>,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        Todor Tomov <todor.tomov@linaro.org>,
+        Nicolas Dufresne <nicolas@ndufresne.ca>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        dave.stevenson@raspberrypi.org,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Maxime Jourdan <maxi.jourdan@wanadoo.fr>
+Subject: Re: [PATCH v3 2/2] media: docs-rst: Document memory-to-memory video
+ encoder interface
+Message-ID: <20190522161655.29ed1653@litschi.hi.pengutronix.de>
+In-Reply-To: <CAAFQd5Ci6QCFyVtTo11NeKZ2KA+keicqoVd72mOyhRK8-tGrsQ@mail.gmail.com>
+References: <20190124100419.26492-1-tfiga@chromium.org>
+        <20190124100419.26492-3-tfiga@chromium.org>
+        <cb3c73e0-9481-54d1-8730-69e51655d7d8@xs4all.nl>
+        <CAAFQd5AqRzGehW6fN4P=_oVdPdH+bJQqKhxgP6zsu80p-74bXA@mail.gmail.com>
+        <fded491f-8a25-3283-76c4-dee3dd56045e@xs4all.nl>
+        <CAAFQd5CYT=eA_eFyHLTePBQatOBVwsoDjAfMoybJeWrO7V-raA@mail.gmail.com>
+        <2376896b-0087-5eee-a4b9-6ad03b0fef9c@xs4all.nl>
+        <CAAFQd5BWXhTBWM0DtakC6KgrBdXbP_3rw5V4RhV53kFzh0awvw@mail.gmail.com>
+        <CAAFQd5Ci6QCFyVtTo11NeKZ2KA+keicqoVd72mOyhRK8-tGrsQ@mail.gmail.com>
+Organization: Pengutronix
+X-Mailer: Claws Mail 3.14.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20190522110107.GB8582@sirena.org.uk>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:feaa:14ff:fe6a:8db5
+X-SA-Exim-Mail-From: m.tretter@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/22/2019 5:01 AM, Mark Brown wrote:
-> On Tue, May 21, 2019 at 05:16:06PM -0600, Jeffrey Hugo wrote:
->> On 5/21/2019 12:50 PM, Mark Brown wrote:
+On Wed, 22 May 2019 17:43:49 +0900, Tomasz Figa wrote:
+> On Tue, Apr 9, 2019 at 6:43 PM Tomasz Figa <tfiga@chromium.org> wrote:
+> >
+> > On Tue, Apr 9, 2019 at 6:37 PM Hans Verkuil <hverkuil@xs4all.nl> wrote:  
+> > >
+> > > On 4/9/19 9:11 AM, Tomasz Figa wrote:  
+> > > > On Mon, Apr 8, 2019 at 5:43 PM Hans Verkuil <hverkuil@xs4all.nl> wrote:  
+> > > >>
+> > > >> On 4/8/19 10:36 AM, Tomasz Figa wrote:  
+> > > >>> On Mon, Mar 25, 2019 at 10:12 PM Hans Verkuil <hverkuil@xs4all.nl> wrote:  
+> > > >>>>
+> > > >>>> Another comment found while creating compliance tests:
+> > > >>>>
+> > > >>>> On 1/24/19 11:04 AM, Tomasz Figa wrote:  
+> > > >>>>> +Drain
+> > > >>>>> +=====
+> > > >>>>> +
+> > > >>>>> +To ensure that all the queued ``OUTPUT`` buffers have been processed and the
+> > > >>>>> +related ``CAPTURE`` buffers are given to the client, the client must follow the
+> > > >>>>> +drain sequence described below. After the drain sequence ends, the client has
+> > > >>>>> +received all encoded frames for all ``OUTPUT`` buffers queued before the
+> > > >>>>> +sequence was started.
+> > > >>>>> +
+> > > >>>>> +1. Begin the drain sequence by issuing :c:func:`VIDIOC_ENCODER_CMD`.
+> > > >>>>> +
+> > > >>>>> +   * **Required fields:**
+> > > >>>>> +
+> > > >>>>> +     ``cmd``
+> > > >>>>> +         set to ``V4L2_ENC_CMD_STOP``
+> > > >>>>> +
+> > > >>>>> +     ``flags``
+> > > >>>>> +         set to 0
+> > > >>>>> +
+> > > >>>>> +     ``pts``
+> > > >>>>> +         set to 0
+> > > >>>>> +
+> > > >>>>> +   .. warning::
+> > > >>>>> +
+> > > >>>>> +      The sequence can be only initiated if both ``OUTPUT`` and ``CAPTURE``
+> > > >>>>> +      queues are streaming. For compatibility reasons, the call to
+> > > >>>>> +      :c:func:`VIDIOC_ENCODER_CMD` will not fail even if any of the queues is
+> > > >>>>> +      not streaming, but at the same time it will not initiate the `Drain`
+> > > >>>>> +      sequence and so the steps described below would not be applicable.
+> > > >>>>> +
+> > > >>>>> +2. Any ``OUTPUT`` buffers queued by the client before the
+> > > >>>>> +   :c:func:`VIDIOC_ENCODER_CMD` was issued will be processed and encoded as
+> > > >>>>> +   normal. The client must continue to handle both queues independently,
+> > > >>>>> +   similarly to normal encode operation. This includes:
+> > > >>>>> +
+> > > >>>>> +   * queuing and dequeuing ``CAPTURE`` buffers, until a buffer marked with the
+> > > >>>>> +     ``V4L2_BUF_FLAG_LAST`` flag is dequeued,
+> > > >>>>> +
+> > > >>>>> +     .. warning::
+> > > >>>>> +
+> > > >>>>> +        The last buffer may be empty (with :c:type:`v4l2_buffer`
+> > > >>>>> +        ``bytesused`` = 0) and in that case it must be ignored by the client,
+> > > >>>>> +        as it does not contain an encoded frame.
+> > > >>>>> +
+> > > >>>>> +     .. note::
+> > > >>>>> +
+> > > >>>>> +        Any attempt to dequeue more buffers beyond the buffer marked with
+> > > >>>>> +        ``V4L2_BUF_FLAG_LAST`` will result in a -EPIPE error from
+> > > >>>>> +        :c:func:`VIDIOC_DQBUF`.
+> > > >>>>> +
+> > > >>>>> +   * dequeuing processed ``OUTPUT`` buffers, until all the buffers queued
+> > > >>>>> +     before the ``V4L2_ENC_CMD_STOP`` command are dequeued,
+> > > >>>>> +
+> > > >>>>> +   * dequeuing the ``V4L2_EVENT_EOS`` event, if the client subscribes to it.
+> > > >>>>> +
+> > > >>>>> +   .. note::
+> > > >>>>> +
+> > > >>>>> +      For backwards compatibility, the encoder will signal a ``V4L2_EVENT_EOS``
+> > > >>>>> +      event when the last frame has been decoded and all frames are ready to be
+> > > >>>>> +      dequeued. It is deprecated behavior and the client must not rely on it.
+> > > >>>>> +      The ``V4L2_BUF_FLAG_LAST`` buffer flag should be used instead.
+> > > >>>>> +
+> > > >>>>> +3. Once all ``OUTPUT`` buffers queued before the ``V4L2_ENC_CMD_STOP`` call are
+> > > >>>>> +   dequeued and the last ``CAPTURE`` buffer is dequeued, the encoder is stopped
+> > > >>>>> +   and it will accept, but not process any newly queued ``OUTPUT`` buffers
+> > > >>>>> +   until the client issues any of the following operations:
+> > > >>>>> +
+> > > >>>>> +   * ``V4L2_ENC_CMD_START`` - the encoder will not be reset and will resume
+> > > >>>>> +     operation normally, with all the state from before the drain,  
+> > > >>>>
+> > > >>>> I assume that calling CMD_START when *not* draining will succeed but does nothing.
+> > > >>>>
+> > > >>>> In other words: while draining is in progress START will return EBUSY. When draining
+> > > >>>> was finished, then START will resume the encoder. In all other cases it just returns
+> > > >>>> 0 since the encoder is really already started.
+> > > >>>>  
+> > > >>>
+> > > >>> Yes, that was the intention and seems to be the closest to the
+> > > >>> behavior described in the existing documentation.
+> > > >>>  
+> > > >>>>> +
+> > > >>>>> +   * a pair of :c:func:`VIDIOC_STREAMOFF` and :c:func:`VIDIOC_STREAMON` on the
+> > > >>>>> +     ``CAPTURE`` queue - the encoder will be reset (see the `Reset` sequence)
+> > > >>>>> +     and then resume encoding,
+> > > >>>>> +
+> > > >>>>> +   * a pair of :c:func:`VIDIOC_STREAMOFF` and :c:func:`VIDIOC_STREAMON` on the
+> > > >>>>> +     ``OUTPUT`` queue - the encoder will resume operation normally, however any
+> > > >>>>> +     source frames queued to the ``OUTPUT`` queue between ``V4L2_ENC_CMD_STOP``
+> > > >>>>> +     and :c:func:`VIDIOC_STREAMOFF` will be discarded.
+> > > >>>>> +
+> > > >>>>> +.. note::
+> > > >>>>> +
+> > > >>>>> +   Once the drain sequence is initiated, the client needs to drive it to
+> > > >>>>> +   completion, as described by the steps above, unless it aborts the process by
+> > > >>>>> +   issuing :c:func:`VIDIOC_STREAMOFF` on any of the ``OUTPUT`` or ``CAPTURE``
+> > > >>>>> +   queues.  The client is not allowed to issue ``V4L2_ENC_CMD_START`` or
+> > > >>>>> +   ``V4L2_ENC_CMD_STOP`` again while the drain sequence is in progress and they
+> > > >>>>> +   will fail with -EBUSY error code if attempted.  
+> > > >>>>
+> > > >>>> I assume calling STOP again once the drain sequence completed just returns 0 and
+> > > >>>> doesn't do anything else (since we're already stopped).
+> > > >>>>  
+> > > >>>
+> > > >>> Right.
+> > > >>>  
+> > > >>>>> +
+> > > >>>>> +   Although mandatory, the availability of encoder commands may be queried
+> > > >>>>> +   using :c:func:`VIDIOC_TRY_ENCODER_CMD`.  
+> > > >>>>
+> > > >>>> Some corner cases:
+> > > >>>>
+> > > >>>> 1) No buffers are queued on either vb2_queue, but STREAMON is called for both queues.
+> > > >>>>    Now ENC_CMD_STOP is issued. What should happen?
+> > > >>>>
+> > > >>>>    Proposal: the next time the applications queues a CAPTURE buffer it is returned
+> > > >>>>    at once as an empty buffer with FLAG_LAST set.
+> > > >>>>  
+> > > >>>
+> > > >>> SGTM. It's actually similar to a relatively common case where all
+> > > >>> CAPTURE buffers have been dequeued and the application has to refill
+> > > >>> the CAPTURE queue, but in the meantime a drain request needs to be
+> > > >>> issued.
+> > > >>>  
+> > > >>>> 2) Both queues are streaming and buffers have been encoded, but currently no buffers
+> > > >>>>    are queued on either vb2_queue. Now ENC_CMD_STOP is issued. What should happen?
+> > > >>>>
+> > > >>>>    Proposal: the next time the applications queues a CAPTURE buffer it is returned
+> > > >>>>    at once as an empty buffer with FLAG_LAST set. This is consistent with the
+> > > >>>>    previous corner case.  
+> > > >>>
+> > > >>> Agreed.
+> > > >>>  
+> > > >>>>
+> > > >>>> 3) The CAPTURE queue contains buffers, the OUTPUT queue does not. Now ENC_CMD_STOP
+> > > >>>>    is issued. What should happen?
+> > > >>>>
+> > > >>>>    Proposal: the oldest CAPTURE buffer in the ready queue is returned as an empty
+> > > >>>>    buffer with FLAG_LAST set.  
+> > > >>>
+> > > >>> Generally agreed, but not sure if there is a reason to specifically
+> > > >>> refer to the oldest buffer. (I'm personally for keeping the queues
+> > > >>> ordered, though...)  
+> > > >>
+> > > >> Feel free to rephrase. Perhaps: "an empty CAPTURE buffer with FLAG_LAST set should be
+> > > >> queued up for userspace to signal that the encoder has stopped." Or something along
+> > > >> those lines.  
+> > > >
+> > > > I've added a note:
+> > > >
+> > > >    For reference, handling of various corner cases is described below:
+> > > >
+> > > >    * In case of no buffer in the ``OUTPUT`` queue at the time the
+> > > >      ``V4L2_ENC_CMD_STOP`` command was issued, the drain sequence completes
+> > > >      immediately and the encoder returns an empty ``CAPTURE`` buffer with the
+> > > >      ``V4L2_BUF_FLAG_LAST`` flag set.
+> > > >
+> > > >    * In case of no buffer in the ``CAPTURE`` queue at the time the drain
+> > > >      sequence completes, the next time the client queues a ``CAPTURE`` buffer
+> > > >      it is returned at once as an empty buffer with the ``V4L2_BUF_FLAG_LAST``
+> > > >      flag set.
+> > > >
+> > > >    * If :c:func:`VIDIOC_STREAMOFF` is called on the ``CAPTURE`` queue in the
+> > > >      middle of the drain sequence, the drain sequence is cancelled and all  
+> > >
+> > > cancelled -> canceled
+> > >  
+> > > >      ``CAPTURE`` buffers are implicitly returned to the userpace.  
+> > >
+> > > userpace -> userspace
+> > >  
+> >
+> > Actually changed it to "client".
+> >  
+> > > >
+> > > >    * If :c:func:`VIDIOC_STREAMOFF` is called on the ``OUTPUT`` queue in the
+> > > >      middle of the drain sequence, the drain sequence completes immediately and
+> > > >      next ``CAPTURE`` buffer will be returned empty with the
+> > > >      ``V4L2_BUF_FLAG_LAST`` flag set.
+> > > >
+> > > > Slightly changed the split into cases to cover behaviors rather than
+> > > > conditions. WDYT?  
+> > >
+> > > Looks good (with those two typos fixed).
+> > >  
+> >
+> > Thanks.  
 > 
->>>> +static int spmi_regulator_common_list_voltage(struct regulator_dev *rdev,
->>>> +					      unsigned selector);
->>>> +
->>>> +static int spmi_regulator_common2_set_voltage(struct regulator_dev *rdev,
->>>> +					      unsigned selector)
+> Hmm, we actually looked into implementing this in mtk-vcodec and
+> handling of this corner case gets quite complicated. When stopping the
+> streaming on OUTPUT, you may not have any available CAPTURE buffer, so
+> you need to keep some extra state in the driver and check it in vb2
+> .buf_queue for CAPTURE to return the first buffer and complete the
+> drain.
 > 
->>> Eeew, can we not have better names?
+> The general handling of drain would have to look like this:
+>  - VIDIOC_DECODER_CMD must check if a drain isn't already in progress
+> and also whether the queues are streaming,
+>  - STREAMOFF(CAPTURE) needs to cancel any pending drain,
+>  - STREAMOFF(OUTPUT) needs to return a CAPTURE buffer with LAST set if
+> there is one or postpone it until a buffer is queued,
+>  - QBUF(CAPTURE) must return the buffer instantly if such return was
+> postponed by STREAMOFF(OUTPUT).
+>  - DQBUF(CAPTURE) of a buffer with the LAST flag set would finish the sequence.
 > 
->> I'm open to suggestions.  Apparently there are two register common register
->> schemes - the old one and the new one.  PMIC designs after some random point
->> in time are all the new register scheme per the documentation I see.
-> 
->> As far as I an aware, the FT426 design is the first design to be added to
->> this driver to make use of the new scheme, but I expect more to be supported
->> in future, thus I'm reluctant to make these ft426 specific in the name.
-> 
-> If there's a completely new register map why are these even in the same
-> driver?
+> Sounds like we definitely need some generic code to handle this...
 
-Its not completely new, its a derivative of the old scheme.  Of the 104 
-registers, approximately 5 have been modified, therefore the new scheme 
-is 95% compatible with the old one.  Duplicating a 1883 line driver to 
-handle a change in 5% of the register space seems less than ideal. 
-Particularly considering your previous comments seem to indicate that 
-you feel its pretty trivial to handle the quirks associated with the 
-changes in this driver.
+I implemented this as well for allegro. I ended up exactly with an
+additional state (ALLEGRO_STATE_WAIT_FOR_BUFFER) to handle this corner
+case. The implementation was tricky and I would highly appreciate
+generic code that is used by other drivers as well.
 
-> 
->>>> +	if (reg == SPMI_COMMON2_MODE_HPM_MASK)
->>>> +		return REGULATOR_MODE_NORMAL;
->>>> +
->>>> +	if (reg == SPMI_COMMON2_MODE_AUTO_MASK)
->>>> +		return REGULATOR_MODE_FAST;
->>>> +
->>>> +	return REGULATOR_MODE_IDLE;
->>>> +}
-> 
->>> This looks like you want to write a switch statement.
-> 
->> It follows the existing style in the driver, but sure I can make this a
->> switch.
-> 
-> Please fix the rest of the driver as well then.
-> 
+Michael
 
 
--- 
-Jeffrey Hugo
-Qualcomm Datacenter Technologies as an affiliate of Qualcomm 
-Technologies, Inc.
-Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
+> 
+> >  
+> > >         Hans
+> > >  
+> > > >
+> > > > Best regards,
+> > > > Tomasz
+> > > >  .
+> > > >>
+> > > >> Regards,
+> > > >>
+> > > >>         Hans
+> > > >>  
+> > > >>>  
+> > > >>>>
+> > > >>>> 4) Both queues have queued buffers. ENC_CMD_STOP is issued to start the drain process.
+> > > >>>>    Before the drain process completes STREAMOFF is called for either CAPTURE or
+> > > >>>>    OUTPUT queue. What should happen?
+> > > >>>>
+> > > >>>>    Proposal for STREAMOFF(CAPTURE): aborts the drain process and all CAPTURE buffers are
+> > > >>>>    returned to userspace. If encoding is restarted, then any remaining OUTPUT buffers
+> > > >>>>    will be used as input to the encoder.
+> > > >>>>  
+> > > >>>
+> > > >>> Agreed.
+> > > >>>  
+> > > >>>>    Proposal for STREAMOFF(OUTPUT): the next capture buffer will be empty and have
+> > > >>>>    FLAG_LAST set.  
+> > > >>>
+> > > >>> Agreed.
+> > > >>>  
+> > > >>>>
+> > > >>>> Some of this might have to be documented, but these corner cases should certainly be
+> > > >>>> tested by v4l2-compliance. Before I write those tests I'd like to know if you agree
+> > > >>>> with this.  
+> > > >>>
+> > > >>> Agreed with just one minor comment. Thanks for checking with me!
+> > > >>>
+> > > >>> Best regards,
+> > > >>> Tomasz
+> > > >>>  
+> > > >>  
+> > >  
+> 
