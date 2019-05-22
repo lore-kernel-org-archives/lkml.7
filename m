@@ -2,121 +2,100 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DATE_IN_PAST_12_24,
-	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E6C7C072B5
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 02:29:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B7B7C072B5
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 02:33:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FB512173C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 02:29:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="pzLjNCWj"
+	by mail.kernel.org (Postfix) with ESMTP id 29D36217F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 02:33:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558492397;
+	bh=stsomyQrXg2oFOXmpSx06uL2yS8uJMmKpQW0CHbxwiU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Osw07YssY8wUWtzn0zzR2WPGCLzZbSQnvFcHGerbguDmVTp7cMKTZipiItTmnNb9Y
+	 dZUaxZkCqgykBKJespbmXb1wZ23SxShHw0PpBvmPYNmjmO/a1GM26HnO0rTPQGinzC
+	 5Kw7KcYIS6WiJbtxm2FfIGcxrb4ZkUXniO9ZaaeA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728231AbfEVC34 (ORCPT
+        id S1728320AbfEVCdO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 22:29:56 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:42324 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726466AbfEVC34 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 22:29:56 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4M2T0FR038593;
-        Wed, 22 May 2019 02:29:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id; s=corp-2018-07-02;
- bh=ZXUeQYgZB3O0V7HnlxDvOw49BMFt48EfbIn16aNTl/g=;
- b=pzLjNCWji1W1SDF9Bw9C/ZEezK9tc+A83lNgJZbqCd02orKUVbRCZ6qlapXr3wUJEjWW
- yLGMlFypDraEnHBeGQ9uzFJpoLUMciJGWWBWytfD26rCDCEcH8OtgPkLg0im6fI+cWt3
- BqvzhIaHlvsiXoPR/KNtJt/gJM/M5STmS02611bN5GjX6Hv1LQV2EW3iIZMRQHL2irDk
- WLTKbu8N2tA/IOBxz44m/x7nNsoV0lGg4Oe5Rs83FF9aYup0Z8N0NR0QmTUNlDDo5InV
- +f0mDTzN3f6jUNTmvXopZ2NJCKyUsy9y39NETflGe5gjn9l1Se6pqsc/++3Mc0ZI66xL BA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2smsk58rtk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 22 May 2019 02:29:00 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4M2SDh1017840;
-        Wed, 22 May 2019 02:28:59 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 2smsgsawm3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 22 May 2019 02:28:59 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x4M2SphF018805;
-        Wed, 22 May 2019 02:28:51 GMT
-Received: from z2.cn.oracle.com (/10.182.69.87)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 22 May 2019 02:28:50 +0000
-From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
-To:     linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-Cc:     paulmck@linux.ibm.com, josh@joshtriplett.org, rostedt@goodmis.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-        joel@joelfernandes.org, corbet@lwn.net, tglx@linutronix.de,
-        mingo@kernel.org, gregkh@linuxfoundation.org,
-        keescook@chromium.org, srinivas.eeda@oracle.com,
-        Zhenzhong Duan <zhenzhong.duan@oracle.com>
-Subject: [PATCH v3] doc: kernel-parameters.txt: fix documentation of nmi_watchdog parameter
-Date:   Tue, 21 May 2019 10:32:08 +0800
-Message-Id: <1558405928-29449-1-git-send-email-zhenzhong.duan@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9264 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1905220015
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9264 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905220015
+        Tue, 21 May 2019 22:33:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41738 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727208AbfEVCdO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 22:33:14 -0400
+Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5302B2173C;
+        Wed, 22 May 2019 02:33:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558492393;
+        bh=stsomyQrXg2oFOXmpSx06uL2yS8uJMmKpQW0CHbxwiU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=S9s7o5FgX4z/u7+WIrJ4i4+Qxe4jXFBy3y5hH0XzwyZgwDhA92N2D+Qji5lMGhvct
+         ALiCiNedjpmNN/4R0cPv4AmY+Vx6Ho0GShjq1voZmi5rbAp8MhNOGAnhK4UEhHH7uC
+         q6RDy4zNqynWhzrlKoTS0fuaO0iCWzj2oi/N6fUU=
+Date:   Tue, 21 May 2019 19:33:12 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Roman Penyaev <rpenyaev@suse.de>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Azat Khuzhin <azat@libevent.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 13/13] epoll: implement epoll_create2() syscall
+Message-Id: <20190521193312.42a3fdda1774b1922730e459@linux-foundation.org>
+In-Reply-To: <41b847c48ccbe0c406bd54c16fbc1bf0@suse.de>
+References: <20190516085810.31077-1-rpenyaev@suse.de>
+        <20190516085810.31077-14-rpenyaev@suse.de>
+        <CAK8P3a2-fN_BHEnEHvf4X9Ysy4t0_SnJetQLvFU1kFa3OtM0fQ@mail.gmail.com>
+        <41b847c48ccbe0c406bd54c16fbc1bf0@suse.de>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The default behavior of hardlockup depends on the config of
-CONFIG_BOOTPARAM_HARDLOCKUP_PANIC.
+On Thu, 16 May 2019 12:20:50 +0200 Roman Penyaev <rpenyaev@suse.de> wrote:
 
-Fix the description of nmi_watchdog to make it clear.
+> On 2019-05-16 12:03, Arnd Bergmann wrote:
+> > On Thu, May 16, 2019 at 10:59 AM Roman Penyaev <rpenyaev@suse.de> 
+> > wrote:
+> >> 
+> >> epoll_create2() is needed to accept EPOLL_USERPOLL flags
+> >> and size, i.e. this patch wires up polling from userspace.
+> > 
+> > Could you add the system call to all syscall*.tbl files at the same 
+> > time here?
+> 
+> For all other archs, you mean?  Sure.  But what is the rule of thumb?
+> Sometimes people tend to add to the most common x86 and other tables
+> are left untouched, but then you commit the rest, e.g.
+> 
+> commit 39036cd2727395c3369b1051005da74059a85317
+> Author: Arnd Bergmann <arnd@arndb.de>
+> Date:   Thu Feb 28 13:59:19 2019 +0100
+> 
+>      arch: add pidfd and io_uring syscalls everywhere
+> 
 
-Suggested-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
-Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-Acked-by: Ingo Molnar <mingo@kernel.org>
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-doc@vger.kernel.org
----
- v3: add Suggested-by and Acked-by
- v2: fix description using words suggested by Steven Rostedt
+I thought the preferred approach was to wire up the architectures on
+which the submitter has tested the syscall, then allow the arch
+maintainers to enable the syscall independently?
 
- Documentation/admin-guide/kernel-parameters.txt | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+And to help them in this, provide a test suite for the new syscall
+under tools/testing/selftests/.
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 08df588..b9d4358 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -2805,8 +2805,9 @@
- 			0 - turn hardlockup detector in nmi_watchdog off
- 			1 - turn hardlockup detector in nmi_watchdog on
- 			When panic is specified, panic when an NMI watchdog
--			timeout occurs (or 'nopanic' to override the opposite
--			default). To disable both hard and soft lockup detectors,
-+			timeout occurs (or 'nopanic' to not panic on an NMI
-+			watchdog, if CONFIG_BOOTPARAM_HARDLOCKUP_PANIC is set)
-+			To disable both hard and soft lockup detectors,
- 			please see 'nowatchdog'.
- 			This is useful when you use a panic=... timeout and
- 			need the box quickly up again.
--- 
-1.8.3.1
+https://github.com/rouming/test-tools/blob/master/userpolled-epoll.c
+will certainly help but I do think it would be better to move the test
+into the kernel tree to keep it maintained and so that many people run
+it in their various setups on an ongoing basis.
+
 
