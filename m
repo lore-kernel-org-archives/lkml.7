@@ -7,53 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D30C8C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:32:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3090FC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:32:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A70A52089E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:32:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E83442089E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:32:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558553537;
-	bh=cxE51xDuQ99B+iO3+SW+CxV1y6ZoG6k/FmVMMKosy6E=;
+	s=default; t=1558553546;
+	bh=RcK3tU00by1x1i8xlsXwi4KSIoLbrcvfVHiQQcXb244=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=16ZczYMb04oq+skn7L6jtKmLEnpuZPUFyJAmxRwVfXGFt1rnFF+svK3klTVc2FdKe
-	 OKLZD37IMjg0N6weywl+KRW9LA3XESAPYuk+k7Ei/5RhcT7cb3tgACvnUA7tRFaNjY
-	 /+GHQJ1/pgxQANuhuV1Q4UWc/xxc/qOAfniehdSs=
+	b=icdOS3WKCkl1USknxNmdhgfZeRgtbYqnaxpRZ/jwJsA7wT9GyEvYgu4SAg1nLavRO
+	 6PfHcWIyhmr3prfmofaE3T+3xykPHTTOwnQReQzWt3aVMd1Lps8cme6W9zcv9Hwx3T
+	 Dh9jWrI8YuSUgUc96OX7mBALfP+qHC+68aNPKJRE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387794AbfEVTcQ (ORCPT
+        id S1731046AbfEVTcY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:32:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55868 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:32:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56024 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387762AbfEVTcH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:32:07 -0400
+        id S2387777AbfEVTcP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:32:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8E382089E;
-        Wed, 22 May 2019 19:32:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC17E21473;
+        Wed, 22 May 2019 19:32:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553527;
-        bh=cxE51xDuQ99B+iO3+SW+CxV1y6ZoG6k/FmVMMKosy6E=;
+        s=default; t=1558553534;
+        bh=RcK3tU00by1x1i8xlsXwi4KSIoLbrcvfVHiQQcXb244=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n8W+mZ6pYth4s8bvSWlxauNjNR36JhY5yuUlCvv2qM6I+uVWhFkllMSrF1zC43eQR
-         OV1+Mn2dZRwcfcWzmnvZ1RO3ATH+WM/vDmZQ7eF+0H5+sb+pZTCSIObH9cK7FFVyvW
-         nT3hEy0TJjKHroxD0DfX62GLvNQNem3UZfwkllAk=
+        b=dd+WF4wm5L0hifIRL18iV4wZYm4Ie/8SYcTTAcCmj/8jVijbBkAW0/+3M6hIEs6yQ
+         T332toPR8gUnJ0OI/Lc4HyfC4MsPamx5Lf0MFQEGcPsQokBWTyNC9apG73r3aKJedr
+         hxFpIJ/F2MDqXqUcFK9chvp84R4dzmGQIrrYmmcI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jiri Kosina <jkosina@suse.cz>, Nicolai Stange <nstange@suse.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 25/92] x86/mm: Remove in_nmi() warning from 64-bit implementation of vmalloc_fault()
-Date:   Wed, 22 May 2019 15:30:20 -0400
-Message-Id: <20190522193127.27079-25-sashal@kernel.org>
+Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 30/92] media: coda: clear error return value before picture run
+Date:   Wed, 22 May 2019 15:30:25 -0400
+Message-Id: <20190522193127.27079-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522193127.27079-1-sashal@kernel.org>
 References: <20190522193127.27079-1-sashal@kernel.org>
@@ -66,61 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Kosina <jkosina@suse.cz>
+From: Philipp Zabel <p.zabel@pengutronix.de>
 
-[ Upstream commit a65c88e16f32aa9ef2e8caa68ea5c29bd5eb0ff0 ]
+[ Upstream commit bbeefa7357a648afe70e7183914c87c3878d528d ]
 
-In-NMI warnings have been added to vmalloc_fault() via:
+The error return value is not written by some firmware codecs, such as
+MPEG-2 decode on CodaHx4. Clear the error return value before starting
+the picture run to avoid misinterpreting unrelated values returned by
+sequence initialization as error return value.
 
-  ebc8827f75 ("x86: Barf when vmalloc and kmemcheck faults happen in NMI")
-
-back in the time when our NMI entry code could not cope with nested NMIs.
-
-These days, it's perfectly fine to take a fault in NMI context and we
-don't have to care about the fact that IRET from the fault handler might
-cause NMI nesting.
-
-This warning has already been removed from 32-bit implementation of
-vmalloc_fault() in:
-
-  6863ea0cda8 ("x86/mm: Remove in_nmi() warning from vmalloc_fault()")
-
-but the 64-bit version was omitted.
-
-Remove the bogus warning also from 64-bit implementation of vmalloc_fault().
-
-Reported-by: Nicolai Stange <nstange@suse.de>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Frederic Weisbecker <fweisbec@gmail.com>
-Cc: Joerg Roedel <jroedel@suse.de>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Fixes: 6863ea0cda8 ("x86/mm: Remove in_nmi() warning from vmalloc_fault()")
-Link: http://lkml.kernel.org/r/nycvar.YFH.7.76.1904240902280.9803@cbobk.fhfr.pm
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/mm/fault.c | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/media/platform/coda/coda-bit.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
-index c4dffae5d9390..462c5c30b9a21 100644
---- a/arch/x86/mm/fault.c
-+++ b/arch/x86/mm/fault.c
-@@ -373,8 +373,6 @@ static noinline int vmalloc_fault(unsigned long address)
- 	if (!(address >= VMALLOC_START && address < VMALLOC_END))
- 		return -1;
+diff --git a/drivers/media/platform/coda/coda-bit.c b/drivers/media/platform/coda/coda-bit.c
+index d76511c1c1e3f..a4639813cf35d 100644
+--- a/drivers/media/platform/coda/coda-bit.c
++++ b/drivers/media/platform/coda/coda-bit.c
+@@ -1829,6 +1829,9 @@ static int coda_prepare_decode(struct coda_ctx *ctx)
+ 	/* Clear decode success flag */
+ 	coda_write(dev, 0, CODA_RET_DEC_PIC_SUCCESS);
  
--	WARN_ON_ONCE(in_nmi());
--
- 	/*
- 	 * Copy kernel mappings over when needed. This can also
- 	 * happen within a race in page table update. In the later
++	/* Clear error return value */
++	coda_write(dev, 0, CODA_RET_DEC_PIC_ERR_MB);
++
+ 	trace_coda_dec_pic_run(ctx, meta);
+ 
+ 	coda_command_async(ctx, CODA_COMMAND_PIC_RUN);
 -- 
 2.20.1
 
