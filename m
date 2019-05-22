@@ -2,143 +2,207 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2AB2C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 09:19:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 115D8C18E7D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 09:21:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9947B20675
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 09:19:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB53C21479
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 09:21:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728896AbfEVJTo (ORCPT
+        id S1728906AbfEVJVN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 05:19:44 -0400
-Received: from mx2.suse.de ([195.135.220.15]:48888 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726552AbfEVJTo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 05:19:44 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 843E1ADEC;
-        Wed, 22 May 2019 09:19:42 +0000 (UTC)
-From:   Jiri Slaby <jslaby@suse.cz>
-To:     akpm@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Shakeel Butt <shakeelb@google.com>, cgroups@vger.kernel.org,
-        stable@vger.kernel.org, linux-mm@kvack.org,
-        Raghavendra K T <raghavendra.kt@linux.vnet.ibm.com>
-Subject: [PATCH -resend v2] memcg: make it work on sparse non-0-node systems
-Date:   Wed, 22 May 2019 11:19:40 +0200
-Message-Id: <20190522091940.3615-1-jslaby@suse.cz>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190517114204.6330-1-jslaby@suse.cz>
-References: <20190517114204.6330-1-jslaby@suse.cz>
+        Wed, 22 May 2019 05:21:13 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:35226 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728547AbfEVJVN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 05:21:13 -0400
+Received: by mail-ot1-f65.google.com with SMTP id n14so1448065otk.2;
+        Wed, 22 May 2019 02:21:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=p/fnSZedKvA8Iqi6ZZvsXLPVwAkY8qUX0ojVQgRr2ec=;
+        b=B4nCp9iwVFmDlnlJC3mpp9Nenucc4SJmlDyRV13lkG5kBZSrddXzsrURuvUQIeThZY
+         Ehr3MLMmqeImqAVXm4MVg0w+eWo9Vbs/sZQtaZxZqpoe1koxkysbIkrSQNECIM6dhiR1
+         fPDWm+O1vLzIkp7SM/gQTHak4gmNG++ugA69j6+h0mykjcXAdT+0wfLmGIQkbfJL1ZLY
+         lSrceY8mHFRckl2VDgcEnKlVGibVKvsbCKciGAT+h2MWb4aDM0maoW/w3UCOIpRNMAHP
+         6IlquCcvhUtV8EmXlQirw1K9rFuLYoItJjR3xubziMDu4IQKBebuob/lMpClAq6MK/3x
+         ruyw==
+X-Gm-Message-State: APjAAAVwfxxPYnQ0T+NNzYp61+mgMiw/KoaLOtEw7UuaE9M+ITn2zuta
+        Y4RyMgMaYU2kayeYYgAZZd0n/YjBPU4NAfCFuUk=
+X-Google-Smtp-Source: APXvYqyobpJ63a1iTpV/Vmzl3T4jPFpgqUHVdSsARI3lZgekWUpzNXifpDBaSAjDG4knVag0MFU8Mr62nKwVypF3Ci8=
+X-Received: by 2002:a9d:6195:: with SMTP id g21mr4768otk.179.1558516871479;
+ Wed, 22 May 2019 02:21:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190521145141.9813-1-paul@crapouillou.net> <20190521145141.9813-10-paul@crapouillou.net>
+In-Reply-To: <20190521145141.9813-10-paul@crapouillou.net>
+From:   Mathieu Malaterre <malat@debian.org>
+Date:   Wed, 22 May 2019 11:21:00 +0200
+Message-ID: <CA+7wUsxe4DLmAGNnnXZ3UokguMJ0cOGtu=opQpuAPvN_SH4KUw@mail.gmail.com>
+Subject: Re: [PATCH v12 09/13] MIPS: jz4740: Add DTS nodes for the TCU drivers
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, linux-mips@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-clk@vger.kernel.org, od@zcrc.me
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We have a single node system with node 0 disabled:
-  Scanning NUMA topology in Northbridge 24
-  Number of physical nodes 2
-  Skipping disabled node 0
-  Node 1 MemBase 0000000000000000 Limit 00000000fbff0000
-  NODE_DATA(1) allocated [mem 0xfbfda000-0xfbfeffff]
+On Tue, May 21, 2019 at 4:52 PM Paul Cercueil <paul@crapouillou.net> wrote:
+>
+> Add DTS nodes for the JZ4780, JZ4770 and JZ4740 devicetree files.
+>
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> ---
+>
+> Notes:
+>     v5: New patch
+>
+>     v6: Fix register lengths in watchdog/pwm nodes
+>
+>     v7: No change
+>
+>     v8: - Fix wrong start address for PWM node
+>         - Add system timer and clocksource sub-nodes
+>
+>     v9: Drop timer and clocksource sub-nodes
+>
+>     v10-v11: No change
+>
+>     v12: Drop PWM/watchdog/OST sub-nodes, for now.
+>
+>  arch/mips/boot/dts/ingenic/jz4740.dtsi | 22 ++++++++++++++++++++++
+>  arch/mips/boot/dts/ingenic/jz4770.dtsi | 21 +++++++++++++++++++++
+>  arch/mips/boot/dts/ingenic/jz4780.dtsi | 21 +++++++++++++++++++++
+>  3 files changed, 64 insertions(+)
+>
+> diff --git a/arch/mips/boot/dts/ingenic/jz4740.dtsi b/arch/mips/boot/dts/ingenic/jz4740.dtsi
+> index 2beb78a62b7d..807d9702d4cf 100644
+> --- a/arch/mips/boot/dts/ingenic/jz4740.dtsi
+> +++ b/arch/mips/boot/dts/ingenic/jz4740.dtsi
+> @@ -53,6 +53,28 @@
+>                 clock-names = "rtc";
+>         };
+>
+> +       tcu: timer@10002000 {
+> +               compatible = "ingenic,jz4740-tcu";
+> +               reg = <0x10002000 0x1000>;
+> +               #address-cells = <1>;
+> +               #size-cells = <1>;
+> +               ranges = <0x0 0x10002000 0x1000>;
+> +
+> +               #clock-cells = <1>;
+> +
+> +               clocks = <&cgu JZ4740_CLK_RTC
+> +                         &cgu JZ4740_CLK_EXT
+> +                         &cgu JZ4740_CLK_PCLK
+> +                         &cgu JZ4740_CLK_TCU>;
+> +               clock-names = "rtc", "ext", "pclk", "tcu";
+> +
+> +               interrupt-controller;
+> +               #interrupt-cells = <1>;
+> +
+> +               interrupt-parent = <&intc>;
+> +               interrupts = <23 22 21>;
+> +       };
+> +
+>         rtc_dev: rtc@10003000 {
+>                 compatible = "ingenic,jz4740-rtc";
+>                 reg = <0x10003000 0x40>;
+> diff --git a/arch/mips/boot/dts/ingenic/jz4770.dtsi b/arch/mips/boot/dts/ingenic/jz4770.dtsi
+> index 49ede6c14ff3..70932fd90902 100644
+> --- a/arch/mips/boot/dts/ingenic/jz4770.dtsi
+> +++ b/arch/mips/boot/dts/ingenic/jz4770.dtsi
+> @@ -46,6 +46,27 @@
+>                 #clock-cells = <1>;
+>         };
+>
+> +       tcu: timer@10002000 {
+> +               compatible = "ingenic,jz4770-tcu";
+> +               reg = <0x10002000 0x1000>;
+> +               #address-cells = <1>;
+> +               #size-cells = <1>;
+> +               ranges = <0x0 0x10002000 0x1000>;
+> +
+> +               #clock-cells = <1>;
+> +
+> +               clocks = <&cgu JZ4770_CLK_RTC
+> +                         &cgu JZ4770_CLK_EXT
+> +                         &cgu JZ4770_CLK_PCLK>;
+> +               clock-names = "rtc", "ext", "pclk";
+> +
+> +               interrupt-controller;
+> +               #interrupt-cells = <1>;
+> +
+> +               interrupt-parent = <&intc>;
+> +               interrupts = <27 26 25>;
+> +       };
+> +
+>         pinctrl: pin-controller@10010000 {
+>                 compatible = "ingenic,jz4770-pinctrl";
+>                 reg = <0x10010000 0x600>;
+> diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+> index b03cdec56de9..495082ce7fc5 100644
+> --- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
+> +++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+> @@ -46,6 +46,27 @@
+>                 #clock-cells = <1>;
+>         };
+>
+> +       tcu: timer@10002000 {
 
-This causes crashes in memcg when system boots:
-  BUG: unable to handle kernel NULL pointer dereference at 0000000000000008
-  #PF error: [normal kernel read fault]
-...
-  RIP: 0010:list_lru_add+0x94/0x170
-...
-  Call Trace:
-   d_lru_add+0x44/0x50
-   dput.part.34+0xfc/0x110
-   __fput+0x108/0x230
-   task_work_run+0x9f/0xc0
-   exit_to_usermode_loop+0xf5/0x100
+With W=1, I see:
 
-It is reproducible as far as 4.12. I did not try older kernels. You have
-to have a new enough systemd, e.g. 241 (the reason is unknown -- was not
-investigated). Cannot be reproduced with systemd 234.
+../arch/mips/boot/dts/ingenic/jz4780.dtsi:64.22-83.4: Warning
+(unique_unit_address): /timer@10002000: duplicate unit-address (also
+used in node /watchdog@1000
+2000)
 
-The system crashes because the size of lru array is never updated in
-memcg_update_all_list_lrus and the reads are past the zero-sized array,
-causing dereferences of random memory.
 
-The root cause are list_lru_memcg_aware checks in the list_lru code.
-The test in list_lru_memcg_aware is broken: it assumes node 0 is always
-present, but it is not true on some systems as can be seen above.
-
-So fix this by avoiding checks on node 0. Remember the memcg-awareness
-by a bool flag in struct list_lru.
-
-[v2] use the idea proposed by Vladimir -- the bool flag.
-
-Signed-off-by: Jiri Slaby <jslaby@suse.cz>
-Fixes: 60d3fd32a7a9 ("list_lru: introduce per-memcg lists")
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Suggested-by: Vladimir Davydov <vdavydov.dev@gmail.com>
-Acked-by: Vladimir Davydov <vdavydov.dev@gmail.com>
-Reviewed-by: Shakeel Butt <shakeelb@google.com>
-Cc: <cgroups@vger.kernel.org>
-Cc: <stable@vger.kernel.org>
-Cc: <linux-mm@kvack.org>
-Cc: Raghavendra K T <raghavendra.kt@linux.vnet.ibm.com>
----
-
-This is only a resent patch. I did not send it the akpm's way previously.
-
- include/linux/list_lru.h | 1 +
- mm/list_lru.c            | 8 +++-----
- 2 files changed, 4 insertions(+), 5 deletions(-)
-
-diff --git a/include/linux/list_lru.h b/include/linux/list_lru.h
-index aa5efd9351eb..d5ceb2839a2d 100644
---- a/include/linux/list_lru.h
-+++ b/include/linux/list_lru.h
-@@ -54,6 +54,7 @@ struct list_lru {
- #ifdef CONFIG_MEMCG_KMEM
- 	struct list_head	list;
- 	int			shrinker_id;
-+	bool			memcg_aware;
- #endif
- };
- 
-diff --git a/mm/list_lru.c b/mm/list_lru.c
-index 0730bf8ff39f..d3b538146efd 100644
---- a/mm/list_lru.c
-+++ b/mm/list_lru.c
-@@ -37,11 +37,7 @@ static int lru_shrinker_id(struct list_lru *lru)
- 
- static inline bool list_lru_memcg_aware(struct list_lru *lru)
- {
--	/*
--	 * This needs node 0 to be always present, even
--	 * in the systems supporting sparse numa ids.
--	 */
--	return !!lru->node[0].memcg_lrus;
-+	return lru->memcg_aware;
- }
- 
- static inline struct list_lru_one *
-@@ -451,6 +447,8 @@ static int memcg_init_list_lru(struct list_lru *lru, bool memcg_aware)
- {
- 	int i;
- 
-+	lru->memcg_aware = memcg_aware;
-+
- 	if (!memcg_aware)
- 		return 0;
- 
--- 
-2.21.0
-
+> +               compatible = "ingenic,jz4770-tcu";
+> +               reg = <0x10002000 0x1000>;
+> +               #address-cells = <1>;
+> +               #size-cells = <1>;
+> +               ranges = <0x0 0x10002000 0x1000>;
+> +
+> +               #clock-cells = <1>;
+> +
+> +               clocks = <&cgu JZ4780_CLK_RTCLK
+> +                         &cgu JZ4780_CLK_EXCLK
+> +                         &cgu JZ4780_CLK_PCLK>;
+> +               clock-names = "rtc", "ext", "pclk";
+> +
+> +               interrupt-controller;
+> +               #interrupt-cells = <1>;
+> +
+> +               interrupt-parent = <&intc>;
+> +               interrupts = <27 26 25>;
+> +       };
+> +
+>         rtc_dev: rtc@10003000 {
+>                 compatible = "ingenic,jz4780-rtc";
+>                 reg = <0x10003000 0x4c>;
+> --
+> 2.21.0.593.g511ec345e18
+>
