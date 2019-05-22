@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3991C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:21:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEEA3C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:21:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5E0C21841
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:21:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84D61217D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:21:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558552914;
-	bh=0MBBHq+/wwPBgj0o4eISPDyMTLG6cab4FTlC0BHuuHE=;
+	s=default; t=1558552918;
+	bh=FprT0T9ceOzSbKvrTxOKSrB3aus9Ery68a7fs8LZ6xA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yTT2U71EFYn78vHt1nTn+BlEcZd3jo/3lYj6U0xRw1rPSlqOaB+r2KFMOKrsdcaIj
-	 Elff5ucK0+Sx/Q4T78d/J/2jy8h2hdDjUuYY9rAIenMAlY/XdtEpPPxR2gy9B4jJ1Z
-	 su6rjNyIRPKu/Ag//KpRdCZh3awQA6xrAxQmHJBk=
+	b=mwSfEwF2hVQuQW/6zHRv3l0N4aShijv3dfca8kCaLLNw1gTsc0nyW4GVXA7GUbo8X
+	 9p6IJEBIZzVyxw9I587+VB6rTkB2pKZyyn7lJmEvjETH5v1tRk8ePHT8FjrNRcL20D
+	 HjGM1vfWGFSVGl8JTjSbenn5/FJspqQOQtlyYzcU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730199AbfEVTVy (ORCPT
+        id S1730231AbfEVTV5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:21:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42446 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:21:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42496 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730136AbfEVTVv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:21:51 -0400
+        id S1730164AbfEVTVw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:21:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13C7C2177E;
-        Wed, 22 May 2019 19:21:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 617A721473;
+        Wed, 22 May 2019 19:21:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558552909;
-        bh=0MBBHq+/wwPBgj0o4eISPDyMTLG6cab4FTlC0BHuuHE=;
+        s=default; t=1558552912;
+        bh=FprT0T9ceOzSbKvrTxOKSrB3aus9Ery68a7fs8LZ6xA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QQU+5Iw+95BV+pIWwSjvSD3wWcoIjXbgcwfoLTUB3NzS3xS2EyqCXw65M6wOFKwXb
-         +GLlW6CsV7XWTw6Bwg/7vnX1lVOWCxTpWRi8z5jTE/N4l4jOBzBJzGg1ZDjfiV4LJC
-         ATVNZy9TpXkWRvHy6ylFWQL7oTwuwnhQBiSmpcrI=
+        b=02xJBetu1XSHcasBiwRmycMYdK/oT3CCg27A2ZTUClKQ0hrooDUoNnHPVDbiuP9vv
+         yYwqYg8BUGgGfeuc9xeH1vS/pMKTTpNGl5XPQufMYvEemNL4q1aF70t5/G7cbE+yDw
+         UWfcJHwDLs5Vl2bX7aqRooLFbqyPSMNSGfluBu3g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sameeh Jubran <sameehj@amazon.com>,
-        Arthur Kiyanovski <akiyano@amazon.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 023/375] net: ena: fix: set freed objects to NULL to avoid failing future allocations
-Date:   Wed, 22 May 2019 15:15:23 -0400
-Message-Id: <20190522192115.22666-23-sashal@kernel.org>
+Cc:     Martin Brandenburg <martin@omnibond.com>,
+        Mike Marshall <hubcap@omnibond.com>,
+        Sasha Levin <sashal@kernel.org>, devel@lists.orangefs.org
+Subject: [PATCH AUTOSEL 5.1 025/375] orangefs: truncate before updating size
+Date:   Wed, 22 May 2019 15:15:25 -0400
+Message-Id: <20190522192115.22666-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192115.22666-1-sashal@kernel.org>
 References: <20190522192115.22666-1-sashal@kernel.org>
@@ -60,95 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sameeh Jubran <sameehj@amazon.com>
+From: Martin Brandenburg <martin@omnibond.com>
 
-[ Upstream commit 8ee8ee7fe87bf64738ab4e31be036a7165608b27 ]
+[ Upstream commit 33713cd09ccdc1e01b10d0782ae60200d4989553 ]
 
-In some cases when a queue related allocation fails, successful past
-allocations are freed but the pointer that pointed to them is not
-set to NULL. This is a problem for 2 reasons:
-1. This is generally a bad practice since this pointer might be
-accidentally accessed in the future.
-2. Future allocations using the same pointer check if the pointer
-is NULL and fail if it is not.
+Otherwise we race with orangefs_writepage/orangefs_writepages
+which and does not expect i_size < page_offset.
 
-Fixed this by setting such pointers to NULL in the allocation of
-queue related objects.
+Fixes xfstests generic/129.
 
-Also refactored the code of ena_setup_tx_resources() to goto-style
-error handling to avoid code duplication of resource freeing.
-
-Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
-Signed-off-by: Arthur Kiyanovski <akiyano@amazon.com>
-Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Martin Brandenburg <martin@omnibond.com>
+Signed-off-by: Mike Marshall <hubcap@omnibond.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/amazon/ena/ena_netdev.c | 25 ++++++++++++--------
- 1 file changed, 15 insertions(+), 10 deletions(-)
+ fs/orangefs/inode.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/amazon/ena/ena_netdev.c b/drivers/net/ethernet/amazon/ena/ena_netdev.c
-index 41c1c9acb3246..9b03d7e404f83 100644
---- a/drivers/net/ethernet/amazon/ena/ena_netdev.c
-+++ b/drivers/net/ethernet/amazon/ena/ena_netdev.c
-@@ -224,28 +224,23 @@ static int ena_setup_tx_resources(struct ena_adapter *adapter, int qid)
- 	if (!tx_ring->tx_buffer_info) {
- 		tx_ring->tx_buffer_info = vzalloc(size);
- 		if (!tx_ring->tx_buffer_info)
--			return -ENOMEM;
-+			goto err_tx_buffer_info;
+diff --git a/fs/orangefs/inode.c b/fs/orangefs/inode.c
+index c3334eca18c7e..3260f757c0803 100644
+--- a/fs/orangefs/inode.c
++++ b/fs/orangefs/inode.c
+@@ -172,7 +172,11 @@ static int orangefs_setattr_size(struct inode *inode, struct iattr *iattr)
  	}
+ 	orig_size = i_size_read(inode);
  
- 	size = sizeof(u16) * tx_ring->ring_size;
- 	tx_ring->free_tx_ids = vzalloc_node(size, node);
- 	if (!tx_ring->free_tx_ids) {
- 		tx_ring->free_tx_ids = vzalloc(size);
--		if (!tx_ring->free_tx_ids) {
--			vfree(tx_ring->tx_buffer_info);
--			return -ENOMEM;
--		}
-+		if (!tx_ring->free_tx_ids)
-+			goto err_free_tx_ids;
- 	}
+-	truncate_setsize(inode, iattr->ia_size);
++	/* This is truncate_setsize in a different order. */
++	truncate_pagecache(inode, iattr->ia_size);
++	i_size_write(inode, iattr->ia_size);
++	if (iattr->ia_size > orig_size)
++		pagecache_isize_extended(inode, orig_size, iattr->ia_size);
  
- 	size = tx_ring->tx_max_header_size;
- 	tx_ring->push_buf_intermediate_buf = vzalloc_node(size, node);
- 	if (!tx_ring->push_buf_intermediate_buf) {
- 		tx_ring->push_buf_intermediate_buf = vzalloc(size);
--		if (!tx_ring->push_buf_intermediate_buf) {
--			vfree(tx_ring->tx_buffer_info);
--			vfree(tx_ring->free_tx_ids);
--			return -ENOMEM;
--		}
-+		if (!tx_ring->push_buf_intermediate_buf)
-+			goto err_push_buf_intermediate_buf;
- 	}
- 
- 	/* Req id ring for TX out of order completions */
-@@ -259,6 +254,15 @@ static int ena_setup_tx_resources(struct ena_adapter *adapter, int qid)
- 	tx_ring->next_to_clean = 0;
- 	tx_ring->cpu = ena_irq->cpu;
- 	return 0;
-+
-+err_push_buf_intermediate_buf:
-+	vfree(tx_ring->free_tx_ids);
-+	tx_ring->free_tx_ids = NULL;
-+err_free_tx_ids:
-+	vfree(tx_ring->tx_buffer_info);
-+	tx_ring->tx_buffer_info = NULL;
-+err_tx_buffer_info:
-+	return -ENOMEM;
- }
- 
- /* ena_free_tx_resources - Free I/O Tx Resources per Queue
-@@ -378,6 +382,7 @@ static int ena_setup_rx_resources(struct ena_adapter *adapter,
- 		rx_ring->free_rx_ids = vzalloc(size);
- 		if (!rx_ring->free_rx_ids) {
- 			vfree(rx_ring->rx_buffer_info);
-+			rx_ring->rx_buffer_info = NULL;
- 			return -ENOMEM;
- 		}
- 	}
+ 	new_op = op_alloc(ORANGEFS_VFS_OP_TRUNCATE);
+ 	if (!new_op)
 -- 
 2.20.1
 
