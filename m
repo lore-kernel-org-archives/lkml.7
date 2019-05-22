@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BD45C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:42:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05450C282DC
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:42:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D69220856
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:42:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C187520856
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:42:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558554162;
-	bh=hWpyTbAuScce53fa0ib4KmjxiRgfEYKUxYrkRt/czmk=;
+	s=default; t=1558554166;
+	bh=by8BltlWF2RfOdmNYZlOmLlimur2zOafkiL3mXgpTqQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t8RhAMrDWs9FJchYmsuBeFUIqBZ9+xZWU2P4est6cayC7GRwhaeY8ey8X8L8Xa1Ve
-	 87FLWIRIm0Lypkg6t2vaU25Ergo/7bYZxNMO8QgM8KbAaDfhOJrR5w2nbsUJQRKJRr
-	 suRoCZTyzA+P3gFASGNtGGmm5ou3a14Z0/MpaCl8=
+	b=WFD86HdbaFQbgRwAbKJSqAvVFQMs2hhsjF/WbYDTM3EDr8aaxknA7fM2OFERa6q5B
+	 tAB0d9bS8mYQ2Wm4QRcNVJ2t6zdCQF7sfehXMgqO/a+w7b6lZwDEN5AuMVlcD0tZ07
+	 BE3M5lZ9QyIYzIgb3ArLWitn0aXiwku1PieCJDxc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732724AbfEVTml (ORCPT
+        id S1732594AbfEVT2h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:42:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51360 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:28:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50850 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732593AbfEVT2i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:28:38 -0400
+        id S1732505AbfEVT2P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:28:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B40CF217D4;
-        Wed, 22 May 2019 19:28:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC9F420675;
+        Wed, 22 May 2019 19:28:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553317;
-        bh=hWpyTbAuScce53fa0ib4KmjxiRgfEYKUxYrkRt/czmk=;
+        s=default; t=1558553294;
+        bh=by8BltlWF2RfOdmNYZlOmLlimur2zOafkiL3mXgpTqQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AB72Gya1tTAJhs04PHP8K/BeoPzp+smRfV5QTYhL+CGTMDkxVOSkfH/BuQUqIBFk5
-         xLRTAbEh9ogZVhbsz+Fg3XM76PGou+MDw2VXkWCwo9vpxkXyuRP2oryd1Gte4bVo1H
-         V9XlYIgMWLXOKtjGvbAFR4LbFprT47yTr/0hGMVo=
+        b=gvz5oV8/VExTnFySTHlL9hgxC+dS95pfEtCEIFXy7m3o87UvZRMw6CIVmiqSrW1QF
+         UorI6IXwLTGfiyuvo10wbHcPxt32a5jxoxpMlfV3JaD/InXpwq7mBHLhYm3MHs0cPW
+         xZuB32USh+FayMveXFUbHd1oponVgDxHw/z9QSaA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 080/244] HID: logitech-hidpp: use RAP instead of FAP to get the protocol version
-Date:   Wed, 22 May 2019 15:23:46 -0400
-Message-Id: <20190522192630.24917-80-sashal@kernel.org>
+Cc:     Shenghui Wang <shhuiw@foxmail.com>, Coly Li <colyli@suse.de>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-bcache@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 066/244] bcache: avoid potential memleak of list of journal_replay(s) in the CACHE_SYNC branch of run_cache_set
+Date:   Wed, 22 May 2019 15:23:32 -0400
+Message-Id: <20190522192630.24917-66-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192630.24917-1-sashal@kernel.org>
 References: <20190522192630.24917-1-sashal@kernel.org>
@@ -59,76 +59,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Shenghui Wang <shhuiw@foxmail.com>
 
-[ Upstream commit 096377525cdb8251e4656085efc988bdf733fb4c ]
+[ Upstream commit 95f18c9d1310730d075499a75aaf13bcd60405a7 ]
 
-According to the logitech_hidpp_2.0_specification_draft_2012-06-04.pdf doc:
-https://lekensteyn.nl/files/logitech/logitech_hidpp_2.0_specification_draft_2012-06-04.pdf
+In the CACHE_SYNC branch of run_cache_set(), LIST_HEAD(journal) is used
+to collect journal_replay(s) and filled by bch_journal_read().
 
-We should use a register-access-protocol request using the short input /
-output report ids. This is necessary because 27MHz HID++ receivers have
-a max-packetsize on their HIP++ endpoint of 8, so they cannot support
-long reports. Using a feature-access-protocol request (which is always
-long or very-long) with these will cause a timeout error, followed by
-the hidpp driver treating the device as not being HID++ capable.
+If all goes well, bch_journal_replay() will release the list of
+jounal_replay(s) at the end of the branch.
 
-This commit fixes this by switching to using a rap request to get the
-protocol version.
+If something goes wrong, code flow will jump to the label "err:" and leave
+the list unreleased.
 
-Besides being tested with a (046d:c517) 27MHz receiver with various
-27MHz keyboards and mice, this has also been tested to not cause
-regressions on a non-unifying dual-HID++ nano receiver (046d:c534) with
-k270 and m185 HID++-2.0 devices connected and on a unifying/dj receiver
-(046d:c52b) with a HID++-2.0 Logitech Rechargeable Touchpad T650.
+This patch will release the list of journal_replay(s) in the case of
+error detected.
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+v1 -> v2:
+* Move the release code to the location after label 'err:' to
+  simply the change.
+
+Signed-off-by: Shenghui Wang <shhuiw@foxmail.com>
+Signed-off-by: Coly Li <colyli@suse.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-logitech-hidpp.c | 17 +++++++++++++----
- 1 file changed, 13 insertions(+), 4 deletions(-)
+ drivers/md/bcache/super.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-hidpp.c
-index 8425d3548a414..edf224ad13369 100644
---- a/drivers/hid/hid-logitech-hidpp.c
-+++ b/drivers/hid/hid-logitech-hidpp.c
-@@ -725,13 +725,16 @@ static int hidpp_root_get_feature(struct hidpp_device *hidpp, u16 feature,
+diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
+index 03bb5cee2b835..0dffb97d49833 100644
+--- a/drivers/md/bcache/super.c
++++ b/drivers/md/bcache/super.c
+@@ -1777,6 +1777,8 @@ static void run_cache_set(struct cache_set *c)
+ 	struct cache *ca;
+ 	struct closure cl;
+ 	unsigned int i;
++	LIST_HEAD(journal);
++	struct journal_replay *l;
  
- static int hidpp_root_get_protocol_version(struct hidpp_device *hidpp)
- {
-+	const u8 ping_byte = 0x5a;
-+	u8 ping_data[3] = { 0, 0, ping_byte };
- 	struct hidpp_report response;
- 	int ret;
+ 	closure_init_stack(&cl);
  
--	ret = hidpp_send_fap_command_sync(hidpp,
-+	ret = hidpp_send_rap_command_sync(hidpp,
-+			REPORT_ID_HIDPP_SHORT,
- 			HIDPP_PAGE_ROOT_IDX,
- 			CMD_ROOT_GET_PROTOCOL_VERSION,
--			NULL, 0, &response);
-+			ping_data, sizeof(ping_data), &response);
- 
- 	if (ret == HIDPP_ERROR_INVALID_SUBID) {
- 		hidpp->protocol_major = 1;
-@@ -751,8 +754,14 @@ static int hidpp_root_get_protocol_version(struct hidpp_device *hidpp)
- 	if (ret)
- 		return ret;
- 
--	hidpp->protocol_major = response.fap.params[0];
--	hidpp->protocol_minor = response.fap.params[1];
-+	if (response.rap.params[2] != ping_byte) {
-+		hid_err(hidpp->hid_dev, "%s: ping mismatch 0x%02x != 0x%02x\n",
-+			__func__, response.rap.params[2], ping_byte);
-+		return -EPROTO;
+@@ -1934,6 +1936,12 @@ static void run_cache_set(struct cache_set *c)
+ 	set_bit(CACHE_SET_RUNNING, &c->flags);
+ 	return;
+ err:
++	while (!list_empty(&journal)) {
++		l = list_first_entry(&journal, struct journal_replay, list);
++		list_del(&l->list);
++		kfree(l);
 +	}
 +
-+	hidpp->protocol_major = response.rap.params[0];
-+	hidpp->protocol_minor = response.rap.params[1];
- 
- 	return ret;
- }
+ 	closure_sync(&cl);
+ 	/* XXX: test this, it's broken */
+ 	bch_cache_set_error(c, "%s", err);
 -- 
 2.20.1
 
