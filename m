@@ -2,54 +2,52 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A663C282DC
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:22:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B530C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:22:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A059206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:22:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05925217D7
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:22:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558552948;
-	bh=YzezW2Fba2Qpg5me27N4CVgznmETrqoWlEbAAN6ufFg=;
+	s=default; t=1558552950;
+	bh=t5xengB7nNuo2KSH7Jj1ZxDwNMwXO7ggXnUm8qMUaWg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=icKHzqT2O8PxKpcY1kRuoMFmHKFzbF2TnsXxpLM1X18ertmNRYZoeQcx6POijKZN9
-	 0ph2hOUuA1XmcZB4YZ7uHAO1WVk3bDKdZDLU3OjANJd+3a6tj43pCl6fWjHk5wh8d6
-	 nFU6SFKxIgZF6JGwWsg5eO8xQs6JpPcP8WqLOd3Y=
+	b=VmoTSCH63OEhhUfoXMVTeMaoSHiymyh9hwf1V5+IKsdVtsysoluWFhXNh2mwf3jrT
+	 cwkHDdw4uwpcJ6z73bs1103xJwrA26AKnAUJYuJ7SUa2nQ4KMigE1nw46DQDTt8W1K
+	 7OsPWk5phGKczXtFTqxvt72YIPUHpVaTmW3Gjljo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730481AbfEVTW1 (ORCPT
+        id S1730494AbfEVTW3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:22:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43010 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:22:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43136 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730425AbfEVTWW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:22:22 -0400
+        id S1730460AbfEVTWZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:22:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 62724217F9;
-        Wed, 22 May 2019 19:22:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 267E420644;
+        Wed, 22 May 2019 19:22:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558552941;
-        bh=YzezW2Fba2Qpg5me27N4CVgznmETrqoWlEbAAN6ufFg=;
+        s=default; t=1558552944;
+        bh=t5xengB7nNuo2KSH7Jj1ZxDwNMwXO7ggXnUm8qMUaWg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pwTMZgk6ttZZMmW8JGU6yTrDktklu8NQ8uWJm7tAtLBVtCtEmA4E/FulirrAVtHuK
-         sLO/M27MT6BN9zzRiC86JfGys/rzGgsJ4L6Ihfgyz0tP0mQkDYS+ahpaR38bFf7t7X
-         gm5b2DWnzFOKM+Nwc/SZAf6ITdfHNsGHk1TAxl3A=
+        b=P86AuJrAyjGNPkCOo5wvqwhZCddKJtLeF3xXWVWnTsWZlQGkuIJM2xcZVJUsdiiGL
+         /N2gIyqbGJuLCMxAs1JvixgpszUZIPMNWXPUFPofQbtQ45s3779XRFrxFWoR1tZ7H/
+         5KdmBoKt3JXwoygfa0Fqxo+ZFFv8FqV6tJnWnY7A=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
+Cc:     Jon Derrick <jonathan.derrick@intel.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
         Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 041/375] brcm80211: potential NULL dereference in brcmf_cfg80211_vndr_cmds_dcmd_handler()
-Date:   Wed, 22 May 2019 15:15:41 -0400
-Message-Id: <20190522192115.22666-41-sashal@kernel.org>
+        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.1 043/375] drm/nouveau/bar/nv50: ensure BAR is mapped
+Date:   Wed, 22 May 2019 15:15:43 -0400
+Message-Id: <20190522192115.22666-43-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192115.22666-1-sashal@kernel.org>
 References: <20190522192115.22666-1-sashal@kernel.org>
@@ -62,57 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Jon Derrick <jonathan.derrick@intel.com>
 
-[ Upstream commit e025da3d7aa4770bb1d1b3b0aa7cc4da1744852d ]
+[ Upstream commit f10b83de1fd49216a4c657816f48001437e4bdd5 ]
 
-If "ret_len" is negative then it could lead to a NULL dereference.
+If the BAR is zero size, it indicates it was never successfully mapped.
+Ensure that the BAR is valid during initialization before attempting to
+use it.
 
-The "ret_len" value comes from nl80211_vendor_cmd(), if it's negative
-then we don't allocate the "dcmd_buf" buffer.  Then we pass "ret_len" to
-brcmf_fil_cmd_data_set() where it is cast to a very high u32 value.
-Most of the functions in that call tree check whether the buffer we pass
-is NULL but there are at least a couple places which don't such as
-brcmf_dbg_hex_dump() and brcmf_msgbuf_query_dcmd().  We memcpy() to and
-from the buffer so it would result in a NULL dereference.
-
-The fix is to change the types so that "ret_len" can't be negative.  (If
-we memcpy() zero bytes to NULL, that's a no-op and doesn't cause an
-issue).
-
-Fixes: 1bacb0487d0e ("brcmfmac: replace cfg80211 testmode with vendor command")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
+Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/vendor.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/nouveau/nvkm/subdev/bar/nv50.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/vendor.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/vendor.c
-index 8eff2753abade..d493021f60318 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/vendor.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/vendor.c
-@@ -35,9 +35,10 @@ static int brcmf_cfg80211_vndr_cmds_dcmd_handler(struct wiphy *wiphy,
- 	struct brcmf_if *ifp;
- 	const struct brcmf_vndr_dcmd_hdr *cmdhdr = data;
- 	struct sk_buff *reply;
--	int ret, payload, ret_len;
-+	unsigned int payload, ret_len;
- 	void *dcmd_buf = NULL, *wr_pointer;
- 	u16 msglen, maxmsglen = PAGE_SIZE - 0x100;
-+	int ret;
+diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/bar/nv50.c b/drivers/gpu/drm/nouveau/nvkm/subdev/bar/nv50.c
+index 157b076a12723..38c9c086754b6 100644
+--- a/drivers/gpu/drm/nouveau/nvkm/subdev/bar/nv50.c
++++ b/drivers/gpu/drm/nouveau/nvkm/subdev/bar/nv50.c
+@@ -109,7 +109,7 @@ nv50_bar_oneinit(struct nvkm_bar *base)
+ 	struct nvkm_device *device = bar->base.subdev.device;
+ 	static struct lock_class_key bar1_lock;
+ 	static struct lock_class_key bar2_lock;
+-	u64 start, limit;
++	u64 start, limit, size;
+ 	int ret;
  
- 	if (len < sizeof(*cmdhdr)) {
- 		brcmf_err("vendor command too short: %d\n", len);
-@@ -65,7 +66,7 @@ static int brcmf_cfg80211_vndr_cmds_dcmd_handler(struct wiphy *wiphy,
- 			brcmf_err("oversize return buffer %d\n", ret_len);
- 			ret_len = BRCMF_DCMD_MAXLEN;
- 		}
--		payload = max(ret_len, len) + 1;
-+		payload = max_t(unsigned int, ret_len, len) + 1;
- 		dcmd_buf = vzalloc(payload);
- 		if (NULL == dcmd_buf)
- 			return -ENOMEM;
+ 	ret = nvkm_gpuobj_new(device, 0x20000, 0, false, NULL, &bar->mem);
+@@ -127,7 +127,10 @@ nv50_bar_oneinit(struct nvkm_bar *base)
+ 
+ 	/* BAR2 */
+ 	start = 0x0100000000ULL;
+-	limit = start + device->func->resource_size(device, 3);
++	size = device->func->resource_size(device, 3);
++	if (!size)
++		return -ENOMEM;
++	limit = start + size;
+ 
+ 	ret = nvkm_vmm_new(device, start, limit-- - start, NULL, 0,
+ 			   &bar2_lock, "bar2", &bar->bar2_vmm);
+@@ -164,7 +167,10 @@ nv50_bar_oneinit(struct nvkm_bar *base)
+ 
+ 	/* BAR1 */
+ 	start = 0x0000000000ULL;
+-	limit = start + device->func->resource_size(device, 1);
++	size = device->func->resource_size(device, 1);
++	if (!size)
++		return -ENOMEM;
++	limit = start + size;
+ 
+ 	ret = nvkm_vmm_new(device, start, limit-- - start, NULL, 0,
+ 			   &bar1_lock, "bar1", &bar->bar1_vmm);
 -- 
 2.20.1
 
