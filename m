@@ -2,91 +2,109 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-9.0 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B672C072A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 08:52:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0115EC072A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 08:54:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3BF520851
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 08:52:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qqCo3fFW"
+	by mail.kernel.org (Postfix) with ESMTP id C342420856
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 08:54:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728845AbfEVIwF (ORCPT
+        id S1728653AbfEVIyj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 04:52:05 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:41984 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726552AbfEVIwE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 04:52:04 -0400
-Received: by mail-oi1-f195.google.com with SMTP id w9so991655oic.9;
-        Wed, 22 May 2019 01:52:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dJ4wm+mdjXtu+eOzSO5zfL1pe6lE6wK9af8XsWQTncE=;
-        b=qqCo3fFW9XUWHn252Q2WFlLZvSAu/rSqSVOpdnL+6JkaWkvBV9db/TsdE2hCqPjcUO
-         vDbOuJSjDyOQlbu2Vz5fwhkmY6ko36t+1UTqukYQKdCXaQjYX3qvFXSDEdm9/jr5OaNu
-         FPGLbailOOLuQc78LlQGUivYQB2PGrtA5blcV516e4qRRIKOCKZgfrSUpkUyha73IJxD
-         oKyD7cO2RBYEOaRC41OIO68QqOs3OfwaXSkrRbVGw0Lvby++KY/ra7wXZkr8TKdylBJY
-         6mHbK73xzWpqxrigHqu4zTlA+2Sg5GIrVKSV4ecXgFXYUxqdLKpE5xcknZsBumyAShbl
-         R6xA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dJ4wm+mdjXtu+eOzSO5zfL1pe6lE6wK9af8XsWQTncE=;
-        b=FN6f4viuBOcdsKEW1/zv3PfMCUnXRpwAWohL+YBNkD1mq3y3jEJ0gYI6N7h4wi+4FA
-         MDG1mjSY9QcAXNO2cI8SIwR4ssXfpQQa4/Kcf3OYhQ08ypUTVle4nf9olUSQFykow5Xf
-         xGMRQ7oIyNJts+oLaZEvre8xVyg07DdCcaGSKlf9lSs/kqayKDkVqXuxFES8JdXI9V3h
-         MmRTBGgwqH3RlhXcPI1Nzpd4GTIKDOlCuOft5XCvDK8IExPdAzTb96wXr47n8fJaSjWV
-         OPUvQJbL8zZFXDT02iztK2cM8oqipJbAb4+t2d5XgFyi8ugNrpVlNjnOXDK+JyD6hRIQ
-         zIbQ==
-X-Gm-Message-State: APjAAAWFbxWDOF8Fvpgnbbkj+JchaFh0i5m+x2zu80g8pX8UgQYZxX1j
-        LZIa8I+jzpwaNXJyd3QrmsqEYCrmzfoz+y/Aox27Zg==
-X-Google-Smtp-Source: APXvYqzWqtntfEpUbYhbg9b1uoi4VMeSgM35pQjyl/6kZpkGpdPxywV+CDrw7U5YeNuJgTdSJL2wuSuRTFh2RhcfP/o=
-X-Received: by 2002:aca:bf83:: with SMTP id p125mr6252674oif.47.1558515124059;
- Wed, 22 May 2019 01:52:04 -0700 (PDT)
+        Wed, 22 May 2019 04:54:39 -0400
+Received: from mail-oln040092067104.outbound.protection.outlook.com ([40.92.67.104]:49111
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726552AbfEVIyi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 04:54:38 -0400
+Received: from AM5EUR02FT029.eop-EUR02.prod.protection.outlook.com
+ (10.152.8.57) by AM5EUR02HT231.eop-EUR02.prod.protection.outlook.com
+ (10.152.9.138) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1922.16; Wed, 22 May
+ 2019 08:54:36 +0000
+Received: from VI1PR07MB4432.eurprd07.prod.outlook.com (10.152.8.57) by
+ AM5EUR02FT029.mail.protection.outlook.com (10.152.8.161) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1922.16 via Frontend Transport; Wed, 22 May 2019 08:54:36 +0000
+Received: from VI1PR07MB4432.eurprd07.prod.outlook.com
+ ([fe80::91f:b1bb:a60a:fdc3]) by VI1PR07MB4432.eurprd07.prod.outlook.com
+ ([fe80::91f:b1bb:a60a:fdc3%7]) with mapi id 15.20.1922.013; Wed, 22 May 2019
+ 08:54:35 +0000
+From:   Philippe Mazenauer <philippe.mazenauer@outlook.de>
+CC:     Philippe Mazenauer <philippe.mazenauer@outlook.de>,
+        Russell King <linux@armlinux.org.uk>,
+        "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: [PATCH] ARM: Add method to mach/pci.h
+Thread-Topic: [PATCH] ARM: Add method to mach/pci.h
+Thread-Index: AQHVEHv6lq8w7O7W1kuo9tizM8ubug==
+Date:   Wed, 22 May 2019 08:54:34 +0000
+Message-ID: <VI1PR07MB443283DF94F9F8942E6A3ADAFD000@VI1PR07MB4432.eurprd07.prod.outlook.com>
+Accept-Language: de-CH, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MWHPR0201CA0001.namprd02.prod.outlook.com
+ (2603:10b6:301:74::14) To VI1PR07MB4432.eurprd07.prod.outlook.com
+ (2603:10a6:802:67::17)
+x-incomingtopheadermarker: OriginalChecksum:AE6877DCB04B7A1ABB5EAE267A161E0BB157E0E7B953ABF9D704854FE2E1E338;UpperCasedChecksum:1F8AD31A4A089FF3C730F2C3E3FA88C354BFB6319A50B83F0A7CD44991D4E8C2;SizeAsReceived:7421;Count:47
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.17.1
+x-tmn:  [cYBMpV7q8ymNh4KaOYE0WfZP4tigp1go]
+x-microsoft-original-message-id: <20190522085353.113717-1-philippe.mazenauer@outlook.de>
+x-ms-publictraffictype: Email
+x-incomingheadercount: 47
+x-eopattributedmessage: 0
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(5050001)(7020095)(20181119110)(201702061078)(5061506573)(5061507331)(1603103135)(2017031320274)(2017031323274)(2017031324274)(2017031322404)(1601125500)(1603101475)(1701031045);SRVR:AM5EUR02HT231;
+x-ms-traffictypediagnostic: AM5EUR02HT231:
+x-microsoft-antispam-message-info: h1vn1LmJtUMreQ0Pee7FC2pTadgObiOZKYK1dMviGlW+IATHSKa3dujBwCgjMMiofT6i2CXo/V5std3KWMCVAJn0lW0a+/QwMiniy8B6klV5TtS2KzhxR+7RNPeJvRNSXz1qWqXo9vfi9Zpl6kpT7M0tu/zUiNGf9DEfFuQYOgPklds+RejtnH5fhkM7Ashm
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <17B8CDA1DC5EF441B76A66E351EC577E@eurprd07.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <1558340289-6857-1-git-send-email-wanpengli@tencent.com>
-In-Reply-To: <1558340289-6857-1-git-send-email-wanpengli@tencent.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Wed, 22 May 2019 16:51:52 +0800
-Message-ID: <CANRm+Cx0o14p_pTp5_dk5-W=mL20E9DHAFK-qYYNNv+5VuSR=Q@mail.gmail.com>
-Subject: Re: [PATCH v4 0/5] KVM: LAPIC: Optimize timer latency further
-To:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: c8705529-ceb8-49a1-0466-08d6de931c0a
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 May 2019 08:54:35.6337
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5EUR02HT231
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 20 May 2019 at 16:18, Wanpeng Li <kernellwp@gmail.com> wrote:
->
-> Advance lapic timer tries to hidden the hypervisor overhead between the
-> host emulated timer fires and the guest awares the timer is fired. However,
-> it just hidden the time between apic_timer_fn/handle_preemption_timer ->
-> wait_lapic_expire, instead of the real position of vmentry which is
-> mentioned in the orignial commit d0659d946be0 ("KVM: x86: add option to
-> advance tscdeadline hrtimer expiration"). There is 700+ cpu cycles between
-> the end of wait_lapic_expire and before world switch on my haswell desktop.
->
-> This patchset tries to narrow the last gap(wait_lapic_expire -> world switch),
-> it takes the real overhead time between apic_timer_fn/handle_preemption_timer
-> and before world switch into consideration when adaptively tuning timer
-> advancement. The patchset can reduce 40% latency (~1600+ cycles to ~1000+
-> cycles on a haswell desktop) for kvm-unit-tests/tscdeadline_latency when
-> testing busy waits.
-
-Testing on a Skylake Server, w/ nohz=off, idle=poll in the guest.
-Reduces average cyclictest latency from 3us to 2us.
-
-Regards,
-Wanpeng Li
+QWRkaW5nIG1ldGhvZCBwY2liaW9zX3JlcG9ydF9zdGF0dXMoKSB0byBtYWNoL3BjaS5oLCBzbyBh
+cyB0byByZW1vdmUgdGhlDQpleHRlcm4gZGVjbGFyYXRpb24gaW4gZGMyMTI4NS5jLCBhbmQgcmVt
+b3ZlIG1pc3NpbmctcHJvdG90eXBlcyB3YXJuaW5nDQppbiBrZXJuZWwvYmlvczMyLmMuDQoNCi4u
+L2FyY2gvYXJtL2tlcm5lbC9iaW9zMzIuYzo1OTo2OiB3YXJuaW5nOiBubyBwcmV2aW91cyBwcm90
+b3R5cGUgZm9yIOKAmHBjaWJpb3NfcmVwb3J0X3N0YXR1c+KAmSBbLVdtaXNzaW5nLXByb3RvdHlw
+ZXNdDQogdm9pZCBwY2liaW9zX3JlcG9ydF9zdGF0dXModV9pbnQgc3RhdHVzX21hc2ssIGludCB3
+YXJuKQ0KICAgICAgXn5+fn5+fn5+fn5+fn5+fn5+fn5+DQoNClNpZ25lZC1vZmYtYnk6IFBoaWxp
+cHBlIE1hemVuYXVlciA8cGhpbGlwcGUubWF6ZW5hdWVyQG91dGxvb2suZGU+DQotLS0NCiBhcmNo
+L2FybS9pbmNsdWRlL2FzbS9tYWNoL3BjaS5oICAgIHwgMiArKw0KIGFyY2gvYXJtL21hY2gtZm9v
+dGJyaWRnZS9kYzIxMjg1LmMgfCAxIC0NCiAyIGZpbGVzIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygr
+KSwgMSBkZWxldGlvbigtKQ0KDQpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vaW5jbHVkZS9hc20vbWFj
+aC9wY2kuaCBiL2FyY2gvYXJtL2luY2x1ZGUvYXNtL21hY2gvcGNpLmgNCmluZGV4IDIzM2I0YjUw
+ZWZmMy4uMWUwNzYxMmJjYmRiIDEwMDY0NA0KLS0tIGEvYXJjaC9hcm0vaW5jbHVkZS9hc20vbWFj
+aC9wY2kuaA0KKysrIGIvYXJjaC9hcm0vaW5jbHVkZS9hc20vbWFjaC9wY2kuaA0KQEAgLTU3LDYg
+KzU3LDggQEAgc3RydWN0IHBjaV9zeXNfZGF0YSB7DQogCXZvaWQJCSpwcml2YXRlX2RhdGE7CS8q
+IHBsYXRmb3JtIGNvbnRyb2xsZXIgcHJpdmF0ZSBkYXRhCSovDQogfTsNCiANCit2b2lkIHBjaWJp
+b3NfcmVwb3J0X3N0YXR1cyh1X2ludCBzdGF0dXNfbWFzaywgaW50IHdhcm4pOw0KKw0KIC8qDQog
+ICogQ2FsbCB0aGlzIHdpdGggeW91ciBod19wY2kgc3RydWN0IHRvIGluaXRpYWxpc2UgdGhlIFBD
+SSBzeXN0ZW0uDQogICovDQpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vbWFjaC1mb290YnJpZGdlL2Rj
+MjEyODUuYyBiL2FyY2gvYXJtL21hY2gtZm9vdGJyaWRnZS9kYzIxMjg1LmMNCmluZGV4IDE2ZDcx
+YmFjMDA2MS4uNzVkOTdjZGU3NjU1IDEwMDY0NA0KLS0tIGEvYXJjaC9hcm0vbWFjaC1mb290YnJp
+ZGdlL2RjMjEyODUuYw0KKysrIGIvYXJjaC9hcm0vbWFjaC1mb290YnJpZGdlL2RjMjEyODUuYw0K
+QEAgLTM0LDcgKzM0LDYgQEANCiAJCQkJICBQQ0lfU1RBVFVTX1BBUklUWSkgPDwgMTYpDQogDQog
+ZXh0ZXJuIGludCBzZXR1cF9hcm1faXJxKGludCwgc3RydWN0IGlycWFjdGlvbiAqKTsNCi1leHRl
+cm4gdm9pZCBwY2liaW9zX3JlcG9ydF9zdGF0dXModV9pbnQgc3RhdHVzX21hc2ssIGludCB3YXJu
+KTsNCiANCiBzdGF0aWMgdW5zaWduZWQgbG9uZw0KIGRjMjEyODVfYmFzZV9hZGRyZXNzKHN0cnVj
+dCBwY2lfYnVzICpidXMsIHVuc2lnbmVkIGludCBkZXZmbikNCi0tIA0KMi4xNy4xDQoNCg==
