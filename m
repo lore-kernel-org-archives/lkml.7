@@ -6,33 +6,33 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 128A9C18E7D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 10:36:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 569FEC18E7D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 10:36:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E63D4217D4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 10:36:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BD0E217D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 10:36:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729395AbfEVKfn (ORCPT
+        id S1729604AbfEVKgs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 06:35:43 -0400
-Received: from foss.arm.com ([217.140.101.70]:47094 "EHLO foss.arm.com"
+        Wed, 22 May 2019 06:36:48 -0400
+Received: from foss.arm.com ([217.140.101.70]:47114 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729347AbfEVKfk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 06:35:40 -0400
+        id S1729383AbfEVKfn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 06:35:43 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 57FD9341;
-        Wed, 22 May 2019 03:35:40 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F32B515AB;
+        Wed, 22 May 2019 03:35:42 -0700 (PDT)
 Received: from en101.cambridge.arm.com (en101.cambridge.arm.com [10.1.196.93])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 483293F575;
-        Wed, 22 May 2019 03:35:39 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E1E0C3F575;
+        Wed, 22 May 2019 03:35:41 -0700 (PDT)
 From:   Suzuki K Poulose <suzuki.poulose@arm.com>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     linux-kernel@vger.kernel.org, mathieu.poirier@linaro.org,
         coresight@lists.linaro.org,
         Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: [PATCH v4 17/30] coresight: Make device to CPU mapping generic
-Date:   Wed, 22 May 2019 11:34:50 +0100
-Message-Id: <1558521304-27469-18-git-send-email-suzuki.poulose@arm.com>
+Subject: [PATCH v4 19/30] coresight: Remove name from platform description
+Date:   Wed, 22 May 2019 11:34:52 +0100
+Message-Id: <1558521304-27469-20-git-send-email-suzuki.poulose@arm.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1558521304-27469-1-git-send-email-suzuki.poulose@arm.com>
 References: <1558521304-27469-1-git-send-email-suzuki.poulose@arm.com>
@@ -41,117 +41,230 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The CoreSight components ETM and CPU-Debug are always associated
-with CPUs. Replace the of_coresight_get_cpu() with a platform
-agnostic helper, in preparation to add ACPI support.
+We are about to use a name independent of the parent AMBA device
+name. As such, there is no need to have it in the platform description.
+Let us move this to coresight description instead.
 
 Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 ---
- drivers/hwtracing/coresight/coresight-cpu-debug.c |  3 +--
- drivers/hwtracing/coresight/coresight-platform.c  | 18 +++++++++++++-----
- include/linux/coresight.h                         |  7 +------
- 3 files changed, 15 insertions(+), 13 deletions(-)
+ drivers/hwtracing/coresight/coresight-catu.c       | 2 ++
+ drivers/hwtracing/coresight/coresight-etb10.c      | 3 ++-
+ drivers/hwtracing/coresight/coresight-etm3x.c      | 1 +
+ drivers/hwtracing/coresight/coresight-etm4x.c      | 1 +
+ drivers/hwtracing/coresight/coresight-funnel.c     | 1 +
+ drivers/hwtracing/coresight/coresight-platform.c   | 3 ---
+ drivers/hwtracing/coresight/coresight-replicator.c | 2 ++
+ drivers/hwtracing/coresight/coresight-stm.c        | 1 +
+ drivers/hwtracing/coresight/coresight-tmc.c        | 5 +++--
+ drivers/hwtracing/coresight/coresight-tpiu.c       | 1 +
+ drivers/hwtracing/coresight/coresight.c            | 2 +-
+ include/linux/coresight.h                          | 8 ++++----
+ 12 files changed, 19 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/hwtracing/coresight/coresight-cpu-debug.c b/drivers/hwtracing/coresight/coresight-cpu-debug.c
-index e8819d7..07a1367 100644
---- a/drivers/hwtracing/coresight/coresight-cpu-debug.c
-+++ b/drivers/hwtracing/coresight/coresight-cpu-debug.c
-@@ -572,14 +572,13 @@ static int debug_probe(struct amba_device *adev, const struct amba_id *id)
- 	struct device *dev = &adev->dev;
- 	struct debug_drvdata *drvdata;
- 	struct resource *res = &adev->res;
--	struct device_node *np = adev->dev.of_node;
- 	int ret;
+diff --git a/drivers/hwtracing/coresight/coresight-catu.c b/drivers/hwtracing/coresight/coresight-catu.c
+index 799ba1d..05c7304 100644
+--- a/drivers/hwtracing/coresight/coresight-catu.c
++++ b/drivers/hwtracing/coresight/coresight-catu.c
+@@ -551,6 +551,8 @@ static int catu_probe(struct amba_device *adev, const struct amba_id *id)
+ 	catu_desc.type = CORESIGHT_DEV_TYPE_HELPER;
+ 	catu_desc.subtype.helper_subtype = CORESIGHT_DEV_SUBTYPE_HELPER_CATU;
+ 	catu_desc.ops = &catu_ops;
++	catu_desc.name = dev_name(dev);
++
+ 	drvdata->csdev = coresight_register(&catu_desc);
+ 	if (IS_ERR(drvdata->csdev))
+ 		ret = PTR_ERR(drvdata->csdev);
+diff --git a/drivers/hwtracing/coresight/coresight-etb10.c b/drivers/hwtracing/coresight/coresight-etb10.c
+index 612f1e9..5e7ecc6 100644
+--- a/drivers/hwtracing/coresight/coresight-etb10.c
++++ b/drivers/hwtracing/coresight/coresight-etb10.c
+@@ -770,12 +770,13 @@ static int etb_probe(struct amba_device *adev, const struct amba_id *id)
+ 	desc.ops = &etb_cs_ops;
+ 	desc.pdata = pdata;
+ 	desc.dev = dev;
++	desc.name = dev_name(dev);
+ 	desc.groups = coresight_etb_groups;
+ 	drvdata->csdev = coresight_register(&desc);
+ 	if (IS_ERR(drvdata->csdev))
+ 		return PTR_ERR(drvdata->csdev);
  
- 	drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
- 	if (!drvdata)
- 		return -ENOMEM;
- 
--	drvdata->cpu = np ? of_coresight_get_cpu(np) : 0;
-+	drvdata->cpu = coresight_get_cpu(dev);
- 	if (per_cpu(debug_drvdata, drvdata->cpu)) {
- 		dev_err(dev, "CPU%d drvdata has already been initialized\n",
- 			drvdata->cpu);
+-	drvdata->miscdev.name = pdata->name;
++	drvdata->miscdev.name = desc.name;
+ 	drvdata->miscdev.minor = MISC_DYNAMIC_MINOR;
+ 	drvdata->miscdev.fops = &etb_fops;
+ 	ret = misc_register(&drvdata->miscdev);
+diff --git a/drivers/hwtracing/coresight/coresight-etm3x.c b/drivers/hwtracing/coresight/coresight-etm3x.c
+index 722fab96..101fb01 100644
+--- a/drivers/hwtracing/coresight/coresight-etm3x.c
++++ b/drivers/hwtracing/coresight/coresight-etm3x.c
+@@ -854,6 +854,7 @@ static int etm_probe(struct amba_device *adev, const struct amba_id *id)
+ 	desc.ops = &etm_cs_ops;
+ 	desc.pdata = pdata;
+ 	desc.dev = dev;
++	desc.name = dev_name(dev);
+ 	desc.groups = coresight_etm_groups;
+ 	drvdata->csdev = coresight_register(&desc);
+ 	if (IS_ERR(drvdata->csdev)) {
+diff --git a/drivers/hwtracing/coresight/coresight-etm4x.c b/drivers/hwtracing/coresight/coresight-etm4x.c
+index 03576f3..8adc148 100644
+--- a/drivers/hwtracing/coresight/coresight-etm4x.c
++++ b/drivers/hwtracing/coresight/coresight-etm4x.c
+@@ -1142,6 +1142,7 @@ static int etm4_probe(struct amba_device *adev, const struct amba_id *id)
+ 	desc.pdata = pdata;
+ 	desc.dev = dev;
+ 	desc.groups = coresight_etmv4_groups;
++	desc.name = dev_name(dev);
+ 	drvdata->csdev = coresight_register(&desc);
+ 	if (IS_ERR(drvdata->csdev)) {
+ 		ret = PTR_ERR(drvdata->csdev);
+diff --git a/drivers/hwtracing/coresight/coresight-funnel.c b/drivers/hwtracing/coresight/coresight-funnel.c
+index fc033fd..ded33f5 100644
+--- a/drivers/hwtracing/coresight/coresight-funnel.c
++++ b/drivers/hwtracing/coresight/coresight-funnel.c
+@@ -229,6 +229,7 @@ static int funnel_probe(struct device *dev, struct resource *res)
+ 	desc.ops = &funnel_cs_ops;
+ 	desc.pdata = pdata;
+ 	desc.dev = dev;
++	desc.name = dev_name(dev);
+ 	drvdata->csdev = coresight_register(&desc);
+ 	if (IS_ERR(drvdata->csdev)) {
+ 		ret = PTR_ERR(drvdata->csdev);
 diff --git a/drivers/hwtracing/coresight/coresight-platform.c b/drivers/hwtracing/coresight/coresight-platform.c
-index 5d78f4f..ba8c146 100644
+index 541e500..f500de6 100644
 --- a/drivers/hwtracing/coresight/coresight-platform.c
 +++ b/drivers/hwtracing/coresight/coresight-platform.c
-@@ -151,12 +151,14 @@ static void of_coresight_get_ports(const struct device_node *node,
+@@ -323,9 +323,6 @@ coresight_get_platform_data(struct device *dev)
+ 		goto error;
  	}
- }
  
--int of_coresight_get_cpu(const struct device_node *node)
-+static int of_coresight_get_cpu(struct device *dev)
- {
- 	int cpu;
- 	struct device_node *dn;
- 
--	dn = of_parse_phandle(node, "cpu", 0);
-+	if (!dev->of_node)
-+		return 0;
-+	dn = of_parse_phandle(dev->of_node, "cpu", 0);
- 	/* Affinity defaults to CPU0 */
- 	if (!dn)
- 		return 0;
-@@ -166,7 +168,6 @@ int of_coresight_get_cpu(const struct device_node *node)
- 	/* Affinity to CPU0 if no cpu nodes are found */
- 	return (cpu < 0) ? 0 : cpu;
- }
--EXPORT_SYMBOL_GPL(of_coresight_get_cpu);
- 
- /*
-  * of_coresight_parse_endpoint : Parse the given output endpoint @ep
-@@ -240,8 +241,6 @@ static int of_get_coresight_platform_data(struct device *dev,
- 	bool legacy_binding = false;
- 	struct device_node *node = dev->of_node;
- 
--	pdata->cpu = of_coresight_get_cpu(node);
+-	/* Use device name as sysfs handle */
+-	pdata->name = dev_name(dev);
 -
- 	/* Get the number of input and output port for this component */
- 	of_coresight_get_ports(node, &pdata->nr_inport, &pdata->nr_outport);
- 
-@@ -300,6 +299,14 @@ of_get_coresight_platform_data(struct device *dev,
- }
- #endif
- 
-+int coresight_get_cpu(struct device *dev)
-+{
-+	if (is_of_node(dev->fwnode))
-+		return of_coresight_get_cpu(dev);
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(coresight_get_cpu);
-+
- struct coresight_platform_data *
- coresight_get_platform_data(struct device *dev)
- {
-@@ -318,6 +325,7 @@ coresight_get_platform_data(struct device *dev)
- 
- 	/* Use device name as sysfs handle */
- 	pdata->name = dev_name(dev);
-+	pdata->cpu = coresight_get_cpu(dev);
- 
  	if (is_of_node(fwnode))
  		ret = of_get_coresight_platform_data(dev, pdata);
+ 
+diff --git a/drivers/hwtracing/coresight/coresight-replicator.c b/drivers/hwtracing/coresight/coresight-replicator.c
+index 054b335..f28bafd 100644
+--- a/drivers/hwtracing/coresight/coresight-replicator.c
++++ b/drivers/hwtracing/coresight/coresight-replicator.c
+@@ -220,6 +220,8 @@ static int replicator_probe(struct device *dev, struct resource *res)
+ 	desc.ops = &replicator_cs_ops;
+ 	desc.pdata = dev->platform_data;
+ 	desc.dev = dev;
++	desc.name = dev_name(dev);
++
+ 	drvdata->csdev = coresight_register(&desc);
+ 	if (IS_ERR(drvdata->csdev)) {
+ 		ret = PTR_ERR(drvdata->csdev);
+diff --git a/drivers/hwtracing/coresight/coresight-stm.c b/drivers/hwtracing/coresight/coresight-stm.c
+index 9faa1ed..02031d9 100644
+--- a/drivers/hwtracing/coresight/coresight-stm.c
++++ b/drivers/hwtracing/coresight/coresight-stm.c
+@@ -871,6 +871,7 @@ static int stm_probe(struct amba_device *adev, const struct amba_id *id)
+ 	desc.ops = &stm_cs_ops;
+ 	desc.pdata = pdata;
+ 	desc.dev = dev;
++	desc.name = dev_name(dev);
+ 	desc.groups = coresight_stm_groups;
+ 	drvdata->csdev = coresight_register(&desc);
+ 	if (IS_ERR(drvdata->csdev)) {
+diff --git a/drivers/hwtracing/coresight/coresight-tmc.c b/drivers/hwtracing/coresight/coresight-tmc.c
+index be0bd98..44a5719 100644
+--- a/drivers/hwtracing/coresight/coresight-tmc.c
++++ b/drivers/hwtracing/coresight/coresight-tmc.c
+@@ -437,6 +437,7 @@ static int tmc_probe(struct amba_device *adev, const struct amba_id *id)
+ 	desc.pdata = pdata;
+ 	desc.dev = dev;
+ 	desc.groups = coresight_tmc_groups;
++	desc.name = dev_name(dev);
+ 
+ 	switch (drvdata->config_type) {
+ 	case TMC_CONFIG_TYPE_ETB:
+@@ -461,7 +462,7 @@ static int tmc_probe(struct amba_device *adev, const struct amba_id *id)
+ 		desc.ops = &tmc_etf_cs_ops;
+ 		break;
+ 	default:
+-		pr_err("%s: Unsupported TMC config\n", pdata->name);
++		pr_err("%s: Unsupported TMC config\n", desc.name);
+ 		ret = -EINVAL;
+ 		goto out;
+ 	}
+@@ -472,7 +473,7 @@ static int tmc_probe(struct amba_device *adev, const struct amba_id *id)
+ 		goto out;
+ 	}
+ 
+-	drvdata->miscdev.name = pdata->name;
++	drvdata->miscdev.name = desc.name;
+ 	drvdata->miscdev.minor = MISC_DYNAMIC_MINOR;
+ 	drvdata->miscdev.fops = &tmc_fops;
+ 	ret = misc_register(&drvdata->miscdev);
+diff --git a/drivers/hwtracing/coresight/coresight-tpiu.c b/drivers/hwtracing/coresight/coresight-tpiu.c
+index aec0ed7..d8a2e39 100644
+--- a/drivers/hwtracing/coresight/coresight-tpiu.c
++++ b/drivers/hwtracing/coresight/coresight-tpiu.c
+@@ -157,6 +157,7 @@ static int tpiu_probe(struct amba_device *adev, const struct amba_id *id)
+ 	desc.ops = &tpiu_cs_ops;
+ 	desc.pdata = pdata;
+ 	desc.dev = dev;
++	desc.name = dev_name(dev);
+ 	drvdata->csdev = coresight_register(&desc);
+ 
+ 	if (!IS_ERR(drvdata->csdev)) {
+diff --git a/drivers/hwtracing/coresight/coresight.c b/drivers/hwtracing/coresight/coresight.c
+index 4b13028..04b5d3c 100644
+--- a/drivers/hwtracing/coresight/coresight.c
++++ b/drivers/hwtracing/coresight/coresight.c
+@@ -1199,7 +1199,7 @@ struct coresight_device *coresight_register(struct coresight_desc *desc)
+ 	csdev->dev.parent = desc->dev;
+ 	csdev->dev.release = coresight_device_release;
+ 	csdev->dev.bus = &coresight_bustype;
+-	dev_set_name(&csdev->dev, "%s", desc->pdata->name);
++	dev_set_name(&csdev->dev, "%s", desc->name);
+ 
+ 	ret = device_register(&csdev->dev);
+ 	if (ret) {
 diff --git a/include/linux/coresight.h b/include/linux/coresight.h
-index e2b95e0..98a4440 100644
+index bf241db..298db20 100644
 --- a/include/linux/coresight.h
 +++ b/include/linux/coresight.h
-@@ -292,12 +292,7 @@ static inline void coresight_disclaim_device_unlocked(void __iomem *base) {}
+@@ -91,13 +91,11 @@ union coresight_dev_subtype {
  
- #endif
+ /**
+  * struct coresight_platform_data - data harvested from the DT specification
+- * @name:	name of the component as shown under sysfs.
+  * @nr_inport:	number of input ports for this component.
+  * @nr_outport:	number of output ports for this component.
+  * @conns:	Array of nr_outport connections from this component
+  */
+ struct coresight_platform_data {
+-	const char *name;
+ 	int nr_inport;
+ 	int nr_outport;
+ 	struct coresight_connection *conns;
+@@ -108,11 +106,12 @@ struct coresight_platform_data {
+  * @type:	as defined by @coresight_dev_type.
+  * @subtype:	as defined by @coresight_dev_subtype.
+  * @ops:	generic operations for this component, as defined
+-		by @coresight_ops.
++ *		by @coresight_ops.
+  * @pdata:	platform data collected from DT.
+  * @dev:	The device entity associated to this component.
+  * @groups:	operations specific to this component. These will end up
+-		in the component's sysfs sub-directory.
++ *		in the component's sysfs sub-directory.
++ * @name:	name for the coresight device, also shown under sysfs.
+  */
+ struct coresight_desc {
+ 	enum coresight_dev_type type;
+@@ -121,6 +120,7 @@ struct coresight_desc {
+ 	struct coresight_platform_data *pdata;
+ 	struct device *dev;
+ 	const struct attribute_group **groups;
++	const char *name;
+ };
  
--#ifdef CONFIG_OF
--extern int of_coresight_get_cpu(const struct device_node *node);
--#else
--static inline int of_coresight_get_cpu(const struct device_node *node)
--{ return 0; }
--#endif
-+extern int coresight_get_cpu(struct device *dev);
- 
- struct coresight_platform_data *coresight_get_platform_data(struct device *dev);
- 
+ /**
 -- 
 2.7.4
 
