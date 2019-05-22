@@ -2,93 +2,94 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8902C282DC
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 18:36:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FB8EC282DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 18:39:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B36DA2173C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 18:36:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAEFC2173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 18:39:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729630AbfEVSgR (ORCPT
+        id S1729522AbfEVSj6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 14:36:17 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:60089 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728272AbfEVSgQ (ORCPT
+        Wed, 22 May 2019 14:39:58 -0400
+Received: from iolanthe.rowland.org ([192.131.102.54]:56412 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1728533AbfEVSj5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 14:36:16 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 6221680477; Wed, 22 May 2019 20:36:04 +0200 (CEST)
-Date:   Wed, 22 May 2019 20:36:14 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Lukas Prause <langspielplatte@black-mesa.xyz>
-Cc:     lizefan@huawei.com, tj@kernel.org, hannes@cmpxchg.org,
-        peterz@infradead.org, mingo@redhat.com, will.deacon@arm.com,
-        rjw@rjwysocki.net, len.brown@intel.com, rostedt@goodmis.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        cgroups@vger.kernel.org, linux-pm@vger.kernel.org,
-        Lennart Glauer <mail@lennart-glauer.de>
-Subject: Re: [PATCH] Fix comments with paths pointing to renamed or moved
- files.
-Message-ID: <20190522183614.GD10003@amd>
-References: <20190521155430.14941-1-langspielplatte@black-mesa.xyz>
+        Wed, 22 May 2019 14:39:57 -0400
+Received: (qmail 10090 invoked by uid 2102); 22 May 2019 14:39:56 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 22 May 2019 14:39:56 -0400
+Date:   Wed, 22 May 2019 14:39:56 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     Bjorn Helgaas <helgaas@kernel.org>
+cc:     Kai Heng Feng <kai.heng.feng@canonical.com>,
+        Rafael Wysocki <rafael.j.wysocki@intel.com>,
+        <linux-pci@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        <linux-usb@vger.kernel.org>
+Subject: Re: [PATCH] PCI / PM: Don't runtime suspend when device only supports
+ wakeup from D0
+In-Reply-To: <20190522181157.GC79339@google.com>
+Message-ID: <Pine.LNX.4.44L0.1905221433310.1410-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="sXc4Kmr5FA7axrvy"
-Content-Disposition: inline
-In-Reply-To: <20190521155430.14941-1-langspielplatte@black-mesa.xyz>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Type: TEXT/PLAIN; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 22 May 2019, Bjorn Helgaas wrote:
 
---sXc4Kmr5FA7axrvy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> On Wed, May 22, 2019 at 11:46:25PM +0800, Kai Heng Feng wrote:
+> > > On May 22, 2019, at 9:48 PM, Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > On Wed, May 22, 2019 at 11:42:14AM +0800, Kai Heng Feng wrote:
+> > >> at 6:23 AM, Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > >>> On Wed, May 22, 2019 at 12:31:04AM +0800, Kai-Heng Feng wrote:
+> > >>>> There's an xHC device that doesn't wake when a USB device gets plugged
+> > >>>> to its USB port. The driver's own runtime suspend callback was called,
+> > >>>> PME signaling was enabled, but it stays at PCI D0.
+> 
+> > > ...
+> > > And I guess this patch basically means we wouldn't call the driver's
+> > > suspend callback if we're merely going to stay at D0, so the driver
+> > > would have no idea anything happened.  That might match
+> > > Documentation/power/pci.txt better, because it suggests that the
+> > > suspend callback is related to putting a device in a low-power state,
+> > > and D0 is not a low-power state.
+> > 
+> > Yes, the patch is to let the device stay at D0 and don’t run driver’s own
+> > runtime suspend routine.
+> > 
+> > I guess I’ll just proceed to send a V2 with updated commit message?
+> 
+> Now that I understand what "runtime suspended to D0" means, help me
+> understand what's actually wrong.
 
-On Tue 2019-05-21 17:54:30, Lukas Prause wrote:
-> This patch corrects renamed or moved paths in comments.
->=20
-> Signed-off-by: Lukas Prause <langspielplatte@black-mesa.xyz>
-> Signed-off-by: Lennart Glauer <mail@lennart-glauer.de>
+Kai's point is that the xhci-hcd driver thinks the device is now in 
+runtime suspend, because the runtime_suspend method has been executed.  
+But in fact the device is still in D0, and as a result, PME signalling 
+may not work correctly.
 
-Acked-by: Pavel Machek <pavel@ucw.cz>
+On the other hand, it wasn't clear from the patch description whether
+this actually causes a problem on real systems.  The description only
+said that the problem was theoretical.
 
-> diff --git a/kernel/power/power.h b/kernel/power/power.h
-> index 9e58bdc8a562..5de8b0c7f657 100644
-> --- a/kernel/power/power.h
-> +++ b/kernel/power/power.h
-> @@ -182,7 +182,7 @@ extern int swsusp_unmark(void);
->  #endif
-> =20
->  struct timeval;
-> -/* kernel/power/swsusp.c */
-> +/* kernel/power/hibernate.c */
->  extern void swsusp_show_speed(ktime_t, ktime_t, unsigned int, char *);
-> =20
->  #ifdef CONFIG_SUSPEND
+> The PCI core apparently *does* enable PME when we "suspend to D0".
+> But somehow calling the xHCI runtime suspend callback makes the driver
+> unable to notice when the PME is signaled?
 
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+According to Kai, PME signalling doesn't work in D0 -- or at least, it
+is _documented_ not to work in D0 -- even though it is enabled and the
+device claims to support it.
 
---sXc4Kmr5FA7axrvy
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+In any case, I don't really see any point in "runtime suspending" a 
+device while leaving it in D0.  We might as well just leave it alone.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Alan Stern
 
-iEYEARECAAYFAlzllp4ACgkQMOfwapXb+vJZkQCfeKwSOh2FKYaMG98zV3Dzre+t
-L5cAoIt7HOw2sWn9bbsMWeOfbg1PjNGy
-=AwUp
------END PGP SIGNATURE-----
-
---sXc4Kmr5FA7axrvy--
