@@ -2,104 +2,100 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A51BC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:46:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98DCDC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:46:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BD6A2081C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:46:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ta1jPaeU"
+	by mail.kernel.org (Postfix) with ESMTP id 61EB02081C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:46:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558554390;
+	bh=3WjJSY7vZLVqoeVZv6ccOG1TIWOYqs8oAQ8eRPMkcSo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Ya8YbNNGmaxabwzCBijSPKzkRurPmtbqVb4vq/KWqbQRixzPMFLfGIZiyqXHH3HcJ
+	 O411rZ+y/kg51u2u66gxpXHFJ1oUqcCBNmgxl9UJSvqcK18Bhr3GjeI3+gdxL6D2s6
+	 KyJZh+o/Dj6tzNdInteyhyvx4QHUZzClwKYjkk3M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387641AbfEVTqY (ORCPT
+        id S1732603AbfEVTq3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:46:24 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:50654 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732405AbfEVT1u (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:27:50 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4MJRjqw079732;
-        Wed, 22 May 2019 14:27:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1558553265;
-        bh=mb9DtpGK++v8kJ0PeDAjLnaIBJtP4888+bgXxUdkl88=;
-        h=From:To:CC:Subject:Date;
-        b=ta1jPaeU4FnSNZVQlH51XLxYFchglSs8CoDqyl1FdasyFYosfISgT6H2Du21gRtZ2
-         UIXRspA2dPO5w+Op2h2VNu2nuSVOhIY9uOBsHUIH2JgUTAn3PNQyjh2w/GOdwejE/k
-         zwaR9N1QMgEN2iCwFuDRHXWlB8gRKeNU1s90SedU=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4MJRj3O031994
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 22 May 2019 14:27:45 -0500
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 22
- May 2019 14:27:44 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 22 May 2019 14:27:44 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4MJRid2096385;
-        Wed, 22 May 2019 14:27:44 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <broonie@kernel.org>,
-        <lgirdwood@gmail.com>
-CC:     <lee.jones@linaro.org>, <linux-leds@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH v4 0/6] LM36274 Introduction
-Date:   Wed, 22 May 2019 14:27:27 -0500
-Message-ID: <20190522192733.13422-1-dmurphy@ti.com>
-X-Mailer: git-send-email 2.21.0.5.gaeb582a983
+        Wed, 22 May 2019 15:46:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50226 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730040AbfEVT1t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:27:49 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6666D2173C;
+        Wed, 22 May 2019 19:27:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558553269;
+        bh=3WjJSY7vZLVqoeVZv6ccOG1TIWOYqs8oAQ8eRPMkcSo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=o3xVTa2nPaqGElsQ+mt1PSz3WmGmQ7pl/Oe8agMzHc3GT/TFy8OpJVcRvDOmOQnfu
+         82FPty9XukjNNutOsybyk2Dc/cMm+zrWUc6qK7lN1h9Hkejp7A9w9km6Trv557JVnm
+         SEEtnYqVj0S/CWkHxu33hE1UYvLE8NqsG6aRmVj4=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Fabien Dessenne <fabien.dessenne@st.com>,
+        Amelie Delaunay <amelie.delaunay@st.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rtc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 045/244] rtc: stm32: manage the get_irq probe defer case
+Date:   Wed, 22 May 2019 15:23:11 -0400
+Message-Id: <20190522192630.24917-45-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190522192630.24917-1-sashal@kernel.org>
+References: <20190522192630.24917-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello
+From: Fabien Dessenne <fabien.dessenne@st.com>
 
-This is patch set v4 for the LM36274.  There were no changes made
-to this patch set except to rebase this on top of the latest TI LMU common code
-patchset.
+[ Upstream commit cf612c5949aca2bd81a1e28688957c8149ea2693 ]
 
-This patch set was rebased on the series at:
-https://lore.kernel.org/patchwork/project/lkml/list/?series=393071
+Manage the -EPROBE_DEFER error case for the wake IRQ.
 
-Dan
+Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
+Acked-by: Amelie Delaunay <amelie.delaunay@st.com>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/rtc/rtc-stm32.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-Dan Murphy (6):
-  regulator: lm363x: Make the gpio register enable flexible
-  dt-bindings: mfd: Add lm36274 bindings to ti-lmu
-  mfd: ti-lmu: Add LM36274 support to the ti-lmu
-  regulator: lm363x: Add support for LM36274
-  dt-bindings: leds: Add LED bindings for the LM36274
-  leds: lm36274: Introduce the TI LM36274 LED driver
-
- .../devicetree/bindings/leds/leds-lm36274.txt |  82 +++++++++
- .../devicetree/bindings/mfd/ti-lmu.txt        |  54 ++++++
- drivers/leds/Kconfig                          |   7 +
- drivers/leds/Makefile                         |   1 +
- drivers/leds/leds-lm36274.c                   | 174 ++++++++++++++++++
- drivers/mfd/Kconfig                           |   5 +-
- drivers/mfd/ti-lmu.c                          |  14 ++
- drivers/regulator/Kconfig                     |   2 +-
- drivers/regulator/lm363x-regulator.c          |  56 +++++-
- include/linux/mfd/ti-lmu-register.h           |  23 +++
- include/linux/mfd/ti-lmu.h                    |   4 +
- 11 files changed, 416 insertions(+), 6 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/leds/leds-lm36274.txt
- create mode 100644 drivers/leds/leds-lm36274.c
-
+diff --git a/drivers/rtc/rtc-stm32.c b/drivers/rtc/rtc-stm32.c
+index c5908cfea2340..8e6c9b3bcc29a 100644
+--- a/drivers/rtc/rtc-stm32.c
++++ b/drivers/rtc/rtc-stm32.c
+@@ -788,11 +788,14 @@ static int stm32_rtc_probe(struct platform_device *pdev)
+ 	ret = device_init_wakeup(&pdev->dev, true);
+ 	if (rtc->data->has_wakeirq) {
+ 		rtc->wakeirq_alarm = platform_get_irq(pdev, 1);
+-		if (rtc->wakeirq_alarm <= 0)
+-			ret = rtc->wakeirq_alarm;
+-		else
++		if (rtc->wakeirq_alarm > 0) {
+ 			ret = dev_pm_set_dedicated_wake_irq(&pdev->dev,
+ 							    rtc->wakeirq_alarm);
++		} else {
++			ret = rtc->wakeirq_alarm;
++			if (rtc->wakeirq_alarm == -EPROBE_DEFER)
++				goto err;
++		}
+ 	}
+ 	if (ret)
+ 		dev_warn(&pdev->dev, "alarm can't wake up the system: %d", ret);
 -- 
-2.21.0.5.gaeb582a983
+2.20.1
 
