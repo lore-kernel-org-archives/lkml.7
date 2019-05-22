@@ -2,134 +2,122 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54538C18E7D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 08:59:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC1CCC18E7D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 09:00:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2941C20856
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 08:59:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 913222184E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 09:00:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="KEGjkhgZ"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="co4p2RLq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728889AbfEVI74 (ORCPT
+        id S1728907AbfEVJAW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 04:59:56 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:15362 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728406AbfEVI7z (ORCPT
+        Wed, 22 May 2019 05:00:22 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:46120 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728547AbfEVJAW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 04:59:55 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ce50f8a0000>; Wed, 22 May 2019 01:59:54 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 22 May 2019 01:59:54 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 22 May 2019 01:59:54 -0700
-Received: from [10.24.45.128] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 22 May
- 2019 08:59:49 +0000
-Subject: Re: [PATCH V7 13/15] phy: tegra: Add PCIe PIPE2UPHY support
-To:     Thierry Reding <thierry.reding@gmail.com>
-CC:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <jonathanh@nvidia.com>, <kishon@ti.com>, <catalin.marinas@arm.com>,
-        <will.deacon@arm.com>, <jingoohan1@gmail.com>,
-        <gustavo.pimentel@synopsys.com>, <mperttunen@nvidia.com>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
-References: <20190517123846.3708-1-vidyas@nvidia.com>
- <20190517123846.3708-14-vidyas@nvidia.com> <20190521110053.GM29166@ulmo>
-X-Nvconfidentiality: public
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <ff85f75b-2b4d-eb31-2c9c-44122833b5e3@nvidia.com>
-Date:   Wed, 22 May 2019 14:29:46 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190521110053.GM29166@ulmo>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL106.nvidia.com (172.18.146.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1558515594; bh=j8nUL7CYBN3ZSo9bQt9cG2C16yOUGsDVML131j+TReM=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=KEGjkhgZ4IGYiJr81sxvF7ROIJV5hZOAAAyoNOT3N3R64IL1IjiYpe1e7a2VMGAp+
-         gDcBbDCRMD6xj52cZGirkKwtyaQKp2u15PVY5TfCDAB6efYwHK5WGu462lxpFfa7jD
-         U17xB8s8C1XcbW1hs4Hp7nJDoYkuGrr/PxLVEoASViQrk5993GSteP7uqtiZlUAkFe
-         oDh4Qroc/slfkPKFkGBGn7DERLLWki7GYkkM1O2ayFbLZcHv4fjuI4hjnYllCQxdvB
-         ee+4uhzcUsk7KtsYIEe1CsYgwxHXF1aAJPgfN4QvaclgbJFOQd1mk9uEk4WDkvwbGw
-         14JY5mSLixK4A==
+        Wed, 22 May 2019 05:00:22 -0400
+Received: by mail-pf1-f193.google.com with SMTP id y11so960746pfm.13
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 02:00:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=from:to:subject:date:message-id:in-reply-to:references;
+        bh=M/dXEAziti11+FvXEXzwN3m+bojHGjlx1XnERvN29LU=;
+        b=co4p2RLqrxuL8lSUuID/P22fcyaxeRRgB3URvx4DJ20nD6KJz9f+2uZy+xsa++EQFh
+         ywIqthdr1stLYsdfRIFZU6Ne3OTXKtQQ0v2Z7hg9aoMZErhvoYokU6LsOLkm2itAiANY
+         PHUxSEUrI0hpBIWQn+QK0Y2/jnqO6s25sg1sNmUCzsrFAt3E/21dSjYfunx/m8Vimajk
+         ThS3nNY5+nkcs29TYnN2I/1ac2SeZ1UmoXJFmrghMmNJrIi8McJgAOxQ78sC4NA8eD72
+         nWs+H/lQTasqBOocE+IUBJoY0HSBQ3vrYKz5ml5DgOvpV9NcGCZeQXIeVE460IzJErbi
+         HjAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references;
+        bh=M/dXEAziti11+FvXEXzwN3m+bojHGjlx1XnERvN29LU=;
+        b=gYNGT1/g/oS6tRlb80XIoiuZJ20GHZjtabKIOCngxAqaPNr/XFac8is5irtXoBjFiJ
+         OOHLEph39T/iEH9Ba/WJiBNmW4zGXEpsml8B5ZsziBBLL4fmYMQKkKTMzqdG5eqg9j1Z
+         Zs18igHo2rybcBKsF66v1axw+Bn1D/W9RqfXYNKSCBCwJzqNxa1ph2kKW1S9ULmHWjE5
+         OptqTIdlMoYUN+uqpyhYBhqEHTfhlmvwTJf2ij1D7CUTNms0Z30QIlPMmkCZNV5vJPet
+         dgoGKAKGRiN4NBq7NrD6hy3++N0x1Bn7rO0XNGPjC/yTOcGnAk7MXuaSeUFzwjdy+hvs
+         rLrw==
+X-Gm-Message-State: APjAAAWy4tGB2s4m6sksYxpQo9qtQFxGs+PuXcljNW+subQwGbZLv520
+        3ii/qelFLH3T6aPYKJ0rJVgGuQ==
+X-Google-Smtp-Source: APXvYqycp6Q2qsp5lrcfut8xaYp5vitvUL2aApTymSt6rk/UtSFVxOYK6EKnpNc3Q0KGbC8bq2zvcQ==
+X-Received: by 2002:a65:6450:: with SMTP id s16mr1908023pgv.414.1558515621798;
+        Wed, 22 May 2019 02:00:21 -0700 (PDT)
+Received: from buildserver-90.open-silicon.com ([114.143.65.226])
+        by smtp.googlemail.com with ESMTPSA id z6sm42465905pfr.135.2019.05.22.02.00.18
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 22 May 2019 02:00:21 -0700 (PDT)
+From:   Sagar Shrikant Kadam <sagar.kadam@sifive.com>
+To:     robh+dt@kernel.org, mark.rutland@arm.com, peter@korsgaard.com,
+        andrew@lunn.ch, palmer@sifive.com, paul.walmsley@sifive.com,
+        sagar.kadam@sifive.com, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v7 1/3] dt-bindings: i2c: extend existing opencore bindings.
+Date:   Wed, 22 May 2019 14:29:32 +0530
+Message-Id: <1558515574-11155-2-git-send-email-sagar.kadam@sifive.com>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1558515574-11155-1-git-send-email-sagar.kadam@sifive.com>
+References: <1558515574-11155-1-git-send-email-sagar.kadam@sifive.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/21/2019 4:30 PM, Thierry Reding wrote:
-> On Fri, May 17, 2019 at 06:08:44PM +0530, Vidya Sagar wrote:
->> Synopsys DesignWare core based PCIe controllers in Tegra 194 SoC interface
->> with Universal PHY (UPHY) module through a PIPE2UPHY (P2U) module.
->> For each PCIe lane of a controller, there is a P2U unit instantiated at
->> hardware level. This driver provides support for the programming required
->> for each P2U that is going to be used for a PCIe controller.
->>
->> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->> ---
->> Changes since [v6]:
->> * None
->>
->> Changes since [v5]:
->> * Addressed review comments from Thierry
->>
->> Changes since [v4]:
->> * None
->>
->> Changes since [v3]:
->> * Rebased on top of linux-next top of the tree
->>
->> Changes since [v2]:
->> * Replaced spaces with tabs in Kconfig file
->> * Sorted header file inclusion alphabetically
->>
->> Changes since [v1]:
->> * Added COMPILE_TEST in Kconfig
->> * Removed empty phy_ops implementations
->> * Modified code according to DT documentation file modifications
->>
->>   drivers/phy/tegra/Kconfig             |   7 ++
->>   drivers/phy/tegra/Makefile            |   1 +
->>   drivers/phy/tegra/pcie-p2u-tegra194.c | 109 ++++++++++++++++++++++++++
->>   3 files changed, 117 insertions(+)
->>   create mode 100644 drivers/phy/tegra/pcie-p2u-tegra194.c
->>
->> diff --git a/drivers/phy/tegra/Kconfig b/drivers/phy/tegra/Kconfig
->> index a3b1de953fb7..06d423fa85b4 100644
->> --- a/drivers/phy/tegra/Kconfig
->> +++ b/drivers/phy/tegra/Kconfig
->> @@ -6,3 +6,10 @@ config PHY_TEGRA_XUSB
->>   
->>   	  To compile this driver as a module, choose M here: the module will
->>   	  be called phy-tegra-xusb.
->> +
->> +config PHY_TEGRA194_PCIE_P2U
->> +	tristate "NVIDIA Tegra P2U PHY Driver"
-> 
-> One more thing: perhaps make this description consistent with the driver
-> description in the source file.
-Done.
-> 
-> Thierry
-> 
+Reformatted compatibility strings to one valid combination on
+each line.
+Add FU540-C000 specific device tree bindings to already available
+i2-ocores file. This device is available on
+HiFive Unleashed Rev A00 board. Move interrupt under optional
+property list as this can be optional.
+
+The FU540-C000 SoC from sifive, has an Opencore's I2C block
+reimplementation.
+
+The DT compatibility string for this IP is present in HDL and available at.
+https://github.com/sifive/sifive-blocks/blob/master/src/main/scala/devices/i2c/I2C.scala#L73
+
+Signed-off-by: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
+---
+ Documentation/devicetree/bindings/i2c/i2c-ocores.txt | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-ocores.txt b/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
+index 17bef9a..db96951 100644
+--- a/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
++++ b/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
+@@ -1,9 +1,13 @@
+ Device tree configuration for i2c-ocores
+ 
+ Required properties:
+-- compatible      : "opencores,i2c-ocores" or "aeroflexgaisler,i2cmst"
++- compatible      : "opencores,i2c-ocores",
++                    "aeroflexgaisler,i2cmst",
++                    "sifive,fu540-c000-i2c","sifive,i2c0".
++                    For Opencore based I2C IP block reimplemented in
++                    FU540-C000 SoC.Please refer sifive-blocks-ip-versioning.txt
++                    for additional details.
+ - reg             : bus address start and address range size of device
+-- interrupts      : interrupt number
+ - clocks          : handle to the controller clock; see the note below.
+                     Mutually exclusive with opencores,ip-clock-frequency
+ - opencores,ip-clock-frequency: frequency of the controller clock in Hz;
+@@ -12,6 +16,7 @@ Required properties:
+ - #size-cells     : should be <0>
+ 
+ Optional properties:
++- interrupts      : interrupt number.
+ - clock-frequency : frequency of bus clock in Hz; see the note below.
+                     Defaults to 100 KHz when the property is not specified
+ - reg-shift       : device register offsets are shifted by this value
+-- 
+1.9.1
 
