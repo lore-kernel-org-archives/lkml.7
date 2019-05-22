@@ -2,271 +2,99 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2CA8C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 15:55:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53ED0C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 15:57:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6548720879
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 15:55:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29AE420879
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 15:57:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OxmUNETV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PPoE1xQw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729955AbfEVPzQ (ORCPT
+        id S1729788AbfEVP5G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 11:55:16 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:45607 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727975AbfEVPzQ (ORCPT
+        Wed, 22 May 2019 11:57:06 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:44097 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728527AbfEVP5F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 11:55:16 -0400
-Received: by mail-io1-f68.google.com with SMTP id b3so2234454iob.12;
-        Wed, 22 May 2019 08:55:15 -0700 (PDT)
+        Wed, 22 May 2019 11:57:05 -0400
+Received: by mail-pl1-f193.google.com with SMTP id c5so1277779pll.11;
+        Wed, 22 May 2019 08:57:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kb3WM7gPCIFW1UnQ0vFC/8eKfBUUYf+CYSf6YWVRBUk=;
-        b=OxmUNETVTX2kM2b2am7Wt0QjqrpQ0WmM8pWApCtT1YJU0bKg/XUlMXMTV/JofMuoca
-         BYrVh/6/P9sf1sQM+fQ6aFifVXzK8kqMbKmx1Gz90nojXGrKzQJ0/CAxQI/TJZcfjSEA
-         Ug71MQ7dp0MUa6QZoapD4LK0lFEPTMRIejCOFm+H6wwkc9+SzBWNWNjzIctNudoZJRpR
-         KefPOz4SMD874EddtAQh6k3LqmHP3h7NYkqwDcOclqdP+PhRj2XLbICn8JhyYvLjYZ92
-         /kszDY9J8kE3jNsj8chBbQUoAEmfhZDvfU9rC2l/Zae6j9A0TzD5MHWJPXAiMuTB3LDG
-         cDig==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=AmNGy/NFq2EOHvqVIGC3ySGjBTZpA5aNPHZwt8OoqlI=;
+        b=PPoE1xQw3nra2WTRsZTaBZCtml6jPMVGPz706uZ+mCYLvT6e/vL+EE3yEKwTetPNlv
+         JVokWZV0PVWmDrQ60rzh0mkexLrDVG+EB4cg1bG0H7sfjvcpRA9AXAta5KV5EFpC87an
+         4JEZ0Emc577+64EdrmvL2uugj1A06eNNhIEC0AVxxZGqxFC3oyTYn2ZyywA4CsI/9uNj
+         BMD8+VnLIMrHQ10JsFYNe11eZ2rd9L4DbTMYIgBxvDGhNDLWEEo6j4jg0VqIZXw2JFCt
+         k2WqgAYlBmUOdqp7AyV12AF11INdzHUGgX7xt6M+q08baRHD59mpCCf2GqR4iYkEM7pm
+         Zj4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kb3WM7gPCIFW1UnQ0vFC/8eKfBUUYf+CYSf6YWVRBUk=;
-        b=WMeVf/xaHnMMgqts3LTO6tkzckRzodkVYs3VlsDNfzhlLKJ1HZ3T9goHlGRCjws8ye
-         LECz4e5RknD8MLaLZtUP+zKRInEDbHJ0tcrJlN61tunFs7hItXfhYePtzBKGB+LfvhuK
-         uXoNxhOpgKNL+A6xqLwRgHwZmSArdoOJlLi3qjN05DkaidHSH+PddEUQ35DtwgzGJnU/
-         o1fsXIc1RtcBTfsPO4acm8Lm39mXNR13O2LAI1FGE2RhrjcdUtLvfeq+gSzhicIQuGH4
-         ZopPdJQ4EdOQQJ0YPJaB5xMpy9+p41+za9Ud/CEKe2g75o71XV+RPCLg+m63awCwmGIz
-         HHHg==
-X-Gm-Message-State: APjAAAVhyKShl7tvlm/oVpPgiSDWBSmSTd59V0MrsG3t1GEJ40i7x/Nu
-        awckedibnDvejZi3aQRI2KZHx9QdLpTdQrv0JxU=
-X-Google-Smtp-Source: APXvYqz2u66DeVSCxgF0xIHaau9v4jAaesv4EGAF3nfS+zCIyKX2S86Vb9+yfpsBKCqrK3GzdTXTKxGwAodLTwQHfmQ=
-X-Received: by 2002:a5e:840c:: with SMTP id h12mr8740557ioj.81.1558540515228;
- Wed, 22 May 2019 08:55:15 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=AmNGy/NFq2EOHvqVIGC3ySGjBTZpA5aNPHZwt8OoqlI=;
+        b=oth7Bb1boQ27hxqGL+JzjJZXN2fzam5Hh39k7mHdMle/Dg5qKkIWvsgU3HWzi3QZH1
+         5a2MekctzGDArTlRD4SdVkZZ6dK+/1Xw7e8rFpykIr1DvtviweVrU2NujF4SDlqvN7G+
+         Ew1n09Kd9rLgaUOcKyJrrXqf2SOw7dBApzlVwpJpMEv/sHqAGc9sPhzftpVjTItP9oxy
+         iz/qz3NCE/RLS/IsKMBbYh9VMmN5aw3rjR2XM/WaBLTz45jN/CA5mE89CSDZGRKeLEos
+         MPIT99dApZi/NEvgTy0NJzfS36xIDA69j0WkhvayYovMyK7tNmWAJtaglIhjx/08dSaL
+         cQFQ==
+X-Gm-Message-State: APjAAAWZ6xMbb5I93ngPi3sY+VTiA2S3yDjoWjiy5vBnPEvESGmVKFH5
+        Xh8e9330Dodb6ECA72zrmxw=
+X-Google-Smtp-Source: APXvYqwjIBzw5VgJ5UcxwexYB5MRjuc3hXWK1BuvqP2lReBMDIXLKnpXPeFEGo0eWjohrsL3X9FDoA==
+X-Received: by 2002:a17:902:4383:: with SMTP id j3mr91573274pld.320.1558540624927;
+        Wed, 22 May 2019 08:57:04 -0700 (PDT)
+Received: from bharath12345-Inspiron-5559 ([103.110.42.31])
+        by smtp.gmail.com with ESMTPSA id t7sm29962927pfh.156.2019.05.22.08.57.00
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 22 May 2019 08:57:04 -0700 (PDT)
+Date:   Wed, 22 May 2019 21:26:57 +0530
+From:   Bharath Vedartham <linux.bhar@gmail.com>
+To:     Joe Perches <joe@perches.com>
+Cc:     sathya.prakash@broadcom.com, chaitra.basappa@broadcom.com,
+        MPT-FusionLinux.pdl@broadcom.com, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] message/fusion/mptbase.c: Use kmemdup instead of memcpy
+ and kmalloc
+Message-ID: <20190522155657.GA12887@bharath12345-Inspiron-5559>
+References: <20190522095335.GA3212@bharath12345-Inspiron-5559>
+ <7e2a727333d1d764ae3c0099e050a0521e87d9d8.camel@perches.com>
 MIME-Version: 1.0
-References: <20190522032144.10995-1-deepa.kernel@gmail.com> <20190522150505.GA4915@redhat.com>
-In-Reply-To: <20190522150505.GA4915@redhat.com>
-From:   Deepa Dinamani <deepa.kernel@gmail.com>
-Date:   Wed, 22 May 2019 08:55:02 -0700
-Message-ID: <CABeXuvrPM5xvzqUydbREapvwgy6deYreHp0aaMoSHyLB6+HGRg@mail.gmail.com>
-Subject: Re: [PATCH v2] signal: Adjust error codes according to restore_user_sigmask()
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>, dbueso@suse.de, axboe@kernel.dk,
-        Davidlohr Bueso <dave@stgolabs.net>, Eric Wong <e@80x24.org>,
-        Jason Baron <jbaron@akamai.com>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        linux-aio <linux-aio@kvack.org>,
-        Omar Kilani <omar.kilani@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7e2a727333d1d764ae3c0099e050a0521e87d9d8.camel@perches.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
--Deepa
+On Wed, May 22, 2019 at 04:48:33AM -0700, Joe Perches wrote:
+> On Wed, 2019-05-22 at 15:23 +0530, Bharath Vedartham wrote:
+> > Replace kmalloc + memcpy with kmemdup.
+> > This was reported by coccinelle.
+> []
+> > diff --git a/drivers/message/fusion/mptbase.c b/drivers/message/fusion/mptbase.c
+> []
+> > @@ -6001,13 +6001,12 @@ mpt_findImVolumes(MPT_ADAPTER *ioc)
+> >  	if (mpt_config(ioc, &cfg) != 0)
+> >  		goto out;
+> >  
+> > -	mem = kmalloc(iocpage2sz, GFP_KERNEL);
+> > +	mem = kmemdup((u8 *)pIoc2, iocpage2sz, GFP_KERNEL);
+> 
+> You should remove the unnecessary cast here.
+> 
+>
+Yes! I will change this in v2.
 
-> On May 22, 2019, at 8:05 AM, Oleg Nesterov <oleg@redhat.com> wrote:
->
->> On 05/21, Deepa Dinamani wrote:
->>
->> Note that this patch returns interrupted errors (EINTR, ERESTARTNOHAND,
->> etc) only when there is no other error. If there is a signal and an error
->> like EINVAL, the syscalls return -EINVAL rather than the interrupted
->> error codes.
->
-> Ugh. I need to re-check, but at first glance I really dislike this change.
->
-> I think we can fix the problem _and_ simplify the code. Something like below.
-> The patch is obviously incomplete, it changes only only one caller of
-> set_user_sigmask(), epoll_pwait() to explain what I mean.
-> restore_user_sigmask() should simply die. Although perhaps another helper
-> makes sense to add WARN_ON(test_tsk_restore_sigmask() && !signal_pending).
-
-restore_user_sigmask() was added because of all the variants of these
-syscalls we added because of y2038 as noted in commit message:
-
-  signal: Add restore_user_sigmask()
-
-    Refactor the logic to restore the sigmask before the syscall
-    returns into an api.
-    This is useful for versions of syscalls that pass in the
-    sigmask and expect the current->sigmask to be changed during
-    the execution and restored after the execution of the syscall.
-
-    With the advent of new y2038 syscalls in the subsequent patches,
-    we add two more new versions of the syscalls (for pselect, ppoll
-    and io_pgetevents) in addition to the existing native and compat
-    versions. Adding such an api reduces the logic that would need to
-    be replicated otherwise.
-
-
->
-> diff --git a/fs/eventpoll.c b/fs/eventpoll.c
-> index 4a0e98d..85f56e4 100644
-> --- a/fs/eventpoll.c
-> +++ b/fs/eventpoll.c
-> @@ -2318,19 +2318,19 @@ SYSCALL_DEFINE6(epoll_pwait, int, epfd, struct epoll_event __user *, events,
->        size_t, sigsetsize)
-> {
->    int error;
-> -    sigset_t ksigmask, sigsaved;
->
->    /*
->     * If the caller wants a certain signal mask to be set during the wait,
->     * we apply it here.
->     */
-> -    error = set_user_sigmask(sigmask, &ksigmask, &sigsaved, sigsetsize);
-> +    error = set_user_sigmask(sigmask, sigsetsize);
->    if (error)
->        return error;
->
->    error = do_epoll_wait(epfd, events, maxevents, timeout);
->
-> -    restore_user_sigmask(sigmask, &sigsaved);
-> +    if (error != -EINTR)
-
-As you address all the other syscalls this condition becomes more and
-more complicated.
-
-> +        restore_saved_sigmask();
->
->    return error;
-> }
-> diff --git a/include/linux/sched/signal.h b/include/linux/sched/signal.h
-> index e412c09..1e82ae0 100644
-> --- a/include/linux/sched/signal.h
-> +++ b/include/linux/sched/signal.h
-> @@ -416,7 +416,6 @@ void task_join_group_stop(struct task_struct *task);
-> static inline void set_restore_sigmask(void)
-> {
->    set_thread_flag(TIF_RESTORE_SIGMASK);
-> -    WARN_ON(!test_thread_flag(TIF_SIGPENDING));
-
-So you always want do_signal() to be called?
-You will have to check each architecture's implementation of
-do_signal() to check if that has any side effects.
-
-Although this is not what the patch is solving. What we want is to
-adjust return codes on all these syscalls to user and not drop
-signals. Please check v2/v3 of the patch. I've updated the commit text
-to provide more context into what is actually being fixed here.
-
-If we really want to simplify, we should rewrite all the internal
-logic of all the ppoll, epoll_pwait, io_pgetevent syscall internal
-handling where we set the error code.
-As new versions of syscalls were added, the internal logic got
-reworked rather hapazardly. But, as the current issue points out,
-these are delicate changes.
-
--Deepa
-> }
->
-> static inline void clear_tsk_restore_sigmask(struct task_struct *tsk)
-> @@ -447,7 +446,6 @@ static inline bool test_and_clear_restore_sigmask(void)
-> static inline void set_restore_sigmask(void)
-> {
->    current->restore_sigmask = true;
-> -    WARN_ON(!test_thread_flag(TIF_SIGPENDING));
-> }
-> static inline void clear_tsk_restore_sigmask(struct task_struct *tsk)
-> {
-> diff --git a/include/linux/signal.h b/include/linux/signal.h
-> index 9702016..887cea6 100644
-> --- a/include/linux/signal.h
-> +++ b/include/linux/signal.h
-> @@ -273,8 +273,7 @@ extern int group_send_sig_info(int sig, struct kernel_siginfo *info,
->                   struct task_struct *p, enum pid_type type);
-> extern int __group_send_sig_info(int, struct kernel_siginfo *, struct task_struct *);
-> extern int sigprocmask(int, sigset_t *, sigset_t *);
-> -extern int set_user_sigmask(const sigset_t __user *usigmask, sigset_t *set,
-> -    sigset_t *oldset, size_t sigsetsize);
-> +extern int set_user_sigmask(const sigset_t __user *umask, size_t sigsetsize);
-> extern void restore_user_sigmask(const void __user *usigmask,
->                 sigset_t *sigsaved);
-> extern void set_current_blocked(sigset_t *);
-> diff --git a/kernel/signal.c b/kernel/signal.c
-> index 227ba17..76f4f9a 100644
-> --- a/kernel/signal.c
-> +++ b/kernel/signal.c
-> @@ -2801,19 +2801,21 @@ EXPORT_SYMBOL(sigprocmask);
->  * This is useful for syscalls such as ppoll, pselect, io_pgetevents and
->  * epoll_pwait where a new sigmask is passed from userland for the syscalls.
->  */
-> -int set_user_sigmask(const sigset_t __user *usigmask, sigset_t *set,
-> -             sigset_t *oldset, size_t sigsetsize)
-> +int set_user_sigmask(const sigset_t __user *umask, size_t sigsetsize)
-> {
-> -    if (!usigmask)
-> +    sigset_t *kmask;
-> +
-> +    if (!umask)
->        return 0;
->
->    if (sigsetsize != sizeof(sigset_t))
->        return -EINVAL;
-> -    if (copy_from_user(set, usigmask, sizeof(sigset_t)))
-> +    if (copy_from_user(kmask, umask, sizeof(sigset_t)))
->        return -EFAULT;
->
-> -    *oldset = current->blocked;
-> -    set_current_blocked(set);
-> +    set_restore_sigmask();
-> +    current->saved_sigmask = current->blocked;
-> +    set_current_blocked(kmask);
->
->    return 0;
-> }
-> @@ -2840,39 +2842,6 @@ int set_compat_user_sigmask(const compat_sigset_t __user *usigmask,
-> EXPORT_SYMBOL(set_compat_user_sigmask);
-> #endif
->
-> -/*
-> - * restore_user_sigmask:
-> - * usigmask: sigmask passed in from userland.
-> - * sigsaved: saved sigmask when the syscall started and changed the sigmask to
-> - *           usigmask.
-> - *
-> - * This is useful for syscalls such as ppoll, pselect, io_pgetevents and
-> - * epoll_pwait where a new sigmask is passed in from userland for the syscalls.
-> - */
-> -void restore_user_sigmask(const void __user *usigmask, sigset_t *sigsaved)
-> -{
-> -
-> -    if (!usigmask)
-> -        return;
-> -    /*
-> -     * When signals are pending, do not restore them here.
-> -     * Restoring sigmask here can lead to delivering signals that the above
-> -     * syscalls are intended to block because of the sigmask passed in.
-> -     */
-> -    if (signal_pending(current)) {
-> -        current->saved_sigmask = *sigsaved;
-> -        set_restore_sigmask();
-> -        return;
-> -    }
-> -
-> -    /*
-> -     * This is needed because the fast syscall return path does not restore
-> -     * saved_sigmask when signals are not pending.
-> -     */
-> -    set_current_blocked(sigsaved);
-> -}
-> -EXPORT_SYMBOL(restore_user_sigmask);
-> -
-> /**
->  *  sys_rt_sigprocmask - change the list of currently blocked signals
->  *  @how: whether to add, remove, or set signals
->
+Thanks
+Bharath
