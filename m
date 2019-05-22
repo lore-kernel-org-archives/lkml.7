@@ -2,133 +2,178 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ECE1C072A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 07:35:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F4BEC072A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 07:38:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29F49217D4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 07:35:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B1EF20863
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 07:38:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728628AbfEVHff (ORCPT
+        id S1728434AbfEVHiy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 03:35:35 -0400
-Received: from mga17.intel.com ([192.55.52.151]:30009 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725801AbfEVHfe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 03:35:34 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 May 2019 00:35:34 -0700
-X-ExtLoop1: 1
-Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.150])
-  by fmsmga001.fm.intel.com with ESMTP; 22 May 2019 00:35:32 -0700
-From:   Jani Nikula <jani.nikula@linux.intel.com>
-To:     Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Markus Heiser <markus.heiser@darmarit.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>
-Subject: Re: [PATCH 2/2] doc: Cope with the deprecation of AutoReporter
-In-Reply-To: <20190521211714.1395-3-corbet@lwn.net>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20190521211714.1395-1-corbet@lwn.net> <20190521211714.1395-3-corbet@lwn.net>
-Date:   Wed, 22 May 2019 10:38:50 +0300
-Message-ID: <87a7ff7xbp.fsf@intel.com>
+        Wed, 22 May 2019 03:38:54 -0400
+Received: from hostingweb31-40.netsons.net ([89.40.174.40]:46652 "EHLO
+        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725850AbfEVHiy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 03:38:54 -0400
+Received: from [109.168.11.45] (port=47788 helo=[192.168.101.64])
+        by hostingweb31.netsons.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.91)
+        (envelope-from <luca@lucaceresoli.net>)
+        id 1hTLpp-001bvJ-Jg; Wed, 22 May 2019 09:38:49 +0200
+Subject: Re: [RFC 0/4] TI camera serdes - I2C address translation draft
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     linux-media@vger.kernel.org,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        jacopo mondi <jacopo@jmondi.org>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Peter Rosin <peda@axentia.se>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-i2c@vger.kernel.org, Hans Verkuil <hverkuil@xs4all.nl>
+References: <20190108223953.9969-1-luca@lucaceresoli.net>
+ <20190521144034.100f9f8b@coco.lan>
+From:   Luca Ceresoli <luca@lucaceresoli.net>
+Message-ID: <f3346136-1fba-dd85-8448-ce8d0580f0d3@lucaceresoli.net>
+Date:   Wed, 22 May 2019 09:38:48 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20190521144034.100f9f8b@coco.lan>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lucaceresoli.net
+X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca+lucaceresoli.net/only user confirmed/virtual account not confirmed
+X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 21 May 2019, Jonathan Corbet <corbet@lwn.net> wrote:
-> AutoReporter is going away; recent versions of sphinx emit a warning like:
->
->   /stuff/k/git/kernel/Documentation/sphinx/kerneldoc.py:125:
->       RemovedInSphinx20Warning: AutodocReporter is now deprecated.
->       Use sphinx.util.docutils.switch_source_input() instead.
->
-> Make the switch.  But switch_source_input() only showed up in 1.7, so we
-> have to do ugly version checks to keep things working in older versions.
-> ---
->  Documentation/sphinx/kerneldoc.py | 38 ++++++++++++++++++++++++-------
->  1 file changed, 30 insertions(+), 8 deletions(-)
->
-> diff --git a/Documentation/sphinx/kerneldoc.py b/Documentation/sphinx/kerneldoc.py
-> index e8891e63e001..d3216f7b4170 100644
-> --- a/Documentation/sphinx/kerneldoc.py
-> +++ b/Documentation/sphinx/kerneldoc.py
-> @@ -37,7 +37,17 @@ import glob
->  from docutils import nodes, statemachine
->  from docutils.statemachine import ViewList
->  from docutils.parsers.rst import directives, Directive
-> -from sphinx.ext.autodoc import AutodocReporter
-> +
-> +#
-> +# AutodocReporter is only good up to Sphinx 1.7
-> +#
-> +import sphinx
-> +
-> +Use_SSI = sphinx.__version__[:3] >= '1.7'
-> +if Use_SSI:
-> +    from sphinx.util.docutils import switch_source_input
-> +else:
-> +    from sphinx.ext.autodoc import AutodocReporter
->  
->  import kernellog
->  
-> @@ -125,13 +135,7 @@ class KernelDocDirective(Directive):
->                      lineoffset += 1
->  
->              node = nodes.section()
-> -            buf = self.state.memo.title_styles, self.state.memo.section_level, self.state.memo.reporter
-> -            self.state.memo.reporter = AutodocReporter(result, self.state.memo.reporter)
-> -            self.state.memo.title_styles, self.state.memo.section_level = [], 0
-> -            try:
-> -                self.state.nested_parse(result, 0, node, match_titles=1)
-> -            finally:
-> -                self.state.memo.title_styles, self.state.memo.section_level, self.state.memo.reporter = buf
-> +            self.do_parse(result, node)
->  
->              return node.children
->  
-> @@ -140,6 +144,24 @@ class KernelDocDirective(Directive):
->                             (" ".join(cmd), str(e)))
->              return [nodes.error(None, nodes.paragraph(text = "kernel-doc missing"))]
->  
-> +    def do_parse(self, result, node):
-> +        if Use_SSI:
-> +            save = self.state.memo.title_styles, self.state.memo.section_level
-> +            try:
-> +                with switch_source_input(self.state, result):
-> +                    self.state.nested_parse(result, 0, node, match_titles=1)
+Hi,
 
-IIUC you don't need to save the state anymore, so the above two lines
-should be sufficient when using switch_source_input.
+On 21/05/19 19:40, Mauro Carvalho Chehab wrote:
+> Em Tue,  8 Jan 2019 23:39:49 +0100
+> Luca Ceresoli <luca@lucaceresoli.net> escreveu:
+> 
+>> Hi,
+>>
+>> there has been some discussion on linux-media about video
+>> serializer/deserializer chipsets with remote I2C capabilities from TI
+>> [0] and Maxim [1]. I took part discussing how the remote I2C feature
+>> of such chips could be best implemented in Linux while I was
+>> implementing a driver for the Texas Instruments DS90UB954-Q1 video
+>> deserializer. My approach is different from both the one used by
+>> Vladimir Zapolskiy on other TI chips, which look similar to the
+>> DS90UB954 in their I2C management, and the one used by Kieran Bingham
+>> with Maxim chips, which have a different and simpler I2C management.
+>>
+>> After that I had to stop that work, so it is unfinished and I have no
+>> plan to continue it. Upon suggestion by some linux-media developers
+>> I'm sending my patches as RFC in the hope that they bring additional
+>> material for the discussion.
+>>
+>> I2C management is quite complete in my patches, and it shows how I
+>> envisioned I2C management. For the rest the code is in large part
+>> incomplete. Don't consider the V4L2, GPIO and other sections as ready
+>> for any review.
+>>
+>> The whole idea is structured around a central node, called the ATR
+>> (Address Translator). It is similar to an I2C mux except it changes
+>> the I2C addresses of transactions with an "alias" address for each
+>> remote chip. Patch 2 has a detailed description of this process.
+>>
+>>
+>> A typical setup looks like:
+>>
+>>                           Slave X @ 0x10
+>>                   .-----.   |
+>>       .-----.     |     |---+---- B
+>>       | CPU |--A--| ATR |
+>>       `-----'     |     |---+---- C
+>>                   `-----'   |
+>>                           Slave Y @ 0x10
+>>
+>>   A = "local" bus
+>>   B = "remote" bus 0
+>>   C = "remote" bus 1
+>>
+>> In patch 2 I enriched the i2c-mux to also act as an ATR. However the
+>> implementation grew larger than I desired, so now I think it would
+>> make sense to leave i2c-mux as is, and add a new i2c-atr.c which has
+>> ATR features without much of the MUX code. However the implementation
+>> would not change too much, so you can look at i2c-mux to see how I
+>> implemented the ATR.
+>>
+>> In the ATR (i2c-mux.c) I implemented the logic needed to remap slave
+>> addresses according to a table. Choosing appropriate aliases and
+>> filling that table is driver-specific, so in this case it is done by
+>> ds90ub954.c. The ATR driver needs to know when a new client appears on
+>> the remote bus to setup translation and when it gets disconnected to
+>> undo it. So I added a callback pair, attach_client and detach_client,
+>> from i2c-core to i2c-mux and from there to the ATR driver. When
+>> getting the callback the ATR driver chooses an alias to be used on the
+>> local bus for the new chip, configures the ATR (perhaps setting some
+>> registers) returns the alias back to the ATR which sill add the new
+>> chip-alias pair to its table. The ATR (i2c-mux) then will do the
+>> translation for each message, so that the alias will be used on the
+>> local bus and the physical chip address on the remote bus.
+>>
+>> The alias address for a new client is chosen from an alias pool that
+>> must be defined in device tree. It is the responsibility of the DT
+>> writer to fill the pool with addresses that are otherwise unused on
+>> the local bus. The pool could not be filled automatically because
+>> there might be conflicting chips on the local bus that are unknown to
+>> the software, or that are just connected later.
+>>
+>> The alias pool and the mapping done at runtime allow to model
+>> different camera modules [or display or other modules] similarly to
+>> beaglebone capes or rpi hats, up to a model where:
+>>
+>>  1. there can be different camera modules being designed over time
+>>  2. there can be different base boards being designed over time
+>>  3. there is a standard interconnection between them (mechanical,
+>>     electrical, communication bus)
+>>  4. camera modules and base boards are designed and sold independently
+>>     (thanks to point 3)
+>>
+>> The implementation is split in the following patches:
+>>  * Patch 1 adds the attach_client() and detach_client() callbacks to
+>>    i2c-core
+>>  * Patch 2 adds similar callbacks for the use of device drivers and,
+>>    most importantly, implements the ATR engine
+>>  * Patch 3 adds a farily complete DT bindings document, including the
+>>    alias map
+>>  * Patch 4 adds the DS90UB954-Q1 dual deserializer driver
+>>
+>> There is no serializer driver here. The one I have is just a skeleton
+>> setting a few registers, just enough to work on the deserializer
+>> driver.
+> 
+> Not sure what to do here... I guess I'll just mark the patches as
+> RFC at media patchwork, as someone has to need support for it and need
+> to finish its implementation.
 
-BR,
-Jani.
+I just did it.
 
-
-> +            finally:
-> +                self.state.memo.title_styles, self.state.memo.section_level = save
-> +        else:
-> +            save = self.state.memo.title_styles, self.state.memo.section_level, self.state.memo.reporter
-> +            self.state.memo.reporter = AutodocReporter(result, self.state.memo.reporter)
-> +            self.state.memo.title_styles, self.state.memo.section_level = [], 0
-> +            try:
-> +                self.state.nested_parse(result, 0, node, match_titles=1)
-> +            finally:
-> +                self.state.memo.title_styles, self.state.memo.section_level, self.state.memo.reporter = save
-> +
-> +
->  def setup(app):
->      app.add_config_value('kerneldoc_bin', None, 'env')
->      app.add_config_value('kerneldoc_srctree', None, 'env')
+As I wrote in the cover letter, I was not actively working on the topic
+and sent these patches as an additional input for the discussion about
+I2C address translation and serdes chips in general.
 
 -- 
-Jani Nikula, Intel Open Source Graphics Center
+Luca
