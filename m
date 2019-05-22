@@ -2,133 +2,231 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D60A9C072A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 06:52:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C145DC072A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 06:56:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAAB720675
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 06:52:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F1D020863
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 06:56:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558508179;
+	bh=kmn9mB4kA50Xw3EkopThJnf3nEu54rXXj5I+aS34jfk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=RIIERFRwydw0lamGzqvRdZOu7JvomfiMeyP10gQ86+1Ce97qpFAlevrVwsPE8HCVN
+	 mWxCanpixJVcqSeEyJ50pBIC6zG1MdfsYNtR+CmDeiu6ZyX3zBfA53vvb7mx1ChX2r
+	 oUhv2WyjCnYW4nNHH2SwFFEILJlY7qONhJPUiB0A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728467AbfEVGwk (ORCPT
+        id S1728346AbfEVG4S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 02:52:40 -0400
-Received: from lb3-smtp-cloud9.xs4all.net ([194.109.24.30]:52303 "EHLO
-        lb3-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725801AbfEVGwk (ORCPT
+        Wed, 22 May 2019 02:56:18 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:37342 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726217AbfEVG4S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 02:52:40 -0400
-Received: from [192.168.2.10] ([46.9.252.75])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id TL73h27qisDWyTL76hJb1d; Wed, 22 May 2019 08:52:37 +0200
-Subject: Re: [PATCH] media:usb:zr364xx:Fix KASAN:null-ptr-deref Read in
- zr364xx_vidioc_querycap
-To:     Vandana BN <bnvandana@gmail.com>, royale@zerezo.com,
-        mchehab@kernel.org, linux-usb@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     skhan@linuxfoundation.org, gregkh@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-References: <20190521181535.7974-1-bnvandana@gmail.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <c9311eeb-4cb6-e69c-8a26-7faea7e0c088@xs4all.nl>
-Date:   Wed, 22 May 2019 08:52:33 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 22 May 2019 02:56:18 -0400
+Received: by mail-pl1-f193.google.com with SMTP id p15so597604pll.4
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 23:56:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=xNNjO3Z10SyEiIZGGK+eEhwTEkIQuQOZC/mTNRdPXMU=;
+        b=Iyvhpnu71BRoO8hxoyP6STb8UG8Grq+OW2XWQAJiPJKGG+N0ts+3Dt85OfQUrcfglQ
+         20ADlhUvnoMyWj7IAUtuOMRSVbnYDtjY98rr/pFHgI4rH+uQqFlXWrdW+qwLmJf3WwE6
+         HzWUfXF0jo0qvhCK/PIaDl+pwaDxzBTuMszpAcbwY7G4hEUPWJeUJS0mYSw6huJxebDr
+         NnhriCcgxrhzsxE3lq+I47+EVL+HyMqFNH6r8t0HDw7ID87kb82CqNojHWbKiiBtNXIL
+         3WV7LGOqDl7SPsIoQQhGcZ65Xz32nA5xAr8x2Pi2+cYICqb9MXjUDU/1DcXdBQl+9RqX
+         Bi1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xNNjO3Z10SyEiIZGGK+eEhwTEkIQuQOZC/mTNRdPXMU=;
+        b=i4zyLPfWDPB5G7xCO4hFVjQBAs2rNSZjdb/VBH6sXlr3J+kuMdmZTJUok+iXYh/jm9
+         iunhHQHAmN0MNvwFOsu7ApvmDkl6VBrGZ1JAJ6ZWoPdEHcgCREWsPFpuVpojJ4CDpojR
+         NK4d79HFxyb796ISbgw9cxrlk/McPsTXx5WUXt2VYfxQF11abRDB9ft5gld2JlQ9wvXT
+         fBmY3Eeg3NXuhytjk0eDD6gsb/ZyTWoeMi3mHdhXfARdAAV+VArsGpr1dkW/PwJqWrEE
+         qxD2FCpaMm7WG4BXzBtVjzKwkimraTHlOvSJ0JwLLxpK3clej5kf+wBRSoiFcQ6/6Rpp
+         6e5Q==
+X-Gm-Message-State: APjAAAVuY3MmoL2KBp7guPqxNDc7OISgkFqW4PLnSCnZbIy1MJG9/GMo
+        U5REOsvNOw2aNgXWuJPzUSo=
+X-Google-Smtp-Source: APXvYqxo9NajZs5fZPCdw+ga/xnJHpXc5yK8GQ8WUfBD3FwYnm5v99Cz1yZmZJkteeSh07zN/Ej4jg==
+X-Received: by 2002:a17:902:298a:: with SMTP id h10mr62396632plb.6.1558508176523;
+        Tue, 21 May 2019 23:56:16 -0700 (PDT)
+Received: from google.com ([2401:fa00:d:10:75ad:a5d:715f:f6d8])
+        by smtp.gmail.com with ESMTPSA id x7sm19159629pfm.82.2019.05.21.23.56.13
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 21 May 2019 23:56:15 -0700 (PDT)
+Date:   Wed, 22 May 2019 15:56:10 +0900
+From:   Namhyung Kim <namhyung@kernel.org>
+To:     Wei Li <liwei391@huawei.com>
+Cc:     acme@kernel.org, jolsa@redhat.com,
+        alexander.shishkin@linux.intel.com, peterz@infradead.org,
+        mingo@redhat.com, linux-kernel@vger.kernel.org,
+        xiezhipeng1@huawei.com
+Subject: Re: [PATCH v2] fix use-after-free in perf_sched__lat
+Message-ID: <20190522065555.GA206606@google.com>
+References: <20190508143648.8153-1-liwei391@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <20190521181535.7974-1-bnvandana@gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfAgCbWpy3/Mf5iE6uyIh7ObpST1ZI0MlELXVDzMVOAM5s4N2waUax5FlNru1+/Av8LNMcRlwevn2yp8AUTXfT6JWENMdahG1tg7KBmzj8qYDGnX3vzE3
- Mm+eQgNaM2bAQ5zig8OtkP8f6wDRWan4EKKgCl1DWhMF/mAbAWu4rEvNuL9wrLcvRBibv85CnBvwzvHeo8vo3McSwFDEpd/no29TWWtFXiC5L74tSKnigtBC
- KRYYhWTgj/5UHdwlRpp027YgOkt6f6/6C9xsoNVFmAOvQuLk5F+g3E0L4pzAEV2Ead6GT9BFyR9+3eQnHdq68MwtQQLaqCPVfT/6ZerSdV0GGXW06bIaO+hm
- Xzq6N3RyvhGs9vMmBc3LLAMt01hFKuNIJa5ebL16+xQRHy8f+VknmDk3kBBScWvpS+/ZU8DeYBsmu0gOBGzvxOU3tt99LCqimqby/y2BIWh6p8/ddEduf1Fz
- F6ponXMjgeuIgMF8
+Content-Disposition: inline
+In-Reply-To: <20190508143648.8153-1-liwei391@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/21/19 8:15 PM, Vandana BN wrote:
-> SyzKaller hit the null pointer deref while reading from uninitialized
-> udev->product in zr364xx_vidioc_querycap().
-> ==================================================================
-> BUG: KASAN: null-ptr-deref in read_word_at_a_time+0xe/0x20
-> include/linux/compiler.h:274
-> Read of size 1 at addr 0000000000000000 by task v4l_id/5287
+On Wed, May 08, 2019 at 10:36:48PM +0800, Wei Li wrote:
+> After thread is added to machine->threads[i].dead in
+> __machine__remove_thread, the machine->threads[i].dead is freed
+> when calling free(session) in perf_session__delete(). So it get a
+> Segmentation fault when accessing it in thread__put().
 > 
-> CPU: 1 PID: 5287 Comm: v4l_id Not tainted 5.1.0-rc3-319004-g43151d6 #6
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> Google 01/01/2011
-> Call Trace:
->   __dump_stack lib/dump_stack.c:77 [inline]
->   dump_stack+0xe8/0x16e lib/dump_stack.c:113
->   kasan_report.cold+0x5/0x3c mm/kasan/report.c:321
->   read_word_at_a_time+0xe/0x20 include/linux/compiler.h:274
->   strscpy+0x8a/0x280 lib/string.c:207
->   zr364xx_vidioc_querycap+0xb5/0x210 drivers/media/usb/zr364xx/zr364xx.c:706
->   v4l_querycap+0x12b/0x340 drivers/media/v4l2-core/v4l2-ioctl.c:1062
->   __video_do_ioctl+0x5bb/0xb40 drivers/media/v4l2-core/v4l2-ioctl.c:2874
->   video_usercopy+0x44e/0xf00 drivers/media/v4l2-core/v4l2-ioctl.c:3056
->   v4l2_ioctl+0x14e/0x1a0 drivers/media/v4l2-core/v4l2-dev.c:364
->   vfs_ioctl fs/ioctl.c:46 [inline]
->   file_ioctl fs/ioctl.c:509 [inline]
->   do_vfs_ioctl+0xced/0x12f0 fs/ioctl.c:696
->   ksys_ioctl+0xa0/0xc0 fs/ioctl.c:713
->   __do_sys_ioctl fs/ioctl.c:720 [inline]
->   __se_sys_ioctl fs/ioctl.c:718 [inline]
->   __x64_sys_ioctl+0x74/0xb0 fs/ioctl.c:718
->   do_syscall_64+0xcf/0x4f0 arch/x86/entry/common.c:290
->   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> RIP: 0033:0x7f3b56d8b347
-> Code: 90 90 90 48 8b 05 f1 fa 2a 00 64 c7 00 26 00 00 00 48 c7 c0 ff ff ff
-> ff c3 90 90 90 90 90 90 90 90 90 90 b8 10 00 00 00 0f 05 <48> 3d 01 f0 ff
-> ff 73 01 c3 48 8b 0d c1 fa 2a 00 31 d2 48 29 c2 64
-> RSP: 002b:00007ffe005d5d68 EFLAGS: 00000202 ORIG_RAX: 0000000000000010
-> RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00007f3b56d8b347
-> RDX: 00007ffe005d5d70 RSI: 0000000080685600 RDI: 0000000000000003
-> RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000202 R12: 0000000000400884
-> R13: 00007ffe005d5ec0 R14: 0000000000000000 R15: 0000000000000000
-> ==================================================================
+> In this patch, we delay the perf_session__delete until all threads
+> have been deleted.
 > 
-> For this device udev->product is not initialized and accessing it causes a NULL pointer deref.
+> This can be reproduced by following steps:
+> 	ulimit -c unlimited
+> 	export MALLOC_MMAP_THRESHOLD_=0
+> 	perf sched record sleep 10
+> 	perf sched latency --sort max
+> 	Segmentation fault (core dumped)
 > 
-> The fix is to check for NULL before strscpy() and copy empty string, if
-> product is NULL
-> 
-> Reported-by: syzbot+66010012fd4c531a1a96@syzkaller.appspotmail.com
-> 
-> Signed-off-by: Vandana BN <bnvandana@gmail.com>
+> Signed-off-by: Zhipeng Xie <xiezhipeng1@huawei.com>
+> Signed-off-by: Wei Li <liwei391@huawei.com>
+
+Acked-by: Namhyung Kim <namhyung@kernel.org>
+
+Thahks,
+Namhyung
+
+
 > ---
->  drivers/media/usb/zr364xx/zr364xx.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
+>  tools/perf/builtin-sched.c | 63 ++++++++++++++++++++++++++------------
+>  1 file changed, 43 insertions(+), 20 deletions(-)
 > 
-> diff --git a/drivers/media/usb/zr364xx/zr364xx.c b/drivers/media/usb/zr364xx/zr364xx.c
-> index 96fee8d5b865..401a1e55dbe1 100644
-> --- a/drivers/media/usb/zr364xx/zr364xx.c
-> +++ b/drivers/media/usb/zr364xx/zr364xx.c
-> @@ -703,7 +703,10 @@ static int zr364xx_vidioc_querycap(struct file *file, void *priv,
->  	struct zr364xx_camera *cam = video_drvdata(file);
+> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+> index 275f2d92a7bf..8a4841fa124c 100644
+> --- a/tools/perf/builtin-sched.c
+> +++ b/tools/perf/builtin-sched.c
+> @@ -1774,7 +1774,8 @@ static int perf_sched__process_comm(struct perf_tool *tool __maybe_unused,
+>  	return 0;
+>  }
 >  
->  	strscpy(cap->driver, DRIVER_DESC, sizeof(cap->driver));
-> -	strscpy(cap->card, cam->udev->product, sizeof(cap->card));
-> +	if (cam->udev->product)
-> +		strscpy(cap->card, cam->udev->product, sizeof(cap->card));
-> +	else
-> +		strscpy(cap->card, "", sizeof(cap->card));
-
-You can drop the 'else' part since cap->card is already zeroed by the
-V4L2 core framework. Looks good otherwise!
-
-Regards,
-
-	Hans
-
->  	strscpy(cap->bus_info, dev_name(&cam->udev->dev),
->  		sizeof(cap->bus_info));
->  	cap->device_caps = V4L2_CAP_VIDEO_CAPTURE |
+> -static int perf_sched__read_events(struct perf_sched *sched)
+> +static int __perf_sched__read_events(struct perf_sched *sched,
+> +					struct perf_session *session)
+>  {
+>  	const struct perf_evsel_str_handler handlers[] = {
+>  		{ "sched:sched_switch",	      process_sched_switch_event, },
+> @@ -1783,30 +1784,17 @@ static int perf_sched__read_events(struct perf_sched *sched)
+>  		{ "sched:sched_wakeup_new",   process_sched_wakeup_event, },
+>  		{ "sched:sched_migrate_task", process_sched_migrate_task_event, },
+>  	};
+> -	struct perf_session *session;
+> -	struct perf_data data = {
+> -		.path  = input_name,
+> -		.mode  = PERF_DATA_MODE_READ,
+> -		.force = sched->force,
+> -	};
+> -	int rc = -1;
+> -
+> -	session = perf_session__new(&data, false, &sched->tool);
+> -	if (session == NULL) {
+> -		pr_debug("No Memory for session\n");
+> -		return -1;
+> -	}
+>  
+>  	symbol__init(&session->header.env);
+>  
+>  	if (perf_session__set_tracepoints_handlers(session, handlers))
+> -		goto out_delete;
+> +		return -1;
+>  
+>  	if (perf_session__has_traces(session, "record -R")) {
+>  		int err = perf_session__process_events(session);
+>  		if (err) {
+>  			pr_err("Failed to process events, error %d", err);
+> -			goto out_delete;
+> +			return -1;
+>  		}
+>  
+>  		sched->nr_events      = session->evlist->stats.nr_events[0];
+> @@ -1814,9 +1802,28 @@ static int perf_sched__read_events(struct perf_sched *sched)
+>  		sched->nr_lost_chunks = session->evlist->stats.nr_events[PERF_RECORD_LOST];
+>  	}
+>  
+> -	rc = 0;
+> -out_delete:
+> +	return 0;
+> +}
+> +
+> +static int perf_sched__read_events(struct perf_sched *sched)
+> +{
+> +	struct perf_session *session;
+> +	struct perf_data data = {
+> +		.path  = input_name,
+> +		.mode  = PERF_DATA_MODE_READ,
+> +		.force = sched->force,
+> +	};
+> +	int rc;
+> +
+> +	session = perf_session__new(&data, false, &sched->tool);
+> +	if (session == NULL) {
+> +		pr_debug("No Memory for session\n");
+> +		return -1;
+> +	}
+> +
+> +	rc = __perf_sched__read_events(sched, session);
+>  	perf_session__delete(session);
+> +
+>  	return rc;
+>  }
+>  
+> @@ -3130,12 +3137,25 @@ static void perf_sched__merge_lat(struct perf_sched *sched)
+>  
+>  static int perf_sched__lat(struct perf_sched *sched)
+>  {
+> +	struct perf_session *session;
+> +	struct perf_data data = {
+> +		.path  = input_name,
+> +		.mode  = PERF_DATA_MODE_READ,
+> +		.force = sched->force,
+> +	};
+>  	struct rb_node *next;
+> +	int rc = -1;
+>  
+>  	setup_pager();
+>  
+> -	if (perf_sched__read_events(sched))
+> +	session = perf_session__new(&data, false, &sched->tool);
+> +	if (session == NULL) {
+> +		pr_debug("No Memory for session\n");
+>  		return -1;
+> +	}
+> +
+> +	if (__perf_sched__read_events(sched, session))
+> +		goto out_delete;
+>  
+>  	perf_sched__merge_lat(sched);
+>  	perf_sched__sort_lat(sched);
+> @@ -3164,7 +3184,10 @@ static int perf_sched__lat(struct perf_sched *sched)
+>  	print_bad_events(sched);
+>  	printf("\n");
+>  
+> -	return 0;
+> +	rc = 0;
+> +out_delete:
+> +	perf_session__delete(session);
+> +	return rc;
+>  }
+>  
+>  static int setup_map_cpus(struct perf_sched *sched)
+> -- 
+> 2.17.1
 > 
-
