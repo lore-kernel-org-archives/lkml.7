@@ -2,94 +2,182 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FAKE_REPLY_C,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFC7EC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 22:18:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0077BC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 22:18:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82A602081C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 22:18:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C3A42081C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 22:18:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="GXLavN/7"
+	dkim=pass (2048-bit key) header.d=fomichev-me.20150623.gappssmtp.com header.i=@fomichev-me.20150623.gappssmtp.com header.b="gnPu95pB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728523AbfEVWSI (ORCPT
+        id S1728984AbfEVWSq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 18:18:08 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:42054 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727899AbfEVWSI (ORCPT
+        Wed, 22 May 2019 18:18:46 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:37626 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725823AbfEVWSp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 18:18:08 -0400
-Received: by mail-pg1-f194.google.com with SMTP id e17so1859091pgo.9
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 15:18:08 -0700 (PDT)
+        Wed, 22 May 2019 18:18:45 -0400
+Received: by mail-pl1-f193.google.com with SMTP id p15so1731043pll.4
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 15:18:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chrisdown.name; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=Jd0RSCXoP1EdL1cjt/xgeuNaQX2V7Ph/JBkgB7uNH0g=;
-        b=GXLavN/7grE6LNJqyGhvPPesKBk185WFjgJna7ETOIJBaq1hY/O3DZYH9mqYTRPG6J
-         GdFKCMBa8+OJJ7SXTg/NgAmRQpnKKVfSSiZLmo2keKmw0ot67menzPS8qFUMaPrsgUDO
-         GNub7HFs2rNTz94sRTH62HK1i3T4MLXdmoCYI=
+        d=fomichev-me.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=QUdAmGAks4E+4DtrN0mw6crQFbwVYGBopZMl7vlB5xU=;
+        b=gnPu95pB76Hc4txzz6BDi48JQGwlBKlryzlDHuG/n0DhE+ubr+d43v3d4CVQQARDfv
+         rDONLYaYKQ8KqJ9i++TTN0BPf98fY37iG3zfc6/oSlvf6rd3PoVUGcLZ+qk5MujPnyHx
+         kGbxwb6lScVthKUY9+NLiUOuf7eI7JIbT0Vyx5A860qAlECkU6+LM3bqn/pAj4MZ7srv
+         5+I5uMRWrfuHhSKRjjpoUuu2QdfaAe5pQHq6mnpg8lhi8LjhGXP/C0tsx4cyD/1pjA+b
+         maDom5+rvbWtufW7OFGn2mS3ghksirusuFNUjDPBn4Vw4BDTtymMKQRTfGPGyPsDtI01
+         D+nw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Jd0RSCXoP1EdL1cjt/xgeuNaQX2V7Ph/JBkgB7uNH0g=;
-        b=etYOGF3PZX2lZZ7m1//Usl8rE+9POhSF7fERskw9NccNX+FbPFvhQFYcBerKUFmzAU
-         hU6T2v9O70OFOtCwR3IeeYzNy4TYFGdhOyblHC8ClUJKSUy6SbYkJWq70fsdI1HaUJGD
-         1rGr3QMvLHADcvgenRShG5mPm8muFp0iHsu/HBwOUDuNapPfXjrzCStUX085gFiGdRIv
-         sZhZAHb8Bmvq2J7GwMSzpgTsy8IwnRqJNzMLYDjPgUbnhylQUpKAI9GXn7fphz3R/NvC
-         Up3V3tRDlm3jeBjxhQZFCpo5ydeZSJXi/9lTE4VHazzEZnl2PMaiPS+ZGxQoSxWYgLcX
-         upcQ==
-X-Gm-Message-State: APjAAAUw2X9LvDhbCaIaQnWcANcPuyv/W/9KNLynlzNTey8Y9/h7t/rY
-        pf155NQtPkhNkibBIT9cMUFfyQ==
-X-Google-Smtp-Source: APXvYqwYkSpq4sI0OwVnuYJtsng97b6lnFAf2peUNKoiZTQR4ze4ezgmfpK+1cl50ZPOllSPkVklsg==
-X-Received: by 2002:a63:6f0b:: with SMTP id k11mr92068194pgc.342.1558563487623;
-        Wed, 22 May 2019 15:18:07 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::e733])
-        by smtp.gmail.com with ESMTPSA id l7sm28232045pfl.9.2019.05.22.15.18.06
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 22 May 2019 15:18:06 -0700 (PDT)
-Date:   Wed, 22 May 2019 18:18:05 -0400
-From:   Chris Down <chris@chrisdown.name>
-To:     deepa.kernel@gmail.com
-Cc:     akpm@linux-foundation.org, arnd@arndb.de, axboe@kernel.dk,
-        dave@stgolabs.net, dbueso@suse.de, e@80x24.org, jbaron@akamai.com,
-        linux-aio@kvack.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, oleg@redhat.com,
-        omar.kilani@gmail.com, stable@vger.kernel.org, tglx@linutronix.de,
-        viro@zeniv.linux.org.uk, linux-mm@kvack.org
-Subject: Re: [PATCH v2] signal: Adjust error codes according to
- restore_user_sigmask()
-Message-ID: <20190522221805.GA30062@chrisdown.name>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=QUdAmGAks4E+4DtrN0mw6crQFbwVYGBopZMl7vlB5xU=;
+        b=OdjqDzLlKceA4KZ2jGPe4fGiFqjhfBZuEZ9DOk9O+yAWafaMwvyUKpXrx9bVhYkCq4
+         vcMmATPq6gdDRoSwt4U9hOLyyfIOwduluriCR5wFQz+B/kGTR3wzMeU1vrzPNkei/Eb9
+         n9rM8g2eoQZeFbEh+Uz1IG9jzGfS52BSP0k+fd3AnQyX4Qx61iH/rp1zrKrWU//IefuE
+         BGaLPmMr4ZhvLVfgoErMSfmNL99iqeN0OL5eiudRhSKQESocJMvfN6V4ytA1TX8IxPYX
+         4gwvNwGc94CpAzKpRKLaK2NnS8EQDyX0b4EXBUxT3yQTFCvwYly4h3w53hY3IG7In179
+         qO7w==
+X-Gm-Message-State: APjAAAXaDnfZEwgOb4tyKHE6hyHE2rYl209wkry2vQqTpdU6AQOEIymj
+        Y+MU5xr4zm3ZPck2RofXU2ZNyA==
+X-Google-Smtp-Source: APXvYqwPSBEYFh3s2/ZKBKXC4f3IrI47OPivC9KwR7cQjypOsdzUYyqv0o0smuB9CZYaU/DwXSGTXA==
+X-Received: by 2002:a17:902:b949:: with SMTP id h9mr49158945pls.50.1558563524887;
+        Wed, 22 May 2019 15:18:44 -0700 (PDT)
+Received: from localhost ([2601:646:8f00:18d9:d0fa:7a4b:764f:de48])
+        by smtp.gmail.com with ESMTPSA id q14sm26900610pgg.10.2019.05.22.15.18.43
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 22 May 2019 15:18:44 -0700 (PDT)
+Date:   Wed, 22 May 2019 15:18:43 -0700
+From:   Stanislav Fomichev <sdf@fomichev.me>
+To:     Roman Gushchin <guro@fb.com>
+Cc:     bpf@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>, netdev@vger.kernel.org,
+        Tejun Heo <tj@kernel.org>, kernel-team@fb.com,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH bpf-next 3/4] selftests/bpf: enable all available cgroup
+ v2 controllers
+Message-ID: <20190522221843.GA3032@mini-arch>
+References: <20190522212932.2646247-1-guro@fb.com>
+ <20190522212932.2646247-4-guro@fb.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190522032144.10995-1-deepa.kernel@gmail.com>
+In-Reply-To: <20190522212932.2646247-4-guro@fb.com>
 User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+Cc: linux-mm, since this broke mmots tree and has been applied there
+On 05/22, Roman Gushchin wrote:
+> Enable all available cgroup v2 controllers when setting up
+> the environment for the bpf kselftests. It's required to properly test
+> the bpf prog auto-detach feature. Also it will generally increase
+> the code coverage.
+> 
+> Signed-off-by: Roman Gushchin <guro@fb.com>
+> ---
+>  tools/testing/selftests/bpf/cgroup_helpers.c | 58 ++++++++++++++++++++
+>  1 file changed, 58 insertions(+)
+> 
+> diff --git a/tools/testing/selftests/bpf/cgroup_helpers.c b/tools/testing/selftests/bpf/cgroup_helpers.c
+> index 6692a40a6979..4533839c0ce0 100644
+> --- a/tools/testing/selftests/bpf/cgroup_helpers.c
+> +++ b/tools/testing/selftests/bpf/cgroup_helpers.c
+> @@ -33,6 +33,61 @@
+>  	snprintf(buf, sizeof(buf), "%s%s%s", CGROUP_MOUNT_PATH, \
+>  		 CGROUP_WORK_DIR, path)
+>  
+> +/**
+> + * enable_all_controllers() - Enable all available cgroup v2 controllers
+> + *
+> + * Enable all available cgroup v2 controllers in order to increase
+> + * the code coverage.
+> + *
+> + * If successful, 0 is returned.
+> + */
+> +int enable_all_controllers(char *cgroup_path)
+> +{
+> +	char path[PATH_MAX + 1];
+> +	char buf[PATH_MAX];
+> +	char *c, *c2;
+> +	int fd, cfd;
+> +	size_t len;
+> +
+> +	snprintf(path, sizeof(path), "%s/cgroup.controllers", cgroup_path);
+> +	fd = open(path, O_RDONLY);
+> +	if (fd < 0) {
+> +		log_err("Opening cgroup.controllers: %s", path);
+> +		return -1;
+> +	}
+> +
+> +	len = read(fd, buf, sizeof(buf) - 1);
+> +	if (len < 0) {
+> +		close(fd);
+> +		log_err("Reading cgroup.controllers: %s", path);
+> +		return -1;
+> +	}
+> +
+> +	close(fd);
+> +
+> +	/* No controllers available? We're probably on cgroup v1. */
+> +	if (len == 0)
+> +		return 0;
+> +
+> +	snprintf(path, sizeof(path), "%s/cgroup.subtree_control", cgroup_path);
+> +	cfd = open(path, O_RDWR);
+> +	if (cfd < 0) {
+> +		log_err("Opening cgroup.subtree_control: %s", path);
+> +		return -1;
+> +	}
+> +
 
-This patch is missing a definition for signal_detected in io_cqring_wait, which 
-breaks the build.
+[..]
+> +	buf[len] = 0;
+nit: move this up a bit? Right after:
 
-diff --git fs/io_uring.c fs/io_uring.c
-index b785c8d7efc4..b34311675d2d 100644
---- fs/io_uring.c
-+++ fs/io_uring.c
-@@ -2182,7 +2182,7 @@ static int io_cqring_wait(struct io_ring_ctx *ctx, int min_events,
- {
-        struct io_cq_ring *ring = ctx->cq_ring;
-        sigset_t ksigmask, sigsaved;
--       int ret;
-+       int ret, signal_detected;
- 
-        if (io_cqring_events(ring) >= min_events)
-                return 0;
+	if (len < 0) {
+		...
+	}
+	buf[len] = 0;
+	close(fd);
+
+I was actually writing a comment about missing buf[len]=0 until I
+somehow spotted it :-)
+
+> +	for (c = strtok_r(buf, " ", &c2); c; c = strtok_r(NULL, " ", &c2)) {
+> +		if (dprintf(cfd, "+%s\n", c) <= 0) {
+> +			log_err("Enabling controller %s: %s", c, path);
+> +			close(cfd);
+> +			return -1;
+> +		}
+> +	}
+> +	close(cfd);
+> +	return 0;
+> +}
+> +
+>  /**
+>   * setup_cgroup_environment() - Setup the cgroup environment
+>   *
+> @@ -71,6 +126,9 @@ int setup_cgroup_environment(void)
+>  		return 1;
+>  	}
+>  
+> +	if (enable_all_controllers(cgroup_workdir))
+> +		return 1;
+> +
+>  	return 0;
+>  }
+>  
+> -- 
+> 2.20.1
+> 
