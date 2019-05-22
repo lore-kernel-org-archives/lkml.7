@@ -2,139 +2,122 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB984C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:52:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17CD8C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:53:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E93121019
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:52:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558558355;
-	bh=bhpBHeEEilTJAKuT5Mz1T+jvRriCi/QY/aaDhmaV7JI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=w/8opV5kRlIza2NPeNJCqQwRdBww4FSDD7BxASWvBMo/nvvf8ZnA4cK99L+YhsyN0
-	 GYC8HLBoYgL3Ei2ybdD295kJA1oeh7Vr0ad51hAWmsqVoHMKJcVfWITNlL7/8y+AwA
-	 XWzjQX+k5ielbt9HzFr6Lw1wYFVsdLZqPzbL/MsY=
+	by mail.kernel.org (Postfix) with ESMTP id AF75221019
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:53:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RjfDSqdM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730287AbfEVUwf (ORCPT
+        id S1730367AbfEVUxf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 16:52:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37892 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729528AbfEVUwe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 16:52:34 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B37220675;
-        Wed, 22 May 2019 20:52:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558558353;
-        bh=bhpBHeEEilTJAKuT5Mz1T+jvRriCi/QY/aaDhmaV7JI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ouHOrgyYGR6Ej2mSKFz/3tkEsldkGSNiCr50YNVhTymWt2/NSkU5IZLSv5wHzIHey
-         yfJCtejVdReX1qKpbB02KMuX1ladLoJjzMV47fSNX14NzIFTNC7O2HJsIfig+Dgxa+
-         EdwV7TDs99XEyF6g7uXFcv7KEVI02A4FvjQ/pdmU=
-Date:   Wed, 22 May 2019 15:52:31 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     Kai Heng Feng <kai.heng.feng@canonical.com>,
-        Rafael Wysocki <rafael.j.wysocki@intel.com>,
-        linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        linux-usb@vger.kernel.org
-Subject: Re: [PATCH] PCI / PM: Don't runtime suspend when device only
- supports wakeup from D0
-Message-ID: <20190522205231.GD79339@google.com>
-References: <20190522181157.GC79339@google.com>
- <Pine.LNX.4.44L0.1905221433310.1410-100000@iolanthe.rowland.org>
+        Wed, 22 May 2019 16:53:35 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:43323 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729528AbfEVUxe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 16:53:34 -0400
+Received: by mail-pl1-f195.google.com with SMTP id gn7so1624844plb.10;
+        Wed, 22 May 2019 13:53:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=/Ss3XekhoAeJW501j2lZN9cRIVhRSBmA8AmuXwTseos=;
+        b=RjfDSqdM7JMfp+j0CLByP8ahJAWw1TNDM1Ig/33Xu+MNPw7uUoZlzfGFyiC1/rAXnw
+         bC9LRKWe99q/8iAuluWjaUwIsAWXloDLd2LpOh3T4hnwzNdFRWf0RCBefdvaxkNMAlan
+         lrpbYo12CMIlAtogUcyLXP3p7bvlL9ZksNTNb7j3HqeTG3dKGBTPQx+xTEY09zdzh6ZO
+         HA1AzXVmIV4k5BLBgXc5pNFFDyhDi6r3k4IC5A0Y+LKcmx7DTs3MZaekoWUeVF4OgaMx
+         clsjLITtQYnJPVC1/iizueodZvd5gA5QRIcsLS0FbphKeNoHbJzvlI3ge3UZuYbPouzC
+         Vi/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/Ss3XekhoAeJW501j2lZN9cRIVhRSBmA8AmuXwTseos=;
+        b=pUlRO0jcmoZXCg/uIGDh0OiP9FeIzTR/55HtJEVz05UIAB2vO2hMs06oDsjUXDW3WC
+         UB4Tf9amuUT0bWWaOmzaZNqyXFJyo2J5VrBHIlUiJ9dNucUsaAKKg3TOzbiB5QRm+fBZ
+         mYAiUHAzFTrxRy6wCFcTRjswHDvK8hr86jx3Uzopv9syAj36olfIO8qtf/jp7htCq2A0
+         ljSoHe5hrtWqR6sKzm2Lz7EcYsAOuC27C32RwC1HdmuvmtQJUcS5hQIJsNiUryUyQacF
+         t8+69jMuPMhkj4pfqjGP0m2Dz0M415v5E6/CPHfpyP3Rksk/9rVDhya++0FI0fmteW36
+         E+mw==
+X-Gm-Message-State: APjAAAVH7pzV8SGAOI5sEOZ9RRud+UhN4PsXZVxUyoZQKvvkPJIFO340
+        M7E7Qnmk6XXWj5tIXqJpnCwmw2oI
+X-Google-Smtp-Source: APXvYqzVG7hCS6Nzs2QqDdx1m8Y/SSCXSMRoPwHkzq4oMVA8lyuBeEmOOJAy6Q2Rx3dmKvansvlUMw==
+X-Received: by 2002:a17:902:e7:: with SMTP id a94mr67793430pla.182.1558558413947;
+        Wed, 22 May 2019 13:53:33 -0700 (PDT)
+Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:180::6565])
+        by smtp.gmail.com with ESMTPSA id y16sm3811085pfl.140.2019.05.22.13.53.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 22 May 2019 13:53:32 -0700 (PDT)
+Date:   Wed, 22 May 2019 13:53:31 -0700
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     Kris Van Hees <kris.van.hees@oracle.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, dtrace-devel@oss.oracle.com,
+        linux-kernel@vger.kernel.org, mhiramat@kernel.org, acme@kernel.org,
+        ast@kernel.org, daniel@iogearbox.net, peterz@infradead.org
+Subject: Re: [RFC PATCH 00/11] bpf, trace, dtrace: DTrace BPF program type
+ implementation and sample use
+Message-ID: <20190522205329.uu26oq2saj56og5m@ast-mbp.dhcp.thefacebook.com>
+References: <201905202347.x4KNl0cs030532@aserv0121.oracle.com>
+ <20190521175617.ipry6ue7o24a2e6n@ast-mbp.dhcp.thefacebook.com>
+ <20190521184137.GH2422@oracle.com>
+ <20190521205533.evfszcjvdouby7vp@ast-mbp.dhcp.thefacebook.com>
+ <20190521173618.2ebe8c1f@gandalf.local.home>
+ <20190521214325.rr7emn5z3b7wqiiy@ast-mbp.dhcp.thefacebook.com>
+ <20190521174757.74ec8937@gandalf.local.home>
+ <20190522052327.GN2422@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Pine.LNX.4.44L0.1905221433310.1410-100000@iolanthe.rowland.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190522052327.GN2422@oracle.com>
+User-Agent: NeoMutt/20180223
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 22, 2019 at 02:39:56PM -0400, Alan Stern wrote:
-> On Wed, 22 May 2019, Bjorn Helgaas wrote:
-> > On Wed, May 22, 2019 at 11:46:25PM +0800, Kai Heng Feng wrote:
-> > > > On May 22, 2019, at 9:48 PM, Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > > On Wed, May 22, 2019 at 11:42:14AM +0800, Kai Heng Feng wrote:
-> > > >> at 6:23 AM, Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > >>> On Wed, May 22, 2019 at 12:31:04AM +0800, Kai-Heng Feng wrote:
-> > > >>>> There's an xHC device that doesn't wake when a USB device gets plugged
-> > > >>>> to its USB port. The driver's own runtime suspend callback was called,
-> > > >>>> PME signaling was enabled, but it stays at PCI D0.
-> > 
-> > > > ...
-> > > > And I guess this patch basically means we wouldn't call the driver's
-> > > > suspend callback if we're merely going to stay at D0, so the driver
-> > > > would have no idea anything happened.  That might match
-> > > > Documentation/power/pci.txt better, because it suggests that the
-> > > > suspend callback is related to putting a device in a low-power state,
-> > > > and D0 is not a low-power state.
-> > > 
-> > > Yes, the patch is to let the device stay at D0 and don’t run driver’s own
-> > > runtime suspend routine.
-> > > 
-> > > I guess I’ll just proceed to send a V2 with updated commit message?
-> > 
-> > Now that I understand what "runtime suspended to D0" means, help me
-> > understand what's actually wrong.
+On Wed, May 22, 2019 at 01:23:27AM -0400, Kris Van Hees wrote:
 > 
-> Kai's point is that the xhci-hcd driver thinks the device is now in 
-> runtime suspend, because the runtime_suspend method has been executed.  
-> But in fact the device is still in D0, and as a result, PME signalling 
-> may not work correctly.
+> Userspace aside, there are various features that are not currently available
+> such as retrieving the ppid of the current task, and various other data items
+> that relate to the current task that triggered a probe.  There are ways to
+> work around it (using the bpf_probe_read() helper, which actually performs a
+> probe_kernel_read()) but that is rather clunky
 
-The device claims to be able to signal PME from D0 (this is from the lspci
-in https://bugzilla.kernel.org/show_bug.cgi?id=203673):
+Sounds like you're admiting that the access to all kernel data structures
+is actually available, but you don't want to change user space to use it?
 
-  00:10.0 USB controller: Advanced Micro Devices, Inc. [AMD] FCH USB XHCI Controller (rev 20) (prog-if 30 [XHCI])
-    Capabilities: [50] Power Management version 3
-      Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0+,D1-,D2-,D3hot+,D3cold+)
+> triggered the execution.  Often, a single DTrace clause is associated with
+> multiple probes, of different types.  Probes in the kernel (kprobe, perf event,
+> tracepoint, ...) are associated with their own BPF program type, so it is not
+> possible to load the DTrace clause (translated into BPF code) once and
+> associate it with probes of different types.  Instead, I'd have to load it
+> as a BPF_PROG_TYPE_KPROBE program to associate it with a kprobe, and I'd have
+> to load it as a BPF_PROG_TYPE_TRACEPOINT program to associate it with a
+> tracepoint, and so on.  This also means that I suddenly have to add code to
+> the userspace component to know about the different program types with more
+> detail, like what helpers are available to specific program types.
 
-From the xHCI spec r1.0, sec 4.15.2.3, it looks like a connect
-detected while in D0 should assert PME# if enabled (and WCE is set).
+That also sounds that there is a solution, but you don't want to change user space ?
 
-> On the other hand, it wasn't clear from the patch description whether
-> this actually causes a problem on real systems.  The description only
-> said that the problem was theoretical.
+> Another advantage of being able to operate on a more abstract probe concept
+> that is not tied to a specific probe type is that the userspace component does
+> not need to know about the implementation details of the specific probes.
 
-Kai did say nothing happens when hot-adding a USB device, so I think
-there really is a problem.  This should be an obvious problem that
-lots of people would trip over, so I expect there should be reports in
-launchpad, etc.  I'd really like to have those bread crumbs.  Kai, can
-you add a complete dmesg log to the bugzilla?  Hints from the log,
-like the platform name, can help find related reports.
+If that is indeed the case that dtrace is broken _by design_
+and nothing on the kernel side can fix it.
 
-> > The PCI core apparently *does* enable PME when we "suspend to D0".
-> > But somehow calling the xHCI runtime suspend callback makes the
-> > driver unable to notice when the PME is signaled?
-> 
-> According to Kai, PME signalling doesn't work in D0 -- or at least,
-> it is _documented_ not to work in D0 -- even though it is enabled
-> and the device claims to support it.
+bpf prog attached to NMI is running in NMI.
+That is very different execution context vs kprobe.
+kprobe execution context is also different from syscall.
 
-I didn't understand this part.  From a PCI perspective, PME signaling
-while in D0 is an optional feature and should work if the device
-advertises support for it.  If it doesn't work on this device, we
-should have a quirk to indicate that.
-
-But I thought Kai said the device *can* signal PME from D0, but for
-some reason we don't handle it correctly if we have called the xHCI
-suspend callback.
-
-That's the part I don't understand.  Is this an xHCI driver issue?
-Should the suspend callback do something different if we're staying in
-D0?  I'm not sure the callback even knows what Dx state we're going
-to.
-
-Bjorn
+The user writing the script has to be aware in what context
+that script will be executing.
