@@ -3,175 +3,95 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A297CC282DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:44:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1355DC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:44:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 750992081C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:44:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="A+/dnBdX"
+	by mail.kernel.org (Postfix) with ESMTP id CEC632081C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:44:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558554288;
+	bh=WRDWdcYe/dmdSqigJ92qRz3Bm1CJW3V6dtXb0v4xKY8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=bA0p5Ie/dxTyVqLE75/vpJn2YYF4QRA4XAtE8fI3U8S3DrhLtzfw67Re9Jp+U1E2a
+	 xF3U7WNA4tUzC1z+GUVeb6W0eTR0BQnev7+Ne5/rNNGzc8iLegb2qyN08koAEv5eiB
+	 IXalsMI7rP/oP9zl82ZNMkjYT7DxiKm7hKhT3enA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732474AbfEVT2I (ORCPT
+        id S1733267AbfEVTor (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:28:08 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:41340 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731387AbfEVT1w (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:27:52 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4MJRkxb016907;
-        Wed, 22 May 2019 14:27:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1558553266;
-        bh=itExORL3KdLT3HQGYDuVv7awOOxxOEGDK+mdWtGGt8g=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=A+/dnBdXikfvNMSE4qlFprTFq9k/4DOWQwNTvLSEcSQaFH7NO4+lMSgG1p/NrnXfb
-         XBMExeCbtNqe0+NQZVztFJlqD/pntCx5m9cplu04h5rPeGrKv3JhTNSNN5mM6r5i5+
-         diMFASqzmeU5N4zzOhWUKjRBIms04VocZ4s5HO1A=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4MJRkgp010662
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 22 May 2019 14:27:46 -0500
-Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 22
- May 2019 14:27:45 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 22 May 2019 14:27:45 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4MJRj89101064;
-        Wed, 22 May 2019 14:27:45 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <broonie@kernel.org>,
-        <lgirdwood@gmail.com>
-CC:     <lee.jones@linaro.org>, <linux-leds@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
-Subject: [RESEND PATCH v4 4/6] regulator: lm363x: Add support for LM36274
-Date:   Wed, 22 May 2019 14:27:31 -0500
-Message-ID: <20190522192733.13422-5-dmurphy@ti.com>
-X-Mailer: git-send-email 2.21.0.5.gaeb582a983
-In-Reply-To: <20190522192733.13422-1-dmurphy@ti.com>
-References: <20190522192733.13422-1-dmurphy@ti.com>
+        Wed, 22 May 2019 15:44:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50608 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731993AbfEVT2F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:28:05 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A567E204FD;
+        Wed, 22 May 2019 19:28:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558553284;
+        bh=WRDWdcYe/dmdSqigJ92qRz3Bm1CJW3V6dtXb0v4xKY8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=F77lmuFZ69nzbtT1vcXEjBKeZGw9Q4bs6o4uqQY5+1sRAnF6mmBA97+C5+GwnAliL
+         lQyy8LuJ2t/vnHj10xO6gl+ArmHm0tYGzUyIduvgQfRZii5kkhjK4YwjkyzmmWOvyi
+         rgB8XZD9vHC8BKabmmyzsUp0nxrkm/MK4VMFWAu8=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 058/244] mwifiex: prevent an array overflow
+Date:   Wed, 22 May 2019 15:23:24 -0400
+Message-Id: <20190522192630.24917-58-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190522192630.24917-1-sashal@kernel.org>
+References: <20190522192630.24917-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adding regulator support for the LM36274 backlight driver.
-This device can leverage this existing code as the functionality
-and registers are common enough between the LM36274 and the LM363x
-series of devices.
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
+[ Upstream commit b4c35c17227fe437ded17ce683a6927845f8c4a4 ]
+
+The "rate_index" is only used as an index into the phist_data->rx_rate[]
+array in the mwifiex_hist_data_set() function.  That array has
+MWIFIEX_MAX_AC_RX_RATES (74) elements and it's used to generate some
+debugfs information.  The "rate_index" variable comes from the network
+skb->data[] and it is a u8 so it's in the 0-255 range.  We need to cap
+it to prevent an array overflow.
+
+Fixes: cbf6e05527a7 ("mwifiex: add rx histogram statistics support")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/regulator/Kconfig            |  2 +-
- drivers/regulator/lm363x-regulator.c | 52 ++++++++++++++++++++++++++++
- 2 files changed, 53 insertions(+), 1 deletion(-)
+ drivers/net/wireless/marvell/mwifiex/cfp.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
-index b7f249ee5e68..23252ae81fdf 100644
---- a/drivers/regulator/Kconfig
-+++ b/drivers/regulator/Kconfig
-@@ -362,7 +362,7 @@ config REGULATOR_LM363X
- 	tristate "TI LM363X voltage regulators"
- 	depends on MFD_TI_LMU
- 	help
--	  This driver supports LM3631 and LM3632 voltage regulators for
-+	  This driver supports LM3631, LM3632 and LM36274 voltage regulators for
- 	  the LCD bias.
- 	  One boost output voltage is configurable and always on.
- 	  Other LDOs are used for the display module.
-diff --git a/drivers/regulator/lm363x-regulator.c b/drivers/regulator/lm363x-regulator.c
-index 382b1cecdd93..1944677b1448 100644
---- a/drivers/regulator/lm363x-regulator.c
-+++ b/drivers/regulator/lm363x-regulator.c
-@@ -37,6 +37,11 @@
- #define LM3632_VBOOST_MIN		4500000
- #define LM3632_VLDO_MIN			4000000
+diff --git a/drivers/net/wireless/marvell/mwifiex/cfp.c b/drivers/net/wireless/marvell/mwifiex/cfp.c
+index bfe84e55df776..f1522fb1c1e87 100644
+--- a/drivers/net/wireless/marvell/mwifiex/cfp.c
++++ b/drivers/net/wireless/marvell/mwifiex/cfp.c
+@@ -531,5 +531,8 @@ u8 mwifiex_adjust_data_rate(struct mwifiex_private *priv,
+ 		rate_index = (rx_rate > MWIFIEX_RATE_INDEX_OFDM0) ?
+ 			      rx_rate - 1 : rx_rate;
  
-+/* LM36274 */
-+#define LM36274_BOOST_VSEL_MAX		0x3f
-+#define LM36274_LDO_VSEL_MAX		0x34
-+#define LM36274_VOLTAGE_MIN		4000000
++	if (rate_index >= MWIFIEX_MAX_AC_RX_RATES)
++		rate_index = MWIFIEX_MAX_AC_RX_RATES - 1;
 +
- /* Common */
- #define LM363X_STEP_50mV		50000
- #define LM363X_STEP_500mV		500000
-@@ -217,6 +222,51 @@ static const struct regulator_desc lm363x_regulator_desc[] = {
- 		.enable_reg     = LM3632_REG_BIAS_CONFIG,
- 		.enable_mask    = LM3632_EN_VNEG_MASK,
- 	},
-+
-+	/* LM36274 */
-+	{
-+		.name           = "vboost",
-+		.of_match	= "vboost",
-+		.id             = LM36274_BOOST,
-+		.ops            = &lm363x_boost_voltage_table_ops,
-+		.n_voltages     = LM36274_BOOST_VSEL_MAX,
-+		.min_uV         = LM36274_VOLTAGE_MIN,
-+		.uV_step        = LM363X_STEP_50mV,
-+		.type           = REGULATOR_VOLTAGE,
-+		.owner          = THIS_MODULE,
-+		.vsel_reg       = LM36274_REG_VOUT_BOOST,
-+		.vsel_mask      = LM36274_VOUT_MASK,
-+	},
-+	{
-+		.name           = "ldo_vpos",
-+		.of_match	= "vpos",
-+		.id             = LM36274_LDO_POS,
-+		.ops            = &lm363x_regulator_voltage_table_ops,
-+		.n_voltages     = LM36274_LDO_VSEL_MAX,
-+		.min_uV         = LM36274_VOLTAGE_MIN,
-+		.uV_step        = LM363X_STEP_50mV,
-+		.type           = REGULATOR_VOLTAGE,
-+		.owner          = THIS_MODULE,
-+		.vsel_reg       = LM36274_REG_VOUT_POS,
-+		.vsel_mask      = LM36274_VOUT_MASK,
-+		.enable_reg     = LM36274_REG_BIAS_CONFIG_1,
-+		.enable_mask    = LM36274_EN_VPOS_MASK,
-+	},
-+	{
-+		.name           = "ldo_vneg",
-+		.of_match	= "vneg",
-+		.id             = LM36274_LDO_NEG,
-+		.ops            = &lm363x_regulator_voltage_table_ops,
-+		.n_voltages     = LM36274_LDO_VSEL_MAX,
-+		.min_uV         = LM36274_VOLTAGE_MIN,
-+		.uV_step        = LM363X_STEP_50mV,
-+		.type           = REGULATOR_VOLTAGE,
-+		.owner          = THIS_MODULE,
-+		.vsel_reg       = LM36274_REG_VOUT_NEG,
-+		.vsel_mask      = LM36274_VOUT_MASK,
-+		.enable_reg     = LM36274_REG_BIAS_CONFIG_1,
-+		.enable_mask    = LM36274_EN_VNEG_MASK,
-+	},
- };
- 
- static struct gpio_desc *lm363x_regulator_of_get_enable_gpio(struct device *dev, int id)
-@@ -229,9 +279,11 @@ static struct gpio_desc *lm363x_regulator_of_get_enable_gpio(struct device *dev,
- 	 */
- 	switch (id) {
- 	case LM3632_LDO_POS:
-+	case LM36274_LDO_POS:
- 		return gpiod_get_index_optional(dev, "enable", 0,
- 				GPIOD_OUT_LOW | GPIOD_FLAGS_BIT_NONEXCLUSIVE);
- 	case LM3632_LDO_NEG:
-+	case LM36274_LDO_NEG:
- 		return gpiod_get_index_optional(dev, "enable", 1,
- 				GPIOD_OUT_LOW | GPIOD_FLAGS_BIT_NONEXCLUSIVE);
- 	default:
+ 	return rate_index;
+ }
 -- 
-2.21.0.5.gaeb582a983
+2.20.1
 
