@@ -2,270 +2,56 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D54BC18E7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 08:56:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60E52C18E7D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 08:56:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50BB1217D4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 08:56:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="H7ig9Dkd"
+	by mail.kernel.org (Postfix) with ESMTP id 3C57820856
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 08:56:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728735AbfEVI4T (ORCPT
+        id S1728786AbfEVI4v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 04:56:19 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:15243 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727796AbfEVI4T (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 04:56:19 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ce50eb00000>; Wed, 22 May 2019 01:56:16 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Wed, 22 May 2019 01:56:16 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Wed, 22 May 2019 01:56:16 -0700
-Received: from [10.24.45.128] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 22 May
- 2019 08:56:10 +0000
-Subject: Re: [PATCH V7 04/15] PCI: dwc: Move config space capability search
- API
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     <lorenzo.pieralisi@arm.com>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <kishon@ti.com>, <catalin.marinas@arm.com>,
-        <will.deacon@arm.com>, <jingoohan1@gmail.com>,
-        <gustavo.pimentel@synopsys.com>, <mperttunen@nvidia.com>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
-References: <20190517123846.3708-1-vidyas@nvidia.com>
- <20190517123846.3708-5-vidyas@nvidia.com> <20190521211757.GF57618@google.com>
-X-Nvconfidentiality: public
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <fd164d1f-cf99-fe81-c368-46e3a3742a59@nvidia.com>
-Date:   Wed, 22 May 2019 14:26:08 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 22 May 2019 04:56:51 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:43640 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727796AbfEVI4v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 04:56:51 -0400
+Received: from we0524.dip.tu-dresden.de ([141.76.178.12] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1hTN3B-0008Cu-RQ; Wed, 22 May 2019 10:56:41 +0200
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v2 1/3] dt-bindings: gpu: add #cooling-cells property to the ARM Mali Midgard GPU binding
+Date:   Wed, 22 May 2019 10:56:41 +0200
+Message-ID: <2879152.HiopfVTTri@phil>
+In-Reply-To: <20190516172510.181473-1-mka@chromium.org>
+References: <20190516172510.181473-1-mka@chromium.org>
 MIME-Version: 1.0
-In-Reply-To: <20190521211757.GF57618@google.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL106.nvidia.com (172.18.146.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1558515376; bh=N5UCTQ0Qf3AxzLE/m3Mt3Uz4MoUt0G5MVA4MUrcYgjU=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=H7ig9Dkd6/qCtoQSM9CHdizNJAtYYEgV880CAyRSPzwwAbd0ON5e2B2zSimxScECX
-         2DcyRpTM+hnuxBBHTwXrAUmH/6BaXys4QwUQZVttaMLscQ/FjGpOO7y3f6EoHtWHUw
-         mWaMYhpb0OBZJElgPwsoflDpGisEh0NMEcP85FK1+mol5oFRFWVIZ+gShKoSf+UDS7
-         nf+7bwdB9/3XFgpQpwXKk0nxuJZSEcX1RZ6nz1ZgxlDkehFQR7uongXo92t1s3Tofv
-         1Srxotb5+yfq6PQTxBiOIutjHsF7gU2XmdG1GgAFVaVaBJBYP9c8VtZ3FK2NwPLAMb
-         bAG/lQBsYN+2w==
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/22/2019 2:47 AM, Bjorn Helgaas wrote:
-> On Fri, May 17, 2019 at 06:08:35PM +0530, Vidya Sagar wrote:
->> Move PCIe config space capability search API to common DesignWare file
->> as this can be used by both host and ep mode codes.
->>
->> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->> Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
->> ---
->> Changes since [v6]:
->> * Exported dw_pcie_find_capability() API
->>
->> Changes since [v5]:
->> * None
->>
->> Changes since [v4]:
->> * Removed redundant APIs in pcie-designware-ep.c file after moving them
->>    to pcie-designware.c file based on Bjorn's comments.
->>
->> Changes since [v3]:
->> * Rebased to linux-next top of the tree
->>
->> Changes since [v2]:
->> * None
->>
->> Changes since [v1]:
->> * Removed dw_pcie_find_next_ext_capability() API from here and made a
->>    separate patch for that
->>
->>   .../pci/controller/dwc/pcie-designware-ep.c   | 37 +----------------
->>   drivers/pci/controller/dwc/pcie-designware.c  | 40 +++++++++++++++++++
->>   drivers/pci/controller/dwc/pcie-designware.h  |  2 +
->>   3 files changed, 44 insertions(+), 35 deletions(-)
->>
->> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
->> index 2bf5a35c0570..65f479250087 100644
->> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
->> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
->> @@ -40,39 +40,6 @@ void dw_pcie_ep_reset_bar(struct dw_pcie *pci, enum pci_barno bar)
->>   	__dw_pcie_ep_reset_bar(pci, bar, 0);
->>   }
->>   
->> -static u8 __dw_pcie_ep_find_next_cap(struct dw_pcie *pci, u8 cap_ptr,
->> -			      u8 cap)
->> -{
->> -	u8 cap_id, next_cap_ptr;
->> -	u16 reg;
->> -
->> -	if (!cap_ptr)
->> -		return 0;
->> -
->> -	reg = dw_pcie_readw_dbi(pci, cap_ptr);
->> -	cap_id = (reg & 0x00ff);
->> -
->> -	if (cap_id > PCI_CAP_ID_MAX)
->> -		return 0;
->> -
->> -	if (cap_id == cap)
->> -		return cap_ptr;
->> -
->> -	next_cap_ptr = (reg & 0xff00) >> 8;
->> -	return __dw_pcie_ep_find_next_cap(pci, next_cap_ptr, cap);
->> -}
->> -
->> -static u8 dw_pcie_ep_find_capability(struct dw_pcie *pci, u8 cap)
->> -{
->> -	u8 next_cap_ptr;
->> -	u16 reg;
->> -
->> -	reg = dw_pcie_readw_dbi(pci, PCI_CAPABILITY_LIST);
->> -	next_cap_ptr = (reg & 0x00ff);
->> -
->> -	return __dw_pcie_ep_find_next_cap(pci, next_cap_ptr, cap);
->> -}
->> -
->>   static int dw_pcie_ep_write_header(struct pci_epc *epc, u8 func_no,
->>   				   struct pci_epf_header *hdr)
->>   {
->> @@ -612,9 +579,9 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
->>   		dev_err(dev, "Failed to reserve memory for MSI/MSI-X\n");
->>   		return -ENOMEM;
->>   	}
->> -	ep->msi_cap = dw_pcie_ep_find_capability(pci, PCI_CAP_ID_MSI);
->> +	ep->msi_cap = dw_pcie_find_capability(pci, PCI_CAP_ID_MSI);
->>   
->> -	ep->msix_cap = dw_pcie_ep_find_capability(pci, PCI_CAP_ID_MSIX);
->> +	ep->msix_cap = dw_pcie_find_capability(pci, PCI_CAP_ID_MSIX);
->>   
->>   	offset = dw_pcie_ep_find_ext_capability(pci, PCI_EXT_CAP_ID_REBAR);
->>   	if (offset) {
->> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
->> index 83cdd2ce2486..8f53ce63d17e 100644
->> --- a/drivers/pci/controller/dwc/pcie-designware.c
->> +++ b/drivers/pci/controller/dwc/pcie-designware.c
->> @@ -14,6 +14,46 @@
->>   
->>   #include "pcie-designware.h"
->>   
->> +/*
->> + * These APIs are different from standard pci_find_*capability() APIs in the
->> + * sense that former can only be used post device enumeration as they require
->> + * 'struct pci_dev *' pointer whereas these APIs require 'struct dw_pcie *'
->> + * pointer and can be used before link up also.
+Am Donnerstag, 16. Mai 2019, 19:25:08 CEST schrieb Matthias Kaehlcke:
+> The GPU can be used as a thermal cooling device, add an optional
+> '#cooling-cells' property.
 > 
-> I think this comment is slightly misleading because it suggests the
-> reason we need these DW interfaces is because we're doing something
-> before a pci_dev pointer is available.
-> 
-> But these DW interfaces are used on devices that will *never* have a
-> pci_dev pointer because they are not PCI devices.  They're used on
-> host controller devices, which have a PCIe link on the downstream
-> side, but the host controller driver operates them using their
-> upstream, non-PCI interfaces.  Logically, I think they would be
-> considered parts of Root Complexes, not Root Ports.
-> 
-> There's actually no reason why that upstream interface should look
-> anything like PCI; it doesn't need to organize registers into
-> capability lists at all.  It might be convenient for the hardware to
-> do that and share things with a Root Port device, which *is* a PCI
-> device, but it's not required.
-> 
-> It also really has nothing to do with whether the link is up.  This
-> code operates on hardware that is upstream from the link, so we can
-> reach it regardless of the link.
-I added this comment after receiving a review comment to justify why standard
-pci_find_*capability() APIs can't be used here. Hence added this.
-I understand your comment that DW interface need not have to be a PCI device,
-but what is present in the hardware is effectively a root port implementation
-and post enumeration, we get a 'struct pci_dev' created for it, hence I thought
-it is fine to bring 'struct pci_dev' into picture.
-Also, I agree that mention of 'link up' is unwarranted and could be reworded in
-a better way.
-Do you suggest to remove this comment altogether or reword it
-s/and can be used before link up also/and can be used before 'struct pci_dev' is
-available/ ?
+> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
 
-> 
->> + */
->> +static u8 __dw_pcie_find_next_cap(struct dw_pcie *pci, u8 cap_ptr,
->> +				  u8 cap)
->> +{
->> +	u8 cap_id, next_cap_ptr;
->> +	u16 reg;
->> +
->> +	if (!cap_ptr)
->> +		return 0;
->> +
->> +	reg = dw_pcie_readw_dbi(pci, cap_ptr);
->> +	cap_id = (reg & 0x00ff);
->> +
->> +	if (cap_id > PCI_CAP_ID_MAX)
->> +		return 0;
->> +
->> +	if (cap_id == cap)
->> +		return cap_ptr;
->> +
->> +	next_cap_ptr = (reg & 0xff00) >> 8;
->> +	return __dw_pcie_find_next_cap(pci, next_cap_ptr, cap);
->> +}
->> +
->> +u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap)
->> +{
->> +	u8 next_cap_ptr;
->> +	u16 reg;
->> +
->> +	reg = dw_pcie_readw_dbi(pci, PCI_CAPABILITY_LIST);
->> +	next_cap_ptr = (reg & 0x00ff);
->> +
->> +	return __dw_pcie_find_next_cap(pci, next_cap_ptr, cap);
->> +}
->> +EXPORT_SYMBOL_GPL(dw_pcie_find_capability);
->> +
->>   int dw_pcie_read(void __iomem *addr, int size, u32 *val)
->>   {
->>   	if (!IS_ALIGNED((uintptr_t)addr, size)) {
->> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
->> index 14762e262758..6cb978132469 100644
->> --- a/drivers/pci/controller/dwc/pcie-designware.h
->> +++ b/drivers/pci/controller/dwc/pcie-designware.h
->> @@ -251,6 +251,8 @@ struct dw_pcie {
->>   #define to_dw_pcie_from_ep(endpoint)   \
->>   		container_of((endpoint), struct dw_pcie, ep)
->>   
->> +u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap);
->> +
->>   int dw_pcie_read(void __iomem *addr, int size, u32 *val);
->>   int dw_pcie_write(void __iomem *addr, int size, u32 val);
->>   
->> -- 
->> 2.17.1
->>
+applied to drm-misc-next for 5.3
+
 
