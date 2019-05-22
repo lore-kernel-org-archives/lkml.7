@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8648CC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:21:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9FCFC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:21:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59FA22177E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:21:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DD3D2177E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:21:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558552903;
-	bh=NXduDLUHcBO0fbGKsSX8fKnqa2uju3P2hEwKRHBKAU0=;
+	s=default; t=1558552911;
+	bh=C0r+/pATXVdBaBIXsTrqqwu3xhz3epE8VJyDmAubfoU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=skZ2by+R7xHS1cTDkuhVlLmXbDiXdVqRp8AXwhvBesxwAnOUIFX+PNKO7Ka13tIqY
-	 VB9k53KWerHAeSMJVIBVXmkBPUKyOyWCc2PHEUXwpsxs4W47KXS+nCMAWW2028JKGl
-	 0ZzXbbygf9kz4Ultf41bdMdvZ0mXIZPMfFzmE6nQ=
+	b=DtvSZZzOTZ3IhV7rllG6EGplkKTbB/7ov4p1dngYcyCUiRm/ErqoASiebOGtrM9y+
+	 oLzuiu5C7sL/NoiuQv68QnBFzSg5ZnRV7TXA3cE37hDJ3VArBsXr1Q0loJdQzabkga
+	 fQRmL7tXBux2OMAzaJt7KTWjDt8pN9x+HPzz94dU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730042AbfEVTVm (ORCPT
+        id S1730155AbfEVTVv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:21:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42122 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:21:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42428 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729971AbfEVTVe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:21:34 -0400
+        id S1730091AbfEVTVr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:21:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 697A92177E;
-        Wed, 22 May 2019 19:21:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 91E1F21473;
+        Wed, 22 May 2019 19:21:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558552893;
-        bh=NXduDLUHcBO0fbGKsSX8fKnqa2uju3P2hEwKRHBKAU0=;
+        s=default; t=1558552907;
+        bh=C0r+/pATXVdBaBIXsTrqqwu3xhz3epE8VJyDmAubfoU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NiqyCYp4VY2/g4I69CeS1P0k8+vLFdDwpA1mrt2uq1WGhV9P0BpgXQSvl+WWgYrYH
-         BkSF+h1PLN6JWv0ygtJ13avVvdIoOf+xTB1IaoeXuuo07Jw7UAGFgXNxRl6TkNOsSh
-         H3GZSZbieAfqgoD8FQ5+R1oFuKSqacK38isqKw20=
+        b=VwxXnqzGoxGiLts5EhtWGQ1lqzIrILr34BpWweYUjMn3WTsYlF/zmB+8/PF0NYzMK
+         ro+17DVE6woI0M3qau8h3FQuBigdQwpO3ErgJWZ169OSacUmwYTCe1MyezX+4ptGsg
+         vjOiaQHKhfHLiV1HEnZXWSrllFU0k/pJhubsSWKI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Martyna Szapar <martyna.szapar@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+Cc:     Sameeh Jubran <sameehj@amazon.com>,
+        "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 013/375] i40e: Fix of memory leak and integer truncation in i40e_virtchnl.c
-Date:   Wed, 22 May 2019 15:15:13 -0400
-Message-Id: <20190522192115.22666-13-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 022/375] net: ena: gcc 8: fix compilation warning
+Date:   Wed, 22 May 2019 15:15:22 -0400
+Message-Id: <20190522192115.22666-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192115.22666-1-sashal@kernel.org>
 References: <20190522192115.22666-1-sashal@kernel.org>
@@ -59,84 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martyna Szapar <martyna.szapar@intel.com>
+From: Sameeh Jubran <sameehj@amazon.com>
 
-[ Upstream commit 24474f2709af6729b9b1da1c5e160ab62e25e3a4 ]
+[ Upstream commit f913308879bc6ae437ce64d878c7b05643ddea44 ]
 
-Fixed possible memory leak in i40e_vc_add_cloud_filter function:
-cfilter is being allocated and in some error conditions
-the function returns without freeing the memory.
+GCC 8 contains a number of new warnings as well as enhancements to existing
+checkers. The warning - Wstringop-truncation - warns for calls to bounded
+string manipulation functions such as strncat, strncpy, and stpncpy that
+may either truncate the copied string or leave the destination unchanged.
 
-Fix of integer truncation from u16 (type of queue_id value) to u8
-when calling i40e_vc_isvalid_queue_id function.
+In our case the destination string length (32 bytes) is much shorter than
+the source string (64 bytes) which causes this warning to show up. In
+general the destination has to be at least a byte larger than the length
+of the source string with strncpy for this warning not to showup.
 
-Signed-off-by: Martyna Szapar <martyna.szapar@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+This can be easily fixed by using strlcpy instead which already does the
+truncation to the string. Documentation for this function can be
+found here:
+
+https://elixir.bootlin.com/linux/latest/source/lib/string.c#L141
+
+Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
+Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/ethernet/intel/i40e/i40e_virtchnl_pf.c   | 16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
+ drivers/net/ethernet/amazon/ena/ena_netdev.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c b/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
-index 831d52bc3c9ae..0b5b867c9fbcb 100644
---- a/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
-+++ b/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
-@@ -181,7 +181,7 @@ static inline bool i40e_vc_isvalid_vsi_id(struct i40e_vf *vf, u16 vsi_id)
-  * check for the valid queue id
-  **/
- static inline bool i40e_vc_isvalid_queue_id(struct i40e_vf *vf, u16 vsi_id,
--					    u8 qid)
-+					    u16 qid)
- {
- 	struct i40e_pf *pf = vf->pf;
- 	struct i40e_vsi *vsi = i40e_find_vsi_from_id(pf, vsi_id);
-@@ -3374,7 +3374,7 @@ static int i40e_vc_add_cloud_filter(struct i40e_vf *vf, u8 *msg)
- 
- 	if (!test_bit(I40E_VF_STATE_ACTIVE, &vf->vf_states)) {
- 		aq_ret = I40E_ERR_PARAM;
--		goto err;
-+		goto err_out;
- 	}
- 
- 	if (!vf->adq_enabled) {
-@@ -3382,7 +3382,7 @@ static int i40e_vc_add_cloud_filter(struct i40e_vf *vf, u8 *msg)
- 			 "VF %d: ADq is not enabled, can't apply cloud filter\n",
- 			 vf->vf_id);
- 		aq_ret = I40E_ERR_PARAM;
--		goto err;
-+		goto err_out;
- 	}
- 
- 	if (i40e_validate_cloud_filter(vf, vcf)) {
-@@ -3390,7 +3390,7 @@ static int i40e_vc_add_cloud_filter(struct i40e_vf *vf, u8 *msg)
- 			 "VF %d: Invalid input/s, can't apply cloud filter\n",
- 			 vf->vf_id);
- 		aq_ret = I40E_ERR_PARAM;
--		goto err;
-+		goto err_out;
- 	}
- 
- 	cfilter = kzalloc(sizeof(*cfilter), GFP_KERNEL);
-@@ -3451,13 +3451,17 @@ static int i40e_vc_add_cloud_filter(struct i40e_vf *vf, u8 *msg)
- 			"VF %d: Failed to add cloud filter, err %s aq_err %s\n",
- 			vf->vf_id, i40e_stat_str(&pf->hw, ret),
- 			i40e_aq_str(&pf->hw, pf->hw.aq.asq_last_status));
--		goto err;
-+		goto err_free;
- 	}
- 
- 	INIT_HLIST_NODE(&cfilter->cloud_node);
- 	hlist_add_head(&cfilter->cloud_node, &vf->cloud_filter_list);
-+	/* release the pointer passing it to the collection */
-+	cfilter = NULL;
- 	vf->num_cloud_filters++;
--err:
-+err_free:
-+	kfree(cfilter);
-+err_out:
- 	return i40e_vc_send_resp_to_vf(vf, VIRTCHNL_OP_ADD_CLOUD_FILTER,
- 				       aq_ret);
- }
+diff --git a/drivers/net/ethernet/amazon/ena/ena_netdev.c b/drivers/net/ethernet/amazon/ena/ena_netdev.c
+index a6eacf2099c30..41c1c9acb3246 100644
+--- a/drivers/net/ethernet/amazon/ena/ena_netdev.c
++++ b/drivers/net/ethernet/amazon/ena/ena_netdev.c
+@@ -2292,7 +2292,7 @@ static void ena_config_host_info(struct ena_com_dev *ena_dev,
+ 	host_info->bdf = (pdev->bus->number << 8) | pdev->devfn;
+ 	host_info->os_type = ENA_ADMIN_OS_LINUX;
+ 	host_info->kernel_ver = LINUX_VERSION_CODE;
+-	strncpy(host_info->kernel_ver_str, utsname()->version,
++	strlcpy(host_info->kernel_ver_str, utsname()->version,
+ 		sizeof(host_info->kernel_ver_str) - 1);
+ 	host_info->os_dist = 0;
+ 	strncpy(host_info->os_dist_str, utsname()->release,
 -- 
 2.20.1
 
