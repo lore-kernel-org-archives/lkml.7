@@ -2,353 +2,160 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4A5CC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 22:23:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43948C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 22:23:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 767F720868
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 22:23:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7F0720868
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 22:23:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TlpHTH27"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="IAEjEkbK";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="r4T7y0il"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727825AbfEVWXN (ORCPT
+        id S1728359AbfEVWXP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 18:23:13 -0400
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:46671 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726363AbfEVWXN (ORCPT
+        Wed, 22 May 2019 18:23:15 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:41618 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726553AbfEVWXO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 18:23:13 -0400
-Received: by mail-vs1-f65.google.com with SMTP id x8so2360721vsx.13
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 15:23:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=DYN9LlFeyKRjq/xcPPmVp8LKn1oRYtGLM+ITTEgUoj8=;
-        b=TlpHTH27ENCb9k0Q8+5A/acQGXrYdIrAXa0g7+wD5DdZPKfefo7ZRd0eFnxEw7PJ8B
-         Rcvg4m6byxm5zpKRklaLUdLnJ4+79xwm+1kSAF/gFdJjJ8aKqehDepNbBn+vSXzvT6gk
-         I8dmgQNaFyoyzjAtQyNNSCshDpfbdt80qJage1IpfZqJU+3LkpVpRsSva4EMSsTm2Rwh
-         dGt6it4PCEAHQNy9RdNROYFn8S/7FcztaJpAjGx2/NVy+QIYFgL6A1OyWZTimX2F7RJd
-         jw8S6qbQLAa0YTj7Jgf68E6Jfe/O86J3+SyiqFkxuZDwcDn89Vx0PVOEnKrF489bZnew
-         1gcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=DYN9LlFeyKRjq/xcPPmVp8LKn1oRYtGLM+ITTEgUoj8=;
-        b=A4UR1noBBdLFRVcKNKKNdxm/JtGCOrlHlFSt7PsVt39SgTlu6rLfuTeLw0slOM+uML
-         dKHcutOlxWltKzTHm0m4CIpP9BzJ2Z9WhU7ldDVqcfaTI06c/3sONr24Ug96H5UiPhFk
-         9ORECg2I5rbLxFmP5sr7U/yjkQa+EjIlU5uEDQMBi4XW3fMhS3HBgYvaL7kbNNC8PNgK
-         0nENTRW7YIiW45a4CIyXqpoqTqVQwp304F5oY4etnQNnKN1T3RaQkrzLudV2y8HcgOwq
-         KZruLPXn4tRwCmmaFXz4ROYCz2PRs/F+KfVaZrq6GTLmG3yFVSNjNflAaKBL+nIvVDnz
-         YGeg==
-X-Gm-Message-State: APjAAAXqAlU7ffnkL15H48e0hLmxmNYTjigc5SAPSWyO6FcjO7S7tlLs
-        rvlDef9wizKfA+3TCjrSRLDIy5yPlApQ/ATQEJQeYw==
-X-Google-Smtp-Source: APXvYqwuKhVD+ogfR/VeIAquIxZhNEnuyb8mKOSN9dLHcNiBDFmXEaj0ElOAqgbt6GJh+N5QXEQO3j+bwRGykqcMN88=
-X-Received: by 2002:a67:ebd6:: with SMTP id y22mr29442238vso.87.1558563791712;
- Wed, 22 May 2019 15:23:11 -0700 (PDT)
+        Wed, 22 May 2019 18:23:14 -0400
+Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
+        by m0001303.ppops.net (8.16.0.27/8.16.0.27) with SMTP id x4MMBl7C022026;
+        Wed, 22 May 2019 15:23:04 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=dGmKexW93ziU4gaxGu2r8jazHHWX79RJa8vFWpgs9PA=;
+ b=IAEjEkbK1fNS9QuZ5RtI4RWq2cpu9zKkLk4Rti/yV01QYV8kG1U3eIz5Rah4wzJUsQ91
+ lSWbqIWGduow+/cXrlgLSYo97fZs4fRK21NSP3TJC+xqcBs4VdBs0o9nvHnGqZiba22o
+ IqaKjwpzRVCF60QB4mRiNEpjyT+fqY3uqOc= 
+Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
+        by m0001303.ppops.net with ESMTP id 2sn5ta28p3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Wed, 22 May 2019 15:23:04 -0700
+Received: from prn-hub05.TheFacebook.com (2620:10d:c081:35::129) by
+ prn-hub02.TheFacebook.com (2620:10d:c081:35::126) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Wed, 22 May 2019 15:23:03 -0700
+Received: from NAM04-CO1-obe.outbound.protection.outlook.com (192.168.54.28)
+ by o365-in.thefacebook.com (192.168.16.29) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
+ via Frontend Transport; Wed, 22 May 2019 15:23:03 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector1-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dGmKexW93ziU4gaxGu2r8jazHHWX79RJa8vFWpgs9PA=;
+ b=r4T7y0il9x6ORmFiY+ATgUu27a5Q8elRA6V5CL9dgARrsp6Vv6YqHqQA57GRa5IZAjHFAYbw76PmE0c4fh8ahy2zDrKyWxs3f7au137fhrs5yg4vJZzTFKtioDF86B4DDVh/7n9ELX1UqbDAznWxbH8D44z06Ktz0XQ8rn5V1y8=
+Received: from BYAPR15MB2631.namprd15.prod.outlook.com (20.179.156.24) by
+ BYAPR15MB2246.namprd15.prod.outlook.com (52.135.196.161) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1900.18; Wed, 22 May 2019 22:23:01 +0000
+Received: from BYAPR15MB2631.namprd15.prod.outlook.com
+ ([fe80::d4f6:b485:69ee:fd9a]) by BYAPR15MB2631.namprd15.prod.outlook.com
+ ([fe80::d4f6:b485:69ee:fd9a%7]) with mapi id 15.20.1900.020; Wed, 22 May 2019
+ 22:23:01 +0000
+From:   Roman Gushchin <guro@fb.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+CC:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        "Johannes Weiner" <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Rik van Riel <riel@surriel.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Christoph Lameter <cl@linux.com>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
+        Waiman Long <longman@redhat.com>
+Subject: Re: [PATCH v5 0/7] mm: reparent slab memory on cgroup removal
+Thread-Topic: [PATCH v5 0/7] mm: reparent slab memory on cgroup removal
+Thread-Index: AQHVEBPXzJHWaXaBI0+0EQ7he1b+7KZ3OWCAgAB5ngCAAAaqgA==
+Date:   Wed, 22 May 2019 22:23:01 +0000
+Message-ID: <20190522222254.GA5700@castle>
+References: <20190521200735.2603003-1-guro@fb.com>
+ <20190522214347.GA10082@tower.DHCP.thefacebook.com>
+ <20190522145906.60c9e70ac0ed7ee3918a124c@linux-foundation.org>
+In-Reply-To: <20190522145906.60c9e70ac0ed7ee3918a124c@linux-foundation.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: CO2PR07CA0056.namprd07.prod.outlook.com (2603:10b6:100::24)
+ To BYAPR15MB2631.namprd15.prod.outlook.com (2603:10b6:a03:152::24)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [2620:10d:c090:200::2:39a1]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: de318b47-c092-401b-4178-08d6df040cf7
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:BYAPR15MB2246;
+x-ms-traffictypediagnostic: BYAPR15MB2246:
+x-microsoft-antispam-prvs: <BYAPR15MB2246367CCCFC35A3F2B478F7BE000@BYAPR15MB2246.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4714;
+x-forefront-prvs: 0045236D47
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(979002)(7916004)(376002)(39860400002)(136003)(366004)(396003)(346002)(189003)(199004)(476003)(53936002)(66446008)(66946007)(5660300002)(99286004)(73956011)(66476007)(52116002)(186003)(81166006)(386003)(6506007)(81156014)(8936002)(76176011)(54906003)(316002)(86362001)(66556008)(64756008)(71190400001)(71200400001)(1076003)(6246003)(4326008)(25786009)(33716001)(7736002)(46003)(486006)(478600001)(7416002)(14454004)(14444005)(11346002)(256004)(446003)(305945005)(6916009)(33656002)(8676002)(2906002)(9686003)(6512007)(229853002)(102836004)(6436002)(68736007)(6486002)(6116002)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB2246;H:BYAPR15MB2631.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: fhZs5LKwhhGswexFbHlJlKTaGR8pmNZeyhMtDQgoclfVQT2GW26UxNzwMpTFiMeq5IRllRA4XGPFbAGfXxXodt9ROCKZpALcfrQ3jFC8fC8v/Glx4hxTp5G1+sYaNfJ0UnE35lGsy+0qmgGdpvbKZ3vUZJjWa1d5W3fLQx3m70rmG1wfSLx56VRQ3tuRqA57GNri0HLpG3P/gN1SXW+fdJoXcuRTJqGMPkQ9ks574d7QDhkDa2kbuOl+N3WAZJfJC8sdkRAUAPwWaKVN8Z9M85z9oNMeKPEJD3nrCOyiVU833QMjUYKclVgB7SfwEic+M7WYBY0iHDKH+z+BsnAHElJZCu5+JzttR5+Eg0/7v+rdDSCBhH/fQ3f1uFqHTN1HNyhHafnPeWOJXzJgDUOC8rPSvtBacLU7J0XMdqek7U0=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <65249C67D481204287EF3B3478D04766@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-From:   Eric Hankland <ehankland@google.com>
-Date:   Wed, 22 May 2019 15:23:00 -0700
-Message-ID: <CAOyeoRWfPNmaWY6Lifdkdj3KPPM654vzDO+s3oduEMCJP+Asow@mail.gmail.com>
-Subject: [PATCH v1] KVM: x86: PMU Whitelist
-To:     pbonzini@redhat.com, rkrcmar@redhat.com
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-CrossTenant-Network-Message-Id: de318b47-c092-401b-4178-08d6df040cf7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 May 2019 22:23:01.2975
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2246
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-22_13:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=735 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905220154
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-- Add a VCPU ioctl that can control which events the guest can monitor.
+On Wed, May 22, 2019 at 02:59:06PM -0700, Andrew Morton wrote:
+> On Wed, 22 May 2019 21:43:54 +0000 Roman Gushchin <guro@fb.com> wrote:
+>=20
+> > Is this patchset good to go? Or do you have any remaining concerns?
+> >=20
+> > It has been carefully reviewed by Shakeel; and also Christoph and Waima=
+n
+> > gave some attention to it.
+> >=20
+> > Since commit 172b06c32b94 ("mm: slowly shrink slabs with a relatively")
+> > has been reverted, the memcg "leak" problem is open again, and I've hea=
+rd
+> > from several independent people and companies that it's a real problem
+> > for them. So it will be nice to close it asap.
+> >=20
+> > I suspect that the fix is too heavy for stable, unfortunately.
+> >=20
+> > Please, let me know if you have any issues that preventing you
+> > from pulling it into the tree.
+>=20
+> I looked, and put it on ice for a while, hoping to hear from
+> mhocko/hannes.  Did they look at the earlier versions?
 
-Signed-off-by: ehankland <ehankland@google.com>
----
-Some events can provide a guest with information about other guests or the
-host (e.g. L3 cache stats); providing the capability to restrict access
-to a "safe" set of events would limit the potential for the PMU to be used
-in any side channel attacks. This change introduces a new vcpu ioctl that
-sets an event whitelist. If the guest attempts to program a counter for
-any unwhitelisted event, the kernel counter won't be created, so any
-RDPMC/RDMSR will show 0 instances of that event.
----
- Documentation/virtual/kvm/api.txt | 16 +++++++++++
- arch/x86/include/asm/kvm_host.h   |  1 +
- arch/x86/include/uapi/asm/kvm.h   |  7 +++++
- arch/x86/kvm/pmu.c                | 44 +++++++++++++++++++++++++++++++
- arch/x86/kvm/pmu.h                |  3 +++
- arch/x86/kvm/pmu_amd.c            | 16 +++++++++++
- arch/x86/kvm/vmx/pmu_intel.c      | 16 +++++++++++
- arch/x86/kvm/x86.c                |  7 +++++
- include/uapi/linux/kvm.h          |  4 +++
- 9 files changed, 114 insertions(+)
+Johannes has definitely looked at one of early versions of the patchset,
+and one of the outcomes was his own patchset about pushing memcg stats
+up by the tree, which eliminated the need to deal with memcg stats
+on kmem_cache reparenting.
 
-diff --git a/Documentation/virtual/kvm/api.txt
-b/Documentation/virtual/kvm/api.txt
-index ba6c42c576dd..79cbe7339145 100644
---- a/Documentation/virtual/kvm/api.txt
-+++ b/Documentation/virtual/kvm/api.txt
-@@ -4065,6 +4065,22 @@ KVM_ARM_VCPU_FINALIZE call.
- See KVM_ARM_VCPU_INIT for details of vcpu features that require finalization
- using this ioctl.
+The problem and the proposed solution have been discussed on latest LSFMM,
+and I didn't hear any opposition. So I assume that Michal is at least
+not against the idea in general. A careful code review is always welcome,
+of course.
 
-+4.120 KVM_SET_PMU_WHITELIST
-+
-+Capability: KVM_CAP_PMU_WHITELIST
-+Architectures: x86
-+Type: vm ioctl
-+Parameters: struct kvm_pmu_whitelist (in)
-+Returns: 0 on success, -1 on error
-+
-+struct kvm_pmu_whitelist {
-+       __u64 event_mask;
-+       __u16 num_events;
-+       __u64 events[0];
-+};
-+This ioctl restricts the set of PMU events that the guest can program to the
-+set of whitelisted events.
-+
- 5. The kvm_run structure
- ------------------------
-
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 450d69a1e6fa..942647475999 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -477,6 +477,7 @@ struct kvm_pmu {
-        struct kvm_pmc fixed_counters[INTEL_PMC_MAX_FIXED];
-        struct irq_work irq_work;
-        u64 reprogram_pmi;
-+       struct kvm_pmu_whitelist *whitelist;
- };
-
- struct kvm_pmu_ops;
-diff --git a/arch/x86/include/uapi/asm/kvm.h b/arch/x86/include/uapi/asm/kvm.h
-index 7a0e64ccd6ff..2633b48b75cd 100644
---- a/arch/x86/include/uapi/asm/kvm.h
-+++ b/arch/x86/include/uapi/asm/kvm.h
-@@ -421,4 +421,11 @@ struct kvm_nested_state {
-        __u8 data[0];
- };
-
-+/* for KVM_SET_PMU_WHITELIST */
-+struct kvm_pmu_whitelist {
-+       __u64 event_mask;
-+       __u16 num_events;
-+       __u64 events[0];
-+};
-+
- #endif /* _ASM_X86_KVM_H */
-diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
-index e39741997893..d0d81cd3626d 100644
---- a/arch/x86/kvm/pmu.c
-+++ b/arch/x86/kvm/pmu.c
-@@ -101,6 +101,9 @@ static void pmc_reprogram_counter(struct kvm_pmc
-*pmc, u32 type,
-                                  bool exclude_kernel, bool intr,
-                                  bool in_tx, bool in_tx_cp)
- {
-+       struct kvm_pmu *pmu = pmc_to_pmu(pmc);
-+       int i;
-+       u64 event_config;
-        struct perf_event *event;
-        struct perf_event_attr attr = {
-                .type = type,
-@@ -127,6 +130,19 @@ static void pmc_reprogram_counter(struct kvm_pmc
-*pmc, u32 type,
-                attr.config |= HSW_IN_TX_CHECKPOINTED;
-        }
-
-+       if (pmu->whitelist) {
-+               event_config = attr.config;
-+               if (type == PERF_TYPE_HARDWARE)
-+                       event_config = kvm_x86_ops->pmu_ops->get_event_code(
-+                               attr.config);
-+               event_config &= pmu->whitelist->event_mask;
-+               for (i = 0; i < pmu->whitelist->num_events; i++)
-+                       if (event_config == pmu->whitelist->events[i])
-+                               break;
-+               if (i == pmu->whitelist->num_events)
-+                       return;
-+       }
-+
-        event = perf_event_create_kernel_counter(&attr, -1, current,
-                                                 intr ? kvm_perf_overflow_intr :
-                                                 kvm_perf_overflow, pmc);
-@@ -244,6 +260,34 @@ int kvm_pmu_is_valid_msr_idx(struct kvm_vcpu
-*vcpu, unsigned idx)
-        return kvm_x86_ops->pmu_ops->is_valid_msr_idx(vcpu, idx);
- }
-
-+int kvm_vcpu_ioctl_set_pmu_whitelist(struct kvm_vcpu *vcpu,
-+                                    struct kvm_pmu_whitelist __user *whtlst)
-+{
-+       struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
-+       struct kvm_pmu_whitelist *old = pmu->whitelist;
-+       struct kvm_pmu_whitelist *new = NULL;
-+       struct kvm_pmu_whitelist tmp;
-+       int r;
-+       size_t size;
-+
-+       r = -EFAULT;
-+       if (copy_from_user(&tmp, whtlst, sizeof(struct kvm_pmu_whitelist)))
-+               goto err;
-+
-+       size = sizeof(tmp) + sizeof(tmp.events[0]) * tmp.num_events;
-+       new = kvzalloc(size, GFP_KERNEL_ACCOUNT);
-+       r = -ENOMEM;
-+       if (!new)
-+               goto err;
-+       pmu->whitelist = new;
-+
-+       kvfree(old);
-+       return 0;
-+err:
-+       kvfree(new);
-+       return r;
-+}
-+
- bool is_vmware_backdoor_pmc(u32 pmc_idx)
- {
-        switch (pmc_idx) {
-diff --git a/arch/x86/kvm/pmu.h b/arch/x86/kvm/pmu.h
-index ba8898e1a854..7d4a37fcb043 100644
---- a/arch/x86/kvm/pmu.h
-+++ b/arch/x86/kvm/pmu.h
-@@ -23,6 +23,7 @@ struct kvm_pmu_ops {
-        unsigned (*find_arch_event)(struct kvm_pmu *pmu, u8 event_select,
-                                    u8 unit_mask);
-        unsigned (*find_fixed_event)(int idx);
-+       u64 (*get_event_code)(unsigned event_type);
-        bool (*pmc_is_enabled)(struct kvm_pmc *pmc);
-        struct kvm_pmc *(*pmc_idx_to_pmc)(struct kvm_pmu *pmu, int pmc_idx);
-        struct kvm_pmc *(*msr_idx_to_pmc)(struct kvm_vcpu *vcpu, unsigned idx);
-@@ -108,6 +109,8 @@ void reprogram_counter(struct kvm_pmu *pmu, int pmc_idx);
-
- void kvm_pmu_deliver_pmi(struct kvm_vcpu *vcpu);
- void kvm_pmu_handle_event(struct kvm_vcpu *vcpu);
-+int kvm_vcpu_ioctl_set_pmu_whitelist(struct kvm_vcpu *vcpu,
-+                                    struct kvm_pmu_whitelist __user *whtlst);
- int kvm_pmu_rdpmc(struct kvm_vcpu *vcpu, unsigned pmc, u64 *data);
- int kvm_pmu_is_valid_msr_idx(struct kvm_vcpu *vcpu, unsigned idx);
- bool kvm_pmu_is_valid_msr(struct kvm_vcpu *vcpu, u32 msr);
-diff --git a/arch/x86/kvm/pmu_amd.c b/arch/x86/kvm/pmu_amd.c
-index 1495a735b38e..1d977b20c863 100644
---- a/arch/x86/kvm/pmu_amd.c
-+++ b/arch/x86/kvm/pmu_amd.c
-@@ -145,6 +145,21 @@ static unsigned amd_find_arch_event(struct kvm_pmu *pmu,
-        return amd_event_mapping[i].event_type;
- }
-
-+static u64 amd_get_event_code(unsigned event_type)
-+{
-+       int i;
-+       u64 event_code = 0;
-+
-+       for (i = 0; i < ARRAY_SIZE(amd_event_mapping); i++)
-+               if (amd_event_mapping[i].event_type == event_type) {
-+                       event_code = amd_event_mapping[i].eventsel |
-+                               ((u64)amd_event_mapping[i].unit_mask << 8);
-+                       break;
-+               }
-+
-+       return event_code;
-+}
-+
- /* return PERF_COUNT_HW_MAX as AMD doesn't have fixed events */
- static unsigned amd_find_fixed_event(int idx)
- {
-@@ -306,6 +321,7 @@ static void amd_pmu_reset(struct kvm_vcpu *vcpu)
- struct kvm_pmu_ops amd_pmu_ops = {
-        .find_arch_event = amd_find_arch_event,
-        .find_fixed_event = amd_find_fixed_event,
-+       .get_event_code = amd_get_event_code,
-        .pmc_is_enabled = amd_pmc_is_enabled,
-        .pmc_idx_to_pmc = amd_pmc_idx_to_pmc,
-        .msr_idx_to_pmc = amd_msr_idx_to_pmc,
-diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
-index f8502c376b37..01a5d5a3bf3d 100644
---- a/arch/x86/kvm/vmx/pmu_intel.c
-+++ b/arch/x86/kvm/vmx/pmu_intel.c
-@@ -67,6 +67,21 @@ static void global_ctrl_changed(struct kvm_pmu
-*pmu, u64 data)
-                reprogram_counter(pmu, bit);
- }
-
-+static u64 intel_get_event_code(unsigned event_type)
-+{
-+       int i;
-+       u64 event_code = 0;
-+
-+       for (i = 0; i < ARRAY_SIZE(intel_arch_events); i++)
-+               if (intel_arch_events[i].event_type == event_type) {
-+                       event_code = intel_arch_events[i].eventsel |
-+                               ((u64) intel_arch_events[i].unit_mask << 8);
-+                       break;
-+               }
-+
-+       return event_code;
-+}
-+
- static unsigned intel_find_arch_event(struct kvm_pmu *pmu,
-                                      u8 event_select,
-                                      u8 unit_mask)
-@@ -350,6 +365,7 @@ static void intel_pmu_reset(struct kvm_vcpu *vcpu)
-
- struct kvm_pmu_ops intel_pmu_ops = {
-        .find_arch_event = intel_find_arch_event,
-+       .get_event_code = intel_get_event_code,
-        .find_fixed_event = intel_find_fixed_event,
-        .pmc_is_enabled = intel_pmc_is_enabled,
-        .pmc_idx_to_pmc = intel_pmc_idx_to_pmc,
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 536b78c4af6e..089de23289f4 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -3089,6 +3089,7 @@ int kvm_vm_ioctl_check_extension(struct kvm
-*kvm, long ext)
-        case KVM_CAP_GET_MSR_FEATURES:
-        case KVM_CAP_MSR_PLATFORM_INFO:
-        case KVM_CAP_EXCEPTION_PAYLOAD:
-+       case KVM_CAP_PMU_WHITELIST:
-                r = 1;
-                break;
-        case KVM_CAP_SYNC_REGS:
-@@ -4285,6 +4286,12 @@ long kvm_arch_vcpu_ioctl(struct file *filp,
-                r = 0;
-                break;
-        }
-+       case KVM_SET_PMU_WHITELIST: {
-+               struct kvm_pmu_whitelist __user *whitelist = argp;
-+
-+               r = kvm_vcpu_ioctl_set_pmu_whitelist(vcpu, whitelist);
-+               goto out;
-+       }
-        default:
-                r = -EINVAL;
-        }
-diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-index 2fe12b40d503..140a6ac52981 100644
---- a/include/uapi/linux/kvm.h
-+++ b/include/uapi/linux/kvm.h
-@@ -993,6 +993,7 @@ struct kvm_ppc_resize_hpt {
- #define KVM_CAP_ARM_SVE 170
- #define KVM_CAP_ARM_PTRAUTH_ADDRESS 171
- #define KVM_CAP_ARM_PTRAUTH_GENERIC 172
-+#define KVM_CAP_PMU_WHITELIST 173
-
- #ifdef KVM_CAP_IRQ_ROUTING
-
-@@ -1451,6 +1452,9 @@ struct kvm_enc_region {
- /* Available with KVM_CAP_ARM_SVE */
- #define KVM_ARM_VCPU_FINALIZE    _IOW(KVMIO,  0xc2, int)
-
-+/* Available with KVM_CAP_PMU_WHITELIST */
-+# define KVM_SET_PMU_WHITELIST   _IOW(KVMIO, 0xc3, struct kvm_pmu_whitelist)
-+
- /* Secure Encrypted Virtualization command */
- enum sev_cmd_id {
-        /* Guest initialization commands */
+Thanks!
