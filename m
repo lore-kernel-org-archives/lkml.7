@@ -2,114 +2,110 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 297D6C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 18:23:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86A0FC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 18:23:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED8C02173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 18:23:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="goDtFo0R"
+	by mail.kernel.org (Postfix) with ESMTP id 6AB8021473
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 18:23:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729563AbfEVSXX (ORCPT
+        id S1729595AbfEVSX4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 14:23:23 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:34754 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728272AbfEVSXX (ORCPT
+        Wed, 22 May 2019 14:23:56 -0400
+Received: from shelob.surriel.com ([96.67.55.147]:40060 "EHLO
+        shelob.surriel.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728272AbfEVSX4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 14:23:23 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4MIJ5uZ071020;
-        Wed, 22 May 2019 18:22:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=r5KZMuAu+51JUTI2ohhapWR6r+UgqS3aDYLLXOt7kLM=;
- b=goDtFo0Rr/Ds1O+vpv8kzreIVzaXr2FwgjQ/MipPKL+JxYC4bAn329mQEOpa6Ky7VBjy
- qpfzJWdvOvMbMACb6c8cVqsHSgZYWTsM7gYnJHSnNNXza+L3wAqSLhgIClBequuaoZ8R
- a9BJ9lgJHsqs/lfkaZIPiW1Y6v8zzOGISsxwZkr/ceVxjfTCKt5g3e2RzyY2ytzJ969Z
- Iuo7oTzQVEog543lhQ9fVgaAtHZk5LYKyrndey6nLACYxGLT4PdWq5BCteyBAmeFELyO
- 8RwA3ln39aSxeoeWZBCEek/X1VJaXZnLIt0CWl/nJ5QEOVuZdpe1DrT+4/6JXZhu9znF 9g== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2smsk55syx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 22 May 2019 18:22:25 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4MILhUW043670;
-        Wed, 22 May 2019 18:22:25 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by userp3020.oracle.com with ESMTP id 2smsgv13ax-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 22 May 2019 18:22:25 +0000
-Received: from userp3020.oracle.com (userp3020.oracle.com [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x4MIMOoo045618;
-        Wed, 22 May 2019 18:22:24 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 2smsgv13aq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 22 May 2019 18:22:24 +0000
-Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x4MIMI50023367;
-        Wed, 22 May 2019 18:22:18 GMT
-Received: from localhost (/10.159.211.99)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 22 May 2019 18:22:17 +0000
-Date:   Wed, 22 May 2019 14:22:15 -0400
-From:   Kris Van Hees <kris.van.hees@oracle.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Kris Van Hees <kris.van.hees@oracle.com>,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        dtrace-devel@oss.oracle.com, linux-kernel@vger.kernel.org,
-        rostedt@goodmis.org, mhiramat@kernel.org, acme@kernel.org,
-        ast@kernel.org, daniel@iogearbox.net
-Subject: Re: [RFC PATCH 00/11] bpf, trace, dtrace: DTrace BPF program type
- implementation and sample use
-Message-ID: <20190522182215.GO2422@oracle.com>
-References: <201905202347.x4KNl0cs030532@aserv0121.oracle.com>
- <20190521175617.ipry6ue7o24a2e6n@ast-mbp.dhcp.thefacebook.com>
- <20190522142531.GE16275@worktop.programming.kicks-ass.net>
+        Wed, 22 May 2019 14:23:56 -0400
+Received: from imladris.surriel.com ([96.67.55.152])
+        by shelob.surriel.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.91)
+        (envelope-from <riel@shelob.surriel.com>)
+        id 1hTVtz-0002ay-Uk; Wed, 22 May 2019 14:23:47 -0400
+Message-ID: <d8ec196590237c047bbe6805b933ec9dd2ec42c4.camel@surriel.com>
+Subject: Re: [PATCH] smp,cpumask: Don't call functions on offline CPUs
+From:   Rik van Riel <riel@surriel.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Andrew Murray <andrew.murray@arm.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org
+Date:   Wed, 22 May 2019 14:23:47 -0400
+In-Reply-To: <20190522144918.GH16275@worktop.programming.kicks-ass.net>
+References: <20190522111537.27815-1-andrew.murray@arm.com>
+         <20190522140921.GD16275@worktop.programming.kicks-ass.net>
+         <20190522143711.GC8268@e119886-lin.cambridge.arm.com>
+         <20190522144918.GH16275@worktop.programming.kicks-ass.net>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-0vbLQ8PSxJ5AAaklNGAH"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190522142531.GE16275@worktop.programming.kicks-ass.net>
-User-Agent: Mutt/1.5.23 (2014-03-12)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9265 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905220128
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 22, 2019 at 04:25:32PM +0200, Peter Zijlstra wrote:
-> On Tue, May 21, 2019 at 10:56:18AM -0700, Alexei Starovoitov wrote:
-> 
-> > and no changes are necessary in kernel/events/ring_buffer.c either.
-> 
-> Let me just NAK them on the principle that I don't see them in my inbox.
 
-My apologies for failing to include you on the Cc for the patches.  That was
-an oversight on my end and certainly not intentional.
+--=-0vbLQ8PSxJ5AAaklNGAH
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> Let me further NAK it for adding all sorts of garbage to the code --
-> we're not going to do gaps and stay_in_page nonsense.
+On Wed, 2019-05-22 at 16:49 +0200, Peter Zijlstra wrote:
+> On Wed, May 22, 2019 at 03:37:11PM +0100, Andrew Murray wrote:
+> > > Is perhaps the problem that on_each_cpu_cond() uses
+> > > cpu_onlne_mask
+> > > without protection?
+> >=20
+> > Does this prevent racing with a CPU going offline? I guess this
+> > prevents
+> > the warning at the expense of a lock - but is only beneficial in
+> > the
+> > unlikely path. (In the likely path this prevents new CPUs going
+> > offline
+> > but we don't care because we don't WARN if they aren't they when we
+> > attempt to call functions).
+> >=20
+> > At least this is my limited understanding.
+>=20
+> Hmm.. I don't think it could matter, we only use the mask when
+> preempt_disable(), which would already block offline, due to it using
+> stop_machine().
+>=20
+> So the patch is a no-op.
+>=20
+> What's the WARN you see? TLB invalidation should pass mm_cpumask(),
+> which similarly should not contain offline CPUs I'm thinking.
 
-Could you give some guidance in terms of an alternative?  The ring buffer code
-provides both non-contiguous page allocation support and a vmalloc-based
-allocation, and the vmalloc version certainly would avoid the entire gap and
-page boundary stuff.  But since the allocator is chosen at build time based on
-the arch capabilities, there is no way to select a specific memory allocator.
-I'd be happy to use an alternative approach that allows direct writing into
-the ring buffer.
+Does the TLB invalidation code have anything in it
+to prevent from racing with the CPU offline code?
 
-	Thanks,
-	Kris
+In other words, could we end up with the TLB
+invalidation code building its bitmask, getting
+interrupted (eg. hypervisor preemption, NMI),
+and not sending out the IPI to that bitmask of
+CPUs until after one of the CPUs in the bitmap
+has gotten offlined?
+
+--=20
+All Rights Reversed.
+
+--=-0vbLQ8PSxJ5AAaklNGAH
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEKR73pCCtJ5Xj3yADznnekoTE3oMFAlzlk7MACgkQznnekoTE
+3oMqLwf/Qre0ZBiGCS1ToLsApMEvym3Mq6QzFAX5MSjWE7mfxX56YVeIGWqULrie
+fReCb4ubNKv5TSLXTFRLweA07U57LmUfUdgtqLJdBvAgT1W3o32WiS/m83o9Fl9P
+Xf7zMtyNoiQXekB2gj85QtZgxsdvySgTwIYdPXRL9c0w2mNHz1gnpXfj9Ah2kV6q
+3It3S3D6QOXHwPV/eXP3PghRmWgmVZKo4UHQaBGbUrFnNRSKCO25YZPDenBmc/DX
+9ZE0gZM7KMAr8mu0YcI3YsGtuVyZUCv53KSJnpT7c9G9RyfoDjsu0IbW1VxsEfdW
+jV19/XX+8iMH29oWqsjVP2YBNXYeAw==
+=KvjP
+-----END PGP SIGNATURE-----
+
+--=-0vbLQ8PSxJ5AAaklNGAH--
+
