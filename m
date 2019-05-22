@@ -2,206 +2,127 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C32E7C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 17:22:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 502BFC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 17:23:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9703C204EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 17:22:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2660020862
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 17:23:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="wrWjZS1V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730153AbfEVRWk (ORCPT
+        id S1730206AbfEVRXI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 13:22:40 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:32961 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727365AbfEVRWj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 13:22:39 -0400
-Received: from LHREML712-CAH.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 05CF417966E92720806F;
-        Wed, 22 May 2019 18:22:37 +0100 (IST)
-Received: from [10.204.65.201] (10.204.65.201) by smtpsuk.huawei.com
- (10.201.108.35) with Microsoft SMTP Server (TLS) id 14.3.408.0; Wed, 22 May
- 2019 18:22:31 +0100
-Subject: Re: [PATCH v3 2/2] initramfs: introduce do_readxattrs()
-To:     <hpa@zytor.com>, Arvind Sankar <nivedita@alum.mit.edu>
-CC:     <viro@zeniv.linux.org.uk>, <linux-security-module@vger.kernel.org>,
-        <linux-integrity@vger.kernel.org>, <initramfs@vger.kernel.org>,
-        <linux-api@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <zohar@linux.vnet.ibm.com>,
-        <silviu.vlasceanu@huawei.com>, <dmitry.kasatkin@huawei.com>,
-        <takondra@cisco.com>, <kamensky@cisco.com>, <arnd@arndb.de>,
-        <rob@landley.net>, <james.w.mcmechan@gmail.com>,
-        <niveditas98@gmail.com>
-References: <20190517165519.11507-1-roberto.sassu@huawei.com>
- <20190517165519.11507-3-roberto.sassu@huawei.com>
- <CD9A4F89-7CA5-4329-A06A-F8DEB87905A5@zytor.com>
- <20190517210219.GA5998@rani.riverdale.lan>
- <d48f35a1-aab1-2f20-2e91-5e81a84b107f@zytor.com>
- <20190517221731.GA11358@rani.riverdale.lan>
- <7bdca169-7a01-8c55-40e4-a832e876a0e5@huawei.com>
- <9C5B9F98-2067-43D3-B149-57613F38DCD4@zytor.com>
-From:   Roberto Sassu <roberto.sassu@huawei.com>
-Message-ID: <2ceb1f01-88fb-d383-daee-e38348a2f075@huawei.com>
-Date:   Wed, 22 May 2019 19:22:37 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.3.0
+        Wed, 22 May 2019 13:23:08 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:40153 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730171AbfEVRXH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 13:23:07 -0400
+Received: by mail-lf1-f66.google.com with SMTP id h13so2291338lfc.7
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 10:23:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=lBNMJ6UCxXT/YF+lFUeXussSr2NQJ1IFe7JSJtDJqb8=;
+        b=wrWjZS1VcTFTBBgUzyHp1/AOCa/Nvm+zWwLMEzSDn4IFs2OMmIFs3ZM6B5WYEdlz+T
+         xTjM5Jpr7BQp/By25fuYTpsMVTbxjhJUAEUohHCWk/Fl+mJKUwOcUQdnxd7YCDNL5iyr
+         f5FSXooSRFOS5410Qxlcetg7xH/tX8DWAJzbNbvkViyT1p9Z0CQ770BJNLppHNvpaNN3
+         9spTlhk2OnceN0iLWNU6MRzwajsAHsd3C26hFA1m42GIwSb6zjTwGoqA+Jm9YPm/4U4e
+         jdORvkaReWF5CemOF59O3jAWFTzX/p4e+PsdWbIgYtG3qvPILUN2OR9neqdRve9RvrBn
+         9IGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=lBNMJ6UCxXT/YF+lFUeXussSr2NQJ1IFe7JSJtDJqb8=;
+        b=hZrknCdoPdO2Po6EzUxBRfgQc4K22+OQs9cPyZWH/AAYaofmlr9qm6SwfnAqYUaj8k
+         kfxyAeJEDbcuPavH1GjmyZmettV8138SHU59MnqjEMnejSjhHLeSWgiOxPPZ7MLIzHlK
+         kMqy0NmVcdZgSZ8MM3KGmcriqUXSfiXEUMA6F68IY/Rjm/dwdDM7rJFyURx+LSh0OfAu
+         KtlXuLmalktAA7i2uLWyDiFZu/sINqgho9fX+iWb0HLLib4ybHmHWUWAHwJX1ewhF1qa
+         gels2Lkb5M2VInFPXn7QIP/jK1QrlrSbquRyNCv6FYvNJSmCwy7BUy+NV+sLAMW1m1uK
+         qTVw==
+X-Gm-Message-State: APjAAAWr/KY19SCRzunxH0zzNqVVHX1ECi4uAtu32EOGsnAYVl5uJfiZ
+        0FX6i1+JXtncFVySBiIZDby9Sg==
+X-Google-Smtp-Source: APXvYqxh6z0c+HMItpmjk7oDLYnEBiKv2gMrikNxJClquOF/OVRMup6KVFeHonqCNSkGHl69ulKwBQ==
+X-Received: by 2002:ac2:483c:: with SMTP id 28mr26309353lft.93.1558545786181;
+        Wed, 22 May 2019 10:23:06 -0700 (PDT)
+Received: from wasted.cogentembedded.com ([31.173.80.150])
+        by smtp.gmail.com with ESMTPSA id r19sm4762708lji.87.2019.05.22.10.23.04
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 22 May 2019 10:23:05 -0700 (PDT)
+Subject: Re: [PATCH v12 3/3] dt-bindings: mfd: Document Renesas R-Car Gen3
+ RPC-IF MFD bindings
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Mason Yang <masonccyang@mxic.com.tw>,
+        Lee Jones <lee.jones@linaro.org>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms@verge.net.au>, juliensu@mxic.com.tw,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh@kernel.org>, zhengxunli@mxic.com.tw,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+References: <1556092536-17095-1-git-send-email-masonccyang@mxic.com.tw>
+ <20190424212356.GA27103@bogus>
+ <65853dc2-6f3c-1494-7e72-54877797cdd2@gmail.com>
+ <20190507125730.GD29524@dell>
+ <OF08A5650B.8AE8977C-ON482583F4.000E5B1E-482583F4.000F7215@mxic.com.tw>
+ <d229b19e-351c-c576-b5c4-716d10dad1a0@gmail.com> <20190508061119.GB7627@dell>
+ <OFE86674B9.06D723A0-ON482583F5.000AD50C-482583F5.000BA075@mxic.com.tw>
+ <a05cff8f-7df2-1938-c0e7-f9366bece607@cogentembedded.com>
+ <OFB19BCE91.6EBBAA77-ON482583F6.000234E2-482583F6.00061290@mxic.com.tw>
+ <CAMuHMdUP8KU3Dbv6cwOvrY0hWOcm1xqVcsi20+GvazYMDLGGZg@mail.gmail.com>
+ <OFD932ABFC.E3FFCEB8-ON482583F9.003412B1-482583F9.0034D5CA@mxic.com.tw>
+ <b51d1cb7-b3b5-208f-ab4c-145ecb57805d@cogentembedded.com>
+ <44bc8f0a-cbdc-db4a-9a46-b8bae5cc37a2@cogentembedded.com>
+ <OF5AF00898.3CE87C98-ON48258400.00259B16-48258400.0028A4F5@mxic.com.tw>
+ <5e718d9f-3aeb-c2ef-0723-400497b2b98f@cogentembedded.com>
+ <CAMuHMdUWNqkZz5DEWFJsoHLmC86ziLjWKHpz=A-EmvMDDgnSNQ@mail.gmail.com>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Organization: Cogent Embedded
+Message-ID: <bba153f8-051c-9880-eacf-2ff698cc0171@cogentembedded.com>
+Date:   Wed, 22 May 2019 20:23:03 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.1
 MIME-Version: 1.0
-In-Reply-To: <9C5B9F98-2067-43D3-B149-57613F38DCD4@zytor.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+In-Reply-To: <CAMuHMdUWNqkZz5DEWFJsoHLmC86ziLjWKHpz=A-EmvMDDgnSNQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-MW
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.204.65.201]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/22/2019 6:17 PM, hpa@zytor.com wrote:
-> On May 20, 2019 2:39:46 AM PDT, Roberto Sassu <roberto.sassu@huawei.com> wrote:
->> On 5/18/2019 12:17 AM, Arvind Sankar wrote:
->>> On Fri, May 17, 2019 at 02:47:31PM -0700, H. Peter Anvin wrote:
->>>> On 5/17/19 2:02 PM, Arvind Sankar wrote:
->>>>> On Fri, May 17, 2019 at 01:18:11PM -0700, hpa@zytor.com wrote:
->>>>>>
->>>>>> Ok... I just realized this does not work for a modular initramfs,
->> composed at load time from multiple files, which is a very real
->> problem. Should be easy enough to deal with: instead of one large file,
->> use one companion file per source file, perhaps something like
->> filename..xattrs (suggesting double dots to make it less likely to
->> conflict with a "real" file.) No leading dot, as it makes it more
->> likely that archivers will sort them before the file proper.
->>>>> This version of the patch was changed from the previous one exactly
->> to deal with this case --
->>>>> it allows for the bootloader to load multiple initramfs archives,
->> each
->>>>> with its own .xattr-list file, and to have that work properly.
->>>>> Could you elaborate on the issue that you see?
->>>>>
->>>>
->>>> Well, for one thing, how do you define "cpio archive", each with its
->> own
->>>> .xattr-list file? Second, that would seem to depend on the ordering,
->> no,
->>>> in which case you depend critically on .xattr-list file following
->> the
->>>> files, which most archivers won't do.
->>>>
->>>> Either way it seems cleaner to have this per file; especially if/as
->> it
->>>> can be done without actually mucking up the format.
->>>>
->>>> I need to run, but I'll post a more detailed explanation of what I
->> did
->>>> in a little bit.
->>>>
->>>> 	-hpa
->>>>
->>> Not sure what you mean by how do I define it? Each cpio archive will
->>> contain its own .xattr-list file with signatures for the files within
->>> it, that was the idea.
->>>
->>> You need to review the code more closely I think -- it does not
->> depend
->>> on the .xattr-list file following the files to which it applies.
->>>
->>> The code first extracts .xattr-list as though it was a regular file.
->> If
->>> a later dupe shows up (presumably from a second archive, although the
->>> patch will actually allow a second one in the same archive), it will
->>> then process the existing .xattr-list file and apply the attributes
->>> listed within it. It then will proceed to read the second one and
->>> overwrite the first one with it (this is the normal behaviour in the
->>> kernel cpio parser). At the end once all the archives have been
->>> extracted, if there is an .xattr-list file in the rootfs it will be
->>> parsed (it would've been the last one encountered, which hasn't been
->>> parsed yet, just extracted).
->>>
->>> Regarding the idea to use the high 16 bits of the mode field in
->>> the header that's another possibility. It would just require
->> additional
->>> support in the program that actually creates the archive though,
->> which
->>> the current patch doesn't.
+On 05/22/2019 08:05 PM, Geert Uytterhoeven wrote:
+
+>> On 05/20/2019 10:23 AM, masonccyang@mxic.com.tw wrote:
+>>> +- clocks: should contain 1 entries for the module's clock
 >>
->> Yes, for adding signatures for a subset of files, no changes to the ram
->> disk generator are necessary. Everything is done by a custom module. To
->> support a generic use case, it would be necessary to modify the
->> generator to execute getfattr and the awk script after files have been
->> placed in the temporary directory.
->>
->> If I understood the new proposal correctly, it would be task for cpio
->> to
->> read file metadata after the content and create a new record for each
->> file with mode 0x18000, type of metadata encoded in the file name and
->> metadata as file content. I don't know how easy it would be to modify
->> cpio. Probably the amount of changes would be reasonable.
->>
->> The kernel will behave in a similar way. It will call do_readxattrs()
->> in
->> do_copy() for each file. Since the only difference between the current
->> and the new proposal would be two additional calls to do_readxattrs()
->> in
->> do_name() and unpack_to_rootfs(), maybe we could support both.
->>
->> Roberto
+>>    1 entry (clock node phandle and specifier).
 > 
-> The nice thing with explicit metadata is that it doesn't have to contain the filename per se, and each file is self-contained. There is a reason why each cpio header starts with the magic number: each cpio record is formally independent and can be processed in isolation.  The TRAILER!!! thing is a huge wart in the format, although in practice TRAILER!!! always has a mode of 0 and so can be distinguished from an actual file.
+> Doesn't "specifier" mean "phandle + optional arguments"?
+
+   No.
+   E.g. when specifying the IRQs, the "interrupts" prop contains one or more
+interrupt specifiers, the phandle is specified in the "interrupt-parent"
+prop (see the DT spec). 
+
+> Gr{oetje,eeting}s,
 > 
-> The use of mode 0x18000 for metadata allows for optional backwards compatibility for extraction; for encoding this can be handled with very simple postprocessing.
-> 
-> So my suggestion would be to have mode 0x18000 indicate extended file metadata, with the filename of the form:
-> 
-> optional_filename!XXXXX!
-> 
-> ... where XXXXX indicates the type of metadata (e.g. !XATTR!). The optional_filename prefix allows an unaware decoder to extract to a well-defined name; simple postprocessing would be able to either remove (for size) or add (for compatibility) this prefix. It would be an error for this prefix, if present, to not match the name of the previous file.
+>                         Geert
 
-Actually, I defined '..metadata..' as special name to indicate that the
-file contains metadata. Then, the content of the file is a set of:
-
-struct metadata_hdr {
-         char c_size[8];     /* total size including c_size field */
-         char c_version;     /* header version */
-         char c_type;        /* metadata type */
-         char c_metadata[];  /* metadata */
-} __packed;
-
-init/initramfs.c now has a specific parser for c_type. Currently, I
-implemented a parser for xattrs, which expects data in the format:
-
-<xattr #N name>\0<xattr #N value>
-
-I checked if it is possible to use bit 17:16 to identify files with
-metadata, but both the cpio and the kernel use unsigned short.
-
-I already modified gen_init_cpio and cpio. I modify at run-time the list
-of files to be included in the image by adding a temporary file, that
-each time is set with the xattrs of the previously processed file.
-
-The output of cpio -t looks like:
-
---
-.
-..metadata..
-bin
-..metadata..
-dev
-..metadata..
-dev/console
-..metadata..
---
-
-Would it be ok? If you prefer that I add the format to the file name or
-you/anyone has a comment about this proposal, please let me know so that
-I make the changes before sending a new version of the patch set.
-
-Thanks
-
-Roberto
-
--- 
-HUAWEI TECHNOLOGIES Duesseldorf GmbH, HRB 56063
-Managing Director: Bo PENG, Jian LI, Yanli SHI
+MBR, Sergei
