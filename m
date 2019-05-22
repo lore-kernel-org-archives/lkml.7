@@ -2,99 +2,112 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,PLING_QUERY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 711E5C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 18:33:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56046C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 18:35:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50EC02173C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 18:33:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2463821473
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 18:35:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vn6CJI4I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729638AbfEVSdb (ORCPT
+        id S1729517AbfEVSfj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 14:33:31 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:59990 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728272AbfEVSda (ORCPT
+        Wed, 22 May 2019 14:35:39 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:38618 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728272AbfEVSfi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 14:33:30 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 939A980477; Wed, 22 May 2019 20:33:19 +0200 (CEST)
-Date:   Wed, 22 May 2019 20:33:29 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     kernel list <linux-kernel@vger.kernel.org>, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org
-Subject: Re: 5.2-rc0.8: emacs segfaults?! x220, with 32-bit userland
-Message-ID: <20190522183329.GB10003@amd>
-References: <20190519221700.GA7154@amd>
- <20190520160636.z6fpjiidc2d5ko5g@linutronix.de>
- <20190520231342.GA20835@amd>
- <20190521073240.mikv2ufwyriy4q7r@linutronix.de>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="V0207lvV8h4k8FAm"
-Content-Disposition: inline
-In-Reply-To: <20190521073240.mikv2ufwyriy4q7r@linutronix.de>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+        Wed, 22 May 2019 14:35:38 -0400
+Received: by mail-ed1-f66.google.com with SMTP id w11so5200828edl.5
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 11:35:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=2yFcpeyX6JPm/ecJCYVsQ23H/MFISXMka+yL/1ipPcI=;
+        b=Vn6CJI4Iv01K+/MIKACrYzOgVTCFnZD+WoawUUmft83IYO69sapogfVUFB9bOzn4Uz
+         P2o44RNOrKprGiToU47Lr4IQTKRxwqSDCDtnNnS53ly3FHnO/iJSje6z4IAejyobIq/a
+         bqRMQkxoFDtAs0aHOjav4cnAOe5CBRZyAVMSAY4i/qKG/MMvJWvbYEeoTc51PGXFv19c
+         4jq1LHLuaJNTriNuYa1Trq+r2xZ7hy/IokoKF2+IWM7NJlJkM4SunCIsFLYF8CUBOy6s
+         TU1Nr2ucHtfgr3yQoS85raP+TeJ5VDOKA1OvO9q/V9MN/ytF//wxiCSQhDzrBbLXPayE
+         G0Qg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=2yFcpeyX6JPm/ecJCYVsQ23H/MFISXMka+yL/1ipPcI=;
+        b=K/5+9MtFQu6U5dwVw6G/DIYjgpKbizDLRNeV3UafYY7ILST35Hi2+rHmR3zQFMXHZ4
+         9T+FwqoFhBzyNQ8nXa09SLCWwSCf5p/CADCfo28U/S6jc7BDJuC+pmBffIRoP+/23ywI
+         7Z/juVi06LboJmSv/hFuTrZl02ibbu7UyOAKcqFMFJbkcEZolXFX3yCdjrQyxVmrTMnw
+         XqdfS7Am6Slnetf0PnNFNnsWTHeJeybfsgo0H0E+4CQFjM8jg/+FeNkT2AFKrO45K7dE
+         kMqxrauseXthz1nehfzajQR7adMkcbvPJxMupEel1TLX1JbNr+vAOT5Gi765as44HOTs
+         Nk1A==
+X-Gm-Message-State: APjAAAWxgfbPgQbofk3c4GPMXyLUYK4HRhEdAnsDqZ+6tjrPbrkD09w8
+        zR5FcqCS20XLSKtmr/LVyQhO1WxP
+X-Google-Smtp-Source: APXvYqxhJChWD1XAly4+6D8uS2kpzjlPZvSw2+lf63M8KVbXZanuPwO9zgr6zuOP8oM7S3EVM5Pfdw==
+X-Received: by 2002:a50:fc97:: with SMTP id f23mr90805607edq.104.1558550137237;
+        Wed, 22 May 2019 11:35:37 -0700 (PDT)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id k18sm7293117eda.92.2019.05.22.11.35.35
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 22 May 2019 11:35:36 -0700 (PDT)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Al Cooper <alcooperx@gmail.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        bcm-kernel-feedback-list@broadcom.com
+Subject: [PATCH] phy: usb: phy-brcm-usb: Remove sysfs attributes upon driver removal
+Date:   Wed, 22 May 2019 11:35:25 -0700
+Message-Id: <20190522183525.5957-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+We are not destroying the sysfs attribute groupe we registered during
+the probe function which will make subsequent probe calls to that
+driver fail. Correct that with adding a remove function which only
+removes those attributes since the reference counting on clocks did its
+job already.
 
---V0207lvV8h4k8FAm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Fixes: 415060b21f31 ("phy: usb: phy-brcm-usb: Add ability to force DRD mode to host or device")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+---
+ drivers/phy/broadcom/phy-brcm-usb.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-Hi!
+diff --git a/drivers/phy/broadcom/phy-brcm-usb.c b/drivers/phy/broadcom/phy-brcm-usb.c
+index f59b1dc30399..292d5b3fc66c 100644
+--- a/drivers/phy/broadcom/phy-brcm-usb.c
++++ b/drivers/phy/broadcom/phy-brcm-usb.c
+@@ -376,6 +376,13 @@ static int brcm_usb_phy_probe(struct platform_device *pdev)
+ 	return PTR_ERR_OR_ZERO(phy_provider);
+ }
+ 
++static int brcm_usb_phy_remove(struct platform_device *pdev)
++{
++	sysfs_remove_group(&pdev->dev.kobj, &brcm_usb_phy_group);
++
++	return 0;
++}
++
+ #ifdef CONFIG_PM_SLEEP
+ static int brcm_usb_phy_suspend(struct device *dev)
+ {
+@@ -441,6 +448,7 @@ MODULE_DEVICE_TABLE(of, brcm_usb_dt_ids);
+ 
+ static struct platform_driver brcm_usb_driver = {
+ 	.probe		= brcm_usb_phy_probe,
++	.remove		= brcm_usb_phy_remove,
+ 	.driver		= {
+ 		.name	= "brcmstb-usb-phy",
+ 		.owner	= THIS_MODULE,
+-- 
+2.17.1
 
-I did not notice any new crashes.
-
-> > I don't have reproducible test case :-(. I had two or three failures
-> > so far.
->=20
-> oki. Could you please send me the output of
-> 	dmesg | grep fpu
-
-Here you go:
-
-Using method `randr'.
-pavel@duo:~$ uname -a
-Linux duo 5.2.0-rc1+ #32 SMP Mon May 20 12:51:17 CEST 2019 x86_64
-GNU/Linux
-pavel@duo:~$ dmesg | grep fpu
-[    0.000000] x86/fpu: Supporting XSAVE feature 0x001: 'x87 floating
-point registers'
-[    0.000000] x86/fpu: Supporting XSAVE feature 0x002: 'SSE
-registers'
-[    0.000000] x86/fpu: Supporting XSAVE feature 0x004: 'AVX
-registers'
-[    0.000000] x86/fpu: xstate_offset[2]:  576, xstate_sizes[2]:  256
-[    0.000000] x86/fpu: Enabled xstate features 0x7, context size is
-832 bytes, using 'standard' format.
-pavel@duo:~$
-model name	: Intel(R) Core(TM) i5-2520M CPU @ 2.50GHz
-
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---V0207lvV8h4k8FAm
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlzllfkACgkQMOfwapXb+vIclACgtZ6OgSaXeEXhXCbOHNQGUpk7
-hMAAnROrvOmR736ERRk5MWEyDogg1PIl
-=782N
------END PGP SIGNATURE-----
-
---V0207lvV8h4k8FAm--
