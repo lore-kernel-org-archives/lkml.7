@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22A06C282DC
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:45:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D861C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:45:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E892C20856
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:45:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBCBC2089E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:45:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558554351;
-	bh=GMoEqbIHc1meMLXmpxarvtmzEIojSX2iqWCVmo7WhdE=;
+	s=default; t=1558554356;
+	bh=t5xRMUEEpDNJ3nOdGBJbwH704jBjmeeKEfBphf6hj0E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yJBgT/ve3btEbwhv0VglD02cQj4NPSelT5HzU+wAWBF949cPyp6oDn+JxAtogMwyC
-	 4HXyy5ZIZ41SM/bxabqh+vc0OBnyMO+ArjMPh6vv7/P6FijsZtozt0CN7uvHV9P/3J
-	 fWPA6F++HALlaKzqDf7yEoAW5ghnzpZYDZhDH84M=
+	b=vdw33RwD805uREQ42en6gVyhf1gvrvm2SyW4UjO6aemqnsZH7S08XIQlgo2iD6S6Z
+	 IqYVclpECleQs//gkILFDu6yrgMuHVSwXBEczzTaZpJfHo1Xnm71KGR5zCzPmtOsg8
+	 jzfzfE2snAdD3n/aDR+nxg0V2UmAAw14dTmVAOnM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387825AbfEVTpu (ORCPT
+        id S2387844AbfEVTpz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:45:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50324 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:45:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50292 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731420AbfEVT1y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:27:54 -0400
+        id S1730359AbfEVT1w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:27:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8C42204FD;
-        Wed, 22 May 2019 19:27:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C351620879;
+        Wed, 22 May 2019 19:27:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553273;
-        bh=GMoEqbIHc1meMLXmpxarvtmzEIojSX2iqWCVmo7WhdE=;
+        s=default; t=1558553272;
+        bh=t5xRMUEEpDNJ3nOdGBJbwH704jBjmeeKEfBphf6hj0E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BJ42NOgwmr01r/1zrA9RBymQ+7VBlxpYYiXHEA12Y4BsQJiHGjXqgEUmbmuIVYTP7
-         uDzBEhrSMZl7liuyjtVCx9wdzovjs5Cd7jVz9WU1ul7Sf/5Pqs6FwDs0gdhRLzcT/j
-         w1NULRotp96aLU4gEm1caM7kcxe7rYE9OYQKCD58=
+        b=I8k7eU3poufG/YO/1pH4SiTwBxZebRokiZK07eU1Z27XIN7XKno7yBIrK5wcwJjrS
+         1xo3Z/aXR+Eb8L3/4vArnpWwQZfUG7VA90VI/3jbiK6SGvqFmPtyNh851Np18/wkSx
+         WhlVTNcsA5Kogvz9KWVGsvBZNIs5EEzKzCagiIvw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nicholas Piggin <npiggin@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 048/244] sched/nohz: Run NOHZ idle load balancer on HK_FLAG_MISC CPUs
-Date:   Wed, 22 May 2019 15:23:14 -0400
-Message-Id: <20190522192630.24917-48-sashal@kernel.org>
+Cc:     Philipp Rudo <prudo@linux.ibm.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 047/244] s390/kexec_file: Fix detection of text segment in ELF loader
+Date:   Wed, 22 May 2019 15:23:13 -0400
+Message-Id: <20190522192630.24917-47-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192630.24917-1-sashal@kernel.org>
 References: <20190522192630.24917-1-sashal@kernel.org>
@@ -62,72 +59,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicholas Piggin <npiggin@gmail.com>
+From: Philipp Rudo <prudo@linux.ibm.com>
 
-[ Upstream commit 9b019acb72e4b5741d88e8936d6f200ed44b66b2 ]
+[ Upstream commit 729829d775c9a5217abc784b2f16087d79c4eec8 ]
 
-The NOHZ idle balancer runs on the lowest idle CPU. This can
-interfere with isolated CPUs, so confine it to HK_FLAG_MISC
-housekeeping CPUs.
+To register data for the next kernel (command line, oldmem_base, etc.) the
+current kernel needs to find the ELF segment that contains head.S. This is
+currently done by checking ifor 'phdr->p_paddr == 0'. This works fine for
+the current kernel build but in theory the first few pages could be
+skipped. Make the detection more robust by checking if the entry point lies
+within the segment.
 
-HK_FLAG_SCHED is not used for this because it is not set anywhere
-at the moment. This could be folded into HK_FLAG_SCHED once that
-option is fixed.
-
-The problem was observed with increased jitter on an application
-running on CPU0, caused by NOHZ idle load balancing being run on
-CPU1 (an SMT sibling).
-
-Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Frederic Weisbecker <fweisbec@gmail.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190412042613.28930-1-npiggin@gmail.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Philipp Rudo <prudo@linux.ibm.com>
+Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/fair.c | 16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
+ arch/s390/kernel/kexec_elf.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index d31916366d39c..7a1e9db617f76 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -9083,22 +9083,26 @@ static inline int on_null_domain(struct rq *rq)
-  * - When one of the busy CPUs notice that there may be an idle rebalancing
-  *   needed, they will kick the idle load balancer, which then does idle
-  *   load balancing for all the idle CPUs.
-+ * - HK_FLAG_MISC CPUs are used for this task, because HK_FLAG_SCHED not set
-+ *   anywhere yet.
-  */
+diff --git a/arch/s390/kernel/kexec_elf.c b/arch/s390/kernel/kexec_elf.c
+index 5a286b012043b..602e7cc26d118 100644
+--- a/arch/s390/kernel/kexec_elf.c
++++ b/arch/s390/kernel/kexec_elf.c
+@@ -19,10 +19,15 @@ static int kexec_file_add_elf_kernel(struct kimage *image,
+ 	struct kexec_buf buf;
+ 	const Elf_Ehdr *ehdr;
+ 	const Elf_Phdr *phdr;
++	Elf_Addr entry;
+ 	int i, ret;
  
- static inline int find_new_ilb(void)
- {
--	int ilb = cpumask_first(nohz.idle_cpus_mask);
-+	int ilb;
+ 	ehdr = (Elf_Ehdr *)kernel;
+ 	buf.image = image;
++	if (image->type == KEXEC_TYPE_CRASH)
++		entry = STARTUP_KDUMP_OFFSET;
++	else
++		entry = ehdr->e_entry;
  
--	if (ilb < nr_cpu_ids && idle_cpu(ilb))
--		return ilb;
-+	for_each_cpu_and(ilb, nohz.idle_cpus_mask,
-+			      housekeeping_cpumask(HK_FLAG_MISC)) {
-+		if (idle_cpu(ilb))
-+			return ilb;
-+	}
+ 	phdr = (void *)ehdr + ehdr->e_phoff;
+ 	for (i = 0; i < ehdr->e_phnum; i++, phdr++) {
+@@ -35,7 +40,7 @@ static int kexec_file_add_elf_kernel(struct kimage *image,
+ 		buf.mem = ALIGN(phdr->p_paddr, phdr->p_align);
+ 		buf.memsz = phdr->p_memsz;
  
- 	return nr_cpu_ids;
- }
+-		if (phdr->p_paddr == 0) {
++		if (entry - phdr->p_paddr < phdr->p_memsz) {
+ 			data->kernel_buf = buf.buffer;
+ 			data->memsz += STARTUP_NORMAL_OFFSET;
  
- /*
-- * Kick a CPU to do the nohz balancing, if it is time for it. We pick the
-- * nohz_load_balancer CPU (if there is one) otherwise fallback to any idle
-- * CPU (if there is one).
-+ * Kick a CPU to do the nohz balancing, if it is time for it. We pick any
-+ * idle CPU in the HK_FLAG_MISC housekeeping set (if there is one).
-  */
- static void kick_ilb(unsigned int flags)
- {
 -- 
 2.20.1
 
