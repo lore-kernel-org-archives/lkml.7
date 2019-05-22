@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D286AC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:32:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEB50C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:32:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D3B4217D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:32:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A201F204FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:32:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558553529;
-	bh=P9EaZvPN5ixa+/d96A56l5O32Bn1X/A3te1E3JKdMeI=;
+	s=default; t=1558553535;
+	bh=B1vCH7X8vSqE9p5rvXvsVyhZo92iEF33oALO52MF+fA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FRLeQAWBuNxP38AQRcEx1KpJf9+9TFlcD/8xwk9tj26TTGJF+Bckaq6NI+albMwBQ
-	 s4oJiPS5eYTB9IifPFj7vpuCmmvz22+S4en7nYtx14ZcGgW9O3uReg6guBs+rQOOO7
-	 l2M8T0dwo7Y825FbsqbAZpcNj7nQpXSQjkGSUu+E=
+	b=s1r4SgWYeZxTBemR5FR6nmh7HKhc+EkwkfeJXEelQux0unAVMlT4e24Vs2m9BI86v
+	 5QNndjnmck8+lrzcmNqfREKeMAE0bUBM178RS9FWZdOkj8FW+CKPaz7UzrUC1Kl8J/
+	 hC0f1EiuGTzfDxcHuDIAOIE5lVTohooTSOKSAcvg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732143AbfEVTcI (ORCPT
+        id S2387779AbfEVTcP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:32:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55734 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:32:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55946 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733301AbfEVTcD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:32:03 -0400
+        id S1731460AbfEVTcL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:32:11 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF7CB20675;
-        Wed, 22 May 2019 19:32:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6860B217D4;
+        Wed, 22 May 2019 19:32:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553522;
-        bh=P9EaZvPN5ixa+/d96A56l5O32Bn1X/A3te1E3JKdMeI=;
+        s=default; t=1558553530;
+        bh=B1vCH7X8vSqE9p5rvXvsVyhZo92iEF33oALO52MF+fA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mkBacXWidHlgFh2u2nnYmh/POo/cyv36vGJC/dvFDYHeVLcdD8HKeh0EbcJIFLgZQ
-         64Rwj//oR0keQqRj0YrUfT5QDeBO/Jt5Clp4x80Y0SXVO54ZZLhR4EGj5b1oo59xMq
-         f71bZ+yOthTyT/DDqBRB364GR+h4e9iNtbjxCv1k=
+        b=To4teIbefun8bp/t2VKWKLG0JvwZ5GTOFxWklkv2yreUk/h7MPFkIAMWmav/sUcdf
+         JjiZXU2u4Slm/plR3mjGC49YSgA77qtEH5gf6umzcVzRfLBQoOKRLRUbndl8+tcw0H
+         yAZV23p6iN+rjdPvcJUBaBlhJ5c+wti0c8NRuOhQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kees Cook <keescook@chromium.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Borislav Petkov <bp@suse.de>,
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>, luto@kernel.org,
         Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 23/92] x86/build: Move _etext to actual end of .text
-Date:   Wed, 22 May 2019 15:30:18 -0400
-Message-Id: <20190522193127.27079-23-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 26/92] mm/uaccess: Use 'unsigned long' to placate UBSAN warnings on older GCC versions
+Date:   Wed, 22 May 2019 15:30:21 -0400
+Message-Id: <20190522193127.27079-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522193127.27079-1-sashal@kernel.org>
 References: <20190522193127.27079-1-sashal@kernel.org>
@@ -63,51 +61,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+From: Peter Zijlstra <peterz@infradead.org>
 
-[ Upstream commit 392bef709659abea614abfe53cf228e7a59876a4 ]
+[ Upstream commit 29da93fea3ea39ab9b12270cc6be1b70ef201c9e ]
 
-When building x86 with Clang LTO and CFI, CFI jump regions are
-automatically added to the end of the .text section late in linking. As a
-result, the _etext position was being labelled before the appended jump
-regions, causing confusion about where the boundaries of the executable
-region actually are in the running kernel, and broke at least the fault
-injection code. This moves the _etext mark to outside (and immediately
-after) the .text area, as it already the case on other architectures
-(e.g. arm64, arm).
+Randy reported objtool triggered on his (GCC-7.4) build:
 
-Reported-and-tested-by: Sami Tolvanen <samitolvanen@google.com>
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Cc: Borislav Petkov <bp@suse.de>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
+  lib/strncpy_from_user.o: warning: objtool: strncpy_from_user()+0x315: call to __ubsan_handle_add_overflow() with UACCESS enabled
+  lib/strnlen_user.o: warning: objtool: strnlen_user()+0x337: call to __ubsan_handle_sub_overflow() with UACCESS enabled
+
+This is due to UBSAN generating signed-overflow-UB warnings where it
+should not. Prior to GCC-8 UBSAN ignored -fwrapv (which the kernel
+uses through -fno-strict-overflow).
+
+Make the functions use 'unsigned long' throughout.
+
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
+Acked-by: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: http://lkml.kernel.org/r/20190423183827.GA4012@beast
+Cc: luto@kernel.org
+Link: http://lkml.kernel.org/r/20190424072208.754094071@infradead.org
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/vmlinux.lds.S | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ lib/strncpy_from_user.c | 5 +++--
+ lib/strnlen_user.c      | 4 ++--
+ 2 files changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
-index 17e1e60b6b400..68dd72248919b 100644
---- a/arch/x86/kernel/vmlinux.lds.S
-+++ b/arch/x86/kernel/vmlinux.lds.S
-@@ -110,11 +110,11 @@ SECTIONS
- 		*(.text.__x86.indirect_thunk)
- 		__indirect_thunk_end = .;
- #endif
--
--		/* End of text section */
--		_etext = .;
- 	} :text = 0x9090
+diff --git a/lib/strncpy_from_user.c b/lib/strncpy_from_user.c
+index e0af6ff73d146..f8b1e3cb716b9 100644
+--- a/lib/strncpy_from_user.c
++++ b/lib/strncpy_from_user.c
+@@ -20,10 +20,11 @@
+  * hit it), 'max' is the address space maximum (and we return
+  * -EFAULT if we hit it).
+  */
+-static inline long do_strncpy_from_user(char *dst, const char __user *src, long count, unsigned long max)
++static inline long do_strncpy_from_user(char *dst, const char __user *src,
++					unsigned long count, unsigned long max)
+ {
+ 	const struct word_at_a_time constants = WORD_AT_A_TIME_CONSTANTS;
+-	long res = 0;
++	unsigned long res = 0;
  
-+	/* End of text section */
-+	_etext = .;
-+
- 	NOTES :text :note
+ 	/*
+ 	 * Truncate 'max' to the user-specified limit, so that
+diff --git a/lib/strnlen_user.c b/lib/strnlen_user.c
+index 3a5f2b366d84e..1c87bfa63db7f 100644
+--- a/lib/strnlen_user.c
++++ b/lib/strnlen_user.c
+@@ -27,7 +27,7 @@
+ static inline long do_strnlen_user(const char __user *src, unsigned long count, unsigned long max)
+ {
+ 	const struct word_at_a_time constants = WORD_AT_A_TIME_CONSTANTS;
+-	long align, res = 0;
++	unsigned long align, res = 0;
+ 	unsigned long c;
  
- 	EXCEPTION_TABLE(16) :text = 0x9090
+ 	/*
+@@ -41,7 +41,7 @@ static inline long do_strnlen_user(const char __user *src, unsigned long count,
+ 	 * Do everything aligned. But that means that we
+ 	 * need to also expand the maximum..
+ 	 */
+-	align = (sizeof(long) - 1) & (unsigned long)src;
++	align = (sizeof(unsigned long) - 1) & (unsigned long)src;
+ 	src -= align;
+ 	max += align;
+ 
 -- 
 2.20.1
 
