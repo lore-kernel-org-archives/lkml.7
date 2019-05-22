@@ -2,88 +2,103 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84E02C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 17:13:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1890BC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 17:16:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C40C21473
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 17:13:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RssdoCWh"
+	by mail.kernel.org (Postfix) with ESMTP id EC04420851
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 17:16:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730258AbfEVRNd (ORCPT
+        id S1730338AbfEVRQr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 13:13:33 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:53833 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727499AbfEVRNd (ORCPT
+        Wed, 22 May 2019 13:16:47 -0400
+Received: from smtprelay0007.hostedemail.com ([216.40.44.7]:37669 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729915AbfEVRQq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 13:13:33 -0400
-Received: by mail-wm1-f67.google.com with SMTP id 198so3003749wme.3;
-        Wed, 22 May 2019 10:13:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=CpjgnkF4sruSuOrQ4VHMEk7dF6UBjfXsObBBwsBgqqk=;
-        b=RssdoCWhiAKCll53j5tJrIbL+pWXOsqAR4f0hlrGh8aceXkxyZx46Ju4jkAwX5wIxH
-         YR0IK0Hk89pV7f9U4P5OUNavZl9TCtoP+2GGSy2wnQjP9ptqrH0Rn5LnsKUj/8pZgiOB
-         KWnRciVDNz0ZJCq4h/14nYAoYEOIi7vSD175DD/FqPosHKBiNl+Z5IyoFXoPGlSq7Spg
-         EGBfxu0QAUjQMoxznXteUROIoLc6wU86bldO3nxlZCRbhswkDB9WPnWkwt5d2JdVBrSm
-         zLqVUad0h2Fyju9ts0sOtoim544kIzY3IIoxK5nPCgQfs/StYvXX43VATZdujBd4/t6Y
-         6gnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=CpjgnkF4sruSuOrQ4VHMEk7dF6UBjfXsObBBwsBgqqk=;
-        b=jd1low4d/rWgZNeXlrEiQTorhPkjrdu6DMaobj75XHGFgfuKBKQ+vtPracTi3XmsrS
-         /q7BdVXtTY7Zx3+29W0hF9pdaO8e6Jsu5lEGLkoNombJrG4HbijSDNSNvxWqNio1RfrN
-         bBG2RlsWTRMUeQ1g9ou41ZfTPT7teSnm5DPH0fhGfAPKQuWKAMcHNzFZ2ALXHFRsu5Uw
-         ZHdpYBvIwUWpGegw5vTHS73iVOavFVjClbhVyZ0U5NqKKUXz9k8FB+IYsgUe0ElcaMfg
-         bhBfhK+CBALV3C62Kz3dY6IhPRNHNUrsS9b+8N0BNCZTLQw1Plu329qTZFHHuwubxllG
-         /rsg==
-X-Gm-Message-State: APjAAAUFbcHcWxXx5I351QxzmdsZm341tlQJUvAjLFjUrA+25c+jq8sA
-        1LfG66PV3EHzOcAYMqoKag==
-X-Google-Smtp-Source: APXvYqzvtDN4iyZt2JkJqh0kQBV55tVES+dkrB6shRzCZqfEAsBYVLLOO2abqKUNz6rqoWfM6pSvUg==
-X-Received: by 2002:a7b:c397:: with SMTP id s23mr8539730wmj.85.1558545210729;
-        Wed, 22 May 2019 10:13:30 -0700 (PDT)
-Received: from avx2 ([46.53.250.82])
-        by smtp.gmail.com with ESMTPSA id a11sm27105190wrx.31.2019.05.22.10.13.29
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 22 May 2019 10:13:29 -0700 (PDT)
-Date:   Wed, 22 May 2019 20:13:27 +0300
-From:   Alexey Dobriyan <adobriyan@gmail.com>
-To:     Jan Luebbe <jlu@pengutronix.de>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        John Ogness <john.ogness@linutronix.de>,
-        Andy Lutomirski <luto@kernel.org>, kernel@pengutronix.de,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH] proc: report eip and esp for all threads when coredumping
-Message-ID: <20190522171327.GA2111@avx2>
-References: <20190522161614.628-1-jlu@pengutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190522161614.628-1-jlu@pengutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 22 May 2019 13:16:46 -0400
+Received: from smtprelay.hostedemail.com (10.5.19.251.rfc1918.com [10.5.19.251])
+        by smtpgrave07.hostedemail.com (Postfix) with ESMTP id 689BF18011ADF;
+        Wed, 22 May 2019 17:16:45 +0000 (UTC)
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 799BB180A887B;
+        Wed, 22 May 2019 17:16:44 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: sock87_3abe498a27f2d
+X-Filterd-Recvd-Size: 2531
+Received: from XPS-9350 (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf07.hostedemail.com (Postfix) with ESMTPA;
+        Wed, 22 May 2019 17:16:43 +0000 (UTC)
+Message-ID: <2b4878de1404e71d3085ee4832a5abc3526f2cdf.camel@perches.com>
+Subject: Re: [PATCH] checkpatch.pl: Update DT vendor prefix check
+From:   Joe Perches <joe@perches.com>
+To:     Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org
+Cc:     devicetree@vger.kernel.org
+Date:   Wed, 22 May 2019 10:16:41 -0700
+In-Reply-To: <20190522151238.25176-1-robh@kernel.org>
+References: <20190522151238.25176-1-robh@kernel.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.1-1build1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 22, 2019 at 06:16:14PM +0200, Jan Luebbe wrote:
-> --- a/fs/proc/array.c
-> +++ b/fs/proc/array.c
-> @@ -462,7 +462,7 @@ static int do_task_stat(struct seq_file *m, struct pid_namespace *ns,
->  		 * a program is not able to use ptrace(2) in that case. It is
->  		 * safe because the task has stopped executing permanently.
->  		 */
-> -		if (permitted && (task->flags & PF_DUMPCORE)) {
-> +		if (permitted && (!!mm->core_state)) {
+On Wed, 2019-05-22 at 10:12 -0500, Rob Herring wrote:
+> In commit 8122de54602e ("dt-bindings: Convert vendor prefixes to
+> json-schema"), vendor-prefixes.txt has been converted to a DT schema.
+> Update the checkpatch.pl DT check to extract vendor prefixes from the new
+> vendor-prefixes.yaml file.
+> 
+> Fixes: 8122de54602e ("dt-bindings: Convert vendor prefixes to json-schema")
+> Cc: Joe Perches <joe@perches.com>
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+>  scripts/checkpatch.pl | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> index bb28b178d929..073051a4471b 100755
+> --- a/scripts/checkpatch.pl
+> +++ b/scripts/checkpatch.pl
+> @@ -3027,7 +3027,7 @@ sub process {
+>  			my @compats = $rawline =~ /\"([a-zA-Z0-9\-\,\.\+_]+)\"/g;
+>  
+>  			my $dt_path = $root . "/Documentation/devicetree/bindings/";
+> -			my $vp_file = $dt_path . "vendor-prefixes.txt";
+> +			my $vp_file = $dt_path . "vendor-prefixes.yaml";
+>  
+>  			foreach my $compat (@compats) {
+>  				my $compat2 = $compat;
+> @@ -3042,7 +3042,7 @@ sub process {
+>  
+>  				next if $compat !~ /^([a-zA-Z0-9\-]+)\,/;
+>  				my $vendor = $1;
+> -				`grep -Eq "^$vendor\\b" $vp_file`;
+> +				`grep -oE "\\"\\^[a-zA-Z0-9]+" $vp_file | grep -q "$vendor"`;
 
-You don't need both "!!" and "()", it is a regular pointer after all.
+I think this does't work well as it loses the -
+in various vendor prefixes:
+
+  "^active-semi,.*":
+  "^asahi-kasei,.*":
+  "^ebs-systart,.*":
+  "^inside-secure,.*":
+  "^multi-inno,.*":
+  "^netron-dy,.*":
+  "^si-en,.*":
+  "^si-linux,.*":
+  "^tbs-biometrics,.*":
+  "^u-blox,.*":
+  "^x-powers,.*":
+
+Perhaps the grep should be something like: (untested)
+
+	`grep -Eq "\\"\\^\Q$vendor\E,\\.\\*\\":" $vp_file`;
+
