@@ -2,182 +2,89 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0077BC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 22:18:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF4CAC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 22:20:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C3A42081C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 22:18:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F4312081C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 22:20:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=fomichev-me.20150623.gappssmtp.com header.i=@fomichev-me.20150623.gappssmtp.com header.b="gnPu95pB"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="l6Twn3Uj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728984AbfEVWSq (ORCPT
+        id S1728103AbfEVWUJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 18:18:46 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:37626 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725823AbfEVWSp (ORCPT
+        Wed, 22 May 2019 18:20:09 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:42181 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725823AbfEVWUJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 18:18:45 -0400
-Received: by mail-pl1-f193.google.com with SMTP id p15so1731043pll.4
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 15:18:45 -0700 (PDT)
+        Wed, 22 May 2019 18:20:09 -0400
+Received: by mail-pg1-f193.google.com with SMTP id e17so1861174pgo.9
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 15:20:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fomichev-me.20150623.gappssmtp.com; s=20150623;
+        d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=QUdAmGAks4E+4DtrN0mw6crQFbwVYGBopZMl7vlB5xU=;
-        b=gnPu95pB76Hc4txzz6BDi48JQGwlBKlryzlDHuG/n0DhE+ubr+d43v3d4CVQQARDfv
-         rDONLYaYKQ8KqJ9i++TTN0BPf98fY37iG3zfc6/oSlvf6rd3PoVUGcLZ+qk5MujPnyHx
-         kGbxwb6lScVthKUY9+NLiUOuf7eI7JIbT0Vyx5A860qAlECkU6+LM3bqn/pAj4MZ7srv
-         5+I5uMRWrfuHhSKRjjpoUuu2QdfaAe5pQHq6mnpg8lhi8LjhGXP/C0tsx4cyD/1pjA+b
-         maDom5+rvbWtufW7OFGn2mS3ghksirusuFNUjDPBn4Vw4BDTtymMKQRTfGPGyPsDtI01
-         D+nw==
+         :content-disposition:in-reply-to;
+        bh=zKpoS8ChVauG/b5jE7jdGLek9tzNeFPqv0E/OMjWjmE=;
+        b=l6Twn3UjulqQqYjQ1sV1Om600H5NzmMO9lU7YFqwo77Q3wEt3NpC2jGlLXf606OARJ
+         u5179gymw9vrMKnbwCTv3rehfAly651iOeW71m1DadeWX4CicN1zq9VWAolyQFIs7fHo
+         Av9uo86ofFN6IiAIpEWhPjsElNYdgRQbdvBI0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=QUdAmGAks4E+4DtrN0mw6crQFbwVYGBopZMl7vlB5xU=;
-        b=OdjqDzLlKceA4KZ2jGPe4fGiFqjhfBZuEZ9DOk9O+yAWafaMwvyUKpXrx9bVhYkCq4
-         vcMmATPq6gdDRoSwt4U9hOLyyfIOwduluriCR5wFQz+B/kGTR3wzMeU1vrzPNkei/Eb9
-         n9rM8g2eoQZeFbEh+Uz1IG9jzGfS52BSP0k+fd3AnQyX4Qx61iH/rp1zrKrWU//IefuE
-         BGaLPmMr4ZhvLVfgoErMSfmNL99iqeN0OL5eiudRhSKQESocJMvfN6V4ytA1TX8IxPYX
-         4gwvNwGc94CpAzKpRKLaK2NnS8EQDyX0b4EXBUxT3yQTFCvwYly4h3w53hY3IG7In179
-         qO7w==
-X-Gm-Message-State: APjAAAXaDnfZEwgOb4tyKHE6hyHE2rYl209wkry2vQqTpdU6AQOEIymj
-        Y+MU5xr4zm3ZPck2RofXU2ZNyA==
-X-Google-Smtp-Source: APXvYqwPSBEYFh3s2/ZKBKXC4f3IrI47OPivC9KwR7cQjypOsdzUYyqv0o0smuB9CZYaU/DwXSGTXA==
-X-Received: by 2002:a17:902:b949:: with SMTP id h9mr49158945pls.50.1558563524887;
-        Wed, 22 May 2019 15:18:44 -0700 (PDT)
-Received: from localhost ([2601:646:8f00:18d9:d0fa:7a4b:764f:de48])
-        by smtp.gmail.com with ESMTPSA id q14sm26900610pgg.10.2019.05.22.15.18.43
+         :mime-version:content-disposition:in-reply-to;
+        bh=zKpoS8ChVauG/b5jE7jdGLek9tzNeFPqv0E/OMjWjmE=;
+        b=Z7zJpk3Xw9IEy5Pe3glLZS3ZqSO2JEBej7psvCIaX/3sBKlMv0E49hvSUex1ddvQP5
+         eMlWZGQDd4fFTzfRQwkAOl+s8cOCyGUsqjsWeesnk9kPDAcj4L8lWEuoq3KLqt6GxORz
+         ub6mag8AJ+A08ggOZaXV6UCXPnTLKeWonkklcVxQbK/QT1IrvZj5DTykI35scRcEFIkn
+         3gdogl8B0ivpvF7KlYvKxyn5agg2lBzUHpXLuv/4dp4diP20bRyv9uPKLSIFKsPDMZAI
+         J8R+JEkf8mVcW+gAlT+2yTJVFqgMfoO4maDTW4FzQkWHU0Iy5lwSRjHfL4JqNzrEK3sA
+         Yqrg==
+X-Gm-Message-State: APjAAAVS0rzk2is7fYG0SmeMOOBfHea9QxfWF8EK6NZJPi7x+LlUtrK4
+        MqTLHt4/VgJw/EAdcVqbqqqpwQ==
+X-Google-Smtp-Source: APXvYqw7vBRQoH+FD/trwikHaC065wEINOozIgtwVa9U9ZyvIo0eWI2fuUR7x4j3CWWXadtR698Bjg==
+X-Received: by 2002:a63:ed03:: with SMTP id d3mr92213341pgi.7.1558563608854;
+        Wed, 22 May 2019 15:20:08 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id x16sm28300353pff.30.2019.05.22.15.20.07
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 22 May 2019 15:18:44 -0700 (PDT)
-Date:   Wed, 22 May 2019 15:18:43 -0700
-From:   Stanislav Fomichev <sdf@fomichev.me>
-To:     Roman Gushchin <guro@fb.com>
-Cc:     bpf@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>, netdev@vger.kernel.org,
-        Tejun Heo <tj@kernel.org>, kernel-team@fb.com,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH bpf-next 3/4] selftests/bpf: enable all available cgroup
- v2 controllers
-Message-ID: <20190522221843.GA3032@mini-arch>
-References: <20190522212932.2646247-1-guro@fb.com>
- <20190522212932.2646247-4-guro@fb.com>
+        Wed, 22 May 2019 15:20:07 -0700 (PDT)
+Date:   Wed, 22 May 2019 15:20:06 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Boris Brezillon <boris.brezillon@collabora.com>
+Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Richard Weinberger <richard@nod.at>,
+        linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        linux-mtd@lists.infradead.org,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Brian Norris <computersforpeace@gmail.com>,
+        David Woodhouse <dwmw2@infradead.org>
+Subject: Re: [PATCH] mtd: onenand_base: Avoid fall-through warnings
+Message-ID: <201905221519.88B9364E@keescook>
+References: <20190522180446.GA30082@embeddedor>
+ <201905221403.642AF6092@keescook>
+ <20190522235738.68059906@collabora.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190522212932.2646247-4-guro@fb.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190522235738.68059906@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/22, Roman Gushchin wrote:
-> Enable all available cgroup v2 controllers when setting up
-> the environment for the bpf kselftests. It's required to properly test
-> the bpf prog auto-detach feature. Also it will generally increase
-> the code coverage.
-> 
-> Signed-off-by: Roman Gushchin <guro@fb.com>
-> ---
->  tools/testing/selftests/bpf/cgroup_helpers.c | 58 ++++++++++++++++++++
->  1 file changed, 58 insertions(+)
-> 
-> diff --git a/tools/testing/selftests/bpf/cgroup_helpers.c b/tools/testing/selftests/bpf/cgroup_helpers.c
-> index 6692a40a6979..4533839c0ce0 100644
-> --- a/tools/testing/selftests/bpf/cgroup_helpers.c
-> +++ b/tools/testing/selftests/bpf/cgroup_helpers.c
-> @@ -33,6 +33,61 @@
->  	snprintf(buf, sizeof(buf), "%s%s%s", CGROUP_MOUNT_PATH, \
->  		 CGROUP_WORK_DIR, path)
->  
-> +/**
-> + * enable_all_controllers() - Enable all available cgroup v2 controllers
-> + *
-> + * Enable all available cgroup v2 controllers in order to increase
-> + * the code coverage.
-> + *
-> + * If successful, 0 is returned.
-> + */
-> +int enable_all_controllers(char *cgroup_path)
-> +{
-> +	char path[PATH_MAX + 1];
-> +	char buf[PATH_MAX];
-> +	char *c, *c2;
-> +	int fd, cfd;
-> +	size_t len;
-> +
-> +	snprintf(path, sizeof(path), "%s/cgroup.controllers", cgroup_path);
-> +	fd = open(path, O_RDONLY);
-> +	if (fd < 0) {
-> +		log_err("Opening cgroup.controllers: %s", path);
-> +		return -1;
-> +	}
-> +
-> +	len = read(fd, buf, sizeof(buf) - 1);
-> +	if (len < 0) {
-> +		close(fd);
-> +		log_err("Reading cgroup.controllers: %s", path);
-> +		return -1;
-> +	}
-> +
-> +	close(fd);
-> +
-> +	/* No controllers available? We're probably on cgroup v1. */
-> +	if (len == 0)
-> +		return 0;
-> +
-> +	snprintf(path, sizeof(path), "%s/cgroup.subtree_control", cgroup_path);
-> +	cfd = open(path, O_RDWR);
-> +	if (cfd < 0) {
-> +		log_err("Opening cgroup.subtree_control: %s", path);
-> +		return -1;
-> +	}
-> +
+On Wed, May 22, 2019 at 11:57:38PM +0200, Boris Brezillon wrote:
+> All this look suspicious, and even if the fall through logic
+> has no side effects in practice (which I'm still not sure is the case),
+> I think it'd be better to explicitly set the flags that have
+> to be set in each case statement and add breaks.
 
-[..]
-> +	buf[len] = 0;
-nit: move this up a bit? Right after:
+Yeah, totally agreed. :)
 
-	if (len < 0) {
-		...
-	}
-	buf[len] = 0;
-	close(fd);
-
-I was actually writing a comment about missing buf[len]=0 until I
-somehow spotted it :-)
-
-> +	for (c = strtok_r(buf, " ", &c2); c; c = strtok_r(NULL, " ", &c2)) {
-> +		if (dprintf(cfd, "+%s\n", c) <= 0) {
-> +			log_err("Enabling controller %s: %s", c, path);
-> +			close(cfd);
-> +			return -1;
-> +		}
-> +	}
-> +	close(cfd);
-> +	return 0;
-> +}
-> +
->  /**
->   * setup_cgroup_environment() - Setup the cgroup environment
->   *
-> @@ -71,6 +126,9 @@ int setup_cgroup_environment(void)
->  		return 1;
->  	}
->  
-> +	if (enable_all_controllers(cgroup_workdir))
-> +		return 1;
-> +
->  	return 0;
->  }
->  
-> -- 
-> 2.20.1
-> 
+-- 
+Kees Cook
