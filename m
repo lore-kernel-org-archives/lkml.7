@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE7BDC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:54:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6180C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:54:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 754A420856
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:54:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F56020856
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:54:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558554869;
-	bh=c6VsHFKQRXSatgbuDQAcJBnPN60zHUQiCX7glMLjcs0=;
+	s=default; t=1558554872;
+	bh=z3MDV60291LlBWj453hvcf3H7YFDWQlBi73KyBFq4n0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YNaoE22K9+eeGaHiTBkbgZgZzliuVJaOEuTpxX++9qqYHpKrTgiTvHF/IYumcqmTe
-	 YLjwtO9fnget0mq1lApPuG/L6pyiRI2vehMCrA9vnuENHTTJXnz+IYWCmavWkDzXSu
-	 8LxgXBhFtuy2odOoHNHh/Qo9YBSBXn8IXUrFG24Q=
+	b=haVL1SoV6BQjuh9L5kZe7Yt9pGymleAvk9bSy9IEYkUadPEDcaB6EPjsG1IDom7Io
+	 XwbL90IJ4yvMX8Ev31nh3vtxNiRppfBIck3ktnPUebC50WX3XGlAoADIlCHxsBfhZy
+	 dYoLOrZzO4NskJOxX4xf8MhsaFCqVmO67OjFiYo4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732181AbfEVTy2 (ORCPT
+        id S1731680AbfEVTZj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:54:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47034 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731681AbfEVTZj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 22 May 2019 15:25:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46812 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731579AbfEVTZ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:25:29 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA684206BA;
-        Wed, 22 May 2019 19:25:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B25D421473;
+        Wed, 22 May 2019 19:25:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553139;
-        bh=c6VsHFKQRXSatgbuDQAcJBnPN60zHUQiCX7glMLjcs0=;
+        s=default; t=1558553128;
+        bh=z3MDV60291LlBWj453hvcf3H7YFDWQlBi73KyBFq4n0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AR0YrH+MrxTDneGOT2U+oOKllb3XLpvR/wf2NXux2OcLqPyc5k1FTRmxt7K8Y349N
-         lL9RpDC/kI78nwst0LmnoXFsSefmc9qq66+T2MD3dieCppisCjMHa8lyAhz+7UNsSK
-         QrQ+jYJDJCZ3DRtVm0VzCe+l12xE+I8+rtk+ya1M=
+        b=TIRXdsgMHdF5gKBSk1CUhWdqVSBGYgDoiJOLsMi57WSz6FF6uqbQv0y5wFa86JWD4
+         2XmMZ6G+EZSZD+XFa+MUungzh9X+rUfS4Oz5V5Njsk/yZzTajFirv8VodOas11mXuB
+         fCetvcJA3l401fum137EC5ux1bTTOaU3HnyvpxEE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kangjie Lu <kjlu@umn.edu>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 069/317] slimbus: fix a potential NULL pointer dereference in of_qcom_slim_ngd_register
-Date:   Wed, 22 May 2019 15:19:30 -0400
-Message-Id: <20190522192338.23715-69-sashal@kernel.org>
+Cc:     Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 062/317] net: phy: improve genphy_soft_reset
+Date:   Wed, 22 May 2019 15:19:23 -0400
+Message-Id: <20190522192338.23715-62-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192338.23715-1-sashal@kernel.org>
 References: <20190522192338.23715-1-sashal@kernel.org>
@@ -60,36 +59,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kangjie Lu <kjlu@umn.edu>
+From: Heiner Kallweit <hkallweit1@gmail.com>
 
-[ Upstream commit 06d5d6b7f9948a89543e1160ef852d57892c750d ]
+[ Upstream commit 8c90b795e90f7753d23c18e8b95dd71b4a18c5d9 ]
 
-In case platform_device_alloc fails, the fix returns an error
-code to avoid the NULL pointer dereference.
+PHY's behave differently when being reset. Some reset registers to
+defaults, some don't. Some trigger an autoneg restart, some don't.
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+So let's also set the autoneg restart bit when resetting. Then PHY
+behavior should be more consistent. Clearing BMCR_ISOLATE serves the
+same purpose and is borrowed from genphy_restart_aneg.
+
+BMCR holds the speed / duplex settings in fixed mode. Therefore
+we may have an issue if a soft reset resets BMCR to its default.
+So better call genphy_setup_forced() afterwards in fixed mode.
+We've seen no related complaint in the last >10 yrs, so let's
+treat it as an improvement.
+
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/slimbus/qcom-ngd-ctrl.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/net/phy/phy_device.c | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/slimbus/qcom-ngd-ctrl.c b/drivers/slimbus/qcom-ngd-ctrl.c
-index 71f094c9ec684..f3585777324cf 100644
---- a/drivers/slimbus/qcom-ngd-ctrl.c
-+++ b/drivers/slimbus/qcom-ngd-ctrl.c
-@@ -1342,6 +1342,10 @@ static int of_qcom_slim_ngd_register(struct device *parent,
- 			return -ENOMEM;
+diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+index ff2426e00682c..67a06fa7566bd 100644
+--- a/drivers/net/phy/phy_device.c
++++ b/drivers/net/phy/phy_device.c
+@@ -1830,13 +1830,25 @@ EXPORT_SYMBOL(genphy_read_status);
+  */
+ int genphy_soft_reset(struct phy_device *phydev)
+ {
++	u16 res = BMCR_RESET;
+ 	int ret;
  
- 		ngd->pdev = platform_device_alloc(QCOM_SLIM_NGD_DRV_NAME, id);
-+		if (!ngd->pdev) {
-+			kfree(ngd);
-+			return -ENOMEM;
-+		}
- 		ngd->id = id;
- 		ngd->pdev->dev.parent = parent;
- 		ngd->pdev->driver_override = QCOM_SLIM_NGD_DRV_NAME;
+-	ret = phy_set_bits(phydev, MII_BMCR, BMCR_RESET);
++	if (phydev->autoneg == AUTONEG_ENABLE)
++		res |= BMCR_ANRESTART;
++
++	ret = phy_modify(phydev, MII_BMCR, BMCR_ISOLATE, res);
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	return phy_poll_reset(phydev);
++	ret = phy_poll_reset(phydev);
++	if (ret)
++		return ret;
++
++	/* BMCR may be reset to defaults */
++	if (phydev->autoneg == AUTONEG_DISABLE)
++		ret = genphy_setup_forced(phydev);
++
++	return ret;
+ }
+ EXPORT_SYMBOL(genphy_soft_reset);
+ 
 -- 
 2.20.1
 
