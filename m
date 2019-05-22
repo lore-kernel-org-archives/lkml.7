@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F11B6C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:50:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8117BC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:50:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7FB12081C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:50:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4557A2081C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:50:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558554601;
-	bh=SXkz2rRTYygGWZhwmXK4TDRIYfU0p6emAJwWwaDRWIA=;
+	s=default; t=1558554616;
+	bh=UBMVhekPV7BTpiroIPnru4aWsTCiB2h1mOv7e9uwsaY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Rlj04Bq2ueEU+ZV5o2ymXFRn0gsk7gSqsDLYxDet7lOSYbsKB8vqY67NjOttUTZg0
-	 I1AFSgz3r4RIUIasPj67bcfznKqxuluOV0MvS9u/BG0So8yPVTZelHck8gBNoEUW/g
-	 sk8tQRM2BVc8ldDAvVtqL6/dbg6LpUL1w+5N1LsY=
+	b=2dXDz+Ptljgh65idpeQlJF13imhTDoyMxB1XywBtureXFmIEmDAN+P2KutdDQjk7I
+	 N0ocgATG+FpwodrYkruTCHRm59pN0GG+VHr7oa26GL8/QSYCduTSJtOS+EEmcAvuDo
+	 UE1WikOO91GLc3W/yQM1ciCPCgljsvApGnUD1L34=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732132AbfEVT0s (ORCPT
+        id S1732405AbfEVTuP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:26:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48410 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:50:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48302 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732110AbfEVT0p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:26:45 -0400
+        id S1732073AbfEVT0m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:26:42 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 02ABB21872;
-        Wed, 22 May 2019 19:26:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F33F21872;
+        Wed, 22 May 2019 19:26:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553204;
-        bh=SXkz2rRTYygGWZhwmXK4TDRIYfU0p6emAJwWwaDRWIA=;
+        s=default; t=1558553201;
+        bh=UBMVhekPV7BTpiroIPnru4aWsTCiB2h1mOv7e9uwsaY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Zci6+KPqSgTzPrGThRwN0E9ZbfT+3NKTDoH7+VukzCsFs52XDv/usOtSjMwNyXW+g
-         jEVdpm0/EISiBTBAP4K9Dim9sPNxCg+RNhShhIE0l3ey8JRc2fWac4HTf1jtiHFYwY
-         yiGvU0Bh/UxzBpopGYVTuUZ0HZxotS0MHR9Nt13o=
+        b=iOlugxb5fJFZLSiHle/9NpQq9IAvMbzWzW6rYceizV1c/qUWLaYHeZyBGk45X5JLY
+         e0ER5VfYSCtvapWHNffO01vbjUWt0vBV+h+PI5mxoSfMercp2T0yaFRvVpiEa2Yu42
+         kQ76kVuc2Nu+xvwKJmm7W80pspfkTQe4ndATTCNA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Quentin Monnet <quentin.monnet@netronome.com>,
+Cc:     Vineet Gupta <Vineet.Gupta1@synopsys.com>,
+        Vineet Gupta <vgupta@synopsys.com>, Yonghong Song <yhs@fb.com>,
         Alexei Starovoitov <ast@kernel.org>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
         bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 010/244] bpftool: exclude bash-completion/bpftool from .gitignore pattern
-Date:   Wed, 22 May 2019 15:22:36 -0400
-Message-Id: <20190522192630.24917-10-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 008/244] tools/bpf: fix perf build error with uClibc (seen on ARC)
+Date:   Wed, 22 May 2019 15:22:34 -0400
+Message-Id: <20190522192630.24917-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192630.24917-1-sashal@kernel.org>
 References: <20190522192630.24917-1-sashal@kernel.org>
@@ -61,57 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
+From: Vineet Gupta <Vineet.Gupta1@synopsys.com>
 
-[ Upstream commit a7d006714724de4334c5e3548701b33f7b12ca96 ]
+[ Upstream commit ca31ca8247e2d3807ff5fa1d1760616a2292001c ]
 
-tools/bpf/bpftool/.gitignore has the "bpftool" pattern, which is
-intended to ignore the following build artifact:
+When build perf for ARC recently, there was a build failure due to lack
+of __NR_bpf.
 
-  tools/bpf/bpftool/bpftool
+| Auto-detecting system features:
+|
+| ...                     get_cpuid: [ OFF ]
+| ...                           bpf: [ on  ]
+|
+| #  error __NR_bpf not defined. libbpf does not support your arch.
+    ^~~~~
+| bpf.c: In function 'sys_bpf':
+| bpf.c:66:17: error: '__NR_bpf' undeclared (first use in this function)
+|  return syscall(__NR_bpf, cmd, attr, size);
+|                 ^~~~~~~~
+|                 sys_bpf
 
-However, the .gitignore entry is effective not only for the current
-directory, but also for any sub-directories.
-
-So, from the point of .gitignore grammar, the following check-in file
-is also considered to be ignored:
-
-  tools/bpf/bpftool/bash-completion/bpftool
-
-As the manual gitignore(5) says "Files already tracked by Git are not
-affected", this is not a problem as far as Git is concerned.
-
-However, Git is not the only program that parses .gitignore because
-.gitignore is useful to distinguish build artifacts from source files.
-
-For example, tar(1) supports the --exclude-vcs-ignore option. As of
-writing, this option does not work perfectly, but it intends to create
-a tarball excluding files specified by .gitignore.
-
-So, I believe it is better to fix this issue.
-
-You can fix it by prefixing the pattern with a slash; the leading slash
-means the specified pattern is relative to the current directory.
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Reviewed-by: Quentin Monnet <quentin.monnet@netronome.com>
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+Acked-by: Yonghong Song <yhs@fb.com>
 Signed-off-by: Alexei Starovoitov <ast@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/bpf/bpftool/.gitignore | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/lib/bpf/bpf.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/tools/bpf/bpftool/.gitignore b/tools/bpf/bpftool/.gitignore
-index 67167e44b7266..8248b8dd89d4b 100644
---- a/tools/bpf/bpftool/.gitignore
-+++ b/tools/bpf/bpftool/.gitignore
-@@ -1,5 +1,5 @@
- *.d
--bpftool
-+/bpftool
- bpftool*.8
- bpf-helpers.*
- FEATURE-DUMP.bpftool
+diff --git a/tools/lib/bpf/bpf.c b/tools/lib/bpf/bpf.c
+index 7a0014794bff7..dd0b68d1f4be0 100644
+--- a/tools/lib/bpf/bpf.c
++++ b/tools/lib/bpf/bpf.c
+@@ -53,6 +53,8 @@
+ #  define __NR_bpf 349
+ # elif defined(__s390__)
+ #  define __NR_bpf 351
++# elif defined(__arc__)
++#  define __NR_bpf 280
+ # else
+ #  error __NR_bpf not defined. libbpf does not support your arch.
+ # endif
 -- 
 2.20.1
 
