@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 656A1C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:34:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E975C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:34:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 388AC20675
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:34:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 379A620675
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:34:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558553676;
-	bh=6e+J5S1j1KTcLpmr63lSOkWltFBuo7AeDUTGROpHAvM=;
+	s=default; t=1558553688;
+	bh=sWItnj+hTefFXAPdAyenA+me0RtZsmF2pBQmxx3wXk8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tm9LXEBpg2s3XW2WD6d758WeONLnBb15Zxkv8k+ZVfREnvz+h8UX9UC7fddYmh9gm
-	 XaDwbqUOi4zkMPzGHFCFcF6oq1im2F2kV2hN79AIjYWwMO1bTpp6wkQ/7JuCQ8dY00
-	 6PcT43LIds1G+R09ZQ7sclaTS88ppTV8lfx5kIE4=
+	b=nSU5oL2O2fkkg1ZGbODfIQj3L1d7OXXIpOr53wgHjbelm0ODuACnUBftYaHotIKu4
+	 sT5PjB/tb2ZyS+qfE5RXkLoLniehuKfDgMVleo1EYs86ZN2jI/kVDkb3Ydrcqsk+0d
+	 9Xrwk3pz0DMd5vGWm0m18SOvYNocWNWDLFNOYgnY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731410AbfEVTef (ORCPT
+        id S1733285AbfEVTer (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:34:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54912 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:34:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54834 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387507AbfEVTb0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:31:26 -0400
+        id S1731761AbfEVTbV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:31:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B64220675;
-        Wed, 22 May 2019 19:31:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7116120879;
+        Wed, 22 May 2019 19:31:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553486;
-        bh=6e+J5S1j1KTcLpmr63lSOkWltFBuo7AeDUTGROpHAvM=;
+        s=default; t=1558553481;
+        bh=sWItnj+hTefFXAPdAyenA+me0RtZsmF2pBQmxx3wXk8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tmYMxOK1FmOgGYLXA7hA0DE75zolrw/dhwhvObgMbPfL+gFWvfmrUh0+HWJAMMqvN
-         EXZq0or3GlB0VNWVH3ECVUNetqjcxLWgP8R1hLRrwPmnm0Fnab58KIV+4mh7G/2h5e
-         ZeoAp9ta/p+v404xgiXhy/MtpEg11061d3dVVwLw=
+        b=BtJ61EpNl+Va3Nh48oovHFSs6U+DADWDAYZxjqwLssAafxqk/fVv/be+K+iRyW/8Q
+         FhX1RIulu9P87ukU7CV2xDedg4//sApO264kvSiQP2gNbbERBOQg9/juaXIpiTFU1C
+         xoit/oiXfRCISfVg0gHh9DRc3U63hqGACvclTwi8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans Verkuil <hverkuil@xs4all.nl>,
+Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
         Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Shuah Khan <shuah@kernel.org>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 042/114] media: au0828: stop video streaming only when last user stops
-Date:   Wed, 22 May 2019 15:29:05 -0400
-Message-Id: <20190522193017.26567-42-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 040/114] media: coda: clear error return value before picture run
+Date:   Wed, 22 May 2019 15:29:03 -0400
+Message-Id: <20190522193017.26567-40-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522193017.26567-1-sashal@kernel.org>
 References: <20190522193017.26567-1-sashal@kernel.org>
@@ -61,69 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans Verkuil <hverkuil@xs4all.nl>
+From: Philipp Zabel <p.zabel@pengutronix.de>
 
-[ Upstream commit f604f0f5afb88045944567f604409951b5eb6af8 ]
+[ Upstream commit bbeefa7357a648afe70e7183914c87c3878d528d ]
 
-If the application was streaming from both videoX and vbiX, and streaming
-from videoX was stopped, then the vbi streaming also stopped.
+The error return value is not written by some firmware codecs, such as
+MPEG-2 decode on CodaHx4. Clear the error return value before starting
+the picture run to avoid misinterpreting unrelated values returned by
+sequence initialization as error return value.
 
-The cause being that stop_streaming for video stopped the subdevs as well,
-instead of only doing that if dev->streaming_users reached 0.
-
-au0828_stop_vbi_streaming was also wrong since it didn't stop the subdevs
-at all when dev->streaming_users reached 0.
-
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
 Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Tested-by: Shuah Khan <shuah@kernel.org>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/au0828/au0828-video.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ drivers/media/platform/coda/coda-bit.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/media/usb/au0828/au0828-video.c b/drivers/media/usb/au0828/au0828-video.c
-index 85dd9a8e83ff1..40594c8a71f4f 100644
---- a/drivers/media/usb/au0828/au0828-video.c
-+++ b/drivers/media/usb/au0828/au0828-video.c
-@@ -852,9 +852,9 @@ int au0828_start_analog_streaming(struct vb2_queue *vq, unsigned int count)
- 			return rc;
- 		}
+diff --git a/drivers/media/platform/coda/coda-bit.c b/drivers/media/platform/coda/coda-bit.c
+index b6625047250d6..717ee9a6a80ef 100644
+--- a/drivers/media/platform/coda/coda-bit.c
++++ b/drivers/media/platform/coda/coda-bit.c
+@@ -1829,6 +1829,9 @@ static int coda_prepare_decode(struct coda_ctx *ctx)
+ 	/* Clear decode success flag */
+ 	coda_write(dev, 0, CODA_RET_DEC_PIC_SUCCESS);
  
-+		v4l2_device_call_all(&dev->v4l2_dev, 0, video, s_stream, 1);
++	/* Clear error return value */
++	coda_write(dev, 0, CODA_RET_DEC_PIC_ERR_MB);
 +
- 		if (vq->type == V4L2_BUF_TYPE_VIDEO_CAPTURE) {
--			v4l2_device_call_all(&dev->v4l2_dev, 0, video,
--						s_stream, 1);
- 			dev->vid_timeout_running = 1;
- 			mod_timer(&dev->vid_timeout, jiffies + (HZ / 10));
- 		} else if (vq->type == V4L2_BUF_TYPE_VBI_CAPTURE) {
-@@ -874,10 +874,11 @@ static void au0828_stop_streaming(struct vb2_queue *vq)
+ 	trace_coda_dec_pic_run(ctx, meta);
  
- 	dprintk(1, "au0828_stop_streaming called %d\n", dev->streaming_users);
- 
--	if (dev->streaming_users-- == 1)
-+	if (dev->streaming_users-- == 1) {
- 		au0828_uninit_isoc(dev);
-+		v4l2_device_call_all(&dev->v4l2_dev, 0, video, s_stream, 0);
-+	}
- 
--	v4l2_device_call_all(&dev->v4l2_dev, 0, video, s_stream, 0);
- 	dev->vid_timeout_running = 0;
- 	del_timer_sync(&dev->vid_timeout);
- 
-@@ -906,8 +907,10 @@ void au0828_stop_vbi_streaming(struct vb2_queue *vq)
- 	dprintk(1, "au0828_stop_vbi_streaming called %d\n",
- 		dev->streaming_users);
- 
--	if (dev->streaming_users-- == 1)
-+	if (dev->streaming_users-- == 1) {
- 		au0828_uninit_isoc(dev);
-+		v4l2_device_call_all(&dev->v4l2_dev, 0, video, s_stream, 0);
-+	}
- 
- 	spin_lock_irqsave(&dev->slock, flags);
- 	if (dev->isoc_ctl.vbi_buf != NULL) {
+ 	coda_command_async(ctx, CODA_COMMAND_PIC_RUN);
 -- 
 2.20.1
 
