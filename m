@@ -2,128 +2,136 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65448C072A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 08:08:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EDF4C072A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 08:10:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EC49217D4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 08:08:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40BFB20815
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 08:10:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="MPxkK+ad"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D9Uom5FG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728826AbfEVIIa (ORCPT
+        id S1728587AbfEVIKs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 04:08:30 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:22024 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726358AbfEVII3 (ORCPT
+        Wed, 22 May 2019 04:10:48 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:46364 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728159AbfEVIKs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 04:08:29 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4M86k0n002750;
-        Wed, 22 May 2019 10:08:18 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=31LcOJHiVU7kM7i+jYHMtvLW3Ng5hRb7rd4vsjEaOEI=;
- b=MPxkK+advOYvKxUWlQp8XawP3OkLWmtDv1F6BBmG3Z4jkIliGmkzdxjdMNZZUVuqFH0M
- jjVWDfeqpBQjs4VZogXcJvxwPYL27cicFu+/qXsvJtHKAImcqdNPzksV9G2AyPIIrno1
- gUVD8B2kuIus3hHJyagg/2jeQTfYcI0iCv1oCECKNiSz7e3NlAXvYjBArZmQyhww/kEG
- /GjJZfvne05cITC7K2VqFxKbIA2PPl55lYg1kFxyeZe7Gf7373tNCFL/gIwjySJKaJMv
- R4ZKz13t5TBlmsQyCEeFlPqoELdO4pODBRB/eF/+T8gDgABW/sQvHWWN9MAKnuqW9632 xA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2sj77477wh-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Wed, 22 May 2019 10:08:18 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 65C4A34;
-        Wed, 22 May 2019 08:08:17 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 23F6118FC;
-        Wed, 22 May 2019 08:08:13 +0000 (GMT)
-Received: from SFHDAG3NODE2.st.com (10.75.127.8) by SFHDAG3NODE3.st.com
- (10.75.127.9) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 22 May
- 2019 10:08:12 +0200
-Received: from SFHDAG3NODE2.st.com ([fe80::b82f:1ce:8854:5b96]) by
- SFHDAG3NODE2.st.com ([fe80::b82f:1ce:8854:5b96%20]) with mapi id
- 15.00.1347.000; Wed, 22 May 2019 10:08:12 +0200
-From:   Amelie DELAUNAY <amelie.delaunay@st.com>
-To:     Lee Jones <lee.jones@linaro.org>
-CC:     Linus Walleij <linus.walleij@linaro.org>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "kbuild-all@01.org" <kbuild-all@01.org>
-Subject: Re: [PATCH] pinctrl: stmfx: Fix compile issue when CONFIG_OF_GPIO is
- not defined
-Thread-Topic: [PATCH] pinctrl: stmfx: Fix compile issue when CONFIG_OF_GPIO is
- not defined
-Thread-Index: AQHVDuDxK6HzwnJUFE6SYGi4rooWzqZ2hLKAgAAnAgA=
-Date:   Wed, 22 May 2019 08:08:12 +0000
-Message-ID: <eb8425ec-989a-9701-7fee-61bd1d2b93c1@st.com>
-References: <1558338735-8444-1-git-send-email-amelie.delaunay@st.com>
- <20190522054833.GB4574@dell>
-In-Reply-To: <20190522054833.GB4574@dell>
-Accept-Language: fr-FR, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.47]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <E9CA614ECF5A6949ACD7AA72A5C4B2BA@st.com>
-Content-Transfer-Encoding: base64
+        Wed, 22 May 2019 04:10:48 -0400
+Received: by mail-pg1-f195.google.com with SMTP id o11so727879pgm.13
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 01:10:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Eti3TImRx56hinakaM+GO4KiRjx+tMNw0bxj57lLePA=;
+        b=D9Uom5FGuRUl6X5RivO2rLKVbgOAJvOnWsg32AR6UpqgoGxlHq5MF4ojlx3u+aZZty
+         vq0E17FZhku4nBGqRMdDYrnumWdcPkNfnbNvjnPuB9tHnwSpQtyziPr2JbKdSxcepcET
+         pRM8bEIcMxL3yv/Wlv9/mw/C7G7vyMFRGetBGGfHliAKdIS1+U2i6ES2QBha5gblCt4z
+         wWpgSTejFzk6bIHqFzpMDanP8TJYLHiZGb6Rzc2cB0UM+O1GvQ8Lm/FPn4+FRXBGcj3j
+         i3+joGrqpLsLwoxSgkzDZPFyrX1S++YqUOtWLpd2TOfGv8ero7BfeRBGW2tw091/tnum
+         sRGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Eti3TImRx56hinakaM+GO4KiRjx+tMNw0bxj57lLePA=;
+        b=bX6u84Ii2DhoTjMtigoc9RfmzjGqHUa2mtxDeT5GrrtWbel/FhiE510e/+Xx6eSZIA
+         fYUVGQqNr5A3OYFUFvKvmDljZpo4J2fsz0uTPYbtBx1rdT4ktHAvq/8gJZ+bZ3bIaAuZ
+         35C9OE3WvS3/eYA+jILn8Fu/49KErCH+agIs7M1DNkjD6B10PdljnYI3EGuKOk6KuVWE
+         ooKjg3GkzHEWqOb/hWFZOaOI6Ot2GB5mTwtlDC4lh7dCa75ZEoMBat2d7AUNbqRnYFAU
+         akxv70VNF/5D+7NlHg95yjkn2uCgPhm8gA+W67zr3bW0sBKIDw1vZo/nH9UfmDLT/8Cy
+         qedQ==
+X-Gm-Message-State: APjAAAWz6OshjEZUQv1F9ui+xGAkGNMQC50lSsCNRTVHbjjBEUsn+crX
+        nLiLUVEkv6LnUE4IskIxFrE=
+X-Google-Smtp-Source: APXvYqwUSdJheWXGz2kRmSkOFY6sRR2tOnw3/flcVVM5hW6b5AwLhuzSEoDP0fIk5gOpxxKsrd+mfQ==
+X-Received: by 2002:a63:1045:: with SMTP id 5mr44165466pgq.55.1558512647450;
+        Wed, 22 May 2019 01:10:47 -0700 (PDT)
+Received: from zhanggen-UX430UQ ([66.42.35.75])
+        by smtp.gmail.com with ESMTPSA id e10sm45898976pfm.137.2019.05.22.01.10.41
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 22 May 2019 01:10:46 -0700 (PDT)
+Date:   Wed, 22 May 2019 16:10:29 +0800
+From:   Gen Zhang <blackgod016574@gmail.com>
+To:     Nicolas Pitre <nico@fluxnic.net>
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] vt: Fix a missing-check bug in drivers/tty/vt/vt.c
+Message-ID: <20190522081029.GB5109@zhanggen-UX430UQ>
+References: <20190521022940.GA4858@zhanggen-UX430UQ>
+ <nycvar.YSQ.7.76.1905202242410.1558@knanqh.ubzr>
+ <20190521030905.GB5263@zhanggen-UX430UQ>
+ <nycvar.YSQ.7.76.1905202323290.1558@knanqh.ubzr>
+ <20190521040019.GD5263@zhanggen-UX430UQ>
+ <nycvar.YSQ.7.76.1905210022050.1558@knanqh.ubzr>
+ <20190521073901.GF5263@zhanggen-UX430UQ>
+ <nycvar.YSQ.7.76.1905212218090.1558@knanqh.ubzr>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-22_03:,,
- signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <nycvar.YSQ.7.76.1905212218090.1558@knanqh.ubzr>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCk9uIDUvMjIvMTkgNzo0OCBBTSwgTGVlIEpvbmVzIHdyb3RlOg0KPiBPbiBNb24sIDIwIE1h
-eSAyMDE5LCBBbWVsaWUgRGVsYXVuYXkgd3JvdGU6DQo+IA0KPj4gV2hlbiBDT05GSUdfR1BJT19P
-RiBpcyBub3QgZGVmaW5lZCwgc3RydWN0IGdwaW9fY2hpcCAnb2Zfbm9kZScgbWVtYmVyIGRvZXMN
-Cj4+IG5vdCBleGlzdDoNCj4+IGRyaXZlcnMvcGluY3RybC9waW5jdHJsLXN0bWZ4LmM6IEluIGZ1
-bmN0aW9uICdzdG1meF9waW5jdHJsX3Byb2JlJzoNCj4+IGRyaXZlcnMvcGluY3RybC9waW5jdHJs
-LXN0bWZ4LmM6NjUyOjE3OiBlcnJvcjogJ3N0cnVjdCBncGlvX2NoaXAnIGhhcyBubyBtZW1iZXIg
-bmFtZWQgJ29mX25vZGUnDQo+PiAgICAgICBwY3RsLT5ncGlvX2NoaXAub2Zfbm9kZSA9IG5wOw0K
-Pj4NCj4+IEZpeGVzOiAxNDkwZDlmODQxYjEgKCJwaW5jdHJsOiBBZGQgU1RNRlggR1BJTyBleHBh
-bmRlciBQaW5jdHJsL0dQSU8gZHJpdmVyIikNCj4+IFJlcG9ydGVkLWJ5OiBrYnVpbGQgdGVzdCBy
-b2JvdCA8bGtwQGludGVsLmNvbT4NCj4+IFNpZ25lZC1vZmYtYnk6IEFtZWxpZSBEZWxhdW5heSA8
-YW1lbGllLmRlbGF1bmF5QHN0LmNvbT4NCj4+IC0tLQ0KPj4gICBkcml2ZXJzL3BpbmN0cmwvcGlu
-Y3RybC1zdG1meC5jIHwgMiArKw0KPj4gICAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCsp
-DQo+Pg0KPj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGluY3RybC9waW5jdHJsLXN0bWZ4LmMgYi9k
-cml2ZXJzL3BpbmN0cmwvcGluY3RybC1zdG1meC5jDQo+PiBpbmRleCBlYmE4NzJjLi5iYjY0YWEw
-IDEwMDY0NA0KPj4gLS0tIGEvZHJpdmVycy9waW5jdHJsL3BpbmN0cmwtc3RtZnguYw0KPj4gKysr
-IGIvZHJpdmVycy9waW5jdHJsL3BpbmN0cmwtc3RtZnguYw0KPj4gQEAgLTY0OCw3ICs2NDgsOSBA
-QCBzdGF0aWMgaW50IHN0bWZ4X3BpbmN0cmxfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAq
-cGRldikNCj4+ICAgCXBjdGwtPmdwaW9fY2hpcC5iYXNlID0gLTE7DQo+PiAgIAlwY3RsLT5ncGlv
-X2NoaXAubmdwaW8gPSBwY3RsLT5wY3RsX2Rlc2MubnBpbnM7DQo+PiAgIAlwY3RsLT5ncGlvX2No
-aXAuY2FuX3NsZWVwID0gdHJ1ZTsNCj4+ICsjaWZkZWYgQ09ORklHX09GX0dQSU8NCj4+ICAgCXBj
-dGwtPmdwaW9fY2hpcC5vZl9ub2RlID0gbnA7DQo+PiArI2VuZGlmDQo+IA0KPiBUaGlzIGlzIHBy
-ZXR0eSB1Z2x5LiAgV2lsbCBTVE1GWCBldmVyIGJlIHVzZWQgd2l0aG91dCBPRiBzdXBwb3J0PyAg
-SWYNCj4gbm90LCBpdCBtaWdodCBiZSBiZXR0ZXIgdG8gcGxhY2UgdGhpcyByZXN0cmljdGlvbiBv
-biB0aGUgZHJpdmVyIGFzIGENCj4gd2hvbGUuDQo+IA0KPiBJbmNpZGVudGFsbHksIHdoeSBpcyB0
-aGlzIGJsYW5rZWQgb3V0IGluIHRoZSBzdHJ1Y3R1cmUgZGVmaW5pdGlvbj8NCj4gRXZlbiAnc3Ry
-dWN0IGRldmljZScgZG9lc24ndCBkbyB0aGlzLg0KPiANCmNvbmZpZyBQSU5DVFJMX1NUTUZYDQoJ
-dHJpc3RhdGUgIlNUTWljcm9lbGVjdHJvbmljcyBTVE1GWCBHUElPIGV4cGFuZGVyIHBpbmN0cmwg
-ZHJpdmVyIg0KCWRlcGVuZHMgb24gSTJDDQoJZGVwZW5kcyBvbiBPRiB8fCBDT01QSUxFX1RFU1QN
-CglzZWxlY3QgR0VORVJJQ19QSU5DT05GDQoJc2VsZWN0IEdQSU9MSUJfSVJRQ0hJUA0KCXNlbGVj
-dCBNRkRfU1RNRlgNCg0KVGhlIGlzc3VlIGlzIGR1ZSB0byBDT01QSUxFX1RFU1Q6IHdvdWxkICJk
-ZXBlbmRzIG9uIE9GIHx8IChPRiAmJiANCkNPTVBJTEVfVEVTVCkiIGJlIGJldHRlciA/DQoNCj4+
-ICAgCXBjdGwtPmdwaW9fY2hpcC5uZWVkX3ZhbGlkX21hc2sgPSB0cnVlOw0KPj4gICANCj4+ICAg
-CXJldCA9IGRldm1fZ3Bpb2NoaXBfYWRkX2RhdGEocGN0bC0+ZGV2LCAmcGN0bC0+Z3Bpb19jaGlw
-LCBwY3RsKTsNCj4g
+On Tue, May 21, 2019 at 10:43:11PM -0400, Nicolas Pitre wrote:
+> On Tue, 21 May 2019, Gen Zhang wrote:
+> 
+> > On Tue, May 21, 2019 at 12:30:38AM -0400, Nicolas Pitre wrote:
+> > > Now imagine that MIN_NR_CONSOLES is defined to 10 instead of 1.
+> > > 
+> > > What happens with allocated memory if the err_vc condition is met on the 
+> > > 5th loop?
+> > Yes, vc->vc_screenbuf from the last loop is still not freed, right? I
+> > don't have idea to solve this one. Could please give some advice? Since
+> > we have to consider the err_vc condition.
+> > 
+> > > If err_vc_screenbuf condition is encountered on the 5th loop (curcons = 
+> > > 4), what is the value of vc_cons[4].d? Isn't it the same as vc that you 
+> > > just freed?
+> > > 
+> > > 
+> > > Nicolas
+> > Thanks for your explaination! You mean a double free situation may 
+> > happen, right? But in vc_allocate() there is also such a kfree(vc) and 
+> > vc_cons[currcons].d = NULL operation. This situation is really confusing
+> > me.
+> 
+> What you could do is something that looks like:
+> 
+> 	for (currcons = 0; currcons < MIN_NR_CONSOLES; currcons++) {
+> 		vc_cons[currcons].d = vc = kzalloc(...);
+> 		if (!vc)
+> 			goto fail1;
+> 		...
+> 		vc->vc_screenbuf = kzalloc(...);
+> 		if (!vc->vc_screenbuf)
+> 			goto fail2;
+> 		...
+> 
+> 	return 0;
+> 
+> 	/* free already allocated memory on error */
+> fail1:
+> 	while (curcons > 0) {
+> 		curcons--;
+> 		kfree(vc_cons[currcons].d->vc_screenbuf);
+> fail2:
+> 		kfree(vc_cons[currcons].d);
+> 		vc_cons[currcons].d = NULL;
+> 	}
+> 	console_unlock();
+> 	return -ENOMEM;
+> 
+> 
+> Nicolas
+Thanks for your patient explaination, Nicolas!
+I will work on it and resubmit it.
+Thanks
+Gen
