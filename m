@@ -3,102 +3,182 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 854C2C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:28:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 323F6C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:28:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D2872173C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:28:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558553286;
-	bh=KUHFrstY9xKfRid6AIdvydrKVOVwZMyZqRJWK+U/rYY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J4ohvkZDitf1jnJxxnm4hRTfnJm8zFe55EvrcNLphHxAPfx4Hey3kLkIXAYIzsgA0
-	 mLNdTyZNSxx4OnagS8u+i1QgwW2bQBkElIwPBG6fbos+Rt51kqyPpCqabvVJ5ECmU9
-	 70TlZasbKPT8Wbcf6cIv27CVG9/2AF4dG9l7J6cI=
+	by mail.kernel.org (Postfix) with ESMTP id 05303204FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:28:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="KmawTsCW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732452AbfEVT2F (ORCPT
+        id S1732498AbfEVT2M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:28:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50174 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730048AbfEVT1r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:27:47 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A15120675;
-        Wed, 22 May 2019 19:27:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553266;
-        bh=KUHFrstY9xKfRid6AIdvydrKVOVwZMyZqRJWK+U/rYY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WEvs/MArc0AWbBNK9Ru8zmz5thQrKrNOq0fjKVYyPFfk1SjV15ffVOLEnZrF+gLIM
-         r4WVgHllTCka0DeQma0/73DS5Upx+6rplS4aQXdythI09mkLthcOvuWCXkPifoVozg
-         sPNy9OynTDb/CwPqgQ9vPvkywOK5LdvIp9r4wU3w=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Johannes Berg <johannes.berg@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 043/244] iwlwifi: pcie: don't crash on invalid RX interrupt
-Date:   Wed, 22 May 2019 15:23:09 -0400
-Message-Id: <20190522192630.24917-43-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190522192630.24917-1-sashal@kernel.org>
-References: <20190522192630.24917-1-sashal@kernel.org>
+        Wed, 22 May 2019 15:28:12 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:41342 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732411AbfEVT1x (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:27:53 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4MJRjkm016902;
+        Wed, 22 May 2019 14:27:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1558553265;
+        bh=4lobOehpHKxAz9Z2v1fQplOERI0AEUJYx6XR9ln2I/Y=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=KmawTsCWlghFrolh4iPInogSpLFXphQXpwYPd9X4gXWOh2Kkqb95S1yx3Nq+KyrGo
+         ea5F+BoMPObh9v4IjxcXZlyI34umclWXf5ngV5vDxIl97XvgNpfU33UDoLKr1A6FVv
+         wPEXI3l9pGrABwDNeU2M96EjYMuAHhYDG3Fc4QWY=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4MJRjWH026144
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 22 May 2019 14:27:45 -0500
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 22
+ May 2019 14:27:45 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 22 May 2019 14:27:45 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4MJRjAq096393;
+        Wed, 22 May 2019 14:27:45 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <broonie@kernel.org>,
+        <lgirdwood@gmail.com>
+CC:     <lee.jones@linaro.org>, <linux-leds@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>,
+        Rob Herring <robh@kernel.org>
+Subject: [RESEND PATCH v4 2/6] dt-bindings: mfd: Add lm36274 bindings to ti-lmu
+Date:   Wed, 22 May 2019 14:27:29 -0500
+Message-ID: <20190522192733.13422-3-dmurphy@ti.com>
+X-Mailer: git-send-email 2.21.0.5.gaeb582a983
+In-Reply-To: <20190522192733.13422-1-dmurphy@ti.com>
+References: <20190522192733.13422-1-dmurphy@ti.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Berg <johannes.berg@intel.com>
+Add the LM36274 backlight driver with regulator support.
+This is a multi-function device for backlight applications.
 
-[ Upstream commit 30f24eabab8cd801064c5c37589d803cb4341929 ]
+Backlight properties will be documented in it's a supplemental
+bindings document.
 
-If for some reason the device gives us an RX interrupt before we're
-ready for it, perhaps during device power-on with misconfigured IRQ
-causes mapping or so, we can crash trying to access the queues.
+Regulator support is documented in the regulator/lm363x-regulator.txt
 
-Prevent that by checking that we actually have RXQs and that they
-were properly allocated.
+http://www.ti.com/lit/ds/symlink/lm36274.pdf
 
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
 ---
- drivers/net/wireless/intel/iwlwifi/pcie/rx.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ .../devicetree/bindings/mfd/ti-lmu.txt        | 54 +++++++++++++++++++
+ 1 file changed, 54 insertions(+)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/rx.c b/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
-index b2905f01b7df3..6dcd5374d9b4d 100644
---- a/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
-+++ b/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
-@@ -1388,10 +1388,15 @@ static struct iwl_rx_mem_buffer *iwl_pcie_get_rxb(struct iwl_trans *trans,
- static void iwl_pcie_rx_handle(struct iwl_trans *trans, int queue)
- {
- 	struct iwl_trans_pcie *trans_pcie = IWL_TRANS_GET_PCIE_TRANS(trans);
--	struct iwl_rxq *rxq = &trans_pcie->rxq[queue];
-+	struct iwl_rxq *rxq;
- 	u32 r, i, count = 0;
- 	bool emergency = false;
+diff --git a/Documentation/devicetree/bindings/mfd/ti-lmu.txt b/Documentation/devicetree/bindings/mfd/ti-lmu.txt
+index 782d3c9812ed..2296b8f24de4 100644
+--- a/Documentation/devicetree/bindings/mfd/ti-lmu.txt
++++ b/Documentation/devicetree/bindings/mfd/ti-lmu.txt
+@@ -8,6 +8,7 @@ TI LMU driver supports lighting devices below.
+   LM3632       Backlight and regulator
+   LM3633       Backlight, LED and fault monitor
+   LM3695       Backlight
++  LM36274      Backlight and regulator
  
-+	if (WARN_ON_ONCE(!trans_pcie->rxq || !trans_pcie->rxq[queue].bd))
-+		return;
+ Required properties:
+   - compatible: Should be one of:
+@@ -15,11 +16,13 @@ Required properties:
+                 "ti,lm3632"
+                 "ti,lm3633"
+                 "ti,lm3695"
++		"ti,lm36274"
+   - reg: I2C slave address.
+          0x11 for LM3632
+          0x29 for LM3631
+          0x36 for LM3633
+          0x63 for LM3695
++         0x11 for LM36274
+ 
+ Optional properties:
+   - enable-gpios: A GPIO specifier for hardware enable pin.
+@@ -50,12 +53,14 @@ Optional nodes:
+       - compatible: Should be one of:
+                     "ti,lm3633-fault-monitor"
+   - leds: LED properties for LM3633. Please refer to [2].
++	  LED properties for LM36274. Please refer to [4].
+   - regulators: Regulator properties for LM3631 and LM3632.
+                 Please refer to [3].
+ 
+ [1] ../leds/backlight/ti-lmu-backlight.txt
+ [2] ../leds/leds-lm3633.txt
+ [3] ../regulator/lm363x-regulator.txt
++[4] ../leds/leds-lm36274.txt
+ 
+ lm3631@29 {
+ 	compatible = "ti,lm3631";
+@@ -213,3 +218,52 @@ lm3695@63 {
+ 		};
+ 	};
+ };
 +
-+	rxq = &trans_pcie->rxq[queue];
++lm36274@11 {
++	compatible = "ti,lm36274";
++	#address-cells = <1>;
++	#size-cells = <0>;
++	reg = <0x11>;
 +
- restart:
- 	spin_lock(&rxq->lock);
- 	/* uCode's read index (stored in shared DRAM) indicates the last Rx
++	enable-gpios = <&pioC 2 GPIO_ACTIVE_HIGH>;
++	regulators {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		compatible = "ti,lm363x-regulator";
++
++		enable-gpios = <&pioC 0 GPIO_ACTIVE_HIGH>,
++			       <&pioC 1 GPIO_ACTIVE_HIGH>;
++
++		vboost {
++			regulator-name = "lcd_boost";
++			regulator-min-microvolt = <4000000>;
++			regulator-max-microvolt = <7150000>;
++			regulator-always-on;
++		};
++
++		vpos {
++			regulator-name = "lcd_vpos";
++			regulator-min-microvolt = <4000000>;
++			regulator-max-microvolt = <6500000>;
++		};
++
++		vneg {
++			regulator-name = "lcd_vneg";
++			regulator-min-microvolt = <4000000>;
++			regulator-max-microvolt = <6500000>;
++		};
++	};
++
++	backlight {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		compatible = "ti,lm36274-backlight";
++
++		led@0 {
++			reg = <0>;
++			led-sources = <0 2>;
++			label = "white:backlight_cluster";
++			linux,default-trigger = "backlight";
++		};
++	};
++};
 -- 
-2.20.1
+2.21.0.5.gaeb582a983
 
