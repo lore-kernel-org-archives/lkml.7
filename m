@@ -4,53 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 146D8C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:59:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2F11C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:59:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8C9C20856
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:59:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A024D2089E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:59:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558555150;
-	bh=9kA7/3NfFEuzmb1BGqSNJEJHToYnF5TiQxVFRt+cegs=;
+	s=default; t=1558555154;
+	bh=ah1LNuIOPWVLPYR0jAnfJIm+cy9FWUH0OVgPtJI0Wco=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qB6U8+fNG4YMWOArGTSq2BLAevkFCmjN+71sOe1g1cNa/L6+wHzy4e0C9e65QDees
-	 3rJrzv4jGXV45zFaiDjsETwFm92cwj9L3SKW/jcfQlwcJCb0i1fIt1eS/GX915YgFO
-	 NOtNKECtBGfJT5uctsQxeHP/uSyCLJeyraKr5qNk=
+	b=db2+ePNYpLWGnGO7xq/gsFfZKiIWbkIehpGCCWzyI9Goh9lzS50eWuxjipFFUazos
+	 0eCYOLPiHMwaQId/SqPdMRcT2mEcvNdtbvzgEqq2Md546DzD9St61NUaE3cyzQ+HwM
+	 QUZ6SeZMzhPJJPiZZdNTMgJvpMVd1WJ/YyVN8+c0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730988AbfEVTXq (ORCPT
+        id S1731838AbfEVT7N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:23:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44436 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:59:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44712 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730920AbfEVTXd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:23:33 -0400
+        id S1730979AbfEVTXq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:23:46 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3187E21473;
-        Wed, 22 May 2019 19:23:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE12F217D4;
+        Wed, 22 May 2019 19:23:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553012;
-        bh=9kA7/3NfFEuzmb1BGqSNJEJHToYnF5TiQxVFRt+cegs=;
+        s=default; t=1558553025;
+        bh=ah1LNuIOPWVLPYR0jAnfJIm+cy9FWUH0OVgPtJI0Wco=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N7Hcjh1AOO9RclKxv9O30zyGewpf33YY5ebhaKXbwJykoqRTJCYuS9ESBGkTlGfoz
-         OIttdH9CDrw8YPf3dXEJAnfjY7AibfR5e5tKOQpJQMUjdsWu9MKz/fg3eExvl833fA
-         4KbPbYxZhfN6w/V8scE/LRCJVCUQZk1vh1/2Z3qM=
+        b=vLdP7N9w1AaF7NJXn6+4docczHEUhzA1xhXIhkxKE4TH2B/4zcQEFJZChb9ePEOvn
+         qZo8h2AkUT0kyoAJVhUbVmad17tw99/Nty/I227F2hcksJAzg17Aqx44yHDO2X+RO8
+         17IsWaULhPyxfmeRG7ijXY9FfSo8UFQG5OwnxpQU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 076/375] mac80211/cfg80211: update bss channel on channel switch
-Date:   Wed, 22 May 2019 15:16:16 -0400
-Message-Id: <20190522192115.22666-76-sashal@kernel.org>
+Cc:     Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        "Michael J . Ruhl" <michael.j.ruhl@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 006/317] IB/hfi1: Fix WQ_MEM_RECLAIM warning
+Date:   Wed, 22 May 2019 15:18:27 -0400
+Message-Id: <20190522192338.23715-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190522192115.22666-1-sashal@kernel.org>
-References: <20190522192115.22666-1-sashal@kernel.org>
+In-Reply-To: <20190522192338.23715-1-sashal@kernel.org>
+References: <20190522192338.23715-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,68 +61,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
+From: Mike Marciniszyn <mike.marciniszyn@intel.com>
 
-[ Upstream commit 5dc8cdce1d722c733f8c7af14c5fb595cfedbfa8 ]
+[ Upstream commit 4c4b1996b5db688e2dcb8242b0a3bf7b1e845e42 ]
 
-FullMAC STAs have no way to update bss channel after CSA channel switch
-completion. As a result, user-space tools may provide inconsistent
-channel info. For instance, consider the following two commands:
-$ sudo iw dev wlan0 link
-$ sudo iw dev wlan0 info
-The latter command gets channel info from the hardware, so most probably
-its output will be correct. However the former command gets channel info
-from scan cache, so its output will contain outdated channel info.
-In fact, current bss channel info will not be updated until the
-next [re-]connect.
+The work_item cancels that occur when a QP is destroyed can elicit the
+following trace:
 
-Note that mac80211 STAs have a workaround for this, but it requires
-access to internal cfg80211 data, see ieee80211_chswitch_work:
+ workqueue: WQ_MEM_RECLAIM ipoib_wq:ipoib_cm_tx_reap [ib_ipoib] is flushing !WQ_MEM_RECLAIM hfi0_0:_hfi1_do_send [hfi1]
+ WARNING: CPU: 7 PID: 1403 at kernel/workqueue.c:2486 check_flush_dependency+0xb1/0x100
+ Call Trace:
+  __flush_work.isra.29+0x8c/0x1a0
+  ? __switch_to_asm+0x40/0x70
+  __cancel_work_timer+0x103/0x190
+  ? schedule+0x32/0x80
+  iowait_cancel_work+0x15/0x30 [hfi1]
+  rvt_reset_qp+0x1f8/0x3e0 [rdmavt]
+  rvt_destroy_qp+0x65/0x1f0 [rdmavt]
+  ? _cond_resched+0x15/0x30
+  ib_destroy_qp+0xe9/0x230 [ib_core]
+  ipoib_cm_tx_reap+0x21c/0x560 [ib_ipoib]
+  process_one_work+0x171/0x370
+  worker_thread+0x49/0x3f0
+  kthread+0xf8/0x130
+  ? max_active_store+0x80/0x80
+  ? kthread_bind+0x10/0x10
+  ret_from_fork+0x35/0x40
 
-	/* XXX: shouldn't really modify cfg80211-owned data! */
-	ifmgd->associated->channel = sdata->csa_chandef.chan;
+Since QP destruction frees memory, hfi1_wq should have the WQ_MEM_RECLAIM.
 
-This patch suggests to convert mac80211 workaround into cfg80211 behavior
-and to update current bss channel in cfg80211_ch_switch_notify.
+The hfi1_wq does not allocate memory with GFP_KERNEL or otherwise become
+entangled with memory reclaim, so this flag is appropriate.
 
-Signed-off-by: Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Fixes: 0a226edd203f ("staging/rdma/hfi1: Use parallel workqueue for SDMA engines")
+Reviewed-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
+Signed-off-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/mlme.c    | 3 ---
- net/wireless/nl80211.c | 5 +++++
- 2 files changed, 5 insertions(+), 3 deletions(-)
+ drivers/infiniband/hw/hfi1/init.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/net/mac80211/mlme.c b/net/mac80211/mlme.c
-index 2dbcf5d5512ef..b7a9fe3d5fcb7 100644
---- a/net/mac80211/mlme.c
-+++ b/net/mac80211/mlme.c
-@@ -1188,9 +1188,6 @@ static void ieee80211_chswitch_work(struct work_struct *work)
- 		goto out;
- 	}
- 
--	/* XXX: shouldn't really modify cfg80211-owned data! */
--	ifmgd->associated->channel = sdata->csa_chandef.chan;
--
- 	ifmgd->csa_waiting_bcn = true;
- 
- 	ieee80211_sta_reset_beacon_monitor(sdata);
-diff --git a/net/wireless/nl80211.c b/net/wireless/nl80211.c
-index 47e30a58566c2..d2a7459a5da43 100644
---- a/net/wireless/nl80211.c
-+++ b/net/wireless/nl80211.c
-@@ -15727,6 +15727,11 @@ void cfg80211_ch_switch_notify(struct net_device *dev,
- 
- 	wdev->chandef = *chandef;
- 	wdev->preset_chandef = *chandef;
-+
-+	if (wdev->iftype == NL80211_IFTYPE_STATION &&
-+	    !WARN_ON(!wdev->current_bss))
-+		wdev->current_bss->pub.channel = chandef->chan;
-+
- 	nl80211_ch_switch_notify(rdev, dev, chandef, GFP_KERNEL,
- 				 NL80211_CMD_CH_SWITCH_NOTIFY, 0);
- }
+diff --git a/drivers/infiniband/hw/hfi1/init.c b/drivers/infiniband/hw/hfi1/init.c
+index c532ceb0bb9af..b66c4fe8151a1 100644
+--- a/drivers/infiniband/hw/hfi1/init.c
++++ b/drivers/infiniband/hw/hfi1/init.c
+@@ -797,7 +797,8 @@ static int create_workqueues(struct hfi1_devdata *dd)
+ 			ppd->hfi1_wq =
+ 				alloc_workqueue(
+ 				    "hfi%d_%d",
+-				    WQ_SYSFS | WQ_HIGHPRI | WQ_CPU_INTENSIVE,
++				    WQ_SYSFS | WQ_HIGHPRI | WQ_CPU_INTENSIVE |
++				    WQ_MEM_RECLAIM,
+ 				    HFI1_MAX_ACTIVE_WORKQUEUE_ENTRIES,
+ 				    dd->unit, pidx);
+ 			if (!ppd->hfi1_wq)
 -- 
 2.20.1
 
