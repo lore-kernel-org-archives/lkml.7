@@ -2,105 +2,295 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10086C18E7D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 10:15:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADA27C18E7D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 10:15:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D70C220868
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 10:15:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4106220868
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 10:15:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="P2N0wm44"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="TyZ+ZcFg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729045AbfEVKP1 (ORCPT
+        id S1729091AbfEVKPk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 06:15:27 -0400
-Received: from mail-eopbgr10047.outbound.protection.outlook.com ([40.107.1.47]:4611
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728406AbfEVKP0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 06:15:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+dqo49IE6Hyu28xDXn3CEozEsEu8BstlMk1rq9bA+oI=;
- b=P2N0wm44ZPTPW6LaMtLGQ9q5KnxNcjDv7rnqMjBT5VYl+kMbSo6RUYly/tAUDVfSNkw1CoDdjYsnELIoGbhpCIZ7tbIDmTKHexfS8P+0oUV5SB43xYFA81KROwcywU+k48XDYHp3aopEO9b5+nKjGBFKTJ1BbAQY4hc+aJo3X38=
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
- AM0PR04MB5092.eurprd04.prod.outlook.com (20.177.40.161) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1900.17; Wed, 22 May 2019 10:15:21 +0000
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::3173:24:d401:2378]) by AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::3173:24:d401:2378%6]) with mapi id 15.20.1900.020; Wed, 22 May 2019
- 10:15:21 +0000
-From:   Peng Fan <peng.fan@nxp.com>
-To:     "sudeep.holla@arm.com" <sudeep.holla@arm.com>
-CC:     "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "van.freenix@gmail.com" <van.freenix@gmail.com>,
-        Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH] firmware: arm_scmi: clock: set rate_discrete
-Thread-Topic: [PATCH] firmware: arm_scmi: clock: set rate_discrete
-Thread-Index: AQHVEIdDeGE/ZUAgK0KBQchFdwpL/g==
-Date:   Wed, 22 May 2019 10:15:21 +0000
-Message-ID: <20190522102912.1032-1-peng.fan@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: git-send-email 2.16.4
-x-clientproxiedby: HK2PR0401CA0017.apcprd04.prod.outlook.com
- (2603:1096:202:2::27) To AM0PR04MB4481.eurprd04.prod.outlook.com
- (2603:10a6:208:70::15)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peng.fan@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [119.31.174.71]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: cbb28e2f-5a90-45e0-2eb9-08d6de9e65aa
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:AM0PR04MB5092;
-x-ms-traffictypediagnostic: AM0PR04MB5092:
-x-microsoft-antispam-prvs: <AM0PR04MB5092F5D17FDE59DF83AE711F88000@AM0PR04MB5092.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-forefront-prvs: 0045236D47
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(189003)(199004)(66066001)(53936002)(14454004)(4744005)(50226002)(6512007)(1076003)(25786009)(305945005)(54906003)(6436002)(5640700003)(4326008)(7736002)(52116002)(2501003)(498600001)(5660300002)(102836004)(99286004)(386003)(6506007)(2906002)(8936002)(8676002)(81166006)(81156014)(68736007)(3846002)(6116002)(26005)(186003)(86362001)(71200400001)(71190400001)(44832011)(2351001)(2616005)(73956011)(66946007)(66446008)(64756008)(66556008)(66476007)(476003)(486006)(6916009)(256004)(6486002)(36756003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB5092;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: v06QT+psWAQRWPe/zlbAD4HZ8zPuELgiEr7kcTyrINL32g7lFOgxL50T5zQCjZoUb+oJP8UPYyJ8IEAyAItRCdQONkGc/ZldGMaNAi9kNzOHBux8GZ7jjqPn0TUDTDX++HGFKrkorLMK9dVlbXuB/Ak4zb6Trc6EAJ7B6+YQEeO04mXNlf+BrCHWwhd4/CXUHibOe0f/vxsKd1UQYkmk6jo7Yvqqad3RVICcCXgV4SdCyu1W7lBOqJc0YKmgZdjpVhrvl8Yqy9hYwSv8Nxsmc082LyiXygjxw6fUGCNy/pif/2m6SZTN9LQmdN2kXrXSzK2fTg/mQUB+pMKNldCYk2mQyp1aH2fIX4EubFetC0Dei3DXswPX/uK/fCy1Jl7Kd0KabxaLMJtTYlsqHzrR+Yd97Od5FIqkQieBOaYMOqc=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 22 May 2019 06:15:40 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:45853 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728406AbfEVKPk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 06:15:40 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190522101537euoutp019ff2e6373f78f69b9b8a7a3bf93ae370~g_c7TYv2P1036510365euoutp014
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 10:15:37 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190522101537euoutp019ff2e6373f78f69b9b8a7a3bf93ae370~g_c7TYv2P1036510365euoutp014
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1558520137;
+        bh=lgBQ+8uTfQLkV5PxSZgmgCh8/JrIEUqTDsyfWM/9dxM=;
+        h=From:Subject:To:Date:References:From;
+        b=TyZ+ZcFgG2o0RIttpGeKeyEQOSBoMhAjQhBt7fGCYVU1rsojri08t7QM8CwvemggF
+         vMh/mkW5CgabVTWWrpR9iG1YvOKfM6QMcSiZ76250U9u1qIwHpmbO08D1lOOwBavvG
+         DE53t9CFLhqn1mo3/D8N8tBiLUOp+KV+ENGay6Tw=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190522101537eucas1p1f7812bd5cf91f685eadd65139204d3e8~g_c68FAc71081010810eucas1p1k;
+        Wed, 22 May 2019 10:15:37 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id B0.E8.04298.94125EC5; Wed, 22
+        May 2019 11:15:37 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190522101536eucas1p12e71e836b8d5983f26ec50324156b926~g_c6Oj--t1081010810eucas1p1j;
+        Wed, 22 May 2019 10:15:36 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190522101536eusmtrp25c2931906d41c5320e661acda7b4fe36~g_c6AcN082564725647eusmtrp2z;
+        Wed, 22 May 2019 10:15:36 +0000 (GMT)
+X-AuditID: cbfec7f2-f2dff700000010ca-c7-5ce5214938d1
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 9B.60.04140.84125EC5; Wed, 22
+        May 2019 11:15:36 +0100 (BST)
+Received: from [106.120.51.71] (unknown [106.120.51.71]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190522101535eusmtip240a6689d03d52c29a7c2f974647b1f09~g_c5cYoQh1251612516eusmtip2h;
+        Wed, 22 May 2019 10:15:35 +0000 (GMT)
+From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: [PATCH 1/2] video: fbdev: pvr2fb: remove function prototypes
+To:     linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Message-ID: <2a32648a-69c8-47a6-109a-6c2f764b2534@samsung.com>
+Date:   Wed, 22 May 2019 12:15:34 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.6.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cbb28e2f-5a90-45e0-2eb9-08d6de9e65aa
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 May 2019 10:15:21.7271
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5092
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpileLIzCtJLcpLzFFi42LZduznOV1PxacxBnPvsFpc+fqezeJE3wdW
+        i8u75rA5MHvc7z7O5PF5k1wAUxSXTUpqTmZZapG+XQJXxv6dZ9kL/mhVfLsm08B4R7GLkYND
+        QsBE4uGEqC5GTg4hgRWMEo8/AtlcQPYXRonbcx+yQiQ+M0p8PS8AYoPUt35bzgIRX84o8fuw
+        KUTDW0aJWZeawBJsAlYSE9tXMYLYwgKuEk9X9DCD2CICCRIrps8Ai/MK2Ek8njeVDcRmEVCV
+        aH/6GmyZqECExP1jG1ghagQlTs58AjaTWUBc4taT+UwQtrzE9rdzmEEWSwjcZpP4sPoEE8Q3
+        LhKX9kZCHCos8er4FnYIW0bi/06QXpD6dYwSfzteQDVvZ5RYPvkfG0SVtcTh4xdZQQYxC2hK
+        rN+lDxF2lNiw7xoLxHw+iRtvBSFu4JOYtG06M0SYV6KjTQiiWk1iw7INbDBru3auhCrxkPh2
+        twASbLES7f2L2SYwKsxC8uQsJE/OQvLkLIRzFjCyrGIUTy0tzk1PLTbMSy3XK07MLS7NS9dL
+        zs/dxAhMGaf/Hf+0g/HrpaRDjAIcjEo8vBYPH8cIsSaWFVfmHmKU4GBWEuE9fepRjBBvSmJl
+        VWpRfnxRaU5q8SFGaQ4WJXHeaoYH0UIC6YklqdmpqQWpRTBZJg5OqQZGRwazTwtZsll38E5p
+        WPWluuH67or+7ntyeUbGmYn5KVP5LRSTbfMZ9b0fpb7+UbHZa8e8l9f5DFfoHpNkKDrGVnPQ
+        RPKj8bPse7HXK41/KovG8ZnyvDtdpd3iK/vxyIJvkxiyXnB+OMi7zOBB8+UDC/YXx0q21cVc
+        aDcxto2ee493V9HcGAMlluKMREMt5qLiRADGUubnFQMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrCLMWRmVeSWpSXmKPExsVy+t/xe7oeik9jDGb9ErK48vU9m8WJvg+s
+        Fpd3zWFzYPa4332cyePzJrkApig9m6L80pJUhYz84hJbpWhDCyM9Q0sLPSMTSz1DY/NYKyNT
+        JX07m5TUnMyy1CJ9uwS9jP07z7IX/NGq+HZNpoHxjmIXIyeHhICJROu35SxdjFwcQgJLGSUu
+        Pj3O3MXIAZSQkTi+vgyiRljiz7UuNoia14wSB2ccYQdJsAlYSUxsX8UIYgsLuEo8XdHDDGKL
+        CCRIPH09nw3E5hWwk3g8byqYzSKgKtH+9DUriC0qECFx5v0KFogaQYmTM5+A2cwC6hJ/5l1i
+        hrDFJW49mc8EYctLbH87h3kCI/8sJC2zkLTMQtIyC0nLAkaWVYwiqaXFuem5xUZ6xYm5xaV5
+        6XrJ+bmbGIEhvu3Yzy07GLveBR9iFOBgVOLhfXDvcYwQa2JZcWXuIUYJDmYlEd7Tpx7FCPGm
+        JFZWpRblxxeV5qQWH2I0BXpoIrOUaHI+MP7ySuINTQ3NLSwNzY3Njc0slMR5OwQOxggJpCeW
+        pGanphakFsH0MXFwSjUwXkqYGtBz/lylTq0mH+ulr4+03t5ov3zZLNLq5oe7iYwieq9/8bza
+        d+3UsWmtB5bppz5SrlrKyGc2TS/Xxe/xvq+zf1t47S98apujUWibcSt54pwKjcvzd69eICp0
+        jOdbbG/JjO/7D88w3GP2tD/2dvjKWqvyxKnXS7ZPEE84W6SwJ3rrpq7FO5VYijMSDbWYi4oT
+        Aderj5WHAgAA
+X-CMS-MailID: 20190522101536eucas1p12e71e836b8d5983f26ec50324156b926
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190522101536eucas1p12e71e836b8d5983f26ec50324156b926
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190522101536eucas1p12e71e836b8d5983f26ec50324156b926
+References: <CGME20190522101536eucas1p12e71e836b8d5983f26ec50324156b926@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VGhlIHJhdGVfZGlzY3JldGUgbmVlZHMgdG8gYmUgYXNzaWduZWQgdG8gY2xrLT5yYXRlX2Rpc2Ny
-ZXRlLA0KdGhlbiBzY21pX2Nsa19yb3VuZF9yYXRlIGNvdWxkIGdldCB0aGUgdmFsdWUuDQoNCkZp
-eGVzOiA1ZjZjNjQzMGU5MDQgKCJmaXJtd2FyZTogYXJtX3NjbWk6IGFkZCBpbml0aWFsIHN1cHBv
-cnQgZm9yIGNsb2NrIHByb3RvY29sIikNClNpZ25lZC1vZmYtYnk6IFBlbmcgRmFuIDxwZW5nLmZh
-bkBueHAuY29tPg0KLS0tDQogZHJpdmVycy9maXJtd2FyZS9hcm1fc2NtaS9jbG9jay5jIHwgMiAr
-Kw0KIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKykNCg0KZGlmZiAtLWdpdCBhL2RyaXZl
-cnMvZmlybXdhcmUvYXJtX3NjbWkvY2xvY2suYyBiL2RyaXZlcnMvZmlybXdhcmUvYXJtX3NjbWkv
-Y2xvY2suYw0KaW5kZXggMzBmYzA0ZTI4NDMxLi4wYTE5NGFmOTI0MzggMTAwNjQ0DQotLS0gYS9k
-cml2ZXJzL2Zpcm13YXJlL2FybV9zY21pL2Nsb2NrLmMNCisrKyBiL2RyaXZlcnMvZmlybXdhcmUv
-YXJtX3NjbWkvY2xvY2suYw0KQEAgLTE4NSw2ICsxODUsOCBAQCBzY21pX2Nsb2NrX2Rlc2NyaWJl
-X3JhdGVzX2dldChjb25zdCBzdHJ1Y3Qgc2NtaV9oYW5kbGUgKmhhbmRsZSwgdTMyIGNsa19pZCwN
-CiAJaWYgKHJhdGVfZGlzY3JldGUpDQogCQljbGstPmxpc3QubnVtX3JhdGVzID0gdG90X3JhdGVf
-Y250Ow0KIA0KKwljbGstPnJhdGVfZGlzY3JldGUgPSByYXRlX2Rpc2NyZXRlOw0KKw0KIGVycjoN
-CiAJc2NtaV94ZmVyX3B1dChoYW5kbGUsIHQpOw0KIAlyZXR1cm4gcmV0Ow0KLS0gDQoyLjE2LjQN
-Cg0K
+Reorder code a bit and then remove no longer needed function
+prototypes.
+
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+---
+ drivers/video/fbdev/pvr2fb.c |  141 ++++++++++++++++++-------------------------
+ 1 file changed, 61 insertions(+), 80 deletions(-)
+
+Index: b/drivers/video/fbdev/pvr2fb.c
+===================================================================
+--- a/drivers/video/fbdev/pvr2fb.c
++++ b/drivers/video/fbdev/pvr2fb.c
+@@ -193,39 +193,6 @@ static unsigned int shdma = PVR2_CASCADE
+ static unsigned int pvr2dma = ONCHIP_NR_DMA_CHANNELS;
+ #endif
+ 
+-static int pvr2fb_setcolreg(unsigned int regno, unsigned int red, unsigned int green, unsigned int blue,
+-                            unsigned int transp, struct fb_info *info);
+-static int pvr2fb_blank(int blank, struct fb_info *info);
+-static unsigned long get_line_length(int xres_virtual, int bpp);
+-static void set_color_bitfields(struct fb_var_screeninfo *var);
+-static int pvr2fb_check_var(struct fb_var_screeninfo *var, struct fb_info *info);
+-static int pvr2fb_set_par(struct fb_info *info);
+-static void pvr2_update_display(struct fb_info *info);
+-static void pvr2_init_display(struct fb_info *info);
+-static void pvr2_do_blank(void);
+-static irqreturn_t pvr2fb_interrupt(int irq, void *dev_id);
+-static int pvr2_init_cable(void);
+-static int pvr2_get_param(const struct pvr2_params *p, const char *s,
+-                            int val, int size);
+-#ifdef CONFIG_PVR2_DMA
+-static ssize_t pvr2fb_write(struct fb_info *info, const char *buf,
+-			    size_t count, loff_t *ppos);
+-#endif
+-
+-static struct fb_ops pvr2fb_ops = {
+-	.owner		= THIS_MODULE,
+-	.fb_setcolreg	= pvr2fb_setcolreg,
+-	.fb_blank	= pvr2fb_blank,
+-	.fb_check_var	= pvr2fb_check_var,
+-	.fb_set_par	= pvr2fb_set_par,
+-#ifdef CONFIG_PVR2_DMA
+-	.fb_write	= pvr2fb_write,
+-#endif
+-	.fb_fillrect	= cfb_fillrect,
+-	.fb_copyarea	= cfb_copyarea,
+-	.fb_imageblit	= cfb_imageblit,
+-};
+-
+ static struct fb_videomode pvr2_modedb[] = {
+     /*
+      * Broadcast video modes (PAL and NTSC).  I'm unfamiliar with
+@@ -353,6 +320,36 @@ static int pvr2fb_setcolreg(unsigned int
+ 	return 0;
+ }
+ 
++/*
++ * Determine the cable type and initialize the cable output format.  Don't do
++ * anything if the cable type has been overidden (via "cable:XX").
++ */
++
++#define PCTRA 0xff80002c
++#define PDTRA 0xff800030
++#define VOUTC 0xa0702c00
++
++static int pvr2_init_cable(void)
++{
++	if (cable_type < 0) {
++		fb_writel((fb_readl(PCTRA) & 0xfff0ffff) | 0x000a0000,
++	                  PCTRA);
++		cable_type = (fb_readw(PDTRA) >> 8) & 3;
++	}
++
++	/* Now select the output format (either composite or other) */
++	/* XXX: Save the previous val first, as this reg is also AICA
++	  related */
++	if (cable_type == CT_COMPOSITE)
++		fb_writel(3 << 8, VOUTC);
++	else if (cable_type == CT_RGB)
++		fb_writel(1 << 9, VOUTC);
++	else
++		fb_writel(0, VOUTC);
++
++	return cable_type;
++}
++
+ static int pvr2fb_set_par(struct fb_info *info)
+ {
+ 	struct pvr2fb_par *par = (struct pvr2fb_par *)info->par;
+@@ -641,36 +638,6 @@ static irqreturn_t pvr2fb_interrupt(int
+ 	return IRQ_HANDLED;
+ }
+ 
+-/*
+- * Determine the cable type and initialize the cable output format.  Don't do
+- * anything if the cable type has been overidden (via "cable:XX").
+- */
+-
+-#define PCTRA 0xff80002c
+-#define PDTRA 0xff800030
+-#define VOUTC 0xa0702c00
+-
+-static int pvr2_init_cable(void)
+-{
+-	if (cable_type < 0) {
+-		fb_writel((fb_readl(PCTRA) & 0xfff0ffff) | 0x000a0000,
+-	                  PCTRA);
+-		cable_type = (fb_readw(PDTRA) >> 8) & 3;
+-	}
+-
+-	/* Now select the output format (either composite or other) */
+-	/* XXX: Save the previous val first, as this reg is also AICA
+-	  related */
+-	if (cable_type == CT_COMPOSITE)
+-		fb_writel(3 << 8, VOUTC);
+-	else if (cable_type == CT_RGB)
+-		fb_writel(1 << 9, VOUTC);
+-	else
+-		fb_writel(0, VOUTC);
+-
+-	return cable_type;
+-}
+-
+ #ifdef CONFIG_PVR2_DMA
+ static ssize_t pvr2fb_write(struct fb_info *info, const char *buf,
+ 			    size_t count, loff_t *ppos)
+@@ -741,6 +708,37 @@ out_unmap:
+ }
+ #endif /* CONFIG_PVR2_DMA */
+ 
++static struct fb_ops pvr2fb_ops = {
++	.owner		= THIS_MODULE,
++	.fb_setcolreg	= pvr2fb_setcolreg,
++	.fb_blank	= pvr2fb_blank,
++	.fb_check_var	= pvr2fb_check_var,
++	.fb_set_par	= pvr2fb_set_par,
++#ifdef CONFIG_PVR2_DMA
++	.fb_write	= pvr2fb_write,
++#endif
++	.fb_fillrect	= cfb_fillrect,
++	.fb_copyarea	= cfb_copyarea,
++	.fb_imageblit	= cfb_imageblit,
++};
++
++static int pvr2_get_param(const struct pvr2_params *p, const char *s, int val,
++			  int size)
++{
++	int i;
++
++	for (i = 0 ; i < size ; i++ ) {
++		if (s != NULL) {
++			if (!strncasecmp(p[i].name, s, strlen(s)))
++				return p[i].val;
++		} else {
++			if (p[i].val == val)
++				return (int)p[i].name;
++		}
++	}
++	return -1;
++}
++
+ /**
+  * pvr2fb_common_init
+  *
+@@ -990,23 +988,6 @@ static void __exit pvr2fb_pci_exit(void)
+ }
+ #endif /* CONFIG_PCI */
+ 
+-static int pvr2_get_param(const struct pvr2_params *p, const char *s, int val,
+-			  int size)
+-{
+-	int i;
+-
+-	for (i = 0 ; i < size ; i++ ) {
+-		if (s != NULL) {
+-			if (!strncasecmp(p[i].name, s, strlen(s)))
+-				return p[i].val;
+-		} else {
+-			if (p[i].val == val)
+-				return (int)p[i].name;
+-		}
+-	}
+-	return -1;
+-}
+-
+ /*
+  * Parse command arguments.  Supported arguments are:
+  *    inverse                             Use inverse color maps
