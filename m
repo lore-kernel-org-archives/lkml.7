@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 807C4C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:53:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DF4FC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:53:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41EB220856
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:53:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1A6220856
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:53:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558554800;
-	bh=pNa5STz0klYcf814JCbBCeet+LbTI8FfOQvGtWfN5eI=;
+	s=default; t=1558554823;
+	bh=5SAhx8vj6qUME2xSMKj1eig1Z6FGgp2q+mG1fxEhaxc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LD9yFF4HYug5h9XafD9/tHCHlAOqwqfHKQCGsOQqFygPqK6C7GUzzbc3k5kai8Jxo
-	 je0oPeYGXIap8+DRagxbRl4rrf+onog+KPRjiyOb4r8i+WrGTP1f5GHDe5Me1h8l4T
-	 RdQRSeLv3Rt6C+moQRevLj5FL/OKTzT1sQPeBUc4=
+	b=S7IfbFUU7e+O1BhApT0TN0xzpMmYeYVWyPTaJL6TnMmd6kIepn0lBcmPMM+SFr0rD
+	 YSF/Tez20r2xcipAUPIbzGjfBX1gksqzVvLMjFYIXseMAdkpo4B6TVZPwiHEcEscXq
+	 cGOkL/waNeJMwCBDhjvEN43TtN9Av3LpIwXvm7T4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733224AbfEVTxT (ORCPT
+        id S1731744AbfEVTZr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:53:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47276 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:25:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47050 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731767AbfEVTZw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:25:52 -0400
+        id S1731685AbfEVTZl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:25:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A3CB21841;
-        Wed, 22 May 2019 19:25:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D0D0E2173C;
+        Wed, 22 May 2019 19:25:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553151;
-        bh=pNa5STz0klYcf814JCbBCeet+LbTI8FfOQvGtWfN5eI=;
+        s=default; t=1558553140;
+        bh=5SAhx8vj6qUME2xSMKj1eig1Z6FGgp2q+mG1fxEhaxc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pOMB7ua7+iD60PK7p4yYfXpyPJQw97AYJercGpFabuM2LQ2VVFzEgLcZI9lpe0ZHL
-         BvBwGzzv5PlUPazRM7vtHOUohiSQtz/k1zcgRUVan91kK1naip2yE535nJ7oqVlUI0
-         qJxZ8Agun876OSMs6oNF2tP7OI2BzhncjI94YDsA=
+        b=LWIj+1qBKTSZNlfZpc8VgBdcKpe14JGYCmB8wXzRkzyApRu+qtlUR+fZqSroZVnr8
+         6SuyZYxlahqVDGMFpS/LAKr/uiaAFsB5z/TLjdd/30mxyVe27mL3slVxYqy8q58ONg
+         qQiAk/T3R2m62iHypKqduCmRvmX1XdT14rCr6rXw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sagi Grimberg <sagi@grimberg.me>, Christoph Hellwig <hch@lst.de>,
-        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.0 079/317] nvme-rdma: fix a NULL deref when an admin connect times out
-Date:   Wed, 22 May 2019 15:19:40 -0400
-Message-Id: <20190522192338.23715-79-sashal@kernel.org>
+Cc:     Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 070/317] driver core: platform: Fix the usage of platform device name(pdev->name)
+Date:   Wed, 22 May 2019 15:19:31 -0400
+Message-Id: <20190522192338.23715-70-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192338.23715-1-sashal@kernel.org>
 References: <20190522192338.23715-1-sashal@kernel.org>
@@ -58,51 +59,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sagi Grimberg <sagi@grimberg.me>
+From: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
 
-[ Upstream commit 1007709d7d06fab09bf2d007657575958676282b ]
+[ Upstream commit edb16da34b084c66763f29bee42b4e6bb33c3d66 ]
 
-If we timeout the admin startup sequence we might not yet have
-an I/O tagset allocated which causes the teardown sequence to crash.
-Make nvme_tcp_teardown_io_queues safe by not iterating inflight tags
-if the tagset wasn't allocated.
+Platform core is using pdev->name as the platform device name to do
+the binding of the devices with the drivers. But, when the platform
+driver overrides the platform device name with dev_set_name(),
+the pdev->name is pointing to a location which is freed and becomes
+an invalid parameter to do the binding match.
 
-Fixes: 4c174e636674 ("nvme-rdma: fix timeout handler")
-Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+use-after-free instance:
+
+[   33.325013] BUG: KASAN: use-after-free in strcmp+0x8c/0xb0
+[   33.330646] Read of size 1 at addr ffffffc10beae600 by task modprobe
+[   33.339068] CPU: 5 PID: 518 Comm: modprobe Tainted:
+			G S      W  O      4.19.30+ #3
+[   33.346835] Hardware name: MTP (DT)
+[   33.350419] Call trace:
+[   33.352941]  dump_backtrace+0x0/0x3b8
+[   33.356713]  show_stack+0x24/0x30
+[   33.360119]  dump_stack+0x160/0x1d8
+[   33.363709]  print_address_description+0x84/0x2e0
+[   33.368549]  kasan_report+0x26c/0x2d0
+[   33.372322]  __asan_report_load1_noabort+0x2c/0x38
+[   33.377248]  strcmp+0x8c/0xb0
+[   33.380306]  platform_match+0x70/0x1f8
+[   33.384168]  __driver_attach+0x78/0x3a0
+[   33.388111]  bus_for_each_dev+0x13c/0x1b8
+[   33.392237]  driver_attach+0x4c/0x58
+[   33.395910]  bus_add_driver+0x350/0x560
+[   33.399854]  driver_register+0x23c/0x328
+[   33.403886]  __platform_driver_register+0xd0/0xe0
+
+So, use dev_name(&pdev->dev), which fetches the platform device name from
+the kobject(dev->kobj->name) of the device instead of the pdev->name.
+
+Signed-off-by: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/rdma.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ drivers/base/platform.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/nvme/host/rdma.c b/drivers/nvme/host/rdma.c
-index 52abc3a6de129..1b1645a77daf5 100644
---- a/drivers/nvme/host/rdma.c
-+++ b/drivers/nvme/host/rdma.c
-@@ -922,8 +922,9 @@ static void nvme_rdma_teardown_admin_queue(struct nvme_rdma_ctrl *ctrl,
- {
- 	blk_mq_quiesce_queue(ctrl->ctrl.admin_q);
- 	nvme_rdma_stop_queue(&ctrl->queues[0]);
--	blk_mq_tagset_busy_iter(&ctrl->admin_tag_set, nvme_cancel_request,
--			&ctrl->ctrl);
-+	if (ctrl->ctrl.admin_tagset)
-+		blk_mq_tagset_busy_iter(ctrl->ctrl.admin_tagset,
-+			nvme_cancel_request, &ctrl->ctrl);
- 	blk_mq_unquiesce_queue(ctrl->ctrl.admin_q);
- 	nvme_rdma_destroy_admin_queue(ctrl, remove);
+diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+index 1c958eb33ef4d..fcb8ea54f61f8 100644
+--- a/drivers/base/platform.c
++++ b/drivers/base/platform.c
+@@ -855,7 +855,7 @@ static ssize_t modalias_show(struct device *dev, struct device_attribute *a,
+ 	if (len != -ENODEV)
+ 		return len;
+ 
+-	len = snprintf(buf, PAGE_SIZE, "platform:%s\n", pdev->name);
++	len = snprintf(buf, PAGE_SIZE, "platform:%s\n", dev_name(&pdev->dev));
+ 
+ 	return (len >= PAGE_SIZE) ? (PAGE_SIZE - 1) : len;
  }
-@@ -934,8 +935,9 @@ static void nvme_rdma_teardown_io_queues(struct nvme_rdma_ctrl *ctrl,
- 	if (ctrl->ctrl.queue_count > 1) {
- 		nvme_stop_queues(&ctrl->ctrl);
- 		nvme_rdma_stop_io_queues(ctrl);
--		blk_mq_tagset_busy_iter(&ctrl->tag_set, nvme_cancel_request,
--				&ctrl->ctrl);
-+		if (ctrl->ctrl.tagset)
-+			blk_mq_tagset_busy_iter(ctrl->ctrl.tagset,
-+				nvme_cancel_request, &ctrl->ctrl);
- 		if (remove)
- 			nvme_start_queues(&ctrl->ctrl);
- 		nvme_rdma_destroy_io_queues(ctrl, remove);
+@@ -931,7 +931,7 @@ static int platform_uevent(struct device *dev, struct kobj_uevent_env *env)
+ 		return rc;
+ 
+ 	add_uevent_var(env, "MODALIAS=%s%s", PLATFORM_MODULE_PREFIX,
+-			pdev->name);
++			dev_name(&pdev->dev));
+ 	return 0;
+ }
+ 
+@@ -940,7 +940,7 @@ static const struct platform_device_id *platform_match_id(
+ 			struct platform_device *pdev)
+ {
+ 	while (id->name[0]) {
+-		if (strcmp(pdev->name, id->name) == 0) {
++		if (strcmp(dev_name(&pdev->dev), id->name) == 0) {
+ 			pdev->id_entry = id;
+ 			return id;
+ 		}
+@@ -984,7 +984,7 @@ static int platform_match(struct device *dev, struct device_driver *drv)
+ 		return platform_match_id(pdrv->id_table, pdev) != NULL;
+ 
+ 	/* fall-back to driver name match */
+-	return (strcmp(pdev->name, drv->name) == 0);
++	return (strcmp(dev_name(&pdev->dev), drv->name) == 0);
+ }
+ 
+ #ifdef CONFIG_PM_SLEEP
 -- 
 2.20.1
 
