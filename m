@@ -4,59 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D8DBC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:58:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D457C46470
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:59:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E225C20856
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:58:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E335320856
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:59:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558555139;
-	bh=HUCoXz8V57TxO0xhBlQSwhSh+bv+U4sQr/jgvgqldQU=;
+	s=default; t=1558555147;
+	bh=2exSR2Nnkhck0kqyrIIIcnFhOeWL/t1JxLNownjldOE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qKBDZBo/D0Aw/1QGfoVffRpTGEg8+4K22kJ2yyh24vde2CgU6WOABC6+VZdHfozRF
-	 dL8xPKWSZTG+FriCgFXquXqxMcA8vUWQgg/JNcXFbHO+ZNwxTRIXpfjycyq0tkZNGl
-	 6CuYR9Bgiz8Te9BvB5lazPLBFdv9wsWt0m9VjLh8=
+	b=Gt5HJ7VtL+1G6lalygKTIcUhg4kdGqrYQ+9TowiTxfdy00wXrQvDNOIGEqAgIAzaY
+	 eBJOsE7s/cumJs0ix+4W63RGOI3xREu9pTmCOPFf3Bs3kpMBoC47ULKZthqcVSfRRK
+	 dRVI8zoIDCOaa/vbRd+uPYAB69gwVX7ORmdQ6Gm0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388027AbfEVT66 (ORCPT
+        id S1731020AbfEVTXw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:58:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44806 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731010AbfEVTXw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 22 May 2019 15:23:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44672 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730235AbfEVTXp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:23:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE0E121855;
-        Wed, 22 May 2019 19:23:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B987B21850;
+        Wed, 22 May 2019 19:23:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553030;
-        bh=HUCoXz8V57TxO0xhBlQSwhSh+bv+U4sQr/jgvgqldQU=;
+        s=default; t=1558553024;
+        bh=2exSR2Nnkhck0kqyrIIIcnFhOeWL/t1JxLNownjldOE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c0YBuJcnTdKPcmNrS5dx1c0V9agTsyMIvnRqTmrF0UXAUK6yHkFQkAx3tjJmMAcyp
-         K2LbqnbkKOw1D8MLfZNsa4Xt4BGIjJlvHXXtxG06Z+JMIcIapgkGgx1jyJI400/SjC
-         hx6H3OuMzjjhh5VsU29QOxItj8SXinp2T+Z8uEdc=
+        b=TPudtTCB/5H8v0DS9B9dVLlB1b2rm/fjBIRGz89aB7aRkAMbVDQrr7adFfTzicsYL
+         4VpNqY7ldG452bfKGSjbEVA4n7JO5UwcXywYCRP/7qpFbRmAoGhEdZs+QNA5pHsS5C
+         Ip7AazUqI4t6uqpwtCOGgc34PnmJhjv8Wt8jw0qI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Linus=20L=C3=BCssing?= <linus.luessing@c0d3.blue>,
-        syzbot+83f2d54ec6b7e417e13f@syzkaller.appspotmail.com,
-        syzbot+050927a651272b145a5d@syzkaller.appspotmail.com,
-        syzbot+979ffc89b87309b1b94b@syzkaller.appspotmail.com,
-        syzbot+f9f3f388440283da2965@syzkaller.appspotmail.com,
-        Sven Eckelmann <sven@narfation.org>,
-        Simon Wunderlich <sw@simonwunderlich.de>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 009/317] batman-adv: mcast: fix multicast tt/tvlv worker locking
-Date:   Wed, 22 May 2019 15:18:30 -0400
-Message-Id: <20190522192338.23715-9-sashal@kernel.org>
+Cc:     Abhi Das <adas@redhat.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, cluster-devel@redhat.com
+Subject: [PATCH AUTOSEL 5.0 005/317] gfs2: fix race between gfs2_freeze_func and unmount
+Date:   Wed, 22 May 2019 15:18:26 -0400
+Message-Id: <20190522192338.23715-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192338.23715-1-sashal@kernel.org>
 References: <20190522192338.23715-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -65,114 +59,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Lüssing <linus.luessing@c0d3.blue>
+From: Abhi Das <adas@redhat.com>
 
-[ Upstream commit a3c7cd0cdf1107f891aff847ad481e34df727055 ]
+[ Upstream commit 8f91821990fd6f170a5dca79697a441181a41b16 ]
 
-Syzbot has reported some issues with the locking assumptions made for
-the multicast tt/tvlv worker: It was able to trigger the WARN_ON() in
-batadv_mcast_mla_tt_retract() and batadv_mcast_mla_tt_add().
-While hard/not reproduceable for us so far it seems that the
-delayed_work_pending() we use might not be quite safe from reordering.
+As part of the freeze operation, gfs2_freeze_func() is left blocking
+on a request to hold the sd_freeze_gl in SH. This glock is held in EX
+by the gfs2_freeze() code.
 
-Therefore this patch adds an explicit, new spinlock to protect the
-update of the mla_list and flags in bat_priv and then removes the
-WARN_ON(delayed_work_pending()).
+A subsequent call to gfs2_unfreeze() releases the EXclusively held
+sd_freeze_gl, which allows gfs2_freeze_func() to acquire it in SH and
+resume its operation.
 
-Reported-by: syzbot+83f2d54ec6b7e417e13f@syzkaller.appspotmail.com
-Reported-by: syzbot+050927a651272b145a5d@syzkaller.appspotmail.com
-Reported-by: syzbot+979ffc89b87309b1b94b@syzkaller.appspotmail.com
-Reported-by: syzbot+f9f3f388440283da2965@syzkaller.appspotmail.com
-Fixes: cbebd363b2e9 ("batman-adv: Use own timer for multicast TT and TVLV updates")
-Signed-off-by: Linus Lüssing <linus.luessing@c0d3.blue>
-Signed-off-by: Sven Eckelmann <sven@narfation.org>
-Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+gfs2_unfreeze(), however, doesn't wait for gfs2_freeze_func() to complete.
+If a umount is issued right after unfreeze, it could result in an
+inconsistent filesystem because some journal data (statfs update) isn't
+written out.
+
+Refer to commit 24972557b12c for a more detailed explanation of how
+freeze/unfreeze work.
+
+This patch causes gfs2_unfreeze() to wait for gfs2_freeze_func() to
+complete before returning to the user.
+
+Signed-off-by: Abhi Das <adas@redhat.com>
+Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/batman-adv/main.c      |  1 +
- net/batman-adv/multicast.c | 11 +++--------
- net/batman-adv/types.h     |  5 +++++
- 3 files changed, 9 insertions(+), 8 deletions(-)
+ fs/gfs2/incore.h | 1 +
+ fs/gfs2/super.c  | 8 +++++---
+ 2 files changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/net/batman-adv/main.c b/net/batman-adv/main.c
-index d1ed839fd32bb..64558df6a119d 100644
---- a/net/batman-adv/main.c
-+++ b/net/batman-adv/main.c
-@@ -161,6 +161,7 @@ int batadv_mesh_init(struct net_device *soft_iface)
- 	spin_lock_init(&bat_priv->tt.commit_lock);
- 	spin_lock_init(&bat_priv->gw.list_lock);
- #ifdef CONFIG_BATMAN_ADV_MCAST
-+	spin_lock_init(&bat_priv->mcast.mla_lock);
- 	spin_lock_init(&bat_priv->mcast.want_lists_lock);
- #endif
- 	spin_lock_init(&bat_priv->tvlv.container_list_lock);
-diff --git a/net/batman-adv/multicast.c b/net/batman-adv/multicast.c
-index 69244e4598f5a..454b9067fbbd0 100644
---- a/net/batman-adv/multicast.c
-+++ b/net/batman-adv/multicast.c
-@@ -325,8 +325,6 @@ static void batadv_mcast_mla_list_free(struct hlist_head *mcast_list)
-  * translation table except the ones listed in the given mcast_list.
-  *
-  * If mcast_list is NULL then all are retracted.
-- *
-- * Do not call outside of the mcast worker! (or cancel mcast worker first)
-  */
- static void batadv_mcast_mla_tt_retract(struct batadv_priv *bat_priv,
- 					struct hlist_head *mcast_list)
-@@ -334,8 +332,6 @@ static void batadv_mcast_mla_tt_retract(struct batadv_priv *bat_priv,
- 	struct batadv_hw_addr *mcast_entry;
- 	struct hlist_node *tmp;
+diff --git a/fs/gfs2/incore.h b/fs/gfs2/incore.h
+index e10e0b0a7cd58..e1a33d2881213 100644
+--- a/fs/gfs2/incore.h
++++ b/fs/gfs2/incore.h
+@@ -621,6 +621,7 @@ enum {
+ 	SDF_SKIP_DLM_UNLOCK	= 8,
+ 	SDF_FORCE_AIL_FLUSH     = 9,
+ 	SDF_AIL1_IO_ERROR	= 10,
++	SDF_FS_FROZEN           = 11,
+ };
  
--	WARN_ON(delayed_work_pending(&bat_priv->mcast.work));
--
- 	hlist_for_each_entry_safe(mcast_entry, tmp, &bat_priv->mcast.mla_list,
- 				  list) {
- 		if (mcast_list &&
-@@ -359,8 +355,6 @@ static void batadv_mcast_mla_tt_retract(struct batadv_priv *bat_priv,
-  *
-  * Adds multicast listener announcements from the given mcast_list to the
-  * translation table if they have not been added yet.
-- *
-- * Do not call outside of the mcast worker! (or cancel mcast worker first)
-  */
- static void batadv_mcast_mla_tt_add(struct batadv_priv *bat_priv,
- 				    struct hlist_head *mcast_list)
-@@ -368,8 +362,6 @@ static void batadv_mcast_mla_tt_add(struct batadv_priv *bat_priv,
- 	struct batadv_hw_addr *mcast_entry;
- 	struct hlist_node *tmp;
- 
--	WARN_ON(delayed_work_pending(&bat_priv->mcast.work));
--
- 	if (!mcast_list)
- 		return;
- 
-@@ -658,7 +650,10 @@ static void batadv_mcast_mla_update(struct work_struct *work)
- 	priv_mcast = container_of(delayed_work, struct batadv_priv_mcast, work);
- 	bat_priv = container_of(priv_mcast, struct batadv_priv, mcast);
- 
-+	spin_lock(&bat_priv->mcast.mla_lock);
- 	__batadv_mcast_mla_update(bat_priv);
-+	spin_unlock(&bat_priv->mcast.mla_lock);
-+
- 	batadv_mcast_start_timer(bat_priv);
+ enum gfs2_freeze_state {
+diff --git a/fs/gfs2/super.c b/fs/gfs2/super.c
+index ca71163ff7cfd..360206704a14c 100644
+--- a/fs/gfs2/super.c
++++ b/fs/gfs2/super.c
+@@ -973,8 +973,7 @@ void gfs2_freeze_func(struct work_struct *work)
+ 	if (error) {
+ 		printk(KERN_INFO "GFS2: couldn't get freeze lock : %d\n", error);
+ 		gfs2_assert_withdraw(sdp, 0);
+-	}
+-	else {
++	} else {
+ 		atomic_set(&sdp->sd_freeze_state, SFS_UNFROZEN);
+ 		error = thaw_super(sb);
+ 		if (error) {
+@@ -987,6 +986,8 @@ void gfs2_freeze_func(struct work_struct *work)
+ 		gfs2_glock_dq_uninit(&freeze_gh);
+ 	}
+ 	deactivate_super(sb);
++	clear_bit_unlock(SDF_FS_FROZEN, &sdp->sd_flags);
++	wake_up_bit(&sdp->sd_flags, SDF_FS_FROZEN);
+ 	return;
  }
  
-diff --git a/net/batman-adv/types.h b/net/batman-adv/types.h
-index cbe17da36fcbe..2b0ea1cbbc2fc 100644
---- a/net/batman-adv/types.h
-+++ b/net/batman-adv/types.h
-@@ -1223,6 +1223,11 @@ struct batadv_priv_mcast {
- 	/** @bridged: whether the soft interface has a bridge on top */
- 	unsigned char bridged:1;
+@@ -1029,6 +1030,7 @@ static int gfs2_freeze(struct super_block *sb)
+ 		msleep(1000);
+ 	}
+ 	error = 0;
++	set_bit(SDF_FS_FROZEN, &sdp->sd_flags);
+ out:
+ 	mutex_unlock(&sdp->sd_freeze_mutex);
+ 	return error;
+@@ -1053,7 +1055,7 @@ static int gfs2_unfreeze(struct super_block *sb)
  
-+	/**
-+	 * @mla_lock: a lock protecting mla_list and mla_flags
-+	 */
-+	spinlock_t mla_lock;
-+
- 	/**
- 	 * @num_want_all_unsnoopables: number of nodes wanting unsnoopable IP
- 	 *  traffic
+ 	gfs2_glock_dq_uninit(&sdp->sd_freeze_gh);
+ 	mutex_unlock(&sdp->sd_freeze_mutex);
+-	return 0;
++	return wait_on_bit(&sdp->sd_flags, SDF_FS_FROZEN, TASK_INTERRUPTIBLE);
+ }
+ 
+ /**
 -- 
 2.20.1
 
