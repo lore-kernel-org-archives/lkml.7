@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D84D7C282DC
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:30:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A24C7C282DC
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:30:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA92C20879
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:30:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6946A217F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:30:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558553429;
-	bh=TSxv4XIeGGv8euTEvyL7iVFJBgCZzL+AxbODGUtTQsI=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=BHW8uqVd39GDpVtsRA+ENuetSAN30TazZh4DWzqwbAZB1wlcmoIZ+p5GWYFMsnzxJ
-	 FB2s9bQuD+PQV5k87xtwtxAhpLcOmAe0qWMxF23gad8Ea7ZCPXBVgVg8pTwcoQy/+A
-	 xtxp/2B3tO9uSoT3pAYha8mH6092vXvXwCjg3PDI=
+	s=default; t=1558553434;
+	bh=UapYmnCpWuab03TBWLBB+gBSRoAtQj094QqbPvWrKzQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=S1Wg/Jlxclh6Hg347Gth2VEoIgRJU1rCmP8IctQAB98e26SfpAjVgd5/amVgaX6Wq
+	 skrz6R09X0M4V+3qFHxWPH7sVQdWl/Y6sZ5XnUTksHlNGu3rhfhzumMf69UYFVmz5R
+	 KPSxUbyMkh//5s22fi9Cc2ZlUHzMBuPnbJhKrcLQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733253AbfEVTa2 (ORCPT
+        id S1732789AbfEVTac (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:30:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53778 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:30:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53852 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732339AbfEVTaT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:30:19 -0400
+        id S1732749AbfEVTaX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:30:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D57E217F9;
-        Wed, 22 May 2019 19:30:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ACA7F20879;
+        Wed, 22 May 2019 19:30:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553419;
-        bh=TSxv4XIeGGv8euTEvyL7iVFJBgCZzL+AxbODGUtTQsI=;
-        h=From:To:Cc:Subject:Date:From;
-        b=1LT5d0D4lc5AHLKO/7VdHSLRqUWHtrdF98UmGkXsDsm0VMxfIY9gil5es6kvB+s15
-         PcIVmluJoDZt1NuD6Sx7Xfm4V2Vo7R9+U/Ub6yFENgkP/9OE/J4tVJKqYjfxr+kLkg
-         L6tw0aHnUCxLBvAv+pSq57DDPSHsenMeZEMJl7tQ=
+        s=default; t=1558553422;
+        bh=UapYmnCpWuab03TBWLBB+gBSRoAtQj094QqbPvWrKzQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=OyVyfnCq+djQdsrGJ9W8kDaU9tKUXR+CIeDBLIJ1LVZdeexyLaU8x00+OqVIY4w9b
+         Lds4ihz26V2qlKQgrX5HywZpqZk5AIdiwi6C4Mx5Q0UxRy+ZWVTcHY+fG7zl6JnwWB
+         ltU2OJV1j8vIBBe29nSjr5Ly9RDr0NoB0ijY7MPE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ross Lagerwall <ross.lagerwall@citrix.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, cluster-devel@redhat.com
-Subject: [PATCH AUTOSEL 4.9 001/114] gfs2: Fix lru_count going negative
-Date:   Wed, 22 May 2019 15:28:24 -0400
-Message-Id: <20190522193017.26567-1-sashal@kernel.org>
+Cc:     Raul E Rangel <rrangel@chromium.org>,
+        Avri Altman <avri.altman@wdc.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-mmc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 003/114] mmc: core: Verify SD bus width
+Date:   Wed, 22 May 2019 15:28:26 -0400
+Message-Id: <20190522193017.26567-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190522193017.26567-1-sashal@kernel.org>
+References: <20190522193017.26567-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -57,110 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ross Lagerwall <ross.lagerwall@citrix.com>
+From: Raul E Rangel <rrangel@chromium.org>
 
-[ Upstream commit 7881ef3f33bb80f459ea6020d1e021fc524a6348 ]
+[ Upstream commit 9e4be8d03f50d1b25c38e2b59e73b194c130df7d ]
 
-Under certain conditions, lru_count may drop below zero resulting in
-a large amount of log spam like this:
+The SD Physical Layer Spec says the following: Since the SD Memory Card
+shall support at least the two bus modes 1-bit or 4-bit width, then any SD
+Card shall set at least bits 0 and 2 (SD_BUS_WIDTH="0101").
 
-vmscan: shrink_slab: gfs2_dump_glock+0x3b0/0x630 [gfs2] \
-    negative objects to delete nr=-1
+This change verifies the card has specified a bus width.
 
-This happens as follows:
-1) A glock is moved from lru_list to the dispose list and lru_count is
-   decremented.
-2) The dispose function calls cond_resched() and drops the lru lock.
-3) Another thread takes the lru lock and tries to add the same glock to
-   lru_list, checking if the glock is on an lru list.
-4) It is on a list (actually the dispose list) and so it avoids
-   incrementing lru_count.
-5) The glock is moved to lru_list.
-5) The original thread doesn't dispose it because it has been re-added
-   to the lru list but the lru_count has still decreased by one.
+AMD SDHC Device 7806 can get into a bad state after a card disconnect
+where anything transferred via the DATA lines will always result in a
+zero filled buffer. Currently the driver will continue without error if
+the HC is in this condition. A block device will be created, but reading
+from it will result in a zero buffer. This makes it seem like the SD
+device has been erased, when in actuality the data is never getting
+copied from the DATA lines to the data buffer.
 
-Fix by checking if the LRU flag is set on the glock rather than checking
-if the glock is on some list and rearrange the code so that the LRU flag
-is added/removed precisely when the glock is added/removed from lru_list.
+SCR is the first command in the SD initialization sequence that uses the
+DATA lines. By checking that the response was invalid, we can abort
+mounting the card.
 
-Signed-off-by: Ross Lagerwall <ross.lagerwall@citrix.com>
-Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
+Reviewed-by: Avri Altman <avri.altman@wdc.com>
+Signed-off-by: Raul E Rangel <rrangel@chromium.org>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/gfs2/glock.c | 22 +++++++++++++---------
- 1 file changed, 13 insertions(+), 9 deletions(-)
+ drivers/mmc/core/sd.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/fs/gfs2/glock.c b/fs/gfs2/glock.c
-index 7a8b1d72e3d91..efd44d5645d83 100644
---- a/fs/gfs2/glock.c
-+++ b/fs/gfs2/glock.c
-@@ -136,22 +136,26 @@ static int demote_ok(const struct gfs2_glock *gl)
+diff --git a/drivers/mmc/core/sd.c b/drivers/mmc/core/sd.c
+index f09148a4ab557..00ba8807dafe4 100644
+--- a/drivers/mmc/core/sd.c
++++ b/drivers/mmc/core/sd.c
+@@ -214,6 +214,14 @@ static int mmc_decode_scr(struct mmc_card *card)
  
- void gfs2_glock_add_to_lru(struct gfs2_glock *gl)
- {
-+	if (!(gl->gl_ops->go_flags & GLOF_LRU))
-+		return;
+ 	if (scr->sda_spec3)
+ 		scr->cmds = UNSTUFF_BITS(resp, 32, 2);
 +
- 	spin_lock(&lru_lock);
- 
--	if (!list_empty(&gl->gl_lru))
--		list_del_init(&gl->gl_lru);
--	else
-+	list_del(&gl->gl_lru);
-+	list_add_tail(&gl->gl_lru, &lru_list);
-+
-+	if (!test_bit(GLF_LRU, &gl->gl_flags)) {
-+		set_bit(GLF_LRU, &gl->gl_flags);
- 		atomic_inc(&lru_count);
++	/* SD Spec says: any SD Card shall set at least bits 0 and 2 */
++	if (!(scr->bus_widths & SD_SCR_BUS_WIDTH_1) ||
++	    !(scr->bus_widths & SD_SCR_BUS_WIDTH_4)) {
++		pr_err("%s: invalid bus width\n", mmc_hostname(card->host));
++		return -EINVAL;
 +	}
- 
--	list_add_tail(&gl->gl_lru, &lru_list);
--	set_bit(GLF_LRU, &gl->gl_flags);
- 	spin_unlock(&lru_lock);
++
+ 	return 0;
  }
  
- static void gfs2_glock_remove_from_lru(struct gfs2_glock *gl)
- {
- 	spin_lock(&lru_lock);
--	if (!list_empty(&gl->gl_lru)) {
-+	if (test_bit(GLF_LRU, &gl->gl_flags)) {
- 		list_del_init(&gl->gl_lru);
- 		atomic_dec(&lru_count);
- 		clear_bit(GLF_LRU, &gl->gl_flags);
-@@ -1048,8 +1052,7 @@ void gfs2_glock_dq(struct gfs2_holder *gh)
- 		    !test_bit(GLF_DEMOTE, &gl->gl_flags))
- 			fast_path = 1;
- 	}
--	if (!test_bit(GLF_LFLUSH, &gl->gl_flags) && demote_ok(gl) &&
--	    (glops->go_flags & GLOF_LRU))
-+	if (!test_bit(GLF_LFLUSH, &gl->gl_flags) && demote_ok(gl))
- 		gfs2_glock_add_to_lru(gl);
- 
- 	trace_gfs2_glock_queue(gh, 0);
-@@ -1349,6 +1352,7 @@ __acquires(&lru_lock)
- 		if (!spin_trylock(&gl->gl_lockref.lock)) {
- add_back_to_lru:
- 			list_add(&gl->gl_lru, &lru_list);
-+			set_bit(GLF_LRU, &gl->gl_flags);
- 			atomic_inc(&lru_count);
- 			continue;
- 		}
-@@ -1356,7 +1360,6 @@ __acquires(&lru_lock)
- 			spin_unlock(&gl->gl_lockref.lock);
- 			goto add_back_to_lru;
- 		}
--		clear_bit(GLF_LRU, &gl->gl_flags);
- 		gl->gl_lockref.count++;
- 		if (demote_ok(gl))
- 			handle_callback(gl, LM_ST_UNLOCKED, 0, false);
-@@ -1392,6 +1395,7 @@ static long gfs2_scan_glock_lru(int nr)
- 		if (!test_bit(GLF_LOCK, &gl->gl_flags)) {
- 			list_move(&gl->gl_lru, &dispose);
- 			atomic_dec(&lru_count);
-+			clear_bit(GLF_LRU, &gl->gl_flags);
- 			freed++;
- 			continue;
- 		}
 -- 
 2.20.1
 
