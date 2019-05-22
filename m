@@ -2,511 +2,274 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61533C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 13:16:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35462C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 13:16:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2288D2089E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 13:16:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB0B02089E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 13:16:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="k0pNbEcZ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="j1wHqu8A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729426AbfEVNQc (ORCPT
+        id S1729442AbfEVNQt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 09:16:32 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:40815 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729171AbfEVNQc (ORCPT
+        Wed, 22 May 2019 09:16:49 -0400
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:33025 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728827AbfEVNQt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 09:16:32 -0400
-Received: by mail-pl1-f195.google.com with SMTP id g69so1073069plb.7
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 06:16:31 -0700 (PDT)
+        Wed, 22 May 2019 09:16:49 -0400
+Received: by mail-vs1-f68.google.com with SMTP id y6so1383748vsb.0
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 06:16:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=7/8TA+cL55vqgUwtOrO0zHU6pqvlEdQLUD7j6Bw+RPg=;
-        b=k0pNbEcZp7ieluuZsCz2EagVFfTzW96e1hLqT9PzejMqQDJl1mk+Oa2Kft17vEmhwZ
-         LSjkPku4MzjnYA2G49hMaA4s5nXwLvdeBy8ijlAJ5/lQgKjbDeOUlwMjeRVRB/zdhD9l
-         VE0GSXP0El50Gd2PIWzmO1VjDA8H7MT/jKFZf79stLDssdXoRem0a7Gs1x3ZB/nlirWI
-         rwwXBoxaCL78nhUo6cP+iQKH6LhXbQ6eCkYpKdia+Q8XxpgzAopCtf3lMHVkSdh6CB7H
-         /7B48/SqIh3R9uhVgHX5ERtIm/vEE0skhKQyBFc7Ia+76ZdfwZ8hrcI0O2qouI3+DXCf
-         ANlg==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Q9WDMTISxSbXUvo3thAxC/8/26mhSvfk+H8gY5FC7Rw=;
+        b=j1wHqu8AOIn/TdK3Y0IuY6mHEhzfNgXhLIR1I14fCixzhZjP6kl68f73pag/2NfvhJ
+         QaIDM+gBSbg8soVYGbOTRuSkxKYjpmsZ8o4QlENBPNpnIRB9eTtvwphEmF/eMo8DZ56b
+         Fci3tFn/bm7JUAnW7d6CfEA/MinkOSOxXlfquk8mzB4/r6mJTLM0Oda2Kil51koQZo7v
+         5sEsat+7aleE+x9ALHMt/mZ/HY7/Ogph5D+X6AqjjyN8X8Up9gA+IEkNCeLZe/fTgfIp
+         eoaLwqWqwzHgGiC5chmeGfemsRNG0G6u1o2A+TxPXm1FJpGSJN4LuLq9pd0m0VZlhc6Q
+         ouwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=7/8TA+cL55vqgUwtOrO0zHU6pqvlEdQLUD7j6Bw+RPg=;
-        b=HtwhC53DGGgSz+CSlUEBmyzOJCyF0L1ZUHH9JHDQt5kDOOhlj05QavQXTK6bxJNlFe
-         GCFtythVuCxtAFTxhfz133ccLm43Ko42s46Tl69QPRBdnI8M3MswTHwgDjFXcOPi6DIk
-         3tUHRpGK6PS+b24dVqoSXJ1Odma6jc+5JDFcuj5pg1kFCn2XCXU1thtLiiw93HEaiQbd
-         Q/XVn00lLZDisva3eYiRuprZC4hAe1cVerBjsSCCKY/ZigeO8L5m05w78rlT0jeZyr29
-         Rbl9+oNyT4LhZXqqh6y9zUnwuV6J0OADkT9q1JPM4I13WU9qGwIeEk7BheE6BoUAqAgY
-         oCuA==
-X-Gm-Message-State: APjAAAUpQlwPSsZ55VbOvFfR9zMH0W9WzRABirHQ/JGvvKR1hY02oUFT
-        Lwq3vOIs384fF9b8URoivL8n
-X-Google-Smtp-Source: APXvYqyAianOUOrL7PBqYiT72NPkqQ6o1gkPvTNFOrvrjw/jk75u75Rg8BQ5fiaKFGl7S//VbFdNRQ==
-X-Received: by 2002:a17:902:2884:: with SMTP id f4mr61837102plb.230.1558530991083;
-        Wed, 22 May 2019 06:16:31 -0700 (PDT)
-Received: from localhost.localdomain ([2405:204:73c4:1ab0:ac45:9c21:7eb3:888a])
-        by smtp.gmail.com with ESMTPSA id b7sm22273565pgq.71.2019.05.22.06.16.23
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 22 May 2019 06:16:30 -0700 (PDT)
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     shawnguo@kernel.org, s.hauer@pengutronix.de, robh+dt@kernel.org,
-        festevam@gmail.com
-Cc:     kernel@pengutronix.de, linux-imx@nxp.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, pbrobinson@gmail.com,
-        yossi@novtech.com, nazik@novtech.com,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH 2/2] ARM: dts: Add support for 96Boards Meerkat96 board
-Date:   Wed, 22 May 2019 18:45:50 +0530
-Message-Id: <20190522131550.9034-3-manivannan.sadhasivam@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190522131550.9034-1-manivannan.sadhasivam@linaro.org>
-References: <20190522131550.9034-1-manivannan.sadhasivam@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Q9WDMTISxSbXUvo3thAxC/8/26mhSvfk+H8gY5FC7Rw=;
+        b=jQPzIJssvOhTb4hVtANjVX3rSC3U5AT4skr1Oqnc+7PfDXPEanurAvvNbNKzdRXJyC
+         ZbJjIjCt6hRh86/VqLridiNtXcBX1tmxx1yjgUnmZjRGtpFSeHZy13hRO3OgZDavMruh
+         BF9mTffXtDp7IXnHndNcKPQEnOW6fgYhDlZB/5dARI1QGNOs+O/zksH3f42O82DjxbXf
+         dOjVkahdYIKvpXhRVZsGK9lOfcEPkkGmaf6d1UHlKGHicLQ9MeTnBzx05+w04uZIsrgV
+         NANw6/hCfuxX0CqxRX6e1G6eiaS0vZXMKIk7Q4yKFr8xHi5OBPnlFu8q2cRnQA1WYh3P
+         JFZA==
+X-Gm-Message-State: APjAAAVS+szPmcL2MYvyGd05EH4EfWQ50QAtpg6987YexuH682XtD03H
+        7Rby87SYJbsaU7VHA1Obl77xdXjBCNFcJbOiOZ63T1QBF/8=
+X-Google-Smtp-Source: APXvYqxFBOllyAKPLvt3Dkg6wZYZywBpcF5mzFj9Itr4aFvtSRh3etdyk2e7hSUxEx+v1RN+KkqaTfbiVtly9yN1HqA=
+X-Received: by 2002:a67:1485:: with SMTP id 127mr14620677vsu.77.1558531007677;
+ Wed, 22 May 2019 06:16:47 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190520035254.57579-1-minchan@kernel.org> <20190521084158.s5wwjgewexjzrsm6@brauner.io>
+ <20190521110552.GG219653@google.com> <20190521113029.76iopljdicymghvq@brauner.io>
+ <20190521113911.2rypoh7uniuri2bj@brauner.io> <CAKOZuesjDcD3EM4PS7aO7yTa3KZ=FEzMP63MR0aEph4iW1NCYQ@mail.gmail.com>
+ <CAHrFyr6iuoZ-r6e57zp1rz7b=Ee0Vko+syuUKW2an+TkAEz_iA@mail.gmail.com>
+In-Reply-To: <CAHrFyr6iuoZ-r6e57zp1rz7b=Ee0Vko+syuUKW2an+TkAEz_iA@mail.gmail.com>
+From:   Daniel Colascione <dancol@google.com>
+Date:   Wed, 22 May 2019 06:16:35 -0700
+Message-ID: <CAKOZueupb10vmm-bmL0j_b__qsC9ZrzhzHgpGhwPVUrfX0X-Og@mail.gmail.com>
+Subject: Re: [RFC 0/7] introduce memory hinting API for external process
+To:     Christian Brauner <christian@brauner.io>
+Cc:     Minchan Kim <minchan@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tim Murray <timmurray@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>, Jann Horn <jannh@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add devicetree support for 96Boards Meerkat96 board from Novtech. This
-board is one of the Consumer Edition boards of the 96Boards family based
-on i.MX7D SoC. Following are the currently supported features of the
-board:
+On Wed, May 22, 2019 at 1:22 AM Christian Brauner <christian@brauner.io> wr=
+ote:
+>
+> On Wed, May 22, 2019 at 7:12 AM Daniel Colascione <dancol@google.com> wro=
+te:
+> >
+> > On Tue, May 21, 2019 at 4:39 AM Christian Brauner <christian@brauner.io=
+> wrote:
+> > >
+> > > On Tue, May 21, 2019 at 01:30:29PM +0200, Christian Brauner wrote:
+> > > > On Tue, May 21, 2019 at 08:05:52PM +0900, Minchan Kim wrote:
+> > > > > On Tue, May 21, 2019 at 10:42:00AM +0200, Christian Brauner wrote=
+:
+> > > > > > On Mon, May 20, 2019 at 12:52:47PM +0900, Minchan Kim wrote:
+> > > > > > > - Background
+> > > > > > >
+> > > > > > > The Android terminology used for forking a new process and st=
+arting an app
+> > > > > > > from scratch is a cold start, while resuming an existing app =
+is a hot start.
+> > > > > > > While we continually try to improve the performance of cold s=
+tarts, hot
+> > > > > > > starts will always be significantly less power hungry as well=
+ as faster so
+> > > > > > > we are trying to make hot start more likely than cold start.
+> > > > > > >
+> > > > > > > To increase hot start, Android userspace manages the order th=
+at apps should
+> > > > > > > be killed in a process called ActivityManagerService. Activit=
+yManagerService
+> > > > > > > tracks every Android app or service that the user could be in=
+teracting with
+> > > > > > > at any time and translates that into a ranked list for lmkd(l=
+ow memory
+> > > > > > > killer daemon). They are likely to be killed by lmkd if the s=
+ystem has to
+> > > > > > > reclaim memory. In that sense they are similar to entries in =
+any other cache.
+> > > > > > > Those apps are kept alive for opportunistic performance impro=
+vements but
+> > > > > > > those performance improvements will vary based on the memory =
+requirements of
+> > > > > > > individual workloads.
+> > > > > > >
+> > > > > > > - Problem
+> > > > > > >
+> > > > > > > Naturally, cached apps were dominant consumers of memory on t=
+he system.
+> > > > > > > However, they were not significant consumers of swap even tho=
+ugh they are
+> > > > > > > good candidate for swap. Under investigation, swapping out on=
+ly begins
+> > > > > > > once the low zone watermark is hit and kswapd wakes up, but t=
+he overall
+> > > > > > > allocation rate in the system might trip lmkd thresholds and =
+cause a cached
+> > > > > > > process to be killed(we measured performance swapping out vs.=
+ zapping the
+> > > > > > > memory by killing a process. Unsurprisingly, zapping is 10x t=
+imes faster
+> > > > > > > even though we use zram which is much faster than real storag=
+e) so kill
+> > > > > > > from lmkd will often satisfy the high zone watermark, resulti=
+ng in very
+> > > > > > > few pages actually being moved to swap.
+> > > > > > >
+> > > > > > > - Approach
+> > > > > > >
+> > > > > > > The approach we chose was to use a new interface to allow use=
+rspace to
+> > > > > > > proactively reclaim entire processes by leveraging platform i=
+nformation.
+> > > > > > > This allowed us to bypass the inaccuracy of the kernel=E2=80=
+=99s LRUs for pages
+> > > > > > > that are known to be cold from userspace and to avoid races w=
+ith lmkd
+> > > > > > > by reclaiming apps as soon as they entered the cached state. =
+Additionally,
+> > > > > > > it could provide many chances for platform to use much inform=
+ation to
+> > > > > > > optimize memory efficiency.
+> > > > > > >
+> > > > > > > IMHO we should spell it out that this patchset complements MA=
+DV_WONTNEED
+> > > > > > > and MADV_FREE by adding non-destructive ways to gain some fre=
+e memory
+> > > > > > > space. MADV_COLD is similar to MADV_WONTNEED in a way that it=
+ hints the
+> > > > > > > kernel that memory region is not currently needed and should =
+be reclaimed
+> > > > > > > immediately; MADV_COOL is similar to MADV_FREE in a way that =
+it hints the
+> > > > > > > kernel that memory region is not currently needed and should =
+be reclaimed
+> > > > > > > when memory pressure rises.
+> > > > > > >
+> > > > > > > To achieve the goal, the patchset introduce two new options f=
+or madvise.
+> > > > > > > One is MADV_COOL which will deactive activated pages and the =
+other is
+> > > > > > > MADV_COLD which will reclaim private pages instantly. These n=
+ew options
+> > > > > > > complement MADV_DONTNEED and MADV_FREE by adding non-destruct=
+ive ways to
+> > > > > > > gain some free memory space. MADV_COLD is similar to MADV_DON=
+TNEED in a way
+> > > > > > > that it hints the kernel that memory region is not currently =
+needed and
+> > > > > > > should be reclaimed immediately; MADV_COOL is similar to MADV=
+_FREE in a way
+> > > > > > > that it hints the kernel that memory region is not currently =
+needed and
+> > > > > > > should be reclaimed when memory pressure rises.
+> > > > > > >
+> > > > > > > This approach is similar in spirit to madvise(MADV_WONTNEED),=
+ but the
+> > > > > > > information required to make the reclaim decision is not know=
+n to the app.
+> > > > > > > Instead, it is known to a centralized userspace daemon, and t=
+hat daemon
+> > > > > > > must be able to initiate reclaim on its own without any app i=
+nvolvement.
+> > > > > > > To solve the concern, this patch introduces new syscall -
+> > > > > > >
+> > > > > > >         struct pr_madvise_param {
+> > > > > > >                 int size;
+> > > > > > >                 const struct iovec *vec;
+> > > > > > >         }
+> > > > > > >
+> > > > > > >         int process_madvise(int pidfd, ssize_t nr_elem, int *=
+behavior,
+> > > > > > >                                 struct pr_madvise_param *rest=
+uls,
+> > > > > > >                                 struct pr_madvise_param *rang=
+es,
+> > > > > > >                                 unsigned long flags);
+> > > > > > >
+> > > > > > > The syscall get pidfd to give hints to external process and p=
+rovides
+> > > > > > > pair of result/ranges vector arguments so that it could give =
+several
+> > > > > > > hints to each address range all at once.
+> > > > > > >
+> > > > > > > I guess others have different ideas about the naming of sysca=
+ll and options
+> > > > > > > so feel free to suggest better naming.
+> > > > > >
+> > > > > > Yes, all new syscalls making use of pidfds should be named
+> > > > > > pidfd_<action>. So please make this pidfd_madvise.
+> > > > >
+> > > > > I don't have any particular preference but just wondering why pid=
+fd is
+> > > > > so special to have it as prefix of system call name.
+> > > >
+> > > > It's a whole new API to address processes. We already have
+> > > > clone(CLONE_PIDFD) and pidfd_send_signal() as you have seen since y=
+ou
+> > > > exported pidfd_to_pid(). And we're going to have pidfd_open(). Your
+> > > > syscall works only with pidfds so it's tied to this api as well so =
+it
+> > > > should follow the naming scheme. This also makes life easier for
+> > > > userspace and is consistent.
+> > >
+> > > This is at least my reasoning. I'm not going to make this a whole big
+> > > pedantic argument. If people have really strong feelings about not us=
+ing
+> > > this prefix then fine. But if syscalls can be grouped together and ha=
+ve
+> > > consistent naming this is always a big plus.
+> >
+> > My hope has been that pidfd use becomes normalized enough that
+> > prefixing "pidfd_" to pidfd-accepting system calls becomes redundant.
+> > We write write(), not fd_write(), right? :-) pidfd_open() makes sense
+> > because the primary purpose of this system call is to operate on a
+> > pidfd, but I think process_madvise() is fine.
+>
+> This madvise syscall just operates on pidfds. It would make sense to
+> name it process_madvise() if were to operate both on pid_t and int pidfd.
 
-* uSD
-* WiFi/BT
-* USB
+The name of the function ought to encode its purpose, not its
+signature. The system call under discussion operates on processes and
+so should be called "process_madvise". That this system call happens
+to accept a pidfd to identify the process on which it operates is not
+its most interesting aspect of the system call. The argument type
+isn't important enough to spotlight in the permanent name of an API.
+Pidfds are novel now, but they won't be novel in the future.
 
-More information about this board can be found in 96Boards product page:
-https://www.96boards.org/product/imx7-96/
+> Giving specific names to system calls won't stop it from becoming
+> normalized.
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- arch/arm/boot/dts/Makefile            |   1 +
- arch/arm/boot/dts/imx7d-meerkat96.dts | 396 ++++++++++++++++++++++++++
- 2 files changed, 397 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx7d-meerkat96.dts
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index f4f5aeaf3298..3018a763dbd1 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -579,6 +579,7 @@ dtb-$(CONFIG_SOC_IMX7D) += \
- 	imx7d-cl-som-imx7.dtb \
- 	imx7d-colibri-emmc-eval-v3.dtb \
- 	imx7d-colibri-eval-v3.dtb \
-+	imx7d-meerkat96.dtb \
- 	imx7d-nitrogen7.dtb \
- 	imx7d-pico-hobbit.dtb \
- 	imx7d-pico-pi.dtb \
-diff --git a/arch/arm/boot/dts/imx7d-meerkat96.dts b/arch/arm/boot/dts/imx7d-meerkat96.dts
-new file mode 100644
-index 000000000000..7898d27340f6
---- /dev/null
-+++ b/arch/arm/boot/dts/imx7d-meerkat96.dts
-@@ -0,0 +1,396 @@
-+// SPDX-License-Identifier: GPL-2.0+ OR MIT
-+/*
-+ * Copyright (C) 2019 Linaro Ltd.
-+ */
-+
-+/dts-v1/;
-+
-+#include "imx7d.dtsi"
-+
-+/ {
-+	model = "96Boards Meerkat96 Board";
-+	compatible = "novtech,imx7d-meerkat96", "fsl,imx7d";
-+
-+	chosen {
-+		stdout-path = &uart6;
-+	};
-+
-+	memory@80000000 {
-+		device_type = "memory";
-+		reg = <0x80000000 0x20000000>; /* 512MB */
-+	};
-+
-+	reg_wlreg_on: regulator-wlreg_on {
-+		compatible = "regulator-fixed";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_wlreg_on>;
-+		regulator-name = "wlreg_on";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		startup-delay-us = <100>;
-+		gpio = <&gpio6 15 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+		regulator-always-on;
-+	};
-+
-+	reg_3p3v: regulator-3p3v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "3P3V";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+	};
-+
-+	reg_usb_otg1_vbus: regulator-usb-otg1-vbus {
-+		compatible = "regulator-fixed";
-+		regulator-name = "usb_otg1_vbus";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+	};
-+
-+	reg_usb_otg2_vbus: regulator-usb-otg2-vbus {
-+		compatible = "regulator-fixed";
-+		regulator-name = "usb_otg2_vbus";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		gpio = <&gpio1 2 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+
-+	sw1a_reg: sw1a {
-+		regulator-name = "sw1a_reg";
-+		regulator-min-microvolt = <700000>;
-+		regulator-max-microvolt = <1475000>;
-+		regulator-boot-on;
-+		regulator-always-on;
-+		regulator-ramp-delay = <6250>;
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_gpio_leds>;
-+
-+		led1 {
-+			label = "green:user1";
-+			gpios = <&gpio1 4 GPIO_ACTIVE_LOW>;
-+			linux,default-trigger = "heartbeat";
-+			default-state = "off";
-+		};
-+
-+		led2 {
-+			label = "green:user2";
-+			gpios = <&gpio1 5 GPIO_ACTIVE_LOW>;
-+			linux,default-trigger = "mmc0";
-+			default-state = "off";
-+		};
-+
-+		led3 {
-+			label = "green:user3";
-+			gpios = <&gpio1 6 GPIO_ACTIVE_LOW>;
-+			linux,default-trigger = "mmc1";
-+			default-state = "off";
-+		};
-+
-+		led4 {
-+			label = "green:user4";
-+			gpios = <&gpio1 7 GPIO_ACTIVE_LOW>;
-+			linux,default-trigger = "none";
-+			default-state = "off";
-+			panic-indicator;
-+		};
-+
-+		led@5 {
-+			label = "yellow:wlan";
-+			gpios = <&gpio1 0 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "phy0tx";
-+			default-state = "off";
-+		};
-+
-+		led@6 {
-+			label = "blue:bt";
-+			gpios = <&gpio5 2 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "bluetooth-power";
-+			default-state = "off";
-+		};
-+	};
-+};
-+
-+&cpu0 {
-+	cpu-supply = <&sw1a_reg>;
-+};
-+
-+&i2c1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c1>;
-+	status = "okay";
-+};
-+
-+&i2c2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c2>;
-+	status = "okay";
-+};
-+
-+&i2c3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c3>;
-+	status = "okay";
-+};
-+
-+&i2c4 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c4>;
-+	status = "okay";
-+};
-+
-+&lcdif {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_lcdif>;
-+	status = "okay";
-+};
-+
-+&uart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart1>;
-+	assigned-clocks = <&clks IMX7D_UART1_ROOT_SRC>;
-+	assigned-clock-parents = <&clks IMX7D_PLL_SYS_MAIN_240M_CLK>;
-+	status = "okay";
-+};
-+
-+&uart3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart3>;
-+	assigned-clocks = <&clks IMX7D_UART3_ROOT_SRC>;
-+	assigned-clock-parents = <&clks IMX7D_PLL_SYS_MAIN_240M_CLK>;
-+	fsl,uart-has-rtscts;
-+	status = "okay";
-+};
-+
-+&uart6 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart6>;
-+	assigned-clocks = <&clks IMX7D_UART6_ROOT_SRC>;
-+	assigned-clock-parents = <&clks IMX7D_PLL_SYS_MAIN_240M_CLK>;
-+	status = "okay";
-+};
-+
-+&uart7 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart7 &pinctrl_bt_gpios>;
-+	assigned-clocks = <&clks IMX7D_UART7_ROOT_SRC>;
-+	assigned-clock-parents = <&clks IMX7D_PLL_SYS_MAIN_240M_CLK>;
-+	fsl,uart-has-rtscts;
-+	fsl,dte-mode;
-+	status = "okay";
-+
-+	bluetooth {
-+		compatible = "brcm,bcm43438-bt";
-+		device-wakeup-gpios = <&gpio6 13 GPIO_ACTIVE_HIGH>;
-+		host-wakeup-gpios = <&gpio4 17 GPIO_ACTIVE_HIGH>;
-+	};
-+};
-+
-+&usbotg1 {
-+	vbus-supply = <&reg_usb_otg1_vbus>;
-+	status = "okay";
-+};
-+
-+&usbotg2 {
-+	vbus-supply = <&reg_usb_otg2_vbus>;
-+	dr_mode = "host";
-+	status = "okay";
-+};
-+
-+&usdhc1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usdhc1>;
-+	keep-power-in-suspend;
-+	tuning-step = <2>;
-+	vmmc-supply = <&reg_3p3v>;
-+	no-1-8-v;
-+	broken-cd;
-+	status = "okay";
-+};
-+
-+&usdhc3 {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usdhc3>;
-+	bus-width = <4>;
-+	no-1-8-v;
-+	no-mmc;
-+	non-removable;
-+	keep-power-in-suspend;
-+	enable-sdio-wakeup;
-+	vmmc-supply = <&reg_wlreg_on>;
-+	vqmmc-supply =<&reg_3p3v>;
-+	status = "okay";
-+
-+	brcmf: wifi@1 {
-+		reg = <1>;
-+		compatible = "brcm,bcm4329-fmac";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_wlan_irq>;
-+		interrupt-parent = <&gpio6>;
-+		interrupts = <14 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-names = "host-wake";
-+	};
-+};
-+
-+&iomuxc {
-+	imx7d-sdb {
-+		pinctrl_bt_gpios: bt_gpios {
-+			fsl,pins = <
-+				MX7D_PAD_SAI1_TX_BCLK__GPIO6_IO13	0x59
-+				MX7D_PAD_ECSPI1_MOSI__GPIO4_IO17	0x1f
-+			>;
-+		};
-+
-+		pinctrl_i2c1: i2c1grp {
-+			fsl,pins = <
-+				MX7D_PAD_I2C1_SDA__I2C1_SDA		0x4000007f
-+				MX7D_PAD_I2C1_SCL__I2C1_SCL		0x4000007f
-+			>;
-+		};
-+
-+		pinctrl_i2c2: i2c2grp {
-+			fsl,pins = <
-+				MX7D_PAD_I2C2_SDA__I2C2_SDA		0x4000007f
-+				MX7D_PAD_I2C2_SCL__I2C2_SCL		0x4000007f
-+			>;
-+		};
-+
-+		pinctrl_i2c3: i2c3grp {
-+			fsl,pins = <
-+				MX7D_PAD_ENET1_RGMII_RD1__I2C3_SDA	0x4000007f
-+				MX7D_PAD_ENET1_RGMII_RD0__I2C3_SCL	0x4000007f
-+			>;
-+		};
-+
-+		pinctrl_i2c4: i2c4grp {
-+			fsl,pins = <
-+				MX7D_PAD_SAI1_RX_BCLK__I2C4_SDA		0x4000007f
-+				MX7D_PAD_SAI1_RX_SYNC__I2C4_SCL		0x4000007f
-+			>;
-+		};
-+
-+		pinctrl_lcdif: lcdifgrp {
-+			fsl,pins = <
-+				MX7D_PAD_LCD_DATA00__LCD_DATA0		0x79
-+				MX7D_PAD_LCD_DATA01__LCD_DATA1		0x79
-+				MX7D_PAD_LCD_DATA02__LCD_DATA2		0x79
-+				MX7D_PAD_LCD_DATA03__LCD_DATA3		0x79
-+				MX7D_PAD_LCD_DATA04__LCD_DATA4		0x79
-+				MX7D_PAD_LCD_DATA05__LCD_DATA5		0x79
-+				MX7D_PAD_LCD_DATA06__LCD_DATA6		0x79
-+				MX7D_PAD_LCD_DATA07__LCD_DATA7		0x79
-+				MX7D_PAD_LCD_DATA08__LCD_DATA8		0x79
-+				MX7D_PAD_LCD_DATA09__LCD_DATA9		0x79
-+				MX7D_PAD_LCD_DATA10__LCD_DATA10		0x79
-+				MX7D_PAD_LCD_DATA11__LCD_DATA11		0x79
-+				MX7D_PAD_LCD_DATA12__LCD_DATA12		0x79
-+				MX7D_PAD_LCD_DATA13__LCD_DATA13		0x79
-+				MX7D_PAD_LCD_DATA14__LCD_DATA14		0x79
-+				MX7D_PAD_LCD_DATA15__LCD_DATA15		0x79
-+				MX7D_PAD_LCD_DATA16__LCD_DATA16		0x79
-+				MX7D_PAD_LCD_DATA17__LCD_DATA17		0x79
-+				MX7D_PAD_LCD_DATA18__LCD_DATA18		0x79
-+				MX7D_PAD_LCD_DATA19__LCD_DATA19		0x79
-+				MX7D_PAD_LCD_DATA20__LCD_DATA20		0x79
-+				MX7D_PAD_LCD_DATA21__LCD_DATA21		0x79
-+				MX7D_PAD_LCD_DATA22__LCD_DATA22		0x79
-+				MX7D_PAD_LCD_DATA23__LCD_DATA23		0x79
-+				MX7D_PAD_LCD_CLK__LCD_CLK		0x79
-+				MX7D_PAD_LCD_ENABLE__LCD_ENABLE		0x79
-+				MX7D_PAD_LCD_VSYNC__LCD_VSYNC		0x79
-+				MX7D_PAD_LCD_HSYNC__LCD_HSYNC		0x79
-+				MX7D_PAD_LCD_RESET__LCD_RESET		0x79
-+			>;
-+		};
-+
-+		pinctrl_gpio_leds: gpioledsgrp {
-+			fsl,pins = <
-+				MX7D_PAD_LPSR_GPIO1_IO00__GPIO1_IO0	0x59
-+				MX7D_PAD_LPSR_GPIO1_IO04__GPIO1_IO4	0x59
-+				MX7D_PAD_LPSR_GPIO1_IO05__GPIO1_IO5	0x59
-+				MX7D_PAD_LPSR_GPIO1_IO06__GPIO1_IO6	0x59
-+				MX7D_PAD_LPSR_GPIO1_IO07__GPIO1_IO7	0x59
-+				MX7D_PAD_SD1_RESET_B__GPIO5_IO2		0x59
-+			>;
-+		};
-+
-+		pinctrl_tda998x: hdmigrp-1 {
-+			fsl,pins = <
-+				MX7D_PAD_EPDC_BDR0__GPIO2_IO28		0x59
-+			>;
-+		};
-+
-+		pinctrl_uart1: uart1grp {
-+			fsl,pins = <
-+				MX7D_PAD_UART1_TX_DATA__UART1_DCE_TX	0x79
-+				MX7D_PAD_UART1_RX_DATA__UART1_DCE_RX	0x79
-+			>;
-+		};
-+
-+		pinctrl_uart3: uart3grp {
-+			fsl,pins = <
-+				MX7D_PAD_SD3_DATA4__UART3_DCE_RX	0x79
-+				MX7D_PAD_SD3_DATA5__UART3_DCE_TX	0x79
-+				MX7D_PAD_SD3_DATA6__UART3_DCE_RTS	0x79
-+				MX7D_PAD_SD3_DATA7__UART3_DCE_CTS	0x79
-+			>;
-+		};
-+
-+		pinctrl_uart6: uart6grp {
-+			fsl,pins = <
-+				MX7D_PAD_SD1_CD_B__UART6_DCE_RX		0x79
-+				MX7D_PAD_SD1_WP__UART6_DCE_TX		0x79
-+			>;
-+		};
-+
-+		pinctrl_uart7: uart7grp {
-+			fsl,pins = <
-+				MX7D_PAD_ECSPI2_SCLK__UART7_DTE_TX	0x79
-+				MX7D_PAD_ECSPI2_MOSI__UART7_DTE_RX	0x79
-+				MX7D_PAD_ECSPI2_MISO__UART7_DTE_CTS	0x79
-+				MX7D_PAD_ECSPI2_SS0__UART7_DTE_RTS	0x79
-+			>;
-+		};
-+
-+		pinctrl_usdhc1: usdhc1grp {
-+			fsl,pins = <
-+				MX7D_PAD_SD1_CMD__SD1_CMD		0x59
-+				MX7D_PAD_SD1_CLK__SD1_CLK		0x19
-+				MX7D_PAD_SD1_DATA0__SD1_DATA0		0x59
-+				MX7D_PAD_SD1_DATA1__SD1_DATA1		0x59
-+				MX7D_PAD_SD1_DATA2__SD1_DATA2		0x59
-+				MX7D_PAD_SD1_DATA3__SD1_DATA3		0x59
-+			>;
-+		};
-+
-+		pinctrl_usdhc3: usdhc3grp {
-+			fsl,pins = <
-+				MX7D_PAD_SD3_CMD__SD3_CMD		0x59
-+				MX7D_PAD_SD3_CLK__SD3_CLK		0x0D
-+				MX7D_PAD_SD3_DATA0__SD3_DATA0		0x59
-+				MX7D_PAD_SD3_DATA1__SD3_DATA1		0x59
-+				MX7D_PAD_SD3_DATA2__SD3_DATA2		0x59
-+				MX7D_PAD_SD3_DATA3__SD3_DATA3		0x59
-+			>;
-+		};
-+
-+		pinctrl_wlreg_on: wlreg_on {
-+			fsl,pins = <
-+				MX7D_PAD_SAI1_TX_DATA__GPIO6_IO15	0x19
-+			>;
-+		};
-+
-+		pinctrl_wlan_irq: wlan_irq {
-+			fsl,pins = <
-+				MX7D_PAD_SAI1_TX_SYNC__GPIO6_IO14	0x19
-+			>;
-+		};
-+	};
-+};
--- 
-2.17.1
-
+We could name system calls with `cat /dev/urandom | xxd` and they'd
+still get used. It doesn't follow that all names are equally good.
