@@ -2,113 +2,101 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11FEAC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 11:00:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B21FC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 11:00:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB9C6217D4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 11:00:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558522802;
-	bh=JCfS6NoqmhAaZmM/71VWLePQlItCQB1P6+GYcfxA48k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bXw2hKSqOaI7o/7zlma+tBudhscors0FKYmUV8V67Yez2+Vu7qvaOdQ0y4pejjmb+
-	 RZfbtHUkZufWy9d9oAi61zp1l1RuyK5cW2TTuKsDsfcJE9XAXJ3KgamIm6XF64K82P
-	 WBnywE72jb+9Qdke7t7DB5N0RN74O7SdDtg67nHs=
+	by mail.kernel.org (Postfix) with ESMTP id 4636A217D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 11:00:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="AGZZdOV5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729265AbfEVLAC (ORCPT
+        id S1729311AbfEVLAi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 07:00:02 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:53500 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728743AbfEVLAB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 07:00:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=eFWOq9fyCjbeZsGZQ8qpdpB5CCC8q3sEkswLrHrTb+A=; b=Pe0s4MnXPtcrSOYwHiISkC0ld
-        DzpFBaINeiJAXZ4B1+fwnEBCzicdZuAGphPWVDjd+rFx8WB1l5vTqbyGYGzQrcF5FSgWO5vCqUC/2
-        dcd35VobthGmu729tKYRe5x8bpBYZr+eSQUUURMlf9kHxcZB7ZVbOteZifWjGj2asewpA=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hTOyU-00042z-Ol; Wed, 22 May 2019 10:59:58 +0000
-Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 1FC891126D0E; Wed, 22 May 2019 11:59:58 +0100 (BST)
-Date:   Wed, 22 May 2019 11:59:58 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
-        lee.jones@linaro.org, lgirdwood@gmail.com
-Subject: Re: [GIT PULL] Immutable branch between LEDs, MFD and REGULATOR
-Message-ID: <20190522105958.GA8582@sirena.org.uk>
-References: <20190521203038.31946-1-jacek.anaszewski@gmail.com>
- <20190521211504.GD1580@sirena.org.uk>
- <151079e6-4ae3-3b95-2dc1-c57927b0425f@ti.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="KsGdsel6WgEHnImy"
-Content-Disposition: inline
-In-Reply-To: <151079e6-4ae3-3b95-2dc1-c57927b0425f@ti.com>
-X-Cookie: Does the name Pavlov ring a bell?
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 22 May 2019 07:00:38 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:18815 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728743AbfEVLAh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 07:00:37 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 4588mz3Nsdz9v2JK;
+        Wed, 22 May 2019 13:00:35 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=AGZZdOV5; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id 1p8m7ConjVBO; Wed, 22 May 2019 13:00:35 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 4588mz28Wtz9v2JJ;
+        Wed, 22 May 2019 13:00:35 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1558522835; bh=k7gXDpgsRbDzPYykyp8yT+pXmsBZ7LxZ7ySJOQkqcXw=;
+        h=From:Subject:To:Cc:Date:From;
+        b=AGZZdOV5RUVapAjUuLLyoEBn8omopPog2JyYv4LASsAhWoXCdyU9I93TVKTjbPhLx
+         BgF3zcvxOIsUMriKEtcbgmJBnzV2xbvEeYGHovscztGKkFIOj3aqmSDax2qJxfIrV8
+         fMmKfkOYYtWdG1ZjhuQLnAgi583uvHmh3ojdsWZI=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 76CBB8B838;
+        Wed, 22 May 2019 13:00:36 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id C2x4lgf7MCwK; Wed, 22 May 2019 13:00:36 +0200 (CEST)
+Received: from po16846vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.231.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 54E698B823;
+        Wed, 22 May 2019 13:00:36 +0200 (CEST)
+Received: by po16846vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id 2F081684F2; Wed, 22 May 2019 11:00:36 +0000 (UTC)
+Message-Id: <9c1b9545e6683666a795cd89070fa9491f33b9da.1558522754.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH] spi: spi-fsl-spi: call spi_finalize_current_message() at the
+ end
+To:     Mark Brown <broonie@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-spi@vger.kernel.org
+Date:   Wed, 22 May 2019 11:00:36 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+spi_finalize_current_message() shall be called once all
+actions are finished, otherwise the last actions might
+step over a newly started transfer.
 
---KsGdsel6WgEHnImy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Fixes: c592becbe704 ("spi: fsl-(e)spi: migrate to generic master queueing")
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+---
+ drivers/spi/spi-fsl-spi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On Tue, May 21, 2019 at 07:48:18PM -0500, Dan Murphy wrote:
-> On 5/21/19 4:15 PM, Mark Brown wrote:
-> > On Tue, May 21, 2019 at 10:30:38PM +0200, Jacek Anaszewski wrote:
+diff --git a/drivers/spi/spi-fsl-spi.c b/drivers/spi/spi-fsl-spi.c
+index b36ac6aa3b1f..7fbdaf066719 100644
+--- a/drivers/spi/spi-fsl-spi.c
++++ b/drivers/spi/spi-fsl-spi.c
+@@ -432,7 +432,6 @@ static int fsl_spi_do_one_msg(struct spi_master *master,
+ 	}
+ 
+ 	m->status = status;
+-	spi_finalize_current_message(master);
+ 
+ 	if (status || !cs_change) {
+ 		ndelay(nsecs);
+@@ -440,6 +439,7 @@ static int fsl_spi_do_one_msg(struct spi_master *master,
+ 	}
+ 
+ 	fsl_spi_setup_transfer(spi, NULL);
++	spi_finalize_current_message(master);
+ 	return 0;
+ }
+ 
+-- 
+2.13.3
 
-> >>       regulator: lm363x: Make the gpio register enable flexible
-> >>       regulator: lm363x: Add support for LM36274
-
-> > Why have these been applied, I haven't reviewed them?  As far as I can
-> > tell they were sent before the merge window so I'd expect a resend at
-> > this point...
-
-> You and Liam were cc'd on April 10,2019 for v2 of this patch set.  So I am not sure why the review was missed.
-
-> My apologies for not cc'ing you on v4 but there were no change since that time.
-
-Perhaps I was busy, perhaps I saw that the series had other problems and
-needed a rework as it was so I just waited for the resend in case they
-had knock on effects on the regulator patches.
-
-> I cannot find v3 of this patchset.
-
-> The initial patches were sent on April 5, 2019
-
-And not CCed to maintainers...  AFAICT I got at most one copy of this
-ages ago that needed revisions.
-
---KsGdsel6WgEHnImy
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlzlK6sACgkQJNaLcl1U
-h9DIxwf/elASizg6DnbC1WJHknM3Px/oCI41SFbyGi9xneuPmdbhCz8Nww6n0jGS
-E7nidc60vg2h46WDkL6UWKeoMcYV37TAtb8nQXFvW7gb83q5qiCYgVtXDWhUASv1
-Dmtd1FSzIuMuIZ9a3+iB53oyeSIgJvKYDJhkk/uC2yoMspBEdTan+pGjoRcIoe5W
-jciG+nb/O+me09wsgY+gGGCAl3wBsm5cS40a9Cxn1Healyo+R4MQg0LV5GYPFaK1
-hXO1SSc3F4EN+nP2pTElID7ALNZigiL7eDa6eJXcXhJCU9/1IKQQTPw8Z4/MXYLZ
-KF0EsXThXq9Fq/Fil2HkAs67jOrAmw==
-=DPu1
------END PGP SIGNATURE-----
-
---KsGdsel6WgEHnImy--
