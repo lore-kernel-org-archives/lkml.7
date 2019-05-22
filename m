@@ -2,177 +2,222 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85A7CC282DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:21:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D71F5C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:21:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EFE72186A
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:21:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558552895;
-	bh=q45bGC7eS5ClWtkYK6X1HWzi/ijAvwG+ED5Bqf85fyM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E5YoQg5gGcjp9Wt+lkCQRXY5VYnTMGRdz4gMxekzOmlG9r/oR2qbqO989lZ5439OW
-	 zb1DSwroI8TS1pVWQNDHPeXTvU2736/7SBBkXE2xj+SP4ieyBQqXEeoGR3E6lynAYT
-	 yZCfUaN+nfNTk1/peUebLNp5KuVt+uFlKbRNSbS0=
+	by mail.kernel.org (Postfix) with ESMTP id 9F0722173C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:21:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GFshwxVj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729973AbfEVTVe (ORCPT
+        id S1730018AbfEVTVi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:21:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41970 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729924AbfEVTVb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:21:38 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:46489 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729929AbfEVTVb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 22 May 2019 15:21:31 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A82D2173C;
-        Wed, 22 May 2019 19:21:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558552889;
-        bh=q45bGC7eS5ClWtkYK6X1HWzi/ijAvwG+ED5Bqf85fyM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MddxJICHIcH3ebIwRxE8h4ySOdzqcmjQco6MgsZf4J+MJgZZzWqHlwWsyEsIrGwXf
-         EGAbcmm8TOMRF37GBvyWBfttl/Aj2SuDz+KZxKo+qTSxGKZFu55psD3GHMFqMXIaN/
-         FEaBhI0wAFra+BkrQTJiVUd2n5xSthaMhUezKYv4=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Linus=20L=C3=BCssing?= <linus.luessing@c0d3.blue>,
-        syzbot+83f2d54ec6b7e417e13f@syzkaller.appspotmail.com,
-        syzbot+050927a651272b145a5d@syzkaller.appspotmail.com,
-        syzbot+979ffc89b87309b1b94b@syzkaller.appspotmail.com,
-        syzbot+f9f3f388440283da2965@syzkaller.appspotmail.com,
-        Sven Eckelmann <sven@narfation.org>,
-        Simon Wunderlich <sw@simonwunderlich.de>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 010/375] batman-adv: mcast: fix multicast tt/tvlv worker locking
-Date:   Wed, 22 May 2019 15:15:10 -0400
-Message-Id: <20190522192115.22666-10-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190522192115.22666-1-sashal@kernel.org>
-References: <20190522192115.22666-1-sashal@kernel.org>
+Received: by mail-pg1-f196.google.com with SMTP id o11so1603567pgm.13
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 12:21:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=NP4JWkHqbCIs5rs8MQbZ/rJv31PHu50+VP85AcMzbbU=;
+        b=GFshwxVjgFyTBuVsTzhm7IUt1UjnhWPD0MinKNguPB3el83BFNud8bHr5plz3emii+
+         cTc7Cjy2KfiVySMa4vl3S45MUDV6ughBv+eP5o9C9KIg6ntk97RzOYluREumaUsuEfOH
+         SjJgP3hh0ohPvQPPbSdKkfRYeqkQoVWPqO5e4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=NP4JWkHqbCIs5rs8MQbZ/rJv31PHu50+VP85AcMzbbU=;
+        b=kLKsKaxPI/280HTpItPtC6lxniQirEciigTIfbes1W3fatqTXR31wmu8ZIBncwSv5A
+         m4v7B7/yrwOX2xWsHdEc+jMIabESN0tEAaz+nGla+q0FAhkYq0bLI138CK68s0WFMmkY
+         RwtNBtu1yJRNrAJeO0nG1WRe5ISZQ2qJgfLiMi89hhl3kJy1+io9oDbrU1m5og7zfOhy
+         K5iL9bvciBw48siHrFUymFePlmzGJpwn8yjapp30OxG8JjEjDNpGblYzPjzf2KL9EuPA
+         Nf5YWK+NKUzITQCVkYLOm7L6s3YM1EpWHs04w2isNCh6VnnwwzxSK9jwLSj1JfAJAPpl
+         YHxg==
+X-Gm-Message-State: APjAAAUE0ImXtVmia7kwFpr/ehZ00Qj3HmXFR/sViV1OXwoG00HD1OSi
+        ysj2DdN2QpYIDTnRdPMDU0lksQ==
+X-Google-Smtp-Source: APXvYqzNjksdiGtBA2K0Yn7lD7hXz0a3WOc+KaCHe5Lfb///NUHl50P+zldmTZ4Tu8MFGQvOw+1qnw==
+X-Received: by 2002:a62:6456:: with SMTP id y83mr32990581pfb.71.1558552889913;
+        Wed, 22 May 2019 12:21:29 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id x10sm37135797pfj.136.2019.05.22.12.21.28
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 22 May 2019 12:21:28 -0700 (PDT)
+Date:   Wed, 22 May 2019 12:21:27 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     enh <enh@google.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Evgenii Stepanov <eugenis@google.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Khalid Aziz <khalid.aziz@oracle.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
+        kvm@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alexander Deucher <Alexander.Deucher@amd.com>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
+Subject: Re: [PATCH v15 00/17] arm64: untag user pointers passed to the kernel
+Message-ID: <201905221157.A9BAB1F296@keescook>
+References: <cover.1557160186.git.andreyknvl@google.com>
+ <20190517144931.GA56186@arrakis.emea.arm.com>
+ <CAFKCwrj6JEtp4BzhqO178LFJepmepoMx=G+YdC8sqZ3bcBp3EQ@mail.gmail.com>
+ <20190521182932.sm4vxweuwo5ermyd@mbp>
+ <201905211633.6C0BF0C2@keescook>
+ <20190522101110.m2stmpaj7seezveq@mbp>
+ <CAJgzZoosKBwqXRyA6fb8QQSZXFqfHqe9qO9je5TogHhzuoGXJQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJgzZoosKBwqXRyA6fb8QQSZXFqfHqe9qO9je5TogHhzuoGXJQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Lüssing <linus.luessing@c0d3.blue>
+On Wed, May 22, 2019 at 08:30:21AM -0700, enh wrote:
+> On Wed, May 22, 2019 at 3:11 AM Catalin Marinas <catalin.marinas@arm.com> wrote:
+> > On Tue, May 21, 2019 at 05:04:39PM -0700, Kees Cook wrote:
+> > > I just want to make sure I fully understand your concern about this
+> > > being an ABI break, and I work best with examples. The closest situation
+> > > I can see would be:
+> > >
+> > > - some program has no idea about MTE
+> >
+> > Apart from some libraries like libc (and maybe those that handle
+> > specific device ioctls), I think most programs should have no idea about
+> > MTE. I wouldn't expect programmers to have to change their app just
+> > because we have a new feature that colours heap allocations.
 
-[ Upstream commit a3c7cd0cdf1107f891aff847ad481e34df727055 ]
+Right -- things should Just Work from the application perspective.
 
-Syzbot has reported some issues with the locking assumptions made for
-the multicast tt/tvlv worker: It was able to trigger the WARN_ON() in
-batadv_mcast_mla_tt_retract() and batadv_mcast_mla_tt_add().
-While hard/not reproduceable for us so far it seems that the
-delayed_work_pending() we use might not be quite safe from reordering.
+> obviously i'm biased as a libc maintainer, but...
+> 
+> i don't think it helps to move this to libc --- now you just have an
+> extra dependency where to have a guaranteed working system you need to
+> update your kernel and libc together. (or at least update your libc to
+> understand new ioctls etc _before_ you can update your kernel.)
 
-Therefore this patch adds an explicit, new spinlock to protect the
-update of the mla_list and flags in bat_priv and then removes the
-WARN_ON(delayed_work_pending()).
+I think (hope?) we've all agreed that we shouldn't pass this off to
+userspace. At the very least, it reduces the utility of MTE, and at worst
+it complicates userspace when this is clearly a kernel/architecture issue.
 
-Reported-by: syzbot+83f2d54ec6b7e417e13f@syzkaller.appspotmail.com
-Reported-by: syzbot+050927a651272b145a5d@syzkaller.appspotmail.com
-Reported-by: syzbot+979ffc89b87309b1b94b@syzkaller.appspotmail.com
-Reported-by: syzbot+f9f3f388440283da2965@syzkaller.appspotmail.com
-Fixes: cbebd363b2e9 ("batman-adv: Use own timer for multicast TT and TVLV updates")
-Signed-off-by: Linus Lüssing <linus.luessing@c0d3.blue>
-Signed-off-by: Sven Eckelmann <sven@narfation.org>
-Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- net/batman-adv/main.c      |  1 +
- net/batman-adv/multicast.c | 11 +++--------
- net/batman-adv/types.h     |  5 +++++
- 3 files changed, 9 insertions(+), 8 deletions(-)
+> 
+> > > - malloc() starts returning MTE-tagged addresses
+> > > - program doesn't break from that change
+> > > - program uses some syscall that is missing untagged_addr() and fails
+> > > - kernel has now broken userspace that used to work
+> >
+> > That's one aspect though probably more of a case of plugging in a new
+> > device (graphics card, network etc.) and the ioctl to the new device
+> > doesn't work.
 
-diff --git a/net/batman-adv/main.c b/net/batman-adv/main.c
-index 75750870cf048..f8725786b5961 100644
---- a/net/batman-adv/main.c
-+++ b/net/batman-adv/main.c
-@@ -161,6 +161,7 @@ int batadv_mesh_init(struct net_device *soft_iface)
- 	spin_lock_init(&bat_priv->tt.commit_lock);
- 	spin_lock_init(&bat_priv->gw.list_lock);
- #ifdef CONFIG_BATMAN_ADV_MCAST
-+	spin_lock_init(&bat_priv->mcast.mla_lock);
- 	spin_lock_init(&bat_priv->mcast.want_lists_lock);
- #endif
- 	spin_lock_init(&bat_priv->tvlv.container_list_lock);
-diff --git a/net/batman-adv/multicast.c b/net/batman-adv/multicast.c
-index f91b1b6265cfe..1b985ab89c087 100644
---- a/net/batman-adv/multicast.c
-+++ b/net/batman-adv/multicast.c
-@@ -325,8 +325,6 @@ static void batadv_mcast_mla_list_free(struct hlist_head *mcast_list)
-  * translation table except the ones listed in the given mcast_list.
-  *
-  * If mcast_list is NULL then all are retracted.
-- *
-- * Do not call outside of the mcast worker! (or cancel mcast worker first)
-  */
- static void batadv_mcast_mla_tt_retract(struct batadv_priv *bat_priv,
- 					struct hlist_head *mcast_list)
-@@ -334,8 +332,6 @@ static void batadv_mcast_mla_tt_retract(struct batadv_priv *bat_priv,
- 	struct batadv_hw_addr *mcast_entry;
- 	struct hlist_node *tmp;
- 
--	WARN_ON(delayed_work_pending(&bat_priv->mcast.work));
--
- 	hlist_for_each_entry_safe(mcast_entry, tmp, &bat_priv->mcast.mla_list,
- 				  list) {
- 		if (mcast_list &&
-@@ -359,8 +355,6 @@ static void batadv_mcast_mla_tt_retract(struct batadv_priv *bat_priv,
-  *
-  * Adds multicast listener announcements from the given mcast_list to the
-  * translation table if they have not been added yet.
-- *
-- * Do not call outside of the mcast worker! (or cancel mcast worker first)
-  */
- static void batadv_mcast_mla_tt_add(struct batadv_priv *bat_priv,
- 				    struct hlist_head *mcast_list)
-@@ -368,8 +362,6 @@ static void batadv_mcast_mla_tt_add(struct batadv_priv *bat_priv,
- 	struct batadv_hw_addr *mcast_entry;
- 	struct hlist_node *tmp;
- 
--	WARN_ON(delayed_work_pending(&bat_priv->mcast.work));
--
- 	if (!mcast_list)
- 		return;
- 
-@@ -658,7 +650,10 @@ static void batadv_mcast_mla_update(struct work_struct *work)
- 	priv_mcast = container_of(delayed_work, struct batadv_priv_mcast, work);
- 	bat_priv = container_of(priv_mcast, struct batadv_priv, mcast);
- 
-+	spin_lock(&bat_priv->mcast.mla_lock);
- 	__batadv_mcast_mla_update(bat_priv);
-+	spin_unlock(&bat_priv->mcast.mla_lock);
-+
- 	batadv_mcast_start_timer(bat_priv);
- }
- 
-diff --git a/net/batman-adv/types.h b/net/batman-adv/types.h
-index a21b34ed6548f..ed0f6a519de55 100644
---- a/net/batman-adv/types.h
-+++ b/net/batman-adv/types.h
-@@ -1223,6 +1223,11 @@ struct batadv_priv_mcast {
- 	/** @bridged: whether the soft interface has a bridge on top */
- 	unsigned char bridged:1;
- 
-+	/**
-+	 * @mla_lock: a lock protecting mla_list and mla_flags
-+	 */
-+	spinlock_t mla_lock;
-+
- 	/**
- 	 * @num_want_all_unsnoopables: number of nodes wanting unsnoopable IP
- 	 *  traffic
+I think MTE will likely be rather like NX/PXN and SMAP/PAN: there will
+be glitches, and we can disable stuff either via CONFIG or (as is more
+common now) via a kernel commandline with untagged_addr() containing a
+static branch, etc. But I actually don't think we need to go this route
+(see below...)
+
+> > The other is that, assuming we reach a point where the kernel entirely
+> > supports this relaxed ABI, can we guarantee that it won't break in the
+> > future. Let's say some subsequent kernel change (some refactoring)
+> > misses out an untagged_addr(). This renders a previously TBI/MTE-capable
+> > syscall unusable. Can we rely only on testing?
+> >
+> > > The trouble I see with this is that it is largely theoretical and
+> > > requires part of userspace to collude to start using a new CPU feature
+> > > that tickles a bug in the kernel. As I understand the golden rule,
+> > > this is a bug in the kernel (a missed ioctl() or such) to be fixed,
+> > > not a global breaking of some userspace behavior.
+> >
+> > Yes, we should follow the rule that it's a kernel bug but it doesn't
+> > help the user that a newly installed kernel causes user space to no
+> > longer reach a prompt. Hence the proposal of an opt-in via personality
+> > (for MTE we would need an explicit opt-in by the user anyway since the
+> > top byte is no longer ignored but checked against the allocation tag).
+> 
+> but realistically would this actually get used in this way? or would
+> any given system either be MTE or non-MTE. in which case a kernel
+> configuration option would seem to make more sense. (because either
+> way, the hypothetical user basically needs to recompile the kernel to
+> get back on their feet. or all of userspace.)
+
+Right: the point is to design things so that we do our best to not break
+userspace that is using the new feature (which I think this series has
+done well). But supporting MTE/TBI is just like supporting PAN: if someone
+refactors a driver and swaps a copy_from_user() to a memcpy(), it's going
+to break under PAN. There will be the same long tail of these bugs like
+any other, but my sense is that they are small and rare. But I agree:
+they're going to be pretty weird bugs to track down. The final result,
+however, will be excellent annotation in the kernel for where userspace
+addresses get used and people make assumptions about them.
+
+The sooner we get the series landed and gain QEMU support (or real
+hardware), the faster we can hammer out these missed corner-cases.
+What's the timeline for either of those things, BTW?
+
+> > > I feel like I'm missing something about this being seen as an ABI
+> > > break. The kernel already fails on userspace addresses that have high
+> > > bits set -- are there things that _depend_ on this failure to operate?
+> >
+> > It's about providing a relaxed ABI which allows non-zero top byte and
+> > breaking it later inadvertently without having something better in place
+> > to analyse the kernel changes.
+
+It sounds like the question is how to switch a process in or out of this
+ABI (but I don't think that's the real issue: I think it's just a matter
+of whether or not a process uses tags at all). Doing it at the prctl()
+level doesn't make sense to me, except maybe to detect MTE support or
+something. ("Should I tag allocations?") And that state is controlled
+by the kernel: the kernel does it or it doesn't.
+
+If a process wants to not tag, that's also up to the allocator where
+it can decide not to ask the kernel, and just not tag. Nothing breaks in
+userspace if a process is NOT tagging and untagged_addr() exists or is
+missing. This, I think, is the core way this doesn't trip over the
+golden rule: an old system image will run fine (because it's not
+tagging). A *new* system may encounter bugs with tagging because it's a
+new feature: this is The Way Of Things. But we don't break old userspace
+because old userspace isn't using tags.
+
+So the agreement appears to be between the kernel and the allocator.
+Kernel says "I support this" or not. Telling the allocator to not tag if
+something breaks sounds like an entirely userspace decision, yes?
+
 -- 
-2.20.1
-
+Kees Cook
