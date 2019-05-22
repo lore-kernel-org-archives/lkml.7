@@ -2,163 +2,113 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 573F1C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 16:14:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 308FCC282DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 16:15:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35B3220868
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 16:14:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0653221473
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 16:15:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TsIh23HR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729984AbfEVQOV (ORCPT
+        id S1730011AbfEVQPj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 12:14:21 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34760 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729603AbfEVQOV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 12:14:21 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 2197985539;
-        Wed, 22 May 2019 16:14:15 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.159])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 2FCAF5DE68;
-        Wed, 22 May 2019 16:14:10 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Wed, 22 May 2019 18:14:13 +0200 (CEST)
-Date:   Wed, 22 May 2019 18:14:07 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Deepa Dinamani <deepa.kernel@gmail.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>, dbueso@suse.de, axboe@kernel.dk,
-        Davidlohr Bueso <dave@stgolabs.net>, Eric Wong <e@80x24.org>,
-        Jason Baron <jbaron@akamai.com>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        linux-aio <linux-aio@kvack.org>,
-        Omar Kilani <omar.kilani@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>, stable@vger.kernel.org
-Subject: Re: [PATCH v2] signal: Adjust error codes according to
- restore_user_sigmask()
-Message-ID: <20190522161407.GB4915@redhat.com>
-References: <20190522032144.10995-1-deepa.kernel@gmail.com>
- <20190522150505.GA4915@redhat.com>
- <CABeXuvrPM5xvzqUydbREapvwgy6deYreHp0aaMoSHyLB6+HGRg@mail.gmail.com>
+        Wed, 22 May 2019 12:15:39 -0400
+Received: from mail-yb1-f196.google.com ([209.85.219.196]:43527 "EHLO
+        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729576AbfEVQPj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 12:15:39 -0400
+Received: by mail-yb1-f196.google.com with SMTP id n145so1065079ybg.10;
+        Wed, 22 May 2019 09:15:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=H2QOYmtrbMv2RwSsZzKZlIgE2lZOebGHxtRTWGwCUK8=;
+        b=TsIh23HRLdI8hEqPtQ30fFSZzK3/A1tyuR7wi8bJAddsbCkyN0GMgWgPVR3rgKILCq
+         FrjrSON1dGlThNxb6/6otMCvetSODgQPtK+wCIUhqMULhi+c8WlRIZmlkJ0P+HcMxQ8u
+         7yPysCT0YucMkd14fGXTR2A7RsGbxmWl/6v+RXwx++xvoi7fJRqw6R9i/QHjVz9JM1Jo
+         Q1Qlo/bOw4egn1BpoPLWvnMrKgLZ9NEiLUWJNYq/Hj2xcoWn3Q2P8krIEgqDVbCR0vtm
+         ArAa3hmhxNyAeVNo3DWT2VcBqjFu3i1zmzbnIZkNrRlh0EMNdQuROjTN9nfPKbOQ4oNO
+         DeeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=H2QOYmtrbMv2RwSsZzKZlIgE2lZOebGHxtRTWGwCUK8=;
+        b=Qi3y8e5hcaBOpW/ZPT5d35OlBGA8YAhnnRZiBDYrTV4Li3wmH35jBiXAIo+Y7tBW8X
+         1kiZ8zKzdVyEpdKNfqDm12e6eEMD1ocSDNHeK04M9pncR7b/ugY0zQjsoixqDvyPbnmw
+         HiSseIlfn//zb77d3YQ7v+T3qxv8y9YXIIV00MmQHwbCDeHfXMNu24yQ4JY4EROdDHIm
+         6J+I3jGvdfbnEa6xC0x1l6x7h+nn6Q7EnCdTMYHUfPxGIa2buClkUac4tblNpnnKOuxP
+         d600gnv3lsXl8Movzr15k7nOnx3pMbJCcnPXKT3z5pVTB9Wn57cklE++TNdlN+rgpULN
+         6Tnw==
+X-Gm-Message-State: APjAAAVzfr7qsZ5uHBbuTD+pLy5xSTTU/G0OJa3z1WZBIC+PkuMMRAZH
+        INUal63bVuVPd8O7AZeZ/BK6BojjQ/idJevMLtU=
+X-Google-Smtp-Source: APXvYqyPQIgHEnxdgVx+UouRSudO6JPKLPIolrSmSVfkcCwrLtqxxyhpQn1v2Hu8mH5g9waksx4+zTXkVOk8H8NtNxI=
+X-Received: by 2002:a25:ae22:: with SMTP id a34mr6825427ybj.438.1558541737775;
+ Wed, 22 May 2019 09:15:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CABeXuvrPM5xvzqUydbREapvwgy6deYreHp0aaMoSHyLB6+HGRg@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Wed, 22 May 2019 16:14:20 +0000 (UTC)
+References: <20190521160330.28402-1-peron.clem@gmail.com> <20190521160330.28402-4-peron.clem@gmail.com>
+ <20190522103243.mmrfato5p2mhtf4j@flea>
+In-Reply-To: <20190522103243.mmrfato5p2mhtf4j@flea>
+From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Date:   Wed, 22 May 2019 18:15:26 +0200
+Message-ID: <CAJiuCcdaZVLQyupEf8HPaUySakufXXAhzundo6VeyQaAyZ8Trw@mail.gmail.com>
+Subject: Re: [PATCH v4 3/5] dt-bindings: watchdog: add Allwinner H6 r_watchdog
+To:     Maxime Ripard <maxime.ripard@bootlin.com>
+Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>, linux-watchdog@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/22, Deepa Dinamani wrote:
+Hi Maxime,
+
+On Wed, 22 May 2019 at 12:32, Maxime Ripard <maxime.ripard@bootlin.com> wro=
+te:
 >
-> -Deepa
->
-> > On May 22, 2019, at 8:05 AM, Oleg Nesterov <oleg@redhat.com> wrote:
+> On Tue, May 21, 2019 at 06:03:28PM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
+> > Allwinner H6 has a second watchdog on the r-blocks which is
+> > compatible with the A31.
 > >
-> >> On 05/21, Deepa Dinamani wrote:
-> >>
-> >> Note that this patch returns interrupted errors (EINTR, ERESTARTNOHAND,
-> >> etc) only when there is no other error. If there is a signal and an error
-> >> like EINVAL, the syscalls return -EINVAL rather than the interrupted
-> >> error codes.
+> > This commit add the H6 compatible for the r_watchdog.
 > >
-> > Ugh. I need to re-check, but at first glance I really dislike this change.
-> >
-> > I think we can fix the problem _and_ simplify the code. Something like below.
-> > The patch is obviously incomplete, it changes only only one caller of
-> > set_user_sigmask(), epoll_pwait() to explain what I mean.
-> > restore_user_sigmask() should simply die. Although perhaps another helper
-> > makes sense to add WARN_ON(test_tsk_restore_sigmask() && !signal_pending).
+> > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
 >
-> restore_user_sigmask() was added because of all the variants of these
-> syscalls we added because of y2038 as noted in commit message:
+> Unless you have some evidence that the two blocks are different, then
+> you should just reuse the same one.
+
+I have no evidence it's different nor identical, it's not documented
+in the user manual.
+I thought it would better to have separate bindings in case there is a
+difference.
+Than don't have and find later that we have to introduce one.
+
+But as you prefer.
+
+Regards,
+Cl=C3=A9ment
+
+
+
 >
->   signal: Add restore_user_sigmask()
+> Maxime
 >
->     Refactor the logic to restore the sigmask before the syscall
->     returns into an api.
->     This is useful for versions of syscalls that pass in the
->     sigmask and expect the current->sigmask to be changed during
->     the execution and restored after the execution of the syscall.
->
->     With the advent of new y2038 syscalls in the subsequent patches,
->     we add two more new versions of the syscalls (for pselect, ppoll
->     and io_pgetevents) in addition to the existing native and compat
->     versions. Adding such an api reduces the logic that would need to
->     be replicated otherwise.
-
-Again, I need to re-check, will continue tomorrow. But so far I am not sure
-this helper can actually help.
-
-> > --- a/fs/eventpoll.c
-> > +++ b/fs/eventpoll.c
-> > @@ -2318,19 +2318,19 @@ SYSCALL_DEFINE6(epoll_pwait, int, epfd, struct epoll_event __user *, events,
-> >        size_t, sigsetsize)
-> > {
-> >    int error;
-> > -    sigset_t ksigmask, sigsaved;
-> >
-> >    /*
-> >     * If the caller wants a certain signal mask to be set during the wait,
-> >     * we apply it here.
-> >     */
-> > -    error = set_user_sigmask(sigmask, &ksigmask, &sigsaved, sigsetsize);
-> > +    error = set_user_sigmask(sigmask, sigsetsize);
-> >    if (error)
-> >        return error;
-> >
-> >    error = do_epoll_wait(epfd, events, maxevents, timeout);
-> >
-> > -    restore_user_sigmask(sigmask, &sigsaved);
-> > +    if (error != -EINTR)
->
-> As you address all the other syscalls this condition becomes more and
-> more complicated.
-
-May be.
-
-> > --- a/include/linux/sched/signal.h
-> > +++ b/include/linux/sched/signal.h
-> > @@ -416,7 +416,6 @@ void task_join_group_stop(struct task_struct *task);
-> > static inline void set_restore_sigmask(void)
-> > {
-> >    set_thread_flag(TIF_RESTORE_SIGMASK);
-> > -    WARN_ON(!test_thread_flag(TIF_SIGPENDING));
->
-> So you always want do_signal() to be called?
-
-Why do you think so? No. This is just to avoid the warning, because with the
-patch I sent set_restore_sigmask() is called "in advance".
-
-> You will have to check each architecture's implementation of
-> do_signal() to check if that has any side effects.
-
-I don't think so.
-
-> Although this is not what the patch is solving.
-
-Sure. But you know, after I tried to read the changelog, I am not sure
-I understand what exactly you are trying to fix. Could you please explain
-this part
-
-	The behavior
-	before 854a6ed56839a was that the signals were dropped after the error
-	code was decided. This resulted in lost signals but the userspace did not
-	notice it
-
-? I fail to understand it, sorry. It looks as if the code was already buggy before
-that commit and it could miss a signal or something like this, but I do not see how.
-
-Oleg.
-
+> --
+> Maxime Ripard, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
