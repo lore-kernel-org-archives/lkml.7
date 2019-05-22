@@ -2,327 +2,98 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AC99C18E7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 01:03:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 515E1C072B5
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 01:05:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE22B21773
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 01:03:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26B8721479
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 01:05:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HHgQUWC3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g9TWTCtZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728347AbfEVBDq (ORCPT
+        id S1728228AbfEVBFN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 21:03:46 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:43916 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728099AbfEVBDc (ORCPT
+        Tue, 21 May 2019 21:05:13 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:44398 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727466AbfEVBFN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 21:03:32 -0400
-Received: by mail-pl1-f196.google.com with SMTP id gn7so179566plb.10;
-        Tue, 21 May 2019 18:03:32 -0700 (PDT)
+        Tue, 21 May 2019 21:05:13 -0400
+Received: by mail-pf1-f193.google.com with SMTP id g9so351694pfo.11
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 18:05:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=KR2SKJZVR7dpL/K3IRH5SfiJbtnvBNtS7TM5fTzvwUU=;
-        b=HHgQUWC34be18WJ5hpThjXaJU/6mavEM8ZzuyekAbNVxY/4FX8Cs/A5WF6CsgOwtKE
-         NxUmOwiHscHOZ6sxipTWhKlKUD5q3a3HTRuWmduWUtGNyeWty1CBbEAR48zNpf8gxjxV
-         T3ss6wWbGfo35ppJ6pmZdjOwfLO7EEJODY5/VgkTlNVvKDVKLeR4B9o3ry0EBX9F6kzx
-         zfmP+JnvBG9mV5DZKXKcHjtqAgXCSMI2mmxCjL99jcC1cnirFzqCO8GKMYDaKXRJwEMV
-         J/J6k/95z9HZR5yKOo95sEBfgoljDZt45iN33bTeJRM36aW2/3wSHXTg80Je6dQGWvQM
-         pLqg==
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=1GsqKRYlwofaep/lI4l9vkLa2KfO9O6nBfblo2Qq5qU=;
+        b=g9TWTCtZvFmF3D6JJSRgbsjOAc6S4dR/Zw6rCdDyCFm+9I6nYUvz55M3Ml+s+aGkFJ
+         t4FAkL1HK9s7wAxS5oAgWp+hzLuyIj6bfiiykX4cTK77szpO3e8HPMR+Qahnis5MuwDu
+         kE2uaVFW1eX09YBRJS+4PBu9SMF+7k1GYCFS3R3FOKK11W/0dLpKIgsOfD3gVD+Gq9yB
+         btVRcF9/siIKyAauat6GiVKT441xdMiJnpSlS8+Lh+TxTvCVnxm0sbgp+XHpE1pjuf/O
+         SnfgNoqb+ZHe0TnzvT4ldCXiHIH4H+/TrjSpActNkB941GOjo1qijSF7eA2p2dRTkoQl
+         lIHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=KR2SKJZVR7dpL/K3IRH5SfiJbtnvBNtS7TM5fTzvwUU=;
-        b=J/O8ppkF37bZuLf/fZ2KXQMzFDiy7tT/2/kbH1UHZheft4QibLV85C5/k5BEPxR1+8
-         YLz1iY2MbMsngJyfb7/iQs8TmhVjvBAUsR0GG+XlHmScQhjUxySIM+2lLDr5EiSN+XIE
-         oerSvhaj5q0+zz21uwnTGu0KT9OfYhGbCw8JLIM9JbIgrYq8tjliG8XrPP9GWdJQh4d5
-         JYLgfePU74xmC1ABELjmPNvQN2xCx+KB2SqJ8BVHNXqexfJLLrvBkn6t0K1L1GWtZPBF
-         HX6Kj/GRA6QmCORYYX3koCHoFI6O3QvFKRQ8DSyRzUp2ED2wyqedDU/wEkrbhVBJ9mA5
-         zCXQ==
-X-Gm-Message-State: APjAAAWX2LuoOw4bmDSfTfTFiL6NcCSROYoSz69F+kMom/BRSuDKYika
-        ifqS/iqxN9YYvXsJ7LVxORvNfGUA
-X-Google-Smtp-Source: APXvYqykPyD2qJbS9WVld6QmroysQrD9PBf86L0y3vxq20JEw07sose/NZ9zVGHthyLMv4cZwb9Qug==
-X-Received: by 2002:a17:902:12f:: with SMTP id 44mr40653762plb.137.1558487011546;
-        Tue, 21 May 2019 18:03:31 -0700 (PDT)
-Received: from majic.sklembedded.com (c-73-202-231-77.hsd1.ca.comcast.net. [73.202.231.77])
-        by smtp.googlemail.com with ESMTPSA id q193sm34291242pfc.52.2019.05.21.18.03.30
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=1GsqKRYlwofaep/lI4l9vkLa2KfO9O6nBfblo2Qq5qU=;
+        b=OwU5i3PB3zM8oMEun/dCBN20gnQb+z2BaYk71H7gOEuna59Cr+Oq3csgnC74b9RUO0
+         YT6D0GdzxBDWuLXWL4KFZJGWDjt5KkuJlkuxylSQZ8RcI2zphHbkqMY+3SvT1s+M6KG3
+         Y9hkwH8eu6H3Pb7x07J4PHXWaNccx/LSywhDRHSEoW7SUZia7+JLfdIZwgbspr2+0Igz
+         JRsrogzGx2lY5VpFebWI/XIkTWtbScvlMElF/Nvi58A5lJbcWv8i5R6BoeVWYKm3EI3m
+         NCcsCJzWNjrQR9jpwnQhBw0nbr0/RaYjfVgc++XKHmOLFI2ZJSH5epi8QJHKkrgccnfz
+         hi2w==
+X-Gm-Message-State: APjAAAWVjVTOSJPzH4ddwk5zo0zYyF7FUe3NLgcBJMwVJ06gm2Q67ETA
+        6U92MSo6F1Id/7FJe0Z8D5mohgG25bc=
+X-Google-Smtp-Source: APXvYqw9+BIU0oNEw2h6rJmaehxZz3k8pFMr8M2nAyZSMJwZ4uf+LQOFh7bnfRSc4IwgrF5hCOQEzg==
+X-Received: by 2002:a62:1a51:: with SMTP id a78mr90897504pfa.133.1558487112414;
+        Tue, 21 May 2019 18:05:12 -0700 (PDT)
+Received: from zhanggen-UX430UQ ([66.42.35.75])
+        by smtp.gmail.com with ESMTPSA id a15sm5041869pgv.4.2019.05.21.18.05.05
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 21 May 2019 18:03:30 -0700 (PDT)
-From:   Steve Longerbeam <slongerbeam@gmail.com>
-To:     linux-media@vger.kernel.org
-Cc:     Steve Longerbeam <slongerbeam@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        dri-devel@lists.freedesktop.org (open list:DRM DRIVERS FOR FREESCALE
-        IMX), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v8 3/5] gpu: ipu-v3: ipu-ic-csc: Add support for limited range encoding
-Date:   Tue, 21 May 2019 18:03:15 -0700
-Message-Id: <20190522010317.23710-4-slongerbeam@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190522010317.23710-1-slongerbeam@gmail.com>
-References: <20190522010317.23710-1-slongerbeam@gmail.com>
+        Tue, 21 May 2019 18:05:11 -0700 (PDT)
+Date:   Wed, 22 May 2019 09:04:55 +0800
+From:   Gen Zhang <blackgod016574@gmail.com>
+To:     lizhijian@cn.fujitsu.com
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH] initramfs: Fix a missing-check bug in init/initramfs.c
+Message-ID: <20190522010455.GA4093@zhanggen-UX430UQ>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for encodings to or from limited range quantization.
+In dir_add(), de and de->name are allocated by kmalloc() and kstrdup().
+And de->name is dereferenced in the following codes. However, memory
+allocation functions such as kmalloc() and kstrdup() may fail.
+Dereferencing this de->name null pointer may cause the kernel go wrong.
+Thus we should check this allocation.
+Further, if kstrdup() returns NULL, we should free de and panic().
 
-Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
----
-Changes in v7:
-- hard-code the coefficients instead of deriving the limited range
-  coefficients from the full2full coefficients on the fly with
-  fixed-point math.
-- add support for RGB limited-range.
----
- drivers/gpu/ipu-v3/ipu-ic-csc.c | 180 +++++++++++++++++++++++++++++---
- 1 file changed, 166 insertions(+), 14 deletions(-)
+Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
 
-diff --git a/drivers/gpu/ipu-v3/ipu-ic-csc.c b/drivers/gpu/ipu-v3/ipu-ic-csc.c
-index 5fb469cd64fe..8e9150b1d668 100644
---- a/drivers/gpu/ipu-v3/ipu-ic-csc.c
-+++ b/drivers/gpu/ipu-v3/ipu-ic-csc.c
-@@ -10,6 +10,10 @@
- #include <linux/sizes.h>
- #include "ipu-prv.h"
- 
-+#define QUANT_MAP(q)					\
-+	((q) == V4L2_QUANTIZATION_FULL_RANGE ||		\
-+	 (q) == V4L2_QUANTIZATION_DEFAULT ? 0 : 1)
-+
- /* identity matrix */
- static const struct ipu_ic_csc_params identity = {
- 	.coeff = {
-@@ -21,12 +25,87 @@ static const struct ipu_ic_csc_params identity = {
- 	.scale = 2,
- };
- 
-+/*
-+ * RGB full-range to RGB limited-range
-+ *
-+ * R_lim = 0.8588 * R_full + 16
-+ * G_lim = 0.8588 * G_full + 16
-+ * B_lim = 0.8588 * B_full + 16
-+ */
-+static const struct ipu_ic_csc_params rgbf2rgbl = {
-+	.coeff = {
-+		{  220,    0,    0, },
-+		{    0,  220,    0, },
-+		{    0,    0,  220, },
-+	},
-+	.offset = { 64, 64, 64, },
-+	.scale = 1,
-+};
-+
-+/*
-+ * RGB limited-range to RGB full-range
-+ *
-+ * R_full = 1.1644 * (R_lim - 16)
-+ * G_full = 1.1644 * (G_lim - 16)
-+ * B_full = 1.1644 * (B_lim - 16)
-+ */
-+static const struct ipu_ic_csc_params rgbl2rgbf = {
-+	.coeff = {
-+		{  149,    0,    0, },
-+		{    0,  149,    0, },
-+		{    0,    0,  149, },
-+	},
-+	.offset = { -37, -37, -37, },
-+	.scale = 2,
-+};
-+
-+/*
-+ * YUV full-range to YUV limited-range
-+ *
-+ * Y_lim  = 0.8588 * Y_full + 16
-+ * Cb_lim = 0.8784 * (Cb_full - 128) + 128
-+ * Cr_lim = 0.8784 * (Cr_full - 128) + 128
-+ */
-+static const struct ipu_ic_csc_params yuvf2yuvl = {
-+	.coeff = {
-+		{  220,    0,    0, },
-+		{    0,  225,    0, },
-+		{    0,    0,  225, },
-+	},
-+	.offset = { 64, 62, 62, },
-+	.scale = 1,
-+	.sat = true,
-+};
-+
-+/*
-+ * YUV limited-range to YUV full-range
-+ *
-+ * Y_full  = 1.1644 * (Y_lim - 16)
-+ * Cb_full = 1.1384 * (Cb_lim - 128) + 128
-+ * Cr_full = 1.1384 * (Cr_lim - 128) + 128
-+ */
-+static const struct ipu_ic_csc_params yuvl2yuvf = {
-+	.coeff = {
-+		{  149,    0,    0, },
-+		{    0,  146,    0, },
-+		{    0,    0,  146, },
-+	},
-+	.offset = { -37, -35, -35, },
-+	.scale = 2,
-+};
-+
- static const struct ipu_ic_csc_params *rgb2rgb[] = {
- 	&identity,
-+	&rgbf2rgbl,
-+	&rgbl2rgbf,
-+	&identity,
- };
- 
- static const struct ipu_ic_csc_params *yuv2yuv[] = {
- 	&identity,
-+	&yuvf2yuvl,
-+	&yuvl2yuvf,
-+	&identity,
- };
- 
- /*
-@@ -46,6 +125,41 @@ static const struct ipu_ic_csc_params rgbf2yuvf_601 = {
- 	.scale = 1,
- };
- 
-+/* BT.601 RGB full-range to YUV limited-range */
-+static const struct ipu_ic_csc_params rgbf2yuvl_601 = {
-+	.coeff = {
-+		{   66,  129,   25, },
-+		{  -38,  -74,  112, },
-+		{  112,  -94,  -18, },
-+	},
-+	.offset = { 64, 512, 512, },
-+	.scale = 1,
-+	.sat = true,
-+};
-+
-+/* BT.601 RGB limited-range to YUV full-range */
-+static const struct ipu_ic_csc_params rgbl2yuvf_601 = {
-+	.coeff = {
-+		{   89,  175,   34, },
-+		{  -50,  -99,  149, },
-+		{  149, -125,  -24, },
-+	},
-+	.offset = { -75, 512, 512, },
-+	.scale = 1,
-+};
-+
-+/* BT.601 RGB limited-range to YUV limited-range */
-+static const struct ipu_ic_csc_params rgbl2yuvl_601 = {
-+	.coeff = {
-+		{   77,  150,   29, },
-+		{  -44,  -87,  131, },
-+		{  131, -110,  -21, },
-+	},
-+	.offset = { 0, 512, 512, },
-+	.scale = 1,
-+	.sat = true,
-+};
-+
- /*
-  * BT.601 YUV full-range to RGB full-range
-  *
-@@ -69,39 +183,77 @@ static const struct ipu_ic_csc_params yuvf2rgbf_601 = {
- 	.scale = 2,
- };
- 
-+/* BT.601 YUV full-range to RGB limited-range */
-+static const struct ipu_ic_csc_params yuvf2rgbl_601 = {
-+	.coeff = {
-+		{  110,    0,  154, },
-+		{  110,  -38,  -78, },
-+		{  110,  195,    0, },
-+	},
-+	.offset = { -276, 265, -358, },
-+	.scale = 2,
-+};
-+
-+/* BT.601 YUV limited-range to RGB full-range */
-+static const struct ipu_ic_csc_params yuvl2rgbf_601 = {
-+	.coeff = {
-+		{   75,    0,  102, },
-+		{   75,  -25,  -52, },
-+		{   75,  129,    0, },
-+	},
-+	.offset = { -223, 136, -277, },
-+	.scale = 3,
-+};
-+
-+/* BT.601 YUV limited-range to RGB limited-range */
-+static const struct ipu_ic_csc_params yuvl2rgbl_601 = {
-+	.coeff = {
-+		{  128,    0,  175, },
-+		{  128,  -43,  -89, },
-+		{  128,  222,    0, },
-+	},
-+	.offset = { -351, 265, -443, },
-+	.scale = 2,
-+};
-+
- static const struct ipu_ic_csc_params *rgb2yuv_601[] = {
- 	&rgbf2yuvf_601,
-+	&rgbf2yuvl_601,
-+	&rgbl2yuvf_601,
-+	&rgbl2yuvl_601,
- };
- 
- static const struct ipu_ic_csc_params *yuv2rgb_601[] = {
- 	&yuvf2rgbf_601,
-+	&yuvf2rgbl_601,
-+	&yuvl2rgbf_601,
-+	&yuvl2rgbl_601,
- };
- 
- static int calc_csc_coeffs(struct ipu_ic_csc *csc)
- {
-+	const struct ipu_ic_csc_params **params_tbl;
-+	int tbl_idx;
-+
- 	if (csc->out_cs.enc != V4L2_YCBCR_ENC_601)
- 		return -ENOTSUPP;
- 
--	if ((csc->in_cs.cs == IPUV3_COLORSPACE_YUV &&
--	     csc->in_cs.quant != V4L2_QUANTIZATION_FULL_RANGE) ||
--	    (csc->out_cs.cs == IPUV3_COLORSPACE_YUV &&
--	     csc->out_cs.quant != V4L2_QUANTIZATION_FULL_RANGE))
--		return -ENOTSUPP;
--
--	if ((csc->in_cs.cs == IPUV3_COLORSPACE_RGB &&
--	     csc->in_cs.quant != V4L2_QUANTIZATION_FULL_RANGE) ||
--	    (csc->out_cs.cs == IPUV3_COLORSPACE_RGB &&
--	     csc->out_cs.quant != V4L2_QUANTIZATION_FULL_RANGE))
--		return -ENOTSUPP;
-+	tbl_idx = (QUANT_MAP(csc->in_cs.quant) << 1) |
-+		QUANT_MAP(csc->out_cs.quant);
- 
- 	if (csc->in_cs.cs == csc->out_cs.cs) {
- 		csc->params = (csc->in_cs.cs == IPUV3_COLORSPACE_YUV) ?
--			*yuv2yuv[0] : *rgb2rgb[0];
-+			*yuv2yuv[tbl_idx] : *rgb2rgb[tbl_idx];
-+
- 		return 0;
- 	}
- 
--	csc->params = (csc->in_cs.cs == IPUV3_COLORSPACE_YUV) ?
--		*yuv2rgb_601[0] : *rgb2yuv_601[0];
-+	/* YUV <-> RGB encoding is required */
-+
-+	params_tbl = (csc->in_cs.cs == IPUV3_COLORSPACE_YUV) ?
-+		yuv2rgb_601 : rgb2yuv_601;
-+
-+	csc->params = *params_tbl[tbl_idx];
- 
- 	return 0;
+---
+diff --git a/init/initramfs.c b/init/initramfs.c
+index 178130f..dc8063f 100644
+--- a/init/initramfs.c
++++ b/init/initramfs.c
+@@ -125,6 +125,10 @@ static void __init dir_add(const char *name, time64_t mtime)
+ 		panic("can't allocate dir_entry buffer");
+ 	INIT_LIST_HEAD(&de->list);
+ 	de->name = kstrdup(name, GFP_KERNEL);
++	if (!de->name) {
++		kfree(de);
++		panic("can't allocate dir_entry name buffer");
++	}
+ 	de->mtime = mtime;
+ 	list_add(&de->list, &dir_list);
  }
--- 
-2.17.1
-
