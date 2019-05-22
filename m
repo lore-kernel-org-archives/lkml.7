@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13E48C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:26:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE023C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:26:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE79521841
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:26:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3B7C21850
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:26:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558553205;
-	bh=r4EtqetRWJlSKq7Cu5r6i4y2EfulVoRIH/P+h7Ui8AA=;
+	s=default; t=1558553209;
+	bh=rAcvKwp2UduGNAUik+s6lh38sOxMN6Y08aQsqhokFCI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VBiSDBY9QTfycsLnAoKFffFzPhI8l8wfQjG1ZOX6tQjxDAHK0HBrERkAGTbQJnZwr
-	 RRsW4DLFOS5Lt3d3irqyZqYb9TR8UZVdrpnimaub53XaOkkdYIPS3BGqbK/vFm+Ohu
-	 FCsGH+RJ1zWzd14Pxw2ysDCKIBQfFM1Z+odJQfFA=
+	b=XPE7TS5TRkDxRVfyYTKDuONsMs4p/6DHwnsHJKmP1JaVTugJT2d5pp9+jNVGE2rIl
+	 KLBR6QAbfOEMFUjpvbynHT83hyZYEhiQTSoKGYRyxtYA94lafGOySlzagq8yB1mYlw
+	 TJVksz++AItVIDqKrNujj/LMlwU/uLiDpmk7Sy1U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732109AbfEVT0o (ORCPT
+        id S1732146AbfEVT0s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:26:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48368 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:26:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48460 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731435AbfEVT0n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:26:43 -0400
+        id S1732116AbfEVT0r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:26:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF2CD21873;
-        Wed, 22 May 2019 19:26:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3125C217F9;
+        Wed, 22 May 2019 19:26:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553202;
-        bh=r4EtqetRWJlSKq7Cu5r6i4y2EfulVoRIH/P+h7Ui8AA=;
+        s=default; t=1558553206;
+        bh=rAcvKwp2UduGNAUik+s6lh38sOxMN6Y08aQsqhokFCI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O9OBwKcFqEC4nWVO0gb4B6TzMtYo4tnWoPCywy+yYiapd68QgixKc+n90bn1lffaM
-         rMVd5VuZZTDCW1w2zx+FX5XD8eqZHFszniNc2XgFhQvuMBDoNOZiDZPq02sAQa3CM/
-         ine0zo/5lDDp0w+32hWD8z9gOJugSvvCwoiUL9TY=
+        b=cSig2ufCsM32BqcnDqdA0w478XepokFaG5PDXWvOuW5uBuhU0nWZts2bQ6Kbv1TjG
+         ZlFNIINo3AtzxIkkw8sUbi15lpoCeR0ZREIv1+fK1Bpy6m4onj8ebpiTuaqHMdIsZF
+         bACqynFTo9OHHHAlyTxeUnmm8brlvezRMuVJdO6c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yonghong Song <yhs@fb.com>, Alexei Starovoitov <ast@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 009/244] selftests/bpf: set RLIMIT_MEMLOCK properly for test_libbpf_open.c
-Date:   Wed, 22 May 2019 15:22:35 -0400
-Message-Id: <20190522192630.24917-9-sashal@kernel.org>
+Cc:     Sameer Pujar <spujar@nvidia.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 011/244] dmaengine: tegra210-dma: free dma controller in remove()
+Date:   Wed, 22 May 2019 15:22:37 -0400
+Message-Id: <20190522192630.24917-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192630.24917-1-sashal@kernel.org>
 References: <20190522192630.24917-1-sashal@kernel.org>
@@ -60,43 +60,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yonghong Song <yhs@fb.com>
+From: Sameer Pujar <spujar@nvidia.com>
 
-[ Upstream commit 6cea33701eb024bc6c920ab83940ee22afd29139 ]
+[ Upstream commit f030e419501cb95e961e9ed35c493b5d46a04eca ]
 
-Test test_libbpf.sh failed on my development server with failure
-  -bash-4.4$ sudo ./test_libbpf.sh
-  [0] libbpf: Error in bpf_object__probe_name():Operation not permitted(1).
-      Couldn't load basic 'r0 = 0' BPF program.
-  test_libbpf: failed at file test_l4lb.o
-  selftests: test_libbpf [FAILED]
-  -bash-4.4$
+Following kernel panic is seen during DMA driver unload->load sequence
+==========================================================================
+Unable to handle kernel paging request at virtual address ffffff8001198880
+Internal error: Oops: 86000007 [#1] PREEMPT SMP
+CPU: 0 PID: 5907 Comm: HwBinder:4123_1 Tainted: G C 4.9.128-tegra-g065839f
+Hardware name: galen (DT)
+task: ffffffc3590d1a80 task.stack: ffffffc3d0678000
+PC is at 0xffffff8001198880
+LR is at of_dma_request_slave_channel+0xd8/0x1f8
+pc : [<ffffff8001198880>] lr : [<ffffff8008746f30>] pstate: 60400045
+sp : ffffffc3d067b710
+x29: ffffffc3d067b710 x28: 000000000000002f
+x27: ffffff800949e000 x26: ffffff800949e750
+x25: ffffff800949e000 x24: ffffffbefe817d84
+x23: ffffff8009f77cb0 x22: 0000000000000028
+x21: ffffffc3ffda49c8 x20: 0000000000000029
+x19: 0000000000000001 x18: ffffffffffffffff
+x17: 0000000000000000 x16: ffffff80082b66a0
+x15: ffffff8009e78250 x14: 000000000000000a
+x13: 0000000000000038 x12: 0101010101010101
+x11: 0000000000000030 x10: 0101010101010101
+x9 : fffffffffffffffc x8 : 7f7f7f7f7f7f7f7f
+x7 : 62ff726b6b64622c x6 : 0000000000008064
+x5 : 6400000000000000 x4 : ffffffbefe817c44
+x3 : ffffffc3ffda3e08 x2 : ffffff8001198880
+x1 : ffffffc3d48323c0 x0 : ffffffc3d067b788
 
-The reason is because my machine has 64KB locked memory by default which
-is not enough for this program to get locked memory.
-Similar to other bpf selftests, let us increase RLIMIT_MEMLOCK
-to infinity, which fixed the issue.
+Process HwBinder:4123_1 (pid: 5907, stack limit = 0xffffffc3d0678028)
+Call trace:
+[<ffffff8001198880>] 0xffffff8001198880
+[<ffffff80087459f8>] dma_request_chan+0x50/0x1f0
+[<ffffff8008745bc0>] dma_request_slave_channel+0x28/0x40
+[<ffffff8001552c44>] tegra_alt_pcm_open+0x114/0x170
+[<ffffff8008d65fa4>] soc_pcm_open+0x10c/0x878
+[<ffffff8008d18618>] snd_pcm_open_substream+0xc0/0x170
+[<ffffff8008d1878c>] snd_pcm_open+0xc4/0x240
+[<ffffff8008d189e0>] snd_pcm_playback_open+0x58/0x80
+[<ffffff8008cfc6d4>] snd_open+0xb4/0x178
+[<ffffff8008250628>] chrdev_open+0xb8/0x1d0
+[<ffffff8008246fdc>] do_dentry_open+0x214/0x318
+[<ffffff80082485d0>] vfs_open+0x58/0x88
+[<ffffff800825bce0>] do_last+0x450/0xde0
+[<ffffff800825c718>] path_openat+0xa8/0x368
+[<ffffff800825dd84>] do_filp_open+0x8c/0x110
+[<ffffff8008248a74>] do_sys_open+0x164/0x220
+[<ffffff80082b66dc>] compat_SyS_openat+0x3c/0x50
+[<ffffff8008083040>] el0_svc_naked+0x34/0x38
+---[ end trace 67e6d544e65b5145 ]---
+Kernel panic - not syncing: Fatal exception
+==========================================================================
 
-Signed-off-by: Yonghong Song <yhs@fb.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+In device probe(), of_dma_controller_register() registers DMA controller.
+But when driver is removed, this is not freed. During driver reload this
+results in data abort and kernel panic. Add of_dma_controller_free() in
+driver remove path to fix the issue.
+
+Fixes: f46b195799b5 ("dmaengine: tegra-adma: Add support for Tegra210 ADMA")
+Signed-off-by: Sameer Pujar <spujar@nvidia.com>
+Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/bpf/test_libbpf_open.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/dma/tegra210-adma.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/testing/selftests/bpf/test_libbpf_open.c b/tools/testing/selftests/bpf/test_libbpf_open.c
-index 8fcd1c076add0..cbd55f5f8d598 100644
---- a/tools/testing/selftests/bpf/test_libbpf_open.c
-+++ b/tools/testing/selftests/bpf/test_libbpf_open.c
-@@ -11,6 +11,8 @@ static const char *__doc__ =
- #include <bpf/libbpf.h>
- #include <getopt.h>
+diff --git a/drivers/dma/tegra210-adma.c b/drivers/dma/tegra210-adma.c
+index b26256f23d67f..08b10274284a8 100644
+--- a/drivers/dma/tegra210-adma.c
++++ b/drivers/dma/tegra210-adma.c
+@@ -786,6 +786,7 @@ static int tegra_adma_remove(struct platform_device *pdev)
+ 	struct tegra_adma *tdma = platform_get_drvdata(pdev);
+ 	int i;
  
-+#include "bpf_rlimit.h"
-+
- static const struct option long_options[] = {
- 	{"help",	no_argument,		NULL, 'h' },
- 	{"debug",	no_argument,		NULL, 'D' },
++	of_dma_controller_free(pdev->dev.of_node);
+ 	dma_async_device_unregister(&tdma->dma_dev);
+ 
+ 	for (i = 0; i < tdma->nr_channels; ++i)
 -- 
 2.20.1
 
