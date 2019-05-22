@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 858E6C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:50:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CB18C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:50:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5806C2081C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:50:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2F2F2081C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:50:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558554629;
-	bh=mYfDEMvLomIq373dBewLXer1tJLucNNH3eH2mTtWHJ0=;
+	s=default; t=1558554635;
+	bh=lrtK3RdajsN6tX9e2swMgqkaRZIoycmTMyYl7uCGNYg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Bb75FHSFoECi0chfDCCmM7VH/L/0MOjHVBhzAov4go0KBaEwQqc3xHlXgQrfG+b2r
-	 lXI/D5/ANFnaO5uUe42HwNrNrdEEMY3rf0VXe7LYaeoOY+/8451TaxRJuvelWEJY6b
-	 dceU1kTm5wfPAt1VO2hn/0wYkv4VunaAYoQz1u1k=
+	b=bEyGsMI3pJQ9rWtAVkt8g3pjpbwdvnk0uAUaDI06pLeKJ4guwNTgBdfx9+be6oEow
+	 FbW1iX6NPD39L0QmIVsiwMzJAgYimsq6VXl3KUW33kj+KHvRVNGeps1lhSCPipjvio
+	 S9A+wP2z2IFm9ldrILR4l+55PgkN92FFDeVEX7Hs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732982AbfEVTu2 (ORCPT
+        id S2387816AbfEVTue (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:50:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48192 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:50:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48140 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732015AbfEVT0h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:26:37 -0400
+        id S1732018AbfEVT0e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:26:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D89221851;
-        Wed, 22 May 2019 19:26:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 40B03217F9;
+        Wed, 22 May 2019 19:26:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553196;
-        bh=mYfDEMvLomIq373dBewLXer1tJLucNNH3eH2mTtWHJ0=;
+        s=default; t=1558553194;
+        bh=lrtK3RdajsN6tX9e2swMgqkaRZIoycmTMyYl7uCGNYg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W4XsqQ0Z/g5H+h3O7LQbNqWBQB1O7T6OjVn2AnUpHJPPbc2En37V5d2OhF4LaynoG
-         7xsHPMRPkEVz2Yk/iXkzC9TQPVaSQH7y4BUeZ/4mUZ6qSsdGgo07WfNT1QAfdCEs3A
-         wsbseS5uknJXZNr8hPpX3RtaWWfIW5a8a86D7aUQ=
+        b=VUOYJJVM752Vm6X/oHrqa0mBcLEJkZVk9h6EtkOD52WOXdOqLvxjZqzLPWLZlurAF
+         YOEti47821RLZUC182UIWKOvjlZ0Weml2g51HveHj4bDgMINTJtCR4CQk/3UFEeDk0
+         5DlltgTBZ+j6D4hJKC2/iCY/89nhN/vD25fGxB9E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andreas Gruenbacher <agruenba@redhat.com>,
-        Ross Lagerwall <ross.lagerwall@citrix.com>,
-        Bob Peterson <rpeterso@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, cluster-devel@redhat.com
-Subject: [PATCH AUTOSEL 4.19 005/244] gfs2: Fix occasional glock use-after-free
-Date:   Wed, 22 May 2019 15:22:31 -0400
-Message-Id: <20190522192630.24917-5-sashal@kernel.org>
+Cc:     Roberto Bergantinos Corpas <rbergant@redhat.com>,
+        Benjamin Coddington <bcodding@redhat.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 003/244] NFS: make nfs_match_client killable
+Date:   Wed, 22 May 2019 15:22:29 -0400
+Message-Id: <20190522192630.24917-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192630.24917-1-sashal@kernel.org>
 References: <20190522192630.24917-1-sashal@kernel.org>
@@ -60,97 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andreas Gruenbacher <agruenba@redhat.com>
+From: Roberto Bergantinos Corpas <rbergant@redhat.com>
 
-[ Upstream commit 9287c6452d2b1f24ea8e84bd3cf6f3c6f267f712 ]
+[ Upstream commit 950a578c6128c2886e295b9c7ecb0b6b22fcc92b ]
 
-This patch has to do with the life cycle of glocks and buffers.  When
-gfs2 metadata or journaled data is queued to be written, a gfs2_bufdata
-object is assigned to track the buffer, and that is queued to various
-lists, including the glock's gl_ail_list to indicate it's on the active
-items list.  Once the page associated with the buffer has been written,
-it is removed from the ail list, but its life isn't over until a revoke
-has been successfully written.
+    Actually we don't do anything with return value from
+    nfs_wait_client_init_complete in nfs_match_client, as a
+    consequence if we get a fatal signal and client is not
+    fully initialised, we'll loop to "again" label
 
-So after the block is written, its bufdata object is moved from the
-glock's gl_ail_list to a file-system-wide list of pending revokes,
-sd_log_le_revoke.  At that point the glock still needs to track how many
-revokes it contributed to that list (in gl_revokes) so that things like
-glock go_sync can ensure all the metadata has been not only written, but
-also revoked before the glock is granted to a different node.  This is
-to guarantee journal replay doesn't replay the block once the glock has
-been granted to another node.
+    This has been proven to cause soft lockups on some scenarios
+    (no-carrier but configured network interfaces)
 
-Ross Lagerwall recently discovered a race in which an inode could be
-evicted, and its glock freed after its ail list had been synced, but
-while it still had unwritten revokes on the sd_log_le_revoke list.  The
-evict decremented the glock reference count to zero, which allowed the
-glock to be freed.  After the revoke was written, function
-revoke_lo_after_commit tried to adjust the glock's gl_revokes counter
-and clear its GLF_LFLUSH flag, at which time it referenced the freed
-glock.
-
-This patch fixes the problem by incrementing the glock reference count
-in gfs2_add_revoke when the glock's first bufdata object is moved from
-the glock to the global revokes list. Later, when the glock's last such
-bufdata object is freed, the reference count is decremented. This
-guarantees that whichever process finishes last (the revoke writing or
-the evict) will properly free the glock, and neither will reference the
-glock after it has been freed.
-
-Reported-by: Ross Lagerwall <ross.lagerwall@citrix.com>
-Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
-Signed-off-by: Bob Peterson <rpeterso@redhat.com>
+Signed-off-by: Roberto Bergantinos Corpas <rbergant@redhat.com>
+Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/gfs2/glock.c | 1 +
- fs/gfs2/log.c   | 3 ++-
- fs/gfs2/lops.c  | 6 ++++--
- 3 files changed, 7 insertions(+), 3 deletions(-)
+ fs/nfs/client.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/fs/gfs2/glock.c b/fs/gfs2/glock.c
-index 775256141e9fb..ccdd8c821abd7 100644
---- a/fs/gfs2/glock.c
-+++ b/fs/gfs2/glock.c
-@@ -140,6 +140,7 @@ void gfs2_glock_free(struct gfs2_glock *gl)
- {
- 	struct gfs2_sbd *sdp = gl->gl_name.ln_sbd;
+diff --git a/fs/nfs/client.c b/fs/nfs/client.c
+index 751ca65da8a35..846d45cb1a3c8 100644
+--- a/fs/nfs/client.c
++++ b/fs/nfs/client.c
+@@ -290,6 +290,7 @@ static struct nfs_client *nfs_match_client(const struct nfs_client_initdata *dat
+ 	struct nfs_client *clp;
+ 	const struct sockaddr *sap = data->addr;
+ 	struct nfs_net *nn = net_generic(data->net, nfs_net_id);
++	int error;
  
-+	BUG_ON(atomic_read(&gl->gl_revokes));
- 	rhashtable_remove_fast(&gl_hash_table, &gl->gl_node, ht_parms);
- 	smp_mb();
- 	wake_up_glock(gl);
-diff --git a/fs/gfs2/log.c b/fs/gfs2/log.c
-index ee20ea42e7b59..cd85092723dea 100644
---- a/fs/gfs2/log.c
-+++ b/fs/gfs2/log.c
-@@ -604,7 +604,8 @@ void gfs2_add_revoke(struct gfs2_sbd *sdp, struct gfs2_bufdata *bd)
- 	bd->bd_bh = NULL;
- 	bd->bd_ops = &gfs2_revoke_lops;
- 	sdp->sd_log_num_revoke++;
--	atomic_inc(&gl->gl_revokes);
-+	if (atomic_inc_return(&gl->gl_revokes) == 1)
-+		gfs2_glock_hold(gl);
- 	set_bit(GLF_LFLUSH, &gl->gl_flags);
- 	list_add(&bd->bd_list, &sdp->sd_log_le_revoke);
- }
-diff --git a/fs/gfs2/lops.c b/fs/gfs2/lops.c
-index f2567f958d002..8f99b395d7bf6 100644
---- a/fs/gfs2/lops.c
-+++ b/fs/gfs2/lops.c
-@@ -662,8 +662,10 @@ static void revoke_lo_after_commit(struct gfs2_sbd *sdp, struct gfs2_trans *tr)
- 		bd = list_entry(head->next, struct gfs2_bufdata, bd_list);
- 		list_del_init(&bd->bd_list);
- 		gl = bd->bd_gl;
--		atomic_dec(&gl->gl_revokes);
--		clear_bit(GLF_LFLUSH, &gl->gl_flags);
-+		if (atomic_dec_return(&gl->gl_revokes) == 0) {
-+			clear_bit(GLF_LFLUSH, &gl->gl_flags);
-+			gfs2_glock_queue_put(gl);
-+		}
- 		kmem_cache_free(gfs2_bufdata_cachep, bd);
- 	}
- }
+ again:
+ 	list_for_each_entry(clp, &nn->nfs_client_list, cl_share_link) {
+@@ -302,8 +303,10 @@ static struct nfs_client *nfs_match_client(const struct nfs_client_initdata *dat
+ 		if (clp->cl_cons_state > NFS_CS_READY) {
+ 			refcount_inc(&clp->cl_count);
+ 			spin_unlock(&nn->nfs_client_lock);
+-			nfs_wait_client_init_complete(clp);
++			error = nfs_wait_client_init_complete(clp);
+ 			nfs_put_client(clp);
++			if (error < 0)
++				return ERR_PTR(error);
+ 			spin_lock(&nn->nfs_client_lock);
+ 			goto again;
+ 		}
+@@ -413,6 +416,8 @@ struct nfs_client *nfs_get_client(const struct nfs_client_initdata *cl_init)
+ 		clp = nfs_match_client(cl_init);
+ 		if (clp) {
+ 			spin_unlock(&nn->nfs_client_lock);
++			if (IS_ERR(clp))
++				return clp;
+ 			if (new)
+ 				new->rpc_ops->free_client(new);
+ 			return nfs_found_client(cl_init, clp);
 -- 
 2.20.1
 
