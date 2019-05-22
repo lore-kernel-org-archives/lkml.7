@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA686C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:33:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 234BEC282DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:33:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D29920675
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:33:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5CC22081C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:33:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558553624;
-	bh=1B0Z3Z+ZgrnSvkongENlGpPWgEZtMXO/WX3vBpiNpwk=;
+	s=default; t=1558553635;
+	bh=TtZxRTTPiWvnlFqdm9fT0u4QdkJyzZY3C89GNM1Bbdw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1lyJACx0+8n8qZFiV3o5HjvklIBGlVnB3EmTcqZDPmM/dDJAVQ3nFH5559VHTvT/Z
-	 jrPtw5F24Jdack3ZvGJeSxlwj1rKx15J08PQwmZiSgoDxW/6t41ID6ATmvtxfiur8J
-	 W3Bwax3COEocBjP4CSFNiI8SJ3jF5s2liFHCOy8k=
+	b=p0pjf7pAKJxupzddgdZLeKF3HTiBAkGLujSIBRCf9LKBKoImjccPuLPMEmiGnWlaA
+	 fxpCSer+ZyQ+59d+w/KJ3cFA1BjQG3LB/6jFpjmsJ9Q8S8+niO94qmZ0fnbSDJmztN
+	 htI4Em1v8pK3uVt7AsCLxMUnqxAsc7s7ikS5nwaU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733243AbfEVTdn (ORCPT
+        id S1733287AbfEVTdy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:33:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55366 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:33:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55306 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732793AbfEVTbp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:31:45 -0400
+        id S2387599AbfEVTbn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:31:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 70D3721873;
-        Wed, 22 May 2019 19:31:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C85C20879;
+        Wed, 22 May 2019 19:31:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553505;
-        bh=1B0Z3Z+ZgrnSvkongENlGpPWgEZtMXO/WX3vBpiNpwk=;
+        s=default; t=1558553502;
+        bh=TtZxRTTPiWvnlFqdm9fT0u4QdkJyzZY3C89GNM1Bbdw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=psBe1s8PI5DFI8cbX9s0PfOjMrKcT+dZQNYVw2QbABIGCYcQOzJwhnhfg0MQI/VTL
-         IIV4gdq0TEv6XHHsfdNJUfg6SpzgU3QPUBCmXa8Qzan+fivPR7QH4MyDeWUfLvAHSR
-         ld1Wk4NBw91HBCoEXdCJd0kdGmM62tY9ORt0nCQw=
+        b=QjmGVoibD5N5pdLdY5G9VAsBiQsDSO+GNPSieiYr6o1idPSkAWHKJbmnyP9jS7cDT
+         LRV0NrWfweypluFBWJVNRN13Uae6Zm7iyRMAwbFpdJk1BK9M+bifScdEy48oU5Fpku
+         UDn6LJvp8CirOuIL/SIj7jGJfVWRv4f7Y4PO15Bg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 12/92] driver core: platform: Fix the usage of platform device name(pdev->name)
-Date:   Wed, 22 May 2019 15:30:07 -0400
-Message-Id: <20190522193127.27079-12-sashal@kernel.org>
+Cc:     Sugar Zhang <sugar.zhang@rock-chips.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        dmaengine@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 10/92] dmaengine: pl330: _stop: clear interrupt status
+Date:   Wed, 22 May 2019 15:30:05 -0400
+Message-Id: <20190522193127.27079-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522193127.27079-1-sashal@kernel.org>
 References: <20190522193127.27079-1-sashal@kernel.org>
@@ -59,89 +59,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
+From: Sugar Zhang <sugar.zhang@rock-chips.com>
 
-[ Upstream commit edb16da34b084c66763f29bee42b4e6bb33c3d66 ]
+[ Upstream commit 2da254cc7908105a60a6bb219d18e8dced03dcb9 ]
 
-Platform core is using pdev->name as the platform device name to do
-the binding of the devices with the drivers. But, when the platform
-driver overrides the platform device name with dev_set_name(),
-the pdev->name is pointing to a location which is freed and becomes
-an invalid parameter to do the binding match.
+This patch kill instructs the DMAC to immediately terminate
+execution of a thread. and then clear the interrupt status,
+at last, stop generating interrupts for DMA_SEV. to guarantee
+the next dma start is clean. otherwise, one interrupt maybe leave
+to next start and make some mistake.
 
-use-after-free instance:
+we can reporduce the problem as follows:
 
-[   33.325013] BUG: KASAN: use-after-free in strcmp+0x8c/0xb0
-[   33.330646] Read of size 1 at addr ffffffc10beae600 by task modprobe
-[   33.339068] CPU: 5 PID: 518 Comm: modprobe Tainted:
-			G S      W  O      4.19.30+ #3
-[   33.346835] Hardware name: MTP (DT)
-[   33.350419] Call trace:
-[   33.352941]  dump_backtrace+0x0/0x3b8
-[   33.356713]  show_stack+0x24/0x30
-[   33.360119]  dump_stack+0x160/0x1d8
-[   33.363709]  print_address_description+0x84/0x2e0
-[   33.368549]  kasan_report+0x26c/0x2d0
-[   33.372322]  __asan_report_load1_noabort+0x2c/0x38
-[   33.377248]  strcmp+0x8c/0xb0
-[   33.380306]  platform_match+0x70/0x1f8
-[   33.384168]  __driver_attach+0x78/0x3a0
-[   33.388111]  bus_for_each_dev+0x13c/0x1b8
-[   33.392237]  driver_attach+0x4c/0x58
-[   33.395910]  bus_add_driver+0x350/0x560
-[   33.399854]  driver_register+0x23c/0x328
-[   33.403886]  __platform_driver_register+0xd0/0xe0
+DMASEV: modify the event-interrupt resource, and if the INTEN sets
+function as interrupt, the DMAC will set irq<event_num> HIGH to
+generate interrupt. write INTCLR to clear interrupt.
 
-So, use dev_name(&pdev->dev), which fetches the platform device name from
-the kobject(dev->kobj->name) of the device instead of the pdev->name.
+	DMA EXECUTING INSTRUCTS		DMA TERMINATE
+		|				|
+		|				|
+	       ...			      _stop
+		|				|
+		|			spin_lock_irqsave
+	     DMASEV				|
+		|				|
+		|			    mask INTEN
+		|				|
+		|			     DMAKILL
+		|				|
+		|			spin_unlock_irqrestore
 
-Signed-off-by: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+in above case, a interrupt was left, and if we unmask INTEN, the DMAC
+will set irq<event_num> HIGH to generate interrupt.
+
+to fix this, do as follows:
+
+	DMA EXECUTING INSTRUCTS		DMA TERMINATE
+		|				|
+		|				|
+	       ...			      _stop
+		|				|
+		|			spin_lock_irqsave
+	     DMASEV				|
+		|				|
+		|			     DMAKILL
+		|				|
+		|			   clear INTCLR
+		|			    mask INTEN
+		|				|
+		|			spin_unlock_irqrestore
+
+Signed-off-by: Sugar Zhang <sugar.zhang@rock-chips.com>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/base/platform.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/dma/pl330.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-index 065fcc4be263a..071dd053a917b 100644
---- a/drivers/base/platform.c
-+++ b/drivers/base/platform.c
-@@ -796,7 +796,7 @@ static ssize_t modalias_show(struct device *dev, struct device_attribute *a,
- 	if (len != -ENODEV)
- 		return len;
- 
--	len = snprintf(buf, PAGE_SIZE, "platform:%s\n", pdev->name);
-+	len = snprintf(buf, PAGE_SIZE, "platform:%s\n", dev_name(&pdev->dev));
- 
- 	return (len >= PAGE_SIZE) ? (PAGE_SIZE - 1) : len;
- }
-@@ -872,7 +872,7 @@ static int platform_uevent(struct device *dev, struct kobj_uevent_env *env)
- 		return rc;
- 
- 	add_uevent_var(env, "MODALIAS=%s%s", PLATFORM_MODULE_PREFIX,
--			pdev->name);
-+			dev_name(&pdev->dev));
- 	return 0;
- }
- 
-@@ -881,7 +881,7 @@ static const struct platform_device_id *platform_match_id(
- 			struct platform_device *pdev)
+diff --git a/drivers/dma/pl330.c b/drivers/dma/pl330.c
+index 95619ee33112c..799c182c3eacc 100644
+--- a/drivers/dma/pl330.c
++++ b/drivers/dma/pl330.c
+@@ -1006,6 +1006,7 @@ static void _stop(struct pl330_thread *thrd)
  {
- 	while (id->name[0]) {
--		if (strcmp(pdev->name, id->name) == 0) {
-+		if (strcmp(dev_name(&pdev->dev), id->name) == 0) {
- 			pdev->id_entry = id;
- 			return id;
- 		}
-@@ -925,7 +925,7 @@ static int platform_match(struct device *dev, struct device_driver *drv)
- 		return platform_match_id(pdrv->id_table, pdev) != NULL;
+ 	void __iomem *regs = thrd->dmac->base;
+ 	u8 insn[6] = {0, 0, 0, 0, 0, 0};
++	u32 inten = readl(regs + INTEN);
  
- 	/* fall-back to driver name match */
--	return (strcmp(pdev->name, drv->name) == 0);
-+	return (strcmp(dev_name(&pdev->dev), drv->name) == 0);
+ 	if (_state(thrd) == PL330_STATE_FAULT_COMPLETING)
+ 		UNTIL(thrd, PL330_STATE_FAULTING | PL330_STATE_KILLING);
+@@ -1018,10 +1019,13 @@ static void _stop(struct pl330_thread *thrd)
+ 
+ 	_emit_KILL(0, insn);
+ 
+-	/* Stop generating interrupts for SEV */
+-	writel(readl(regs + INTEN) & ~(1 << thrd->ev), regs + INTEN);
+-
+ 	_execute_DBGINSN(thrd, insn, is_manager(thrd));
++
++	/* clear the event */
++	if (inten & (1 << thrd->ev))
++		writel(1 << thrd->ev, regs + INTCLR);
++	/* Stop generating interrupts for SEV */
++	writel(inten & ~(1 << thrd->ev), regs + INTEN);
  }
  
- #ifdef CONFIG_PM_SLEEP
+ /* Start doing req 'idx' of thread 'thrd' */
 -- 
 2.20.1
 
