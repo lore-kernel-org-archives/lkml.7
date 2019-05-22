@@ -2,119 +2,118 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93914C072B5
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 02:07:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0B86C18E7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 02:07:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 617F1217D7
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 02:07:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96AE4217D7
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 02:07:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qeD1Z+S9"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YENWXgYB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728224AbfEVCHg (ORCPT
+        id S1728340AbfEVCHr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 22:07:36 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:33324 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727208AbfEVCHg (ORCPT
+        Tue, 21 May 2019 22:07:47 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:33161 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727208AbfEVCHq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 22:07:36 -0400
-Received: by mail-pf1-f194.google.com with SMTP id z28so455181pfk.0
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 19:07:35 -0700 (PDT)
+        Tue, 21 May 2019 22:07:46 -0400
+Received: by mail-oi1-f196.google.com with SMTP id q186so429523oia.0
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 19:07:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=XjZv8VPZY5yPAJVnzsgKE93tbIf6Kof6QehNERCMUpk=;
-        b=qeD1Z+S9sMyldLc0e+aThRlLF6yqkIOo93DnE2pVcJU94KsMO7MhNKx8mSOFJKxROY
-         UwDTwt2OG/V3JEa3YqiiPCyeSUy+KtvcqGP7/k+1EHV2Rq2EvoiVvZ14A/DGlhTNo2qX
-         3ExDvDLENmnwHWwpdMQ3GckBO4MB0xOCj3aXgjao2KZqjKs7PlYa6zcozWJ4EcYSWbDP
-         Qt55kDO9gN0mV/oaWo3oci9uC6GAyqh+fcfglxH4oc8gGp5g4VnYwCC25mHlGl+u7rYj
-         qQBoDrrBVR7/nkrhxSBh70FzO9CM5RmTWJnD6ObvlypDOr827SyEMS4y73EKK0GFWofS
-         8Lrw==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PW2Ksp4dF+kCYGO2bVRBw5OwUH5NVUnvQm1hs6EDl6g=;
+        b=YENWXgYBjKoO0LJUuXsbbL9ODcCAtlfjp9Zm6wsARsbNfeRLCI23TVVM3BF/uL00AM
+         BLgVZdXe7kq0jzXclwNKvS1rTgULLOlEENmBV/Y+o/61bNq4aR4ywl/InH5pmMxoRgKG
+         UtXhrd6Fnz0Fi0pKGBV9ETLvcd2AWAcO2iwPkx/iGFhiWPy/N7sHS56TY2e+5RkTzQqE
+         7GQnhX7osJRKB6smAWzymNNMQ94E2QRgPyO1WcpHNM9CU0NXQUejAv8hGQXGTOV3qc5L
+         5I10NNR7uYkWqWvEpZUQb6pE14tf+vHvR2c8doFRh8z1Rp+dVyi5zTfBZSVoLOPx6w8V
+         iCTg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=XjZv8VPZY5yPAJVnzsgKE93tbIf6Kof6QehNERCMUpk=;
-        b=izUoY8/TOZCbK+Ijo/nPEtzyhomBN7dK98Qa86u4a3p40I81JDxX7A8Qkm4+p5FQfI
-         TeSQUmCtbUDxzlIu2n7sfRr7Glnhibc5Nav5sPUfViaoQmMvsQQ1jRBwLZRZBl/PrAFP
-         L+NFE43Avhi9zflknPGniT2DgCa/ltSxlKYPmfj7WcGJDJHVztb6Gir88vvDrzmDFKJn
-         W8ZkO5c+OvyyZrzaFXNOfg9jOpQyCejAnaKtKkQB34ydfff+fLvqibzaRi4I0BPGj0ZX
-         fnvEQFVyKm6H94Hqd2724c7rO7y3WuPK/rPbKzV7nd32QuGe/QAqv4awLOkbEDJWXHwN
-         qkpQ==
-X-Gm-Message-State: APjAAAVBkgy/KqFREv//DBwjyweFWakPp3nNRlNm+fztXrtkBYrBhxfk
-        DbHgCTw9SBQj/leUZXXiMzdJ8Z/6anE=
-X-Google-Smtp-Source: APXvYqzfgLBunWyLsQElxtkwqOcLss9PkcnCTe4Jf2aIamDd3gse5p+E+Obiu1hU/CIygMErM98YgA==
-X-Received: by 2002:a63:7146:: with SMTP id b6mr82676079pgn.426.1558490855602;
-        Tue, 21 May 2019 19:07:35 -0700 (PDT)
-Received: from zhanggen-UX430UQ ([66.42.35.75])
-        by smtp.gmail.com with ESMTPSA id y10sm33534653pff.4.2019.05.21.19.07.32
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 21 May 2019 19:07:35 -0700 (PDT)
-Date:   Wed, 22 May 2019 10:07:23 +0800
-From:   Gen Zhang <blackgod016574@gmail.com>
-To:     Li Zhijian <lizhijian@cn.fujitsu.com>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] initramfs: Fix a missing-check bug in init/initramfs.c
-Message-ID: <20190522020723.GA5753@zhanggen-UX430UQ>
-References: <20190522010455.GA4093@zhanggen-UX430UQ>
- <2c246472-bb1c-1063-1370-33da04af27d0@cn.fujitsu.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PW2Ksp4dF+kCYGO2bVRBw5OwUH5NVUnvQm1hs6EDl6g=;
+        b=bnnPct/GfFGAIXXrXMH7PFv0hopWdOopoVZIFS3rp0C6e1XxgTxsUi49kAUrzBeuDm
+         J/P5TW8cQMWVdjEXgxNO5EWjDI9qth+iBP4xcuQaY+TTpUMOyw0gSVAFWqetu/ei6G1i
+         H67KhtgDr7IR0upOuW4CQ6XKp6ojig+riefoRPkjdu5wDFC6DcakHC8S2ASq/15mNEo3
+         dbAgodhNhNQLoQnAFu68lytK93R9Cs8WRjUMPo5R3Sb7wkzQyDZeNRuEAa2M/+BYTzy8
+         aCynGAtXozT9Z3Dlkx/DFG04PDSnt1r/QC5jOKVtTs0i1pYRgDxoIR8AJDXjcXXpFrBh
+         x/SA==
+X-Gm-Message-State: APjAAAU3j+oNwXrOx7A2zyTHLIy0O1Cw5qyrOBzsIHOgP6uuhYnxyiCH
+        0ERusOpVg2di99MkIMplHl4U1aY4ghqUp2ulmLgztQ==
+X-Google-Smtp-Source: APXvYqxjqcRRR4xBTNMXgyICOQLiOPpbilh/rSzqCR3MbAtsroT4lNBzp+g7xdHt2NeHrKTxYN1cMbG6dh67ig9jpfY=
+X-Received: by 2002:aca:d846:: with SMTP id p67mr2797618oig.6.1558490865822;
+ Tue, 21 May 2019 19:07:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <2c246472-bb1c-1063-1370-33da04af27d0@cn.fujitsu.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20190522011504.19342-1-zhang.chunyan@linaro.org> <20190522011504.19342-2-zhang.chunyan@linaro.org>
+In-Reply-To: <20190522011504.19342-2-zhang.chunyan@linaro.org>
+From:   Baolin Wang <baolin.wang@linaro.org>
+Date:   Wed, 22 May 2019 10:07:33 +0800
+Message-ID: <CAMz4kuKbw+HHbALGEJaoYvV435-RS7gMzWbmwZekLWdKT=GV7A@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] clk: sprd: Switch from of_iomap() to devm_ioremap_resource()
+To:     Chunyan Zhang <zhang.chunyan@linaro.org>
+Cc:     Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 22, 2019 at 10:00:37AM +0800, Li Zhijian wrote:
-> 
-> On 5/22/19 09:04, Gen Zhang wrote:
-> >In dir_add(), de and de->name are allocated by kmalloc() and kstrdup().
-> >And de->name is dereferenced in the following codes. However, memory
-> >allocation functions such as kmalloc() and kstrdup() may fail.
-> >Dereferencing this de->name null pointer may cause the kernel go wrong.
-> >Thus we should check this allocation.
-> >Further, if kstrdup() returns NULL, we should free de and panic().
-> >
-> >Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
-> >
-> >---
-> >diff --git a/init/initramfs.c b/init/initramfs.c
-> >index 178130f..dc8063f 100644
-> >--- a/init/initramfs.c
-> >+++ b/init/initramfs.c
-> >@@ -125,6 +125,10 @@ static void __init dir_add(const char *name, time64_t mtime)
-> >  		panic("can't allocate dir_entry buffer");
-> >  	INIT_LIST_HEAD(&de->list);
-> >  	de->name = kstrdup(name, GFP_KERNEL);
-> >+	if (!de->name) {
-> >+		kfree(de);
-> >+		panic("can't allocate dir_entry name buffer");
-> >+	}
-> 
-> Looks good
-> 
-> but the following place should be considered as well i think
-> 342                                 vcollected = kstrdup(collected, GFP_KERNEL);
-> 343                                 state = CopyFile;
-> 
-> 
-> Thanks
-> Zhijian
-Thanks for your comments, Zhijian!
-I thinks you are correct that vcollected should also be checked.
-I will work on this patch and resubmit it.
-Thank
-Gen
+On Wed, 22 May 2019 at 09:15, Chunyan Zhang <zhang.chunyan@linaro.org> wrote:
+>
+> devm_ioremap_resources() automatically requests resources and devm_ wrappers
+> do better error handling and unmapping of the I/O region when needed,
+> that would make drivers more clean and simple.
+>
+> Signed-off-by: Chunyan Zhang <zhang.chunyan@linaro.org>
+
+Reviewed-by: Baolin Wang <baolin.wang@linaro.org>
+
+> ---
+>  drivers/clk/sprd/common.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/clk/sprd/common.c b/drivers/clk/sprd/common.c
+> index e038b0447206..9ce690999eaa 100644
+> --- a/drivers/clk/sprd/common.c
+> +++ b/drivers/clk/sprd/common.c
+> @@ -42,6 +42,7 @@ int sprd_clk_regmap_init(struct platform_device *pdev,
+>         void __iomem *base;
+>         struct device_node *node = pdev->dev.of_node;
+>         struct regmap *regmap;
+> +       struct resource *res;
+>
+>         if (of_find_property(node, "sprd,syscon", NULL)) {
+>                 regmap = syscon_regmap_lookup_by_phandle(node, "sprd,syscon");
+> @@ -50,7 +51,11 @@ int sprd_clk_regmap_init(struct platform_device *pdev,
+>                         return PTR_ERR(regmap);
+>                 }
+>         } else {
+> -               base = of_iomap(node, 0);
+> +               res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +               base = devm_ioremap_resource(&pdev->dev, res);
+> +               if (IS_ERR(base))
+> +                       return PTR_ERR(base);
+> +
+>                 regmap = devm_regmap_init_mmio(&pdev->dev, base,
+>                                                &sprdclk_regmap_config);
+>                 if (IS_ERR_OR_NULL(regmap)) {
+> --
+> 2.17.1
+>
+
+
+-- 
+Baolin Wang
+Best Regards
