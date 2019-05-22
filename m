@@ -2,176 +2,236 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55ED8C282DC
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 22:42:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCEEFC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 22:43:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08B8B21773
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 22:42:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D8B42173C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 22:43:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558564982;
+	bh=OOvk4jhd4RJaf/SM5z16pjS8vJ3csmmntOLya71ImTY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Pax7N6MW16QMjTDYh/JX39aAU2HmrQoj3Q3gcn9NQX8ALFV6nsjsdwkr0d+AoEY5U
+	 wPMotaLJxe11hHrytQ1lkRkybSK+xmMVx3knWAaWJmleO/d9PisBraMdyRDcs6+XBg
+	 64pqq3SHj3QbgWgGj31SyGcOvYnEExSsxEBoydeM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729198AbfEVWmO (ORCPT
+        id S1729405AbfEVWnB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 18:42:14 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59502 "EHLO mx1.redhat.com"
+        Wed, 22 May 2019 18:43:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58206 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726218AbfEVWmO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 18:42:14 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1728202AbfEVWnB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 18:43:01 -0400
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E075A30001EB;
-        Wed, 22 May 2019 22:42:13 +0000 (UTC)
-Received: from redhat.com (unknown [10.20.6.178])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id D720C62660;
-        Wed, 22 May 2019 22:42:12 +0000 (UTC)
-Date:   Wed, 22 May 2019 18:42:11 -0400
-From:   Jerome Glisse <jglisse@redhat.com>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-rdma@vger.kernel.org, Leon Romanovsky <leonro@mellanox.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Artemy Kovalyov <artemyko@mellanox.com>,
-        Moni Shoua <monis@mellanox.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Kaike Wan <kaike.wan@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>
-Subject: Re: [PATCH v4 0/1] Use HMM for ODP v4
-Message-ID: <20190522224211.GF20179@redhat.com>
-References: <20190411181314.19465-1-jglisse@redhat.com>
- <20190506195657.GA30261@ziepe.ca>
- <20190521205321.GC3331@redhat.com>
- <20190522005225.GA30819@ziepe.ca>
- <20190522174852.GA23038@redhat.com>
- <20190522201247.GH6054@ziepe.ca>
- <20190522220419.GB20179@redhat.com>
- <20190522223906.GA15389@ziepe.ca>
+        by mail.kernel.org (Postfix) with ESMTPSA id A471821855
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 22:42:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558564979;
+        bh=OOvk4jhd4RJaf/SM5z16pjS8vJ3csmmntOLya71ImTY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Uv3dbxZBVzkpdBCbr+gOafq0SWIgkZDVjd3lr2+tS4Ri2jV+M0mOrPu8pY9d0wn3T
+         DHL0MaocHFIaV913/qDSFVudmp3spEApGaelHChdWetR5Gb/uoW26APzBLn5dEZcZD
+         hU8LYCVAohKZLS9FA16eD4RlISBsDbzzDbT0ynhs=
+Received: by mail-wm1-f46.google.com with SMTP id i3so3783178wml.4
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 15:42:59 -0700 (PDT)
+X-Gm-Message-State: APjAAAWY49dJKIRXp4Buhgq3xbCZVrRX7vgouIKQa3o3RESxR89CpsPC
+        bald4FOS7WuT3kL+108yyK0o7YtAm0H/72LKERo8wQ==
+X-Google-Smtp-Source: APXvYqzYdSH+GPYlXRlgnwW11c6pqXd9fEL34pkzWbjIju7c8aUW1zezZ1OS5qIiYrcgg2q8tcuDWDAEMZ3zzBaU0WE=
+X-Received: by 2002:a1c:4107:: with SMTP id o7mr9456931wma.122.1558564978244;
+ Wed, 22 May 2019 15:42:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190522223906.GA15389@ziepe.ca>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Wed, 22 May 2019 22:42:14 +0000 (UTC)
+References: <20190515013031.GF1977@linux.intel.com> <CALCETrXf8mSK45h7sTK5Wf+pXLVn=Bjsc_RLpgO-h-qdzBRo5Q@mail.gmail.com>
+ <20190517000331.GD11204@linux.intel.com> <CALCETrWxw7xALE0kmiYBzomaSMAeXEVq-7rX7xeqPtDPeDQiCA@mail.gmail.com>
+ <20190520114105.GD27805@linux.intel.com> <20190521151836.GA4843@linux.intel.com>
+ <20190521155140.GE22089@linux.intel.com> <20190522132022.GC31176@linux.intel.com>
+ <20190522132227.GD31176@linux.intel.com> <0e183cce-c4b4-0e10-dbb6-bd81bea58b66@tycho.nsa.gov>
+ <20190522153836.GA24833@linux.intel.com>
+In-Reply-To: <20190522153836.GA24833@linux.intel.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Wed, 22 May 2019 15:42:45 -0700
+X-Gmail-Original-Message-ID: <CALCETrUS8xyF1JJmQs18BGTDhPRXf+s81BkMZCZwmY73r7M+zg@mail.gmail.com>
+Message-ID: <CALCETrUS8xyF1JJmQs18BGTDhPRXf+s81BkMZCZwmY73r7M+zg@mail.gmail.com>
+Subject: Re: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Stephen Smalley <sds@tycho.nsa.gov>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
+        Jethro Beekman <jethro@fortanix.com>,
+        "Xing, Cedric" <cedric.xing@intel.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Dr. Greg" <greg@enjellic.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 22, 2019 at 07:39:06PM -0300, Jason Gunthorpe wrote:
-> On Wed, May 22, 2019 at 06:04:20PM -0400, Jerome Glisse wrote:
-> > On Wed, May 22, 2019 at 05:12:47PM -0300, Jason Gunthorpe wrote:
-> > > On Wed, May 22, 2019 at 01:48:52PM -0400, Jerome Glisse wrote:
-> > > 
-> > > >  static void put_per_mm(struct ib_umem_odp *umem_odp)
-> > > >  {
-> > > >  	struct ib_ucontext_per_mm *per_mm = umem_odp->per_mm;
-> > > > @@ -325,9 +283,10 @@ static void put_per_mm(struct ib_umem_odp *umem_odp)
-> > > >  	up_write(&per_mm->umem_rwsem);
-> > > >  
-> > > >  	WARN_ON(!RB_EMPTY_ROOT(&per_mm->umem_tree.rb_root));
-> > > > -	mmu_notifier_unregister_no_release(&per_mm->mn, per_mm->mm);
-> > > > +	hmm_mirror_unregister(&per_mm->mirror);
-> > > >  	put_pid(per_mm->tgid);
-> > > > -	mmu_notifier_call_srcu(&per_mm->rcu, free_per_mm);
-> > > > +
-> > > > +	kfree(per_mm);
-> > > 
-> > > Notice that mmu_notifier only uses SRCU to fence in-progress ops
-> > > callbacks, so I think hmm internally has the bug that this ODP
-> > > approach prevents.
-> > > 
-> > > hmm should follow the same pattern ODP has and 'kfree_srcu' the hmm
-> > > struct, use container_of in the mmu_notifier callbacks, and use the
-> > > otherwise vestigal kref_get_unless_zero() to bail:
-> > > 
-> > > From 0cb536dc0150ba964a1d655151d7b7a84d0f915a Mon Sep 17 00:00:00 2001
-> > > From: Jason Gunthorpe <jgg@mellanox.com>
-> > > Date: Wed, 22 May 2019 16:52:52 -0300
-> > > Subject: [PATCH] hmm: Fix use after free with struct hmm in the mmu notifiers
-> > > 
-> > > mmu_notifier_unregister_no_release() is not a fence and the mmu_notifier
-> > > system will continue to reference hmm->mn until the srcu grace period
-> > > expires.
-> > > 
-> > >          CPU0                                     CPU1
-> > >                                                __mmu_notifier_invalidate_range_start()
-> > >                                                  srcu_read_lock
-> > >                                                  hlist_for_each ()
-> > >                                                    // mn == hmm->mn
-> > > hmm_mirror_unregister()
-> > >   hmm_put()
-> > >     hmm_free()
-> > >       mmu_notifier_unregister_no_release()
-> > >          hlist_del_init_rcu(hmm-mn->list)
-> > > 			                           mn->ops->invalidate_range_start(mn, range);
-> > > 					             mm_get_hmm()
-> > >       mm->hmm = NULL;
-> > >       kfree(hmm)
-> > >                                                      mutex_lock(&hmm->lock);
-> > > 
-> > > Use SRCU to kfree the hmm memory so that the notifiers can rely on hmm
-> > > existing. Get the now-safe hmm struct through container_of and directly
-> > > check kref_get_unless_zero to lock it against free.
-> > 
-> > It is already badly handled with BUG_ON()
-> 
-> You can't crash the kernel because userspace forced a race, and no it
-> isn't handled today because there is no RCU locking in mm_get_hmm nor
-> is there a kfree_rcu for the struct hmm to make the
-> kref_get_unless_zero work without use-after-free.
-> 
-> > i just need to convert those to return and to use
-> > mmu_notifier_call_srcu() to free hmm struct.
-> 
-> Isn't that what this patch does?
+On Wed, May 22, 2019 at 8:38 AM Sean Christopherson
+<sean.j.christopherson@intel.com> wrote:
+>
+> On Wed, May 22, 2019 at 09:56:30AM -0400, Stephen Smalley wrote:
+> > On 5/22/19 9:22 AM, Jarkko Sakkinen wrote:
+> > >On Wed, May 22, 2019 at 04:20:22PM +0300, Jarkko Sakkinen wrote:
+> > >>On Tue, May 21, 2019 at 08:51:40AM -0700, Sean Christopherson wrote:
+> > >>>Except that mmap() is more or less required to guarantee that ELRANGE
+> > >>>established by ECREATE is available.  And we want to disallow mmap() as
+> > >>>soon as the first EADD is done so that userspace can't remap the enclave's
+> > >>>VMAs via munmap()->mmap() and gain execute permissions to pages that were
+> > >>>EADD'd as NX.
+> > >>
+> > >>We don't want to guarantee such thing and it is not guaranteed. It does
+> > >>not fit at all to the multi process work done. Enclaves are detached
+> > >>from any particular process addresse spaces. It is responsibility of
+> > >>process to open windows to them.
+> > >>
+> > >>That would be completely against work that we've done lately.
+> > >
+> > >Example use case: you have a process that just constructs an enclave
+> > >and sends it to another process or processes for use. The constructor
+> > >process could have basically anything on that range. This was the key
+> > >goal of the fd based enclave work.
+> >
+> > What exactly happens in the constructor versus the recipient processes?
+> > Which process performs each of the necessary open(), mmap(), and ioctl()
+> > calls for setting up the enclave?  Can you provide a high level overview of
+> > the sequence of userspace calls by the constructor and by the recipient
+> > similar to what Sean showed earlier for just a single process?
+>
+> Hmm, what we had talked about was allowing the SGX ioctls to work without
+> an associated VMA, with the end goal of letting userspace restrict access
+> to /dev/sgx/enclave.   Very roughly...
+>
+> Enclave Owner:
+>
+>   connect(builder, ...);
+>   send(builder, "/home/sean/path/to/my/enclave");
+>
+>   recv(builder, &enclave_fd);
+>
+>   for_each_chunk {
+>           mmap(enclave_addr + offset, size, ..., MAP_SHARED, enclave_fd, 0);
+>   }
+>
+>
+> Enclave Builder:
+>
+>   recv(sock, &enclave_path);
+>
+>   source_fd = open(enclave_path, O_RDONLY);
+>   for_each_chunk {
+>           <hand waving - mmap()/mprotect() the enclave file into regular memory>
+>   }
+>
+>   enclave_fd = open("/dev/sgx/enclave", O_RDWR);
+>
+>   ioctl(enclave_fd, ENCLAVE_CREATE, ...);
+>   for_each_chunk {
+>       struct sgx_enclave_add ioctlargs = {
+>           .offset = chunk.offset,
+>           .source = chunk.addr,
+>           .size   = chunk.size,
+>           .type   = chunk.type, /* SGX specific metadata */
+>       }
+>       ioctl(fd, ENCLAVE_ADD, &ioctlargs); /* modifies enclave's VMAs */
+>   }
+>   ioctl(enclave_fd, ENCLAVE_INIT, ...);
+>
+>   write(sock, enclave_fd);
+>
+>
+> But the above flow is flawed because there'a catch-22: ENCLAVE_ECREATE
+> takes the virtual address of the enclave, but in the above flow that's
+> not established until "mmap(..., enclave_fd)".  And because an enclave's
+> virtual range needs to be naturally aligned (hardware requirements), the
+> enclave owner would need to do something like:
+>
+>   source_fd = open("/home/sean/path/to/my/enclave", O_RDONLY);
+>   size = <parse size from source_fd>
+>
+>   enclave_range = mmap(NULL, size*2, PROT_READ, ???, NULL, 0);
+>   enclave_addr = (enclave_range + (size - 1)) & ~(size - 1);
+>
+>   connect(builder, ...);
+>   send(builder, {"/home/sean/path/to/my/enclave", enclave_addr});
+>
+>   recv(builder, &enclave_fd);
+>
+>   munmap(enclave_range);
+>
+>   for_each_chunk {
+>       addr = mmap(enclave_addr + c.offset, c.size, ..., MAP_SHARED, enclave_fd, 0);
+>       if (addr != enclave_addr + c.offset)
+>            exit(1);
+>   }
+>
+> And that straight up doesn't work with the v20 driver because mmap() with
+> the enclave_fd will run through sgx_get_unmapped_area(), which also does
+> the natural alignment adjustments (the idea being that mmap() is mapping
+> the entire enclave).  E.g. mmap() will map the wrong address if the offset
+> of a chunk is less than its size due to the driver adjusting the address.
 
-Yes but other chunk just need to replace BUG_ON with return
+That presumably needs to change.
 
-> 
-> > The way race is avoided is because mm->hmm will either be NULL or
-> > point to another hmm struct before an existing hmm is free. 
-> 
-> There is no locking on mm->hmm so it is useless to prevent races.
+Are we entirely missing an API to allocate a naturally aligned VA
+range?  That's kind of annoying.
 
-There is locking on mm->hmm
+>
+> Eliminating sgx_get_unmapped_area() means userspace is once again on the
+> hook for naturally aligning the enclave, which is less than desirable.
+>
+> Looking back at the original API discussions around a builder process[1],
+> we never fleshed out the end-to-end flow.  While having a builder process
+> *sounds* reasonable, in practice it adds a lot of complexity without
+> providing much in the way of added security.  E.g. in addition to the
+> above mmap() issues, since the order of EADDs affects the enclave
+> measurement, the enclave owner would need to communicate the exact steps
+> to build the enclave, or the builder would need a priori knowledge of the
+> enclave format.
+>
+> Userspace can still restrict access to /dev/sgx/enclave, e.g. by having a
+> daemon that requires additional credentials to obtain a new enclave_fd.
+> So AFAICT, the only benefit to having a dedicated builder is that it can
+> do its own whitelisting of enclaves, but since we're trending towards
+> supporting whitelisting enclaves in the kernel, e.g. via sigstruct,
+> whitelisting in userspace purely in userspace also provides marginal value.
+>
+> TL;DR: Requiring VMA backing to build an enclave seems reasonable and sane.
 
-> 
-> > Also if range_start/range_end use kref_get_unless_zero() but right
-> > now this is BUG_ON if it turn out to be NULL, it should just return
-> > on NULL.
-> 
-> Still needs rcu.
-> 
-> Also the container_of is necessary to avoid some race where you could
-> be doing:
-> 
->                   CPU0                                     CPU1                         CPU2
->                                                        hlist_for_each ()
->        mmu_notifier_unregister_no_release(hmm1)             
->        spin_lock(&mm->page_table_lock);                                
->        mm->hmm = NULL
->        spin_unlock(&mm->page_table_lock);                                                                                      
->                                                       				 hmm2 = hmm_get_or_create()
->                                                         mn == hmm1->mn
->                                                         mn->ops->invalidate_range_start(mn, range)
-> 							  mm_get_mm() == hmm2
->                                                       hist_for_each con't
->                                                         mn == hmm2->mn
->                                                         mn->ops->invalidate_range_start(mn, range)
-> 							  mm_get_mm() == hmm2
-> 
-> Now we called the same notifier twice on hmm2. Ooops.
-> 
-> There is no reason to risk this confusion just to avoid container_of.
-> 
-> So we agree this patch is necessary? Can you test it an ack it please?
+This isn't necessarily a problem, but we pretty much have to use
+mprotect() then.
 
-A slightly different patch than this one is necessary i will work on
-it tomorrow.
+Maybe the semantics could just be that mmap() on the SGX device gives
+natural alignment, but that there is no actual constraint enforced by
+the driver as to whether mmap() happens before or after ECREATE.
+After all, it's *ugly* for user code to reserve its address range with
+an awkward giant mmap(), there's nothing fundamentally wrong with it.
 
-Cheers,
-Jérôme
+As far as I know from this whole discussion, we still haven't come up
+with any credible way to avoid tracking, per enclave page, whether
+that page came from unmodified PROT_EXEC memory.
