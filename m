@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FD74C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:04:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79362C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:04:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40E1E20863
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:04:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F98220821
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:04:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558555458;
-	bh=LCKP4eDolnwtBjnan8oPnWRJSNMCYpIpwhcShYyVK8A=;
+	s=default; t=1558555468;
+	bh=MOnbJw2T6l+CcenFyc9OMxxTCg3GPde1Po01t5+Nt6Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eFJRLE2dzN3Wc9DNLQd15o8B+faaYcjF9EAHhr6RrAvZNVNGKmHyNQaAjKU/K3mPl
-	 a3TgUfKhvGOlkwielI8VrQNIChH73JbPrS5fC8IgsgzPOL8NzSequhA1dvQsAOqTS5
-	 E0l9ZD5gz4ALhcbWVkKzzQILFL3i7vPcHFcvGs7U=
+	b=Z+1lIy2hTKfi0F+z/p4zCTGjlDmWvgQTnUNyaaf+7CgC0ebvLzfmSdUtASC5XKsiV
+	 5AMsbMe0RG9aoy2k37kMvC25iPt7S/c4pbW9V6sYHWTh57FsdoyHKRIpOG2QUy+i14
+	 oUPvvXdNYmZzL8n8y3aeKhXanTp0vdaQXd91gCHo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732167AbfEVUEQ (ORCPT
+        id S1730984AbfEVUE1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 16:04:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42008 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 16:04:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729937AbfEVTVb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:21:31 -0400
+        id S1729790AbfEVTV2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:21:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC801217D4;
-        Wed, 22 May 2019 19:21:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3EB8A217F9;
+        Wed, 22 May 2019 19:21:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558552890;
-        bh=LCKP4eDolnwtBjnan8oPnWRJSNMCYpIpwhcShYyVK8A=;
+        s=default; t=1558552888;
+        bh=MOnbJw2T6l+CcenFyc9OMxxTCg3GPde1Po01t5+Nt6Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xdAgm7dZHCdVyVxTxbB5Ce2ayCiimN532eiCfruEp/jBjVqe7XFLsGVhSBr0FNUvK
-         IyyH+Qm+8M2YleregqFaI1iu3IczHbcbgmEdacdH0czO25cYV2ewxBTGvNJ9cFJJrE
-         4e4Gq1yb/57OXLZ7zfMX/SWJVMYvfd5ciYi7KjOw=
+        b=j0WKBQkAv5r1K5MPJPuLOZUK7wyF07s3CyvISZjmUfk2XlM4uO1drG1B2hm2OK3xw
+         wGGJTPkTCoYK3PCLLyi+BvepYE5EaI4FcWkxCO8+e35K/Ea+OMDGVKLuWAu5HuYPM0
+         2+zaFQMI0qhqggeE0PHVa88yWMUotXYSCORPZtaA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Dumazet <edumazet@google.com>,
-        Stefan Bader <stefan.bader@canonical.com>,
-        Peter Oskolkov <posk@google.com>,
-        Florian Westphal <fw@strlen.de>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 011/375] ip6: fix skb leak in ip6frag_expire_frag_queue()
-Date:   Wed, 22 May 2019 15:15:11 -0400
-Message-Id: <20190522192115.22666-11-sashal@kernel.org>
+Cc:     Raul E Rangel <rrangel@chromium.org>,
+        Avri Altman <avri.altman@wdc.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-mmc@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 009/375] mmc: core: Verify SD bus width
+Date:   Wed, 22 May 2019 15:15:09 -0400
+Message-Id: <20190522192115.22666-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192115.22666-1-sashal@kernel.org>
 References: <20190522192115.22666-1-sashal@kernel.org>
@@ -62,59 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Raul E Rangel <rrangel@chromium.org>
 
-[ Upstream commit 47d3d7fdb10a21c223036b58bd70ffdc24a472c4 ]
+[ Upstream commit 9e4be8d03f50d1b25c38e2b59e73b194c130df7d ]
 
-Since ip6frag_expire_frag_queue() now pulls the head skb
-from frag queue, we should no longer use skb_get(), since
-this leads to an skb leak.
+The SD Physical Layer Spec says the following: Since the SD Memory Card
+shall support at least the two bus modes 1-bit or 4-bit width, then any SD
+Card shall set at least bits 0 and 2 (SD_BUS_WIDTH="0101").
 
-Stefan Bader initially reported a problem in 4.4.stable [1] caused
-by the skb_get(), so this patch should also fix this issue.
+This change verifies the card has specified a bus width.
 
-296583.091021] kernel BUG at /build/linux-6VmqmP/linux-4.4.0/net/core/skbuff.c:1207!
-[296583.091734] Call Trace:
-[296583.091749]  [<ffffffff81740e50>] __pskb_pull_tail+0x50/0x350
-[296583.091764]  [<ffffffff8183939a>] _decode_session6+0x26a/0x400
-[296583.091779]  [<ffffffff817ec719>] __xfrm_decode_session+0x39/0x50
-[296583.091795]  [<ffffffff818239d0>] icmpv6_route_lookup+0xf0/0x1c0
-[296583.091809]  [<ffffffff81824421>] icmp6_send+0x5e1/0x940
-[296583.091823]  [<ffffffff81753238>] ? __netif_receive_skb+0x18/0x60
-[296583.091838]  [<ffffffff817532b2>] ? netif_receive_skb_internal+0x32/0xa0
-[296583.091858]  [<ffffffffc0199f74>] ? ixgbe_clean_rx_irq+0x594/0xac0 [ixgbe]
-[296583.091876]  [<ffffffffc04eb260>] ? nf_ct_net_exit+0x50/0x50 [nf_defrag_ipv6]
-[296583.091893]  [<ffffffff8183d431>] icmpv6_send+0x21/0x30
-[296583.091906]  [<ffffffff8182b500>] ip6_expire_frag_queue+0xe0/0x120
-[296583.091921]  [<ffffffffc04eb27f>] nf_ct_frag6_expire+0x1f/0x30 [nf_defrag_ipv6]
-[296583.091938]  [<ffffffff810f3b57>] call_timer_fn+0x37/0x140
-[296583.091951]  [<ffffffffc04eb260>] ? nf_ct_net_exit+0x50/0x50 [nf_defrag_ipv6]
-[296583.091968]  [<ffffffff810f5464>] run_timer_softirq+0x234/0x330
-[296583.091982]  [<ffffffff8108a339>] __do_softirq+0x109/0x2b0
+AMD SDHC Device 7806 can get into a bad state after a card disconnect
+where anything transferred via the DATA lines will always result in a
+zero filled buffer. Currently the driver will continue without error if
+the HC is in this condition. A block device will be created, but reading
+from it will result in a zero buffer. This makes it seem like the SD
+device has been erased, when in actuality the data is never getting
+copied from the DATA lines to the data buffer.
 
-Fixes: d4289fcc9b16 ("net: IP6 defrag: use rbtrees for IPv6 defrag")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: Stefan Bader <stefan.bader@canonical.com>
-Cc: Peter Oskolkov <posk@google.com>
-Cc: Florian Westphal <fw@strlen.de>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+SCR is the first command in the SD initialization sequence that uses the
+DATA lines. By checking that the response was invalid, we can abort
+mounting the card.
+
+Reviewed-by: Avri Altman <avri.altman@wdc.com>
+Signed-off-by: Raul E Rangel <rrangel@chromium.org>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/net/ipv6_frag.h | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/mmc/core/sd.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/include/net/ipv6_frag.h b/include/net/ipv6_frag.h
-index 28aa9b30aecea..1f77fb4dc79df 100644
---- a/include/net/ipv6_frag.h
-+++ b/include/net/ipv6_frag.h
-@@ -94,7 +94,6 @@ ip6frag_expire_frag_queue(struct net *net, struct frag_queue *fq)
- 		goto out;
+diff --git a/drivers/mmc/core/sd.c b/drivers/mmc/core/sd.c
+index 265e1aeeb9d88..d3d32f9a2cb18 100644
+--- a/drivers/mmc/core/sd.c
++++ b/drivers/mmc/core/sd.c
+@@ -221,6 +221,14 @@ static int mmc_decode_scr(struct mmc_card *card)
  
- 	head->dev = dev;
--	skb_get(head);
- 	spin_unlock(&fq->q.lock);
+ 	if (scr->sda_spec3)
+ 		scr->cmds = UNSTUFF_BITS(resp, 32, 2);
++
++	/* SD Spec says: any SD Card shall set at least bits 0 and 2 */
++	if (!(scr->bus_widths & SD_SCR_BUS_WIDTH_1) ||
++	    !(scr->bus_widths & SD_SCR_BUS_WIDTH_4)) {
++		pr_err("%s: invalid bus width\n", mmc_hostname(card->host));
++		return -EINVAL;
++	}
++
+ 	return 0;
+ }
  
- 	icmpv6_send(head, ICMPV6_TIME_EXCEED, ICMPV6_EXC_FRAGTIME, 0);
 -- 
 2.20.1
 
