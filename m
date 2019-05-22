@@ -2,72 +2,115 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56B05C072A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 08:27:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 960F9C072A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 08:30:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E25F21019
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 08:27:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 691E4204EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 08:30:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558513834;
+	bh=5S6RxRIhK7LmYwNwDZdpP3Oig4cYnbDSbf2KlMY3wr4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Y2DOjQwjC3mpBGYcUSiudtUYHdbkeYUCz8N6bjSL5pU+J7cQEM3nnwWKAbSB881JD
+	 AWpC1EGKJliIvKxhiEoDnvhUyIGSOwuGk/5Gm4X9TowMQRRNgC1HWmyvb+QteG7JVF
+	 G3FtVNV4Ag7gKr8gxFCyPc02fo/WAQFs9x7UyigI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728823AbfEVI1H (ORCPT
+        id S1728635AbfEVIad (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 04:27:07 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:44254 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728406AbfEVI1H (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 04:27:07 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1hTMZv-0008N0-E9; Wed, 22 May 2019 08:26:27 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Dan Murphy <dmurphy@ti.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, linux-leds@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][next] leds: TI LMU: remove redundant u8 comparisons with less than zero
-Date:   Wed, 22 May 2019 09:26:27 +0100
-Message-Id: <20190522082627.18354-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 22 May 2019 04:30:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50300 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726358AbfEVIad (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 04:30:33 -0400
+Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 27B36204EC;
+        Wed, 22 May 2019 08:30:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558513830;
+        bh=5S6RxRIhK7LmYwNwDZdpP3Oig4cYnbDSbf2KlMY3wr4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=kdqgrnyAVly1Pf4LmDAgDiXMnWSM9G9ZBsQjsDei2RBNUfNBcWLl4LI8ETBpaiBHr
+         0GOuPlJ7s0PjrqHWgSp5a/7wp1j6Dao/8iRNfc8PxyK8a3AMNMtEInL08PDx/PgTqy
+         0gKScf9utb5BwfoBnjqz/w6tERvpAEP+nE16r1RI=
+Date:   Wed, 22 May 2019 16:29:31 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     Angus Ainslie <angus@akkea.ca>, angus.ainslie@puri.sm,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-kernel-owner@vger.kernel.org
+Subject: Re: [PATCH v9 1/3] arm64: dts: fsl: librem5: Add a device tree for
+ the Librem5 devkit
+Message-ID: <20190522082929.GA9261@dragon>
+References: <20190513145539.28174-1-angus@akkea.ca>
+ <20190513145539.28174-2-angus@akkea.ca>
+ <0f355f524122cb4dd6388431495a9d182e3ed9d6.camel@perches.com>
+ <11c9a715ee0599e50359eb5ad5bd093e@www.akkea.ca>
+ <a2a45d8f881d877027e2c32faf71c7a3f4897324.camel@perches.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a2a45d8f881d877027e2c32faf71c7a3f4897324.camel@perches.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On Mon, May 13, 2019 at 09:05:27AM -0700, Joe Perches wrote:
+> On Mon, 2019-05-13 at 08:35 -0700, Angus Ainslie wrote:
+> > Hi Joe,
+> 
+> Hi.
+> 
+> > On 2019-05-13 08:11, Joe Perches wrote:
+> > > On Mon, 2019-05-13 at 07:55 -0700, Angus Ainslie (Purism) wrote:
+> > > > This is for the development kit board for the Librem 5. The current 
+> > > > level
+> > > > of support yields a working console and is able to boot userspace from
+> > > > the network or eMMC.
+> > > []
+> > > > diff --git a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts 
+> > > > b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
+> > > > new file mode 100644
+> > > 
+> > > Perhaps add an entry in the MAINTAINERS file for this
+> > > .dts file similar to other freescale boards?
+> > 
+> > The MAINTAINERS files has this entry
+> > 
+> > ARM/FREESCALE IMX / MXC ARM ARCHITECTURE
+> > M:  Shawn Guo <shawnguo@kernel.org>
+> > M:  Sascha Hauer <s.hauer@pengutronix.de>
+> > R:  Pengutronix Kernel Team <kernel@pengutronix.de>
+> > R:  Fabio Estevam <festevam@gmail.com>
+> > R:  NXP Linux Team <linux-imx@nxp.com>
+> > L:  linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+> > S:  Maintained
+> > T:  git git://git.kernel.org/pub/scm/linux/kernel/git/shawnguo/linux.git
+> > N:  imx
+> > N:  mxs
+> > X:  drivers/media/i2c/
+> > 
+> > Shouldn't the "N: imx" cover this board already ?
+> 
+> Yes, it would, but not 'exclusively' by the get_maintainer.pl
+> script.
 
-The u8 variables ramp_up and ramp_down are being compared to less
-than zero, this will always be false. Code is redundant so remove
-it.
+We moved to 'N' match with commit da8b7f0fb02b ("MAINTAINERS: add all
+files matching "imx" and "mxs" to the IMX entry").  As long as
+get_maintainer.pl reports those M/R/L addresses, we are fine, I think.
 
-Addresses-Coverity: ("Unsigned compared against 0")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/leds/leds-ti-lmu-common.c | 3 ---
- 1 file changed, 3 deletions(-)
-
-diff --git a/drivers/leds/leds-ti-lmu-common.c b/drivers/leds/leds-ti-lmu-common.c
-index adc7293004f1..6db47accfe62 100644
---- a/drivers/leds/leds-ti-lmu-common.c
-+++ b/drivers/leds/leds-ti-lmu-common.c
-@@ -94,9 +94,6 @@ int ti_lmu_common_set_ramp(struct ti_lmu_bank *lmu_bank)
- 		ramp_down = ti_lmu_common_convert_ramp_to_index(lmu_bank->ramp_down_usec);
- 	}
- 
--	if (ramp_up < 0 || ramp_down < 0)
--		return -EINVAL;
--
- 	ramp = (ramp_up << 4) | ramp_down;
- 
- 	return regmap_write(regmap, lmu_bank->runtime_ramp_reg, ramp);
--- 
-2.20.1
-
+Shawn
