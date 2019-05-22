@@ -2,152 +2,150 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9796AC072A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 05:38:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74932C072A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 05:43:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 684FF20815
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 05:38:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4257620815
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 05:43:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DsZP4LP2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726693AbfEVFie (ORCPT
+        id S1728227AbfEVFnC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 01:38:34 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36202 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725796AbfEVFie (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 01:38:34 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A8BA166991;
-        Wed, 22 May 2019 05:38:30 +0000 (UTC)
-Received: from dhcp-128-65.nay.redhat.com (ovpn-12-78.pek2.redhat.com [10.72.12.78])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 608DA66845;
-        Wed, 22 May 2019 05:38:26 +0000 (UTC)
-Date:   Wed, 22 May 2019 13:38:22 +0800
-From:   Dave Young <dyoung@redhat.com>
-To:     Kairui Song <kasong@redhat.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
-        Bhupesh Sharma <bhsharma@redhat.com>
-Subject: Re: [PATCH v2] vmcore: Add a kernel cmdline vmcore_device_dump
-Message-ID: <20190522053822.GA4472@dhcp-128-65.nay.redhat.com>
-References: <20190520061834.32231-1-kasong@redhat.com>
+        Wed, 22 May 2019 01:43:02 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:50398 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726217AbfEVFnC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 01:43:02 -0400
+Received: by mail-wm1-f65.google.com with SMTP id f204so785234wme.0
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 22:43:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=UV86+9faBPyxG3LMeaUxCHb1Y1cnH/FV7fOPtgG5S98=;
+        b=DsZP4LP2cJulyBy4GynzLKTHzyJoCoCR+MG+Z+gHUf7P1+KlPTqh4MZlQ7dWkHBh1B
+         8iggThqkjVvRIhwpfIRB8fpHfRS7GEWqv8mxWIWY0uSi8D+dXMP3g5QjDJV5gUwDXHVG
+         MkR2NAAvUo3zXH4PatvV5weAw+f8j8XGfuUTyu9kkecLb5pJ93Zt+0vKqvhPzaFAegJH
+         qItzRiDiWbTKGma/Qlw+i6uhs2NosSoFdC725fNRNWHUMe1tKyhj/kZlZeoRFassCZLo
+         Bb/kdKZZXVy1sRbybIYU3prXHhmpf5XnffKDZCImKEFh+F77yid5QUrVMA21O8u2miet
+         O1fQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=UV86+9faBPyxG3LMeaUxCHb1Y1cnH/FV7fOPtgG5S98=;
+        b=l4TZBEopOKUVSbegIW+hvPe1akZm4nmEPFxqznFZTN4euDoNIRjZQE3QZJV7ifmyuC
+         Sos/SkjBjB+AML1B3nM4ul4DkKmqJ3xxA8mGoyTLnWa6nAqNbWhWlTcEtJ0njGDUZvnN
+         ct0mCJTnWQPiFINVZCzIB+eaunfbpEa84T8+OuE7zrNIDyNSxXatNrps9C5njWThyBLt
+         Ks9aMPt3UIJ8OO7Czldnh6S9EB0psS3NmwpCYPi8JLykHVmJFJJlc+dFo+72BHyBFR0V
+         N0BpmIZmFm9XH35oyOcFdxz65H6a4yBN6/0aubKRMXAg7TQ/EW6pF7DCS1u483wOG6XL
+         HjGA==
+X-Gm-Message-State: APjAAAXsVwEpxLC7/hq0WgkwuXsHJt4xQsJKhzjVqfl1StBinGt7PuBL
+        z+/nCKQApkkFy1aHbUFVtQUYcg==
+X-Google-Smtp-Source: APXvYqx3ytJTwrdokltodLpxK93jWrnPf+fMI1jolPsXgHoB5MtfXMSEAoN/yUl4y3UJqS1NcpWM8A==
+X-Received: by 2002:a1c:f910:: with SMTP id x16mr6258184wmh.132.1558503779936;
+        Tue, 21 May 2019 22:42:59 -0700 (PDT)
+Received: from dell ([2.27.167.43])
+        by smtp.gmail.com with ESMTPSA id j17sm23295196wrs.77.2019.05.21.22.42.58
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 21 May 2019 22:42:59 -0700 (PDT)
+Date:   Wed, 22 May 2019 06:42:56 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
+        lgirdwood@gmail.com, broonie@kernel.org
+Subject: Re: [GIT PULL] Immutable branch between LEDs, MFD and REGULATOR
+Message-ID: <20190522054256.GA4574@dell>
+References: <20190521203038.31946-1-jacek.anaszewski@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190520061834.32231-1-kasong@redhat.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Wed, 22 May 2019 05:38:33 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190521203038.31946-1-jacek.anaszewski@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/20/19 at 02:18pm, Kairui Song wrote:
-> Since commit 2724273e8fd0 ('vmcore: add API to collect hardware dump in
-> second kernel'), drivers is allowed to add device related dump data to
-> vmcore as they want by using the device dump API. This have a potential
-> issue, the data is stored in memory, drivers may append too much data
-> and use too much memory. The vmcore is typically used in a kdump kernel
-> which runs in a pre-reserved small chunk of memory. So as a result it
-> will make kdump unusable at all due to OOM issues.
-> 
-> So introduce new vmcore_device_dump= kernel parameter, and disable
-> device dump by default. User can enable it only if device dump data is
-> required for debugging, and have the chance to increase the kdump
-> reserved memory accordingly before device dump fails kdump.
-> 
-> Signed-off-by: Kairui Song <kasong@redhat.com>
-> ---
->  Update from V1:
->   - Use bool parameter to turn it on/off instead of letting user give
->     the size limit. Size of device dump is hard to determine.
-> 
->  Documentation/admin-guide/kernel-parameters.txt | 15 +++++++++++++++
->  fs/proc/vmcore.c                                | 13 +++++++++++++
->  2 files changed, 28 insertions(+)
-> 
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index 43176340c73d..2d48e39fd080 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -5062,6 +5062,21 @@
->  			decrease the size and leave more room for directly
->  			mapped kernel RAM.
->  
-> +	vmcore_device_dump=
-> +			[VMCORE]
+On Tue, 21 May 2019, Jacek Anaszewski wrote:
 
-It looks better to have above two line merged in one line, also use
-[KNL, KDUMP] will be better.
-
-> +			Format: {"off" | "on"}
-> +			If CONFIG_PROC_VMCORE_DEVICE_DUMP is set,
-> +			this parameter allows enable or disable device dump
-> +			for vmcore.
-> +			Device dump allows drivers to append dump data to
-> +			vmcore so you can collect driver specified debug info.
-> +			Note that the drivers could append the data without
-> +			any limit, and the data is stored in memory, this may
-> +			bring a significant memory stress. If you want to turn
-> +			on this option, make sure you have reserved enough memory
-> +			with crashkernel= parameter.
-> +			default: off
-> +
->  	vmcp_cma=nn[MG]	[KNL,S390]
->  			Sets the memory size reserved for contiguous memory
->  			allocations for the vmcp device driver.
-> diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
-> index 3fe90443c1bb..d1b608b0efad 100644
-> --- a/fs/proc/vmcore.c
-> +++ b/fs/proc/vmcore.c
-> @@ -53,6 +53,8 @@ static struct proc_dir_entry *proc_vmcore;
->  /* Device Dump list and mutex to synchronize access to list */
->  static LIST_HEAD(vmcoredd_list);
->  static DEFINE_MUTEX(vmcoredd_mutex);
-> +
-> +static bool vmcoredd_enabled;
->  #endif /* CONFIG_PROC_VMCORE_DEVICE_DUMP */
->  
->  /* Device Dump Size */
-> @@ -1451,6 +1453,11 @@ int vmcore_add_device_dump(struct vmcoredd_data *data)
->  	size_t data_size;
->  	int ret;
->  
-> +	if (!vmcoredd_enabled) {
-> +		pr_err_once("Device dump is disabled\n");
-> +		return -EINVAL;
-> +	}
-> +
->  	if (!data || !strlen(data->dump_name) ||
->  	    !data->vmcoredd_callback || !data->size)
->  		return -EINVAL;
-> @@ -1502,6 +1509,12 @@ int vmcore_add_device_dump(struct vmcoredd_data *data)
->  	return ret;
->  }
->  EXPORT_SYMBOL(vmcore_add_device_dump);
-> +
-> +static int __init vmcoredd_parse_cmdline(char *arg)
-> +{
-> +	return kstrtobool(arg, &vmcoredd_enabled);
-> +}
-> +__setup("vmcore_device_dump=", vmcoredd_parse_cmdline);
->  #endif /* CONFIG_PROC_VMCORE_DEVICE_DUMP */
->  
->  /* Free all dumps in vmcore device dump list */
-> -- 
-> 2.21.0
+> The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
 > 
+>   Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
+> 
+> are available in the git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/j.anaszewski/linux-leds.git tags/ti-lmu-led-drivers
+> 
+> for you to fetch changes up to 13f5750a60b923d8f3f0e23902f2ece46dd733d7:
+> 
+>   leds: lm36274: Introduce the TI LM36274 LED driver (2019-05-21 20:34:19 +0200)
+> 
+> ----------------------------------------------------------------
+> TI LMU LED support rework and introduction of two new drivers
+> with DT bindings:
+> 
+> - leds-lm3697 (entails additions to lm363x-regulator.c)
+> - leds-lm36274
+> ----------------------------------------------------------------
+> Dan Murphy (12):
 
-Thanks
-Dave
+>       dt-bindings: mfd: LMU: Add the ramp up/down property
+>       dt-bindings: mfd: LMU: Add ti,brightness-resolution
+>       mfd: ti-lmu: Remove support for LM3697
+>       mfd: ti-lmu: Add LM36274 support to the ti-lmu
+
+These patches were Acked "for my own reference", which means I'd
+at least expect a discussion on how/where they would be applied.
+
+It's fine for them to go in via the LED tree in this instance and I do
+thank you for sending a PR.  Next time can we at least agree on the
+route-in though please?
+
+>       leds: TI LMU: Add common code for TI LMU devices
+>       dt-bindings: ti-lmu: Modify dt bindings for the LM3697
+>       leds: lm3697: Introduce the lm3697 driver
+>       regulator: lm363x: Make the gpio register enable flexible
+>       dt-bindings: mfd: Add lm36274 bindings to ti-lmu
+>       regulator: lm363x: Add support for LM36274
+>       dt-bindings: leds: Add LED bindings for the LM36274
+>       leds: lm36274: Introduce the TI LM36274 LED driver
+> 
+>  .../devicetree/bindings/leds/leds-lm36274.txt      |  82 +++++
+>  .../devicetree/bindings/leds/leds-lm3697.txt       |  73 ++++
+>  Documentation/devicetree/bindings/mfd/ti-lmu.txt   |  88 +++--
+>  drivers/leds/Kconfig                               |  23 ++
+>  drivers/leds/Makefile                              |   3 +
+>  drivers/leds/leds-lm36274.c                        | 174 +++++++++
+>  drivers/leds/leds-lm3697.c                         | 395 +++++++++++++++++++++
+>  drivers/leds/leds-ti-lmu-common.c                  | 156 ++++++++
+>  drivers/mfd/Kconfig                                |   5 +-
+>  drivers/mfd/ti-lmu.c                               |  23 +-
+>  drivers/regulator/Kconfig                          |   2 +-
+>  drivers/regulator/lm363x-regulator.c               |  56 ++-
+>  include/linux/leds-ti-lmu-common.h                 |  47 +++
+>  include/linux/mfd/ti-lmu-register.h                |  63 ++--
+>  include/linux/mfd/ti-lmu.h                         |   5 +-
+>  15 files changed, 1112 insertions(+), 83 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/leds/leds-lm36274.txt
+>  create mode 100644 Documentation/devicetree/bindings/leds/leds-lm3697.txt
+>  create mode 100644 drivers/leds/leds-lm36274.c
+>  create mode 100644 drivers/leds/leds-lm3697.c
+>  create mode 100644 drivers/leds/leds-ti-lmu-common.c
+>  create mode 100644 include/linux/leds-ti-lmu-common.h
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
