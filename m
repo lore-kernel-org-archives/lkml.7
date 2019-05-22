@@ -2,135 +2,304 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA0F0C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 12:17:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C490CC282DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 12:17:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B034120675
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 12:17:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9994F217F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 12:17:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="aSA1itul"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="Wq6xO1sA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729221AbfEVMRO (ORCPT
+        id S1729325AbfEVMRi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 08:17:14 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:45745 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728680AbfEVMRO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 08:17:14 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 458BTM0ZB4z9v2JC;
-        Wed, 22 May 2019 14:17:11 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=aSA1itul; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id 2tBcVXNsQ-sn; Wed, 22 May 2019 14:17:11 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 458BTL6PbWz9v2JB;
-        Wed, 22 May 2019 14:17:10 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1558527430; bh=ULpgX9HYncfSaEjyyyTwrdNHRBTq+jrPPxiAH/Bi1aw=;
-        h=From:Subject:To:Cc:Date:From;
-        b=aSA1itulWnmknDSRHJhSq1WT91YKt9nFX1g2vucCgzWDHHhNM0nDTcVysFxUvQZic
-         1v9U+CpLqpd8blZoTTPh8TgLi0ZrXGB2y7lrwuGlEn9MQBjybBAVdsixui/i5AXygf
-         0bmPvZ5IMK1zkqvNUvDbvhChGB8o7760K93FkHZU=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 2F6C18B840;
-        Wed, 22 May 2019 14:17:12 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id a6HB5Dsaeycs; Wed, 22 May 2019 14:17:12 +0200 (CEST)
-Received: from po16846vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.231.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 0A5E98B83E;
-        Wed, 22 May 2019 14:17:12 +0200 (CEST)
-Received: by po16846vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id E04AD68430; Wed, 22 May 2019 12:17:11 +0000 (UTC)
-Message-Id: <d99f90e2107d7bff3adc187b5ce36a79cc786bfd.1558527014.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH] tty: serial: cpm_uart - fix init when SMC is relocated
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-serial@vger.kernel.org
-Date:   Wed, 22 May 2019 12:17:11 +0000 (UTC)
+        Wed, 22 May 2019 08:17:38 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:52658 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728438AbfEVMRi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 08:17:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
+        Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=XRRgdQBJ/m9hgBIL0+vqNyzCsUJrXLqFJLRgNNPO7vw=; b=Wq6xO1sANWcBwPamElkQu2Y/r
+        bkPQQyr4IGWcpM9D+ubD8c0xiMiPGBPPX0fplOwBjmPx9YvpFeuFb5J9VzDyjzBaWurrcHjnPDPoN
+        w4WJs40ixrpw3o790FJHTJPicLMMcEtzvmNug49BPpQuO5ZD7nsuOkPEpQE78oqWIHZlvkgm0HDcK
+        dFyxR/s903Xp7ETectuAHVpTXTYMabNTRgy2WtP/kM5zpEIMdJ2NquDSpILAYl++aPDjrksVLLcp6
+        fBiack2GMrfLt2h0yf2azhpnVPhwz0gDfAOMIRP+ubcHQ+wzR0B7kLLi79Aa6px4CqAK/e15u5ZWV
+        MfIs6814w==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:52576)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1hTQBa-0007Ya-1f; Wed, 22 May 2019 13:17:34 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.89)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1hTQBW-0006f9-UC; Wed, 22 May 2019 13:17:30 +0100
+Date:   Wed, 22 May 2019 13:17:30 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+Cc:     Network Development <netdev@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-block@vger.kernel.org, John Crispin <john@phrozen.org>,
+        Jonas Gorski <jonas.gorski@gmail.com>,
+        Jo-Philipp Wich <jo@mein.io>, Felix Fietkau <nbd@nbd.name>
+Subject: Re: ARM router NAT performance affected by random/unrelated commits
+Message-ID: <20190522121730.fhswxkw4gbflkhei@shell.armlinux.org.uk>
+References: <9a9ba4c9-3cb7-eb64-4aac-d43b59224442@gmail.com>
+ <20190521104512.2r67fydrgniwqaja@shell.armlinux.org.uk>
+ <de262f71-748f-d242-f1d4-ea10188a0438@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <de262f71-748f-d242-f1d4-ea10188a0438@gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SMC relocation can also be activated earlier by the bootloader,
-so the driver's behaviour cannot rely on selected kernel config.
+On Wed, May 22, 2019 at 01:51:01PM +0200, Rafał Miłecki wrote:
+> On 21.05.2019 12:45, Russell King - ARM Linux admin wrote:> On Tue, May 21, 2019 at 12:28:48PM +0200, Rafał Miłecki wrote:
+> >> I work on home routers based on Broadcom's Northstar SoCs. Those devices
+> >> have ARM Cortex-A9 and most of them are dual-core.
+> >>
+> >> As for home routers, my main concern is network performance. That CPU
+> >> isn't powerful enough to handle gigabit traffic so all kind of
+> >> optimizations do matter. I noticed some unexpected changes in NAT
+> >> performance when switching between kernels.
+> >>
+> >> My hardware is BCM47094 SoC (dual core ARM) with integrated network
+> >> controller and external BCM53012 switch.
+> >
+> > Guessing, I'd say it's to do with the placement of code wrt cachelines.
+> > You could try aligning some of the cache flushing code to a cache line
+> > and see what effect that has.
+> 
+> Is System.map a good place to check for functions code alignment?
+> 
+> With Linux 4.19 + OpenWrt mtd patches I have:
+> (...)
+> c010ea94 t v7_dma_inv_range
+> c010eae0 t v7_dma_clean_range
+> (...)
+> c02ca3d0 T blk_mq_update_nr_hw_queues
+> c02ca69c T blk_mq_alloc_tag_set
+> c02ca94c T blk_mq_release
+> c02ca9b4 T blk_mq_free_queue
+> c02caa88 T blk_mq_update_nr_requests
+> c02cab50 T blk_mq_unique_tag
+> (...)
+> 
+> After cherry-picking 9316a9ed6895 ("blk-mq: provide helper for setting
+> up an SQ queue and tag set"):
+> (...)
+> c010ea94 t v7_dma_inv_range
+> c010eae0 t v7_dma_clean_range
+> (...)
+> c02ca3d0 T blk_mq_update_nr_hw_queues
+> c02ca69c T blk_mq_alloc_tag_set
+> c02ca94c T blk_mq_init_sq_queue <-- NEW
+> c02ca9c0 T blk_mq_release <-- Different address of this & all below
+> c02caa28 T blk_mq_free_queue
+> c02caafc T blk_mq_update_nr_requests
+> c02cabc4 T blk_mq_unique_tag
+> (...)
+> 
+> As you can see blk_mq_init_sq_queue has appeared in the System.map and
+> it affected addresses of ~30000 symbols. I can believe some frequently
+> used symbols got luckily aligned and that improved overall performance.
+> 
+> Interestingly v7_dma_inv_range() and v7_dma_clean_range() were not
+> relocated.
+> 
+> *****
+> 
+> I followed Russell's suggestion and added .align 5 to cache-v7.S (see
+> two attached diffs).
+> 
+> 1) v4.19 + OpenWrt mtd patches
+> > egrep -B 1 -A 1 "v7_dma_(inv|clean)_range" System.map
+> c010ea58 T v7_flush_kern_dcache_area
+> c010ea94 t v7_dma_inv_range
+> c010eae0 t v7_dma_clean_range
+> c010eb18 T b15_dma_flush_range
+> 
+> 2) v4.19 + OpenWrt mtd patches + two .align 5 in cache-v7.S
+> c010ea6c T v7_flush_kern_dcache_area
+> c010eac0 t v7_dma_inv_range
+> c010eb20 t v7_dma_clean_range
+> c010eb58 T b15_dma_flush_range
+> (actually 15 symbols above v7_dma_inv_range were replaced)
+> 
+> This method seems to be somehow working (at least affects addresses in
+> System.map).
+> 
+> *****
+> 
+> I run 2 tests for each combination of changes. Each test consisted of
+> 10 sequences of: 30 seconds iperf session + reboot.
+> 
+> 
+> > git reset --hard v4.19
+> > git am OpenWrt-mtd-chages.patch
+> Test #1: 738 Mb/s
+> Test #2: 737 Mb/s
+> 
+> > git reset --hard v4.19
+> > git am OpenWrt-mtd-chages.patch
+> patch -p1 < v7_dma_clean_range-align.diff
+> Test #1: 746 Mb/s
+> Test #2: 747 Mb/s
+> 
+> > git reset --hard v4.19
+> > git am OpenWrt-mtd-chages.patch
+> > patch -p1 < v7_dma_inv_range-align.diff
+> Test #1: 745 Mb/s
+> Test #2: 746 Mb/s
+> 
+> > git reset --hard v4.19
+> > git am OpenWrt-mtd-chages.patch
+> > patch -p1 < v7_dma_clean_range-align.diff
+> > patch -p1 < v7_dma_inv_range-align.diff
+> Test #1: 762 Mb/s
+> Test #2: 761 Mb/s
+> 
+> As you can see I got a quite nice performance improvement after aligning
+> both: v7_dma_clean_range() and v7_dma_inv_range().
 
-When the SMC is relocated, CPM_CR_INIT_TRX cannot be used.
+This is an improvement of about 3.3%.
 
-But the only thing CPM_CR_INIT_TRX does is to clear the
-rstate and tstate registers, so this can be done manually,
-even when SMC is not relocated.
+> It still wasn't as good as with 9316a9ed6895 cherry-picked but pretty
+> close.
+> 
+> 
+> > git reset --hard v4.19
+> > git am OpenWrt-mtd-chages.patch
+> > git cherry-pick -x 9316a9ed6895
+> Test #1: 770 Mb/s
+> Test #2: 766 Mb/s
+> 
+> > git reset --hard v4.19
+> > git am OpenWrt-mtd-chages.patch
+> > git cherry-pick -x 9316a9ed6895
+> > patch -p1 < v7_dma_clean_range-align.diff
+> Test #1: 756 Mb/s
+> Test #2: 759 Mb/s
+> 
+> > git reset --hard v4.19
+> > git am OpenWrt-mtd-chages.patch
+> > git cherry-pick -x 9316a9ed6895
+> > patch -p1 < v7_dma_inv_range-align.diff
+> Test #1: 758 Mb/s
+> Test #2: 759 Mb/s
+> 
+> > git reset --hard v4.19
+> > git am OpenWrt-mtd-chages.patch
+> > git cherry-pick -x 9316a9ed6895
+> > patch -p1 < v7_dma_clean_range-align.diff
+> > patch -p1 < v7_dma_inv_range-align.diff
+> Test #1: 767 Mb/s
+> Test #2: 763 Mb/s
+> 
+> Now you can see how unpredictable it is. If I cherry-pick 9316a9ed6895
+> and do an extra alignment of v7_dma_clean_range() and v7_dma_inv_range()
+> that extra alignment can actually *hurt* NAT performance.
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Fixes: 9ab921201444 ("cpm_uart: fix non-console port startup bug")
----
- drivers/tty/serial/cpm_uart/cpm_uart_core.c | 17 +++++++++++------
- 1 file changed, 11 insertions(+), 6 deletions(-)
+You have a maximum variance of 4Mb/s in your tests which is around
+0.5%, and this shows a reduction of 3Mb/s, or 0.4%.
 
-diff --git a/drivers/tty/serial/cpm_uart/cpm_uart_core.c b/drivers/tty/serial/cpm_uart/cpm_uart_core.c
-index b929c7ae3a27..7bab9a3eda92 100644
---- a/drivers/tty/serial/cpm_uart/cpm_uart_core.c
-+++ b/drivers/tty/serial/cpm_uart/cpm_uart_core.c
-@@ -407,7 +407,16 @@ static int cpm_uart_startup(struct uart_port *port)
- 			clrbits16(&pinfo->sccp->scc_sccm, UART_SCCM_RX);
- 		}
- 		cpm_uart_initbd(pinfo);
--		cpm_line_cr_cmd(pinfo, CPM_CR_INIT_TRX);
-+		if (IS_SMC(pinfo)) {
-+			out_be32(&pinfo->smcup->smc_rstate, 0);
-+			out_be32(&pinfo->smcup->smc_tstate, 0);
-+			out_be16(&pinfo->smcup->smc_rbptr,
-+				 in_be16(&pinfo->smcup->smc_rbase));
-+			out_be16(&pinfo->smcup->smc_tbptr,
-+				 in_be16(&pinfo->smcup->smc_tbase));
-+		} else {
-+			cpm_line_cr_cmd(pinfo, CPM_CR_INIT_TRX);
-+		}
- 	}
- 	/* Install interrupt handler. */
- 	retval = request_irq(port->irq, cpm_uart_int, 0, "cpm_uart", port);
-@@ -861,16 +870,14 @@ static void cpm_uart_init_smc(struct uart_cpm_port *pinfo)
- 	         (u8 __iomem *)pinfo->tx_bd_base - DPRAM_BASE);
- 
- /*
-- *  In case SMC1 is being relocated...
-+ *  In case SMC is being relocated...
-  */
--#if defined (CONFIG_I2C_SPI_SMC1_UCODE_PATCH)
- 	out_be16(&up->smc_rbptr, in_be16(&pinfo->smcup->smc_rbase));
- 	out_be16(&up->smc_tbptr, in_be16(&pinfo->smcup->smc_tbase));
- 	out_be32(&up->smc_rstate, 0);
- 	out_be32(&up->smc_tstate, 0);
- 	out_be16(&up->smc_brkcr, 1);              /* number of break chars */
- 	out_be16(&up->smc_brkec, 0);
--#endif
- 
- 	/* Set up the uart parameters in the
- 	 * parameter ram.
-@@ -884,8 +891,6 @@ static void cpm_uart_init_smc(struct uart_cpm_port *pinfo)
- 	out_be16(&up->smc_brkec, 0);
- 	out_be16(&up->smc_brkcr, 1);
- 
--	cpm_line_cr_cmd(pinfo, CPM_CR_INIT_TRX);
--
- 	/* Set UART mode, 8 bit, no parity, one stop.
- 	 * Enable receive and transmit.
- 	 */
+If we look at it a different way:
+- Without the alignment patches, there is a difference of 4% in
+  performance depending on whether 9316a9ed6895 is applied.
+- With the alignment patches, there is a difference of 0.4% in
+  performance depending on whether 9316a9ed6895 is applied.
+
+How can this not be beneficial?
+
+> 
+> My guess is that:
+> 1) 9316a9ed6895 provides alignment of some very important function(s)
+> 2) DMA alignments on top ^^ provide some gain but also break some align
+> 
+> *****
+> 
+> SUMMARY
+> 
+> It seems that for Linux 4.19 + my .config I can get a very lucky &
+> optimal alignment of functions by cherry-picking 9316a9ed6895.
+> 
+> I thought of checking functions reported by the "perf" tool with CPU
+> usage of 2%+.
+> 
+> All following functions keep their original address with 9316a9ed6895:
+> __irqentry_text_end
+> arch_cpu_idle
+> l2c210_clean_range
+> l2c210_inv_range
+> v7_dma_clean_range
+> v7_dma_inv_range
+> 
+> Remaining 3 functions got reallocated:
+> -c03e5038 t __netif_receive_skb_core
+> +c03e50b0 t __netif_receive_skb_core
+> -c03c8b1c t bcma_host_soc_read32
+> +c03c8b94 t bcma_host_soc_read32
+> -c0475620 T fib_table_lookup
+> +c0475698 T fib_table_lookup
+> 
+> I tried aligning all 3 above functions using:
+> __attribute__((aligned(32)))
+> and got 756 Mb/s. It's better but still not ~770 Mb/s.
+> 
+> Is there any easy way of identifying which of function alignments got
+> such a big impact on NAT performance? I'd like to get those functions
+> explicitly aligned using assembler/__attribute__/something.
+> 
+> What I'm also afraid are false positives. I may end up aligning some
+> unrelated function that just happens to align other ones. Just like
+> cherry-picking 9316a9ed6895 having side-effects and not really fixing
+> anything explicitly.
+
+> diff --git a/arch/arm/mm/cache-v7.S b/arch/arm/mm/cache-v7.S
+> index 215df435bfb9..c60046cd34aa 100644
+> --- a/arch/arm/mm/cache-v7.S
+> +++ b/arch/arm/mm/cache-v7.S
+> @@ -373,6 +373,8 @@ v7_dma_inv_range:
+>  	ret	lr
+>  ENDPROC(v7_dma_inv_range)
+>  
+> +	.align	5
+> +
+>  /*
+>   *	v7_dma_clean_range(start,end)
+>   *	- start   - virtual start address of region
+
+> diff --git a/arch/arm/mm/cache-v7.S b/arch/arm/mm/cache-v7.S
+> index 215df435bfb9..0c3999f219ab 100644
+> --- a/arch/arm/mm/cache-v7.S
+> +++ b/arch/arm/mm/cache-v7.S
+> @@ -340,6 +340,8 @@ ENTRY(v7_flush_kern_dcache_area)
+>  	ret	lr
+>  ENDPROC(v7_flush_kern_dcache_area)
+>  
+> +	.align	5
+> +
+>  /*
+>   *	v7_dma_inv_range(start,end)
+>   *
+
+
 -- 
-2.13.3
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
