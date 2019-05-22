@@ -2,120 +2,110 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08209C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 15:57:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01CCBC282DC
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 15:58:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBC0821473
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 15:57:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB6E220879
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 15:58:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="I5c1PJ8Q"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lEXht/Yz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729909AbfEVP5r (ORCPT
+        id S1729919AbfEVP6B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 11:57:47 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:50349 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728527AbfEVP5r (ORCPT
+        Wed, 22 May 2019 11:58:01 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:41327 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728466AbfEVP6B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 11:57:47 -0400
-Received: by mail-it1-f193.google.com with SMTP id i10so4421570ite.0
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 08:57:46 -0700 (PDT)
+        Wed, 22 May 2019 11:58:01 -0400
+Received: by mail-vs1-f66.google.com with SMTP id w19so1711194vsw.8
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 08:58:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=csIO6/r6boDgls5PxYVv4WnR4nG5C2hWLcsvu4wXyRE=;
-        b=I5c1PJ8QlNgcKHXLHGh8brj9dKeIc23jMxGlGishmc7jg0dw/3WNuuAICPR4vHase6
-         PXKRpc3p3PBlZCgxRTvLDlTyAmIMxmJ7uAylqP0Oum+ZxW7HPwc5ZhsSqR+PuIQLF2kn
-         rmWAp7Sa8igzbVYZCptsBDsyBpbNGWwDEp1Gg=
+        bh=s+WN2NSpn2jB+QUHcx4gNYGLsVtBRRfA1ymT26broI0=;
+        b=lEXht/YzHUZXrnvdt5qubD90lRzX9j1Hhl5VcHyTADFl7HzlKZD3QAkyg2J05xaB+W
+         v+yjOf3FT4gNaluoicvNLlvsh1zpPzq7MIKXk+qQ8OfuPhgWCfjUsNBtvbFFQfLZmmaS
+         pRfHWOPDr0Svw9fuTxYmtViBinOwFT8aK1hpeHXxkVPlFJYXmEAeS//9FgBg4FlU26Lm
+         GD035e+60AW9wjRfTojUD/fXVAhoYtaTlMk9wq9qwgvlOS0yRD5tbXYTtmBa/dmL9uGb
+         pAKj37gKgvWH/F1SOhOG5rKvqXgptpqEM3fRlIrPwElyc92ah4Y4Jd/79Du7582TE1IF
+         IUaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=csIO6/r6boDgls5PxYVv4WnR4nG5C2hWLcsvu4wXyRE=;
-        b=FmDzewqRanIk3X92mubZpBx2v4+Ax+jbC3vfKrxemRvbeNX5d/7zG/9TioTDIoOm3t
-         XoOteBBT/XpYYVb0BqzWjpmy5JTi1wT2bph65uXZGFP/+dx6witdD9V9Q+fLAyMOj7Qq
-         StnkHF5J3l11z+G8t/6Px6MFItgxsVqRIHJZYyFxeLY/KRQbbvZ7CMHXkWr3BXWCsJ0o
-         ScHWm+djS7UlDeBhTxVwRPhu0woF8yjLBsCmJl8ac2A71slky2X8SuTm15KErIc+iAa7
-         E3nhmMspeXxjx3KDCBWjCm+y3UIy7QYeB0v1A2UCCy3yk2ZeUKskEmYvQVPtlj6euOSB
-         ox8g==
-X-Gm-Message-State: APjAAAVPPE0JZJuaghGN9hWMMS/6aUg0d8PGHg9j9OBvihtEY3TY3HHS
-        AxO3s9PgXl1RyVGBjP/ySlV9APmg0PU=
-X-Google-Smtp-Source: APXvYqxzVxH0CGHOtbPPacUQzmlmSwvyuXkojrpeof//twviKDIiGLRVgwgyr0yAPizziW7zjRQi9Q==
-X-Received: by 2002:a24:d43:: with SMTP id 64mr2092582itx.114.1558540666497;
-        Wed, 22 May 2019 08:57:46 -0700 (PDT)
-Received: from mail-it1-f179.google.com (mail-it1-f179.google.com. [209.85.166.179])
-        by smtp.gmail.com with ESMTPSA id i25sm7730903ioi.42.2019.05.22.08.57.44
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Wed, 22 May 2019 08:57:45 -0700 (PDT)
-Received: by mail-it1-f179.google.com with SMTP id m141so4385352ita.3
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 08:57:44 -0700 (PDT)
-X-Received: by 2002:a02:5143:: with SMTP id s64mr8139039jaa.54.1558540664324;
- Wed, 22 May 2019 08:57:44 -0700 (PDT)
+        bh=s+WN2NSpn2jB+QUHcx4gNYGLsVtBRRfA1ymT26broI0=;
+        b=rdXcW0F26cHN3ycVJphBAgjG3jykDkgb38sNaTT0gGaJZlU+37SlMcWiIa3iMivuyu
+         lF0xpIpoocFArDBfjhnwDKHTnH0yM73Y+ZZykQOb4FrxL2/RUbSV1yNYuEEM16Z2H+wR
+         ks+vcueHJJHrhlG0hq4bbJr2y33hw1jmSW5vI4ZQqeKDKtX9LBUIYeABofcXqezay1q0
+         FW1sXfFJ4FJTrGm2o2M+Psfmn5uRKOzxRrBhQVZxdAO2jNs6+v9WdtNcBSA31d2yM/iM
+         LHwTaggOHGc+PB63mCnugPzaUJQtPtJ1NvctUAhl0Vh5GUu+YJw6q0yByqHRKTCWBcaD
+         cr4g==
+X-Gm-Message-State: APjAAAVao2jbAy5zqYqaiF0or/4VYrsU36Z5REKYRIccm8pO+kT6/cOm
+        GuP8W0ldH5GFsSLDcU0/AGmZOts8BoK03644ItfOxQ==
+X-Google-Smtp-Source: APXvYqyweCTnIudqCQoYfR74UirDb+xbgaCwS7136xNVmk5dacdDUaPrVVugetVcSqKqiDfJrOtZO/R40hLE8CE7dbA=
+X-Received: by 2002:a67:1485:: with SMTP id 127mr15146284vsu.77.1558540679719;
+ Wed, 22 May 2019 08:57:59 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190520231948.49693-1-thgarnie@chromium.org> <20190520231948.49693-4-thgarnie@chromium.org>
- <FF111368-9173-4AC2-9A79-E79A52B104DD@zytor.com>
-In-Reply-To: <FF111368-9173-4AC2-9A79-E79A52B104DD@zytor.com>
-From:   Thomas Garnier <thgarnie@chromium.org>
-Date:   Wed, 22 May 2019 08:57:33 -0700
-X-Gmail-Original-Message-ID: <CAJcbSZEYZLj_UQCQZzqxiOJEoWb2EzuUgaaFCkUBBFuKepHh8w@mail.gmail.com>
-Message-ID: <CAJcbSZEYZLj_UQCQZzqxiOJEoWb2EzuUgaaFCkUBBFuKepHh8w@mail.gmail.com>
-Subject: Re: [PATCH v7 03/12] x86: Add macro to get symbol address for PIE support
-To:     "H . Peter Anvin" <hpa@zytor.com>
-Cc:     Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Kristen Carlson Accardi <kristen@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nadav Amit <namit@vmware.com>, Jann Horn <jannh@google.com>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <20190520035254.57579-1-minchan@kernel.org> <20190521084158.s5wwjgewexjzrsm6@brauner.io>
+ <20190521110552.GG219653@google.com> <20190521113029.76iopljdicymghvq@brauner.io>
+ <20190521113911.2rypoh7uniuri2bj@brauner.io> <CAKOZuesjDcD3EM4PS7aO7yTa3KZ=FEzMP63MR0aEph4iW1NCYQ@mail.gmail.com>
+ <CAHrFyr6iuoZ-r6e57zp1rz7b=Ee0Vko+syuUKW2an+TkAEz_iA@mail.gmail.com>
+ <CAKOZueupb10vmm-bmL0j_b__qsC9ZrzhzHgpGhwPVUrfX0X-Og@mail.gmail.com>
+ <20190522145216.jkimuudoxi6pder2@brauner.io> <CAKOZueu837QGDAGat-tdA9J1qtKaeuQ5rg0tDyEjyvd_hjVc6g@mail.gmail.com>
+ <20190522154823.hu77qbjho5weado5@brauner.io>
+In-Reply-To: <20190522154823.hu77qbjho5weado5@brauner.io>
+From:   Daniel Colascione <dancol@google.com>
+Date:   Wed, 22 May 2019 08:57:47 -0700
+Message-ID: <CAKOZuev97fTvmXhEkjb7_RfDvjki4UoPw+QnVOsSAg0RB8RyMQ@mail.gmail.com>
+Subject: Re: [RFC 0/7] introduce memory hinting API for external process
+To:     Christian Brauner <christian@brauner.io>
+Cc:     Minchan Kim <minchan@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tim Murray <timmurray@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>, Jann Horn <jannh@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 20, 2019 at 8:13 PM <hpa@zytor.com> wrote:
+On Wed, May 22, 2019 at 8:48 AM Christian Brauner <christian@brauner.io> wrote:
 >
-> On May 20, 2019 4:19:28 PM PDT, Thomas Garnier <thgarnie@chromium.org> wrote:
-> >From: Thomas Garnier <thgarnie@google.com>
+> On Wed, May 22, 2019 at 08:17:23AM -0700, Daniel Colascione wrote:
+> > On Wed, May 22, 2019 at 7:52 AM Christian Brauner <christian@brauner.io> wrote:
+> > > I'm not going to go into yet another long argument. I prefer pidfd_*.
 > >
-> >Add a new _ASM_MOVABS macro to fetch a symbol address. It will be used
-> >to replace "_ASM_MOV $<symbol>, %dst" code construct that are not
-> >compatible with PIE.
+> > Ok. We're each allowed our opinion.
 > >
-> >Signed-off-by: Thomas Garnier <thgarnie@google.com>
-> >---
-> > arch/x86/include/asm/asm.h | 1 +
-> > 1 file changed, 1 insertion(+)
+> > > It's tied to the api, transparent for userspace, and disambiguates it
+> > > from process_vm_{read,write}v that both take a pid_t.
 > >
-> >diff --git a/arch/x86/include/asm/asm.h b/arch/x86/include/asm/asm.h
-> >index 3ff577c0b102..3a686057e882 100644
-> >--- a/arch/x86/include/asm/asm.h
-> >+++ b/arch/x86/include/asm/asm.h
-> >@@ -30,6 +30,7 @@
-> > #define _ASM_ALIGN    __ASM_SEL(.balign 4, .balign 8)
-> >
-> > #define _ASM_MOV      __ASM_SIZE(mov)
-> >+#define _ASM_MOVABS   __ASM_SEL(movl, movabsq)
-> > #define _ASM_INC      __ASM_SIZE(inc)
-> > #define _ASM_DEC      __ASM_SIZE(dec)
-> > #define _ASM_ADD      __ASM_SIZE(add)
+> > Speaking of process_vm_readv and process_vm_writev: both have a
+> > currently-unused flags argument. Both should grow a flag that tells
+> > them to interpret the pid argument as a pidfd. Or do you support
+> > adding pidfd_vm_readv and pidfd_vm_writev system calls? If not, why
+> > should process_madvise be called pidfd_madvise while process_vm_readv
+> > isn't called pidfd_vm_readv?
 >
-> This is just about *always* wrong on x86-86. We should be using leaq sym(%rip),%reg. If it isn't reachable by leaq, then it is a non-PIE symbol like percpu. You do have to keep those distinct!
+> Actually, you should then do the same with process_madvise() and give it
+> a flag for that too if that's not too crazy.
 
-Yes, I agree. This patch is just having a shortcut when it is a
-non-PIE symbol. The other patches try to separate the use cases where
-a leaq sym(%rip) would work versus the need for a movabsq. There are
-multiple cases where relative references are not possible because the
-memory layout is different (hibernation, early boot or others).
-
-> --
-> Sent from my Android device with K-9 Mail. Please excuse my brevity.
+I don't know what you mean. My gut feeling is that for the sake of
+consistency, process_madvise, process_vm_readv, and process_vm_writev
+should all accept a first argument interpreted as either a numeric PID
+or a pidfd depending on a flag --- ideally the same flag. Is that what
+you have in mind?
