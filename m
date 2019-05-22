@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05450C282DC
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:42:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9DBEC282DC
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:42:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C187520856
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:42:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83C0120862
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:42:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558554166;
-	bh=by8BltlWF2RfOdmNYZlOmLlimur2zOafkiL3mXgpTqQ=;
+	s=default; t=1558554174;
+	bh=9gu/ehZ6l8f0SZ+JITBMqr2JTBHP/QbQzVgj0ArK6VU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WFD86HdbaFQbgRwAbKJSqAvVFQMs2hhsjF/WbYDTM3EDr8aaxknA7fM2OFERa6q5B
-	 tAB0d9bS8mYQ2Wm4QRcNVJ2t6zdCQF7sfehXMgqO/a+w7b6lZwDEN5AuMVlcD0tZ07
-	 BE3M5lZ9QyIYzIgb3ArLWitn0aXiwku1PieCJDxc=
+	b=wmoOQNpHAbCkWeeOHO9Rtp9Ti8Qb51Bqx/VqYFu4u/CXd3VVkc+xwFXRhr1syRFUj
+	 QmtDc4L02F99B37vOIEOvY/dJ6d5U8HVlwCM7DT5rcGbBPan4+admbUm4+CoGScNxL
+	 mEVYr5qmTUYT739wISiADRLOx/Ok6idUnIkzrz0A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732594AbfEVT2h (ORCPT
+        id S1732277AbfEVTmx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:28:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50850 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:42:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51314 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732505AbfEVT2P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:28:15 -0400
+        id S1732254AbfEVT2g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:28:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC9F420675;
-        Wed, 22 May 2019 19:28:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 841DF204FD;
+        Wed, 22 May 2019 19:28:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553294;
-        bh=by8BltlWF2RfOdmNYZlOmLlimur2zOafkiL3mXgpTqQ=;
+        s=default; t=1558553316;
+        bh=9gu/ehZ6l8f0SZ+JITBMqr2JTBHP/QbQzVgj0ArK6VU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gvz5oV8/VExTnFySTHlL9hgxC+dS95pfEtCEIFXy7m3o87UvZRMw6CIVmiqSrW1QF
-         UorI6IXwLTGfiyuvo10wbHcPxt32a5jxoxpMlfV3JaD/InXpwq7mBHLhYm3MHs0cPW
-         xZuB32USh+FayMveXFUbHd1oponVgDxHw/z9QSaA=
+        b=pf+9DVJRsDjODhezZpISX61jFRnKKF5RMYBs8Lu3dw40X8tkX6QW8Q3dIrYi28Ad9
+         i/3A4ZjLd8mXQbIiUJl0A1FGy1aiRRQkni7/Rx8Qd0SnQ90+aheoDWSaONEPStUE8w
+         IfPZR2j0U06IP/448QAKbVm73UAvIcykTN5yTRIA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Shenghui Wang <shhuiw@foxmail.com>, Coly Li <colyli@suse.de>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-bcache@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 066/244] bcache: avoid potential memleak of list of journal_replay(s) in the CACHE_SYNC branch of run_cache_set
-Date:   Wed, 22 May 2019 15:23:32 -0400
-Message-Id: <20190522192630.24917-66-sashal@kernel.org>
+Cc:     Balakrishna Godavarthi <bgodavar@codeaurora.org>,
+        Rocky Liao <rjliao@codeaurora.org>,
+        Claire Chang <tientzu@chromium.org>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-bluetooth@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 079/244] Bluetooth: hci_qca: Give enough time to ROME controller to bootup.
+Date:   Wed, 22 May 2019 15:23:45 -0400
+Message-Id: <20190522192630.24917-79-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192630.24917-1-sashal@kernel.org>
 References: <20190522192630.24917-1-sashal@kernel.org>
@@ -59,60 +62,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shenghui Wang <shhuiw@foxmail.com>
+From: Balakrishna Godavarthi <bgodavar@codeaurora.org>
 
-[ Upstream commit 95f18c9d1310730d075499a75aaf13bcd60405a7 ]
+[ Upstream commit 7f09d5a6c33be66a5ca19bf9dd1c2d90c5dfcf0d ]
 
-In the CACHE_SYNC branch of run_cache_set(), LIST_HEAD(journal) is used
-to collect journal_replay(s) and filled by bch_journal_read().
+This patch enables enough time to ROME controller to bootup
+after we bring the enable pin out of reset.
 
-If all goes well, bch_journal_replay() will release the list of
-jounal_replay(s) at the end of the branch.
-
-If something goes wrong, code flow will jump to the label "err:" and leave
-the list unreleased.
-
-This patch will release the list of journal_replay(s) in the case of
-error detected.
-
-v1 -> v2:
-* Move the release code to the location after label 'err:' to
-  simply the change.
-
-Signed-off-by: Shenghui Wang <shhuiw@foxmail.com>
-Signed-off-by: Coly Li <colyli@suse.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: 05ba533c5c11 ("Bluetooth: hci_qca: Add serdev support").
+Signed-off-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
+Reviewed-by: Rocky Liao <rjliao@codeaurora.org>
+Tested-by: Rocky Liao <rjliao@codeaurora.org>
+Tested-by: Claire Chang <tientzu@chromium.org>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/bcache/super.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/bluetooth/hci_qca.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
-index 03bb5cee2b835..0dffb97d49833 100644
---- a/drivers/md/bcache/super.c
-+++ b/drivers/md/bcache/super.c
-@@ -1777,6 +1777,8 @@ static void run_cache_set(struct cache_set *c)
- 	struct cache *ca;
- 	struct closure cl;
- 	unsigned int i;
-+	LIST_HEAD(journal);
-+	struct journal_replay *l;
- 
- 	closure_init_stack(&cl);
- 
-@@ -1934,6 +1936,12 @@ static void run_cache_set(struct cache_set *c)
- 	set_bit(CACHE_SET_RUNNING, &c->flags);
- 	return;
- err:
-+	while (!list_empty(&journal)) {
-+		l = list_first_entry(&journal, struct journal_replay, list);
-+		list_del(&l->list);
-+		kfree(l);
-+	}
-+
- 	closure_sync(&cl);
- 	/* XXX: test this, it's broken */
- 	bch_cache_set_error(c, "%s", err);
+diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+index f0d593c3fa728..77004c29da089 100644
+--- a/drivers/bluetooth/hci_qca.c
++++ b/drivers/bluetooth/hci_qca.c
+@@ -504,6 +504,8 @@ static int qca_open(struct hci_uart *hu)
+ 		qcadev = serdev_device_get_drvdata(hu->serdev);
+ 		if (qcadev->btsoc_type != QCA_WCN3990) {
+ 			gpiod_set_value_cansleep(qcadev->bt_en, 1);
++			/* Controller needs time to bootup. */
++			msleep(150);
+ 		} else {
+ 			hu->init_speed = qcadev->init_speed;
+ 			hu->oper_speed = qcadev->oper_speed;
 -- 
 2.20.1
 
