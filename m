@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBC9AC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:56:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E59BC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:56:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A793220856
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:56:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDCB920856
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:56:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558554982;
-	bh=aD23fXim+qn4m5LsD02ZfzeMdCT29N+kpDGNTJbL7ng=;
+	s=default; t=1558554992;
+	bh=PkZmfk0OqJyY0Cf/BSA2N55nGF6Y2FVS3Bi5FZ5MtjQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QUryIGC1Sy2r050mD2Op/ly8ClY5Ga2q9Pa5EPYd/RMue+KHHnMNOIyJ+mmB9YKvT
-	 dIlaXlUsvsOhE7a3wcYWOJ10Pt4AiHIoPCNNWBVSsoIzflvICubz7U/NuwBsdvhOE4
-	 l4vhlX/reMFrlbpSsWcnF2XwKjPHRzidGilJ6JvI=
+	b=da0T02Jaw10FIn4giSivCabseJPsNrc0z6/kgkftu9htzFnvWRx7RWiPzCuFY/B5p
+	 /EJNUnA3ksWuNHbbSdkqzFgfWvdBTaegWIv8X+ZF6/EG29CzlHO303uiQ50XHXG3fk
+	 LnDG9bGCmFmr9dy/iZONpn/gOCDiiS6A3eFgGQ80=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388045AbfEVT4W (ORCPT
+        id S1731908AbfEVT4c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:56:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46212 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:56:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46064 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731463AbfEVTY6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:24:58 -0400
+        id S1731434AbfEVTYw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:24:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 74867217F9;
-        Wed, 22 May 2019 19:24:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2565A20879;
+        Wed, 22 May 2019 19:24:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553097;
-        bh=aD23fXim+qn4m5LsD02ZfzeMdCT29N+kpDGNTJbL7ng=;
+        s=default; t=1558553092;
+        bh=PkZmfk0OqJyY0Cf/BSA2N55nGF6Y2FVS3Bi5FZ5MtjQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2TVEwVcx5T3U8vBMD38QOYsh9fp/0QEyopynvY0jDGFUZMiXeBDwGRJD8fEo6bQ8n
-         YYbPuwI8KdGY6l4PwWiZdDisgmlt0+5sEyjmnqtmIbKJyjYfOu3B4mU7KRz1yxWnJe
-         wRcB/CmTWwWExuKKK4KK/JgJs+3h3GPOzmXXyLNE=
+        b=Y8e6igcckBocAA9WMlMHiTL2KTTrhw1vyJ4rwtU+NBflTYpXHSZlI0++OB80b84ET
+         6HyTPykt5dEzkMIr85tn7vuosdbJ0YAsAN9XUE4/eoJz1nM/ECNd43BdxG7P/sipWf
+         uEoxgQ2NpO9HiHoikqT7q6GfF5U4dr4/pM9HC5hI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bart Van Assche <bvanassche@acm.org>,
-        Himanshu Madhani <hmadhani@marvell.com>,
-        Giridhar Malavali <gmalavali@marvell.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 046/317] scsi: qla2xxx: Avoid that lockdep complains about unsafe locking in tcm_qla2xxx_close_session()
-Date:   Wed, 22 May 2019 15:19:07 -0400
-Message-Id: <20190522192338.23715-46-sashal@kernel.org>
+Cc:     Nicholas Piggin <npiggin@gmail.com>,
+        "Gautham R . Shenoy" <ego@linux.vnet.ibm.com>,
+        Ravikumar Bangoria <ravi.bangoria@in.ibm.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 5.0 042/317] powerpc/watchdog: Use hrtimers for per-CPU heartbeat
+Date:   Wed, 22 May 2019 15:19:03 -0400
+Message-Id: <20190522192338.23715-42-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192338.23715-1-sashal@kernel.org>
 References: <20190522192338.23715-1-sashal@kernel.org>
@@ -61,260 +62,196 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Nicholas Piggin <npiggin@gmail.com>
 
-[ Upstream commit d4023db71108375e4194e92730ba0d32d7f07813 ]
+[ Upstream commit 7ae3f6e130e8dc6188b59e3b4ebc2f16e9c8d053 ]
 
-This patch avoids that lockdep reports the following warning:
+Using a jiffies timer creates a dependency on the tick_do_timer_cpu
+incrementing jiffies. If that CPU has locked up and jiffies is not
+incrementing, the watchdog heartbeat timer for all CPUs stops and
+creates false positives and confusing warnings on local CPUs, and
+also causes the SMP detector to stop, so the root cause is never
+detected.
 
-=====================================================
-WARNING: HARDIRQ-safe -> HARDIRQ-unsafe lock order detected
-5.1.0-rc1-dbg+ #11 Tainted: G        W
------------------------------------------------------
-rmdir/1478 [HC0[0]:SC0[0]:HE0:SE1] is trying to acquire:
-00000000e7ac4607 (&(&k->k_lock)->rlock){+.+.}, at: klist_next+0x43/0x1d0
+Fix this by using hrtimer based timers for the watchdog heartbeat,
+like the generic kernel hardlockup detector.
 
-and this task is already holding:
-00000000cf0baf5e (&(&ha->tgt.sess_lock)->rlock){-...}, at: tcm_qla2xxx_close_session+0x57/0xb0 [tcm_qla2xxx]
-which would create a new lock dependency:
- (&(&ha->tgt.sess_lock)->rlock){-...} -> (&(&k->k_lock)->rlock){+.+.}
-
-but this new dependency connects a HARDIRQ-irq-safe lock:
- (&(&ha->tgt.sess_lock)->rlock){-...}
-
-... which became HARDIRQ-irq-safe at:
-  lock_acquire+0xe3/0x200
-  _raw_spin_lock_irqsave+0x3d/0x60
-  qla2x00_fcport_event_handler+0x1f3d/0x22b0 [qla2xxx]
-  qla2x00_async_login_sp_done+0x1dc/0x1f0 [qla2xxx]
-  qla24xx_process_response_queue+0xa37/0x10e0 [qla2xxx]
-  qla24xx_msix_rsp_q+0x79/0xf0 [qla2xxx]
-  __handle_irq_event_percpu+0x79/0x3c0
-  handle_irq_event_percpu+0x70/0xf0
-  handle_irq_event+0x5a/0x8b
-  handle_edge_irq+0x12c/0x310
-  handle_irq+0x192/0x20a
-  do_IRQ+0x73/0x160
-  ret_from_intr+0x0/0x1d
-  default_idle+0x23/0x1f0
-  arch_cpu_idle+0x15/0x20
-  default_idle_call+0x35/0x40
-  do_idle+0x2bb/0x2e0
-  cpu_startup_entry+0x1d/0x20
-  start_secondary+0x24d/0x2d0
-  secondary_startup_64+0xa4/0xb0
-
-to a HARDIRQ-irq-unsafe lock:
- (&(&k->k_lock)->rlock){+.+.}
-
-... which became HARDIRQ-irq-unsafe at:
-...
-  lock_acquire+0xe3/0x200
-  _raw_spin_lock+0x32/0x50
-  klist_add_tail+0x33/0xb0
-  device_add+0x7f4/0xb60
-  device_create_groups_vargs+0x11c/0x150
-  device_create_with_groups+0x89/0xb0
-  vtconsole_class_init+0xb2/0x124
-  do_one_initcall+0xc5/0x3ce
-  kernel_init_freeable+0x295/0x32e
-  kernel_init+0x11/0x11b
-  ret_from_fork+0x3a/0x50
-
-other info that might help us debug this:
-
- Possible interrupt unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(&(&k->k_lock)->rlock);
-                               local_irq_disable();
-                               lock(&(&ha->tgt.sess_lock)->rlock);
-                               lock(&(&k->k_lock)->rlock);
-  <Interrupt>
-    lock(&(&ha->tgt.sess_lock)->rlock);
-
- *** DEADLOCK ***
-
-4 locks held by rmdir/1478:
- #0: 000000002c7f1ba4 (sb_writers#10){.+.+}, at: mnt_want_write+0x32/0x70
- #1: 00000000c85eb147 (&default_group_class[depth - 1]#2/1){+.+.}, at: do_rmdir+0x217/0x2d0
- #2: 000000002b164d6f (&sb->s_type->i_mutex_key#13){++++}, at: vfs_rmdir+0x7e/0x1d0
- #3: 00000000cf0baf5e (&(&ha->tgt.sess_lock)->rlock){-...}, at: tcm_qla2xxx_close_session+0x57/0xb0 [tcm_qla2xxx]
-
-the dependencies between HARDIRQ-irq-safe lock and the holding lock:
--> (&(&ha->tgt.sess_lock)->rlock){-...} ops: 127 {
-   IN-HARDIRQ-W at:
-                    lock_acquire+0xe3/0x200
-                    _raw_spin_lock_irqsave+0x3d/0x60
-                    qla2x00_fcport_event_handler+0x1f3d/0x22b0 [qla2xxx]
-                    qla2x00_async_login_sp_done+0x1dc/0x1f0 [qla2xxx]
-                    qla24xx_process_response_queue+0xa37/0x10e0 [qla2xxx]
-                    qla24xx_msix_rsp_q+0x79/0xf0 [qla2xxx]
-                    __handle_irq_event_percpu+0x79/0x3c0
-                    handle_irq_event_percpu+0x70/0xf0
-                    handle_irq_event+0x5a/0x8b
-                    handle_edge_irq+0x12c/0x310
-                    handle_irq+0x192/0x20a
-                    do_IRQ+0x73/0x160
-                    ret_from_intr+0x0/0x1d
-                    default_idle+0x23/0x1f0
-                    arch_cpu_idle+0x15/0x20
-                    default_idle_call+0x35/0x40
-                    do_idle+0x2bb/0x2e0
-                    cpu_startup_entry+0x1d/0x20
-                    start_secondary+0x24d/0x2d0
-                    secondary_startup_64+0xa4/0xb0
-   INITIAL USE at:
-                   lock_acquire+0xe3/0x200
-                   _raw_spin_lock_irqsave+0x3d/0x60
-                   qla2x00_loop_resync+0xb3d/0x2690 [qla2xxx]
-                   qla2x00_do_dpc+0xcee/0xf30 [qla2xxx]
-                   kthread+0x1d2/0x1f0
-                   ret_from_fork+0x3a/0x50
- }
- ... key      at: [<ffffffffa125f700>] __key.62804+0x0/0xfffffffffff7e900 [qla2xxx]
- ... acquired at:
-   __lock_acquire+0x11ed/0x1b60
-   lock_acquire+0xe3/0x200
-   _raw_spin_lock_irqsave+0x3d/0x60
-   klist_next+0x43/0x1d0
-   device_for_each_child+0x96/0x110
-   scsi_target_block+0x3c/0x40 [scsi_mod]
-   fc_remote_port_delete+0xe7/0x1c0 [scsi_transport_fc]
-   qla2x00_mark_device_lost+0x4d3/0x500 [qla2xxx]
-   qlt_unreg_sess+0x104/0x2c0 [qla2xxx]
-   tcm_qla2xxx_close_session+0xa2/0xb0 [tcm_qla2xxx]
-   target_shutdown_sessions+0x17b/0x190 [target_core_mod]
-   core_tpg_del_initiator_node_acl+0xf3/0x1f0 [target_core_mod]
-   target_fabric_nacl_base_release+0x25/0x30 [target_core_mod]
-   config_item_release+0x9f/0x120 [configfs]
-   config_item_put+0x29/0x2b [configfs]
-   configfs_rmdir+0x3d2/0x520 [configfs]
-   vfs_rmdir+0xb3/0x1d0
-   do_rmdir+0x25c/0x2d0
-   __x64_sys_rmdir+0x24/0x30
-   do_syscall_64+0x77/0x220
-   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-the dependencies between the lock to be acquired
- and HARDIRQ-irq-unsafe lock:
--> (&(&k->k_lock)->rlock){+.+.} ops: 14568 {
-   HARDIRQ-ON-W at:
-                    lock_acquire+0xe3/0x200
-                    _raw_spin_lock+0x32/0x50
-                    klist_add_tail+0x33/0xb0
-                    device_add+0x7f4/0xb60
-                    device_create_groups_vargs+0x11c/0x150
-                    device_create_with_groups+0x89/0xb0
-                    vtconsole_class_init+0xb2/0x124
-                    do_one_initcall+0xc5/0x3ce
-                    kernel_init_freeable+0x295/0x32e
-                    kernel_init+0x11/0x11b
-                    ret_from_fork+0x3a/0x50
-   SOFTIRQ-ON-W at:
-                    lock_acquire+0xe3/0x200
-                    _raw_spin_lock+0x32/0x50
-                    klist_add_tail+0x33/0xb0
-                    device_add+0x7f4/0xb60
-                    device_create_groups_vargs+0x11c/0x150
-                    device_create_with_groups+0x89/0xb0
-                    vtconsole_class_init+0xb2/0x124
-                    do_one_initcall+0xc5/0x3ce
-                    kernel_init_freeable+0x295/0x32e
-                    kernel_init+0x11/0x11b
-                    ret_from_fork+0x3a/0x50
-   INITIAL USE at:
-                   lock_acquire+0xe3/0x200
-                   _raw_spin_lock+0x32/0x50
-                   klist_add_tail+0x33/0xb0
-                   device_add+0x7f4/0xb60
-                   device_create_groups_vargs+0x11c/0x150
-                   device_create_with_groups+0x89/0xb0
-                   vtconsole_class_init+0xb2/0x124
-                   do_one_initcall+0xc5/0x3ce
-                   kernel_init_freeable+0x295/0x32e
-                   kernel_init+0x11/0x11b
-                   ret_from_fork+0x3a/0x50
- }
- ... key      at: [<ffffffff83f3d900>] __key.15805+0x0/0x40
- ... acquired at:
-   __lock_acquire+0x11ed/0x1b60
-   lock_acquire+0xe3/0x200
-   _raw_spin_lock_irqsave+0x3d/0x60
-   klist_next+0x43/0x1d0
-   device_for_each_child+0x96/0x110
-   scsi_target_block+0x3c/0x40 [scsi_mod]
-   fc_remote_port_delete+0xe7/0x1c0 [scsi_transport_fc]
-   qla2x00_mark_device_lost+0x4d3/0x500 [qla2xxx]
-   qlt_unreg_sess+0x104/0x2c0 [qla2xxx]
-   tcm_qla2xxx_close_session+0xa2/0xb0 [tcm_qla2xxx]
-   target_shutdown_sessions+0x17b/0x190 [target_core_mod]
-   core_tpg_del_initiator_node_acl+0xf3/0x1f0 [target_core_mod]
-   target_fabric_nacl_base_release+0x25/0x30 [target_core_mod]
-   config_item_release+0x9f/0x120 [configfs]
-   config_item_put+0x29/0x2b [configfs]
-   configfs_rmdir+0x3d2/0x520 [configfs]
-   vfs_rmdir+0xb3/0x1d0
-   do_rmdir+0x25c/0x2d0
-   __x64_sys_rmdir+0x24/0x30
-   do_syscall_64+0x77/0x220
-   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-stack backtrace:
-CPU: 7 PID: 1478 Comm: rmdir Tainted: G        W         5.1.0-rc1-dbg+ #11
-Hardware name: Bochs Bochs, BIOS Bochs 01/01/2011
-Call Trace:
- dump_stack+0x86/0xca
- check_usage.cold.59+0x473/0x563
- check_prev_add.constprop.43+0x1f1/0x1170
- __lock_acquire+0x11ed/0x1b60
- lock_acquire+0xe3/0x200
- _raw_spin_lock_irqsave+0x3d/0x60
- klist_next+0x43/0x1d0
- device_for_each_child+0x96/0x110
- scsi_target_block+0x3c/0x40 [scsi_mod]
- fc_remote_port_delete+0xe7/0x1c0 [scsi_transport_fc]
- qla2x00_mark_device_lost+0x4d3/0x500 [qla2xxx]
- qlt_unreg_sess+0x104/0x2c0 [qla2xxx]
- tcm_qla2xxx_close_session+0xa2/0xb0 [tcm_qla2xxx]
- target_shutdown_sessions+0x17b/0x190 [target_core_mod]
- core_tpg_del_initiator_node_acl+0xf3/0x1f0 [target_core_mod]
- target_fabric_nacl_base_release+0x25/0x30 [target_core_mod]
- config_item_release+0x9f/0x120 [configfs]
- config_item_put+0x29/0x2b [configfs]
- configfs_rmdir+0x3d2/0x520 [configfs]
- vfs_rmdir+0xb3/0x1d0
- do_rmdir+0x25c/0x2d0
- __x64_sys_rmdir+0x24/0x30
- do_syscall_64+0x77/0x220
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Cc: Himanshu Madhani <hmadhani@marvell.com>
-Cc: Giridhar Malavali <gmalavali@marvell.com>
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Acked-by: Himanshu Madhani <hmadhani@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Cc: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
+Reported-by: Ravikumar Bangoria <ravi.bangoria@in.ibm.com>
+Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
+Tested-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Reported-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Reviewed-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/tcm_qla2xxx.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/powerpc/kernel/watchdog.c | 81 +++++++++++++++++-----------------
+ 1 file changed, 40 insertions(+), 41 deletions(-)
 
-diff --git a/drivers/scsi/qla2xxx/tcm_qla2xxx.c b/drivers/scsi/qla2xxx/tcm_qla2xxx.c
-index 708151b72ee9f..72d5b678e85d2 100644
---- a/drivers/scsi/qla2xxx/tcm_qla2xxx.c
-+++ b/drivers/scsi/qla2xxx/tcm_qla2xxx.c
-@@ -374,8 +374,9 @@ static void tcm_qla2xxx_close_session(struct se_session *se_sess)
+diff --git a/arch/powerpc/kernel/watchdog.c b/arch/powerpc/kernel/watchdog.c
+index 3c6ab22a0c4e3..af3c15a1d41eb 100644
+--- a/arch/powerpc/kernel/watchdog.c
++++ b/arch/powerpc/kernel/watchdog.c
+@@ -77,7 +77,7 @@ static u64 wd_smp_panic_timeout_tb __read_mostly; /* panic other CPUs */
  
- 	spin_lock_irqsave(&vha->hw->tgt.sess_lock, flags);
- 	target_sess_cmd_list_set_waiting(se_sess);
--	tcm_qla2xxx_put_sess(sess);
- 	spin_unlock_irqrestore(&vha->hw->tgt.sess_lock, flags);
-+
-+	tcm_qla2xxx_put_sess(sess);
+ static u64 wd_timer_period_ms __read_mostly;  /* interval between heartbeat */
+ 
+-static DEFINE_PER_CPU(struct timer_list, wd_timer);
++static DEFINE_PER_CPU(struct hrtimer, wd_hrtimer);
+ static DEFINE_PER_CPU(u64, wd_timer_tb);
+ 
+ /* SMP checker bits */
+@@ -293,21 +293,21 @@ void soft_nmi_interrupt(struct pt_regs *regs)
+ 	nmi_exit();
  }
  
- static u32 tcm_qla2xxx_sess_get_index(struct se_session *se_sess)
+-static void wd_timer_reset(unsigned int cpu, struct timer_list *t)
+-{
+-	t->expires = jiffies + msecs_to_jiffies(wd_timer_period_ms);
+-	if (wd_timer_period_ms > 1000)
+-		t->expires = __round_jiffies_up(t->expires, cpu);
+-	add_timer_on(t, cpu);
+-}
+-
+-static void wd_timer_fn(struct timer_list *t)
++static enum hrtimer_restart watchdog_timer_fn(struct hrtimer *hrtimer)
+ {
+ 	int cpu = smp_processor_id();
+ 
++	if (!(watchdog_enabled & NMI_WATCHDOG_ENABLED))
++		return HRTIMER_NORESTART;
++
++	if (!cpumask_test_cpu(cpu, &watchdog_cpumask))
++		return HRTIMER_NORESTART;
++
+ 	watchdog_timer_interrupt(cpu);
+ 
+-	wd_timer_reset(cpu, t);
++	hrtimer_forward_now(hrtimer, ms_to_ktime(wd_timer_period_ms));
++
++	return HRTIMER_RESTART;
+ }
+ 
+ void arch_touch_nmi_watchdog(void)
+@@ -323,37 +323,22 @@ void arch_touch_nmi_watchdog(void)
+ }
+ EXPORT_SYMBOL(arch_touch_nmi_watchdog);
+ 
+-static void start_watchdog_timer_on(unsigned int cpu)
+-{
+-	struct timer_list *t = per_cpu_ptr(&wd_timer, cpu);
+-
+-	per_cpu(wd_timer_tb, cpu) = get_tb();
+-
+-	timer_setup(t, wd_timer_fn, TIMER_PINNED);
+-	wd_timer_reset(cpu, t);
+-}
+-
+-static void stop_watchdog_timer_on(unsigned int cpu)
+-{
+-	struct timer_list *t = per_cpu_ptr(&wd_timer, cpu);
+-
+-	del_timer_sync(t);
+-}
+-
+-static int start_wd_on_cpu(unsigned int cpu)
++static void start_watchdog(void *arg)
+ {
++	struct hrtimer *hrtimer = this_cpu_ptr(&wd_hrtimer);
++	int cpu = smp_processor_id();
+ 	unsigned long flags;
+ 
+ 	if (cpumask_test_cpu(cpu, &wd_cpus_enabled)) {
+ 		WARN_ON(1);
+-		return 0;
++		return;
+ 	}
+ 
+ 	if (!(watchdog_enabled & NMI_WATCHDOG_ENABLED))
+-		return 0;
++		return;
+ 
+ 	if (!cpumask_test_cpu(cpu, &watchdog_cpumask))
+-		return 0;
++		return;
+ 
+ 	wd_smp_lock(&flags);
+ 	cpumask_set_cpu(cpu, &wd_cpus_enabled);
+@@ -363,27 +348,40 @@ static int start_wd_on_cpu(unsigned int cpu)
+ 	}
+ 	wd_smp_unlock(&flags);
+ 
+-	start_watchdog_timer_on(cpu);
++	*this_cpu_ptr(&wd_timer_tb) = get_tb();
+ 
+-	return 0;
++	hrtimer_init(hrtimer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
++	hrtimer->function = watchdog_timer_fn;
++	hrtimer_start(hrtimer, ms_to_ktime(wd_timer_period_ms),
++		      HRTIMER_MODE_REL_PINNED);
+ }
+ 
+-static int stop_wd_on_cpu(unsigned int cpu)
++static int start_watchdog_on_cpu(unsigned int cpu)
+ {
++	return smp_call_function_single(cpu, start_watchdog, NULL, true);
++}
++
++static void stop_watchdog(void *arg)
++{
++	struct hrtimer *hrtimer = this_cpu_ptr(&wd_hrtimer);
++	int cpu = smp_processor_id();
+ 	unsigned long flags;
+ 
+ 	if (!cpumask_test_cpu(cpu, &wd_cpus_enabled))
+-		return 0; /* Can happen in CPU unplug case */
++		return; /* Can happen in CPU unplug case */
+ 
+-	stop_watchdog_timer_on(cpu);
++	hrtimer_cancel(hrtimer);
+ 
+ 	wd_smp_lock(&flags);
+ 	cpumask_clear_cpu(cpu, &wd_cpus_enabled);
+ 	wd_smp_unlock(&flags);
+ 
+ 	wd_smp_clear_cpu_pending(cpu, get_tb());
++}
+ 
+-	return 0;
++static int stop_watchdog_on_cpu(unsigned int cpu)
++{
++	return smp_call_function_single(cpu, stop_watchdog, NULL, true);
+ }
+ 
+ static void watchdog_calc_timeouts(void)
+@@ -402,7 +400,7 @@ void watchdog_nmi_stop(void)
+ 	int cpu;
+ 
+ 	for_each_cpu(cpu, &wd_cpus_enabled)
+-		stop_wd_on_cpu(cpu);
++		stop_watchdog_on_cpu(cpu);
+ }
+ 
+ void watchdog_nmi_start(void)
+@@ -411,7 +409,7 @@ void watchdog_nmi_start(void)
+ 
+ 	watchdog_calc_timeouts();
+ 	for_each_cpu_and(cpu, cpu_online_mask, &watchdog_cpumask)
+-		start_wd_on_cpu(cpu);
++		start_watchdog_on_cpu(cpu);
+ }
+ 
+ /*
+@@ -423,7 +421,8 @@ int __init watchdog_nmi_probe(void)
+ 
+ 	err = cpuhp_setup_state_nocalls(CPUHP_AP_ONLINE_DYN,
+ 					"powerpc/watchdog:online",
+-					start_wd_on_cpu, stop_wd_on_cpu);
++					start_watchdog_on_cpu,
++					stop_watchdog_on_cpu);
+ 	if (err < 0) {
+ 		pr_warn("could not be initialized");
+ 		return err;
 -- 
 2.20.1
 
