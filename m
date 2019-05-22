@@ -2,97 +2,79 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92A44C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:43:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26B60C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:43:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5988D20856
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:43:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558554183;
-	bh=t0ELyZcHCkTHsnKm5byRNb6pPqbCrwMCLRiZIvw3gTc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R1nibBwe2YL71SZ29wUD2AY+0uvdFK10LLneelq1OZCeOlWBCoVp3KWBeC9F9O6/r
-	 WmhkDNoXGgMRR9kvY2c6z6Uqm5tBHX6W1oqziXnU5z/ijqa3vkUAnHI/zPypAIPrgl
-	 MdLVu1k8n2D1zDM89p5hyVgpG7r6l97NZT4UieNs=
+	by mail.kernel.org (Postfix) with ESMTP id EBFD920862
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:43:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732930AbfEVTnC (ORCPT
+        id S1733002AbfEVTnL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:43:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51246 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:43:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37218 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732573AbfEVT2c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:28:32 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1732148AbfEVTnI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:43:08 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3E4F5217D9;
-        Wed, 22 May 2019 19:28:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553311;
-        bh=t0ELyZcHCkTHsnKm5byRNb6pPqbCrwMCLRiZIvw3gTc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gubNOFB/5632QJrziOLMgu9uWGylICgJgcjxEyc0sY233d+s5Go6Wn3B8927zNegX
-         a8coUBte5RaUGSluSfMf6YAGeX100BDiXO0owWR0kL4AAkZYinUNVrBFO52APg6qKh
-         Yr/DlEp5VRxfRT1TtfW4IMsh67bUKXbxQN2db8gI=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Ahern <dsahern@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 077/244] mlxsw: spectrum_router: Prevent ipv6 gateway with v4 route via replace and append
-Date:   Wed, 22 May 2019 15:23:43 -0400
-Message-Id: <20190522192630.24917-77-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190522192630.24917-1-sashal@kernel.org>
-References: <20190522192630.24917-1-sashal@kernel.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id 096B720856;
+        Wed, 22 May 2019 19:43:06 +0000 (UTC)
+Date:   Wed, 22 May 2019 15:43:05 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Leon Romanovsky <leon@kernel.org>,
+        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH] RDMA/mlx5: Use DIV_ROUND_UP_ULL macro to allow 32 bit
+ to build
+Message-ID: <20190522154305.615d1d76@gandalf.local.home>
+In-Reply-To: <20190522192821.GG6054@ziepe.ca>
+References: <20190522145450.25ff483d@gandalf.local.home>
+        <20190522192821.GG6054@ziepe.ca>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Ahern <dsahern@gmail.com>
+On Wed, 22 May 2019 16:28:21 -0300
+Jason Gunthorpe <jgg@ziepe.ca> wrote:
 
-[ Upstream commit 7973d9e76727aa42f0824f5569e96248a572d50b ]
+> On Wed, May 22, 2019 at 02:54:50PM -0400, Steven Rostedt wrote:
+> > 
+> > From: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> > 
+> > When testing 32 bit x86, my build failed with:
+> > 
+> >   ERROR: "__udivdi3" [drivers/infiniband/hw/mlx5/mlx5_ib.ko] undefined!
+> > 
+> > It appears that a few non-ULL roundup() calls were made, which uses a
+> > normal division against a 64 bit number. This is fine for x86_64, but
+> > on 32 bit x86, it causes the compiler to look for a helper function
+> > __udivdi3, which we do not have in the kernel, and thus fails to build.
+> > 
+> > Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> > ---  
+> 
+> Do you like this version better?
+> 
+> https://patchwork.kernel.org/patch/10950913/
+> 
 
-mlxsw currently does not support v6 gateways with v4 routes. Commit
-19a9d136f198 ("ipv4: Flag fib_info with a fib_nh using IPv6 gateway")
-prevents a route from being added, but nothing stops the replace or
-append. Add a catch for them too.
-    $ ip  ro add 172.16.2.0/24 via 10.99.1.2
-    $ ip  ro replace 172.16.2.0/24 via inet6 fe80::202:ff:fe00:b dev swp1s0
-    Error: mlxsw_spectrum: IPv6 gateway with IPv4 route is not supported.
-    $ ip  ro append 172.16.2.0/24 via inet6 fe80::202:ff:fe00:b dev swp1s0
-    Error: mlxsw_spectrum: IPv6 gateway with IPv4 route is not supported.
+Honestly, I don't care ;-)
 
-Signed-off-by: David Ahern <dsahern@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c | 2 ++
- 1 file changed, 2 insertions(+)
+As long as it is correct and doesn't break my builds. I really prefer
+if these kinds of things don't make it into Linus's tree to begin with.
+I'm surprised the zero-day bot didn't catch this. Because this is
+something that it normally does.
 
-diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c
-index 2ab9cf25a08ae..6d214db2ec22e 100644
---- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c
-@@ -5927,6 +5927,8 @@ static int mlxsw_sp_router_fib_event(struct notifier_block *nb,
- 			return notifier_from_errno(err);
- 		break;
- 	case FIB_EVENT_ENTRY_ADD:
-+	case FIB_EVENT_ENTRY_REPLACE: /* fall through */
-+	case FIB_EVENT_ENTRY_APPEND:  /* fall through */
- 		if (router->aborted) {
- 			NL_SET_ERR_MSG_MOD(info->extack, "FIB offload was aborted. Not configuring route");
- 			return notifier_from_errno(-EINVAL);
--- 
-2.20.1
-
+-- Steve
