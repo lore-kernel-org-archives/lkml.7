@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71F6CC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:30:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29B04C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:30:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39C4C21473
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:30:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F148320879
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:30:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558553439;
-	bh=XNdipqEzOx7/+ADkM/ggmrOGx69uPcHMbMepM83nMs0=;
+	s=default; t=1558553445;
+	bh=B7NYvC0ObKs2+BZPDMKWtI+XcjJXwV0A/crcwKiTMYU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Zb9Y/BvXB0vqEfhT4UgESlRTTkrWlIsuscL0jEUkxbGcUx+eV+f9ZRDsYw8tNkAvA
-	 4Inwku6g1elLaujEiKTZ34aTuDOujgh+T54p7ncYOdkP4JrTXPJQTIYg/0zoiZXjlO
-	 qPoZqH+StBP+FhBBbfOJdyly8mNAfeLBhtcwIs1Q=
+	b=YA0kw4qbJV14yIWbEH198xCQsbhtExgakgOOr0f61ApL37cYX3GXX8Q8VWVNhUgwR
+	 UkRjs0CTRJS+anzNWPI1CNVQzd7D/wyDIo0u3i2P9xyQQEuCaP4zZdjew+mo07shrx
+	 EDh3WP5RT+gei2AOkjkReipPrwJ6OBIhHUB9ZUOY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733275AbfEVTai (ORCPT
+        id S1733297AbfEVTan (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:30:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53898 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:30:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54024 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731957AbfEVTa0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:30:26 -0400
+        id S1732441AbfEVTad (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:30:33 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5345020879;
-        Wed, 22 May 2019 19:30:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 42CEA21841;
+        Wed, 22 May 2019 19:30:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553426;
-        bh=XNdipqEzOx7/+ADkM/ggmrOGx69uPcHMbMepM83nMs0=;
+        s=default; t=1558553432;
+        bh=B7NYvC0ObKs2+BZPDMKWtI+XcjJXwV0A/crcwKiTMYU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A23yZlGFflvlaSmrt/OHxL27E6Li4DHdEkd/IvhRlI0oaOB9q5pg9Zapp8dELhJ+U
-         BLV4ZmyuCTn4vH6tzPDcERPy/HolB8Z2WCq4fuHDFHNbN2SyNxfY4UGixQkLKXl143
-         bsSG6JLuLaVT7Z+3yvx9Srl7+pffYRJnHWgEHKwo=
+        b=LNckDID2FAAmATaTHYiRwTOqMw+wVTxqojkhTLfFV7piNgHfwRZjEEfoN7LRxpjS5
+         XJmhmNqhgf+TGhPEQw44roWGRR/HrYU3bD5YpYEUv4OaeXohHBAu+6jRqaZogArdpd
+         eisFrMVqVFch3WWfuc/Vh9hVJ9Y2971n0y0hA7I8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sameeh Jubran <sameehj@amazon.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 005/114] net: ena: gcc 8: fix compilation warning
-Date:   Wed, 22 May 2019 15:28:28 -0400
-Message-Id: <20190522193017.26567-5-sashal@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 009/114] ASoC: imx: fix fiq dependencies
+Date:   Wed, 22 May 2019 15:28:32 -0400
+Message-Id: <20190522193017.26567-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522193017.26567-1-sashal@kernel.org>
 References: <20190522193017.26567-1-sashal@kernel.org>
@@ -59,47 +58,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sameeh Jubran <sameehj@amazon.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit f913308879bc6ae437ce64d878c7b05643ddea44 ]
+[ Upstream commit ea751227c813ab833609afecfeedaf0aa26f327e ]
 
-GCC 8 contains a number of new warnings as well as enhancements to existing
-checkers. The warning - Wstringop-truncation - warns for calls to bounded
-string manipulation functions such as strncat, strncpy, and stpncpy that
-may either truncate the copied string or leave the destination unchanged.
+During randconfig builds, I occasionally run into an invalid configuration
+of the freescale FIQ sound support:
 
-In our case the destination string length (32 bytes) is much shorter than
-the source string (64 bytes) which causes this warning to show up. In
-general the destination has to be at least a byte larger than the length
-of the source string with strncpy for this warning not to showup.
+WARNING: unmet direct dependencies detected for SND_SOC_IMX_PCM_FIQ
+  Depends on [m]: SOUND [=y] && !UML && SND [=y] && SND_SOC [=y] && SND_IMX_SOC [=m]
+  Selected by [y]:
+  - SND_SOC_FSL_SPDIF [=y] && SOUND [=y] && !UML && SND [=y] && SND_SOC [=y] && SND_IMX_SOC [=m]!=n && (MXC_TZIC [=n] || MXC_AVIC [=y])
 
-This can be easily fixed by using strlcpy instead which already does the
-truncation to the string. Documentation for this function can be
-found here:
+sound/soc/fsl/imx-ssi.o: In function `imx_ssi_remove':
+imx-ssi.c:(.text+0x28): undefined reference to `imx_pcm_fiq_exit'
+sound/soc/fsl/imx-ssi.o: In function `imx_ssi_probe':
+imx-ssi.c:(.text+0xa64): undefined reference to `imx_pcm_fiq_init'
 
-https://elixir.bootlin.com/linux/latest/source/lib/string.c#L141
+The Kconfig warning is a result of the symbol being defined inside of
+the "if SND_IMX_SOC" block, and is otherwise harmless. The link error
+is more tricky and happens with SND_SOC_IMX_SSI=y, which may or may not
+imply FIQ support. However, if SND_SOC_FSL_SSI is set to =m at the same
+time, that selects SND_SOC_IMX_PCM_FIQ as a loadable module dependency,
+which then causes a link failure from imx-ssi.
 
-Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
-Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+The solution here is to make SND_SOC_IMX_PCM_FIQ built-in whenever
+one of its potential users is built-in.
+
+Fixes: ff40260f79dc ("ASoC: fsl: refine DMA/FIQ dependencies")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/amazon/ena/ena_netdev.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/fsl/Kconfig | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/amazon/ena/ena_netdev.c b/drivers/net/ethernet/amazon/ena/ena_netdev.c
-index 0c298878bf46f..0780900b37c72 100644
---- a/drivers/net/ethernet/amazon/ena/ena_netdev.c
-+++ b/drivers/net/ethernet/amazon/ena/ena_netdev.c
-@@ -2116,7 +2116,7 @@ static void ena_config_host_info(struct ena_com_dev *ena_dev)
+diff --git a/sound/soc/fsl/Kconfig b/sound/soc/fsl/Kconfig
+index a732b3a065c92..8a2873a7899a7 100644
+--- a/sound/soc/fsl/Kconfig
++++ b/sound/soc/fsl/Kconfig
+@@ -172,16 +172,17 @@ config SND_MPC52xx_SOC_EFIKA
  
- 	host_info->os_type = ENA_ADMIN_OS_LINUX;
- 	host_info->kernel_ver = LINUX_VERSION_CODE;
--	strncpy(host_info->kernel_ver_str, utsname()->version,
-+	strlcpy(host_info->kernel_ver_str, utsname()->version,
- 		sizeof(host_info->kernel_ver_str) - 1);
- 	host_info->os_dist = 0;
- 	strncpy(host_info->os_dist_str, utsname()->release,
+ endif # SND_POWERPC_SOC
+ 
++config SND_SOC_IMX_PCM_FIQ
++	tristate
++	default y if SND_SOC_IMX_SSI=y && (SND_SOC_FSL_SSI=m || SND_SOC_FSL_SPDIF=m) && (MXC_TZIC || MXC_AVIC)
++	select FIQ
++
+ if SND_IMX_SOC
+ 
+ config SND_SOC_IMX_SSI
+ 	tristate
+ 	select SND_SOC_FSL_UTILS
+ 
+-config SND_SOC_IMX_PCM_FIQ
+-	tristate
+-	select FIQ
+-
+ comment "SoC Audio support for Freescale i.MX boards:"
+ 
+ config SND_MXC_SOC_WM1133_EV1
 -- 
 2.20.1
 
