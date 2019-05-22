@@ -2,119 +2,103 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E053EC072B5
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 01:01:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5800C072B5
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 01:03:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B26E021773
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 01:01:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B944521479
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 01:03:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Dz6r/nx2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jgen3ia4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728179AbfEVBBU (ORCPT
+        id S1728203AbfEVBD3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 21:01:20 -0400
-Received: from ozlabs.org ([203.11.71.1]:36947 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728127AbfEVBBT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 21:01:19 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 457vTS2fZMz9s7h;
-        Wed, 22 May 2019 11:01:15 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1558486876;
-        bh=lAww5DxAQLnInFkdZGsqPapfsSAWA2CdCh234+8lFuI=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Dz6r/nx2h8yRsX/Kjer4WQH+rtSBD/v92zlS9KBUXjapxPgFyqfEWxd6hcUFVte4O
-         pUqYUx/gvkeWiI2N0qLAZjtS/eqFMfFw0H6JzFYSg98r2bMThY05bjU34Hk/bcgMRv
-         GJVRp2V58HWiTGiox1KdLSUHA4MhNdXIKfqkhwoEmKL5rrXzcFsji0VpZfXPLgcPBr
-         qh31aQWvewR5SP3nSEn/CUON6gPhOq1R4tDuoOs+xoJlxP//T1D5ZNhhMnXnLtAUwA
-         AdEJfb5h+C84rOL7YQjIQ0WrSniiJRPlHXFixoFATm+AVlPh58JVHC6epl9nNcO2MK
-         pYJGqoN8tUYfA==
-Date:   Wed, 22 May 2019 11:01:15 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Christian Brauner <christian@brauner.io>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Subject: linux-next: manual merge of the pidfd tree with Linus' tree
-Message-ID: <20190522110115.7350be3e@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/9FpqtZ5yD8iO3LD4WECjyjC"; protocol="application/pgp-signature"
+        Tue, 21 May 2019 21:03:29 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:33747 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727208AbfEVBD2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 21:03:28 -0400
+Received: by mail-pl1-f195.google.com with SMTP id g21so200443plq.0;
+        Tue, 21 May 2019 18:03:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=hZxOPx40sM31sXATrJWIrdV0RTZA1DlPQH1xR20a6EI=;
+        b=jgen3ia4nDSmuFARPMsvjj7DWaO1iW//OuXl403j+o/G/TeeSqMiVvZ0ntMuQMMXz6
+         dtYV3xJmd6l827CYLhYs0ByM6njiVjg79s2sLCEs10WDDns51gcmIiqVYfDp/6R1nW+G
+         D7wCvEhSSQapr8PxP9ML32wzLwnQZxIdUggSCXCB7IypYUWUyr8i5evxZj6HPi+WRFmO
+         yXzbdeJePZ2tMsOKiODoiM6UEvZefm+7ELDy419DUzcbnyj1I3a46oV0Ah5yp0TC7bIQ
+         KccvvkiC4s8eBlLscwu0inRFcPY4XG+2RKJmEymnUlEEow92i0+LBjTtou2cCMaAb2x1
+         Njgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=hZxOPx40sM31sXATrJWIrdV0RTZA1DlPQH1xR20a6EI=;
+        b=OJAUKqGqq4aaRwaVuH2DC1x35vFTK7Zsutx87MqDpZI92GQQSvHfoEg2ZgO2l15Rr+
+         zbxYUHPDkDHCCQIEXBRCGICrRy5WmDjUuQc4V4++V4epiUPllZb8WbI7+9DVqNDnH9NT
+         lLbLRn0gS4rB5KMxBdD3Kdfx2LFV3txV4Tr26CA1/H4QbxnJGAx33AHQvzjKO16NKYDm
+         J17neVbnjcshxX9sayhI+k9YlUtJZ0VwEkFQOVG4pYkEj+GKvB3XHcEwPTIfxwtIiyfM
+         IPk7e+e1S3PdVU6PrkZdIV/3QQrch8gdD9EDlEkaMavoXE0aFb/UHLDgCaPgWvZl/oCE
+         MCcA==
+X-Gm-Message-State: APjAAAUyc+uniQLgnDcDi/6cyEgnS7hCg548UmC2+m4fidZBWS5znWzN
+        s/POu1kW96VWmaofAJf/82tjxCvB
+X-Google-Smtp-Source: APXvYqxX3046Ypk/1iJeTlE7JccOi5IUU7WTFVOh31S6dnrg9pgR8igRa5NROi7akpn4K9HbrvEROQ==
+X-Received: by 2002:a17:902:424:: with SMTP id 33mr87086594ple.102.1558487007261;
+        Tue, 21 May 2019 18:03:27 -0700 (PDT)
+Received: from majic.sklembedded.com (c-73-202-231-77.hsd1.ca.comcast.net. [73.202.231.77])
+        by smtp.googlemail.com with ESMTPSA id q193sm34291242pfc.52.2019.05.21.18.03.26
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 21 May 2019 18:03:26 -0700 (PDT)
+From:   Steve Longerbeam <slongerbeam@gmail.com>
+To:     linux-media@vger.kernel.org
+Cc:     Steve Longerbeam <slongerbeam@gmail.com>, stable@vger.kernel.org,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        dri-devel@lists.freedesktop.org (open list:DRM DRIVERS FOR FREESCALE
+        IMX), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v8 1/5] gpu: ipu-v3: ipu-ic: Fix saturation bit offset in TPMEM
+Date:   Tue, 21 May 2019 18:03:13 -0700
+Message-Id: <20190522010317.23710-2-slongerbeam@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190522010317.23710-1-slongerbeam@gmail.com>
+References: <20190522010317.23710-1-slongerbeam@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/9FpqtZ5yD8iO3LD4WECjyjC
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+The saturation bit was being set at bit 9 in the second 32-bit word
+of the TPMEM CSC. This isn't correct, the saturation bit is bit 42,
+which is bit 10 of the second word.
 
-Hi all,
+Fixes: 1aa8ea0d2bd5d ("gpu: ipu-v3: Add Image Converter unit")
 
-Today's linux-next merge of the pidfd tree got a conflict in:
+Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
+Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: stable@vger.kernel.org
+---
+ drivers/gpu/ipu-v3/ipu-ic.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-  tools/testing/selftests/pidfd/Makefile
+diff --git a/drivers/gpu/ipu-v3/ipu-ic.c b/drivers/gpu/ipu-v3/ipu-ic.c
+index 594c3cbc8291..18816ccf600e 100644
+--- a/drivers/gpu/ipu-v3/ipu-ic.c
++++ b/drivers/gpu/ipu-v3/ipu-ic.c
+@@ -257,7 +257,7 @@ static int init_csc(struct ipu_ic *ic,
+ 	writel(param, base++);
+ 
+ 	param = ((a[0] & 0x1fe0) >> 5) | (params->scale << 8) |
+-		(params->sat << 9);
++		(params->sat << 10);
+ 	writel(param, base++);
+ 
+ 	param = ((a[1] & 0x1f) << 27) | ((c[0][1] & 0x1ff) << 18) |
+-- 
+2.17.1
 
-between commit:
-
-  ec8f24b7faaf ("treewide: Add SPDX license identifier - Makefile/Kconfig")
-
-from Linus' tree and commit:
-
-  233ad92edbea ("pidfd: add polling selftests")
-
-from the pidfd tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc tools/testing/selftests/pidfd/Makefile
-index 443fedbd6231,8d97cb35fca4..000000000000
---- a/tools/testing/selftests/pidfd/Makefile
-+++ b/tools/testing/selftests/pidfd/Makefile
-@@@ -1,7 -1,6 +1,7 @@@
- +# SPDX-License-Identifier: GPL-2.0-only
-- CFLAGS +=3D -g -I../../../../usr/include/
-+ CFLAGS +=3D -g -I../../../../usr/include/ -lpthread
- =20
-- TEST_GEN_PROGS :=3D pidfd_test
-+ TEST_GEN_PROGS :=3D pidfd_test pidfd_open_test
- =20
-  include ../lib.mk
- =20
-
---Sig_/9FpqtZ5yD8iO3LD4WECjyjC
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzkn1sACgkQAVBC80lX
-0Gzw9Af9E8+ptOFJWEcj9CvgKhaBwlug3cjhqiEcxYdTnLmbKU6B9vlyYvSEnnn+
-hVm4Z0TZnXThT3bQcUo+euYoa5zXiTckwjjFW4zHwM0VXO/hhmI74d6d8RiVGzqQ
-2tOn0X+wN+MagiE/E/tSh7aKBiQtX4r80Bq2u+hbZccRcI191QtdH6QsMPl7usYY
-wVNP/fWo9iQaqOw4QRJ8aoTo9eqGQU/QEaUaXRaHJ6HW+MoclVfBCvxbZm22EhgI
-u7tWOYAsxH7dQmUIRHi7TmzLLpJ2ULJd8e4E8tyA23Ro5FW4xpgPhdSVo/lUpmVf
-Vros2xs/BUn1i0OivT2cNIRbKxvOiw==
-=4Q4U
------END PGP SIGNATURE-----
-
---Sig_/9FpqtZ5yD8iO3LD4WECjyjC--
