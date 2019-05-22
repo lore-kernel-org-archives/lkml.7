@@ -3,69 +3,117 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D4EBC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 14:56:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42029C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 14:57:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AB9121479
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 14:56:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1862F20879
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 14:57:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729613AbfEVO4D (ORCPT
+        id S1729643AbfEVO52 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 10:56:03 -0400
-Received: from iolanthe.rowland.org ([192.131.102.54]:55530 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1728450AbfEVO4C (ORCPT
+        Wed, 22 May 2019 10:57:28 -0400
+Received: from 11.mo7.mail-out.ovh.net ([87.98.173.157]:39736 "EHLO
+        11.mo7.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728450AbfEVO52 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 10:56:02 -0400
-Received: (qmail 2691 invoked by uid 2102); 22 May 2019 10:56:01 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 22 May 2019 10:56:01 -0400
-Date:   Wed, 22 May 2019 10:56:01 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     Oliver Neukum <oneukum@suse.com>
-cc:     Jaewon Kim <jaewon31.kim@gmail.com>,
-        Christoph Hellwig <hch@infradead.org>, <linux-mm@kvack.org>,
-        <gregkh@linuxfoundation.org>,
-        Jaewon Kim <jaewon31.kim@samsung.com>,
-        <m.szyprowski@samsung.com>, <ytk.lee@samsung.com>,
-        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>
-Subject: Re: [RFC PATCH] usb: host: xhci: allow __GFP_FS in dma allocation
-In-Reply-To: <1558506702.12672.28.camel@suse.com>
-Message-ID: <Pine.LNX.4.44L0.1905221055190.1410-100000@iolanthe.rowland.org>
+        Wed, 22 May 2019 10:57:28 -0400
+X-Greylist: delayed 16200 seconds by postgrey-1.27 at vger.kernel.org; Wed, 22 May 2019 10:57:26 EDT
+Received: from player715.ha.ovh.net (unknown [10.108.42.119])
+        by mo7.mail-out.ovh.net (Postfix) with ESMTP id 6D41211DCD6
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 12:11:44 +0200 (CEST)
+Received: from bealr.fr (unknown [176.178.90.37])
+        (Authenticated sender: ml@bealr.fr)
+        by player715.ha.ovh.net (Postfix) with ESMTPSA id 3BE965FB9C6A
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 10:11:44 +0000 (UTC)
+To:     linux-kernel@vger.kernel.org
+From:   Romain BEAL <ml@bealr.fr>
+Subject: IMX6 error binding ipu on vdic
+Message-ID: <bd1184c2-6d5a-a12b-f0e6-55537f6965b6@bealr.fr>
+Date:   Wed, 22 May 2019 12:11:44 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 7bit
+X-Ovh-Tracer-Id: 2332864608621626647
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: 0
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduuddrudduvddgvdegucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenuc
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 22 May 2019, Oliver Neukum wrote:
+Hi,
 
-> On Di, 2019-05-21 at 10:00 -0400, Alan Stern wrote:
-> > 
-> > Changing configurations amounts to much the same as disconnecting,
-> > because both operations destroy all the existing interfaces.
-> > 
-> > Disconnect can arise in two different ways.
-> > 
-> >         Physical hot-unplug: All I/O operations will fail.
-> > 
-> >         Rmmod or unbind: I/O operations will succeed.
-> > 
-> > The second case is probably okay.  The first we can do nothing about.  
-> > However, in either case we do need to make sure that memory allocations
-> > do not require any writebacks.  This suggests that we need to call
-> > memalloc_noio_save() from within usb_unbind_interface().
-> 
-> I agree with the problem, but I fail to see why this issue would be
-> specific to USB. Shouldn't this be done in the device core layer?
+Tested on gateworks ventana and variscite dart platform :
+Unable to bind ipu1_csi0 on ipu1_vdic AND ipu2_csi1 on ipu2_vdic.
 
-Only for drivers that are on the block-device writeback path.  The 
-device core doesn't know which drivers these are.
+Steps to reproduce on ventana board :
 
-Alan Stern
+$ media_ctl -p
+- entity 53: ipu1_csi0 (3 pads, 4 links)
+              type V4L2 subdev subtype Unknown flags 0
+              device node name /dev/v4l-subdev8
+         pad0: Sink
+                 [fmt:UYVY8_2X8/640x480@1/30 field:none 
+colorspace:smpte170m xfer:709 ycbcr:601 quantization:lim-range
+                  crop.bounds:(0,0)/640x480
+                  crop:(0,0)/640x480
+                  compose.bounds:(0,0)/640x480
+                  compose:(0,0)/640x480]
+                 <- "ipu1_csi0_mux":5 []
+         pad1: Source
+                 [fmt:AYUV8_1X32/640x480@1/30 field:none 
+colorspace:smpte170m xfer:709 ycbcr:601 quantization:lim-range]
+                 -> "ipu1_ic_prp":0 []
+                 -> "ipu1_vdic":0 []
+         pad2: Source
+                 [fmt:AYUV8_1X32/640x480@1/30 field:none 
+colorspace:smpte170m xfer:709 ycbcr:601 quantization:lim-range]
+                 -> "ipu1_csi0 capture":0 []
 
+
+- entity 1: ipu1_vdic (3 pads, 3 links)
+             type V4L2 subdev subtype Unknown flags 0
+             device node name /dev/v4l-subdev0
+         pad0: Sink
+                 [fmt:AYUV8_1X32/640x480@1/30 field:none 
+colorspace:smpte170m xfer:709 ycbcr:601 quantization:lim-range]
+                 <- "ipu1_csi0":1 []
+                 <- "ipu1_csi1":1 []
+         pad1: Sink
+                 [fmt:UYVY8_2X8/640x480@1/30 field:none 
+colorspace:smpte170m xfer:709 ycbcr:601 quantization:lim-range]
+         pad2: Source
+                 [fmt:AYUV8_1X32/640x480@1/60 field:none 
+colorspace:smpte170m xfer:709 ycbcr:601 quantization:lim-range]
+                 -> "ipu1_ic_prp":0 []
+
+
+
+$ media-ctl -l "'ipu1_csi0':1 -> 'ipu1_vdic':0[1]" -v
+Opening media device /dev/media0
+Enumerating entities
+Found 19 entities
+Enumerating pads and links
+Setting up link 53:1 -> 1:0 [1]
+Opening media device /dev/media0
+media_setup_link: Unable to setup link (Invalid argument)
+
+  'ipu1_csi0':1 -> 'ipu1_vdic':0[1]
+                                  ^
+Unable to parse link: Invalid argument (22)
+
+
+Others links works great.
+The ipu -> vdic bind worked on 4.14
+
+Is it a kernel bug?
+
+---
+Romain BEAL
