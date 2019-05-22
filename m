@@ -2,155 +2,220 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D221DC072A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 08:16:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 867A4C072A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 08:19:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADA5320815
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 08:16:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BADB20856
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 08:19:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="UXoszbvJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728727AbfEVIQC (ORCPT
+        id S1728780AbfEVIT0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 04:16:02 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:40120 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726552AbfEVIQB (ORCPT
+        Wed, 22 May 2019 04:19:26 -0400
+Received: from mail-wr1-f44.google.com ([209.85.221.44]:46488 "EHLO
+        mail-wr1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728674AbfEVITY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 04:16:01 -0400
-Received: by mail-wr1-f68.google.com with SMTP id f10so1172115wre.7
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 01:15:59 -0700 (PDT)
+        Wed, 22 May 2019 04:19:24 -0400
+Received: by mail-wr1-f44.google.com with SMTP id r7so1163042wrr.13
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 01:19:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:openpgp:autocrypt:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=rUpKlEA8tIPKK8DZFrMHr5Vjc8RluFtQBZi76sNv0Nw=;
+        b=UXoszbvJM03D2fO8JaH10+Y2L1hYJRwOOpnoH1N5Zi66NdpPRff2wG1w6iCox+3s+/
+         IHe8Nj3QpK/ykyafi4FxPJw0jBc/Bg2WGHg3/2HYKHM5BGwjDTThynsITGnOjNfDKgcx
+         foyYTga5Gnbq7bpry9cAOQM6xKRWEbMliuTFCiBZD/H81KRPPyV3HI3IyNoGzKNrSINW
+         dLhH+pPyBYR3r3hhy2jHkxy1HhSQnjH8Ex0FgYAfmYl/HECfK0atOc2m1ult4PrZEQPt
+         TW6DS62Q9wNgJSvQqJ8WgCUP2z4d2tq5S4zGfWprBbjfAI2rbVPGeLnXXuPbAANohttM
+         vYEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=L61GZ1vGWhSEJqecA5eKfOLhoaeorDC4hNTYi6dhVcY=;
-        b=D+cJmbHuzT4uWZspwIy31YKH8F721lbOAduk/G1UaXA0SNkH2RcPpl/oVUGOWJ3xx2
-         bHEuSf4dbOzJt5juTp/nHnObm9LMm7KdNYH1XPjKOhDzyJwU0TSMzRTTO/U3BGwaW6YQ
-         9Zh8Ndc+iejWe9wVGegFFdCWogMP8vujO7wZ/ITjqzRwRpCUm4VR5YSvKHK3EPZONt4l
-         eJSOZcYh6KZwvMSUdNkKygSj0G7DoYt437izcVyLpnjZNd1zvngPFBy9BgX5VKes3Z+R
-         vN3OdaKnrGoP4TEX1dBPpRdgwk8UfLsgwS5Aj8p9xcjr4MvYx0Ugx2dHPh3hysl9kAT0
-         X3+w==
-X-Gm-Message-State: APjAAAVQ9EIhTaWU5SU1vUKOu3iXKQFz7E4GEXTs2U0hgnJ5a2/XkbYd
-        di/nqc7ZuY1cHyRB+1YBZ7mXj5SG
-X-Google-Smtp-Source: APXvYqzP5eAxt+QUdNKDPImk4DLyQ9IrS3d/xiCvj7cG/GwGarLagqzX4gxsF0Qj0WVblbYGVE5LMw==
-X-Received: by 2002:a5d:54c9:: with SMTP id x9mr35515424wrv.266.1558512959021;
-        Wed, 22 May 2019 01:15:59 -0700 (PDT)
-Received: from ?IPv6:2a0b:e7c0:0:107::49? ([2a0b:e7c0:0:107::49])
-        by smtp.gmail.com with ESMTPSA id a22sm4984007wma.41.2019.05.22.01.15.57
+        bh=rUpKlEA8tIPKK8DZFrMHr5Vjc8RluFtQBZi76sNv0Nw=;
+        b=aNlcmu5WVk+cwDtclN4AIfdOATj8T7beH/EKCNtRqi4/qn7OWwwdlZu+oL+R0VysRH
+         uN37NHMO4fuBnabOWxN/u5uJcVpnm4RI1nh5Cv4lDNqKqap2vZJu5ErX0iQtG+jKWAZn
+         g14bmtCN6dMbgRdAnxIuMA4IEFHgDXVlrXbxe1RsCKw4xXftWh/mr+ioXkvLQY/MrZUX
+         XpFDtrMUp5eyR7ftN4siXphj6xtVogZzOnA4NHhWSSuHBfhEKkJ8UI1/RsQYlJSKZ8xk
+         mO6USAp8xlUm19cABnic/zgI3zfhW6Tfygy0cFh3bZlhO4gmrA165dvMr1694f+lRvwR
+         1MzQ==
+X-Gm-Message-State: APjAAAU78NDc3BCtSJbBUtjEu9ASapVK2BTlHKS3KfG577H//Vn++eQD
+        vU5wcjojZJnRMEIfm33+2EuU8A==
+X-Google-Smtp-Source: APXvYqzZ6kcXy3QXJ6HHUvi4u9okO0GxA5BtrwhIImIvuySrgAeQodOTKF1Zc0E9Uk6blNHWCB/nGA==
+X-Received: by 2002:adf:dccf:: with SMTP id x15mr7656464wrm.139.1558513161988;
+        Wed, 22 May 2019 01:19:21 -0700 (PDT)
+Received: from [192.168.1.62] (wal59-h01-176-150-251-154.dsl.sta.abo.bbox.fr. [176.150.251.154])
+        by smtp.gmail.com with ESMTPSA id n2sm1933129wro.13.2019.05.22.01.19.20
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 22 May 2019 01:15:57 -0700 (PDT)
-Subject: Re: [PATCH] tty_io: Fix a missing-check bug in drivers/tty/tty_io.c
-To:     Gen Zhang <blackgod016574@gmail.com>
-Cc:     linux-kernel@vger.kernel.org
-References: <20190522014006.GB4093@zhanggen-UX430UQ>
- <abc68141-df99-1ae1-ea51-c83bd4480d92@suse.cz>
- <20190522080656.GA5109@zhanggen-UX430UQ>
-From:   Jiri Slaby <jslaby@suse.cz>
+        Wed, 22 May 2019 01:19:21 -0700 (PDT)
+Subject: Re: [PATCH v3 3/3] arm64: dts: meson: Add minimal support for
+ Odroid-N2
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     khilman@baylibre.com, linux-amlogic@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20190521151952.2779-1-narmstrong@baylibre.com>
+ <20190521151952.2779-4-narmstrong@baylibre.com>
+ <CAFBinCDzvroNfzhZHhDdvc+VR1eQNg5JMJ7F9=++hdWKcEXSOw@mail.gmail.com>
+From:   Neil Armstrong <narmstrong@baylibre.com>
 Openpgp: preference=signencrypt
-Autocrypt: addr=jslaby@suse.cz; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <3a3db304-9725-6a90-65ac-dff09ef31aae@suse.cz>
-Date:   Wed, 22 May 2019 10:15:56 +0200
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ ZaTUOEkgIor5losDrePdPgE=
+Organization: Baylibre
+Message-ID: <f7020818-5824-f998-6ebd-303014abd34d@baylibre.com>
+Date:   Wed, 22 May 2019 10:19:20 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190522080656.GA5109@zhanggen-UX430UQ>
-Content-Type: text/plain; charset=iso-8859-2
-Content-Language: en-GB
+In-Reply-To: <CAFBinCDzvroNfzhZHhDdvc+VR1eQNg5JMJ7F9=++hdWKcEXSOw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22. 05. 19, 10:06, Gen Zhang wrote:
-> On Wed, May 22, 2019 at 06:25:36AM +0200, Jiri Slaby wrote:
->> On 22. 05. 19, 3:40, Gen Zhang wrote:
->>> In alloc_tty_struct(), tty->dev is assigned by tty_get_device(). And it
->>> calls class_find_device(). And class_find_device() may return NULL.
->>> And tty->dev is dereferenced in the following codes. When 
->>> tty_get_device() returns NULL, dereferencing this tty->dev null pointer
->>> may cause the kernel go wrong. Thus we should check tty->dev.
->>> Further, if tty_get_device() returns NULL, we should free tty and 
->>> return NULL.
->>>
->>> Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
->>>
->>> ---
->>> diff --git a/drivers/tty/tty_io.c b/drivers/tty/tty_io.c
->>> index 033ac7e..1444b59 100644
->>> --- a/drivers/tty/tty_io.c
->>> +++ b/drivers/tty/tty_io.c
->>> @@ -3008,6 +3008,10 @@ struct tty_struct *alloc_tty_struct(struct tty_driver *driver, int idx)
->>>  	tty->index = idx;
->>>  	tty_line_name(driver, idx, tty->name);
->>>  	tty->dev = tty_get_device(tty);
->>> +	if (!tty->dev) {
->>> +		kfree(tty);
->>> +		return NULL;
->>> +	}
->>
->> This is incorrect, you introduced an ldisc reference leak.
-> Thanks for your reply, Jiri!
-> And what do you mean by an ldisc reference leak? I did't get the reason
-> of introducing it.
+On 21/05/2019 20:01, Martin Blumenstingl wrote:
+> Hi Neil,
+> 
+> On Tue, May 21, 2019 at 5:20 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
+> [...]
+>> +       hub_5v: regulator-hub_5v {
+>> +               compatible = "regulator-fixed";
+>> +               regulator-name = "HUB_5V";
+>> +               regulator-min-microvolt = <5000000>;
+>> +               regulator-max-microvolt = <5000000>;
+>> +               vin-supply = <&vcc_5v>;
+>> +
+>> +               gpio = <&gpio GPIOH_5 GPIO_ACTIVE_HIGH>;
+> I missed this in the review of v1:
+> according to the schematics GPIOH_5 is routed to GL3523 (soldered down
+> USB hub) CHIP_EN signal.
+> The datasheet [0] mentions that this will "Disable whole chip and keep
+> hub in lowest power state (standby mode)"
 
-Look at the top of alloc_tty_struct: there is tty_ldisc_init. If
-tty_get_device fails here, you have to call tty_ldisc_deinit. Better,
-you should add a failure-handling tail to this function and "goto" there.
+In the v1, we didn't have the schematics, so it was all a wild guess.
 
->> And can this happen at all?
-> I think tty_get_device() may happen to return NULL. Because it calls 
-> class_find_device() and there's a chance class_find_device() returns
-> NULL.
+> 
+> do you know if this is a similar case as GPIOH_4 (USB hub reset line,
+> we configure this using a gpio-hog)?
 
-Sure, but can class_find_device return NULL in this tty case here?
 
-thanks,
--- 
-js
-suse labs
+We have 3 signals for USB :
+- GPIOH_5: goes to CHIP_EN to CHIPENABLE to the Hub
+- GPIOH_4: goes to RST_N to RESETJ to the Hub
+- GPIOH_6: goes to PWREN for the OTG connector PWREN
+
+As you said, the datasheet mentions : "
+Disable whole chip and keep hub in lowest power state (standby mode
+"
+
+I modeled it as a regulator since when enabled it actually enables the
+power on the USB3 ports using the post-Hub VBUSCTRL signal.
+
+Since I can't model these post-hub power enable signals, I can only
+model the hub CHIPENABLE as a regulator to handle power.
+I can't model the hub as a device subnode inside the dwc3 since
+when CHIPENABLE is low, it won't appear...
+
+We could model it as a Hog, but we won't be able to power down
+the usb3 ports.
+
+> 
+> [...]
+>> +&ext_mdio {
+>> +       external_phy: ethernet-phy@0 {
+>> +               /* Realtek RTL8211F (0x001cc916) */
+>> +               reg = <0>;
+>> +               max-speed = <1000>;
+>> +               eee-broken-1000t;
+> are we in the same situation that we have on the X96 Max where network
+> dies without eee-broken-1000t?
+
+I assume, let me run more tests to be sure.
+
+> 
+> [...]
+>> +&usb2_phy0 {
+>> +       phy-supply = <&usb_pwr_en>;
+> is usb_pwr_en really the phy-supply or is it the vbus-supply of the
+> USB top control block (&usb node)?
+You're right, now we have the schematics, it's not the phy supply.
+
+I'll move it to vbus-supply since it's connected to the pwrenable
+of the otg port.
+
+> 
+> if these three questions are answered then you can add my:
+> Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+
+I'll ask you to review the next version before !!!
+
+Thanks.
+Neil
+
+> 
+> 
+> Regards
+> Martin
+> 
+> 
+> [0] https://datasheet.lcsc.com/szlcsc/GL3523-OV3S1_C157363.pdf
+> 
+
