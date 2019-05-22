@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AD67C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:29:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D098C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:29:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5B6421850
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:29:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4055D21855
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:29:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558553371;
-	bh=aFIvxDwgLQtxByVGxwRnPQ/NnvxhKoDJ7f2NCtg+tY8=;
+	s=default; t=1558553376;
+	bh=vBPhNznWntfWLhCoC4+mv2WSZUsADKeT1enGQ0mjAx8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PPt+vqyIH21vJqYOjBcMmwLmdrOXOs/tJGzzi1dastVt3lS0lib1KISlhBv4x1tvp
-	 tRyZ9LA0El+A4JjgXhYkB7mai91TIQbamVOXtTH80vRMhe00NYbx7UFJVQBqsExojD
-	 XWKqGHKMY8l4m9d2B4ZIQRnpbiQDlTwERniQvvYQ=
+	b=bbrS3O/srabqx9q8xec1IhAG/gOrzr0a52EdZ+9unzOAswfsF4GZ1OOMkmfDK4ub7
+	 vEefVJ86/lEa/H+7hv8xMuTpbiFrxt7Wsl4NhLrYvB3aLFNt0U9AlcH+d1yavZ5rwI
+	 VUKU9f3J13nQw6MggMHsyCH9V3Q55a0MSXzN3O2k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732910AbfEVT3b (ORCPT
+        id S1732940AbfEVT3f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:29:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52488 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:29:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52598 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732488AbfEVT31 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:29:27 -0400
+        id S1732912AbfEVT3c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:29:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D151D20675;
-        Wed, 22 May 2019 19:29:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A1729204FD;
+        Wed, 22 May 2019 19:29:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553366;
-        bh=aFIvxDwgLQtxByVGxwRnPQ/NnvxhKoDJ7f2NCtg+tY8=;
+        s=default; t=1558553371;
+        bh=vBPhNznWntfWLhCoC4+mv2WSZUsADKeT1enGQ0mjAx8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BGA4mfhKHXNAf7J0gb0RLq3ZNwOLwnFOYBC3weaZBJjn2Z1Wkyo1DxdmKJqMvHBw6
-         /zLS1Qet0zcHyy6YzSm4Zf1QSIIiwqVxSNWQgDHFhg7bPwtePtLIOTHIpERVHcHJmI
-         1Ba6BIC1MdX1W1FWO2I26fJ0al2adtk1rJEQIQQ0=
+        b=OzhV2sUHhxxUoI/nnst8ipKOcyFjkuEyPcA0lBwT7UMycZm+uFMbgQeEsCk3cIvNO
+         /Qx72ow9bqtaiCCqV1fBb+fUblbwIEXHu5eDilQsMjAp0nqJDzyXM5JaQp+citvyin
+         /RUuSCpWOmYOQupJLwL+rDbcLDdpZ2eR5vHa80bI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qu Wenruo <wqu@suse.com>, Filipe Manana <fdmanana@suse.com>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 028/167] btrfs: Don't panic when we can't find a root key
-Date:   Wed, 22 May 2019 15:26:23 -0400
-Message-Id: <20190522192842.25858-28-sashal@kernel.org>
+Cc:     Manish Rangankar <mrangankar@marvell.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 031/167] scsi: qedi: Abort ep termination if offload not scheduled
+Date:   Wed, 22 May 2019 15:26:26 -0400
+Message-Id: <20190522192842.25858-31-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192842.25858-1-sashal@kernel.org>
 References: <20190522192842.25858-1-sashal@kernel.org>
@@ -60,51 +59,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qu Wenruo <wqu@suse.com>
+From: Manish Rangankar <mrangankar@marvell.com>
 
-[ Upstream commit 7ac1e464c4d473b517bb784f30d40da1f842482e ]
+[ Upstream commit f848bfd8e167210a29374e8a678892bed591684f ]
 
-When we failed to find a root key in btrfs_update_root(), we just panic.
+Sometimes during connection recovery when there is a failure to resolve
+ARP, and offload connection was not issued, driver tries to flush pending
+offload connection work which was not queued up.
 
-That's definitely not cool, fix it by outputting an unique error
-message, aborting current transaction and return -EUCLEAN. This should
-not normally happen as the root has been used by the callers in some
-way.
+kernel: WARNING: CPU: 19 PID: 10110 at kernel/workqueue.c:3030 __flush_work.isra.34+0x19c/0x1b0
+kernel: CPU: 19 PID: 10110 Comm: iscsid Tainted: G W 5.1.0-rc4 #11
+kernel: Hardware name: Dell Inc. PowerEdge R730/0599V5, BIOS 2.9.1 12/04/2018
+kernel: RIP: 0010:__flush_work.isra.34+0x19c/0x1b0
+kernel: Code: 8b fb 66 0f 1f 44 00 00 31 c0 eb ab 48 89 ef c6 07 00 0f 1f 40 00 fb 66 0f 1f 44 00 00 31 c0 eb 96 e8 08 16 fe ff 0f 0b eb 8d <0f> 0b 31 c0 eb 87 0f 1f 40 00 66 2e 0f 1
+f 84 00 00 00 00 00 0f 1f
+kernel: RSP: 0018:ffffa6b4054dba68 EFLAGS: 00010246
+kernel: RAX: 0000000000000000 RBX: ffff91df21c36fc0 RCX: 0000000000000000
+kernel: RDX: 0000000000000001 RSI: 0000000000000000 RDI: ffff91df21c36fc0
+kernel: RBP: ffff91df21c36ef0 R08: 0000000000000000 R09: 0000000000000000
+kernel: R10: 0000000000000038 R11: ffffa6b4054dbd60 R12: ffffffffc05e72c0
+kernel: R13: ffff91db10280820 R14: 0000000000000048 R15: 0000000000000000
+kernel: FS:  00007f5d83cc1740(0000) GS:ffff91df2f840000(0000) knlGS:0000000000000000
+kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+kernel: CR2: 0000000001cc5000 CR3: 0000000465450002 CR4: 00000000001606e0
+kernel: Call Trace:
+kernel: ? try_to_del_timer_sync+0x4d/0x80
+kernel: qedi_ep_disconnect+0x3b/0x410 [qedi]
+kernel: ? 0xffffffffc083c000
+kernel: ? klist_iter_exit+0x14/0x20
+kernel: ? class_find_device+0x93/0xf0
+kernel: iscsi_if_ep_disconnect.isra.18+0x58/0x70 [scsi_transport_iscsi]
+kernel: iscsi_if_recv_msg+0x10e2/0x1510 [scsi_transport_iscsi]
+kernel: ? copyout+0x22/0x30
+kernel: ? _copy_to_iter+0xa0/0x430
+kernel: ? _cond_resched+0x15/0x30
+kernel: ? __kmalloc_node_track_caller+0x1f9/0x270
+kernel: iscsi_if_rx+0xa5/0x1e0 [scsi_transport_iscsi]
+kernel: netlink_unicast+0x17f/0x230
+kernel: netlink_sendmsg+0x2d2/0x3d0
+kernel: sock_sendmsg+0x36/0x50
+kernel: ___sys_sendmsg+0x280/0x2a0
+kernel: ? timerqueue_add+0x54/0x80
+kernel: ? enqueue_hrtimer+0x38/0x90
+kernel: ? hrtimer_start_range_ns+0x19f/0x2c0
+kernel: __sys_sendmsg+0x58/0xa0
+kernel: do_syscall_64+0x5b/0x180
+kernel: entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-Reviewed-by: Filipe Manana <fdmanana@suse.com>
-Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
-Signed-off-by: Qu Wenruo <wqu@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Manish Rangankar <mrangankar@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/root-tree.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ drivers/scsi/qedi/qedi_iscsi.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/fs/btrfs/root-tree.c b/fs/btrfs/root-tree.c
-index 95bcc3cce78f8..f737513b53e3b 100644
---- a/fs/btrfs/root-tree.c
-+++ b/fs/btrfs/root-tree.c
-@@ -150,11 +150,14 @@ int btrfs_update_root(struct btrfs_trans_handle *trans, struct btrfs_root
- 		goto out;
- 	}
+diff --git a/drivers/scsi/qedi/qedi_iscsi.c b/drivers/scsi/qedi/qedi_iscsi.c
+index 45f044f35cea8..0b7267e683360 100644
+--- a/drivers/scsi/qedi/qedi_iscsi.c
++++ b/drivers/scsi/qedi/qedi_iscsi.c
+@@ -1008,6 +1008,9 @@ static void qedi_ep_disconnect(struct iscsi_endpoint *ep)
+ 	qedi_ep = ep->dd_data;
+ 	qedi = qedi_ep->qedi;
  
--	if (ret != 0) {
--		btrfs_print_leaf(path->nodes[0]);
--		btrfs_crit(fs_info, "unable to update root key %llu %u %llu",
--			   key->objectid, key->type, key->offset);
--		BUG_ON(1);
-+	if (ret > 0) {
-+		btrfs_crit(fs_info,
-+			"unable to find root key (%llu %u %llu) in tree %llu",
-+			key->objectid, key->type, key->offset,
-+			root->root_key.objectid);
-+		ret = -EUCLEAN;
-+		btrfs_abort_transaction(trans, ret);
-+		goto out;
- 	}
++	if (qedi_ep->state == EP_STATE_OFLDCONN_START)
++		goto ep_exit_recover;
++
+ 	flush_work(&qedi_ep->offload_work);
  
- 	l = path->nodes[0];
+ 	if (qedi_ep->conn) {
 -- 
 2.20.1
 
