@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5409C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:38:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97E51C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:38:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A1AB20675
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:38:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6970B20675
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:38:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558553917;
-	bh=vJsHcoNSg0SBDsu+O0F8uHJTy/8v/IhCGVV7dXKr7IE=;
+	s=default; t=1558553922;
+	bh=DhmiDpaApVO07Y6QTOeqICdGFhTwm3yFOL1mbaF/OIs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SJRemMpw/nfmM5gJ2rBnGYVqTm/+vSMdkhD+axOk/QV/YpfZy924xHbkaq5kIARyb
-	 k280T4C/3mUm2P5A3VnkcaNNvGqbuQwoBiaKDNdlankGDxcPV+GQKxByWv5ZEo4A5w
-	 yxUkao1dcvrrRuRnrjjFyojrTMRyC6ySP0VDeDhk=
+	b=VuLmQ8KcrtMtIScZbmwHWoIO0vCSWq8VDNwzPw1X4L61NEcwnat1QRKha4sEBQ8BI
+	 EUrjhAXdiIc90NGuL/B6S7HLyB1U270nrkLQHx5VHGfgwh6iXsWDLL43FRJdTcaJLs
+	 yaEqbHNEy9eHfrI3LXjlUafg43IQU0XecSefYbUA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733057AbfEVT3u (ORCPT
+        id S1733247AbfEVTik (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:29:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52964 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:38:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53022 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733026AbfEVT3q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:29:46 -0400
+        id S1733039AbfEVT3u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:29:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E9A22177E;
-        Wed, 22 May 2019 19:29:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6EAA221473;
+        Wed, 22 May 2019 19:29:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553385;
-        bh=vJsHcoNSg0SBDsu+O0F8uHJTy/8v/IhCGVV7dXKr7IE=;
+        s=default; t=1558553389;
+        bh=DhmiDpaApVO07Y6QTOeqICdGFhTwm3yFOL1mbaF/OIs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mwg2Xj6iOI9UQ6FSbSBYizF8oKjNygjacPP4eiP/qe1FzESht2Nok8QUHr4fQ0NBZ
-         VZH/gDgEQc9nfQjkOHJyJpZoMD/Dc3xMoya1TOsN86Rx/ns22Mp/AKE3+60od5isQ9
-         YHysDMG9YznGxZHk6ZtG7gW8XuqXLSA8zqsQGXCo=
+        b=j5IRKbYM+k9djYp4aLrsKqsdux6Y8XS7RXqdV/xkP6SG7aYTk99cQe8iyDftF9MiZ
+         ZIYBfBSFJfR7IJNJXHLMUIDTN0j5ONUrTcwah1kBuOsyOF6w8eIgjk/fnhOnTSMZ3v
+         IoVpa6FX2WC7OajGry5WYRwwZgaBu3nz1m+BRoQc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Coly Li <colyli@suse.de>, Hannes Reinecke <hare@suse.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-bcache@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 043/167] bcache: return error immediately in bch_journal_replay()
-Date:   Wed, 22 May 2019 15:26:38 -0400
-Message-Id: <20190522192842.25858-43-sashal@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Coly Li <colyli@suse.de>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>, linux-bcache@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 046/167] bcache: avoid clang -Wunintialized warning
+Date:   Wed, 22 May 2019 15:26:41 -0400
+Message-Id: <20190522192842.25858-46-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192842.25858-1-sashal@kernel.org>
 References: <20190522192842.25858-1-sashal@kernel.org>
@@ -59,52 +60,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Coly Li <colyli@suse.de>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 68d10e6979a3b59e3cd2e90bfcafed79c4cf180a ]
+[ Upstream commit 78d4eb8ad9e1d413449d1b7a060f50b6efa81ebd ]
 
-When failure happens inside bch_journal_replay(), calling
-cache_set_err_on() and handling the failure in async way is not a good
-idea. Because after bch_journal_replay() returns, registering code will
-continue to execute following steps, and unregistering code triggered
-by cache_set_err_on() is running in same time. First it is unnecessary
-to handle failure and unregister cache set in an async way, second there
-might be potential race condition to run register and unregister code
-for same cache set.
+clang has identified a code path in which it thinks a
+variable may be unused:
 
-So in this patch, if failure happens in bch_journal_replay(), we don't
-call cache_set_err_on(), and just print out the same error message to
-kernel message buffer, then return -EIO immediately caller. Then caller
-can detect such failure and handle it in synchrnozied way.
+drivers/md/bcache/alloc.c:333:4: error: variable 'bucket' is used uninitialized whenever 'if' condition is false
+      [-Werror,-Wsometimes-uninitialized]
+                        fifo_pop(&ca->free_inc, bucket);
+                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/md/bcache/util.h:219:27: note: expanded from macro 'fifo_pop'
+ #define fifo_pop(fifo, i)       fifo_pop_front(fifo, (i))
+                                ^~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/md/bcache/util.h:189:6: note: expanded from macro 'fifo_pop_front'
+        if (_r) {                                                       \
+            ^~
+drivers/md/bcache/alloc.c:343:46: note: uninitialized use occurs here
+                        allocator_wait(ca, bch_allocator_push(ca, bucket));
+                                                                  ^~~~~~
+drivers/md/bcache/alloc.c:287:7: note: expanded from macro 'allocator_wait'
+                if (cond)                                               \
+                    ^~~~
+drivers/md/bcache/alloc.c:333:4: note: remove the 'if' if its condition is always true
+                        fifo_pop(&ca->free_inc, bucket);
+                        ^
+drivers/md/bcache/util.h:219:27: note: expanded from macro 'fifo_pop'
+ #define fifo_pop(fifo, i)       fifo_pop_front(fifo, (i))
+                                ^
+drivers/md/bcache/util.h:189:2: note: expanded from macro 'fifo_pop_front'
+        if (_r) {                                                       \
+        ^
+drivers/md/bcache/alloc.c:331:15: note: initialize the variable 'bucket' to silence this warning
+                        long bucket;
+                                   ^
 
+This cannot happen in practice because we only enter the loop
+if there is at least one element in the list.
+
+Slightly rearranging the code makes this clearer to both the
+reader and the compiler, which avoids the warning.
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
 Signed-off-by: Coly Li <colyli@suse.de>
-Reviewed-by: Hannes Reinecke <hare@suse.com>
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/bcache/journal.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/md/bcache/alloc.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/md/bcache/journal.c b/drivers/md/bcache/journal.c
-index 03cc0722ae486..ec7856c06cbb0 100644
---- a/drivers/md/bcache/journal.c
-+++ b/drivers/md/bcache/journal.c
-@@ -323,9 +323,12 @@ int bch_journal_replay(struct cache_set *s, struct list_head *list)
- 	list_for_each_entry(i, list, list) {
- 		BUG_ON(i->pin && atomic_read(i->pin) != 1);
+diff --git a/drivers/md/bcache/alloc.c b/drivers/md/bcache/alloc.c
+index 8c13a9036d07f..ada94a01e1423 100644
+--- a/drivers/md/bcache/alloc.c
++++ b/drivers/md/bcache/alloc.c
+@@ -325,10 +325,11 @@ static int bch_allocator_thread(void *arg)
+ 		 * possibly issue discards to them, then we add the bucket to
+ 		 * the free list:
+ 		 */
+-		while (!fifo_empty(&ca->free_inc)) {
++		while (1) {
+ 			long bucket;
  
--		cache_set_err_on(n != i->j.seq, s,
--"bcache: journal entries %llu-%llu missing! (replaying %llu-%llu)",
--				 n, i->j.seq - 1, start, end);
-+		if (n != i->j.seq) {
-+			pr_err("bcache: journal entries %llu-%llu missing! (replaying %llu-%llu)",
-+			n, i->j.seq - 1, start, end);
-+			ret = -EIO;
-+			goto err;
-+		}
+-			fifo_pop(&ca->free_inc, bucket);
++			if (!fifo_pop(&ca->free_inc, bucket))
++				break;
  
- 		for (k = i->j.start;
- 		     k < bset_bkey_last(&i->j);
+ 			if (ca->discard) {
+ 				mutex_unlock(&ca->set->bucket_lock);
 -- 
 2.20.1
 
