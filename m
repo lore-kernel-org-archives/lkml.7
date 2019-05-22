@@ -2,136 +2,127 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EDF4C072A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 08:10:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CA41C072A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 08:12:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40BFB20815
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 08:10:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D30BB2075B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 08:12:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D9Uom5FG"
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="FQpPrYca"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728587AbfEVIKs (ORCPT
+        id S1728720AbfEVIMZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 04:10:48 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:46364 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728159AbfEVIKs (ORCPT
+        Wed, 22 May 2019 04:12:25 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:35111 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728610AbfEVIMY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 04:10:48 -0400
-Received: by mail-pg1-f195.google.com with SMTP id o11so727879pgm.13
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 01:10:47 -0700 (PDT)
+        Wed, 22 May 2019 04:12:24 -0400
+Received: by mail-lf1-f67.google.com with SMTP id c17so986541lfi.2
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 01:12:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Eti3TImRx56hinakaM+GO4KiRjx+tMNw0bxj57lLePA=;
-        b=D9Uom5FGuRUl6X5RivO2rLKVbgOAJvOnWsg32AR6UpqgoGxlHq5MF4ojlx3u+aZZty
-         vq0E17FZhku4nBGqRMdDYrnumWdcPkNfnbNvjnPuB9tHnwSpQtyziPr2JbKdSxcepcET
-         pRM8bEIcMxL3yv/Wlv9/mw/C7G7vyMFRGetBGGfHliAKdIS1+U2i6ES2QBha5gblCt4z
-         wWpgSTejFzk6bIHqFzpMDanP8TJYLHiZGb6Rzc2cB0UM+O1GvQ8Lm/FPn4+FRXBGcj3j
-         i3+joGrqpLsLwoxSgkzDZPFyrX1S++YqUOtWLpd2TOfGv8ero7BfeRBGW2tw091/tnum
-         sRGA==
+        d=brauner.io; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NinRxNHyDYbCj8IbjH00ChDPuWJUmzxEB5UBBCZfvuk=;
+        b=FQpPrYcaQxCAFGTYiUsPu0qLO+TyOcW7gshxdKkzEdBEoeF7zfGLnQVrcgcr4gKCeX
+         LJ4YXrL36Z8UOIkkUcBOLv8jo3+1wy2Zrr1Gv+mEl7u90rBwnDVcVlXzHgwabis+F7I/
+         dlJlteIhWCGDFh11b+aiyTTGML6DsZQmYr7FjOpjo+237NiSY/93FSEYu5SmcuC+kMHi
+         w+QbDlfq/QnsLdgPfA6Jf+xdMdism6B4eELfwRuNPZvO4gmtKOqxk/k31Xt7g6ek0i6A
+         6O4E/le0sudnktBxl+9AFEIeQt8N5n9ZAVs90K2h9eXQLV3Rz/8qfSLtahw9cvbBcJ3h
+         1JTg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Eti3TImRx56hinakaM+GO4KiRjx+tMNw0bxj57lLePA=;
-        b=bX6u84Ii2DhoTjMtigoc9RfmzjGqHUa2mtxDeT5GrrtWbel/FhiE510e/+Xx6eSZIA
-         fYUVGQqNr5A3OYFUFvKvmDljZpo4J2fsz0uTPYbtBx1rdT4ktHAvq/8gJZ+bZ3bIaAuZ
-         35C9OE3WvS3/eYA+jILn8Fu/49KErCH+agIs7M1DNkjD6B10PdljnYI3EGuKOk6KuVWE
-         ooKjg3GkzHEWqOb/hWFZOaOI6Ot2GB5mTwtlDC4lh7dCa75ZEoMBat2d7AUNbqRnYFAU
-         akxv70VNF/5D+7NlHg95yjkn2uCgPhm8gA+W67zr3bW0sBKIDw1vZo/nH9UfmDLT/8Cy
-         qedQ==
-X-Gm-Message-State: APjAAAWz6OshjEZUQv1F9ui+xGAkGNMQC50lSsCNRTVHbjjBEUsn+crX
-        nLiLUVEkv6LnUE4IskIxFrE=
-X-Google-Smtp-Source: APXvYqwUSdJheWXGz2kRmSkOFY6sRR2tOnw3/flcVVM5hW6b5AwLhuzSEoDP0fIk5gOpxxKsrd+mfQ==
-X-Received: by 2002:a63:1045:: with SMTP id 5mr44165466pgq.55.1558512647450;
-        Wed, 22 May 2019 01:10:47 -0700 (PDT)
-Received: from zhanggen-UX430UQ ([66.42.35.75])
-        by smtp.gmail.com with ESMTPSA id e10sm45898976pfm.137.2019.05.22.01.10.41
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 22 May 2019 01:10:46 -0700 (PDT)
-Date:   Wed, 22 May 2019 16:10:29 +0800
-From:   Gen Zhang <blackgod016574@gmail.com>
-To:     Nicolas Pitre <nico@fluxnic.net>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] vt: Fix a missing-check bug in drivers/tty/vt/vt.c
-Message-ID: <20190522081029.GB5109@zhanggen-UX430UQ>
-References: <20190521022940.GA4858@zhanggen-UX430UQ>
- <nycvar.YSQ.7.76.1905202242410.1558@knanqh.ubzr>
- <20190521030905.GB5263@zhanggen-UX430UQ>
- <nycvar.YSQ.7.76.1905202323290.1558@knanqh.ubzr>
- <20190521040019.GD5263@zhanggen-UX430UQ>
- <nycvar.YSQ.7.76.1905210022050.1558@knanqh.ubzr>
- <20190521073901.GF5263@zhanggen-UX430UQ>
- <nycvar.YSQ.7.76.1905212218090.1558@knanqh.ubzr>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NinRxNHyDYbCj8IbjH00ChDPuWJUmzxEB5UBBCZfvuk=;
+        b=ft9YheLDdUKpLZNNnqPS4LtOefQofQTVY5WDgpzG5aaz+ab9ghwIgNZ3HcgVZybqte
+         kyHqby0i9VrPyfrd6mDA6ooCkLKGASmzqi9zqnh6f7Cv3DWW2v/mEY6bfJdHZI81PX7a
+         08Y24wb5pH5i/Ps/t9seQTCs1XHPggB+u70Hix7fLFrSCWN3coDRnD0TsJLCYXEloxLc
+         NR2zLBAqp5TxVzx8l8lF7kGrbVREv0PX8ZdEgkKiPb9G7CmSsB9IVycZQ0nk7gLOMI/Z
+         6ry9j9c1FjkF6MVkn/vZM/hAXhNS+1OkXQexCqrBndwE5X85ukcZdg90f+2V+1hb8KGF
+         luEA==
+X-Gm-Message-State: APjAAAWgXzwy0bZvtUQPA0pRiX6pX7C05okVVI381nTY1X9OI92EOLSF
+        e/CS4RXIHRCQi1QEe0cKBCkZJ1xzArgRQxE9Gb3Qsg==
+X-Google-Smtp-Source: APXvYqx7pLLI28SrC6KCXMaRxdNQfwff8OtpKLPW6FHDJY0UodmrushWU4y7kAd+10dOgbbxHnK3LHfXY1UCm8GAhHE=
+X-Received: by 2002:a05:6512:1c1:: with SMTP id f1mr4469627lfp.125.1558512742198;
+ Wed, 22 May 2019 01:12:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <nycvar.YSQ.7.76.1905212218090.1558@knanqh.ubzr>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20190521150006.GJ17978@ZenIV.linux.org.uk> <20190521113448.20654-1-christian@brauner.io>
+ <28114.1558456227@warthog.procyon.org.uk> <20190521164141.rbehqnghiej3gfua@brauner.io>
+ <CAHk-=wgtHm4t71oKbykE=awiVv2H2wCy8yH0L_FsyhHQ5OSO+Q@mail.gmail.com>
+In-Reply-To: <CAHk-=wgtHm4t71oKbykE=awiVv2H2wCy8yH0L_FsyhHQ5OSO+Q@mail.gmail.com>
+From:   Christian Brauner <christian@brauner.io>
+Date:   Wed, 22 May 2019 10:12:11 +0200
+Message-ID: <CAHrFyr4NV_5Z7TRSXTaurd4KCTLiHqKb47dN=bdY46HiL9ZY3Q@mail.gmail.com>
+Subject: Re: [PATCH 1/2] open: add close_range()
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     David Howells <dhowells@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Jann Horn <jannh@google.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Arnd Bergmann <arnd@arndb.de>, Shuah Khan <shuah@kernel.org>,
+        Todd Kjos <tkjos@android.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        alpha <linux-alpha@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-ia64@vger.kernel.org,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>,
+        linux-mips@vger.kernel.org,
+        Parisc List <linux-parisc@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        sparclinux <sparclinux@vger.kernel.org>,
+        linux-xtensa@linux-xtensa.org,
+        linux-arch <linux-arch@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 21, 2019 at 10:43:11PM -0400, Nicolas Pitre wrote:
-> On Tue, 21 May 2019, Gen Zhang wrote:
-> 
-> > On Tue, May 21, 2019 at 12:30:38AM -0400, Nicolas Pitre wrote:
-> > > Now imagine that MIN_NR_CONSOLES is defined to 10 instead of 1.
-> > > 
-> > > What happens with allocated memory if the err_vc condition is met on the 
-> > > 5th loop?
-> > Yes, vc->vc_screenbuf from the last loop is still not freed, right? I
-> > don't have idea to solve this one. Could please give some advice? Since
-> > we have to consider the err_vc condition.
-> > 
-> > > If err_vc_screenbuf condition is encountered on the 5th loop (curcons = 
-> > > 4), what is the value of vc_cons[4].d? Isn't it the same as vc that you 
-> > > just freed?
-> > > 
-> > > 
-> > > Nicolas
-> > Thanks for your explaination! You mean a double free situation may 
-> > happen, right? But in vc_allocate() there is also such a kfree(vc) and 
-> > vc_cons[currcons].d = NULL operation. This situation is really confusing
-> > me.
-> 
-> What you could do is something that looks like:
-> 
-> 	for (currcons = 0; currcons < MIN_NR_CONSOLES; currcons++) {
-> 		vc_cons[currcons].d = vc = kzalloc(...);
-> 		if (!vc)
-> 			goto fail1;
-> 		...
-> 		vc->vc_screenbuf = kzalloc(...);
-> 		if (!vc->vc_screenbuf)
-> 			goto fail2;
-> 		...
-> 
-> 	return 0;
-> 
-> 	/* free already allocated memory on error */
-> fail1:
-> 	while (curcons > 0) {
-> 		curcons--;
-> 		kfree(vc_cons[currcons].d->vc_screenbuf);
-> fail2:
-> 		kfree(vc_cons[currcons].d);
-> 		vc_cons[currcons].d = NULL;
-> 	}
-> 	console_unlock();
-> 	return -ENOMEM;
-> 
-> 
-> Nicolas
-Thanks for your patient explaination, Nicolas!
-I will work on it and resubmit it.
-Thanks
-Gen
+On Tue, May 21, 2019 at 10:23 PM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> On Tue, May 21, 2019 at 9:41 AM Christian Brauner <christian@brauner.io> wrote:
+> >
+> > Yeah, you mentioned this before. I do like being able to specify an
+> > upper bound to have the ability to place fds strategically after said
+> > upper bound.
+>
+> I suspect that's the case.
+>
+> And if somebody really wants to just close everything and uses a large
+> upper bound, we can - if we really want to - just compare the upper
+> bound to the file table size, and do an optimized case for that. We do
+> that upper bound comparison anyway to limit the size of the walk, so
+> *if* it's a big deal, that case could then do the whole "shrink
+> fdtable" case too.
+
+Makes sense.
+
+>
+> But I don't believe it's worth optimizing for unless somebody really
+> has a load where that is shown to be a big deal.   Just do the silly
+> and simple loop, and add a cond_resched() in the loop, like
+> close_files() does for the "we have a _lot_ of files open" case.
+
+Ok. I will resend a v1 later with the cond_resched() logic you and Al
+suggested added.
+
+Thanks!
+Christian
