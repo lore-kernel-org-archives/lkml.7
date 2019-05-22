@@ -2,268 +2,349 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44947C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 12:01:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16A11C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 12:02:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AA6B20815
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 12:01:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="duXL9btW"
+	by mail.kernel.org (Postfix) with ESMTP id E06E020815
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 12:02:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729029AbfEVMBY (ORCPT
+        id S1729201AbfEVMCI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 08:01:24 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:34236 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727464AbfEVMBX (ORCPT
+        Wed, 22 May 2019 08:02:08 -0400
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:35057 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727464AbfEVMCH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 08:01:23 -0400
-Received: by mail-it1-f195.google.com with SMTP id g23so5342468iti.1
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 05:01:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=a0sgS6JiPQaMdmqr0pmDguVAsGhTr/YF3Eo5mOXHScw=;
-        b=duXL9btWJwwi+wIeMidO21e/PYLqCPnvpseC4tuFVlunBET+P86h4wWHns03Omsey+
-         auG5o28oXmMSQ9x0BMuI3HHM1tShs0xrJtA92QfB05yn529qjxCxysO3pRt0cPknUezE
-         tPS80c1NMwufr3mogOJ/7VZPgFMc7CGvw/ad8=
+        Wed, 22 May 2019 08:02:07 -0400
+Received: by mail-vs1-f68.google.com with SMTP id q13so1235332vso.2;
+        Wed, 22 May 2019 05:02:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=a0sgS6JiPQaMdmqr0pmDguVAsGhTr/YF3Eo5mOXHScw=;
-        b=O5VXFb4mDO3Xy8ddhLwvl0Iy3zC4X3BZjv5s94w/l6Jphqq+1UFMRegFEzNWfBY9JC
-         Gr2E87ScVctloEvEzxCpJjEx+HIJzMv2F/clAHtD4pkHWS4aLrIweguejWz61Y59RIJh
-         gvuyhwmBTVPZqbwNbs0/ST0H/uGe0CTnQFTqTg8bmJnc7lhxN/SNjlDew2NWCs2iBK+4
-         KOUmB00XOd2NHk913KRj/l3f7TfHIlV+INQ52nv2blEj1xNBm+mM6ExCKtsjNI3bI7KA
-         mv3iUXIlLjnE56m7J6Je++hnuoHFECCWdFHzpxgHZrf04LR+ppJ4vXBNjWRH+0bX5Rbw
-         hSbA==
-X-Gm-Message-State: APjAAAUvPou7DSg/E0Y7LJnT7LIQkwPOmm9FHtGp2oZcexvvpYsP7Q+v
-        G+VSW8fDOuEjUrhO/kW3Z7H6SHZbYKLYKprZMh9TGw==
-X-Google-Smtp-Source: APXvYqxmTssug6sa7NiW2YWZql6kODBlYCZUD1kCFBempFTb+E4be0jz47x+9V2Yy9CA5auFDdC4/zjMd5z+PrC42vU=
-X-Received: by 2002:a24:590f:: with SMTP id p15mr7744336itb.12.1558526482322;
- Wed, 22 May 2019 05:01:22 -0700 (PDT)
+        bh=KePk7BxEeBmUescRtgLbgAKoQJF6RzIgfNSFHJK5/y8=;
+        b=eLNTguI8hp7921HNt8zymEmGkxCl1rEe5gjojMGHjPTDzkJq1e5zHmsCVb7+39OhVR
+         uMoJyZW77rbrUT5uqM71/xg95pAyM8OGKMmUrFZGku1yr0NNWMRoSRW+x85y6C7JHcqr
+         MOCw9uYlM+0PG+b6JrA1k/fafoHJA67cVLxe850NQ1GjEs4jvryAjQQRO1ZuXoEjo7qE
+         2cTdfGkvRSYGM65j1VALL39HNfPSdhaKLNVHshfvlLi/OQBJFkp4BJufARPHv9xfFSgh
+         6qiS0s0/m/3vvfUTuhLl4Fh+KCvQ22iMB5SI/z+TYE7gx+5ftm4MMS0/TzV7Vu/AUTNB
+         OVlA==
+X-Gm-Message-State: APjAAAWpC1I2S1XtiDY0dkfhT1s9AQ97TJvmJTaszsSP3xhER9yw5S/j
+        /a5ZBOLyqjKBXfMX37lDQjMsNa/qObAXq4k/PUs=
+X-Google-Smtp-Source: APXvYqwoH3E3qPmtK7oOXFar/xCNLEDWqr5sAN4KTZLD7szH09iRU5BhUo1+1byeNChLDfg9fNdDAR6WY6lKCv4z668=
+X-Received: by 2002:a67:f589:: with SMTP id i9mr11868819vso.152.1558526525732;
+ Wed, 22 May 2019 05:02:05 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190315130825.9005-1-jagan@amarulasolutions.com>
- <20190315130825.9005-4-jagan@amarulasolutions.com> <c232d5620d6a3272a6064ce9ccdec5c86a3a7950.camel@bootlin.com>
-In-Reply-To: <c232d5620d6a3272a6064ce9ccdec5c86a3a7950.camel@bootlin.com>
-From:   Jagan Teki <jagan@amarulasolutions.com>
-Date:   Wed, 22 May 2019 17:31:10 +0530
-Message-ID: <CAMty3ZC=cLNbJAeDBGCyYrknB5LWriL-pisk7j=jXQ54bse7XQ@mail.gmail.com>
-Subject: Re: [linux-sunxi] [PATCH 3/6] drm/sun4i: dsi: Add bridge support
-To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>
-Cc:     Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Chen-Yu Tsai <wens@csie.org>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        linux-amarula <linux-amarula@amarulasolutions.com>
+References: <1558442111-10599-1-git-send-email-gareth.williams.jx@renesas.com>
+In-Reply-To: <1558442111-10599-1-git-send-email-gareth.williams.jx@renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 22 May 2019 14:01:54 +0200
+Message-ID: <CAMuHMdWGwfDtRcfdzPCpQaM8X=x+s0uT7j+EnRP4Yta+4Nx9Gg@mail.gmail.com>
+Subject: Re: [PATCH v2] clk: renesas: r9a06g032: Add clock domain support
+To:     Gareth Williams <gareth.williams.jx@renesas.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul and Maxime,
+Hi Gareth,
 
-On Fri, Mar 15, 2019 at 7:03 PM Paul Kocialkowski
-<paul.kocialkowski@bootlin.com> wrote:
+On Tue, May 21, 2019 at 2:35 PM Gareth Williams
+<gareth.williams.jx@renesas.com> wrote:
+> There are several clocks on the r9ag032 which are currently not enabled
+> in their drivers that can be delegated to clock domain system for power
+> management. Therefore add support for clock domain functionality to the
+> r9a06g032 clock driver.
 >
-> Hi,
+> Signed-off-by: Gareth Williams <gareth.williams.jx@renesas.com>
+> ---
+> v2:
+>  - Rebased onto kernel/git/geert/renesas-drivers.git
+
+Thanks for the update!
+
+>  drivers/clk/renesas/r9a06g032-clocks.c | 243 ++++++++++++++++++++++++---------
+>  1 file changed, 176 insertions(+), 67 deletions(-)
+
+Please also update
+Documentation/devicetree/bindings/clock/renesas,r9a06g032-sysctrl.txt,
+to describe #power-domain-cells (must be 0), and to update the provider
+and consumer examples.
+
+> --- a/drivers/clk/renesas/r9a06g032-clocks.c
+> +++ b/drivers/clk/renesas/r9a06g032-clocks.c
+
+> @@ -28,6 +30,7 @@ struct r9a06g032_gate {
+>  /* This is used to describe a clock for instantiation */
+>  struct r9a06g032_clkdesc {
+>         const char *name;
+> +       bool managed;
+
+This flag can be integrated into the bit field below, avoiding a size
+increase.
+
+>         uint32_t type: 3;
+>         uint32_t index: 8;
+>         uint32_t source : 8; /* source index + 1 (0 == none) */
+> @@ -60,7 +63,11 @@ struct r9a06g032_clkdesc {
+>  #define D_GATE(_idx, _n, _src, ...) \
+>         { .type = K_GATE, .index = R9A06G032_##_idx, \
+>                 .source = 1 + R9A06G032_##_src, .name = _n, \
+> -               .gate = I_GATE(__VA_ARGS__), }
+> +               .managed = 0, .gate = I_GATE(__VA_ARGS__) }
+
+No need to initialize static variable fields to zero.
+
+> +#define D_MODULE(_idx, _n, _src, ...) \
+> +       { .type = K_GATE, .index = R9A06G032_##_idx, \
+> +               .source = 1 + R9A06G032_##_src, .name = _n, \
+> +               .managed = 1, .gate = I_GATE(__VA_ARGS__) }
+>  #define D_ROOT(_idx, _n, _mul, _div) \
+>         { .type = K_FFC, .index = R9A06G032_##_idx, .name = _n, \
+>                 .div = _div, .mul = _mul }
+> @@ -170,7 +177,7 @@ static const struct r9a06g032_clkdesc r9a06g032_clocks[] __initconst = {
+>         D_GATE(CLK_P6_PG2, "clk_p6_pg2", DIV_P6_PG, 0x8a3, 0x8a4, 0x8a5, 0, 0xb61, 0, 0),
+>         D_GATE(CLK_P6_PG3, "clk_p6_pg3", DIV_P6_PG, 0x8a6, 0x8a7, 0x8a8, 0, 0xb62, 0, 0),
+>         D_GATE(CLK_P6_PG4, "clk_p6_pg4", DIV_P6_PG, 0x8a9, 0x8aa, 0x8ab, 0, 0xb63, 0, 0),
+> -       D_GATE(CLK_PCI_USB, "clk_pci_usb", CLKOUT_D40, 0xe6, 0, 0, 0, 0, 0, 0),
+> +       D_MODULE(CLK_PCI_USB, "clk_pci_usb", CLKOUT_D40, 0xe6, 0, 0, 0, 0, 0, 0),
+
+Is this correct? All other module clocks are HCLK_*?
+You do have separate module clocks for USB host/function/power management
+below?
+
+>         D_GATE(CLK_QSPI0, "clk_qspi0", DIV_QSPI0, 0x2a4, 0x2a5, 0, 0, 0, 0, 0),
+>         D_GATE(CLK_QSPI1, "clk_qspi1", DIV_QSPI1, 0x484, 0x485, 0, 0, 0, 0, 0),
+>         D_GATE(CLK_RGMII_REF, "clk_rgmii_ref", CLKOUT_D8, 0x340, 0, 0, 0, 0, 0, 0),
+> @@ -187,17 +194,17 @@ static const struct r9a06g032_clkdesc r9a06g032_clocks[] __initconst = {
+>         D_GATE(CLK_SPI5, "clk_spi5", DIV_P4_PG, 0x822, 0x823, 0, 0, 0, 0, 0),
+>         D_GATE(CLK_SWITCH, "clk_switch", DIV_SWITCH, 0x982, 0x983, 0, 0, 0, 0, 0),
+>         D_DIV(DIV_MOTOR, "div_motor", CLKOUT_D5, 84, 2, 8),
+> -       D_GATE(HCLK_ECAT125, "hclk_ecat125", CLKOUT_D8, 0x400, 0x401, 0, 0x402, 0, 0x440, 0x441),
+> -       D_GATE(HCLK_PINCONFIG, "hclk_pinconfig", CLKOUT_D40, 0x740, 0x741, 0x742, 0, 0xae0, 0, 0),
+> -       D_GATE(HCLK_SERCOS, "hclk_sercos", CLKOUT_D10, 0x420, 0x422, 0, 0x421, 0, 0x460, 0x461),
+> -       D_GATE(HCLK_SGPIO2, "hclk_sgpio2", DIV_P5_PG, 0x8c3, 0x8c4, 0x8c5, 0, 0xb41, 0, 0),
+> -       D_GATE(HCLK_SGPIO3, "hclk_sgpio3", DIV_P5_PG, 0x8c6, 0x8c7, 0x8c8, 0, 0xb42, 0, 0),
+> -       D_GATE(HCLK_SGPIO4, "hclk_sgpio4", DIV_P5_PG, 0x8c9, 0x8ca, 0x8cb, 0, 0xb43, 0, 0),
+> -       D_GATE(HCLK_TIMER0, "hclk_timer0", CLKOUT_D40, 0x743, 0x744, 0x745, 0, 0xae1, 0, 0),
+> -       D_GATE(HCLK_TIMER1, "hclk_timer1", CLKOUT_D40, 0x746, 0x747, 0x748, 0, 0xae2, 0, 0),
+> -       D_GATE(HCLK_USBF, "hclk_usbf", CLKOUT_D8, 0xe3, 0, 0, 0xe4, 0, 0x102, 0x103),
+> -       D_GATE(HCLK_USBH, "hclk_usbh", CLKOUT_D8, 0xe0, 0xe1, 0, 0xe2, 0, 0x100, 0x101),
+> -       D_GATE(HCLK_USBPM, "hclk_usbpm", CLKOUT_D8, 0xe5, 0, 0, 0, 0, 0, 0),
+
+... here.
+
+> +       D_MODULE(HCLK_ECAT125, "hclk_ecat125", CLKOUT_D8, 0x400, 0x401, 0, 0x402, 0, 0x440, 0x441),
+> +       D_MODULE(HCLK_PINCONFIG, "hclk_pinconfig", CLKOUT_D40, 0x740, 0x741, 0x742, 0, 0xae0, 0, 0),
+> +       D_MODULE(HCLK_SERCOS, "hclk_sercos", CLKOUT_D10, 0x420, 0x422, 0, 0x421, 0, 0x460, 0x461),
+> +       D_MODULE(HCLK_SGPIO2, "hclk_sgpio2", DIV_P5_PG, 0x8c3, 0x8c4, 0x8c5, 0, 0xb41, 0, 0),
+> +       D_MODULE(HCLK_SGPIO3, "hclk_sgpio3", DIV_P5_PG, 0x8c6, 0x8c7, 0x8c8, 0, 0xb42, 0, 0),
+> +       D_MODULE(HCLK_SGPIO4, "hclk_sgpio4", DIV_P5_PG, 0x8c9, 0x8ca, 0x8cb, 0, 0xb43, 0, 0),
+> +       D_MODULE(HCLK_TIMER0, "hclk_timer0", CLKOUT_D40, 0x743, 0x744, 0x745, 0, 0xae1, 0, 0),
+> +       D_MODULE(HCLK_TIMER1, "hclk_timer1", CLKOUT_D40, 0x746, 0x747, 0x748, 0, 0xae2, 0, 0),
+> +       D_MODULE(HCLK_USBF, "hclk_usbf", CLKOUT_D8, 0xe3, 0, 0, 0xe4, 0, 0x102, 0x103),
+> +       D_MODULE(HCLK_USBH, "hclk_usbh", CLKOUT_D8, 0xe0, 0xe1, 0, 0xe2, 0, 0x100, 0x101),
+> +       D_MODULE(HCLK_USBPM, "hclk_usbpm", CLKOUT_D8, 0xe5, 0, 0, 0, 0, 0, 0),
+>         D_GATE(CLK_48_PG_F, "clk_48_pg_f", CLK_48, 0x78c, 0x78d, 0, 0x78e, 0, 0xb04, 0xb05),
+>         D_GATE(CLK_48_PG4, "clk_48_pg4", CLK_48, 0x789, 0x78a, 0x78b, 0, 0xb03, 0, 0),
+>         D_FFC(CLK_DDRPHY_PLLCLK_D4, "clk_ddrphy_pllclk_d4", CLK_DDRPHY_PLLCLK, 4),
+
+> @@ -344,6 +351,104 @@ struct r9a06g032_clk_gate {
 >
-> On Fri, 2019-03-15 at 18:38 +0530, Jagan Teki wrote:
-> > Some display panels would come up with a non-DSI output which
-> > can have an option to connect DSI interface by means of bridge
-> > convertor.
-> >
-> > This DSI to non-DSI bridge convertor would require a bridge
-> > driver that would communicate the DSI controller for bridge
-> > functionalities.
-> >
-> > So, add support for bridge functionalities in Allwinner DSI
-> > controller.
+>  #define to_r9a06g032_gate(_hw) container_of(_hw, struct r9a06g032_clk_gate, hw)
 >
-> See a few comments below.
+> +struct r9a06g032_clk_domain {
+> +       struct generic_pm_domain genpd;
+> +       struct device_node *np;
+
+np is unused (but see below), and unneeded, as nowadays you can use
+generic_pm_domain.dev.of_node instead.  Hence you can just use struct
+generic_pm_domain directly, instead of wrapping it.
+
+> +};
+> +
+> +static struct r9a06g032_clk_domain *r9a06g032_clk_domain;
+
+I don't think this singleton is needed, as there's no interaction with a
+second PM Domain driver (renesas-cpg-mssr interacts with rcar-sysc).
+
+> +static int create_add_module_clock(struct of_phandle_args *clkspec,
+> +                                  struct device *dev)
+> +{
+> +       struct clk *clk;
+> +       int error = 0;
+> +
+> +       clk = of_clk_get_from_provider(clkspec);
+> +
+
+Please drop this blank line.
+
+> +       if (IS_ERR(clk))
+> +               return PTR_ERR(clk);
+> +
+> +       error = pm_clk_create(dev);
+> +       if (error) {
+> +               dev_err(dev, "pm_clk_create failed %d\n", error);
+
+This can only happen when running out of memory, so no need to print a
+message.
+
+> +               clk_put(clk);
+> +               return error;
+> +       }
+> +
+> +       error = pm_clk_add_clk(dev, clk);
+> +       if (error) {
+> +               dev_err(dev, "pm_clk_add_clk %pC failed %d\n", clk, error);
+
+Likewise, I think.
+
+> +               pm_clk_destroy(dev);
+> +               clk_put(clk);
+> +       }
+> +
+> +       return error;
+> +}
+> +
+> +int __init r9a06g032_attach_dev(struct generic_pm_domain *unused,
+
+Missing static.
+Please drop the __init, as devices can be attached anytime
+(no section mismatch warnings?).
+
+> +                               struct device *dev)
+> +{
+> +       struct r9a06g032_clk_domain *pd = r9a06g032_clk_domain;
+
+You can just use the passed generic_pm_domain instead...
+
+> +       struct device_node *np = dev->of_node;
+> +       struct of_phandle_args clkspec;
+> +       int i = 0;
+> +       int error;
+> +
+> +       if (!pd) {
+
+... and this check is no longer needed.
+
+> +               dev_dbg(dev, "RZN1 clock domain not yet available\n");
+> +               return -EPROBE_DEFER;
+
+
+> +       }
+> +
+> +       while (!of_parse_phandle_with_args(np, "clocks", "#clock-cells", i,
+> +                                          &clkspec)) {
+
+As an entry in a clocks property may refer to a different type of clock
+(e.g. an external crystal), you need to add a check here, to make sure
+the clkspec refers to a clock handled by this driver:
+
+    if (clkspec->np != pd->genpd.dev.of_node)
+            continue
+
+> +               int index = clkspec.args[0];
+> +
+> +               if (index < R9A06G032_CLOCK_COUNT &&
+> +                   r9a06g032_clocks[index].managed) {
+> +                       error = create_add_module_clock(&clkspec, dev);
+> +
+> +                       if (error)
+> +                               return error;
+> +
+> +                       of_node_put(clkspec.np);
+
+Please move this line up, before the error check, to avoid a reference leak.
+
+> +               }
+> +               i++;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +void r9a06g032_detach_dev(struct generic_pm_domain *unused, struct device *dev)
+
+Missing static.
+
+> +{
+> +       if (!pm_clk_no_clocks(dev))
+> +               pm_clk_destroy(dev);
+> +}
+> +
+> +static int __init r9a06g032_add_clk_domain(struct device *dev)
+> +{
+> +       struct device_node *np = dev->of_node;
+> +       struct generic_pm_domain *genpd;
+> +       struct r9a06g032_clk_domain *pd;
+
+Just struct generic_pm_domain *pd, and s/genpd/pd/ below.
+
+> +
+> +       pd = devm_kzalloc(dev, sizeof(*pd), GFP_KERNEL);
+> +       if (!pd)
+> +               return -ENOMEM;
+> +
+> +       pd->np = np;
+
+Not needed.
+
+> +
+> +       genpd = &pd->genpd;
+
+Not needed.
+
+> +       genpd->name = np->name;
+> +       genpd->flags = GENPD_FLAG_PM_CLK | GENPD_FLAG_ACTIVE_WAKEUP;
+> +       genpd->attach_dev = r9a06g032_attach_dev;
+> +       genpd->detach_dev = r9a06g032_detach_dev;
+> +       pm_genpd_init(genpd, &pm_domain_always_on_gov, false);
+> +       r9a06g032_clk_domain = pd;
+
+Not needed.
+
+> +
+> +       of_genpd_add_provider_simple(np, genpd);
+> +       return 0;
+> +}
+> +
+>  static void
+>  r9a06g032_clk_gate_set(struct r9a06g032_priv *clocks,
+>                        struct r9a06g032_gate *g, int on)
+> @@ -870,6 +975,10 @@ static int __init r9a06g032_clocks_probe(struct platform_device *pdev)
+>         if (error)
+>                 return error;
 >
-> > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> > ---
-> >  drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 65 +++++++++++++++++++-------
-> >  drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h |  1 +
-> >  2 files changed, 49 insertions(+), 17 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-> > index 0960b96b62cc..64d74313b842 100644
-> > --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-> > +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-> > @@ -781,6 +781,9 @@ static void sun6i_dsi_encoder_enable(struct drm_encoder *encoder)
-> >       if (!IS_ERR(dsi->panel))
-> >               drm_panel_prepare(dsi->panel);
-> >
-> > +     if (!IS_ERR(dsi->bridge))
-> > +             drm_bridge_pre_enable(dsi->bridge);
-> > +
-> >       /*
-> >        * FIXME: This should be moved after the switch to HS mode.
-> >        *
-> > @@ -796,6 +799,9 @@ static void sun6i_dsi_encoder_enable(struct drm_encoder *encoder)
-> >       if (!IS_ERR(dsi->panel))
-> >               drm_panel_enable(dsi->panel);
-> >
-> > +     if (!IS_ERR(dsi->bridge))
-> > +             drm_bridge_enable(dsi->bridge);
-> > +
-> >       sun6i_dsi_start(dsi, DSI_START_HSC);
-> >
-> >       udelay(1000);
-> > @@ -812,6 +818,9 @@ static void sun6i_dsi_encoder_disable(struct drm_encoder *encoder)
-> >       if (!IS_ERR(dsi->panel)) {
-> >               drm_panel_disable(dsi->panel);
-> >               drm_panel_unprepare(dsi->panel);
-> > +     } else if (!IS_ERR(dsi->bridge)) {
-> > +             drm_bridge_disable(dsi->bridge);
-> > +             drm_bridge_post_disable(dsi->bridge);
-> >       }
-> >
-> >       phy_power_off(dsi->dphy);
-> > @@ -973,11 +982,16 @@ static int sun6i_dsi_attach(struct mipi_dsi_host *host,
-> >       struct sun6i_dsi *dsi = host_to_sun6i_dsi(host);
-> >
-> >       dsi->device = device;
-> > -     dsi->panel = of_drm_find_panel(device->dev.of_node);
-> > -     if (IS_ERR(dsi->panel))
-> > -             return PTR_ERR(dsi->panel);
-> >
-> > -     dev_info(host->dev, "Attached device %s\n", device->name);
-> > +     dsi->bridge = of_drm_find_bridge(device->dev.of_node);
-> > +     if (!dsi->bridge) {
->
-> You are using IS_ERR to check that the bridge is alive in the changes
-> above, but switch to checking that it's non-NULL at this point.
->
-> Are both guaranteed to be interchangeable?
->
-> > +             dsi->panel = of_drm_find_panel(device->dev.of_node);
-> > +             if (IS_ERR(dsi->panel))
-> > +                     return PTR_ERR(dsi->panel);
-> > +     }
->
-> You should probably use drm_of_find_panel_or_bridge instead of
-> duplicating the logic here.
+> +       error = r9a06g032_add_clk_domain(dev);
 
-True, In-fact I did try this API. but pipeline were unable to bound.
-Usually the panel and bridge were attached first and then the pipeline
-bound would start from front-end (in A33) But in my below cases I have
-seen only panel or bridge attached but no pipeline bound at all.
+I would do this after the call to devm_add_action_or_reset() below.
 
-And I'm using drm_of_find_panel_or_bridge(host->dev->of_node, 1, 0,
-&dsi->panel, &dsi->bridge); in dsi attach API.
+> +       if (error)
+> +               return error;
+> +
+>         return devm_add_action_or_reset(dev,
+>                                         r9a06g032_clocks_del_clk_provider, np);
+>  }
 
-Case-1, panel:
+Gr{oetje,eeting}s,
 
-&dsi {
-    vcc-dsi-supply = <&reg_dcdc1>;        /* VCC3V3-DSI */
-    status = "okay";
+                        Geert
 
-    ports {
-        dsi_out: port@1 {
-            reg = <1>;
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-            dsi_out_panel: endpoint {
-                remote-endpoint = <&panel_out_dsi>;
-            };
-        };
-    };
-
-    panel@0 {
-        compatible = "bananapi,s070wv20-ct16-icn6211";
-        reg = <0>;
-        enable-gpios = <&pio 1 7 GPIO_ACTIVE_HIGH>; /* LCD-PWR-EN: PB7 */
-        reset-gpios = <&r_pio 0 5 GPIO_ACTIVE_HIGH>; /* LCD-RST: PL5 */
-        backlight = <&backlight>;
-
-        port {
-            panel_out_dsi: endpoint {
-                remote-endpoint = <&dsi_out_panel>;
-            };
-        };
-    };
-};
-
-Case-2, bridge:
-
-    panel {
-        compatible = "bananapi,s070wv20-ct16", "simple-panel";
-        enable-gpios = <&pio 1 7 GPIO_ACTIVE_HIGH>; /* LCD-PWR-EN: PB7 */
-        backlight = <&backlight>;
-
-        port {
-
-            panel_out_bridge: endpoint {
-                remote-endpoint = <&bridge_out_panel>;
-            };
-        };
-    };
-
-&dsi {
-    vcc-dsi-supply = <&reg_dcdc1>;        /* VCC-DSI */
-    status = "okay";
-
-    ports {
-        dsi_out: port@1 {
-            reg = <1>;
-
-            dsi_out_bridge: endpoint {
-                remote-endpoint = <&bridge_out_dsi>;
-            };
-        };
-    };
-
-    bridge@0 {
-        reg = <0>;
-        compatible = "bananapi,icn6211", "chipone,icn6211";
-        reset-gpios = <&r_pio 0 5 GPIO_ACTIVE_HIGH>; /* LCD-RST: PL5 */
-        #address-cells = <1>;
-        #size-cells = <0>;
-
-        ports {
-            #address-cells = <1>;
-            #size-cells = <0>;
-
-            bridge_in: port@0 {
-                reg = <0>;
-
-                bridge_out_dsi: endpoint {
-                    remote-endpoint = <&dsi_out_bridge>;
-                };
-            };
-
-            bridge_out: port@1 {
-                reg = <1>;
-
-                bridge_out_panel: endpoint {
-                    remote-endpoint = <&panel_out_bridge>;
-                };
-            };
-        };
-    };
-};
-
-I think, I'm sure about the pipeline connections as per my
-understanding. but something loosely missed here or in the code.
-Please do let me know for any suggestions.
-
-Jagan.
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
