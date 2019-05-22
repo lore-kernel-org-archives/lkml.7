@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD2B9C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:02:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 484B8C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:02:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B27F20856
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:02:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18E9420821
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:02:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558555338;
-	bh=5NdB2/oVoctYoT1f+lKCXQgAtRDIr4XP3VOrre8ZM2M=;
+	s=default; t=1558555346;
+	bh=6Hn5tdOXg3VLkL0x+vG12oDyBo+z47LO5zk51wE53MM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CVRDQjyxQ2U4Hnqxuzswq6JPNdBkWrTvzIlB06xYad5lRMfhNqJzyo1ol9Bynxb0E
-	 iE3HPln/XjE7JopRx9DCBz95fQboXME+BB/kUsJVUoIXy9xMznamWu00KsMHC4ov1Y
-	 ObCohrMs0Y2V/LsXu1dTzZfdEkb7NKSqZ3cmRP2o=
+	b=igGHXVtbq89qM4KazfxPogrhRhZqwI/R5roZG9Q/xkblQ6rVVl48HcKsadfTvbsJe
+	 AXC0cVXTRdpKirmgW2MnjRJYna9kigRSnTTJunNpG2CzL97jSih6wJnRmrynXNyboB
+	 9G3zBHkjClPPYIAxtC50ES0UGEGb9fMaX5JtlzwI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730996AbfEVUCR (ORCPT
+        id S1731110AbfEVUCZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 16:02:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42768 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 16:02:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730278AbfEVTWF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:22:05 -0400
+        id S1730244AbfEVTWA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:22:00 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C012217F9;
-        Wed, 22 May 2019 19:22:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84CE42177E;
+        Wed, 22 May 2019 19:21:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558552925;
-        bh=5NdB2/oVoctYoT1f+lKCXQgAtRDIr4XP3VOrre8ZM2M=;
+        s=default; t=1558552919;
+        bh=6Hn5tdOXg3VLkL0x+vG12oDyBo+z47LO5zk51wE53MM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JgE55VfTTH+4qLsR1UjJakOznfVnJBTLpSMx7KBD0ixnXFvN+pxhsyLjd8+rO9/GW
-         EGZ05Q9oA/1wq5KukvNqn7fgrLYwCJTWtW/x4aYWtv1++cNoLHiDc8wmaUdgEnvuLn
-         CP1RK/G1NKauqNtskD7zmeFnRnLpxy0TNpc6fHww=
+        b=VlzaXdjS9Kh6IP8doHhbDV1hbMMnJEvqEqlzkVfERzY4TmetRrfmUV9HBYqC5F1Qc
+         OLlq0hQgpgy5Up6vDHhUcB3II6hkX1ZabLi8UHo/3MoYNrs9ZuU4SIyMWnrCCLWst6
+         wYzIi/Asswpp+drvsFdybTKx4mrHrrY6vK1OtA6Q=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pavel Machek <pavel@ucw.cz>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-leds@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 033/375] leds: avoid races with workqueue
-Date:   Wed, 22 May 2019 15:15:33 -0400
-Message-Id: <20190522192115.22666-33-sashal@kernel.org>
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 030/375] usb: dwc3: move synchronize_irq() out of the spinlock protected block
+Date:   Wed, 22 May 2019 15:15:30 -0400
+Message-Id: <20190522192115.22666-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192115.22666-1-sashal@kernel.org>
 References: <20190522192115.22666-1-sashal@kernel.org>
@@ -59,62 +59,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pavel Machek <pavel@ucw.cz>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
 
-[ Upstream commit 0db37915d912e8dc6588f25da76d3ed36718d92f ]
+[ Upstream commit 41a91c606e7d2b74358a944525267cc451c271e8 ]
 
-There are races between "main" thread and workqueue. They manifest
-themselves on Thinkpad X60:
+dwc3_gadget_suspend() is called under dwc->lock spinlock. In such context
+calling synchronize_irq() is not allowed. Move the problematic call out
+of the protected block to fix the following kernel BUG during system
+suspend:
 
-This should result in LED blinking, but it turns it off instead:
+BUG: sleeping function called from invalid context at kernel/irq/manage.c:112
+in_atomic(): 1, irqs_disabled(): 128, pid: 1601, name: rtcwake
+6 locks held by rtcwake/1601:
+ #0: f70ac2a2 (sb_writers#7){.+.+}, at: vfs_write+0x130/0x16c
+ #1: b5fe1270 (&of->mutex){+.+.}, at: kernfs_fop_write+0xc0/0x1e4
+ #2: 7e597705 (kn->count#60){.+.+}, at: kernfs_fop_write+0xc8/0x1e4
+ #3: 8b3527d0 (system_transition_mutex){+.+.}, at: pm_suspend+0xc4/0xc04
+ #4: fc7f1c42 (&dev->mutex){....}, at: __device_suspend+0xd8/0x74c
+ #5: 4b36507e (&(&dwc->lock)->rlock){....}, at: dwc3_gadget_suspend+0x24/0x3c
+irq event stamp: 11252
+hardirqs last  enabled at (11251): [<c09c54a4>] _raw_spin_unlock_irqrestore+0x6c/0x74
+hardirqs last disabled at (11252): [<c09c4d44>] _raw_spin_lock_irqsave+0x1c/0x5c
+softirqs last  enabled at (9744): [<c0102564>] __do_softirq+0x3a4/0x66c
+softirqs last disabled at (9737): [<c0128528>] irq_exit+0x140/0x168
+Preemption disabled at:
+[<00000000>]   (null)
+CPU: 7 PID: 1601 Comm: rtcwake Not tainted
+5.0.0-rc3-next-20190122-00039-ga3f4ee4f8a52 #5252
+Hardware name: SAMSUNG EXYNOS (Flattened Device Tree)
+[<c01110f0>] (unwind_backtrace) from [<c010d120>] (show_stack+0x10/0x14)
+[<c010d120>] (show_stack) from [<c09a4d04>] (dump_stack+0x90/0xc8)
+[<c09a4d04>] (dump_stack) from [<c014c700>] (___might_sleep+0x22c/0x2c8)
+[<c014c700>] (___might_sleep) from [<c0189d68>] (synchronize_irq+0x28/0x84)
+[<c0189d68>] (synchronize_irq) from [<c05cbbf8>] (dwc3_gadget_suspend+0x34/0x3c)
+[<c05cbbf8>] (dwc3_gadget_suspend) from [<c05bd020>] (dwc3_suspend_common+0x154/0x410)
+[<c05bd020>] (dwc3_suspend_common) from [<c05bd34c>] (dwc3_suspend+0x14/0x2c)
+[<c05bd34c>] (dwc3_suspend) from [<c051c730>] (platform_pm_suspend+0x2c/0x54)
+[<c051c730>] (platform_pm_suspend) from [<c05285d4>] (dpm_run_callback+0xa4/0x3dc)
+[<c05285d4>] (dpm_run_callback) from [<c0528a40>] (__device_suspend+0x134/0x74c)
+[<c0528a40>] (__device_suspend) from [<c052c508>] (dpm_suspend+0x174/0x588)
+[<c052c508>] (dpm_suspend) from [<c0182134>] (suspend_devices_and_enter+0xc0/0xe74)
+[<c0182134>] (suspend_devices_and_enter) from [<c0183658>] (pm_suspend+0x770/0xc04)
+[<c0183658>] (pm_suspend) from [<c0180ddc>] (state_store+0x6c/0xcc)
+[<c0180ddc>] (state_store) from [<c09a9a70>] (kobj_attr_store+0x14/0x20)
+[<c09a9a70>] (kobj_attr_store) from [<c02d6800>] (sysfs_kf_write+0x4c/0x50)
+[<c02d6800>] (sysfs_kf_write) from [<c02d594c>] (kernfs_fop_write+0xfc/0x1e4)
+[<c02d594c>] (kernfs_fop_write) from [<c02593d8>] (__vfs_write+0x2c/0x160)
+[<c02593d8>] (__vfs_write) from [<c0259694>] (vfs_write+0xa4/0x16c)
+[<c0259694>] (vfs_write) from [<c0259870>] (ksys_write+0x40/0x8c)
+[<c0259870>] (ksys_write) from [<c0101000>] (ret_fast_syscall+0x0/0x28)
+Exception stack(0xed55ffa8 to 0xed55fff0)
+...
 
-    root@amd:/data/pavel# cd /sys/class/leds/tpacpi\:\:power
-    root@amd:/sys/class/leds/tpacpi::power# echo timer > trigger
-    root@amd:/sys/class/leds/tpacpi::power# echo timer > trigger
-
-It should be possible to transition from blinking to solid on by echo
-0 > brightness; echo 1 > brightness... but that does not work, either,
-if done too quickly.
-
-Synchronization of the workqueue fixes both.
-
-Fixes: 1afcadfcd184 ("leds: core: Use set_brightness_work for the blocking op")
-Signed-off-by: Pavel Machek <pavel@ucw.cz>
-Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Fixes: 01c10880d242 ("usb: dwc3: gadget: synchronize_irq dwc irq in suspend")
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/leds/led-class.c | 1 +
- drivers/leds/led-core.c  | 5 +++++
- 2 files changed, 6 insertions(+)
+ drivers/usb/dwc3/core.c   | 2 ++
+ drivers/usb/dwc3/gadget.c | 2 --
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
-index 3c7e3487b373b..85848c5da705f 100644
---- a/drivers/leds/led-class.c
-+++ b/drivers/leds/led-class.c
-@@ -57,6 +57,7 @@ static ssize_t brightness_store(struct device *dev,
- 	if (state == LED_OFF)
- 		led_trigger_remove(led_cdev);
- 	led_set_brightness(led_cdev, state);
-+	flush_work(&led_cdev->set_brightness_work);
+diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+index f944cea4056bc..72110a8c49d68 100644
+--- a/drivers/usb/dwc3/core.c
++++ b/drivers/usb/dwc3/core.c
+@@ -1600,6 +1600,7 @@ static int dwc3_suspend_common(struct dwc3 *dwc, pm_message_t msg)
+ 		spin_lock_irqsave(&dwc->lock, flags);
+ 		dwc3_gadget_suspend(dwc);
+ 		spin_unlock_irqrestore(&dwc->lock, flags);
++		synchronize_irq(dwc->irq_gadget);
+ 		dwc3_core_exit(dwc);
+ 		break;
+ 	case DWC3_GCTL_PRTCAP_HOST:
+@@ -1632,6 +1633,7 @@ static int dwc3_suspend_common(struct dwc3 *dwc, pm_message_t msg)
+ 			spin_lock_irqsave(&dwc->lock, flags);
+ 			dwc3_gadget_suspend(dwc);
+ 			spin_unlock_irqrestore(&dwc->lock, flags);
++			synchronize_irq(dwc->irq_gadget);
+ 		}
  
- 	ret = size;
- unlock:
-diff --git a/drivers/leds/led-core.c b/drivers/leds/led-core.c
-index e3da7c03da1b5..e9ae7f87ab900 100644
---- a/drivers/leds/led-core.c
-+++ b/drivers/leds/led-core.c
-@@ -164,6 +164,11 @@ static void led_blink_setup(struct led_classdev *led_cdev,
- 		     unsigned long *delay_on,
- 		     unsigned long *delay_off)
- {
-+	/*
-+	 * If "set brightness to 0" is pending in workqueue, we don't
-+	 * want that to be reordered after blink_set()
-+	 */
-+	flush_work(&led_cdev->set_brightness_work);
- 	if (!test_bit(LED_BLINK_ONESHOT, &led_cdev->work_flags) &&
- 	    led_cdev->blink_set &&
- 	    !led_cdev->blink_set(led_cdev, delay_on, delay_off))
+ 		dwc3_otg_exit(dwc);
+diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
+index e293400cc6e95..2bb0ff9608d30 100644
+--- a/drivers/usb/dwc3/gadget.c
++++ b/drivers/usb/dwc3/gadget.c
+@@ -3384,8 +3384,6 @@ int dwc3_gadget_suspend(struct dwc3 *dwc)
+ 	dwc3_disconnect_gadget(dwc);
+ 	__dwc3_gadget_stop(dwc);
+ 
+-	synchronize_irq(dwc->irq_gadget);
+-
+ 	return 0;
+ }
+ 
 -- 
 2.20.1
 
