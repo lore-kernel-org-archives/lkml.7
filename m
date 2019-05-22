@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6C96C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:31:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C58DBC282DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:31:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B089220879
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:31:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 996DB217D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:31:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558553506;
-	bh=r8OJ0Lvs9EiXT0z3rsg9GusRJUVtlhz+gyLKUPXKbsw=;
+	s=default; t=1558553508;
+	bh=6n1wNH6eD5II1KdR/BBc8rW4oiMULBFCsHNYEGVHrFc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mORkU+j4ITQPA8IuA/Yi8BTCCAsrLup8GPEYYMk16Zew+wdoyTam0I5EPQMhXVLZl
-	 A7VCfJyhwD/TVS341oqo8w20MefuqX3bKels5Kmea9yeKiKLC3hzMum5CBWwYRX7r3
-	 fj0iewO21kElijpZTDNPxWyyebnjcf+LrSgCASJE=
+	b=0UH3/VWjvhpE+Edf8+GnWxfsTh99729RNQc9FBG5/aMZ+QdLoM7WNAQ38WylZRcTt
+	 qp/z1gjsVcRkpnCUj5aXK4t+XjGJ3S/+yZfTAmLt4nXSImVqEfRqc/iW0lyWlQH11b
+	 /sc1x0Pw39MNCAQ6KGN1+Z+/MRowdDnk33giLzsA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387624AbfEVTbp (ORCPT
+        id S1733255AbfEVTbr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:31:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55268 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:31:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55338 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387591AbfEVTbm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:31:42 -0400
+        id S2387603AbfEVTbo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:31:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 488F6204FD;
-        Wed, 22 May 2019 19:31:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 575F32173C;
+        Wed, 22 May 2019 19:31:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553501;
-        bh=r8OJ0Lvs9EiXT0z3rsg9GusRJUVtlhz+gyLKUPXKbsw=;
+        s=default; t=1558553504;
+        bh=6n1wNH6eD5II1KdR/BBc8rW4oiMULBFCsHNYEGVHrFc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DywC0j9AoS6aYn8GJoZMdaTlq4xLPjV+h3lwUrxVNgmIyu2VsLZF0Shru7FN4IRAE
-         Qq79YE8Z7bHOWLeGDjxxuOV3aVOn02Xq/iN14BIAZNSVAO4D92MfjNf3vHna40lfhX
-         GMHIkIXalCIo1jtZD77vAvvz67qoyFHE33pVjL3E=
+        b=ZgW3mpIE/6lVq60qn/KZrgVG8YTI8WmLy/asXEMiX7wZvYlKrQTmwji0n134fbBn/
+         JfzkSWafXc/k7PcN3avo/n5HXOiLx+Ion+cYwRVsfLyGkNKj2MVFxjoy5y62qkPO0V
+         bKshb45541g/ZPyvGEuWzz1FUH3ngTuEtYwP6BFE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mariusz Bialonczyk <manio@skyboo.net>,
-        Jean-Francois Dagenais <jeff.dagenais@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 09/92] w1: fix the resume command API
-Date:   Wed, 22 May 2019 15:30:04 -0400
-Message-Id: <20190522193127.27079-9-sashal@kernel.org>
+Cc:     Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 11/92] mac80211/cfg80211: update bss channel on channel switch
+Date:   Wed, 22 May 2019 15:30:06 -0400
+Message-Id: <20190522193127.27079-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522193127.27079-1-sashal@kernel.org>
 References: <20190522193127.27079-1-sashal@kernel.org>
@@ -60,51 +60,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mariusz Bialonczyk <manio@skyboo.net>
+From: Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
 
-[ Upstream commit 62909da8aca048ecf9fbd7e484e5100608f40a63 ]
+[ Upstream commit 5dc8cdce1d722c733f8c7af14c5fb595cfedbfa8 ]
 
->From the DS2408 datasheet [1]:
-"Resume Command function checks the status of the RC flag and, if it is set,
- directly transfers control to the control functions, similar to a Skip ROM
- command. The only way to set the RC flag is through successfully executing
- the Match ROM, Search ROM, Conditional Search ROM, or Overdrive-Match ROM
- command"
+FullMAC STAs have no way to update bss channel after CSA channel switch
+completion. As a result, user-space tools may provide inconsistent
+channel info. For instance, consider the following two commands:
+$ sudo iw dev wlan0 link
+$ sudo iw dev wlan0 info
+The latter command gets channel info from the hardware, so most probably
+its output will be correct. However the former command gets channel info
+from scan cache, so its output will contain outdated channel info.
+In fact, current bss channel info will not be updated until the
+next [re-]connect.
 
-The function currently works perfectly fine in a multidrop bus, but when we
-have only a single slave connected, then only a Skip ROM is used and Match
-ROM is not called at all. This is leading to problems e.g. with single one
-DS2408 connected, as the Resume Command is not working properly and the
-device is responding with failing results after the Resume Command.
+Note that mac80211 STAs have a workaround for this, but it requires
+access to internal cfg80211 data, see ieee80211_chswitch_work:
 
-This commit is fixing this by using a Skip ROM instead in those cases.
-The bandwidth / performance advantage is exactly the same.
+	/* XXX: shouldn't really modify cfg80211-owned data! */
+	ifmgd->associated->channel = sdata->csa_chandef.chan;
 
-Refs:
-[1] https://datasheets.maximintegrated.com/en/ds/DS2408.pdf
+This patch suggests to convert mac80211 workaround into cfg80211 behavior
+and to update current bss channel in cfg80211_ch_switch_notify.
 
-Signed-off-by: Mariusz Bialonczyk <manio@skyboo.net>
-Reviewed-by: Jean-Francois Dagenais <jeff.dagenais@gmail.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/w1/w1_io.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ net/mac80211/mlme.c    | 3 ---
+ net/wireless/nl80211.c | 5 +++++
+ 2 files changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/w1/w1_io.c b/drivers/w1/w1_io.c
-index 282092421cc9e..1a9d9ec8db4df 100644
---- a/drivers/w1/w1_io.c
-+++ b/drivers/w1/w1_io.c
-@@ -437,8 +437,7 @@ int w1_reset_resume_command(struct w1_master *dev)
- 	if (w1_reset_bus(dev))
- 		return -1;
+diff --git a/net/mac80211/mlme.c b/net/mac80211/mlme.c
+index ed4fef32b394f..08384dbf426c8 100644
+--- a/net/mac80211/mlme.c
++++ b/net/mac80211/mlme.c
+@@ -1104,9 +1104,6 @@ static void ieee80211_chswitch_work(struct work_struct *work)
+ 		goto out;
+ 	}
  
--	/* This will make only the last matched slave perform a skip ROM. */
--	w1_write_8(dev, W1_RESUME_CMD);
-+	w1_write_8(dev, dev->slave_count > 1 ? W1_RESUME_CMD : W1_SKIP_ROM);
- 	return 0;
+-	/* XXX: shouldn't really modify cfg80211-owned data! */
+-	ifmgd->associated->channel = sdata->csa_chandef.chan;
+-
+ 	ifmgd->csa_waiting_bcn = true;
+ 
+ 	ieee80211_sta_reset_beacon_monitor(sdata);
+diff --git a/net/wireless/nl80211.c b/net/wireless/nl80211.c
+index 81013490a99f4..1968998e6c6c2 100644
+--- a/net/wireless/nl80211.c
++++ b/net/wireless/nl80211.c
+@@ -12788,6 +12788,11 @@ void cfg80211_ch_switch_notify(struct net_device *dev,
+ 
+ 	wdev->chandef = *chandef;
+ 	wdev->preset_chandef = *chandef;
++
++	if (wdev->iftype == NL80211_IFTYPE_STATION &&
++	    !WARN_ON(!wdev->current_bss))
++		wdev->current_bss->pub.channel = chandef->chan;
++
+ 	nl80211_ch_switch_notify(rdev, dev, chandef, GFP_KERNEL,
+ 				 NL80211_CMD_CH_SWITCH_NOTIFY, 0);
  }
- EXPORT_SYMBOL_GPL(w1_reset_resume_command);
 -- 
 2.20.1
 
