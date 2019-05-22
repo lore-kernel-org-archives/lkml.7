@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71E48C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:23:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3C6AC282DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:23:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4950920879
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:23:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5C302184E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:23:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558553018;
-	bh=dwcs9Y0vxroOP9WzRELD7LmuEjDjG77KIt901BZw2uw=;
+	s=default; t=1558553020;
+	bh=P+R2WS1P5K+edrz0F0rQKyDg6nYgS4/rJHr/X8Zb5kw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pz4T1Ksi1x3TuxDq6//P4OplsxWmNAtagFwkn11fUQKw13C8ZP+t0zTGWw4DMYVAi
-	 +FkpDEODr7ZEFUEA4w0g8t+mfMIwhwQ1NXWw0jQ58gffiv+eCEn/nV2oe6bq62aOfx
-	 +wm0JpHekrvER6OvQ2mkHsZIsk7gshniTni0UoO8=
+	b=ci53qePiyHAzzHKvzslisg7aEJuGIAEO75E1UWG/NdBPKLV2E11QjQrUhm7I+Hv5T
+	 iQrhWf07SZ1kjAYAtVLWrU81Barrnq1xssWPhWHshz624oGZeH5AxpKQF1I9S2DNZ3
+	 Hp0aL62r9SzXeg4T/eUKn6ogY4PXygOWYvU4cn/0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730941AbfEVTXg (ORCPT
+        id S1730931AbfEVTXe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:23:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44462 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730924AbfEVTXe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 22 May 2019 15:23:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44388 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730072AbfEVTXb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:23:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B367217D4;
-        Wed, 22 May 2019 19:23:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 00CB120879;
+        Wed, 22 May 2019 19:23:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553013;
-        bh=dwcs9Y0vxroOP9WzRELD7LmuEjDjG77KIt901BZw2uw=;
+        s=default; t=1558553010;
+        bh=P+R2WS1P5K+edrz0F0rQKyDg6nYgS4/rJHr/X8Zb5kw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FB1qJLCdiHFSxjoDPT0Lxd7zGxTCdRZBbEcuWbJt8LZDklF46bSwlnw6ca9Cwl6yt
-         LAHpdqI3djxtzRrPMhfy2JHYoJMqfKKknsW4e8/qX0uYVTzeNy9cfOfbpdHbqmKxba
-         1d8wMvJD7O7lCkQvZ/0L9+bGjfTKhWJM5Z5N9/Wc=
+        b=peGvIh1jtRnM31XLtqHZTKxEfBckIK2MUOzWBek8DipbdVnqhEX94ZbWVA3V0OO+V
+         aKXO2L6s02265GP3CSudNpLAb0K14zAhnkk5BRVGmF3tA8u4dcg8CiuMeptUMeDn5s
+         zG7Te2npek3qMbXBrI5X8KWoTl7IYJBvAuKrK/jw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Johan Hovold <johan@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 077/375] USB: serial: fix initial-termios handling
-Date:   Wed, 22 May 2019 15:16:17 -0400
-Message-Id: <20190522192115.22666-77-sashal@kernel.org>
+Cc:     Huazhong Tan <tanhuazhong@huawei.com>,
+        Peng Li <lipeng321@huawei.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 074/375] net: hns3: use atomic_t replace u32 for arq's count
+Date:   Wed, 22 May 2019 15:16:14 -0400
+Message-Id: <20190522192115.22666-74-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192115.22666-1-sashal@kernel.org>
 References: <20190522192115.22666-1-sashal@kernel.org>
@@ -58,75 +60,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Huazhong Tan <tanhuazhong@huawei.com>
 
-[ Upstream commit 579bebe5dd522580019e7b10b07daaf500f9fb1e ]
+[ Upstream commit 30780a8b1677e7409b32ae52a9a84f7d41ae6b43 ]
 
-The USB-serial driver init_termios callback is used to override the
-default initial terminal settings provided by USB-serial core.
+Since irq handler and mailbox task will both update arq's count,
+so arq's count should use atomic_t instead of u32, otherwise
+its value may go wrong finally.
 
-After a bug was fixed in the original implementation introduced by
-commit fe1ae7fdd2ee ("tty: USB serial termios bits"), the init_termios
-callback was no longer called just once on first use as intended but
-rather on every (first) open.
-
-This specifically meant that the terminal settings saved on (final)
-close were ignored when reopening a port for drivers overriding the
-initial settings.
-
-Also update the outdated function header referring to the creation of
-termios objects.
-
-Fixes: 7e29bb4b779f ("usb-serial: fix termios initialization logic")
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Fixes: 07a0556a3a73 ("net: hns3: Changes to support ARQ(Asynchronous Receive Queue)")
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Signed-off-by: Peng Li <lipeng321@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/serial/usb-serial.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h          | 2 +-
+ drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c | 2 +-
+ drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c | 7 ++++---
+ 3 files changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/usb/serial/usb-serial.c b/drivers/usb/serial/usb-serial.c
-index 7e89efbf2c284..676c296103a2f 100644
---- a/drivers/usb/serial/usb-serial.c
-+++ b/drivers/usb/serial/usb-serial.c
-@@ -164,9 +164,9 @@ void usb_serial_put(struct usb_serial *serial)
-  * @driver: the driver (USB in our case)
-  * @tty: the tty being created
-  *
-- * Create the termios objects for this tty.  We use the default
-+ * Initialise the termios structure for this tty.  We use the default
-  * USB serial settings but permit them to be overridden by
-- * serial->type->init_termios.
-+ * serial->type->init_termios on first open.
-  *
-  * This is the first place a new tty gets used.  Hence this is where we
-  * acquire references to the usb_serial structure and the driver module,
-@@ -178,6 +178,7 @@ static int serial_install(struct tty_driver *driver, struct tty_struct *tty)
- 	int idx = tty->index;
- 	struct usb_serial *serial;
- 	struct usb_serial_port *port;
-+	bool init_termios;
- 	int retval = -ENODEV;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h b/drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h
+index 299b277bc7ae9..589b7ee32bff8 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h
+@@ -107,7 +107,7 @@ struct hclgevf_mbx_arq_ring {
+ 	struct hclgevf_dev *hdev;
+ 	u32 head;
+ 	u32 tail;
+-	u32 count;
++	atomic_t count;
+ 	u16 msg_q[HCLGE_MBX_MAX_ARQ_MSG_NUM][HCLGE_MBX_MAX_ARQ_MSG_SIZE];
+ };
  
- 	port = usb_serial_port_get_by_minor(idx);
-@@ -192,14 +193,16 @@ static int serial_install(struct tty_driver *driver, struct tty_struct *tty)
- 	if (retval)
- 		goto error_get_interface;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c
+index 9441b453d38df..9a0a501908aec 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c
+@@ -327,7 +327,7 @@ int hclgevf_cmd_init(struct hclgevf_dev *hdev)
+ 	hdev->arq.hdev = hdev;
+ 	hdev->arq.head = 0;
+ 	hdev->arq.tail = 0;
+-	hdev->arq.count = 0;
++	atomic_set(&hdev->arq.count, 0);
+ 	hdev->hw.cmq.csq.next_to_clean = 0;
+ 	hdev->hw.cmq.csq.next_to_use = 0;
+ 	hdev->hw.cmq.crq.next_to_clean = 0;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c
+index 7dc3c9f79169f..4f2c77283cb43 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c
+@@ -208,7 +208,8 @@ void hclgevf_mbx_handler(struct hclgevf_dev *hdev)
+ 			/* we will drop the async msg if we find ARQ as full
+ 			 * and continue with next message
+ 			 */
+-			if (hdev->arq.count >= HCLGE_MBX_MAX_ARQ_MSG_NUM) {
++			if (atomic_read(&hdev->arq.count) >=
++			    HCLGE_MBX_MAX_ARQ_MSG_NUM) {
+ 				dev_warn(&hdev->pdev->dev,
+ 					 "Async Q full, dropping msg(%d)\n",
+ 					 req->msg[1]);
+@@ -220,7 +221,7 @@ void hclgevf_mbx_handler(struct hclgevf_dev *hdev)
+ 			memcpy(&msg_q[0], req->msg,
+ 			       HCLGE_MBX_MAX_ARQ_MSG_SIZE * sizeof(u16));
+ 			hclge_mbx_tail_ptr_move_arq(hdev->arq);
+-			hdev->arq.count++;
++			atomic_inc(&hdev->arq.count);
  
-+	init_termios = (driver->termios[idx] == NULL);
-+
- 	retval = tty_standard_install(driver, tty);
- 	if (retval)
- 		goto error_init_termios;
+ 			hclgevf_mbx_task_schedule(hdev);
  
- 	mutex_unlock(&serial->disc_mutex);
+@@ -308,7 +309,7 @@ void hclgevf_mbx_async_handler(struct hclgevf_dev *hdev)
+ 		}
  
--	/* allow the driver to update the settings */
--	if (serial->type->init_termios)
-+	/* allow the driver to update the initial settings */
-+	if (init_termios && serial->type->init_termios)
- 		serial->type->init_termios(tty);
- 
- 	tty->driver_data = port;
+ 		hclge_mbx_head_ptr_move_arq(hdev->arq);
+-		hdev->arq.count--;
++		atomic_dec(&hdev->arq.count);
+ 		msg_q = hdev->arq.msg_q[hdev->arq.head];
+ 	}
+ }
 -- 
 2.20.1
 
