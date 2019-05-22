@@ -2,104 +2,257 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01E6CC18E7D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 10:10:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB955C18E7D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 10:11:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0E31217F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 10:10:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7358C20863
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 10:11:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729118AbfEVKKn (ORCPT
+        id S1729212AbfEVKLV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 06:10:43 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:55623 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728424AbfEVKKm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 06:10:42 -0400
-Received: from kresse.hi.pengutronix.de ([2001:67c:670:100:1d::2a])
-        by metis.ext.pengutronix.de with esmtp (Exim 4.89)
-        (envelope-from <l.stach@pengutronix.de>)
-        id 1hTOCd-0003cl-Ks; Wed, 22 May 2019 12:10:31 +0200
-Message-ID: <1558519829.2624.40.camel@pengutronix.de>
-Subject: Re: [PATCH v4 00/14] add ecspi ERR009165 for i.mx6/7 soc family
-From:   Lucas Stach <l.stach@pengutronix.de>
-To:     Robin Gong <yibin.gong@nxp.com>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-        "plyatov@gmail.com" <plyatov@gmail.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>
-Cc:     "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>
-Date:   Wed, 22 May 2019 12:10:29 +0200
-In-Reply-To: <1558548188-1155-1-git-send-email-yibin.gong@nxp.com>
-References: <1558548188-1155-1-git-send-email-yibin.gong@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6-1+deb9u1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::2a
-X-SA-Exim-Mail-From: l.stach@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+        Wed, 22 May 2019 06:11:21 -0400
+Received: from foss.arm.com ([217.140.101.70]:46636 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728584AbfEVKLV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 06:11:21 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2B39E341;
+        Wed, 22 May 2019 03:11:20 -0700 (PDT)
+Received: from mbp (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 12BA73F575;
+        Wed, 22 May 2019 03:11:13 -0700 (PDT)
+Date:   Wed, 22 May 2019 11:11:11 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Evgenii Stepanov <eugenis@google.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Khalid Aziz <khalid.aziz@oracle.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
+        kvm@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alexander Deucher <Alexander.Deucher@amd.com>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
+        Elliott Hughes <enh@google.com>
+Subject: Re: [PATCH v15 00/17] arm64: untag user pointers passed to the kernel
+Message-ID: <20190522101110.m2stmpaj7seezveq@mbp>
+References: <cover.1557160186.git.andreyknvl@google.com>
+ <20190517144931.GA56186@arrakis.emea.arm.com>
+ <CAFKCwrj6JEtp4BzhqO178LFJepmepoMx=G+YdC8sqZ3bcBp3EQ@mail.gmail.com>
+ <20190521182932.sm4vxweuwo5ermyd@mbp>
+ <201905211633.6C0BF0C2@keescook>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <201905211633.6C0BF0C2@keescook>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Robin,
+Hi Kees,
 
-Am Mittwoch, den 22.05.2019, 09:59 +0000 schrieb Robin Gong:
->   There is ecspi ERR009165 on i.mx6/7 soc family, which cause FIFO
-> transfer to be send twice in DMA mode. Please get more information from:
-> https://www.nxp.com/docs/en/errata/IMX6DQCE.pdf. The workaround is adding
-> new sdma ram script which works in XCH  mode as PIO inside sdma instead
-> of SMC mode, meanwhile, 'TX_THRESHOLD' should be 0. The issue should be
-> exist on all legacy i.mx6/7 soc family before i.mx6ul.
-> NXP fix this design issue from i.mx6ul, so newer chips including i.mx6ul/
-> 6ull/6sll do not need this workaroud anymore. All other i.mx6/7/8 chips
-> still need this workaroud. This patch set add new 'fsl,imx6ul-ecspi'
-> for ecspi driver and 'ecspi_fixed' in sdma driver to choose if need errata
-> or not.
->   The first two reverted patches should be the same issue, though, it
-> seems 'fixed' by changing to other shp script. Hope Sean or Sascha could
-> have the chance to test this patch set if could fix their issues.
->   Besides, enable sdma support for i.mx8mm/8mq and fix ecspi1 not work
-> on i.mx8mm because the event id is zero.
+Thanks for joining the thread ;).
+
+On Tue, May 21, 2019 at 05:04:39PM -0700, Kees Cook wrote:
+> On Tue, May 21, 2019 at 07:29:33PM +0100, Catalin Marinas wrote:
+> > On Mon, May 20, 2019 at 04:53:07PM -0700, Evgenii Stepanov wrote:
+> > > On Fri, May 17, 2019 at 7:49 AM Catalin Marinas <catalin.marinas@arm.com> wrote:
+> > > > IMO (RFC for now), I see two ways forward:
+> > > > [...]
+> > > > 2. Similar shim to the above libc wrapper but inside the kernel
+> > > >    (arch/arm64 only; most pointer arguments could be covered with an
+> > > >    __SC_CAST similar to the s390 one). There are two differences from
+> > > >    what we've discussed in the past:
+> > > >
+> > > >    a) this is an opt-in by the user which would have to explicitly call
+> > > >       prctl(). If it returns -ENOTSUPP etc., the user won't be allowed
+> > > >       to pass tagged pointers to the kernel. This would probably be the
+> > > >       responsibility of the C lib to make sure it doesn't tag heap
+> > > >       allocations. If the user did not opt-in, the syscalls are routed
+> > > >       through the normal path (no untagging address shim).
+> > > >
+> > > >    b) ioctl() and other blacklisted syscalls (prctl) will not accept
+> > > >       tagged pointers (to be documented in Vicenzo's ABI patches).
+> > >
+> > > The way I see it, a patch that breaks handling of tagged pointers is
+> > > not that different from, say, a patch that adds a wild pointer
+> > > dereference. Both are bugs; the difference is that (a) the former
+> > > breaks a relatively uncommon target and (b) it's arguably an easier
+> > > mistake to make. If MTE adoption goes well, (a) will not be the case
+> > > for long.
+> > 
+> > It's also the fact such patch would go unnoticed for a long time until
+> > someone exercises that code path. And when they do, the user would be
+> > pretty much in the dark trying to figure what what went wrong, why a
+> > SIGSEGV or -EFAULT happened. What's worse, we can't even say we fixed
+> > all the places where it matters in the current kernel codebase (ignoring
+> > future patches).
 > 
-> PS:
->   Please get sdma firmware from below linux-firmware and copy it to your
-> local rootfs /lib/firmware/imx/sdma.
-> https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/tree/imx/sdma
+> So, looking forward a bit, this isn't going to be an ARM-specific issue
+> for long.
 
-I haven't tested this so asking the obvious question: what happens when
-this series is applied without the RAM script being present on the
-system? Will it render SPI unusable? I guess so since it changes the
-flow between the SPI core and DMA controller. Can we somehow detect
-that SDMA isn't using the correct RAM script and fall back to PIO mode
-in the SPI driver in that case?
+I do hope so.
 
-Currently using the RAM script is not an option in a lot of use-cases,
-as it still breaks serial DMA support. The fix for the serial issue
-really needs to be remove the broken serial script from the RAM
-firmware, not change the serial driver to deal with the broken behavior
-introduced by the RAM script.
+> In fact, I think we shouldn't have arm-specific syscall wrappers
+> in this series: I think untagged_addr() should likely be added at the
+> top-level and have it be a no-op for other architectures.
 
-Regards,
-Lucas
+That's what the current patchset does, so we have this as a starting
+point. Kostya raised another potential issue with the syscall wrappers:
+with MTE the kernel will be forced to enable the match-all (wildcard)
+pointers for user space accesses since copy_from_user() would only get a
+0 tag. So it has wider implications than just uaccess routines not
+checking the colour.
+
+> So given this becoming a kernel-wide multi-architecture issue (under
+> the assumption that x86, RISC-V, and others will gain similar TBI or
+> MTE things), we should solve it in a way that we can re-use.
+
+Can we do any better to aid the untagged_addr() placement (e.g. better
+type annotations, better static analysis)? We have to distinguish
+between user pointers that may be dereferenced by the kernel (I think
+almost fully covered with this patchset) and user addresses represented
+as ulong that may:
+
+a) be converted to a user pointer and dereferenced; I think that's the
+   case for many overloaded ulong/u64 arguments
+
+b) used for address space management, rbtree look-ups etc. where the tag
+   is no longer relevant and it even gets in the way
+
+We tried last year to identify void __user * casts to unsigned long
+using sparse on the assumption that pointers can be tagged while ulong
+is about address space management and needs to lose such tag. I think we
+could have pushed this further. For example, get_user_pages() takes an
+unsigned long but it is perfectly capable of untagging the address
+itself. Shall we change its first argument to void __user * (together
+with all its callers)?
+
+find_vma(), OTOH, could untag the address but it doesn't help since
+vm_start/end don't have such information (that's more about the content
+or type that the user decided) and the callers check against it.
+
+Are there any other places where this matters? These patches tracked
+down find_vma() as some heuristics but we may need better static
+analysis to identify other cases.
+
+> We need something that is going to work everywhere. And it needs to be
+> supported by the kernel for the simple reason that the kernel needs to
+> do MTE checks during copy_from_user(): having that information stripped
+> means we lose any userspace-assigned MTE protections if they get handled
+> by the kernel, which is a total non-starter, IMO.
+
+Such feedback is welcomed ;).
+
+> As an aside: I think Sparc ADI support in Linux actually side-stepped
+> this[1] (i.e. chose "solution 1"): "All addresses passed to kernel must
+> be non-ADI tagged addresses." (And sadly, "Kernel does not enable ADI
+> for kernel code.") I think this was a mistake we should not repeat for
+> arm64 (we do seem to be at least in agreement about this, I think).
+> 
+> [1] https://lore.kernel.org/patchwork/patch/654481/
+
+I tried to drag the SPARC guys into this discussion but without much
+success.
+
+> > > This is a bit of a chicken-and-egg problem. In a world where memory
+> > > allocators on one or several popular platforms generate pointers with
+> > > non-zero tags, any such breakage will be caught in testing.
+> > > Unfortunately to reach that state we need the kernel to start
+> > > accepting tagged pointers first, and then hold on for a couple of
+> > > years until userspace catches up.
+> > 
+> > Would the kernel also catch up with providing a stable ABI? Because we
+> > have two moving targets.
+> > 
+> > On one hand, you have Android or some Linux distro that stick to a
+> > stable kernel version for some time, so they have better chance of
+> > clearing most of the problems. On the other hand, we have mainline
+> > kernel that gets over 500K lines every release. As maintainer, I can't
+> > rely on my testing alone as this is on a limited number of platforms. So
+> > my concern is that every kernel release has a significant chance of
+> > breaking the ABI, unless we have a better way of identifying potential
+> > issues.
+> 
+> I just want to make sure I fully understand your concern about this
+> being an ABI break, and I work best with examples. The closest situation
+> I can see would be:
+> 
+> - some program has no idea about MTE
+
+Apart from some libraries like libc (and maybe those that handle
+specific device ioctls), I think most programs should have no idea about
+MTE. I wouldn't expect programmers to have to change their app just
+because we have a new feature that colours heap allocations.
+
+> - malloc() starts returning MTE-tagged addresses
+> - program doesn't break from that change
+> - program uses some syscall that is missing untagged_addr() and fails
+> - kernel has now broken userspace that used to work
+
+That's one aspect though probably more of a case of plugging in a new
+device (graphics card, network etc.) and the ioctl to the new device
+doesn't work.
+
+The other is that, assuming we reach a point where the kernel entirely
+supports this relaxed ABI, can we guarantee that it won't break in the
+future. Let's say some subsequent kernel change (some refactoring)
+misses out an untagged_addr(). This renders a previously TBI/MTE-capable
+syscall unusable. Can we rely only on testing?
+
+> The trouble I see with this is that it is largely theoretical and
+> requires part of userspace to collude to start using a new CPU feature
+> that tickles a bug in the kernel. As I understand the golden rule,
+> this is a bug in the kernel (a missed ioctl() or such) to be fixed,
+> not a global breaking of some userspace behavior.
+
+Yes, we should follow the rule that it's a kernel bug but it doesn't
+help the user that a newly installed kernel causes user space to no
+longer reach a prompt. Hence the proposal of an opt-in via personality
+(for MTE we would need an explicit opt-in by the user anyway since the
+top byte is no longer ignored but checked against the allocation tag).
+
+> I feel like I'm missing something about this being seen as an ABI
+> break. The kernel already fails on userspace addresses that have high
+> bits set -- are there things that _depend_ on this failure to operate?
+
+It's about providing a relaxed ABI which allows non-zero top byte and
+breaking it later inadvertently without having something better in place
+to analyse the kernel changes.
+
+Thanks.
+
+-- 
+Catalin
