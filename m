@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0D58C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:28:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8388AC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:28:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 744F921473
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:28:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56FFF21473
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:28:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558553302;
-	bh=TUZd8tnIqvYLooMkzM0AEvXcdKTVA1wVSgVbInwXR9g=;
+	s=default; t=1558553306;
+	bh=A/CvQbHbjzhxBY6tspVGBAtk1iIGUmNPzlWeyfyCtuE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HrK18Dz7OYuX663va0FG+mr9JxDW3uxYFqa2LSMshPJsB/A9fAgT8N37RhDhBmrJU
-	 TeRE+gIvNZWyITKjZ5xLgskYk9cJulI/25tkeP3tmeyDxcBLuDvtwMFCLZwUEcFcJr
-	 3/M9krodmvq1Tu15O1MdwzeSLpowAr74WTiwborw=
+	b=gFYxQ8A8e18c5PAPaX0w2OrY6PPdP/23kr+BECMOU9NEv8AmJNXAUlZTrP3qkzMND
+	 cKv2nzshz4XKOybb4r6WP66YRFG81rKzbWRKxCmuuWwXwIoH/tvNZ8LAlXkeOmGeuM
+	 TdQBauhuQ5cDUN/NFpLxl1kH5udOeug47cRHHY68=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732537AbfEVT2V (ORCPT
+        id S1732551AbfEVT2Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:28:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50492 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:28:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50546 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729686AbfEVT2A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:28:00 -0400
+        id S1732447AbfEVT2D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:28:03 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 645B921473;
-        Wed, 22 May 2019 19:27:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A3B54204FD;
+        Wed, 22 May 2019 19:28:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553280;
-        bh=TUZd8tnIqvYLooMkzM0AEvXcdKTVA1wVSgVbInwXR9g=;
+        s=default; t=1558553282;
+        bh=A/CvQbHbjzhxBY6tspVGBAtk1iIGUmNPzlWeyfyCtuE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jGQ582fASdGLuHZRwnIdpyXntNl8JbNd7yS9JIfm7iogsNdv7cnwTHMTYpMaTN2NN
-         xcHS7jWeZ9MREGBGQq/XZs2fX3ghw0RvdHgnYlBU7+i2Djrm62JzoV/6Bc7x45n9Sq
-         y1Y1djt7TPvhQmqWnvCKi5svLg8GZV2dADUOXVAw=
+        b=BN8a3t65XLvHKzFMzmrTPibBWZkJFLRULHaUm1YerRyesTTW1z9RfxdPfJZSIFjIC
+         sNzWj0T+vhdVGri7rrsE7BiG1x8HxnUnUUMTYskNqHzmIkYmZqwDG7INb10I4lBXZA
+         sz9GCqRdNkDHIRz6iyALPpYDi61WHd4mhTjzatzk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Daniel T. Lee" <danieltimlee@gmail.com>,
-        Yonghong Song <yhs@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 054/244] libbpf: fix samples/bpf build failure due to undefined UINT32_MAX
-Date:   Wed, 22 May 2019 15:23:20 -0400
-Message-Id: <20190522192630.24917-54-sashal@kernel.org>
+Cc:     Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 056/244] driver core: platform: Fix the usage of platform device name(pdev->name)
+Date:   Wed, 22 May 2019 15:23:22 -0400
+Message-Id: <20190522192630.24917-56-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192630.24917-1-sashal@kernel.org>
 References: <20190522192630.24917-1-sashal@kernel.org>
@@ -61,63 +59,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Daniel T. Lee" <danieltimlee@gmail.com>
+From: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
 
-[ Upstream commit 32e621e55496a0009f44fe4914cd4a23cade4984 ]
+[ Upstream commit edb16da34b084c66763f29bee42b4e6bb33c3d66 ]
 
-Currently, building bpf samples will cause the following error.
+Platform core is using pdev->name as the platform device name to do
+the binding of the devices with the drivers. But, when the platform
+driver overrides the platform device name with dev_set_name(),
+the pdev->name is pointing to a location which is freed and becomes
+an invalid parameter to do the binding match.
 
-    ./tools/lib/bpf/bpf.h:132:27: error: 'UINT32_MAX' undeclared here (not in a function) ..
-     #define BPF_LOG_BUF_SIZE (UINT32_MAX >> 8) /* verifier maximum in kernels <= 5.1 */
-                               ^
-    ./samples/bpf/bpf_load.h:31:25: note: in expansion of macro 'BPF_LOG_BUF_SIZE'
-     extern char bpf_log_buf[BPF_LOG_BUF_SIZE];
-                             ^~~~~~~~~~~~~~~~
+use-after-free instance:
 
-Due to commit 4519efa6f8ea ("libbpf: fix BPF_LOG_BUF_SIZE off-by-one error")
-hard-coded size of BPF_LOG_BUF_SIZE has been replaced with UINT32_MAX which is
-defined in <stdint.h> header.
+[   33.325013] BUG: KASAN: use-after-free in strcmp+0x8c/0xb0
+[   33.330646] Read of size 1 at addr ffffffc10beae600 by task modprobe
+[   33.339068] CPU: 5 PID: 518 Comm: modprobe Tainted:
+			G S      W  O      4.19.30+ #3
+[   33.346835] Hardware name: MTP (DT)
+[   33.350419] Call trace:
+[   33.352941]  dump_backtrace+0x0/0x3b8
+[   33.356713]  show_stack+0x24/0x30
+[   33.360119]  dump_stack+0x160/0x1d8
+[   33.363709]  print_address_description+0x84/0x2e0
+[   33.368549]  kasan_report+0x26c/0x2d0
+[   33.372322]  __asan_report_load1_noabort+0x2c/0x38
+[   33.377248]  strcmp+0x8c/0xb0
+[   33.380306]  platform_match+0x70/0x1f8
+[   33.384168]  __driver_attach+0x78/0x3a0
+[   33.388111]  bus_for_each_dev+0x13c/0x1b8
+[   33.392237]  driver_attach+0x4c/0x58
+[   33.395910]  bus_add_driver+0x350/0x560
+[   33.399854]  driver_register+0x23c/0x328
+[   33.403886]  __platform_driver_register+0xd0/0xe0
 
-Even with this change, bpf selftests are running fine since these are built
-with clang and it includes header(-idirafter) from clang/6.0.0/include.
-(it has <stdint.h>)
+So, use dev_name(&pdev->dev), which fetches the platform device name from
+the kobject(dev->kobj->name) of the device instead of the pdev->name.
 
-    clang -I. -I./include/uapi -I../../../include/uapi -idirafter /usr/local/include -idirafter /usr/include \
-    -idirafter /usr/lib/llvm-6.0/lib/clang/6.0.0/include -idirafter /usr/include/x86_64-linux-gnu \
-    -Wno-compare-distinct-pointer-types -O2 -target bpf -emit-llvm -c progs/test_sysctl_prog.c -o - | \
-    llc -march=bpf -mcpu=generic  -filetype=obj -o /linux/tools/testing/selftests/bpf/test_sysctl_prog.o
-
-But bpf samples are compiled with GCC, and it only searches and includes
-headers declared at the target file. As '#include <stdint.h>' hasn't been
-declared in tools/lib/bpf/bpf.h, it causes build failure of bpf samples.
-
-    gcc -Wp,-MD,./samples/bpf/.sockex3_user.o.d -Wall -Wmissing-prototypes -Wstrict-prototypes \
-    -O2 -fomit-frame-pointer -std=gnu89 -I./usr/include -I./tools/lib/ -I./tools/testing/selftests/bpf/ \
-    -I./tools/  lib/ -I./tools/include -I./tools/perf -c -o ./samples/bpf/sockex3_user.o ./samples/bpf/sockex3_user.c;
-
-This commit add declaration of '#include <stdint.h>' to tools/lib/bpf/bpf.h
-to fix this problem.
-
-Signed-off-by: Daniel T. Lee <danieltimlee@gmail.com>
-Acked-by: Yonghong Song <yhs@fb.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Signed-off-by: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/bpf/bpf.h | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/base/platform.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/tools/lib/bpf/bpf.h b/tools/lib/bpf/bpf.h
-index 6f38164b26181..c3145ab3bdcac 100644
---- a/tools/lib/bpf/bpf.h
-+++ b/tools/lib/bpf/bpf.h
-@@ -26,6 +26,7 @@
- #include <linux/bpf.h>
- #include <stdbool.h>
- #include <stddef.h>
-+#include <stdint.h>
+diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+index dff82a3c2caa9..5721f96a6e63e 100644
+--- a/drivers/base/platform.c
++++ b/drivers/base/platform.c
+@@ -853,7 +853,7 @@ static ssize_t modalias_show(struct device *dev, struct device_attribute *a,
+ 	if (len != -ENODEV)
+ 		return len;
  
- struct bpf_create_map_attr {
- 	const char *name;
+-	len = snprintf(buf, PAGE_SIZE, "platform:%s\n", pdev->name);
++	len = snprintf(buf, PAGE_SIZE, "platform:%s\n", dev_name(&pdev->dev));
+ 
+ 	return (len >= PAGE_SIZE) ? (PAGE_SIZE - 1) : len;
+ }
+@@ -929,7 +929,7 @@ static int platform_uevent(struct device *dev, struct kobj_uevent_env *env)
+ 		return rc;
+ 
+ 	add_uevent_var(env, "MODALIAS=%s%s", PLATFORM_MODULE_PREFIX,
+-			pdev->name);
++			dev_name(&pdev->dev));
+ 	return 0;
+ }
+ 
+@@ -938,7 +938,7 @@ static const struct platform_device_id *platform_match_id(
+ 			struct platform_device *pdev)
+ {
+ 	while (id->name[0]) {
+-		if (strcmp(pdev->name, id->name) == 0) {
++		if (strcmp(dev_name(&pdev->dev), id->name) == 0) {
+ 			pdev->id_entry = id;
+ 			return id;
+ 		}
+@@ -982,7 +982,7 @@ static int platform_match(struct device *dev, struct device_driver *drv)
+ 		return platform_match_id(pdrv->id_table, pdev) != NULL;
+ 
+ 	/* fall-back to driver name match */
+-	return (strcmp(pdev->name, drv->name) == 0);
++	return (strcmp(dev_name(&pdev->dev), drv->name) == 0);
+ }
+ 
+ #ifdef CONFIG_PM_SLEEP
 -- 
 2.20.1
 
