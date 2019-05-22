@@ -2,100 +2,67 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B7B7C072B5
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 02:33:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83B89C18E7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 02:41:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29D36217F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 02:33:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558492397;
-	bh=stsomyQrXg2oFOXmpSx06uL2yS8uJMmKpQW0CHbxwiU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Osw07YssY8wUWtzn0zzR2WPGCLzZbSQnvFcHGerbguDmVTp7cMKTZipiItTmnNb9Y
-	 dZUaxZkCqgykBKJespbmXb1wZ23SxShHw0PpBvmPYNmjmO/a1GM26HnO0rTPQGinzC
-	 5Kw7KcYIS6WiJbtxm2FfIGcxrb4ZkUXniO9ZaaeA=
+	by mail.kernel.org (Postfix) with ESMTP id 5F927217F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 02:41:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728320AbfEVCdO (ORCPT
+        id S1728271AbfEVClA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 22:33:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41738 "EHLO mail.kernel.org"
+        Tue, 21 May 2019 22:41:00 -0400
+Received: from namei.org ([65.99.196.166]:33694 "EHLO namei.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727208AbfEVCdO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 22:33:14 -0400
-Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5302B2173C;
-        Wed, 22 May 2019 02:33:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558492393;
-        bh=stsomyQrXg2oFOXmpSx06uL2yS8uJMmKpQW0CHbxwiU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=S9s7o5FgX4z/u7+WIrJ4i4+Qxe4jXFBy3y5hH0XzwyZgwDhA92N2D+Qji5lMGhvct
-         ALiCiNedjpmNN/4R0cPv4AmY+Vx6Ho0GShjq1voZmi5rbAp8MhNOGAnhK4UEhHH7uC
-         q6RDy4zNqynWhzrlKoTS0fuaO0iCWzj2oi/N6fUU=
-Date:   Tue, 21 May 2019 19:33:12 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Roman Penyaev <rpenyaev@suse.de>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Azat Khuzhin <azat@libevent.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 13/13] epoll: implement epoll_create2() syscall
-Message-Id: <20190521193312.42a3fdda1774b1922730e459@linux-foundation.org>
-In-Reply-To: <41b847c48ccbe0c406bd54c16fbc1bf0@suse.de>
-References: <20190516085810.31077-1-rpenyaev@suse.de>
-        <20190516085810.31077-14-rpenyaev@suse.de>
-        <CAK8P3a2-fN_BHEnEHvf4X9Ysy4t0_SnJetQLvFU1kFa3OtM0fQ@mail.gmail.com>
-        <41b847c48ccbe0c406bd54c16fbc1bf0@suse.de>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
+        id S1727208AbfEVClA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 22:41:00 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by namei.org (8.14.4/8.14.4) with ESMTP id x4M2et1w006403;
+        Wed, 22 May 2019 02:40:55 GMT
+Date:   Wed, 22 May 2019 12:40:55 +1000 (AEST)
+From:   James Morris <jmorris@namei.org>
+To:     Matthew Garrett <matthewgarrett@google.com>
+cc:     linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Andy Lutomirski <luto@kernel.org>
+Subject: Re: [RFC] Turn lockdown into an LSM
+In-Reply-To: <20190521224013.3782-1-matthewgarrett@google.com>
+Message-ID: <alpine.LRH.2.21.1905221203070.3967@namei.org>
+References: <20190521224013.3782-1-matthewgarrett@google.com>
+User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 16 May 2019 12:20:50 +0200 Roman Penyaev <rpenyaev@suse.de> wrote:
+On Tue, 21 May 2019, Matthew Garrett wrote:
 
-> On 2019-05-16 12:03, Arnd Bergmann wrote:
-> > On Thu, May 16, 2019 at 10:59 AM Roman Penyaev <rpenyaev@suse.de> 
-> > wrote:
-> >> 
-> >> epoll_create2() is needed to accept EPOLL_USERPOLL flags
-> >> and size, i.e. this patch wires up polling from userspace.
-> > 
-> > Could you add the system call to all syscall*.tbl files at the same 
-> > time here?
+> Hi James,
 > 
-> For all other archs, you mean?  Sure.  But what is the rule of thumb?
-> Sometimes people tend to add to the most common x86 and other tables
-> are left untouched, but then you commit the rest, e.g.
+> This is a quick attempt to integrate lockdown into the existing LSM
+> framework. It adds a new lockdown security hook and an LSM that defines
+> the existing coarse-grained policy, and also adds a new
+> DEFINE_EARLY_LSM() definition in order to permit lockdown (and
+> potentially other modules) to be initialised at the top of kernel init
+> in order to allow policy to be imposed on stuff that happens in
+> setup_arch(). The goal here is to allow policy to be devolved to other
+> LSMs on systems that have a secure mechanism for loading LSM policy
+> early in boot, allowing creation of arbitrarily complicated policies
+> without interfering with the common-case coarse-grained approach.
 > 
-> commit 39036cd2727395c3369b1051005da74059a85317
-> Author: Arnd Bergmann <arnd@arndb.de>
-> Date:   Thu Feb 28 13:59:19 2019 +0100
-> 
->      arch: add pidfd and io_uring syscalls everywhere
-> 
+> This should probably be extended so a uapi-exposed constant is passed to
+> the hook in order to make it easier to write policy in other LSMs, but
+> does this broadly look like you were imagining?
 
-I thought the preferred approach was to wire up the architectures on
-which the submitter has tested the syscall, then allow the arch
-maintainers to enable the syscall independently?
+This looks promising!
 
-And to help them in this, provide a test suite for the new syscall
-under tools/testing/selftests/.
+An LSM could also potentially implement its own policy for the hook.
 
-https://github.com/rouming/test-tools/blob/master/userpolled-epoll.c
-will certainly help but I do think it would be better to move the test
-into the kernel tree to keep it maintained and so that many people run
-it in their various setups on an ongoing basis.
-
+-- 
+James Morris
+<jmorris@namei.org>
 
