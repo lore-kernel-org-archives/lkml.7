@@ -2,98 +2,115 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99962C072B5
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 01:51:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 652A5C18E7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 01:53:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E2CA2173C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 01:51:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B9EF217D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 01:53:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ay7EE+Lf"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LQZb/vjK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728295AbfEVBvV (ORCPT
+        id S1728183AbfEVBxr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 21:51:21 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:46381 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727733AbfEVBvV (ORCPT
+        Tue, 21 May 2019 21:53:47 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:33278 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727208AbfEVBxr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 21:51:21 -0400
-Received: by mail-pl1-f196.google.com with SMTP id r18so225184pls.13
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 18:51:20 -0700 (PDT)
+        Tue, 21 May 2019 21:53:47 -0400
+Received: by mail-pg1-f193.google.com with SMTP id h17so461346pgv.0
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 18:53:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=tzHrjRS92ZANYX17XXnDROsRuQC8/NkfxYyb1LR6j7Y=;
-        b=Ay7EE+LfbC4CS2hMLvVDWrxe7aWf6xecxgolLuXeb/rG0Uo1BpLuGx9rpVTPaf+AGx
-         qBg/dW5r+BoH3WfVcQodRQzJD9lDOe8JjtbCJyrTaOuHx9aUihUwEEkKiZE9ECgucdxP
-         UxO/dIWgo+7Uoq1jtqoCSPYcAJrmR2cDEaEDkBww1ZuaWN2eUBST7LVaQiumc3KD9a35
-         m+UtUqTJQ+jeIcdJ7i/ZuuCTj6hYRhByx1uxXJEFmdtwaAnTtUu73hyoEg+aqDu7leHU
-         EaHI9KN3NhUTIYNf5huUSPn6Rr+N3GGZCE4i5LCT6V/4ia4sn4Ejl7o5AVSNYczW8ur6
-         ku/g==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=LlxRyT+mbsnTVNTKSITBJmRiSrxfctVw8atQ9aC4s90=;
+        b=LQZb/vjKAJSs4KcX5G91N4TfJF4lnwNCerToC7NPX0ZiF1SeZmnFrgslAo/Ehj7Ays
+         vTcCigfoicBqFk3/cFD25tDvPYKCmuopKzOB9wZjNGLQMLqTfqSMXsx5xkIp+TMIwZ9p
+         /aXA51kU0Nw4LB1636JvDgComqQYYS4O/aMmzkr0gDOAEC12uRDf2ha+OI7/Z3OsqBol
+         +FaAMtdRYzoIKo+08tsZE0kpHNdsf/Cu9bAGhJwVHeDBpxKDY4Mz182jLQLSO5yH6hoI
+         EQSNJLOUtcDP930SVt0p2UpKO/ZuX2YeviTNEAGqBjGHhI05Yul6Y345Nfg4CEuAk8gr
+         feiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=tzHrjRS92ZANYX17XXnDROsRuQC8/NkfxYyb1LR6j7Y=;
-        b=mGEzARtusgTBcWmbnJdQ06uzZMdUIf8fVORJIzXaDQRyZs9t3cQAmGqeTrr8aizjTd
-         S75V+QJ7QAcif2XPdgHw2KuJ4Fik2suIZf8nFQbsx+4Zb1qXIixTzO6z4x5YiOE5Bwm6
-         MEHZFf7upmNG9dWOnjAIwoTK0QGuRaxJvaOjtulL/o5JPVbuRNwnP7cmweqQwA/mwD5i
-         6yq0L0DxQwaDVcOt3uhtUw2Qt7CIrJMWV1qu5ZIWMZPhC0LUd6MIoWQhaVFqXxvdrqX4
-         KUwlsBpoJUE1hsMF6w57LvIngVl6p2XKlqJBcgDWkit1w200DpQd94HPiObv/AJyBs58
-         YrGw==
-X-Gm-Message-State: APjAAAW7oUSbVwmnFWfpMoYMHKflKjMgGy40YXGah4EOYt7wTbbxU0os
-        sLQW+3KKgoXvY+MV7PA1l0XSMdbya+s=
-X-Google-Smtp-Source: APXvYqwwUP5b1+y7AnETZywLWoKux6CiWxk/ty9G4/TJs2HaWrtMUIVtxBry30vpE1dgJd2GgHu4jw==
-X-Received: by 2002:a17:902:18a:: with SMTP id b10mr61413462plb.277.1558489880665;
-        Tue, 21 May 2019 18:51:20 -0700 (PDT)
-Received: from zhanggen-UX430UQ ([66.42.35.75])
-        by smtp.gmail.com with ESMTPSA id q17sm37739216pfq.74.2019.05.21.18.51.14
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=LlxRyT+mbsnTVNTKSITBJmRiSrxfctVw8atQ9aC4s90=;
+        b=KseNBZKkWZmfIBg11bsYlRUW+PovN08ggmUtgvVfIN/OJw1dC4eTz1ivzVgG5lvxCS
+         fMonrgjtonyxazHrzqxQke0xOA+9LbSP4uRlLk9atOm/eOsp4+GynIKdzYZz43Rjm+d6
+         HbFeyB5W8qFQSjEWM0qADPFvyYeZ7w6AZNfDbVC6IlKKUOP7jy0YW7/9s37hFSOV+17y
+         uj59iPuttV8iZOsHDVHR8aezKvGPOI+DO8k7QDFV/Od7q+eENFRJ24X8Q/WF/tIVH/VG
+         8YvZebtr8RrAofuTMDSmCmS9MHuenJR4wMn0BrVGEwg5NAGgccWvq+eM3bVZFB6wvBU+
+         o+4Q==
+X-Gm-Message-State: APjAAAXcUuSFnGGt+B6HuC3ZKvtF6w/YIpNP7KqPR7p7jn7jDqs0UEBp
+        GPoxrquqTS0N87LDPWtIJx1Afw==
+X-Google-Smtp-Source: APXvYqwErOiQXUAm3LtR1L1z9k+pkiWT1RA4VF+qZwNsLRF4A82r6eTtgvGC90jKTyxYHpvWhI1kmA==
+X-Received: by 2002:a63:700b:: with SMTP id l11mr30923085pgc.449.1558490026123;
+        Tue, 21 May 2019 18:53:46 -0700 (PDT)
+Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id i27sm47073805pfk.162.2019.05.21.18.53.45
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 21 May 2019 18:51:20 -0700 (PDT)
-Date:   Wed, 22 May 2019 09:50:55 +0800
-From:   Gen Zhang <blackgod016574@gmail.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] consolemap: Fix a memory leaking bug in
- drivers/tty/vt/consolemap.c
-Message-ID: <20190522015055.GC4093@zhanggen-UX430UQ>
-References: <20190521092935.GA2297@zhanggen-UX430UQ>
- <201905211342.DE554F0D@keescook>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <201905211342.DE554F0D@keescook>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Tue, 21 May 2019 18:53:45 -0700 (PDT)
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, srinivas.kandagatla@linaro.org
+Subject: [PATCH] soc: qcom: apr: Don't use reg for domain id
+Date:   Tue, 21 May 2019 18:53:42 -0700
+Message-Id: <20190522015342.29501-1-bjorn.andersson@linaro.org>
+X-Mailer: git-send-email 2.18.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 21, 2019 at 01:44:33PM -0700, Kees Cook wrote:
-> This doesn't look safe to me: p->uni_pgdir[n] will still have a handle
-> to the freed memory, won't it?
-> 
-Thanks for your reply, Kees!
-I think you are right. Maybe we should do this:
-	kfree(p1);
-	p->uni_pgdir[n] = NULL;
-Is this correct?
-> (And please direct these patches to Greg, as he's the current
-> maintainer; I'm happy to stay CCed, of course.)
-> 
-I will follow your suggestions, thanks!
-Gen
-> -Kees
-> 
-> >  		memset(p2, 0xff, 64*sizeof(u16)); /* No glyphs for the characters (yet) */
-> >  	}
-> >  
-> 
-> -- 
-> Kees Cook
+The reg property represents the address and size on the bus that a
+device lives, but for APR the parent is a rpmsg bus, which does not have
+numerical addresses. Simply defining #address/#size-cells to 1 and 0,
+respectively, to silence the compiler is not an appropriate solution.
+
+Replace the use of "reg" with an APR specific property.
+
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
+
+The APR device was recently added to msm8996.dtsi, but this is still
+depending on working SMMU to provide functional audio support.
+
+ Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt | 2 +-
+ drivers/soc/qcom/apr.c                                  | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
+index bcc612cc7423..38d3c06abc41 100644
+--- a/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
++++ b/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
+@@ -9,7 +9,7 @@ used for audio/voice services on the QDSP.
+ 	Value type: <stringlist>
+ 	Definition: must be "qcom,apr-v<VERSION-NUMBER>", example "qcom,apr-v2"
+ 
+-- reg
++- qcom,apr-domain
+ 	Usage: required
+ 	Value type: <u32>
+ 	Definition: Destination processor ID.
+diff --git a/drivers/soc/qcom/apr.c b/drivers/soc/qcom/apr.c
+index 74f8b9607daa..b83d71b2e0a4 100644
+--- a/drivers/soc/qcom/apr.c
++++ b/drivers/soc/qcom/apr.c
+@@ -276,7 +276,7 @@ static int apr_probe(struct rpmsg_device *rpdev)
+ 	if (!apr)
+ 		return -ENOMEM;
+ 
+-	ret = of_property_read_u32(dev->of_node, "reg", &apr->dest_domain_id);
++	ret = of_property_read_u32(dev->of_node, "qcom,apr-domain", &apr->dest_domain_id);
+ 	if (ret) {
+ 		dev_err(dev, "APR Domain ID not specified in DT\n");
+ 		return ret;
+-- 
+2.18.0
+
