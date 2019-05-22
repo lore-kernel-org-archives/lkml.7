@@ -2,105 +2,162 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90473C072B5
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 00:11:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE9CFC072B5
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 00:14:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 612F121841
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 00:11:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="j0oR+a1i"
+	by mail.kernel.org (Postfix) with ESMTP id 8A44621841
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 00:14:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558484065;
+	bh=tBUlh7t4ziJIcxmShUGJnmzqdE/W3H7m9a3/sy7TF5I=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=krlo77zrwBSSbycVp6PeX+ZEsv1pmAqWkBegLZukr1srzlttwTTRPHGPaMra3E3UR
+	 9iyl3sXPMM466OPWJAjpw2DeaSKab9r52AfW9psAQaBnmiTzodrjuY9pd8sNCGvssC
+	 5947eznG4Gg2F1XBLandk51mI4tzsxJgkgFynXWc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727781AbfEVALl (ORCPT
+        id S1727857AbfEVAOY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 20:11:41 -0400
-Received: from ozlabs.org ([203.11.71.1]:48145 "EHLO ozlabs.org"
+        Tue, 21 May 2019 20:14:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45720 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725797AbfEVALl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 20:11:41 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1725797AbfEVAOY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 21 May 2019 20:14:24 -0400
+Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 457tNB6Nlyz9s6w;
-        Wed, 22 May 2019 10:11:38 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1558483898;
-        bh=aWc4GcbweEa3FC2GdDxGdp7frJPYEwaj74KnxlB7MWM=;
-        h=Date:From:To:Cc:Subject:From;
-        b=j0oR+a1i2e7Flg04+CR7GF2vRSLcM0o6adO8oQ//G4fagnygBkIAc0zy5m6oo/y6V
-         8k8lvLCBEiX/HOLT3EWBm7PCU9z+SSFoN92mxQDVAzcomZYPQmu4/lBmuwwLWvWYLQ
-         scZ8HS4Yp7uoV5gXg6ymjJZoOF/1ITw2gkaPCng/wu3kfFOggPr2wM6i5ukATziwT/
-         u27nQj5bFGLYRDdwadraxB/hLeumFPMZaKiLKXN6+5uGpFDQ5aLecZObqpO9zUdEBJ
-         xPslUfp/DPLJggkDJPoV9aI3hQkai4pwGM0gqHWU7M1O3Kx3BoGebxIJzv7ET904B5
-         FVcumTIdRLXlQ==
-Date:   Wed, 22 May 2019 10:11:38 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     James Bottomley <James.Bottomley@HansenPartnership.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hannes Reinece <hare@suse.com>
-Subject: linux-next: manual merge of the scsi tree with Linus' tree
-Message-ID: <20190522101138.3797b3d0@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/SWqY30olTy+T8neXG.DkgSr"; protocol="application/pgp-signature"
+        by mail.kernel.org (Postfix) with ESMTPSA id C84D921773;
+        Wed, 22 May 2019 00:14:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558484062;
+        bh=tBUlh7t4ziJIcxmShUGJnmzqdE/W3H7m9a3/sy7TF5I=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=oLSNEzDmqFj7jLXPvQ3g4WURAHlo6UFEUiGi0QquRUiCvNNoqotBiH3eypXFjfBg9
+         zPr8X2BLt365raBut96Q4gD5Q3ucP/BwXvLE+akh3yjczbESjFok9G6DFmgiKZLjWn
+         B8cZEIuTJHhGUS0cIITDrCXdx/oBKbKsBSV7naHI=
+Date:   Tue, 21 May 2019 17:14:22 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Paul Walmsley <paul.walmsley@sifive.com>
+Cc:     Joe Perches <joe@perches.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] scripts/spelling.txt: drop "sepc" from the misspelling
+ list
+Message-Id: <20190521171422.c7ef965e39b27f6142788412@linux-foundation.org>
+In-Reply-To: <alpine.DEB.2.21.9999.1905191108180.10723@viisi.sifive.com>
+References: <20190518210037.13674-1-paul.walmsley@sifive.com>
+        <201b9ab622b8359225f3a3b673a05047ffce5744.camel@perches.com>
+        <alpine.DEB.2.21.9999.1905191108180.10723@viisi.sifive.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/SWqY30olTy+T8neXG.DkgSr
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Sun, 19 May 2019 11:24:22 -0700 (PDT) Paul Walmsley <paul.walmsley@sifive.com> wrote:
 
-Hi all,
+> On Sat, 18 May 2019, Joe Perches wrote:
+> 
+> > On Sat, 2019-05-18 at 14:00 -0700, Paul Walmsley wrote:
+> > > The RISC-V architecture has a register named the "Supervisor Exception
+> > > Program Counter", or "sepc".  This abbreviation triggers
+> > > checkpatch.pl's misspelling detector, resulting in noise in the
+> > > checkpatch output.  The risk that this noise could cause more useful
+> > > warnings to be missed seems to outweigh the harm of an occasional
+> > > misspelling of "spec".  Thus drop the "sepc" entry from the
+> > > misspelling list.
+> > 
+> > I would agree if you first fixed the existing sepc/spec
+> > and sepcific/specific typos.
+> > 
+> > arch/powerpc/kvm/book3s_xics.c:	 * a pending interrupt, this is a SW error and PAPR sepcifies
+> > arch/unicore32/include/mach/regs-gpio.h: * Sepcial Voltage Detect Reg GPIO_GPIR.
+> > drivers/scsi/lpfc/lpfc_init.c:		/* Stop any OneConnect device sepcific driver timers */
+> > drivers/staging/rtl8723bs/hal/rtl8723b_phycfg.c:* OverView:	Read "sepcific bits" from BB register
+> > drivers/net/wireless/realtek/rtlwifi/wifi.h:/* Ref: 802.11i sepc D10.0 7.3.2.25.1
+> 
+> Your agreement shouldn't be needed for the patch I sent.
 
-Today's linux-next merge of the scsi tree got a conflict in:
+I always find Joe's input to be very useful.
 
-  drivers/scsi/osst.c
+Here:
 
-between commit:
+From: Andrew Morton <akpm@linux-foundation.org>
+Subject: scripts-spellingtxt-drop-sepc-from-the-misspelling-list-fix
 
-  09c434b8a004 ("treewide: Add SPDX license identifier for more missed file=
-s")
+fix existing "sepc" instances, per Joe
 
-from Linus' tree and commit:
+Cc: Joe Perches <joe@perches.com>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+---
 
-  70841904d909 ("scsi: osst: kill obsolete driver")
+ arch/powerpc/kvm/book3s_xics.c                  |    2 +-
+ arch/unicore32/include/mach/regs-gpio.h         |    2 +-
+ drivers/net/wireless/realtek/rtlwifi/wifi.h     |    2 +-
+ drivers/scsi/lpfc/lpfc_init.c                   |    2 +-
+ drivers/staging/rtl8723bs/hal/rtl8723b_phycfg.c |    2 +-
+ 5 files changed, 5 insertions(+), 5 deletions(-)
 
-from the scsi tree.
+--- a/arch/powerpc/kvm/book3s_xics.c~scripts-spellingtxt-drop-sepc-from-the-misspelling-list-fix
++++ a/arch/powerpc/kvm/book3s_xics.c
+@@ -830,7 +830,7 @@ static noinline int kvmppc_h_eoi(struct
+ 	 *
+ 	 * Note: If EOI is incorrectly used by SW to lower the CPPR
+ 	 * value (ie more favored), we do not check for rejection of
+-	 * a pending interrupt, this is a SW error and PAPR sepcifies
++	 * a pending interrupt, this is a SW error and PAPR specifies
+ 	 * that we don't have to deal with it.
+ 	 *
+ 	 * The sending of an EOI to the ICS is handled after the
+--- a/arch/unicore32/include/mach/regs-gpio.h~scripts-spellingtxt-drop-sepc-from-the-misspelling-list-fix
++++ a/arch/unicore32/include/mach/regs-gpio.h
+@@ -32,7 +32,7 @@
+  */
+ #define GPIO_GEDR	(PKUNITY_GPIO_BASE + 0x0018)
+ /*
+- * Sepcial Voltage Detect Reg GPIO_GPIR.
++ * Special Voltage Detect Reg GPIO_GPIR.
+  */
+ #define GPIO_GPIR	(PKUNITY_GPIO_BASE + 0x0020)
+ 
+--- a/drivers/net/wireless/realtek/rtlwifi/wifi.h~scripts-spellingtxt-drop-sepc-from-the-misspelling-list-fix
++++ a/drivers/net/wireless/realtek/rtlwifi/wifi.h
+@@ -597,7 +597,7 @@ enum ht_channel_width {
+ 	HT_CHANNEL_WIDTH_MAX,
+ };
+ 
+-/* Ref: 802.11i sepc D10.0 7.3.2.25.1
++/* Ref: 802.11i spec D10.0 7.3.2.25.1
+  * Cipher Suites Encryption Algorithms
+  */
+ enum rt_enc_alg {
+--- a/drivers/scsi/lpfc/lpfc_init.c~scripts-spellingtxt-drop-sepc-from-the-misspelling-list-fix
++++ a/drivers/scsi/lpfc/lpfc_init.c
+@@ -2963,7 +2963,7 @@ lpfc_stop_hba_timers(struct lpfc_hba *ph
+ 		del_timer_sync(&phba->fcp_poll_timer);
+ 		break;
+ 	case LPFC_PCI_DEV_OC:
+-		/* Stop any OneConnect device sepcific driver timers */
++		/* Stop any OneConnect device specific driver timers */
+ 		lpfc_sli4_stop_fcf_redisc_wait_timer(phba);
+ 		break;
+ 	default:
+--- a/drivers/staging/rtl8723bs/hal/rtl8723b_phycfg.c~scripts-spellingtxt-drop-sepc-from-the-misspelling-list-fix
++++ a/drivers/staging/rtl8723bs/hal/rtl8723b_phycfg.c
+@@ -45,7 +45,7 @@ static	u32 phy_CalculateBitShift(u32 Bit
+ /**
+ * Function:	PHY_QueryBBReg
+ *
+-* OverView:	Read "sepcific bits" from BB register
++* OverView:	Read "specific bits" from BB register
+ *
+ * Input:
+ *		struct adapter *	Adapter,
+_
 
-I fixed it up (I just removed the file) and can carry the fix as
-necessary. This is now fixed as far as linux-next is concerned, but any
-non trivial conflicts should be mentioned to your upstream maintainer
-when your tree is submitted for merging.  You may also want to consider
-cooperating with the maintainer of the conflicting tree to minimise any
-particularly complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/SWqY30olTy+T8neXG.DkgSr
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzkk7oACgkQAVBC80lX
-0Gz8igf/eIWVE3LL64EJmtlG73TBlNTQgiqQn3T2eBRPnFpbtNbyqIyhtMG1Uxja
-3TscbjJkuBYLZw2r/gMKtqJlZJQiRoS5M5/+sV7iHrXhkbkBpe1h5+tQX5PC3FX4
-PG9VKacU0cudMnO+vCKYlm46XIP1RCPD/wNPY+oEqrXpiaer/24MU/PpVL2rkmZT
-nfOn6k/7kqBNMnR7AiRZKF54gkeyCUPB0VnHhLrbrRUSlDqVs6S/31EUCBMWNNdO
-fYMY27AVnZ5j23ONTjuesbNfOn4iur66Q9BWfuxZvt2/gQvzkr5pwpGv8lJXCL/m
-+VsvQiBNEFM85+Rlaq7A17A7F3vI9Q==
-=GMpd
------END PGP SIGNATURE-----
-
---Sig_/SWqY30olTy+T8neXG.DkgSr--
