@@ -2,30 +2,30 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D901AC46460
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 10:51:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89EEBC18E7D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 10:51:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8CCC21850
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 10:51:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69D8620856
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 10:51:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729055AbfEVKvR (ORCPT
+        id S1729199AbfEVKvT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 06:51:17 -0400
+        Wed, 22 May 2019 06:51:19 -0400
 Received: from mga07.intel.com ([134.134.136.100]:32515 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727464AbfEVKvQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 06:51:16 -0400
+        id S1727464AbfEVKvS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 06:51:18 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 May 2019 03:51:15 -0700
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 May 2019 03:51:17 -0700
 X-ExtLoop1: 1
 Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 22 May 2019 03:51:13 -0700
+  by fmsmga001.fm.intel.com with ESMTP; 22 May 2019 03:51:15 -0700
 From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
 To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
         Hans de Goede <hdegoede@redhat.com>
@@ -33,10 +33,12 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Andy Shevchenko <andy@infradead.org>,
         linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH v4 00/16] Software fwnode references
-Date:   Wed, 22 May 2019 13:50:57 +0300
-Message-Id: <20190522105113.11153-1-heikki.krogerus@linux.intel.com>
+Subject: [PATCH v4 01/16] software node: Allow node creation without properties
+Date:   Wed, 22 May 2019 13:50:58 +0300
+Message-Id: <20190522105113.11153-2-heikki.krogerus@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190522105113.11153-1-heikki.krogerus@linux.intel.com>
+References: <20190522105113.11153-1-heikki.krogerus@linux.intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -44,89 +46,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Software nodes are not forced to have device properties.
+Adding check to property_entries_dup() to make it possible
+to create software nodes that don't have any properties.
 
-I'm not splitting this series in two after all. After thinking about
-this for some time, I decided to add support for static software
-nodes. I did not want to support them because I don't want to make it
-easy to maintain board files, but in end they make the use of the
-software nodes so much more easier compared to if we always had to
-dynamically allocate them that it's a no-brainer. The references can
-now be also described statically. Actually, those can now only be
-described statically.
+Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+---
+ drivers/base/swnode.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Hans! I applied (hopefully) all of the fixes you proposed in v3. I
-hope you have time to test these.
-
-Here's the cover letter from v3:
-
-This is the third version of my proposal to add reference handling to
-the software node code. In this version I renamed ACPI_NAME_SIZE to
-ACPI_NAMESEG_SIZE in 6/13, and slit patch 9/13 in two separate patches
-(9/13 and 10/13) as suggested by Andy. Patch 9/13 will now only move
-the registration of max17047 out of probe, and 10/13 will introduce
-the software nodes.
-
-v2 cover letter:
-
-This is the second version of this series. In this version I'm
-introducing a new helper device_find_child_by_name() as proposed
-by Andy. Andy requested also another helper that could be used for
-chaining the fwnodes, but I decided not to add that now. I would like
-to still think about how we should handle exceptions like if there
-already is a secondary node assigned for a node.
-
-v1 cover letter:
-
-This series adds support for software fwnode reference handling. In
-practice it means making fwnode_property_get_reference_args() function
-usable in the drivers also with software nodes. I send the series
-originally as RFC [1].
-
-As the first user for the software node references, I'm converting
-intel_cht_int33fe.c to use them as part of the series.
-
-[1] https://lkml.org/lkml/2019/3/15/457
-
-thanks,
-
-Heikki Krogerus (16):
-  software node: Allow node creation without properties
-  software node: Simplify software_node_release() function
-  software node: Add support for static node descriptors
-  software node: Use kobject name when finding child nodes by name
-  software node: Add software_node_get_reference_args()
-  driver core: Add helper device_find_child_by_name()
-  ACPI / property: Don't limit named child node matching to data nodes
-  device property: Introduce fwnode_find_reference()
-  device connection: Find connections also by checking the references
-  usb: typec: Registering real device entries for the muxes
-  platform/x86: intel_cht_int33fe: Register max17047 in its own function
-  platform/x86: intel_cht_int33fe: Remove unused fusb302 device property
-  platform/x86: intel_cht_int33fe: Provide software nodes for the
-    devices
-  platform/x86: intel_cht_int33fe: Provide fwnode for the USB connector
-  platform/x86: intel_cht_int33fe: Supply fwnodes for the external
-    dependencies
-  platform/x86: intel_cht_int33fe: Replacing the old connections with
-    references
-
- drivers/acpi/property.c                  |  26 +-
- drivers/base/core.c                      |  28 ++
- drivers/base/devcon.c                    |  26 ++
- drivers/base/property.c                  |  24 ++
- drivers/base/swnode.c                    | 324 +++++++++++++++++------
- drivers/platform/x86/intel_cht_int33fe.c | 290 ++++++++++++++++----
- drivers/usb/roles/class.c                |   2 +-
- drivers/usb/typec/bus.h                  |  15 ++
- drivers/usb/typec/class.c                |  17 +-
- drivers/usb/typec/mux.c                  | 238 ++++++++++++-----
- drivers/usb/typec/mux/pi3usb30532.c      |  46 ++--
- include/linux/device.h                   |   2 +
- include/linux/property.h                 |  51 ++++
- include/linux/usb/typec_mux.h            |  62 ++---
- 14 files changed, 902 insertions(+), 249 deletions(-)
-
+diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
+index 7fc5a18e02ad..30077454eb68 100644
+--- a/drivers/base/swnode.c
++++ b/drivers/base/swnode.c
+@@ -383,6 +383,9 @@ property_entries_dup(const struct property_entry *properties)
+ 	int i, n = 0;
+ 	int ret;
+ 
++	if (!properties)
++		return NULL;
++
+ 	while (properties[n].name)
+ 		n++;
+ 
 -- 
 2.20.1
 
