@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3515C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:31:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC5C2C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:31:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACB92204FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:31:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE2A020879
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:31:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558553467;
-	bh=f7dg84IkYaJn/zqFRfLVsVVP5Xb09Vvo51Ce1EFlCfw=;
+	s=default; t=1558553478;
+	bh=FpK3PALUkiRggahgPCoFdWDll+zJ/hZo/9CalA2gadU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CIVBiXiEG6VVBUnzYtvQlmpiaghWlcnT2MjLx/qy4nlqpjIYS6BEj+t4AtN/S9n1k
-	 pPWZPC+9pW+UeZmKwwMM6RVnAchB1kFv9a32UesJKY430ccyeZ93v208sTsIEGI6Ls
-	 I0PraDdVisH0yFlr0inyIXbfp9HSjlq8Qukaa6iM=
+	b=nKFm4mb5jRcp+8vodEs/s86fsXY+xa91Y2N2JVBRf9C+4ODPxPcugx82TY+gwF+bt
+	 emgBcmgxIO0bksc+OHnx0xhmhE+fvlW25A+/4VGKQt5/wxSW8d9M3a+T6N4KJ25NkA
+	 shI51vddP0CHMGxT2ugF3QdjscunOGjT2mdVjpVI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387441AbfEVTbG (ORCPT
+        id S1732638AbfEVTbR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:31:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54366 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:31:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54554 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732971AbfEVTax (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:30:53 -0400
+        id S1730349AbfEVTbE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:31:04 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2AD942177E;
-        Wed, 22 May 2019 19:30:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 783AF20675;
+        Wed, 22 May 2019 19:31:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553452;
-        bh=f7dg84IkYaJn/zqFRfLVsVVP5Xb09Vvo51Ce1EFlCfw=;
+        s=default; t=1558553463;
+        bh=FpK3PALUkiRggahgPCoFdWDll+zJ/hZo/9CalA2gadU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PMda66YQHECqZTPVRkZsFF98foXmS0FPI80hUrv5dYBN+gXUXpaELkcynenXsPeC7
-         TFCVVAzl/PoMnM4kSd2TnOj7mnq/mGkuZsA/enURAggPn+JhJ4O7pYNIuAqQv0VgkL
-         rvf4mHPM0Bgih9emVFaWUNEtk5uQFgXUrAjkmNp8=
+        b=n5SgJz8dAz6CFsLJ1RwrXyZ9pDKVpHRIAhsWp1znnU/f2/PxGdgpB7agW3n5kpNUl
+         anOlTSipAZT0Q2pqPzw8J2LeK/qWP4PqHd76VfWdHjxLDnQZG/7Cq6YZtKZsjmtqOp
+         zqGJZD+X0exdaQxyHVExQhczzsQxI0eYg+akgTyA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Daniel Baluta <daniel.baluta@nxp.com>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.9 022/114] ASoC: fsl_sai: Update is_slave_mode with correct value
-Date:   Wed, 22 May 2019 15:28:45 -0400
-Message-Id: <20190522193017.26567-22-sashal@kernel.org>
+Cc:     Coly Li <colyli@suse.de>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>, linux-bcache@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 030/114] bcache: add failure check to run_cache_set() for journal replay
+Date:   Wed, 22 May 2019 15:28:53 -0400
+Message-Id: <20190522193017.26567-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522193017.26567-1-sashal@kernel.org>
 References: <20190522193017.26567-1-sashal@kernel.org>
@@ -60,47 +58,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Baluta <daniel.baluta@nxp.com>
+From: Coly Li <colyli@suse.de>
 
-[ Upstream commit ddb351145a967ee791a0fb0156852ec2fcb746ba ]
+[ Upstream commit ce3e4cfb59cb382f8e5ce359238aa580d4ae7778 ]
 
-is_slave_mode defaults to false because sai structure
-that contains it is kzalloc'ed.
+Currently run_cache_set() has no return value, if there is failure in
+bch_journal_replay(), the caller of run_cache_set() has no idea about
+such failure and just continue to execute following code after
+run_cache_set().  The internal failure is triggered inside
+bch_journal_replay() and being handled in async way. This behavior is
+inefficient, while failure handling inside bch_journal_replay(), cache
+register code is still running to start the cache set. Registering and
+unregistering code running as same time may introduce some rare race
+condition, and make the code to be more hard to be understood.
 
-Anyhow, if we decide to set the following configuration
-SAI slave -> SAI master, is_slave_mode will remain set on true
-although SAI being master it should be set to false.
+This patch adds return value to run_cache_set(), and returns -EIO if
+bch_journal_rreplay() fails. Then caller of run_cache_set() may detect
+such failure and stop registering code flow immedidately inside
+register_cache_set().
 
-Fix this by updating is_slave_mode for each call of
-fsl_sai_set_dai_fmt.
+If journal replay fails, run_cache_set() can report error immediately
+to register_cache_set(). This patch makes the failure handling for
+bch_journal_replay() be in synchronized way, easier to understand and
+debug, and avoid poetential race condition for register-and-unregister
+in same time.
 
-Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
-Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Coly Li <colyli@suse.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/fsl/fsl_sai.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/md/bcache/super.c | 17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
 
-diff --git a/sound/soc/fsl/fsl_sai.c b/sound/soc/fsl/fsl_sai.c
-index 9fadf7e31c5f8..cb43f57f978b1 100644
---- a/sound/soc/fsl/fsl_sai.c
-+++ b/sound/soc/fsl/fsl_sai.c
-@@ -274,12 +274,14 @@ static int fsl_sai_set_dai_fmt_tr(struct snd_soc_dai *cpu_dai,
- 	case SND_SOC_DAIFMT_CBS_CFS:
- 		val_cr2 |= FSL_SAI_CR2_BCD_MSTR;
- 		val_cr4 |= FSL_SAI_CR4_FSD_MSTR;
-+		sai->is_slave_mode = false;
- 		break;
- 	case SND_SOC_DAIFMT_CBM_CFM:
- 		sai->is_slave_mode = true;
- 		break;
- 	case SND_SOC_DAIFMT_CBS_CFM:
- 		val_cr2 |= FSL_SAI_CR2_BCD_MSTR;
-+		sai->is_slave_mode = false;
- 		break;
- 	case SND_SOC_DAIFMT_CBM_CFS:
- 		val_cr4 |= FSL_SAI_CR4_FSD_MSTR;
+diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
+index 894992ae9be07..0b5f0803712ba 100644
+--- a/drivers/md/bcache/super.c
++++ b/drivers/md/bcache/super.c
+@@ -1561,7 +1561,7 @@ struct cache_set *bch_cache_set_alloc(struct cache_sb *sb)
+ 	return NULL;
+ }
+ 
+-static void run_cache_set(struct cache_set *c)
++static int run_cache_set(struct cache_set *c)
+ {
+ 	const char *err = "cannot allocate memory";
+ 	struct cached_dev *dc, *t;
+@@ -1653,7 +1653,9 @@ static void run_cache_set(struct cache_set *c)
+ 		if (j->version < BCACHE_JSET_VERSION_UUID)
+ 			__uuid_write(c);
+ 
+-		bch_journal_replay(c, &journal);
++		err = "bcache: replay journal failed";
++		if (bch_journal_replay(c, &journal))
++			goto err;
+ 	} else {
+ 		pr_notice("invalidating existing data");
+ 
+@@ -1721,11 +1723,13 @@ static void run_cache_set(struct cache_set *c)
+ 	flash_devs_run(c);
+ 
+ 	set_bit(CACHE_SET_RUNNING, &c->flags);
+-	return;
++	return 0;
+ err:
+ 	closure_sync(&cl);
+ 	/* XXX: test this, it's broken */
+ 	bch_cache_set_error(c, "%s", err);
++
++	return -EIO;
+ }
+ 
+ static bool can_attach_cache(struct cache *ca, struct cache_set *c)
+@@ -1789,8 +1793,11 @@ static const char *register_cache_set(struct cache *ca)
+ 	ca->set->cache[ca->sb.nr_this_dev] = ca;
+ 	c->cache_by_alloc[c->caches_loaded++] = ca;
+ 
+-	if (c->caches_loaded == c->sb.nr_in_set)
+-		run_cache_set(c);
++	if (c->caches_loaded == c->sb.nr_in_set) {
++		err = "failed to run cache set";
++		if (run_cache_set(c) < 0)
++			goto err;
++	}
+ 
+ 	return NULL;
+ err:
 -- 
 2.20.1
 
