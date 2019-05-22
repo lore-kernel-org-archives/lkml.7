@@ -2,93 +2,69 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MIME_QP_LONG_LINE,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AE3EC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 17:35:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6473C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 17:36:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 285FF20863
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 17:35:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=jakemoroni.com header.i=@jakemoroni.com header.b="ZFbm55Ml";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="LM5XhQMo"
+	by mail.kernel.org (Postfix) with ESMTP id A9C4920863
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 17:36:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729167AbfEVRfR (ORCPT
+        id S1729504AbfEVRg5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 13:35:17 -0400
-Received: from out4-smtp.messagingengine.com ([66.111.4.28]:52317 "EHLO
-        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727499AbfEVRfR (ORCPT
+        Wed, 22 May 2019 13:36:57 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:59068 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729085AbfEVRg4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 13:35:17 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id D008120CB3
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 13:35:15 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Wed, 22 May 2019 13:35:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jakemoroni.com;
-         h=from:content-type:content-transfer-encoding:mime-version:date
-        :subject:message-id:to; s=fm3; bh=FfV+FE6CldNSY2p0Xo3j+sgr/sGrsY
-        uQuZTfRHU1Rg8=; b=ZFbm55Ml4AMlcXK2AZTJSFZAK3AbbmfXFxpzj2cDu8x+Cb
-        sN2tM5rtuV5qlBUW7lltfMpkjrgszh2JsV/v9GNptu2gY+pfBHdlryHDujsxgOpP
-        SU4dExVbzQq2EcDgDGa8SlPzN85fqOuAoq7ZZW3Vnp+FWnV4QHPP4XGPDia0WIBx
-        Gyf/3kPovQrquvl8IQy7sEB5VVWqtm5puj5JaL/OjHCcXxy+fFCHl9U4z+QjeFzd
-        mQvyXf/yIPqsiKkQmZ2YNRx81Ls2ezq2VPMRKlHNsri9MW6qL99ZqYU0Wo1kP8rj
-        FmlC76zxeCw5xVfAIpWe9YCO9SS+54Hag5xZ7Cvg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=content-transfer-encoding:content-type
-        :date:from:message-id:mime-version:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=FfV+FE
-        6CldNSY2p0Xo3j+sgr/sGrsYuQuZTfRHU1Rg8=; b=LM5XhQMoZWGKrGc2cTx+v6
-        kia4Gm4AYSIDcCLMSEO/qzk9Oy1GUoY/p1WXrtVo8eUHN5trzXeecGHyFJI5FFpK
-        0UDexXIuzeejqcnw/7rxLxB+qr6qLl7oVjat9OYzzvtqXaWFpP/V+yl0ekszO6uS
-        nfy3NPujcaj9uYxwZgrMPoizZ+l3urXKjWu9tyOpO5zDo2dm9nvzGNM5PEt2Dxzv
-        8ENcEpaCW4N7NlkEhi3iucP6/vPPY9y4zFo3mRcyPWqQJ6bEnjA6+2+PiTE7tefC
-        8BylCAmAXuss511cV2K7X0Zm3LHTroWvtPAOLgxLlpDlJ94jeozZD90l4PCQsbxQ
-        ==
-X-ME-Sender: <xms:U4jlXHcHFXDeZ6Xs-4A8UPoP64n90FgF8hpZbMl3TM5gug46qwG-Ow>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrudduvddgudduiecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecunecujfgurhephfgtgfggfffukffvofesthhqmh
-    dthhdtjeenucfhrhhomhepfdflrggtohgsucfurdcuofhorhhonhhifdcuoehmrghilhes
-    jhgrkhgvmhhorhhonhhirdgtohhmqeenucfkphepudejvddrheekrddvtdefrddvkeenuc
-    frrghrrghmpehmrghilhhfrhhomhepmhgrihhlsehjrghkvghmohhrohhnihdrtghomhen
-    ucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:U4jlXF-vvjR2ucIA1sNnzHJmKLcDhUa3KkhB2dRr6nOyQBou9_Ggvw>
-    <xmx:U4jlXCs7ycXW-EAqfW8hzqga9VqnTog7SnIdA4WSDb5iRVIX4woxYQ>
-    <xmx:U4jlXPyJPZcFS8Q-MoFuBnNry7mEBZ3uR7cxi98xnZnQodUNmJGKmA>
-    <xmx:U4jlXNObIIwD7E0M4qVCf-8Qr1cI39LacpvkhLOqmQsINx4CZXnJkw>
-Received: from [IPv6:2607:fb90:62b2:c453:e196:235f:f8b5:5298] (unknown [172.58.203.28])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 1CEBD80065
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 13:35:15 -0400 (EDT)
-From:   "Jacob S. Moroni" <mail@jakemoroni.com>
-Content-Type: text/plain;
-        charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Mime-Version: 1.0 (1.0)
-Date:   Wed, 22 May 2019 13:35:14 -0400
-Subject: Re: Linux 4.19.45
-Message-Id: <B288C346-785F-4453-A2BC-69A7C13CD328@jakemoroni.com>
-To:     linux-kernel@vger.kernel.org
-X-Mailer: iPhone Mail (16E227)
+        Wed, 22 May 2019 13:36:56 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d8])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id F2C6615002409;
+        Wed, 22 May 2019 10:36:55 -0700 (PDT)
+Date:   Wed, 22 May 2019 10:36:55 -0700 (PDT)
+Message-Id: <20190522.103655.1021678724919980639.davem@davemloft.net>
+To:     felipe@felipegasper.com
+Cc:     viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, linux-api@vger.kernel.org
+Subject: Re: [PATCH v4] net: Add UNIX_DIAG_UID to Netlink UNIX socket
+ diagnostics.
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190521004351.23706-1-felipe@felipegasper.com>
+References: <20190521004351.23706-1-felipe@felipegasper.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 22 May 2019 10:36:56 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+From: Felipe Gasper <felipe@felipegasper.com>
+Date: Mon, 20 May 2019 19:43:51 -0500
 
-4.19.45 doesn=E2=80=99t seem to build for me.
+> This adds the ability for Netlink to report a socket's UID along with the
+> other UNIX diagnostic information that is already available. This will
+> allow diagnostic tools greater insight into which users control which
+> socket.
+> 
+> To test this, do the following as a non-root user:
+> 
+>     unshare -U -r bash
+>     nc -l -U user.socket.$$ &
+> 
+> .. and verify from within that same session that Netlink UNIX socket
+> diagnostics report the socket's UID as 0. Also verify that Netlink UNIX
+> socket diagnostics report the socket's UID as the user's UID from an
+> unprivileged process in a different session. Verify the same from
+> a root process.
+> 
+> Signed-off-by: Felipe Gasper <felipe@felipegasper.com>
 
-I get an error on line 1231 of fs/open.c regarding a missing definition for =E2=
-=80=9CFMODE_STREAM=E2=80=9D.
-
-I searched the entire tree for this definition and couldn=E2=80=99t find it d=
-efined anywhere.
-
-Thanks,
-Jake Moroni
-
+Applied to net-next, thanks.
