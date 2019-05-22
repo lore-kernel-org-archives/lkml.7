@@ -2,292 +2,175 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D250C18E7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 04:13:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8343C18E7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 04:24:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA12920862
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 04:13:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A478B20675
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 04:24:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="F3ITnOwB"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cTctEi3a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726432AbfEVEN6 (ORCPT
+        id S1726323AbfEVEYE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 00:13:58 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:41078 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725787AbfEVEN5 (ORCPT
+        Wed, 22 May 2019 00:24:04 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:44109 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725796AbfEVEYE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 00:13:57 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4M48hlI102267;
-        Wed, 22 May 2019 04:13:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=7HRLf3BezHIqpaBxypsQao+m1vPiNXUpQpY3syHj0HM=;
- b=F3ITnOwBRBNFjjwlXqS2iWI7UihpJa261STrq83+L0e0JA40p0Gsrv2zf1iCyk579Yg5
- MsXg6WTyVXj6w5BMB2O65fdrKRWIEUVVr5m9VnRRzgiT7EQAgd6yWsADbFWgYNk9/4hX
- 4DRQAJnUHHd+i2MAoEVBHSaISYbcEQGaSxFcfoOvhhiRZgRbUOv9xrg6o+rD+k7uuCOo
- CRJwoNpq1O9DRaxOaZK/YcoitgPKtSCcRbc6mVvTGNRLlJ/kmDMpCdH3J/mEBc0kX2jo
- MobRhHy1YwFt9YOoiZL+LlVpsE/K/u83g+aOj2jDwjZ2P/oKzlWyIfsmtGFzf22ucs9E gA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2smsk5918c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 22 May 2019 04:13:02 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4M4BeEl158656;
-        Wed, 22 May 2019 04:13:02 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by userp3020.oracle.com with ESMTP id 2smsgum05e-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 22 May 2019 04:13:01 +0000
-Received: from userp3020.oracle.com (userp3020.oracle.com [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x4M4D1hx161149;
-        Wed, 22 May 2019 04:13:01 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 2smsgum050-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 22 May 2019 04:13:01 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x4M4CvbY010025;
-        Wed, 22 May 2019 04:12:58 GMT
-Received: from localhost (/10.159.211.99)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 22 May 2019 04:12:56 +0000
-Date:   Wed, 22 May 2019 00:12:53 -0400
-From:   Kris Van Hees <kris.van.hees@oracle.com>
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     Kris Van Hees <kris.van.hees@oracle.com>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, dtrace-devel@oss.oracle.com,
-        linux-kernel@vger.kernel.org, rostedt@goodmis.org,
-        mhiramat@kernel.org, acme@kernel.org, ast@kernel.org,
-        daniel@iogearbox.net, peterz@infradead.org
-Subject: Re: [RFC PATCH 00/11] bpf, trace, dtrace: DTrace BPF program type
- implementation and sample use
-Message-ID: <20190522041253.GM2422@oracle.com>
-References: <201905202347.x4KNl0cs030532@aserv0121.oracle.com>
- <20190521175617.ipry6ue7o24a2e6n@ast-mbp.dhcp.thefacebook.com>
- <20190521184137.GH2422@oracle.com>
- <20190521205533.evfszcjvdouby7vp@ast-mbp.dhcp.thefacebook.com>
- <20190521213648.GK2422@oracle.com>
- <20190521232618.xyo6w3e6nkwu3h5v@ast-mbp.dhcp.thefacebook.com>
+        Wed, 22 May 2019 00:24:04 -0400
+Received: by mail-ed1-f67.google.com with SMTP id b8so1656195edm.11
+        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 21:24:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+NQu0NI8ncRqI8fsVQtJ0PPb5XIcqSyNmrQ1DHUlIgA=;
+        b=cTctEi3aTljPqIa9jevUUtkhUYP6k7DFrA/xHnftumm9ApHTJKy3N++7Ueoj0t2YuR
+         GqtafLyvkH2P4JExAvskMZj3A+phaDWwFHrdXLM5Q9UZw4i4ZPRvt4R4WScaJZ0QxMvh
+         rsoFhFnx/DRaxyTPlryjIEHTPtMsJi8CGRuw9mz8pc53fXK5Y5dHApQF2uGnifIy/9aA
+         KDgZVDf2tH57ieUxk0C9OSNHKLsLTL6tAD+m436cT3jECDzLtJfQnw69G5l+euN9240+
+         5vYHG/3HNGySzVeHP4I7Bw7WhrwBfcwQIX7ZmqYPgwOsow8gxFB1vjkoBZHwClOkmyoW
+         2aYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+NQu0NI8ncRqI8fsVQtJ0PPb5XIcqSyNmrQ1DHUlIgA=;
+        b=F51IH/m6IQyX70OQFYVTV/s/NFJGufFplo0XG9aU/ii6gKvrbW/qJhuD2a30iKiEVt
+         x6JC3OteK4WMDQxjLMovGsBw9QmMBHXTHCK/IxVFahrbepc5AbBZ/48AMd90EktKUllV
+         0IP9FmxpBe6X0v9KoOGC6+8HmS1siqgH1gFjqiCSNwC+gmir19KWn51nNpqD9oiC+Pe3
+         ZqGN9Gmfi4FQXPvIdHmcKTxz1fULTmKoDE7ec6NEKGG/iW/5I4ocBoh2/37b3DxpaRQI
+         CSDmgfkHFjd6jymfxx7TJ51Df+Zwlms/h9exdgm6jmpiUsHAed6TskkC+XGbi1RDNMwl
+         393A==
+X-Gm-Message-State: APjAAAW+OlKuh9nQRRIoXebpph2LqImSNUOUoXyDEjvMPiFaQv+PH5pw
+        fJylORi5DgV8UDd0lbQVCvDV1w3Gj5/Dv0j6ls9Zme/2/pRMiicv
+X-Google-Smtp-Source: APXvYqyRHcfinxI7Xw/i+5OLohhLHbRhnK8lQ37zl+2Edp8bEtKpoEyaN6XkTY8Aox/DgqYZ2vbzhn7fg2fKtixYDMo=
+X-Received: by 2002:a50:9264:: with SMTP id j33mr85821109eda.125.1558499041640;
+ Tue, 21 May 2019 21:24:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190521232618.xyo6w3e6nkwu3h5v@ast-mbp.dhcp.thefacebook.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9264 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905220028
+References: <20190520035254.57579-1-minchan@kernel.org> <dbe801f0-4bbe-5f6e-9053-4b7deb38e235@arm.com>
+ <CAEe=Sxka3Q3vX+7aWUJGKicM+a9Px0rrusyL+5bB1w4ywF6N4Q@mail.gmail.com>
+ <1754d0ef-6756-d88b-f728-17b1fe5d5b07@arm.com> <CALvZod6ioRxSi7tHB-uSTxN1-hsxD+8O3mfFAjaqdsimjUVmcw@mail.gmail.com>
+In-Reply-To: <CALvZod6ioRxSi7tHB-uSTxN1-hsxD+8O3mfFAjaqdsimjUVmcw@mail.gmail.com>
+From:   Brian Geffon <bgeffon@google.com>
+Date:   Tue, 21 May 2019 21:23:35 -0700
+Message-ID: <CADyq12xG5AO-bAniiMwrW+7W4jBdJVsacVC_gbOq_g4zQ=X12g@mail.gmail.com>
+Subject: Re: [RFC 0/7] introduce memory hinting API for external process
+To:     Shakeel Butt <shakeelb@google.com>
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        Tim Murray <timmurray@google.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Sonny Rao <sonnyrao@google.com>, linux-api@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 21, 2019 at 04:26:19PM -0700, Alexei Starovoitov wrote:
-> On Tue, May 21, 2019 at 05:36:49PM -0400, Kris Van Hees wrote:
-> > On Tue, May 21, 2019 at 01:55:34PM -0700, Alexei Starovoitov wrote:
-> > > On Tue, May 21, 2019 at 02:41:37PM -0400, Kris Van Hees wrote:
-> > > > On Tue, May 21, 2019 at 10:56:18AM -0700, Alexei Starovoitov wrote:
-> > > > > On Mon, May 20, 2019 at 11:47:00PM +0000, Kris Van Hees wrote:
-> > > > > > 
-> > > > > >     2. bpf: add BPF_PROG_TYPE_DTRACE
-> > > > > > 
-> > > > > > 	This patch adds BPF_PROG_TYPE_DTRACE as a new BPF program type, without
-> > > > > > 	actually providing an implementation.  The actual implementation is
-> > > > > > 	added in patch 4 (see below).  We do it this way because the
-> > > > > > 	implementation is being added to the tracing subsystem as a component
-> > > > > > 	that I would be happy to maintain (if merged) whereas the declaration
-> > > > > > 	of the program type must be in the bpf subsystem.  Since the two
-> > > > > > 	subsystems are maintained by different people, we split the
-> > > > > > 	implementing patches across maintainer boundaries while ensuring that
-> > > > > > 	the kernel remains buildable between patches.
-> > > > > 
-> > > > > None of these kernel patches are necessary for what you want to achieve.
-> > > > 
-> > > > I disagree.  The current support for BPF programs for probes associates a
-> > > > specific BPF program type with a specific set of probes, which means that I
-> > > > cannot write BPF programs based on a more general concept of a 'DTrace probe'
-> > > > and provide functionality based on that.  It also means that if I have a D
-> > > > clause (DTrace probe action code associated with probes) that is to be executed
-> > > > for a list of probes of different types, I need to duplicate the program
-> > > > because I cannot cross program type boundaries.
-> > > 
-> > > tracepoint vs kprobe vs raw_tracepoint vs perf event work on different input.
-> > > There is no common denominator to them that can serve as single 'generic' context.
-> > > We're working on the concept of bpf libraries where different bpf program
-> > > with different types can call single bpf function with arbitrary arguments.
-> > > This concept already works in bpf2bpf calls. We're working on extending it
-> > > to different program types.
-> > > You're more then welcome to help in that direction,
-> > > but type casting of tracepoint into kprobe is no go.
-> > 
-> > I am happy to hear about the direction you are going in adding functionality.
-> > Please note though that I am not type casting tracepoint into kprobe or
-> > anything like that.  I am making it possible to transfer execution from
-> > tracepoint, kprobe, raw-tracepoint, perf event, etc into a BPF program of
-> > a different type (BPF_PROG_TYPE_DTRACE) which operates as a general probe
-> > action execution program type.  It provides functionality that is used to
-> > implement actions to be executed when a probe fires, independent of the
-> > actual probe type that fired.
-> > 
-> > What you describe seems to me to be rather equivalent to what I already
-> > implement in my patch.
-> 
-> except they're not.
-> you're converting to one new prog type only that no one else can use.
-> Whereas bpf infra is aiming to be as generic as possible and
-> fit networking, tracing, security use case all at once.
+To expand on the ChromeOS use case we're in a very similar situation
+to Android. For example, the Chrome browser uses a separate process
+for each individual tab (with some exceptions) and over time many tabs
+remain open in a back-grounded or idle state. Given that we have a lot
+of information about the weight of a tab, when it was last active,
+etc, we can benefit tremendously from per-process reclaim. We're
+working on getting real world numbers but all of our initial testing
+shows very promising results.
 
-Two points here...  the patch that implements cross-prog type tail-call support
-is not specific to *any* specific prog type.  Each prog type can specify which
-(if any) prog types is can receive calls from (and it can implement context
-conversion code to carry any relevant info from the caller context into the
-context for the callee).  There is nothing in that patch that is specific to
-DTrace or any other prog type.
 
-Then I also introduce a new prog type (not tied to any specific probe type) to
-provide the ability to execute programs in a probe type independent context,
-and it makes use of the cross-prog-type tail-call support in order to be able
-to invoke programs in that probe-independent context from probe-specific BPF
-programs.  And there is nothing that prevents anyone from using that new prog
-type as well - it is available for use just like any other prog type that
-already exists.
-
-But I am confused...  the various probes you mentioned a few emails back
-(kprobe, tracepoint, raw_tracepoint, perf event) each have their own BPF
-program type associated with them (raw_tracepoint has two program types
-serving it), which doesn't sound very generic.  But you are objecting to the
-introduction of a generic prog type that can be used to execute programs
-regardless of the probe type that caused the invocation because the bpf
-infrastructure is aimed at being as generic as possible.
-
-Could you elaborate on why you believe my patches are not adding generic
-features?  I can certainly agree that the DTrace-specific portions are less
-generic (although they are certainly available for anyone to use), but I
-don't quite understand why the new features are deemed non-generic and why
-you believe no one else can use this?
-
-> > > > The reasons for these patches is because I cannot do the same with the existing
-> > > > implementation.  Yes, I can do some of it or use some workarounds to accomplish
-> > > > kind of the same thing, but at the expense of not being able to do what I need
-> > > > to do but rather do some kind of best effort alternative.  That is not the goal
-> > > > here.
-> > > 
-> > > what you call 'workaround' other people call 'feature'.
-> > > The kernel community doesn't accept extra code into the kernel
-> > > when user space can do the same.
-> > 
-> > Sure, but userspace cannot do the same because in the case of DTrace much
-> > of this needs to execute at the kernel level within the context of the probe
-> > firing, because once you get back to userspace, the system has moved on.  We
-> > need to capture information and perform processing of that information at the
-> > time of probe firing.  I am spending quite a lot of my time in the design of
-> > DTrace based on BPF and other kernel features to avoid adding more to the
-> > kernel than is really needed, to certainly also to avoid duplicating code.
-> > 
-> > But I am not designing and implementing a new tracer - I am making an
-> > existing one available based on existing features (as much as possible).  So,
-> > something that comes close but doesn't quite do what we need is not a
-> > solution.
-> 
-> Your patches disagree with your words.
-> This dtrace buffer is a redundant feature.
-> per-cpu array plus perf_event_output achieve _exactly_ the same.
-
-How can it be exactly the same when the per-cpu array plus perf_event_output
-approach relies on memory to be allocated in the per-cpu array to be used as
-scratch space for constructing the sample, and then that sample data gets
-copied from the per-cpu array memory into the memory that was allocated for
-the perf ring-buffer?  And my patch provides a way to write the data directly
-into the perf ring-buffer, without the need for a scratch area to be allocated,
-and without needing to copy the data from one memory chunk into another.
-
-> > > > > Feel free to add tools/dtrace/ directory and maintain it though.
-> > > > 
-> > > > Thank you.
-> > > > 
-> > > > > The new dtrace_buffer doesn't need to replicate existing bpf+kernel functionality
-> > > > > and no changes are necessary in kernel/events/ring_buffer.c either.
-> > > > > tools/dtrace/ user space component can use either per-cpu array map
-> > > > > or hash map as a buffer to store arbitrary data into and use
-> > > > > existing bpf_perf_event_output() to send it to user space via perf ring buffer.
-> > > > > 
-> > > > > See, for example, how bpftrace does that.
-> > > > 
-> > > > When using bpf_perf_event_output() you need to construct the sample first,
-> > > > and then send it off to user space using the perf ring-buffer.  That is extra
-> > > > work that is unnecessary.  Also, storing arbitrary data from userspace in maps
-> > > > is not relevant here because this is about data that is generated at the level
-> > > > of the kernel and sent to userspace as part of the probe action that is
-> > > > executed when the probe fires.
-> > > > 
-> > > > Bpftrace indeed uses maps and ways to construct the sample and then uses the
-> > > > perf ring-buffer to pass data to userspace.  And that is not the way DTrace
-> > > > works and that is not the mechanism that we need here,  So, while this may be
-> > > > satisfactory for bpftrace, it is not for DTrace.  We need more fine-grained
-> > > > control over how we write data to the buffer (doing direct stores from BPF
-> > > > code) and without the overhead of constructing a complete sample that can just
-> > > > be handed over to bpf_perf_event_output().
-> > > 
-> > > I think we're not on the same page vs how bpftrace and bpf_perf_event_output work.
-> > > What you're proposing in these patches is _slower_ than existing mechanism.
-> > 
-> > How can it be slower?  Is a sequence of BPF store instructions, writing
-> > directly to memory in the ring-buffer slower than using BPF store instructions
-> > to write data into a temporary location from which data is then copied into
-> > the ring-buffer by bpf_perf_event_output()?
-> > 
-> > Other than this, my implementation uses exactly the same functions at the
-> > perf ring-buffer level as bpf_perf_event_output() does.  In my case, the
-> > buffer reserve work is done with one helper, and the final commit is done
-> > with another helper.  So yes, I use two helper calls vs one helper call if
-> > you use bpf_perf_event_output() but as I mention above, I avoid the creation
-> > and copying of the sample data.
-> 
-> What stops you from using per-cpu array and perf_event_output?
-> No 'reserve' call necessary. lookup from per-cpu array gives a pointer
-> to large buffer that can be feed into perf_event_output.
-> It's also faster for small buffers and has no issues with multi-page.
-> No hacks on perf side necessary.
-
-Please see my comments above.  And please note that aside from the overhead of
-making one extra helper call (buffer_reserve), my implementation uses the very
-functions that are used to implement perf_event_output.  The only difference
-is that the first half of perf_event_output (reserving the needed space in the
-ring-buffer - not something I came up with - it already gets done for every
-write operation to the ring-buffer) gets done from buffer_reserve, and the last
-part (recording the new head in the ring-buffer so userspace can see it) is
-done form buffer_commit.  Yes, there is a little bit of extra code involved
-because the ring-buffer is usually comprised of non-contiguous pages, but
-that extra code is minimal.  The real difference with just using
-perf_event_output is that perf_event_output copies a chunk of data from a
-given memory location into the ring-buffer whereas my implementation places
-the data into the ring-buffer directly using BPF store instructions.
-
-The DTrace userspace implementation has an established format in which the
-probe data is expected to be found in the buffer.  My proposed (minimal)
-extension to the perf ring-buffer code makes it possible to write data into
-the ring-buffer in the expected format.  This is not possible by simply using
-perf_event_output because that adds a header to the sample data.
-
-> > > > Also, please note that I am not duplicating any kernel functionality when it
-> > > > comes to buffer handling, and in fact, I found it very easy to be able to
-> > > > tap into the perf event ring-buffer implementation and add a feature that I
-> > > > need for DTrace.  That was a very pleasant experience for sure!
-> > > 
-> > > Let's agree to disagree. All I see is a code duplication and lack of understanding
-> > > of existing bpf features.
-> > 
-> > Could you point out to me where you believe I am duplicating code?  I'd really
-> > like to address that.
-> 
-> see above.
+On Tue, May 21, 2019 at 5:57 AM Shakeel Butt <shakeelb@google.com> wrote:
+>
+> On Mon, May 20, 2019 at 7:55 PM Anshuman Khandual
+> <anshuman.khandual@arm.com> wrote:
+> >
+> >
+> >
+> > On 05/20/2019 10:29 PM, Tim Murray wrote:
+> > > On Sun, May 19, 2019 at 11:37 PM Anshuman Khandual
+> > > <anshuman.khandual@arm.com> wrote:
+> > >>
+> > >> Or Is the objective here is reduce the number of processes which get killed by
+> > >> lmkd by triggering swapping for the unused memory (user hinted) sooner so that
+> > >> they dont get picked by lmkd. Under utilization for zram hardware is a concern
+> > >> here as well ?
+> > >
+> > > The objective is to avoid some instances of memory pressure by
+> > > proactively swapping pages that userspace knows to be cold before
+> > > those pages reach the end of the LRUs, which in turn can prevent some
+> > > apps from being killed by lmk/lmkd. As soon as Android userspace knows
+> > > that an application is not being used and is only resident to improve
+> > > performance if the user returns to that app, we can kick off
+> > > process_madvise on that process's pages (or some portion of those
+> > > pages) in a power-efficient way to reduce memory pressure long before
+> > > the system hits the free page watermark. This allows the system more
+> > > time to put pages into zram versus waiting for the watermark to
+> > > trigger kswapd, which decreases the likelihood that later memory
+> > > allocations will cause enough pressure to trigger a kill of one of
+> > > these apps.
+> >
+> > So this opens up bit of LRU management to user space hints. Also because the app
+> > in itself wont know about the memory situation of the entire system, new system
+> > call needs to be called from an external process.
+> >
+> > >
+> > >> Swapping out memory into zram wont increase the latency for a hot start ? Or
+> > >> is it because as it will prevent a fresh cold start which anyway will be slower
+> > >> than a slow hot start. Just being curious.
+> > >
+> > > First, not all swapped pages will be reloaded immediately once an app
+> > > is resumed. We've found that an app's working set post-process_madvise
+> > > is significantly smaller than what an app allocates when it first
+> > > launches (see the delta between pswpin and pswpout in Minchan's
+> > > results). Presumably because of this, faulting to fetch from zram does
+> >
+> > pswpin      417613    1392647     975034     233.00
+> > pswpout    1274224    2661731    1387507     108.00
+> >
+> > IIUC the swap-in ratio is way higher in comparison to that of swap out. Is that
+> > always the case ? Or it tend to swap out from an active area of the working set
+> > which faulted back again.
+> >
+> > > not seem to introduce a noticeable hot start penalty, not does it
+> > > cause an increase in performance problems later in the app's
+> > > lifecycle. I've measured with and without process_madvise, and the
+> > > differences are within our noise bounds. Second, because we're not
+> >
+> > That is assuming that post process_madvise() working set for the application is
+> > always smaller. There is another challenge. The external process should ideally
+> > have the knowledge of active areas of the working set for an application in
+> > question for it to invoke process_madvise() correctly to prevent such scenarios.
+> >
+> > > preemptively evicting file pages and only making them more likely to
+> > > be evicted when there's already memory pressure, we avoid the case
+> > > where we process_madvise an app then immediately return to the app and
+> > > reload all file pages in the working set even though there was no
+> > > intervening memory pressure. Our initial version of this work evicted
+> >
+> > That would be the worst case scenario which should be avoided. Memory pressure
+> > must be a parameter before actually doing the swap out. But pages if know to be
+> > inactive/cold can be marked high priority to be swapped out.
+> >
+> > > file pages preemptively and did cause a noticeable slowdown (~15%) for
+> > > that case; this patch set avoids that slowdown. Finally, the benefit
+> > > from avoiding cold starts is huge. The performance improvement from
+> > > having a hot start instead of a cold start ranges from 3x for very
+> > > small apps to 50x+ for larger apps like high-fidelity games.
+> >
+> > Is there any other real world scenario apart from this app based ecosystem where
+> > user hinted LRU management might be helpful ? Just being curious. Thanks for the
+> > detailed explanation. I will continue looking into this series.
+>
+> Chrome OS is another real world use-case for this user hinted LRU
+> management approach by proactively reclaiming reclaim from tabs not
+> accessed by the user for some time.
