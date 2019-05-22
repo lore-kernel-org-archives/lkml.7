@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BA4BC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:36:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 977C2C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:36:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 160D020675
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:36:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 686242081C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:36:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558553766;
-	bh=7DivioIFu3ELdIZdB7oq8oxrdWgoDjmxnrNLT0XjvOM=;
+	s=default; t=1558553774;
+	bh=MO7wHOeODYUsgUTq0t5fXWKpKvu1ZS3FOL1EFL74wr8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RgZ1tSA+b9ycqvuAZXlNHYkmHIaITCI1HHbq/ntyVg+KWFjR3xZlOvzx50dXCKP+j
-	 Dy2oqKnF1sXliJljjdQ6xxiXFy0JOO9Q3zflsSKd15ZD9bBACMn6iBqKnh4Octsyqk
-	 Lx846ZLaf/r1Q9pniwfcqH7CtHt4Y0RHBIAEJxvg=
+	b=a7tbKP/XCLdEqkP5UASdtbwC6hnHQ9lhBwiZsTSRZiEOY28bB2NZpg02i60em09SC
+	 7Fp9jsv5hu7FF8HXuljK8jytdP3ZMfjvgsl5LFIxe+k0yNMt3N8qfidUmAYg+egNv8
+	 F1iiRGjMPqkXOfsvflxG/h7G09QI7RyA7CajWBeI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732230AbfEVTgF (ORCPT
+        id S2387494AbfEVTgN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:36:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54396 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:36:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54316 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731784AbfEVTay (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:30:54 -0400
+        id S2387395AbfEVTau (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:30:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 444DA217D4;
-        Wed, 22 May 2019 19:30:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 11EF720675;
+        Wed, 22 May 2019 19:30:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553454;
-        bh=7DivioIFu3ELdIZdB7oq8oxrdWgoDjmxnrNLT0XjvOM=;
+        s=default; t=1558553449;
+        bh=MO7wHOeODYUsgUTq0t5fXWKpKvu1ZS3FOL1EFL74wr8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0xPZxPsBx5DJEBIlPs4epHI9V1Yvqst8FCtNVK0NZgHVDm80Mf4GBpn139HG1IKGC
-         jD+S5n0mb8onG2E6blmAQDze4OZi2vbZ8HGd5sQU/zf8UuhClGPEqiV1HZrZ/kY9tE
-         JrdyoU4d03Tn9OT4W5/CSTN9Y0NekWf+uf8cUZnk=
+        b=X9ahqJrhU/p6cCu6OwOcThEvbgiX0I8BFa207qVqdKMCPmLNPXDYhaLhga2Cho32Z
+         poAxd+guEisDU80EX9RWkx82HV7TG18KiCZ5Z+mnfPCdC7Xs5ZJiBJ4IpD9xWHr2yL
+         S47QKW1uPSMKAJQaxRn2I1tprs3qBLjUp3lmH1U4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 023/114] mwifiex: prevent an array overflow
-Date:   Wed, 22 May 2019 15:28:46 -0400
-Message-Id: <20190522193017.26567-23-sashal@kernel.org>
+Cc:     Sugar Zhang <sugar.zhang@rock-chips.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        dmaengine@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 019/114] dmaengine: pl330: _stop: clear interrupt status
+Date:   Wed, 22 May 2019 15:28:42 -0400
+Message-Id: <20190522193017.26567-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522193017.26567-1-sashal@kernel.org>
 References: <20190522193017.26567-1-sashal@kernel.org>
@@ -60,38 +59,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Sugar Zhang <sugar.zhang@rock-chips.com>
 
-[ Upstream commit b4c35c17227fe437ded17ce683a6927845f8c4a4 ]
+[ Upstream commit 2da254cc7908105a60a6bb219d18e8dced03dcb9 ]
 
-The "rate_index" is only used as an index into the phist_data->rx_rate[]
-array in the mwifiex_hist_data_set() function.  That array has
-MWIFIEX_MAX_AC_RX_RATES (74) elements and it's used to generate some
-debugfs information.  The "rate_index" variable comes from the network
-skb->data[] and it is a u8 so it's in the 0-255 range.  We need to cap
-it to prevent an array overflow.
+This patch kill instructs the DMAC to immediately terminate
+execution of a thread. and then clear the interrupt status,
+at last, stop generating interrupts for DMA_SEV. to guarantee
+the next dma start is clean. otherwise, one interrupt maybe leave
+to next start and make some mistake.
 
-Fixes: cbf6e05527a7 ("mwifiex: add rx histogram statistics support")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+we can reporduce the problem as follows:
+
+DMASEV: modify the event-interrupt resource, and if the INTEN sets
+function as interrupt, the DMAC will set irq<event_num> HIGH to
+generate interrupt. write INTCLR to clear interrupt.
+
+	DMA EXECUTING INSTRUCTS		DMA TERMINATE
+		|				|
+		|				|
+	       ...			      _stop
+		|				|
+		|			spin_lock_irqsave
+	     DMASEV				|
+		|				|
+		|			    mask INTEN
+		|				|
+		|			     DMAKILL
+		|				|
+		|			spin_unlock_irqrestore
+
+in above case, a interrupt was left, and if we unmask INTEN, the DMAC
+will set irq<event_num> HIGH to generate interrupt.
+
+to fix this, do as follows:
+
+	DMA EXECUTING INSTRUCTS		DMA TERMINATE
+		|				|
+		|				|
+	       ...			      _stop
+		|				|
+		|			spin_lock_irqsave
+	     DMASEV				|
+		|				|
+		|			     DMAKILL
+		|				|
+		|			   clear INTCLR
+		|			    mask INTEN
+		|				|
+		|			spin_unlock_irqrestore
+
+Signed-off-by: Sugar Zhang <sugar.zhang@rock-chips.com>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/marvell/mwifiex/cfp.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/dma/pl330.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/wireless/marvell/mwifiex/cfp.c b/drivers/net/wireless/marvell/mwifiex/cfp.c
-index 1ff22055e54f8..9ddaa767ea747 100644
---- a/drivers/net/wireless/marvell/mwifiex/cfp.c
-+++ b/drivers/net/wireless/marvell/mwifiex/cfp.c
-@@ -533,5 +533,8 @@ u8 mwifiex_adjust_data_rate(struct mwifiex_private *priv,
- 		rate_index = (rx_rate > MWIFIEX_RATE_INDEX_OFDM0) ?
- 			      rx_rate - 1 : rx_rate;
+diff --git a/drivers/dma/pl330.c b/drivers/dma/pl330.c
+index 6d7e3cd4aba4c..57b375d0de292 100644
+--- a/drivers/dma/pl330.c
++++ b/drivers/dma/pl330.c
+@@ -1020,6 +1020,7 @@ static void _stop(struct pl330_thread *thrd)
+ {
+ 	void __iomem *regs = thrd->dmac->base;
+ 	u8 insn[6] = {0, 0, 0, 0, 0, 0};
++	u32 inten = readl(regs + INTEN);
  
-+	if (rate_index >= MWIFIEX_MAX_AC_RX_RATES)
-+		rate_index = MWIFIEX_MAX_AC_RX_RATES - 1;
+ 	if (_state(thrd) == PL330_STATE_FAULT_COMPLETING)
+ 		UNTIL(thrd, PL330_STATE_FAULTING | PL330_STATE_KILLING);
+@@ -1032,10 +1033,13 @@ static void _stop(struct pl330_thread *thrd)
+ 
+ 	_emit_KILL(0, insn);
+ 
+-	/* Stop generating interrupts for SEV */
+-	writel(readl(regs + INTEN) & ~(1 << thrd->ev), regs + INTEN);
+-
+ 	_execute_DBGINSN(thrd, insn, is_manager(thrd));
 +
- 	return rate_index;
++	/* clear the event */
++	if (inten & (1 << thrd->ev))
++		writel(1 << thrd->ev, regs + INTCLR);
++	/* Stop generating interrupts for SEV */
++	writel(inten & ~(1 << thrd->ev), regs + INTEN);
  }
+ 
+ /* Start doing req 'idx' of thread 'thrd' */
 -- 
 2.20.1
 
