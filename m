@@ -2,128 +2,109 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 214B5C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 17:44:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F888C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 17:45:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0FB32173C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 17:44:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558547093;
-	bh=WGpxkLS3O1W5xJkPVT6OtlO6L0fjxSCDqpvjxfdM6e8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RRm73oKSxeKmo72CcjN56NFqwUyp6/OwH0I4mKaLC4EMi+UwUNpClEJzdsSW6HpOa
-	 UexS9baOygmXpWu23b+E096ilyY48ixik27eMc1n9ckymEXzJRBSW5fWMjMtOzRC3L
-	 vWieShzCyi+D0YzWFrgccYgiC7gZlu6EZEOhGTYU=
+	by mail.kernel.org (Postfix) with ESMTP id 67EDA2173C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 17:45:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729054AbfEVRow (ORCPT
+        id S1729419AbfEVRpB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 13:44:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36548 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727984AbfEVRov (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 13:44:51 -0400
-Received: from localhost (unknown [104.132.1.68])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC5C121019;
-        Wed, 22 May 2019 17:44:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558547090;
-        bh=WGpxkLS3O1W5xJkPVT6OtlO6L0fjxSCDqpvjxfdM6e8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=SzL7buq0bAzafVDhOU8P3wAUmBGyHpJpmx/A+Wg9G+RBjrePwONfrzYdaLTQ6n0ke
-         xz8NKrRO3GWrfZTLu5+xIfiqvqPnf6DQ0cVkiooeJc32eSX+rfY8IFuTtOPMSTssKH
-         1IWqBJr6jhO9FgvLdW5ERpUg+ZbExknEYZH5aPHs=
-Date:   Wed, 22 May 2019 10:44:48 -0700
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Chao Yu <chao@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: Re: [f2fs-dev] [PATCH 1/2] Revert "f2fs: don't clear
- CP_QUOTA_NEED_FSCK_FLAG"
-Message-ID: <20190522174448.GA81051@jaegeuk-macbookpro.roam.corp.google.com>
-References: <20190521180625.10562-1-jaegeuk@kernel.org>
- <8e9a4cac-c81b-11ce-0a5a-c6f5caf716c4@kernel.org>
+        Wed, 22 May 2019 13:45:01 -0400
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:45142 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727984AbfEVRpB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 13:45:01 -0400
+Received: by mail-vs1-f67.google.com with SMTP id k187so1908506vsk.12;
+        Wed, 22 May 2019 10:45:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NYrm0bUv2G3ou+xt7BepsnZBkRyzFtIlpVXDYxrwa2Q=;
+        b=KXOlc/8KKFqolD3OGK4kKqUTySf5bhzXFx/VoG34zC5623elVDu0hnNYRnr7xpGoFu
+         znhCDewCEPki0tbKQNnveLQk+NLjo//mmOGFf22bi3wCRB8TeeHmu1U9vj+ZP1pS5wOH
+         IBcKVcxW2UGCfNAnNizP6vejPNkk8ffiqFRWGUOX6r8vQeHOjQ1GSoU0BfQCq+RoPI6+
+         dOVVBWdXFda80kxuP1Vlihlv362Iu17Ydj4WINA1SA4vbHjZZnH9Nhquz4nzXcQ769nA
+         mxlcphaeEj91CcOee4yZ8lZ7/8YAAp34F4apajyfmajXP5tSC06/0qt3SLLC98KgfaMj
+         Wkeg==
+X-Gm-Message-State: APjAAAV2YMRnOYDUy1/YwmucUsKyaB2ukvHmceT0zkKXmddhB8ngWKxi
+        1j6GI1kpTnAdRYM9f6f/7GAjTYRTU/2ZSgpxkRg=
+X-Google-Smtp-Source: APXvYqzqwQrsBtqfMle90gQW8BOkmF0HFDIu/8ONkuwk3qh3X7b+zian9ggE6ZPD1Oo1QC7Wfgqqi4MKUY046NTd658=
+X-Received: by 2002:a67:f589:: with SMTP id i9mr12970338vso.152.1558547100195;
+ Wed, 22 May 2019 10:45:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8e9a4cac-c81b-11ce-0a5a-c6f5caf716c4@kernel.org>
-User-Agent: Mutt/1.8.2 (2017-04-18)
+References: <1556092536-17095-1-git-send-email-masonccyang@mxic.com.tw>
+ <20190424212356.GA27103@bogus> <65853dc2-6f3c-1494-7e72-54877797cdd2@gmail.com>
+ <20190507125730.GD29524@dell> <OF08A5650B.8AE8977C-ON482583F4.000E5B1E-482583F4.000F7215@mxic.com.tw>
+ <d229b19e-351c-c576-b5c4-716d10dad1a0@gmail.com> <20190508061119.GB7627@dell>
+ <OFE86674B9.06D723A0-ON482583F5.000AD50C-482583F5.000BA075@mxic.com.tw>
+ <a05cff8f-7df2-1938-c0e7-f9366bece607@cogentembedded.com> <OFB19BCE91.6EBBAA77-ON482583F6.000234E2-482583F6.00061290@mxic.com.tw>
+ <CAMuHMdUP8KU3Dbv6cwOvrY0hWOcm1xqVcsi20+GvazYMDLGGZg@mail.gmail.com>
+ <OFD932ABFC.E3FFCEB8-ON482583F9.003412B1-482583F9.0034D5CA@mxic.com.tw>
+ <b51d1cb7-b3b5-208f-ab4c-145ecb57805d@cogentembedded.com> <44bc8f0a-cbdc-db4a-9a46-b8bae5cc37a2@cogentembedded.com>
+ <OF5AF00898.3CE87C98-ON48258400.00259B16-48258400.0028A4F5@mxic.com.tw>
+ <5e718d9f-3aeb-c2ef-0723-400497b2b98f@cogentembedded.com> <CAMuHMdUWNqkZz5DEWFJsoHLmC86ziLjWKHpz=A-EmvMDDgnSNQ@mail.gmail.com>
+ <bba153f8-051c-9880-eacf-2ff698cc0171@cogentembedded.com>
+In-Reply-To: <bba153f8-051c-9880-eacf-2ff698cc0171@cogentembedded.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 22 May 2019 19:44:48 +0200
+Message-ID: <CAMuHMdVBF82cUYFR3+K1bKhK16qCxNhyFXykp2c_CLffUq4i1w@mail.gmail.com>
+Subject: Re: [PATCH v12 3/3] dt-bindings: mfd: Document Renesas R-Car Gen3
+ RPC-IF MFD bindings
+To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc:     Mason Yang <masonccyang@mxic.com.tw>,
+        Lee Jones <lee.jones@linaro.org>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms@verge.net.au>, juliensu@mxic.com.tw,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh@kernel.org>, zhengxunli@mxic.com.tw,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/22, Chao Yu wrote:
-> On 2019-5-22 2:06, Jaegeuk Kim wrote:
-> > This reverts commit fb40d618b03978b7cc5820697894461f4a2af98b.
-> > 
-> > The original patch introduced # of fsck triggers.
-> 
-> How about pointing out the old issue has been fixed with below patch:
-> 
-> f2fs-tools: fix to check total valid block count before block allocation
-> 
-> Otherwise, user should keep kernel commit "f2fs: don't clear
-> CP_QUOTA_NEED_FSCK_FLAG".
+Hi Sergei,
 
-Actually, that didn't fix my testing issue, but I found we were not using
-error control for quota_sysfile. Now I've seen no issue with the below patch.
+On Wed, May 22, 2019 at 7:23 PM Sergei Shtylyov
+<sergei.shtylyov@cogentembedded.com> wrote:
+> On 05/22/2019 08:05 PM, Geert Uytterhoeven wrote:
+> >> On 05/20/2019 10:23 AM, masonccyang@mxic.com.tw wrote:
+> >>> +- clocks: should contain 1 entries for the module's clock
+> >>
+> >>    1 entry (clock node phandle and specifier).
+> >
+> > Doesn't "specifier" mean "phandle + optional arguments"?
+>
+>    No.
+>    E.g. when specifying the IRQs, the "interrupts" prop contains one or more
+> interrupt specifiers, the phandle is specified in the "interrupt-parent"
+> prop (see the DT spec).
 
-From e1b7de7050fd87b7c20e033b062b1cc6505679d3 Mon Sep 17 00:00:00 2001
-From: Jaegeuk Kim <jaegeuk@kernel.org>
-Date: Mon, 20 May 2019 16:17:56 -0700
-Subject: [PATCH] f2fs: link f2fs quota ops for sysfile
+Mea culpa, I stand corrected.
 
-This patch reverts:
-commit fb40d618b039 ("f2fs: don't clear CP_QUOTA_NEED_FSCK_FLAG").
+Gr{oetje,eeting}s,
 
-We were missing error handlers used in f2fs quota ops.
+                        Geert
 
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
----
- fs/f2fs/checkpoint.c | 6 ++----
- fs/f2fs/super.c      | 5 +----
- 2 files changed, 3 insertions(+), 8 deletions(-)
-
-diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
-index d0539ddad6e2..89825261d474 100644
---- a/fs/f2fs/checkpoint.c
-+++ b/fs/f2fs/checkpoint.c
-@@ -1317,10 +1317,8 @@ static void update_ckpt_flags(struct f2fs_sb_info *sbi, struct cp_control *cpc)
- 
- 	if (is_sbi_flag_set(sbi, SBI_QUOTA_SKIP_FLUSH))
- 		__set_ckpt_flags(ckpt, CP_QUOTA_NEED_FSCK_FLAG);
--	/*
--	 * TODO: we count on fsck.f2fs to clear this flag until we figure out
--	 * missing cases which clear it incorrectly.
--	 */
-+	else
-+		__clear_ckpt_flags(ckpt, CP_QUOTA_NEED_FSCK_FLAG);
- 
- 	if (is_sbi_flag_set(sbi, SBI_QUOTA_NEED_REPAIR))
- 		__set_ckpt_flags(ckpt, CP_QUOTA_NEED_FSCK_FLAG);
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index 856f9081c599..34f2adf191ed 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -3169,10 +3169,7 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
- 
- #ifdef CONFIG_QUOTA
- 	sb->dq_op = &f2fs_quota_operations;
--	if (f2fs_sb_has_quota_ino(sbi))
--		sb->s_qcop = &dquot_quotactl_sysfile_ops;
--	else
--		sb->s_qcop = &f2fs_quotactl_ops;
-+	sb->s_qcop = &f2fs_quotactl_ops;
- 	sb->s_quota_types = QTYPE_MASK_USR | QTYPE_MASK_GRP | QTYPE_MASK_PRJ;
- 
- 	if (f2fs_sb_has_quota_ino(sbi)) {
 -- 
-2.19.0.605.g01d371f741-goog
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
