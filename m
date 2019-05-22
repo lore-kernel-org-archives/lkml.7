@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56CA8C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:59:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8376FC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:00:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1916A20856
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:59:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5036220856
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:00:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558555196;
-	bh=QePx1IMak/j1YkCE6t2wjbBLa/k4asf6AK8gETWFaGc=;
+	s=default; t=1558555204;
+	bh=5R1qiA4ub11Ga1Rdx5yuNJd2np/tgjKoWBcsGGpXrX8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P/MVhQ9V04/uo/2vz4Ao+jGIg+4pi37EKXAOG4FlETvQt2CUuHITCNz5uqUylBPSk
-	 +EXXd06KtcU/yr6q9woFscSMSeuG1EvP2N3MVmEydUTtt1Ffrjfl06ocgnTZfuHvCz
-	 NNvb21Y9Tohvh8XosGfIoZFPcKoeRmnwHp+Xlj0s=
+	b=zikLQspzKag9qtyjQdzP5tnfzJqm+CnXSUR4OuSqee1RYP99hU3HimaDSdxpNKwVk
+	 AYlBUOaVFdXc2NPBCSmLkyexxnsPsOR6szONn9SrE9EGo8gBy7b8mbvr3D3OD1BvYo
+	 vo9R2SxPZ3y5vAWSiH98Mq7oCWaQEJUMTwSHPSQM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733269AbfEVT7z (ORCPT
+        id S1730839AbfEVTXT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:59:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44258 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:23:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44076 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730034AbfEVTXW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:23:22 -0400
+        id S1730788AbfEVTXL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:23:11 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C39E21473;
-        Wed, 22 May 2019 19:23:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1BEE82177E;
+        Wed, 22 May 2019 19:23:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553002;
-        bh=QePx1IMak/j1YkCE6t2wjbBLa/k4asf6AK8gETWFaGc=;
+        s=default; t=1558552991;
+        bh=5R1qiA4ub11Ga1Rdx5yuNJd2np/tgjKoWBcsGGpXrX8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DiJfk4gRAVwwrliMb2Oi9lMvlMrZQX76LLW24yzHfWatDX2Cfy7iABclH8c1w9ztS
-         8usCGbkGLPNEWPTejB5s4gkgucqt5QQPloH7NV3KLAEpzR9tquKtW8qImsiW1u7Rod
-         NZmUKdubpKu5nbRKo2JhCJhIKOIvMo5uJrpyD7W0=
+        b=VVpXGpzq2AvpiJ4/Jtx5DglnJBH2Ym9FuVVqDHZMWqHNHG4xTtgpY2vZLOzdKQ+OA
+         dfNz382OQXG+iBXp/RVjwAlBQD+yQp346zu4MIubzG47kGvVkw9/hLRRjGNj0/3yoK
+         NasoMEYPD0dlPEmcGdhaHdXElNXyRmikWCG8apOI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yunsheng Lin <linyunsheng@huawei.com>,
-        Peng Li <lipeng321@huawei.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 070/375] net: hns3: fix for TX clean num when cleaning TX BD
-Date:   Wed, 22 May 2019 15:16:10 -0400
-Message-Id: <20190522192115.22666-70-sashal@kernel.org>
+Cc:     Nicholas Piggin <npiggin@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 066/375] sched/nohz: Run NOHZ idle load balancer on HK_FLAG_MISC CPUs
+Date:   Wed, 22 May 2019 15:16:06 -0400
+Message-Id: <20190522192115.22666-66-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192115.22666-1-sashal@kernel.org>
 References: <20190522192115.22666-1-sashal@kernel.org>
@@ -61,54 +62,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yunsheng Lin <linyunsheng@huawei.com>
+From: Nicholas Piggin <npiggin@gmail.com>
 
-[ Upstream commit 63380a1ae4ced8aef67659ff9547c69ef8b9613a ]
+[ Upstream commit 9b019acb72e4b5741d88e8936d6f200ed44b66b2 ]
 
-hns3_desc_unused() returns how many BD have been cleaned, but new
-buffer has not been attached to them. The register of
-HNS3_RING_RX_RING_FBDNUM_REG returns how many BD need allocating new
-buffer to or need to cleaned. So the remaining BD need to be clean
-is HNS3_RING_RX_RING_FBDNUM_REG - hns3_desc_unused().
+The NOHZ idle balancer runs on the lowest idle CPU. This can
+interfere with isolated CPUs, so confine it to HK_FLAG_MISC
+housekeeping CPUs.
 
-Also, new buffer can not attach to the pending BD when the last BD is
-not handled, because memcpy has not been done on the first pending BD.
+HK_FLAG_SCHED is not used for this because it is not set anywhere
+at the moment. This could be folded into HK_FLAG_SCHED once that
+option is fixed.
 
-This patch fixes by subtracting the pending BD num from unused_count
-after 'HNS3_RING_RX_RING_FBDNUM_REG - unused_count' is used to calculate
-the BD bum need to be clean.
+The problem was observed with increased jitter on an application
+running on CPU0, caused by NOHZ idle load balancing being run on
+CPU1 (an SMT sibling).
 
-Fixes: e55970950556 ("net: hns3: Add handling of GRO Pkts not fully RX'ed in NAPI poll")
-Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
-Signed-off-by: Peng Li <lipeng321@huawei.com>
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Frederic Weisbecker <fweisbec@gmail.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20190412042613.28930-1-npiggin@gmail.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ kernel/sched/fair.c | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-index 162cb9afa0e70..0208efe282775 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-@@ -2705,7 +2705,7 @@ int hns3_clean_rx_ring(
- #define RCB_NOF_ALLOC_RX_BUFF_ONCE 16
- 	struct net_device *netdev = ring->tqp->handle->kinfo.netdev;
- 	int recv_pkts, recv_bds, clean_count, err;
--	int unused_count = hns3_desc_unused(ring) - ring->pending_buf;
-+	int unused_count = hns3_desc_unused(ring);
- 	struct sk_buff *skb = ring->skb;
- 	int num;
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 35f3ea3750844..232491e3ed0db 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -9551,22 +9551,26 @@ static inline int on_null_domain(struct rq *rq)
+  * - When one of the busy CPUs notice that there may be an idle rebalancing
+  *   needed, they will kick the idle load balancer, which then does idle
+  *   load balancing for all the idle CPUs.
++ * - HK_FLAG_MISC CPUs are used for this task, because HK_FLAG_SCHED not set
++ *   anywhere yet.
+  */
  
-@@ -2714,6 +2714,7 @@ int hns3_clean_rx_ring(
+ static inline int find_new_ilb(void)
+ {
+-	int ilb = cpumask_first(nohz.idle_cpus_mask);
++	int ilb;
  
- 	recv_pkts = 0, recv_bds = 0, clean_count = 0;
- 	num -= unused_count;
-+	unused_count -= ring->pending_buf;
+-	if (ilb < nr_cpu_ids && idle_cpu(ilb))
+-		return ilb;
++	for_each_cpu_and(ilb, nohz.idle_cpus_mask,
++			      housekeeping_cpumask(HK_FLAG_MISC)) {
++		if (idle_cpu(ilb))
++			return ilb;
++	}
  
- 	while (recv_pkts < budget && recv_bds < num) {
- 		/* Reuse or realloc buffers */
+ 	return nr_cpu_ids;
+ }
+ 
+ /*
+- * Kick a CPU to do the nohz balancing, if it is time for it. We pick the
+- * nohz_load_balancer CPU (if there is one) otherwise fallback to any idle
+- * CPU (if there is one).
++ * Kick a CPU to do the nohz balancing, if it is time for it. We pick any
++ * idle CPU in the HK_FLAG_MISC housekeeping set (if there is one).
+  */
+ static void kick_ilb(unsigned int flags)
+ {
 -- 
 2.20.1
 
