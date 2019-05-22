@@ -2,170 +2,166 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FSL_HELO_FAKE,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BBF6C18E7D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 09:58:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D953C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 09:59:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BF3E20821
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 09:58:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34F2E2070D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 09:59:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eepgEolk"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="r8VzIPYm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729102AbfEVJ61 (ORCPT
+        id S1728955AbfEVJ7q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 05:58:27 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:38354 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728527AbfEVJ61 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 05:58:27 -0400
-Received: by mail-wr1-f68.google.com with SMTP id d18so1559691wrs.5
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 02:58:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=3kfhe+C5MUHt6X5mCM+Dlz0/pZVO77tnwk01LDkUJwI=;
-        b=eepgEolkpBAsdhuDCiFIXdUlqhCg4rRJ19or5wxnHr181zC0h3kfWE4MDlCk4igOk8
-         ogY4TIEByedt10k+bIx+/Sq0ziV+OCBxwVC+pU7n22x65upqN7ot8H2e0732+uy8osY/
-         rsse1NIQ2GMdf39YotIm+b2D7x4pOHLRKDdyEz0St2H3UaXFJyisPPYm0L3rGWUab9OR
-         egCbW5FtAp7nvuvNQHxL1fWLon85eOxNH3rK5gfiETt2E55G/czHN3uLH20d4WMktVO6
-         XCHoavNoOAsh6w0vpg2jAuXbtnR3amKBkJJYokAvfxlpS8HNTYqfu0q+7XsX/eb9Kmy8
-         TClw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=3kfhe+C5MUHt6X5mCM+Dlz0/pZVO77tnwk01LDkUJwI=;
-        b=TK2VFecu57+eiL9XzjCSf0F5WVuLpndTV/70IbBORSqDAgalM7K4SG6jvffSXdGLIE
-         RtqaGQWKni1btwVauWrce/C2xeo5qXUHx/KvaNcU0taeZG48HeWah7LZnxpwegKbKGd2
-         DA/B3m+k+rquR3OT7x1nxOAv6mJ88LGvRuzx7P3AJFOqeEbxfVUISbW78jpd7zN8nRsF
-         iauHSyPFgFaAw5JQpFCT2o48S9DV94zyjdM6hnZBJONyX9EyG8rzv6PZko/tC6t/nSMy
-         dKnmm8ogQS+tM5WZQp47ahYWkH/i/Sk1WyJjqSsrVojhAMNUI/pnuWb3oQnu9CZxVVLd
-         t2Nw==
-X-Gm-Message-State: APjAAAUM9Es/ydpTvdKkYRLwBpuSx+UQdR74ie5sIJJZM7NXtcFpApSF
-        fX6IOMAZcIhQEbkiWbGw29Q4GF/W
-X-Google-Smtp-Source: APXvYqxJnFa/97VgErvjnVhLSPSEdqaXOinYYwWOp5xfTqerKU/79CGHZMCzLjEsX9aXIl8a9bcBXw==
-X-Received: by 2002:a5d:4ec6:: with SMTP id s6mr46648586wrv.184.1558519105239;
-        Wed, 22 May 2019 02:58:25 -0700 (PDT)
-Received: from gmail.com (79.108.96.12.dyn.user.ono.com. [79.108.96.12])
-        by smtp.gmail.com with ESMTPSA id n2sm2327078wro.13.2019.05.22.02.58.24
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 22 May 2019 02:58:24 -0700 (PDT)
-Date:   Wed, 22 May 2019 11:58:10 +0200
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] tracing: silence GCC 9 array bounds warning
-Message-ID: <20190522095810.GA16110@gmail.com>
+        Wed, 22 May 2019 05:59:46 -0400
+Received: from mail-eopbgr20058.outbound.protection.outlook.com ([40.107.2.58]:22337
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727464AbfEVJ7p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 05:59:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WDyskuE1hfrVjxPzPDO3h59MjCYr/+DW7fNrhovBzYY=;
+ b=r8VzIPYmATUNiTqGa7xA1UawM3hW9IKBgg3nOQJ0F5BFxBYlfDFZfhh1nOdaUh2uRqxW1Zhjx0yR6vwGw3YTKDaLaSFnwGrOIQqiIqIOYwSCa4UGDPIfE+jZ3/ZfgHHs4vmTDnAz5kqofqqdg7JkmP3xnfWYeveKF63dUtN4aZo=
+Received: from VI1PR04MB4543.eurprd04.prod.outlook.com (20.177.55.90) by
+ VI1PR04MB3103.eurprd04.prod.outlook.com (10.170.229.13) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1900.18; Wed, 22 May 2019 09:59:39 +0000
+Received: from VI1PR04MB4543.eurprd04.prod.outlook.com
+ ([fe80::5062:df97:a70b:93f8]) by VI1PR04MB4543.eurprd04.prod.outlook.com
+ ([fe80::5062:df97:a70b:93f8%7]) with mapi id 15.20.1900.020; Wed, 22 May 2019
+ 09:59:39 +0000
+From:   Robin Gong <yibin.gong@nxp.com>
+To:     "robh@kernel.org" <robh@kernel.org>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        "plyatov@gmail.com" <plyatov@gmail.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>
+CC:     "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>
+Subject: [PATCH v4 00/14] add ecspi ERR009165 for i.mx6/7 soc family
+Thread-Topic: [PATCH v4 00/14] add ecspi ERR009165 for i.mx6/7 soc family
+Thread-Index: AQHVEIUR54BxkzTNOk2fBr52LKhyNQ==
+Date:   Wed, 22 May 2019 09:59:39 +0000
+Message-ID: <1558548188-1155-1-git-send-email-yibin.gong@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.7.4
+x-clientproxiedby: HK2PR04CA0045.apcprd04.prod.outlook.com
+ (2603:1096:202:14::13) To VI1PR04MB4543.eurprd04.prod.outlook.com
+ (2603:10a6:803:6d::26)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yibin.gong@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 87ebcce8-5d67-4a02-6927-08d6de9c33f8
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB3103;
+x-ms-traffictypediagnostic: VI1PR04MB3103:
+x-ms-exchange-purlcount: 2
+x-microsoft-antispam-prvs: <VI1PR04MB3103F029DE5EAE4CC102C56A89000@VI1PR04MB3103.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2803;
+x-forefront-prvs: 0045236D47
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(189003)(199004)(68736007)(81166006)(2201001)(2501003)(52116002)(71200400001)(14454004)(186003)(256004)(14444005)(26005)(53936002)(7736002)(25786009)(81156014)(305945005)(966005)(8936002)(4326008)(86362001)(8676002)(50226002)(71190400001)(486006)(6512007)(6306002)(5660300002)(6436002)(66946007)(73956011)(498600001)(66446008)(66066001)(66476007)(64756008)(66556008)(3846002)(6116002)(99286004)(386003)(6506007)(2906002)(54906003)(36756003)(110136005)(7416002)(2616005)(6486002)(102836004)(476003)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB3103;H:VI1PR04MB4543.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: jnsnaHzcad38YiP83FfDlBCYBJ0GMZPivmHg4wOR57yoTdXl2R3JmK81S9ktZE1NnM9yFYXqoEpB82tanGIzEfsFKclYNaRXVyUIUWbhFMB3dM0tfk7yhiLgLudUiR0PT1Orxj+0cMk3hg/Fbfjxz8QuW6zGySAl7/KWjYyIofhToKtL3evJCZgVlfiQto1o/P/Fm5lgoazQZCOC9J4CMuSK9iZ3MRAHcPfiMHx5GOC3YXEatdntT4n44m/c2su7YiZG3e3qlyun+VQllxPcNi+O4gxayDkZAapD587786dMJFRbuckFQVlfLrZV5HiG17H13drTfkF4teCkqfqnDQwcjCTzwqjzPqx9w5lS83XK+PPlpKdYoucN8lxWhw8PHhGIM7W4ctr02WiAEdnL1PZeiw/lSkfn2qif1wiunoQ=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: elm/2
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 87ebcce8-5d67-4a02-6927-08d6de9c33f8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 May 2019 09:59:39.2933
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB3103
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Starting with GCC 9, -Warray-bounds detects cases when memset is called
-starting on a member of a struct but the size to be cleared ends up
-writing over further members.
-
-Such a call happens in the trace code to clear, at once, all members
-after and including `seq` on struct trace_iterator:
-
-    In function 'memset',
-        inlined from 'ftrace_dump' at kernel/trace/trace.c:8914:3:
-    ./include/linux/string.h:344:9: warning: '__builtin_memset' offset
-    [8505, 8560] from the object at 'iter' is out of the bounds of
-    referenced subobject 'seq' with type 'struct trace_seq' at offset
-    4368 [-Warray-bounds]
-      344 |  return __builtin_memset(p, c, size);
-          |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-In order to avoid GCC complaining about it, we compute the address
-ourselves by adding the offsetof distance instead of referring
-directly to the member.
-
-Since there are two places doing this clear (trace.c and trace_kdb.c),
-take the chance to move the workaround into a single place in
-the internal header.
-
-Signed-off-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
----
-Steven, let me know if you still prefer (char *) or anything else
-(or just change it in your side if you want :-)
-
- kernel/trace/trace.c     |  6 +-----
- kernel/trace/trace.h     | 14 ++++++++++++++
- kernel/trace/trace_kdb.c |  6 +-----
- 3 files changed, 16 insertions(+), 10 deletions(-)
-
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 2c92b3d9ea30..1c80521fd436 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -8910,12 +8910,8 @@ void ftrace_dump(enum ftrace_dump_mode oops_dump_mode)
- 
- 		cnt++;
- 
--		/* reset all but tr, trace, and overruns */
--		memset(&iter.seq, 0,
--		       sizeof(struct trace_iterator) -
--		       offsetof(struct trace_iterator, seq));
-+		trace_iterator_reset(&iter);
- 		iter.iter_flags |= TRACE_FILE_LAT_FMT;
--		iter.pos = -1;
- 
- 		if (trace_find_next_entry_inc(&iter) != NULL) {
- 			int ret;
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 1974ce818ddb..f9a12003f137 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -1967,4 +1967,18 @@ static inline void tracer_hardirqs_off(unsigned long a0, unsigned long a1) { }
- 
- extern struct trace_iterator *tracepoint_print_iter;
- 
-+/* reset all but tr, trace, and overruns */
-+static __always_inline void trace_iterator_reset(struct trace_iterator *iter)
-+{
-+	/*
-+	 * We do not simplify the start address to &iter->seq in order to let
-+	 * GCC 9 know that we really want to overwrite more members than
-+	 * just iter->seq (-Warray-bounds).
-+	 */
-+	const size_t offset = offsetof(struct trace_iterator, seq);
-+	memset((char *)(iter) + offset, 0, sizeof(struct trace_iterator) - offset);
-+
-+	iter->pos = -1;
-+}
-+
- #endif /* _LINUX_KERNEL_TRACE_H */
-diff --git a/kernel/trace/trace_kdb.c b/kernel/trace/trace_kdb.c
-index 6c1ae6b752d1..cca65044c14c 100644
---- a/kernel/trace/trace_kdb.c
-+++ b/kernel/trace/trace_kdb.c
-@@ -37,12 +37,8 @@ static void ftrace_dump_buf(int skip_entries, long cpu_file)
- 	if (skip_entries)
- 		kdb_printf("(skipping %d entries)\n", skip_entries);
- 
--	/* reset all but tr, trace, and overruns */
--	memset(&iter.seq, 0,
--		   sizeof(struct trace_iterator) -
--		   offsetof(struct trace_iterator, seq));
-+	trace_iterator_reset(&iter);
- 	iter.iter_flags |= TRACE_FILE_LAT_FMT;
--	iter.pos = -1;
- 
- 	if (cpu_file == RING_BUFFER_ALL_CPUS) {
- 		for_each_tracing_cpu(cpu) {
--- 
-2.17.1
-
+ICBUaGVyZSBpcyBlY3NwaSBFUlIwMDkxNjUgb24gaS5teDYvNyBzb2MgZmFtaWx5LCB3aGljaCBj
+YXVzZSBGSUZPDQp0cmFuc2ZlciB0byBiZSBzZW5kIHR3aWNlIGluIERNQSBtb2RlLiBQbGVhc2Ug
+Z2V0IG1vcmUgaW5mb3JtYXRpb24gZnJvbToNCmh0dHBzOi8vd3d3Lm54cC5jb20vZG9jcy9lbi9l
+cnJhdGEvSU1YNkRRQ0UucGRmLiBUaGUgd29ya2Fyb3VuZCBpcyBhZGRpbmcNCm5ldyBzZG1hIHJh
+bSBzY3JpcHQgd2hpY2ggd29ya3MgaW4gWENIICBtb2RlIGFzIFBJTyBpbnNpZGUgc2RtYSBpbnN0
+ZWFkDQpvZiBTTUMgbW9kZSwgbWVhbndoaWxlLCAnVFhfVEhSRVNIT0xEJyBzaG91bGQgYmUgMC4g
+VGhlIGlzc3VlIHNob3VsZCBiZQ0KZXhpc3Qgb24gYWxsIGxlZ2FjeSBpLm14Ni83IHNvYyBmYW1p
+bHkgYmVmb3JlIGkubXg2dWwuDQpOWFAgZml4IHRoaXMgZGVzaWduIGlzc3VlIGZyb20gaS5teDZ1
+bCwgc28gbmV3ZXIgY2hpcHMgaW5jbHVkaW5nIGkubXg2dWwvDQo2dWxsLzZzbGwgZG8gbm90IG5l
+ZWQgdGhpcyB3b3JrYXJvdWQgYW55bW9yZS4gQWxsIG90aGVyIGkubXg2LzcvOCBjaGlwcw0Kc3Rp
+bGwgbmVlZCB0aGlzIHdvcmthcm91ZC4gVGhpcyBwYXRjaCBzZXQgYWRkIG5ldyAnZnNsLGlteDZ1
+bC1lY3NwaScNCmZvciBlY3NwaSBkcml2ZXIgYW5kICdlY3NwaV9maXhlZCcgaW4gc2RtYSBkcml2
+ZXIgdG8gY2hvb3NlIGlmIG5lZWQgZXJyYXRhDQpvciBub3QuDQogIFRoZSBmaXJzdCB0d28gcmV2
+ZXJ0ZWQgcGF0Y2hlcyBzaG91bGQgYmUgdGhlIHNhbWUgaXNzdWUsIHRob3VnaCwgaXQNCnNlZW1z
+ICdmaXhlZCcgYnkgY2hhbmdpbmcgdG8gb3RoZXIgc2hwIHNjcmlwdC4gSG9wZSBTZWFuIG9yIFNh
+c2NoYSBjb3VsZA0KaGF2ZSB0aGUgY2hhbmNlIHRvIHRlc3QgdGhpcyBwYXRjaCBzZXQgaWYgY291
+bGQgZml4IHRoZWlyIGlzc3Vlcy4NCiAgQmVzaWRlcywgZW5hYmxlIHNkbWEgc3VwcG9ydCBmb3Ig
+aS5teDhtbS84bXEgYW5kIGZpeCBlY3NwaTEgbm90IHdvcmsNCm9uIGkubXg4bW0gYmVjYXVzZSB0
+aGUgZXZlbnQgaWQgaXMgemVyby4NCg0KUFM6DQogIFBsZWFzZSBnZXQgc2RtYSBmaXJtd2FyZSBm
+cm9tIGJlbG93IGxpbnV4LWZpcm13YXJlIGFuZCBjb3B5IGl0IHRvIHlvdXINCmxvY2FsIHJvb3Rm
+cyAvbGliL2Zpcm13YXJlL2lteC9zZG1hLg0KaHR0cHM6Ly9naXQua2VybmVsLm9yZy9wdWIvc2Nt
+L2xpbnV4L2tlcm5lbC9naXQvZmlybXdhcmUvbGludXgtZmlybXdhcmUuZ2l0L3RyZWUvaW14L3Nk
+bWENCg0KdjI6DQogIDEuIGFkZCBjb21taXQgbG9nIGZvciByZXZlcnRlZCBwYXRjaGVzLg0KICAy
+LiBhZGQgY29tbWVudCBmb3IgJ2Vjc3BpX2ZpeGVkJyBpbiBzZG1hIGRyaXZlci4NCiAgMy4gYWRk
+ICdmc2wsaW14NnNsbC1lY3NwaScgY29tcGF0aWJsZSBpbnN0ZWFkIG9mICdmc2wsaW14NnVsLWVj
+c3BpJw0KICAgICByYXRoZXIgdGhhbiByZW1vdmUuDQp2MzoNCiAgMS4gY29uZmlybSB3aXRoIGRl
+c2lnbiB0ZWFtIG1ha2Ugc3VyZSBFUlIwMDkxNjUgZml4ZWQgb24gaS5teDZ1bC9pLm14NnVsbA0K
+ICAvaS5teDZzbGwsIG5vdCBmaXhlZCBvbiBpLm14OG0vOG1tIGFuZCBvdGhlciBpLm14Ni83IGxl
+Z2FjeSBjaGlwcy4NCiAgQ29ycmVjdCBkdHMgcmVsYXRlZCBkdHMgcGF0Y2ggaW4gdjIuDQogIDIu
+IGNsZWFuIGVyYXR0YSBpbmZvcm1hdGlvbiBpbiBiaW5kaW5nIGRvYyBhbmQgbmV3ICd0eF9nbGl0
+Y2hfZml4ZWQnIGZsYWcNCiAgaW4gc3BpLWlteCBkcml2ZXIgdG8gc3RhdGUgRVJSMDA5MTY1IGZp
+eGVkIG9yIG5vdC4NCiAgMy4gRW5sYXJnZSBidXJzdCBzaXplIHRvIGZpZm8gc2l6ZSBmb3IgdHgg
+c2luY2UgdHhfd21sIHNldCB0byAwIGluIHRoZQ0KICBlcnJhdGEgd29ya2Fyb3VkLCB0aHVzIGlt
+cHJvdmUgcGVyZm9ybWFuY2UgYXMgcG9zc2libGUuDQp2NDoNCiAgMS4gYWRkIEFjayB0YWcgZnJv
+bSBNYXJrIGFuZCBWaW5vZA0KICAyLiByZW1vdmUgY2hlY2tpbmcgJ2V2ZW50X2lkMScgemVybyBh
+cyAnZXZlbnRfaWQwJy4NCg0KUm9iaW4gR29uZyAoMTQpOg0KICBSZXZlcnQgIkFSTTogZHRzOiBp
+bXg2cTogVXNlIGNvcnJlY3QgU0RNQSBzY3JpcHQgZm9yIFNQSTUgY29yZSINCiAgUmV2ZXJ0ICJB
+Uk06IGR0czogaW14NjogVXNlIGNvcnJlY3QgU0RNQSBzY3JpcHQgZm9yIFNQSSBjb3JlcyINCiAg
+UmV2ZXJ0ICJkbWFlbmdpbmU6IGlteC1zZG1hOiByZWZpbmUgdG8gbG9hZCBjb250ZXh0IG9ubHkg
+b25jZSINCiAgZG1hZW5naW5lOiBpbXgtc2RtYTogcmVtb3ZlIGR1cGlsaWNhdGVkIHNkbWFfbG9h
+ZF9jb250ZXh0DQogIGRtYWVuZ2luZTogaW14LXNkbWE6IGFkZCBtY3VfMl9lY3NwaSBzY3JpcHQN
+CiAgc3BpOiBpbXg6IGZpeCBFUlIwMDkxNjUNCiAgc3BpOiBpbXg6IHJlbW92ZSBFUlIwMDkxNjUg
+d29ya2Fyb3VuZCBvbiBpLm14NnVsDQogIGR0LWJpbmRpbmdzOiBzcGk6IGlteDogYWRkIG5ldyBp
+Lm14NnVsIGNvbXBhdGlibGUgbmFtZQ0KICBkbWFlbmdpbmU6IGlteC1zZG1hOiByZW1vdmUgRVJS
+MDA5MTY1IG9uIGkubXg2dWwNCiAgZHQtYmluZGluZ3M6IGRtYTogaW14LXNkbWE6IGFkZCBpLm14
+NnVsLzZzeCBjb21wYXRpYmxlIG5hbWUNCiAgZG1hZW5naW5lOiBpbXgtc2RtYTogZml4IGVjc3Bp
+MSByeCBkbWEgbm90IHdvcmsgb24gaS5teDhtbQ0KICBBUk06IGR0czogaW14NnVsOiBhZGQgZG1h
+IHN1cHBvcnQgb24gZWNzcGkNCiAgQVJNOiBkdHM6IGlteDZzbGw6IGNvcnJlY3Qgc2RtYSBjb21w
+YXRpYmxlDQogIGFybTY0OiBkZWZjb25maWc6IEVuYWJsZSBTRE1BIG9uIGkubXg4bXEvOG1tDQoN
+CiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kbWEvZnNsLWlteC1zZG1hLnR4dCAgICAgICB8ICAy
+ICsNCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9zcGkvZnNsLWlteC1jc3BpLnR4dCAgICAgICB8
+ICAxICsNCiBhcmNoL2FybS9ib290L2R0cy9pbXg2cS5kdHNpICAgICAgICAgICAgICAgICAgICAg
+ICB8ICAyICstDQogYXJjaC9hcm0vYm9vdC9kdHMvaW14NnFkbC5kdHNpICAgICAgICAgICAgICAg
+ICAgICAgfCAgOCArLS0NCiBhcmNoL2FybS9ib290L2R0cy9pbXg2c2xsLmR0c2kgICAgICAgICAg
+ICAgICAgICAgICB8ICAyICstDQogYXJjaC9hcm0vYm9vdC9kdHMvaW14NnVsLmR0c2kgICAgICAg
+ICAgICAgICAgICAgICAgfCAgOCArKysNCiBhcmNoL2FybTY0L2NvbmZpZ3MvZGVmY29uZmlnICAg
+ICAgICAgICAgICAgICAgICAgICB8ICAzICsNCiBkcml2ZXJzL2RtYS9pbXgtc2RtYS5jICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICB8IDc4ICsrKysrKysrKysrKysrKystLS0tLS0NCiBkcml2
+ZXJzL3NwaS9zcGktaW14LmMgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8IDYxICsrKysr
+KysrKysrKysrLS0tDQogaW5jbHVkZS9saW51eC9wbGF0Zm9ybV9kYXRhL2RtYS1pbXgtc2RtYS5o
+ICAgICAgICAgfCAgMSArDQogMTAgZmlsZXMgY2hhbmdlZCwgMTMyIGluc2VydGlvbnMoKyksIDM0
+IGRlbGV0aW9ucygtKQ0KDQotLSANCjIuNy40DQoNCg==
