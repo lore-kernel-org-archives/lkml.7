@@ -2,90 +2,115 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7496BC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 11:14:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F7A2C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 11:15:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 461E8217F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 11:14:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QlhmZfQX"
+	by mail.kernel.org (Postfix) with ESMTP id 664C3217D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 11:15:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729220AbfEVLOH (ORCPT
+        id S1729249AbfEVLO7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 07:14:07 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:40062 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728406AbfEVLOF (ORCPT
+        Wed, 22 May 2019 07:14:59 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:35923 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728406AbfEVLO7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 07:14:05 -0400
-Received: by mail-pf1-f193.google.com with SMTP id u17so1151725pfn.7
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 04:14:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=C6OuMrDuHvrcgAJB4Ug9M+5gS8lkJoyf4CxtYg00dTw=;
-        b=QlhmZfQX9P0OorgbuFi68ZgPIcKeIWLKGdFKGZ6HFlpUQKN8gH/RhMOx11fTP9me0J
-         hf7DVGkGFY8BBWpZNqedXDdPKAJjihqsgLsuZD8bc5Gyf8XQSM41nXOzmuPlsAN6CwQn
-         vsvOsS7v1H/sXg3fw5i/g8d7emb1yT1ggGU/LnirbYidkpmGl4GESXQbUVsA7rqn6Az1
-         izmklK1KsJoEfoC9C53Sy7m3Uw5IuND2dGNwcUDvndKzX7bIM1ocKslY2RcqDy0/VaNA
-         T4yPUi6yuDCCvrP2UT2DznyA1LzEFzLYEm3E/yrGIxdJBZc0+17UtvXRyKbRFgbi8TYm
-         hahw==
+        Wed, 22 May 2019 07:14:59 -0400
+Received: by mail-qt1-f196.google.com with SMTP id a17so1791287qth.3;
+        Wed, 22 May 2019 04:14:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=C6OuMrDuHvrcgAJB4Ug9M+5gS8lkJoyf4CxtYg00dTw=;
-        b=JOSKQNrTb26C0klMc7KKLIFsk2u0TebH94yGfUTrKmIvdoElDjJrJoWo+A5VblGEHW
-         jlRR3vO+7oIIKJrRLwC9Zv078Z5Wii/Er6YYlIqx4rvv8gwD7Z7P5pMbynJFL9Q2exZL
-         3w4oObWKETF88+GMhDOvYV6ZydHNhAf23BVWUWAPtycs9bL5VgQQhshUMrzR9REM98et
-         sixpdTFyxhyEzXkz0+ARpLYlxHkpNAzm7wndgl5hjk73+HwTu+o1hFTEDz6umQdS+8Hp
-         7DWmjGDLxA4qD6lSqaL/Ht8JdltARNlYxGr1y3dmHn2Hq9QgkZvTJXADPtmgvqQBMpbY
-         glnw==
-X-Gm-Message-State: APjAAAXRwAnDusnH7vh1TfqptJCCHWLvUCL8Ric4JeU/Ka1ScrnsEVmR
-        mbiNo27dIxFHzDGU/Sbt9Vg=
-X-Google-Smtp-Source: APXvYqzWYSQVt3hJ7zvJAONHgNDkVOL3p1MXZeRmpQUVJKrWcr3BCpnDLIWyhSER19ft45ChJGTBZA==
-X-Received: by 2002:a62:2cc2:: with SMTP id s185mr55929040pfs.106.1558523645154;
-        Wed, 22 May 2019 04:14:05 -0700 (PDT)
-Received: from zhanggen-UX430UQ ([66.42.35.75])
-        by smtp.gmail.com with ESMTPSA id u20sm32310898pfm.145.2019.05.22.04.14.02
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 22 May 2019 04:14:04 -0700 (PDT)
-Date:   Wed, 22 May 2019 19:13:54 +0800
-From:   Gen Zhang <blackgod016574@gmail.com>
-To:     Johan Hovold <johan@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] tty_io: Fix a missing-check bug in drivers/tty/tty_io.c
-Message-ID: <20190522111354.GA5849@zhanggen-UX430UQ>
-References: <20190522014006.GB4093@zhanggen-UX430UQ>
- <abc68141-df99-1ae1-ea51-c83bd4480d92@suse.cz>
- <20190522080656.GA5109@zhanggen-UX430UQ>
- <3a3db304-9725-6a90-65ac-dff09ef31aae@suse.cz>
- <20190522102900.GC2200@localhost>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8ii2+g1Yuy9p+Tzu5oDaDkK4iSzLT2e87aOjge7d8qc=;
+        b=keuCaNyCYa5wuGOKQCjm5gU6hA9etviUXq6CnrRmZa68ySOQpFMqaxxWEXswWYsFdS
+         J3iNFLyNza5SCQzXwW5fRzUx/tHhF7CIDng26y2ns5dsVzSmOlGMlutzPFd60O159+xJ
+         GJH//mRSm9v18NXO4bjtL45B2+FzeRHS03CQsARX84E2dlqzTtQAB0JPjcipm0zu+OuY
+         iDUh44gXg4muI91Iz+blGE/OXR2CH441TS2dMv2kk1cjWoCVzpnnIqdx+Ov5Z7vhI//t
+         SDPWbs0Ll5PT570wtW80FsAUwy4vnx+i9JbCAevOWp/1VgQfT7+269yK6xjnHFNxd4K1
+         75GQ==
+X-Gm-Message-State: APjAAAVk22qUQi15+iEvkUervratb4VTSdl9WxbPiAZaM359xxlBkHIs
+        QMzBNrBNokwaZGwB40WG4oe8hzH9/+k7xiqiaM4=
+X-Google-Smtp-Source: APXvYqwrHwCBCiCay5soyp1JKsXm50OnDnZUTKbJgG6Y5QmYOfB72om3Cm14f1T0mKTgl9Z2jcJv2ycTGPBYZJMgMQs=
+X-Received: by 2002:ac8:2433:: with SMTP id c48mr59157201qtc.18.1558523698039;
+ Wed, 22 May 2019 04:14:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190522102900.GC2200@localhost>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20190516085810.31077-1-rpenyaev@suse.de> <20190516085810.31077-14-rpenyaev@suse.de>
+ <CAK8P3a2-fN_BHEnEHvf4X9Ysy4t0_SnJetQLvFU1kFa3OtM0fQ@mail.gmail.com>
+ <41b847c48ccbe0c406bd54c16fbc1bf0@suse.de> <20190521193312.42a3fdda1774b1922730e459@linux-foundation.org>
+In-Reply-To: <20190521193312.42a3fdda1774b1922730e459@linux-foundation.org>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 22 May 2019 13:14:41 +0200
+Message-ID: <CAK8P3a3GWVNraxowtPmdZnF3moJ8=zkkD6F_1-885614HiVP3g@mail.gmail.com>
+Subject: Re: [PATCH v3 13/13] epoll: implement epoll_create2() syscall
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Roman Penyaev <rpenyaev@suse.de>, Azat Khuzhin <azat@libevent.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 22, 2019 at 12:29:00PM +0200, Johan Hovold wrote:
-> Where do you see that the kernel is dereferencing tty->dev without
-> checking for NULL first? If you can find that, then that would indeed be
-> a bug that needs fixing.
-Thanks for your reply, Johan!
-I examined the code but failed to find this situation.
-Anyway, checking return value of tty_get_device() is theoritically
-right. But tty->dev is never dereferenced, so checking is not needed.
-However, what if in later kernels tty->dev is dereferenced by some
-codes? Is it better to apply this check for this reason?
-Thanks
-Gen
+On Wed, May 22, 2019 at 4:33 AM Andrew Morton <akpm@linux-foundation.org> wrote:
+> On Thu, 16 May 2019 12:20:50 +0200 Roman Penyaev <rpenyaev@suse.de> wrote:
+> > On 2019-05-16 12:03, Arnd Bergmann wrote:
+> > > On Thu, May 16, 2019 at 10:59 AM Roman Penyaev <rpenyaev@suse.de>
+> > > wrote:
+> > >>
+> > >> epoll_create2() is needed to accept EPOLL_USERPOLL flags
+> > >> and size, i.e. this patch wires up polling from userspace.
+> > >
+> > > Could you add the system call to all syscall*.tbl files at the same
+> > > time here?
+> >
+> > For all other archs, you mean?  Sure.  But what is the rule of thumb?
+> > Sometimes people tend to add to the most common x86 and other tables
+> > are left untouched, but then you commit the rest, e.g.
+> >
+> > commit 39036cd2727395c3369b1051005da74059a85317
+> > Author: Arnd Bergmann <arnd@arndb.de>
+> > Date:   Thu Feb 28 13:59:19 2019 +0100
+> >
+> >      arch: add pidfd and io_uring syscalls everywhere
+> >
+>
+> I thought the preferred approach was to wire up the architectures on
+> which the submitter has tested the syscall, then allow the arch
+> maintainers to enable the syscall independently?
+
+I'm hoping to change that practice now, as it has not worked well
+in the past:
+
+- half the architectures now use asm-generic/unistd.h, so they are
+  already wired up at the same time, regardless of testing
+- in the other half, not adding them at the same time actually
+  made it harder to test, as it was significantly harder to figure
+  out how to build a modified kernel for a given architecture
+  than to run the test case
+- Not having all architectures add a new call at the same time caused
+  the architectures to get out of sync when some got added and others
+  did not. Now that we use the same numbers across all architectures,
+  that would be even more confusing.
+
+My plan for the long run is to only have one file to which new
+system calls get added in the future.
+
+> And to help them in this, provide a test suite for the new syscall
+> under tools/testing/selftests/.
+>
+> https://github.com/rouming/test-tools/blob/master/userpolled-epoll.c
+> will certainly help but I do think it would be better to move the test
+> into the kernel tree to keep it maintained and so that many people run
+> it in their various setups on an ongoing basis.
+
+No disagreement on that.
+
+      Arnd
