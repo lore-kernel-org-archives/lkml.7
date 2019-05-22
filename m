@@ -2,205 +2,112 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 729EEC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 15:02:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 767D6C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 15:02:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B4A2204EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 15:02:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A25C204EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 15:02:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KTZrZjLx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729756AbfEVPCp (ORCPT
+        id S1729773AbfEVPCs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 22 May 2019 11:02:48 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:44369 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729517AbfEVPCp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 22 May 2019 11:02:45 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:53200 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729159AbfEVPCo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 11:02:44 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4733380D;
+Received: by mail-io1-f66.google.com with SMTP id f22so2081615iol.11;
         Wed, 22 May 2019 08:02:44 -0700 (PDT)
-Received: from e111045-lin.cambridge.arm.com (apickardsiphone.cambridge.arm.com [10.1.30.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EF30E3F718;
-        Wed, 22 May 2019 08:02:41 -0700 (PDT)
-From:   Ard Biesheuvel <ard.biesheuvel@arm.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     marc.zyngier@arm.com, james.morse@arm.com, will.deacon@arm.com,
-        guillaume.gardet@arm.com, mark.rutland@arm.com, mingo@kernel.org,
-        jeyu@kernel.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, arnd@arndb.de, x86@kernel.org,
-        Ard Biesheuvel <ard.biesheuvel@arm.com>
-Subject: [PATCH] module/ksymtab: use 64-bit relative reference for target symbol
-Date:   Wed, 22 May 2019 16:02:39 +0100
-Message-Id: <20190522150239.19314-1-ard.biesheuvel@arm.com>
-X-Mailer: git-send-email 2.17.1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vDrBocZqF5A9uvIRjwm8TlVuWA42reD9PHLLFCTbFI8=;
+        b=KTZrZjLxDXab0dPMxFWXRl0eNy5ybOtX4eJo2UN5GMYS9KUvUQzE+BJ2oOkdLIs3Zj
+         Jp2RILHcGS16ekSnEUBvKzm2hFcfnHE5Jr7612tdepE6cVhQ0m68o8JTg25/p2aYQOO3
+         p9O7BC1ztcFxnGtwkZEwfAymH20dUnw0+/jFdte++fufR7JCWA21iKVnfocFpy8AbGzb
+         eCPr1cAtcv2kqlo6rOh+ztAYbJcfnkL40ep1dNVnLYbmCic+1UqqhP8s+EvnZBvbAdHl
+         RjLZyllNq3Utg6BZ11E+o5dyeu0yMlVy4v5JwWmfsm/Y+MuDgJV8yr3kBvfqx6dlWS2r
+         wTXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vDrBocZqF5A9uvIRjwm8TlVuWA42reD9PHLLFCTbFI8=;
+        b=gwzNcI4UghOVZnd+8z/xYlEiNPUzVVc7TITTn+eTO9/vC2fWXMlhMqt5cvDkoQQafh
+         7FqGkNuFS4lUqZrLSqnvw9Bev0eLTGJA/QWullivfuFC4XbRKQ6Npli25RdRIl8gRpAF
+         3NhEILf5bXJXgR0fhNP8486WFvQuJELuS63kT8z7D1JNk3S5AMy6UsAowpH/tp0z1KyC
+         GTWvyfH4kaiSzhrI6SZBtBI3boZ4HN96anK9UZrHiKTPVoq0AolhCvas0j5raEW5TSFw
+         f1ZKJyMEEThJFRIKfPcjgY0pwC/vJ3rt2LUjV/6pnXmr5a9u56jUYTuc+8BqKuoILWKm
+         g3vA==
+X-Gm-Message-State: APjAAAWC30H602ggBUAXIsZ459surKefIwSKpZlzol1x4LaO5mTGa+hI
+        O2Qmc9l57oNxXD8ZzCDcRySdjfzYVaTI4Y6psvzFtkrWsbQ=
+X-Google-Smtp-Source: APXvYqzLGNbsta34sjAK5yPAwpIwFYJUcC4AaRk6875xUEBJ05MhRdbGMYpQSWHnZpUcyA82CQZxP98IIXCSFC3pQV8=
+X-Received: by 2002:a6b:b7ce:: with SMTP id h197mr26284954iof.169.1558537364407;
+ Wed, 22 May 2019 08:02:44 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190522120736.5521-1-alexandre.belloni@bootlin.com>
+In-Reply-To: <20190522120736.5521-1-alexandre.belloni@bootlin.com>
+From:   Sylvain Lemieux <slemieux.tyco@gmail.com>
+Date:   Wed, 22 May 2019 11:02:32 -0400
+Message-ID: <CA+rxa6oabqMLAUyXVX-tvrAkpNDXVQ7KqiEqSf73J1HXwY-e5A@mail.gmail.com>
+Subject: Re: [PATCH v2] usb: gadget: udc: lpc32xx: allocate descriptor with GFP_ATOMIC
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Felipe Balbi <balbi@kernel.org>, Vladimir Zapolskiy <vz@mleia.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org,
+        "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel@vger.kernel.org, James Grant <jamesg@zaltys.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit
+Acked-by: Sylvain Lemieux <slemieux.tyco@gmail.com>
 
-  7290d5809571 ("module: use relative references for __ksymtab entries")
-
-updated the ksymtab handling of some KASLR capable architectures
-so that ksymtab entries are emitted as pairs of 32-bit relative
-references. This reduces the size of the entries, but more
-importantly, it gets rid of statically assigned absolute
-addresses, which require fixing up at boot time if the kernel
-is self relocating (which takes a 24 byte RELA entry for each
-member of the ksymtab struct).
-
-Since ksymtab entries are always part of the same module as the
-symbol they export (or of the core kernel), it was assumed at the
-time that a 32-bit relative reference is always sufficient to
-capture the offset between a ksymtab entry and its target symbol.
-
-Unfortunately, this is not always true: in the case of per-CPU
-variables, a per-CPU variable's base address (which usually differs
-from the actual address of any of its per-CPU copies) could be at
-an arbitrary offset from the ksymtab entry, and so it may be out
-of range for a 32-bit relative reference.
-
-To make matters worse, we identified an issue in the arm64 module
-loader, where the overflow check applied to 32-bit place relative
-relocations uses the range that is specified in the AArch64 psABI,
-which is documented as having a 'blind spot' unless you explicitly
-narrow the range to match the signed vs unsigned interpretation of
-the relocation target [0]. This means that, in some cases, code
-importing those per-CPU variables from other modules may obtain a
-bogus reference and corrupt unrelated data.
-
-So let's fix this issue by switching to a 64-bit place relative
-reference on 64-bit architectures for the ksymtab entry's target
-symbol. This uses a bit more memory in the entry itself, which is
-unfortunate, but it preserves the original intent, which was to
-make the value invariant under runtime relocation of the core
-kernel.
-
-[0] https://lore.kernel.org/linux-arm-kernel/20190521125707.6115-1-ard.biesheuvel@arm.com
-
-Cc: Jessica Yu <jeyu@kernel.org>
-Cc: <stable@vger.kernel.org> # v4.19+
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@arm.com>
----
-
-Note that the name 'CONFIG_HAVE_ARCH_PREL32_RELOCATIONS' is no longer
-entirely accurate after this patch, so I will follow up with a patch
-to rename it to CONFIG_HAVE_ARCH_PREL_RELOCATIONS, but that doesn't
-require a backport to -stable so I have omitted it here.
-
-Also note that for x86, this patch depends on b40a142b12b5 ("x86: Add
-support for 64-bit place relative relocations"), which will need to
-be backported to v4.19 (from v4.20) if this patch is applied to
--stable.
-
- include/asm-generic/export.h |  9 +++++++--
- include/linux/compiler.h     |  9 +++++++++
- include/linux/export.h       | 14 ++++++++++----
- kernel/module.c              |  2 +-
- 4 files changed, 27 insertions(+), 7 deletions(-)
-
-diff --git a/include/asm-generic/export.h b/include/asm-generic/export.h
-index 294d6ae785d4..4d658b1e4707 100644
---- a/include/asm-generic/export.h
-+++ b/include/asm-generic/export.h
-@@ -4,7 +4,7 @@
- #ifndef KSYM_FUNC
- #define KSYM_FUNC(x) x
- #endif
--#ifdef CONFIG_64BIT
-+#if defined(CONFIG_64BIT) && !defined(CONFIG_HAVE_ARCH_PREL32_RELOCATIONS)
- #ifndef KSYM_ALIGN
- #define KSYM_ALIGN 8
- #endif
-@@ -19,7 +19,12 @@
- 
- .macro __put, val, name
- #ifdef CONFIG_HAVE_ARCH_PREL32_RELOCATIONS
--	.long	\val - ., \name - .
-+#ifdef CONFIG_64BIT
-+	.quad	\val - .
-+#else
-+	.long	\val - .
-+#endif
-+	.long	\name - .
- #elif defined(CONFIG_64BIT)
- 	.quad	\val, \name
- #else
-diff --git a/include/linux/compiler.h b/include/linux/compiler.h
-index 8aaf7cd026b0..33c65ebb7cfe 100644
---- a/include/linux/compiler.h
-+++ b/include/linux/compiler.h
-@@ -305,6 +305,15 @@ static inline void *offset_to_ptr(const int *off)
- 	return (void *)((unsigned long)off + *off);
- }
- 
-+/**
-+ * loffset_to_ptr - convert a relative memory offset to an absolute pointer
-+ * @off:	the address of the signed long offset value
-+ */
-+static inline void *loffset_to_ptr(const long *off)
-+{
-+	return (void *)((unsigned long)off + *off);
-+}
-+
- #endif /* __ASSEMBLY__ */
- 
- /* Compile time object size, -1 for unknown */
-diff --git a/include/linux/export.h b/include/linux/export.h
-index fd8711ed9ac4..8f805b9f1c25 100644
---- a/include/linux/export.h
-+++ b/include/linux/export.h
-@@ -43,6 +43,12 @@ extern struct module __this_module;
- 
- #ifdef CONFIG_HAVE_ARCH_PREL32_RELOCATIONS
- #include <linux/compiler.h>
-+#ifdef CONFIG_64BIT
-+#define __KSYMTAB_REL	".quad "
-+#else
-+#define __KSYMTAB_REL	".long "
-+#endif
-+
- /*
-  * Emit the ksymtab entry as a pair of relative references: this reduces
-  * the size by half on 64-bit architectures, and eliminates the need for
-@@ -52,16 +58,16 @@ extern struct module __this_module;
- #define __KSYMTAB_ENTRY(sym, sec)					\
- 	__ADDRESSABLE(sym)						\
- 	asm("	.section \"___ksymtab" sec "+" #sym "\", \"a\"	\n"	\
--	    "	.balign	8					\n"	\
-+	    "	.balign	4					\n"	\
- 	    "__ksymtab_" #sym ":				\n"	\
--	    "	.long	" #sym "- .				\n"	\
-+	    __KSYMTAB_REL #sym "- .				\n"	\
- 	    "	.long	__kstrtab_" #sym "- .			\n"	\
- 	    "	.previous					\n")
- 
- struct kernel_symbol {
--	int value_offset;
-+	long value_offset;
- 	int name_offset;
--};
-+} __packed;
- #else
- #define __KSYMTAB_ENTRY(sym, sec)					\
- 	static const struct kernel_symbol __ksymtab_##sym		\
-diff --git a/kernel/module.c b/kernel/module.c
-index 6e6712b3aaf5..43efd46feeee 100644
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -541,7 +541,7 @@ static bool check_exported_symbol(const struct symsearch *syms,
- static unsigned long kernel_symbol_value(const struct kernel_symbol *sym)
- {
- #ifdef CONFIG_HAVE_ARCH_PREL32_RELOCATIONS
--	return (unsigned long)offset_to_ptr(&sym->value_offset);
-+	return (unsigned long)loffset_to_ptr(&sym->value_offset);
- #else
- 	return sym->value;
- #endif
--- 
-2.17.1
-
+On Wed, May 22, 2019 at 8:07 AM Alexandre Belloni
+<alexandre.belloni@bootlin.com> wrote:
+>
+> Gadget drivers may queue request in interrupt context. This would lead to
+> a descriptor allocation in that context. In that case we would hit
+> BUG_ON(in_interrupt()) in __get_vm_area_node.
+>
+> Also remove the unnecessary cast.
+>
+> Tested-by: James Grant <jamesg@zaltys.org>
+> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> ---
+>
+> Changes in v2:
+>  - remove unnecessary cast as pointed by Joe Perches
+>  - Collected tested-by
+>
+>  drivers/usb/gadget/udc/lpc32xx_udc.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+>
+> diff --git a/drivers/usb/gadget/udc/lpc32xx_udc.c b/drivers/usb/gadget/udc/lpc32xx_udc.c
+> index d8f1c60793ed..2719194ebf42 100644
+> --- a/drivers/usb/gadget/udc/lpc32xx_udc.c
+> +++ b/drivers/usb/gadget/udc/lpc32xx_udc.c
+> @@ -937,8 +937,7 @@ static struct lpc32xx_usbd_dd_gad *udc_dd_alloc(struct lpc32xx_udc *udc)
+>         dma_addr_t                      dma;
+>         struct lpc32xx_usbd_dd_gad      *dd;
+>
+> -       dd = (struct lpc32xx_usbd_dd_gad *) dma_pool_alloc(
+> -                       udc->dd_cache, (GFP_KERNEL | GFP_DMA), &dma);
+> +       dd = dma_pool_alloc(udc->dd_cache, GFP_ATOMIC | GFP_DMA, &dma);
+>         if (dd)
+>                 dd->this_dma = dma;
+>
+> --
+> 2.21.0
+>
