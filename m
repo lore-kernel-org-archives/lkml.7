@@ -2,114 +2,338 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CD7CC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 21:10:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C759FC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 21:12:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1289520881
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 21:10:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E70720881
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 21:12:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CpcVdY8g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730128AbfEVVKf (ORCPT
+        id S1730256AbfEVVMS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 17:10:35 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:64009 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729770AbfEVVKf (ORCPT
+        Wed, 22 May 2019 17:12:18 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:37943 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729720AbfEVVMR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 17:10:35 -0400
-Received: from fsav302.sakura.ne.jp (fsav302.sakura.ne.jp [153.120.85.133])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x4ML9Ed0088910;
-        Thu, 23 May 2019 06:09:14 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav302.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav302.sakura.ne.jp);
- Thu, 23 May 2019 06:09:14 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav302.sakura.ne.jp)
-Received: from [192.168.1.8] (softbank126012062002.bbtec.net [126.12.62.2])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x4ML98Wg088888
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
-        Thu, 23 May 2019 06:09:14 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: [PATCH] kernel/hung_task.c: Monitor killed tasks.
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Liu Chuansheng <chuansheng.liu@intel.com>,
-        Valdis Kletnieks <valdis.kletnieks@vt.edu>,
-        linux-kernel@vger.kernel.org, Dmitry Vyukov <dvyukov@google.com>
-References: <1557745331-10367-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
- <20190515105540.vyzh6n62rqi5imqv@pathway.suse.cz>
- <ee7501c6-d996-1684-1652-f0f838ba69c3@i-love.sakura.ne.jp>
- <20190516115758.6v7oitg3vbkfhh5j@pathway.suse.cz>
- <a3d9de97-46e8-aa43-1743-ebf66b434830@i-love.sakura.ne.jp>
- <a6b6a5ef-c65c-6999-2bc1-7aaf9dd19fe8@i-love.sakura.ne.jp>
- <20190522234134.44327256@canb.auug.org.au>
- <03b5834d-5f8f-9c7e-20df-cfdf5395d245@i-love.sakura.ne.jp>
-Message-ID: <abbfb5df-40da-63c8-0333-805083397533@i-love.sakura.ne.jp>
-Date:   Thu, 23 May 2019 06:09:07 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Wed, 22 May 2019 17:12:17 -0400
+Received: by mail-lj1-f194.google.com with SMTP id 14so3438640ljj.5;
+        Wed, 22 May 2019 14:12:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=g1JDwv6DsF/R2W3Hhi+fRQf2Wpp35+okn4+cO0Bor4E=;
+        b=CpcVdY8gtYjb6P8gpIw0BmeeElTuj0Hhd7ZWfUbFtQh6nRggZpzCg8VDfzZfdDbGKY
+         pj41HkhH1UzqHQwstKCkJiCUarMb7jxu8gbPsQRq9hKkEYRzWjn/JBRFreTnFZkSbazt
+         l32yq9PFS20Iiy1PnyXBEOibLcc3ziZylXznA7vkFRSwovtHxHXybxTCb0WKYlGW9/qo
+         tOyxS/ZKwn9pQsAgz9nRGGy72rxrq9xE4TerGZ/lyYtyTzNlKPXOgpIoGs/8+3nsrI2Q
+         g5/ZupjYXqOrGyks2oIxgd5O7Kl24Wuh4EEVH9G1jRFGug+dsbOCHL2uOdSOVCUeXaZf
+         Q8JQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=g1JDwv6DsF/R2W3Hhi+fRQf2Wpp35+okn4+cO0Bor4E=;
+        b=EouD06qbCr0xioBKodrIhEVYrM5JMr4HJJ5UYvNofyHNEFm8AgUJQ5IOYuvXgyzEkh
+         R1h4gLLPrqjCg+KDROLvnjwhW7Ql5cGWd5Uw4gn4n5ZzMJIczs9ms0VmrV6OOgd20bcN
+         ZMFmKBZr6zA8IlXSuexnms2rcAtFiDDEIP8p2t2+DtM4bqVjgPQAihIFocHxeoslaxdM
+         1lsvSWOH/MZEcISFnLpKtoz2duPnjV3FRAi3Ok+sSzUlc7g0739fwa8hCMvDTGYjvDcQ
+         fYeVjlpLw/qRnjQA8b2v/wjKdwMweIKMV2wHoAcZdSXZ4ZvWpFpv3HuybxHBaxjfQ9S8
+         Zu4Q==
+X-Gm-Message-State: APjAAAXlos3lv7Hs4jvcvQGJA7iRx0tnMFAZbfZ9qDgv++MOtWssMKv+
+        O4N/pY9yldd6WSf93onZWQU=
+X-Google-Smtp-Source: APXvYqxHtRvDgngbiW+UmX4FEmTGxfk64Oa5UkQ+bxX8hf5+g9A0o8XZGm9SJRHhtch1fwU7a324Zw==
+X-Received: by 2002:a2e:5515:: with SMTP id j21mr20462954ljb.198.1558559534455;
+        Wed, 22 May 2019 14:12:14 -0700 (PDT)
+Received: from elitebook.lan (ip-194-187-74-233.konfederacka.maverick.com.pl. [194.187.74.233])
+        by smtp.googlemail.com with ESMTPSA id h2sm5670744lfm.17.2019.05.22.14.12.13
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Wed, 22 May 2019 14:12:13 -0700 (PDT)
+Subject: Re: ARM router NAT performance affected by random/unrelated commits
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Network Development <netdev@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-block@vger.kernel.org, John Crispin <john@phrozen.org>,
+        Jonas Gorski <jonas.gorski@gmail.com>,
+        Jo-Philipp Wich <jo@mein.io>
+References: <9a9ba4c9-3cb7-eb64-4aac-d43b59224442@gmail.com>
+ <20190521104512.2r67fydrgniwqaja@shell.armlinux.org.uk>
+ <de262f71-748f-d242-f1d4-ea10188a0438@gmail.com>
+ <20190522121730.fhswxkw4gbflkhei@shell.armlinux.org.uk>
+From:   =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+Message-ID: <d0d67f85-01e9-037a-3a18-6282a8bfce5c@gmail.com>
+Date:   Wed, 22 May 2019 23:12:12 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.2
 MIME-Version: 1.0
-In-Reply-To: <03b5834d-5f8f-9c7e-20df-cfdf5395d245@i-love.sakura.ne.jp>
-Content-Type: text/plain; charset=windows-1252
+In-Reply-To: <20190522121730.fhswxkw4gbflkhei@shell.armlinux.org.uk>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/05/22 23:58, Tetsuo Handa wrote:
-> On 2019/05/22 22:41, Stephen Rothwell wrote:
->> Hi Tetsuo,
->>
->> On Wed, 22 May 2019 21:38:45 +0900 Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp> wrote:
+On 22.05.2019 14:17, Russell King - ARM Linux admin wrote:
+> On Wed, May 22, 2019 at 01:51:01PM +0200, Rafał Miłecki wrote:
+>> On 21.05.2019 12:45, Russell King - ARM Linux admin wrote:> On Tue, May 21, 2019 at 12:28:48PM +0200, Rafał Miłecki wrote:
+>>>> I work on home routers based on Broadcom's Northstar SoCs. Those devices
+>>>> have ARM Cortex-A9 and most of them are dual-core.
+>>>>
+>>>> As for home routers, my main concern is network performance. That CPU
+>>>> isn't powerful enough to handle gigabit traffic so all kind of
+>>>> optimizations do matter. I noticed some unexpected changes in NAT
+>>>> performance when switching between kernels.
+>>>>
+>>>> My hardware is BCM47094 SoC (dual core ARM) with integrated network
+>>>> controller and external BCM53012 switch.
 >>>
->>> I want to send debug printk() patches to linux-next.git. Petr Mladek
->>> is suggesting me to have a git tree for debug printk() patches.
->>> But it seems that there is "git quiltimport" command, and I prefer
->>> "subversion + quilt", and I don't have trees for sending "git pull"
->>> requests. Therefore, just ignoring "git quiltimport" failure is fine.
->>> What do you think?
+>>> Guessing, I'd say it's to do with the placement of code wrt cachelines.
+>>> You could try aligning some of the cache flushing code to a cache line
+>>> and see what effect that has.
 >>
->> Sure, we can try.  I already have one quilt tree (besides Andrew's) in
->> linux-next, but much prefer a git tree.  If you have to use a quilt
->> tree, I will import it into a local branch on the base you tell me to
->> and then fetch it every morning and reimport it if it changes.  I will
->> then merge it like any other git branch.  Let me know what you can deal
->> with.
+>> Is System.map a good place to check for functions code alignment?
 >>
+>> With Linux 4.19 + OpenWrt mtd patches I have:
+>> (...)
+>> c010ea94 t v7_dma_inv_range
+>> c010eae0 t v7_dma_clean_range
+>> (...)
+>> c02ca3d0 T blk_mq_update_nr_hw_queues
+>> c02ca69c T blk_mq_alloc_tag_set
+>> c02ca94c T blk_mq_release
+>> c02ca9b4 T blk_mq_free_queue
+>> c02caa88 T blk_mq_update_nr_requests
+>> c02cab50 T blk_mq_unique_tag
+>> (...)
+>>
+>> After cherry-picking 9316a9ed6895 ("blk-mq: provide helper for setting
+>> up an SQ queue and tag set"):
+>> (...)
+>> c010ea94 t v7_dma_inv_range
+>> c010eae0 t v7_dma_clean_range
+>> (...)
+>> c02ca3d0 T blk_mq_update_nr_hw_queues
+>> c02ca69c T blk_mq_alloc_tag_set
+>> c02ca94c T blk_mq_init_sq_queue <-- NEW
+>> c02ca9c0 T blk_mq_release <-- Different address of this & all below
+>> c02caa28 T blk_mq_free_queue
+>> c02caafc T blk_mq_update_nr_requests
+>> c02cabc4 T blk_mq_unique_tag
+>> (...)
+>>
+>> As you can see blk_mq_init_sq_queue has appeared in the System.map and
+>> it affected addresses of ~30000 symbols. I can believe some frequently
+>> used symbols got luckily aligned and that improved overall performance.
+>>
+>> Interestingly v7_dma_inv_range() and v7_dma_clean_range() were not
+>> relocated.
+>>
+>> *****
+>>
+>> I followed Russell's suggestion and added .align 5 to cache-v7.S (see
+>> two attached diffs).
+>>
+>> 1) v4.19 + OpenWrt mtd patches
+>>> egrep -B 1 -A 1 "v7_dma_(inv|clean)_range" System.map
+>> c010ea58 T v7_flush_kern_dcache_area
+>> c010ea94 t v7_dma_inv_range
+>> c010eae0 t v7_dma_clean_range
+>> c010eb18 T b15_dma_flush_range
+>>
+>> 2) v4.19 + OpenWrt mtd patches + two .align 5 in cache-v7.S
+>> c010ea6c T v7_flush_kern_dcache_area
+>> c010eac0 t v7_dma_inv_range
+>> c010eb20 t v7_dma_clean_range
+>> c010eb58 T b15_dma_flush_range
+>> (actually 15 symbols above v7_dma_inv_range were replaced)
+>>
+>> This method seems to be somehow working (at least affects addresses in
+>> System.map).
+>>
+>> *****
+>>
+>> I run 2 tests for each combination of changes. Each test consisted of
+>> 10 sequences of: 30 seconds iperf session + reboot.
+>>
+>>
+>>> git reset --hard v4.19
+>>> git am OpenWrt-mtd-chages.patch
+>> Test #1: 738 Mb/s
+>> Test #2: 737 Mb/s
+>>
+>>> git reset --hard v4.19
+>>> git am OpenWrt-mtd-chages.patch
+>> patch -p1 < v7_dma_clean_range-align.diff
+>> Test #1: 746 Mb/s
+>> Test #2: 747 Mb/s
+>>
+>>> git reset --hard v4.19
+>>> git am OpenWrt-mtd-chages.patch
+>>> patch -p1 < v7_dma_inv_range-align.diff
+>> Test #1: 745 Mb/s
+>> Test #2: 746 Mb/s
+>>
+>>> git reset --hard v4.19
+>>> git am OpenWrt-mtd-chages.patch
+>>> patch -p1 < v7_dma_clean_range-align.diff
+>>> patch -p1 < v7_dma_inv_range-align.diff
+>> Test #1: 762 Mb/s
+>> Test #2: 761 Mb/s
+>>
+>> As you can see I got a quite nice performance improvement after aligning
+>> both: v7_dma_clean_range() and v7_dma_inv_range().
 > 
-> What I do for making patches is:
+> This is an improvement of about 3.3%.
 > 
->   git fetch --tags
->   git reset --hard next-$date
->   edit files
->   git commit -a -s
->   git format-patch -1
->   git send-email --to=$recipient 0001-*.patch
+>> It still wasn't as good as with 9316a9ed6895 cherry-picked but pretty
+>> close.
+>>
+>>
+>>> git reset --hard v4.19
+>>> git am OpenWrt-mtd-chages.patch
+>>> git cherry-pick -x 9316a9ed6895
+>> Test #1: 770 Mb/s
+>> Test #2: 766 Mb/s
+>>
+>>> git reset --hard v4.19
+>>> git am OpenWrt-mtd-chages.patch
+>>> git cherry-pick -x 9316a9ed6895
+>>> patch -p1 < v7_dma_clean_range-align.diff
+>> Test #1: 756 Mb/s
+>> Test #2: 759 Mb/s
+>>
+>>> git reset --hard v4.19
+>>> git am OpenWrt-mtd-chages.patch
+>>> git cherry-pick -x 9316a9ed6895
+>>> patch -p1 < v7_dma_inv_range-align.diff
+>> Test #1: 758 Mb/s
+>> Test #2: 759 Mb/s
+>>
+>>> git reset --hard v4.19
+>>> git am OpenWrt-mtd-chages.patch
+>>> git cherry-pick -x 9316a9ed6895
+>>> patch -p1 < v7_dma_clean_range-align.diff
+>>> patch -p1 < v7_dma_inv_range-align.diff
+>> Test #1: 767 Mb/s
+>> Test #2: 763 Mb/s
+>>
+>> Now you can see how unpredictable it is. If I cherry-pick 9316a9ed6895
+>> and do an extra alignment of v7_dma_clean_range() and v7_dma_inv_range()
+>> that extra alignment can actually *hurt* NAT performance.
 > 
-> I'm sure I will confuse git history/repository everyday if
-> I try to send changes using git. For my skill level, managing
-> 0001-*.patch in a subversion repository is the simplest and safest.
+> You have a maximum variance of 4Mb/s in your tests which is around
+> 0.5%, and this shows a reduction of 3Mb/s, or 0.4%.
 > 
+> If we look at it a different way:
+> - Without the alignment patches, there is a difference of 4% in
+>    performance depending on whether 9316a9ed6895 is applied.
+> - With the alignment patches, there is a difference of 0.4% in
+>    performance depending on whether 9316a9ed6895 is applied.
+> 
+> How can this not be beneficial?
 
-I put an example patch into my subversion repository:
+Aligning v7_dma_clean_range() and v7_dma_inv_range() is definitely
+beneficial! I'm sorry I wasn't clear enough.
 
-  svn checkout https://svn.osdn.net/svnroot/tomoyo/branches/syzbot-patches/
+I redid testing of 2 most important setups with few more iterations.
 
-To fetch up-to-date debug printk() patches:
+ > git reset --hard v4.19
+ > git am OpenWrt-mtd-chages.patch
+ > git cherry-pick -x 9316a9ed6895
+[  3]  0.0-30.0 sec  2.71 GBytes   776 Mbits/sec
+[  3]  0.0-30.0 sec  2.71 GBytes   775 Mbits/sec
+[  3]  0.0-30.0 sec  2.70 GBytes   774 Mbits/sec
+[  3]  0.0-30.0 sec  2.70 GBytes   774 Mbits/sec
+[  3]  0.0-30.0 sec  2.70 GBytes   773 Mbits/sec
+[  3]  0.0-30.0 sec  2.70 GBytes   773 Mbits/sec
+[  3]  0.0-30.0 sec  2.70 GBytes   773 Mbits/sec
+[  3]  0.0-30.0 sec  2.69 GBytes   771 Mbits/sec
+[  3]  0.0-30.0 sec  2.69 GBytes   771 Mbits/sec
+[  3]  0.0-30.0 sec  2.69 GBytes   771 Mbits/sec
+[  3]  0.0-30.0 sec  2.69 GBytes   771 Mbits/sec
+[  3]  0.0-30.0 sec  2.69 GBytes   770 Mbits/sec
+[  3]  0.0-30.0 sec  2.69 GBytes   770 Mbits/sec
+[  3]  0.0-30.0 sec  2.69 GBytes   770 Mbits/sec
+[  3]  0.0-30.0 sec  2.69 GBytes   770 Mbits/sec
+[  3]  0.0-30.0 sec  2.69 GBytes   769 Mbits/sec
+[  3]  0.0-30.0 sec  2.69 GBytes   769 Mbits/sec
+[  3]  0.0-30.0 sec  2.68 GBytes   768 Mbits/sec
+[  3]  0.0-30.0 sec  2.68 GBytes   768 Mbits/sec
+[  3]  0.0-30.0 sec  2.68 GBytes   767 Mbits/sec
+[  3]  0.0-30.0 sec  2.68 GBytes   767 Mbits/sec
+[  3]  0.0-30.0 sec  2.68 GBytes   767 Mbits/sec
+[  3]  0.0-30.0 sec  2.67 GBytes   765 Mbits/sec
+[  3]  0.0-30.0 sec  2.67 GBytes   765 Mbits/sec
+[  3]  0.0-30.0 sec  2.67 GBytes   764 Mbits/sec
+[  3]  0.0-30.0 sec  2.67 GBytes   763 Mbits/sec
+[  3]  0.0-30.0 sec  2.67 GBytes   763 Mbits/sec
+[  3]  0.0-30.0 sec  2.66 GBytes   762 Mbits/sec
+[  3]  0.0-30.0 sec  2.66 GBytes   760 Mbits/sec
+[  3]  0.0-30.0 sec  2.66 GBytes   760 Mbits/sec
+Average: 769 Mb/s (+4,10%)
+Previous results: 773 Mb/s, 770 Mb/s, 766 Mb/s
 
-  cd syzbot-patches
-  svn update
+ > git reset --hard v4.19
+ > git am OpenWrt-mtd-chages.patch
+ > patch -p1 < v7_dma_clean_range-align.diff
+ > patch -p1 < v7_dma_inv_range-align.diff
+[  3]  0.0-30.0 sec  2.69 GBytes   769 Mbits/sec
+[  3]  0.0-30.0 sec  2.69 GBytes   769 Mbits/sec
+[  3]  0.0-30.0 sec  2.68 GBytes   767 Mbits/sec
+[  3]  0.0-30.0 sec  2.68 GBytes   766 Mbits/sec
+[  3]  0.0-30.0 sec  2.67 GBytes   766 Mbits/sec
+[  3]  0.0-30.0 sec  2.67 GBytes   765 Mbits/sec
+[  3]  0.0-30.0 sec  2.67 GBytes   765 Mbits/sec
+[  3]  0.0-30.0 sec  2.67 GBytes   765 Mbits/sec
+[  3]  0.0-30.0 sec  2.67 GBytes   764 Mbits/sec
+[  3]  0.0-30.0 sec  2.67 GBytes   763 Mbits/sec
+[  3]  0.0-30.0 sec  2.67 GBytes   763 Mbits/sec
+[  3]  0.0-30.0 sec  2.66 GBytes   762 Mbits/sec
+[  3]  0.0-30.0 sec  2.66 GBytes   762 Mbits/sec
+[  3]  0.0-30.0 sec  2.66 GBytes   762 Mbits/sec
+[  3]  0.0-30.0 sec  2.66 GBytes   762 Mbits/sec
+[  3]  0.0-30.0 sec  2.66 GBytes   761 Mbits/sec
+[  3]  0.0-30.0 sec  2.66 GBytes   761 Mbits/sec
+[  3]  0.0-30.0 sec  2.66 GBytes   760 Mbits/sec
+[  3]  0.0-30.0 sec  2.66 GBytes   760 Mbits/sec
+[  3]  0.0-30.0 sec  2.66 GBytes   760 Mbits/sec
+[  3]  0.0-30.0 sec  2.65 GBytes   760 Mbits/sec
+[  3]  0.0-30.0 sec  2.65 GBytes   759 Mbits/sec
+[  3]  0.0-30.0 sec  2.65 GBytes   759 Mbits/sec
+[  3]  0.0-30.0 sec  2.65 GBytes   758 Mbits/sec
+[  3]  0.0-30.0 sec  2.65 GBytes   758 Mbits/sec
+[  3]  0.0-30.0 sec  2.65 GBytes   757 Mbits/sec
+[  3]  0.0-30.0 sec  2.65 GBytes   757 Mbits/sec
+[  3]  0.0-30.0 sec  2.65 GBytes   757 Mbits/sec
+[  3]  0.0-30.0 sec  2.64 GBytes   757 Mbits/sec
+[  3]  0.0-30.0 sec  2.64 GBytes   756 Mbits/sec
+Average: 762 Mb/s (+3,16%)
+Previous results: 767 Mb/s, 763 Mb/s
 
-Does this work for you?
+So let me explain why I keep researching on this. There are two reasons:
+
+1) Realignment done by cherry-picking 9316a9ed6895 was providing a
+*marginally* better performance than aligning v7_dma_clean_range() and
+v7_dma_inv_range(). It's a *very* minimal difference but I can't stop
+thinking I can still do better.
+
+2) Cherry-picking 9316a9ed6895 doesn't change v7_dma_clean_range or
+v7_dma_inv_range addresses at all. Yet it still improves NAT
+performance. That makes me believe there are more functions that (if
+properly aligned) can bump NAT performance.
+I hope that aligning all:
+* v7_dma_clean_range
+* v7_dma_inv_range
+* [some unrevealed functions]
+could result in even better NAT performance.
