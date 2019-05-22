@@ -2,232 +2,84 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3D05C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 21:12:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC581C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 21:14:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C2C72054F
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 21:12:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="KQ4MO4k8"
+	by mail.kernel.org (Postfix) with ESMTP id 60CD721773
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 21:14:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558559694;
+	bh=YqxAZ35p2dCb4ol3pLFSqCJ1k7KxyeByBxDmBp5VkbA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=XTqNowYUTugwwazfW7jkfCtflGm4uElW6L70RSANMccF84mBsFAkylBVcs1iNdQgK
+	 C8SBt+HutVD5qZImes7tzk3uz3mIezrAsecuXz/2LaroFv06+4Tp04Y2ie1CHUYHSt
+	 4AtBD/SfghmuD36pEQecRPu1NM9QYuwZ5uw6JaVE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730352AbfEVVMi (ORCPT
+        id S1730004AbfEVVOx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 17:12:38 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:9517 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729720AbfEVVMi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 17:12:38 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ce5bb430000>; Wed, 22 May 2019 14:12:35 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 22 May 2019 14:12:35 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 22 May 2019 14:12:35 -0700
-Received: from rcampbell-dev.nvidia.com (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 22 May
- 2019 21:12:31 +0000
-Subject: Re: [PATCH v4 0/1] Use HMM for ODP v4
-To:     Jason Gunthorpe <jgg@ziepe.ca>, Jerome Glisse <jglisse@redhat.com>,
-        <linux-mm@kvack.org>
-CC:     <linux-kernel@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        "Leon Romanovsky" <leonro@mellanox.com>,
-        Doug Ledford <dledford@redhat.com>,
-        "Artemy Kovalyov" <artemyko@mellanox.com>,
-        Moni Shoua <monis@mellanox.com>,
-        "Mike Marciniszyn" <mike.marciniszyn@intel.com>,
-        Kaike Wan <kaike.wan@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>
-References: <20190411181314.19465-1-jglisse@redhat.com>
- <20190506195657.GA30261@ziepe.ca> <20190521205321.GC3331@redhat.com>
- <20190522005225.GA30819@ziepe.ca> <20190522174852.GA23038@redhat.com>
- <20190522201247.GH6054@ziepe.ca>
-From:   Ralph Campbell <rcampbell@nvidia.com>
-Message-ID: <05e7f491-b8a4-4214-ab75-9ecf1128aaa6@nvidia.com>
-Date:   Wed, 22 May 2019 14:12:31 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.0
-MIME-Version: 1.0
-In-Reply-To: <20190522201247.GH6054@ziepe.ca>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+        Wed, 22 May 2019 17:14:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48314 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729720AbfEVVOx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 17:14:53 -0400
+Received: from localhost.localdomain (c-73-223-200-170.hsd1.ca.comcast.net [73.223.200.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 93FCB2173E;
+        Wed, 22 May 2019 21:14:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558559692;
+        bh=YqxAZ35p2dCb4ol3pLFSqCJ1k7KxyeByBxDmBp5VkbA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Biw2BRIldASqZ6cE7U4pIVIimXdJqOYDrDywf8hjysNKnDbHBBRDCxBLaYFdxaREa
+         wBSWEY84IXYCS7lrImeeL7RnVcgPlquYbwbyzAGRrQU4RFM1HrzAqumYf9fCOUmrXb
+         HSPkkDTQc8Qx4QtRRP7kzgPAuGr1wtp6yzxFBj3w=
+Date:   Wed, 22 May 2019 14:14:52 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     jroedel@suse.de, dwmw2@infradead.org,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: Re: [RESEND PATCH] iommu/intel: fix variable 'iommu' set but not
+ used
+Message-Id: <20190522141452.9105fbd041ed24eedde950b9@linux-foundation.org>
+In-Reply-To: <1558557386-17160-1-git-send-email-cai@lca.pw>
+References: <1558557386-17160-1-git-send-email-cai@lca.pw>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1558559555; bh=mX/CdrHkooQO7jjbW8rAIvvhdT+nRmphKetM9at3fl4=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=KQ4MO4k8l+72nJLn6i84C3CQ35IQKGD8fCmAUJnqiaH43emJ+Tq4QMnDM3at0c3oG
-         fKaiKcy3laigtGeONQU/lsCHwd+hKJwBy8kBAPM9CvkmalcPYHm8/SINlAY7n5SLLk
-         zw5vUeGhoN9s80rB8pwmqrzjT7VEK8mPmWOGD4k0CcAfOFOMxLZksmbNYWxU7hku78
-         VgBIGRWR7WGIPQ33NlYQNDB/zOJ9Phe2rNUIw723n+00aZn5TK99hVsVyz8gV9/ajv
-         Bw7OrdqLmaHMwWhtpVOsMF+1IQutmqv5wLHPEhWmgmdTUwyA542iZcapvY4q7VI2aD
-         ehyNrkOI11anw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 22 May 2019 16:36:26 -0400 Qian Cai <cai@lca.pw> wrote:
 
-On 5/22/19 1:12 PM, Jason Gunthorpe wrote:
-> On Wed, May 22, 2019 at 01:48:52PM -0400, Jerome Glisse wrote:
+> The commit cf04eee8bf0e ("iommu/vt-d: Include ACPI devices in iommu=pt")
+> added for_each_active_iommu() in iommu_prepare_static_identity_mapping()
+> but never used the each element, i.e, "drhd->iommu".
 > 
->>   static void put_per_mm(struct ib_umem_odp *umem_odp)
->>   {
->>   	struct ib_ucontext_per_mm *per_mm = umem_odp->per_mm;
->> @@ -325,9 +283,10 @@ static void put_per_mm(struct ib_umem_odp *umem_odp)
->>   	up_write(&per_mm->umem_rwsem);
->>   
->>   	WARN_ON(!RB_EMPTY_ROOT(&per_mm->umem_tree.rb_root));
->> -	mmu_notifier_unregister_no_release(&per_mm->mn, per_mm->mm);
->> +	hmm_mirror_unregister(&per_mm->mirror);
->>   	put_pid(per_mm->tgid);
->> -	mmu_notifier_call_srcu(&per_mm->rcu, free_per_mm);
->> +
->> +	kfree(per_mm);
+> drivers/iommu/intel-iommu.c: In function
+> 'iommu_prepare_static_identity_mapping':
+> drivers/iommu/intel-iommu.c:3037:22: warning: variable 'iommu' set but
+> not used [-Wunused-but-set-variable]
+>   struct intel_iommu *iommu;
 > 
-> Notice that mmu_notifier only uses SRCU to fence in-progress ops
-> callbacks, so I think hmm internally has the bug that this ODP
-> approach prevents.
+> Fixed the warning by passing "drhd->iommu" directly to
+> for_each_active_iommu() which all subsequent self-assignments should be
+> ignored by a compiler anyway.
 > 
-> hmm should follow the same pattern ODP has and 'kfree_srcu' the hmm
-> struct, use container_of in the mmu_notifier callbacks, and use the
-> otherwise vestigal kref_get_unless_zero() to bail:
 
-You might also want to look at my patch where
-I try to fix some of these same issues (5/5).
+Yes, assigning drhd->iommu to itself seems a bit nasty.  Maybe this is
+a case for __mabe_unused (with a comment explaining why), if that fixes
+the warning.  Dunno.
 
-https://marc.info/?l=linux-mm&m=155718572908765&w=2
+btw, for_each_active_dev_scope() and for_each_dev_scope() should be
+dragged out and shot.  Or at least, should have those single-char
+identifiers changed into something meaningful so poor sods like me have
+a hope of understanding the code :(
 
-
->  From 0cb536dc0150ba964a1d655151d7b7a84d0f915a Mon Sep 17 00:00:00 2001
-> From: Jason Gunthorpe <jgg@mellanox.com>
-> Date: Wed, 22 May 2019 16:52:52 -0300
-> Subject: [PATCH] hmm: Fix use after free with struct hmm in the mmu notifiers
-> 
-> mmu_notifier_unregister_no_release() is not a fence and the mmu_notifier
-> system will continue to reference hmm->mn until the srcu grace period
-> expires.
-> 
->           CPU0                                     CPU1
->                                                 __mmu_notifier_invalidate_range_start()
->                                                   srcu_read_lock
->                                                   hlist_for_each ()
->                                                     // mn == hmm->mn
-> hmm_mirror_unregister()
->    hmm_put()
->      hmm_free()
->        mmu_notifier_unregister_no_release()
->           hlist_del_init_rcu(hmm-mn->list)
-> 			                           mn->ops->invalidate_range_start(mn, range);
-> 					             mm_get_hmm()
->        mm->hmm = NULL;
->        kfree(hmm)
->                                                       mutex_lock(&hmm->lock);
-> 
-> Use SRCU to kfree the hmm memory so that the notifiers can rely on hmm
-> existing. Get the now-safe hmm struct through container_of and directly
-> check kref_get_unless_zero to lock it against free.
-> 
-> Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-> ---
->   include/linux/hmm.h |  1 +
->   mm/hmm.c            | 25 +++++++++++++++++++------
->   2 files changed, 20 insertions(+), 6 deletions(-)
-> 
-> diff --git a/include/linux/hmm.h b/include/linux/hmm.h
-> index 51ec27a8466816..8b91c90d3b88cb 100644
-> --- a/include/linux/hmm.h
-> +++ b/include/linux/hmm.h
-> @@ -102,6 +102,7 @@ struct hmm {
->   	struct mmu_notifier	mmu_notifier;
->   	struct rw_semaphore	mirrors_sem;
->   	wait_queue_head_t	wq;
-> +	struct rcu_head		rcu;
->   	long			notifiers;
->   	bool			dead;
->   };
-> diff --git a/mm/hmm.c b/mm/hmm.c
-> index 816c2356f2449f..824e7e160d8167 100644
-> --- a/mm/hmm.c
-> +++ b/mm/hmm.c
-> @@ -113,6 +113,11 @@ static struct hmm *hmm_get_or_create(struct mm_struct *mm)
->   	return NULL;
->   }
->   
-> +static void hmm_fee_rcu(struct rcu_head *rcu)
-> +{
-> +	kfree(container_of(rcu, struct hmm, rcu));
-> +}
-> +
->   static void hmm_free(struct kref *kref)
->   {
->   	struct hmm *hmm = container_of(kref, struct hmm, kref);
-> @@ -125,7 +130,7 @@ static void hmm_free(struct kref *kref)
->   		mm->hmm = NULL;
->   	spin_unlock(&mm->page_table_lock);
->   
-> -	kfree(hmm);
-> +	mmu_notifier_call_srcu(&hmm->rcu, hmm_fee_rcu);
->   }
->   
->   static inline void hmm_put(struct hmm *hmm)
-> @@ -153,10 +158,14 @@ void hmm_mm_destroy(struct mm_struct *mm)
->   
->   static void hmm_release(struct mmu_notifier *mn, struct mm_struct *mm)
->   {
-> -	struct hmm *hmm = mm_get_hmm(mm);
-> +	struct hmm *hmm = container_of(mn, struct hmm, mmu_notifier);
->   	struct hmm_mirror *mirror;
->   	struct hmm_range *range;
->   
-> +	/* hmm is in progress to free */
-> +	if (!kref_get_unless_zero(&hmm->kref))
-> +		return;
-> +
->   	/* Report this HMM as dying. */
->   	hmm->dead = true;
->   
-> @@ -194,13 +203,15 @@ static void hmm_release(struct mmu_notifier *mn, struct mm_struct *mm)
->   static int hmm_invalidate_range_start(struct mmu_notifier *mn,
->   			const struct mmu_notifier_range *nrange)
->   {
-> -	struct hmm *hmm = mm_get_hmm(nrange->mm);
-> +	struct hmm *hmm = container_of(mn, struct hmm, mmu_notifier);
->   	struct hmm_mirror *mirror;
->   	struct hmm_update update;
->   	struct hmm_range *range;
->   	int ret = 0;
->   
-> -	VM_BUG_ON(!hmm);
-> +	/* hmm is in progress to free */
-> +	if (!kref_get_unless_zero(&hmm->kref))
-> +		return 0;
->   
->   	update.start = nrange->start;
->   	update.end = nrange->end;
-> @@ -248,9 +259,11 @@ static int hmm_invalidate_range_start(struct mmu_notifier *mn,
->   static void hmm_invalidate_range_end(struct mmu_notifier *mn,
->   			const struct mmu_notifier_range *nrange)
->   {
-> -	struct hmm *hmm = mm_get_hmm(nrange->mm);
-> +	struct hmm *hmm = container_of(mn, struct hmm, mmu_notifier);
->   
-> -	VM_BUG_ON(!hmm);
-> +	/* hmm is in progress to free */
-> +	if (!kref_get_unless_zero(&hmm->kref))
-> +		return;
->   
->   	mutex_lock(&hmm->lock);
->   	hmm->notifiers--;
-> 
