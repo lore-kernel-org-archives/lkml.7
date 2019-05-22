@@ -2,205 +2,130 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFA25C072B5
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 00:04:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD58DC072B5
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 00:06:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4844217D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 00:04:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 980DA217D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 00:06:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Zf9QLE33"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="E8zIP9sC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727911AbfEVAEn (ORCPT
+        id S1728009AbfEVAGs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 20:04:43 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:41138 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726271AbfEVAEn (ORCPT
+        Tue, 21 May 2019 20:06:48 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:37114 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726017AbfEVAGs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 20:04:43 -0400
-Received: by mail-pf1-f196.google.com with SMTP id q17so286792pfq.8
-        for <linux-kernel@vger.kernel.org>; Tue, 21 May 2019 17:04:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=h+HMpjJbOByDkcgcmqTFcjwM/Zjfkc20s8NGwt76Mr8=;
-        b=Zf9QLE33qmPluiR2OGF4dL2quucaUAVgN4YPizfJiTzAzfLxxGI5FlE9xizVc831A4
-         PZROfhtKhT/R7pMFQlHGrknlILzZeG3LHD5gyBNKzIo1iuXRcoC6OuM/wsNOYEBlL6Lp
-         KGXm5hniO64celTxThJARG41BLIiM0pmyycsI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=h+HMpjJbOByDkcgcmqTFcjwM/Zjfkc20s8NGwt76Mr8=;
-        b=gLBBKCMqjvZkTyccW35IkIT+/4DkMSXpYmUiIdtCHm6tKGsFEv4kyP67A+rJIvNsHs
-         zLMKJ+wNULdeKXLqyYHkRzn1/6Chg2wETqUqK3nR794gRgXHCuaTza+531PaJPbGl/MM
-         4HlJOmzejjWmuwVPxH8f1TofX8QfVrVlmUGVpZKsLxMCGrdeUJyfHmNTIBTu0muaJlNm
-         TT7FbcL8/sYoxjLamUWdWxe4poyAKv7zAJ6bMPcW/6BW3a1+nXCkMomg6Zrt/c+tvrST
-         raa4Cvu6kQOEClgAT2BXuoiB7R0bR/D1l8fejZA6G6BHuPd8A+oTWjKZKV2eLVvTRt7R
-         XZTA==
-X-Gm-Message-State: APjAAAV23ZdFEAvv5pkldg5Ba1e1VO4QUizqjiTHRypvGDhkomxGw/Op
-        WqNaKGenEDnXf8wRwg0UKhfRnQ==
-X-Google-Smtp-Source: APXvYqyRHlp4k1ARvHRDx6pnXWJEks1ZEDsNIbDRibBeuJSxc6NZrbRUP3gWhA9hXypH8RUrMs25NQ==
-X-Received: by 2002:a63:8dc8:: with SMTP id z191mr87505404pgd.9.1558483482349;
-        Tue, 21 May 2019 17:04:42 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id a11sm15675685pff.128.2019.05.21.17.04.40
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 21 May 2019 17:04:40 -0700 (PDT)
-Date:   Tue, 21 May 2019 17:04:39 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     Evgenii Stepanov <eugenis@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Khalid Aziz <khalid.aziz@oracle.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
-        kvm@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
-        Elliott Hughes <enh@google.com>
-Subject: Re: [PATCH v15 00/17] arm64: untag user pointers passed to the kernel
-Message-ID: <201905211633.6C0BF0C2@keescook>
-References: <cover.1557160186.git.andreyknvl@google.com>
- <20190517144931.GA56186@arrakis.emea.arm.com>
- <CAFKCwrj6JEtp4BzhqO178LFJepmepoMx=G+YdC8sqZ3bcBp3EQ@mail.gmail.com>
- <20190521182932.sm4vxweuwo5ermyd@mbp>
+        Tue, 21 May 2019 20:06:48 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 3A41A8365B;
+        Wed, 22 May 2019 12:06:46 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1558483606;
+        bh=MlTgnlsatXuH34Bkw+JA8k8YCTZyVZxlECoV11VrIxs=;
+        h=From:To:Cc:Subject:Date;
+        b=E8zIP9sC59ehXJK6VZy6paV6rHo+NiA0P6WHFN7rqz0VDtXvd4v8BCB2WbiZ5jTSQ
+         z+Y3tmvIDGXTczXZEhdXs5WFpCYgJpP/IA4VU5/aueTMbDpo20pfWzHFwI3qSwBI6w
+         NPEooA4J8+7l2ca+CiONV2z6ZPgsYM2zE/c2TwDu6AhAFzAf0ex0r2oIXHbA9ldLxt
+         OBKOnR7iopWpnK0Pln9+S/xYa+dGsWeI0RPgRs8PnzmV1Tq+EOKO7vc7UAAFCTGXOQ
+         89fccHlyzPNrAwPAktwLOMzbPsvZDjqWSeg2Q2zp4RoACPb/Lh7tOVBJPf2+cKurL4
+         a2+ggnp9eqNcg==
+Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5ce492920000>; Wed, 22 May 2019 12:06:45 +1200
+Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.30])
+        by smtp (Postfix) with ESMTP id 1BE1213ED45;
+        Wed, 22 May 2019 12:06:43 +1200 (NZST)
+Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
+        id 726621E1DDA; Wed, 22 May 2019 12:06:42 +1200 (NZST)
+From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
+To:     dwmw2@infradead.org, computersforpeace@gmail.com,
+        marek.vasut@gmail.com, miquel.raynal@bootlin.com, richard@nod.at,
+        vigneshr@ti.com
+Cc:     sr@denx.de, linux-mtd@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH] mtd: cfi_cmdset_0002: dynamically determine the max sectors
+Date:   Wed, 22 May 2019 12:06:28 +1200
+Message-Id: <20190522000628.13073-1-chris.packham@alliedtelesis.co.nz>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190521182932.sm4vxweuwo5ermyd@mbp>
+Content-Transfer-Encoding: quoted-printable
+x-atlnz-ls: pat
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 21, 2019 at 07:29:33PM +0100, Catalin Marinas wrote:
-> On Mon, May 20, 2019 at 04:53:07PM -0700, Evgenii Stepanov wrote:
-> > On Fri, May 17, 2019 at 7:49 AM Catalin Marinas <catalin.marinas@arm.com> wrote:
-> > > IMO (RFC for now), I see two ways forward:
-> > > [...]
-> > > 2. Similar shim to the above libc wrapper but inside the kernel
-> > >    (arch/arm64 only; most pointer arguments could be covered with an
-> > >    __SC_CAST similar to the s390 one). There are two differences from
-> > >    what we've discussed in the past:
-> > >
-> > >    a) this is an opt-in by the user which would have to explicitly call
-> > >       prctl(). If it returns -ENOTSUPP etc., the user won't be allowed
-> > >       to pass tagged pointers to the kernel. This would probably be the
-> > >       responsibility of the C lib to make sure it doesn't tag heap
-> > >       allocations. If the user did not opt-in, the syscalls are routed
-> > >       through the normal path (no untagging address shim).
-> > >
-> > >    b) ioctl() and other blacklisted syscalls (prctl) will not accept
-> > >       tagged pointers (to be documented in Vicenzo's ABI patches).
-> >
-> > The way I see it, a patch that breaks handling of tagged pointers is
-> > not that different from, say, a patch that adds a wild pointer
-> > dereference. Both are bugs; the difference is that (a) the former
-> > breaks a relatively uncommon target and (b) it's arguably an easier
-> > mistake to make. If MTE adoption goes well, (a) will not be the case
-> > for long.
-> 
-> It's also the fact such patch would go unnoticed for a long time until
-> someone exercises that code path. And when they do, the user would be
-> pretty much in the dark trying to figure what what went wrong, why a
-> SIGSEGV or -EFAULT happened. What's worse, we can't even say we fixed
-> all the places where it matters in the current kernel codebase (ignoring
-> future patches).
+Because PPB unlocking unlocks the whole chip cfi_ppb_unlock() needs to
+remember the locked status for each sector so it can re-lock the
+unaddressed sectors. Dynamically calculate the maximum number of sectors
+rather than using a hardcoded value that is too small for larger chips.
 
-So, looking forward a bit, this isn't going to be an ARM-specific issue
-for long. In fact, I think we shouldn't have arm-specific syscall wrappers
-in this series: I think untagged_addr() should likely be added at the
-top-level and have it be a no-op for other architectures. So given this
-becoming a kernel-wide multi-architecture issue (under the assumption
-that x86, RISC-V, and others will gain similar TBI or MTE things),
-we should solve it in a way that we can re-use.
+Tested with Spansion S29GL01GS11TFI flash device.
 
-We need something that is going to work everywhere. And it needs to be
-supported by the kernel for the simple reason that the kernel needs to
-do MTE checks during copy_from_user(): having that information stripped
-means we lose any userspace-assigned MTE protections if they get handled
-by the kernel, which is a total non-starter, IMO.
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+---
+ drivers/mtd/chips/cfi_cmdset_0002.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
-As an aside: I think Sparc ADI support in Linux actually side-stepped
-this[1] (i.e. chose "solution 1"): "All addresses passed to kernel must
-be non-ADI tagged addresses." (And sadly, "Kernel does not enable ADI
-for kernel code.") I think this was a mistake we should not repeat for
-arm64 (we do seem to be at least in agreement about this, I think).
+diff --git a/drivers/mtd/chips/cfi_cmdset_0002.c b/drivers/mtd/chips/cfi_=
+cmdset_0002.c
+index c8fa5906bdf9..a1a7d334aa82 100644
+--- a/drivers/mtd/chips/cfi_cmdset_0002.c
++++ b/drivers/mtd/chips/cfi_cmdset_0002.c
+@@ -2533,8 +2533,6 @@ struct ppb_lock {
+ 	int locked;
+ };
+=20
+-#define MAX_SECTORS			512
+-
+ #define DO_XXLOCK_ONEBLOCK_LOCK		((void *)1)
+ #define DO_XXLOCK_ONEBLOCK_UNLOCK	((void *)2)
+ #define DO_XXLOCK_ONEBLOCK_GETLOCK	((void *)3)
+@@ -2633,6 +2631,7 @@ static int __maybe_unused cfi_ppb_unlock(struct mtd=
+_info *mtd, loff_t ofs,
+ 	int i;
+ 	int sectors;
+ 	int ret;
++	int max_sectors;
+=20
+ 	/*
+ 	 * PPB unlocking always unlocks all sectors of the flash chip.
+@@ -2640,7 +2639,11 @@ static int __maybe_unused cfi_ppb_unlock(struct mt=
+d_info *mtd, loff_t ofs,
+ 	 * first check the locking status of all sectors and save
+ 	 * it for future use.
+ 	 */
+-	sect =3D kcalloc(MAX_SECTORS, sizeof(struct ppb_lock), GFP_KERNEL);
++	max_sectors =3D 0;
++	for (i =3D 0; i < mtd->numeraseregions; i++)
++		max_sectors +=3D regions[i].numblocks;
++
++	sect =3D kcalloc(max_sectors, sizeof(struct ppb_lock), GFP_KERNEL);
+ 	if (!sect)
+ 		return -ENOMEM;
+=20
+@@ -2689,9 +2692,9 @@ static int __maybe_unused cfi_ppb_unlock(struct mtd=
+_info *mtd, loff_t ofs,
+ 		}
+=20
+ 		sectors++;
+-		if (sectors >=3D MAX_SECTORS) {
++		if (sectors >=3D max_sectors) {
+ 			printk(KERN_ERR "Only %d sectors for PPB locking supported!\n",
+-			       MAX_SECTORS);
++			       max_sectors);
+ 			kfree(sect);
+ 			return -EINVAL;
+ 		}
+--=20
+2.21.0
 
-[1] https://lore.kernel.org/patchwork/patch/654481/
-
-> > This is a bit of a chicken-and-egg problem. In a world where memory
-> > allocators on one or several popular platforms generate pointers with
-> > non-zero tags, any such breakage will be caught in testing.
-> > Unfortunately to reach that state we need the kernel to start
-> > accepting tagged pointers first, and then hold on for a couple of
-> > years until userspace catches up.
-> 
-> Would the kernel also catch up with providing a stable ABI? Because we
-> have two moving targets.
-> 
-> On one hand, you have Android or some Linux distro that stick to a
-> stable kernel version for some time, so they have better chance of
-> clearing most of the problems. On the other hand, we have mainline
-> kernel that gets over 500K lines every release. As maintainer, I can't
-> rely on my testing alone as this is on a limited number of platforms. So
-> my concern is that every kernel release has a significant chance of
-> breaking the ABI, unless we have a better way of identifying potential
-> issues.
-
-I just want to make sure I fully understand your concern about this
-being an ABI break, and I work best with examples. The closest situation
-I can see would be:
-
-- some program has no idea about MTE
-- malloc() starts returning MTE-tagged addresses
-- program doesn't break from that change
-- program uses some syscall that is missing untagged_addr() and fails
-- kernel has now broken userspace that used to work
-
-The trouble I see with this is that it is largely theoretical and
-requires part of userspace to collude to start using a new CPU feature
-that tickles a bug in the kernel. As I understand the golden rule,
-this is a bug in the kernel (a missed ioctl() or such) to be fixed,
-not a global breaking of some userspace behavior.
-
-I feel like I'm missing something about this being seen as an ABI
-break. The kernel already fails on userspace addresses that have high
-bits set -- are there things that _depend_ on this failure to operate?
-
--- 
-Kees Cook
