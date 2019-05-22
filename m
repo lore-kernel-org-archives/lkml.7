@@ -2,79 +2,100 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD4EEC46460
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 09:14:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D76F9C18E7D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 09:14:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80AC720856
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 09:14:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B782520856
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 09:14:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728916AbfEVJOD (ORCPT
+        id S1728950AbfEVJOd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 05:14:03 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:45564 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726552AbfEVJOD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 05:14:03 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CB9F3374;
-        Wed, 22 May 2019 02:14:02 -0700 (PDT)
-Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8CF653F575;
-        Wed, 22 May 2019 02:14:00 -0700 (PDT)
-Subject: Re: [PATCH v2] edac: sifive: Add EDAC platform driver for SiFive SoCs
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Yash Shah <yash.shah@sifive.com>, linux-edac@vger.kernel.org,
-        linux-riscv@lists.infradead.org,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        linux-kernel@vger.kernel.org, aou@eecs.berkeley.edu,
-        mchehab@kernel.org, Sachin Ghadi <sachin.ghadi@sifive.com>,
-        davem@davemloft.net, gregkh@linuxfoundation.org,
-        nicolas.ferre@microchip.com, paulmck@linux.ibm.com
-References: <1557142026-15949-1-git-send-email-yash.shah@sifive.com>
- <1557142026-15949-2-git-send-email-yash.shah@sifive.com>
- <CAJ2_jOG9Ag0spbh3YCxavUE5XEAUP1pHcgCZ56Nu2u4TqfrzHQ@mail.gmail.com>
- <20190521182132.GB7793@cz.tnic>
-From:   James Morse <james.morse@arm.com>
-Message-ID: <1c7eb8ab-6f48-c41a-1d3a-a9b0f5ce8a7f@arm.com>
-Date:   Wed, 22 May 2019 10:13:59 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 22 May 2019 05:14:33 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:43854 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726552AbfEVJOd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 05:14:33 -0400
+Received: from we0524.dip.tu-dresden.de ([141.76.178.12] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1hTNKP-0008Ig-Qw; Wed, 22 May 2019 11:14:29 +0200
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v2 1/3] ARM: dts: rockchip: disable GPU 500 MHz OPP for veyron
+Date:   Wed, 22 May 2019 11:14:29 +0200
+Message-ID: <3108277.JP5bvJISVS@phil>
+In-Reply-To: <20190520220051.54847-1-mka@chromium.org>
+References: <20190520220051.54847-1-mka@chromium.org>
 MIME-Version: 1.0
-In-Reply-To: <20190521182132.GB7793@cz.tnic>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Boris,
-
-On 21/05/2019 19:21, Borislav Petkov wrote:
-> On Tue, May 21, 2019 at 11:00:59AM +0530, Yash Shah wrote:
->> The prerequisite patch (sifive_l2_cache driver) has been merged into
->> mainline v5.2-rc1
->> It should be OK to merge this edac driver now.
+Am Dienstag, 21. Mai 2019, 00:00:49 CEST schrieb Matthias Kaehlcke:
+> The NPLL is the only safe way to generate 500 MHz for the GPU. The
+> downstream Chrome OS 3.14 kernel ('official' kernel for veyron
+> devices) re-purposes NPLL to HDMI and hence disables the OPP for
+> the GPU (see https://crrev.com/c/1574579). Disable it here as well
+> to keep in sync and avoid problems in case someone decides to
+> re-purpose NPLL.
 > 
-> James?
+> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
 
-Still fine by me:
-Reviewed-by: James Morse <james.morse@arm.com>
+I was actually expecting to just drop the 500MHz opp from all
+of rk3288 ;-) .
 
-(...this patch already has my reviewed-by on it...)
+To not have to respin, I just modified your patch accordingly,
+see [0] and please holler if you disagree :-D .
 
-I commented that it couldn't be merged in pieces here:
-https://lore.kernel.org/lkml/4072c812-d3bf-9ad5-2b30-6b2a5060bb55@arm.com/T/#u
-
-which is what Yash is replying to.
+Heiko
 
 
-Thanks,
+[0] https://git.kernel.org/pub/scm/linux/kernel/git/mmind/linux-rockchip.git/commit/?id=75481833c6dbab4c29d15452f6b4337c16f5407b
 
-James
+
+> ---
+> Changes in v2:
+> - patch added to the series
+> ---
+>  arch/arm/boot/dts/rk3288-veyron.dtsi | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/rk3288-veyron.dtsi b/arch/arm/boot/dts/rk3288-veyron.dtsi
+> index 90c8312d01ff..ec10ce4fcf04 100644
+> --- a/arch/arm/boot/dts/rk3288-veyron.dtsi
+> +++ b/arch/arm/boot/dts/rk3288-veyron.dtsi
+> @@ -174,6 +174,14 @@
+>  	temperature = <100000>;
+>  };
+>  
+> +/*
+> + * Remove 500 MHz since the only way to make 500 MHz is via the NPLL
+> + * which might be used for HDMI.
+> + */
+> +&gpu_opp_table {
+> +	/delete-node/ opp-500000000;
+> +};
+> +
+>  &hdmi {
+>  	ddc-i2c-bus = <&i2c5>;
+>  	status = "okay";
+> 
+
+
+
+
