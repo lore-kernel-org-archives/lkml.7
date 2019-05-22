@@ -2,98 +2,123 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50BB8C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 13:58:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1348DC282DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 14:01:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B87F21473
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 13:58:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB72421473
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 14:01:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EwPVMgH1"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="fRUcQO90"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728690AbfEVN6x (ORCPT
+        id S1728794AbfEVOBY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 09:58:53 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:46944 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726770AbfEVN6w (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 09:58:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=stoReT4l5YzQVAfQyuDlkRZNXTb+4C0OYLElAHjZh1M=; b=EwPVMgH1NSlQBE6DSSuhGWezC
-        vtkSBVOm2RRupQquWj3DB2AgwQmIGnJD9ld/bu9Pr6bBIxPAg22hsAN1wv5HuqJUGVOKbw8XqBd3F
-        eeWL6hxCRMOMC1bnePP+7+UleiMNlysdZCdq3kwVM2JTMWP41XO28a7KklpczCcA2kuqaKsqTOV4w
-        EKaOTxKXdMaS+VUr7X2+oVkTnsSsL0XGrSccHQ/OPeTyPQG25CteOdS8g1vD14ZZPHjeSaDmJO073
-        nwgS3rfERrwrOPLtrjoYHHXkkJeQASoQ4ss7bzF1x3XFFLQDp0RqPNbxRsZJrxwCS67f4Y1U8MPEm
-        rwk+rgzxw==;
-Received: from [31.161.185.207] (helo=worktop.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hTRlZ-00040l-P7; Wed, 22 May 2019 13:58:50 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 359BA984E09; Wed, 22 May 2019 15:58:50 +0200 (CEST)
-Date:   Wed, 22 May 2019 15:58:50 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Song Liu <songliubraving@fb.com>
-Cc:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        kernel-team@fb.com, Kairui Song <kasong@redhat.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-Subject: Re: [PATCH] perf/x86: always include regs->ip in callchain
-Message-ID: <20190522135850.GB16275@worktop.programming.kicks-ass.net>
-References: <20190521204813.1167784-1-songliubraving@fb.com>
+        Wed, 22 May 2019 10:01:24 -0400
+Received: from mail-eopbgr820059.outbound.protection.outlook.com ([40.107.82.59]:55616
+        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726770AbfEVOBY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 10:01:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector1-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rxBppLEijZ4yUlx2wqTTRZ4Dlj49bmha9+EBSzSjwuk=;
+ b=fRUcQO90Kf+NPtu+WEGzkWsrUS3VBf6HUpfw0hJfEXDAFEqagU1j6Odl6SFd98SnUmpJKegv3YFdb64BlhiLhOfXYXduO5ks1HCAcyF0N8xyKd+e1CsWCEVJrv65ML0uh9/dv4EcLmjSFvFkGKbjG8H3Upcy8Ou4Uw2xAXimd6k=
+Received: from SN6PR12MB2639.namprd12.prod.outlook.com (52.135.103.16) by
+ SN6PR12MB2639.namprd12.prod.outlook.com (52.135.103.16) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1922.16; Wed, 22 May 2019 14:01:21 +0000
+Received: from SN6PR12MB2639.namprd12.prod.outlook.com
+ ([fe80::69b5:19ac:b63d:2b82]) by SN6PR12MB2639.namprd12.prod.outlook.com
+ ([fe80::69b5:19ac:b63d:2b82%3]) with mapi id 15.20.1922.017; Wed, 22 May 2019
+ 14:01:21 +0000
+From:   "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
+To:     Borislav Petkov <bp@alien8.de>, "Luck, Tony" <tony.luck@intel.com>
+CC:     "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>
+Subject: RE: [PATCH v3 4/6] x86/MCE: Make number of MCA banks per_cpu
+Thread-Topic: [PATCH v3 4/6] x86/MCE: Make number of MCA banks per_cpu
+Thread-Index: AQHU/5PPM7ZBD2KPAEGkkqngr+ktbaZw2aaAgAT1zzCAAFkKAIAAA88AgAApA4CAAPi2gA==
+Date:   Wed, 22 May 2019 14:01:21 +0000
+Message-ID: <SN6PR12MB26392392901AD4379E133BE0F8000@SN6PR12MB2639.namprd12.prod.outlook.com>
+References: <20190430203206.104163-1-Yazen.Ghannam@amd.com>
+ <20190430203206.104163-5-Yazen.Ghannam@amd.com>
+ <20190518112530.GA26276@zn.tnic>
+ <SN6PR12MB2639571E33EBC7342A0607F8F8070@SN6PR12MB2639.namprd12.prod.outlook.com>
+ <20190521202902.GC7793@cz.tnic> <20190521204239.GA11029@agluck-desk>
+ <20190521230927.GB2435@cz.tnic>
+In-Reply-To: <20190521230927.GB2435@cz.tnic>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Yazen.Ghannam@amd.com; 
+x-originating-ip: [2601:3c2:8280:2327:e187:3cf8:9bd2:2742]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 70bc8c0d-1f42-4f9a-72fa-08d6debdf86c
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:SN6PR12MB2639;
+x-ms-traffictypediagnostic: SN6PR12MB2639:
+x-microsoft-antispam-prvs: <SN6PR12MB2639E5F74B17346ACF00616AF8000@SN6PR12MB2639.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 0045236D47
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(376002)(396003)(366004)(136003)(39860400002)(13464003)(199004)(189003)(51444003)(6436002)(229853002)(73956011)(66946007)(15650500001)(478600001)(81156014)(53936002)(256004)(68736007)(7696005)(52536014)(64756008)(66446008)(66556008)(2906002)(186003)(76116006)(66476007)(33656002)(446003)(11346002)(72206003)(14454004)(486006)(8676002)(4326008)(305945005)(86362001)(81166006)(102836004)(6116002)(476003)(25786009)(46003)(6246003)(53546011)(7736002)(9686003)(6506007)(55016002)(54906003)(110136005)(76176011)(71190400001)(71200400001)(316002)(5660300002)(74316002)(8936002)(99286004);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR12MB2639;H:SN6PR12MB2639.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: y4RhJR8n1OJcA44DqIkytithg3bEj5iE8067uFK6n5iWmyCRbz1OmImoWr359waVin0e1nej4Nvgs/h1n5cP/YCbpEgBtuocN6KFlE/kp4k232pbbrFEovHJmoMUQPFUWUltaKUOdWL0OARByx2wHi1k1+qkhlaqjyfQzhT6EUqokId5GPLSdVID1QLFnPssodkel6J8poFvGqUoATCihqwKYEWetiMoHERtPy3zgkhQcFsRSs3CLwpgFjlwHvFrlcfFCB0A95ABD7249oNafp0BiTJQoxTWeGKq3AXVfKqA0JrBV/RT3g88TmPbsCUEstKJ2xpMvmoAQE3xoFmgE0zsLtRY3pPboNlCyb3BvcTSmUpoxQqGQ9c1FU3q09vVo+JYw/Yz1/DJv5W3x5XwJXLXVLJe0hAuQYz9fzGZzq8=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190521204813.1167784-1-songliubraving@fb.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 70bc8c0d-1f42-4f9a-72fa-08d6debdf86c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 May 2019 14:01:21.6326
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: yghannam@amd.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2639
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 21, 2019 at 01:48:13PM -0700, Song Liu wrote:
-> Commit d15d356887e7 removes regs->ip for !perf_hw_regs(regs) case. This
-> breaks tests like test_stacktrace_map from selftests/bpf/tests_prog.
-
-That test is broken by something else; just the one entry is wrong too.
-
-That said, yes the patch below is actually correct, but the above
-description is misleading at best.
-
-> This patch adds regs->ip back.
-> 
-> Fixes: d15d356887e7 ("perf/x86: Make perf callchains work without CONFIG_FRAME_POINTER")
-> Cc: Kairui Song <kasong@redhat.com>
-> Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Signed-off-by: Song Liu <songliubraving@fb.com>
-> ---
->  arch/x86/events/core.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-> index f315425d8468..7b8a9eb4d5fd 100644
-> --- a/arch/x86/events/core.c
-> +++ b/arch/x86/events/core.c
-> @@ -2402,9 +2402,9 @@ perf_callchain_kernel(struct perf_callchain_entry_ctx *entry, struct pt_regs *re
->  		return;
->  	}
->  
-> +	if (perf_callchain_store(entry, regs->ip))
-> +		return;
->  	if (perf_hw_regs(regs)) {
-> -		if (perf_callchain_store(entry, regs->ip))
-> -			return;
->  		unwind_start(&state, current, regs, NULL);
->  	} else {
->  		unwind_start(&state, current, NULL, (void *)regs->sp);
-> -- 
-> 2.17.1
-> 
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBsaW51eC1lZGFjLW93bmVyQHZn
+ZXIua2VybmVsLm9yZyA8bGludXgtZWRhYy1vd25lckB2Z2VyLmtlcm5lbC5vcmc+IE9uIEJlaGFs
+ZiBPZiBCb3Jpc2xhdiBQZXRrb3YNCj4gU2VudDogVHVlc2RheSwgTWF5IDIxLCAyMDE5IDY6MDkg
+UE0NCj4gVG86IEx1Y2ssIFRvbnkgPHRvbnkubHVja0BpbnRlbC5jb20+DQo+IENjOiBHaGFubmFt
+LCBZYXplbiA8WWF6ZW4uR2hhbm5hbUBhbWQuY29tPjsgbGludXgtZWRhY0B2Z2VyLmtlcm5lbC5v
+cmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IHg4NkBrZXJuZWwub3JnDQo+IFN1Ympl
+Y3Q6IFJlOiBbUEFUQ0ggdjMgNC82XSB4ODYvTUNFOiBNYWtlIG51bWJlciBvZiBNQ0EgYmFua3Mg
+cGVyX2NwdQ0KPiANCj4gDQo+IE9uIFR1ZSwgTWF5IDIxLCAyMDE5IGF0IDAxOjQyOjQwUE0gLTA3
+MDAsIEx1Y2ssIFRvbnkgd3JvdGU6DQo+ID4gT24gVHVlLCBNYXkgMjEsIDIwMTkgYXQgMTA6Mjk6
+MDJQTSArMDIwMCwgQm9yaXNsYXYgUGV0a292IHdyb3RlOg0KPiA+ID4NCj4gPiA+IENhbiB3ZSBk
+byBpbnN0ZWFkOg0KPiA+ID4NCj4gPiA+IC1zdGF0aWMgREVGSU5FX1BFUl9DUFVfUkVBRF9NT1NU
+TFkoc3RydWN0IG1jZV9iYW5rICosIG1jZV9iYW5rc19hcnJheSk7DQo+ID4gPiArc3RhdGljIERF
+RklORV9QRVJfQ1BVX1JFQURfTU9TVExZKHN0cnVjdCBtY2VfYmFuaywgbWNlX2JhbmtzX2FycmF5
+W01BWF9OUl9CQU5LU10pOw0KPiA+ID4NCj4gPiA+IHdoaWNoIHNob3VsZCBiZSBzb21ldGhpbmcg
+bGlrZSA5KjMyID0gMjg4IGJ5dGVzIHBlciBDUFUuDQo+ID4gPg0KPiA+DQo+ID4gV2hlcmUgZGlk
+IHlvdSBnZXQgdGhlICI5IiBmcm9tPyAgc3RydWN0IG1jZV9iYW5rIGxvb2tzIHRvDQo+ID4gYmUg
+b3ZlciA1MCBieXRlcy4NCj4gDQo+IFBhdGNoIDIvNiBjaGFuZ2VzIHRoYXQ6DQo+IA0KPiAgc3Ry
+dWN0IG1jZV9iYW5rIHsNCj4gICAgICAgICB1NjQgICAgICAgICAgICAgICAgICAgICBjdGw7ICAg
+ICAgICAgICAgICAgICAgICAvKiBzdWJldmVudHMgdG8gZW5hYmxlICovDQo+ICAgICAgICAgYm9v
+bCAgICAgICAgICAgICAgICAgICAgaW5pdDsgICAgICAgICAgICAgICAgICAgLyogaW5pdGlhbGlz
+ZSBiYW5rPyAqLw0KPiArfTsNCj4gK3N0YXRpYyBERUZJTkVfUEVSX0NQVV9SRUFEX01PU1RMWShz
+dHJ1Y3QgbWNlX2JhbmsgKiwgbWNlX2JhbmtzX3BlcmNwdSk7DQo+ICsNCj4gKyNkZWZpbmUgQVRU
+Ul9MRU4gICAgICAgICAgICAgICAxNg0KPiArLyogT25lIG9iamVjdCBmb3IgZWFjaCBNQ0UgYmFu
+aywgc2hhcmVkIGJ5IGFsbCBDUFVzICovDQo+ICtzdHJ1Y3QgbWNlX2JhbmtfZGV2IHsNCj4gICAg
+ICAgICBzdHJ1Y3QgZGV2aWNlX2F0dHJpYnV0ZSBhdHRyOyAgICAgICAgICAgICAgICAgICAvKiBk
+ZXZpY2UgYXR0cmlidXRlICovDQo+ICAgICAgICAgY2hhciAgICAgICAgICAgICAgICAgICAgYXR0
+cm5hbWVbQVRUUl9MRU5dOyAgICAgLyogYXR0cmlidXRlIG5hbWUgKi8NCj4gKyAgICAgICB1OCAg
+ICAgICAgICAgICAgICAgICAgICBiYW5rOyAgICAgICAgICAgICAgICAgICAvKiBiYW5rIG51bWJl
+ciAqLw0KPiAgfTsNCj4gK3N0YXRpYyBzdHJ1Y3QgbWNlX2JhbmtfZGV2IG1jZV9iYW5rX2RldnNb
+TUFYX05SX0JBTktTXTsNCj4gDQo+ID4gU3RpbGwgb25seSAxLjVLIHBlciBjcHUgdGhvdWdoLg0K
+PiANCj4gWWFoLCBJIHRoaW5rIHRoYXQgdXNpbmcgc3RhdGljIHBlci1DUFUgbWVtb3J5IHNob3Vs
+ZCBiZSBiZXR0ZXIgdGhhbg0KPiBHRlBfQVRPTUlDLg0KPiANCg0KT2theSwgbWFrZXMgc2Vuc2Uu
+IEknbGwgc2VuZCBhIHBhdGNoIHNvb24uDQoNClRoYW5rcywNCllhemVuDQo=
