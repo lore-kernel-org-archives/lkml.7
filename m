@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1611AC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:21:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C371DC282DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:21:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC4A7217F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:21:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 988752184E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:21:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558552880;
-	bh=b3pnOJlavVTSMLrhfhWYxt52OURL4r336/7ktnNmvMU=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=h837SBvswDrepWLfLIrlz68VVK21yLnqN1Qz6IJz7huiBVulOZYJSKMKWqvt5Tq4R
-	 ulagcAIMfLJpxpWhEPwVNIHvrRWr18d82kCxucS9TiyLsZbMbW0kCNNg05XtdvJ983
-	 pHXA2hwj8W3jVk8sZcvf3Q9emFgw4r7PINYK7TtA=
+	s=default; t=1558552883;
+	bh=lOAMxzkToxe3qagEy8KPYQKMxFkKtyRzcd+10Z2xQgw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=WgcGegreGQxx6Tx+5iN78oJv02pm0d/buJYVQptsajV1H+nkSoelKdaQ+xAbM5aZa
+	 cONjz6yAMak2oNNh6pkAjaCIQJ2cfLFxUVZQbEfpInX37Tx5Mon/KzXAWyIfWf14aq
+	 yJKb3nepK0TxcV2r4sv6Aa6snGGXF7JHJVetxXGY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729805AbfEVTVT (ORCPT
+        id S1729847AbfEVTVW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:21:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41666 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:21:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41708 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728615AbfEVTVS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:21:18 -0400
+        id S1729790AbfEVTVU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:21:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0A2221473;
-        Wed, 22 May 2019 19:21:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E990E2177E;
+        Wed, 22 May 2019 19:21:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558552877;
-        bh=b3pnOJlavVTSMLrhfhWYxt52OURL4r336/7ktnNmvMU=;
-        h=From:To:Cc:Subject:Date:From;
-        b=PlixEF4CxgQGNSweQt8/coqg8ojaOM9oB4bBFTRgfmqje53doDLyMIQ27dyp3glp0
-         I19MXb80ucwlK4uUyjrzDBnZpZ5X7qDt06hxxPrnNqDpf4x+bkcdvmD0/CUnidosLU
-         ffFJhstru/frrjjE6a8peZ5LRt3uwSCOHThVt1yc=
+        s=default; t=1558552879;
+        bh=lOAMxzkToxe3qagEy8KPYQKMxFkKtyRzcd+10Z2xQgw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=RFiTou4wcoDQcW5rlRKSf8TWdm5cGvqGpCsAS1+LNvLYs4B9YoHL85q9iSgmtyzAc
+         z6DgDvOo4+ulAyKZ2zuSt00yoTpLhd5IQDCW6ztGBQ90Qx36elD7eM2w4tBtmNCDnY
+         NIhSyni9gJlH7hZFd9IooX9vpaNwHv91joUl1O80=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ross Lagerwall <ross.lagerwall@citrix.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, cluster-devel@redhat.com
-Subject: [PATCH AUTOSEL 5.1 001/375] gfs2: Fix lru_count going negative
-Date:   Wed, 22 May 2019 15:15:01 -0400
-Message-Id: <20190522192115.22666-1-sashal@kernel.org>
+Cc:     David Howells <dhowells@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-afs@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.1 003/375] afs: Fix getting the afs.fid xattr
+Date:   Wed, 22 May 2019 15:15:03 -0400
+Message-Id: <20190522192115.22666-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190522192115.22666-1-sashal@kernel.org>
+References: <20190522192115.22666-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -57,111 +58,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ross Lagerwall <ross.lagerwall@citrix.com>
+From: David Howells <dhowells@redhat.com>
 
-[ Upstream commit 7881ef3f33bb80f459ea6020d1e021fc524a6348 ]
+[ Upstream commit a2f611a3dc317d8ea1c98ad6c54b911cf7f93193 ]
 
-Under certain conditions, lru_count may drop below zero resulting in
-a large amount of log spam like this:
+The AFS3 FID is three 32-bit unsigned numbers and is represented as three
+up-to-8-hex-digit numbers separated by colons to the afs.fid xattr.
+However, with the advent of support for YFS, the FID is now a 64-bit volume
+number, a 96-bit vnode/inode number and a 32-bit uniquifier (as before).
+Whilst the sprintf in afs_xattr_get_fid() has been partially updated (it
+currently ignores the upper 32 bits of the 96-bit vnode number), the size
+of the stack-based buffer has not been increased to match, thereby allowing
+stack corruption to occur.
 
-vmscan: shrink_slab: gfs2_dump_glock+0x3b0/0x630 [gfs2] \
-    negative objects to delete nr=-1
+Fix this by increasing the buffer size appropriately and conditionally
+including the upper part of the vnode number if it is non-zero.  The latter
+requires the lower part to be zero-padded if the upper part is non-zero.
 
-This happens as follows:
-1) A glock is moved from lru_list to the dispose list and lru_count is
-   decremented.
-2) The dispose function calls cond_resched() and drops the lru lock.
-3) Another thread takes the lru lock and tries to add the same glock to
-   lru_list, checking if the glock is on an lru list.
-4) It is on a list (actually the dispose list) and so it avoids
-   incrementing lru_count.
-5) The glock is moved to lru_list.
-5) The original thread doesn't dispose it because it has been re-added
-   to the lru list but the lru_count has still decreased by one.
-
-Fix by checking if the LRU flag is set on the glock rather than checking
-if the glock is on some list and rearrange the code so that the LRU flag
-is added/removed precisely when the glock is added/removed from lru_list.
-
-Signed-off-by: Ross Lagerwall <ross.lagerwall@citrix.com>
-Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
+Fixes: 3b6492df4153 ("afs: Increase to 64-bit volume ID and 96-bit vnode ID for YFS")
+Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/gfs2/glock.c | 22 +++++++++++++---------
- 1 file changed, 13 insertions(+), 9 deletions(-)
+ fs/afs/xattr.c | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
-diff --git a/fs/gfs2/glock.c b/fs/gfs2/glock.c
-index d32964cd11176..e4f6d39500bcc 100644
---- a/fs/gfs2/glock.c
-+++ b/fs/gfs2/glock.c
-@@ -183,15 +183,19 @@ static int demote_ok(const struct gfs2_glock *gl)
- 
- void gfs2_glock_add_to_lru(struct gfs2_glock *gl)
+diff --git a/fs/afs/xattr.c b/fs/afs/xattr.c
+index a2cdf25573e24..706801c6c4c4c 100644
+--- a/fs/afs/xattr.c
++++ b/fs/afs/xattr.c
+@@ -69,11 +69,20 @@ static int afs_xattr_get_fid(const struct xattr_handler *handler,
+ 			     void *buffer, size_t size)
  {
-+	if (!(gl->gl_ops->go_flags & GLOF_LRU))
-+		return;
+ 	struct afs_vnode *vnode = AFS_FS_I(inode);
+-	char text[8 + 1 + 8 + 1 + 8 + 1];
++	char text[16 + 1 + 24 + 1 + 8 + 1];
+ 	size_t len;
+ 
+-	len = sprintf(text, "%llx:%llx:%x",
+-		      vnode->fid.vid, vnode->fid.vnode, vnode->fid.unique);
++	/* The volume ID is 64-bit, the vnode ID is 96-bit and the
++	 * uniquifier is 32-bit.
++	 */
++	len = sprintf(text, "%llx:", vnode->fid.vid);
++	if (vnode->fid.vnode_hi)
++		len += sprintf(text + len, "%x%016llx",
++			       vnode->fid.vnode_hi, vnode->fid.vnode);
++	else
++		len += sprintf(text + len, "%llx", vnode->fid.vnode);
++	len += sprintf(text + len, ":%x", vnode->fid.unique);
 +
- 	spin_lock(&lru_lock);
- 
--	if (!list_empty(&gl->gl_lru))
--		list_del_init(&gl->gl_lru);
--	else
-+	list_del(&gl->gl_lru);
-+	list_add_tail(&gl->gl_lru, &lru_list);
-+
-+	if (!test_bit(GLF_LRU, &gl->gl_flags)) {
-+		set_bit(GLF_LRU, &gl->gl_flags);
- 		atomic_inc(&lru_count);
-+	}
- 
--	list_add_tail(&gl->gl_lru, &lru_list);
--	set_bit(GLF_LRU, &gl->gl_flags);
- 	spin_unlock(&lru_lock);
- }
- 
-@@ -201,7 +205,7 @@ static void gfs2_glock_remove_from_lru(struct gfs2_glock *gl)
- 		return;
- 
- 	spin_lock(&lru_lock);
--	if (!list_empty(&gl->gl_lru)) {
-+	if (test_bit(GLF_LRU, &gl->gl_flags)) {
- 		list_del_init(&gl->gl_lru);
- 		atomic_dec(&lru_count);
- 		clear_bit(GLF_LRU, &gl->gl_flags);
-@@ -1159,8 +1163,7 @@ void gfs2_glock_dq(struct gfs2_holder *gh)
- 		    !test_bit(GLF_DEMOTE, &gl->gl_flags))
- 			fast_path = 1;
- 	}
--	if (!test_bit(GLF_LFLUSH, &gl->gl_flags) && demote_ok(gl) &&
--	    (glops->go_flags & GLOF_LRU))
-+	if (!test_bit(GLF_LFLUSH, &gl->gl_flags) && demote_ok(gl))
- 		gfs2_glock_add_to_lru(gl);
- 
- 	trace_gfs2_glock_queue(gh, 0);
-@@ -1456,6 +1459,7 @@ __acquires(&lru_lock)
- 		if (!spin_trylock(&gl->gl_lockref.lock)) {
- add_back_to_lru:
- 			list_add(&gl->gl_lru, &lru_list);
-+			set_bit(GLF_LRU, &gl->gl_flags);
- 			atomic_inc(&lru_count);
- 			continue;
- 		}
-@@ -1463,7 +1467,6 @@ __acquires(&lru_lock)
- 			spin_unlock(&gl->gl_lockref.lock);
- 			goto add_back_to_lru;
- 		}
--		clear_bit(GLF_LRU, &gl->gl_flags);
- 		gl->gl_lockref.count++;
- 		if (demote_ok(gl))
- 			handle_callback(gl, LM_ST_UNLOCKED, 0, false);
-@@ -1498,6 +1501,7 @@ static long gfs2_scan_glock_lru(int nr)
- 		if (!test_bit(GLF_LOCK, &gl->gl_flags)) {
- 			list_move(&gl->gl_lru, &dispose);
- 			atomic_dec(&lru_count);
-+			clear_bit(GLF_LRU, &gl->gl_flags);
- 			freed++;
- 			continue;
- 		}
+ 	if (size == 0)
+ 		return len;
+ 	if (len > size)
 -- 
 2.20.1
 
