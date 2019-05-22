@@ -2,81 +2,149 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C5B3C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 17:40:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C270CC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 17:41:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65CAA21473
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 17:40:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9E6A21019
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 17:41:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729531AbfEVRkV (ORCPT
+        id S1729575AbfEVRlE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 13:40:21 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:59166 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727499AbfEVRkV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 13:40:21 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d8])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 39F1515002414;
-        Wed, 22 May 2019 10:40:20 -0700 (PDT)
-Date:   Wed, 22 May 2019 10:40:19 -0700 (PDT)
-Message-Id: <20190522.104019.40493905027242516.davem@davemloft.net>
-To:     rick.p.edgecombe@intel.com
-Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org,
-        linux-mm@kvack.org, mroos@linux.ee, mingo@redhat.com,
-        namit@vmware.com, luto@kernel.org, bp@alien8.de,
-        netdev@vger.kernel.org, dave.hansen@intel.com,
-        sparclinux@vger.kernel.org
-Subject: Re: [PATCH v2] vmalloc: Fix issues with flush flag
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <339ef85d984f329aa66f29fa80781624e6e4aecc.camel@intel.com>
-References: <a43f9224e6b245ade4b587a018c8a21815091f0f.camel@intel.com>
-        <20190520.184336.743103388474716249.davem@davemloft.net>
-        <339ef85d984f329aa66f29fa80781624e6e4aecc.camel@intel.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 22 May 2019 10:40:20 -0700 (PDT)
+        Wed, 22 May 2019 13:41:04 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:55906 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729172AbfEVRlD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 13:41:03 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 489EB341;
+        Wed, 22 May 2019 10:41:02 -0700 (PDT)
+Received: from e111045-lin.cambridge.arm.com (apickardsiphone.cambridge.arm.com [10.1.30.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 01C223F5AF;
+        Wed, 22 May 2019 10:40:59 -0700 (PDT)
+From:   Ard Biesheuvel <ard.biesheuvel@arm.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     marc.zyngier@arm.com, james.morse@arm.com, will.deacon@arm.com,
+        guillaume.gardet@arm.com, mark.rutland@arm.com, mingo@kernel.org,
+        jeyu@kernel.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, arnd@arndb.de, x86@kernel.org,
+        Ard Biesheuvel <ard.biesheuvel@arm.com>
+Subject: [PATCH] x86/tools: deal with 64-bit relative relocations for per-CPU symbols
+Date:   Wed, 22 May 2019 18:40:57 +0100
+Message-Id: <20190522174057.21770-1-ard.biesheuvel@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
-Date: Tue, 21 May 2019 01:59:54 +0000
+In order to fix an issue in the place relative ksymtab code, we
+need to switch to 64-bit place relative references, which
+require special handling in the x86 'relocs' tool. The reason
+is that per-CPU symbols on x86_64 live in a separate link time
+section, whose load time address is not reflected in the ELF
+metadata, and so relative references emitted by the toolchain
+are guaranteed to be wrong.
 
-> On Mon, 2019-05-20 at 18:43 -0700, David Miller wrote:
->> From: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
->> Date: Tue, 21 May 2019 01:20:33 +0000
->> 
->> > Should it handle executing an unmapped page gracefully? Because
->> > this
->> > change is causing that to happen much earlier. If something was
->> > relying
->> > on a cached translation to execute something it could find the
->> > mapping
->> > disappear.
->> 
->> Does this work by not mapping any kernel mappings at the beginning,
->> and then filling in the BPF mappings in response to faults?
-> No, nothing too fancy. It just flushes the vm mapping immediatly in
-> vfree for execute (and RO) mappings. The only thing that happens around
-> allocation time is setting of a new flag to tell vmalloc to do the
-> flush.
-> 
-> The problem before was that the pages would be freed before the execute
-> mapping was flushed. So then when the pages got recycled, random,
-> sometimes coming from userspace, data would be mapped as executable in
-> the kernel by the un-flushed tlb entries.
+So fix this by extending the handling of 32-bit relative references
+to per-CPU variables to support 64-bit relative references as
+well.
 
-If I am to understand things correctly, there was a case where 'end'
-could be smaller than 'start' when doing a range flush.  That would
-definitely kill some of the sparc64 TLB flush routines.
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@arm.com>
+---
+This is a follow-up to [0] and a prerequisite to the change it
+implements: using 64-bit relative references on x86_64 requires
+this handling in the 'relocs' tool and in the decompressor.
+
+[0] https://lore.kernel.org/linux-arm-kernel/20190522150239.19314-1-ard.biesheuvel@arm.com
+
+This patch plus [0] build and boot tested with x86_64_defconfig on QEMU/kvm + OVMF.
+
+ arch/x86/boot/compressed/misc.c | 12 ++++++++++++
+ arch/x86/tools/relocs.c         | 15 ++++++++++-----
+ 2 files changed, 22 insertions(+), 5 deletions(-)
+
+diff --git a/arch/x86/boot/compressed/misc.c b/arch/x86/boot/compressed/misc.c
+index 5a237e8dbf8d..e089d78bd86a 100644
+--- a/arch/x86/boot/compressed/misc.c
++++ b/arch/x86/boot/compressed/misc.c
+@@ -218,6 +218,8 @@ static void handle_relocations(void *output, unsigned long output_len,
+ 	 * Format is:
+ 	 *
+ 	 * kernel bits...
++	 * 0 - zero terminator for inverse 64 bit relocations
++	 * 64 bit inverse relocation repeated
+ 	 * 0 - zero terminator for 64 bit relocations
+ 	 * 64 bit relocation repeated
+ 	 * 0 - zero terminator for inverse 32 bit relocations
+@@ -258,6 +260,16 @@ static void handle_relocations(void *output, unsigned long output_len,
+ 
+ 		*(uint64_t *)ptr += delta;
+ 	}
++	while (*--reloc) {
++		long extended = *reloc;
++		extended += map;
++
++		ptr = (unsigned long)extended;
++		if (ptr < min_addr || ptr > max_addr)
++			error("inverse 64-bit relocation outside of kernel!\n");
++
++		*(uint64_t *)ptr -= delta;
++	}
+ #endif
+ }
+ #else
+diff --git a/arch/x86/tools/relocs.c b/arch/x86/tools/relocs.c
+index ce7188cbdae5..d6a2bb90dfa6 100644
+--- a/arch/x86/tools/relocs.c
++++ b/arch/x86/tools/relocs.c
+@@ -26,6 +26,7 @@ static struct relocs relocs32;
+ #if ELF_BITS == 64
+ static struct relocs relocs32neg;
+ static struct relocs relocs64;
++static struct relocs relocs64neg;
+ #endif
+ 
+ struct section {
+@@ -800,12 +801,8 @@ static int do_reloc64(struct section *sec, Elf_Rel *rel, ElfW(Sym) *sym,
+ 		break;
+ 
+ 	case R_X86_64_PC64:
+-		/*
+-		 * Only used by jump labels
+-		 */
+ 		if (is_percpu_sym(sym, symname))
+-			die("Invalid R_X86_64_PC64 relocation against per-CPU symbol %s\n",
+-			    symname);
++			add_reloc(&relocs64neg, offset);
+ 		break;
+ 
+ 	case R_X86_64_32:
+@@ -1027,6 +1024,7 @@ static void emit_relocs(int as_text, int use_real_mode)
+ #if ELF_BITS == 64
+ 	sort_relocs(&relocs32neg);
+ 	sort_relocs(&relocs64);
++	sort_relocs(&relocs64neg);
+ #else
+ 	sort_relocs(&relocs16);
+ #endif
+@@ -1054,6 +1052,13 @@ static void emit_relocs(int as_text, int use_real_mode)
+ 		/* Print a stop */
+ 		write_reloc(0, stdout);
+ 
++		/* Now print each inverse 64-bit relocation */
++		for (i = 0; i < relocs64neg.count; i++)
++			write_reloc(relocs64neg.offset[i], stdout);
++
++		/* Print a stop */
++		write_reloc(0, stdout);
++
+ 		/* Now print each relocation */
+ 		for (i = 0; i < relocs64.count; i++)
+ 			write_reloc(relocs64.offset[i], stdout);
+-- 
+2.17.1
+
