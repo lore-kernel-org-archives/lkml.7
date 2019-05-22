@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A19A2C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:44:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED291C282DC
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:44:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67FD320856
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:44:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE27820856
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:44:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558554241;
-	bh=y9GCPgLk+P/0ViFYcdr1yEsp0L57dnkElkVUNTZFlIU=;
+	s=default; t=1558554246;
+	bh=irYDzsSaRjmeboTJQ6mVwg/sHDAw4JvY/pG/qqZ33YI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Zg4LJIaZU0VVH1dDfVNEDwMLYuo8gqc8fvHqgnSiD2g9v+faC6zLo4KjKEt8Yog0y
-	 TxHPZfvIqH79fakKnO8sFnTflTetygJ9flTV6tohn7lnBK0Sy+vAZrTtF2N+BXHcs3
-	 BwB8q2hcntF9fCx9grjonPYgAkEMZZxMwcDpMZdM=
+	b=GjYcHrYXRULY/xjfZw19ZNeSoVg1dbtEUHP62AE7e+S/gVr/zk6JWTs8qvZFvOjMD
+	 VbyFnryQINNIUe4RVeP/7zFIccDWX1D6bfavp9n790wJjMGZV/ruwUmb3vif8sf743
+	 /NqBjyabgHJxdAAET7sgr3faEvmdEkPlDFnLBg8g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732766AbfEVToA (ORCPT
+        id S1730468AbfEVT2P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:44:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50868 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:28:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50398 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732423AbfEVT2Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:28:16 -0400
+        id S1732423AbfEVT14 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:27:56 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 10DD021841;
-        Wed, 22 May 2019 19:28:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 27BA521473;
+        Wed, 22 May 2019 19:27:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553295;
-        bh=y9GCPgLk+P/0ViFYcdr1yEsp0L57dnkElkVUNTZFlIU=;
+        s=default; t=1558553276;
+        bh=irYDzsSaRjmeboTJQ6mVwg/sHDAw4JvY/pG/qqZ33YI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ICvgYc8OPBIGZaI0CRnOfG5ihKWD8E7Uy9Nt4erfWIRlZg4UtHw6SEHwyOc3BvBO+
-         OxEmuFmCLsPZsadyShEzXxyolZwq+pmhue/jHkBP4U1+h6RhhY/PchkR31ij0zrvkV
-         QcO5rFvMkDDIcFwV55jUSz44MJOh7Umf+5qF9msA=
+        b=aiNNfUUvQ8ZFszhZDbqLiwaKOoRoYwZT4KiRExtPxnJmrPkTxRfL8/F+LRpbrSvml
+         E/h9pnD3MrmegXk2R35fNtKuL9PhT2tWGkJyvaIvd8EKCIwbryYov838p26WlrPB43
+         qJvjnuElL5PozSqkYgsckNapai/BnbMGQ2Ot74eg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Coly Li <colyli@suse.de>, Hannes Reinecke <hare@suse.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-bcache@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 067/244] bcache: return error immediately in bch_journal_replay()
-Date:   Wed, 22 May 2019 15:23:33 -0400
-Message-Id: <20190522192630.24917-67-sashal@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Julian Wiedmann <jwi@linux.ibm.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 050/244] s390: qeth: address type mismatch warning
+Date:   Wed, 22 May 2019 15:23:16 -0400
+Message-Id: <20190522192630.24917-50-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192630.24917-1-sashal@kernel.org>
 References: <20190522192630.24917-1-sashal@kernel.org>
@@ -59,52 +61,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Coly Li <colyli@suse.de>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 68d10e6979a3b59e3cd2e90bfcafed79c4cf180a ]
+[ Upstream commit 46b83629dede262315aa82179d105581f11763b6 ]
 
-When failure happens inside bch_journal_replay(), calling
-cache_set_err_on() and handling the failure in async way is not a good
-idea. Because after bch_journal_replay() returns, registering code will
-continue to execute following steps, and unregistering code triggered
-by cache_set_err_on() is running in same time. First it is unnecessary
-to handle failure and unregister cache set in an async way, second there
-might be potential race condition to run register and unregister code
-for same cache set.
+clang produces a harmless warning for each use for the qeth_adp_supported
+macro:
 
-So in this patch, if failure happens in bch_journal_replay(), we don't
-call cache_set_err_on(), and just print out the same error message to
-kernel message buffer, then return -EIO immediately caller. Then caller
-can detect such failure and handle it in synchrnozied way.
+drivers/s390/net/qeth_l2_main.c:559:31: warning: implicit conversion from enumeration type 'enum qeth_ipa_setadp_cmd' to
+      different enumeration type 'enum qeth_ipa_funcs' [-Wenum-conversion]
+        if (qeth_adp_supported(card, IPA_SETADP_SET_PROMISC_MODE))
+            ~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/s390/net/qeth_core.h:179:41: note: expanded from macro 'qeth_adp_supported'
+        qeth_is_ipa_supported(&c->options.adp, f)
+        ~~~~~~~~~~~~~~~~~~~~~                  ^
 
-Signed-off-by: Coly Li <colyli@suse.de>
-Reviewed-by: Hannes Reinecke <hare@suse.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Add a version of this macro that uses the correct types, and
+remove the unused qeth_adp_enabled() macro that has the same
+problem.
+
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/bcache/journal.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/s390/net/qeth_core.h | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/md/bcache/journal.c b/drivers/md/bcache/journal.c
-index 522c7426f3a05..3e9bc9776951b 100644
---- a/drivers/md/bcache/journal.c
-+++ b/drivers/md/bcache/journal.c
-@@ -330,9 +330,12 @@ int bch_journal_replay(struct cache_set *s, struct list_head *list)
- 	list_for_each_entry(i, list, list) {
- 		BUG_ON(i->pin && atomic_read(i->pin) != 1);
+diff --git a/drivers/s390/net/qeth_core.h b/drivers/s390/net/qeth_core.h
+index 2d1f6a583641b..b2657582cfcfd 100644
+--- a/drivers/s390/net/qeth_core.h
++++ b/drivers/s390/net/qeth_core.h
+@@ -201,6 +201,12 @@ struct qeth_vnicc_info {
+ 	bool rx_bcast_enabled;
+ };
  
--		cache_set_err_on(n != i->j.seq, s,
--"bcache: journal entries %llu-%llu missing! (replaying %llu-%llu)",
--				 n, i->j.seq - 1, start, end);
-+		if (n != i->j.seq) {
-+			pr_err("bcache: journal entries %llu-%llu missing! (replaying %llu-%llu)",
-+			n, i->j.seq - 1, start, end);
-+			ret = -EIO;
-+			goto err;
-+		}
++static inline int qeth_is_adp_supported(struct qeth_ipa_info *ipa,
++		enum qeth_ipa_setadp_cmd func)
++{
++	return (ipa->supported_funcs & func);
++}
++
+ static inline int qeth_is_ipa_supported(struct qeth_ipa_info *ipa,
+ 		enum qeth_ipa_funcs func)
+ {
+@@ -214,9 +220,7 @@ static inline int qeth_is_ipa_enabled(struct qeth_ipa_info *ipa,
+ }
  
- 		for (k = i->j.start;
- 		     k < bset_bkey_last(&i->j);
+ #define qeth_adp_supported(c, f) \
+-	qeth_is_ipa_supported(&c->options.adp, f)
+-#define qeth_adp_enabled(c, f) \
+-	qeth_is_ipa_enabled(&c->options.adp, f)
++	qeth_is_adp_supported(&c->options.adp, f)
+ #define qeth_is_supported(c, f) \
+ 	qeth_is_ipa_supported(&c->options.ipa4, f)
+ #define qeth_is_enabled(c, f) \
 -- 
 2.20.1
 
