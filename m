@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3885C46460
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:34:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F93DC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:34:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97D142173C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:34:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58B2F20675
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:34:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558553662;
-	bh=+EkBlhEciHCWxP398yYjw3KYGRN012t44hMWC5GNIdY=;
+	s=default; t=1558553671;
+	bh=TnJ2bCfWpNnilFNi5is2KJP69mQPXJVdAWqct3X/4jk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QxwSfaFMxGLrvAz2rY25iEqnZ8JtQs0AzLoxqzy7F+AXbqwfPN0YN+8P9hBgDsiU8
-	 fLvjKyvCaRNORKsnVRplK/1b2ppWXvet/cPNXY5ymcdkdOTDEB+7EUOooMI5J2glwS
-	 QG1ptCm2+kYWPpqeNKpCCmsqT2/wyjVyST1a+cgU=
+	b=loBh6sMrgPXspoohRX3Q0MVQCOPr9Gk4+zjxuCDhKBXIoU47EwMfD+uXr8bzulGWB
+	 WyCZ1cQGTePv82TfWPiH8kiwj2DngpPLcrLQLXOBS/T0P70BuFXMQEyY8zrSNo7Il9
+	 FAPm282AhJP4wdAWwW+juoZKu8t9fqFJTXzUS90M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387540AbfEVTbe (ORCPT
+        id S1730215AbfEVTb1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:31:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55046 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:31:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54822 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732669AbfEVTbb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:31:31 -0400
+        id S1731751AbfEVTbU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:31:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7CD522177E;
-        Wed, 22 May 2019 19:31:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4476A20675;
+        Wed, 22 May 2019 19:31:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553490;
-        bh=+EkBlhEciHCWxP398yYjw3KYGRN012t44hMWC5GNIdY=;
+        s=default; t=1558553480;
+        bh=TnJ2bCfWpNnilFNi5is2KJP69mQPXJVdAWqct3X/4jk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YP8P7roBQbQkC7cdN0cq4MzCvU8pObL5RYJvg4HeGqCJScjBtZfdENn/nl6MrWCbT
-         lDbp3Dp/t02Yv3/D8PLnedSLdMEYOnw36rKmD18U9LW0dZW/VcEg8nFkaJHYxrS/11
-         uBtnsM1SyJIsCsX618cOMry8IvmGV6qXg046PfTw=
+        b=iwGhtQMreOW09cEdPrCRgaBvTCB3pUtKnWjVdvXpapZebgWKYYklV0SSppXG83U7M
+         c+n6JCBtZtM0eAv/7Et4AyVTlBm9HlTTev7HIg8caIxkdNRscKmIpgk7ECeOLsokaY
+         x95ZaNrrjSvJqju+pVZVxHcQIP+KtLeXD2dWU7S0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 02/92] cxgb4: Fix error path in cxgb4_init_module
-Date:   Wed, 22 May 2019 15:29:57 -0400
-Message-Id: <20190522193127.27079-2-sashal@kernel.org>
+Cc:     Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 039/114] dmaengine: at_xdmac: remove BUG_ON macro in tasklet
+Date:   Wed, 22 May 2019 15:29:02 -0400
+Message-Id: <20190522193017.26567-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190522193127.27079-1-sashal@kernel.org>
-References: <20190522193127.27079-1-sashal@kernel.org>
+In-Reply-To: <20190522193017.26567-1-sashal@kernel.org>
+References: <20190522193017.26567-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,84 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Nicolas Ferre <nicolas.ferre@microchip.com>
 
-[ Upstream commit a3147770bea76c8dbad73eca3a24c2118da5e719 ]
+[ Upstream commit e2c114c06da2d9ffad5b16690abf008d6696f689 ]
 
-BUG: unable to handle kernel paging request at ffffffffa016a270
-PGD 3270067 P4D 3270067 PUD 3271063 PMD 230bbd067 PTE 0
-Oops: 0000 [#1
-CPU: 0 PID: 6134 Comm: modprobe Not tainted 5.1.0+ #33
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.9.3-0-ge2fc41e-prebuilt.qemu-project.org 04/01/2014
-RIP: 0010:atomic_notifier_chain_register+0x24/0x60
-Code: 1f 80 00 00 00 00 55 48 89 e5 41 54 49 89 f4 53 48 89 fb e8 ae b4 38 01 48 8b 53 38 48 8d 4b 38 48 85 d2 74 20 45 8b 44 24 10 <44> 3b 42 10 7e 08 eb 13 44 39 42 10 7c 0d 48 8d 4a 08 48 8b 52 08
-RSP: 0018:ffffc90000e2bc60 EFLAGS: 00010086
-RAX: 0000000000000292 RBX: ffffffff83467240 RCX: ffffffff83467278
-RDX: ffffffffa016a260 RSI: ffffffff83752140 RDI: ffffffff83467240
-RBP: ffffc90000e2bc70 R08: 0000000000000000 R09: 0000000000000001
-R10: 0000000000000000 R11: 00000000014fa61f R12: ffffffffa01c8260
-R13: ffff888231091e00 R14: 0000000000000000 R15: ffffc90000e2be78
-FS:  00007fbd8d7cd540(0000) GS:ffff888237a00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffffffa016a270 CR3: 000000022c7e3000 CR4: 00000000000006f0
-Call Trace:
- register_inet6addr_notifier+0x13/0x20
- cxgb4_init_module+0x6c/0x1000 [cxgb4
- ? 0xffffffffa01d7000
- do_one_initcall+0x6c/0x3cc
- ? do_init_module+0x22/0x1f1
- ? rcu_read_lock_sched_held+0x97/0xb0
- ? kmem_cache_alloc_trace+0x325/0x3b0
- do_init_module+0x5b/0x1f1
- load_module+0x1db1/0x2690
- ? m_show+0x1d0/0x1d0
- __do_sys_finit_module+0xc5/0xd0
- __x64_sys_finit_module+0x15/0x20
- do_syscall_64+0x6b/0x1d0
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
+Even if this case shouldn't happen when controller is properly programmed,
+it's still better to avoid dumping a kernel Oops for this.
+As the sequence may happen only for debugging purposes, log the error and
+just finish the tasklet call.
 
-If pci_register_driver fails, register inet6addr_notifier is
-pointless. This patch fix the error path in cxgb4_init_module.
-
-Fixes: b5a02f503caa ("cxgb4 : Update ipv6 address handling api")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+ drivers/dma/at_xdmac.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
-index a3e1498ca67ce..3b96622de8ff2 100644
---- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
-+++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
-@@ -5061,15 +5061,24 @@ static int __init cxgb4_init_module(void)
+diff --git a/drivers/dma/at_xdmac.c b/drivers/dma/at_xdmac.c
+index b222dd7afe8e2..12d9048293245 100644
+--- a/drivers/dma/at_xdmac.c
++++ b/drivers/dma/at_xdmac.c
+@@ -1608,7 +1608,11 @@ static void at_xdmac_tasklet(unsigned long data)
+ 					struct at_xdmac_desc,
+ 					xfer_node);
+ 		dev_vdbg(chan2dev(&atchan->chan), "%s: desc 0x%p\n", __func__, desc);
+-		BUG_ON(!desc->active_xfer);
++		if (!desc->active_xfer) {
++			dev_err(chan2dev(&atchan->chan), "Xfer not active: exiting");
++			spin_unlock_bh(&atchan->lock);
++			return;
++		}
  
- 	ret = pci_register_driver(&cxgb4_driver);
- 	if (ret < 0)
--		debugfs_remove(cxgb4_debugfs_root);
-+		goto err_pci;
- 
- #if IS_ENABLED(CONFIG_IPV6)
- 	if (!inet6addr_registered) {
--		register_inet6addr_notifier(&cxgb4_inet6addr_notifier);
--		inet6addr_registered = true;
-+		ret = register_inet6addr_notifier(&cxgb4_inet6addr_notifier);
-+		if (ret)
-+			pci_unregister_driver(&cxgb4_driver);
-+		else
-+			inet6addr_registered = true;
- 	}
- #endif
- 
-+	if (ret == 0)
-+		return ret;
-+
-+err_pci:
-+	debugfs_remove(cxgb4_debugfs_root);
-+
- 	return ret;
- }
+ 		txd = &desc->tx_dma_desc;
  
 -- 
 2.20.1
