@@ -2,237 +2,192 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A54A2C18E7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 05:24:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D05CBC18E7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 05:24:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A49120856
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 05:24:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A581521479
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 05:24:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Pdf6HkCp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728031AbfEVFYb (ORCPT
+        id S1728305AbfEVFYd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 01:24:31 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:53719 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725796AbfEVFYb (ORCPT
+        Wed, 22 May 2019 01:24:33 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:58180 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725801AbfEVFYc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 01:24:31 -0400
-X-UUID: c79c5609883e4e05bbfd9eabfb832317-20190522
-X-UUID: c79c5609883e4e05bbfd9eabfb832317-20190522
-Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw01.mediatek.com
-        (envelope-from <long.cheng@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1054208324; Wed, 22 May 2019 13:24:25 +0800
-Received: from MTKCAS32.mediatek.inc (172.27.4.184) by mtkmbs08n1.mediatek.inc
- (172.21.101.55) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Wed, 22 May
- 2019 13:24:23 +0800
-Received: from [10.17.3.153] (172.27.4.253) by MTKCAS32.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 22 May 2019 13:24:22 +0800
-Message-ID: <1558502662.14150.31.camel@mhfsdcap03>
-Subject: Re: [PATCH 4/4] serial: 8250-mtk: modify uart DMA rx
-From:   Long Cheng <long.cheng@mediatek.com>
-To:     Nicolas Boichat <drinkcat@chromium.org>
-CC:     Vinod Koul <vkoul@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Rob Herring" <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Ryder Lee" <ryder.lee@mediatek.com>,
-        Sean Wang <sean.wang@kernel.org>,
-        "Matthias Brugger" <matthias.bgg@gmail.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        "linux-arm Mailing List" <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        <linux-serial@vger.kernel.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        Yingjoe Chen <yingjoe.chen@mediatek.com>,
-        YT Shen <yt.shen@mediatek.com>,
-        Zhenbao Liu <zhenbao.liu@mediatek.com>,
-        Long Cheng <long.cheng@mediatek.com>
-Date:   Wed, 22 May 2019 13:24:22 +0800
-In-Reply-To: <1558078602.14150.27.camel@mhfsdcap03>
-References: <1556336193-15198-1-git-send-email-long.cheng@mediatek.com>
-         <1556336193-15198-5-git-send-email-long.cheng@mediatek.com>
-         <CANMq1KDTyu48joV6uMksGBMz9EmjFH9SEpGAm93YCZ40jxgBpQ@mail.gmail.com>
-         <1558078602.14150.27.camel@mhfsdcap03>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 7bit
+        Wed, 22 May 2019 01:24:32 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4M5EDBu160383;
+        Wed, 22 May 2019 05:23:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=7yB1jRRKfJaTqC5CwIRJSAlMgBo0pt+Z3oKjydQnMbA=;
+ b=Pdf6HkCpfujIhOnSEKRQckBYu+cLerSuyaUTvpy5Ji9HaoLNXsfTUr+fQErYVTc0qiiJ
+ ZvzrCdv/4uxLdg369gHvAaTKruY3BmENC6m5HGe1U08UU85i3St1WVNSWWRAypdhucS+
+ 8O41vongb2zciolGPc6rpqYNgA65IO3TWS+uyKY0olBdUO2rpdDOaK2yEvY2lj6plLV3
+ C5t3Bcwi1Tca6Xk097sYBlil6dfgeNXAGwqnbxK52bmY94xK8Pq44DEj+PjH+FbJZaTC
+ d1CV8v1t868VUFq9SKSXNCd20+C3mhyXkfw1zMU9jm/KEqQqN8hBj9XdwLgcCrkFniJJ Yg== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2130.oracle.com with ESMTP id 2smsk597sy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 22 May 2019 05:23:34 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4M5N9IU133624;
+        Wed, 22 May 2019 05:23:33 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by userp3030.oracle.com with ESMTP id 2smshecvjq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 22 May 2019 05:23:33 +0000
+Received: from userp3030.oracle.com (userp3030.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x4M5NXYZ134191;
+        Wed, 22 May 2019 05:23:33 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 2smshecvjh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 22 May 2019 05:23:33 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x4M5NUSL027017;
+        Wed, 22 May 2019 05:23:30 GMT
+Received: from localhost (/10.159.211.99)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 22 May 2019 05:23:30 +0000
+Date:   Wed, 22 May 2019 01:23:27 -0400
+From:   Kris Van Hees <kris.van.hees@oracle.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Kris Van Hees <kris.van.hees@oracle.com>,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        dtrace-devel@oss.oracle.com, linux-kernel@vger.kernel.org,
+        mhiramat@kernel.org, acme@kernel.org, ast@kernel.org,
+        daniel@iogearbox.net, peterz@infradead.org
+Subject: Re: [RFC PATCH 00/11] bpf, trace, dtrace: DTrace BPF program type
+ implementation and sample use
+Message-ID: <20190522052327.GN2422@oracle.com>
+References: <201905202347.x4KNl0cs030532@aserv0121.oracle.com>
+ <20190521175617.ipry6ue7o24a2e6n@ast-mbp.dhcp.thefacebook.com>
+ <20190521184137.GH2422@oracle.com>
+ <20190521205533.evfszcjvdouby7vp@ast-mbp.dhcp.thefacebook.com>
+ <20190521173618.2ebe8c1f@gandalf.local.home>
+ <20190521214325.rr7emn5z3b7wqiiy@ast-mbp.dhcp.thefacebook.com>
+ <20190521174757.74ec8937@gandalf.local.home>
 MIME-Version: 1.0
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190521174757.74ec8937@gandalf.local.home>
+User-Agent: Mutt/1.5.23 (2014-03-12)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9264 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905220037
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-05-17 at 15:36 +0800, Long Cheng wrote:
-> On Wed, 2019-05-15 at 21:48 +0800, Nicolas Boichat wrote:
-> > On Sat, Apr 27, 2019 at 11:36 AM Long Cheng <long.cheng@mediatek.com> wrote:
-> > >
-> > > Modify uart rx and complete for DMA.
-> > 
-> > I don't know much about the DMA framework, but can you please explain
-> > why you are making the changes in this CL? I see that you are dropping
-> > dma_sync_single_for_device calls, for example, why?
-> > 
+On Tue, May 21, 2019 at 05:48:11PM -0400, Steven Rostedt wrote:
+> On Tue, 21 May 2019 14:43:26 -0700
+> Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
 > 
-> the rx buffer is create by 'dma_alloc_coherent'. in the function, the
-> buffer is uncache. We don't need to sync between CPU and DMA. So I
-> remove it.
+> > Steve,
+> > sounds like you've missed all prior threads.
 > 
-> > >
-> > > Signed-off-by: Long Cheng <long.cheng@mediatek.com>
-> > > ---
-> > >  drivers/tty/serial/8250/8250_mtk.c |   53 ++++++++++++++++--------------------
-> > >  1 file changed, 23 insertions(+), 30 deletions(-)
-> > >
-> > > diff --git a/drivers/tty/serial/8250/8250_mtk.c b/drivers/tty/serial/8250/8250_mtk.c
-> > > index c1fdbc0..04081a6 100644
-> > > --- a/drivers/tty/serial/8250/8250_mtk.c
-> > > +++ b/drivers/tty/serial/8250/8250_mtk.c
-> > > @@ -30,7 +30,6 @@
-> > >  #define MTK_UART_DMA_EN_TX     0x2
-> > >  #define MTK_UART_DMA_EN_RX     0x5
-> > >
-> > > -#define MTK_UART_TX_SIZE       UART_XMIT_SIZE
-> > >  #define MTK_UART_RX_SIZE       0x8000
-> > >  #define MTK_UART_TX_TRIGGER    1
-> > >  #define MTK_UART_RX_TRIGGER    MTK_UART_RX_SIZE
-> > > @@ -64,28 +63,30 @@ static void mtk8250_dma_rx_complete(void *param)
-> > >         struct mtk8250_data *data = up->port.private_data;
-> > >         struct tty_port *tty_port = &up->port.state->port;
-> > >         struct dma_tx_state state;
-> > > +       int copied, cnt, tmp;
-> > >         unsigned char *ptr;
-> > > -       int copied;
-> > >
-> > > -       dma_sync_single_for_cpu(dma->rxchan->device->dev, dma->rx_addr,
-> > > -                               dma->rx_size, DMA_FROM_DEVICE);
-> > > +       if (data->rx_status == DMA_RX_SHUTDOWN)
-> > > +               return;
-> > >
-> > >         dmaengine_tx_status(dma->rxchan, dma->rx_cookie, &state);
-> > > +       cnt = dma->rx_size - state.residue;
-> > > +       tmp = cnt;
-> > 
-> > I ponder, maybe we should rename cnt to left? (like, how many bytes
-> > are left to transfer, in total) Or maybe "total"
-> > Then maybe rename tmp to cnt.
-> > 
-> like better.
+> I probably have missed them ;-)
 > 
-> > >
-> > > -       if (data->rx_status == DMA_RX_SHUTDOWN)
-> > > -               return;
-> > > +       if ((data->rx_pos + cnt) > dma->rx_size)
-> > > +               tmp = dma->rx_size - data->rx_pos;
-> > 
-> > Maybe replace this and the line above:
-> > tmp = max_t(int, cnt, dma->rx_size - data->rx_pos);
-> > 
-> Yes. It's better.
+> > The feedback was given to Kris it was very clear:
+> > implement dtrace the same way as bpftrace is working with bpf.
+> > No changes are necessary to dtrace scripts
+> > and no kernel changes are necessary.
 > 
+> Kris, I haven't been keeping up on all the discussions. But what
+> exactly is the issue where Dtrace can't be done the same way as the
+> bpftrace is done?
 
-can't replace by 'max_t'. So I will keep original code.
+There are several issues (and I keep finding new ones as I move forward) but
+the biggest one is that I am not trying to re-design and re-implement) DTrace
+from the ground up.  We have an existing userspace component that is getting
+modified to work with a new kernel implementation (based on BPF and various
+other kernel features that are thankfully available these days).  But we need
+to ensure that the userspace component continues to function exactly as one
+would expect.  There should be no need to modify DTrace scripts.  Perhaps
+bpftrace could be taught to parse DTrace scripts (i.e. implement the D script
+language with all its bells and whistles) but it currently cannot and DTrace
+obviously can.  It seems to be a better use of resources to focus on the
+kernel component, where we can really provide a much cleaner implementation
+for DTrace probe execution because BPF is available and very powerful.
 
-> > >
-> > > -       if ((data->rx_pos + state.residue) <= dma->rx_size) {
-> > > -               ptr = (unsigned char *)(data->rx_pos + dma->rx_buf);
-> > > -               copied = tty_insert_flip_string(tty_port, ptr, state.residue);
-> > > -       } else {
-> > > -               ptr = (unsigned char *)(data->rx_pos + dma->rx_buf);
-> > > -               copied = tty_insert_flip_string(tty_port, ptr,
-> > > -                                               dma->rx_size - data->rx_pos);
-> > > +       ptr = (unsigned char *)(data->rx_pos + dma->rx_buf);
-> > > +       copied = tty_insert_flip_string(tty_port, ptr, tmp);
-> > > +       data->rx_pos += tmp;
-> > > +
-> > > +       if (cnt > tmp) {
-> > >                 ptr = (unsigned char *)(dma->rx_buf);
-> > > -               copied += tty_insert_flip_string(tty_port, ptr,
-> > > -                               data->rx_pos + state.residue - dma->rx_size);
-> > > +               tmp = cnt - tmp;
-> > > +               copied += tty_insert_flip_string(tty_port, ptr, tmp);
-> > > +               data->rx_pos = tmp;
-> > >         }
-> > > +
-> > >         up->port.icount.rx += copied;
-> > >
-> > >         tty_flip_buffer_push(tty_port);
-> > > @@ -96,9 +97,7 @@ static void mtk8250_dma_rx_complete(void *param)
-> > >  static void mtk8250_rx_dma(struct uart_8250_port *up)
-> > >  {
-> > >         struct uart_8250_dma *dma = up->dma;
-> > > -       struct mtk8250_data *data = up->port.private_data;
-> > >         struct dma_async_tx_descriptor  *desc;
-> > > -       struct dma_tx_state      state;
-> > >
-> > >         desc = dmaengine_prep_slave_single(dma->rxchan, dma->rx_addr,
-> > >                                            dma->rx_size, DMA_DEV_TO_MEM,
-> > > @@ -113,12 +112,6 @@ static void mtk8250_rx_dma(struct uart_8250_port *up)
-> > >
-> > >         dma->rx_cookie = dmaengine_submit(desc);
-> > >
-> > > -       dmaengine_tx_status(dma->rxchan, dma->rx_cookie, &state);
-> > > -       data->rx_pos = state.residue;
-> > > -
-> > > -       dma_sync_single_for_device(dma->rxchan->device->dev, dma->rx_addr,
-> > > -                                  dma->rx_size, DMA_FROM_DEVICE);
-> > > -
-> > >         dma_async_issue_pending(dma->rxchan);
-> > >  }
-> > >
-> > > @@ -131,13 +124,13 @@ static void mtk8250_dma_enable(struct uart_8250_port *up)
-> > >         if (data->rx_status != DMA_RX_START)
-> > >                 return;
-> > >
-> > > -       dma->rxconf.direction           = DMA_DEV_TO_MEM;
-> > > -       dma->rxconf.src_addr_width      = dma->rx_size / 1024;
-> > > -       dma->rxconf.src_addr            = dma->rx_addr;
-> > > +       dma->rxconf.direction                           = DMA_DEV_TO_MEM;
-> > > +       dma->rxconf.src_port_window_size        = dma->rx_size;
-> > > +       dma->rxconf.src_addr                            = dma->rx_addr;
-> > >
-> > > -       dma->txconf.direction           = DMA_MEM_TO_DEV;
-> > > -       dma->txconf.dst_addr_width      = MTK_UART_TX_SIZE / 1024;
-> > > -       dma->txconf.dst_addr            = dma->tx_addr;
-> > > +       dma->txconf.direction                           = DMA_MEM_TO_DEV;
-> > > +       dma->txconf.dst_port_window_size        = UART_XMIT_SIZE;
-> > > +       dma->txconf.dst_addr                            = dma->tx_addr;
-> > >
-> > >         serial_out(up, UART_FCR, UART_FCR_ENABLE_FIFO | UART_FCR_CLEAR_RCVR |
-> > >                 UART_FCR_CLEAR_XMIT);
-> > > @@ -217,7 +210,7 @@ static void mtk8250_shutdown(struct uart_port *port)
-> > >          * Mediatek UARTs use an extra highspeed register (UART_MTK_HIGHS)
-> > >          *
-> > >          * We need to recalcualte the quot register, as the claculation depends
-> > > -        * on the vaule in the highspeed register.
-> > > +        * on the value in the highspeed register.
-> > 
-> > Since you're doing some cosmetic changes here, you might as well fix
-> > recalcualte => recalculate and claculation => calculation on the line
-> > above.
-> > 
-> 
-> I see.
-> 
-> > But technically, this should belong in another patch...
-> > 
-> > >          *
-> > >          * Some baudrates are not supported by the chip, so we use the next
-> > >          * lower rate supported and update termios c_flag.
-> > > --
-> > > 1.7.9.5
-> > >
-> 
+Userspace aside, there are various features that are not currently available
+such as retrieving the ppid of the current task, and various other data items
+that relate to the current task that triggered a probe.  There are ways to
+work around it (using the bpf_probe_read() helper, which actually performs a
+probe_kernel_read()) but that is rather clunky and definitely shouldn't be
+something that can be done from a BPF program if we're doing unprivileged
+tracing (which is a goal that is important for us).  New helpers can be added
+for things like this, but the list grows large very quickly once you look at
+what information DTrace scripts tend to use.
 
+One of the benefits of DTrace is that probes are largely abstracted entities
+when you get to the script level.  While different probes provide different
+data, they are all represented as probe arguments and they are accessed in a
+very consistent manner that is independent from the actual kind of probe that
+triggered the execution.  Often, a single DTrace clause is associated with
+multiple probes, of different types.  Probes in the kernel (kprobe, perf event,
+tracepoint, ...) are associated with their own BPF program type, so it is not
+possible to load the DTrace clause (translated into BPF code) once and
+associate it with probes of different types.  Instead, I'd have to load it
+as a BPF_PROG_TYPE_KPROBE program to associate it with a kprobe, and I'd have
+to load it as a BPF_PROG_TYPE_TRACEPOINT program to associate it with a
+tracepoint, and so on.  This also means that I suddenly have to add code to
+the userspace component to know about the different program types with more
+detail, like what helpers are available to specific program types.
 
+Another advantage of being able to operate on a more abstract probe concept
+that is not tied to a specific probe type is that the userspace component does
+not need to know about the implementation details of the specific probes.
+This avoids a tight coupling between the userspace component and the kernel
+implementation.
+
+Another feature that is currently not supported is speculative tracing.  This
+is a feature that is not as commonly used (although I personally have found it
+to be very useful in the past couple of years) but it quite powerful because
+it allows for probe data to be recorded, and have the decision on whether it
+is to be made available to userspace postponed to a later event.  At that time,
+the data can be discarded or committed.
+
+These are just some examples of issues I have been working on.  I spent quite
+a bit of time to look for ways to implement what we need for DTrace with a
+minimal amount of patches to the kernel because there really isn't any point
+in doing unnecessary work.  I do not doubt that there are possible clever
+ways to somehow get around some of these issues with clever hacks and
+workarounds, but I am not trying to hack something together that hopefully
+will be close enough to the expected functionality.
+
+DTrace has proven itself to be quite useful and dependable as a tracing
+solution, and I am working on continuing to deliver on that while recognizing
+the significant work that others have put into advancing the tracing
+infrastructure in Linux in recent years.  So many people have contributed
+excellent features - and I am making use of those features as much as I can.
+But as is often the case, not everything that I need is currently implemented.
+As I expressed during last year's Plumbers in Vancouver, I am putting a very
+strong emphasis on ensuring that what I propose as contributions is not
+limited to just DTrace.  My goal is to work in an open, collaborative manner,
+providing features that anyone can use if they want to.
+
+I wish that the assertion that "no changes are necessary to dtrace scripts and
+no kernel changes are necessary" were true, but my own findings contradict
+that.  To my knowledge no tool exists right now that can execute any and all
+valid DTrace scripts without any changes to the scripts and without any changes
+to the kernel.  The only tool I know that can execute DTrace scripts right now
+does require rather extensive kernel changes, and the work I am doing right now
+is aimed at doing much better than that.
+
+	Kris
