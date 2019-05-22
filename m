@@ -7,62 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77A16C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:22:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9BFEC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:23:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D31721871
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:22:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7BB021871
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:23:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558552979;
-	bh=725qs2G8mkSFYKEorpNyVrp1Z1Mx50l8p4XEVP6RJP4=;
+	s=default; t=1558552982;
+	bh=e6LFd7jmW39mo9lnQy+F1wiUYzgcCZS9C8c43hpfcvA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BshlUXX9hW9xLtJFydFbFLzX3nrnN9hOFJfeZoF3xikGo3kdT9sakHERIuM7YeuAz
-	 KeiY4NqHUOlfvW8iZbr4yEgBL+GuT84PgX5HngDUNWq8a+QTj8deo3UPGFg87ByuAp
-	 0wKqGyIh7LaIZs9RkAI7BZTBuYVC5w9zYDYlaJzs=
+	b=Bxd4YlN3eAmtymOz630vHgN0kVEVDHhXSEALauffq71UuVw5N6czIghpWljXhgZKr
+	 egs49ZsrTA1KqOv5mkmIMqPXdCQvFwCZjfCXnPnseGr5y/5H82BgzC2SZATwfoI08+
+	 r658ORW7JRKnzNrQhRV1h6suJQd8CeSQHk7kLz+g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730680AbfEVTW6 (ORCPT
+        id S1730721AbfEVTXB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:22:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43676 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:23:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43838 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730641AbfEVTWz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:22:55 -0400
+        id S1729958AbfEVTW7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:22:59 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 710492177E;
-        Wed, 22 May 2019 19:22:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E30521855;
+        Wed, 22 May 2019 19:22:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558552974;
-        bh=725qs2G8mkSFYKEorpNyVrp1Z1Mx50l8p4XEVP6RJP4=;
+        s=default; t=1558552979;
+        bh=e6LFd7jmW39mo9lnQy+F1wiUYzgcCZS9C8c43hpfcvA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Xa6oRiiijLOM2m47/i7aae2KX7K3F9oPJZjpAZycOm4MmSOtcIPe6B633XKgKcv+l
-         kt/wXkYmDFuKsAUfSttpAS6M8fTfwStkwTl3AqSVkE2FgSHJvecJU+DP0N6ifiMU8/
-         DhJxujvOm7l+9LMNIOxOUBxnW29mncYrH4xqKfEw=
+        b=qEwvNOC+A72na9Ybm6HlIDKiCu5YJCm/B0nOAJLyNJsAchhHczqcBfxrRAPGMmKTC
+         9H6u1J4wHF0AiTrY6tvVz6ZkbpdrSAwkHNBym2EBCnLj4PqO14N7Yv6aNvTLjH8MD4
+         um0hj68xg6F00HHNg+TGz1O9cSphkzAcHUFSTXU8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nadav Amit <namit@vmware.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Rick Edgecombe <rick.p.edgecombe@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        akpm@linux-foundation.org, ard.biesheuvel@linaro.org,
-        deneen.t.dock@intel.com, kernel-hardening@lists.openwall.com,
-        kristen@linux.intel.com, linux_dti@icloud.com, will.deacon@arm.com,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@intel.com>,
-        "H . Peter Anvin" <hpa@zytor.com>, Jessica Yu <jeyu@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Rik van Riel <riel@surriel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 055/375] x86/modules: Avoid breaking W^X while loading modules
-Date:   Wed, 22 May 2019 15:15:55 -0400
-Message-Id: <20190522192115.22666-55-sashal@kernel.org>
+Cc:     Qu Wenruo <wqu@suse.com>, Filipe Manana <fdmanana@suse.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 059/375] btrfs: Don't panic when we can't find a root key
+Date:   Wed, 22 May 2019 15:15:59 -0400
+Message-Id: <20190522192115.22666-59-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192115.22666-1-sashal@kernel.org>
 References: <20190522192115.22666-1-sashal@kernel.org>
@@ -75,142 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nadav Amit <namit@vmware.com>
+From: Qu Wenruo <wqu@suse.com>
 
-[ Upstream commit f2c65fb3221adc6b73b0549fc7ba892022db9797 ]
+[ Upstream commit 7ac1e464c4d473b517bb784f30d40da1f842482e ]
 
-When modules and BPF filters are loaded, there is a time window in
-which some memory is both writable and executable. An attacker that has
-already found another vulnerability (e.g., a dangling pointer) might be
-able to exploit this behavior to overwrite kernel code. Prevent having
-writable executable PTEs in this stage.
+When we failed to find a root key in btrfs_update_root(), we just panic.
 
-In addition, avoiding having W+X mappings can also slightly simplify the
-patching of modules code on initialization (e.g., by alternatives and
-static-key), as would be done in the next patch. This was actually the
-main motivation for this patch.
+That's definitely not cool, fix it by outputting an unique error
+message, aborting current transaction and return -EUCLEAN. This should
+not normally happen as the root has been used by the callers in some
+way.
 
-To avoid having W+X mappings, set them initially as RW (NX) and after
-they are set as RO set them as X as well. Setting them as executable is
-done as a separate step to avoid one core in which the old PTE is cached
-(hence writable), and another which sees the updated PTE (executable),
-which would break the W^X protection.
-
-Suggested-by: Thomas Gleixner <tglx@linutronix.de>
-Suggested-by: Andy Lutomirski <luto@amacapital.net>
-Signed-off-by: Nadav Amit <namit@vmware.com>
-Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: <akpm@linux-foundation.org>
-Cc: <ard.biesheuvel@linaro.org>
-Cc: <deneen.t.dock@intel.com>
-Cc: <kernel-hardening@lists.openwall.com>
-Cc: <kristen@linux.intel.com>
-Cc: <linux_dti@icloud.com>
-Cc: <will.deacon@arm.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@intel.com>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Jessica Yu <jeyu@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Rik van Riel <riel@surriel.com>
-Link: https://lkml.kernel.org/r/20190426001143.4983-12-namit@vmware.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Reviewed-by: Filipe Manana <fdmanana@suse.com>
+Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
+Signed-off-by: Qu Wenruo <wqu@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/alternative.c | 28 +++++++++++++++++++++-------
- arch/x86/kernel/module.c      |  2 +-
- include/linux/filter.h        |  1 +
- kernel/module.c               |  5 +++++
- 4 files changed, 28 insertions(+), 8 deletions(-)
+ fs/btrfs/root-tree.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
-index 9a79c7808f9cc..d7df79fc448cd 100644
---- a/arch/x86/kernel/alternative.c
-+++ b/arch/x86/kernel/alternative.c
-@@ -667,15 +667,29 @@ void __init alternative_instructions(void)
-  * handlers seeing an inconsistent instruction while you patch.
-  */
- void *__init_or_module text_poke_early(void *addr, const void *opcode,
--					      size_t len)
-+				       size_t len)
- {
- 	unsigned long flags;
--	local_irq_save(flags);
--	memcpy(addr, opcode, len);
--	local_irq_restore(flags);
--	sync_core();
--	/* Could also do a CLFLUSH here to speed up CPU recovery; but
--	   that causes hangs on some VIA CPUs. */
-+
-+	if (boot_cpu_has(X86_FEATURE_NX) &&
-+	    is_module_text_address((unsigned long)addr)) {
-+		/*
-+		 * Modules text is marked initially as non-executable, so the
-+		 * code cannot be running and speculative code-fetches are
-+		 * prevented. Just change the code.
-+		 */
-+		memcpy(addr, opcode, len);
-+	} else {
-+		local_irq_save(flags);
-+		memcpy(addr, opcode, len);
-+		local_irq_restore(flags);
-+		sync_core();
-+
-+		/*
-+		 * Could also do a CLFLUSH here to speed up CPU recovery; but
-+		 * that causes hangs on some VIA CPUs.
-+		 */
-+	}
- 	return addr;
- }
+diff --git a/fs/btrfs/root-tree.c b/fs/btrfs/root-tree.c
+index 893d12fbfda07..1b9a5d0de1392 100644
+--- a/fs/btrfs/root-tree.c
++++ b/fs/btrfs/root-tree.c
+@@ -137,11 +137,14 @@ int btrfs_update_root(struct btrfs_trans_handle *trans, struct btrfs_root
+ 		goto out;
+ 	}
  
-diff --git a/arch/x86/kernel/module.c b/arch/x86/kernel/module.c
-index b052e883dd8cc..cfa3106faee42 100644
---- a/arch/x86/kernel/module.c
-+++ b/arch/x86/kernel/module.c
-@@ -87,7 +87,7 @@ void *module_alloc(unsigned long size)
- 	p = __vmalloc_node_range(size, MODULE_ALIGN,
- 				    MODULES_VADDR + get_module_load_offset(),
- 				    MODULES_END, GFP_KERNEL,
--				    PAGE_KERNEL_EXEC, 0, NUMA_NO_NODE,
-+				    PAGE_KERNEL, 0, NUMA_NO_NODE,
- 				    __builtin_return_address(0));
- 	if (p && (kasan_module_alloc(p, size) < 0)) {
- 		vfree(p);
-diff --git a/include/linux/filter.h b/include/linux/filter.h
-index 6074aa064b540..14ec3bdad9a90 100644
---- a/include/linux/filter.h
-+++ b/include/linux/filter.h
-@@ -746,6 +746,7 @@ static inline void bpf_prog_unlock_ro(struct bpf_prog *fp)
- static inline void bpf_jit_binary_lock_ro(struct bpf_binary_header *hdr)
- {
- 	set_memory_ro((unsigned long)hdr, hdr->pages);
-+	set_memory_x((unsigned long)hdr, hdr->pages);
- }
+-	if (ret != 0) {
+-		btrfs_print_leaf(path->nodes[0]);
+-		btrfs_crit(fs_info, "unable to update root key %llu %u %llu",
+-			   key->objectid, key->type, key->offset);
+-		BUG_ON(1);
++	if (ret > 0) {
++		btrfs_crit(fs_info,
++			"unable to find root key (%llu %u %llu) in tree %llu",
++			key->objectid, key->type, key->offset,
++			root->root_key.objectid);
++		ret = -EUCLEAN;
++		btrfs_abort_transaction(trans, ret);
++		goto out;
+ 	}
  
- static inline void bpf_jit_binary_unlock_ro(struct bpf_binary_header *hdr)
-diff --git a/kernel/module.c b/kernel/module.c
-index 0b9aa8ab89f08..2b2845ae983ed 100644
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -1950,8 +1950,13 @@ void module_enable_ro(const struct module *mod, bool after_init)
- 		return;
- 
- 	frob_text(&mod->core_layout, set_memory_ro);
-+	frob_text(&mod->core_layout, set_memory_x);
-+
- 	frob_rodata(&mod->core_layout, set_memory_ro);
-+
- 	frob_text(&mod->init_layout, set_memory_ro);
-+	frob_text(&mod->init_layout, set_memory_x);
-+
- 	frob_rodata(&mod->init_layout, set_memory_ro);
- 
- 	if (after_init)
+ 	l = path->nodes[0];
 -- 
 2.20.1
 
