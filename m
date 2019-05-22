@@ -2,243 +2,317 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC5ABC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 11:49:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 615AFC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 11:51:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B12092173C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 11:49:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28009217F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 11:51:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pCIXG2ap"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729179AbfEVLtU (ORCPT
+        id S1729211AbfEVLvI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 07:49:20 -0400
-Received: from foss.arm.com ([217.140.101.70]:48626 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727464AbfEVLtU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 07:49:20 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7DC8180D;
-        Wed, 22 May 2019 04:49:19 -0700 (PDT)
-Received: from mbp (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AE7643F575;
-        Wed, 22 May 2019 04:49:13 -0700 (PDT)
-Date:   Wed, 22 May 2019 12:49:10 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Andrey Konovalov <andreyknvl@google.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
-        linux-media@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
-Subject: Re: [PATCH v15 05/17] arms64: untag user pointers passed to memory
- syscalls
-Message-ID: <20190522114910.emlckebwzv2qz42i@mbp>
-References: <cover.1557160186.git.andreyknvl@google.com>
- <00eb4c63fefc054e2c8d626e8fedfca11d7c2600.1557160186.git.andreyknvl@google.com>
+        Wed, 22 May 2019 07:51:08 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:32803 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727464AbfEVLvH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 07:51:07 -0400
+Received: by mail-lf1-f65.google.com with SMTP id x132so1476226lfd.0;
+        Wed, 22 May 2019 04:51:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language;
+        bh=0ynUYONVcMiVbkrkcaIw584jgiD0pTwFWZg9Gin77bo=;
+        b=pCIXG2apP2eP17dxL3Fcc9s1Po4HcUjSyZOLarAaiah2CRKo092uOOzwoS8W+89Yoq
+         91OoZsgbqvKnGDCfmKFV150MeQygCfkDdxUH8Cti/NmOUmJwLO+zWIZTzZ2azXlcKUkw
+         yUwbmGmQkb5/YooUExPckSyPQG1+05oBe4i5+wfRTO584laJEGpbOy224XB+cxOqpxuz
+         ytlY1hevwI1YzM+s9v+C9I3e/zs1gvAj5dF0e1fYZ9+lrddjjPvIq1oQHnI6cYTp+7nI
+         aLmR45Is1Rt9j2qEz2hVcZIPKuKVrGDHn8Ap3EeOWK49nBg9kTmNDMmKCsqCNf5FB9pU
+         RL7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language;
+        bh=0ynUYONVcMiVbkrkcaIw584jgiD0pTwFWZg9Gin77bo=;
+        b=VKnWv7PrNYFTbCDLkXnNKJIohRMuSmbVJd+gVGekE1LkUm2HelUtQjhQ4wJBxqJSP6
+         U/Ogps9nMtgSrtFoE5CCVORAoRAgav67SbSsPS2MgPR54qxljYFVNYuhnXycnAPlDX+Z
+         SAPU2XsJKi146385VGwjfZc2Imesh2oElZlf9aSuMH9Ii6Uyar+JQUyi6tmLscJ+4U5P
+         1NBBk8dTJuG9tf3kotZ7CCUcZGRMUwuV009B95XiHKbatS+NEzz2oEHX1Ag71ADE3Crm
+         zaMxuoeosAENyriG6lVoHmNT+kEBUhZ8Lm4vNU1IFbDsmoffBJXKuhYs0QT+/m9FhPHo
+         7s+Q==
+X-Gm-Message-State: APjAAAV/92+ZyC5mf+sY6GnCEetOrXDxpyfBmPJ9mzJMTWfukt3+DCJV
+        biCZbHl/3UbgaZR00s9l/Pw=
+X-Google-Smtp-Source: APXvYqy2S4Tw15COferEzBGg+gYLtPOE26SWc436EPB7s/SfCOmOTSDqz+ruUjxlnOAUBK2I43Jfnw==
+X-Received: by 2002:a19:7d05:: with SMTP id y5mr9179157lfc.40.1558525864270;
+        Wed, 22 May 2019 04:51:04 -0700 (PDT)
+Received: from elitebook.lan (ip-194-187-74-233.konfederacka.maverick.com.pl. [194.187.74.233])
+        by smtp.googlemail.com with ESMTPSA id h10sm6193902ljm.9.2019.05.22.04.51.02
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Wed, 22 May 2019 04:51:03 -0700 (PDT)
+Subject: Re: ARM router NAT performance affected by random/unrelated commits
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Network Development <netdev@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-block@vger.kernel.org, John Crispin <john@phrozen.org>,
+        Jonas Gorski <jonas.gorski@gmail.com>,
+        Jo-Philipp Wich <jo@mein.io>, Felix Fietkau <nbd@nbd.name>
+References: <9a9ba4c9-3cb7-eb64-4aac-d43b59224442@gmail.com>
+ <20190521104512.2r67fydrgniwqaja@shell.armlinux.org.uk>
+From:   =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+Message-ID: <de262f71-748f-d242-f1d4-ea10188a0438@gmail.com>
+Date:   Wed, 22 May 2019 13:51:01 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <00eb4c63fefc054e2c8d626e8fedfca11d7c2600.1557160186.git.andreyknvl@google.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20190521104512.2r67fydrgniwqaja@shell.armlinux.org.uk>
+Content-Type: multipart/mixed;
+ boundary="------------1DD6FAD97BC7F1875FD92211"
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 06, 2019 at 06:30:51PM +0200, Andrey Konovalov wrote:
-> This patch is a part of a series that extends arm64 kernel ABI to allow to
-> pass tagged user pointers (with the top byte set to something else other
-> than 0x00) as syscall arguments.
-> 
-> This patch allows tagged pointers to be passed to the following memory
-> syscalls: brk, get_mempolicy, madvise, mbind, mincore, mlock, mlock2,
-> mmap, mmap_pgoff, mprotect, mremap, msync, munlock, munmap,
-> remap_file_pages, shmat and shmdt.
-> 
-> This is done by untagging pointers passed to these syscalls in the
-> prologues of their handlers.
+This is a multi-part message in MIME format.
+--------------1DD6FAD97BC7F1875FD92211
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-I'll go through them one by one to see if we can tighten the expected
-ABI while having the MTE in mind.
+On 21.05.2019 12:45, Russell King - ARM Linux admin wrote:> On Tue, May 21, 2019 at 12:28:48PM +0200, Rafał Miłecki wrote:
+ >> I work on home routers based on Broadcom's Northstar SoCs. Those devices
+ >> have ARM Cortex-A9 and most of them are dual-core.
+ >>
+ >> As for home routers, my main concern is network performance. That CPU
+ >> isn't powerful enough to handle gigabit traffic so all kind of
+ >> optimizations do matter. I noticed some unexpected changes in NAT
+ >> performance when switching between kernels.
+ >>
+ >> My hardware is BCM47094 SoC (dual core ARM) with integrated network
+ >> controller and external BCM53012 switch.
+ >
+ > Guessing, I'd say it's to do with the placement of code wrt cachelines.
+ > You could try aligning some of the cache flushing code to a cache line
+ > and see what effect that has.
 
-> diff --git a/arch/arm64/kernel/sys.c b/arch/arm64/kernel/sys.c
-> index b44065fb1616..933bb9f3d6ec 100644
-> --- a/arch/arm64/kernel/sys.c
-> +++ b/arch/arm64/kernel/sys.c
-> @@ -35,10 +35,33 @@ SYSCALL_DEFINE6(mmap, unsigned long, addr, unsigned long, len,
->  {
->  	if (offset_in_page(off) != 0)
->  		return -EINVAL;
-> -
-> +	addr = untagged_addr(addr);
->  	return ksys_mmap_pgoff(addr, len, prot, flags, fd, off >> PAGE_SHIFT);
->  }
+Is System.map a good place to check for functions code alignment?
 
-If user passes a tagged pointer to mmap() and the address is honoured
-(or MAP_FIXED is given), what is the expected return pointer? Does it
-need to be tagged with the value from the hint?
+With Linux 4.19 + OpenWrt mtd patches I have:
+(...)
+c010ea94 t v7_dma_inv_range
+c010eae0 t v7_dma_clean_range
+(...)
+c02ca3d0 T blk_mq_update_nr_hw_queues
+c02ca69c T blk_mq_alloc_tag_set
+c02ca94c T blk_mq_release
+c02ca9b4 T blk_mq_free_queue
+c02caa88 T blk_mq_update_nr_requests
+c02cab50 T blk_mq_unique_tag
+(...)
 
-With MTE, we may want to use this as a request for the default colour of
-the mapped pages (still under discussion).
+After cherry-picking 9316a9ed6895 ("blk-mq: provide helper for setting
+up an SQ queue and tag set"):
+(...)
+c010ea94 t v7_dma_inv_range
+c010eae0 t v7_dma_clean_range
+(...)
+c02ca3d0 T blk_mq_update_nr_hw_queues
+c02ca69c T blk_mq_alloc_tag_set
+c02ca94c T blk_mq_init_sq_queue <-- NEW
+c02ca9c0 T blk_mq_release <-- Different address of this & all below
+c02caa28 T blk_mq_free_queue
+c02caafc T blk_mq_update_nr_requests
+c02cabc4 T blk_mq_unique_tag
+(...)
 
-> +SYSCALL_DEFINE6(arm64_mmap_pgoff, unsigned long, addr, unsigned long, len,
-> +		unsigned long, prot, unsigned long, flags,
-> +		unsigned long, fd, unsigned long, pgoff)
-> +{
-> +	addr = untagged_addr(addr);
-> +	return ksys_mmap_pgoff(addr, len, prot, flags, fd, pgoff);
-> +}
+As you can see blk_mq_init_sq_queue has appeared in the System.map and
+it affected addresses of ~30000 symbols. I can believe some frequently
+used symbols got luckily aligned and that improved overall performance.
 
-We don't have __NR_mmap_pgoff on arm64.
+Interestingly v7_dma_inv_range() and v7_dma_clean_range() were not
+relocated.
 
-> +SYSCALL_DEFINE5(arm64_mremap, unsigned long, addr, unsigned long, old_len,
-> +		unsigned long, new_len, unsigned long, flags,
-> +		unsigned long, new_addr)
-> +{
-> +	addr = untagged_addr(addr);
-> +	new_addr = untagged_addr(new_addr);
-> +	return ksys_mremap(addr, old_len, new_len, flags, new_addr);
-> +}
+*****
 
-Similar comment as for mmap(), do we want the tag from new_addr to be
-preserved? In addition, should we check that the two tags are identical
-or mremap() should become a way to repaint a memory region?
+I followed Russell's suggestion and added .align 5 to cache-v7.S (see
+two attached diffs).
 
-> +SYSCALL_DEFINE2(arm64_munmap, unsigned long, addr, size_t, len)
-> +{
-> +	addr = untagged_addr(addr);
-> +	return ksys_munmap(addr, len);
-> +}
+1) v4.19 + OpenWrt mtd patches
+ > egrep -B 1 -A 1 "v7_dma_(inv|clean)_range" System.map
+c010ea58 T v7_flush_kern_dcache_area
+c010ea94 t v7_dma_inv_range
+c010eae0 t v7_dma_clean_range
+c010eb18 T b15_dma_flush_range
 
-This looks fine.
+2) v4.19 + OpenWrt mtd patches + two .align 5 in cache-v7.S
+c010ea6c T v7_flush_kern_dcache_area
+c010eac0 t v7_dma_inv_range
+c010eb20 t v7_dma_clean_range
+c010eb58 T b15_dma_flush_range
+(actually 15 symbols above v7_dma_inv_range were replaced)
 
-> +SYSCALL_DEFINE1(arm64_brk, unsigned long, brk)
-> +{
-> +	brk = untagged_addr(brk);
-> +	return ksys_brk(brk);
-> +}
+This method seems to be somehow working (at least affects addresses in
+System.map).
 
-I wonder whether brk() should simply not accept tags, and should not
-return them (similar to the prctl(PR_SET_MM) discussion). We could
-document this in the ABI requirements.
+*****
 
-> +SYSCALL_DEFINE5(arm64_get_mempolicy, int __user *, policy,
-> +		unsigned long __user *, nmask, unsigned long, maxnode,
-> +		unsigned long, addr, unsigned long, flags)
-> +{
-> +	addr = untagged_addr(addr);
-> +	return ksys_get_mempolicy(policy, nmask, maxnode, addr, flags);
-> +}
-> +
-> +SYSCALL_DEFINE3(arm64_madvise, unsigned long, start,
-> +		size_t, len_in, int, behavior)
-> +{
-> +	start = untagged_addr(start);
-> +	return ksys_madvise(start, len_in, behavior);
-> +}
-> +
-> +SYSCALL_DEFINE6(arm64_mbind, unsigned long, start, unsigned long, len,
-> +		unsigned long, mode, const unsigned long __user *, nmask,
-> +		unsigned long, maxnode, unsigned int, flags)
-> +{
-> +	start = untagged_addr(start);
-> +	return ksys_mbind(start, len, mode, nmask, maxnode, flags);
-> +}
-> +
-> +SYSCALL_DEFINE2(arm64_mlock, unsigned long, start, size_t, len)
-> +{
-> +	start = untagged_addr(start);
-> +	return ksys_mlock(start, len, VM_LOCKED);
-> +}
-> +
-> +SYSCALL_DEFINE2(arm64_mlock2, unsigned long, start, size_t, len)
-> +{
-> +	start = untagged_addr(start);
-> +	return ksys_mlock(start, len, VM_LOCKED);
-> +}
-> +
-> +SYSCALL_DEFINE2(arm64_munlock, unsigned long, start, size_t, len)
-> +{
-> +	start = untagged_addr(start);
-> +	return ksys_munlock(start, len);
-> +}
-> +
-> +SYSCALL_DEFINE3(arm64_mprotect, unsigned long, start, size_t, len,
-> +		unsigned long, prot)
-> +{
-> +	start = untagged_addr(start);
-> +	return ksys_mprotect_pkey(start, len, prot, -1);
-> +}
-> +
-> +SYSCALL_DEFINE3(arm64_msync, unsigned long, start, size_t, len, int, flags)
-> +{
-> +	start = untagged_addr(start);
-> +	return ksys_msync(start, len, flags);
-> +}
-> +
-> +SYSCALL_DEFINE3(arm64_mincore, unsigned long, start, size_t, len,
-> +		unsigned char __user *, vec)
-> +{
-> +	start = untagged_addr(start);
-> +	return ksys_mincore(start, len, vec);
-> +}
+I run 2 tests for each combination of changes. Each test consisted of
+10 sequences of: 30 seconds iperf session + reboot.
 
-These look fine.
 
-> +SYSCALL_DEFINE5(arm64_remap_file_pages, unsigned long, start,
-> +		unsigned long, size, unsigned long, prot,
-> +		unsigned long, pgoff, unsigned long, flags)
-> +{
-> +	start = untagged_addr(start);
-> +	return ksys_remap_file_pages(start, size, prot, pgoff, flags);
-> +}
+ > git reset --hard v4.19
+ > git am OpenWrt-mtd-chages.patch
+Test #1: 738 Mb/s
+Test #2: 737 Mb/s
 
-While this has been deprecated for some time, I presume user space still
-invokes it?
+ > git reset --hard v4.19
+ > git am OpenWrt-mtd-chages.patch
+patch -p1 < v7_dma_clean_range-align.diff
+Test #1: 746 Mb/s
+Test #2: 747 Mb/s
 
-> +SYSCALL_DEFINE3(arm64_shmat, int, shmid, char __user *, shmaddr, int, shmflg)
-> +{
-> +	shmaddr = untagged_addr(shmaddr);
-> +	return ksys_shmat(shmid, shmaddr, shmflg);
-> +}
-> +
-> +SYSCALL_DEFINE1(arm64_shmdt, char __user *, shmaddr)
-> +{
-> +	shmaddr = untagged_addr(shmaddr);
-> +	return ksys_shmdt(shmaddr);
-> +}
+ > git reset --hard v4.19
+ > git am OpenWrt-mtd-chages.patch
+ > patch -p1 < v7_dma_inv_range-align.diff
+Test #1: 745 Mb/s
+Test #2: 746 Mb/s
 
-Do we actually want to allow shared tagged memory? Who's going to tag
-it? If not, we can document it as not supported.
+ > git reset --hard v4.19
+ > git am OpenWrt-mtd-chages.patch
+ > patch -p1 < v7_dma_clean_range-align.diff
+ > patch -p1 < v7_dma_inv_range-align.diff
+Test #1: 762 Mb/s
+Test #2: 761 Mb/s
 
--- 
-Catalin
+As you can see I got a quite nice performance improvement after aligning
+both: v7_dma_clean_range() and v7_dma_inv_range().
+
+It still wasn't as good as with 9316a9ed6895 cherry-picked but pretty
+close.
+
+
+ > git reset --hard v4.19
+ > git am OpenWrt-mtd-chages.patch
+ > git cherry-pick -x 9316a9ed6895
+Test #1: 770 Mb/s
+Test #2: 766 Mb/s
+
+ > git reset --hard v4.19
+ > git am OpenWrt-mtd-chages.patch
+ > git cherry-pick -x 9316a9ed6895
+ > patch -p1 < v7_dma_clean_range-align.diff
+Test #1: 756 Mb/s
+Test #2: 759 Mb/s
+
+ > git reset --hard v4.19
+ > git am OpenWrt-mtd-chages.patch
+ > git cherry-pick -x 9316a9ed6895
+ > patch -p1 < v7_dma_inv_range-align.diff
+Test #1: 758 Mb/s
+Test #2: 759 Mb/s
+
+ > git reset --hard v4.19
+ > git am OpenWrt-mtd-chages.patch
+ > git cherry-pick -x 9316a9ed6895
+ > patch -p1 < v7_dma_clean_range-align.diff
+ > patch -p1 < v7_dma_inv_range-align.diff
+Test #1: 767 Mb/s
+Test #2: 763 Mb/s
+
+Now you can see how unpredictable it is. If I cherry-pick 9316a9ed6895
+and do an extra alignment of v7_dma_clean_range() and v7_dma_inv_range()
+that extra alignment can actually *hurt* NAT performance.
+
+My guess is that:
+1) 9316a9ed6895 provides alignment of some very important function(s)
+2) DMA alignments on top ^^ provide some gain but also break some align
+
+*****
+
+SUMMARY
+
+It seems that for Linux 4.19 + my .config I can get a very lucky &
+optimal alignment of functions by cherry-picking 9316a9ed6895.
+
+I thought of checking functions reported by the "perf" tool with CPU
+usage of 2%+.
+
+All following functions keep their original address with 9316a9ed6895:
+__irqentry_text_end
+arch_cpu_idle
+l2c210_clean_range
+l2c210_inv_range
+v7_dma_clean_range
+v7_dma_inv_range
+
+Remaining 3 functions got reallocated:
+-c03e5038 t __netif_receive_skb_core
++c03e50b0 t __netif_receive_skb_core
+-c03c8b1c t bcma_host_soc_read32
++c03c8b94 t bcma_host_soc_read32
+-c0475620 T fib_table_lookup
++c0475698 T fib_table_lookup
+
+I tried aligning all 3 above functions using:
+__attribute__((aligned(32)))
+and got 756 Mb/s. It's better but still not ~770 Mb/s.
+
+Is there any easy way of identifying which of function alignments got
+such a big impact on NAT performance? I'd like to get those functions
+explicitly aligned using assembler/__attribute__/something.
+
+What I'm also afraid are false positives. I may end up aligning some
+unrelated function that just happens to align other ones. Just like
+cherry-picking 9316a9ed6895 having side-effects and not really fixing
+anything explicitly.
+
+--------------1DD6FAD97BC7F1875FD92211
+Content-Type: text/x-patch;
+ name="v7_dma_clean_range-align.diff"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename="v7_dma_clean_range-align.diff"
+
+diff --git a/arch/arm/mm/cache-v7.S b/arch/arm/mm/cache-v7.S
+index 215df435bfb9..c60046cd34aa 100644
+--- a/arch/arm/mm/cache-v7.S
++++ b/arch/arm/mm/cache-v7.S
+@@ -373,6 +373,8 @@ v7_dma_inv_range:
+ 	ret	lr
+ ENDPROC(v7_dma_inv_range)
+ 
++	.align	5
++
+ /*
+  *	v7_dma_clean_range(start,end)
+  *	- start   - virtual start address of region
+
+--------------1DD6FAD97BC7F1875FD92211
+Content-Type: text/x-patch;
+ name="v7_dma_inv_range-align.diff"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename="v7_dma_inv_range-align.diff"
+
+diff --git a/arch/arm/mm/cache-v7.S b/arch/arm/mm/cache-v7.S
+index 215df435bfb9..0c3999f219ab 100644
+--- a/arch/arm/mm/cache-v7.S
++++ b/arch/arm/mm/cache-v7.S
+@@ -340,6 +340,8 @@ ENTRY(v7_flush_kern_dcache_area)
+ 	ret	lr
+ ENDPROC(v7_flush_kern_dcache_area)
+ 
++	.align	5
++
+ /*
+  *	v7_dma_inv_range(start,end)
+  *
+
+--------------1DD6FAD97BC7F1875FD92211--
