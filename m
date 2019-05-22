@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 680C4C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:59:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61996C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:59:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 398D720862
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:59:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29A4520856
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:59:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558555181;
-	bh=BPb4NjmHolydlhRR8dtGeWe0kxntVuJZl/9kSGlOJv0=;
+	s=default; t=1558555186;
+	bh=ohwL04BOh4ZgawOxZX/3E1Brr5PMk/Jb/8Hs5x/j9lQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y4IlBxShH1X1fydC1LGhIptweswNeooV9EDoYz++SWsn9nY6iQ0MmmknJHJQwRf2n
-	 iopZxdNB10F/yQ9LkhVdMYJwqxz2EKcC3jpt+H4i0YTiHAV+Mux7k1jKTsmdC9B5sz
-	 q55/6v2oM71u78hR7Hian2RssqJb1Zq8L/ly3lbY=
+	b=EtM6EDJ8gFzI450D0jACQP23uG4P9nAy+eywW4ZnXDnmDLlLLcmGKM+0gFNLvo+iF
+	 6MDaQwsVVFpeheJwoWNTQcKO6pWfUX94M3+8NrQNjOGKlXSHXyLJTM7a+FswJS/stn
+	 OO0MMlAkc3BlRUEmjXmyypofi8MMMYf+/zuZEYRY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732214AbfEVT7k (ORCPT
+        id S1730876AbfEVTXZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:59:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44424 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:23:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44208 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730086AbfEVTXc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:23:32 -0400
+        id S1729898AbfEVTXV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:23:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1EF242173C;
-        Wed, 22 May 2019 19:23:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3500020879;
+        Wed, 22 May 2019 19:23:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553011;
-        bh=BPb4NjmHolydlhRR8dtGeWe0kxntVuJZl/9kSGlOJv0=;
+        s=default; t=1558553000;
+        bh=ohwL04BOh4ZgawOxZX/3E1Brr5PMk/Jb/8Hs5x/j9lQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kN2reKIrnMlaSk5AHzxlNRTYMW6uigBGKpcblYJWDdl2Se5lCQWIh6noepDt1yLSc
-         1N4TVm7H7ysnZWBs5xsdxQLa5fhH0REc0TYVfilbew9EKsBEcgXSYhj+6c9wUjP0+7
-         76I3OVMcBTxJELg/qq/OI2/apqj4+zIgE7R/I2ss=
+        b=1of2dmi5lXNNjQ+1lGnt38HrbzVV6yYwYDaoxQ64foH+zX08t9+JHw0okQ25HeSCC
+         BNpcxWdjW4BXrVbQDRa5eQ7Hd1WdJB8TGL4t4JP1XdXSeB/14p6B2mrLolqE1eMD9j
+         sO01YMcaOqAcUGyohIvrv5404smCoG6bK/HwrAoU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sugar Zhang <sugar.zhang@rock-chips.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 075/375] dmaengine: pl330: _stop: clear interrupt status
-Date:   Wed, 22 May 2019 15:16:15 -0400
-Message-Id: <20190522192115.22666-75-sashal@kernel.org>
+Cc:     Huazhong Tan <tanhuazhong@huawei.com>,
+        Peng Li <lipeng321@huawei.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 069/375] net: hns3: fix pause configure fail problem
+Date:   Wed, 22 May 2019 15:16:09 -0400
+Message-Id: <20190522192115.22666-69-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192115.22666-1-sashal@kernel.org>
 References: <20190522192115.22666-1-sashal@kernel.org>
@@ -59,92 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sugar Zhang <sugar.zhang@rock-chips.com>
+From: Huazhong Tan <tanhuazhong@huawei.com>
 
-[ Upstream commit 2da254cc7908105a60a6bb219d18e8dced03dcb9 ]
+[ Upstream commit fba2efdae8b4f998f66a2ff4c9f0575e1c4bbc40 ]
 
-This patch kill instructs the DMAC to immediately terminate
-execution of a thread. and then clear the interrupt status,
-at last, stop generating interrupts for DMA_SEV. to guarantee
-the next dma start is clean. otherwise, one interrupt maybe leave
-to next start and make some mistake.
+When configure pause, current implementation returns directly
+after setup PFC without setup BP, which is not sufficient.
 
-we can reporduce the problem as follows:
+So this patch fixes it, only return while setting PFC failed.
 
-DMASEV: modify the event-interrupt resource, and if the INTEN sets
-function as interrupt, the DMAC will set irq<event_num> HIGH to
-generate interrupt. write INTCLR to clear interrupt.
-
-	DMA EXECUTING INSTRUCTS		DMA TERMINATE
-		|				|
-		|				|
-	       ...			      _stop
-		|				|
-		|			spin_lock_irqsave
-	     DMASEV				|
-		|				|
-		|			    mask INTEN
-		|				|
-		|			     DMAKILL
-		|				|
-		|			spin_unlock_irqrestore
-
-in above case, a interrupt was left, and if we unmask INTEN, the DMAC
-will set irq<event_num> HIGH to generate interrupt.
-
-to fix this, do as follows:
-
-	DMA EXECUTING INSTRUCTS		DMA TERMINATE
-		|				|
-		|				|
-	       ...			      _stop
-		|				|
-		|			spin_lock_irqsave
-	     DMASEV				|
-		|				|
-		|			     DMAKILL
-		|				|
-		|			   clear INTCLR
-		|			    mask INTEN
-		|				|
-		|			spin_unlock_irqrestore
-
-Signed-off-by: Sugar Zhang <sugar.zhang@rock-chips.com>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Fixes: 44e59e375bf7 ("net: hns3: do not return GE PFC setting err when initializing")
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Signed-off-by: Peng Li <lipeng321@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/pl330.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/dma/pl330.c b/drivers/dma/pl330.c
-index eec79fdf27a5b..56695ffb5d377 100644
---- a/drivers/dma/pl330.c
-+++ b/drivers/dma/pl330.c
-@@ -966,6 +966,7 @@ static void _stop(struct pl330_thread *thrd)
- {
- 	void __iomem *regs = thrd->dmac->base;
- 	u8 insn[6] = {0, 0, 0, 0, 0, 0};
-+	u32 inten = readl(regs + INTEN);
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c
+index aafc69f4bfdd6..a7bbb6d3091a6 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c
+@@ -1331,8 +1331,11 @@ int hclge_pause_setup_hw(struct hclge_dev *hdev, bool init)
+ 	ret = hclge_pfc_setup_hw(hdev);
+ 	if (init && ret == -EOPNOTSUPP)
+ 		dev_warn(&hdev->pdev->dev, "GE MAC does not support pfc\n");
+-	else
++	else if (ret) {
++		dev_err(&hdev->pdev->dev, "config pfc failed! ret = %d\n",
++			ret);
+ 		return ret;
++	}
  
- 	if (_state(thrd) == PL330_STATE_FAULT_COMPLETING)
- 		UNTIL(thrd, PL330_STATE_FAULTING | PL330_STATE_KILLING);
-@@ -978,10 +979,13 @@ static void _stop(struct pl330_thread *thrd)
- 
- 	_emit_KILL(0, insn);
- 
--	/* Stop generating interrupts for SEV */
--	writel(readl(regs + INTEN) & ~(1 << thrd->ev), regs + INTEN);
--
- 	_execute_DBGINSN(thrd, insn, is_manager(thrd));
-+
-+	/* clear the event */
-+	if (inten & (1 << thrd->ev))
-+		writel(1 << thrd->ev, regs + INTCLR);
-+	/* Stop generating interrupts for SEV */
-+	writel(inten & ~(1 << thrd->ev), regs + INTEN);
+ 	return hclge_tm_bp_setup(hdev);
  }
- 
- /* Start doing req 'idx' of thread 'thrd' */
 -- 
 2.20.1
 
