@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF4E1C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:22:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A92D5C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:22:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B30F32177E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:22:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C19F2184B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:22:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558552924;
-	bh=cUZTCZSKkExAXaZbd+FP2itMgvfaBTYv2eqKKMroUko=;
+	s=default; t=1558552927;
+	bh=t8LzQfJiNP8lkaPps8PiasZHkLfcUJ+qmAwDHAqTvo4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WZuwg2Qck3xY6md5z32sTZs3r0a5Dk5b64gcdp4M0sQlP9YkYQ34h4sfn9t/uAtrg
-	 VAt9RjSLBHwjKYyOXxh5hFiDfXkTSXZ/gqPS2eWXkjnfMbPM7LSFZoAcNYCWWVAVl+
-	 lQS2H9yxbi9zgw6yP7kHknNH4i17nlN9QcqDrf70=
+	b=CLSk3i3kfJBiF+kNBcCwVMqCAEz+UbXJXcjO1NONYtElCRehNjYU7rbahWTlvoCB0
+	 ebF1QiS3BuRfFtSGPgIhB9FUWAFo/dckZ0gRamcYVRIj05WwdEUFvE0wJw/l4facDk
+	 ByXNFoKCZEextbrWJW5dqXExaDf62M0G1bWwAWH4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730269AbfEVTWE (ORCPT
+        id S1730291AbfEVTWG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:22:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42628 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:22:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42686 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730236AbfEVTV7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:21:59 -0400
+        id S1730259AbfEVTWD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:22:03 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 64556217F9;
-        Wed, 22 May 2019 19:21:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19A7B217D9;
+        Wed, 22 May 2019 19:22:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558552918;
-        bh=cUZTCZSKkExAXaZbd+FP2itMgvfaBTYv2eqKKMroUko=;
+        s=default; t=1558552921;
+        bh=t8LzQfJiNP8lkaPps8PiasZHkLfcUJ+qmAwDHAqTvo4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i0vquc6uvxigQC+EznGF/WVC/9gH/aDGAU3obp3TYXTsahbkTFS+udW3ib3LkrJuS
-         C/Ib1ulrIG78sFcfp9OvxPXGMzlHIrFPszsq9y8jHEgc94rZsSvNzP5hzIOk3GRK9E
-         UDZSnzwS0eHSQ5B1t28avCbAh+1RzPMioE6FnAqE=
+        b=zqG4a/xmxB66vPf8Sw5kiIKZW7khmNpE9TGpPSH2IIQFX9Bg1m9QL9F1pSYz6WMiQ
+         HF4NBT8jK66+W5ALOQQ7Rfkwu4Y2hQI4b/zmy7cVcjY/H6RGrhGalwfixovngvBWJF
+         IsXAlCAPMux+5qERqHh+R7nKd/7wXDFliZbME9KM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Minas Harutyunyan <minas.harutyunyan@synopsys.com>,
-        Minas Harutyunyan <hminas@synopsys.com>,
+Cc:     Fei Yang <fei.yang@intel.com>,
+        Manu Gautam <mgautam@codeaurora.org>,
+        John Stultz <john.stultz@linaro.org>,
         Felipe Balbi <felipe.balbi@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 029/375] usb: dwc2: gadget: Increase descriptors count for ISOC's
-Date:   Wed, 22 May 2019 15:15:29 -0400
-Message-Id: <20190522192115.22666-29-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 031/375] usb: gadget: f_fs: don't free buffer prematurely
+Date:   Wed, 22 May 2019 15:15:31 -0400
+Message-Id: <20190522192115.22666-31-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192115.22666-1-sashal@kernel.org>
 References: <20190522192115.22666-1-sashal@kernel.org>
@@ -60,106 +61,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Minas Harutyunyan <minas.harutyunyan@synopsys.com>
+From: Fei Yang <fei.yang@intel.com>
 
-[ Upstream commit 54f37f56631747075f1f9a2f0edf6ba405e3e66c ]
+[ Upstream commit 73103c7f958b99561555c3bd1bc1a0809e0b7d61 ]
 
-Some function drivers queueing more than 128 ISOC requests at a time.
-To avoid "descriptor chain full" cases, increasing descriptors count
-from MAX_DMA_DESC_NUM_GENERIC to MAX_DMA_DESC_NUM_HS_ISOC for ISOC's
-only.
+The following kernel panic happens due to the io_data buffer gets deallocated
+before the async io is completed. Add a check for the case where io_data buffer
+should be deallocated by ffs_user_copy_worker.
 
-Signed-off-by: Minas Harutyunyan <hminas@synopsys.com>
+[   41.663334] BUG: unable to handle kernel NULL pointer dereference at 0000000000000048
+[   41.672099] #PF error: [normal kernel read fault]
+[   41.677356] PGD 20c974067 P4D 20c974067 PUD 20c973067 PMD 0
+[   41.683687] Oops: 0000 [#1] PREEMPT SMP
+[   41.687976] CPU: 1 PID: 7 Comm: kworker/u8:0 Tainted: G     U            5.0.0-quilt-2e5dc0ac-00790-gd8c79f2-dirty #2
+[   41.705309] Workqueue: adb ffs_user_copy_worker
+[   41.705316] RIP: 0010:__vunmap+0x2a/0xc0
+[   41.705318] Code: 0f 1f 44 00 00 48 85 ff 0f 84 87 00 00 00 55 f7 c7 ff 0f 00 00 48 89 e5 41 55 41 89 f5 41 54 53 48 89 fb 75 71 e8 56 d7 ff ff <4c> 8b 60 48 4d 85 e4 74 76 48 89 df e8 25 ff ff ff 45 85 ed 74 46
+[   41.705320] RSP: 0018:ffffbc3a40053df0 EFLAGS: 00010286
+[   41.705322] RAX: 0000000000000000 RBX: ffffbc3a406f1000 RCX: 0000000000000000
+[   41.705323] RDX: 0000000000000001 RSI: 0000000000000001 RDI: 00000000ffffffff
+[   41.705324] RBP: ffffbc3a40053e08 R08: 000000000001fb79 R09: 0000000000000037
+[   41.705325] R10: ffffbc3a40053b68 R11: ffffbc3a40053cad R12: fffffffffffffff2
+[   41.705326] R13: 0000000000000001 R14: 0000000000000000 R15: ffffffffffffffff
+[   41.705328] FS:  0000000000000000(0000) GS:ffff9e2977a80000(0000) knlGS:0000000000000000
+[   41.705329] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   41.705330] CR2: 0000000000000048 CR3: 000000020c994000 CR4: 00000000003406e0
+[   41.705331] Call Trace:
+[   41.705338]  vfree+0x50/0xb0
+[   41.705341]  ffs_user_copy_worker+0xe9/0x1c0
+[   41.705344]  process_one_work+0x19f/0x3e0
+[   41.705348]  worker_thread+0x3f/0x3b0
+[   41.829766]  kthread+0x12b/0x150
+[   41.833371]  ? process_one_work+0x3e0/0x3e0
+[   41.838045]  ? kthread_create_worker_on_cpu+0x70/0x70
+[   41.843695]  ret_from_fork+0x3a/0x50
+[   41.847689] Modules linked in: hci_uart bluetooth ecdh_generic rfkill_gpio dwc3_pci dwc3 snd_usb_audio mei_me tpm_crb snd_usbmidi_lib xhci_pci xhci_hcd mei tpm snd_hwdep cfg80211 snd_soc_skl snd_soc_skl_ipc snd_soc_sst_ipc snd_soc_sst_dsp snd_hda_ext_core snd_hda_core videobuf2_dma_sg crlmodule
+[   41.876880] CR2: 0000000000000048
+[   41.880584] ---[ end trace 2bc4addff0f2e673 ]---
+[   41.891346] RIP: 0010:__vunmap+0x2a/0xc0
+[   41.895734] Code: 0f 1f 44 00 00 48 85 ff 0f 84 87 00 00 00 55 f7 c7 ff 0f 00 00 48 89 e5 41 55 41 89 f5 41 54 53 48 89 fb 75 71 e8 56 d7 ff ff <4c> 8b 60 48 4d 85 e4 74 76 48 89 df e8 25 ff ff ff 45 85 ed 74 46
+[   41.916740] RSP: 0018:ffffbc3a40053df0 EFLAGS: 00010286
+[   41.922583] RAX: 0000000000000000 RBX: ffffbc3a406f1000 RCX: 0000000000000000
+[   41.930563] RDX: 0000000000000001 RSI: 0000000000000001 RDI: 00000000ffffffff
+[   41.938540] RBP: ffffbc3a40053e08 R08: 000000000001fb79 R09: 0000000000000037
+[   41.946520] R10: ffffbc3a40053b68 R11: ffffbc3a40053cad R12: fffffffffffffff2
+[   41.954502] R13: 0000000000000001 R14: 0000000000000000 R15: ffffffffffffffff
+[   41.962482] FS:  0000000000000000(0000) GS:ffff9e2977a80000(0000) knlGS:0000000000000000
+[   41.971536] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   41.977960] CR2: 0000000000000048 CR3: 000000020c994000 CR4: 00000000003406e0
+[   41.985930] Kernel panic - not syncing: Fatal exception
+[   41.991817] Kernel Offset: 0x16000000 from 0xffffffff81000000 (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
+[   42.009525] Rebooting in 10 seconds..
+[   52.014376] ACPI MEMORY or I/O RESET_REG.
+
+Fixes: 772a7a724f69 ("usb: gadget: f_fs: Allow scatter-gather buffers")
+Signed-off-by: Fei Yang <fei.yang@intel.com>
+Reviewed-by: Manu Gautam <mgautam@codeaurora.org>
+Tested-by: John Stultz <john.stultz@linaro.org>
 Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/dwc2/gadget.c | 27 +++++++++++++++------------
- 1 file changed, 15 insertions(+), 12 deletions(-)
+ drivers/usb/gadget/function/f_fs.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/usb/dwc2/gadget.c b/drivers/usb/dwc2/gadget.c
-index 6812a8a3a98ba..a749de7604c62 100644
---- a/drivers/usb/dwc2/gadget.c
-+++ b/drivers/usb/dwc2/gadget.c
-@@ -714,13 +714,11 @@ static unsigned int dwc2_gadget_get_chain_limit(struct dwc2_hsotg_ep *hs_ep)
- 	unsigned int maxsize;
- 
- 	if (is_isoc)
--		maxsize = hs_ep->dir_in ? DEV_DMA_ISOC_TX_NBYTES_LIMIT :
--					   DEV_DMA_ISOC_RX_NBYTES_LIMIT;
-+		maxsize = (hs_ep->dir_in ? DEV_DMA_ISOC_TX_NBYTES_LIMIT :
-+					   DEV_DMA_ISOC_RX_NBYTES_LIMIT) *
-+					   MAX_DMA_DESC_NUM_HS_ISOC;
- 	else
--		maxsize = DEV_DMA_NBYTES_LIMIT;
--
--	/* Above size of one descriptor was chosen, multiple it */
--	maxsize *= MAX_DMA_DESC_NUM_GENERIC;
-+		maxsize = DEV_DMA_NBYTES_LIMIT * MAX_DMA_DESC_NUM_GENERIC;
- 
- 	return maxsize;
+diff --git a/drivers/usb/gadget/function/f_fs.c b/drivers/usb/gadget/function/f_fs.c
+index 20413c276c616..47be961f1bf3f 100644
+--- a/drivers/usb/gadget/function/f_fs.c
++++ b/drivers/usb/gadget/function/f_fs.c
+@@ -1133,7 +1133,8 @@ static ssize_t ffs_epfile_io(struct file *file, struct ffs_io_data *io_data)
+ error_mutex:
+ 	mutex_unlock(&epfile->mutex);
+ error:
+-	ffs_free_buffer(io_data);
++	if (ret != -EIOCBQUEUED) /* don't free if there is iocb queued */
++		ffs_free_buffer(io_data);
+ 	return ret;
  }
-@@ -932,7 +930,7 @@ static int dwc2_gadget_fill_isoc_desc(struct dwc2_hsotg_ep *hs_ep,
  
- 	/* Update index of last configured entry in the chain */
- 	hs_ep->next_desc++;
--	if (hs_ep->next_desc >= MAX_DMA_DESC_NUM_GENERIC)
-+	if (hs_ep->next_desc >= MAX_DMA_DESC_NUM_HS_ISOC)
- 		hs_ep->next_desc = 0;
- 
- 	return 0;
-@@ -964,7 +962,7 @@ static void dwc2_gadget_start_isoc_ddma(struct dwc2_hsotg_ep *hs_ep)
- 	}
- 
- 	/* Initialize descriptor chain by Host Busy status */
--	for (i = 0; i < MAX_DMA_DESC_NUM_GENERIC; i++) {
-+	for (i = 0; i < MAX_DMA_DESC_NUM_HS_ISOC; i++) {
- 		desc = &hs_ep->desc_list[i];
- 		desc->status = 0;
- 		desc->status |= (DEV_DMA_BUFF_STS_HBUSY
-@@ -2162,7 +2160,7 @@ static void dwc2_gadget_complete_isoc_request_ddma(struct dwc2_hsotg_ep *hs_ep)
- 		dwc2_hsotg_complete_request(hsotg, hs_ep, hs_req, 0);
- 
- 		hs_ep->compl_desc++;
--		if (hs_ep->compl_desc > (MAX_DMA_DESC_NUM_GENERIC - 1))
-+		if (hs_ep->compl_desc > (MAX_DMA_DESC_NUM_HS_ISOC - 1))
- 			hs_ep->compl_desc = 0;
- 		desc_sts = hs_ep->desc_list[hs_ep->compl_desc].status;
- 	}
-@@ -3899,6 +3897,7 @@ static int dwc2_hsotg_ep_enable(struct usb_ep *ep,
- 	unsigned int i, val, size;
- 	int ret = 0;
- 	unsigned char ep_type;
-+	int desc_num;
- 
- 	dev_dbg(hsotg->dev,
- 		"%s: ep %s: a 0x%02x, attr 0x%02x, mps 0x%04x, intr %d\n",
-@@ -3945,11 +3944,15 @@ static int dwc2_hsotg_ep_enable(struct usb_ep *ep,
- 	dev_dbg(hsotg->dev, "%s: read DxEPCTL=0x%08x from 0x%08x\n",
- 		__func__, epctrl, epctrl_reg);
- 
-+	if (using_desc_dma(hsotg) && ep_type == USB_ENDPOINT_XFER_ISOC)
-+		desc_num = MAX_DMA_DESC_NUM_HS_ISOC;
-+	else
-+		desc_num = MAX_DMA_DESC_NUM_GENERIC;
-+
- 	/* Allocate DMA descriptor chain for non-ctrl endpoints */
- 	if (using_desc_dma(hsotg) && !hs_ep->desc_list) {
- 		hs_ep->desc_list = dmam_alloc_coherent(hsotg->dev,
--			MAX_DMA_DESC_NUM_GENERIC *
--			sizeof(struct dwc2_dma_desc),
-+			desc_num * sizeof(struct dwc2_dma_desc),
- 			&hs_ep->desc_list_dma, GFP_ATOMIC);
- 		if (!hs_ep->desc_list) {
- 			ret = -ENOMEM;
-@@ -4092,7 +4095,7 @@ static int dwc2_hsotg_ep_enable(struct usb_ep *ep,
- 
- error2:
- 	if (ret && using_desc_dma(hsotg) && hs_ep->desc_list) {
--		dmam_free_coherent(hsotg->dev, MAX_DMA_DESC_NUM_GENERIC *
-+		dmam_free_coherent(hsotg->dev, desc_num *
- 			sizeof(struct dwc2_dma_desc),
- 			hs_ep->desc_list, hs_ep->desc_list_dma);
- 		hs_ep->desc_list = NULL;
 -- 
 2.20.1
 
