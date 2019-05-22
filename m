@@ -3,130 +3,95 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E36BCC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:46:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7397C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:46:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4ACF2089E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:46:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558554368;
-	bh=yQvt4+uccVxdTjTgy1w2X3qN7O6gBh/UFLTPVcaVHXc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eVsmbRT9lh35HH7f9e8Akl5Dhvd/ZdZRWx9VO7+0nLjQ7UUB4EU0aWFn8KiNiVkqD
-	 szKyqMP0daFQfnjeUmCqmkJpihIzfKn8Ut1W3M/6MYVFs84sOclpb3Twd98XKjZlCl
-	 d0hPqR2zcAvmak4pI0pg2yPlrxxFt2cugzhEYyNM=
+	by mail.kernel.org (Postfix) with ESMTP id 7987720862
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:46:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="IDPA+9a+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387869AbfEVTqH (ORCPT
+        id S1732541AbfEVTqK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:46:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50242 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729711AbfEVT1v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:46:10 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:36708 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732406AbfEVT1v (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 22 May 2019 15:27:51 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93AF820675;
-        Wed, 22 May 2019 19:27:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553270;
-        bh=yQvt4+uccVxdTjTgy1w2X3qN7O6gBh/UFLTPVcaVHXc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pxs+3MIYytKEsC2XUl23TyLpe2LBNQwsXFNhG9nr8p18Kvj3AAZmg0AWRxrVfgvpG
-         RukqhIe3XgDxSTtT9QXd2SJzxuUBd1aCWm03hcQ/47n4dWsYi/z+AJmdYWD/XNHir8
-         2+30ze86ECXvldRogE1YdXUvspB5/F3s9UBx2Ncg=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Manish Rangankar <mrangankar@marvell.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 046/244] scsi: qedi: Abort ep termination if offload not scheduled
-Date:   Wed, 22 May 2019 15:23:12 -0400
-Message-Id: <20190522192630.24917-46-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190522192630.24917-1-sashal@kernel.org>
-References: <20190522192630.24917-1-sashal@kernel.org>
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4MJRjYE117819;
+        Wed, 22 May 2019 14:27:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1558553265;
+        bh=LjSX35Zd9AAVl0gh4n5sT6SVSu9q2cBivqmA5diC3lY=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=IDPA+9a+FSnphel0B7xSOm2LJZ/UEmME3iciTCPvFc7vRF/aC7vqc6pPbn3BopcGN
+         5UzaTpZd7uM2qfwcnmkF7E+JWVAIBV8vGFEjPsb6TTeSYc+DHZt8Z02x0vigSjuDaE
+         AsA0ct6d8W3BHcqKDzfbBev2izOwO1MTdXQSSj80=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4MJRjMS031997
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 22 May 2019 14:27:45 -0500
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 22
+ May 2019 14:27:45 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 22 May 2019 14:27:45 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4MJRjJO081593;
+        Wed, 22 May 2019 14:27:45 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <broonie@kernel.org>,
+        <lgirdwood@gmail.com>
+CC:     <lee.jones@linaro.org>, <linux-leds@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
+Subject: [RESEND PATCH v4 1/6] regulator: lm363x: Make the gpio register enable flexible
+Date:   Wed, 22 May 2019 14:27:28 -0500
+Message-ID: <20190522192733.13422-2-dmurphy@ti.com>
+X-Mailer: git-send-email 2.21.0.5.gaeb582a983
+In-Reply-To: <20190522192733.13422-1-dmurphy@ti.com>
+References: <20190522192733.13422-1-dmurphy@ti.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Manish Rangankar <mrangankar@marvell.com>
+The use of and enablement of the GPIO can be used across devices.
+Use the enable_reg in the regulator descriptor for the register to
+write.
 
-[ Upstream commit f848bfd8e167210a29374e8a678892bed591684f ]
-
-Sometimes during connection recovery when there is a failure to resolve
-ARP, and offload connection was not issued, driver tries to flush pending
-offload connection work which was not queued up.
-
-kernel: WARNING: CPU: 19 PID: 10110 at kernel/workqueue.c:3030 __flush_work.isra.34+0x19c/0x1b0
-kernel: CPU: 19 PID: 10110 Comm: iscsid Tainted: G W 5.1.0-rc4 #11
-kernel: Hardware name: Dell Inc. PowerEdge R730/0599V5, BIOS 2.9.1 12/04/2018
-kernel: RIP: 0010:__flush_work.isra.34+0x19c/0x1b0
-kernel: Code: 8b fb 66 0f 1f 44 00 00 31 c0 eb ab 48 89 ef c6 07 00 0f 1f 40 00 fb 66 0f 1f 44 00 00 31 c0 eb 96 e8 08 16 fe ff 0f 0b eb 8d <0f> 0b 31 c0 eb 87 0f 1f 40 00 66 2e 0f 1
-f 84 00 00 00 00 00 0f 1f
-kernel: RSP: 0018:ffffa6b4054dba68 EFLAGS: 00010246
-kernel: RAX: 0000000000000000 RBX: ffff91df21c36fc0 RCX: 0000000000000000
-kernel: RDX: 0000000000000001 RSI: 0000000000000000 RDI: ffff91df21c36fc0
-kernel: RBP: ffff91df21c36ef0 R08: 0000000000000000 R09: 0000000000000000
-kernel: R10: 0000000000000038 R11: ffffa6b4054dbd60 R12: ffffffffc05e72c0
-kernel: R13: ffff91db10280820 R14: 0000000000000048 R15: 0000000000000000
-kernel: FS:  00007f5d83cc1740(0000) GS:ffff91df2f840000(0000) knlGS:0000000000000000
-kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-kernel: CR2: 0000000001cc5000 CR3: 0000000465450002 CR4: 00000000001606e0
-kernel: Call Trace:
-kernel: ? try_to_del_timer_sync+0x4d/0x80
-kernel: qedi_ep_disconnect+0x3b/0x410 [qedi]
-kernel: ? 0xffffffffc083c000
-kernel: ? klist_iter_exit+0x14/0x20
-kernel: ? class_find_device+0x93/0xf0
-kernel: iscsi_if_ep_disconnect.isra.18+0x58/0x70 [scsi_transport_iscsi]
-kernel: iscsi_if_recv_msg+0x10e2/0x1510 [scsi_transport_iscsi]
-kernel: ? copyout+0x22/0x30
-kernel: ? _copy_to_iter+0xa0/0x430
-kernel: ? _cond_resched+0x15/0x30
-kernel: ? __kmalloc_node_track_caller+0x1f9/0x270
-kernel: iscsi_if_rx+0xa5/0x1e0 [scsi_transport_iscsi]
-kernel: netlink_unicast+0x17f/0x230
-kernel: netlink_sendmsg+0x2d2/0x3d0
-kernel: sock_sendmsg+0x36/0x50
-kernel: ___sys_sendmsg+0x280/0x2a0
-kernel: ? timerqueue_add+0x54/0x80
-kernel: ? enqueue_hrtimer+0x38/0x90
-kernel: ? hrtimer_start_range_ns+0x19f/0x2c0
-kernel: __sys_sendmsg+0x58/0xa0
-kernel: do_syscall_64+0x5b/0x180
-kernel: entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Signed-off-by: Manish Rangankar <mrangankar@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
 ---
- drivers/scsi/qedi/qedi_iscsi.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/regulator/lm363x-regulator.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/scsi/qedi/qedi_iscsi.c b/drivers/scsi/qedi/qedi_iscsi.c
-index d4821b9dea45d..4130b9117055f 100644
---- a/drivers/scsi/qedi/qedi_iscsi.c
-+++ b/drivers/scsi/qedi/qedi_iscsi.c
-@@ -1001,6 +1001,9 @@ static void qedi_ep_disconnect(struct iscsi_endpoint *ep)
- 	qedi_ep = ep->dd_data;
- 	qedi = qedi_ep->qedi;
+diff --git a/drivers/regulator/lm363x-regulator.c b/drivers/regulator/lm363x-regulator.c
+index c876e161052a..382b1cecdd93 100644
+--- a/drivers/regulator/lm363x-regulator.c
++++ b/drivers/regulator/lm363x-regulator.c
+@@ -263,8 +263,8 @@ static int lm363x_regulator_probe(struct platform_device *pdev)
  
-+	if (qedi_ep->state == EP_STATE_OFLDCONN_START)
-+		goto ep_exit_recover;
-+
- 	flush_work(&qedi_ep->offload_work);
- 
- 	if (qedi_ep->conn) {
+ 	if (gpiod) {
+ 		cfg.ena_gpiod = gpiod;
+-
+-		ret = regmap_update_bits(regmap, LM3632_REG_BIAS_CONFIG,
++		ret = regmap_update_bits(regmap,
++					 lm363x_regulator_desc[id].enable_reg,
+ 					 LM3632_EXT_EN_MASK,
+ 					 LM3632_EXT_EN_MASK);
+ 		if (ret) {
 -- 
-2.20.1
+2.21.0.5.gaeb582a983
 
