@@ -2,197 +2,216 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1F8FC18E7D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 09:30:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2AE5C18E7D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 09:30:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8647C20851
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 09:30:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="p1vVrT54"
+	by mail.kernel.org (Postfix) with ESMTP id 976D620815
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 09:30:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728725AbfEVJab (ORCPT
+        id S1728895AbfEVJas (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 05:30:31 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:39411 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728406AbfEVJab (ORCPT
+        Wed, 22 May 2019 05:30:48 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:15374 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728536AbfEVJar (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 05:30:31 -0400
-Received: by mail-wm1-f67.google.com with SMTP id n25so1416389wmk.4
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 02:30:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=+VK7fLshFfrAgd2rmmiVLNHyPAHPZZGXsuVy0XdS+Zc=;
-        b=p1vVrT54TqP7Tv92KeSNxtCIKuVh2was82RL9sqlsEHAdDh2H92mU+5C8DI7g4nWA9
-         i3gl7B3ndoe5+0YE0YsQh97LdUGeRyA+qKuVr5IxMCSdyTmWj88ezs+VPsiQSidfaUOx
-         nMwyYdFrAY59hOb8Z70FDRyo6llGJNl1RnZaQjrFuGtBibmnjtPtJcqWMQBzAKGJi/yY
-         w90y0HTNXO0xxbADc/H1ZIfStFB8ee25hmcLtJs5/3Rwiyv8rZau4N9xonQVjuERSZ9g
-         5zA4zplXyKSdEUdqJDu/8K+MjKIv7rFTsGhQd76J7EIAPwSf8VO3O6ukvm1/MoxXQZxN
-         yNMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=+VK7fLshFfrAgd2rmmiVLNHyPAHPZZGXsuVy0XdS+Zc=;
-        b=oZ7S3LPGduP005yM7GTtosRiedLY0FNbtqNFRYks3SDw5ihXCxvqF/FQYX0tuXMKoo
-         l6jTpRjpfu0QH8gcfPqMhn2O6QwXp9bs4UkjEdqWFyHPihkHcMOs1Von9ta76jDuoP7v
-         cvus+RjlkwlmWc0JrE1rWv6IGatawZgoxaYPWtSrhxUkM/6a2qHtCockX+P2s5yM396B
-         CFgyKEL1t5B6apbkzYjh8/9xN9BD68KEle6CeTQ1wQPnTnh8DohHYMpLiSXh+XRGg03I
-         lZNDhoA7Uu0hAVE5PLgfcrf/UAqH73zLi1oAFPm76vDzFKeXvI2aJYyBm4q6nKKmYKNI
-         e2sA==
-X-Gm-Message-State: APjAAAUVfSRfL398IX/CWU/LoIhBKcc8U6FQVJDNI+kiJd2Jcos4Ykub
-        gCYRdYFsWfWAL2AXOy7qLMZqPQ==
-X-Google-Smtp-Source: APXvYqwWvQYOAuut9pW+SWIr2WhinP84EdHxdOWjWpQnLL2IrrpfL3/E5WtmX1qrlrUmJEKNMHencA==
-X-Received: by 2002:a1c:7503:: with SMTP id o3mr7066267wmc.28.1558517429034;
-        Wed, 22 May 2019 02:30:29 -0700 (PDT)
-Received: from dell ([2.27.167.43])
-        by smtp.gmail.com with ESMTPSA id g17sm21322431wrr.65.2019.05.22.02.30.27
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 22 May 2019 02:30:28 -0700 (PDT)
-Date:   Wed, 22 May 2019 10:30:26 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Amelie DELAUNAY <amelie.delaunay@st.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        Wed, 22 May 2019 05:30:47 -0400
+X-UUID: 6572bcb62c544fa1ac84fa752fc1c9c8-20190522
+X-UUID: 6572bcb62c544fa1ac84fa752fc1c9c8-20190522
+Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <chunfeng.yun@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 272006990; Wed, 22 May 2019 17:30:39 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31N1.mediatek.inc
+ (172.27.4.69) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Wed, 22 May
+ 2019 17:30:37 +0800
+Received: from [10.17.3.153] (172.27.4.253) by MTKCAS36.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 22 May 2019 17:30:36 +0800
+Message-ID: <1558517436.10179.388.camel@mhfsdcap03>
+Subject: RE: [PATCH v5 4/6] usb: roles: add API to get usb_role_switch by
+ node
+From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
+To:     Biju Das <biju.das@bp.renesas.com>
+CC:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        Li Jun <jun.li@nxp.com>,
+        Badhri Jagan Sridharan <badhri@google.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Min Guo <min.guo@mediatek.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
         "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "kbuild-all@01.org" <kbuild-all@01.org>,
-        Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH] pinctrl: stmfx: Fix compile issue when CONFIG_OF_GPIO is
- not defined
-Message-ID: <20190522093026.GG4574@dell>
-References: <1558338735-8444-1-git-send-email-amelie.delaunay@st.com>
- <20190522054833.GB4574@dell>
- <eb8425ec-989a-9701-7fee-61bd1d2b93c1@st.com>
- <20190522084133.GF4574@dell>
- <bc1b5f1d-23b0-141d-f58f-b54ac303fe20@st.com>
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 22 May 2019 17:30:36 +0800
+In-Reply-To: <OSBPR01MB21032206146152983C8F4E8EB8000@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+References: <1557823643-8616-1-git-send-email-chunfeng.yun@mediatek.com>
+         <1557823643-8616-5-git-send-email-chunfeng.yun@mediatek.com>
+         <20190517103736.GA1490@kuha.fi.intel.com>
+         <20190517130511.GA1887@kuha.fi.intel.com>
+         <1558319951.10179.352.camel@mhfsdcap03>
+         <20190520080359.GC1887@kuha.fi.intel.com>
+         <OSBPR01MB2103385D996762FA54F8E437B8060@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+         <20190520083601.GE1887@kuha.fi.intel.com>
+         <OSBPR01MB2103C4C8920C40E42BC1B2A9B8060@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+         <20190521095839.GI1887@kuha.fi.intel.com>
+         <OSBPR01MB21032206146152983C8F4E8EB8000@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <bc1b5f1d-23b0-141d-f58f-b54ac303fe20@st.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 22 May 2019, Amelie DELAUNAY wrote:
+Hi Biju,
+On Wed, 2019-05-22 at 08:05 +0000, Biju Das wrote:
+> Hi Heikki,
+> 
+> Thanks for the feedback.
+> 
+> > Subject: Re: [PATCH v5 4/6] usb: roles: add API to get usb_role_switch by
+> > node
+> > 
+> > On Mon, May 20, 2019 at 09:45:46AM +0000, Biju Das wrote:
+> > >
+> > >
+> > > Hi Heikki,
+> > >
+> > > Thanks for the feedback.
+> > >
+> > > > Subject: Re: [PATCH v5 4/6] usb: roles: add API to get
+> > > > usb_role_switch by node
+> > > >
+> > > > On Mon, May 20, 2019 at 08:06:41AM +0000, Biju Das wrote:
+> > > > > Hi Heikki,
+> > > > >
+> > > > > > Subject: Re: [PATCH v5 4/6] usb: roles: add API to get
+> > > > > > usb_role_switch by node
+> > > > > >
+> > > > > > On Mon, May 20, 2019 at 10:39:11AM +0800, Chunfeng Yun wrote:
+> > > > > > > Hi,
+> > > > > > > On Fri, 2019-05-17 at 16:05 +0300, Heikki Krogerus wrote:
+> > > > > > > > Hi,
+> > > > > > > >
+> > > > > > > > On Fri, May 17, 2019 at 01:37:36PM +0300, Heikki Krogerus wrote:
+> > > > > > > > > On Tue, May 14, 2019 at 04:47:21PM +0800, Chunfeng Yun
+> > wrote:
+> > > > > > > > > > Add fwnode_usb_role_switch_get() to make easier to get
+> > > > > > > > > > usb_role_switch by fwnode which register it.
+> > > > > > > > > > It's useful when there is not device_connection
+> > > > > > > > > > registered between two drivers and only knows the fwnode
+> > > > > > > > > > which register usb_role_switch.
+> > > > > > > > > >
+> > > > > > > > > > Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> > > > > > > > > > Tested-by: Biju Das <biju.das@bp.renesas.com>
+> > > > > > > > >
+> > > > > > > > > Acked-by: Heikki Krogerus
+> > > > > > > > > <heikki.krogerus@linux.intel.com>
+> > > > > > > >
+> > > > > > > > Hold on. I just noticed Rob's comment on patch 2/6, where he
+> > > > > > > > points out that you don't need to use device graph since the
+> > > > > > > > controller is the parent of the connector. Doesn't that mean
+> > > > > > > > you don't really need this API?
+> > > > > > > No, I still need it.
+> > > > > > > The change is about the way how to get fwnode; when use device
+> > > > > > > graph, get fwnode by of_graph_get_remote_node(); but now will
+> > > > > > > get fwnode by of_get_parent();
+> > > > > >
+> > > > > > OK, I get that, but I'm still not convinced about if something
+> > > > > > like this function is needed at all. I also have concerns
+> > > > > > regarding how you are using the function. I'll explain in
+> > > > > > comment to the patch 5/6 in this
+> > > > series...
+> > > > >
+> > > > > FYI, Currently  I am also using this api in my patch series.
+> > > > > https://patchwork.kernel.org/patch/10944637/
+> > > >
+> > > > Yes, and I have the same question for you I jusb asked in comment I
+> > > > added to the patch 5/6 of this series. Why isn't usb_role_switch_get()
+> > enough?
+> > >
+> > > Currently no issue. It will work with this api as well, since the port node is
+> > part of controller node.
+> > > For eg:-
+> > > https://patchwork.kernel.org/patch/10944627/
+> > >
+> > > However if any one adds port node inside the connector node, then this
+> > api may won't work as expected.
+> > > Currently I get below error
+> > >
+> > > [    2.299703] OF: graph: no port node found in
+> > /soc/i2c@e6500000/hd3ss3220@47
+> > 
+> > We need to understand why is that happening?
+> > 
+> 
+> Form the stack trace  the parent node is "parent_node=hd3ss3220@47" , instead of the "connector" node.
+> That is the reason for the above error.
+> 
+> [    2.442429]  of_graph_get_next_endpoint.part.0+0x28/0x168
+> [    2.447889]  of_fwnode_graph_get_next_endpoint+0x5c/0xb0
+> [    2.453267]  fwnode_graph_get_next_endpoint+0x20/0x30
+> [    2.458374]  device_connection_find_match+0x74/0x1a0
+> [    2.463399]  usb_role_switch_get+0x20/0x28
+> [    2.467542]  hd3ss3220_probe+0xc4/0x218
+> 
+> The use case is
+> 
+> &i2c0 {
+> 	hd3ss3220@47 {                                                           
+>                  	compatible = "ti,hd3ss3220"; 
+>                                    
+>                  	usb_con: connector {                                             
+>                           		compatible = "usb-c-connector";                                                      
+>                          		port {                                                   
+>                                 		 hd3ss3220_ep: endpoint {                         
+>                                         			remote-endpoint = <&usb3_role_switch>;   
+>                                 		};                                               
+>                          		};                                                       
+>                 	 };                                                               
+> 	 }; 
+> };
+>    
+> &usb3_peri0 {                                                                    
+>          companion = <&xhci0>;                                                    
+>          usb-role-switch;                                                         
+>                                                                                   
+>          port {                                                                   
+>                 usb3_role_switch: endpoint {                                     
+>                         remote-endpoint = <&hd3ss3220_ep>;                       
+>                  };                                                               
+>          };                                                                       
+> };   
+> 
+> Q1) How do we modify the usb_role_switch_get() function to search 
+> Child(connector) and child's endpoint?
+How about firstly finding connector node in fwnode_graph_devcon_match(),
+then search each endpoint?
 
-> On 5/22/19 10:41 AM, Lee Jones wrote:
-> > On Wed, 22 May 2019, Amelie DELAUNAY wrote:
-> >> On 5/22/19 7:48 AM, Lee Jones wrote:
-> >>> On Mon, 20 May 2019, Amelie Delaunay wrote:
-> >>>
-> >>>> When CONFIG_GPIO_OF is not defined, struct gpio_chip 'of_node' member does
-> >>>> not exist:
-> >>>> drivers/pinctrl/pinctrl-stmfx.c: In function 'stmfx_pinctrl_probe':
-> >>>> drivers/pinctrl/pinctrl-stmfx.c:652:17: error: 'struct gpio_chip' has no member named 'of_node'
-> >>>>        pctl->gpio_chip.of_node = np;
-> >>>>
-> >>>> Fixes: 1490d9f841b1 ("pinctrl: Add STMFX GPIO expander Pinctrl/GPIO driver")
-> >>>> Reported-by: kbuild test robot <lkp@intel.com>
-> >>>> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
-> >>>> ---
-> >>>>    drivers/pinctrl/pinctrl-stmfx.c | 2 ++
-> >>>>    1 file changed, 2 insertions(+)
-> >>>>
-> >>>> diff --git a/drivers/pinctrl/pinctrl-stmfx.c b/drivers/pinctrl/pinctrl-stmfx.c
-> >>>> index eba872c..bb64aa0 100644
-> >>>> --- a/drivers/pinctrl/pinctrl-stmfx.c
-> >>>> +++ b/drivers/pinctrl/pinctrl-stmfx.c
-> >>>> @@ -648,7 +648,9 @@ static int stmfx_pinctrl_probe(struct platform_device *pdev)
-> >>>>    	pctl->gpio_chip.base = -1;
-> >>>>    	pctl->gpio_chip.ngpio = pctl->pctl_desc.npins;
-> >>>>    	pctl->gpio_chip.can_sleep = true;
-> >>>> +#ifdef CONFIG_OF_GPIO
-> >>>>    	pctl->gpio_chip.of_node = np;
-> >>>> +#endif
-> >>>
-> >>> This is pretty ugly.  Will STMFX ever be used without OF support?  If
-> >>> not, it might be better to place this restriction on the driver as a
-> >>> whole.
-> >>>
-> >>> Incidentally, why is this blanked out in the structure definition?
-> >>> Even 'struct device' doesn't do this.
-> >>>
-> >> config PINCTRL_STMFX
-> >> 	tristate "STMicroelectronics STMFX GPIO expander pinctrl driver"
-> >> 	depends on I2C
-> >> 	depends on OF || COMPILE_TEST
-> >> 	select GENERIC_PINCONF
-> >> 	select GPIOLIB_IRQCHIP
-> >> 	select MFD_STMFX
-> >>
-> >> The issue is due to COMPILE_TEST: would "depends on OF || (OF &&
-> >> COMPILE_TEST)" be better ?
-> > 
-> > Linus would be in a better position to respond, but from what I can
-> > see, maybe:
-> > 
-> >    depends on OF || (OF_GPIO && COMPILE_TEST)
-> > 
-> > Although, I'm unsure why other COMPILE_TESTs haven't highlighted this
-> > issue.  Perhaps because they have all been locked down to a particular
-> > arch:
-> > 
-> > $ grep COMPILE_TEST -- drivers/pinctrl/Kconfig
-> > 	bool "Support pin multiplexing controllers" if COMPILE_TEST
-> > 	bool "Support pin configuration controllers" if COMPILE_TEST
-> > 	depends on OF && (ARCH_DAVINCI_DA850 || COMPILE_TEST)
-> > 	depends on OF && (ARCH_DIGICOLOR || COMPILE_TEST)
-> > 	depends on OF && (ARCH_LPC18XX || COMPILE_TEST)
-> > 	depends on ARCH_R7S72100 || COMPILE_TEST
-> > 	depends on ARCH_R7S9210 || COMPILE_TEST
-> > 	depends on ARCH_RZN1 || COMPILE_TEST
-> > 	depends on MIPS || COMPILE_TEST
-> > 
-> > What about adding this to your Kconfig entry:
-> > 
-> >    select OF_GPIO
-> > 
 > 
-> Yes COMPILE_TEST is combined with arch when depending on OF. But STMFX 
-> isn't arch dependent, it is just OF and I2C dependent.
+> > It looks like we have an issue somewhere in the code, and instead of fixing
+> > that, you are working around it. Let's not do that.
 > 
-> Randy also see a build error in pinctrl-stmfx.c when CONFIG_OF is not 
-> set/enabled (randconfig):
+> OK.
 > 
-> ../drivers/pinctrl/pinctrl-stmfx.c:409:20: error: 
-> ‘pinconf_generic_dt_node_to_map_pin’ undeclared here (not in a function)
->    .dt_node_to_map = pinconf_generic_dt_node_to_map_pin,
+> Regards,
+> Biju
 > 
-> OF_GPIO depends on OF.
-> 
-> So either
->      depends on OF || (OF && COMPILE_TEST)
-> or
->      depends on OF || (OF_GPIO && COMPILE_TEST)
-> 
-> and
-> 
->      select OF_GPIO
-> 
-> What is the prettiest way ?
 
-I'll leave the final call up to Linus.
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
