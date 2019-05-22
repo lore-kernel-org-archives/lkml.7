@@ -2,117 +2,99 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B62DC46470
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 00:35:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0277CC18E7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 00:36:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D10C21850
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 00:35:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC07F217F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 00:36:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Et3SEPfq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PKkfQhz8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728042AbfEVAfv (ORCPT
+        id S1728113AbfEVAgI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 21 May 2019 20:35:51 -0400
-Received: from mail-it1-f194.google.com ([209.85.166.194]:33912 "EHLO
-        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726083AbfEVAfv (ORCPT
+        Tue, 21 May 2019 20:36:08 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:40700 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726083AbfEVAgH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 21 May 2019 20:35:51 -0400
-Received: by mail-it1-f194.google.com with SMTP id g23so4095086iti.1;
-        Tue, 21 May 2019 17:35:50 -0700 (PDT)
+        Tue, 21 May 2019 20:36:07 -0400
+Received: by mail-pg1-f195.google.com with SMTP id d30so352553pgm.7;
+        Tue, 21 May 2019 17:36:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dmn24KC+m6x18zOYziZWDo5rYFdprsz28GNXc60VqcM=;
-        b=Et3SEPfqDEkMJQkdWI5NcbgBXFwSnmgc4IkpkyXuP/wF0TfGB6e1Pofok9i3gQVCdC
-         41wcVBJIud8W8bHbEYF6lYxT7DfMeuDvr8KHC10JS69ZipKHxoLbas7ffdXmSFC2dLWZ
-         4bN2MC0kFc2EOqpUsixIw6zd78MsPnS55mIhw0opNmNKfSNukaHmnnGdD3ZQH4VFykRW
-         J8Hi0Mz3vPUcCJRgdQhxjUFgnOqxI+rry97EhQ+7EsjThzESIYE/9TZ0xRWyjvElLGen
-         EafVNr3LpPZ9kutDJWNTeUD89h0GEuriOYD20CZRoqD3aeVsFh6X6Tqw433QgGcu3kJa
-         D+Yg==
+        h=from:to:cc:subject:date:message-id;
+        bh=xbyzh1GJJ8m0Sm1ENljBkms7F5sprXDnDoT8XWgkBJE=;
+        b=PKkfQhz87VyLXywfWJU0zQCGTaOjfOsBWtuSXc8bcUmWt3ddU25a0weMhIItrXdrXY
+         a1AeEKPD19hJGoD92FnQM/EJugJaI6h3BfU7BDUvPHlCiyQm5/99wgOvDyKrSxuQKa74
+         Xf0x2HcIDuFdprsYOgziU9IYsdHigA56WAGBLyLFIF79sUV0fDZYrii1BuDEnaUYGU70
+         VoKttFxTbBrpnEy7zt++M9GgkngCSHpsb91dEamU2bXGia1tpm+AeaNu6jlT1MuD8YP1
+         pYgDQC3UJ3eyUWklehfS9FJHlaWf8A9jlEhYqILCeKMwPsRee4cWQPzao65Jt7TOMsHX
+         objw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dmn24KC+m6x18zOYziZWDo5rYFdprsz28GNXc60VqcM=;
-        b=o1lL7xMdPRrJzUhduox4MahqrF2zhI3RgUvvYVN4kzXacUvxrk58w/1sho1o4OvO3/
-         7WKA9UUZudGldE9eeVUIwXxTeAOR6PvRKsa9WfkIf7+wAQWuECNJFTM82HL4FPDfwmPS
-         1MYPdcmSFVw+97vCsl3CmUG9Pg2s5wwjF8FKEsw2RIrGfYCKJNulLtKd/QnjiRQIx5XA
-         xBsj6nK/sEdo9eD14nRRBtm9zPPWQxmd0xEDRuWAtkewGhr8lz+RPYk3Yb61r3LkfDAM
-         WJjB10LxQ0BSE4JYlA74LruoYujePK2H44ZWduPm6ldCDqP0R5UFWZPPAI25e/UwOsFt
-         6Cdw==
-X-Gm-Message-State: APjAAAVBCdNGVzI7qxRiLr4UdjLTJV5BN0xpV/lNXhBHQAjIOYLFmFqC
-        4uOJDL8gRtcjR/Nelple2xNZDhPQ03gHxAmlKFXNwJjb
-X-Google-Smtp-Source: APXvYqyhSur7RLYxkPauMes6/6zkMTMY5/tOriifV/CCLRD7QPPwvlQNLkfOoChDXo2OFZFy/GRDNWQ0C4EnMYOBZhM=
-X-Received: by 2002:a02:94e7:: with SMTP id x94mr21163035jah.5.1558485350392;
- Tue, 21 May 2019 17:35:50 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190507043954.9020-1-deepa.kernel@gmail.com> <20190521092551.fwtb6recko3tahwj@dcvr>
- <20190521152748.6b4cd70cf83a1183caa6aae7@linux-foundation.org> <20190521233319.GA17957@dcvr>
-In-Reply-To: <20190521233319.GA17957@dcvr>
-From:   Deepa Dinamani <deepa.kernel@gmail.com>
-Date:   Tue, 21 May 2019 17:35:38 -0700
-Message-ID: <CABeXuvoOGwOGmSz_vgTugLD1NPE=2ULvmESPTtK9d6r8S+WVdQ@mail.gmail.com>
-Subject: Re: [PATCH 1/1] signal: Adjust error codes according to restore_user_sigmask()
-To:     Eric Wong <e@80x24.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>, dbueso@suse.de, axboe@kernel.dk,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Jason Baron <jbaron@akamai.com>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        linux-aio <linux-aio@kvack.org>,
-        Omar Kilani <omar.kilani@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>, stable@vger.kernel.org,
-        Oleg Nesterov <oleg@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=xbyzh1GJJ8m0Sm1ENljBkms7F5sprXDnDoT8XWgkBJE=;
+        b=BUUz30EBKXNaiKWGD2wKm57EOBBUnwR3orUuNkVtBmhQqCEFh1f7fgP2fQjtFDLifX
+         2VjQ7UB9/VmPGRZazw264Dl0RQG12SXhzhm9di2awlx0pkDH9kFv4/6VBB28q799yVvJ
+         S47orEtuDsQblpH3bKXylqYyJl5TlAmYSmhqR0cp8bQM2/CJBK7DRS5AGs8jvI3mOift
+         BWq27xq3OJsEiE+ElIm3THHEBziQUkhw4enRkdUnswGMzKzNX6pf5doscP+Z6anMCzcx
+         oiFWTw1Pgdd+wq5bk6byQ4tecrRyIFUt3+UGmzmIqyEKEwgTBU9YORt/YMgyKWaZjWqk
+         xjuQ==
+X-Gm-Message-State: APjAAAXrE7upY4VW6BDJsY8bv0AVrhx9z2tCeNaejPsLZHmQAMmRpMT5
+        0S8Cw9GKVkYKFWQcZWGsa6Q=
+X-Google-Smtp-Source: APXvYqyWEM2ys6h9C/EWx0uwlzEjQDxreysX5yp85RmjiTBxeSOaRxKQLGuzPsoBvtLxYOIjQeKCbw==
+X-Received: by 2002:a65:4649:: with SMTP id k9mr87616022pgr.239.1558485367175;
+        Tue, 21 May 2019 17:36:07 -0700 (PDT)
+Received: from localhost ([2601:640:4:f15a:d07:291f:4ccd:776a])
+        by smtp.gmail.com with ESMTPSA id u6sm33092780pfa.1.2019.05.21.17.36.06
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 21 May 2019 17:36:06 -0700 (PDT)
+From:   Yury Norov <yury.norov@gmail.com>
+X-Google-Original-From: Yury Norov <ynorov@marvell.com>
+To:     "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Helge Deller <deller@gmx.de>, linux-parisc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Yury Norov <ynorov@marvell.com>, Qian Cai <cai@lca.pw>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH] slab: cleanup after /proc/slab_allocators removal
+Date:   Tue, 21 May 2019 17:36:04 -0700
+Message-Id: <20190522003604.28236-1-ynorov@marvell.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > > It's been 2 weeks and this fix hasn't appeared in mmots / mmotm.
-> > > I also noticed it's missing Cc: for stable@ (below)
-> >
-> > Why is a -stable backport needed?  I see some talk above about lost
-> > signals but it is unclear whether these are being observed after fixing
-> > the regression caused by 854a6ed56839a.
->
-> I guess Deepa's commit messages wasn't clear...
-> I suggest prepending this as the first paragraph to Deepa's
-> original message:
->
->   This fixes a bug introduced with 854a6ed56839a which caused
->   EINTR to not be reported to userspace on epoll_pwait.  Failure
->   to report EINTR to userspace caused problems with user code
->   which relies on EINTR to run signal handlers.
+From: Yury Norov <ynorov@marvell.com>
 
-This is not what the patch fixed.
+The commit 7878c231dae0 ("slab: remove /proc/slab_allocators")
+removes DEBUG_SLAB_LEAK config everywhere but a parisc config.
+It doesn't look intentional. Fix it.
 
-The notable change is userspace is that now whenever a signal is
-delivered, the return value is adjusted to reflect the signal
-delivery.
-Prior to this patch, there was a window, however small it might have
-been, when the signal was delivered but the errono was not adjusted
-appropriately.
-This is because of the regression caused by 854a6ed56839a, which
-extended the window of delivery of signals that was delivered to
-userspace.
-The patch also fixes more than sys_epoll_pwait().
+Signed-off-by: Yury Norov <ynorov@marvell.com>
+---
+ arch/parisc/configs/c8000_defconfig | 1 -
+ 1 file changed, 1 deletion(-)
 
-I will post a follow up patch.
+diff --git a/arch/parisc/configs/c8000_defconfig b/arch/parisc/configs/c8000_defconfig
+index 088ab948a5ca..900b00084953 100644
+--- a/arch/parisc/configs/c8000_defconfig
++++ b/arch/parisc/configs/c8000_defconfig
+@@ -225,7 +225,6 @@ CONFIG_UNUSED_SYMBOLS=y
+ CONFIG_DEBUG_FS=y
+ CONFIG_MAGIC_SYSRQ=y
+ CONFIG_DEBUG_SLAB=y
+-CONFIG_DEBUG_SLAB_LEAK=y
+ CONFIG_DEBUG_MEMORY_INIT=y
+ CONFIG_DEBUG_STACKOVERFLOW=y
+ CONFIG_PANIC_ON_OOPS=y
+-- 
+2.17.1
 
->
-> > IOW, can we please have a changelog which has a clear and complete
-> > description of the user-visible effects of the change.
-> >
-> > And please Cc Oleg.
-
-I will cc Oleg.
