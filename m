@@ -4,48 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3F41C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:27:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D011AC282DC
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:27:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7736217D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:27:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A46F62184E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:27:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558553235;
-	bh=SJZlZ8tEd34xSlIzQTUceO438JbvwEqk7xemU0PK10s=;
+	s=default; t=1558553240;
+	bh=YzezW2Fba2Qpg5me27N4CVgznmETrqoWlEbAAN6ufFg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BACSG7GFfggwgLC7D0DT5i+MSj3yJ6RiHPaXcRI3T8cQ9um0/yF+WUWj0mJoi2qye
-	 D1eNU3wkLh2QZvVgjEEsku1uiJLHPYVxZHcUs43Z3O+7VS+1nKY5xn2fkv3eWr63I4
-	 HDGVqCOKSueGmnI4FywWjVH9kbPtVS+xfd8ZJvmA=
+	b=EZOz1V368Qlgcnq6X00WDkkJaKf7pAaix0gJXJJPxI5085B4ZsdsQkeWi9/RHBIZE
+	 ISq+dPvcmJIkRtENeQJQxDQ6q3zuvjQk8qAUwa5qov5UaSZ4fItYQd7DAQlOEQLbBo
+	 u6geK9n1KlVxG+lmoO30QTVCFvsqs5mNV01ymSJE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732282AbfEVT1O (ORCPT
+        id S1732296AbfEVT1T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:27:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49050 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:27:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49156 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731608AbfEVT1M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:27:12 -0400
+        id S1731414AbfEVT1Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:27:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 786D520879;
-        Wed, 22 May 2019 19:27:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F65020879;
+        Wed, 22 May 2019 19:27:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553232;
-        bh=SJZlZ8tEd34xSlIzQTUceO438JbvwEqk7xemU0PK10s=;
+        s=default; t=1558553235;
+        bh=YzezW2Fba2Qpg5me27N4CVgznmETrqoWlEbAAN6ufFg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fVUAOb/GWaQx+KKsgaGgz1CX1nHvCc3zTI07ropeRZX/4CODzrZ8y+G9xyAC3EzS7
-         nKXqqLWfmCKONTkS+d/ZFH7bGeu3R5YLDGhad/0VF8wvhvc2LwopWoIFOXMapwHcCZ
-         5ie3JBMVm5VS4dNh6khJXv+RncEXBQ0ynXb4bJss=
+        b=dlfeFIe7CiVRKG8yYFyBQdUFavZrp1fq0YwpWvTAnwEpqh1r29ygwpljR7yfI7oj+
+         dcPIuL2hn0CeAOWNInPi4d4g5ZOwwFApT/xGyay+vFOOvLWYlyBymAMv7XtUdWuSSn
+         uGI3M8Rbb6tWtzxhWb2ZnDQmsa8/nNlqcsbqWjZ0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 025/244] ASoC: imx: fix fiq dependencies
-Date:   Wed, 22 May 2019 15:22:51 -0400
-Message-Id: <20190522192630.24917-25-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 027/244] brcm80211: potential NULL dereference in brcmf_cfg80211_vndr_cmds_dcmd_handler()
+Date:   Wed, 22 May 2019 15:22:53 -0400
+Message-Id: <20190522192630.24917-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192630.24917-1-sashal@kernel.org>
 References: <20190522192630.24917-1-sashal@kernel.org>
@@ -58,67 +62,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit ea751227c813ab833609afecfeedaf0aa26f327e ]
+[ Upstream commit e025da3d7aa4770bb1d1b3b0aa7cc4da1744852d ]
 
-During randconfig builds, I occasionally run into an invalid configuration
-of the freescale FIQ sound support:
+If "ret_len" is negative then it could lead to a NULL dereference.
 
-WARNING: unmet direct dependencies detected for SND_SOC_IMX_PCM_FIQ
-  Depends on [m]: SOUND [=y] && !UML && SND [=y] && SND_SOC [=y] && SND_IMX_SOC [=m]
-  Selected by [y]:
-  - SND_SOC_FSL_SPDIF [=y] && SOUND [=y] && !UML && SND [=y] && SND_SOC [=y] && SND_IMX_SOC [=m]!=n && (MXC_TZIC [=n] || MXC_AVIC [=y])
+The "ret_len" value comes from nl80211_vendor_cmd(), if it's negative
+then we don't allocate the "dcmd_buf" buffer.  Then we pass "ret_len" to
+brcmf_fil_cmd_data_set() where it is cast to a very high u32 value.
+Most of the functions in that call tree check whether the buffer we pass
+is NULL but there are at least a couple places which don't such as
+brcmf_dbg_hex_dump() and brcmf_msgbuf_query_dcmd().  We memcpy() to and
+from the buffer so it would result in a NULL dereference.
 
-sound/soc/fsl/imx-ssi.o: In function `imx_ssi_remove':
-imx-ssi.c:(.text+0x28): undefined reference to `imx_pcm_fiq_exit'
-sound/soc/fsl/imx-ssi.o: In function `imx_ssi_probe':
-imx-ssi.c:(.text+0xa64): undefined reference to `imx_pcm_fiq_init'
+The fix is to change the types so that "ret_len" can't be negative.  (If
+we memcpy() zero bytes to NULL, that's a no-op and doesn't cause an
+issue).
 
-The Kconfig warning is a result of the symbol being defined inside of
-the "if SND_IMX_SOC" block, and is otherwise harmless. The link error
-is more tricky and happens with SND_SOC_IMX_SSI=y, which may or may not
-imply FIQ support. However, if SND_SOC_FSL_SSI is set to =m at the same
-time, that selects SND_SOC_IMX_PCM_FIQ as a loadable module dependency,
-which then causes a link failure from imx-ssi.
-
-The solution here is to make SND_SOC_IMX_PCM_FIQ built-in whenever
-one of its potential users is built-in.
-
-Fixes: ff40260f79dc ("ASoC: fsl: refine DMA/FIQ dependencies")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 1bacb0487d0e ("brcmfmac: replace cfg80211 testmode with vendor command")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/fsl/Kconfig | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/vendor.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/fsl/Kconfig b/sound/soc/fsl/Kconfig
-index 2e75b5bc5f1da..f721cd4e3f972 100644
---- a/sound/soc/fsl/Kconfig
-+++ b/sound/soc/fsl/Kconfig
-@@ -173,16 +173,17 @@ config SND_MPC52xx_SOC_EFIKA
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/vendor.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/vendor.c
+index 8eff2753abade..d493021f60318 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/vendor.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/vendor.c
+@@ -35,9 +35,10 @@ static int brcmf_cfg80211_vndr_cmds_dcmd_handler(struct wiphy *wiphy,
+ 	struct brcmf_if *ifp;
+ 	const struct brcmf_vndr_dcmd_hdr *cmdhdr = data;
+ 	struct sk_buff *reply;
+-	int ret, payload, ret_len;
++	unsigned int payload, ret_len;
+ 	void *dcmd_buf = NULL, *wr_pointer;
+ 	u16 msglen, maxmsglen = PAGE_SIZE - 0x100;
++	int ret;
  
- endif # SND_POWERPC_SOC
- 
-+config SND_SOC_IMX_PCM_FIQ
-+	tristate
-+	default y if SND_SOC_IMX_SSI=y && (SND_SOC_FSL_SSI=m || SND_SOC_FSL_SPDIF=m) && (MXC_TZIC || MXC_AVIC)
-+	select FIQ
-+
- if SND_IMX_SOC
- 
- config SND_SOC_IMX_SSI
- 	tristate
- 	select SND_SOC_FSL_UTILS
- 
--config SND_SOC_IMX_PCM_FIQ
--	tristate
--	select FIQ
--
- comment "SoC Audio support for Freescale i.MX boards:"
- 
- config SND_MXC_SOC_WM1133_EV1
+ 	if (len < sizeof(*cmdhdr)) {
+ 		brcmf_err("vendor command too short: %d\n", len);
+@@ -65,7 +66,7 @@ static int brcmf_cfg80211_vndr_cmds_dcmd_handler(struct wiphy *wiphy,
+ 			brcmf_err("oversize return buffer %d\n", ret_len);
+ 			ret_len = BRCMF_DCMD_MAXLEN;
+ 		}
+-		payload = max(ret_len, len) + 1;
++		payload = max_t(unsigned int, ret_len, len) + 1;
+ 		dcmd_buf = vzalloc(payload);
+ 		if (NULL == dcmd_buf)
+ 			return -ENOMEM;
 -- 
 2.20.1
 
