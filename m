@@ -2,219 +2,274 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A90F9C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 21:28:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 712A2C282DC
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 21:29:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42E5D20821
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 21:28:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CD0D2177E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 21:29:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=stackpath.com header.i=@stackpath.com header.b="TeKjVeCo"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="hrSfMQXl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730162AbfEVV2c (ORCPT
+        id S1730246AbfEVV3n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 17:28:32 -0400
-Received: from mail-eopbgr810088.outbound.protection.outlook.com ([40.107.81.88]:39647
-        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728761AbfEVV2c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 17:28:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stackpath.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OD4D3biz7wnYPAi2MCBX/MrJb7+Epkb2H8kSBC8X67A=;
- b=TeKjVeCos7BpD3c2wXGssewI+sThXTRPZyULy1eftPS/5WcedrTib+RG4+ofjNiMZducVG/dvBFiIcHh8+S14EORIZlrnQlNnhJGmcrsNM9XVtMBjwvrRpAGtup0RU/4Rmlq081J3UaS34oGnPRpLjXww0U/+nGkOc2hvFG1sLw=
-Received: from BYAPR10MB2680.namprd10.prod.outlook.com (52.135.217.31) by
- BYAPR10MB3061.namprd10.prod.outlook.com (20.177.224.78) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1900.18; Wed, 22 May 2019 21:28:28 +0000
-Received: from BYAPR10MB2680.namprd10.prod.outlook.com
- ([fe80::ec8c:9c6a:c83f:43db]) by BYAPR10MB2680.namprd10.prod.outlook.com
- ([fe80::ec8c:9c6a:c83f:43db%7]) with mapi id 15.20.1900.020; Wed, 22 May 2019
- 21:28:28 +0000
-From:   Matthew Cover <matthew.cover@stackpath.com>
-To:     Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Matthew Cover <werekraken@gmail.com>
-Subject: Re: tc_classid access in skb bpf context
-Thread-Topic: tc_classid access in skb bpf context
-Thread-Index: AQHVEC09Nj6ajF14HkezzoiQKGhG0aZ20sYAgACPafeAAEU5bw==
-Date:   Wed, 22 May 2019 21:28:27 +0000
-Message-ID: <BYAPR10MB26800BD692C1CBDD8CAB950AE3000@BYAPR10MB2680.namprd10.prod.outlook.com>
-References: <BYAPR10MB2680B63C684345098E6E7669E3070@BYAPR10MB2680.namprd10.prod.outlook.com>,<73d5b951-2598-0d7f-5b6e-8925cc61989a@iogearbox.net>,<BYAPR10MB268073D6667D2AB0E1699D5DE3000@BYAPR10MB2680.namprd10.prod.outlook.com>
-In-Reply-To: <BYAPR10MB268073D6667D2AB0E1699D5DE3000@BYAPR10MB2680.namprd10.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=matthew.cover@stackpath.com; 
-x-originating-ip: [24.56.44.135]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 04017f2e-f90c-4ad3-c14f-08d6defc6e31
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:BYAPR10MB3061;
-x-ms-traffictypediagnostic: BYAPR10MB3061:
-x-microsoft-antispam-prvs: <BYAPR10MB3061181D53F79A4B990EE4ECE3000@BYAPR10MB3061.namprd10.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0045236D47
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(396003)(376002)(346002)(39860400002)(136003)(189003)(199004)(3846002)(53936002)(66556008)(5660300002)(64756008)(6246003)(6116002)(66446008)(14454004)(8676002)(81156014)(26005)(2501003)(11346002)(2906002)(9686003)(73956011)(66946007)(76116006)(52536014)(66476007)(55016002)(186003)(256004)(478600001)(74316002)(2201001)(66066001)(86362001)(76176011)(14444005)(5024004)(316002)(486006)(6436002)(44832011)(476003)(7696005)(6506007)(102836004)(53546011)(7416002)(110136005)(71190400001)(71200400001)(99286004)(446003)(25786009)(4326008)(305945005)(8936002)(7736002)(68736007)(33656002)(2940100002)(229853002)(81166006);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR10MB3061;H:BYAPR10MB2680.namprd10.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: stackpath.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: /aWWmDC8oRu52J1y04W6s7Qj30xM9gRySX71EBeuIyb/k2wMS8LdwfjTn9DpiylS+rIhSYwCHT4k/awJ2hWA/mt/AWZ2QO//rsYDXIuWP8+wV2UQtkpME/ngCTFxXnqzK9Kx8gwltACSdfzUTtr356zHo3+mYrcygxoWihAzGHdwm5E7HJMS2w7m81bllVOhIs4Ikeb88mkGwbFFhjYHIsI0kGyPqDh6BNUYE1OGws1WsNx/3TJDIU4zMDahoQF4/RcEtWmxYYxHn+AEBIP2RM6jcDKcbOTewQ9xP53vBBHMfaWJpnDfTETTxRscqm8D9WwWP0uIea2wK6OxDz+0+1ljqfftuaFJxLl6jMUms6pmYYBpTvovIhWwyiFCGmbEzG7eAhKITlBzDw82qyIBUafRDQHy/ZjOL7jIPuBuNlw=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 22 May 2019 17:29:43 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:58184 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729771AbfEVV3m (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 17:29:42 -0400
+Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4MLLIJa026005
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 14:29:41 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=facebook; bh=4TamBFhMxI7eVZDyeQik75QRP7s+XDIcj/PxFC9FCqI=;
+ b=hrSfMQXlWX3e2ugBLp6dlDBdgmdVT07HzTNOYTllL0bU9jxXQgDXIUrNOGahC4qMUO9R
+ /Xxb10Z6dqPx3F4O71Mb0VipIGl19fwl2YeDXI1v2ujVe7sbP43vcIOaguoPGVg+o//D
+ eADmCL4L+FuFQGehqldAcP/bg8mv0Qu9q+w= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 2sn7jusrtq-2
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 14:29:41 -0700
+Received: from mx-out.facebook.com (2620:10d:c0a8:1b::d) by
+ mail.thefacebook.com (2620:10d:c0a8:83::5) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 22 May 2019 14:29:40 -0700
+Received: by devvm2643.prn2.facebook.com (Postfix, from userid 111017)
+        id 5D6F31251A298; Wed, 22 May 2019 14:29:39 -0700 (PDT)
+Smtp-Origin-Hostprefix: devvm
+From:   Roman Gushchin <guro@fb.com>
+Smtp-Origin-Hostname: devvm2643.prn2.facebook.com
+To:     <bpf@vger.kernel.org>
+CC:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        <netdev@vger.kernel.org>, Tejun Heo <tj@kernel.org>,
+        <kernel-team@fb.com>, <cgroups@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Roman Gushchin <guro@fb.com>
+Smtp-Origin-Cluster: prn2c23
+Subject: [PATCH bpf-next 2/4] selftests/bpf: convert test_cgrp2_attach2 example into kselftest
+Date:   Wed, 22 May 2019 14:29:30 -0700
+Message-ID: <20190522212932.2646247-3-guro@fb.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190522212932.2646247-1-guro@fb.com>
+References: <20190522212932.2646247-1-guro@fb.com>
+X-FB-Internal: Safe
 MIME-Version: 1.0
-X-OriginatorOrg: stackpath.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 04017f2e-f90c-4ad3-c14f-08d6defc6e31
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 May 2019 21:28:28.0173
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: fd04f7e7-8712-48a5-bd2d-688fe1861f4b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR10MB3061
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-22_13:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ malwarescore=0 suspectscore=13 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905220148
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Convert test_cgrp2_attach2 example into a proper test_cgroup_attach
+kselftest. It's better because we do run kselftest on a constant
+basis, so there are better chances to spot a potential regression.
 
-On 05/22/2019 01:52 AM, Matthew Cover wrote:
-> > > __sk_buff has a member tc_classid which I'm interested in accessing f=
-rom the skb bpf context.
-> > >=20
-> > > A bpf program which accesses skb->tc_classid compiles, but fails veri=
-fication; the specific failure is "invalid bpf_context access".
-> > >=20
-> > > if (skb->tc_classid !=3D 0)
-> > >=A0 return 1;
-> > > return 0;
-> > >=20
-> > > Some of the tests in tools/testing/selftests/bpf/verifier/ (those on =
-tc_classid) further confirm that this is, in all likelihood, intentional be=
-havior.
-> > >=20
-> > > The very similar bpf program which instead accesses skb->mark works a=
-s desired.
-> > >=20
-> > > if (skb->mark !=3D 0)
-> > >=A0 return 1;
-> > > return 0;
-> >=20
-> > You should be able to access skb->tc_classid, perhaps you're using the =
-wrong program
-> > type? BPF_PROG_TYPE_SCHED_CLS is supposed to work (if not we'd have a r=
-egression).
-> >=20
->=20
-> I am in fact using BPF_PROG_TYPE_SOCKET_FILTER and using the program as P=
-ACKET_FANOUT_DATA with PACKET_FANOUT_EBPF.
->=20
-> I have been working on a series of utils which leverage PACKET_FANOUT to =
-provide various per-socket-fd (per-cpu, per-queue, per-rx-flow-hash-indirec=
-tion-table-idx) statistics and pcap files. While playing with PACKET_FANOUT=
-_EBPF, I realized that I could use  the bpf program to categorize packets i=
-n ways packet-filter(7) does not provide.
->=20
-> As a concrete example, I plan to build a util `rxtxmark` which could be p=
-assed something like `--mark-list 42,88`. This would be translated to a bpf=
- program where the return code is the ordinality of the mark in the list.
->=20
-> if (skb->mark =3D=3D 42)
-> =A0return 1;
-> if (skb->mark =3D=3D 88)
-> =A0return 2;
-> return 0;
->=20
-> Packets enqueued to fd0 are simply ignored. Packets enqueued to the other=
- fds are processed into pcaps and statistics.
->=20
-> While I may build a util for tc_classid which does per-user-requested-cla=
-ssid pcaps and statistics like `rxtxmark` does for marks, I'm also interest=
-ed in using tc_classid as a simple way to capture tx packets from a long ru=
-nning program on the fly.
->=20
-> The program under inspection would simply be added to a net_cls cgroup wh=
-ich has a unique classid defined. A bpf program would be attached to map pa=
-ckets with that classid to fd1. While I can do this already by using iptabl=
-es to translate the tc_classid to  a mark, that complicates the implementat=
-ion greatly since the firewall has to be touched (which is probably overrea=
-ching for a packet capture util and would most likely be left to the user t=
-o configure).
->=20
+Also make it slightly less verbose to conform kselftests output style.
 
-And only now do I discover netsniff-ng; a seriously cool set of utils! Than=
-k you for your efforts there Daniel!
+Output example:
+  $ ./test_cgroup_attach
+  #override:PASS
+  #multi:PASS
+  test_cgroup_attach:PASS
 
-I still plan to continue advancing my various PACKET_FANOUT utils and event=
-ually seeing how much, if any, of the common code would be of interest to t=
-he libpcap maintainers. But very cool that a quick look at the netsniff-ng =
-help file shows that rxtxcpu et al could be accomplished with the right num=
-ber of concurrent invocations of netsniff-ng.
+Signed-off-by: Roman Gushchin <guro@fb.com>
+---
+ samples/bpf/Makefile                          |  2 -
+ tools/testing/selftests/bpf/Makefile          |  4 +-
+ .../selftests/bpf/test_cgroup_attach.c        | 48 ++++++++++++-------
+ 3 files changed, 35 insertions(+), 19 deletions(-)
+ rename samples/bpf/test_cgrp2_attach2.c => tools/testing/selftests/bpf/test_cgroup_attach.c (92%)
 
-> > > I built a kernel (v5.1) with 4 instances of the following line remove=
-d from net/core/filter.c to test the behavior when the instructions pass ve=
-rification.
-> > >=20
-> > >=A0=A0=A0=A0 switch (off) {
-> > > -=A0=A0=A0 case bpf_ctx_range(struct __sk_buff, tc_classid):
-> > > ...
-> > >=A0=A0=A0=A0=A0=A0=A0=A0 return false;
-> > >=20
-> > > It appears skb->tc_classid is always zero within my bpf program, even=
- when I verify by other means (e.g. netfilter) that the value is set non-ze=
-ro.
-> > >=20
-> > > I gather that sk_buff proper sometimes (i.e. at some layers) has qdis=
-c_skb_cb stored in skb->cb, but not always.
-> > >=20
-> > > I suspect that the tc_classid is available at l3 (and therefore to ut=
-ils like netfilter, ip route, tc), but not at l2 (and not to AF_PACKET).
-> >=20
-> > From tc/BPF context you can use it; it's been long time, but I think ba=
-ck then
-> > we mapped it into cb[] so it can be used within the BPF context to pass=
- skb data
-> > around e.g. between tail calls, and cls_bpf_classify() when in direct-a=
-ction mode
-> > which likely everyone is/should-be using then maps that skb->tc_classid=
- u16 cb[]
-> > value to res->classid on program return which then in either sch_handle=
-_ingress()
-> > or sch_handle_egress() is transferred into the skb->tc_index.
-> >=20
->=20
-> It sounds like just before the start of a BPF_PROG_TYPE_SCHED_CLS bpf pro=
-gram tc_classid id placed in skb->cb. The missing plumbing to support my us=
-e case is probably the same thing, but for BPF_PROG_TYPE_SOCKET_FILTER.
->=20
-> I'll see about familiarizing myself with both as time permits and perhaps=
- I can get tc_classid working for a BPF_PROG_TYPE_SOCKET_FILTER program; it=
- certainly sounds like it's doable.
->=20
-> > > Is it impractical to make skb->tc_classid available in this bpf conte=
-xt or is there just some plumbing which hasn't been connected yet?
-> > >=20
-> > > Is my suspicion that skb->cb no longer contains qdisc_skb_cb due to c=
-rossing a layer boundary well founded?
-> > >=20
-> > > I'm willing to look into hooking things together as time permits if i=
-t's a feasible task.
-> > >=20
-> > > It's trivial to have iptables match on tc_classid and set a mark whic=
-h is available to bpf at l2, but I'd like to better understand this.
-> > >=20
-> > > Thanks,
-> > > Matt C.
-> > >=20
+diff --git a/samples/bpf/Makefile b/samples/bpf/Makefile
+index 4f0a1cdbfe7c..253e5a2856be 100644
+--- a/samples/bpf/Makefile
++++ b/samples/bpf/Makefile
+@@ -26,7 +26,6 @@ hostprogs-y += map_perf_test
+ hostprogs-y += test_overhead
+ hostprogs-y += test_cgrp2_array_pin
+ hostprogs-y += test_cgrp2_attach
+-hostprogs-y += test_cgrp2_attach2
+ hostprogs-y += test_cgrp2_sock
+ hostprogs-y += test_cgrp2_sock2
+ hostprogs-y += xdp1
+@@ -81,7 +80,6 @@ map_perf_test-objs := bpf_load.o map_perf_test_user.o
+ test_overhead-objs := bpf_load.o test_overhead_user.o
+ test_cgrp2_array_pin-objs := test_cgrp2_array_pin.o
+ test_cgrp2_attach-objs := test_cgrp2_attach.o
+-test_cgrp2_attach2-objs := test_cgrp2_attach2.o $(CGROUP_HELPERS)
+ test_cgrp2_sock-objs := test_cgrp2_sock.o
+ test_cgrp2_sock2-objs := bpf_load.o test_cgrp2_sock2.o
+ xdp1-objs := xdp1_user.o
+diff --git a/tools/testing/selftests/bpf/Makefile b/tools/testing/selftests/bpf/Makefile
+index 66f2dca1dee1..e09f419f4d7e 100644
+--- a/tools/testing/selftests/bpf/Makefile
++++ b/tools/testing/selftests/bpf/Makefile
+@@ -23,7 +23,8 @@ TEST_GEN_PROGS = test_verifier test_tag test_maps test_lru_map test_lpm_map test
+ 	test_align test_verifier_log test_dev_cgroup test_tcpbpf_user \
+ 	test_sock test_btf test_sockmap test_lirc_mode2_user get_cgroup_id_user \
+ 	test_socket_cookie test_cgroup_storage test_select_reuseport test_section_names \
+-	test_netcnt test_tcpnotify_user test_sock_fields test_sysctl
++	test_netcnt test_tcpnotify_user test_sock_fields test_sysctl \
++	test_cgroup_attach
+ 
+ BPF_OBJ_FILES = $(patsubst %.c,%.o, $(notdir $(wildcard progs/*.c)))
+ TEST_GEN_FILES = $(BPF_OBJ_FILES)
+@@ -96,6 +97,7 @@ $(OUTPUT)/test_cgroup_storage: cgroup_helpers.c
+ $(OUTPUT)/test_netcnt: cgroup_helpers.c
+ $(OUTPUT)/test_sock_fields: cgroup_helpers.c
+ $(OUTPUT)/test_sysctl: cgroup_helpers.c
++$(OUTPUT)/test_cgroup_attach: cgroup_helpers.c
+ 
+ .PHONY: force
+ 
+diff --git a/samples/bpf/test_cgrp2_attach2.c b/tools/testing/selftests/bpf/test_cgroup_attach.c
+similarity index 92%
+rename from samples/bpf/test_cgrp2_attach2.c
+rename to tools/testing/selftests/bpf/test_cgroup_attach.c
+index 0bb6507256b7..93d4fe295e7d 100644
+--- a/samples/bpf/test_cgrp2_attach2.c
++++ b/tools/testing/selftests/bpf/test_cgroup_attach.c
+@@ -1,3 +1,5 @@
++// SPDX-License-Identifier: GPL-2.0
++
+ /* eBPF example program:
+  *
+  * - Creates arraymap in kernel with 4 bytes keys and 8 byte values
+@@ -25,20 +27,27 @@
+ #include <sys/resource.h>
+ #include <sys/time.h>
+ #include <unistd.h>
++#include <linux/filter.h>
+ 
+ #include <linux/bpf.h>
+ #include <bpf/bpf.h>
+ 
+-#include "bpf_insn.h"
++#include "bpf_util.h"
+ #include "bpf_rlimit.h"
+ #include "cgroup_helpers.h"
+ 
+ #define FOO		"/foo"
+ #define BAR		"/foo/bar/"
+-#define PING_CMD	"ping -c1 -w1 127.0.0.1 > /dev/null"
++#define PING_CMD	"ping -q -c1 -w1 127.0.0.1 > /dev/null"
+ 
+ char bpf_log_buf[BPF_LOG_BUF_SIZE];
+ 
++#ifdef DEBUG
++#define debug(args...) printf(args)
++#else
++#define debug(args...)
++#endif
++
+ static int prog_load(int verdict)
+ {
+ 	int ret;
+@@ -89,7 +98,7 @@ static int test_foo_bar(void)
+ 		goto err;
+ 	}
+ 
+-	printf("Attached DROP prog. This ping in cgroup /foo should fail...\n");
++	debug("Attached DROP prog. This ping in cgroup /foo should fail...\n");
+ 	assert(system(PING_CMD) != 0);
+ 
+ 	/* Create cgroup /foo/bar, get fd, and join it */
+@@ -100,7 +109,7 @@ static int test_foo_bar(void)
+ 	if (join_cgroup(BAR))
+ 		goto err;
+ 
+-	printf("Attached DROP prog. This ping in cgroup /foo/bar should fail...\n");
++	debug("Attached DROP prog. This ping in cgroup /foo/bar should fail...\n");
+ 	assert(system(PING_CMD) != 0);
+ 
+ 	if (bpf_prog_attach(allow_prog, bar, BPF_CGROUP_INET_EGRESS,
+@@ -109,7 +118,7 @@ static int test_foo_bar(void)
+ 		goto err;
+ 	}
+ 
+-	printf("Attached PASS prog. This ping in cgroup /foo/bar should pass...\n");
++	debug("Attached PASS prog. This ping in cgroup /foo/bar should pass...\n");
+ 	assert(system(PING_CMD) == 0);
+ 
+ 	if (bpf_prog_detach(bar, BPF_CGROUP_INET_EGRESS)) {
+@@ -117,7 +126,7 @@ static int test_foo_bar(void)
+ 		goto err;
+ 	}
+ 
+-	printf("Detached PASS from /foo/bar while DROP is attached to /foo.\n"
++	debug("Detached PASS from /foo/bar while DROP is attached to /foo.\n"
+ 	       "This ping in cgroup /foo/bar should fail...\n");
+ 	assert(system(PING_CMD) != 0);
+ 
+@@ -132,7 +141,7 @@ static int test_foo_bar(void)
+ 		goto err;
+ 	}
+ 
+-	printf("Attached PASS from /foo/bar and detached DROP from /foo.\n"
++	debug("Attached PASS from /foo/bar and detached DROP from /foo.\n"
+ 	       "This ping in cgroup /foo/bar should pass...\n");
+ 	assert(system(PING_CMD) == 0);
+ 
+@@ -199,9 +208,9 @@ static int test_foo_bar(void)
+ 	close(bar);
+ 	cleanup_cgroup_environment();
+ 	if (!rc)
+-		printf("### override:PASS\n");
++		printf("#override:PASS\n");
+ 	else
+-		printf("### override:FAIL\n");
++		printf("#override:FAIL\n");
+ 	return rc;
+ }
+ 
+@@ -441,19 +450,26 @@ static int test_multiprog(void)
+ 	close(cg5);
+ 	cleanup_cgroup_environment();
+ 	if (!rc)
+-		printf("### multi:PASS\n");
++		printf("#multi:PASS\n");
+ 	else
+-		printf("### multi:FAIL\n");
++		printf("#multi:FAIL\n");
+ 	return rc;
+ }
+ 
+ int main(int argc, char **argv)
+ {
+-	int rc = 0;
++	int (*tests[])(void) = {test_foo_bar, test_multiprog};
++	int errors = 0;
++	int i;
+ 
+-	rc = test_foo_bar();
+-	if (rc)
+-		return rc;
++	for (i = 0; i < ARRAY_SIZE(tests); i++)
++		if (tests[i]())
++			errors++;
++
++	if (errors)
++		printf("test_cgroup_attach:FAIL\n");
++	else
++		printf("test_cgroup_attach:PASS\n");
+ 
+-	return test_multiprog();
++	return errors ? EXIT_FAILURE : EXIT_SUCCESS;
+ }
+-- 
+2.20.1
 
-=A0=A0=A0     =
