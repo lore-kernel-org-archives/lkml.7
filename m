@@ -2,149 +2,106 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3CA6C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:38:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBC13C282DC
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:39:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 864E02081C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:38:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558553932;
-	bh=YNihBYt2lrUvxJoVXq1UboPwbSOdSrtPaWoNftFFXGI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FjI/KMTn3v4PUOnMxNaF6taY8DgKKjNJNpz+Vva0QDmt1H2tJccIfAh5Tnvq8AylC
-	 IHcgRJLg0LaIYsb8y+I3m2mBCrNyUnk++WrXEVl+aSXojEjgMx4LUGk0AKoOt3+KWl
-	 J30aAD+aOfw65L329vUbIpohfLI9Za9RC9CU7brg=
+	by mail.kernel.org (Postfix) with ESMTP id 89A3E2081C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:39:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bY2LHNLC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733030AbfEVT3r (ORCPT
+        id S2387583AbfEVTjC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:29:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52878 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732994AbfEVT3o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:39:02 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:40472 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731503AbfEVT3o (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 22 May 2019 15:29:44 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F0AB20879;
-        Wed, 22 May 2019 19:29:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553382;
-        bh=YNihBYt2lrUvxJoVXq1UboPwbSOdSrtPaWoNftFFXGI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UknvP66e3YEe9Tl8tJ0yOS+wfCP+8X0t+lor5MeJV2Mm82SvmsSkvZ3AFcTJyCBx3
-         UGcpIoZDsEm8Yp2dljLzUuJLw+hXU8DtcRUhz4nfDfg8g+Nlg9gh/8d3U6GN6KC2Vh
-         1iXNAmmBklLZYLZbxNFdqW52onxu4ASGZOgnpOUg=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 040/167] at76c50x-usb: Don't register led_trigger if usb_register_driver failed
-Date:   Wed, 22 May 2019 15:26:35 -0400
-Message-Id: <20190522192842.25858-40-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190522192842.25858-1-sashal@kernel.org>
-References: <20190522192842.25858-1-sashal@kernel.org>
+Received: by mail-pg1-f195.google.com with SMTP id d30so1806654pgm.7;
+        Wed, 22 May 2019 12:29:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=N1lt5YyedYDYRxDOevOGqSo7gsUd5bOy8cykHjsLtD4=;
+        b=bY2LHNLCRmlqE7LZ2ALn4Q1gh+SLFN3JLiF2C7Ru1QyZWI8hRcAfSxfGENzxsOGd9X
+         6ReaQDGqY3unNPurFzVA3zpBAQGilVoYCMiZXEWqkWIyI5/h8y92antbZieW37hZGXlL
+         s2xqlbVdokYNc5NtaVdB0hxtLUZQDYvrujL6SjXophticu47GzYEFA2YljihX75dHsp5
+         EwLod7515r5VerNSBs+o2zTOEf3Q2Z64i8umWxxQj8EOGhyWocqyIXHSC0xQqLI6IWx1
+         skdMPrx2Kq1wSG7FmqrTadMHXkHOs0l59PDpeUltrH2bIFhzgui5wPxUX84bKue8CIGa
+         w68A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=N1lt5YyedYDYRxDOevOGqSo7gsUd5bOy8cykHjsLtD4=;
+        b=BzQ42hys0EmVlTeUrzyy6YHOOkxD2Va2lncI4vmic0QwVRVAF2LPSLvsQw2CsrFokT
+         GT/Rk8MVJ5FsQLjcFtCxEV9dDWIWYW6mcRBnLM9enZ7olFcR+nF60I3wBtYFlEXMFdJQ
+         l69+qVObPuOFPKTJaJnni12dAdhoChLc2IH87C+UOf8SfhQm65784F2MGYpbjiRrCUwA
+         SDZT2l3RwWHWM+A3SeZCNnTc0c9HVSkH1Ng/d35l88KyYkGWIsDj/QTV7Oivbb+1c+/d
+         1zbQhjTIVzvMxjmxqjhIctWEAIRtNYnMHkaNkxA1lnhH9bSpPFSBuu/1Xy8WLniVcY5J
+         a3vA==
+X-Gm-Message-State: APjAAAW9J38MbzS4r9FWVDvBTkRSlOGk6X4PxsYKcL8qXEwmUlVp8kmp
+        ch2FS8tHal9gou+eghEKZWiH+7Uy
+X-Google-Smtp-Source: APXvYqzEfaOkdYrAL9gJoOJDFyg+POabiHIwhe6pRwJkDrCakMPc5mlZ+G9QyXHGTSMVI1JnZQ5BUQ==
+X-Received: by 2002:a63:cf01:: with SMTP id j1mr87053467pgg.97.1558553383396;
+        Wed, 22 May 2019 12:29:43 -0700 (PDT)
+Received: from ?IPv6:2601:282:800:fd80:f892:82c5:66c:c52c? ([2601:282:800:fd80:f892:82c5:66c:c52c])
+        by smtp.googlemail.com with ESMTPSA id 85sm35545612pgb.52.2019.05.22.12.29.41
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 22 May 2019 12:29:42 -0700 (PDT)
+Subject: Re: [PATCH AUTOSEL 4.19 077/244] mlxsw: spectrum_router: Prevent ipv6
+ gateway with v4 route via replace and append
+To:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Cc:     "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org
+References: <20190522192630.24917-1-sashal@kernel.org>
+ <20190522192630.24917-77-sashal@kernel.org>
+From:   David Ahern <dsahern@gmail.com>
+Message-ID: <2fbc186d-3ec6-f3d1-a3aa-cf9b36b2fd88@gmail.com>
+Date:   Wed, 22 May 2019 13:29:41 -0600
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:52.0)
+ Gecko/20100101 Thunderbird/52.9.1
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190522192630.24917-77-sashal@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+On 5/22/19 1:23 PM, Sasha Levin wrote:
+> From: David Ahern <dsahern@gmail.com>
+> 
+> [ Upstream commit 7973d9e76727aa42f0824f5569e96248a572d50b ]
+> 
+> mlxsw currently does not support v6 gateways with v4 routes. Commit
+> 19a9d136f198 ("ipv4: Flag fib_info with a fib_nh using IPv6 gateway")
+> prevents a route from being added, but nothing stops the replace or
+> append. Add a catch for them too.
+>     $ ip  ro add 172.16.2.0/24 via 10.99.1.2
+>     $ ip  ro replace 172.16.2.0/24 via inet6 fe80::202:ff:fe00:b dev swp1s0
+>     Error: mlxsw_spectrum: IPv6 gateway with IPv4 route is not supported.
+>     $ ip  ro append 172.16.2.0/24 via inet6 fe80::202:ff:fe00:b dev swp1s0
+>     Error: mlxsw_spectrum: IPv6 gateway with IPv4 route is not supported.
+> 
+> Signed-off-by: David Ahern <dsahern@gmail.com>
+> Signed-off-by: David S. Miller <davem@davemloft.net>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c | 2 ++
+>  1 file changed, 2 insertions(+)
 
-[ Upstream commit 09ac2694b0475f96be895848687ebcbba97eeecf ]
+This patch is not needed for any release prior to 5.2.
 
-Syzkaller report this:
-
-[ 1213.468581] BUG: unable to handle kernel paging request at fffffbfff83bf338
-[ 1213.469530] #PF error: [normal kernel read fault]
-[ 1213.469530] PGD 237fe4067 P4D 237fe4067 PUD 237e60067 PMD 1c868b067 PTE 0
-[ 1213.473514] Oops: 0000 [#1] SMP KASAN PTI
-[ 1213.473514] CPU: 0 PID: 6321 Comm: syz-executor.0 Tainted: G         C        5.1.0-rc3+ #8
-[ 1213.473514] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
-[ 1213.473514] RIP: 0010:strcmp+0x31/0xa0
-[ 1213.473514] Code: 00 00 00 00 fc ff df 55 53 48 83 ec 08 eb 0a 84 db 48 89 ef 74 5a 4c 89 e6 48 89 f8 48 89 fa 48 8d 6f 01 48 c1 e8 03 83 e2 07 <42> 0f b6 04 28 38 d0 7f 04 84 c0 75 50 48 89 f0 48 89 f2 0f b6 5d
-[ 1213.473514] RSP: 0018:ffff8881f2b7f950 EFLAGS: 00010246
-[ 1213.473514] RAX: 1ffffffff83bf338 RBX: ffff8881ea6f7240 RCX: ffffffff825350c6
-[ 1213.473514] RDX: 0000000000000000 RSI: ffffffffc1ee19c0 RDI: ffffffffc1df99c0
-[ 1213.473514] RBP: ffffffffc1df99c1 R08: 0000000000000001 R09: 0000000000000004
-[ 1213.473514] R10: 0000000000000000 R11: ffff8881de353f00 R12: ffff8881ee727900
-[ 1213.473514] R13: dffffc0000000000 R14: 0000000000000001 R15: ffffffffc1eeaaf0
-[ 1213.473514] FS:  00007fa66fa01700(0000) GS:ffff8881f7200000(0000) knlGS:0000000000000000
-[ 1213.473514] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[ 1213.473514] CR2: fffffbfff83bf338 CR3: 00000001ebb9e005 CR4: 00000000007606f0
-[ 1213.473514] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[ 1213.473514] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[ 1213.473514] PKRU: 55555554
-[ 1213.473514] Call Trace:
-[ 1213.473514]  led_trigger_register+0x112/0x3f0
-[ 1213.473514]  led_trigger_register_simple+0x7a/0x110
-[ 1213.473514]  ? 0xffffffffc1c10000
-[ 1213.473514]  at76_mod_init+0x77/0x1000 [at76c50x_usb]
-[ 1213.473514]  do_one_initcall+0xbc/0x47d
-[ 1213.473514]  ? perf_trace_initcall_level+0x3a0/0x3a0
-[ 1213.473514]  ? kasan_unpoison_shadow+0x30/0x40
-[ 1213.473514]  ? kasan_unpoison_shadow+0x30/0x40
-[ 1213.473514]  do_init_module+0x1b5/0x547
-[ 1213.473514]  load_module+0x6405/0x8c10
-[ 1213.473514]  ? module_frob_arch_sections+0x20/0x20
-[ 1213.473514]  ? kernel_read_file+0x1e6/0x5d0
-[ 1213.473514]  ? find_held_lock+0x32/0x1c0
-[ 1213.473514]  ? cap_capable+0x1ae/0x210
-[ 1213.473514]  ? __do_sys_finit_module+0x162/0x190
-[ 1213.473514]  __do_sys_finit_module+0x162/0x190
-[ 1213.473514]  ? __ia32_sys_init_module+0xa0/0xa0
-[ 1213.473514]  ? __mutex_unlock_slowpath+0xdc/0x690
-[ 1213.473514]  ? wait_for_completion+0x370/0x370
-[ 1213.473514]  ? vfs_write+0x204/0x4a0
-[ 1213.473514]  ? do_syscall_64+0x18/0x450
-[ 1213.473514]  do_syscall_64+0x9f/0x450
-[ 1213.473514]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-[ 1213.473514] RIP: 0033:0x462e99
-[ 1213.473514] Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
-[ 1213.473514] RSP: 002b:00007fa66fa00c58 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
-[ 1213.473514] RAX: ffffffffffffffda RBX: 000000000073bf00 RCX: 0000000000462e99
-[ 1213.473514] RDX: 0000000000000000 RSI: 0000000020000300 RDI: 0000000000000003
-[ 1213.473514] RBP: 00007fa66fa00c70 R08: 0000000000000000 R09: 0000000000000000
-[ 1213.473514] R10: 0000000000000000 R11: 0000000000000246 R12: 00007fa66fa016bc
-[ 1213.473514] R13: 00000000004bcefa R14: 00000000006f6fb0 R15: 0000000000000004
-
-If usb_register failed, no need to call led_trigger_register_simple.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 1264b951463a ("at76c50x-usb: add driver")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/wireless/atmel/at76c50x-usb.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/net/wireless/atmel/at76c50x-usb.c b/drivers/net/wireless/atmel/at76c50x-usb.c
-index 94bf01f8b2a88..14f0cc36854fc 100644
---- a/drivers/net/wireless/atmel/at76c50x-usb.c
-+++ b/drivers/net/wireless/atmel/at76c50x-usb.c
-@@ -2585,8 +2585,8 @@ static int __init at76_mod_init(void)
- 	if (result < 0)
- 		printk(KERN_ERR DRIVER_NAME
- 		       ": usb_register failed (status %d)\n", result);
--
--	led_trigger_register_simple("at76_usb-tx", &ledtrig_tx);
-+	else
-+		led_trigger_register_simple("at76_usb-tx", &ledtrig_tx);
- 	return result;
- }
- 
--- 
-2.20.1
+IPv6 nexthops with an IPv4 route is a 5.2 feature.
 
