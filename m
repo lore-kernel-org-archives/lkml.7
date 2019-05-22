@@ -2,212 +2,133 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA92EC072A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 06:50:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D60A9C072A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 06:52:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C8F220644
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 06:50:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="c/wOHEtg"
+	by mail.kernel.org (Postfix) with ESMTP id AAAB720675
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 06:52:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728401AbfEVGuR (ORCPT
+        id S1728467AbfEVGwk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 02:50:17 -0400
-Received: from mail-eopbgr70045.outbound.protection.outlook.com ([40.107.7.45]:36618
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725796AbfEVGuR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 02:50:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iICz36GaGxIZ80QI8DIEGWCXWs0uFOywwiZIP9Tsbkk=;
- b=c/wOHEtgRHfI78/qrEVHmfBtJGzym2+FdE9C8pt7xET5N0ZtKQ9D/ot65UjfeyghyxVWfSXG+ArrHcB2putKWi0FuM/oWhiDQHRSX4nvEMFajnQ6kupI7TFd0U+ocT9WigD7nm/3A7pQI+TQ0c2Wg/XLeyj8xlGn29eArn+/+kk=
-Received: from AM6PR04MB5863.eurprd04.prod.outlook.com (20.179.1.11) by
- AM6PR04MB5093.eurprd04.prod.outlook.com (20.177.33.12) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1900.18; Wed, 22 May 2019 06:50:11 +0000
-Received: from AM6PR04MB5863.eurprd04.prod.outlook.com
- ([fe80::29f1:bb22:4881:3cbd]) by AM6PR04MB5863.eurprd04.prod.outlook.com
- ([fe80::29f1:bb22:4881:3cbd%4]) with mapi id 15.20.1900.020; Wed, 22 May 2019
- 06:50:11 +0000
-From:   Leo Li <leoyang.li@nxp.com>
-To:     Chuanhua Han <chuanhua.han@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh@kernel.org>
-CC:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Ying Zhang <ying.zhang22455@nxp.com>
-Subject: RE: [EXT] Re: [PATCH] arm64: dts: ls1028a: fix watchdog device node
-Thread-Topic: [EXT] Re: [PATCH] arm64: dts: ls1028a: fix watchdog device node
-Thread-Index: AQHVBjWLXx4zf+tY20C9RmzfaaLbEqZupocAgAA7pYCAAQj3MIAFssaAgAB4RGCAAKvwgIAABnYw
-Date:   Wed, 22 May 2019 06:50:11 +0000
-Message-ID: <AM6PR04MB5863FA1CE6D1E40F11B2E5008F000@AM6PR04MB5863.eurprd04.prod.outlook.com>
-References: <20190509070657.18281-1-chuanhua.han@nxp.com>
- <20190517023728.GA15856@dragon>
- <AM6PR04MB4357C78FCEBA1B00AA42ED2E970B0@AM6PR04MB4357.eurprd04.prod.outlook.com>
- <AM6PR04MB586341334E62A663EE5E8BD18F0B0@AM6PR04MB5863.eurprd04.prod.outlook.com>
- <AM6PR04MB435758E1498B6A2BE0C0ACE397070@AM6PR04MB4357.eurprd04.prod.outlook.com>
- <AM6PR04MB58631458E6D851E4D83A77ED8F070@AM6PR04MB5863.eurprd04.prod.outlook.com>
- <AM6PR04MB435708872A4DBA92561C772597000@AM6PR04MB4357.eurprd04.prod.outlook.com>
-In-Reply-To: <AM6PR04MB435708872A4DBA92561C772597000@AM6PR04MB4357.eurprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=leoyang.li@nxp.com; 
-x-originating-ip: [64.157.242.222]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d882d92f-7a01-4832-519c-08d6de81bcaf
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:AM6PR04MB5093;
-x-ms-traffictypediagnostic: AM6PR04MB5093:
-x-microsoft-antispam-prvs: <AM6PR04MB5093F26D5F00A8BEDF635D448F000@AM6PR04MB5093.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6108;
-x-forefront-prvs: 0045236D47
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(13464003)(199004)(189003)(446003)(25786009)(11346002)(8936002)(486006)(305945005)(81166006)(7736002)(26005)(476003)(81156014)(186003)(2906002)(4326008)(8676002)(53936002)(6246003)(6116002)(3846002)(68736007)(66066001)(74316002)(498600001)(5660300002)(7696005)(14444005)(256004)(52536014)(64756008)(73956011)(86362001)(76116006)(6436002)(66946007)(229853002)(66476007)(66556008)(66446008)(33656002)(76176011)(14454004)(99286004)(9686003)(54906003)(102836004)(110136005)(53546011)(6506007)(71200400001)(55016002)(71190400001)(21314003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR04MB5093;H:AM6PR04MB5863.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: GqBOmu+swPZ9PpYvYCtnA5M4aKIXrt107nVNOHvEh5iAzDAmK1n37sco0e4dETUC1cgV0A5gU03bd0go+d9579xQ8y08DEhni4yauTx42a7HGerRG/NScglarSOPYPAElrKyxa8dAeG65rTe/b5/T8iqcRFsB4PzIh9t7w+98yomCDVLT92ttbpLCs3V9ycy3td+tYzkS8IQFtqDlPpv6N5cVYwPDbnPq0e5FNIfELgzpj/RRyp9JGA3dgs7PjD2Lf1uHZ7F7mVI/j3NA22BVOCuOAa7c9vnCRekQ18ixlYPF6tbopUeO4U4e/FmayPm+k7w2qV7jqkspMeDXw6N28O5QyJi6TM6vGXJE5Kxjwz/VtEIAAMArljv2/pAegyPYRlxonqdP6NFVAke3S0hzCTqNLbdxVp0u/VadnnhmJg=
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        Wed, 22 May 2019 02:52:40 -0400
+Received: from lb3-smtp-cloud9.xs4all.net ([194.109.24.30]:52303 "EHLO
+        lb3-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725801AbfEVGwk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 02:52:40 -0400
+Received: from [192.168.2.10] ([46.9.252.75])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id TL73h27qisDWyTL76hJb1d; Wed, 22 May 2019 08:52:37 +0200
+Subject: Re: [PATCH] media:usb:zr364xx:Fix KASAN:null-ptr-deref Read in
+ zr364xx_vidioc_querycap
+To:     Vandana BN <bnvandana@gmail.com>, royale@zerezo.com,
+        mchehab@kernel.org, linux-usb@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     skhan@linuxfoundation.org, gregkh@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
+References: <20190521181535.7974-1-bnvandana@gmail.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <c9311eeb-4cb6-e69c-8a26-7faea7e0c088@xs4all.nl>
+Date:   Wed, 22 May 2019 08:52:33 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d882d92f-7a01-4832-519c-08d6de81bcaf
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 May 2019 06:50:11.6138
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB5093
+In-Reply-To: <20190521181535.7974-1-bnvandana@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfAgCbWpy3/Mf5iE6uyIh7ObpST1ZI0MlELXVDzMVOAM5s4N2waUax5FlNru1+/Av8LNMcRlwevn2yp8AUTXfT6JWENMdahG1tg7KBmzj8qYDGnX3vzE3
+ Mm+eQgNaM2bAQ5zig8OtkP8f6wDRWan4EKKgCl1DWhMF/mAbAWu4rEvNuL9wrLcvRBibv85CnBvwzvHeo8vo3McSwFDEpd/no29TWWtFXiC5L74tSKnigtBC
+ KRYYhWTgj/5UHdwlRpp027YgOkt6f6/6C9xsoNVFmAOvQuLk5F+g3E0L4pzAEV2Ead6GT9BFyR9+3eQnHdq68MwtQQLaqCPVfT/6ZerSdV0GGXW06bIaO+hm
+ Xzq6N3RyvhGs9vMmBc3LLAMt01hFKuNIJa5ebL16+xQRHy8f+VknmDk3kBBScWvpS+/ZU8DeYBsmu0gOBGzvxOU3tt99LCqimqby/y2BIWh6p8/ddEduf1Fz
+ F6ponXMjgeuIgMF8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQ2h1YW5odWEgSGFuDQo+
-IFNlbnQ6IFdlZG5lc2RheSwgTWF5IDIyLCAyMDE5IDE6MjYgQU0NCj4gVG86IExlbyBMaSA8bGVv
-eWFuZy5saUBueHAuY29tPjsgU2hhd24gR3VvIDxzaGF3bmd1b0BrZXJuZWwub3JnPg0KPiBDYzog
-bWFyay5ydXRsYW5kQGFybS5jb207IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9y
-ZzsNCj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5l
-bC5vcmc7IFlpbmcgWmhhbmcNCj4gPHlpbmcuemhhbmcyMjQ1NUBueHAuY29tPg0KPiBTdWJqZWN0
-OiBSRTogW0VYVF0gUmU6IFtQQVRDSF0gYXJtNjQ6IGR0czogbHMxMDI4YTogZml4IHdhdGNoZG9n
-IGRldmljZSBub2RlDQo+IA0KPiANCj4gDQo+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0N
-Cj4gPiBGcm9tOiBMZW8gTGkNCj4gPiBTZW50OiAyMDE5xOo11MIyMsjVIDQ6MTUNCj4gPiBUbzog
-Q2h1YW5odWEgSGFuIDxjaHVhbmh1YS5oYW5AbnhwLmNvbT47IFNoYXduIEd1bw0KPiA+IDxzaGF3
-bmd1b0BrZXJuZWwub3JnPg0KPiA+IENjOiBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgbGludXgtYXJt
-LWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOw0KPiA+IGRldmljZXRyZWVAdmdlci5rZXJuZWwu
-b3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBZaW5nIFpoYW5nDQo+ID4gPHlpbmcu
-emhhbmcyMjQ1NUBueHAuY29tPg0KPiA+IFN1YmplY3Q6IFJFOiBbRVhUXSBSZTogW1BBVENIXSBh
-cm02NDogZHRzOiBsczEwMjhhOiBmaXggd2F0Y2hkb2cNCj4gPiBkZXZpY2Ugbm9kZQ0KPiA+DQo+
-ID4NCj4gPg0KPiA+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiA+IEZyb206IENo
-dWFuaHVhIEhhbg0KPiA+ID4gU2VudDogVHVlc2RheSwgTWF5IDIxLCAyMDE5IDg6MDAgQU0NCj4g
-PiA+IFRvOiBMZW8gTGkgPGxlb3lhbmcubGlAbnhwLmNvbT47IFNoYXduIEd1byA8c2hhd25ndW9A
-a2VybmVsLm9yZz4NCj4gPiA+IENjOiBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgbGludXgtYXJtLWtl
-cm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOw0KPiA+ID4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5v
-cmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IFlpbmcgWmhhbmcNCj4gPiA+IDx5aW5n
-LnpoYW5nMjI0NTVAbnhwLmNvbT4NCj4gPiA+IFN1YmplY3Q6IFJFOiBbRVhUXSBSZTogW1BBVENI
-XSBhcm02NDogZHRzOiBsczEwMjhhOiBmaXggd2F0Y2hkb2cNCj4gPiA+IGRldmljZSBub2RlDQo+
-ID4gPg0KPiA+ID4NCj4gPiA+DQo+ID4gPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+
-ID4gPiA+IEZyb206IExlbyBMaQ0KPiA+ID4gPiBTZW50OiAyMDE5xOo11MIxOMjVIDY6MDENCj4g
-PiA+ID4gVG86IENodWFuaHVhIEhhbiA8Y2h1YW5odWEuaGFuQG54cC5jb20+OyBTaGF3biBHdW8N
-Cj4gPiA+ID4gPHNoYXduZ3VvQGtlcm5lbC5vcmc+DQo+ID4gPiA+IENjOiBtYXJrLnJ1dGxhbmRA
-YXJtLmNvbTsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOw0KPiA+ID4gPiBk
-ZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsg
-WWluZw0KPiA+ID4gPiBaaGFuZyA8eWluZy56aGFuZzIyNDU1QG54cC5jb20+DQo+ID4gPiA+IFN1
-YmplY3Q6IFJFOiBbRVhUXSBSZTogW1BBVENIXSBhcm02NDogZHRzOiBsczEwMjhhOiBmaXggd2F0
-Y2hkb2cNCj4gPiA+ID4gZGV2aWNlIG5vZGUNCj4gPiA+ID4NCj4gPiA+ID4NCj4gPiA+ID4NCj4g
-PiA+ID4gPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+ID4gPiA+IEZyb206IENodWFu
-aHVhIEhhbg0KPiA+ID4gPiA+IFNlbnQ6IEZyaWRheSwgTWF5IDE3LCAyMDE5IDE6MTEgQU0NCj4g
-PiA+ID4gPiBUbzogU2hhd24gR3VvIDxzaGF3bmd1b0BrZXJuZWwub3JnPg0KPiA+ID4gPiA+IENj
-OiBMZW8gTGkgPGxlb3lhbmcubGlAbnhwLmNvbT47IG1hcmsucnV0bGFuZEBhcm0uY29tOw0KPiA+
-ID4gPiA+IGxpbnV4LWFybS0ga2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7DQo+ID4gPiA+ID4g
-ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LSBrZXJuZWxAdmdlci5rZXJuZWwub3Jn
-OyBZaW5nDQo+ID4gPiA+ID4gWmhhbmcgPHlpbmcuemhhbmcyMjQ1NUBueHAuY29tPg0KPiA+ID4g
-PiA+IFN1YmplY3Q6IFJFOiBbRVhUXSBSZTogW1BBVENIXSBhcm02NDogZHRzOiBsczEwMjhhOiBm
-aXggd2F0Y2hkb2cNCj4gPiA+ID4gPiBkZXZpY2Ugbm9kZQ0KPiA+ID4gPiA+DQo+ID4gPiA+ID4N
-Cj4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiA+
-ID4gPiA+IEZyb206IFNoYXduIEd1byA8c2hhd25ndW9Aa2VybmVsLm9yZz4NCj4gPiA+ID4gPiA+
-IFNlbnQ6IDIwMTnE6jXUwjE3yNUgMTA6MzgNCj4gPiA+ID4gPiA+IFRvOiBDaHVhbmh1YSBIYW4g
-PGNodWFuaHVhLmhhbkBueHAuY29tPg0KPiA+ID4gPiA+ID4gQ2M6IExlbyBMaSA8bGVveWFuZy5s
-aUBueHAuY29tPjsgbWFyay5ydXRsYW5kQGFybS5jb207DQo+ID4gPiA+ID4gPiBsaW51eC1hcm0t
-a2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7DQo+ID4gPiA+ID4gPiBkZXZpY2V0cmVlQHZnZXIu
-a2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgWWluZw0KPiA+ID4gPiA+
-ID4gWmhhbmcgPHlpbmcuemhhbmcyMjQ1NUBueHAuY29tPg0KPiA+ID4gPiA+ID4gU3ViamVjdDog
-W0VYVF0gUmU6IFtQQVRDSF0gYXJtNjQ6IGR0czogbHMxMDI4YTogZml4IHdhdGNoZG9nDQo+ID4g
-PiA+ID4gPiBkZXZpY2Ugbm9kZQ0KPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+IENhdXRpb246IEVY
-VCBFbWFpbA0KPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+IE9uIFRodSwgTWF5IDA5LCAyMDE5IGF0
-IDAzOjA2OjU3UE0gKzA4MDAsIENodWFuaHVhIEhhbiB3cm90ZToNCj4gPiA+ID4gPiA+ID4gbHMx
-MDI4YSBwbGF0Zm9ybSB1c2VzIHNwODA1IHdhdGNoZG9nLCBhbmQgdXNlIDEvMTYgcGxhdGZvcm0N
-Cj4gPiA+ID4gPiA+ID4gY2xvY2sgYXMgdGltZXIgY2xvY2ssIHRoaXMgcGF0Y2ggZml4IGRldmlj
-ZSB0cmVlIG5vZGUuDQo+ID4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiA+IFNpZ25lZC1vZmYtYnk6
-IFpoYW5nIFlpbmctMjI0NTUgPHlpbmcuemhhbmcyMjQ1NUBueHAuY29tPg0KPiA+ID4gPiA+ID4g
-PiBTaWduZWQtb2ZmLWJ5OiBDaHVhbmh1YSBIYW4gPGNodWFuaHVhLmhhbkBueHAuY29tPg0KPiA+
-ID4gPiA+ID4gPiAtLS0NCj4gPiA+ID4gPiA+ID4gIC4uLi9hcm02NC9ib290L2R0cy9mcmVlc2Nh
-bGUvZnNsLWxzMTAyOGEuZHRzaSB8IDE5DQo+ID4gPiA+ID4gPiA+ICsrKysrKysrKysrKy0tLS0t
-LS0NCj4gPiA+ID4gPiA+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxMiBpbnNlcnRpb25zKCspLCA3IGRl
-bGV0aW9ucygtKQ0KPiA+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gPiBkaWZmIC0tZ2l0IGEvYXJj
-aC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAyOGEuZHRzaQ0KPiA+ID4gPiA+ID4g
-PiBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwMjhhLmR0c2kNCj4gPiA+
-ID4gPiA+ID4gaW5kZXggYjA0NTgxMjQ5ZjBiLi4xNTEwYjE4NTgyNDYgMTAwNjQ0DQo+ID4gPiA+
-ID4gPiA+IC0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwMjhhLmR0
-c2kNCj4gPiA+ID4gPiA+ID4gKysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNs
-LWxzMTAyOGEuZHRzaQ0KPiA+ID4gPiA+ID4gPiBAQCAtMjg1LDEzICsyODUsMTggQEANCj4gPiA+
-ID4gPiA+ID4gICAgICAgICAgICAgICAgICAgICAgICNpbnRlcnJ1cHQtY2VsbHMgPSA8Mj47DQo+
-ID4gPiA+ID4gPiA+ICAgICAgICAgICAgICAgfTsNCj4gPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+
-ID4gLSAgICAgICAgICAgICB3ZG9nMDogd2F0Y2hkb2dAMjNjMDAwMCB7DQo+ID4gPiA+ID4gPiA+
-IC0gICAgICAgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gImZzbCxsczEwMjhhLXdkdCIsDQo+
-ID4gImZzbCxpbXgyMS13ZHQiOw0KPiA+ID4gPiA+ID4gPiAtICAgICAgICAgICAgICAgICAgICAg
-cmVnID0gPDB4MCAweDIzYzAwMDAgMHgwIDB4MTAwMDA+Ow0KPiA+ID4gPiA+ID4gPiAtICAgICAg
-ICAgICAgICAgICAgICAgaW50ZXJydXB0cyA9IDxHSUNfU1BJIDU5DQo+ID4gPiA+IElSUV9UWVBF
-X0xFVkVMX0hJR0g+Ow0KPiA+ID4gPiA+ID4gPiAtICAgICAgICAgICAgICAgICAgICAgY2xvY2tz
-ID0gPCZjbG9ja2dlbiA0IDE+Ow0KPiA+ID4gPiA+ID4gPiAtICAgICAgICAgICAgICAgICAgICAg
-YmlnLWVuZGlhbjsNCj4gPiA+ID4gPiA+ID4gLSAgICAgICAgICAgICAgICAgICAgIHN0YXR1cyA9
-ICJkaXNhYmxlZCI7DQo+ID4gPiA+ID4gPiA+ICsgICAgICAgICAgICAgY2x1c3RlcjFfY29yZTBf
-d2F0Y2hkb2c6IHdkdEBjMDAwMDAwIHsNCj4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiBLZWVwICd3
-YXRjaGRvZycgYXMgdGhlIG5vZGUgbmFtZSwNCj4gPiA+ID4gPiBUaGFua3MgZm9yIHlvdXIgcmVw
-bGF5DQo+ID4gPiA+ID4gRG8geW91IG1lYW4gcmVwbGFjZSB0aGUgoa53ZHShryB3aXRoIKGud2F0
-Y2hkb2ehrz8NCj4gPiA+ID4gPiBhbmQga2VlcCBub2RlcyBzb3J0IGluIHVuaXQtYWRkcmVzcy4N
-Cj4gPiA+ID4gPiBXaGF0IGRvZXMgdGhpcyBtZWFuPw0KPiA+ID4gPg0KPiA+ID4gPiBUaGF0IG1l
-YW5zIG9yZGVyIHRoZSBub2RlcyBieSB0aGUgYWRkcmVzc2VzIChlLmcuIGMwMDAwMDAsDQo+ID4g
-PiA+IGMwMTAwMDApDQo+ID4gPiBUaGUgY3VycmVudCBvcmRlciBpcyBjb3JyZWN0o6hUaGUgZmly
-c3QgaXMgYzAwMDAwMCwgdGhlbiBjMDAwMDAwo6kuDQo+ID4NCj4gPiBCdXQgdGhleSBhcmUgYWRk
-ZWQgYWZ0ZXIgZ3Bpb0AyMzIwMDAwIGFuZCBiZWZvcmUgc2F0YUAzMjAwMDAwLg0KPiBJIGNoYW5n
-ZWQgYW5kIG1hZGUgdGhlIHNlY29uZCB2ZXJzaW9uIG9mIHRoZSBwYXRjaCwgYnV0IEkgZm91bmQg
-dGhlDQo+IGZvbGxvd2luZyBlcnJvciB3aGVuIEkgZXhlY3V0ZWQgLi9zY3JpcHRzL2NoZWNrcGF0
-Y2gucGwgeHh4LnBhdGNoIHRvIGNoZWNrDQo+IHRoZSBwYXRjaDoNCj4gDQo+IFdBUk5JTkc6IERU
-IGNvbXBhdGlibGUgc3RyaW5nIHZlbmRvciAiYXJtIiBhcHBlYXJzIHVuLWRvY3VtZW50ZWQgLS0N
-Cj4gY2hlY2sgLi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdmVuZG9yLXByZWZp
-eGVzLnR4dA0KPiAjNDM6IEZJTEU6IGFyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1s
-czEwMjhhLmR0c2k6MzUxOg0KPiArIGNvbXBhdGlibGUgPSAiYXJtLHNwODA1IiwgImFybSxwcmlt
-ZWNlbGwiOw0KPiANCj4gSG93ZXZlciwgdGhlcmUgaXMgbm8gdmVuZG9yLXByZWZpeGVzLnR4dCBm
-aWxlIGluDQo+IHRoZSAuL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy8gZGlyZWN0
-b3J5LCBvbmx5IHZlbmRvci0NCj4gcHJlZml4ZXMueWFtbC4NCj4gTW9yZW92ZXIsIHRoZXJlIGFy
-ZSChrmFybaGvIHZlbmRvcnMgaW4gdmVuZG9yLXByZWZpeGVzLnlhbWwuDQoNCkFkZGVkIFJvYiBI
-ZXJyaW5nIHRvIHRoZSB0aHJlYWQuDQoNCj4gUmVxdWVzdCBoZWxwo6x0aGFua3MNCj4gPg0KPiA+
-ID4gPg0KPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+IFNoYXduDQo+ID4gPiA+ID4gPg0KPiA+ID4g
-PiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJhcm0sc3A4MDUiLCAi
-YXJtLHByaW1lY2VsbCI7DQo+ID4gPiA+ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgICByZWcg
-PSA8MHgwIDB4YzAwMDAwMCAweDAgMHgxMDAwPjsNCj4gPiA+ID4gPiA+ID4gKyAgICAgICAgICAg
-ICAgICAgICAgIGNsb2NrcyA9IDwmY2xvY2tnZW4gNCAxNT4sIDwmY2xvY2tnZW4NCj4gPiA+ID4g
-PiA+ID4gKyA0DQo+ID4gMTU+Ow0KPiA+ID4gPiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAg
-Y2xvY2stbmFtZXMgPSAiYXBiX3BjbGsiLCAid2RvZ19jbGsiOw0KPiA+ID4gPiA+ID4gPiArICAg
-ICAgICAgICAgIH07DQo+ID4gPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiA+ID4gKyAgICAgICAgICAg
-ICBjbHVzdGVyMV9jb3JlMV93YXRjaGRvZzogd2R0QGMwMTAwMDAgew0KPiA+ID4gPiA+ID4gPiAr
-ICAgICAgICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJhcm0sc3A4MDUiLCAiYXJtLHByaW1l
-Y2VsbCI7DQo+ID4gPiA+ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgICByZWcgPSA8MHgwIDB4
-YzAxMDAwMCAweDAgMHgxMDAwPjsNCj4gPiA+ID4gPiA+ID4gKyAgICAgICAgICAgICAgICAgICAg
-IGNsb2NrcyA9IDwmY2xvY2tnZW4gNCAxNT4sIDwmY2xvY2tnZW4NCj4gPiA+ID4gPiA+ID4gKyA0
-DQo+ID4gMTU+Ow0KPiA+ID4gPiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAgY2xvY2stbmFt
-ZXMgPSAiYXBiX3BjbGsiLCAid2RvZ19jbGsiOw0KPiA+ID4gPiA+ID4gPiAgICAgICAgICAgICAg
-IH07DQo+ID4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiA+ICAgICAgICAgICAgICAgc2F0YTogc2F0
-YUAzMjAwMDAwIHsNCj4gPiA+ID4gPiA+ID4gLS0NCj4gPiA+ID4gPiA+ID4gMi4xNy4xDQo+ID4g
-PiA+ID4gPiA+DQo=
+On 5/21/19 8:15 PM, Vandana BN wrote:
+> SyzKaller hit the null pointer deref while reading from uninitialized
+> udev->product in zr364xx_vidioc_querycap().
+> ==================================================================
+> BUG: KASAN: null-ptr-deref in read_word_at_a_time+0xe/0x20
+> include/linux/compiler.h:274
+> Read of size 1 at addr 0000000000000000 by task v4l_id/5287
+> 
+> CPU: 1 PID: 5287 Comm: v4l_id Not tainted 5.1.0-rc3-319004-g43151d6 #6
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> Google 01/01/2011
+> Call Trace:
+>   __dump_stack lib/dump_stack.c:77 [inline]
+>   dump_stack+0xe8/0x16e lib/dump_stack.c:113
+>   kasan_report.cold+0x5/0x3c mm/kasan/report.c:321
+>   read_word_at_a_time+0xe/0x20 include/linux/compiler.h:274
+>   strscpy+0x8a/0x280 lib/string.c:207
+>   zr364xx_vidioc_querycap+0xb5/0x210 drivers/media/usb/zr364xx/zr364xx.c:706
+>   v4l_querycap+0x12b/0x340 drivers/media/v4l2-core/v4l2-ioctl.c:1062
+>   __video_do_ioctl+0x5bb/0xb40 drivers/media/v4l2-core/v4l2-ioctl.c:2874
+>   video_usercopy+0x44e/0xf00 drivers/media/v4l2-core/v4l2-ioctl.c:3056
+>   v4l2_ioctl+0x14e/0x1a0 drivers/media/v4l2-core/v4l2-dev.c:364
+>   vfs_ioctl fs/ioctl.c:46 [inline]
+>   file_ioctl fs/ioctl.c:509 [inline]
+>   do_vfs_ioctl+0xced/0x12f0 fs/ioctl.c:696
+>   ksys_ioctl+0xa0/0xc0 fs/ioctl.c:713
+>   __do_sys_ioctl fs/ioctl.c:720 [inline]
+>   __se_sys_ioctl fs/ioctl.c:718 [inline]
+>   __x64_sys_ioctl+0x74/0xb0 fs/ioctl.c:718
+>   do_syscall_64+0xcf/0x4f0 arch/x86/entry/common.c:290
+>   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> RIP: 0033:0x7f3b56d8b347
+> Code: 90 90 90 48 8b 05 f1 fa 2a 00 64 c7 00 26 00 00 00 48 c7 c0 ff ff ff
+> ff c3 90 90 90 90 90 90 90 90 90 90 b8 10 00 00 00 0f 05 <48> 3d 01 f0 ff
+> ff 73 01 c3 48 8b 0d c1 fa 2a 00 31 d2 48 29 c2 64
+> RSP: 002b:00007ffe005d5d68 EFLAGS: 00000202 ORIG_RAX: 0000000000000010
+> RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00007f3b56d8b347
+> RDX: 00007ffe005d5d70 RSI: 0000000080685600 RDI: 0000000000000003
+> RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000202 R12: 0000000000400884
+> R13: 00007ffe005d5ec0 R14: 0000000000000000 R15: 0000000000000000
+> ==================================================================
+> 
+> For this device udev->product is not initialized and accessing it causes a NULL pointer deref.
+> 
+> The fix is to check for NULL before strscpy() and copy empty string, if
+> product is NULL
+> 
+> Reported-by: syzbot+66010012fd4c531a1a96@syzkaller.appspotmail.com
+> 
+> Signed-off-by: Vandana BN <bnvandana@gmail.com>
+> ---
+>  drivers/media/usb/zr364xx/zr364xx.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/media/usb/zr364xx/zr364xx.c b/drivers/media/usb/zr364xx/zr364xx.c
+> index 96fee8d5b865..401a1e55dbe1 100644
+> --- a/drivers/media/usb/zr364xx/zr364xx.c
+> +++ b/drivers/media/usb/zr364xx/zr364xx.c
+> @@ -703,7 +703,10 @@ static int zr364xx_vidioc_querycap(struct file *file, void *priv,
+>  	struct zr364xx_camera *cam = video_drvdata(file);
+>  
+>  	strscpy(cap->driver, DRIVER_DESC, sizeof(cap->driver));
+> -	strscpy(cap->card, cam->udev->product, sizeof(cap->card));
+> +	if (cam->udev->product)
+> +		strscpy(cap->card, cam->udev->product, sizeof(cap->card));
+> +	else
+> +		strscpy(cap->card, "", sizeof(cap->card));
+
+You can drop the 'else' part since cap->card is already zeroed by the
+V4L2 core framework. Looks good otherwise!
+
+Regards,
+
+	Hans
+
+>  	strscpy(cap->bus_info, dev_name(&cam->udev->dev),
+>  		sizeof(cap->bus_info));
+>  	cap->device_caps = V4L2_CAP_VIDEO_CAPTURE |
+> 
+
