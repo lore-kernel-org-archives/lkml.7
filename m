@@ -4,52 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79703C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:37:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0FF3C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:37:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49CEF2081C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:37:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF1E320675
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:37:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558553846;
-	bh=2tdx0dv/iRRHc+bjoP1rVr48kmKTYBJAsaMm6nfp5zg=;
+	s=default; t=1558553856;
+	bh=sggYvIFTjVwlhubVJZzr4XZFhH5kkvKII9OXtKTlSPo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FCBr7pud+J31Uol4Hi5QHhZuR+UR53AK4ak4AwArcOti7UEnn+gyRr9YoeGQZ9G4n
-	 EknB5+eNLyHrl/9rH1zwI5wbGHLzTY6iWIyHXhLOTOXK+MSiEAMtqdEUm+QW5vlgHp
-	 jDAPvSvTyBOLXQlPmFuZW85IKB9w+NmJmmGUA7eI=
+	b=NfenxacoetQ2JGu7nWL0wVyD8iwSBDgEnv2PO9tG1aiWkkmfxbbqeBWeJJ//wg3Ji
+	 94vSafjVrcpsX8WGB3f81IhqLNtT+DTgbpNgYcHrHfm14nvSHHHNvCx+uVxrkYTXkq
+	 /YGDqWvIUXxLb3dLQj+K2FjL1I4Sfm0BtpwNwvcU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387404AbfEVThU (ORCPT
+        id S2387398AbfEVThg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:37:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53910 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:37:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53688 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732774AbfEVTa1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:30:27 -0400
+        id S1733194AbfEVTaQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:30:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 55D942173C;
-        Wed, 22 May 2019 19:30:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C0D8217D7;
+        Wed, 22 May 2019 19:30:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553427;
-        bh=2tdx0dv/iRRHc+bjoP1rVr48kmKTYBJAsaMm6nfp5zg=;
+        s=default; t=1558553415;
+        bh=sggYvIFTjVwlhubVJZzr4XZFhH5kkvKII9OXtKTlSPo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PoeDWukp7tgzByDrSm/gwL8fSvDLaE7B0ZLPgNG75JKvE1Y1cCinfFRR4OzzSoCAM
-         psqc/FPNn946fksyyKKnyAF4ZWCVojRxyIPlviUuijJh96tNJe91XPbgUOXxj0T6bE
-         O3QOSlJ/jO7hfDOVCx2s2r5N4N6j9ydf9yJuQmP8=
+        b=V70evVROENHgfIw93Qr/C0tUiSGP0Gx6LK1eE4VeHRtmTjY/16WjVUKyfNR+SL5KN
+         C6//ZE/sn3jFX1XYlV8gYbQ/43w7OBv6slmXUoVLh5LOs57967m2+tGgb0aIMP+IJM
+         ++RyEOnLniwclgI4jGAHNLwoeHVMRA3Xdvgih3Y4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Martin Brandenburg <martin@omnibond.com>,
-        Mike Marshall <hubcap@omnibond.com>,
-        Sasha Levin <sashal@kernel.org>, devel@lists.orangefs.org
-Subject: [PATCH AUTOSEL 4.9 006/114] orangefs: truncate before updating size
-Date:   Wed, 22 May 2019 15:28:29 -0400
-Message-Id: <20190522193017.26567-6-sashal@kernel.org>
+Cc:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Shuah Khan <shuah@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 061/167] media: au0828: stop video streaming only when last user stops
+Date:   Wed, 22 May 2019 15:26:56 -0400
+Message-Id: <20190522192842.25858-61-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190522193017.26567-1-sashal@kernel.org>
-References: <20190522193017.26567-1-sashal@kernel.org>
+In-Reply-To: <20190522192842.25858-1-sashal@kernel.org>
+References: <20190522192842.25858-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,39 +61,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Brandenburg <martin@omnibond.com>
+From: Hans Verkuil <hverkuil@xs4all.nl>
 
-[ Upstream commit 33713cd09ccdc1e01b10d0782ae60200d4989553 ]
+[ Upstream commit f604f0f5afb88045944567f604409951b5eb6af8 ]
 
-Otherwise we race with orangefs_writepage/orangefs_writepages
-which and does not expect i_size < page_offset.
+If the application was streaming from both videoX and vbiX, and streaming
+from videoX was stopped, then the vbi streaming also stopped.
 
-Fixes xfstests generic/129.
+The cause being that stop_streaming for video stopped the subdevs as well,
+instead of only doing that if dev->streaming_users reached 0.
 
-Signed-off-by: Martin Brandenburg <martin@omnibond.com>
-Signed-off-by: Mike Marshall <hubcap@omnibond.com>
+au0828_stop_vbi_streaming was also wrong since it didn't stop the subdevs
+at all when dev->streaming_users reached 0.
+
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Tested-by: Shuah Khan <shuah@kernel.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/orangefs/inode.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/media/usb/au0828/au0828-video.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
-diff --git a/fs/orangefs/inode.c b/fs/orangefs/inode.c
-index 08ecdeebd6f70..c85c5f9b17036 100644
---- a/fs/orangefs/inode.c
-+++ b/fs/orangefs/inode.c
-@@ -176,7 +176,11 @@ static int orangefs_setattr_size(struct inode *inode, struct iattr *iattr)
- 	}
- 	orig_size = i_size_read(inode);
+diff --git a/drivers/media/usb/au0828/au0828-video.c b/drivers/media/usb/au0828/au0828-video.c
+index 9342402b92f76..7cd2daf869895 100644
+--- a/drivers/media/usb/au0828/au0828-video.c
++++ b/drivers/media/usb/au0828/au0828-video.c
+@@ -839,9 +839,9 @@ int au0828_start_analog_streaming(struct vb2_queue *vq, unsigned int count)
+ 			return rc;
+ 		}
  
--	truncate_setsize(inode, iattr->ia_size);
-+	/* This is truncate_setsize in a different order. */
-+	truncate_pagecache(inode, iattr->ia_size);
-+	i_size_write(inode, iattr->ia_size);
-+	if (iattr->ia_size > orig_size)
-+		pagecache_isize_extended(inode, orig_size, iattr->ia_size);
++		v4l2_device_call_all(&dev->v4l2_dev, 0, video, s_stream, 1);
++
+ 		if (vq->type == V4L2_BUF_TYPE_VIDEO_CAPTURE) {
+-			v4l2_device_call_all(&dev->v4l2_dev, 0, video,
+-						s_stream, 1);
+ 			dev->vid_timeout_running = 1;
+ 			mod_timer(&dev->vid_timeout, jiffies + (HZ / 10));
+ 		} else if (vq->type == V4L2_BUF_TYPE_VBI_CAPTURE) {
+@@ -861,10 +861,11 @@ static void au0828_stop_streaming(struct vb2_queue *vq)
  
- 	new_op = op_alloc(ORANGEFS_VFS_OP_TRUNCATE);
- 	if (!new_op)
+ 	dprintk(1, "au0828_stop_streaming called %d\n", dev->streaming_users);
+ 
+-	if (dev->streaming_users-- == 1)
++	if (dev->streaming_users-- == 1) {
+ 		au0828_uninit_isoc(dev);
++		v4l2_device_call_all(&dev->v4l2_dev, 0, video, s_stream, 0);
++	}
+ 
+-	v4l2_device_call_all(&dev->v4l2_dev, 0, video, s_stream, 0);
+ 	dev->vid_timeout_running = 0;
+ 	del_timer_sync(&dev->vid_timeout);
+ 
+@@ -893,8 +894,10 @@ void au0828_stop_vbi_streaming(struct vb2_queue *vq)
+ 	dprintk(1, "au0828_stop_vbi_streaming called %d\n",
+ 		dev->streaming_users);
+ 
+-	if (dev->streaming_users-- == 1)
++	if (dev->streaming_users-- == 1) {
+ 		au0828_uninit_isoc(dev);
++		v4l2_device_call_all(&dev->v4l2_dev, 0, video, s_stream, 0);
++	}
+ 
+ 	spin_lock_irqsave(&dev->slock, flags);
+ 	if (dev->isoc_ctl.vbi_buf != NULL) {
 -- 
 2.20.1
 
