@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8376FC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:00:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F9A6C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:00:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5036220856
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:00:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBC9120856
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:00:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558555204;
-	bh=5R1qiA4ub11Ga1Rdx5yuNJd2np/tgjKoWBcsGGpXrX8=;
+	s=default; t=1558555208;
+	bh=eHjR7WKf4S/nm5NSKt//euvYzwhQVvsxfSeDGz2iyFo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zikLQspzKag9qtyjQdzP5tnfzJqm+CnXSUR4OuSqee1RYP99hU3HimaDSdxpNKwVk
-	 AYlBUOaVFdXc2NPBCSmLkyexxnsPsOR6szONn9SrE9EGo8gBy7b8mbvr3D3OD1BvYo
-	 vo9R2SxPZ3y5vAWSiH98Mq7oCWaQEJUMTwSHPSQM=
+	b=lGgKietKMXD62TwgiC2INX0UU9Dkfpk7/cif4KVrlKEOHUthCG0KzPkajm4++Rrvo
+	 ojkpwmBlo6rQKARWupdwpNLjsljP9qnN9vx88C78elP78SqRHPfV604fm9NsMuAdq1
+	 RTwkeYDa3nKR5Q+I/nV6Bj0PxkQO2s2EOPlqqtGo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730839AbfEVTXT (ORCPT
+        id S1731689AbfEVUAH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:23:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44076 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 16:00:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44194 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730788AbfEVTXL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:23:11 -0400
+        id S1730776AbfEVTXS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:23:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1BEE82177E;
-        Wed, 22 May 2019 19:23:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A6E9B2173C;
+        Wed, 22 May 2019 19:23:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558552991;
-        bh=5R1qiA4ub11Ga1Rdx5yuNJd2np/tgjKoWBcsGGpXrX8=;
+        s=default; t=1558552998;
+        bh=eHjR7WKf4S/nm5NSKt//euvYzwhQVvsxfSeDGz2iyFo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VVpXGpzq2AvpiJ4/Jtx5DglnJBH2Ym9FuVVqDHZMWqHNHG4xTtgpY2vZLOzdKQ+OA
-         dfNz382OQXG+iBXp/RVjwAlBQD+yQp346zu4MIubzG47kGvVkw9/hLRRjGNj0/3yoK
-         NasoMEYPD0dlPEmcGdhaHdXElNXyRmikWCG8apOI=
+        b=yCRTK4Ly5K8OYW7AkKYL6sUYE1VCUWDuOZ16X6/oV81uzQuMHGahMnH80VY8BveXd
+         0sX3XtcBDOELyq664UiAaV3wRFFA/rP2p0sl1+w0UNQPDVhxFcyTknrwPtRbJJNHKp
+         1ms9tAkp09lKAx4EOE0F1jZG297WNSQ4f2/kqPew=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nicholas Piggin <npiggin@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.1 066/375] sched/nohz: Run NOHZ idle load balancer on HK_FLAG_MISC CPUs
-Date:   Wed, 22 May 2019 15:16:06 -0400
-Message-Id: <20190522192115.22666-66-sashal@kernel.org>
+Cc:     Mariusz Bialonczyk <manio@skyboo.net>,
+        Jean-Francois Dagenais <jeff.dagenais@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 068/375] w1: fix the resume command API
+Date:   Wed, 22 May 2019 15:16:08 -0400
+Message-Id: <20190522192115.22666-68-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192115.22666-1-sashal@kernel.org>
 References: <20190522192115.22666-1-sashal@kernel.org>
@@ -62,72 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicholas Piggin <npiggin@gmail.com>
+From: Mariusz Bialonczyk <manio@skyboo.net>
 
-[ Upstream commit 9b019acb72e4b5741d88e8936d6f200ed44b66b2 ]
+[ Upstream commit 62909da8aca048ecf9fbd7e484e5100608f40a63 ]
 
-The NOHZ idle balancer runs on the lowest idle CPU. This can
-interfere with isolated CPUs, so confine it to HK_FLAG_MISC
-housekeeping CPUs.
+>From the DS2408 datasheet [1]:
+"Resume Command function checks the status of the RC flag and, if it is set,
+ directly transfers control to the control functions, similar to a Skip ROM
+ command. The only way to set the RC flag is through successfully executing
+ the Match ROM, Search ROM, Conditional Search ROM, or Overdrive-Match ROM
+ command"
 
-HK_FLAG_SCHED is not used for this because it is not set anywhere
-at the moment. This could be folded into HK_FLAG_SCHED once that
-option is fixed.
+The function currently works perfectly fine in a multidrop bus, but when we
+have only a single slave connected, then only a Skip ROM is used and Match
+ROM is not called at all. This is leading to problems e.g. with single one
+DS2408 connected, as the Resume Command is not working properly and the
+device is responding with failing results after the Resume Command.
 
-The problem was observed with increased jitter on an application
-running on CPU0, caused by NOHZ idle load balancing being run on
-CPU1 (an SMT sibling).
+This commit is fixing this by using a Skip ROM instead in those cases.
+The bandwidth / performance advantage is exactly the same.
 
-Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Frederic Weisbecker <fweisbec@gmail.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190412042613.28930-1-npiggin@gmail.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Refs:
+[1] https://datasheets.maximintegrated.com/en/ds/DS2408.pdf
+
+Signed-off-by: Mariusz Bialonczyk <manio@skyboo.net>
+Reviewed-by: Jean-Francois Dagenais <jeff.dagenais@gmail.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/fair.c | 16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
+ drivers/w1/w1_io.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 35f3ea3750844..232491e3ed0db 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -9551,22 +9551,26 @@ static inline int on_null_domain(struct rq *rq)
-  * - When one of the busy CPUs notice that there may be an idle rebalancing
-  *   needed, they will kick the idle load balancer, which then does idle
-  *   load balancing for all the idle CPUs.
-+ * - HK_FLAG_MISC CPUs are used for this task, because HK_FLAG_SCHED not set
-+ *   anywhere yet.
-  */
+diff --git a/drivers/w1/w1_io.c b/drivers/w1/w1_io.c
+index 0364d3329c526..3516ce6718d94 100644
+--- a/drivers/w1/w1_io.c
++++ b/drivers/w1/w1_io.c
+@@ -432,8 +432,7 @@ int w1_reset_resume_command(struct w1_master *dev)
+ 	if (w1_reset_bus(dev))
+ 		return -1;
  
- static inline int find_new_ilb(void)
- {
--	int ilb = cpumask_first(nohz.idle_cpus_mask);
-+	int ilb;
- 
--	if (ilb < nr_cpu_ids && idle_cpu(ilb))
--		return ilb;
-+	for_each_cpu_and(ilb, nohz.idle_cpus_mask,
-+			      housekeeping_cpumask(HK_FLAG_MISC)) {
-+		if (idle_cpu(ilb))
-+			return ilb;
-+	}
- 
- 	return nr_cpu_ids;
+-	/* This will make only the last matched slave perform a skip ROM. */
+-	w1_write_8(dev, W1_RESUME_CMD);
++	w1_write_8(dev, dev->slave_count > 1 ? W1_RESUME_CMD : W1_SKIP_ROM);
+ 	return 0;
  }
- 
- /*
-- * Kick a CPU to do the nohz balancing, if it is time for it. We pick the
-- * nohz_load_balancer CPU (if there is one) otherwise fallback to any idle
-- * CPU (if there is one).
-+ * Kick a CPU to do the nohz balancing, if it is time for it. We pick any
-+ * idle CPU in the HK_FLAG_MISC housekeeping set (if there is one).
-  */
- static void kick_ilb(unsigned int flags)
- {
+ EXPORT_SYMBOL_GPL(w1_reset_resume_command);
 -- 
 2.20.1
 
