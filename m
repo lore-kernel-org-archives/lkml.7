@@ -2,106 +2,166 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 772FDC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:21:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1611AC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:21:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A2912173C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:21:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC4A7217F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:21:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558552877;
-	bh=YbWw5jCdlVSPKASk0Am85SMF0LzLvtSiYq/4581+xHE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=1vRsWL+MSigby2aDMiwzTj//xhpdoEWDRrIUxmyh1RnbyhoDL+Bn/SR+PcE2XW4kX
-	 8rWKOooMtScJRqET0/Lc+NTo4a6dWoJ+qKLc0ccK6/6bbPqdPWnXf9f6SE6wYt5tuz
-	 CPxiV/Va4GW5KyMAhtWQNCzcQetvAaUaKD0VX5tM=
+	s=default; t=1558552880;
+	bh=b3pnOJlavVTSMLrhfhWYxt52OURL4r336/7ktnNmvMU=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=h837SBvswDrepWLfLIrlz68VVK21yLnqN1Qz6IJz7huiBVulOZYJSKMKWqvt5Tq4R
+	 ulagcAIMfLJpxpWhEPwVNIHvrRWr18d82kCxucS9TiyLsZbMbW0kCNNg05XtdvJ983
+	 pHXA2hwj8W3jVk8sZcvf3Q9emFgw4r7PINYK7TtA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729712AbfEVTVQ (ORCPT
+        id S1729805AbfEVTVT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:21:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41606 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:21:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728615AbfEVTVQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:21:16 -0400
-Received: from localhost.localdomain (c-73-223-200-170.hsd1.ca.comcast.net [73.223.200.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1728615AbfEVTVS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:21:18 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 523F120879;
-        Wed, 22 May 2019 19:21:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0A2221473;
+        Wed, 22 May 2019 19:21:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558552875;
-        bh=YbWw5jCdlVSPKASk0Am85SMF0LzLvtSiYq/4581+xHE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=wlA5IMAkbdJJK84FwgfTk9vb9mKRpiUrE0gdmAYhRNeZdEZWLa1O+1TqMzYFFDkfR
-         m8FRQRwg28nthhrzfBj+wuGjErUBKAjaQqkxYOpUwt4Yv2Q5F1PzzdjoWN+gmExmTD
-         OETzWa9p/CSYA14EHx9WnsYDpghD4UP96mMh+maQ=
-Date:   Wed, 22 May 2019 12:21:13 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Mike Rapoport <rppt@linux.ibm.com>
-Cc:     Andrea Arcangeli <aarcange@redhat.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Borislav Petkov <bp@suse.de>
-Subject: Re: [PATCH] mm/gup: continue VM_FAULT_RETRY processing event for
- pre-faults
-Message-Id: <20190522122113.a2edc8aba32f0fad189bae21@linux-foundation.org>
-In-Reply-To: <1557844195-18882-1-git-send-email-rppt@linux.ibm.com>
-References: <1557844195-18882-1-git-send-email-rppt@linux.ibm.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        s=default; t=1558552877;
+        bh=b3pnOJlavVTSMLrhfhWYxt52OURL4r336/7ktnNmvMU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=PlixEF4CxgQGNSweQt8/coqg8ojaOM9oB4bBFTRgfmqje53doDLyMIQ27dyp3glp0
+         I19MXb80ucwlK4uUyjrzDBnZpZ5X7qDt06hxxPrnNqDpf4x+bkcdvmD0/CUnidosLU
+         ffFJhstru/frrjjE6a8peZ5LRt3uwSCOHThVt1yc=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Ross Lagerwall <ross.lagerwall@citrix.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, cluster-devel@redhat.com
+Subject: [PATCH AUTOSEL 5.1 001/375] gfs2: Fix lru_count going negative
+Date:   Wed, 22 May 2019 15:15:01 -0400
+Message-Id: <20190522192115.22666-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 14 May 2019 17:29:55 +0300 Mike Rapoport <rppt@linux.ibm.com> wrote:
+From: Ross Lagerwall <ross.lagerwall@citrix.com>
 
-> When get_user_pages*() is called with pages = NULL, the processing of
-> VM_FAULT_RETRY terminates early without actually retrying to fault-in all
-> the pages.
-> 
-> If the pages in the requested range belong to a VMA that has userfaultfd
-> registered, handle_userfault() returns VM_FAULT_RETRY *after* user space
-> has populated the page, but for the gup pre-fault case there's no actual
-> retry and the caller will get no pages although they are present.
-> 
-> This issue was uncovered when running post-copy memory restore in CRIU
-> after commit d9c9ce34ed5c ("x86/fpu: Fault-in user stack if
-> copy_fpstate_to_sigframe() fails").
-> 
-> After this change, the copying of FPU state to the sigframe switched from
-> copy_to_user() variants which caused a real page fault to get_user_pages()
-> with pages parameter set to NULL.
+[ Upstream commit 7881ef3f33bb80f459ea6020d1e021fc524a6348 ]
 
-You're saying that argument buf_fx in copy_fpstate_to_sigframe() is NULL?
+Under certain conditions, lru_count may drop below zero resulting in
+a large amount of log spam like this:
 
-If so was that expected by the (now cc'ed) developers of
-d9c9ce34ed5c8923 ("x86/fpu: Fault-in user stack if
-copy_fpstate_to_sigframe() fails")?
+vmscan: shrink_slab: gfs2_dump_glock+0x3b0/0x630 [gfs2] \
+    negative objects to delete nr=-1
 
-It seems rather odd.  copy_fpregs_to_sigframe() doesn't look like it's
-expecting a NULL argument.
+This happens as follows:
+1) A glock is moved from lru_list to the dispose list and lru_count is
+   decremented.
+2) The dispose function calls cond_resched() and drops the lru lock.
+3) Another thread takes the lru lock and tries to add the same glock to
+   lru_list, checking if the glock is on an lru list.
+4) It is on a list (actually the dispose list) and so it avoids
+   incrementing lru_count.
+5) The glock is moved to lru_list.
+5) The original thread doesn't dispose it because it has been re-added
+   to the lru list but the lru_count has still decreased by one.
 
-Also, I wonder if copy_fpstate_to_sigframe() would be better using
-fault_in_pages_writeable() rather than get_user_pages_unlocked().  That
-seems like it operates at a more suitable level and I guess it will fix
-this issue also.
+Fix by checking if the LRU flag is set on the glock rather than checking
+if the glock is on some list and rearrange the code so that the LRU flag
+is added/removed precisely when the glock is added/removed from lru_list.
 
-> In post-copy mode of CRIU, the destination memory is managed with
-> userfaultfd and lack of the retry for pre-fault case in get_user_pages()
-> causes a crash of the restored process.
-> 
-> Making the pre-fault behavior of get_user_pages() the same as the "normal"
-> one fixes the issue.
+Signed-off-by: Ross Lagerwall <ross.lagerwall@citrix.com>
+Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/gfs2/glock.c | 22 +++++++++++++---------
+ 1 file changed, 13 insertions(+), 9 deletions(-)
 
-Should this be backported into -stable trees?
-
-> Fixes: d9c9ce34ed5c ("x86/fpu: Fault-in user stack if copy_fpstate_to_sigframe() fails")
-> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-
+diff --git a/fs/gfs2/glock.c b/fs/gfs2/glock.c
+index d32964cd11176..e4f6d39500bcc 100644
+--- a/fs/gfs2/glock.c
++++ b/fs/gfs2/glock.c
+@@ -183,15 +183,19 @@ static int demote_ok(const struct gfs2_glock *gl)
+ 
+ void gfs2_glock_add_to_lru(struct gfs2_glock *gl)
+ {
++	if (!(gl->gl_ops->go_flags & GLOF_LRU))
++		return;
++
+ 	spin_lock(&lru_lock);
+ 
+-	if (!list_empty(&gl->gl_lru))
+-		list_del_init(&gl->gl_lru);
+-	else
++	list_del(&gl->gl_lru);
++	list_add_tail(&gl->gl_lru, &lru_list);
++
++	if (!test_bit(GLF_LRU, &gl->gl_flags)) {
++		set_bit(GLF_LRU, &gl->gl_flags);
+ 		atomic_inc(&lru_count);
++	}
+ 
+-	list_add_tail(&gl->gl_lru, &lru_list);
+-	set_bit(GLF_LRU, &gl->gl_flags);
+ 	spin_unlock(&lru_lock);
+ }
+ 
+@@ -201,7 +205,7 @@ static void gfs2_glock_remove_from_lru(struct gfs2_glock *gl)
+ 		return;
+ 
+ 	spin_lock(&lru_lock);
+-	if (!list_empty(&gl->gl_lru)) {
++	if (test_bit(GLF_LRU, &gl->gl_flags)) {
+ 		list_del_init(&gl->gl_lru);
+ 		atomic_dec(&lru_count);
+ 		clear_bit(GLF_LRU, &gl->gl_flags);
+@@ -1159,8 +1163,7 @@ void gfs2_glock_dq(struct gfs2_holder *gh)
+ 		    !test_bit(GLF_DEMOTE, &gl->gl_flags))
+ 			fast_path = 1;
+ 	}
+-	if (!test_bit(GLF_LFLUSH, &gl->gl_flags) && demote_ok(gl) &&
+-	    (glops->go_flags & GLOF_LRU))
++	if (!test_bit(GLF_LFLUSH, &gl->gl_flags) && demote_ok(gl))
+ 		gfs2_glock_add_to_lru(gl);
+ 
+ 	trace_gfs2_glock_queue(gh, 0);
+@@ -1456,6 +1459,7 @@ __acquires(&lru_lock)
+ 		if (!spin_trylock(&gl->gl_lockref.lock)) {
+ add_back_to_lru:
+ 			list_add(&gl->gl_lru, &lru_list);
++			set_bit(GLF_LRU, &gl->gl_flags);
+ 			atomic_inc(&lru_count);
+ 			continue;
+ 		}
+@@ -1463,7 +1467,6 @@ __acquires(&lru_lock)
+ 			spin_unlock(&gl->gl_lockref.lock);
+ 			goto add_back_to_lru;
+ 		}
+-		clear_bit(GLF_LRU, &gl->gl_flags);
+ 		gl->gl_lockref.count++;
+ 		if (demote_ok(gl))
+ 			handle_callback(gl, LM_ST_UNLOCKED, 0, false);
+@@ -1498,6 +1501,7 @@ static long gfs2_scan_glock_lru(int nr)
+ 		if (!test_bit(GLF_LOCK, &gl->gl_flags)) {
+ 			list_move(&gl->gl_lru, &dispose);
+ 			atomic_dec(&lru_count);
++			clear_bit(GLF_LRU, &gl->gl_flags);
+ 			freed++;
+ 			continue;
+ 		}
+-- 
+2.20.1
 
