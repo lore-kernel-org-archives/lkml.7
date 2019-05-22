@@ -2,285 +2,383 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9BBDC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 23:23:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55D57C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 23:25:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79DC220881
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 23:23:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9DE62089E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 23:25:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="kC7XoFy4"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="gwtgq5eL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729596AbfEVXXx (ORCPT
+        id S1729611AbfEVXZz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 19:23:53 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:46422 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727691AbfEVXXx (ORCPT
+        Wed, 22 May 2019 19:25:55 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:39951 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726890AbfEVXZy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 19:23:53 -0400
-Received: from pps.filterd (m0044008.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4MNEGTC008447
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 16:23:52 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=facebook; bh=7M3KTYgCtux1ge1QjiyZqAfJv7mn0dKoN8WOBcMq0W0=;
- b=kC7XoFy4qr3w4O1V6gB92soMVy0wRfv/pWciH5b+ZcaCi9DckgEaqlx5SkNWF/s3r+UE
- Lt72C/KRy4qVIjozS0r+ot00Lf2FC4Hr0SIE9bRUPx1MXBD1glfHrU1mtcJYLKuNTUbB
- 1wgdF4EAPBPX+I2BDjnS6GmvwJImSYcDk4U= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 2sn8b0svx3-3
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 16:23:52 -0700
-Received: from mx-out.facebook.com (2620:10d:c0a8:1b::d) by
- mail.thefacebook.com (2620:10d:c0a8:83::4) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 22 May 2019 16:23:50 -0700
-Received: by devvm2643.prn2.facebook.com (Postfix, from userid 111017)
-        id E262712526D46; Wed, 22 May 2019 16:20:53 -0700 (PDT)
-Smtp-Origin-Hostprefix: devvm
-From:   Roman Gushchin <guro@fb.com>
-Smtp-Origin-Hostname: devvm2643.prn2.facebook.com
-To:     Alexei Starovoitov <ast@kernel.org>, <bpf@vger.kernel.org>
-CC:     Daniel Borkmann <daniel@iogearbox.net>, <netdev@vger.kernel.org>,
-        Tejun Heo <tj@kernel.org>, <kernel-team@fb.com>,
-        <cgroups@vger.kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
-        <linux-kernel@vger.kernel.org>, Roman Gushchin <guro@fb.com>,
-        <jolsa@redhat.com>
-Smtp-Origin-Cluster: prn2c23
-Subject: [PATCH v2 bpf-next 1/4] bpf: decouple the lifetime of cgroup_bpf from cgroup itself
-Date:   Wed, 22 May 2019 16:20:48 -0700
-Message-ID: <20190522232051.2938491-2-guro@fb.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190522232051.2938491-1-guro@fb.com>
-References: <20190522232051.2938491-1-guro@fb.com>
-X-FB-Internal: Safe
+        Wed, 22 May 2019 19:25:54 -0400
+Received: by mail-pl1-f193.google.com with SMTP id g69so1789635plb.7
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 16:25:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language;
+        bh=a3brF+YUmxTxk2F1brFTmo/foMcySfHuLXXD32dHStY=;
+        b=gwtgq5eLCEAfPcGa2FymfErf75k3wGr2WjTLIrpHm31UFI0S/n7X/XZiY5MuSEDtBE
+         UWM+j3NU5Dv9rhyKg6QRpRuDMwqmGf143pPCtuxjo2kp7NY09LUuotnHOyzM9St51Aim
+         BWvpba2PfQvnsS/uLwA2DV372rVWGhi8eqOWskMIpgdfGOd/3schiRKK35SRZ0XplImt
+         EAoBYGSHJAGzTsQHsjURRBk7aWnlbvJevqgUYRsgbKWNlVa4KIwpILxi/LmAp/OuxR2Z
+         h3roJNwyzgSnj+/+Zz+0Oa4Lmrey8ouzGaYMADZ4+UdPLmBos9bWz8DkSZ4lm85/TQlL
+         kuQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language;
+        bh=a3brF+YUmxTxk2F1brFTmo/foMcySfHuLXXD32dHStY=;
+        b=FxDnr5QtBHyaL/d70j5EcHdflXocFQo381vmZBGA0E7XHeEJf+t4Z+dBJPbw5UneZ5
+         Nh5WBqwtpObwpOC9o0dMRQGSp7Gx0xAV9BCnBsNx9Fqb6q9SQN+bwQQUSpIJGHE0+myg
+         kESULtvg9BCX24l403mM1mXr/qiDez2/e4/uvzhA46aGIWr4pCGzLp/vKKJNgmQ/w+x0
+         tpo0dx4hWq7ECan6l1V0lHidf002RMr6GQ49fMqHX0Koja82SpAO6GwNkXgnFVRIaHs0
+         BdJPkwbCl5v/j6/xeGGm4XkZ6eVRZUsju2Iu11d067KNe+iGtZJeSFmwu3/H5vf4Kox4
+         +ZHQ==
+X-Gm-Message-State: APjAAAUdRGw6Q6xhzskFMZ/S1PiU/EwqaAaKN2lI44Gy1Twd4vx5YQVC
+        JsA1N7kSUTye1+u5e51/WOe1qxlV6CVVqA==
+X-Google-Smtp-Source: APXvYqwSZ6oz8BG0XqU4qh2v6AqWU6Ve4H3P8w+4sKKZC3D3dB2aggbkug8XxjmWf+VcWF8JHMVe+g==
+X-Received: by 2002:a17:902:758b:: with SMTP id j11mr35742229pll.191.1558567553229;
+        Wed, 22 May 2019 16:25:53 -0700 (PDT)
+Received: from [192.168.1.121] (66.29.164.166.static.utbb.net. [66.29.164.166])
+        by smtp.gmail.com with ESMTPSA id a11sm19729840pff.128.2019.05.22.16.25.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 22 May 2019 16:25:52 -0700 (PDT)
+Subject: Re: [PATCH] aoe: list new maintainer for aoe driver
+From:   Jens Axboe <axboe@kernel.dk>
+To:     Ed Cashin <ed.cashin@acm.org>
+Cc:     Justin Sanders <justin@coraid.com>, linux-kernel@vger.kernel.org
+References: <1558125894.9571@cat.he.net>
+ <856ae195-ceb8-5657-5ce7-9743f96845a5@kernel.dk>
+Message-ID: <2f5aa01b-86bc-ce12-deb6-98a0d68d3760@kernel.dk>
+Date:   Wed, 22 May 2019 17:25:50 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-22_14:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=717 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905220162
-X-FB-Internal: deliver
+In-Reply-To: <856ae195-ceb8-5657-5ce7-9743f96845a5@kernel.dk>
+Content-Type: multipart/mixed;
+ boundary="------------D7A20E346CE2DCB0725FBB66"
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently the lifetime of bpf programs attached to a cgroup is bound
-to the lifetime of the cgroup itself. It means that if a user
-forgets (or intentionally avoids) to detach a bpf program before
-removing the cgroup, it will stay attached up to the release of the
-cgroup. Since the cgroup can stay in the dying state (the state
-between being rmdir()'ed and being released) for a very long time, it
-leads to a waste of memory. Also, it blocks a possibility to implement
-the memcg-based memory accounting for bpf objects, because a circular
-reference dependency will occur. Charged memory pages are pinning the
-corresponding memory cgroup, and if the memory cgroup is pinning
-the attached bpf program, nothing will be ever released.
+This is a multi-part message in MIME format.
+--------------D7A20E346CE2DCB0725FBB66
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-A dying cgroup can not contain any processes, so the only chance for
-an attached bpf program to be executed is a live socket associated
-with the cgroup. So in order to release all bpf data early, let's
-count associated sockets using a new percpu refcounter. On cgroup
-removal the counter is transitioned to the atomic mode, and as soon
-as it reaches 0, all bpf programs are detached.
+On 5/17/19 3:16 PM, Jens Axboe wrote:
+> On 5/17/19 2:29 PM, Ed Cashin wrote:
+>> Justin Sanders, who has extensive experience with ATA over Ethernet
+>> in general and AoE SCSI and block-device drivers in particular, is
+>> ready to take on the role of aoe maintainer.  The driver needs a more
+>> active maintainer.
+>=20
+> Applied, thanks - and good luck to Justin.
 
-The reference counter is not socket specific, and can be used for any
-other types of programs, which can be executed from a cgroup-bpf hook
-outside of the process context, had such a need arise in the future.
+Ed, you didn't add your signed-off-by to that patch. Is it ok if I go
+ahead and add it?
 
-Signed-off-by: Roman Gushchin <guro@fb.com>
-Cc: jolsa@redhat.com
----
- include/linux/bpf-cgroup.h |  8 ++++++--
- include/linux/cgroup.h     | 18 ++++++++++++++++++
- kernel/bpf/cgroup.c        | 25 ++++++++++++++++++++++---
- kernel/cgroup/cgroup.c     | 11 ++++++++---
- 4 files changed, 54 insertions(+), 8 deletions(-)
+--=20
+Jens Axboe
 
-diff --git a/include/linux/bpf-cgroup.h b/include/linux/bpf-cgroup.h
-index cb3c6b3b89c8..a0945de9ba5f 100644
---- a/include/linux/bpf-cgroup.h
-+++ b/include/linux/bpf-cgroup.h
-@@ -6,6 +6,7 @@
- #include <linux/errno.h>
- #include <linux/jump_label.h>
- #include <linux/percpu.h>
-+#include <linux/percpu-refcount.h>
- #include <linux/rbtree.h>
- #include <uapi/linux/bpf.h>
- 
-@@ -72,10 +73,13 @@ struct cgroup_bpf {
- 
- 	/* temp storage for effective prog array used by prog_attach/detach */
- 	struct bpf_prog_array __rcu *inactive;
-+
-+	/* reference counter used to detach bpf programs after cgroup removal */
-+	struct percpu_ref refcnt;
- };
- 
--void cgroup_bpf_put(struct cgroup *cgrp);
- int cgroup_bpf_inherit(struct cgroup *cgrp);
-+void cgroup_bpf_offline(struct cgroup *cgrp);
- 
- int __cgroup_bpf_attach(struct cgroup *cgrp, struct bpf_prog *prog,
- 			enum bpf_attach_type type, u32 flags);
-@@ -283,8 +287,8 @@ int cgroup_bpf_prog_query(const union bpf_attr *attr,
- 
- struct bpf_prog;
- struct cgroup_bpf {};
--static inline void cgroup_bpf_put(struct cgroup *cgrp) {}
- static inline int cgroup_bpf_inherit(struct cgroup *cgrp) { return 0; }
-+static inline void cgroup_bpf_offline(struct cgroup *cgrp) {}
- 
- static inline int cgroup_bpf_prog_attach(const union bpf_attr *attr,
- 					 enum bpf_prog_type ptype,
-diff --git a/include/linux/cgroup.h b/include/linux/cgroup.h
-index c0077adeea83..49e8facf7c4a 100644
---- a/include/linux/cgroup.h
-+++ b/include/linux/cgroup.h
-@@ -924,4 +924,22 @@ static inline bool cgroup_task_frozen(struct task_struct *task)
- 
- #endif /* !CONFIG_CGROUPS */
- 
-+#ifdef CONFIG_CGROUP_BPF
-+static inline void cgroup_bpf_get(struct cgroup *cgrp)
-+{
-+	percpu_ref_get(&cgrp->bpf.refcnt);
-+}
-+
-+static inline void cgroup_bpf_put(struct cgroup *cgrp)
-+{
-+	percpu_ref_put(&cgrp->bpf.refcnt);
-+}
-+
-+#else /* CONFIG_CGROUP_BPF */
-+
-+static inline void cgroup_bpf_get(struct cgroup *cgrp) {}
-+static inline void cgroup_bpf_put(struct cgroup *cgrp) {}
-+
-+#endif /* CONFIG_CGROUP_BPF */
-+
- #endif /* _LINUX_CGROUP_H */
-diff --git a/kernel/bpf/cgroup.c b/kernel/bpf/cgroup.c
-index fcde0f7b2585..65f5c482ed9d 100644
---- a/kernel/bpf/cgroup.c
-+++ b/kernel/bpf/cgroup.c
-@@ -22,12 +22,20 @@
- DEFINE_STATIC_KEY_FALSE(cgroup_bpf_enabled_key);
- EXPORT_SYMBOL(cgroup_bpf_enabled_key);
- 
-+void cgroup_bpf_offline(struct cgroup *cgrp)
-+{
-+	cgroup_get(cgrp);
-+	percpu_ref_kill(&cgrp->bpf.refcnt);
-+}
-+
- /**
-- * cgroup_bpf_put() - put references of all bpf programs
-+ * cgroup_bpf_release() - put references of all bpf programs and
-+ *                        release all cgroup bpf data
-  * @cgrp: the cgroup to modify
-  */
--void cgroup_bpf_put(struct cgroup *cgrp)
-+static void cgroup_bpf_release(struct percpu_ref *ref)
- {
-+	struct cgroup *cgrp = container_of(ref, struct cgroup, bpf.refcnt);
- 	enum bpf_cgroup_storage_type stype;
- 	unsigned int type;
- 
-@@ -47,6 +55,9 @@ void cgroup_bpf_put(struct cgroup *cgrp)
- 		}
- 		bpf_prog_array_free(cgrp->bpf.effective[type]);
- 	}
-+
-+	percpu_ref_exit(&cgrp->bpf.refcnt);
-+	cgroup_put(cgrp);
- }
- 
- /* count number of elements in the list.
-@@ -167,7 +178,12 @@ int cgroup_bpf_inherit(struct cgroup *cgrp)
-  */
- #define	NR ARRAY_SIZE(cgrp->bpf.effective)
- 	struct bpf_prog_array __rcu *arrays[NR] = {};
--	int i;
-+	int ret, i;
-+
-+	ret = percpu_ref_init(&cgrp->bpf.refcnt, cgroup_bpf_release, 0,
-+			      GFP_KERNEL);
-+	if (ret)
-+		return -ENOMEM;
- 
- 	for (i = 0; i < NR; i++)
- 		INIT_LIST_HEAD(&cgrp->bpf.progs[i]);
-@@ -183,6 +199,9 @@ int cgroup_bpf_inherit(struct cgroup *cgrp)
- cleanup:
- 	for (i = 0; i < NR; i++)
- 		bpf_prog_array_free(arrays[i]);
-+
-+	percpu_ref_exit(&cgrp->bpf.refcnt);
-+
- 	return -ENOMEM;
- }
- 
-diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
-index 217cec4e22c6..ef9cfbfc82a9 100644
---- a/kernel/cgroup/cgroup.c
-+++ b/kernel/cgroup/cgroup.c
-@@ -4955,8 +4955,6 @@ static void css_release_work_fn(struct work_struct *work)
- 		if (cgrp->kn)
- 			RCU_INIT_POINTER(*(void __rcu __force **)&cgrp->kn->priv,
- 					 NULL);
--
--		cgroup_bpf_put(cgrp);
- 	}
- 
- 	mutex_unlock(&cgroup_mutex);
-@@ -5482,6 +5480,8 @@ static int cgroup_destroy_locked(struct cgroup *cgrp)
- 
- 	cgroup1_check_for_release(parent);
- 
-+	cgroup_bpf_offline(cgrp);
-+
- 	/* put the base reference */
- 	percpu_ref_kill(&cgrp->self.refcnt);
- 
-@@ -6221,6 +6221,7 @@ void cgroup_sk_alloc(struct sock_cgroup_data *skcd)
- 		 * Don't use cgroup_get_live().
- 		 */
- 		cgroup_get(sock_cgroup_ptr(skcd));
-+		cgroup_bpf_get(sock_cgroup_ptr(skcd));
- 		return;
- 	}
- 
-@@ -6232,6 +6233,7 @@ void cgroup_sk_alloc(struct sock_cgroup_data *skcd)
- 		cset = task_css_set(current);
- 		if (likely(cgroup_tryget(cset->dfl_cgrp))) {
- 			skcd->val = (unsigned long)cset->dfl_cgrp;
-+			cgroup_bpf_get(cset->dfl_cgrp);
- 			break;
- 		}
- 		cpu_relax();
-@@ -6242,7 +6244,10 @@ void cgroup_sk_alloc(struct sock_cgroup_data *skcd)
- 
- void cgroup_sk_free(struct sock_cgroup_data *skcd)
- {
--	cgroup_put(sock_cgroup_ptr(skcd));
-+	struct cgroup *cgrp = sock_cgroup_ptr(skcd);
-+
-+	cgroup_bpf_put(cgrp);
-+	cgroup_put(cgrp);
- }
- 
- #endif	/* CONFIG_SOCK_CGROUP_DATA */
--- 
-2.20.1
 
+--------------D7A20E346CE2DCB0725FBB66
+Content-Type: application/pgp-keys;
+ name="pEpkey.asc"
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: attachment;
+ filename="pEpkey.asc"
+
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+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
+0dOH04UBEAABAQAAAAAAAAAAAAAAAP/Y/+AAEEpGSUYAAQEAAAEAAQAA/9sAQwAI
+BgYHBgUIBwcHCQkICgwUDQwLCwwZEhMPFB0aHx4dGhwcICQuJyAiLCMcHCg3KSww
+MTQ0NB8nOT04MjwuMzQy/9sAQwEJCQkMCwwYDQ0YMiEcITIyMjIyMjIyMjIyMjIy
+MjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIy/8AAEQgAlgBwAwEi
+AAIRAQMRAf/EAB8AAAEFAQEBAQEBAAAAAAAAAAABAgMEBQYHCAkKC//EALUQAAIB
+AwMCBAMFBQQEAAABfQECAwAEEQUSITFBBhNRYQcicRQygZGhCCNCscEVUtHwJDNi
+coIJChYXGBkaJSYnKCkqNDU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0
+dXZ3eHl6g4SFhoeIiYqSk5SVlpeYmZqio6Slpqeoqaqys7S1tre4ubrCw8TFxsfI
+ycrS09TV1tfY2drh4uPk5ebn6Onq8fLz9PX29/j5+v/EAB8BAAMBAQEBAQEBAQEA
+AAAAAAABAgMEBQYHCAkKC//EALURAAIBAgQEAwQHBQQEAAECdwABAgMRBAUhMQYS
+QVEHYXETIjKBCBRCkaGxwQkjM1LwFWJy0QoWJDThJfEXGBkaJicoKSo1Njc4OTpD
+REVGR0hJSlNUVVZXWFlaY2RlZmdoaWpzdHV2d3h5eoKDhIWGh4iJipKTlJWWl5iZ
+mqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uLj5OXm5+jp6vLz
+9PX29/j5+v/aAAwDAQACEQMRAD8A5LW7p7uZppGJZzk1z0h5rXvzheTWM5rSbKgM
+zULDJqaom6msTQgX5HK9m6VNCMnFMkTcPftUqJJEscroyq5wCRjP0pM2oys7MvRR
+8Vchi5HFFsgZARWlaWM9w4WCF5GPZVzXPJns04WVz3f4ZzQyeCrWOIjdEzLIB65z
+/Iiuwrwfw9qt14RnaSXUra3Df6y2Y+azemVXp9citfVvjDPJC0Wm2KoSMGWY/wAl
+B/rVRnaNmeVXwU51W4apmR8RpP7V8ZXK2UbTeUqxsUGeQOelcRcwJZ5+0zxRt/cB
+3N+Q6VLqOuahqAZZLlhGTny4xsX8hWV9keTouAe5qEurPTgpwgoLobljpcV9PbQC
+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3D=3D
+=3D5pK/
+-----END PGP PUBLIC KEY BLOCK-----
+
+--------------D7A20E346CE2DCB0725FBB66--
