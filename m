@@ -6,107 +6,189 @@ X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13CC2C072A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 08:05:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AB72C072A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 08:05:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD805217F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 08:05:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2505C20675
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 08:05:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="k5sXZjUp"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nWl3XtfG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728746AbfEVIFa (ORCPT
+        id S1728796AbfEVIFw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 04:05:30 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:51849 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726358AbfEVIF3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 04:05:29 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4584tv296Vz9s6w;
-        Wed, 22 May 2019 18:05:27 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1558512327;
-        bh=5k9DDli4sG5wljC2UtgesCL45vdVEt97tqs5ZqtEYUE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=k5sXZjUp3WUaxnzzELFNlHAJfR4ozkKFnmSjKQYbsdel3a6an4u41EQv0oNmWrdIO
-         FTeNhjLhBCdN5I5CGx3SORI4LO+SJ+8RaWfBC90rCQxar+qZCOf2Nd8ink2kmfHQUX
-         FIspdqkMWBC1JaORz9xFpr3NnYhpZEffWkFVjPe5gJo4sWbs9XRO1ZuZyHbQXSQVz9
-         r0BSlGDvKMlwbvsaOizrY6IrTvT7QssniGuiY4sl6im6Mo8PSdO8ZxkFQHTCWpUqw7
-         BkoTp7cFDbGvwr4QCNW/7ro3nlnHX6b6GnEtWTYSDenDpeR/BaqxTUefcrLjQ2EdVi
-         Itijl2OrZvh1Q==
-Date:   Wed, 22 May 2019 18:05:24 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Christian Brauner <christian@brauner.io>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Subject: Re: linux-next: manual merge of the pidfd tree with Linus' tree
-Message-ID: <20190522180524.4e751614@canb.auug.org.au>
-In-Reply-To: <CEB120FD-547A-4D92-92AE-43E6AF8E767B@brauner.io>
-References: <20190522110115.7350be3e@canb.auug.org.au>
-        <20190522055235.GC13702@kroah.com>
-        <20190522174725.6bfd51bd@canb.auug.org.au>
-        <CEB120FD-547A-4D92-92AE-43E6AF8E767B@brauner.io>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/dMu_ynlLlbctLrd4FLVcZ.g"; protocol="application/pgp-signature"
+        Wed, 22 May 2019 04:05:52 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:45421 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728752AbfEVIFv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 04:05:51 -0400
+Received: by mail-wr1-f67.google.com with SMTP id b18so1116970wrq.12
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 01:05:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:message-id:mime-version:subject:date:in-reply-to:cc:to
+         :references;
+        bh=5IBIrmvVf6ccQNtdeu2yWc9LBHhhxGRdGfBVh0+028w=;
+        b=nWl3XtfGIqveSLzPdyEuAYRuA8O7EYCM0ZtEgQ98DXJsA2zQzynY9G9rSYeseu7ci5
+         5KOe7ue5VJv9/oJvslVlbwxovozJmUJVdfdiAwatZRNHOLWB605HT9Bht1bQhsJFoZ0h
+         O8Ew1carVKdmMVmYPwgVk523ad6Oonl8yVKfoZj1tw1DeQRbFyLA1HoOYSfd/eKsgKzQ
+         7RWbiLmAIak6Lu72/j5jH1NFhinktak81lGqNLQYBCAZxVHvcKAU457C1n52KVEAOBGV
+         B+iC9uipo0uWSS+ouPP7hYuVIetP/gSu/agvrI0QXpzU1JYl9nLLdXzXZEJDmP0Av+gV
+         LGFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:message-id:mime-version:subject:date
+         :in-reply-to:cc:to:references;
+        bh=5IBIrmvVf6ccQNtdeu2yWc9LBHhhxGRdGfBVh0+028w=;
+        b=FS4lP5KKA84QiIdVUOVyB7hJbELhLZQ78byMDUyUO+2jd6v+ztGAzdM7WwX70s9XFV
+         nmzXeyAiMkrsCPrp/gZRVgb/2v3BuF4Awpx8N10nqz7nWr30nmV2bujTzS7aw1wwQNXA
+         j9M4L2hMMUtDRuO5LEYM8PPS3/kTHi/Z9uMbBBmKdb2eY8E3XuOzRbimav1bGJPrdDzq
+         xGgSD4gwvVsPyKA+kNAn62gytvNSOV8Aa5VoLHVUl5Oggh9EVrQqbINXNAyzlG1fsldK
+         4bKLaxtMVkdHbYCNilfByDn5F1RRMCHmyB/zi/1eLORKCuV2SRvk00OwammenDv83N2K
+         c+CQ==
+X-Gm-Message-State: APjAAAXL+JUev0OJpvj/psnXtuLswMXV87sa9nfekmuFZHJS4lArap/+
+        e56yeIe++RV3ccO9XzO2VlgUzA==
+X-Google-Smtp-Source: APXvYqyp3cwbjBT2OIymk4j5HSd2Mnu+CvGqClw/DIwkORgLNVvAuawEHWU5ZpivC/01GynCrEiJXQ==
+X-Received: by 2002:adf:f9c3:: with SMTP id w3mr6562625wrr.271.1558512349291;
+        Wed, 22 May 2019 01:05:49 -0700 (PDT)
+Received: from [192.168.0.100] (88-147-40-42.dyn.eolo.it. [88.147.40.42])
+        by smtp.gmail.com with ESMTPSA id 34sm42104331wre.32.2019.05.22.01.05.47
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 22 May 2019 01:05:48 -0700 (PDT)
+From:   Paolo Valente <paolo.valente@linaro.org>
+Message-Id: <F5E29C98-6CC4-43B8-994D-0B5354EECBF3@linaro.org>
+Content-Type: multipart/signed;
+        boundary="Apple-Mail=_D125924D-1FFE-4DC1-9485-B31EC5A3E5A7";
+        protocol="application/pgp-signature";
+        micalg=pgp-sha256
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
+Subject: Re: CFQ idling kills I/O performance on ext4 with blkio cgroup
+ controller
+Date:   Wed, 22 May 2019 10:05:46 +0200
+In-Reply-To: <0e3fdf31-70d9-26eb-7b42-2795d4b03722@csail.mit.edu>
+Cc:     linux-fsdevel@vger.kernel.org,
+        linux-block <linux-block@vger.kernel.org>,
+        linux-ext4@vger.kernel.org, cgroups@vger.kernel.org,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Jens Axboe <axboe@kernel.dk>, Jan Kara <jack@suse.cz>,
+        jmoyer@redhat.com, Theodore Ts'o <tytso@mit.edu>,
+        amakhalov@vmware.com, anishs@vmware.com, srivatsab@vmware.com
+To:     "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
+References: <8d72fcf7-bbb4-2965-1a06-e9fc177a8938@csail.mit.edu>
+ <1812E450-14EF-4D5A-8F31-668499E13652@linaro.org>
+ <46c6a4be-f567-3621-2e16-0e341762b828@csail.mit.edu>
+ <07D11833-8285-49C2-943D-E4C1D23E8859@linaro.org>
+ <A0DFE635-EFEC-4670-AD70-5D813E170BEE@linaro.org>
+ <5B6570A2-541A-4CF8-98E0-979EA6E3717D@linaro.org>
+ <2CB39B34-21EE-4A95-A073-8633CF2D187C@linaro.org>
+ <FC24E25F-4578-454D-AE2B-8D8D352478D8@linaro.org>
+ <0e3fdf31-70d9-26eb-7b42-2795d4b03722@csail.mit.edu>
+X-Mailer: Apple Mail (2.3445.104.8)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/dMu_ynlLlbctLrd4FLVcZ.g
-Content-Type: text/plain; charset=US-ASCII
+
+--Apple-Mail=_D125924D-1FFE-4DC1-9485-B31EC5A3E5A7
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset=us-ascii
 
-Hi Christian,
 
-On Wed, 22 May 2019 09:55:00 +0200 Christian Brauner <christian@brauner.io>=
- wrote:
->
-> On May 22, 2019 9:48:33 AM GMT+02:00, Stephen Rothwell <sfr@canb.auug.org=
-.au> wrote:
-> >Hi Greg,
-> >
-> >On Wed, 22 May 2019 07:52:35 +0200 Greg Kroah-Hartman
-> ><gregkh@linuxfoundation.org> wrote: =20
-> >>
-> >> Sorry, you are going to get a number of these types of minor =20
-> >conflicts =20
-> >> now.  That's the problem of touching thousands of files :( =20
-> >
-> >Yeah, I expected that one I saw the commits.  At least is is just after
-> >-rc1, hopefully most maintainers will start their -next branches after
-> >today :-) =20
+
+> Il giorno 22 mag 2019, alle ore 00:51, Srivatsa S. Bhat =
+<srivatsa@csail.mit.edu> ha scritto:
 >=20
-> I can just rebase if that helps you out.
+> [ Resending this mail with a dropbox link to the traces (instead
+> of a file attachment), since it didn't go through the last time. ]
+>=20
+> On 5/21/19 10:38 AM, Paolo Valente wrote:
+>>=20
+>>> So, instead of only sending me a trace, could you please:
+>>> 1) apply this new patch on top of the one I attached in my previous =
+email
+>>> 2) repeat your test and report results
+>>=20
+>> One last thing (I swear!): as you can see from my script, I tested =
+the
+>> case low_latency=3D0 so far.  So please, for the moment, do your test
+>> with low_latency=3D0.  You find the whole path to this parameter in,
+>> e.g., my script.
+>>=20
+> No problem! :) Thank you for sharing patches for me to test!
+>=20
+> I have good news :) Your patch improves the throughput significantly
+> when low_latency =3D 0.
+>=20
+> Without any patch:
+>=20
+> dd if=3D/dev/zero of=3D/root/test.img bs=3D512 count=3D10000 =
+oflag=3Ddsync
+> 10000+0 records in
+> 10000+0 records out
+> 5120000 bytes (5.1 MB, 4.9 MiB) copied, 58.0915 s, 88.1 kB/s
+>=20
+>=20
+> With both patches applied:
+>=20
+> dd if=3D/dev/zero of=3D/root/test0.img bs=3D512 count=3D10000 =
+oflag=3Ddsync
+> 10000+0 records in
+> 10000+0 records out
+> 5120000 bytes (5.1 MB, 4.9 MiB) copied, 3.87487 s, 1.3 MB/s
+>=20
+> The performance is still not as good as mq-deadline (which achieves
+> 1.6 MB/s), but this is a huge improvement for BFQ nonetheless!
+>=20
+> A tarball with the trace output from the 2 scenarios you requested,
+> one with only the debug patch applied =
+(trace-bfq-add-logs-and-BUG_ONs),
+> and another with both patches applied (trace-bfq-boost-injection) is
+> available here:
+>=20
+> https://www.dropbox.com/s/pdf07vi7afido7e/bfq-traces.tar.gz?dl=3D0
+>=20
 
-No need, those conflicts are now in my "git rerere" cache, so I
-hopefully won;t have ot worry about them again.
+Hi Srivatsa,
+I've seen the bugzilla you've created.  I'm a little confused on how
+to better proceed.  Shall we move this discussion to the bugzilla, or
+should we continue this discussion here, where it has started, and
+then update the bugzilla?
 
---=20
-Cheers,
-Stephen Rothwell
+Let me know,
+Paolo
 
---Sig_/dMu_ynlLlbctLrd4FLVcZ.g
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+> Thank you!
+>=20
+> Regards,
+> Srivatsa
+> VMware Photon OS
+
+
+--Apple-Mail=_D125924D-1FFE-4DC1-9485-B31EC5A3E5A7
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+	filename=signature.asc
+Content-Type: application/pgp-signature;
+	name=signature.asc
+Content-Description: Message signed with OpenPGP
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzlAsQACgkQAVBC80lX
-0GwKKAf/Vdk1+Zg9m6WG2lmqpxpqn+xy/BChQkXfXN5ruj7oAAtTHoGzrIAQQFPz
-hLDIFxyEjZ+VIloEKY7TH4MYSvvRX3kO7I+TyWJsEtNMB1yH+Ko6DYIdnHXk1o1I
-seWD+lypo2SUcYPbQuP770f3lKQeFrTtRjtTRoQL/iLDrriJTLn4jQAYOBhlVX6J
-zppqWx0MU1f9JaFlYeoa9xSrNtsaq/rlf3p4le3mH0kjfsIG6HF1Wk3/+SKyOabP
-VpIi25Vyd1kAbrVn2wa/Uaez0yxFbPoHbuQYz4AgMCQ/AGNNaBzPvZKEa46O4Vl9
-hyVSHBP5nzzGBlis1XSbJgXRYQf4IA==
-=S8wa
+iQIzBAEBCAAdFiEEpYoduex+OneZyvO8OAkCLQGo9oMFAlzlAtoACgkQOAkCLQGo
+9oMOew//baPEoy03FXyfpwRm+aDYCXZracwMcV8EWCYLxsc9h+OSDu7YSL3VY+ld
+2SyrH2br9GjVHPnM218Moh1g2pTGr9C2BtEzWT72DnGFmZqEYFOS3+KJ6D4FEK/l
+6qOtaYyYZDABc5D+wW1B+wouBFeDFH/V4QWpIgyAjKPHi+rTeerEFNzNmsx2SngT
+mn+AG8kUfecpNhThxEEJxPZN0Edso3t6vet2vsJ7FEmpxD+AW4V6h5oxRBMMlzks
+JeDs0/gvOV0wiRSAwlmQSecNSssSLLSeouHlLu3+ara3YxdNstDjBd7ODXiabUdX
+4NPn9U5baJ8XsC4s6ukMOm1Bc7Q97ZFS4cM5b9FoqTYgWuwL32vbHFPffe/0Ld2g
+hJcXoI7HmDyGvH4jAvlSQ4hDDkuLRjf0450Y75onK8uq/g6r0VhGXgntHl+ghMvI
+ykkrXo8cPp9Ii4MiOAbH4FaVj1/1yinJdiIbR7bCdj3kODB8wzLunSAB3GDVTqYr
+qqFfl6MYNxJi6mUpERhdFa8JsohkU9f/PK+hYh4HYjZNveV1YcSJfcuoCu2t1/yA
+04KNr+WG1JFQrrXe+iqXtu5EMD/K6QlH9iBXabq8V/JJ1TR/X3WXo2iPRhDfpKc7
++kRGBjEtU+WJvdECyd4AfTpVuKBK8tUewLIBr7WchCBggJ/4sFg=
+=q2Kr
 -----END PGP SIGNATURE-----
 
---Sig_/dMu_ynlLlbctLrd4FLVcZ.g--
+--Apple-Mail=_D125924D-1FFE-4DC1-9485-B31EC5A3E5A7--
