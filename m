@@ -2,103 +2,108 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 998A7C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 10:07:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBD60C18E7D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 10:10:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74872217F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 10:07:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70383217F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 10:10:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558519804;
+	bh=fjSUsl7+ylbVqp71Ri0/DWUzGL9Kyn1X+h1AuUerIOw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0Od2LXHN3PgYppCs44md1tFLo1Io59PwU8VLO+8kLeI9TcTHE6QwoeiVgHyTA2E3K
+	 c1PpfGw3rnIFJ+kjUIDxGbkXKcWE94+KeYkgjIk+SoRdLKT65a88CaXK3v0WWb0LXC
+	 8oLptqycZdbSU9m+3++MNYYhJPTberG5bXMi2pDQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729168AbfEVKHR (ORCPT
+        id S1729001AbfEVKKD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 06:07:17 -0400
-Received: from mail-oln040092071063.outbound.protection.outlook.com ([40.92.71.63]:37395
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728424AbfEVKHQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 06:07:16 -0400
-Received: from DB5EUR03FT027.eop-EUR03.prod.protection.outlook.com
- (10.152.20.52) by DB5EUR03HT031.eop-EUR03.prod.protection.outlook.com
- (10.152.21.117) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1900.16; Wed, 22 May
- 2019 10:07:14 +0000
-Received: from VI1PR07MB4432.eurprd07.prod.outlook.com (10.152.20.52) by
- DB5EUR03FT027.mail.protection.outlook.com (10.152.20.121) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.1922.16 via Frontend Transport; Wed, 22 May 2019 10:07:14 +0000
-Received: from VI1PR07MB4432.eurprd07.prod.outlook.com
- ([fe80::91f:b1bb:a60a:fdc3]) by VI1PR07MB4432.eurprd07.prod.outlook.com
- ([fe80::91f:b1bb:a60a:fdc3%7]) with mapi id 15.20.1922.013; Wed, 22 May 2019
- 10:07:14 +0000
-From:   Philippe Mazenauer <philippe.mazenauer@outlook.de>
-CC:     Philippe Mazenauer <philippe.mazenauer@outlook.de>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Russell King <linux@armlinux.org.uk>,
-        "open list:CRYPTO API" <linux-crypto@vger.kernel.org>,
-        "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: [PATCH] crypto: arm/sha512 - make function static
-Thread-Topic: [PATCH] crypto: arm/sha512 - make function static
-Thread-Index: AQHVEIYg0/n17GVM/0WrI34N1yB+nw==
-Date:   Wed, 22 May 2019 10:07:14 +0000
-Message-ID: <VI1PR07MB44324EFEF57062FCCA758358FD000@VI1PR07MB4432.eurprd07.prod.outlook.com>
-Accept-Language: de-CH, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: CO2PR05CA0079.namprd05.prod.outlook.com
- (2603:10b6:102:2::47) To VI1PR07MB4432.eurprd07.prod.outlook.com
- (2603:10a6:802:67::17)
-x-incomingtopheadermarker: OriginalChecksum:93E2A0D80A89EB0FBAA122ADC242ADBB36D5B9329F2929AEE227FBF289682C1E;UpperCasedChecksum:364AF332B8014653A71F9C05F8B8F4EA0A2873242A451BC0C99AFF3C41216965;SizeAsReceived:7591;Count:47
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-tmn:  [omNYMT9E9m9SRgFtDZrK8qFeDf5ZrQAu]
-x-microsoft-original-message-id: <20190522100649.158063-1-philippe.mazenauer@outlook.de>
-x-ms-publictraffictype: Email
-x-incomingheadercount: 47
-x-eopattributedmessage: 0
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(5050001)(7020095)(20181119110)(201702061078)(5061506573)(5061507331)(1603103135)(2017031320274)(2017031323274)(2017031324274)(2017031322404)(1601125500)(1603101475)(1701031045);SRVR:DB5EUR03HT031;
-x-ms-traffictypediagnostic: DB5EUR03HT031:
-x-microsoft-antispam-message-info: k9zPpgcEv+Y35MFMFfvUzP1JUpTutQyXOJSTCm07G3tj/aMDswjt7vN8KPYP1JgguXFtAGC7tO959slhAHC5k2dMcOhJS/6LSMPO/3rpSSETjlzJBnkTKqT3e2Dtt+u1WerN/kf1O+nsxg8bLh8M3hj1mY9gW/VoSp5beddeGsZx1tb4ByhnqNwk14ET2DtT
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <73AB4A9B5F272D408CC901F2856F9BDD@eurprd07.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Wed, 22 May 2019 06:10:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60192 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728424AbfEVKKD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 06:10:03 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 31A5020863;
+        Wed, 22 May 2019 10:10:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558519802;
+        bh=fjSUsl7+ylbVqp71Ri0/DWUzGL9Kyn1X+h1AuUerIOw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bhMoO9b4ACIo+GhJUTw/Xd/LmOG8DLNEmBSqsqwW5R4OrwMLJYbywTvXwm3uN52wh
+         VlSij/ZHtt2WmLffZY5pIyN9nxxv1CQYUbk+6u+boMJ8rjOyO28eUZDCHx66YsEHi3
+         DUzkQ6zG3a4vK0Zjob7LHVL6PqCUkmvyxeVJKxQQ=
+Date:   Wed, 22 May 2019 12:09:59 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Aleksa Sarai <cyphar@cyphar.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Rik van Riel <riel@surriel.com>,
+        Nicolai Stange <nstange@suse.de>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        zfs-devel@list.zfsonlinux.org, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] x86/fpu: allow kernel_fpu_{begin,end} to be used by
+ non-GPL modules
+Message-ID: <20190522100959.GA15390@kroah.com>
+References: <20190522044204.24207-1-cyphar@cyphar.com>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 43087c09-cd2d-4f59-444e-08d6de9d4342
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 May 2019 10:07:14.2749
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB5EUR03HT031
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190522044204.24207-1-cyphar@cyphar.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnVuY3Rpb24gc2hhNTEyX2FybV9maW5hbCgpIGlzIG9ubHkgdXNlZCBpbiB0aGlzIGZpbGUsIHRo
-ZXJlZm9yZSBzaG91bGQNCmJlIHN0YXRpYw0KDQouLi9hcmNoL2FybS9jcnlwdG8vc2hhNTEyLWds
-dWUuYzo0MDo1OiB3YXJuaW5nOiBubyBwcmV2aW91cyBwcm90b3R5cGUgZm9yIOKAmHNoYTUxMl9h
-cm1fZmluYWzigJkgWy1XbWlzc2luZy1wcm90b3R5cGVzXQ0KIGludCBzaGE1MTJfYXJtX2ZpbmFs
-KHN0cnVjdCBzaGFzaF9kZXNjICpkZXNjLCB1OCAqb3V0KQ0KICAgICBefn5+fn5+fn5+fn5+fn5+
-DQoNClNpZ25lZC1vZmYtYnk6IFBoaWxpcHBlIE1hemVuYXVlciA8cGhpbGlwcGUubWF6ZW5hdWVy
-QG91dGxvb2suZGU+DQotLS0NCiBhcmNoL2FybS9jcnlwdG8vc2hhNTEyLWdsdWUuYyB8IDIgKy0N
-CiAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkNCg0KZGlmZiAt
-LWdpdCBhL2FyY2gvYXJtL2NyeXB0by9zaGE1MTItZ2x1ZS5jIGIvYXJjaC9hcm0vY3J5cHRvL3No
-YTUxMi1nbHVlLmMNCmluZGV4IDg2NTQwY2Q0YTZmYS4uMjNmYzM4MTNhOTFiIDEwMDY0NA0KLS0t
-IGEvYXJjaC9hcm0vY3J5cHRvL3NoYTUxMi1nbHVlLmMNCisrKyBiL2FyY2gvYXJtL2NyeXB0by9z
-aGE1MTItZ2x1ZS5jDQpAQCAtMzcsNyArMzcsNyBAQCBpbnQgc2hhNTEyX2FybV91cGRhdGUoc3Ry
-dWN0IHNoYXNoX2Rlc2MgKmRlc2MsIGNvbnN0IHU4ICpkYXRhLA0KIAkJKHNoYTUxMl9ibG9ja19m
-biAqKXNoYTUxMl9ibG9ja19kYXRhX29yZGVyKTsNCiB9DQogDQotaW50IHNoYTUxMl9hcm1fZmlu
-YWwoc3RydWN0IHNoYXNoX2Rlc2MgKmRlc2MsIHU4ICpvdXQpDQorc3RhdGljIGludCBzaGE1MTJf
-YXJtX2ZpbmFsKHN0cnVjdCBzaGFzaF9kZXNjICpkZXNjLCB1OCAqb3V0KQ0KIHsNCiAJc2hhNTEy
-X2Jhc2VfZG9fZmluYWxpemUoZGVzYywNCiAJCShzaGE1MTJfYmxvY2tfZm4gKilzaGE1MTJfYmxv
-Y2tfZGF0YV9vcmRlcik7DQotLSANCjIuMTcuMQ0KDQo=
+On Wed, May 22, 2019 at 02:42:04PM +1000, Aleksa Sarai wrote:
+> Prior to [1], all non-GPL modules were able to make use of SIMD on x86
+> by making use of the __kernel_fpu_* API. Given that __kernel_fpu_* were
+> both EXPORT_SYMBOL'd and kernel_fpu_* are such trivial wrappers around
+> the now-static __kernel_fpu_*, it seems to me that there is no reason to
+> have different licensing rules for them.
+> 
+> In the case of OpenZFS, the lack of SIMD on newer Linux kernels has
+> caused significant performance problems (since ZFS uses SIMD for
+> calculation of blkptr checksums as well as raidz calculations).
+> 
+> [1]: commit 12209993e98c ("x86/fpu: Don't export __kernel_fpu_{begin,end}()")
+> 
+> Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>
+> Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
+> ---
+>  arch/x86/kernel/fpu/core.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/kernel/fpu/core.c b/arch/x86/kernel/fpu/core.c
+> index 2e5003fef51a..8de5687a470d 100644
+> --- a/arch/x86/kernel/fpu/core.c
+> +++ b/arch/x86/kernel/fpu/core.c
+> @@ -127,14 +127,14 @@ void kernel_fpu_begin(void)
+>  	preempt_disable();
+>  	__kernel_fpu_begin();
+>  }
+> -EXPORT_SYMBOL_GPL(kernel_fpu_begin);
+> +EXPORT_SYMBOL(kernel_fpu_begin);
+>  
+>  void kernel_fpu_end(void)
+>  {
+>  	__kernel_fpu_end();
+>  	preempt_enable();
+>  }
+> -EXPORT_SYMBOL_GPL(kernel_fpu_end);
+> +EXPORT_SYMBOL(kernel_fpu_end);
+
+No, please, we have gone over this before, we do not care at all about
+external kernel modules, ESPECIALLY ones that are not GPL compatible.
+
+greg k-h
