@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37646C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:46:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AA34C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:47:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00C0120856
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:46:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41D682089E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:47:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558554415;
-	bh=KjnceZrrK6pttVwb8hdNkEHs3mPHFshpUT6RlkLvtX4=;
+	s=default; t=1558554421;
+	bh=N/HWZ6eecpTpT9fjMbEwRpzm6qtN5IsK/x3qcDuB1yQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pUiuu3M5cw/UKrwGCKnwxLsxcvMwYQZsaNdKb8LEDg66HgWQWDRZWxGDMliJP8+hB
-	 kD4kZYNXQ+nf2Kk1yC7NUYLfkkYUGmZ7uEwM0GsuRW6t18rYmTIF+5pb5CCbYrS9pz
-	 AUyyJ6+OvbsrOjg4+6uTzcFx1Nt+jTJTm8GXn418=
+	b=hR5YCx3jSVI893C98/cbcWLrzcUa4EKPtN6Adc9Te17lvdG6puzrh/oRK1HPXoSdO
+	 3vNYdED9ve3Yu5rSisUKNt+DfRl7+dxweBdGsvJX8HP8sBmWFXNvxQc4Q8N2iUMhUo
+	 YBXh4iT9sxKDDmH+ThEHlyCb/wH169FHOJxfpA0M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731536AbfEVTqy (ORCPT
+        id S1732362AbfEVT1m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:46:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50036 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:27:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49774 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732372AbfEVT1o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:27:44 -0400
+        id S1731746AbfEVT1c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:27:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0FEB221473;
-        Wed, 22 May 2019 19:27:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB09421473;
+        Wed, 22 May 2019 19:27:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553263;
-        bh=KjnceZrrK6pttVwb8hdNkEHs3mPHFshpUT6RlkLvtX4=;
+        s=default; t=1558553251;
+        bh=N/HWZ6eecpTpT9fjMbEwRpzm6qtN5IsK/x3qcDuB1yQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PrBvvrNx3B434zhl7iWo1AXbhBsp07sNkyKMDsE4Wn/Fyxm76MFuwEi7PdLsKyOWz
-         sH5NLnmSXshDlLIvuPSL1bflfJ2OIOfoRBisFALsyA6VKKhCWhsR2+FN6nX7rmzpeL
-         CieeVYcrIN/jHWaCRLxPlSrIa4jlXw0UAPPFOh9A=
+        b=wUDCh1OPA3pPCUbLYIqCoViDVSHooyYNEZRmGxiuNifuVcYXwGe1JA3nW+rjBJjA1
+         ZXVCBnmMC1AHdDCx0EkXt4Oh9vF98EkGxndxA6At1aA/QeUiegMUG3V41xN2Ok3sEr
+         Ujvny7D8Zu0n0p8elpBZL1g7EAdqJRPCmjRVO5eU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qu Wenruo <wqu@suse.com>, Filipe Manana <fdmanana@suse.com>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 042/244] btrfs: Don't panic when we can't find a root key
-Date:   Wed, 22 May 2019 15:23:08 -0400
-Message-Id: <20190522192630.24917-42-sashal@kernel.org>
+Cc:     Bart Van Assche <bvanassche@acm.org>,
+        Himanshu Madhani <hmadhani@marvell.com>,
+        Giridhar Malavali <gmalavali@marvell.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 035/244] scsi: qla2xxx: Fix a qla24xx_enable_msix() error path
+Date:   Wed, 22 May 2019 15:23:01 -0400
+Message-Id: <20190522192630.24917-35-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192630.24917-1-sashal@kernel.org>
 References: <20190522192630.24917-1-sashal@kernel.org>
@@ -60,51 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qu Wenruo <wqu@suse.com>
+From: Bart Van Assche <bvanassche@acm.org>
 
-[ Upstream commit 7ac1e464c4d473b517bb784f30d40da1f842482e ]
+[ Upstream commit 24afabdbd0b3553963a2bbf465895492b14d1107 ]
 
-When we failed to find a root key in btrfs_update_root(), we just panic.
+Make sure that the allocated interrupts are freed if allocating memory for
+the msix_entries array fails.
 
-That's definitely not cool, fix it by outputting an unique error
-message, aborting current transaction and return -EUCLEAN. This should
-not normally happen as the root has been used by the callers in some
-way.
-
-Reviewed-by: Filipe Manana <fdmanana@suse.com>
-Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
-Signed-off-by: Qu Wenruo <wqu@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Cc: Himanshu Madhani <hmadhani@marvell.com>
+Cc: Giridhar Malavali <gmalavali@marvell.com>
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Acked-by: Himanshu Madhani <hmadhani@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/root-tree.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ drivers/scsi/qla2xxx/qla_isr.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/fs/btrfs/root-tree.c b/fs/btrfs/root-tree.c
-index 65bda0682928b..f51a4a425a457 100644
---- a/fs/btrfs/root-tree.c
-+++ b/fs/btrfs/root-tree.c
-@@ -137,11 +137,14 @@ int btrfs_update_root(struct btrfs_trans_handle *trans, struct btrfs_root
- 		goto out;
+diff --git a/drivers/scsi/qla2xxx/qla_isr.c b/drivers/scsi/qla2xxx/qla_isr.c
+index 36cbb29c84f63..88d8acf86a2a4 100644
+--- a/drivers/scsi/qla2xxx/qla_isr.c
++++ b/drivers/scsi/qla2xxx/qla_isr.c
+@@ -3449,7 +3449,7 @@ qla24xx_enable_msix(struct qla_hw_data *ha, struct rsp_que *rsp)
+ 		ql_log(ql_log_fatal, vha, 0x00c8,
+ 		    "Failed to allocate memory for ha->msix_entries.\n");
+ 		ret = -ENOMEM;
+-		goto msix_out;
++		goto free_irqs;
  	}
+ 	ha->flags.msix_enabled = 1;
  
--	if (ret != 0) {
--		btrfs_print_leaf(path->nodes[0]);
--		btrfs_crit(fs_info, "unable to update root key %llu %u %llu",
--			   key->objectid, key->type, key->offset);
--		BUG_ON(1);
-+	if (ret > 0) {
-+		btrfs_crit(fs_info,
-+			"unable to find root key (%llu %u %llu) in tree %llu",
-+			key->objectid, key->type, key->offset,
-+			root->root_key.objectid);
-+		ret = -EUCLEAN;
-+		btrfs_abort_transaction(trans, ret);
-+		goto out;
- 	}
+@@ -3532,6 +3532,10 @@ qla24xx_enable_msix(struct qla_hw_data *ha, struct rsp_que *rsp)
  
- 	l = path->nodes[0];
+ msix_out:
+ 	return ret;
++
++free_irqs:
++	pci_free_irq_vectors(ha->pdev);
++	goto msix_out;
+ }
+ 
+ int
 -- 
 2.20.1
 
