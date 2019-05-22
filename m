@@ -2,104 +2,116 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE202C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:49:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F11B6C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:50:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88CCF2081C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:49:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7FB12081C
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:50:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558554601;
+	bh=SXkz2rRTYygGWZhwmXK4TDRIYfU0p6emAJwWwaDRWIA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Rlj04Bq2ueEU+ZV5o2ymXFRn0gsk7gSqsDLYxDet7lOSYbsKB8vqY67NjOttUTZg0
+	 I1AFSgz3r4RIUIasPj67bcfznKqxuluOV0MvS9u/BG0So8yPVTZelHck8gBNoEUW/g
+	 sk8tQRM2BVc8ldDAvVtqL6/dbg6LpUL1w+5N1LsY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387996AbfEVTtx (ORCPT
+        id S1732132AbfEVT0s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:49:53 -0400
-Received: from mga05.intel.com ([192.55.52.43]:43391 "EHLO mga05.intel.com"
+        Wed, 22 May 2019 15:26:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48410 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732116AbfEVT0t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:26:49 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 May 2019 12:26:46 -0700
-X-ExtLoop1: 1
-Received: from orsmsx102.amr.corp.intel.com ([10.22.225.129])
-  by orsmga002.jf.intel.com with ESMTP; 22 May 2019 12:26:48 -0700
-Received: from orsmsx112.amr.corp.intel.com ([169.254.3.79]) by
- ORSMSX102.amr.corp.intel.com ([169.254.3.72]) with mapi id 14.03.0415.000;
- Wed, 22 May 2019 12:26:47 -0700
-From:   "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
-To:     "davem@davemloft.net" <davem@davemloft.net>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "mroos@linux.ee" <mroos@linux.ee>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "namit@vmware.com" <namit@vmware.com>,
-        "luto@kernel.org" <luto@kernel.org>, "bp@alien8.de" <bp@alien8.de>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>
-Subject: Re: [PATCH v2] vmalloc: Fix issues with flush flag
-Thread-Topic: [PATCH v2] vmalloc: Fix issues with flush flag
-Thread-Index: AQHVD0ezpbXySuUS5EinefGl750kkaZ0/uwAgAALkwCAAAiygIAAGYEAgAADqwCAAA0vgIAABnMAgAAEjYCAApkWgIAAHb0A
-Date:   Wed, 22 May 2019 19:26:47 +0000
-Message-ID: <01a23900329e605fcd41ad8962cfd8f2d9b1fa44.camel@intel.com>
-References: <a43f9224e6b245ade4b587a018c8a21815091f0f.camel@intel.com>
-         <20190520.184336.743103388474716249.davem@davemloft.net>
-         <339ef85d984f329aa66f29fa80781624e6e4aecc.camel@intel.com>
-         <20190522.104019.40493905027242516.davem@davemloft.net>
-In-Reply-To: <20190522.104019.40493905027242516.davem@davemloft.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.30.1 (3.30.1-1.fc29) 
-x-originating-ip: [10.254.91.116]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <8DA560705D778D4A9D23CAF3ED2AB2FC@intel.com>
-Content-Transfer-Encoding: base64
+        id S1732110AbfEVT0p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:26:45 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 02ABB21872;
+        Wed, 22 May 2019 19:26:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558553204;
+        bh=SXkz2rRTYygGWZhwmXK4TDRIYfU0p6emAJwWwaDRWIA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Zci6+KPqSgTzPrGThRwN0E9ZbfT+3NKTDoH7+VukzCsFs52XDv/usOtSjMwNyXW+g
+         jEVdpm0/EISiBTBAP4K9Dim9sPNxCg+RNhShhIE0l3ey8JRc2fWac4HTf1jtiHFYwY
+         yiGvU0Bh/UxzBpopGYVTuUZ0HZxotS0MHR9Nt13o=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Quentin Monnet <quentin.monnet@netronome.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 010/244] bpftool: exclude bash-completion/bpftool from .gitignore pattern
+Date:   Wed, 22 May 2019 15:22:36 -0400
+Message-Id: <20190522192630.24917-10-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190522192630.24917-1-sashal@kernel.org>
+References: <20190522192630.24917-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCAyMDE5LTA1LTIyIGF0IDEwOjQwIC0wNzAwLCBEYXZpZCBNaWxsZXIgd3JvdGU6DQo+
-IEZyb206ICJFZGdlY29tYmUsIFJpY2sgUCIgPHJpY2sucC5lZGdlY29tYmVAaW50ZWwuY29tPg0K
-PiBEYXRlOiBUdWUsIDIxIE1heSAyMDE5IDAxOjU5OjU0ICswMDAwDQo+IA0KPiA+IE9uIE1vbiwg
-MjAxOS0wNS0yMCBhdCAxODo0MyAtMDcwMCwgRGF2aWQgTWlsbGVyIHdyb3RlOg0KPiA+ID4gRnJv
-bTogIkVkZ2Vjb21iZSwgUmljayBQIiA8cmljay5wLmVkZ2Vjb21iZUBpbnRlbC5jb20+DQo+ID4g
-PiBEYXRlOiBUdWUsIDIxIE1heSAyMDE5IDAxOjIwOjMzICswMDAwDQo+ID4gPiANCj4gPiA+ID4g
-U2hvdWxkIGl0IGhhbmRsZSBleGVjdXRpbmcgYW4gdW5tYXBwZWQgcGFnZSBncmFjZWZ1bGx5PyBC
-ZWNhdXNlDQo+ID4gPiA+IHRoaXMNCj4gPiA+ID4gY2hhbmdlIGlzIGNhdXNpbmcgdGhhdCB0byBo
-YXBwZW4gbXVjaCBlYXJsaWVyLiBJZiBzb21ldGhpbmcgd2FzDQo+ID4gPiA+IHJlbHlpbmcNCj4g
-PiA+ID4gb24gYSBjYWNoZWQgdHJhbnNsYXRpb24gdG8gZXhlY3V0ZSBzb21ldGhpbmcgaXQgY291
-bGQgZmluZCB0aGUNCj4gPiA+ID4gbWFwcGluZw0KPiA+ID4gPiBkaXNhcHBlYXIuDQo+ID4gPiAN
-Cj4gPiA+IERvZXMgdGhpcyB3b3JrIGJ5IG5vdCBtYXBwaW5nIGFueSBrZXJuZWwgbWFwcGluZ3Mg
-YXQgdGhlDQo+ID4gPiBiZWdpbm5pbmcsDQo+ID4gPiBhbmQgdGhlbiBmaWxsaW5nIGluIHRoZSBC
-UEYgbWFwcGluZ3MgaW4gcmVzcG9uc2UgdG8gZmF1bHRzPw0KPiA+IE5vLCBub3RoaW5nIHRvbyBm
-YW5jeS4gSXQganVzdCBmbHVzaGVzIHRoZSB2bSBtYXBwaW5nIGltbWVkaWF0bHkgaW4NCj4gPiB2
-ZnJlZSBmb3IgZXhlY3V0ZSAoYW5kIFJPKSBtYXBwaW5ncy4gVGhlIG9ubHkgdGhpbmcgdGhhdCBo
-YXBwZW5zDQo+ID4gYXJvdW5kDQo+ID4gYWxsb2NhdGlvbiB0aW1lIGlzIHNldHRpbmcgb2YgYSBu
-ZXcgZmxhZyB0byB0ZWxsIHZtYWxsb2MgdG8gZG8gdGhlDQo+ID4gZmx1c2guDQo+ID4gDQo+ID4g
-VGhlIHByb2JsZW0gYmVmb3JlIHdhcyB0aGF0IHRoZSBwYWdlcyB3b3VsZCBiZSBmcmVlZCBiZWZv
-cmUgdGhlDQo+ID4gZXhlY3V0ZQ0KPiA+IG1hcHBpbmcgd2FzIGZsdXNoZWQuIFNvIHRoZW4gd2hl
-biB0aGUgcGFnZXMgZ290IHJlY3ljbGVkLCByYW5kb20sDQo+ID4gc29tZXRpbWVzIGNvbWluZyBm
-cm9tIHVzZXJzcGFjZSwgZGF0YSB3b3VsZCBiZSBtYXBwZWQgYXMgZXhlY3V0YWJsZQ0KPiA+IGlu
-DQo+ID4gdGhlIGtlcm5lbCBieSB0aGUgdW4tZmx1c2hlZCB0bGIgZW50cmllcy4NCj4gDQo+IElm
-IEkgYW0gdG8gdW5kZXJzdGFuZCB0aGluZ3MgY29ycmVjdGx5LCB0aGVyZSB3YXMgYSBjYXNlIHdo
-ZXJlICdlbmQnDQo+IGNvdWxkIGJlIHNtYWxsZXIgdGhhbiAnc3RhcnQnIHdoZW4gZG9pbmcgYSBy
-YW5nZSBmbHVzaC4gIFRoYXQgd291bGQNCj4gZGVmaW5pdGVseSBraWxsIHNvbWUgb2YgdGhlIHNw
-YXJjNjQgVExCIGZsdXNoIHJvdXRpbmVzLg0KDQpPaywgdGhhbmtzLg0KDQpUaGUgcGF0Y2ggYXQg
-dGhlIGJlZ2lubmluZyBvZiB0aGlzIHRocmVhZCBkb2Vzbid0IGhhdmUgdGhhdCBiZWhhdmlvcg0K
-dGhvdWdoIGFuZCBpdCBhcHBhcmVudGx5IHN0aWxsIGh1bmcuIEkgYXNrZWQgaWYgTWVlbGlzIGNv
-dWxkIHRlc3Qgd2l0aA0KdGhpcyBmZWF0dXJlIGRpc2FibGVkIGFuZCBERUJVR19QQUdFQUxMT0Mg
-b24sIHNpbmNlIGl0IGZsdXNoZXMgb24gZXZlcnkNCnZmcmVlIGFuZCBpcyBub3QgbmV3IGxvZ2lj
-LCBhbmQgYWxzbyB3aXRoIGEgcGF0Y2ggdGhhdCBsb2dzIGV4YWN0IFRMQg0KZmx1c2ggcmFuZ2Vz
-IGFuZCBmYXVsdCBhZGRyZXNzZXMgb24gdG9wIG9mIHRoZSBrZXJuZWwgaGF2aW5nIHRoaXMNCmlz
-c3VlLiBIb3BlZnVsbHkgdGhhdCB3aWxsIHNoZWQgc29tZSBsaWdodC4NCg0KU29ycnkgZm9yIGFs
-bCB0aGUgbm9pc2UgYW5kIHNwZWN1bGF0aW9uIG9uIHRoaXMuIEl0IGhhcyBiZWVuIGRpZmZpY3Vs
-dA0KdG8gZGVidWcgcmVtb3RlbHkgd2l0aCBhIHRlc3RlciBhbmQgZGV2ZWxvcGVyIGluIGRpZmZl
-cmVudCB0aW1lIHpvbmVzLg0KDQoNCg==
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+
+[ Upstream commit a7d006714724de4334c5e3548701b33f7b12ca96 ]
+
+tools/bpf/bpftool/.gitignore has the "bpftool" pattern, which is
+intended to ignore the following build artifact:
+
+  tools/bpf/bpftool/bpftool
+
+However, the .gitignore entry is effective not only for the current
+directory, but also for any sub-directories.
+
+So, from the point of .gitignore grammar, the following check-in file
+is also considered to be ignored:
+
+  tools/bpf/bpftool/bash-completion/bpftool
+
+As the manual gitignore(5) says "Files already tracked by Git are not
+affected", this is not a problem as far as Git is concerned.
+
+However, Git is not the only program that parses .gitignore because
+.gitignore is useful to distinguish build artifacts from source files.
+
+For example, tar(1) supports the --exclude-vcs-ignore option. As of
+writing, this option does not work perfectly, but it intends to create
+a tarball excluding files specified by .gitignore.
+
+So, I believe it is better to fix this issue.
+
+You can fix it by prefixing the pattern with a slash; the leading slash
+means the specified pattern is relative to the current directory.
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Reviewed-by: Quentin Monnet <quentin.monnet@netronome.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ tools/bpf/bpftool/.gitignore | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/bpf/bpftool/.gitignore b/tools/bpf/bpftool/.gitignore
+index 67167e44b7266..8248b8dd89d4b 100644
+--- a/tools/bpf/bpftool/.gitignore
++++ b/tools/bpf/bpftool/.gitignore
+@@ -1,5 +1,5 @@
+ *.d
+-bpftool
++/bpftool
+ bpftool*.8
+ bpf-helpers.*
+ FEATURE-DUMP.bpftool
+-- 
+2.20.1
+
