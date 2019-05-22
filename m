@@ -2,257 +2,98 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB955C18E7D
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 10:11:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C2D5C18E7D
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 10:12:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7358C20863
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 10:11:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1247220868
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 10:12:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729212AbfEVKLV (ORCPT
+        id S1729038AbfEVKMv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 06:11:21 -0400
-Received: from foss.arm.com ([217.140.101.70]:46636 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728584AbfEVKLV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 06:11:21 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2B39E341;
-        Wed, 22 May 2019 03:11:20 -0700 (PDT)
-Received: from mbp (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 12BA73F575;
-        Wed, 22 May 2019 03:11:13 -0700 (PDT)
-Date:   Wed, 22 May 2019 11:11:11 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Evgenii Stepanov <eugenis@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Khalid Aziz <khalid.aziz@oracle.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
-        kvm@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
-        Elliott Hughes <enh@google.com>
-Subject: Re: [PATCH v15 00/17] arm64: untag user pointers passed to the kernel
-Message-ID: <20190522101110.m2stmpaj7seezveq@mbp>
-References: <cover.1557160186.git.andreyknvl@google.com>
- <20190517144931.GA56186@arrakis.emea.arm.com>
- <CAFKCwrj6JEtp4BzhqO178LFJepmepoMx=G+YdC8sqZ3bcBp3EQ@mail.gmail.com>
- <20190521182932.sm4vxweuwo5ermyd@mbp>
- <201905211633.6C0BF0C2@keescook>
+        Wed, 22 May 2019 06:12:51 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:38094 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728625AbfEVKMu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 06:12:50 -0400
+Received: by mail-ed1-f65.google.com with SMTP id w11so3038003edl.5
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 03:12:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=UOism6/WliJKlizbO03ANyTQDbU6zepiLVCCA7yr4no=;
+        b=EAS95erR7zgHxD4l5HzxyFuQQ8ARELbdgIvHR0nzpi4iGxU06B2BuetVQBOljGGcbY
+         0G/Rt9R4gwLCV0ZOBbIFAU+Snu0oDyKF/K1ecxjXW+7+dh19pdu2Qn4ldIDDush7aFtz
+         IJ4rxWlD1jJBXsBDQFEqqB4QLqWiFTPm2ahYJqA/N9Rq5pYgGNWMEoTTq15LYCThaLaq
+         mnUpETDx0S51EmtOhsSjchICziOAEtk6cohh70Q67W63BFsWtf2Vri/gJFFq9qZxXdqC
+         jBGbE9LwcTB3iaELva2bdBdKOrNyzbWl7ppno5FxD+enIBk59BS3brq2Tw/wd1626J2C
+         LnAg==
+X-Gm-Message-State: APjAAAVGcG9FQV9Zvg8cO7bEVB5eDk12kbDJczhty9k6Iro9NVke4+tS
+        QG0u0Rjb/v2xruoGxiFSRczX6CbClzU=
+X-Google-Smtp-Source: APXvYqzNhVaVxR8CohHDUn6M+ULJOxCah+OGJx2vJUGm8rsFFDe+YEXiuua+IT83U0iTKfsg0KunhA==
+X-Received: by 2002:a17:906:6c1:: with SMTP id v1mr13388705ejb.266.1558519969205;
+        Wed, 22 May 2019 03:12:49 -0700 (PDT)
+Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
+        by smtp.gmail.com with ESMTPSA id u1sm2617873ejz.92.2019.05.22.03.12.48
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Wed, 22 May 2019 03:12:48 -0700 (PDT)
+Subject: Re: [PATCH] input: silead: Add MSSL0017 to acpi_device_id.
+To:     Danct12 <danct12@disroot.org>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190522045455.15769-1-danct12@disroot.org>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <6c18472f-bedd-6e6d-121c-8a311495c3c3@redhat.com>
+Date:   Wed, 22 May 2019 12:12:47 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <201905211633.6C0BF0C2@keescook>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20190522045455.15769-1-danct12@disroot.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kees,
+Hi,
 
-Thanks for joining the thread ;).
-
-On Tue, May 21, 2019 at 05:04:39PM -0700, Kees Cook wrote:
-> On Tue, May 21, 2019 at 07:29:33PM +0100, Catalin Marinas wrote:
-> > On Mon, May 20, 2019 at 04:53:07PM -0700, Evgenii Stepanov wrote:
-> > > On Fri, May 17, 2019 at 7:49 AM Catalin Marinas <catalin.marinas@arm.com> wrote:
-> > > > IMO (RFC for now), I see two ways forward:
-> > > > [...]
-> > > > 2. Similar shim to the above libc wrapper but inside the kernel
-> > > >    (arch/arm64 only; most pointer arguments could be covered with an
-> > > >    __SC_CAST similar to the s390 one). There are two differences from
-> > > >    what we've discussed in the past:
-> > > >
-> > > >    a) this is an opt-in by the user which would have to explicitly call
-> > > >       prctl(). If it returns -ENOTSUPP etc., the user won't be allowed
-> > > >       to pass tagged pointers to the kernel. This would probably be the
-> > > >       responsibility of the C lib to make sure it doesn't tag heap
-> > > >       allocations. If the user did not opt-in, the syscalls are routed
-> > > >       through the normal path (no untagging address shim).
-> > > >
-> > > >    b) ioctl() and other blacklisted syscalls (prctl) will not accept
-> > > >       tagged pointers (to be documented in Vicenzo's ABI patches).
-> > >
-> > > The way I see it, a patch that breaks handling of tagged pointers is
-> > > not that different from, say, a patch that adds a wild pointer
-> > > dereference. Both are bugs; the difference is that (a) the former
-> > > breaks a relatively uncommon target and (b) it's arguably an easier
-> > > mistake to make. If MTE adoption goes well, (a) will not be the case
-> > > for long.
-> > 
-> > It's also the fact such patch would go unnoticed for a long time until
-> > someone exercises that code path. And when they do, the user would be
-> > pretty much in the dark trying to figure what what went wrong, why a
-> > SIGSEGV or -EFAULT happened. What's worse, we can't even say we fixed
-> > all the places where it matters in the current kernel codebase (ignoring
-> > future patches).
+On 22-05-19 06:54, Danct12 wrote:
+> On Chuwi Hi10 Plus, the Silead device id is MSSL0017.
 > 
-> So, looking forward a bit, this isn't going to be an ARM-specific issue
-> for long.
+> Signed-off-by: Danct12 <danct12@disroot.org>
 
-I do hope so.
+Patch looks good to me:
 
-> In fact, I think we shouldn't have arm-specific syscall wrappers
-> in this series: I think untagged_addr() should likely be added at the
-> top-level and have it be a no-op for other architectures.
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 
-That's what the current patchset does, so we have this as a starting
-point. Kostya raised another potential issue with the syscall wrappers:
-with MTE the kernel will be forced to enable the match-all (wildcard)
-pointers for user space accesses since copy_from_user() would only get a
-0 tag. So it has wider implications than just uaccess routines not
-checking the colour.
+Regards,
 
-> So given this becoming a kernel-wide multi-architecture issue (under
-> the assumption that x86, RISC-V, and others will gain similar TBI or
-> MTE things), we should solve it in a way that we can re-use.
+Hans
 
-Can we do any better to aid the untagged_addr() placement (e.g. better
-type annotations, better static analysis)? We have to distinguish
-between user pointers that may be dereferenced by the kernel (I think
-almost fully covered with this patchset) and user addresses represented
-as ulong that may:
 
-a) be converted to a user pointer and dereferenced; I think that's the
-   case for many overloaded ulong/u64 arguments
-
-b) used for address space management, rbtree look-ups etc. where the tag
-   is no longer relevant and it even gets in the way
-
-We tried last year to identify void __user * casts to unsigned long
-using sparse on the assumption that pointers can be tagged while ulong
-is about address space management and needs to lose such tag. I think we
-could have pushed this further. For example, get_user_pages() takes an
-unsigned long but it is perfectly capable of untagging the address
-itself. Shall we change its first argument to void __user * (together
-with all its callers)?
-
-find_vma(), OTOH, could untag the address but it doesn't help since
-vm_start/end don't have such information (that's more about the content
-or type that the user decided) and the callers check against it.
-
-Are there any other places where this matters? These patches tracked
-down find_vma() as some heuristics but we may need better static
-analysis to identify other cases.
-
-> We need something that is going to work everywhere. And it needs to be
-> supported by the kernel for the simple reason that the kernel needs to
-> do MTE checks during copy_from_user(): having that information stripped
-> means we lose any userspace-assigned MTE protections if they get handled
-> by the kernel, which is a total non-starter, IMO.
-
-Such feedback is welcomed ;).
-
-> As an aside: I think Sparc ADI support in Linux actually side-stepped
-> this[1] (i.e. chose "solution 1"): "All addresses passed to kernel must
-> be non-ADI tagged addresses." (And sadly, "Kernel does not enable ADI
-> for kernel code.") I think this was a mistake we should not repeat for
-> arm64 (we do seem to be at least in agreement about this, I think).
+> ---
+>   drivers/input/touchscreen/silead.c | 1 +
+>   1 file changed, 1 insertion(+)
 > 
-> [1] https://lore.kernel.org/patchwork/patch/654481/
-
-I tried to drag the SPARC guys into this discussion but without much
-success.
-
-> > > This is a bit of a chicken-and-egg problem. In a world where memory
-> > > allocators on one or several popular platforms generate pointers with
-> > > non-zero tags, any such breakage will be caught in testing.
-> > > Unfortunately to reach that state we need the kernel to start
-> > > accepting tagged pointers first, and then hold on for a couple of
-> > > years until userspace catches up.
-> > 
-> > Would the kernel also catch up with providing a stable ABI? Because we
-> > have two moving targets.
-> > 
-> > On one hand, you have Android or some Linux distro that stick to a
-> > stable kernel version for some time, so they have better chance of
-> > clearing most of the problems. On the other hand, we have mainline
-> > kernel that gets over 500K lines every release. As maintainer, I can't
-> > rely on my testing alone as this is on a limited number of platforms. So
-> > my concern is that every kernel release has a significant chance of
-> > breaking the ABI, unless we have a better way of identifying potential
-> > issues.
+> diff --git a/drivers/input/touchscreen/silead.c b/drivers/input/touchscreen/silead.c
+> index 09241d4cdebc..06f0eb04a8fd 100644
+> --- a/drivers/input/touchscreen/silead.c
+> +++ b/drivers/input/touchscreen/silead.c
+> @@ -617,6 +617,7 @@ static const struct acpi_device_id silead_ts_acpi_match[] = {
+>   	{ "MSSL1680", 0 },
+>   	{ "MSSL0001", 0 },
+>   	{ "MSSL0002", 0 },
+> +	{ "MSSL0017", 0 },
+>   	{ }
+>   };
+>   MODULE_DEVICE_TABLE(acpi, silead_ts_acpi_match);
 > 
-> I just want to make sure I fully understand your concern about this
-> being an ABI break, and I work best with examples. The closest situation
-> I can see would be:
-> 
-> - some program has no idea about MTE
-
-Apart from some libraries like libc (and maybe those that handle
-specific device ioctls), I think most programs should have no idea about
-MTE. I wouldn't expect programmers to have to change their app just
-because we have a new feature that colours heap allocations.
-
-> - malloc() starts returning MTE-tagged addresses
-> - program doesn't break from that change
-> - program uses some syscall that is missing untagged_addr() and fails
-> - kernel has now broken userspace that used to work
-
-That's one aspect though probably more of a case of plugging in a new
-device (graphics card, network etc.) and the ioctl to the new device
-doesn't work.
-
-The other is that, assuming we reach a point where the kernel entirely
-supports this relaxed ABI, can we guarantee that it won't break in the
-future. Let's say some subsequent kernel change (some refactoring)
-misses out an untagged_addr(). This renders a previously TBI/MTE-capable
-syscall unusable. Can we rely only on testing?
-
-> The trouble I see with this is that it is largely theoretical and
-> requires part of userspace to collude to start using a new CPU feature
-> that tickles a bug in the kernel. As I understand the golden rule,
-> this is a bug in the kernel (a missed ioctl() or such) to be fixed,
-> not a global breaking of some userspace behavior.
-
-Yes, we should follow the rule that it's a kernel bug but it doesn't
-help the user that a newly installed kernel causes user space to no
-longer reach a prompt. Hence the proposal of an opt-in via personality
-(for MTE we would need an explicit opt-in by the user anyway since the
-top byte is no longer ignored but checked against the allocation tag).
-
-> I feel like I'm missing something about this being seen as an ABI
-> break. The kernel already fails on userspace addresses that have high
-> bits set -- are there things that _depend_ on this failure to operate?
-
-It's about providing a relaxed ABI which allows non-zero top byte and
-breaking it later inadvertently without having something better in place
-to analyse the kernel changes.
-
-Thanks.
-
--- 
-Catalin
