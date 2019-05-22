@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0677FC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:01:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8174C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:01:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C472D2089E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:01:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8936B20862
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 20:01:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558555312;
-	bh=5FtMFb5fTVywaRzfyhTc3uZrAM9WA4rSelThMtC9RLQ=;
+	s=default; t=1558555317;
+	bh=nEBB5yxuW6ya7Lpwt5XhwuUOQN8F0/Rtm6PbrEMFXGY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nGY6ZdIlFUmBZUz0evo+HXXBIq8cnyc2PFWVD+CET64Tz5kg4nJN1kfxIQld+vgnn
-	 S9qqEzcjYR3o71+tmGiiEc3PIhO0G3O6gvKVBD+YNZf6wFZQNnMGqRtTzIkvHNkEPB
-	 Ni/XevBiyIL8xKJga/6+VPWxRaPsXs2xCH76+6eQ=
+	b=oRzj/cjFiA4/dcNdhX+aO1fSssynqrZgRrLgEkNNodqf44B0TIH3sj9aC/UcQrJkB
+	 toeYrTG3wjZy3fCXF6K92E2VjTEhRcwfbG3aW6VMBdUi0ZLTINUAd26DUgcH1YjHb8
+	 MG1PjUTthWMgwxxA2McgTMu+B5Sw5daI7bjmeopI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730374AbfEVTWP (ORCPT
+        id S1731021AbfEVUB4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:22:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42888 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 16:01:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42948 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730352AbfEVTWN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:22:13 -0400
+        id S1730379AbfEVTWQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:22:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E3112177E;
-        Wed, 22 May 2019 19:22:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C8CC20675;
+        Wed, 22 May 2019 19:22:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558552932;
-        bh=5FtMFb5fTVywaRzfyhTc3uZrAM9WA4rSelThMtC9RLQ=;
+        s=default; t=1558552936;
+        bh=nEBB5yxuW6ya7Lpwt5XhwuUOQN8F0/Rtm6PbrEMFXGY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LXbV2XNTEP0wSzPejGQyLJvSQUZI4JBlUSIAMGLyQIFFEfy/d5ikkwj94VCddyluH
-         1Meym9GmAdhniv+0k27TgZOfYorSIMaKqmCInVJspyUxL1TFJYMlbAeVNC/Yeq8gyZ
-         na+noYYvc2jlKhvaZ7RZ7q+HJy4OSQXbAH+lAjPA=
+        b=ckewIJUOb1//3+UKVYkLBldAsyOA3PRRQT44YxBF+LF1qJdnTYAtDTFaWIOxxkDBG
+         xYZVt7aMMTWGv5HbFa47Bzgwurt0p5Cdec+uyo6+nmw+4LbM46xrBEt3xktiFFf1VX
+         mW3u8IZ2OKESxD7HKQ4D9+GnA4MZHyXlOZFIhTsk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 5.1 036/375] powerpc/perf: Fix loop exit condition in nest_imc_event_init
-Date:   Wed, 22 May 2019 15:15:36 -0400
-Message-Id: <20190522192115.22666-36-sashal@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 038/375] ASoC: imx: fix fiq dependencies
+Date:   Wed, 22 May 2019 15:15:38 -0400
+Message-Id: <20190522192115.22666-38-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192115.22666-1-sashal@kernel.org>
 References: <20190522192115.22666-1-sashal@kernel.org>
@@ -61,60 +58,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anju T Sudhakar <anju@linux.vnet.ibm.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 860b7d2286236170a36f94946d03ca9888d32571 ]
+[ Upstream commit ea751227c813ab833609afecfeedaf0aa26f327e ]
 
-The data structure (i.e struct imc_mem_info) to hold the memory address
-information for nest imc units is allocated based on the number of nodes
-in the system.
+During randconfig builds, I occasionally run into an invalid configuration
+of the freescale FIQ sound support:
 
-nest_imc_event_init() traverse this struct array to calculate the memory
-base address for the event-cpu. If we fail to find a match for the event
-cpu's chip-id in imc_mem_info struct array, then the do-while loop will
-iterate until we crash.
+WARNING: unmet direct dependencies detected for SND_SOC_IMX_PCM_FIQ
+  Depends on [m]: SOUND [=y] && !UML && SND [=y] && SND_SOC [=y] && SND_IMX_SOC [=m]
+  Selected by [y]:
+  - SND_SOC_FSL_SPDIF [=y] && SOUND [=y] && !UML && SND [=y] && SND_SOC [=y] && SND_IMX_SOC [=m]!=n && (MXC_TZIC [=n] || MXC_AVIC [=y])
 
-Fix this by changing the loop exit condition based on the number of
-non zero vbase elements in the array, since the allocation is done for
-nr_chips + 1.
+sound/soc/fsl/imx-ssi.o: In function `imx_ssi_remove':
+imx-ssi.c:(.text+0x28): undefined reference to `imx_pcm_fiq_exit'
+sound/soc/fsl/imx-ssi.o: In function `imx_ssi_probe':
+imx-ssi.c:(.text+0xa64): undefined reference to `imx_pcm_fiq_init'
 
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Fixes: 885dcd709ba91 ("powerpc/perf: Add nest IMC PMU support")
-Signed-off-by: Anju T Sudhakar <anju@linux.vnet.ibm.com>
-Reviewed-by: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+The Kconfig warning is a result of the symbol being defined inside of
+the "if SND_IMX_SOC" block, and is otherwise harmless. The link error
+is more tricky and happens with SND_SOC_IMX_SSI=y, which may or may not
+imply FIQ support. However, if SND_SOC_FSL_SSI is set to =m at the same
+time, that selects SND_SOC_IMX_PCM_FIQ as a loadable module dependency,
+which then causes a link failure from imx-ssi.
+
+The solution here is to make SND_SOC_IMX_PCM_FIQ built-in whenever
+one of its potential users is built-in.
+
+Fixes: ff40260f79dc ("ASoC: fsl: refine DMA/FIQ dependencies")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/perf/imc-pmu.c               | 2 +-
- arch/powerpc/platforms/powernv/opal-imc.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ sound/soc/fsl/Kconfig | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/arch/powerpc/perf/imc-pmu.c b/arch/powerpc/perf/imc-pmu.c
-index 6159e9edddfd0..2d12f0037e3a5 100644
---- a/arch/powerpc/perf/imc-pmu.c
-+++ b/arch/powerpc/perf/imc-pmu.c
-@@ -499,7 +499,7 @@ static int nest_imc_event_init(struct perf_event *event)
- 			break;
- 		}
- 		pcni++;
--	} while (pcni);
-+	} while (pcni->vbase != 0);
+diff --git a/sound/soc/fsl/Kconfig b/sound/soc/fsl/Kconfig
+index 7b1d9970be8b3..1f65cf555ebe0 100644
+--- a/sound/soc/fsl/Kconfig
++++ b/sound/soc/fsl/Kconfig
+@@ -182,16 +182,17 @@ config SND_MPC52xx_SOC_EFIKA
  
- 	if (!flag)
- 		return -ENODEV;
-diff --git a/arch/powerpc/platforms/powernv/opal-imc.c b/arch/powerpc/platforms/powernv/opal-imc.c
-index 58a07948c76e7..3d27f02695e41 100644
---- a/arch/powerpc/platforms/powernv/opal-imc.c
-+++ b/arch/powerpc/platforms/powernv/opal-imc.c
-@@ -127,7 +127,7 @@ static int imc_get_mem_addr_nest(struct device_node *node,
- 								nr_chips))
- 		goto error;
+ endif # SND_POWERPC_SOC
  
--	pmu_ptr->mem_info = kcalloc(nr_chips, sizeof(*pmu_ptr->mem_info),
-+	pmu_ptr->mem_info = kcalloc(nr_chips + 1, sizeof(*pmu_ptr->mem_info),
- 				    GFP_KERNEL);
- 	if (!pmu_ptr->mem_info)
- 		goto error;
++config SND_SOC_IMX_PCM_FIQ
++	tristate
++	default y if SND_SOC_IMX_SSI=y && (SND_SOC_FSL_SSI=m || SND_SOC_FSL_SPDIF=m) && (MXC_TZIC || MXC_AVIC)
++	select FIQ
++
+ if SND_IMX_SOC
+ 
+ config SND_SOC_IMX_SSI
+ 	tristate
+ 	select SND_SOC_FSL_UTILS
+ 
+-config SND_SOC_IMX_PCM_FIQ
+-	tristate
+-	select FIQ
+-
+ comment "SoC Audio support for Freescale i.MX boards:"
+ 
+ config SND_MXC_SOC_WM1133_EV1
 -- 
 2.20.1
 
