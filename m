@@ -4,56 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58772C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:30:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC3F0C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:30:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A6BA2184E
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:30:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 951152177E
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:30:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558553455;
-	bh=shTTSno3Vmfm+DSV2fIEsrskFZGxkjejRLHNEOTct/w=;
+	s=default; t=1558553459;
+	bh=Z5M97+wnGla18P25MkB3sjrGHWb2JtxK/um22vBOWNQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZKzlFvFhh6B9V9WH4Wl15Q4gnSV3ulqHte1oPkaOSzAO1EcSj4UtWM6kd2vDdcE/k
-	 1n4HtAN2gtZTCHJMjgfTs5s+iXTsAA3g53Qlmg46K1YSGO7qhmQyGsV/RpZJVE7141
-	 pIZ9f7mcPaUHhXKLfrJKnXDFNn0VrS6lvovdW5zA=
+	b=qyPr8LJpLjZ28Erc+jmlRrocLvDHgxHBIRMV6gWKMPra0UAAWhzNwL/bbGXl/nPeG
+	 BBWpVzkqqa/azMRDqNeWAcE6fU9OHkbwBr3iPa+XzsF/GIVLS65KCoOf9GrXAo9L0N
+	 olfSFrlKhhybAs4zMphCj3NYUSDh31bwu3MJGI1k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732544AbfEVTax (ORCPT
+        id S1732989AbfEVTa6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:30:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54168 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:30:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54254 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733290AbfEVTan (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:30:43 -0400
+        id S1732913AbfEVTas (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:30:48 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BBDCA204FD;
-        Wed, 22 May 2019 19:30:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE23921473;
+        Wed, 22 May 2019 19:30:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553443;
-        bh=shTTSno3Vmfm+DSV2fIEsrskFZGxkjejRLHNEOTct/w=;
+        s=default; t=1558553447;
+        bh=Z5M97+wnGla18P25MkB3sjrGHWb2JtxK/um22vBOWNQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lx8ITbMUV1l7359/9KIvpqM6g5JapaF5DbHJ2L3cLZZKCO1akoewoCBjfZjrz5j+q
-         KmdZX9Z7hhT1MeiOf29HFWQARk3TeuUc4ZEm3Rrzuxn7bgPdCRhNNNEtHGRU2rN0vb
-         O9+kGdohmNxPCZbw+IbOAWGerN9ZPzXWEZnPtB3M=
+        b=o+cy/+wVR8Q2Tuue1s+++sEaaVpbgChfOGkTX5Zuv1bNffzgui3BaCtEIM7kE96nu
+         FQd9jZRxZWUYB52eI2irCTR49EMJkKwZYOTrUXF4ndoMOJJOx+fPAqOrAipsdr+cI5
+         ZldGjhuCQqdPqKdUIg5QNwGUCj5eFjtSyBFYSKVA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        "Tobin C . Harding" <tobin@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 014/114] sched/cpufreq: Fix kobject memleak
-Date:   Wed, 22 May 2019 15:28:37 -0400
-Message-Id: <20190522193017.26567-14-sashal@kernel.org>
+Cc:     Sven Van Asbroeck <thesven73@gmail.com>,
+        Sven Van Asbroeck <TheSven73@gmail.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rtc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 017/114] rtc: 88pm860x: prevent use-after-free on device remove
+Date:   Wed, 22 May 2019 15:28:40 -0400
+Message-Id: <20190522193017.26567-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522193017.26567-1-sashal@kernel.org>
 References: <20190522193017.26567-1-sashal@kernel.org>
@@ -66,59 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Viresh Kumar <viresh.kumar@linaro.org>
+From: Sven Van Asbroeck <thesven73@gmail.com>
 
-[ Upstream commit 9a4f26cc98d81b67ecc23b890c28e2df324e29f3 ]
+[ Upstream commit f22b1ba15ee5785aa028384ebf77dd39e8e47b70 ]
 
-Currently the error return path from kobject_init_and_add() is not
-followed by a call to kobject_put() - which means we are leaking
-the kobject.
+The device's remove() attempts to shut down the delayed_work scheduled
+on the kernel-global workqueue by calling flush_scheduled_work().
 
-Fix it by adding a call to kobject_put() in the error path of
-kobject_init_and_add().
+Unfortunately, flush_scheduled_work() does not prevent the delayed_work
+from re-scheduling itself. The delayed_work might run after the device
+has been removed, and touch the already de-allocated info structure.
+This is a potential use-after-free.
 
-Signed-off-by: Tobin C. Harding <tobin@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Tobin C. Harding <tobin@kernel.org>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>
-Link: http://lkml.kernel.org/r/20190430001144.24890-1-tobin@kernel.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Fix by calling cancel_delayed_work_sync() during remove(): this ensures
+that the delayed work is properly cancelled, is no longer running, and
+is not able to re-schedule itself.
+
+This issue was detected with the help of Coccinelle.
+
+Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/cpufreq/cpufreq.c          | 1 +
- drivers/cpufreq/cpufreq_governor.c | 2 ++
- 2 files changed, 3 insertions(+)
+ drivers/rtc/rtc-88pm860x.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-index a38a23f0b3f41..e917521a3ef9b 100644
---- a/drivers/cpufreq/cpufreq.c
-+++ b/drivers/cpufreq/cpufreq.c
-@@ -1065,6 +1065,7 @@ static struct cpufreq_policy *cpufreq_policy_alloc(unsigned int cpu)
- 				   cpufreq_global_kobject, "policy%u", cpu);
- 	if (ret) {
- 		pr_err("%s: failed to init policy->kobj: %d\n", __func__, ret);
-+		kobject_put(&policy->kobj);
- 		goto err_free_real_cpus;
- 	}
+diff --git a/drivers/rtc/rtc-88pm860x.c b/drivers/rtc/rtc-88pm860x.c
+index 19e53b3b8e005..166faae3a59cd 100644
+--- a/drivers/rtc/rtc-88pm860x.c
++++ b/drivers/rtc/rtc-88pm860x.c
+@@ -414,7 +414,7 @@ static int pm860x_rtc_remove(struct platform_device *pdev)
+ 	struct pm860x_rtc_info *info = platform_get_drvdata(pdev);
  
-diff --git a/drivers/cpufreq/cpufreq_governor.c b/drivers/cpufreq/cpufreq_governor.c
-index 38d1a8216084c..32c9524a6ec54 100644
---- a/drivers/cpufreq/cpufreq_governor.c
-+++ b/drivers/cpufreq/cpufreq_governor.c
-@@ -449,6 +449,8 @@ int cpufreq_dbs_governor_init(struct cpufreq_policy *policy)
- 	/* Failure, so roll back. */
- 	pr_err("initialization failed (dbs_data kobject init error %d)\n", ret);
- 
-+	kobject_put(&dbs_data->attr_set.kobj);
-+
- 	policy->governor_data = NULL;
- 
- 	if (!have_governor_per_policy())
+ #ifdef VRTC_CALIBRATION
+-	flush_scheduled_work();
++	cancel_delayed_work_sync(&info->calib_work);
+ 	/* disable measurement */
+ 	pm860x_set_bits(info->i2c, PM8607_MEAS_EN2, MEAS2_VRTC, 0);
+ #endif	/* VRTC_CALIBRATION */
 -- 
 2.20.1
 
