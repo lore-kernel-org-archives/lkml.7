@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B707C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:55:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79E9FC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:56:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4304420862
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:55:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46DF220856
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 19:56:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558554958;
-	bh=KjnceZrrK6pttVwb8hdNkEHs3mPHFshpUT6RlkLvtX4=;
+	s=default; t=1558554967;
+	bh=SHTanGl498Jp+C/3CVisWEVSVFlCHF+CC9lNTtyLOMw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R7UOQSMGFbfWdoz5K+J8wkfGUX/R3jgmogPXOaf8xjLKq9/YyfG/Xpsr3hwRtrIab
-	 wAkt7gP7ucaTH+VrJbFrCezQgJYriuKBzFik7yUvY98vqUJIk143sHuG/MMn40SpuA
-	 pccgDcT6tCOWk1IVwsWMf4tGC28isPCOUyJgvyI4=
+	b=rQnAu4f7rBnUzBBEGKQy6dEckP7jl+firdUfI8UrnIU8hWY+h/aJ5/uiBG9Cyg/ZU
+	 2kcSoa7TDAPob0gz91/c0NWYFxiR3rucQba9MdpNGYYHekzuVGZDUaZWdQ7jj4K+8I
+	 SLwPpSUzRuAZOaLp+CxnIxpsVXBs5Iuig9BM5Gqc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733100AbfEVTz5 (ORCPT
+        id S2387982AbfEVT4G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 15:55:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46400 "EHLO mail.kernel.org"
+        Wed, 22 May 2019 15:56:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46378 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730340AbfEVTZH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 15:25:07 -0400
+        id S1727984AbfEVTZF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 15:25:05 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F70D217D9;
-        Wed, 22 May 2019 19:25:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F46C217D7;
+        Wed, 22 May 2019 19:25:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553107;
-        bh=KjnceZrrK6pttVwb8hdNkEHs3mPHFshpUT6RlkLvtX4=;
+        s=default; t=1558553104;
+        bh=SHTanGl498Jp+C/3CVisWEVSVFlCHF+CC9lNTtyLOMw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0n3iklGxsNkm7n0u1r4+uEGD/re/HNY5pDLq9lfhxF1LMNjt6ymwA+NWmXvu2OZIH
-         L6EfakA7QR1HpKEieln5rVIGIGjIBMSuJuVnMHpHD7Qos8dgViIMMKDuwpRAA1YGPz
-         LRQ0OCox19F2soKW3Ztv7STyisWjr832Wo/zN+9o=
+        b=htRO7uCpWnyztMJTjbp5cJMJeb1E2C7naW2bRGPU7LIRqWkQm+bJf+k1Lx5uQIbWu
+         wfH3KmGdaFsih15vRW8nkwdcQayzEWDm87ofOSzMKIYo7CbUE9Bet/VHyrjOsqccnr
+         FjYch7B/9Lg1S77Sdwigcgxof8abapt0gSZfWtA0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qu Wenruo <wqu@suse.com>, Filipe Manana <fdmanana@suse.com>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
+Cc:     Robbie Ko <robbieko@synology.com>,
+        Filipe Manana <fdmanana@suse.com>,
         David Sterba <dsterba@suse.com>,
         Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 051/317] btrfs: Don't panic when we can't find a root key
-Date:   Wed, 22 May 2019 15:19:12 -0400
-Message-Id: <20190522192338.23715-51-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 049/317] Btrfs: fix data bytes_may_use underflow with fallocate due to failed quota reserve
+Date:   Wed, 22 May 2019 15:19:10 -0400
+Message-Id: <20190522192338.23715-49-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192338.23715-1-sashal@kernel.org>
 References: <20190522192338.23715-1-sashal@kernel.org>
@@ -60,51 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qu Wenruo <wqu@suse.com>
+From: Robbie Ko <robbieko@synology.com>
 
-[ Upstream commit 7ac1e464c4d473b517bb784f30d40da1f842482e ]
+[ Upstream commit 39ad317315887c2cb9a4347a93a8859326ddf136 ]
 
-When we failed to find a root key in btrfs_update_root(), we just panic.
+When doing fallocate, we first add the range to the reserve_list and
+then reserve the quota.  If quota reservation fails, we'll release all
+reserved parts of reserve_list.
 
-That's definitely not cool, fix it by outputting an unique error
-message, aborting current transaction and return -EUCLEAN. This should
-not normally happen as the root has been used by the callers in some
-way.
+However, cur_offset is not updated to indicate that this range is
+already been inserted into the list.  Therefore, the same range is freed
+twice.  Once at list_for_each_entry loop, and once at the end of the
+function.  This will result in WARN_ON on bytes_may_use when we free the
+remaining space.
 
+At the end, under the 'out' label we have a call to:
+
+   btrfs_free_reserved_data_space(inode, data_reserved, alloc_start, alloc_end - cur_offset);
+
+The start offset, third argument, should be cur_offset.
+
+Everything from alloc_start to cur_offset was freed by the
+list_for_each_entry_safe_loop.
+
+Fixes: 18513091af94 ("btrfs: update btrfs_space_info's bytes_may_use timely")
 Reviewed-by: Filipe Manana <fdmanana@suse.com>
-Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
-Signed-off-by: Qu Wenruo <wqu@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Robbie Ko <robbieko@synology.com>
 Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/root-tree.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ fs/btrfs/file.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/fs/btrfs/root-tree.c b/fs/btrfs/root-tree.c
-index 65bda0682928b..f51a4a425a457 100644
---- a/fs/btrfs/root-tree.c
-+++ b/fs/btrfs/root-tree.c
-@@ -137,11 +137,14 @@ int btrfs_update_root(struct btrfs_trans_handle *trans, struct btrfs_root
- 		goto out;
- 	}
- 
--	if (ret != 0) {
--		btrfs_print_leaf(path->nodes[0]);
--		btrfs_crit(fs_info, "unable to update root key %llu %u %llu",
--			   key->objectid, key->type, key->offset);
--		BUG_ON(1);
-+	if (ret > 0) {
-+		btrfs_crit(fs_info,
-+			"unable to find root key (%llu %u %llu) in tree %llu",
-+			key->objectid, key->type, key->offset,
-+			root->root_key.objectid);
-+		ret = -EUCLEAN;
-+		btrfs_abort_transaction(trans, ret);
-+		goto out;
- 	}
- 
- 	l = path->nodes[0];
+diff --git a/fs/btrfs/file.c b/fs/btrfs/file.c
+index d38dc8c315337..ab5caf87ef481 100644
+--- a/fs/btrfs/file.c
++++ b/fs/btrfs/file.c
+@@ -3132,6 +3132,7 @@ static long btrfs_fallocate(struct file *file, int mode,
+ 			ret = btrfs_qgroup_reserve_data(inode, &data_reserved,
+ 					cur_offset, last_byte - cur_offset);
+ 			if (ret < 0) {
++				cur_offset = last_byte;
+ 				free_extent_map(em);
+ 				break;
+ 			}
+@@ -3181,7 +3182,7 @@ static long btrfs_fallocate(struct file *file, int mode,
+ 	/* Let go of our reservation. */
+ 	if (ret != 0 && !(mode & FALLOC_FL_ZERO_RANGE))
+ 		btrfs_free_reserved_data_space(inode, data_reserved,
+-				alloc_start, alloc_end - cur_offset);
++				cur_offset, alloc_end - cur_offset);
+ 	extent_changeset_free(data_reserved);
+ 	return ret;
+ }
 -- 
 2.20.1
 
