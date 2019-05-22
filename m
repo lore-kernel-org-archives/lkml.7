@@ -2,233 +2,179 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 435C7C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 18:31:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29A59C282DC
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 18:31:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11D9821473
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 18:31:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEAF521473
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 18:31:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="AIWX6UX4"
+	dkim=pass (2048-bit key) header.d=tycho.nsa.gov header.i=@tycho.nsa.gov header.b="gOU66hrm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729547AbfEVSbM (ORCPT
+        id S1729592AbfEVSbT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 14:31:12 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:45673 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729155AbfEVSbL (ORCPT
+        Wed, 22 May 2019 14:31:19 -0400
+Received: from upbd19pa08.eemsg.mail.mil ([214.24.27.83]:3346 "EHLO
+        upbd19pa08.eemsg.mail.mil" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729372AbfEVSbS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 14:31:11 -0400
-Received: by mail-ot1-f67.google.com with SMTP id t24so2976228otl.12
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 11:31:11 -0700 (PDT)
+        Wed, 22 May 2019 14:31:18 -0400
+X-EEMSG-check-017: 226514867|UPBD19PA08_EEMSG_MP8.csd.disa.mil
+Received: from emsm-gh1-uea10.ncsc.mil ([214.29.60.2])
+  by upbd19pa08.eemsg.mail.mil with ESMTP/TLS/DHE-RSA-AES256-SHA256; 22 May 2019 18:30:53 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=ehpW3FmyFNwwgVcU0sf6xcroE4sJqcvHvuK/a3hE4J0=;
-        b=AIWX6UX4vTSfazL/tbmSXhq6IE3iXeh+57T/ZszV7RHo3c+MQuXBfNnypjIOsPeQx9
-         WU71JNbQoccuY7mOy+ctQiNiGWp5P0Y98tZjczvDtzod6yXP87V4+W3cndPeiS/v1fdu
-         DMOs9x08w66R6ZzTlTCE26YItU/6ruqAuAhTk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=ehpW3FmyFNwwgVcU0sf6xcroE4sJqcvHvuK/a3hE4J0=;
-        b=DOsvL11j9dBX4OhfAM1/uBAALN7k3Og9HvlbIFB/8jELdqBkzSBPoCcY1WfRTUzZnw
-         II1UuiOAg7NBV4Wd9kOHs4CVFEOZrVLG4vAWu0ZgkBIREksVsp/joyY7hxAWqxzQ/Wup
-         q+ttilCqRzinjGwlgHlBNeA17jfpbeuDGelevQ4CdhgSC9GJr3+3MLBo2aDY7LOKqS3C
-         DkNPNAiJG1BVbkZD87ozHaf561pBTF60Ux3LFRwR7pO45D+U63khxvK7sVo7gG3kLuwj
-         mvz8CPdHaf/JlrL3yf5I2m7qqvxtMaRjOIOdeXUKtObb1qfMLfZ6zJKIfCBKSvcsqoJn
-         1y7g==
-X-Gm-Message-State: APjAAAWR1Y4zhVKjuAAXK48or/pBIUfMWzulUGdhsOcDbeI9NZlOcUQ0
-        AsKjf5YOD10Vf3M/voUjNZtiJENBe/jWbF9ObTJHaw==
-X-Google-Smtp-Source: APXvYqx3IiGHo0i8z7yFDpSNCNymJ7phpC9KvQaOQ+mUNdi70By2Li+PCYUroTuATuW8VtF4ZJcbipILRmVjSlC2nEI=
-X-Received: by 2002:a9d:6e1a:: with SMTP id e26mr55319767otr.188.1558549870947;
- Wed, 22 May 2019 11:31:10 -0700 (PDT)
+  d=tycho.nsa.gov; i=@tycho.nsa.gov; q=dns/txt;
+  s=tycho.nsa.gov; t=1558549853; x=1590085853;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=ZNFtgo98464FFumdNNSXhhawQQvya8ZlBcaJz1YwRnc=;
+  b=gOU66hrmjouMMoO2raHA82rLkMS1jwmFYHaECa4RNVUgYrr4mBtgAva1
+   gnNpugsCoplbe0VkFixRbh5Kc2W4BgOZ7pwVoyEJY2vhfn/vg1YkxCCdR
+   BD56DHXcO3fkIle9oLN3LsPFXoN9MZ4oQ1a+AjSaAfqEbDiG5KtkuJsya
+   t50Bjh+iQy28Vf/rXkltQhFXJaEN0tPB+59ECTLsQ8gUws3pcwnd70VB4
+   PKGTIWrWvuLAnFSBX8y803nqLMyGsAXLfLtKxl7TeJG2Vdl/8l2oPsobJ
+   BuJXnVLtIPzQoTq6tQp1D8rmXurCPMgxFXueJojFmsce3e10e1V2bHFVP
+   g==;
+X-IronPort-AV: E=Sophos;i="5.60,500,1549929600"; 
+   d="scan'208";a="23997588"
+IronPort-PHdr: =?us-ascii?q?9a23=3AE2bWgR1tnU0IVdJgsmDT+DRfVm0co7zxezQtwd?=
+ =?us-ascii?q?8ZsesWIvXxwZ3uMQTl6Ol3ixeRBMOHsqsC0rOM+Pm6BCQp2tWoiDg6aptCVh?=
+ =?us-ascii?q?sI2409vjcLJ4q7M3D9N+PgdCcgHc5PBxdP9nC/NlVJSo6lPwWB6nK94iQPFR?=
+ =?us-ascii?q?rhKAF7Ovr6GpLIj8Swyuu+54Dfbx9HiTagfL9+Ngi6oRjPusUZnIduNKY8wQ?=
+ =?us-ascii?q?bVr3VVfOhb2XlmLk+JkRbm4cew8p9j8yBOtP8k6sVNT6b0cbkmQLJBFDgpPH?=
+ =?us-ascii?q?w768PttRnYUAuA/WAcXXkMkhpJGAfK8hf3VYrsvyTgt+p93C6aPdDqTb0xRD?=
+ =?us-ascii?q?+v4btnRAPuhSwaLDMy7n3ZhdJsg6JauBKhpgJww4jIYIGOKfFyerrRcc4GSW?=
+ =?us-ascii?q?ZdW8pcUSJOApm4b4ASEeQPO+hWpJT5q1cXsxezAQygCeXywTFKm3D2x7U33f?=
+ =?us-ascii?q?k/HwHI3AIuHNwAv3rbo9r3KKgcXvu4zLXKwDjZc/9axTnw5YrOfxs8of+MR7?=
+ =?us-ascii?q?Vwcc/JxEcyCwPKkE2QqYz7MDOTy+8Drm2b4PBkVeKrlWEmqxx6rz+0xsgxkY?=
+ =?us-ascii?q?nEnZ4Vy1DY+iV5x4Y5P9u4SFVhbtK+H5tQsD+aOpJwT8g/QG9ooD43xqAJtJ?=
+ =?us-ascii?q?O0ZiQHyIkrywTBZ/GIbYSE+A/vWeCMKjlinn1lYqiwhxOq/Eilze3zS9e73U?=
+ =?us-ascii?q?5RripAjtnMrncN1wHP6sSfSvty4EOh2TGX2gDP8O5EO0E0lbfAK5I73r4xlo?=
+ =?us-ascii?q?YcsUTEHiPsnkX5kLSWeVk+9uit6uTnZq3qpp6aN4BqlgHzKrkil8OwDOgiMg?=
+ =?us-ascii?q?UCQnKX9fqz2bH950H1Xa1GjvgsnanYtJDaK94bpqm8AwJNyYYs9g2/Aiy60N?=
+ =?us-ascii?q?UYgXYHLFVFdAiBj4jyIV7COv/4DfChg1i0ijdk2+jGPqH9ApXKNnXDlKrhfa?=
+ =?us-ascii?q?p660NHywo808pf55RKBbEFOv7zXVXxtNPABB8jLwO02/rnCMl61o4GXGKPAK?=
+ =?us-ascii?q?CZPaPWvFKT6eIvJO6MZIARuDnjMfQq+/nujXohk18HYaapxYcXaGy/Hvl+IU?=
+ =?us-ascii?q?WZZH3sgs0bEWcLpQozV+rqh0eHUTFNZna+RaU85is0CIi+F4fMWpitgKCd3C?=
+ =?us-ascii?q?e8BpBWYmFGClaREXbnbomEQOkDZz6PIs97kzwESbigR5Yk1RGpqQD61r5nIf?=
+ =?us-ascii?q?TP9y0GupLsysJ16/fQlR4s7zx0CdqS02WXQ2FzhGMISCc83Lpjrkxl1leDza?=
+ =?us-ascii?q?94juRcFdxS4fNJTwg7OYffz+NkEdDyXBzOftOSRVa4TdWpHysxQsgyw9AQeU?=
+ =?us-ascii?q?Z9HcutjhTZ0yqtGb8VmO/DOJth26TQzjDVOtp6znfcz6ogxw0iX9dIHW6rnK?=
+ =?us-ascii?q?hy807UHYGf1w28nrq2dakDlAHE7n2O0XbG6ERaX1MhearCWn8baw3dqtGvtW?=
+ =?us-ascii?q?3YSLr7MqgqKgtMz4a5L6JObtD4xQFdSOzLJMXVY2X3nXy5QxmP2OXfP8LRZ2?=
+ =?us-ascii?q?wB0XCFWwA/mAcJ8CPDbFJvCw=3D=3D?=
+X-IPAS-Result: =?us-ascii?q?A2BPAADXlOVc/wHyM5BdCBwBAQEEAQEHBAEBgVMFAQELA?=
+ =?us-ascii?q?YFmKoFtKIQTlRV+iFCPCYEkA1QJAQEBAQEBAQEBNAECAQGEQAKCMSM2Bw4BA?=
+ =?us-ascii?q?wEBAQQBAQEBAwEBbCiCOikBgmYBAQEBAgEjBBFBBQsLDgoCAiYCAlcGAQwGA?=
+ =?us-ascii?q?gEBF4JIP4F3BQ+oJHwzhUeDKIFGgQwoAYoygR4XeIEHgREnghsbNT6EH4Mvg?=
+ =?us-ascii?q?lgEiyM7h22BJJNCCYIPghGQbwYbgh6UFIxdgSeWLAonNoEhKwgCGAghDzuCb?=
+ =?us-ascii?q?IIbF4EBAQ6NKyMDMIEGAQGNaAEB?=
+Received: from tarius.tycho.ncsc.mil ([144.51.242.1])
+  by EMSM-GH1-UEA10.NCSC.MIL with ESMTP; 22 May 2019 18:30:50 +0000
+Received: from moss-pluto.infosec.tycho.ncsc.mil (moss-pluto [192.168.25.131])
+        by tarius.tycho.ncsc.mil (8.14.4/8.14.4) with ESMTP id x4MIUnM3009971;
+        Wed, 22 May 2019 14:30:50 -0400
+Subject: Re: [RFC] Turn lockdown into an LSM
+To:     Andy Lutomirski <luto@kernel.org>,
+        Matthew Garrett <mjg59@google.com>
+Cc:     James Morris <jmorris@namei.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20190521224013.3782-1-matthewgarrett@google.com>
+ <alpine.LRH.2.21.1905221203070.3967@namei.org>
+ <CACdnJuuTR=Ut4giPKC=kdxgY9yPv8+3PZyEzuxvON3Jr_92XnQ@mail.gmail.com>
+ <CALCETrVow8U=xhQdJt8kSMX16Lf0Mstf3+QxY4iz4DHVp=PYWA@mail.gmail.com>
+From:   Stephen Smalley <sds@tycho.nsa.gov>
+Message-ID: <14ed1f30-a1d0-f973-5c8c-241337c8fc09@tycho.nsa.gov>
+Date:   Wed, 22 May 2019 14:30:49 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190416183841.1577-1-christian.koenig@amd.com>
- <1556323269-19670-1-git-send-email-lmark@codeaurora.org> <CAO_48GGanguXbmYDD+p1kK_VkiWdZSTYAD1y-0JQK7hqL_OPPg@mail.gmail.com>
- <d7fb2a6b-f516-b506-247d-0f3d4d59ec8e@gmail.com>
-In-Reply-To: <d7fb2a6b-f516-b506-247d-0f3d4d59ec8e@gmail.com>
-From:   Daniel Vetter <daniel@ffwll.ch>
-Date:   Wed, 22 May 2019 20:30:59 +0200
-Message-ID: <CAKMK7uEaeVW0EMtCUeH+WeUmFnovEySz3kebRUcybLeySb4GSA@mail.gmail.com>
-Subject: Re: [PATCH 01/12] dma-buf: add dynamic caching of sg_table
-To:     =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-Cc:     Sumit Semwal <sumit.semwal@linaro.org>,
-        Liam Mark <lmark@codeaurora.org>,
-        Linaro MM SIG <linaro-mm-sig@lists.linaro.org>,
-        "open list:DMA BUFFER SHARING FRAMEWORK" 
-        <linux-media@vger.kernel.org>,
-        DRI mailing list <dri-devel@lists.freedesktop.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CALCETrVow8U=xhQdJt8kSMX16Lf0Mstf3+QxY4iz4DHVp=PYWA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 22, 2019 at 7:28 PM Christian K=C3=B6nig
-<ckoenig.leichtzumerken@gmail.com> wrote:
->
-> Am 22.05.19 um 18:17 schrieb Sumit Semwal:
-> > Hi Christian,
-> >
-> > On Sat, 27 Apr 2019 at 05:31, Liam Mark <lmark@codeaurora.org> wrote:
-> >> On Tue, 16 Apr 2019, Christian K=C3=B6nig wrote:
-> >>
-> >>> To allow a smooth transition from pinning buffer objects to dynamic
-> >>> invalidation we first start to cache the sg_table for an attachment
-> >>> unless the driver explicitly says to not do so.
-> >>>
-> >>> ---
-> >>>   drivers/dma-buf/dma-buf.c | 24 ++++++++++++++++++++++++
-> >>>   include/linux/dma-buf.h   | 11 +++++++++++
-> >>>   2 files changed, 35 insertions(+)
-> >>>
-> >>> diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
-> >>> index 7c858020d14b..65161a82d4d5 100644
-> >>> --- a/drivers/dma-buf/dma-buf.c
-> >>> +++ b/drivers/dma-buf/dma-buf.c
-> >>> @@ -573,6 +573,20 @@ struct dma_buf_attachment *dma_buf_attach(struct=
- dma_buf *dmabuf,
-> >>>        list_add(&attach->node, &dmabuf->attachments);
-> >>>
-> >>>        mutex_unlock(&dmabuf->lock);
-> >>> +
-> >>> +     if (!dmabuf->ops->dynamic_sgt_mapping) {
-> >>> +             struct sg_table *sgt;
-> >>> +
-> >>> +             sgt =3D dmabuf->ops->map_dma_buf(attach, DMA_BIDIRECTIO=
-NAL);
-> >>> +             if (!sgt)
-> >>> +                     sgt =3D ERR_PTR(-ENOMEM);
-> >>> +             if (IS_ERR(sgt)) {
-> >>> +                     dma_buf_detach(dmabuf, attach);
-> >>> +                     return ERR_CAST(sgt);
-> >>> +             }
-> >>> +             attach->sgt =3D sgt;
-> >>> +     }
-> >>> +
-> >>>        return attach;
-> >>>
-> >>>   err_attach:
-> >>> @@ -595,6 +609,10 @@ void dma_buf_detach(struct dma_buf *dmabuf, stru=
-ct dma_buf_attachment *attach)
-> >>>        if (WARN_ON(!dmabuf || !attach))
-> >>>                return;
-> >>>
-> >>> +     if (attach->sgt)
-> >>> +             dmabuf->ops->unmap_dma_buf(attach, attach->sgt,
-> >>> +                                        DMA_BIDIRECTIONAL);
-> >>> +
-> >>>        mutex_lock(&dmabuf->lock);
-> >>>        list_del(&attach->node);
-> >>>        if (dmabuf->ops->detach)
-> >>> @@ -630,6 +648,9 @@ struct sg_table *dma_buf_map_attachment(struct dm=
-a_buf_attachment *attach,
-> >>>        if (WARN_ON(!attach || !attach->dmabuf))
-> >>>                return ERR_PTR(-EINVAL);
-> >>>
-> >>> +     if (attach->sgt)
-> >>> +             return attach->sgt;
-> >>> +
-> >> I am concerned by this change to make caching the sg_table the default
-> >> behavior as this will result in the exporter's map_dma_buf/unmap_dma_b=
-uf
-> >> calls are no longer being called in
-> >> dma_buf_map_attachment/dma_buf_unmap_attachment.
-> > Probably this concern from Liam got lost between versions of your
-> > patches; could we please request a reply to these points here?
->
-> Sorry I indeed never got this mail, but this is actually not an issue
-> because Daniel had similar concerns and we didn't made this the default
-> in the final version.
->
-> >> This seems concerning to me as it appears to ignore the cache maintena=
-nce
-> >> aspect of the map_dma_buf/unmap_dma_buf calls.
-> >> For example won't this potentially cause issues for clients of ION.
-> >>
-> >> If we had the following
-> >> - #1 dma_buf_attach coherent_device
-> >> - #2 dma_buf attach non_coherent_device
-> >> - #3 dma_buf_map_attachment non_coherent_device
-> >> - #4 non_coherent_device writes to buffer
-> >> - #5 dma_buf_unmap_attachment non_coherent_device
-> >> - #6 dma_buf_map_attachment coherent_device
-> >> - #7 coherent_device reads buffer
-> >> - #8 dma_buf_unmap_attachment coherent_device
-> >>
-> >> There wouldn't be any CMO at step #5 anymore (specifically no invalida=
-te)
-> >> so now at step #7 the coherent_device could read a stale cache line.
-> >>
-> >> Also, now by default dma_buf_unmap_attachment no longer removes the
-> >> mappings from the iommu, so now by default dma_buf_unmap_attachment is=
- not
-> >> doing what I would expect and clients are losing the potential sandbox=
-ing
-> >> benefits of removing the mappings.
-> >> Shouldn't this caching behavior be something that clients opt into ins=
-tead
-> >> of being the default?
->
-> Well, it seems you are making incorrect assumptions about the cache
-> maintenance of DMA-buf here.
->
-> At least for all DRM devices I'm aware of mapping/unmapping an
-> attachment does *NOT* have any cache maintenance implications.
->
-> E.g. the use case you describe above would certainly fail with amdgpu,
-> radeon, nouveau and i915 because mapping a DMA-buf doesn't stop the
-> exporter from reading/writing to that buffer (just the opposite actually)=
-.
->
-> All of them assume perfectly coherent access to the underlying memory.
-> As far as I know there is no documented cache maintenance requirements
-> for DMA-buf.
+On 5/22/19 1:08 PM, Andy Lutomirski wrote:
+> On Wed, May 22, 2019 at 9:49 AM Matthew Garrett <mjg59@google.com> wrote:
+>>
+>> On Tue, May 21, 2019 at 7:40 PM James Morris <jmorris@namei.org> wrote:
+>>> An LSM could also potentially implement its own policy for the hook.
+>>
+>> That was my plan. Right now the hook just gets an ASCII description of
+>> the reason for the lockdown - that seems suboptimal for cases like
+>> SELinux. What information would you want? My initial thinking was to
+>> just have a stable enum of lockdown reasons that's in the UAPI headers
+>> and then let other LSM tooling consume that, but I haven't spent
+>> enough time with the internals of SELinux to know if there'd be a more
+>> attractive solution.
+> 
+> I may be in the minority here, but I see this issue as a significant
+> downside of making lockdown more flexible.  If we stick with just
+> "this may violate integrity" and "this may violate confidentiality",
+> then the ABI surface is nice and narrow.  If we start having a big
+> uapi list of things that might qualify for lockdown, we need to worry
+> about compatibility issues.
+> 
+> This isn't purely theoretical.  Lockdown has some interesting
+> interactions with eBPF.  I don't want to be in a situation where v1 of
+> lockdown has a few eBPF hooks, but a later update improves the eBPF vs
+> lockdown interaction so that you can do more with eBPF on a locked
+> down kernel.  But now any such change has to worry about breaking the
+> lockdown LSM ABI.
 
-I think it is documented. It's just that on x86, we ignore that
-because the dma-api pretends there's never a need for cache flushing
-on x86, and that everything snoops the cpu caches. Which isn't true
-since over 20 ago when AGP happened. The actual rules for x86 dma-buf
-are very much ad-hoc (and we occasionally reapply some duct-tape when
-cacheline noise shows up somewhere).
+I think we could keep the enum itself private to the kernel, and 
+internally each security module could map the values to whatever 
+permissions it wants to define.  SELinux itself has the ability to 
+add/remove/re-arrange its permission definitions without breaking 
+userspace/policy; they are dynamically mapped at policy load time. If a 
+given permission doesn't exist in the loaded policy, there is a policy 
+flag to control whether the policy should be rejected, or the permission 
+should always be denied, or the permission should always be allowed. 
+There is also support for an extensible set of "policy capabilities" to 
+control whether new/changed permission checking logic for a given 
+permission/operation should be enabled for that policy or if the kernel 
+should continue using the older logic.
 
-I've just filed this away as another instance of the dma-api not
-fitting gpus, and I think giving recent discussions that won't improve
-anytime soon. So we're stuck with essentially undefined dma-buf
-behaviour.
--Daniel
+> And I still think it would be nice to have some credible use case for
+> a more fine grained policy than just the tri-state.  Having a lockdown
+> policy of "may not violate kernel confidentiality except using
+> kprobes" may be convenient, but it's also basically worthless, since
+> kernel confidentiality is gone.
 
-> The IOMMU concern on the other hand is certainly valid and I perfectly
-> agree that keeping the mapping time as short as possible is desirable.
->
-> Regards,
-> Christian.
->
-> >> Liam
-> >>
-> >> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-> >> a Linux Foundation Collaborative Project
-> >>
-> > Best,
-> > Sumit.
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+I would expect that distros and users would have to make pragmatic 
+tradeoffs in this area, and it would be nice if they could have a choice 
+beyond all-or-nothing.  Do all of the interfaces being locked down 
+expose the same degree of confidentiality or integrity risk?
 
+> All this being said, I do see one big benefit for LSM integration:
+> SELinux or another LSM could allow certain privileged tasks to bypass
+> lockdown.
 
+That seems to violate the intent of lockdown as I understood it, and 
+turns security_is_locked_down() into a finer-grained capable() call.
+Also, if I understand correctly, this could only be done if one were to 
+disable the lockdown module in the lsm list, since the security 
+framework will return non-zero (i.e. the operation is locked down) if 
+any module that implements the hook returns non-zero; LSM is 
+"restrictive". At that point, SELinux or the other LSM would be the sole 
+arbiter of lockdown decisions.  SELinux or the other LSM also wouldn't 
+have access to the kernel_locked_down level unless that was exported in 
+some manner from the lockdown module.  Not sure how to compose these.
 
---=20
-Daniel Vetter
-Software Engineer, Intel Corporation
-+41 (0) 79 365 57 48 - http://blog.ffwll.ch
+   This seems fine, except that there's potential nastiness
+> where current->cred isn't actually a valid thing to look at in the
+> current context.
+> 
+> So I guess my proposal is: use LSM, but make the hook very coarse
+> grained: int security_violate_confidentiality(const struct cred *) and
+> int security_violate_integrity(const struct cred *).
+
+Not sure one can construct a useful policy at that granularity.
