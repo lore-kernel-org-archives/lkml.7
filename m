@@ -2,183 +2,180 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18DEFC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 16:17:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14DE6C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 16:18:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D090D20863
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 16:17:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEA7A20868
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 16:17:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="uiMj7ouD"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qUu5zsFe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730050AbfEVQRv (ORCPT
+        id S1730062AbfEVQR7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 12:17:51 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:48639 "EHLO
-        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728638AbfEVQRu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 12:17:50 -0400
-Received: from [IPv6:2607:fb90:3635:972:9c5a:d1ae:8e8f:2fe7] ([IPv6:2607:fb90:3635:972:9c5a:d1ae:8e8f:2fe7])
-        (authenticated bits=0)
-        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id x4MGHSn03691732
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
-        Wed, 22 May 2019 09:17:30 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com x4MGHSn03691732
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1558541852;
-        bh=B44ya3o9B6nqq6f/Jtd+b4WU9Xx+2DYOyzI8sYcDzls=;
-        h=Date:In-Reply-To:References:Subject:To:CC:From:From;
-        b=uiMj7ouDv0CJJx/tuZx6jO74+sdp1REU90ooSB5Z2URjHChSQMIkPIXIgJMaLqcHa
-         bgEb0yw6vbjDRwDz/Zr6gDDaS+dL3mG1tPZRFlc022fMDsV52ZkgTF1ddn0xI3z4Em
-         HuOBuls8ENM4Tcuc7zIgk48oTAtnymU9JL0g09dmlanScR1N1Gz1kpJ5cDziwPUff0
-         mfjYAwaA8ljFJzgZOFWvwzAtpRjKvEfVBrDqv/QKMMt6KYfHWtAD2Cvqt038kxD+WO
-         0nGzFStMwoRl+WNfWH7w8+nXamRR8ZYWrNivWRM6y53fGfep7+6iEaik56YK0htho6
-         oOVdD/InCq6wA==
-Date:   Wed, 22 May 2019 09:17:24 -0700
-User-Agent: K-9 Mail for Android
-In-Reply-To: <7bdca169-7a01-8c55-40e4-a832e876a0e5@huawei.com>
-References: <20190517165519.11507-1-roberto.sassu@huawei.com> <20190517165519.11507-3-roberto.sassu@huawei.com> <CD9A4F89-7CA5-4329-A06A-F8DEB87905A5@zytor.com> <20190517210219.GA5998@rani.riverdale.lan> <d48f35a1-aab1-2f20-2e91-5e81a84b107f@zytor.com> <20190517221731.GA11358@rani.riverdale.lan> <7bdca169-7a01-8c55-40e4-a832e876a0e5@huawei.com>
+        Wed, 22 May 2019 12:17:59 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:41643 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728638AbfEVQR6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 12:17:58 -0400
+Received: by mail-ot1-f65.google.com with SMTP id l25so2591757otp.8
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 09:17:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=uZnS38EBVW2iZ9H54x1WrqV/ExYc3w2djCQImrBE2rU=;
+        b=qUu5zsFe21yO1LFslkcndbSlfgHxFbGHP3Tm5s9PUaMTAj96RfcYznWCAN6qOaRKJM
+         PrwXKPvzkwvWLtc7KHpdzkEJ2RzIEkF6J88PWgnIexEyeOo45FpHBoW8gGqtrTxXPDpO
+         vqD50PqoWl2gCPIc6AY/egUpD9BdI1QoXV8YG3AbpgxlJrnx+/iAeboIu7xv4d3MGvYI
+         4nhMkcO8RDi507eeDFojCOTMi9DCdyU9oe5619UdhQMryeQkI/ZTUC9q3s1wW50i7y70
+         fNfcNT3NoR/+E0iRQiZ1PwFEVdI6y+iN66hEjwUUUi7EaQrzQR3Y/REyS7Xz8HPTkx6M
+         ZoYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=uZnS38EBVW2iZ9H54x1WrqV/ExYc3w2djCQImrBE2rU=;
+        b=XnQ5FEU1EyrfPAVjZV1ZeeBfK5YnOr3fGHMh7aTAVUKVXEd+nLVr2jHsuTmc4Q1nfr
+         T/j4TZNKiUDWQdiz0KvTeFHKFrXeuuVEc4hfK8Sbfgb9MAHSBApV6c+jEZRvOgkMcemk
+         MLXFRrBqc3IWCuh+xftMoIQ2TZ0JntbrRaya/Fes5nKvDss4lRmlGqr2t095dwy6+oQj
+         8bQsbdMbrvK5Ap18AujwRI7vVLFqj3GqcwRTLEi9AXZOUzthov6oaN7ghNFSwk5q2kxj
+         sWwsxr3ii87wMTVS29rGqt2ZTR5ctXSY+DzyfAMF4Zer4pmVnsIpRI/gTb6dYK1aaYgA
+         fX7A==
+X-Gm-Message-State: APjAAAXjJNOTJyUoMXpi7OkPOpvdFIkQbP7A21Z43X33MSTGIJBNJssI
+        pPitsda2nrf+K5AGL+6Qzb87eKxcOnIZEZVqyWwGXQ==
+X-Google-Smtp-Source: APXvYqwiHJgKfv3RPGnam7NhQkqAVji6zxMV25gVCjnVXHUAunGHPrKPYNOB99xLvcoSn8B3uey9R/DsH27Z2nWzEr0=
+X-Received: by 2002:a9d:32a1:: with SMTP id u30mr36439046otb.371.1558541877365;
+ Wed, 22 May 2019 09:17:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
+References: <20190416183841.1577-1-christian.koenig@amd.com> <1556323269-19670-1-git-send-email-lmark@codeaurora.org>
+In-Reply-To: <1556323269-19670-1-git-send-email-lmark@codeaurora.org>
+From:   Sumit Semwal <sumit.semwal@linaro.org>
+Date:   Wed, 22 May 2019 21:47:46 +0530
+Message-ID: <CAO_48GGanguXbmYDD+p1kK_VkiWdZSTYAD1y-0JQK7hqL_OPPg@mail.gmail.com>
+Subject: Re: [PATCH 01/12] dma-buf: add dynamic caching of sg_table
+To:     Liam Mark <lmark@codeaurora.org>
+Cc:     =?UTF-8?Q?Christian_K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        DRI mailing list <dri-devel@lists.freedesktop.org>,
+        Linaro MM SIG <linaro-mm-sig@lists.linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:DMA BUFFER SHARING FRAMEWORK" 
+        <linux-media@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v3 2/2] initramfs: introduce do_readxattrs()
-To:     Roberto Sassu <roberto.sassu@huawei.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>
-CC:     viro@zeniv.linux.org.uk, linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org, initramfs@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, zohar@linux.vnet.ibm.com,
-        silviu.vlasceanu@huawei.com, dmitry.kasatkin@huawei.com,
-        takondra@cisco.com, kamensky@cisco.com, arnd@arndb.de,
-        rob@landley.net, james.w.mcmechan@gmail.com, niveditas98@gmail.com
-From:   hpa@zytor.com
-Message-ID: <9C5B9F98-2067-43D3-B149-57613F38DCD4@zytor.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On May 20, 2019 2:39:46 AM PDT, Roberto Sassu <roberto=2Esassu@huawei=2Ecom=
-> wrote:
->On 5/18/2019 12:17 AM, Arvind Sankar wrote:
->> On Fri, May 17, 2019 at 02:47:31PM -0700, H=2E Peter Anvin wrote:
->>> On 5/17/19 2:02 PM, Arvind Sankar wrote:
->>>> On Fri, May 17, 2019 at 01:18:11PM -0700, hpa@zytor=2Ecom wrote:
->>>>>
->>>>> Ok=2E=2E=2E I just realized this does not work for a modular initram=
-fs,
->composed at load time from multiple files, which is a very real
->problem=2E Should be easy enough to deal with: instead of one large file,
->use one companion file per source file, perhaps something like
->filename=2E=2Exattrs (suggesting double dots to make it less likely to
->conflict with a "real" file=2E) No leading dot, as it makes it more
->likely that archivers will sort them before the file proper=2E
->>>> This version of the patch was changed from the previous one exactly
->to deal with this case --
->>>> it allows for the bootloader to load multiple initramfs archives,
->each
->>>> with its own =2Exattr-list file, and to have that work properly=2E
->>>> Could you elaborate on the issue that you see?
->>>>
->>>
->>> Well, for one thing, how do you define "cpio archive", each with its
->own
->>> =2Exattr-list file? Second, that would seem to depend on the ordering,
->no,
->>> in which case you depend critically on =2Exattr-list file following
->the
->>> files, which most archivers won't do=2E
->>>
->>> Either way it seems cleaner to have this per file; especially if/as
->it
->>> can be done without actually mucking up the format=2E
->>>
->>> I need to run, but I'll post a more detailed explanation of what I
->did
->>> in a little bit=2E
->>>
->>> 	-hpa
->>>
->> Not sure what you mean by how do I define it? Each cpio archive will
->> contain its own =2Exattr-list file with signatures for the files within
->> it, that was the idea=2E
->>=20
->> You need to review the code more closely I think -- it does not
->depend
->> on the =2Exattr-list file following the files to which it applies=2E
->>=20
->> The code first extracts =2Exattr-list as though it was a regular file=
-=2E
->If
->> a later dupe shows up (presumably from a second archive, although the
->> patch will actually allow a second one in the same archive), it will
->> then process the existing =2Exattr-list file and apply the attributes
->> listed within it=2E It then will proceed to read the second one and
->> overwrite the first one with it (this is the normal behaviour in the
->> kernel cpio parser)=2E At the end once all the archives have been
->> extracted, if there is an =2Exattr-list file in the rootfs it will be
->> parsed (it would've been the last one encountered, which hasn't been
->> parsed yet, just extracted)=2E
->>=20
->> Regarding the idea to use the high 16 bits of the mode field in
->> the header that's another possibility=2E It would just require
->additional
->> support in the program that actually creates the archive though,
->which
->> the current patch doesn't=2E
+Hi Christian,
+
+On Sat, 27 Apr 2019 at 05:31, Liam Mark <lmark@codeaurora.org> wrote:
 >
->Yes, for adding signatures for a subset of files, no changes to the ram
->disk generator are necessary=2E Everything is done by a custom module=2E =
-To
->support a generic use case, it would be necessary to modify the
->generator to execute getfattr and the awk script after files have been
->placed in the temporary directory=2E
+> On Tue, 16 Apr 2019, Christian K=C3=B6nig wrote:
 >
->If I understood the new proposal correctly, it would be task for cpio
->to
->read file metadata after the content and create a new record for each
->file with mode 0x18000, type of metadata encoded in the file name and
->metadata as file content=2E I don't know how easy it would be to modify
->cpio=2E Probably the amount of changes would be reasonable=2E
+> > To allow a smooth transition from pinning buffer objects to dynamic
+> > invalidation we first start to cache the sg_table for an attachment
+> > unless the driver explicitly says to not do so.
+> >
+> > ---
+> >  drivers/dma-buf/dma-buf.c | 24 ++++++++++++++++++++++++
+> >  include/linux/dma-buf.h   | 11 +++++++++++
+> >  2 files changed, 35 insertions(+)
+> >
+> > diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
+> > index 7c858020d14b..65161a82d4d5 100644
+> > --- a/drivers/dma-buf/dma-buf.c
+> > +++ b/drivers/dma-buf/dma-buf.c
+> > @@ -573,6 +573,20 @@ struct dma_buf_attachment *dma_buf_attach(struct d=
+ma_buf *dmabuf,
+> >       list_add(&attach->node, &dmabuf->attachments);
+> >
+> >       mutex_unlock(&dmabuf->lock);
+> > +
+> > +     if (!dmabuf->ops->dynamic_sgt_mapping) {
+> > +             struct sg_table *sgt;
+> > +
+> > +             sgt =3D dmabuf->ops->map_dma_buf(attach, DMA_BIDIRECTIONA=
+L);
+> > +             if (!sgt)
+> > +                     sgt =3D ERR_PTR(-ENOMEM);
+> > +             if (IS_ERR(sgt)) {
+> > +                     dma_buf_detach(dmabuf, attach);
+> > +                     return ERR_CAST(sgt);
+> > +             }
+> > +             attach->sgt =3D sgt;
+> > +     }
+> > +
+> >       return attach;
+> >
+> >  err_attach:
+> > @@ -595,6 +609,10 @@ void dma_buf_detach(struct dma_buf *dmabuf, struct=
+ dma_buf_attachment *attach)
+> >       if (WARN_ON(!dmabuf || !attach))
+> >               return;
+> >
+> > +     if (attach->sgt)
+> > +             dmabuf->ops->unmap_dma_buf(attach, attach->sgt,
+> > +                                        DMA_BIDIRECTIONAL);
+> > +
+> >       mutex_lock(&dmabuf->lock);
+> >       list_del(&attach->node);
+> >       if (dmabuf->ops->detach)
+> > @@ -630,6 +648,9 @@ struct sg_table *dma_buf_map_attachment(struct dma_=
+buf_attachment *attach,
+> >       if (WARN_ON(!attach || !attach->dmabuf))
+> >               return ERR_PTR(-EINVAL);
+> >
+> > +     if (attach->sgt)
+> > +             return attach->sgt;
+> > +
 >
->The kernel will behave in a similar way=2E It will call do_readxattrs()
->in
->do_copy() for each file=2E Since the only difference between the current
->and the new proposal would be two additional calls to do_readxattrs()
->in
->do_name() and unpack_to_rootfs(), maybe we could support both=2E
+> I am concerned by this change to make caching the sg_table the default
+> behavior as this will result in the exporter's map_dma_buf/unmap_dma_buf
+> calls are no longer being called in
+> dma_buf_map_attachment/dma_buf_unmap_attachment.
+
+Probably this concern from Liam got lost between versions of your
+patches; could we please request a reply to these points here?
 >
->Roberto
+> This seems concerning to me as it appears to ignore the cache maintenance
+> aspect of the map_dma_buf/unmap_dma_buf calls.
+> For example won't this potentially cause issues for clients of ION.
+>
+> If we had the following
+> - #1 dma_buf_attach coherent_device
+> - #2 dma_buf attach non_coherent_device
+> - #3 dma_buf_map_attachment non_coherent_device
+> - #4 non_coherent_device writes to buffer
+> - #5 dma_buf_unmap_attachment non_coherent_device
+> - #6 dma_buf_map_attachment coherent_device
+> - #7 coherent_device reads buffer
+> - #8 dma_buf_unmap_attachment coherent_device
+>
+> There wouldn't be any CMO at step #5 anymore (specifically no invalidate)
+> so now at step #7 the coherent_device could read a stale cache line.
+>
+> Also, now by default dma_buf_unmap_attachment no longer removes the
+> mappings from the iommu, so now by default dma_buf_unmap_attachment is no=
+t
+> doing what I would expect and clients are losing the potential sandboxing
+> benefits of removing the mappings.
+> Shouldn't this caching behavior be something that clients opt into instea=
+d
+> of being the default?
+>
+> Liam
+>
+> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+>
 
-The nice thing with explicit metadata is that it doesn't have to contain t=
-he filename per se, and each file is self-contained=2E There is a reason wh=
-y each cpio header starts with the magic number: each cpio record is formal=
-ly independent and can be processed in isolation=2E  The TRAILER!!! thing i=
-s a huge wart in the format, although in practice TRAILER!!! always has a m=
-ode of 0 and so can be distinguished from an actual file=2E
-
-The use of mode 0x18000 for metadata allows for optional backwards compati=
-bility for extraction; for encoding this can be handled with very simple po=
-stprocessing=2E
-
-So my suggestion would be to have mode 0x18000 indicate extended file meta=
-data, with the filename of the form:
-
-optional_filename!XXXXX!
-
-=2E=2E=2E where XXXXX indicates the type of metadata (e=2Eg=2E !XATTR!)=2E=
- The optional_filename prefix allows an unaware decoder to extract to a wel=
-l-defined name; simple postprocessing would be able to either remove (for s=
-ize) or add (for compatibility) this prefix=2E It would be an error for thi=
-s prefix, if present, to not match the name of the previous file=2E
-
-I do agree that the delayed processing of an =2Exattr-list as you describe=
- ought to work even with a modular initramfs=2E
-
-
---=20
-Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
+Best,
+Sumit.
