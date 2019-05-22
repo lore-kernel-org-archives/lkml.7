@@ -2,179 +2,204 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29A59C282DC
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 18:31:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69942C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 18:32:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEAF521473
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 18:31:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BC2821473
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 18:32:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tycho.nsa.gov header.i=@tycho.nsa.gov header.b="gOU66hrm"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="DOYEYXNF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729592AbfEVSbT (ORCPT
+        id S1729622AbfEVScG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 14:31:19 -0400
-Received: from upbd19pa08.eemsg.mail.mil ([214.24.27.83]:3346 "EHLO
-        upbd19pa08.eemsg.mail.mil" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729372AbfEVSbS (ORCPT
+        Wed, 22 May 2019 14:32:06 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:37384 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728533AbfEVScG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 14:31:18 -0400
-X-EEMSG-check-017: 226514867|UPBD19PA08_EEMSG_MP8.csd.disa.mil
-Received: from emsm-gh1-uea10.ncsc.mil ([214.29.60.2])
-  by upbd19pa08.eemsg.mail.mil with ESMTP/TLS/DHE-RSA-AES256-SHA256; 22 May 2019 18:30:53 +0000
+        Wed, 22 May 2019 14:32:06 -0400
+Received: by mail-qt1-f194.google.com with SMTP id o7so3617140qtp.4
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 11:32:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tycho.nsa.gov; i=@tycho.nsa.gov; q=dns/txt;
-  s=tycho.nsa.gov; t=1558549853; x=1590085853;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=ZNFtgo98464FFumdNNSXhhawQQvya8ZlBcaJz1YwRnc=;
-  b=gOU66hrmjouMMoO2raHA82rLkMS1jwmFYHaECa4RNVUgYrr4mBtgAva1
-   gnNpugsCoplbe0VkFixRbh5Kc2W4BgOZ7pwVoyEJY2vhfn/vg1YkxCCdR
-   BD56DHXcO3fkIle9oLN3LsPFXoN9MZ4oQ1a+AjSaAfqEbDiG5KtkuJsya
-   t50Bjh+iQy28Vf/rXkltQhFXJaEN0tPB+59ECTLsQ8gUws3pcwnd70VB4
-   PKGTIWrWvuLAnFSBX8y803nqLMyGsAXLfLtKxl7TeJG2Vdl/8l2oPsobJ
-   BuJXnVLtIPzQoTq6tQp1D8rmXurCPMgxFXueJojFmsce3e10e1V2bHFVP
-   g==;
-X-IronPort-AV: E=Sophos;i="5.60,500,1549929600"; 
-   d="scan'208";a="23997588"
-IronPort-PHdr: =?us-ascii?q?9a23=3AE2bWgR1tnU0IVdJgsmDT+DRfVm0co7zxezQtwd?=
- =?us-ascii?q?8ZsesWIvXxwZ3uMQTl6Ol3ixeRBMOHsqsC0rOM+Pm6BCQp2tWoiDg6aptCVh?=
- =?us-ascii?q?sI2409vjcLJ4q7M3D9N+PgdCcgHc5PBxdP9nC/NlVJSo6lPwWB6nK94iQPFR?=
- =?us-ascii?q?rhKAF7Ovr6GpLIj8Swyuu+54Dfbx9HiTagfL9+Ngi6oRjPusUZnIduNKY8wQ?=
- =?us-ascii?q?bVr3VVfOhb2XlmLk+JkRbm4cew8p9j8yBOtP8k6sVNT6b0cbkmQLJBFDgpPH?=
- =?us-ascii?q?w768PttRnYUAuA/WAcXXkMkhpJGAfK8hf3VYrsvyTgt+p93C6aPdDqTb0xRD?=
- =?us-ascii?q?+v4btnRAPuhSwaLDMy7n3ZhdJsg6JauBKhpgJww4jIYIGOKfFyerrRcc4GSW?=
- =?us-ascii?q?ZdW8pcUSJOApm4b4ASEeQPO+hWpJT5q1cXsxezAQygCeXywTFKm3D2x7U33f?=
- =?us-ascii?q?k/HwHI3AIuHNwAv3rbo9r3KKgcXvu4zLXKwDjZc/9axTnw5YrOfxs8of+MR7?=
- =?us-ascii?q?Vwcc/JxEcyCwPKkE2QqYz7MDOTy+8Drm2b4PBkVeKrlWEmqxx6rz+0xsgxkY?=
- =?us-ascii?q?nEnZ4Vy1DY+iV5x4Y5P9u4SFVhbtK+H5tQsD+aOpJwT8g/QG9ooD43xqAJtJ?=
- =?us-ascii?q?O0ZiQHyIkrywTBZ/GIbYSE+A/vWeCMKjlinn1lYqiwhxOq/Eilze3zS9e73U?=
- =?us-ascii?q?5RripAjtnMrncN1wHP6sSfSvty4EOh2TGX2gDP8O5EO0E0lbfAK5I73r4xlo?=
- =?us-ascii?q?YcsUTEHiPsnkX5kLSWeVk+9uit6uTnZq3qpp6aN4BqlgHzKrkil8OwDOgiMg?=
- =?us-ascii?q?UCQnKX9fqz2bH950H1Xa1GjvgsnanYtJDaK94bpqm8AwJNyYYs9g2/Aiy60N?=
- =?us-ascii?q?UYgXYHLFVFdAiBj4jyIV7COv/4DfChg1i0ijdk2+jGPqH9ApXKNnXDlKrhfa?=
- =?us-ascii?q?p660NHywo808pf55RKBbEFOv7zXVXxtNPABB8jLwO02/rnCMl61o4GXGKPAK?=
- =?us-ascii?q?CZPaPWvFKT6eIvJO6MZIARuDnjMfQq+/nujXohk18HYaapxYcXaGy/Hvl+IU?=
- =?us-ascii?q?WZZH3sgs0bEWcLpQozV+rqh0eHUTFNZna+RaU85is0CIi+F4fMWpitgKCd3C?=
- =?us-ascii?q?e8BpBWYmFGClaREXbnbomEQOkDZz6PIs97kzwESbigR5Yk1RGpqQD61r5nIf?=
- =?us-ascii?q?TP9y0GupLsysJ16/fQlR4s7zx0CdqS02WXQ2FzhGMISCc83Lpjrkxl1leDza?=
- =?us-ascii?q?94juRcFdxS4fNJTwg7OYffz+NkEdDyXBzOftOSRVa4TdWpHysxQsgyw9AQeU?=
- =?us-ascii?q?Z9HcutjhTZ0yqtGb8VmO/DOJth26TQzjDVOtp6znfcz6ogxw0iX9dIHW6rnK?=
- =?us-ascii?q?hy807UHYGf1w28nrq2dakDlAHE7n2O0XbG6ERaX1MhearCWn8baw3dqtGvtW?=
- =?us-ascii?q?3YSLr7MqgqKgtMz4a5L6JObtD4xQFdSOzLJMXVY2X3nXy5QxmP2OXfP8LRZ2?=
- =?us-ascii?q?wB0XCFWwA/mAcJ8CPDbFJvCw=3D=3D?=
-X-IPAS-Result: =?us-ascii?q?A2BPAADXlOVc/wHyM5BdCBwBAQEEAQEHBAEBgVMFAQELA?=
- =?us-ascii?q?YFmKoFtKIQTlRV+iFCPCYEkA1QJAQEBAQEBAQEBNAECAQGEQAKCMSM2Bw4BA?=
- =?us-ascii?q?wEBAQQBAQEBAwEBbCiCOikBgmYBAQEBAgEjBBFBBQsLDgoCAiYCAlcGAQwGA?=
- =?us-ascii?q?gEBF4JIP4F3BQ+oJHwzhUeDKIFGgQwoAYoygR4XeIEHgREnghsbNT6EH4Mvg?=
- =?us-ascii?q?lgEiyM7h22BJJNCCYIPghGQbwYbgh6UFIxdgSeWLAonNoEhKwgCGAghDzuCb?=
- =?us-ascii?q?IIbF4EBAQ6NKyMDMIEGAQGNaAEB?=
-Received: from tarius.tycho.ncsc.mil ([144.51.242.1])
-  by EMSM-GH1-UEA10.NCSC.MIL with ESMTP; 22 May 2019 18:30:50 +0000
-Received: from moss-pluto.infosec.tycho.ncsc.mil (moss-pluto [192.168.25.131])
-        by tarius.tycho.ncsc.mil (8.14.4/8.14.4) with ESMTP id x4MIUnM3009971;
-        Wed, 22 May 2019 14:30:50 -0400
-Subject: Re: [RFC] Turn lockdown into an LSM
-To:     Andy Lutomirski <luto@kernel.org>,
-        Matthew Garrett <mjg59@google.com>
-Cc:     James Morris <jmorris@namei.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20190521224013.3782-1-matthewgarrett@google.com>
- <alpine.LRH.2.21.1905221203070.3967@namei.org>
- <CACdnJuuTR=Ut4giPKC=kdxgY9yPv8+3PZyEzuxvON3Jr_92XnQ@mail.gmail.com>
- <CALCETrVow8U=xhQdJt8kSMX16Lf0Mstf3+QxY4iz4DHVp=PYWA@mail.gmail.com>
-From:   Stephen Smalley <sds@tycho.nsa.gov>
-Message-ID: <14ed1f30-a1d0-f973-5c8c-241337c8fc09@tycho.nsa.gov>
-Date:   Wed, 22 May 2019 14:30:49 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=CaDjZ/LTZEWIV1k6jmaoesTLyIfde7eaoYVq6F0BEbE=;
+        b=DOYEYXNFXZtj3Fxv6GkbcrmxU5qsq07byb5Z/nKMwy5d7BkU/5zXVjPqNAaD0l6xyH
+         xlB+AdtKp1epaSxw5VkAKq4S8M3K7YgmevLZSH75UeUvXXQlWK90b5D/k+Nvf6ZKGqXj
+         TWtBp1hiphibJFzUinRHHxjMNpCRyVDdIkY+DSX07WsbkGoHGI2pLPzK4+CAvsrMzAEx
+         A30oAnOWmiUTpX+/9fNvXkEEyo1w3wikiXyWNCGgaJs+rdfODCsZexTq0hyq5k9GrnTa
+         75hribAj3aj4O1x0Zhj+2Q/GjAJBxqGS0eU9LrDXGTcw9licqCzF5A1gt0CFtCJ74HM4
+         1gSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=CaDjZ/LTZEWIV1k6jmaoesTLyIfde7eaoYVq6F0BEbE=;
+        b=CdDVd+A7D+zjiSDBgeWIjjvsRH2YF0MdaQN/jKYdUR5eE9TFWab50F3oglTocNf+tJ
+         qt/tyizJ2GPn1wl/xEXNxU2yi7WHmtykELf2Of/YMPtbpPbE7xsjIYtbKgXq+7ru7Yog
+         d0DnHBGjW+FQ44UAUsfF8U266B1K5oAYK5HwLqMscsztMFaoIB/EYNJeZ/edhs/47a8s
+         oAfOU0MVt94gIDI1753TIqlLnAftt6VioKHZVUZJXRXHo7ZJ/E6yWmwYn/BuQ/vNkolA
+         G0tQwV+zCozc0sP6h5H7QVmNhmFszuWX4IJucrqm7sBgbKb7WkTOhoiIHrQZg21fuauX
+         pz/g==
+X-Gm-Message-State: APjAAAUkxXYgEhJQUF0MO5YadODnvSv4cgpyvP6OJFTpYG/n+BAYqlWA
+        /s6otov37VDDgx0QDl20lRrO1w==
+X-Google-Smtp-Source: APXvYqzf05Cgzli4/sO/d45KwJM6VGf3KpJ+mO5Il0PMQODrgkuDAUi8F/XB67dWwlfl0xja9rPWRw==
+X-Received: by 2002:ac8:18c2:: with SMTP id o2mr77676877qtk.165.1558549924824;
+        Wed, 22 May 2019 11:32:04 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-49-251.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.49.251])
+        by smtp.gmail.com with ESMTPSA id g12sm11725833qkk.88.2019.05.22.11.32.04
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 22 May 2019 11:32:04 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hTW1z-0005Gd-IY; Wed, 22 May 2019 15:32:03 -0300
+Date:   Wed, 22 May 2019 15:32:03 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Jerome Glisse <jglisse@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Artemy Kovalyov <artemyko@mellanox.com>,
+        Moni Shoua <monis@mellanox.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Kaike Wan <kaike.wan@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>
+Subject: Re: [PATCH v4 0/1] Use HMM for ODP v4
+Message-ID: <20190522183203.GE6054@ziepe.ca>
+References: <20190411181314.19465-1-jglisse@redhat.com>
+ <20190506195657.GA30261@ziepe.ca>
+ <20190521205321.GC3331@redhat.com>
+ <20190522005225.GA30819@ziepe.ca>
+ <20190522174852.GA23038@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <CALCETrVow8U=xhQdJt8kSMX16Lf0Mstf3+QxY4iz4DHVp=PYWA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190522174852.GA23038@redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/22/19 1:08 PM, Andy Lutomirski wrote:
-> On Wed, May 22, 2019 at 9:49 AM Matthew Garrett <mjg59@google.com> wrote:
->>
->> On Tue, May 21, 2019 at 7:40 PM James Morris <jmorris@namei.org> wrote:
->>> An LSM could also potentially implement its own policy for the hook.
->>
->> That was my plan. Right now the hook just gets an ASCII description of
->> the reason for the lockdown - that seems suboptimal for cases like
->> SELinux. What information would you want? My initial thinking was to
->> just have a stable enum of lockdown reasons that's in the UAPI headers
->> and then let other LSM tooling consume that, but I haven't spent
->> enough time with the internals of SELinux to know if there'd be a more
->> attractive solution.
+On Wed, May 22, 2019 at 01:48:52PM -0400, Jerome Glisse wrote:
+
+> From 0b429b2ffbec348e283693cb97d7ffce760d89da Mon Sep 17 00:00:00 2001
+> From: =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>
+> Date: Sat, 8 Dec 2018 15:47:55 -0500
+> Subject: [PATCH] RDMA/odp: convert to use HMM for ODP v5
+> MIME-Version: 1.0
+> Content-Type: text/plain; charset=UTF-8
+> Content-Transfer-Encoding: 8bit
 > 
-> I may be in the minority here, but I see this issue as a significant
-> downside of making lockdown more flexible.  If we stick with just
-> "this may violate integrity" and "this may violate confidentiality",
-> then the ABI surface is nice and narrow.  If we start having a big
-> uapi list of things that might qualify for lockdown, we need to worry
-> about compatibility issues.
+> Convert ODP to use HMM so that we can build on common infrastructure
+> for different class of devices that want to mirror a process address
+> space into a device. There is no functional changes.
 > 
-> This isn't purely theoretical.  Lockdown has some interesting
-> interactions with eBPF.  I don't want to be in a situation where v1 of
-> lockdown has a few eBPF hooks, but a later update improves the eBPF vs
-> lockdown interaction so that you can do more with eBPF on a locked
-> down kernel.  But now any such change has to worry about breaking the
-> lockdown LSM ABI.
-
-I think we could keep the enum itself private to the kernel, and 
-internally each security module could map the values to whatever 
-permissions it wants to define.  SELinux itself has the ability to 
-add/remove/re-arrange its permission definitions without breaking 
-userspace/policy; they are dynamically mapped at policy load time. If a 
-given permission doesn't exist in the loaded policy, there is a policy 
-flag to control whether the policy should be rejected, or the permission 
-should always be denied, or the permission should always be allowed. 
-There is also support for an extensible set of "policy capabilities" to 
-control whether new/changed permission checking logic for a given 
-permission/operation should be enabled for that policy or if the kernel 
-should continue using the older logic.
-
-> And I still think it would be nice to have some credible use case for
-> a more fine grained policy than just the tri-state.  Having a lockdown
-> policy of "may not violate kernel confidentiality except using
-> kprobes" may be convenient, but it's also basically worthless, since
-> kernel confidentiality is gone.
-
-I would expect that distros and users would have to make pragmatic 
-tradeoffs in this area, and it would be nice if they could have a choice 
-beyond all-or-nothing.  Do all of the interfaces being locked down 
-expose the same degree of confidentiality or integrity risk?
-
-> All this being said, I do see one big benefit for LSM integration:
-> SELinux or another LSM could allow certain privileged tasks to bypass
-> lockdown.
-
-That seems to violate the intent of lockdown as I understood it, and 
-turns security_is_locked_down() into a finer-grained capable() call.
-Also, if I understand correctly, this could only be done if one were to 
-disable the lockdown module in the lsm list, since the security 
-framework will return non-zero (i.e. the operation is locked down) if 
-any module that implements the hook returns non-zero; LSM is 
-"restrictive". At that point, SELinux or the other LSM would be the sole 
-arbiter of lockdown decisions.  SELinux or the other LSM also wouldn't 
-have access to the kernel_locked_down level unless that was exported in 
-some manner from the lockdown module.  Not sure how to compose these.
-
-   This seems fine, except that there's potential nastiness
-> where current->cred isn't actually a valid thing to look at in the
-> current context.
+> Changes since v4:
+>     - Rebase on top of rdma-next
+> Changes since v3:
+>     - Rebase on top of 5.2-rc1
+> Changes since v2:
+>     - Update to match changes to HMM API
+> Changes since v1:
+>     - improved comments
+>     - simplified page alignment computation
 > 
-> So I guess my proposal is: use LSM, but make the hook very coarse
-> grained: int security_violate_confidentiality(const struct cred *) and
-> int security_violate_integrity(const struct cred *).
+> Signed-off-by: Jérôme Glisse <jglisse@redhat.com>
+> Cc: Jason Gunthorpe <jgg@mellanox.com>
+> Cc: Leon Romanovsky <leonro@mellanox.com>
+> Cc: Doug Ledford <dledford@redhat.com>
+> Cc: Artemy Kovalyov <artemyko@mellanox.com>
+> Cc: Moni Shoua <monis@mellanox.com>
+> Cc: Mike Marciniszyn <mike.marciniszyn@intel.com>
+> Cc: Kaike Wan <kaike.wan@intel.com>
+> Cc: Dennis Dalessandro <dennis.dalessandro@intel.com>
+>  drivers/infiniband/core/umem_odp.c | 506 +++++++++--------------------
+>  drivers/infiniband/hw/mlx5/mem.c   |  20 +-
+>  drivers/infiniband/hw/mlx5/mr.c    |   2 +-
+>  drivers/infiniband/hw/mlx5/odp.c   | 104 +++---
+>  include/rdma/ib_umem_odp.h         |  47 +--
+>  5 files changed, 233 insertions(+), 446 deletions(-)
 
-Not sure one can construct a useful policy at that granularity.
+The kconfig stuff is missing, and it doesn't compile in various cases
+I tried.
+
+The kconfig stuff for hmm is also really obnoxious, you can't just
+enabe HMM_MIRROR, you have to track down all the little required
+elements to get it to turn on..
+
+Once I did get it to compile, I also get warnings:
+
+mm/hmm.c: In function ‘hmm_vma_walk_pud’:
+mm/hmm.c:782:28: warning: unused variable ‘pfn’ [-Wunused-variable]
+   unsigned long i, npages, pfn;
+                            ^~~
+mm/hmm.c: In function ‘hmm_range_snapshot’:
+mm/hmm.c:1027:19: warning: unused variable ‘h’ [-Wunused-variable]
+    struct hstate *h = hstate_vma(vma);
+
+Because this kernel doesn't have CONFIG_HUGETLB_PAGE
+
+Please fold this into your patch if it has to be resent.. I think it
+fixes the compilation problems.
+
+diff --git a/drivers/infiniband/Kconfig b/drivers/infiniband/Kconfig
+index cbfbea49f126cd..e3eefd0917985a 100644
+--- a/drivers/infiniband/Kconfig
++++ b/drivers/infiniband/Kconfig
+@@ -63,7 +63,7 @@ config INFINIBAND_USER_MEM
+ config INFINIBAND_ON_DEMAND_PAGING
+ 	bool "InfiniBand on-demand paging support"
+ 	depends on INFINIBAND_USER_MEM
+-	select MMU_NOTIFIER
++	depends on HMM_MIRROR
+ 	default y
+ 	---help---
+ 	  On demand paging support for the InfiniBand subsystem.
+diff --git a/include/rdma/ib_umem_odp.h b/include/rdma/ib_umem_odp.h
+index e1476e9ebb7906..f760103c07349a 100644
+--- a/include/rdma/ib_umem_odp.h
++++ b/include/rdma/ib_umem_odp.h
+@@ -115,6 +115,16 @@ static inline size_t ib_umem_odp_num_pages(struct ib_umem_odp *umem_odp)
+ 
+ #define ODP_DMA_ADDR_MASK (~(ODP_READ_ALLOWED_BIT | ODP_WRITE_ALLOWED_BIT))
+ 
++#define ODP_READ_BIT	(1<<0ULL)
++#define ODP_WRITE_BIT	(1<<1ULL)
++/*
++ * The device bit is not use by ODP but is there to full-fill HMM API which
++ * also support device with device memory (like GPU). So from ODP/RDMA POV
++ * this can be ignored.
++ */
++#define ODP_DEVICE_BIT	(1<<2ULL)
++#define ODP_FLAGS_BITS	3
++
+ #ifdef CONFIG_INFINIBAND_ON_DEMAND_PAGING
+ 
+ struct ib_ucontext_per_mm {
+@@ -138,16 +148,6 @@ struct ib_umem_odp *ib_alloc_odp_umem(struct ib_umem_odp *root_umem,
+ 				      unsigned long addr, size_t size);
+ void ib_umem_odp_release(struct ib_umem_odp *umem_odp);
+ 
+-#define ODP_READ_BIT	(1<<0ULL)
+-#define ODP_WRITE_BIT	(1<<1ULL)
+-/*
+- * The device bit is not use by ODP but is there to full-fill HMM API which
+- * also support device with device memory (like GPU). So from ODP/RDMA POV
+- * this can be ignored.
+- */
+-#define ODP_DEVICE_BIT	(1<<2ULL)
+-#define ODP_FLAGS_BITS	3
+-
+ long ib_umem_odp_map_dma_pages(struct ib_umem_odp *umem_odp,
+ 			       struct hmm_range *range);
+ 
