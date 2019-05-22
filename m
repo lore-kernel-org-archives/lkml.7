@@ -2,136 +2,125 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1296FC18E7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 05:14:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E6DEC072A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 05:21:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBF8420863
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 05:14:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D63892075B
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 05:21:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="Qm3+equ6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X4TZ9d/S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727816AbfEVFOt (ORCPT
+        id S1728084AbfEVFVZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 01:14:49 -0400
-Received: from mail-eopbgr1310099.outbound.protection.outlook.com ([40.107.131.99]:42551
-        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725808AbfEVFOs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 01:14:48 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
- b=VQZDCwOhSUHVrQ2Z995q6pDwWa/qSKFq+qKRVzYH5Ow21XQ6tbje9/hXdBPB1tFGPE+k5NFjPiySntUjBA8x8+1ymJ9uFSXNFA62yXCFxgsrZNfeZADFeVc2WgwJrVlmlxZBPUmI0FCVEQur4f8hOh2kiPWcDmP6vJ57fGfXG2k=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=testarcselector01;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Y19JCdPuf9uVF9qJHJG3kC9ZS6Ar0waTtB8sdWI1csw=;
- b=QnYv8oW6274aAPdBFji5KdBsklmMtTfe0MpS/SIBMahUU1dt6PhKTgKzl893Zdopl7Lg/3045hsf4dnmSElPoORd1j7URmSzRgH7cNYgBB4JOeo1hftc7ewPYhub/68xQX1sHvPxGwpp+IsBsq6vZm8VBTpMt5JOzxw/b99q5Cw=
-ARC-Authentication-Results: i=1; test.office365.com
- 1;spf=none;dmarc=none;dkim=none;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Y19JCdPuf9uVF9qJHJG3kC9ZS6Ar0waTtB8sdWI1csw=;
- b=Qm3+equ60hMaeSqBxOxkJrEPVFK28Mkkqay+Oo04cBrbQDDFd8b3trFaz1uZfGLdHiav6/7QbgfLkBaizgtYUBrWMAfQ7sVFAIpjKoSRTn+pq8UIOTNzRQ+hbI2RzOJevuuTUvQy0jonbOE7ZXcVVeV5H/mRpZ+QnUXIM3+IHaA=
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
- PU1P153MB0121.APCP153.PROD.OUTLOOK.COM (10.170.188.14) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1943.3; Wed, 22 May 2019 05:14:40 +0000
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::d896:4219:e493:b04]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::d896:4219:e493:b04%3]) with mapi id 15.20.1943.007; Wed, 22 May 2019
- 05:14:40 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     Stephen Hemminger <sthemmin@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-CC:     KY Srinivasan <kys@microsoft.com>,
-        "olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] PCI: hv: Detect and fix Hyper-V PCI domain number
- collision
-Thread-Topic: [PATCH] PCI: hv: Detect and fix Hyper-V PCI domain number
- collision
-Thread-Index: AQHVDpIz+mZnowKmCU+oYiS1gYdC2KZ2e2rggAAYLv+AAAJVYA==
-Date:   Wed, 22 May 2019 05:14:39 +0000
-Message-ID: <PU1P153MB0169CF7AC335C98C971582BCBF000@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-References: <1558304821-36038-1-git-send-email-haiyangz@microsoft.com>,<PU1P153MB01690809D82F85EDE4BC5B9CBF000@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
- <BYAPR21MB131778CC3A356745BC74EE3DCC000@BYAPR21MB1317.namprd21.prod.outlook.com>
-In-Reply-To: <BYAPR21MB131778CC3A356745BC74EE3DCC000@BYAPR21MB1317.namprd21.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-05-22T05:14:36.4421488Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=2e158bc6-a282-488b-bb04-130ffa25db8c;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-x-originating-ip: [2601:600:a280:1760:e0e1:6836:3789:8439]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 0c8f5c1d-1736-4cdf-b2d5-08d6de74645f
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:PU1P153MB0121;
-x-ms-traffictypediagnostic: PU1P153MB0121:
-x-ms-exchange-purlcount: 1
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <PU1P153MB0121FB91C542045AD87D2BB2BF000@PU1P153MB0121.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0045236D47
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(136003)(346002)(366004)(376002)(396003)(54534003)(199004)(189003)(40224003)(2501003)(68736007)(66446008)(73956011)(66476007)(66556008)(64756008)(66946007)(33656002)(229853002)(6436002)(4744005)(14454004)(966005)(10290500003)(8990500004)(316002)(74316002)(25786009)(76116006)(22452003)(52536014)(6506007)(102836004)(7696005)(9686003)(76176011)(86612001)(486006)(446003)(11346002)(476003)(86362001)(2201001)(110136005)(54906003)(55016002)(46003)(186003)(10090500001)(6306002)(256004)(71190400001)(71200400001)(99286004)(1511001)(2906002)(5660300002)(478600001)(6246003)(8676002)(8936002)(305945005)(7736002)(53936002)(4326008)(14444005)(81156014)(81166006)(6116002);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0121;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 9YhFQ0Sv/zaOWNnZbtmiW50mUb5R00zc98Hc49NrzPejINxxtd7HGO3c/q1QN+dVod5fvsWK63UBLIfbZz/FHra42+1xeGNvjhIaehnGbMQ1JLHjL4p3nS1aRkv6i3/DVsO0BUokdpB3M62hyvR/gdnU9nAejQnVfIgtrBtUSNsLQBC9/0CevLBgLFELdEK0AFGAlCKimgUub5ABeN5EYMylXSoJ0IrflP6PKl1XGOMJ+1NnVXBz9SpqSoZJjIa4lYjTdj12wLnl4qd4rbnuXoCh31Kq5TjtoD5aoMReV5gfNLOb4dPaNDjCdtg8qrG7AS0TUCtZ+mfz5J8Lp0WMmvHJQJb4HKFPU4zXYROCdl5D8LZbwC+LibrPPKFJm9QFD2LBPRzdXyBHdE6Y7R5Il1nSODgwdYzdZXeCesC/SJ0=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 22 May 2019 01:21:25 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:44352 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725796AbfEVFVY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 01:21:24 -0400
+Received: by mail-pf1-f195.google.com with SMTP id g9so668634pfo.11;
+        Tue, 21 May 2019 22:21:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=A3GSMoFtIIu9gnm2oZly2q3vAs35Rn87VGmbBuylL+M=;
+        b=X4TZ9d/S3vWo07LOsHAjPNORAxOtuouzOUHa/G4iQLPSL3hN57UsUh84AqVWgiI+vU
+         P971S7BBSPaOD1ahjKh73WlKDa2S5ntc6IP5Nomo4ZSE5e8hotTFimwaYiAzCboEUhRr
+         Tco+ybvVge8XTmAys+Ta82JbS7udrsqPCFrOJ21LaKBF7gltIqugG6ngpe/rGchSxGlg
+         6EY7ICyUFhZ5ZrbaSD3vqHnxFXGLPaLcDhTtSEWblZCRb21QXOpxoQuYYHRSvVi4B+KI
+         0jdHwZ9KKFFe6BC+M7dXeRtfeEn+rxt5K/aqFCcCBaJVMqO2oqmHyCED8VyPbg2NDyP8
+         vmCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=A3GSMoFtIIu9gnm2oZly2q3vAs35Rn87VGmbBuylL+M=;
+        b=NJwxJ0b+OH7hyFjZ49jQSSLaFB8rK8NkqPnYqTCRxvh6EGyXdccI47v0n34hi3/Vx/
+         RAhYwNlWBtFk13TwkErqoPuO9JSwVUwLopeJAoY04YTrg41slLlBj5oekA1ANrZrBYdq
+         IHeP49/PLqrsphbWszUAVCS3Crhi1wKAUHMm0Jl+oxSSDZQKVZTbRLCuWHa00yXw4Gr6
+         56XMVgdkU+cwuzj7Gg5RKgBKi0sXOFq3g2u7j9k6HpFGHg8EX/0dfRyOE/WoSVzBpNmb
+         0b+GXXHFF3tyxme76ZdbiL8WbT7VP9lgjFOvwl1Ju3KDT4H6WcD2xjCH9RB3J3F/tX+6
+         P3CA==
+X-Gm-Message-State: APjAAAUr1G2Ho+b3HbJu7w3k0QkxLYniAsbxTYpilIZRhdJuqKPJSUcK
+        gG4OYCsyaArP6JDHX88wA+E=
+X-Google-Smtp-Source: APXvYqxSZ7EXEUPmJF3/IZH6oaVimhi52QTGFi31kHkYhOmIkXSS1LnhSRqDHbj40ar84kakjRjwjw==
+X-Received: by 2002:a63:9a52:: with SMTP id e18mr88157840pgo.335.1558502483806;
+        Tue, 21 May 2019 22:21:23 -0700 (PDT)
+Received: from anarsoul-thinkpad.lan (216-71-213-236.dyn.novuscom.net. [216.71.213.236])
+        by smtp.gmail.com with ESMTPSA id d9sm28138152pgj.34.2019.05.21.22.21.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 21 May 2019 22:21:23 -0700 (PDT)
+From:   Vasily Khoruzhick <anarsoul@gmail.com>
+To:     Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Vasily Khoruzhick <anarsoul@gmail.com>, stable@vger.kernel.org
+Subject: [PATCH] Revert "Bluetooth: Align minimum encryption key size for LE and BR/EDR connections"
+Date:   Tue, 21 May 2019 22:20:02 -0700
+Message-Id: <20190522052002.10411-1-anarsoul@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0c8f5c1d-1736-4cdf-b2d5-08d6de74645f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 May 2019 05:14:39.7431
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: decui@microsoft.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0121
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Stephen Hemminger <sthemmin@microsoft.com>=20
-> Sent: Tuesday, May 21, 2019 9:40 PM
->
-> Thanks for working this out with the host team.
-> Now if we could just get some persistent slot information it would make u=
-dev in systemd happy.
+This reverts commit d5bb334a8e171b262e48f378bd2096c0ea458265.
 
-The slot info comes from the serial number "hpdev->desc.ser", which may not=
- guarantee
-uniqueness: "...Hyper-V doesn't provide unique serial numbers": see the cha=
-ngelog of the below
-commit:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?=
-id=3D29927dfb7f69bcf2ae7fd1cda10997e646a5189c
+This commit breaks some HID devices, see [1] for details
 
-And we can pass through multiple devices to a VM in any order (i.e. hot add=
-/remove), so IMO
-the "slot" info is not unique and persistent.
+https://bugzilla.kernel.org/show_bug.cgi?id=203643
 
-Thanks,
--- Dexuan
+Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
+Cc: stable@vger.kernel.org
+---
+ include/net/bluetooth/hci_core.h | 3 ---
+ net/bluetooth/hci_conn.c         | 8 --------
+ 2 files changed, 11 deletions(-)
+
+diff --git a/include/net/bluetooth/hci_core.h b/include/net/bluetooth/hci_core.h
+index 05b1b96f4d9e..094e61e07030 100644
+--- a/include/net/bluetooth/hci_core.h
++++ b/include/net/bluetooth/hci_core.h
+@@ -190,9 +190,6 @@ struct adv_info {
+ 
+ #define HCI_MAX_SHORT_NAME_LENGTH	10
+ 
+-/* Min encryption key size to match with SMP */
+-#define HCI_MIN_ENC_KEY_SIZE		7
+-
+ /* Default LE RPA expiry time, 15 minutes */
+ #define HCI_DEFAULT_RPA_TIMEOUT		(15 * 60)
+ 
+diff --git a/net/bluetooth/hci_conn.c b/net/bluetooth/hci_conn.c
+index 3cf0764d5793..bd4978ce8c45 100644
+--- a/net/bluetooth/hci_conn.c
++++ b/net/bluetooth/hci_conn.c
+@@ -1276,14 +1276,6 @@ int hci_conn_check_link_mode(struct hci_conn *conn)
+ 	    !test_bit(HCI_CONN_ENCRYPT, &conn->flags))
+ 		return 0;
+ 
+-	/* The minimum encryption key size needs to be enforced by the
+-	 * host stack before establishing any L2CAP connections. The
+-	 * specification in theory allows a minimum of 1, but to align
+-	 * BR/EDR and LE transports, a minimum of 7 is chosen.
+-	 */
+-	if (conn->enc_key_size < HCI_MIN_ENC_KEY_SIZE)
+-		return 0;
+-
+ 	return 1;
+ }
+ 
+-- 
+2.21.0
+
