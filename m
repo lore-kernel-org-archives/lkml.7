@@ -2,102 +2,94 @@ Return-Path: <SRS0=sxVn=TW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D0CAC282DC
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 13:51:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23B45C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 13:53:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F11E20863
-	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 13:51:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558533092;
-	bh=twm53GIqNOW3f4RY4I3jAxu+p3QvXT7EvaA/aHLii1Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=C+sQEHoBV8+gQzWpXa3MGZCxpZ0yHp2ktB508udjGPcyRZ7n+LLpvUzTyf7pgTsR+
-	 lIBW3FlS678s0FCnlU4D4C1AB2cabGrwj8Ua0o0myZogi8C7srF2fTWCBGNJLUxwDd
-	 zkpE2kBeNkQaaG4WZiZkg4t3ac/Rpc1oVE7L7AP8=
+	by mail.kernel.org (Postfix) with ESMTP id ED16521473
+	for <linux-kernel@archiver.kernel.org>; Wed, 22 May 2019 13:53:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728536AbfEVNvb (ORCPT
+        id S1728774AbfEVNxe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 09:51:31 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:34344 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726770AbfEVNva (ORCPT
+        Wed, 22 May 2019 09:53:34 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:50862 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726770AbfEVNxe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 09:51:30 -0400
-Received: by mail-ot1-f65.google.com with SMTP id l17so2138838otq.1;
-        Wed, 22 May 2019 06:51:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WNC2JYWG7tWES9f64iNfx+WaqJ4vmOCp/0J1TeLz0p4=;
-        b=qvDEVPVqzuWN4+F1oBQDNBoUDdISpYKkJKEo2Cs6N45xy8S1Qpgw5EubdZDx2rAj6L
-         UErOCz8Oqxz5cnCMHZ0dtTO2laJzV+/lgvrymruRQ8MHh2sMklXJ0GuST0uUh1m+NSc/
-         uC0xWDV4Vr4ZggrxRWDE8JR31c04MeE65QiIC1vsQCQW2ZSP5ALRzQ4U8A/Kw7kdZvt/
-         GkDUmPxTCqJLm7VzhCH5FOYixAwKYtLS/dq0MWLq+jOyVG0+qOI/9IJxt2ehj6Wmp6As
-         0l+CggYmYmHtb+12+uL+zVm8Gz2DkkeOCg/aGZM4inOjHxeIcgKFAUzKRGW8KuU2sLqz
-         9f1w==
-X-Gm-Message-State: APjAAAX8TUFhDNgH6qjeyogUqQq5iBDzhAwUAieSbYJkiowI77w0tuAX
-        BcLFsp4pbtVJzdALtQjYug==
-X-Google-Smtp-Source: APXvYqyruJO4hpb5ERYDyy8YFYJg7Z8ngUs0aEUiTimEwLTJsVuVZ4S1t245qpR8qtmb7mfA8CLAFA==
-X-Received: by 2002:a05:6830:11ce:: with SMTP id v14mr23382616otq.184.1558533089709;
-        Wed, 22 May 2019 06:51:29 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id e8sm4849679otk.13.2019.05.22.06.51.28
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 22 May 2019 06:51:29 -0700 (PDT)
-Date:   Wed, 22 May 2019 08:51:28 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Robin Gong <yibin.gong@nxp.com>
-Cc:     "robh@kernel.org" <robh@kernel.org>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-        "plyatov@gmail.com" <plyatov@gmail.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>
-Subject: Re: [PATCH v4 10/14] dma: imx-sdma: add i.mx6ul/6sx compatible name
-Message-ID: <20190522135128.GA24987@bogus>
-References: <1558548188-1155-1-git-send-email-yibin.gong@nxp.com>
- <1558548188-1155-11-git-send-email-yibin.gong@nxp.com>
+        Wed, 22 May 2019 09:53:34 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hTRgR-0006NS-M5; Wed, 22 May 2019 13:53:31 +0000
+Date:   Wed, 22 May 2019 14:53:31 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Vicente Bergas <vicencb@gmail.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: d_lookup: Unable to handle kernel paging request
+Message-ID: <20190522135331.GM17978@ZenIV.linux.org.uk>
+References: <23950bcb-81b0-4e07-8dc8-8740eb53d7fd@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1558548188-1155-11-git-send-email-yibin.gong@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <23950bcb-81b0-4e07-8dc8-8740eb53d7fd@gmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 22 May 2019 10:00:38 +0000, Robin Gong wrote:
-> Add i.mx6ul and i.mx6sx compatible name in binding doc.
-> 
-> Signed-off-by: Robin Gong <yibin.gong@nxp.com>
-> ---
->  Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt | 2 ++
->  1 file changed, 2 insertions(+)
-> 
+On Wed, May 22, 2019 at 12:40:55PM +0200, Vicente Bergas wrote:
+> Hi,
+> since a recent update the kernel is reporting d_lookup errors.
+> They appear randomly and after each error the affected file or directory
+> is no longer accessible.
+> The kernel is built with GCC 9.1.0 on ARM64.
+> Four traces from different workloads follow.
 
-Please add Acked-by/Reviewed-by tags when posting new versions. However,
-there's no need to repost patches *only* to add the tags. The upstream
-maintainer will do that for acks received on the version they apply.
+Interesting...  bisection would be useful.
 
-If a tag was not added on purpose, please state why and what changed.
+> This trace is from v5.1-12511-g72cf0b07418a while untaring into a tmpfs
+> filesystem:
+> 
+> Unable to handle kernel paging request at virtual address 0000880001000018
+> user pgtable: 4k pages, 48-bit VAs, pgdp = 000000007ccc6c7d
+> [0000880001000018] pgd=0000000000000000
+
+Attempt to dereference 0x0000880001000018, which is not mapped at all?
+
+> pc : __d_lookup+0x58/0x198
+
+... and so would objdump of the function in question.
+
+> This trace is from v5.2.0-rc1:
+> Unable to handle kernel paging request at virtual address 0000880001000018
+[apparently identical oops, modulo the call chain to d_lookup(); since that's
+almost certainly buggered data structures encountered during the hash lookup,
+exact callchain doesn't matter all that much; procfs is the filesystem involved]
+
+> This trace is from v5.2.0-rc1 while executing 'git pull -r' from f2fs. It
+> got repeated several times:
+> 
+> Unable to handle kernel paging request at virtual address 0000000000fffffc
+> user pgtable: 4k pages, 48-bit VAs, pgdp = 0000000092bdb9cd
+> [0000000000fffffc] pgd=0000000000000000
+> pc : __d_lookup_rcu+0x68/0x198
+
+> This trace is from v5.2.0-rc1 while executing 'rm -rf' the directory
+> affected from the previous trace:
+> 
+> Unable to handle kernel paging request at virtual address 0000000001000018
+
+... and addresses involved are
+
+0000880001000018
+0000000000fffffc
+0000000001000018
+
+AFAICS, the only registers with the value in the vicinity of those addresses
+had been (in all cases so far) x19 - 0000880001000000 in the first two traces,
+0000000001000000 in the last two...
+
+I'd really like to see the disassembly of the functions involved (as well as
+.config in question).
