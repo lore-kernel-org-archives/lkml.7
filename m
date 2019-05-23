@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42663C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:18:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D419DC282E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:18:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19A4D217D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:18:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABB7C21855
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:18:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639100;
-	bh=+dH4tLbB5MAGB6/kpQgez879bVH3AbQuXGiy5148d+M=;
+	s=default; t=1558639102;
+	bh=r0YV2d7Kb4ORO5KhwBeQugIwHS3gDCFSoFs1q5XHlPg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oju8Vg0VonxO6DXE6ZT6lbHNLbw2hXVYaoGfA5MqfErQVlo010WrhKUtOs7Fo3hsX
-	 nXfaHyPCLRcMuVwrNrCXFN1Tq3tyaCzh1t+7yU4IstPuVdFbmPuKIXQ6eovGavRvUH
-	 FOA3l0CEUzfyT1eC34NfRav4cC+KT6r7Mlnq9ciw=
+	b=DCulXPKyEk/F/x9jfo6nUWaqBGjwORJhpait/WlkgdlTsc1p1gKQybyEK41nO7KIr
+	 ERx++9uP3XBTPmkCLPjjvHn8THKDptO0O+pQGDjrFyw+WDT+aSqIazM1mTIHW87sAM
+	 TvRro0SYlPjbdp/0wBz39V1X0b1mhl2Z5KpGc2fU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389574AbfEWTST (ORCPT
+        id S2389584AbfEWTSV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:18:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53640 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:18:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389523AbfEWTSP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:18:15 -0400
+        id S2388250AbfEWTSS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:18:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB3B6205ED;
-        Thu, 23 May 2019 19:18:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 740CA20863;
+        Thu, 23 May 2019 19:18:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639094;
-        bh=+dH4tLbB5MAGB6/kpQgez879bVH3AbQuXGiy5148d+M=;
+        s=default; t=1558639096;
+        bh=r0YV2d7Kb4ORO5KhwBeQugIwHS3gDCFSoFs1q5XHlPg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ar3GqiS7FEGm0mJy0Nym22/dlsHCDJqImOZE6hCOFhZUYSyWQhud4/BCjnrioR4Ml
-         EmauUBiDhEip4SxzASqE5jNmIDwPRMYctQKBF6G8bdOhZ2tWC+WB83Ft4iXKd20W7e
-         QDxi+ffTr6ENs3gHuYu0yCedHZpaANevb4JAQt7s=
+        b=olEzaOoLSuCh6mPUtwZTFyMr7uwpu/k5V0iuLxUAwq0bJB6OqNAv2+wlv+L9ddnMc
+         6whIiGYxycGvGqBh/frWiH0h77l/3v+HeVioe5T8YA30E4iThJW1AdsspZ6wCoHfsI
+         krdnqbXApBynhzZV2E0tMw4CsLmBp1c5VhY6GJac=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         =?UTF-8?q?Stefan=20M=C3=A4tje?= <stefan.maetje@esd.eu>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH 4.19 075/114] PCI: Factor out pcie_retrain_link() function
-Date:   Thu, 23 May 2019 21:06:14 +0200
-Message-Id: <20190523181738.540233344@linuxfoundation.org>
+Subject: [PATCH 4.19 076/114] PCI: Work around Pericom PCIe-to-PCI bridge Retrain Link erratum
+Date:   Thu, 23 May 2019 21:06:15 +0200
+Message-Id: <20190523181738.630668446@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181731.372074275@linuxfoundation.org>
 References: <20190523181731.372074275@linuxfoundation.org>
@@ -63,83 +63,96 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Stefan Mätje <stefan.maetje@esd.eu>
 
-commit 86fa6a344209d9414ea962b1f1ac6ade9dd7563a upstream.
+commit 4ec73791a64bab25cabf16a6067ee478692e506d upstream.
 
-Factor out pcie_retrain_link() to use for Pericom Retrain Link quirk.  No
-functional change intended.
+Due to an erratum in some Pericom PCIe-to-PCI bridges in reverse mode
+(conventional PCI on primary side, PCIe on downstream side), the Retrain
+Link bit needs to be cleared manually to allow the link training to
+complete successfully.
+
+If it is not cleared manually, the link training is continuously restarted
+and no devices below the PCI-to-PCIe bridge can be accessed.  That means
+drivers for devices below the bridge will be loaded but won't work and may
+even crash because the driver is only reading 0xffff.
+
+See the Pericom Errata Sheet PI7C9X111SLB_errata_rev1.2_102711.pdf for
+details.  Devices known as affected so far are: PI7C9X110, PI7C9X111SL,
+PI7C9X130.
+
+Add a new flag, clear_retrain_link, in struct pci_dev.  Quirks for affected
+devices set this bit.
+
+Note that pcie_retrain_link() lives in aspm.c because that's currently the
+only place we use it, but this erratum is not specific to ASPM, and we may
+retrain links for other reasons in the future.
 
 Signed-off-by: Stefan Mätje <stefan.maetje@esd.eu>
+[bhelgaas: apply regardless of CONFIG_PCIEASPM]
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 CC: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pci/pcie/aspm.c |   40 ++++++++++++++++++++++++----------------
- 1 file changed, 24 insertions(+), 16 deletions(-)
+ drivers/pci/pcie/aspm.c |    9 +++++++++
+ drivers/pci/quirks.c    |   17 +++++++++++++++++
+ include/linux/pci.h     |    2 ++
+ 3 files changed, 28 insertions(+)
 
 --- a/drivers/pci/pcie/aspm.c
 +++ b/drivers/pci/pcie/aspm.c
-@@ -198,6 +198,29 @@ static void pcie_clkpm_cap_init(struct p
- 	link->clkpm_capable = (blacklist) ? 0 : capable;
- }
- 
-+static bool pcie_retrain_link(struct pcie_link_state *link)
-+{
-+	struct pci_dev *parent = link->pdev;
-+	unsigned long start_jiffies;
-+	u16 reg16;
-+
-+	pcie_capability_read_word(parent, PCI_EXP_LNKCTL, &reg16);
-+	reg16 |= PCI_EXP_LNKCTL_RL;
-+	pcie_capability_write_word(parent, PCI_EXP_LNKCTL, reg16);
-+
-+	/* Wait for link training end. Break out after waiting for timeout */
-+	start_jiffies = jiffies;
-+	for (;;) {
-+		pcie_capability_read_word(parent, PCI_EXP_LNKSTA, &reg16);
-+		if (!(reg16 & PCI_EXP_LNKSTA_LT))
-+			break;
-+		if (time_after(jiffies, start_jiffies + LINK_RETRAIN_TIMEOUT))
-+			break;
-+		msleep(1);
-+	}
-+	return !(reg16 & PCI_EXP_LNKSTA_LT);
-+}
-+
- /*
-  * pcie_aspm_configure_common_clock: check if the 2 ends of a link
-  *   could use common clock. If they are, configure them to use the
-@@ -207,7 +230,6 @@ static void pcie_aspm_configure_common_c
- {
- 	int same_clock = 1;
- 	u16 reg16, parent_reg, child_reg[8];
--	unsigned long start_jiffies;
- 	struct pci_dev *child, *parent = link->pdev;
- 	struct pci_bus *linkbus = parent->subordinate;
- 	/*
-@@ -265,21 +287,7 @@ static void pcie_aspm_configure_common_c
- 		reg16 &= ~PCI_EXP_LNKCTL_CCC;
+@@ -207,6 +207,15 @@ static bool pcie_retrain_link(struct pci
+ 	pcie_capability_read_word(parent, PCI_EXP_LNKCTL, &reg16);
+ 	reg16 |= PCI_EXP_LNKCTL_RL;
  	pcie_capability_write_word(parent, PCI_EXP_LNKCTL, reg16);
++	if (parent->clear_retrain_link) {
++		/*
++		 * Due to an erratum in some devices the Retrain Link bit
++		 * needs to be cleared again manually to allow the link
++		 * training to succeed.
++		 */
++		reg16 &= ~PCI_EXP_LNKCTL_RL;
++		pcie_capability_write_word(parent, PCI_EXP_LNKCTL, reg16);
++	}
  
--	/* Retrain link */
--	reg16 |= PCI_EXP_LNKCTL_RL;
--	pcie_capability_write_word(parent, PCI_EXP_LNKCTL, reg16);
--
--	/* Wait for link training end. Break out after waiting for timeout */
--	start_jiffies = jiffies;
--	for (;;) {
--		pcie_capability_read_word(parent, PCI_EXP_LNKSTA, &reg16);
--		if (!(reg16 & PCI_EXP_LNKSTA_LT))
--			break;
--		if (time_after(jiffies, start_jiffies + LINK_RETRAIN_TIMEOUT))
--			break;
--		msleep(1);
--	}
--	if (!(reg16 & PCI_EXP_LNKSTA_LT))
-+	if (pcie_retrain_link(link))
- 		return;
+ 	/* Wait for link training end. Break out after waiting for timeout */
+ 	start_jiffies = jiffies;
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -2220,6 +2220,23 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_IN
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x10f4, quirk_disable_aspm_l0s);
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x1508, quirk_disable_aspm_l0s);
  
- 	/* Training failed. Restore common clock configurations */
++/*
++ * Some Pericom PCIe-to-PCI bridges in reverse mode need the PCIe Retrain
++ * Link bit cleared after starting the link retrain process to allow this
++ * process to finish.
++ *
++ * Affected devices: PI7C9X110, PI7C9X111SL, PI7C9X130.  See also the
++ * Pericom Errata Sheet PI7C9X111SLB_errata_rev1.2_102711.pdf.
++ */
++static void quirk_enable_clear_retrain_link(struct pci_dev *dev)
++{
++	dev->clear_retrain_link = 1;
++	pci_info(dev, "Enable PCIe Retrain Link quirk\n");
++}
++DECLARE_PCI_FIXUP_HEADER(0x12d8, 0xe110, quirk_enable_clear_retrain_link);
++DECLARE_PCI_FIXUP_HEADER(0x12d8, 0xe111, quirk_enable_clear_retrain_link);
++DECLARE_PCI_FIXUP_HEADER(0x12d8, 0xe130, quirk_enable_clear_retrain_link);
++
+ static void fixup_rev1_53c810(struct pci_dev *dev)
+ {
+ 	u32 class = dev->class;
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -346,6 +346,8 @@ struct pci_dev {
+ 	unsigned int	hotplug_user_indicators:1; /* SlotCtl indicators
+ 						      controlled exclusively by
+ 						      user sysfs */
++	unsigned int	clear_retrain_link:1;	/* Need to clear Retrain Link
++						   bit manually */
+ 	unsigned int	d3_delay;	/* D3->D0 transition time in ms */
+ 	unsigned int	d3cold_delay;	/* D3cold->D0 transition time in ms */
+ 
 
 
