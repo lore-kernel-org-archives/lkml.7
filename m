@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCD76C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:18:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97D31C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:18:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94AC020863
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:18:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F7BC21855
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:18:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639106;
-	bh=tT3A7MgSY8GySfsmmxxmN0nbp6Jz1o10Gaxx8+h9/P8=;
+	s=default; t=1558639110;
+	bh=M43iYBL2/sR04SYtZRTjxjXOqo+J3N4c2fF66lDFwBw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PPW90AI1zA0a7C65/GW8rsem8w6P9oqBXKDjcOiHxcyMQmZqSqiJm1Z2JrJspl5FG
-	 mL6UY6x3BPKpi8IDZToVool7JuVp3MzQlx2cWzTh2YXJSeMJHWKc3xgjhfDNaL9zIP
-	 BI/VUxQU9OgsO3+QowTNeuPTFe6IoZghgQdJCeXM=
+	b=rqOfXxcXhz8Jed9wfRCX/xDeV+KYN//bgwMsTDxS40t+V+A7kG7x+vLhGrbMyPo9l
+	 CNa8srcnbtuar5ErJiFOoUgGVFOL8Evwg5eaViFxvYzoRWCmOzeSH0bMugHrpDpBmH
+	 Wn4jD7+ZSV/D5hZVgiYNE7JiZ1KKEKoM6RfLyT/s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389614AbfEWTS0 (ORCPT
+        id S2389623AbfEWTS3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:18:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53840 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:18:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53972 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389588AbfEWTSX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:18:23 -0400
+        id S2388941AbfEWTS2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:18:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8E93217D9;
-        Thu, 23 May 2019 19:18:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2BE7920863;
+        Thu, 23 May 2019 19:18:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639102;
-        bh=tT3A7MgSY8GySfsmmxxmN0nbp6Jz1o10Gaxx8+h9/P8=;
+        s=default; t=1558639107;
+        bh=M43iYBL2/sR04SYtZRTjxjXOqo+J3N4c2fF66lDFwBw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jRagaAofvKJOwYReE0dTB02G+CyPx3qwADDirPta6zElNOC+eX6v9DnM4jXObFBMV
-         fEZDI+EgMPtg7IfNEjK8LMNHZ7SvjbZhkggD3RxR0xVjTlCCmtulYsr6lzWzduRjhy
-         s8ni1luJ1U0EC+zy7NmpeeVsYIf2lKuFkKQE+6+w=
+        b=Uz9m9F9/7VwKphUPtql6dY2jDyFIwCH8NTsU9Gsc5UmkM5ul+aToVZrsXDANmIe3/
+         oQvQv5yXjYSZqEzn7v+DGQP0fwaGiM9lofBBqliKNOsppVFnzYWxGuUqiqQR6e9hcF
+         fPoqEEC0FbdzzSnN5cHDWrYTzys9a+2hzqXfeZOQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sabrina Dubroca <sd@queasysnail.net>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
+        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
+        Mukesh Ojha <mojha@codeaurora.org>,
+        Stefan Schmidt <stefan@datenfreihafen.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 087/114] esp4: add length check for UDP encapsulation
-Date:   Thu, 23 May 2019 21:06:26 +0200
-Message-Id: <20190523181739.478982228@linuxfoundation.org>
+Subject: [PATCH 4.19 097/114] net: ieee802154: fix missing checks for regmap_update_bits
+Date:   Thu, 23 May 2019 21:06:36 +0200
+Message-Id: <20190523181740.072873627@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181731.372074275@linuxfoundation.org>
 References: <20190523181731.372074275@linuxfoundation.org>
@@ -60,88 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 8dfb4eba4100e7cdd161a8baef2d8d61b7a7e62e ]
+[ Upstream commit 22e8860cf8f777fbf6a83f2fb7127f682a8e9de4 ]
 
-esp_output_udp_encap can produce a length that doesn't fit in the 16
-bits of a UDP header's length field. In that case, we'll send a
-fragmented packet whose length is larger than IP_MAX_MTU (resulting in
-"Oversized IP packet" warnings on receive) and with a bogus UDP
-length.
+regmap_update_bits could fail and deserves a check.
 
-To prevent this, add a length check to esp_output_udp_encap and return
- -EMSGSIZE on failure.
+The patch adds the checks and if it fails, returns its error
+code upstream.
 
-This seems to be older than git history.
-
-Signed-off-by: Sabrina Dubroca <sd@queasysnail.net>
-Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+Signed-off-by: Stefan Schmidt <stefan@datenfreihafen.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/esp4.c | 20 +++++++++++++++-----
- 1 file changed, 15 insertions(+), 5 deletions(-)
+ drivers/net/ieee802154/mcr20a.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/net/ipv4/esp4.c b/net/ipv4/esp4.c
-index 12a43a5369a54..114f9def1ec54 100644
---- a/net/ipv4/esp4.c
-+++ b/net/ipv4/esp4.c
-@@ -223,7 +223,7 @@ static void esp_output_fill_trailer(u8 *tail, int tfclen, int plen, __u8 proto)
- 	tail[plen - 1] = proto;
+diff --git a/drivers/net/ieee802154/mcr20a.c b/drivers/net/ieee802154/mcr20a.c
+index 04891429a5542..fe4057fca83d8 100644
+--- a/drivers/net/ieee802154/mcr20a.c
++++ b/drivers/net/ieee802154/mcr20a.c
+@@ -539,6 +539,8 @@ mcr20a_start(struct ieee802154_hw *hw)
+ 	dev_dbg(printdev(lp), "no slotted operation\n");
+ 	ret = regmap_update_bits(lp->regmap_dar, DAR_PHY_CTRL1,
+ 				 DAR_PHY_CTRL1_SLOTTED, 0x0);
++	if (ret < 0)
++		return ret;
+ 
+ 	/* enable irq */
+ 	enable_irq(lp->spi->irq);
+@@ -546,11 +548,15 @@ mcr20a_start(struct ieee802154_hw *hw)
+ 	/* Unmask SEQ interrupt */
+ 	ret = regmap_update_bits(lp->regmap_dar, DAR_PHY_CTRL2,
+ 				 DAR_PHY_CTRL2_SEQMSK, 0x0);
++	if (ret < 0)
++		return ret;
+ 
+ 	/* Start the RX sequence */
+ 	dev_dbg(printdev(lp), "start the RX sequence\n");
+ 	ret = regmap_update_bits(lp->regmap_dar, DAR_PHY_CTRL1,
+ 				 DAR_PHY_CTRL1_XCVSEQ_MASK, MCR20A_XCVSEQ_RX);
++	if (ret < 0)
++		return ret;
+ 
+ 	return 0;
  }
- 
--static void esp_output_udp_encap(struct xfrm_state *x, struct sk_buff *skb, struct esp_info *esp)
-+static int esp_output_udp_encap(struct xfrm_state *x, struct sk_buff *skb, struct esp_info *esp)
- {
- 	int encap_type;
- 	struct udphdr *uh;
-@@ -231,6 +231,7 @@ static void esp_output_udp_encap(struct xfrm_state *x, struct sk_buff *skb, stru
- 	__be16 sport, dport;
- 	struct xfrm_encap_tmpl *encap = x->encap;
- 	struct ip_esp_hdr *esph = esp->esph;
-+	unsigned int len;
- 
- 	spin_lock_bh(&x->lock);
- 	sport = encap->encap_sport;
-@@ -238,11 +239,14 @@ static void esp_output_udp_encap(struct xfrm_state *x, struct sk_buff *skb, stru
- 	encap_type = encap->encap_type;
- 	spin_unlock_bh(&x->lock);
- 
-+	len = skb->len + esp->tailen - skb_transport_offset(skb);
-+	if (len + sizeof(struct iphdr) >= IP_MAX_MTU)
-+		return -EMSGSIZE;
-+
- 	uh = (struct udphdr *)esph;
- 	uh->source = sport;
- 	uh->dest = dport;
--	uh->len = htons(skb->len + esp->tailen
--		  - skb_transport_offset(skb));
-+	uh->len = htons(len);
- 	uh->check = 0;
- 
- 	switch (encap_type) {
-@@ -259,6 +263,8 @@ static void esp_output_udp_encap(struct xfrm_state *x, struct sk_buff *skb, stru
- 
- 	*skb_mac_header(skb) = IPPROTO_UDP;
- 	esp->esph = esph;
-+
-+	return 0;
- }
- 
- int esp_output_head(struct xfrm_state *x, struct sk_buff *skb, struct esp_info *esp)
-@@ -272,8 +278,12 @@ int esp_output_head(struct xfrm_state *x, struct sk_buff *skb, struct esp_info *
- 	int tailen = esp->tailen;
- 
- 	/* this is non-NULL only with UDP Encapsulation */
--	if (x->encap)
--		esp_output_udp_encap(x, skb, esp);
-+	if (x->encap) {
-+		int err = esp_output_udp_encap(x, skb, esp);
-+
-+		if (err < 0)
-+			return err;
-+	}
- 
- 	if (!skb_cloned(skb)) {
- 		if (tailen <= skb_tailroom(skb)) {
 -- 
 2.20.1
 
