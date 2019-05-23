@@ -2,121 +2,144 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65288C282E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 14:43:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26DDCC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 14:44:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3760D206BA
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 14:43:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC39D206BA
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 14:44:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="FnGZ0kJD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sf4PXYXe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730888AbfEWOnu (ORCPT
+        id S1730906AbfEWOom (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 10:43:50 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:38798 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730719AbfEWOnu (ORCPT
+        Thu, 23 May 2019 10:44:42 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:33281 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730709AbfEWOol (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 10:43:50 -0400
-Received: by mail-io1-f67.google.com with SMTP id x24so5042008ion.5
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 07:43:49 -0700 (PDT)
+        Thu, 23 May 2019 10:44:41 -0400
+Received: by mail-pf1-f196.google.com with SMTP id z28so3381622pfk.0;
+        Thu, 23 May 2019 07:44:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=zr03PxvX3Q9baWaHps2wF9f+lJL+gPYP1/+9lyUaWfw=;
-        b=FnGZ0kJDfcg3DpNlDaDqLOqGHCVxeW7Xbx05UK/GNeTp+jzBg1cJQzSi6TFvzSf+Wg
-         q9a8fbh90aVA/Fiu5cVrla6U97izAFOwfKBWvXT2sgXkrYftUXiCUUieEMvsHNFtV23J
-         XunntKmp8TiJXk2EnUB8daKeCTHV54IZdsoEUTDEXTpN3wrqx5k9Y8CvJgTo+PsxF5IV
-         DN/7CESAYvoQt/sYpjH1i8k6XA4FNBtlSBC5R3+L/00kaddmDV/RU3WvwZSchWELskeY
-         5meY+WjAbL1ZPXH3ATdgEzHM+2oqhtU1duMBHKH89W12BjYwJnChp18ZL3kjtQaaoKi0
-         7jXw==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=trLF/Pu76tcs2yNpJEmVVGLKJPxzPf+7/LopwlS1ci8=;
+        b=sf4PXYXeAQSFyn0UVZTTW2ciZr/ivjcuG5sp5GStckkZgxCyuav/So+HN6AeqF2+Uc
+         nA2qq6zG1nYL+fCcfs9sDtvvZniacIHuvyBkk5kKq5XAzEpRRikrZeczPUXmSo5RusWg
+         Vt9krzTu2EUS8SbY3x+ZUlhF5Fo4sT6eVvBIre3nN3PzAwL+hmmTWhnWqvazYVGiaOxS
+         v257kAIWtsYx4eIcnZ+pzmI7Vp8+J1/JS2AuG2NX5f/SHs5U3szZ9QMvIqyuDMT2saD4
+         zHYxtj95orWKnwBRtPaMsdifgQLK3YegNcMf/NU/hvlzQ/EQElhwesRZIuMi8IUUMQzm
+         4bJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zr03PxvX3Q9baWaHps2wF9f+lJL+gPYP1/+9lyUaWfw=;
-        b=kZb2u43knqkOmYtgTk/1yD5QvxOFqjBSkZq2VyJL4iW3kTolHunNX/KHPXCPw22TO9
-         4XLn8PuHmfe8HBdj9x9H6BCRc9EVRaziQI6zocDdB0nanLQZAo5IFGY3IWZzfLsjFdyh
-         jmhTMAU50l+Vk8Vf0B2as6c2G1YVBcqMKnyYD06/Sg08j+rWzVg7pwl621O1+CFqSoQK
-         6IdJzdTFAuN9luz80DkJsr6Gveojl4zOqDn5EOZ03CElI2tTNN92v6lhSNJtsg6MiZsy
-         qhvprU1moUimkgcxN9V5ah3EQ5yoqDQQJNu8DwApBImmO0zfClmHMNqjYIMPYGlMyR0Y
-         HKaw==
-X-Gm-Message-State: APjAAAVDWzD0ELZimxXWHEP3/FgN0Ghczj61AOjkIuUeYuHvD4MoT+c/
-        FbrKvJE6wlQ31Dab68XvGdzulg==
-X-Google-Smtp-Source: APXvYqzn9fD6jIUuMkhV+I8qPXKpA0lebAcJZNoO4nnL5N3JWDsHHACUYc+tQ0/wanRBkCmQlWSJlw==
-X-Received: by 2002:a5d:8589:: with SMTP id f9mr14216938ioj.274.1558622629386;
-        Thu, 23 May 2019 07:43:49 -0700 (PDT)
-Received: from brauner.io ([172.56.12.187])
-        by smtp.gmail.com with ESMTPSA id b142sm4336118itb.28.2019.05.23.07.43.45
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 23 May 2019 07:43:48 -0700 (PDT)
-Date:   Thu, 23 May 2019 16:43:43 +0200
-From:   Christian Brauner <christian@brauner.io>
-To:     Jan Kara <jack@suse.cz>
-Cc:     Amir Goldstein <amir73il@gmail.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Matthew Bobrowski <mbobrowski@mbobrowski.org>
-Subject: Re: [PATCH] fanotify: remove redundant capable(CAP_SYS_ADMIN)s
-Message-ID: <20190523144342.5ty2v3zxaezkq4vf@brauner.io>
-References: <EB97EF04-D44F-4320-ACDC-C536EED03BA4@brauner.io>
- <CAOQ4uxhodqVw0DVfcvXYH5vBf4LKcv7t388ZwXeZPBTcEMzGSw@mail.gmail.com>
- <20190523095506.nyei5nogvv63lm4a@brauner.io>
- <CAOQ4uxiBeAzsE+b=tE7+9=25-qS7ohuTdEswYOt8DrCp6eAMuw@mail.gmail.com>
- <20190523104239.u63u2uth4yyuuufs@brauner.io>
- <CAOQ4uxji4jRvJnLvXe0yR4Ls7VxM_tjAypX1TqBe5FYr_7GnXw@mail.gmail.com>
- <20190523115845.w7neydaka5xivwyi@brauner.io>
- <CAOQ4uxgJXLyZe0Bs=q60=+pHpdGtnCdKKZKdr-3iTbygKCryRA@mail.gmail.com>
- <20190523133516.6734wclswqr6vpeg@brauner.io>
- <20190523144050.GE2949@quack2.suse.cz>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=trLF/Pu76tcs2yNpJEmVVGLKJPxzPf+7/LopwlS1ci8=;
+        b=Rjul+5lbuwnu715oVdcNt7U02jpBae4yk+QkGvMkwEikiUS0X6x1hjhhb4cJnRrj4C
+         hikx+b+gxf9SzUSeP4228YDHV+tkBqo3c7UTiaeqo/t11mpmHrEOiI7AT93RNsQ2FQBo
+         rWbcU4PW299HmxqaNNgTzQY6KONBI9ZON93tOvFQsKXiufEmdRvENRHEUF0j6sAAiWQ4
+         xq4mHzScBsFJaH4R6LFQ2UrAAbHnffKUb358wYpZ6K4ab8Sg1Ljd44hPDBWeemNizO/l
+         LU4AjWMqUtTmrocCkT3FJCi9yd0G5PwHgouCfSDOT944EhH89zbG7MtytL+Y4QoNX6Xm
+         4vtg==
+X-Gm-Message-State: APjAAAWcEHBGnmOutXRzNDgEIecXuwxIW3JZWuDJFAsISiOQkyO03IyQ
+        XLoEcSPRmlMTGx8K2+w7rAM=
+X-Google-Smtp-Source: APXvYqzb4lEsv8vtep4ivojq/y0QGSAnx/qVDcHNABBr29g5D97ty1yHiucaSX80WUZQQvYPoGVKzQ==
+X-Received: by 2002:a17:90a:b890:: with SMTP id o16mr1669701pjr.60.1558622680943;
+        Thu, 23 May 2019 07:44:40 -0700 (PDT)
+Received: from zhanggen-UX430UQ ([66.42.35.75])
+        by smtp.gmail.com with ESMTPSA id h6sm42913471pfk.188.2019.05.23.07.44.34
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 23 May 2019 07:44:40 -0700 (PDT)
+Date:   Thu, 23 May 2019 22:44:25 +0800
+From:   Gen Zhang <blackgod016574@gmail.com>
+To:     kvalo@codeaurora.org, eyalreizer@gmail.com
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] sdio: Fix a memory leaking bug in wl1271_probe()
+Message-ID: <20190523144425.GA26766@zhanggen-UX430UQ>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190523144050.GE2949@quack2.suse.cz>
-User-Agent: NeoMutt/20180716
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 04:40:50PM +0200, Jan Kara wrote:
-> On Thu 23-05-19 15:35:18, Christian Brauner wrote:
-> > So let's say the user tells me:
-> > - When the "/A/B/C/target" file appears on the host filesystem,
-> >   please give me access to "target" in the container at a path I tell
-> >   you.
-> > What I do right now is listen for the creation of the "target" file.
-> > But at the time the user gives me instructions to listen for
-> > "/A/B/C/target" only /A might exist and so I currently add a watch on A/
-> > and then wait for the creation of B/, then wait for the creation of C/
-> > and finally for the creation of "target" (Of course, I also need to
-> > handle B/ and C/ being removed again an recreated and so on.). It would
-> > be helpful, if I could specify, give me notifications, recursively for
-> > e.g. A/ without me having to place extra watches on B/ and C/ when they
-> > appear. Maybe that's out of scope...
-> 
-> I see. But this is going to be painful whatever you do. Consider for
-> example situation like:
-> 
-> mkdir -p BAR/B/C/
-> touch BAR/B/C/target
-> mv BAR A
-> 
-> Or even situation where several renames race so that the end result creates
-> the name (or does not create it depending on how renames race). And by the
-> time you decide A/B/C/target exists, it doesn't need to exist anymore.
-> Honestly I don't see how you want to implement *any* solution in a sane
-> way. About the most reliable+simple would seem to be stat "A/B/C/target"
-> once per second as dumb as it is.
+In wl1271_probe(), 'glue->core' is allocated by platform_device_alloc(),
+when this allocation fails, ENOMEM is returned. However, 'pdev_data'
+and 'glue' are allocated by devm_kzalloc() before 'glue->core'. When
+platform_device_alloc() returns NULL, we should also free 'pdev_data'
+and 'glue' before wl1271_probe() ends to prevent leaking memory.
 
-What we have kinda works rn good enough. And yes, it's inherently racy.
-Basically, iirc we only watch that it exists once, then create the thing
-for the container and then consider our job done. If that thing is
-removed under us we don't really care.
+Similarly, we should free 'pdev_data' when 'glue' is NULL. And we
+should free 'pdev_data' and 'glue' when 'ret' is error.
 
-Christian
+Further, we shoulf free 'glue->dev', 'pdev_data' and 'glue' when this
+function normally ends to prevent memory leaking.
+
+Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
+---
+diff --git a/drivers/net/wireless/ti/wlcore/sdio.c b/drivers/net/wireless/ti/wlcore/sdio.c
+index 4d4b0770..232ce5f 100644
+--- a/drivers/net/wireless/ti/wlcore/sdio.c
++++ b/drivers/net/wireless/ti/wlcore/sdio.c
+@@ -298,8 +298,10 @@ static int wl1271_probe(struct sdio_func *func,
+ 	pdev_data->if_ops = &sdio_ops;
+ 
+ 	glue = devm_kzalloc(&func->dev, sizeof(*glue), GFP_KERNEL);
+-	if (!glue)
+-		return -ENOMEM;
++	if (!glue) {
++		ret = -ENOMEM;
++		goto out_free1;
++	}
+ 
+ 	glue->dev = &func->dev;
+ 
+@@ -311,7 +313,7 @@ static int wl1271_probe(struct sdio_func *func,
+ 
+ 	ret = wlcore_probe_of(&func->dev, &irq, &wakeirq, pdev_data);
+ 	if (ret)
+-		goto out;
++		goto out_free2;
+ 
+ 	/* if sdio can keep power while host is suspended, enable wow */
+ 	mmcflags = sdio_get_host_pm_caps(func);
+@@ -340,7 +342,7 @@ static int wl1271_probe(struct sdio_func *func,
+ 	if (!glue->core) {
+ 		dev_err(glue->dev, "can't allocate platform_device");
+ 		ret = -ENOMEM;
+-		goto out;
++		goto out_free2;
+ 	}
+ 
+ 	glue->core->dev.parent = &func->dev;
+@@ -380,11 +382,20 @@ static int wl1271_probe(struct sdio_func *func,
+ 		dev_err(glue->dev, "can't add platform device\n");
+ 		goto out_dev_put;
+ 	}
++	platform_device_put(glue->core);
++	devm_kfree(&func->dev, glue);
++	devm_kfree(&func->dev, pdev_data);
+ 	return 0;
+ 
+ out_dev_put:
+ 	platform_device_put(glue->core);
+ 
++out_free2:
++	devm_kfree(&func->dev, glue);
++
++out_free1:
++	devm_kfree(&func->dev, pdev_data);
++
+ out:
+ 	return ret;
+ }
+---
