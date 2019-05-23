@@ -2,136 +2,153 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA998C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 11:21:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E317C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 11:22:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E09421019
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 11:21:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="CBbnpJnc"
+	by mail.kernel.org (Postfix) with ESMTP id 3514A2168B
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 11:22:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730588AbfEWLVO (ORCPT
+        id S1730381AbfEWLWr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 07:21:14 -0400
-Received: from mail-eopbgr810079.outbound.protection.outlook.com ([40.107.81.79]:5568
-        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729430AbfEWLVO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 07:21:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector1-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=F3Jf/3VYvQazQa8QOZRZdlOd+7ln/5To/XUzNSIVV0c=;
- b=CBbnpJnce0TET+OF8b4AQhxiNnzXCMAw9Hh+IPKq1PgWCxrEWbmdPJpbFPAtuiEVeqciSmAudv64fuHKmN+08f4e0X9+GOquWAxMvb9c/mVRGOEc+3BxmAMIindQknPEfrMZvtV3mq18JMKTfvN7cp+X6xMNvraXlkIwTmLO//4=
-Received: from DM5PR12MB1546.namprd12.prod.outlook.com (10.172.36.23) by
- DM5PR12MB1402.namprd12.prod.outlook.com (10.168.236.140) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1900.19; Thu, 23 May 2019 11:21:10 +0000
-Received: from DM5PR12MB1546.namprd12.prod.outlook.com
- ([fe80::e1b1:5b6f:b2df:afa5]) by DM5PR12MB1546.namprd12.prod.outlook.com
- ([fe80::e1b1:5b6f:b2df:afa5%7]) with mapi id 15.20.1922.018; Thu, 23 May 2019
- 11:21:10 +0000
-From:   "Koenig, Christian" <Christian.Koenig@amd.com>
-To:     Daniel Vetter <daniel@ffwll.ch>
-CC:     Sumit Semwal <sumit.semwal@linaro.org>,
-        Liam Mark <lmark@codeaurora.org>,
-        Linaro MM SIG <linaro-mm-sig@lists.linaro.org>,
-        "open list:DMA BUFFER SHARING FRAMEWORK" 
-        <linux-media@vger.kernel.org>,
-        DRI mailing list <dri-devel@lists.freedesktop.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 01/12] dma-buf: add dynamic caching of sg_table
-Thread-Topic: [PATCH 01/12] dma-buf: add dynamic caching of sg_table
-Thread-Index: AQHVEMyJP5maGBYcQkWyKdEVjdF6oqZ4kZwA
-Date:   Thu, 23 May 2019 11:21:10 +0000
-Message-ID: <cbb1f3a1-6cd1-c231-f1b2-8f20a6bad067@amd.com>
-References: <20190416183841.1577-1-christian.koenig@amd.com>
- <1556323269-19670-1-git-send-email-lmark@codeaurora.org>
- <CAO_48GGanguXbmYDD+p1kK_VkiWdZSTYAD1y-0JQK7hqL_OPPg@mail.gmail.com>
- <d7fb2a6b-f516-b506-247d-0f3d4d59ec8e@gmail.com>
- <CAKMK7uEaeVW0EMtCUeH+WeUmFnovEySz3kebRUcybLeySb4GSA@mail.gmail.com>
-In-Reply-To: <CAKMK7uEaeVW0EMtCUeH+WeUmFnovEySz3kebRUcybLeySb4GSA@mail.gmail.com>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-x-originating-ip: [2a02:908:1252:fb60:be8a:bd56:1f94:86e7]
-x-clientproxiedby: AM6P193CA0081.EURP193.PROD.OUTLOOK.COM
- (2603:10a6:209:88::22) To DM5PR12MB1546.namprd12.prod.outlook.com
- (2603:10b6:4:8::23)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Christian.Koenig@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 2c916d8f-9a39-4ced-beec-08d6df70c218
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DM5PR12MB1402;
-x-ms-traffictypediagnostic: DM5PR12MB1402:
-x-microsoft-antispam-prvs: <DM5PR12MB14026F92EFED86C289B0896683010@DM5PR12MB1402.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 00462943DE
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(396003)(366004)(136003)(39860400002)(376002)(199004)(189003)(64756008)(66556008)(66946007)(73956011)(8676002)(305945005)(2906002)(486006)(66446008)(7736002)(66476007)(229853002)(52116002)(6486002)(25786009)(186003)(71200400001)(99286004)(8936002)(46003)(2616005)(68736007)(476003)(446003)(11346002)(14444005)(256004)(6116002)(31696002)(71190400001)(5024004)(86362001)(81156014)(81166006)(5660300002)(64126003)(36756003)(72206003)(6246003)(53936002)(14454004)(478600001)(102836004)(6512007)(6436002)(316002)(6916009)(31686004)(58126008)(54906003)(6506007)(386003)(65826007)(76176011)(4326008)(65806001)(65956001);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR12MB1402;H:DM5PR12MB1546.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 1QgghXmHlzduNwD3J1hA+JP2nvnp8mU3IC7AGYgDwJk1V2VHNOTTCwrCEGp2W4qjgkG8IwJ1vq7PjqYlxt5w6IUGtPVIbCqK3q6c2U72sEALhdZA83LXiCnLsQFdLXwSEgLSVIzv0uKx/XYcK7Cy2nBXP9+5oJ7Ft4u6zsNWa0LUreVKki5affKjgLyMoEIIiVDDdzv2LtunGlCn8kzQTTcGqilcAGqLHDX/92FjZ1+vPMPIFkmMruASJWNM8Tm4YQx2vfuBsNZxJP729XiHJwVXIBFrN3rkioqf1vjVcm4iDA4kMKXUU5CSJQ2THL81IrRgEguyIGsSvApA2ovyIx1mLHD75mVzCR2xjPP8O2vZ/ys4/YifK/ccfH5ki+Let4P92pt3mLyo+oCHMw3cxUd1/7Qhh8oGt4pAi+MbhoY=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <CD6A67A23EF5314086ED4E6CF6ACE72E@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Thu, 23 May 2019 07:22:47 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:51232 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728309AbfEWLWr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 07:22:47 -0400
+Received: by mail-wm1-f65.google.com with SMTP id c77so5415672wmd.1
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 04:22:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=o5spxOia4/6GDV/owf0hUE+Yl+KqSq8ES+CEbG5WZlY=;
+        b=sVkSNpXH6Yf+c/Ia7y2ROPIh0YTx/cxSiOQyyzEhx/JDMDqncWlAGkZK4NtREdtAqF
+         slVTHM6Qt9YOJJqw9VAZMjVxftzDPU/o4rJ1PFP1vajfvTYI1l73fcrCxdEdbEtW0Odh
+         DxaJeb9L8SzGevBN9QHNfioQIgbmBu8ozMXt2U4ahT9UfEwtCwCdoFspxfbQgYHErgX7
+         f5wT6KtIhGMQMe9S6wYSHUWKOgGx64GZnUebwSjTAITmDewaVQpfW2ex0zl8Fed0XdpQ
+         iTVo0iqd3Z3FlQBpRBNYkeP1ax3bVaj2WQyn2y9rI73njdzGhpwXHJLrabymkfcLeFZ5
+         LVUA==
+X-Gm-Message-State: APjAAAXcss3rx+8ZXV/dHuYfDas9sfIk9W3qKA8BD9hgtWDXc+BurgD0
+        bFh1Uj+D5tVHgVU7Id0wY6j7oA==
+X-Google-Smtp-Source: APXvYqx9Gn6HemSAZ87ApeaJsnDwTZFfySah89pYCZ120z3yhNqY4R//xB9J5AhiGRciFCsdYI81dw==
+X-Received: by 2002:a7b:c549:: with SMTP id j9mr11007052wmk.122.1558610564990;
+        Thu, 23 May 2019 04:22:44 -0700 (PDT)
+Received: from localhost (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id h8sm16765707wmf.5.2019.05.23.04.22.43
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 23 May 2019 04:22:43 -0700 (PDT)
+Date:   Thu, 23 May 2019 13:22:42 +0200
+From:   Oleksandr Natalenko <oleksandr@redhat.com>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Markus Heiser <markus.heiser@darmarit.de>
+Subject: Re: [PATCH 0/8] docs: Fixes for recent versions of Sphinx
+Message-ID: <20190523112240.7hv4ufwknwbaviv2@butterfly.localdomain>
+References: <20190522205034.25724-1-corbet@lwn.net>
+ <20190523093944.mylk5l3ginkpelfi@butterfly.localdomain>
+ <20190523074545.65642eac@coco.lan>
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2c916d8f-9a39-4ced-beec-08d6df70c218
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 May 2019 11:21:10.7498
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1402
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190523074545.65642eac@coco.lan>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-QW0gMjIuMDUuMTkgdW0gMjA6MzAgc2NocmllYiBEYW5pZWwgVmV0dGVyOg0KPiBbU05JUF0NCj4+
-IFdlbGwsIGl0IHNlZW1zIHlvdSBhcmUgbWFraW5nIGluY29ycmVjdCBhc3N1bXB0aW9ucyBhYm91
-dCB0aGUgY2FjaGUNCj4+IG1haW50ZW5hbmNlIG9mIERNQS1idWYgaGVyZS4NCj4+DQo+PiBBdCBs
-ZWFzdCBmb3IgYWxsIERSTSBkZXZpY2VzIEknbSBhd2FyZSBvZiBtYXBwaW5nL3VubWFwcGluZyBh
-bg0KPj4gYXR0YWNobWVudCBkb2VzICpOT1QqIGhhdmUgYW55IGNhY2hlIG1haW50ZW5hbmNlIGlt
-cGxpY2F0aW9ucy4NCj4+DQo+PiBFLmcuIHRoZSB1c2UgY2FzZSB5b3UgZGVzY3JpYmUgYWJvdmUg
-d291bGQgY2VydGFpbmx5IGZhaWwgd2l0aCBhbWRncHUsDQo+PiByYWRlb24sIG5vdXZlYXUgYW5k
-IGk5MTUgYmVjYXVzZSBtYXBwaW5nIGEgRE1BLWJ1ZiBkb2Vzbid0IHN0b3AgdGhlDQo+PiBleHBv
-cnRlciBmcm9tIHJlYWRpbmcvd3JpdGluZyB0byB0aGF0IGJ1ZmZlciAoanVzdCB0aGUgb3Bwb3Np
-dGUgYWN0dWFsbHkpLg0KPj4NCj4+IEFsbCBvZiB0aGVtIGFzc3VtZSBwZXJmZWN0bHkgY29oZXJl
-bnQgYWNjZXNzIHRvIHRoZSB1bmRlcmx5aW5nIG1lbW9yeS4NCj4+IEFzIGZhciBhcyBJIGtub3cg
-dGhlcmUgaXMgbm8gZG9jdW1lbnRlZCBjYWNoZSBtYWludGVuYW5jZSByZXF1aXJlbWVudHMNCj4+
-IGZvciBETUEtYnVmLg0KPiBJIHRoaW5rIGl0IGlzIGRvY3VtZW50ZWQuIEl0J3MganVzdCB0aGF0
-IG9uIHg4Niwgd2UgaWdub3JlIHRoYXQNCj4gYmVjYXVzZSB0aGUgZG1hLWFwaSBwcmV0ZW5kcyB0
-aGVyZSdzIG5ldmVyIGEgbmVlZCBmb3IgY2FjaGUgZmx1c2hpbmcNCj4gb24geDg2LCBhbmQgdGhh
-dCBldmVyeXRoaW5nIHNub29wcyB0aGUgY3B1IGNhY2hlcy4gV2hpY2ggaXNuJ3QgdHJ1ZQ0KPiBz
-aW5jZSBvdmVyIDIwIGFnbyB3aGVuIEFHUCBoYXBwZW5lZC4gVGhlIGFjdHVhbCBydWxlcyBmb3Ig
-eDg2IGRtYS1idWYNCj4gYXJlIHZlcnkgbXVjaCBhZC1ob2MgKGFuZCB3ZSBvY2Nhc2lvbmFsbHkg
-cmVhcHBseSBzb21lIGR1Y3QtdGFwZSB3aGVuDQo+IGNhY2hlbGluZSBub2lzZSBzaG93cyB1cCBz
-b21ld2hlcmUpLg0KDQpXZWxsIEkgc3Ryb25nbHkgZGlzYWdyZWUgb24gdGhpcy4gRXZlbiBvbiB4
-ODYgYXQgbGVhc3QgQU1EIEdQVXMgYXJlIGFsc28gDQpub3QgZnVsbHkgY29oZXJlbnQuDQoNCkZv
-ciBleGFtcGxlIHlvdSBoYXZlIHRoZSB0ZXh0dXJlIGNhY2hlIGFuZCB0aGUgSERQIHJlYWQvd3Jp
-dGUgY2FjaGUuIFNvIA0Kd2hlbiBib3RoIGFtZGdwdSBhcyB3ZWxsIGFzIGk5MTUgd291bGQgd3Jp
-dGUgdG8gdGhlIHNhbWUgYnVmZmVyIGF0IHRoZSANCnNhbWUgdGltZSB3ZSB3b3VsZCBnZXQgYSBj
-b3JydXB0ZWQgZGF0YSBhcyB3ZWxsLg0KDQpUaGUga2V5IHBvaW50IGlzIHRoYXQgaXQgaXMgTk9U
-IERNQS1idWYgaW4gaXQncyBtYXAvdW5tYXAgY2FsbCB3aG8gaXMgDQpkZWZpbmluZyB0aGUgY29o
-ZXJlbmN5LCBidXQgcmF0aGVyIHRoZSByZXNlcnZhdGlvbiBvYmplY3QgYW5kIGl0cyANCmF0dGFj
-aGVkIGRtYV9mZW5jZSBpbnN0YW5jZXMuDQoNClNvIGZvciBleGFtcGxlIGFzIGxvbmcgYXMgYSBl
-eGNsdXNpdmUgcmVzZXJ2YXRpb24gb2JqZWN0IGZlbmNlIGlzIHN0aWxsIA0Kbm90IHNpZ25hbGVk
-IEkgY2FuJ3QgYXNzdW1lIHRoYXQgYWxsIGNhY2hlcyBhcmUgZmx1c2hlZCBhbmQgc28gY2FuJ3Qg
-DQpzdGFydCB3aXRoIG15IG93biBvcGVyYXRpb24vYWNjZXNzIHRvIHRoZSBkYXRhIGluIHF1ZXN0
-aW9uLg0KDQpSZWdhcmRzLA0KQ2hyaXN0aWFuLg0KDQo+DQo+IEkndmUganVzdCBmaWxlZCB0aGlz
-IGF3YXkgYXMgYW5vdGhlciBpbnN0YW5jZSBvZiB0aGUgZG1hLWFwaSBub3QNCj4gZml0dGluZyBn
-cHVzLCBhbmQgSSB0aGluayBnaXZpbmcgcmVjZW50IGRpc2N1c3Npb25zIHRoYXQgd29uJ3QgaW1w
-cm92ZQ0KPiBhbnl0aW1lIHNvb24uIFNvIHdlJ3JlIHN0dWNrIHdpdGggZXNzZW50aWFsbHkgdW5k
-ZWZpbmVkIGRtYS1idWYNCj4gYmVoYXZpb3VyLg0KPiAtRGFuaWVsDQo+DQoNCg==
+On Thu, May 23, 2019 at 07:45:45AM -0300, Mauro Carvalho Chehab wrote:
+> Em Thu, 23 May 2019 11:39:44 +0200
+> Oleksandr Natalenko <oleksandr@redhat.com> escreveu:
+> 
+> > Hi.
+> > 
+> > On Wed, May 22, 2019 at 02:50:26PM -0600, Jonathan Corbet wrote:
+> > > The Sphinx folks deprecated some interfaces in the 2.0 release; one
+> > > immediate result of that is a bunch of warnings that show up when building
+> > > with 1.8.  These two patches make those warnings go away, but at a cost:
+> > > 
+> > >  - It introduces a couple of Sphinx version checks, which are always
+> > >    ugly, but the alternative would be to stop supporting versions
+> > >    before 1.7.  For now, I think we can carry that cruft.
+> > > 
+> > >  - The second patch causes the build to fail horribly on newer
+> > >    Sphinx installations.  The change to switch_source_input() seems
+> > >    to make the parser much more finicky, increasing warnings and
+> > >    eventually failing the build altogether.  In particular, it will
+> > >    scream about problems in .rst files that are not included in the
+> > >    TOC tree at all.
+> > > 
+> > > This version of the patch set fixes up the worst problems (the i915 error
+> > > in particular, which breaks the build hard).  I've tested it with versions
+> > > 1.4, 1.8, and 2.0.
+> > > 
+> > > Given that these problems are already breaking builds on some systems, I
+> > > think I may try to sell these changes to Linus for 5.2 still.
+> > > 
+> > > Changes since v1:
+> > >   - Fix up a couple of logging changes I somehow missed
+> > >   - Don't save state when using switch_source_input()
+> > >   - Fix a few build errors
+> > >   - Add Mauro's sphinx-pre-install improvements
+> > > 
+> > > Jonathan Corbet (7):
+> > >   doc: Cope with Sphinx logging deprecations
+> > >   doc: Cope with the deprecation of AutoReporter
+> > >   docs: fix numaperf.rst and add it to the doc tree
+> > >   lib/list_sort: fix kerneldoc build error
+> > >   docs: fix multiple doc build warnings in enumeration.rst
+> > >   docs/gpu: fix a documentation build break in i915.rst
+> > >   docs: Fix conf.py for Sphinx 2.0
+> > > 
+> > > Mauro Carvalho Chehab (1):
+> > >   scripts/sphinx-pre-install: make it handle Sphinx versions
+> > > 
+> > >  Documentation/admin-guide/mm/index.rst        |  1 +
+> > >  Documentation/admin-guide/mm/numaperf.rst     |  2 +-
+> > >  Documentation/conf.py                         |  2 +-
+> > >  .../firmware-guide/acpi/enumeration.rst       |  2 +-
+> > >  Documentation/gpu/i915.rst                    |  4 +-
+> > >  Documentation/sphinx/kerneldoc.py             | 44 +++++++---
+> > >  Documentation/sphinx/kernellog.py             | 28 +++++++
+> > >  Documentation/sphinx/kfigure.py               | 40 +++++----
+> > >  lib/list_sort.c                               |  3 +-
+> > >  scripts/sphinx-pre-install                    | 81 +++++++++++++++++--
+> > >  10 files changed, 166 insertions(+), 41 deletions(-)
+> > >  create mode 100644 Documentation/sphinx/kernellog.py
+> > > 
+> > > -- 
+> > > 2.21.0
+> > >   
+> > 
+> > Thanks for the efforts. I've run this on top of Linus' tree, and the
+> > only sphinx-related deprecation warning I've spotted is this one:
+> > 
+> > /home/onatalen/work/src/linux/Documentation/sphinx/cdomain.py:51: RemovedInSphinx30Warning: app.override_domain() is deprecated. Use app.add_domain() with override option instead.
+> >   app.override_domain(CDomain)
+> > 
+> > Otherwise, it builds.
+> > 
+> 
+> Just sent a fix. Could you please test?
+> 
+> 
+> https://lore.kernel.org/lkml/b38a9fdfdcda49b2c6118072afac564e96406800.1558608217.git.mchehab+samsung@kernel.org/T/#u
+
+Yes, now it's fine. Thanks.
+
+> 
+> Thanks,
+> Mauro
+
+-- 
+  Best regards,
+    Oleksandr Natalenko (post-factum)
+    Senior Software Maintenance Engineer
