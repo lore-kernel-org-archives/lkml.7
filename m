@@ -2,30 +2,30 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E68AC282E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 10:35:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3202DC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 10:36:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69EF221019
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 10:35:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F25F92168B
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 10:36:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730712AbfEWKfx (ORCPT
+        id S1730776AbfEWKgA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 06:35:53 -0400
-Received: from foss.arm.com ([217.140.101.70]:43160 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730669AbfEWKft (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 06:35:49 -0400
+        Thu, 23 May 2019 06:36:00 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:43202 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730749AbfEWKf4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 06:35:56 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1C3CC165C;
-        Thu, 23 May 2019 03:35:49 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 284E41688;
+        Thu, 23 May 2019 03:35:56 -0700 (PDT)
 Received: from usa.arm.com (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 073903F718;
-        Thu, 23 May 2019 03:35:46 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 142383F718;
+        Thu, 23 May 2019 03:35:53 -0700 (PDT)
 From:   Sudeep Holla <sudeep.holla@arm.com>
 To:     kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org
 Cc:     Sudeep Holla <sudeep.holla@arm.com>, kvm@vger.kernel.org,
@@ -37,9 +37,9 @@ Cc:     Sudeep Holla <sudeep.holla@arm.com>, kvm@vger.kernel.org,
         Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will.deacon@arm.com>,
         Julien Thierry <julien.thierry@arm.com>
-Subject: [PATCH v2 12/15] KVM: arm64: add a new vcpu device control group for SPEv1
-Date:   Thu, 23 May 2019 11:34:59 +0100
-Message-Id: <20190523103502.25925-13-sudeep.holla@arm.com>
+Subject: [PATCH v2 15/15][KVMTOOL] kvm: add a vcpu feature for SPEv1 support
+Date:   Thu, 23 May 2019 11:35:02 +0100
+Message-Id: <20190523103502.25925-16-sudeep.holla@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190523103502.25925-1-sudeep.holla@arm.com>
 References: <20190523103502.25925-1-sudeep.holla@arm.com>
@@ -48,81 +48,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To configure the virtual SPEv1 overflow interrupt number, we use the
-vcpu kvm_device ioctl, encapsulating the KVM_ARM_VCPU_SPE_V1_IRQ
-attribute within the KVM_ARM_VCPU_SPE_V1_CTRL group.
-
-After configuring the SPEv1, call the vcpu ioctl with attribute
-KVM_ARM_VCPU_SPE_V1_INIT to initialize the SPEv1.
+This is a runtime configurable for KVM tool to enable Statistical
+Profiling Extensions version 1 support in guest kernel. A command line
+option --spe is required to use the same.
 
 Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 ---
- Documentation/virtual/kvm/devices/vcpu.txt |  28 ++++
- arch/arm64/include/asm/kvm_host.h          |   2 +-
- arch/arm64/include/uapi/asm/kvm.h          |   4 +
- arch/arm64/kvm/Makefile                    |   1 +
- arch/arm64/kvm/guest.c                     |   9 ++
- arch/arm64/kvm/reset.c                     |   3 +
- include/kvm/arm_spe.h                      |  35 +++++
- include/uapi/linux/kvm.h                   |   1 +
- virt/kvm/arm/arm.c                         |   1 +
- virt/kvm/arm/spe.c                         | 163 +++++++++++++++++++++
- 10 files changed, 246 insertions(+), 1 deletion(-)
- create mode 100644 virt/kvm/arm/spe.c
+ Makefile                                  |  2 +-
+ arm/aarch64/arm-cpu.c                     |  2 +
+ arm/aarch64/include/asm/kvm.h             |  4 ++
+ arm/aarch64/include/kvm/kvm-config-arch.h |  2 +
+ arm/aarch64/include/kvm/kvm-cpu-arch.h    |  3 +-
+ arm/include/arm-common/kvm-config-arch.h  |  1 +
+ arm/include/arm-common/spe.h              |  4 ++
+ arm/spe.c                                 | 81 +++++++++++++++++++++++
+ include/linux/kvm.h                       |  1 +
+ 9 files changed, 98 insertions(+), 2 deletions(-)
+ create mode 100644 arm/include/arm-common/spe.h
+ create mode 100644 arm/spe.c
 
-diff --git a/Documentation/virtual/kvm/devices/vcpu.txt b/Documentation/virtual/kvm/devices/vcpu.txt
-index 2b5dab16c4f2..d1ece488aeee 100644
---- a/Documentation/virtual/kvm/devices/vcpu.txt
-+++ b/Documentation/virtual/kvm/devices/vcpu.txt
-@@ -60,3 +60,31 @@ time to use the number provided for a given timer, overwriting any previously
- configured values on other VCPUs.  Userspace should configure the interrupt
- numbers on at least one VCPU after creating all VCPUs and before running any
- VCPUs.
-+
-+3. GROUP: KVM_ARM_VCPU_SPE_V1_CTRL
-+Architectures: ARM64
-+
-+1.1. ATTRIBUTE: KVM_ARM_VCPU_SPE_V1_IRQ
-+Parameters: in kvm_device_attr.addr the address for SPE buffer overflow interrupt
-+	    is a pointer to an int
-+Returns: -EBUSY: The SPE overflow interrupt is already set
-+         -ENXIO: The overflow interrupt not set when attempting to get it
-+         -ENODEV: SPEv1 not supported
-+         -EINVAL: Invalid SPE overflow interrupt number supplied or
-+                  trying to set the IRQ number without using an in-kernel
-+                  irqchip.
-+
-+A value describing the SPEv1 (Statistical Profiling Extension v1) overflow
-+interrupt number for this vcpu. This interrupt should be PPI and the interrupt
-+type and number must be same for each vcpu.
-+
-+1.2 ATTRIBUTE: KVM_ARM_VCPU_SPE_V1_INIT
-+Parameters: no additional parameter in kvm_device_attr.addr
-+Returns: -ENODEV: SPEv1 not supported or GIC not initialized
-+         -ENXIO: SPEv1 not properly configured or in-kernel irqchip not
-+                 configured as required prior to calling this attribute
-+         -EBUSY: SPEv1 already initialized
-+
-+Request the initialization of the SPEv1.  If using the SPEv1 with an in-kernel
-+virtual GIC implementation, this must be done after initializing the in-kernel
-+irqchip.
-diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
-index 6921fdfd477b..fc4ead0774b3 100644
---- a/arch/arm64/include/asm/kvm_host.h
-+++ b/arch/arm64/include/asm/kvm_host.h
-@@ -50,7 +50,7 @@
+diff --git a/Makefile b/Makefile
+index 9e21a4e2b419..b7c7ad8caf20 100644
+--- a/Makefile
++++ b/Makefile
+@@ -158,7 +158,7 @@ endif
+ # ARM
+ OBJS_ARM_COMMON		:= arm/fdt.o arm/gic.o arm/gicv2m.o arm/ioport.o \
+ 			   arm/kvm.o arm/kvm-cpu.o arm/pci.o arm/timer.o \
+-			   arm/pmu.o
++			   arm/pmu.o arm/spe.o
+ HDRS_ARM_COMMON		:= arm/include
+ ifeq ($(ARCH), arm)
+ 	DEFINES		+= -DCONFIG_ARM
+diff --git a/arm/aarch64/arm-cpu.c b/arm/aarch64/arm-cpu.c
+index d7572b7790b1..6ccea033f361 100644
+--- a/arm/aarch64/arm-cpu.c
++++ b/arm/aarch64/arm-cpu.c
+@@ -6,6 +6,7 @@
+ #include "arm-common/gic.h"
+ #include "arm-common/timer.h"
+ #include "arm-common/pmu.h"
++#include "arm-common/spe.h"
  
- #define KVM_MAX_VCPUS VGIC_V3_MAX_CPUS
+ #include <linux/byteorder.h>
+ #include <linux/types.h>
+@@ -17,6 +18,7 @@ static void generate_fdt_nodes(void *fdt, struct kvm *kvm)
+ 	gic__generate_fdt_nodes(fdt, kvm->cfg.arch.irqchip);
+ 	timer__generate_fdt_nodes(fdt, kvm, timer_interrupts);
+ 	pmu__generate_fdt_nodes(fdt, kvm);
++	spe__generate_fdt_nodes(fdt, kvm);
+ }
  
--#define KVM_VCPU_MAX_FEATURES 7
-+#define KVM_VCPU_MAX_FEATURES 8
- 
- #define KVM_REQ_SLEEP \
- 	KVM_ARCH_REQ_FLAGS(0, KVM_REQUEST_WAIT | KVM_REQUEST_NO_WAKEUP)
-diff --git a/arch/arm64/include/uapi/asm/kvm.h b/arch/arm64/include/uapi/asm/kvm.h
+ static int arm_cpu__vcpu_init(struct kvm_cpu *vcpu)
+diff --git a/arm/aarch64/include/asm/kvm.h b/arm/aarch64/include/asm/kvm.h
 index 7b7ac0f6cec9..4c9e168de896 100644
---- a/arch/arm64/include/uapi/asm/kvm.h
-+++ b/arch/arm64/include/uapi/asm/kvm.h
+--- a/arm/aarch64/include/asm/kvm.h
++++ b/arm/aarch64/include/asm/kvm.h
 @@ -106,6 +106,7 @@ struct kvm_regs {
  #define KVM_ARM_VCPU_SVE		4 /* enable SVE for this CPU */
  #define KVM_ARM_VCPU_PTRAUTH_ADDRESS	5 /* VCPU uses address authentication */
@@ -141,124 +122,146 @@ index 7b7ac0f6cec9..4c9e168de896 100644
  
  /* KVM_IRQ_LINE irq field index values */
  #define KVM_ARM_IRQ_TYPE_SHIFT		24
-diff --git a/arch/arm64/kvm/Makefile b/arch/arm64/kvm/Makefile
-index 3ac1a64d2fb9..1ba6154dd8e1 100644
---- a/arch/arm64/kvm/Makefile
-+++ b/arch/arm64/kvm/Makefile
-@@ -35,3 +35,4 @@ kvm-$(CONFIG_KVM_ARM_HOST) += $(KVM)/arm/vgic/vgic-debug.o
- kvm-$(CONFIG_KVM_ARM_HOST) += $(KVM)/irqchip.o
- kvm-$(CONFIG_KVM_ARM_HOST) += $(KVM)/arm/arch_timer.o
- kvm-$(CONFIG_KVM_ARM_PMU) += $(KVM)/arm/pmu.o
-+kvm-$(CONFIG_KVM_ARM_SPE) += $(KVM)/arm/spe.o
-diff --git a/arch/arm64/kvm/guest.c b/arch/arm64/kvm/guest.c
-index 3ae2f82fca46..02c28a7eb332 100644
---- a/arch/arm64/kvm/guest.c
-+++ b/arch/arm64/kvm/guest.c
-@@ -848,6 +848,9 @@ int kvm_arm_vcpu_arch_set_attr(struct kvm_vcpu *vcpu,
- 	case KVM_ARM_VCPU_TIMER_CTRL:
- 		ret = kvm_arm_timer_set_attr(vcpu, attr);
- 		break;
-+	case KVM_ARM_VCPU_SPE_V1_CTRL:
-+		ret = kvm_arm_spe_v1_set_attr(vcpu, attr);
-+		break;
- 	default:
- 		ret = -ENXIO;
- 		break;
-@@ -868,6 +871,9 @@ int kvm_arm_vcpu_arch_get_attr(struct kvm_vcpu *vcpu,
- 	case KVM_ARM_VCPU_TIMER_CTRL:
- 		ret = kvm_arm_timer_get_attr(vcpu, attr);
- 		break;
-+	case KVM_ARM_VCPU_SPE_V1_CTRL:
-+		ret = kvm_arm_spe_v1_get_attr(vcpu, attr);
-+		break;
- 	default:
- 		ret = -ENXIO;
- 		break;
-@@ -888,6 +894,9 @@ int kvm_arm_vcpu_arch_has_attr(struct kvm_vcpu *vcpu,
- 	case KVM_ARM_VCPU_TIMER_CTRL:
- 		ret = kvm_arm_timer_has_attr(vcpu, attr);
- 		break;
-+	case KVM_ARM_VCPU_SPE_V1_CTRL:
-+		ret = kvm_arm_spe_v1_has_attr(vcpu, attr);
-+		break;
- 	default:
- 		ret = -ENXIO;
- 		break;
-diff --git a/arch/arm64/kvm/reset.c b/arch/arm64/kvm/reset.c
-index 1140b4485575..33ce5248613e 100644
---- a/arch/arm64/kvm/reset.c
-+++ b/arch/arm64/kvm/reset.c
-@@ -91,6 +91,9 @@ int kvm_arch_vm_ioctl_check_extension(struct kvm *kvm, long ext)
- 	case KVM_CAP_ARM_INJECT_SERROR_ESR:
- 		r = cpus_have_const_cap(ARM64_HAS_RAS_EXTN);
- 		break;
-+	case KVM_CAP_ARM_SPE_V1:
-+		r = kvm_arm_support_spe_v1();
-+		break;
- 	case KVM_CAP_SET_GUEST_DEBUG:
- 	case KVM_CAP_VCPU_ATTRIBUTES:
- 		r = 1;
-diff --git a/include/kvm/arm_spe.h b/include/kvm/arm_spe.h
-index fdcb0df1e0fd..8c2e8f10a965 100644
---- a/include/kvm/arm_spe.h
-+++ b/include/kvm/arm_spe.h
-@@ -19,6 +19,9 @@ struct kvm_spe {
- #ifdef CONFIG_KVM_ARM_SPE
- 
- #define kvm_arm_spe_v1_ready(v)		((v)->arch.spe.ready)
-+#define kvm_arm_spe_irq_initialized(v)		\
-+	((v)->arch.spe.irq >= VGIC_NR_SGIS &&	\
-+	(v)->arch.spe.irq <= VGIC_MAX_PRIVATE)
- 
- static inline bool kvm_arm_support_spe_v1(void)
- {
-@@ -27,10 +30,42 @@ static inline bool kvm_arm_support_spe_v1(void)
- 	return !!cpuid_feature_extract_unsigned_field(dfr0,
- 						      ID_AA64DFR0_PMSVER_SHIFT);
+diff --git a/arm/aarch64/include/kvm/kvm-config-arch.h b/arm/aarch64/include/kvm/kvm-config-arch.h
+index 04be43dfa9b2..9968e1666de5 100644
+--- a/arm/aarch64/include/kvm/kvm-config-arch.h
++++ b/arm/aarch64/include/kvm/kvm-config-arch.h
+@@ -6,6 +6,8 @@
+ 			"Run AArch32 guest"),				\
+ 	OPT_BOOLEAN('\0', "pmu", &(cfg)->has_pmuv3,			\
+ 			"Create PMUv3 device"),				\
++	OPT_BOOLEAN('\0', "spe", &(cfg)->has_spev1,			\
++			"Create SPEv1 device"),				\
+ 	OPT_U64('\0', "kaslr-seed", &(cfg)->kaslr_seed,			\
+ 			"Specify random seed for Kernel Address Space "	\
+ 			"Layout Randomization (KASLR)"),
+diff --git a/arm/aarch64/include/kvm/kvm-cpu-arch.h b/arm/aarch64/include/kvm/kvm-cpu-arch.h
+index a9d8563382c6..5abaf9505274 100644
+--- a/arm/aarch64/include/kvm/kvm-cpu-arch.h
++++ b/arm/aarch64/include/kvm/kvm-cpu-arch.h
+@@ -8,7 +8,8 @@
+ #define ARM_VCPU_FEATURE_FLAGS(kvm, cpuid)	{				\
+ 	[0] = ((!!(cpuid) << KVM_ARM_VCPU_POWER_OFF) |				\
+ 	       (!!(kvm)->cfg.arch.aarch32_guest << KVM_ARM_VCPU_EL1_32BIT) |	\
+-	       (!!(kvm)->cfg.arch.has_pmuv3 << KVM_ARM_VCPU_PMU_V3))		\
++	       (!!(kvm)->cfg.arch.has_pmuv3 << KVM_ARM_VCPU_PMU_V3) |		\
++	       (!!(kvm)->cfg.arch.has_spev1 << KVM_ARM_VCPU_SPE_V1))		\
  }
-+
-+int kvm_arm_spe_v1_set_attr(struct kvm_vcpu *vcpu,
-+			    struct kvm_device_attr *attr);
-+int kvm_arm_spe_v1_get_attr(struct kvm_vcpu *vcpu,
-+			    struct kvm_device_attr *attr);
-+int kvm_arm_spe_v1_has_attr(struct kvm_vcpu *vcpu,
-+			    struct kvm_device_attr *attr);
-+int kvm_arm_spe_v1_enable(struct kvm_vcpu *vcpu);
- #else
  
- #define kvm_arm_spe_v1_ready(v)		(false)
- #define kvm_arm_support_spe_v1()	(false)
-+#define kvm_arm_spe_irq_initialized(v)	(false)
+ #define ARM_MPIDR_HWID_BITMASK	0xFF00FFFFFFUL
+diff --git a/arm/include/arm-common/kvm-config-arch.h b/arm/include/arm-common/kvm-config-arch.h
+index 5734c46ab9e6..742733e289af 100644
+--- a/arm/include/arm-common/kvm-config-arch.h
++++ b/arm/include/arm-common/kvm-config-arch.h
+@@ -9,6 +9,7 @@ struct kvm_config_arch {
+ 	bool		virtio_trans_pci;
+ 	bool		aarch32_guest;
+ 	bool		has_pmuv3;
++	bool		has_spev1;
+ 	u64		kaslr_seed;
+ 	enum irqchip_type irqchip;
+ 	u64		fw_addr;
+diff --git a/arm/include/arm-common/spe.h b/arm/include/arm-common/spe.h
+new file mode 100644
+index 000000000000..bcfa40877f6f
+--- /dev/null
++++ b/arm/include/arm-common/spe.h
+@@ -0,0 +1,4 @@
 +
-+static inline int kvm_arm_spe_v1_set_attr(struct kvm_vcpu *vcpu,
-+					  struct kvm_device_attr *attr)
++#define KVM_ARM_SPEV1_PPI			21
++
++void spe__generate_fdt_nodes(void *fdt, struct kvm *kvm);
+diff --git a/arm/spe.c b/arm/spe.c
+new file mode 100644
+index 000000000000..ec03b01a3866
+--- /dev/null
++++ b/arm/spe.c
+@@ -0,0 +1,81 @@
++#include "kvm/fdt.h"
++#include "kvm/kvm.h"
++#include "kvm/kvm-cpu.h"
++#include "kvm/util.h"
++
++#include "arm-common/gic.h"
++#include "arm-common/spe.h"
++
++#ifdef CONFIG_ARM64
++static int set_spe_attr(struct kvm *kvm, int vcpu_idx,
++			struct kvm_device_attr *attr)
 +{
-+	return -ENXIO;
++	int ret, fd;
++
++	fd = kvm->cpus[vcpu_idx]->vcpu_fd;
++
++	ret = ioctl(fd, KVM_HAS_DEVICE_ATTR, attr);
++	if (!ret) {
++		ret = ioctl(fd, KVM_SET_DEVICE_ATTR, attr);
++		if (ret)
++			pr_err("SPE KVM_SET_DEVICE_ATTR failed (%d)\n", ret);
++	} else {
++		pr_err("Unsupported SPE on vcpu%d\n", vcpu_idx);
++	}
++
++	return ret;
 +}
 +
-+static inline int kvm_arm_spe_v1_get_attr(struct kvm_vcpu *vcpu,
-+					  struct kvm_device_attr *attr)
++void spe__generate_fdt_nodes(void *fdt, struct kvm *kvm)
 +{
-+	return -ENXIO;
-+}
++	const char compatible[] = "arm,statistical-profiling-extension-v1";
++	int irq = KVM_ARM_SPEV1_PPI;
++	int i, ret;
 +
-+static inline int kvm_arm_spe_v1_has_attr(struct kvm_vcpu *vcpu,
-+					  struct kvm_device_attr *attr)
-+{
-+	return -ENXIO;
-+}
++	u32 cpu_mask = (((1 << kvm->nrcpus) - 1) << GIC_FDT_IRQ_PPI_CPU_SHIFT) \
++		       & GIC_FDT_IRQ_PPI_CPU_MASK;
++	u32 irq_prop[] = {
++		cpu_to_fdt32(GIC_FDT_IRQ_TYPE_PPI),
++		cpu_to_fdt32(irq - 16),
++		cpu_to_fdt32(cpu_mask | IRQ_TYPE_LEVEL_HIGH),
++	};
 +
-+static inline int kvm_arm_spe_v1_enable(struct kvm_vcpu *vcpu)
-+{
-+	return 0;
++	if (!kvm->cfg.arch.has_spev1)
++		return;
++
++	if (!kvm__supports_extension(kvm, KVM_CAP_ARM_SPE_V1)) {
++		pr_info("SPE unsupported\n");
++		return;
++	}
++
++	for (i = 0; i < kvm->nrcpus; i++) {
++		struct kvm_device_attr spe_attr;
++
++		spe_attr = (struct kvm_device_attr){
++			.group	= KVM_ARM_VCPU_SPE_V1_CTRL,
++			.addr	= (u64)(unsigned long)&irq,
++			.attr	= KVM_ARM_VCPU_SPE_V1_IRQ,
++		};
++
++		ret = set_spe_attr(kvm, i, &spe_attr);
++		if (ret)
++			return;
++
++		spe_attr = (struct kvm_device_attr){
++			.group	= KVM_ARM_VCPU_SPE_V1_CTRL,
++			.attr	= KVM_ARM_VCPU_SPE_V1_INIT,
++		};
++
++		ret = set_spe_attr(kvm, i, &spe_attr);
++		if (ret)
++			return;
++	}
++
++	_FDT(fdt_begin_node(fdt, "spe"));
++	_FDT(fdt_property(fdt, "compatible", compatible, sizeof(compatible)));
++	_FDT(fdt_property(fdt, "interrupts", irq_prop, sizeof(irq_prop)));
++	_FDT(fdt_end_node(fdt));
 +}
- #endif /* CONFIG_KVM_ARM_SPE */
- 
- #endif /* __ASM_ARM_KVM_SPE_H */
-diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
++#else
++void spe__generate_fdt_nodes(void *fdt, struct kvm *kvm) { }
++#endif
+diff --git a/include/linux/kvm.h b/include/linux/kvm.h
 index 2fe12b40d503..698bcc2f96e3 100644
---- a/include/uapi/linux/kvm.h
-+++ b/include/uapi/linux/kvm.h
+--- a/include/linux/kvm.h
++++ b/include/linux/kvm.h
 @@ -993,6 +993,7 @@ struct kvm_ppc_resize_hpt {
  #define KVM_CAP_ARM_SVE 170
  #define KVM_CAP_ARM_PTRAUTH_ADDRESS 171
@@ -267,187 +270,6 @@ index 2fe12b40d503..698bcc2f96e3 100644
  
  #ifdef KVM_CAP_IRQ_ROUTING
  
-diff --git a/virt/kvm/arm/arm.c b/virt/kvm/arm/arm.c
-index 90cedebaeb94..c5b711ef1cf8 100644
---- a/virt/kvm/arm/arm.c
-+++ b/virt/kvm/arm/arm.c
-@@ -34,6 +34,7 @@
- #include <trace/events/kvm.h>
- #include <kvm/arm_pmu.h>
- #include <kvm/arm_psci.h>
-+#include <kvm/arm_spe.h>
- 
- #define CREATE_TRACE_POINTS
- #include "trace.h"
-diff --git a/virt/kvm/arm/spe.c b/virt/kvm/arm/spe.c
-new file mode 100644
-index 000000000000..87f02ed92426
---- /dev/null
-+++ b/virt/kvm/arm/spe.c
-@@ -0,0 +1,163 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2018 ARM Ltd.
-+ */
-+
-+#include <linux/cpu.h>
-+#include <linux/kvm.h>
-+#include <linux/kvm_host.h>
-+#include <linux/uaccess.h>
-+#include <asm/kvm_emulate.h>
-+#include <kvm/arm_spe.h>
-+#include <kvm/arm_vgic.h>
-+
-+int kvm_arm_spe_v1_enable(struct kvm_vcpu *vcpu)
-+{
-+	if (!vcpu->arch.spe.created)
-+		return 0;
-+
-+	/*
-+	 * A valid interrupt configuration for the SPE is either to have a
-+	 * properly configured interrupt number and using an in-kernel irqchip.
-+	 */
-+	if (irqchip_in_kernel(vcpu->kvm)) {
-+		int irq = vcpu->arch.spe.irq;
-+
-+		if (!kvm_arm_spe_irq_initialized(vcpu))
-+			return -EINVAL;
-+
-+		if (!irq_is_ppi(irq))
-+			return -EINVAL;
-+	}
-+
-+	vcpu->arch.spe.ready = true;
-+
-+	return 0;
-+}
-+
-+static int kvm_arm_spe_v1_init(struct kvm_vcpu *vcpu)
-+{
-+	if (!kvm_arm_support_spe_v1())
-+		return -ENODEV;
-+
-+	if (!test_bit(KVM_ARM_VCPU_SPE_V1, vcpu->arch.features))
-+		return -ENXIO;
-+
-+	if (vcpu->arch.spe.created)
-+		return -EBUSY;
-+
-+	if (irqchip_in_kernel(vcpu->kvm)) {
-+		int ret;
-+
-+		/*
-+		 * If using the SPE with an in-kernel virtual GIC
-+		 * implementation, we require the GIC to be already
-+		 * initialized when initializing the SPE.
-+		 */
-+		if (!vgic_initialized(vcpu->kvm))
-+			return -ENODEV;
-+
-+		ret = kvm_vgic_set_owner(vcpu, vcpu->arch.spe.irq,
-+					 &vcpu->arch.spe);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	vcpu->arch.spe.created = true;
-+	return 0;
-+}
-+
-+/*
-+ * For one VM the interrupt type must be same for each vcpu.
-+ * As a PPI, the interrupt number is the same for all vcpus,
-+ * while as an SPI it must be a separate number per vcpu.
-+ */
-+static bool spe_irq_is_valid(struct kvm *kvm, int irq)
-+{
-+	int i;
-+	struct kvm_vcpu *vcpu;
-+
-+	kvm_for_each_vcpu(i, vcpu, kvm) {
-+		if (!kvm_arm_spe_irq_initialized(vcpu))
-+			continue;
-+
-+		if (vcpu->arch.spe.irq != irq)
-+			return false;
-+	}
-+
-+	return true;
-+}
-+
-+int kvm_arm_spe_v1_set_attr(struct kvm_vcpu *vcpu, struct kvm_device_attr *attr)
-+{
-+	switch (attr->attr) {
-+	case KVM_ARM_VCPU_SPE_V1_IRQ: {
-+		int __user *uaddr = (int __user *)(long)attr->addr;
-+		int irq;
-+
-+		if (!irqchip_in_kernel(vcpu->kvm))
-+			return -EINVAL;
-+
-+		if (!test_bit(KVM_ARM_VCPU_SPE_V1, vcpu->arch.features))
-+			return -ENODEV;
-+
-+		if (get_user(irq, uaddr))
-+			return -EFAULT;
-+
-+		/* The SPE overflow interrupt can be a PPI only */
-+		if (!(irq_is_ppi(irq)))
-+			return -EINVAL;
-+
-+		if (!spe_irq_is_valid(vcpu->kvm, irq))
-+			return -EINVAL;
-+
-+		if (kvm_arm_spe_irq_initialized(vcpu))
-+			return -EBUSY;
-+
-+		kvm_debug("Set kvm ARM SPE irq: %d\n", irq);
-+		vcpu->arch.spe.irq = irq;
-+		return 0;
-+	}
-+	case KVM_ARM_VCPU_SPE_V1_INIT:
-+		return kvm_arm_spe_v1_init(vcpu);
-+	}
-+
-+	return -ENXIO;
-+}
-+
-+int kvm_arm_spe_v1_get_attr(struct kvm_vcpu *vcpu, struct kvm_device_attr *attr)
-+{
-+	switch (attr->attr) {
-+	case KVM_ARM_VCPU_SPE_V1_IRQ: {
-+		int __user *uaddr = (int __user *)(long)attr->addr;
-+		int irq;
-+
-+		if (!irqchip_in_kernel(vcpu->kvm))
-+			return -EINVAL;
-+
-+		if (!test_bit(KVM_ARM_VCPU_SPE_V1, vcpu->arch.features))
-+			return -ENODEV;
-+
-+		if (!kvm_arm_spe_irq_initialized(vcpu))
-+			return -ENXIO;
-+
-+		irq = vcpu->arch.spe.irq;
-+		return put_user(irq, uaddr);
-+	}
-+	}
-+
-+	return -ENXIO;
-+}
-+
-+int kvm_arm_spe_v1_has_attr(struct kvm_vcpu *vcpu, struct kvm_device_attr *attr)
-+{
-+	switch (attr->attr) {
-+	case KVM_ARM_VCPU_SPE_V1_IRQ:
-+	case KVM_ARM_VCPU_SPE_V1_INIT:
-+		if (kvm_arm_support_spe_v1() &&
-+		    test_bit(KVM_ARM_VCPU_SPE_V1, vcpu->arch.features))
-+			return 0;
-+	}
-+
-+	return -ENXIO;
-+}
 -- 
 2.17.1
 
