@@ -2,145 +2,61 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A4D5C282E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 16:56:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5690C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 16:57:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9C48217D4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 16:56:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72BB22075B
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 16:57:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731289AbfEWQ4r convert rfc822-to-8bit (ORCPT
+        id S1731297AbfEWQ5V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 12:56:47 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:49593 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730951AbfEWQ4q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 12:56:46 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-195-dCvv3IMGOWGiL--uJpCpLw-1; Thu, 23 May 2019 17:56:43 +0100
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b::d117) by AcuMS.aculab.com
- (fd9f:af1c:a25b::d117) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu,
- 23 May 2019 17:56:43 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Thu, 23 May 2019 17:56:43 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Oleg Nesterov' <oleg@redhat.com>
-CC:     'Deepa Dinamani' <deepa.kernel@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "dbueso@suse.de" <dbueso@suse.de>,
-        "axboe@kernel.dk" <axboe@kernel.dk>,
-        Davidlohr Bueso <dave@stgolabs.net>, Eric Wong <e@80x24.org>,
-        Jason Baron <jbaron@akamai.com>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        linux-aio <linux-aio@kvack.org>,
-        Omar Kilani <omar.kilani@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: RE: [PATCH v2] signal: Adjust error codes according to
- restore_user_sigmask()
-Thread-Topic: [PATCH v2] signal: Adjust error codes according to
- restore_user_sigmask()
-Thread-Index: AQHVELwtsgR+BAQFXk2JV68Wk/7LjKZ4aINAgABVkoCAAB2x0P///TgAgAARdkA=
-Date:   Thu, 23 May 2019 16:56:43 +0000
-Message-ID: <f0eced5677c144debfc5a69d0d327bc1@AcuMS.aculab.com>
-References: <20190522032144.10995-1-deepa.kernel@gmail.com>
- <20190522150505.GA4915@redhat.com>
- <CABeXuvrPM5xvzqUydbREapvwgy6deYreHp0aaMoSHyLB6+HGRg@mail.gmail.com>
- <20190522161407.GB4915@redhat.com>
- <CABeXuvpjrW5Gt95JC-_rYkOA=6RCD5OtkEQdwZVVqGCE3GkQOQ@mail.gmail.com>
- <4f7b6dbeab1d424baaebd7a5df116349@AcuMS.aculab.com>
- <20190523145944.GB23070@redhat.com>
- <345cfba5edde470f9a68d913f44fa342@AcuMS.aculab.com>
- <20190523163604.GE23070@redhat.com>
-In-Reply-To: <20190523163604.GE23070@redhat.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Thu, 23 May 2019 12:57:21 -0400
+Received: from foss.arm.com ([217.140.101.70]:50896 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730899AbfEWQ5V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 12:57:21 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 56C6A374;
+        Thu, 23 May 2019 09:51:55 -0700 (PDT)
+Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 669CC3F5AF;
+        Thu, 23 May 2019 09:51:53 -0700 (PDT)
+Date:   Thu, 23 May 2019 17:51:51 +0100
+From:   Will Deacon <will.deacon@arm.com>
+To:     Julien Thierry <julien.thierry@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        rostedt@goodmis.org, marc.zyngier@arm.com, yuzenghui@huawei.com,
+        wanghaibin.wang@huawei.com, james.morse@arm.com,
+        catalin.marinas@arm.com, mark.rutland@arm.com, liwei391@huawei.com
+Subject: Re: [PATCH v2 0/5] arm64: IRQ priority masking and Pseudo-NMI fixes
+Message-ID: <20190523165151.GB1716@fuggles.cambridge.arm.com>
+References: <1556553607-46531-1-git-send-email-julien.thierry@arm.com>
 MIME-Version: 1.0
-X-MC-Unique: dCvv3IMGOWGiL--uJpCpLw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1556553607-46531-1-git-send-email-julien.thierry@arm.com>
+User-Agent: Mutt/1.11.1+86 (6f28e57d73f2) ()
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oleg Nesterov
-> Sent: 23 May 2019 17:36
-> On 05/23, David Laight wrote:
-> >
-> > From: Oleg Nesterov
-> > > On 05/23, David Laight wrote:
-...
-> > > Not sure I understand... OK, suppose that you do
-> > >
-> > > 	block-all-signals;
-> > > 	ret = pselect(..., sigmask(SIG_URG));
-> > >
-> > > if it returns success/timeout then the handler for SIG_URG should not be called?
-> >
-> > Ugg...
-> > Posix probably allows the signal handler be called at the point the event
-> > happens rather than being deferred until the system call completes.
-> > Queueing up the signal handler to be run at a later time (syscall exit)
-> > certainly makes sense.
-> > Definitely safest to call the signal handler even if success/timeout
-> > is returned.
+Hi Julien,
+
+On Mon, Apr 29, 2019 at 05:00:02PM +0100, Julien Thierry wrote:
+> [Changing the title to make it reflex more the status of the series.]
 > 
-> Why?
+> Version one[1] of this series attempted to fix the issue reported by
+> Zenghui[2] when using the function_graph tracer with IRQ priority
+> masking.
 > 
-> > pselect() exists to stop the entry race, not the exit one.
-> 
-> pselect() has to block SIG_URG again before it returns to user-mode, right?
+> Since then, I realized that priority masking and the use of Pseudo-NMIs
+> was more broken than I thought.
 
-Yep.
-So the signal handler can't be called for a signal that happens after
-pselect() returns.
+Do you plan to respin this in light of Marc's comments?
 
-> Suppose pselect() finds a ready fd, and this races with SIG_URG.
-
-You mean if SIG_URG is raised after a ready fd is found (or even timeout)?
-So the return value isn't EINTR.
-(If an fd is readable on entry, the SIG_URG could have happened much earlier.)
-
-> Why do you think the handler should run?
-
-Think of the application code loop.
-Consider what happens if the signal is SIG_INT - to request the program
-stop.
-After every pselect() call the application looks to see if the handler
-has been called.
-If one of the fds is always readable pselect() will never return EINTR
-but you want the SIG_INT handler run so that the loop gets terminated.
-If you only call the signal handler when EINTR is returned the process
-will never stop.
-So you need to call the handler even when pselect() succeeds/time out.
-
-> What if SIG_URG comes right after pselect() blocks SIG_URG again? I mean,
-> how this differs the case when it comes before, but a ready fd was already
-> found?
-
-I suspect you need to defer the re-instatement of the original mask
-to the code that calls the signal handlers (which probably should
-be called with the programs signal mask).
-So that particular window doesn't exist.
-
-	David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
-
+Will
