@@ -2,46 +2,44 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE144C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 23:43:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43BACC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 23:44:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 925AB2133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 23:43:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 097302133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 23:44:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388685AbfEWXnk (ORCPT
+        id S2388707AbfEWXoF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 19:43:40 -0400
-Received: from gateway33.websitewelcome.com ([192.185.145.221]:48077 "EHLO
-        gateway33.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388661AbfEWXnj (ORCPT
+        Thu, 23 May 2019 19:44:05 -0400
+Received: from gateway36.websitewelcome.com ([192.185.201.2]:21811 "EHLO
+        gateway36.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388302AbfEWXoF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 19:43:39 -0400
-Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
-        by gateway33.websitewelcome.com (Postfix) with ESMTP id 34599DBE81B
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 18:43:37 -0500 (CDT)
+        Thu, 23 May 2019 19:44:05 -0400
+X-Greylist: delayed 1292 seconds by postgrey-1.27 at vger.kernel.org; Thu, 23 May 2019 19:44:04 EDT
+Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
+        by gateway36.websitewelcome.com (Postfix) with ESMTP id 10347400D6B82
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 17:42:39 -0500 (CDT)
 Received: from gator4166.hostgator.com ([108.167.133.22])
         by cmsmtp with SMTP
-        id TxN3ht3Rl2PzOTxN3hGuhF; Thu, 23 May 2019 18:43:37 -0500
+        id Tx2dhzXy04FKpTx2dhLs0N; Thu, 23 May 2019 18:22:31 -0500
 X-Authority-Reason: nr=8
-Received: from [189.250.47.159] (port=44276 helo=[192.168.1.76])
+Received: from [189.250.47.159] (port=41698 helo=[192.168.1.76])
         by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
         (Exim 4.91)
         (envelope-from <gustavo@embeddedor.com>)
-        id 1hTxN2-001tlo-Mo; Thu, 23 May 2019 18:43:36 -0500
-Subject: Re: [PATCH net-next] xprtrdma: Use struct_size() in kzalloc()
-To:     David Miller <davem@davemloft.net>
-Cc:     chuck.lever@oracle.com, trond.myklebust@hammerspace.com,
-        anna.schumaker@netapp.com, bfields@fieldses.org,
-        jlayton@kernel.org, linux-nfs@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <07CB966E-A946-4956-8480-C0FC13E13E4E@oracle.com>
- <ad9eccc7-afd2-3419-b886-6210eeabd5b5@embeddedor.com>
- <70ca0dea-6f1f-922c-7c5d-e79c6cf6ecb5@embeddedor.com>
- <20190523.163229.1499181553844972278.davem@davemloft.net>
+        id 1hTx2d-001jOI-BI; Thu, 23 May 2019 18:22:31 -0500
+Subject: Re: [PATCH net-next] net: sched: cls_u32: use struct_size() helper
+To:     Jamal Hadi Salim <jhs@mojatatu.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Jiri Pirko <jiri@resnulli.us>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190501162315.GA27166@embeddedor>
 From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=gustavo@embeddedor.com; keydata=
@@ -87,12 +85,12 @@ Autocrypt: addr=gustavo@embeddedor.com; keydata=
  YJWH93PN+ZUh6i6Rd2U/i8jH5WvzR57UeWxE4P8bQc0hNGrUsHQH6bpHV2lbuhDdqo+cM9eh
  GZEO3+gCDFmKrjspZjkJbB5Gadzvts5fcWGOXEvuT8uQSvl+vEL0g6vczsyPBtqoBLa9SNrS
  VtSixD1uOgytAP7RWS474w==
-Message-ID: <c8d7982b-cf18-adc0-aa70-81b8ee5ae780@embeddedor.com>
-Date:   Thu, 23 May 2019 18:43:34 -0500
+Message-ID: <be6196ae-01b3-e23e-f504-d3e53324da9b@embeddedor.com>
+Date:   Thu, 23 May 2019 18:22:29 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190523.163229.1499181553844972278.davem@davemloft.net>
+In-Reply-To: <20190501162315.GA27166@embeddedor>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -104,13 +102,13 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 189.250.47.159
 X-Source-L: No
-X-Exim-ID: 1hTxN2-001tlo-Mo
+X-Exim-ID: 1hTx2d-001jOI-BI
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: ([192.168.1.76]) [189.250.47.159]:44276
+X-Source-Sender: ([192.168.1.76]) [189.250.47.159]:41698
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 21
+X-Email-Count: 6
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
@@ -118,24 +116,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi all,
 
+Friendly ping:
 
-On 5/23/19 6:32 PM, David Miller wrote:
-> From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-> Date: Thu, 23 May 2019 17:36:00 -0500
-> 
->> Hi Dave,
->>
->> I wonder if you can take this patch.
-> 
-> The sunrpc/nfs maintainer should take this.  I never take patches in that
-> area.
-> 
-
-Yep. Chuck just let me know that Anna is who take these patches.
-
-Hopefully, she will take this one soon.
+Who can take this?
 
 Thanks
 --
 Gustavo
+
+On 5/1/19 11:23 AM, Gustavo A. R. Silva wrote:
+> Make use of the struct_size() helper instead of an open-coded version
+> in order to avoid any potential type mistakes, in particular in the
+> context in which this code is being used.
+> 
+> So, replace code of the following form:
+> 
+> sizeof(*s) + s->nkeys*sizeof(struct tc_u32_key)
+> 
+> with:
+> 
+> struct_size(s, keys, s->nkeys)
+> 
+> This code was detected with the help of Coccinelle.
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> ---
+>  net/sched/cls_u32.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/net/sched/cls_u32.c b/net/sched/cls_u32.c
+> index 04e9ef088535..4b8710a266cc 100644
+> --- a/net/sched/cls_u32.c
+> +++ b/net/sched/cls_u32.c
+> @@ -847,7 +847,7 @@ static struct tc_u_knode *u32_init_knode(struct net *net, struct tcf_proto *tp,
+>  	/* Similarly success statistics must be moved as pointers */
+>  	new->pcpu_success = n->pcpu_success;
+>  #endif
+> -	memcpy(&new->sel, s, sizeof(*s) + s->nkeys*sizeof(struct tc_u32_key));
+> +	memcpy(&new->sel, s, struct_size(s, keys, s->nkeys));
+>  
+>  	if (tcf_exts_init(&new->exts, net, TCA_U32_ACT, TCA_U32_POLICE)) {
+>  		kfree(new);
+> 
