@@ -2,104 +2,97 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88FDDC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:00:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 272ABC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:00:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 545FB20881
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:00:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558623626;
-	bh=xJMkwCyY4/2C56CJmLlJPx2roTyR5mzhQpE9uHoRZBc=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=SI4CPOp59LOPRUuRlNKLT5hE2O+3eDRtiXz+PJdY1ueujP6gIhfjFsE/ztPR8vycV
-	 th3UpvvDrxg7+9Zh7mfHzNgWb8jXZSBw864ZWTv9CfHn57bMOUCLUljJq5173LelUX
-	 XxrMCVnOWK9XwkzKE49v0zg/rPGbyxVCAb7S6FqM=
+	by mail.kernel.org (Postfix) with ESMTP id EFAE12175B
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:00:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="WtzwBrSH";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="WtzwBrSH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731014AbfEWPAZ (ORCPT
+        id S1731052AbfEWPA2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 11:00:25 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:35057 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730741AbfEWPAZ (ORCPT
+        Thu, 23 May 2019 11:00:28 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:47866 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730741AbfEWPA0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 11:00:25 -0400
-Received: by mail-oi1-f196.google.com with SMTP id a132so4618320oib.2;
-        Thu, 23 May 2019 08:00:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qeElCV+Nxu7+CjCipGaoQ8bPDQ/OvLxQiVOvXHGO8wU=;
-        b=akLkGPnb5jcklOwOikBbzeKdN4MhmgNNvcC31lc16knee4JUvBRHr12oVT8QBa++Tw
-         LWT7OocUINANzTc/5lbDncqm5NVs5+moYTfGmrPfkyh88SWdc5IlCpGnsvRgaIVYGroU
-         ZZPiKz/V6N8sPhS+7P8zCcAt8z2JU76Av4sRvhn+lFacw84/i35XNTKpTNgIN19PIHcz
-         Fto8cf7v2hC40aPoXgj9kEQgNDhCi3FBanxjH0UkLLydreBCjMLDH5ngo6ScB77Xpk1V
-         hUU5/HmXTnqQlg6MDN8vPUK2sUABAkb4WlIkjlMf9I4WzaPRhV8R4iWEyka7VvaLJCJy
-         IYVg==
-X-Gm-Message-State: APjAAAX8Eguj6YfFh07OI4aiF+CfTK2d/7KPZ3FIdAdGIy2C/kYPq0sb
-        v+61XbT64FBr3RnmMx4Ne4rVE1E=
-X-Google-Smtp-Source: APXvYqw+Zx4Tu7B3lsgAaVXYIU6YlWQRJGzzP06SV1533OP9OPc7wxuh08Z0YveCkf05D3ocehL3hw==
-X-Received: by 2002:aca:7552:: with SMTP id q79mr3041138oic.85.1558623623408;
-        Thu, 23 May 2019 08:00:23 -0700 (PDT)
-Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.googlemail.com with ESMTPSA id f5sm9256735oto.67.2019.05.23.08.00.22
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 23 May 2019 08:00:22 -0700 (PDT)
-From:   Rob Herring <robh@kernel.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     devicetree@vger.kernel.org, Joe Perches <joe@perches.com>
-Subject: [PATCH v2] checkpatch.pl: Update DT vendor prefix check
-Date:   Thu, 23 May 2019 10:00:22 -0500
-Message-Id: <20190523150022.2747-1-robh@kernel.org>
-X-Mailer: git-send-email 2.20.1
+        Thu, 23 May 2019 11:00:26 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id DB79160A42; Thu, 23 May 2019 15:00:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1558623625;
+        bh=xjX2dCoX++xPQ70yBZuiq+wW8s0TyrMClqMEGpholq0=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=WtzwBrSHxC98Nc3KswSuxRp1VN96Pmu74SOXVvvNAXqNaFFA2OJmPaF9ZaCn0RNll
+         /Y3aTKxSGn3pEcG90HsoI6OGjtd4ueW38oJ+zOOLvRlaTP80VT2CSWsV5Gv4qw+fM5
+         apiqSik983/sk2+OlO6xpJUl3XsqIRazum3T2GDY=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2B4ED607B9;
+        Thu, 23 May 2019 15:00:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1558623625;
+        bh=xjX2dCoX++xPQ70yBZuiq+wW8s0TyrMClqMEGpholq0=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=WtzwBrSHxC98Nc3KswSuxRp1VN96Pmu74SOXVvvNAXqNaFFA2OJmPaF9ZaCn0RNll
+         /Y3aTKxSGn3pEcG90HsoI6OGjtd4ueW38oJ+zOOLvRlaTP80VT2CSWsV5Gv4qw+fM5
+         apiqSik983/sk2+OlO6xpJUl3XsqIRazum3T2GDY=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2B4ED607B9
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Gen Zhang <blackgod016574@gmail.com>
+Cc:     eyalreizer@gmail.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org
+Subject: Re: [PATCH v2] sdio: Fix a memory leaking bug in wl1271_probe()
+References: <20190523144425.GA26766@zhanggen-UX430UQ>
+Date:   Thu, 23 May 2019 18:00:21 +0300
+In-Reply-To: <20190523144425.GA26766@zhanggen-UX430UQ> (Gen Zhang's message of
+        "Thu, 23 May 2019 22:44:25 +0800")
+Message-ID: <87d0k9b4hm.fsf@kamboji.qca.qualcomm.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In commit 8122de54602e ("dt-bindings: Convert vendor prefixes to
-json-schema"), vendor-prefixes.txt has been converted to a DT schema.
-Update the checkpatch.pl DT check to extract vendor prefixes from the new
-vendor-prefixes.yaml file.
++ linux-wireless
 
-Fixes: 8122de54602e ("dt-bindings: Convert vendor prefixes to json-schema")
-Cc: Joe Perches <joe@perches.com>
-Signed-off-by: Rob Herring <robh@kernel.org>
----
-v2: Handle vendor prefixes with '-' using Joe's reworked grep
+Gen Zhang <blackgod016574@gmail.com> writes:
 
- scripts/checkpatch.pl | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> In wl1271_probe(), 'glue->core' is allocated by platform_device_alloc(),
+> when this allocation fails, ENOMEM is returned. However, 'pdev_data'
+> and 'glue' are allocated by devm_kzalloc() before 'glue->core'. When
+> platform_device_alloc() returns NULL, we should also free 'pdev_data'
+> and 'glue' before wl1271_probe() ends to prevent leaking memory.
+>
+> Similarly, we should free 'pdev_data' when 'glue' is NULL. And we
+> should free 'pdev_data' and 'glue' when 'ret' is error.
+>
+> Further, we shoulf free 'glue->dev', 'pdev_data' and 'glue' when this
+> function normally ends to prevent memory leaking.
+>
+> Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
+> ---
+> diff --git a/drivers/net/wireless/ti/wlcore/sdio.c b/drivers/net/wireless/ti/wlcore/sdio.c
+> index 4d4b0770..232ce5f 100644
+> --- a/drivers/net/wireless/ti/wlcore/sdio.c
+> +++ b/drivers/net/wireless/ti/wlcore/sdio.c
 
-diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-index bb28b178d929..342c7c781ba5 100755
---- a/scripts/checkpatch.pl
-+++ b/scripts/checkpatch.pl
-@@ -3027,7 +3027,7 @@ sub process {
- 			my @compats = $rawline =~ /\"([a-zA-Z0-9\-\,\.\+_]+)\"/g;
- 
- 			my $dt_path = $root . "/Documentation/devicetree/bindings/";
--			my $vp_file = $dt_path . "vendor-prefixes.txt";
-+			my $vp_file = $dt_path . "vendor-prefixes.yaml";
- 
- 			foreach my $compat (@compats) {
- 				my $compat2 = $compat;
-@@ -3042,7 +3042,7 @@ sub process {
- 
- 				next if $compat !~ /^([a-zA-Z0-9\-]+)\,/;
- 				my $vendor = $1;
--				`grep -Eq "^$vendor\\b" $vp_file`;
-+				`grep -Eq "\\"\\^\Q$vendor\E,\\.\\*\\":" $vp_file`;
- 				if ( $? >> 8 ) {
- 					WARN("UNDOCUMENTED_DT_STRING",
- 					     "DT compatible string vendor \"$vendor\" appears un-documented -- check $vp_file\n" . $herecurr);
+You need to CC linux-wireless, otherwise patchwork won't see the patch
+and it will not be applied. Also you should use prefix "wlcore:".
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches#commit_title_is_wrong
+
 -- 
-2.20.1
-
+Kalle Valo
