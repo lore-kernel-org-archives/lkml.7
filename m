@@ -2,97 +2,99 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5CF5C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 13:43:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20515C282E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 13:46:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97DCE2133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 13:43:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="F5HMpVG3"
+	by mail.kernel.org (Postfix) with ESMTP id E787020881
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 13:46:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730827AbfEWNnN (ORCPT
+        id S1730759AbfEWNqa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 09:43:13 -0400
-Received: from mail-ua1-f68.google.com ([209.85.222.68]:43303 "EHLO
-        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729698AbfEWNnN (ORCPT
+        Thu, 23 May 2019 09:46:30 -0400
+Received: from www62.your-server.de ([213.133.104.62]:51730 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729902AbfEWNqa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 09:43:13 -0400
-Received: by mail-ua1-f68.google.com with SMTP id u4so2173030uau.10
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 06:43:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kDtnRElNuUyMt12FB8Rk0MvDHzUU1QwxTxxj3HBh2vw=;
-        b=F5HMpVG3EWCJPzMlJKs927sGGct8xw/xB0Y89Vgc09MmTe9qCI0EWFwkd3F7L+ZqFU
-         kWHqmexwtAqAJgSeoLTmFnZylC+rm5Br2x4lzGtcs02ZZCavNG2Gf5f+gE/JWhQ/Ivs/
-         8x2rRNG3Gb6qPEUUT/ibkLnE5XHfMOxE1oKgDBsbVXYeq/geXD2fm0t7ZMlNcI6Ag/XQ
-         tbJ0nagR/yajVw57nuQCPVX18YlRvtDzNv8eAC23gjHJgwzVXV5xko9O2KehbFq5yR5X
-         JXt7dQUscteyeiumbcstLMRjk9pfvtsuAbcAyqhHrkbkUqxZO4aGLoi3vYUAgFsAwP9e
-         VWDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kDtnRElNuUyMt12FB8Rk0MvDHzUU1QwxTxxj3HBh2vw=;
-        b=IK90TvaGgGozeV433ZekRf1/yXX8NJjNfk2TNjrC5UzH5LcHAjtZPWWhoApmI8QS0R
-         mdchY8WRnX4lP5ziw5lI04/zQmB9gv9/CZ760L4yEmLCk4ccjTF+Sps7xDugEeePJ3xF
-         CppYzwrwDNFtUXbtXpDDkqe6DiH7AmVOG6NdHiEOuHDTFfeEeAHQxuN4BstHoyEDg4Gx
-         zpGWBePGf56WfqHCKJBYia0nJCX50+vdR4SqH8nU4DWivAGnCzVuKvG8ju7fPqZdgyzA
-         lCZ5b3jT5Po2hSI4eww7ijjvNWmUtwsHQwufYBACfsLovBM38U9Twzdjj75mEmoYK6Pf
-         qs+A==
-X-Gm-Message-State: APjAAAXQXC90wnVZouQ58QzFXMxGk9wPSaTEYTseIlyUcHY1LKrJs6zf
-        Fr/DDq0RxBaJjWs7S1BfewTJxq2160HW+lgbioPnBw==
-X-Google-Smtp-Source: APXvYqwGxws4eO22FIKVa1UIaqOVwcqNo2ovHYADpIBiJJe9TRlN+UMwHQoxWg/gax3t035v1obA5yqmm0zqE+T3KI8=
-X-Received: by 2002:a9f:366b:: with SMTP id s40mr22365743uad.121.1558618992582;
- Thu, 23 May 2019 06:43:12 -0700 (PDT)
+        Thu, 23 May 2019 09:46:30 -0400
+Received: from [88.198.220.132] (helo=sslproxy03.your-server.de)
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1hTo3A-0003BO-4A; Thu, 23 May 2019 15:46:28 +0200
+Received: from [178.197.249.12] (helo=linux.home)
+        by sslproxy03.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1hTo39-0008Tu-N1; Thu, 23 May 2019 15:46:27 +0200
+Subject: Re: [PATCH 4.19 144/187] selftests/bpf: skip verifier tests for
+ unsupported program types
+To:     "Rantala, Tommi T. (Nokia - FI/Espoo)" <tommi.t.rantala@nokia.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+Cc:     "sashal@kernel.org" <sashal@kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "sdf@google.com" <sdf@google.com>
+References: <20190404084603.119654039@linuxfoundation.org>
+ <20190404084609.946908305@linuxfoundation.org>
+ <16ec5436310b0df657a4898e3d15ccc3b9aab8e2.camel@nokia.com>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <47a9ede3-bef8-7ae1-6353-b954b6e7f7af@iogearbox.net>
+Date:   Thu, 23 May 2019 15:46:26 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.3.0
 MIME-Version: 1.0
-References: <1558515574-11155-1-git-send-email-sagar.kadam@sifive.com>
- <1558515574-11155-4-git-send-email-sagar.kadam@sifive.com>
- <20190522194529.GJ7281@lunn.ch> <CAARK3HmMVibudG2CFLBoMSAqnraXyirTL6CXYo1T_XJEuGJy7Q@mail.gmail.com>
- <20190523123435.GA15531@lunn.ch>
-In-Reply-To: <20190523123435.GA15531@lunn.ch>
-From:   Sagar Kadam <sagar.kadam@sifive.com>
-Date:   Thu, 23 May 2019 19:13:01 +0530
-Message-ID: <CAARK3H=BPT3aGUGiQvov5aqFRNVTSeyqJ-bNGw6uEoU7c8iiJg@mail.gmail.com>
-Subject: Re: [PATCH v7 3/3] i2c-ocores: sifive: add polling mode workaround
- for FU540-C000 SoC.
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, peter@korsgaard.com,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <16ec5436310b0df657a4898e3d15ccc3b9aab8e2.camel@nokia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.100.3/25458/Thu May 23 09:58:32 2019)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrew,
+On 05/23/2019 12:27 PM, Rantala, Tommi T. (Nokia - FI/Espoo) wrote:
+> On Thu, 2019-04-04 at 10:48 +0200, Greg Kroah-Hartman wrote:
+>> 4.19-stable review patch.  If anyone has any objections, please let
+>> me know.
+>>
+>> ------------------
+>>
+>> [ Upstream commit 8184d44c9a577a2f1842ed6cc844bfd4a9981d8e ]
+>>
+>> Use recently introduced bpf_probe_prog_type() to skip tests in the
+>> test_verifier() if bpf_verify_program() fails. The skipped test is
+>> indicated in the output.
+> 
+> Hi, this patch added in 4.19.34 causes test_verifier build failure, as
+> bpf_probe_prog_type() is not available:
+> 
+> gcc -Wall -O2 -I../../../include/uapi -I../../../lib -I../../../lib/bpf
+> -I../../../../include/generated -DHAVE_GENHDR
+> -I../../../include    test_verifier.c /root/linux-
+> 4.19.44/tools/testing/selftests/bpf/libbpf.a -lcap -lelf -lrt -lpthread
+> -o /root/linux-4.19.44/tools/testing/selftests/bpf/test_verifier
+> test_verifier.c: In function ‘do_test_single’:
+> test_verifier.c:12775:22: warning: implicit declaration of function
+> ‘bpf_probe_prog_type’; did you mean ‘bpf_program__set_type’? [-
+> Wimplicit-function-declaration]
+>   if (fd_prog < 0 && !bpf_probe_prog_type(prog_type, 0)) {
+>                       ^~~~~~~~~~~~~~~~~~~
+>                       bpf_program__set_type
+> /usr/bin/ld: /tmp/ccEtyLhk.o: in function `do_test_single':
+> test_verifier.c:(.text+0xa19): undefined reference to
+> `bpf_probe_prog_type'
+> collect2: error: ld returned 1 exit status
+> make[1]: *** [../lib.mk:152: /root/linux-
+> 4.19.44/tools/testing/selftests/bpf/test_verifier] Error 1
 
+Looks like this kselftest one got auto-selected for stable? It's not
+strictly needed, so totally fine to drop.
 
-On Thu, May 23, 2019 at 6:04 PM Andrew Lunn <andrew@lunn.ch> wrote:
->
-> > Thank you Andrew for reviewing the patch set.
-> > Can you please let me know weather you or Peter will be pick up the patch
-> > for v5.3 or they  should go in via some other tree?
->
-> Hi Sagar
->
-> Wolfram Sang should pick the patchset up.
->
-
-Ok, Great. Do we need to write to him about this patchset?
-
->         Andrew
-
-Regards,
-Sagar Kadam
+Thanks,
+Daniel
