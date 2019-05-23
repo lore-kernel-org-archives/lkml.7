@@ -2,108 +2,197 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DDE1C282E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 17:47:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09631C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 17:51:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 229ED21851
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 17:47:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558633677;
-	bh=qSP3OnYAbptsHLrP7wuWhN2bIkr8rj9sublY3K28GdM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qsC4tA43zKNmvJOyDQsUDXVao3xbZ9OKsJqHLfMefS27hUwzO6FathEyF65IkUF4t
-	 yn5/vTy3XJOA2IVra5E9hHGcPLPilAV1xj4DJBJPtAyLy15Ke8g60ILtNtV4UpmH3o
-	 KtE8akmNmdGRzKxNs1a0D2dnsa3Oxmnwt60aNUTQ=
+	by mail.kernel.org (Postfix) with ESMTP id C53DE2184B
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 17:51:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="kdt5X+qn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731395AbfEWRr4 (ORCPT
+        id S1731358AbfEWRvz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 13:47:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52752 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730899AbfEWRr4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 13:47:56 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 38F772184B;
-        Thu, 23 May 2019 17:47:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558633675;
-        bh=qSP3OnYAbptsHLrP7wuWhN2bIkr8rj9sublY3K28GdM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=yHHZPFo133t6zqKAHluV7hUzMeYAH0NrF+17oYtcmPvpClPwKWtvu8qZG288zwd5n
-         Lu1+E1JtWi8VhJGD0bMlWyFkGzttfqi5xsj1pCCWHTl0QUyisCEoFZgktSY16Kg4+y
-         Bzx/Qc2SLzGcu5SGhGyHTqfaplW1B4f9ErbcwAjI=
-Date:   Thu, 23 May 2019 19:47:53 +0200
-From:   "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-To:     Daniel Borkmann <daniel@iogearbox.net>
-Cc:     "Rantala, Tommi T. (Nokia - FI/Espoo)" <tommi.t.rantala@nokia.com>,
+        Thu, 23 May 2019 13:51:55 -0400
+Received: from mail-eopbgr730090.outbound.protection.outlook.com ([40.107.73.90]:11392
+        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730928AbfEWRvy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 13:51:54 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
+ b=yOwyZSUksOx9KxLIo5CrD+4bl8GF+yuZ+EOu9t2BKcr17jHiH5Q3U5fCLJjuSDqQdwl3LFGCzkr1Jro5KO2wz90jP1j8SS5LvZo8akHDp18STSjx/+YKJS/LCm47SziKCokc92C6CnJPibWXMzuVU0QO4GyOdWZ5bK0OGwB5wco=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=testarcselector01;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=O1gtWwZvKHrCTwBPtZVN+DvvUZS0a8xh+/uzA+bC2nk=;
+ b=uAHTmHYPDvhpZZo4rJPjh0OCnnOz8KGT7yagN+cj+X8EEivi6hbFL2tQi+cettfNID6dex7U3Mb19FPhxK3/gW6vKlDYwBNW2tkUNvQD3noyQmmFanuJ0qTMPhDKLowL7VphYwJEJJhHx1XpeaYHr8qVoIjInj3f4R9kamc9WjQ=
+ARC-Authentication-Results: i=1; test.office365.com
+ 1;spf=none;dmarc=none;dkim=none;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=O1gtWwZvKHrCTwBPtZVN+DvvUZS0a8xh+/uzA+bC2nk=;
+ b=kdt5X+qn6hWsnOW6I5P043tmlmqErOJwmHmoOgrfIdfJJ3jmglhYx3oTAZps7b2/dsM+Jhy6kmtwRKVpgA6Byl81LZ6pe0IBlpZNKskH8mefRgF/TvxRJPRsKzwCs/Qbv7Qo5Soa2FifR2/4hJDCFgYZwZHytkEScCFe5WMCH6k=
+Received: from BYAPR21MB1319.namprd21.prod.outlook.com (2603:10b6:a03:115::9)
+ by BYAPR21MB1191.namprd21.prod.outlook.com (2603:10b6:a03:105::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1922.3; Thu, 23 May
+ 2019 17:51:49 +0000
+Received: from BYAPR21MB1319.namprd21.prod.outlook.com
+ ([fe80::e9a9:224d:3961:2088]) by BYAPR21MB1319.namprd21.prod.outlook.com
+ ([fe80::e9a9:224d:3961:2088%8]) with mapi id 15.20.1943.006; Thu, 23 May 2019
+ 17:51:49 +0000
+From:   "Lei Wang (BSP)" <Wang.Lei@microsoft.com>
+To:     Mark Rutland <mark.rutland@arm.com>,
+        Lei Wang <leiwang_git@outlook.com>
+CC:     "bp@alien8.de" <bp@alien8.de>,
+        "james.morse@arm.com" <james.morse@arm.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "sdf@google.com" <sdf@google.com>
-Subject: Re: [PATCH 4.19 144/187] selftests/bpf: skip verifier tests for
- unsupported program types
-Message-ID: <20190523174753.GE29438@kroah.com>
-References: <20190404084603.119654039@linuxfoundation.org>
- <20190404084609.946908305@linuxfoundation.org>
- <16ec5436310b0df657a4898e3d15ccc3b9aab8e2.camel@nokia.com>
- <47a9ede3-bef8-7ae1-6353-b954b6e7f7af@iogearbox.net>
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        Rui Zhao <ruizhao@microsoft.com>,
+        Hang Li <hangl@microsoft.com>,
+        Sasha Levin <Alexander.Levin@microsoft.com>
+Subject: RE: [PATCH v3 1/2] dt-bindings: edac: arm-dmc520.txt
+Thread-Topic: [PATCH v3 1/2] dt-bindings: edac: arm-dmc520.txt
+Thread-Index: AQHVC5AR4+AcLYu1eESQ1uQyoWKNiaZ4+muAgAAKjAA=
+Date:   Thu, 23 May 2019 17:51:49 +0000
+Message-ID: <BYAPR21MB1319BC4D079B918AB038A4D590010@BYAPR21MB1319.namprd21.prod.outlook.com>
+References: <CY1PR0401MB1244062C1738B09D6100F202860A0@CY1PR0401MB1244.namprd04.prod.outlook.com>
+ <20190523165841.GD7523@lakrids.cambridge.arm.com>
+In-Reply-To: <20190523165841.GD7523@lakrids.cambridge.arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=lewan@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-05-23T17:51:47.9288836Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=12189b5c-1702-4376-aa08-110460eab1f4;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Wang.Lei@microsoft.com; 
+x-originating-ip: [2001:4898:80e8:0:74f8:b538:8cb0:8ca0]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ec2f4537-2761-43cc-1b08-08d6dfa754b8
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:BYAPR21MB1191;
+x-ms-traffictypediagnostic: BYAPR21MB1191:
+x-microsoft-antispam-prvs: <BYAPR21MB1191D206046F24D18444C6D090010@BYAPR21MB1191.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 00462943DE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(366004)(376002)(136003)(346002)(396003)(199004)(189003)(13464003)(8990500004)(6246003)(22452003)(10290500003)(107886003)(5660300002)(53936002)(52536014)(76176011)(7696005)(4326008)(2906002)(102836004)(68736007)(52396003)(6116002)(99286004)(6506007)(53546011)(229853002)(72206003)(86612001)(8676002)(486006)(478600001)(54906003)(25786009)(256004)(110136005)(6436002)(316002)(8936002)(186003)(55016002)(10090500001)(11346002)(9686003)(7736002)(476003)(446003)(305945005)(14454004)(71190400001)(71200400001)(81156014)(46003)(81166006)(86362001)(73956011)(66946007)(66446008)(76116006)(33656002)(64756008)(66556008)(66476007)(74316002);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR21MB1191;H:BYAPR21MB1319.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: NRZGK2QaAq79EuKfAN4cXWfPDYw2vu/o6hgBvfJy5ULU9ICrN3P+llWqP/lt//h8XD2vGGpqt+Dxf1Auc+apTP66+i8jKDhuni7RqJB6HLvgAlJn+dQqo6J9gxpUgnglw2z9/Sc0mPD7RN+7+Dx8aN32F8hNlWyANkVAhE9xONlOH4t6pRTdMgoSgxGSE6PfwK83J/UvP2o81MBMpzeOYEfZdsJ//diRDFpdgpf19KrD29G3udyFIH9XAlTOearUS71zxg+gKGLpkwZB59MlToDIXqe/JxFvdWjmvzoGut7UsKuIUckWeJ/z2E5wlGLu2XiZpeK3hskA3PBoF7f7gGeYxnuKfF8gbsmkP11IwiXyBTlh5E42pLk7b4Cjvfa46ucxUE1R2MggdPtGa94Txx2tXxOvzh7/HYkyH6tMxDk=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <47a9ede3-bef8-7ae1-6353-b954b6e7f7af@iogearbox.net>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ec2f4537-2761-43cc-1b08-08d6dfa754b8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 May 2019 17:51:49.1715
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: lewan@microsoft.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR21MB1191
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 03:46:26PM +0200, Daniel Borkmann wrote:
-> On 05/23/2019 12:27 PM, Rantala, Tommi T. (Nokia - FI/Espoo) wrote:
-> > On Thu, 2019-04-04 at 10:48 +0200, Greg Kroah-Hartman wrote:
-> >> 4.19-stable review patch.  If anyone has any objections, please let
-> >> me know.
-> >>
-> >> ------------------
-> >>
-> >> [ Upstream commit 8184d44c9a577a2f1842ed6cc844bfd4a9981d8e ]
-> >>
-> >> Use recently introduced bpf_probe_prog_type() to skip tests in the
-> >> test_verifier() if bpf_verify_program() fails. The skipped test is
-> >> indicated in the output.
-> > 
-> > Hi, this patch added in 4.19.34 causes test_verifier build failure, as
-> > bpf_probe_prog_type() is not available:
-> > 
-> > gcc -Wall -O2 -I../../../include/uapi -I../../../lib -I../../../lib/bpf
-> > -I../../../../include/generated -DHAVE_GENHDR
-> > -I../../../include    test_verifier.c /root/linux-
-> > 4.19.44/tools/testing/selftests/bpf/libbpf.a -lcap -lelf -lrt -lpthread
-> > -o /root/linux-4.19.44/tools/testing/selftests/bpf/test_verifier
-> > test_verifier.c: In function ‘do_test_single’:
-> > test_verifier.c:12775:22: warning: implicit declaration of function
-> > ‘bpf_probe_prog_type’; did you mean ‘bpf_program__set_type’? [-
-> > Wimplicit-function-declaration]
-> >   if (fd_prog < 0 && !bpf_probe_prog_type(prog_type, 0)) {
-> >                       ^~~~~~~~~~~~~~~~~~~
-> >                       bpf_program__set_type
-> > /usr/bin/ld: /tmp/ccEtyLhk.o: in function `do_test_single':
-> > test_verifier.c:(.text+0xa19): undefined reference to
-> > `bpf_probe_prog_type'
-> > collect2: error: ld returned 1 exit status
-> > make[1]: *** [../lib.mk:152: /root/linux-
-> > 4.19.44/tools/testing/selftests/bpf/test_verifier] Error 1
-> 
-> Looks like this kselftest one got auto-selected for stable? It's not
-> strictly needed, so totally fine to drop.
+(+Rui/Hang/Sasha)
 
-Ok, will go revert this, sorry for the breakage.
+Hi Mark, please see inline with "[Lei]" tag. Thanks! -Lei
 
-greg k-h
+-----Original Message-----
+From: Mark Rutland <mark.rutland@arm.com>=20
+Sent: Thursday, May 23, 2019 9:59 AM
+To: Lei Wang <leiwang_git@outlook.com>
+Cc: bp@alien8.de; james.morse@arm.com; robh+dt@kernel.org; devicetree@vger.=
+kernel.org; linux-kernel@vger.kernel.org; linux-edac@vger.kernel.org; Lei W=
+ang (BSP) <Wang.Lei@microsoft.com>
+Subject: Re: [PATCH v3 1/2] dt-bindings: edac: arm-dmc520.txt
+
+On Thu, May 16, 2019 at 02:35:47AM +0000, Lei Wang wrote:
+> From: Lei Wang <leiwang_git@outlook.com>
+>=20
+> This is the device tree bindings for new EDAC driver dmc520_edac.c.
+>=20
+> Signed-off-by: Lei Wang <leiwang_git@outlook.com>
+> ---
+>  .../devicetree/bindings/edac/arm-dmc520.txt        | 26 ++++++++++++++++=
+++++++
+>  1 file changed, 26 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/edac/arm-dmc520.txt
+>=20
+> diff --git a/Documentation/devicetree/bindings/edac/arm-dmc520.txt b/Docu=
+mentation/devicetree/bindings/edac/arm-dmc520.txt
+> new file mode 100644
+> index 0000000..71e7aa3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/edac/arm-dmc520.txt
+> @@ -0,0 +1,26 @@
+> +* ARM DMC-520 EDAC node
+> +
+> +Required properties:
+> +- compatible		: "brcm,dmc-520", "arm,dmc-520".
+> +- reg			: Address range of the DMC-520 registers.
+> +- interrupts		: DMC-520 interrupt numbers. The example below specifies
+> +			  two interrupt lines for dram_ecc_errc_int and
+> +			  dram_ecc_errd_int.
+> +- interrupt-config	: This is an array of interrupt masks. For each of th=
+e
+> +			  above interrupt line, add one interrupt mask element to
+> +			  it. That is, there is a 1:1 mapping from each interrupt
+> +			  line to an interrupt mask. An interrupt mask can represent
+> +			  multiple interrupts being enabled. Refer to interrupt_control
+> +			  register in DMC-520 TRM for interrupt mapping. In the example
+> +			  below, the interrupt configuration enables dram_ecc_errc_int
+> +			  and dram_ecc_errd_int. And each interrupt is connected to
+> +			  a separate interrupt line.
+
+Generally we use interrupt-names to distinguish interrupts.
+
+Do you really have arbitary subsets of lines muxed together?
+
+-----------------------------------------------
+[Lei] Yes it is possible to mux multiple interrupt sources into one interru=
+pt line for dmc520. For example, in this particular brcm implementation,=20
+
+Line 841: source dram_ecc_errc_int
+Line 843: source dram_ecc_errd_int
+Line 839: source dram_ecc_errc_int and dram_ecc_errd_int
+
+There are two possibilities for implementing ecc counts for ce/ue. And we c=
+hose to use the single source line. But it's possible to implement using th=
+e combined-source line too. This dt binding can support both by modifying t=
+he properties.
+-------------------------------------------------
+
+Thanks,
+Mark.
+
+> +
+> +Example:
+> +
+> +dmc0: dmc@200000 {
+> +	compatible =3D "brcm,dmc-520", "arm,dmc-520";
+> +	reg =3D <0x200000 0x80000>;
+> +	interrupts =3D <0x0 0x349 0x4>, <0x0 0x34B 0x4>;
+> +	interrupt-config =3D <0x4>, <0x8>;
+> +};
+> --=20
+> 2.7.4
+>=20
