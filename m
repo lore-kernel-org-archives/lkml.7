@@ -2,109 +2,104 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C139EC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 10:18:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AABD9C282E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 10:19:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 877562133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 10:18:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558606710;
-	bh=JifrdQE47dqJRXjPaDe1E4L25whVXnXXOKoGofDLhRw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ldNtqq+yBCrenP7YY3ucxEiYe0STlYpMJ0TUbdnmWnb6awNRcAEy6vZHiQ2bbr0Ro
-	 FAC7gvH04/9Ah39tIzTYCpJWU1d4Q6x5XhShv3b58nNGrjUQXY5g7knTPGxSeDJQLq
-	 FWNKkLxLgqeqZ7N35G3JHrY7WzrckHn9Xgovfaa8=
+	by mail.kernel.org (Postfix) with ESMTP id 84F4B2081C
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 10:19:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730154AbfEWKS3 (ORCPT
+        id S1730339AbfEWKTi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 06:18:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32960 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 06:19:38 -0400
+Received: from foss.arm.com ([217.140.101.70]:42386 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726846AbfEWKS3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 06:18:29 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D044E2081C;
-        Thu, 23 May 2019 10:18:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558606708;
-        bh=JifrdQE47dqJRXjPaDe1E4L25whVXnXXOKoGofDLhRw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=EcAH1yVDp58hMy7lfCaaFsaTHMxvF8Ehrau1rSrtPR9NKLWzWWg9u6YAu8AEJnqbE
-         NVqk83wa3AL42DP9lYJCCRFWssgE/NqA4LAR+30odq/J+vC8FIJECRKv5eNc+zDQ1m
-         NT2Ix3l2UTadau1flt4TnKXxK3uGzS88brPnA9jQ=
-Date:   Thu, 23 May 2019 12:18:26 +0200
-From:   "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-To:     TonyWWang-oc <TonyWWang-oc@zhaoxin.com>
-Cc:     "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "hpa@zytor.com" <hpa@zytor.com>, "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "lenb@kernel.org" <lenb@kernel.org>,
-        David Wang <DavidWang@zhaoxin.com>,
-        "Cooper Yan(BJ-RD)" <CooperYan@zhaoxin.com>,
-        "Qiyuan Wang(BJ-RD)" <QiyuanWang@zhaoxin.com>,
-        "Herry Yang(BJ-RD)" <HerryYang@zhaoxin.com>
-Subject: Re: [PATCH v1 1/3] x86/cpu: Create Zhaoxin processors architecture
- support file
-Message-ID: <20190523101826.GA11016@kroah.com>
-References: <b3b31fab04814140b1feb13887c4aa2a@zhaoxin.com>
+        id S1726846AbfEWKTh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 06:19:37 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9DEBF341;
+        Thu, 23 May 2019 03:19:36 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5C8823F718;
+        Thu, 23 May 2019 03:19:32 -0700 (PDT)
+Date:   Thu, 23 May 2019 11:19:26 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Andrea Parri <andrea.parri@amarulasolutions.com>
+Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org,
+        will.deacon@arm.com, aou@eecs.berkeley.edu, arnd@arndb.de,
+        bp@alien8.de, catalin.marinas@arm.com, davem@davemloft.net,
+        fenghua.yu@intel.com, heiko.carstens@de.ibm.com,
+        herbert@gondor.apana.org.au, ink@jurassic.park.msu.ru,
+        jhogan@kernel.org, linux@armlinux.org.uk, mattst88@gmail.com,
+        mingo@kernel.org, mpe@ellerman.id.au, palmer@sifive.com,
+        paul.burton@mips.com, paulus@samba.org, ralf@linux-mips.org,
+        rth@twiddle.net, stable@vger.kernel.org, tglx@linutronix.de,
+        tony.luck@intel.com, vgupta@synopsys.com
+Subject: Re: [PATCH 00/18] locking/atomic: atomic64 type cleanup
+Message-ID: <20190523101926.GA3370@lakrids.cambridge.arm.com>
+References: <20190522132250.26499-1-mark.rutland@arm.com>
+ <20190523083013.GA4616@andrea>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b3b31fab04814140b1feb13887c4aa2a@zhaoxin.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190523083013.GA4616@andrea>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 10:10:52AM +0000, TonyWWang-oc wrote:
-> Add x86 architecture support for new Zhaoxin processors.
-> Carve out initialization code needed by Zhaoxin processors into
-> a separate compilation unit.
+On Thu, May 23, 2019 at 10:30:13AM +0200, Andrea Parri wrote:
+> Hi Mark,
+
+Hi Andrea,
+
+> On Wed, May 22, 2019 at 02:22:32PM +0100, Mark Rutland wrote:
+> > Currently architectures return inconsistent types for atomic64 ops. Some return
+> > long (e..g. powerpc), some return long long (e.g. arc), and some return s64
+> > (e.g. x86).
 > 
-> To identify Zhaoxin CPU, add a new vendor type X86_VENDOR_ZHAOXIN
-> for system recognition.
+> (only partially related, but probably worth asking:)
 > 
-> Signed-off-by: TonyWWang <TonyWWang-oc@zhaoxin.com>
-> ---
-> MAINTAINERS                      |   6 ++
-> arch/x86/Kconfig.cpu             |  13 +++
-> arch/x86/include/asm/processor.h |   3 +-
-> arch/x86/kernel/cpu/Makefile     |   1 +
-> arch/x86/kernel/cpu/zhaoxin.c    | 178 +++++++++++++++++++++++++++++++++++++++
-> 5 files changed, 200 insertions(+), 1 deletion(-)
-> create mode 100644 arch/x86/kernel/cpu/zhaoxin.c
+> While reading the series, I realized that the following expression:
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 0c55b0f..cab21a4 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -17460,6 +17460,12 @@ Q: https://patchwork.linuxtv.org/project/linux-media/list/
-> S: Maintained
-> F: drivers/media/dvb-frontends/zd1301_demod*
-> +ZHAOXIN PROCESSOR SUPPORT
-> +M: TonyWWang <TonyWWang-oc@zhaoxin.com>
-> +L: linux-kernel@vger.kernel.org
-> +S: Maintained
-> +F: arch/x86/kernel/cpu/zhaoxin.c
-> +
-> ZPOOL COMPRESSED PAGE STORAGE API
-> M: Dan Streetman <ddstreet@ieee.org>
-> L: linux-mm@kvack.org
+> 	atomic64_t v;
+>         ...
+> 	typeof(v.counter) my_val = atomic64_set(&v, VAL);
+> 
+> is a valid expression on some architectures (in part., on architectures
+> which #define atomic64_set() to WRITE_ONCE()) but is invalid on others.
+> (This is due to the fact that WRITE_ONCE() can be used as an rvalue in
+> the above assignment; TBH, I ignore the reasons for having such rvalue?)
+> 
+> IIUC, similar considerations hold for atomic_set().
+> 
+> The question is whether this is a known/"expected" inconsistency in the
+> implementation of atomic64_set() or if this would also need to be fixed
+> /addressed (say in a different patchset)?
 
-I think your email client ate the leading space here :(
+In either case, I don't think the intent is that they should be used that way,
+and from a quick scan, I can only fine a single relevant instance today:
 
-Anyway, you need a blank line before your entry.
+[mark@lakrids:~/src/linux]% git grep '\(return\|=\)\s\+atomic\(64\)\?_set'
+include/linux/vmw_vmci_defs.h:  return atomic_set((atomic_t *)var, (u32)new_val);
+include/linux/vmw_vmci_defs.h:  return atomic64_set(var, new_val);
 
-thanks,
 
-greg k-h
+[mark@lakrids:~/src/linux]% git grep '=\s+atomic_set' | wc -l
+0
+[mark@lakrids:~/src/linux]% git grep '=\s+atomic64_set' | wc -l
+0
+
+Any architectures implementing arch_atomic_* will have both of these functions
+returning void. Currently that's x86 and arm64, but (time permitting) I intend
+to migrate other architectures, so I guess we'll have to fix the above up as
+required.
+
+I think it's best to avoid the construct above.
+
+Thanks,
+Mark.
