@@ -2,202 +2,210 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6710FC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 14:48:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 464FAC282E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 14:50:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 399E9206BA
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 14:48:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HNr+lm9q"
+	by mail.kernel.org (Postfix) with ESMTP id 1A261206BA
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 14:50:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730953AbfEWOsa (ORCPT
+        id S1730846AbfEWOui (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 10:48:30 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:42004 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730710AbfEWOs3 (ORCPT
+        Thu, 23 May 2019 10:50:38 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:38453 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730709AbfEWOuh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 10:48:29 -0400
-Received: by mail-ot1-f65.google.com with SMTP id i2so5648951otr.9;
-        Thu, 23 May 2019 07:48:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oDQBZdIvYwIinFH3kAqUI347dxABstmtY5K29nEy8mo=;
-        b=HNr+lm9qrX2w9n+0DHcc8xytZybxavfe+23JfHpNgn9pseNEgnEK0UTfApLytl3g9K
-         JPfxVu6Ozzs/AWTnnt8YvUO5noCYyjb5r5fdlvOHCfygSc6lc6s1KKX2G3aaws7mPgYr
-         ZODo9q5J84Pvb7LDzjMKYtcbpQ+k2785cimOMJKhSrEL/BNOkiA0DvyCiJlQd6XyUI1R
-         xNge4WJLZqLPiNoaN0sHp8dNBpGSjdaULSEzM5V2FUa5iUxU0A3dZd+sWCwd1nq5pZHA
-         rpR1DJxBRNF/ZBXNbinJniHhF3t9FMym1Z0QdoAn0/JDUL+MySyXAunoctX5Mb4/gG/q
-         77/A==
+        Thu, 23 May 2019 10:50:37 -0400
+Received: by mail-io1-f65.google.com with SMTP id x24so5062061ion.5
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 07:50:37 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=oDQBZdIvYwIinFH3kAqUI347dxABstmtY5K29nEy8mo=;
-        b=dRYybhbEErmG0SXXtCM2+6rQPD7J5RSxG6Fn7uk6sYPA7omqVqTyMQ3wALqHmivPkD
-         fal0DBw0yLX+9AMFxramoAtUP5OxYtBXTuXsBlizfNU0JcaNNb8aHgUYfRwPFWiY15YH
-         5EGQaTUrlPzfjlFo4Cj/QVeAK27dAMT+nhRDrQXLqX0bmCHVQq40LGPaxRT0kr3Su9Jw
-         jxq84J9Nh3awmYZO3Nezxt7nWo2dd1pP2AayIHkOiyNQ2sDM4soe8OQ1oRrUffNX8oj3
-         PfwqsEoCYr4A6lGZX5TKg+HdVnILnXL/H7bj//XHA7ihOFiFqYQJWSe4swqodH3PtHd2
-         bB7g==
-X-Gm-Message-State: APjAAAX+Sv48a54vE+T9lyvAOf8+IFGO3oDYMjDY0z39QUrUEY4mTFwp
-        qlr03cLGB9W9ekKARG0kj6Y13M4l21cCyg7XWfQ=
-X-Google-Smtp-Source: APXvYqw3lXNzL20L5yiXLKv5Z3v3y22lX4Y0hQjIQiu0uAzQPUXWXHzt/EhByUGPnFRRFPnfxLaM88AV6ZYWkFV34b8=
-X-Received: by 2002:a05:6830:2047:: with SMTP id f7mr29121701otp.312.1558622909158;
- Thu, 23 May 2019 07:48:29 -0700 (PDT)
+        bh=HMbKP8ol8uS26+YktTCfpu4N0fIbBCyB3gtFH0FLV6k=;
+        b=EsM5gx8vZ1ntnJ8k9dIf4Iz+Y/Ef8KNBso467M1zIF9d//1N0mTs7BBGQR/gj4GXmo
+         G0JmUGUbl2rvumNuoejrazg4MiZKSyU4Vy9Ex0z8ZnEXLCGPuRI105jxMD0eVjN0QU7t
+         r1FcqYCNa9dGTNwum7UQAwJXon+KP9Tg1xRdbdWT7zw01mXuZAgoH2XkTpfTNOkRFIqo
+         nAuFxZxGrDPK5PMalnfKBE+SyRRoncnroIV1FTNP8LACzgtSGejAsT0YXKzIyLO8Ft74
+         FYKs6HhE/osaIS8SM9WDzBzWf34Cd2JnKLdiTLcFHOl7sKoEUU13twCfXNj8EbYxM+C9
+         sA9Q==
+X-Gm-Message-State: APjAAAXbGpqof6EJcEVZ0r848xzeGest5cq+/fKc9l2D1m8oU57QZUPq
+        h7uzQug8VISnaYxWQnAW8rtdVOPu1NxG6PHulXQZYg==
+X-Google-Smtp-Source: APXvYqzEuGMFvzF0nHEDHc1fFCLq49ou/KfTZjKOivp3GV7q9ttzWr1E/qEdb+uxM9tuyVBgHFL7/zsd1neA/aOgt8E=
+X-Received: by 2002:a05:6602:211a:: with SMTP id x26mr3328966iox.202.1558623036527;
+ Thu, 23 May 2019 07:50:36 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190523065013.2719D68B05@newverein.lst.de> <20190523065404.BB60F68B20@newverein.lst.de>
-In-Reply-To: <20190523065404.BB60F68B20@newverein.lst.de>
-From:   Vasily Khoruzhick <anarsoul@gmail.com>
-Date:   Thu, 23 May 2019 07:48:03 -0700
-Message-ID: <CA+E=qVdh-=C5zOYWYj95jLN51EaXFS6B+CQ101-f64q5QmgN3g@mail.gmail.com>
-Subject: Re: [PATCH 6/6] arm64: dts: allwinner: a64: enable ANX6345 bridge on Teres-I
-To:     Torsten Duwe <duwe@lst.de>
-Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Sean Paul <seanpaul@chromium.org>,
-        Harald Geyer <harald@ccbib.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        arm-linux <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
+References: <20190517074600.GJ2623@hirez.programming.kicks-ass.net>
+ <20190517081057.GQ2650@hirez.programming.kicks-ass.net> <CACPcB9cB5n1HOmZcVpusJq8rAV5+KfmZ-Lxv3tgsSoy7vNrk7w@mail.gmail.com>
+ <20190517091044.GM2606@hirez.programming.kicks-ass.net> <CACPcB9cpNp5CBqoRs+XMCwufzAFa8Pj-gbmj9fb+g5wVdue=ig@mail.gmail.com>
+ <20190522140233.GC16275@worktop.programming.kicks-ass.net>
+ <ab047883-69f6-1175-153f-5ad9462c6389@fb.com> <20190522174517.pbdopvookggen3d7@treble>
+ <20190522234635.a47bettklcf5gt7c@treble> <CACPcB9dRJ89YAMDQdKoDMU=vFfpb5AaY0mWC_Xzw1ZMTFBf6ng@mail.gmail.com>
+ <20190523133253.tad6ywzzexks6hrp@treble>
+In-Reply-To: <20190523133253.tad6ywzzexks6hrp@treble>
+From:   Kairui Song <kasong@redhat.com>
+Date:   Thu, 23 May 2019 22:50:24 +0800
+Message-ID: <CACPcB9fQKg7xhzhCZaF4UGi=EQs1HLTFgg-C_xJQaUfho3yMyA@mail.gmail.com>
+Subject: Re: Getting empty callchain from perf_callchain_kernel()
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Alexei Starovoitov <ast@fb.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Song Liu <songliubraving@fb.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 22, 2019 at 11:54 PM Torsten Duwe <duwe@lst.de> wrote:
+On Thu, May 23, 2019 at 9:32 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
 >
-> From: Icenowy Zheng <icenowy@aosc.io>
+> On Thu, May 23, 2019 at 02:48:11PM +0800, Kairui Song wrote:
+> > On Thu, May 23, 2019 at 7:46 AM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+> > >
+> > > On Wed, May 22, 2019 at 12:45:17PM -0500, Josh Poimboeuf wrote:
+> > > > On Wed, May 22, 2019 at 02:49:07PM +0000, Alexei Starovoitov wrote:
+> > > > > The one that is broken is prog_tests/stacktrace_map.c
+> > > > > There we attach bpf to standard tracepoint where
+> > > > > kernel suppose to collect pt_regs before calling into bpf.
+> > > > > And that's what bpf_get_stackid_tp() is doing.
+> > > > > It passes pt_regs (that was collected before any bpf)
+> > > > > into bpf_get_stackid() which calls get_perf_callchain().
+> > > > > Same thing with kprobes, uprobes.
+> > > >
+> > > > Is it trying to unwind through ___bpf_prog_run()?
+> > > >
+> > > > If so, that would at least explain why ORC isn't working.  Objtool
+> > > > currently ignores that function because it can't follow the jump table.
+> > >
+> > > Here's a tentative fix (for ORC, at least).  I'll need to make sure this
+> > > doesn't break anything else.
+> > >
+> > > diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
+> > > index 242a643af82f..1d9a7cc4b836 100644
+> > > --- a/kernel/bpf/core.c
+> > > +++ b/kernel/bpf/core.c
+> > > @@ -1562,7 +1562,6 @@ static u64 ___bpf_prog_run(u64 *regs, const struct bpf_insn *insn, u64 *stack)
+> > >                 BUG_ON(1);
+> > >                 return 0;
+> > >  }
+> > > -STACK_FRAME_NON_STANDARD(___bpf_prog_run); /* jump table */
+> > >
+> > >  #define PROG_NAME(stack_size) __bpf_prog_run##stack_size
+> > >  #define DEFINE_BPF_PROG_RUN(stack_size) \
+> > > diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+> > > index 172f99195726..2567027fce95 100644
+> > > --- a/tools/objtool/check.c
+> > > +++ b/tools/objtool/check.c
+> > > @@ -1033,13 +1033,6 @@ static struct rela *find_switch_table(struct objtool_file *file,
+> > >                 if (text_rela->type == R_X86_64_PC32)
+> > >                         table_offset += 4;
+> > >
+> > > -               /*
+> > > -                * Make sure the .rodata address isn't associated with a
+> > > -                * symbol.  gcc jump tables are anonymous data.
+> > > -                */
+> > > -               if (find_symbol_containing(rodata_sec, table_offset))
+> > > -                       continue;
+> > > -
+> > >                 rodata_rela = find_rela_by_dest(rodata_sec, table_offset);
+> > >                 if (rodata_rela) {
+> > >                         /*
+> >
+> > Hi Josh, this still won't fix the problem.
+> >
+> > Problem is not (or not only) with ___bpf_prog_run, what actually went
+> > wrong is with the JITed bpf code.
 >
-> Teres-I has an anx6345 bridge connected to the RGB666 LCD output, and
-> the I2C controlling signals are connected to I2C0 bus. eDP output goes
-> to an Innolux N116BGE panel.
+> There seem to be a bunch of issues.  My patch at least fixes the failing
+> selftest reported by Alexei for ORC.
 >
-> Enable it in the device tree.
->
-> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-> Signed-off-by: Torsten Duwe <duwe@suse.de>
-> ---
->  arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts |   65 +++++++++++++++++--
->  1 file changed, 61 insertions(+), 4 deletions(-)
->
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
-> @@ -65,6 +65,21 @@
->                 };
->         };
->
-> +       panel: panel {
-> +               compatible ="innolux,n116bge", "simple-panel";
+> How can I recreate your issue?
 
-IIRC Rob wanted it to be edp-connector, not simple-panel. Also you
-need to introduce edp-connector binding.
+Hmm, I used bcc's example to attach bpf to trace point, and with that
+fix stack trace is still invalid.
 
-> +               status = "okay";
-> +               power-supply = <&reg_dcdc1>;
-> +               backlight = <&backlight>;
-> +
-> +               ports {
-> +                       panel_in: port {
-> +                               panel_in_edp: endpoint {
-> +                                       remote-endpoint = <&anx6345_out>;
-> +                               };
-> +                       };
-> +               };
-> +       };
-> +
->         reg_usb1_vbus: usb1-vbus {
->                 compatible = "regulator-fixed";
->                 regulator-name = "usb1-vbus";
-> @@ -81,20 +96,48 @@
->         };
->  };
+CMD I used with bcc:
+python3 ./tools/stackcount.py t:sched:sched_fork
+
+And I just had another try applying your patch, self test is also failing.
+
+I'm applying on my local master branch, a few days older than
+upstream, I can update and try again, am I missing anything?
+
 >
-> +&de {
-> +       status = "okay";
-> +};
-> +
->  &ehci1 {
->         status = "okay";
->  };
+> > For frame pointer unwinder, it seems the JITed bpf code will have a
+> > shifted "BP" register? (arch/x86/net/bpf_jit_comp.c:217), so if we can
+> > unshift it properly then it will work.
 >
+> Yeah, that looks like a frame pointer bug in emit_prologue().
 >
-> -/* The ANX6345 eDP-bridge is on i2c0. There is no linux (mainline)
-> - * driver for this chip at the moment, the bootloader initializes it.
-> - * However it can be accessed with the i2c-dev driver from user space.
-> - */
->  &i2c0 {
->         clock-frequency = <100000>;
->         pinctrl-names = "default";
->         pinctrl-0 = <&i2c0_pins>;
->         status = "okay";
-> +
-> +       anx6345: anx6345@38 {
-> +               compatible = "analogix,anx6345";
-> +               reg = <0x38>;
-> +               reset-gpios = <&pio 3 24 GPIO_ACTIVE_LOW>; /* PD24 */
-> +               dvdd25-supply = <&reg_dldo2>;
-> +               dvdd12-supply = <&reg_dldo3>;
-> +
-> +               ports {
-> +                       #address-cells = <1>;
-> +                       #size-cells = <0>;
-> +
-> +                       port@0 {
-> +                               anx6345_in: endpoint {
-> +                                       remote-endpoint = <&tcon0_out_anx6345>;
-> +                               };
-> +                       };
-> +                       port@1 {
-> +                               anx6345_out: endpoint {
-> +                                       remote-endpoint = <&panel_in_edp>;
-> +                               };
-> +                       };
-> +               };
-> +       };
-> +};
-> +
-> +&mixer0 {
-> +       status = "okay";
->  };
+> > I tried below code, and problem is fixed (only for frame pointer
+> > unwinder though). Need to find a better way to detect and do any
+> > similar trick for bpf part, if this is a feasible way to fix it:
+> >
+> > diff --git a/arch/x86/kernel/unwind_frame.c b/arch/x86/kernel/unwind_frame.c
+> > index 9b9fd4826e7a..2c0fa2aaa7e4 100644
+> > --- a/arch/x86/kernel/unwind_frame.c
+> > +++ b/arch/x86/kernel/unwind_frame.c
+> > @@ -330,8 +330,17 @@ bool unwind_next_frame(struct unwind_state *state)
+> >         }
+> >
+> >         /* Move to the next frame if it's safe: */
+> > -       if (!update_stack_state(state, next_bp))
+> > -               goto bad_address;
+> > +       if (!update_stack_state(state, next_bp)) {
+> > +               // Try again with shifted BP
+> > +               state->bp += 5; // see AUX_STACK_SPACE
+> > +               next_bp = (unsigned long
+> > *)READ_ONCE_TASK_STACK(state->task, *state->bp);
+> > +               // Clean and refetch stack info, it's marked as error outed
+> > +               state->stack_mask = 0;
+> > +               get_stack_info(next_bp, state->task,
+> > &state->stack_info, &state->stack_mask);
+> > +               if (!update_stack_state(state, next_bp)) {
+> > +                       goto bad_address;
+> > +               }
+> > +       }
+> >
+> >         return true;
 >
->  &mmc0 {
-> @@ -279,6 +322,20 @@
->         vcc-hdmi-supply = <&reg_dldo1>;
->  };
+> Nack.
 >
-> +&tcon0 {
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&lcd_rgb666_pins>;
-> +
-> +       status = "okay";
-> +};
-> +
-> +&tcon0_out {
-> +       tcon0_out_anx6345: endpoint@0 {
-> +               reg = <0>;
-> +               remote-endpoint = <&anx6345_in>;
-> +       };
-> +};
-> +
->  &uart0 {
->         pinctrl-names = "default";
->         pinctrl-0 = <&uart0_pb_pins>;
+> > For ORC unwinder, I think the unwinder can't find any info about the
+> > JITed part. Maybe if can let it just skip the JITed part and go to
+> > kernel context, then should be good enough.
+>
+> If it's starting from a fake pt_regs then that's going to be a
+> challenge.
+>
+> Will the JIT code always have the same stack layout?  If so then we
+> could hard code that knowledge in ORC.  Or even better, create a generic
+> interface for ORC to query the creator of the generated code about the
+> stack layout.
+
+I think yes.
+
+Not sure why we have the BP shift yet, if the prolog code could be
+tweaked to work with frame pointer unwinder it will be good to have.
+But still not for ORC.
+
+Will it be a good idea to have a region reserved for the JITed code?
+Currently it shares the region with "module mapping space". If let it
+have a separate region, when the unwinder meet any code in that region
+it will know it's JITed code and then can do something special about
+it.
+
+This should make it much easier for both frame pointer and ORC unwinder to work.
+
+-- 
+Best Regards,
+Kairui Song
