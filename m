@@ -2,96 +2,158 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51778C282DE
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 14:32:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BE21C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 14:32:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 210BC20851
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 14:32:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F25A721850
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 14:32:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zfcN1c1e"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BCy6Okmk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730923AbfEWOcm (ORCPT
+        id S1730945AbfEWOcn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 10:32:42 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:33330 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730708AbfEWOcl (ORCPT
+        Thu, 23 May 2019 10:32:43 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:46833 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730899AbfEWOcl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 May 2019 10:32:41 -0400
-Received: by mail-qt1-f196.google.com with SMTP id z5so614947qtb.0
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 07:32:40 -0700 (PDT)
+Received: by mail-ot1-f67.google.com with SMTP id j49so5571188otc.13
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 07:32:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=26O4OAT3StjGcdvXWdoax0aRus0DVxp2E0u/qprceKo=;
-        b=zfcN1c1eomMu4+oxnKPYdhDF2+VuS/B2E91XN3OlCwQw7KkklrujUQt8Kn5EKAXrGY
-         ky/1UB308P/7q0WsnVGs5zkXTd0UslTzabH6KAPdXvHo4ywiM4EJ2agZAyCfJm3t7kGh
-         aJfKlvedmBR9f+Odt+gP5zlLz+6cPU0onGlKfVGSiOf1C4L4lRQJ4lTTjH4aGIf0hIU1
-         eDpi16auna3NIpAhQOqkSI/vfO4QvFDbGR/p5yxpVQz0ftc712fBu5i+MhhNqFAY4hMQ
-         KRW9jPEmbatolCDcubTgZulhcUm7MK+6TxOmmNTr/UujaPPAqinAbJOii1JTZMxPzTRu
-         qGXg==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UmCv77ojMXG+c1Fp7DLXkEEMvKlYSuA0abYrccWopi8=;
+        b=BCy6Okmk8ktr4nwvd4MspoIxsNlhMgBNgut3lK3gji1Mo8ZK86sDQuXYRAM0aEzKt1
+         l5h9Z162b8ZZvcy3+o2m7mOM8MFYONAclzGI9eGRFt+MvF5Vk7qd2XbUpuRtY3kwxigT
+         TItqAHhT39/xzIdVfEVUYP6dbydvV9umwbP2vl+FxdLXFLSb9ACpWUQrIu3LG0CJGus3
+         efSiM9X4tBhY2RglIlFRNgfOwB840H3gEzgClahgzgTog6Yv+6has8aNNHrrbEHD2p91
+         f4b1gS1SqBJkPyuKpLmeXF29Yw4PJv/H5cHfQKgbABzZI5vn49C4VG2ZQkov7h619lB0
+         cONg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=26O4OAT3StjGcdvXWdoax0aRus0DVxp2E0u/qprceKo=;
-        b=tdNyYETT7Kvfiv4u5q2SFwp1FTLjbib19c24puwePwLdQKkdWPqnz0q0R4p8OoF43I
-         vBG1GsYkS3jPk8tFuPg3Tk6ZifGrp1hX9d3wrB+kNYDdTuhHWQsUHnU/k6L4Ah43u3Ul
-         rq+q7aN5U2S3KNxOjugSg9WTOgZAnLtG6+vqOegNFyy2f2FZw9nBlQ9ZKCygR96GgRfR
-         WgdO/i5Co9CwN8C9gig+ODXsP5lBziX1W2R08xCR3AjfPevVZPrNDCwNoa/V9amDS6Kn
-         Pb6h6f5mj699IMeBlvd3HTpW0Yht7C71hD43A8358rluyAQ/07Lor1IgZ+gM6HvBFpZG
-         y6TQ==
-X-Gm-Message-State: APjAAAXlHn8mpvxLCv1d+8rKPVca1QXBtSnJXU5G0JR8ey1i6vYMx910
-        EOavu8SAEmDO4Z7sTQJ45Aig0A==
-X-Google-Smtp-Source: APXvYqwhHNKz/pi41E5cnHTYcYzQ3e6W/Vv0HpqStGGaYWCsQz5zn9J2dosBcXxlTD20r8VmIj5f4A==
-X-Received: by 2002:a0c:b50b:: with SMTP id d11mr27491149qve.98.1558621960357;
-        Thu, 23 May 2019 07:32:40 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s (li483-211.members.linode.com. [50.116.44.211])
-        by smtp.gmail.com with ESMTPSA id w2sm10446227qto.19.2019.05.23.07.32.35
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 23 May 2019 07:32:39 -0700 (PDT)
-Date:   Thu, 23 May 2019 22:32:27 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 00/30] coresight: Support for ACPI bindings
-Message-ID: <20190523143227.GC31751@leoy-ThinkPad-X240s>
-References: <1558521304-27469-1-git-send-email-suzuki.poulose@arm.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UmCv77ojMXG+c1Fp7DLXkEEMvKlYSuA0abYrccWopi8=;
+        b=DzeznXuIGv9qlSQIISF09ZHyZNnGcjInUGxxUOpcMExBPxcL/RvdbZsjo2x1j0/bwn
+         /91lTDnGpDZHeGEsStsN6IliK8maluMXlnsoGIx0qvNNqQ9Xvhm9WSPyZFxdr4hydIiM
+         P6/5lfZugOG8dN4aHBfIppACgj+cSaWQ5XavIb3phvX/4c7nEr4aWXmap8DHQDBys4An
+         hCHqsxmoT4F5bJoyKHdfDsiS4QrK3p9MOp13avgiB9J6HCdF8RjYhtkuZoTyt4zHpcjM
+         6Dcn3CBXw5aIu6IBFyzFI9HNzBjVl8MFxj+PfI6aZIrVoKmk5FWbUh+mVo0Deq98T8GT
+         xmDg==
+X-Gm-Message-State: APjAAAWpw89qf18YqyFFV5k2SA8PTvlg9yV13ZSWLJdH04Bbmevbvdqv
+        YGlOZwEbTLxfD2EVLeuYSihyHD+EHB3FJK5wRINeLQ==
+X-Google-Smtp-Source: APXvYqzFh/C6cDrkSdzIHZQLhSVRwEaU4gGSzclCCpHMgWTGugVQoxN/zVlngGYGKq3CVngNXUCDkIhtZyPn6qxtEko=
+X-Received: by 2002:a9d:7f8b:: with SMTP id t11mr72319otp.110.1558621960440;
+ Thu, 23 May 2019 07:32:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1558521304-27469-1-git-send-email-suzuki.poulose@arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20190522155259.11174-1-christian@brauner.io> <20190522165737.GC4915@redhat.com>
+ <20190523115118.pmscbd6kaqy37dym@brauner.io>
+In-Reply-To: <20190523115118.pmscbd6kaqy37dym@brauner.io>
+From:   Jann Horn <jannh@google.com>
+Date:   Thu, 23 May 2019 16:32:14 +0200
+Message-ID: <CAG48ez0Uq2GQnQsuPkNrDdJVku_6GPeZ_5F_-5J3iy2CULr0_Q@mail.gmail.com>
+Subject: Re: [PATCH v1 1/2] open: add close_range()
+To:     Christian Brauner <christian@brauner.io>
+Cc:     Oleg Nesterov <oleg@redhat.com>, Al Viro <viro@zeniv.linux.org.uk>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Florian Weimer <fweimer@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Arnd Bergmann <arnd@arndb.de>, Shuah Khan <shuah@kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        Todd Kjos <tkjos@android.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org,
+        linux-arch <linux-arch@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Suzuki,
-
-On Wed, May 22, 2019 at 11:34:33AM +0100, Suzuki K Poulose wrote:
-
+On Thu, May 23, 2019 at 1:51 PM Christian Brauner <christian@brauner.io> wrote:
 [...]
+> I kept it dumb and was about to reply that your solution introduces more
+> code when it seemed we wanted to keep this very simple for now.
+> But then I saw that find_next_opened_fd() already exists as
+> find_next_fd(). So it's actually not bad compared to what I sent in v1.
+> So - with some small tweaks (need to test it and all now) - how do we
+> feel about?:
+[...]
+> static int __close_next_open_fd(struct files_struct *files, unsigned *curfd, unsigned maxfd)
+> {
+>         struct file *file = NULL;
+>         unsigned fd;
+>         struct fdtable *fdt;
+>
+>         spin_lock(&files->file_lock);
+>         fdt = files_fdtable(files);
+>         fd = find_next_fd(fdt, *curfd);
 
-> Changes since v2:
->  - Drop the patches exposing device links via sysfs, to be posted as separate
->    series.
+find_next_fd() finds free fds, not used ones.
 
-Thanks for sharing the git tree linkage in another email.  Just want
-to confirm, since patch set v3 you have dropped the patch "coresight:
-Expose device connections via sysfs" [1], will you send out this patch
-after ACPI binding support patches has been merged?
+>         if (fd >= fdt->max_fds || fd > maxfd)
+>                 goto out_unlock;
+>
+>         file = fdt->fd[fd];
+>         rcu_assign_pointer(fdt->fd[fd], NULL);
+>         __put_unused_fd(files, fd);
 
-When you send out the new patch for exposing device connection, please
-loop me so that I can base on it for perf testing related works.
+You can't do __put_unused_fd() if the old pointer in fdt->fd[fd] was
+NULL - because that means that the fd has been reserved by another
+thread that is about to put a file pointer in there, and if you
+release the fd here, that messes up the refcounting (or hits the
+BUG_ON() in __fd_install()).
 
-Thanks,
-Leo Yan
+> out_unlock:
+>         spin_unlock(&files->file_lock);
+>
+>         if (!file)
+>                 return -EBADF;
+>
+>         *curfd = fd;
+>         filp_close(file, files);
+>         return 0;
+> }
+>
+> int __close_range(struct files_struct *files, unsigned fd, unsigned max_fd)
+> {
+>         if (fd > max_fd)
+>                 return -EINVAL;
+>
+>         while (fd <= max_fd) {
 
-[1] https://lkml.org/lkml/2019/4/15/658
+Note that with a pattern like this, you have to be careful about what
+happens if someone gives you max_fd==0xffffffff - then this condition
+is always true and the loop can not terminate this way.
+
+>                 if (__close_next_fd(files, &fd, maxfd))
+>                         break;
+
+(obviously it can still terminate this way)
+
+>                 cond_resched();
+>                 fd++;
+>         }
+>
+>         return 0;
+> }
