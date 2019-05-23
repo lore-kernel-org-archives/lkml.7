@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E037C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:16:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EC16C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:17:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79A9F2184E
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:16:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5503821841
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:17:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639016;
-	bh=oheSv95oFkn+VVV3lf9Ovz2363O9f+rCEsKN1nvHhuA=;
+	s=default; t=1558639020;
+	bh=wKOlZSx4CfiKezSLe4RjSocThAM1H9tuHQ8Ho95X1wE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FefPSI5MY+hKbX6ZwDMleWyA34U9lz/q2dkOlAyNL89zyytGqaS9KnxbsAVX72J4a
-	 ezNiHWgsZrHfpetN3aQc9o405bH3lIx2iLItA3c2MSoDAKNaVB4qHFQ36CAFKmBjPb
-	 n66Ghmz7NvCVUA0uryb3TUKdk1hu3Z9YWnoQQG18=
+	b=eoR8yq8GnbD8YJiKpNdIEDayEXA5ccc4ayV5gbOvMqqjx0diBlDqTSVp7MfYgRrT1
+	 iHeaFxdaPE5oGG3laHAaZS/kmqUXbrqxqfr50Gym/aJwPowf6pL5rYv4leknQxsZp9
+	 Ith/VV0KyI/HLXjpIf/H9YT61xVpFVvwaaWitTFU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388407AbfEWTQz (ORCPT
+        id S2389301AbfEWTQ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:16:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51808 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:16:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387916AbfEWTQy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:16:54 -0400
+        id S2388830AbfEWTQ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:16:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A0F7217D9;
-        Thu, 23 May 2019 19:16:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F3FC22184B;
+        Thu, 23 May 2019 19:16:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639013;
-        bh=oheSv95oFkn+VVV3lf9Ovz2363O9f+rCEsKN1nvHhuA=;
+        s=default; t=1558639016;
+        bh=wKOlZSx4CfiKezSLe4RjSocThAM1H9tuHQ8Ho95X1wE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wKXqi7TTzZt2S3QmBOF4pI6TEeZr2tO+Hho85WdidU7vTp6U5MD0AjWhQoqyKncjr
-         XpdmAtotGb/kIQAYmidOBK5dbVxp7Gvs00lqsukhVzIJwXwR4z/KjviC/kWbKU2QMN
-         GX9bx0jqpre14IcaSFoNzOO0C6iFQpxyn4R9RViw=
+        b=rW8EdZLSyOrkrQY/NCrBrlP05RKfWqbd6oumpRqKzf6ZaBxmy2Ee/1JmD93WBWSWL
+         s4aJCyPuiikMPwTi7VJv+ukSKDK1AGS+C3BhE1PUTFPupSxeQUhNnI5tUh7PcKjUHK
+         uC1nrZJRDob0RW1cMkzzg2vRF1akPYGWwjF33Vv4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
         Teddy Wang <teddy.wang@siliconmotion.com>,
         Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: [PATCH 4.19 064/114] fbdev: sm712fb: fix white screen of death on reboot, dont set CR3B-CR3F
-Date:   Thu, 23 May 2019 21:06:03 +0200
-Message-Id: <20190523181737.398060692@linuxfoundation.org>
+Subject: [PATCH 4.19 065/114] fbdev: sm712fb: fix boot screen glitch when sm712fb replaces VGA
+Date:   Thu, 23 May 2019 21:06:04 +0200
+Message-Id: <20190523181737.497528035@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181731.372074275@linuxfoundation.org>
 References: <20190523181731.372074275@linuxfoundation.org>
@@ -63,22 +63,13 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Yifeng Li <tomli@tomli.me>
 
-commit 8069053880e0ee3a75fd6d7e0a30293265fe3de4 upstream.
+commit ec1587d5073f29820e358f3a383850d61601d981 upstream.
 
-On a Thinkpad s30 (Pentium III / i440MX, Lynx3DM), rebooting with
-sm712fb framebuffer driver would cause a white screen of death on
-the next POST, presumably the proper timings for the LCD panel was
-not reprogrammed properly by the BIOS.
-
-Experiments showed a few CRTC Scratch Registers, including CRT3D,
-CRT3E and CRT3F may be used internally by BIOS as some flags. CRT3B is
-a hardware testing register, we shouldn't mess with it. CRT3C has
-blanking signal and line compare control, which is not needed for this
-driver.
-
-Stop writing to CR3B-CR3F (a.k.a CRT3B-CRT3F) registers. Even if these
-registers don't have side-effect on other systems, writing to them is
-also highly questionable.
+When the machine is booted in VGA mode, loading sm712fb would cause
+a glitch of random pixels shown on the screen. To prevent it from
+happening, we first clear the entire framebuffer, and we also need
+to stop calling smtcfb_setmode() during initialization, the fbdev
+layer will call it for us later when it's ready.
 
 Signed-off-by: Yifeng Li <tomli@tomli.me>
 Tested-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
@@ -93,19 +84,18 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 --- a/drivers/video/fbdev/sm712fb.c
 +++ b/drivers/video/fbdev/sm712fb.c
-@@ -1173,8 +1173,12 @@ static void sm7xx_set_timing(struct smtc
- 			smtc_crtcw(i, vgamode[j].init_cr00_cr18[i]);
+@@ -1493,7 +1493,11 @@ static int smtcfb_pci_probe(struct pci_d
+ 	if (err)
+ 		goto failed;
  
- 		/* init CRTC register CR30 - CR4D */
--		for (i = 0; i < SIZE_CR30_CR4D; i++)
-+		for (i = 0; i < SIZE_CR30_CR4D; i++) {
-+			if ((i + 0x30) >= 0x3B && (i + 0x30) <= 0x3F)
-+				/* side-effect, don't write to CR3B-CR3F */
-+				continue;
- 			smtc_crtcw(i + 0x30, vgamode[j].init_cr30_cr4d[i]);
-+		}
+-	smtcfb_setmode(sfb);
++	/*
++	 * The screen would be temporarily garbled when sm712fb takes over
++	 * vesafb or VGA text mode. Zero the framebuffer.
++	 */
++	memset_io(sfb->lfb, 0, sfb->fb->fix.smem_len);
  
- 		/* init CRTC register CR90 - CRA7 */
- 		for (i = 0; i < SIZE_CR90_CRA7; i++)
+ 	err = register_framebuffer(info);
+ 	if (err < 0)
 
 
