@@ -6,47 +6,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4D1BC282CE
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 00:44:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73C6CC282CE
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 00:44:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7583F21773
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 00:44:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E00921773
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 00:44:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730292AbfEWAoF (ORCPT
+        id S1730329AbfEWAoQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 20:44:05 -0400
-Received: from out01.mta.xmission.com ([166.70.13.231]:49786 "EHLO
-        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729535AbfEWAnM (ORCPT
+        Wed, 22 May 2019 20:44:16 -0400
+Received: from out02.mta.xmission.com ([166.70.13.232]:57521 "EHLO
+        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729523AbfEWAnK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 20:43:12 -0400
+        Wed, 22 May 2019 20:43:10 -0400
 Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
         (Exim 4.87)
         (envelope-from <ebiederm@xmission.com>)
-        id 1hTbp8-0002L9-0G; Wed, 22 May 2019 18:43:10 -0600
+        id 1hTbp7-0008Ri-Nd; Wed, 22 May 2019 18:43:09 -0600
 Received: from ip72-206-97-68.om.om.cox.net ([72.206.97.68] helo=x220.int.ebiederm.org)
         by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_CBC_SHA256:128)
         (Exim 4.87)
         (envelope-from <ebiederm@xmission.com>)
-        id 1hTboG-0005Z3-Oo; Wed, 22 May 2019 18:42:18 -0600
+        id 1hTbnf-0005Z3-5l; Wed, 22 May 2019 18:41:48 -0600
 From:   "Eric W. Biederman" <ebiederm@xmission.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
         Linux Containers <containers@lists.linux-foundation.org>,
         Oleg Nesterov <oleg@redhat.com>, linux-arch@vger.kernel.org
-Date:   Wed, 22 May 2019 19:39:13 -0500
-Message-Id: <20190523003916.20726-24-ebiederm@xmission.com>
+Date:   Wed, 22 May 2019 19:39:08 -0500
+Message-Id: <20190523003916.20726-19-ebiederm@xmission.com>
 X-Mailer: git-send-email 2.21.0.dirty
 In-Reply-To: <20190523003916.20726-1-ebiederm@xmission.com>
 References: <20190523003916.20726-1-ebiederm@xmission.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-XM-SPF: eid=1hTboG-0005Z3-Oo;;;mid=<20190523003916.20726-24-ebiederm@xmission.com>;;;hst=in01.mta.xmission.com;;;ip=72.206.97.68;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1/XSmEdBp3G/DfkJAV+7Yk3a+X2rFZTN9Y=
+X-XM-SPF: eid=1hTbnf-0005Z3-5l;;;mid=<20190523003916.20726-19-ebiederm@xmission.com>;;;hst=in01.mta.xmission.com;;;ip=72.206.97.68;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1+bKbUzlq5gxopT7fPoQdp0fJB4iJOIX4M=
 X-SA-Exim-Connect-IP: 72.206.97.68
 X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: [REVIEW][PATCH 23/26] signal: Move the computation of force into send_signal and correct it.
+Subject: [REVIEW][PATCH 18/26] signal/unicore32: Remove tsk parameter from __do_user_fault
 X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
 X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -54,112 +54,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Forcing a signal or not allowing a pid namespace init to ignore
-SIGKILL or SIGSTOP is more cleanly computed in send_signal.
+The __do_user_fault function is always called with tsk == current.
+Make that obvious by removing the tsk parameter.
 
-There are two cases where we don't allow a pid namespace init
-to ignore SIGKILL or SIGSTOP.  If the sending process is
-from an ancestor pid namespace and as such is effectively
-the god to the target process, and if the it is the kernel
-that is sending the signal, not another application.
-
-It is known that a process is from an ancestor pid namespace if
-it can see it's target but it's target does not have a pid for
-the sender in it's pid namespace.
-
-It is know that a signal is sent from the kernel if si_code is set to
-SI_KERNEL or info is SEND_SIG_PRIV (which ultimately generates
-a signal with si_code == SI_KERNEL).
-
-The only signals that matter are SIGKILL and SIGSTOP neither of
-which can really be caught, and both of which always have a siginfo
-layout that includes si_uid and si_pid.  Therefore we never need
-to worry about forcing a signal when si_pid and si_uid are absent.
-
-So handle the two special cases of info and the case when si_pid and
-si_uid are present.
+This makes it clear that __do_user_fault calls force_sig_fault
+on the current task.
 
 Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
 ---
- kernel/signal.c | 35 ++++++++++++++++++++++-------------
- 1 file changed, 22 insertions(+), 13 deletions(-)
+ arch/unicore32/mm/fault.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/kernel/signal.c b/kernel/signal.c
-index b2f0cf3a68aa..0da35880261e 100644
---- a/kernel/signal.c
-+++ b/kernel/signal.c
-@@ -1057,7 +1057,7 @@ static inline bool legacy_queue(struct sigpending *signals, int sig)
+diff --git a/arch/unicore32/mm/fault.c b/arch/unicore32/mm/fault.c
+index b9a3a50644c1..cadee0b3b4e0 100644
+--- a/arch/unicore32/mm/fault.c
++++ b/arch/unicore32/mm/fault.c
+@@ -116,10 +116,11 @@ static void __do_kernel_fault(struct mm_struct *mm, unsigned long addr,
+  * Something tried to access memory that isn't in our memory map..
+  * User mode accesses just cause a SIGSEGV
+  */
+-static void __do_user_fault(struct task_struct *tsk, unsigned long addr,
+-		unsigned int fsr, unsigned int sig, int code,
+-		struct pt_regs *regs)
++static void __do_user_fault(unsigned long addr, unsigned int fsr,
++			    unsigned int sig, int code,	struct pt_regs *regs)
+ {
++	struct task_struct *tsk = current;
++
+ 	tsk->thread.address = addr;
+ 	tsk->thread.error_code = fsr;
+ 	tsk->thread.trap_no = 14;
+@@ -136,7 +137,7 @@ void do_bad_area(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
+ 	 * have no context to handle this fault with.
+ 	 */
+ 	if (user_mode(regs))
+-		__do_user_fault(tsk, addr, fsr, SIGSEGV, SEGV_MAPERR, regs);
++		__do_user_fault(addr, fsr, SIGSEGV, SEGV_MAPERR, regs);
+ 	else
+ 		__do_kernel_fault(mm, addr, fsr, regs);
  }
- 
- static int __send_signal(int sig, struct kernel_siginfo *info, struct task_struct *t,
--			enum pid_type type, int from_ancestor_ns)
-+			enum pid_type type, bool force)
- {
- 	struct sigpending *pending;
- 	struct sigqueue *q;
-@@ -1067,8 +1067,7 @@ static int __send_signal(int sig, struct kernel_siginfo *info, struct task_struc
- 	assert_spin_locked(&t->sighand->siglock);
- 
- 	result = TRACE_SIGNAL_IGNORED;
--	if (!prepare_signal(sig, t,
--			from_ancestor_ns || (info == SEND_SIG_PRIV)))
-+	if (!prepare_signal(sig, t, force))
- 		goto ret;
- 
- 	pending = (type != PIDTYPE_PID) ? &t->signal->shared_pending : &t->pending;
-@@ -1198,13 +1197,17 @@ static inline bool has_si_pid_and_uid(struct kernel_siginfo *info)
- static int send_signal(int sig, struct kernel_siginfo *info, struct task_struct *t,
- 			enum pid_type type)
- {
--	int from_ancestor_ns = 0;
--
--#ifdef CONFIG_PID_NS
--	from_ancestor_ns = si_fromuser(info) &&
--			   !task_pid_nr_ns(current, task_active_pid_ns(t));
--#endif
--	if (!is_si_special(info) && has_si_pid_and_uid(info)) {
-+	/* Should SIGKILL or SIGSTOP be received by a pid namespace init? */
-+	bool force = false;
-+
-+	if (info == SEND_SIG_NOINFO) {
-+		/* Force if sent from an ancestor pid namespace */
-+		force = !task_pid_nr_ns(current, task_active_pid_ns(t));
-+	} else if (info == SEND_SIG_PRIV) {
-+		/* Don't ignore kernel generated signals */
-+		force = true;
-+	} else if (has_si_pid_and_uid(info)) {
-+		/* SIGKILL and SIGSTOP is special or has ids */
- 		struct user_namespace *t_user_ns;
- 
- 		rcu_read_lock();
-@@ -1215,10 +1218,16 @@ static int send_signal(int sig, struct kernel_siginfo *info, struct task_struct
- 		}
- 		rcu_read_unlock();
- 
--		if (!task_pid_nr_ns(current, task_active_pid_ns(t)))
-+		/* A kernel generated signal? */
-+		force = (info->si_code == SI_KERNEL);
-+
-+		/* From an ancestor pid namespace? */
-+		if (!task_pid_nr_ns(current, task_active_pid_ns(t))) {
- 			info->si_pid = 0;
-+			force = true;
-+		}
+@@ -310,7 +311,7 @@ static int do_pf(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
+ 		code = fault == VM_FAULT_BADACCESS ? SEGV_ACCERR : SEGV_MAPERR;
  	}
--	return __send_signal(sig, info, t, type, from_ancestor_ns);
-+	return __send_signal(sig, info, t, type, force);
- }
  
- static void print_fatal_signal(int signr)
-@@ -1509,7 +1518,7 @@ int kill_pid_usb_asyncio(int sig, int errno, sigval_t addr,
+-	__do_user_fault(tsk, addr, fsr, sig, code, regs);
++	__do_user_fault(addr, fsr, sig, code, regs);
+ 	return 0;
  
- 	if (sig) {
- 		if (lock_task_sighand(p, &flags)) {
--			ret = __send_signal(sig, &info, p, PIDTYPE_TGID, 0);
-+			ret = __send_signal(sig, &info, p, PIDTYPE_TGID, false);
- 			unlock_task_sighand(p, &flags);
- 		} else
- 			ret = -ESRCH;
+ no_context:
 -- 
 2.21.0
 
