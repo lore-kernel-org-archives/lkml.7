@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C49DFC282DE
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:32:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 061BBC282E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:32:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C2D12054F
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:32:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C695F20675
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:32:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639957;
-	bh=O/q34PUgSB/3SJ3kr25zIaftIpvty8Zo4bMPrl8SX74=;
+	s=default; t=1558639968;
+	bh=s72rLvTOwA5x4B2XRi8yDybv5ixqBUHpoT+rgHvTsdc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Hvcrsm04CmJscLW1xkrhB9QvmLjY02nM6sYB17jO2EMmUNBEzKxrPT8qfKIFsLz99
-	 13CdzleRrf5CCMSLxEy8tkyuV0w4G0nmKn0Qi6Qf9keTZWz9ueBVxqHCJwQ/ZtDGwI
-	 18Rvy05v7fMBMWguoFuiouhmdVqkzs0QuOBG7mPg=
+	b=stO3nL6D5AEJ0Z3d2My2Z3vQTkz4lWEWyZu18Q3IM0RQ2WJIeOIESVUWIDA0E2zri
+	 sd3nFQcbcOxLJBmcvuBsK7o1RORvKGS2ohLPSYi0AqWLCKtTaoQK4g9SlhUqNFTHPl
+	 SddYH06LB8iFfgMz2h7tkDmATV2LEBxMET5mHseQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392045AbfEWTcg (ORCPT
+        id S2392120AbfEWTaW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:32:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44190 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:30:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403772AbfEWTah (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:30:37 -0400
+        id S2392102AbfEWTaS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:30:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 68DCA21851;
-        Thu, 23 May 2019 19:30:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3EA6021855;
+        Thu, 23 May 2019 19:30:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639836;
-        bh=O/q34PUgSB/3SJ3kr25zIaftIpvty8Zo4bMPrl8SX74=;
+        s=default; t=1558639817;
+        bh=s72rLvTOwA5x4B2XRi8yDybv5ixqBUHpoT+rgHvTsdc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LipBo7U9mk7bzan5XylkPu1VhzziWBJGnyJtieVnE66549I2AbwuEJMON41081tX3
-         4Qebz7TlQpDH5l9JuQovPYAuKle81gFi5/1JfPACrBTJSThOXqXomYj86hwxy9rzhI
-         N3qUtao7TAlbjKGoU2m6L2hVCJJL71KYc7iNtAaA=
+        b=yBpsTC6760S5NV5fn8XS0xPjTGu3e5RuTigGInIpDS279wdU6GDnLnn1ZB4z/UGb6
+         eZStCrX+RVkcgK5lNbRad6eBgGsDTt9bbEXGA/F+wKde3z+WAe4JSwx2b56OIoYnC1
+         rwBlHdE8OwUsNd7u41/gnQG+h4pOjv1L7teMt4AY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kirill Smelkov <kirr@nexedi.com>,
-        Miklos Szeredi <mszeredi@redhat.com>
-Subject: [PATCH 5.1 110/122] fuse: Add FOPEN_STREAM to use stream_open()
-Date:   Thu, 23 May 2019 21:07:12 +0200
-Message-Id: <20190523181720.013770818@linuxfoundation.org>
+        stable@vger.kernel.org, Andreas Ziegler <andreas.ziegler@fau.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: [PATCH 5.1 077/122] tracing: probeevent: Fix to make the type of $comm string
+Date:   Thu, 23 May 2019 21:06:39 +0200
+Message-Id: <20190523181714.962759068@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181705.091418060@linuxfoundation.org>
 References: <20190523181705.091418060@linuxfoundation.org>
@@ -59,87 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kirill Smelkov <kirr@nexedi.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-commit bbd84f33652f852ce5992d65db4d020aba21f882 upstream.
+commit 3dd1f7f24f8ceec00bbbc364c2ac3c893f0fdc4c upstream.
 
-Starting from commit 9c225f2655e3 ("vfs: atomic f_pos accesses as per
-POSIX") files opened even via nonseekable_open gate read and write via lock
-and do not allow them to be run simultaneously. This can create read vs
-write deadlock if a filesystem is trying to implement a socket-like file
-which is intended to be simultaneously used for both read and write from
-filesystem client.  See commit 10dce8af3422 ("fs: stream_open - opener for
-stream-like files so that read and write can run simultaneously without
-deadlock") for details and e.g. commit 581d21a2d02a ("xenbus: fix deadlock
-on writes to /proc/xen/xenbus") for a similar deadlock example on
-/proc/xen/xenbus.
+Fix to make the type of $comm "string".  If we set the other type to $comm
+argument, it shows meaningless value or wrong data. Currently probe events
+allow us to set string array type (e.g. ":string[2]"), or other digit types
+like x8 on $comm. But since clearly $comm is just a string data, it should
+not be fetched by other types including array.
 
-To avoid such deadlock it was tempting to adjust fuse_finish_open to use
-stream_open instead of nonseekable_open on just FOPEN_NONSEEKABLE flags,
-but grepping through Debian codesearch shows users of FOPEN_NONSEEKABLE,
-and in particular GVFS which actually uses offset in its read and write
-handlers
+Link: http://lkml.kernel.org/r/155723736241.9149.14582064184468574539.stgit@devnote2
 
-	https://codesearch.debian.net/search?q=-%3Enonseekable+%3D
-	https://gitlab.gnome.org/GNOME/gvfs/blob/1.40.0-6-gcbc54396/client/gvfsfusedaemon.c#L1080
-	https://gitlab.gnome.org/GNOME/gvfs/blob/1.40.0-6-gcbc54396/client/gvfsfusedaemon.c#L1247-1346
-	https://gitlab.gnome.org/GNOME/gvfs/blob/1.40.0-6-gcbc54396/client/gvfsfusedaemon.c#L1399-1481
-
-so if we would do such a change it will break a real user.
-
-Add another flag (FOPEN_STREAM) for filesystem servers to indicate that the
-opened handler is having stream-like semantics; does not use file position
-and thus the kernel is free to issue simultaneous read and write request on
-opened file handle.
-
-This patch together with stream_open() should be added to stable kernels
-starting from v3.14+. This will allow to patch OSSPD and other FUSE
-filesystems that provide stream-like files to return FOPEN_STREAM |
-FOPEN_NONSEEKABLE in open handler and this way avoid the deadlock on all
-kernel versions. This should work because fuse_finish_open ignores unknown
-open flags returned from a filesystem and so passing FOPEN_STREAM to a
-kernel that is not aware of this flag cannot hurt. In turn the kernel that
-is not aware of FOPEN_STREAM will be < v3.14 where just FOPEN_NONSEEKABLE
-is sufficient to implement streams without read vs write deadlock.
-
-Cc: stable@vger.kernel.org # v3.14+
-Signed-off-by: Kirill Smelkov <kirr@nexedi.com>
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+Cc: Andreas Ziegler <andreas.ziegler@fau.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: stable@vger.kernel.org
+Fixes: 533059281ee5 ("tracing: probeevent: Introduce new argument fetching code")
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/fuse/file.c            |    4 +++-
- include/uapi/linux/fuse.h |    2 ++
- 2 files changed, 5 insertions(+), 1 deletion(-)
+ kernel/trace/trace_probe.c |   13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
---- a/fs/fuse/file.c
-+++ b/fs/fuse/file.c
-@@ -178,7 +178,9 @@ void fuse_finish_open(struct inode *inod
- 
- 	if (!(ff->open_flags & FOPEN_KEEP_CACHE))
- 		invalidate_inode_pages2(inode->i_mapping);
--	if (ff->open_flags & FOPEN_NONSEEKABLE)
-+	if (ff->open_flags & FOPEN_STREAM)
-+		stream_open(inode, file);
-+	else if (ff->open_flags & FOPEN_NONSEEKABLE)
- 		nonseekable_open(inode, file);
- 	if (fc->atomic_o_trunc && (file->f_flags & O_TRUNC)) {
- 		struct fuse_inode *fi = get_fuse_inode(inode);
---- a/include/uapi/linux/fuse.h
-+++ b/include/uapi/linux/fuse.h
-@@ -229,11 +229,13 @@ struct fuse_file_lock {
-  * FOPEN_KEEP_CACHE: don't invalidate the data cache on open
-  * FOPEN_NONSEEKABLE: the file is not seekable
-  * FOPEN_CACHE_DIR: allow caching this directory
-+ * FOPEN_STREAM: the file is stream-like (no file position at all)
-  */
- #define FOPEN_DIRECT_IO		(1 << 0)
- #define FOPEN_KEEP_CACHE	(1 << 1)
- #define FOPEN_NONSEEKABLE	(1 << 2)
- #define FOPEN_CACHE_DIR		(1 << 3)
-+#define FOPEN_STREAM		(1 << 4)
- 
- /**
-  * INIT request/reply flags
+--- a/kernel/trace/trace_probe.c
++++ b/kernel/trace/trace_probe.c
+@@ -420,13 +420,14 @@ static int traceprobe_parse_probe_arg_bo
+ 				return -E2BIG;
+ 		}
+ 	}
+-	/*
+-	 * The default type of $comm should be "string", and it can't be
+-	 * dereferenced.
+-	 */
+-	if (!t && strcmp(arg, "$comm") == 0)
++
++	/* Since $comm can not be dereferred, we can find $comm by strcmp */
++	if (strcmp(arg, "$comm") == 0) {
++		/* The type of $comm must be "string", and not an array. */
++		if (parg->count || (t && strcmp(t, "string")))
++			return -EINVAL;
+ 		parg->type = find_fetch_type("string");
+-	else
++	} else
+ 		parg->type = find_fetch_type(t);
+ 	if (!parg->type) {
+ 		pr_info("Unsupported type: %s\n", t);
 
 
