@@ -2,110 +2,145 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B237C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 16:56:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A4D5C282E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 16:56:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EFBA2133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 16:56:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QKjKEJAP"
+	by mail.kernel.org (Postfix) with ESMTP id D9C48217D4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 16:56:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731254AbfEWQ40 (ORCPT
+        id S1731289AbfEWQ4r convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 12:56:26 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:45447 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730790AbfEWQ40 (ORCPT
+        Thu, 23 May 2019 12:56:47 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:49593 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730951AbfEWQ4q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 12:56:26 -0400
-Received: by mail-pf1-f194.google.com with SMTP id s11so3551478pfm.12
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 09:56:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=hM/FpdNSFBUxwsc/bH6HaYb2mRTwEqnM6q+pG5Opaiw=;
-        b=QKjKEJAP/SopoWFpkRrkNWKTted6q6ovKsHuS/T5GyygadbPTQhqDN1eUDmUZY6nbP
-         iNDTVxSZ0IVYxCNniNsid4BDCKsxfctE/l0uywvmxJS/9MiQLcQWd8JjktJ1ldZthUB6
-         nrq7LNR++REjxMPKnL2efXJj+/16tP6rcfgBRp/cK13NJulzZGqk2L0K0hEmRQmu92Cz
-         YwosRU/9z+rpRdt7846q0u44RuMtl0Z9qRHPMLQ1iMtX70txwdA4RBJQIFp8rGSq/zh6
-         rF4tyGCFMlq752MeSgMLyxLCQbSkA9ceF/0iC/u49Ny/IL75STLonSu2USSX14ZT+bdt
-         sqLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=hM/FpdNSFBUxwsc/bH6HaYb2mRTwEqnM6q+pG5Opaiw=;
-        b=cTA0kcKTfXYKnTcQJDcbN+S/ocfQTNDOOvNj4ZGO7cjoCFnZMA7zAH9AN0N8shY0f+
-         Hf6VBnGrawQ+ixdKmidsf+uhCf24t5+uUmCAVw3uvmSviLYiCc8GnAtXDjmYM0d2Hk6S
-         hI5No1rFZ5vdjG9OVNbS7I/mZyJETub4RMpWQEwIaWYAvqXzA6fM/084zaHyEMhpygph
-         Su4XQH3Kk9U02S63iZ9qxJmXPIZYRIg95COy7BoT5SRSdunHKo+GmZSoF8QBWyHPuIYS
-         cjaMYwAY8oAWq8APrlcgXsx680QGrBVicD6F29R9OkHtPV0cKHmjg5kAiim4lzZadUy4
-         SzZQ==
-X-Gm-Message-State: APjAAAXYWmKY4eytSuKgAhyehLlYL8Z4VcPOB2V/meb/eU3qoY049KRV
-        a9Jxvpwz43ebErgGyF+0vPA=
-X-Google-Smtp-Source: APXvYqyafcu/mWXpHJw/TN+hfAfMBqUTLhHre/3ZPW/vDgWJUo0VN4xy4pAikHdSA0Un9QN7TomKsg==
-X-Received: by 2002:aa7:87c3:: with SMTP id i3mr103598908pfo.85.1558630585808;
-        Thu, 23 May 2019 09:56:25 -0700 (PDT)
-Received: from bharath12345-Inspiron-5559 ([103.110.42.33])
-        by smtp.gmail.com with ESMTPSA id t10sm6687147pfe.2.2019.05.23.09.56.23
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 23 May 2019 09:56:25 -0700 (PDT)
-Date:   Thu, 23 May 2019 22:26:20 +0530
-From:   Bharath Vedartham <linux.bhar@gmail.com>
-To:     ericvh@gmail.com, lucho@ionkov.net, asmadeus@codewreck.org
-Cc:     v9fs-developer@lists.sourceforge.net, linux-kernel@vger.kernel.org
-Subject: [PATCH] 9p/vfs_super.c: Remove unused parameter data in
- v9fs_fill_super
-Message-ID: <20190523165619.GA4209@bharath12345-Inspiron-5559>
+        Thu, 23 May 2019 12:56:46 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-195-dCvv3IMGOWGiL--uJpCpLw-1; Thu, 23 May 2019 17:56:43 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b::d117) by AcuMS.aculab.com
+ (fd9f:af1c:a25b::d117) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu,
+ 23 May 2019 17:56:43 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Thu, 23 May 2019 17:56:43 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Oleg Nesterov' <oleg@redhat.com>
+CC:     'Deepa Dinamani' <deepa.kernel@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "dbueso@suse.de" <dbueso@suse.de>,
+        "axboe@kernel.dk" <axboe@kernel.dk>,
+        Davidlohr Bueso <dave@stgolabs.net>, Eric Wong <e@80x24.org>,
+        Jason Baron <jbaron@akamai.com>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        linux-aio <linux-aio@kvack.org>,
+        Omar Kilani <omar.kilani@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: RE: [PATCH v2] signal: Adjust error codes according to
+ restore_user_sigmask()
+Thread-Topic: [PATCH v2] signal: Adjust error codes according to
+ restore_user_sigmask()
+Thread-Index: AQHVELwtsgR+BAQFXk2JV68Wk/7LjKZ4aINAgABVkoCAAB2x0P///TgAgAARdkA=
+Date:   Thu, 23 May 2019 16:56:43 +0000
+Message-ID: <f0eced5677c144debfc5a69d0d327bc1@AcuMS.aculab.com>
+References: <20190522032144.10995-1-deepa.kernel@gmail.com>
+ <20190522150505.GA4915@redhat.com>
+ <CABeXuvrPM5xvzqUydbREapvwgy6deYreHp0aaMoSHyLB6+HGRg@mail.gmail.com>
+ <20190522161407.GB4915@redhat.com>
+ <CABeXuvpjrW5Gt95JC-_rYkOA=6RCD5OtkEQdwZVVqGCE3GkQOQ@mail.gmail.com>
+ <4f7b6dbeab1d424baaebd7a5df116349@AcuMS.aculab.com>
+ <20190523145944.GB23070@redhat.com>
+ <345cfba5edde470f9a68d913f44fa342@AcuMS.aculab.com>
+ <20190523163604.GE23070@redhat.com>
+In-Reply-To: <20190523163604.GE23070@redhat.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+X-MC-Unique: dCvv3IMGOWGiL--uJpCpLw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-v9fs_fill_super has a param 'void *data' which is unused in the
-function.
+From: Oleg Nesterov
+> Sent: 23 May 2019 17:36
+> On 05/23, David Laight wrote:
+> >
+> > From: Oleg Nesterov
+> > > On 05/23, David Laight wrote:
+...
+> > > Not sure I understand... OK, suppose that you do
+> > >
+> > > 	block-all-signals;
+> > > 	ret = pselect(..., sigmask(SIG_URG));
+> > >
+> > > if it returns success/timeout then the handler for SIG_URG should not be called?
+> >
+> > Ugg...
+> > Posix probably allows the signal handler be called at the point the event
+> > happens rather than being deferred until the system call completes.
+> > Queueing up the signal handler to be run at a later time (syscall exit)
+> > certainly makes sense.
+> > Definitely safest to call the signal handler even if success/timeout
+> > is returned.
+> 
+> Why?
+> 
+> > pselect() exists to stop the entry race, not the exit one.
+> 
+> pselect() has to block SIG_URG again before it returns to user-mode, right?
 
-This patch removes the 'void *data' param in v9fs_fill_super and changes
-the parameters in all function calls of v9fs_fill_super.
+Yep.
+So the signal handler can't be called for a signal that happens after
+pselect() returns.
 
-Signed-off-by: Bharath Vedartham <linux.bhar@gmail.com>
----
- fs/9p/vfs_super.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> Suppose pselect() finds a ready fd, and this races with SIG_URG.
 
-diff --git a/fs/9p/vfs_super.c b/fs/9p/vfs_super.c
-index 67d1b96..00f2078 100644
---- a/fs/9p/vfs_super.c
-+++ b/fs/9p/vfs_super.c
-@@ -73,7 +73,7 @@ static int v9fs_set_super(struct super_block *s, void *data)
- 
- static int
- v9fs_fill_super(struct super_block *sb, struct v9fs_session_info *v9ses,
--		int flags, void *data)
-+		int flags)
- {
- 	int ret;
- 
-@@ -143,7 +143,7 @@ static struct dentry *v9fs_mount(struct file_system_type *fs_type, int flags,
- 		retval = PTR_ERR(sb);
- 		goto clunk_fid;
- 	}
--	retval = v9fs_fill_super(sb, v9ses, flags, data);
-+	retval = v9fs_fill_super(sb, v9ses, flags);
- 	if (retval)
- 		goto release_sb;
- 
--- 
-2.7.4
+You mean if SIG_URG is raised after a ready fd is found (or even timeout)?
+So the return value isn't EINTR.
+(If an fd is readable on entry, the SIG_URG could have happened much earlier.)
+
+> Why do you think the handler should run?
+
+Think of the application code loop.
+Consider what happens if the signal is SIG_INT - to request the program
+stop.
+After every pselect() call the application looks to see if the handler
+has been called.
+If one of the fds is always readable pselect() will never return EINTR
+but you want the SIG_INT handler run so that the loop gets terminated.
+If you only call the signal handler when EINTR is returned the process
+will never stop.
+So you need to call the handler even when pselect() succeeds/time out.
+
+> What if SIG_URG comes right after pselect() blocks SIG_URG again? I mean,
+> how this differs the case when it comes before, but a ready fd was already
+> found?
+
+I suspect you need to defer the re-instatement of the original mask
+to the code that calls the signal handlers (which probably should
+be called with the programs signal mask).
+So that particular window doesn't exist.
+
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
