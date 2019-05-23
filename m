@@ -2,96 +2,135 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF2E7C04AAC
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 07:37:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19E57C04AAC
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 07:37:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 814382133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 07:37:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C89002075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 07:37:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fR8RE84n"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="Y7lLSv4n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726905AbfEWHhh (ORCPT
+        id S1730178AbfEWHhl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 03:37:37 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:33419 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730320AbfEWHhf (ORCPT
+        Thu, 23 May 2019 03:37:41 -0400
+Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:43648 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726070AbfEWHhd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 03:37:35 -0400
-Received: by mail-lf1-f68.google.com with SMTP id x132so3659403lfd.0
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 00:37:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cx8kg7WymCjtyRcPfqK4zjuEJ4lhy55B2Gkin5DJtFU=;
-        b=fR8RE84n1odppI3p20OTG7XaGgUYqo6kXCldCRW8or5Z3hIBeoEMGNKMB5ZPtdNJk/
-         mgByEQfAV30URjnhve0FLDZCf3VjYeJTLxrXOtpebu/WgWJa95xV6q/bzJIWfQu5kAM/
-         lb+2YJRaFCyI9zlUIgxWbqOGBQ8GH9WL7wLHOn/TeVF16dYN8cUyFpGCJTNx4/m3BA6y
-         WhJFolJShRdIpJ8lYYTZrjQzkt4A0fSuH6IOy7MSadTiKYexx/vuh+O5dw6MVcnvh0iX
-         6FmVEvoLxExnr+FvKCG/9HFdK3pBLFR3kjTdxjnhyNRcvh8Flzh1gs9FGLySsBOjgh/R
-         +vAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cx8kg7WymCjtyRcPfqK4zjuEJ4lhy55B2Gkin5DJtFU=;
-        b=iHbH+RfH9sZ19jN7bEaejXJytnqm84GJUqmNVCdvogYsK7Y1ri5T9a1ofumLv1i0wA
-         ggVonfKt/mtIAKNQqJ5YUDgr5ONbm6NcNX34AvtzZoeHv01SelIZsIr3S8puxHk+aGkO
-         lm1Mwq4khTch0Ng5B28gEJlZOhvT+CcCMzbKMI03ZIaLj2nMdu9KL51+bVpBPr7HST/Y
-         iGdRHA18KaKGA2oc8/Kq76FB+9P+vZSLD6S0I7Gt0PyrXo74p4hPUDIyPougsOJ/sAoi
-         Kbo9TlZJgMmWg7k76QO1ARKCEhhMAjVFIdA/oHIBahoobD+ZE/f5vtXbrViJVc4aTnOB
-         2QHQ==
-X-Gm-Message-State: APjAAAWXA+HgFl/o1who6u2q9MXWNN/ApP1WKasK4eDmTQwmyJu/J57I
-        7nrTPNtteM/VHTDY4HH5KPqSY0ryP9wpqYvf86g88g==
-X-Google-Smtp-Source: APXvYqyBRsqXPk9Dhzbeg2Oz3JZyzA3NjwECl9TBODwCZZrOK9/RFjOdjOlwiSIFYgEUEDYHs19a86bibzY+Aklnf3E=
-X-Received: by 2002:ac2:5935:: with SMTP id v21mr4885287lfi.117.1558597053613;
- Thu, 23 May 2019 00:37:33 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190522152925.12419-1-benjamin.gaignard@st.com>
-In-Reply-To: <20190522152925.12419-1-benjamin.gaignard@st.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 23 May 2019 09:37:22 +0200
-Message-ID: <CACRpkdYOS0UrXPtJb0--4RW6QM_Xq8wb=9Gj5X9fk7JWCgpWfQ@mail.gmail.com>
-Subject: Re: [PATCH 0/2] Allow pinctrl framework to create links
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>
-Cc:     Alexandre TORGUE <alexandre.torgue@st.com>,
-        Amelie Delaunay <amelie.delaunay@st.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 23 May 2019 03:37:33 -0400
+Received: from mailhost.synopsys.com (dc2-mailhost2.synopsys.com [10.12.135.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id D17AAC019E;
+        Thu, 23 May 2019 07:37:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1558597059; bh=tx/RgSBNhnHOh1Ade5WF0HH1a1AcMDyppC57wRGfoHY=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Y7lLSv4nWF+c9EihmPKmOa7DSJJXsSawAPFiFPO2sbEasiWGf6D/35vF9aDVL+fAg
+         43hiifuM6MYjr/MSV7cBumU9LX8R/pPI3Fmk1CYWAVxM2Vjnss29iYxo7wseaV+MbM
+         5jZ7RAo6W/mCJoIkYHOSThyGx4ndRivkphW38fqFWastzUfCKAyKPORjot75WNTt6/
+         cRw7Y5RsN2cKzAPU/ht2Jl5DL/xMZfRrv/tgcA1s6+ASN9b3WU3spRJ240PeD2JmYg
+         8YrQre0iCBqbjpxSTAjC5ufaxxoQF+E75C1msncNBE40/TE+9y2DHi/iOJ+YMpWysa
+         iP7zTwEJxD4zw==
+Received: from de02.synopsys.com (de02.internal.synopsys.com [10.225.17.21])
+        by mailhost.synopsys.com (Postfix) with ESMTP id D07E1A009B;
+        Thu, 23 May 2019 07:37:28 +0000 (UTC)
+Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
+        by de02.synopsys.com (Postfix) with ESMTP id CBCCD3D92B;
+        Thu, 23 May 2019 09:37:27 +0200 (CEST)
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
+        Joao Pinto <Joao.Pinto@synopsys.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Corentin Labbe <clabbe.montjoie@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>
+Subject: [PATCH net-next 00/18] net: stmmac: Improvements and Selftests
+Date:   Thu, 23 May 2019 09:36:50 +0200
+Message-Id: <cover.1558596599.git.joabreu@synopsys.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Benjamin!
+[ Thanks to the introducion of selftests this series ended up being a misc
+of improvements and the selftests additions per-se. ]
 
-On Wed, May 22, 2019 at 5:29 PM Benjamin Gaignard
-<benjamin.gaignard@st.com> wrote:
+This introduces selftests support in stmmac driver. We add 9 basic sanity
+checks and MAC loopback support for all cores within the driver. This way
+more tests can easily be added in the future and can be run in virtually
+any MAC/GMAC/QoS/XGMAC platform.
 
-> Some pin controllers may need to ensure suspend/resume calls ordering between
-> themselves and their clients.
-> That is the case for STMFX (an I2C GPIO expender) which need to be suspended
-> after all it clients to let them call pinctrl_pm_select_sleep_state() before
-> perform it own suspend function. It is the same problem for resume but in
-> reverse order.
->
-> This series allow to let pinctrl core knows if a controller would like to
-> create link between itself and it client by setting create_link to true.
+Having this we can find regressions and missing features in the driver
+while at the same time we can check if the IP is correctly working.
 
-I changed the name of the boolt to "link_consumers" and applied!
+We have been using this for some time now and I do have more tests to
+submit in the feature. My experience is that although writing the tests
+adds more development time, the gain results are obvious.
 
-I will send patches for all other pin controllers that are I2C or other
-slow bus based, as they will definately need this. Let's see what
-happens!
+I let this feature optional within the driver under a Kconfig option.
 
-Yours,
-Linus Walleij
+Cc: Joao Pinto <jpinto@synopsys.com>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+Cc: Alexandre Torgue <alexandre.torgue@st.com>
+Cc: Corentin Labbe <clabbe.montjoie@gmail.com>
+Cc: Andrew Lunn <andrew@lunn.ch>
+
+Corentin Labbe (1):
+  net: ethernet: stmmac: dwmac-sun8i: Enable control of loopback
+
+Jose Abreu (17):
+  net: stmmac: Add MAC loopback callback to HWIF
+  net: stmmac: dwmac100: Add MAC loopback support
+  net: stmmac: dwmac1000: Add MAC loopback support
+  net: stmmac: dwmac4/5: Add MAC loopback support
+  net: stmmac: dwxgmac2: Add MAC loopback support
+  net: stmmac: Switch MMC functions to HWIF callbacks
+  net: stmmac: dwmac1000: Also pass control frames while in promisc mode
+  net: stmmac: dwmac4/5: Also pass control frames while in promisc mode
+  net: stmmac: dwxgmac2: Also pass control frames while in promisc mode
+  net: stmmac: Introduce selftests support
+  net: stmmac: dwmac1000: Fix Hash Filter
+  net: stmmac: dwmac1000: Clear unused address entries
+  net: stmmac: dwmac4/5: Fix Hash Filter
+  net: stmmac: dwmac4/5: Do not disable whole RX in dma_stop_rx()
+  net: stmmac: dwxgmac2: Do not disable whole RX in dma_stop_rx()
+  net: stmmac: dwmac4/5: Clear unused address entries
+  net: stmmac: Prevent missing interrupts when running NAPI
+
+ drivers/net/ethernet/stmicro/stmmac/Kconfig        |   9 +
+ drivers/net/ethernet/stmicro/stmmac/Makefile       |   2 +
+ drivers/net/ethernet/stmicro/stmmac/common.h       |   1 +
+ drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c  |  13 +
+ drivers/net/ethernet/stmicro/stmmac/dwmac1000.h    |   1 +
+ .../net/ethernet/stmicro/stmmac/dwmac1000_core.c   |  22 +-
+ .../net/ethernet/stmicro/stmmac/dwmac100_core.c    |  13 +
+ drivers/net/ethernet/stmicro/stmmac/dwmac4.h       |   3 +
+ drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c  |  29 +-
+ drivers/net/ethernet/stmicro/stmmac/dwmac4_lib.c   |   4 -
+ drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h     |   2 +
+ .../net/ethernet/stmicro/stmmac/dwxgmac2_core.c    |  15 +-
+ drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c |   4 -
+ drivers/net/ethernet/stmicro/stmmac/hwif.c         |   9 +
+ drivers/net/ethernet/stmicro/stmmac/hwif.h         |  21 +
+ drivers/net/ethernet/stmicro/stmmac/mmc.h          |   4 -
+ drivers/net/ethernet/stmicro/stmmac/mmc_core.c     |  13 +-
+ drivers/net/ethernet/stmicro/stmmac/stmmac.h       |  22 +
+ .../net/ethernet/stmicro/stmmac/stmmac_ethtool.c   |   8 +-
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c  |   7 +-
+ .../net/ethernet/stmicro/stmmac/stmmac_selftests.c | 837 +++++++++++++++++++++
+ 21 files changed, 1016 insertions(+), 23 deletions(-)
+ create mode 100644 drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
+
+-- 
+2.7.4
+
