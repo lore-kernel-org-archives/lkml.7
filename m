@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C163DC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:29:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E86FC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:29:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97BF7206BA
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:29:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 690CC206BA
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:29:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639765;
-	bh=HiFtAIKrl+Yj/b7btEiQx9X+/cf8POcNBsL9C668gKc=;
+	s=default; t=1558639768;
+	bh=8T1Tvz0pFoNbcqa2xr0vtm5OazC3Ix2HGzZSZ/OhBEo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f78Ff5Qh/vp4qLRm6YbwLPQhQrWgvRiZbMwAxdWxO0xjYa53fBVkwB2wKZtemogic
-	 UnVnxa/rtu2Fdnb+1dcmlONQjhye3bfHw93nF+V/fu/DPDXbx1YYwQGt2SO2oliB82
-	 cFxiodWpdd5DPdkz03RNGRSJYNgcjLrjf5+CXiXw=
+	b=AEG2EVGuwhXYjQ+3Mutv/Br6Z3twH3KTcLOtrJS8wfJ1mV/tqPYl2iL1EieGnXMm1
+	 +ZdfdlTUnbh5rMafXLRIeIBiPfUiVrpk2XMHYOyjiATQTjgaY8hzXXe51XBAeUtZq/
+	 TRAS5MuXEt0hZ6f2ZM885m3gVz6nLc2npaNGKa2E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391411AbfEWT3Y (ORCPT
+        id S2391963AbfEWT31 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:29:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42456 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:29:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42520 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391937AbfEWT3W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:29:22 -0400
+        id S2391949AbfEWT3Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:29:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF5D52133D;
-        Thu, 23 May 2019 19:29:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA890206BA;
+        Thu, 23 May 2019 19:29:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639761;
-        bh=HiFtAIKrl+Yj/b7btEiQx9X+/cf8POcNBsL9C668gKc=;
+        s=default; t=1558639764;
+        bh=8T1Tvz0pFoNbcqa2xr0vtm5OazC3Ix2HGzZSZ/OhBEo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ENXBowsK4E9PLX3ry0BGGWHuV853e9IaYzTXwQMGquvX+DEmmXbBUG7Cl4vuGPpJV
-         mf6n6YX0uoV8Hocw5tU5zihFzHSDZOw7LMMRFNoMekFnotCi/dsT8YkmUiV8SAol9L
-         WGUMCbXVlI4w49Mhzm6GtCeO36fj/7FLKA6J936g=
+        b=u12mV0+dlASrBHmBpfcTR9tDNpCnOMR2o2XqvyontkCRg85TaspXNGpRtWfOMycU5
+         78T/lkxRazqmZ2xz9dzTd9DxJ1W2uKnm6KoUu3g0e3KKE7po3SX/tdFj/rikUDDpoN
+         0r0v1iDRzKxmdhKvUKlH7SZTcJrXXaS9FDDmrK0c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhong Kaihua <zhongkaihua@huawei.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Zhangfei Gao <zhangfei.gao@linaro.org>,
-        Dong Zhang <zhangdong46@hisilicon.com>,
-        Leo Yan <leo.yan@linaro.org>, Stephen Boyd <sboyd@kernel.org>
-Subject: [PATCH 5.1 059/122] clk: hi3660: Mark clk_gate_ufs_subsys as critical
-Date:   Thu, 23 May 2019 21:06:21 +0200
-Message-Id: <20190523181712.577353528@linuxfoundation.org>
+        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <treding@nvidia.com>
+Subject: [PATCH 5.1 078/122] memory: tegra: Fix integer overflow on tick value calculation
+Date:   Thu, 23 May 2019 21:06:40 +0200
+Message-Id: <20190523181715.094872429@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181705.091418060@linuxfoundation.org>
 References: <20190523181705.091418060@linuxfoundation.org>
@@ -62,44 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leo Yan <leo.yan@linaro.org>
+From: Dmitry Osipenko <digetx@gmail.com>
 
-commit 9f77a60669d13ed4ddfa6cd7374c9d88da378ffa upstream.
+commit b906c056b6023c390f18347169071193fda57dde upstream.
 
-clk_gate_ufs_subsys is a system bus clock, turning off it will
-introduce lockup issue during system suspend flow.  Let's mark
-clk_gate_ufs_subsys as critical clock, thus keeps it on during
-system suspend and resume.
+Multiplying the Memory Controller clock rate by the tick count results
+in an integer overflow and in result the truncated tick value is being
+programmed into hardware, such that the GR3D memory client performance is
+reduced by two times.
 
-Fixes: d374e6fd5088 ("clk: hisilicon: Add clock driver for hi3660 SoC")
-Cc: stable@vger.kernel.org
-Cc: Zhong Kaihua <zhongkaihua@huawei.com>
-Cc: John Stultz <john.stultz@linaro.org>
-Cc: Zhangfei Gao <zhangfei.gao@linaro.org>
-Suggested-by: Dong Zhang <zhangdong46@hisilicon.com>
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/clk/hisilicon/clk-hi3660.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/memory/tegra/mc.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/clk/hisilicon/clk-hi3660.c
-+++ b/drivers/clk/hisilicon/clk-hi3660.c
-@@ -163,8 +163,12 @@ static const struct hisi_gate_clock hi36
- 	  "clk_isp_snclk_mux", CLK_SET_RATE_PARENT, 0x50, 17, 0, },
- 	{ HI3660_CLK_GATE_ISP_SNCLK2, "clk_gate_isp_snclk2",
- 	  "clk_isp_snclk_mux", CLK_SET_RATE_PARENT, 0x50, 18, 0, },
-+	/*
-+	 * clk_gate_ufs_subsys is a system bus clock, mark it as critical
-+	 * clock and keep it on for system suspend and resume.
-+	 */
- 	{ HI3660_CLK_GATE_UFS_SUBSYS, "clk_gate_ufs_subsys", "clk_div_sysbus",
--	  CLK_SET_RATE_PARENT, 0x50, 21, 0, },
-+	  CLK_SET_RATE_PARENT | CLK_IS_CRITICAL, 0x50, 21, 0, },
- 	{ HI3660_PCLK_GATE_DSI0, "pclk_gate_dsi0", "clk_div_cfgbus",
- 	  CLK_SET_RATE_PARENT, 0x50, 28, 0, },
- 	{ HI3660_PCLK_GATE_DSI1, "pclk_gate_dsi1", "clk_div_cfgbus",
+--- a/drivers/memory/tegra/mc.c
++++ b/drivers/memory/tegra/mc.c
+@@ -282,7 +282,7 @@ static int tegra_mc_setup_latency_allowa
+ 	u32 value;
+ 
+ 	/* compute the number of MC clock cycles per tick */
+-	tick = mc->tick * clk_get_rate(mc->clk);
++	tick = (unsigned long long)mc->tick * clk_get_rate(mc->clk);
+ 	do_div(tick, NSEC_PER_SEC);
+ 
+ 	value = readl(mc->regs + MC_EMEM_ARB_CFG);
 
 
