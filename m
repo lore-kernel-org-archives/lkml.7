@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 712C8C282DE
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:23:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D5EFC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:23:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48AC5217D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:23:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64A55217D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:23:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639424;
-	bh=wKOlZSx4CfiKezSLe4RjSocThAM1H9tuHQ8Ho95X1wE=;
+	s=default; t=1558639426;
+	bh=LkxJLjCUKrKFGxWh1/a/LOeqSaX3EHtctEGuUYC9oGE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OjNP06ExRHw+aaFR83Zm7+M/+3IacBYJneyhtOg5u/1mhLR/oz1qsbUqUtGXvcuRF
-	 E2AGXTr6DZj3DNeWNz+Hr2qRK/+nc46tGPHefpV8EDhHylHZgQCBeGli+i7dHTou0y
-	 /0ENMbQsXJEWk2W4GQuCBfn3WopRVcuGsG+Qw5rw=
+	b=JumWuS7Mf4kokkXWmyIatTf1sgFwslQt5MO2jsZKHenoDrepK2uudvS+mC/Sol3Zd
+	 03zcT86oR3Qlgm45HMhieaxVwJ1tZfGUupxo46zTwpf+MPJ7ssMZqCBYlYQythftRb
+	 4MJ5+c9YDmT8a7pP/qnLxNOlvDN+xo/IzfAe4tZQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390748AbfEWTXn (ORCPT
+        id S2390071AbfEWTXp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:23:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34050 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:23:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34182 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390106AbfEWTXe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:23:34 -0400
+        id S2390398AbfEWTXk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:23:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ACD162054F;
-        Thu, 23 May 2019 19:23:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 242152054F;
+        Thu, 23 May 2019 19:23:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639414;
-        bh=wKOlZSx4CfiKezSLe4RjSocThAM1H9tuHQ8Ho95X1wE=;
+        s=default; t=1558639419;
+        bh=LkxJLjCUKrKFGxWh1/a/LOeqSaX3EHtctEGuUYC9oGE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TTlPWhquBLMR51Zb4dnI74oMwxRZ0e+5rE5rInra8T/vZkvivPblQPOn/N+BnKG1B
-         JLqcJfvUXYZXnJPvmxLnMR8LhFc+whFxDJ8YMIuMlawg8UWoMGw5WmRf3WFINGO37M
-         Yslc051ULpS9Mn8j9Wo2kEXQmqwZXx5HG+27uybk=
+        b=cmov/QBJzzZOnPAfYCzLpI1zQwbOYfyMZw5FRlzqkH2V8ATFbdpWJa8n55Q2Hs/NC
+         EX6x3aawx8Z12jgiqkF2aULEdzza1PcSqpClCtk7YZSZQmwFRBUlRkyquaKJdP8E0C
+         qYp8GJEFEeebWuxD6cz8Tc4VFfnWMzpBG/Rs/Qo0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yifeng Li <tomli@tomli.me>,
-        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        Teddy Wang <teddy.wang@siliconmotion.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: [PATCH 5.0 080/139] fbdev: sm712fb: fix boot screen glitch when sm712fb replaces VGA
-Date:   Thu, 23 May 2019 21:06:08 +0200
-Message-Id: <20190523181731.278156118@linuxfoundation.org>
+        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 5.0 072/139] perf intel-pt: Fix sample timestamp wrt non-taken branches
+Date:   Thu, 23 May 2019 21:06:00 +0200
+Message-Id: <20190523181730.164978652@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181720.120897565@linuxfoundation.org>
 References: <20190523181720.120897565@linuxfoundation.org>
@@ -61,41 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yifeng Li <tomli@tomli.me>
+From: Adrian Hunter <adrian.hunter@intel.com>
 
-commit ec1587d5073f29820e358f3a383850d61601d981 upstream.
+commit 1b6599a9d8e6c9f7e9b0476012383b1777f7fc93 upstream.
 
-When the machine is booted in VGA mode, loading sm712fb would cause
-a glitch of random pixels shown on the screen. To prevent it from
-happening, we first clear the entire framebuffer, and we also need
-to stop calling smtcfb_setmode() during initialization, the fbdev
-layer will call it for us later when it's ready.
+The sample timestamp is updated to ensure that the timestamp represents
+the time of the sample and not a branch that the decoder is still
+walking towards. The sample timestamp is updated when the decoder
+returns, but the decoder does not return for non-taken branches. Update
+the sample timestamp then also.
 
-Signed-off-by: Yifeng Li <tomli@tomli.me>
-Tested-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Cc: Teddy Wang <teddy.wang@siliconmotion.com>
-Cc: <stable@vger.kernel.org>  # v4.4+
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Note that commit 3f04d98e972b5 ("perf intel-pt: Improve sample
+timestamp") was also a stable fix and appears, for example, in v4.4
+stable tree as commit a4ebb58fd124 ("perf intel-pt: Improve sample
+timestamp").
+
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: stable@vger.kernel.org # v4.4+
+Fixes: 3f04d98e972b ("perf intel-pt: Improve sample timestamp")
+Link: http://lkml.kernel.org/r/20190510124143.27054-4-adrian.hunter@intel.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/video/fbdev/sm712fb.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ tools/perf/util/intel-pt-decoder/intel-pt-decoder.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/drivers/video/fbdev/sm712fb.c
-+++ b/drivers/video/fbdev/sm712fb.c
-@@ -1493,7 +1493,11 @@ static int smtcfb_pci_probe(struct pci_d
- 	if (err)
- 		goto failed;
- 
--	smtcfb_setmode(sfb);
-+	/*
-+	 * The screen would be temporarily garbled when sm712fb takes over
-+	 * vesafb or VGA text mode. Zero the framebuffer.
-+	 */
-+	memset_io(sfb->lfb, 0, sfb->fb->fix.smem_len);
- 
- 	err = register_framebuffer(info);
- 	if (err < 0)
+--- a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
++++ b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
+@@ -1318,8 +1318,11 @@ static int intel_pt_walk_tnt(struct inte
+ 				return 0;
+ 			}
+ 			decoder->ip += intel_pt_insn.length;
+-			if (!decoder->tnt.count)
++			if (!decoder->tnt.count) {
++				decoder->sample_timestamp = decoder->timestamp;
++				decoder->sample_insn_cnt = decoder->timestamp_insn_cnt;
+ 				return -EAGAIN;
++			}
+ 			decoder->tnt.payload <<= 1;
+ 			continue;
+ 		}
 
 
