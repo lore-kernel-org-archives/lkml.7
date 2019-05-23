@@ -2,51 +2,54 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 729E0C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:13:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8AFCC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:13:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FF80217D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:13:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C117B2184E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:13:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558638786;
-	bh=I6u1nRkixkWgd4+KBmT8cNxNPupYXx8ksFuELRXsnq4=;
+	s=default; t=1558638789;
+	bh=QUpdGt6ebGsGSafMqL+BLhTHSI+Qz6jsqf/naCdPraQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jculXzyHvyp1TtaL8gW276mkShmofZ4k22AOvmElSAjw2tkH+jU3k5IOky+cikNDy
-	 OvjtHcdLTf/CZ1snA3V5p/H2SBD2pgeVqi+lvSGCxIm1WhoSDnJNXwhYa1HnALruwC
-	 w3/HpSaRx4TGz4c69juaEeSX2kdSBxqM7XsRCHxo=
+	b=wi/jW5i8Sk3/Xihf8/udNVJwr2/yfzY13oY7iIGFcWZ5GSxd2JLdr5F+6/ltKNe2v
+	 0eeEdUy97nSm036MP/CejTAAvlin1kQUJcgVeLTbKefnnF9IKo8gRZ6JO3u/bexBDf
+	 ZPk/lJ0jFlqIeissjsS82g8b+fhr+Me0hMlQDv9s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388501AbfEWTNF (ORCPT
+        id S2388514AbfEWTNI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:13:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46912 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:13:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46948 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387921AbfEWTND (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:13:03 -0400
+        id S2387921AbfEWTNG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:13:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 78F6B2133D;
-        Thu, 23 May 2019 19:13:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F97E217D7;
+        Thu, 23 May 2019 19:13:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558638783;
-        bh=I6u1nRkixkWgd4+KBmT8cNxNPupYXx8ksFuELRXsnq4=;
+        s=default; t=1558638785;
+        bh=QUpdGt6ebGsGSafMqL+BLhTHSI+Qz6jsqf/naCdPraQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1i5FjDXtv/EzKgDD7H+mss6epe0SW2i+JxEFOlD1wglXi8Zly2u5UqF0iRWHJcGbV
-         unNv6wPmOUbOMCOI/yzmKOc9VExJR8BQnE7ztVk6yXlk7zHSO8NdMNu0nPe2yytZ+3
-         TeJy8twIHWvCiuqe0GiCz0OhHghvO1Mj4QOjWO4c=
+        b=UG0wnO4A602YpcOw7FM4hZ/P3XYN7FobD2chWJXSTiFKng5mVT0FIOvudXLXu5TzT
+         4KFdqtpibCqW7SOZH0NigfSw+2AWUvHCasCqkqTkXxrCsfjrEfbWNb8nUSY5KhO2M6
+         tRB5Au+Zg1mE+Urb7pg3iBbnUQXfT6fNHcDLJyFY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 4.14 55/77] dm delay: fix a crash when invalid device is specified
-Date:   Thu, 23 May 2019 21:06:13 +0200
-Message-Id: <20190523181727.590080797@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Bhagavathi Perumal S <bperumal@codeaurora.org>,
+        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 64/77] mac80211: Fix kernel panic due to use of txq after free
+Date:   Thu, 23 May 2019 21:06:22 +0200
+Message-Id: <20190523181728.834027065@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181719.982121681@linuxfoundation.org>
 References: <20190523181719.982121681@linuxfoundation.org>
@@ -59,34 +62,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mikulas Patocka <mpatocka@redhat.com>
+[ Upstream commit f1267cf3c01b12e0f843fb6a7450a7f0b2efab8a ]
 
-commit 81bc6d150ace6250503b825d9d0c10f7bbd24095 upstream.
+The txq of vif is added to active_txqs list for ATF TXQ scheduling
+in the function ieee80211_queue_skb(), but it was not properly removed
+before freeing the txq object. It was causing use after free of the txq
+objects from the active_txqs list, result was kernel panic
+due to invalid memory access.
 
-When the target line contains an invalid device, delay_ctr() will call
-delay_dtr() with NULL workqueue.  Attempting to destroy the NULL
-workqueue causes a crash.
+Fix kernel invalid memory access by properly removing txq object
+from active_txqs list before free the object.
 
-Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Bhagavathi Perumal S <bperumal@codeaurora.org>
+Acked-by: Toke Høiland-Jørgensen <toke@redhat.com>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/dm-delay.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/mac80211/iface.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/md/dm-delay.c
-+++ b/drivers/md/dm-delay.c
-@@ -222,7 +222,8 @@ static void delay_dtr(struct dm_target *
- {
- 	struct delay_c *dc = ti->private;
+diff --git a/net/mac80211/iface.c b/net/mac80211/iface.c
+index 222c063244f56..6ce13e976b7a2 100644
+--- a/net/mac80211/iface.c
++++ b/net/mac80211/iface.c
+@@ -1924,6 +1924,9 @@ void ieee80211_if_remove(struct ieee80211_sub_if_data *sdata)
+ 	list_del_rcu(&sdata->list);
+ 	mutex_unlock(&sdata->local->iflist_mtx);
  
--	destroy_workqueue(dc->kdelayd_wq);
-+	if (dc->kdelayd_wq)
-+		destroy_workqueue(dc->kdelayd_wq);
++	if (sdata->vif.txq)
++		ieee80211_txq_purge(sdata->local, to_txq_info(sdata->vif.txq));
++
+ 	synchronize_rcu();
  
- 	dm_put_device(ti, dc->dev_read);
- 
+ 	if (sdata->dev) {
+-- 
+2.20.1
+
 
 
