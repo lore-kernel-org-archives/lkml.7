@@ -2,121 +2,148 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DDDFC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:10:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DEA0C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:10:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 655ED217D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:10:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="jTerZ5K9"
+	by mail.kernel.org (Postfix) with ESMTP id 55C80217D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:10:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558638615;
+	bh=d2lz/LRhtp1gvkecaybs2OEfgoE9qS63fMgr3EWksjo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=x7pCu4JEpByCsDj3oXIdgczXxJs9nwKS8CDlJXF/gskIqSF4g60l+hbU7yZXfZ6+x
+	 DrnFabGgdZ+sx8Jbw2tAzW+a79MFWkUMJmEXgROpKA6m6btVTbJpd21S2ZsXeK0gGY
+	 kzWvoNz9uU/dkmwaoNEaRs3XB0MIOO+xymrfCeEM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387729AbfEWTKL (ORCPT
+        id S2387751AbfEWTKO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 23 May 2019 15:10:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43504 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387722AbfEWTKL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 May 2019 15:10:11 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:40172 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387704AbfEWTKK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:10:10 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4NJA6Nk028160;
-        Thu, 23 May 2019 14:10:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1558638606;
-        bh=bJbg1A/txouFJSm6HDuK7A27QEfGpODsy5IJMrZQuaU=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=jTerZ5K9nLu0AxG9WFvwpQY4AaaG0eDboGnkSqJJf2u+ZiNrG+rCg5u8xMvyFw7o7
-         it6zQ3fBe50bN1Ew667cTEde6JHbsreD69XqWg8ZZrrCqhpOE3gA6HNfJtIbAPNU68
-         Wfw++lFhaqYj8gO6GE9N5CYJMpWjVfYgE5J3Aibs=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4NJA60F005401
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 23 May 2019 14:10:06 -0500
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 23
- May 2019 14:10:05 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 23 May 2019 14:10:05 -0500
-Received: from [10.250.90.63] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4NJA55D024840;
-        Thu, 23 May 2019 14:10:05 -0500
-Subject: Re: [RESEND PATCH v4 6/6] leds: lm36274: Introduce the TI LM36274 LED
- driver
-To:     Pavel Machek <pavel@ucw.cz>
-CC:     <jacek.anaszewski@gmail.com>, <broonie@kernel.org>,
-        <lgirdwood@gmail.com>, <lee.jones@linaro.org>,
-        <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20190522192733.13422-1-dmurphy@ti.com>
- <20190522192733.13422-7-dmurphy@ti.com> <20190523125012.GB20354@amd>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <0c2bd6af-92c5-2458-dc41-1ea413545347@ti.com>
-Date:   Thu, 23 May 2019 14:09:49 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5655C2133D;
+        Thu, 23 May 2019 19:10:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558638610;
+        bh=d2lz/LRhtp1gvkecaybs2OEfgoE9qS63fMgr3EWksjo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=gWtjzCP/sa6mikPpmfGGGT00I/TJjPjgoFCxlNmHExS3iX+sC88lZg+9C6BuB1iZn
+         pAKdRk4UnH/nzAKDJ+aMnQznclUPyvbDqRse+awE/rwB0OP+1CRxx4wbNwwPpq+qiL
+         E7QbTkLkBsIBIjUUUK0rfHxHBXTaX3eukH2AIw6A=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Nikolay Borisov <nborisov@suse.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.9 53/53] btrfs: Honour FITRIM range constraints during free space trim
+Date:   Thu, 23 May 2019 21:06:17 +0200
+Message-Id: <20190523181719.388423466@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190523181710.981455400@linuxfoundation.org>
+References: <20190523181710.981455400@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20190523125012.GB20354@amd>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pavel
+From: Nikolay Borisov <nborisov@suse.com>
 
-Thanks for the review
+commit c2d1b3aae33605a61cbab445d8ae1c708ccd2698 upstream.
 
-On 5/23/19 7:50 AM, Pavel Machek wrote:
-> Hi!
-> 
->> +++ b/drivers/leds/leds-lm36274.c
-> 
->> +static int lm36274_parse_dt(struct lm36274 *lm36274_data)
->> +{
->> +	struct fwnode_handle *child = NULL;
->> +	char label[LED_MAX_NAME_SIZE];
->> +	struct device *dev = &lm36274_data->pdev->dev;
->> +	const char *name;
->> +	int child_cnt;
->> +	int ret = -EINVAL;
->> +
->> +	/* There should only be 1 node */
->> +	child_cnt = device_get_child_node_count(dev);
->> +	if (child_cnt != 1)
->> +		return ret;
-> 
-> I'd do explicit "return -EINVAL" here.
-> 
+Up until now trimming the freespace was done irrespective of what the
+arguments of the FITRIM ioctl were. For example fstrim's -o/-l arguments
+will be entirely ignored. Fix it by correctly handling those paramter.
+This requires breaking if the found freespace extent is after the end of
+the passed range as well as completing trim after trimming
+fstrim_range::len bytes.
 
-ACK
+Fixes: 499f377f49f0 ("btrfs: iterate over unused chunk space in FITRIM")
+CC: stable@vger.kernel.org # 4.4+
+Signed-off-by: Nikolay Borisov <nborisov@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
->> +static int lm36274_probe(struct platform_device *pdev)
->> +{
->> +	struct ti_lmu *lmu = dev_get_drvdata(pdev->dev.parent);
->> +	struct lm36274 *lm36274_data;
->> +	int ret;
->> +
->> +	lm36274_data = devm_kzalloc(&pdev->dev, sizeof(*lm36274_data),
->> +				    GFP_KERNEL);
->> +	if (!lm36274_data) {
->> +		ret = -ENOMEM;
->> +		return ret;
->> +	}
-> 
-> And certainly do "return -ENOMEM" explicitly here.
-> 
 
-ACK
+---
+ fs/btrfs/extent-tree.c |   25 +++++++++++++++++++------
+ 1 file changed, 19 insertions(+), 6 deletions(-)
 
-> Acked-by: Pavel Machek <pavel@ucw.cz>
-> 									Pavel
-> 
+--- a/fs/btrfs/extent-tree.c
++++ b/fs/btrfs/extent-tree.c
+@@ -11150,9 +11150,9 @@ int btrfs_error_unpin_extent_range(struc
+  * transaction.
+  */
+ static int btrfs_trim_free_extents(struct btrfs_device *device,
+-				   u64 minlen, u64 *trimmed)
++				   struct fstrim_range *range, u64 *trimmed)
+ {
+-	u64 start = 0, len = 0;
++	u64 start = range->start, len = 0;
+ 	int ret;
+ 
+ 	*trimmed = 0;
+@@ -11188,8 +11188,8 @@ static int btrfs_trim_free_extents(struc
+ 			atomic_inc(&trans->use_count);
+ 		spin_unlock(&fs_info->trans_lock);
+ 
+-		ret = find_free_dev_extent_start(trans, device, minlen, start,
+-						 &start, &len);
++		ret = find_free_dev_extent_start(trans, device, range->minlen,
++						 start, &start, &len);
+ 		if (trans)
+ 			btrfs_put_transaction(trans);
+ 
+@@ -11201,6 +11201,16 @@ static int btrfs_trim_free_extents(struc
+ 			break;
+ 		}
+ 
++		/* If we are out of the passed range break */
++		if (start > range->start + range->len - 1) {
++			mutex_unlock(&fs_info->chunk_mutex);
++			ret = 0;
++			break;
++		}
++
++		start = max(range->start, start);
++		len = min(range->len, len);
++
+ 		ret = btrfs_issue_discard(device->bdev, start, len, &bytes);
+ 		up_read(&fs_info->commit_root_sem);
+ 		mutex_unlock(&fs_info->chunk_mutex);
+@@ -11211,6 +11221,10 @@ static int btrfs_trim_free_extents(struc
+ 		start += len;
+ 		*trimmed += bytes;
+ 
++		/* We've trimmed enough */
++		if (*trimmed >= range->len)
++			break;
++
+ 		if (fatal_signal_pending(current)) {
+ 			ret = -ERESTARTSYS;
+ 			break;
+@@ -11295,8 +11309,7 @@ int btrfs_trim_fs(struct btrfs_root *roo
+ 	mutex_lock(&fs_info->fs_devices->device_list_mutex);
+ 	devices = &fs_info->fs_devices->devices;
+ 	list_for_each_entry(device, devices, dev_list) {
+-		ret = btrfs_trim_free_extents(device, range->minlen,
+-					      &group_trimmed);
++		ret = btrfs_trim_free_extents(device, range, &group_trimmed);
+ 		if (ret) {
+ 			dev_failed++;
+ 			dev_ret = ret;
+
+
