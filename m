@@ -2,158 +2,106 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49737C04AAC
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 06:59:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16095C04AAC
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 07:00:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF0DC2133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 06:59:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6CBD21773
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 07:00:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LsHY8NEg"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GAsiZSYZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728237AbfEWG7y (ORCPT
+        id S1728427AbfEWHAg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 02:59:54 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:44673 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725814AbfEWG7x (ORCPT
+        Thu, 23 May 2019 03:00:36 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:33046 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725814AbfEWHAg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 02:59:53 -0400
-Received: by mail-pg1-f193.google.com with SMTP id n2so2604634pgp.11
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 23:59:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ttP/4fpxH6Y8Dru2/qv3TInM/GG4T6a2AqT579g6WtY=;
-        b=LsHY8NEgXvz4fbJbH3G2r3/rwzZdFJcfqoKgUrt94Qm4vAAZSYJpPw8rL2jkS4yJag
-         thV+CubU9iRnlRDUlcducksBWNxB9XVPmR4gBP1R5Al1An9LdnxSwXyigiPJeje8WJzw
-         SV8ZxkHkrauUNgjzyXgb5/8CAldf1Ytt3wg4SQPXrOyVIZQGvlir1nBuAiiat9k/6ORV
-         SZeG6rk9X0xVf9+VqTyhY8qrGu7wMdtB385ZT+QK+sTNVwwArCaVun4kGOb653ze2Z38
-         jnVfs6Jos0wNILgIrbPk3r2LqiMR7tn1V24W/cpx9lZFpAjKrejzFSRe5B8lTNIQGBZm
-         tFfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ttP/4fpxH6Y8Dru2/qv3TInM/GG4T6a2AqT579g6WtY=;
-        b=iD1OfISsKO1Pc37Sci+NtgMpx4j7NvBjGPBEtjVpIIyKTVZBuhHRZ0e409yw6Iebp5
-         c/UeaCLdmbaKYkLN6h6k4ZnPlKB0arZRl84arus0XBe74jFzmTQbDiviqCxo8trqXmMc
-         8zjqfR7LKkNfEE+fQB/N59x1eSZazrtGkr/ODgAdxjjvIdp9H2QYrgvU30nSh4Mty051
-         vD7PX2mxWGKS7emBXd4dyw0VDhEE+7ABHcKsxpbMVoGUWK4xDhpDziDEPXUPs4PiATzQ
-         WVj1xI7eZ/W77UMgUxCaGByTLmBMf3qheUWqEWPeYhUIk0V9fqm8O0JJl1rGtm3byhE3
-         1A5Q==
-X-Gm-Message-State: APjAAAUsYln5QWeq/LTdR+y+SFSDMQjxUBq1SfxUiEWICATDlzoA9UlM
-        lvGukuADbMm1VluourV1fDQ=
-X-Google-Smtp-Source: APXvYqztAm+HRTVxFcCMQOrTwcYmrmZ7Lcw/Ye5QFRvDfuScthzWWIz20vs2srxigaXFQs2RIvzdCg==
-X-Received: by 2002:a62:54c7:: with SMTP id i190mr79166699pfb.87.1558594792896;
-        Wed, 22 May 2019 23:59:52 -0700 (PDT)
-Received: from localhost ([110.70.27.122])
-        by smtp.gmail.com with ESMTPSA id a9sm38161607pgw.72.2019.05.22.23.59.51
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 22 May 2019 23:59:52 -0700 (PDT)
-Date:   Thu, 23 May 2019 15:59:47 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Subject: Re: [PATCHv2 4/4] printk: make sure we always print console disabled
- message
-Message-ID: <20190523065947.GB18333@jagdpanzerIV>
-References: <20190426053302.4332-1-sergey.senozhatsky@gmail.com>
- <20190426053302.4332-5-sergey.senozhatsky@gmail.com>
- <20190426054445.GA564@jagdpanzerIV>
- <20190515144702.uja2mk2vfip6maws@pathway.suse.cz>
+        Thu, 23 May 2019 03:00:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=gAofSstRuBJKOBonOfNBSALVwiT+Rdgyj5l0uMZAW+0=; b=GAsiZSYZNBxFA9nepaYZHnFGM
+        XDbvfMN0iodzffPtSz0jSDCUy/A/MpR3l7wh6jqABvtAWqK9rqZGbqCyVXH5VB+x+o9pWhJHMmZB+
+        3o8ow0fZT+MRdvzy7AErKGHnl/Qn79wNGJqQmHEa1mPlnRE94c2jhBCg29RQGaeydpiHPjShrKRBI
+        LNhkX1K8rROvRoejOjQB/Y+42A2jnJBgcVHBT0qZMNomh3qVcm2uqCWu5+bolCkUDbofMUjQJVmbW
+        WrLhr4FiDGvGBdP4qhmWhWkIQW+frS0mofpjWCyFjA83lj77vVpZ9iP+YZCplXx5Q/gnGF5VLGxbf
+        9Y742JeWQ==;
+Received: from 213-225-10-46.nat.highway.a1.net ([213.225.10.46] helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hThiJ-0004hB-Jm; Thu, 23 May 2019 07:00:32 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Tom Murphy <tmurphy@arista.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: implement generic dma_map_ops for IOMMUs v6
+Date:   Thu, 23 May 2019 09:00:05 +0200
+Message-Id: <20190523070028.7435-1-hch@lst.de>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190515144702.uja2mk2vfip6maws@pathway.suse.cz>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (05/15/19 16:47), Petr Mladek wrote:
-> On Fri 2019-04-26 14:44:45, Sergey Senozhatsky wrote:
-> > 
-> > Forgot to mention that the series is still in RFC phase.
-> > 
-> > 
-> > On (04/26/19 14:33), Sergey Senozhatsky wrote:
-> > [..]
-> > > +++ b/kernel/printk/printk.c
-> > > @@ -2613,6 +2613,12 @@ static int __unregister_console(struct console *console)
-> > >  	pr_info("%sconsole [%s%d] disabled\n",
-> > >  		(console->flags & CON_BOOT) ? "boot" : "",
-> > >  		console->name, console->index);
-> > > +	/*
-> > > +	 * Print 'console disabled' on all the consoles, including the
-> > > +	 * one we are about to unregister.
-> > > +	 */
-> > > +	console_unlock();
-> > > +	console_lock();
-> > >  
-> > >  	res = _braille_unregister_console(console);
-> > >  	if (res)
-> > 
-> > Need to think more if this is race free...
-> 
-> I am afraid that it is racy against for_each_console() when
-> removing the boot consoles.
 
-Can you explain? Do you mean that we can execute two paths unregistering
-the same bcon?
+Hi Robin and Joerg,
 
-	CPU0					CPU1
-
-	console_lock();
-	__unregister_console(bconA)		console_lock();
-	console_unlock();
-
-						__unregister_console(bconA);
-						for (a = console_drivers->next ...)
-							if (a == console)
-								unregister();
-							// console bconA is
-							// not in the list
-							// anymore
-						console_unlock();
-
-	for (a = console_drivers->next ...)
-		if (a == console)
-	console_unlock();
+I think we are finally ready for the generic dma-iommu series.  I have
+various DMA API changes pending, and Tom has patches ready to convert
+the AMD and Intel iommu drivers over to it.  I'd love to have this
+in a stable branch shared between the dma-mapping and iommu trees
+the day after rc2 is released.  I volunteer to create the branch,
+but I'm fine with it living in the iommu tree as well.
 
 
-This CPU0 will never see bconA in the console drivers list.
-But... it will try to do
+A git tree is also available at:
 
-	console->flags &= ~CON_ENABLED;
+    git://git.infradead.org/users/hch/misc.git dma-iommu-ops.6
 
-Which we need to fix.
+Gitweb:
 
-Do not disable console which is not on the console_drivers list.
+    http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/dma-iommu-ops.6
 
----
-index 1177ea4b3fe1..e729992cb4e4 100644
---- a/kernel/printk/printk.c
-+++ b/kernel/printk/printk.c
-@@ -2660,7 +2660,8 @@ static int __unregister_console(struct console *console)
- 	if (console_drivers != NULL && console->flags & CON_CONSDEV)
- 		console_drivers->flags |= CON_CONSDEV;
- 
--	console->flags &= ~CON_ENABLED;
-+	if (!res)
-+		console->flags &= ~CON_ENABLED;
- 	return res;
- }
- 
----
-	-ss
+Changes since v5:
+ - rebased to latest linus tree and dropped a patch now merged
+ - remove the now pointless __dma_iommu_mmap function
+ - restore a cleanup from Robin that would have caused a conflict in
+   last merge winow, but is fine now
+
+Changes since v4:
+ - rebased to 5.2-rc1
+
+Changes since v3:
+ - fold the separate patch to refactor mmap bounds checking
+ - don't warn on not finding a vm_area
+ - improve a commit log
+ - refactor __dma_iommu_free a little differently
+ - remove a minor MSI map cleanup to avoid a conflict with the
+   "Split iommu_dma_map_msi_msg" series
+
+Changes since v2:
+ - address various review comments and include patches from Robin
+
+Changes since v1:
+ - only include other headers in dma-iommu.h if CONFIG_DMA_IOMMU is enabled
+ - keep using a scatterlist in iommu_dma_alloc
+ - split out mmap/sgtable fixes and move them early in the series
+ - updated a few commit logs
+_______________________________________________
+iommu mailing list
+iommu@lists.linux-foundation.org
+https://lists.linuxfoundation.org/mailman/listinfo/iommu
