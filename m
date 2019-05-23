@@ -2,197 +2,103 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55473C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 14:52:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 514B0C282E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 14:53:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2895420863
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 14:52:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 266CF2175B
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 14:53:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BRHvzn19"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730897AbfEWOwT (ORCPT
+        id S1730930AbfEWOxK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 10:52:19 -0400
-Received: from gateway21.websitewelcome.com ([192.185.45.250]:47633 "EHLO
-        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730672AbfEWOwS (ORCPT
+        Thu, 23 May 2019 10:53:10 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:39347 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730672AbfEWOxK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 10:52:18 -0400
-Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
-        by gateway21.websitewelcome.com (Postfix) with ESMTP id 42826400CCC80
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 09:52:17 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id Tp4rhOZUVYTGMTp4rhPAWW; Thu, 23 May 2019 09:52:17 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.47.159] (port=53746 helo=[192.168.1.76])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.91)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hTp4q-001bo1-Kd; Thu, 23 May 2019 09:52:17 -0500
-Subject: Re: [PATCH] usbip: usbip_host_common: Use struct_size() in realloc()
-To:     Valentina Manea <valentina.manea.m@gmail.com>,
-        Shuah Khan <shuah@kernel.org>
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190523144019.GA28932@embeddedor>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <c5315c1f-5329-3f7b-0b70-a2337671320c@embeddedor.com>
-Date:   Thu, 23 May 2019 09:52:08 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 23 May 2019 10:53:10 -0400
+Received: by mail-oi1-f194.google.com with SMTP id v2so4572965oie.6;
+        Thu, 23 May 2019 07:53:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=O0uMxTnfP+/hXCIQ74nquohFY3NHJwYjI26x2LR70Ak=;
+        b=BRHvzn19h6XsCYeXK2+Hm/earZgXCKqh2N+cMhHkzUUXjOr4bvlgcM7cS24sm+3fX6
+         c2IYYOpSiKLaXSmd3oOaeUdw4c8uBS1nvNlZapWxM/Gi0frS2ESpejabL/II9CrInDg/
+         ufkR0hZkSgGt2ljA1G/r+JOBV9s4rxm+fntnNtgszJjoI5R2cQ5i/fNCWp5MBvUB/1rs
+         GwV5E6lmOJGYEhDzfjpM84QENK1jn486uB9X5nWHeL7igPdQBLNbDZCsbfLCtzKIV1v2
+         K1ZVytKnFlrSuDFy6nIMoe5VfFn4WZ2vHhJmrDYUz+iiEmXVLXKNEqMzqvQ67dZPmJF4
+         ZL6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=O0uMxTnfP+/hXCIQ74nquohFY3NHJwYjI26x2LR70Ak=;
+        b=qFN6BCFrQdM0w/Ip8GExf4wP1M2mnEXmKvAjuTyNGMBiJiUKzhSk97X7c6dDXQYdwg
+         Re/a+eavmJMor2W/COGDsI8TWLJ+tNNU5yvcngAX3LrIM5KLwDSefssGAus8FLlcZ80G
+         ma3JChMqstWH3VIz69yGkLncR/MUj9yZZUJgLpBjuUM61yEq4uGNSowUsIRZ3sJXl4c2
+         w6j4eCdKn967CE2HFfxSwPqtBgqQdan0F5BNoEaC6Zfi46YLh2aXi45/8O7wkpMRWd9Z
+         QJjDkv/PrLBvzdwAOVa6hYaw0dDMYgzFW0hGvrh9Kz2JutL0d5ux1IJsz1HziJuIHHOv
+         Wl9g==
+X-Gm-Message-State: APjAAAW7X3EoqY5nDKiO7lRDCs4VdUmsr5Vjr3OdjafqFTUFBvwbhVeN
+        4Bu41besxhVp3n79yYca/M81In1/nDrU071RKjM=
+X-Google-Smtp-Source: APXvYqyzXzvZ6yPDb95ZsCQV9OIWIjHaIxtlrVTQrzcdpGSR/hUJcheMvHFjq5q3jn+oK5EXFvNa6tEZz7x32gv3Iuk=
+X-Received: by 2002:aca:efc6:: with SMTP id n189mr3048044oih.34.1558623189175;
+ Thu, 23 May 2019 07:53:09 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190523144019.GA28932@embeddedor>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.47.159
-X-Source-L: No
-X-Exim-ID: 1hTp4q-001bo1-Kd
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.1.76]) [189.250.47.159]:53746
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 8
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+References: <20190522052002.10411-1-anarsoul@gmail.com> <6BD1D3F7-E2F2-4B2D-9479-06E27049133C@holtmann.org>
+ <7B7F362B-6C8B-4112-8772-FB6BC708ABF5@holtmann.org>
+In-Reply-To: <7B7F362B-6C8B-4112-8772-FB6BC708ABF5@holtmann.org>
+From:   Vasily Khoruzhick <anarsoul@gmail.com>
+Date:   Thu, 23 May 2019 07:52:43 -0700
+Message-ID: <CA+E=qVfopSA90vG2Kkh+XzdYdNn=M-hJN_AptW=R+B5v3HB9eA@mail.gmail.com>
+Subject: Re: [PATCH] Revert "Bluetooth: Align minimum encryption key size for
+ LE and BR/EDR connections"
+To:     Marcel Holtmann <marcel@holtmann.org>
+Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+On Wed, May 22, 2019 at 12:08 AM Marcel Holtmann <marcel@holtmann.org> wrote:
+>
+> Hi Vasily,
+>
+> >> This reverts commit d5bb334a8e171b262e48f378bd2096c0ea458265.
+> >>
+> >> This commit breaks some HID devices, see [1] for details
+> >>
+> >> https://bugzilla.kernel.org/show_bug.cgi?id=203643
+> >>
+> >> Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
+> >> Cc: stable@vger.kernel.org
+> >
+> > let me have a look at this. Maybe there is a missing initialization for older HID devices that we need to handle. Do you happen to have the full btmon binary trace from controller initialization to connection attempt for me?
+> >
+> > Are both devices Bluetooth 2.1 or later device that are supporting Secure Simple Pairing? Or is one of them a Bluetooth 2.0 or earlier device?
+>
+> I am almost certain that you have a Bluetooth 2.0 mouse. I made a really stupid mistake in the key size check logic and forgot to bind it to SSP support. Can you please check the patch that I just send you.
+>
+> https://lore.kernel.org/linux-bluetooth/20190522070540.48895-1-marcel@holtmann.org/T/#u
 
-Sorry, please, drop this patch.
+This patch fixes the issue for me. Thanks!
 
-Thanks
---
-Gustavo
-
-On 5/23/19 9:40 AM, Gustavo A. R. Silva wrote:
-> One of the more common cases of allocation size calculations is finding
-> the size of a structure that has a zero-sized array at the end, along
-> with memory for some number of elements for that array. For example:
-> 
-> struct foo {
->     int stuff;
->     struct boo entry[];
-> };
-> 
-> size = sizeof(struct foo) + count * sizeof(struct boo);
-> instance = realloc(instance, size);
-> 
-> Instead of leaving these open-coded and prone to type mistakes, we can
-> now use the new struct_size() helper:
-> 
-> size = struct_size(instance, entry, count);
-> 
-> or
-> 
-> instance = realloc(instance, struct_size(instance, entry, count));
-> 
-> Notice that, in this case, variable size is not necessary,
-> hence it is removed.
-> 
-> This code was detected with the help of Coccinelle.
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> ---
-> 
-> Notice that checkpatch reports the following warning:
-> 
-> WARNING: line over 80 characters
-> #57: FILE: tools/usb/usbip/libsrc/usbip_host_common.c:90:
-> +	edev = realloc(edev, struct_size(edev, uinf, edev->udev.bNumInterfaces));
-> 
-> The line above is 81-character long. So, I think we should be fine
-> with that, instead of split it into two lines like:
-> 
-> edev = realloc(edev,
-> 	       struct_size(edev, uinf, edev->udev.bNumInterfaces));
-> 
-> Thanks
-> --
-> Gustavo
-> 
->  tools/usb/usbip/libsrc/usbip_host_common.c | 6 +-----
->  1 file changed, 1 insertion(+), 5 deletions(-)
-> 
-> diff --git a/tools/usb/usbip/libsrc/usbip_host_common.c b/tools/usb/usbip/libsrc/usbip_host_common.c
-> index 2813aa821c82..1645d02a52af 100644
-> --- a/tools/usb/usbip/libsrc/usbip_host_common.c
-> +++ b/tools/usb/usbip/libsrc/usbip_host_common.c
-> @@ -67,7 +67,6 @@ struct usbip_exported_device *usbip_exported_device_new(
->  {
->  	struct usbip_exported_device *edev = NULL;
->  	struct usbip_exported_device *edev_old;
-> -	size_t size;
->  	int i;
->  
->  	edev = calloc(1, sizeof(struct usbip_exported_device));
-> @@ -87,11 +86,8 @@ struct usbip_exported_device *usbip_exported_device_new(
->  		goto err;
->  
->  	/* reallocate buffer to include usb interface data */
-> -	size = sizeof(struct usbip_exported_device) +
-> -		edev->udev.bNumInterfaces * sizeof(struct usbip_usb_interface);
-> -
->  	edev_old = edev;
-> -	edev = realloc(edev, size);
-> +	edev = realloc(edev, struct_size(edev, uinf, edev->udev.bNumInterfaces));
->  	if (!edev) {
->  		edev = edev_old;
->  		dbg("realloc failed");
-> 
+>
+> Regards
+>
+> Marcel
+>
