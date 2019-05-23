@@ -2,87 +2,151 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2BCDC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 09:31:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA657C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 09:33:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B386C20675
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 09:31:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A54672133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 09:33:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="aLZjpXIG"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="nAoUGcXx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730488AbfEWJby (ORCPT
+        id S1730135AbfEWJdJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 05:31:54 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:41032 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729762AbfEWJby (ORCPT
+        Thu, 23 May 2019 05:33:09 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:52621 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726846AbfEWJdJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 05:31:54 -0400
-Received: by mail-wr1-f67.google.com with SMTP id u16so1569758wrn.8
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 02:31:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ingics-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=ozW29rNk7jqBzsqPwmK5fiFVlAdGSbYVAGL0ITKgSdM=;
-        b=aLZjpXIGYDHmv/ws2VbtEe2RblTPaIJxvjNl4LutzOg6NqTRYnE1IWtllwsXC1N6Hl
-         SGsx/tYWWQGkzt3dPwTAhFPc8JX0vtqaDWHfEfngYbPKD2urZVV3nmCKXF3Clz8J4s+j
-         aSrOk4KfdDOmlAUQ2TUCMCDpU4OgImCG9wxrTkuxDsd0WrwFyvg6hKpKSPCFQCuYEx4a
-         RpG0ismUy5mI+Lv8BIjzWbfq/+q26Gcxq+6LHeqNCgzhFKHJKzsj1Oy+pp2hBbpDBrOL
-         u/4gV18XE4FHn6J/0znioN/LFLPI9misaH9wNj+j8IjRkOMSrJhEECo2pMA71wP53qhd
-         p3bQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=ozW29rNk7jqBzsqPwmK5fiFVlAdGSbYVAGL0ITKgSdM=;
-        b=KuCcRMxKt50QVpaz/qeqip6VyRgyF3+/Kfz9Nrj6LDjFE5PvUAgMLpX2cfWP4ijERD
-         jWUr0ji60QZ39VjyI0qtve1K3hl1XNQ3h3x9PksFJmNf58l+/zw8YuKnJFnzV/isEaOn
-         vFpofr3oECVSPuUVNdwhI+RMvFm5/ikKdduOtyGSmNnDzVPvaCGbcTDreWQO/xBi9sNJ
-         RpdzDmlhCF4cJbULJcXm3Wl/1U0LyRfIYRh8MpvfiNQ7z5vjn8yjCvo6pl3JE40l9umX
-         est2XwUqimirMs63T8KVGgxXBAZ6JeX0belFrw0RcvPYyMFI4sCUNl6FjM1JAm+e4gP2
-         gofQ==
-X-Gm-Message-State: APjAAAVdiKAWoesLKVMpk/O71OlheTBlnbJOQnTSfScYzPSVUQq09cmC
-        fYhHW3pYVvfBx0XsqR/F3qDBz8/KB2QDLATQMQYHrg==
-X-Google-Smtp-Source: APXvYqzj1kwHy+TkUXT3LQpMPBCHNOOQ8zMgJk0apJ5xCjGxYGg5xEimWzmLzWeGi+jeI7HLTcYBjtT830ObqAP7VRo=
-X-Received: by 2002:adf:fdc1:: with SMTP id i1mr30926927wrs.103.1558603912553;
- Thu, 23 May 2019 02:31:52 -0700 (PDT)
+        Thu, 23 May 2019 05:33:09 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4N9VxKr4042757
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Thu, 23 May 2019 02:31:59 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4N9VxKr4042757
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019051801; t=1558603919;
+        bh=bS40bLJjFN3lJTYArjnk/bD65ZP21iJ1K8s7UdZJiPE=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=nAoUGcXx3eoK5AqpDQBmZ0GFz0w+h249miJYONZrLfMpybvWPTXRC+WHW9/nfre87
+         dlhrWSMJ/qH1XmJASAS6BdxolBYpa/LVrKuYSYjb19gzQQv2+8xnrN93vGogma1HJc
+         8Fhhs3prdhR54SA3qtTYeE/lvKSSdnM6iBeUClz0zrKUQzIWLqgncyRQdO0MzHJG/g
+         T6W9bhZzBNMiDQ+FZNXE/BKdsjr9NNujVxxKisRkoRjqO7GvAlZ6jHX4Iv3tomLHpM
+         P2QIjG9r1IMXxbZdkScsUO4icET+N/p8BLHDcULaVvPrLxAhEYJi5uzk5xy5A5VVTN
+         k1vvX3zOzTixw==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4N9VwpA4042754;
+        Thu, 23 May 2019 02:31:58 -0700
+Date:   Thu, 23 May 2019 02:31:58 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Kan Liang <tipbot@zytor.com>
+Message-ID: <tip-b10b3efb88e7bba12f09f71740bab9b7225631c9@git.kernel.org>
+Cc:     tglx@linutronix.de, mingo@kernel.org, linux-kernel@vger.kernel.org,
+        kan.liang@linux.intel.com, hpa@zytor.com, len.brown@intel.com,
+        peterz@infradead.org
+Reply-To: peterz@infradead.org, len.brown@intel.com, hpa@zytor.com,
+          kan.liang@linux.intel.com, mingo@kernel.org,
+          linux-kernel@vger.kernel.org, tglx@linutronix.de
+In-Reply-To: <851320c8c87ba7a54e58ee8579c1bf566ce23cbb.1557769318.git.len.brown@intel.com>
+References: <851320c8c87ba7a54e58ee8579c1bf566ce23cbb.1557769318.git.len.brown@intel.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:x86/topology] perf/x86/intel/rapl: Support multi-die/package
+Git-Commit-ID: b10b3efb88e7bba12f09f71740bab9b7225631c9
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-References: <CAMpxmJWDJiLZA7NQ12VkxqV9nKV-9idn3JsZGdXhz0e19NX54w@mail.gmail.com>
-In-Reply-To: <CAMpxmJWDJiLZA7NQ12VkxqV9nKV-9idn3JsZGdXhz0e19NX54w@mail.gmail.com>
-From:   Axel Lin <axel.lin@ingics.com>
-Date:   Thu, 23 May 2019 17:31:41 +0800
-Message-ID: <CAFRkauBu511Mf7jgLMuX0M_C_KjmBrxSG_d4OEh6ChHfSYK80w@mail.gmail.com>
-Subject: Re: regulator: NULL-pointer dereference in tps6507x
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Mark Brown <broonie@kernel.org>, Sekhar Nori <nsekhar@ti.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Bartosz Golaszewski <bgolaszewski@baylibre.com> =E6=96=BC 2019=E5=B9=B45=E6=
-=9C=8823=E6=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=885:28=E5=AF=AB=E9=81=
-=93=EF=BC=9A
->
-> Hi Axel,
->
-> commit f979c08f7624 ("regulator: tps6507x: Convert to regulator core's
-> simplified DT parsing code") causes the following crash on da850-evm
-> board with linux v5.2-rc1:
+Commit-ID:  b10b3efb88e7bba12f09f71740bab9b7225631c9
+Gitweb:     https://git.kernel.org/tip/b10b3efb88e7bba12f09f71740bab9b7225631c9
+Author:     Kan Liang <kan.liang@linux.intel.com>
+AuthorDate: Mon, 13 May 2019 13:58:58 -0400
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Thu, 23 May 2019 10:08:35 +0200
 
-The fix is already in regulator tree and linux-next tree:
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/=
-drivers/regulator?id=3D7d293f56456120efa97c4e18250d86d2a05ad0bd
+perf/x86/intel/rapl: Support multi-die/package
 
-Regards,
-Axel
+RAPL becomes die-scope on Xeon Cascade Lake-AP. Perf RAPL driver needs to
+support die-scope RAPL domain.
+
+Use topology_logical_die_id() to replace topology_logical_package_id().
+For previous platforms which doesn't have multi-die,
+topology_logical_die_id() is identical as topology_logical_package_id().
+
+Use topology_die_cpumask() to replace topology_core_cpumask().  For
+previous platforms which doesn't have multi-die, topology_die_cpumask() is
+identical as topology_core_cpumask().
+
+There is no functional change for previous platforms.
+
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Signed-off-by: Len Brown <len.brown@intel.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Ingo Molnar <mingo@kernel.org>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/851320c8c87ba7a54e58ee8579c1bf566ce23cbb.1557769318.git.len.brown@intel.com
+
+---
+ arch/x86/events/intel/rapl.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/arch/x86/events/intel/rapl.c b/arch/x86/events/intel/rapl.c
+index 37ebf6fc5415..6f5331271563 100644
+--- a/arch/x86/events/intel/rapl.c
++++ b/arch/x86/events/intel/rapl.c
+@@ -161,7 +161,7 @@ static u64 rapl_timer_ms;
+ 
+ static inline struct rapl_pmu *cpu_to_rapl_pmu(unsigned int cpu)
+ {
+-	unsigned int pkgid = topology_logical_package_id(cpu);
++	unsigned int pkgid = topology_logical_die_id(cpu);
+ 
+ 	/*
+ 	 * The unsigned check also catches the '-1' return value for non
+@@ -571,7 +571,7 @@ static int rapl_cpu_offline(unsigned int cpu)
+ 
+ 	pmu->cpu = -1;
+ 	/* Find a new cpu to collect rapl events */
+-	target = cpumask_any_but(topology_core_cpumask(cpu), cpu);
++	target = cpumask_any_but(topology_die_cpumask(cpu), cpu);
+ 
+ 	/* Migrate rapl events to the new target */
+ 	if (target < nr_cpu_ids) {
+@@ -598,14 +598,14 @@ static int rapl_cpu_online(unsigned int cpu)
+ 		pmu->timer_interval = ms_to_ktime(rapl_timer_ms);
+ 		rapl_hrtimer_init(pmu);
+ 
+-		rapl_pmus->pmus[topology_logical_package_id(cpu)] = pmu;
++		rapl_pmus->pmus[topology_logical_die_id(cpu)] = pmu;
+ 	}
+ 
+ 	/*
+ 	 * Check if there is an online cpu in the package which collects rapl
+ 	 * events already.
+ 	 */
+-	target = cpumask_any_and(&rapl_cpu_mask, topology_core_cpumask(cpu));
++	target = cpumask_any_and(&rapl_cpu_mask, topology_die_cpumask(cpu));
+ 	if (target < nr_cpu_ids)
+ 		return 0;
+ 
+@@ -675,7 +675,7 @@ static void cleanup_rapl_pmus(void)
+ 
+ static int __init init_rapl_pmus(void)
+ {
+-	int maxpkg = topology_max_packages();
++	int maxpkg = topology_max_packages() * topology_max_die_per_package();
+ 	size_t size;
+ 
+ 	size = sizeof(*rapl_pmus) + maxpkg * sizeof(struct rapl_pmu *);
