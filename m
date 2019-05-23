@@ -2,107 +2,119 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34A08C282CE
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 02:32:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C5AAC282CE
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 02:33:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D84D52173C
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 02:32:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E392821773
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 02:33:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="fs3cKvK0"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="k663+5f2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729551AbfEWCch (ORCPT
+        id S1729737AbfEWCda (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 22:32:37 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:40894 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727802AbfEWCch (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 22:32:37 -0400
-Received: by mail-qt1-f194.google.com with SMTP id k24so4978556qtq.7
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 19:32:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=w1BRoEDPELMK0Gyp9/s2p/rcYNsdRckdJGf7yGafkuk=;
-        b=fs3cKvK0NKboTT76WS2fOatBli8xun3JE9RHPbc8Y7ra9i2bA9b+aNHPVgi2NOuEh9
-         Sd5ZMaa4Iqwn3Y0zFXXwS/t9vhQ7qx3cqzUWZd6BtEVHeKeT/2YC8ACuc89T9bhYBlBN
-         tAwI7GH7qRt/ANpVMLvKLfRpD27QtExgoc+e0V3JY4w5S1QSuTnhvAFsxpzZ6+ZmVE4J
-         BUBbKREis/mvL9qmSOyoE+eKFb9VFUnaT2QHpkA9LuxeAYAX2w8eNE5f+G+deolb8+tt
-         Hlbd1wFXYtOudAn3gYWzSAfpsEbdY+YIY9zLQx04JTViMMr+MJjbn2lIZC+kUWlObBTD
-         Yvkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=w1BRoEDPELMK0Gyp9/s2p/rcYNsdRckdJGf7yGafkuk=;
-        b=Z+NeFk+DqIGjOjIRO6PnZ1SBtV5fttRSrDHdX0Y4POCriBf3IAylL0qUfzxmJ8jKWH
-         ZZupE4t8zOy6ID1oKurO+ZYY4SMl/PaanTTP2qc8/MejSkk4H0Te9HWaXVSWFZ8jaGsh
-         X35RjIVyILEtWmqTUacj9WmTRxa0uL2TaRT0shjQl/Rb8Ck95rbBT3DlvTwOfglFfeYt
-         WtA6pO2yiReLzsiOhI8wKCu/fGTUfHGOZrz6VBc+oqAphxPa/XhmgPe6JPhyvsJHM3oL
-         pwbSqZe3dIK/fFZ45X9RvmozQREZ3K9BywCJeyqhxOm3/FHxzTK8963fxra9/NAdr9Rb
-         PHHw==
-X-Gm-Message-State: APjAAAWXUHyKXv0igs0oyPCpYE0P5ZbovmQzUtumbZHKv64A05Z7xjwD
-        qVllcLvI1kC61qyVTzr2oCtIag==
-X-Google-Smtp-Source: APXvYqwXTOyP/ZR1b0OccJMZC/QtNGYrA/lcBr6HbpCaQNFLZZ1gWevztbjKZgn+0FbHLGRp5kaoRQ==
-X-Received: by 2002:a0c:9228:: with SMTP id a37mr15950616qva.221.1558578756618;
-        Wed, 22 May 2019 19:32:36 -0700 (PDT)
-Received: from ovpn-121-0.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id q66sm12891044qke.66.2019.05.22.19.32.35
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 22 May 2019 19:32:35 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-To:     benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au
-Cc:     aik@ozlabs.ru, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
-Subject: [PATCH] powerpc/powernv: fix variable "c" set but not used
-Date:   Wed, 22 May 2019 22:31:41 -0400
-Message-Id: <20190523023141.2973-1-cai@lca.pw>
-X-Mailer: git-send-email 2.20.1 (Apple Git-117)
+        Wed, 22 May 2019 22:33:30 -0400
+Received: from mail-eopbgr40063.outbound.protection.outlook.com ([40.107.4.63]:4985
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727305AbfEWCd3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 22:33:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=u2pK2nk+jKWXtZXdvMZZ3y8Ol+oaNT6tFDKhSdeVfHI=;
+ b=k663+5f2Q231UU38NjSEWWeaDUivRdcGOt/PwSTQd/388AYdqJL+g5oHcYhExYIkAzR3q64G2IRs88pNBUfhxk4JXN/CD9rEv3FCm/zt4dGjK0HXKPPHyCLmLxHcmA1Km/pfaGvUFc3KYWLPM+kxCZZSnQU/Ssidh447Bsl2/BE=
+Received: from VI1PR0401MB2237.eurprd04.prod.outlook.com (10.169.132.138) by
+ VI1PR0401MB2494.eurprd04.prod.outlook.com (10.168.65.141) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1922.18; Thu, 23 May 2019 02:33:25 +0000
+Received: from VI1PR0401MB2237.eurprd04.prod.outlook.com
+ ([fe80::b091:6395:e853:5986]) by VI1PR0401MB2237.eurprd04.prod.outlook.com
+ ([fe80::b091:6395:e853:5986%3]) with mapi id 15.20.1922.016; Thu, 23 May 2019
+ 02:33:25 +0000
+From:   "Y.b. Lu" <yangbo.lu@nxp.com>
+To:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Richard Cochran <richardcochran@gmail.com>,
+        David Miller <davem@davemloft.net>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Alexandru Marginean <alexandru.marginean@nxp.com>
+CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Y.b. Lu" <yangbo.lu@nxp.com>
+Subject: [PATCH net-next v2, 0/4] ENETC: support hardware timestamping
+Thread-Topic: [PATCH net-next v2, 0/4] ENETC: support hardware timestamping
+Thread-Index: AQHVEQ/lOru7YbqaqUKfl9qTVlpeDA==
+Date:   Thu, 23 May 2019 02:33:24 +0000
+Message-ID: <20190523023451.2933-1-yangbo.lu@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: HK2PR04CA0053.apcprd04.prod.outlook.com
+ (2603:1096:202:14::21) To VI1PR0401MB2237.eurprd04.prod.outlook.com
+ (2603:10a6:800:27::10)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yangbo.lu@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.17.1
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: c2e3befc-ba54-4aac-9fb5-08d6df27079a
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR0401MB2494;
+x-ms-traffictypediagnostic: VI1PR0401MB2494:
+x-microsoft-antispam-prvs: <VI1PR0401MB2494730BBFBD78B84F6D6792F8010@VI1PR0401MB2494.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 00462943DE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(396003)(366004)(346002)(376002)(136003)(189003)(199004)(2616005)(54906003)(66066001)(86362001)(478600001)(110136005)(26005)(476003)(52116002)(486006)(8676002)(66476007)(25786009)(81166006)(81156014)(186003)(66946007)(66556008)(64756008)(66446008)(99286004)(73956011)(2906002)(102836004)(3846002)(6116002)(6512007)(386003)(53936002)(2501003)(6506007)(256004)(14444005)(36756003)(68736007)(50226002)(305945005)(6486002)(7736002)(8936002)(71200400001)(71190400001)(6636002)(5660300002)(316002)(1076003)(14454004)(4326008)(6436002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0401MB2494;H:VI1PR0401MB2237.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 4UB/wrpE2ABEeUwvDWknJ5GvAcSjcW24nZjCDsO1kCOuY55Eg24gt9x/M34ZDJsen9JYNlacySmrSllk8Dq0oe+ZzWHLqILw5P+E14iZ6MACzuEvT4+xjhvVjJGMcED/jaRZ3scCj2L+XyQ78tSsN/VLiY8srgrBIGaZ+ZVA5SVH6iG4hOiQAg7fTszLMBxa8IiMbIxayKOyMcpucXxQ+Ch3NWRNF4j76PBEjfARupmHnVGQ15G3ptV65cUQzKtallGlHrYWdseX9O1AzEnb0ohdI/l7tbA3vslR41ICW9mzUvC5vThaZQ0dBdK61sttwZQ6B5WD0dnEl8s/5hyELJhSgi+L/M4fLEEVoqret13GsiqE0LdHFuj8izDqwVyw0MIgJ1fsh9U4p7pjKneAInBzjZyaGsG+R0DDQe3iW3o=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c2e3befc-ba54-4aac-9fb5-08d6df27079a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 May 2019 02:33:25.0872
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: yangbo.lu@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0401MB2494
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The commit 58629c0dc349 ("powerpc/powernv/npu: Fault user page into the
-hypervisor's pagetable") introduced a variable "c" to be used in
-__get_user() and __get_user_nocheck() which need to stay as macros for
-performance reasons, and "c" is not actually used in
-pnv_npu2_handle_fault(),
-
-arch/powerpc/platforms/powernv/npu-dma.c: In function 'pnv_npu2_handle_fault':
-arch/powerpc/platforms/powernv/npu-dma.c:1122:7: warning: variable 'c'
-set but not used [-Wunused-but-set-variable]
-
-Fixed it by appending the __maybe_unused attribute, so compilers would
-ignore it.
-
-Signed-off-by: Qian Cai <cai@lca.pw>
----
- arch/powerpc/platforms/powernv/npu-dma.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/arch/powerpc/platforms/powernv/npu-dma.c b/arch/powerpc/platforms/powernv/npu-dma.c
-index 495550432f3d..5bbe59573ee6 100644
---- a/arch/powerpc/platforms/powernv/npu-dma.c
-+++ b/arch/powerpc/platforms/powernv/npu-dma.c
-@@ -1119,7 +1119,8 @@ int pnv_npu2_handle_fault(struct npu_context *context, uintptr_t *ea,
- 	int i, is_write;
- 	struct page *page[1];
- 	const char __user *u;
--	char c;
-+	/* To silence a -Wunused-but-set-variable warning. */
-+	char c __maybe_unused;
- 
- 	/* mmap_sem should be held so the struct_mm must be present */
- 	struct mm_struct *mm = context->mm;
--- 
-2.20.1 (Apple Git-117)
-
+VGhpcyBwYXRjaC1zZXQgaXMgdG8gc3VwcG9ydCBoYXJkd2FyZSB0aW1lc3RhbXBpbmcgZm9yIEVO
+RVRDDQphbmQgYWxzbyB0byBhZGQgRU5FVEMgMTU4OCB0aW1lciBkZXZpY2UgdHJlZSBub2RlIGZv
+ciBsczEwMjhhLg0KDQpCZWNhdXNlIHRoZSBFTkVUQyBSWCBCRCByaW5nIGR5bmFtaWMgYWxsb2Nh
+dGlvbiBoYXMgbm90IGJlZW4NCnN1cHBvcnRlZCBhbmQgaXQgaXMgdG9vIGV4cGVuc2l2ZSB0byB1
+c2UgZXh0ZW5kZWQgUlggQkRzDQppZiB0aW1lc3RhbXBpbmcgaXMgbm90IHVzZWQsIGEgS2NvbmZp
+ZyBvcHRpb24gaXMgdXNlZCB0bw0KZW5hYmxlIGV4dGVuZGVkIFJYIEJEcyBpbiBvcmRlciB0byBz
+dXBwb3J0IGhhcmR3YXJlDQp0aW1lc3RhbXBpbmcuIFRoaXMgb3B0aW9uIHdpbGwgYmUgcmVtb3Zl
+ZCBvbmNlIFJYIEJEDQpyaW5nIGR5bmFtaWMgYWxsb2NhdGlvbiBpcyBpbXBsZW1lbnRlZC4NCg0K
+WWFuZ2JvIEx1ICg0KToNCiAgZW5ldGM6IGFkZCBoYXJkd2FyZSB0aW1lc3RhbXBpbmcgc3VwcG9y
+dA0KICBlbmV0YzogYWRkIGdldF90c19pbmZvIGludGVyZmFjZSBmb3IgZXRodG9vbA0KICBkdC1i
+aW5kaW5nOiBwdHBfcW9yaXE6IHN1cHBvcnQgRU5FVEMgUFRQIGNvbXBhdGlibGUNCiAgYXJtNjQ6
+IGR0czogZnNsOiBsczEwMjhhOiBhZGQgRU5FVEMgMTU4OCB0aW1lciBub2RlDQoNCiAuLi4vZGV2
+aWNldHJlZS9iaW5kaW5ncy9wdHAvcHRwLXFvcmlxLnR4dCAgICAgfCAgIDEgKw0KIC4uLi9hcm02
+NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAyOGEuZHRzaSB8ICAgNiArDQogZHJpdmVycy9u
+ZXQvZXRoZXJuZXQvZnJlZXNjYWxlL2VuZXRjL0tjb25maWcgIHwgIDEwICsrDQogZHJpdmVycy9u
+ZXQvZXRoZXJuZXQvZnJlZXNjYWxlL2VuZXRjL2VuZXRjLmMgIHwgMTU4ICsrKysrKysrKysrKysr
+KysrLQ0KIGRyaXZlcnMvbmV0L2V0aGVybmV0L2ZyZWVzY2FsZS9lbmV0Yy9lbmV0Yy5oICB8ICAx
+NSArLQ0KIC4uLi9ldGhlcm5ldC9mcmVlc2NhbGUvZW5ldGMvZW5ldGNfZXRodG9vbC5jICB8ICAz
+MSArKysrDQogLi4uL25ldC9ldGhlcm5ldC9mcmVlc2NhbGUvZW5ldGMvZW5ldGNfaHcuaCAgIHwg
+IDEzICsrDQogLi4uL25ldC9ldGhlcm5ldC9mcmVlc2NhbGUvZW5ldGMvZW5ldGNfcGYuYyAgIHwg
+ICAxICsNCiAuLi4vbmV0L2V0aGVybmV0L2ZyZWVzY2FsZS9lbmV0Yy9lbmV0Y19wdHAuYyAgfCAg
+IDUgKw0KIC4uLi9uZXQvZXRoZXJuZXQvZnJlZXNjYWxlL2VuZXRjL2VuZXRjX3ZmLmMgICB8ICAg
+MSArDQogMTAgZmlsZXMgY2hhbmdlZCwgMjM1IGluc2VydGlvbnMoKyksIDYgZGVsZXRpb25zKC0p
+DQoNCi0tIA0KMi4xNy4xDQoNCg==
