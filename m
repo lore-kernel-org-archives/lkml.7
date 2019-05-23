@@ -2,408 +2,168 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DF8EC04AAC
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:07:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A56EC04AAC
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:07:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A890020868
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:06:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 013E320862
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:07:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="j7ULGu3v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729988AbfEWIG6 (ORCPT
+        id S1729877AbfEWIGz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 04:06:58 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40258 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726310AbfEWIG4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 04:06:56 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 71AE0356FF
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 08:06:56 +0000 (UTC)
-Received: from zhyan-laptop.redhat.com (ovpn-12-163.pek2.redhat.com [10.72.12.163])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id AAA995D9C6;
-        Thu, 23 May 2019 08:06:54 +0000 (UTC)
-From:   "Yan, Zheng" <zyan@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     idryomov@redhat.com, jlayton@redhat.com
-Subject: [PATCH 3/8] ceph: avoid iput_final() while holding mutex or in dispatch thread
-Date:   Thu, 23 May 2019 16:06:41 +0800
-Message-Id: <20190523080646.19632-3-zyan@redhat.com>
-In-Reply-To: <20190523080646.19632-1-zyan@redhat.com>
-References: <20190523080646.19632-1-zyan@redhat.com>
+        Thu, 23 May 2019 04:06:55 -0400
+Received: from mail-eopbgr40074.outbound.protection.outlook.com ([40.107.4.74]:61106
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729700AbfEWIGx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 04:06:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nWaTk8MbZpmIop2guW09qvoF8guSPYmjA49+FhJk8C0=;
+ b=j7ULGu3vY4YvufQl7EUVFjTzC1y14pIo6DVEcH0qwc5eIZPrqLMKq7WFzeZTeYyES7+q4w/GIKjuzPdKxMxuyWA/r9R9zDAcyy3L2QSJt9lTcPRJALTDfzDog6iQr99Lx8G9EGHnQrwf1feKh4/V7E9smyt+voRVAOvw+ZwSV1Y=
+Received: from AM5PR04MB3299.eurprd04.prod.outlook.com (10.173.255.158) by
+ AM5PR04MB3185.eurprd04.prod.outlook.com (10.173.255.30) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1900.17; Thu, 23 May 2019 08:06:43 +0000
+Received: from AM5PR04MB3299.eurprd04.prod.outlook.com
+ ([fe80::15e3:bb28:7e33:1adb]) by AM5PR04MB3299.eurprd04.prod.outlook.com
+ ([fe80::15e3:bb28:7e33:1adb%7]) with mapi id 15.20.1922.017; Thu, 23 May 2019
+ 08:06:42 +0000
+From:   Xiaowei Bao <xiaowei.bao@nxp.com>
+To:     Shawn Guo <shawnguo@kernel.org>
+CC:     Leo Li <leoyang.li@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [EXT] Re: [PATCHv2] arm64: dts: ls1028a: add flexspi nodes
+Thread-Topic: [EXT] Re: [PATCHv2] arm64: dts: ls1028a: add flexspi nodes
+Thread-Index: AQHVCw6ogMFRF8ssNEKztKIHvtwUn6Z4ZSmAgAAAqwA=
+Date:   Thu, 23 May 2019 08:06:42 +0000
+Message-ID: <AM5PR04MB32997EA37551AFC88FCBE2C6F5010@AM5PR04MB3299.eurprd04.prod.outlook.com>
+References: <20190515110924.13726-1-xiaowei.bao@nxp.com>
+ <20190523080049.GI9261@dragon>
+In-Reply-To: <20190523080049.GI9261@dragon>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=xiaowei.bao@nxp.com; 
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 43aa6459-d660-4dbd-d523-08d6df5597b1
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:AM5PR04MB3185;
+x-ms-traffictypediagnostic: AM5PR04MB3185:
+x-microsoft-antispam-prvs: <AM5PR04MB318553DD68302E88F4EEB310F5010@AM5PR04MB3185.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:167;
+x-forefront-prvs: 00462943DE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(39860400002)(376002)(346002)(366004)(396003)(13464003)(189003)(199004)(44832011)(4326008)(86362001)(7696005)(316002)(99286004)(54906003)(76176011)(2906002)(186003)(478600001)(53546011)(6506007)(55016002)(476003)(26005)(3846002)(6116002)(102836004)(8936002)(6436002)(66066001)(81166006)(81156014)(8676002)(486006)(11346002)(446003)(73956011)(76116006)(229853002)(52536014)(5660300002)(53936002)(68736007)(66556008)(64756008)(6246003)(66946007)(66476007)(66446008)(256004)(74316002)(7736002)(305945005)(9686003)(33656002)(6916009)(71200400001)(71190400001)(25786009)(14454004);DIR:OUT;SFP:1101;SCL:1;SRVR:AM5PR04MB3185;H:AM5PR04MB3299.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: wVM7EXpMrt8yPD59xt0F4FUO6zo1lXmGRO9nu3FVBehM+OkLyDGiPhLlmEK8F6yMK36OzOmlTWi0rIIQW3kHQHsvWDP83KlW8yHKvIJdI7vQvvnGdACPt1lf0AvSgS3TlPQrxGt1biF/yRQpKIey5aJp7dXM52j9NToZDXowjc+iSxqLUM4o9c2VxhqZZkHfQaIS5x8JvaIwQ/H6qUpppgpOlUL49oqp30IQZcr1lbax1eYlSMcfsdYoNrsKCXUDC1cplUYcEE5FsvqB6zRazAWKpoiy4LKdiBvjq6X5Z9MayKruuJEU14iclYxpNzXH2AByoll4t0lrADMv/i/kzm7Hq5wAaWUBSf0st8oxjPcEFg216jvzY7NTYn9Ixdr+e9bNc/ZQuD8dCSOiFBJxF0ZX3WVSHtwFCke5eoXH0Co=
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Thu, 23 May 2019 08:06:56 +0000 (UTC)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 43aa6459-d660-4dbd-d523-08d6df5597b1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 May 2019 08:06:42.8512
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR04MB3185
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-iput_final() may wait for reahahead pages. The wait can cause deadlock.
-For example:
-
-Workqueue: ceph-msgr ceph_con_workfn [libceph]
-  Call Trace:
-   schedule+0x36/0x80
-   io_schedule+0x16/0x40
-   __lock_page+0x101/0x140
-   truncate_inode_pages_range+0x556/0x9f0
-   truncate_inode_pages_final+0x4d/0x60
-   evict+0x182/0x1a0
-   iput+0x1d2/0x220
-   iterate_session_caps+0x82/0x230 [ceph]
-   dispatch+0x678/0xa80 [ceph]
-   ceph_con_workfn+0x95b/0x1560 [libceph]
-   process_one_work+0x14d/0x410
-   worker_thread+0x4b/0x460
-   kthread+0x105/0x140
-   ret_from_fork+0x22/0x40
-
-Workqueue: ceph-msgr ceph_con_workfn [libceph]
-  Call Trace:
-   __schedule+0x3d6/0x8b0
-   schedule+0x36/0x80
-   schedule_preempt_disabled+0xe/0x10
-   mutex_lock+0x2f/0x40
-   ceph_check_caps+0x505/0xa80 [ceph]
-   ceph_put_wrbuffer_cap_refs+0x1e5/0x2c0 [ceph]
-   writepages_finish+0x2d3/0x410 [ceph]
-   __complete_request+0x26/0x60 [libceph]
-   handle_reply+0x6c8/0xa10 [libceph]
-   dispatch+0x29a/0xbb0 [libceph]
-   ceph_con_workfn+0x95b/0x1560 [libceph]
-   process_one_work+0x14d/0x410
-   worker_thread+0x4b/0x460
-   kthread+0x105/0x140
-   ret_from_fork+0x22/0x40
-
-In above example, truncate_inode_pages_range() waits for readahead pages
-while holding s_mutex. ceph_check_caps() waits for s_mutex and blocks
-OSD dispatch thread. Later OSD replies (for readahead) can't be handled.
-
-ceph_check_caps() also may lock snap_rwsem for read. So similar deadlock
-can happen if iput_final() is called while holding snap_rwsem.
-
-In general, it's not good to call iput_final() inside MDS/OSD threads or
-while holding any mutex.
-
-The fix is introducing ceph_async_iput(), which calls iput_final() in
-workqueue.
-
-Signed-off-by: "Yan, Zheng" <zyan@redhat.com>
----
- fs/ceph/caps.c       | 12 ++++++++----
- fs/ceph/inode.c      | 31 +++++++++++++++++++++++++++----
- fs/ceph/mds_client.c | 28 ++++++++++++++++++----------
- fs/ceph/quota.c      |  9 ++++++---
- fs/ceph/snap.c       | 16 +++++++++++-----
- fs/ceph/super.h      |  2 +-
- 6 files changed, 71 insertions(+), 27 deletions(-)
-
-diff --git a/fs/ceph/caps.c b/fs/ceph/caps.c
-index 079d0df9650c..0176241eaea7 100644
---- a/fs/ceph/caps.c
-+++ b/fs/ceph/caps.c
-@@ -2992,8 +2992,10 @@ void ceph_put_wrbuffer_cap_refs(struct ceph_inode_info *ci, int nr,
- 	}
- 	if (complete_capsnap)
- 		wake_up_all(&ci->i_cap_wq);
--	while (put-- > 0)
--		iput(inode);
-+	while (put-- > 0) {
-+		/* avoid calling iput_final() in osd dispatch threads */
-+		ceph_async_iput(inode);
-+	}
- }
- 
- /*
-@@ -3964,8 +3966,9 @@ void ceph_handle_caps(struct ceph_mds_session *session,
- done:
- 	mutex_unlock(&session->s_mutex);
- done_unlocked:
--	iput(inode);
- 	ceph_put_string(extra_info.pool_ns);
-+	/* avoid calling iput_final() in mds dispatch threads */
-+	ceph_async_iput(inode);
- 	return;
- 
- flush_cap_releases:
-@@ -4011,7 +4014,8 @@ void ceph_check_delayed_caps(struct ceph_mds_client *mdsc)
- 		if (inode) {
- 			dout("check_delayed_caps on %p\n", inode);
- 			ceph_check_caps(ci, flags, NULL);
--			iput(inode);
-+			/* avoid calling iput_final() in tick thread */
-+			ceph_async_iput(inode);
- 		}
- 	}
- 	spin_unlock(&mdsc->cap_delay_lock);
-diff --git a/fs/ceph/inode.c b/fs/ceph/inode.c
-index d9ff349821f0..8cfece240ffe 100644
---- a/fs/ceph/inode.c
-+++ b/fs/ceph/inode.c
-@@ -1480,7 +1480,8 @@ static int readdir_prepopulate_inodes_only(struct ceph_mds_request *req,
- 			pr_err("fill_inode badness on %p got %d\n", in, rc);
- 			err = rc;
- 		}
--		iput(in);
-+		/* avoid calling iput_final() in mds dispatch threads */
-+		ceph_async_iput(in);
- 	}
- 
- 	return err;
-@@ -1678,8 +1679,11 @@ int ceph_readdir_prepopulate(struct ceph_mds_request *req,
- 				 &req->r_caps_reservation);
- 		if (ret < 0) {
- 			pr_err("fill_inode badness on %p\n", in);
--			if (d_really_is_negative(dn))
--				iput(in);
-+			if (d_really_is_negative(dn)) {
-+				/* avoid calling iput_final() in mds
-+				 * dispatch threads */
-+				ceph_async_iput(in);
-+			}
- 			d_drop(dn);
- 			err = ret;
- 			goto next_item;
-@@ -1689,7 +1693,7 @@ int ceph_readdir_prepopulate(struct ceph_mds_request *req,
- 			if (ceph_security_xattr_deadlock(in)) {
- 				dout(" skip splicing dn %p to inode %p"
- 				     " (security xattr deadlock)\n", dn, in);
--				iput(in);
-+				ceph_async_iput(in);
- 				skipped++;
- 				goto next_item;
- 			}
-@@ -1740,6 +1744,25 @@ bool ceph_inode_set_size(struct inode *inode, loff_t size)
- 	return ret;
- }
- 
-+/*
-+ * Put reference to inode, but avoid calling iput_final() in current thread.
-+ * iput_final() may wait for reahahead pages. The wait can cause deadlock in
-+ * some contexts.
-+ */
-+void ceph_async_iput(struct inode *inode)
-+{
-+	if (!inode)
-+		return;
-+	for (;;) {
-+		if (atomic_add_unless(&inode->i_count, -1, 1))
-+			break;
-+		if (queue_work(ceph_inode_to_client(inode)->inode_wq,
-+			       &ceph_inode(inode)->i_work))
-+			break;
-+		/* queue work failed, i_count must be at least 2 */
-+	}
-+}
-+
- /*
-  * Write back inode data in a worker thread.  (This can't be done
-  * in the message handler context.)
-diff --git a/fs/ceph/mds_client.c b/fs/ceph/mds_client.c
-index e979d1d543e4..60e8ddbdfdc5 100644
---- a/fs/ceph/mds_client.c
-+++ b/fs/ceph/mds_client.c
-@@ -700,11 +700,12 @@ void ceph_mdsc_release_request(struct kref *kref)
- 		ceph_msg_put(req->r_reply);
- 	if (req->r_inode) {
- 		ceph_put_cap_refs(ceph_inode(req->r_inode), CEPH_CAP_PIN);
--		iput(req->r_inode);
-+		/* avoid calling iput_final() in mds dispatch threads */
-+		ceph_async_iput(req->r_inode);
- 	}
- 	if (req->r_parent)
- 		ceph_put_cap_refs(ceph_inode(req->r_parent), CEPH_CAP_PIN);
--	iput(req->r_target_inode);
-+	ceph_async_iput(req->r_target_inode);
- 	if (req->r_dentry)
- 		dput(req->r_dentry);
- 	if (req->r_old_dentry)
-@@ -718,7 +719,7 @@ void ceph_mdsc_release_request(struct kref *kref)
- 		 */
- 		ceph_put_cap_refs(ceph_inode(req->r_old_dentry_dir),
- 				  CEPH_CAP_PIN);
--		iput(req->r_old_dentry_dir);
-+		ceph_async_iput(req->r_old_dentry_dir);
- 	}
- 	kfree(req->r_path1);
- 	kfree(req->r_path2);
-@@ -828,7 +829,8 @@ static void __unregister_request(struct ceph_mds_client *mdsc,
- 	}
- 
- 	if (req->r_unsafe_dir) {
--		iput(req->r_unsafe_dir);
-+		/* avoid calling iput_final() in mds dispatch threads */
-+		ceph_async_iput(req->r_unsafe_dir);
- 		req->r_unsafe_dir = NULL;
- 	}
- 
-@@ -993,7 +995,7 @@ static int __choose_mds(struct ceph_mds_client *mdsc,
- 		cap = rb_entry(rb_first(&ci->i_caps), struct ceph_cap, ci_node);
- 	if (!cap) {
- 		spin_unlock(&ci->i_ceph_lock);
--		iput(inode);
-+		ceph_async_iput(inode);
- 		goto random;
- 	}
- 	mds = cap->session->s_mds;
-@@ -1002,7 +1004,9 @@ static int __choose_mds(struct ceph_mds_client *mdsc,
- 	     cap == ci->i_auth_cap ? "auth " : "", cap);
- 	spin_unlock(&ci->i_ceph_lock);
- out:
--	iput(inode);
-+	/* avoid calling iput_final() while holding mdsc->mutex or
-+	 * in mds dispatch threads */
-+	ceph_async_iput(inode);
- 	return mds;
- 
- random:
-@@ -1312,7 +1316,9 @@ int ceph_iterate_session_caps(struct ceph_mds_session *session,
- 		spin_unlock(&session->s_cap_lock);
- 
- 		if (last_inode) {
--			iput(last_inode);
-+			/* avoid calling iput_final() while holding
-+			 * s_mutex or in mds dispatch threads */
-+			ceph_async_iput(last_inode);
- 			last_inode = NULL;
- 		}
- 		if (old_cap) {
-@@ -1345,7 +1351,7 @@ int ceph_iterate_session_caps(struct ceph_mds_session *session,
- 	session->s_cap_iterator = NULL;
- 	spin_unlock(&session->s_cap_lock);
- 
--	iput(last_inode);
-+	ceph_async_iput(last_inode);
- 	if (old_cap)
- 		ceph_put_cap(session->s_mdsc, old_cap);
- 
-@@ -1481,7 +1487,8 @@ static void remove_session_caps(struct ceph_mds_session *session)
- 			spin_unlock(&session->s_cap_lock);
- 
- 			inode = ceph_find_inode(sb, vino);
--			iput(inode);
-+			 /* avoid calling iput_final() while holding s_mutex */
-+			ceph_async_iput(inode);
- 
- 			spin_lock(&session->s_cap_lock);
- 		}
-@@ -3923,8 +3930,9 @@ static void handle_lease(struct ceph_mds_client *mdsc,
- 	ceph_con_send(&session->s_con, msg);
- 
- out:
--	iput(inode);
- 	mutex_unlock(&session->s_mutex);
-+	/* avoid calling iput_final() in mds dispatch threads */
-+	ceph_async_iput(inode);
- 	return;
- 
- bad:
-diff --git a/fs/ceph/quota.c b/fs/ceph/quota.c
-index c4522212872c..d629fc857450 100644
---- a/fs/ceph/quota.c
-+++ b/fs/ceph/quota.c
-@@ -74,7 +74,8 @@ void ceph_handle_quota(struct ceph_mds_client *mdsc,
- 		            le64_to_cpu(h->max_files));
- 	spin_unlock(&ci->i_ceph_lock);
- 
--	iput(inode);
-+	/* avoid calling iput_final() in dispatch thread */
-+	ceph_async_iput(inode);
- }
- 
- static struct ceph_quotarealm_inode *
-@@ -235,7 +236,8 @@ static struct ceph_snap_realm *get_quota_realm(struct ceph_mds_client *mdsc,
- 
- 		ci = ceph_inode(in);
- 		has_quota = __ceph_has_any_quota(ci);
--		iput(in);
-+		/* avoid calling iput_final() while holding mdsc->snap_rwsem */
-+		ceph_async_iput(in);
- 
- 		next = realm->parent;
- 		if (has_quota || !next)
-@@ -372,7 +374,8 @@ static bool check_quota_exceeded(struct inode *inode, enum quota_check_op op,
- 			pr_warn("Invalid quota check op (%d)\n", op);
- 			exceeded = true; /* Just break the loop */
- 		}
--		iput(in);
-+		/* avoid calling iput_final() while holding mdsc->snap_rwsem */
-+		ceph_async_iput(in);
- 
- 		next = realm->parent;
- 		if (exceeded || !next)
-diff --git a/fs/ceph/snap.c b/fs/ceph/snap.c
-index b26e12cd8ec3..72c6c022f02b 100644
---- a/fs/ceph/snap.c
-+++ b/fs/ceph/snap.c
-@@ -648,13 +648,15 @@ static void queue_realm_cap_snaps(struct ceph_snap_realm *realm)
- 		if (!inode)
- 			continue;
- 		spin_unlock(&realm->inodes_with_caps_lock);
--		iput(lastinode);
-+		/* avoid calling iput_final() while holding
-+		 * mdsc->snap_rwsem or in mds dispatch threads */
-+		ceph_async_iput(lastinode);
- 		lastinode = inode;
- 		ceph_queue_cap_snap(ci);
- 		spin_lock(&realm->inodes_with_caps_lock);
- 	}
- 	spin_unlock(&realm->inodes_with_caps_lock);
--	iput(lastinode);
-+	ceph_async_iput(lastinode);
- 
- 	dout("queue_realm_cap_snaps %p %llx done\n", realm, realm->ino);
- }
-@@ -806,7 +808,9 @@ static void flush_snaps(struct ceph_mds_client *mdsc)
- 		ihold(inode);
- 		spin_unlock(&mdsc->snap_flush_lock);
- 		ceph_flush_snaps(ci, &session);
--		iput(inode);
-+		/* avoid calling iput_final() while holding
-+		 * session->s_mutex or in mds dispatch threads */
-+		ceph_async_iput(inode);
- 		spin_lock(&mdsc->snap_flush_lock);
- 	}
- 	spin_unlock(&mdsc->snap_flush_lock);
-@@ -950,12 +954,14 @@ void ceph_handle_snap(struct ceph_mds_client *mdsc,
- 			ceph_get_snap_realm(mdsc, realm);
- 			ceph_put_snap_realm(mdsc, oldrealm);
- 
--			iput(inode);
-+			/* avoid calling iput_final() while holding
-+			 * mdsc->snap_rwsem or mds in dispatch threads */
-+			ceph_async_iput(inode);
- 			continue;
- 
- skip_inode:
- 			spin_unlock(&ci->i_ceph_lock);
--			iput(inode);
-+			ceph_async_iput(inode);
- 		}
- 
- 		/* we may have taken some of the old realm's children. */
-diff --git a/fs/ceph/super.h b/fs/ceph/super.h
-index 234610ce4155..11aeb540b0cf 100644
---- a/fs/ceph/super.h
-+++ b/fs/ceph/super.h
-@@ -904,9 +904,9 @@ extern int ceph_inode_holds_cap(struct inode *inode, int mask);
- extern bool ceph_inode_set_size(struct inode *inode, loff_t size);
- extern void __ceph_do_pending_vmtruncate(struct inode *inode);
- extern void ceph_queue_vmtruncate(struct inode *inode);
--
- extern void ceph_queue_invalidate(struct inode *inode);
- extern void ceph_queue_writeback(struct inode *inode);
-+extern void ceph_async_iput(struct inode *inode);
- 
- extern int __ceph_do_getattr(struct inode *inode, struct page *locked_page,
- 			     int mask, bool force);
--- 
-2.17.2
-
+SGkgU2hhd24sDQoNCi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQpGcm9tOiBTaGF3biBHdW8g
+PHNoYXduZ3VvQGtlcm5lbC5vcmc+IA0KU2VudDogMjAxOcTqNdTCMjPI1SAxNjowMQ0KVG86IFhp
+YW93ZWkgQmFvIDx4aWFvd2VpLmJhb0BueHAuY29tPg0KQ2M6IExlbyBMaSA8bGVveWFuZy5saUBu
+eHAuY29tPjsgcm9iaCtkdEBrZXJuZWwub3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgbGludXgt
+YXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9y
+ZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZw0KU3ViamVjdDogW0VYVF0gUmU6IFtQQVRD
+SHYyXSBhcm02NDogZHRzOiBsczEwMjhhOiBhZGQgZmxleHNwaSBub2Rlcw0KDQpDYXV0aW9uOiBF
+WFQgRW1haWwNCg0KT24gV2VkLCBNYXkgMTUsIDIwMTkgYXQgMTE6MDk6MjVBTSArMDAwMCwgWGlh
+b3dlaSBCYW8gd3JvdGU6DQo+IEZyb206IFhpYW93ZWkgQmFvIDx4aWFvd2VpLmJhb0BueHAuY29t
+Pg0KPg0KPiBBZGQgZnNwaSBub2RlIHByb3BlcnR5IGZvciBMUzEwMjhBIFNvQyBmb3IgRmxleFNQ
+SSBkcml2ZXIuDQo+IFByb3BlcnR5IGFkZGVkIGZvciB0aGUgRmxleFNQSSBjb250cm9sbGVyIGFu
+ZCBmb3IgdGhlIGNvbm5lY3RlZCBzbGF2ZSANCj4gZGV2aWNlIGZvciB0aGUgTFMxMDI4QVJEQiBh
+bmQgTFMxMDI4QVFEUyB0YXJnZXQuDQo+IFRoaXMgaXMgaGF2aW5nIG9uZSBTUEktTk9SIGZsYXNo
+IGRldmljZSwgbXQzNXh1MDJnIGNvbm5lY3RlZCBhdCBDUzAuDQo+DQo+IFNpZ25lZC1vZmYtYnk6
+IFhpYW93ZWkgQmFvIDx4aWFvd2VpLmJhb0BueHAuY29tPg0KPiAtLS0NCj4gdjI6DQo+ICAtIG1v
+ZGlmeSB0aGUgY29tbWl0IG1lc3NhZ2UgYW5kIHRoZSBkdHMgZm9ybWF0Lg0KPg0KPiAgYXJjaC9h
+cm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAyOGEtcWRzLmR0cyB8ICAgMTUgKysrKysr
+KysrKysrKysrDQo+ICBhcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDI4YS1y
+ZGIuZHRzIHwgICAxNSArKysrKysrKysrKysrKysNCj4gIGFyY2gvYXJtNjQvYm9vdC9kdHMvZnJl
+ZXNjYWxlL2ZzbC1sczEwMjhhLmR0c2kgICAgfCAgIDEyICsrKysrKysrKysrKw0KPiAgMyBmaWxl
+cyBjaGFuZ2VkLCA0MiBpbnNlcnRpb25zKCspLCAwIGRlbGV0aW9ucygtKQ0KPg0KPiBkaWZmIC0t
+Z2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAyOGEtcWRzLmR0cyAN
+Cj4gYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDI4YS1xZHMuZHRzDQo+
+IGluZGV4IDViY2Q0OTEuLjZlMTI4MDYgMTAwNjQ0DQo+IC0tLSBhL2FyY2gvYXJtNjQvYm9vdC9k
+dHMvZnJlZXNjYWxlL2ZzbC1sczEwMjhhLXFkcy5kdHMNCj4gKysrIGIvYXJjaC9hcm02NC9ib290
+L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAyOGEtcWRzLmR0cw0KPiBAQCAtMTU4LDYgKzE1OCwyMSBA
+QA0KPiAgICAgICB9Ow0KPiAgfTsNCj4NCj4gKyZmc3BpIHsNCg0KS2VlcCB0aGUgbGFiZWxpbmcg
+bm9kZSBzb3J0IGFscGhhYmV0aWNhbGx5LiAgVGhhdCBzYWlkLCAmZnNwaSBzaG91bGQgYmUgYWRk
+ZWQgYmVmb3JlICZpMmMwLg0KDQo+ICsgICAgIHN0YXR1cyA9ICJva2F5IjsNCg0KUGxlYXNlIGhh
+dmUgbmV3bGluZSBiZXR3ZWVuIHByb3BlcnR5IGFuZCBjaGlsZCBub2RlLg0KDQo+ICsgICAgIG10
+MzV4dTAyZzogZmxhc2hAMCB7DQo+ICsgICAgICAgICAgICAgI2FkZHJlc3MtY2VsbHMgPSA8MT47
+DQo+ICsgICAgICAgICAgICAgI3NpemUtY2VsbHMgPSA8MT47DQo+ICsgICAgICAgICAgICAgY29t
+cGF0aWJsZSA9ICJzcGFuc2lvbixtMjVwODAiOw0KDQpQbGVhc2Ugc3RhcnQgcHJvcGVydGllcyB3
+aXRoIGNvbXBhdGlibGUuDQpbWGlhb3dlaSBCYW9dIEkgaGF2ZSBzdWJtaXQgdGhlIHYzIHBhdGNo
+IHRvIGZpeCB0aGlzIGlzc3VlLg0KDQo+ICsgICAgICAgICAgICAgbTI1cCxmYXN0LXJlYWQ7DQo+
+ICsgICAgICAgICAgICAgc3BpLW1heC1mcmVxdWVuY3kgPSA8MjAwMDAwMDA+Ow0KPiArICAgICAg
+ICAgICAgIHJlZyA9IDwwPjsNCj4gKyAgICAgICAgICAgICAvKiBUaGUgZm9sbG93aW5nIHNldHRp
+bmcgZW5hYmxlcyAxLTEtOCAoQ01ELUFERFItREFUQSkgbW9kZSAqLw0KPiArICAgICAgICAgICAg
+IHNwaS1yeC1idXMtd2lkdGggPSA8OD47IC8qIDggU1BJIFJ4IGxpbmVzICovDQo+ICsgICAgICAg
+ICAgICAgc3BpLXR4LWJ1cy13aWR0aCA9IDwxPjsgLyogMSBTUEkgVHggbGluZSAqLw0KPiArICAg
+ICB9Ow0KPiArfTsNCj4gKw0KPiAgJnNhaTEgew0KPiAgICAgICBzdGF0dXMgPSAib2theSI7DQo+
+ICB9Ow0KPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxz
+MTAyOGEtcmRiLmR0cyANCj4gYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMx
+MDI4YS1yZGIuZHRzDQo+IGluZGV4IDI1ZDIzNzAuLjVkMzk2MTYgMTAwNjQ0DQo+IC0tLSBhL2Fy
+Y2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwMjhhLXJkYi5kdHMNCj4gKysrIGIv
+YXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAyOGEtcmRiLmR0cw0KPiBAQCAt
+MTM2LDYgKzEzNiwyMSBAQA0KPiAgICAgICB9Ow0KPiAgfTsNCj4NCj4gKyZmc3BpIHsNCj4gKyAg
+ICAgc3RhdHVzID0gIm9rYXkiOw0KPiArICAgICBtdDM1eHUwMmc6IGZsYXNoQDAgew0KPiArICAg
+ICAgICAgICAgICNhZGRyZXNzLWNlbGxzID0gPDE+Ow0KPiArICAgICAgICAgICAgICNzaXplLWNl
+bGxzID0gPDE+Ow0KPiArICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAic3BhbnNpb24sbTI1cDgw
+IjsNCj4gKyAgICAgICAgICAgICBtMjVwLGZhc3QtcmVhZDsNCj4gKyAgICAgICAgICAgICBzcGkt
+bWF4LWZyZXF1ZW5jeSA9IDwyMDAwMDAwMD47DQo+ICsgICAgICAgICAgICAgcmVnID0gPDA+Ow0K
+PiArICAgICAgICAgICAgIC8qIFRoZSBmb2xsb3dpbmcgc2V0dGluZyBlbmFibGVzIDEtMS04IChD
+TUQtQUREUi1EQVRBKSBtb2RlICovDQo+ICsgICAgICAgICAgICAgc3BpLXJ4LWJ1cy13aWR0aCA9
+IDw4PjsgLyogOCBTUEkgUnggbGluZXMgKi8NCj4gKyAgICAgICAgICAgICBzcGktdHgtYnVzLXdp
+ZHRoID0gPDE+OyAvKiAxIFNQSSBUeCBsaW5lICovDQo+ICsgICAgIH07DQo+ICt9Ow0KPiArDQo+
+ICAmZHVhcnQwIHsNCj4gICAgICAgc3RhdHVzID0gIm9rYXkiOw0KPiAgfTsNCj4gZGlmZiAtLWdp
+dCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwMjhhLmR0c2kgDQo+IGIv
+YXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAyOGEuZHRzaQ0KPiBpbmRleCBi
+YTcxYTMzLi5hMjdjZDYwIDEwMDY0NA0KPiAtLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVz
+Y2FsZS9mc2wtbHMxMDI4YS5kdHNpDQo+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNj
+YWxlL2ZzbC1sczEwMjhhLmR0c2kNCj4gQEAgLTEwOSw2ICsxMDksMTggQEANCj4gICAgICAgICAg
+ICAgICB9Ow0KPiAgICAgICB9Ow0KPg0KPiArICAgICBmc3BpOiBzcGlAMjBjMDAwMCB7DQoNCkFy
+ZSB5b3Ugc3VyZSB5b3Ugd2FudCB0byBhZGQgdGhpcyBkZXZpY2Ugbm9kZSBvdXRzaWRlIG9mICdz
+b2MnIG5vZGU/DQoNCj4gKyAgICAgICAgICAgICBjb21wYXRpYmxlID0gIm54cCxseDIxNjBhLWZz
+cGkiLCAic2ltcGxlLWJ1cyI7DQo+ICsgICAgICAgICAgICAgI2FkZHJlc3MtY2VsbHMgPSA8MT47
+DQo+ICsgICAgICAgICAgICAgI3NpemUtY2VsbHMgPSA8MD47DQo+ICsgICAgICAgICAgICAgcmVn
+ID0gPDB4MCAweDIwYzAwMDAgMHgwIDB4MTAwMDA+LA0KPiArICAgICAgICAgICAgICAgICA8MHgw
+IDB4MjAwMDAwMDAgMHgwIDB4MTAwMDAwMDA+Ow0KDQpGaXggdGhlIGluZGVudGF0aW9uIHRvIGdp
+dCBpdCBhbGlnbmVkIHdpdGggYWJvdmUgJzwnLg0KW1hpYW93ZWkgQmFvXSB0aGlzIGlzIGFsaWdu
+ZWQsIEkgZG9uJ3Qga25vdyB3aHkgaXQgaXMgbm90IGFsaWduZWQgaW4gZW1haWwuIFRoYW5rcy4N
+Cg0KPiArICAgICAgICAgICAgIHJlZy1uYW1lcyA9ICJGU1BJIiwgIkZTUEktbWVtb3J5IjsNCj4g
+KyAgICAgICAgICAgICBpbnRlcnJ1cHRzID0gPDAgMjUgMHg0PjsgLyogTGV2ZWwgaGlnaCB0eXBl
+ICovDQoNCmludGVycnVwdHMgPSA8R0lDX1NQSSAyNSBJUlFfVFlQRV9MRVZFTF9ISUdIPjsNCg0K
+U2hhd24NCg0KPiArICAgICAgICAgICAgIGNsb2NrcyA9IDwmY2xvY2tnZW4gNCAzPiwgPCZjbG9j
+a2dlbiA0IDM+Ow0KPiArICAgICAgICAgICAgIGNsb2NrLW5hbWVzID0gImZzcGlfZW4iLCAiZnNw
+aSI7DQo+ICsgICAgIH07DQo+ICsNCj4gICAgICAgc29jOiBzb2Mgew0KPiAgICAgICAgICAgICAg
+IGNvbXBhdGlibGUgPSAic2ltcGxlLWJ1cyI7DQo+ICAgICAgICAgICAgICAgI2FkZHJlc3MtY2Vs
+bHMgPSA8Mj47DQo+IC0tDQo+IDEuNy4xDQo+DQo=
