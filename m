@@ -2,52 +2,51 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF364C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:28:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDE23C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:28:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8599B21871
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:28:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B53062054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:28:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639685;
-	bh=LBVCXhgVU49YHaR9Ev/F2JhIioCYtg0jVSYC9JHnQbs=;
+	s=default; t=1558639687;
+	bh=uu3IdUy+7dfGB7tzNOlP2lRoWgO/DVyjNyZ5vA0JBLo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uou6L3tcoQnNs7bZDOX9ECInnYdqL8XoZv55idWZFdcW/z6bdxiLjDiRWKk1YYKds
-	 cJf3sZW+C+Lk4HA+yYCdrDmszW8p+VLRiUAiqg6l1uLulx17EMYUGIu2RArlm9iWrJ
-	 FIfJFRL7VeSox3VMOwyZrDmIupfts7nbdmJxkxx0=
+	b=Ql24h5GiIjyWWOrJb3Gx293eSgX7tB3bEWUv1B/z19gon1nJckvD+eeE1+P0eP8q2
+	 3ROfY4RL2QvdjQMpNUNSODCNXorjeaXVkxTwLqnNcQ2cg4sCKP4Sd9/Ky71bZ6fNFm
+	 h8dzpqweWVpzlaiPbABDRMX+fnJ1dTJOl/fd4d64=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391711AbfEWT2E (ORCPT
+        id S2391720AbfEWT2G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:28:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40452 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:28:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40520 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391002AbfEWT2B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:28:01 -0400
+        id S2391700AbfEWT2D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:28:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3ECB72054F;
-        Thu, 23 May 2019 19:28:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D2C9E206BA;
+        Thu, 23 May 2019 19:28:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639680;
-        bh=LBVCXhgVU49YHaR9Ev/F2JhIioCYtg0jVSYC9JHnQbs=;
+        s=default; t=1558639683;
+        bh=uu3IdUy+7dfGB7tzNOlP2lRoWgO/DVyjNyZ5vA0JBLo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m3lRRI6RlHj60DY/8tMJ7r5MWVoMx8a0sVyCDgylv0o0zCe6KMk2WU6GQ0gxrYLkz
-         BbF3avJg7RYJPOdmleNdzTqqX1jIQuwasx1ic8nmKiiC9n9WvAuXUaOM2IOW0XbcXc
-         l18O8cQZN0OQXvlWELIwrOwtMeuO4LLf+pRgWH+g=
+        b=qV05Vab54YEMUrkIwq5AHxtWj/dGWjMBCPowLRyyDtfUEhX4Nox5qCfDhZn7xwi1D
+         Nf9ksQXip+i/cGxbwFH1juv1UMiiXF07IAhMd6k7NRbnQ70cybo2bjqRSUjy9Khzry
+         HTnegCa2Cht9UqCNX+kITAJ5HUo96HuLmOWpd7VA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jason Gunthorpe <jgg@mellanox.com>,
-        Haggai Eran <haggaie@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>
-Subject: [PATCH 5.1 055/122] RDMA/mlx5: Use get_zeroed_page() for clock_info
-Date:   Thu, 23 May 2019 21:06:17 +0200
-Message-Id: <20190523181712.012640350@linuxfoundation.org>
+        stable@vger.kernel.org, Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH 5.1 056/122] RDMA/ipoib: Allow user space differentiate between valid dev_port
+Date:   Thu, 23 May 2019 21:06:18 +0200
+Message-Id: <20190523181712.155165635@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181705.091418060@linuxfoundation.org>
 References: <20190523181705.091418060@linuxfoundation.org>
@@ -60,98 +59,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Gunthorpe <jgg@mellanox.com>
+From: Leon Romanovsky <leonro@mellanox.com>
 
-commit ddcdc368b1033e19fd3a5f750752e10e28a87826 upstream.
+commit b79656ed44c6865e17bcd93472ec39488bcc4984 upstream.
 
-get_zeroed_page() returns a virtual address for the page which is better
-than allocating a struct page and doing a permanent kmap on it.
+Systemd triggers the following warning during IPoIB device load:
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-Reviewed-by: Haggai Eran <haggaie@mellanox.com>
+ mlx5_core 0000:00:0c.0 ib0: "systemd-udevd" wants to know my dev_id.
+        Should it look at dev_port instead?
+        See Documentation/ABI/testing/sysfs-class-net for more info.
+
+This is caused due to user space attempt to differentiate old systems
+without dev_port and new systems with dev_port. In case dev_port will be
+zero, the systemd will try to read dev_id instead.
+
+There is no need to print a warning in such case, because it is valid
+situation and it is needed to ensure systemd compatibility with old
+kernels.
+
+Link: https://github.com/systemd/systemd/blob/master/src/udev/udev-builtin-net_id.c#L358
+Cc: <stable@vger.kernel.org> # 4.19
+Fixes: f6350da41dc7 ("IB/ipoib: Log sysfs 'dev_id' accesses from userspace")
 Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
 Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/hw/mlx5/main.c                   |    5 ++-
- drivers/net/ethernet/mellanox/mlx5/core/lib/clock.c |   30 +++++++-------------
- include/linux/mlx5/driver.h                         |    1 
- 3 files changed, 14 insertions(+), 22 deletions(-)
+ drivers/infiniband/ulp/ipoib/ipoib_main.c |   13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
---- a/drivers/infiniband/hw/mlx5/main.c
-+++ b/drivers/infiniband/hw/mlx5/main.c
-@@ -2070,11 +2070,12 @@ static int mlx5_ib_mmap_clock_info_page(
- 		return -EPERM;
- 	vma->vm_flags &= ~VM_MAYWRITE;
+--- a/drivers/infiniband/ulp/ipoib/ipoib_main.c
++++ b/drivers/infiniband/ulp/ipoib/ipoib_main.c
+@@ -2402,7 +2402,18 @@ static ssize_t dev_id_show(struct device
+ {
+ 	struct net_device *ndev = to_net_dev(dev);
  
--	if (!dev->mdev->clock_info_page)
-+	if (!dev->mdev->clock_info)
- 		return -EOPNOTSUPP;
- 
- 	return rdma_user_mmap_page(&context->ibucontext, vma,
--				   dev->mdev->clock_info_page, PAGE_SIZE);
-+				   virt_to_page(dev->mdev->clock_info),
-+				   PAGE_SIZE);
- }
- 
- static int uar_mmap(struct mlx5_ib_dev *dev, enum mlx5_ib_mmap_cmd cmd,
---- a/drivers/net/ethernet/mellanox/mlx5/core/lib/clock.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/lib/clock.c
-@@ -535,23 +535,16 @@ void mlx5_init_clock(struct mlx5_core_de
- 	do_div(ns, NSEC_PER_SEC / HZ);
- 	clock->overflow_period = ns;
- 
--	mdev->clock_info_page = alloc_page(GFP_KERNEL);
--	if (mdev->clock_info_page) {
--		mdev->clock_info = kmap(mdev->clock_info_page);
--		if (!mdev->clock_info) {
--			__free_page(mdev->clock_info_page);
--			mlx5_core_warn(mdev, "failed to map clock page\n");
--		} else {
--			mdev->clock_info->sign   = 0;
--			mdev->clock_info->nsec   = clock->tc.nsec;
--			mdev->clock_info->cycles = clock->tc.cycle_last;
--			mdev->clock_info->mask   = clock->cycles.mask;
--			mdev->clock_info->mult   = clock->nominal_c_mult;
--			mdev->clock_info->shift  = clock->cycles.shift;
--			mdev->clock_info->frac   = clock->tc.frac;
--			mdev->clock_info->overflow_period =
--						clock->overflow_period;
--		}
-+	mdev->clock_info =
-+		(struct mlx5_ib_clock_info *)get_zeroed_page(GFP_KERNEL);
-+	if (mdev->clock_info) {
-+		mdev->clock_info->nsec = clock->tc.nsec;
-+		mdev->clock_info->cycles = clock->tc.cycle_last;
-+		mdev->clock_info->mask = clock->cycles.mask;
-+		mdev->clock_info->mult = clock->nominal_c_mult;
-+		mdev->clock_info->shift = clock->cycles.shift;
-+		mdev->clock_info->frac = clock->tc.frac;
-+		mdev->clock_info->overflow_period = clock->overflow_period;
- 	}
- 
- 	INIT_WORK(&clock->pps_info.out_work, mlx5_pps_out);
-@@ -599,8 +592,7 @@ void mlx5_cleanup_clock(struct mlx5_core
- 	cancel_delayed_work_sync(&clock->overflow_work);
- 
- 	if (mdev->clock_info) {
--		kunmap(mdev->clock_info_page);
--		__free_page(mdev->clock_info_page);
-+		free_page((unsigned long)mdev->clock_info);
- 		mdev->clock_info = NULL;
- 	}
- 
---- a/include/linux/mlx5/driver.h
-+++ b/include/linux/mlx5/driver.h
-@@ -681,7 +681,6 @@ struct mlx5_core_dev {
- #endif
- 	struct mlx5_clock        clock;
- 	struct mlx5_ib_clock_info  *clock_info;
--	struct page             *clock_info_page;
- 	struct mlx5_fw_tracer   *tracer;
- };
- 
+-	if (ndev->dev_id == ndev->dev_port)
++	/*
++	 * ndev->dev_port will be equal to 0 in old kernel prior to commit
++	 * 9b8b2a323008 ("IB/ipoib: Use dev_port to expose network interface
++	 * port numbers") Zero was chosen as special case for user space
++	 * applications to fallback and query dev_id to check if it has
++	 * different value or not.
++	 *
++	 * Don't print warning in such scenario.
++	 *
++	 * https://github.com/systemd/systemd/blob/master/src/udev/udev-builtin-net_id.c#L358
++	 */
++	if (ndev->dev_port && ndev->dev_id == ndev->dev_port)
+ 		netdev_info_once(ndev,
+ 			"\"%s\" wants to know my dev_id. Should it look at dev_port instead? See Documentation/ABI/testing/sysfs-class-net for more info.\n",
+ 			current->comm);
 
 
