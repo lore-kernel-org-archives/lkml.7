@@ -2,495 +2,245 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B5E2C282DE
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 16:38:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 513E2C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 16:38:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C903221773
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 16:38:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FA6120881
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 16:38:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xxuQx4Pm"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MzIBf/cg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731207AbfEWQiW (ORCPT
+        id S1731356AbfEWQiZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 12:38:22 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:33236 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730752AbfEWQiV (ORCPT
+        Thu, 23 May 2019 12:38:25 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:44772 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731210AbfEWQiX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 12:38:21 -0400
-Received: by mail-wm1-f66.google.com with SMTP id c66so7522113wme.0
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 09:38:18 -0700 (PDT)
+        Thu, 23 May 2019 12:38:23 -0400
+Received: by mail-pl1-f195.google.com with SMTP id c5so2972151pll.11
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 09:38:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Uc/EZeoFWudzAAaizpZc7eAmy5xMsx8Uz2iUj7QK1iU=;
-        b=xxuQx4PmAnDPT9Y12KQdAqxrHnAWLOJmILCkkXaiIfiO4lBiRonCFB+nWZ2INdQP6U
-         EqSCbgJjK1tCZidcMH2CajpmE5eJ6LVCU1BRnCRlERChDPvN0ji+fxC6Pui30XJvTMXR
-         EEuB+oz8oRraQX30DKyFPUlEIjJwECFJNtNX22ul5kBLN+K0KP8dJVyeQDg/sP5a9QMT
-         iCT6caHMrsyteKdnltcEcgzzegmQj8HYcNWoHAqQt/goswJ/YBaZY9WloB+vwgM08NJA
-         dJFNqi+VVX2ilFMJlc1S/H4WZv2lrYfGa7JAv6CqxbPPqTWhev8sACbGAqGkdRsFtqiE
-         cSjw==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=lscewINPN3hq/l0Swcavzj6U0JCykRwN+VKQYmeGavk=;
+        b=MzIBf/cg8HqX7LDHDmH3NduBH/GNHyk36BoEHjmaEfwdA0mOkdLBAg0EUXF7biIGPX
+         1D7AzOrIM750xRnkubOq1jGRkMcjIZjIYf+kPatHpylhUSqCQfdwGLTrWn4J8esTRBLk
+         Xcvmw1TY3lT5og+Fj9TWzv82uZX9wel5U8qi8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Uc/EZeoFWudzAAaizpZc7eAmy5xMsx8Uz2iUj7QK1iU=;
-        b=UZVh8AgJJGpGQhk4rMwbJeg5bgZ/azmT9OWzXVI2ao6fFQOAora3aduqrNPu/UDld4
-         k4PwJLwcC0lGhtonubxeBlz+i1wHMbFjcUIGQARI/XDSI9ZxPL9CoDSxMlcSXg7fMF9H
-         vp2pzEAJiMEcoaQ2T95bB/r4iMPQjOv+JCusjKIk3dlKFQpXEhdSGX60lf5oBsRNuT3m
-         dcDyfeiuoF1QVv6VEQmVEjLYG9IhZBGqVNynb6MXd/fKwDCcUKxq63zEyOEUvTEwRXyL
-         i3agc4M1Hgp3wGTU0YP0uj98RVnMyTelX6QWLYrJTgobQbAXORUpoRU3qHOzn7MZhHiO
-         FN9A==
-X-Gm-Message-State: APjAAAWRu1XCoJeLeZExoikeOxXCDXw2Nxc98w6SaSamdbOmoBbU7QQ/
-        MbLOqk8shml19KCOjkiES90uNQ==
-X-Google-Smtp-Source: APXvYqwsh61PmjWJEGFJ6UHfJ+KqwQGNKlIWWaG+cRw1WBTYSoKmRqXzStwyuTej5U4VDuoqd2DD3g==
-X-Received: by 2002:a1c:9a83:: with SMTP id c125mr11609852wme.39.1558629497283;
-        Thu, 23 May 2019 09:38:17 -0700 (PDT)
-Received: from [192.168.43.165] ([37.170.117.75])
-        by smtp.googlemail.com with ESMTPSA id s62sm21765wmf.24.2019.05.23.09.38.15
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 23 May 2019 09:38:16 -0700 (PDT)
-Subject: Re: [RFC v2 1/2] clocksource: davinci-timer: add support for
- clockevents
-To:     Bartosz Golaszewski <brgl@bgdev.pl>, Sekhar Nori <nsekhar@ti.com>,
-        Kevin Hilman <khilman@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        David Lechner <david@lechnology.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-References: <20190523125813.29506-1-brgl@bgdev.pl>
- <20190523125813.29506-2-brgl@bgdev.pl>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <dbe04cda-4f42-46b5-0808-e756a65180d2@linaro.org>
-Date:   Thu, 23 May 2019 18:38:14 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=lscewINPN3hq/l0Swcavzj6U0JCykRwN+VKQYmeGavk=;
+        b=ML5PJEXleXz5LfrVX8boPXArl9amH9NGUJ0inX6Q9biW/zpmZh+uRblGTErqGNQHFv
+         7g9NBEkX4sqJeNWOqQ0MPvfhhUZjopnf36seMKHOb2mtDEXyuw+Rn9PgwHBqI+wl/x0Q
+         P1LoVajWW84zN1CR5CFTdK9eGf97Q2strO2Xp+0hAwKy2wOzBegfKv+MhL35HX1Y5eOf
+         0kPh2Mhtc2kVeB1gVEq4MGBY7cIFZIgMzaKcI/ojVR22VJzsbDKwhSiG3NQ/pePEtUqF
+         /BXJbMva98mzqP0dcqLMD9bZc6YNGXrngwG0P/ZuMGStR8E3m1nkvGrnxRrO/+ReuNRb
+         iycw==
+X-Gm-Message-State: APjAAAXzA5Ax2R9GcHM3IGvFDUU+tC1iEUm662neGUgZ3WVfsLrDHZtN
+        slijiM2Kf2qdBE3ufpeRmgNjxQ==
+X-Google-Smtp-Source: APXvYqzxDNUT+zQ+3IUTM4Pfo29z2ussIuDSTH+Mz2tPZncaJ19KDxQ7w12Ra519k713lyeCzNKlsQ==
+X-Received: by 2002:a17:902:2aa6:: with SMTP id j35mr17743251plb.189.1558629502290;
+        Thu, 23 May 2019 09:38:22 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id g19sm56536684pgj.75.2019.05.23.09.38.20
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 23 May 2019 09:38:21 -0700 (PDT)
+Date:   Thu, 23 May 2019 09:38:19 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     enh <enh@google.com>, Evgenii Stepanov <eugenis@google.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Khalid Aziz <khalid.aziz@oracle.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
+        kvm@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alexander Deucher <Alexander.Deucher@amd.com>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
+Subject: Re: [PATCH v15 00/17] arm64: untag user pointers passed to the kernel
+Message-ID: <201905230917.DEE7A75EF0@keescook>
+References: <cover.1557160186.git.andreyknvl@google.com>
+ <20190517144931.GA56186@arrakis.emea.arm.com>
+ <CAFKCwrj6JEtp4BzhqO178LFJepmepoMx=G+YdC8sqZ3bcBp3EQ@mail.gmail.com>
+ <20190521182932.sm4vxweuwo5ermyd@mbp>
+ <201905211633.6C0BF0C2@keescook>
+ <20190522101110.m2stmpaj7seezveq@mbp>
+ <CAJgzZoosKBwqXRyA6fb8QQSZXFqfHqe9qO9je5TogHhzuoGXJQ@mail.gmail.com>
+ <20190522163527.rnnc6t4tll7tk5zw@mbp>
+ <201905221316.865581CF@keescook>
+ <20190523144449.waam2mkyzhjpqpur@mbp>
 MIME-Version: 1.0
-In-Reply-To: <20190523125813.29506-2-brgl@bgdev.pl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190523144449.waam2mkyzhjpqpur@mbp>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/05/2019 14:58, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On Thu, May 23, 2019 at 03:44:49PM +0100, Catalin Marinas wrote:
+> There is also the obvious requirement which I didn't mention: new user
+> space continues to run on new/subsequent kernel versions. That's one of
+> the points of contention for this series (ignoring MTE) with the
+> maintainers having to guarantee this without much effort. IOW, do the
+> 500K+ new lines in a subsequent kernel version break any user space out
+> there? I'm only talking about the relaxed TBI ABI. Are the usual LTP,
+> syskaller sufficient? Better static analysis would definitely help.
+
+We can't have perfect coverage of people actively (or accidentally)
+working to trick static analyzers (and the compiler) into "forgetting"
+about a __user annotation. We can certainly improve analysis (I see
+the other sub-thread on that), but I'd like that work not to block
+this series.
+
+What on this front would you be comfortable with? Given it's a new
+feature isn't it sufficient to have a CONFIG (and/or boot option)?
+
+> Or, if we ever want MTE to be turned on by default (i.e. tag checking),
+> even if everything is tagged with 0, we have to disallow TBI for user
+> and this includes hwasan. There were a small number of programs using
+> the TBI (I think some JavaScript compilers tried this). But now we are
+> bringing in the hwasan support and this can be a large user base. Shall
+> we add an ELF note for such binaries that use TBI/hwasan?
+
+Just to be clear, you say "disallow TBI for user" -- you mean a
+particular process, yes? i.e. there is no architectural limitation that
+says once we're using MTE nothing can switch to TBI. i.e. a process is
+either doing MTE or TBI (or nothing, but that's the same as TBI).
+
+> This needs solving as well. Most driver developers won't know why
+> untagged_addr() is needed unless we have more rigorous types or type
+> annotations and a tool to check them (we should probably revive the old
+> sparse thread).
+
+This seems like a parallel concern: we can do that separately from this
+series. Without landing it, is it much harder for people to test it,
+look for bugs, help with types/annotations, etc.
+
+> > So there needs to be some way to let the kernel know which of three
+> > things it should be doing:
+> > 1- leaving userspace addresses as-is (present)
+> > 2- wiping the top bits before using (this series)
 > 
-> Currently the clocksource and clockevent support for davinci platforms
-> lives in mach-davinci. It hard-codes many things, uses global variables,
-> implements functionalities unused by any platform and has code fragments
-> scattered across many (often unrelated) files.
+> (I'd say tolerating rather than wiping since get_user still uses the tag
+> in the current series)
 > 
-> Implement a new, modern and simplified timer driver and put it into
-> drivers/clocksource. We still need to support legacy board files so
-> export a config structure and a function that allows machine code to
-> register the timer.
+> The current series does not allow any choice between 1 and 2, the
+> default ABI basically becomes option 2.
+
+What about testing tools that intentionally insert high bits for syscalls
+and are _expecting_ them to fail? It seems the TBI series will break them?
+In that case, do we need to opt into TBI as well?
+
+> > 3- wiping the top bits for most things, but retaining them for MTE as
+> >    needed (the future)
 > 
-> The timer we're using is 64-bit but can be programmed in dual 32-bit
-> mode (both chained and unchained). We're using dual 32-bit mode to
-> have separate counters for clockevents and clocksource.
+> 2 and 3 are not entirely compatible as a tagged pointer may be checked
+> against the memory colour by the hardware. So you can't have hwasan
+> binary with MTE enabled.
+
+Right: a process must be either MTE or TBI, not both.
+
+> > I expect MTE to be the "default" in the future. Once a system's libc has
+> > grown support for it, everything will be trying to use MTE. TBI will be
+> > the special case (but TBI is effectively a prerequisite).
 > 
-> This patch contains the core code and support for clockevent. The
-> clocksource code will be included in a subsequent patch.
+> The kernel handling of tagged pointers is indeed a prerequisite. The ABI
+> distinction between the above 2 and 3 needs to be solved.
+
+Does that need solving now or when the MTE series appears? As there is
+no reason to distinguish between "normal" and "TBI", that doesn't seem
+to need solving at this point?
+
+> > AFAICT, the only difference I see between 2 and 3 will be the tag handling
+> > in usercopy (all other places will continue to ignore the top bits). Is
+> > that accurate?
 > 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> ---
->  drivers/clocksource/Kconfig         |   5 +
->  drivers/clocksource/Makefile        |   1 +
->  drivers/clocksource/timer-davinci.c | 285 ++++++++++++++++++++++++++++
->  include/clocksource/timer-davinci.h |  44 +++++
->  4 files changed, 335 insertions(+)
->  create mode 100644 drivers/clocksource/timer-davinci.c
->  create mode 100644 include/clocksource/timer-davinci.h
+> Yes, mostly (for the kernel). If MTE is enabled by default for a hwasan
+> binary, it will SEGFAULT (either in user space or in kernel uaccess).
+> How does the kernel choose between 2 and 3?
+
+Right -- that was my question as well.
+
+> > Is "1" a per-process state we want to keep? (I assume not, but rather it
+> > is available via no TBI/MTE CONFIG or a boot-time option, if at all?)
 > 
-> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
-> index 6bcaa4e2e72c..32dee6abd54a 100644
-> --- a/drivers/clocksource/Kconfig
-> +++ b/drivers/clocksource/Kconfig
-> @@ -42,6 +42,11 @@ config BCM_KONA_TIMER
->  	help
->  	  Enables the support for the BCM Kona mobile timer driver.
->  
-> +config DAVINCI_TIMER
-> +	bool "Texas Instruments DaVinci timer driver" if COMPILE_TEST
-> +	help
-> +	  Enables the support for the TI DaVinci timer driver.
-> +
->  config DIGICOLOR_TIMER
->  	bool "Digicolor timer driver" if COMPILE_TEST
->  	select CLKSRC_MMIO
-> diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
-> index 236858fa7fbf..021831bcc567 100644
-> --- a/drivers/clocksource/Makefile
-> +++ b/drivers/clocksource/Makefile
-> @@ -15,6 +15,7 @@ obj-$(CONFIG_SH_TIMER_TMU)	+= sh_tmu.o
->  obj-$(CONFIG_EM_TIMER_STI)	+= em_sti.o
->  obj-$(CONFIG_CLKBLD_I8253)	+= i8253.o
->  obj-$(CONFIG_CLKSRC_MMIO)	+= mmio.o
-> +obj-$(CONFIG_DAVINCI_TIMER)	+= timer-davinci.o
->  obj-$(CONFIG_DIGICOLOR_TIMER)	+= timer-digicolor.o
->  obj-$(CONFIG_OMAP_DM_TIMER)	+= timer-ti-dm.o
->  obj-$(CONFIG_DW_APB_TIMER)	+= dw_apb_timer.o
-> diff --git a/drivers/clocksource/timer-davinci.c b/drivers/clocksource/timer-davinci.c
-> new file mode 100644
-> index 000000000000..a8fc7b3805c9
-> --- /dev/null
-> +++ b/drivers/clocksource/timer-davinci.c
-> @@ -0,0 +1,285 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * TI DaVinci clocksource driver
-> + *
-> + * Copyright (C) 2019 Texas Instruments
-> + * Author: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> + * (with tiny parts adopted from code by Kevin Hilman <khilman@baylibre.com>)
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/clockchips.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/kernel.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/sched_clock.h>
-> +
-> +#include <clocksource/timer-davinci.h>
-> +
-> +#undef pr_fmt
-> +#define pr_fmt(fmt) "%s: " fmt "\n", __func__
-> +
-> +#define DAVINCI_TIMER_REG_TIM12			0x10
-> +#define DAVINCI_TIMER_REG_TIM34			0x14
-> +#define DAVINCI_TIMER_REG_PRD12			0x18
-> +#define DAVINCI_TIMER_REG_PRD34			0x1c
-> +#define DAVINCI_TIMER_REG_TCR			0x20
-> +#define DAVINCI_TIMER_REG_TGCR			0x24
-> +
-> +#define DAVINCI_TIMER_TIMMODE_MASK		GENMASK(3, 2)
-> +#define DAVINCI_TIMER_RESET_MASK		GENMASK(1, 0)
-> +#define DAVINCI_TIMER_TIMMODE_32BIT_UNCHAINED	BIT(2)
-> +#define DAVINCI_TIMER_UNRESET			GENMASK(1, 0)
-> +
-> +#define DAVINCI_TIMER_ENAMODE_MASK		GENMASK(1, 0)
-> +#define DAVINCI_TIMER_ENAMODE_DISABLED		0x00
-> +#define DAVINCI_TIMER_ENAMODE_ONESHOT		BIT(0)
-> +
-> +#define DAVINCI_TIMER_ENAMODE_SHIFT_TIM12	6
-> +#define DAVINCI_TIMER_ENAMODE_SHIFT_TIM34	22
-> +
-> +#define DAVINCI_TIMER_MIN_DELTA			0x01
-> +#define DAVINCI_TIMER_MAX_DELTA			0xfffffffe
-> +
-> +#define DAVINCI_TIMER_TGCR_DEFAULT \
-> +		(DAVINCI_TIMER_TIMMODE_32BIT_UNCHAINED | DAVINCI_TIMER_UNRESET)
-> +
-> +/* Cache the TCR register value. */
-> +static unsigned int davinci_tcr;
-> +
-> +struct davinci_clockevent {
-> +	struct clock_event_device dev;
-> +	void __iomem *base;
-> +
-> +	unsigned int tim_off;
-> +	unsigned int prd_off;
-> +	unsigned int cmp_off;
-> +
-> +	unsigned int enamode_disabled;
-> +	unsigned int enamode_oneshot;
-> +	unsigned int enamode_mask;
-> +};
-> +
-> +static struct davinci_clockevent *
-> +to_davinci_clockevent(struct clock_event_device *clockevent)
-> +{
-> +	return container_of(clockevent, struct davinci_clockevent, dev);
-> +}
-> +
-> +static unsigned int
-> +davinci_clockevent_read(struct davinci_clockevent *clockevent,
-> +			unsigned int reg)
-> +{
-> +	return readl_relaxed(clockevent->base + reg);
-> +}
-> +
-> +static void davinci_clockevent_write(struct davinci_clockevent *clockevent,
-> +				     unsigned int reg, unsigned int val)
-> +{
-> +	writel_relaxed(val, clockevent->base + reg);
-> +}
-> +
-> +static void davinci_tcr_update(void __iomem *base,
-> +			       unsigned int mask, unsigned int val)
-> +{
-> +	davinci_tcr &= ~mask;
-> +	davinci_tcr |= val & mask;
+> Possibly, though not necessarily per process. For testing or if
+> something goes wrong during boot, a command line option with a static
+> label would do. The AT_FLAGS bit needs to be checked by user space. My
+> preference would be per-process.
+
+I would agree.
+
+> > To choose between "2" and "3", it seems we need a per-process flag to
+> > opt into TBI (and out of MTE).
+> 
+> Or leave option 2 the default and get it to opt in to MTE.
+
+Given that MTE has to "start" at some point in the binary lifetime, I'm
+fine with opting into MTE. I do expect, though, this will feel redundant
+in a couple years as everything will immediately opt-in. But, okay, this
+is therefore an issue for the MTE series.
+
+> The current plan is that a future binary issues a prctl(), after
+> checking the HWCAP_MTE bit (as I replied to Elliot, the MTE instructions
+> are not in the current NOP space). I'd expect this to be done by the
+> libc or dynamic loader under the assumption that the binaries it loads
+> do _not_ use the top pointer byte for anything else. With hwasan
+> compiled objects this gets more confusing (any ELF note to identify
+> them?).
+
+Okay, sounds fine.
+
+> (there is also the risk of existing applications using TBI already but
+> I'm not aware of any still using this feature other than hwasan)
+
+Correct.
 
 
-I don't see when the davinci_tcr is initialized.
+Alright, the tl;dr appears to be:
+- you want more assurances that we can find __user stripping in the
+  kernel more easily. (But this seems like a parallel problem.)
+- we might need to opt in to TBI with a prctl()
+- all other concerns are for the future MTE series (though it sounds
+  like HWCAP_MTE and a prctl() solve those issues too).
 
-> +	writel_relaxed(davinci_tcr, base + DAVINCI_TIMER_REG_TCR);
-> +}
-> +
-> +static int davinci_clockevent_shutdown(struct clock_event_device *dev)
-> +{
-> +	struct davinci_clockevent *clockevent;
-> +
-> +	clockevent = to_davinci_clockevent(dev);
-> +
-> +	davinci_tcr_update(clockevent->base,
-> +			   clockevent->enamode_mask,
-> +			   clockevent->enamode_disabled);
-> +
-> +	return 0;
-> +}
-> +
-> +static int davinci_clockevent_set_oneshot(struct clock_event_device *dev)
-> +{
-> +	struct davinci_clockevent *clockevent = to_davinci_clockevent(dev);
-> +
-> +	davinci_clockevent_write(clockevent, clockevent->tim_off, 0x0);
-> +
-> +	davinci_tcr_update(clockevent->base,
-> +			   clockevent->enamode_mask,
-> +			   clockevent->enamode_oneshot);
-> +
-> +	return 0;
-> +}
-> +
-> +static int
-> +davinci_clockevent_set_next_event_std(unsigned long cycles,
-> +				      struct clock_event_device *dev)
-> +{
-> +	struct davinci_clockevent *clockevent = to_davinci_clockevent(dev);
-> +
-> +	davinci_clockevent_shutdown(dev);
-> +
-> +	davinci_clockevent_write(clockevent, clockevent->tim_off, 0x0);
-> +	davinci_clockevent_write(clockevent, clockevent->prd_off, cycles);
-> +
-> +	davinci_clockevent_set_oneshot(dev);
-> +
-> +	return 0;
-> +}
-> +
-> +static int
-> +davinci_clockevent_set_next_event_cmp(unsigned long cycles,
-> +				      struct clock_event_device *dev)
-> +{
-> +	struct davinci_clockevent *clockevent = to_davinci_clockevent(dev);
-> +	unsigned int curr_time;
-> +
-> +	curr_time = davinci_clockevent_read(clockevent, clockevent->tim_off);
-> +	davinci_clockevent_write(clockevent,
-> +				 clockevent->cmp_off, curr_time + cycles);
-> +
-> +	return 0;
-> +}
-> +
-> +static irqreturn_t davinci_timer_irq_timer(int irq, void *data)
-> +{
-> +	struct davinci_clockevent *clockevent = data;
-> +
-> +	if (!clockevent_state_oneshot(&clockevent->dev))
-> +		davinci_tcr_update(clockevent,
-> +				   clockevent->enamode_mask,
-> +				   clockevent->enamode_disabled);
-> +
-> +	clockevent->dev.event_handler(&clockevent->dev);
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static void davinci_timer_init(void __iomem *base)
-> +{
-> +	/* Set clock to internal mode and disable it. */
-> +	writel_relaxed(0x0, base + DAVINCI_TIMER_REG_TCR);
-> +	/*
-> +	 * Reset both 32-bit timers, set no prescaler for timer 34, set the
-> +	 * timer to dual 32-bit unchained mode, unreset both 32-bit timers.
-> +	 */
-> +	writel_relaxed(DAVINCI_TIMER_TGCR_DEFAULT,
-> +		       base + DAVINCI_TIMER_REG_TGCR);
-> +	/* Init both counters to zero. */
-> +	writel_relaxed(0x0, base + DAVINCI_TIMER_REG_TIM12);
-> +	writel_relaxed(0x0, base + DAVINCI_TIMER_REG_TIM34);
-> +}
-> +
-> +int __init davinci_timer_register(struct clk *clk,
-> +				  const struct davinci_timer_cfg *timer_cfg)
-> +{
-> +	struct davinci_clockevent *clockevent;
-> +	unsigned int tick_rate, shift;
-> +	void __iomem *base;
-> +	int rv;
-> +
-> +	rv = clk_prepare_enable(clk);
-> +	if (rv) {
-> +		pr_err("Unable to prepare and enable the timer clock");
-> +		return rv;
-> +	}
-> +
-> +	base = request_mem_region(timer_cfg->reg.start,
-> +				  resource_size(&timer_cfg->reg),
-> +				  "davinci-timer");
-> +	if (!base) {
-> +		pr_err("Unable to request memory region");
-> +		return -EBUSY;
-> +	}
-> +
-> +	base = ioremap(timer_cfg->reg.start, resource_size(&timer_cfg->reg));
-> +	if (!base) {
-> +		pr_err("Unable to map the register range");
-> +		return -ENOMEM;
-> +	}
-> +
-> +	davinci_timer_init(base);
-> +	tick_rate = clk_get_rate(clk);
-> +
-> +	clockevent = kzalloc(sizeof(*clockevent), GFP_KERNEL);
-> +	if (!clockevent) {
-> +		pr_err("Error allocating memory for clockevent data");
-> +		return -ENOMEM;
-> +	}
-> +
-> +	clockevent->dev.name = "tim12";
-> +	clockevent->dev.features = CLOCK_EVT_FEAT_ONESHOT;
-> +	clockevent->dev.cpumask = cpumask_of(0);
-> +
-> +	clockevent->base = base;
-> +	clockevent->tim_off = DAVINCI_TIMER_REG_TIM12;
-> +	clockevent->prd_off = DAVINCI_TIMER_REG_PRD12;
-> +
-> +	shift = DAVINCI_TIMER_ENAMODE_SHIFT_TIM12;
-> +	clockevent->enamode_disabled = DAVINCI_TIMER_ENAMODE_DISABLED << shift;
-> +	clockevent->enamode_oneshot = DAVINCI_TIMER_ENAMODE_ONESHOT << shift;
-> +	clockevent->enamode_mask = DAVINCI_TIMER_ENAMODE_MASK << shift;
-> +
-> +	clockevent->dev.set_state_shutdown = davinci_clockevent_shutdown;
-> +	clockevent->dev.set_state_oneshot = davinci_clockevent_set_oneshot;
-> +
-> +	if (timer_cfg->cmp_off) {
-> +		clockevent->cmp_off = timer_cfg->cmp_off;
-> +		clockevent->dev.set_next_event =
-> +				davinci_clockevent_set_next_event_cmp;
-> +	} else {
-> +		clockevent->dev.set_next_event =
-> +				davinci_clockevent_set_next_event_std;
-> +	}
-> +
-> +	rv = request_irq(timer_cfg->irq[DAVINCI_TIMER_CLOCKEVENT_IRQ].start,
-> +			 davinci_timer_irq_timer, IRQF_TIMER,
-> +			 "clockevent", clockevent);
-> +	if (rv) {
-> +		pr_err("Unable to request the clockevent interrupt");
-> +		return rv;
-> +	}
-> +
-> +	clockevents_config_and_register(&clockevent->dev, tick_rate,
-> +					DAVINCI_TIMER_MIN_DELTA,
-> +					DAVINCI_TIMER_MAX_DELTA);
-> +
-> +	return 0;
-> +}
-> +
-> +static int __init of_davinci_timer_register(struct device_node *np)
-> +{
-> +	struct davinci_timer_cfg timer_cfg = { };
-> +	struct clk *clk;
-> +	int rv;
-> +
-> +	rv = of_address_to_resource(np, 0, &timer_cfg.reg);
-> +	if (rv) {
-> +		pr_err("Unable to get the register range for timer");
-> +		return rv;
-> +	}
-> +
-> +	rv = of_irq_to_resource_table(np, timer_cfg.irq,
-> +				      DAVINCI_TIMER_NUM_IRQS);
-> +	if (rv != DAVINCI_TIMER_NUM_IRQS) {
-> +		pr_err("Unable to get the interrupts for timer");
-> +		return rv;
-> +	}
-> +
-> +	clk = of_clk_get(np, 0);
-> +	if (IS_ERR(clk)) {
-> +		pr_err("Unable to get the timer clock");
-> +		return PTR_ERR(clk);
-> +	}
-> +
-> +	rv = davinci_timer_register(clk, &timer_cfg);
-> +	if (rv)
-> +		clk_put(clk);
-> +
-> +	return rv;
-> +}
-> +TIMER_OF_DECLARE(davinci_timer, "ti,da830-timer", of_davinci_timer_register);
-> diff --git a/include/clocksource/timer-davinci.h b/include/clocksource/timer-davinci.h
-> new file mode 100644
-> index 000000000000..1dcc1333fbc8
-> --- /dev/null
-> +++ b/include/clocksource/timer-davinci.h
-> @@ -0,0 +1,44 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * TI DaVinci clocksource driver
-> + *
-> + * Copyright (C) 2019 Texas Instruments
-> + * Author: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> + */
-> +
-> +#ifndef __TIMER_DAVINCI_H__
-> +#define __TIMER_DAVINCI_H__
-> +
-> +#include <linux/clk.h>
-> +#include <linux/ioport.h>
-> +
-> +enum {
-> +	DAVINCI_TIMER_CLOCKEVENT_IRQ,
-> +	DAVINCI_TIMER_CLOCKSOURCE_IRQ,
-> +	DAVINCI_TIMER_NUM_IRQS,
-> +};
-> +
-> +/**
-> + * struct davinci_timer_cfg - davinci clocksource driver configuration struct
-> + * @reg:        register range resource
-> + * @irq:        clockevent and clocksource interrupt resources
-> + * @cmp_off:    if set - it specifies the compare register used for clockevent
-> + *
-> + * Note: if the compare register is specified, the driver will use the bottom
-> + * clock half for both clocksource and clockevent and the compare register
-> + * to generate event irqs. The user must supply the correct compare register
-> + * interrupt number.
-> + *
-> + * This is only used by da830 the DSP of which uses the top half. The timer
-> + * driver still configures the top half to run in free-run mode.
-> + */
-> +struct davinci_timer_cfg {
-> +	struct resource reg;
-> +	struct resource irq[DAVINCI_TIMER_NUM_IRQS];
-> +	unsigned int cmp_off;
-> +};
-> +
-> +int __init davinci_timer_register(struct clk *clk,
-> +				  const struct davinci_timer_cfg *data);
-> +
-> +#endif /* __TIMER_DAVINCI_H__ */
-> 
-
+Is this accurate? What do you see as the blockers for this series at
+this point?
 
 -- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
+Kees Cook
