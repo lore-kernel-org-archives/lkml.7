@@ -2,121 +2,125 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 951F5C282CE
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 02:09:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 540BBC282CE
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 02:13:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D20F20B1F
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 02:09:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B2AD20B1F
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 02:13:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="nP+EimQW"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="QnLisD6/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729828AbfEWCJA (ORCPT
+        id S1729819AbfEWCNO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 22:09:00 -0400
-Received: from mail-eopbgr60084.outbound.protection.outlook.com ([40.107.6.84]:64142
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727854AbfEWCJA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 22:09:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MwZgzs/4aZwNfCjdz+/ne/jbJMPxd4bUOyyhLYXEmVI=;
- b=nP+EimQWUqrXt5cXHaVpbVhy9ZH0Qhzk9/N8pJLoVsYEIZArUpMWK+JjZhixjfAkEwKt6YzZUk4IbDXAjv9uQ73WmK9LUTo7ME0k2MXH+Ydx6ljp8vfknOuWbPlf42I7KMpJ5FFL9oECyA8N7GB96CvUPqYnmsYB2ECqIlrFaq0=
-Received: from VI1PR04MB4543.eurprd04.prod.outlook.com (20.177.55.90) by
- VI1PR04MB6094.eurprd04.prod.outlook.com (20.179.25.148) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1900.17; Thu, 23 May 2019 02:08:55 +0000
-Received: from VI1PR04MB4543.eurprd04.prod.outlook.com
- ([fe80::5062:df97:a70b:93f8]) by VI1PR04MB4543.eurprd04.prod.outlook.com
- ([fe80::5062:df97:a70b:93f8%7]) with mapi id 15.20.1900.020; Thu, 23 May 2019
- 02:08:54 +0000
-From:   Robin Gong <yibin.gong@nxp.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     "broonie@kernel.org" <broonie@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-        "plyatov@gmail.com" <plyatov@gmail.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>
-Subject: RE: [EXT] Re: [PATCH v4 10/14] dma: imx-sdma: add i.mx6ul/6sx
- compatible name
-Thread-Topic: [EXT] Re: [PATCH v4 10/14] dma: imx-sdma: add i.mx6ul/6sx
- compatible name
-Thread-Index: AQHVEIU1vbltRMJezUidB/k1RHkv66Z3Kd0AgADL88A=
-Date:   Thu, 23 May 2019 02:08:54 +0000
-Message-ID: <VI1PR04MB4543BE5BB829A2BFDA48824789010@VI1PR04MB4543.eurprd04.prod.outlook.com>
-References: <1558548188-1155-1-git-send-email-yibin.gong@nxp.com>
- <1558548188-1155-11-git-send-email-yibin.gong@nxp.com>
- <20190522135128.GA24987@bogus>
-In-Reply-To: <20190522135128.GA24987@bogus>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yibin.gong@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 817b28b3-d63c-44eb-92dc-08d6df239bc7
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB6094;
-x-ms-traffictypediagnostic: VI1PR04MB6094:
-x-microsoft-antispam-prvs: <VI1PR04MB6094D46D8E2A38D25049248E89010@VI1PR04MB6094.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 00462943DE
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(346002)(366004)(39860400002)(136003)(376002)(13464003)(189003)(199004)(446003)(476003)(11346002)(4744005)(71190400001)(71200400001)(52536014)(5660300002)(2906002)(486006)(186003)(68736007)(66446008)(64756008)(66556008)(66476007)(66946007)(73956011)(6116002)(26005)(3846002)(7736002)(76116006)(305945005)(81156014)(81166006)(86362001)(66066001)(6916009)(316002)(74316002)(8676002)(8936002)(33656002)(7416002)(54906003)(76176011)(7696005)(229853002)(25786009)(102836004)(256004)(14444005)(4326008)(99286004)(53936002)(55016002)(9686003)(478600001)(6436002)(6506007)(6246003)(14454004);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB6094;H:VI1PR04MB4543.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 3K3cPhbNnzwtDRRdVPWB7LqwrE1SytmzdbFbuVWzSXwQZk3Y7rA0D2XnHHotVTwx3+sRL6VDKWi/xQHHiF6yFOFhIZT9Wd/aljoL8Lx5wOsbGuPHmU5mqHJO63/04mu916C8MXbmFOZklhC+ZuvCV8veFV2h9d2TCHgTZNUqRTRO0642CtdTdz5ibtYipB/riCr8VKtr1VkNBDp102UhasX3I5J4Xvra1cki0WLom6AyaUt/UsqL+Rikl+XKAckrNigKNMyLr9/kV9jCuaBDR6vIHIIIeu1Iop1OeyKgwAnK2AgeUJ9LGAJYrr3a0xbKyuZEo2flSHijZx4vyygD+sxrFhKNJt4szoidsugeYeiY8AUvUU8XZJsI2H4l2PuFKpp1D+XGfLH/uC2XXYdCxB49FYJ8VGstqB2hL0HBwPg=
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        Wed, 22 May 2019 22:13:14 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:44379 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727691AbfEWCNL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 22:13:11 -0400
+Received: by mail-qk1-f193.google.com with SMTP id w25so2842820qkj.11
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 19:13:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=b3/EfmHSRs62elR8A/odK6e3/0Brcb6KqCx2aA27cX0=;
+        b=QnLisD6/JMGBjRoEeUEBnzIhET9cvQhrzLkPKkXxNCJuPiuygToVdTcDsAwx42cZ1b
+         UlAvySDZcxZSyTgfucQA3QsEb+vUS9fysnn19IhqPclikUfqfkQbzpjx1C7xeWQ/EFm4
+         clYt9HU1w6PBTd5Tuk8E+PY0ybn0CgpK3YGFcAI2L9GEobEqfakjbhs3PVghusX4HIZP
+         gSNNkIVt4CqnzDSiZWwl2sgaMjpmZUvdh2ByMQtDucxE2HRrledC+a9W0cyhRIOAJ8UA
+         EGMeRm8vYCQpbB5aKbglgNRP7qSkS+6hhZCn4KzcVXWcX1GQyD2iiRmOseNAzvUG6t4s
+         05Nw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=b3/EfmHSRs62elR8A/odK6e3/0Brcb6KqCx2aA27cX0=;
+        b=eMzwGKDB3TeO+bgxEs0jzk/W8kQtEswyLKNTrLGqSOICNe6pfDvzIj7kFhTAnif0RV
+         BCnbm5BL4o5Wq49TuPkGkAJI2zrl6QsPWykdFrxuRz+F1ERCWSixwJGwAc0S5CMj0bTQ
+         Sl5G3aNgfiPLJvLtFeZTh2QiPPyLXwZg28U/xiQGm3kq7pbTJ2shVyjDdc3c6ecz2UZ5
+         /+ZgwQXbgloTGR3SNrobJnLK617RWAF1Qqct4oSKRhi5rxSiCDGqfmyU0PWJaqm+sXiw
+         MbXG2x4V+/tDoGmTv8IlAOoLxWE0Rcw9+IXMQDPCX2JV55/QuPpL+uqQ+JDPlQMNZfdo
+         +6jw==
+X-Gm-Message-State: APjAAAUSRyt+MhWNTojboALtuOxkzxNseDsdCtg/QXcTWSfIfwBpf+Jz
+        4Sz4YEvssde79yu52QHtSy0qAQ==
+X-Google-Smtp-Source: APXvYqwBibUBUKv3IpDQKP/S8DuZjyNQXNlKDOPKwGuuQFaNi+Xo8eCt6bpY/XnH14YiP71Dm3MSig==
+X-Received: by 2002:a37:660d:: with SMTP id a13mr35324863qkc.347.1558577590882;
+        Wed, 22 May 2019 19:13:10 -0700 (PDT)
+Received: from ovpn-121-0.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id j29sm11895298qki.39.2019.05.22.19.13.09
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 22 May 2019 19:13:10 -0700 (PDT)
+From:   Qian Cai <cai@lca.pw>
+To:     mingo@redhat.com, peterz@infradead.org
+Cc:     linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
+Subject: [PATCH] sched: fix "runnable_avg_yN_inv" not used warnings
+Date:   Wed, 22 May 2019 22:12:45 -0400
+Message-Id: <20190523021245.2882-1-cai@lca.pw>
+X-Mailer: git-send-email 2.20.1 (Apple Git-117)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 817b28b3-d63c-44eb-92dc-08d6df239bc7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 May 2019 02:08:54.8391
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB6094
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgUm9iLA0KCVRoYW5rIHlvdSBmb3IgeW91ciByZW1pbmRpbmcsIEkgaGF2ZSBhZGRlZCBBY2tl
-ZC1ieSB0YWdzIGdvdHRlbiBmcm9tIE1hcmsgYW5kIFZpbm9kIGluIHY0IHBhdGNoIHNldCwgYnV0
-IHRoZXJlIGlzIHN0aWxsIG9uZSB1cGRhdGUgKA0KcmVtb3ZlIGNoZWNraW5nICdldmVudF9pZDEn
-IHplcm8gYXMgJ2V2ZW50X2lkMCcuKSBmb3IgVmlub2QncyBjb25jZXJuLCBzbyBJIHNlbnQgbmV3
-IHY0Lg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBSb2IgSGVycmluZyA8
-cm9iaEBrZXJuZWwub3JnPg0KPiBTZW50OiAyMDE5xOo11MIyMsjVIDIxOjUxPiANCj4gT24gV2Vk
-LCAyMiBNYXkgMjAxOSAxMDowMDozOCArMDAwMCwgUm9iaW4gR29uZyB3cm90ZToNCj4gPiBBZGQg
-aS5teDZ1bCBhbmQgaS5teDZzeCBjb21wYXRpYmxlIG5hbWUgaW4gYmluZGluZyBkb2MuDQo+ID4N
-Cj4gPiBTaWduZWQtb2ZmLWJ5OiBSb2JpbiBHb25nIDx5aWJpbi5nb25nQG54cC5jb20+DQo+ID4g
-LS0tDQo+ID4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kbWEvZnNsLWlteC1z
-ZG1hLnR4dCB8IDIgKysNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKQ0KPiA+
-DQo+IA0KPiBQbGVhc2UgYWRkIEFja2VkLWJ5L1Jldmlld2VkLWJ5IHRhZ3Mgd2hlbiBwb3N0aW5n
-IG5ldyB2ZXJzaW9ucy4gSG93ZXZlciwNCj4gdGhlcmUncyBubyBuZWVkIHRvIHJlcG9zdCBwYXRj
-aGVzICpvbmx5KiB0byBhZGQgdGhlIHRhZ3MuIFRoZSB1cHN0cmVhbQ0KPiBtYWludGFpbmVyIHdp
-bGwgZG8gdGhhdCBmb3IgYWNrcyByZWNlaXZlZCBvbiB0aGUgdmVyc2lvbiB0aGV5IGFwcGx5Lg0K
-PiANCj4gSWYgYSB0YWcgd2FzIG5vdCBhZGRlZCBvbiBwdXJwb3NlLCBwbGVhc2Ugc3RhdGUgd2h5
-IGFuZCB3aGF0IGNoYW5nZWQuDQo=
+runnable_avg_yN_inv[] is only used in kernel/sched/pelt.c but was
+included in several other places and causes compilation warnings,
+
+In file included from kernel/sched/pelt.h:2,
+                 from kernel/sched/rt.c:8:
+kernel/sched/sched-pelt.h:4:18: warning: 'runnable_avg_yN_inv' defined
+but not used [-Wunused-const-variable=]
+In file included from kernel/sched/pelt.h:2,
+                 from kernel/sched/fair.c:705:
+kernel/sched/sched-pelt.h:4:18: warning: 'runnable_avg_yN_inv' defined
+but not used [-Wunused-const-variable=]
+In file included from kernel/sched/pelt.h:2,
+                 from kernel/sched/deadline.c:19:
+kernel/sched/sched-pelt.h:4:18: warning: 'runnable_avg_yN_inv' defined
+but not used [-Wunused-const-variable=]
+
+Fixed it by appending the __maybe_unused attribute for it, so all
+generated variables and macros can still be kept in the same file.
+
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+ Documentation/scheduler/sched-pelt.c | 2 +-
+ kernel/sched/sched-pelt.h            | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/scheduler/sched-pelt.c b/Documentation/scheduler/sched-pelt.c
+index e4219139386a..6c10b8764533 100644
+--- a/Documentation/scheduler/sched-pelt.c
++++ b/Documentation/scheduler/sched-pelt.c
+@@ -20,7 +20,7 @@ void calc_runnable_avg_yN_inv(void)
+ 	int i;
+ 	unsigned int x;
+ 
+-	printf("static const u32 runnable_avg_yN_inv[] = {");
++	printf("static const u32 runnable_avg_yN_inv[] __maybe_unused = {");
+ 	for (i = 0; i < HALFLIFE; i++) {
+ 		x = ((1UL<<32)-1)*pow(y, i);
+ 
+diff --git a/kernel/sched/sched-pelt.h b/kernel/sched/sched-pelt.h
+index a26473674fb7..c529706bed11 100644
+--- a/kernel/sched/sched-pelt.h
++++ b/kernel/sched/sched-pelt.h
+@@ -1,7 +1,7 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ /* Generated by Documentation/scheduler/sched-pelt; do not modify. */
+ 
+-static const u32 runnable_avg_yN_inv[] = {
++static const u32 runnable_avg_yN_inv[] __maybe_unused = {
+ 	0xffffffff, 0xfa83b2da, 0xf5257d14, 0xefe4b99a, 0xeac0c6e6, 0xe5b906e6,
+ 	0xe0ccdeeb, 0xdbfbb796, 0xd744fcc9, 0xd2a81d91, 0xce248c14, 0xc9b9bd85,
+ 	0xc5672a10, 0xc12c4cc9, 0xbd08a39e, 0xb8fbaf46, 0xb504f333, 0xb123f581,
+-- 
+2.20.1 (Apple Git-117)
+
