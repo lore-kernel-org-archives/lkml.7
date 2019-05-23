@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BE67C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:22:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 452EFC46460
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:22:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36ABE2184E
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:22:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C71E2184E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:22:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639323;
-	bh=Q0lGo3h/GiZTNUedHTI6vKMsm4zr8272mGtNb6WOu9Y=;
+	s=default; t=1558639326;
+	bh=OM323lilaXTT5GZ/zcOGrhKKBjdRwxa1Q4gP6gKPlek=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aqJxPMntOwiRkg1JKBb87TJQdlaMCm2H8A8UVOdojhRGLVsuUIY5+c5Ek/lBvsgxg
-	 r1oHyZgy8Dd+8nvcvbJM7da0YLjPHSIMTrcOb17d8PovFVALxhPNf+HaTI/Mq1WeWU
-	 Xs6tiTv2P4sOBpixaGgeMMkgB+KrTBVDzdg7OI6M=
+	b=A+Ck4Olf67osxsa+csmaYb91Be0+6OV1NefXJ4FRMENpLqKYxZ+oY8E+W8RlEKnGE
+	 WuK6rbDL4NMtA3pc6e99SmFhXt1a4lYLS0Nj6f5iKFUUhDVuu8vC2OM/Qr0LoV0jeX
+	 ya4phKwQVjUKrQylqKmB5onu8lw2TCvN8ngPhdpk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388693AbfEWTWC (ORCPT
+        id S2390397AbfEWTWF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:22:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59514 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:22:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59684 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390361AbfEWTVz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:21:55 -0400
+        id S2388660AbfEWTWB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:22:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 60398217D9;
-        Thu, 23 May 2019 19:21:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A72F920863;
+        Thu, 23 May 2019 19:21:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639314;
-        bh=Q0lGo3h/GiZTNUedHTI6vKMsm4zr8272mGtNb6WOu9Y=;
+        s=default; t=1558639320;
+        bh=OM323lilaXTT5GZ/zcOGrhKKBjdRwxa1Q4gP6gKPlek=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K6+CAJbX7oeB7WksLOhcEqb26oBLztl2uJJtsvuIh2+Pfa9QD42EjFVkr2UW8It7h
-         tUeS/OMHIt3pxad/9vg3o0s3M2q7TQTAahAP7pSSEG9ScdqPCkUhM3z6P7fR7GOheR
-         IqT2fxFhHXhfmxsNsSEmjLQ8jGv/3BqPkP/LAE7o=
+        b=qLWgOI0+4WaAajLmzkQdpjvrUpIxrM3+JrI8saKJTA3rLIGWTLDIvu4OS9MWszAuY
+         +HyqUymRdrRnD2dRVDxVDQSXjNbwsREbziP5qk9l/ibTzu/2S7mWY78fzWlLozFb3e
+         U4sJvsh3aM0S+LnsebNQq18r1PYZxzGC0Cpi0UUQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christoph Probst <kernel@probst.it>,
-        Pavel Shilovsky <pshilov@microsoft.com>,
-        Steve French <stfrench@microsoft.com>
-Subject: [PATCH 5.0 042/139] cifs: fix strcat buffer overflow and reduce raciness in smb21_set_oplock_level()
-Date:   Thu, 23 May 2019 21:05:30 +0200
-Message-Id: <20190523181726.206207031@linuxfoundation.org>
+        stable@vger.kernel.org, Xiao Ni <xni@redhat.com>,
+        NeilBrown <neilb@suse.com>, Song Liu <songliubraving@fb.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.0 034/139] md: batch flush requests.
+Date:   Thu, 23 May 2019 21:05:22 +0200
+Message-Id: <20190523181725.202744210@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181720.120897565@linuxfoundation.org>
 References: <20190523181720.120897565@linuxfoundation.org>
@@ -60,62 +60,170 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Probst <kernel@probst.it>
+From: NeilBrown <neilb@suse.com>
 
-commit 6a54b2e002c9d00b398d35724c79f9fe0d9b38fb upstream.
+commit 2bc13b83e6298486371761de503faeffd15b7534 upstream.
 
-Change strcat to strncpy in the "None" case to fix a buffer overflow
-when cinode->oplock is reset to 0 by another thread accessing the same
-cinode. It is never valid to append "None" to any other message.
+Currently if many flush requests are submitted to an md device is quick
+succession, they are serialized and can take a long to process them all.
+We don't really need to call flush all those times - a single flush call
+can satisfy all requests submitted before it started.
+So keep track of when the current flush started and when it finished,
+allow any pending flush that was requested before the flush started
+to complete without waiting any more.
 
-Consolidate multiple writes to cinode->oplock to reduce raciness.
+Test results from Xiao:
 
-Signed-off-by: Christoph Probst <kernel@probst.it>
-Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-CC: Stable <stable@vger.kernel.org>
+Test is done on a raid10 device which is created by 4 SSDs. The tool is
+dbench.
+
+1. The latest linux stable kernel
+  Operation                Count    AvgLat    MaxLat
+  --------------------------------------------------
+  Deltree                    768    10.509    78.305
+  Flush                  2078376     0.013    10.094
+  Close                  21787697     0.019    18.821
+  LockX                    96580     0.007     3.184
+  Mkdir                      384     0.008     0.062
+  Rename                 1255883     0.191    23.534
+  ReadX                  46495589     0.020    14.230
+  WriteX                 14790591     7.123    60.706
+  Unlink                 5989118     0.440    54.551
+  UnlockX                  96580     0.005     2.736
+  FIND_FIRST             10393845     0.042    12.079
+  SET_FILE_INFORMATION   2415558     0.129    10.088
+  QUERY_FILE_INFORMATION 4711725     0.005     8.462
+  QUERY_PATH_INFORMATION 26883327     0.032    21.715
+  QUERY_FS_INFORMATION   4929409     0.010     8.238
+  NTCreateX              29660080     0.100    53.268
+
+Throughput 1034.88 MB/sec (sync open)  128 clients  128 procs
+max_latency=60.712 ms
+
+2. With patch1 "Revert "MD: fix lock contention for flush bios""
+  Operation                Count    AvgLat    MaxLat
+  --------------------------------------------------
+  Deltree                    256     8.326    36.761
+  Flush                   693291     3.974   180.269
+  Close                  7266404     0.009    36.929
+  LockX                    32160     0.006     0.840
+  Mkdir                      128     0.008     0.021
+  Rename                  418755     0.063    29.945
+  ReadX                  15498708     0.007     7.216
+  WriteX                 4932310    22.482   267.928
+  Unlink                 1997557     0.109    47.553
+  UnlockX                  32160     0.004     1.110
+  FIND_FIRST             3465791     0.036     7.320
+  SET_FILE_INFORMATION    805825     0.015     1.561
+  QUERY_FILE_INFORMATION 1570950     0.005     2.403
+  QUERY_PATH_INFORMATION 8965483     0.013    14.277
+  QUERY_FS_INFORMATION   1643626     0.009     3.314
+  NTCreateX              9892174     0.061    41.278
+
+Throughput 345.009 MB/sec (sync open)  128 clients  128 procs
+max_latency=267.939 m
+
+3. With patch1 and patch2
+  Operation                Count    AvgLat    MaxLat
+  --------------------------------------------------
+  Deltree                    768     9.570    54.588
+  Flush                  2061354     0.666    15.102
+  Close                  21604811     0.012    25.697
+  LockX                    95770     0.007     1.424
+  Mkdir                      384     0.008     0.053
+  Rename                 1245411     0.096    12.263
+  ReadX                  46103198     0.011    12.116
+  WriteX                 14667988     7.375    60.069
+  Unlink                 5938936     0.173    30.905
+  UnlockX                  95770     0.005     4.147
+  FIND_FIRST             10306407     0.041    11.715
+  SET_FILE_INFORMATION   2395987     0.048     7.640
+  QUERY_FILE_INFORMATION 4672371     0.005     9.291
+  QUERY_PATH_INFORMATION 26656735     0.018    19.719
+  QUERY_FS_INFORMATION   4887940     0.010     7.654
+  NTCreateX              29410811     0.059    28.551
+
+Throughput 1026.21 MB/sec (sync open)  128 clients  128 procs
+max_latency=60.075 ms
+
+Cc: <stable@vger.kernel.org> # v4.19+
+Tested-by: Xiao Ni <xni@redhat.com>
+Signed-off-by: NeilBrown <neilb@suse.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/smb2ops.c |   14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+ drivers/md/md.c |   27 +++++++++++++++++++++++----
+ drivers/md/md.h |    3 +++
+ 2 files changed, 26 insertions(+), 4 deletions(-)
 
---- a/fs/cifs/smb2ops.c
-+++ b/fs/cifs/smb2ops.c
-@@ -2652,26 +2652,28 @@ smb21_set_oplock_level(struct cifsInodeI
- 		       unsigned int epoch, bool *purge_cache)
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -427,6 +427,7 @@ static void submit_flushes(struct work_s
+ 	struct mddev *mddev = container_of(ws, struct mddev, flush_work);
+ 	struct md_rdev *rdev;
+ 
++	mddev->start_flush = ktime_get_boottime();
+ 	INIT_WORK(&mddev->flush_work, md_submit_flush_data);
+ 	atomic_set(&mddev->flush_pending, 1);
+ 	rcu_read_lock();
+@@ -467,6 +468,7 @@ static void md_submit_flush_data(struct
+ 	 * could wait for this and below md_handle_request could wait for those
+ 	 * bios because of suspend check
+ 	 */
++	mddev->last_flush = mddev->start_flush;
+ 	mddev->flush_bio = NULL;
+ 	wake_up(&mddev->sb_wait);
+ 
+@@ -481,15 +483,32 @@ static void md_submit_flush_data(struct
+ 
+ void md_flush_request(struct mddev *mddev, struct bio *bio)
  {
- 	char message[5] = {0};
-+	unsigned int new_oplock = 0;
++	ktime_t start = ktime_get_boottime();
+ 	spin_lock_irq(&mddev->lock);
+ 	wait_event_lock_irq(mddev->sb_wait,
+-			    !mddev->flush_bio,
++			    !mddev->flush_bio ||
++			    ktime_after(mddev->last_flush, start),
+ 			    mddev->lock);
+-	mddev->flush_bio = bio;
++	if (!ktime_after(mddev->last_flush, start)) {
++		WARN_ON(mddev->flush_bio);
++		mddev->flush_bio = bio;
++		bio = NULL;
++	}
+ 	spin_unlock_irq(&mddev->lock);
  
- 	oplock &= 0xFF;
- 	if (oplock == SMB2_OPLOCK_LEVEL_NOCHANGE)
- 		return;
- 
--	cinode->oplock = 0;
- 	if (oplock & SMB2_LEASE_READ_CACHING_HE) {
--		cinode->oplock |= CIFS_CACHE_READ_FLG;
-+		new_oplock |= CIFS_CACHE_READ_FLG;
- 		strcat(message, "R");
- 	}
- 	if (oplock & SMB2_LEASE_HANDLE_CACHING_HE) {
--		cinode->oplock |= CIFS_CACHE_HANDLE_FLG;
-+		new_oplock |= CIFS_CACHE_HANDLE_FLG;
- 		strcat(message, "H");
- 	}
- 	if (oplock & SMB2_LEASE_WRITE_CACHING_HE) {
--		cinode->oplock |= CIFS_CACHE_WRITE_FLG;
-+		new_oplock |= CIFS_CACHE_WRITE_FLG;
- 		strcat(message, "W");
- 	}
--	if (!cinode->oplock)
--		strcat(message, "None");
-+	if (!new_oplock)
-+		strncpy(message, "None", sizeof(message));
-+
-+	cinode->oplock = new_oplock;
- 	cifs_dbg(FYI, "%s Lease granted on inode %p\n", message,
- 		 &cinode->vfs_inode);
+-	INIT_WORK(&mddev->flush_work, submit_flushes);
+-	queue_work(md_wq, &mddev->flush_work);
++	if (!bio) {
++		INIT_WORK(&mddev->flush_work, submit_flushes);
++		queue_work(md_wq, &mddev->flush_work);
++	} else {
++		/* flush was performed for some other bio while we waited. */
++		if (bio->bi_iter.bi_size == 0)
++			/* an empty barrier - all done */
++			bio_endio(bio);
++		else {
++			bio->bi_opf &= ~REQ_PREFLUSH;
++			mddev->pers->make_request(mddev, bio);
++		}
++	}
  }
+ EXPORT_SYMBOL(md_flush_request);
+ 
+--- a/drivers/md/md.h
++++ b/drivers/md/md.h
+@@ -463,6 +463,9 @@ struct mddev {
+ 	 */
+ 	struct bio *flush_bio;
+ 	atomic_t flush_pending;
++	ktime_t start_flush, last_flush; /* last_flush is when the last completed
++					  * flush was started.
++					  */
+ 	struct work_struct flush_work;
+ 	struct work_struct event_work;	/* used by dm to report failure event */
+ 	void (*sync_super)(struct mddev *mddev, struct md_rdev *rdev);
 
 
