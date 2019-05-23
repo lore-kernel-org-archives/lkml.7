@@ -2,256 +2,194 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF996C282DE
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 13:54:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ED0CC282E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 13:55:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97CAA2133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 13:54:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=fixposition.ch header.i=@fixposition.ch header.b="TbW6+/HN";
-	dkim=pass (2048-bit key) header.d=fixposition.ch header.i=@fixposition.ch header.b="RNvdWUXD"
+	by mail.kernel.org (Postfix) with ESMTP id 2A9D52133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 13:55:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730874AbfEWNyP (ORCPT
+        id S1730791AbfEWNz5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 09:54:15 -0400
-Received: from mail.fixposition.ch ([212.51.146.252]:51390 "EHLO
-        mail.fixposition.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730323AbfEWNyP (ORCPT
+        Thu, 23 May 2019 09:55:57 -0400
+Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:46265 "EHLO
+        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730323AbfEWNz5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 09:54:15 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.fixposition.ch (Postfix) with ESMTP id 3BAA81FD7B;
-        Thu, 23 May 2019 15:54:12 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fixposition.ch;
-        s=mail; t=1558619652;
-        bh=PA8e0mAyI05eeyPdXbeaUuDGGdyjfTjWwscmDMjVUoc=;
-        h=In-Reply-To:From:Date:Cc:To:Subject:From;
-        b=TbW6+/HNtYT4iA3Zlv2GRktYYVo8WRtdfHUo2cJZhfQ9uzv5sgYFOrH1foCpqR0Y/
-         BYFETHtc/PvCR7wKbgnSKlD+w7FYOFI1mfV80lXCJ0YTdrdTBayjxJ6L1cFy7pUelA
-         QzcefFh4N6H2N13IsJVxPNxOIfWOFI3OIxuGeLBMVb8oweeHL+vEOWBEYyduh5WGqN
-         6EVvZ5BI592/ZapYwo/HwsQSxpVmHLPoQBYSuXoU6lP5+aEvN33765+8fnC+EkflXm
-         GZpDvCp1j7RbbASmNxPVitTstTU/jsy+IFC0bZAjOIH2lSkg3Pet5quuGbCadAoW+w
-         80c1XLAa97aIQ==
-X-Virus-Scanned: Debian amavisd-new at fixposition.ch
-Received: from mail.fixposition.ch ([127.0.0.1])
-        by localhost (mail.fixposition.ch [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id x8T_B6QxQIWG; Thu, 23 May 2019 15:54:09 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.fixposition.ch (Postfix) with ESMTP id 1C8A51FF91;
-        Thu, 23 May 2019 15:54:09 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fixposition.ch;
-        s=mail; t=1558619649;
-        bh=PA8e0mAyI05eeyPdXbeaUuDGGdyjfTjWwscmDMjVUoc=;
-        h=In-Reply-To:From:Date:Cc:To:Subject:From;
-        b=RNvdWUXDs4JozcTX5gUu7ovxs4aHnKIH+PZ1JX7bkcPMID0+HUINTM73aBn7mAdQj
-         A9u0DdPwp7kE0NBIS7gqmwxvg78JWJp2pIZOwngjHsNZDW/HmZLxSf1xuMryks0fg8
-         zPWRLd1Scn/HcnQS001jo+ZRqC3vBbte2MON66mR6+Q6XUM1GDti3hw3t7rA1eoEFC
-         WTOZ/XHWECmPVWHonKQ3TC9i39OPOPBd4RNxL/4y3dXnA2JdyJE/TrO3pOYMRNxZkN
-         WPK83fWZx+JSCb3gaxTDa6Mb9ovP2qS8EcsAc6xT5wHuGW0qy6HLTQZJx6az9Sb/Z0
-         g1jTrqU+T5x8g==
-Content-Type: text/plain; charset="utf-8"
-In-Reply-To: <MN2PR12MB337375FCA3AAA2EB5F08B15AC4010@MN2PR12MB3373.namprd12.prod.outlook.com>
-From:   "Andreea Lutac" <andreea.lutac@fixposition.ch>
-X-Forward: 82.130.71.40
-Date:   Thu, 23 May 2019 15:54:09 +0200
-Cc:     =?utf-8?q?stevemo=40skydio=2Ecom?= <stevemo@skydio.com>,
-        =?utf-8?q?jic23=40kernel=2Eorg?= <jic23@kernel.org>,
-        =?utf-8?q?knaack=2Eh=40gmx=2Ede?= <knaack.h@gmx.de>,
-        =?utf-8?q?lars=40metafoo=2Ede?= <lars@metafoo.de>,
-        =?utf-8?q?pmeerw=40pmeerw=2Enet?= <pmeerw@pmeerw.net>,
-        =?utf-8?q?linux-iio=40vger=2Ekernel=2Eorg?= 
-        <linux-iio@vger.kernel.org>,
-        =?utf-8?q?linux-kernel=40vger=2Ekernel=2Eorg?= 
-        <linux-kernel@vger.kernel.org>
-To:     "Jean-Baptiste Maneyrol" <JManeyrol@invensense.com>
+        Thu, 23 May 2019 09:55:57 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R321e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04446;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0TSTyrdx_1558619738;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TSTyrdx_1558619738)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 23 May 2019 21:55:39 +0800
+Subject: Re: [v4 PATCH 2/2] mm: vmscan: correct some vmscan counters for THP
+ swapout
+To:     "Huang, Ying" <ying.huang@intel.com>
+Cc:     hannes@cmpxchg.org, mhocko@suse.com, mgorman@techsingularity.net,
+        kirill.shutemov@linux.intel.com, josef@toxicpanda.com,
+        hughd@google.com, shakeelb@google.com, akpm@linux-foundation.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <1558578458-83807-1-git-send-email-yang.shi@linux.alibaba.com>
+ <1558578458-83807-2-git-send-email-yang.shi@linux.alibaba.com>
+ <87lfyx9vtr.fsf@yhuang-dev.intel.com>
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+Message-ID: <18866477-ec08-3571-c7fe-1c8417da6c3a@linux.alibaba.com>
+Date:   Thu, 23 May 2019 21:55:37 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
 MIME-Version: 1.0
-Message-ID: <42bd-5ce6a600-59-ca9e8b0@181727209>
-Subject: =?utf-8?q?Re=3A?= ICM20602 buffer issues with the =?utf-8?q?inv=5Fmpu6050?= 
- driver
-User-Agent: SOGoMail 4.0.7
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <87lfyx9vtr.fsf@yhuang-dev.intel.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jean-Baptiste,
-
-Thank you for the prompt response. Your explanation makes sense and I k=
-now how to at least work around this issue for now. For my current purp=
-oses, it is still useful to have the temperature data as well, so I'll =
-stick to reading all 14 bytes for now and then see if there's a way to =
-permanently enable temp as a more long-term solution.
-
-I probably wouldn't have come across this problem had it not been the c=
-ase that libiio fails to enable the temp channel. Looking into it I fou=
-nd that libiio has an open issue where channels like temp that are neit=
-her modified, nor indexed are not counted as scan elements and thus can=
-'t be enabled. So just in case someone facing a similar issue comes acr=
-oss this thread, this can be either worked around by making temp an ind=
-exed channel in the driver and hopefully solved definitively by waiting=
- for the fix to be merged into libiio.
-
-Thanks for all the help!
-All the best,
-Andreea
 
 
-On Thursday, May 23, 2019 12:12 CEST, Jean-Baptiste Maneyrol <JManeyrol=
-@invensense.com> wrote: 
-
-> Hi Andreea,
-> 
-> I understand the issue now. The problem is that temperature data are =
-always present in the FIFO. Even when the attribute is disabled. This i=
-s a limitation of this chip and cannot be changed on the hardware side.=
-
-> 
-> When temp attribute is disabled while accel and gyro are on, the iio =
-buffer is expecting to have 12 bytes with accel + gyro data. But the dr=
-iver will still provides 14 bytes with temperature in the middle since =
-the FIFO will contain that. Always enabling temperature attribute on us=
-erspace will solve this issue, but that's certainly not the best.
-> 
-> A correct solution would be to enforce temperature data in iio buffer=
- by having the temp attribute always enabled and read-only in userspace=
-. That would reflect correctly the chip capabilities. But I don't know =
-if this is feasible. A workaround would be to add data post-processing =
-in the driver and delete temp data when it is disabled. But I don't lik=
-e this kind of workaround because that goes against iio buffer design p=
-rinciple.
-> 
-> Hope this help you.
-> 
-> Best regards,
-> Jean-Baptiste Maneyrol
-> 
-> From: Andreea Lutac <andreea.lutac@fixposition.ch>
-> Sent: Thursday, May 23, 2019 11:44
-> To: Jean-Baptiste Maneyrol
-> Cc: stevemo@skydio.com; jic23@kernel.org; knaack.h@gmx.de; lars@metaf=
-oo.de; pmeerw@pmeerw.net; linux-iio@vger.kernel.org; linux-kernel@vger.=
-kernel.org
-> Subject: Re: ICM20602 buffer issues with the inv=5Fmpu6050 driver
-> =C2=A0
-> =C2=A0CAUTION: This email originated from outside of the organization=
-. Please make sure the sender is who they say they are and do not click=
- links or open attachments unless you recognize the sender and know the=
- content is safe.
-> 
-> Hi Jean-Baptiste and Stepan,
-> 
-> Thanks so much for the replies and the advice. I've dug a bit deeper =
-into this and added a few printk statements to the driver, as suggested=
- by Stepan. It looks like the device is getting recognized correctly as=
- ICM20602 and the buffer is being filled with 14 bytes as expected.
-> 
-> But I've identified some strange behaviour regarding the temperature =
-channeI. If I manually enable all 7 scan elements and read 14 bytes fro=
-m the device file, the readings appear correct and change accordingly w=
-hen I move the chip around. However, if I set in=5Ftemp=5Fen set to 0 (=
-with everything else still enabled) and read 12 bytes, the buffer doesn=
-'t seem to acknowledge this change and shift the gyro values up, instea=
-d getting only the first 12 bytes (accel=5Fx, accel=5Fy, accel=5Fz, tem=
-p, gyro=5Fx, gyro=5Fy), without gyro=5Fz. So this is why it looks as if=
- temp is replacing gyro=5Fx.
-> I made a pastebin here with some of the (unconverted) values I got wh=
-ile testing these cases: https://urldefense.proofpoint.com/v2/url?u=3Dh=
-ttps-3A=5F=5Fpastebin.com=5FBYVqDNch&d=3DDwIFaQ&c=3DWoJWtq5JV8YrKnzRxvD=
-8NxmTP=5F1wxfE0prPmo0NeZwg&r=3D4jiDX=5F1brsSWfCjfA6Ovj1d4h9MF8q7Xk5aBwG=
-28mVk&m=3DsbkHiUlsj8pOWjf2iTq5CXEFvv-MNyqBKOqCjxOj9kc&s=3DPmb23R-DoTj9h=
-DwYk3qqiUfOCUWbtfpVQjUZ1lajeFI&e=3D
-> 
-> Attempting the same reads with my C++ program via libiio always resul=
-ts in only the first 12 bytes being read, as for some strange reason li=
-biio fails to enable the temperature channel, so iio=5Fdevice=5Fget=5Fs=
-ample=5Fsize() is always 12 and it's actually gyro=5Fz that I can't get=
- to.
-> 
-> I'll try to look through the code that is supposed to enable a channe=
-l and see why it's not succeeding via libiio. Do you have any clue as t=
-o which bit of code does the adjustment of the buffer values according =
-to which channels are enabled? Is this done in the driver or deeper in =
-the kernel?
-> 
-> Thanks once again for the help!
-> Best regards,
-> Andreea
-> 
-> On Wednesday, May 22, 2019 16:33 CEST, Jean-Baptiste Maneyrol <JManey=
-rol@invensense.com> wrote:
-> 
-> > Hello,
-> >
-> > I had a look inside the driver to verify the buffer implementation.=
- It looks correct to me. I don't see where the problem can come from. I=
- am sorry I don't have a setup currently to test in live.
-> >
-> > For sure you can have a different result by reading the buffer thro=
-ugh the char device file compared to reading the raw sysfs entry. The b=
-uffer is taking the data from the FIFO and the raw sysfs from the senso=
-r data registers.
-> >
-> > You can perhaps test value 1 by 1 in the buffer, and verify the cor=
-rectness of every attributes. If you can also send a complete buffer lo=
-g that would be helpful.
-> > Every data is 2 bytes long and in the following order: accel=5Fx, a=
-ccel=5Fy, accel=5Fz, temp, gyro=5Fx, gyro=5Fy, gyro=5Fz
-> >
-> > Best regards,
-> > JB Maneyrol
-> >
-> > From: Andreea Lutac <andreea.lutac@fixposition.ch>
-> > Sent: Tuesday, May 21, 2019 12:40
-> > Cc: Jean-Baptiste Maneyrol; stevemo@skydio.com; jic23@kernel.org; k=
-naack.h@gmx.de; lars@metafoo.de; pmeerw@pmeerw.net; linux-iio@vger.kern=
-el.org; linux-kernel@vger.kernel.org
-> > Subject: ICM20602 buffer issues with the inv=5Fmpu6050 driver
-> > =C2=A0
-> > Hello,
-> >
-> > I've been trying to get some data samples from the ICM20602 IMU usi=
-ng the mpu6050 driver which recently added support for it, but I'm enco=
-untering an issue with the ordering of the data in the FIFO.
-> > According to the specs of the device, if the accel and gyro XYZ cha=
-nnels are enabled, then the hardware FIFO is filled with 14 bytes corre=
-sponding to the following channels: accel=5Fx, accel=5Fy, accel=5Fz, te=
-mp, anglvel=5Fx, anglvel=5Fy, anglvel=5Fz. However, when reading out th=
-e buffer, the value I get for anglvel=5Fx seems to actually be the temp=
-erature. This=C2=A0 occurs both when reading with iio=5Fchannel=5Fread =
-(via libiio) and also if I read directly from /dev/iio:device with only=
- in=5Fanglvel=5Fx=5Fen set. But in=5Fanglvel=5Fx=5Fraw reports correct =
-values, which made me suspect that maybe somewhere in the driver this i=
-nterleaved temp channel is not accounted for in the buffer structure.
-> >
-> > I had a look at the driver code and inv=5Fmpu6050=5Fread=5Ffifo() i=
-n particular, but I can't identify anything amiss. I've applied the rec=
-ent patch that added the extra 2 temperature bytes ( ), but the problem=
- persists. So far I've tried changing the size of the data buffer, defi=
-ned in inv=5Fmpu=5Fiio.h:
-> >
-> > /* 6 + 6 round up and plus 8 */
-> > #define INV=5FMPU6050=5FOUTPUT=5FDATA=5FSIZE=C2=A0=C2=A0=C2=A0=C2=A0=
- 24
-> >
-> > from 24 to 32, according to the intuition that 24 corresponds to re=
-adings without temperature (i.e. 6 bytes for accel, rounded up to 8 + 6=
- bytes for gyro, rounded up to 8 + 8 bytes for the timestamp =3D 24) an=
-d thus another 8 bytes would be needed, but that doesn't seem to have s=
-olved it.
-> >
-> > I'm quite new to driver development though, so I think there might =
-be something I'm not getting. I would be really grateful if anyone coul=
-d shed some light over what's happening here or give some advice as to =
-what I could be doing wrong.
-> >
-> > Best regards,
-> > Andreea Lutac
-> >
+On 5/23/19 8:52 PM, Huang, Ying wrote:
+> Yang Shi <yang.shi@linux.alibaba.com> writes:
 >
+>> Since commit bd4c82c22c36 ("mm, THP, swap: delay splitting THP after
+>> swapped out"), THP can be swapped out in a whole.  But, nr_reclaimed
+>> and some other vm counters still get inc'ed by one even though a whole
+>> THP (512 pages) gets swapped out.
+>>
+>> This doesn't make too much sense to memory reclaim.  For example, direct
+>> reclaim may just need reclaim SWAP_CLUSTER_MAX pages, reclaiming one THP
+>> could fulfill it.  But, if nr_reclaimed is not increased correctly,
+>> direct reclaim may just waste time to reclaim more pages,
+>> SWAP_CLUSTER_MAX * 512 pages in worst case.
+>>
+>> And, it may cause pgsteal_{kswapd|direct} is greater than
+>> pgscan_{kswapd|direct}, like the below:
+>>
+>> pgsteal_kswapd 122933
+>> pgsteal_direct 26600225
+>> pgscan_kswapd 174153
+>> pgscan_direct 14678312
+>>
+>> nr_reclaimed and nr_scanned must be fixed in parallel otherwise it would
+>> break some page reclaim logic, e.g.
+>>
+>> vmpressure: this looks at the scanned/reclaimed ratio so it won't
+>> change semantics as long as scanned & reclaimed are fixed in parallel.
+>>
+>> compaction/reclaim: compaction wants a certain number of physical pages
+>> freed up before going back to compacting.
+>>
+>> kswapd priority raising: kswapd raises priority if we scan fewer pages
+>> than the reclaim target (which itself is obviously expressed in order-0
+>> pages). As a result, kswapd can falsely raise its aggressiveness even
+>> when it's making great progress.
+>>
+>> Other than nr_scanned and nr_reclaimed, some other counters, e.g.
+>> pgactivate, nr_skipped, nr_ref_keep and nr_unmap_fail need to be fixed
+>> too since they are user visible via cgroup, /proc/vmstat or trace
+>> points, otherwise they would be underreported.
+>>
+>> When isolating pages from LRUs, nr_taken has been accounted in base
+>> page, but nr_scanned and nr_skipped are still accounted in THP.  It
+>> doesn't make too much sense too since this may cause trace point
+>> underreport the numbers as well.
+>>
+>> So accounting those counters in base page instead of accounting THP as
+>> one page.
+>>
+>> nr_dirty, nr_unqueued_dirty, nr_congested and nr_writeback are used by
+>> file cache, so they are not impacted by THP swap.
+>>
+>> This change may result in lower steal/scan ratio in some cases since
+>> THP may get split during page reclaim, then a part of tail pages get
+>> reclaimed instead of the whole 512 pages, but nr_scanned is accounted
+>> by 512, particularly for direct reclaim.  But, this should be not a
+>> significant issue.
+>>
+>> Cc: "Huang, Ying" <ying.huang@intel.com>
+>> Cc: Johannes Weiner <hannes@cmpxchg.org>
+>> Cc: Michal Hocko <mhocko@suse.com>
+>> Cc: Mel Gorman <mgorman@techsingularity.net>
+>> Cc: "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+>> Cc: Hugh Dickins <hughd@google.com>
+>> Cc: Shakeel Butt <shakeelb@google.com>
+>> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+>> ---
+>> v4: Fixed the comments from Johannes and Huang Ying
+>> v3: Removed Shakeel's Reviewed-by since the patch has been changed significantly
+>>      Switched back to use compound_order per Matthew
+>>      Fixed more counters per Johannes
+>> v2: Added Shakeel's Reviewed-by
+>>      Use hpage_nr_pages instead of compound_order per Huang Ying and William Kucharski
+>>
+>>   mm/vmscan.c | 34 ++++++++++++++++++++++------------
+>>   1 file changed, 22 insertions(+), 12 deletions(-)
+>>
+>> diff --git a/mm/vmscan.c b/mm/vmscan.c
+>> index b65bc50..1b35a7a 100644
+>> --- a/mm/vmscan.c
+>> +++ b/mm/vmscan.c
+>> @@ -1118,6 +1118,7 @@ static unsigned long shrink_page_list(struct list_head *page_list,
+>>   		int may_enter_fs;
+>>   		enum page_references references = PAGEREF_RECLAIM_CLEAN;
+>>   		bool dirty, writeback;
+>> +		unsigned int nr_pages;
+>>   
+>>   		cond_resched();
+>>   
+>> @@ -1129,7 +1130,9 @@ static unsigned long shrink_page_list(struct list_head *page_list,
+>>   
+>>   		VM_BUG_ON_PAGE(PageActive(page), page);
+>>   
+>> -		sc->nr_scanned++;
+>> +		/* Account the number of base pages evne though THP */
+> s/evne/even/
+>
+>> +		nr_pages = 1 << compound_order(page);
+>> +		sc->nr_scanned += nr_pages;
+>>   
+>>   		if (unlikely(!page_evictable(page)))
+>>   			goto activate_locked;
+>> @@ -1250,7 +1253,7 @@ static unsigned long shrink_page_list(struct list_head *page_list,
+>>   		case PAGEREF_ACTIVATE:
+>>   			goto activate_locked;
+>>   		case PAGEREF_KEEP:
+>> -			stat->nr_ref_keep++;
+>> +			stat->nr_ref_keep += nr_pages;
+>>   			goto keep_locked;
+>>   		case PAGEREF_RECLAIM:
+>>   		case PAGEREF_RECLAIM_CLEAN:
+> If the THP is split, you need
+>
+>          sc->nr_scanned -= nr_pages - 1;
+>
+> Otherwise the tail pages will be counted twice.
+
+Yes, it looks so.
+
+>
+>> @@ -1315,7 +1318,7 @@ static unsigned long shrink_page_list(struct list_head *page_list,
+>>   			if (unlikely(PageTransHuge(page)))
+>>   				flags |= TTU_SPLIT_HUGE_PMD;
+>>   			if (!try_to_unmap(page, flags)) {
+>> -				stat->nr_unmap_fail++;
+>> +				stat->nr_unmap_fail += nr_pages;
+>>   				goto activate_locked;
+>>   			}
+>>   		}
+>> @@ -1442,7 +1445,11 @@ static unsigned long shrink_page_list(struct list_head *page_list,
+>>   
+>>   		unlock_page(page);
+>>   free_it:
+>> -		nr_reclaimed++;
+>> +		/*
+>> +		 * THP may get swapped out in a whole, need account
+>> +		 * all base pages.
+>> +		 */
+>> +		nr_reclaimed += (1 << compound_order(page));
+> Best Regards,
+> Huang, Ying
 
