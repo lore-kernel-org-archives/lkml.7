@@ -2,171 +2,137 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97411C282E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 09:03:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3DD3C282E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 09:04:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6392C20856
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 09:03:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F11C20851
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 09:04:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730029AbfEWJDe (ORCPT
+        id S1730152AbfEWJEh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 05:03:34 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:56179 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727232AbfEWJDe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 05:03:34 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-109-QAnUYR_ZPWu03W_8XUVOfg-1; Thu, 23 May 2019 10:03:30 +0100
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Thu, 23 May 2019 10:03:29 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Thu, 23 May 2019 10:03:29 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Deepa Dinamani' <deepa.kernel@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>
-CC:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thu, 23 May 2019 05:04:37 -0400
+Received: from foss.arm.com ([217.140.101.70]:40630 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726230AbfEWJEh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 05:04:37 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 409B2341;
+        Thu, 23 May 2019 02:04:36 -0700 (PDT)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A78AC3F575;
+        Thu, 23 May 2019 02:04:30 -0700 (PDT)
+Date:   Thu, 23 May 2019 10:04:28 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Evgenii Stepanov <eugenis@google.com>
+Cc:     Andrey Konovalov <andreyknvl@google.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
+        kvm@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Arnd Bergmann" <arnd@arndb.de>, "dbueso@suse.de" <dbueso@suse.de>,
-        "axboe@kernel.dk" <axboe@kernel.dk>,
-        Davidlohr Bueso <dave@stgolabs.net>, Eric Wong <e@80x24.org>,
-        Jason Baron <jbaron@akamai.com>,
-        "Linux FS-devel Mailing List" <linux-fsdevel@vger.kernel.org>,
-        linux-aio <linux-aio@kvack.org>,
-        Omar Kilani <omar.kilani@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: RE: [PATCH v2] signal: Adjust error codes according to
- restore_user_sigmask()
-Thread-Topic: [PATCH v2] signal: Adjust error codes according to
- restore_user_sigmask()
-Thread-Index: AQHVELwtsgR+BAQFXk2JV68Wk/7LjKZ4aINA
-Date:   Thu, 23 May 2019 09:03:29 +0000
-Message-ID: <4f7b6dbeab1d424baaebd7a5df116349@AcuMS.aculab.com>
-References: <20190522032144.10995-1-deepa.kernel@gmail.com>
- <20190522150505.GA4915@redhat.com>
- <CABeXuvrPM5xvzqUydbREapvwgy6deYreHp0aaMoSHyLB6+HGRg@mail.gmail.com>
- <20190522161407.GB4915@redhat.com>
- <CABeXuvpjrW5Gt95JC-_rYkOA=6RCD5OtkEQdwZVVqGCE3GkQOQ@mail.gmail.com>
-In-Reply-To: <CABeXuvpjrW5Gt95JC-_rYkOA=6RCD5OtkEQdwZVVqGCE3GkQOQ@mail.gmail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alexander Deucher <Alexander.Deucher@amd.com>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
+Subject: Re: [PATCH v15 05/17] arms64: untag user pointers passed to memory
+ syscalls
+Message-ID: <20190523090427.GA44383@arrakis.emea.arm.com>
+References: <cover.1557160186.git.andreyknvl@google.com>
+ <00eb4c63fefc054e2c8d626e8fedfca11d7c2600.1557160186.git.andreyknvl@google.com>
+ <20190522114910.emlckebwzv2qz42i@mbp>
+ <CAFKCwrjyP+x0JJy=qpBFsp4pub3He6UkvU0qnf1UOKt6W1LPRQ@mail.gmail.com>
 MIME-Version: 1.0
-X-MC-Unique: QAnUYR_ZPWu03W_8XUVOfg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAFKCwrjyP+x0JJy=qpBFsp4pub3He6UkvU0qnf1UOKt6W1LPRQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogRGVlcGEgRGluYW1hbmkNCj4gU2VudDogMjIgTWF5IDIwMTkgMTc6MzQNCj4gT24gV2Vk
-LCBNYXkgMjIsIDIwMTkgYXQgOToxNCBBTSBPbGVnIE5lc3Rlcm92IDxvbGVnQHJlZGhhdC5jb20+
-IHdyb3RlOg0KPiA+DQo+ID4gT24gMDUvMjIsIERlZXBhIERpbmFtYW5pIHdyb3RlOg0KPiA+ID4N
-Cj4gPiA+IC1EZWVwYQ0KPiA+ID4NCj4gPiA+ID4gT24gTWF5IDIyLCAyMDE5LCBhdCA4OjA1IEFN
-LCBPbGVnIE5lc3Rlcm92IDxvbGVnQHJlZGhhdC5jb20+IHdyb3RlOg0KPiA+ID4gPg0KPiA+ID4g
-Pj4gT24gMDUvMjEsIERlZXBhIERpbmFtYW5pIHdyb3RlOg0KPiA+ID4gPj4NCj4gPiA+ID4+IE5v
-dGUgdGhhdCB0aGlzIHBhdGNoIHJldHVybnMgaW50ZXJydXB0ZWQgZXJyb3JzIChFSU5UUiwgRVJF
-U1RBUlROT0hBTkQsDQo+ID4gPiA+PiBldGMpIG9ubHkgd2hlbiB0aGVyZSBpcyBubyBvdGhlciBl
-cnJvci4gSWYgdGhlcmUgaXMgYSBzaWduYWwgYW5kIGFuIGVycm9yDQo+ID4gPiA+PiBsaWtlIEVJ
-TlZBTCwgdGhlIHN5c2NhbGxzIHJldHVybiAtRUlOVkFMIHJhdGhlciB0aGFuIHRoZSBpbnRlcnJ1
-cHRlZA0KPiA+ID4gPj4gZXJyb3IgY29kZXMuDQo+ID4gPiA+DQo+ID4gPiA+IFVnaC4gSSBuZWVk
-IHRvIHJlLWNoZWNrLCBidXQgYXQgZmlyc3QgZ2xhbmNlIEkgcmVhbGx5IGRpc2xpa2UgdGhpcyBj
-aGFuZ2UuDQo+ID4gPiA+DQo+ID4gPiA+IEkgdGhpbmsgd2UgY2FuIGZpeCB0aGUgcHJvYmxlbSBf
-YW5kXyBzaW1wbGlmeSB0aGUgY29kZS4gU29tZXRoaW5nIGxpa2UgYmVsb3cuDQo+ID4gPiA+IFRo
-ZSBwYXRjaCBpcyBvYnZpb3VzbHkgaW5jb21wbGV0ZSwgaXQgY2hhbmdlcyBvbmx5IG9ubHkgb25l
-IGNhbGxlciBvZg0KPiA+ID4gPiBzZXRfdXNlcl9zaWdtYXNrKCksIGVwb2xsX3B3YWl0KCkgdG8g
-ZXhwbGFpbiB3aGF0IEkgbWVhbi4NCj4gPiA+ID4gcmVzdG9yZV91c2VyX3NpZ21hc2soKSBzaG91
-bGQgc2ltcGx5IGRpZS4gQWx0aG91Z2ggcGVyaGFwcyBhbm90aGVyIGhlbHBlcg0KPiA+ID4gPiBt
-YWtlcyBzZW5zZSB0byBhZGQgV0FSTl9PTih0ZXN0X3Rza19yZXN0b3JlX3NpZ21hc2soKSAmJiAh
-c2lnbmFsX3BlbmRpbmcpLg0KPiA+ID4NCj4gPiA+IHJlc3RvcmVfdXNlcl9zaWdtYXNrKCkgd2Fz
-IGFkZGVkIGJlY2F1c2Ugb2YgYWxsIHRoZSB2YXJpYW50cyBvZiB0aGVzZQ0KPiA+ID4gc3lzY2Fs
-bHMgd2UgYWRkZWQgYmVjYXVzZSBvZiB5MjAzOCBhcyBub3RlZCBpbiBjb21taXQgbWVzc2FnZToN
-Cj4gPiA+DQo+ID4gPiAgIHNpZ25hbDogQWRkIHJlc3RvcmVfdXNlcl9zaWdtYXNrKCkNCj4gPiA+
-DQo+ID4gPiAgICAgUmVmYWN0b3IgdGhlIGxvZ2ljIHRvIHJlc3RvcmUgdGhlIHNpZ21hc2sgYmVm
-b3JlIHRoZSBzeXNjYWxsDQo+ID4gPiAgICAgcmV0dXJucyBpbnRvIGFuIGFwaS4NCj4gPiA+ICAg
-ICBUaGlzIGlzIHVzZWZ1bCBmb3IgdmVyc2lvbnMgb2Ygc3lzY2FsbHMgdGhhdCBwYXNzIGluIHRo
-ZQ0KPiA+ID4gICAgIHNpZ21hc2sgYW5kIGV4cGVjdCB0aGUgY3VycmVudC0+c2lnbWFzayB0byBi
-ZSBjaGFuZ2VkIGR1cmluZw0KPiA+ID4gICAgIHRoZSBleGVjdXRpb24gYW5kIHJlc3RvcmVkIGFm
-dGVyIHRoZSBleGVjdXRpb24gb2YgdGhlIHN5c2NhbGwuDQo+ID4gPg0KPiA+ID4gICAgIFdpdGgg
-dGhlIGFkdmVudCBvZiBuZXcgeTIwMzggc3lzY2FsbHMgaW4gdGhlIHN1YnNlcXVlbnQgcGF0Y2hl
-cywNCj4gPiA+ICAgICB3ZSBhZGQgdHdvIG1vcmUgbmV3IHZlcnNpb25zIG9mIHRoZSBzeXNjYWxs
-cyAoZm9yIHBzZWxlY3QsIHBwb2xsDQo+ID4gPiAgICAgYW5kIGlvX3BnZXRldmVudHMpIGluIGFk
-ZGl0aW9uIHRvIHRoZSBleGlzdGluZyBuYXRpdmUgYW5kIGNvbXBhdA0KPiA+ID4gICAgIHZlcnNp
-b25zLiBBZGRpbmcgc3VjaCBhbiBhcGkgcmVkdWNlcyB0aGUgbG9naWMgdGhhdCB3b3VsZCBuZWVk
-IHRvDQo+ID4gPiAgICAgYmUgcmVwbGljYXRlZCBvdGhlcndpc2UuDQo+ID4NCj4gPiBBZ2Fpbiwg
-SSBuZWVkIHRvIHJlLWNoZWNrLCB3aWxsIGNvbnRpbnVlIHRvbW9ycm93LiBCdXQgc28gZmFyIEkg
-YW0gbm90IHN1cmUNCj4gPiB0aGlzIGhlbHBlciBjYW4gYWN0dWFsbHkgaGVscC4NCj4gPg0KPiA+
-ID4gPiAtLS0gYS9mcy9ldmVudHBvbGwuYw0KPiA+ID4gPiArKysgYi9mcy9ldmVudHBvbGwuYw0K
-PiA+ID4gPiBAQCAtMjMxOCwxOSArMjMxOCwxOSBAQCBTWVNDQUxMX0RFRklORTYoZXBvbGxfcHdh
-aXQsIGludCwgZXBmZCwgc3RydWN0IGVwb2xsX2V2ZW50IF9fdXNlciAqLA0KPiBldmVudHMsDQo+
-ID4gPiA+ICAgICAgICBzaXplX3QsIHNpZ3NldHNpemUpDQo+ID4gPiA+IHsNCj4gPiA+ID4gICAg
-aW50IGVycm9yOw0KPiA+ID4gPiAtICAgIHNpZ3NldF90IGtzaWdtYXNrLCBzaWdzYXZlZDsNCj4g
-PiA+ID4NCj4gPiA+ID4gICAgLyoNCj4gPiA+ID4gICAgICogSWYgdGhlIGNhbGxlciB3YW50cyBh
-IGNlcnRhaW4gc2lnbmFsIG1hc2sgdG8gYmUgc2V0IGR1cmluZyB0aGUgd2FpdCwNCj4gPiA+ID4g
-ICAgICogd2UgYXBwbHkgaXQgaGVyZS4NCj4gPiA+ID4gICAgICovDQo+ID4gPiA+IC0gICAgZXJy
-b3IgPSBzZXRfdXNlcl9zaWdtYXNrKHNpZ21hc2ssICZrc2lnbWFzaywgJnNpZ3NhdmVkLCBzaWdz
-ZXRzaXplKTsNCj4gPiA+ID4gKyAgICBlcnJvciA9IHNldF91c2VyX3NpZ21hc2soc2lnbWFzaywg
-c2lnc2V0c2l6ZSk7DQo+ID4gPiA+ICAgIGlmIChlcnJvcikNCj4gPiA+ID4gICAgICAgIHJldHVy
-biBlcnJvcjsNCj4gPiA+ID4NCj4gPiA+ID4gICAgZXJyb3IgPSBkb19lcG9sbF93YWl0KGVwZmQs
-IGV2ZW50cywgbWF4ZXZlbnRzLCB0aW1lb3V0KTsNCj4gPiA+ID4NCj4gPiA+ID4gLSAgICByZXN0
-b3JlX3VzZXJfc2lnbWFzayhzaWdtYXNrLCAmc2lnc2F2ZWQpOw0KPiA+ID4gPiArICAgIGlmIChl
-cnJvciAhPSAtRUlOVFIpDQo+ID4gPg0KPiA+ID4gQXMgeW91IGFkZHJlc3MgYWxsIHRoZSBvdGhl
-ciBzeXNjYWxscyB0aGlzIGNvbmRpdGlvbiBiZWNvbWVzIG1vcmUgYW5kDQo+ID4gPiBtb3JlIGNv
-bXBsaWNhdGVkLg0KPiA+DQo+ID4gTWF5IGJlLg0KPiA+DQo+ID4gPiA+IC0tLSBhL2luY2x1ZGUv
-bGludXgvc2NoZWQvc2lnbmFsLmgNCj4gPiA+ID4gKysrIGIvaW5jbHVkZS9saW51eC9zY2hlZC9z
-aWduYWwuaA0KPiA+ID4gPiBAQCAtNDE2LDcgKzQxNiw2IEBAIHZvaWQgdGFza19qb2luX2dyb3Vw
-X3N0b3Aoc3RydWN0IHRhc2tfc3RydWN0ICp0YXNrKTsNCj4gPiA+ID4gc3RhdGljIGlubGluZSB2
-b2lkIHNldF9yZXN0b3JlX3NpZ21hc2sodm9pZCkNCj4gPiA+ID4gew0KPiA+ID4gPiAgICBzZXRf
-dGhyZWFkX2ZsYWcoVElGX1JFU1RPUkVfU0lHTUFTSyk7DQo+ID4gPiA+IC0gICAgV0FSTl9PTigh
-dGVzdF90aHJlYWRfZmxhZyhUSUZfU0lHUEVORElORykpOw0KPiA+ID4NCj4gPiA+IFNvIHlvdSBh
-bHdheXMgd2FudCBkb19zaWduYWwoKSB0byBiZSBjYWxsZWQ/DQo+ID4NCj4gPiBXaHkgZG8geW91
-IHRoaW5rIHNvPyBOby4gVGhpcyBpcyBqdXN0IHRvIGF2b2lkIHRoZSB3YXJuaW5nLCBiZWNhdXNl
-IHdpdGggdGhlDQo+ID4gcGF0Y2ggSSBzZW50IHNldF9yZXN0b3JlX3NpZ21hc2soKSBpcyBjYWxs
-ZWQgImluIGFkdmFuY2UiLg0KPiA+DQo+ID4gPiBZb3Ugd2lsbCBoYXZlIHRvIGNoZWNrIGVhY2gg
-YXJjaGl0ZWN0dXJlJ3MgaW1wbGVtZW50YXRpb24gb2YNCj4gPiA+IGRvX3NpZ25hbCgpIHRvIGNo
-ZWNrIGlmIHRoYXQgaGFzIGFueSBzaWRlIGVmZmVjdHMuDQo+ID4NCj4gPiBJIGRvbid0IHRoaW5r
-IHNvLg0KPiANCj4gV2h5IG5vdD8NCj4gDQo+ID4gPiBBbHRob3VnaCB0aGlzIGlzIG5vdCB3aGF0
-IHRoZSBwYXRjaCBpcyBzb2x2aW5nLg0KPiA+DQo+ID4gU3VyZS4gQnV0IHlvdSBrbm93LCBhZnRl
-ciBJIHRyaWVkIHRvIHJlYWQgdGhlIGNoYW5nZWxvZywgSSBhbSBub3Qgc3VyZQ0KPiA+IEkgdW5k
-ZXJzdGFuZCB3aGF0IGV4YWN0bHkgeW91IGFyZSB0cnlpbmcgdG8gZml4LiBDb3VsZCB5b3UgcGxl
-YXNlIGV4cGxhaW4NCj4gPiB0aGlzIHBhcnQNCj4gPg0KPiA+ICAgICAgICAgVGhlIGJlaGF2aW9y
-DQo+ID4gICAgICAgICBiZWZvcmUgODU0YTZlZDU2ODM5YSB3YXMgdGhhdCB0aGUgc2lnbmFscyB3
-ZXJlIGRyb3BwZWQgYWZ0ZXIgdGhlIGVycm9yDQo+ID4gICAgICAgICBjb2RlIHdhcyBkZWNpZGVk
-LiBUaGlzIHJlc3VsdGVkIGluIGxvc3Qgc2lnbmFscyBidXQgdGhlIHVzZXJzcGFjZSBkaWQgbm90
-DQo+ID4gICAgICAgICBub3RpY2UgaXQNCj4gPg0KPiA+ID8gSSBmYWlsIHRvIHVuZGVyc3RhbmQg
-aXQsIHNvcnJ5LiBJdCBsb29rcyBhcyBpZiB0aGUgY29kZSB3YXMgYWxyZWFkeSBidWdneSBiZWZv
-cmUNCj4gPiB0aGF0IGNvbW1pdCBhbmQgaXQgY291bGQgbWlzcyBhIHNpZ25hbCBvciBzb21ldGhp
-bmcgbGlrZSB0aGlzLCBidXQgSSBkbyBub3Qgc2VlIGhvdy4NCj4gDQo+IERpZCB5b3UgcmVhZCB0
-aGUgZXhwbGFuYXRpb24gcG9pbnRlZCB0byBpbiB0aGUgY29tbWl0IHRleHQ/IDoNCj4gDQo+IGh0
-dHBzOi8vbG9yZS5rZXJuZWwub3JnL2xpbnV4LWZzZGV2ZWwvMjAxOTA0MjcwOTMzMTkuc2dpY3Fp
-azJvcWtlejN3a0BkY3ZyLw0KPiANCj4gTGV0IG1lIGtub3cgd2hhdCBwYXJ0IHlvdSBkb24ndCB1
-bmRlcnN0YW5kIGFuZCBJIGNhbiBleHBsYWluIG1vcmUuDQo+IA0KPiBJdCB3b3VsZCBiZSBiZXR0
-ZXIgdG8gdW5kZXJzdGFuZCB0aGUgaXNzc3VlIGJlZm9yZSB3ZSBzdGFydCBkaXNjdXNzaW5nIHRo
-ZSBmaXguDQoNCg0KSSdtIGNvbmZ1c2VkLi4uDQpJIHRob3VnaHQ6DQoNCkVJTlRSIHNob3VsZCBv
-bmx5IGJlIHJldHVybmVkIGlmIGEgYmxvY2tpbmcgc2xlZXAgKGVnIGluIGRvX2Vwb2xsX3dhaXQo
-KSBpdHNlbGYpDQp3YXMgaW50ZXJydXB0ZWQgYnkgYSBzaWduYWwgdGhhdCB3YXMgZW5hYmxlZCBh
-dCB0aGUgdGltZSBvZiB0aGUgc2xlZXAuDQoNClRoZSBoYW5kbGVycyBmb3IgYWxsIHVuYmxvY2tl
-ZCBzaWduYWxzIHNob3VsZCBiZSBydW4gb24gcmV0dXJuIHRvIHVzZXIuDQpUaGlzIGlzIGFmdGVy
-IHRoZSBtYXNrIGhhcyBiZWVuIHJlc3RvcmVkIGFuZCByZWdhcmRsZXNzIG9mIHRoZSBlcnJvciBj
-b2RlLg0KDQpTbyBlcG9sbCgpIGNhbiByZXR1cm4gJ3N1Y2Nlc3MnIG9yICd0aW1lb3V0JyAoZXRj
-KSBhbmQgdGhlIGhhbmRsZXIgZm9yIFNJR19VUkcNCnNob3VsZCBzdGlsbCBiZSBjYWxsZWQuDQpU
-aGlzIGlzIGV4YWN0bHkgZXF1aXZhbGVudCB0byB0aGUgaW50ZXJydXB0IHRoYXQgZ2VuZXJhdGVz
-IHRoZSBzaWduYWwgaGFwcGVuaW5nDQpqdXN0IGFmdGVyIHRoZSAncmV0dXJuIHRvIHVzZXInIG9m
-IHRoZSBzeXN0ZW0gY2FsbC4NCg0KCURhdmlkDQoNCi0NClJlZ2lzdGVyZWQgQWRkcmVzcyBMYWtl
-c2lkZSwgQnJhbWxleSBSb2FkLCBNb3VudCBGYXJtLCBNaWx0b24gS2V5bmVzLCBNSzEgMVBULCBV
-Sw0KUmVnaXN0cmF0aW9uIE5vOiAxMzk3Mzg2IChXYWxlcykNCg==
+On Wed, May 22, 2019 at 02:16:57PM -0700, Evgenii Stepanov wrote:
+> On Wed, May 22, 2019 at 4:49 AM Catalin Marinas <catalin.marinas@arm.com> wrote:
+> > On Mon, May 06, 2019 at 06:30:51PM +0200, Andrey Konovalov wrote:
+> > > This patch is a part of a series that extends arm64 kernel ABI to allow to
+> > > pass tagged user pointers (with the top byte set to something else other
+> > > than 0x00) as syscall arguments.
+> > >
+> > > This patch allows tagged pointers to be passed to the following memory
+> > > syscalls: brk, get_mempolicy, madvise, mbind, mincore, mlock, mlock2,
+> > > mmap, mmap_pgoff, mprotect, mremap, msync, munlock, munmap,
+> > > remap_file_pages, shmat and shmdt.
+> > >
+> > > This is done by untagging pointers passed to these syscalls in the
+> > > prologues of their handlers.
+> >
+> > I'll go through them one by one to see if we can tighten the expected
+> > ABI while having the MTE in mind.
+> >
+> > > diff --git a/arch/arm64/kernel/sys.c b/arch/arm64/kernel/sys.c
+> > > index b44065fb1616..933bb9f3d6ec 100644
+> > > --- a/arch/arm64/kernel/sys.c
+> > > +++ b/arch/arm64/kernel/sys.c
+> > > @@ -35,10 +35,33 @@ SYSCALL_DEFINE6(mmap, unsigned long, addr, unsigned long, len,
+> > >  {
+> > >       if (offset_in_page(off) != 0)
+> > >               return -EINVAL;
+> > > -
+> > > +     addr = untagged_addr(addr);
+> > >       return ksys_mmap_pgoff(addr, len, prot, flags, fd, off >> PAGE_SHIFT);
+> > >  }
+> >
+> > If user passes a tagged pointer to mmap() and the address is honoured
+> > (or MAP_FIXED is given), what is the expected return pointer? Does it
+> > need to be tagged with the value from the hint?
+> 
+> For HWASan the most convenient would be to use the tag from the hint.
+> But since in the TBI (not MTE) mode the kernel has no idea what
+> meaning userspace assigns to pointer tags, perhaps it should not try
+> to guess, and should return raw (zero-tagged) address instead.
 
+Then, just to relax the ABI for hwasan, shall we simply disallow tagged
+pointers on mmap() arguments? We can leave them in for
+mremap(old_address), madvise().
+
+> > With MTE, we may want to use this as a request for the default colour of
+> > the mapped pages (still under discussion).
+> 
+> I like this - and in that case it would make sense to return the
+> pointer that can be immediately dereferenced without crashing the
+> process, i.e. with the matching tag.
+
+This came up from the Android investigation work where large memory
+allocations (using mmap) could be more efficiently pre-tagged by the
+kernel on page fault. Not sure about the implementation details yet.
+
+-- 
+Catalin
