@@ -2,127 +2,236 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33103C282E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:43:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D5D7C282E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:44:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05F642177E
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:43:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EAC2217D4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:44:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hkjw+CLd"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aFH35CN6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731130AbfEWPnY (ORCPT
+        id S1731134AbfEWPo2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 11:43:24 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:39956 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730760AbfEWPnY (ORCPT
+        Thu, 23 May 2019 11:44:28 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:35016 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730790AbfEWPo1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 11:43:24 -0400
-Received: by mail-lf1-f65.google.com with SMTP id h13so4754147lfc.7;
-        Thu, 23 May 2019 08:43:22 -0700 (PDT)
+        Thu, 23 May 2019 11:44:27 -0400
+Received: by mail-lj1-f194.google.com with SMTP id h11so5955260ljb.2
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 08:44:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=rt3kwZULHGK/PKpRtUuWwLsPHH34ElZ4GD2j3IDRk3w=;
-        b=Hkjw+CLdxGJTm9Z8TgeKtXuB+lk9hwmn56w1P9kQ1TjBzO/54IowI+CxZ4O+7rneJF
-         903dKrkD1WEoZmWa6s1OSNTrL8SOE2pecIejBepyYvLwCy8wDopHP3fW4/gy/8AUDzCI
-         03e0aSidNY2gH1B5TSBqOQv6WCUmj7R3fvTPq5xmPnWxQajt8R/iWUTNgJ91Msd1GkDL
-         SC0pcRVwbVkHSx3vfCX4yQ4EGcpG8apUdnEgIBI2QAyr1vWDHtnPWIQOW4Obk4RbFQji
-         rB9KBRejUnh+7h4rEAHbROzC9xJc7U4k2EHBBPUi+F4jJG1OfP9sWAr9TlXN5Osj46tC
-         OL1w==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/wji4Ea/4BKbtz1pB+NomkucTVNmeP5sWS4Z09Qoh/0=;
+        b=aFH35CN6oPRsy0HINPVyUyCLmmZ1q+W5tanGOLFB9ZDOu6iaE0T6Zf2p50/YpwHsbr
+         48EE1NUmchXldef87VmFcBOfomkIHiEfKDLilaRqMK87cFmewn3SJqhTI1TRHWczozD4
+         oXQnG40alYiwUIlV5zhAeNCFOXlq3pqE0BbnZ0FvRVuwBWMRV9wfu1H9fYBPCAdnSv5U
+         HVNKv9dUz6r+VmwUQYwzrC3kRsKz62p+YOIjrLW4bC1aoOEaVaZZBPmIi8QCc4AHmXYb
+         1tLTls+6tcRQac2V8FPQbYxeEAGXeJISVC1rVB3y4LA5KetGIABPN8JvrlKNXRYKDzkN
+         FlXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=rt3kwZULHGK/PKpRtUuWwLsPHH34ElZ4GD2j3IDRk3w=;
-        b=KZBWjk7UAN3slK6S+9Q5cGvLY4j3QwnZWoz0CKR2oRB/JattrZ9l/vcQJH291iwB1+
-         FXDTCHK4wa0+tJzO6HyYxOW6tDqTiFGi0x9BGPI4riW2yFIrYK0Q7vaNIZwlPQQDVo9A
-         BU0ssthE4FqFsPFQnwgkD2VDSNEsB6J5ANqJNzfzYcieoLnkJhbt6GjsdAOWFVZTHWd6
-         tWgxomcGFuw03KwSkGgG+TvIzlWkRQ3B1EPXTKndYkDZirC8vwy0JDLVUy6jrx+SVXhR
-         aEYOVpPfkTPYazxoEpnjw+hdE015mh6/vM8lqEcgSDhQfDM/mBfxrAxHtGC1iIiQQLPq
-         JJuQ==
-X-Gm-Message-State: APjAAAVKziHckJzrYcwStcSWIi9i2qd/r+OBywxah4rrjVZEpqUnZAix
-        jfTf0zu8P5d2feh0F1Ac+ppXAg10
-X-Google-Smtp-Source: APXvYqx/ipqLQ/Gvk7k00swJjRnoH5BJnzcsLzG0x4+LWZwEAVMhPXWH+WMw2vABjusmZ3xoN9tkgg==
-X-Received: by 2002:ac2:4111:: with SMTP id b17mr5751476lfi.31.1558626202089;
-        Thu, 23 May 2019 08:43:22 -0700 (PDT)
-Received: from localhost.localdomain (mm-89-92-44-37.mgts.dynamic.pppoe.byfly.by. [37.44.92.89])
-        by smtp.gmail.com with ESMTPSA id p10sm2450147ljh.50.2019.05.23.08.43.20
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 23 May 2019 08:43:21 -0700 (PDT)
-From:   "Pavel Begunkov (Silence)" <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Pavel Begunkov <asml.silence@gmail.com>
-Subject: [PATCH 1/1] blk-core: Remove blk_end_request*() declarations
-Date:   Thu, 23 May 2019 18:43:11 +0300
-Message-Id: <8c174fbe05ef879f2443b01e3ffb340a7f524d40.1558626111.git.asml.silence@gmail.com>
-X-Mailer: git-send-email 2.21.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/wji4Ea/4BKbtz1pB+NomkucTVNmeP5sWS4Z09Qoh/0=;
+        b=Ma2rTIMS79kChbVeXz2F85yBb3XX11UekgtRjHOdIMldoCye4YokkIl/Hw+F3nb19O
+         VLm2Oxl14lzJSpeWQoRjY5Aks/cPzYU5I5aNbEPrkCHICecz26BAeMpE6YJ6uL/oAxga
+         eqUnVbouIUXAG2hu0/A9ncywLYzyogdC9oV5HQQMrBceWtCvlTJZp8f3HbqBEKhxaWvs
+         5y20WcqVL7hXGjY8UC5npN6a+t/zu0QlJ30Erk2Ji4K56DJr04SgWmM1y8p0SfOpBtwU
+         oqegGEnF8vmeB1J9uXpvuB6NnLh6UQqM+FSVJqmvxi5Gp2t2b0BOUA8wtuYJH1R6BTu6
+         bQBg==
+X-Gm-Message-State: APjAAAXnX+V4D/NbGlAhNpVUeLR3KWCxxCDHBDR87egM5yFVqxMV8YDJ
+        HRgELclNxkwL85aT93Z7qBuJDnjioW0DLe42imO4Mg==
+X-Google-Smtp-Source: APXvYqzhSDjrNWAy5KyNhMUlv7cjkwlGbRwsa6Uqsf4zqqYvI69PmEIAwS9JjP+IZnW+JBpTZSKDycdIF2QLVLgBgoM=
+X-Received: by 2002:a2e:9d4e:: with SMTP id y14mr23518941ljj.199.1558626264355;
+ Thu, 23 May 2019 08:44:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <cover.1557160186.git.andreyknvl@google.com> <20190517144931.GA56186@arrakis.emea.arm.com>
+ <CAFKCwrj6JEtp4BzhqO178LFJepmepoMx=G+YdC8sqZ3bcBp3EQ@mail.gmail.com>
+ <20190521182932.sm4vxweuwo5ermyd@mbp> <201905211633.6C0BF0C2@keescook>
+ <20190522101110.m2stmpaj7seezveq@mbp> <CAJgzZoosKBwqXRyA6fb8QQSZXFqfHqe9qO9je5TogHhzuoGXJQ@mail.gmail.com>
+ <20190522163527.rnnc6t4tll7tk5zw@mbp> <201905221316.865581CF@keescook> <20190523144449.waam2mkyzhjpqpur@mbp>
+In-Reply-To: <20190523144449.waam2mkyzhjpqpur@mbp>
+From:   enh <enh@google.com>
+Date:   Thu, 23 May 2019 08:44:12 -0700
+Message-ID: <CAJgzZoqX--Kd9=Kjpnfz-5cjVJ=TdsXM5dJM_EjLFKniVbny2w@mail.gmail.com>
+Subject: Re: [PATCH v15 00/17] arm64: untag user pointers passed to the kernel
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Evgenii Stepanov <eugenis@google.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Khalid Aziz <khalid.aziz@oracle.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
+        kvm@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alexander Deucher <Alexander.Deucher@amd.com>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pavel Begunkov <asml.silence@gmail.com>
+On Thu, May 23, 2019 at 7:45 AM Catalin Marinas <catalin.marinas@arm.com> wrote:
+>
+> On Wed, May 22, 2019 at 01:47:36PM -0700, Kees Cook wrote:
+> > On Wed, May 22, 2019 at 05:35:27PM +0100, Catalin Marinas wrote:
+> > > The two hard requirements I have for supporting any new hardware feature
+> > > in Linux are (1) a single kernel image binary continues to run on old
+> > > hardware while making use of the new feature if available and (2) old
+> > > user space continues to run on new hardware while new user space can
+> > > take advantage of the new feature.
+> >
+> > Agreed! And I think the series meets these requirements, yes?
+>
+> Yes. I mentioned this just to make sure people don't expect different
+> kernel builds for different hardware features.
+>
+> There is also the obvious requirement which I didn't mention: new user
+> space continues to run on new/subsequent kernel versions. That's one of
+> the points of contention for this series (ignoring MTE) with the
+> maintainers having to guarantee this without much effort. IOW, do the
+> 500K+ new lines in a subsequent kernel version break any user space out
+> there? I'm only talking about the relaxed TBI ABI. Are the usual LTP,
+> syskaller sufficient? Better static analysis would definitely help.
+>
+> > > For MTE, we just can't enable it by default since there are applications
+> > > who use the top byte of a pointer and expect it to be ignored rather
+> > > than failing with a mismatched tag. Just think of a hwasan compiled
+> > > binary where TBI is expected to work and you try to run it with MTE
+> > > turned on.
+> >
+> > Ah! Okay, here's the use-case I wasn't thinking of: the concern is TBI
+> > conflicting with MTE. And anything that starts using TBI suddenly can't
+> > run in the future because it's being interpreted as MTE bits? (Is that
+> > the ABI concern?
+>
+> That's another aspect to figure out when we add the MTE support. I don't
+> think we'd be able to do this without an explicit opt-in by the user.
+>
+> Or, if we ever want MTE to be turned on by default (i.e. tag checking),
+> even if everything is tagged with 0, we have to disallow TBI for user
+> and this includes hwasan. There were a small number of programs using
+> the TBI (I think some JavaScript compilers tried this). But now we are
+> bringing in the hwasan support and this can be a large user base. Shall
+> we add an ELF note for such binaries that use TBI/hwasan?
+>
+> This series is still required for MTE but we may decide not to relax the
+> ABI blindly, therefore the opt-in (prctl) or personality idea.
+>
+> > I feel like we got into the weeds about ioctl()s and one-off bugs...)
+>
+> This needs solving as well. Most driver developers won't know why
+> untagged_addr() is needed unless we have more rigorous types or type
+> annotations and a tool to check them (we should probably revive the old
+> sparse thread).
+>
+> > So there needs to be some way to let the kernel know which of three
+> > things it should be doing:
+> > 1- leaving userspace addresses as-is (present)
+> > 2- wiping the top bits before using (this series)
+>
+> (I'd say tolerating rather than wiping since get_user still uses the tag
+> in the current series)
+>
+> The current series does not allow any choice between 1 and 2, the
+> default ABI basically becomes option 2.
+>
+> > 3- wiping the top bits for most things, but retaining them for MTE as
+> >    needed (the future)
+>
+> 2 and 3 are not entirely compatible as a tagged pointer may be checked
+> against the memory colour by the hardware. So you can't have hwasan
+> binary with MTE enabled.
+>
+> > I expect MTE to be the "default" in the future. Once a system's libc has
+> > grown support for it, everything will be trying to use MTE. TBI will be
+> > the special case (but TBI is effectively a prerequisite).
+>
+> The kernel handling of tagged pointers is indeed a prerequisite. The ABI
+> distinction between the above 2 and 3 needs to be solved.
+>
+> > AFAICT, the only difference I see between 2 and 3 will be the tag handling
+> > in usercopy (all other places will continue to ignore the top bits). Is
+> > that accurate?
+>
+> Yes, mostly (for the kernel). If MTE is enabled by default for a hwasan
+> binary, it will SEGFAULT (either in user space or in kernel uaccess).
+> How does the kernel choose between 2 and 3?
+>
+> > Is "1" a per-process state we want to keep? (I assume not, but rather it
+> > is available via no TBI/MTE CONFIG or a boot-time option, if at all?)
+>
+> Possibly, though not necessarily per process. For testing or if
+> something goes wrong during boot, a command line option with a static
+> label would do. The AT_FLAGS bit needs to be checked by user space. My
+> preference would be per-process.
+>
+> > To choose between "2" and "3", it seems we need a per-process flag to
+> > opt into TBI (and out of MTE).
+>
+> Or leave option 2 the default and get it to opt in to MTE.
+>
+> > For userspace, how would a future binary choose TBI over MTE? If it's
+> > a library issue, we can't use an ELF bit, since the choice may be
+> > "late" after ELF load (this implies the need for a prctl().) If it's
+> > binary-only ("built with HWKASan") then an ELF bit seems sufficient.
+> > And without the marking, I'd expect the kernel to enforce MTE when
+> > there are high bits.
+>
+> The current plan is that a future binary issues a prctl(), after
+> checking the HWCAP_MTE bit (as I replied to Elliot, the MTE instructions
+> are not in the current NOP space). I'd expect this to be done by the
+> libc or dynamic loader under the assumption that the binaries it loads
+> do _not_ use the top pointer byte for anything else.
 
-Commit a1ce35fa49852db60fc6e268 ("block: remove dead elevator code")
-deleted blk_end_request() and friends, but some declaration are still
-left. Purge them.
+yeah, it sounds like to support hwasan and MTE, the dynamic linker
+will need to not use either itself.
 
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
----
- block/blk-core.c       |  2 +-
- include/linux/blkdev.h | 12 ------------
- 2 files changed, 1 insertion(+), 13 deletions(-)
+> With hwasan
+> compiled objects this gets more confusing (any ELF note to identify
+> them?).
 
-diff --git a/block/blk-core.c b/block/blk-core.c
-index 419d600e6637..48ba4783437f 100644
---- a/block/blk-core.c
-+++ b/block/blk-core.c
-@@ -1393,7 +1393,7 @@ EXPORT_SYMBOL_GPL(blk_steal_bios);
-  *
-  *     This special helper function is only for request stacking drivers
-  *     (e.g. request-based dm) so that they can handle partial completion.
-- *     Actual device drivers should use blk_end_request instead.
-+ *     Actual device drivers should use blk_mq_end_request instead.
-  *
-  *     Passing the result of blk_rq_bytes() as @nr_bytes guarantees
-  *     %false return from this function.
-diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-index 1aafeb923e7b..d069b5e2a295 100644
---- a/include/linux/blkdev.h
-+++ b/include/linux/blkdev.h
-@@ -1021,21 +1021,9 @@ void blk_steal_bios(struct bio_list *list, struct request *rq);
-  *
-  * blk_update_request() completes given number of bytes and updates
-  * the request without completing it.
-- *
-- * blk_end_request() and friends.  __blk_end_request() must be called
-- * with the request queue spinlock acquired.
-- *
-- * Several drivers define their own end_request and call
-- * blk_end_request() for parts of the original function.
-- * This prevents code duplication in drivers.
-  */
- extern bool blk_update_request(struct request *rq, blk_status_t error,
- 			       unsigned int nr_bytes);
--extern void blk_end_request_all(struct request *rq, blk_status_t error);
--extern bool __blk_end_request(struct request *rq, blk_status_t error,
--			      unsigned int nr_bytes);
--extern void __blk_end_request_all(struct request *rq, blk_status_t error);
--extern bool __blk_end_request_cur(struct request *rq, blk_status_t error);
- 
- extern void __blk_complete_request(struct request *);
- extern void blk_abort_request(struct request *);
--- 
-2.21.0
+no, at the moment code that wants to know checks for the presence of
+__hwasan_init. (and bionic doesn't actually look at any ELF notes
+right now.) but we can always add something if we need to.
 
+> (there is also the risk of existing applications using TBI already but
+> I'm not aware of any still using this feature other than hwasan)
+>
+> --
+> Catalin
