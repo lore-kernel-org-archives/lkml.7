@@ -2,108 +2,81 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39136C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 20:11:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE3E8C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 20:14:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1526A2175B
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 20:11:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4BF620881
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 20:14:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="UyRxKupv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387820AbfEWULU (ORCPT
+        id S2387513AbfEWUOo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 16:11:20 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:55844 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726451AbfEWULT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 16:11:19 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1A48EA78;
-        Thu, 23 May 2019 13:11:19 -0700 (PDT)
-Received: from mbp (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BBB143F690;
-        Thu, 23 May 2019 13:11:12 -0700 (PDT)
-Date:   Thu, 23 May 2019 21:11:05 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Khalid Aziz <khalid.aziz@oracle.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Evgenii Stepanov <eugenis@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
-        kvm@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
-        Elliott Hughes <enh@google.com>
-Subject: Re: [PATCH v15 00/17] arm64: untag user pointers passed to the kernel
-Message-ID: <20190523201105.oifkksus4rzcwqt4@mbp>
-References: <cover.1557160186.git.andreyknvl@google.com>
- <20190517144931.GA56186@arrakis.emea.arm.com>
- <CAFKCwrj6JEtp4BzhqO178LFJepmepoMx=G+YdC8sqZ3bcBp3EQ@mail.gmail.com>
- <20190521182932.sm4vxweuwo5ermyd@mbp>
- <201905211633.6C0BF0C2@keescook>
- <6049844a-65f5-f513-5b58-7141588fef2b@oracle.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6049844a-65f5-f513-5b58-7141588fef2b@oracle.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+        Thu, 23 May 2019 16:14:44 -0400
+Received: from mail-pg1-f170.google.com ([209.85.215.170]:45871 "EHLO
+        mail-pg1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387408AbfEWUOo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 16:14:44 -0400
+Received: by mail-pg1-f170.google.com with SMTP id i21so3686298pgi.12
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 13:14:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=tZPNt+rLtUBdYZbp+GReAQDN4uohyDhwin9i7fqNR7M=;
+        b=UyRxKupvpchv4zUcVTIPwRGpdH+S9gd/1KPfrt85pLEA2muykirPLiTshBFtrZPhpX
+         ZNqkJL0sw3Zg6Df5LaOGlwVR64QpchLLcWy/qn+Hx7jyD2lLM13cmRMVzWBrSn1r4Xls
+         W1+OlWofLQN3kwd2SlvoKBPOctI5eKRDkyP/zfCR/N64ApQ7yg9jy26CSLtpHGlyVzpv
+         oVx0FLxaqMayfkEXnCfNU+h0+QGWjAGFNnN6Mxpm+uiG8fhwLVrdQHDd6wtUmp6ef5Iq
+         XGMmnQGmqD9/uut2xzqjkWdYco4zsLgA66rogAMuNCKB3JlYWt/yVT8qnmYJgh9+PNEh
+         I0mQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=tZPNt+rLtUBdYZbp+GReAQDN4uohyDhwin9i7fqNR7M=;
+        b=IhfHe6gm5fULlOlU//bwNufbCvcLh3Piq+LJy1eKKvFHB5LYTgZzN3VY6vEO5ZeBO0
+         QayqT/Wxd1dcozY9RcR5eUDdy1DYJx7QGIGjC0J73h2bpAJQUR5qOG9WokF1fJ087qdd
+         CuYcFw2J6FjmZ55BGlHFcZg1g8yxJ4fdn1yUicZ4vHmaEzIFEHoCedwIkr9RmCQhAXoy
+         vi+QxsFq5fzab0oZbm2ZhHWNJVf2XlAvbbfjTdVonIHt5PswlDZrt+LdaE+B2PrDdox8
+         jE5WHWD55O8148Z4AETfaNTl28TFCHlFY/6ITwTEG4fiJ9K8SuW8EZ48lb3d2jDubYQm
+         nn7A==
+X-Gm-Message-State: APjAAAV8kNJXWANHmhePG1uOUXeIVO0ZXhCrasDJa7JWDILjEKZ9JjX3
+        6JeOOC2SRsC6JaoeU9uxvT6roA==
+X-Google-Smtp-Source: APXvYqxdEMuHsSvTD33i4R7P8PwKnLNgtSRQ3qW5XaTRqxwwtBXhqKfM5bY739i1ywptuOGdBFXUgA==
+X-Received: by 2002:a63:1820:: with SMTP id y32mr98313150pgl.287.1558642483635;
+        Thu, 23 May 2019 13:14:43 -0700 (PDT)
+Received: from nuc7.sifive.com ([12.206.222.2])
+        by smtp.gmail.com with ESMTPSA id i12sm180839pgb.61.2019.05.23.13.14.42
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Thu, 23 May 2019 13:14:42 -0700 (PDT)
+From:   Alan Mikhak <alan.mikhak@sifive.com>
+X-Google-Original-From: Alan Mikhak < alan.mikhak@sifive.com >
+To:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kishon@ti.com, lorenzo.pieralisi@arm.com,
+        linux-riscv@lists.infradead.org, palmer@sifive.com,
+        paul.walmsley@sifive.com
+Cc:     Alan Mikhak <alan.mikhak@sifive.com>
+Subject: [PATCH 0/2] tools: PCI: Fix broken pcitest compilation
+Date:   Thu, 23 May 2019 13:14:22 -0700
+Message-Id: <1558642464-9946-1-git-send-email-alan.mikhak@sifive.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Khalid,
+From: Alan Mikhak <alan.mikhak@sifive.com>
 
-On Thu, May 23, 2019 at 11:51:40AM -0600, Khalid Aziz wrote:
-> On 5/21/19 6:04 PM, Kees Cook wrote:
-> > As an aside: I think Sparc ADI support in Linux actually side-stepped
-> > this[1] (i.e. chose "solution 1"): "All addresses passed to kernel must
-> > be non-ADI tagged addresses." (And sadly, "Kernel does not enable ADI
-> > for kernel code.") I think this was a mistake we should not repeat for
-> > arm64 (we do seem to be at least in agreement about this, I think).
-> > 
-> > [1] https://lore.kernel.org/patchwork/patch/654481/
-> 
-> That is a very early version of the sparc ADI patch. Support for tagged
-> addresses in syscalls was added in later versions and is in the patch
-> that is in the kernel.
+This patchset fixes a compiler error and two warnings that resulted in a
+broken compilation of pcitest.
 
-I tried to figure out but I'm not familiar with the sparc port. How did
-you solve the tagged address going into various syscall implementations
-in the kernel (e.g. sys_write)? Is the tag removed on kernel entry or it
-ends up deeper in the core code?
-
-Thanks.
+ tools/pci/pcitest.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
 -- 
-Catalin
+2.7.4
+
