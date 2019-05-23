@@ -6,163 +6,198 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84019C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 11:05:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4944C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 11:09:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5391120868
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 11:05:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0F6921019
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 11:09:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730431AbfEWLFC (ORCPT
+        id S1730080AbfEWLJP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 07:05:02 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:43318 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726429AbfEWLFA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 07:05:00 -0400
-Received: by mail-io1-f68.google.com with SMTP id v7so4471021iob.10
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 04:05:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eRrHvKQERKjgiXIkofXLltvm3gZLl1VkOb0Hjm91f/o=;
-        b=Nvh4OWo5wZF6S6jcn2vkVwIlefsuZac9N8dLbpx9mPggRSFSBMxL2iTPNMQndOjKof
-         EITwsoT0KuVYZNCJOkiiK2G2xj+iP8ZaDUaSZ5Wge89QK8Z3dhkUObWNBGAVBjVBje8+
-         sMds8yhGFW7ISoYyoeFVgvn7Tro/K4Za+J1eaZddu/Q3sqnbdwyar5F7mstfIAslnIDT
-         cYRtwaCxq94lrs2mRx5bn389KWTLqoqorvhi49CefteqDup08znW6A3Dp3Zjd1ZL7Hdp
-         C5k2bgGhU3+q8hI9qMsgFT3HObdtS0KHrRRZtiND21JJMaQSe3OtWN6BAPWYYZe0/4zh
-         9ivA==
-X-Gm-Message-State: APjAAAUxhQLBa7K84MbKB3syajHa98o/rU9bk0+Q7gkGOww/GU6SprHl
-        jhPOSPZTab5iAj/vfLvqsEkwFuVXJC8805TCZJo0JQ==
-X-Google-Smtp-Source: APXvYqzhB+kWTw0fY0OON2WJw3UAMBGFm+i/VrtMNe1jls4j2XTSAkI0N08ZlcXD33EQ59ABBEMrh2dEdMkWZS2bEzE=
-X-Received: by 2002:a05:6602:211a:: with SMTP id x26mr2541980iox.202.1558609499901;
- Thu, 23 May 2019 04:04:59 -0700 (PDT)
+        Thu, 23 May 2019 07:09:15 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:47758 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726429AbfEWLJO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 07:09:14 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 856CF3082B4B;
+        Thu, 23 May 2019 11:09:09 +0000 (UTC)
+Received: from dhcp40-158.desklab.eng.bos.redhat.com (unknown [10.19.40.160])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B0A5060A9A;
+        Thu, 23 May 2019 11:09:07 +0000 (UTC)
+From:   tcamuso <tcamuso@redhat.com>
+To:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Cc:     airlied@linux.ie, daniel@ffwll.ch, tcamuso@redhat.com,
+        dkwon@redhat.com
+Subject: [PATCH] drm: assure aux_dev is nonzero before using it
+Date:   Thu, 23 May 2019 07:09:05 -0400
+Message-Id: <20190523110905.22445-1-tcamuso@redhat.com>
 MIME-Version: 1.0
-References: <20190520061834.32231-1-kasong@redhat.com> <20190522053822.GA4472@dhcp-128-65.nay.redhat.com>
-In-Reply-To: <20190522053822.GA4472@dhcp-128-65.nay.redhat.com>
-From:   Kairui Song <kasong@redhat.com>
-Date:   Thu, 23 May 2019 19:04:42 +0800
-Message-ID: <CACPcB9dM97sFmydswSkpj8nmFHvsWXUhnQJ-8jW2aEc-m7g9qg@mail.gmail.com>
-Subject: Re: [PATCH v2] vmcore: Add a kernel cmdline vmcore_device_dump
-To:     Dave Young <dyoung@redhat.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
-        Bhupesh Sharma <bhsharma@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Thu, 23 May 2019 11:09:14 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 22, 2019 at 1:38 PM Dave Young <dyoung@redhat.com> wrote:
->
-> On 05/20/19 at 02:18pm, Kairui Song wrote:
-> > Since commit 2724273e8fd0 ('vmcore: add API to collect hardware dump in
-> > second kernel'), drivers is allowed to add device related dump data to
-> > vmcore as they want by using the device dump API. This have a potential
-> > issue, the data is stored in memory, drivers may append too much data
-> > and use too much memory. The vmcore is typically used in a kdump kernel
-> > which runs in a pre-reserved small chunk of memory. So as a result it
-> > will make kdump unusable at all due to OOM issues.
-> >
-> > So introduce new vmcore_device_dump= kernel parameter, and disable
-> > device dump by default. User can enable it only if device dump data is
-> > required for debugging, and have the chance to increase the kdump
-> > reserved memory accordingly before device dump fails kdump.
-> >
-> > Signed-off-by: Kairui Song <kasong@redhat.com>
-> > ---
-> >  Update from V1:
-> >   - Use bool parameter to turn it on/off instead of letting user give
-> >     the size limit. Size of device dump is hard to determine.
-> >
-> >  Documentation/admin-guide/kernel-parameters.txt | 15 +++++++++++++++
-> >  fs/proc/vmcore.c                                | 13 +++++++++++++
-> >  2 files changed, 28 insertions(+)
-> >
-> > diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> > index 43176340c73d..2d48e39fd080 100644
-> > --- a/Documentation/admin-guide/kernel-parameters.txt
-> > +++ b/Documentation/admin-guide/kernel-parameters.txt
-> > @@ -5062,6 +5062,21 @@
-> >                       decrease the size and leave more room for directly
-> >                       mapped kernel RAM.
-> >
-> > +     vmcore_device_dump=
-> > +                     [VMCORE]
->
-> It looks better to have above two line merged in one line, also use
-> [KNL, KDUMP] will be better.
->
-> > +                     Format: {"off" | "on"}
-> > +                     If CONFIG_PROC_VMCORE_DEVICE_DUMP is set,
-> > +                     this parameter allows enable or disable device dump
-> > +                     for vmcore.
-> > +                     Device dump allows drivers to append dump data to
-> > +                     vmcore so you can collect driver specified debug info.
-> > +                     Note that the drivers could append the data without
-> > +                     any limit, and the data is stored in memory, this may
-> > +                     bring a significant memory stress. If you want to turn
-> > +                     on this option, make sure you have reserved enough memory
-> > +                     with crashkernel= parameter.
-> > +                     default: off
-> > +
-> >       vmcp_cma=nn[MG] [KNL,S390]
-> >                       Sets the memory size reserved for contiguous memory
-> >                       allocations for the vmcp device driver.
-> > diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
-> > index 3fe90443c1bb..d1b608b0efad 100644
-> > --- a/fs/proc/vmcore.c
-> > +++ b/fs/proc/vmcore.c
-> > @@ -53,6 +53,8 @@ static struct proc_dir_entry *proc_vmcore;
-> >  /* Device Dump list and mutex to synchronize access to list */
-> >  static LIST_HEAD(vmcoredd_list);
-> >  static DEFINE_MUTEX(vmcoredd_mutex);
-> > +
-> > +static bool vmcoredd_enabled;
-> >  #endif /* CONFIG_PROC_VMCORE_DEVICE_DUMP */
-> >
-> >  /* Device Dump Size */
-> > @@ -1451,6 +1453,11 @@ int vmcore_add_device_dump(struct vmcoredd_data *data)
-> >       size_t data_size;
-> >       int ret;
-> >
-> > +     if (!vmcoredd_enabled) {
-> > +             pr_err_once("Device dump is disabled\n");
-> > +             return -EINVAL;
-> > +     }
-> > +
-> >       if (!data || !strlen(data->dump_name) ||
-> >           !data->vmcoredd_callback || !data->size)
-> >               return -EINVAL;
-> > @@ -1502,6 +1509,12 @@ int vmcore_add_device_dump(struct vmcoredd_data *data)
-> >       return ret;
-> >  }
-> >  EXPORT_SYMBOL(vmcore_add_device_dump);
-> > +
-> > +static int __init vmcoredd_parse_cmdline(char *arg)
-> > +{
-> > +     return kstrtobool(arg, &vmcoredd_enabled);
-> > +}
-> > +__setup("vmcore_device_dump=", vmcoredd_parse_cmdline);
-> >  #endif /* CONFIG_PROC_VMCORE_DEVICE_DUMP */
-> >
-> >  /* Free all dumps in vmcore device dump list */
-> > --
-> > 2.21.0
-> >
->
-> Thanks
-> Dave
+From Daniel Kwon <dkwon@redhat.com>
 
-Good suggestion, I'll update in V3.
+The system was crashed due to invalid memory access while trying to access
+auxiliary device.
 
+crash> bt
+PID: 9863   TASK: ffff89d1bdf11040  CPU: 1   COMMAND: "ipmitool"
+ #0 [ffff89cedd7f3868] machine_kexec at ffffffffb0663674
+ #1 [ffff89cedd7f38c8] __crash_kexec at ffffffffb071cf62
+ #2 [ffff89cedd7f3998] crash_kexec at ffffffffb071d050
+ #3 [ffff89cedd7f39b0] oops_end at ffffffffb0d6d758
+ #4 [ffff89cedd7f39d8] no_context at ffffffffb0d5bcde
+ #5 [ffff89cedd7f3a28] __bad_area_nosemaphore at ffffffffb0d5bd75
+ #6 [ffff89cedd7f3a78] bad_area at ffffffffb0d5c085
+ #7 [ffff89cedd7f3aa0] __do_page_fault at ffffffffb0d7080c
+ #8 [ffff89cedd7f3b10] do_page_fault at ffffffffb0d70905
+ #9 [ffff89cedd7f3b40] page_fault at ffffffffb0d6c758
+    [exception RIP: drm_dp_aux_dev_get_by_minor+0x3d]
+    RIP: ffffffffc0a589bd  RSP: ffff89cedd7f3bf0  RFLAGS: 00010246
+    RAX: 0000000000000000  RBX: 0000000000000000  RCX: ffff89cedd7f3fd8
+    RDX: 0000000000000000  RSI: 0000000000000000  RDI: ffffffffc0a613e0
+    RBP: ffff89cedd7f3bf8   R8: ffff89f1bcbabbd0   R9: 0000000000000000
+    R10: ffff89f1be7a1cc0  R11: 0000000000000000  R12: 0000000000000000
+    R13: ffff89f1b32a2830  R14: ffff89d18fadfa00  R15: 0000000000000000
+    ORIG_RAX: ffffffffffffffff  CS: 0010  SS: 0018
+    RIP: 00002b45f0d80d30  RSP: 00007ffc416066a0  RFLAGS: 00010246
+    RAX: 0000000000000002  RBX: 000056062e212d80  RCX: 00007ffc41606810
+    RDX: 0000000000000000  RSI: 0000000000000002  RDI: 00007ffc41606ec0
+    RBP: 0000000000000000   R8: 000056062dfed229   R9: 00002b45f0cdf14d
+    R10: 0000000000000002  R11: 0000000000000246  R12: 00007ffc41606ec0
+    R13: 00007ffc41606ed0  R14: 00007ffc41606ee0  R15: 0000000000000000
+    ORIG_RAX: 0000000000000002  CS: 0033  SS: 002b
+
+----------------------------------------------------------------------------
+
+It was trying to open '/dev/ipmi0', but as no entry in aux_dir, it returned
+NULL from 'idr_find()'. This drm_dp_aux_dev_get_by_minor() should have done a
+check on this, but had failed to do it.
+
+----------------------------------------------------------------------------
+/usr/src/debug/kernel-3.10.0-957.12.1.el7/linux-3.10.0-957.12.1.el7.x86_64/include/linux/idr.h: 114
+     114 	struct idr_layer *hint = rcu_dereference_raw(idr->hint);
+0xffffffffc0a58998 <drm_dp_aux_dev_get_by_minor+0x18>:	mov    0x8a41(%rip),%rax        # 0xffffffffc0a613e0 <aux_idr>
+/usr/src/debug/kernel-3.10.0-957.12.1.el7/linux-3.10.0-957.12.1.el7.x86_64/include/linux/idr.h: 116
+     116 	if (hint && (id & ~IDR_MASK) == hint->prefix)
+     117 		return rcu_dereference_raw(hint->ary[id & IDR_MASK]);
+0xffffffffc0a5899f <drm_dp_aux_dev_get_by_minor+0x1f>:	test   %rax,%rax
+0xffffffffc0a589a2 <drm_dp_aux_dev_get_by_minor+0x22>:	je     0xffffffffc0a589ac <drm_dp_aux_dev_get_by_minor+0x2c>
+0xffffffffc0a589a4 <drm_dp_aux_dev_get_by_minor+0x24>:	mov    %ebx,%edx
+0xffffffffc0a589a6 <drm_dp_aux_dev_get_by_minor+0x26>:	xor    %dl,%dl
+0xffffffffc0a589a8 <drm_dp_aux_dev_get_by_minor+0x28>:	cmp    (%rax),%edx
+0xffffffffc0a589aa <drm_dp_aux_dev_get_by_minor+0x2a>:	je     0xffffffffc0a589f0 <drm_dp_aux_dev_get_by_minor+0x70>
+/usr/src/debug/kernel-3.10.0-957.12.1.el7/linux-3.10.0-957.12.1.el7.x86_64/include/linux/idr.h: 119
+     119 	return idr_find_slowpath(idr, id);
+0xffffffffc0a589ac <drm_dp_aux_dev_get_by_minor+0x2c>:	mov    %ebx,%esi
+0xffffffffc0a589ae <drm_dp_aux_dev_get_by_minor+0x2e>:	mov    $0xffffffffc0a613e0,%rdi
+0xffffffffc0a589b5 <drm_dp_aux_dev_get_by_minor+0x35>:	callq  0xffffffffb09771b0 <idr_find_slowpath>
+0xffffffffc0a589ba <drm_dp_aux_dev_get_by_minor+0x3a>:	mov    %rax,%rbx
+/usr/src/debug/kernel-3.10.0-957.12.1.el7/linux-3.10.0-957.12.1.el7.x86_64/arch/x86/include/asm/atomic.h: 25
+      25 	return ACCESS_ONCE((v)->counter);
+0xffffffffc0a589bd <drm_dp_aux_dev_get_by_minor+0x3d>:	mov    0x18(%rbx),%edx
+
+crash> struct file.f_path 0xffff89d18fadfa00
+  f_path = {
+    mnt = 0xffff89f23feaa620,
+    dentry = 0xffff89f1be7a1cc0
+  }
+crash> files -d 0xffff89f1be7a1cc0
+     DENTRY           INODE           SUPERBLK     TYPE PATH
+ffff89f1be7a1cc0 ffff89f1b32a2830 ffff89d293aa8800 CHR  /dev/ipmi0
+
+crash> struct inode.i_rdev ffff89f1b32a2830
+  i_rdev = 0xf200000
+crash> eval (0xfffff & 0xf200000)
+hexadecimal: 0
+    decimal: 0
+      octal: 0
+     binary: 0000000000000000000000000000000000000000000000000000000000000000
+----------------------------------------------------------------------------
+
+As the index value was 0 and aux_idr had value 0 for all, it can have value
+NULL from idr_find() function, but the below function doesn't check and just
+tries to use it.
+
+----------------------------------------------------------------------------
+crash> aux_idr
+aux_idr = $8 = {
+  hint = 0x0,
+  top = 0x0,
+  id_free = 0x0,
+  layers = 0x0,
+  id_free_cnt = 0x0,
+  cur = 0x0,
+  lock = {
+    {
+      rlock = {
+        raw_lock = {
+          val = {
+            counter = 0x0
+          }
+        }
+      }
+    }
+  }
+}
+
+crash> edis -f drm_dp_aux_dev_get_by_minor
+/usr/src/debug/kernel-3.10.0-957.12.1.el7/linux-3.10.0-957.12.1.el7.x86_64/drivers/gpu/drm/drm_dp_aux_dev.c: 57
+
+      56 static struct drm_dp_aux_dev *drm_dp_aux_dev_get_by_minor(unsigned index)
+      57 {
+      58 	struct drm_dp_aux_dev *aux_dev = NULL;
+      59
+      60 	mutex_lock(&aux_idr_mutex);
+      61 	aux_dev = idr_find(&aux_idr, index);
+      62 	if (!kref_get_unless_zero(&aux_dev->refcount))
+      63 		aux_dev = NULL;
+      64 	mutex_unlock(&aux_idr_mutex);
+      65
+      66 	return aux_dev;
+      67 }
+----------------------------------------------------------------------------
+
+To avoid this kinds of situation, we should make a safeguard for the returned
+value. Changing the line 62 with the below would do.
+
+      62 	if (aux_dev && !kref_get_unless_zero(&aux_dev->refcount))
+                    ^^^^^^^^^^
+From Tony Camuso <tcamuso@redhat.com>
+I built a patched kernel for several architectures.
+Booted the kernel, and ran the following for 100 iterations.
+   rmmod ipmi kmods to remove /dev/ipmi0.
+   Invoked ipmitool
+   insmod ipmi kmods
+Did not see any crashes or call traces.
+
+Suggested-by: Daniel Kwon <dkwon@redhat.com>
+Signed-off-by: Tony Camuso <tcamuso@redhat.com>
+---
+ drivers/gpu/drm/drm_dp_aux_dev.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/drm_dp_aux_dev.c b/drivers/gpu/drm/drm_dp_aux_dev.c
+index 0e4f25d63fd2d..0b11210c882ee 100644
+--- a/drivers/gpu/drm/drm_dp_aux_dev.c
++++ b/drivers/gpu/drm/drm_dp_aux_dev.c
+@@ -60,7 +60,7 @@ static struct drm_dp_aux_dev *drm_dp_aux_dev_get_by_minor(unsigned index)
+ 
+ 	mutex_lock(&aux_idr_mutex);
+ 	aux_dev = idr_find(&aux_idr, index);
+-	if (!kref_get_unless_zero(&aux_dev->refcount))
++	if (aux_dev && !kref_get_unless_zero(&aux_dev->refcount))
+ 		aux_dev = NULL;
+ 	mutex_unlock(&aux_idr_mutex);
+ 
 -- 
-Best Regards,
-Kairui Song
+2.20.1
+
