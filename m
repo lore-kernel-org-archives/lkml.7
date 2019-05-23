@@ -4,54 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 621BAC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:14:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C681DC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:14:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25DDD20863
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:14:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9464D21872
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:14:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558638859;
-	bh=yAuVqjRgjW6xn6vI8RLO4YCZ8n4X7jLMhWHxvFEjw5I=;
+	s=default; t=1558638862;
+	bh=uiMZxNZb9jvTsvm1Z471D7qsO+eJO02Umt6u34YKsQ0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nHXuZZiYJMxGHLg9+ylGng4roxgCFVQqdQzv5kkMZxNRhYCv1kbOABb01Aa0/N7EI
-	 nl9EfK+TlzlyKBufdI/7BLycgIks+OdLC9j8fX9H+FDcKVoSyiI01mjUc+Iiryk1ut
-	 2HOhD4tzG2AFDFUlCRglGd60CLxKl/HSYZUqafG8=
+	b=0EGxoWWIwEFrtAjJcj1xTHW7sOaYrPcsEumm2hoYSK0f1BhPlrWO1LGhj0tezWyl6
+	 73l/yPM0o69kSdYVBWhqJ1PZu/hgG/xs/O0Ihx5IwKB8IGcoywehgqNUu7q3MjUGqG
+	 6q6cg0KZiHZPy80Jd0rBG2L95NNYLQIfdWPZbQAI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388215AbfEWTOS (ORCPT
+        id S2388745AbfEWTOV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:14:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48208 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:14:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48266 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388698AbfEWTOP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:14:15 -0400
+        id S2388726AbfEWTOS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:14:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 493F421855;
-        Thu, 23 May 2019 19:14:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F2A092184B;
+        Thu, 23 May 2019 19:14:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558638854;
-        bh=yAuVqjRgjW6xn6vI8RLO4YCZ8n4X7jLMhWHxvFEjw5I=;
+        s=default; t=1558638857;
+        bh=uiMZxNZb9jvTsvm1Z471D7qsO+eJO02Umt6u34YKsQ0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SwkIDl1NJg0lCqftX1gfTvaqt9wyf1UPpy2vyNOCTM7vxXeh1diqy/7Xglqc+YReh
-         ag/H0AoFo17zYfZnMBCMIFZ3LMb0PP533mCCb7kl5zthyj673YlWmnhr8DM5mFfBID
-         koeEIkWvQ0l8ps4RGea2NpObFfA3eQiHKjoZSfQM=
+        b=Gqc8z12ztD9lmKSP9MbuXlU6Fb+HfQhDgEaLN+ESZmqyjIjGmvOa1ivQQN6LGpP6j
+         USxr4nVU9+fAfMbB2MsQITPGhTtmbShFznnxuy1qYwrxb4kh6Jul0olN495+elnJBd
+         m9P6p1NPb1FusjkwRrX210sQ+NG1GFaTzVYKHx3A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>,
-        Nigel Croxon <ncroxon@redhat.com>,
-        Song Liu <songliubraving@fb.com>
-Subject: [PATCH 4.14 73/77] md/raid: raid5 preserve the writeback action after the parity check
-Date:   Thu, 23 May 2019 21:06:31 +0200
-Message-Id: <20190523181730.064636896@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Mikael Magnusson <mikael.kernel@lists.m7n.se>,
+        Wei Wang <weiwan@google.com>, Martin Lau <kafai@fb.com>,
+        Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        David Ahern <dsahern@gmail.com>
+Subject: [PATCH 4.19 001/114] ipv6: fix src addr routing with the exception table
+Date:   Thu, 23 May 2019 21:05:00 +0200
+Message-Id: <20190523181731.560730892@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190523181719.982121681@linuxfoundation.org>
-References: <20190523181719.982121681@linuxfoundation.org>
+In-Reply-To: <20190523181731.372074275@linuxfoundation.org>
+References: <20190523181731.372074275@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -60,52 +65,137 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nigel Croxon <ncroxon@redhat.com>
+From: Wei Wang <weiwan@google.com>
 
-commit b2176a1dfb518d870ee073445d27055fea64dfb8 upstream.
+[ Upstream commit 510e2ceda031eed97a7a0f9aad65d271a58b460d ]
 
-The problem is that any 'uptodate' vs 'disks' check is not precise
-in this path. Put a "WARN_ON(!test_bit(R5_UPTODATE, &dev->flags)" on the
-device that might try to kick off writes and then skip the action.
-Better to prevent the raid driver from taking unexpected action *and* keep
-the system alive vs killing the machine with BUG_ON.
+When inserting route cache into the exception table, the key is
+generated with both src_addr and dest_addr with src addr routing.
+However, current logic always assumes the src_addr used to generate the
+key is a /128 host address. This is not true in the following scenarios:
+1. When the route is a gateway route or does not have next hop.
+   (rt6_is_gw_or_nonexthop() == false)
+2. When calling ip6_rt_cache_alloc(), saddr is passed in as NULL.
+This means, when looking for a route cache in the exception table, we
+have to do the lookup twice: first time with the passed in /128 host
+address, second time with the src_addr stored in fib6_info.
 
-Note: fixed warning reported by kbuild test robot <lkp@intel.com>
+This solves the pmtu discovery issue reported by Mikael Magnusson where
+a route cache with a lower mtu info is created for a gateway route with
+src addr. However, the lookup code is not able to find this route cache.
 
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Nigel Croxon <ncroxon@redhat.com>
-Signed-off-by: Song Liu <songliubraving@fb.com>
+Fixes: 2b760fcf5cfb ("ipv6: hook up exception table to store dst cache")
+Reported-by: Mikael Magnusson <mikael.kernel@lists.m7n.se>
+Bisected-by: David Ahern <dsahern@gmail.com>
+Signed-off-by: Wei Wang <weiwan@google.com>
+Cc: Martin Lau <kafai@fb.com>
+Cc: Eric Dumazet <edumazet@google.com>
+Acked-by: Martin KaFai Lau <kafai@fb.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/md/raid5.c |   10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ net/ipv6/route.c |   51 +++++++++++++++++++++++++++------------------------
+ 1 file changed, 27 insertions(+), 24 deletions(-)
 
---- a/drivers/md/raid5.c
-+++ b/drivers/md/raid5.c
-@@ -4182,7 +4182,7 @@ static void handle_parity_checks6(struct
- 		/* now write out any block on a failed drive,
- 		 * or P or Q if they were recomputed
- 		 */
--		BUG_ON(s->uptodate < disks - 1); /* We don't need Q to recover */
-+		dev = NULL;
- 		if (s->failed == 2) {
- 			dev = &sh->dev[s->failed_num[1]];
- 			s->locked++;
-@@ -4207,6 +4207,14 @@ static void handle_parity_checks6(struct
- 			set_bit(R5_LOCKED, &dev->flags);
- 			set_bit(R5_Wantwrite, &dev->flags);
- 		}
-+		if (WARN_ONCE(dev && !test_bit(R5_UPTODATE, &dev->flags),
-+			      "%s: disk%td not up to date\n",
-+			      mdname(conf->mddev),
-+			      dev - (struct r5dev *) &sh->dev)) {
-+			clear_bit(R5_LOCKED, &dev->flags);
-+			clear_bit(R5_Wantwrite, &dev->flags);
-+			s->locked--;
-+		}
- 		clear_bit(STRIPE_DEGRADED, &sh->state);
+--- a/net/ipv6/route.c
++++ b/net/ipv6/route.c
+@@ -110,8 +110,8 @@ static int rt6_fill_node(struct net *net
+ 			 int iif, int type, u32 portid, u32 seq,
+ 			 unsigned int flags);
+ static struct rt6_info *rt6_find_cached_rt(struct fib6_info *rt,
+-					   struct in6_addr *daddr,
+-					   struct in6_addr *saddr);
++					   const struct in6_addr *daddr,
++					   const struct in6_addr *saddr);
  
- 		set_bit(STRIPE_INSYNC, &sh->state);
+ #ifdef CONFIG_IPV6_ROUTE_INFO
+ static struct fib6_info *rt6_add_route_info(struct net *net,
+@@ -1542,31 +1542,44 @@ out:
+  * Caller has to hold rcu_read_lock()
+  */
+ static struct rt6_info *rt6_find_cached_rt(struct fib6_info *rt,
+-					   struct in6_addr *daddr,
+-					   struct in6_addr *saddr)
++					   const struct in6_addr *daddr,
++					   const struct in6_addr *saddr)
+ {
++	const struct in6_addr *src_key = NULL;
+ 	struct rt6_exception_bucket *bucket;
+-	struct in6_addr *src_key = NULL;
+ 	struct rt6_exception *rt6_ex;
+ 	struct rt6_info *res = NULL;
+ 
+-	bucket = rcu_dereference(rt->rt6i_exception_bucket);
+-
+ #ifdef CONFIG_IPV6_SUBTREES
+ 	/* rt6i_src.plen != 0 indicates rt is in subtree
+ 	 * and exception table is indexed by a hash of
+ 	 * both rt6i_dst and rt6i_src.
+-	 * Otherwise, the exception table is indexed by
+-	 * a hash of only rt6i_dst.
++	 * However, the src addr used to create the hash
++	 * might not be exactly the passed in saddr which
++	 * is a /128 addr from the flow.
++	 * So we need to use f6i->fib6_src to redo lookup
++	 * if the passed in saddr does not find anything.
++	 * (See the logic in ip6_rt_cache_alloc() on how
++	 * rt->rt6i_src is updated.)
+ 	 */
+ 	if (rt->fib6_src.plen)
+ 		src_key = saddr;
++find_ex:
+ #endif
++	bucket = rcu_dereference(rt->rt6i_exception_bucket);
+ 	rt6_ex = __rt6_find_exception_rcu(&bucket, daddr, src_key);
+ 
+ 	if (rt6_ex && !rt6_check_expired(rt6_ex->rt6i))
+ 		res = rt6_ex->rt6i;
+ 
++#ifdef CONFIG_IPV6_SUBTREES
++	/* Use fib6_src as src_key and redo lookup */
++	if (!res && src_key && src_key != &rt->fib6_src.addr) {
++		src_key = &rt->fib6_src.addr;
++		goto find_ex;
++	}
++#endif
++
+ 	return res;
+ }
+ 
+@@ -2650,10 +2663,8 @@ out:
+ u32 ip6_mtu_from_fib6(struct fib6_info *f6i, struct in6_addr *daddr,
+ 		      struct in6_addr *saddr)
+ {
+-	struct rt6_exception_bucket *bucket;
+-	struct rt6_exception *rt6_ex;
+-	struct in6_addr *src_key;
+ 	struct inet6_dev *idev;
++	struct rt6_info *rt;
+ 	u32 mtu = 0;
+ 
+ 	if (unlikely(fib6_metric_locked(f6i, RTAX_MTU))) {
+@@ -2662,18 +2673,10 @@ u32 ip6_mtu_from_fib6(struct fib6_info *
+ 			goto out;
+ 	}
+ 
+-	src_key = NULL;
+-#ifdef CONFIG_IPV6_SUBTREES
+-	if (f6i->fib6_src.plen)
+-		src_key = saddr;
+-#endif
+-
+-	bucket = rcu_dereference(f6i->rt6i_exception_bucket);
+-	rt6_ex = __rt6_find_exception_rcu(&bucket, daddr, src_key);
+-	if (rt6_ex && !rt6_check_expired(rt6_ex->rt6i))
+-		mtu = dst_metric_raw(&rt6_ex->rt6i->dst, RTAX_MTU);
+-
+-	if (likely(!mtu)) {
++	rt = rt6_find_cached_rt(f6i, daddr, saddr);
++	if (unlikely(rt)) {
++		mtu = dst_metric_raw(&rt->dst, RTAX_MTU);
++	} else {
+ 		struct net_device *dev = fib6_info_nh_dev(f6i);
+ 
+ 		mtu = IPV6_MIN_MTU;
 
 
