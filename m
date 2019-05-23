@@ -2,109 +2,68 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EAE5C282E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 10:21:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34C63C282E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 10:24:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49E272133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 10:21:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05F1321019
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 10:24:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730311AbfEWKVI (ORCPT
+        id S1730102AbfEWKYF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 06:21:08 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:42470 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726429AbfEWKVI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 06:21:08 -0400
+        Thu, 23 May 2019 06:24:05 -0400
+Received: from foss.arm.com ([217.140.101.70]:42572 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727434AbfEWKYF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 06:24:05 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CEC50341;
-        Thu, 23 May 2019 03:21:07 -0700 (PDT)
-Received: from e103592.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 780123F718;
-        Thu, 23 May 2019 03:21:06 -0700 (PDT)
-Date:   Thu, 23 May 2019 11:21:04 +0100
-From:   Dave Martin <Dave.Martin@arm.com>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        James Morse <James.Morse@arm.com>,
-        Will Deacon <Will.Deacon@arm.com>
-Subject: Re: [REVIEW][PATCH 03/26] signal/arm64: Use force_sig not
- force_sig_fault for SIGKILL
-Message-ID: <20190523102101.GW28398@e103592.cambridge.arm.com>
-References: <20190523003916.20726-1-ebiederm@xmission.com>
- <20190523003916.20726-4-ebiederm@xmission.com>
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 73501341;
+        Thu, 23 May 2019 03:24:04 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4F6333F718;
+        Thu, 23 May 2019 03:24:00 -0700 (PDT)
+Date:   Thu, 23 May 2019 11:23:57 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Palmer Dabbelt <palmer@sifive.com>
+Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org,
+        Will Deacon <will.deacon@arm.com>, aou@eecs.berkeley.edu,
+        Arnd Bergmann <arnd@arndb.de>, bp@alien8.de,
+        catalin.marinas@arm.com, davem@davemloft.net, fenghua.yu@intel.com,
+        heiko.carstens@de.ibm.com, herbert@gondor.apana.org.au,
+        ink@jurassic.park.msu.ru, jhogan@kernel.org, linux@armlinux.org.uk,
+        mattst88@gmail.com, mingo@kernel.org, mpe@ellerman.id.au,
+        paul.burton@mips.com, paulus@samba.org, ralf@linux-mips.org,
+        rth@twiddle.net, stable@vger.kernel.org, tglx@linutronix.de,
+        tony.luck@intel.com, vgupta@synopsys.com
+Subject: Re: [PATCH 12/18] locking/atomic: riscv: use s64 for atomic64
+Message-ID: <20190523102357.GB3370@lakrids.cambridge.arm.com>
+References: <20190522132250.26499-13-mark.rutland@arm.com>
+ <mhng-678bd8a3-987b-4564-9885-1a764d1725b8@palmer-si-x1e>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190523003916.20726-4-ebiederm@xmission.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <mhng-678bd8a3-987b-4564-9885-1a764d1725b8@palmer-si-x1e>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 01:38:53AM +0100, Eric W. Biederman wrote:
-> It really only matters to debuggers but the SIGKILL does not have any
-> si_codes that use the fault member of the siginfo union.  Correct this
-> the simple way and call force_sig instead of force_sig_fault when the
-> signal is SIGKILL.
-
-I haven't fully understood the context for this, but why does it matter
-what's in siginfo for SIGKILL?  My understanding is that userspace
-(including ptrace) never gets to see it anyway for the SIGKILL case.
-
-Here it feels like SIGKILL is logically a synchronous, thread-targeted
-fault: we must ensure that no subsequent insn in current executes (just
-like other fault signal).  In this case, I thought we fall back to
-SIGKILL not because there is no fault, but because we failed to
-properly diagnose or report the type of fault that occurred.
-
-So maybe handling it consistently with other faults signals makes
-sense.  The fact that delivery of this signal destroys the process
-before anyone can look at the resulting siginfo feels like a
-side-effect rather than something obviously wrong.
-
-The siginfo is potentially useful diagnostic information, that we could
-subsequently provide a means to access post-mortem.
-
-I just dived in on this single patch, so I may be missing something more
-fundamental, or just being pedantic...
-
-Cheers
----Dave
-
-> Cc: stable@vger.kernel.org
-> Cc: Dave Martin <Dave.Martin@arm.com>
-> Cc: James Morse <james.morse@arm.com>
-> Cc: Will Deacon <will.deacon@arm.com>
-> Fixes: af40ff687bc9 ("arm64: signal: Ensure si_code is valid for all fault signals")
-> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
-> ---
->  arch/arm64/kernel/traps.c | 5 +++++
->  1 file changed, 5 insertions(+)
+On Wed, May 22, 2019 at 12:06:31PM -0700, Palmer Dabbelt wrote:
+> On Wed, 22 May 2019 06:22:44 PDT (-0700), mark.rutland@arm.com wrote:
+> > As a step towards making the atomic64 API use consistent types treewide,
+> > let's have the s390 atomic64 implementation use s64 as the underlying
 > 
-> diff --git a/arch/arm64/kernel/traps.c b/arch/arm64/kernel/traps.c
-> index ade32046f3fe..0feb17bdcaa0 100644
-> --- a/arch/arm64/kernel/traps.c
-> +++ b/arch/arm64/kernel/traps.c
-> @@ -282,6 +282,11 @@ void arm64_notify_die(const char *str, struct pt_regs *regs,
->  		current->thread.fault_address = 0;
->  		current->thread.fault_code = err;
->  
-> +		if (signo == SIGKILL) {
-> +			arm64_show_signal(signo, str);
-> +			force_sig(signo, current);
-> +			return;
-> +		}
->  		arm64_force_sig_fault(signo, sicode, addr, str);
->  	} else {
->  		die(str, regs, err);
-> -- 
-> 2.21.0
-> 
+> and apparently the RISC-V one as well? :)
+
+Heh. You can guess which commit message I wrote first...
+
+> Reviwed-by: Palmer Dabbelt <palmer@sifive.com>
+
+Cheers! I'll add an extra 'e' when I fold this in. :)
+
+Thanks,
+Mark.
