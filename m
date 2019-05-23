@@ -2,95 +2,109 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C454FC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 10:20:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EAE5C282E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 10:21:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9097C21773
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 10:20:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558606801;
-	bh=GNInhe6VPv5fombvzpUL3THNY7dma3FuzHTYbDtjP6k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nbgDO1PEckLzwzpScRcuN7j/ORmiLaajUs1WPeYP9QMjONHf6UGDNCg0EMCn/joax
-	 lbTvRAWloGKkk8KUGb+7xqiTo4R9Z8yrCNjnFmJanjIjiofciqydWvt8nzCxtxhKJT
-	 JgO4b1xBh34ugejS2EN/DlslrwAQrbm0lI/wa7Ds=
+	by mail.kernel.org (Postfix) with ESMTP id 49E272133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 10:21:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730413AbfEWKUA (ORCPT
+        id S1730311AbfEWKVI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 06:20:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33358 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726846AbfEWKUA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 06:20:00 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 559862133D;
-        Thu, 23 May 2019 10:19:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558606799;
-        bh=GNInhe6VPv5fombvzpUL3THNY7dma3FuzHTYbDtjP6k=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=e895LSjjeSNnD/eybI4cwM0yOCD5it0EtRNNciV8cg1Z5l8taqfhijMy2MuLrpRru
-         I8j2Z3rEW41aX+EfrcsofnLJ3hqnYj3FoeEljrBMQHAFCSpVrtCwMog2qsxXg5Hian
-         Bhf9Vp397y//mfiXBkI5yqmpc+7q3MlLqXwIYUxo=
-Date:   Thu, 23 May 2019 12:19:57 +0200
-From:   "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-To:     TonyWWang-oc <TonyWWang-oc@zhaoxin.com>
-Cc:     "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "hpa@zytor.com" <hpa@zytor.com>, "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "lenb@kernel.org" <lenb@kernel.org>,
-        David Wang <DavidWang@zhaoxin.com>,
-        "Cooper Yan(BJ-RD)" <CooperYan@zhaoxin.com>,
-        "Qiyuan Wang(BJ-RD)" <QiyuanWang@zhaoxin.com>,
-        "Herry Yang(BJ-RD)" <HerryYang@zhaoxin.com>
-Subject: Re: [PATCH v1 1/3] x86/cpu: Create Zhaoxin processors architecture
- support file
-Message-ID: <20190523101957.GB11016@kroah.com>
-References: <b3b31fab04814140b1feb13887c4aa2a@zhaoxin.com>
+        Thu, 23 May 2019 06:21:08 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:42470 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726429AbfEWKVI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 06:21:08 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CEC50341;
+        Thu, 23 May 2019 03:21:07 -0700 (PDT)
+Received: from e103592.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 780123F718;
+        Thu, 23 May 2019 03:21:06 -0700 (PDT)
+Date:   Thu, 23 May 2019 11:21:04 +0100
+From:   Dave Martin <Dave.Martin@arm.com>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux Containers <containers@lists.linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        James Morse <James.Morse@arm.com>,
+        Will Deacon <Will.Deacon@arm.com>
+Subject: Re: [REVIEW][PATCH 03/26] signal/arm64: Use force_sig not
+ force_sig_fault for SIGKILL
+Message-ID: <20190523102101.GW28398@e103592.cambridge.arm.com>
+References: <20190523003916.20726-1-ebiederm@xmission.com>
+ <20190523003916.20726-4-ebiederm@xmission.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b3b31fab04814140b1feb13887c4aa2a@zhaoxin.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190523003916.20726-4-ebiederm@xmission.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 10:10:52AM +0000, TonyWWang-oc wrote:
-> --- /dev/null
-> +++ b/arch/x86/kernel/cpu/zhaoxin.c
-> @@ -0,0 +1,178 @@
-> +// SPDX-License-Identifier: GPL-2.0
+On Thu, May 23, 2019 at 01:38:53AM +0100, Eric W. Biederman wrote:
+> It really only matters to debuggers but the SIGKILL does not have any
+> si_codes that use the fault member of the siginfo union.  Correct this
+> the simple way and call force_sig instead of force_sig_fault when the
+> signal is SIGKILL.
 
-Nice, but:
+I haven't fully understood the context for this, but why does it matter
+what's in siginfo for SIGKILL?  My understanding is that userspace
+(including ptrace) never gets to see it anyway for the SIGKILL case.
 
-> +/*
-> + * Zhaoxin Processor Support for Linux
-> + *
-> + * Copyright (c) 2019 Shanghai Zhaoxin Semiconductor Co., Ltd.
-> + *
-> + * Author: David Wang <davidwang@zhaoxin.com>
-> + *
-> + * This file is licensed under the terms of the GNU General
-> + * License v2.0 or later. See file COPYING for details.
+Here it feels like SIGKILL is logically a synchronous, thread-targeted
+fault: we must ensure that no subsequent insn in current executes (just
+like other fault signal).  In this case, I thought we fall back to
+SIGKILL not because there is no fault, but because we failed to
+properly diagnose or report the type of fault that occurred.
 
-That contridicts the first line of the file :(
+So maybe handling it consistently with other faults signals makes
+sense.  The fact that delivery of this signal destroys the process
+before anyone can look at the resulting siginfo feels like a
+side-effect rather than something obviously wrong.
 
-Please sort this out with your lawyers and resend it corrected.
+The siginfo is potentially useful diagnostic information, that we could
+subsequently provide a means to access post-mortem.
 
-Also, gpl "boilerplate" text like this does not need to be in the file
-if you just include the spdx line.
+I just dived in on this single patch, so I may be missing something more
+fundamental, or just being pedantic...
 
-thanks,
+Cheers
+---Dave
 
-greg k-h
+> Cc: stable@vger.kernel.org
+> Cc: Dave Martin <Dave.Martin@arm.com>
+> Cc: James Morse <james.morse@arm.com>
+> Cc: Will Deacon <will.deacon@arm.com>
+> Fixes: af40ff687bc9 ("arm64: signal: Ensure si_code is valid for all fault signals")
+> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+> ---
+>  arch/arm64/kernel/traps.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/arch/arm64/kernel/traps.c b/arch/arm64/kernel/traps.c
+> index ade32046f3fe..0feb17bdcaa0 100644
+> --- a/arch/arm64/kernel/traps.c
+> +++ b/arch/arm64/kernel/traps.c
+> @@ -282,6 +282,11 @@ void arm64_notify_die(const char *str, struct pt_regs *regs,
+>  		current->thread.fault_address = 0;
+>  		current->thread.fault_code = err;
+>  
+> +		if (signo == SIGKILL) {
+> +			arm64_show_signal(signo, str);
+> +			force_sig(signo, current);
+> +			return;
+> +		}
+>  		arm64_force_sig_fault(signo, sicode, addr, str);
+>  	} else {
+>  		die(str, regs, err);
+> -- 
+> 2.21.0
+> 
