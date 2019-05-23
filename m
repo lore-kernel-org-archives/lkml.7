@@ -2,74 +2,77 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-10.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98C60C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 20:04:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42106C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 20:07:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C3DA20856
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 20:04:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A583217D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 20:07:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="Hu4ic74M"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oUh0mjqL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387565AbfEWUEk (ORCPT
+        id S2387674AbfEWUHm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 16:04:40 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:47076 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387455AbfEWUEk (ORCPT
+        Thu, 23 May 2019 16:07:42 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:40788 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387504AbfEWUHl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 16:04:40 -0400
-Received: by mail-ed1-f66.google.com with SMTP id f37so10850799edb.13
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 13:04:38 -0700 (PDT)
+        Thu, 23 May 2019 16:07:41 -0400
+Received: by mail-lf1-f65.google.com with SMTP id h13so5318143lfc.7;
+        Thu, 23 May 2019 13:07:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
+        d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=R9lnEivA0vSTCYlaSnEP+1dqE4I56DJXM0BNqlsp4vo=;
-        b=Hu4ic74MEt+nkeIQo/00GhwVT8ats2qb/xwZDyY1jQKBfbEskxUGyHP0wd2Y9Bpuyo
-         fOAOHcvydAiCHdSeKJcPxtJahKGCyyJm8wglHeQ83pSBQMwj+ER7EPSUcdAm4V8ucKeL
-         OWaBI0YZl8+bs5Qu55iD7ZA5kxFl7xFSXYRrQ=
+        bh=QfVXXvInpWGRG3+JwX1SknPbAFx966/86u+2yVF/INk=;
+        b=oUh0mjqL39Dt/TUrmf1FzzYDzyClG1fvbWrK2baT/1VL+CFDYeZRr+yByDt+y4O5Tl
+         rIgZ71AEyLByZIG8mlxDwnDaVVoPFShZPLiBk+Sfv3On8RToKlTG0tvashEDdfgoIsN4
+         97Qb52wUVLPlr78MUgOdj9bIGz5vPyCpNrZWL940lRkdzkdgv9qkhxoPNdHqNn4REz5x
+         ZdsfxeZ79x9KRFwmVw2z0Cc3BeqY2+SAoWigVLOA+4Td/Gm00GWZ9qyNMyqY/XwXc21r
+         MRCbhzmxazA+IfY7EkQMfXJQIqc3quVOZE00PTrcg84/BGlMXRItZIYxQxnoBd94RrRo
+         vdog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=R9lnEivA0vSTCYlaSnEP+1dqE4I56DJXM0BNqlsp4vo=;
-        b=i13dbkZ3YSKdmUtNSXODH2RPrfdf41ZFNaJlnqT2b/P1yujDFSeTxgBo4s6iJAEK7j
-         Anm+gHtN+kNZVaAjpG1z0b7BiDypF3NfN3+dHeeAfg/xrVzYEOGSsCg+qgkxaDvMjZJR
-         JBAXIaPwV5Lo3OpIiy1MxscQLDiRCObMZMN+abTGIDm+nbUvKk8aRcKqUxIUAH4wvJj7
-         5i7WlC+dXYyZTvNH4omGwhN2B+osiHEW2FUeFgKJ7XtopCR5cB3W5q+V+I0nMZQHg1jX
-         Yr7fegGuifUoEsHWIdNn8RloCKh/brHzhqTK+lEE57vKUueo5MYAYBT7hhvmKrsQCqpC
-         elTg==
-X-Gm-Message-State: APjAAAX5RZO0+kpIhIoM8T0bWZPXa5ndCj6SCiRbXgqtTnucBtfcDaYH
-        vvfXg0ACaHH+9lhx02Bfb4/8OA==
-X-Google-Smtp-Source: APXvYqxcavWV9IkAVIyu4F30EENWDdifmBk61KZW1dvW6KulIOgYeihR97FaCJgaDhG0+dsXGcgtGQ==
-X-Received: by 2002:a17:906:1ed1:: with SMTP id m17mr32146998ejj.213.1558641877646;
-        Thu, 23 May 2019 13:04:37 -0700 (PDT)
-Received: from [192.168.1.149] (ip-5-186-118-63.cgn.fibianet.dk. [5.186.118.63])
-        by smtp.gmail.com with ESMTPSA id h9sm130745edb.80.2019.05.23.13.04.36
+        bh=QfVXXvInpWGRG3+JwX1SknPbAFx966/86u+2yVF/INk=;
+        b=Wbf3Ac0j2tg5aai90EM0Ym1htsRP8lpEj4BRB5si6a4SJxjGDlvX6Ql3rZ8aYDo3sh
+         apsyZM04AnO6G7J/bs4bDHda2E5QjWXwotBdVBExhSCn6ni2p+0z2ZuXvhnYP1jBCvYF
+         Gi960PrdOq4E1WXCnnqd9Fka6MtDlP0ioVGc/wzKpZt5WtsJEgH+Ohv1dZ1i9Lr/3OWV
+         whiBQrVpHkU8EmOKPHPwkEc/my4l1SUlzIL0SHQo3jjak9lei/W/pVhKXddZdno4CSyw
+         UP5rUCZVhzx2pFrWuLfP4q7PZr45fA6SrS5EbYmze1mHe1ochzLR8lAPYFIk3BfFJ7QJ
+         O/Zw==
+X-Gm-Message-State: APjAAAWo/NSY7Ysh327eLxVLDaqM7ginUSuhf6TQgVEs/NdQsj+OHhN9
+        MYyRuvqh2U7/UnIRkTuuJLqnoymY
+X-Google-Smtp-Source: APXvYqwnZXCspGjC6DogAdICLKwqG874TZ1aQziH9gjkkNdl9fRNoo0GVig3krgTlTY4KGwj2z4AqQ==
+X-Received: by 2002:a19:4f54:: with SMTP id a20mr47675662lfk.136.1558642058924;
+        Thu, 23 May 2019 13:07:38 -0700 (PDT)
+Received: from [192.168.1.17] (drp59.neoplus.adsl.tpnet.pl. [83.24.201.59])
+        by smtp.gmail.com with ESMTPSA id o124sm101855lfe.92.2019.05.23.13.07.37
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 23 May 2019 13:04:37 -0700 (PDT)
-Subject: Re: [PATCH] lib/sort: Add the sort_r() variant
-To:     Boris Brezillon <boris.brezillon@collabora.com>,
-        linux-kernel@vger.kernel.org
-Cc:     George Spelvin <lkml@sdf.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andrey Abramov <st5pub@yandex.ru>, kernel@collabora.com
-References: <20190522112550.31814-1-boris.brezillon@collabora.com>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <bc3f2b9b-627f-bcc7-c16d-391a962258c0@rasmusvillemoes.dk>
-Date:   Thu, 23 May 2019 22:04:35 +0200
+        Thu, 23 May 2019 13:07:38 -0700 (PDT)
+Subject: Re: [GIT PULL] Immutable branch between LEDs, MFD and REGULATOR
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
+        lgirdwood@gmail.com, broonie@kernel.org
+References: <20190521203038.31946-1-jacek.anaszewski@gmail.com>
+ <20190522054256.GA4574@dell> <3492171a-bcdc-bee2-684c-e1029653a811@gmail.com>
+ <20190523083129.GH4574@dell>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Message-ID: <e7f332a3-ce4b-a058-74b3-3dfd8bccfbc8@gmail.com>
+Date:   Thu, 23 May 2019 22:07:35 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190522112550.31814-1-boris.brezillon@collabora.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20190523083129.GH4574@dell>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -77,155 +80,127 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22/05/2019 13.25, Boris Brezillon wrote:
-> Some users might need extra context to compare 2 elements. This patch
-> adds the sort_r() which is similar to the qsort_r() variant of qsort().
+On 5/23/19 10:31 AM, Lee Jones wrote:
+> On Wed, 22 May 2019, Jacek Anaszewski wrote:
 > 
-> Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
-> ---
-> Hello,
+>> On 5/22/19 7:42 AM, Lee Jones wrote:
+>>> On Tue, 21 May 2019, Jacek Anaszewski wrote:
+>>>
+>>>> The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
+>>>>
+>>>>     Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
+>>>>
+>>>> are available in the git repository at:
+>>>>
+>>>>     git://git.kernel.org/pub/scm/linux/kernel/git/j.anaszewski/linux-leds.git tags/ti-lmu-led-drivers
+>>>>
+>>>> for you to fetch changes up to 13f5750a60b923d8f3f0e23902f2ece46dd733d7:
+>>>>
+>>>>     leds: lm36274: Introduce the TI LM36274 LED driver (2019-05-21 20:34:19 +0200)
+>>>>
+>>>> ----------------------------------------------------------------
+>>>> TI LMU LED support rework and introduction of two new drivers
+>>>> with DT bindings:
+>>>>
+>>>> - leds-lm3697 (entails additions to lm363x-regulator.c)
+>>>> - leds-lm36274
+>>>> ----------------------------------------------------------------
+>>>> Dan Murphy (12):
+>>>
+>>>>         dt-bindings: mfd: LMU: Add the ramp up/down property
+>>>>         dt-bindings: mfd: LMU: Add ti,brightness-resolution
+>>>>         mfd: ti-lmu: Remove support for LM3697
+>>>>         mfd: ti-lmu: Add LM36274 support to the ti-lmu
+>>>
+>>> These patches were Acked "for my own reference", which means I'd
+>>> at least expect a discussion on how/where they would be applied.
+>>>
+>>> It's fine for them to go in via the LED tree in this instance and I do
+>>> thank you for sending a PR.  Next time can we at least agree on the
+>>> route-in though please?
+>>
+>> Usually ack from the colliding subsystem maintainer means he
+>> acknowledges the patch and gives silent approval for merging
+>> it via the other tree.
 > 
-> A few more details about this patch.
+> Usually the type of Ack you mention takes this form:
 > 
-> Even though I post it as a standalone patch, I do intend to use it in
-> a real driver (v4l2 driver), just didn't want to have it burried in a
-> huge patch series.
+>    Acked-by: Lee Jones <lee.jones@linaro.org>
 > 
-> Note that sort() and sort_r() are now implemented as wrappers around
-> do_sort() so that most of the code can be shared. I initially went for
-> a solution that implemented sort() as a wrapper around sort_r() (which
-> basically contained the do_sort() logic without the cmp_func arg)
-> but realized this was adding one extra indirect call (the compare func
-> wrapper), which I know are being chased.
+> However, the one I provided looks like this:
+> 
+>    For my own reference:
+>      Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+> 
+> Which clearly says "for my own reference" and not to be taken as an
+> indication that it's okay for the patch(es) to go in via another
+> tree.
+> 
+>> This is the usual workflow e.g. in case of massive reworks
+>> of commonly shared kernel APIs.
+>>
+>> Your Acked-for-MFD-by tag is not documented anywhere and I've just
+>> found out about its exact meaning :-) Note also that it percolated
+>> to the mainline git history probably because people mistakenly assumed
+>> it was some new convention (despite that checkpatch.pl complains about
+>> it). So far there are 12 occurrences thereof in git. I must admit that
+>> I once unduly made my contribution to that mess.
+> 
+> Being MFD maintainer presents an uncommon and awkward scenario.  MFD
+> is special in that it means we have to work more cross-subsystem than
+> most (any?).  The default for MFD related patch-sets which traverse
+> multiple subsystem is for them to go in via MFD with Acks from all the
+> other maintainers.  I'm always happy to discuss different merge
+> strategies, but using the MFD repo is the norm.
+> 
+> The Acked-*-by you see above came as a result of a conversation
+> between myself and Maintainers I work with the most.  It was seen as
+> the most succinct way of saying that the patch has been reviewed,
+> whilst providing the least amount of confusion w.r.t. whether it's
+> okay to be applied to another tree or not.  The "for my own reference"
+> should be clear enough that I provide that tag for my own purposes,
+> rather than an okay for others to merge it.
+> 
+>> Of course, now being taught about the exact meaning of the tag,
+>> I will proceed accordingly.
+> 
+> I'd appreciate that, thank you.
+> 
+>> Regarding this one - please hold on for a while with pulling
+>> the stuff, since we may have some updates from REGULATOR maintainers
+>> (hopefully Acked-by).
+> 
+> I haven't pulled this yet, but please bear in mind ...
+> 
+> Once an immutable branch is created, it should never, ever change.  I
+> think this is the second pull-request I've had from you [0] and the
+> second one you've wanted to retract.  That should not happen!
 
-Hm, I don't like the "pass one or the other, but not both". Yes, the
-direct way to implement sort() in terms of sort_r would be
+This is life - it is always possible that some problems will be
+detected in linux-next later in the cycle, either by bots or by other
+people.
 
-cmp_wrapper(void *a, void *b, void *priv)
-{ return ((cmp_func_t)priv)(a, b); }
+Some time ago I referred to Linus' message from 2017 discouraging
+maintainers from cross-merging their trees, which you didn't find
+applicable to existing MFD workflow.
 
-void sort(...) { sort_r(...., cmp_wrapper, cmp_func); }
+Recently Linus put stress on that again [0].
 
-but it's easy enough to get rid of that extra indirect call similar to
-how the swap functions are done: pass a sentinel value, and use a single
-(highly predictable) branch to check whether we have an old-style cmp
-function.
+At the occasion of the situation we have currently, I'd like to clarify
+if cross-merges between MFD and other subsystems deserve special
+treatment.
 
-[Are there actually any architectures where passing a third argument to
-a function just expecting two would not Just Work? I.e., could one
-simply cast a new-style comparison function to an old-style and pass
-NULL as priv? Well, we'd better not go down that road.]
+So please, if you find it reasonable to proceed with these immutable
+branches workflow, I would first prefer to see Linus' approval for that.
 
-So I propose this somewhat simpler (at least in terms of diffstat)
-patch, which also fits nicely with some optimizations I plan on doing to
-eliminate "trivial" comparison functions (those that just do a single
-integer comparison of some field inside the structs). Sorry if it's
-whitespace-damaged. I also wonder if one should make the priv argument
-void* instead of const void*, to help avoid mixing up the elements with
-the context, but the function should be pure, so I'm inclined to stick
-with the three const void* args.
+> This is precisely why I usually find it better for patches to go in
+> via the MFD tree.
+> 
+> [0] [GIT PULL] LM3532 backlight support improvements and relocation
+> 
 
- include/linux/sort.h |  5 +++++
- lib/sort.c           | 34 ++++++++++++++++++++++++++++------
- 2 files changed, 33 insertions(+), 6 deletions(-)
+[0] https://lkml.org/lkml/2019/5/8/820
 
-diff --git a/include/linux/sort.h b/include/linux/sort.h
-index 2b99a5dd073d..61b96d0ebc44 100644
---- a/include/linux/sort.h
-+++ b/include/linux/sort.h
-@@ -4,6 +4,11 @@
-
- #include <linux/types.h>
-
-+void sort_r(void *base, size_t num, size_t size,
-+	    int (*cmp)(const void *, const void *, const void *),
-+	    void (*swap)(void *, void *, int),
-+	    const void *priv);
-+
- void sort(void *base, size_t num, size_t size,
- 	  int (*cmp)(const void *, const void *),
- 	  void (*swap)(void *, void *, int));
-diff --git a/lib/sort.c b/lib/sort.c
-index 50855ea8c262..8737d47d87bf 100644
---- a/lib/sort.c
-+++ b/lib/sort.c
-@@ -141,6 +141,18 @@ static void do_swap(void *a, void *b, size_t size,
-swap_func_t swap_func)
- 		swap_func(a, b, (int)size);
- }
-
-+typedef int (*cmp_func_t)(const void *, const void *);
-+typedef int (*cmp_r_func_t)(const void *, const void *, const void *);
-+#define CMP_WRAPPER ((cmp_r_func_t)1L)
-+
-+static int do_cmp(const void *a, const void *b,
-+		  cmp_r_func_t cmp, const void *priv)
-+{
-+	if (cmp == CMP_WRAPPER)
-+		return ((cmp_func_t)(priv))(a, b);
-+	return cmp(a, b, priv);
-+}
-+
- /**
-  * parent - given the offset of the child, find the offset of the parent.
-  * @i: the offset of the heap element whose parent is sought.  Non-zero.
-@@ -168,12 +180,13 @@ static size_t parent(size_t i, unsigned int lsbit,
-size_t size)
- }
-
- /**
-- * sort - sort an array of elements
-+ * sort_r - sort an array of elements
-  * @base: pointer to data to sort
-  * @num: number of elements
-  * @size: size of each element
-  * @cmp_func: pointer to comparison function
-  * @swap_func: pointer to swap function or NULL
-+ * @priv: third argument passed to comparison function
-  *
-  * This function does a heapsort on the given array.  You may provide
-  * a swap_func function if you need to do something more than a memory
-@@ -185,9 +198,10 @@ static size_t parent(size_t i, unsigned int lsbit,
-size_t size)
-  * O(n*n) worst-case behavior and extra memory requirements that make
-  * it less suitable for kernel use.
-  */
--void sort(void *base, size_t num, size_t size,
--	  int (*cmp_func)(const void *, const void *),
--	  void (*swap_func)(void *, void *, int size))
-+void sort_r(void *base, size_t num, size_t size,
-+	    int (*cmp_func)(const void *, const void *, const void *),
-+	    void (*swap_func)(void *, void *, int size),
-+	    const void *priv)
- {
- 	/* pre-scale counters for performance */
- 	size_t n = num * size, a = (num/2) * size;
-@@ -235,12 +249,12 @@ void sort(void *base, size_t num, size_t size,
- 		 * average, 3/4 worst-case.)
- 		 */
- 		for (b = a; c = 2*b + size, (d = c + size) < n;)
--			b = cmp_func(base + c, base + d) >= 0 ? c : d;
-+			b = do_cmp(base + c, base + d, cmp_func, priv) >= 0 ? c : d;
- 		if (d == n)	/* Special case last leaf with no sibling */
- 			b = c;
-
- 		/* Now backtrack from "b" to the correct location for "a" */
--		while (b != a && cmp_func(base + a, base + b) >= 0)
-+		while (b != a && do_cmp(base + a, base + b, cmp_func, priv) >= 0)
- 			b = parent(b, lsbit, size);
- 		c = b;			/* Where "a" belongs */
- 		while (b != a) {	/* Shift it into place */
-@@ -249,4 +263,12 @@ void sort(void *base, size_t num, size_t size,
- 		}
- 	}
- }
-+EXPORT_SYMBOL(sort_r);
-+
-+void sort(void *base, size_t num, size_t size,
-+	    int (*cmp_func)(const void *, const void *),
-+	    void (*swap_func)(void *, void *, int size))
-+{
-+	return sort_r(base, num, size, CMP_WRAPPER, swap_func, cmp_func);
-+}
- EXPORT_SYMBOL(sort);
-
+-- 
+Best regards,
+Jacek Anaszewski
