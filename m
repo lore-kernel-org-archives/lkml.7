@@ -2,127 +2,99 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 134E5C04AAC
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:52:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8E25C04AAC
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:52:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6FD421019
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:52:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558601525;
-	bh=GvIxnz2QDkzaDXhCwkyYIbh58BouSz387m9539g/2A8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qKBbBgcrzEdyIEGK7kfHl6trBssq5OAioYK918PkxCH/cHEaZvu10UC98t/kgGfj4
-	 0xXvD36lH3Al5cHg/PFV14JZ2NmhvkoJLtFGJrU29SSWti2/Iq+P2Gq7JLG7ASOy37
-	 e2rrJp/fhQTgagSiMlDNN6vdOXiyqL9m6xH7Umug=
+	by mail.kernel.org (Postfix) with ESMTP id 65B5E2184B
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:52:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="on9kVxqn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730126AbfEWIwF (ORCPT
+        id S1730194AbfEWIwO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 04:52:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34272 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726081AbfEWIwE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 04:52:04 -0400
-Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9633220675;
-        Thu, 23 May 2019 08:52:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558601523;
-        bh=GvIxnz2QDkzaDXhCwkyYIbh58BouSz387m9539g/2A8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=cGQ/xj15H4e7wzpcSW5LwgkL0k2fAuxUfKby8GOqJq7U+CObYxAh8WO4TLHsuSU42
-         5OmnsByuClenpeucDd2R6GXBQ9Q2yBeqlfsJP9xf/abAQ4i3T1VngiNyi/Mf833qTw
-         +QEBNS3NTcj3UbMAhjKZ/c3iC5Hv1hkYAHSrkH3c=
-Date:   Thu, 23 May 2019 16:51:04 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Ran Wang <ran.wang_1@nxp.com>,
-        Bhaskar Upadhaya <bhaskar.upadhaya@nxp.com>
-Cc:     Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] arm64: dts: ls1028a: Fix CPU idle fail.
-Message-ID: <20190523085104.GP9261@dragon>
-References: <20190517045753.3709-1-ran.wang_1@nxp.com>
+        Thu, 23 May 2019 04:52:14 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:42232 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726081AbfEWIwO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 04:52:14 -0400
+Received: by mail-wr1-f67.google.com with SMTP id l2so5297344wrb.9
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 01:52:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=j+i/6YHpLYa0VRON5YtxYPlWNbeZJcsk8UufzzybxG8=;
+        b=on9kVxqnE4XL9gvdkGUX2lnqH+HDfMFx1fmgPPhEHMLh6fLl/qMVTqq0jyIU4/zk3M
+         y7YSJbcxD91+NnS+VGobBAu9oIIllM+Rvh6RrpTXngDXu2RBlSNjIRrjjwsYU4288n4R
+         zUmjrS1VsLFV93LbAPHzTV7s0QxGGhiBSoKi6y1LOUJ33YP7h4SuM36zK6MAZqkLr+Ta
+         ynjHcXlIGcck8mXnnZZ9Xptdc+uSZeNf6jzyVjTjBW1VPOK9Vz7ioWG3tK9klx/C+QJE
+         HzALoy6aCD9QkWLWhOjXICOwGUhtN2g/TQiP+OXFWkX1J/rsMKCeP8EzJnR3scxtjR4R
+         Hnxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=j+i/6YHpLYa0VRON5YtxYPlWNbeZJcsk8UufzzybxG8=;
+        b=otKjOI3zSvAUfM1miIsKDP47TNXuioJpNPUghRR8AbutvrACYqsXnROAtIcWWYcYrW
+         FHE9dsm4kotvhR/pB49AnZsmThOWIqOdzHONpDqDAIpP0nPKqrYl39d+sZlrd3DyG/Y6
+         zny0Y+8NoYNdFUXobUPwHuc67v3HCVastpqqfI2Y5cD833iou5xXyHqIvQPiZJoqqydm
+         nLSL8FHeaCoKc/3yianqEOV8WsZh93tvjcFQlMu+k21mRDxhBUejvDCAdQbFkSjw3nGN
+         xsF8uCtfo8LPNHDxp+3p114ak+S3I+m5XOcVw1xdMAbCUyqKFg0+MrB7YoqUWowwo1ps
+         Jk/Q==
+X-Gm-Message-State: APjAAAULFSHCqzMpw/HEu3CFSb6obXAmlTl6SxqL/I0wp5zQsQBdKLSa
+        2bLhL6EE2a/gErqCiQJmNvvbaw==
+X-Google-Smtp-Source: APXvYqwVf7vgNc882DGvmr22eEnXmPhOY+Dm37Awq0EvbkD2CxA4UYuZbiq2u9/BDdvPo7hxsg3PVA==
+X-Received: by 2002:adf:ce89:: with SMTP id r9mr10093854wrn.300.1558601532706;
+        Thu, 23 May 2019 01:52:12 -0700 (PDT)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id i25sm10949054wmb.46.2019.05.23.01.52.11
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 23 May 2019 01:52:12 -0700 (PDT)
+Subject: Re: [PATCH] nvmem: Broaden the selection of NVMEM_SNVS_LPGPR
+To:     Fabio Estevam <festevam@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, shawnguo@kernel.org,
+        linux-imx@nxp.com, kernel@pengutronix.de
+References: <20190523001502.20105-1-festevam@gmail.com>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <a17e4954-7cc0-2774-3070-6c0554c7cb95@linaro.org>
+Date:   Thu, 23 May 2019 09:52:11 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190517045753.3709-1-ran.wang_1@nxp.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20190523001502.20105-1-festevam@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 17, 2019 at 12:57:53PM +0800, Ran Wang wrote:
-> PSCI spec define 1st parameter's bit 16 of function CPU_SUSPEND to
-> indicate CPU State Type: 0 for standby, 1 for power down. In this
-> case, we want to select standby for CPU idle feature. But current
-> setting wrongly select power down and cause CPU SUSPEND fail every
-> time. Need this fix.
+
+
+On 23/05/2019 01:15, Fabio Estevam wrote:
+> The SNVS LPGR IP block is also found on other i.MX SoCs that
+> are not covered by the current SOC_IMX6 || SOC_IMX7D logic.
 > 
-> Fixes: 8897f3255c9c ("arm64: dts: Add support for NXP LS1028A SoC")
-> Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
-
-Leo, Bhaskar,
-
-Do you guys agree with it?
-
-Shawn
-
+> One example is the i.MX7ULP.
+> 
+> To avoid keep expanding the SoC logic selection, make it broader
+> by using the more generic ARCH_MXC symbol instead.
+> 
+> Signed-off-by: Fabio Estevam <festevam@gmail.com>
 > ---
->  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi |   18 +++++++++---------
->  1 files changed, 9 insertions(+), 9 deletions(-)
+>   drivers/nvmem/Kconfig | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> index b045812..bf7f845 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> @@ -28,7 +28,7 @@
->  			enable-method = "psci";
->  			clocks = <&clockgen 1 0>;
->  			next-level-cache = <&l2>;
-> -			cpu-idle-states = <&CPU_PH20>;
-> +			cpu-idle-states = <&CPU_PW20>;
->  		};
->  
->  		cpu1: cpu@1 {
-> @@ -38,7 +38,7 @@
->  			enable-method = "psci";
->  			clocks = <&clockgen 1 0>;
->  			next-level-cache = <&l2>;
-> -			cpu-idle-states = <&CPU_PH20>;
-> +			cpu-idle-states = <&CPU_PW20>;
->  		};
->  
->  		l2: l2-cache {
-> @@ -53,13 +53,13 @@
->  		 */
->  		entry-method = "arm,psci";
->  
-> -		CPU_PH20: cpu-ph20 {
-> -			compatible = "arm,idle-state";
-> -			idle-state-name = "PH20";
-> -			arm,psci-suspend-param = <0x00010000>;
-> -			entry-latency-us = <1000>;
-> -			exit-latency-us = <1000>;
-> -			min-residency-us = <3000>;
-> +		CPU_PW20: cpu-pw20 {
-> +			  compatible = "arm,idle-state";
-> +			  idle-state-name = "PW20";
-> +			  arm,psci-suspend-param = <0x0>;
-> +			  entry-latency-us = <2000>;
-> +			  exit-latency-us = <2000>;
-> +			  min-residency-us = <6000>;
->  		};
->  	};
->  
-> -- 
-> 1.7.1
-> 
+
+Applied!
+
+
+Thanks,
+srini
