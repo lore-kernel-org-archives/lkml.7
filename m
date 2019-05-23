@@ -2,143 +2,179 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,UNPARSEABLE_RELAY,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2194C04AAC
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 05:15:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2913C282DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 05:17:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3F9A20675
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 05:15:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A3AF20675
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 05:17:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="vJ+6qXiU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726553AbfEWFPS (ORCPT
+        id S1727526AbfEWFRJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 01:15:18 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:51606 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725792AbfEWFPS (ORCPT
+        Thu, 23 May 2019 01:17:09 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:35506 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725792AbfEWFRJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 01:15:18 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4N59SUi028323
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 01:15:16 -0400
-Received: from e16.ny.us.ibm.com (e16.ny.us.ibm.com [129.33.205.206])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2snmye0htv-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 01:15:16 -0400
-Received: from localhost
-        by e16.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <bauerman@linux.ibm.com>;
-        Thu, 23 May 2019 06:15:15 +0100
-Received: from b01cxnp22033.gho.pok.ibm.com (9.57.198.23)
-        by e16.ny.us.ibm.com (146.89.104.203) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 23 May 2019 06:15:12 +0100
-Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
-        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4N5FBwT38535290
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 23 May 2019 05:15:11 GMT
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 91CD3AC065;
-        Thu, 23 May 2019 05:15:11 +0000 (GMT)
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A6841AC05E;
-        Thu, 23 May 2019 05:15:08 +0000 (GMT)
-Received: from morokweng.localdomain (unknown [9.80.216.227])
-        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTPS;
-        Thu, 23 May 2019 05:15:08 +0000 (GMT)
-References: <20190521044912.1375-1-bauerman@linux.ibm.com> <20190521044912.1375-12-bauerman@linux.ibm.com> <20190521051507.GD29120@lst.de>
-User-agent: mu4e 1.0; emacs 26.2
-From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Anshuman Khandual <anshuman.linux@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Mike Anderson <andmike@linux.ibm.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Ram Pai <linuxram@us.ibm.com>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>,
-        Anshuman Khandual <khandual@linux.vnet.ibm.com>
-Subject: Re: [PATCH 11/12] powerpc/pseries/svm: Force SWIOTLB for secure guests
-In-reply-to: <20190521051507.GD29120@lst.de>
-Date:   Thu, 23 May 2019 02:15:04 -0300
+        Thu, 23 May 2019 01:17:09 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4N58bOa136530;
+        Thu, 23 May 2019 05:16:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=YHmUkeaqmv1OOxNWaSvy+U5cIOirtzQ4CVGUc/PM624=;
+ b=vJ+6qXiUAYAOUc2vALVQ800raEdyVY1BhDr0pKEtusn00E4Q9X1QrNcUQS4FiihW8Wq/
+ MZ7GbtHcx8BXUtZKeP9KC1hQIgbHhTlNlRp9ba/B9W3xoy6EpCglz20WDBk3FVQnJc23
+ 2D6Xq4bpdm9h8ZTPq/TKV1Cng9Z5MCTC3zAZXuV0+Q6joCeHEnHr9IioEg0co8dv+FLt
+ GtnqLFn4dho6yDFDs35R5YSHoyF7UJC3FTBlOIvb1Q7Xlf/L9t6xKfZiXf/aQGNO4T2J
+ lBJ0MHqeBVTqqy5vvHnL+ZEZLSrmjFVoz3zZSykC2h9u0CFKpuQkJEfBT0CmSJ3D/i/7 +Q== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2smsk57vvc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 23 May 2019 05:16:16 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4N5FYGM027444;
+        Thu, 23 May 2019 05:16:15 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by aserp3030.oracle.com with ESMTP id 2smsgt16dv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 23 May 2019 05:16:15 +0000
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x4N5GFn4028865;
+        Thu, 23 May 2019 05:16:15 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 2smsgt16ds-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 23 May 2019 05:16:15 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x4N5GBwq005662;
+        Thu, 23 May 2019 05:16:11 GMT
+Received: from localhost (/10.159.211.99)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 23 May 2019 05:16:11 +0000
+Date:   Thu, 23 May 2019 01:16:08 -0400
+From:   Kris Van Hees <kris.van.hees@oracle.com>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Kris Van Hees <kris.van.hees@oracle.com>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, dtrace-devel@oss.oracle.com,
+        linux-kernel@vger.kernel.org, rostedt@goodmis.org,
+        mhiramat@kernel.org, acme@kernel.org, ast@kernel.org,
+        daniel@iogearbox.net, peterz@infradead.org
+Subject: Re: [RFC PATCH 00/11] bpf, trace, dtrace: DTrace BPF program type
+ implementation and sample use
+Message-ID: <20190523051608.GP2422@oracle.com>
+References: <201905202347.x4KNl0cs030532@aserv0121.oracle.com>
+ <20190521175617.ipry6ue7o24a2e6n@ast-mbp.dhcp.thefacebook.com>
+ <20190521184137.GH2422@oracle.com>
+ <20190521205533.evfszcjvdouby7vp@ast-mbp.dhcp.thefacebook.com>
+ <20190521213648.GK2422@oracle.com>
+ <20190521232618.xyo6w3e6nkwu3h5v@ast-mbp.dhcp.thefacebook.com>
+ <20190522041253.GM2422@oracle.com>
+ <20190522201624.eza3pe2v55sn2t2w@ast-mbp.dhcp.thefacebook.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-x-cbid: 19052305-0072-0000-0000-00000432235B
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011146; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01207291; UDB=6.00634029; IPR=6.00988272;
- MB=3.00027013; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-23 05:15:14
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19052305-0073-0000-0000-00004C53FAC6
-Message-Id: <87y32xzr8n.fsf@morokweng.localdomain>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-23_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=947 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905230036
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190522201624.eza3pe2v55sn2t2w@ast-mbp.dhcp.thefacebook.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9265 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905230036
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, May 22, 2019 at 01:16:25PM -0700, Alexei Starovoitov wrote:
+> On Wed, May 22, 2019 at 12:12:53AM -0400, Kris Van Hees wrote:
+> > 
+> > Could you elaborate on why you believe my patches are not adding generic
+> > features?  I can certainly agree that the DTrace-specific portions are less
+> > generic (although they are certainly available for anyone to use), but I
+> > don't quite understand why the new features are deemed non-generic and why
+> > you believe no one else can use this?
+> 
+> And once again your statement above contradicts your own patches.
+> The patch 2 adds new prog type BPF_PROG_TYPE_DTRACE and the rest of the patches
+> are tying everything to it.
+> This approach contradicts bpf philosophy of being generic execution engine
+> and not favoriting one program type vs another.
 
-Hello Christoph,
+I am not sure I understand where you see a contradiction.  What I posted is
+a generic feature, and sample code that demonstrates how it can be used based
+on the use-case that I am currently working on.  So yes, the sample code is
+very specific but it does not restrict the use of the cross-prog-type tail-call
+feature.  That feature is designed to be generic.
 
-Thanks for reviewing the patch!
+Probes come in different types (kprobe, tracepoint, perf event, ...) and they
+each have their own very specific data associated with them.  I agree 100%
+with you on that.  And sometimes tracing makes use of those specifics.  But
+even from looking at the implementation of the various probe related prog
+types (and e.g. the list of helpers they each support) it shows that there is
+a lot of commonality as well.  That common functionality is common to all the
+probe program types, and that is where I suggest introducing a program type
+that captures the common concept of a probe, so perhaps a better name would
+be BPF_PROG_TYPE_PROBE.
 
-Christoph Hellwig <hch@lst.de> writes:
+The principle remains the same though...  I am proposing adding support for
+program types that provide common functionality so that programs for various
+program types can make use of the more generic programs stored in prog arrays.
 
->> diff --git a/arch/powerpc/include/asm/mem_encrypt.h b/arch/powerpc/include/asm/mem_encrypt.h
->> new file mode 100644
->> index 000000000000..45d5e4d0e6e0
->> --- /dev/null
->> +++ b/arch/powerpc/include/asm/mem_encrypt.h
->> @@ -0,0 +1,19 @@
->> +/* SPDX-License-Identifier: GPL-2.0+ */
->> +/*
->> + * SVM helper functions
->> + *
->> + * Copyright 2019 IBM Corporation
->> + */
->> +
->> +#ifndef _ASM_POWERPC_MEM_ENCRYPT_H
->> +#define _ASM_POWERPC_MEM_ENCRYPT_H
->> +
->> +#define sme_me_mask	0ULL
->> +
->> +static inline bool sme_active(void) { return false; }
->> +static inline bool sev_active(void) { return false; }
->> +
->> +int set_memory_encrypted(unsigned long addr, int numpages);
->> +int set_memory_decrypted(unsigned long addr, int numpages);
->> +
->> +#endif /* _ASM_POWERPC_MEM_ENCRYPT_H */
->
-> S/390 seems to be adding a stub header just like this.  Can you please
-> clean up the Kconfig and generic headers bits for memory encryption so
-> that we don't need all this boilerplate code?
+> I have nothing against dtrace language and dtrace scripts.
+> Go ahead and compile them into bpf.
+> All patches to improve bpf infrastructure are very welcomed.
+> 
+> In particular you brought up a good point that there is a use case
+> for sharing a piece of bpf program between kprobe and tracepoint events.
+> The better way to do that is via bpf2bpf call.
+> Example:
+> void bpf_subprog(arbitrary args)
+> {
+> }
+> 
+> SEC("kprobe/__set_task_comm")
+> int bpf_prog_kprobe(struct pt_regs *ctx)
+> {
+>   bpf_subprog(...);
+> }
+> 
+> SEC("tracepoint/sched/sched_switch")
+> int bpf_prog_tracepoint(struct sched_switch_args *ctx)
+> {
+>   bpf_subprog(...);
+> }
+> 
+> Such configuration is not supported by the verifier yet.
+> We've been discussing it for some time, but no work has started,
+> since there was no concrete use case.
+> If you can work on adding support for it everyone will benefit.
+> 
+> Could you please consider doing that as a step forward?
 
-Yes, that's a good idea. Will do.
+This definitely looks to be an interesting addition and I am happy to look into
+that further.  I have a few questions that I hope you can shed light on...
 
->>  config PPC_SVM
->>  	bool "Secure virtual machine (SVM) support for POWER"
->>  	depends on PPC_PSERIES
->> +	select SWIOTLB
->> +	select ARCH_HAS_MEM_ENCRYPT
->>  	default n
->
-> n is the default default, no need to explictly specify it.
+1. What context would bpf_subprog execute with?  If it can be called from
+   multiple different prog types, would it see whichever context the caller
+   is executing with?  Or would you envision bpf_subprog to not be allowed to
+   access the execution context because it cannot know which one is in use?
 
-Indeed. Changed for the next version.
+2. Given that BPF programs are loaded with a specification of the prog type, 
+   how would one load a code construct as the one you outline above?  How can
+   you load a BPF function and have it be used as subprog from programs that
+   are loaded separately?  I.e. in the sample above, if bpf_subprog is loaded
+   as part of loading bpf_prog_kprobe (prog type KPROBE), how can it be
+   referenced from bpf_prog_tracepoint (prog type TRACEPOINT) which would be
+   loaded separately?
 
--- 
-Thiago Jung Bauermann
-IBM Linux Technology Center
-
+	Cheers,
+	Kris
