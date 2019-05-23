@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EB14C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:29:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97D1FC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:29:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6728F20879
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:29:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E0622054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:29:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639778;
-	bh=wKOlZSx4CfiKezSLe4RjSocThAM1H9tuHQ8Ho95X1wE=;
+	s=default; t=1558639784;
+	bh=YBMr8ol5ddUzuPtejLpdxwDOqyjzDxIYdtVrFGBFFaU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MPHNcUWOWDKIZrnKOJP8gXYZ2BWydCxRq0MB4ZDNDpqFxfslxtOhCOnpXnqYcSt/z
-	 DOyb8aE606BsgHB8Aqa+vLBoQxIWmyXdOwHrwDOSZ6Ukwn5dE2q5SZtdWOvO/9C9qX
-	 c8kIqEuuD7lP0NFh2hTIKwbDF4C6ua+KybXLASpw=
+	b=SJg/PF8HVtqscN4KbfvqN6syiw72lcxgghOcsfRB+xD2CxCnwEvtQnYmgZBUm1yBh
+	 zacaNmG1fN3Uz6CUD0THkTUzs7V9ISWDKOo9i44pS6KNibvDkJpo5mFbkLT7dTLW87
+	 9i1eaKbBasKVEalHcxYjbwgrmLzxgeDs9RX10Xq4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391725AbfEWT3h (ORCPT
+        id S2392009AbfEWT3n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:29:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42724 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:29:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42842 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391447AbfEWT3d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:29:33 -0400
+        id S2391987AbfEWT3i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:29:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B6E332054F;
-        Thu, 23 May 2019 19:29:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1ADDA2054F;
+        Thu, 23 May 2019 19:29:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639772;
-        bh=wKOlZSx4CfiKezSLe4RjSocThAM1H9tuHQ8Ho95X1wE=;
+        s=default; t=1558639777;
+        bh=YBMr8ol5ddUzuPtejLpdxwDOqyjzDxIYdtVrFGBFFaU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kkWcrTPIelTPdOGmlw0z4Lxd615/Cfafy4dOzZro8oXpwpxPex4C/z947bKVPnIUq
-         P+nN+prB6Y4KYks4ogL4o6SNCL498t/57gzCU4W0eM+vsFVbo8p8CisWJpoesfMuTT
-         GBRMM8Oap34tZ1e+GwaAq0QwZd/yPdYO0E4FmzQY=
+        b=Y8uU9SacOtCXPqYXX2AHh3znbkOZ4rdMpajAU5yl5BbZuHW0feGbwdImd91vaNWtE
+         QTpyHQJuGHeZugd36AYGNqhepPySc1dajU9IgdrRBzZIqtHmbeFW2dPokrLzIfiltI
+         vJAUahpyxDYfXSSqx3EdeBz72CGgY9IkJe7e717o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
         Teddy Wang <teddy.wang@siliconmotion.com>,
         Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: [PATCH 5.1 089/122] fbdev: sm712fb: fix boot screen glitch when sm712fb replaces VGA
-Date:   Thu, 23 May 2019 21:06:51 +0200
-Message-Id: <20190523181716.740616378@linuxfoundation.org>
+Subject: [PATCH 5.1 091/122] fbdev: sm712fb: fix support for 1024x768-16 mode
+Date:   Thu, 23 May 2019 21:06:53 +0200
+Message-Id: <20190523181717.094705096@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181705.091418060@linuxfoundation.org>
 References: <20190523181705.091418060@linuxfoundation.org>
@@ -63,13 +63,14 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Yifeng Li <tomli@tomli.me>
 
-commit ec1587d5073f29820e358f3a383850d61601d981 upstream.
+commit 6053d3a4793e5bde6299ac5388e76a3bf679ff65 upstream.
 
-When the machine is booted in VGA mode, loading sm712fb would cause
-a glitch of random pixels shown on the screen. To prevent it from
-happening, we first clear the entire framebuffer, and we also need
-to stop calling smtcfb_setmode() during initialization, the fbdev
-layer will call it for us later when it's ready.
+In order to support the 1024x600 panel on Yeeloong Loongson MIPS
+laptop, the original 1024x768-16 table was modified to 1024x600-16,
+without leaving the original. It causes problem on x86 laptop as
+the 1024x768-16 support was still claimed but not working.
+
+Fix it by introducing the 1024x768-16 mode.
 
 Signed-off-by: Yifeng Li <tomli@tomli.me>
 Tested-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
@@ -79,23 +80,76 @@ Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/video/fbdev/sm712fb.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/video/fbdev/sm712fb.c |   59 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 59 insertions(+)
 
 --- a/drivers/video/fbdev/sm712fb.c
 +++ b/drivers/video/fbdev/sm712fb.c
-@@ -1493,7 +1493,11 @@ static int smtcfb_pci_probe(struct pci_d
- 	if (err)
- 		goto failed;
- 
--	smtcfb_setmode(sfb);
-+	/*
-+	 * The screen would be temporarily garbled when sm712fb takes over
-+	 * vesafb or VGA text mode. Zero the framebuffer.
-+	 */
-+	memset_io(sfb->lfb, 0, sfb->fb->fix.smem_len);
- 
- 	err = register_framebuffer(info);
- 	if (err < 0)
+@@ -530,6 +530,65 @@ static const struct modeinit vgamode[] =
+ 			0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x15, 0x03,
+ 		},
+ 	},
++	{	/*  1024 x 768  16Bpp  60Hz */
++		1024, 768, 16, 60,
++		/*  Init_MISC */
++		0xEB,
++		{	/*  Init_SR0_SR4 */
++			0x03, 0x01, 0x0F, 0x03, 0x0E,
++		},
++		{	/*  Init_SR10_SR24 */
++			0xF3, 0xB6, 0xC0, 0xDD, 0x00, 0x0E, 0x17, 0x2C,
++			0x99, 0x02, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00,
++			0xC4, 0x30, 0x02, 0x01, 0x01,
++		},
++		{	/*  Init_SR30_SR75 */
++			0x38, 0x03, 0x20, 0x09, 0xC0, 0x3A, 0x3A, 0x3A,
++			0x3A, 0x3A, 0x3A, 0x3A, 0x00, 0x00, 0x03, 0xFF,
++			0x00, 0xFC, 0x00, 0x00, 0x20, 0x18, 0x00, 0xFC,
++			0x20, 0x0C, 0x44, 0x20, 0x00, 0x00, 0x00, 0x3A,
++			0x06, 0x68, 0xA7, 0x7F, 0x83, 0x24, 0xFF, 0x03,
++			0x0F, 0x60, 0x59, 0x3A, 0x3A, 0x00, 0x00, 0x3A,
++			0x01, 0x80, 0x7E, 0x1A, 0x1A, 0x00, 0x00, 0x00,
++			0x50, 0x03, 0x74, 0x14, 0x3B, 0x0D, 0x09, 0x02,
++			0x04, 0x45, 0x30, 0x30, 0x40, 0x20,
++		},
++		{	/*  Init_SR80_SR93 */
++			0xFF, 0x07, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x3A,
++			0xF7, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0x3A, 0x3A,
++			0x00, 0x00, 0x00, 0x00,
++		},
++		{	/*  Init_SRA0_SRAF */
++			0x00, 0xFB, 0x9F, 0x01, 0x00, 0xED, 0xED, 0xED,
++			0x7B, 0xFB, 0xFF, 0xFF, 0x97, 0xEF, 0xBF, 0xDF,
++		},
++		{	/*  Init_GR00_GR08 */
++			0x00, 0x00, 0x00, 0x00, 0x00, 0x40, 0x05, 0x0F,
++			0xFF,
++		},
++		{	/*  Init_AR00_AR14 */
++			0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
++			0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F,
++			0x41, 0x00, 0x0F, 0x00, 0x00,
++		},
++		{	/*  Init_CR00_CR18 */
++			0xA3, 0x7F, 0x7F, 0x00, 0x85, 0x16, 0x24, 0xF5,
++			0x00, 0x60, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++			0x03, 0x09, 0xFF, 0x80, 0x40, 0xFF, 0x00, 0xE3,
++			0xFF,
++		},
++		{	/*  Init_CR30_CR4D */
++			0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x02, 0x20,
++			0x00, 0x00, 0x00, 0x40, 0x00, 0xFF, 0xBF, 0xFF,
++			0xA3, 0x7F, 0x00, 0x86, 0x15, 0x24, 0xFF, 0x00,
++			0x01, 0x07, 0xE5, 0x20, 0x7F, 0xFF,
++		},
++		{	/*  Init_CR90_CRA7 */
++			0x55, 0xD9, 0x5D, 0xE1, 0x86, 0x1B, 0x8E, 0x26,
++			0xDA, 0x8D, 0xDE, 0x94, 0x00, 0x00, 0x18, 0x00,
++			0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x15, 0x03,
++		},
++	},
+ 	{	/*  mode#5: 1024 x 768  24Bpp  60Hz */
+ 		1024, 768, 24, 60,
+ 		/*  Init_MISC */
 
 
