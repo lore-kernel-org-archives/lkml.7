@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A802BC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:47:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A5B9C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:47:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BD4120881
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:47:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E877120851
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:47:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558640863;
-	bh=3rxfAX4mLHvVaXl+hX9hwHnq3HJQHQSfrnr68pxQPQk=;
+	s=default; t=1558640873;
+	bh=oe3Ks5A33FJZZy8e0C9HZahremKFJ9LlOQk49bdyEpU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BQWQ/qn/yFN5c8nKzeu6VSESQew0/Wr3wyfnwxlfSCVF8gEQrFq+eLcK+qd5rpjYP
-	 2xR3d4eDfxrOh3uZhsYYUQlJ8VXZqnnCmoCBxxoEDB9VPh7yuhhdilhgbvxQNfek69
-	 nPuxtwOzT4UhFu3WRp7pHYTVQA4Ut0CkfZKHQ8SM=
+	b=TqWPSAF4m+FzNbmjvg2SXltLMcYa2VBhSWaBTb1i1S7rXXHROL38JlZO4z/7Yh8BF
+	 pPlAzItMKHkiJOlvnezW3XxuMqVKG/xuRfeBxF/KHEhRJt4rubIT7DRITzwsSauoaf
+	 LUQAQJ0He4eocDQxAP+MfdPIiYX8nUBO8PD+M+Nw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389000AbfEWTrl (ORCPT
+        id S2389010AbfEWTrw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:47:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46694 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:47:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46528 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731873AbfEWTMw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:12:52 -0400
+        id S2387829AbfEWTMp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:12:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C359C217D9;
-        Thu, 23 May 2019 19:12:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0AC420863;
+        Thu, 23 May 2019 19:12:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558638772;
-        bh=3rxfAX4mLHvVaXl+hX9hwHnq3HJQHQSfrnr68pxQPQk=;
+        s=default; t=1558638764;
+        bh=oe3Ks5A33FJZZy8e0C9HZahremKFJ9LlOQk49bdyEpU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V6JTE46ICWkHXjV1l8wbyDv3hmewX02HiMM6h5cRl8aiECOPcDlowYgmqM1pfgfu6
-         PeQj7OVCer5O6wOfVbcv273mrfektAe+n4SURcVHIjteIQXXs5Io7HI1jXryVGdDgQ
-         PqZbCN/YTsEqitMWWjzQhQ+5kjuixbk9EOQGGulU=
+        b=McRj1gHku0Um55+cVkUA/T3sMSHeQPogMXs0QPEKLfnNbE+AFj0I41vArDZw1ZFSl
+         0lAXBK9er29HeNpRs0yZC/ET2C8QuSfo+N/XtjX0WY3LTbBWOF/yAqqeRxFR7BxtuX
+         htixZkWHrhCn1XMZkOvqGe+d3q9W4MUkIkbJppR8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yifeng Li <tomli@tomli.me>,
-        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        Teddy Wang <teddy.wang@siliconmotion.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: [PATCH 4.14 42/77] fbdev: sm712fb: fix VRAM detection, dont set SR70/71/74/75
-Date:   Thu, 23 May 2019 21:06:00 +0200
-Message-Id: <20190523181725.964126138@linuxfoundation.org>
+        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 4.14 39/77] perf intel-pt: Fix sample timestamp wrt non-taken branches
+Date:   Thu, 23 May 2019 21:05:57 +0200
+Message-Id: <20190523181725.594545999@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181719.982121681@linuxfoundation.org>
 References: <20190523181719.982121681@linuxfoundation.org>
@@ -61,44 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yifeng Li <tomli@tomli.me>
+From: Adrian Hunter <adrian.hunter@intel.com>
 
-commit dcf9070595e100942c539e229dde4770aaeaa4e9 upstream.
+commit 1b6599a9d8e6c9f7e9b0476012383b1777f7fc93 upstream.
 
-On a Thinkpad s30 (Pentium III / i440MX, Lynx3DM), the amount of Video
-RAM is not detected correctly by the xf86-video-siliconmotion driver.
-This is because sm712fb overwrites the GPR71 Scratch Pad Register, which
-is set by BIOS on x86 and used to indicate amount of VRAM.
+The sample timestamp is updated to ensure that the timestamp represents
+the time of the sample and not a branch that the decoder is still
+walking towards. The sample timestamp is updated when the decoder
+returns, but the decoder does not return for non-taken branches. Update
+the sample timestamp then also.
 
-Other Scratch Pad Registers, including GPR70/74/75, don't have the same
-side-effect, but overwriting to them is still questionable, as they are
-not related to modesetting.
+Note that commit 3f04d98e972b5 ("perf intel-pt: Improve sample
+timestamp") was also a stable fix and appears, for example, in v4.4
+stable tree as commit a4ebb58fd124 ("perf intel-pt: Improve sample
+timestamp").
 
-Stop writing to SR70/71/74/75 (a.k.a GPR70/71/74/75).
-
-Signed-off-by: Yifeng Li <tomli@tomli.me>
-Tested-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Cc: Teddy Wang <teddy.wang@siliconmotion.com>
-Cc: <stable@vger.kernel.org>  # v4.4+
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: stable@vger.kernel.org # v4.4+
+Fixes: 3f04d98e972b ("perf intel-pt: Improve sample timestamp")
+Link: http://lkml.kernel.org/r/20190510124143.27054-4-adrian.hunter@intel.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/video/fbdev/sm712fb.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ tools/perf/util/intel-pt-decoder/intel-pt-decoder.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/drivers/video/fbdev/sm712fb.c
-+++ b/drivers/video/fbdev/sm712fb.c
-@@ -1146,7 +1146,9 @@ static void sm7xx_set_timing(struct smtc
- 		/* init SEQ register SR30 - SR75 */
- 		for (i = 0; i < SIZE_SR30_SR75; i++)
- 			if ((i + 0x30) != 0x30 && (i + 0x30) != 0x62 &&
--			    (i + 0x30) != 0x6a && (i + 0x30) != 0x6b)
-+			    (i + 0x30) != 0x6a && (i + 0x30) != 0x6b &&
-+			    (i + 0x30) != 0x70 && (i + 0x30) != 0x71 &&
-+			    (i + 0x30) != 0x74 && (i + 0x30) != 0x75)
- 				smtc_seqw(i + 0x30,
- 					  vgamode[j].init_sr30_sr75[i]);
- 
+--- a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
++++ b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
+@@ -1313,8 +1313,11 @@ static int intel_pt_walk_tnt(struct inte
+ 				return 0;
+ 			}
+ 			decoder->ip += intel_pt_insn.length;
+-			if (!decoder->tnt.count)
++			if (!decoder->tnt.count) {
++				decoder->sample_timestamp = decoder->timestamp;
++				decoder->sample_insn_cnt = decoder->timestamp_insn_cnt;
+ 				return -EAGAIN;
++			}
+ 			decoder->tnt.payload <<= 1;
+ 			continue;
+ 		}
 
 
