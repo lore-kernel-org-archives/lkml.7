@@ -2,124 +2,144 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D03CC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 22:50:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 785D4C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 22:50:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19C452133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 22:50:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 423C72133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 22:50:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bXcI47Jx"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="PL1hqSFG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388477AbfEWWuF (ORCPT
+        id S2388544AbfEWWuV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 18:50:05 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:40762 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388090AbfEWWuF (ORCPT
+        Thu, 23 May 2019 18:50:21 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:9797 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387546AbfEWWuV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 18:50:05 -0400
-Received: by mail-pf1-f194.google.com with SMTP id u17so4053748pfn.7
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 15:50:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=e/NfIHCVQjBHTsINYXgWEQe1AyRzPZ8hL6+7doNswG4=;
-        b=bXcI47JxofDGo1M0DDwsXDLbdRQ95hs39CqiYfXG7cgRp0MFDioTUhMsu3WcKl5915
-         /38w7MknLlLN+pwCqLI/lFk0HXoyLJ09PD5xwdfCUiAxe/LNh5hVehjvOxWU6T0aP6ba
-         w7V0ZddMe4/oH99yg4H6HuB4xc90N3ENpCBUc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=e/NfIHCVQjBHTsINYXgWEQe1AyRzPZ8hL6+7doNswG4=;
-        b=VaP6ruO67Xs/z9CJDFY6F21whD5RR/b8iWXJ7mfociHMF1SObgyc2O7ijad+flGSfd
-         JFBRq9rxVROAY+y5xifdQ5Pb+ZoDvJIBB2yHrQ6hMfRuwvDu4jCDBuS3CSVtFnkdrj5b
-         0rM/TUBVjFihyoQGNBbKu45q86XrEKgF6TH6njQvQJNugXjR+cjkFGGDEttQYkwBp1Yn
-         q/oy6ZdxV3DOOsqJbeij4932Jwu3lfJpYXPgcotugAP+j0J6Yt0p4iINp+EQs7YneYYW
-         +A60gKQg/d//NgAyeUeqFuLVYqmVOuInJ9hYAmVBLJJWT0eJ00WfU+k+KIXWTw6FqQK/
-         wORw==
-X-Gm-Message-State: APjAAAWPiwASZVxB/mWQejmH0s3Dnj8uQn/uRjwshyCMWYcUWBLe9Wi4
-        KTJEplFNnuJdNOPxVMHCdyXqyg==
-X-Google-Smtp-Source: APXvYqwxBeRi10x1u9b1EDgJcZ/13TYtxDSbQwI/aBcgPO8WMo4c4JkGBCwpE4WOp1rsNiEWhouPmw==
-X-Received: by 2002:a65:430a:: with SMTP id j10mr55272610pgq.133.1558651804206;
-        Thu, 23 May 2019 15:50:04 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id r9sm470379pfc.173.2019.05.23.15.50.03
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 23 May 2019 15:50:03 -0700 (PDT)
-Date:   Thu, 23 May 2019 15:50:02 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     Shuah Khan <shuah@kernel.org>,
-        Jeffrin Thalakkottoor <jeffrin@rajagiritech.edu.in>,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rtc@vger.kernel.org
-Subject: Re: [PATCH 2/2] selftests: rtc: rtctest: specify timeouts
-Message-ID: <201905231549.C19B7A21@keescook>
-References: <20190523224223.11054-1-alexandre.belloni@bootlin.com>
- <20190523224223.11054-3-alexandre.belloni@bootlin.com>
+        Thu, 23 May 2019 18:50:21 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ce723ac0005>; Thu, 23 May 2019 15:50:20 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 23 May 2019 15:50:19 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 23 May 2019 15:50:19 -0700
+Received: from [10.110.48.28] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 23 May
+ 2019 22:50:14 +0000
+Subject: Re: [PATCH 1/1] infiniband/mm: convert put_page() to put_user_page*()
+To:     Ira Weiny <ira.weiny@intel.com>
+CC:     Jason Gunthorpe <jgg@mellanox.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        Doug Ledford <dledford@redhat.com>,
+        "Mike Marciniszyn" <mike.marciniszyn@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Christian Benvenuti <benve@cisco.com>,
+        "Jan Kara" <jack@suse.cz>
+References: <20190523072537.31940-1-jhubbard@nvidia.com>
+ <20190523072537.31940-2-jhubbard@nvidia.com>
+ <20190523172852.GA27175@iweiny-DESK2.sc.intel.com>
+ <20190523173222.GH12145@mellanox.com>
+ <fa6d7d7c-13a3-0586-6384-768ebb7f0561@nvidia.com>
+ <20190523190423.GA19578@iweiny-DESK2.sc.intel.com>
+ <0bd9859f-8eb0-9148-6209-08ae42665626@nvidia.com>
+ <20190523223701.GA15048@iweiny-DESK2.sc.intel.com>
+From:   John Hubbard <jhubbard@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <050f56d0-1dda-036e-e508-3a7255ac7b59@nvidia.com>
+Date:   Thu, 23 May 2019 15:50:14 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190523224223.11054-3-alexandre.belloni@bootlin.com>
+In-Reply-To: <20190523223701.GA15048@iweiny-DESK2.sc.intel.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL106.nvidia.com (172.18.146.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US-large
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1558651820; bh=pnD2mPom1537ot4zdnaJYiSqU3krtz3ITZMHoUjrO54=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=PL1hqSFGAyha/HZ79WcNqF63aQObWkwaPlneBIGP0b7M7mgvTnxDuamjPTAyGfKF1
+         yHMeLk26WEhfP2v931D1xU4W3M3kiwYQmBfLraEzR5YZXcfsobgtoJPyyLH4+6FTSu
+         jnQhcgabwqiWxG7558a5TO0DHh6plvrU70wZ6snBovpECiJdOYn4l86CCwmo3NDu3O
+         3UXNZap6nUALoyxA2W+ylo2ndYIsR8f9oF+z0OhfOamlbdOLOBUEnQFBZGiQWt1HUc
+         6E7eSVdsS34aUe5ZN9gIcZVR9Y/B0Sxsb590oa3FJ9NZuUjjM8XRY+0vmapyQQB2fM
+         PPK57wDeZu70A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 24, 2019 at 12:42:23AM +0200, Alexandre Belloni wrote:
-> uie_read is a commonly failing test that will block forever on buggy rtc
-> drivers. Shorten its timeout so it fails earlier. Also increase the timeout
-> for the two alarm test on a minute boundary.
+On 5/23/19 3:37 PM, Ira Weiny wrote:
+[...] 
+> I've dug in further and I see now that release_pages() implements (almost the
+> same thing, see below) as put_page().
 > 
-> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-
-Reviewed-by: Kees Cook <keescook@chromium.org>
-
-> ---
->  tools/testing/selftests/rtc/rtctest.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+> However, I think we need to be careful here because put_page_testzero() calls
 > 
-> diff --git a/tools/testing/selftests/rtc/rtctest.c b/tools/testing/selftests/rtc/rtctest.c
-> index b2065536d407..66af608fb4c6 100644
-> --- a/tools/testing/selftests/rtc/rtctest.c
-> +++ b/tools/testing/selftests/rtc/rtctest.c
-> @@ -49,7 +49,7 @@ TEST_F(rtc, date_read) {
->  	       rtc_tm.tm_hour, rtc_tm.tm_min, rtc_tm.tm_sec);
->  }
->  
-> -TEST_F(rtc, uie_read) {
-> +TEST_F_TIMEOUT(rtc, uie_read, NUM_UIE + 2) {
->  	int i, rc, irq = 0;
->  	unsigned long data;
->  
-> @@ -211,7 +211,7 @@ TEST_F(rtc, alarm_wkalm_set) {
->  	ASSERT_EQ(new, secs);
->  }
->  
-> -TEST_F(rtc, alarm_alm_set_minute) {
-> +TEST_F_TIMEOUT(rtc, alarm_alm_set_minute, 65) {
->  	struct timeval tv = { .tv_sec = 62 };
->  	unsigned long data;
->  	struct rtc_time tm;
-> @@ -264,7 +264,7 @@ TEST_F(rtc, alarm_alm_set_minute) {
->  	ASSERT_EQ(new, secs);
->  }
->  
-> -TEST_F(rtc, alarm_wkalm_set_minute) {
-> +TEST_F_TIMEOUT(rtc, alarm_wkalm_set_minute, 65) {
->  	struct timeval tv = { .tv_sec = 62 };
->  	struct rtc_wkalrm alarm = { 0 };
->  	struct rtc_time tm;
-> -- 
-> 2.21.0
+> 	page_ref_dec_and_test(page);
+> 
+> ... and after your changes it will need to call ...
+> 
+> 	page_ref_sub_return(page, GUP_PIN_COUNTING_BIAS);
+> 
+> ... on a GUP page:
+> 
+> So how do you propose calling release_pages() from within put_user_pages()?  Or
+> were you thinking this would be temporary?
+
+I was thinking of it as a temporary measure, only up until, but not including the
+point where put_user_pages() becomes active. That is, the point when put_user_pages
+starts decrementing GUP_PIN_COUNTING_BIAS, instead of just forwarding to put_page().
+
+(For other readers, that's this patch:
+
+    "mm/gup: debug tracking of get_user_pages() references"
+
+...in https://github.com/johnhubbard/linux/tree/gup_dma_core )
+
+> 
+> That said, there are 2 differences I see between release_pages() and put_page()
+> 
+> 1) release_pages() will only work for a MEMORY_DEVICE_PUBLIC page and not all
+>    devmem pages...
+>    I think this is a bug, patch to follow shortly.
+> 
+> 2) release_pages() calls __ClearPageActive() while put_page() does not
+> 
+> I have no idea if the second difference is a bug or not.  But it smells of
+> one...
+> 
+> It would be nice to know if the open coding of put_page is really a performance
+> benefit or not.  It seems like an attempt to optimize the taking of the page
+> data lock.
+> 
+> Does anyone have any information about the performance advantage here?
+> 
+> Given the changes above it seems like it would be a benefit to merge the 2 call
+> paths more closely to make sure we do the right thing.
 > 
 
+Yes, it does. Maybe best to not do the temporary measure, then, while this stuff
+gets improved. I'll look at your other patch...
+
+
+thanks,
 -- 
-Kees Cook
+John Hubbard
+NVIDIA
