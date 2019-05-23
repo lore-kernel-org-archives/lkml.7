@@ -2,219 +2,183 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92EC6C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:09:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FD8AC282E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:09:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60C47217F9
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:09:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="K79gKRW/"
+	by mail.kernel.org (Postfix) with ESMTP id 06A262184B
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:09:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558638573;
+	bh=T85Jjxk0NgM73sAqGZhoIIV7gjVXYl/ORklZiPJt03s=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=RKpeFul9UJbrBSdCZ5tjYgSsLUq79vjDzNRgFUt3G+4Vfymt5LkgT0KxNdfqI3cLS
+	 OAkkORMG3av0HzgdGI/cF4M3QDYPIPmWpkZu8sw9mxacN80VhlQ3hM0MDUjhUMpuad
+	 z7oBC3qxCSpa3aFUcPz7CJ4d1x4KT55xcIweVAvY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732203AbfEWTJa (ORCPT
+        id S1732221AbfEWTJc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:09:30 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:40762 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732185AbfEWTJ3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:09:29 -0400
-Received: by mail-pg1-f196.google.com with SMTP id d30so3613929pgm.7
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 12:09:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Nu4ATjrqQqsM0pX/rCcIWFjpR3mlic29/RWxUeaEtwY=;
-        b=K79gKRW/JknosTVB0FWYG94V0xmWP66HddU2XJjlge1xRraBz7b2P3GVnw1g99kj+p
-         AH0pEr84Z9WIHP9dV4jtvVVbxNazILT46Uv1QMrsOWrZejFssLMYYuNRfz9DxuHvjCMy
-         YtCuwR8/CVmTRBK4S4KpgTB/vJqtk6pvOu9LwMJhizbQ5O/2E0Kn2vk6aP7F6GMBCpkW
-         Q2LMW7JaH1kJFzEG/3G6IXICIlQYDgqXyTfvtdXETjSKKdHqOGRGCYIWVxtO10r4aPRO
-         TpA453wrrs3FnXfY0GpiM8STOIe4DAfN7DCCo+UlIakJNiAx++bPU24jzY/bY9T+HbYr
-         KOzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Nu4ATjrqQqsM0pX/rCcIWFjpR3mlic29/RWxUeaEtwY=;
-        b=CQNy90Jlitsv41tgo4AJqxhxQhdR4+etyWChdg/iYaZJbQQwtZz2CRQ2tJ8PM44iLN
-         ZQFw4/P2OLnh40DtTDR3mPKWScAo0SQZ6QGePNS13GqyEAKUVD6eP2LPLkaWhdX1P05j
-         iloVVdJihPHpc9xeQM2pK6EgwAuDxOIk0p6H1f6xUo8fDjoH/lKwltqaan4QVqghs5PL
-         tGxGoEOI+v8WWrHjzbY0guyZIc+mD87xScdkJG9zC9Pz4gn5UV+pxuvnCN+YWJPT0bRg
-         q2i/VSXIPexJY7gEsRBsdOPDTX5xUJV3oS/lkpSwVGVTvB+n1J2P2lhYy4JdBZptE+Fu
-         jYmg==
-X-Gm-Message-State: APjAAAWzVDuDkQG/rPKRomTGus31inap8UboQiXHGeIpqAk3WY8vSWrm
-        zb7zhe6M6HWgoHa3bJgZ5irMeQ==
-X-Google-Smtp-Source: APXvYqzJVzBs96A0vZXeyNDI2SldyKqbOk+LVZ141h/UfoMVaEjbJAN4az6WNwpCYRb8DJaE+FJgNA==
-X-Received: by 2002:a63:225b:: with SMTP id t27mr13484490pgm.25.1558638568172;
-        Thu, 23 May 2019 12:09:28 -0700 (PDT)
-Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id i7sm201071pfo.19.2019.05.23.12.09.27
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 23 May 2019 12:09:27 -0700 (PDT)
-Date:   Thu, 23 May 2019 12:09:25 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Doug Anderson <dianders@chromium.org>,
-        Andy Gross <agross@kernel.org>,
-        David Brown <david.brown@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v7 2/4] soc: qcom: Add AOSS QMP driver
-Message-ID: <20190523190925.GU31438@minitux>
-References: <20190501043734.26706-1-bjorn.andersson@linaro.org>
- <20190501043734.26706-3-bjorn.andersson@linaro.org>
- <CAD=FV=VVxKSp6e=j8YM8JBrhsF+T=0=8xDjd_817hphOMWHVFA@mail.gmail.com>
- <5ce6e0cd.1c69fb81.9a03e.0260@mx.google.com>
+        Thu, 23 May 2019 15:09:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42510 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732171AbfEWTJ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:09:26 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0CD93217F9;
+        Thu, 23 May 2019 19:09:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558638565;
+        bh=T85Jjxk0NgM73sAqGZhoIIV7gjVXYl/ORklZiPJt03s=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=z/ACv82LLxrlE/6pgF3eYEa1URsiTCY7S+lMHwPF28TVrEYAiEQGXt1cw1G9A+t7R
+         bq1Q+YmNL8GabXYfMxA43S4R/Yq0+sQ8viUmugWABQAUDrl525edz+PT5V0mx9G7Yq
+         Q0M87y+BiCHDaEQOjNstEp/qpxmvNE5W2HSooV+I=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Yifeng Li <tomli@tomli.me>,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+        Teddy Wang <teddy.wang@siliconmotion.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: [PATCH 4.9 36/53] fbdev: sm712fb: use 1024x768 by default on non-MIPS, fix garbled display
+Date:   Thu, 23 May 2019 21:06:00 +0200
+Message-Id: <20190523181716.527809065@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190523181710.981455400@linuxfoundation.org>
+References: <20190523181710.981455400@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5ce6e0cd.1c69fb81.9a03e.0260@mx.google.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 23 May 11:05 PDT 2019, Stephen Boyd wrote:
+From: Yifeng Li <tomli@tomli.me>
 
-> Quoting Doug Anderson (2019-05-23 09:38:13)
-> > Hi,
-> > 
-> > On Tue, Apr 30, 2019 at 9:38 PM Bjorn Andersson
-> > <bjorn.andersson@linaro.org> wrote:
-> > 
-> > > +static int qmp_qdss_clk_add(struct qmp *qmp)
-> > > +{
-> > > +       struct clk_init_data qdss_init = {
-> > > +               .ops = &qmp_qdss_clk_ops,
-> > > +               .name = "qdss",
-> > > +       };
-> > 
-> > Can't qdss_init be "static const"?  That had the advantage of not
-> > needing to construct it on the stack and also of it having a longer
-> > lifetime.  It looks like clk_register() stores the "hw" pointer in its
-> > structure and the "hw" structure will have a pointer here.  While I
-> > can believe that it never looks at it again, it's nice if that pointer
-> > doesn't point somewhere on an old stack.
-> > 
-> > I suppose we could go the other way and try to mark more stuff in this
-> > module as __init and __initdata, but even then at least the pointer
-> > won't be onto a stack.  ;-)
-> > 
-> 
-> Const would be nice, but otherwise making it static isn't a good idea.
-> The clk_init_data structure is all copied over, although we do leave a
-> dangling pointer to it stored inside the clk_hw structure we don't use
-> it after clk registration. Maybe we should overwrite the pointer with
-> NULL once we're done in clk_register() so that clk providers can't use
-> it. It might break somebody but would at least clarify this point.
-> 
+commit 4ed7d2ccb7684510ec5f7a8f7ef534bc6a3d55b2 upstream.
 
-I had to read through the clock code to conclude that this was indeed
-the design, so I'm happy with your patch of ensuring that this is
-followed. Perhaps add a statement in the kerneldoc for struct clk_hw as
-well to state that init won't be accessed past the return of
-clk_register.
+Loongson MIPS netbooks use 1024x600 LCD panels, which is the original
+target platform of this driver, but nearly all old x86 laptops have
+1024x768. Lighting 768 panels using 600's timings would partially
+garble the display. Since it's not possible to distinguish them reliably,
+we change the default to 768, but keep 600 as-is on MIPS.
 
-> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-> index aa51756fd4d6..56997a974408 100644
-> --- a/drivers/clk/clk.c
-> +++ b/drivers/clk/clk.c
-> @@ -3438,9 +3438,9 @@ static int clk_cpy_name(const char **dst_p, const char *src, bool must_exist)
->  	return 0;
->  }
->  
-> -static int clk_core_populate_parent_map(struct clk_core *core)
-> +static int clk_core_populate_parent_map(struct clk_core *core,
-> +					const struct clk_init_data *init)
->  {
-> -	const struct clk_init_data *init = core->hw->init;
->  	u8 num_parents = init->num_parents;
->  	const char * const *parent_names = init->parent_names;
->  	const struct clk_hw **parent_hws = init->parent_hws;
-> @@ -3520,6 +3520,14 @@ __clk_register(struct device *dev, struct device_node *np, struct clk_hw *hw)
->  {
->  	int ret;
->  	struct clk_core *core;
-> +	const struct clk_init_data *init = hw->init;
-> +
-> +	/*
-> +	 * The init data is not supposed to be used outside of registration path.
-> +	 * Set it to NULL so that provider drivers can't use it either and so that
-> +	 * we catch use of hw->init early on in the core.
-> +	 */
-> +	hw->init = NULL;
->  
->  	core = kzalloc(sizeof(*core), GFP_KERNEL);
->  	if (!core) {
-> @@ -3527,17 +3535,17 @@ __clk_register(struct device *dev, struct device_node *np, struct clk_hw *hw)
->  		goto fail_out;
->  	}
->  
-> -	core->name = kstrdup_const(hw->init->name, GFP_KERNEL);
-> +	core->name = kstrdup_const(init->name, GFP_KERNEL);
->  	if (!core->name) {
->  		ret = -ENOMEM;
->  		goto fail_name;
->  	}
->  
-> -	if (WARN_ON(!hw->init->ops)) {
-> +	if (WARN_ON(!init->ops)) {
->  		ret = -EINVAL;
->  		goto fail_ops;
->  	}
-> -	core->ops = hw->init->ops;
-> +	core->ops = init->ops;
->  
->  	if (dev && pm_runtime_enabled(dev))
->  		core->rpm_enabled = true;
-> @@ -3546,13 +3554,13 @@ __clk_register(struct device *dev, struct device_node *np, struct clk_hw *hw)
->  	if (dev && dev->driver)
->  		core->owner = dev->driver->owner;
->  	core->hw = hw;
-> -	core->flags = hw->init->flags;
-> -	core->num_parents = hw->init->num_parents;
-> +	core->flags = init->flags;
-> +	core->num_parents = init->num_parents;
->  	core->min_rate = 0;
->  	core->max_rate = ULONG_MAX;
->  	hw->core = core;
->  
-> -	ret = clk_core_populate_parent_map(core);
-> +	ret = clk_core_populate_parent_map(core, init);
->  	if (ret)
->  		goto fail_parents;
->  
+Further, earlier laptops, such as IBM Thinkpad 240X, has a 800x600 LCD
+panel, this driver would probably garbled those display. As we don't
+have one for testing, the original behavior of the driver is kept as-is,
+but the problem has been documented is the comments.
 
-I've reviewed this and it looks good!
+Signed-off-by: Yifeng Li <tomli@tomli.me>
+Tested-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Cc: Teddy Wang <teddy.wang@siliconmotion.com>
+Cc: <stable@vger.kernel.org>  # v4.4+
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Regards,
-Bjorn
+---
+ drivers/video/fbdev/sm712.h   |    7 +++--
+ drivers/video/fbdev/sm712fb.c |   53 +++++++++++++++++++++++++++++++-----------
+ 2 files changed, 44 insertions(+), 16 deletions(-)
 
-> 
-> > 
-> > 
-> > > +static void qmp_pd_remove(struct qmp *qmp)
-> > > +{
-> > > +       struct genpd_onecell_data *data = &qmp->pd_data;
-> > > +       struct device *dev = qmp->dev;
-> > > +       int i;
-> > > +
-> > > +       of_genpd_del_provider(dev->of_node);
-> > > +
-> > > +       for (i = 0; i < data->num_domains; i++)
-> > > +               pm_genpd_remove(data->domains[i]);
-> > 
-> > Still feels like the above loop would be better as:
-> >   for (i = data->num_domains - 1; i >= 0; i--)
-> > 
-> 
-> Reason being to remove in reverse order? Otherwise this looks like an
-> opinion.
+--- a/drivers/video/fbdev/sm712.h
++++ b/drivers/video/fbdev/sm712.h
+@@ -15,9 +15,10 @@
+ 
+ #define FB_ACCEL_SMI_LYNX 88
+ 
+-#define SCREEN_X_RES      1024
+-#define SCREEN_Y_RES      600
+-#define SCREEN_BPP        16
++#define SCREEN_X_RES          1024
++#define SCREEN_Y_RES_PC       768
++#define SCREEN_Y_RES_NETBOOK  600
++#define SCREEN_BPP            16
+ 
+ #define dac_reg	(0x3c8)
+ #define dac_val	(0x3c9)
+--- a/drivers/video/fbdev/sm712fb.c
++++ b/drivers/video/fbdev/sm712fb.c
+@@ -1462,6 +1462,43 @@ static u_long sm7xx_vram_probe(struct sm
+ 	return 0;  /* unknown hardware */
+ }
+ 
++static void sm7xx_resolution_probe(struct smtcfb_info *sfb)
++{
++	/* get mode parameter from smtc_scr_info */
++	if (smtc_scr_info.lfb_width != 0) {
++		sfb->fb->var.xres = smtc_scr_info.lfb_width;
++		sfb->fb->var.yres = smtc_scr_info.lfb_height;
++		sfb->fb->var.bits_per_pixel = smtc_scr_info.lfb_depth;
++		goto final;
++	}
++
++	/*
++	 * No parameter, default resolution is 1024x768-16.
++	 *
++	 * FIXME: earlier laptops, such as IBM Thinkpad 240X, has a 800x600
++	 * panel, also see the comments about Thinkpad 240X above.
++	 */
++	sfb->fb->var.xres = SCREEN_X_RES;
++	sfb->fb->var.yres = SCREEN_Y_RES_PC;
++	sfb->fb->var.bits_per_pixel = SCREEN_BPP;
++
++#ifdef CONFIG_MIPS
++	/*
++	 * Loongson MIPS netbooks use 1024x600 LCD panels, which is the original
++	 * target platform of this driver, but nearly all old x86 laptops have
++	 * 1024x768. Lighting 768 panels using 600's timings would partially
++	 * garble the display, so we don't want that. But it's not possible to
++	 * distinguish them reliably.
++	 *
++	 * So we change the default to 768, but keep 600 as-is on MIPS.
++	 */
++	sfb->fb->var.yres = SCREEN_Y_RES_NETBOOK;
++#endif
++
++final:
++	big_pixel_depth(sfb->fb->var.bits_per_pixel, smtc_scr_info.lfb_depth);
++}
++
+ static int smtcfb_pci_probe(struct pci_dev *pdev,
+ 			    const struct pci_device_id *ent)
+ {
+@@ -1507,19 +1544,6 @@ static int smtcfb_pci_probe(struct pci_d
+ 
+ 	sm7xx_init_hw();
+ 
+-	/* get mode parameter from smtc_scr_info */
+-	if (smtc_scr_info.lfb_width != 0) {
+-		sfb->fb->var.xres = smtc_scr_info.lfb_width;
+-		sfb->fb->var.yres = smtc_scr_info.lfb_height;
+-		sfb->fb->var.bits_per_pixel = smtc_scr_info.lfb_depth;
+-	} else {
+-		/* default resolution 1024x600 16bit mode */
+-		sfb->fb->var.xres = SCREEN_X_RES;
+-		sfb->fb->var.yres = SCREEN_Y_RES;
+-		sfb->fb->var.bits_per_pixel = SCREEN_BPP;
+-	}
+-
+-	big_pixel_depth(sfb->fb->var.bits_per_pixel, smtc_scr_info.lfb_depth);
+ 	/* Map address and memory detection */
+ 	mmio_base = pci_resource_start(pdev, 0);
+ 	pci_read_config_byte(pdev, PCI_REVISION_ID, &sfb->chip_rev_id);
+@@ -1581,6 +1605,9 @@ static int smtcfb_pci_probe(struct pci_d
+ 		goto failed_fb;
+ 	}
+ 
++	/* probe and decide resolution */
++	sm7xx_resolution_probe(sfb);
++
+ 	/* can support 32 bpp */
+ 	if (15 == sfb->fb->var.bits_per_pixel)
+ 		sfb->fb->var.bits_per_pixel = 16;
+
+
