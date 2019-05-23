@@ -2,107 +2,185 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD6F0C04AAC
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:30:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF2C5C04AAC
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:31:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CD0820862
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:30:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C55B2133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:31:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="ab15QBgC"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dAQolkKF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726385AbfEWIaY (ORCPT
+        id S1729917AbfEWIbf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 04:30:24 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:42555 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726309AbfEWIaX (ORCPT
+        Thu, 23 May 2019 04:31:35 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:55597 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726309AbfEWIbe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 04:30:23 -0400
-Received: by mail-wr1-f66.google.com with SMTP id l2so5215569wrb.9
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 01:30:22 -0700 (PDT)
+        Thu, 23 May 2019 04:31:34 -0400
+Received: by mail-wm1-f66.google.com with SMTP id x64so4820926wmb.5
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 01:31:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
+        d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=CWRQ0EYJjfxMbJnmKcTI7ZG0fOWBb9XCDQzcnCHm0dk=;
-        b=ab15QBgCx0Q1cdYfe/azNEfujud37wvKO/QjSgnTFVRKW8FQCv4j3HFI6ob+hKLDsu
-         dKiIHDHhQBPT/N3J44Eesz9o9jfESxiznCGA4rzGg1FQX7UTouFMJ7Ca45N/QCYCAfMc
-         ImnuUxTy+ZuY6lXykGMoA9Zi0XYGG7QCApeh0=
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=wCfGcDm9Z73CKKAlzNjn/GW2GoLJ80Qj1IJGooCZbwc=;
+        b=dAQolkKF1Ws5EuNRmBB6wU8UztDOWTmF866CRJ+UaGiat5fz1y5Iardnrpx9/uhAFw
+         7m34qBAxSI5J9uhJ9yii+KJOm6rVClsyl2T0PSFceIOCjL7RDujE+/bvKNQ+Xs0BiLSB
+         zaTiP75q+Djc+JqmG2wJmxOBmwIjC41wmedoxkMLrG3AwGXA38v/k+/SdSCOk5jYSKVL
+         z2OolKa2BsQ9XWftkYrKYF9C6SOAr+fYdjQwvA4fuROOOmY4wMefFjSkYlFghvejgnMW
+         nFcbr/2pttOTEP+A0h8GOscpKy9+vMrttelqud8XvvIrie1hOpwoJBwFD5/JWYTSLHFG
+         9T2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=CWRQ0EYJjfxMbJnmKcTI7ZG0fOWBb9XCDQzcnCHm0dk=;
-        b=OApNbJq96spPFCOV7U/BL5gJX07uJzloyCT+CyAcHdIkOXr0uQ1tiohyy01fngsjA+
-         WWLj17fL692+EA5ELRFUvryAWgMtMqc78ZrilW8Ed0/Xbmqaxu9ryPOUsC/HEdU+vD68
-         ypYbF0xrpjN9k8R9V2sHodbwPg8D69gjHbigF7yg7yt3yIWiLnyNuT3GDXXUSIT0TuJP
-         X8sKuqbqZwIdlOwchxR2HDdKErjlNOLare6DaZBVyJlif1SaJHUZVi/QluT/U1FIBaYC
-         Y3A4cmdIL5gUGuoTg80A2l2F39nXTsu9xNPX2PC6yhfai56y18AQqyZEJvoGbb3z8IS6
-         wP4A==
-X-Gm-Message-State: APjAAAVX6ahzAB4haNFvZrd7GqHZU8p2araJikeI5VLrztVIqG9GaYwG
-        J3UE6YGNkJuxwbkFMEjxdCp1QA==
-X-Google-Smtp-Source: APXvYqwek6Tl0tiKwDs0xQJs11UWCKfT0GBtpbpuH2Rtwvb8IKmaXLyamsDRFPj5dEubkjO1mx22Qw==
-X-Received: by 2002:adf:f7d1:: with SMTP id a17mr110557wrq.64.1558600222084;
-        Thu, 23 May 2019 01:30:22 -0700 (PDT)
-Received: from andrea (86.100.broadband17.iol.cz. [109.80.100.86])
-        by smtp.gmail.com with ESMTPSA id m10sm9287874wmf.40.2019.05.23.01.30.20
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 23 May 2019 01:30:21 -0700 (PDT)
-Date:   Thu, 23 May 2019 10:30:13 +0200
-From:   Andrea Parri <andrea.parri@amarulasolutions.com>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org,
-        will.deacon@arm.com, aou@eecs.berkeley.edu, arnd@arndb.de,
-        bp@alien8.de, catalin.marinas@arm.com, davem@davemloft.net,
-        fenghua.yu@intel.com, heiko.carstens@de.ibm.com,
-        herbert@gondor.apana.org.au, ink@jurassic.park.msu.ru,
-        jhogan@kernel.org, linux@armlinux.org.uk, mattst88@gmail.com,
-        mingo@kernel.org, mpe@ellerman.id.au, palmer@sifive.com,
-        paul.burton@mips.com, paulus@samba.org, ralf@linux-mips.org,
-        rth@twiddle.net, stable@vger.kernel.org, tglx@linutronix.de,
-        tony.luck@intel.com, vgupta@synopsys.com
-Subject: Re: [PATCH 00/18] locking/atomic: atomic64 type cleanup
-Message-ID: <20190523083013.GA4616@andrea>
-References: <20190522132250.26499-1-mark.rutland@arm.com>
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=wCfGcDm9Z73CKKAlzNjn/GW2GoLJ80Qj1IJGooCZbwc=;
+        b=KXwpaW6OQ2/CtV8x7DX7gsoOx45/C231LItYmsj5vAUTu8c4XusaDoHPYT4UZUoyRL
+         RNUe4aICvACzMXTxLLYsVaoxVM8yAwgbVHQcY2klxtA5Ws94c5/hOSe4MJvRjuBxjbyA
+         m+HghibTll23IcC1y8Zzp1Kn6+QksU+Hno/mxUt8eUksI8pNvKPsizwlUMKl8Mdh8n5r
+         3L7BmzFHVJdSvt+pZGjU2aURixWzOoTTLr2V/Cc3gLRbur6kjmGT1sVTan9nQxkqNvMs
+         ZGdvOui2nZMHO1Q+LU1bfSGQlnNvizejHoCdJ7MtxrFpyXw3e0LpCLvlgKQSQdFSbNLq
+         40ng==
+X-Gm-Message-State: APjAAAV3ZpwjGj+5jpWjkhmdYrhuK6/0atqTkn9x6aAMy1c626Y3I4HJ
+        ekaX0Rsr0ZgXAuUrzecmW35m6w==
+X-Google-Smtp-Source: APXvYqxLDV8L3XA83uIj2nyC1xgdtL6GxOA8voLcuQbIB1G6V0X5Ev6oUdduL+EdBaOTbbXECwTqTw==
+X-Received: by 2002:a1c:9eca:: with SMTP id h193mr10459372wme.125.1558600291851;
+        Thu, 23 May 2019 01:31:31 -0700 (PDT)
+Received: from dell ([2.27.167.43])
+        by smtp.gmail.com with ESMTPSA id 91sm41718572wrs.43.2019.05.23.01.31.30
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 23 May 2019 01:31:31 -0700 (PDT)
+Date:   Thu, 23 May 2019 09:31:29 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
+        lgirdwood@gmail.com, broonie@kernel.org
+Subject: Re: [GIT PULL] Immutable branch between LEDs, MFD and REGULATOR
+Message-ID: <20190523083129.GH4574@dell>
+References: <20190521203038.31946-1-jacek.anaszewski@gmail.com>
+ <20190522054256.GA4574@dell>
+ <3492171a-bcdc-bee2-684c-e1029653a811@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190522132250.26499-1-mark.rutland@arm.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3492171a-bcdc-bee2-684c-e1029653a811@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mark,
+On Wed, 22 May 2019, Jacek Anaszewski wrote:
 
-On Wed, May 22, 2019 at 02:22:32PM +0100, Mark Rutland wrote:
-> Currently architectures return inconsistent types for atomic64 ops. Some return
-> long (e..g. powerpc), some return long long (e.g. arc), and some return s64
-> (e.g. x86).
+> On 5/22/19 7:42 AM, Lee Jones wrote:
+> > On Tue, 21 May 2019, Jacek Anaszewski wrote:
+> > 
+> > > The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
+> > > 
+> > >    Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
+> > > 
+> > > are available in the git repository at:
+> > > 
+> > >    git://git.kernel.org/pub/scm/linux/kernel/git/j.anaszewski/linux-leds.git tags/ti-lmu-led-drivers
+> > > 
+> > > for you to fetch changes up to 13f5750a60b923d8f3f0e23902f2ece46dd733d7:
+> > > 
+> > >    leds: lm36274: Introduce the TI LM36274 LED driver (2019-05-21 20:34:19 +0200)
+> > > 
+> > > ----------------------------------------------------------------
+> > > TI LMU LED support rework and introduction of two new drivers
+> > > with DT bindings:
+> > > 
+> > > - leds-lm3697 (entails additions to lm363x-regulator.c)
+> > > - leds-lm36274
+> > > ----------------------------------------------------------------
+> > > Dan Murphy (12):
+> > 
+> > >        dt-bindings: mfd: LMU: Add the ramp up/down property
+> > >        dt-bindings: mfd: LMU: Add ti,brightness-resolution
+> > >        mfd: ti-lmu: Remove support for LM3697
+> > >        mfd: ti-lmu: Add LM36274 support to the ti-lmu
+> > 
+> > These patches were Acked "for my own reference", which means I'd
+> > at least expect a discussion on how/where they would be applied.
+> > 
+> > It's fine for them to go in via the LED tree in this instance and I do
+> > thank you for sending a PR.  Next time can we at least agree on the
+> > route-in though please?
+> 
+> Usually ack from the colliding subsystem maintainer means he
+> acknowledges the patch and gives silent approval for merging
+> it via the other tree.
 
-(only partially related, but probably worth asking:)
+Usually the type of Ack you mention takes this form:
 
-While reading the series, I realized that the following expression:
+  Acked-by: Lee Jones <lee.jones@linaro.org>
 
-	atomic64_t v;
-        ...
-	typeof(v.counter) my_val = atomic64_set(&v, VAL);
+However, the one I provided looks like this:
 
-is a valid expression on some architectures (in part., on architectures
-which #define atomic64_set() to WRITE_ONCE()) but is invalid on others.
-(This is due to the fact that WRITE_ONCE() can be used as an rvalue in
-the above assignment; TBH, I ignore the reasons for having such rvalue?)
+  For my own reference:
+    Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
 
-IIUC, similar considerations hold for atomic_set().
+Which clearly says "for my own reference" and not to be taken as an
+indication that it's okay for the patch(es) to go in via another
+tree.
 
-The question is whether this is a known/"expected" inconsistency in the
-implementation of atomic64_set() or if this would also need to be fixed
-/addressed (say in a different patchset)?
+> This is the usual workflow e.g. in case of massive reworks
+> of commonly shared kernel APIs.
+> 
+> Your Acked-for-MFD-by tag is not documented anywhere and I've just
+> found out about its exact meaning :-) Note also that it percolated
+> to the mainline git history probably because people mistakenly assumed
+> it was some new convention (despite that checkpatch.pl complains about
+> it). So far there are 12 occurrences thereof in git. I must admit that
+> I once unduly made my contribution to that mess.
 
-Thanks,
-  Andrea
+Being MFD maintainer presents an uncommon and awkward scenario.  MFD
+is special in that it means we have to work more cross-subsystem than
+most (any?).  The default for MFD related patch-sets which traverse
+multiple subsystem is for them to go in via MFD with Acks from all the
+other maintainers.  I'm always happy to discuss different merge
+strategies, but using the MFD repo is the norm.
+
+The Acked-*-by you see above came as a result of a conversation
+between myself and Maintainers I work with the most.  It was seen as
+the most succinct way of saying that the patch has been reviewed,
+whilst providing the least amount of confusion w.r.t. whether it's
+okay to be applied to another tree or not.  The "for my own reference"
+should be clear enough that I provide that tag for my own purposes,
+rather than an okay for others to merge it.
+
+> Of course, now being taught about the exact meaning of the tag,
+> I will proceed accordingly.
+
+I'd appreciate that, thank you.
+
+> Regarding this one - please hold on for a while with pulling
+> the stuff, since we may have some updates from REGULATOR maintainers
+> (hopefully Acked-by).
+
+I haven't pulled this yet, but please bear in mind ...
+
+Once an immutable branch is created, it should never, ever change.  I
+think this is the second pull-request I've had from you [0] and the
+second one you've wanted to retract.  That should not happen!
+
+This is precisely why I usually find it better for patches to go in
+via the MFD tree.
+
+[0] [GIT PULL] LM3532 backlight support improvements and relocation
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
