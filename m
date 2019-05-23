@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43CA3C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:49:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D5FBC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:49:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1098C20851
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:49:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22FC620881
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:49:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558640960;
-	bh=tQ4EPmHa88YeE+lsAVf8RF8bcxRpc2MVqWookuBRWD0=;
+	s=default; t=1558640970;
+	bh=12OvtLJ+C7mV68x8yhIzFoFCz/QlQ+RzX5Rhw8VAU6Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZHjpeXpaWmtTiVxQQTK+UC30L3CliFkvhE+li1C3mi7u3Khsc8TJq2abWcS8oH5SX
-	 pOKSsJX11cXQMwzW48pZwW4Xk62k3yO5YBCeI7ZXQ4TdCH2EnZ8VaqyxPYG7taSYGz
-	 CG48OHYE0rUeNM1fWBh7D1qDKNqnlGGMQ3fYehE0=
+	b=SRvvCo95A4EyOW/ge7513CTz70RQF8sNUk6snFO811A3Xod9rhZszlyXprM+nQahH
+	 1Px3DL6mvhFi9RAUr+5ZFGim+WqbeOY7Ski/8ElISyTmveEmsuMiHu3eMnVPOhqiLa
+	 a5TR4szE2jDkfLaoxMoUUkKYqIr9UXZkNQA6/T/c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731873AbfEWTtT (ORCPT
+        id S1731962AbfEWTt2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:49:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44568 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:49:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44296 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388069AbfEWTLK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:11:10 -0400
+        id S2388010AbfEWTK5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:10:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C712217D9;
-        Thu, 23 May 2019 19:11:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 110AB217D9;
+        Thu, 23 May 2019 19:10:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558638669;
-        bh=tQ4EPmHa88YeE+lsAVf8RF8bcxRpc2MVqWookuBRWD0=;
+        s=default; t=1558638656;
+        bh=12OvtLJ+C7mV68x8yhIzFoFCz/QlQ+RzX5Rhw8VAU6Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QrENA8UcnVJIM6yfJF3PMxexITSAcuIwkdpnFKOwaeREa2pIPbH7rBIkDElTCs3G9
-         XGz0qzoxmQi/kgxn+50lbldLdJu4ej8Jef1vq1KDQxv17nMg3QBzpOift3FEE9qrF1
-         ANHT6kOEpV1eKXxZmmgY5ZzvjCSp4bvbf4BpPyeI=
+        b=xhnyFM1fD0e7YUvqj6k+3Yy9POlb8JjYuRk7HXRC2ELhxAs05ix7DaOcPyduBvAYx
+         WGOAHrbPJZIwAXJYZUNlZdeUvxkI/RZblSDhEY0d/9A476QCRpcoGgXiML2axu2Cpj
+         JrUxzUERVAgnZhQkq8tAwlVmxLot5UdVPq7T5ilw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stefano Garzarella <sgarzare@redhat.com>,
+        stable@vger.kernel.org, Yunjian Wang <wangyunjian@huawei.com>,
+        Tariq Toukan <tariqt@mellanox.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 07/77] vsock/virtio: free packets during the socket release
-Date:   Thu, 23 May 2019 21:05:25 +0200
-Message-Id: <20190523181721.098201875@linuxfoundation.org>
+Subject: [PATCH 4.14 02/77] net/mlx4_core: Change the error print to info print
+Date:   Thu, 23 May 2019 21:05:20 +0200
+Message-Id: <20190523181720.327324775@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181719.982121681@linuxfoundation.org>
 References: <20190523181719.982121681@linuxfoundation.org>
@@ -59,42 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefano Garzarella <sgarzare@redhat.com>
+From: Yunjian Wang <wangyunjian@huawei.com>
 
-[ Upstream commit ac03046ece2b158ebd204dfc4896fd9f39f0e6c8 ]
+[ Upstream commit 00f9fec48157f3734e52130a119846e67a12314b ]
 
-When the socket is released, we should free all packets
-queued in the per-socket list in order to avoid a memory
-leak.
+The error print within mlx4_flow_steer_promisc_add() should
+be a info print.
 
-Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+Fixes: 592e49dda812 ('net/mlx4: Implement promiscuous mode with device managed flow-steering')
+Signed-off-by: Yunjian Wang <wangyunjian@huawei.com>
+Reviewed-by: Tariq Toukan <tariqt@mellanox.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/vmw_vsock/virtio_transport_common.c |    7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/net/ethernet/mellanox/mlx4/mcg.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/vmw_vsock/virtio_transport_common.c
-+++ b/net/vmw_vsock/virtio_transport_common.c
-@@ -786,12 +786,19 @@ static bool virtio_transport_close(struc
+--- a/drivers/net/ethernet/mellanox/mlx4/mcg.c
++++ b/drivers/net/ethernet/mellanox/mlx4/mcg.c
+@@ -1490,7 +1490,7 @@ int mlx4_flow_steer_promisc_add(struct m
+ 	rule.port = port;
+ 	rule.qpn = qpn;
+ 	INIT_LIST_HEAD(&rule.list);
+-	mlx4_err(dev, "going promisc on %x\n", port);
++	mlx4_info(dev, "going promisc on %x\n", port);
  
- void virtio_transport_release(struct vsock_sock *vsk)
- {
-+	struct virtio_vsock_sock *vvs = vsk->trans;
-+	struct virtio_vsock_pkt *pkt, *tmp;
- 	struct sock *sk = &vsk->sk;
- 	bool remove_sock = true;
- 
- 	lock_sock(sk);
- 	if (sk->sk_type == SOCK_STREAM)
- 		remove_sock = virtio_transport_close(vsk);
-+
-+	list_for_each_entry_safe(pkt, tmp, &vvs->rx_queue, list) {
-+		list_del(&pkt->list);
-+		virtio_transport_free_pkt(pkt);
-+	}
- 	release_sock(sk);
- 
- 	if (remove_sock)
+ 	return  mlx4_flow_attach(dev, &rule, regid_p);
+ }
 
 
