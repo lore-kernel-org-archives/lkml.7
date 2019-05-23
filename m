@@ -2,99 +2,115 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2141C04AAC
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 03:50:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76F84C04AAC
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 03:58:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7155220673
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 03:50:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31C0721019
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 03:58:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="P6dAJzkr";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="MTQCPFe1"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KejvbuT5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729694AbfEWDuD (ORCPT
+        id S1728189AbfEWD6n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 23:50:03 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:58332 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726326AbfEWDuD (ORCPT
+        Wed, 22 May 2019 23:58:43 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:43798 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726070AbfEWD6m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 23:50:03 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 673AC607C3; Thu, 23 May 2019 03:50:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1558583402;
-        bh=Hrr/PtP34IJ2Z7aiXFVzZQp9WZiRECimfmz68C6xDyM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=P6dAJzkreK0A4OhMbsOZBw3zWV8by0C0/zoxpH9DyRE9yxfyIZzSHbeA4AyitwEyO
-         B2gpo+ZVxRcQWOXH9Bx7O45aKdfRs27gHgYfvv1W/sX3aeIHHFJb/cFLgbLIjd4tMg
-         R8jW6nRGZqAAvKeegm69tbKB2Jf1JCxZShkhHmEY=
-Received: from codeaurora.org (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: stummala@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0EF566025A;
-        Thu, 23 May 2019 03:49:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1558583401;
-        bh=Hrr/PtP34IJ2Z7aiXFVzZQp9WZiRECimfmz68C6xDyM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MTQCPFe1tKOYi39hkVr4OJ6GVlKGOWoH04qTUR+MgZW5iYuM5YKe1R/2RFEhLTJO6
-         tBmsbE5GuwbMXKeslIixBz2WnpLv08eoBG9bDrjGcsgdULGMeQyxz1gODc14INZFUr
-         RLb+s3PsrCuMpW8mzNMwSWutfYIGUBprV4b9pjuc=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0EF566025A
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=stummala@codeaurora.org
-Date:   Thu, 23 May 2019 09:19:56 +0530
-From:   Sahitya Tummala <stummala@codeaurora.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Junxiao Bi <junxiao.bi@oracle.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] configfs: Fix use-after-free when accessing
- sd->s_dentry
-Message-ID: <20190523034956.GA10043@codeaurora.org>
-References: <1546514295-24818-1-git-send-email-stummala@codeaurora.org>
- <20190131032011.GC7308@codeaurora.org>
- <0081e5c8083f5ed9f1c1e9b456739728@codeaurora.org>
- <20190517082312.GA13457@lst.de>
+        Wed, 22 May 2019 23:58:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:Date:Message-ID:Subject:From:Cc:To:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=texO5kjCiEyRmA9j8g6TTKwQQkF5isv3f023B/uvzhs=; b=KejvbuT5ypOOy1kGXQohTsyf7
+        FNfeMpU0pDrgoKMZww1WiKg/xa5W1ZRCiJZgImZ1b4SYOqY2sW4hAXtTHfZIFJC9FJG7vVsUz3pUc
+        kY4Xq6DKYVHO/oaaMv0B2c15hoNaVgzYC5BUkQwVoP6UPSYsjO3CPiTKVsIoAz5MoPESZ91Kg1Vni
+        a/uou4gXI6+Jx8uSLJyLYobPvknnVxdUPaHCD06JyiD7/EgpZvvS8BjXuibJzy6tnKYidtxGzSKs6
+        v71HEPit5etVQrMYejPK1woKwOV7M9WXvskhQa15vVfNMEtSglArMQYGGVA2gmsL1t0dFR/varD/s
+        KorAFxyHg==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=dragon.dunlab)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hTesJ-00057R-Ai; Thu, 23 May 2019 03:58:39 +0000
+To:     LKML <linux-kernel@vger.kernel.org>,
+        moderated for non-subscribers <alsa-devel@alsa-project.org>
+Cc:     kbuild test robot <lkp@intel.com>, Mark Brown <broonie@kernel.org>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Jie Yang <yang.jie@linux.intel.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH] ASoc: fix sound/soc/intel/skylake/slk-ssp-clk.c build error
+ on IA64
+Message-ID: <9019c87f-cf1a-b59f-d87e-8169b247cf88@infradead.org>
+Date:   Wed, 22 May 2019 20:58:35 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190517082312.GA13457@lst.de>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 17, 2019 at 10:23:12AM +0200, Christoph Hellwig wrote:
-> On Thu, May 16, 2019 at 06:27:53PM +0530, stummala@codeaurora.org wrote:
-> > Hi Christoph, Al,
-> >
-> > Can you please consider this patch for merging?
-> 
-> I've been sitting on this for a while, mostly because I can't convince
-> myself it is safe.  What protects other threads from using ->s_dentry
-> just when we clear it?  Also why would sd->s_dentry == dentry ever be
-> false?
+From: Randy Dunlap <rdunlap@infradead.org>
 
-Thanks Christoph for getting back on this.
-I will try to find answers to your queries and get back on this.
+skl-ssp-clk.c does not build on IA64 because the driver
+uses the common clock interface, so make the driver depend
+on COMMON_CLK.
 
-Besides, Al Viro reviewed this patch [1] and commented that fix looks
-good. Hence, I was following up to get this merged as I thought it
-must be a miss to not pick it up :)
+Fixes this build error:
+../sound/soc/intel/skylake/skl-ssp-clk.c:26:16: error: field 'hw' has incomplete type
+  struct clk_hw hw;
+                ^~
 
-[1] - https://lkml.org/lkml/2019/1/3/47
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc: Liam Girdwood <liam.r.girdwood@linux.intel.com>
+Cc: Jie Yang <yang.jie@linux.intel.com>
+Cc: alsa-devel@alsa-project.org
+---
+ sound/soc/intel/Kconfig        |    3 ++-
+ sound/soc/intel/boards/Kconfig |    2 +-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
-Thanks,
-Sahitya.
+--- lnx-52-rc1.orig/sound/soc/intel/Kconfig
++++ lnx-52-rc1/sound/soc/intel/Kconfig
+@@ -104,7 +104,7 @@ config SND_SST_ATOM_HIFI2_PLATFORM_ACPI
+ config SND_SOC_INTEL_SKYLAKE
+ 	tristate "All Skylake/SST Platforms"
+ 	depends on PCI && ACPI
+-	select SND_SOC_INTEL_SKL
++	select SND_SOC_INTEL_SKL if COMMON_CLK
+ 	select SND_SOC_INTEL_APL
+ 	select SND_SOC_INTEL_KBL
+ 	select SND_SOC_INTEL_GLK
+@@ -120,6 +120,7 @@ config SND_SOC_INTEL_SKYLAKE
+ config SND_SOC_INTEL_SKL
+ 	tristate "Skylake Platforms"
+ 	depends on PCI && ACPI
++	depends on COMMON_CLK
+ 	select SND_SOC_INTEL_SKYLAKE_FAMILY
+ 	help
+ 	  If you have a Intel Skylake platform with the DSP enabled
+--- lnx-52-rc1.orig/sound/soc/intel/boards/Kconfig
++++ lnx-52-rc1/sound/soc/intel/boards/Kconfig
+@@ -286,7 +286,7 @@ config SND_SOC_INTEL_KBL_RT5663_MAX98927
+ 	select SND_SOC_MAX98927
+ 	select SND_SOC_DMIC
+ 	select SND_SOC_HDAC_HDMI
+-	select SND_SOC_INTEL_SKYLAKE_SSP_CLK
++	select SND_SOC_INTEL_SKYLAKE_SSP_CLK if COMMON_CLK
+ 	help
+ 	  This adds support for ASoC Onboard Codec I2S machine driver. This will
+ 	  create an alsa sound card for RT5663 + MAX98927.
 
--- 
---
-Sent by a consultant of the Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
+
