@@ -2,557 +2,292 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBE06C282E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 16:31:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 990E1C282DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 16:34:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FC9621019
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 16:31:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C87920879
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 16:34:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="KCpAxLB2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731361AbfEWQb4 (ORCPT
+        id S1731219AbfEWQeB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 12:31:56 -0400
-Received: from foss.arm.com ([217.140.101.70]:50454 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730904AbfEWQbz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 12:31:55 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A4D41341;
-        Thu, 23 May 2019 09:31:54 -0700 (PDT)
-Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D470D3F5AF;
-        Thu, 23 May 2019 09:31:52 -0700 (PDT)
-Subject: Re: [PATCH v3 2/2] EDAC: add EDAC driver for DMC520
-To:     Lei Wang <leiwang_git@outlook.com>
-Cc:     "bp@alien8.de" <bp@alien8.de>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "lewan@microsoft.com" <lewan@microsoft.com>,
-        Rui Zhao <ruizhao@outlook.com>,
-        Rui Zhao <ruizhao@microsoft.com>
-References: <CY1PR0401MB1244FDD9E720C9D9C1F41FEE860A0@CY1PR0401MB1244.namprd04.prod.outlook.com>
-From:   James Morse <james.morse@arm.com>
-Message-ID: <b1e360bc-2329-3f8b-3c93-65380f62d6fd@arm.com>
-Date:   Thu, 23 May 2019 17:31:51 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 23 May 2019 12:34:01 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:33943 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731106AbfEWQd6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 12:33:58 -0400
+Received: by mail-io1-f66.google.com with SMTP id g84so5397429ioa.1
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 09:33:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brauner.io; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=b6jNLZo6n/zwGOY2CD2TJ6zwx3NiHgngsWO3OTPihOg=;
+        b=KCpAxLB2PwuwzzvNPWa51VxDuKZl9mXjyeGVvtRnzY4zeyu5Q/lUTH0nK8BsPOUGMG
+         mll28J5V6S0gsmZLDYkmrDvtCXPU7QXqZHnalJxGa2kxJ4JKa+Y3A9K6i6mFiNxCHi9V
+         9ojBzKRAYSQKflPpp02KS5QCCRX1WW7N4dgWE34Jlvp6KphQ7VM+ispn6iz5AGzc+uB8
+         xEedOEHm4ZcjcwD+vNa8JTBqzSey+DEYig3N7jkXxPZ6jP8b5YfZUd4UEKVyG/k0TvEr
+         a0DrTouL+vnHvuGSy+Z2wdD1hDBNfx3j9OZIpyQLKEHxHddaVqvpMQIAxvISg1PLU/Bm
+         zvVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=b6jNLZo6n/zwGOY2CD2TJ6zwx3NiHgngsWO3OTPihOg=;
+        b=PYoRx4VUG8LvKW6ctZdLssuuqAuXwehLKz4i34ggs33z4fKeg0y4HF8UkBQiUZ0FQD
+         wFgK4/1jLGVDssNuMm24D8pOe2EUYW/vRDJeVN3Nrrn1Te8HE0TgBIoZbU6yp00sM9Io
+         qLEm79Jwc8G6J/O1Bf9j5AN8bcGqUMQnmug0dOsybEoTbHqteYUozGU+w7NfusKsc+bV
+         VviM13TazxaP3s3po+B85Mgn7zWXeOIKhUoWHWX4dwGrHLHVHaMlL3d26moznd7b1nG8
+         LhZK41fniEHtskEWb/wexv5aJo/DGIUrJ5gjtwx+Lp8Cd3BmW7zNsv6VeFGg58UQA/b7
+         vhNg==
+X-Gm-Message-State: APjAAAUyDOmz7kaTqVYSPs+sKPRA7e9cCBx3KGj4vkZS4VrG3kEHdxEa
+        I2EgOInndSW+I0BmqAAgN1xMog==
+X-Google-Smtp-Source: APXvYqwp9AOuXnuV28RKSHn+C4brhY1yF92liHBKHp00UusHReN8R5yWjjHU8K3LoyoSq2voOoarxA==
+X-Received: by 2002:a6b:511a:: with SMTP id f26mr56591286iob.56.1558629237427;
+        Thu, 23 May 2019 09:33:57 -0700 (PDT)
+Received: from brauner.io ([172.56.12.187])
+        by smtp.gmail.com with ESMTPSA id d7sm4559191itd.32.2019.05.23.09.33.49
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 23 May 2019 09:33:56 -0700 (PDT)
+Date:   Thu, 23 May 2019 18:33:46 +0200
+From:   Christian Brauner <christian@brauner.io>
+To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Cc:     viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
+        torvalds@linux-foundation.org, fweimer@redhat.com,
+        jannh@google.com, oleg@redhat.com, tglx@linutronix.de,
+        arnd@arndb.de, shuah@kernel.org, dhowells@redhat.com,
+        tkjos@android.com, ldv@altlinux.org, miklos@szeredi.hu,
+        linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, linux-arch@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH v1 1/2] open: add close_range()
+Message-ID: <20190523163345.q5ynd2ytk7nxcvqf@brauner.io>
+References: <20190522155259.11174-1-christian@brauner.io>
+ <67e4458a-9cc4-d1aa-608c-73ebe9e2f7a3@yandex-team.ru>
 MIME-Version: 1.0
-In-Reply-To: <CY1PR0401MB1244FDD9E720C9D9C1F41FEE860A0@CY1PR0401MB1244.namprd04.prod.outlook.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <67e4458a-9cc4-d1aa-608c-73ebe9e2f7a3@yandex-team.ru>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lei,
-
-(CC: +Rui Zhao)
-
-On 16/05/2019 03:55, Lei Wang wrote:
-> New driver supports error detection and correction on the devices with ARM DMC-520 memory controller.
-
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 7d1246b..23894ac 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -5573,6 +5573,12 @@ F:	Documentation/driver-api/edac.rst
->  F:	drivers/edac/
->  F:	include/linux/edac.h
->  
-> +EDAC-DMC520
-> +M:	Rui Zhao <ruizhao@microsoft.com>
-> +L:	linux-edac@vger.kernel.org
-> +S:	Supported
-> +F:	drivers/edac/dmc520_edac.c
-
-Hmm, you're listing someone else as maintainer of this driver.
-I think we'd need to see an Ack from Rui Zhao...
-
-This patch was previously posted by Rui Zhao, this version has your changes and you as
-author. (But how you arrange the attribution is up to the two of you...)
-
-
-> diff --git a/drivers/edac/dmc520_edac.c b/drivers/edac/dmc520_edac.c
-> new file mode 100644
-> index 0000000..c81bfcc
-> --- /dev/null
-> +++ b/drivers/edac/dmc520_edac.c
-
-> +static irqreturn_t dmc520_edac_dram_all_isr(int irq, void *data, u32 interrupt_mask);
-> +
-> +#define DECLARE_ISR(index) \
-> +static irqreturn_t dmc520_isr_##index (int irq, void *data) \
-> +{ \
-> +	struct mem_ctl_info *mci; \
-> +	struct dmc520_edac *edac; \
-> +	mci = data; \
-> +	edac = mci->pvt_info; \
-> +	return dmc520_edac_dram_all_isr(irq, data, edac->interrupt_masks[index]); \
-> +}
-> +
-> +DECLARE_ISR(0)
-> +DECLARE_ISR(1)
-
-(Generating functions like this makes them hard to find when they appear in a backtrace)
-
-
-> +/* More DECLARE_ISR(index) can be added to support more interrupt lines. */
-> +
-> +irq_handler_t dmc520_isr_array[] = {
-> +	dmc520_isr_0,
-> +	dmc520_isr_1
-> +	/* More dmc520_isr_index can be added to support more interrupt lines. */
-> +};
-
-(I'd prefer it if this allocated memory for a 'struct edac_dmc520_interrupt' that held the
-interrupt_mask and mci pointer. This would be runtime-allocation of memory, instead of
-compile-time generation of these templates... But its just a matter of taste, and this works.)
-
-
-> +static u32 dmc520_get_dram_ecc_error_count(struct dmc520_edac *edac,
-> +					   bool is_ce)
-> +{
-> +	u32 reg_offset_low, reg_offset_high;
-> +	u32 err_low, err_high;
-> +	u32 ce_count;
-> +
-> +	reg_offset_low = is_ce ? REG_OFFSET_ECC_ERRC_COUNT_31_00 :
-> +				 REG_OFFSET_ECC_ERRD_COUNT_31_00;
-> +	reg_offset_high = is_ce ? REG_OFFSET_ECC_ERRC_COUNT_63_32 :
-> +				  REG_OFFSET_ECC_ERRD_COUNT_63_32;
-> +
-> +	err_low = dmc520_read_reg(edac, reg_offset_low);
-> +	err_high = dmc520_read_reg(edac, reg_offset_high);
-> +	/* Reset error counters */
-> +	dmc520_write_reg(edac, 0, reg_offset_low);
-> +	dmc520_write_reg(edac, 0, reg_offset_high);
-> +
-> +	ce_count = dmc520_calc_dram_ecc_error(err_low) +
-> +		   dmc520_calc_dram_ecc_error(err_high);
-
-(Nit: its a little odd to call this 'ce_count' when !is_ce)
-
-
-> +
-> +	return ce_count;
-> +}
-> +
-> +static bool dmc520_get_dram_ecc_error_info(struct dmc520_edac *edac,
-> +					   bool is_ce,
-> +					   struct ecc_error_info *info)
-> +{
-> +	u32 reg_offset_low, reg_offset_high;
-> +	u32 reg_val_low, reg_val_high;
-> +	bool valid;
-> +
-> +	reg_offset_low = is_ce ? REG_OFFSET_DRAM_ECC_ERRC_INT_INFO_31_00 :
-> +				 REG_OFFSET_DRAM_ECC_ERRD_INT_INFO_31_00;
-> +	reg_offset_high = is_ce ? REG_OFFSET_DRAM_ECC_ERRC_INT_INFO_63_32 :
-> +				  REG_OFFSET_DRAM_ECC_ERRD_INT_INFO_63_32;
-> +
-> +	reg_val_low = dmc520_read_reg(edac, reg_offset_low);
-> +	reg_val_high = dmc520_read_reg(edac, reg_offset_high);
-> +
-> +	valid = (FIELD_GET(REG_FIELD_ERR_INFO_LOW_VALID, reg_val_low) != 0) &&
-> +		(FIELD_GET(REG_FIELD_ERR_INFO_HIGH_VALID, reg_val_high) != 0);
-> +
-> +	if (info) {
-
-This has one caller, which passes info as &info. You don't need to test for NULL here.
-
-
-> +		if (valid) {
-> +			info->col = FIELD_GET(REG_FIELD_ERR_INFO_LOW_COL,
-> +					      reg_val_low);
-> +			info->row = FIELD_GET(REG_FIELD_ERR_INFO_LOW_ROW,
-> +					      reg_val_low);
-> +			info->rank = FIELD_GET(REG_FIELD_ERR_INFO_LOW_RANK,
-> +					       reg_val_low);
-> +			info->bank = FIELD_GET(REG_FIELD_ERR_INFO_HIGH_BANK,
-> +					       reg_val_high);
-> +		} else {
-> +			memset(info, 0, sizeof(struct ecc_error_info));
-> +		}
-> +	}
-> +
-> +	return valid;
-
-
-> +static bool dmc520_is_scrub_configured(struct dmc520_edac *edac)
-> +{
-> +	int chan;
-> +	u32 scrub_control_offsets[] = {
-> +		REG_OFFSET_SCRUB_CONTROL0_NOW,
-> +		REG_OFFSET_SCRUB_CONTROL1_NOW,
-> +		REG_OFFSET_SCRUB_CONTROL2_NOW,
-> +		REG_OFFSET_SCRUB_CONTROL3_NOW,
-> +		REG_OFFSET_SCRUB_CONTROL4_NOW,
-> +		REG_OFFSET_SCRUB_CONTROL5_NOW,
-> +		REG_OFFSET_SCRUB_CONTROL6_NOW,
-> +		REG_OFFSET_SCRUB_CONTROL7_NOW
-> +	};
-> +
-> +	for (chan = 0; chan < ARRAY_SIZE(scrub_control_offsets); chan++) {
-> +		u32 val = dmc520_read_reg(edac, scrub_control_offsets[chan]);
-> +		if ((val & SCRUB_CONTROL_MASK) != 0)
-
-| #define SCRUB_CONTROL_MASK			GENMASK(12, 0)
-
-So if any of the bottom twelve bits in this register are set, scrubbing is enabled?
-
-3.3.245 scrub_control0_now of [0] has reserved/unused bits in there, they could be
-set/clear based on something else...
-
-Can we use the mask to test the trigger0_now field, as that looks most likely:
-I think 'err_detect' and 'idle' are the two modes we know will work. 'activate' and 'none'
-(cough: irq), would require something else in the system to be triggering the scrub...
-
-
-> +			return true;
-> +	}
-> +
-> +	return false;
-> +}
-
-
-> +static u64 dmc520_get_rank_size(struct dmc520_edac *edac)
-> +{
-> +	u32 reg_val, col_bits, row_bits, bank_bits;
-> +
-> +	reg_val = dmc520_read_reg(edac, REG_OFFSET_ADDRESS_CONTROL_NOW);
-> +
-> +	col_bits = FIELD_GET(REG_FIELD_ADDRESS_CONTROL_COL, reg_val) +
-> +		   DRAM_ADDRESS_CONTROL_MIN_COL_BITS;
-> +	row_bits = FIELD_GET(REG_FIELD_ADDRESS_CONTROL_ROW, reg_val) +
-> +		   DRAM_ADDRESS_CONTROL_MIN_ROW_BITS;
-> +	bank_bits = FIELD_GET(REG_FIELD_ADDRESS_CONTROL_BANK, reg_val);
-> +
-> +	return (u64)DMC520_BUS_WIDTH << (col_bits + row_bits + bank_bits);
-> +}
-
-Should the device_width returned by dmc520_get_dtype() be relevant here?
-(has it been hardcoded as DMC520_BUS_WIDTH for your platform?)
-
-
-> +static void dmc520_handle_dram_ecc_errors(struct mem_ctl_info *mci,
-> +					  bool is_ce)
-> +{
-> +	struct ecc_error_info info;
-> +	struct dmc520_edac *edac;
-> +	u32 cnt;
-> +	char message[EDAC_MSG_BUF_SIZE];
-> +
-> +	edac = mci->pvt_info;
-> +	dmc520_get_dram_ecc_error_info(edac, is_ce, &info);
-> +
-> +	cnt = dmc520_get_dram_ecc_error_count(edac, is_ce);
-> +
-> +	if (cnt > 0) {
-> +		snprintf(message, ARRAY_SIZE(message),
-> +			 "rank:%d bank:%d row:%d col:%d",
-> +			 info.rank, info.bank,
-> +			 info.row, info.col);
-> +
-> +		edac_mc_handle_error((is_ce ? HW_EVENT_ERR_CORRECTED :
-> +				     HW_EVENT_ERR_UNCORRECTED),
-> +				     mci, cnt, 0, 0, 0, info.rank, -1, -1,
-> +				     message, "");
-
-Because you have multiple interrupts, you can be calling edac_mc_handle_error() in
-parallel on different CPUs, for the same mci.
-
-edac_mc_handle_error() packs all these arguments into mci->error_desc, so two CPUs will
-stomp over each other's values.
-
-Please add a spinlock in 'struct dmc520_edac' to prevent this.
-
-
-> +	}
-> +}
-> +
-> +static irqreturn_t dmc520_edac_dram_ecc_isr(int irq, void *data, bool is_ce)
-> +{
-> +	u32 i_mask, status;
-> +	struct mem_ctl_info *mci;
-> +	struct dmc520_edac *edac;
-> +
-> +	mci = data;
-> +	edac = mci->pvt_info;
-> +
-
-> +	i_mask = is_ce ? DRAM_ECC_INT_CE_MASK : DRAM_ECC_INT_UE_MASK;
-
-> +	status = dmc520_read_reg(edac, REG_OFFSET_INTERRUPT_STATUS);
-
-What do you need this for? The caller just read status.
-Leftover code from v2?
-
-
-> +	dmc520_handle_dram_ecc_errors(mci, is_ce);
-> +
-> +	dmc520_write_reg(edac, i_mask, REG_OFFSET_INTERRUPT_CLR);
-> +
-> +	return IRQ_HANDLED;
-> +}
-
-
-> +static irqreturn_t dmc520_edac_dram_ce_isr(int irq, void *data)
-> +{
-> +	return dmc520_edac_dram_ecc_isr(irq, data, true);
-> +}
-> +
-> +static irqreturn_t dmc520_edac_dram_ue_isr(int irq, void *data)
-> +{
-> +	return dmc520_edac_dram_ecc_isr(irq, data, false);
-> +}
-
-Nit: These two one-liners each only have one caller, are they really needed?
-(If you're doing this for readability you could create an enum for UE/CE to name the
-true/false values passed to dmc520_edac_dram_ecc_isr()).
-
-
-> +static int dmc520_edac_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev;
-> +	struct dmc520_edac *edac;
-> +	struct mem_ctl_info *mci;
-> +	struct edac_mc_layer layers[1];
-> +	int ret, irq, nintr;
-> +	struct resource *res;
-> +	void __iomem *reg_base;
-> +	u32 interrupt_masks[DMC520_MAX_INTERRUPT_LINES] = {0};
-> +	u32 interrupt_mask_all = 0;
-> +
-> +	/* Parsing the device node */
-> +	dev = &pdev->dev;
-> +	if (!dev->of_node) {
-> +		edac_printk(KERN_ERR, EDAC_MOD_NAME,
-> +			"Invalid device node in device tree.\n");
-> +		return -EINVAL;
-> +	}
-
-Can this happen? Surely the node must exist if we matched a compatible.
-
-
-> +	nintr = of_property_count_u32_elems(dev->of_node, "interrupt-config");
-> +	if (nintr <= 0) {
-> +		edac_printk(KERN_ERR, EDAC_MOD_NAME,
-> +			"Invalid device node configuration: at least one interrupt line & config is expected.\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	edac_printk(KERN_INFO, EDAC_MOD_NAME,
-> +		"Interrupt lines: %d.\n",
-> +		nintr);
-
-Leftover debug? I think drivers should stay quiet until something goes wrong.
-
-
-> +	ret = of_property_read_u32_array(dev->of_node,
-> +									 "interrupt-config",
-> +									 interrupt_masks,
-> +									 nintr);
-
-What happened to the whitespace here?
-
-Wasn't the point of calculating the size of nintr first so that you could check it would
-fit in interrupt_masks? If its greater than DMC520_MAX_INTERRUPT_LINES, you overflow here
-because you told of_property_read_u32_array() there is enough space.
-
-If you juggled the order, you could probably read it into edac->interrupt_masks directly
-once its allocated.
-
-
-> +	if (ret) {
-> +		edac_printk(KERN_ERR, EDAC_MOD_NAME,
-> +			"Failed to get interrupt-config arrays.\n");
-> +		return ret;
-> +	}
-> +
-> +	/* Initialize dmc520 edac */
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	reg_base = devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(reg_base))
-> +		return PTR_ERR(reg_base);
-> +
-> +	layers[0].type = EDAC_MC_LAYER_CHIP_SELECT;
-> +	layers[0].size = dmc520_get_rank_count(reg_base);
-> +	layers[0].is_virt_csrow = true;
-> +
-> +	mci = edac_mc_alloc(dmc520_mc_idx++, ARRAY_SIZE(layers), layers,
-> +			    sizeof(struct dmc520_edac) + sizeof(u32) * nintr);
-> +	if (!mci) {
-> +		edac_printk(KERN_ERR, EDAC_MOD_NAME,
-> +			    "Failed to allocate memory for mc instance\n");
-> +		return -ENOMEM;
-> +	}
-> +
-> +	edac = mci->pvt_info;
-> +	edac->reg_base = reg_base;
-> +	memcpy(edac->interrupt_masks, interrupt_masks, sizeof(u32) * nintr);
-
-
-> +	if (!dmc520_is_ecc_enabled(edac)) {
-> +		edac_printk(KERN_ERR, EDAC_MOD_NAME, "ECC not enabled\n");
-
-(Do we need to print this? Its going to be perfectly normal on some platforms.)
-
-
-> +		ret = -ENXIO;
-> +		goto err_free_mc;
-> +	}
-
-(If dmc520_is_ecc_enabled() took reg_base like dmc520_get_rank_count() does, you could
-avoid the edac_mc_alloc()/edac_mc_free() if this driver isn't needed).
-
-
-> +	platform_set_drvdata(pdev, mci);
-> +
-> +	mci->pdev = dev;
-> +	mci->mtype_cap = MEM_FLAG_DDR3 | MEM_FLAG_DDR4;
-> +	mci->edac_ctl_cap = EDAC_FLAG_NONE | EDAC_FLAG_SECDED;
-> +	mci->edac_cap = EDAC_FLAG_SECDED;
-> +	mci->scrub_cap = SCRUB_FLAG_HW_SRC;
-> +	mci->scrub_mode = dmc520_is_scrub_configured(edac) ?
-> +			  SCRUB_HW_SRC : SCRUB_NONE;
-> +	mci->ctl_name = EDAC_CTL_NAME;
-> +	mci->dev_name = dev_name(mci->pdev);
-> +	mci->mod_name = EDAC_MOD_NAME;
-> +	mci->ctl_page_to_phys = NULL;
-> +
-> +	edac_op_state = EDAC_OPSTATE_INT;
-> +
-> +	dmc520_init_csrow(mci);
-> +
-> +	ret = edac_mc_add_mc(mci);
-> +	if (ret) {
-> +		edac_printk(KERN_ERR, EDAC_MOD_NAME,
-> +			"Failed to register with EDAC core\n");
-> +		goto err_free_mc;
-> +	}
-> +
-> +	/* Clear interrupts */
-> +	dmc520_write_reg(edac, 0, REG_OFFSET_INTERRUPT_CONTROL);
-
-Could we read-modify-write this, for the interrupts we know about.
-If there is an enabled 'temperature_event_int' we weren't told about, we just disabled it.
-
-You could generate 'interrupt_mask_all' for the interrupts we're taking ownership of
-earlier and use that here.
-
-(admittedly this would be the platforms problem for giving linux access to this in the
-first place!)
-
-
-> +	dmc520_write_reg(edac, ALL_INT_MASK, REG_OFFSET_INTERRUPT_CLR);
-
-Again, could we only clear the interrupts we're going to be using?
-
-
-> +	for (irq = 0; irq < nintr; ++irq) {
-
-Nit: could we keep the variable name 'irq' reserved for a variable that is the irq number?
-This is the index in the firwmare tables...
-
-
-> +		int irq_id = platform_get_irq(pdev, irq);
-> +
-> +		if (irq_id < 0) {
-> +			edac_printk(KERN_ERR, EDAC_MC,
-> +				    "Failed to get irq #%d\n", irq);
-> +			ret = -ENODEV;
-> +			goto err_del_mc;
-> +		}
-> +
-> +		ret = devm_request_irq(&pdev->dev,
-> +				       irq_id,
-> +				       dmc520_isr_array[irq],
-> +				       IRQF_SHARED,
-> +				       dev_name(&pdev->dev),
-> +				       mci);
-
-Coding-style would like this on fewer lines.
-
-
-> +		if (ret < 0) {
-> +			edac_printk(KERN_ERR, EDAC_MC,
-> +				    "Failed to request irq %d\n", irq_id);
-> +			goto err_del_mc;
-> +		}
-
-> +		edac_printk(KERN_INFO, EDAC_MOD_NAME,
-> +			"Interrupt line #%d, mask 0x%x, allocated irq_id %d.\n",
-> +			irq, interrupt_masks[irq], irq_id);
-
-Leftover debug?
-
-
-> +		interrupt_mask_all |= interrupt_masks[irq];
-
-Could we check the masks don't overlap? If these are level-triggered interrupts sampled
-twice, we don't want two interrupt handlers trying to access the same registers...
-
-
-> +	}
-> +
-> +	interrupt_mask_all &= ALL_INT_MASK;
-> +
-> +	/* Reset DRAM CE/UE counters */
-> +	if (interrupt_mask_all & DRAM_ECC_INT_CE_MASK)
-> +		dmc520_get_dram_ecc_error_count(edac, true);
-> +
-> +	if (interrupt_mask_all & DRAM_ECC_INT_UE_MASK)
-> +		dmc520_get_dram_ecc_error_count(edac, false);
-> +
-> +	/* Enable interrupts */
-> +	dmc520_write_reg(edac, interrupt_mask_all, REG_OFFSET_INTERRUPT_CONTROL);
-> +
-> +	return 0;
-> +
-> +err_del_mc:
-> +	edac_mc_del_mc(&pdev->dev);
-> +err_free_mc:
-> +	edac_mc_free(mci);
-> +
-> +	return ret;
-> +}
-
-
-> +static int dmc520_edac_remove(struct platform_device *pdev)
-> +{
-> +	struct dmc520_edac *edac;
-> +	struct mem_ctl_info *mci;
-> +
-> +	mci = platform_get_drvdata(pdev);
-> +	edac = mci->pvt_info;
-> +
-> +	/* Disable interrupts */
-> +	dmc520_write_reg(edac, 0, REG_OFFSET_INTERRUPT_CONTROL);
-
-Could we only disable the interrupts we know about?
-
-This stops the hardware generating new ones, but there my be one in-progress on another
-CPU. Do you need to unregister them too? Otherwise you are freeing data structures the irq
-hadnler may be using!
-
-
-> +	edac_mc_del_mc(&pdev->dev);
-> +	edac_mc_free(mci);
-> +
-> +	return 0;
-> +}
-
-
-Thanks,
-
-James
-
-[0] https://static.docs.arm.com/100000/0200/corelink_dmc520_trm_100000_0200_01_en.pdf
+On Thu, May 23, 2019 at 07:22:17PM +0300, Konstantin Khlebnikov wrote:
+> On 22.05.2019 18:52, Christian Brauner wrote:> This adds the close_range() syscall. It allows to efficiently close a range
+> > of file descriptors up to all file descriptors of a calling task.
+> >
+> > The syscall came up in a recent discussion around the new mount API and
+> > making new file descriptor types cloexec by default. During this
+> > discussion, Al suggested the close_range() syscall (cf. [1]). Note, a
+> > syscall in this manner has been requested by various people over time.
+> >
+> > First, it helps to close all file descriptors of an exec()ing task. This
+> > can be done safely via (quoting Al's example from [1] verbatim):
+> >
+> >          /* that exec is sensitive */
+> >          unshare(CLONE_FILES);
+> >          /* we don't want anything past stderr here */
+> >          close_range(3, ~0U);
+> >          execve(....);
+> >
+> > The code snippet above is one way of working around the problem that file
+> > descriptors are not cloexec by default. This is aggravated by the fact that
+> > we can't just switch them over without massively regressing userspace. For
+> > a whole class of programs having an in-kernel method of closing all file
+> > descriptors is very helpful (e.g. demons, service managers, programming
+> > language standard libraries, container managers etc.).
+> > (Please note, unshare(CLONE_FILES) should only be needed if the calling
+> >   task is multi-threaded and shares the file descriptor table with another
+> >   thread in which case two threads could race with one thread allocating
+> >   file descriptors and the other one closing them via close_range(). For the
+> >   general case close_range() before the execve() is sufficient.)
+> >
+> > Second, it allows userspace to avoid implementing closing all file
+> > descriptors by parsing through /proc/<pid>/fd/* and calling close() on each
+> > file descriptor. From looking at various large(ish) userspace code bases
+> > this or similar patterns are very common in:
+> > - service managers (cf. [4])
+> > - libcs (cf. [6])
+> > - container runtimes (cf. [5])
+> > - programming language runtimes/standard libraries
+> >    - Python (cf. [2])
+> >    - Rust (cf. [7], [8])
+> > As Dmitry pointed out there's even a long-standing glibc bug about missing
+> > kernel support for this task (cf. [3]).
+> > In addition, the syscall will also work for tasks that do not have procfs
+> > mounted and on kernels that do not have procfs support compiled in. In such
+> > situations the only way to make sure that all file descriptors are closed
+> > is to call close() on each file descriptor up to UINT_MAX or RLIMIT_NOFILE,
+> > OPEN_MAX trickery (cf. comment [8] on Rust).
+> >
+> > The performance is striking. For good measure, comparing the following
+> > simple close_all_fds() userspace implementation that is essentially just
+> > glibc's version in [6]:
+> >
+> > static int close_all_fds(void)
+> > {
+> >          int dir_fd;
+> >          DIR *dir;
+> >          struct dirent *direntp;
+> >
+> >          dir = opendir("/proc/self/fd");
+> >          if (!dir)
+> >                  return -1;
+> >          dir_fd = dirfd(dir);
+> >          while ((direntp = readdir(dir))) {
+> >                  int fd;
+> >                  if (strcmp(direntp->d_name, ".") == 0)
+> >                          continue;
+> >                  if (strcmp(direntp->d_name, "..") == 0)
+> >                          continue;
+> >                  fd = atoi(direntp->d_name);
+> >                  if (fd == dir_fd || fd == 0 || fd == 1 || fd == 2)
+> >                          continue;
+> >                  close(fd);
+> >          }
+> >          closedir(dir);
+> >          return 0;
+> > }
+> >
+> > to close_range() yields:
+> > 1. closing 4 open files:
+> >     - close_all_fds(): ~280 us
+> >     - close_range():    ~24 us
+> >
+> > 2. closing 1000 open files:
+> >     - close_all_fds(): ~5000 us
+> >     - close_range():   ~800 us
+> >
+> > close_range() is designed to allow for some flexibility. Specifically, it
+> > does not simply always close all open file descriptors of a task. Instead,
+> > callers can specify an upper bound.
+> > This is e.g. useful for scenarios where specific file descriptors are
+> > created with well-known numbers that are supposed to be excluded from
+> > getting closed.
+> > For extra paranoia close_range() comes with a flags argument. This can e.g.
+> > be used to implement extension. Once can imagine userspace wanting to stop
+> > at the first error instead of ignoring errors under certain circumstances.
+> 
+> > There might be other valid ideas in the future. In any case, a flag
+> > argument doesn't hurt and keeps us on the safe side.
+> 
+> Here is another strange but real-live scenario: crash handler for dumping core.
+> 
+> If applications has network connections it would be better to close them all,
+> otherwise clients will wait until end of dumping process or timeout.
+> Also closing normal files might be a good idea for releasing locks.
+> 
+> But simple closing might race with other threads - closed fd will be reused
+> while some code still thinks it refers to original file.
+> 
+> Our solution closes files without freeing fd: it opens /dev/null and
+> replaces all opened descriptors using dup2.
+> 
+> So, special flag for close_range() could close files without clearing bitmap.
+> Effect should be the same - fd wouldn't be reused.
+> 
+> Actually two flags for two phases: closing files and releasing fd.
+> 
+> >
+> >  From an implementation side this is kept rather dumb. It saw some input
+> > from David and Jann but all nonsense is obviously my own!
+> > - Errors to close file descriptors are currently ignored. (Could be changed
+> >    by setting a flag in the future if needed.)
+> > - __close_range() is a rather simplistic wrapper around __close_fd().
+> >    My reasoning behind this is based on the nature of how __close_fd() needs
+> >    to release an fd. But maybe I misunderstood specifics:
+> >    We take the files_lock and rcu-dereference the fdtable of the calling
+> >    task, we find the entry in the fdtable, get the file and need to release
+> >    files_lock before calling filp_close().
+> >    In the meantime the fdtable might have been altered so we can't just
+> >    retake the spinlock and keep the old rcu-reference of the fdtable
+> >    around. Instead we need to grab a fresh reference to the fdtable.
+> >    If my reasoning is correct then there's really no point in fancyfying
+> >    __close_range(): We just need to rcu-dereference the fdtable of the
+> >    calling task once to cap the max_fd value correctly and then go on
+> >    calling __close_fd() in a loop.
+> >
+> > /* References */
+> > [1]: https://lore.kernel.org/lkml/20190516165021.GD17978@ZenIV.linux.org.uk/
+> > [2]: https://github.com/python/cpython/blob/9e4f2f3a6b8ee995c365e86d976937c141d867f8/Modules/_posixsubprocess.c#L220
+> > [3]: https://sourceware.org/bugzilla/show_bug.cgi?id=10353#c7
+> > [4]: https://github.com/systemd/systemd/blob/5238e9575906297608ff802a27e2ff9effa3b338/src/basic/fd-util.c#L217
+> > [5]: https://github.com/lxc/lxc/blob/ddf4b77e11a4d08f09b7b9cd13e593f8c047edc5/src/lxc/start.c#L236
+> > [6]: https://sourceware.org/git/?p=glibc.git;a=blob;f=sysdeps/unix/sysv/linux/grantpt.c;h=2030e07fa6e652aac32c775b8c6e005844c3c4eb;hb=HEAD#l17
+> >       Note that this is an internal implementation that is not exported.
+> >       Currently, libc seems to not provide an exported version of this
+> >       because of missing kernel support to do this.
+> > [7]: https://github.com/rust-lang/rust/issues/12148
+> > [8]: https://github.com/rust-lang/rust/blob/5f47c0613ed4eb46fca3633c1297364c09e5e451/src/libstd/sys/unix/process2.rs#L303-L308
+> >       Rust's solution is slightly different but is equally unperformant.
+> >       Rust calls getdtablesize() which is a glibc library function that
+> >       simply returns the current RLIMIT_NOFILE or OPEN_MAX values. Rust then
+> >       goes on to call close() on each fd. That's obviously overkill for most
+> >       tasks. Rarely, tasks - especially non-demons - hit RLIMIT_NOFILE or
+> >       OPEN_MAX.
+> >       Let's be nice and assume an unprivileged user with RLIMIT_NOFILE set
+> >       to 1024. Even in this case, there's a very high chance that in the
+> >       common case Rust is calling the close() syscall 1021 times pointlessly
+> >       if the task just has 0, 1, and 2 open.
+> >
+> > Suggested-by: Al Viro <viro@zeniv.linux.org.uk>
+> > Signed-off-by: Christian Brauner <christian@brauner.io>
+> > Cc: Arnd Bergmann <arnd@arndb.de>
+> > Cc: Jann Horn <jannh@google.com>
+> > Cc: David Howells <dhowells@redhat.com>
+> > Cc: Dmitry V. Levin <ldv@altlinux.org>
+> > Cc: Oleg Nesterov <oleg@redhat.com>
+> > Cc: Linus Torvalds <torvalds@linux-foundation.org>
+> > Cc: Florian Weimer <fweimer@redhat.com>
+> > Cc: linux-api@vger.kernel.org
+> > ---
+> > v1:
+> > - Linus Torvalds <torvalds@linux-foundation.org>:
+> >    - add cond_resched() to yield cpu when closing a lot of file descriptors
+> > - Al Viro <viro@zeniv.linux.org.uk>:
+> >    - add cond_resched() to yield cpu when closing a lot of file descriptors
+> > ---
+> >   arch/alpha/kernel/syscalls/syscall.tbl      |  1 +
+> >   arch/arm/tools/syscall.tbl                  |  1 +
+> >   arch/arm64/include/asm/unistd32.h           |  2 +
+> >   arch/ia64/kernel/syscalls/syscall.tbl       |  1 +
+> >   arch/m68k/kernel/syscalls/syscall.tbl       |  1 +
+> >   arch/microblaze/kernel/syscalls/syscall.tbl |  1 +
+> >   arch/mips/kernel/syscalls/syscall_n32.tbl   |  1 +
+> >   arch/mips/kernel/syscalls/syscall_n64.tbl   |  1 +
+> >   arch/mips/kernel/syscalls/syscall_o32.tbl   |  1 +
+> >   arch/parisc/kernel/syscalls/syscall.tbl     |  1 +
+> >   arch/powerpc/kernel/syscalls/syscall.tbl    |  1 +
+> >   arch/s390/kernel/syscalls/syscall.tbl       |  1 +
+> >   arch/sh/kernel/syscalls/syscall.tbl         |  1 +
+> >   arch/sparc/kernel/syscalls/syscall.tbl      |  1 +
+> >   arch/x86/entry/syscalls/syscall_32.tbl      |  1 +
+> >   arch/x86/entry/syscalls/syscall_64.tbl      |  1 +
+> >   arch/xtensa/kernel/syscalls/syscall.tbl     |  1 +
+> >   fs/file.c                                   | 63 ++++++++++++++++++---
+> >   fs/open.c                                   | 20 +++++++
+> >   include/linux/fdtable.h                     |  2 +
+> >   include/linux/syscalls.h                    |  2 +
+> >   include/uapi/asm-generic/unistd.h           |  4 +-
+> >   22 files changed, 100 insertions(+), 9 deletions(-)
+> >
+> 
+> It would be better to split arch/ wiring into separate patch for better readability.
+
+Ok. You mean only do x86 - seems to be the standard - and then move the
+others into a separate patch? Doesn't seem worth to have a patch
+per-arch, I'd think.
