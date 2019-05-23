@@ -4,55 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CCB6C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 13:49:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C79A3C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 13:49:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3BE5217D4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 13:49:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D2192175B
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 13:49:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558619345;
-	bh=nMCqbwCvmD+mL960/QjgFF8eC7M3VJd3uduWKLB9ipY=;
+	s=default; t=1558619347;
+	bh=klsTxGUx/77tyYi70S6c30cYI6nZQkFLOxEf1NPfpgs=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=VcZmu931lUYycpZcOegDamQu/YPQsjG/RgmTxOGuH4WY8jmN7Y4pkaDGXRCBNevHa
-	 Sopsql6j29usywsOnvh3BUPcN0GJtCSejQlajyaNv4YArfoMaYyoAtApVUNNTf49ND
-	 nH8z/uHIThqQ/K312UgGH4gWZpzxVzuKBYza5iLU=
+	b=VV/rGQkiVJMllwXe6PV7+aRXZzGTwlCWR9nM59OQg+ZW9ZmbXaXIhm05E6cEpz214
+	 a0OrkXv7It25EVyjChSlEavshXQJtK8UPbh/z/wRUU0J4dT6bfIOOaP36VZk3p3POv
+	 KciCjh9QeoU54cEkYZZAORWxFPx5nbnc8W52WqXs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730870AbfEWNtE (ORCPT
+        id S1730892AbfEWNtG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 09:49:04 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:44924 "EHLO
+        Thu, 23 May 2019 09:49:06 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:44922 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730710AbfEWNtD (ORCPT
+        with ESMTP id S1730713AbfEWNtE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 09:49:03 -0400
+        Thu, 23 May 2019 09:49:04 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=ii75uoCMytEv53yTyioEoQIrG3Y7Vo6j3AmzwsRC4aI=; b=wZGr3Si9vd7O
-        EVi4QEoe78M7NptJj2JEBG2VyJfSPL+yzSCKsJXFeZgP5y2AQ2Ej3zhFplSu+CBHN14CdE8Fh8qID
-        lEOQtHCrd96UzzzfR4Z8gib8PFBySj/fsHRTq5Z2ffmDeq93/2dmJ+JkYIIf1D+cvhf0HzBm74How
-        JJYAU=;
+        List-Archive; bh=apcyAboxe792qh3AK3njxXGriXNQtjXi9uWRFsMGTuc=; b=HzuGuk9gdzeU
+        58v4d18AC9cG9wxDQJllBW6PDBT7GB9RpreCTPKlWrFXmJNZWSYqS1NyUOWQxI2vEY+yoQhIaXHuz
+        gkIOjwM1e/MQw0Q1Sll6uHHV1X7x0oEZ+zIX9wZA45G7N0PZDKafXV11gsdhcctFvSiEWXZdLGVFy
+        cBytc=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hTo5d-0000Ed-FA; Thu, 23 May 2019 13:49:01 +0000
+        id 1hTo5d-0000EY-F9; Thu, 23 May 2019 13:49:01 +0000
 Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 0E9021126D25; Thu, 23 May 2019 14:49:00 +0100 (BST)
+        id 4A60E1126D27; Thu, 23 May 2019 14:49:00 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
 To:     Rob Herring <robh@kernel.org>
-Cc:     Daniel Mack <zonque@gmail.com>, devicetree@vger.kernel.org,
-        Liam Girdwood <lgirdwood@gmail.com>,
+Cc:     devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
         linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: Applied "regulator: Convert max8660 binding to json-schema" to the regulator tree
-In-Reply-To: <20190521212031.12982-3-robh@kernel.org>
+Subject: Applied "regulator: Convert gpio-regulator to json-schema" to the regulator tree
+In-Reply-To: <20190521212031.12982-2-robh@kernel.org>
 X-Patchwork-Hint: ignore
-Message-Id: <20190523134900.0E9021126D25@debutante.sirena.org.uk>
+Message-Id: <20190523134900.4A60E1126D27@debutante.sirena.org.uk>
 Date:   Thu, 23 May 2019 14:49:00 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -61,7 +60,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: Convert max8660 binding to json-schema
+   regulator: Convert gpio-regulator to json-schema
 
 has been applied to the regulator tree at
 
@@ -86,156 +85,208 @@ to this mail.
 Thanks,
 Mark
 
-From 27b1b58fcfe72fd6b53a83b0dccb678e6b6faab8 Mon Sep 17 00:00:00 2001
+From 673e401effe9dfd655f2d16588248f4c043361ce Mon Sep 17 00:00:00 2001
 From: Rob Herring <robh@kernel.org>
-Date: Tue, 21 May 2019 16:20:31 -0500
-Subject: [PATCH] regulator: Convert max8660 binding to json-schema
+Date: Tue, 21 May 2019 16:20:30 -0500
+Subject: [PATCH] regulator: Convert gpio-regulator to json-schema
 
-Convert the max8660 binding to DT schema format using json-schema.
+Convert the gpio-regulator binding to DT schema format using
+json-schema.
 
 Signed-off-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- .../devicetree/bindings/regulator/max8660.txt | 47 -----------
- .../bindings/regulator/max8660.yaml           | 77 +++++++++++++++++++
- 2 files changed, 77 insertions(+), 47 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/regulator/max8660.txt
- create mode 100644 Documentation/devicetree/bindings/regulator/max8660.yaml
+ .../bindings/regulator/gpio-regulator.txt     |  57 ---------
+ .../bindings/regulator/gpio-regulator.yaml    | 118 ++++++++++++++++++
+ 2 files changed, 118 insertions(+), 57 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/regulator/gpio-regulator.txt
+ create mode 100644 Documentation/devicetree/bindings/regulator/gpio-regulator.yaml
 
-diff --git a/Documentation/devicetree/bindings/regulator/max8660.txt b/Documentation/devicetree/bindings/regulator/max8660.txt
+diff --git a/Documentation/devicetree/bindings/regulator/gpio-regulator.txt b/Documentation/devicetree/bindings/regulator/gpio-regulator.txt
 deleted file mode 100644
-index 8ba994d8a142..000000000000
---- a/Documentation/devicetree/bindings/regulator/max8660.txt
+index dd25e73b5d79..000000000000
+--- a/Documentation/devicetree/bindings/regulator/gpio-regulator.txt
 +++ /dev/null
-@@ -1,47 +0,0 @@
--Maxim MAX8660 voltage regulator
+@@ -1,57 +0,0 @@
+-GPIO controlled regulators
 -
 -Required properties:
--- compatible: must be one of "maxim,max8660", "maxim,max8661"
--- reg: I2C slave address, usually 0x34
--- any required generic properties defined in regulator.txt
+-- compatible		: Must be "regulator-gpio".
+-- regulator-name	: Defined in regulator.txt as optional, but required
+-			  here.
+-- gpios			: Array of one or more GPIO pins used to select the
+-			  regulator voltage/current listed in "states".
+-- states		: Selection of available voltages/currents provided by
+-			  this regulator and matching GPIO configurations to
+-			  achieve them. If there are no states in the "states"
+-			  array, use a fixed regulator instead.
+-
+-Optional properties:
+-- enable-gpios		: GPIO used to enable/disable the regulator.
+-			  Warning, the GPIO phandle flags are ignored and the
+-			  GPIO polarity is controlled solely by the presence
+-			  of "enable-active-high" DT property. This is due to
+-			  compatibility with old DTs.
+-- enable-active-high	: Polarity of "enable-gpio" GPIO is active HIGH.
+-			  Default is active LOW.
+-- gpios-states		: On operating systems, that don't support reading back
+-			  gpio values in output mode (most notably linux), this
+-			  array provides the state of GPIO pins set when
+-			  requesting them from the gpio controller. Systems,
+-			  that are capable of preserving state when requesting
+-			  the lines, are free to ignore this property.
+-			  0: LOW, 1: HIGH. Default is LOW if nothing else
+-			  is specified.
+-- startup-delay-us	: Startup time in microseconds.
+-- regulator-type	: Specifies what is being regulated, must be either
+-			  "voltage" or "current", defaults to voltage.
+-
+-Any property defined as part of the core regulator binding defined in
+-regulator.txt can also be used.
 -
 -Example:
 -
--	i2c_master {
--		max8660@34 {
--			compatible = "maxim,max8660";
--			reg = <0x34>;
+-	mmciv: gpio-regulator {
+-		compatible = "regulator-gpio";
 -
--			regulators {
--				regulator@0 {
--					regulator-compatible= "V3(DCDC)";
--					regulator-min-microvolt = <725000>;
--					regulator-max-microvolt = <1800000>;
--				};
+-		regulator-name = "mmci-gpio-supply";
+-		regulator-min-microvolt = <1800000>;
+-		regulator-max-microvolt = <2600000>;
+-		regulator-boot-on;
 -
--				regulator@1 {
--					regulator-compatible= "V4(DCDC)";
--					regulator-min-microvolt = <725000>;
--					regulator-max-microvolt = <1800000>;
--				};
+-		enable-gpios = <&gpio0 23 0x4>;
+-		gpios = <&gpio0 24 0x4
+-			 &gpio0 25 0x4>;
+-		states = <1800000 0x3
+-			  2200000 0x2
+-			  2600000 0x1
+-			  2900000 0x0>;
 -
--				regulator@2 {
--					regulator-compatible= "V5(LDO)";
--					regulator-min-microvolt = <1700000>;
--					regulator-max-microvolt = <2000000>;
--				};
--
--				regulator@3 {
--					regulator-compatible= "V6(LDO)";
--					regulator-min-microvolt = <1800000>;
--					regulator-max-microvolt = <3300000>;
--				};
--
--				regulator@4 {
--					regulator-compatible= "V7(LDO)";
--					regulator-min-microvolt = <1800000>;
--					regulator-max-microvolt = <3300000>;
--				};
--			};
--		};
+-		startup-delay-us = <100000>;
+-		enable-active-high;
 -	};
-diff --git a/Documentation/devicetree/bindings/regulator/max8660.yaml b/Documentation/devicetree/bindings/regulator/max8660.yaml
+diff --git a/Documentation/devicetree/bindings/regulator/gpio-regulator.yaml b/Documentation/devicetree/bindings/regulator/gpio-regulator.yaml
 new file mode 100644
-index 000000000000..9c038698f880
+index 000000000000..9d3b28417fb6
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/max8660.yaml
-@@ -0,0 +1,77 @@
++++ b/Documentation/devicetree/bindings/regulator/gpio-regulator.yaml
+@@ -0,0 +1,118 @@
 +# SPDX-License-Identifier: GPL-2.0
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/regulator/max8660.yaml#
++$id: http://devicetree.org/schemas/regulator/gpio-regulator.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Maxim MAX8660 voltage regulator
++title: GPIO controlled regulators
 +
 +maintainers:
-+  - Daniel Mack <zonque@gmail.com>
++  - Liam Girdwood <lgirdwood@gmail.com>
++  - Mark Brown <broonie@kernel.org>
++
++description:
++  Any property defined as part of the core regulator binding, defined in
++  regulator.txt, can also be used.
++
++allOf:
++  - $ref: "regulator.yaml#"
 +
 +properties:
-+  $nodename:
-+    pattern: "pmic@[0-9a-f]{1,2}"
 +  compatible:
-+    enum:
-+      - maxim,max8660
-+      - maxim,max8661
++    const: regulator-gpio
 +
-+  reg:
++  regulator-name: true
++
++  enable-gpios:
++    description: GPIO to use to enable/disable the regulator.
++      Warning, the GPIO phandle flags are ignored and the GPIO polarity is
++      controlled solely by the presence of "enable-active-high" DT property.
++      This is due to compatibility with old DTs.
 +    maxItems: 1
 +
-+  regulators:
-+    type: object
++  gpios:
++    description: Array of one or more GPIO pins used to select the regulator
++      voltage/current listed in "states".
++    minItems: 1
++    maxItems: 8  # Should be enough...
 +
-+    patternProperties:
-+      "regulator-.+":
-+        $ref: "regulator.yaml#"
++  gpios-states:
++    description: |
++      On operating systems, that don't support reading back gpio values in
++      output mode (most notably linux), this array provides the state of GPIO
++      pins set when requesting them from the gpio controller. Systems, that are
++      capable of preserving state when requesting the lines, are free to ignore
++      this property.
++        0: LOW
++        1: HIGH
++      Default is LOW if nothing else is specified.
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32-array
++      - maxItems: 8
++        items:
++          enum: [ 0, 1 ]
++          default: 0
 +
-+    additionalProperties: false
++  states:
++    description: Selection of available voltages/currents provided by this
++      regulator and matching GPIO configurations to achieve them. If there are
++      no states in the "states" array, use a fixed regulator instead.
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32-matrix
++      - maxItems: 8
++        items:
++          items:
++            - description: Voltage in microvolts
++            - description: GPIO group state value
 +
-+additionalProperties: false
++  startup-delay-us:
++    description: startup time in microseconds
++
++  enable-active-high:
++    description: Polarity of "enable-gpio" GPIO is active HIGH. Default is
++      active LOW.
++    type: boolean
++
++  gpio-open-drain:
++    description:
++      GPIO is open drain type. If this property is missing then default
++      assumption is false.
++    type: boolean
++
++  regulator-type:
++    description: Specifies what is being regulated.
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/string
++      - enum:
++          - voltage
++          - current
++        default: voltage
++
++required:
++  - compatible
++  - regulator-name
++  - gpios
++  - states
 +
 +examples:
 +  - |
-+    i2c {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
++    gpio-regulator {
++      compatible = "regulator-gpio";
 +
-+      pmic@34 {
-+        compatible = "maxim,max8660";
-+        reg = <0x34>;
++      regulator-name = "mmci-gpio-supply";
++      regulator-min-microvolt = <1800000>;
++      regulator-max-microvolt = <2600000>;
++      regulator-boot-on;
 +
-+        regulators {
-+          regulator-V3 {
-+            regulator-compatible= "V3(DCDC)";
-+            regulator-min-microvolt = <725000>;
-+            regulator-max-microvolt = <1800000>;
-+          };
++      enable-gpios = <&gpio0 23 0x4>;
++      gpios = <&gpio0 24 0x4
++        &gpio0 25 0x4>;
++      states = <1800000 0x3>,
++        <2200000 0x2>,
++        <2600000 0x1>,
++        <2900000 0x0>;
 +
-+          regulator-V4 {
-+            regulator-compatible= "V4(DCDC)";
-+            regulator-min-microvolt = <725000>;
-+            regulator-max-microvolt = <1800000>;
-+          };
-+
-+          regulator-V5 {
-+            regulator-compatible= "V5(LDO)";
-+            regulator-min-microvolt = <1700000>;
-+            regulator-max-microvolt = <2000000>;
-+          };
-+
-+          regulator-V6 {
-+            regulator-compatible= "V6(LDO)";
-+            regulator-min-microvolt = <1800000>;
-+            regulator-max-microvolt = <3300000>;
-+          };
-+
-+          regulator-V7 {
-+            regulator-compatible= "V7(LDO)";
-+            regulator-min-microvolt = <1800000>;
-+            regulator-max-microvolt = <3300000>;
-+          };
-+        };
-+      };
++      startup-delay-us = <100000>;
++      enable-active-high;
 +    };
 +...
 -- 
