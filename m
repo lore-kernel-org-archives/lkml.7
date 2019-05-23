@@ -2,232 +2,344 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23257C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:36:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 562B1C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:37:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA7262177E
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:36:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1948E2075B
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:37:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731113AbfEWPgV (ORCPT
+        id S1731123AbfEWPhW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 11:36:21 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:46552 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730904AbfEWPgU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 11:36:20 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4NFYAet136190
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 11:36:19 -0400
-Received: from e14.ny.us.ibm.com (e14.ny.us.ibm.com [129.33.205.204])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2snuwx872j-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 11:36:19 -0400
-Received: from localhost
-        by e14.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <akrowiak@linux.ibm.com>;
-        Thu, 23 May 2019 16:36:18 +0100
-Received: from b01cxnp23033.gho.pok.ibm.com (9.57.198.28)
-        by e14.ny.us.ibm.com (146.89.104.201) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 23 May 2019 16:36:15 +0100
-Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
-        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4NFaD3440239452
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 23 May 2019 15:36:13 GMT
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5CF8A2805A;
-        Thu, 23 May 2019 15:36:13 +0000 (GMT)
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C3D2D28059;
-        Thu, 23 May 2019 15:36:12 +0000 (GMT)
-Received: from [9.85.195.246] (unknown [9.85.195.246])
-        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu, 23 May 2019 15:36:12 +0000 (GMT)
-Subject: Re: [PATCH v9 0/4] vfio: ap: AP Queue Interrupt Control
-To:     Pierre Morel <pmorel@linux.ibm.com>, borntraeger@de.ibm.com
-Cc:     alex.williamson@redhat.com, cohuck@redhat.com,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, frankja@linux.ibm.com, pasic@linux.ibm.com,
-        david@redhat.com, schwidefsky@de.ibm.com,
-        heiko.carstens@de.ibm.com, freude@linux.ibm.com, mimu@linux.ibm.com
-References: <1558452877-27822-1-git-send-email-pmorel@linux.ibm.com>
-From:   Tony Krowiak <akrowiak@linux.ibm.com>
-Date:   Thu, 23 May 2019 11:36:12 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Thu, 23 May 2019 11:37:22 -0400
+Received: from mga03.intel.com ([134.134.136.65]:65249 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730859AbfEWPhW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 11:37:22 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 May 2019 08:37:21 -0700
+X-ExtLoop1: 1
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by orsmga003.jf.intel.com with ESMTP; 23 May 2019 08:37:21 -0700
+Date:   Thu, 23 May 2019 08:40:19 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     Auger Eric <eric.auger@redhat.com>
+Cc:     iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        Yi Liu <yi.l.liu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Andriy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v3 04/16] ioasid: Add custom IOASID allocator
+Message-ID: <20190523084019.7f940aa5@jacob-builder>
+In-Reply-To: <a33797e9-d34b-b0a9-4f39-700dce8252b3@redhat.com>
+References: <1556922737-76313-1-git-send-email-jacob.jun.pan@linux.intel.com>
+        <1556922737-76313-5-git-send-email-jacob.jun.pan@linux.intel.com>
+        <c991ff0c-87bf-574a-bf31-9b37f0421385@redhat.com>
+        <20190522124255.117de6f6@jacob-builder>
+        <a33797e9-d34b-b0a9-4f39-700dce8252b3@redhat.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <1558452877-27822-1-git-send-email-pmorel@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19052315-0052-0000-0000-000003C6077C
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011149; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01207499; UDB=6.00634153; IPR=6.00988479;
- MB=3.00027020; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-23 15:36:17
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19052315-0053-0000-0000-00006104218B
-Message-Id: <5b46f988-fa79-4d84-c81f-144daa0c4426@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-23_13:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905230106
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/21/19 11:34 AM, Pierre Morel wrote:
-> This patch series implements PQAP/AQIC interception in KVM.
-> 
-> 1) Data to handle GISA interrupt for AQIC
-> 
-> To implement this we need to add a new structure, vfio_ap_queue,
-> to be able to retrieve the mediated device associated with a queue
-> and specific values needed to register/unregister the interrupt
-> structures:
->    - APQN: to be able to issue the commands and search for queue
->      structures
->    - saved NIB : to keep track of the pin page for unpining it
->    - saved ISC : to unregister with the GIB interface
->    - matrix_mdev: to retrieve the associate matrix, the mediated device
->      and KVM
-> 
-> Specific handling bei keeping old values when re-registering is
-> needed because the guest could unregister interrupt in a invisble
-> manner bei issuing an un-interceptible RESET command.
-> 
-> Reset commands issued directly by the guest and indirectly when
-> removing the guest unpin the memory and deregister the ISC.
-> 
-> The vfio_ap_queue is associated to the ap_device during the probe
-> of the device and dissociated during the remove of the ap_device.
-> 
-> The vfio_ap_queue is associated to the matrix mediated device during
-> each interception of the AQIC command, so it does not need to be
-> dissociated until the guest is terminated.
-> 
-> The life of the vfio_ap_queue will be protected by the matrix_dev lock
-> to guaranty that no change can occur to the CRYCB or that devices can
-> not be removed when a vfio_ap_queue is in use.
-> 
-> 2) KVM destroy race conditions
-> 
-> To make sure that KVM do not vanish and GISA is still available
-> when the VFIO_AP driver is in used we take a reference to KVM
-> during the opening of the mediated device and release it on
-> releasing the mediated device.
-> 
-> 3) Interception of PQAP
-> 
-> The driver registers a hook structure to KVM providing:
-> - a pointer to a function implementing PQAP(AQIC) handling
-> - the reference to the module owner of the hook
-> 
-> On interception by KVM we do not change the behavior, returning
->   -EOPNOTSUPP to the user in the case AP instructions are not
-> supported by the host or by the guest.
-> Otherwise we verify the exceptions cases before trying to call
-> the vfio_ap hook.
-> 
-> In the case we do not find a hook we assume that the CRYCB has not
-> been setup for the guest and is empty.
-> 
-> 4) Enabling and disabling the IRQ
-> 
-> When enabling the IRQ care is taken to unping the saved NIB.
-> When disabling IRQ care is taken to wait until the IRQ bit
-> of the queue status is cleared before unpining the NIB.
-> 
-> On RESET and before unpinning the NIB and unregistering the ISC
-> the IRQ is disabled using PQAP/AQIC even when a PQAP/APZQ have
-> been done.
-> 
-> 5) Removing the AP device
-> 
-> Removing the AP device without having unassign it is clearly
-> discourage by the documentation.
-> The patch series does not check if the queue is used by a
-> guest. It only de-register the IRQ, unregister ISC and unpin
-> the NIB, then free the vfio_ap_queue.
-> 
-> 6) Associated QEMU patch
-> 
-> There is a QEMU patch which is needed to enable the PQAP/AQIC
-> facility in the guest.
-> 
-> Posted in qemu-devel@nongnu.org as:
-> Message-Id: <1550146494-21085-1-git-send-email-pmorel@linux.ibm.com>
-> 
-> 7) Compatibility with Dynamic configuration patches
-> 
-> Tony, I did not rebase this series above the dynamic configuration
-> patches because:
-> - This series do the work it needs to do without having to take
->    care on the dynamic configuration.
-> - It is guarantied that interrupt will be shut off after removing
->    the APQueue device
-> - The dynamic configuration series is not converging.
+On Thu, 23 May 2019 09:14:07 +0200
+Auger Eric <eric.auger@redhat.com> wrote:
 
-Would you consider the following?
-
-* Take dynconfig patch "s390: vfio-ap: wait for queue empty on queue
-   reset" and include it in your series. This patch modifies the
-   reset function to wait for queue empty.
-
-* In dynconfig patch "s390: vfio-ap: handle bind and unbind of AP queue
-   device" the following functions are introduced:
-
-      void vfio_ap_mdev_probe_queue(struct ap_queue *queue)
-      void vfio_ap_mdev_remove_queue(struct ap_queue *queue)
-
-   The vfio_ap_mdev_probe_queue function is called from the vfio_ap
-   driver probe callback. You could embed the code you've introduced in
-   the probe callback there. Of course, you would need to return int
-   from the function for the -ENOMEM error.
-
-   The vfio_ap_mdev_remove_queue function is called from the vfio_ap
-   driver remove callback. You could embed the code you've introduced in
-   the remove callback there.
-
-* Move your vfio_ap_irq_disable function to vfio_ap_ops.c and make it a
-   static function.
-
-* Leave the vfio_ap_mdev_reset_queue function as a static function in
-   vfio_ap_ops.c
-
-If you do the things above, then I can base the dynconfig series on
-the IRQ series without much of a merge issue. What say you?
-
-Note: I've included review comments for patch 3/4 to match the
-       suggestions above.
-
+> Hi Jacob,
 > 
-> However Tony, the choice is your's, I won't be able to help
-> in a near future.
+> On 5/22/19 9:42 PM, Jacob Pan wrote:
+> > On Tue, 21 May 2019 11:55:55 +0200
+> > Auger Eric <eric.auger@redhat.com> wrote:
+> >   
+> >> Hi Jacob,
+> >>
+> >> On 5/4/19 12:32 AM, Jacob Pan wrote:  
+> >>> Sometimes, IOASID allocation must be handled by platform specific
+> >>> code. The use cases are guest vIOMMU and pvIOMMU where IOASIDs
+> >>> need to be allocated by the host via enlightened or paravirt
+> >>> interfaces.
+> >>>
+> >>> This patch adds an extension to the IOASID allocator APIs such
+> >>> that platform drivers can register a custom allocator, possibly
+> >>> at boot time, to take over the allocation. Xarray is still used
+> >>> for tracking and searching purposes internal to the IOASID code.
+> >>> Private data of an IOASID can also be set after the allocation.
+> >>>
+> >>> There can be multiple custom allocators registered but only one is
+> >>> used at a time. In case of hot removal of devices that provides
+> >>> the allocator, all IOASIDs must be freed prior to unregistering
+> >>> the allocator. Default XArray based allocator cannot be mixed with
+> >>> custom allocators, i.e. custom allocators will not be used if
+> >>> there are outstanding IOASIDs allocated by the default XA
+> >>> allocator.
+> >>>
+> >>> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> >>> ---
+> >>>  drivers/iommu/ioasid.c | 125
+> >>> +++++++++++++++++++++++++++++++++++++++++++++++++ 1 file changed,
+> >>> 125 insertions(+)
+> >>>
+> >>> diff --git a/drivers/iommu/ioasid.c b/drivers/iommu/ioasid.c
+> >>> index 99f5e0a..ed2915a 100644
+> >>> --- a/drivers/iommu/ioasid.c
+> >>> +++ b/drivers/iommu/ioasid.c
+> >>> @@ -17,6 +17,100 @@ struct ioasid_data {
+> >>>  };
+> >>>  
+> >>>  static DEFINE_XARRAY_ALLOC(ioasid_xa);
+> >>> +static DEFINE_MUTEX(ioasid_allocator_lock);
+> >>> +static struct ioasid_allocator *active_custom_allocator;
+> >>> +
+> >>> +static LIST_HEAD(custom_allocators);
+> >>> +/*
+> >>> + * A flag to track if ioasid default allocator is in use, this
+> >>> will
+> >>> + * prevent custom allocator from being used. The reason is that
+> >>> custom allocator
+> >>> + * must have unadulterated space to track private data with
+> >>> xarray, there cannot
+> >>> + * be a mix been default and custom allocated IOASIDs.
+> >>> + */
+> >>> +static int default_allocator_active;
+> >>> +
+> >>> +/**
+> >>> + * ioasid_register_allocator - register a custom allocator
+> >>> + * @allocator: the custom allocator to be registered
+> >>> + *
+> >>> + * Custom allocators take precedence over the default xarray
+> >>> based allocator.
+> >>> + * Private data associated with the ASID are managed by ASID
+> >>> common code
+> >>> + * similar to data stored in xa.
+> >>> + *
+> >>> + * There can be multiple allocators registered but only one is
+> >>> active. In case
+> >>> + * of runtime removal of a custom allocator, the next one is
+> >>> activated based
+> >>> + * on the registration ordering.
+> >>> + */
+> >>> +int ioasid_register_allocator(struct ioasid_allocator *allocator)
+> >>> +{
+> >>> +	struct ioasid_allocator *pallocator;
+> >>> +	int ret = 0;
+> >>> +
+> >>> +	if (!allocator)
+> >>> +		return -EINVAL;    
+> >> is it really necessary? Sin't it the caller responsibility?  
+> > makes sense. will remove this one and below.  
+> >>> +
+> >>> +	mutex_lock(&ioasid_allocator_lock);
+> >>> +	/*
+> >>> +	 * No particular preference since all custom allocators
+> >>> end up calling
+> >>> +	 * the host to allocate IOASIDs. We activate the first
+> >>> one and keep
+> >>> +	 * the later registered allocators in a list in case the
+> >>> first one gets
+> >>> +	 * removed due to hotplug.
+> >>> +	 */
+> >>> +	if (list_empty(&custom_allocators))
+> >>> +		active_custom_allocator = allocator;> +
+> >>> else {
+> >>> +		/* Check if the allocator is already registered
+> >>> */
+> >>> +		list_for_each_entry(pallocator,
+> >>> &custom_allocators, list) {
+> >>> +			if (pallocator == allocator) {
+> >>> +				pr_err("IOASID allocator already
+> >>> registered\n");
+> >>> +				ret = -EEXIST;
+> >>> +				goto out_unlock;
+> >>> +			}
+> >>> +		}
+> >>> +	}
+> >>> +	list_add_tail(&allocator->list, &custom_allocators);
+> >>> +
+> >>> +out_unlock:
+> >>> +	mutex_unlock(&ioasid_allocator_lock);
+> >>> +	return ret;
+> >>> +}
+> >>> +EXPORT_SYMBOL_GPL(ioasid_register_allocator);
+> >>> +
+> >>> +/**
+> >>> + * ioasid_unregister_allocator - Remove a custom IOASID allocator
+> >>> + * @allocator: the custom allocator to be removed
+> >>> + *
+> >>> + * Remove an allocator from the list, activate the next allocator
+> >>> in
+> >>> + * the order it was registered.
+> >>> + */
+> >>> +void ioasid_unregister_allocator(struct ioasid_allocator
+> >>> *allocator) +{
+> >>> +	if (!allocator)
+> >>> +		return;    
+> >> is it really necessary?  
+> >>> +
+> >>> +	if (list_empty(&custom_allocators)) {
+> >>> +		pr_warn("No custom IOASID allocators active!\n");
+> >>> +		return;
+> >>> +	}
+> >>> +
+> >>> +	mutex_lock(&ioasid_allocator_lock);
+> >>> +	list_del(&allocator->list);
+> >>> +	if (list_empty(&custom_allocators)) {
+> >>> +		pr_info("No custom IOASID allocators\n")>
+> >>> +		/*
+> >>> +		 * All IOASIDs should have been freed before the
+> >>> last custom
+> >>> +		 * allocator is unregistered. Unless default
+> >>> allocator is in
+> >>> +		 * use.
+> >>> +		 */
+> >>> +		BUG_ON(!xa_empty(&ioasid_xa)
+> >>> && !default_allocator_active);
+> >>> +		active_custom_allocator = NULL;
+> >>> +	} else if (allocator == active_custom_allocator) {    
+> >> In case you are removing the active custom allocator don't you also
+> >> need to check that all ioasids were freed. Otherwise you are likely
+> >> to switch to a different allocator whereas the asid space is
+> >> partially populated.  
+> > The assumption is that all custom allocators on the same guest will
+> > end up calling the same host allocator. Having multiple custom
+> > allocators in the list is just a way to support multiple (p)vIOMMUs
+> > with hotplug. Therefore, we cannot nor need to free all PASIDs when
+> > one custom allocator goes away. This is a different situation then
+> > switching between default allocator and custom allocator, where
+> > custom allocator has to start with a clean space.  
+> Although I understand your specific usecase, this framework may have
+> other users, where custom allocators behave differently.
 > 
+> Also the commit msg says:"
+> In case of hot removal of devices that provides the
+> allocator, all IOASIDs must be freed prior to unregistering the
+> allocator."
 > 
-> Pierre Morel (4):
->    s390: ap: kvm: add PQAP interception for AQIC
->    vfio: ap: register IOMMU VFIO notifier
->    s390: ap: implement PAPQ AQIC interception in kernel
->    s390: ap: kvm: Enable PQAP/AQIC facility for the guest
-> 
->   arch/s390/include/asm/kvm_host.h      |   7 +
->   arch/s390/kvm/priv.c                  |  86 ++++++++
->   arch/s390/tools/gen_facilities.c      |   1 +
->   drivers/s390/crypto/vfio_ap_drv.c     |  34 ++-
->   drivers/s390/crypto/vfio_ap_ops.c     | 379 +++++++++++++++++++++++++++++++++-
->   drivers/s390/crypto/vfio_ap_private.h |  15 ++
->   6 files changed, 514 insertions(+), 8 deletions(-)
-> 
+Right, it is inconsistent.
+Consider the following scenario on a single guest with two vIOMMUs:
+1. vIOMMU1 register allocator A1 first
+2. vIOMMU2 register allocator A2 stored to the allocator list
+3. device belong to vIOMMU1 bind_sva(), allocate PASID1 from A1
+4. device belong to vIOMMU2 bind_sva(), allocate PASID2 from A1
+5. vIOMMU1 hot removed, free PASID1, then unregister A1
+6. IOASID framework will try to free A1 then install A2 as the active
+allocator but PASID2 is in use. It will be unnecessarily disruptive to
+free PASID2
 
+I can think of a solution:
+ - Add a flag when registering ioasid custom allocator,
+IOASID_ALLOC_RETAIN, which means when switching to another custom
+allocator, all outstanding PASIDs will be retained. Of course it does
+not include switching to default allocator which does not have this
+RETAIN flag.
+
+ - For the allocators do not have this flag, their PASIDs must be freed
+upon unregistering.
+
+Any thoughts?
+
+Jacob
+
+> Thanks
+> 
+> Eric
+> > 
+> >    
+> >>> +		active_custom_allocator =
+> >>> list_entry(&custom_allocators, struct ioasid_allocator, list);
+> >>> +		pr_info("IOASID allocator changed");
+> >>> +	}
+> >>> +	mutex_unlock(&ioasid_allocator_lock);
+> >>> +}
+> >>> +EXPORT_SYMBOL_GPL(ioasid_unregister_allocator);
+> >>>  
+> >>>  /**
+> >>>   * ioasid_set_data - Set private data for an allocated ioasid
+> >>> @@ -68,6 +162,29 @@ ioasid_t ioasid_alloc(struct ioasid_set *set,
+> >>> ioasid_t min, ioasid_t max, data->set = set;
+> >>>  	data->private = private;
+> >>>  
+> >>> +	mutex_lock(&ioasid_allocator_lock);
+> >>> +	/*
+> >>> +	 * Use custom allocator if available, otherwise use
+> >>> default.
+> >>> +	 * However, if there are active IOASIDs already been
+> >>> allocated by default
+> >>> +	 * allocator, custom allocator cannot be used.
+> >>> +	 */
+> >>> +	if (!default_allocator_active &&
+> >>> active_custom_allocator) {
+> >>> +		id = active_custom_allocator->alloc(min, max,
+> >>> active_custom_allocator->pdata);
+> >>> +		if (id == INVALID_IOASID) {
+> >>> +			pr_err("Failed ASID allocation by custom
+> >>> allocator\n");
+> >>> +			mutex_unlock(&ioasid_allocator_lock);
+> >>> +			goto exit_free;
+> >>> +		}
+> >>> +		/*
+> >>> +		 * Use XA to manage private data also sanitiy
+> >>> check custom
+> >>> +		 * allocator for duplicates.
+> >>> +		 */
+> >>> +		min = id;
+> >>> +		max = id + 1;
+> >>> +	} else
+> >>> +		default_allocator_active = 1;    
+> >> nit: true?  
+> > yes, i can turn default_allocator_active into a bool type.
+> >   
+> >>> +	mutex_unlock(&ioasid_allocator_lock);
+> >>> +
+> >>>  	if (xa_alloc(&ioasid_xa, &id, data, XA_LIMIT(min, max),
+> >>> GFP_KERNEL)) { pr_err("Failed to alloc ioasid from %d to %d\n",
+> >>> min, max); goto exit_free;> @@ -91,9 +208,17 @@ void
+> >>> ioasid_free(ioasid_t ioasid) {
+> >>>  	struct ioasid_data *ioasid_data;
+> >>>  
+> >>> +	mutex_lock(&ioasid_allocator_lock);
+> >>> +	if (active_custom_allocator)
+> >>> +		active_custom_allocator->free(ioasid,
+> >>> active_custom_allocator->pdata);
+> >>> +	mutex_unlock(&ioasid_allocator_lock);
+> >>> +
+> >>>  	ioasid_data = xa_erase(&ioasid_xa, ioasid);
+> >>>  
+> >>>  	kfree_rcu(ioasid_data, rcu);
+> >>> +
+> >>> +	if (xa_empty(&ioasid_xa))
+> >>> +		default_allocator_active = 0;    
+> >> Isn't it racy? what if an xa_alloc occurs inbetween?
+> >>
+> >>  
+> > yes, i will move it under the mutex. Thanks.  
+> >>>  }
+> >>>  EXPORT_SYMBOL_GPL(ioasid_free);
+> >>>  
+> >>>     
+> >>
+> >> Thanks
+> >>
+> >> Eric  
+> > 
+> > [Jacob Pan]
+> >   
+
+[Jacob Pan]
