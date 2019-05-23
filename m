@@ -2,132 +2,176 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D00E6C282CE
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 02:50:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4B75C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 02:50:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8639F21019
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 02:50:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558579820;
-	bh=EVhshLbtwbLXVta5mEz2uUHlz53CbxdvuJdULkIxxwo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tRuGb1lpgZYljQRWHOcYJ3vVqrV3EqDkwYCK4bpG3U+ArSegGnvWXPnwoa8Kx/LYX
-	 SZANq2PNVl/NR3GguKk5bpltLR72bOCcF3aL4kQ72VseM61lYOXJETjuliX7rT+m5j
-	 NaYKhSxddDB6GGoAPeemoYDuJdd5Af7plRdCQN8U=
+	by mail.kernel.org (Postfix) with ESMTP id 7D0FC21841
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 02:50:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="CSvmpxzP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729564AbfEWCuT (ORCPT
+        id S1729721AbfEWCub (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 22:50:19 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:35797 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727802AbfEWCuT (ORCPT
+        Wed, 22 May 2019 22:50:31 -0400
+Received: from conssluserg-02.nifty.com ([210.131.2.81]:45004 "EHLO
+        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727802AbfEWCua (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 22:50:19 -0400
-Received: by mail-pg1-f195.google.com with SMTP id t1so2309509pgc.2
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 19:50:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=toBZ1FCdllt2tn+h0ykIvTcQZ5vqDTgX+a58FRrvFAo=;
-        b=EavVRmqwN6gSFjji1kOzzHxsu1ZuXCrySBo6jY9xLrbreoI5c9IvT8kWfqPngbjEBF
-         9XGVMunZbmsPpOdGLkwllfj74odFClEEnQMfOJI9MxOLyW4TOKfjzsuhlBokTDBSmZOQ
-         ZsWpNRBY2hNe9mz/kdsLqg5KOLp2iHXh3ziCbiYIxNGdHLbUSdHXX3i5qr9Q0TPYdwcG
-         fhOaTZJUvsFM1OVPlxqsMOZhBidkAAh3YCC8VvTo/pCFfq9GFv3aXzEj2GYYli5H1Hn/
-         XSO/TfAoo1OESWZdkBSbdxJpp5hVL1TFfDbF2o+Rnc0rNipwlr5Wzv6DUpgozgFLe3kN
-         5xQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=toBZ1FCdllt2tn+h0ykIvTcQZ5vqDTgX+a58FRrvFAo=;
-        b=U94TxNQL/Q0WxA+ys+AcDYwL4m5UiIgHyc1ON8/x92doPJ8q4ZmG6XzsjswRFuGk27
-         kRs4KYsEns8yczdcyitVjXs3ZR1h0mKjtGhSKvmZrNQ3t4XmTSEPk7oPAzMXGXN8D9AE
-         ueugkKqSOW/Qkz+l4ERu5VyP8z5Oi49jl9MDvYzaU6xe9mS9kA6VzUml3Wdph/MBi2hE
-         JtqEgdSVnkwgY088SG6fshLzikVAthOIosfn6c4RMqA9q+cCf2jE51oyjlzcxMx/YDZO
-         ue+brz/34PVmlB9Je9v8wm+mVjlaRtc6/29NpP97Tp2WChYMSt2MIEIUyBXzgUKMrjwn
-         clBQ==
-X-Gm-Message-State: APjAAAXQUDSKQ3a+Yv3JATV6nAHFpZciKD4TUXeBroawUSDGuQYfsv6d
-        Tp4Efq3iMhRhyF2xawn7DA8jdG4N
-X-Google-Smtp-Source: APXvYqz9ID17o5bLyPCucWN4VIM8c8mFPhf3cWcbgCbM4GW77qZxIoR1LL7XMg7DSRA3NPR5JynJKA==
-X-Received: by 2002:aa7:87d7:: with SMTP id i23mr99441501pfo.211.1558579818681;
-        Wed, 22 May 2019 19:50:18 -0700 (PDT)
-Received: from google.com ([2401:fa00:d:10:75ad:a5d:715f:f6d8])
-        by smtp.gmail.com with ESMTPSA id g71sm32511543pgc.41.2019.05.22.19.50.16
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 22 May 2019 19:50:18 -0700 (PDT)
-Date:   Thu, 23 May 2019 11:50:13 +0900
-From:   Namhyung Kim <namhyung@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Wei Li <liwei391@huawei.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-        linux-kernel@vger.kernel.org, xiezhipeng1@huawei.com
-Subject: Re: [PATCH v2] fix use-after-free in perf_sched__lat
-Message-ID: <20190523025011.GC196218@google.com>
-References: <20190508143648.8153-1-liwei391@huawei.com>
- <20190522065555.GA206606@google.com>
- <20190522110823.GR8945@kernel.org>
+        Wed, 22 May 2019 22:50:30 -0400
+Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com [209.85.217.44]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id x4N2oFjD014618;
+        Thu, 23 May 2019 11:50:16 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x4N2oFjD014618
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1558579816;
+        bh=2/FugdO2450EGjLSvjVI5FNYBjL5g1ZfuRbjKTuspjk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=CSvmpxzPkU2LHsR9dH7CWIjYKucvLevctvHA7v5ONetX796qRZ1xbCWNqGXa9XwVI
+         vQAQo+KiE2WYWDesNWHle3/0jQGRB83XXCX/CXeXwmLJVoLdQjPiT+K+jnVhrhUfOu
+         tm/HUoLPbtiXp7ykFzGxbzSU5T+Z0lqXgsIwhDeAl4oIeQRKv65HiawMrZhatj2GZ5
+         pQz5REwF0Kej+deu7CvPaT0WUOxqgI7SZ2ITehIbGUYVPk/+u3nH9vLR7Ekk5c6mvg
+         D/LkSQzS4ADtu3MOaEfRhUIT/SeD/df/vrdgfkSedUXQOOJOR354EprRyHbcDY5hNg
+         pVQbw7zfgHPSA==
+X-Nifty-SrcIP: [209.85.217.44]
+Received: by mail-vs1-f44.google.com with SMTP id d128so2646752vsc.10;
+        Wed, 22 May 2019 19:50:16 -0700 (PDT)
+X-Gm-Message-State: APjAAAXCqKNItr8XEFsj2X9svS0Hej9fNMpbYLl3yvpSNGuqsu2XTp5T
+        Qhxd/NtX99s+ne+exBTi9cadK3//EBuRCs7Nb9k=
+X-Google-Smtp-Source: APXvYqyyUQRDo34h8x9tqqKP8C5sThOQ4CucA4sp0PJzI8TeKi1Fk+k9xQaLmwClSBfAo0Z5KvKi8o5tYXUAshG+xqA=
+X-Received: by 2002:a05:6102:3d9:: with SMTP id n25mr19610186vsq.181.1558579815029;
+ Wed, 22 May 2019 19:50:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190522110823.GR8945@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190521133257.GA21471@kroah.com> <CAK7LNASZWLwYC2E3vBkXhp7wt9zBWkFrR+NTnxTyLn1zO66a0w@mail.gmail.com>
+ <eae2d0e80824cc84965c571a0ea097e14d3f498c.camel@perches.com>
+In-Reply-To: <eae2d0e80824cc84965c571a0ea097e14d3f498c.camel@perches.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Thu, 23 May 2019 11:49:38 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQ=M0ejV3C8bgjuMxdRR9v=2-GRdXeUjFR6URrrtYPCnA@mail.gmail.com>
+Message-ID: <CAK7LNAQ=M0ejV3C8bgjuMxdRR9v=2-GRdXeUjFR6URrrtYPCnA@mail.gmail.com>
+Subject: Re: [GIT PULL] SPDX update for 5.2-rc1 - round 1
+To:     Joe Perches <joe@perches.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-spdx@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 22, 2019 at 08:08:23AM -0300, Arnaldo Carvalho de Melo wrote:
-> Em Wed, May 22, 2019 at 03:56:10PM +0900, Namhyung Kim escreveu:
-> > On Wed, May 08, 2019 at 10:36:48PM +0800, Wei Li wrote:
-> > > After thread is added to machine->threads[i].dead in
-> > > __machine__remove_thread, the machine->threads[i].dead is freed
-> > > when calling free(session) in perf_session__delete(). So it get a
-> > > Segmentation fault when accessing it in thread__put().
-> > > 
-> > > In this patch, we delay the perf_session__delete until all threads
-> > > have been deleted.
-> > > 
-> > > This can be reproduced by following steps:
-> > > 	ulimit -c unlimited
-> > > 	export MALLOC_MMAP_THRESHOLD_=0
-> > > 	perf sched record sleep 10
-> > > 	perf sched latency --sort max
-> > > 	Segmentation fault (core dumped)
-> > > 
-> > > Signed-off-by: Zhipeng Xie <xiezhipeng1@huawei.com>
-> > > Signed-off-by: Wei Li <liwei391@huawei.com>
-> > 
-> > Acked-by: Namhyung Kim <namhyung@kernel.org>
-> 
-> I'll try to analyse this one soon, but my first impression was that we
-> should just grab reference counts when keeping a pointer to those
-> threads instead of keeping _all_ threads alive when supposedly we could
-> trow away unreferenced data structures.
-> 
-> But this is just a first impression from just reading the patch
-> description, probably I'm missing something.
+On Wed, May 22, 2019 at 3:37 PM Joe Perches <joe@perches.com> wrote:
+>
+> On Wed, 2019-05-22 at 13:32 +0900, Masahiro Yamada wrote:
+> > On Tue, May 21, 2019 at 10:34 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+> []
+> > >  - Add GPL-2.0-only or GPL-2.0-or-later tags to files where our scan
+> > >     tools can determine the license text in the file itself.  Where this
+> > >     happens, the license text is removed, in order to cut down on the
+> > >     700+ different ways we have in the kernel today, in a quest to get
+> > >     rid of all of these.
+> []
+> > I have been wondering for a while
+> > which version of spdx tags I should use in my work.
+> >
+> > I know the 'GPL-2.0' tag is already deprecated.
+> > (https://spdx.org/licenses/GPL-2.0.html)
+> >
+> > But, I saw negative reaction to this:
+> > https://lore.kernel.org/patchwork/patch/975394/
+> >
+> > Nor "-only" / "-or-later" are documented in
+> > Documentation/process/license-rules.rst
+> >
+> > In this patch series, Thomas used 'GPL-2.0-only' and 'GPL-2.0-or-later'
+> > instead of 'GPL-2.0' and 'GPL-2.0+'.
+> >
+> > Now, we have a great number of users of spdx v3 tags.
+> > $ git grep -P 'SPDX-License-Identifier.*(?:-or-later|-only)'| wc -l
+> > 4135
+> > So, what I understood is:
+> >
+> >   For newly added tags, '*-only' and '*-or-later' are preferred.
+> >
+> > (But, we do not convert existing spdx v2 tags globally.)
+> >
+> >
+> > "
+> > Joe's patch was not merged, but at least
+> > Documentation/process/license-rules.rst
+> > should be updated in my opinion.
+> >
+> > (Perhaps, checkpatch.pl can suggest newer tags in case
+> > patch submitters do not even know that deprecation.)
+>
+> I'd still prefer the kernel use of a single SPDX style.
+>
+> I don't know why the -only and -or-later forms were
+> used for this patch, but I like it.
+>
+> I believe the -only and -or-later are more intelligible
+> as a trivial reading of
+>
+>         SPDX-License-Identifier: GPL-2.0
+>
+> would generally mean to me the original
+> GPL-2.0 license without the elision of the
+> (or at your option, any later version) bits
+>
+> whereas
+>
+>         SPDX-License-Identifier: GPL-2.0-only
+>
+> seems fairly descriptive.
+>
+> Is it agreed that the GPL-<v>-only and GPL-<v>-or-later
+> forms should be preferred for new SPDX identifiers?
 
-No, thread refcounting is fine.  We already did it and threads with the
-refcount will be accessed only.
 
-But the problem is the head of the list.  After using the thread, the
-refcount is gone and thread is removed from the list and destroyed.
-However the head of list is in a struct machine which was freed with
-session already.
-
-Thanks,
-Namhyung
+I agree.
 
 
-> 
-> Thanks for providing instructions on readily triggering the segfault.
-> 
-> - Arnaldo
+> If so, I'll submit a checkpatch patch.
+
+That will be nice.
+
+
+> I could also wire up a patch to checkpatch and docs to
+> remove the /* */
+> requirement for .h files and prefer
+> the generic // form for both .c and
+> .h files as the
+> current minimum tooling versions now all allow //
+> comments
+> .
+
+We have control for minimal tool versions for building the kernel,
+so I think // will be OK for in-kernel headers.
+
+
+On the other hand, I am not quite sure about UAPI headers.
+We cannot define minimum tool versions
+for building user-space.
+Perhaps, using // in UAPI headers causes a problem
+if an ancient compiler is used?
+
+
+BTW, if we allow to use // in header files,
+we have no reason to forbid // in assembly files either.
+
+We use *.S files (assembly that should be preprocessed)
+instead of *.s files.
+
+So, comments are ripped off by CPP anyway
+whichever comment style is used.
+
+
+--
+Best Regards
+Masahiro Yamada
