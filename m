@@ -2,234 +2,105 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C56B2C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 13:16:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76E0CC282E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 13:16:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85DD120851
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 13:16:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PEIFwC3Y"
+	by mail.kernel.org (Postfix) with ESMTP id 448F72133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 13:16:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558617409;
+	bh=mXLc0Pq75zm3ejNcPLS6bjMJjJ1c1cz2ZzOn9qMPJRM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LIpAo2nUEbIWWIkm3sNLxKPpwLZWu5PmD76wtjTjA1BypciDGhISYFx3Fzy2N8L0N
+	 vHvERu7sgVCjvfom74rmUaTHBF7nrsJ7RTnUCm+VYeKbrbP1GV0lJjrVia0AR7OcYV
+	 zU3ml2WYh6qyaYffn/AqDMidBYxWYbgz6ues/klc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730633AbfEWNQh (ORCPT
+        id S1730703AbfEWNQs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 09:16:37 -0400
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:44794 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726310AbfEWNQh (ORCPT
+        Thu, 23 May 2019 09:16:48 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:47288 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726310AbfEWNQs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 09:16:37 -0400
-Received: by mail-yw1-f66.google.com with SMTP id e74so2235116ywe.11;
-        Thu, 23 May 2019 06:16:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0N6TfJoMq4yDHvFcXvCZM5fyaTvl0O+ulNBm5ab01nU=;
-        b=PEIFwC3YOzERhhaOOVIZYgP81HC1wJPf1zaX7uh8o0BJhLRkiBBioVNJIj5l+mt0t0
-         1tWnDcq4UFxVnrrXAElp9eiWQq6lviTT4p/x9yLp1yN/YC3J5FtBTUIS1uFNwhi9gVaU
-         xncH8aHx5FsySpxFNAVbldJLUHt2mecIaj3L7ylbcmnL5haWwORseT1Tek0s32BFEQLU
-         aY82yuUJbIMgadiPcQQbS5NOk6+7r24o1Yovbo8ckMVhyIA5N0FKeG5BXW61f5KfCmU7
-         +nGahSNS1v064qd5RAzs7Ek4AMjBFH5XzJqa4eRBQniOqKT0XIMYnVwdTffqTAF+y6T7
-         Jj1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0N6TfJoMq4yDHvFcXvCZM5fyaTvl0O+ulNBm5ab01nU=;
-        b=M/iYr6lPLzNWpP//W+c1AMAVpjvfy3unWJCOOQX5BWuduUybjXrcWk86bovgMsQCSG
-         ID+LCf6A56aCVgGDBM+NaVjsV3cUfbDbWjBjD790S3BCD5Bu0fjRD7g1EqBQkGwqRInZ
-         spqIpVnSgspVbRFD/+1KpVALYiOWfjI0svOBxMGBN+z8af1Hloc19FbwrdT+GKYmfpS6
-         +Bk908xlvjEQMXglKkZMQjP3Y7925FPYny8XJIfnCMek2DUpt5ttU5S5qa+9NeycubpP
-         AGtoIZpDQjrT52YvZDllGtUbup1OXv9ux7BclR1Dc6K1Fn3doKiImp5IUNmvU5XejyNr
-         0UjQ==
-X-Gm-Message-State: APjAAAWDpaU0XUn/+lMc89yO0XzV5wqODCChcRM2Ex2+E2TqU2MYHIQf
-        gbuBEoQniCgrqFPiiUhAStKcsmojuYCWljiJ7xk=
-X-Google-Smtp-Source: APXvYqzxatInHHn1Pl9fXMx+ApQwq8tLSScUrEaJRdV9TeX01oDAEoxc9uuKjDtuAL5dSdwi4vZi/Z9PsP/WPeFkM78=
-X-Received: by 2002:a81:4ecc:: with SMTP id c195mr44693567ywb.31.1558617396179;
- Thu, 23 May 2019 06:16:36 -0700 (PDT)
+        Thu, 23 May 2019 09:16:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=mXLc0Pq75zm3ejNcPLS6bjMJjJ1c1cz2ZzOn9qMPJRM=; b=jwZNKcvSZsGKxhjtZO0m04i13
+        XHNJ71dJgEsdHqeCt7pSl9qYAomLC+UAdP8UucBjF6RsoIbyIjyWgVDzcmrb+JpzA4x6teRFAIp9u
+        2+Ov/Onsmki/kayOWNyssvBea+F3ss8BsnPxIf1frR5nME1kFKktbqy2XZLj5dNsVEvAg=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hTnaM-0000B5-0H; Thu, 23 May 2019 13:16:42 +0000
+Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
+        id 602F61126D24; Thu, 23 May 2019 14:16:41 +0100 (BST)
+Date:   Thu, 23 May 2019 14:16:41 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
+Cc:     lgirdwood@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        bjorn.andersson@linaro.org, vinod.koul@linaro.org,
+        niklas.cassel@linaro.org, khasim.mohammed@linaro.org,
+        linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH 2/3] drivers: regulator: qcom: add PMS405 SPMI regulator
+Message-ID: <20190523131641.GD17245@sirena.org.uk>
+References: <a3c281d5-d30e-294f-71ab-957decde2ba0@linaro.org>
+ <20190502023316.GS14916@sirena.org.uk>
+ <dd15d784-f2a1-78c6-3543-69bbcc1143c4@linaro.org>
+ <20190503062626.GE14916@sirena.org.uk>
+ <229823c4-f5d4-4821-ded1-cc046dd0bd20@linaro.org>
+ <20190506043809.GL14916@sirena.org.uk>
+ <a89763cb-5d50-0927-7912-6ccf38ae1d66@linaro.org>
 MIME-Version: 1.0
-References: <20190522163150.16849-1-christian@brauner.io> <CAOQ4uxjV=7=FXuyccBK9Pu1B7o-w-pbc1FQXJxY4q6z8E93KOg@mail.gmail.com>
- <EB97EF04-D44F-4320-ACDC-C536EED03BA4@brauner.io> <CAOQ4uxhodqVw0DVfcvXYH5vBf4LKcv7t388ZwXeZPBTcEMzGSw@mail.gmail.com>
- <20190523095506.nyei5nogvv63lm4a@brauner.io> <CAOQ4uxiBeAzsE+b=tE7+9=25-qS7ohuTdEswYOt8DrCp6eAMuw@mail.gmail.com>
- <20190523104239.u63u2uth4yyuuufs@brauner.io> <CAOQ4uxji4jRvJnLvXe0yR4Ls7VxM_tjAypX1TqBe5FYr_7GnXw@mail.gmail.com>
- <20190523115845.w7neydaka5xivwyi@brauner.io>
-In-Reply-To: <20190523115845.w7neydaka5xivwyi@brauner.io>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Thu, 23 May 2019 16:16:24 +0300
-Message-ID: <CAOQ4uxgJXLyZe0Bs=q60=+pHpdGtnCdKKZKdr-3iTbygKCryRA@mail.gmail.com>
-Subject: Re: [PATCH] fanotify: remove redundant capable(CAP_SYS_ADMIN)s
-To:     Christian Brauner <christian@brauner.io>
-Cc:     Jan Kara <jack@suse.cz>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Matthew Bobrowski <mbobrowski@mbobrowski.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="IDYEmSnFhs3mNXr+"
+Content-Disposition: inline
+In-Reply-To: <a89763cb-5d50-0927-7912-6ccf38ae1d66@linaro.org>
+X-Cookie: I brake for chezlogs!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 2:58 PM Christian Brauner <christian@brauner.io> wrote:
->
-> On Thu, May 23, 2019 at 02:40:39PM +0300, Amir Goldstein wrote:
-> > On Thu, May 23, 2019 at 1:42 PM Christian Brauner <christian@brauner.io> wrote:
-> > >
-> > > On Thu, May 23, 2019 at 01:25:08PM +0300, Amir Goldstein wrote:
-> > > > On Thu, May 23, 2019 at 12:55 PM Christian Brauner <christian@brauner.io> wrote:
-> > > > >
-> > > > > On Wed, May 22, 2019 at 11:00:22PM +0300, Amir Goldstein wrote:
-> > > > > > On Wed, May 22, 2019 at 9:57 PM Christian Brauner <christian@brauner.io> wrote:
-> > > > > > >
-> > > > > > > On May 22, 2019 8:29:37 PM GMT+02:00, Amir Goldstein <amir73il@gmail.com> wrote:
-> > > > > > > >On Wed, May 22, 2019 at 7:32 PM Christian Brauner
-> > > > > > > ><christian@brauner.io> wrote:
-> > > > > > > >>
-> > > > > > > >> This removes two redundant capable(CAP_SYS_ADMIN) checks from
-> > > > > > > >> fanotify_init().
-> > > > > > > >> fanotify_init() guards the whole syscall with capable(CAP_SYS_ADMIN)
-> > > > > > > >at the
-> > > > > > > >> beginning. So the other two capable(CAP_SYS_ADMIN) checks are not
-> > > > > > > >needed.
-> > > > > > > >
-> > > > > > > >It's intentional:
-> > > > > > > >
-> > > > > > > >commit e7099d8a5a34d2876908a9fab4952dabdcfc5909
-> > > > > > > >Author: Eric Paris <eparis@redhat.com>
-> > > > > > > >Date:   Thu Oct 28 17:21:57 2010 -0400
-> > > > > > > >
-> > > > > > > >    fanotify: limit the number of marks in a single fanotify group
-> > > > > > > >
-> > > > > > > >There is currently no limit on the number of marks a given fanotify
-> > > > > > > >group
-> > > > > > > >can have.  Since fanotify is gated on CAP_SYS_ADMIN this was not seen
-> > > > > > > >as
-> > > > > > > >a serious DoS threat.  This patch implements a default of 8192, the
-> > > > > > > >same as
-> > > > > > > >inotify to work towards removing the CAP_SYS_ADMIN gating and
-> > > > > > > >eliminating
-> > > > > > > >    the default DoS'able status.
-> > > > > > > >
-> > > > > > > >    Signed-off-by: Eric Paris <eparis@redhat.com>
-> > > > > > > >
-> > > > > > > >There idea is to eventually remove the gated CAP_SYS_ADMIN.
-> > > > > > > >There is no reason that fanotify could not be used by unprivileged
-> > > > > > > >users
-> > > > > > > >to setup inotify style watch on an inode or directories children, see:
-> > > > > > > >https://patchwork.kernel.org/patch/10668299/
-> > > > > > > >
-> > > > > > > >>
-> > > > > > > >> Fixes: 5dd03f55fd2 ("fanotify: allow userspace to override max queue
-> > > > > > > >depth")
-> > > > > > > >> Fixes: ac7e22dcfaf ("fanotify: allow userspace to override max
-> > > > > > > >marks")
-> > > > > > > >
-> > > > > > > >Fixes is used to tag bug fixes for stable.
-> > > > > > > >There is no bug.
-> > > > > > > >
-> > > > > > > >Thanks,
-> > > > > > > >Amir.
-> > > > > > >
-> > > > > > > Interesting. When do you think the gate can be removed?
-> > > > > >
-> > > > > > Nobody is working on this AFAIK.
-> > > > > > What I posted was a simple POC, but I have no use case for this.
-> > > > > > In the patchwork link above, Jan has listed the prerequisites for
-> > > > > > removing the gate.
-> > > > > >
-> > > > > > One of the prerequisites is FAN_REPORT_FID, which is now merged.
-> > > > > > When events gets reported with fid instead of fd, unprivileged user
-> > > > > > (hopefully) cannot use fid for privilege escalation.
-> > > > > >
-> > > > > > > I was looking into switching from inotify to fanotify but since it's not usable from
-> > > > > > > non-initial userns it's a no-no
-> > > > > > > since we support nested workloads.
-> > > > > >
-> > > > > > One of Jan's questions was what is the benefit of using inotify-compatible
-> > > > > > fanotify vs. using inotify.
-> > > > > > So what was the reason you were looking into switching from inotify to fanotify?
-> > > > > > Is it because of mount/filesystem watch? Because making those available for
-> > > > >
-> > > > > Yeah. Well, I would need to look but you could probably do it safely for
-> > > > > filesystems mountable in user namespaces (which are few).
-> > > > > Can you do a bind-mount and then place a watch on the bind-mount or is
-> > > > > this superblock based?
-> > > > >
-> > > >
-> > > > Either.
-> > > > FAN_MARK_MOUNT was there from day 1 of fanotify.
-> > > > FAN_MARK_FILESYSTEM was merged to Linux Linux 4.20.
-> > > >
-> > > > But directory modification events that are supported since v5.1 are
-> > > > not available
-> > > > with FAN_MARK_MOUNT, see:
-> > >
-> > > Because you're worried about unprivileged users spying on events? Or
-> > > something else?
-> >
-> > Something else. The current fsnotify_move/create/delete() VFS hooks
-> > have no path/mount information, so it is not possible to filter them by
-> > mount only by inode/sb.
-> > Fixing that would not be trivial, but first a strong use case would need
-> > to be presented.
-> >
-> > > Because if you can do a bind-mount there's nothing preventing an
-> > > unprivileged user to do a hand-rolled recursive inotify that would
-> > > amount to the same thing anyway.
-> >
-> > There is. unprivileged user cannot traverse into directories it is not
-> > allowed to read/search.
->
-> Right, I should've mentioned: when you're userns root and you have
-> access to all files. The part that is interesting to me is getting rid
-> of capable(CAP_SYS_ADMIN).
 
-Indeed. so part of removing the gated capable(CAP_SYS_ADMIN)
-is figuring out the permission checks needed for individual features.
-I agree that for FAN_MARK_MOUNT/FILESYSTEM,
-capabale(CAP_SYS_ADMIN) is too strong.
-ns_capable(sb->s_user_ns, CAP_DAC_READ_SEARCH)
-is probably enough.
+--IDYEmSnFhs3mNXr+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
->
-> >
-> > > (And btw, v5.1 really is a major step forward and I would really like to
-> > >  use this api tbh.)
-> > >
-> >
-> > You haven't answered my question. What is the reason you are interested
-> > in the new API? What does it provide that the old API does not?
-> > I know the 2 APIs differ. I just want to know which difference interests *you*,
-> > because without a strong use case, it will be hard for me to make progress
-> > upstream.
-> >
-> > Is what you want really a "bind-mount" watch or a "subtree watch"?
-> > The distinction is important. I am thinking about solutions for the latter,
-> > although there is no immediate solution in the horizon - only ideas.
->
-> Both cases would be interesting. But subtree watch is what would
-> probably help a lot already. So let me explain.
-> For LXD - not sure if you know what that is -
-I do
+On Thu, May 23, 2019 at 10:35:46AM +0200, Jorge Ramirez wrote:
 
->  we allow user to "hotplug"
-> mounts or certain whitelisted devices into a user namespace container.
-> One of the nifty features is that we let users specify a "required"
-> property. When "required" is "false" the user can give us a path, e.g.
-> /bla/bla/bla/target and then we place a watch on the closest existing
-> ancestor of my-device. When the target shows up we hotplug it for the
-> user. Now, as you imagine maintaining that cache until "target" shows up
-> is a royal pain.
+> Would you accept if I wrote a separate driver specific to pms405 or do
+> you want me to integrate in qcom-spmi_regulator.c?
 
-You lost me there. Are you looking for notifications when device files appear?
-When directory is created? Please give a concrete example.
-What part of /bla/bla/bla/target appears, when and how.
-fanotify does not give notifications when mounts are mounted.
-I have seen a proposal by David Howells for mount change notifications.
+> I am asking because none of the ops will use the common functions (I
+> wont be reusing much code from this qcom-spmi_regulator.c file)
 
-Thanks,
-Amir.
+I don't really mind, if there's nothing really shared then making it a
+separate driver is probably best but it's not a strong opinion either
+way.
+
+--IDYEmSnFhs3mNXr+
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlzmnTgACgkQJNaLcl1U
+h9CDcAf8DL+MyQPT/4yQxHXXQBs5IDMiS1xz5/mDyBccppntbLrOEa47PK9HkXBd
+1OOgkPuGEIYd74ad4Oue+CWFYQJhofrt4PSHoq0qfciBgho8cgZGRKI5twUI5P68
+lQP7WMcri9askjAXIzykFfbdNoSQVoCsWi2mONsSDJXQqZg5C8VAdH1wpJjBe27Z
+we9oiZ+JQi0NvANUAHq3IqEHk3q9EP2p1IpvMzLRJHIv96kmHD8IJXoF5eZC2Hs1
+QRv7RA+EgX1/mT2JhVE+FaFvDbb4Ur4oLU2u/387E5ImIQ+ltcADQq2KUbsbl4LN
+sJRpd1qX9AEPMdyAnm2K18I0slbCRg==
+=5f7d
+-----END PGP SIGNATURE-----
+
+--IDYEmSnFhs3mNXr+--
