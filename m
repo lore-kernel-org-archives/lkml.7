@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7A2EC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:09:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35255C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:09:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4C27217D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:09:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D1F6217D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:09:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558638545;
-	bh=DR2Hg/fRrmYxcQi0/v7BdYlawFDvUxGS549mG4XxQ/k=;
+	s=default; t=1558638549;
+	bh=4Iku/FjekZcjWFXaDe6eZYD6gS+UBEqFJtU66m3sppg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XyUcQgWfO9Jwh2hpE9A6C6vchuDefh3AJmpqe81DMAnySd194KiC+Wb+fxmWRNEJT
-	 sUIicVRLa8IRyBNPs4ct9kbGoYwFegq/T3/QL90fs0n8RBjE3JxonjQqDDAFMkw+ec
-	 to8PTcqUzm2Xb1c1TquWsenyP7fJgj91NacVJbp8=
+	b=kWt2aNCqGNcseqLe0c2W7ahyLiGu3RUnbTm8FhA7lTefonWm4pVsukI748EMk4Lmu
+	 JHj1lNduwJK/fzi5ADx7wJamhB3OLkAt94HaDSJ7DgOVbIhukHo8m9Xo+VQUFm2q2I
+	 yp8VanBNVXITmZP94Qlq4KDaKjSw1exKP1lhflIc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732038AbfEWTJF (ORCPT
+        id S1732060AbfEWTJI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:09:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42002 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:09:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42112 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731992AbfEWTJC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:09:02 -0400
+        id S1732039AbfEWTJH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:09:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA09E21841;
-        Thu, 23 May 2019 19:09:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B52621841;
+        Thu, 23 May 2019 19:09:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558638541;
-        bh=DR2Hg/fRrmYxcQi0/v7BdYlawFDvUxGS549mG4XxQ/k=;
+        s=default; t=1558638546;
+        bh=4Iku/FjekZcjWFXaDe6eZYD6gS+UBEqFJtU66m3sppg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LEew0I1CtePbIm1nva7N0OCYSwjT6YByPxrTtE+z+hRqja3fRiELrjojqWf429TMC
-         L/ddQau3FABLgMrll/9cdi62fuNAEdQJUYjCgJ31Wx67zx0lcp0gMcvDiXb1tmKQKd
-         L8GdSeMqJEw1m7rn8CTO0w0rgEBSS4GjMODergwI=
+        b=SzVi5vP8DJE5ZUf3DjDae4+KgFXJwnYzghbykCRzxbOhEsULzXl/XvHp4auPGpTQ7
+         PVH0Fdgh7SnOLbhVC+xRqf454CKsBXOGn9QXOW7uDXzjVIWaDD0l9kpYnQb6zevZyX
+         +OXB9rE0ERXWY5PG/bSCC6h4BppyF7kDfcMK4Jrg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Helge Deller <deller@gmx.de>
-Subject: [PATCH 4.9 09/53] parisc: Skip registering LED when running in QEMU
-Date:   Thu, 23 May 2019 21:05:33 +0200
-Message-Id: <20190523181712.376411617@linuxfoundation.org>
+        stable@vger.kernel.org, Tingwei Zhang <tingwei@codeaurora.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Subject: [PATCH 4.9 11/53] stm class: Fix channel free in stm output free path
+Date:   Thu, 23 May 2019 21:05:35 +0200
+Message-Id: <20190523181712.685624475@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181710.981455400@linuxfoundation.org>
 References: <20190523181710.981455400@linuxfoundation.org>
@@ -58,31 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Helge Deller <deller@gmx.de>
+From: Tingwei Zhang <tingwei@codeaurora.org>
 
-commit b438749044356dd1329c45e9b5a9377b6ea13eb2 upstream.
+commit ee496da4c3915de3232b5f5cd20e21ae3e46fe8d upstream.
 
-No need to spend CPU cycles when we run on QEMU.
+Number of free masters is not set correctly in stm
+free path. Fix this by properly adding the number
+of output channels before setting them to 0 in
+stm_output_disclaim().
 
-Signed-off-by: Helge Deller <deller@gmx.de>
-CC: stable@vger.kernel.org # v4.9+
+Currently it is equivalent to doing nothing since
+master->nr_free is incremented by 0.
+
+Fixes: 7bd1d4093c2f ("stm class: Introduce an abstraction for System Trace Module devices")
+Signed-off-by: Tingwei Zhang <tingwei@codeaurora.org>
+Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc: stable@vger.kernel.org # v4.4
+Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/parisc/led.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/hwtracing/stm/core.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/parisc/led.c
-+++ b/drivers/parisc/led.c
-@@ -568,6 +568,9 @@ int __init register_led_driver(int model
- 		break;
+--- a/drivers/hwtracing/stm/core.c
++++ b/drivers/hwtracing/stm/core.c
+@@ -226,8 +226,8 @@ stm_output_disclaim(struct stm_device *s
+ 	bitmap_release_region(&master->chan_map[0], output->channel,
+ 			      ilog2(output->nr_chans));
  
- 	case DISPLAY_MODEL_LASI:
-+		/* Skip to register LED in QEMU */
-+		if (running_on_qemu)
-+			return 1;
- 		LED_DATA_REG = data_reg;
- 		led_func_ptr = led_LASI_driver;
- 		printk(KERN_INFO "LED display at %lx registered\n", LED_DATA_REG);
+-	output->nr_chans = 0;
+ 	master->nr_free += output->nr_chans;
++	output->nr_chans = 0;
+ }
+ 
+ /*
 
 
