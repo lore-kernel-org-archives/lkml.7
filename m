@@ -2,237 +2,116 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 580F7C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:34:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1467BC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:35:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2114D2175B
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:34:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAB2321871
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:35:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="YYadS9fN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hkLe4JMm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731068AbfEWPec (ORCPT
+        id S1731096AbfEWPfx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 11:34:32 -0400
-Received: from mail-it1-f196.google.com ([209.85.166.196]:52117 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730752AbfEWPeb (ORCPT
+        Thu, 23 May 2019 11:35:53 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:36422 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730866AbfEWPfx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 11:34:31 -0400
-Received: by mail-it1-f196.google.com with SMTP id m3so10458832itl.1
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 08:34:31 -0700 (PDT)
+        Thu, 23 May 2019 11:35:53 -0400
+Received: by mail-ed1-f66.google.com with SMTP id a8so9851491edx.3;
+        Thu, 23 May 2019 08:35:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Z4KPzzFsdGcBdAr5bNG6JKh38d9/uHM4E4WIv1LXSx4=;
-        b=YYadS9fNuoSsvmLh28CLlcNFOR4c0CO8CCadSPs02K2zUwG2Cov8aiLX/U+yGOAYGb
-         R0KBvuagNFrO3HD3wgaOQmMm7OmGrpBAQIXWnTCLJHVsCCfbxaCPWs4UY9IihyiTZ9AV
-         uBcmQrLpB4/R7JKLsgyCs+fsVwWCPv4y//sJAxbmyMXQ+LUs5zjs32+s55uwg0ecp9nQ
-         F7Wim0HYNflr/5CcCtu/014icVLBvPbutqSzx0vGItbbaCLKx426zzLOFgd8n2W4sjk5
-         qjrsJirsR3I42TOvUNtsBdkmd/5nLzCTshPBzcfQvDpnqGk6fNBgrMY8tda01I3Xolk1
-         XT2w==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=u7LRGUAkc7MmENWtPTnGBlH4AqK0GL/jUqDDtZhAKtY=;
+        b=hkLe4JMmxf0dcgTvJtjxIAYwmwWavbwwRoIPkmLlqnh2eTIKFOcvLi4cgcphOplATt
+         POTcp28T3R8sosv4sem6hFp1nsu86K7mb0NLEno1CtbIYorggPaSWfSHaNvDQ5lcb9h1
+         quewMMnxmno5KjR/Wvrh8IXKXf78dzrUgH//sYNEUImyy+hUgOG+SYx0Z+VVMr1PJxK8
+         3c5badxV6idEMF2w8hx3oomth6R2Pd4UyEz2Hy4Jd3KuqKwcAJeHcZQX3s3+cQOys5tY
+         IH4C0IqpRDifzFLYE3mBWv+K8X14840gPwP9A0YTV2O9Zq4dQ8RBpZv4UmvjCrm+RNh3
+         MPxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Z4KPzzFsdGcBdAr5bNG6JKh38d9/uHM4E4WIv1LXSx4=;
-        b=QyZceRCMWCbnN04Id4yWq88N/W5XxjRsfGNZVXE1h1Lq9BhkadnXap5/EWrefc9fGZ
-         l7heVtTOkoGcsSeSBrqxmwK5Y+q/1aovXNUB1D7XtRJWvzc4r2rxdWuhaTAdzJnV/H6z
-         ho4g/Nj0leGqlFWaxcxYaDn2416jNgxAGdjzXokI2YVIJ/vkdvI1YRIiUsTcm39Wr9Vz
-         1cMKMYsnxvrZqyFHwl6LYG0y5HVVCyPzpjdVADXP/TYAHUpDmLbzVwupDEnsM+xuyvSl
-         Fo7G+fXeGk4PT0225uHLSV1pc9PU12AfhmB309+tKzsQ0k7mqejGZtVU/PavjuACGZKq
-         6MwA==
-X-Gm-Message-State: APjAAAWbrjTJ0T/DsDH4EY50RgfM/UHt6TsS+Zmq6SU3oIpaeRbb0o/9
-        K9vcbKyhKPM3usVdiB3ugnDZiTXRSQ+Bw3Rku9ucNQ==
-X-Google-Smtp-Source: APXvYqwOyTiWj7DRNZuwkOCP8cSldAHhrwF14HATAzXUOruWpcjC64EzkCng07uLWqWchLgSG8+SA02W9UGBjHjD4ik=
-X-Received: by 2002:a24:e409:: with SMTP id o9mr14808892ith.4.1558625670960;
- Thu, 23 May 2019 08:34:30 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=u7LRGUAkc7MmENWtPTnGBlH4AqK0GL/jUqDDtZhAKtY=;
+        b=XNOOvaBOI379vftmpCgM5qT2AXsHQVjP4sJF84tMvYYsSwMXlletG+xmTJif9rC7IV
+         7AMcRsARMq9yeC692X0FKx2uqar6gX/VYWrWh+J/A3/DSorfmxAaq/w/7NSx2jg7VN6T
+         6bQNw2DHe9k/VNgf7wm6WdLEjKNQ/NYqd0kohpRrhWut8bs9pox/XFyiIkHE6zgaNVTq
+         pzlIbrnh73sz5FGo94AaMnEYj+mv09xuZUtAhgwfrQJKDe0+A6/GjIVGKx2OIWBBpR4Q
+         r8aZLbmzHWTQoK502nOtsLQIoZye9JbVQZslQPp2Zoz482TnuOtYy1n30n999SEdzBqj
+         pwgQ==
+X-Gm-Message-State: APjAAAU8aKyILRmHjDxTsDoulYh64P5ztYxvLeMRTlrutB0taMrc+5F3
+        DDsZmfKCMD8tXFIeN5n/a3o=
+X-Google-Smtp-Source: APXvYqx7lm1bbh3OsTk/Fnw+a8KwyrgCSMljf9Y1/4Z8cKrIXySVZ6A9GXIjHJO1dWEdwWOsXX3Hrw==
+X-Received: by 2002:a17:906:265b:: with SMTP id i27mr35933745ejc.147.1558625751135;
+        Thu, 23 May 2019 08:35:51 -0700 (PDT)
+Received: from archlinux-epyc ([2a01:4f9:2b:2b15::2])
+        by smtp.gmail.com with ESMTPSA id z32sm7942897edz.85.2019.05.23.08.35.49
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 23 May 2019 08:35:50 -0700 (PDT)
+Date:   Thu, 23 May 2019 08:35:48 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Don Brace <don.brace@microsemi.com>,
+        "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        esc.storagedev@microsemi.com, linux-scsi@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] scsi: hpsa: fix an uninitialized read and
+ dereference of pointer dev
+Message-ID: <20190523153548.GA112363@archlinux-epyc>
+References: <20190522083903.18849-1-colin.king@canonical.com>
 MIME-Version: 1.0
-References: <20190417144709.19588-1-brgl@bgdev.pl> <20190417144709.19588-2-brgl@bgdev.pl>
- <187fdcd8-4cc8-3871-ee66-1ebd7408b1fe@linaro.org> <CAMRc=MdQ_GORGaw1szwvBRqKzkZQCZNnEcwkNzmGduEbiDR4Lw@mail.gmail.com>
- <ca00f49f-0fa2-1907-feac-ba798dce365b@linaro.org>
-In-Reply-To: <ca00f49f-0fa2-1907-feac-ba798dce365b@linaro.org>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Thu, 23 May 2019 17:34:20 +0200
-Message-ID: <CAMRc=Mf37TZZO00tbXhAyxzNBYx9C-farKNQ=9vmVWZY59KC2w@mail.gmail.com>
-Subject: Re: [RFC 1/2] clocksource: davinci-timer: add support for clockevents
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        David Lechner <david@lechnology.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190522083903.18849-1-colin.king@canonical.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-czw., 23 maj 2019 o 15:25 Daniel Lezcano <daniel.lezcano@linaro.org> napisa=
-=C5=82(a):
->
->
-> Hi Bartosz,
->
->
->
-> On 23/05/2019 14:58, Bartosz Golaszewski wrote:
->
-> [ ... ]
->
-> >>> +++ b/drivers/clocksource/timer-davinci.c
-> >>> @@ -0,0 +1,272 @@
-> >>> +// SPDX-License-Identifier: GPL-2.0-only
-> >>> +//
-> >>> +// TI DaVinci clocksource driver
-> >>> +//
-> >>> +// Copyright (C) 2019 Texas Instruments
-> >>> +// Author: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >>> +// (with tiny parts adopted from code by Kevin Hilman <khilman@bayli=
-bre.com>)
-> >>
-> >> The header format is wrong, it should be:
-> >>
-> >> // SPDX-License-Identifier: GPL-2.0-only
-> >> /*
-> >>  * TI DaVinci clocksource driver
-> >>  *
-> >>  * ...
-> >>  * ...
-> >>  *
-> >>  */
-> >
-> > It's not wrong. It looks like it's at the maintainers discretion and
-> > I've been asked to use both forms by different maintainers. Seems you
-> > just can't get it right. :) I've changed it in v2 though.
->
-> Right, I've been through the documentation but it is still unclear for
-> me. So let's stick to whatever you want for now.
->
-> [ ... ]
->
-> >>> +static int
-> >>> +davinci_clockevent_set_next_event_std(unsigned long cycles,
-> >>> +                                   struct clock_event_device *dev)
-> >>> +{
-> >>> +     struct davinci_clockevent *clockevent;
-> >>> +     unsigned int enamode;
-> >>> +
-> >>> +     clockevent =3D to_davinci_clockevent(dev);
-> >>> +     enamode =3D clockevent->enamode_disabled;
-> >>> +
-> >>> +     davinci_clockevent_update(clockevent, DAVINCI_TIMER_REG_TCR,
-> >>> +                               clockevent->enamode_mask,
-> >>> +                               clockevent->enamode_disabled);
-> >>
-> >> What is for this function with the DAVINCI_TIMER_REG_TCR parameter?
-> >
-> > I'm not sure I understand the question. :(
->
-> I meant davinci_clockevent_update is always called with the
-> DAVINCI_TIMER_REG_TCR parameter.
->
-> So it can be changed to:
-> static void davinci_clockevent_update(struct davinci_clockevent
->                                                 *clockevent,
->                                         unsigned int mask,
->                                         unsigned int val)
-> {
->         davinci_reg_update(clockevent->base, DAVINCI_TIMER_REG_TCR,
->                                  mask, val);
-> }
->
+On Wed, May 22, 2019 at 09:39:03AM +0100, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> Currently the check for a lockup_detected failure exits via the
+> label return_reset_status that reads and dereferences an uninitialized
+> pointer dev.  Fix this by ensuring dev is inintialized to null.
+> 
+> Addresses-Coverity: ("Uninitialized pointer read")
+> Fixes: 14991a5bade5 ("scsi: hpsa: correct device resets")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-Yes, this is pretty much what I did in v2.
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
 
->
-> Alternatively davinci_clockevent_update can be replaced by a direct call
-> to davinci_reg_update.
->
-> [ ... ]
->
-> >>> +     clockevent->dev.cpumask =3D cpumask_of(0);
-> >>> +
-> >>> +     clockevent->base =3D base;
-> >>> +     clockevent->tim_off =3D DAVINCI_TIMER_REG_TIM12;
-> >>> +     clockevent->prd_off =3D DAVINCI_TIMER_REG_PRD12;
-> >>> +
-> >>> +     shift =3D DAVINCI_TIMER_ENAMODE_SHIFT_TIM12;
-> >>> +     clockevent->enamode_disabled =3D DAVINCI_TIMER_ENAMODE_DISABLED=
- << shift;
-> >>> +     clockevent->enamode_oneshot =3D DAVINCI_TIMER_ENAMODE_ONESHOT <=
-< shift;
-> >>> +     clockevent->enamode_periodic =3D DAVINCI_TIMER_ENAMODE_PERIODIC=
- << shift;
-> >>> +     clockevent->enamode_mask =3D DAVINCI_TIMER_ENAMODE_MASK << shif=
-t;
-> >>
-> >> I don't see where 'shift' can be different from TIM12 here neither in
-> >> the second patch for those values. Why create these fields instead of
-> >> pre-computed macros?
-> >>
-> >
-> > The variable 'shift' here is only to avoid breaking the lines (just a h=
-elper).
-> >
-> > The shift itself can be different though in the second patch -
-> > specifically when calling davinci_clocksource_init().
-> >
-> > If I were to use predefined values for clockevent, we'd still need
-> > another set of values for clocksource. I think it's clearer the way it
-> > is.
->
-> Ah yes, I see, it is passed as parameter. Ok, let's keep it this way if
-> you prefer.
->
-> >>> +     if (timer_cfg->cmp_off) {
-> >>> +             clockevent->cmp_off =3D timer_cfg->cmp_off;
-> >>> +             clockevent->dev.set_next_event =3D
-> >>> +                             davinci_clockevent_set_next_event_cmp;
-> >>> +     } else {
-> >>> +             clockevent->dev.set_next_event =3D
-> >>> +                             davinci_clockevent_set_next_event_std;
-> >>> +     }
-> >>> +
-> >>> +     rv =3D request_irq(timer_cfg->irq[DAVINCI_TIMER_CLOCKEVENT_IRQ]=
-.start,
-> >>> +                      davinci_timer_irq_timer, IRQF_TIMER,
-> >>> +                      "clockevent", clockevent);
-> >>
-> >> May be replace "clockevent" by eg. "tim12"?
-> >>
-> >
-> > I don't think this is a good idea. Now if you look at /proc/interrupts
-> > you can tell immediately what the interrupt is for ("clockevent").
-> > With "tim12" it's no longer that clear.
->
-> Yes, "tim12" can be confusing. However, it is good practice to add a
-> device name aside with its purpose in case there are several timers
-> defined on the system. "clockevent" is a kernel internal representation
-> of a timer, so may be a name like "timer/tim12" or something in the same
-> spirit would be more adequate.
->
+Clang similarly warns about this, hence my identical submission after
+this, sorry for the noise.
 
-I'll wait for your comments on v2 before changing it in the final submissio=
-n.
-
-Thanks,
-Bart
-
->
->
->
-> --
->  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software for A=
-RM SoCs
->
-> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-> <http://twitter.com/#!/linaroorg> Twitter |
-> <http://www.linaro.org/linaro-blog/> Blog
->
+> ---
+>  drivers/scsi/hpsa.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/scsi/hpsa.c b/drivers/scsi/hpsa.c
+> index c560a4532733..ac8338b0571b 100644
+> --- a/drivers/scsi/hpsa.c
+> +++ b/drivers/scsi/hpsa.c
+> @@ -5947,7 +5947,7 @@ static int hpsa_eh_device_reset_handler(struct scsi_cmnd *scsicmd)
+>  	int rc = SUCCESS;
+>  	int i;
+>  	struct ctlr_info *h;
+> -	struct hpsa_scsi_dev_t *dev;
+> +	struct hpsa_scsi_dev_t *dev = NULL;
+>  	u8 reset_type;
+>  	char msg[48];
+>  	unsigned long flags;
+> -- 
+> 2.20.1
+> 
