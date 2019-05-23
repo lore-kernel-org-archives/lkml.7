@@ -2,176 +2,143 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95BF1C282DE
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:42:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A65ECC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:42:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DD6620881
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:42:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558640560;
-	bh=yKm9kSSfkFNJs3iEFdy76ZqrBYFPvJeqEdGoCYDAJsw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2gQ5r6eSwWPEPbZlpVSZQq7q8utFWGX+N/bqr+/ghLB9Lf1/VO0ltR9q4013zz/ed
-	 4OSpBN0NZw1quu5MlYPcWLDZzte+xNWh9jnJ933pypsfBS+0vvXQGh7ncVeiP9an2L
-	 hgR8cmRerYux43pmL/L292iSiemseTVOd+VSLefc=
+	by mail.kernel.org (Postfix) with ESMTP id 7E6E620881
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:42:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ElJnN4SI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389692AbfEWTSu (ORCPT
+        id S2390057AbfEWTmm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:18:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54436 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389687AbfEWTSs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:18:48 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2F43205ED;
-        Thu, 23 May 2019 19:18:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639126;
-        bh=yKm9kSSfkFNJs3iEFdy76ZqrBYFPvJeqEdGoCYDAJsw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WVGTAvJzU+mqNfrYHd9sXNPuo03z6vXmqSRbZu7lb0FbmVxTy6nD6B8T2P9zhqUtv
-         FqKQjhNVlpKMOezWumM7BWFWWOm4ScEBJwcdGudZ7mss3v/RP4NycnVGkNrPPI4Ioh
-         WPXvkL0CXlV/etr9uiTxGGaa5nvwyaJ8coRwgsBo=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Li RongQing <lirongqing@baidu.com>,
-        Gary R Hook <gary.hook@amd.com>,
-        Borislav Petkov <bp@suse.de>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Coly Li <colyli@suse.de>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Kent Overstreet <kent.overstreet@gmail.com>,
-        "luto@kernel.org" <luto@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 104/114] x86/mm/mem_encrypt: Disable all instrumentation for early SME setup
-Date:   Thu, 23 May 2019 21:06:43 +0200
-Message-Id: <20190523181740.427513217@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190523181731.372074275@linuxfoundation.org>
-References: <20190523181731.372074275@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 23 May 2019 15:42:42 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:32928 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389690AbfEWTSv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:18:51 -0400
+Received: by mail-lf1-f66.google.com with SMTP id x132so5247281lfd.0
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 12:18:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=7Xq8hDRQty0iPHxqWBmFMiHP5/NEYwgv6qrN0Vc4nP8=;
+        b=ElJnN4SIqyVX33y7h7nGUs3agYvp1XeedQRemgpNbRIk5YlpyMiZcdC55lWgxLgh11
+         KGA9kvQoiXXYs/58eF04FaDku2dDlD83wtRBSt+M6G1ZAh4arkTz+KAL9TD9eCPYRb/s
+         Ml/yCA3Aye5kHbDL64GQjMNXaH7xxCsjKFKk57fS61mAwZZbM5zYQIgvTjCECVGeIZvS
+         Vu8BchtkGC9SqVmc9zM+HUOnm3qts+3oDP4vc86hWfjkeMINYmjeEB+owqaNfIjKGnt1
+         gaT8dQa9c8myhvRDjgnSpTJpspt1aTRyCZ621kdINUkw1wzbTQr7dwLOXa4U8fvDlT2D
+         Gyvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=7Xq8hDRQty0iPHxqWBmFMiHP5/NEYwgv6qrN0Vc4nP8=;
+        b=QXrYLeaTU3fmuYLUhlUSOyrxHsaMSrkZoPxhmbjwOjNN7iqvlLqRjnMkZRud/++f+j
+         Wj/+knWDCibAwlV7l2Ldb57JpBr7AjXTzOG35NxgqtXFpYs9Yf8KGtsvW2KfYzMhLRwu
+         hXN19G5bzV0ohNKrK0ewFDnoe3W875I0200znJJjjBYWQUEghn+MGb6sZo2N/kHEh7jT
+         aMjdhKNHLOY96xIJvUSx7B5eiWQ2MY6rz9/CIW/BfWZWC11IB11fiOEgEWacAhQiwZ/o
+         PIoN4WpfCjt2C+XNfc4SorkUSt34XtoGxJ/npMtLWRyAUScMGwNZbX6YdazvP0N3sOHm
+         Kaqw==
+X-Gm-Message-State: APjAAAWXBd8NJR+r40HkpYVeUgTQ1UrGSiUodXmmJWRsRaGpcoUykZOy
+        XxPavAFDsc2j3jfwaUu1WVq522psobZI0CUTnsAAAw==
+X-Google-Smtp-Source: APXvYqw1XbYiFz5hQUalCxrVjKiO6TIO71hT0hyMX6W3pIGmpBG9+vju9MG+sHieuLq/jz7BZlnOc90KWMXZK2Bxibs=
+X-Received: by 2002:a19:189:: with SMTP id 131mr46796309lfb.74.1558639129364;
+ Thu, 23 May 2019 12:18:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <1558338735-8444-1-git-send-email-amelie.delaunay@st.com>
+ <20190522054833.GB4574@dell> <eb8425ec-989a-9701-7fee-61bd1d2b93c1@st.com>
+ <20190522084133.GF4574@dell> <bc1b5f1d-23b0-141d-f58f-b54ac303fe20@st.com>
+ <CACRpkdYmdpwEvCBrL6i1V+Zxd0OSpZmD8BJPSZu9jYNeJkoimQ@mail.gmail.com> <08ea97544018430caf53af36677902b7@SFHDAG3NODE2.st.com>
+In-Reply-To: <08ea97544018430caf53af36677902b7@SFHDAG3NODE2.st.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 23 May 2019 21:18:37 +0200
+Message-ID: <CACRpkdZLbMJ5dKiL9J1x=PozBVH777kNNABZi-n0LxD0BOp8mw@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: stmfx: Fix compile issue when CONFIG_OF_GPIO is
+ not defined
+To:     Amelie DELAUNAY <amelie.delaunay@st.com>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "kbuild-all@01.org" <kbuild-all@01.org>,
+        Randy Dunlap <rdunlap@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b51ce3744f115850166f3d6c292b9c8cb849ad4f ]
+On Thu, May 23, 2019 at 4:11 PM Amelie DELAUNAY <amelie.delaunay@st.com> wr=
+ote:
+> On 5/22/19 11:48 PM, Linus Walleij wrote:
+> > On Wed, May 22, 2019 at 11:21 AM Amelie DELAUNAY <amelie.delaunay@st.co=
+m> wrote:
+> >
+> >> ../drivers/pinctrl/pinctrl-stmfx.c:409:20: error:
+> >> =E2=80=98pinconf_generic_dt_node_to_map_pin=E2=80=99 undeclared here (=
+not in a function)
+> >>     .dt_node_to_map =3D pinconf_generic_dt_node_to_map_pin,
+> >>
+> >> OF_GPIO depends on OF.
+> >>
+> >> So either
+> >>       depends on OF || (OF && COMPILE_TEST)
+> >> or
+> >>       depends on OF || (OF_GPIO && COMPILE_TEST)
+> >>
+> >> and
+> >>
+> >>       select OF_GPIO
+> >
+> > I would use just:
+> >
+> > depends on OF_GPIO
+> >
+> > Because OF_GPIO already depends on OF, and
+> > compile tests will not work without OF_GPIO which
+> > require OF so...
+> >
+> > Besides it is what most other GPIO drivers do.
+> >
+> > So just keep that one line and drop the rest.
+> >
+> > Yours,
+> > Linus Walleij
+> >
+>
+> Ok so I can get rid of COMPILE_TEST ?
+>         depends on I2C
+>         depends on OF_GPIO
+>         select GENERIC_PINCONF
+>         select GPIOLIB_IRQCHIP
+>         select MFD_STMFX
 
-Enablement of AMD's Secure Memory Encryption feature is determined very
-early after start_kernel() is entered. Part of this procedure involves
-scanning the command line for the parameter 'mem_encrypt'.
+Yep just like that.
 
-To determine intended state, the function sme_enable() uses library
-functions cmdline_find_option() and strncmp(). Their use occurs early
-enough such that it cannot be assumed that any instrumentation subsystem
-is initialized.
+> Because I've no arch to balance COMPILE_TEST. Or maybe something like
+>         depends on OF_GPIO && (OF || COMPILE_TEST)
+> even if OF_GPIO && OF is redundant ?
 
-For example, making calls to a KASAN-instrumented function before KASAN
-is set up will result in the use of uninitialized memory and a boot
-failure.
+COMPILE_TEST is just to make something available for testing
+on other architectures, such as testing ARM-specific drivers
+on x86.
 
-When AMD's SME support is enabled, conditionally disable instrumentation
-of these dependent functions in lib/string.c and arch/x86/lib/cmdline.c.
+With just OF_GPIO as dependency, it will be compile tested anyways
+because x86 allyesconfig will enable OF and OF_GPIO, and also
+all the STMFX drivers.
 
- [ bp: Get rid of intermediary nostackp var and cleanup whitespace. ]
-
-Fixes: aca20d546214 ("x86/mm: Add support to make use of Secure Memory Encryption")
-Reported-by: Li RongQing <lirongqing@baidu.com>
-Signed-off-by: Gary R Hook <gary.hook@amd.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Boris Brezillon <bbrezillon@kernel.org>
-Cc: Coly Li <colyli@suse.de>
-Cc: "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Kent Overstreet <kent.overstreet@gmail.com>
-Cc: "luto@kernel.org" <luto@kernel.org>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: "mingo@redhat.com" <mingo@redhat.com>
-Cc: "peterz@infradead.org" <peterz@infradead.org>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/155657657552.7116.18363762932464011367.stgit@sosrh3.amd.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/x86/lib/Makefile | 12 ++++++++++++
- lib/Makefile          | 11 +++++++++++
- 2 files changed, 23 insertions(+)
-
-diff --git a/arch/x86/lib/Makefile b/arch/x86/lib/Makefile
-index 25a972c61b0ae..3c19d60316a88 100644
---- a/arch/x86/lib/Makefile
-+++ b/arch/x86/lib/Makefile
-@@ -6,6 +6,18 @@
- # Produces uninteresting flaky coverage.
- KCOV_INSTRUMENT_delay.o	:= n
- 
-+# Early boot use of cmdline; don't instrument it
-+ifdef CONFIG_AMD_MEM_ENCRYPT
-+KCOV_INSTRUMENT_cmdline.o := n
-+KASAN_SANITIZE_cmdline.o  := n
-+
-+ifdef CONFIG_FUNCTION_TRACER
-+CFLAGS_REMOVE_cmdline.o = -pg
-+endif
-+
-+CFLAGS_cmdline.o := $(call cc-option, -fno-stack-protector)
-+endif
-+
- inat_tables_script = $(srctree)/arch/x86/tools/gen-insn-attr-x86.awk
- inat_tables_maps = $(srctree)/arch/x86/lib/x86-opcode-map.txt
- quiet_cmd_inat_tables = GEN     $@
-diff --git a/lib/Makefile b/lib/Makefile
-index 4238764468109..0ab808318202c 100644
---- a/lib/Makefile
-+++ b/lib/Makefile
-@@ -17,6 +17,17 @@ KCOV_INSTRUMENT_list_debug.o := n
- KCOV_INSTRUMENT_debugobjects.o := n
- KCOV_INSTRUMENT_dynamic_debug.o := n
- 
-+# Early boot use of cmdline, don't instrument it
-+ifdef CONFIG_AMD_MEM_ENCRYPT
-+KASAN_SANITIZE_string.o := n
-+
-+ifdef CONFIG_FUNCTION_TRACER
-+CFLAGS_REMOVE_string.o = -pg
-+endif
-+
-+CFLAGS_string.o := $(call cc-option, -fno-stack-protector)
-+endif
-+
- lib-y := ctype.o string.o vsprintf.o cmdline.o \
- 	 rbtree.o radix-tree.o timerqueue.o\
- 	 idr.o int_sqrt.o extable.o \
--- 
-2.20.1
-
-
-
+Yours,
+Linus Walleij
