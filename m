@@ -2,117 +2,271 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_MED,
+	URIBL_BLOCKED,USER_AGENT_MUTT,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2CA0C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:53:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B85DEC282DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:54:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81E6620881
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:53:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DF0C20881
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:54:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OLTWrxv9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387702AbfEWTxZ (ORCPT
+        id S2387826AbfEWTys (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:53:25 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:54076 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2387433AbfEWTxY (ORCPT
+        Thu, 23 May 2019 15:54:48 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:42522 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387533AbfEWTyr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:53:24 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4NJlR6F187003
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 15:53:23 -0400
-Received: from e16.ny.us.ibm.com (e16.ny.us.ibm.com [129.33.205.206])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2sp1yqg6du-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 15:53:23 -0400
-Received: from localhost
-        by e16.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <farosas@linux.ibm.com>;
-        Thu, 23 May 2019 20:53:22 +0100
-Received: from b01cxnp22036.gho.pok.ibm.com (9.57.198.26)
-        by e16.ny.us.ibm.com (146.89.104.203) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 23 May 2019 20:53:18 +0100
-Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
-        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4NJrHRk31982062
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 23 May 2019 19:53:17 GMT
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6D59B112065;
-        Thu, 23 May 2019 19:53:17 +0000 (GMT)
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4E10E112062;
-        Thu, 23 May 2019 19:53:16 +0000 (GMT)
-Received: from farosas.linux.ibm.com.br.ibm.com (unknown [9.86.26.96])
-        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu, 23 May 2019 19:53:16 +0000 (GMT)
-From:   Fabiano Rosas <farosas@linux.ibm.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Jan Kiszka <jan.kiszka@siemens.com>,
-        Kieran Bingham <kbingham@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Jackie Liu <liuyun01@kylinos.cn>
-Subject: [PATCH] scripts/gdb: Fix invocation when CONFIG_COMMON_CLK is not set
-Date:   Thu, 23 May 2019 16:53:11 -0300
-X-Mailer: git-send-email 2.20.1
+        Thu, 23 May 2019 15:54:47 -0400
+Received: by mail-pl1-f193.google.com with SMTP id go2so3154603plb.9
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 12:54:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=U3LLk369lx0l/Cax30ZKFIWopXk4cwhU19zVTBRdyDg=;
+        b=OLTWrxv9KFJRtLRvrA9iUwbxM3MnJ4We26ubghbbb7/DT61JHNFhpo+x+taiQkkHt3
+         r/VxXdmi7n8S4NX8La2p0v7lijEBYWBI+doPOfIBDZSx+/XGRSaXHENBlfcUmq2o+jgZ
+         RDzlec51PgRhBXrzNQbZUEbyI42vchEtJo4dqUzVms+sGCcoZ4gNgkW8fPYO9wdL4AnS
+         8b6OImpZAUeTBqm4cp4COeRgvY4x0Q1AGguiT+q/Abv0cUFWY7gxEPacHz97RaGNFDf2
+         s4dLzoanFzg144hLIhWtb/hmNoaIqInf5nr+Uxw+Rndhtm2nV+8Vhwy4H3gRAAgt9vc4
+         2ilQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=U3LLk369lx0l/Cax30ZKFIWopXk4cwhU19zVTBRdyDg=;
+        b=gk9CDobdzgF7Bdyfnw2lV+WN4vF/J8WsE7WLRVfuGi1AtDsoNnDztgw0oeIur89Gol
+         cyBaa8I/TVwPm38oCHm7p3O5E6Vtn88oS6jaoqhDqLLSQCxkF1BbU8yjUS3MUj+2r7P1
+         HkPgmjZLL9ZkWMxPPY1mr3lTfNfSUvuuLoojwXb/0w7Qs+4/Ce8y2nBS78Yq6mbeP9U6
+         KUZkPbC8/4n1n16GBxVd4hIW3R1w9zbIyvoYXqSU/0c1uj9lWg50+QmhUNmkHc0dwIl/
+         NUKPnAY/V9i52YuqKHEMzS5/W4h+hFa9aTk9K72hlatZEvAnUUOnQ5jIgZxgSIyIQjm4
+         nziA==
+X-Gm-Message-State: APjAAAVZdmI0lYW9PMjzrnLotpmrVygIV8FmWCWuJ59tz3BhZJJedwTZ
+        SkuANtCvRJ0eKrsMumZ3DEsNZQ==
+X-Google-Smtp-Source: APXvYqzEzxMwTyuepztbi3qnj0NnQB4vzeT8DtYtsUPRejRPP7KXhwsUDoF51TbaFdkdCSvBeqW3aQ==
+X-Received: by 2002:a17:902:bd91:: with SMTP id q17mr99231198pls.13.1558641285152;
+        Thu, 23 May 2019 12:54:45 -0700 (PDT)
+Received: from google.com ([2620:15c:202:201:bc61:d85d:eb16:9036])
+        by smtp.gmail.com with ESMTPSA id y16sm256381pfo.133.2019.05.23.12.54.43
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 23 May 2019 12:54:43 -0700 (PDT)
+Date:   Thu, 23 May 2019 12:54:38 -0700
+From:   Benson Leung <bleung@google.com>
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     linux-pm@vger.kernel.org, sre@kernel.org,
+        Sameer Nanda <snanda@chromium.org>, bleung@chromium.org,
+        rjw@rjwysocki.net, gwendal@chromium.org,
+        linux-kernel@vger.kernel.org, Len Brown <len.brown@intel.com>,
+        groeck@chromium.org, Adam.Thomson.Opensource@diasemi.com,
+        kernel@collabora.com, Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v4 1/2] power: supply: add input power and voltage limit
+ properties
+Message-ID: <20190523195438.GA110498@google.com>
+References: <20190507095248.17915-1-enric.balletbo@collabora.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19052319-0072-0000-0000-000004326D81
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011150; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01207584; UDB=6.00634204; IPR=6.00988564;
- MB=3.00027022; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-23 19:53:20
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19052319-0073-0000-0000-00004C562D62
-Message-Id: <20190523195313.24701-1-farosas@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-23_16:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=15 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=828 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905230128
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="oyUTqETQ0mS9luUI"
+Content-Disposition: inline
+In-Reply-To: <20190507095248.17915-1-enric.balletbo@collabora.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CLK_GET_RATE_NOCACHE depends on CONFIG_COMMON_CLK. Importing
-constants.py when CONFIG_COMMON_CLK is not defined causes:
 
-  (gdb) lx-symbols
-  (...)
-    File "scripts/gdb/linux/proc.py", line 15, in <module>
-      from linux import constants
-    File "scripts/gdb/linux/constants.py", line 2, in <module>
-      LX_CLK_GET_RATE_NOCACHE = gdb.parse_and_eval("CLK_GET_RATE_NOCACHE")
-  gdb.error: No symbol "CLK_GET_RATE_NOCACHE" in current context.
+--oyUTqETQ0mS9luUI
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Fixes: e7e6f462c1be ("scripts/gdb: print cached rate in lx-clk-summary")
-Signed-off-by: Fabiano Rosas <farosas@linux.ibm.com>
----
- scripts/gdb/linux/constants.py.in | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Hi Enric,
 
-diff --git a/scripts/gdb/linux/constants.py.in b/scripts/gdb/linux/constants.py.in
-index 1d73083da6cb..2efbec6b6b8d 100644
---- a/scripts/gdb/linux/constants.py.in
-+++ b/scripts/gdb/linux/constants.py.in
-@@ -40,7 +40,8 @@
- import gdb
- 
- /* linux/clk-provider.h */
--LX_GDBPARSED(CLK_GET_RATE_NOCACHE)
-+if IS_BUILTIN(CONFIG_COMMON_CLK):
-+    LX_GDBPARSED(CLK_GET_RATE_NOCACHE)
- 
- /* linux/fs.h */
- LX_VALUE(SB_RDONLY)
--- 
-2.20.1
+On Tue, May 07, 2019 at 11:52:47AM +0200, Enric Balletbo i Serra wrote:
+> For thermal management strategy you might be interested on limit the
+> input power for a power supply. We already have current limit but
+> basically what we probably want is to limit power. So, introduce the
+> input_power_limit property.
+>=20
+> Although the common use case is limit the input power, in some
+> specific cases it is the voltage that is problematic (i.e some regulators
+> have different efficiencies at higher voltage resulting in more heat).
+> So introduce also the input_voltage_limit property.
+>=20
+> This happens in one Chromebook and is used on the Pixel C's thermal
+> management strategy to effectively limit the input power to 5V 3A when
+> the screen is on. When the screen is on, the display, the CPU, and the GPU
+> all contribute more heat to the system than while the screen is off, and
+> we made a tradeoff to throttle the charger in order to give more of the
+> thermal budget to those other components.
+>=20
+> So there's nothing fundamentally broken about the hardware that would
+> cause the Pixel C to malfunction if we were charging at 9V or 12V instead
+> of 5V when the screen is on, i.e. if userspace doesn't change this.
+>=20
+> What would happen is that you wouldn't meet Google's skin temperature
+> targets on the system if the charger was allowed to run at 9V or 12V with
+> the screen on.
+>=20
+> For folks hacking on Pixel Cs (which is now outside of Google's official
+> support window for Android) and customizing their own kernel and userspace
+> this would be acceptable, but we wanted to expose this feature in the
+> power supply properties because the feature does exist in the Emedded
+> Controller firmware of the Pixel C and all of Google's Chromebooks with
+> USB-C made since 2015 in case someone running an up to date kernel wanted
+> to limit the charging power for thermal or other reasons.
+>=20
+> This patch exposes a new property, similar to input current limit, to
+> re-configure the maximum voltage from the external supply at runtime
+> based on system-level knowledge or user input.
+>=20
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> Reviewed-by: Guenter Roeck <groeck@chromium.org>
+> Acked-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
 
+Reviewed-by: Benson Leung <bleung@chromium.org>
+
+> ---
+>=20
+> Changes in v4:
+> - Add also input_power_limit.
+>=20
+> Changes in v3:
+> - Improve commit log and documentation with Benson comments.
+>=20
+> Changes in v2:
+> - Document the new property in ABI/testing/sysfs-class-power.
+> - Add the Reviewed-by Guenter Roeck tag.
+>=20
+>  Documentation/ABI/testing/sysfs-class-power | 32 +++++++++++++++++++++
+>  Documentation/power/power_supply_class.txt  |  4 +++
+>  drivers/power/supply/power_supply_sysfs.c   |  2 ++
+>  include/linux/power_supply.h                |  2 ++
+>  4 files changed, 40 insertions(+)
+>=20
+> diff --git a/Documentation/ABI/testing/sysfs-class-power b/Documentation/=
+ABI/testing/sysfs-class-power
+> index 5e23e22dce1b..962a27a1daf8 100644
+> --- a/Documentation/ABI/testing/sysfs-class-power
+> +++ b/Documentation/ABI/testing/sysfs-class-power
+> @@ -331,10 +331,42 @@ Description:
+>  		supply. Normally this is configured based on the type of
+>  		connection made (e.g. A configured SDP should output a maximum
+>  		of 500mA so the input current limit is set to the same value).
+> +		Use preferably input_power_limit, and for problems that can be
+> +		solved using power limit use input_current_limit.
+> =20
+>  		Access: Read, Write
+>  		Valid values: Represented in microamps
+> =20
+> +What:		/sys/class/power_supply/<supply_name>/input_voltage_limit
+> +Date:		May 2019
+> +Contact:	linux-pm@vger.kernel.org
+> +Description:
+> +		This entry configures the incoming VBUS voltage limit currently
+> +		set in the supply. Normally this is configured based on
+> +		system-level knowledge or user input (e.g. This is part of the
+> +		Pixel C's thermal management strategy to effectively limit the
+> +		input power to 5V when the screen is on to meet Google's skin
+> +		temperature targets). Note that this feature should not be
+> +		used for safety critical things.
+> +		Use preferably input_power_limit, and for problems that can be
+> +		solved using power limit use input_voltage_limit.
+> +
+> +		Access: Read, Write
+> +		Valid values: Represented in microvolts
+> +
+> +What:		/sys/class/power_supply/<supply_name>/input_power_limit
+> +Date:		May 2019
+> +Contact:	linux-pm@vger.kernel.org
+> +Description:
+> +		This entry configures the incoming power limit currently set
+> +		in the supply. Normally this is configured based on
+> +		system-level knowledge or user input. Use preferably this
+> +		feature to limit the incoming power and use current/voltage
+> +		limit only for problems that can be solved using power limit.
+> +
+> +		Access: Read, Write
+> +		Valid values: Represented in microwatts
+> +
+>  What:		/sys/class/power_supply/<supply_name>/online,
+>  Date:		May 2007
+>  Contact:	linux-pm@vger.kernel.org
+> diff --git a/Documentation/power/power_supply_class.txt b/Documentation/p=
+ower/power_supply_class.txt
+> index 300d37896e51..1e3c705111db 100644
+> --- a/Documentation/power/power_supply_class.txt
+> +++ b/Documentation/power/power_supply_class.txt
+> @@ -137,6 +137,10 @@ power supply object.
+> =20
+>  INPUT_CURRENT_LIMIT - input current limit programmed by charger. Indicat=
+es
+>  the current drawn from a charging source.
+> +INPUT_VOLTAGE_LIMIT - input voltage limit programmed by charger. Indicat=
+es
+> +the voltage limit from a charging source.
+> +INPUT_POWER_LIMIT - input power limit programmed by charger. Indicates
+> +the power limit from a charging source.
+> =20
+>  CHARGE_CONTROL_LIMIT - current charge control limit setting
+>  CHARGE_CONTROL_LIMIT_MAX - maximum charge control limit setting
+> diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/su=
+pply/power_supply_sysfs.c
+> index 5358a80d854f..860db617d241 100644
+> --- a/drivers/power/supply/power_supply_sysfs.c
+> +++ b/drivers/power/supply/power_supply_sysfs.c
+> @@ -275,6 +275,8 @@ static struct device_attribute power_supply_attrs[] =
+=3D {
+>  	POWER_SUPPLY_ATTR(charge_control_limit),
+>  	POWER_SUPPLY_ATTR(charge_control_limit_max),
+>  	POWER_SUPPLY_ATTR(input_current_limit),
+> +	POWER_SUPPLY_ATTR(input_voltage_limit),
+> +	POWER_SUPPLY_ATTR(input_power_limit),
+>  	POWER_SUPPLY_ATTR(energy_full_design),
+>  	POWER_SUPPLY_ATTR(energy_empty_design),
+>  	POWER_SUPPLY_ATTR(energy_full),
+> diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
+> index 2f9c201a54d1..ba135a5d8996 100644
+> --- a/include/linux/power_supply.h
+> +++ b/include/linux/power_supply.h
+> @@ -122,6 +122,8 @@ enum power_supply_property {
+>  	POWER_SUPPLY_PROP_CHARGE_CONTROL_LIMIT,
+>  	POWER_SUPPLY_PROP_CHARGE_CONTROL_LIMIT_MAX,
+>  	POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT,
+> +	POWER_SUPPLY_PROP_INPUT_VOLTAGE_LIMIT,
+> +	POWER_SUPPLY_PROP_INPUT_POWER_LIMIT,
+>  	POWER_SUPPLY_PROP_ENERGY_FULL_DESIGN,
+>  	POWER_SUPPLY_PROP_ENERGY_EMPTY_DESIGN,
+>  	POWER_SUPPLY_PROP_ENERGY_FULL,
+> --=20
+> 2.20.1
+>=20
+
+--=20
+Benson Leung
+Staff Software Engineer
+Chrome OS Kernel
+Google Inc.
+bleung@google.com
+Chromium OS Project
+bleung@chromium.org
+
+--oyUTqETQ0mS9luUI
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQQCtZK6p/AktxXfkOlzbaomhzOwwgUCXOb6fgAKCRBzbaomhzOw
+wruNAP4zRqtnStUyRbBYdBhaBh/GyqZhsVOldLx65aej/QKwlgD/c1Jt+QIZMNyj
+e5t4yql/iUJbui2eMgpTtAy0FERpEgE=
+=37gh
+-----END PGP SIGNATURE-----
+
+--oyUTqETQ0mS9luUI--
