@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA7DCC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:12:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE70EC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:12:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 909C8217F9
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:12:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E090217D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:12:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558638725;
-	bh=SNM0Fl27uXWqQ5amLSxTAalRgg9QV1Z6TRqIcxX9UNU=;
+	s=default; t=1558638728;
+	bh=ZKAWL+TfWyCxI4eR1wQK7z52Plma/GdthdPmEGtd6Z0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kDFhUIk5YUX2JgFI45DR3cG84id0v+65xfZZdCgTBkMtSVNbgpEQ8N4hZiw0kbFUD
-	 DjpW3TERWesNVVPt5RT249TXxuCBeUXBYNzYPfDLDrAUNsVVQq5BT99AotneRikoZs
-	 DG+x8npuHMLPvofkOFeQ5jvhmW0mGuF0f1HzmTzk=
+	b=BcT8MGn35BWUWNIZANsVSDQMN+GhsNAvdrO8Ji7hSOpDv+Pkntm48q3t6J7i+cj8c
+	 uMsz+wckug5XnPiVknEllFMg2CRq35wBn57Z+RIUXrXtNayrRUePCyA0HrZyzh1UKk
+	 OB99uocOBm01fwkPG8s9CczvJVm7etljikep9AYE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388361AbfEWTME (ORCPT
+        id S2388376AbfEWTMH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:12:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45676 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:12:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45722 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388313AbfEWTMB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:12:01 -0400
+        id S2388347AbfEWTME (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:12:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F97421873;
-        Thu, 23 May 2019 19:12:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5BABC217F9;
+        Thu, 23 May 2019 19:12:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558638721;
-        bh=SNM0Fl27uXWqQ5amLSxTAalRgg9QV1Z6TRqIcxX9UNU=;
+        s=default; t=1558638723;
+        bh=ZKAWL+TfWyCxI4eR1wQK7z52Plma/GdthdPmEGtd6Z0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nvGTqfZImYtcXVcm87oP35w0G5pMUONaQmCXxQugBRvBRtzs9ox460/+uOQ7X/Zy2
-         Na7uAj9OQ2iQGDC6vUjkqkWMcNOAPmW4QAMoSMalMAn5ngif7aVRBWqi9c722SXJEQ
-         ZNwiZAwJINtLd+lfrydA6Hx59NSaapC++AtC1SPY=
+        b=fLTpRq8VmarsvbzOEHH1xBRcuskk2QqWWeAod0cBD3I8fJIbamdG5gojF4FPEe5tQ
+         eaqXn+fgELBTFMvvZFHJuhF1g24G9yxP8lnHxwyi7YS26wenFMdrt2MqJkPs9PEhlH
+         eom+ofBCPtoYKcP7A+YGfJ2eBH9V6dJdTndfUi0s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, ZhangXiaoxu <zhangxiaoxu5@huawei.com>,
+        stable@vger.kernel.org, Olga Kornievskaia <kolga@netapp.com>,
         Anna Schumaker <Anna.Schumaker@Netapp.com>
-Subject: [PATCH 4.14 23/77] NFS4: Fix v4.0 client state corruption when mount
-Date:   Thu, 23 May 2019 21:05:41 +0200
-Message-Id: <20190523181723.530871339@linuxfoundation.org>
+Subject: [PATCH 4.14 24/77] PNFS fallback to MDS if no deviceid found
+Date:   Thu, 23 May 2019 21:05:42 +0200
+Message-Id: <20190523181723.657210808@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181719.982121681@linuxfoundation.org>
 References: <20190523181719.982121681@linuxfoundation.org>
@@ -59,47 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: ZhangXiaoxu <zhangxiaoxu5@huawei.com>
+From: Olga Kornievskaia <kolga@netapp.com>
 
-commit f02f3755dbd14fb935d24b14650fff9ba92243b8 upstream.
+commit b1029c9bc078a6f1515f55dd993b507dcc7e3440 upstream.
 
-stat command with soft mount never return after server is stopped.
+If we fail to find a good deviceid while trying to pnfs instead of
+propogating an error back fallback to doing IO to the MDS. Currently,
+code with fals the IO with EINVAL.
 
-When alloc a new client, the state of the client will be set to
-NFS4CLNT_LEASE_EXPIRED.
-
-When the server is stopped, the state manager will work, and accord
-the state to recover. But the state is NFS4CLNT_LEASE_EXPIRED, it
-will drain the slot table and lead other task to wait queue, until
-the client recovered. Then the stat command is hung.
-
-When discover server trunking, the client will renew the lease,
-but check the client state, it lead the client state corruption.
-
-So, we need to call state manager to recover it when detect server
-ip trunking.
-
-Signed-off-by: ZhangXiaoxu <zhangxiaoxu5@huawei.com>
-Cc: stable@vger.kernel.org
+Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+Fixes: 8d40b0f14846f ("NFS filelayout:call GETDEVICEINFO after pnfs_layout_process completes"
+Cc: stable@vger.kernel.org # v4.11+
 Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/nfs/nfs4state.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ fs/nfs/filelayout/filelayout.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/nfs/nfs4state.c
-+++ b/fs/nfs/nfs4state.c
-@@ -143,6 +143,10 @@ int nfs40_discover_server_trunking(struc
- 		/* Sustain the lease, even if it's empty.  If the clientid4
- 		 * goes stale it's of no use for trunking discovery. */
- 		nfs4_schedule_state_renewal(*result);
-+
-+		/* If the client state need to recover, do it. */
-+		if (clp->cl_state)
-+			nfs4_schedule_state_manager(clp);
+--- a/fs/nfs/filelayout/filelayout.c
++++ b/fs/nfs/filelayout/filelayout.c
+@@ -904,7 +904,7 @@ fl_pnfs_update_layout(struct inode *ino,
+ 	status = filelayout_check_deviceid(lo, fl, gfp_flags);
+ 	if (status) {
+ 		pnfs_put_lseg(lseg);
+-		lseg = ERR_PTR(status);
++		lseg = NULL;
  	}
  out:
- 	return status;
+ 	return lseg;
 
 
