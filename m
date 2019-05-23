@@ -2,257 +2,151 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DEAAC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 11:10:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E458C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 11:14:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B24772133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 11:10:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="wi2zDD2X"
+	by mail.kernel.org (Postfix) with ESMTP id 5BF5421019
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 11:14:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558610047;
+	bh=QLzDFgMIQ8r1GZmn2cqT3yCBkjro2vAsn1Q1ncZrY60=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=UslMkQh/CJiLOkeSEQDoywdfosyL8ISkVIJ7e9Q/bVfGHQshbHPCgtVlGqXCeNB3P
+	 vji8aEghjWVHNJsoKnXhWw2LISeW5/x+KzVgkqLAPcF+V4dl+6ts6eYigIz7Oo0NFn
+	 B2QLXjxkmUqSccHojAYRtg9eb5lZ8POCja8Q3f28=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730620AbfEWLKg (ORCPT
+        id S1730379AbfEWLOH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 07:10:36 -0400
-Received: from mail-eopbgr20064.outbound.protection.outlook.com ([40.107.2.64]:62247
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728109AbfEWLKg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 07:10:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8W1HFk1Xu7Yl1GPqV7LvNLQrcPXSAFXsa+oIP+Kd+Io=;
- b=wi2zDD2XTMFSVDETsVS92oL3RKjtSZKBR3Y+Tsg0daoEoraH7PPU9EjXVAc/GYwmD5oJL+7NQpJ2l7B2OjnZRCiXeo2hqOlhy50Xb5EUaqogrjUKnkkWjUdX5LNLpNT9uG5JW3GsS+k0XFKtoepf3U7C7bfFBjpFdzf4QxqU1ws=
-Received: from VE1PR08MB5006.eurprd08.prod.outlook.com (10.255.159.31) by
- AM0SPR01MB0043.eurprd08.prod.outlook.com (20.178.16.12) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1900.18; Thu, 23 May 2019 11:10:27 +0000
-Received: from VE1PR08MB5006.eurprd08.prod.outlook.com
- ([fe80::206b:5cf6:97e:1358]) by VE1PR08MB5006.eurprd08.prod.outlook.com
- ([fe80::206b:5cf6:97e:1358%7]) with mapi id 15.20.1922.017; Thu, 23 May 2019
- 11:10:27 +0000
-From:   "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
-To:     Liviu Dudau <Liviu.Dudau@arm.com>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        "maarten.lankhorst@linux.intel.com" 
-        <maarten.lankhorst@linux.intel.com>,
-        "sean@poorly.run" <sean@poorly.run>
-CC:     "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
-        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
-        "thomas Sun (Arm Technology China)" <thomas.Sun@arm.com>,
-        "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>,
-        Ayan Halder <Ayan.Halder@arm.com>,
-        "Tiannan Zhu (Arm Technology China)" <Tiannan.Zhu@arm.com>,
-        "Yiqi Kang (Arm Technology China)" <Yiqi.Kang@arm.com>,
-        nd <nd@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        Ben Davis <Ben.Davis@arm.com>,
-        "Oscar Zhang (Arm Technology China)" <Oscar.Zhang@arm.com>,
-        "Channing Chen (Arm Technology China)" <Channing.Chen@arm.com>,
-        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
-Subject: [PATCH v2 6/6] drm/komeda: Add image enhancement support
-Thread-Topic: [PATCH v2 6/6] drm/komeda: Add image enhancement support
-Thread-Index: AQHVEVgguYZbx8YZUEC3sY0xfe9XzA==
-Date:   Thu, 23 May 2019 11:10:27 +0000
-Message-ID: <20190523110933.10742-7-james.qian.wang@arm.com>
-References: <20190523110933.10742-1-james.qian.wang@arm.com>
-In-Reply-To: <20190523110933.10742-1-james.qian.wang@arm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [113.29.88.7]
-x-clientproxiedby: HK2PR02CA0191.apcprd02.prod.outlook.com
- (2603:1096:201:21::27) To VE1PR08MB5006.eurprd08.prod.outlook.com
- (2603:10a6:803:113::31)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=james.qian.wang@arm.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 6fbd9a21-c998-4471-0fe6-08d6df6f4278
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:AM0SPR01MB0043;
-x-ms-traffictypediagnostic: AM0SPR01MB0043:
-nodisclaimer: True
-x-microsoft-antispam-prvs: <AM0SPR01MB0043337A372F603B14DA57ADB3010@AM0SPR01MB0043.eurprd08.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3968;
-x-forefront-prvs: 00462943DE
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(346002)(39860400002)(136003)(376002)(396003)(189003)(199004)(36756003)(1076003)(8936002)(103116003)(2616005)(446003)(54906003)(110136005)(4326008)(11346002)(53936002)(25786009)(6486002)(50226002)(256004)(81156014)(66066001)(68736007)(81166006)(486006)(2501003)(14444005)(5024004)(99286004)(7736002)(386003)(5660300002)(66946007)(71200400001)(186003)(476003)(305945005)(6506007)(2201001)(2906002)(76176011)(55236004)(86362001)(102836004)(3846002)(26005)(6116002)(478600001)(316002)(66476007)(66556008)(73956011)(14454004)(6436002)(66446008)(6512007)(64756008)(52116002)(8676002)(71190400001)(309714004);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0SPR01MB0043;H:VE1PR08MB5006.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: arm.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: KMThfdLmfA90wt92QSjpVOBTQKGnotKdR6hMIRdsoOoACEZThqEnDk19VcnRqn20o8RQAw5jAbXuDxpHBKg6HJxvEwdxvtU0stnT1ttpBVcUGrkNhF0iAfYPzpOe71pyWcp11EbnT079SxbWdAyTYwR6HqEVnsqAkfdnkqapmevpYYlnF3vH1ilQ+5QzPcj8vFEyctrCLKbtjlZlxySGaOjZLisVRwOjDwhAdafsg7I45k6g1oYGpOYhtXL02TFUfdokm9a+iwlUojkox6mlRkg1xOCS8a4TgMzSiOncoeMZc2kCHhpBR8ZOan1kWZxg8Wf2oNzV7gQ+lHGSi+OihO5y/YObekQFUM2ZSYPxg9lQepFqoz55Zd+X5NGq9fTtLSnjgXnvE3ko2yeMrFn8pAekvzfa7Sd5Ep08q8KxZ7c=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 23 May 2019 07:14:07 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:40390 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727466AbfEWLOG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 07:14:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=xdMf4hb49NfuLIvwvlurkRXqs+h2lkzb21P6JrueUX8=; b=E4mKAz/wlARBwiBzcJxiim61Q
+        Lp1euNrhQBlqijcFzYYwbc2Cqc1rje7VHGEZ0gQ1fi+I4KgzBaEYMuzbnwPzQEiJHBTUKBvAQm+Z/
+        25mtkbUt4x13xnlXDWm4/eHutOD0W3xme0bS4w4uUnXNfGu6f7uHLEhlO5wr7aZfzW4MMXPlsdnqj
+        /2AmY7FNkwq7f+XWWTGy7PT7/RHezDP84nboNRprgCtG2gzjoFndlcWlA3QaZg4PDHhJVPGEK+zuB
+        iwQuzO4NpGMXQ4wtkjyD5ecDsr1gcxNBHAuLvQtYZcipgSBmp4GJ8mXGFeGO07ieskLdjVKpFraQn
+        mGOyiuiJg==;
+Received: from [179.182.168.126] (helo=bombadil.infradead.org)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hTlfi-0000m0-CT; Thu, 23 May 2019 11:14:06 +0000
+Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
+        (envelope-from <mchehab@bombadil.infradead.org>)
+        id 1hTlff-0007NY-PR; Thu, 23 May 2019 08:14:03 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
+Subject: [PATCH] scripts/sphinx-pre-install: make activate hint smarter
+Date:   Thu, 23 May 2019 08:14:02 -0300
+Message-Id: <582e6b7351f619d92035db8cfe24ecec5d95a489.1558610037.git.mchehab+samsung@kernel.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6fbd9a21-c998-4471-0fe6-08d6df6f4278
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 May 2019 11:10:27.2880
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0SPR01MB0043
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-QmVzaWRlcyBzY2FsaW5nLCBBcm0gZGlzcGxheSBzY2FsZXIgYWxzbyBjYW4gc3VwcG9ydCBpbWFn
-ZSBlbmhhbmNlbWVudC4NCkZvciBzdXBwb3J0IGl0LCBBZGQgYSBuZXcgcHJvcGVydHkgImltZ19l
-bmhhbmNlbWVudCIgdG8gcGxhbmUsIHRoZW4gdXNlcg0KY2FuIHR1cm4gb24vb2ZmIGl0IGJ5IHRo
-aXMgcHJvcGVydHksIGFuZCBrZXJuZWwgZm9sbG93IHVzZXIncyByZXF1aXJlbWVudA0KdG8gbWFp
-dGFpbiB0aGUgc3RhdGUgYW5kIGVuYWJsZS9kaXNhYmxlIHRoZSByZWFsIEhXIGltYWdlIGVuaGFu
-Y2VtZW50Lg0KDQp2MjogUmViYXNlIGFuZCByZW5hbWUgIm5lZWRzX2ltZ19lbmhhbmNlbWVudCIg
-dG8gImVuX2ltZ19lbmhhbmNlbWVudCINCg0KU2lnbmVkLW9mZi1ieTogSmFtZXMgUWlhbiBXYW5n
-IChBcm0gVGVjaG5vbG9neSBDaGluYSkgPGphbWVzLnFpYW4ud2FuZ0Bhcm0uY29tPg0KLS0tDQog
-Li4uL2FybS9kaXNwbGF5L2tvbWVkYS9kNzEvZDcxX2NvbXBvbmVudC5jICAgIHwgIDEgKw0KIC4u
-Li9ncHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfa21zLmggICB8ICA2ICstDQogLi4u
-L2RybS9hcm0vZGlzcGxheS9rb21lZGEva29tZWRhX3BpcGVsaW5lLmggIHwgIDYgKy0NCiAuLi4v
-ZGlzcGxheS9rb21lZGEva29tZWRhX3BpcGVsaW5lX3N0YXRlLmMgICAgfCAgNiArLQ0KIC4uLi9n
-cHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfcGxhbmUuYyB8IDczICsrKysrKysrKysr
-KysrKysrKy0NCiA1IGZpbGVzIGNoYW5nZWQsIDg1IGluc2VydGlvbnMoKyksIDcgZGVsZXRpb25z
-KC0pDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2Q3
-MS9kNzFfY29tcG9uZW50LmMgYi9kcml2ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2Q3
-MS9kNzFfY29tcG9uZW50LmMNCmluZGV4IDJlYTI4MmM2YTE1Ni4uMWY3YTVkNTcyYjFhIDEwMDY0
-NA0KLS0tIGEvZHJpdmVycy9ncHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9kNzEvZDcxX2NvbXBv
-bmVudC5jDQorKysgYi9kcml2ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2Q3MS9kNzFf
-Y29tcG9uZW50LmMNCkBAIC02MTAsNiArNjEwLDcgQEAgc3RhdGljIHZvaWQgZDcxX3NjYWxlcl91
-cGRhdGUoc3RydWN0IGtvbWVkYV9jb21wb25lbnQgKmMsDQogCWN0cmwgPSAwOw0KIAljdHJsIHw9
-IHN0LT5lbl9zY2FsaW5nID8gU0NfQ1RSTF9TQ0wgOiAwOw0KIAljdHJsIHw9IHN0LT5lbl9hbHBo
-YSA/IFNDX0NUUkxfQVAgOiAwOw0KKwljdHJsIHw9IHN0LT5lbl9pbWdfZW5oYW5jZW1lbnQgPyBT
-Q19DVFJMX0lFTkggOiAwOw0KIA0KIAltYWxpZHBfd3JpdGUzMihyZWcsIEJMS19DT05UUk9MLCBj
-dHJsKTsNCiAJbWFsaWRwX3dyaXRlMzIocmVnLCBCTEtfSU5QVVRfSUQwLCB0b19kNzFfaW5wdXRf
-aWQoJnN0YXRlLT5pbnB1dHNbMF0pKTsNCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vYXJt
-L2Rpc3BsYXkva29tZWRhL2tvbWVkYV9rbXMuaCBiL2RyaXZlcnMvZ3B1L2RybS9hcm0vZGlzcGxh
-eS9rb21lZGEva29tZWRhX2ttcy5oDQppbmRleCBkYjU5YTkwNDJiZWIuLmU2ZTA1OWYyYWY1MiAx
-MDA2NDQNCi0tLSBhL2RyaXZlcnMvZ3B1L2RybS9hcm0vZGlzcGxheS9rb21lZGEva29tZWRhX2tt
-cy5oDQorKysgYi9kcml2ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV9rbXMu
-aA0KQEAgLTMyLDYgKzMyLDkgQEAgc3RydWN0IGtvbWVkYV9wbGFuZSB7DQogCSAqIExheWVycyB3
-aXRoIHNhbWUgY2FwYWJpbGl0aWVzLg0KIAkgKi8NCiAJc3RydWN0IGtvbWVkYV9sYXllciAqbGF5
-ZXI7DQorDQorCS8qKiBAcHJvcF9pbWdfZW5oYW5jZW1lbnQ6IGZvciBvbi9vZmYgaW1hZ2UgZW5o
-YW5jZW1lbnQgKi8NCisJc3RydWN0IGRybV9wcm9wZXJ0eSAqcHJvcF9pbWdfZW5oYW5jZW1lbnQ7
-DQogfTsNCiANCiAvKioNCkBAIC00NCw3ICs0Nyw4IEBAIHN0cnVjdCBrb21lZGFfcGxhbmVfc3Rh
-dGUgew0KIAkvKiogQGJhc2U6ICZkcm1fcGxhbmVfc3RhdGUgKi8NCiAJc3RydWN0IGRybV9wbGFu
-ZV9zdGF0ZSBiYXNlOw0KIA0KLQkvKiBwcml2YXRlIHByb3BlcnRpZXMgKi8NCisJLyogQGltZ19l
-bmhhbmNlbWVudDogb24vb2ZmIGltYWdlIGVuaGFuY2VtZW50ICovDQorCXU4IGltZ19lbmhhbmNl
-bWVudCA6IDE7DQogfTsNCiANCiAvKioNCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vYXJt
-L2Rpc3BsYXkva29tZWRhL2tvbWVkYV9waXBlbGluZS5oIGIvZHJpdmVycy9ncHUvZHJtL2FybS9k
-aXNwbGF5L2tvbWVkYS9rb21lZGFfcGlwZWxpbmUuaA0KaW5kZXggZDBiZjdkNWIzOWE3Li4wZTMz
-NGYxY2YxOGIgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRh
-L2tvbWVkYV9waXBlbGluZS5oDQorKysgYi9kcml2ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29t
-ZWRhL2tvbWVkYV9waXBlbGluZS5oDQpAQCAtMjU0LDcgKzI1NCw4IEBAIHN0cnVjdCBrb21lZGFf
-c2NhbGVyX3N0YXRlIHsNCiAJdTE2IGhzaXplX2luLCB2c2l6ZV9pbjsNCiAJdTE2IGhzaXplX291
-dCwgdnNpemVfb3V0Ow0KIAl1OCBlbl9zY2FsaW5nIDogMSwNCi0JICAgZW5fYWxwaGEgOiAxOyAv
-KiBlbmFibGUgYWxwaGEgcHJvY2Vzc2luZyAqLw0KKwkgICBlbl9hbHBoYSA6IDEsIC8qIGVuYWJs
-ZSBhbHBoYSBwcm9jZXNzaW5nICovDQorCSAgIGVuX2ltZ19lbmhhbmNlbWVudCA6IDE7DQogfTsN
-CiANCiBzdHJ1Y3Qga29tZWRhX2NvbXBpeiB7DQpAQCAtMzEzLDcgKzMxNCw4IEBAIHN0cnVjdCBr
-b21lZGFfZGF0YV9mbG93X2NmZyB7DQogCXUzMiByb3Q7DQogCWludCBibGVuZGluZ196b3JkZXI7
-DQogCXU4IHBpeGVsX2JsZW5kX21vZGUsIGxheWVyX2FscGhhOw0KLQl1OCBlbl9zY2FsaW5nIDog
-MTsNCisJdTggZW5fc2NhbGluZyA6IDEsDQorCSAgIGVuX2ltZ19lbmhhbmNlbWVudCA6IDE7DQog
-fTsNCiANCiBzdHJ1Y3Qga29tZWRhX3BpcGVsaW5lX2Z1bmNzIHsNCmRpZmYgLS1naXQgYS9kcml2
-ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV9waXBlbGluZV9zdGF0ZS5jIGIv
-ZHJpdmVycy9ncHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfcGlwZWxpbmVfc3RhdGUu
-Yw0KaW5kZXggMDE1NDRjMjc0ODQ4Li5kYjM0ZWEyNjc2MGMgMTAwNjQ0DQotLS0gYS9kcml2ZXJz
-L2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV9waXBlbGluZV9zdGF0ZS5jDQorKysg
-Yi9kcml2ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV9waXBlbGluZV9zdGF0
-ZS5jDQpAQCAtNDU3LDcgKzQ1Nyw3IEBAIGtvbWVkYV9zY2FsZXJfdmFsaWRhdGUodm9pZCAqdXNl
-ciwNCiAJc3RydWN0IGtvbWVkYV9zY2FsZXIgKnNjYWxlcjsNCiAJaW50IGVyciA9IDA7DQogDQot
-CWlmICghZGZsb3ctPmVuX3NjYWxpbmcpDQorCWlmICghKGRmbG93LT5lbl9zY2FsaW5nIHx8IGRm
-bG93LT5lbl9pbWdfZW5oYW5jZW1lbnQpKQ0KIAkJcmV0dXJuIDA7DQogDQogCXNjYWxlciA9IGtv
-bWVkYV9jb21wb25lbnRfZ2V0X2F2YWlsX3NjYWxlcihkZmxvdy0+aW5wdXQuY29tcG9uZW50LA0K
-QEAgLTQ4Miw5ICs0ODIsMTEgQEAga29tZWRhX3NjYWxlcl92YWxpZGF0ZSh2b2lkICp1c2VyLA0K
-IAlzdC0+dnNpemVfaW4gPSBkZmxvdy0+aW5faDsNCiAJc3QtPmhzaXplX291dCA9IGRmbG93LT5v
-dXRfdzsNCiAJc3QtPnZzaXplX291dCA9IGRmbG93LT5vdXRfaDsNCi0Jc3QtPmVuX3NjYWxpbmcg
-PSBkZmxvdy0+ZW5fc2NhbGluZzsNCisNCiAJLyogRW5hYmxlIGFscGhhIHByb2Nlc3NpbmcgaWYg
-dGhlIG5leHQgc3RhZ2UgbmVlZHMgdGhlIHBpeGVsIGFscGhhICovDQogCXN0LT5lbl9hbHBoYSA9
-IGRmbG93LT5waXhlbF9ibGVuZF9tb2RlICE9IERSTV9NT0RFX0JMRU5EX1BJWEVMX05PTkU7DQor
-CXN0LT5lbl9zY2FsaW5nID0gZGZsb3ctPmVuX3NjYWxpbmc7DQorCXN0LT5lbl9pbWdfZW5oYW5j
-ZW1lbnQgPSBkZmxvdy0+ZW5faW1nX2VuaGFuY2VtZW50Ow0KIA0KIAlrb21lZGFfY29tcG9uZW50
-X2FkZF9pbnB1dCgmc3QtPmJhc2UsICZkZmxvdy0+aW5wdXQsIDApOw0KIAlrb21lZGFfY29tcG9u
-ZW50X3NldF9vdXRwdXQoJmRmbG93LT5pbnB1dCwgJnNjYWxlci0+YmFzZSwgMCk7DQpkaWZmIC0t
-Z2l0IGEvZHJpdmVycy9ncHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfcGxhbmUuYyBi
-L2RyaXZlcnMvZ3B1L2RybS9hcm0vZGlzcGxheS9rb21lZGEva29tZWRhX3BsYW5lLmMNCmluZGV4
-IDk3ZDhhZGI2Y2QyYi4uZTdjZDY5MGQ5MzNkIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9ncHUvZHJt
-L2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfcGxhbmUuYw0KKysrIGIvZHJpdmVycy9ncHUvZHJt
-L2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfcGxhbmUuYw0KQEAgLTE1LDYgKzE1LDcgQEAgc3Rh
-dGljIGludA0KIGtvbWVkYV9wbGFuZV9pbml0X2RhdGFfZmxvdyhzdHJ1Y3QgZHJtX3BsYW5lX3N0
-YXRlICpzdCwNCiAJCQkgICAgc3RydWN0IGtvbWVkYV9kYXRhX2Zsb3dfY2ZnICpkZmxvdykNCiB7
-DQorCXN0cnVjdCBrb21lZGFfcGxhbmVfc3RhdGUgKmtwbGFuZV9zdCA9IHRvX2twbGFuZV9zdChz
-dCk7DQogCXN0cnVjdCBkcm1fZnJhbWVidWZmZXIgKmZiID0gc3QtPmZiOw0KIA0KIAltZW1zZXQo
-ZGZsb3csIDAsIHNpemVvZigqZGZsb3cpKTsNCkBAIC0yMyw3ICsyNCw3IEBAIGtvbWVkYV9wbGFu
-ZV9pbml0X2RhdGFfZmxvdyhzdHJ1Y3QgZHJtX3BsYW5lX3N0YXRlICpzdCwNCiANCiAJLyogaWYg
-Zm9ybWF0IGRvZXNuJ3QgaGF2ZSBhbHBoYSwgZml4IGJsZW5kIG1vZGUgdG8gUElYRUxfTk9ORSAq
-Lw0KIAlkZmxvdy0+cGl4ZWxfYmxlbmRfbW9kZSA9IGZiLT5mb3JtYXQtPmhhc19hbHBoYSA/DQot
-CQlzdC0+cGl4ZWxfYmxlbmRfbW9kZSA6IERSTV9NT0RFX0JMRU5EX1BJWEVMX05PTkU7DQorCQkJ
-c3QtPnBpeGVsX2JsZW5kX21vZGUgOiBEUk1fTU9ERV9CTEVORF9QSVhFTF9OT05FOw0KIAlkZmxv
-dy0+bGF5ZXJfYWxwaGEgPSBzdC0+YWxwaGEgPj4gODsNCiANCiAJZGZsb3ctPm91dF94ID0gc3Qt
-PmNydGNfeDsNCkBAIC0zNiw2ICszNyw4IEBAIGtvbWVkYV9wbGFuZV9pbml0X2RhdGFfZmxvdyhz
-dHJ1Y3QgZHJtX3BsYW5lX3N0YXRlICpzdCwNCiAJZGZsb3ctPmluX3cgPSBzdC0+c3JjX3cgPj4g
-MTY7DQogCWRmbG93LT5pbl9oID0gc3QtPnNyY19oID4+IDE2Ow0KIA0KKwlkZmxvdy0+ZW5faW1n
-X2VuaGFuY2VtZW50ID0ga3BsYW5lX3N0LT5pbWdfZW5oYW5jZW1lbnQ7DQorDQogCWtvbWVkYV9j
-b21wbGV0ZV9kYXRhX2Zsb3dfY2ZnKGRmbG93KTsNCiANCiAJcmV0dXJuIDA7DQpAQCAtMTMzLDcg
-KzEzNiw3IEBAIHN0YXRpYyB2b2lkIGtvbWVkYV9wbGFuZV9yZXNldChzdHJ1Y3QgZHJtX3BsYW5l
-ICpwbGFuZSkNCiBzdGF0aWMgc3RydWN0IGRybV9wbGFuZV9zdGF0ZSAqDQoga29tZWRhX3BsYW5l
-X2F0b21pY19kdXBsaWNhdGVfc3RhdGUoc3RydWN0IGRybV9wbGFuZSAqcGxhbmUpDQogew0KLQlz
-dHJ1Y3Qga29tZWRhX3BsYW5lX3N0YXRlICpuZXc7DQorCXN0cnVjdCBrb21lZGFfcGxhbmVfc3Rh
-dGUgKm5ldywgKm9sZDsNCiANCiAJaWYgKFdBUk5fT04oIXBsYW5lLT5zdGF0ZSkpDQogCQlyZXR1
-cm4gTlVMTDsNCkBAIC0xNDQsNiArMTQ3LDEwIEBAIGtvbWVkYV9wbGFuZV9hdG9taWNfZHVwbGlj
-YXRlX3N0YXRlKHN0cnVjdCBkcm1fcGxhbmUgKnBsYW5lKQ0KIA0KIAlfX2RybV9hdG9taWNfaGVs
-cGVyX3BsYW5lX2R1cGxpY2F0ZV9zdGF0ZShwbGFuZSwgJm5ldy0+YmFzZSk7DQogDQorCW9sZCA9
-IHRvX2twbGFuZV9zdChwbGFuZS0+c3RhdGUpOw0KKw0KKwluZXctPmltZ19lbmhhbmNlbWVudCA9
-IG9sZC0+aW1nX2VuaGFuY2VtZW50Ow0KKw0KIAlyZXR1cm4gJm5ldy0+YmFzZTsNCiB9DQogDQpA
-QCAtMTU1LDYgKzE2Miw0MCBAQCBrb21lZGFfcGxhbmVfYXRvbWljX2Rlc3Ryb3lfc3RhdGUoc3Ry
-dWN0IGRybV9wbGFuZSAqcGxhbmUsDQogCWtmcmVlKHRvX2twbGFuZV9zdChzdGF0ZSkpOw0KIH0N
-CiANCitzdGF0aWMgaW50DQora29tZWRhX3BsYW5lX2F0b21pY19nZXRfcHJvcGVydHkoc3RydWN0
-IGRybV9wbGFuZSAqcGxhbmUsDQorCQkJCSBjb25zdCBzdHJ1Y3QgZHJtX3BsYW5lX3N0YXRlICpz
-dGF0ZSwNCisJCQkJIHN0cnVjdCBkcm1fcHJvcGVydHkgKnByb3BlcnR5LA0KKwkJCQkgdWludDY0
-X3QgKnZhbCkNCit7DQorCXN0cnVjdCBrb21lZGFfcGxhbmUgKmtwbGFuZSA9IHRvX2twbGFuZShw
-bGFuZSk7DQorCXN0cnVjdCBrb21lZGFfcGxhbmVfc3RhdGUgKnN0ID0gdG9fa3BsYW5lX3N0KHN0
-YXRlKTsNCisNCisJaWYgKHByb3BlcnR5ID09IGtwbGFuZS0+cHJvcF9pbWdfZW5oYW5jZW1lbnQp
-DQorCQkqdmFsID0gc3QtPmltZ19lbmhhbmNlbWVudDsNCisJZWxzZQ0KKwkJcmV0dXJuIC1FSU5W
-QUw7DQorDQorCXJldHVybiAwOw0KK30NCisNCitzdGF0aWMgaW50DQora29tZWRhX3BsYW5lX2F0
-b21pY19zZXRfcHJvcGVydHkoc3RydWN0IGRybV9wbGFuZSAqcGxhbmUsDQorCQkJCSBzdHJ1Y3Qg
-ZHJtX3BsYW5lX3N0YXRlICpzdGF0ZSwNCisJCQkJIHN0cnVjdCBkcm1fcHJvcGVydHkgKnByb3Bl
-cnR5LA0KKwkJCQkgdWludDY0X3QgdmFsKQ0KK3sNCisJc3RydWN0IGtvbWVkYV9wbGFuZSAqa3Bs
-YW5lID0gdG9fa3BsYW5lKHBsYW5lKTsNCisJc3RydWN0IGtvbWVkYV9wbGFuZV9zdGF0ZSAqc3Qg
-PSB0b19rcGxhbmVfc3Qoc3RhdGUpOw0KKw0KKwlpZiAocHJvcGVydHkgPT0ga3BsYW5lLT5wcm9w
-X2ltZ19lbmhhbmNlbWVudCkNCisJCXN0LT5pbWdfZW5oYW5jZW1lbnQgPSAhIXZhbDsNCisJZWxz
-ZQ0KKwkJcmV0dXJuIC1FSU5WQUw7DQorDQorCXJldHVybiAwOw0KK30NCisNCiBzdGF0aWMgYm9v
-bA0KIGtvbWVkYV9wbGFuZV9mb3JtYXRfbW9kX3N1cHBvcnRlZChzdHJ1Y3QgZHJtX3BsYW5lICpw
-bGFuZSwNCiAJCQkJICB1MzIgZm9ybWF0LCB1NjQgbW9kaWZpZXIpDQpAQCAtMTc0LDkgKzIxNSwz
-MyBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IGRybV9wbGFuZV9mdW5jcyBrb21lZGFfcGxhbmVfZnVu
-Y3MgPSB7DQogCS5yZXNldAkJCT0ga29tZWRhX3BsYW5lX3Jlc2V0LA0KIAkuYXRvbWljX2R1cGxp
-Y2F0ZV9zdGF0ZQk9IGtvbWVkYV9wbGFuZV9hdG9taWNfZHVwbGljYXRlX3N0YXRlLA0KIAkuYXRv
-bWljX2Rlc3Ryb3lfc3RhdGUJPSBrb21lZGFfcGxhbmVfYXRvbWljX2Rlc3Ryb3lfc3RhdGUsDQor
-CS5hdG9taWNfZ2V0X3Byb3BlcnR5CT0ga29tZWRhX3BsYW5lX2F0b21pY19nZXRfcHJvcGVydHks
-DQorCS5hdG9taWNfc2V0X3Byb3BlcnR5CT0ga29tZWRhX3BsYW5lX2F0b21pY19zZXRfcHJvcGVy
-dHksDQogCS5mb3JtYXRfbW9kX3N1cHBvcnRlZAk9IGtvbWVkYV9wbGFuZV9mb3JtYXRfbW9kX3N1
-cHBvcnRlZCwNCiB9Ow0KIA0KK3N0YXRpYyBpbnQNCitrb21lZGFfcGxhbmVfY3JlYXRlX2xheWVy
-X3Byb3BlcnRpZXMoc3RydWN0IGtvbWVkYV9wbGFuZSAqa3BsYW5lLA0KKwkJCQkgICAgIHN0cnVj
-dCBrb21lZGFfbGF5ZXIgKmxheWVyKQ0KK3sNCisJc3RydWN0IGRybV9kZXZpY2UgKmRybSA9IGtw
-bGFuZS0+YmFzZS5kZXY7DQorCXN0cnVjdCBkcm1fcGxhbmUgKnBsYW5lID0gJmtwbGFuZS0+YmFz
-ZTsNCisJc3RydWN0IGRybV9wcm9wZXJ0eSAqcHJvcCA9IE5VTEw7DQorDQorCS8qIHByb3BlcnR5
-OiBsYXllciBpbWFnZV9lbmhhbmNlbWVudCAqLw0KKwlpZiAobGF5ZXItPmJhc2Uuc3VwcG9ydGVk
-X291dHB1dHMgJiBLT01FREFfUElQRUxJTkVfU0NBTEVSUykgew0KKwkJcHJvcCA9IGRybV9wcm9w
-ZXJ0eV9jcmVhdGVfYm9vbChkcm0sIERSTV9NT0RFX1BST1BfQVRPTUlDLA0KKwkJCQkJCSJpbWdf
-ZW5oYW5jZW1lbnQiKTsNCisJCWlmICghcHJvcCkNCisJCQlyZXR1cm4gLUVOT01FTTsNCisNCisJ
-CWRybV9vYmplY3RfYXR0YWNoX3Byb3BlcnR5KCZwbGFuZS0+YmFzZSwgcHJvcCwgMCk7DQorCQlr
-cGxhbmUtPnByb3BfaW1nX2VuaGFuY2VtZW50ID0gcHJvcDsNCisJfQ0KKw0KKwlyZXR1cm4gMDsN
-Cit9DQorDQogLyogZm9yIGtvbWVkYSwgd2hpY2ggaXMgcGlwZWxpbmUgY2FuIGJlIHNoYXJlIGJl
-dHdlZW4gY3J0Y3MgKi8NCiBzdGF0aWMgdTMyIGdldF9wb3NzaWJsZV9jcnRjcyhzdHJ1Y3Qga29t
-ZWRhX2ttc19kZXYgKmttcywNCiAJCQkgICAgICBzdHJ1Y3Qga29tZWRhX3BpcGVsaW5lICpwaXBl
-KQ0KQEAgLTIzOCw2ICszMDMsMTAgQEAgc3RhdGljIGludCBrb21lZGFfcGxhbmVfYWRkKHN0cnVj
-dCBrb21lZGFfa21zX2RldiAqa21zLA0KIA0KIAlkcm1fcGxhbmVfaGVscGVyX2FkZChwbGFuZSwg
-JmtvbWVkYV9wbGFuZV9oZWxwZXJfZnVuY3MpOw0KIA0KKwllcnIgPSBrb21lZGFfcGxhbmVfY3Jl
-YXRlX2xheWVyX3Byb3BlcnRpZXMoa3BsYW5lLCBsYXllcik7DQorCWlmIChlcnIpDQorCQlnb3Rv
-IGNsZWFudXA7DQorDQogCXJldHVybiAwOw0KIGNsZWFudXA6DQogCWtvbWVkYV9wbGFuZV9kZXN0
-cm95KHBsYW5lKTsNCi0tIA0KMi4xNy4xDQoNCg==
+It is possible that multiple Sphinx virtualenvs are installed
+on a given kernel tree. Change the logic to get the latest
+version of those, as this is probably what the user wants.
+
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+---
+ scripts/sphinx-pre-install | 22 ++++++++++++++--------
+ 1 file changed, 14 insertions(+), 8 deletions(-)
+
+diff --git a/scripts/sphinx-pre-install b/scripts/sphinx-pre-install
+index 8c2d1bcf2e02..11239eb29695 100755
+--- a/scripts/sphinx-pre-install
++++ b/scripts/sphinx-pre-install
+@@ -1,7 +1,7 @@
+ #!/usr/bin/perl
+ use strict;
+ 
+-# Copyright (c) 2017 Mauro Carvalho Chehab <mchehab@kernel.org>
++# Copyright (c) 2017-2019 Mauro Carvalho Chehab <mchehab@kernel.org>
+ #
+ # This program is free software; you can redistribute it and/or
+ # modify it under the terms of the GNU General Public License
+@@ -15,6 +15,7 @@ use strict;
+ 
+ my $conf = "Documentation/conf.py";
+ my $requirement_file = "Documentation/sphinx/requirements.txt";
++my $virtenv_prefix = "sphinx_";
+ 
+ #
+ # Static vars
+@@ -28,7 +29,8 @@ my $need_symlink = 0;
+ my $need_sphinx = 0;
+ my $rec_sphinx_upgrade = 0;
+ my $install = "";
+-my $virtenv_dir = "sphinx_";
++my $virtenv_dir = "";
++my $min_version;
+ 
+ #
+ # Command line arguments
+@@ -229,7 +231,6 @@ sub get_sphinx_fname()
+ 
+ sub check_sphinx()
+ {
+-	my $min_version;
+ 	my $rec_version;
+ 	my $cur_version;
+ 
+@@ -255,7 +256,7 @@ sub check_sphinx()
+ 
+ 	die "Can't get recommended sphinx version from $requirement_file" if (!$min_version);
+ 
+-	$virtenv_dir .= $rec_version;
++	$virtenv_dir = $virtenv_prefix . $rec_version;
+ 
+ 	my $sphinx = get_sphinx_fname();
+ 	return if ($sphinx eq "");
+@@ -612,18 +613,23 @@ sub check_needs()
+ 		       which("sphinx-build-3");
+ 	}
+ 	if ($need_sphinx || $rec_sphinx_upgrade) {
+-		my $activate = "$virtenv_dir/bin/activate";
+-		if (-e "$ENV{'PWD'}/$activate") {
++		my $min_activate = "$ENV{'PWD'}/${virtenv_prefix}${min_version}/bin/activate";
++                my @activates = glob "$ENV{'PWD'}/${virtenv_prefix}*/bin/activate";
++
++                @activates = sort {$b cmp $a} @activates;
++
++		if (scalar @activates > 0 && $activates[0] ge $min_activate) {
+ 			printf "\nNeed to activate virtualenv with:\n";
+-			printf "\t. $activate\n";
++			printf "\t. $activates[0]\n";
+ 		} else {
++			my $rec_activate = "$virtenv_dir/bin/activate";
+ 			my $virtualenv = findprog("virtualenv-3");
+ 			$virtualenv = findprog("virtualenv-3.5") if (!$virtualenv);
+ 			$virtualenv = findprog("virtualenv") if (!$virtualenv);
+ 			$virtualenv = "virtualenv" if (!$virtualenv);
+ 
+ 			printf "\t$virtualenv $virtenv_dir\n";
+-			printf "\t. $activate\n";
++			printf "\t. $rec_activate\n";
+ 			printf "\tpip install -r $requirement_file\n";
+ 
+ 			$need++ if (!$rec_sphinx_upgrade);
+-- 
+2.21.0
+
