@@ -2,163 +2,61 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E479BC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 00:20:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDC8DC282CE
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 00:22:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9515A2089E
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 00:20:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="b1PxbkXj"
+	by mail.kernel.org (Postfix) with ESMTP id A89E22173C
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 00:22:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728784AbfEWAU4 (ORCPT
+        id S1729491AbfEWAWG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 20:20:56 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:43145 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727691AbfEWAUz (ORCPT
+        Wed, 22 May 2019 20:22:06 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:36486 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727634AbfEWAWG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 20:20:55 -0400
-Received: by mail-qt1-f194.google.com with SMTP id i26so4694945qtr.10
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 17:20:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=kja4wR6FLtasYFQS1xUbhik8iG88bHuMFvf2ArrK0nw=;
-        b=b1PxbkXji6rxJkxXzX+E8hmtsDc4EAG6spndGBpqTY6Mtd1Z82qmKG7IFdzEDWmzKK
-         cpfPgmFkndIKUtDn3lZmf4ZAYcKRjit4YkqMU72A44nfyHayfu0+OGxh9SgysS/YRAv2
-         RDEnuh2qly9nvvswbClZIbFXuZCzwJj2KYSwWCU/YgJUugR9fRVuJUTKIe2+8zLwiPOj
-         anBDeIuRaK3lpaZn56KojfHXM/H6EWmNRZuecl/6erGrJ5dc4+VdWT4yxUQf8Rpv9nUY
-         hRDkUmUo3tTzvQuC1Vf8iYC9BBrTle8EWAWahcABrO+2gaF43DLowx5aiqsiUBpSVZlJ
-         7EAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=kja4wR6FLtasYFQS1xUbhik8iG88bHuMFvf2ArrK0nw=;
-        b=IwxNrp8Jq8pc2kv+dVan8YrIu1p8fxaBuFOHKB6MRj9jR7S5CxUs3QGiLEC1OfnkZa
-         A5G9qKl+B7VRjEq4nt/fmoPX/GdN3UWZTIM+5XwCcGaVjoZzl9cK6KiRRFzhC2186jgO
-         ariig60NSwf8VdAN3rGQn0ywZZWju/RX60nelT54/lBoDf0R5sjC2zYZfx4FfsloH5/3
-         n/5OPBTP4X0PUxZ0mdDdSU+FkvDwfD24x7UHlEfXSsFA7f3D9FVkIBF3myCkOPfuYThS
-         ffpDwfJteIDcTxjTTBozAh0tksQQ8j0miYinHVwMz9wQC3kv6kcmTkASWXVvbzqeAIuf
-         AZRA==
-X-Gm-Message-State: APjAAAUv5gPHMrDGhBeu4+v/Xhho6GYW4wgBxwoLtq+9aocJjb2A7aqD
-        2oq828lE9VJpI8nRxLODlfPEZQ==
-X-Google-Smtp-Source: APXvYqwzvo9H/aW7qSfx2OQVIHnUtdd1Cyzpi6J44RNo2JLbDhDXh7kfDH2OJy33sD2sQGXynL6VQQ==
-X-Received: by 2002:ac8:f71:: with SMTP id l46mr70609860qtk.321.1558570854263;
-        Wed, 22 May 2019 17:20:54 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-49-251.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.49.251])
-        by smtp.gmail.com with ESMTPSA id t30sm15637238qtc.80.2019.05.22.17.20.53
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 22 May 2019 17:20:53 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1hTbTZ-0001Zh-03; Wed, 22 May 2019 21:20:53 -0300
-Date:   Wed, 22 May 2019 21:20:52 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Dave Martin <Dave.Martin@arm.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>, kvm@vger.kernel.org,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        dri-devel@lists.freedesktop.org, linux-mm@kvack.org,
-        linux-kselftest@vger.kernel.org,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Leon Romanovsky <leon@kernel.org>, linux-rdma@vger.kernel.org,
-        amd-gfx@lists.freedesktop.org, Dmitry Vyukov <dvyukov@google.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        linux-media@vger.kernel.org, Kevin Brodsky <kevin.brodsky@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Kostya Serebryany <kcc@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        linux-kernel@vger.kernel.org,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Subject: Re: [PATCH v15 00/17] arm64: untag user pointers passed to the kernel
-Message-ID: <20190523002052.GF15389@ziepe.ca>
-References: <cover.1557160186.git.andreyknvl@google.com>
- <20190517144931.GA56186@arrakis.emea.arm.com>
- <20190521184856.GC2922@ziepe.ca>
- <20190522134925.GV28398@e103592.cambridge.arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190522134925.GV28398@e103592.cambridge.arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Wed, 22 May 2019 20:22:06 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d8])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 8B12815042EA8;
+        Wed, 22 May 2019 17:22:05 -0700 (PDT)
+Date:   Wed, 22 May 2019 17:21:44 -0700 (PDT)
+Message-Id: <20190522.172144.190504285268899608.davem@davemloft.net>
+To:     Claudiu.Beznea@microchip.com
+Cc:     Nicolas.Ferre@microchip.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: macb: save/restore the remaining registers and
+ features
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <1558513467-8424-1-git-send-email-claudiu.beznea@microchip.com>
+References: <1558513467-8424-1-git-send-email-claudiu.beznea@microchip.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 22 May 2019 17:22:05 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 22, 2019 at 02:49:28PM +0100, Dave Martin wrote:
-> On Tue, May 21, 2019 at 03:48:56PM -0300, Jason Gunthorpe wrote:
-> > On Fri, May 17, 2019 at 03:49:31PM +0100, Catalin Marinas wrote:
-> > 
-> > > The tagged pointers (whether hwasan or MTE) should ideally be a
-> > > transparent feature for the application writer but I don't think we can
-> > > solve it entirely and make it seamless for the multitude of ioctls().
-> > > I'd say you only opt in to such feature if you know what you are doing
-> > > and the user code takes care of specific cases like ioctl(), hence the
-> > > prctl() proposal even for the hwasan.
-> > 
-> > I'm not sure such a dire view is warrented.. 
-> > 
-> > The ioctl situation is not so bad, other than a few special cases,
-> > most drivers just take a 'void __user *' and pass it as an argument to
-> > some function that accepts a 'void __user *'. sparse et al verify
-> > this. 
-> > 
-> > As long as the core functions do the right thing the drivers will be
-> > OK.
-> > 
-> > The only place things get dicy is if someone casts to unsigned long
-> > (ie for vma work) but I think that reflects that our driver facing
-> > APIs for VMAs are compatible with static analysis (ie I have no
-> > earthly idea why get_user_pages() accepts an unsigned long), not that
-> > this is too hard.
+From: <Claudiu.Beznea@microchip.com>
+Date: Wed, 22 May 2019 08:24:43 +0000
+
+> From: Claudiu Beznea <claudiu.beznea@microchip.com>
 > 
-> If multiple people will care about this, perhaps we should try to
-> annotate types more explicitly in SYSCALL_DEFINEx() and ABI data
-> structures.
+> SAMA5D2 SoC has a suspend mode where SoC's power is cut off. Due to this
+> the registers content is lost after a suspend/resume cycle. The current
+> suspend/resume implementation covers some of these registers. However
+> there are few which were not treated (e.g. SCRT2 and USRIO). Apart
+> from this, netdev features are not restored. Treat these issues.
 > 
-> For example, we could have a couple of mutually exclusive modifiers
-> 
-> T __object *
-> T __vaddr * (or U __vaddr)
-> 
-> In the first case the pointer points to an object (in the C sense)
-> that the call may dereference but not use for any other purpose.
+> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
 
-How would you use these two differently?
-
-So far the kernel has worked that __user should tag any pointer that
-is from userspace and then you can't do anything with it until you
-transform it into a kernel something
-
-> to tell static analysers the real type of pointers smuggled through
-> UAPI disguised as other types (*cough* KVM, etc.)
-
-Yes, that would help alot, we often have to pass pointers through a
-u64 in the uAPI, and there is no static checker support to make sure
-they are run through the u64_to_user_ptr() helper.
-
-Jason
+Applied.
