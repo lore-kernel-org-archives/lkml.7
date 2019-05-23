@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E86FC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:29:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2900C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:29:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 690CC206BA
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:29:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B82A120879
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:29:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639768;
-	bh=8T1Tvz0pFoNbcqa2xr0vtm5OazC3Ix2HGzZSZ/OhBEo=;
+	s=default; t=1558639770;
+	bh=3rxfAX4mLHvVaXl+hX9hwHnq3HJQHQSfrnr68pxQPQk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AEG2EVGuwhXYjQ+3Mutv/Br6Z3twH3KTcLOtrJS8wfJ1mV/tqPYl2iL1EieGnXMm1
-	 +ZdfdlTUnbh5rMafXLRIeIBiPfUiVrpk2XMHYOyjiATQTjgaY8hzXXe51XBAeUtZq/
-	 TRAS5MuXEt0hZ6f2ZM885m3gVz6nLc2npaNGKa2E=
+	b=k8fyD0uPAMgYUUOonYUp34z6t0CkNrAxL8iGhXwukj4nrPTqMMhdLmpXn3NAbX4zz
+	 TwRqn/+xrQhcu6GxQ+AW4tVo18uK9sUAGbitxS5Zm6P0cdc790cjGoeSaRtWBOnJYo
+	 os6tj1Zx8VsDlhS46vcc5cbIzvmcoGcZX1pjwTzI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391963AbfEWT31 (ORCPT
+        id S2391973AbfEWT3a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:29:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42520 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:29:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42586 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391949AbfEWT3Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:29:24 -0400
+        id S2391435AbfEWT31 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:29:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA890206BA;
-        Thu, 23 May 2019 19:29:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 59C6120879;
+        Thu, 23 May 2019 19:29:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639764;
-        bh=8T1Tvz0pFoNbcqa2xr0vtm5OazC3Ix2HGzZSZ/OhBEo=;
+        s=default; t=1558639766;
+        bh=3rxfAX4mLHvVaXl+hX9hwHnq3HJQHQSfrnr68pxQPQk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u12mV0+dlASrBHmBpfcTR9tDNpCnOMR2o2XqvyontkCRg85TaspXNGpRtWfOMycU5
-         78T/lkxRazqmZ2xz9dzTd9DxJ1W2uKnm6KoUu3g0e3KKE7po3SX/tdFj/rikUDDpoN
-         0r0v1iDRzKxmdhKvUKlH7SZTcJrXXaS9FDDmrK0c=
+        b=U0iVKVtv3FR6Ie6iFDroO0UE1rioN6Ncw2WwO66QPzCSrzKY65+wV1XkUXxrjTE4L
+         tbwKxGO7dXtxmz+PzOGCYseuXoHlUXCE+aLDh3fqUFyuZ70pp8ZixRU1j82lOY7qug
+         /2JUiu5AonPz5dDvVw/UM0wuyVqtcng/oHwF4SuI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <treding@nvidia.com>
-Subject: [PATCH 5.1 078/122] memory: tegra: Fix integer overflow on tick value calculation
-Date:   Thu, 23 May 2019 21:06:40 +0200
-Message-Id: <20190523181715.094872429@linuxfoundation.org>
+        stable@vger.kernel.org, Yifeng Li <tomli@tomli.me>,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+        Teddy Wang <teddy.wang@siliconmotion.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: [PATCH 5.1 087/122] fbdev: sm712fb: fix VRAM detection, dont set SR70/71/74/75
+Date:   Thu, 23 May 2019 21:06:49 +0200
+Message-Id: <20190523181716.431314928@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181705.091418060@linuxfoundation.org>
 References: <20190523181705.091418060@linuxfoundation.org>
@@ -59,34 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Osipenko <digetx@gmail.com>
+From: Yifeng Li <tomli@tomli.me>
 
-commit b906c056b6023c390f18347169071193fda57dde upstream.
+commit dcf9070595e100942c539e229dde4770aaeaa4e9 upstream.
 
-Multiplying the Memory Controller clock rate by the tick count results
-in an integer overflow and in result the truncated tick value is being
-programmed into hardware, such that the GR3D memory client performance is
-reduced by two times.
+On a Thinkpad s30 (Pentium III / i440MX, Lynx3DM), the amount of Video
+RAM is not detected correctly by the xf86-video-siliconmotion driver.
+This is because sm712fb overwrites the GPR71 Scratch Pad Register, which
+is set by BIOS on x86 and used to indicate amount of VRAM.
 
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+Other Scratch Pad Registers, including GPR70/74/75, don't have the same
+side-effect, but overwriting to them is still questionable, as they are
+not related to modesetting.
+
+Stop writing to SR70/71/74/75 (a.k.a GPR70/71/74/75).
+
+Signed-off-by: Yifeng Li <tomli@tomli.me>
+Tested-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Cc: Teddy Wang <teddy.wang@siliconmotion.com>
+Cc: <stable@vger.kernel.org>  # v4.4+
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/memory/tegra/mc.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/video/fbdev/sm712fb.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/memory/tegra/mc.c
-+++ b/drivers/memory/tegra/mc.c
-@@ -282,7 +282,7 @@ static int tegra_mc_setup_latency_allowa
- 	u32 value;
+--- a/drivers/video/fbdev/sm712fb.c
++++ b/drivers/video/fbdev/sm712fb.c
+@@ -1146,7 +1146,9 @@ static void sm7xx_set_timing(struct smtc
+ 		/* init SEQ register SR30 - SR75 */
+ 		for (i = 0; i < SIZE_SR30_SR75; i++)
+ 			if ((i + 0x30) != 0x30 && (i + 0x30) != 0x62 &&
+-			    (i + 0x30) != 0x6a && (i + 0x30) != 0x6b)
++			    (i + 0x30) != 0x6a && (i + 0x30) != 0x6b &&
++			    (i + 0x30) != 0x70 && (i + 0x30) != 0x71 &&
++			    (i + 0x30) != 0x74 && (i + 0x30) != 0x75)
+ 				smtc_seqw(i + 0x30,
+ 					  vgamode[j].init_sr30_sr75[i]);
  
- 	/* compute the number of MC clock cycles per tick */
--	tick = mc->tick * clk_get_rate(mc->clk);
-+	tick = (unsigned long long)mc->tick * clk_get_rate(mc->clk);
- 	do_div(tick, NSEC_PER_SEC);
- 
- 	value = readl(mc->regs + MC_EMEM_ARB_CFG);
 
 
