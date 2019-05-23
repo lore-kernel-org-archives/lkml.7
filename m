@@ -2,104 +2,182 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 737A3C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:08:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 061C2C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:08:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A529217D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:08:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558638521;
-	bh=SNM0Fl27uXWqQ5amLSxTAalRgg9QV1Z6TRqIcxX9UNU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MU5nwesm1ytRISniRSteBuBWXq9zWt6b5KfNCPOadb9kbFHDw1JxQgtYHO2Zbcq27
-	 QtQg/Srk/i9tSUJmloc8PrRdza4sYVH7cR2cEcanQYCRcABzjEyqbsRrA3JOABR6z5
-	 C7fyW4qFMbQYMLV7fAFMHDRHV2r1iYrv7smvxsjc=
+	by mail.kernel.org (Postfix) with ESMTP id D255F217D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:08:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ftte8Z4j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731830AbfEWTIj (ORCPT
+        id S1731885AbfEWTIq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:08:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41424 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731464AbfEWTIi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:08:38 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 16F8A21841;
-        Thu, 23 May 2019 19:08:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558638517;
-        bh=SNM0Fl27uXWqQ5amLSxTAalRgg9QV1Z6TRqIcxX9UNU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Yd9rw4zbxq0RX6e+GUTFDFWy/BZInqsl6bOvk1Pq2S91MQw0g0EZ15phvU8f4n7bT
-         MQpj1Kpi3hvqc615EeD76BMmQyL4xuvD9NFrz/XptJkhLqMveAKBJQi+Jgew8eDwSC
-         sY2+0oeqyt+M0sWBBcfBD8qQ5J+uAXxf5G9nGzFI=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, ZhangXiaoxu <zhangxiaoxu5@huawei.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>
-Subject: [PATCH 4.9 18/53] NFS4: Fix v4.0 client state corruption when mount
-Date:   Thu, 23 May 2019 21:05:42 +0200
-Message-Id: <20190523181713.746726375@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190523181710.981455400@linuxfoundation.org>
-References: <20190523181710.981455400@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 23 May 2019 15:08:46 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:56294 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731841AbfEWTIm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:08:42 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4NJ8btM092486;
+        Thu, 23 May 2019 14:08:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1558638517;
+        bh=NOGPoNwWv6Pn/PLmO8rE0HQXiSYvUFN87f5nSAAmvIE=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=ftte8Z4j52lAhLnoqLNsMSuDfTgJH9AszYsc/dkSmcWfss676p7TJ0VjvMGCy4JAP
+         gSO81UNzM01hfFirotm5swl8bWclY6GDM/OWO9QPshL9cajgb/yiH4EZUStp00xdj6
+         WpRHjpFPlUTFUbDR18Q8NhhhtawDztspjcdRPPPs=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4NJ8bos123868
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 23 May 2019 14:08:37 -0500
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 23
+ May 2019 14:08:37 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Thu, 23 May 2019 14:08:37 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4NJ8b8m095902;
+        Thu, 23 May 2019 14:08:37 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <robh+dt@kernel.org>
+CC:     <devicetree@vger.kernel.org>, <linux-leds@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH v3 2/9] dt: bindings: Add multicolor class dt bindings documention
+Date:   Thu, 23 May 2019 14:08:13 -0500
+Message-ID: <20190523190820.29375-3-dmurphy@ti.com>
+X-Mailer: git-send-email 2.21.0.5.gaeb582a983
+In-Reply-To: <20190523190820.29375-1-dmurphy@ti.com>
+References: <20190523190820.29375-1-dmurphy@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: ZhangXiaoxu <zhangxiaoxu5@huawei.com>
+Add DT bindings for the LEDs multicolor class framework.
 
-commit f02f3755dbd14fb935d24b14650fff9ba92243b8 upstream.
-
-stat command with soft mount never return after server is stopped.
-
-When alloc a new client, the state of the client will be set to
-NFS4CLNT_LEASE_EXPIRED.
-
-When the server is stopped, the state manager will work, and accord
-the state to recover. But the state is NFS4CLNT_LEASE_EXPIRED, it
-will drain the slot table and lead other task to wait queue, until
-the client recovered. Then the stat command is hung.
-
-When discover server trunking, the client will renew the lease,
-but check the client state, it lead the client state corruption.
-
-So, we need to call state manager to recover it when detect server
-ip trunking.
-
-Signed-off-by: ZhangXiaoxu <zhangxiaoxu5@huawei.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
 ---
- fs/nfs/nfs4state.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ .../bindings/leds/leds-class-multicolor.txt   | 97 +++++++++++++++++++
+ 1 file changed, 97 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
 
---- a/fs/nfs/nfs4state.c
-+++ b/fs/nfs/nfs4state.c
-@@ -143,6 +143,10 @@ int nfs40_discover_server_trunking(struc
- 		/* Sustain the lease, even if it's empty.  If the clientid4
- 		 * goes stale it's of no use for trunking discovery. */
- 		nfs4_schedule_state_renewal(*result);
+diff --git a/Documentation/devicetree/bindings/leds/leds-class-multicolor.txt b/Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
+new file mode 100644
+index 000000000000..e2a2ce3279cb
+--- /dev/null
++++ b/Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
+@@ -0,0 +1,97 @@
++* Multicolor LED properties
 +
-+		/* If the client state need to recover, do it. */
-+		if (clp->cl_state)
-+			nfs4_schedule_state_manager(clp);
- 	}
- out:
- 	return status;
-
++Multicolor LEDs can consist of a RGB, RGBW or a RGBA LED clusters.  These devices
++can be grouped together and also provide a modeling mechanism so that the
++cluster LEDs can vary in hue and intensity to produce a wide range of colors.
++
++The nodes and properties defined in this document are unique to the multicolor
++LED class.  Common LED nodes and properties are inherited from the common.txt
++within this documentation directory.
++
++Required LED Child properties:
++	- color : For multicolor LED support this property should be defined as
++		  LED_COLOR_ID_MULTI and further definition can be found in
++		  include/linux/leds/common.h.
++
++led-controller@30 {
++	#address-cells = <1>;
++	#size-cells = <0>;
++	compatible = "ti,lp5024";
++	reg = <0x29>;
++
++	multi-led@4 {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <4>;
++		color = <LED_COLOR_ID_MULTI>;
++		function = LED_FUNCTION_ACTIVITY;
++
++		led@12 {
++			reg = <12>;
++			color = <LED_COLOR_ID_RED>;
++		};
++
++		led@13 {
++			reg = <13>;
++			color = <LED_COLOR_ID_GREEN>;
++		};
++
++		led@14 {
++			reg = <14>;
++			color = <LED_COLOR_ID_BLUE>;
++		};
++	};
++
++	/* Only support RGB no model defined */
++	multi-led@1 {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <1>;
++		color = <LED_COLOR_ID_MULTI>;
++		function = LED_FUNCTION_;
++
++
++		led@3 {
++			reg = <3>;
++			color = <LED_COLOR_ID_RED>;
++		};
++
++		led@4 {
++			reg = <4>;
++			color = <LED_COLOR_ID_GREEN>;
++		};
++
++		led@5 {
++			reg = <5>;
++			color = <LED_COLOR_ID_BLUE>;
++		};
++	};
++
++	multi-led@2 {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		color = <LED_COLOR_ID_MULTI>;
++		function = LED_FUNCTION_ACTIVITY;
++		reg = <2>;
++		ti,led-bank = <2 3 5>;
++
++		led@6 {
++			reg = <0x6>;
++			color = <LED_COLOR_ID_RED>;
++			led-sources = <6 9 15>;
++		};
++
++		led@7 {
++			reg = <0x7>;
++			color = <LED_COLOR_ID_GREEN>;
++			led-sources = <7 10 16>;
++		};
++
++		led@8 {
++			reg = <0x8>;
++			color = <LED_COLOR_ID_BLUE>;
++			led-sources = <8 11 17>;
++		};
++	};
++
++};
+-- 
+2.21.0.5.gaeb582a983
 
