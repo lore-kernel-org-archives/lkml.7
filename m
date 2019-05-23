@@ -2,298 +2,149 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79596C282DE
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:49:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08A0CC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:52:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22777217D4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:49:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="LmDqunok"
+	by mail.kernel.org (Postfix) with ESMTP id D98CC2175B
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:52:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731092AbfEWPtS (ORCPT
+        id S1730972AbfEWPwL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 11:49:18 -0400
-Received: from mail-it1-f196.google.com ([209.85.166.196]:39810 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731191AbfEWPtO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 11:49:14 -0400
-Received: by mail-it1-f196.google.com with SMTP id 9so9242792itf.4
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 08:49:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Z5ctpIu+jWXTv/YFXK0h4ORrsvPLOawXchITh96/44s=;
-        b=LmDqunokL2kjMrDmv8k3gLYKoM+RLixq6vguLoqH6ppc5OE2j6g/sY/IRwa/T+C0lr
-         MzhTsdRi1nPEx9ntLAlE+TIJAMjWkklvTV4NijoxXlid+DHygGOIWSTqHkZnznJMFfeP
-         woDcMT587TMgQJWCpoFjPXDaTxIjTBX17qmqOUGVWRXnl0B30Lu03+FkoeVqO7OJvCOe
-         6c1p8lxR7QzK3IVGGBHWO0z88XD+S1W9KkFTpROeb06FbFjBD6yrA4WamZ4UtOoN6tJk
-         f05IXhmT+6d1ozkBEwzS/GJUPFRCEV+QIkQwz+TdoaVCt4UW8b+fkgNlvMeA8ioJ5g/s
-         GwPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Z5ctpIu+jWXTv/YFXK0h4ORrsvPLOawXchITh96/44s=;
-        b=I1Y4UNGgv9ohaWLgmX3Vol6/ur85DxS4Pee+SSFfox/YKweia35oh5S9XsMuFGidpB
-         jONSbzB0cAxio7MVX/4IaZ9ON3Wkn2nSAqbqlt/QUE4nBqga6MR1vMITmEWkYl4n4AS4
-         dcO+91GQDfKUjF87tj35A/SjZGENhG5b+OYU4UGzI2FpO+OO7KE1y1z3dACNrdDdzFbb
-         Twbd04aYh8zbHFqnAd8dkw5XhXmehjaTCB++3ynP4sddWYcFal3d+lxn6zgxYaxYx80T
-         kKoc5CZjQfBymrPZDXdYT8PudFy5z0xrDWexe/CRZP8HSibabOHYcrWtT+Hq4qStfb55
-         YupA==
-X-Gm-Message-State: APjAAAXWjwc20cqTaCZqiVPC+0guQQDx5WVcyqINAjEBx8v6iiak8ygB
-        uu4f/NKvNE0NJlCzg7UDuikcNA==
-X-Google-Smtp-Source: APXvYqxC9q/gfvF4noEmnKzYohqXHRREb6iPacdieXuLb/sEjezVXXt1D/3GJTGuntWPZltO3Gx05A==
-X-Received: by 2002:a05:6638:617:: with SMTP id g23mr11397158jar.118.1558626553338;
-        Thu, 23 May 2019 08:49:13 -0700 (PDT)
-Received: from localhost.localdomain ([172.56.12.187])
-        by smtp.gmail.com with ESMTPSA id v1sm9124939iob.56.2019.05.23.08.49.05
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 23 May 2019 08:49:12 -0700 (PDT)
-From:   Christian Brauner <christian@brauner.io>
-To:     viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
-        torvalds@linux-foundation.org, fweimer@redhat.com
-Cc:     jannh@google.com, oleg@redhat.com, tglx@linutronix.de,
-        arnd@arndb.de, shuah@kernel.org, dhowells@redhat.com,
-        tkjos@android.com, ldv@altlinux.org, miklos@szeredi.hu,
-        linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, linux-arch@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, x86@kernel.org,
-        Christian Brauner <christian@brauner.io>
-Subject: [PATCH v2 2/2] tests: add close_range() tests
-Date:   Thu, 23 May 2019 17:47:47 +0200
-Message-Id: <20190523154747.15162-3-christian@brauner.io>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190523154747.15162-1-christian@brauner.io>
-References: <20190523154747.15162-1-christian@brauner.io>
+        Thu, 23 May 2019 11:52:11 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:34076 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730760AbfEWPwL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 11:52:11 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id AA4FF75725;
+        Thu, 23 May 2019 15:52:10 +0000 (UTC)
+Received: from redhat.com (unknown [10.20.6.178])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C378117CDD;
+        Thu, 23 May 2019 15:52:09 +0000 (UTC)
+Date:   Thu, 23 May 2019 11:52:08 -0400
+From:   Jerome Glisse <jglisse@redhat.com>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Artemy Kovalyov <artemyko@mellanox.com>,
+        Moni Shoua <monis@mellanox.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Kaike Wan <kaike.wan@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>
+Subject: Re: [PATCH v4 0/1] Use HMM for ODP v4
+Message-ID: <20190523155207.GC5104@redhat.com>
+References: <20190411181314.19465-1-jglisse@redhat.com>
+ <20190506195657.GA30261@ziepe.ca>
+ <20190521205321.GC3331@redhat.com>
+ <20190522005225.GA30819@ziepe.ca>
+ <20190522174852.GA23038@redhat.com>
+ <20190522235737.GD15389@ziepe.ca>
+ <20190523150432.GA5104@redhat.com>
+ <20190523154149.GB12159@ziepe.ca>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190523154149.GB12159@ziepe.ca>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Thu, 23 May 2019 15:52:10 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds basic tests for the new close_range() syscall.
-- test that no invalid flags can be passed
-- test that a range of file descriptors is correctly closed
-- test that a range of file descriptors is correctly closed if there there
-  are already closed file descriptors in the range
-- test that max_fd is correctly capped to the current fdtable maximum
+On Thu, May 23, 2019 at 12:41:49PM -0300, Jason Gunthorpe wrote:
+> On Thu, May 23, 2019 at 11:04:32AM -0400, Jerome Glisse wrote:
+> > On Wed, May 22, 2019 at 08:57:37PM -0300, Jason Gunthorpe wrote:
+> > > On Wed, May 22, 2019 at 01:48:52PM -0400, Jerome Glisse wrote:
+> > > 
+> > > > > > So attached is a rebase on top of 5.2-rc1, i have tested with pingpong
+> > > > > > (prefetch and not and different sizes). Seems to work ok.
+> > > > > 
+> > > > > Urk, it already doesn't apply to the rdma tree :(
+> > > > > 
+> > > > > The conflicts are a little more extensive than I'd prefer to handle..
+> > > > > Can I ask you to rebase it on top of this branch please:
+> > > > > 
+> > > > > https://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git/log/?h=wip/jgg-for-next
+> > > > > 
+> > > > > Specifically it conflicts with this patch:
+> > > > > 
+> > > > > https://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git/commit/?h=wip/jgg-for-next&id=d2183c6f1958e6b6dfdde279f4cee04280710e34
+> > > 
+> > > There is at least one more serious blocker here:
+> > > 
+> > > config ARCH_HAS_HMM_MIRROR
+> > >         bool
+> > >         default y
+> > >         depends on (X86_64 || PPC64)
+> > >         depends on MMU && 64BIT
+> > > 
+> > > I can't loose ARM64 support for ODP by merging this, that is too
+> > > serious of a regression.
+> > > 
+> > > Can you fix it?
+> > 
+> > 5.2 already has patch to fix the Kconfig (ARCH_HAS_HMM_MIRROR and
+> > ARCH_HAS_HMM_DEVICE replacing ARCH_HAS_HMM) I need to update nouveau
+> 
+> Newer than 5.2-rc1? Is this why ARCH_HAS_HMM_MIRROR is not used anywhere?
 
-Signed-off-by: Christian Brauner <christian@brauner.io>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Jann Horn <jannh@google.com>
-Cc: David Howells <dhowells@redhat.com>
-Cc: Dmitry V. Levin <ldv@altlinux.org>
-Cc: Oleg Nesterov <oleg@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Florian Weimer <fweimer@redhat.com>
-Cc: linux-api@vger.kernel.org
----
-v1: unchanged
-v2:
-- Christian Brauner <christian@brauner.io>:
-  - verify that close_range() correctly closes a single file descriptor
----
- tools/testing/selftests/Makefile              |   1 +
- tools/testing/selftests/core/.gitignore       |   1 +
- tools/testing/selftests/core/Makefile         |   6 +
- .../testing/selftests/core/close_range_test.c | 142 ++++++++++++++++++
- 4 files changed, 150 insertions(+)
- create mode 100644 tools/testing/selftests/core/.gitignore
- create mode 100644 tools/testing/selftests/core/Makefile
- create mode 100644 tools/testing/selftests/core/close_range_test.c
+Yes this is multi-step update, first add the new Kconfig release n,
+update driver in release n+1, update core Kconfig in release n+2
 
-diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Makefile
-index 9781ca79794a..06e57fabbff9 100644
---- a/tools/testing/selftests/Makefile
-+++ b/tools/testing/selftests/Makefile
-@@ -4,6 +4,7 @@ TARGETS += bpf
- TARGETS += breakpoints
- TARGETS += capabilities
- TARGETS += cgroup
-+TARGETS += core
- TARGETS += cpufreq
- TARGETS += cpu-hotplug
- TARGETS += drivers/dma-buf
-diff --git a/tools/testing/selftests/core/.gitignore b/tools/testing/selftests/core/.gitignore
-new file mode 100644
-index 000000000000..6e6712ce5817
---- /dev/null
-+++ b/tools/testing/selftests/core/.gitignore
-@@ -0,0 +1 @@
-+close_range_test
-diff --git a/tools/testing/selftests/core/Makefile b/tools/testing/selftests/core/Makefile
-new file mode 100644
-index 000000000000..de3ae68aa345
---- /dev/null
-+++ b/tools/testing/selftests/core/Makefile
-@@ -0,0 +1,6 @@
-+CFLAGS += -g -I../../../../usr/include/ -I../../../../include
-+
-+TEST_GEN_PROGS := close_range_test
-+
-+include ../lib.mk
-+
-diff --git a/tools/testing/selftests/core/close_range_test.c b/tools/testing/selftests/core/close_range_test.c
-new file mode 100644
-index 000000000000..d6e6079d3d53
---- /dev/null
-+++ b/tools/testing/selftests/core/close_range_test.c
-@@ -0,0 +1,142 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#define _GNU_SOURCE
-+#include <errno.h>
-+#include <fcntl.h>
-+#include <linux/kernel.h>
-+#include <limits.h>
-+#include <stdbool.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <syscall.h>
-+#include <unistd.h>
-+
-+#include "../kselftest.h"
-+
-+static inline int sys_close_range(unsigned int fd, unsigned int max_fd,
-+				  unsigned int flags)
-+{
-+	return syscall(__NR_close_range, fd, max_fd, flags);
-+}
-+
-+#ifndef ARRAY_SIZE
-+#define ARRAY_SIZE(x) (sizeof(x) / sizeof((x)[0]))
-+#endif
-+
-+int main(int argc, char **argv)
-+{
-+	const char *test_name = "close_range";
-+	int i, ret;
-+	int open_fds[101];
-+	int fd_max, fd_mid, fd_min;
-+
-+	ksft_set_plan(9);
-+
-+	for (i = 0; i < ARRAY_SIZE(open_fds); i++) {
-+		int fd;
-+
-+		fd = open("/dev/null", O_RDONLY | O_CLOEXEC);
-+		if (fd < 0) {
-+			if (errno == ENOENT)
-+				ksft_exit_skip(
-+					"%s test: skipping test since /dev/null does not exist\n",
-+					test_name);
-+
-+			ksft_exit_fail_msg(
-+				"%s test: %s - failed to open /dev/null\n",
-+				strerror(errno), test_name);
-+		}
-+
-+		open_fds[i] = fd;
-+	}
-+
-+	fd_min = open_fds[0];
-+	fd_max = open_fds[99];
-+
-+	ret = sys_close_range(fd_min, fd_max, 1);
-+	if (!ret)
-+		ksft_exit_fail_msg(
-+			"%s test: managed to pass invalid flag value\n",
-+			test_name);
-+	ksft_test_result_pass("do not allow invalid flag values for close_range()\n");
-+
-+	fd_mid = open_fds[50];
-+	ret = sys_close_range(fd_min, fd_mid, 0);
-+	if (ret < 0)
-+		ksft_exit_fail_msg(
-+			"%s test: Failed to close range of file descriptors from %d to %d\n",
-+			test_name, fd_min, fd_mid);
-+	ksft_test_result_pass("close_range() from %d to %d\n", fd_min, fd_mid);
-+
-+	for (i = 0; i <= 50; i++) {
-+		ret = fcntl(open_fds[i], F_GETFL);
-+		if (ret >= 0)
-+			ksft_exit_fail_msg(
-+				"%s test: Failed to close range of file descriptors from %d to %d\n",
-+				test_name, fd_min, fd_mid);
-+	}
-+	ksft_test_result_pass("fcntl() verify closed range from %d to %d\n", fd_min, fd_mid);
-+
-+	/* create a couple of gaps */
-+	close(57);
-+	close(78);
-+	close(81);
-+	close(82);
-+	close(84);
-+	close(90);
-+
-+	fd_mid = open_fds[51];
-+	/* Choose slightly lower limit and leave some fds for a later test */
-+	fd_max = open_fds[92];
-+	ret = sys_close_range(fd_mid, fd_max, 0);
-+	if (ret < 0)
-+		ksft_exit_fail_msg(
-+			"%s test: Failed to close range of file descriptors from 51 to 100\n",
-+			test_name);
-+	ksft_test_result_pass("close_range() from %d to %d\n", fd_mid, fd_max);
-+
-+	for (i = 51; i <= 92; i++) {
-+		ret = fcntl(open_fds[i], F_GETFL);
-+		if (ret >= 0)
-+			ksft_exit_fail_msg(
-+				"%s test: Failed to close range of file descriptors from 51 to 100\n",
-+				test_name);
-+	}
-+	ksft_test_result_pass("fcntl() verify closed range from %d to %d\n", fd_mid, fd_max);
-+
-+	fd_mid = open_fds[93];
-+	fd_max = open_fds[99];
-+	/* test that the kernel caps and still closes all fds */
-+	ret = sys_close_range(fd_mid, UINT_MAX, 0);
-+	if (ret < 0)
-+		ksft_exit_fail_msg(
-+			"%s test: Failed to close range of file descriptors from 51 to 100\n",
-+			test_name);
-+	ksft_test_result_pass("close_range() from %d to %d\n", fd_mid, fd_max);
-+
-+	for (i = 93; i < 100; i++) {
-+		ret = fcntl(open_fds[i], F_GETFL);
-+		if (ret >= 0)
-+			ksft_exit_fail_msg(
-+				"%s test: Failed to close range of file descriptors from 51 to 100\n",
-+				test_name);
-+	}
-+	ksft_test_result_pass("fcntl() verify closed range from %d to %d\n", fd_mid, fd_max);
-+
-+	ret = sys_close_range(open_fds[100], open_fds[100], 0);
-+	if (ret < 0)
-+		ksft_exit_fail_msg(
-+			"%s test: Failed to close single file descriptor\n",
-+			test_name);
-+	ksft_test_result_pass("close_range() closed single file descriptor\n");
-+
-+	ret = fcntl(open_fds[100], F_GETFL);
-+	if (ret >= 0)
-+		ksft_exit_fail_msg(
-+			"%s test: Failed to close single file descriptor\n",
-+			test_name);
-+	ksft_test_result_pass("fcntl() verify closed single file descriptor\n");
-+
-+	return ksft_exit_pass();
-+}
--- 
-2.21.0
+So we are in release n (5.2), in 5.3 i will update nouveau and amdgpu
+so that in 5.4 in ca remove the old ARCH_HAS_HMM
 
+> > in 5.3 so that i can drop the old ARCH_HAS_HMM and then convert
+> > core mm in 5.4 to use ARCH_HAS_HMM_MIRROR and ARCH_HAS_HMM_DEVICE
+> > instead of ARCH_HAS_HMM
+> 
+> My problem is that ODP needs HMM_MIRROR which needs HMM & ARCH_HAS_HMM
+> - and then even if fixed we still have the ARCH_HAS_HMM_MIRROR
+> restricted to ARM64..
+> 
+> Can we broaden HMM_MIRROR to all arches? I would very much prefer
+> that.
+
+Ignore ARCH_HAS_HMM it will be remove in 5.4, all that will matter
+for ODP is ARCH_HAS_HMM_MIRROR which should be enabled for ARM64 as
+ARM64 has everything needed for that. I just did not add ARM64 to
+ARCH_HAS_HMM_MIRROR because i did not had hardware to test it on.
+
+So in 5.3 i will update nouveau and amdgpu to use ARCH_HAS_HMM_DEVICE
+and ARCH_HAS_HMM_MIRROR. In 5.4 i will update mm/Kconig to remove
+ARCH_HAS_HMM
+
+> 
+> > So it seems it will have to wait 5.4 for ODP. I will re-spin the
+> > patch for ODP once i am done reviewing Ralph changes and yours
+> > for 5.3.
+> 
+> I think we are still OK for 5.3.
+
+I can not update mm/Kconfig in 5.3 so any Kconfig update will be
+5.4
+
+> 
+> If mm takes the fixup patches so hmm mirror is as reliable as ODP's
+> existing stuff, and patch from you to enable ARM64, then we can
+> continue to merge into 5.3
+> 
+> So, let us try to get acks on those other threads..
+
+I will be merging your patchset and Ralph and repost, they are only
+minor change mostly that you can not update the driver API in just
+one release. First add the new API in release n, then replace old
+API usage in release n+1, then remove old API in n+2.
+
+Cheers,
+Jérôme
