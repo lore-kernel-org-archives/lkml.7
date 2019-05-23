@@ -2,208 +2,129 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1480AC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 02:35:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC0A1C282CE
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 02:36:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0F292173C
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 02:35:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A1E02173C
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 02:36:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558579005;
+	bh=kUNFVjH4be23cyX2XaiQof8NpPNY3Soi3MYZVYreeiA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=m5/UDdSQm8CJxW+m8NoR9fnRoqLItvvB+x63M+gmjl8iHsJnvZnUBX2VFlohQva9O
+	 GyR4yq9DDKGHe3JX6GxJFey5tFb3OZPnMIc3cNMuzYXgLEBSLviPoJf3dUJpkXBVmn
+	 y4rnYcRyMNxr5CHKR7PYwpPyfE9WG9pMLqktVtHA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729662AbfEWCfT (ORCPT
+        id S1729699AbfEWCgo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 22:35:19 -0400
-Received: from mga02.intel.com ([134.134.136.20]:46690 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727305AbfEWCfS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 22:35:18 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 May 2019 19:35:18 -0700
-X-ExtLoop1: 1
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
-  by orsmga006.jf.intel.com with ESMTP; 22 May 2019 19:35:17 -0700
-Date:   Wed, 22 May 2019 19:35:17 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Stephen Smalley <sds@tycho.nsa.gov>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Paul Moore <paul@paul-moore.com>,
-        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
-        Jethro Beekman <jethro@fortanix.com>,
-        "Xing, Cedric" <cedric.xing@intel.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Dr. Greg" <greg@enjellic.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>
-Subject: Re: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
-Message-ID: <20190523023517.GA31950@linux.intel.com>
-References: <20190517000331.GD11204@linux.intel.com>
- <CALCETrWxw7xALE0kmiYBzomaSMAeXEVq-7rX7xeqPtDPeDQiCA@mail.gmail.com>
- <20190520114105.GD27805@linux.intel.com>
- <20190521151836.GA4843@linux.intel.com>
- <20190521155140.GE22089@linux.intel.com>
- <20190522132022.GC31176@linux.intel.com>
- <20190522132227.GD31176@linux.intel.com>
- <0e183cce-c4b4-0e10-dbb6-bd81bea58b66@tycho.nsa.gov>
- <20190522153836.GA24833@linux.intel.com>
- <CALCETrUS8xyF1JJmQs18BGTDhPRXf+s81BkMZCZwmY73r7M+zg@mail.gmail.com>
+        Wed, 22 May 2019 22:36:44 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:34824 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727305AbfEWCgo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 22:36:44 -0400
+Received: by mail-pg1-f193.google.com with SMTP id t1so2291797pgc.2
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 19:36:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=TYy9mnGw838Z6ch8hH4W+J8qg+DBgD5PvvxcXV/fJrw=;
+        b=Ez83ZcJnZxAbc3c67jAKqZGUKDpO8IL+z/Umj+K7A00qOC2f+8dz2OhjS5rADuxLOM
+         L18C9kkeAB4ke26FQq4TK8sak/eym9qz/AoeoQSIVFjvRfIqk1MhW8i/yVY9J2pH1qsd
+         85MKzoVbR/cYzxu8wjzBHvob5IvUZtLld+2hgiJrKHdj2szRhWyCO/OsBOxUl97mEfIu
+         BauqGWmOgUqxrbLbCtn406wSSr5kh5rRr2Z/7emMgs9LjMcwAq4PRCzFKH3uvtV7CaG2
+         wzf4A/cdyk75MJYZzuiZNvXK9qJRI/wPeQHqtxt/laYhkl5pH2jzhhat7E/i0OtDWLS3
+         yjnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=TYy9mnGw838Z6ch8hH4W+J8qg+DBgD5PvvxcXV/fJrw=;
+        b=FzdwRvXe76Lxtg7U1Z6K1aegjLR9qDcyUjKIalEuftF0xGXEELH6ux2xoaP2zP6mfB
+         Dsua0QYbqLfOZ4KNdB/jns3aMPjeUAU8URxWzVIkD4GlZo7l+xNaFz0LKlmlatpf1/mm
+         bf+oq41Jjb0qXyt0NYFbdGZWQSP70YT2fHSw86tuNZ1I9Q4E8yWryTLjtYyyn3hKwsxR
+         dkLsc2dAGODrhKPguDewxjykRvl1Y/6dTCg7O3iUbB6VBIgutYyxeX3wMw8sstzrsWsN
+         KX82Q3//aq7UJX1aNdNFlGGjMOGK+9tq9oKgD802HvWhhau7fRsujV3z7pgFZrd1A1B6
+         t+GA==
+X-Gm-Message-State: APjAAAXsD8YZf3So/N7LnfTwyBh0kBsvzsWLkz8Leep/p50GavWXFxhy
+        trfh3lJYQLUn4U9dUUmuYfw=
+X-Google-Smtp-Source: APXvYqwgSCQjm6qqsQ2FVUFP7eAp8i4/6rVj3AInpbf5h+8sjCBrGQM4LzpGB8wfeOaGq3eIYOgohg==
+X-Received: by 2002:a63:ff0f:: with SMTP id k15mr92609291pgi.407.1558579003658;
+        Wed, 22 May 2019 19:36:43 -0700 (PDT)
+Received: from google.com ([2401:fa00:d:10:75ad:a5d:715f:f6d8])
+        by smtp.gmail.com with ESMTPSA id o1sm18555290pfa.66.2019.05.22.19.36.41
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 22 May 2019 19:36:43 -0700 (PDT)
+Date:   Thu, 23 May 2019 11:36:38 +0900
+From:   Namhyung Kim <namhyung@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, LKML <linux-kernel@vger.kernel.org>,
+        Krister Johansen <kjlx@templeofstupid.com>,
+        Hari Bathini <hbathini@linux.vnet.ibm.com>
+Subject: Re: [PATCH 1/3] perf tools: Protect reading thread's namespace
+Message-ID: <20190523023636.GA196218@google.com>
+References: <20190522053250.207156-1-namhyung@kernel.org>
+ <20190522053250.207156-2-namhyung@kernel.org>
+ <20190522131832.GB30271@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CALCETrUS8xyF1JJmQs18BGTDhPRXf+s81BkMZCZwmY73r7M+zg@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190522131832.GB30271@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 22, 2019 at 03:42:45PM -0700, Andy Lutomirski wrote:
-> On Wed, May 22, 2019 at 8:38 AM Sean Christopherson
-> <sean.j.christopherson@intel.com> wrote:
-> >
-> > And that straight up doesn't work with the v20 driver because mmap() with
-> > the enclave_fd will run through sgx_get_unmapped_area(), which also does
-> > the natural alignment adjustments (the idea being that mmap() is mapping
-> > the entire enclave).  E.g. mmap() will map the wrong address if the offset
-> > of a chunk is less than its size due to the driver adjusting the address.
+Hi Arnaldo,
+
+On Wed, May 22, 2019 at 10:18:32AM -0300, Arnaldo Carvalho de Melo wrote:
+> Em Wed, May 22, 2019 at 02:32:48PM +0900, Namhyung Kim escreveu:
+> > It seems that the current code lacks holding the namespace lock in
+> > thread__namespaces().  Otherwise it can see inconsistent results.
+> > 
+> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> > ---
+> >  tools/perf/util/thread.c | 15 +++++++++++++--
+> >  1 file changed, 13 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/tools/perf/util/thread.c b/tools/perf/util/thread.c
+> > index 403045a2bbea..b413ba5b9835 100644
+> > --- a/tools/perf/util/thread.c
+> > +++ b/tools/perf/util/thread.c
+> > @@ -133,7 +133,7 @@ void thread__put(struct thread *thread)
+> >  	}
+> >  }
+> >  
+> > -struct namespaces *thread__namespaces(const struct thread *thread)
+> > +static struct namespaces *__thread__namespaces(const struct thread *thread)
+> >  {
+> >  	if (list_empty(&thread->namespaces_list))
+> >  		return NULL;
+> > @@ -141,10 +141,21 @@ struct namespaces *thread__namespaces(const struct thread *thread)
+> >  	return list_first_entry(&thread->namespaces_list, struct namespaces, list);
+> >  }
+> >  
+> > +struct namespaces *thread__namespaces(const struct thread *thread)
+> > +{
+> > +	struct namespaces *ns;
+> > +
+> > +	down_read((struct rw_semaphore *)&thread->namespaces_lock);
+> > +	ns = __thread__namespaces(thread);
+> > +	up_read((struct rw_semaphore *)&thread->namespaces_lock);
+> > +
 > 
-> That presumably needs to change.
+> Humm, so we need to change thread__namespaces() to remove that const
+> instead of throwing it away with that cast, right?
 
-If we want to allow mmap() on a subset of the enclave, yes.  I assume it's
-a simple matter of respecting MAP_FIXED.
+Yes, that's possible too.  Note that thread__comm_str() has the same issue
+as well.
 
-> Are we entirely missing an API to allocate a naturally aligned VA
-> range?  That's kind of annoying.
-
-Yes?
-
-> > Eliminating sgx_get_unmapped_area() means userspace is once again on the
-> > hook for naturally aligning the enclave, which is less than desirable.
-> >
-> > Looking back at the original API discussions around a builder process[1],
-> > we never fleshed out the end-to-end flow.  While having a builder process
-> > *sounds* reasonable, in practice it adds a lot of complexity without
-> > providing much in the way of added security.  E.g. in addition to the
-> > above mmap() issues, since the order of EADDs affects the enclave
-> > measurement, the enclave owner would need to communicate the exact steps
-> > to build the enclave, or the builder would need a priori knowledge of the
-> > enclave format.
-> >
-> > Userspace can still restrict access to /dev/sgx/enclave, e.g. by having a
-> > daemon that requires additional credentials to obtain a new enclave_fd.
-> > So AFAICT, the only benefit to having a dedicated builder is that it can
-> > do its own whitelisting of enclaves, but since we're trending towards
-> > supporting whitelisting enclaves in the kernel, e.g. via sigstruct,
-> > whitelisting in userspace purely in userspace also provides marginal value.
-> >
-> > TL;DR: Requiring VMA backing to build an enclave seems reasonable and sane.
-> 
-> This isn't necessarily a problem, but we pretty much have to use
-> mprotect() then.
-
-You lost me there.  Who needs to mprotect() what?
-
-> Maybe the semantics could just be that mmap() on the SGX device gives
-> natural alignment, but that there is no actual constraint enforced by
-> the driver as to whether mmap() happens before or after ECREATE.
-> After all, it's *ugly* for user code to reserve its address range with
-> an awkward giant mmap(), there's nothing fundamentally wrong with it.
-> 
-> As far as I know from this whole discussion, we still haven't come up
-> with any credible way to avoid tracking, per enclave page, whether
-> that page came from unmodified PROT_EXEC memory.
-
-Disallowing mmap() after ECREATE is credible, but apparently not
-palatable. :-)
-
-But actually, there's no need to disallow mmap() after ECREATE since the
-LSM checks also apply to mmap(), e.g. FILE__EXECUTE would be needed to
-mmap() any enclave pages PROT_EXEC.  I guess my past self thought mmap()
-bypassed LSM checks?  The real problem is that mmap()'ng an existing
-enclave would require FILE__WRITE and FILE__EXECUTE, which puts us back
-at square one.
-
-Tracking permissions per enclave page isn't difficult, it's the new SGX
-specific LSM hooks and mprotect() interactions that I want to avoid.
-
-Jumping back to mmap(), AIUI the fundamental issue is that we want to
-allow building/running an enclave without FILE__WRITE and FILE__EXECUTE,
-otherwise FILE__WRITE and FILE__EXECUTE become meaningless.  Assuming I'm
-not off in the weeds, that means we really just need to special case
-mmap() on enclaves so it can map enclave memory using the verified page
-permissions so as not to run afoul of LSM checks.  All other behaviors,
-e.g. mprotect(), can reuse the existing LSM checks for shared mappings.
-
-So, what if we snapshot the permissions for each enclave page at EADD,
-and then special case mmap() to propagate flags from the snapshot to the
-VMA?  More or less the same idea as doing mprotect_fixup() using the
-source VMA during EADD.  We could define the EADD semantics to match
-this as well, e.g. only propagate the flags from the source VMA to the
-enclave VMA if the EADD range is fully mapped with PROT_NONE.  This would
-allow the enclave builder concept, albeit with funky semantics, and
-wouldn't require new LSM hooks.
-
-E.g. something like this:
-
-static inline void sgx_mmap_update_prot_flags(struct vm_area_struct *vma,
-					      struct sgx_encl *encl)
-{
-	struct radix_tree_iter iter;
-	struct sgx_encl_page *entry;
-	unsigned long addr;
-	vm_flags_t flags;
-	void **slot;
-
-	/*
-	 * SGX special: if userspace is requesting PROT_NONE and pages have
-	 * been added to the enclave, then propagate the flags snapshot from
-	 * the enclave to the VMA.  Do this if and only if all overlapped
-	 * pages are defined and have identical permissions.  Stuffing the
-	 * VMA on PROT_NONE allows userspace to map EPC pages without being
-	 * incorrectly rejected by LSMs due to insufficient permissions (the
-	 * snapshottted flags have alaredy been vetted).
-	 */
-	if (vma->vm_flags & (VM_READ|VM_WRITE|VM_EXEC))
-		return;
-
-	flags = 0;
-
-	for (addr = vma->vm_start; addr < vma->vm_end; addr += PAGE_SIZE) {
-		entry = radix_tree_lookup(&encl->page_tree, addr >> PAGE_SHIFT);
-
-		if (!entry && flags)
-			return;
-		if (!flags && entry) {
-			if (addr == vma->vm_start) {
-				flags = entry->vm_flags;
-				continue;
-			}
-			return;
-		}
-		if (entry && flags && entry->vm_flags != flags)
-			return;
-
-	}
-	vma->vm_flags |= flags;
-}
-
+Thanks,
+Namhyung
