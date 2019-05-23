@@ -2,93 +2,93 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 116A0C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:51:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 791C3C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:52:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5D3120851
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:51:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558641115;
-	bh=oLnhJo1VanbKdZHccG/M2AWX6tCSmV4ezVCwsTOPdPs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gisS21uYm5X1bPd9Q6zl6+SpK6V3n0WZPq2DSgr0dl9RsVxfZT/UcOcDg/iYtWHKy
-	 YYftbNEq+m6kjq51f1Qfy+BwCiv0mlkulphtzkIz49WgJjMo0urFaoANaLBl7ytpCy
-	 3gL3LWQWNe2EyMLPy5zcdOZQWa6OtszDk1CWOb3A=
+	by mail.kernel.org (Postfix) with ESMTP id 47DCB20851
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:52:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="pm9unagI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731727AbfEWTvz (ORCPT
+        id S2388019AbfEWTwD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:51:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41648 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731853AbfEWTIn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:08:43 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 57367217D7;
-        Thu, 23 May 2019 19:08:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558638522;
-        bh=oLnhJo1VanbKdZHccG/M2AWX6tCSmV4ezVCwsTOPdPs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BMggWRII9eJk/xnqwAnAOac5FrHXrYbN2tKU3ZTISEfqUDc6h3xrPrOBpdmV7KShF
-         1do5FTcT5UytZfBEOvCmhgOvrkIHa6ExImERd593k0Dhkumvj7WLFS/c+If6QPfCUF
-         TxJjW35X5HSXoEIP6/qbnZI2+DIwrrhsspFbH5xI=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Antonio SJ Musumeci <trapexit@spawn.link>,
-        Miklos Szeredi <mszeredi@redhat.com>
-Subject: [PATCH 4.9 20/53] fuse: fix writepages on 32bit
-Date:   Thu, 23 May 2019 21:05:44 +0200
-Message-Id: <20190523181714.052642775@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190523181710.981455400@linuxfoundation.org>
-References: <20190523181710.981455400@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 23 May 2019 15:52:03 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:56295 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731842AbfEWTIm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:08:42 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4NJ8cMl092490;
+        Thu, 23 May 2019 14:08:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1558638518;
+        bh=C9GGDpT/HCR8wHHiGobavLLm9veC0TrECKEglvQZZXg=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=pm9unagI50bQl0hJeSBsiZCrRP7gFr3Vn8A2dg+NN/V0VRcimOEY6HZO6fnr+mrd0
+         8l0sftm+jQhiv/pFn3xlb9IKaSa+6Pxh2d/HmFrieHNZwCpdJgIvLg63ZXOes8j6yA
+         Gtnd+KF5E6OPL1cIBaW6cJD8mC8xW+JStrE5BggE=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4NJ8cPC003822
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 23 May 2019 14:08:38 -0500
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 23
+ May 2019 14:08:37 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Thu, 23 May 2019 14:08:37 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4NJ8bDv022839;
+        Thu, 23 May 2019 14:08:37 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <robh+dt@kernel.org>
+CC:     <devicetree@vger.kernel.org>, <linux-leds@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH v3 4/9] dt-bindings: leds: Add multicolor ID to the color ID  list
+Date:   Thu, 23 May 2019 14:08:15 -0500
+Message-ID: <20190523190820.29375-5-dmurphy@ti.com>
+X-Mailer: git-send-email 2.21.0.5.gaeb582a983
+In-Reply-To: <20190523190820.29375-1-dmurphy@ti.com>
+References: <20190523190820.29375-1-dmurphy@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miklos Szeredi <mszeredi@redhat.com>
+Add a new color ID that is declared as MULTICOLOR as with the
+multicolor framework declaring a definitive color is not accurate
+as the node can contain multiple colors.
 
-commit 9de5be06d0a89ca97b5ab902694d42dfd2bb77d2 upstream.
-
-Writepage requests were cropped to i_size & 0xffffffff, which meant that
-mmaped writes to any file larger than 4G might be silently discarded.
-
-Fix by storing the file size in a properly sized variable (loff_t instead
-of size_t).
-
-Reported-by: Antonio SJ Musumeci <trapexit@spawn.link>
-Fixes: 6eaf4782eb09 ("fuse: writepages: crop secondary requests")
-Cc: <stable@vger.kernel.org> # v3.13
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
 ---
- fs/fuse/file.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/dt-bindings/leds/common.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/fs/fuse/file.c
-+++ b/fs/fuse/file.c
-@@ -1521,7 +1521,7 @@ __acquires(fc->lock)
- {
- 	struct fuse_conn *fc = get_fuse_conn(inode);
- 	struct fuse_inode *fi = get_fuse_inode(inode);
--	size_t crop = i_size_read(inode);
-+	loff_t crop = i_size_read(inode);
- 	struct fuse_req *req;
+diff --git a/include/dt-bindings/leds/common.h b/include/dt-bindings/leds/common.h
+index d8c8c38700bd..259cea653844 100644
+--- a/include/dt-bindings/leds/common.h
++++ b/include/dt-bindings/leds/common.h
+@@ -65,6 +65,7 @@
+ #define LED_COLOR_ID_VIOLET	5
+ #define LED_COLOR_ID_YELLOW	6
+ #define LED_COLOR_ID_IR		7
+-#define LED_COLOR_ID_COUNT	8
++#define LED_COLOR_ID_MULTI	8
++#define LED_COLOR_ID_COUNT	9
  
- 	while (fi->writectr >= 0 && !list_empty(&fi->queued_writes)) {
-
+ #endif /* __DT_BINDINGS_LEDS_H */
+-- 
+2.21.0.5.gaeb582a983
 
