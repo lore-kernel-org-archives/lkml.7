@@ -2,215 +2,165 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B3A9C282E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 23:40:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05AD9C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 23:43:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D97BD2133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 23:40:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A93192133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 23:43:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="F4T0GEL1";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="GiO2qQwp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388431AbfEWXks (ORCPT
+        id S2388570AbfEWXn0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 19:40:48 -0400
-Received: from mga06.intel.com ([134.134.136.31]:12427 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388129AbfEWXkr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 19:40:47 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 May 2019 16:40:46 -0700
-X-ExtLoop1: 1
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
-  by fmsmga004.fm.intel.com with ESMTP; 23 May 2019 16:40:44 -0700
-Date:   Thu, 23 May 2019 16:40:44 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Paul Moore <paul@paul-moore.com>,
-        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
-        Jethro Beekman <jethro@fortanix.com>,
-        "Xing, Cedric" <cedric.xing@intel.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Dr. Greg" <greg@enjellic.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>
-Subject: Re: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
-Message-ID: <20190523234044.GC12078@linux.intel.com>
-References: <20190521155140.GE22089@linux.intel.com>
- <20190522132022.GC31176@linux.intel.com>
- <20190522132227.GD31176@linux.intel.com>
- <0e183cce-c4b4-0e10-dbb6-bd81bea58b66@tycho.nsa.gov>
- <20190522153836.GA24833@linux.intel.com>
- <CALCETrUS8xyF1JJmQs18BGTDhPRXf+s81BkMZCZwmY73r7M+zg@mail.gmail.com>
- <20190523023517.GA31950@linux.intel.com>
- <20190523102628.GC10955@linux.intel.com>
- <20190523141752.GA12078@linux.intel.com>
- <CALCETrUzx3LPAKCLFf75P-XshAkRcr+JLET3LA_kHDs9MA11FA@mail.gmail.com>
+        Thu, 23 May 2019 19:43:26 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:49542 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388129AbfEWXnZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 19:43:25 -0400
+Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4NNea3u006535;
+        Thu, 23 May 2019 16:43:03 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=f056jcvQEMd8XhBuxKG3eAcSjUdhkSgLRalk/El0N+A=;
+ b=F4T0GEL1HOFBoMyaZLkCnbWi57oAi5qJzhOOsf+TsXSqgM2aUV5isfi1KP99pIko6SRg
+ GnH1oE8bl4iP/CD5aJi525wNhogjZS6ZE8HMgdHXuLtzt7sgKE8eO1eIvew0otokB7P1
+ PqM4MiBv5w0dCMgWmX0pfBZ/vk4irk1qbIA= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 2sp3e0rcjh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Thu, 23 May 2019 16:43:03 -0700
+Received: from ash-exopmbx201.TheFacebook.com (2620:10d:c0a8:83::8) by
+ ash-exhub101.TheFacebook.com (2620:10d:c0a8:82::e) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 23 May 2019 16:43:02 -0700
+Received: from ash-exhub203.TheFacebook.com (2620:10d:c0a8:83::5) by
+ ash-exopmbx201.TheFacebook.com (2620:10d:c0a8:83::8) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 23 May 2019 16:43:02 -0700
+Received: from NAM02-BL2-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.36.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Thu, 23 May 2019 16:43:02 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector1-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=f056jcvQEMd8XhBuxKG3eAcSjUdhkSgLRalk/El0N+A=;
+ b=GiO2qQwpaobSq+eJipapKcGrkwbwGvuBZ2A7X+ocKiXnnGTH35BEct8xvFDZCUmYv6mqKC4A1AEz7hQIgv8/6LBrucAHtqtaIuNDvgAMvqWt+Ngiz0vSo2iZUL8wJdfL7623/ulDzwCCOsViIUFlrbmWTFtaG82/bc1RpBxg9+A=
+Received: from BYAPR15MB2631.namprd15.prod.outlook.com (20.179.156.24) by
+ BYAPR15MB3142.namprd15.prod.outlook.com (20.178.239.215) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1922.18; Thu, 23 May 2019 23:43:00 +0000
+Received: from BYAPR15MB2631.namprd15.prod.outlook.com
+ ([fe80::d4f6:b485:69ee:fd9a]) by BYAPR15MB2631.namprd15.prod.outlook.com
+ ([fe80::d4f6:b485:69ee:fd9a%7]) with mapi id 15.20.1922.018; Thu, 23 May 2019
+ 23:43:00 +0000
+From:   Roman Gushchin <guro@fb.com>
+To:     Yonghong Song <yhs@fb.com>
+CC:     Alexei Starovoitov <ast@kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Tejun Heo <tj@kernel.org>, Kernel Team <Kernel-team@fb.com>,
+        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
+        Stanislav Fomichev <sdf@fomichev.me>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 bpf-next 4/4] selftests/bpf: add auto-detach test
+Thread-Topic: [PATCH v3 bpf-next 4/4] selftests/bpf: add auto-detach test
+Thread-Index: AQHVEaCPg78JwYs3bk+j5PuTlvgUDqZ5VeUAgAAJVwA=
+Date:   Thu, 23 May 2019 23:43:00 +0000
+Message-ID: <20190523234254.GA17907@tower.DHCP.thefacebook.com>
+References: <20190523194532.2376233-1-guro@fb.com>
+ <20190523194532.2376233-5-guro@fb.com>
+ <4ff840cb-7e24-62d5-4ea7-fbca34218800@fb.com>
+In-Reply-To: <4ff840cb-7e24-62d5-4ea7-fbca34218800@fb.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MWHPR0201CA0078.namprd02.prod.outlook.com
+ (2603:10b6:301:75::19) To BYAPR15MB2631.namprd15.prod.outlook.com
+ (2603:10b6:a03:152::24)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [2620:10d:c090:200::2:3036]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 8a2cdaf1-f1b0-4ac0-4db2-08d6dfd863de
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:BYAPR15MB3142;
+x-ms-traffictypediagnostic: BYAPR15MB3142:
+x-microsoft-antispam-prvs: <BYAPR15MB3142D0BF135F4F5CC5E64E5DBE010@BYAPR15MB3142.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 00462943DE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(136003)(39860400002)(346002)(396003)(376002)(189003)(199004)(486006)(81156014)(81166006)(33656002)(8936002)(6862004)(4326008)(25786009)(14454004)(316002)(186003)(99286004)(53936002)(68736007)(54906003)(66446008)(6246003)(256004)(2906002)(64756008)(5024004)(66476007)(66556008)(8676002)(66946007)(6116002)(73956011)(76176011)(6512007)(46003)(9686003)(386003)(6506007)(53546011)(71200400001)(71190400001)(1076003)(5660300002)(446003)(4744005)(6486002)(476003)(102836004)(52116002)(478600001)(86362001)(11346002)(6436002)(229853002)(6636002)(7736002)(305945005);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB3142;H:BYAPR15MB2631.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: csUhtAAKF1/GJtflklgpZYsuPVt80h40oYov75PbRGEc0l1h7slRAcK0dYQtkmfPxg0Bti3Dk4l6m/hPhKewY2Bv/yY/BKcFiUpxk8z/8Nu9X1RVbC3zqkgPkR2WK5ioVYWVmHn7PM5VuHv4kR4p3rgvjRZHmj53CQhzOFUkNSV93cE5e7O8S2jyPDap1/6AxrHHi6MHrKFrWyOqfEy1WYijLQBoLXT4Vn77m56qxnWx4ciSQ1ecGaTke3wKYKU/12hzZnGHtHYemvopPHgDCbmScCSiJPFvizd7reV8T8OuaedcOyd8TirGPTiXL1VnRiu5bfNKFokQ3RchrTE+OTSRhH948VXvoNJxcvOCUo6192U3wA1oTqDjO9u22PMmcbGauaMdXowXt0VJbi/ctmL196pjJhI9Atyz8HE8iZM=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <939DF126ABA27447928EED9237DE1734@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALCETrUzx3LPAKCLFf75P-XshAkRcr+JLET3LA_kHDs9MA11FA@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8a2cdaf1-f1b0-4ac0-4db2-08d6dfd863de
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 May 2019 23:43:00.3605
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: guro@fb.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB3142
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-23_18:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=471 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905230153
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 08:38:17AM -0700, Andy Lutomirski wrote:
-> On Thu, May 23, 2019 at 7:17 AM Sean Christopherson
-> <sean.j.christopherson@intel.com> wrote:
-> >
-> > On Thu, May 23, 2019 at 01:26:28PM +0300, Jarkko Sakkinen wrote:
-> > > On Wed, May 22, 2019 at 07:35:17PM -0700, Sean Christopherson wrote:
-> > > > But actually, there's no need to disallow mmap() after ECREATE since the
-> > > > LSM checks also apply to mmap(), e.g. FILE__EXECUTE would be needed to
-> > > > mmap() any enclave pages PROT_EXEC.  I guess my past self thought mmap()
-> > > > bypassed LSM checks?  The real problem is that mmap()'ng an existing
-> > > > enclave would require FILE__WRITE and FILE__EXECUTE, which puts us back
-> > > > at square one.
-> > >
-> > > I'm lost with the constraints we want to set.
-> >
-> > As is today, SELinux policies would require enclave loaders to have
-> > FILE__WRITE and FILE__EXECUTE permissions on /dev/sgx/enclave.  Presumably
-> > other LSMs have similar requirements.  Requiring all processes to have
-> > FILE__{WRITE,EXECUTE} permissions means the permissions don't add much
-> > value, e.g. they can't be used to distinguish between an enclave that is
-> > being loaded from an unmodified file and an enclave that is being
-> > generated on the fly, e.g. Graphene.
-> >
-> > Looking back at Andy's mail, he was talking about requiring FILE__EXECUTE
-> > to run an enclave, so perhaps it's only FILE__WRITE that we're trying to
-> > special case.
-> >
-> 
-> I thought about this some more, and I have a new proposal that helps
-> address the ELRANGE alignment issue and the permission issue at the
-> cost of some extra verbosity.  Maybe you all can poke holes in it :)
-> The basic idea is to make everything more explicit from a user's
-> perspective.  Here's how it works:
-> 
-> Opening /dev/sgx/enclave gives an enclave_fd that, by design, doesn't
-> give EXECUTE or WRITE.  mmap() on the enclave_fd only works if you
-> pass PROT_NONE and gives the correct alignment.  The resulting VMA
-> cannot be mprotected or mremapped.  It can't be mmapped at all until
+On Thu, May 23, 2019 at 04:09:30PM -0700, Yonghong Song wrote:
+>=20
+>=20
+> On 5/23/19 12:45 PM, Roman Gushchin wrote:
+> > Add a kselftest to cover bpf auto-detachment functionality.
+> > The test creates a cgroup, associates some resources with it,
+> > attaches a couple of bpf programs and deletes the cgroup.
+> >=20
+> > Then it checks that bpf programs are going away in 5 seconds.
+> >=20
+> > Expected output:
+> >    $ ./test_cgroup_attach
+> >    #override:PASS
+> >    #multi:PASS
+> >    #autodetach:PASS
+> >    test_cgroup_attach:PASS
+> >=20
+> > On a kernel without auto-detaching:
+> >    $ ./test_cgroup_attach
+> >    #override:PASS
+> >    #multi:PASS
+> >    #autodetach:FAIL
+> >    test_cgroup_attach:FAIL
+> >=20
+> > Signed-off-by: Roman Gushchin <guro@fb.com>
+>=20
+> Looks good to me. It will be good if you can add test_cgroup_attach
+> to .gitignore to avoid it shows up in `git status`. With that,
 
-I assume you're thinking of clearing all VM_MAY* flags in sgx_mmap()?
+I don't think it deserves a new version, I'll prepare a separate patch
+for it.
 
-> after ECREATE because the alignment isn't known before that.
+>=20
+> Acked-by: Yonghong Song <yhs@fb.com>
 
-I don't follow.  The alignment is known because userspace knows the size
-of its enclave.  The initial unknown is the address, but that becomes
-known once the initial mmap() completes.
-
-> Associated with the enclave are a bunch (up to 7) "enclave segment
-
-I assume 7 = R, W, X, RW, RX, WX and RWX?
-
-> inodes".  These are anon_inodes that are created automagically.  An
-> enclave segment is a group of pages, not necessary contiguous, with an
-> upper bound on the memory permissions.  Each enclave page belongs to a
-> segment.  When you do EADD, you tell the driver what segment you're
-> adding to. [0]  This means that EADD gets an extra argument that is a
-> permission mask for the page -- in addition to the initial SECINFO,
-> you also pass to EADD something to the effect of "I promise never to
-> map this with permissions greater than RX".
->
-> Then we just need some way to mmap a region from an enclave segment.
-> This could be done by having a way to get an fd for an enclave segment
-> or it could be done by having a new ioctl SGX_IOC_MAP_SEGMENT.  User
-> code would use this operation to replace, MAP_FIXED-style, ranges from
-> the big PROT_NONE mapping with the relevant pages from the enclave
-> segment.  The resulting vma would only have VM_MAYWRITE if the segment
-> is W, only have VM_MAYEXEC if the segment is X, and only have
-> VM_MAYREAD if the segment is R.  Depending on implementation details,
-> the VMAs might need to restrict mremap() to avoid mapping pages that
-> aren't part of the segment in question.
-
-If my above assumptions regarding VM_MAY* and the "7 segments" are
-correct, IIUC you're proposing that an LSM could have policies for each
-of the anon inodes, e.g. grant/deny RWX vs. RW vs RX.  Am I in the
-ballpark?
-
-> It's plausible that this whole thing works without the magic segment
-> inodes under the hood, but figuring that out would need a careful look
-> at how all the core mm bits and LSM bits work together.
->
-> To get all the LSM stuff to work, SELinux will need some way to
-> automatically assign an appropriate label to the segment inodes.  I
-> assume that such a mechanism already exists and gets used for things
-> like sockets, but I haven't actually confirmed this.
-
-I (obviously) don't fully understand your proposal, but I don't think we
-want to hook inodes, e.g. AppArmor doesn't implement inode_permission()
-but does implement file_mprotect() and mmap_file(), which feel like the
-natural hooks for this sort of thing.  I also think it's overkill, e.g.
-AppArmor doesn't have a concept of EXECMOD, EXECMEM, EXECHEAP, etc.., so
-I don't think we need to go beyond detecting W+X scenarios.
-
-Starting with your original idea of tracking "safe to execute" and
-Cedric's of propagating the permissions from the source VMA, but tweaked
-with your new idea of clearing VM_MAY* and a custom MAP_FIXED/mprotect().
-
-Add SGX_IOC_MPROTECT (or SGX_IOC_MAP_REGION?) that works as follows:
-
-  1. Track VM_MAY{READ,WRITE,EXEC} flags for each enclave page.
-  2. SGX_IOC_ADD_REGION, i.e. EADD, initializes the VM_MAY* flags for each
-     enclave page based on the source VMA.
-  3. sgx_mmap() only works with PROT_NONE, skips alignment stuff if
-     MAP_FIXED, and clears VM_MAY{READ,WRITE,EXEC}.
-  4. mprotect() on /dev/sgx/enclave doesn't work because the VMA doesn't
-     have any VM_MAY{READ,WRITE,EXEC} capabilities.
-  5. Deny mremap() post-ECREATE as the address and size of the enclave
-     are fixed at ECREATE (in hardware).
-  6. SGX_IOC_MPROTECT works like normal mprotect(), except the VM_MAY*
-     flags are pulled from the enclave pages, and its call to
-     security_file_mprotect() is VM_READ|VM_EXEC by default.  The LSM call
-     sets VM_WRITE iff the enclave page has both VM_MAYWRITE and
-     VM_MAYEXEC.  The idea here is to require READ and EXECUTE to run an
-     enclave, and only require WRITE on /dev/sgx/enclave when the enclave
-     can execute modified memory.
-
-To support SGX2 down the road, which will want to convert a page to
-executable on the fly, we could add:
-
-  7. SGX_IOC_EXTEND_PERMISSIONS enables userspace to extend the VM_MAY*
-     flags for an enclave page, e.g. to make a page executable.
-     SGX_IOC_MPROTECT is still required to actually map the page.
-     Notably, adding a RW page to the enclave, e.g. to grow its heap,
-     doesn't require WRITE, whereas adding a RWX page, e.g. for dynamic
-     loading, would require WRITE.  This can only extend!  E.g. userspace
-     can't circumvent the WRITE requirement by clearing VM_MAYWRITE.
-
-Note, FILE__WRITE on /dev/sgx/enclave is essentially equivalent to
-FILE__EXECMOD.  Using FILE__WRITE in this way means there are no changes
-to SELinux (triggering FILE__EXECMOD would be awkward), and AppArmor also
-picks up extra protections for enclaves.
-
-> [0] There needs to be some vaguely intelligent semantics if you EADD
-> the *same* address more than once.  A simple solution would be to
-> disallow it if the segments don't match.
-
-I don't see any reason to allow duplicate EADD as it serves no purpose,
-e.g. doing so changes the enclave's measurement and that's it.
+Thank you for the review!
