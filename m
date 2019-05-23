@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B168C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:26:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AB0EC282DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:26:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51E4C206BA
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:26:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03A14217D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:26:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639594;
-	bh=VX0vfVF6EuCB2RefEzmCaKE/JDFP2USXqDpZTzKjHWM=;
+	s=default; t=1558639597;
+	bh=n6s3IH4aHVsyV1IC6V4r+732vbgmcAV58aY8KqxAqj4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eRMdqocQ2NKiV+nq0KJD80zUmuTfemGafajUm3TGGKcL5OBJ8uvXfnIRxs5+aeVOC
-	 rkkcgoITfln1bssp3261yINY3hDYYT4nDZ+DODwGOA+/QY6jQlI5Axj/rPKPQJw+yA
-	 3IlJ74KGGirWP4C2ArYOHWv1HDy7zz5V3Iw2nIv4=
+	b=Y+0wEIeFoIBaqgZffPGkWNoWMT3Ilst5odgLnAkU4rLkKfTZ7Bw3ZpjrMd8R1Z98e
+	 Fu7f6DTkRbHVBKo6zyJdm5NXNoi6+/ube/q7RMor2h93a92jEvyHPqigboXvnIFzej
+	 mpB+IKHTjBeETS39Up0cPzQXtWqxuRNZsgVI3mMM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391367AbfEWT0c (ORCPT
+        id S2391373AbfEWT0g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:26:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38352 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:26:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38416 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390744AbfEWT03 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:26:29 -0400
+        id S2391362AbfEWT0c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:26:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A69FA20868;
-        Thu, 23 May 2019 19:26:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 51FE72054F;
+        Thu, 23 May 2019 19:26:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639589;
-        bh=VX0vfVF6EuCB2RefEzmCaKE/JDFP2USXqDpZTzKjHWM=;
+        s=default; t=1558639591;
+        bh=n6s3IH4aHVsyV1IC6V4r+732vbgmcAV58aY8KqxAqj4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PbhIqDuxifJG0CiHbpcmYppa5KQFlFEydxhNRt8qt7lXZbpcY2RkJ81dGUc4X/Cyp
-         1ckF//h00ua4P2/uO1vViQ4UdgV6jIHzBDLr0+0BoIeWgDrRNiAeaYDkPoH74pFJ/N
-         czbEADc0e35kfRWhGvbnTb1ndzVUzfFG5pHe8siw=
+        b=tZ1VH8/ZvWJ4aIpD2Iklij11tMD7xgsN4cAPqbJFAQUWZTMJiBof9Bt2gZF7RrmYc
+         2fZm5CVWiGjDf9ZTbMyOpAusMIhyvk8/FpSI6hsEYoNCAsn0CpdSV5bYg7Df9dmUlt
+         nbcP9est7d0bJvrVCi4bvpm0d0hDrgcXBPcy0TRc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmytro Linkin <dmitrolin@mellanox.com>,
-        Roi Dayan <roid@mellanox.com>,
-        Vlad Buslov <vladbu@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 5.1 021/122] net/mlx5e: Additional check for flow destination comparison
-Date:   Thu, 23 May 2019 21:05:43 +0200
-Message-Id: <20190523181707.600807137@linuxfoundation.org>
+        stable@vger.kernel.org, Saeed Mahameed <saeedm@mellanox.com>
+Subject: [PATCH 5.1 022/122] net/mlx5: Imply MLXFW in mlx5_core
+Date:   Thu, 23 May 2019 21:05:44 +0200
+Message-Id: <20190523181707.733914871@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181705.091418060@linuxfoundation.org>
 References: <20190523181705.091418060@linuxfoundation.org>
@@ -61,42 +58,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmytro Linkin <dmitrolin@mellanox.com>
+From: Saeed Mahameed <saeedm@mellanox.com>
 
-[ Upstream commit c979c445a88e1c9dd7d8f90838c10456ae4ecd09 ]
+[ Upstream commit bad861f31bb15a99becef31aab59640eaeb247e2 ]
 
-Flow destination comparison has an inaccuracy: code see no
-difference between same vf ports, which belong to different pfs.
+mlxfw can be compiled as external module while mlx5_core can be
+builtin, in such case mlx5 will act like mlxfw is disabled.
 
-Example: If start ping from VF0 (PF1) to VF1 (PF1) and mirror
-all traffic to VF0 (PF2), icmp reply to VF0 (PF1) and mirrored
-flow to VF0 (PF2) would be determined as same destination. It lead
-to creating flow handler with rule nodes, which not added to node
-tree. When later driver try to delete this flow rules we got
-kernel crash.
+Since mlxfw is just a service library for mlx* drivers,
+imply it in mlx5_core to make it always reachable if it was enabled.
 
-Add comparison of vhca_id field to avoid this.
-
-Fixes: 1228e912c934 ("net/mlx5: Consider encapsulation properties when comparing destinations")
-Signed-off-by: Dmytro Linkin <dmitrolin@mellanox.com>
-Reviewed-by: Roi Dayan <roid@mellanox.com>
-Reviewed-by: Vlad Buslov <vladbu@mellanox.com>
+Fixes: 3ffaabecd1a1 ("net/mlx5e: Support the flash device ethtool callback")
 Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/fs_core.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/ethernet/mellanox/mlx5/core/Kconfig |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/fs_core.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/fs_core.c
-@@ -1386,6 +1386,8 @@ static bool mlx5_flow_dests_cmp(struct m
- 		if ((d1->type == MLX5_FLOW_DESTINATION_TYPE_VPORT &&
- 		     d1->vport.num == d2->vport.num &&
- 		     d1->vport.flags == d2->vport.flags &&
-+		     ((d1->vport.flags & MLX5_FLOW_DEST_VPORT_VHCA_ID) ?
-+		      (d1->vport.vhca_id == d2->vport.vhca_id) : true) &&
- 		     ((d1->vport.flags & MLX5_FLOW_DEST_VPORT_REFORMAT_ID) ?
- 		      (d1->vport.reformat_id == d2->vport.reformat_id) : true)) ||
- 		    (d1->type == MLX5_FLOW_DESTINATION_TYPE_FLOW_TABLE &&
+--- a/drivers/net/ethernet/mellanox/mlx5/core/Kconfig
++++ b/drivers/net/ethernet/mellanox/mlx5/core/Kconfig
+@@ -7,6 +7,7 @@ config MLX5_CORE
+ 	depends on PCI
+ 	imply PTP_1588_CLOCK
+ 	imply VXLAN
++	imply MLXFW
+ 	default n
+ 	---help---
+ 	  Core driver for low level functionality of the ConnectX-4 and
 
 
