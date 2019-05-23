@@ -2,123 +2,123 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19944C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 17:40:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 385B8C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 17:43:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E63742075B
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 17:40:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F15E22184B
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 17:43:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="0KPNMSd1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731392AbfEWRkg (ORCPT
+        id S1731365AbfEWRnx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 13:40:36 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:45258 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731195AbfEWRkf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 13:40:35 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 0DD0830C1AF9;
-        Thu, 23 May 2019 17:40:35 +0000 (UTC)
-Received: from kamzik.brq.redhat.com (unknown [10.43.2.160])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7CCF55C219;
-        Thu, 23 May 2019 17:40:30 +0000 (UTC)
-Date:   Thu, 23 May 2019 19:40:28 +0200
-From:   Andrew Jones <drjones@redhat.com>
-To:     Thomas Huth <thuth@redhat.com>
-Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-s390@vger.kernel.org
-Subject: Re: [PATCH 5/9] KVM: selftests: Align memory region addresses to 1M
- on s390x
-Message-ID: <20190523174028.3giefzff3l5eclki@kamzik.brq.redhat.com>
-References: <20190523164309.13345-1-thuth@redhat.com>
- <20190523164309.13345-6-thuth@redhat.com>
+        Thu, 23 May 2019 13:43:53 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:35551 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731098AbfEWRnw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 13:43:52 -0400
+Received: by mail-pf1-f194.google.com with SMTP id d126so1438016pfd.2
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 10:43:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=GPbTqA3sKULGXvYjOTM7gfPZ7s4y9WwkUm1EREZ84Ec=;
+        b=0KPNMSd1e/ZShlAg1C25np34O9KMTbLFWMGEN4hhgcEhVyzmdg5tjbCMiFs1aybHC6
+         Qpem7qqPH7wZ4Y1fpd/on//UTqYR/TJz2wC3p8mAuf4EPSJ+zqxXdvq+cUPYsMcx/dRk
+         EJrnBOUKqsEexPUnDc9t4pjTsVMOc/DoL+jt8v9Wyf/nNMNpk+KmMOurhckcCiuYo8aP
+         tWxIVyTzlRevLlnAIJgCTLQ7i0JTkhGkeIzFcoQPfXmExNfoNOaGDETbyV6xKsyeqkXF
+         EHjzKM3rmL85wy3SZurcNLO0/Vg8m4xth9v1V0hD2M/S/tFuQf+P5py04XOUCNByiOKB
+         7fwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=GPbTqA3sKULGXvYjOTM7gfPZ7s4y9WwkUm1EREZ84Ec=;
+        b=Q2fQIt2SPu3S41Ca9ccqemoJY1dZ21H6sGZ868atdhpLU7lWMeaDvweLTqKUVRzZ+V
+         C7ztyp7FpjzGX+xytA+Oteroywr60Q3tpHZdZK/mUC+v/Q0B87BwQ0uIg6dNNtXbTsiR
+         8UFvd0nBIBrWoR0yTGDvbKSenBOTpxq/aXVpoAtb7p4NNoMOo0BBuXCS14DvZ20VxnSZ
+         8t2DDTekuFiPp8Ed7h0ZjCe4iDtRL1AI6w8yX/8gCagJvg1rUB4StCiDBDqYjKetJQ/P
+         5CLZXZoBq6uWX4OLEtQQDfEIqaQdt1kMgRAbfqBQipaLaWks6WJjooA09V7XsGP6aUis
+         FSPg==
+X-Gm-Message-State: APjAAAV6MIIqMH//gKEV1OWzpbOH62t/Yh7iJjHLnUWfOtqsy4P8/UGJ
+        aUqcSdKL1z25VBNQm4XX28jFDw==
+X-Google-Smtp-Source: APXvYqxxNUBl2ALbzC/oRGpRc2/4PfBhkyFvL2USl2iASHWmjwWhqOT4E5ch4yBkBNmaWJBlon5wXQ==
+X-Received: by 2002:a62:4118:: with SMTP id o24mr74875817pfa.17.1558633431910;
+        Thu, 23 May 2019 10:43:51 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::1:a988])
+        by smtp.gmail.com with ESMTPSA id h18sm13255pgv.38.2019.05.23.10.43.50
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 23 May 2019 10:43:50 -0700 (PDT)
+Date:   Thu, 23 May 2019 13:43:49 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Subject: xarray breaks thrashing detection and cgroup isolation
+Message-ID: <20190523174349.GA10939@cmpxchg.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190523164309.13345-6-thuth@redhat.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Thu, 23 May 2019 17:40:35 +0000 (UTC)
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 06:43:05PM +0200, Thomas Huth wrote:
-> On s390x, there is a constraint that memory regions have to be aligned
-> to 1M (or running the VM will fail). Introduce a new "alignment" variable
-> in the vm_userspace_mem_region_add() function which now can be used for
-> both, huge page and s390x alignment requirements.
-> 
-> Signed-off-by: Thomas Huth <thuth@redhat.com>
-> ---
->  tools/testing/selftests/kvm/lib/kvm_util.c | 21 ++++++++++++++++-----
->  1 file changed, 16 insertions(+), 5 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
-> index 08edb8436c47..656df9d5cd4d 100644
-> --- a/tools/testing/selftests/kvm/lib/kvm_util.c
-> +++ b/tools/testing/selftests/kvm/lib/kvm_util.c
-> @@ -559,6 +559,7 @@ void vm_userspace_mem_region_add(struct kvm_vm *vm,
->  	unsigned long pmem_size = 0;
->  	struct userspace_mem_region *region;
->  	size_t huge_page_size = KVM_UTIL_PGS_PER_HUGEPG * vm->page_size;
-> +	size_t alignment;
->  
->  	TEST_ASSERT((guest_paddr % vm->page_size) == 0, "Guest physical "
->  		"address not on a page boundary.\n"
-> @@ -608,9 +609,20 @@ void vm_userspace_mem_region_add(struct kvm_vm *vm,
->  	TEST_ASSERT(region != NULL, "Insufficient Memory");
->  	region->mmap_size = npages * vm->page_size;
->  
-> -	/* Enough memory to align up to a huge page. */
-> +#ifdef __s390x__
-> +	/* On s390x, the host address must be aligned to 1M (due to PGSTEs) */
-> +	alignment = 0x100000;
-> +#else
-> +	alignment = 1;
-> +#endif
-> +
->  	if (src_type == VM_MEM_SRC_ANONYMOUS_THP)
-> -		region->mmap_size += huge_page_size;
-> +		alignment = huge_page_size;
+Hello,
 
-I guess s390x won't ever support VM_MEM_SRC_ANONYMOUS_THP? If it does,
-then we need 'alignment = max(huge_page_size, alignment)'. Actually
-that might be a nice way to write this anyway for future-proofing.
+I noticed that recent upstream kernels don't account the xarray nodes
+of the page cache to the allocating cgroup, like we used to do for the
+radix tree nodes.
 
-> +
-> +	/* Add enough memory to align up if necessary */
-> +	if (alignment > 1)
-> +		region->mmap_size += alignment;
-> +
->  	region->mmap_start = mmap(NULL, region->mmap_size,
->  				  PROT_READ | PROT_WRITE,
->  				  MAP_PRIVATE | MAP_ANONYMOUS
-> @@ -620,9 +632,8 @@ void vm_userspace_mem_region_add(struct kvm_vm *vm,
->  		    "test_malloc failed, mmap_start: %p errno: %i",
->  		    region->mmap_start, errno);
->  
-> -	/* Align THP allocation up to start of a huge page. */
-> -	region->host_mem = align(region->mmap_start,
-> -				 src_type == VM_MEM_SRC_ANONYMOUS_THP ?  huge_page_size : 1);
-> +	/* Align host address */
-> +	region->host_mem = align(region->mmap_start, alignment);
->  
->  	/* As needed perform madvise */
->  	if (src_type == VM_MEM_SRC_ANONYMOUS || src_type == VM_MEM_SRC_ANONYMOUS_THP) {
-> -- 
-> 2.21.0
-> 
+This results in broken isolation for cgrouped apps, allowing them to
+escape their containment and harm other cgroups and the system with an
+excessive build-up of nonresident information.
+
+It also breaks thrashing/refault detection because the page cache
+lives in a different domain than the xarray nodes, and so the shadow
+shrinker can reclaim nonresident information way too early when there
+isn't much cache in the root cgroup.
+
+This appears to be the culprit:
+
+commit a28334862993b5c6a8766f6963ee69048403817c
+Author: Matthew Wilcox <willy@infradead.org>
+Date:   Tue Dec 5 19:04:20 2017 -0500
+
+    page cache: Finish XArray conversion
+    
+    With no more radix tree API users left, we can drop the GFP flags
+    and use xa_init() instead of INIT_RADIX_TREE().
+    
+    Signed-off-by: Matthew Wilcox <willy@infradead.org>
+
+diff --git a/fs/inode.c b/fs/inode.c
+index 42f6d25f32a5..9b808986d440 100644
+--- a/fs/inode.c
++++ b/fs/inode.c
+@@ -349,7 +349,7 @@ EXPORT_SYMBOL(inc_nlink);
+ 
+ static void __address_space_init_once(struct address_space *mapping)
+ {
+-       INIT_RADIX_TREE(&mapping->i_pages, GFP_ATOMIC | __GFP_ACCOUNT);
++       xa_init_flags(&mapping->i_pages, XA_FLAGS_LOCK_IRQ);
+        init_rwsem(&mapping->i_mmap_rwsem);
+        INIT_LIST_HEAD(&mapping->private_list);
+        spin_lock_init(&mapping->private_lock);
+
+It fairly blatantly drops __GFP_ACCOUNT.
+
+I'm not quite sure how to fix this, since the xarray code doesn't seem
+to have per-tree gfp flags anymore like the radix tree did. We cannot
+add SLAB_ACCOUNT to the radix_tree_node_cachep slab cache. And the
+xarray api doesn't seem to really support gfp flags, either (xas_nomem
+does, but the optimistic internal allocations have fixed gfp flags).
