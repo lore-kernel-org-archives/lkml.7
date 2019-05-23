@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4532FC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:19:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A502C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:19:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10DA521871
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:19:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 608132189E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:19:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639175;
-	bh=EhYtP/rpvE8jWFvUYVqzJ7BQ2mvQOotty2PPRp7l7Lw=;
+	s=default; t=1558639179;
+	bh=kesfgwBqgVXPkLx/zEwnlJg4dQOQm0nNiBwMUCHiobU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Vix0D/2VBvNYmVtOtB7uye/0mEdAWt3iPeaHC+hl0dhpyayMW/xUQ1k+qNnUReEIz
-	 sMEfQdUB4BNXKboxPkg1pGJ8aU5FW/nqhZ2aAzCwFnMh0j+JJSUkKRtKDqRwzQVv12
-	 wGvyutwGBX4hEm5dlLp9oN3noieYvj9pNgESi2bA=
+	b=UizOC+EkrJu3vsy+A5X9sd3sKosQAe0roWAh77y45VeV06tCWUR4/W+uMnU1QMVaB
+	 tX+mWMaXRyyGpww8sSza0/QL32aEVPoSR9nff3H1uWqc1aBbuCJxr+CXLznaUq0oml
+	 4uIfJaF3jJZ7G9eEqdmVXyz/64fpR0+7VOnjJbfo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389843AbfEWTTe (ORCPT
+        id S2389229AbfEWTTi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:19:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55576 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:19:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55740 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389828AbfEWTTa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:19:30 -0400
+        id S2388715AbfEWTTg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:19:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 35035205ED;
-        Thu, 23 May 2019 19:19:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B4992133D;
+        Thu, 23 May 2019 19:19:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639169;
-        bh=EhYtP/rpvE8jWFvUYVqzJ7BQ2mvQOotty2PPRp7l7Lw=;
+        s=default; t=1558639175;
+        bh=kesfgwBqgVXPkLx/zEwnlJg4dQOQm0nNiBwMUCHiobU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IooAF2xcGjpdlMVWCVLqyGNkeb6s4E8E98mBU2qsv7+LNks/ylkEwt+wx86X4ZkAU
-         bAh2bOXXN7VhUXW7l3tJB4nZ6Xk9Jp8ASLVdFl0iuOoxyqtnKxwkU044SUxLwuG7JR
-         hDQpHvBEEYigtwqRxyYkjySVlVZbzXkZsggHrf78=
+        b=WIc318X0NXF4+RmWoXQXCsDnvhK1MqSAwcgODxbros/QeaxFCJ0CZfyTnoddHGb7L
+         dGoAIBrU78sQ4jOfaCQyTBFZx32jX8iZaTjBFkLAIr67pqrHZpQEr5HSkXWC5K1voX
+         XTfHqSsyySSaxUNpaxYVy7FpskUAi00DSqCkNXXA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chenbo Feng <fengc@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>
-Subject: [PATCH 4.19 112/114] bpf: relax inode permission check for retrieving bpf program
-Date:   Thu, 23 May 2019 21:06:51 +0200
-Message-Id: <20190523181740.846294896@linuxfoundation.org>
+        stable@vger.kernel.org, Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>
+Subject: [PATCH 4.19 114/114] bpf, lru: avoid messing with eviction heuristics upon syscall lookup
+Date:   Thu, 23 May 2019 21:06:53 +0200
+Message-Id: <20190523181740.955032364@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181731.372074275@linuxfoundation.org>
 References: <20190523181731.372074275@linuxfoundation.org>
@@ -60,38 +60,106 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chenbo Feng <fengc@google.com>
+From: Daniel Borkmann <daniel@iogearbox.net>
 
-commit e547ff3f803e779a3898f1f48447b29f43c54085 upstream.
+commit 50b045a8c0ccf44f76640ac3eea8d80ca53979a3 upstream.
 
-For iptable module to load a bpf program from a pinned location, it
-only retrieve a loaded program and cannot change the program content so
-requiring a write permission for it might not be necessary.
-Also when adding or removing an unrelated iptable rule, it might need to
-flush and reload the xt_bpf related rules as well and triggers the inode
-permission check. It might be better to remove the write premission
-check for the inode so we won't need to grant write access to all the
-processes that flush and restore iptables rules.
+One of the biggest issues we face right now with picking LRU map over
+regular hash table is that a map walk out of user space, for example,
+to just dump the existing entries or to remove certain ones, will
+completely mess up LRU eviction heuristics and wrong entries such
+as just created ones will get evicted instead. The reason for this
+is that we mark an entry as "in use" via bpf_lru_node_set_ref() from
+system call lookup side as well. Thus upon walk, all entries are
+being marked, so information of actual least recently used ones
+are "lost".
 
-Signed-off-by: Chenbo Feng <fengc@google.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+In case of Cilium where it can be used (besides others) as a BPF
+based connection tracker, this current behavior causes disruption
+upon control plane changes that need to walk the map from user space
+to evict certain entries. Discussion result from bpfconf [0] was that
+we should simply just remove marking from system call side as no
+good use case could be found where it's actually needed there.
+Therefore this patch removes marking for regular LRU and per-CPU
+flavor. If there ever should be a need in future, the behavior could
+be selected via map creation flag, but due to mentioned reason we
+avoid this here.
+
+  [0] http://vger.kernel.org/bpfconf.html
+
+Fixes: 29ba732acbee ("bpf: Add BPF_MAP_TYPE_LRU_HASH")
+Fixes: 8f8449384ec3 ("bpf: Add BPF_MAP_TYPE_LRU_PERCPU_HASH")
 Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Acked-by: Martin KaFai Lau <kafai@fb.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/bpf/inode.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/bpf/hashtab.c |   23 ++++++++++++++++++-----
+ 1 file changed, 18 insertions(+), 5 deletions(-)
 
---- a/kernel/bpf/inode.c
-+++ b/kernel/bpf/inode.c
-@@ -518,7 +518,7 @@ out:
- static struct bpf_prog *__get_prog_inode(struct inode *inode, enum bpf_prog_type type)
- {
- 	struct bpf_prog *prog;
--	int ret = inode_permission(inode, MAY_READ | MAY_WRITE);
-+	int ret = inode_permission(inode, MAY_READ);
- 	if (ret)
- 		return ERR_PTR(ret);
+--- a/kernel/bpf/hashtab.c
++++ b/kernel/bpf/hashtab.c
+@@ -518,18 +518,30 @@ static u32 htab_map_gen_lookup(struct bp
+ 	return insn - insn_buf;
+ }
  
+-static void *htab_lru_map_lookup_elem(struct bpf_map *map, void *key)
++static __always_inline void *__htab_lru_map_lookup_elem(struct bpf_map *map,
++							void *key, const bool mark)
+ {
+ 	struct htab_elem *l = __htab_map_lookup_elem(map, key);
+ 
+ 	if (l) {
+-		bpf_lru_node_set_ref(&l->lru_node);
++		if (mark)
++			bpf_lru_node_set_ref(&l->lru_node);
+ 		return l->key + round_up(map->key_size, 8);
+ 	}
+ 
+ 	return NULL;
+ }
+ 
++static void *htab_lru_map_lookup_elem(struct bpf_map *map, void *key)
++{
++	return __htab_lru_map_lookup_elem(map, key, true);
++}
++
++static void *htab_lru_map_lookup_elem_sys(struct bpf_map *map, void *key)
++{
++	return __htab_lru_map_lookup_elem(map, key, false);
++}
++
+ static u32 htab_lru_map_gen_lookup(struct bpf_map *map,
+ 				   struct bpf_insn *insn_buf)
+ {
+@@ -1206,6 +1218,7 @@ const struct bpf_map_ops htab_lru_map_op
+ 	.map_free = htab_map_free,
+ 	.map_get_next_key = htab_map_get_next_key,
+ 	.map_lookup_elem = htab_lru_map_lookup_elem,
++	.map_lookup_elem_sys_only = htab_lru_map_lookup_elem_sys,
+ 	.map_update_elem = htab_lru_map_update_elem,
+ 	.map_delete_elem = htab_lru_map_delete_elem,
+ 	.map_gen_lookup = htab_lru_map_gen_lookup,
+@@ -1237,7 +1250,6 @@ static void *htab_lru_percpu_map_lookup_
+ 
+ int bpf_percpu_hash_copy(struct bpf_map *map, void *key, void *value)
+ {
+-	struct bpf_htab *htab = container_of(map, struct bpf_htab, map);
+ 	struct htab_elem *l;
+ 	void __percpu *pptr;
+ 	int ret = -ENOENT;
+@@ -1253,8 +1265,9 @@ int bpf_percpu_hash_copy(struct bpf_map
+ 	l = __htab_map_lookup_elem(map, key);
+ 	if (!l)
+ 		goto out;
+-	if (htab_is_lru(htab))
+-		bpf_lru_node_set_ref(&l->lru_node);
++	/* We do not mark LRU map element here in order to not mess up
++	 * eviction heuristics when user space does a map walk.
++	 */
+ 	pptr = htab_elem_get_ptr(l, map->key_size);
+ 	for_each_possible_cpu(cpu) {
+ 		bpf_long_memcpy(value + off,
 
 
