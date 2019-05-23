@@ -2,53 +2,54 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40D14C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:22:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FBC6C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:22:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 141422187F
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:22:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64192205ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:22:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639334;
-	bh=Q/5OzBM4VQEOBvCfeonOdIK9aQC1KWHPkJclcmFLRO4=;
+	s=default; t=1558639340;
+	bh=kiG2Z147l4GuJ/myFhrqydpFyu3ZbV9OGO+gjWFZCQk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QHrMu+6EdfljDg/nkz/82FnztCCsdOucswFmmyk0K/2TAyRXUJKTeTyH3IomOd6mz
-	 MErDdcMHrFbhCalPquLZMO7MOvQWWCSBZe0muBE8sL0AwaKQWJmJj0qC+RMvYseqkZ
-	 8cmwvX9Lq1VzOl9zGVqmMqBuEYKsCIaNaQ4mQsnk=
+	b=bKSDeRltNRN9fAzMawHzNThKhrz0ioKhp1SVRSjfGeqXFt+0XrOe+O6IKrs2+vTDm
+	 7J+rKKuFuYWsuWMCqQA2k9Sn3ZrKM4T6rLN4YnRRJO5S6YRdrLT287DCH9tIPOdZsJ
+	 0fOXu0KsfsTPWREj5nLtbM4oH27vaDv/ajByYCiw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390416AbfEWTWN (ORCPT
+        id S2390450AbfEWTWT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:22:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59876 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:22:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60162 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390406AbfEWTWI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:22:08 -0400
+        id S2389740AbfEWTWQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:22:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A1C5F21841;
-        Thu, 23 May 2019 19:22:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F50821850;
+        Thu, 23 May 2019 19:22:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639328;
-        bh=Q/5OzBM4VQEOBvCfeonOdIK9aQC1KWHPkJclcmFLRO4=;
+        s=default; t=1558639335;
+        bh=kiG2Z147l4GuJ/myFhrqydpFyu3ZbV9OGO+gjWFZCQk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EiOnNxdDSTk2yzJM5tmG7toeozy7R/XyG9Aa0VKKemuRleXijDXaT5LS9tmcRygRo
-         0750/1hgXzwpkhMuJFY3er5eMXj+0UjFfHMazbq/EZV40KuN+r1WRt6xF5Voll9JIJ
-         N2sQm0X+GunuJgthCcIJY+ZYJ6SCujKuOh/O0ZA0=
+        b=K9YiUv0CfhXY9EjcQS7HUdzacSvIdD0+bCbCTfAJZzveEL97BKX4TfDdE1ij995St
+         uncHZH0bf55yEeOmaaSp4vXt8N4WyFad+sMixUAdK2M1zaBsEMBSjJ4Sji5fK4T8To
+         ar9TdtkxPB31oz0t2GBgQg8kVhVRezJRylae4niA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nicolai Stange <nstange@suse.de>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
+        stable@vger.kernel.org, Orit Wasserman <orit.was@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Elazar Leibovich <elazar@lightbitslabs.com>,
         "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 5.0 064/139] x86_64: Add gap to int3 to allow for call emulation
-Date:   Thu, 23 May 2019 21:05:52 +0200
-Message-Id: <20190523181729.091826690@linuxfoundation.org>
+Subject: [PATCH 5.0 067/139] tracing: Fix partial reading of trace events id file
+Date:   Thu, 23 May 2019 21:05:55 +0200
+Message-Id: <20190523181729.548435244@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181720.120897565@linuxfoundation.org>
 References: <20190523181720.120897565@linuxfoundation.org>
@@ -61,76 +62,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Poimboeuf <jpoimboe@redhat.com>
+From: Elazar Leibovich <elazar@lightbitslabs.com>
 
-commit 2700fefdb2d9751c416ad56897e27d41e409324a upstream.
+commit cbe08bcbbe787315c425dde284dcb715cfbf3f39 upstream.
 
-To allow an int3 handler to emulate a call instruction, it must be able to
-push a return address onto the stack. Add a gap to the stack to allow the
-int3 handler to push the return address and change the return from int3 to
-jump straight to the emulated called function target.
+When reading only part of the id file, the ppos isn't tracked correctly.
+This is taken care by simple_read_from_buffer.
 
-Link: http://lkml.kernel.org/r/20181130183917.hxmti5josgq4clti@treble
-Link: http://lkml.kernel.org/r/20190502162133.GX2623@hirez.programming.kicks-ass.net
+Reading a single byte, and then the next byte would result EOF.
 
-[
-  Note, this is needed to allow Live Kernel Patching to not miss calling a
-  patched function when tracing is enabled. -- Steven Rostedt
-]
+While this seems like not a big deal, this breaks abstractions that
+reads information from files unbuffered. See for example
+https://github.com/golang/go/issues/29399
 
+This code was mentioned as problematic in
+commit cd458ba9d5a5
+("tracing: Do not (ab)use trace_seq in event_id_read()")
+
+An example C code that show this bug is:
+
+  #include <stdio.h>
+  #include <stdint.h>
+
+  #include <sys/types.h>
+  #include <sys/stat.h>
+  #include <fcntl.h>
+  #include <unistd.h>
+
+  int main(int argc, char **argv) {
+    if (argc < 2)
+      return 1;
+    int fd = open(argv[1], O_RDONLY);
+    char c;
+    read(fd, &c, 1);
+    printf("First  %c\n", c);
+    read(fd, &c, 1);
+    printf("Second %c\n", c);
+  }
+
+Then run with, e.g.
+
+  sudo ./a.out /sys/kernel/debug/tracing/events/tcp/tcp_set_state/id
+
+You'll notice you're getting the first character twice, instead of the
+first two characters in the id file.
+
+Link: http://lkml.kernel.org/r/20181231115837.4932-1-elazar@lightbitslabs.com
+
+Cc: Orit Wasserman <orit.was@gmail.com>
+Cc: Oleg Nesterov <oleg@redhat.com>
+Cc: Ingo Molnar <mingo@redhat.com>
 Cc: stable@vger.kernel.org
-Fixes: b700e7f03df5 ("livepatch: kernel: add support for live patching")
-Tested-by: Nicolai Stange <nstange@suse.de>
-Reviewed-by: Nicolai Stange <nstange@suse.de>
-Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Fixes: 23725aeeab10b ("ftrace: provide an id file for each event")
+Signed-off-by: Elazar Leibovich <elazar@lightbitslabs.com>
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/entry/entry_64.S |   18 ++++++++++++++++--
- 1 file changed, 16 insertions(+), 2 deletions(-)
+ kernel/trace/trace_events.c |    3 ---
+ 1 file changed, 3 deletions(-)
 
---- a/arch/x86/entry/entry_64.S
-+++ b/arch/x86/entry/entry_64.S
-@@ -881,7 +881,7 @@ apicinterrupt IRQ_WORK_VECTOR			irq_work
-  * @paranoid == 2 is special: the stub will never switch stacks.  This is for
-  * #DF: if the thread stack is somehow unusable, we'll still get a useful OOPS.
-  */
--.macro idtentry sym do_sym has_error_code:req paranoid=0 shift_ist=-1
-+.macro idtentry sym do_sym has_error_code:req paranoid=0 shift_ist=-1 create_gap=0
- ENTRY(\sym)
- 	UNWIND_HINT_IRET_REGS offset=\has_error_code*8
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -1318,9 +1318,6 @@ event_id_read(struct file *filp, char __
+ 	char buf[32];
+ 	int len;
  
-@@ -901,6 +901,20 @@ ENTRY(\sym)
- 	jnz	.Lfrom_usermode_switch_stack_\@
- 	.endif
+-	if (*ppos)
+-		return 0;
+-
+ 	if (unlikely(!id))
+ 		return -ENODEV;
  
-+	.if \create_gap == 1
-+	/*
-+	 * If coming from kernel space, create a 6-word gap to allow the
-+	 * int3 handler to emulate a call instruction.
-+	 */
-+	testb	$3, CS-ORIG_RAX(%rsp)
-+	jnz	.Lfrom_usermode_no_gap_\@
-+	.rept	6
-+	pushq	5*8(%rsp)
-+	.endr
-+	UNWIND_HINT_IRET_REGS offset=8
-+.Lfrom_usermode_no_gap_\@:
-+	.endif
-+
- 	.if \paranoid
- 	call	paranoid_entry
- 	.else
-@@ -1132,7 +1146,7 @@ apicinterrupt3 HYPERV_STIMER0_VECTOR \
- #endif /* CONFIG_HYPERV */
- 
- idtentry debug			do_debug		has_error_code=0	paranoid=1 shift_ist=DEBUG_STACK
--idtentry int3			do_int3			has_error_code=0
-+idtentry int3			do_int3			has_error_code=0	create_gap=1
- idtentry stack_segment		do_stack_segment	has_error_code=1
- 
- #ifdef CONFIG_XEN_PV
 
 
