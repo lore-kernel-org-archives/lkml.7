@@ -2,128 +2,103 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7FA6C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 16:57:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EA89C282DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 16:58:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACABE2070D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 16:57:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558630647;
-	bh=TCw7cKoRb0mNvs2XUEnU4+3yGCOFVTVy1RJc0z1Ogw0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vcGBXZ2YSvBgUX+F4ih2DknE52ksXAckp6tCa1gp1FSP4ILgw7REM/8dXKookWQAH
-	 psMIwar72kBK1P198EWjcdpnTqREzuVAEKR4n6ezK6yKwXnYx1lfGxtEocJPcjogs9
-	 TirYBE8haZmL/WER0EF29QwMGgXMrMkSgrRdwYtk=
+	by mail.kernel.org (Postfix) with ESMTP id E16462075B
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 16:58:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731360AbfEWQ5Y (ORCPT
+        id S1731273AbfEWQ6r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 12:57:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37756 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731299AbfEWQ5W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 12:57:22 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF3E62070D;
-        Thu, 23 May 2019 16:51:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558630320;
-        bh=TCw7cKoRb0mNvs2XUEnU4+3yGCOFVTVy1RJc0z1Ogw0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=yaCvTrdue+ruF5/+/4uQDCzrgFwtbSrks+PtpQpAJ8fQNoyl0AZFXYR41m8P0b6AZ
-         RWHVm1Q2EQImnFPXFOU+0KUkHzWCf4dmAQNDWr/n6M1YR0tltL3ICmW0M02M3o0A6A
-         GU5rSksqUXUmyhJn9xel9Ex9paNHOFXzYT6bmb2A=
-Date:   Thu, 23 May 2019 18:51:57 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Nishka Dasgupta <nishkadg.linux@gmail.com>
-Cc:     christian.gromm@microchip.com, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: most: usb: Remove variable frame_size
-Message-ID: <20190523165157.GA19908@kroah.com>
-References: <20190523132334.29611-1-nishkadg.linux@gmail.com>
+        Thu, 23 May 2019 12:58:47 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:50982 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730899AbfEWQ6q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 12:58:46 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DBD31374;
+        Thu, 23 May 2019 09:58:45 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 61A693F5AF;
+        Thu, 23 May 2019 09:58:44 -0700 (PDT)
+Date:   Thu, 23 May 2019 17:58:41 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Lei Wang <leiwang_git@outlook.com>
+Cc:     "bp@alien8.de" <bp@alien8.de>,
+        "james.morse@arm.com" <james.morse@arm.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "lewan@microsoft.com" <lewan@microsoft.com>
+Subject: Re: [PATCH v3 1/2] dt-bindings: edac: arm-dmc520.txt
+Message-ID: <20190523165841.GD7523@lakrids.cambridge.arm.com>
+References: <CY1PR0401MB1244062C1738B09D6100F202860A0@CY1PR0401MB1244.namprd04.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190523132334.29611-1-nishkadg.linux@gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <CY1PR0401MB1244062C1738B09D6100F202860A0@CY1PR0401MB1244.namprd04.prod.outlook.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 06:53:34PM +0530, Nishka Dasgupta wrote:
-> Remove variable frame_size as its multiple usages are all independent of
-> each other and so can be returned separately.
-> Issue found with Coccinelle.
+On Thu, May 16, 2019 at 02:35:47AM +0000, Lei Wang wrote:
+> From: Lei Wang <leiwang_git@outlook.com>
 > 
-> Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
+> This is the device tree bindings for new EDAC driver dmc520_edac.c.
+> 
+> Signed-off-by: Lei Wang <leiwang_git@outlook.com>
 > ---
->  drivers/staging/most/usb/usb.c | 16 ++++++----------
->  1 file changed, 6 insertions(+), 10 deletions(-)
+>  .../devicetree/bindings/edac/arm-dmc520.txt        | 26 ++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/edac/arm-dmc520.txt
 > 
-> diff --git a/drivers/staging/most/usb/usb.c b/drivers/staging/most/usb/usb.c
-> index 360cb5b7a10b..751e82cf66c5 100644
-> --- a/drivers/staging/most/usb/usb.c
-> +++ b/drivers/staging/most/usb/usb.c
-> @@ -186,32 +186,28 @@ static inline int start_sync_ep(struct usb_device *usb_dev, u16 ep)
->   */
->  static unsigned int get_stream_frame_size(struct most_channel_config *cfg)
->  {
-> -	unsigned int frame_size = 0;
->  	unsigned int sub_size = cfg->subbuffer_size;
->  
->  	if (!sub_size) {
->  		pr_warn("Misconfig: Subbuffer size zero.\n");
-> -		return frame_size;
-> +		return 0;
->  	}
->  	switch (cfg->data_type) {
->  	case MOST_CH_ISOC:
-> -		frame_size = AV_PACKETS_PER_XACT * sub_size;
-> -		break;
-> +		return AV_PACKETS_PER_XACT * sub_size;
->  	case MOST_CH_SYNC:
->  		if (cfg->packets_per_xact == 0) {
->  			pr_warn("Misconfig: Packets per XACT zero\n");
-> -			frame_size = 0;
-> +			return 0;
->  		} else if (cfg->packets_per_xact == 0xFF) {
-> -			frame_size = (USB_MTU / sub_size) * sub_size;
-> +			return (USB_MTU / sub_size) * sub_size;
->  		} else {
-> -			frame_size = cfg->packets_per_xact * sub_size;
-> +			return cfg->packets_per_xact * sub_size;
->  		}
-> -		break;
->  	default:
->  		pr_warn("Query frame size of non-streaming channel\n");
-> -		break;
-> +		return 0;
->  	}
-> -	return frame_size;
->  }
+> diff --git a/Documentation/devicetree/bindings/edac/arm-dmc520.txt b/Documentation/devicetree/bindings/edac/arm-dmc520.txt
+> new file mode 100644
+> index 0000000..71e7aa3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/edac/arm-dmc520.txt
+> @@ -0,0 +1,26 @@
+> +* ARM DMC-520 EDAC node
+> +
+> +Required properties:
+> +- compatible		: "brcm,dmc-520", "arm,dmc-520".
+> +- reg			: Address range of the DMC-520 registers.
+> +- interrupts		: DMC-520 interrupt numbers. The example below specifies
+> +			  two interrupt lines for dram_ecc_errc_int and
+> +			  dram_ecc_errd_int.
+> +- interrupt-config	: This is an array of interrupt masks. For each of the
+> +			  above interrupt line, add one interrupt mask element to
+> +			  it. That is, there is a 1:1 mapping from each interrupt
+> +			  line to an interrupt mask. An interrupt mask can represent
+> +			  multiple interrupts being enabled. Refer to interrupt_control
+> +			  register in DMC-520 TRM for interrupt mapping. In the example
+> +			  below, the interrupt configuration enables dram_ecc_errc_int
+> +			  and dram_ecc_errd_int. And each interrupt is connected to
+> +			  a separate interrupt line.
 
-Now it just feels like you are doing "busy work" :(
+Generally we use interrupt-names to distinguish interrupts.
 
-frame_size makes sense here, right?  Why change this code?
+Do you really have arbitary subsets of lines muxed together?
 
-Remember, code is written for developers first, the compiler second.
-Reading this with frame_size makes it much more obvious what this code
-does when you read it again in 5-10 years.  Why change this, you have
-not made it faster, or smaller at all.
+Thanks,
+Mark.
 
-So no, I would not accept this, sorry.
-
-We have so many _real_ things to do in the drivers/staging/ directory if
-you are looking for stuff to clean up.  Don't try to micro-optimize
-things that do not matter at the expense of understanding.
-
-thanks,
-
-greg k-h
+> +
+> +Example:
+> +
+> +dmc0: dmc@200000 {
+> +	compatible = "brcm,dmc-520", "arm,dmc-520";
+> +	reg = <0x200000 0x80000>;
+> +	interrupts = <0x0 0x349 0x4>, <0x0 0x34B 0x4>;
+> +	interrupt-config = <0x4>, <0x8>;
+> +};
+> -- 
+> 2.7.4
+> 
