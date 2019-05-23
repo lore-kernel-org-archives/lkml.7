@@ -2,77 +2,104 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D858C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:37:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03851C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:37:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0E1E2184E
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:37:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="pL5nUok9"
+	by mail.kernel.org (Postfix) with ESMTP id C4C1D2075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:37:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558640252;
+	bh=r0zyQ/B7KH52Fb9qpYaua23yoj2J/TXEHxufZ/7v2fs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=UBNOB3PcXv2q3CzZk+2FLEUKGYHLnB7jmA5HdU7zUK61OP1DzSjX9aOxxBFe64j8G
+	 fq2VuyXo2vgfYXM9d+tVcstF5MZNgVPkbmFZpEj/j3q3bBzez0LanV5SuUDlmjXRso
+	 3Zo6zmtKJ53Ud6tE9vrZMt/M2v6fxsu9hVyWionQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391542AbfEWThU (ORCPT
+        id S2390911AbfEWTY3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:37:20 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:60898 "EHLO mail.skyhub.de"
+        Thu, 23 May 2019 15:24:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35386 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391147AbfEWThR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:37:17 -0400
-Received: from cz.tnic (unknown [165.204.77.1])
+        id S2390892AbfEWTY0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:24:26 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id E585E1EC0249;
-        Thu, 23 May 2019 21:37:15 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1558640236;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=Srz9nZ3KqeuWjClvOk7zYv9LY9g9nrm5xPcxGRQlFLg=;
-        b=pL5nUok9ZIay72KrYyGu3TZDURNZJG33dgbozo1hyAIUyqg6Y3SWsQh7nNXVWl5bJ4vgpY
-        BP9wTC+Egqml/s8YdFAX6WJGzTlvOX8ou5mUBqZ7DAOuwDq15ds6hguSrlEeQZhMhoH05f
-        Ga1LyEvyIpKw4c0SSEb7xwSitV5/O+A=
-Date:   Thu, 23 May 2019 23:37:04 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
-Cc:     "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "x86@kernel.org" <x86@kernel.org>
-Subject: Re: [PATCH] x86/MCE: Statically allocate mce_banks_array
-Message-ID: <20190523213704.GB3980@cz.tnic>
-References: <20190523150345.42906-1-Yazen.Ghannam@amd.com>
- <20190523202754.GA3980@cz.tnic>
- <SN6PR12MB2639AAC20E9F01D1DE810E17F8010@SN6PR12MB2639.namprd12.prod.outlook.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id E30C720868;
+        Thu, 23 May 2019 19:24:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558639465;
+        bh=r0zyQ/B7KH52Fb9qpYaua23yoj2J/TXEHxufZ/7v2fs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=HdCu2P45Eovj4pDJqSykwE/khzv7mGw+9cjMYN9VCF6rh+imGp0paG0i4pn+g9J3Z
+         j8urFBr1Pht5yBIw3PhyqTYUFFlv/GsfmI4Te7Qw5LzoitZl78gazH0WIL/owrj1OF
+         rBrjNDN7L6j8w1khwMHUNN3OEufgs3HJ2FztxLSs=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Yufen Yu <yuyufen@huawei.com>,
+        Martin Wilck <mwilck@suse.com>,
+        Mike Snitzer <snitzer@redhat.com>
+Subject: [PATCH 5.0 098/139] dm mpath: always free attached_handler_name in parse_path()
+Date:   Thu, 23 May 2019 21:06:26 +0200
+Message-Id: <20190523181733.312916915@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190523181720.120897565@linuxfoundation.org>
+References: <20190523181720.120897565@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <SN6PR12MB2639AAC20E9F01D1DE810E17F8010@SN6PR12MB2639.namprd12.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 07:23:08PM +0000, Ghannam, Yazen wrote:
-> Sure, but which patch are you referring to?
-> 
-> This seems to fix a patch in the set in bp/rc0+3-ras.
+From: Martin Wilck <mwilck@suse.com>
 
-Sorry, I got confused. So bp/rc0+3-ras is not cast in stone - feel free
-to take it and merge this change into 5b0883f5c7be ("x86/MCE: Make
-mce_banks a per-CPU array") and then fix up any potential conflicts
-coming from the following patches. And then send the whole pile as a new
-revision.
+commit 940bc471780b004a5277c1931f52af363c2fc9da upstream.
 
-Thx.
+Commit b592211c33f7 ("dm mpath: fix attached_handler_name leak and
+dangling hw_handler_name pointer") fixed a memory leak for the case
+where setup_scsi_dh() returns failure. But setup_scsi_dh may return
+success and not "use" attached_handler_name if the
+retain_attached_hwhandler flag is not set on the map. As setup_scsi_sh
+properly "steals" the pointer by nullifying it, freeing it
+unconditionally in parse_path() is safe.
 
--- 
-Regards/Gruss,
-    Boris.
+Fixes: b592211c33f7 ("dm mpath: fix attached_handler_name leak and dangling hw_handler_name pointer")
+Cc: stable@vger.kernel.org
+Reported-by: Yufen Yu <yuyufen@huawei.com>
+Signed-off-by: Martin Wilck <mwilck@suse.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-ECO tip #101: Trim your mails when you reply. Srsly.
+---
+ drivers/md/dm-mpath.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/drivers/md/dm-mpath.c
++++ b/drivers/md/dm-mpath.c
+@@ -882,6 +882,7 @@ static struct pgpath *parse_path(struct
+ 	if (attached_handler_name || m->hw_handler_name) {
+ 		INIT_DELAYED_WORK(&p->activate_path, activate_path_work);
+ 		r = setup_scsi_dh(p->path.dev->bdev, m, &attached_handler_name, &ti->error);
++		kfree(attached_handler_name);
+ 		if (r) {
+ 			dm_put_device(ti, p->path.dev);
+ 			goto bad;
+@@ -896,7 +897,6 @@ static struct pgpath *parse_path(struct
+ 
+ 	return p;
+  bad:
+-	kfree(attached_handler_name);
+ 	free_pgpath(p);
+ 	return ERR_PTR(r);
+ }
+
+
