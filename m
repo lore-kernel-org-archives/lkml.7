@@ -2,87 +2,106 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 299D3C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 13:53:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6170C282E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 13:54:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF7F92133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 13:53:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A92D62133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 13:54:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AYqyVghC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730841AbfEWNxx (ORCPT
+        id S1730855AbfEWNx7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 09:53:53 -0400
-Received: from sauhun.de ([88.99.104.3]:54498 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730323AbfEWNxx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 09:53:53 -0400
-Received: from localhost (p54B333B6.dip0.t-ipconnect.de [84.179.51.182])
-        by pokefinder.org (Postfix) with ESMTPSA id 90F8E2C0398;
-        Thu, 23 May 2019 15:53:50 +0200 (CEST)
-Date:   Thu, 23 May 2019 15:53:50 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Sagar Kadam <sagar.kadam@sifive.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, peter@korsgaard.com,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 3/3] i2c-ocores: sifive: add polling mode workaround
- for FU540-C000 SoC.
-Message-ID: <20190523135350.GA4985@kunai>
-References: <1558515574-11155-1-git-send-email-sagar.kadam@sifive.com>
- <1558515574-11155-4-git-send-email-sagar.kadam@sifive.com>
- <20190522194529.GJ7281@lunn.ch>
- <CAARK3HmMVibudG2CFLBoMSAqnraXyirTL6CXYo1T_XJEuGJy7Q@mail.gmail.com>
- <20190523123435.GA15531@lunn.ch>
- <CAARK3H=BPT3aGUGiQvov5aqFRNVTSeyqJ-bNGw6uEoU7c8iiJg@mail.gmail.com>
+        Thu, 23 May 2019 09:53:59 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:44715 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730323AbfEWNx5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 09:53:57 -0400
+Received: by mail-pg1-f196.google.com with SMTP id n2so3172062pgp.11;
+        Thu, 23 May 2019 06:53:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=wBOus5XnMT/GSFm7Ta2azVSwxrEw9Cm7MC3BR8HqZMQ=;
+        b=AYqyVghC2krw5toK68f4xOM57O3RMbSdGaDaNMebJfETjLn/GEMAAcQ1+mBmNK7dmY
+         ljlsrUa3QizI/pO79Q0a+D9ZxtBFPJINAA3WfdMDmbO7wuqpe/eDcKr/c0BnlYfOnrXa
+         36hY+yot8t+cf59FWTZ8oaW1/5sLEBxOsHzdzDjIODlgJ/Sx1EeCr8+v/SVOg59hBL9q
+         7MKg//dmuoJlbxnZ+uBtuz/Z9FXj6R0MA+KRgL+/hQxR4g/oFHV6OHZW4LuUvfi2LB97
+         7nQMQZtL2Oyhx1B7qaZPxKD3pBgF2PVEst0tGfbE9MLIUtr41utsqNJaltFKndXPZFyv
+         xpJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=wBOus5XnMT/GSFm7Ta2azVSwxrEw9Cm7MC3BR8HqZMQ=;
+        b=ehRd8E93chCojwH/SruG6YBzvqLPLg6/YdztZ+xVKEcTKOwyzHpK5V/RTV7DAc3sdH
+         5wyjdhJVBjYyZQswTlzBNWc44vJ0uwQC+4F0+qpMCuF5bkPQvUTIYp8Xnp5xjGXzUpJ5
+         lvJi7WgxIbZZQXIK4lV/QBwYkJnSPvnix4m73IGaalqpt0fet+Gjrxhar+QTo5jGIpZH
+         AW4DoblVb2kNeeK8Gfz7Vmm0Y1nJzAL6Q5pfdnYgAOw2/ou5gNh20CX6I8GwkbI0kCe7
+         HmWbfBT9RQDZGbcx3+ambNCx8SrkkEdJ3c8Rxj+6xqKb7In6uo3aqxJDfLGDZdt/XpBZ
+         y+Ow==
+X-Gm-Message-State: APjAAAV1VqHDKlO3Ayes0snIg5jYIE/LOwR0aT0zoB2RYSJslLh+2oEu
+        6EY+ktjuC9Hs5czDO09JepZM7QmwXQg=
+X-Google-Smtp-Source: APXvYqyjfGFyvo1lLdMR/jT+jVGxH8yZMja3v8JHFTQYYTIDpJj5qCC6LIDRsy0lm1J2aJ3us2ZShg==
+X-Received: by 2002:a62:2ec4:: with SMTP id u187mr103116784pfu.84.1558619636990;
+        Thu, 23 May 2019 06:53:56 -0700 (PDT)
+Received: from zhanggen-UX430UQ ([66.42.35.75])
+        by smtp.gmail.com with ESMTPSA id q70sm959922pja.31.2019.05.23.06.53.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 23 May 2019 06:53:56 -0700 (PDT)
+Date:   Thu, 23 May 2019 21:53:26 +0800
+From:   Gen Zhang <blackgod016574@gmail.com>
+To:     kvalo@codeaurora.org, eyalreizer@gmail.com
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] sdio: Fix a memory leaking bug in wl1271_probe()
+Message-ID: <20190523135326.GA25841@zhanggen-UX430UQ>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ZPt4rx8FFjLCG7dd"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAARK3H=BPT3aGUGiQvov5aqFRNVTSeyqJ-bNGw6uEoU7c8iiJg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+In wl1271_probe(), 'glue->core' is allocated by platform_device_alloc(),
+when this allocation fails, ENOMEM is returned. However, 'pdev_data'
+and 'glue' are allocated by devm_kzalloc() before 'glue->core'. When
+platform_device_alloc() returns NULL, we should also free 'pdev_data'
+and 'glue' before wl1271_probe() ends to prevent leaking memory.
 
---ZPt4rx8FFjLCG7dd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-
-> Ok, Great. Do we need to write to him about this patchset?
-
-Nope. Hint: You can dig in the mail archives studying older patches to
-see how things work. I do this as well because things may work
-differently per subsystem.
-
-
---ZPt4rx8FFjLCG7dd
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlzmpeYACgkQFA3kzBSg
-KbZ50xAAimynxr0PJx8ptAPr43eEclJl1OQihcsB1bfsNnwPm0VKds2AQLP2dYHC
-BISTG9B+IPj/7E9E/1D8UnmP1KQU9sYaZUS7HFnx1sSowG3Uy0ppnfhEDphLb34q
-Upt3domZHzvBwz2uDM4dI0RCUtB0wM+bGDqYp0PA9XL82KUCLdDOD4mEkwb8GrYd
-HKbij71iHnHZymVM1ESn2hp0t9dYOGw8JnPE1SXk2CxjVRJrguLKMR9AMZjhS/eJ
-ASDTDStxqRl60v6HrMYgHZEfACZcx42627191pHOp+e12aftKm3jArMyN9oWMLZM
-W5tdlvcYHk9zWtBOm9ICQLoUENdzZE0/p4xPqjCvYlWJ8a+RPKdgAYq9jQ8u32qF
-VsABTkJV3wMV+LfQxPY9lZ/8VVtfAIzxsFcCb3Z8eRFxXqXm+snIZ36Cd5MCKMXq
-iVh/VNvVCfku76W6wcHH0wZwoBacDjkv+it4bR5zVoEOXpgXuw45rzzNroNssxQ9
-ITj5IcJh1xQ3CyqxoTCNqLHbznNgdN5cG6ZXVP5P3badfY134i1C7plwLSG4EhMr
-qE6pgVZxp/cCpvAKxfq6hbz8XqKmmRDT14ENK9h3uBK2n7nwlm4MhBXpFBzSbJM6
-qe2KzVv56JSG61v1tjAFjGgVb7lsGQzlNV+eNsMXeZzZBLbM4Mk=
-=171K
------END PGP SIGNATURE-----
-
---ZPt4rx8FFjLCG7dd--
+Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
+---
+diff --git a/drivers/net/wireless/ti/wlcore/sdio.c b/drivers/net/wireless/ti/wlcore/sdio.c
+index 4d4b0770..e134f30 100644
+--- a/drivers/net/wireless/ti/wlcore/sdio.c
++++ b/drivers/net/wireless/ti/wlcore/sdio.c
+@@ -340,7 +340,7 @@ static int wl1271_probe(struct sdio_func *func,
+ 	if (!glue->core) {
+ 		dev_err(glue->dev, "can't allocate platform_device");
+ 		ret = -ENOMEM;
+-		goto out;
++		goto out_free;
+ 	}
+ 
+ 	glue->core->dev.parent = &func->dev;
+@@ -385,6 +385,10 @@ static int wl1271_probe(struct sdio_func *func,
+ out_dev_put:
+ 	platform_device_put(glue->core);
+ 
++out_free:
++	devm_kfree(&func->dev, pdev_data);
++	devm_kfree(&func->dev, glue);
++
+ out:
+ 	return ret;
+ }
+---
