@@ -2,121 +2,134 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F729C04AAC
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:42:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D817DC04AAC
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:43:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EE1920881
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:42:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558600979;
-	bh=BuZkJfDpDKsBcnzErUlYWJxVb0Fb5383/quSQvg7bMc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vQVL1Wpqu5hgmREZoPaI/xvHFc2pf24gumdtyF/quAydKi83iI02iMEEn21oVen/2
-	 x8UB3yCSH87on+gPaIy8PCPrTbWiAlT6WSvldcyvtqMOVDLCaiQIF2dg4eVAU/IBLb
-	 Wf74mYypr1vqJaG/sd5W4rf2KfkWE+4h0o6Y2nxE=
+	by mail.kernel.org (Postfix) with ESMTP id 9985C20881
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:43:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ui/NihjZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729691AbfEWIm6 (ORCPT
+        id S1730020AbfEWInS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 04:42:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59582 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725814AbfEWIm5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 04:42:57 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2969920881;
-        Thu, 23 May 2019 08:42:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558600976;
-        bh=BuZkJfDpDKsBcnzErUlYWJxVb0Fb5383/quSQvg7bMc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=HqaldpNdJ9Ff+CcLP19DojL0HVbQhgDlbWQInW3/wunoC16ErQ/U+lgM57mI+JDJh
-         PpUmkENq2Orc0d+VdH3QRh+IdE3S2FX+NSSzAZ9isjz4EbSReOjnVLbJs0IuwM6qd7
-         LrbPCwR0Jnibf8vIViJhOwzBDs8oAuHz/FmDfSlU=
-Date:   Thu, 23 May 2019 10:42:54 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Nishka Dasgupta <nishka.dasgupta@yahoo.com>
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: fieldbus: anybuss: Remove unnecessary variables
-Message-ID: <20190523084254.GA831@kroah.com>
-References: <20190523063504.10530-1-nishka.dasgupta@yahoo.com>
- <20190523072220.GC24998@kroah.com>
- <b8cc12d9-2fe3-754b-be08-f23055a31ffe@yahoo.com>
+        Thu, 23 May 2019 04:43:18 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:46915 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725814AbfEWInS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 04:43:18 -0400
+Received: by mail-wr1-f66.google.com with SMTP id r7so5245830wrr.13
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 01:43:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=+LCxAheRB5qj77eljS/M2DLhUcgp+C7BPN+J7IFDhdI=;
+        b=Ui/NihjZ0pUjUW2sMbKku3wVCIrB8aJgyCELcpQNnt/LzhlDqPTjENf7NL7GRsisW5
+         RBvgc7sdX00PJos/YG8V1Uaj2zzu3+z1trLNdbQ7G5L4WucXjFbf9tbMHfF6ycNlZ8CN
+         ceuHElvJWD2CfdgUCvqatSXfi6Onvd5tMNhnht9+EydUN6cesGkrFUZEtpH07nBArc9m
+         98HnR0hy255/Mb2J8A9TdSX4ARB+zzHzNU2F5n+xGj7PCLEpz7Q+VSob44ebkjuZnNEs
+         cj8qN9AHrrjs1dDX1mSik0E1DGInk2eNLaQdN95AkjeYhtt/r8tXq55fu0OsaX/ff8wL
+         3XIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=+LCxAheRB5qj77eljS/M2DLhUcgp+C7BPN+J7IFDhdI=;
+        b=d4YKMAjK8fVUYKNeqvom5+OCYV2cdPvpWFWWxfYUSChcEBQSH9a33k5LLRkM499sa+
+         kzjHAf+zaSdvGPyqdAxe7vYJU80OV714lx7dToZaAwQekTaU516zQxMFg6PBJDtQALSH
+         PTMH8d3lYAv2qjt55akw8pBgHWUul8S4hOUMS1nPDWptBNNwEOPUu5Vbv0QFs77lU+17
+         mU8FNgJkRzhacw/J/AWhwi7DfDy2BeGpWgiRWgjOaHYBZ6/8rJFDjTVfx1GffCaLZIwe
+         TZLrBNPU/Bkj4gvNz8gnyDRMTiiXU76k8x+IQVlQsKnZKpwL/cKwmnRlKdNcPuO7CDgr
+         MI0w==
+X-Gm-Message-State: APjAAAXB0kDnL0Tnm8lXPFHBvaXVJwva/DZNjY97j0Z+T8ALMSyKdPIE
+        iGeTsl98WThdNQhqOPOZkbDdi8dXQ9VPIw==
+X-Google-Smtp-Source: APXvYqxyi4aASx0zjHHgh92IIp9xuwbeTDlL4GfAU8mgGRhZ9PmpEAyuP80j1M/++Do9dCrCOJXkpQ==
+X-Received: by 2002:a5d:4ec6:: with SMTP id s6mr51133938wrv.184.1558600996450;
+        Thu, 23 May 2019 01:43:16 -0700 (PDT)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id g2sm28814885wru.37.2019.05.23.01.43.15
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 23 May 2019 01:43:15 -0700 (PDT)
+Subject: Re: [PATCH] soundwire: stream: fix bad unlock balance
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        vkoul@kernel.org
+Cc:     sanyog.r.kale@intel.com, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org
+References: <20190522162528.5892-1-srinivas.kandagatla@linaro.org>
+ <4744834c-36b1-dd8d-45fa-76c75eb3d5cb@linux.intel.com>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <2dc66f9d-e508-d457-a7d6-c06c4336e7b8@linaro.org>
+Date:   Thu, 23 May 2019 09:43:14 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b8cc12d9-2fe3-754b-be08-f23055a31ffe@yahoo.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <4744834c-36b1-dd8d-45fa-76c75eb3d5cb@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 01:51:18PM +0530, Nishka Dasgupta wrote:
+
+
+On 22/05/2019 17:41, Pierre-Louis Bossart wrote:
 > 
 > 
-> On 23/05/19 12:52 PM, Greg KH wrote:
-> > On Thu, May 23, 2019 at 12:05:01PM +0530, Nishka Dasgupta wrote:
-> > > In the functions export_reset_0 and export_reset_1 in arcx-anybus.c,
-> > > the only operation performed before return is passing the variable cd
-> > > (which takes the value of a function call on one of the parameters) as
-> > > argument to another function. Hence the variable cd can be removed.
-> > > Issue found using Coccinelle.
-> > > 
-> > > Signed-off-by: Nishka Dasgupta <nishka.dasgupta@yahoo.com>
-> > > ---
-> > >   drivers/staging/fieldbus/anybuss/arcx-anybus.c | 8 ++------
-> > >   1 file changed, 2 insertions(+), 6 deletions(-)
-> > > 
-> > > diff --git a/drivers/staging/fieldbus/anybuss/arcx-anybus.c b/drivers/staging/fieldbus/anybuss/arcx-anybus.c
-> > > index 2ecffa42e561..e245f940a5c4 100644
-> > > --- a/drivers/staging/fieldbus/anybuss/arcx-anybus.c
-> > > +++ b/drivers/staging/fieldbus/anybuss/arcx-anybus.c
-> > > @@ -87,16 +87,12 @@ static int anybuss_reset(struct controller_priv *cd,
-> > >   static void export_reset_0(struct device *dev, bool assert)
-> > >   {
-> > > -	struct controller_priv *cd = dev_get_drvdata(dev);
-> > > -
-> > > -	anybuss_reset(cd, 0, assert);
-> > > +	anybuss_reset(dev_get_drvdata(dev), 0, assert);
-> > >   }
-> > 
-> > While your patch is "correct", it's not the nicest thing.  The way the
-> > code looks today is to make it obvious we are passing a pointer to a
-> > struct controller_priv() into anybuss_reset().  But with your change, it
-> > looks like we are passing any random void pointer to it.
-> > 
-> > So I'd prefer the original code please.
+> On 5/22/19 11:25 AM, Srinivas Kandagatla wrote:
+>> This patch fixes below warning due to unlocking without locking.
+>>
+>>   =====================================
+>>   WARNING: bad unlock balance detected!
+>>   5.1.0-16506-gc1c383a6f0a2-dirty #1523 Tainted: G        W
+>>   -------------------------------------
+>>   aplay/2954 is trying to release lock (&bus->msg_lock) at:
+>>   do_bank_switch+0x21c/0x480
+>>   but there are no more locks to release!
+>>
+>> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+>> ---
+>>   drivers/soundwire/stream.c | 3 ++-
+>>   1 file changed, 2 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/soundwire/stream.c b/drivers/soundwire/stream.c
+>> index 544925ff0b40..d16268f30e4f 100644
+>> --- a/drivers/soundwire/stream.c
+>> +++ b/drivers/soundwire/stream.c
+>> @@ -814,7 +814,8 @@ static int do_bank_switch(struct 
+>> sdw_stream_runtime *stream)
+>>               goto error;
+>>           }
+>> -        mutex_unlock(&bus->msg_lock);
+>> +        if (mutex_is_locked(&bus->msg_lock))
+>> +            utex_unlock(&bus->msg_lock);
 > 
-> Thank you, I'll drop this patch then.
+> Does this even compile? should be mutex_unlock, no?
 > 
-> > Also, you forgot to cc: Sven on this patch, please always use the output
-> > of scripts/get_maintainer.pl.
+> We also may want to identify the issue in more details without pushing 
+> it under the rug. The locking mechanism is far from simple and it's 
+> likely there are a number of problems with it.
 > 
-> Which arguments should I use? If I use --nokeywords, --nogit,
-> --nogit-fallback and --norolestats then only your name and the two mailing
-> lists show up.
+msg_lock is taken conditionally during multi link bank switch cases, 
+however the unlock is done unconditionally leading to this warning.
 
-I don't use any arguments at all:
-$ ./scripts/get_maintainer.pl --file drivers/staging/fieldbus/anybuss/arcx-anybus.c
-Greg Kroah-Hartman <gregkh@linuxfoundation.org> (supporter:STAGING SUBSYSTEM,commit_signer:2/2=100%)
-Sven Van Asbroeck <thesven73@gmail.com> (commit_signer:2/2=100%,authored:2/2=100%,added_lines:412/412=100%,removed_lines:31/31=100%)
-devel@driverdev.osuosl.org (open list:STAGING SUBSYSTEM)
-linux-kernel@vger.kernel.org (open list)
+Having a closer look show that there could be a dead lock in this path 
+while executing sdw_transfer(). And infact there is no need to take 
+msg_lock in  multi link switch cases as sdw_transfer should take care of 
+this.
 
-> (Also, regarding the mailing lists: every mail sent to
-> linux-kernel@vger.kernel.org is bouncing; should I not send to that list
-> anymore?)
+Vinod/Sanyog any reason why msg_lock is really required in this path?
 
-Please pick a reputable email server, yahoo.com emails are banned from
-all vger.kernel.org mailing lists.
+--srini
 
-thanks,
-
-greg k-h
+>>       }
+>>       return ret;
+>>
