@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F8ACC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:35:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5129BC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:36:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1975020879
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:35:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DA3F20879
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:36:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558640157;
-	bh=A0Yg2V9achhS0PynrLnME21t4CGr3wm5GbcIE2IwJS4=;
+	s=default; t=1558640164;
+	bh=MJDx3NVKSGNVeTKAQU5Is+w+VaFezvqUHSFZbahXyHU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WeHVW0oXOVs+aCMPxQzEDH/5CVPqc1puHFW6SuZPCa8UMiLjOPRtUHpoGk42nrctv
-	 oxsxdDGN2vHr557xydN+vu8TW5iTpImIPWqHvCtVLPfYI4kELqUyMnsd2Qb3zltwtE
-	 K54g9nCI9zVvb3eCuHkjwwXrjVEUNvUxmIbzuNjo=
+	b=S+plouM7bTJn+Rxn6K0nCRw1WwiY2ubZiAebfAfwn/aUCta1fa9cziwOn91MVA/wW
+	 3hpAaimqL9tue40F0Zxp0dSYgIhf8JF13Pq6nnE/6Nqgl8HZvJ9FYu8OC4VTZszn2O
+	 PFEpkQWZ3puJStJlWTD1idK6zg9wuS4opkqopi2A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391956AbfEWTf4 (ORCPT
+        id S2391290AbfEWT0M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:35:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38074 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:26:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37908 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391303AbfEWT0Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:26:16 -0400
+        id S2390590AbfEWT0I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:26:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D9EF21841;
-        Thu, 23 May 2019 19:26:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D6A32133D;
+        Thu, 23 May 2019 19:26:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639575;
-        bh=A0Yg2V9achhS0PynrLnME21t4CGr3wm5GbcIE2IwJS4=;
+        s=default; t=1558639567;
+        bh=MJDx3NVKSGNVeTKAQU5Is+w+VaFezvqUHSFZbahXyHU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mRnRS8+H59A1QK4IjevPGJ24vTqbWylqz7I27ItkncKIqN9aLimt29YSfiDXSpJ2f
-         Ofo2zDEs/RB2QmB6CKJyuHgzMEyQcg8gYsL2YiUjsXnsndUfgB2kfTzgZ9kSWFYBVW
-         BY/BjW6pLvq3EtboU09/qqiLEfMn0Rd7LZiTxZU0=
+        b=M/dMrAkrWRm3CHziYIritELuo7OcuX3afrri1fbLyog1YNUMxJ6xNRQAycc5kU3lj
+         pAbZKwx9ia847brvV/uFFOteXc13Ke58RCJuwb3SvqUpVY8QQpSq9br19gJqQmRhWj
+         y6ZiZRgm9CfVOFjSv+V3EegoN0mqU0EBC5ZXIJOA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Edward Cree <ecree@solarflare.com>,
+        stable@vger.kernel.org, Yunjian Wang <wangyunjian@huawei.com>,
+        Tariq Toukan <tariqt@mellanox.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.1 016/122] flow_offload: support CVLAN match
-Date:   Thu, 23 May 2019 21:05:38 +0200
-Message-Id: <20190523181707.027462532@linuxfoundation.org>
+Subject: [PATCH 5.1 005/122] net/mlx4_core: Change the error print to info print
+Date:   Thu, 23 May 2019 21:05:27 +0200
+Message-Id: <20190523181705.694384536@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181705.091418060@linuxfoundation.org>
 References: <20190523181705.091418060@linuxfoundation.org>
@@ -59,46 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Edward Cree <ecree@solarflare.com>
+From: Yunjian Wang <wangyunjian@huawei.com>
 
-[ Upstream commit bae9ed69029c7d499c57485593b2faae475fd704 ]
+[ Upstream commit 00f9fec48157f3734e52130a119846e67a12314b ]
 
-Plumb it through from the flow_dissector.
+The error print within mlx4_flow_steer_promisc_add() should
+be a info print.
 
-Signed-off-by: Edward Cree <ecree@solarflare.com>
+Fixes: 592e49dda812 ('net/mlx4: Implement promiscuous mode with device managed flow-steering')
+Signed-off-by: Yunjian Wang <wangyunjian@huawei.com>
+Reviewed-by: Tariq Toukan <tariqt@mellanox.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/net/flow_offload.h |    2 ++
- net/core/flow_offload.c    |    7 +++++++
- 2 files changed, 9 insertions(+)
+ drivers/net/ethernet/mellanox/mlx4/mcg.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/include/net/flow_offload.h
-+++ b/include/net/flow_offload.h
-@@ -71,6 +71,8 @@ void flow_rule_match_eth_addrs(const str
- 			       struct flow_match_eth_addrs *out);
- void flow_rule_match_vlan(const struct flow_rule *rule,
- 			  struct flow_match_vlan *out);
-+void flow_rule_match_cvlan(const struct flow_rule *rule,
-+			   struct flow_match_vlan *out);
- void flow_rule_match_ipv4_addrs(const struct flow_rule *rule,
- 				struct flow_match_ipv4_addrs *out);
- void flow_rule_match_ipv6_addrs(const struct flow_rule *rule,
---- a/net/core/flow_offload.c
-+++ b/net/core/flow_offload.c
-@@ -54,6 +54,13 @@ void flow_rule_match_vlan(const struct f
- }
- EXPORT_SYMBOL(flow_rule_match_vlan);
+--- a/drivers/net/ethernet/mellanox/mlx4/mcg.c
++++ b/drivers/net/ethernet/mellanox/mlx4/mcg.c
+@@ -1492,7 +1492,7 @@ int mlx4_flow_steer_promisc_add(struct m
+ 	rule.port = port;
+ 	rule.qpn = qpn;
+ 	INIT_LIST_HEAD(&rule.list);
+-	mlx4_err(dev, "going promisc on %x\n", port);
++	mlx4_info(dev, "going promisc on %x\n", port);
  
-+void flow_rule_match_cvlan(const struct flow_rule *rule,
-+			   struct flow_match_vlan *out)
-+{
-+	FLOW_DISSECTOR_MATCH(rule, FLOW_DISSECTOR_KEY_CVLAN, out);
-+}
-+EXPORT_SYMBOL(flow_rule_match_cvlan);
-+
- void flow_rule_match_ipv4_addrs(const struct flow_rule *rule,
- 				struct flow_match_ipv4_addrs *out)
- {
+ 	return  mlx4_flow_attach(dev, &rule, regid_p);
+ }
 
 
