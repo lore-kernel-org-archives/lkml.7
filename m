@@ -2,99 +2,165 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99AEFC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 14:37:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69B04C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 14:37:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67A722133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 14:37:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D62020879
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 14:37:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iOfxNUcS"
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="YbCZESmb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730886AbfEWOhK (ORCPT
+        id S1730919AbfEWOhi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 10:37:10 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:36510 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730710AbfEWOhK (ORCPT
+        Thu, 23 May 2019 10:37:38 -0400
+Received: from mail-it1-f193.google.com ([209.85.166.193]:39239 "EHLO
+        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730895AbfEWOhh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 10:37:10 -0400
-Received: by mail-pf1-f195.google.com with SMTP id v80so3366945pfa.3;
-        Thu, 23 May 2019 07:37:09 -0700 (PDT)
+        Thu, 23 May 2019 10:37:37 -0400
+Received: by mail-it1-f193.google.com with SMTP id 9so8864947itf.4
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 07:37:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=vXrYP6IVrcterAfOWxM/mFWw20K/yhkVE+r5OVSyxMg=;
-        b=iOfxNUcSiGEyOpWuZ+9PmG/Kq9Br/tesgw1a6Y70Xm1PPKKPs/0ha61+OmdTTrETAi
-         60UTX7PqF6BSSMhwyvAJjA5EzcNbnUd8rcoCt1oJlVKCJm4i3WXkWWJavRoMOp8h4K/8
-         we83GMgk9i71cTl3cH4dqBTX9p73nVp8vbwg7G+AzhUcnRjs2kFbDoE0zghIq0Ee/7pB
-         QNV0K3BZ/eSYvjEWqFpspGUm4s+Zk99w2x8U5Boy2qL13dtV0vGlE127dxgUkelJ4MZT
-         /Lw68WhPOe0J5CHaocUQ0W61XWFM3dk4OoemAB1Rs+Uvrcx3irg7R40IYBYH0j5f5OT6
-         9uOw==
+        d=brauner.io; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=DahHECUK2AF1J12XBLs2bKF9FH9rjTuzkU7KMfzCZKg=;
+        b=YbCZESmbvCwAQCtgJ5vNBW4fzZ0rmez/RQRMkvQ2gBf8m2vQZ7pZbh6Bnf/yhxyKVI
+         53LigfqSgxhhyV3cJwQAxeBYmchcYj4+L6sb6hM6ANhJ3YzqD5nVaV8VUWyXmRfwM0Js
+         s0qbXNd2fPwKrwA6FMsqrbW+O3oe4jc4dfMVogKbtgea8qKxT3IcnEz6YQoGlNR0pY3m
+         WBeNhDCmn5OB53HQT4TWeQ+Gay0cWaoJ8RQtor16rRwite01Brwb3BNAlCJ/+wg1v28J
+         HJ9HsyrSvI8gu0Uy/czVhZ9L/NkkHH+hj2hN0LXZm7YA7qWQlzwpnrEcctNdcL7rOP5V
+         pe4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=vXrYP6IVrcterAfOWxM/mFWw20K/yhkVE+r5OVSyxMg=;
-        b=IN37ClfFttdkLz/IKzOk19ROQ3LiBYIAWOvgIja8uSgLmKZ7ZPPVmJuXl0W33KWqdl
-         mg64r+wTiSnb3dsNr6AykMbck/fGRnoqBW3SKNGGDORMzy7q/QAq9vCNYfd/a88X8IGP
-         yqF84m2QRej4OVlrNXA7ZPWKVicEagY1a4KYfhSK5fucJUWRP7WS14/CNPRpMEawHLsa
-         WBfLHs6tlPQ/5Ms3ynJo/8HduN/gBSerjbRAwmxmYwvmL0Z5GeQwBc7OXjLYr0d9myvk
-         4lHFN5weKlaj38gyZ58XN5hps03Mqd4qVl2re/2siGhQFoOzKPClPFWhXbq4erwQMam0
-         fukg==
-X-Gm-Message-State: APjAAAVHBQOAIUsynp9N6YUisjPHqu5CIsoFqVXFgiR97mWg6xGsgSas
-        Uo/Bb0H2M9BqXjQoThNPoB/E6pGP
-X-Google-Smtp-Source: APXvYqx+0UgZ3U8YG32buG7b66gR+glOP2cTRyJdh6HObzcpau5irLYVirnqpGWGgXGeoP85HDyGow==
-X-Received: by 2002:a63:441c:: with SMTP id r28mr18615091pga.255.1558622228957;
-        Thu, 23 May 2019 07:37:08 -0700 (PDT)
-Received: from [10.230.1.150] ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id l7sm31306539pfl.9.2019.05.23.07.37.07
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 23 May 2019 07:37:08 -0700 (PDT)
-Subject: Re: [PATCH net-next v2] net: phy: lxt: Add suspend/resume support to
- LXT971 and LXT973.
-To:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-References: <eb206b659fcae041be38d583ff139ca73e9e03c3.1558601485.git.christophe.leroy@c-s.fr>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Openpgp: preference=signencrypt
-Message-ID: <000627c4-985f-6d77-ad20-8884be755ac2@gmail.com>
-Date:   Thu, 23 May 2019 07:37:06 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=DahHECUK2AF1J12XBLs2bKF9FH9rjTuzkU7KMfzCZKg=;
+        b=WyNaACl+0ydDTZxXtocQjf3x7yeS++9rNeEPqQBj6ecSquLZuJLpJkj0qB7guX9HUW
+         k1l8y4XnO4iHpWK9hahzWT7cg8qGF8A61gsM/NDKr7zx8WKa7AtA8uxElUb1JoPEXFXX
+         x6uVKVPvI348pC0fRWp0QLd4Wxq1NfojUMbTWVt3v+ngH+v5liPjwmYPcppNx1j/M81C
+         wo4E+oZ9P4o0hHsMwZnqXL39iV4V5H9h347WISyFsgJdBsXDhheuKufkcoWNq+eizFqP
+         9SyzNNbzhnR+do3GSG3ncArIr41gx81YVYqzyMb/cIsfQOjFD2J1+ZGsg7Y6oo8W2tcW
+         1RMA==
+X-Gm-Message-State: APjAAAXPlNRy7sL4ocX9oLMgvtlPHlOZ4o65jkYAsdm0IYjeKCzlRSjC
+        p0asPnksYO7TDeJZ+6Li1//YKg==
+X-Google-Smtp-Source: APXvYqxCsu1nKhbS62harFEpfvgZRg7+s7a4b8LII1alkH5yuzE7xzETotobVwglIakCJJls3jgHwg==
+X-Received: by 2002:a02:9381:: with SMTP id z1mr24471487jah.130.1558622256966;
+        Thu, 23 May 2019 07:37:36 -0700 (PDT)
+Received: from brauner.io ([172.56.12.187])
+        by smtp.gmail.com with ESMTPSA id l186sm4603784itb.5.2019.05.23.07.37.29
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 23 May 2019 07:37:36 -0700 (PDT)
+Date:   Thu, 23 May 2019 16:37:26 +0200
+From:   Christian Brauner <christian@brauner.io>
+To:     Jann Horn <jannh@google.com>
+Cc:     Oleg Nesterov <oleg@redhat.com>, Al Viro <viro@zeniv.linux.org.uk>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Florian Weimer <fweimer@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Arnd Bergmann <arnd@arndb.de>, Shuah Khan <shuah@kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        Todd Kjos <tkjos@android.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org,
+        linux-arch <linux-arch@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>
+Subject: Re: [PATCH v1 1/2] open: add close_range()
+Message-ID: <20190523143725.y67czx4jxsy6yqrj@brauner.io>
+References: <20190522155259.11174-1-christian@brauner.io>
+ <20190522165737.GC4915@redhat.com>
+ <20190523115118.pmscbd6kaqy37dym@brauner.io>
+ <CAG48ez0Uq2GQnQsuPkNrDdJVku_6GPeZ_5F_-5J3iy2CULr0_Q@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <eb206b659fcae041be38d583ff139ca73e9e03c3.1558601485.git.christophe.leroy@c-s.fr>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <CAG48ez0Uq2GQnQsuPkNrDdJVku_6GPeZ_5F_-5J3iy2CULr0_Q@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 5/23/2019 1:55 AM, Christophe Leroy wrote:
-> All LXT PHYs implement the standard "power down" bit 11 of
-> BMCR, so this patch adds support using the generic
-> genphy_{suspend,resume} functions added by
-> commit 0f0ca340e57b ("phy: power management support").
+On Thu, May 23, 2019 at 04:32:14PM +0200, Jann Horn wrote:
+> On Thu, May 23, 2019 at 1:51 PM Christian Brauner <christian@brauner.io> wrote:
+> [...]
+> > I kept it dumb and was about to reply that your solution introduces more
+> > code when it seemed we wanted to keep this very simple for now.
+> > But then I saw that find_next_opened_fd() already exists as
+> > find_next_fd(). So it's actually not bad compared to what I sent in v1.
+> > So - with some small tweaks (need to test it and all now) - how do we
+> > feel about?:
+> [...]
+> > static int __close_next_open_fd(struct files_struct *files, unsigned *curfd, unsigned maxfd)
+> > {
+> >         struct file *file = NULL;
+> >         unsigned fd;
+> >         struct fdtable *fdt;
+> >
+> >         spin_lock(&files->file_lock);
+> >         fdt = files_fdtable(files);
+> >         fd = find_next_fd(fdt, *curfd);
 > 
-> LXT970 is left aside because all registers get cleared upon
-> "power down" exit.
+> find_next_fd() finds free fds, not used ones.
 > 
-> Reviewed-by: Heiner Kallweit <hkallweit1@gmail.com>
-> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+> >         if (fd >= fdt->max_fds || fd > maxfd)
+> >                 goto out_unlock;
+> >
+> >         file = fdt->fd[fd];
+> >         rcu_assign_pointer(fdt->fd[fd], NULL);
+> >         __put_unused_fd(files, fd);
+> 
+> You can't do __put_unused_fd() if the old pointer in fdt->fd[fd] was
+> NULL - because that means that the fd has been reserved by another
+> thread that is about to put a file pointer in there, and if you
+> release the fd here, that messes up the refcounting (or hits the
+> BUG_ON() in __fd_install()).
+> 
+> > out_unlock:
+> >         spin_unlock(&files->file_lock);
+> >
+> >         if (!file)
+> >                 return -EBADF;
+> >
+> >         *curfd = fd;
+> >         filp_close(file, files);
+> >         return 0;
+> > }
+> >
+> > int __close_range(struct files_struct *files, unsigned fd, unsigned max_fd)
+> > {
+> >         if (fd > max_fd)
+> >                 return -EINVAL;
+> >
+> >         while (fd <= max_fd) {
+> 
+> Note that with a pattern like this, you have to be careful about what
+> happens if someone gives you max_fd==0xffffffff - then this condition
+> is always true and the loop can not terminate this way.
+> 
+> >                 if (__close_next_fd(files, &fd, maxfd))
+> >                         break;
+> 
+> (obviously it can still terminate this way)
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
--- 
-Florian
+Yup, this was only a quick draft.
+I think the dumb simple thing that I did before was the best way to do
+it for now.
+I first thought that the find_next_open_fd() function already exists but
+when I went to write a POC for testing realized it doesn't anyway.
