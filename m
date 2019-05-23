@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66537C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:14:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 372C6C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:14:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DC9E2133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:14:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BEDB21855
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:14:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558638848;
-	bh=3OfAKRejem44lhiav6rHoDnBgWyuGlQs1vMZTZo1psQ=;
+	s=default; t=1558638852;
+	bh=Re8T2yTHXK5XAfnVq2GhyXnFobK1U4GrBjodwoG3V1I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w1g1uUnMTBC/1RQloqNqv0Y3PHTB/zh/k4rVoNxI+aymbMW2RfnbVrmxVp8EpVjaU
-	 K+BoXUPBE7h+hkHsMD0jrz0AnFLc4eTXDJ8IKedkOA7ttxEVjbA0pa6yxkdcsii2+J
-	 OuZ/anD2SYVXaqca/vd1Nw1E4+BFdiecdoZHPCbI=
+	b=qVG6MKRLaEZKy5mLOAcvRnVHrA/lt02aqcfdgdxh2si5pFLvQOp89D8dgdQ5peuf5
+	 /lzwY5FKER7qK46Lwus9htLS/pGEIcjATMCqn+OUiylpAqV7n5SSnNX32rU8jWqteB
+	 3Ikg905AeLT3/GuebhZJvcu46SvG+zf+knzN4qE8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387736AbfEWTOG (ORCPT
+        id S2388687AbfEWTOK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:14:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48034 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:14:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48082 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388430AbfEWTOE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:14:04 -0400
+        id S2388678AbfEWTOH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:14:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 940C52133D;
-        Thu, 23 May 2019 19:14:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5275A217D9;
+        Thu, 23 May 2019 19:14:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558638844;
-        bh=3OfAKRejem44lhiav6rHoDnBgWyuGlQs1vMZTZo1psQ=;
+        s=default; t=1558638846;
+        bh=Re8T2yTHXK5XAfnVq2GhyXnFobK1U4GrBjodwoG3V1I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MseedxOdaRWg7ssyzWzpF0jRz+O+bw6NwE/HVMlofYoZOYUEkvPIESRPdVZyu8/47
-         gU5PhOuCQGmZoQo6ok5jxnHr+BhBk9iYXgMrvXnqIeS+l4h1jMQWWqw2HUNQl0cB/d
-         oopw8y2Emn2CZ2pDXiDVm7XqVgapNmYAzOfVBwuQ=
+        b=GsAqwifSIJAPc5rAw+7Skji10ACv3hllz6uenmSmtMqHFBp+rPS/f0wEZ2EaipxYS
+         cMBFQt22nxIfHywe0ETUZgPCv4+1er+KNV4ZpfvMkpAUa/z06LjvpVI8bkXHWy/WmF
+         KZP8gFo26uQoSjq9HM/Nkdit1f2khRtcYvVjXcqU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiang Chen <chenxiang66@hisilicon.com>,
-        John Garry <john.garry@huawei.com>,
-        Robin Murphy <robin.murphy@arm.com>
-Subject: [PATCH 4.14 74/77] driver core: Postpone DMA tear-down until after devres release for probe failure
-Date:   Thu, 23 May 2019 21:06:32 +0200
-Message-Id: <20190523181730.183006273@linuxfoundation.org>
+        stable@vger.kernel.org, Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>
+Subject: [PATCH 4.14 75/77] bpf: add map_lookup_elem_sys_only for lookups from syscall side
+Date:   Thu, 23 May 2019 21:06:33 +0200
+Message-Id: <20190523181730.307329542@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181719.982121681@linuxfoundation.org>
 References: <20190523181719.982121681@linuxfoundation.org>
@@ -60,119 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Garry <john.garry@huawei.com>
+From: Daniel Borkmann <daniel@iogearbox.net>
 
-commit 0b777eee88d712256ba8232a9429edb17c4f9ceb upstream.
+commit c6110222c6f49ea68169f353565eb865488a8619 upstream.
 
-In commit 376991db4b64 ("driver core: Postpone DMA tear-down until after
-devres release"), we changed the ordering of tearing down the device DMA
-ops and releasing all the device's resources; this was because the DMA ops
-should be maintained until we release the device's managed DMA memories.
+Add a callback map_lookup_elem_sys_only() that map implementations
+could use over map_lookup_elem() from system call side in case the
+map implementation needs to handle the latter differently than from
+the BPF data path. If map_lookup_elem_sys_only() is set, this will
+be preferred pick for map lookups out of user space. This hook is
+used in a follow-up fix for LRU map, but once development window
+opens, we can convert other map types from map_lookup_elem() (here,
+the one called upon BPF_MAP_LOOKUP_ELEM cmd is meant) over to use
+the callback to simplify and clean up the latter.
 
-However, we have seen another crash on an arm64 system when a
-device driver probe fails:
-
-  hisi_sas_v3_hw 0000:74:02.0: Adding to iommu group 2
-  scsi host1: hisi_sas_v3_hw
-  BUG: Bad page state in process swapper/0  pfn:313f5
-  page:ffff7e0000c4fd40 count:1 mapcount:0
-  mapping:0000000000000000 index:0x0
-  flags: 0xfffe00000001000(reserved)
-  raw: 0fffe00000001000 ffff7e0000c4fd48 ffff7e0000c4fd48
-0000000000000000
-  raw: 0000000000000000 0000000000000000 00000001ffffffff
-0000000000000000
-  page dumped because: PAGE_FLAGS_CHECK_AT_FREE flag(s) set
-  bad because of flags: 0x1000(reserved)
-  Modules linked in:
-  CPU: 49 PID: 1 Comm: swapper/0 Not tainted
-5.1.0-rc1-43081-g22d97fd-dirty #1433
-  Hardware name: Huawei D06/D06, BIOS Hisilicon D06 UEFI
-RC0 - V1.12.01 01/29/2019
-  Call trace:
-  dump_backtrace+0x0/0x118
-  show_stack+0x14/0x1c
-  dump_stack+0xa4/0xc8
-  bad_page+0xe4/0x13c
-  free_pages_check_bad+0x4c/0xc0
-  __free_pages_ok+0x30c/0x340
-  __free_pages+0x30/0x44
-  __dma_direct_free_pages+0x30/0x38
-  dma_direct_free+0x24/0x38
-  dma_free_attrs+0x9c/0xd8
-  dmam_release+0x20/0x28
-  release_nodes+0x17c/0x220
-  devres_release_all+0x34/0x54
-  really_probe+0xc4/0x2c8
-  driver_probe_device+0x58/0xfc
-  device_driver_attach+0x68/0x70
-  __driver_attach+0x94/0xdc
-  bus_for_each_dev+0x5c/0xb4
-  driver_attach+0x20/0x28
-  bus_add_driver+0x14c/0x200
-  driver_register+0x6c/0x124
-  __pci_register_driver+0x48/0x50
-  sas_v3_pci_driver_init+0x20/0x28
-  do_one_initcall+0x40/0x25c
-  kernel_init_freeable+0x2b8/0x3c0
-  kernel_init+0x10/0x100
-  ret_from_fork+0x10/0x18
-  Disabling lock debugging due to kernel taint
-  BUG: Bad page state in process swapper/0  pfn:313f6
-  page:ffff7e0000c4fd80 count:1 mapcount:0
-mapping:0000000000000000 index:0x0
-[   89.322983] flags: 0xfffe00000001000(reserved)
-  raw: 0fffe00000001000 ffff7e0000c4fd88 ffff7e0000c4fd88
-0000000000000000
-  raw: 0000000000000000 0000000000000000 00000001ffffffff
-0000000000000000
-
-The crash occurs for the same reason.
-
-In this case, on the really_probe() failure path, we are still clearing
-the DMA ops prior to releasing the device's managed memories.
-
-This patch fixes this issue by reordering the DMA ops teardown and the
-call to devres_release_all() on the failure path.
-
-Reported-by: Xiang Chen <chenxiang66@hisilicon.com>
-Tested-by: Xiang Chen <chenxiang66@hisilicon.com>
-Signed-off-by: John Garry <john.garry@huawei.com>
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
-[jpg: backport to 4.19.x and earlier]
-Signed-off-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Acked-by: Martin KaFai Lau <kafai@fb.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
----
- drivers/base/dd.c |    5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
 
---- a/drivers/base/dd.c
-+++ b/drivers/base/dd.c
-@@ -387,7 +387,7 @@ re_probe:
+---
+ include/linux/bpf.h  |    1 +
+ kernel/bpf/syscall.c |    5 ++++-
+ 2 files changed, 5 insertions(+), 1 deletion(-)
+
+--- a/include/linux/bpf.h
++++ b/include/linux/bpf.h
+@@ -28,6 +28,7 @@ struct bpf_map_ops {
+ 	void (*map_free)(struct bpf_map *map);
+ 	int (*map_get_next_key)(struct bpf_map *map, void *key, void *next_key);
+ 	void (*map_release_uref)(struct bpf_map *map);
++	void *(*map_lookup_elem_sys_only)(struct bpf_map *map, void *key);
  
- 	ret = dma_configure(dev);
- 	if (ret)
--		goto dma_failed;
-+		goto probe_failed;
- 
- 	if (driver_sysfs_add(dev)) {
- 		printk(KERN_ERR "%s: driver_sysfs_add(%s) failed\n",
-@@ -442,14 +442,13 @@ re_probe:
- 	goto done;
- 
- probe_failed:
--	dma_deconfigure(dev);
--dma_failed:
- 	if (dev->bus)
- 		blocking_notifier_call_chain(&dev->bus->p->bus_notifier,
- 					     BUS_NOTIFY_DRIVER_NOT_BOUND, dev);
- pinctrl_bind_failed:
- 	device_links_no_driver(dev);
- 	devres_release_all(dev);
-+	dma_deconfigure(dev);
- 	driver_sysfs_remove(dev);
- 	dev->driver = NULL;
- 	dev_set_drvdata(dev, NULL);
+ 	/* funcs callable from userspace and from eBPF programs */
+ 	void *(*map_lookup_elem)(struct bpf_map *map, void *key);
+--- a/kernel/bpf/syscall.c
++++ b/kernel/bpf/syscall.c
+@@ -493,7 +493,10 @@ static int map_lookup_elem(union bpf_att
+ 		err = bpf_fd_htab_map_lookup_elem(map, key, value);
+ 	} else {
+ 		rcu_read_lock();
+-		ptr = map->ops->map_lookup_elem(map, key);
++		if (map->ops->map_lookup_elem_sys_only)
++			ptr = map->ops->map_lookup_elem_sys_only(map, key);
++		else
++			ptr = map->ops->map_lookup_elem(map, key);
+ 		if (ptr)
+ 			memcpy(value, ptr, value_size);
+ 		rcu_read_unlock();
 
 
