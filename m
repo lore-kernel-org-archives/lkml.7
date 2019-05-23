@@ -4,54 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D1EDC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:24:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C921C282E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:24:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14AFB21841
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:24:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE0FF2184E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:24:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639487;
-	bh=hnyuKlwcGnhqMmJ0G7Kl+bjhhI1ODqP4u/lCpUileYo=;
+	s=default; t=1558639489;
+	bh=WP83gq+M7tCXOm5JOYaYjgXeecYtRirPo/bjriYZoYI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RTQ0Hdr1TLZBHSYzdCx8OHxQs83n4l0/uJHHtOAXdGVVzy+gXEZ4bvbksFL1HkEP4
-	 4puAvKJsMUTQimcsYWRZ7Hf8W+vHkJakixldfPOIHZdJSgvWG1s3a/KOyMWrcU0hWK
-	 J7xPilmMbWjqw0zEPYzWH9lwRgKBclMw6HK0ViRk=
+	b=WDqt30J/bhRLAecYYayNK6FMcE8Ymmcp00k55AJPk2Za4QdJM8vbU+ZG1MM6Cew4/
+	 xYfVqQncApIurWi9t+BJdDmt2u8YfgpcIigfcPffXiLt6ULo2QOnobZWvnAvHiNf0/
+	 huMnR/5spU3t1NLcdIfVz47KQrBJcpomQWH6hWbU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390975AbfEWTYp (ORCPT
+        id S2390986AbfEWTYs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:24:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35740 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:24:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390545AbfEWTYl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:24:41 -0400
+        id S2390970AbfEWTYo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:24:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EBF722054F;
-        Thu, 23 May 2019 19:24:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E9BD2133D;
+        Thu, 23 May 2019 19:24:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639481;
-        bh=hnyuKlwcGnhqMmJ0G7Kl+bjhhI1ODqP4u/lCpUileYo=;
+        s=default; t=1558639484;
+        bh=WP83gq+M7tCXOm5JOYaYjgXeecYtRirPo/bjriYZoYI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w43PHblHTvoOnz/84uDWJo7YuvUsy+kL2Zhjha1XRQJHNcvvC5KQTZe0tUkCmmVUH
-         x8xTZ3lzOcYEzjXaVvO7d5oOfkBSDcbVy5TZutumaTaxDEUO6rrFvXbiJ+NXuTbD+3
-         JyfrFIR97e+om7xlPKWKNnnNxGZ9Cdn11ur3+Rh4=
+        b=fwKd84tGwsgF2q8lRhgha1RCASeB3I0p1V2OnypcMopNNk2urtyUCrfP3Fy8hdj4F
+         G1ROY5SiNfDzVrdJzKmL1i4O5oCsM7f1vWMCEBxu8B1TVeVpXK/mzM8JFSEK54agPs
+         DgtO+BRmN/x3cUpViCQ2bVCgnLON1A+RPD1booNY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alban Crequy <alban@kinvolk.io>,
-        Quentin Monnet <quentin.monnet@netronome.com>,
-        Song Liu <songliubraving@fb.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
+        stable@vger.kernel.org, Roman Gushchin <guro@fb.com>,
         Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 121/139] tools: bpftool: fix infinite loop in map create
-Date:   Thu, 23 May 2019 21:06:49 +0200
-Message-Id: <20190523181735.320430804@linuxfoundation.org>
+Subject: [PATCH 5.0 122/139] bpf: Fix preempt_enable_no_resched() abuse
+Date:   Thu, 23 May 2019 21:06:50 +0200
+Message-Id: <20190523181735.408177139@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181720.120897565@linuxfoundation.org>
 References: <20190523181720.120897565@linuxfoundation.org>
@@ -64,45 +62,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 8694d8c1f82cccec9380e0d3720b84eee315dfb7 ]
+[ Upstream commit 0edd6b64d1939e9e9168ff27947995bb7751db5d ]
 
-"bpftool map create" has an infinite loop on "while (argc)". The error
-case is missing.
+Unless the very next line is schedule(), or implies it, one must not use
+preempt_enable_no_resched(). It can cause a preemption to go missing and
+thereby cause arbitrary delays, breaking the PREEMPT=y invariant.
 
-Symptoms: when forgetting to type the keyword 'type' in front of 'hash':
-$ sudo bpftool map create /sys/fs/bpf/dir/foobar hash key 8 value 8 entries 128
-(infinite loop, taking all the CPU)
-^C
-
-After the patch:
-$ sudo bpftool map create /sys/fs/bpf/dir/foobar hash key 8 value 8 entries 128
-Error: unknown arg hash
-
-Fixes: 0b592b5a01be ("tools: bpftool: add map create command")
-Signed-off-by: Alban Crequy <alban@kinvolk.io>
-Reviewed-by: Quentin Monnet <quentin.monnet@netronome.com>
-Acked-by: Song Liu <songliubraving@fb.com>
-Reviewed-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Roman Gushchin <guro@fb.com>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Signed-off-by: Alexei Starovoitov <ast@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/bpf/bpftool/map.c | 3 +++
- 1 file changed, 3 insertions(+)
+ include/linux/bpf.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/bpf/bpftool/map.c b/tools/bpf/bpftool/map.c
-index 1ef1ee2280a28..227766d9f43b1 100644
---- a/tools/bpf/bpftool/map.c
-+++ b/tools/bpf/bpftool/map.c
-@@ -1111,6 +1111,9 @@ static int do_create(int argc, char **argv)
- 				return -1;
- 			}
- 			NEXT_ARG();
-+		} else {
-+			p_err("unknown arg %s", *argv);
-+			return -1;
- 		}
- 	}
+diff --git a/include/linux/bpf.h b/include/linux/bpf.h
+index e734f163bd0b9..1fbd7672e4b37 100644
+--- a/include/linux/bpf.h
++++ b/include/linux/bpf.h
+@@ -455,7 +455,7 @@ int bpf_prog_array_copy(struct bpf_prog_array __rcu *old_array,
+ 		}					\
+ _out:							\
+ 		rcu_read_unlock();			\
+-		preempt_enable_no_resched();		\
++		preempt_enable();			\
+ 		_ret;					\
+ 	 })
  
 -- 
 2.20.1
