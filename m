@@ -2,202 +2,136 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4944C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 11:09:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 689D8C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 11:09:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0F6921019
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 11:09:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26B4221019
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 11:09:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="6FXpWcCe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730080AbfEWLJP (ORCPT
+        id S1730366AbfEWLJ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 07:09:15 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47758 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726429AbfEWLJO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 07:09:14 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 856CF3082B4B;
-        Thu, 23 May 2019 11:09:09 +0000 (UTC)
-Received: from dhcp40-158.desklab.eng.bos.redhat.com (unknown [10.19.40.160])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B0A5060A9A;
-        Thu, 23 May 2019 11:09:07 +0000 (UTC)
-From:   tcamuso <tcamuso@redhat.com>
-To:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Cc:     airlied@linux.ie, daniel@ffwll.ch, tcamuso@redhat.com,
-        dkwon@redhat.com
-Subject: [PATCH] drm: assure aux_dev is nonzero before using it
-Date:   Thu, 23 May 2019 07:09:05 -0400
-Message-Id: <20190523110905.22445-1-tcamuso@redhat.com>
+        Thu, 23 May 2019 07:09:57 -0400
+Received: from mail-eopbgr140053.outbound.protection.outlook.com ([40.107.14.53]:16967
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726429AbfEWLJ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 07:09:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TakayzVlH1CABK0tK2HkB1gAteDPbjWdRbIYs7prXJQ=;
+ b=6FXpWcCewh9BGQD+eTmTz3dItdzQ9uAywuXq946UrUPucfD1zAm79zmpY7fyxSpJlDLaEtCLMf400zJWHtsMsqZF4Kjd2WF+VjSBtOMYMLFw2pKNCXN+Yxxvqw72q59rx7i5w+1CL9XVscRKXuH5Tx0htDQmb+9pSzgLABvfmcM=
+Received: from VE1PR08MB5006.eurprd08.prod.outlook.com (10.255.159.31) by
+ VE1PR08MB5166.eurprd08.prod.outlook.com (20.179.30.216) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1922.18; Thu, 23 May 2019 11:09:52 +0000
+Received: from VE1PR08MB5006.eurprd08.prod.outlook.com
+ ([fe80::206b:5cf6:97e:1358]) by VE1PR08MB5006.eurprd08.prod.outlook.com
+ ([fe80::206b:5cf6:97e:1358%7]) with mapi id 15.20.1922.017; Thu, 23 May 2019
+ 11:09:51 +0000
+From:   "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
+To:     Liviu Dudau <Liviu.Dudau@arm.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        "maarten.lankhorst@linux.intel.com" 
+        <maarten.lankhorst@linux.intel.com>,
+        "sean@poorly.run" <sean@poorly.run>
+CC:     "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
+        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
+        "thomas Sun (Arm Technology China)" <thomas.Sun@arm.com>,
+        "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>,
+        Ayan Halder <Ayan.Halder@arm.com>,
+        "Tiannan Zhu (Arm Technology China)" <Tiannan.Zhu@arm.com>,
+        "Yiqi Kang (Arm Technology China)" <Yiqi.Kang@arm.com>,
+        nd <nd@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        Ben Davis <Ben.Davis@arm.com>,
+        "Oscar Zhang (Arm Technology China)" <Oscar.Zhang@arm.com>,
+        "Channing Chen (Arm Technology China)" <Channing.Chen@arm.com>,
+        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
+Subject: [PATCH v2 0/6] Added scaler support for komeda
+Thread-Topic: [PATCH v2 0/6] Added scaler support for komeda
+Thread-Index: AQHVEVgLjNNoCzSXLUGXHJyPRjpv/w==
+Date:   Thu, 23 May 2019 11:09:51 +0000
+Message-ID: <20190523110933.10742-1-james.qian.wang@arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [113.29.88.7]
+x-clientproxiedby: HK2PR02CA0191.apcprd02.prod.outlook.com
+ (2603:1096:201:21::27) To VE1PR08MB5006.eurprd08.prod.outlook.com
+ (2603:10a6:803:113::31)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=james.qian.wang@arm.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.17.1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 26e03f22-4d41-411e-884c-08d6df6f2d4a
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VE1PR08MB5166;
+x-ms-traffictypediagnostic: VE1PR08MB5166:
+x-ms-exchange-purlcount: 2
+nodisclaimer: True
+x-microsoft-antispam-prvs: <VE1PR08MB516621B72E11631E64995BC8B3010@VE1PR08MB5166.eurprd08.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-forefront-prvs: 00462943DE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(366004)(376002)(346002)(136003)(39860400002)(199004)(189003)(6512007)(6306002)(25786009)(50226002)(53936002)(476003)(256004)(5024004)(6436002)(103116003)(2616005)(99286004)(486006)(4326008)(6486002)(81156014)(26005)(81166006)(36756003)(66066001)(54906003)(110136005)(8676002)(2906002)(316002)(8936002)(73956011)(66946007)(2501003)(305945005)(68736007)(7736002)(64756008)(186003)(66556008)(1076003)(966005)(55236004)(66446008)(66476007)(86362001)(6506007)(386003)(71200400001)(71190400001)(478600001)(3846002)(52116002)(6116002)(2201001)(102836004)(14454004)(5660300002);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR08MB5166;H:VE1PR08MB5006.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: arm.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: S2nj+l6mDJJY1t41ncDM6zEsb1hwwzVEIbc9ZsENEdNFG3z9yVKBapgQbbK/guJ4cu6BB45hnaGu6ZX6cwxbD5c4VHGAsnVXNpeExL6nE/+KOh0B6MfAtmNLQlPXr/P7IoUezPS5iBy8a8wSDgMikShyyqF2IR5TXwJlK05qszhAp/kIQY+jpxzII//mcIh1nbbJ7RkvTsXkEZY0HOyO/S7HOXFrySiAuKIfpu9UNUxcvpTV/BRbw7yzRaKkhmCjMT6giKU4BiEcFTn6VZWa2+ynn/ZcnWptG/X6BYXmSkEEpQHij/FaD2ZALF6FOZX+F7NkZmEC6MNKABtqROhjQ0Ulxly+0syC2jcDXqClbxA8Sz3o98gL8JxHeVH515/JTpLnKjgAzy2Z2EzFbhm8BUEwEkUy7RLPRTJam6C84/g=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Thu, 23 May 2019 11:09:14 +0000 (UTC)
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 26e03f22-4d41-411e-884c-08d6df6f2d4a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 May 2019 11:09:51.7914
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: james.qian.wang@arm.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR08MB5166
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From Daniel Kwon <dkwon@redhat.com>
-
-The system was crashed due to invalid memory access while trying to access
-auxiliary device.
-
-crash> bt
-PID: 9863   TASK: ffff89d1bdf11040  CPU: 1   COMMAND: "ipmitool"
- #0 [ffff89cedd7f3868] machine_kexec at ffffffffb0663674
- #1 [ffff89cedd7f38c8] __crash_kexec at ffffffffb071cf62
- #2 [ffff89cedd7f3998] crash_kexec at ffffffffb071d050
- #3 [ffff89cedd7f39b0] oops_end at ffffffffb0d6d758
- #4 [ffff89cedd7f39d8] no_context at ffffffffb0d5bcde
- #5 [ffff89cedd7f3a28] __bad_area_nosemaphore at ffffffffb0d5bd75
- #6 [ffff89cedd7f3a78] bad_area at ffffffffb0d5c085
- #7 [ffff89cedd7f3aa0] __do_page_fault at ffffffffb0d7080c
- #8 [ffff89cedd7f3b10] do_page_fault at ffffffffb0d70905
- #9 [ffff89cedd7f3b40] page_fault at ffffffffb0d6c758
-    [exception RIP: drm_dp_aux_dev_get_by_minor+0x3d]
-    RIP: ffffffffc0a589bd  RSP: ffff89cedd7f3bf0  RFLAGS: 00010246
-    RAX: 0000000000000000  RBX: 0000000000000000  RCX: ffff89cedd7f3fd8
-    RDX: 0000000000000000  RSI: 0000000000000000  RDI: ffffffffc0a613e0
-    RBP: ffff89cedd7f3bf8   R8: ffff89f1bcbabbd0   R9: 0000000000000000
-    R10: ffff89f1be7a1cc0  R11: 0000000000000000  R12: 0000000000000000
-    R13: ffff89f1b32a2830  R14: ffff89d18fadfa00  R15: 0000000000000000
-    ORIG_RAX: ffffffffffffffff  CS: 0010  SS: 0018
-    RIP: 00002b45f0d80d30  RSP: 00007ffc416066a0  RFLAGS: 00010246
-    RAX: 0000000000000002  RBX: 000056062e212d80  RCX: 00007ffc41606810
-    RDX: 0000000000000000  RSI: 0000000000000002  RDI: 00007ffc41606ec0
-    RBP: 0000000000000000   R8: 000056062dfed229   R9: 00002b45f0cdf14d
-    R10: 0000000000000002  R11: 0000000000000246  R12: 00007ffc41606ec0
-    R13: 00007ffc41606ed0  R14: 00007ffc41606ee0  R15: 0000000000000000
-    ORIG_RAX: 0000000000000002  CS: 0033  SS: 002b
-
-----------------------------------------------------------------------------
-
-It was trying to open '/dev/ipmi0', but as no entry in aux_dir, it returned
-NULL from 'idr_find()'. This drm_dp_aux_dev_get_by_minor() should have done a
-check on this, but had failed to do it.
-
-----------------------------------------------------------------------------
-/usr/src/debug/kernel-3.10.0-957.12.1.el7/linux-3.10.0-957.12.1.el7.x86_64/include/linux/idr.h: 114
-     114 	struct idr_layer *hint = rcu_dereference_raw(idr->hint);
-0xffffffffc0a58998 <drm_dp_aux_dev_get_by_minor+0x18>:	mov    0x8a41(%rip),%rax        # 0xffffffffc0a613e0 <aux_idr>
-/usr/src/debug/kernel-3.10.0-957.12.1.el7/linux-3.10.0-957.12.1.el7.x86_64/include/linux/idr.h: 116
-     116 	if (hint && (id & ~IDR_MASK) == hint->prefix)
-     117 		return rcu_dereference_raw(hint->ary[id & IDR_MASK]);
-0xffffffffc0a5899f <drm_dp_aux_dev_get_by_minor+0x1f>:	test   %rax,%rax
-0xffffffffc0a589a2 <drm_dp_aux_dev_get_by_minor+0x22>:	je     0xffffffffc0a589ac <drm_dp_aux_dev_get_by_minor+0x2c>
-0xffffffffc0a589a4 <drm_dp_aux_dev_get_by_minor+0x24>:	mov    %ebx,%edx
-0xffffffffc0a589a6 <drm_dp_aux_dev_get_by_minor+0x26>:	xor    %dl,%dl
-0xffffffffc0a589a8 <drm_dp_aux_dev_get_by_minor+0x28>:	cmp    (%rax),%edx
-0xffffffffc0a589aa <drm_dp_aux_dev_get_by_minor+0x2a>:	je     0xffffffffc0a589f0 <drm_dp_aux_dev_get_by_minor+0x70>
-/usr/src/debug/kernel-3.10.0-957.12.1.el7/linux-3.10.0-957.12.1.el7.x86_64/include/linux/idr.h: 119
-     119 	return idr_find_slowpath(idr, id);
-0xffffffffc0a589ac <drm_dp_aux_dev_get_by_minor+0x2c>:	mov    %ebx,%esi
-0xffffffffc0a589ae <drm_dp_aux_dev_get_by_minor+0x2e>:	mov    $0xffffffffc0a613e0,%rdi
-0xffffffffc0a589b5 <drm_dp_aux_dev_get_by_minor+0x35>:	callq  0xffffffffb09771b0 <idr_find_slowpath>
-0xffffffffc0a589ba <drm_dp_aux_dev_get_by_minor+0x3a>:	mov    %rax,%rbx
-/usr/src/debug/kernel-3.10.0-957.12.1.el7/linux-3.10.0-957.12.1.el7.x86_64/arch/x86/include/asm/atomic.h: 25
-      25 	return ACCESS_ONCE((v)->counter);
-0xffffffffc0a589bd <drm_dp_aux_dev_get_by_minor+0x3d>:	mov    0x18(%rbx),%edx
-
-crash> struct file.f_path 0xffff89d18fadfa00
-  f_path = {
-    mnt = 0xffff89f23feaa620,
-    dentry = 0xffff89f1be7a1cc0
-  }
-crash> files -d 0xffff89f1be7a1cc0
-     DENTRY           INODE           SUPERBLK     TYPE PATH
-ffff89f1be7a1cc0 ffff89f1b32a2830 ffff89d293aa8800 CHR  /dev/ipmi0
-
-crash> struct inode.i_rdev ffff89f1b32a2830
-  i_rdev = 0xf200000
-crash> eval (0xfffff & 0xf200000)
-hexadecimal: 0
-    decimal: 0
-      octal: 0
-     binary: 0000000000000000000000000000000000000000000000000000000000000000
-----------------------------------------------------------------------------
-
-As the index value was 0 and aux_idr had value 0 for all, it can have value
-NULL from idr_find() function, but the below function doesn't check and just
-tries to use it.
-
-----------------------------------------------------------------------------
-crash> aux_idr
-aux_idr = $8 = {
-  hint = 0x0,
-  top = 0x0,
-  id_free = 0x0,
-  layers = 0x0,
-  id_free_cnt = 0x0,
-  cur = 0x0,
-  lock = {
-    {
-      rlock = {
-        raw_lock = {
-          val = {
-            counter = 0x0
-          }
-        }
-      }
-    }
-  }
-}
-
-crash> edis -f drm_dp_aux_dev_get_by_minor
-/usr/src/debug/kernel-3.10.0-957.12.1.el7/linux-3.10.0-957.12.1.el7.x86_64/drivers/gpu/drm/drm_dp_aux_dev.c: 57
-
-      56 static struct drm_dp_aux_dev *drm_dp_aux_dev_get_by_minor(unsigned index)
-      57 {
-      58 	struct drm_dp_aux_dev *aux_dev = NULL;
-      59
-      60 	mutex_lock(&aux_idr_mutex);
-      61 	aux_dev = idr_find(&aux_idr, index);
-      62 	if (!kref_get_unless_zero(&aux_dev->refcount))
-      63 		aux_dev = NULL;
-      64 	mutex_unlock(&aux_idr_mutex);
-      65
-      66 	return aux_dev;
-      67 }
-----------------------------------------------------------------------------
-
-To avoid this kinds of situation, we should make a safeguard for the returned
-value. Changing the line 62 with the below would do.
-
-      62 	if (aux_dev && !kref_get_unless_zero(&aux_dev->refcount))
-                    ^^^^^^^^^^
-From Tony Camuso <tcamuso@redhat.com>
-I built a patched kernel for several architectures.
-Booted the kernel, and ran the following for 100 iterations.
-   rmmod ipmi kmods to remove /dev/ipmi0.
-   Invoked ipmitool
-   insmod ipmi kmods
-Did not see any crashes or call traces.
-
-Suggested-by: Daniel Kwon <dkwon@redhat.com>
-Signed-off-by: Tony Camuso <tcamuso@redhat.com>
----
- drivers/gpu/drm/drm_dp_aux_dev.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/drm_dp_aux_dev.c b/drivers/gpu/drm/drm_dp_aux_dev.c
-index 0e4f25d63fd2d..0b11210c882ee 100644
---- a/drivers/gpu/drm/drm_dp_aux_dev.c
-+++ b/drivers/gpu/drm/drm_dp_aux_dev.c
-@@ -60,7 +60,7 @@ static struct drm_dp_aux_dev *drm_dp_aux_dev_get_by_minor(unsigned index)
- 
- 	mutex_lock(&aux_idr_mutex);
- 	aux_dev = idr_find(&aux_idr, index);
--	if (!kref_get_unless_zero(&aux_dev->refcount))
-+	if (aux_dev && !kref_get_unless_zero(&aux_dev->refcount))
- 		aux_dev = NULL;
- 	mutex_unlock(&aux_idr_mutex);
- 
--- 
-2.20.1
-
+VGhpcyBwYXRjaCBzZXJpZXMgYWRkZWQgc2NhbGluZyBhbmQgaW1hZ2UgZW5oYW5jZW1lbnQgc3Vw
+cG9ydCBmb3Iga29tZWRhDQpkcml2ZXIuDQpFbmFibGVkIHR3byBkaWZmZXJlbnQgc2NhbGluZyB1
+c2FnZToNCi0gbGF5ZXIgc2NhbGluZzogc2NhbGluZyBhIGlucHV0IGltYWdlIGJlZm9yZSBjb21w
+b3NpdGUgaXQgd2l0aCBvdGhlcnMNCi0gd3JpdGUtYmFjayBzY2FsaW5nOiBzY2FsaW5nIHRoZSBj
+b21wb3NpdGlvbiByZXN1bHQgYW5kIHdyaXRlIGl0IHRvIG1lbW9yeQ0KDQpUaGlzIHBhdGNoc2V0
+IGRlcGVuZHMgb246DQotIGh0dHBzOi8vcGF0Y2h3b3JrLmZyZWVkZXNrdG9wLm9yZy9zZXJpZXMv
+NTk5MTUvDQotIGh0dHBzOi8vcGF0Y2h3b3JrLmZyZWVkZXNrdG9wLm9yZy9zZXJpZXMvNTkwMDAv
+DQotIGh0dHBzOi8vcGF0Y2h3b3JrLmZyZWVkZXNrdG9wLm9yZy9zZXJpZXMvNTkwMDAvDQoNCnYy
+Og0KLSBSZWJhc2UgYW5kIGNvcnJlY3QgdHlwb3MNCi0gUmVuYW1lICJuZWVkc19zY2FsaW5nIiB0
+byAiZW5fc2NhbGluZyINCi0gUmVuYW1lICJuZWVkc19pbWdfZW5oYW5jZW1lbnQiIHRvICJlbl9p
+bWdfZW5oYW5jZW1lbnQiDQoNCmphbWVzIHFpYW4gd2FuZyAoQXJtIFRlY2hub2xvZ3kgQ2hpbmEp
+ICg2KToNCiAgZHJtL2tvbWVkYTogQXR0YWNoIHNjYWxlciB0byBkcm0gYXMgcHJpdmF0ZSBvYmpl
+Y3QNCiAgZHJtL2tvbWVkYTogQWRkIHRoZSBpbml0aWFsIHNjYWxlciBzdXBwb3J0IGZvciBDT1JF
+DQogIGRybS9rb21lZGE6IEltcGxlbWVudCBENzEgc2NhbGVyIHN1cHBvcnQNCiAgZHJtL2tvbWVk
+YTogQWRkIHdyaXRlYmFjayBzY2FsaW5nIHN1cHBvcnQNCiAgZHJtL2tvbWVkYTogQWRkIGVuZ2lu
+ZSBjbG9jayByZXF1aXJlbWVudCBjaGVjayBmb3IgdGhlIGRvd25zY2FsaW5nDQogIGRybS9rb21l
+ZGE6IEFkZCBpbWFnZSBlbmhhbmNlbWVudCBzdXBwb3J0DQoNCiAuLi4vYXJtL2Rpc3BsYXkva29t
+ZWRhL2Q3MS9kNzFfY29tcG9uZW50LmMgICAgfCAxNzcgKysrKysrKysrKysrKysrKystDQogLi4u
+L2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2Q3MS9kNzFfZGV2LmMgIHwgICAyICstDQogLi4u
+L2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2Q3MS9kNzFfZGV2LmggIHwgICAyICsNCiAuLi4v
+Z3B1L2RybS9hcm0vZGlzcGxheS9rb21lZGEva29tZWRhX2NydGMuYyAgfCAgNjYgKysrKysrLQ0K
+IC4uLi9ncHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfa21zLmggICB8ICAxNCArLQ0K
+IC4uLi9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV9waXBlbGluZS5jICB8ICAxNCArKw0K
+IC4uLi9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV9waXBlbGluZS5oICB8ICAzMiArKyst
+DQogLi4uL2Rpc3BsYXkva29tZWRhL2tvbWVkYV9waXBlbGluZV9zdGF0ZS5jICAgIHwgMTY1ICsr
+KysrKysrKysrKysrKy0NCiAuLi4vZ3B1L2RybS9hcm0vZGlzcGxheS9rb21lZGEva29tZWRhX3Bs
+YW5lLmMgfCAgNzUgKysrKysrKy0NCiAuLi4vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV9wcml2
+YXRlX29iai5jICAgfCAgNDkgKysrKysNCiAuLi4vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV93
+Yl9jb25uZWN0b3IuYyAgfCAgIDIgKw0KIDExIGZpbGVzIGNoYW5nZWQsIDU4MyBpbnNlcnRpb25z
+KCspLCAxNSBkZWxldGlvbnMoLSkNCg0KLS0gDQoyLjE3LjENCg0K
