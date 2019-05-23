@@ -2,57 +2,114 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98E20C282DE
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 12:14:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3658CC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 12:19:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7200A20879
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 12:14:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05ACC21019
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 12:19:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gAft9RUQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730402AbfEWMO5 (ORCPT
+        id S1730404AbfEWMTy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 08:14:57 -0400
-Received: from mga03.intel.com ([134.134.136.65]:51663 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728309AbfEWMO4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 08:14:56 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 May 2019 05:14:55 -0700
-X-ExtLoop1: 1
-Received: from jbroders-mobl.ger.corp.intel.com (HELO localhost) ([10.252.44.6])
-  by orsmga003.jf.intel.com with ESMTP; 23 May 2019 05:14:51 -0700
-Date:   Thu, 23 May 2019 15:14:49 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Matthew Garrett <matthewgarrett@google.com>
-Cc:     linux-integrity@vger.kernel.org, peterhuewe@gmx.de, jgg@ziepe.ca,
-        roberto.sassu@huawei.com, linux-efi@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, tweek@google.com, bsz@semihalf.com
-Subject: Re: [PATCH V7 0/4] Add support for crypto agile logs
-Message-ID: <20190523121449.GA9997@linux.intel.com>
-References: <20190520205501.177637-1-matthewgarrett@google.com>
+        Thu, 23 May 2019 08:19:54 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:36458 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728309AbfEWMTx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 08:19:53 -0400
+Received: by mail-pf1-f196.google.com with SMTP id v80so3168678pfa.3
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 05:19:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=cb/Evthlm75QkClOwhS3DWYfXuweyGfVXTHPr+sRNR8=;
+        b=gAft9RUQUH1U541JS+8Vlts7xBrE6Mxsw8lHvjaO0WozSFXP1jVZZgGZ4kM2+ff9cs
+         b+rx0CG0KGqP7boLxGpppCVpT253cCIOsxfYc6VO/cQThkwK8ViaFRcM5pOPp525h7kB
+         UMrqowGmWRBMc26a+90dRgLoAToHMalkiooZ704AzK8D9bnenBiafH0/TYoMYn8fpgMY
+         otTG/+z+LvxlVqR89/L77eveP/8hia+bReTaUKn7Neju0T9HM0WkxmvlRsHfqhMFObzr
+         Wp4l2/rvUDRfRRe7JwKhEeMzhqaJXcqroBuWScv2pKaEIoP8wYFrFhomilNWvrxWb62w
+         0T9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=cb/Evthlm75QkClOwhS3DWYfXuweyGfVXTHPr+sRNR8=;
+        b=or4DHKChbyIiV+PMl/C7csyIxCCskNRme7PwgfnXV/aVNK+VGgQzp4QoOm9Kc/xgD4
+         cmcDZQT28zuQ+2ztwWOyEYSNBQ5gcPbfQnPGp2QLLtepGd22k1BmLe7R78ZFDubXdPVf
+         qzACutehCN+2sTXaVAgivj33yGdWrnQZkN1fdWfOc4k3cw6r/91cjHUi+1t+DTuCPx3k
+         EYn6Tipp17xa8e7yXI9Up/ZtX3QIYN+vCkYQOh1nlepU2DhNG6AoUFtDMW1t1OjHE6V7
+         oufAVT56ie58eNlZnof1+lK3SH2liGgsKpYzHBF8LHGDNObVGTLEB/pw9Ox8zQ36yMMq
+         Z9Lg==
+X-Gm-Message-State: APjAAAWf4jCcPLsTcj2vZNEbpBnx+nzRdx9WdH5fzQ8mmbUY50+cE3uR
+        1aDtP5CyM0jiY//YMqDhiBFhiF/FNN7RyA==
+X-Google-Smtp-Source: APXvYqy3XwtF8Pw2WhJvGmrAy7A1gCCNClAZk01i29xaDo+Efcqv/6npvbl8ZP3bm2Aq4/r3XGWTFQ==
+X-Received: by 2002:aa7:82cd:: with SMTP id f13mr103258059pfn.203.1558613993167;
+        Thu, 23 May 2019 05:19:53 -0700 (PDT)
+Received: from localhost.localdomain ([122.163.94.48])
+        by smtp.gmail.com with ESMTPSA id c185sm32443314pfc.64.2019.05.23.05.19.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 23 May 2019 05:19:52 -0700 (PDT)
+From:   Nishka Dasgupta <nishkadg.linux@gmail.com>
+To:     gregkh@linuxfoundation.org, straube.linux@gmail.com,
+        realwakka@gmail.com, hle@owl.eu.com, rico.schrage@gmail.com,
+        sophie.matter@web.de, jbi.octave@gmail.com,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Cc:     Nishka Dasgupta <nishka.dasgupta@yahoo.com>
+Subject: [PATCH] staging: pi433: Remove unnecessary return variable
+Date:   Thu, 23 May 2019 17:49:27 +0530
+Message-Id: <20190523121927.28806-1-nishkadg.linux@gmail.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190520205501.177637-1-matthewgarrett@google.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 20, 2019 at 01:54:57PM -0700, Matthew Garrett wrote:
-> Identical to previous version except without the KSAN workaround - Ard
-> has a better solution for that.
+From: Nishka Dasgupta <nishka.dasgupta@yahoo.com>
 
+The variable retval is initialised to 0 and assigned a constant value
+later. Both of these can be returned separately, hence retval can be
+removed.
 
-Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Tested-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Signed-off-by: Nishka Dasgupta <nishka.dasgupta@yahoo.com>
+---
+ drivers/staging/pi433/pi433_if.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-/Jarkko
+diff --git a/drivers/staging/pi433/pi433_if.c b/drivers/staging/pi433/pi433_if.c
+index c889f0bdf424..40c6f4e7632f 100644
+--- a/drivers/staging/pi433/pi433_if.c
++++ b/drivers/staging/pi433/pi433_if.c
+@@ -871,7 +871,6 @@ pi433_write(struct file *filp, const char __user *buf,
+ static long
+ pi433_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+ {
+-	int			retval = 0;
+ 	struct pi433_instance	*instance;
+ 	struct pi433_device	*device;
+ 	struct pi433_tx_cfg	tx_cfg;
+@@ -923,10 +922,10 @@ pi433_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+ 		mutex_unlock(&device->rx_lock);
+ 		break;
+ 	default:
+-		retval = -EINVAL;
++		return -EINVAL;
+ 	}
+ 
+-	return retval;
++	return 0;
+ }
+ 
+ #ifdef CONFIG_COMPAT
+-- 
+2.19.1
+
