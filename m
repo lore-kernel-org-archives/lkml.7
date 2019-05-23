@@ -2,128 +2,136 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58174C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 17:45:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D61DC282E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 17:47:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 296C221851
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 17:45:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1417221851
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 17:47:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vI2eAyq9"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="FfbPZT6Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731449AbfEWRpH (ORCPT
+        id S1731334AbfEWRrj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 13:45:07 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:35063 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730899AbfEWRpH (ORCPT
+        Thu, 23 May 2019 13:47:39 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:13478 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731117AbfEWRrj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 13:45:07 -0400
-Received: by mail-wm1-f68.google.com with SMTP id w9so542808wmi.0;
-        Thu, 23 May 2019 10:45:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=vuxVMAWDY8cHqFufnZqQDPDTejTS+OO13eju916wpAM=;
-        b=vI2eAyq9hKq3yUb8UJwbCHWls1VGJxRoodfP5z/Amr8kMKr36po8hAhqBGAnkouHaF
-         afZ8awEuD5giCGcI0q/4bI/KHvjtqhVdfhgcThVvn872EYmcSqrgEcBBOpXtcdJBi5w7
-         IxQBguL/jHZK2AFghT+H6ZmwRI3akQrcUcxyIbQzpK1Od66MWiyvWNCslZ0sZ4O5PVcP
-         f2LAS6nZbcCk4e5vtd9tcYYli8P8H0d+f/JpoOz6CQHafLaz7Zv+olNGZoAHk3UErGa6
-         ko5zawNE1pAVoAiKIZk0/M17jEK6BWm758t13RTckNgmozGqh2P1PEIEZ5jM33dj1g1b
-         7wcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=vuxVMAWDY8cHqFufnZqQDPDTejTS+OO13eju916wpAM=;
-        b=TJq8x1TArYNjYuDoWNj6e3EgaIfJRihLaeKFqsQNbQNstwRypv0q6YD6F5l+IibOmx
-         BpeYKVf2MMhNGg60CYj+cWtSi9hiH+c1h5vL2yncafLQKy/UEuSyYdAp8IFWwO/oiPYE
-         1Qmp4lC6b5XdUTuMg3lgnPFgUpZODDBTziSUC4kOhhAH6Gf1PqW5dEL6+jfmjYKjWKxB
-         X+uW2L4LtYq8FSQZ5XszLDyh5/nDDEBFrGvfdArDdlLlMXoyx7YykKLDEKy6fihdfkIB
-         oWxuwohYuwnhfylXvASLaaOu2LFxDibsa2bP9+t3vDuf4VGkPj8N1k3M9KbuUipOyF6+
-         cAcw==
-X-Gm-Message-State: APjAAAXiRbHVpPZIX2hrZAtAtu28+0+khtAqOxP3ce3rPWp+xfDatAaY
-        gHcyMb54MByxUKOJ4i2TuxBsYiCq
-X-Google-Smtp-Source: APXvYqxNJqc/gQ7grU9j6U0zREsGXnv+Lf9QVw3rz191xYvNdZT5fQgdkL2G2wKSyuaEs7TrBgJ8LA==
-X-Received: by 2002:a1c:1d4:: with SMTP id 203mr13794857wmb.76.1558633503852;
-        Thu, 23 May 2019 10:45:03 -0700 (PDT)
-Received: from ?IPv6:2003:ea:8be9:7a00:3cd1:e8fe:d810:b3f0? (p200300EA8BE97A003CD1E8FED810B3F0.dip0.t-ipconnect.de. [2003:ea:8be9:7a00:3cd1:e8fe:d810:b3f0])
-        by smtp.googlemail.com with ESMTPSA id n2sm5676383wro.13.2019.05.23.10.45.02
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 23 May 2019 10:45:03 -0700 (PDT)
-Subject: Re: r8169: Link only up after 16 s (A link change request failed with
- some changes committed already. Interface enp3s0 may have been left with an
- inconsistent configuration, please check.)
-To:     Paul Menzel <pmenzel@molgen.mpg.de>,
-        Realtek linux nic maintainers <nic_swsd@realtek.com>
-Cc:     netdev@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <a05b0b6c-505c-db61-96ac-813e68a26cc6@molgen.mpg.de>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Message-ID: <abb2d596-d9fe-5426-8f1d-2ef4a7eb9e1a@gmail.com>
-Date:   Thu, 23 May 2019 19:44:57 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+        Thu, 23 May 2019 13:47:39 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ce6dcb50001>; Thu, 23 May 2019 10:47:33 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 23 May 2019 10:47:38 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 23 May 2019 10:47:38 -0700
+Received: from [10.2.169.219] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 23 May
+ 2019 17:47:34 +0000
+Subject: Re: [PATCH 1/1] infiniband/mm: convert put_page() to put_user_page*()
+To:     Jason Gunthorpe <jgg@mellanox.com>, Ira Weiny <ira.weiny@intel.com>
+CC:     "john.hubbard@gmail.com" <john.hubbard@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        Doug Ledford <dledford@redhat.com>,
+        "Mike Marciniszyn" <mike.marciniszyn@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Christian Benvenuti <benve@cisco.com>,
+        "Jan Kara" <jack@suse.cz>
+References: <20190523072537.31940-1-jhubbard@nvidia.com>
+ <20190523072537.31940-2-jhubbard@nvidia.com>
+ <20190523172852.GA27175@iweiny-DESK2.sc.intel.com>
+ <20190523173222.GH12145@mellanox.com>
+From:   John Hubbard <jhubbard@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <fa6d7d7c-13a3-0586-6384-768ebb7f0561@nvidia.com>
+Date:   Thu, 23 May 2019 10:46:38 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <a05b0b6c-505c-db61-96ac-813e68a26cc6@molgen.mpg.de>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20190523173222.GH12145@mellanox.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1558633653; bh=cJu+WJeaivnLRPXuXP9NC7KepKeSbgIbtxawo6JxqHQ=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=FfbPZT6QVH6VAlR1feLRskrMhm5Y90TbypPeesLGrfGfd7gw4yml32K5pWQRTfTer
+         D4rsycEUWb1uIuGiI+4NyFotZpYk072iAv6M8985uVUZB5YnFvYcHUzwdOgwYBYvk7
+         Oie7zgGrFj5klPYmfYYnJLwI+Mge3sPjjJ59YitQTd/QDOLRYLZpNkZ9gYH2Sva3tp
+         kd7kFGqP9BgfExZaQ8g6ePlt9zkuiWwkJurGW+wpfiR6jXlQTPjLzyq2/ZAvuAl/Gj
+         VgraXs1B91kLLWDN9ZQ5eNpaxgFv9Xv1QqMz+EDdPjAXr0uclLOfBp+7vD31LhjHgI
+         35gTwnCDBIXBQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23.05.2019 13:00, Paul Menzel wrote:
-> Dear Linux folks,
+On 5/23/19 10:32 AM, Jason Gunthorpe wrote:
+> On Thu, May 23, 2019 at 10:28:52AM -0700, Ira Weiny wrote:
+>>>   
+>>> @@ -686,8 +686,8 @@ int ib_umem_odp_map_dma_pages(struct ib_umem_odp *umem_odp, u64 user_virt,
+>>>   			 * ib_umem_odp_map_dma_single_page().
+>>>   			 */
+>>>   			if (npages - (j + 1) > 0)
+>>> -				release_pages(&local_page_list[j+1],
+>>> -					      npages - (j + 1));
+>>> +				put_user_pages(&local_page_list[j+1],
+>>> +					       npages - (j + 1));
+>>
+>> I don't know if we discussed this before but it looks like the use of
+>> release_pages() was not entirely correct (or at least not necessary) here.  So
+>> I think this is ok.
 > 
+> Oh? John switched it from a put_pages loop to release_pages() here:
 > 
-> I optimized the Linux kernel configuration on my ASRock E350M1, and it now
-> boots really fast.
+> commit 75a3e6a3c129cddcc683538d8702c6ef998ec589
+> Author: John Hubbard <jhubbard@nvidia.com>
+> Date:   Mon Mar 4 11:46:45 2019 -0800
 > 
-> Unfortunately, that seems to cause the network driver to hit some corner
-> case, so that the link is supposedly down, although it should be up. The
-> cable is plugged in the whole time.
+>      RDMA/umem: minor bug fix in error handling path
+>      
+>      1. Bug fix: fix an off by one error in the code that cleans up if it fails
+>         to dma-map a page, after having done a get_user_pages_remote() on a
+>         range of pages.
+>      
+>      2. Refinement: for that same cleanup code, release_pages() is better than
+>         put_page() in a loop.
+>      
 > 
-> ```
-> [    2.990757] libphy: r8169: probed
-> [    2.992661] r8169 0000:03:00.0 eth0: RTL8168e/8111e, bc:5f:f4:c8:d3:98, XID 2c2, IRQ 28
-> [    2.992669] r8169 0000:03:00.0 eth0: jumbo features [frames: 9200 bytes, tx checksumming: ko]
-> [    3.294484] usb 5-2: new low-speed USB device number 2 using ohci-pci
-> [    3.458711] usb 5-2: New USB device found, idVendor=1241, idProduct=1122, bcdDevice= 1.00
-> [    3.458718] usb 5-2: New USB device strings: Mfr=0, Product=0, SerialNumber=0
-> [    3.485065] input: HID 1241:1122 as /devices/pci0000:00/0000:00:12.0/usb5/5-2/5-2:1.0/0003:1241:1122.0001/input/input14
-> [    3.485320] hid-generic 0003:1241:1122.0001: input,hidraw0: USB HID v1.00 Mouse [HID 1241:1122] on usb-0000:00:12.0-2/input0
-> [    3.967622] random: crng init done
-> [    3.967628] random: 7 urandom warning(s) missed due to ratelimiting
-> [    4.323449] r8169 0000:03:00.0 enp3s0: renamed from eth0
-> [    4.363774] RTL8211DN Gigabit Ethernet r8169-300:00: attached PHY driver [RTL8211DN Gigabit Ethernet] (mii_bus:phy_addr=r8169-300:00, irq=IGNORE)
-> [    4.576887] r8169 0000:03:00.0 enp3s0: Link is Down
-> [    4.577167] A link change request failed with some changes committed already. Interface enp3s0 may have been left with an inconsistent configuration, please check.
-> [   16.377520] r8169 0000:03:00.0 enp3s0: Link is Up - 100Mbps/Full - flow control rx/tx
-> [   16.377553] IPv6: ADDRCONF(NETDEV_CHANGE): enp3s0: link becomes ready
-> ```
+> And now we are going to back something called put_pages() that
+> implements the same for loop the above removed?
 > 
-> It happens with all Linux kernels I tried. Please find all Linux
-> messages attached.
+> Seems like we are going in circles?? John?
 > 
-> Could you please tell me, how this can be debugged and solved?
-> 
-This warning is triggered by errors in do_setlink() in net/core/rtnetlink.c
-I'd say:
-1. Which kernel config options did you change as part of the optimization?
-   (If I understand you correctly the warning didn't pop up before.)
-2. Try to find out which call in do_setlink() fails and which errno is returned.
 
-> 
-> Kind regards,
-> 
-> Paul
-> 
-Heiner
+put_user_pages() is meant to be a drop-in replacement for release_pages(),
+so I made the above change as an interim step in moving the callsite from
+a loop, to a single call.
+
+And at some point, it may be possible to find a way to optimize put_user_pages()
+in a similar way to the batching that release_pages() does, that was part
+of the plan for this.
+
+But I do see what you mean: in the interim, maybe put_user_pages() should
+just be calling release_pages(), how does that change sound?
+
+
+thanks,
+-- 
+John Hubbard
+NVIDIA
