@@ -2,99 +2,67 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5242C282E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:45:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 257DBC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:45:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A533F20881
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:45:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558640744;
-	bh=7uXs0Hd9BHczWfI9QjqAQuZuSbC0kbYMC9PdSh6KVRg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A0AoZdUqPB3Epg3sNMKoTN5FiuISML5tOEcOKiE7i4c70rC6p2cCWS6PKQV/ltkS4
-	 YNqokY32QhkQ8SbLaT+ZnKOQ5P4KPUJAL15bscAel1NAQXFZy5/lo48sgcda3aJDY6
-	 NhgmecaHEPShrasBYdSjj5N6SjyJ3ted2rTeolNE=
+	by mail.kernel.org (Postfix) with ESMTP id 052E520851
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:45:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388417AbfEWTPS (ORCPT
+        id S2389032AbfEWTpy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:15:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49518 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388918AbfEWTPO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:15:14 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 60ED520863;
-        Thu, 23 May 2019 19:15:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558638913;
-        bh=7uXs0Hd9BHczWfI9QjqAQuZuSbC0kbYMC9PdSh6KVRg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pGV2yy0J2vzn1OWzGb6Q27/X9N4UIyh43rXAe2m65Paxhap+ODSUvE/tGrWcuABD/
-         XZ2XfwL/rOmPKJpBqt1dx/z+dOLHmoMUUHXIfCQnnkLasHzpNggDFyc8+dpMhdYxW5
-         gs9HkXWlsV4KTQjcpNQmsBj62/OkJryRRtT55HaI=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiao Ni <xni@redhat.com>,
-        NeilBrown <neilb@suse.com>, Yufen Yu <yuyufen@huawei.com>,
-        Song Liu <songliubraving@fb.com>
-Subject: [PATCH 4.19 027/114] md: add mddev->pers to avoid potential NULL pointer dereference
-Date:   Thu, 23 May 2019 21:05:26 +0200
-Message-Id: <20190523181734.327465301@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190523181731.372074275@linuxfoundation.org>
-References: <20190523181731.372074275@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 23 May 2019 15:45:54 -0400
+Received: from mslow2.mail.gandi.net ([217.70.178.242]:58742 "EHLO
+        mslow2.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388877AbfEWTPE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:15:04 -0400
+Received: from relay10.mail.gandi.net (unknown [217.70.178.230])
+        by mslow2.mail.gandi.net (Postfix) with ESMTP id A2A5E3A96BB;
+        Thu, 23 May 2019 17:47:55 +0000 (UTC)
+Received: from localhost (lfbn-1-3034-80.w90-66.abo.wanadoo.fr [90.66.53.80])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 402AC240003;
+        Thu, 23 May 2019 17:47:45 +0000 (UTC)
+Date:   Thu, 23 May 2019 19:47:39 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Jeffrin Thalakkottoor <jeffrin@rajagiritech.edu.in>
+Cc:     a.zummo@towertech.it, Shuah Khan <shuah@kernel.org>,
+        linux-rtc@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: about selftests/rtc test related stuff
+Message-ID: <20190523174739.GY3274@piout.net>
+References: <CAG=yYwk+g28_dnOcN--w-PLbGtA2oM5tq14W4X5bBjdurnF2iA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAG=yYwk+g28_dnOcN--w-PLbGtA2oM5tq14W4X5bBjdurnF2iA@mail.gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yufen Yu <yuyufen@huawei.com>
+On 23/05/2019 22:29:36+0530, Jeffrin Thalakkottoor wrote:
+> I get the following result when i run "rtctest"
+> please see the following....
+> -----------------x------------------------x-----------------
+> $pwd
+> /home/jeffrin/upstream/linux-kselftest/tools/testing/selftests/rtc
+> $./rtctest
+> [==========] Running 7 tests from 2 test cases.
+> [ RUN      ] rtc.date_read
+> rtctest.c:32:rtc.date_read:Expected -1 (18446744073709551615) !=
+> self->fd (18446744073709551615)
+> rtc.date_read: Test terminated by assertion
 
-commit ee37e62191a59d253fc916b9fc763deb777211e2 upstream.
-
-When doing re-add, we need to ensure rdev->mddev->pers is not NULL,
-which can avoid potential NULL pointer derefence in fallowing
-add_bound_rdev().
-
-Fixes: a6da4ef85cef ("md: re-add a failed disk")
-Cc: Xiao Ni <xni@redhat.com>
-Cc: NeilBrown <neilb@suse.com>
-Cc: <stable@vger.kernel.org> # 4.4+
-Reviewed-by: NeilBrown <neilb@suse.com>
-Signed-off-by: Yufen Yu <yuyufen@huawei.com>
-Signed-off-by: Song Liu <songliubraving@fb.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/md/md.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -2860,8 +2860,10 @@ state_store(struct md_rdev *rdev, const
- 			err = 0;
- 		}
- 	} else if (cmd_match(buf, "re-add")) {
--		if (test_bit(Faulty, &rdev->flags) && (rdev->raid_disk == -1) &&
--			rdev->saved_raid_disk >= 0) {
-+		if (!rdev->mddev->pers)
-+			err = -EINVAL;
-+		else if (test_bit(Faulty, &rdev->flags) && (rdev->raid_disk == -1) &&
-+				rdev->saved_raid_disk >= 0) {
- 			/* clear_bit is performed _after_ all the devices
- 			 * have their local Faulty bit cleared. If any writes
- 			 * happen in the meantime in the local node, they
+Your user probably doesn't have access to the rtc device file.
 
 
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
