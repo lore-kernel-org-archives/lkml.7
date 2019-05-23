@@ -2,116 +2,140 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D842CC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 13:17:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29FA2C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 13:17:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A479A2133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 13:17:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DEtKgYpP"
+	by mail.kernel.org (Postfix) with ESMTP id EB5B42133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 13:17:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558617473;
+	bh=QzLR9zKzuUVe41ed3CRRrcG2QPpg2Y8M+WRioHn45M8=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=go99Kr+9YxgAPDxCiLNfrxxEOaWUP26pdLLLhxWNfTnasug8ZtyM2yfTVf5gfqj5z
+	 eSghKpcMw7+sAjmcIbchvDPAT/j5MiCmWJXGY5dIe6vlHOPmmjfii4V4HJHVPbkKpo
+	 Cww4eddKdXNz5pvNZoQ+XGSbuX3+zRB0aD1n9XTc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730732AbfEWNRM (ORCPT
+        id S1730748AbfEWNRv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 09:17:12 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:35047 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726310AbfEWNRM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 09:17:12 -0400
-Received: by mail-pl1-f193.google.com with SMTP id p1so2775717plo.2
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 06:17:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Kopmk5mvy3G2sPVhmNvkGBCegMtkQbUAC1QtXamn6kQ=;
-        b=DEtKgYpPpwGdbF4EcNDd2ZV7eBWZlHpcbgHalwosHws5txIbZNSvv0f0YekrZUq2ww
-         Trs96X2AALKE9VRNe9cveE56HD+zlE+STMyYpqgqldesj6HqzSxiJBPKXU84DP+hP+DZ
-         gPigezIOLn1FQytjs8mgTXUIUk+VOWvGKIP6ST0zGblcuDIpt2YMDvoI7w2+2IPLaCeT
-         IqTR0pCumOBm7YsnP/dEF/L1pwzodGp3czArtm985mxSsP2UE9BhTErDu7mOpiQ+A17N
-         absyxnXzb/nx70hx7QQt53dxnZRCY4vwX11ONClSry7eUIpc0yTF3mkuxQwueqMeNMBS
-         s2jQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Kopmk5mvy3G2sPVhmNvkGBCegMtkQbUAC1QtXamn6kQ=;
-        b=QKbTpdVDL14i1R+iiwfJAQLLc1bGloZTh/7VaGVnLVCrKZhHKFwMex4zOqIobMzZOk
-         e8C/NwdMkWVf1woQD7ahVlUteNtvhPmoEIBeA9hfqRyIfHO47mhrDTTe6XMdfQPbOEnr
-         Wj2Z4Jk/ujkChSkc09G6+/OdPKdDq8rVvt1G6GvSrzwKe8fvcNW27cWDJkZHzYljuPjb
-         7kGyY7G+TkdNr2QH8WWEmWHpTYHwSxkIiijPa4q3hgcrGnZgUdH5YanKHHbNRKC21Uxb
-         kExK3iVAZ7Tub35FxPR6/b0367WM0LfymmJLAik6hYNGL+PwiNW88YpzugdKAxNGoSMr
-         4uxw==
-X-Gm-Message-State: APjAAAUkWFYl2eobrL708UqpdI+jAKC6Xc6gJ/Qv4+86VKa+t/J4/Wc9
-        /W7xtNyMNo8EPZetn19U7eQClwW8xv9Y8g==
-X-Google-Smtp-Source: APXvYqxkANieYzEE6DMJG1h286DYQm3u0jAfyirRH8il7DT9Y0MRpbf2blOEcPSth+kWaRJwtHZCvw==
-X-Received: by 2002:a17:902:9689:: with SMTP id n9mr98509857plp.133.1558617431700;
-        Thu, 23 May 2019 06:17:11 -0700 (PDT)
-Received: from dragon (98.142.130.235.16clouds.com. [98.142.130.235])
-        by smtp.gmail.com with ESMTPSA id x66sm20992216pfx.139.2019.05.23.06.17.04
-        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
-        Thu, 23 May 2019 06:17:10 -0700 (PDT)
-Date:   Thu, 23 May 2019 21:16:08 +0800
-From:   Shawn Guo <shawn.guo@linaro.org>
-To:     Anson Huang <anson.huang@nxp.com>
-Cc:     "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>,
-        "olof@lixom.net" <olof@lixom.net>,
-        "agross@kernel.org" <agross@kernel.org>,
-        "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>,
-        "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>,
-        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "dinguyen@kernel.org" <dinguyen@kernel.org>,
-        "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH] arm64: defconfig: Enable CONFIG_QORIQ_THERMAL
-Message-ID: <20190523131606.GA21933@dragon>
-References: <1558425114-10625-1-git-send-email-Anson.Huang@nxp.com>
+        Thu, 23 May 2019 09:17:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40110 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726310AbfEWNRv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 09:17:51 -0400
+Received: from [192.168.0.101] (unknown [58.212.135.189])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 868DD2075B;
+        Thu, 23 May 2019 13:17:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558617470;
+        bh=QzLR9zKzuUVe41ed3CRRrcG2QPpg2Y8M+WRioHn45M8=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=zckNYzzXHUDDRnhqURRK9fAY/jYl+qGGa8r92VtFHnC6sj5UAjhlvArQFPgsZu/Uw
+         ulm4Wm9CdTfUB+EmTy8eXAhr7ep5ZdWQXVwa0Jf1TGRAgSlfJufuEGy3igjclkEMOo
+         b6FEJVwkeZIGPf8M049PDt0veZ5Biq9LYFCU4bZw=
+Subject: Re: [f2fs-dev] [PATCH 1/2] Revert "f2fs: don't clear
+ CP_QUOTA_NEED_FSCK_FLAG"
+To:     Jaegeuk Kim <jaegeuk@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net
+References: <20190521180625.10562-1-jaegeuk@kernel.org>
+ <8e9a4cac-c81b-11ce-0a5a-c6f5caf716c4@kernel.org>
+ <20190522174448.GA81051@jaegeuk-macbookpro.roam.corp.google.com>
+From:   Chao Yu <chao@kernel.org>
+Message-ID: <1f370d69-cb4e-5526-cc87-e67100d91294@kernel.org>
+Date:   Thu, 23 May 2019 21:17:40 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1558425114-10625-1-git-send-email-Anson.Huang@nxp.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20190522174448.GA81051@jaegeuk-macbookpro.roam.corp.google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 21, 2019 at 07:57:05AM +0000, Anson Huang wrote:
-> i.MX8MQ needs CONFIG_QORIQ_THERMAL for thermal support.
+On 2019-5-23 1:44, Jaegeuk Kim wrote:
+> On 05/22, Chao Yu wrote:
+>> On 2019-5-22 2:06, Jaegeuk Kim wrote:
+>>> This reverts commit fb40d618b03978b7cc5820697894461f4a2af98b.
+>>>
+>>> The original patch introduced # of fsck triggers.
+>>
+>> How about pointing out the old issue has been fixed with below patch:
+>>
+>> f2fs-tools: fix to check total valid block count before block allocation
+>>
+>> Otherwise, user should keep kernel commit "f2fs: don't clear
+>> CP_QUOTA_NEED_FSCK_FLAG".
 > 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> Actually, that didn't fix my testing issue, but I found we were not using
+> error control for quota_sysfile. Now I've seen no issue with the below patch.
 
-Please send to my kernel.org email address.
+Alright.
 
-Shawn
+> 
+> From e1b7de7050fd87b7c20e033b062b1cc6505679d3 Mon Sep 17 00:00:00 2001
+> From: Jaegeuk Kim <jaegeuk@kernel.org>
+> Date: Mon, 20 May 2019 16:17:56 -0700
+> Subject: [PATCH] f2fs: link f2fs quota ops for sysfile
+> 
+> This patch reverts:
+> commit fb40d618b039 ("f2fs: don't clear CP_QUOTA_NEED_FSCK_FLAG").
+> 
+> We were missing error handlers used in f2fs quota ops.
+> 
+> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+
+Good catch!
+
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+
+Thanks,
 
 > ---
->  arch/arm64/configs/defconfig | 1 +
->  1 file changed, 1 insertion(+)
+>  fs/f2fs/checkpoint.c | 6 ++----
+>  fs/f2fs/super.c      | 5 +----
+>  2 files changed, 3 insertions(+), 8 deletions(-)
 > 
-> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-> index da85808..61be39b 100644
-> --- a/arch/arm64/configs/defconfig
-> +++ b/arch/arm64/configs/defconfig
-> @@ -420,6 +420,7 @@ CONFIG_SENSORS_INA2XX=m
->  CONFIG_THERMAL_GOV_POWER_ALLOCATOR=y
->  CONFIG_CPU_THERMAL=y
->  CONFIG_THERMAL_EMULATION=y
-> +CONFIG_QORIQ_THERMAL=m
->  CONFIG_ROCKCHIP_THERMAL=m
->  CONFIG_RCAR_THERMAL=y
->  CONFIG_RCAR_GEN3_THERMAL=y
-> -- 
-> 2.7.4
+> diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
+> index d0539ddad6e2..89825261d474 100644
+> --- a/fs/f2fs/checkpoint.c
+> +++ b/fs/f2fs/checkpoint.c
+> @@ -1317,10 +1317,8 @@ static void update_ckpt_flags(struct f2fs_sb_info *sbi, struct cp_control *cpc)
+>  
+>  	if (is_sbi_flag_set(sbi, SBI_QUOTA_SKIP_FLUSH))
+>  		__set_ckpt_flags(ckpt, CP_QUOTA_NEED_FSCK_FLAG);
+> -	/*
+> -	 * TODO: we count on fsck.f2fs to clear this flag until we figure out
+> -	 * missing cases which clear it incorrectly.
+> -	 */
+> +	else
+> +		__clear_ckpt_flags(ckpt, CP_QUOTA_NEED_FSCK_FLAG);
+>  
+>  	if (is_sbi_flag_set(sbi, SBI_QUOTA_NEED_REPAIR))
+>  		__set_ckpt_flags(ckpt, CP_QUOTA_NEED_FSCK_FLAG);
+> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+> index 856f9081c599..34f2adf191ed 100644
+> --- a/fs/f2fs/super.c
+> +++ b/fs/f2fs/super.c
+> @@ -3169,10 +3169,7 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
+>  
+>  #ifdef CONFIG_QUOTA
+>  	sb->dq_op = &f2fs_quota_operations;
+> -	if (f2fs_sb_has_quota_ino(sbi))
+> -		sb->s_qcop = &dquot_quotactl_sysfile_ops;
+> -	else
+> -		sb->s_qcop = &f2fs_quotactl_ops;
+> +	sb->s_qcop = &f2fs_quotactl_ops;
+>  	sb->s_quota_types = QTYPE_MASK_USR | QTYPE_MASK_GRP | QTYPE_MASK_PRJ;
+>  
+>  	if (f2fs_sb_has_quota_ino(sbi)) {
 > 
