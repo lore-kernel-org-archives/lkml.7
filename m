@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DCACC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:35:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C5AFC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:35:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B18C20881
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:35:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E96E720879
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:35:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558640100;
-	bh=4wgxF1YFp5FyaQGTZ3L+A80LKvSHjmr7i8d7XrTzsD0=;
+	s=default; t=1558640107;
+	bh=q0NoChondQNBMPI/IILqxPHisepa81MuFB32CinsJs4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V+lJsNfSoOzx6UuFyWRzRexQhoAi64vAaYg7Lt58rmNrLR7MU2rQmNRq3lXz5InHy
-	 jVfQmBdsWdWvan85VAyvktlN9Lm9cuHO75/iyHPCwmG4+iFXO9J5tXHHb15k9RqgPr
-	 25OwcDdUD5DeywlbC8d8lktoMOfYEF001nMrRnOs=
+	b=KAJ+xTsfPBBIt+/+9OKdXSVGOwC3VnsmBS0hPnTKKdlrwTzToMHaEz15TR+drrgzg
+	 1YNp/jGTIATAZwpzbiurp1l4m4zrnq23n1e3uP3jDTB+RsDT3YItY9D9wsNm+w940N
+	 /qUQt/x5yFwRT8f1vmIq2RfAW4zWKxfc1Kt/fi44=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391914AbfEWTe7 (ORCPT
+        id S2391526AbfEWT1I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:34:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39550 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:27:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39188 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391153AbfEWT1U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:27:20 -0400
+        id S2391521AbfEWT1E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:27:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF84F2186A;
-        Thu, 23 May 2019 19:27:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B933E206BA;
+        Thu, 23 May 2019 19:27:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639640;
-        bh=4wgxF1YFp5FyaQGTZ3L+A80LKvSHjmr7i8d7XrTzsD0=;
+        s=default; t=1558639624;
+        bh=q0NoChondQNBMPI/IILqxPHisepa81MuFB32CinsJs4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wyZFv3yTRbZKX+TwM+fC9Qx4A+nQS08R77wgGBvGPdy8INBiy377o0IWPlFOWqBmi
-         k3/jKZC+tYmVgul2wKR4XHiUBi2V4kR2Q9OwJeiYGudlvnWs7KRuBD4x8X8Sk6RabC
-         a33WdY3hyV+Rk3Xjwpw+neIBiWAJwGBXZyX4HD54=
+        b=MLTRujLOzTR1oPKEQUuhGAmaZGndjeMNel2vkC+EoEstTNKbII2qRFeHcQSimovF5
+         ee6A2VFeJtQ0lkyM9vLA4vL+1hUpdKkuNrg9k2sO8DdCrSO32EkaxDadTP6o7B9c8l
+         4urXAxCKxWcd9NjTAiIWpHkPgGWWHhq8dUaQ4Kww=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guoqing Jiang <gqjiang@suse.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Song Liu <songliubraving@fb.com>
-Subject: [PATCH 5.1 040/122] md: add a missing endianness conversion in check_sb_changes
-Date:   Thu, 23 May 2019 21:06:02 +0200
-Message-Id: <20190523181710.068992771@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Mulu He <muluhe@codeaurora.org>
+Subject: [PATCH 5.1 034/122] stm class: Fix channel bitmap on 32-bit systems
+Date:   Thu, 23 May 2019 21:05:56 +0200
+Message-Id: <20190523181709.335220655@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181705.091418060@linuxfoundation.org>
 References: <20190523181705.091418060@linuxfoundation.org>
@@ -60,34 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Hellwig <hch@lst.de>
+From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 
-commit ed4d0a4ea11e19863952ac6a7cea3bbb27ccd452 upstream.
+commit 51e0f227812ed81a368de54157ebe14396b4be03 upstream.
 
-The on-disk value is little endian and we need to convert it to
-native endian before storing the value in the in-core structure.
+Commit 7bd1d4093c2f ("stm class: Introduce an abstraction for System Trace
+Module devices") naively calculates the channel bitmap size in 64-bit
+chunks regardless of the size of underlying unsigned long, making the
+bitmap half as big on a 32-bit system. This leads to an out of bounds
+access with the upper half of the bitmap.
 
-Fixes: 7564beda19b36 ("md-cluster/raid10: support add disk under grow mode")
-Cc: <stable@vger.kernel.org> # 4.20+
-Acked-by: Guoqing Jiang <gqjiang@suse.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Song Liu <songliubraving@fb.com>
+Fix this by using BITS_TO_LONGS. While at it, convert to using
+struct_size() for the total size calculation of the master struct.
+
+Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Fixes: 7bd1d4093c2f ("stm class: Introduce an abstraction for System Trace Module devices")
+Reported-by: Mulu He <muluhe@codeaurora.org>
+Cc: stable@vger.kernel.org # v4.4+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/md.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/hwtracing/stm/core.c |    7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -9229,7 +9229,7 @@ static void check_sb_changes(struct mdde
- 		 * reshape is happening in the remote node, we need to
- 		 * update reshape_position and call start_reshape.
- 		 */
--		mddev->reshape_position = sb->reshape_position;
-+		mddev->reshape_position = le64_to_cpu(sb->reshape_position);
- 		if (mddev->pers->update_reshape_pos)
- 			mddev->pers->update_reshape_pos(mddev);
- 		if (mddev->pers->start_reshape)
+--- a/drivers/hwtracing/stm/core.c
++++ b/drivers/hwtracing/stm/core.c
+@@ -166,11 +166,10 @@ stm_master(struct stm_device *stm, unsig
+ static int stp_master_alloc(struct stm_device *stm, unsigned int idx)
+ {
+ 	struct stp_master *master;
+-	size_t size;
+ 
+-	size = ALIGN(stm->data->sw_nchannels, 8) / 8;
+-	size += sizeof(struct stp_master);
+-	master = kzalloc(size, GFP_ATOMIC);
++	master = kzalloc(struct_size(master, chan_map,
++				     BITS_TO_LONGS(stm->data->sw_nchannels)),
++			 GFP_ATOMIC);
+ 	if (!master)
+ 		return -ENOMEM;
+ 
 
 
