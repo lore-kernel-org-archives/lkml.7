@@ -2,99 +2,210 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8E25C04AAC
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:52:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55367C04AAC
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:52:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65B5E2184B
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:52:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B8FF2075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:52:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="on9kVxqn"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="VLVnf36c";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="TbaMgyOP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730194AbfEWIwO (ORCPT
+        id S1730244AbfEWIwZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 04:52:14 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:42232 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726081AbfEWIwO (ORCPT
+        Thu, 23 May 2019 04:52:25 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:43912 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725814AbfEWIwZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 04:52:14 -0400
-Received: by mail-wr1-f67.google.com with SMTP id l2so5297344wrb.9
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 01:52:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=j+i/6YHpLYa0VRON5YtxYPlWNbeZJcsk8UufzzybxG8=;
-        b=on9kVxqnE4XL9gvdkGUX2lnqH+HDfMFx1fmgPPhEHMLh6fLl/qMVTqq0jyIU4/zk3M
-         y7YSJbcxD91+NnS+VGobBAu9oIIllM+Rvh6RrpTXngDXu2RBlSNjIRrjjwsYU4288n4R
-         zUmjrS1VsLFV93LbAPHzTV7s0QxGGhiBSoKi6y1LOUJ33YP7h4SuM36zK6MAZqkLr+Ta
-         ynjHcXlIGcck8mXnnZZ9Xptdc+uSZeNf6jzyVjTjBW1VPOK9Vz7ioWG3tK9klx/C+QJE
-         HzALoy6aCD9QkWLWhOjXICOwGUhtN2g/TQiP+OXFWkX1J/rsMKCeP8EzJnR3scxtjR4R
-         Hnxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=j+i/6YHpLYa0VRON5YtxYPlWNbeZJcsk8UufzzybxG8=;
-        b=otKjOI3zSvAUfM1miIsKDP47TNXuioJpNPUghRR8AbutvrACYqsXnROAtIcWWYcYrW
-         FHE9dsm4kotvhR/pB49AnZsmThOWIqOdzHONpDqDAIpP0nPKqrYl39d+sZlrd3DyG/Y6
-         zny0Y+8NoYNdFUXobUPwHuc67v3HCVastpqqfI2Y5cD833iou5xXyHqIvQPiZJoqqydm
-         nLSL8FHeaCoKc/3yianqEOV8WsZh93tvjcFQlMu+k21mRDxhBUejvDCAdQbFkSjw3nGN
-         xsF8uCtfo8LPNHDxp+3p114ak+S3I+m5XOcVw1xdMAbCUyqKFg0+MrB7YoqUWowwo1ps
-         Jk/Q==
-X-Gm-Message-State: APjAAAULFSHCqzMpw/HEu3CFSb6obXAmlTl6SxqL/I0wp5zQsQBdKLSa
-        2bLhL6EE2a/gErqCiQJmNvvbaw==
-X-Google-Smtp-Source: APXvYqwVf7vgNc882DGvmr22eEnXmPhOY+Dm37Awq0EvbkD2CxA4UYuZbiq2u9/BDdvPo7hxsg3PVA==
-X-Received: by 2002:adf:ce89:: with SMTP id r9mr10093854wrn.300.1558601532706;
-        Thu, 23 May 2019 01:52:12 -0700 (PDT)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id i25sm10949054wmb.46.2019.05.23.01.52.11
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 23 May 2019 01:52:12 -0700 (PDT)
-Subject: Re: [PATCH] nvmem: Broaden the selection of NVMEM_SNVS_LPGPR
-To:     Fabio Estevam <festevam@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, shawnguo@kernel.org,
-        linux-imx@nxp.com, kernel@pengutronix.de
-References: <20190523001502.20105-1-festevam@gmail.com>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <a17e4954-7cc0-2774-3070-6c0554c7cb95@linaro.org>
-Date:   Thu, 23 May 2019 09:52:11 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 23 May 2019 04:52:25 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 0A7FD60E7A; Thu, 23 May 2019 08:52:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1558601543;
+        bh=a4w+WoaBzHQtJcAdG7QaHXhgB3zJUnpS03WiEED1hyM=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=VLVnf36ckwKd+IFe3C3tePH9xlwtYWCSeT1NWdLJXfdxz11SotMzBxTEdhWSYvQa5
+         PSRS7ZXQMJyAS+npTcgGxzZPRlWn7D28jGd7+ItpiYTesNayJZYsrglUm30qTslSu8
+         qXgrmsGllInUL9NZQt+FaJk1UQtbjG9UarXYqkN0=
+Received: from x230.qca.qualcomm.com (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B2E536118F;
+        Thu, 23 May 2019 08:52:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1558601541;
+        bh=a4w+WoaBzHQtJcAdG7QaHXhgB3zJUnpS03WiEED1hyM=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=TbaMgyOPWP7nxJq8RTitOmUbpmy5fWZa5Mkljkk68VNl6roXTVP2qUIrkQkDPZ9x9
+         fHh5ALXGkD32H9aE/C2gF/YKN5tFIi5RsgbXxISL7dIYCxSikGV7PT0ZdFVTdJoE0g
+         JuGW3kr0DTrr36y5gVrpHIKLIgJ3I9lU9dCxq7PI=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B2E536118F
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Amitkumar Karwar <amitkarwar@gmail.com>,
+        Siva Rebbagondla <siva8118@gmail.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Subject: Re: [PATCH] rsi: Properly initialize data in rsi_sdio_ta_reset
+References: <20190502151548.11143-1-natechancellor@gmail.com>
+        <CAKwvOd=nvKGGW5jvN+WFUXzOm9xeiNNUD0F9--9YcpuRmnWWhA@mail.gmail.com>
+        <20190503031718.GB6969@archlinux-i9>
+        <20190523015415.GA17819@archlinux-epyc>
+Date:   Thu, 23 May 2019 11:52:17 +0300
+In-Reply-To: <20190523015415.GA17819@archlinux-epyc> (Nathan Chancellor's
+        message of "Wed, 22 May 2019 18:54:15 -0700")
+Message-ID: <87r28po8n2.fsf@codeaurora.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <20190523001502.20105-1-festevam@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Nathan Chancellor <natechancellor@gmail.com> writes:
 
+> On Thu, May 02, 2019 at 08:17:18PM -0700, Nathan Chancellor wrote:
+>> On Thu, May 02, 2019 at 11:18:01AM -0700, Nick Desaulniers wrote:
+>> > On Thu, May 2, 2019 at 8:16 AM Nathan Chancellor
+>> > <natechancellor@gmail.com> wrote:
+>> > >
+>> > > When building with -Wuninitialized, Clang warns:
+>> > >
+>> > > drivers/net/wireless/rsi/rsi_91x_sdio.c:940:43: warning: variable 'data'
+>> > > is uninitialized when used here [-Wuninitialized]
+>> > >         put_unaligned_le32(TA_HOLD_THREAD_VALUE, data);
+>> > >                                                  ^~~~
+>> > > drivers/net/wireless/rsi/rsi_91x_sdio.c:930:10: note: initialize the
+>> > > variable 'data' to silence this warning
+>> > >         u8 *data;
+>> > >                 ^
+>> > >                  = NULL
+>> > > 1 warning generated.
+>> > >
+>> > > Using Clang's suggestion of initializing data to NULL wouldn't work out
+>> > > because data will be dereferenced by put_unaligned_le32. Use kzalloc to
+>> > > properly initialize data, which matches a couple of other places in this
+>> > > driver.
+>> > >
+>> > > Fixes: e5a1ecc97e5f ("rsi: add firmware loading for 9116 device")
+>> > > Link: https://github.com/ClangBuiltLinux/linux/issues/464
+>> > > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+>> > > ---
+>> > >  drivers/net/wireless/rsi/rsi_91x_sdio.c | 21 ++++++++++++++-------
+>> > >  1 file changed, 14 insertions(+), 7 deletions(-)
+>> > >
+>> > > diff --git a/drivers/net/wireless/rsi/rsi_91x_sdio.c b/drivers/net/wireless/rsi/rsi_91x_sdio.c
+>> > > index f9c67ed473d1..b35728564c7b 100644
+>> > > --- a/drivers/net/wireless/rsi/rsi_91x_sdio.c
+>> > > +++ b/drivers/net/wireless/rsi/rsi_91x_sdio.c
+>> > > @@ -929,11 +929,15 @@ static int rsi_sdio_ta_reset(struct rsi_hw *adapter)
+>> > >         u32 addr;
+>> > >         u8 *data;
+>> > >
+>> > > +       data = kzalloc(sizeof(u32), GFP_KERNEL);
+>> > 
+>> > Something fishy is going on here.  We allocate 4 B but declare data as
+>> > a u8* (pointer to individual bytes)?  In general, dynamically
+>> > allocating that few bytes is a code smell; either you meant to just
+>> > use the stack, or this memory's lifetime extends past the lifetime of
+>> > this stackframe, at which point you probably just meant to stack
+>> > allocate space in a higher parent frame and pass this preallocated
+>> > memory down to the child frame to get filled in.
+>> > 
+>> > Reading through this code, I don't think that the memory is meant to
+>> > outlive the stack frame.  Is there a reason why we can't just declare
+>> > data as:
+>> > 
+>> > u8 data [4];
+>> 
+>> data was __le32 in rsi_reset_chip() before commit f700546682a6 ("rsi:
+>> fix nommu_map_sg overflow kernel panic").
+>> 
+>> I wonder if this would be okay for this function:
+>> 
+>> -------------------------------------------------
+>> 
+>> diff --git a/drivers/net/wireless/rsi/rsi_91x_sdio.c b/drivers/net/wireless/rsi/rsi_91x_sdio.c
+>> index f9c67ed473d1..0330c50ab99c 100644
+>> --- a/drivers/net/wireless/rsi/rsi_91x_sdio.c
+>> +++ b/drivers/net/wireless/rsi/rsi_91x_sdio.c
+>> @@ -927,7 +927,7 @@ static int rsi_sdio_ta_reset(struct rsi_hw *adapter)
+>>  {
+>>         int status;
+>>         u32 addr;
+>> -       u8 *data;
+>> +       u8 data;
+>>  
+>>         status = rsi_sdio_master_access_msword(adapter, TA_BASE_ADDR);
+>>         if (status < 0) {
+>> @@ -937,7 +937,7 @@ static int rsi_sdio_ta_reset(struct rsi_hw *adapter)
+>>         }
+>>  
+>>         rsi_dbg(INIT_ZONE, "%s: Bring TA out of reset\n", __func__);
+>> -       put_unaligned_le32(TA_HOLD_THREAD_VALUE, data);
+>> +       put_unaligned_le32(TA_HOLD_THREAD_VALUE, &data);
+>>         addr = TA_HOLD_THREAD_REG | RSI_SD_REQUEST_MASTER;
+>>         status = rsi_sdio_write_register_multiple(adapter, addr,
+>>                                                   (u8 *)&data,
+>> @@ -947,7 +947,7 @@ static int rsi_sdio_ta_reset(struct rsi_hw *adapter)
+>>                 return status;
+>>         }
+>>  
+>> -       put_unaligned_le32(TA_SOFT_RST_CLR, data);
+>> +       put_unaligned_le32(TA_SOFT_RST_CLR, &data);
+>>         addr = TA_SOFT_RESET_REG | RSI_SD_REQUEST_MASTER;
+>>         status = rsi_sdio_write_register_multiple(adapter, addr,
+>>                                                   (u8 *)&data,
+>> @@ -957,7 +957,7 @@ static int rsi_sdio_ta_reset(struct rsi_hw *adapter)
+>>                 return status;
+>>         }
+>>  
+>> -       put_unaligned_le32(TA_PC_ZERO, data);
+>> +       put_unaligned_le32(TA_PC_ZERO, &data);
+>>         addr = TA_TH0_PC_REG | RSI_SD_REQUEST_MASTER;
+>>         status = rsi_sdio_write_register_multiple(adapter, addr,
+>>                                                   (u8 *)&data,
+>> @@ -967,7 +967,7 @@ static int rsi_sdio_ta_reset(struct rsi_hw *adapter)
+>>                 return -EINVAL;
+>>         }
+>>  
+>> -       put_unaligned_le32(TA_RELEASE_THREAD_VALUE, data);
+>> +       put_unaligned_le32(TA_RELEASE_THREAD_VALUE, &data);
+>>         addr = TA_RELEASE_THREAD_REG | RSI_SD_REQUEST_MASTER;
+>>         status = rsi_sdio_write_register_multiple(adapter, addr,
+>>                                                   (u8 *)&data,
+>> 
+>> 
+>> > 
+>> > then use ARRAY_SIZE(data) or RSI_9116_REG_SIZE in rsi_reset_chip(),
+>> > getting rid of the kzalloc/kfree?
+>> > 
+>> > (Sorry, I hate when a simple fixup becomes a "hey let's rewrite all
+>> > this code" thus becoming "that guy.")
+>> 
+>> If we aren't actually improving the code, then why bother? :)
+>> 
+>> Thank you for the review!
+>
+> Did any of the maintainers have any comments on what the correct
+> solution is here to resolve this warning? It is one of the few left
+> before we can turn on -Wuninitialized for the whole kernel.
 
-On 23/05/2019 01:15, Fabio Estevam wrote:
-> The SNVS LPGR IP block is also found on other i.MX SoCs that
-> are not covered by the current SOC_IMX6 || SOC_IMX7D logic.
-> 
-> One example is the i.MX7ULP.
-> 
-> To avoid keep expanding the SoC logic selection, make it broader
-> by using the more generic ARCH_MXC symbol instead.
-> 
-> Signed-off-by: Fabio Estevam <festevam@gmail.com>
-> ---
->   drivers/nvmem/Kconfig | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
+I don't have any strong opinion, but as the commit log says that
+kzalloc() is also used in similar cases in the same driver I would happy
+to take this patch as is.
 
-Applied!
-
-
-Thanks,
-srini
+-- 
+Kalle Valo
