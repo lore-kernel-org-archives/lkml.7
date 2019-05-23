@@ -2,103 +2,107 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5CA9C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 09:53:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35E1BC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 09:54:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73FF5217D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 09:53:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="YizduH/4"
+	by mail.kernel.org (Postfix) with ESMTP id 09CB120863
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 09:54:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730202AbfEWJxq (ORCPT
+        id S1730363AbfEWJyR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 05:53:46 -0400
-Received: from mail-eopbgr140053.outbound.protection.outlook.com ([40.107.14.53]:6257
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729797AbfEWJxq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 05:53:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7/gJyh9U9QUhiBGH17yaDRDpDoZi1M9kFk9wSCZZuTs=;
- b=YizduH/4e0ucsOoc4AmBS7YVyq/VewABmlXTOQOaW7lvl5pXe8IbNrgnMQC+rTiTQ6BxiDKK7+X20Joct+ikRSmmVQG27Ftcn1VoVIEDYeZ4BCMQZWYo6SRvkR0yKV/pQgw1B6VRiP9VVywIDT4fWr3u4nkjIZ5CbZmLLHj8bnA=
-Received: from VE1PR04MB6479.eurprd04.prod.outlook.com (20.179.233.80) by
- VE1PR04MB6509.eurprd04.prod.outlook.com (20.179.233.159) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1900.17; Thu, 23 May 2019 09:53:42 +0000
-Received: from VE1PR04MB6479.eurprd04.prod.outlook.com
- ([fe80::a5b5:13f5:f89c:9a30]) by VE1PR04MB6479.eurprd04.prod.outlook.com
- ([fe80::a5b5:13f5:f89c:9a30%7]) with mapi id 15.20.1922.016; Thu, 23 May 2019
- 09:53:42 +0000
-From:   "S.j. Wang" <shengjiu.wang@nxp.com>
-To:     Nicolin Chen <nicoleotsuka@gmail.com>
-CC:     "timur@kernel.org" <timur@kernel.org>,
-        "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ASoC: fsl_esai: fix the channel swap issue after xrun
-Thread-Topic: [PATCH] ASoC: fsl_esai: fix the channel swap issue after xrun
-Thread-Index: AdURTPrTY9TUCA67Tpmftem6u8zciw==
-Date:   Thu, 23 May 2019 09:53:42 +0000
-Message-ID: <VE1PR04MB647934199C3AA60759BED888E3010@VE1PR04MB6479.eurprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=shengjiu.wang@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 05ec2f23-0094-4fbb-840e-08d6df648a4e
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VE1PR04MB6509;
-x-ms-traffictypediagnostic: VE1PR04MB6509:
-x-microsoft-antispam-prvs: <VE1PR04MB6509F50EB45686EE7F2ABB86E3010@VE1PR04MB6509.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 00462943DE
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(366004)(396003)(376002)(136003)(39860400002)(189003)(199004)(33656002)(8676002)(81156014)(68736007)(14454004)(256004)(52536014)(6116002)(3846002)(1411001)(6916009)(54906003)(6436002)(316002)(99286004)(53936002)(81166006)(2906002)(7736002)(66476007)(229853002)(6506007)(8936002)(478600001)(66556008)(7696005)(6246003)(66446008)(64756008)(305945005)(55016002)(102836004)(86362001)(186003)(9686003)(4326008)(76116006)(66946007)(5660300002)(25786009)(73956011)(486006)(71200400001)(71190400001)(4744005)(74316002)(26005)(476003)(66066001);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6509;H:VE1PR04MB6479.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: dFFutxu6B3E6s1FFu5vXEndpXoLGmV5tfMInI7BwDXUIizLJBNKnfMirImG2Q0qUIJ6VSJRyNdGEp/5noyhhgcjjS7OUeWiTvvyLk2ULRmX3eZQ5wmSfRvBTDmVkDn4DJe1PRxYonHeMBiIG4EZM62s1TrcOFgjXHI280PA830fNnx9KUwLhbBC/LYKeKuNiu8pFMyfdQaK71htZZySxMahIg97F5YQ9/Vtz8aA+D7c4KUSzI4LvviVUmjcXxHg7/c71T0F+fK+pEFr5XaDOoBMXUocsBRyBUK5l25dqSRC7+m22K1lw8aoPQOaWzgZim/zYI4VRyq5qF9mPgIaHxn6HECMTV8K7RM4qVy/vmz2881f/Rca7TAwTJI3yjXTOQEvWnL67MfJiq1dwSl/gP1+DwLifL6k2BLpkPi7z5DA=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 23 May 2019 05:54:17 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:53394 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728109AbfEWJyQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 05:54:16 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4N9qSq5146106
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 05:54:16 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2snqnnd2mk-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 05:54:16 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
+        Thu, 23 May 2019 10:54:13 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 23 May 2019 10:54:09 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4N9s8wC51577044
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 23 May 2019 09:54:08 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 69E3FA4059;
+        Thu, 23 May 2019 09:54:08 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CB0B1A4040;
+        Thu, 23 May 2019 09:54:07 +0000 (GMT)
+Received: from rapoport-lnx (unknown [9.148.8.112])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Thu, 23 May 2019 09:54:07 +0000 (GMT)
+Date:   Thu, 23 May 2019 12:54:06 +0300
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Will Deacon <will.deacon@arm.com>
+Cc:     Steven Price <steven.price@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Subject: Re: Bad virt_to_phys since commit 54c7a8916a887f35
+References: <20190516133820.GA43059@lakrids.cambridge.arm.com>
+ <20190516134105.GB43059@lakrids.cambridge.arm.com>
+ <e70ead93-2fe9-faf9-9e77-9df15809bad6@arm.com>
+ <20190516141640.GC43059@lakrids.cambridge.arm.com>
+ <d265e5fe-c061-17a0-427d-0e6f31be17f3@arm.com>
+ <20190523093138.GB26646@fuggles.cambridge.arm.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 05ec2f23-0094-4fbb-840e-08d6df648a4e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 May 2019 09:53:42.8529
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6509
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190523093138.GB26646@fuggles.cambridge.arm.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-TM-AS-GCONF: 00
+x-cbid: 19052309-0016-0000-0000-0000027EA6F3
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19052309-0017-0000-0000-000032DB9D09
+Message-Id: <20190523095405.GE23850@rapoport-lnx>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-23_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=793 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905230070
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi
+On Thu, May 23, 2019 at 10:31:38AM +0100, Will Deacon wrote:
+> Hi Steven,
+> 
+> On Thu, May 16, 2019 at 03:20:59PM +0100, Steven Price wrote:
+> > I'll spin a real patch and add your Tested-by
+> 
+> Did you send this out? I can't spot it in my inbox.
+ 
+https://lore.kernel.org/lkml/20190516143125.48948-1-steven.price@arm.com
 
-> > +     /*
-> > +      * Add fifo reset here, because the regcache_sync will
-> > +      * write one more data to ETDR.
-> > +      * Which will cause channel shift.
->=20
-> Sounds like a bug to me...should fix it first by marking the data registe=
-rs as
-> volatile.
->=20
+And Andrew already took it to the -mm tree.
 
-The ETDR is a writable register, it is not volatile. Even we change it to
-Volatile, I don't think we can't avoid this issue. for the regcache_sync
-Just to write this register, it is correct behavior.
+> Cheers,
+> 
+> Will
+> 
 
-Best regards
-Wang shengjiu
+-- 
+Sincerely yours,
+Mike.
+
