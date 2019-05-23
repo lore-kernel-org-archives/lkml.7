@@ -7,48 +7,70 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F551C282E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:39:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B54BCC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:39:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DF262075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:39:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F2AE20881
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:39:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558640354;
-	bh=GbDm2XRIFv49aQpkXXo6NsBQuMQNbb6HXIf4zpcN/EQ=;
+	s=default; t=1558640359;
+	bh=plf5khnwnrG7TJd0YaGiq3aILycf1dI/vg/fJhtd+SY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GzgRWIkYxnNJjbe79U8vnLwTFzOzU80CE0VaLob0l5gdAzHYDK5wwzaDFox5v6L8U
-	 B8BQJ0UQGf+ri1AkQV6JfHv+pexJtN7uUjSc+eIBhHD1uvcpgZfIOIOlfnGCHSgnPG
-	 MuC2/yJoqf/X37H8mFnsMjMf1OJaXw9x2lqOliw4=
+	b=VMMgS4rq1XoLRPovnF2+nFjW3GRYDK2EszQ7z6rXe88URpOYBjHOsivKOUabVgVHr
+	 leMemQe1TdALrHbf5esNun75uzFdj0zfjSea8iPz5Ozv3IsY6j/qjLbt5S5Z8qWrXL
+	 3/bxrRMyt5N5Wrsy3NFAbsBcQ38kmBo/M/JBuINQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390460AbfEWTWW (ORCPT
+        id S2390439AbfEWTWR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:22:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60240 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:22:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390444AbfEWTWS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:22:18 -0400
+        id S2390415AbfEWTWM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:22:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 01E98217D7;
-        Thu, 23 May 2019 19:22:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 250352184E;
+        Thu, 23 May 2019 19:22:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639338;
-        bh=GbDm2XRIFv49aQpkXXo6NsBQuMQNbb6HXIf4zpcN/EQ=;
+        s=default; t=1558639330;
+        bh=plf5khnwnrG7TJd0YaGiq3aILycf1dI/vg/fJhtd+SY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R4bQlHJLnJLi6T9ekPqVt3aruAtAmoXwU+/Luc4cJdQPBmQr7s+bBE08hlIcFT6Bg
-         GcMimxcC8XOTo8fEvTxq311Nn3K2HcB9GyG7YG+1oiPKrK/5agJKpu2CtStWp0kijP
-         J8Bnt2CVqUYU9PZ3TH0FsGVZ17qKABHvy9Oc+R5w=
+        b=jJKI+t2YYMNHHkvveqK5D9cUEAzfbz65VMrmJxu6S3uwSh+mU8qZpOJ89iaoj+xDZ
+         v3jhMUG7nsq51NSDiKZ+l8mhQpMUoOhTO4rQDyzzC3M32WM+db7jifm2PTGk1mSL5P
+         dfNfA9E76RNYCe/Y0f0rnN82QkmCobbNazeYq6ko=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andreas Ziegler <andreas.ziegler@fau.de>,
-        Ingo Molnar <mingo@redhat.com>,
+        stable@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
+        Nicolai Stange <nstange@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Juergen Gross <jgross@suse.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
         Masami Hiramatsu <mhiramat@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 5.0 068/139] tracing: probeevent: Fix to make the type of $comm string
-Date:   Thu, 23 May 2019 21:05:56 +0200
-Message-Id: <20190523181729.657954696@linuxfoundation.org>
+Subject: [PATCH 5.0 065/139] x86_64: Allow breakpoints to emulate call instructions
+Date:   Thu, 23 May 2019 21:05:53 +0200
+Message-Id: <20190523181729.225177033@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181720.120897565@linuxfoundation.org>
 References: <20190523181720.120897565@linuxfoundation.org>
@@ -61,52 +83,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Peter Zijlstra <peterz@infradead.org>
 
-commit 3dd1f7f24f8ceec00bbbc364c2ac3c893f0fdc4c upstream.
+commit 4b33dadf37666c0860b88f9e52a16d07bf6d0b03 upstream.
 
-Fix to make the type of $comm "string".  If we set the other type to $comm
-argument, it shows meaningless value or wrong data. Currently probe events
-allow us to set string array type (e.g. ":string[2]"), or other digit types
-like x8 on $comm. But since clearly $comm is just a string data, it should
-not be fetched by other types including array.
+In order to allow breakpoints to emulate call instructions, they need to push
+the return address onto the stack. The x86_64 int3 handler adds a small gap
+to allow the stack to grow some. Use this gap to add the return address to
+be able to emulate a call instruction at the breakpoint location.
 
-Link: http://lkml.kernel.org/r/155723736241.9149.14582064184468574539.stgit@devnote2
+These helper functions are added:
 
-Cc: Andreas Ziegler <andreas.ziegler@fau.de>
+  int3_emulate_jmp(): changes the location of the regs->ip to return there.
+
+ (The next two are only for x86_64)
+  int3_emulate_push(): to push the address onto the gap in the stack
+  int3_emulate_call(): push the return address and change regs->ip
+
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Nicolai Stange <nstange@suse.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: the arch/x86 maintainers <x86@kernel.org>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Jiri Kosina <jikos@kernel.org>
+Cc: Miroslav Benes <mbenes@suse.cz>
+Cc: Petr Mladek <pmladek@suse.com>
+Cc: Joe Lawrence <joe.lawrence@redhat.com>
+Cc: Shuah Khan <shuah@kernel.org>
+Cc: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+Cc: Tim Chen <tim.c.chen@linux.intel.com>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Mimi Zohar <zohar@linux.ibm.com>
+Cc: Juergen Gross <jgross@suse.com>
+Cc: Nick Desaulniers <ndesaulniers@google.com>
+Cc: Nayna Jain <nayna@linux.ibm.com>
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Joerg Roedel <jroedel@suse.de>
+Cc: "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>
 Cc: stable@vger.kernel.org
-Fixes: 533059281ee5 ("tracing: probeevent: Introduce new argument fetching code")
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Fixes: b700e7f03df5 ("livepatch: kernel: add support for live patching")
+Tested-by: Nicolai Stange <nstange@suse.de>
+Reviewed-by: Nicolai Stange <nstange@suse.de>
+Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+[ Modified to only work for x86_64 and added comment to int3_emulate_push() ]
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/trace/trace_probe.c |   13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ arch/x86/include/asm/text-patching.h |   28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
---- a/kernel/trace/trace_probe.c
-+++ b/kernel/trace/trace_probe.c
-@@ -405,13 +405,14 @@ static int traceprobe_parse_probe_arg_bo
- 				return -E2BIG;
- 		}
- 	}
--	/*
--	 * The default type of $comm should be "string", and it can't be
--	 * dereferenced.
--	 */
--	if (!t && strcmp(arg, "$comm") == 0)
+--- a/arch/x86/include/asm/text-patching.h
++++ b/arch/x86/include/asm/text-patching.h
+@@ -39,4 +39,32 @@ extern int poke_int3_handler(struct pt_r
+ extern void *text_poke_bp(void *addr, const void *opcode, size_t len, void *handler);
+ extern int after_bootmem;
+ 
++static inline void int3_emulate_jmp(struct pt_regs *regs, unsigned long ip)
++{
++	regs->ip = ip;
++}
 +
-+	/* Since $comm can not be dereferred, we can find $comm by strcmp */
-+	if (strcmp(arg, "$comm") == 0) {
-+		/* The type of $comm must be "string", and not an array. */
-+		if (parg->count || (t && strcmp(t, "string")))
-+			return -EINVAL;
- 		parg->type = find_fetch_type("string");
--	else
-+	} else
- 		parg->type = find_fetch_type(t);
- 	if (!parg->type) {
- 		pr_info("Unsupported type: %s\n", t);
++#define INT3_INSN_SIZE 1
++#define CALL_INSN_SIZE 5
++
++#ifdef CONFIG_X86_64
++static inline void int3_emulate_push(struct pt_regs *regs, unsigned long val)
++{
++	/*
++	 * The int3 handler in entry_64.S adds a gap between the
++	 * stack where the break point happened, and the saving of
++	 * pt_regs. We can extend the original stack because of
++	 * this gap. See the idtentry macro's create_gap option.
++	 */
++	regs->sp -= sizeof(unsigned long);
++	*(unsigned long *)regs->sp = val;
++}
++
++static inline void int3_emulate_call(struct pt_regs *regs, unsigned long func)
++{
++	int3_emulate_push(regs, regs->ip - INT3_INSN_SIZE + CALL_INSN_SIZE);
++	int3_emulate_jmp(regs, func);
++}
++#endif
++
+ #endif /* _ASM_X86_TEXT_PATCHING_H */
 
 
