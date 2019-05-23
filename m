@@ -2,191 +2,148 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 597D7C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 10:42:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF80DC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 10:43:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F01B420851
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 10:42:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="SDlsxNUZ"
+	by mail.kernel.org (Postfix) with ESMTP id B98C920851
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 10:43:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730484AbfEWKmp (ORCPT
+        id S1730528AbfEWKnG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 06:42:45 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:46843 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728109AbfEWKmo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 06:42:44 -0400
-Received: by mail-ed1-f68.google.com with SMTP id f37so8499576edb.13
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 03:42:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=7G7KMOV6g3j20R/ypsMh4LtnKSKhlC+I/Mtee6H3XzM=;
-        b=SDlsxNUZ/CIEihxMH5EaxK8uvKSOcRfyJe0/2tao19I9okNaAeVF8G431fwJDiJ+Du
-         yIu2wRZeDxt4o2dTbsTIHod9g0eTR+mtbE7M1YN+HcB7VgCoqftONu8dnIKIzzncDQNZ
-         ph4t5K6Df51X8mj+1tViYQka1wgxpAyKhFfzM5o5lIecQvmX7sNkc7xAt0ghz3rf5HXv
-         w14HiPKnP1pgwVnFRPSJccQlk+P3U+XVSr54hkwlXYrTTlK5YIdnUghc0UPeW/YSMVdE
-         aItJGw8ouWlp5NruA2/ijz7o5Z5abhRjMWie+jDxySOOac/k6fT2+S8C4HNNz02DDGo1
-         YuOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=7G7KMOV6g3j20R/ypsMh4LtnKSKhlC+I/Mtee6H3XzM=;
-        b=MJoxBXJLTjfRHqf4TfejSATBg1B5yZlmCq9TrevpsoTDT0u/1c/2W339bgrU1MMfGz
-         jP8t1cR8PVTKpgQ46ZQN4Y7gCY/JRO9isZiprGdNPo3PY5qCpimd5UcMxFno8FomJ+EZ
-         +DWGhFj/yRmyZSirjosiOL8JNdoBqlOgO0LhJLAucTkD5wqLlvuPD9m3aEyTODc/MYQK
-         MyiWPfa+gay2yOwZ9MsuZdZWtkch/71im+mfpWNl2jtzXQJ6RXtjd6e+Y1K9FO9+tL2V
-         61zyNfJ22LwvSlDljiT+BGSjnwAzbTwa6Lee2/SrjbMjgP4wSma9jp2iyWakTvQwPqN8
-         16PA==
-X-Gm-Message-State: APjAAAXnMspUheCNKa4ytvGL3U7cZsNIAywsbeR0UuGKiTJU8kOfhiry
-        0s5Q7vfH3IFGwt5Dzn5D8RuE5g==
-X-Google-Smtp-Source: APXvYqzN6+LHawhNQbZh3C32p4pC9Pi4N3wSY5vZzUbEY1CaF2uw9XPRIUPRj+lUvwNp44q6Nu5sbg==
-X-Received: by 2002:a50:8ec7:: with SMTP id x7mr95579350edx.175.1558608162215;
-        Thu, 23 May 2019 03:42:42 -0700 (PDT)
-Received: from brauner.io (178-197-142-46.pool.kielnet.net. [46.142.197.178])
-        by smtp.gmail.com with ESMTPSA id l43sm7946861eda.70.2019.05.23.03.42.41
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 23 May 2019 03:42:41 -0700 (PDT)
-Date:   Thu, 23 May 2019 12:42:40 +0200
-From:   Christian Brauner <christian@brauner.io>
-To:     Amir Goldstein <amir73il@gmail.com>
-Cc:     Jan Kara <jack@suse.cz>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Matthew Bobrowski <mbobrowski@mbobrowski.org>
-Subject: Re: [PATCH] fanotify: remove redundant capable(CAP_SYS_ADMIN)s
-Message-ID: <20190523104239.u63u2uth4yyuuufs@brauner.io>
-References: <20190522163150.16849-1-christian@brauner.io>
- <CAOQ4uxjV=7=FXuyccBK9Pu1B7o-w-pbc1FQXJxY4q6z8E93KOg@mail.gmail.com>
- <EB97EF04-D44F-4320-ACDC-C536EED03BA4@brauner.io>
- <CAOQ4uxhodqVw0DVfcvXYH5vBf4LKcv7t388ZwXeZPBTcEMzGSw@mail.gmail.com>
- <20190523095506.nyei5nogvv63lm4a@brauner.io>
- <CAOQ4uxiBeAzsE+b=tE7+9=25-qS7ohuTdEswYOt8DrCp6eAMuw@mail.gmail.com>
+        Thu, 23 May 2019 06:43:06 -0400
+Received: from foss.arm.com ([217.140.101.70]:43642 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727434AbfEWKnG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 06:43:06 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 84A77341;
+        Thu, 23 May 2019 03:43:05 -0700 (PDT)
+Received: from e103592.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C9A023F718;
+        Thu, 23 May 2019 03:42:59 -0700 (PDT)
+Date:   Thu, 23 May 2019 11:42:57 +0100
+From:   Dave Martin <Dave.Martin@arm.com>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Mark Rutland <mark.rutland@arm.com>, kvm@vger.kernel.org,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        dri-devel@lists.freedesktop.org, linux-mm@kvack.org,
+        Lee Smith <Lee.Smith@arm.com>, linux-kselftest@vger.kernel.org,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Leon Romanovsky <leon@kernel.org>, linux-rdma@vger.kernel.org,
+        amd-gfx@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        Evgeniy Stepanov <eugenis@google.com>,
+        linux-media@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        linux-kernel@vger.kernel.org,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Alexander Deucher <Alexander.Deucher@amd.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+Subject: Re: [PATCH v15 00/17] arm64: untag user pointers passed to the kernel
+Message-ID: <20190523104256.GX28398@e103592.cambridge.arm.com>
+References: <cover.1557160186.git.andreyknvl@google.com>
+ <20190517144931.GA56186@arrakis.emea.arm.com>
+ <20190521184856.GC2922@ziepe.ca>
+ <20190522134925.GV28398@e103592.cambridge.arm.com>
+ <20190523002052.GF15389@ziepe.ca>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAOQ4uxiBeAzsE+b=tE7+9=25-qS7ohuTdEswYOt8DrCp6eAMuw@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190523002052.GF15389@ziepe.ca>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 01:25:08PM +0300, Amir Goldstein wrote:
-> On Thu, May 23, 2019 at 12:55 PM Christian Brauner <christian@brauner.io> wrote:
-> >
-> > On Wed, May 22, 2019 at 11:00:22PM +0300, Amir Goldstein wrote:
-> > > On Wed, May 22, 2019 at 9:57 PM Christian Brauner <christian@brauner.io> wrote:
-> > > >
-> > > > On May 22, 2019 8:29:37 PM GMT+02:00, Amir Goldstein <amir73il@gmail.com> wrote:
-> > > > >On Wed, May 22, 2019 at 7:32 PM Christian Brauner
-> > > > ><christian@brauner.io> wrote:
-> > > > >>
-> > > > >> This removes two redundant capable(CAP_SYS_ADMIN) checks from
-> > > > >> fanotify_init().
-> > > > >> fanotify_init() guards the whole syscall with capable(CAP_SYS_ADMIN)
-> > > > >at the
-> > > > >> beginning. So the other two capable(CAP_SYS_ADMIN) checks are not
-> > > > >needed.
-> > > > >
-> > > > >It's intentional:
-> > > > >
-> > > > >commit e7099d8a5a34d2876908a9fab4952dabdcfc5909
-> > > > >Author: Eric Paris <eparis@redhat.com>
-> > > > >Date:   Thu Oct 28 17:21:57 2010 -0400
-> > > > >
-> > > > >    fanotify: limit the number of marks in a single fanotify group
-> > > > >
-> > > > >There is currently no limit on the number of marks a given fanotify
-> > > > >group
-> > > > >can have.  Since fanotify is gated on CAP_SYS_ADMIN this was not seen
-> > > > >as
-> > > > >a serious DoS threat.  This patch implements a default of 8192, the
-> > > > >same as
-> > > > >inotify to work towards removing the CAP_SYS_ADMIN gating and
-> > > > >eliminating
-> > > > >    the default DoS'able status.
-> > > > >
-> > > > >    Signed-off-by: Eric Paris <eparis@redhat.com>
-> > > > >
-> > > > >There idea is to eventually remove the gated CAP_SYS_ADMIN.
-> > > > >There is no reason that fanotify could not be used by unprivileged
-> > > > >users
-> > > > >to setup inotify style watch on an inode or directories children, see:
-> > > > >https://patchwork.kernel.org/patch/10668299/
-> > > > >
-> > > > >>
-> > > > >> Fixes: 5dd03f55fd2 ("fanotify: allow userspace to override max queue
-> > > > >depth")
-> > > > >> Fixes: ac7e22dcfaf ("fanotify: allow userspace to override max
-> > > > >marks")
-> > > > >
-> > > > >Fixes is used to tag bug fixes for stable.
-> > > > >There is no bug.
-> > > > >
-> > > > >Thanks,
-> > > > >Amir.
-> > > >
-> > > > Interesting. When do you think the gate can be removed?
-> > >
-> > > Nobody is working on this AFAIK.
-> > > What I posted was a simple POC, but I have no use case for this.
-> > > In the patchwork link above, Jan has listed the prerequisites for
-> > > removing the gate.
-> > >
-> > > One of the prerequisites is FAN_REPORT_FID, which is now merged.
-> > > When events gets reported with fid instead of fd, unprivileged user
-> > > (hopefully) cannot use fid for privilege escalation.
-> > >
-> > > > I was looking into switching from inotify to fanotify but since it's not usable from
-> > > > non-initial userns it's a no-no
-> > > > since we support nested workloads.
-> > >
-> > > One of Jan's questions was what is the benefit of using inotify-compatible
-> > > fanotify vs. using inotify.
-> > > So what was the reason you were looking into switching from inotify to fanotify?
-> > > Is it because of mount/filesystem watch? Because making those available for
-> >
-> > Yeah. Well, I would need to look but you could probably do it safely for
-> > filesystems mountable in user namespaces (which are few).
-> > Can you do a bind-mount and then place a watch on the bind-mount or is
-> > this superblock based?
-> >
+On Wed, May 22, 2019 at 09:20:52PM -0300, Jason Gunthorpe wrote:
+> On Wed, May 22, 2019 at 02:49:28PM +0100, Dave Martin wrote:
+> > On Tue, May 21, 2019 at 03:48:56PM -0300, Jason Gunthorpe wrote:
+> > > On Fri, May 17, 2019 at 03:49:31PM +0100, Catalin Marinas wrote:
+> > > 
+> > > > The tagged pointers (whether hwasan or MTE) should ideally be a
+> > > > transparent feature for the application writer but I don't think we can
+> > > > solve it entirely and make it seamless for the multitude of ioctls().
+> > > > I'd say you only opt in to such feature if you know what you are doing
+> > > > and the user code takes care of specific cases like ioctl(), hence the
+> > > > prctl() proposal even for the hwasan.
+> > > 
+> > > I'm not sure such a dire view is warrented.. 
+> > > 
+> > > The ioctl situation is not so bad, other than a few special cases,
+> > > most drivers just take a 'void __user *' and pass it as an argument to
+> > > some function that accepts a 'void __user *'. sparse et al verify
+> > > this. 
+> > > 
+> > > As long as the core functions do the right thing the drivers will be
+> > > OK.
+> > > 
+> > > The only place things get dicy is if someone casts to unsigned long
+> > > (ie for vma work) but I think that reflects that our driver facing
+> > > APIs for VMAs are compatible with static analysis (ie I have no
+> > > earthly idea why get_user_pages() accepts an unsigned long), not that
+> > > this is too hard.
+> > 
+> > If multiple people will care about this, perhaps we should try to
+> > annotate types more explicitly in SYSCALL_DEFINEx() and ABI data
+> > structures.
+> > 
+> > For example, we could have a couple of mutually exclusive modifiers
+> > 
+> > T __object *
+> > T __vaddr * (or U __vaddr)
+> > 
+> > In the first case the pointer points to an object (in the C sense)
+> > that the call may dereference but not use for any other purpose.
 > 
-> Either.
-> FAN_MARK_MOUNT was there from day 1 of fanotify.
-> FAN_MARK_FILESYSTEM was merged to Linux Linux 4.20.
+> How would you use these two differently?
 > 
-> But directory modification events that are supported since v5.1 are
-> not available
-> with FAN_MARK_MOUNT, see:
+> So far the kernel has worked that __user should tag any pointer that
+> is from userspace and then you can't do anything with it until you
+> transform it into a kernel something
 
-Because you're worried about unprivileged users spying on events? Or
-something else?
-Because if you can do a bind-mount there's nothing preventing an
-unprivileged user to do a hand-rolled recursive inotify that would
-amount to the same thing anyway.
-(And btw, v5.1 really is a major step forward and I would really like to
- use this api tbh.)
+Ultimately it would be good to disallow casting __object pointers execpt
+to compatible __object pointer types, and to make get_user etc. demand
+__object.
 
-Christian
+__vaddr pointers / addresses would be freely castable, but not to
+__object and so would not be dereferenceable even indirectly.
 
-> https://github.com/amir73il/man-pages/blob/fanotify_fid/man2/fanotify_init.2#L97
+Or that's the general idea.  Figuring out a sane set of rules that we
+could actually check / enforce would require a bit of work.
+
+(Whether the __vaddr base type is a pointer or an integer type is
+probably moot, due to the restrictions we would place on the use of
+these anyway.)
+
+> > to tell static analysers the real type of pointers smuggled through
+> > UAPI disguised as other types (*cough* KVM, etc.)
 > 
-> Matthew,
-> 
-> Perhaps this fact is worth a mention in the linked entry for FAN_REPORT_FID
-> in fanotify_init.2 in addition to the comment on the entry for FAN_MARK_MOUNT
-> in fanotify_mark.2.
-> 
-> Thanks,
-> Amir.
+> Yes, that would help alot, we often have to pass pointers through a
+> u64 in the uAPI, and there is no static checker support to make sure
+> they are run through the u64_to_user_ptr() helper.
+
+Agreed.
+
+Cheers
+---Dave
