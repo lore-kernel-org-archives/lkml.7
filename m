@@ -5,50 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EADF7C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:24:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A034C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:24:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF99620868
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:24:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7853217D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:24:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639491;
-	bh=v3YkPnGp/3MImUx4OfH7TLRcK2183DXdIS1ADBX1z6k=;
+	s=default; t=1558639496;
+	bh=uJBh086S3lA5clMbMdK3DEkSiLcda+JDltOY7WdML3w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gMZALEnvc5mjO7pWcZPSs07rYWGsx4wQdK5RZuE72+nfHkgh9a7FTGlisokMk7BlI
-	 TwGOHs12xZhsXaS0MRo+mS1HxpqlxMijzj8xaItkKJQv06pAfNyzs/tCYOHwjJUdCy
-	 NWF3riDU3KxsLqbbxU+bGuM5O2B95u15sNAVL8vc=
+	b=D9wj6yQKAxjl7flzAIAj3mvbg6vwhQDUPONjZii3qZ7veB71KIPEMno/Oyq2ARd5C
+	 SkMkRcKkg1UKecU42o8em4793K6QjCay4IWCVqGogSHub6XjpP9ezL0JEwKLDvgNY3
+	 NxXkn4C3iyQ2dxfT1pIEaM3JvzHCxPU3/I6XkEZ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390378AbfEWTYu (ORCPT
+        id S2390383AbfEWTYz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:24:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35868 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:24:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36064 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388846AbfEWTYs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:24:48 -0400
+        id S2390997AbfEWTYw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:24:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6038B217D7;
-        Thu, 23 May 2019 19:24:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B07082184E;
+        Thu, 23 May 2019 19:24:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639486;
-        bh=v3YkPnGp/3MImUx4OfH7TLRcK2183DXdIS1ADBX1z6k=;
+        s=default; t=1558639492;
+        bh=uJBh086S3lA5clMbMdK3DEkSiLcda+JDltOY7WdML3w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GijowNiKakK51sJsyBylL1dIprxOwiWSDwprQgYPNLWJAUAerGQW4Pm+zR+iZkjLi
-         4mFwAW0KaMZgjkVCQeHtsukFk2Z+FPSM1LDGYxOBXDqisGH72Kqkdk4Q+cGqVWF27A
-         0lbwc+AgXBdTx/zJUfujYazK70kAZdJTvgtOmofE=
+        b=ti5B9ISpbtmyi3yfFq5jDeYLzRPnQQSFH1S6+I0Pl5wU+XdlMtQ+JPbFZLp2J7Mg2
+         DGe4TbkVaUTr1TJGpd00hRUpuIxSowaTgTCN26b/fQAvphfo+QtQ5IpbDZJyZqPPAX
+         e2pEk3yUoAHqZAZmcJo8Cg/I7s8cmm4xSw4FSA88=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lars Melin <larsm17@gmail.com>,
-        =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 123/139] qmi_wwan: new Wistron, ZTE and D-Link devices
-Date:   Thu, 23 May 2019 21:06:51 +0200
-Message-Id: <20190523181735.498110179@linuxfoundation.org>
+        stable@vger.kernel.org, "Tobin C. Harding" <tobin@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 125/139] sched/cpufreq: Fix kobject memleak
+Date:   Thu, 23 May 2019 21:06:53 +0200
+Message-Id: <20190523181735.660905914@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181720.120897565@linuxfoundation.org>
 References: <20190523181720.120897565@linuxfoundation.org>
@@ -61,123 +65,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 88ef66a28391ea7b624bfb7508a5b015c13b28f3 ]
+[ Upstream commit 9a4f26cc98d81b67ecc23b890c28e2df324e29f3 ]
 
-Adding device entries found in vendor modified versions of this
-driver.  Function maps for some of the devices follow:
+Currently the error return path from kobject_init_and_add() is not
+followed by a call to kobject_put() - which means we are leaking
+the kobject.
 
-WNC D16Q1, D16Q5, D18Q1 LTE CAT3 module (1435:0918)
+Fix it by adding a call to kobject_put() in the error path of
+kobject_init_and_add().
 
-MI_00 Qualcomm HS-USB Diagnostics
-MI_01 Android Debug interface
-MI_02 Qualcomm HS-USB Modem
-MI_03 Qualcomm Wireless HS-USB Ethernet Adapter
-MI_04 Qualcomm Wireless HS-USB Ethernet Adapter
-MI_05 Qualcomm Wireless HS-USB Ethernet Adapter
-MI_06 USB Mass Storage Device
-
- T:  Bus=02 Lev=01 Prnt=01 Port=00 Cnt=01 Dev#=  2 Spd=480 MxCh= 0
- D:  Ver= 2.00 Cls=00(>ifc ) Sub=00 Prot=00 MxPS=64 #Cfgs=  1
- P:  Vendor=1435 ProdID=0918 Rev= 2.32
- S:  Manufacturer=Android
- S:  Product=Android
- S:  SerialNumber=0123456789ABCDEF
- C:* #Ifs= 7 Cfg#= 1 Atr=80 MxPwr=500mA
- I:* If#= 0 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
- E:  Ad=81(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
- E:  Ad=01(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
- I:* If#= 1 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=42 Prot=01 Driver=(none)
- E:  Ad=82(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
- E:  Ad=02(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
- I:* If#= 2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
- E:  Ad=84(I) Atr=03(Int.) MxPS=  64 Ivl=32ms
- E:  Ad=83(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
- E:  Ad=03(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
- I:* If#= 3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=ff Driver=qmi_wwan
- E:  Ad=86(I) Atr=03(Int.) MxPS=  64 Ivl=32ms
- E:  Ad=85(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
- E:  Ad=04(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
- I:* If#= 4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=ff Driver=qmi_wwan
- E:  Ad=88(I) Atr=03(Int.) MxPS=  64 Ivl=32ms
- E:  Ad=87(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
- I:* If#= 5 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=ff Driver=qmi_wwan
- E:  Ad=8a(I) Atr=03(Int.) MxPS=  64 Ivl=32ms
- E:  Ad=89(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
- E:  Ad=06(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-
-WNC D18 LTE CAT3 module (1435:d182)
-
-MI_00 Qualcomm HS-USB Diagnostics
-MI_01 Androd Debug interface
-MI_02 Qualcomm HS-USB Modem
-MI_03 Qualcomm HS-USB NMEA
-MI_04 Qualcomm Wireless HS-USB Ethernet Adapter
-MI_05 Qualcomm Wireless HS-USB Ethernet Adapter
-MI_06 USB Mass Storage Device
-
-ZM8510/ZM8620/ME3960 (19d2:0396)
-
-MI_00 ZTE Mobile Broadband Diagnostics Port
-MI_01 ZTE Mobile Broadband AT Port
-MI_02 ZTE Mobile Broadband Modem
-MI_03 ZTE Mobile Broadband NDIS Port (qmi_wwan)
-MI_04 ZTE Mobile Broadband ADB Port
-
-ME3620_X (19d2:1432)
-
-MI_00 ZTE Diagnostics Device
-MI_01 ZTE UI AT Interface
-MI_02 ZTE Modem Device
-MI_03 ZTE Mobile Broadband Network Adapter
-MI_04 ZTE Composite ADB Interface
-
-Reported-by: Lars Melin <larsm17@gmail.com>
-Signed-off-by: Bjørn Mork <bjorn@mork.no>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Tobin C. Harding <tobin@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Tobin C. Harding <tobin@kernel.org>
+Cc: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>
+Link: http://lkml.kernel.org/r/20190430001144.24890-1-tobin@kernel.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/qmi_wwan.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ kernel/sched/cpufreq_schedutil.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
-index 94389c84ede65..366217263d704 100644
---- a/drivers/net/usb/qmi_wwan.c
-+++ b/drivers/net/usb/qmi_wwan.c
-@@ -1122,9 +1122,16 @@ static const struct usb_device_id products[] = {
- 	{QMI_FIXED_INTF(0x0846, 0x68d3, 8)},	/* Netgear Aircard 779S */
- 	{QMI_FIXED_INTF(0x12d1, 0x140c, 1)},	/* Huawei E173 */
- 	{QMI_FIXED_INTF(0x12d1, 0x14ac, 1)},	/* Huawei E1820 */
-+	{QMI_FIXED_INTF(0x1435, 0x0918, 3)},	/* Wistron NeWeb D16Q1 */
-+	{QMI_FIXED_INTF(0x1435, 0x0918, 4)},	/* Wistron NeWeb D16Q1 */
-+	{QMI_FIXED_INTF(0x1435, 0x0918, 5)},	/* Wistron NeWeb D16Q1 */
-+	{QMI_FIXED_INTF(0x1435, 0x3185, 4)},	/* Wistron NeWeb M18Q5 */
-+	{QMI_FIXED_INTF(0x1435, 0xd111, 4)},	/* M9615A DM11-1 D51QC */
- 	{QMI_FIXED_INTF(0x1435, 0xd181, 3)},	/* Wistron NeWeb D18Q1 */
- 	{QMI_FIXED_INTF(0x1435, 0xd181, 4)},	/* Wistron NeWeb D18Q1 */
- 	{QMI_FIXED_INTF(0x1435, 0xd181, 5)},	/* Wistron NeWeb D18Q1 */
-+	{QMI_FIXED_INTF(0x1435, 0xd182, 4)},	/* Wistron NeWeb D18 */
-+	{QMI_FIXED_INTF(0x1435, 0xd182, 5)},	/* Wistron NeWeb D18 */
- 	{QMI_FIXED_INTF(0x1435, 0xd191, 4)},	/* Wistron NeWeb D19Q1 */
- 	{QMI_QUIRK_SET_DTR(0x1508, 0x1001, 4)},	/* Fibocom NL668 series */
- 	{QMI_FIXED_INTF(0x16d8, 0x6003, 0)},	/* CMOTech 6003 */
-@@ -1180,6 +1187,7 @@ static const struct usb_device_id products[] = {
- 	{QMI_FIXED_INTF(0x19d2, 0x0265, 4)},	/* ONDA MT8205 4G LTE */
- 	{QMI_FIXED_INTF(0x19d2, 0x0284, 4)},	/* ZTE MF880 */
- 	{QMI_FIXED_INTF(0x19d2, 0x0326, 4)},	/* ZTE MF821D */
-+	{QMI_FIXED_INTF(0x19d2, 0x0396, 3)},	/* ZTE ZM8620 */
- 	{QMI_FIXED_INTF(0x19d2, 0x0412, 4)},	/* Telewell TW-LTE 4G */
- 	{QMI_FIXED_INTF(0x19d2, 0x1008, 4)},	/* ZTE (Vodafone) K3570-Z */
- 	{QMI_FIXED_INTF(0x19d2, 0x1010, 4)},	/* ZTE (Vodafone) K3571-Z */
-@@ -1200,7 +1208,9 @@ static const struct usb_device_id products[] = {
- 	{QMI_FIXED_INTF(0x19d2, 0x1425, 2)},
- 	{QMI_FIXED_INTF(0x19d2, 0x1426, 2)},	/* ZTE MF91 */
- 	{QMI_FIXED_INTF(0x19d2, 0x1428, 2)},	/* Telewell TW-LTE 4G v2 */
-+	{QMI_FIXED_INTF(0x19d2, 0x1432, 3)},	/* ZTE ME3620 */
- 	{QMI_FIXED_INTF(0x19d2, 0x2002, 4)},	/* ZTE (Vodafone) K3765-Z */
-+	{QMI_FIXED_INTF(0x2001, 0x7e16, 3)},	/* D-Link DWM-221 */
- 	{QMI_FIXED_INTF(0x2001, 0x7e19, 4)},	/* D-Link DWM-221 B1 */
- 	{QMI_FIXED_INTF(0x2001, 0x7e35, 4)},	/* D-Link DWM-222 */
- 	{QMI_FIXED_INTF(0x2020, 0x2031, 4)},	/* Olicard 600 */
+diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
+index 1ccf77f6d346d..d4ab9245e016c 100644
+--- a/kernel/sched/cpufreq_schedutil.c
++++ b/kernel/sched/cpufreq_schedutil.c
+@@ -771,6 +771,7 @@ out:
+ 	return 0;
+ 
+ fail:
++	kobject_put(&tunables->attr_set.kobj);
+ 	policy->governor_data = NULL;
+ 	sugov_tunables_free(tunables);
+ 
 -- 
 2.20.1
 
