@@ -2,104 +2,126 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB5FDC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:49:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62087C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:50:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9244520881
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:49:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="CStJflZD"
+	by mail.kernel.org (Postfix) with ESMTP id 373A22133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:50:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558641001;
+	bh=kBfZs7uPI92w1cYfqBIww9IeYka4HXTlPEwPA1TB7AQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=VqmoaW2VI0m9TwQTX8ohXvRSoVxljOgqU0l+8ByDpvU8IZoAT74FgtZXEZZ2j9QTi
+	 lZtWcSb9kBXWEHJqTkcIgtUyL57OBCbNeweHxcJMirJnsZWfL7Xz2pO8UnPw8jbw0M
+	 r7lJHVuoU68n1KEK9rIN/crVJM0Shl9guc8XWpRs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388069AbfEWTts (ORCPT
+        id S2388284AbfEWTuA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:49:48 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:33884 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387902AbfEWTKk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:10:40 -0400
-Received: by mail-qk1-f196.google.com with SMTP id t64so4319626qkh.1
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 12:10:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ghkOAlfJKu4tMoQKys/1EHqRxAiTe4oOiX6IKeo2jBc=;
-        b=CStJflZDRmQsaJAW4LdEdIgLN08TdeV6wfXiFQVetGvvLwGR78wlPTdu3Y1rnSUP2z
-         PAdqF6JW8oZyONTN6ZJAK/owBJKO5ZdBZN4letqRLItdPhUvAPD44UBf4mdPEuvvfl9m
-         jQu+i+rHGzgN5b9nt83NlNqp9sm4osT9bZ2JSg+rcNZfu24HiPbA/IvSv8NNAlI3gpny
-         UdpW+yXapIINK+p+9EMp7a3udWtaLUtEXQgU9RBmoU47E9VDVODLv2J4/RKajH+FwK//
-         Luh2IQjW7wfZctKpOvPkEJ1SafhIIKBlPNhORqpfr9ACctHprx1sexCgWxJrclZRsgF+
-         +1hw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ghkOAlfJKu4tMoQKys/1EHqRxAiTe4oOiX6IKeo2jBc=;
-        b=L0lg1ZScWRV1e3l08Vwb65fGmyg5akH7zhvS357RbOzgllfd+hyx4E4nD7X+h/735Y
-         9Gdv8Yo/qCiiEDHjXMJw6jib56J9tFQK+LxyAsn4o4OzIhEZkCxyhPU6icf8wzH8Yksm
-         Su730JU9DLL0RNMWMHRNaV+apNv7TdcrBvdBWwOr+zEY1UYnmF736Ut5zcVb45mvxf/c
-         Qjqlmiy0NSbze11AWg8w4B/6W5nhtK2cBX/FO6Y8XLVTK1M/Pv1nsEHwPe92A/c74f4e
-         C2hwrUSAnNOQf9snhy4DuGfr1FgFnb5uC4L+tGloDZSMg/m4AqMLKKdJkca8o3DgRsd+
-         CjXQ==
-X-Gm-Message-State: APjAAAVEncN8C27UjHUzEupN3kHh0Q8aifrfPVKsh1/8ANAUczMFUhxU
-        uadaA0WhKV3p5ymlAULCc3YYTg==
-X-Google-Smtp-Source: APXvYqy/wYrbpFnHYbhiKL987tF9J8OP2PBwu2icZP7tr48Sjo+bfXBS/A5sIwuRti5XspgHsz+C5A==
-X-Received: by 2002:a37:a1d0:: with SMTP id k199mr76164698qke.116.1558638640113;
-        Thu, 23 May 2019 12:10:40 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-49-251.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.49.251])
-        by smtp.gmail.com with ESMTPSA id f33sm122704qtf.64.2019.05.23.12.10.39
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 23 May 2019 12:10:39 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1hTt6t-0000gd-0V; Thu, 23 May 2019 16:10:39 -0300
-Date:   Thu, 23 May 2019 16:10:38 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Jerome Glisse <jglisse@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Artemy Kovalyov <artemyko@mellanox.com>,
-        Moni Shoua <monis@mellanox.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Kaike Wan <kaike.wan@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>
-Subject: Re: [PATCH v4 0/1] Use HMM for ODP v4
-Message-ID: <20190523191038.GG12159@ziepe.ca>
-References: <20190522005225.GA30819@ziepe.ca>
- <20190522174852.GA23038@redhat.com>
- <20190522235737.GD15389@ziepe.ca>
- <20190523150432.GA5104@redhat.com>
- <20190523154149.GB12159@ziepe.ca>
- <20190523155207.GC5104@redhat.com>
- <20190523163429.GC12159@ziepe.ca>
- <20190523173302.GD5104@redhat.com>
- <20190523175546.GE12159@ziepe.ca>
- <20190523182458.GA3571@redhat.com>
+        Thu, 23 May 2019 15:50:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43724 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387796AbfEWTKY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:10:24 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D77502184B;
+        Thu, 23 May 2019 19:10:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558638624;
+        bh=kBfZs7uPI92w1cYfqBIww9IeYka4HXTlPEwPA1TB7AQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=kVYf9ETj7UbFGxPVqK5efkKahQ64jZBswQ+RNf4DtnPgtONx/39/tfdgOE3NnmvT1
+         vmRM7OHVGcak1VXh7Vnz2EC0eKGhkdFYs879WTu97xPc1kvaoqHUOFQL/0jEelX8mQ
+         fdU8klZg62FRYc4prbVJkscPlzwmWTaU6AVdEKFc=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Chris Healy <cphealy@gmail.com>, linux-pm@vger.kernel.org,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 48/53] power: supply: sysfs: prevent endless uevent loop with CONFIG_POWER_SUPPLY_DEBUG
+Date:   Thu, 23 May 2019 21:06:12 +0200
+Message-Id: <20190523181718.571354644@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190523181710.981455400@linuxfoundation.org>
+References: <20190523181710.981455400@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190523182458.GA3571@redhat.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+[ Upstream commit 349ced9984ff540ce74ca8a0b2e9b03dc434b9dd ]
 
-On Thu, May 23, 2019 at 02:24:58PM -0400, Jerome Glisse wrote:
-> I can not take mmap_sem in range_register, the READ_ONCE is fine and
-> they are no race as we do take a reference on the hmm struct thus
+Fix a similar endless event loop as was done in commit
+8dcf32175b4e ("i2c: prevent endless uevent loop with
+CONFIG_I2C_DEBUG_CORE"):
 
-Of course there are use after free races with a READ_ONCE scheme, I
-shouldn't have to explain this.
+  The culprit is the dev_dbg printk in the i2c uevent handler. If
+  this is activated (for instance by CONFIG_I2C_DEBUG_CORE) it results
+  in an endless loop with systemd-journald.
 
-If you cannot take the read mmap sem (why not?), then please use my
-version and push the update to the driver through -mm..
+  This happens if user-space scans the system log and reads the uevent
+  file to get information about a newly created device, which seems
+  fair use to me. Unfortunately reading the "uevent" file uses the
+  same function that runs for creating the uevent for a new device,
+  generating the next syslog entry
 
-Jason
+Both CONFIG_I2C_DEBUG_CORE and CONFIG_POWER_SUPPLY_DEBUG were reported
+in https://bugs.freedesktop.org/show_bug.cgi?id=76886 but only former
+seems to have been fixed. Drop debug prints as it was done in I2C
+subsystem to resolve the issue.
+
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Chris Healy <cphealy@gmail.com>
+Cc: linux-pm@vger.kernel.org
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/power/supply/power_supply_sysfs.c | 6 ------
+ 1 file changed, 6 deletions(-)
+
+diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/supply/power_supply_sysfs.c
+index bcde8d13476af..c0fc98e03c912 100644
+--- a/drivers/power/supply/power_supply_sysfs.c
++++ b/drivers/power/supply/power_supply_sysfs.c
+@@ -278,15 +278,11 @@ int power_supply_uevent(struct device *dev, struct kobj_uevent_env *env)
+ 	char *prop_buf;
+ 	char *attrname;
+ 
+-	dev_dbg(dev, "uevent\n");
+-
+ 	if (!psy || !psy->desc) {
+ 		dev_dbg(dev, "No power supply yet\n");
+ 		return ret;
+ 	}
+ 
+-	dev_dbg(dev, "POWER_SUPPLY_NAME=%s\n", psy->desc->name);
+-
+ 	ret = add_uevent_var(env, "POWER_SUPPLY_NAME=%s", psy->desc->name);
+ 	if (ret)
+ 		return ret;
+@@ -322,8 +318,6 @@ int power_supply_uevent(struct device *dev, struct kobj_uevent_env *env)
+ 			goto out;
+ 		}
+ 
+-		dev_dbg(dev, "prop %s=%s\n", attrname, prop_buf);
+-
+ 		ret = add_uevent_var(env, "POWER_SUPPLY_%s=%s", attrname, prop_buf);
+ 		kfree(attrname);
+ 		if (ret)
+-- 
+2.20.1
+
+
+
