@@ -2,51 +2,51 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDE23C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:28:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73461C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:28:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B53062054F
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:28:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 315592133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:28:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639687;
-	bh=uu3IdUy+7dfGB7tzNOlP2lRoWgO/DVyjNyZ5vA0JBLo=;
+	s=default; t=1558639691;
+	bh=MW32hsEj+bBsxFl2lvUcnJoAOxMKjk7PbtOnPJNOI0M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ql24h5GiIjyWWOrJb3Gx293eSgX7tB3bEWUv1B/z19gon1nJckvD+eeE1+P0eP8q2
-	 3ROfY4RL2QvdjQMpNUNSODCNXorjeaXVkxTwLqnNcQ2cg4sCKP4Sd9/Ky71bZ6fNFm
-	 h8dzpqweWVpzlaiPbABDRMX+fnJ1dTJOl/fd4d64=
+	b=D/XyZgsw5mxSJFM1r4klZAOp1urBInNgpxsrRGS5YyfjhkVoDwpROkmXS3S11xCA9
+	 u9doQPStORE044pz83sAOvqEX5Tk5SNxgvDFIUCrCbiYvqSn8rgGujqXrJr/es25gB
+	 a0m9SaofrZ2PD/B+Y3/7QkZMJYfBlwnvYW3GS7+M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391720AbfEWT2G (ORCPT
+        id S2390340AbfEWT2K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:28:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40520 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:28:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40582 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391700AbfEWT2D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:28:03 -0400
+        id S2391212AbfEWT2G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:28:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D2C9E206BA;
-        Thu, 23 May 2019 19:28:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 89DA621880;
+        Thu, 23 May 2019 19:28:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639683;
-        bh=uu3IdUy+7dfGB7tzNOlP2lRoWgO/DVyjNyZ5vA0JBLo=;
+        s=default; t=1558639686;
+        bh=MW32hsEj+bBsxFl2lvUcnJoAOxMKjk7PbtOnPJNOI0M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qV05Vab54YEMUrkIwq5AHxtWj/dGWjMBCPowLRyyDtfUEhX4Nox5qCfDhZn7xwi1D
-         Nf9ksQXip+i/cGxbwFH1juv1UMiiXF07IAhMd6k7NRbnQ70cybo2bjqRSUjy9Khzry
-         HTnegCa2Cht9UqCNX+kITAJ5HUo96HuLmOWpd7VA=
+        b=VDfm542c1d31jJ6CVj8bEltPkHnS4l4977cW1uMVGUM2ixxdCNQMWQ1fUFYxKWMPf
+         w1GLMmGIvSW1vh0yF3jJ5hUpNryB+bhza/8+A6IE7yODxm3rJ2a1vFg8G5mqedDEFp
+         j6fB3AAvI4VxGx3j7+mDvOKpc7oZsX8afsjL8SNo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 5.1 056/122] RDMA/ipoib: Allow user space differentiate between valid dev_port
-Date:   Thu, 23 May 2019 21:06:18 +0200
-Message-Id: <20190523181712.155165635@linuxfoundation.org>
+        stable@vger.kernel.org, ZhangXiaoxu <zhangxiaoxu5@huawei.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>
+Subject: [PATCH 5.1 057/122] NFS4: Fix v4.0 client state corruption when mount
+Date:   Thu, 23 May 2019 21:06:19 +0200
+Message-Id: <20190523181712.316173633@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181705.091418060@linuxfoundation.org>
 References: <20190523181705.091418060@linuxfoundation.org>
@@ -59,56 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leon Romanovsky <leonro@mellanox.com>
+From: ZhangXiaoxu <zhangxiaoxu5@huawei.com>
 
-commit b79656ed44c6865e17bcd93472ec39488bcc4984 upstream.
+commit f02f3755dbd14fb935d24b14650fff9ba92243b8 upstream.
 
-Systemd triggers the following warning during IPoIB device load:
+stat command with soft mount never return after server is stopped.
 
- mlx5_core 0000:00:0c.0 ib0: "systemd-udevd" wants to know my dev_id.
-        Should it look at dev_port instead?
-        See Documentation/ABI/testing/sysfs-class-net for more info.
+When alloc a new client, the state of the client will be set to
+NFS4CLNT_LEASE_EXPIRED.
 
-This is caused due to user space attempt to differentiate old systems
-without dev_port and new systems with dev_port. In case dev_port will be
-zero, the systemd will try to read dev_id instead.
+When the server is stopped, the state manager will work, and accord
+the state to recover. But the state is NFS4CLNT_LEASE_EXPIRED, it
+will drain the slot table and lead other task to wait queue, until
+the client recovered. Then the stat command is hung.
 
-There is no need to print a warning in such case, because it is valid
-situation and it is needed to ensure systemd compatibility with old
-kernels.
+When discover server trunking, the client will renew the lease,
+but check the client state, it lead the client state corruption.
 
-Link: https://github.com/systemd/systemd/blob/master/src/udev/udev-builtin-net_id.c#L358
-Cc: <stable@vger.kernel.org> # 4.19
-Fixes: f6350da41dc7 ("IB/ipoib: Log sysfs 'dev_id' accesses from userspace")
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+So, we need to call state manager to recover it when detect server
+ip trunking.
+
+Signed-off-by: ZhangXiaoxu <zhangxiaoxu5@huawei.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/ulp/ipoib/ipoib_main.c |   13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+ fs/nfs/nfs4state.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/drivers/infiniband/ulp/ipoib/ipoib_main.c
-+++ b/drivers/infiniband/ulp/ipoib/ipoib_main.c
-@@ -2402,7 +2402,18 @@ static ssize_t dev_id_show(struct device
- {
- 	struct net_device *ndev = to_net_dev(dev);
- 
--	if (ndev->dev_id == ndev->dev_port)
-+	/*
-+	 * ndev->dev_port will be equal to 0 in old kernel prior to commit
-+	 * 9b8b2a323008 ("IB/ipoib: Use dev_port to expose network interface
-+	 * port numbers") Zero was chosen as special case for user space
-+	 * applications to fallback and query dev_id to check if it has
-+	 * different value or not.
-+	 *
-+	 * Don't print warning in such scenario.
-+	 *
-+	 * https://github.com/systemd/systemd/blob/master/src/udev/udev-builtin-net_id.c#L358
-+	 */
-+	if (ndev->dev_port && ndev->dev_id == ndev->dev_port)
- 		netdev_info_once(ndev,
- 			"\"%s\" wants to know my dev_id. Should it look at dev_port instead? See Documentation/ABI/testing/sysfs-class-net for more info.\n",
- 			current->comm);
+--- a/fs/nfs/nfs4state.c
++++ b/fs/nfs/nfs4state.c
+@@ -159,6 +159,10 @@ int nfs40_discover_server_trunking(struc
+ 		/* Sustain the lease, even if it's empty.  If the clientid4
+ 		 * goes stale it's of no use for trunking discovery. */
+ 		nfs4_schedule_state_renewal(*result);
++
++		/* If the client state need to recover, do it. */
++		if (clp->cl_state)
++			nfs4_schedule_state_manager(clp);
+ 	}
+ out:
+ 	return status;
 
 
