@@ -2,143 +2,171 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A65ECC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:42:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E78F8C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:42:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E6E620881
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:42:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ElJnN4SI"
+	by mail.kernel.org (Postfix) with ESMTP id C1A292075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:42:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558640570;
+	bh=ngAzSQ1mjSQ3XtlVtbVkmedVkHtFxufKnncPJuOSsac=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=GVh/wVmTrtw2HsLHceDrlKvpMt2i1Dhs/KZ0O/pztXIO3FMw4EQCvT+1y22k8t8UY
+	 Yh3hcN2CcFivFH8+WYkkoQUiLEjonhmYq2R6+5S4ACV9WoJFBYJfeLdfJes1a/ns/r
+	 xnxxpdRt/jjAY3lr3HuaqoH/xZQ/DweGYwSpdVkE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390057AbfEWTmm (ORCPT
+        id S2388833AbfEWTSp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:42:42 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:32928 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389690AbfEWTSv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:18:51 -0400
-Received: by mail-lf1-f66.google.com with SMTP id x132so5247281lfd.0
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 12:18:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=7Xq8hDRQty0iPHxqWBmFMiHP5/NEYwgv6qrN0Vc4nP8=;
-        b=ElJnN4SIqyVX33y7h7nGUs3agYvp1XeedQRemgpNbRIk5YlpyMiZcdC55lWgxLgh11
-         KGA9kvQoiXXYs/58eF04FaDku2dDlD83wtRBSt+M6G1ZAh4arkTz+KAL9TD9eCPYRb/s
-         Ml/yCA3Aye5kHbDL64GQjMNXaH7xxCsjKFKk57fS61mAwZZbM5zYQIgvTjCECVGeIZvS
-         Vu8BchtkGC9SqVmc9zM+HUOnm3qts+3oDP4vc86hWfjkeMINYmjeEB+owqaNfIjKGnt1
-         gaT8dQa9c8myhvRDjgnSpTJpspt1aTRyCZ621kdINUkw1wzbTQr7dwLOXa4U8fvDlT2D
-         Gyvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=7Xq8hDRQty0iPHxqWBmFMiHP5/NEYwgv6qrN0Vc4nP8=;
-        b=QXrYLeaTU3fmuYLUhlUSOyrxHsaMSrkZoPxhmbjwOjNN7iqvlLqRjnMkZRud/++f+j
-         Wj/+knWDCibAwlV7l2Ldb57JpBr7AjXTzOG35NxgqtXFpYs9Yf8KGtsvW2KfYzMhLRwu
-         hXN19G5bzV0ohNKrK0ewFDnoe3W875I0200znJJjjBYWQUEghn+MGb6sZo2N/kHEh7jT
-         aMjdhKNHLOY96xIJvUSx7B5eiWQ2MY6rz9/CIW/BfWZWC11IB11fiOEgEWacAhQiwZ/o
-         PIoN4WpfCjt2C+XNfc4SorkUSt34XtoGxJ/npMtLWRyAUScMGwNZbX6YdazvP0N3sOHm
-         Kaqw==
-X-Gm-Message-State: APjAAAWXBd8NJR+r40HkpYVeUgTQ1UrGSiUodXmmJWRsRaGpcoUykZOy
-        XxPavAFDsc2j3jfwaUu1WVq522psobZI0CUTnsAAAw==
-X-Google-Smtp-Source: APXvYqw1XbYiFz5hQUalCxrVjKiO6TIO71hT0hyMX6W3pIGmpBG9+vju9MG+sHieuLq/jz7BZlnOc90KWMXZK2Bxibs=
-X-Received: by 2002:a19:189:: with SMTP id 131mr46796309lfb.74.1558639129364;
- Thu, 23 May 2019 12:18:49 -0700 (PDT)
+        Thu, 23 May 2019 15:18:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54290 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389246AbfEWTSm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:18:42 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A3B4A2184E;
+        Thu, 23 May 2019 19:18:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558639121;
+        bh=ngAzSQ1mjSQ3XtlVtbVkmedVkHtFxufKnncPJuOSsac=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=d04q+cw/aKVAUqzlEK0e6SrmfQmZ0FslvWp9pLifE8/XC/Bm1Igz3XOtNISDIKkfi
+         uadep7hm1JOLOJ7eXCOV3q7dSPfkvWhxuoDW7EEMKUnKsqdMjx0hNPuf18sMw7nyMM
+         KCVj5lYW62PnyAs4HRYbRFkJ5DWJtjqmLIk9R3v4=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Luca Coelho <luciano.coelho@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 102/114] iwlwifi: mvm: check for length correctness in iwl_mvm_create_skb()
+Date:   Thu, 23 May 2019 21:06:41 +0200
+Message-Id: <20190523181740.324576631@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190523181731.372074275@linuxfoundation.org>
+References: <20190523181731.372074275@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <1558338735-8444-1-git-send-email-amelie.delaunay@st.com>
- <20190522054833.GB4574@dell> <eb8425ec-989a-9701-7fee-61bd1d2b93c1@st.com>
- <20190522084133.GF4574@dell> <bc1b5f1d-23b0-141d-f58f-b54ac303fe20@st.com>
- <CACRpkdYmdpwEvCBrL6i1V+Zxd0OSpZmD8BJPSZu9jYNeJkoimQ@mail.gmail.com> <08ea97544018430caf53af36677902b7@SFHDAG3NODE2.st.com>
-In-Reply-To: <08ea97544018430caf53af36677902b7@SFHDAG3NODE2.st.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 23 May 2019 21:18:37 +0200
-Message-ID: <CACRpkdZLbMJ5dKiL9J1x=PozBVH777kNNABZi-n0LxD0BOp8mw@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: stmfx: Fix compile issue when CONFIG_OF_GPIO is
- not defined
-To:     Amelie DELAUNAY <amelie.delaunay@st.com>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "kbuild-all@01.org" <kbuild-all@01.org>,
-        Randy Dunlap <rdunlap@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 4:11 PM Amelie DELAUNAY <amelie.delaunay@st.com> wr=
-ote:
-> On 5/22/19 11:48 PM, Linus Walleij wrote:
-> > On Wed, May 22, 2019 at 11:21 AM Amelie DELAUNAY <amelie.delaunay@st.co=
-m> wrote:
-> >
-> >> ../drivers/pinctrl/pinctrl-stmfx.c:409:20: error:
-> >> =E2=80=98pinconf_generic_dt_node_to_map_pin=E2=80=99 undeclared here (=
-not in a function)
-> >>     .dt_node_to_map =3D pinconf_generic_dt_node_to_map_pin,
-> >>
-> >> OF_GPIO depends on OF.
-> >>
-> >> So either
-> >>       depends on OF || (OF && COMPILE_TEST)
-> >> or
-> >>       depends on OF || (OF_GPIO && COMPILE_TEST)
-> >>
-> >> and
-> >>
-> >>       select OF_GPIO
-> >
-> > I would use just:
-> >
-> > depends on OF_GPIO
-> >
-> > Because OF_GPIO already depends on OF, and
-> > compile tests will not work without OF_GPIO which
-> > require OF so...
-> >
-> > Besides it is what most other GPIO drivers do.
-> >
-> > So just keep that one line and drop the rest.
-> >
-> > Yours,
-> > Linus Walleij
-> >
->
-> Ok so I can get rid of COMPILE_TEST ?
->         depends on I2C
->         depends on OF_GPIO
->         select GENERIC_PINCONF
->         select GPIOLIB_IRQCHIP
->         select MFD_STMFX
+[ Upstream commit de1887c064b9996ac03120d90d0a909a3f678f98 ]
 
-Yep just like that.
+We don't check for the validity of the lengths in the packet received
+from the firmware.  If the MPDU length received in the rx descriptor
+is too short to contain the header length and the crypt length
+together, we may end up trying to copy a negative number of bytes
+(headlen - hdrlen < 0) which will underflow and cause us to try to
+copy a huge amount of data.  This causes oopses such as this one:
 
-> Because I've no arch to balance COMPILE_TEST. Or maybe something like
->         depends on OF_GPIO && (OF || COMPILE_TEST)
-> even if OF_GPIO && OF is redundant ?
+BUG: unable to handle kernel paging request at ffff896be2970000
+PGD 5e201067 P4D 5e201067 PUD 5e205067 PMD 16110d063 PTE 8000000162970161
+Oops: 0003 [#1] PREEMPT SMP NOPTI
+CPU: 2 PID: 1824 Comm: irq/134-iwlwifi Not tainted 4.19.33-04308-geea41cf4930f #1
+Hardware name: [...]
+RIP: 0010:memcpy_erms+0x6/0x10
+Code: 90 90 90 90 eb 1e 0f 1f 00 48 89 f8 48 89 d1 48 c1 e9 03 83 e2 07 f3 48 a5 89 d1 f3 a4 c3 66 0f 1f 44 00 00 48 89 f8 48 89 d1 <f3> a4 c3
+ 0f 1f 80 00 00 00 00 48 89 f8 48 83 fa 20 72 7e 40 38 fe
+RSP: 0018:ffffa4630196fc60 EFLAGS: 00010287
+RAX: ffff896be2924618 RBX: ffff896bc8ecc600 RCX: 00000000fffb4610
+RDX: 00000000fffffff8 RSI: ffff896a835e2a38 RDI: ffff896be2970000
+RBP: ffffa4630196fd30 R08: ffff896bc8ecc600 R09: ffff896a83597000
+R10: ffff896bd6998400 R11: 000000000200407f R12: ffff896a83597050
+R13: 00000000fffffff8 R14: 0000000000000010 R15: ffff896a83597038
+FS:  0000000000000000(0000) GS:ffff896be8280000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffff896be2970000 CR3: 000000005dc12002 CR4: 00000000003606e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ iwl_mvm_rx_mpdu_mq+0xb51/0x121b [iwlmvm]
+ iwl_pcie_rx_handle+0x58c/0xa89 [iwlwifi]
+ iwl_pcie_irq_rx_msix_handler+0xd9/0x12a [iwlwifi]
+ irq_thread_fn+0x24/0x49
+ irq_thread+0xb0/0x122
+ kthread+0x138/0x140
+ ret_from_fork+0x1f/0x40
 
-COMPILE_TEST is just to make something available for testing
-on other architectures, such as testing ARM-specific drivers
-on x86.
+Fix that by checking the lengths for correctness and trigger a warning
+to show that we have received wrong data.
 
-With just OF_GPIO as dependency, it will be compile tested anyways
-because x86 allyesconfig will enable OF and OF_GPIO, and also
-all the STMFX drivers.
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/wireless/intel/iwlwifi/mvm/rxmq.c | 28 ++++++++++++++++---
+ 1 file changed, 24 insertions(+), 4 deletions(-)
 
-Yours,
-Linus Walleij
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/rxmq.c b/drivers/net/wireless/intel/iwlwifi/mvm/rxmq.c
+index b53148f972a4a..036d1d82d93e7 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/rxmq.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/rxmq.c
+@@ -143,9 +143,9 @@ static inline int iwl_mvm_check_pn(struct iwl_mvm *mvm, struct sk_buff *skb,
+ }
+ 
+ /* iwl_mvm_create_skb Adds the rxb to a new skb */
+-static void iwl_mvm_create_skb(struct sk_buff *skb, struct ieee80211_hdr *hdr,
+-			       u16 len, u8 crypt_len,
+-			       struct iwl_rx_cmd_buffer *rxb)
++static int iwl_mvm_create_skb(struct iwl_mvm *mvm, struct sk_buff *skb,
++			      struct ieee80211_hdr *hdr, u16 len, u8 crypt_len,
++			      struct iwl_rx_cmd_buffer *rxb)
+ {
+ 	struct iwl_rx_packet *pkt = rxb_addr(rxb);
+ 	struct iwl_rx_mpdu_desc *desc = (void *)pkt->data;
+@@ -178,6 +178,20 @@ static void iwl_mvm_create_skb(struct sk_buff *skb, struct ieee80211_hdr *hdr,
+ 	 * present before copying packet data.
+ 	 */
+ 	hdrlen += crypt_len;
++
++	if (WARN_ONCE(headlen < hdrlen,
++		      "invalid packet lengths (hdrlen=%d, len=%d, crypt_len=%d)\n",
++		      hdrlen, len, crypt_len)) {
++		/*
++		 * We warn and trace because we want to be able to see
++		 * it in trace-cmd as well.
++		 */
++		IWL_DEBUG_RX(mvm,
++			     "invalid packet lengths (hdrlen=%d, len=%d, crypt_len=%d)\n",
++			     hdrlen, len, crypt_len);
++		return -EINVAL;
++	}
++
+ 	skb_put_data(skb, hdr, hdrlen);
+ 	skb_put_data(skb, (u8 *)hdr + hdrlen + pad_len, headlen - hdrlen);
+ 
+@@ -190,6 +204,8 @@ static void iwl_mvm_create_skb(struct sk_buff *skb, struct ieee80211_hdr *hdr,
+ 		skb_add_rx_frag(skb, 0, rxb_steal_page(rxb), offset,
+ 				fraglen, rxb->truesize);
+ 	}
++
++	return 0;
+ }
+ 
+ /* iwl_mvm_pass_packet_to_mac80211 - passes the packet for mac80211 */
+@@ -1425,7 +1441,11 @@ void iwl_mvm_rx_mpdu_mq(struct iwl_mvm *mvm, struct napi_struct *napi,
+ 			rx_status->boottime_ns = ktime_get_boot_ns();
+ 	}
+ 
+-	iwl_mvm_create_skb(skb, hdr, len, crypt_len, rxb);
++	if (iwl_mvm_create_skb(mvm, skb, hdr, len, crypt_len, rxb)) {
++		kfree_skb(skb);
++		goto out;
++	}
++
+ 	if (!iwl_mvm_reorder(mvm, napi, queue, sta, skb, desc))
+ 		iwl_mvm_pass_packet_to_mac80211(mvm, napi, skb, queue, sta);
+ out:
+-- 
+2.20.1
+
+
+
