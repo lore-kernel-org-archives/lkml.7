@@ -2,76 +2,98 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34DADC282CE
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 02:37:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D216C282CE
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 02:39:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E66A321019
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 02:37:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12BDE21019
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 02:39:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XkhqGDia"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729795AbfEWChs (ORCPT
+        id S1729852AbfEWCjI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 22:37:48 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:35600 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727305AbfEWChr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 22:37:47 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id AA1143082163;
-        Thu, 23 May 2019 02:37:47 +0000 (UTC)
-Received: from [10.72.12.128] (ovpn-12-128.pek2.redhat.com [10.72.12.128])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4A6D910AFEC9;
-        Thu, 23 May 2019 02:37:40 +0000 (UTC)
-Subject: Re: [PATCH V2 0/4] Prevent vhost kthread from hogging CPU
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        pbonzini@redhat.com, stefanha@redhat.com
-References: <1558067392-11740-1-git-send-email-jasowang@redhat.com>
- <20190520085207-mutt-send-email-mst@kernel.org>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <aa132e69-4646-da70-7def-b6ad72d4ebda@redhat.com>
-Date:   Thu, 23 May 2019 10:37:39 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 22 May 2019 22:39:08 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:41139 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727305AbfEWCjH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 22:39:07 -0400
+Received: by mail-pl1-f196.google.com with SMTP id f12so1985706plt.8;
+        Wed, 22 May 2019 19:39:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=XeFlFWw61JofilTs9ih/NQ02dCASKl1n6cWqz6/+ogs=;
+        b=XkhqGDiaRbQB/JoWWIb3ZtwGo6mgeC1ka1Xxe9Uf+j0yYT0arBII+Q3+NPUw3e/pMX
+         rY7PZU6v/7aeqgZZJImaVabVzmX1mHf4DxR/EdIuApMN9tuFRylTXNfbx6XsQDNxXWx1
+         MQ3RU+83pS08GZL5yo2R17re7v+1h4rWEOp4uVLUelx55Pl253go6BSc7ZKHxFxjfbzf
+         5SyJrBpa1MSDgP65YibZ96jB7+cLtH7hW4d3yfj3wLJGfzGWNtqOXlKrDhI0VNzlXdQ0
+         wxPMCVavLd+KqRyDdL5ZeQtYkRS5gK2YbK/7KsZQqyCFac4jiQKmupIAv6UUlviEChP5
+         53mw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=XeFlFWw61JofilTs9ih/NQ02dCASKl1n6cWqz6/+ogs=;
+        b=li8cGFcFT8TmCfXyaQpZIp6vW6ktsJa43BDSFGqSodFyzMh8s48hv47BcLWSkvoFi+
+         vqp4S3qpTvcY3ssjZ9qT5Ec+ntXA3sVB1Fk4pFdueM+IWXpET728VPANvYbmISiVONpE
+         psBvc6zuZT+iZ/OndB8o5hNuM5XURFKvm12q8h+baL3dbOhgRDcY+HpeCyrgdlZYHNQp
+         QFKAqUdd7tupH5dXciYU138Q3Hx81HMEA3X92KK5YgOupVWoMqzjpWGWTSW+u5rJgFB6
+         7lZUl6x94N/WveVi2tsblM5NKnwo0VNHfjvSwjwGHgLat4BaKBE8hh7HxWnki0rxPsdh
+         IviA==
+X-Gm-Message-State: APjAAAXdoeDh17l0Azj+jcdWNd9W1ZINp9dBtDGIvbGcahyPwvRau2yg
+        xhlpHy+XaBDs3FrMzanDmRs=
+X-Google-Smtp-Source: APXvYqylhrIxYyfJbmxLV+wjUJ+riM7GvaXwAG0WHVTIWQ9R7+nNngeogLVeAPwcpjLOULlKMX9BEQ==
+X-Received: by 2002:a17:902:3103:: with SMTP id w3mr19279282plb.187.1558579147085;
+        Wed, 22 May 2019 19:39:07 -0700 (PDT)
+Received: from zhanggen-UX430UQ ([66.42.35.75])
+        by smtp.gmail.com with ESMTPSA id d15sm78095232pfm.186.2019.05.22.19.39.02
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 22 May 2019 19:39:06 -0700 (PDT)
+Date:   Thu, 23 May 2019 10:38:55 +0800
+From:   Gen Zhang <blackgod016574@gmail.com>
+To:     martin.petersen@oracle.com
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] sg: Fix a double-fetch bug in drivers/scsi/sg.c
+Message-ID: <20190523023855.GA17852@zhanggen-UX430UQ>
 MIME-Version: 1.0
-In-Reply-To: <20190520085207-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Thu, 23 May 2019 02:37:47 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+In sg_write(), the opcode of the command is fetched the first time from 
+the userspace by __get_user(). Then the whole command, the opcode 
+included, is fetched again from userspace by __copy_from_user(). 
+However, a malicious user can change the opcode between the two fetches.
+This can cause inconsistent data and potential errors as cmnd is used in
+the following codes.
 
-On 2019/5/20 下午8:52, Michael S. Tsirkin wrote:
-> On Fri, May 17, 2019 at 12:29:48AM -0400, Jason Wang wrote:
->> Hi:
->>
->> This series try to prevent a guest triggerable CPU hogging through
->> vhost kthread. This is done by introducing and checking the weight
->> after each requrest. The patch has been tested with reproducer of
->> vsock and virtio-net. Only compile test is done for vhost-scsi.
->>
->> Please review.
->> This addresses CVE-2019-3900.
-> OK I think we should clean this code some more but given
-> it's a CVE fix maybe it's best to do as a patch on top.
->
-> Acked-by: Michael S. Tsirkin<mst@redhat.com>
->
-> Dave do you want to merge this or should I?
->
+Thus we should check opcode between the two fetches to prevent this.
 
-According to David's last reply, it's better for you to merge I think.
-
-Thanks
-
+Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
+---
+diff --git a/drivers/scsi/sg.c b/drivers/scsi/sg.c
+index d3f1531..a2971b8 100644
+--- a/drivers/scsi/sg.c
++++ b/drivers/scsi/sg.c
+@@ -694,6 +694,8 @@ sg_write(struct file *filp, const char __user *buf, size_t count, loff_t * ppos)
+ 	hp->flags = input_size;	/* structure abuse ... */
+ 	hp->pack_id = old_hdr.pack_id;
+ 	hp->usr_ptr = NULL;
++	if (opcode != cmnd[0])
++		return -EINVAL;
+ 	if (__copy_from_user(cmnd, buf, cmd_size))
+ 		return -EFAULT;
+ 	/*
+---
