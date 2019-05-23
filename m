@@ -2,113 +2,87 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FB08C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:34:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4440C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:34:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 179B821873
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:34:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558640065;
-	bh=R4z72mLKfM2fz0ZjlVUj+eqeS+fwJHDSCzafb5yl/Y0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2H0B2rfuouJDZ9JpPiFWrobbtCn0FHPZIKEbaggFk/qQftl65SXAfvx6/O0c4N3Qo
-	 2Vs0e3DZjPLnTgg/Ryr/0PR5kaJKb/NmQ4GbfuRoqVlAr1xs/JGHWG60Wfwq2gUXgP
-	 5h4OFnBZcOyzJeg+vGErLhFKSLj5n58fxGeglzaA=
+	by mail.kernel.org (Postfix) with ESMTP id B303920879
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:34:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VeUasp/n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391689AbfEWT17 (ORCPT
+        id S2392068AbfEWTe0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:27:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40248 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391671AbfEWT1x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:27:53 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D85720879;
-        Thu, 23 May 2019 19:27:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639672;
-        bh=R4z72mLKfM2fz0ZjlVUj+eqeS+fwJHDSCzafb5yl/Y0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TSZudQToHg4rNCbFGr4hw8YKJWnNZbdd42kyndVB+c+O2Fwo4ECs7pGfnLz/OPFBv
-         ute6yynA33HvXFdUZgVATqu0XbTsu6qUux9MxvAS1OP6a8Czr154LMQnaCYaY/yCww
-         uDJmoLNrvS2XfOtmzEsIEhyfBXjpnotYPW7OfW9Q=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Steve Longerbeam <slongerbeam@gmail.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 5.1 052/122] media: imx: Clear fwnode link struct for each endpoint iteration
-Date:   Thu, 23 May 2019 21:06:14 +0200
-Message-Id: <20190523181711.614068954@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190523181705.091418060@linuxfoundation.org>
-References: <20190523181705.091418060@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 23 May 2019 15:34:26 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:34376 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387947AbfEWTeX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:34:23 -0400
+Received: by mail-lj1-f195.google.com with SMTP id j24so6585697ljg.1
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 12:34:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zEdXi9YQ9/PVR4ABDgc5oGstALKw+UDObwes1f/BG98=;
+        b=VeUasp/nnilSR6G52vcxOnkUGJ5BU1C3y+jVW5I+Sk31loGDYD+0/OPsfjHw47uxRD
+         XrahVXJxoor8ACcJ27z0OySYERZUEw7TzTBWEDU2mGo2DdFb3uIrbTMYcnz/QTQHfwYG
+         +F3f+cK3YX5vYB1mNMAk16hmd5y44YYJuFU7n/VvSwBttfzg15gvV9UYhLSSI25lgXH9
+         8Dcv1E/j3LZhKUEUXkPCM4sokOXChPvpUfAYb9nIiQ4ODUlM/aekq1QzOTUR+3mYLxCL
+         w3qEh67Z4vDW4/T2Y9ZqmE3+M/TAHoeYBryiLSUXViQg9LWV3ApsJHDm3vuo3ValJI4S
+         vlXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zEdXi9YQ9/PVR4ABDgc5oGstALKw+UDObwes1f/BG98=;
+        b=ZanirnOr96HVNFdrUL54NPdyIQREzD5AHAnRnHBCZacsajxuEq7iW8kaMW6nK1MmVZ
+         oTjdlZsxSqDgHkMCezbf/VrcT0Cq8B/BaD0Uck2v9bMvqLmwPiR+TEngtCw29rJ6FWiW
+         2Obu3psRNdY9jaF8GtpxdEHR0dls0ngL66CTAtRzkbQqLSFMe7+mXFdnA0Z2sdvApgci
+         7sb2+F76cjb2gJFdZXiy49eX17sXLnkjcz4Kcirp5Ih3/nfoF19ozdUg8k8hNLlycWr0
+         q9/kxGEqy6Q4emvFMZBpbiGgIgLPrymBqzM/I5Ofnsm3muoDssoM5BFFlFjz6YIcE44V
+         Ew+w==
+X-Gm-Message-State: APjAAAXKJkUTSOdOJALUw29lvL0Tjh/s1DyyPJ9Nu0oBaWh7gN9D7OqR
+        8d0xljcIuYoodZnsez2OvyABVFM9cTMV8olWeOlqag==
+X-Google-Smtp-Source: APXvYqxS49q1gB/9+MX0Pw4nbYPSIUWDf6r45GnAk81uVyDOoTg2BLY0kTVzeVnskN1RmSdLk4myFHA4dwsnUm3QOI0=
+X-Received: by 2002:a2e:874b:: with SMTP id q11mr21679456ljj.48.1558640061895;
+ Thu, 23 May 2019 12:34:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20190523181602.3284-1-linus.walleij@linaro.org> <3496e81f-ea63-794d-0d8a-8eba9f2f6853@linaro.org>
+In-Reply-To: <3496e81f-ea63-794d-0d8a-8eba9f2f6853@linaro.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 23 May 2019 21:34:09 +0200
+Message-ID: <CACRpkdZ5LCeqkvJrN-TAcSy7knNOQhGV7M_wfZZ4Rz5ah87KnA@mail.gmail.com>
+Subject: Re: [PATCH] clocksource/drivers/ixp4xx: Implement delay timer
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steve Longerbeam <slongerbeam@gmail.com>
+On Thu, May 23, 2019 at 9:21 PM Daniel Lezcano
+<daniel.lezcano@linaro.org> wrote:
+> On 23/05/2019 20:16, Linus Walleij wrote:
 
-commit 107927fa597c99eaeee4f51865ca0956ec71b6a2 upstream.
+> > This adds delay timer functionality to the IXP4xx
+> > timer driver.
+> >
+> > Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+>
+> The patch does not apply on tip/timers/core
 
-In imx_media_create_csi_of_links(), the 'struct v4l2_fwnode_link' must
-be cleared for each endpoint iteration, otherwise if the remote port
-has no "reg" property, link.remote_port will not be reset to zero.
-This was discovered on the i.MX53 SMD board, since the OV5642 connects
-directly to ipu1_csi0 and has a single source port with no "reg"
-property.
+This seems to be because tip/timers/core is not yet containing
+the commits from v5.2-rc1.
 
-Fixes: 621b08eabcddb ("media: staging/imx: remove static media link arrays")
+Maybe I just send my patches too early after the merge window :)
 
-Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/staging/media/imx/imx-media-of.c |   15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
-
---- a/drivers/staging/media/imx/imx-media-of.c
-+++ b/drivers/staging/media/imx/imx-media-of.c
-@@ -145,15 +145,18 @@ int imx_media_create_csi_of_links(struct
- 				  struct v4l2_subdev *csi)
- {
- 	struct device_node *csi_np = csi->dev->of_node;
--	struct fwnode_handle *fwnode, *csi_ep;
--	struct v4l2_fwnode_link link;
- 	struct device_node *ep;
--	int ret;
--
--	link.local_node = of_fwnode_handle(csi_np);
--	link.local_port = CSI_SINK_PAD;
- 
- 	for_each_child_of_node(csi_np, ep) {
-+		struct fwnode_handle *fwnode, *csi_ep;
-+		struct v4l2_fwnode_link link;
-+		int ret;
-+
-+		memset(&link, 0, sizeof(link));
-+
-+		link.local_node = of_fwnode_handle(csi_np);
-+		link.local_port = CSI_SINK_PAD;
-+
- 		csi_ep = of_fwnode_handle(ep);
- 
- 		fwnode = fwnode_graph_get_remote_endpoint(csi_ep);
-
-
+Yours,
+Linus Walleij
