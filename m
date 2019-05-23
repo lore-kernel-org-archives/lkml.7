@@ -2,88 +2,108 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 958C9C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 17:20:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43863C282E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 17:20:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E02020863
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 17:20:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 169BE21841
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 17:20:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="RtwNPyQO"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="N2A3v/pj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731332AbfEWRUU (ORCPT
+        id S1731354AbfEWRUj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 13:20:20 -0400
-Received: from mail-pl1-f171.google.com ([209.85.214.171]:40256 "EHLO
-        mail-pl1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731265AbfEWRUT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 13:20:19 -0400
-Received: by mail-pl1-f171.google.com with SMTP id g69so3013800plb.7
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 10:20:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=E4wCoZelzPeF40n6KWK0Y8InfWhm/K7CvH4QAAtzBuY=;
-        b=RtwNPyQOVHmIh1T5LywtaHaQv0gUQC2wSVqDRCMdf6v5fEN0lOB7Wy4mhpAVvcOnji
-         X2f8edBEstoW6OLuJBViDx8eELKUghmBrEYuHgKjP8msuxfePYaE30lChQWcpGmJrDqW
-         tyHeHXuN95G++JbqxJJ0/oLUc0lOdHb6D2/8mJrKvLool1D5uLHHU/AJezZLkKR6Aa0e
-         aLu9WSCHJXzY+nleeVo/T7nyXg4IMCH59oitG2uOqTWdr7M15tV9GX77wKgOZUg7DhcR
-         HeBXRtSGiG1bMulx+/NJnBqzLYUBnURuoiWCwbqLG5mFPNPpIExSaMQSWafXcBG1hYm5
-         nTgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=E4wCoZelzPeF40n6KWK0Y8InfWhm/K7CvH4QAAtzBuY=;
-        b=mPk3MMlKXDwvn/o+39km0RtrZBgIEq+p8zfYaClVf7B0SDZqcyePTUlaCkpLxQ7Ws3
-         PgXn0HQu7xReoX7Y+TLu4WjqzZvmhX524Z1Kz3cHl8Glmu0XBxE71oT3JT96BhPRRQbr
-         5YbEvonIwwKGMdWp1D6Sao/kmQppmrSp4uAwgfRRkp+SehYlFXt9yuwfoxGvpCHHokt5
-         6WbWlUPQtJQwFv6GU5H8wgOzkNw3dZmPvHGn50JAikluqKu1uCWRL3oHQilHdq70RJ/w
-         uu26BII3AP6kJ+Ii2iVYLct3fN7UuUy6rxm3LIavHVGwpjaG6iiDXmWUkgwuVxx1YxXo
-         Pmlw==
-X-Gm-Message-State: APjAAAV7eEcMBHTdkHN6Gv7RW2i3m8hXe04grw0NZNyNy1oN7KBJBgog
-        D4sE7f5yHsIz1+hJAgplysF+Dg==
-X-Google-Smtp-Source: APXvYqzRWzAaALeaMqNcd2ribS2Qvh8R8/MueP7qkpKKvwUsbI6KltgJMx0zYzvqQbThLYsJ61MOKw==
-X-Received: by 2002:a17:902:100a:: with SMTP id b10mr96916175pla.239.1558632018359;
-        Thu, 23 May 2019 10:20:18 -0700 (PDT)
-Received: from localhost ([2601:602:9200:a1a5:ed4f:2717:3604:bb3f])
-        by smtp.googlemail.com with ESMTPSA id k3sm20805pfa.36.2019.05.23.10.20.17
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 23 May 2019 10:20:17 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Jerome Brunet <jbrunet@baylibre.com>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/5] arm64: dts: meson: g12a: add ethernet support
-In-Reply-To: <20190520131401.11804-1-jbrunet@baylibre.com>
-References: <20190520131401.11804-1-jbrunet@baylibre.com>
-Date:   Thu, 23 May 2019 10:20:17 -0700
-Message-ID: <7hzhnd2ilq.fsf@baylibre.com>
+        Thu, 23 May 2019 13:20:39 -0400
+Received: from mail-eopbgr770103.outbound.protection.outlook.com ([40.107.77.103]:46599
+        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731121AbfEWRUj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 13:20:39 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
+ b=sx4ggxpacaPJ6hNUy1Eu4ShOVLq7N6/+Vl7ZR0/6FDz4J2+p0KB+1ExBOUflwGcnEIDkpDJwdLJnyjdBh+W9PJ4+YR4L95C0b3ePnAzXzhlfmKfhxAVOsR1gCsQzgb/GtxCFtXQ7DhOpJmTb8zVdEycnyB6hJhLaHcHncoJ0PxU=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=testarcselector01;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=n8M3k1xYYiKmn5XfjEsrxirQ7S0PPQBYDLQy+HW8AAQ=;
+ b=mN0ff5Fxaw1NgajXwqHezEcV3FJLRpbUVN4F5G3a0icnjixthBDkeD2sRPohO44qY7ZSiG7S9EfngiUuuYCEHK9GAf4AH8qIVgqdsz86qWrakBFzZWnfUXIwEwj835/U+kWYs8pRDUzg8Q2phfu/hYRZaUpM1fUmJFGfc3wJK10=
+ARC-Authentication-Results: i=1; test.office365.com
+ 1;spf=none;dmarc=none;dkim=none;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=n8M3k1xYYiKmn5XfjEsrxirQ7S0PPQBYDLQy+HW8AAQ=;
+ b=N2A3v/pjQyJET5y7bxtWnmuDiiZQvpnB7GUC5k3G73AI7lm82+e8pxTGy584MYIS4E3uPxZZt/2OpNZy8tm6Cdx2oQNQQFUssPJELnhlLjbUVfGsfsV1ROpiSRJH4UVJ1ag0WDcgCh/L4+QKxDYMYv/BvlL+0ag27Zk7o7VadRI=
+Received: from CY4PR21MB0279.namprd21.prod.outlook.com (2603:10b6:903:bb::17)
+ by CY4PR21MB0742.namprd21.prod.outlook.com (2603:10b6:903:b2::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1943.6; Thu, 23 May
+ 2019 17:20:36 +0000
+Received: from CY4PR21MB0279.namprd21.prod.outlook.com
+ ([fe80::9843:add4:f5b:8fc1]) by CY4PR21MB0279.namprd21.prod.outlook.com
+ ([fe80::9843:add4:f5b:8fc1%5]) with mapi id 15.20.1943.007; Thu, 23 May 2019
+ 17:20:36 +0000
+From:   Rui Zhao <ruizhao@microsoft.com>
+To:     James Morse <james.morse@arm.com>,
+        Lei Wang <leiwang_git@outlook.com>
+CC:     "bp@alien8.de" <bp@alien8.de>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "Lei Wang (BSP)" <Wang.Lei@microsoft.com>,
+        Rui Zhao <ruizhao@outlook.com>
+Subject: RE: [PATCH v3 2/2] EDAC: add EDAC driver for DMC520
+Thread-Topic: [PATCH v3 2/2] EDAC: add EDAC driver for DMC520
+Thread-Index: AQHVEYUGdXz32HFNiUaYdLQDHxz2DaZ48+Lg
+Date:   Thu, 23 May 2019 17:20:36 +0000
+Message-ID: <CY4PR21MB0279BB0E40B86CEA485CF19AB3010@CY4PR21MB0279.namprd21.prod.outlook.com>
+References: <CY1PR0401MB1244FDD9E720C9D9C1F41FEE860A0@CY1PR0401MB1244.namprd04.prod.outlook.com>
+ <b1e360bc-2329-3f8b-3c93-65380f62d6fd@arm.com>
+In-Reply-To: <b1e360bc-2329-3f8b-3c93-65380f62d6fd@arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=ruizhao@microsoft.com; 
+x-originating-ip: [2001:4898:80e8:1:657c:5a11:ce39:5653]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 84afae33-da0a-4b98-78f6-08d6dfa2f866
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:CY4PR21MB0742;
+x-ms-traffictypediagnostic: CY4PR21MB0742:
+x-microsoft-antispam-prvs: <CY4PR21MB0742A254223DF979E595B0A3B3010@CY4PR21MB0742.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1824;
+x-forefront-prvs: 00462943DE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(366004)(396003)(346002)(136003)(376002)(199004)(189003)(66476007)(6116002)(66946007)(73956011)(64756008)(10090500001)(66446008)(305945005)(7736002)(66556008)(99286004)(76116006)(8990500004)(33656002)(74316002)(68736007)(6436002)(14454004)(4326008)(53936002)(8936002)(478600001)(10290500003)(558084003)(316002)(6246003)(52396003)(7696005)(229853002)(102836004)(25786009)(55016002)(2906002)(81166006)(81156014)(76176011)(8676002)(9686003)(53546011)(6506007)(486006)(446003)(22452003)(110136005)(86612001)(256004)(476003)(14444005)(52536014)(11346002)(54906003)(46003)(71190400001)(5660300002)(71200400001)(86362001)(186003);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR21MB0742;H:CY4PR21MB0279.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: QSo/ACmgMCHjIorpBaNxwiSuKuiadXM7xvWYjeDtFbCPoR2itkcHs1R2t/9ua9wV4SWzqdAOeMp+X4XJbpGDsFsy/aK0bALj12G6e4Gj1r6buPRUA895bnl7zGNYI3WS2j7gpTq2tse+2OcCMngt2S1sOCLUvKgrjyWL3RjuzKpnJ0QA7jnMCigvI+BSZFB0HSbeolPIex8XghhR/Grg3755hC16nPlG+PckYPbfHlHSYtXhrzqtFPeONnMxsuGce9qfDsZVNo36yzj0IXw3a1EFtdCqe9Bk6Ks39DTJRfEBRY5xBSg3Y4/KX6LESVcpVMgFb4YBhw9aHrewLgqSXqlvo7cUfZa8lmQYiFfK6ayQzvxCOKJ4as0usHBsJM0VkTsrUga0xDpr9JukI4mLAGAQE6zXL0WVljvbiKonrzg=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 84afae33-da0a-4b98-78f6-08d6dfa2f866
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 May 2019 17:20:36.3223
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ruizhao@microsoft.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR21MB0742
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jerome Brunet <jbrunet@baylibre.com> writes:
-
-> Add network support to the g12a SoC family
->
-> This is series is based on 5.2-rc1 and the patches I already sent last
-> week. If this is not convient for you, please let me know, I'll rebase.
-
-Queued for v5.3.
-
-> Also, you will need to get the clk tag "clk-meson-5.3-1-fixes" (to get
-> the update MPLL50M id) from clk-meson [0].
-
-I merged this tag in to v5.3/dt64 before applying this series.  Thanks
-for explaining the dependencies.
-
-Kevin
+SGkgSmFtZXMsDQoNCk9uIFRodXJzZGF5LCBNYXkgMjMsIDIwMTkgOTozMiBBTSwgSmFtZXMgTW9y
+c2Ugd3JvdGU6DQoNCj4gSG1tLCB5b3UncmUgbGlzdGluZyBzb21lb25lIGVsc2UgYXMgbWFpbnRh
+aW5lciBvZiB0aGlzIGRyaXZlci4NCj4gSSB0aGluayB3ZSdkIG5lZWQgdG8gc2VlIGFuIEFjayBm
+cm9tIFJ1aSBaaGFvLi4uDQoNCkkgY2FuIGNvbmZpcm0gdGhhdCBMZWkgaXMgYSBtYWludGFpbmVy
+IGZvciB0aGlzIGRyaXZlci4NCg0KVGhhbmtzLA0KUnVpDQoNCg==
