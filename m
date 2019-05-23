@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FF4CC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:12:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92671C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:12:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 764C020863
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:12:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AE0421851
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:12:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558638751;
-	bh=AgMv/H6A/pslVJg9t4dqwQk/uO7uWLtKirFuRK/tXYM=;
+	s=default; t=1558638756;
+	bh=ftD4znQOaJSO3UarcPtZDSeOe3CXrXbU6sFqUYdLwsI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=STP0MfezD65IlR1sRQRe/75+AITThpkdzoeqmD7jIpj7GZTh01VRcd75ilD7j437e
-	 jKO8UI74MmXdgVonPB7iQVd8cPvYlr0Pc43xCr2uRMI6MMUCuEHv1NxZRafB6J7n3W
-	 NQTY4uFXnGOZBqqWB/t11DnuNG4uHUjmvo5fRq9E=
+	b=VDUYyv62EJmZRqzhvJltacy00X96o/jnpAl0AsBQxnFLOACSkPFHRaGSI41OvJp/9
+	 JUBt5AG/iR4KdyUHsYTZBBYOPhmmI+KQyp/R6fBtl6KxbWavon1uIhiKrE613+ahQP
+	 OreMm3A4RPY06Ofr3c4x2aTNnXrRaTVEIvk/I/qw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387800AbfEWTMa (ORCPT
+        id S1731687AbfEWTMe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:12:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46230 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:12:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46282 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388458AbfEWTM0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:12:26 -0400
+        id S1731525AbfEWTMb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:12:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1FAAA2184E;
-        Thu, 23 May 2019 19:12:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9915A2133D;
+        Thu, 23 May 2019 19:12:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558638745;
-        bh=AgMv/H6A/pslVJg9t4dqwQk/uO7uWLtKirFuRK/tXYM=;
+        s=default; t=1558638751;
+        bh=ftD4znQOaJSO3UarcPtZDSeOe3CXrXbU6sFqUYdLwsI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=02EBVhHy8zmGJQCEt1tNEwzv2z25oL++8j4VGRm8ghGpeuuGjxthil/Z3AxSZbAJp
-         7T1u7Z4sItpuxUqpZ5x57lPNlAQ/PGEGpOU6eh8ML4mlEFfBU94xxCB2VVawBfs8Bm
-         4w0n1DIPE3dZtfObEeBw5pAOUg6Nb1uF8lgwDyfM=
+        b=joXQg4E2nzCHu7r7ozgq93+Lq+5E015njaYjvZwj4wvEYpGXo5BEa7SseLuR+k2c6
+         VafD/ajTUcXHrBu0noKWoEufhWJwC052nwXZ5yh7jSoPAPnpCIV6nNDbJA/TFgG3kq
+         1gS9XxjptYHK8ouqAANLnRIkZWbOJh35/anKh5io=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nikolai Kostrigin <nickel@altlinux.org>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Stefan=20M=C3=A4tje?= <stefan.maetje@esd.eu>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 4.14 49/77] PCI: Mark AMD Stoney Radeon R7 GPU ATS as broken
-Date:   Thu, 23 May 2019 21:06:07 +0200
-Message-Id: <20190523181726.827341327@linuxfoundation.org>
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH 4.14 51/77] PCI: Factor out pcie_retrain_link() function
+Date:   Thu, 23 May 2019 21:06:09 +0200
+Message-Id: <20190523181727.076690788@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181719.982121681@linuxfoundation.org>
 References: <20190523181719.982121681@linuxfoundation.org>
@@ -60,42 +61,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nikolai Kostrigin <nickel@altlinux.org>
+From: Stefan Mätje <stefan.maetje@esd.eu>
 
-commit d28ca864c493637f3c957f4ed9348a94fca6de60 upstream.
+commit 86fa6a344209d9414ea962b1f1ac6ade9dd7563a upstream.
 
-ATS is broken on the Radeon R7 GPU (at least for Stoney Ridge based laptop)
-and causes IOMMU stalls and system failure.  Disable ATS on these devices
-to make them usable again with IOMMU enabled.
+Factor out pcie_retrain_link() to use for Pericom Retrain Link quirk.  No
+functional change intended.
 
-Thanks to Joerg Roedel <jroedel@suse.de> for help.
-
-[bhelgaas: In the email thread mentioned below, Alex suspects the real
-problem is in sbios or iommu, so it may affect only certain systems, and it
-may affect other devices in those systems as well.  However, per Joerg we
-lack the ability to debug further, so this quirk is the best we can do for
-now.]
-
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=194521
-Link: https://lore.kernel.org/lkml/20190408103725.30426-1-nickel@altlinux.org
-Fixes: 9b44b0b09dec ("PCI: Mark AMD Stoney GPU ATS as broken")
-Signed-off-by: Nikolai Kostrigin <nickel@altlinux.org>
+Signed-off-by: Stefan Mätje <stefan.maetje@esd.eu>
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Acked-by: Joerg Roedel <jroedel@suse.de>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 CC: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pci/quirks.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/pci/pcie/aspm.c |   40 ++++++++++++++++++++++++----------------
+ 1 file changed, 24 insertions(+), 16 deletions(-)
 
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -4852,4 +4852,5 @@ static void quirk_no_ats(struct pci_dev
+--- a/drivers/pci/pcie/aspm.c
++++ b/drivers/pci/pcie/aspm.c
+@@ -211,6 +211,29 @@ static void pcie_clkpm_cap_init(struct p
+ 	link->clkpm_capable = (blacklist) ? 0 : capable;
+ }
  
- /* AMD Stoney platform GPU */
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x98e4, quirk_no_ats);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x6900, quirk_no_ats);
- #endif /* CONFIG_PCI_ATS */
++static bool pcie_retrain_link(struct pcie_link_state *link)
++{
++	struct pci_dev *parent = link->pdev;
++	unsigned long start_jiffies;
++	u16 reg16;
++
++	pcie_capability_read_word(parent, PCI_EXP_LNKCTL, &reg16);
++	reg16 |= PCI_EXP_LNKCTL_RL;
++	pcie_capability_write_word(parent, PCI_EXP_LNKCTL, reg16);
++
++	/* Wait for link training end. Break out after waiting for timeout */
++	start_jiffies = jiffies;
++	for (;;) {
++		pcie_capability_read_word(parent, PCI_EXP_LNKSTA, &reg16);
++		if (!(reg16 & PCI_EXP_LNKSTA_LT))
++			break;
++		if (time_after(jiffies, start_jiffies + LINK_RETRAIN_TIMEOUT))
++			break;
++		msleep(1);
++	}
++	return !(reg16 & PCI_EXP_LNKSTA_LT);
++}
++
+ /*
+  * pcie_aspm_configure_common_clock: check if the 2 ends of a link
+  *   could use common clock. If they are, configure them to use the
+@@ -220,7 +243,6 @@ static void pcie_aspm_configure_common_c
+ {
+ 	int same_clock = 1;
+ 	u16 reg16, parent_reg, child_reg[8];
+-	unsigned long start_jiffies;
+ 	struct pci_dev *child, *parent = link->pdev;
+ 	struct pci_bus *linkbus = parent->subordinate;
+ 	/*
+@@ -260,21 +282,7 @@ static void pcie_aspm_configure_common_c
+ 		reg16 &= ~PCI_EXP_LNKCTL_CCC;
+ 	pcie_capability_write_word(parent, PCI_EXP_LNKCTL, reg16);
+ 
+-	/* Retrain link */
+-	reg16 |= PCI_EXP_LNKCTL_RL;
+-	pcie_capability_write_word(parent, PCI_EXP_LNKCTL, reg16);
+-
+-	/* Wait for link training end. Break out after waiting for timeout */
+-	start_jiffies = jiffies;
+-	for (;;) {
+-		pcie_capability_read_word(parent, PCI_EXP_LNKSTA, &reg16);
+-		if (!(reg16 & PCI_EXP_LNKSTA_LT))
+-			break;
+-		if (time_after(jiffies, start_jiffies + LINK_RETRAIN_TIMEOUT))
+-			break;
+-		msleep(1);
+-	}
+-	if (!(reg16 & PCI_EXP_LNKSTA_LT))
++	if (pcie_retrain_link(link))
+ 		return;
+ 
+ 	/* Training failed. Restore common clock configurations */
 
 
