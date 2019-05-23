@@ -2,197 +2,173 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BDFBC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 14:28:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6697BC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 14:31:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DAF320851
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 14:28:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B04420851
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 14:31:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="eH5v3tpg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jVOwhhEJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730885AbfEWO2j (ORCPT
+        id S1730873AbfEWObT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 10:28:39 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:33683 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730790AbfEWO2i (ORCPT
+        Thu, 23 May 2019 10:31:19 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:47009 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730708AbfEWObT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 10:28:38 -0400
-Received: by mail-io1-f68.google.com with SMTP id z4so5042104iol.0
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 07:28:37 -0700 (PDT)
+        Thu, 23 May 2019 10:31:19 -0400
+Received: by mail-pl1-f196.google.com with SMTP id r18so2825971pls.13;
+        Thu, 23 May 2019 07:31:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=RpoaZHiLYMmGlhX0k0xc+98b7kVM8O0Nb+ulnrgtNJY=;
-        b=eH5v3tpg2jWcAPb1BtxrbVrTwVUfKiSWlvBDKjPnMCLKVULShlUKgTwitBPVj8R67S
-         bl1SbiSsoHmzObZJaBxdW4O3YF9bi/hDQVh4LM4xPKTAcWNU8KdkloCUphchsoElrid6
-         6AE/lgpbQOcODzePbiuHNI5h5RQVYZ3DdiPNZ1P21NCTx0RWpesYRMzTQk9Tx9wVH82F
-         3QjTfmq966opB3u1fxAMKVkxd+GjbHM+SN0LX9x6Dx0Gop9JfYNLNSq6TGOipNEymeNB
-         dRNv03qtNpwfVHrkY4WBtB5KiozY7XbCo0INoRR2QE2B56FK+0X4wpaY3eTtXiJMWQV6
-         F5KQ==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=OzO5RxAs85LgaOleUXBoRLjXCQwekMSHZAP0cUDWHtg=;
+        b=jVOwhhEJb5le1IMdGM9kPsH/V44mOmocvvXjZUIcPBj8+ylGNBd8RN7RuTlVrd7HqV
+         8zuhWExktEV+QaezF41L5rt9x7FFCyTtdBf6DB7OWiGEXBQQ3hZMKd4fZwGLyVDfsj8h
+         /qpN62uubjW7lQ/GJs2rXKJZYAXjlqJCU9ADo+ZeAKaodrbdpdoqHAAjHkhRrIL2UZVm
+         MohVf0uPAqvR+flYQBiETtqq//jtOB3vSecQexEe967n7OIatP91SFq3OYWnw/OSMQ5T
+         Y6QTnTaTDZpp18F/1AUYP5EJzU5aqkwMWDoHlMe8NnPI2xSjHPXH635j4FSygTN3asHH
+         s94Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=RpoaZHiLYMmGlhX0k0xc+98b7kVM8O0Nb+ulnrgtNJY=;
-        b=gGqj7ESyQefXsXMIift5nDEoPnqsaCt8dUE1CFX6OFV8c8o2n3f60sE44HQqMk1lDf
-         hfNooZWwtKarosggMiAzgiq6JkgsXxB8a9SogoSIzy7lFvwCo47lTzngF/Qawl15yz9V
-         lZMSUFu2Nhk//V5o6vybIWXiUeGI0LDu7bZOSihdMI0mMhdPc7qnQKUqWoPwj3M5/isN
-         kfR9Mg1MLA1Njj69w4Xu7tnGPuqrqTyifR1G9ZVCPmd7i6CnMbu9ef5FBxSLQX5U5AHk
-         rraQIgUw7JXD7PM+mvQWLilOzj+dejd1OizLUr1nY2tVjMJFFUkaYrLVj37YhfdhbyxJ
-         C+Cw==
-X-Gm-Message-State: APjAAAV6YWmmBzKSfswzcWYDQawmwStDQKzQvkq1E+/bU6QIesoxOqIY
-        4QnQceYP7G2sUuG+7uiMh/sXKQ==
-X-Google-Smtp-Source: APXvYqx8LKzOGpiWsL6dTrqW1tpjf/a6M4DwvCuMOWOiEPh8pOdaLx/XEPvYVwOl6hL0YBJIUNsKYw==
-X-Received: by 2002:a6b:ca47:: with SMTP id a68mr20174292iog.227.1558621717396;
-        Thu, 23 May 2019 07:28:37 -0700 (PDT)
-Received: from brauner.io ([172.56.12.187])
-        by smtp.gmail.com with ESMTPSA id w186sm4196873ita.3.2019.05.23.07.28.30
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 23 May 2019 07:28:36 -0700 (PDT)
-Date:   Thu, 23 May 2019 16:28:28 +0200
-From:   Christian Brauner <christian@brauner.io>
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
-        torvalds@linux-foundation.org, fweimer@redhat.com,
-        jannh@google.com, tglx@linutronix.de, arnd@arndb.de,
-        shuah@kernel.org, dhowells@redhat.com, tkjos@android.com,
-        ldv@altlinux.org, miklos@szeredi.hu, linux-alpha@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        x86@kernel.org
-Subject: Re: [PATCH v1 1/2] open: add close_range()
-Message-ID: <20190523142826.omb7vgygudifmveq@brauner.io>
-References: <20190522155259.11174-1-christian@brauner.io>
- <20190522165737.GC4915@redhat.com>
- <20190523115118.pmscbd6kaqy37dym@brauner.io>
- <20190523141447.34s3kc3fuwmoeq7n@brauner.io>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=OzO5RxAs85LgaOleUXBoRLjXCQwekMSHZAP0cUDWHtg=;
+        b=XGyMQP/8F0M4RQNhHmOxmZVTOGOTyiy+EyEH+y4kzlon9PZdWyiwzQ6uDEKgz+UWwb
+         2QQeO2blf1BhESHaQKCSKPJcZ2WzMJLfGcAmFEvSEuEZvCPiZj/sWEsjnvT85QVwSzdw
+         FoCDt95JaKOQJTojpnXt/wW8KGBPEqNW4uD2iABj5Q2iByHqIvb6//GXTqUouz5yvtO9
+         OPLBoVZlAk61CXibrpxuXUUsxLfgX7TZsaK9IhHVigZJeWlTrQeTE3ZW4wnsKP5ikd8U
+         52wA+XgjmCjuYkqSqgD9ytysr4eGknWLssEizTheUHxkiXsWAvhQtPZTT/wl3BkhZBGQ
+         g5+A==
+X-Gm-Message-State: APjAAAWqkRJ/e/YJMNe7Xv7WV3cXCSLURdyEpUlI3ADLjNOmIgi4BnaT
+        /moGhyeq7jSnu3aGpT6tdAUwkWrGZ8c=
+X-Google-Smtp-Source: APXvYqxpzb5BE4r9ASutH0halvaxX8CdPejd0RKIzvdRu7HWvgwdf6uNbOj44MJftLqExn5j5LV8ww==
+X-Received: by 2002:a17:902:e18d:: with SMTP id cd13mr31139018plb.301.1558621878491;
+        Thu, 23 May 2019 07:31:18 -0700 (PDT)
+Received: from zhanggen-UX430UQ ([66.42.35.75])
+        by smtp.gmail.com with ESMTPSA id 140sm45674391pfw.123.2019.05.23.07.30.39
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 23 May 2019 07:31:17 -0700 (PDT)
+Date:   Thu, 23 May 2019 22:30:22 +0800
+From:   Gen Zhang <blackgod016574@gmail.com>
+To:     kvalo@codeaurora.org, davem@davemloft.net
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] spi: Fix a memory leaking bug in wl1271_probe()
+Message-ID: <20190523143022.GA26485@zhanggen-UX430UQ>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190523141447.34s3kc3fuwmoeq7n@brauner.io>
-User-Agent: NeoMutt/20180716
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 04:14:47PM +0200, Christian Brauner wrote:
-> On Thu, May 23, 2019 at 01:51:18PM +0200, Christian Brauner wrote:
-> > On Wed, May 22, 2019 at 06:57:37PM +0200, Oleg Nesterov wrote:
-> > > On 05/22, Christian Brauner wrote:
-> > > >
-> > > > +static struct file *pick_file(struct files_struct *files, unsigned fd)
-> > > >  {
-> > > > -	struct file *file;
-> > > > +	struct file *file = NULL;
-> > > >  	struct fdtable *fdt;
-> > > >  
-> > > >  	spin_lock(&files->file_lock);
-> > > > @@ -632,15 +629,65 @@ int __close_fd(struct files_struct *files, unsigned fd)
-> > > >  		goto out_unlock;
-> > > >  	rcu_assign_pointer(fdt->fd[fd], NULL);
-> > > >  	__put_unused_fd(files, fd);
-> > > > -	spin_unlock(&files->file_lock);
-> > > > -	return filp_close(file, files);
-> > > >  
-> > > >  out_unlock:
-> > > >  	spin_unlock(&files->file_lock);
-> > > > -	return -EBADF;
-> > > > +	return file;
-> > > 
-> > > ...
-> > > 
-> > > > +int __close_range(struct files_struct *files, unsigned fd, unsigned max_fd)
-> > > > +{
-> > > > +	unsigned int cur_max;
-> > > > +
-> > > > +	if (fd > max_fd)
-> > > > +		return -EINVAL;
-> > > > +
-> > > > +	rcu_read_lock();
-> > > > +	cur_max = files_fdtable(files)->max_fds;
-> > > > +	rcu_read_unlock();
-> > > > +
-> > > > +	/* cap to last valid index into fdtable */
-> > > > +	if (max_fd >= cur_max)
-> > > > +		max_fd = cur_max - 1;
-> > > > +
-> > > > +	while (fd <= max_fd) {
-> > > > +		struct file *file;
-> > > > +
-> > > > +		file = pick_file(files, fd++);
-> > > 
-> > > Well, how about something like
-> > > 
-> > > 	static unsigned int find_next_opened_fd(struct fdtable *fdt, unsigned start)
-> > > 	{
-> > > 		unsigned int maxfd = fdt->max_fds;
-> > > 		unsigned int maxbit = maxfd / BITS_PER_LONG;
-> > > 		unsigned int bitbit = start / BITS_PER_LONG;
-> > > 
-> > > 		bitbit = find_next_bit(fdt->full_fds_bits, maxbit, bitbit) * BITS_PER_LONG;
-> > > 		if (bitbit > maxfd)
-> > > 			return maxfd;
-> > > 		if (bitbit > start)
-> > > 			start = bitbit;
-> > > 		return find_next_bit(fdt->open_fds, maxfd, start);
-> > > 	}
-> > 
-> > > 
-> > > 	unsigned close_next_fd(struct files_struct *files, unsigned start, unsigned maxfd)
-> > > 	{
-> > > 		unsigned fd;
-> > > 		struct file *file;
-> > > 		struct fdtable *fdt;
-> > > 	
-> > > 		spin_lock(&files->file_lock);
-> > > 		fdt = files_fdtable(files);
-> > > 		fd = find_next_opened_fd(fdt, start);
-> > > 		if (fd >= fdt->max_fds || fd > maxfd) {
-> > > 			fd = -1;
-> > > 			goto out;
-> > > 		}
-> > > 
-> > > 		file = fdt->fd[fd];
-> > > 		rcu_assign_pointer(fdt->fd[fd], NULL);
-> > > 		__put_unused_fd(files, fd);
-> > > 	out:
-> > > 		spin_unlock(&files->file_lock);
-> > > 
-> > > 		if (fd == -1u)
-> > > 			return fd;
-> > > 
-> > > 		filp_close(file, files);
-> > > 		return fd + 1;
-> > > 	}
-> > 
-> > Thanks, Oleg!
-> > 
-> > I kept it dumb and was about to reply that your solution introduces more
-> > code when it seemed we wanted to keep this very simple for now.
-> > But then I saw that find_next_opened_fd() already exists as
-> > find_next_fd(). So it's actually not bad compared to what I sent in v1.
-> > So - with some small tweaks (need to test it and all now) - how do we
-> > feel about?:
-> 
-> That's obviously not correct atm but I'll send out a tweaked version in
-> a bit.
+In wl1271_probe(), 'glue->core' is allocated by platform_device_alloc(),
+when this allocation fails, ENOMEM is returned. However, 'pdev_data'
+and 'glue' are allocated by devm_kzalloc() before 'glue->core'. When
+platform_device_alloc() returns NULL, we should also free 'pdev_data'
+and 'glue' before wl1271_probe() ends to prevent leaking memory.
 
-So given that we would really need another find_next_open_fd() I think
-sticking to the simple cond_resched() version I sent before is better
-for now until we see real-world performance issues.
-I was however missing a test for close_range(fd, fd, 0) anyway so I'll
-need to send a v2 with this test added.
+Similarly, we shoulf free 'pdev_data' when 'glue' is NULL. And we should
+free 'pdev_data' and 'glue' when 'glue->reg' is error and when 'ret' is
+error.
 
-Christian
+Further, we should free 'glue->core', 'pdev_data' and 'glue' when this 
+function normally ends to prevent leaking memory.
+
+Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
+---
+diff --git a/drivers/net/wireless/ti/wlcore/spi.c b/drivers/net/wireless/ti/wlcore/spi.c
+index 62ce54a..3a020bd 100644
+--- a/drivers/net/wireless/ti/wlcore/spi.c
++++ b/drivers/net/wireless/ti/wlcore/spi.c
+@@ -480,7 +480,7 @@ static int wl1271_probe(struct spi_device *spi)
+ 	struct wl12xx_spi_glue *glue;
+ 	struct wlcore_platdev_data *pdev_data;
+ 	struct resource res[1];
+-	int ret;
++	int ret = -ENOMEM;
+ 
+ 	pdev_data = devm_kzalloc(&spi->dev, sizeof(*pdev_data), GFP_KERNEL);
+ 	if (!pdev_data)
+@@ -491,7 +491,8 @@ static int wl1271_probe(struct spi_device *spi)
+ 	glue = devm_kzalloc(&spi->dev, sizeof(*glue), GFP_KERNEL);
+ 	if (!glue) {
+ 		dev_err(&spi->dev, "can't allocate glue\n");
+-		return -ENOMEM;
++		ret = -ENOMEM;
++		goto out_free1;
+ 	}
+ 
+ 	glue->dev = &spi->dev;
+@@ -503,31 +504,35 @@ static int wl1271_probe(struct spi_device *spi)
+ 	spi->bits_per_word = 32;
+ 
+ 	glue->reg = devm_regulator_get(&spi->dev, "vwlan");
+-	if (PTR_ERR(glue->reg) == -EPROBE_DEFER)
+-		return -EPROBE_DEFER;
++	if (PTR_ERR(glue->reg) == -EPROBE_DEFER) {
++		ret = -EPROBE_DEFER;
++		goto out_free2;
++	}
+ 	if (IS_ERR(glue->reg)) {
+ 		dev_err(glue->dev, "can't get regulator\n");
+-		return PTR_ERR(glue->reg);
++		ret = PTR_ERR(glue->reg);
++		goto out_free2;
+ 	}
+ 
+ 	ret = wlcore_probe_of(spi, glue, pdev_data);
+ 	if (ret) {
+ 		dev_err(glue->dev,
+ 			"can't get device tree parameters (%d)\n", ret);
+-		return ret;
++		goto out_free2;
+ 	}
+ 
+ 	ret = spi_setup(spi);
+ 	if (ret < 0) {
+ 		dev_err(glue->dev, "spi_setup failed\n");
+-		return ret;
++		goto out_free2;
+ 	}
+ 
+ 	glue->core = platform_device_alloc(pdev_data->family->name,
+ 					   PLATFORM_DEVID_AUTO);
+ 	if (!glue->core) {
+ 		dev_err(glue->dev, "can't allocate platform_device\n");
+-		return -ENOMEM;
++		ret = -ENOMEM;
++		goto out_free2;
+ 	}
+ 
+ 	glue->core->dev.parent = &spi->dev;
+@@ -557,10 +562,18 @@ static int wl1271_probe(struct spi_device *spi)
+ 		goto out_dev_put;
+ 	}
+ 
++	platform_device_put(glue->core);
++	devm_kfree(&func->dev, glue);
++	devm_kfree(&func->dev, pdev_data);
+ 	return 0;
+ 
+ out_dev_put:
+ 	platform_device_put(glue->core);
++out_free2:
++	devm_kfree(&func->dev, glue);
++out_free1:
++	devm_kfree(&func->dev, pdev_data);
++out:
+ 	return ret;
+ }
+ 
+---
