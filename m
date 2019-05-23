@@ -2,144 +2,141 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26DDCC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 14:44:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 013D6C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 14:44:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC39D206BA
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 14:44:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C85AC206BA
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 14:44:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sf4PXYXe"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rP6Xyj/q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730906AbfEWOom (ORCPT
+        id S1730936AbfEWOop (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 10:44:42 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:33281 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730709AbfEWOol (ORCPT
+        Thu, 23 May 2019 10:44:45 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:38373 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730709AbfEWOon (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 10:44:41 -0400
-Received: by mail-pf1-f196.google.com with SMTP id z28so3381622pfk.0;
-        Thu, 23 May 2019 07:44:41 -0700 (PDT)
+        Thu, 23 May 2019 10:44:43 -0400
+Received: by mail-pl1-f196.google.com with SMTP id f97so2860085plb.5
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 07:44:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=trLF/Pu76tcs2yNpJEmVVGLKJPxzPf+7/LopwlS1ci8=;
-        b=sf4PXYXeAQSFyn0UVZTTW2ciZr/ivjcuG5sp5GStckkZgxCyuav/So+HN6AeqF2+Uc
-         nA2qq6zG1nYL+fCcfs9sDtvvZniacIHuvyBkk5kKq5XAzEpRRikrZeczPUXmSo5RusWg
-         Vt9krzTu2EUS8SbY3x+ZUlhF5Fo4sT6eVvBIre3nN3PzAwL+hmmTWhnWqvazYVGiaOxS
-         v257kAIWtsYx4eIcnZ+pzmI7Vp8+J1/JS2AuG2NX5f/SHs5U3szZ9QMvIqyuDMT2saD4
-         zHYxtj95orWKnwBRtPaMsdifgQLK3YegNcMf/NU/hvlzQ/EQElhwesRZIuMi8IUUMQzm
-         4bJw==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=2Ky1NhTh6Sjvjan+qNl8ZXCfOCQ4Wh0D7lNZmX1Rk4s=;
+        b=rP6Xyj/q6gZKJRtGHb4s/nLwR57MhxbnQuw2lmcL3adCpoU5QQdXse548sY7W/zuGp
+         g3z9l8KWVy7T+jhAfzH4EGz7LVMEhKk/jgOsuOOZH6LVaBZp6ItlLieciyelHwkQi9vq
+         cyPa0I+iCP/5H0+wSOBK/+c68CkvPwr3dBsB3qkom9Zz39aMQ4lSgMFjNYrwKAk72L59
+         Er36+iRGksE9wtmaMGeW2U70CWZsgcLznWLbkqm42rTFioB6CT7z7+7rjDHBKi3I3NyA
+         rWeniayWC+nTUj/whE5g/LNk+Pqo2fUqzuNWP72MxRJjvYw2MjwFBpjGVQAA+vlkllFN
+         8k2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=trLF/Pu76tcs2yNpJEmVVGLKJPxzPf+7/LopwlS1ci8=;
-        b=Rjul+5lbuwnu715oVdcNt7U02jpBae4yk+QkGvMkwEikiUS0X6x1hjhhb4cJnRrj4C
-         hikx+b+gxf9SzUSeP4228YDHV+tkBqo3c7UTiaeqo/t11mpmHrEOiI7AT93RNsQ2FQBo
-         rWbcU4PW299HmxqaNNgTzQY6KONBI9ZON93tOvFQsKXiufEmdRvENRHEUF0j6sAAiWQ4
-         xq4mHzScBsFJaH4R6LFQ2UrAAbHnffKUb358wYpZ6K4ab8Sg1Ljd44hPDBWeemNizO/l
-         LU4AjWMqUtTmrocCkT3FJCi9yd0G5PwHgouCfSDOT944EhH89zbG7MtytL+Y4QoNX6Xm
-         4vtg==
-X-Gm-Message-State: APjAAAWcEHBGnmOutXRzNDgEIecXuwxIW3JZWuDJFAsISiOQkyO03IyQ
-        XLoEcSPRmlMTGx8K2+w7rAM=
-X-Google-Smtp-Source: APXvYqzb4lEsv8vtep4ivojq/y0QGSAnx/qVDcHNABBr29g5D97ty1yHiucaSX80WUZQQvYPoGVKzQ==
-X-Received: by 2002:a17:90a:b890:: with SMTP id o16mr1669701pjr.60.1558622680943;
-        Thu, 23 May 2019 07:44:40 -0700 (PDT)
-Received: from zhanggen-UX430UQ ([66.42.35.75])
-        by smtp.gmail.com with ESMTPSA id h6sm42913471pfk.188.2019.05.23.07.44.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 23 May 2019 07:44:40 -0700 (PDT)
-Date:   Thu, 23 May 2019 22:44:25 +0800
-From:   Gen Zhang <blackgod016574@gmail.com>
-To:     kvalo@codeaurora.org, eyalreizer@gmail.com
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] sdio: Fix a memory leaking bug in wl1271_probe()
-Message-ID: <20190523144425.GA26766@zhanggen-UX430UQ>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2Ky1NhTh6Sjvjan+qNl8ZXCfOCQ4Wh0D7lNZmX1Rk4s=;
+        b=qz2Lin7BsyoYR1pVFcQge8GF5b5LZt5xNAxd3JjftOgMBf3fJ9wk0hr+hjG+SbhgVq
+         VqmMM2CpJyzE4Ii8Ew9Lfhye13QF4UEEdJV7q7sh0eSxLODl8SqiRIZtc5lPoPbAew4e
+         FlXK89WaSTUvscr3kkDNjVvIeCSB+DdCWupnblPRrRKrWTbV2C3/rqWyEw3gcBa5s/fA
+         L337PaSK+Jhj6euNE0iMEEPldatIrSyt+t6wIVvS2RPCcY8g80tAuLYVRtWahh5v8I9i
+         ElkZIcoo3nb/FFZOCIxGUq7+sdmmS1lG3EFXsssVbH9Eo2WnnFQ3gYQGA0q343FMpo/s
+         kZHA==
+X-Gm-Message-State: APjAAAUqBPSCk12j39aTltli/+oAzVxo0gTG9d9PD94T4JICZ240jPt5
+        mXlmpSsn5/X8jAkybofok8r89w==
+X-Google-Smtp-Source: APXvYqzchItDvd9Ubge8eLDuQHoQswRIRqB8pGOfnTf4Aha7Nu59oyxPz1vEnqnJxz47wckbg4GLYQ==
+X-Received: by 2002:a17:902:2aab:: with SMTP id j40mr75540236plb.238.1558622682710;
+        Thu, 23 May 2019 07:44:42 -0700 (PDT)
+Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id c129sm39219824pfg.178.2019.05.23.07.44.41
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 23 May 2019 07:44:41 -0700 (PDT)
+Date:   Thu, 23 May 2019 07:45:08 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] soc: qcom: apr: Don't use reg for domain id
+Message-ID: <20190523144508.GH2085@tuxbook-pro>
+References: <20190522015342.29501-1-bjorn.andersson@linaro.org>
+ <e7046725-578d-8854-872b-a7837d0fc20a@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <e7046725-578d-8854-872b-a7837d0fc20a@linaro.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In wl1271_probe(), 'glue->core' is allocated by platform_device_alloc(),
-when this allocation fails, ENOMEM is returned. However, 'pdev_data'
-and 'glue' are allocated by devm_kzalloc() before 'glue->core'. When
-platform_device_alloc() returns NULL, we should also free 'pdev_data'
-and 'glue' before wl1271_probe() ends to prevent leaking memory.
+On Thu 23 May 07:38 PDT 2019, Srinivas Kandagatla wrote:
 
-Similarly, we should free 'pdev_data' when 'glue' is NULL. And we
-should free 'pdev_data' and 'glue' when 'ret' is error.
+> 
+> 
+> On 22/05/2019 02:53, Bjorn Andersson wrote:
+> > The reg property represents the address and size on the bus that a
+> > device lives, but for APR the parent is a rpmsg bus, which does not have
+> > numerical addresses. Simply defining #address/#size-cells to 1 and 0,
+> > respectively, to silence the compiler is not an appropriate solution.
+> > 
+> I agree.
+> 
+> > Replace the use of "reg" with an APR specific property.
+> > 
+> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > ---
+> Can you also change the example too.
+> 
 
-Further, we shoulf free 'glue->dev', 'pdev_data' and 'glue' when this
-function normally ends to prevent memory leaking.
+Of course, sorry for missing that.
 
-Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
----
-diff --git a/drivers/net/wireless/ti/wlcore/sdio.c b/drivers/net/wireless/ti/wlcore/sdio.c
-index 4d4b0770..232ce5f 100644
---- a/drivers/net/wireless/ti/wlcore/sdio.c
-+++ b/drivers/net/wireless/ti/wlcore/sdio.c
-@@ -298,8 +298,10 @@ static int wl1271_probe(struct sdio_func *func,
- 	pdev_data->if_ops = &sdio_ops;
- 
- 	glue = devm_kzalloc(&func->dev, sizeof(*glue), GFP_KERNEL);
--	if (!glue)
--		return -ENOMEM;
-+	if (!glue) {
-+		ret = -ENOMEM;
-+		goto out_free1;
-+	}
- 
- 	glue->dev = &func->dev;
- 
-@@ -311,7 +313,7 @@ static int wl1271_probe(struct sdio_func *func,
- 
- 	ret = wlcore_probe_of(&func->dev, &irq, &wakeirq, pdev_data);
- 	if (ret)
--		goto out;
-+		goto out_free2;
- 
- 	/* if sdio can keep power while host is suspended, enable wow */
- 	mmcflags = sdio_get_host_pm_caps(func);
-@@ -340,7 +342,7 @@ static int wl1271_probe(struct sdio_func *func,
- 	if (!glue->core) {
- 		dev_err(glue->dev, "can't allocate platform_device");
- 		ret = -ENOMEM;
--		goto out;
-+		goto out_free2;
- 	}
- 
- 	glue->core->dev.parent = &func->dev;
-@@ -380,11 +382,20 @@ static int wl1271_probe(struct sdio_func *func,
- 		dev_err(glue->dev, "can't add platform device\n");
- 		goto out_dev_put;
- 	}
-+	platform_device_put(glue->core);
-+	devm_kfree(&func->dev, glue);
-+	devm_kfree(&func->dev, pdev_data);
- 	return 0;
- 
- out_dev_put:
- 	platform_device_put(glue->core);
- 
-+out_free2:
-+	devm_kfree(&func->dev, glue);
-+
-+out_free1:
-+	devm_kfree(&func->dev, pdev_data);
-+
- out:
- 	return ret;
- }
----
+> other than that am okay with the change.
+> 
+> Reviewed-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> 
+
+Thanks,
+Bjorn
+
+> --srini
+> > 
+> > The APR device was recently added to msm8996.dtsi, but this is still
+> > depending on working SMMU to provide functional audio support.
+> > 
+> >   Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt | 2 +-
+> >   drivers/soc/qcom/apr.c                                  | 2 +-
+> >   2 files changed, 2 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
+> > index bcc612cc7423..38d3c06abc41 100644
+> > --- a/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
+> > +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
+> > @@ -9,7 +9,7 @@ used for audio/voice services on the QDSP.
+> >   	Value type: <stringlist>
+> >   	Definition: must be "qcom,apr-v<VERSION-NUMBER>", example "qcom,apr-v2"
+> > -- reg
+> > +- qcom,apr-domain
+> >   	Usage: required
+> >   	Value type: <u32>
+> >   	Definition: Destination processor ID.
+> > diff --git a/drivers/soc/qcom/apr.c b/drivers/soc/qcom/apr.c
+> > index 74f8b9607daa..b83d71b2e0a4 100644
+> > --- a/drivers/soc/qcom/apr.c
+> > +++ b/drivers/soc/qcom/apr.c
+> > @@ -276,7 +276,7 @@ static int apr_probe(struct rpmsg_device *rpdev)
+> >   	if (!apr)
+> >   		return -ENOMEM;
+> > -	ret = of_property_read_u32(dev->of_node, "reg", &apr->dest_domain_id);
+> > +	ret = of_property_read_u32(dev->of_node, "qcom,apr-domain", &apr->dest_domain_id);
+> >   	if (ret) {
+> >   		dev_err(dev, "APR Domain ID not specified in DT\n");
+> >   		return ret;
+> > 
