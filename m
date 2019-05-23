@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18522C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:12:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E936C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:12:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4158217F9
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:12:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B212217D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:12:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558638736;
-	bh=JtWd6O3/eRycUXinHH2loJFoCaEZwSr600RHCObQA7A=;
+	s=default; t=1558638739;
+	bh=AxJsAR8dpjeA9qCIvZZYVwgDd+oYyxFSMJaIX6clBMk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xxXYe+GDrIeQsBtGcEs5x9kKwHRh+8EcWrwcE2E2X6T8t7HKht+EFHvRrfCWaobMd
-	 8BrmETGYPsaH4Qcg4PnUPem+yeBg8ZRq8WSY0LWnDyRtKN6mjolAqLJrRZHgys7kpa
-	 AU5hQz1W0yR2GOwW2CBVDvhdJpByJJTJpAipOR+o=
+	b=oT4mfE6I8u8x4EiA70+VDKY340B1liY/CltybWcGuYAd4kfHVCtpzg4azY1yu0cnP
+	 Ns60D9H3CDxFivauupYiSKTex36K4e1mG8ZxocPCewfPXO8HAHQtht7UD/U1FW7zDW
+	 N07zo8XZ3hktxMK3LzovwaIaQbgYUdpS53efao+I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388416AbfEWTMP (ORCPT
+        id S2388428AbfEWTMR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:12:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45880 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:12:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45962 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388380AbfEWTMJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:12:09 -0400
+        id S2388414AbfEWTMQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:12:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B22FE2186A;
-        Thu, 23 May 2019 19:12:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 68676217D7;
+        Thu, 23 May 2019 19:12:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558638729;
-        bh=JtWd6O3/eRycUXinHH2loJFoCaEZwSr600RHCObQA7A=;
+        s=default; t=1558638734;
+        bh=AxJsAR8dpjeA9qCIvZZYVwgDd+oYyxFSMJaIX6clBMk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FeJJqX87bPKp2DpOXadz4ATqQZay8JBHMYEV9JJ7YAbxXv+fEwZujI2/2mllwVst8
-         zAkvB35+C9H35PbNTSc8AL+L/w/UYxDTYx9BL9YGp5A1llazChhCwocLZvDNMatuTC
-         GWm7XAIngyqRSP15wB5GR7y9Ki2v06h42WPjVG2U=
+        b=h+hekNXjW+FATUZKy8yn04bOWo0Ow2vAAfrwTf7xj/Q5fMkL+5N50jOztzkSFerP0
+         FRLCCcnUQUoZl7FqvmUIDwvk8f/VxOvFmxy2EnxlOGdZmlEnHEqGNGC01jgeMsvjtj
+         SnxKCGX7PQAwc1h0AZ1SOzrza5k8H89tQljtlMsw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiao Ni <xni@redhat.com>,
-        NeilBrown <neilb@suse.com>, Yufen Yu <yuyufen@huawei.com>,
-        Song Liu <songliubraving@fb.com>
-Subject: [PATCH 4.14 16/77] md: add mddev->pers to avoid potential NULL pointer dereference
-Date:   Thu, 23 May 2019 21:05:34 +0200
-Message-Id: <20190523181722.480834303@linuxfoundation.org>
+        stable@vger.kernel.org, Yifeng Li <tomli@tomli.me>,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+        Teddy Wang <teddy.wang@siliconmotion.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: [PATCH 4.14 45/77] fbdev: sm712fb: fix crashes during framebuffer writes by correctly mapping VRAM
+Date:   Thu, 23 May 2019 21:06:03 +0200
+Message-Id: <20190523181726.327762305@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181719.982121681@linuxfoundation.org>
 References: <20190523181719.982121681@linuxfoundation.org>
@@ -60,41 +61,147 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yufen Yu <yuyufen@huawei.com>
+From: Yifeng Li <tomli@tomli.me>
 
-commit ee37e62191a59d253fc916b9fc763deb777211e2 upstream.
+commit 9e0e59993df0601cddb95c4f6c61aa3d5e753c00 upstream.
 
-When doing re-add, we need to ensure rdev->mddev->pers is not NULL,
-which can avoid potential NULL pointer derefence in fallowing
-add_bound_rdev().
+On a Thinkpad s30 (Pentium III / i440MX, Lynx3DM), running fbtest or X
+will crash the machine instantly, because the VRAM/framebuffer is not
+mapped correctly.
 
-Fixes: a6da4ef85cef ("md: re-add a failed disk")
-Cc: Xiao Ni <xni@redhat.com>
-Cc: NeilBrown <neilb@suse.com>
-Cc: <stable@vger.kernel.org> # 4.4+
-Reviewed-by: NeilBrown <neilb@suse.com>
-Signed-off-by: Yufen Yu <yuyufen@huawei.com>
-Signed-off-by: Song Liu <songliubraving@fb.com>
+On SM712, the framebuffer starts at the beginning of address space, but
+SM720's framebuffer starts at the 1 MiB offset from the beginning. However,
+sm712fb fails to take this into account, as a result, writing to the
+framebuffer will destroy all the registers and kill the system immediately.
+Another problem is the driver assumes 8 MiB of VRAM for SM720, but some
+SM720 system, such as this IBM Thinkpad, only has 4 MiB of VRAM.
+
+Fix this problem by removing the hardcoded VRAM size, adding a function to
+query the amount of VRAM from register MCR76 on SM720, and adding proper
+framebuffer offset.
+
+Please note that the memory map may have additional problems on Big-Endian
+system, which is not available for testing by myself. But I highly suspect
+that the original code is also broken on Big-Endian machines for SM720, so
+at least we are not making the problem worse. More, the driver also assumed
+SM710/SM712 has 4 MiB of VRAM, but it has a 2 MiB version as well, and used
+in earlier laptops, such as IBM Thinkpad 240X, the driver would probably
+crash on them. I've never seen one of those machines and cannot fix it, but
+I have documented these problems in the comments.
+
+Signed-off-by: Yifeng Li <tomli@tomli.me>
+Tested-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Cc: Teddy Wang <teddy.wang@siliconmotion.com>
+Cc: <stable@vger.kernel.org>  # v4.4+
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/md.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/video/fbdev/sm712.h   |    5 ----
+ drivers/video/fbdev/sm712fb.c |   48 ++++++++++++++++++++++++++++++++++++++----
+ 2 files changed, 44 insertions(+), 9 deletions(-)
 
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -2845,8 +2845,10 @@ state_store(struct md_rdev *rdev, const
- 			err = 0;
- 		}
- 	} else if (cmd_match(buf, "re-add")) {
--		if (test_bit(Faulty, &rdev->flags) && (rdev->raid_disk == -1) &&
--			rdev->saved_raid_disk >= 0) {
-+		if (!rdev->mddev->pers)
-+			err = -EINVAL;
-+		else if (test_bit(Faulty, &rdev->flags) && (rdev->raid_disk == -1) &&
-+				rdev->saved_raid_disk >= 0) {
- 			/* clear_bit is performed _after_ all the devices
- 			 * have their local Faulty bit cleared. If any writes
- 			 * happen in the meantime in the local node, they
+--- a/drivers/video/fbdev/sm712.h
++++ b/drivers/video/fbdev/sm712.h
+@@ -19,11 +19,6 @@
+ #define SCREEN_Y_RES      600
+ #define SCREEN_BPP        16
+ 
+-/*Assume SM712 graphics chip has 4MB VRAM */
+-#define SM712_VIDEOMEMORYSIZE	  0x00400000
+-/*Assume SM722 graphics chip has 8MB VRAM */
+-#define SM722_VIDEOMEMORYSIZE	  0x00800000
+-
+ #define dac_reg	(0x3c8)
+ #define dac_val	(0x3c9)
+ 
+--- a/drivers/video/fbdev/sm712fb.c
++++ b/drivers/video/fbdev/sm712fb.c
+@@ -1329,6 +1329,11 @@ static int smtc_map_smem(struct smtcfb_i
+ {
+ 	sfb->fb->fix.smem_start = pci_resource_start(pdev, 0);
+ 
++	if (sfb->chip_id == 0x720)
++		/* on SM720, the framebuffer starts at the 1 MB offset */
++		sfb->fb->fix.smem_start += 0x00200000;
++
++	/* XXX: is it safe for SM720 on Big-Endian? */
+ 	if (sfb->fb->var.bits_per_pixel == 32)
+ 		sfb->fb->fix.smem_start += big_addr;
+ 
+@@ -1366,12 +1371,45 @@ static inline void sm7xx_init_hw(void)
+ 	outb_p(0x11, 0x3c5);
+ }
+ 
++static u_long sm7xx_vram_probe(struct smtcfb_info *sfb)
++{
++	u8 vram;
++
++	switch (sfb->chip_id) {
++	case 0x710:
++	case 0x712:
++		/*
++		 * Assume SM712 graphics chip has 4MB VRAM.
++		 *
++		 * FIXME: SM712 can have 2MB VRAM, which is used on earlier
++		 * laptops, such as IBM Thinkpad 240X. This driver would
++		 * probably crash on those machines. If anyone gets one of
++		 * those and is willing to help, run "git blame" and send me
++		 * an E-mail.
++		 */
++		return 0x00400000;
++	case 0x720:
++		outb_p(0x76, 0x3c4);
++		vram = inb_p(0x3c5) >> 6;
++
++		if (vram == 0x00)
++			return 0x00800000;  /* 8 MB */
++		else if (vram == 0x01)
++			return 0x01000000;  /* 16 MB */
++		else if (vram == 0x02)
++			return 0x00400000;  /* illegal, fallback to 4 MB */
++		else if (vram == 0x03)
++			return 0x00400000;  /* 4 MB */
++	}
++	return 0;  /* unknown hardware */
++}
++
+ static int smtcfb_pci_probe(struct pci_dev *pdev,
+ 			    const struct pci_device_id *ent)
+ {
+ 	struct smtcfb_info *sfb;
+ 	struct fb_info *info;
+-	u_long smem_size = 0x00800000;	/* default 8MB */
++	u_long smem_size;
+ 	int err;
+ 	unsigned long mmio_base;
+ 
+@@ -1428,12 +1466,15 @@ static int smtcfb_pci_probe(struct pci_d
+ 	mmio_base = pci_resource_start(pdev, 0);
+ 	pci_read_config_byte(pdev, PCI_REVISION_ID, &sfb->chip_rev_id);
+ 
++	smem_size = sm7xx_vram_probe(sfb);
++	dev_info(&pdev->dev, "%lu MiB of VRAM detected.\n",
++					smem_size / 1048576);
++
+ 	switch (sfb->chip_id) {
+ 	case 0x710:
+ 	case 0x712:
+ 		sfb->fb->fix.mmio_start = mmio_base + 0x00400000;
+ 		sfb->fb->fix.mmio_len = 0x00400000;
+-		smem_size = SM712_VIDEOMEMORYSIZE;
+ 		sfb->lfb = ioremap(mmio_base, mmio_addr);
+ 		if (!sfb->lfb) {
+ 			dev_err(&pdev->dev,
+@@ -1465,8 +1506,7 @@ static int smtcfb_pci_probe(struct pci_d
+ 	case 0x720:
+ 		sfb->fb->fix.mmio_start = mmio_base;
+ 		sfb->fb->fix.mmio_len = 0x00200000;
+-		smem_size = SM722_VIDEOMEMORYSIZE;
+-		sfb->dp_regs = ioremap(mmio_base, 0x00a00000);
++		sfb->dp_regs = ioremap(mmio_base, 0x00200000 + smem_size);
+ 		sfb->lfb = sfb->dp_regs + 0x00200000;
+ 		sfb->mmio = (smtc_regbaseaddress =
+ 		    sfb->dp_regs + 0x000c0000);
 
 
