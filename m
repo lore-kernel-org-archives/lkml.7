@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8AFCC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:13:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 113E9C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:13:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C117B2184E
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:13:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDB292133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:13:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558638789;
-	bh=QUpdGt6ebGsGSafMqL+BLhTHSI+Qz6jsqf/naCdPraQ=;
+	s=default; t=1558638791;
+	bh=UY8SQeHd7FCBBneJtTyKQp5Ic9+zcQhEBd8HXBbyPCc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wi/jW5i8Sk3/Xihf8/udNVJwr2/yfzY13oY7iIGFcWZ5GSxd2JLdr5F+6/ltKNe2v
-	 0eeEdUy97nSm036MP/CejTAAvlin1kQUJcgVeLTbKefnnF9IKo8gRZ6JO3u/bexBDf
-	 ZPk/lJ0jFlqIeissjsS82g8b+fhr+Me0hMlQDv9s=
+	b=YJaeaLPOwdQDt+v5YCiZonECdHegXIsZgIjpeLLgGEq+ju96nMeWtIS0hYwQa37gg
+	 6u/uYGQykOZZzpybVQ45D0rjK8UiJMBq6dVfdmzdnQE/QdJ272ostByVMvZlz9AtLA
+	 R5ibW9D9epZ3oLy2mjj6E9IwbbHPquntddMZOd2k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388514AbfEWTNI (ORCPT
+        id S2388528AbfEWTNL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:13:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46948 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:13:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47000 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387921AbfEWTNG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:13:06 -0400
+        id S2388510AbfEWTNJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:13:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F97E217D7;
-        Thu, 23 May 2019 19:13:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA32E217D9;
+        Thu, 23 May 2019 19:13:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558638785;
-        bh=QUpdGt6ebGsGSafMqL+BLhTHSI+Qz6jsqf/naCdPraQ=;
+        s=default; t=1558638788;
+        bh=UY8SQeHd7FCBBneJtTyKQp5Ic9+zcQhEBd8HXBbyPCc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UG0wnO4A602YpcOw7FM4hZ/P3XYN7FobD2chWJXSTiFKng5mVT0FIOvudXLXu5TzT
-         4KFdqtpibCqW7SOZH0NigfSw+2AWUvHCasCqkqTkXxrCsfjrEfbWNb8nUSY5KhO2M6
-         tRB5Au+Zg1mE+Urb7pg3iBbnUQXfT6fNHcDLJyFY=
+        b=atfqW5YD0D2Hn7lgl1kEIi7Ne9S5O5pW8uDSTyf21ah68r3nzSQqB8G6sB7TYB4I4
+         lqtTp6FvjYmDyhPwAoJLVfSVyvtF3rJkXjiuHfrpH4cv3yXKx2/gTW83fGqILolPsM
+         ksQyGVNojG28h1Hp5rk6yV29weU1meAg0Afj6Zck=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Bhagavathi Perumal S <bperumal@codeaurora.org>,
-        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
-        Johannes Berg <johannes.berg@intel.com>,
+        stable@vger.kernel.org, Andrew Jones <drjones@redhat.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 64/77] mac80211: Fix kernel panic due to use of txq after free
-Date:   Thu, 23 May 2019 21:06:22 +0200
-Message-Id: <20190523181728.834027065@linuxfoundation.org>
+Subject: [PATCH 4.14 65/77] KVM: arm/arm64: Ensure vcpu target is unset on reset failure
+Date:   Thu, 23 May 2019 21:06:23 +0200
+Message-Id: <20190523181728.972641334@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181719.982121681@linuxfoundation.org>
 References: <20190523181719.982121681@linuxfoundation.org>
@@ -62,39 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f1267cf3c01b12e0f843fb6a7450a7f0b2efab8a ]
+[ Upstream commit 811328fc3222f7b55846de0cd0404339e2e1e6d7 ]
 
-The txq of vif is added to active_txqs list for ATF TXQ scheduling
-in the function ieee80211_queue_skb(), but it was not properly removed
-before freeing the txq object. It was causing use after free of the txq
-objects from the active_txqs list, result was kernel panic
-due to invalid memory access.
+A failed KVM_ARM_VCPU_INIT should not set the vcpu target,
+as the vcpu target is used by kvm_vcpu_initialized() to
+determine if other vcpu ioctls may proceed. We need to set
+the target before calling kvm_reset_vcpu(), but if that call
+fails, we should then unset it and clear the feature bitmap
+while we're at it.
 
-Fix kernel invalid memory access by properly removing txq object
-from active_txqs list before free the object.
-
-Signed-off-by: Bhagavathi Perumal S <bperumal@codeaurora.org>
-Acked-by: Toke Høiland-Jørgensen <toke@redhat.com>
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Andrew Jones <drjones@redhat.com>
+[maz: Simplified patch, completed commit message]
+Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/iface.c | 3 +++
- 1 file changed, 3 insertions(+)
+ virt/kvm/arm/arm.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/net/mac80211/iface.c b/net/mac80211/iface.c
-index 222c063244f56..6ce13e976b7a2 100644
---- a/net/mac80211/iface.c
-+++ b/net/mac80211/iface.c
-@@ -1924,6 +1924,9 @@ void ieee80211_if_remove(struct ieee80211_sub_if_data *sdata)
- 	list_del_rcu(&sdata->list);
- 	mutex_unlock(&sdata->local->iflist_mtx);
+diff --git a/virt/kvm/arm/arm.c b/virt/kvm/arm/arm.c
+index 32aa88c19b8d5..4154f98b337c5 100644
+--- a/virt/kvm/arm/arm.c
++++ b/virt/kvm/arm/arm.c
+@@ -856,7 +856,7 @@ int kvm_vm_ioctl_irq_line(struct kvm *kvm, struct kvm_irq_level *irq_level,
+ static int kvm_vcpu_set_target(struct kvm_vcpu *vcpu,
+ 			       const struct kvm_vcpu_init *init)
+ {
+-	unsigned int i;
++	unsigned int i, ret;
+ 	int phys_target = kvm_target_cpu();
  
-+	if (sdata->vif.txq)
-+		ieee80211_txq_purge(sdata->local, to_txq_info(sdata->vif.txq));
-+
- 	synchronize_rcu();
+ 	if (init->target != phys_target)
+@@ -891,9 +891,14 @@ static int kvm_vcpu_set_target(struct kvm_vcpu *vcpu,
+ 	vcpu->arch.target = phys_target;
  
- 	if (sdata->dev) {
+ 	/* Now we know what it is, we can reset it. */
+-	return kvm_reset_vcpu(vcpu);
+-}
++	ret = kvm_reset_vcpu(vcpu);
++	if (ret) {
++		vcpu->arch.target = -1;
++		bitmap_zero(vcpu->arch.features, KVM_VCPU_MAX_FEATURES);
++	}
+ 
++	return ret;
++}
+ 
+ static int kvm_arch_vcpu_ioctl_vcpu_init(struct kvm_vcpu *vcpu,
+ 					 struct kvm_vcpu_init *init)
 -- 
 2.20.1
 
