@@ -2,138 +2,125 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBC77C282E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 14:02:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C576AC46460
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 14:02:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9B4021773
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 14:02:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 956652133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 14:02:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S0WIOvfh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730836AbfEWOCO convert rfc822-to-8bit (ORCPT
+        id S1730863AbfEWOCk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 10:02:14 -0400
-Received: from mga18.intel.com ([134.134.136.126]:43223 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730323AbfEWOCO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 10:02:14 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 May 2019 07:02:13 -0700
-X-ExtLoop1: 1
-Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
-  by orsmga008.jf.intel.com with ESMTP; 23 May 2019 07:02:13 -0700
-Received: from fmsmsx118.amr.corp.intel.com (10.18.116.18) by
- FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Thu, 23 May 2019 07:02:13 -0700
-Received: from shsmsx104.ccr.corp.intel.com (10.239.4.70) by
- fmsmsx118.amr.corp.intel.com (10.18.116.18) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Thu, 23 May 2019 07:02:12 -0700
-Received: from shsmsx108.ccr.corp.intel.com ([169.254.8.126]) by
- SHSMSX104.ccr.corp.intel.com ([169.254.5.33]) with mapi id 14.03.0415.000;
- Thu, 23 May 2019 22:02:11 +0800
-From:   "Zhang, Rui" <rui.zhang@intel.com>
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Mark Brown <broonie@kernel.org>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Elaine Zhang <zhangqing@rock-chips.com>
-CC:     "tomeu.vizoso@collabora.com" <tomeu.vizoso@collabora.com>,
-        "guillaume.tucker@collabora.com" <guillaume.tucker@collabora.com>,
-        "mgalka@collabora.com" <mgalka@collabora.com>,
-        "matthew.hart@linaro.org" <matthew.hart@linaro.org>,
-        "khilman@baylibre.com" <khilman@baylibre.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-rockchip@lists.infradead.org" 
-        <linux-rockchip@lists.infradead.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: RE: mainline/master boot bisection: v5.2-rc1-165-g54dee406374c on
- rk3288-veyron-jaq
-Thread-Topic: mainline/master boot bisection: v5.2-rc1-165-g54dee406374c on
- rk3288-veyron-jaq
-Thread-Index: AQHVEQ59ng5b65ntw0ypm8xLYzn0kaZ4KgWAgAAB5wCAAJHx8A==
-Date:   Thu, 23 May 2019 14:02:11 +0000
-Message-ID: <744357E9AAD1214791ACBA4B0B9092637757AD75@SHSMSX108.ccr.corp.intel.com>
-References: <5ce6040d.1c69fb81.60b3b.29fb@mx.google.com>
- <20190523131207.GC17245@sirena.org.uk>
- <ac2f06ac-2bf5-7af6-06c3-37b865c43738@collabora.com>
-In-Reply-To: <ac2f06ac-2bf5-7af6-06c3-37b865c43738@collabora.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiMWIyNDI1MTEtODVlNy00ZmQzLWFlZWUtYzI3OGQ0ODdiMDBlIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoibXUyNlNRZ3U4RWtRSEI1Q1ZFdjlOMURGMmlRVnc0M29SemtQREFEb0FGd0NLdDdUSkNEVXNqS2JzcXV4VXhEcCJ9
-x-ctpclassification: CTP_NT
-dlp-product: dlpe-windows
-dlp-version: 11.0.600.7
-dlp-reaction: no-action
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Thu, 23 May 2019 10:02:40 -0400
+Received: from mail-yb1-f194.google.com ([209.85.219.194]:33989 "EHLO
+        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730323AbfEWOCk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 10:02:40 -0400
+Received: by mail-yb1-f194.google.com with SMTP id v78so2319570ybv.1;
+        Thu, 23 May 2019 07:02:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=sqmYovtDH2Cha2ixUIjp55v47f+tfN+Y/9nD/H0oaXU=;
+        b=S0WIOvfhxfwfAv7ibPxBjD1HBQmHhdi/cM0k2xwZ5e8ECTMVUNqunHYdnAhuKwbDjN
+         Xu8BiJho9SPuTk4wu04jroQpaoDnl0YqNbEBdkaBe0laaCkOz5PxNJYrP4byiu9iu+Ni
+         eV4lSa657lsml6+XQgvFORwIB0LQsbP42cOpgFiECUEFMVbmejiHv41dxvs0CX90H/zU
+         eO/mQkOQphWmY9HEo7Bhr0TaEcA4QYzakZtp2LXeixe/zuJ9XD/QjJrLOVSYQGCPuHv6
+         dIknKspngjhSiFsIIKxxDn6P2LsfxGt8rRbCGnUedOOG7Y5tW1z4iLSqn1Ik8Fr5CK/9
+         SiTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=sqmYovtDH2Cha2ixUIjp55v47f+tfN+Y/9nD/H0oaXU=;
+        b=FM2P4M8e1PAahJdGlYeyKtF0lacsyWsmdRMgRPY6dtsr7hhbMg7+oUk4z8B5yjgJeL
+         5XMrO+xK5qxwu2w9N4saWItPJ2StW60capq3MBk+xCEx7+mVwxid/wJ+06P/b6Hu8VN7
+         ZHK+hgav1d8AZ29hTxcOwEY5MPFV0je6YXVcDo67DEhO8C21uYmRmG4l8TrkdB0Wj0ey
+         HOd8O4kA4F5yckfSvOiCXm4DBbpPXjQwaosxC8EPGXIilLwGGM/zckfGjX/XC4b73bmE
+         MawLdOm7HIyxun1C5gqQj8CutNx+YddZmskGsH4oPGecEZWc08/zWFKatlK5KOBR0Ony
+         g3RA==
+X-Gm-Message-State: APjAAAWpUszFfhl+CzyoIgT7Fn0O8OH7kmHJDjlkC39kaIFnX7RZdJcG
+        7mvA4tpgait4j1a+BFxqIkLlJBZl9M/etCXcrMc=
+X-Google-Smtp-Source: APXvYqxgIVauTGVCqLlR4n4GbP/KO2TXbfyg5FKYwg7m799qm8qa/AQBMYaFifalBrQB2p3zYAor1U7RqgV1eyk1QRs=
+X-Received: by 2002:a25:340e:: with SMTP id b14mr4677744yba.82.1558620159194;
+ Thu, 23 May 2019 07:02:39 -0700 (PDT)
 MIME-Version: 1.0
+References: <20190521160330.28402-1-peron.clem@gmail.com> <20190521160330.28402-4-peron.clem@gmail.com>
+ <20190522103243.mmrfato5p2mhtf4j@flea> <CAJiuCcdaZVLQyupEf8HPaUySakufXXAhzundo6VeyQaAyZ8Trw@mail.gmail.com>
+ <20190523125716.g4euwplfsvw4vqzl@flea>
+In-Reply-To: <20190523125716.g4euwplfsvw4vqzl@flea>
+From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Date:   Thu, 23 May 2019 16:02:28 +0200
+Message-ID: <CAJiuCcdE-RtiGpPKe-BMJpS-m=wOXy+30vS7iAvd6Ng7gaZWNg@mail.gmail.com>
+Subject: Re: [PATCH v4 3/5] dt-bindings: watchdog: add Allwinner H6 r_watchdog
+To:     Maxime Ripard <maxime.ripard@bootlin.com>
+Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>, linux-watchdog@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-> -----Original Message-----
-> From: Enric Balletbo i Serra [mailto:enric.balletbo@collabora.com]
-> Sent: Thursday, May 23, 2019 9:19 PM
-> To: Mark Brown <broonie@kernel.org>; Eduardo Valentin
-> <edubezval@gmail.com>; Elaine Zhang <zhangqing@rock-chips.com>
-> Cc: tomeu.vizoso@collabora.com; guillaume.tucker@collabora.com;
-> mgalka@collabora.com; matthew.hart@linaro.org; khilman@baylibre.com;
-> Daniel Lezcano <daniel.lezcano@linaro.org>; Heiko Stuebner
-> <heiko@sntech.de>; linux-pm@vger.kernel.org; linux-
-> kernel@vger.kernel.org; linux-rockchip@lists.infradead.org; Zhang, Rui
-> <rui.zhang@intel.com>; linux-arm-kernel@lists.infradead.org
-> Subject: Re: mainline/master boot bisection: v5.2-rc1-165-g54dee406374c on
-> rk3288-veyron-jaq
-> Importance: High
-> 
-> Hi Mark,
-> 
-> On 23/5/19 15:12, Mark Brown wrote:
-> > On Wed, May 22, 2019 at 07:23:09PM -0700, kernelci.org bot wrote:
+On Thu, 23 May 2019 at 14:57, Maxime Ripard <maxime.ripard@bootlin.com> wro=
+te:
+>
+> On Wed, May 22, 2019 at 06:15:26PM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
+> > Hi Maxime,
 > >
-> >>   Details:    https://kernelci.org/boot/id/5ce5984c59b514e6a47a364c
-> >>   Plain log:  https://storage.kernelci.org//mainline/master/v5.2-rc1-165-
-> g54dee406374c/arm/multi_v7_defconfig+CONFIG_EFI=y+CONFIG_ARM_LPAE
-> =y/gcc-8/lab-collabora/boot-rk3288-veyron-jaq.txt
-> >>   HTML log:   https://storage.kernelci.org//mainline/master/v5.2-rc1-165-
-> g54dee406374c/arm/multi_v7_defconfig+CONFIG_EFI=y+CONFIG_ARM_LPAE
-> =y/gcc-8/lab-collabora/boot-rk3288-veyron-jaq.html
-> >>   Result:     28694e009e51 thermal: rockchip: fix up the tsadc pinctrl setting
-> error
+> > On Wed, 22 May 2019 at 12:32, Maxime Ripard <maxime.ripard@bootlin.com>=
+ wrote:
+> > >
+> > > On Tue, May 21, 2019 at 06:03:28PM +0200, Cl=C3=A9ment P=C3=A9ron wro=
+te:
+> > > > Allwinner H6 has a second watchdog on the r-blocks which is
+> > > > compatible with the A31.
+> > > >
+> > > > This commit add the H6 compatible for the r_watchdog.
+> > > >
+> > > > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
+> > >
+> > > Unless you have some evidence that the two blocks are different, then
+> > > you should just reuse the same one.
 > >
-> > It looks like this issue has persisted for a while without any kind of
-> > fix happening - given that the bisection has identified this commit as
-> > causing the regression and confirmed that reverting it fixes shouldn't
-> > we just revert?  My guess would be that there's some error with the
-> > pinctrl settings in the DT for the board.
-> >
-> 
-> After some discussion Heiko sent a patch that reverts the offending commit
-> one day ago [1] and it's waiting for maintainer to pick-up the patch.
-> 
-I thought Eduardo will take the patch.
-But I will apply it and queue it for -rc2 anyway.
+> > I have no evidence it's different nor identical, it's not documented
+> > in the user manual.
+> > I thought it would better to have separate bindings in case there is a
+> > difference.
+> > Than don't have and find later that we have to introduce one.
+>
+> It's a tradeoff. Pushing your logic to the limit, we would have a
+> compatible for each controller embedded in an SoC.
+>
+> This would be unmaintainable, and slightly useless since that case is
+> very unlikely.
+>
+> However, having differences between SoCs is quite common, hence why we
+> have different compatibles for each SoC.
+Yes, that make sense, I will send a new version soon,
 
-Thanks,
-Rui
+Thanks for the review,
+Cl=C3=A9ment
 
-> The reason why we think is best reverting that fix it is explained here [2]
-> 
-> [1] https://lkml.org/lkml/2019/5/22/467
-> [2] https://lkml.org/lkml/2019/4/30/270
-> 
-> Thanks,
->  Enric
+>
+> Maxime
+>
+> --
+> Maxime Ripard, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
