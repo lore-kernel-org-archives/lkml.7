@@ -2,108 +2,88 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43863C282E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 17:20:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6521FC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 17:22:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 169BE21841
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 17:20:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="N2A3v/pj"
+	by mail.kernel.org (Postfix) with ESMTP id 35F1B20851
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 17:22:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731354AbfEWRUj (ORCPT
+        id S1731290AbfEWRWj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 13:20:39 -0400
-Received: from mail-eopbgr770103.outbound.protection.outlook.com ([40.107.77.103]:46599
-        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731121AbfEWRUj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 13:20:39 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
- b=sx4ggxpacaPJ6hNUy1Eu4ShOVLq7N6/+Vl7ZR0/6FDz4J2+p0KB+1ExBOUflwGcnEIDkpDJwdLJnyjdBh+W9PJ4+YR4L95C0b3ePnAzXzhlfmKfhxAVOsR1gCsQzgb/GtxCFtXQ7DhOpJmTb8zVdEycnyB6hJhLaHcHncoJ0PxU=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=testarcselector01;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=n8M3k1xYYiKmn5XfjEsrxirQ7S0PPQBYDLQy+HW8AAQ=;
- b=mN0ff5Fxaw1NgajXwqHezEcV3FJLRpbUVN4F5G3a0icnjixthBDkeD2sRPohO44qY7ZSiG7S9EfngiUuuYCEHK9GAf4AH8qIVgqdsz86qWrakBFzZWnfUXIwEwj835/U+kWYs8pRDUzg8Q2phfu/hYRZaUpM1fUmJFGfc3wJK10=
-ARC-Authentication-Results: i=1; test.office365.com
- 1;spf=none;dmarc=none;dkim=none;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=n8M3k1xYYiKmn5XfjEsrxirQ7S0PPQBYDLQy+HW8AAQ=;
- b=N2A3v/pjQyJET5y7bxtWnmuDiiZQvpnB7GUC5k3G73AI7lm82+e8pxTGy584MYIS4E3uPxZZt/2OpNZy8tm6Cdx2oQNQQFUssPJELnhlLjbUVfGsfsV1ROpiSRJH4UVJ1ag0WDcgCh/L4+QKxDYMYv/BvlL+0ag27Zk7o7VadRI=
-Received: from CY4PR21MB0279.namprd21.prod.outlook.com (2603:10b6:903:bb::17)
- by CY4PR21MB0742.namprd21.prod.outlook.com (2603:10b6:903:b2::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1943.6; Thu, 23 May
- 2019 17:20:36 +0000
-Received: from CY4PR21MB0279.namprd21.prod.outlook.com
- ([fe80::9843:add4:f5b:8fc1]) by CY4PR21MB0279.namprd21.prod.outlook.com
- ([fe80::9843:add4:f5b:8fc1%5]) with mapi id 15.20.1943.007; Thu, 23 May 2019
- 17:20:36 +0000
-From:   Rui Zhao <ruizhao@microsoft.com>
-To:     James Morse <james.morse@arm.com>,
-        Lei Wang <leiwang_git@outlook.com>
-CC:     "bp@alien8.de" <bp@alien8.de>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "Lei Wang (BSP)" <Wang.Lei@microsoft.com>,
-        Rui Zhao <ruizhao@outlook.com>
-Subject: RE: [PATCH v3 2/2] EDAC: add EDAC driver for DMC520
-Thread-Topic: [PATCH v3 2/2] EDAC: add EDAC driver for DMC520
-Thread-Index: AQHVEYUGdXz32HFNiUaYdLQDHxz2DaZ48+Lg
-Date:   Thu, 23 May 2019 17:20:36 +0000
-Message-ID: <CY4PR21MB0279BB0E40B86CEA485CF19AB3010@CY4PR21MB0279.namprd21.prod.outlook.com>
-References: <CY1PR0401MB1244FDD9E720C9D9C1F41FEE860A0@CY1PR0401MB1244.namprd04.prod.outlook.com>
- <b1e360bc-2329-3f8b-3c93-65380f62d6fd@arm.com>
-In-Reply-To: <b1e360bc-2329-3f8b-3c93-65380f62d6fd@arm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=ruizhao@microsoft.com; 
-x-originating-ip: [2001:4898:80e8:1:657c:5a11:ce39:5653]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 84afae33-da0a-4b98-78f6-08d6dfa2f866
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:CY4PR21MB0742;
-x-ms-traffictypediagnostic: CY4PR21MB0742:
-x-microsoft-antispam-prvs: <CY4PR21MB0742A254223DF979E595B0A3B3010@CY4PR21MB0742.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1824;
-x-forefront-prvs: 00462943DE
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(366004)(396003)(346002)(136003)(376002)(199004)(189003)(66476007)(6116002)(66946007)(73956011)(64756008)(10090500001)(66446008)(305945005)(7736002)(66556008)(99286004)(76116006)(8990500004)(33656002)(74316002)(68736007)(6436002)(14454004)(4326008)(53936002)(8936002)(478600001)(10290500003)(558084003)(316002)(6246003)(52396003)(7696005)(229853002)(102836004)(25786009)(55016002)(2906002)(81166006)(81156014)(76176011)(8676002)(9686003)(53546011)(6506007)(486006)(446003)(22452003)(110136005)(86612001)(256004)(476003)(14444005)(52536014)(11346002)(54906003)(46003)(71190400001)(5660300002)(71200400001)(86362001)(186003);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR21MB0742;H:CY4PR21MB0279.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: QSo/ACmgMCHjIorpBaNxwiSuKuiadXM7xvWYjeDtFbCPoR2itkcHs1R2t/9ua9wV4SWzqdAOeMp+X4XJbpGDsFsy/aK0bALj12G6e4Gj1r6buPRUA895bnl7zGNYI3WS2j7gpTq2tse+2OcCMngt2S1sOCLUvKgrjyWL3RjuzKpnJ0QA7jnMCigvI+BSZFB0HSbeolPIex8XghhR/Grg3755hC16nPlG+PckYPbfHlHSYtXhrzqtFPeONnMxsuGce9qfDsZVNo36yzj0IXw3a1EFtdCqe9Bk6Ks39DTJRfEBRY5xBSg3Y4/KX6LESVcpVMgFb4YBhw9aHrewLgqSXqlvo7cUfZa8lmQYiFfK6ayQzvxCOKJ4as0usHBsJM0VkTsrUga0xDpr9JukI4mLAGAQE6zXL0WVljvbiKonrzg=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 23 May 2019 13:22:39 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:45362 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731115AbfEWRWi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 13:22:38 -0400
+Received: by mail-qk1-f194.google.com with SMTP id j1so4265812qkk.12
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 10:22:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=orxdKAeTGhuAr1KDO8ykLR98bbgYAJIpSNP1r+lkby0=;
+        b=HKokpVPLyUhQbCG8I0zrY5OWJ0B4QJ8T1RrbuYYqt+l82bgRYvZ2QIVObhGkYyUdWg
+         8YyaWQESHx3GnTs2vvnLA3E2RFiy1VbrmHpftDu1sVDHGzR4nWYHipTdw/4LXBDCfPns
+         M+YlXt47XJgnBr9igTcI3VWSUlqTKfkub1e1261Yw8I5QYCeLOyjeSiWqcfbDnwS0ayj
+         PozKUEcxDzYSKlSdAR0eJ2XZWUtJ2kDqIVA9IDrcp4zK0ahRkkZdt1S4Hoqt2NiLHMT6
+         t5X0rbar+EXpvWWjO72cRGN1ypbsN3ZG6q8v3lYXEicdRQIwu/j1TqaFhZDcBtPYUlkL
+         bIRw==
+X-Gm-Message-State: APjAAAWSgRJDvJAr65EdDUEEgMOj5jWsAF36VMulQ4xdBrd15EJbBxHu
+        OzIs6o/pqaTVfz4G+gOVEwn37g==
+X-Google-Smtp-Source: APXvYqykamv1Wqqs833PdyLZedOafUeo+CHIJkq0yhHSr/u9oMeUTX6fQlKnQFFG/JvpWeUzz3qZdw==
+X-Received: by 2002:a05:620a:1084:: with SMTP id g4mr75399078qkk.228.1558632157708;
+        Thu, 23 May 2019 10:22:37 -0700 (PDT)
+Received: from redhat.com (pool-173-76-105-71.bstnma.fios.verizon.net. [173.76.105.71])
+        by smtp.gmail.com with ESMTPSA id x30sm18102171qtx.35.2019.05.23.10.22.34
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 23 May 2019 10:22:36 -0700 (PDT)
+Date:   Thu, 23 May 2019 13:22:32 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     David Miller <davem@davemloft.net>
+Cc:     jasowang@redhat.com, virtualization@lists.linux-foundation.org,
+        kvm@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, pbonzini@redhat.com,
+        stefanha@redhat.com
+Subject: Re: [PATCH V2 0/4] Prevent vhost kthread from hogging CPU
+Message-ID: <20190523132228-mutt-send-email-mst@kernel.org>
+References: <1558067392-11740-1-git-send-email-jasowang@redhat.com>
+ <20190518.132712.1971625204431294331.davem@davemloft.net>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 84afae33-da0a-4b98-78f6-08d6dfa2f866
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 May 2019 17:20:36.3223
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ruizhao@microsoft.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR21MB0742
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190518.132712.1971625204431294331.davem@davemloft.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgSmFtZXMsDQoNCk9uIFRodXJzZGF5LCBNYXkgMjMsIDIwMTkgOTozMiBBTSwgSmFtZXMgTW9y
-c2Ugd3JvdGU6DQoNCj4gSG1tLCB5b3UncmUgbGlzdGluZyBzb21lb25lIGVsc2UgYXMgbWFpbnRh
-aW5lciBvZiB0aGlzIGRyaXZlci4NCj4gSSB0aGluayB3ZSdkIG5lZWQgdG8gc2VlIGFuIEFjayBm
-cm9tIFJ1aSBaaGFvLi4uDQoNCkkgY2FuIGNvbmZpcm0gdGhhdCBMZWkgaXMgYSBtYWludGFpbmVy
-IGZvciB0aGlzIGRyaXZlci4NCg0KVGhhbmtzLA0KUnVpDQoNCg==
+On Sat, May 18, 2019 at 01:27:12PM -0700, David Miller wrote:
+> From: Jason Wang <jasowang@redhat.com>
+> Date: Fri, 17 May 2019 00:29:48 -0400
+> 
+> > Hi:
+> > 
+> > This series try to prevent a guest triggerable CPU hogging through
+> > vhost kthread. This is done by introducing and checking the weight
+> > after each requrest. The patch has been tested with reproducer of
+> > vsock and virtio-net. Only compile test is done for vhost-scsi.
+> > 
+> > Please review.
+> > 
+> > This addresses CVE-2019-3900.
+> > 
+> > Changs from V1:
+> > - fix user-ater-free in vosck patch
+> 
+> I am assuming that not only will mst review this, it will also go via
+> his tree rather than mine.
+> 
+> Thanks.
+
+Will do.
+
