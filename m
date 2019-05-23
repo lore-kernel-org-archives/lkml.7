@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CBA6C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:44:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1FECC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:44:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6355B20851
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:44:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FB3020851
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:44:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558640677;
-	bh=ZKAWL+TfWyCxI4eR1wQK7z52Plma/GdthdPmEGtd6Z0=;
+	s=default; t=1558640683;
+	bh=5UCojV3+1l9pwyt7QHyOjN9adHUxg59F+wBeuWKbW/s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x8bn3DHKIR7x7pM1YYkAj+8Et5f7hzV+ZYMkFgnVh1pjh9W+J/iRHBE6PSTeSWyz3
-	 qiQv+pvbRzsWgQotldLwDJ97z72QklTEgNjVIhBt1JcO/rBBrMFx55PB1YO6hYFWA3
-	 teKA4LtBmNwcPZrN5VWXb5lXpyVO9WI99Psx8mA8=
+	b=Puvvkx8Q/GAFGUe5JYFeX1/syoa1JOK2H91lM8nTtTdgyQqBOgWtq6Sn2nxwiq282
+	 g+JvO5LrswGq3vQeclCpnbqpsuxxTqMBGxqR6nN2mCL1VJcLzTQ3WuSmxvLnmkRScN
+	 4veIbwMPeVj+Cl9hsFuhr2BSw+dJotS91YvrOrzc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389210AbfEWTQe (ORCPT
+        id S2387965AbfEWTQY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:16:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51178 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:16:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50882 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389191AbfEWTQ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:16:29 -0400
+        id S2389144AbfEWTQQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:16:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C54AC217D7;
-        Thu, 23 May 2019 19:16:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A2FF21841;
+        Thu, 23 May 2019 19:16:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558638989;
-        bh=ZKAWL+TfWyCxI4eR1wQK7z52Plma/GdthdPmEGtd6Z0=;
+        s=default; t=1558638976;
+        bh=5UCojV3+1l9pwyt7QHyOjN9adHUxg59F+wBeuWKbW/s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Zgv4tDx7f6P9t+DI8B19NeyPZwdPVR3uEyN1kf+xhOpTKLRdJKyZjL7SzB52Qqqlx
-         i9+3GpHVvM4Htqk/qhJhNuk4ct1NeJoVogoMlIOFh5Jf2ZOGIRxC0f48YqzbI8ieTT
-         HoFt49woYxtqpTMNhJ5cl229cv2U/tCb5kqN1UlY=
+        b=kEHcYYHtBwQDsR2vLEHPj8igyvqFVbSL3MavPuXyoKEekIjr3IcmZiz45YRke6IZp
+         DM6xwasRZMkDxY4BzwHBQzqwgqKUmY+Jsp7nfxhxYeWZrUAWP0ivG+aRVZW/NaREOj
+         /Ude+vjrQoYhqHBslyxeCP43iBcBPeV6MclsSxZY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Olga Kornievskaia <kolga@netapp.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>
-Subject: [PATCH 4.19 038/114] PNFS fallback to MDS if no deviceid found
-Date:   Thu, 23 May 2019 21:05:37 +0200
-Message-Id: <20190523181735.225066069@linuxfoundation.org>
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH 4.19 033/114] phy: ti-pipe3: fix missing bit-wise or operator when assigning val
+Date:   Thu, 23 May 2019 21:05:32 +0200
+Message-Id: <20190523181734.791120488@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181731.372074275@linuxfoundation.org>
 References: <20190523181731.372074275@linuxfoundation.org>
@@ -59,34 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Olga Kornievskaia <kolga@netapp.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-commit b1029c9bc078a6f1515f55dd993b507dcc7e3440 upstream.
+commit e6577cb5103b7ca7c0204c0c86ef4af8aa6288f6 upstream.
 
-If we fail to find a good deviceid while trying to pnfs instead of
-propogating an error back fallback to doing IO to the MDS. Currently,
-code with fals the IO with EINVAL.
+There seems to be a missing bit-wise or operator when setting val,
+fix this by adding it in.
 
-Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
-Fixes: 8d40b0f14846f ("NFS filelayout:call GETDEVICEINFO after pnfs_layout_process completes"
-Cc: stable@vger.kernel.org # v4.11+
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Fixes: 2796ceb0c18a ("phy: ti-pipe3: Update pcie phy settings")
+Cc: stable@vger.kernel.org # v4.19+
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/nfs/filelayout/filelayout.c |    2 +-
+ drivers/phy/ti/phy-ti-pipe3.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/nfs/filelayout/filelayout.c
-+++ b/fs/nfs/filelayout/filelayout.c
-@@ -904,7 +904,7 @@ fl_pnfs_update_layout(struct inode *ino,
- 	status = filelayout_check_deviceid(lo, fl, gfp_flags);
- 	if (status) {
- 		pnfs_put_lseg(lseg);
--		lseg = ERR_PTR(status);
-+		lseg = NULL;
- 	}
- out:
- 	return lseg;
+--- a/drivers/phy/ti/phy-ti-pipe3.c
++++ b/drivers/phy/ti/phy-ti-pipe3.c
+@@ -303,7 +303,7 @@ static void ti_pipe3_calibrate(struct ti
+ 
+ 	val = ti_pipe3_readl(phy->phy_rx, PCIEPHYRX_ANA_PROGRAMMABILITY);
+ 	val &= ~(INTERFACE_MASK | LOSD_MASK | MEM_PLLDIV);
+-	val = (0x1 << INTERFACE_SHIFT | 0xA << LOSD_SHIFT);
++	val |= (0x1 << INTERFACE_SHIFT | 0xA << LOSD_SHIFT);
+ 	ti_pipe3_writel(phy->phy_rx, PCIEPHYRX_ANA_PROGRAMMABILITY, val);
+ 
+ 	val = ti_pipe3_readl(phy->phy_rx, PCIEPHYRX_DIGITAL_MODES);
 
 
