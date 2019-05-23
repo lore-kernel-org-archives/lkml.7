@@ -7,52 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 454DDC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:35:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D013DC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:35:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1690820881
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:35:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA97820881
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:35:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558640115;
-	bh=PXnCjs8j+JetXEPaNFWEecv9BivgufsuIGkzGDl9ea8=;
+	s=default; t=1558640128;
+	bh=Jm4gOeMZDy0CWa0ohmtarmH9iyQ6p78f9xr7urk7Y3k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qeXxUs0b0vIS5ffxTGTU0IFU10j6QK9sVNLnoUhOT24vY65nirlklzxW0G+A1d4Pp
-	 m10KwRfr6CPD5gn9fgDK3Cm7GKJUseUF3pGuKQLtyxtP1hds43G+Gr9lKnJvnEgSM+
-	 Rh39M6Z+tSMqhyBAvw9GTtnh5Fen3DwZLM020vc8=
+	b=scjWwtKicbKsC4WDDq2Dg14kbLjZPLsZNkWd7h6d4YgyifWi3X8gbVbBaZfNhI899
+	 iFsAloGKeJJwZ7pzDjKr8l0dKLVDRANmo6msHLG99kafv5M7ivahPrsMOh9FjrzxCw
+	 L9OGbVThaf/ytKnos4aB4ZhnmCtGtm2KlPiZXMzM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391505AbfEWT1D (ORCPT
+        id S2391872AbfEWTf1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:27:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39050 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:35:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38680 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391486AbfEWT1A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:27:00 -0400
+        id S2390681AbfEWT0q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:26:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6670320868;
-        Thu, 23 May 2019 19:26:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 36410206BA;
+        Thu, 23 May 2019 19:26:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639618;
-        bh=PXnCjs8j+JetXEPaNFWEecv9BivgufsuIGkzGDl9ea8=;
+        s=default; t=1558639605;
+        bh=Jm4gOeMZDy0CWa0ohmtarmH9iyQ6p78f9xr7urk7Y3k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RX6hb7wSylbUUEeOJclaRlqZ9RBWIK3ruFSD/erM0JsnWs/CoJUQciaX5nGk8gpuQ
-         HZMMCe674JyjBig4+UsTzOSiQh0ItvCQMCOUtst1/AatEEmGsBd0YfS2HLmeCcGUDN
-         UBytcB8WcVZ8Lt19SJo40GZzzNUG6fcX0usZFtlE=
+        b=jeH8OGKJZ0FvkYBChRfK13LPIlpD3YMAnqLAlYXGE2tBXB6OgBZi4T7IxD95cw/5+
+         YhigK3QNUfu9rk71QqoONiwJidZxoPNgQ0W0UmdZCdWDTvS0MTdYXpVIXt7XNuZ1HU
+         WvwPn3o7fZFJMfH29JQIOw+Oz4x3+nLKcygw23aU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dongli Zhang <dongli.zhang@oracle.com>,
-        James Smart <james.smart@broadcom.com>,
-        Bart Van Assche <bart.vanassche@wdc.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Christoph Hellwig <hch@lst.de>, Ming Lei <ming.lei@redhat.com>,
-        Jens Axboe <axboe@kernel.dk>, linux-scsi@vger.kernel.org,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        "James E . J . Bottomley" <jejb@linux.vnet.ibm.com>
-Subject: [PATCH 5.1 024/122] blk-mq: free hw queues resource in hctxs release handler
-Date:   Thu, 23 May 2019 21:05:46 +0200
-Message-Id: <20190523181707.943993176@linuxfoundation.org>
+        stable@vger.kernel.org, Sabrina Dubroca <sd@queasysnail.net>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dan Winship <danw@redhat.com>
+Subject: [PATCH 5.1 010/122] rtnetlink: always put IFLA_LINK for links with a link-netnsid
+Date:   Thu, 23 May 2019 21:05:32 +0200
+Message-Id: <20190523181706.363871384@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181705.091418060@linuxfoundation.org>
 References: <20190523181705.091418060@linuxfoundation.org>
@@ -65,130 +61,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ming Lei <ming.lei@redhat.com>
+From: Sabrina Dubroca <sd@queasysnail.net>
 
-commit c7e2d94b3d1634988a95ac4d77a72dc7487ece06 upstream.
+[ Upstream commit feadc4b6cf42a53a8a93c918a569a0b7e62bd350 ]
 
-Once blk_cleanup_queue() returns, tags shouldn't be used any more,
-because blk_mq_free_tag_set() may be called. Commit 45a9c9d909b2
-("blk-mq: Fix a use-after-free") fixes this issue exactly.
+Currently, nla_put_iflink() doesn't put the IFLA_LINK attribute when
+iflink == ifindex.
 
-However, that commit introduces another issue. Before 45a9c9d909b2,
-we are allowed to run queue during cleaning up queue if the queue's
-kobj refcount is held. After that commit, queue can't be run during
-queue cleaning up, otherwise oops can be triggered easily because
-some fields of hctx are freed by blk_mq_free_queue() in blk_cleanup_queue().
+In some cases, a device can be created in a different netns with the
+same ifindex as its parent. That device will not dump its IFLA_LINK
+attribute, which can confuse some userspace software that expects it.
+For example, if the last ifindex created in init_net and foo are both
+8, these commands will trigger the issue:
 
-We have invented ways for addressing this kind of issue before, such as:
+    ip link add parent type dummy                   # ifindex 9
+    ip link add link parent netns foo type macvlan  # ifindex 9 in ns foo
 
-	8dc765d438f1 ("SCSI: fix queue cleanup race before queue initialization is done")
-	c2856ae2f315 ("blk-mq: quiesce queue before freeing queue")
+So, in case a device puts the IFLA_LINK_NETNSID attribute in a dump,
+always put the IFLA_LINK attribute as well.
 
-But still can't cover all cases, recently James reports another such
-kind of issue:
+Thanks to Dan Winship for analyzing the original OpenShift bug down to
+the missing netlink attribute.
 
-	https://marc.info/?l=linux-scsi&m=155389088124782&w=2
+v2: change Fixes tag, it's been here forever, as Nicolas Dichtel said
+    add Nicolas' ack
+v3: change Fixes tag
+    fix subject typo, spotted by Edward Cree
 
-This issue can be quite hard to address by previous way, given
-scsi_run_queue() may run requeues for other LUNs.
-
-Fixes the above issue by freeing hctx's resources in its release handler, and this
-way is safe becasue tags isn't needed for freeing such hctx resource.
-
-This approach follows typical design pattern wrt. kobject's release handler.
-
-Cc: Dongli Zhang <dongli.zhang@oracle.com>
-Cc: James Smart <james.smart@broadcom.com>
-Cc: Bart Van Assche <bart.vanassche@wdc.com>
-Cc: linux-scsi@vger.kernel.org,
-Cc: Martin K . Petersen <martin.petersen@oracle.com>,
-Cc: Christoph Hellwig <hch@lst.de>,
-Cc: James E . J . Bottomley <jejb@linux.vnet.ibm.com>,
-Reported-by: James Smart <james.smart@broadcom.com>
-Fixes: 45a9c9d909b2 ("blk-mq: Fix a use-after-free")
-Cc: stable@vger.kernel.org
-Reviewed-by: Hannes Reinecke <hare@suse.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Tested-by: James Smart <james.smart@broadcom.com>
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Analyzed-by: Dan Winship <danw@redhat.com>
+Fixes: d8a5ec672768 ("[NET]: netlink support for moving devices between network namespaces.")
+Signed-off-by: Sabrina Dubroca <sd@queasysnail.net>
+Acked-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- block/blk-core.c     |    2 +-
- block/blk-mq-sysfs.c |    6 ++++++
- block/blk-mq.c       |    8 ++------
- block/blk-mq.h       |    2 +-
- 4 files changed, 10 insertions(+), 8 deletions(-)
+ net/core/rtnetlink.c |   16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
---- a/block/blk-core.c
-+++ b/block/blk-core.c
-@@ -375,7 +375,7 @@ void blk_cleanup_queue(struct request_qu
- 	blk_exit_queue(q);
+--- a/net/core/rtnetlink.c
++++ b/net/core/rtnetlink.c
+@@ -1496,14 +1496,15 @@ static int put_master_ifindex(struct sk_
+ 	return ret;
+ }
  
- 	if (queue_is_mq(q))
--		blk_mq_free_queue(q);
-+		blk_mq_exit_queue(q);
- 
- 	percpu_ref_exit(&q->q_usage_counter);
- 
---- a/block/blk-mq-sysfs.c
-+++ b/block/blk-mq-sysfs.c
-@@ -10,6 +10,7 @@
- #include <linux/smp.h>
- 
- #include <linux/blk-mq.h>
-+#include "blk.h"
- #include "blk-mq.h"
- #include "blk-mq-tag.h"
- 
-@@ -33,6 +34,11 @@ static void blk_mq_hw_sysfs_release(stru
+-static int nla_put_iflink(struct sk_buff *skb, const struct net_device *dev)
++static int nla_put_iflink(struct sk_buff *skb, const struct net_device *dev,
++			  bool force)
  {
- 	struct blk_mq_hw_ctx *hctx = container_of(kobj, struct blk_mq_hw_ctx,
- 						  kobj);
+ 	int ifindex = dev_get_iflink(dev);
+ 
+-	if (dev->ifindex == ifindex)
+-		return 0;
++	if (force || dev->ifindex != ifindex)
++		return nla_put_u32(skb, IFLA_LINK, ifindex);
+ 
+-	return nla_put_u32(skb, IFLA_LINK, ifindex);
++	return 0;
+ }
+ 
+ static noinline_for_stack int nla_put_ifalias(struct sk_buff *skb,
+@@ -1520,6 +1521,8 @@ static int rtnl_fill_link_netnsid(struct
+ 				  const struct net_device *dev,
+ 				  struct net *src_net)
+ {
++	bool put_iflink = false;
 +
-+	if (hctx->flags & BLK_MQ_F_BLOCKING)
-+		cleanup_srcu_struct(hctx->srcu);
-+	blk_free_flush_queue(hctx->fq);
-+	sbitmap_free(&hctx->ctx_map);
- 	free_cpumask_var(hctx->cpumask);
- 	kfree(hctx->ctxs);
- 	kfree(hctx);
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -2267,12 +2267,7 @@ static void blk_mq_exit_hctx(struct requ
- 	if (set->ops->exit_hctx)
- 		set->ops->exit_hctx(hctx, hctx_idx);
+ 	if (dev->rtnl_link_ops && dev->rtnl_link_ops->get_link_net) {
+ 		struct net *link_net = dev->rtnl_link_ops->get_link_net(dev);
  
--	if (hctx->flags & BLK_MQ_F_BLOCKING)
--		cleanup_srcu_struct(hctx->srcu);
--
- 	blk_mq_remove_cpuhp(hctx);
--	blk_free_flush_queue(hctx->fq);
--	sbitmap_free(&hctx->ctx_map);
+@@ -1528,10 +1531,12 @@ static int rtnl_fill_link_netnsid(struct
+ 
+ 			if (nla_put_s32(skb, IFLA_LINK_NETNSID, id))
+ 				return -EMSGSIZE;
++
++			put_iflink = true;
+ 		}
+ 	}
+ 
+-	return 0;
++	return nla_put_iflink(skb, dev, put_iflink);
  }
  
- static void blk_mq_exit_hw_queues(struct request_queue *q,
-@@ -2905,7 +2900,8 @@ err_exit:
- }
- EXPORT_SYMBOL(blk_mq_init_allocated_queue);
- 
--void blk_mq_free_queue(struct request_queue *q)
-+/* tags can _not_ be used after returning from blk_mq_exit_queue */
-+void blk_mq_exit_queue(struct request_queue *q)
- {
- 	struct blk_mq_tag_set	*set = q->tag_set;
- 
---- a/block/blk-mq.h
-+++ b/block/blk-mq.h
-@@ -37,7 +37,7 @@ struct blk_mq_ctx {
- 	struct kobject		kobj;
- } ____cacheline_aligned_in_smp;
- 
--void blk_mq_free_queue(struct request_queue *q);
-+void blk_mq_exit_queue(struct request_queue *q);
- int blk_mq_update_nr_requests(struct request_queue *q, unsigned int nr);
- void blk_mq_wake_waiters(struct request_queue *q);
- bool blk_mq_dispatch_rq_list(struct request_queue *, struct list_head *, bool);
+ static int rtnl_fill_link_af(struct sk_buff *skb,
+@@ -1617,7 +1622,6 @@ static int rtnl_fill_ifinfo(struct sk_bu
+ #ifdef CONFIG_RPS
+ 	    nla_put_u32(skb, IFLA_NUM_RX_QUEUES, dev->num_rx_queues) ||
+ #endif
+-	    nla_put_iflink(skb, dev) ||
+ 	    put_master_ifindex(skb, dev) ||
+ 	    nla_put_u8(skb, IFLA_CARRIER, netif_carrier_ok(dev)) ||
+ 	    (dev->qdisc &&
 
 
