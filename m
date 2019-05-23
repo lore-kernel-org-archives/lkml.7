@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BD67C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:26:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D06C3C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:26:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64169206BA
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:26:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DD1E2054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:26:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639617;
-	bh=7CsxQZnR9OEYV73h7mR3bBrUUkWb0cqJ/BNieI70RKk=;
+	s=default; t=1558639619;
+	bh=KqdD4SdZSFzorY+x2YgGvM/UH1GFWDLOzGdOxOUeuvI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KUZvqh2emXph5k0LGCGCNxT9EQmSKZ9U+rE6PbGxmDUSK5TLq0apREZkzHDzYlTLU
-	 f2nXeyANHtHVrMBQcw/ImMHZZlfPmjlLEISm2WJThBDOx9FIQbkDFgbJ6J1P1z8jP0
-	 UQonX3Fw792pqJR7bots+hkpWkW/reeL5/EHw1eY=
+	b=h7SWN5GCmsAA9VeetVR4+m+av8JAQiqQxwX8DBEjfVz8ClqsYphnpLG8T3SCLHQLn
+	 iygwjCZv9IPW8choQ2awcf1ROBbR9OuRxxQjwBN/ErUKVt+q3UCC3XATXf9Ztzq4+R
+	 zvOMYhPTEvotWuXW4Bww4GcJQ9ydZsUCB4+Dj1HI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390711AbfEWT04 (ORCPT
+        id S2391484AbfEWT06 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:26:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38914 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:26:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38970 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390226AbfEWT0y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:26:54 -0400
+        id S2391050AbfEWT04 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:26:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4427A2184E;
-        Thu, 23 May 2019 19:26:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E2A4B2054F;
+        Thu, 23 May 2019 19:26:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639613;
-        bh=7CsxQZnR9OEYV73h7mR3bBrUUkWb0cqJ/BNieI70RKk=;
+        s=default; t=1558639616;
+        bh=KqdD4SdZSFzorY+x2YgGvM/UH1GFWDLOzGdOxOUeuvI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QnaNYW7rZ5A+uuwI8zDO8GqCap5RjFYv/82AxtaMJGybxKptLC0oIxhqJnEaPlYSD
-         yfqktehxqwtRuS6xpET8ykcYL+dkhR8hIhZsIQSxJi7L3KwycP+42gsWIl9LV3lfDw
-         JgpH9m+TbgmfryByE4JL9SSD+2pnOh1I7F8hgqW0=
+        b=wqxYzJvJcfEeOQFDV0DQOKGDjUwmZ6r/6C2t34xHo0y3n3a2nWwd66JdPNjmbGYk7
+         997cjoKI4Dh3KGpxjlXfETKlhY4p1QPu+4knLmCZesM8cRoAGb0XPTQmMyF9l5cTgO
+         3hS6DOY3YDw7Gax9pszKfDTprsDQJV1Ab8iSXCUU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Junwei Hu <hujunwei4@huawei.com>,
-        Wang Wang <wangwang2@huawei.com>,
-        Kang Zhou <zhoukang7@huawei.com>,
-        Suanming Mou <mousuanming@huawei.com>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.1 013/122] tipc: fix modprobe tipc failed after switch order of device registration
-Date:   Thu, 23 May 2019 21:05:35 +0200
-Message-Id: <20190523181706.694989620@linuxfoundation.org>
+Subject: [PATCH 5.1 004/122] net: avoid weird emergency message
+Date:   Thu, 23 May 2019 21:05:26 +0200
+Message-Id: <20190523181705.579395112@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181705.091418060@linuxfoundation.org>
 References: <20190523181705.091418060@linuxfoundation.org>
@@ -62,92 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Junwei Hu <hujunwei4@huawei.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 532b0f7ece4cb2ffd24dc723ddf55242d1188e5e ]
+[ Upstream commit d7c04b05c9ca14c55309eb139430283a45c4c25f ]
 
-Error message printed:
-modprobe: ERROR: could not insert 'tipc': Address family not
-supported by protocol.
-when modprobe tipc after the following patch: switch order of
-device registration, commit 7e27e8d6130c
-("tipc: switch order of device registration to fix a crash")
+When host is under high stress, it is very possible thread
+running netdev_wait_allrefs() returns from msleep(250)
+10 seconds late.
 
-Because sock_create_kern(net, AF_TIPC, ...) is called by
-tipc_topsrv_create_listener() in the initialization process
-of tipc_net_ops, tipc_socket_init() must be execute before that.
+This leads to these messages in the syslog :
 
-I move tipc_socket_init() into function tipc_init_net().
+[...] unregister_netdevice: waiting for syz_tun to become free. Usage count = 0
 
-Fixes: 7e27e8d6130c
-("tipc: switch order of device registration to fix a crash")
-Signed-off-by: Junwei Hu <hujunwei4@huawei.com>
-Reported-by: Wang Wang <wangwang2@huawei.com>
-Reviewed-by: Kang Zhou <zhoukang7@huawei.com>
-Reviewed-by: Suanming Mou <mousuanming@huawei.com>
+If the device refcount is zero, the wait is over.
+
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/tipc/core.c |   14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ net/core/dev.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/tipc/core.c
-+++ b/net/tipc/core.c
-@@ -66,6 +66,10 @@ static int __net_init tipc_init_net(stru
- 	INIT_LIST_HEAD(&tn->node_list);
- 	spin_lock_init(&tn->node_list_lock);
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -8911,7 +8911,7 @@ static void netdev_wait_allrefs(struct n
  
-+	err = tipc_socket_init();
-+	if (err)
-+		goto out_socket;
-+
- 	err = tipc_sk_rht_init(net);
- 	if (err)
- 		goto out_sk_rht;
-@@ -92,6 +96,8 @@ out_subscr:
- out_nametbl:
- 	tipc_sk_rht_destroy(net);
- out_sk_rht:
-+	tipc_socket_stop();
-+out_socket:
- 	return err;
- }
+ 		refcnt = netdev_refcnt_read(dev);
  
-@@ -102,6 +108,7 @@ static void __net_exit tipc_exit_net(str
- 	tipc_bcast_stop(net);
- 	tipc_nametbl_stop(net);
- 	tipc_sk_rht_destroy(net);
-+	tipc_socket_stop();
- }
- 
- static struct pernet_operations tipc_net_ops = {
-@@ -137,10 +144,6 @@ static int __init tipc_init(void)
- 	if (err)
- 		goto out_pernet;
- 
--	err = tipc_socket_init();
--	if (err)
--		goto out_socket;
--
- 	err = tipc_bearer_setup();
- 	if (err)
- 		goto out_bearer;
-@@ -148,8 +151,6 @@ static int __init tipc_init(void)
- 	pr_info("Started in single node mode\n");
- 	return 0;
- out_bearer:
--	tipc_socket_stop();
--out_socket:
- 	unregister_pernet_subsys(&tipc_net_ops);
- out_pernet:
- 	tipc_unregister_sysctl();
-@@ -165,7 +166,6 @@ out_netlink:
- static void __exit tipc_exit(void)
- {
- 	tipc_bearer_cleanup();
--	tipc_socket_stop();
- 	unregister_pernet_subsys(&tipc_net_ops);
- 	tipc_netlink_stop();
- 	tipc_netlink_compat_stop();
+-		if (time_after(jiffies, warning_time + 10 * HZ)) {
++		if (refcnt && time_after(jiffies, warning_time + 10 * HZ)) {
+ 			pr_emerg("unregister_netdevice: waiting for %s to become free. Usage count = %d\n",
+ 				 dev->name, refcnt);
+ 			warning_time = jiffies;
 
 
