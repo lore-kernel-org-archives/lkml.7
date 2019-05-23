@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64436C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:08:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC0A6C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:08:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F4AB2133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:08:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEFB1217D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:08:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558638534;
-	bh=nOEQA3ZPNlwCk7DcRJEBG8Ie9IeSQaL4Fh5HMp7g8ic=;
+	s=default; t=1558638536;
+	bh=xdvvcA62MbAZMW3ffzFO2CIubH9bOSXjrHE8RuAPcdA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mCAmxGAeKBuYg0+MjtxzsUhOOp9ptMKHq7CAuWmwF4ZpDlHV0bsEzGHH3G77ClXBT
-	 OvPwiu/Q35jxZ9WuAzKRdBgSK7qk0y2gUYWSlve/T8bnLmh8dxH5A4/UzbwNQAk60o
-	 ELbhY6psmOqjpdo18hhgfUcB1z9Y68tI7jnXHhhc=
+	b=LimlXzs335dOCj85hdjzqVCK//es0/gc2qYRMzXOq/UrA9kHP/N5Z0tlFN414oOtr
+	 CPuEzj+2oJ1BGrbmo36tO9e0poDVrey6NRmcAB/D8WtSf7+SwfJbxAUKuIMVcsgKuA
+	 +BIiZEqgowGVcNeJWI+OPVM2qnUwN/eaPUtXJLDY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731941AbfEWTIx (ORCPT
+        id S1731959AbfEWTIz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:08:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41776 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:08:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41844 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731921AbfEWTIv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:08:51 -0400
+        id S1731943AbfEWTIx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:08:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52214217D9;
-        Thu, 23 May 2019 19:08:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F0D5821873;
+        Thu, 23 May 2019 19:08:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558638530;
-        bh=nOEQA3ZPNlwCk7DcRJEBG8Ie9IeSQaL4Fh5HMp7g8ic=;
+        s=default; t=1558638533;
+        bh=xdvvcA62MbAZMW3ffzFO2CIubH9bOSXjrHE8RuAPcdA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U1NU4ty74D6rJ/FNcI+zJZTT4zkwZ3zOUz2BU1FFBSHPZoK7mOValRnTp86/cDGEH
-         aBuND3hBAmXfTza5IwDZw96dW0T9RzOqEH8lvp9yNrJSGVGSVCrlCoiRs2dQBrIGp6
-         0TyzRrpsMMdE4Zi3TpIqSvRMkOa6rHMJuj133UTE=
+        b=qyWN49ItFulXuYchPkR3ChLvsaZMIlntWnZvGYMiXQnj15dl9YZgz65F1jXCqLKIj
+         7chZgbY6Tta6a+SDQrdJIT3Va1pHCIIDZ5esJTD8yt6vMWscs1F1q+GG+b13yfzi4L
+         6kffotn9b8pQfi8wVLLljzMnd8IJNRD6zatbJBCU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stefano Garzarella <sgarzare@redhat.com>,
+        stable@vger.kernel.org, Junwei Hu <hujunwei4@huawei.com>,
+        Wang Wang <wangwang2@huawei.com>,
+        Kang Zhou <zhoukang7@huawei.com>,
+        Suanming Mou <mousuanming@huawei.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 05/53] vsock/virtio: free packets during the socket release
-Date:   Thu, 23 May 2019 21:05:29 +0200
-Message-Id: <20190523181711.732195361@linuxfoundation.org>
+Subject: [PATCH 4.9 06/53] tipc: fix modprobe tipc failed after switch order of device registration
+Date:   Thu, 23 May 2019 21:05:30 +0200
+Message-Id: <20190523181711.874540085@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181710.981455400@linuxfoundation.org>
 References: <20190523181710.981455400@linuxfoundation.org>
@@ -59,42 +62,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefano Garzarella <sgarzare@redhat.com>
+From: Junwei Hu <hujunwei4@huawei.com>
 
-[ Upstream commit ac03046ece2b158ebd204dfc4896fd9f39f0e6c8 ]
+[ Upstream commit 532b0f7ece4cb2ffd24dc723ddf55242d1188e5e ]
 
-When the socket is released, we should free all packets
-queued in the per-socket list in order to avoid a memory
-leak.
+Error message printed:
+modprobe: ERROR: could not insert 'tipc': Address family not
+supported by protocol.
+when modprobe tipc after the following patch: switch order of
+device registration, commit 7e27e8d6130c
+("tipc: switch order of device registration to fix a crash")
 
-Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+Because sock_create_kern(net, AF_TIPC, ...) is called by
+tipc_topsrv_create_listener() in the initialization process
+of tipc_net_ops, tipc_socket_init() must be execute before that.
+
+I move tipc_socket_init() into function tipc_init_net().
+
+Fixes: 7e27e8d6130c
+("tipc: switch order of device registration to fix a crash")
+Signed-off-by: Junwei Hu <hujunwei4@huawei.com>
+Reported-by: Wang Wang <wangwang2@huawei.com>
+Reviewed-by: Kang Zhou <zhoukang7@huawei.com>
+Reviewed-by: Suanming Mou <mousuanming@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/vmw_vsock/virtio_transport_common.c |    7 +++++++
- 1 file changed, 7 insertions(+)
+ net/tipc/core.c |   14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
---- a/net/vmw_vsock/virtio_transport_common.c
-+++ b/net/vmw_vsock/virtio_transport_common.c
-@@ -725,12 +725,19 @@ static bool virtio_transport_close(struc
+--- a/net/tipc/core.c
++++ b/net/tipc/core.c
+@@ -62,6 +62,10 @@ static int __net_init tipc_init_net(stru
+ 	INIT_LIST_HEAD(&tn->node_list);
+ 	spin_lock_init(&tn->node_list_lock);
  
- void virtio_transport_release(struct vsock_sock *vsk)
- {
-+	struct virtio_vsock_sock *vvs = vsk->trans;
-+	struct virtio_vsock_pkt *pkt, *tmp;
- 	struct sock *sk = &vsk->sk;
- 	bool remove_sock = true;
- 
- 	lock_sock(sk);
- 	if (sk->sk_type == SOCK_STREAM)
- 		remove_sock = virtio_transport_close(vsk);
++	err = tipc_socket_init();
++	if (err)
++		goto out_socket;
 +
-+	list_for_each_entry_safe(pkt, tmp, &vvs->rx_queue, list) {
-+		list_del(&pkt->list);
-+		virtio_transport_free_pkt(pkt);
-+	}
- 	release_sock(sk);
+ 	err = tipc_sk_rht_init(net);
+ 	if (err)
+ 		goto out_sk_rht;
+@@ -88,6 +92,8 @@ out_subscr:
+ out_nametbl:
+ 	tipc_sk_rht_destroy(net);
+ out_sk_rht:
++	tipc_socket_stop();
++out_socket:
+ 	return err;
+ }
  
- 	if (remove_sock)
+@@ -98,6 +104,7 @@ static void __net_exit tipc_exit_net(str
+ 	tipc_bcast_stop(net);
+ 	tipc_nametbl_stop(net);
+ 	tipc_sk_rht_destroy(net);
++	tipc_socket_stop();
+ }
+ 
+ static struct pernet_operations tipc_net_ops = {
+@@ -133,10 +140,6 @@ static int __init tipc_init(void)
+ 	if (err)
+ 		goto out_pernet;
+ 
+-	err = tipc_socket_init();
+-	if (err)
+-		goto out_socket;
+-
+ 	err = tipc_bearer_setup();
+ 	if (err)
+ 		goto out_bearer;
+@@ -144,8 +147,6 @@ static int __init tipc_init(void)
+ 	pr_info("Started in single node mode\n");
+ 	return 0;
+ out_bearer:
+-	tipc_socket_stop();
+-out_socket:
+ 	unregister_pernet_subsys(&tipc_net_ops);
+ out_pernet:
+ 	tipc_unregister_sysctl();
+@@ -161,7 +162,6 @@ out_netlink:
+ static void __exit tipc_exit(void)
+ {
+ 	tipc_bearer_cleanup();
+-	tipc_socket_stop();
+ 	unregister_pernet_subsys(&tipc_net_ops);
+ 	tipc_netlink_stop();
+ 	tipc_netlink_compat_stop();
 
 
