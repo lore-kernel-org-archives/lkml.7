@@ -2,197 +2,71 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4DEDC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 18:25:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD756C282DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 18:25:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A70DC2075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 18:25:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0D3F2133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 18:25:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558635919;
+	bh=4swXZDyheX0+mVhMrRucUExxVjZCYez9cbpbOfSgUMA=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=bbRGSPY5KZkhlEQE3F1eBXYumEbj7rs72WYkJV0ZzTCNgMKJ+ZN2FZRvJDeaoKAdE
+	 s8rc4+PZrCyotmewuT2M0xeN7s9ZHWWLq/qRKstvqHCASbadrpiXZnwuA5sR/tDspJ
+	 9OTu6ajb29q4Ws8NQUUBbrCMLpuLvNHRkze3sAEw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731415AbfEWSZC (ORCPT
+        id S1731486AbfEWSZT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 14:25:02 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47350 "EHLO mx1.redhat.com"
+        Thu, 23 May 2019 14:25:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33770 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731237AbfEWSZB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 14:25:01 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 2B909300C035;
-        Thu, 23 May 2019 18:25:01 +0000 (UTC)
-Received: from redhat.com (unknown [10.20.6.178])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 43CCC5D9C6;
-        Thu, 23 May 2019 18:25:00 +0000 (UTC)
-Date:   Thu, 23 May 2019 14:24:58 -0400
-From:   Jerome Glisse <jglisse@redhat.com>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Artemy Kovalyov <artemyko@mellanox.com>,
-        Moni Shoua <monis@mellanox.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Kaike Wan <kaike.wan@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>
-Subject: Re: [PATCH v4 0/1] Use HMM for ODP v4
-Message-ID: <20190523182458.GA3571@redhat.com>
-References: <20190521205321.GC3331@redhat.com>
- <20190522005225.GA30819@ziepe.ca>
- <20190522174852.GA23038@redhat.com>
- <20190522235737.GD15389@ziepe.ca>
- <20190523150432.GA5104@redhat.com>
- <20190523154149.GB12159@ziepe.ca>
- <20190523155207.GC5104@redhat.com>
- <20190523163429.GC12159@ziepe.ca>
- <20190523173302.GD5104@redhat.com>
- <20190523175546.GE12159@ziepe.ca>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190523175546.GE12159@ziepe.ca>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Thu, 23 May 2019 18:25:01 +0000 (UTC)
+        id S1731237AbfEWSZS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 14:25:18 -0400
+Subject: Re: [GIT PULL] xfs: fixes for 5.2
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558635917;
+        bh=4swXZDyheX0+mVhMrRucUExxVjZCYez9cbpbOfSgUMA=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=TDkAY1qbMjR7TumFE0radCRAWxn8OnVCid5M71m2yOQndOkkrcZ4aq4Ijy/azVNiG
+         hmShr6Nbt2CSgfHlPI3ZLrSJ72HWXeJ5vXZklm+xNO1ycxKe0oAX6VhVFInaCJYNSJ
+         1kzyvGhL3WX/ldtyGLR4gqHP6efoOaVdLGaW+K7E=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20190523153346.GG5141@magnolia>
+References: <20190523153346.GG5141@magnolia>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20190523153346.GG5141@magnolia>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git
+ tags/xfs-5.2-fixes-1
+X-PR-Tracked-Commit-Id: 5cd213b0fec640a46adc5e6e4dfc7763aa54b3b2
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 4dde821e4296e156d133b98ddc4c45861935a4fb
+Message-Id: <155863591788.31149.9259350999930839889.pr-tracker-bot@kernel.org>
+Date:   Thu, 23 May 2019 18:25:17 +0000
+To:     "Darrick J. Wong" <djwong@kernel.org>
+Cc:     torvalds@linux-foundation.org,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        Dave Chinner <david@fromorbit.com>,
+        linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        sandeen@sandeen.net, hch@lst.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 02:55:46PM -0300, Jason Gunthorpe wrote:
-> On Thu, May 23, 2019 at 01:33:03PM -0400, Jerome Glisse wrote:
-> > On Thu, May 23, 2019 at 01:34:29PM -0300, Jason Gunthorpe wrote:
-> > > On Thu, May 23, 2019 at 11:52:08AM -0400, Jerome Glisse wrote:
-> > > > On Thu, May 23, 2019 at 12:41:49PM -0300, Jason Gunthorpe wrote:
-> > > > > On Thu, May 23, 2019 at 11:04:32AM -0400, Jerome Glisse wrote:
-> > > > > > On Wed, May 22, 2019 at 08:57:37PM -0300, Jason Gunthorpe wrote:
-> > > > > > > On Wed, May 22, 2019 at 01:48:52PM -0400, Jerome Glisse wrote:
-> > > > > > > 
-> > > > > > > > > > So attached is a rebase on top of 5.2-rc1, i have tested with pingpong
-> > > > > > > > > > (prefetch and not and different sizes). Seems to work ok.
-> > > > > > > > > 
-> > > > > > > > > Urk, it already doesn't apply to the rdma tree :(
-> > > > > > > > > 
-> > > > > > > > > The conflicts are a little more extensive than I'd prefer to handle..
-> > > > > > > > > Can I ask you to rebase it on top of this branch please:
-> > > > > > > > > 
-> > > > > > > > > https://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git/log/?h=wip/jgg-for-next
-> > > > > > > > > 
-> > > > > > > > > Specifically it conflicts with this patch:
-> > > > > > > > > 
-> > > > > > > > > https://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git/commit/?h=wip/jgg-for-next&id=d2183c6f1958e6b6dfdde279f4cee04280710e34
-> > > > > > > 
-> > > > > > > There is at least one more serious blocker here:
-> > > > > > > 
-> > > > > > > config ARCH_HAS_HMM_MIRROR
-> > > > > > >         bool
-> > > > > > >         default y
-> > > > > > >         depends on (X86_64 || PPC64)
-> > > > > > >         depends on MMU && 64BIT
-> > > > > > > 
-> > > > > > > I can't loose ARM64 support for ODP by merging this, that is too
-> > > > > > > serious of a regression.
-> > > > > > > 
-> > > > > > > Can you fix it?
-> > > > > > 
-> > > > > > 5.2 already has patch to fix the Kconfig (ARCH_HAS_HMM_MIRROR and
-> > > > > > ARCH_HAS_HMM_DEVICE replacing ARCH_HAS_HMM) I need to update nouveau
-> > > > > 
-> > > > > Newer than 5.2-rc1? Is this why ARCH_HAS_HMM_MIRROR is not used anywhere?
-> > > > 
-> > > > Yes this is multi-step update, first add the new Kconfig release n,
-> > > > update driver in release n+1, update core Kconfig in release n+2
-> > > > 
-> > > > So we are in release n (5.2), in 5.3 i will update nouveau and amdgpu
-> > > > so that in 5.4 in ca remove the old ARCH_HAS_HMM
-> > > 
-> > > Why don't you just send the patch for both parts to mm or to DRM?
-> > > 
-> > > This is very normal - as long as the resulting conflicts would be
-> > > small during there is no reason not to do this. Can you share the
-> > > combined patch?
-> > 
-> > This was tested in the past an resulted in failure. So for now i am
-> > taking the simplest and easiest path with the least burden for every
-> > maintainer. It only complexify my life.
-> 
-> I don't know what you tried to do in the past, but it happens all the
-> time, every merge cycle with success. Not everything can be done, but
-> changing the signature of one function with one call site should
-> really not be a problem.
-> 
-> > Note that mm is not a git tree and thus i can not play any git trick
-> > to help in this endeavor.
-> 
-> I am aware..
-> 
-> > > > > If mm takes the fixup patches so hmm mirror is as reliable as ODP's
-> > > > > existing stuff, and patch from you to enable ARM64, then we can
-> > > > > continue to merge into 5.3
-> > > > > 
-> > > > > So, let us try to get acks on those other threads..
-> > > > 
-> > > > I will be merging your patchset and Ralph and repost, they are only
-> > > > minor change mostly that you can not update the driver API in just
-> > > > one release.
-> > > 
-> > > Of course you can, we do it all the time. It requires some
-> > > co-ordination, but as long as the merge conflicts are not big it is
-> > > fine.
-> > > 
-> > > Merge the driver API change and the call site updates to -mm and
-> > > refain from merging horrendously conflicting patches through DRM.
-> > > 
-> > > In the case of the changes in my HMM RFC it is something like 2
-> > > lines in DRM that need touching, no problem at all.
-> > > 
-> > > If you want help I can volunteer make a hmm PR for Linus just for this
-> > > during the merge window - but Andrew would need to agree and ack the
-> > > patches.
-> > 
-> > This was tested in the past and i do not want to go over this issue
-> > again (or re-iterate the long emails discussion associated with that).
-> > It failed and it put the burden on every maintainers. So it is easier
-> > to do the multi-step thing.
-> > 
-> > You can take a peak at Ralph patchset and yours into one with minor
-> > changes here:
-> > 
-> > https://cgit.freedesktop.org/~glisse/linux/log/?h=hmm-5.3
-> 
-> Okay..
-> 
-> This patch needs to use down_read(&mm->mmap_sem) not READ_ONCE:
-> 
->  mm/hmm: do not try to create hmm struct from within hmm_range_register()
->  Driver should never call hmm_range_register() without a valid and active
->  registered hmm_mirror and thus without a valid and active hmm struct. So
->  if that happens just return -EFAULT.
-> 
-> Otherwise it is inconsisent with the locking scheme and has a use
-> after free race. 
+The pull request you sent on Thu, 23 May 2019 08:33:46 -0700:
 
-I can not take mmap_sem in range_register, the READ_ONCE is fine and
-they are no race as we do take a reference on the hmm struct thus
-if we get are successful at taking that reference then hmm struct
-will remain valid. Also this API has always been use with active
-mirror and thus active hmm and thus mm->hmm will remain stable for
-all call to hmm_range_register(), it would be a bug otherwise.
+> git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/xfs-5.2-fixes-1
 
-The READ_ONCE() is really just a safety net, it is not required and
-once the convertion to hmm_mirror is done it will go away.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/4dde821e4296e156d133b98ddc4c45861935a4fb
 
-> 
-> I was not sure if the lock could be obtained safely here so I
-> preferred to use the no-lock alternative of passing in mirror. I still
-> think you should just change the single call site and sent to -mm.
+Thank you!
 
-It is too painful with unmerge driver like amdgpu that are targeting
-5.3, those do target API that is in 5.2
-
-Cheers,
-Jérôme
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
