@@ -2,115 +2,111 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62EBAC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 12:54:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16B28C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 12:57:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3072B21019
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 12:54:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="peBQCQTs"
+	by mail.kernel.org (Postfix) with ESMTP id D618120879
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 12:57:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730746AbfEWMyU (ORCPT
+        id S1730595AbfEWM5V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 08:54:20 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:36158 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729698AbfEWMyT (ORCPT
+        Thu, 23 May 2019 08:57:21 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:45715 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726310AbfEWM5U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 08:54:19 -0400
-Received: by mail-pg1-f194.google.com with SMTP id a3so3111092pgb.3
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 05:54:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PxeLHI+jcJnNa8egh+nhhwEm8X7EMV+hjf297FNmO2k=;
-        b=peBQCQTsOhZRPBlQhXGKjX9BmJCm8odmIaIdt9AnoBnHuLuHgBSIXKze8HoLcLodx8
-         88zvIel1MVoqD70UqU0d105JJNVD6H45YVT8ukmGTeINvYrVwbVAq99W+/3EMHSFu79x
-         a9SuvDw1Perwg9+I1hzp8+WrgIt0MLVSOz021DaYE2pY6y3n5bwN2lSwdQhUA33W+WYu
-         H/tb+45zUX2AC1E+N/eai3SA4M03ghD0k8Ne4ccQHQEtAQMZniNsrAOereY6Hg1xhXpy
-         rvwNkm5FJ2VMWSIR8Hrnw4zJs1UyEvsPXi7pgLKnkbAq2Z/19DJzAjKc4+nh/8fslNbX
-         AMig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PxeLHI+jcJnNa8egh+nhhwEm8X7EMV+hjf297FNmO2k=;
-        b=fnN1ijtCUKFaBM3Gmoofge5R9j4xPoBw2rarrI78ArkrCQFAGQoT4XR5DmSuMScuId
-         8J38KKKXsohucT6my3Oz7UBIrwHUhiKNHheqL2Dj7F/5YwkV4XPGgogcfyIhlJIpF2em
-         CY6y5Wkux5CVaxSXnieA4kcsUfGkMdYWF7gcXuaFaXR4l8PHkzNFFF2rKTY83O/f9T0g
-         5jYV9PT/gu0UVpzptzx8cbKJKjlLrXHEtTP1WUXNeObq8wACyRGv7UH271Hd6IxCuDBR
-         AiCviuhYibtADtXiFF1vNfTeh6zw9HGB+GquuChxtBTZtZJ1hv+Y9/AEyy1qH5gA1hGz
-         lQsQ==
-X-Gm-Message-State: APjAAAVykARKERAg7oavNChNK0mdXeeMJ+Z/hendUzs4neUbbXoxWjsd
-        lNyohDh5Jf1t2/82+6sT/YQ=
-X-Google-Smtp-Source: APXvYqxV4KBmIXZqYjcYRuW7xGgYl0YjuSZmNGQlm0u6NJ3EFrA8/HTX+//gsnRZZM/zz+A7JhRanA==
-X-Received: by 2002:a63:4a16:: with SMTP id x22mr5750690pga.219.1558616059112;
-        Thu, 23 May 2019 05:54:19 -0700 (PDT)
-Received: from localhost.localdomain ([122.163.94.48])
-        by smtp.gmail.com with ESMTPSA id w12sm27355248pgp.51.2019.05.23.05.54.15
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 23 May 2019 05:54:18 -0700 (PDT)
-From:   Nishka Dasgupta <nishkadg.linux@gmail.com>
-To:     gregkh@linuxfoundation.org, straube.linux@gmail.com,
-        realwakka@gmail.com, hle@owl.eu.com, rico.schrage@gmail.com,
-        sophie.matter@web.de, weiyongjun1@huawei.com, jbi.octave@gmail.com,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Cc:     Nishka Dasgupta <nishkadg.linux@gmail.com>
-Subject: [PATCH v2] staging: pi433: Remove unnecessary variable
-Date:   Thu, 23 May 2019 18:23:41 +0530
-Message-Id: <20190523125340.29338-1-nishkadg.linux@gmail.com>
-X-Mailer: git-send-email 2.19.1
+        Thu, 23 May 2019 08:57:20 -0400
+X-Originating-IP: 90.88.22.185
+Received: from localhost (aaubervilliers-681-1-80-185.w90-88.abo.wanadoo.fr [90.88.22.185])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id CD843C0010;
+        Thu, 23 May 2019 12:57:16 +0000 (UTC)
+Date:   Thu, 23 May 2019 14:57:16 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>, linux-watchdog@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 3/5] dt-bindings: watchdog: add Allwinner H6 r_watchdog
+Message-ID: <20190523125716.g4euwplfsvw4vqzl@flea>
+References: <20190521160330.28402-1-peron.clem@gmail.com>
+ <20190521160330.28402-4-peron.clem@gmail.com>
+ <20190522103243.mmrfato5p2mhtf4j@flea>
+ <CAJiuCcdaZVLQyupEf8HPaUySakufXXAhzundo6VeyQaAyZ8Trw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="wdtcxmlg6dhvhpqj"
+Content-Disposition: inline
+In-Reply-To: <CAJiuCcdaZVLQyupEf8HPaUySakufXXAhzundo6VeyQaAyZ8Trw@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The variable retval is assigned constant values twice, and can therefore
-be replaced by its values.
 
-Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
----
-Changes in v2:
-- Add Wei Yongjun to the recipients list
-- Fix From and Signed-off-by fields
+--wdtcxmlg6dhvhpqj
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
- drivers/staging/pi433/pi433_if.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+On Wed, May 22, 2019 at 06:15:26PM +0200, Cl=E9ment P=E9ron wrote:
+> Hi Maxime,
+>
+> On Wed, 22 May 2019 at 12:32, Maxime Ripard <maxime.ripard@bootlin.com> w=
+rote:
+> >
+> > On Tue, May 21, 2019 at 06:03:28PM +0200, Cl=E9ment P=E9ron wrote:
+> > > Allwinner H6 has a second watchdog on the r-blocks which is
+> > > compatible with the A31.
+> > >
+> > > This commit add the H6 compatible for the r_watchdog.
+> > >
+> > > Signed-off-by: Cl=E9ment P=E9ron <peron.clem@gmail.com>
+> >
+> > Unless you have some evidence that the two blocks are different, then
+> > you should just reuse the same one.
+>
+> I have no evidence it's different nor identical, it's not documented
+> in the user manual.
+> I thought it would better to have separate bindings in case there is a
+> difference.
+> Than don't have and find later that we have to introduce one.
 
-diff --git a/drivers/staging/pi433/pi433_if.c b/drivers/staging/pi433/pi433_if.c
-index c889f0bdf424..40c6f4e7632f 100644
---- a/drivers/staging/pi433/pi433_if.c
-+++ b/drivers/staging/pi433/pi433_if.c
-@@ -871,7 +871,6 @@ pi433_write(struct file *filp, const char __user *buf,
- static long
- pi433_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
- {
--	int			retval = 0;
- 	struct pi433_instance	*instance;
- 	struct pi433_device	*device;
- 	struct pi433_tx_cfg	tx_cfg;
-@@ -923,10 +922,10 @@ pi433_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
- 		mutex_unlock(&device->rx_lock);
- 		break;
- 	default:
--		retval = -EINVAL;
-+		return -EINVAL;
- 	}
- 
--	return retval;
-+	return 0;
- }
- 
- #ifdef CONFIG_COMPAT
--- 
-2.19.1
+It's a tradeoff. Pushing your logic to the limit, we would have a
+compatible for each controller embedded in an SoC.
 
+This would be unmaintainable, and slightly useless since that case is
+very unlikely.
+
+However, having differences between SoCs is quite common, hence why we
+have different compatibles for each SoC.
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--wdtcxmlg6dhvhpqj
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXOaYrAAKCRDj7w1vZxhR
+xUPnAPsGJnjqxtkcj8BFHo1UbY6rBrhE114RafzPUtXuJD8o4QEAmWfFGwayxZZ0
+63T2ZEyt/CbXZE9fTnSFpRsi3BkzQA4=
+=Frvc
+-----END PGP SIGNATURE-----
+
+--wdtcxmlg6dhvhpqj--
