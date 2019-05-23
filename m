@@ -2,200 +2,212 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85EA6C282E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 21:24:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26E9AC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 21:31:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4986A20862
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 21:24:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCCA92177E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 21:31:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nB3Y+Vlw"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SXshT/JW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388010AbfEWVYv (ORCPT
+        id S2388112AbfEWVbU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 17:24:51 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:35590 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387521AbfEWVYu (ORCPT
+        Thu, 23 May 2019 17:31:20 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:41190 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387894AbfEWVbT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 17:24:50 -0400
-Received: by mail-lf1-f67.google.com with SMTP id c17so5472636lfi.2
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 14:24:49 -0700 (PDT)
+        Thu, 23 May 2019 17:31:19 -0400
+Received: by mail-pf1-f194.google.com with SMTP id q17so3950172pfq.8
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 14:31:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=FzWr0jWUizq78fQjYjjq41koeiVNEvdn60rL1vMGWV8=;
-        b=nB3Y+Vlwq85hV6ZNvfs2rVnxQSendJp43bsBt+2JYHIuuRCGenxT5SgaFLY5E7CMt1
-         9cd6kziAiVcgNkwQ5opr7tBv1iplgg2PmD4IKiTklqrVV2JoB6H+kenz0UWY4fArez+m
-         Z/T06tzdWHYwwCGI0nCpPDJ2zfKIMNVmwC0p6F/3ik6fZlWnZzOkf3bLwhIou1nTWkH6
-         2Jl/5d0WyTqJidGqRbDu//1voBJ0UU5t7ySrO4Up5pjXQO6zpsZ5nUm9oZSE+Kjab/Ww
-         UkRZIZwKDZRZHB9GAh2aaKRvpwAhV0jQeY6jZmsrOLXvvOU8Hhjsvv3V6RAlQpSWVgh8
-         2ALQ==
+         :content-disposition:in-reply-to;
+        bh=RooTx4nZ0Zm8m1fxzq6UPxwDmwN2R9frxfJHiTxcRUE=;
+        b=SXshT/JWt4/VxFaxzUCPBis/uU7CKJhnvqILKuBvKuHgZM/0X3lQPlS9BrcA9GPwgN
+         mNP52DBHjW70HoXLGw3kCTAML6GHF8r2zv6T7pohAbgiWS2GBzlP+CcIwmEuaO+qZxq4
+         C2Jko0HEb2Ra0I9vlZLyIy+YOud56hz3nr/kE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=FzWr0jWUizq78fQjYjjq41koeiVNEvdn60rL1vMGWV8=;
-        b=bY6FsBUhDnLJDrhH1s+cIkf2TUEDiM6z2gj3JgscbuZOOTq8j4/sz7NZFA186085Nx
-         cL9M4br9OVvmIG4exVKWz+jhg9QbH6i+IRJe6BuZaPqVmnH4HCFepYuHQUk1WRfQav2/
-         oARuKDmC4aQwGfY4KyR7zC1IUj9N/7RykuIjoWHTIVEZpFeTjd50Izu1xSzjyIaHfldi
-         CsP0RY3aEVGYutlV3SxDsVYNs1JdAfE0xMHSeEwmp22uUz49Nuk0Rd49y+ZTXfAGnL15
-         HjR0p35VFFKriXk0O//NDAmaegc5W2MgEkyGf5P2Gc0y6/j2Kp/YifUr7W2mE+9vcA/z
-         k4GQ==
-X-Gm-Message-State: APjAAAXpurpW+/gSA4IoWexcH3b5tEGjlohCTkZEpgcfOzq5vdEJ9uDa
-        Di0pQFxgM8NLOBsEems0N/Khhw==
-X-Google-Smtp-Source: APXvYqw0wQRztQNEXe5ECv9lUc6NSDiR+JDDfswtgJbKjbK3GH8kI/T2rb/i3Uq0p2tClCr/MsB2aA==
-X-Received: by 2002:ac2:5468:: with SMTP id e8mr18855107lfn.167.1558646688642;
-        Thu, 23 May 2019 14:24:48 -0700 (PDT)
-Received: from centauri (m83-185-80-163.cust.tele2.se. [83.185.80.163])
-        by smtp.gmail.com with ESMTPSA id i14sm136289ljj.57.2019.05.23.14.24.46
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 23 May 2019 14:24:47 -0700 (PDT)
-Date:   Thu, 23 May 2019 23:24:44 +0200
-From:   Niklas Cassel <niklas.cassel@linaro.org>
-To:     Amit Kucheria <amit.kucheria@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        bjorn.andersson@linaro.org, agross@kernel.org,
-        marc.w.gonzalez@free.fr, sibis@codeaurora.org,
-        daniel.lezcano@linaro.org, Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 6/9] arm64: dts: qcom: msm8996: Add PSCI cpuidle low
- power states
-Message-ID: <20190523212444.GA25133@centauri>
-References: <cover.1558430617.git.amit.kucheria@linaro.org>
- <2ffbb3f32484c03360ff7d6fa4668581ef298c9e.1558430617.git.amit.kucheria@linaro.org>
+         :mime-version:content-disposition:in-reply-to;
+        bh=RooTx4nZ0Zm8m1fxzq6UPxwDmwN2R9frxfJHiTxcRUE=;
+        b=LMpS4XOX9x353ARypTeeY2osT7EyuZhRcj4CFV3tK1hN6D0qs4Cr4fXE8r3pw0K5A7
+         Pvz4Suo0J1QeX3uomV/6TzSYqAd7NXnuy30sIXnfUlWdAyYWfuar15UE2IIGmsVrkiHj
+         KeYEERdVavZXIJAQOo1E8cKfuZlpiaf7Ke+9ax2ySXbGV2S6KHd+DfIFePXwxkPfdGuC
+         J0tAzg4vBR1VkfHr1xzpMSQi7j6JxlswD6AtvlJKCPsVXNHF1NQH8eg9GunxnD6gx1Ph
+         HmVU0okS+DrJQga/F7On3ywLrCcKDifZqgGiBp+ekSNv6/1oQY0UNdx70zOmjnJSJhqc
+         CbGg==
+X-Gm-Message-State: APjAAAUT2onnuafUdCF+5eZqB5CBROdLBk5spEnwbnWioORVqvMOHCNO
+        PFH7z+RgHx85Yh4IKj0eXy9Nyw==
+X-Google-Smtp-Source: APXvYqw6NOt/dAzFGypTG6hDOH9RhK81m8D3qkjrLvBMN1nJLO77YhSc++d1DOA7/Z/CI2DiFH6JYA==
+X-Received: by 2002:a63:2226:: with SMTP id i38mr5980879pgi.403.1558647079048;
+        Thu, 23 May 2019 14:31:19 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id f186sm406654pfb.5.2019.05.23.14.31.17
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 23 May 2019 14:31:17 -0700 (PDT)
+Date:   Thu, 23 May 2019 14:31:16 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     enh <enh@google.com>, Evgenii Stepanov <eugenis@google.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Khalid Aziz <khalid.aziz@oracle.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
+        kvm@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alexander Deucher <Alexander.Deucher@amd.com>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
+Subject: Re: [PATCH v15 00/17] arm64: untag user pointers passed to the kernel
+Message-ID: <201905231327.77CA8D0A36@keescook>
+References: <CAFKCwrj6JEtp4BzhqO178LFJepmepoMx=G+YdC8sqZ3bcBp3EQ@mail.gmail.com>
+ <20190521182932.sm4vxweuwo5ermyd@mbp>
+ <201905211633.6C0BF0C2@keescook>
+ <20190522101110.m2stmpaj7seezveq@mbp>
+ <CAJgzZoosKBwqXRyA6fb8QQSZXFqfHqe9qO9je5TogHhzuoGXJQ@mail.gmail.com>
+ <20190522163527.rnnc6t4tll7tk5zw@mbp>
+ <201905221316.865581CF@keescook>
+ <20190523144449.waam2mkyzhjpqpur@mbp>
+ <201905230917.DEE7A75EF0@keescook>
+ <20190523174345.6sv3kcipkvlwfmox@mbp>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2ffbb3f32484c03360ff7d6fa4668581ef298c9e.1558430617.git.amit.kucheria@linaro.org>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190523174345.6sv3kcipkvlwfmox@mbp>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 21, 2019 at 03:05:16PM +0530, Amit Kucheria wrote:
-> Add device bindings for cpuidle states for cpu devices.
+On Thu, May 23, 2019 at 06:43:46PM +0100, Catalin Marinas wrote:
+> On Thu, May 23, 2019 at 09:38:19AM -0700, Kees Cook wrote:
+> > What on this front would you be comfortable with? Given it's a new
+> > feature isn't it sufficient to have a CONFIG (and/or boot option)?
 > 
-> msm8996 features 4 cpus - 2 in each cluster. However, all cpus implement
-> the same microarchitecture and the two clusters only differ in the
-> maximum frequency attainable by the CPUs.
+> I'd rather avoid re-building kernels. A boot option would do, unless we
+> see value in a per-process (inherited) personality or prctl. The
+
+I think I've convinced myself that the normal<->TBI ABI control should
+be a boot parameter. More below...
+
+> > What about testing tools that intentionally insert high bits for syscalls
+> > and are _expecting_ them to fail? It seems the TBI series will break them?
+> > In that case, do we need to opt into TBI as well?
 > 
-> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> ---
->  arch/arm64/boot/dts/qcom/msm8996.dtsi | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
+> If there are such tools, then we may need a per-process control. It's
+> basically an ABI change.
+
+syzkaller already attempts to randomly inject non-canonical and
+0xFFFF....FFFF addresses for user pointers in syscalls in an effort to
+find bugs like CVE-2017-5123 where waitid() via unchecked put_user() was
+able to write directly to kernel memory[1].
+
+It seems that using TBI by default and not allowing a switch back to
+"normal" ABI without a reboot actually means that userspace cannot inject
+kernel pointers into syscalls any more, since they'll get universally
+stripped now. Is my understanding correct, here? i.e. exploiting
+CVE-2017-5123 would be impossible under TBI?
+
+If so, then I think we should commit to the TBI ABI and have a boot
+flag to disable it, but NOT have a process flag, as that would allow
+attackers to bypass the masking. The only flag should be "TBI or MTE".
+
+If so, can I get top byte masking for other architectures too? Like,
+just to strip high bits off userspace addresses? ;)
+
+(Oh, in looking I see this is implemented with sign-extension... why
+not just a mask? So it'll either be valid userspace address or forced
+into the non-canonical range?)
+
+[1] https://salls.github.io/Linux-Kernel-CVE-2017-5123/
+
+> > Alright, the tl;dr appears to be:
+> > - you want more assurances that we can find __user stripping in the
+> >   kernel more easily. (But this seems like a parallel problem.)
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-> index c761269caf80..4f2fb7885f39 100644
-> --- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-> @@ -95,6 +95,7 @@
->  			compatible = "qcom,kryo";
->  			reg = <0x0 0x0>;
->  			enable-method = "psci";
-> +			cpu-idle-states = <&CPU_SLEEP_0>;
->  			next-level-cache = <&L2_0>;
->  			L2_0: l2-cache {
->  			      compatible = "cache";
-> @@ -107,6 +108,7 @@
->  			compatible = "qcom,kryo";
->  			reg = <0x0 0x1>;
->  			enable-method = "psci";
-> +			cpu-idle-states = <&CPU_SLEEP_0>;
->  			next-level-cache = <&L2_0>;
->  		};
->  
-> @@ -115,6 +117,7 @@
->  			compatible = "qcom,kryo";
->  			reg = <0x0 0x100>;
->  			enable-method = "psci";
-> +			cpu-idle-states = <&CPU_SLEEP_0>;
->  			next-level-cache = <&L2_1>;
->  			L2_1: l2-cache {
->  			      compatible = "cache";
-> @@ -127,6 +130,7 @@
->  			compatible = "qcom,kryo";
->  			reg = <0x0 0x101>;
->  			enable-method = "psci";
-> +			cpu-idle-states = <&CPU_SLEEP_0>;
->  			next-level-cache = <&L2_1>;
->  		};
->  
-> @@ -151,6 +155,19 @@
->  				};
->  			};
->  		};
-> +
-> +		idle-states {
-> +			entry-method = "psci";
-> +
-> +			CPU_SLEEP_0: cpu-sleep-0 {
-> +				compatible = "arm,idle-state";
-> +				idle-state-name = "standalone-power-collapse";
-> +				arm,psci-suspend-param = <0x00000004>;
-> +				entry-latency-us = <40>;
-> +				exit-latency-us = <80>;
+> Yes, and that we found all (most) cases now. The reason I don't see it
+> as a parallel problem is that, as maintainer, I promise an ABI to user
+> and I'd rather stick to it. I don't want, for example, ncurses to stop
+> working because of some ioctl() rejecting tagged pointers.
 
-Hello Amit,
+But this is what I don't understand: it would need to be ncurses _using
+TBI_, that would stop working (having started to work before, but then
+regress due to a newly added one-off bug). Regular ncurses will be fine
+because it's not using TBI. So The Golden Rule isn't violated, and by
+definition, it's a specific regression caused by some bug (since TBI
+would have had to have worked _before_ in the situation to be considered
+a regression now). Which describes the normal path for kernel
+development... add feature, find corner cases where it doesn't work,
+fix them, encounter new regressions, fix those, repeat forever.
 
-Looking at this line of code in msm-4.14:
-https://source.codeaurora.org/quic/la/kernel/msm-4.14/tree/drivers/cpuidle/lpm-levels.c?h=LA.UM.7.1.r1-14000-sm8150.0#n993
+> If it's just the occasional one-off bug I'm fine to deal with it. But
+> no-one convinced me yet that this is the case.
 
-And seeing the equivalent in msm-4.4:
-https://source.codeaurora.org/quic/la/kernel/msm-4.4/tree/drivers/cpuidle/lpm-levels.c?h=msm-4.4#n1080
+You believe there still to be some systemic cases that haven't been
+found yet? And even if so -- isn't it better to work on that
+incrementally?
 
-It becomes obvious that
+> As for the generic driver code (filesystems or other subsystems),
+> without some clear direction for developers, together with static
+> checking/sparse, on how user pointers are cast to longs (one example),
+> it would become my responsibility to identify and fix them up with any
+> kernel release. This series is not providing such guidance, just adding
+> untagged_addr() in some places that we think matter.
 
-qcom,time-overhead == entry-latency-us + exit-latency-us
-and
-qcom,latency-us == exit-latency-us
+What about adding a nice bit of .rst documentation that describes the
+situation and shows how to use untagged_addr(). This is the kind of
+kernel-wide change that "everyone" needs to know about, and shouldn't
+be the arch maintainer's sole responsibility to fix.
 
-which means that
-
-entry-latency-us == qcom,time-overhead - qcom,latency-us
-
-
-Using this formula, with the numbers from downstream SDM845:
-https://source.codeaurora.org/quic/la/kernel/msm-4.9/tree/arch/arm64/boot/dts/qcom/sdm845-pm.dtsi?h=msm-4.9#n123
-
-qcom,latency-us = <621>;
-qcom,time-overhead = <885>;
-
-885 - 621 = 264
-
-we end up with the same values that Raju
-has in his submission for upstream SDM845:
-https://patchwork.kernel.org/patch/10953253/
-
-entry-latency-us = <264>;
-exit-latency-us = <621>;
-
-
-
-Which for msm8996:
-
-qcom,latency-us = <80>;
-qcom,time-overhead = <210>;
-
-gives:
-
-entry-latency-us = <130>
-exit-latency-us = <80>;
-
-> +				min-residency-us = <300>;
-> +			};
-> +		};
->  	};
->  
->  	thermal-zones {
-> -- 
-> 2.17.1
+> > - we might need to opt in to TBI with a prctl()
 > 
+> Yes, although still up for discussion.
+
+I think I've talked myself out of it. I say boot param only! :)
+
+
+So what do you say to these next steps:
+
+- change untagged_addr() to use a static branch that is controlled with
+  a boot parameter.
+- add, say, Documentation/core-api/user-addresses.rst to describe
+  proper care and handling of user space pointers with untagged_addr(),
+  with examples based on all the cases seen so far in this series.
+- continue work to improve static analysis.
+
+Thanks for wading through this with me! :)
+
+-- 
+Kees Cook
