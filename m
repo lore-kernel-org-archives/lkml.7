@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A485C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:21:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 149A7C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:21:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 297D7217D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:21:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D75C6217D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:21:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639295;
-	bh=ZKAWL+TfWyCxI4eR1wQK7z52Plma/GdthdPmEGtd6Z0=;
+	s=default; t=1558639303;
+	bh=rNM3h89SpW2iukfDeGZnIjgHVwvRx6j+RvmtjaOtG8Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pj7gDJARuNL43zzV3l3C9FDo1aOlWamDDtubT2imSq6jEynmHywkd/Gk1XEyToigK
-	 xMQqKNxu8K3AFBaH35go73uiKuLtfiDbhNG+XZqDSdXz2UbRJfxfhk20rdqCeW4mDG
-	 ss6aPjJcLfWTuekQydYdYrO9Cs//yLKT8rAHCYvM=
+	b=pgOwhDjDxqJBEWfkfGtKZgvTuitJGv7lTtyBA/Z25/cZ61Zvpil/cXn9uy9GvJxXw
+	 DGaKRmzkPPR1XZGj8VUWD5YInbZg8fSoKg9TA+wlJEwTzosfNgosPCUcp/V05GX5Bz
+	 HkNfPcwGLSw5GZANjtSr8CL71XfQIikodZGIkJlM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390295AbfEWTVe (ORCPT
+        id S2390322AbfEWTVl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:21:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58890 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:21:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59050 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390281AbfEWTVb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:21:31 -0400
+        id S2390289AbfEWTVg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:21:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F03F217D7;
-        Thu, 23 May 2019 19:21:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 87D29217D7;
+        Thu, 23 May 2019 19:21:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639290;
-        bh=ZKAWL+TfWyCxI4eR1wQK7z52Plma/GdthdPmEGtd6Z0=;
+        s=default; t=1558639296;
+        bh=rNM3h89SpW2iukfDeGZnIjgHVwvRx6j+RvmtjaOtG8Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sF/YwecfCeMyQYPkqgA4m+WRbfiXnG/LDic4NdtlWIp3Y2kZg8Qo9N/8rQhU6+tlU
-         hF4y3/OKrF97RSMPqGRAQi/0nrvqtzuX7uMZG6nHWX7urrMlIi5m4Ff8c7y4Vh1NJ4
-         VjbsWCvog1BFDi5BUWAImgZlzW0HRzN4+HAQQeqI=
+        b=G1iYjgWTo8kRlUnyfX/KuBCipNECOYRM3wn15cgeYKVjBFpZg+twouz1ogpLSFTqB
+         VUgezf2K9NtyxqYKv6/U2NINRd3BMGBDCmQp90pKe3UpunqRrX60ROuOuCVxmgl9pV
+         gyGpQ/ybNQZRzXpLr6sL72dCK/Y7/Tv1ORYOdUyo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Olga Kornievskaia <kolga@netapp.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>
-Subject: [PATCH 5.0 050/139] PNFS fallback to MDS if no deviceid found
-Date:   Thu, 23 May 2019 21:05:38 +0200
-Message-Id: <20190523181727.180588179@linuxfoundation.org>
+        stable@vger.kernel.org, Steev Klimaszewski <steev@kali.org>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Subject: [PATCH 5.0 052/139] clk: tegra: Fix PLLM programming on Tegra124+ when PMC overrides divider
+Date:   Thu, 23 May 2019 21:05:40 +0200
+Message-Id: <20190523181727.450732906@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181720.120897565@linuxfoundation.org>
 References: <20190523181720.120897565@linuxfoundation.org>
@@ -59,34 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Olga Kornievskaia <kolga@netapp.com>
+From: Dmitry Osipenko <digetx@gmail.com>
 
-commit b1029c9bc078a6f1515f55dd993b507dcc7e3440 upstream.
+commit 40db569d6769ffa3864fd1b89616b1a7323568a8 upstream.
 
-If we fail to find a good deviceid while trying to pnfs instead of
-propogating an error back fallback to doing IO to the MDS. Currently,
-code with fals the IO with EINVAL.
+There are wrongly set parenthesis in the code that are resulting in a
+wrong configuration being programmed for PLLM. The original fix was made
+by Danny Huang in the downstream kernel. The patch was tested on Nyan Big
+Tegra124 chromebook, PLLM rate changing works correctly now and system
+doesn't lock up after changing the PLLM rate due to EMC scaling.
 
-Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
-Fixes: 8d40b0f14846f ("NFS filelayout:call GETDEVICEINFO after pnfs_layout_process completes"
-Cc: stable@vger.kernel.org # v4.11+
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Cc: <stable@vger.kernel.org>
+Tested-by: Steev Klimaszewski <steev@kali.org>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Acked-By: Peter De Schrijver <pdeschrijver@nvidia.com>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/nfs/filelayout/filelayout.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/clk/tegra/clk-pll.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/fs/nfs/filelayout/filelayout.c
-+++ b/fs/nfs/filelayout/filelayout.c
-@@ -904,7 +904,7 @@ fl_pnfs_update_layout(struct inode *ino,
- 	status = filelayout_check_deviceid(lo, fl, gfp_flags);
- 	if (status) {
- 		pnfs_put_lseg(lseg);
--		lseg = ERR_PTR(status);
-+		lseg = NULL;
- 	}
- out:
- 	return lseg;
+--- a/drivers/clk/tegra/clk-pll.c
++++ b/drivers/clk/tegra/clk-pll.c
+@@ -663,8 +663,8 @@ static void _update_pll_mnp(struct tegra
+ 		pll_override_writel(val, params->pmc_divp_reg, pll);
+ 
+ 		val = pll_override_readl(params->pmc_divnm_reg, pll);
+-		val &= ~(divm_mask(pll) << div_nmp->override_divm_shift) |
+-			~(divn_mask(pll) << div_nmp->override_divn_shift);
++		val &= ~((divm_mask(pll) << div_nmp->override_divm_shift) |
++			(divn_mask(pll) << div_nmp->override_divn_shift));
+ 		val |= (cfg->m << div_nmp->override_divm_shift) |
+ 			(cfg->n << div_nmp->override_divn_shift);
+ 		pll_override_writel(val, params->pmc_divnm_reg, pll);
 
 
