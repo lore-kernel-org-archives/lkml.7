@@ -2,67 +2,70 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B267C28CBF
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 12:51:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A44AAC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 12:51:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E259A21019
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 12:51:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72F132133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 12:51:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nikanor-nu.20150623.gappssmtp.com header.i=@nikanor-nu.20150623.gappssmtp.com header.b="1bLiW/1H"
+	dkim=pass (2048-bit key) header.d=nikanor-nu.20150623.gappssmtp.com header.i=@nikanor-nu.20150623.gappssmtp.com header.b="HN68Q3EV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730823AbfEWMvt (ORCPT
+        id S1730837AbfEWMvu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 08:51:49 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:46430 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730028AbfEWMvs (ORCPT
+        Thu, 23 May 2019 08:51:50 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:36452 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730492AbfEWMvt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 08:51:48 -0400
-Received: by mail-lf1-f68.google.com with SMTP id l26so4289606lfh.13
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 05:51:47 -0700 (PDT)
+        Thu, 23 May 2019 08:51:49 -0400
+Received: by mail-lj1-f195.google.com with SMTP id z1so5357422ljb.3
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 05:51:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=nikanor-nu.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=UMmk2xMTkCY6jSkcBGDN9/7ybK/nNloRLyRDYt7L/zc=;
-        b=1bLiW/1HiRaBIAhNe0+QhlOl10V76Cwy0MtDym3GfT7ezxhkD3yxuVpPi5SuTcfx24
-         g5f2JIaRPF1eBXx18xyV1sweXJsOIdRY+sVf6p12eBP6ksnBE4LD2QvMr2XooOApvIlB
-         XnpQkQbPH/UCtw1bQgjGuP4Q1RxniC7rw0d2HaajRQsfuWKMQXiT5mBuT/VIR5OQJ762
-         +yFvPIz7PCaAwY9tjJPicuIhViTgzPNBRsyucrxqQTNa4WEmXDegex66omgDXV/uCe6k
-         rXtno4qygE5dj8TDqFhQsl1SYGQmJ/VrBIKzvUzyeEBBLm/sl0rdkiWCaCu63h/+Awbj
-         glaw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=WaaInSZ/8FR2reHnDUn1kcD6WX/fXP/+clwh+fO1tAQ=;
+        b=HN68Q3EVQZhJbkZThtdPhltW9YfxgYN5sV+4a7aKumDdVvFz1CzCwxgRl0JHnCfp5B
+         ht7YabU+8ofwfTU3i5NCuaeAurTHZoHtE5M66Jqz66MWlInRIhDlpajOQVZZYEYagSaX
+         9gj0gERXnkjrrUV6qeULqu2GYW3ZHLOzQOtUMEqwvqF3Kgs3V+sZ8dWPTvrcJgdyknky
+         a4vIUH6jjj3372GsoCQh4BKqDaBnux5iTI+1N2P4/kAPzdEtyHX2nFLaU12147ebdDfw
+         l0WZiF+cLO1VJkoCB0NElBLL1mGjRux4amiJbec+ajjHsFpGUtzTaxmyQSt8LSfyAqUQ
+         TwmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=UMmk2xMTkCY6jSkcBGDN9/7ybK/nNloRLyRDYt7L/zc=;
-        b=r7tMDZPxcX4u1mPOdIUQtXK2fvqkE8jgsueCRKJhs4KrJtA/JJRGau0IasP3H4lAnS
-         sye4nHDeSAMiH1hA2lUyQboaf/GIK5cF0+pcl3v1BcmjFX50By1SvQpGsSoobljJaEux
-         H3JVcSnWdlSnsVsnWL6gfBDi2GSmy6aYlSV2/2Qtglqdhc2emqY+r1AcHg346hgA/1bC
-         O82PHV09CCLCIRlWoP6fmX1AaTgfPtZh9idt4Obnr2kAFwesDvPplW1OKdrIQ42pRVwL
-         ZuLJplNzmQ70FJiIkl0yfA5qbE5EpSxJ9QkDmAmlyuoLyagc0xaJSBmum1HjheEhCOgO
-         e99Q==
-X-Gm-Message-State: APjAAAUUcCvJ+qnJidawB0xTvQOY5kIDT3REptZEIugumYjssvCqLDi/
-        F/XaWxGgj5S2TZzzHt5Bo/afd8MVN0E9XA==
-X-Google-Smtp-Source: APXvYqxX0coEjY0024D4lKShz2OT4M6tyAKuuaaCNpO4kCc/n+27WtPuyWYJ7VqM0dqV2Z1SUYdELg==
-X-Received: by 2002:ac2:4c36:: with SMTP id u22mr2113982lfq.33.1558615906558;
-        Thu, 23 May 2019 05:51:46 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=WaaInSZ/8FR2reHnDUn1kcD6WX/fXP/+clwh+fO1tAQ=;
+        b=WW0thPCeNJLVZJc+Wuv4z1YsxQgb7G7GYn6eJ1hPHIf3I53YSCASct0a+/dnUYk3x3
+         YVg2KpLIac7rDFpLataHTTGtcStLZblN38fpSQblEyvY4D0J0BFcYpkWWa3cTHNBDbPO
+         ENIxBK0WdW1aP4eV3xRjKa4rIjduDZi7nbtWjP3I53TIBRb3GKtKW1GTBvMiIPgSaacx
+         LacHAV7D6Kdziwq8u2PqKgkr6LYXrSNorrSd19F/efRPXSs3vmhShMeiyX/flDieDOeP
+         6+Gg1m4f+Jg5aLU7wYR7swurCBEE8Ns+185xt4TEj0HS0ISgw1WLYCYvAC613NL0Zqnq
+         NzQg==
+X-Gm-Message-State: APjAAAX477m3nS87CCg9TG1HX+FWSxYC+ALzMSvT6BDUStBc/rF6NWfS
+        s/DwGtV0IV0hwdlvhO0RsxULhQ==
+X-Google-Smtp-Source: APXvYqwwDdOf6xI+YV3fdp0081pb426NkWEs8zvOFG/hz0kcmI7ogEtPNQtz4h6uyHQTaFpBYVdOIg==
+X-Received: by 2002:a2e:5d49:: with SMTP id r70mr51228511ljb.102.1558615907367;
+        Thu, 23 May 2019 05:51:47 -0700 (PDT)
 Received: from dev.nikanor.nu (78-72-133-4-no161.tbcn.telia.com. [78.72.133.4])
-        by smtp.gmail.com with ESMTPSA id c19sm5947154lfi.69.2019.05.23.05.51.45
+        by smtp.gmail.com with ESMTPSA id c19sm5947154lfi.69.2019.05.23.05.51.46
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 23 May 2019 05:51:45 -0700 (PDT)
+        Thu, 23 May 2019 05:51:46 -0700 (PDT)
 From:   =?UTF-8?q?Simon=20Sandstr=C3=B6m?= <simon@nikanor.nu>
 To:     gregkh@linuxfoundation.org
 Cc:     simon@nikanor.nu, jeremy@azazel.net, dan.carpenter@oracle.com,
         devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/9] Fix more coding style issues in staging/kpc2000
-Date:   Thu, 23 May 2019 14:51:34 +0200
-Message-Id: <20190523125143.32511-1-simon@nikanor.nu>
+Subject: [PATCH v2 1/9] staging: kpc2000: add blank line after declarations
+Date:   Thu, 23 May 2019 14:51:35 +0200
+Message-Id: <20190523125143.32511-2-simon@nikanor.nu>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190523125143.32511-1-simon@nikanor.nu>
+References: <20190523125143.32511-1-simon@nikanor.nu>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -71,33 +74,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Fixes checkpatch.pl warning "Missing a blank line after declarations".
 
-These patches fixes a few more minor coding style issues found in
-staging/kpc2000/cell_probe.c. There are only two more types of
-checkpatch.pl warnings left in this file with these patches applied:
-"line over 80 characters" and "Macro argument reuse".
+Signed-off-by: Simon Sandström <simon@nikanor.nu>
+---
+ drivers/staging/kpc2000/kpc2000/cell_probe.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Changed in v2: don't bother fixing the __func__ usage in the out of
-               memory debug message, instead add a patch that removes
-               it completely.
-
-- Simon
-
-Simon Sandström (9):
-  staging: kpc2000: add blank line after declarations
-  staging: kpc2000: use __func__ in debug messages
-  staging: kpc2000: add missing asterisk in comment
-  staging: kpc2000: fix alignment issues in cell_probe.c
-  staging: kpc2000: remove extra blank lines in cell_probe.c
-  staging: kpc2000: use kzalloc(sizeof(var)...) in cell_probe.c
-  staging: kpc2000: remove unnecessary braces in cell_probe.c
-  staging: kpc2000: remove unnecessary include in cell_probe.c
-  staging: kpc2000: remove unnecessary oom message
-
- drivers/staging/kpc2000/kpc2000/cell_probe.c | 81 +++++++++-----------
- 1 file changed, 38 insertions(+), 43 deletions(-)
-
+diff --git a/drivers/staging/kpc2000/kpc2000/cell_probe.c b/drivers/staging/kpc2000/kpc2000/cell_probe.c
+index e5cddf0eeed3..95bfbe4aae4d 100644
+--- a/drivers/staging/kpc2000/kpc2000/cell_probe.c
++++ b/drivers/staging/kpc2000/kpc2000/cell_probe.c
+@@ -245,6 +245,7 @@ int  kp2000_check_uio_irq(struct kp2000_device *pcard, u32 irq_num)
+ 	u64 interrupt_active   =  readq(pcard->sysinfo_regs_base + REG_INTERRUPT_ACTIVE);
+ 	u64 interrupt_mask_inv = ~readq(pcard->sysinfo_regs_base + REG_INTERRUPT_MASK);
+ 	u64 irq_check_mask = (1 << irq_num);
++
+ 	if (interrupt_active & irq_check_mask) { // if it's active (interrupt pending)
+ 		if (interrupt_mask_inv & irq_check_mask) {    // and if it's not masked off
+ 			return 1;
+@@ -257,6 +258,7 @@ static
+ irqreturn_t  kuio_handler(int irq, struct uio_info *uioinfo)
+ {
+ 	struct kpc_uio_device *kudev = uioinfo->priv;
++
+ 	if (irq != kudev->pcard->pdev->irq)
+ 		return IRQ_NONE;
+ 
+@@ -506,8 +508,10 @@ void  kp2000_remove_cores(struct kp2000_device *pcard)
+ {
+ 	struct list_head *ptr;
+ 	struct list_head *next;
++
+ 	list_for_each_safe(ptr, next, &pcard->uio_devices_list) {
+ 		struct kpc_uio_device *kudev = list_entry(ptr, struct kpc_uio_device, list);
++
+ 		uio_unregister_device(&kudev->uioinfo);
+ 		device_unregister(kudev->dev);
+ 		list_del(&kudev->list);
 -- 
 2.20.1
 
