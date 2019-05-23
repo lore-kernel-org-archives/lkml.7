@@ -2,145 +2,124 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 348E6C282E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 23:08:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7779C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 23:09:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9C9420879
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 23:08:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A7E82184B
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 23:09:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="e7Ha0g8x"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="HuJo8Da3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388510AbfEWXId (ORCPT
+        id S2388562AbfEWXJY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 19:08:33 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:41938 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387705AbfEWXIc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 19:08:32 -0400
-Received: by mail-wr1-f67.google.com with SMTP id u16so4093576wrn.8
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 16:08:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:to:from:cc;
-        bh=bPH3BKB6YMkWMTZRYGJlA8guuTm5AAVhzev7JKBdXCo=;
-        b=e7Ha0g8xc9v1LTknRwftMng/lhlKb2iA9bKmL87JD13f3YFWnxQGyk7tPRBzHBW4Nu
-         bsz4O9nIFnWtmc4rPFgeWSgluPiHWx8E09fg+15v6wSO3Iyw1OzQuJYUx6ugl+IJS1LX
-         o0vURM3AGLSNqWolOpKAN0teLr5ec/kWxp9DFT2vOXn+clAFh/k8rH9lbOYhROcD7Qyp
-         iz7Oog9NxvOePWkp7hoGFAAsijNURr5x7tM8NioaXyh5RHE7WNNdEGkk7qUYp7+4FJve
-         XWl0t1Wjc383i6m1Ue4G8u3++u2s6Inzn1YXSBD/FXh2/ic3PK8qvCG7GkHsEU/iCm+R
-         rACQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
-        bh=bPH3BKB6YMkWMTZRYGJlA8guuTm5AAVhzev7JKBdXCo=;
-        b=TVCnkFo6t+PEZJq6L4gVXD7ResfPmjiyycxyecboyr2db+tQDqS505qg5lu6RErfja
-         tBIt9u3ABfAfy4+FCLZ72yvrEHPKU5/SJVsm/9C0lACBK/nZT/BDRetZ0aYUFX2BeeI7
-         upKJ9sIB/heLRIRCE0qxItd8Epi+5NLEtXGTPWqg3RafjM96JSWNhF1tQLy3n7DCqxVd
-         EqBelJ9ny6zicqKpI9yrTaGaEJTCsnTNbEMjyuojbvV/6GnrAzrsRvU5Wr5a/aENTwes
-         zgdVFfcZd3TWrRrTmO5QUuSPd7yH++ACMAqZ4uI8ky9upurgAA5sSwPb2Dogs+QUfLBv
-         oqbw==
-X-Gm-Message-State: APjAAAU85fbAHyMVZJAdDkoe2mWL7wkK0ftTuTSowoJF2mu44MObWtWh
-        iw2JOpSYfkBH6mnS/l+SK95vnw==
-X-Google-Smtp-Source: APXvYqz/rwj1NpP2dQVZSlxWek0GWv4coeZZgk8975XxJoLAVYxqJg1vpVhFR8CTjwa8i5ihvZNk2w==
-X-Received: by 2002:adf:f7c8:: with SMTP id a8mr3447844wrq.148.1558652911164;
-        Thu, 23 May 2019 16:08:31 -0700 (PDT)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id s13sm464813wrw.17.2019.05.23.16.08.30
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 23 May 2019 16:08:30 -0700 (PDT)
-Message-ID: <5ce727ee.1c69fb81.fbeca.2a40@mx.google.com>
-Date:   Thu, 23 May 2019 16:08:30 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
+        Thu, 23 May 2019 19:09:24 -0400
+Received: from mail-eopbgr10059.outbound.protection.outlook.com ([40.107.1.59]:34438
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387705AbfEWXJX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 19:09:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SSpLH9TddFeBxsJrHSjBfJSeah4jTYTNmw3N/iOI7p0=;
+ b=HuJo8Da3LuyU0t7/A0tU1AIYqvxfEJKtIvh5BgJWGBzXTXV707evy/JVTbADT7d6A8tq+2a5m6cJOAH24iztVC6Q/TNTeFaD/3kvgLebI2vLzPHgl/hnF2qGu2tiwouK1+N1/2pEgFw6AcIcFuRvCoI5jac3ZABm0mTJuiRpJuY=
+Received: from AM0PR04MB6434.eurprd04.prod.outlook.com (20.179.252.215) by
+ AM0PR04MB6689.eurprd04.prod.outlook.com (20.179.255.214) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1900.18; Thu, 23 May 2019 23:09:19 +0000
+Received: from AM0PR04MB6434.eurprd04.prod.outlook.com
+ ([fe80::19be:75a:9fe:7cec]) by AM0PR04MB6434.eurprd04.prod.outlook.com
+ ([fe80::19be:75a:9fe:7cec%7]) with mapi id 15.20.1922.016; Thu, 23 May 2019
+ 23:09:18 +0000
+From:   Leonard Crestez <leonard.crestez@nxp.com>
+To:     Stephen Boyd <swboyd@chromium.org>,
+        Fabiano Rosas <farosas@linux.ibm.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        Kieran Bingham <kbingham@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jackie Liu <liuyun01@kylinos.cn>
+Subject: Re: [PATCH] scripts/gdb: Fix invocation when CONFIG_COMMON_CLK is not
+ set
+Thread-Topic: [PATCH] scripts/gdb: Fix invocation when CONFIG_COMMON_CLK is
+ not set
+Thread-Index: AQHVEaEw3la++p0LyEyZRXi/xw4poQ==
+Date:   Thu, 23 May 2019 23:09:18 +0000
+Message-ID: <AM0PR04MB6434A12D2DCB42ECAA7EB1FAEE010@AM0PR04MB6434.eurprd04.prod.outlook.com>
+References: <20190523195313.24701-1-farosas@linux.ibm.com>
+ <5ce722ac.1c69fb81.b62d2.16d0@mx.google.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=leonard.crestez@nxp.com; 
+x-originating-ip: [192.88.166.1]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: bf21954e-eeb7-42b1-acff-08d6dfd3af30
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:AM0PR04MB6689;
+x-ms-traffictypediagnostic: AM0PR04MB6689:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <AM0PR04MB66892084A22BCDA66653F79DEE010@AM0PR04MB6689.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 00462943DE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(39860400002)(346002)(366004)(136003)(396003)(199004)(189003)(25786009)(66556008)(66446008)(966005)(64756008)(110136005)(76176011)(446003)(4326008)(73956011)(71200400001)(71190400001)(91956017)(76116006)(6116002)(66946007)(33656002)(66476007)(478600001)(305945005)(3846002)(9686003)(53546011)(6306002)(7696005)(6436002)(55016002)(229853002)(14454004)(476003)(99286004)(53936002)(7736002)(68736007)(66066001)(486006)(186003)(6246003)(26005)(2906002)(256004)(81166006)(316002)(54906003)(44832011)(86362001)(8936002)(81156014)(52536014)(8676002)(5660300002)(6506007)(102836004)(74316002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB6689;H:AM0PR04MB6434.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: dpt3Kg89G0PTVJb8yjw/11r3N0JKhr9/mFW0NRp8UfmIlY+A/dVYHv5uwOauPrwPIwea1rM43YvO3Vg0lt/hzy5hvJl82BH94TBWjePfjoJQNEkD2McB/EEUws16i/ItBeVLOPFnh33N7ZRWYbnhtE2v4p4aVoEe0zIifaqFscplyrS/rwogGXaatobL/4d3NtLezzCLMRuLzUzTZiWj7z3ea1RB4mIl6nsRvxhfWHAYaSl2v5+j33LW2HkN5Bn21bP7t3juFb0xli8Hyti9n/lNbA68UBIvLvKgD6RmTNjMAUby7eBMxoiS80Vbe8n/Z2ktPUjSSt7lU+SbBbG+y+SelYsBNXd1PG16wlBWaU3AEj4cw2thSpjP/ZjDNotGd/VSiAjmHeksCPD9goCiHDxm9H822wKlz3r2hlq7yb8=
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Report-Type: boot
-X-Kernelci-Tree: stable-rc
-X-Kernelci-Branch: linux-5.1.y
-X-Kernelci-Kernel: v5.1.4-123-gad8ad5ad6200
-In-Reply-To: <20190523181705.091418060@linuxfoundation.org>
-References: <20190523181705.091418060@linuxfoundation.org>
-Subject: Re: [PATCH 5.1 000/122] 5.1.5-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-From:   "kernelci.org bot" <bot@kernelci.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bf21954e-eeb7-42b1-acff-08d6dfd3af30
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 May 2019 23:09:18.8221
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6689
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-stable-rc/linux-5.1.y boot: 138 boots: 1 failed, 121 passed with 14 offline=
-, 2 untried/unknown (v5.1.4-123-gad8ad5ad6200)
-
-Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
--5.1.y/kernel/v5.1.4-123-gad8ad5ad6200/
-Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-5.1.y=
-/kernel/v5.1.4-123-gad8ad5ad6200/
-
-Tree: stable-rc
-Branch: linux-5.1.y
-Git Describe: v5.1.4-123-gad8ad5ad6200
-Git Commit: ad8ad5ad6200a933bc774415620bb31dd8b2da66
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
-e-rc.git
-Tested: 76 unique boards, 24 SoC families, 14 builds out of 209
-
-Boot Failure Detected:
-
-arm:
-    multi_v7_defconfig:
-        gcc-8:
-            bcm4708-smartrg-sr400ac: 1 failed lab
-
-Offline Platforms:
-
-arm:
-
-    sama5_defconfig:
-        gcc-8
-            at91-sama5d4_xplained: 1 offline lab
-            at91-sama5d4ek: 1 offline lab
-
-    multi_v7_defconfig:
-        gcc-8
-            alpine-db: 1 offline lab
-            at91-sama5d4_xplained: 1 offline lab
-            at91-sama5d4ek: 1 offline lab
-            stih410-b2120: 1 offline lab
-            sun5i-r8-chip: 1 offline lab
-            tegra124-jetson-tk1: 1 offline lab
-
-    tegra_defconfig:
-        gcc-8
-            tegra124-jetson-tk1: 1 offline lab
-
-    sunxi_defconfig:
-        gcc-8
-            sun5i-r8-chip: 1 offline lab
-
-    bcm2835_defconfig:
-        gcc-8
-            bcm2835-rpi-b: 1 offline lab
-
-arm64:
-
-    defconfig:
-        gcc-8
-            apq8016-sbc: 1 offline lab
-            juno-r2: 1 offline lab
-            mt7622-rfb1: 1 offline lab
-
----
-For more info write to <info@kernelci.org>
+On 5/24/2019 1:46 AM, Stephen Boyd wrote:=0A=
+> Quoting Fabiano Rosas (2019-05-23 12:53:11)=0A=
+>> diff --git a/scripts/gdb/linux/constants.py.in b/scripts/gdb/linux/const=
+ants.py.in=0A=
+>> index 1d73083da6cb..2efbec6b6b8d 100644=0A=
+>> --- a/scripts/gdb/linux/constants.py.in=0A=
+>> +++ b/scripts/gdb/linux/constants.py.in=0A=
+>> @@ -40,7 +40,8 @@=0A=
+>>   import gdb=0A=
+>>   =0A=
+>>   /* linux/clk-provider.h */=0A=
+>> -LX_GDBPARSED(CLK_GET_RATE_NOCACHE)=0A=
+>> +if IS_BUILTIN(CONFIG_COMMON_CLK):=0A=
+>> +    LX_GDBPARSED(CLK_GET_RATE_NOCACHE)=0A=
+>>   =0A=
+> =0A=
+> Why is this LX_GDBPARSED() instead of LX_VALUE()? From what I can tell=0A=
+> it doesn't need to be runtime evaluated, just assigned to something that=
+=0A=
+> is macro expanded by CPP.=0A=
+=0A=
+Because CLK_GET_RATE_NOCACHE expands to BIT() which expands to a =0A=
+constant with an UL suffix which python doesn't understand.=0A=
+=0A=
+Alternatively we could redefine the BIT macros inside constants.py.in =0A=
+but using gdb features seemed better. We could even try to strip integer =
+=0A=
+literal suffixes with sed.=0A=
+=0A=
+Mentioned before: https://lkml.org/lkml/2019/5/3/341=0A=
+=0A=
+--=0A=
+Regards,=0A=
+Leonard=0A=
