@@ -2,116 +2,125 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72021C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 11:20:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AF10C282DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 11:20:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A1892133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 11:20:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA4C821019
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 11:20:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="DOyuxxCq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730272AbfEWLUH (ORCPT
+        id S1730513AbfEWLUX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 07:20:07 -0400
-Received: from mga06.intel.com ([134.134.136.31]:32257 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729430AbfEWLUH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 07:20:07 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 May 2019 04:20:06 -0700
-X-ExtLoop1: 1
-Received: from jlrosema-mobl.amr.corp.intel.com (HELO [10.252.131.22]) ([10.252.131.22])
-  by orsmga002.jf.intel.com with ESMTP; 23 May 2019 04:20:05 -0700
-Subject: Re: [PATCH] ASoC: sound/soc/intel/boards: limit some drivers to X86
- since headers are only in arch/x86/
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        moderated for non-subscribers <alsa-devel@alsa-project.org>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Jie Yang <yang.jie@linux.intel.com>
-References: <46dc0767-bb21-2b98-90f2-34dd4bcad7c0@infradead.org>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <bdad5973-93e2-ea2b-85e9-c68635b6a5ba@linux.intel.com>
-Date:   Thu, 23 May 2019 06:20:05 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 23 May 2019 07:20:23 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:38889 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730469AbfEWLUW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 07:20:22 -0400
+Received: by mail-wm1-f65.google.com with SMTP id t5so5371080wmh.3
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 04:20:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=TSU8XlJEMK+KpQjqT+wKCWosXAXefjk73b4VzzoBmws=;
+        b=DOyuxxCqspOt3cSWF1wpAKD57vDkx064yFDRmD+HdF5x1UUC8AMynQLy3b8yeJzxTU
+         t3GKAaiBkG03shVf7En4dFXk2OJZN/jzJV/07Jm9mRiRqydU23p/IsIcNghogpPnWstI
+         tB9I9j8TUMhhRM2qaxs77EVMXjQ2dkDzDjET0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=TSU8XlJEMK+KpQjqT+wKCWosXAXefjk73b4VzzoBmws=;
+        b=BDcn2TuVzp8ihcf9ZD+b4mXDGPnM/Zra1OeCw8ctHDFYMXVU7oXSu66/j5sKezkPFl
+         QGBAIB+Rs71FtndIaLvvu5IP7B6p+oVlXHtxDMzDf03RcwSNKoduSe2ZW9pBmbpjoii4
+         LxALVAxXvs67F8ihHqxtEbPGNZktaayBeVNWChduqOPpiSsSXMCyUPpszP6WhmlCkq2V
+         4eRciD8Ks5bZZhSiTxxhmXP6mYEBrU6yAmmF7k7fRJW9E6VYClKy+WIjJtqCxSJGEbPZ
+         jUT3IvLY6PCoJa/bjc4BK0CHncpywPRAkyRTkF180daCVUJcEdqjE97tFQ9y1v7pLaFr
+         7oSw==
+X-Gm-Message-State: APjAAAVU8eyOBK4H1LZPwlxXfRQ2JEPlLPz+P+mQAIus/JcduxwtE/MP
+        JKPNfRGNZEkr9pGXqwwi2XOROQ==
+X-Google-Smtp-Source: APXvYqxx/e7d1yyDuR1wKw7Y6+trebNMbp76KzUBRwegvbG3ftEtbeB1AhBBf7UCuxakMuTqVLWx7A==
+X-Received: by 2002:a1c:3cc2:: with SMTP id j185mr10979151wma.26.1558610420174;
+        Thu, 23 May 2019 04:20:20 -0700 (PDT)
+Received: from andrea (86.100.broadband17.iol.cz. [109.80.100.86])
+        by smtp.gmail.com with ESMTPSA id d20sm5195243wra.68.2019.05.23.04.20.18
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 23 May 2019 04:20:19 -0700 (PDT)
+Date:   Thu, 23 May 2019 13:20:13 +0200
+From:   Andrea Parri <andrea.parri@amarulasolutions.com>
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org,
+        will.deacon@arm.com, aou@eecs.berkeley.edu, arnd@arndb.de,
+        bp@alien8.de, catalin.marinas@arm.com, davem@davemloft.net,
+        fenghua.yu@intel.com, heiko.carstens@de.ibm.com,
+        herbert@gondor.apana.org.au, ink@jurassic.park.msu.ru,
+        jhogan@kernel.org, linux@armlinux.org.uk, mattst88@gmail.com,
+        mingo@kernel.org, mpe@ellerman.id.au, palmer@sifive.com,
+        paul.burton@mips.com, paulus@samba.org, ralf@linux-mips.org,
+        rth@twiddle.net, stable@vger.kernel.org, tglx@linutronix.de,
+        tony.luck@intel.com, vgupta@synopsys.com
+Subject: Re: [PATCH 00/18] locking/atomic: atomic64 type cleanup
+Message-ID: <20190523112013.GA14035@andrea>
+References: <20190522132250.26499-1-mark.rutland@arm.com>
+ <20190523083013.GA4616@andrea>
+ <20190523101926.GA3370@lakrids.cambridge.arm.com>
 MIME-Version: 1.0
-In-Reply-To: <46dc0767-bb21-2b98-90f2-34dd4bcad7c0@infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190523101926.GA3370@lakrids.cambridge.arm.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+> > While reading the series, I realized that the following expression:
+> > 
+> > 	atomic64_t v;
+> >         ...
+> > 	typeof(v.counter) my_val = atomic64_set(&v, VAL);
+> > 
+> > is a valid expression on some architectures (in part., on architectures
+> > which #define atomic64_set() to WRITE_ONCE()) but is invalid on others.
+> > (This is due to the fact that WRITE_ONCE() can be used as an rvalue in
+> > the above assignment; TBH, I ignore the reasons for having such rvalue?)
+> > 
+> > IIUC, similar considerations hold for atomic_set().
+> > 
+> > The question is whether this is a known/"expected" inconsistency in the
+> > implementation of atomic64_set() or if this would also need to be fixed
+> > /addressed (say in a different patchset)?
+> 
+> In either case, I don't think the intent is that they should be used that way,
+> and from a quick scan, I can only fine a single relevant instance today:
+> 
+> [mark@lakrids:~/src/linux]% git grep '\(return\|=\)\s\+atomic\(64\)\?_set'
+> include/linux/vmw_vmci_defs.h:  return atomic_set((atomic_t *)var, (u32)new_val);
+> include/linux/vmw_vmci_defs.h:  return atomic64_set(var, new_val);
+> 
+> 
+> [mark@lakrids:~/src/linux]% git grep '=\s+atomic_set' | wc -l
+> 0
+> [mark@lakrids:~/src/linux]% git grep '=\s+atomic64_set' | wc -l
+> 0
+> 
+> Any architectures implementing arch_atomic_* will have both of these functions
+> returning void. Currently that's x86 and arm64, but (time permitting) I intend
+> to migrate other architectures, so I guess we'll have to fix the above up as
+> required.
+> 
+> I think it's best to avoid the construct above.
 
+Thank you for the clarification, Mark.  I agree with you that it'd be
+better to avoid such constructs.  (FWIW, it is not currently possible
+to use them in litmus tests for the LKMM...)
 
-On 5/22/19 10:58 PM, Randy Dunlap wrote:
-> From: Randy Dunlap <rdunlap@infradead.org>
-> 
-> Several drivers in sound/soc/intel/boards/ #include header files
-> that only exist in arch/x86/include/asm.  This causes build errors,
-> so make these drivers depend on X86.
-> 
-> Fixes these build errors (on ia64):
-> 
-> ../sound/soc/intel/boards/bxt_da7219_max98357a.c:19:10: fatal error: asm/cpu_device_id.h: No such file or directory
->   #include <asm/cpu_device_id.h>
-> ../sound/soc/intel/boards/bytcr_rt5640.c:31:10: fatal error: asm/cpu_device_id.h: No such file or directory
->   #include <asm/cpu_device_id.h>
-> ../sound/soc/intel/boards/bytcr_rt5651.c:33:10: fatal error: asm/cpu_device_id.h: No such file or directory
->   #include <asm/cpu_device_id.h>
-> ../sound/soc/intel/boards/cht_bsw_rt5645.c:29:10: fatal error: asm/cpu_device_id.h: No such file or directory
->   #include <asm/cpu_device_id.h>
-> ../sound/soc/intel/boards/bytcht_es8316.c:33:10: fatal error: asm/cpu_device_id.h: No such file or directory
->   #include <asm/cpu_device_id.h>
-> ../sound/soc/intel/boards/bytcht_da7213.c:26:10: fatal error: asm/platform_sst_audio.h: No such file or directory
->   #include <asm/platform_sst_audio.h>
-> 
-> And more drivers determined by:
->> grep "include.*asm.cpu_device_id.h" *.c
-> bxt_da7219_max98357a.c:#include <asm/cpu_device_id.h>
-> bytcht_es8316.c:#include <asm/cpu_device_id.h>
-> bytcr_rt5640.c:#include <asm/cpu_device_id.h>
-> bytcr_rt5651.c:#include <asm/cpu_device_id.h>
-> cht_bsw_rt5645.c:#include <asm/cpu_device_id.h>
-> sof_rt5682.c:#include <asm/cpu_device_id.h>
->    and
->> grep "include.*asm.platform_sst_audio.h" *.c
-> bytcht_da7213.c:#include <asm/platform_sst_audio.h>
-> bytcht_es8316.c:#include <asm/platform_sst_audio.h>
-> 
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Mark Brown <broonie@kernel.org>
-> Cc: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-> Cc: Liam Girdwood <liam.r.girdwood@linux.intel.com>
-> Cc: Jie Yang <yang.jie@linux.intel.com>
-> Cc: alsa-devel@alsa-project.org
-> ---
->   sound/soc/intel/boards/Kconfig |    6 ++++++
->   1 file changed, 6 insertions(+)
-> 
-> --- lnx-52-rc1.orig/sound/soc/intel/boards/Kconfig
-> +++ lnx-52-rc1/sound/soc/intel/boards/Kconfig
-> @@ -87,6 +87,7 @@ config SND_SOC_INTEL_BYTCR_RT5640_MACH
->   	tristate "Baytrail and Baytrail-CR with RT5640 codec"
->   	depends on I2C && ACPI
->   	depends on X86_INTEL_LPSS || COMPILE_TEST
-> +	depends on X86
-
-How does this improve the results?
-
-config X86_INTEL_LPSS
-	bool "Intel Low Power Subsystem Support"
-	depends on X86 && ACPI && PCI
-
-So the X86 dependency is already there. Does this happen with 
-COMPILE_TEST set? If yes, maybe that's the part that needs to be 
-changed? The addition of COMPILE_TEST here is quite recent and might 
-need to be reverted.
+Thanks,
+  Andrea
