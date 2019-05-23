@@ -2,107 +2,111 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E306C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 22:54:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A493CC46470
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 22:54:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6961520863
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 22:54:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71DC521841
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 22:54:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="sCESZHDx"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="hOjBNbxm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388441AbfEWWyF (ORCPT
+        id S2388630AbfEWWyN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 18:54:05 -0400
-Received: from mail-pl1-f172.google.com ([209.85.214.172]:35648 "EHLO
-        mail-pl1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387693AbfEWWyF (ORCPT
+        Thu, 23 May 2019 18:54:13 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:14711 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387693AbfEWWyN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 18:54:05 -0400
-Received: by mail-pl1-f172.google.com with SMTP id p1so3337091plo.2
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 15:54:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=/vCEODs/9DS/gyFee8buH340YRgWEPrDV2+u6E7wxSs=;
-        b=sCESZHDxFOtQejQ6JERU/DPBl5BcXkF4edI7w74IPSRCgfA0C8pcJ26FErgdaADeQg
-         ETujxZM1f3GAMvxQfo0k2ewnW9Moqvkz4jpYgx6+oFil1BpPQx6UwsxjWzfOqn8MKFt6
-         au1wuxFe+/KGL8p15QS3kZN1Ggz6CmYHe+kWO3p1TrcKDByvp2ZNV2sIwiVJODQ3YFoh
-         3+WePdtcLhuGD88pyO7LkOb/OgpylRYW8kvpMhLlrl1m9RRlwr1GjT0bHNKWce2cQFgW
-         96pADDk2IrbIw1xxbw0pdXLOp8FDvtNk/IwAfkuafler0DBla2nlWAyNZG0HfuA3XZ0S
-         pt/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=/vCEODs/9DS/gyFee8buH340YRgWEPrDV2+u6E7wxSs=;
-        b=OFbIscgFdbmZ3zTBXyCSyJjO//DsoAD8tpgXeIheVBYBu6XUEosMFZetDDem3FjCwE
-         eukA6zn2NvfT7qx9SmP/TMEfMNHgm0SjOs+hK31kRYwqAcuQTI4ztfC/6Yp/1y52M/Wn
-         m0QODZ1tXjWW3PF/Psp00yEDfLcpm0TX1eGWGmntLAWNWBkfC3kSOYGc1Rs1YYubOGWH
-         BP/vXUQS0aC68W/GukaeJZFKBtd8d42HjoXAMjLhskx3hL3+2f6C6lKV1j4mfE5mkGpl
-         ysa5C1aH6V/lIoiE6zNo+TfjWM4b1TvkvY3qtDyCF1nkHnGJbRLti26vLRoMKm1IL8N3
-         jjOA==
-X-Gm-Message-State: APjAAAWrRS3uA7F8KcNNaH7syLTlwlySlpDCc1KkHrH4IBY/VUNivfHX
-        MQhuDF3cotaI0fdFK87nRPSUag==
-X-Google-Smtp-Source: APXvYqyNX4WEA6oJ/+fN2UKbYJYBspT4MTDG3EG2yBLEFmXxBg+ztIsEDnCWS8kRNZ4jX7AjqIFBBw==
-X-Received: by 2002:a17:902:a81:: with SMTP id 1mr55805935plp.287.1558652043697;
-        Thu, 23 May 2019 15:54:03 -0700 (PDT)
-Received: from [192.168.1.121] (66.29.164.166.static.utbb.net. [66.29.164.166])
-        by smtp.gmail.com with ESMTPSA id w66sm501695pfb.47.2019.05.23.15.54.02
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 23 May 2019 15:54:02 -0700 (PDT)
-Subject: Re: linux-next: Signed-off-by missing for commits in the block tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Keith Busch <kbusch@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Keith Busch <keith.busch@intel.com>
-References: <20190524074500.1fde68d6@canb.auug.org.au>
- <20190523215206.GA15192@localhost.localdomain>
- <20190524083321.7ada6382@canb.auug.org.au>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <9eb52b2c-2148-8f87-dea9-15df4d50e9de@kernel.dk>
-Date:   Thu, 23 May 2019 16:54:01 -0600
+        Thu, 23 May 2019 18:54:13 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ce7248f0000>; Thu, 23 May 2019 15:54:07 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 23 May 2019 15:54:11 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 23 May 2019 15:54:11 -0700
+Received: from [10.110.48.28] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 23 May
+ 2019 22:54:08 +0000
+Subject: Re: [PATCH 1/1] infiniband/mm: convert put_page() to put_user_page*()
+From:   John Hubbard <jhubbard@nvidia.com>
+To:     Ira Weiny <ira.weiny@intel.com>
+CC:     Jason Gunthorpe <jgg@mellanox.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        Doug Ledford <dledford@redhat.com>,
+        "Mike Marciniszyn" <mike.marciniszyn@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Christian Benvenuti <benve@cisco.com>,
+        "Jan Kara" <jack@suse.cz>
+References: <20190523072537.31940-1-jhubbard@nvidia.com>
+ <20190523072537.31940-2-jhubbard@nvidia.com>
+ <20190523172852.GA27175@iweiny-DESK2.sc.intel.com>
+ <20190523173222.GH12145@mellanox.com>
+ <fa6d7d7c-13a3-0586-6384-768ebb7f0561@nvidia.com>
+ <20190523190423.GA19578@iweiny-DESK2.sc.intel.com>
+ <0bd9859f-8eb0-9148-6209-08ae42665626@nvidia.com>
+ <20190523223701.GA15048@iweiny-DESK2.sc.intel.com>
+ <050f56d0-1dda-036e-e508-3a7255ac7b59@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <6a18af65-7071-2531-d767-42ba74ad82c4@nvidia.com>
+Date:   Thu, 23 May 2019 15:54:08 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190524083321.7ada6382@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
+In-Reply-To: <050f56d0-1dda-036e-e508-3a7255ac7b59@nvidia.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL106.nvidia.com (172.18.146.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US-large
 Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1558652047; bh=O/RiGmoYGRmC02sjlkIu6qvEn5MHd+ORmeaARAOsB+c=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=hOjBNbxmo0Oua+svsnfjV4ODR+jjb3kNvpchAZldU4CjYjIIRn76kDjdTnLmZWS/Q
+         rTepf8lEmxnjtuHNh6CwoqckUUQWi5NM6Bzy/QtAzpqAyI4rCnP1ihCjCufoUDn4JM
+         w87ysqq3taZlo9/bkfNVXF8tMnsv/6JwLwp1TY0us7ggJQu2tS1lCfzEbyHYapAsdm
+         82gMkvowgkra8cxbWzoj/m+QlJQl0G9muFCquiUNeV+GNpegaXHpUGgM+FPmV0ZeTD
+         1+bD8kWAHnGrJho7YtPlzT81sgio8SilaAgeKlDcYXGWeE+iv7CbDwd0LC5tHm3wwE
+         1xBP0KgrUEWtg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/23/19 4:33 PM, Stephen Rothwell wrote:
-> Hi Keith,
+On 5/23/19 3:50 PM, John Hubbard wrote:
+> [...] 
+> I was thinking of it as a temporary measure, only up until, but not including the
+> point where put_user_pages() becomes active. That is, the point when put_user_pages
+> starts decrementing GUP_PIN_COUNTING_BIAS, instead of just forwarding to put_page().
 > 
-> On Thu, 23 May 2019 15:52:07 -0600 Keith Busch <kbusch@kernel.org> wrote:
->>
->> On Fri, May 24, 2019 at 07:45:00AM +1000, Stephen Rothwell wrote:
->>> Commits
->>>
->>>    5fb4aac756ac ("nvme: release namespace SRCU protection before performing controller ioctls")
->>>    90ec611adcf2 ("nvme: merge nvme_ns_ioctl into nvme_ioctl")
->>>    3f98bcc58cd5 ("nvme: remove the ifdef around nvme_nvm_ioctl")
->>>    100c815cbd56 ("nvme: fix srcu locking on error return in nvme_get_ns_from_disk")
->>>
->>> are missing a Signed-off-by from their committer.
->>
->> Oops, I'd only added my Reviewed-by. Do I need to update the commit
->> messages and resend, or is this just putting me on notice for next time?
+> (For other readers, that's this patch:
 > 
-> That depends on Jens ...
+>     "mm/gup: debug tracking of get_user_pages() references"
+> 
+> ...in https://github.com/johnhubbard/linux/tree/gup_dma_core )
+> 
 
-Since they at least have a reviewed-by from the committer, I say we let
-it slide this time.
+Arggh, correction, I meant this patch:
 
+    "mm/gup: track gup-pinned pages"
+
+...sorry for any confusion there.
+
+thanks,
 -- 
-Jens Axboe
+John Hubbard
+NVIDIA
 
