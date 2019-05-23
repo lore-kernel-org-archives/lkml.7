@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 576E9C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:15:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A039BC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:15:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22B1B217D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:15:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 778B4217D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:15:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558638936;
-	bh=10XOMHYCtBXmq82im8ODiqLdbIgJIm8C3wPIzJ3hL1Y=;
+	s=default; t=1558638938;
+	bh=DR2Hg/fRrmYxcQi0/v7BdYlawFDvUxGS549mG4XxQ/k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pIJmrnx5P2sYPnewOEEl/6BdswVQI1ozz2pWj91WC/9RodWffY5W7gGdiMJ3u82ru
-	 FkucmPaIx06X8RxGHrolLFNK/yRru5GTG8xpljKXVjRmX0Y2OX1NPmgmXP9eYaz0Kt
-	 oANZcdi2gRksB13phMiVrHpgQamBs2Ei/2hCbDSM=
+	b=ic83kst/1a/T6skX39wzNHZT9imgVuRRTs/RLPDin4uWCBV+NQ/BYZ7dpvkPLcDMs
+	 2CvUBzkwDod/00z4xhBotPC2oumC4TomP2/Grk8pD+Mq2YlcztV/0x+P9wDUNTUNbN
+	 vUO+IKcxUkQKZoTqfFBoj1YxpoYu+AGNb6BlzLLA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389018AbfEWTPe (ORCPT
+        id S2389031AbfEWTPh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:15:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49950 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:15:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388581AbfEWTPd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:15:33 -0400
+        id S2388581AbfEWTPf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:15:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B687217D7;
-        Thu, 23 May 2019 19:15:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 02BF3217D7;
+        Thu, 23 May 2019 19:15:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558638932;
-        bh=10XOMHYCtBXmq82im8ODiqLdbIgJIm8C3wPIzJ3hL1Y=;
+        s=default; t=1558638935;
+        bh=DR2Hg/fRrmYxcQi0/v7BdYlawFDvUxGS549mG4XxQ/k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t5cjWwO7+XxuSNbUN6wTuu9fs36k22/hr8rGx47HEPsgLPBs/T5UjwLptYnzWeKVP
-         L8UIAlQBOxEESAJBWqJHgDPzzxFBsqWz/0Ap8+utC8unkHoN3MCFejyrCEKldufyUt
-         hZNtNxwwjQxNFZZkRAtNu8qIaoZgqQT/bqJPB7lw=
+        b=MQreXXinqDTBm0DNz4WKNqXrIpivBLUmu7IfD1jM9Hqe33l1t4niACvga01bIQDnv
+         9Bvi3m4xETfNlbhu+7DXlkwS7HbdCg0kMflCaGtLjxqCW54TC4b+NjshYnL5nJCrXD
+         ODZ2xlZFX6wuCh4g5Bs1bhDjCFIPfZDUQ1TJscy8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Helge Deller <deller@gmx.de>
-Subject: [PATCH 4.19 017/114] parisc: Export running_on_qemu symbol for modules
-Date:   Thu, 23 May 2019 21:05:16 +0200
-Message-Id: <20190523181733.409693736@linuxfoundation.org>
+Subject: [PATCH 4.19 018/114] parisc: Skip registering LED when running in QEMU
+Date:   Thu, 23 May 2019 21:05:17 +0200
+Message-Id: <20190523181733.503938496@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181731.372074275@linuxfoundation.org>
 References: <20190523181731.372074275@linuxfoundation.org>
@@ -60,25 +60,29 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Helge Deller <deller@gmx.de>
 
-commit 3e1120f4b57bc12437048494ab56648edaa5b57d upstream.
+commit b438749044356dd1329c45e9b5a9377b6ea13eb2 upstream.
+
+No need to spend CPU cycles when we run on QEMU.
 
 Signed-off-by: Helge Deller <deller@gmx.de>
 CC: stable@vger.kernel.org # v4.9+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/parisc/kernel/process.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/parisc/led.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/arch/parisc/kernel/process.c
-+++ b/arch/parisc/kernel/process.c
-@@ -193,6 +193,7 @@ int dump_task_fpu (struct task_struct *t
-  */
+--- a/drivers/parisc/led.c
++++ b/drivers/parisc/led.c
+@@ -568,6 +568,9 @@ int __init register_led_driver(int model
+ 		break;
  
- int running_on_qemu __read_mostly;
-+EXPORT_SYMBOL(running_on_qemu);
- 
- void __cpuidle arch_cpu_idle_dead(void)
- {
+ 	case DISPLAY_MODEL_LASI:
++		/* Skip to register LED in QEMU */
++		if (running_on_qemu)
++			return 1;
+ 		LED_DATA_REG = data_reg;
+ 		led_func_ptr = led_LASI_driver;
+ 		printk(KERN_INFO "LED display at %lx registered\n", LED_DATA_REG);
 
 
