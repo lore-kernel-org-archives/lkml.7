@@ -4,52 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9C19C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:22:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9267C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:22:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0C972133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:22:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF7912133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:22:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639377;
-	bh=sn+dZ/PchoWhDRxZdzF7nRF8NliCSnp7Ebv9+XJ/kfU=;
+	s=default; t=1558639379;
+	bh=PBtTUBAOYf3seKE7fedPr1UQ96MftwcjzEdHhxafmvk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1+DqKIKRnit4DJkf5gPGiDeR3J3EhVwSSwnZOeGubrOdUt9+mIp4hN0YBgU2ON9uE
-	 kLw5J+8PnfIBWtz975OLTrJkG88blb6RpATrKeMZ6QBAaWVFiEKhXuR8V9KX5fnBAa
-	 iP2w2cVsNzPR2s98kl1ibwyhBzwsOJyYhbma5Hs4=
+	b=yt7T9cuiAuTx1WPW+AKOckYV1HOtkbOocBMbdsezXjwPOwJ0h0VE4Lo5f+yTs3ogG
+	 X5GT+Jy4rh1GsaSJkdWXYmhBiVblWG9127BwmGqMcQYg+3G3g/OMk2oczk6Qt91MIh
+	 kdYdGreRN1Gv25Pab9lp2wJY1zEvxVCJFXxeJFFg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390586AbfEWTWz (ORCPT
+        id S2390219AbfEWTW7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:22:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32886 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:22:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32952 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390563AbfEWTWw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:22:52 -0400
+        id S2390578AbfEWTWy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:22:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D697C2054F;
-        Thu, 23 May 2019 19:22:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 59AC3206BA;
+        Thu, 23 May 2019 19:22:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639371;
-        bh=sn+dZ/PchoWhDRxZdzF7nRF8NliCSnp7Ebv9+XJ/kfU=;
+        s=default; t=1558639373;
+        bh=PBtTUBAOYf3seKE7fedPr1UQ96MftwcjzEdHhxafmvk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jQoqxs2X+ZAanOV+TjxKpJbAf0jcr/fGCVRt8H5eoZk0zNLsMKZRuXeePIEto3qca
-         BQaI/IitSac3pOU3mdsl/XwUrLcYpoAI63XGtCB6mr1FVcObfxOOHmZKXm6d20T3oi
-         LXC95tK5DUDdlevtlmVE9qPvTckAR/ao/0tZmuPQ=
+        b=ad7z8kjl89sYSD86X8f1Gk6siyWOaGttZb2SvMjM5hZ2S4sh7Fq3xkgl/KIPRQTRV
+         Gjbie5lqddRVWhMenb0Vy3/Tcm3O4fC0ZgiC2t6KAeB2rz52urKnEMuvdCMVAXXywG
+         I+ZlA00XchyPkYye4e5qiJdbYJZEH4uyH7Yul+pI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Owen Chen <owen.chen@mediatek.com>,
-        Weiyi Lu <weiyi.lu@mediatek.com>,
-        James Liao <jamesjj.liao@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Subject: [PATCH 5.0 053/139] clk: mediatek: Disable tuner_en before change PLL rate
-Date:   Thu, 23 May 2019 21:05:41 +0200
-Message-Id: <20190523181727.557852703@linuxfoundation.org>
+        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        Paul Burton <paul.burton@mips.com>, linux-mips@linux-mips.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org
+Subject: [PATCH 5.0 073/139] MIPS: perf: Fix build with CONFIG_CPU_BMIPS5000 enabled
+Date:   Thu, 23 May 2019 21:06:01 +0200
+Message-Id: <20190523181730.299366832@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181720.120897565@linuxfoundation.org>
 References: <20190523181720.120897565@linuxfoundation.org>
@@ -62,113 +67,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Owen Chen <owen.chen@mediatek.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-commit be17ca6ac76a5cfd07cc3a0397dd05d6929fcbbb upstream.
+commit 1b1f01b653b408ebe58fec78c566d1075d285c64 upstream.
 
-PLLs with tuner_en bit, such as APLL1, need to disable
-tuner_en before apply new frequency settings, or the new frequency
-settings (pcw) will not be applied.
-The tuner_en bit will be disabled during changing PLL rate
-and be restored after new settings applied.
+arch/mips/kernel/perf_event_mipsxx.c: In function 'mipsxx_pmu_enable_event':
+arch/mips/kernel/perf_event_mipsxx.c:326:21: error: unused variable 'event' [-Werror=unused-variable]
+  struct perf_event *event = container_of(evt, struct perf_event, hw);
+                     ^~~~~
 
-Fixes: e2f744a82d725 (clk: mediatek: Add MT2712 clock support)
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Owen Chen <owen.chen@mediatek.com>
-Signed-off-by: Weiyi Lu <weiyi.lu@mediatek.com>
-Reviewed-by: James Liao <jamesjj.liao@mediatek.com>
-Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Fix this by making use of IS_ENABLED() to simplify the code and avoid
+unnecessary ifdefery.
+
+Fixes: 84002c88599d ("MIPS: perf: Fix perf with MT counting other threads")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: linux-mips@linux-mips.org
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: James Hogan <jhogan@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-mips@vger.kernel.org
+Cc: stable@vger.kernel.org # v4.18+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/clk/mediatek/clk-pll.c |   48 +++++++++++++++++++++++++++++------------
- 1 file changed, 34 insertions(+), 14 deletions(-)
+ arch/mips/kernel/perf_event_mipsxx.c |   21 +++------------------
+ 1 file changed, 3 insertions(+), 18 deletions(-)
 
---- a/drivers/clk/mediatek/clk-pll.c
-+++ b/drivers/clk/mediatek/clk-pll.c
-@@ -88,6 +88,32 @@ static unsigned long __mtk_pll_recalc_ra
- 	return ((unsigned long)vco + postdiv - 1) / postdiv;
- }
+--- a/arch/mips/kernel/perf_event_mipsxx.c
++++ b/arch/mips/kernel/perf_event_mipsxx.c
+@@ -64,17 +64,11 @@ struct mips_perf_event {
+ 	#define CNTR_EVEN	0x55555555
+ 	#define CNTR_ODD	0xaaaaaaaa
+ 	#define CNTR_ALL	0xffffffff
+-#ifdef CONFIG_MIPS_MT_SMP
+ 	enum {
+ 		T  = 0,
+ 		V  = 1,
+ 		P  = 2,
+ 	} range;
+-#else
+-	#define T
+-	#define V
+-	#define P
+-#endif
+ };
  
-+static void __mtk_pll_tuner_enable(struct mtk_clk_pll *pll)
-+{
-+	u32 r;
-+
-+	if (pll->tuner_en_addr) {
-+		r = readl(pll->tuner_en_addr) | BIT(pll->data->tuner_en_bit);
-+		writel(r, pll->tuner_en_addr);
-+	} else if (pll->tuner_addr) {
-+		r = readl(pll->tuner_addr) | AUDPLL_TUNER_EN;
-+		writel(r, pll->tuner_addr);
-+	}
-+}
-+
-+static void __mtk_pll_tuner_disable(struct mtk_clk_pll *pll)
-+{
-+	u32 r;
-+
-+	if (pll->tuner_en_addr) {
-+		r = readl(pll->tuner_en_addr) & ~BIT(pll->data->tuner_en_bit);
-+		writel(r, pll->tuner_en_addr);
-+	} else if (pll->tuner_addr) {
-+		r = readl(pll->tuner_addr) & ~AUDPLL_TUNER_EN;
-+		writel(r, pll->tuner_addr);
-+	}
-+}
-+
- static void mtk_pll_set_rate_regs(struct mtk_clk_pll *pll, u32 pcw,
- 		int postdiv)
+ static struct mips_perf_event raw_event;
+@@ -325,9 +319,7 @@ static void mipsxx_pmu_enable_event(stru
  {
-@@ -96,6 +122,9 @@ static void mtk_pll_set_rate_regs(struct
+ 	struct perf_event *event = container_of(evt, struct perf_event, hw);
+ 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+-#ifdef CONFIG_MIPS_MT_SMP
+ 	unsigned int range = evt->event_base >> 24;
+-#endif /* CONFIG_MIPS_MT_SMP */
  
- 	pll_en = readl(pll->base_addr + REG_CON0) & CON0_BASE_EN;
+ 	WARN_ON(idx < 0 || idx >= mipspmu.num_counters);
  
-+	/* disable tuner */
-+	__mtk_pll_tuner_disable(pll);
-+
- 	/* set postdiv */
- 	val = readl(pll->pd_addr);
- 	val &= ~(POSTDIV_MASK << pll->data->pd_shift);
-@@ -122,6 +151,9 @@ static void mtk_pll_set_rate_regs(struct
- 	if (pll->tuner_addr)
- 		writel(con1 + 1, pll->tuner_addr);
+@@ -336,21 +328,15 @@ static void mipsxx_pmu_enable_event(stru
+ 		/* Make sure interrupt enabled. */
+ 		MIPS_PERFCTRL_IE;
  
-+	/* restore tuner_en */
-+	__mtk_pll_tuner_enable(pll);
-+
- 	if (pll_en)
- 		udelay(20);
- }
-@@ -228,13 +260,7 @@ static int mtk_pll_prepare(struct clk_hw
- 	r |= pll->data->en_mask;
- 	writel(r, pll->base_addr + REG_CON0);
- 
--	if (pll->tuner_en_addr) {
--		r = readl(pll->tuner_en_addr) | BIT(pll->data->tuner_en_bit);
--		writel(r, pll->tuner_en_addr);
--	} else if (pll->tuner_addr) {
--		r = readl(pll->tuner_addr) | AUDPLL_TUNER_EN;
--		writel(r, pll->tuner_addr);
+-#ifdef CONFIG_CPU_BMIPS5000
+-	{
++	if (IS_ENABLED(CONFIG_CPU_BMIPS5000)) {
+ 		/* enable the counter for the calling thread */
+ 		cpuc->saved_ctrl[idx] |=
+ 			(1 << (12 + vpe_id())) | BRCM_PERFCTRL_TC;
 -	}
-+	__mtk_pll_tuner_enable(pll);
+-#else
+-#ifdef CONFIG_MIPS_MT_SMP
+-	if (range > V) {
++	} else if (IS_ENABLED(CONFIG_MIPS_MT_SMP) && range > V) {
+ 		/* The counter is processor wide. Set it up to count all TCs. */
+ 		pr_debug("Enabling perf counter for all TCs\n");
+ 		cpuc->saved_ctrl[idx] |= M_TC_EN_ALL;
+-	} else
+-#endif /* CONFIG_MIPS_MT_SMP */
+-	{
++	} else {
+ 		unsigned int cpu, ctrl;
  
- 	udelay(20);
- 
-@@ -258,13 +284,7 @@ static void mtk_pll_unprepare(struct clk
- 		writel(r, pll->base_addr + REG_CON0);
+ 		/*
+@@ -365,7 +351,6 @@ static void mipsxx_pmu_enable_event(stru
+ 		cpuc->saved_ctrl[idx] |= ctrl;
+ 		pr_debug("Enabling perf counter for CPU%d\n", cpu);
  	}
- 
--	if (pll->tuner_en_addr) {
--		r = readl(pll->tuner_en_addr) & ~BIT(pll->data->tuner_en_bit);
--		writel(r, pll->tuner_en_addr);
--	} else if (pll->tuner_addr) {
--		r = readl(pll->tuner_addr) & ~AUDPLL_TUNER_EN;
--		writel(r, pll->tuner_addr);
--	}
-+	__mtk_pll_tuner_disable(pll);
- 
- 	r = readl(pll->base_addr + REG_CON0);
- 	r &= ~CON0_BASE_EN;
+-#endif /* CONFIG_CPU_BMIPS5000 */
+ 	/*
+ 	 * We do not actually let the counter run. Leave it until start().
+ 	 */
 
 
