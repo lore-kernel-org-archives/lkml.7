@@ -2,106 +2,77 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EB68C04AAC
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:15:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE198C04AAC
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:16:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F38F92070D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:15:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E8742177E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:16:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558599395;
+	bh=NZf4YLD4LHzsJ7Iw0Ui8Zne1NY8VX4JKe1guPQ0sIXs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Ib6dpzIlTUBA5pE+Y0RBUdnEptbc/YT4/FPxLIrkYTXy2AGOzE5V8aR0CU2oTkbHU
+	 4mioPKL62li1Yh2/uFUv3I0PUbZIbS3ka7Woe/lOsq8qkDp9Hq/duziogAbBeCNhW+
+	 DY3vfVUhcgZe8VoxnMVUQ+5e/zN1jOOpaj33Izlo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730063AbfEWIPV convert rfc822-to-8bit (ORCPT
+        id S1729991AbfEWIQe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 04:15:21 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:36333 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726913AbfEWIPU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 04:15:20 -0400
-Received: from [2001:67c:670:100:ba1b:8b86:7360:f80e] (helo=rettich)
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <jlu@pengutronix.de>)
-        id 1hTise-0007Xp-Oh; Thu, 23 May 2019 10:15:16 +0200
-Received: from jlu by rettich with local (Exim 4.89)
-        (envelope-from <jlu@pengutronix.de>)
-        id 1hTise-0007rG-6j; Thu, 23 May 2019 10:15:16 +0200
-Message-ID: <1558599316.4138.86.camel@pengutronix.de>
-Subject: Re: [PATCH] proc: report eip and esp for all threads when
- coredumping
-From:   Jan =?ISO-8859-1?Q?L=FCbbe?= <jlu@pengutronix.de>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Alexey Dobriyan <adobriyan@gmail.com>,
-        John Ogness <john.ogness@linutronix.de>,
-        Andy Lutomirski <luto@kernel.org>, kernel@pengutronix.de,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Date:   Thu, 23 May 2019 10:15:16 +0200
-In-Reply-To: <20190522110047.6bc80ca511a1425d8a069110@linux-foundation.org>
-References: <20190522161614.628-1-jlu@pengutronix.de>
-         <20190522110047.6bc80ca511a1425d8a069110@linux-foundation.org>
-Organization: Pengutronix
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Mailer: Evolution 3.26.2-1 
-Mime-Version: 1.0
-X-SA-Exim-Connect-IP: 2001:67c:670:100:ba1b:8b86:7360:f80e
-X-SA-Exim-Mail-From: jlu@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+        Thu, 23 May 2019 04:16:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51130 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726070AbfEWIQe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 04:16:34 -0400
+Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2970920665;
+        Thu, 23 May 2019 08:16:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558599393;
+        bh=NZf4YLD4LHzsJ7Iw0Ui8Zne1NY8VX4JKe1guPQ0sIXs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=w0FJxcelTJh94Ds1oI87eUSzKc7ByFngW438dgYJnRvVoSdEPHHoX5VfYgyAtKB4j
+         MxulVl3rGw6Non02hQG2DmpTpK6O3kc9Qrj8hcOylDuyquvMQ/DxvWzO9O0Q0Z9Uul
+         g+Xx2ocuExBRfGkJyQ3hF/nqrNOkbetNiOPQ9sRk=
+Date:   Thu, 23 May 2019 16:15:34 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Xiaowei Bao <xiaowei.bao@nxp.com>
+Cc:     Leo Li <leoyang.li@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [EXT] Re: [PATCHv2] arm64: dts: ls1028a: add flexspi nodes
+Message-ID: <20190523081533.GJ9261@dragon>
+References: <20190515110924.13726-1-xiaowei.bao@nxp.com>
+ <20190523080049.GI9261@dragon>
+ <AM5PR04MB32997EA37551AFC88FCBE2C6F5010@AM5PR04MB3299.eurprd04.prod.outlook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <AM5PR04MB32997EA37551AFC88FCBE2C6F5010@AM5PR04MB3299.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-05-22 at 11:00 -0700, Andrew Morton wrote:
-> On Wed, 22 May 2019 18:16:14 +0200 Jan Luebbe <jlu@pengutronix.de> wrote:
+On Thu, May 23, 2019 at 08:06:42AM +0000, Xiaowei Bao wrote:
+> > +             compatible = "nxp,lx2160a-fspi", "simple-bus";
+> > +             #address-cells = <1>;
+> > +             #size-cells = <0>;
+> > +             reg = <0x0 0x20c0000 0x0 0x10000>,
+> > +                 <0x0 0x20000000 0x0 0x10000000>;
 > 
-> > Commit 0a1eb2d474ed ("fs/proc: Stop reporting eip and esp in
-> > /proc/PID/stat") stopped reporting eip/esp and commit fd7d56270b52
-> > ("fs/proc: Report eip/esp in /prod/PID/stat for coredumping")
-> > reintroduced the feature to fix a regression with userspace core dump
-> > handlers (such as minicoredumper).
-> > 
-> > Because PF_DUMPCORE is only set for the primary thread, this didn't fix
-> > the original problem for secondary threads. This commit checks
-> > mm->core_state instead, as already done for /proc/<pid>/status in
-> > task_core_dumping(). As we have a mm_struct available here anyway, this
-> > seems to be a clean solution.
-> 
-> Could we please have an explicit and complete description of the
-> end-user visible effect of this change?
+> Fix the indentation to git it aligned with above '<'.
+> [Xiaowei Bao] this is aligned, I don't know why it is not aligned in email. Thanks.
 
-In current mainline, all threads except the main have the
-/proc/[pid]/stat fields 'kstkesp' (29, current stack pointer) and
-'kstkeip' (30, current instruction pointer) show as 0 even during
-coredumping when read by the core dump handler.
+That's fine then.
 
-minicoredumper for example tries to use this value to find each
-thread's stack and tries to dump it, which fails as there is nothing
-mapped at 0. The result is that the thread's stack data is missing from
-the generated core dump.
-
-With this patch, kstkesp and kstkeip are visible again to the core dump
-handler, so the minified core dump contains all stacks again. For a
-process running normally, the values are still reported as 0 (as
-intended).
-
-> It sounds like we should be backporting this into -stable but without
-> the above info it's hard to determine this.
-
-We've been using this patch on 4.19.x for some time, so I agree that
-this should be back-ported (fd7d56270b52 is in 4.14).
-
-
-Andrew, should I send a v2 with Alexey's fix squashed and an updated
-commit message?
-
-Regards,
-Jan
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Shawn
