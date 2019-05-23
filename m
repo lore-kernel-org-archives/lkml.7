@@ -2,137 +2,95 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92F84C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 22:23:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 140E0C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 22:24:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FD2A20868
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 22:23:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7DCC2177E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 22:24:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="QSC/OXGE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388351AbfEWWXi (ORCPT
+        id S2388444AbfEWWYw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 18:23:38 -0400
-Received: from gateway22.websitewelcome.com ([192.185.46.187]:23679 "EHLO
-        gateway22.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388104AbfEWWXi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 18:23:38 -0400
-Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
-        by gateway22.websitewelcome.com (Postfix) with ESMTP id 8F9015EAC
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 17:23:36 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id Tw7chWQekYTGMTw7chWxxT; Thu, 23 May 2019 17:23:36 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.47.159] (port=44754 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.91)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hTw7b-001I7r-DQ; Thu, 23 May 2019 17:23:35 -0500
-Date:   Thu, 23 May 2019 17:23:33 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] ASoC: Intel: Skylake: Use struct_size() helper
-Message-ID: <20190523222333.GA22695@embeddedor>
+        Thu, 23 May 2019 18:24:52 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:36353 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387605AbfEWWYv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 18:24:51 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4593w01HMgz9sBr;
+        Fri, 24 May 2019 08:24:48 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1558650288;
+        bh=FC/yX9Du2izCkSvm2l2eAViEDqA0LyixxLltmRSO3zQ=;
+        h=Date:From:To:Cc:Subject:From;
+        b=QSC/OXGE5+B6DzC9ftJjhiFK0DV3MXJZHok08CctOiJGqSR9lFXLgBdZurPMx/TrJ
+         hevlwYIEMR1ifl88hSfxV+54krWSajecGdzLKAXHdaTWH2mvssyj93asLWhJOaxy3X
+         Pp4VX+cbMpx/wHubYtc/NKTaJveY8uMngJvPCsD63Oc/E/00aBk4b6h2k9tMQN3q0p
+         17J5+0ti0meYBkqcHfD+QVWVKn61GxnFdpztKOWO6IC9lrYTEvaF22qhOItP7dbr/U
+         NHink3lGi5vAY/tUustwTzyiSysSnG4UK784wFx3GZv4gcOYNwUcAREORleqKU0iYI
+         1rVcY4LfK6fhA==
+Date:   Fri, 24 May 2019 08:24:46 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Fabien Parent <fparent@baylibre.com>
+Subject: linux-next: build failure after merge of the input-current tree
+Message-ID: <20190524082446.7d5bc21c@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.47.159
-X-Source-L: No
-X-Exim-ID: 1hTw7b-001I7r-DQ
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [189.250.47.159]:44754
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 8
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/WvNaPxBP.9jG1=fIdjJghOb"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make use of the struct_size() helper instead of an open-coded version
-in order to avoid any potential type mistakes, in particular in the
-context in which this code is being used.
+--Sig_/WvNaPxBP.9jG1=fIdjJghOb
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-So, replace the following form:
+Hi all,
 
-uuid_params->num_modules * sizeof(struct skl_mod_inst_map) + sizeof(uuid_params->num_modules)
+After merging the input-current tree, today's linux-next build (x86_64
+allmodconfig) failed like this:
 
-with:
+drivers/input/keyboard/mtk-pmic-keys.c:21:10: fatal error: linux/mfd/mt6392=
+/registers.h: No such file or directory
+ #include <linux/mfd/mt6392/registers.h>
+          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-struct_size(params, u.map, uuid_params->num_modules)
+Caused by commit
 
-and so on...
+  78094276ca6a ("Input: mtk-pmic-keys - add support for MT6392")
 
-This code was detected with the help of Coccinelle.
+I have reverted that commit for today.
 
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- sound/soc/intel/skylake/skl-topology.c | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
+--=20
+Cheers,
+Stephen Rothwell
 
-diff --git a/sound/soc/intel/skylake/skl-topology.c b/sound/soc/intel/skylake/skl-topology.c
-index 389f1862bc43..c69d999d7bf1 100644
---- a/sound/soc/intel/skylake/skl-topology.c
-+++ b/sound/soc/intel/skylake/skl-topology.c
-@@ -941,9 +941,7 @@ static int skl_tplg_find_moduleid_from_uuid(struct skl *skl,
- 
- 	if (bc->set_params == SKL_PARAM_BIND && bc->max) {
- 		uuid_params = (struct skl_kpb_params *)bc->params;
--		size = uuid_params->num_modules *
--			sizeof(struct skl_mod_inst_map) +
--			sizeof(uuid_params->num_modules);
-+		size = struct_size(params, u.map, uuid_params->num_modules);
- 
- 		params = devm_kzalloc(bus->dev, size, GFP_KERNEL);
- 		if (!params)
-@@ -3315,7 +3313,7 @@ static int skl_tplg_get_int_tkn(struct device *dev,
- 		struct snd_soc_tplg_vendor_value_elem *tkn_elem,
- 		struct skl *skl)
- {
--	int tkn_count = 0, ret, size;
-+	int tkn_count = 0, ret;
- 	static int mod_idx, res_val_idx, intf_val_idx, dir, pin_idx;
- 	struct skl_module_res *res = NULL;
- 	struct skl_module_iface *fmt = NULL;
-@@ -3323,6 +3321,7 @@ static int skl_tplg_get_int_tkn(struct device *dev,
- 	static struct skl_astate_param *astate_table;
- 	static int astate_cfg_idx, count;
- 	int i;
-+	size_t size;
- 
- 	if (skl->modules) {
- 		mod = skl->modules[mod_idx];
-@@ -3366,8 +3365,8 @@ static int skl_tplg_get_int_tkn(struct device *dev,
- 			return -EINVAL;
- 		}
- 
--		size = tkn_elem->value * sizeof(struct skl_astate_param) +
--				sizeof(count);
-+		size = struct_size(skl->cfg.astate_cfg, astate_table,
-+				   tkn_elem->value);
- 		skl->cfg.astate_cfg = devm_kzalloc(dev, size, GFP_KERNEL);
- 		if (!skl->cfg.astate_cfg)
- 			return -ENOMEM;
--- 
-2.21.0
+--Sig_/WvNaPxBP.9jG1=fIdjJghOb
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlznHa4ACgkQAVBC80lX
+0GyAAAf+ITPFpdEirtGjI/PW7tChV+qRMezXoxrPUc8tmETKVvPdt5mmm5ETsEZi
++/lxqsqyHbsEmiueUYUca7+yNWlnFEww/b63W+jiPooYCZYTx3Df4gAy1j/hTbOu
+O0jtcPm1IWNDXqz5xXryBS1KqmURDWvQelcxbSjORjnAaCOtoQtWUQchIos94qbm
+gKPajbOWk5wZrc5YnVzc2br0BmnOD75UekJqv2jK3Jjvz0jMvdJ/otfqAVeNaDfk
+EfxM4q7WJeSCMkyycFTc8+5iZbjW63tbof9/7iIhYlwmIulnU0oE5URbuhzFlnTk
+oqmguu/6TGPdPPb6rj1cQprAGCpEVw==
+=hr3u
+-----END PGP SIGNATURE-----
+
+--Sig_/WvNaPxBP.9jG1=fIdjJghOb--
