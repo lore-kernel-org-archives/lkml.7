@@ -2,58 +2,120 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F2ECC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 21:19:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09A9FC46470
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 21:19:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E699F2175B
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 21:19:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEAA22177E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 21:19:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="WIEVJh7T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388095AbfEWVTO convert rfc822-to-8bit (ORCPT
+        id S2388204AbfEWVTO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 23 May 2019 17:19:14 -0400
-Received: from mail.fireflyinternet.com ([109.228.58.192]:62941 "EHLO
-        fireflyinternet.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2387785AbfEWVTN (ORCPT
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:40317 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387914AbfEWVTO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 17:19:13 -0400
-X-Default-Received-SPF: pass (skip=forwardok (res=PASS)) x-ip-name=78.156.65.138;
-Received: from localhost (unverified [78.156.65.138]) 
-        by fireflyinternet.com (Firefly Internet (M1)) with ESMTP (TLS) id 16660927-1500050 
-        for multiple; Thu, 23 May 2019 22:18:45 +0100
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-To:     Dongli Zhang <dongli.zhang@oracle.com>,
-        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org
-From:   Chris Wilson <chris@chris-wilson.co.uk>
-In-Reply-To: <1558413639-22568-1-git-send-email-dongli.zhang@oracle.com>
-Cc:     linux-kernel@vger.kernel.org, jani.nikula@linux.intel.com,
-        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
-        airlied@linux.ie, daniel@ffwll.ch, dongli.zhang@oracle.com
-References: <1558413639-22568-1-git-send-email-dongli.zhang@oracle.com>
-Message-ID: <155864632459.28319.2321714891490375205@skylake-alporthouse-com>
-User-Agent: alot/0.6
-Subject: Re: [PATCH 1/1] drm/i915: remove unused IO_TLB_SEGPAGES which should be
- defined by swiotlb
-Date:   Thu, 23 May 2019 22:18:44 +0100
+        Thu, 23 May 2019 17:19:14 -0400
+Received: by mail-pf1-f194.google.com with SMTP id u17so3940480pfn.7
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 14:19:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=MSZ9qLvgnuUWthhRIbf1Cjhkpu+CFOpygVqw6RbqY5U=;
+        b=WIEVJh7TgDCASi/+YnUkSMzEwtd6hlDck+n8tN2K1tMOc34LB1Jh1QvKVxb0cutw3A
+         DH4g4vh5nw8eXnfoR/heSxG5RvW1s4Cu7RyyZ6t4otZ8aHQMWiZqrWSxK+3N7aAy6R+4
+         l8r6b9AvVpOk1jZ5i+uT/WsV3S0MArSerkECLKNwwo4gMVmHGwsbZ2PrkVXf3810gVjH
+         4xz9PTduCE02rrpFhwTGSl93D/REB0grsaDhqd9PMcZVxOt1JnTht+mXI17goUcKY5W/
+         MUmKkcNqR6rdY6EVi4f6uc5ZmjTB//hhHcF8odQI4bMn7jlRbjXi1cGld2z+oA2gXfiR
+         dE4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=MSZ9qLvgnuUWthhRIbf1Cjhkpu+CFOpygVqw6RbqY5U=;
+        b=kc9E0za4C4KWqDqFOladFEDewie8dXcLVd9FuBdT7o2XM9ZJ/DrD6QxVpc455+M78k
+         YvEL36PI+hftYOjiiFHTUaJGPtwCDV3GpJiqPA83ATT9IkNCtrM6jEzRn7T6sUo6irpF
+         fW8qs2U1eOg1jFzONnFvAr5j2OCX4HGyJEUu/j1oAOkAGNK1HpuCL1CQRtvll9+zIVU4
+         rYtfCoAeQ2tbHBKL3Edejf1SbMUM16We/LfuuZGNgYj1d7tiFFFzQ4BJrOHRjgHuInLQ
+         eQ3YWTAb2LjUuKRmxGKM2R7gmYdluNO344kbutjnMqPi8zwZ9yS+5AxPU7WZ/YcQ2CkZ
+         6OBw==
+X-Gm-Message-State: APjAAAUL3wmiuofi7mfDhQ05/EY+WdNB4seCyrv7tMKQLCkekEW2Bc9U
+        IvQDyOnk288sDv36P0bDHVGoLw==
+X-Google-Smtp-Source: APXvYqyUyOAczgUqoXWQtDMPqw03qjPB1y6pLPNlzLwxi361TeJoFHwIvI96nXB0BIicaNoroN8SrA==
+X-Received: by 2002:a62:7610:: with SMTP id r16mr108209123pfc.69.1558646353373;
+        Thu, 23 May 2019 14:19:13 -0700 (PDT)
+Received: from nuc7.sifive.com ([12.206.222.2])
+        by smtp.gmail.com with ESMTPSA id t5sm234092pgn.80.2019.05.23.14.19.12
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Thu, 23 May 2019 14:19:12 -0700 (PDT)
+From:   Alan Mikhak <alan.mikhak@sifive.com>
+X-Google-Original-From: Alan Mikhak < alan.mikhak@sifive.com >
+To:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kishon@ti.com, lorenzo.pieralisi@arm.com,
+        linux-riscv@lists.infradead.org, palmer@sifive.com,
+        paul.walmsley@sifive.com
+Cc:     Alan Mikhak <alan.mikhak@sifive.com>
+Subject: [PATCH v2 1/2] tools: PCI: Fix broken pcitest compilation
+Date:   Thu, 23 May 2019 14:18:00 -0700
+Message-Id: <1558646281-12676-2-git-send-email-alan.mikhak@sifive.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1558646281-12676-1-git-send-email-alan.mikhak@sifive.com>
+References: <1558646281-12676-1-git-send-email-alan.mikhak@sifive.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Dongli Zhang (2019-05-21 05:40:39)
-> This patch removes IO_TLB_SEGPAGES which is no longer used since
-> commit 5584f1b1d73e ("drm/i915: fix i915 running as dom0 under Xen").
-> 
-> As the define of both IO_TLB_SEGSIZE and IO_TLB_SHIFT are from swiotlb,
-> IO_TLB_SEGPAGES should be defined on swiotlb side if it is required in the
-> future.
-> 
-> Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
+pcitest is currently broken due to the following compiler error
+and related warning. Fix by changing the run_test() function
+signature to return an integer result.
 
-Pushed, thanks for the patch.
--Chris
+pcitest.c: In function run_test:
+pcitest.c:143:9: warning: return with a value, in function
+returning void
+  return (ret < 0) ? ret : 1 - ret; /* return 0 if test succeeded */
+
+pcitest.c: In function main:
+pcitest.c:232:9: error: void value not ignored as it ought to be
+  return run_test(test);
+
+Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
+Fixes: fef31ecaaf2c ("tools: PCI: Fix compilation warnings")
+Reviewed-by: Paul Walmsley <paul.walmsley@sifive.com>
+---
+ tools/pci/pcitest.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/tools/pci/pcitest.c b/tools/pci/pcitest.c
+index 5fa5c2bdd427..6dce894667f6 100644
+--- a/tools/pci/pcitest.c
++++ b/tools/pci/pcitest.c
+@@ -47,15 +47,15 @@ struct pci_test {
+ 	unsigned long	size;
+ };
+ 
+-static void run_test(struct pci_test *test)
++static int run_test(struct pci_test *test)
+ {
+-	long ret;
++	int ret = -EINVAL;
+ 	int fd;
+ 
+ 	fd = open(test->device, O_RDWR);
+ 	if (fd < 0) {
+ 		perror("can't open PCI Endpoint Test device");
+-		return;
++		return -ENODEV;
+ 	}
+ 
+ 	if (test->barnum >= 0 && test->barnum <= 5) {
+-- 
+2.7.4
+
