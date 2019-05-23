@@ -6,26 +6,26 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AACD7C282CE
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 00:04:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35877C282CE
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 00:04:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6728A2173C
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 00:04:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8B1C2173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 00:04:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729923AbfEWAEU (ORCPT
+        id S1730065AbfEWAEi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 20:04:20 -0400
+        Wed, 22 May 2019 20:04:38 -0400
 Received: from ex13-edg-ou-001.vmware.com ([208.91.0.189]:13607 "EHLO
         EX13-EDG-OU-001.vmware.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729685AbfEWAEC (ORCPT
+        by vger.kernel.org with ESMTP id S1728415AbfEWAES (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 20:04:02 -0400
+        Wed, 22 May 2019 20:04:18 -0400
 Received: from sc9-mailhost2.vmware.com (10.113.161.72) by
  EX13-EDG-OU-001.vmware.com (10.113.208.155) with Microsoft SMTP Server id
- 15.0.1156.6; Wed, 22 May 2019 17:03:41 -0700
+ 15.0.1156.6; Wed, 22 May 2019 17:03:44 -0700
 Received: from rlwimi.localdomain (unknown [10.129.221.32])
-        by sc9-mailhost2.vmware.com (Postfix) with ESMTP id 4310AB205A;
-        Wed, 22 May 2019 20:03:55 -0400 (EDT)
+        by sc9-mailhost2.vmware.com (Postfix) with ESMTP id CFD2BB2067;
+        Wed, 22 May 2019 20:03:57 -0400 (EDT)
 From:   Matt Helsley <mhelsley@vmware.com>
 To:     LKML <linux-kernel@vger.kernel.org>
 CC:     Ingo Molnar <mingo@kernel.org>,
@@ -33,9 +33,9 @@ CC:     Ingo Molnar <mingo@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Steven Rostedt <rostedt@goodmis.org>,
         Matt Helsley <mhelsley@vmware.com>
-Subject: [RFC][PATCH 05/13] recordmcount: Kernel style function signature formatting
-Date:   Wed, 22 May 2019 17:03:28 -0700
-Message-ID: <940d4ce66df8d8943142fd178dc066699de249c0.1558569448.git.mhelsley@vmware.com>
+Subject: [RFC][PATCH 09/13] objtool: Prepare to merge recordmcount
+Date:   Wed, 22 May 2019 17:03:32 -0700
+Message-ID: <6b39c7518fa32bd311e51b258f3ed3cd3f5f759b.1558569448.git.mhelsley@vmware.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <cover.1558569448.git.mhelsley@vmware.com>
 References: <cover.1558569448.git.mhelsley@vmware.com>
@@ -49,121 +49,150 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The uwrite() and ulseek() functions are formatted inconsistently
-with the rest of the file and the kernel overall. While we're
-making other changes here let's fix this.
+Move recordmcount into the objtool directory. We keep this step separate
+so changes which turn recordmcount into a subcommand of objtool don't
+get obscured.
 
 Signed-off-by: Matt Helsley <mhelsley@vmware.com>
 ---
- scripts/recordmcount.c | 21 +++++++--------------
- scripts/recordmcount.h | 13 ++++++-------
- 2 files changed, 13 insertions(+), 21 deletions(-)
+ scripts/.gitignore                         |  1 -
+ scripts/Makefile                           |  1 -
+ scripts/Makefile.build                     | 11 ++++++-----
+ tools/objtool/.gitignore                   |  1 +
+ tools/objtool/Build                        |  2 ++
+ tools/objtool/Makefile                     | 13 ++++++++++++-
+ {scripts => tools/objtool}/recordmcount.c  |  0
+ {scripts => tools/objtool}/recordmcount.h  |  0
+ {scripts => tools/objtool}/recordmcount.pl |  0
+ 9 files changed, 21 insertions(+), 8 deletions(-)
+ rename {scripts => tools/objtool}/recordmcount.c (100%)
+ rename {scripts => tools/objtool}/recordmcount.h (100%)
+ rename {scripts => tools/objtool}/recordmcount.pl (100%)
 
-diff --git a/scripts/recordmcount.c b/scripts/recordmcount.c
-index 21dda8a19c4f..f32a81251d5d 100644
---- a/scripts/recordmcount.c
-+++ b/scripts/recordmcount.c
-@@ -52,8 +52,7 @@ static void *file_append; /* added to the end of the file */
- static size_t file_append_size; /* how much is added to end of file */
+diff --git a/scripts/.gitignore b/scripts/.gitignore
+index 17f8cef88fa8..1b5b5d595d80 100644
+--- a/scripts/.gitignore
++++ b/scripts/.gitignore
+@@ -6,7 +6,6 @@ conmakehash
+ kallsyms
+ pnmtologo
+ unifdef
+-recordmcount
+ sortextable
+ asn1_compiler
+ extract-cert
+diff --git a/scripts/Makefile b/scripts/Makefile
+index 9d442ee050bd..5fca50fee42b 100644
+--- a/scripts/Makefile
++++ b/scripts/Makefile
+@@ -14,7 +14,6 @@ hostprogs-$(CONFIG_BUILD_BIN2C)  += bin2c
+ hostprogs-$(CONFIG_KALLSYMS)     += kallsyms
+ hostprogs-$(CONFIG_LOGO)         += pnmtologo
+ hostprogs-$(CONFIG_VT)           += conmakehash
+-hostprogs-$(BUILD_C_RECORDMCOUNT) += recordmcount
+ hostprogs-$(CONFIG_BUILDTIME_EXTABLE_SORT) += sortextable
+ hostprogs-$(CONFIG_ASN1)	 += asn1_compiler
+ hostprogs-$(CONFIG_MODULE_SIG)	 += sign-file
+diff --git a/scripts/Makefile.build b/scripts/Makefile.build
+index ae9cf740633e..f32cfe63bb0e 100644
+--- a/scripts/Makefile.build
++++ b/scripts/Makefile.build
+@@ -186,18 +186,19 @@ endif
+ # files, including recordmcount.
+ sub_cmd_record_mcount =					\
+ 	if [ $(@) != "scripts/mod/empty.o" ]; then	\
+-		$(objtree)/scripts/recordmcount $(RECORDMCOUNT_FLAGS) "$(@)";	\
++		$(objtree)/tools/objtool/recordmcount $(RECORDMCOUNT_FLAGS) "$(@)";	\
+ 	fi;
+-recordmcount_source := $(srctree)/scripts/recordmcount.c \
+-		    $(srctree)/scripts/recordmcount.h
++
++recordmcount_source := $(srctree)/tools/objtool/recordmcount.c \
++		    $(srctree)/tools/objtool/recordmcount.h
+ else
+-sub_cmd_record_mcount = perl $(srctree)/scripts/recordmcount.pl "$(ARCH)" \
++sub_cmd_record_mcount = perl $(srctree)/tools/objtool/recordmcount.pl "$(ARCH)" \
+ 	"$(if $(CONFIG_CPU_BIG_ENDIAN),big,little)" \
+ 	"$(if $(CONFIG_64BIT),64,32)" \
+ 	"$(OBJDUMP)" "$(OBJCOPY)" "$(CC) $(KBUILD_CPPFLAGS) $(KBUILD_CFLAGS)" \
+ 	"$(LD) $(KBUILD_LDFLAGS)" "$(NM)" "$(RM)" "$(MV)" \
+ 	"$(if $(part-of-module),1,0)" "$(@)";
+-recordmcount_source := $(srctree)/scripts/recordmcount.pl
++recordmcount_source := $(srctree)/tools/objtool/recordmcount.pl
+ endif # BUILD_C_RECORDMCOUNT
+ cmd_record_mcount = $(if $(findstring $(strip $(CC_FLAGS_FTRACE)),$(_c_flags)),	\
+ 	$(sub_cmd_record_mcount))
+diff --git a/tools/objtool/.gitignore b/tools/objtool/.gitignore
+index 914cff12899b..ee471f353caa 100644
+--- a/tools/objtool/.gitignore
++++ b/tools/objtool/.gitignore
+@@ -1,3 +1,4 @@
+ arch/x86/lib/inat-tables.c
+ objtool
++recordmcount
+ fixdep
+diff --git a/tools/objtool/Build b/tools/objtool/Build
+index 749becdf5b90..78c4a8a2f9e7 100644
+--- a/tools/objtool/Build
++++ b/tools/objtool/Build
+@@ -20,3 +20,5 @@ $(OUTPUT)libstring.o: ../lib/string.c FORCE
+ $(OUTPUT)str_error_r.o: ../lib/str_error_r.c FORCE
+ 	$(call rule_mkdir)
+ 	$(call if_changed_dep,cc_o_c)
++
++recordmcount-y += recordmcount.o
+diff --git a/tools/objtool/Makefile b/tools/objtool/Makefile
+index 88158239622b..bd9d0b6534cf 100644
+--- a/tools/objtool/Makefile
++++ b/tools/objtool/Makefile
+@@ -29,6 +29,12 @@ OBJTOOL_IN := $(OBJTOOL)-in.o
+ LIBELF_FLAGS := $(shell pkg-config libelf --cflags 2>/dev/null)
+ LIBELF_LIBS  := $(shell pkg-config libelf --libs 2>/dev/null || echo -lelf)
  
- /* Per-file resource cleanup when multiple files. */
--static void
--cleanup(void)
-+static void cleanup(void)
- {
- 	if (!mmap_failed)
- 		munmap(file_map, sb.st_size);
-@@ -68,8 +67,7 @@ cleanup(void)
++RECORDMCOUNT := $(OUTPUT)recordmcount
++RECORDMCOUNT_IN := $(RECORDMCOUNT)-in.o
++ifeq ($(BUILD_C_RECORDMCOUNT),y)
++all:  $(RECORDMCOUNT)
++endif
++
+ all: $(OBJTOOL)
  
- /* ulseek, uwrite, ...:  Check return value for errors. */
+ INCLUDES := -I$(srctree)/tools/include \
+@@ -49,16 +55,21 @@ include $(srctree)/tools/build/Makefile.include
+ $(OBJTOOL_IN): fixdep FORCE
+ 	@$(MAKE) $(build)=objtool
  
--static off_t
--ulseek(off_t const offset, int const whence)
-+static off_t ulseek(off_t const offset, int const whence)
- {
- 	switch (whence) {
- 	case SEEK_SET:
-@@ -89,8 +87,7 @@ ulseek(off_t const offset, int const whence)
- 	return file_ptr - file_map;
- }
++$(RECORDMCOUNT_IN): fixdep FORCE
++	@$(MAKE) $(build)=recordmcount
++
+ $(OBJTOOL): $(LIBSUBCMD) $(OBJTOOL_IN)
+ 	@$(CONFIG_SHELL) ./sync-check.sh
+ 	$(QUIET_LINK)$(CC) $(OBJTOOL_IN) $(LDFLAGS) -o $@
  
--static ssize_t
--uwrite(void const *const buf, size_t const count)
-+static ssize_t uwrite(void const *const buf, size_t const count)
- {
- 	size_t cnt = count;
- 	off_t idx = 0;
-@@ -127,8 +124,7 @@ uwrite(void const *const buf, size_t const count)
- 	return count;
- }
++$(RECORDMCOUNT): $(RECORDMCOUNT_IN)
++	$(QUIET_LINK)$(CC) $(RECORDMCOUNT_IN) $(KBUILD_HOSTLDFLAGS) -o $@
  
--static void *
--umalloc(size_t size)
-+static void * umalloc(size_t size)
- {
- 	void *const addr = malloc(size);
- 	if (addr == 0) {
-@@ -394,8 +390,7 @@ static uint32_t (*w)(uint32_t);
- static uint32_t (*w2)(uint16_t);
+ $(LIBSUBCMD): fixdep FORCE
+ 	$(Q)$(MAKE) -C $(SUBCMD_SRCDIR) OUTPUT=$(LIBSUBCMD_OUTPUT)
  
- /* Names of the sections that could contain calls to mcount. */
--static int
--is_mcounted_section_name(char const *const txtname)
-+static int is_mcounted_section_name(char const *const txtname)
- {
- 	return strncmp(".text",          txtname, 5) == 0 ||
- 		strcmp(".init.text",     txtname) == 0 ||
-@@ -446,8 +441,7 @@ static void MIPS64_r_info(Elf64_Rel *const rp, unsigned sym, unsigned type)
- 	}).r_info;
- }
+ clean:
+-	$(call QUIET_CLEAN, objtool) $(RM) $(OBJTOOL)
++	$(call QUIET_CLEAN, objtool) $(RM) $(OBJTOOL) $(RECORDMCOUNT)
+ 	$(Q)find $(OUTPUT) -name '*.o' -delete -o -name '\.*.cmd' -delete -o -name '\.*.d' -delete
+ 	$(Q)$(RM) $(OUTPUT)arch/x86/lib/inat-tables.c $(OUTPUT)fixdep
  
--static int
--do_file(char const *const fname)
-+static int do_file(char const *const fname)
- {
- 	Elf32_Ehdr *const ehdr = mmap_file(fname);
- 	unsigned int reltype = 0;
-@@ -595,8 +589,7 @@ do_file(char const *const fname)
- 	return rc;
- }
- 
--int
--main(int argc, char *argv[])
-+int main(int argc, char *argv[])
- {
- 	const char ftrace[] = "/ftrace.o";
- 	int ftrace_size = sizeof(ftrace) - 1;
-diff --git a/scripts/recordmcount.h b/scripts/recordmcount.h
-index 8423c51aa8e8..0ce8e0aaa5ec 100644
---- a/scripts/recordmcount.h
-+++ b/scripts/recordmcount.h
-@@ -476,11 +476,10 @@ static unsigned find_secsym_ndx(unsigned const txtndx,
- char const *already_has_rel_mcount = "success"; /* our work here is done! */
- 
- /* Evade ISO C restriction: no declaration after statement in has_rel_mcount. */
--static char const *
--__has_rel_mcount(Elf_Shdr const *const relhdr,  /* is SHT_REL or SHT_RELA */
--		 Elf_Shdr const *const shdr0,
--		 char const *const shstrtab,
--		 char const *const fname)
-+static char const * __has_rel_mcount(Elf_Shdr const *const relhdr, /* reltype */
-+				     Elf_Shdr const *const shdr0,
-+				     char const *const shstrtab,
-+				     char const *const fname)
- {
- 	/* .sh_info depends on .sh_type == SHT_REL[,A] */
- 	Elf_Shdr const *const txthdr = &shdr0[w(relhdr->sh_info)];
-@@ -532,8 +531,8 @@ static unsigned tot_relsize(Elf_Shdr const *const shdr0,
- 
- 
- /* Overall supervision for Elf32 ET_REL file. */
--static int
--do_func(Elf_Ehdr *const ehdr, char const *const fname, unsigned const reltype)
-+static int do_func(Elf_Ehdr *const ehdr, char const *const fname,
-+		   unsigned const reltype)
- {
- 	Elf_Shdr *const shdr0 = (Elf_Shdr *)(_w(ehdr->e_shoff)
- 		+ (void *)ehdr);
+diff --git a/scripts/recordmcount.c b/tools/objtool/recordmcount.c
+similarity index 100%
+rename from scripts/recordmcount.c
+rename to tools/objtool/recordmcount.c
+diff --git a/scripts/recordmcount.h b/tools/objtool/recordmcount.h
+similarity index 100%
+rename from scripts/recordmcount.h
+rename to tools/objtool/recordmcount.h
+diff --git a/scripts/recordmcount.pl b/tools/objtool/recordmcount.pl
+similarity index 100%
+rename from scripts/recordmcount.pl
+rename to tools/objtool/recordmcount.pl
 -- 
 2.20.1
 
