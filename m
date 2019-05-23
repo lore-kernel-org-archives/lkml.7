@@ -2,142 +2,89 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A09DC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 14:40:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21AF1C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 14:40:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7760020879
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 14:40:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFB8A20879
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 14:40:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730826AbfEWOkX (ORCPT
+        id S1730895AbfEWOkw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 10:40:23 -0400
-Received: from gateway31.websitewelcome.com ([192.185.144.97]:27860 "EHLO
-        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730708AbfEWOkX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 10:40:23 -0400
-Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
-        by gateway31.websitewelcome.com (Postfix) with ESMTP id 90A2AB7CF
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 09:40:21 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id TotJhqeLv4FKpTotJhD2oV; Thu, 23 May 2019 09:40:21 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.47.159] (port=33326 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.91)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hTotI-001W32-J6; Thu, 23 May 2019 09:40:20 -0500
-Date:   Thu, 23 May 2019 09:40:19 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Valentina Manea <valentina.manea.m@gmail.com>,
-        Shuah Khan <shuah@kernel.org>
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] usbip: usbip_host_common: Use struct_size() in realloc()
-Message-ID: <20190523144019.GA28932@embeddedor>
+        Thu, 23 May 2019 10:40:52 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60286 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730708AbfEWOkv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 10:40:51 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 9AEBFAE4E;
+        Thu, 23 May 2019 14:40:50 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 350351E3C69; Thu, 23 May 2019 16:40:50 +0200 (CEST)
+Date:   Thu, 23 May 2019 16:40:50 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Christian Brauner <christian@brauner.io>
+Cc:     Amir Goldstein <amir73il@gmail.com>, Jan Kara <jack@suse.cz>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Matthew Bobrowski <mbobrowski@mbobrowski.org>
+Subject: Re: [PATCH] fanotify: remove redundant capable(CAP_SYS_ADMIN)s
+Message-ID: <20190523144050.GE2949@quack2.suse.cz>
+References: <CAOQ4uxjV=7=FXuyccBK9Pu1B7o-w-pbc1FQXJxY4q6z8E93KOg@mail.gmail.com>
+ <EB97EF04-D44F-4320-ACDC-C536EED03BA4@brauner.io>
+ <CAOQ4uxhodqVw0DVfcvXYH5vBf4LKcv7t388ZwXeZPBTcEMzGSw@mail.gmail.com>
+ <20190523095506.nyei5nogvv63lm4a@brauner.io>
+ <CAOQ4uxiBeAzsE+b=tE7+9=25-qS7ohuTdEswYOt8DrCp6eAMuw@mail.gmail.com>
+ <20190523104239.u63u2uth4yyuuufs@brauner.io>
+ <CAOQ4uxji4jRvJnLvXe0yR4Ls7VxM_tjAypX1TqBe5FYr_7GnXw@mail.gmail.com>
+ <20190523115845.w7neydaka5xivwyi@brauner.io>
+ <CAOQ4uxgJXLyZe0Bs=q60=+pHpdGtnCdKKZKdr-3iTbygKCryRA@mail.gmail.com>
+ <20190523133516.6734wclswqr6vpeg@brauner.io>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.47.159
-X-Source-L: No
-X-Exim-ID: 1hTotI-001W32-J6
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [189.250.47.159]:33326
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 4
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+In-Reply-To: <20190523133516.6734wclswqr6vpeg@brauner.io>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-One of the more common cases of allocation size calculations is finding
-the size of a structure that has a zero-sized array at the end, along
-with memory for some number of elements for that array. For example:
+On Thu 23-05-19 15:35:18, Christian Brauner wrote:
+> So let's say the user tells me:
+> - When the "/A/B/C/target" file appears on the host filesystem,
+>   please give me access to "target" in the container at a path I tell
+>   you.
+> What I do right now is listen for the creation of the "target" file.
+> But at the time the user gives me instructions to listen for
+> "/A/B/C/target" only /A might exist and so I currently add a watch on A/
+> and then wait for the creation of B/, then wait for the creation of C/
+> and finally for the creation of "target" (Of course, I also need to
+> handle B/ and C/ being removed again an recreated and so on.). It would
+> be helpful, if I could specify, give me notifications, recursively for
+> e.g. A/ without me having to place extra watches on B/ and C/ when they
+> appear. Maybe that's out of scope...
 
-struct foo {
-    int stuff;
-    struct boo entry[];
-};
+I see. But this is going to be painful whatever you do. Consider for
+example situation like:
 
-size = sizeof(struct foo) + count * sizeof(struct boo);
-instance = realloc(instance, size);
+mkdir -p BAR/B/C/
+touch BAR/B/C/target
+mv BAR A
 
-Instead of leaving these open-coded and prone to type mistakes, we can
-now use the new struct_size() helper:
+Or even situation where several renames race so that the end result creates
+the name (or does not create it depending on how renames race). And by the
+time you decide A/B/C/target exists, it doesn't need to exist anymore.
+Honestly I don't see how you want to implement *any* solution in a sane
+way. About the most reliable+simple would seem to be stat "A/B/C/target"
+once per second as dumb as it is.
 
-size = struct_size(instance, entry, count);
+								Honza
 
-or
-
-instance = realloc(instance, struct_size(instance, entry, count));
-
-Notice that, in this case, variable size is not necessary,
-hence it is removed.
-
-This code was detected with the help of Coccinelle.
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
-
-Notice that checkpatch reports the following warning:
-
-WARNING: line over 80 characters
-#57: FILE: tools/usb/usbip/libsrc/usbip_host_common.c:90:
-+	edev = realloc(edev, struct_size(edev, uinf, edev->udev.bNumInterfaces));
-
-The line above is 81-character long. So, I think we should be fine
-with that, instead of split it into two lines like:
-
-edev = realloc(edev,
-	       struct_size(edev, uinf, edev->udev.bNumInterfaces));
-
-Thanks
---
-Gustavo
-
- tools/usb/usbip/libsrc/usbip_host_common.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
-
-diff --git a/tools/usb/usbip/libsrc/usbip_host_common.c b/tools/usb/usbip/libsrc/usbip_host_common.c
-index 2813aa821c82..1645d02a52af 100644
---- a/tools/usb/usbip/libsrc/usbip_host_common.c
-+++ b/tools/usb/usbip/libsrc/usbip_host_common.c
-@@ -67,7 +67,6 @@ struct usbip_exported_device *usbip_exported_device_new(
- {
- 	struct usbip_exported_device *edev = NULL;
- 	struct usbip_exported_device *edev_old;
--	size_t size;
- 	int i;
- 
- 	edev = calloc(1, sizeof(struct usbip_exported_device));
-@@ -87,11 +86,8 @@ struct usbip_exported_device *usbip_exported_device_new(
- 		goto err;
- 
- 	/* reallocate buffer to include usb interface data */
--	size = sizeof(struct usbip_exported_device) +
--		edev->udev.bNumInterfaces * sizeof(struct usbip_usb_interface);
--
- 	edev_old = edev;
--	edev = realloc(edev, size);
-+	edev = realloc(edev, struct_size(edev, uinf, edev->udev.bNumInterfaces));
- 	if (!edev) {
- 		edev = edev_old;
- 		dbg("realloc failed");
 -- 
-2.21.0
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
