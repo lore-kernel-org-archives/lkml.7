@@ -1,117 +1,83 @@
 Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USB_DRIVES autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFCC6C282E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 16:19:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 833E0C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 16:19:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83CCE217D4
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 16:19:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558628360;
-	bh=Wv0O6tMsqxBwrYSLzxmAH+HjOtWLDhHqgQXa2NMoUIM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=bglUxWZliKBsO0ePcjtgh1mtgu4HKcQzLXx8bPLCN0crV1bUhP9hJ4PqzKHk8+39W
-	 R60VOxnpyIKjv8Z+Jw0mcNx7hV0vDJLPSzLvsMtnqVGpq3k072IY9aOeJdn2S38/fQ
-	 pjQhE6y3rzEIdbwxD4iwDPQ0aqbANhE32TQRY9l8=
+	by mail.kernel.org (Postfix) with ESMTP id 610D02175B
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 16:19:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731660AbfEWQTT (ORCPT
+        id S1731675AbfEWQTc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 12:19:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55810 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731117AbfEWQTR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 12:19:17 -0400
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C60C32189E
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 16:19:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558628357;
-        bh=Wv0O6tMsqxBwrYSLzxmAH+HjOtWLDhHqgQXa2NMoUIM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=m8wcPZW/M5eX6YmtPExOOjXbCs1Fo1YueQMdcV589nhOSyRRfgxcT1t4ux70n1ALe
-         sdXuQDKIaa0saOhmp7SlCZBenDx2VVUEyRbkHBeLGunh1nk+LkWLYGyCdNi3rQp4CK
-         WzeOTXr3vBI3tiirMj/acZjWjunbW3S/efBcfh08=
-Received: by mail-wr1-f43.google.com with SMTP id w8so6951445wrl.6
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 09:19:16 -0700 (PDT)
-X-Gm-Message-State: APjAAAVrLy0ttMqogV+QubmQ6g6271//GekICqVX0XVuHWwy/raHOmvW
-        BASRnxNYqGWkBvNSHeGCz5ivNA8q9PG5BYDuLHUdnw==
-X-Google-Smtp-Source: APXvYqxJ9cxvpQ95yya8qpavKNpqTd10CO30B7bHS2mBUkOpNhogJ1RkrwPQlmFMEfwJOzNxSeCDw2Nl2Dls9GVaNWg=
-X-Received: by 2002:adf:e90b:: with SMTP id f11mr4069510wrm.291.1558628353521;
- Thu, 23 May 2019 09:19:13 -0700 (PDT)
+        Thu, 23 May 2019 12:19:32 -0400
+Received: from toryburch.com ([198.23.132.45]:53479 "EHLO timesharemyths.com"
+        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731254AbfEWQTc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 12:19:32 -0400
+To:     linux-kernel@vger.kernel.org
+Subject: Logo printing on the USB drives
+Message-ID: <3e5be09d88b518c98eb49ca5d3f95044@lucastirepros.com>
+Date:   Thu, 23 May 2019 15:20:26 +0200
+From:   "Stacy" <ryan@tanschmidit.tech>
+Reply-To: lucas@tanschmidit.tech
 MIME-Version: 1.0
-References: <155836064844.2441.10911127801797083064.stgit@localhost.localdomain>
- <CALCETrU221N6uPmdaj4bRDDsf+Oc5tEfPERuyV24wsYKHn+spA@mail.gmail.com>
- <9638a51c-4295-924f-1852-1783c7f3e82d@virtuozzo.com> <CALCETrUMDTGRtLFocw6vnN___7rkb6r82ULehs0=yQO5PZL8MA@mail.gmail.com>
- <67d1321e-ffd6-24a3-407f-cd26c82e46b8@virtuozzo.com>
-In-Reply-To: <67d1321e-ffd6-24a3-407f-cd26c82e46b8@virtuozzo.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Thu, 23 May 2019 09:19:01 -0700
-X-Gmail-Original-Message-ID: <CALCETrWzuH3=Uh91UeGwpCj28kjQ82Lj2OTuXm7_3d871PyZSA@mail.gmail.com>
-Message-ID: <CALCETrWzuH3=Uh91UeGwpCj28kjQ82Lj2OTuXm7_3d871PyZSA@mail.gmail.com>
-Subject: Re: [PATCH v2 0/7] mm: process_vm_mmap() -- syscall for duplication a
- process mapping
-To:     Kirill Tkhai <ktkhai@virtuozzo.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Keith Busch <keith.busch@intel.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        alexander.h.duyck@linux.intel.com, Weiny Ira <ira.weiny@intel.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        arunks@codeaurora.org, Vlastimil Babka <vbabka@suse.cz>,
-        Christoph Lameter <cl@linux.com>,
-        Rik van Riel <riel@surriel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Roman Gushchin <guro@fb.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Hugh Dickins <hughd@google.com>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        daniel.m.jordan@oracle.com, Jann Horn <jannh@google.com>,
-        Adam Borowski <kilobyte@angband.pl>,
-        Linux API <linux-api@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; format=flowed; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 21, 2019 at 10:44 AM Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
->
-> On 21.05.2019 19:43, Andy Lutomirski wrote:
-> > On Tue, May 21, 2019 at 8:52 AM Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
-> >>
-> >> On 21.05.2019 17:43, Andy Lutomirski wrote:
+Hi,
 
-> > Do you mean that the code you sent rejects this case?  If so, please
-> > document it.  In any case, I looked at the code, and it seems to be
-> > trying to handle MAP_SHARED and MAP_ANONYMOUS.  I don't see where it
-> > would reject copying a vDSO.
->
-> I prohibit all the VMAs, which contain on of flags: VM_HUGETLB|VM_DONTEXPAND|VM_PFNMAP|VM_IO.
-> I'll check carefully, whether it's enough for vDSO.
+I am following up on my previous attempt to contact you.
+We wanted to check to see if you need any LOGO promotional products for
+your business?
 
-I think you could make the new syscall a lot more comprehensible bg
-restricting it to just MAP_ANONYMOUS, by making it unmap the source,
-or possibly both.  If the new syscall unmaps the source (in order so
-that the source is gone before the newly mapped pages become
-accessible), then you avoid issues in which you need to define
-sensible semantics for what happens if both copies are accessed
-simultaneously.
+Our company manufactures USB Flash Drives that are custom printed with your
+logo.
+They make the perfect marketing tool for your business or organization.
 
+Looking for other items with your logo?   We can supply anything with your
+logo…
 
---Andy
+Most Popular Items right now:
+- T-shirts, Hoodies
+- Table Covers printed with your brand
+- Pens
+- Water Bottles
+- Banners…
+- You name it we can make it and print on it for you!
+
+Our USB Pricing is at an ALL TIME LOW.
+We offer low minimum quantities and all memory sizes.
+
+Over 150 Stock Models as well as 100 % custom shaped USB drives in the
+shape of your Logo or
+product or just about anything else you can imagine!
+Ask about our End of the Year Promotions!
+
+We can pre-load your media files, images, presentations and files onto the
+drives for you.
+These are ideal handouts for trade shows, branding, corporate gifts and
+employees.
+
+* Please reply back and let me know what quantity and memory size you need
+for a Fast Quote!
+
+Are you a school or nonprofit?  Please let us know for even further
+discounts.
+
+Let us send you a quote!   We will EARN your business!
+
+Regards,
+
+Stacy Williams
+Custom Logo Products
+Whatsapp: +8617199402387
+
