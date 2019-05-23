@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30B35C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:23:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9145EC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:23:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06EC720868
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:23:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6981020868
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:23:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639432;
-	bh=5hGuj9oFWG/ByC/GC9bzr93Du0SHDhKObtmeCXi1iI4=;
+	s=default; t=1558639434;
+	bh=uxPr8ykJ/Zl6QN+mxD8fJr+dtsoS0g8hBhrj1U7skoM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c+BPzqqnbBjQJ2oNzcPAm4odH2wsbk2fjZe3U4DPfviMYIdUHhokkQklkETtyADNp
-	 vobpsDlQs+NxIE2IhuXAtFLy8/SvgSMrH3DzD3EXvsbAZ8Wvt6vQ77ukhxqnrdqf21
-	 oDq9CziBu/FbQ0YFzEK0t2hgFyq9YiofxjFpB7Lw=
+	b=bK4XIm+bMVRKeY5hQbqpbgAP8lJfEUfKg/8sznE6dq3b1knazx4rncVQlpi6Pd9bx
+	 3JNqiZxhleNwOLahvhSH84svOschWEhNwo7snijd047CvlSoS5uox3uJatb3sGoOV4
+	 RLM4FvDs3iZOjObKh8I6wa1cGwsYKjO+lFkAmh8U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390780AbfEWTXv (ORCPT
+        id S2390135AbfEWTXx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:23:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34414 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:23:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34460 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390093AbfEWTXs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:23:48 -0400
+        id S2390770AbfEWTXu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:23:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3E501217D9;
-        Thu, 23 May 2019 19:23:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D2EB62054F;
+        Thu, 23 May 2019 19:23:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639427;
-        bh=5hGuj9oFWG/ByC/GC9bzr93Du0SHDhKObtmeCXi1iI4=;
+        s=default; t=1558639430;
+        bh=uxPr8ykJ/Zl6QN+mxD8fJr+dtsoS0g8hBhrj1U7skoM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EqovKEY5Dary4hBed73ZCJK2obCthbHiT0va7oJ4mAGnyuwP8mhV3aVXy/ymD4gUV
-         9Xcxr5fD9Bt3HNFVWbxw3JKZlOJP9VCxGZvS9H1Va5yJbuxgu0Hpzccss6kuo4aA/n
-         76WxY9SaiXQD3mmLfOsxNudSiEz/lRU7d8Hn9lUw=
+        b=E8pky9rYwxq+f7FRdp/bAGQ1gmeUvj9wxhytchAsXC/JLJDSq/YgbLN1rGEZ6phE6
+         v1xigbgdGLDODfoXMmDLN4VUCt3eTezg9b95ylaZ9Rp4ydLg6mcnVnzMRCEJYH+0gm
+         Gi0EdzZ8QR5kCZiu3/ZVVzopyZZaNT13Qa8DSmoI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+b69368fd933c6c592f4c@syzkaller.appspotmail.com,
-        Myungho Jung <mhjungk@gmail.com>,
+        stable@vger.kernel.org, Su Yanjun <suyj.fnst@cn.fujitsu.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         Steffen Klassert <steffen.klassert@secunet.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 101/139] xfrm: Reset secpath in xfrm failure
-Date:   Thu, 23 May 2019 21:06:29 +0200
-Message-Id: <20190523181733.613808391@linuxfoundation.org>
+Subject: [PATCH 5.0 102/139] xfrm6_tunnel: Fix potential panic when unloading xfrm6_tunnel module
+Date:   Thu, 23 May 2019 21:06:30 +0200
+Message-Id: <20190523181733.708413856@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181720.120897565@linuxfoundation.org>
 References: <20190523181720.120897565@linuxfoundation.org>
@@ -62,99 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 6ed69184ed9c43873b8a1ee721e3bf3c08c2c6be ]
+[ Upstream commit 6ee02a54ef990a71bf542b6f0a4e3321de9d9c66 ]
 
-In esp4_gro_receive() and esp6_gro_receive(), secpath can be allocated
-without adding xfrm state to xvec. Then, sp->xvec[sp->len - 1] would
-fail and result in dereferencing invalid pointer in esp4_gso_segment()
-and esp6_gso_segment(). Reset secpath if xfrm function returns error.
+When unloading xfrm6_tunnel module, xfrm6_tunnel_fini directly
+frees the xfrm6_tunnel_spi_kmem. Maybe someone has gotten the
+xfrm6_tunnel_spi, so need to wait it.
 
-Fixes: 7785bba299a8 ("esp: Add a software GRO codepath")
-Reported-by: syzbot+b69368fd933c6c592f4c@syzkaller.appspotmail.com
-Signed-off-by: Myungho Jung <mhjungk@gmail.com>
+Fixes: 91cc3bb0b04ff("xfrm6_tunnel: RCU conversion")
+Signed-off-by: Su Yanjun <suyj.fnst@cn.fujitsu.com>
+Acked-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/esp4_offload.c | 8 +++++---
- net/ipv6/esp6_offload.c | 8 +++++---
- 2 files changed, 10 insertions(+), 6 deletions(-)
+ net/ipv6/xfrm6_tunnel.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/net/ipv4/esp4_offload.c b/net/ipv4/esp4_offload.c
-index 8756e0e790d2a..d3170a8001b2a 100644
---- a/net/ipv4/esp4_offload.c
-+++ b/net/ipv4/esp4_offload.c
-@@ -52,13 +52,13 @@ static struct sk_buff *esp4_gro_receive(struct list_head *head,
- 			goto out;
+diff --git a/net/ipv6/xfrm6_tunnel.c b/net/ipv6/xfrm6_tunnel.c
+index bc65db782bfb1..12cb3aa990af4 100644
+--- a/net/ipv6/xfrm6_tunnel.c
++++ b/net/ipv6/xfrm6_tunnel.c
+@@ -402,6 +402,10 @@ static void __exit xfrm6_tunnel_fini(void)
+ 	xfrm6_tunnel_deregister(&xfrm6_tunnel_handler, AF_INET6);
+ 	xfrm_unregister_type(&xfrm6_tunnel_type, AF_INET6);
+ 	unregister_pernet_subsys(&xfrm6_tunnel_net_ops);
++	/* Someone maybe has gotten the xfrm6_tunnel_spi.
++	 * So need to wait it.
++	 */
++	rcu_barrier();
+ 	kmem_cache_destroy(xfrm6_tunnel_spi_kmem);
+ }
  
- 		if (sp->len == XFRM_MAX_DEPTH)
--			goto out;
-+			goto out_reset;
- 
- 		x = xfrm_state_lookup(dev_net(skb->dev), skb->mark,
- 				      (xfrm_address_t *)&ip_hdr(skb)->daddr,
- 				      spi, IPPROTO_ESP, AF_INET);
- 		if (!x)
--			goto out;
-+			goto out_reset;
- 
- 		sp->xvec[sp->len++] = x;
- 		sp->olen++;
-@@ -66,7 +66,7 @@ static struct sk_buff *esp4_gro_receive(struct list_head *head,
- 		xo = xfrm_offload(skb);
- 		if (!xo) {
- 			xfrm_state_put(x);
--			goto out;
-+			goto out_reset;
- 		}
- 	}
- 
-@@ -82,6 +82,8 @@ static struct sk_buff *esp4_gro_receive(struct list_head *head,
- 	xfrm_input(skb, IPPROTO_ESP, spi, -2);
- 
- 	return ERR_PTR(-EINPROGRESS);
-+out_reset:
-+	secpath_reset(skb);
- out:
- 	skb_push(skb, offset);
- 	NAPI_GRO_CB(skb)->same_flow = 0;
-diff --git a/net/ipv6/esp6_offload.c b/net/ipv6/esp6_offload.c
-index d46b4eb645c2e..cb99f6fb79b79 100644
---- a/net/ipv6/esp6_offload.c
-+++ b/net/ipv6/esp6_offload.c
-@@ -74,13 +74,13 @@ static struct sk_buff *esp6_gro_receive(struct list_head *head,
- 			goto out;
- 
- 		if (sp->len == XFRM_MAX_DEPTH)
--			goto out;
-+			goto out_reset;
- 
- 		x = xfrm_state_lookup(dev_net(skb->dev), skb->mark,
- 				      (xfrm_address_t *)&ipv6_hdr(skb)->daddr,
- 				      spi, IPPROTO_ESP, AF_INET6);
- 		if (!x)
--			goto out;
-+			goto out_reset;
- 
- 		sp->xvec[sp->len++] = x;
- 		sp->olen++;
-@@ -88,7 +88,7 @@ static struct sk_buff *esp6_gro_receive(struct list_head *head,
- 		xo = xfrm_offload(skb);
- 		if (!xo) {
- 			xfrm_state_put(x);
--			goto out;
-+			goto out_reset;
- 		}
- 	}
- 
-@@ -109,6 +109,8 @@ static struct sk_buff *esp6_gro_receive(struct list_head *head,
- 	xfrm_input(skb, IPPROTO_ESP, spi, -2);
- 
- 	return ERR_PTR(-EINPROGRESS);
-+out_reset:
-+	secpath_reset(skb);
- out:
- 	skb_push(skb, offset);
- 	NAPI_GRO_CB(skb)->same_flow = 0;
 -- 
 2.20.1
 
