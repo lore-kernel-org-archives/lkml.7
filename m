@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FADDC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:30:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 197EEC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:30:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F6A421851
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:30:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD98721855
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:30:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639801;
-	bh=+athbFoOd2Xxcsmu54xtO7qi37LKpNoQwFHL9MONUjo=;
+	s=default; t=1558639805;
+	bh=LkxJLjCUKrKFGxWh1/a/LOeqSaX3EHtctEGuUYC9oGE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GJZmWEfTX7UcMX4Jnacemq2FkvjfMRo5Tsna4/ORvenlV2iHFbN7XXZE/HmTv9uMg
-	 EiTG3yyuEjawqtj26yC02KJOpggOtD6USfnAy2zKFpKXYxiphUE9UHnedujNaI8UHA
-	 LwCrRAN1pcWsR7ch1XJvPc4l5D/KE0rlt6ZBzZVU=
+	b=I3XLTNkhC3eTQ5s4dotxesI7Uf0LL1i1aO2FH0ibo1+AJAMHwm5Aa0liUNg3qLvB8
+	 eYsIYNZh2DtCs6Soni8SKj1ZAbrKVlOU4JJuMaCdzCVoiXUmXbg+9wY+Ufwsh6zsby
+	 DCiWLK8x7OJv8eOkyZiOLwob+J3fzkWtCVpnpBLw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390515AbfEWTaA (ORCPT
+        id S2392050AbfEWTaE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:30:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43146 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:30:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43330 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390192AbfEWT35 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:29:57 -0400
+        id S2391787AbfEWTaC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:30:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D1B02133D;
-        Thu, 23 May 2019 19:29:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 398AA21850;
+        Thu, 23 May 2019 19:30:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639796;
-        bh=+athbFoOd2Xxcsmu54xtO7qi37LKpNoQwFHL9MONUjo=;
+        s=default; t=1558639801;
+        bh=LkxJLjCUKrKFGxWh1/a/LOeqSaX3EHtctEGuUYC9oGE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nepY8IIaAKyYKJ+RtchDwIiyTuaoUTnmzQ1TJZCnBdZOd+U4VaWxnn9No3hEQ9izN
-         Z0VjntBIJi6yEa3dpWRcF7rbnSXBQzGkm3dipkzGjucNRtQ6pGilahmN9PDkjIrGYq
-         w2pLFmsr67g9s5arGXHaVG06VlRAEnsSWhoR5Jzc=
+        b=1B4QuAHRWG7Z9iM5JnAPsEuG6UNfoSvhPzLIaJqUU9LzzVyoN6BquuGtWa6KgqNcq
+         Cq+dFCaoPTiu7ZmbNcScugTbuz3A1vT8aBpmQmUAliwwQyC7mDVGGRPUnO1OBM1/I+
+         YlRJJ3vF/vmrUW+4vFZwVPnvdQJJ8nHj+EltmVUI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 5.1 079/122] perf intel-pt: Fix instructions sampling rate
-Date:   Thu, 23 May 2019 21:06:41 +0200
-Message-Id: <20190523181715.203995084@linuxfoundation.org>
+Subject: [PATCH 5.1 081/122] perf intel-pt: Fix sample timestamp wrt non-taken branches
+Date:   Thu, 23 May 2019 21:06:43 +0200
+Message-Id: <20190523181715.559197718@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181705.091418060@linuxfoundation.org>
 References: <20190523181705.091418060@linuxfoundation.org>
@@ -62,89 +62,45 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Adrian Hunter <adrian.hunter@intel.com>
 
-commit 7ba8fa20e26eb3c0c04d747f7fd2223694eac4d5 upstream.
+commit 1b6599a9d8e6c9f7e9b0476012383b1777f7fc93 upstream.
 
-The timestamp used to determine if an instruction sample is made, is an
-estimate based on the number of instructions since the last known
-timestamp. A consequence is that it might go backwards, which results in
-extra samples. Change it so that a sample is only made when the
-timestamp goes forwards.
+The sample timestamp is updated to ensure that the timestamp represents
+the time of the sample and not a branch that the decoder is still
+walking towards. The sample timestamp is updated when the decoder
+returns, but the decoder does not return for non-taken branches. Update
+the sample timestamp then also.
 
-Note this does not affect a sampling period of 0 or sampling periods
-specified as a count of instructions.
-
-Example:
-
- Before:
-
- $ perf script --itrace=i10us
- ls 13812 [003] 2167315.222583:       3270 instructions:u:      7fac71e2e494 __GI___tunables_init+0xf4 (/lib/x86_64-linux-gnu/ld-2.28.so)
- ls 13812 [003] 2167315.222667:      30902 instructions:u:      7fac71e2da0f _dl_cache_libcmp+0x2f (/lib/x86_64-linux-gnu/ld-2.28.so)
- ls 13812 [003] 2167315.222667:         10 instructions:u:      7fac71e2d9ff _dl_cache_libcmp+0x1f (/lib/x86_64-linux-gnu/ld-2.28.so)
- ls 13812 [003] 2167315.222667:          8 instructions:u:      7fac71e2d9ea _dl_cache_libcmp+0xa (/lib/x86_64-linux-gnu/ld-2.28.so)
- ls 13812 [003] 2167315.222667:         14 instructions:u:      7fac71e2d9ea _dl_cache_libcmp+0xa (/lib/x86_64-linux-gnu/ld-2.28.so)
- ls 13812 [003] 2167315.222667:          6 instructions:u:      7fac71e2d9ff _dl_cache_libcmp+0x1f (/lib/x86_64-linux-gnu/ld-2.28.so)
- ls 13812 [003] 2167315.222667:         14 instructions:u:      7fac71e2d9ff _dl_cache_libcmp+0x1f (/lib/x86_64-linux-gnu/ld-2.28.so)
- ls 13812 [003] 2167315.222667:          4 instructions:u:      7fac71e2dab2 _dl_cache_libcmp+0xd2 (/lib/x86_64-linux-gnu/ld-2.28.so)
- ls 13812 [003] 2167315.222728:      16423 instructions:u:      7fac71e2477a _dl_map_object_deps+0x1ba (/lib/x86_64-linux-gnu/ld-2.28.so)
- ls 13812 [003] 2167315.222734:      12731 instructions:u:      7fac71e27938 _dl_name_match_p+0x68 (/lib/x86_64-linux-gnu/ld-2.28.so)
- ...
-
- After:
- $ perf script --itrace=i10us
- ls 13812 [003] 2167315.222583:       3270 instructions:u:      7fac71e2e494 __GI___tunables_init+0xf4 (/lib/x86_64-linux-gnu/ld-2.28.so)
- ls 13812 [003] 2167315.222667:      30902 instructions:u:      7fac71e2da0f _dl_cache_libcmp+0x2f (/lib/x86_64-linux-gnu/ld-2.28.so)
- ls 13812 [003] 2167315.222728:      16479 instructions:u:      7fac71e2477a _dl_map_object_deps+0x1ba (/lib/x86_64-linux-gnu/ld-2.28.so)
- ...
+Note that commit 3f04d98e972b5 ("perf intel-pt: Improve sample
+timestamp") was also a stable fix and appears, for example, in v4.4
+stable tree as commit a4ebb58fd124 ("perf intel-pt: Improve sample
+timestamp").
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: stable@vger.kernel.org
-Fixes: f4aa081949e7b ("perf tools: Add Intel PT decoder")
-Link: http://lkml.kernel.org/r/20190510124143.27054-2-adrian.hunter@intel.com
+Cc: stable@vger.kernel.org # v4.4+
+Fixes: 3f04d98e972b ("perf intel-pt: Improve sample timestamp")
+Link: http://lkml.kernel.org/r/20190510124143.27054-4-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/perf/util/intel-pt-decoder/intel-pt-decoder.c |   13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+ tools/perf/util/intel-pt-decoder/intel-pt-decoder.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
 --- a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
 +++ b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
-@@ -888,16 +888,20 @@ static uint64_t intel_pt_next_period(str
- 	timestamp = decoder->timestamp + decoder->timestamp_insn_cnt;
- 	masked_timestamp = timestamp & decoder->period_mask;
- 	if (decoder->continuous_period) {
--		if (masked_timestamp != decoder->last_masked_timestamp)
-+		if (masked_timestamp > decoder->last_masked_timestamp)
- 			return 1;
- 	} else {
- 		timestamp += 1;
- 		masked_timestamp = timestamp & decoder->period_mask;
--		if (masked_timestamp != decoder->last_masked_timestamp) {
-+		if (masked_timestamp > decoder->last_masked_timestamp) {
- 			decoder->last_masked_timestamp = masked_timestamp;
- 			decoder->continuous_period = true;
+@@ -1318,8 +1318,11 @@ static int intel_pt_walk_tnt(struct inte
+ 				return 0;
+ 			}
+ 			decoder->ip += intel_pt_insn.length;
+-			if (!decoder->tnt.count)
++			if (!decoder->tnt.count) {
++				decoder->sample_timestamp = decoder->timestamp;
++				decoder->sample_insn_cnt = decoder->timestamp_insn_cnt;
+ 				return -EAGAIN;
++			}
+ 			decoder->tnt.payload <<= 1;
+ 			continue;
  		}
- 	}
-+
-+	if (masked_timestamp < decoder->last_masked_timestamp)
-+		return decoder->period_ticks;
-+
- 	return decoder->period_ticks - (timestamp - masked_timestamp);
- }
- 
-@@ -926,7 +930,10 @@ static void intel_pt_sample_insn(struct
- 	case INTEL_PT_PERIOD_TICKS:
- 		timestamp = decoder->timestamp + decoder->timestamp_insn_cnt;
- 		masked_timestamp = timestamp & decoder->period_mask;
--		decoder->last_masked_timestamp = masked_timestamp;
-+		if (masked_timestamp > decoder->last_masked_timestamp)
-+			decoder->last_masked_timestamp = masked_timestamp;
-+		else
-+			decoder->last_masked_timestamp += decoder->period_ticks;
- 		break;
- 	case INTEL_PT_PERIOD_NONE:
- 	case INTEL_PT_PERIOD_MTC:
 
 
