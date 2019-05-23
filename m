@@ -2,97 +2,146 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9324C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:44:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04267C282DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:45:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A959720851
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:44:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558640698;
-	bh=IoKpUfohM1tePM/64BXsiJUSHeovw9D5HJOR0CqCOj0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LOt1dHcT/0iNdtAQxrE75g6H+IqsXhIqy14xTI45igfAG8AtybTAIqO2V/E3SscSx
-	 n7fkZvfEjS1c2+5kNlKW1HN1DFXegf4izgJutfbxtD0zb/uWr1RYga9tbLTqFGI39s
-	 TDaBiX3MkJ/MRAVHqA3V71+BhEpcK654TzlP0hBM=
+	by mail.kernel.org (Postfix) with ESMTP id D718320851
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:44:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389132AbfEWTQL (ORCPT
+        id S2389685AbfEWTo7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:16:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50744 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387579AbfEWTQI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:16:08 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B73E20863;
-        Thu, 23 May 2019 19:16:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558638967;
-        bh=IoKpUfohM1tePM/64BXsiJUSHeovw9D5HJOR0CqCOj0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M4BzG+Aj06ewLHMUiDgL7ND8yGiOnp0GLD7sfRLiUGGmLuhQUNet19J1YzRFHkajn
-         NU6//ix97BHnIKIlCX4QcR2N/mebotAMPAb2cSwqfAwObOkwOUzQN4YgoC3OdgXMz4
-         cu9tgxf4DYxAxy/tCVnpd2cuXrr9g/Iz2tm4iNbU=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Liu Bo <bo.liu@linux.alibaba.com>,
-        Miklos Szeredi <mszeredi@redhat.com>
-Subject: [PATCH 4.19 047/114] fuse: honor RLIMIT_FSIZE in fuse_file_fallocate
-Date:   Thu, 23 May 2019 21:05:46 +0200
-Message-Id: <20190523181735.980642690@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190523181731.372074275@linuxfoundation.org>
-References: <20190523181731.372074275@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 23 May 2019 15:44:59 -0400
+Received: from gateway32.websitewelcome.com ([192.185.145.107]:17793 "EHLO
+        gateway32.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2389131AbfEWTQM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:16:12 -0400
+Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
+        by gateway32.websitewelcome.com (Postfix) with ESMTP id 6EA441BAAE
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 14:16:10 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id TtCEhFKcm2qH7TtCEhUDBK; Thu, 23 May 2019 14:16:10 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.47.159] (port=55194 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.91)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hTtCB-0043Zg-MW; Thu, 23 May 2019 14:16:07 -0500
+Date:   Thu, 23 May 2019 14:16:06 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Kyungmin Park <kyungmin.park@samsung.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>
+Cc:     linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH v2] mtd: onenand_base: Avoid fall-through warnings
+Message-ID: <20190523191606.GA9838@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.47.159
+X-Source-L: No
+X-Exim-ID: 1hTtCB-0043Zg-MW
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [189.250.47.159]:55194
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 9
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Liu Bo <bo.liu@linux.alibaba.com>
+NOTICE THAT:
 
-commit 0cbade024ba501313da3b7e5dd2a188a6bc491b5 upstream.
+"...we don't know whether we need fallthroughs or breaks here and this
+is just a change to avoid having new warnings when switching to
+-Wimplicit-fallthrough but this change might be entirely wrong."[1]
 
-fstests generic/228 reported this failure that fuse fallocate does not
-honor what 'ulimit -f' has set.
+See the original thread of discussion here:
 
-This adds the necessary inode_newsize_ok() check.
+https://lore.kernel.org/patchwork/patch/1036251/
 
-Signed-off-by: Liu Bo <bo.liu@linux.alibaba.com>
-Fixes: 05ba1f082300 ("fuse: add FALLOCATE operation")
-Cc: <stable@vger.kernel.org> # v3.5
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+So, in preparation to enabling -Wimplicit-fallthrough, this patch silences
+the following warnings:
 
+drivers/mtd/nand/onenand/onenand_base.c: In function ‘onenand_check_features’:
+drivers/mtd/nand/onenand/onenand_base.c:3264:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
+   if (ONENAND_IS_DDP(this))
+      ^
+drivers/mtd/nand/onenand/onenand_base.c:3284:2: note: here
+  case ONENAND_DEVICE_DENSITY_2Gb:
+  ^~~~
+drivers/mtd/nand/onenand/onenand_base.c:3288:17: warning: this statement may fall through [-Wimplicit-fallthrough=]
+   this->options |= ONENAND_HAS_UNLOCK_ALL;
+drivers/mtd/nand/onenand/onenand_base.c:3290:2: note: here
+  case ONENAND_DEVICE_DENSITY_1Gb:
+  ^~~~
+
+Warning level 3 was used: -Wimplicit-fallthrough=3
+
+Also, notice that this patch doesn't change any functionality. See the
+most recent thread of discussion here:
+
+https://lore.kernel.org/patchwork/patch/1077395/
+
+This patch is part of the ongoing efforts to enable
+-Wimplicit-fallthrough.
+
+[1] https://lore.kernel.org/lkml/20190509085318.34a9d4be@xps13/
+
+Cc: Miquel Raynal <miquel.raynal@bootlin.com>
+Suggested-by: Boris Brezillon <boris.brezillon@collabora.com>
+Suggested-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 ---
- fs/fuse/file.c |    7 +++++++
- 1 file changed, 7 insertions(+)
+Changes in v2:
+ - Add breaks instead of fall-through markings without altering any
+   functionality.
+ - Update changelog text.
 
---- a/fs/fuse/file.c
-+++ b/fs/fuse/file.c
-@@ -2975,6 +2975,13 @@ static long fuse_file_fallocate(struct f
+ drivers/mtd/nand/onenand/onenand_base.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/mtd/nand/onenand/onenand_base.c b/drivers/mtd/nand/onenand/onenand_base.c
+index f41d76248550..fd0da5c347db 100644
+--- a/drivers/mtd/nand/onenand/onenand_base.c
++++ b/drivers/mtd/nand/onenand/onenand_base.c
+@@ -3280,12 +3280,15 @@ static void onenand_check_features(struct mtd_info *mtd)
+ 			if ((this->version_id & 0xf) == 0xe)
+ 				this->options |= ONENAND_HAS_NOP_1;
  		}
- 	}
++		this->options |= ONENAND_HAS_UNLOCK_ALL;
++		break;
  
-+	if (!(mode & FALLOC_FL_KEEP_SIZE) &&
-+	    offset + length > i_size_read(inode)) {
-+		err = inode_newsize_ok(inode, offset + length);
-+		if (err)
-+			return err;
-+	}
-+
- 	if (!(mode & FALLOC_FL_KEEP_SIZE))
- 		set_bit(FUSE_I_SIZE_UNSTABLE, &fi->state);
+ 	case ONENAND_DEVICE_DENSITY_2Gb:
+ 		/* 2Gb DDP does not have 2 plane */
+ 		if (!ONENAND_IS_DDP(this))
+ 			this->options |= ONENAND_HAS_2PLANE;
+ 		this->options |= ONENAND_HAS_UNLOCK_ALL;
++		break;
  
-
+ 	case ONENAND_DEVICE_DENSITY_1Gb:
+ 		/* A-Die has all block unlock */
+-- 
+2.21.0
 
