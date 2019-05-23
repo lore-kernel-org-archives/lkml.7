@@ -2,104 +2,195 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 260F8C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 22:33:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECE7BC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 22:36:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E25C420879
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 22:33:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="gVRWsJWI"
+	by mail.kernel.org (Postfix) with ESMTP id BEFFA20879
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 22:36:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388523AbfEWWd2 (ORCPT
+        id S2388573AbfEWWgH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 18:33:28 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:51085 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387621AbfEWWd1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 18:33:27 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45945w370pz9sBr;
-        Fri, 24 May 2019 08:33:24 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1558650804;
-        bh=QWurjPbadvLi/z4O5dSr2aM3lqa3PhG88Zxdi9mp4fU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=gVRWsJWIDPYNKirFujwrxZ7RMk66i1doKjzuAFeU/6iDA7LjggRGlzRrF7b+OQzY1
-         KZU85tETll4C0hRASyIIKno490dRU0V7OH2CwfdMrvm/uil2kP+mVD+7yTTic3vzCv
-         B6vuVXuAJWCLF8qbyxGia/g1mYq8smC9DxF5apV9rMa0uMK98xlQrqcMM6In9SndEA
-         LJedpbKXumBdnR6CF6IiEGddJ0Py3HG0FZAEiQnEVrebdj/VPIivd6QLIcXuoQ91Ot
-         RiCOG/BwTDgH7ihkaPjKO0LoI6n824F++hfGdmC2WgJhADWfOJbdWvCoyjKm3YcoY6
-         0WFp4JIirWHzg==
-Date:   Fri, 24 May 2019 08:33:21 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Keith Busch <kbusch@kernel.org>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Keith Busch <keith.busch@intel.com>
-Subject: Re: linux-next: Signed-off-by missing for commits in the block tree
-Message-ID: <20190524083321.7ada6382@canb.auug.org.au>
-In-Reply-To: <20190523215206.GA15192@localhost.localdomain>
-References: <20190524074500.1fde68d6@canb.auug.org.au>
-        <20190523215206.GA15192@localhost.localdomain>
+        Thu, 23 May 2019 18:36:07 -0400
+Received: from gateway31.websitewelcome.com ([192.185.143.43]:15149 "EHLO
+        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387735AbfEWWgG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 18:36:06 -0400
+Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
+        by gateway31.websitewelcome.com (Postfix) with ESMTP id 563872720C
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 17:36:04 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id TwJghytnH4FKpTwJghLEDN; Thu, 23 May 2019 17:36:04 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.47.159] (port=37812 helo=[192.168.1.76])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.91)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hTwJf-001NXA-BB; Thu, 23 May 2019 17:36:03 -0500
+Subject: Re: [PATCH net-next] xprtrdma: Use struct_size() in kzalloc()
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Chuck Lever <chuck.lever@oracle.com>
+Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Bruce Fields <bfields@fieldses.org>,
+        Jeff Layton <jlayton@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190131004622.GA30261@embeddedor>
+ <07CB966E-A946-4956-8480-C0FC13E13E4E@oracle.com>
+ <ad9eccc7-afd2-3419-b886-6210eeabd5b5@embeddedor.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Message-ID: <70ca0dea-6f1f-922c-7c5d-e79c6cf6ecb5@embeddedor.com>
+Date:   Thu, 23 May 2019 17:36:00 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/bH4wz8EXsUVjijbXawieSEI"; protocol="application/pgp-signature"
+In-Reply-To: <ad9eccc7-afd2-3419-b886-6210eeabd5b5@embeddedor.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.47.159
+X-Source-L: No
+X-Exim-ID: 1hTwJf-001NXA-BB
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.1.76]) [189.250.47.159]:37812
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 17
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/bH4wz8EXsUVjijbXawieSEI
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Dave,
 
-Hi Keith,
+I wonder if you can take this patch.
 
-On Thu, 23 May 2019 15:52:07 -0600 Keith Busch <kbusch@kernel.org> wrote:
->
-> On Fri, May 24, 2019 at 07:45:00AM +1000, Stephen Rothwell wrote:
-> > Commits
-> >=20
-> >   5fb4aac756ac ("nvme: release namespace SRCU protection before perform=
-ing controller ioctls")
-> >   90ec611adcf2 ("nvme: merge nvme_ns_ioctl into nvme_ioctl")
-> >   3f98bcc58cd5 ("nvme: remove the ifdef around nvme_nvm_ioctl")
-> >   100c815cbd56 ("nvme: fix srcu locking on error return in nvme_get_ns_=
-from_disk")
-> >=20
-> > are missing a Signed-off-by from their committer. =20
->=20
-> Oops, I'd only added my Reviewed-by. Do I need to update the commit
-> messages and resend, or is this just putting me on notice for next time?
+Thanks
+--
+Gustavo
 
-That depends on Jens ...
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/bH4wz8EXsUVjijbXawieSEI
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlznH7EACgkQAVBC80lX
-0GzBnQf/dI0C/I6VfskUrct9z8/c/UiS7V4TOegHThOyh+n+WRFgZH/Pm7mezScA
-uwqHlNd9CI9qIoQatQHg93I6tjtcB/hYSMDQEqTEvaBz39NqFZJuJWY4z+9Uk4YR
-4QJRKSi99ABMrc4RtNQUFrk8fBW49M/uBpZ2McY0TheR4m/6Lom90a7WQyCyeqbz
-w3CTOAP3UAd/KkMgEHYGKH1GI4XmdB15fstbGtd1XCTw0VjTWOu8r7d5IWYrSJWQ
-Pkh8t1q2osTZFbe3Yti9iobdsbcF2oXt+EqyrZEGxaqMBbcw5uglQuS0t8gPhkAh
-ls19SIdwHf4skdZraAqcipgaFH+K2A==
-=D15q
------END PGP SIGNATURE-----
-
---Sig_/bH4wz8EXsUVjijbXawieSEI--
+On 3/28/19 3:41 PM, Gustavo A. R. Silva wrote:
+> Hi all,
+> 
+> Friendly ping:
+> 
+> Who can take this?
+> 
+> Thanks
+> --
+> Gustavo
+> 
+> On 1/31/19 8:11 AM, Chuck Lever wrote:
+>>
+>>
+>>> On Jan 30, 2019, at 7:46 PM, Gustavo A. R. Silva <gustavo@embeddedor.com> wrote:
+>>>
+>>> One of the more common cases of allocation size calculations is finding
+>>> the size of a structure that has a zero-sized array at the end, along
+>>> with memory for some number of elements for that array. For example:
+>>>
+>>> struct foo {
+>>>    int stuff;
+>>>    struct boo entry[];
+>>> };
+>>>
+>>> instance = kzalloc(sizeof(struct foo) + count * sizeof(struct boo), GFP_KERNEL);
+>>>
+>>> Instead of leaving these open-coded and prone to type mistakes, we can
+>>> now use the new struct_size() helper:
+>>>
+>>> instance = kzalloc(struct_size(instance, entry, count), GFP_KERNEL);
+>>>
+>>> This code was detected with the help of Coccinelle.
+>>>
+>>> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+>>
+>> Reviewed-by: Chuck Lever <chuck.lever@oracle.com>
+>>
+>>
+>>> ---
+>>> net/sunrpc/xprtrdma/verbs.c | 3 +--
+>>> 1 file changed, 1 insertion(+), 2 deletions(-)
+>>>
+>>> diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
+>>> index 4994e75945b8..9e8cf7456840 100644
+>>> --- a/net/sunrpc/xprtrdma/verbs.c
+>>> +++ b/net/sunrpc/xprtrdma/verbs.c
+>>> @@ -811,8 +811,7 @@ static struct rpcrdma_sendctx *rpcrdma_sendctx_create(struct rpcrdma_ia *ia)
+>>> {
+>>> 	struct rpcrdma_sendctx *sc;
+>>>
+>>> -	sc = kzalloc(sizeof(*sc) +
+>>> -		     ia->ri_max_send_sges * sizeof(struct ib_sge),
+>>> +	sc = kzalloc(struct_size(sc, sc_sges, ia->ri_max_send_sges),
+>>> 		     GFP_KERNEL);
+>>> 	if (!sc)
+>>> 		return NULL;
+>>> -- 
+>>> 2.20.1
+>>>
+>>
+>> --
+>> Chuck Lever
+>>
+>>
+>>
