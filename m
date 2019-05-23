@@ -2,167 +2,94 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73047C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 14:53:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95C86C282E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 14:53:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44E5420863
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 14:53:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 694DC20863
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 14:53:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="Sl9c/IVp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730963AbfEWOxS (ORCPT
+        id S1730992AbfEWOxU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 10:53:18 -0400
-Received: from out01.mta.xmission.com ([166.70.13.231]:56239 "EHLO
-        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730672AbfEWOxQ (ORCPT
+        Thu, 23 May 2019 10:53:20 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:36454 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730957AbfEWOxS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 10:53:16 -0400
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1hTp5m-0005Tv-Qv; Thu, 23 May 2019 08:53:14 -0600
-Received: from ip72-206-97-68.om.om.cox.net ([72.206.97.68] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1hTp5l-0004Kl-Ui; Thu, 23 May 2019 08:53:14 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Dave Martin <Dave.Martin@arm.com>
-Cc:     "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        "linux-arch\@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        James Morse <James.Morse@arm.com>,
-        Will Deacon <Will.Deacon@arm.com>
-References: <20190523003916.20726-1-ebiederm@xmission.com>
-        <20190523003916.20726-4-ebiederm@xmission.com>
-        <20190523102101.GW28398@e103592.cambridge.arm.com>
-Date:   Thu, 23 May 2019 09:53:06 -0500
-In-Reply-To: <20190523102101.GW28398@e103592.cambridge.arm.com> (Dave Martin's
-        message of "Thu, 23 May 2019 11:21:04 +0100")
-Message-ID: <87r28pgr3h.fsf@xmission.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.1 (gnu/linux)
+        Thu, 23 May 2019 10:53:18 -0400
+Received: by mail-wr1-f65.google.com with SMTP id s17so6646601wru.3
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 07:53:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=KuauVzjJswarfobGLMx62HbVwFkgBXXbK672bwB029A=;
+        b=Sl9c/IVpkPxfdQFvyhEaxuRn1gyGyncWJpElpyHVCz0PT2Jqa0CZ78ux8e4bvp/UDK
+         9VGVElVF1dfjJUkX9iP/zAXDhTRf5rhu5AkZfZwIPthOEGQLaemCwa7mO+bs7KhepM9W
+         b/Q1OdXSLuvvNGxjKUhlYBAIKZPFsLK2aloT4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=KuauVzjJswarfobGLMx62HbVwFkgBXXbK672bwB029A=;
+        b=jwaG/mpmt2Jhdj8gKtCTBbR2nPFvG+DyQj1d5uTryGwUY78tGI99EFoN61H1FFCWJz
+         Zg02MYSXvnOshojAlAOalDr7J4gCtOVRUs/i40Ng2BzTXbSc9Z7umeNrXKgFmqZWgI0v
+         AS1K/uh312iuVu4utf4h1QznixZjmiYnHA6vxDvkT1I+S0giNNPFAMlZ33smAXyyd6xl
+         MoquwzjTKknMHgNkRjbLmVu6BielZvcNWHP8LPQhA7wCV7XRPx2OwM8kzo0rUfLx32FU
+         ELyZ4co70J/xed8UGbAEEJKqjPi79GcdPgpfridwEc4XQfY3ZHqQclB0RukqTbr5JVwv
+         TXpw==
+X-Gm-Message-State: APjAAAUQnHhDbvNX9SklJxY6rVH739xlZIClmorU1kbqhMbUvDuZFKs/
+        lHdoho7yc3vOlkQqmU7BIqlxSw==
+X-Google-Smtp-Source: APXvYqzoZglxEGBUuaQVwNP9WVW+5YjppemivpSRz1xRQFi3El+oY+7xYQL+IEIzgLJn+DvEfnJcCA==
+X-Received: by 2002:adf:aa09:: with SMTP id p9mr6578948wrd.59.1558623197442;
+        Thu, 23 May 2019 07:53:17 -0700 (PDT)
+Received: from andrea (86.100.broadband17.iol.cz. [109.80.100.86])
+        by smtp.gmail.com with ESMTPSA id j206sm14293686wma.47.2019.05.23.07.53.16
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 23 May 2019 07:53:16 -0700 (PDT)
+Date:   Thu, 23 May 2019 16:53:09 +0200
+From:   Andrea Parri <andrea.parri@amarulasolutions.com>
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>, rcu@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [RFC PATCH] rcu: Make 'rcu_assign_pointer(p, v)' of type
+ 'typeof(p)'
+Message-ID: <20190523145309.GA18692@andrea>
+References: <1558618340-17254-1-git-send-email-andrea.parri@amarulasolutions.com>
+ <20190523135013.GL28207@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1hTp5l-0004Kl-Ui;;;mid=<87r28pgr3h.fsf@xmission.com>;;;hst=in02.mta.xmission.com;;;ip=72.206.97.68;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1+THGiZIT6lV3EfwGpihTf9JNTesyMd/TY=
-X-SA-Exim-Connect-IP: 72.206.97.68
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [REVIEW][PATCH 03/26] signal/arm64: Use force_sig not force_sig_fault for SIGKILL
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190523135013.GL28207@linux.ibm.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dave Martin <Dave.Martin@arm.com> writes:
+> > TBH, I'm not sure this is 'the right patch' (hence the RFC...): in
+> > fact, I'm currently missing the motivations for allowing assignments
+> > such as the "r0 = ..." assignment above in generic code.  (BTW, it's
+> > not currently possible to use such assignments in litmus tests...)
+> 
+> Given that a quick (and perhaps error-prone) search of the uses of
+> rcu_assign_pointer() in v5.1 didn't find a single use of the return
+> value, let's please instead change the documentation and implementation
+> to eliminate the return value.
 
-> On Thu, May 23, 2019 at 01:38:53AM +0100, Eric W. Biederman wrote:
->> It really only matters to debuggers but the SIGKILL does not have any
->> si_codes that use the fault member of the siginfo union.  Correct this
->> the simple way and call force_sig instead of force_sig_fault when the
->> signal is SIGKILL.
->
-> I haven't fully understood the context for this, but why does it matter
-> what's in siginfo for SIGKILL?  My understanding is that userspace
-> (including ptrace) never gets to see it anyway for the SIGKILL case.
+Thanks for the confirmation, Paul; I'll prepare the new patch shortly...
 
-Yes.  In practice I think it would take tracing or something very
-exotic to notice anything going wrong because the task will be killed.
-
-> Here it feels like SIGKILL is logically a synchronous, thread-targeted
-> fault: we must ensure that no subsequent insn in current executes (just
-> like other fault signal).  In this case, I thought we fall back to
-> SIGKILL not because there is no fault, but because we failed to
-> properly diagnose or report the type of fault that occurred.
->
-> So maybe handling it consistently with other faults signals makes
-> sense.  The fact that delivery of this signal destroys the process
-> before anyone can look at the resulting siginfo feels like a
-> side-effect rather than something obviously wrong.
->
-> The siginfo is potentially useful diagnostic information, that we could
-> subsequently provide a means to access post-mortem.
->
-> I just dived in on this single patch, so I may be missing something more
-> fundamental, or just being pedantic...
-
-Not really.  I was working on another cleanup and this usage of SIGKILL
-came up.
-
-A synchronous thread synchronous fault gets us as far as the forc_sig
-family of functions.  That only leaves the question of which union
-member in struct siginfo we are using.  The union members are _kill,
-_fault, _timer, _rt, _sigchld, _sigfault, _sigpoll, and _sigsys.
-
-As it has prove quite error prone for people to fill out struct siginfo
-in the past by hand, I have provided a couple of helper functions for
-the common cases that come up such as: force_sig_fault,
-force_sig_mceerr, force_sig_bnderr, force_sig_pkuerr.  Each of those
-helper functions takes the information needed to fill out the union
-member of struct siginfo that kind of fault corresponds to.
-
-For the SIGKILL case the only si_code I see being passed SI_KERNEL.
-The SI_KERNEL si_code corresponds to the _kill union member while
-force_sig_fault fills in fields for the _fault union member.
-
-Because of the mismatch of which union member SIGKILL should be using
-and the union member force_sig_fault applies alarm bells ring in my head
-when I read the current arm64 kernel code.  Somewhat doubly so because
-the other fields in passed to force_sig_fault appear to be somewhat
-random when SIGKILL is the signal.
-
-So I figured let's preserve the usage of SIGKILL as a synchronous
-exception.  That seems legitimate and other folks do that as well but
-let's use force_sig instead of force_sig_fault instead.  I don't know if
-userspace will notice but at the very least we won't be providing a bad
-example for other kernel code to follow and we won't wind up be making
-assumptions that are true today and false tomorrow when some
-implementation detail changes.
-
-For imformation on what signals and si_codes correspond to which
-union members you can look at siginfo_layout.  That function
-is the keeper of the magic decoder key.  Currently the only two
-si_codes defined for SIGKILL are SI_KERNEL and SI_USER both of which
-correspond to a _kill union member.
-
-Eric
-
-
-> Cheers
-> ---Dave
->
->> Cc: stable@vger.kernel.org
->> Cc: Dave Martin <Dave.Martin@arm.com>
->> Cc: James Morse <james.morse@arm.com>
->> Cc: Will Deacon <will.deacon@arm.com>
->> Fixes: af40ff687bc9 ("arm64: signal: Ensure si_code is valid for all fault signals")
->> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
->> ---
->>  arch/arm64/kernel/traps.c | 5 +++++
->>  1 file changed, 5 insertions(+)
->> 
->> diff --git a/arch/arm64/kernel/traps.c b/arch/arm64/kernel/traps.c
->> index ade32046f3fe..0feb17bdcaa0 100644
->> --- a/arch/arm64/kernel/traps.c
->> +++ b/arch/arm64/kernel/traps.c
->> @@ -282,6 +282,11 @@ void arm64_notify_die(const char *str, struct pt_regs *regs,
->>  		current->thread.fault_address = 0;
->>  		current->thread.fault_code = err;
->>  
->> +		if (signo == SIGKILL) {
->> +			arm64_show_signal(signo, str);
->> +			force_sig(signo, current);
->> +			return;
->> +		}
->>  		arm64_force_sig_fault(signo, sicode, addr, str);
->>  	} else {
->>  		die(str, regs, err);
->> -- 
->> 2.21.0
->> 
+  Andrea
