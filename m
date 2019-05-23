@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62087C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:50:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58EEAC282E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:50:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 373A22133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:50:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2685D20881
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:50:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558641001;
-	bh=kBfZs7uPI92w1cYfqBIww9IeYka4HXTlPEwPA1TB7AQ=;
+	s=default; t=1558641005;
+	bh=xywE+GSgYA5Pfdjb6LBnSzVFaUGC8KB/hDWbOo3Es4M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VqmoaW2VI0m9TwQTX8ohXvRSoVxljOgqU0l+8ByDpvU8IZoAT74FgtZXEZZ2j9QTi
-	 lZtWcSb9kBXWEHJqTkcIgtUyL57OBCbNeweHxcJMirJnsZWfL7Xz2pO8UnPw8jbw0M
-	 r7lJHVuoU68n1KEK9rIN/crVJM0Shl9guc8XWpRs=
+	b=ZcUyjAWRHNZxA5QKNF8c90F2Ex2wdaqGtz1/h2ytEpGJrmM+b1nTKWTsIVUiwTi+A
+	 Qz6TFbnCxfE/ozcYHbIlJiBqYUIIE6f442kBDW1TM9zOlYSK8Qa+ctGbnUUzpM8grJ
+	 oS9LOTjRZesT5iq52C8dekhyq9OK6Xt4sy8R7HWg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388284AbfEWTuA (ORCPT
+        id S2387777AbfEWTKU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:50:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43724 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:10:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43548 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387796AbfEWTKY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:10:24 -0400
+        id S2387743AbfEWTKO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:10:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D77502184B;
-        Thu, 23 May 2019 19:10:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EFD672133D;
+        Thu, 23 May 2019 19:10:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558638624;
-        bh=kBfZs7uPI92w1cYfqBIww9IeYka4HXTlPEwPA1TB7AQ=;
+        s=default; t=1558638613;
+        bh=xywE+GSgYA5Pfdjb6LBnSzVFaUGC8KB/hDWbOo3Es4M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kVYf9ETj7UbFGxPVqK5efkKahQ64jZBswQ+RNf4DtnPgtONx/39/tfdgOE3NnmvT1
-         vmRM7OHVGcak1VXh7Vnz2EC0eKGhkdFYs879WTu97xPc1kvaoqHUOFQL/0jEelX8mQ
-         fdU8klZg62FRYc4prbVJkscPlzwmWTaU6AVdEKFc=
+        b=A1Yq5ySbuQhqeVOsKDQyfTJUxepdzZLpw1os5hjiQI6JhveTA/CuFuyLdZzsmCLQM
+         zvzkW1Xp/L7XIuvafShhA5VHKxbVwTyOr8WEbVfcd5yfZ4JFM4bGW3LSSwj9zZQvOk
+         yYuiynslrfYVwgGMtcZ7Vl0eal6PIK0AjaulNyJo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Chris Healy <cphealy@gmail.com>, linux-pm@vger.kernel.org,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        stable@vger.kernel.org, Jeremy Sowden <jeremy@azazel.net>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 48/53] power: supply: sysfs: prevent endless uevent loop with CONFIG_POWER_SUPPLY_DEBUG
-Date:   Thu, 23 May 2019 21:06:12 +0200
-Message-Id: <20190523181718.571354644@linuxfoundation.org>
+Subject: [PATCH 4.9 44/53] vti4: ipip tunnel deregistration fixes.
+Date:   Thu, 23 May 2019 21:06:08 +0200
+Message-Id: <20190523181717.950582899@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181710.981455400@linuxfoundation.org>
 References: <20190523181710.981455400@linuxfoundation.org>
@@ -61,65 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 349ced9984ff540ce74ca8a0b2e9b03dc434b9dd ]
+[ Upstream commit 5483844c3fc18474de29f5d6733003526e0a9f78 ]
 
-Fix a similar endless event loop as was done in commit
-8dcf32175b4e ("i2c: prevent endless uevent loop with
-CONFIG_I2C_DEBUG_CORE"):
+If tunnel registration failed during module initialization, the module
+would fail to deregister the IPPROTO_COMP protocol and would attempt to
+deregister the tunnel.
 
-  The culprit is the dev_dbg printk in the i2c uevent handler. If
-  this is activated (for instance by CONFIG_I2C_DEBUG_CORE) it results
-  in an endless loop with systemd-journald.
+The tunnel was not deregistered during module-exit.
 
-  This happens if user-space scans the system log and reads the uevent
-  file to get information about a newly created device, which seems
-  fair use to me. Unfortunately reading the "uevent" file uses the
-  same function that runs for creating the uevent for a new device,
-  generating the next syslog entry
-
-Both CONFIG_I2C_DEBUG_CORE and CONFIG_POWER_SUPPLY_DEBUG were reported
-in https://bugs.freedesktop.org/show_bug.cgi?id=76886 but only former
-seems to have been fixed. Drop debug prints as it was done in I2C
-subsystem to resolve the issue.
-
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Chris Healy <cphealy@gmail.com>
-Cc: linux-pm@vger.kernel.org
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Fixes: dd9ee3444014e ("vti4: Fix a ipip packet processing bug in 'IPCOMP' virtual tunnel")
+Signed-off-by: Jeremy Sowden <jeremy@azazel.net>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/power/supply/power_supply_sysfs.c | 6 ------
- 1 file changed, 6 deletions(-)
+ net/ipv4/ip_vti.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/supply/power_supply_sysfs.c
-index bcde8d13476af..c0fc98e03c912 100644
---- a/drivers/power/supply/power_supply_sysfs.c
-+++ b/drivers/power/supply/power_supply_sysfs.c
-@@ -278,15 +278,11 @@ int power_supply_uevent(struct device *dev, struct kobj_uevent_env *env)
- 	char *prop_buf;
- 	char *attrname;
+diff --git a/net/ipv4/ip_vti.c b/net/ipv4/ip_vti.c
+index 270e79f4d40e6..4e39c935e057e 100644
+--- a/net/ipv4/ip_vti.c
++++ b/net/ipv4/ip_vti.c
+@@ -678,9 +678,9 @@ static int __init vti_init(void)
+ 	return err;
  
--	dev_dbg(dev, "uevent\n");
--
- 	if (!psy || !psy->desc) {
- 		dev_dbg(dev, "No power supply yet\n");
- 		return ret;
- 	}
- 
--	dev_dbg(dev, "POWER_SUPPLY_NAME=%s\n", psy->desc->name);
--
- 	ret = add_uevent_var(env, "POWER_SUPPLY_NAME=%s", psy->desc->name);
- 	if (ret)
- 		return ret;
-@@ -322,8 +318,6 @@ int power_supply_uevent(struct device *dev, struct kobj_uevent_env *env)
- 			goto out;
- 		}
- 
--		dev_dbg(dev, "prop %s=%s\n", attrname, prop_buf);
--
- 		ret = add_uevent_var(env, "POWER_SUPPLY_%s=%s", attrname, prop_buf);
- 		kfree(attrname);
- 		if (ret)
+ rtnl_link_failed:
+-	xfrm4_protocol_deregister(&vti_ipcomp4_protocol, IPPROTO_COMP);
+-xfrm_tunnel_failed:
+ 	xfrm4_tunnel_deregister(&ipip_handler, AF_INET);
++xfrm_tunnel_failed:
++	xfrm4_protocol_deregister(&vti_ipcomp4_protocol, IPPROTO_COMP);
+ xfrm_proto_comp_failed:
+ 	xfrm4_protocol_deregister(&vti_ah4_protocol, IPPROTO_AH);
+ xfrm_proto_ah_failed:
+@@ -696,6 +696,7 @@ pernet_dev_failed:
+ static void __exit vti_fini(void)
+ {
+ 	rtnl_link_unregister(&vti_link_ops);
++	xfrm4_tunnel_deregister(&ipip_handler, AF_INET);
+ 	xfrm4_protocol_deregister(&vti_ipcomp4_protocol, IPPROTO_COMP);
+ 	xfrm4_protocol_deregister(&vti_ah4_protocol, IPPROTO_AH);
+ 	xfrm4_protocol_deregister(&vti_esp4_protocol, IPPROTO_ESP);
 -- 
 2.20.1
 
