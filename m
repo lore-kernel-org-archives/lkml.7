@@ -2,97 +2,130 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 272ABC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:00:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D779DC282E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:01:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFAE12175B
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:00:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC9DA20881
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:01:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="WtzwBrSH";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="WtzwBrSH"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ylu32Xyv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731052AbfEWPA2 (ORCPT
+        id S1730881AbfEWPB6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 11:00:28 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:47866 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730741AbfEWPA0 (ORCPT
+        Thu, 23 May 2019 11:01:58 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:40069 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730751AbfEWPB5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 11:00:26 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id DB79160A42; Thu, 23 May 2019 15:00:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1558623625;
-        bh=xjX2dCoX++xPQ70yBZuiq+wW8s0TyrMClqMEGpholq0=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=WtzwBrSHxC98Nc3KswSuxRp1VN96Pmu74SOXVvvNAXqNaFFA2OJmPaF9ZaCn0RNll
-         /Y3aTKxSGn3pEcG90HsoI6OGjtd4ueW38oJ+zOOLvRlaTP80VT2CSWsV5Gv4qw+fM5
-         apiqSik983/sk2+OlO6xpJUl3XsqIRazum3T2GDY=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2B4ED607B9;
-        Thu, 23 May 2019 15:00:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1558623625;
-        bh=xjX2dCoX++xPQ70yBZuiq+wW8s0TyrMClqMEGpholq0=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=WtzwBrSHxC98Nc3KswSuxRp1VN96Pmu74SOXVvvNAXqNaFFA2OJmPaF9ZaCn0RNll
-         /Y3aTKxSGn3pEcG90HsoI6OGjtd4ueW38oJ+zOOLvRlaTP80VT2CSWsV5Gv4qw+fM5
-         apiqSik983/sk2+OlO6xpJUl3XsqIRazum3T2GDY=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2B4ED607B9
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Gen Zhang <blackgod016574@gmail.com>
-Cc:     eyalreizer@gmail.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org
-Subject: Re: [PATCH v2] sdio: Fix a memory leaking bug in wl1271_probe()
-References: <20190523144425.GA26766@zhanggen-UX430UQ>
-Date:   Thu, 23 May 2019 18:00:21 +0300
-In-Reply-To: <20190523144425.GA26766@zhanggen-UX430UQ> (Gen Zhang's message of
-        "Thu, 23 May 2019 22:44:25 +0800")
-Message-ID: <87d0k9b4hm.fsf@kamboji.qca.qualcomm.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain
+        Thu, 23 May 2019 11:01:57 -0400
+Received: by mail-pl1-f193.google.com with SMTP id g69so2871015plb.7
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 08:01:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=9HPbB+/1XsdXIOfekp8uwS00PlsQpqBLPqA5cNuO+gA=;
+        b=ylu32XyvB6DWk0CsJb509nElZsZmOoFdPwMEL7u9OSkrpMlho3jb6QCQxy/15T3wMp
+         BkhEPVUE6VEjBnuopij1rHk8QYCaghvYH8nfxns4iMxmCIThEKBsFr7NIzJeo60nFE+u
+         j6xCj8u/NAAWkIaUwYdcd9Kt6fLrmLFbXPzLInYfEWgAd9vYUSbaXz6Y21iIppxWCiEw
+         fhyvwnbHOdYDua1hNZPpaKxj+en82dkzN3OBIe3f3ehQmxjE/wF1eI+jGQcTWy4jWIaI
+         A/hn1rjsz8tLHDQY/Lwgn4XetVvulMZwBrTFYJ920MSzUw7+NoxvcOic0caAQyyoHKGo
+         JetQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=9HPbB+/1XsdXIOfekp8uwS00PlsQpqBLPqA5cNuO+gA=;
+        b=g8nBqubIeukcYIqO5WmsMeqqDeKHsFOWpEKe0paZoC3C6txIws/GnmKsTvQrQbKh1Y
+         /C1v/B3Qtu9Lk+E0M+gIToTFYDuNHQsDFcmBRr+pd48/5+1IsftCqon1tO6JPPErOnPP
+         bEyW4/koJyGOaExbrPLgo7kLO5ivSzPRY4N7me5qvu2Hbj5pp40peq5qEeNspmz5EokH
+         xfPubFos+nrvA3rHB0ZBiRievfQhOGL+jsmL6SHjYACkLQugzuXvBGvosFn9UmzKYNBZ
+         6uxk3BUc19mNG4ThJW98OOEzxSpji+Wgb0euGCWvP96oWPGfheqncXD4aArZ9N57ppIX
+         bJcw==
+X-Gm-Message-State: APjAAAVQ6bqmWZu4PJcfqO4W5JpUUV5M4NRBJAFyFN9Qp773hZZl5+Ow
+        A7mA8mXrvua2GR2/nxYXsU8olQ==
+X-Google-Smtp-Source: APXvYqzIj2BwrvMPQRJHJSSCOwmfUvkSruAz2K1zWiJscGPLw6+nznE6Ym2LMHGMG9AawDFEugtI+g==
+X-Received: by 2002:a17:902:2de4:: with SMTP id p91mr82211589plb.300.1558623717040;
+        Thu, 23 May 2019 08:01:57 -0700 (PDT)
+Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id t2sm25418248pfh.166.2019.05.23.08.01.55
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 23 May 2019 08:01:56 -0700 (PDT)
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Andy Gross <agross@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] soc: qcom: apr: Don't use reg for domain id
+Date:   Thu, 23 May 2019 08:01:53 -0700
+Message-Id: <20190523150153.13136-1-bjorn.andersson@linaro.org>
+X-Mailer: git-send-email 2.18.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+ linux-wireless
+The reg property represents the address and size on the bus that a
+device lives, but for APR the parent is a rpmsg bus, which does not have
+numerical addresses. Simply defining #address/#size-cells to 1 and 0,
+respectively, to silence the compiler is not an appropriate solution.
 
-Gen Zhang <blackgod016574@gmail.com> writes:
+Replace the use of "reg" with an APR specific property.
 
-> In wl1271_probe(), 'glue->core' is allocated by platform_device_alloc(),
-> when this allocation fails, ENOMEM is returned. However, 'pdev_data'
-> and 'glue' are allocated by devm_kzalloc() before 'glue->core'. When
-> platform_device_alloc() returns NULL, we should also free 'pdev_data'
-> and 'glue' before wl1271_probe() ends to prevent leaking memory.
->
-> Similarly, we should free 'pdev_data' when 'glue' is NULL. And we
-> should free 'pdev_data' and 'glue' when 'ret' is error.
->
-> Further, we shoulf free 'glue->dev', 'pdev_data' and 'glue' when this
-> function normally ends to prevent memory leaking.
->
-> Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
-> ---
-> diff --git a/drivers/net/wireless/ti/wlcore/sdio.c b/drivers/net/wireless/ti/wlcore/sdio.c
-> index 4d4b0770..232ce5f 100644
-> --- a/drivers/net/wireless/ti/wlcore/sdio.c
-> +++ b/drivers/net/wireless/ti/wlcore/sdio.c
+Reviewed-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
 
-You need to CC linux-wireless, otherwise patchwork won't see the patch
-and it will not be applied. Also you should use prefix "wlcore:".
+Changes since v1:
+- Fixed example to match change
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches#commit_title_is_wrong
+ Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt | 6 +++---
+ drivers/soc/qcom/apr.c                                  | 2 +-
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
+diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
+index bcc612cc7423..db501269f47b 100644
+--- a/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
++++ b/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
+@@ -9,7 +9,7 @@ used for audio/voice services on the QDSP.
+ 	Value type: <stringlist>
+ 	Definition: must be "qcom,apr-v<VERSION-NUMBER>", example "qcom,apr-v2"
+ 
+-- reg
++- qcom,apr-domain
+ 	Usage: required
+ 	Value type: <u32>
+ 	Definition: Destination processor ID.
+@@ -49,9 +49,9 @@ by the individual bindings for the specific service
+ The following example represents a QDSP based sound card on a MSM8996 device
+ which uses apr as communication between Apps and QDSP.
+ 
+-	apr@4 {
++	apr {
+ 		compatible = "qcom,apr-v2";
+-		reg = <APR_DOMAIN_ADSP>;
++		qcom,apr-domain = <APR_DOMAIN_ADSP>;
+ 
+ 		q6core@3 {
+ 			compatible = "qcom,q6core";
+diff --git a/drivers/soc/qcom/apr.c b/drivers/soc/qcom/apr.c
+index 74f8b9607daa..b83d71b2e0a4 100644
+--- a/drivers/soc/qcom/apr.c
++++ b/drivers/soc/qcom/apr.c
+@@ -276,7 +276,7 @@ static int apr_probe(struct rpmsg_device *rpdev)
+ 	if (!apr)
+ 		return -ENOMEM;
+ 
+-	ret = of_property_read_u32(dev->of_node, "reg", &apr->dest_domain_id);
++	ret = of_property_read_u32(dev->of_node, "qcom,apr-domain", &apr->dest_domain_id);
+ 	if (ret) {
+ 		dev_err(dev, "APR Domain ID not specified in DT\n");
+ 		return ret;
 -- 
-Kalle Valo
+2.18.0
+
