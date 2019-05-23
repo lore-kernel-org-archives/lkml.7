@@ -2,121 +2,92 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11178C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 13:46:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C02FC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 13:48:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5AB720881
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 13:46:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558619193;
-	bh=hHE6c67P2rAS6OaTN285xrU4cTJEg+JYvlzhHriVflQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=aT7kOQkX7qEb71StQoXK1I4zXPCGGNa4GNcdpCewZJvJwXQBRUFy4DuSfXMIcQEeU
-	 YvZ1gwEEvIsp6ZcTTvtDLSrQkZhmobmQjJLaNCkweea3V+lUyiJC5JzGNskSca4CVG
-	 cxBFBTgeYc8wfZvFnoSydEsIJZ7yoBifcFe4rXEw=
+	by mail.kernel.org (Postfix) with ESMTP id 2B1A820868
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 13:48:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rnsqyg44"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730800AbfEWNqd (ORCPT
+        id S1730840AbfEWNsg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 09:46:33 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:40576 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730564AbfEWNqb (ORCPT
+        Thu, 23 May 2019 09:48:36 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:43174 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730684AbfEWNsg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 09:46:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=mfme33xseZptaUR1J0V/caYBOllJ3rsr79Z37c1uExY=; b=p03EHWT2EucM1oy2mwwkLoCa4
-        cEClGv19UdrvGGd0zT2qpW5VR+hR7uqzOdMkk8Pq97xH1hF2IuNiIw8WCKa8qpFzoFcgidqqUxoFM
-        qkFRSOWgyqaN+BmVvehSRKNxsehKedaX1zgRl/igV7NNJdWO7vlbzoLgwPplFrbbMbU6w=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hTo39-0000Dd-D8; Thu, 23 May 2019 13:46:27 +0000
-Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 0250D1126D24; Thu, 23 May 2019 14:46:25 +0100 (BST)
-Date:   Thu, 23 May 2019 14:46:25 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        linux-rockchip@lists.infradead.org, drinkcat@chromium.org,
-        Guenter Roeck <groeck@chromium.org>, briannorris@chromium.org,
-        mka@chromium.org, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org
-Subject: Re: [PATCH v4 2/3] spi: Allow SPI devices to request the pumping
- thread be realtime
-Message-ID: <20190523134625.GG17245@sirena.org.uk>
-References: <20190515164814.258898-1-dianders@chromium.org>
- <20190515164814.258898-3-dianders@chromium.org>
+        Thu, 23 May 2019 09:48:36 -0400
+Received: by mail-pl1-f195.google.com with SMTP id gn7so2783965plb.10;
+        Thu, 23 May 2019 06:48:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=+gf6TK/DBZkbbPD59gjM5EzSFnmu0bkE4KJafULy65Y=;
+        b=rnsqyg44lH8m7taWbuklaTCCz+35oJR/l6Qvu3nboiWywtVJszAN5r1JZZHNf22TlL
+         EC6rzSjYQa/QR0ivyeZMdANgKAjULdQ8jZm65iQGs+q82LE2KLJ5xf+OjAK4S7BR91Es
+         b5zTbN82WIaV6D95qOmUz/zqRV7tuLDrhiG4juw5hDWhRZyiifIizk4b+8z67j38wZKR
+         roz6c8S7JRou1K+Hp2d8pEigq64HClfp+59fhiSKhLvwcIhL+H00WgbMyFXI9TPHSfoD
+         ZXrtrGkrt/NwdtN+K0dNuzbfEX4sRH8aTyhUQJBSLp3RtWGgpvzEhwJlbNbAH95jHOjo
+         K+7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+gf6TK/DBZkbbPD59gjM5EzSFnmu0bkE4KJafULy65Y=;
+        b=AeTmkADzHbtVlUbypbQ0DsRaKOyI5KwW387d/01TKDiAQNf3Inkq8FVyDIvI0HdtJS
+         U059whISItvkzcK5wSPV1T/l8KGPXLGohlfGuF0GpcQhl/7ikV5qfEaoraWpfGAlLg3E
+         +VpclBQQbHObMXT6MSFtqF9G7m1NO5dwA8aMxkdm/EsSJ6eih6+vBBax49vlKQOWjtbz
+         fPdSzqkiRGEma36BDyVQMXRwOihitChga+qDVUMAlR0n8s/uF9EkaSZ2QGnRpfqWuJF2
+         uq6pQHZgwbR4GDCsWy/IbAHzMOHlPaCDia5GFxmu5Ovxr0Q63YbFA1um9x53wzIAzBgT
+         nFYA==
+X-Gm-Message-State: APjAAAXqRDl9ZEW/hYnx5C6AcWh/tjPMEwygoD8CVAw9buYye4/v4irW
+        HTl/af+Gbnb5HIaVb/SU6Cw=
+X-Google-Smtp-Source: APXvYqwKUTsNLMMZr3WT+JsRYI+XStFLzKHLL4taI1RlLURXHZmDRyhRh2+PrNYZ032j2fi3xT6L8g==
+X-Received: by 2002:a17:902:728f:: with SMTP id d15mr24384602pll.167.1558619315442;
+        Thu, 23 May 2019 06:48:35 -0700 (PDT)
+Received: from localhost (c-73-222-71-142.hsd1.ca.comcast.net. [73.222.71.142])
+        by smtp.gmail.com with ESMTPSA id y191sm2667986pfb.179.2019.05.23.06.48.34
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 23 May 2019 06:48:34 -0700 (PDT)
+Date:   Thu, 23 May 2019 06:48:32 -0700
+From:   Richard Cochran <richardcochran@gmail.com>
+To:     "Y.b. Lu" <yangbo.lu@nxp.com>
+Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        David Miller <davem@davemloft.net>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Alexandru Marginean <alexandru.marginean@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next v2, 0/4] ENETC: support hardware timestamping
+Message-ID: <20190523134832.xzupnwvhhlljtoyh@localhost>
+References: <20190523023451.2933-1-yangbo.lu@nxp.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="bO4vSxwwZtUjUWHo"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190515164814.258898-3-dianders@chromium.org>
-X-Cookie: I brake for chezlogs!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190523023451.2933-1-yangbo.lu@nxp.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, May 23, 2019 at 02:33:24AM +0000, Y.b. Lu wrote:
+> This patch-set is to support hardware timestamping for ENETC
+> and also to add ENETC 1588 timer device tree node for ls1028a.
 
---bO4vSxwwZtUjUWHo
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Please, in the future, summarize the changes from the last series in
+the cover letter.  It helps the reviewers to focus.
 
-On Wed, May 15, 2019 at 09:48:12AM -0700, Douglas Anderson wrote:
-> Right now the only way to get the SPI pumping thread bumped up to
-> realtime priority is for the controller to request it.  However it may
-> be that the controller works fine with the normal priority but
-> communication to a particular SPI device on the bus needs realtime
-> priority.
-
-The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
-
-  Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
-
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git tags/spi-rt-pump
-
-for you to fetch changes up to 924b5867e7bd6a6a98014f0517b747465b108011:
-
-  spi: Allow SPI devices to request the pumping thread be realtime (2019-05-23 14:44:02 +0100)
-
-----------------------------------------------------------------
-spi: Allow setting pump to RT priority
-
-----------------------------------------------------------------
-Douglas Anderson (1):
-      spi: Allow SPI devices to request the pumping thread be realtime
-
- drivers/spi/spi.c       | 36 ++++++++++++++++++++++++++++++------
- include/linux/spi/spi.h |  2 ++
- 2 files changed, 32 insertions(+), 6 deletions(-)
-
---bO4vSxwwZtUjUWHo
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlzmpDEACgkQJNaLcl1U
-h9AT8wf9HCQwiI9ChQBim3VkHh1VA8vwPgC20zoPo4PUGPcvvaWX5I3lrUoeCp1Q
-vpMaUDp9J8OQ57wbmNFjqYYwLAK66XMUPQmqyH6q+1m1JSp5FP41aVGkJD32UOnk
-wqsDdznTOvdDrgnVtJWtqjSWiK18M4OQJhIJGwe0wBRIfk+bpQDa+s+R34wgHCt8
-xGJZcdJagggMsco0HvSgLuIRcIVuLbsCiu9Vxh1GR3ko3x7xLUVhkoKzxJ81qVu1
-99KmShuE/rXn2IKU0lfC6WjItvey3r1RWyKFsSd7xKI6Izz45lNFrUlgrSOyLW4R
-NqMXjQUeC/nEluG0IIC4X0mbopIIsw==
-=Xgy/
------END PGP SIGNATURE-----
-
---bO4vSxwwZtUjUWHo--
+Thanks,
+Richard
