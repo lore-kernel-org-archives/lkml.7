@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14493C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:17:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23962C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:17:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFC192070D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:17:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEAD021850
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:17:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639042;
-	bh=+athbFoOd2Xxcsmu54xtO7qi37LKpNoQwFHL9MONUjo=;
+	s=default; t=1558639048;
+	bh=VhYHj1JGEzybdzdBDT8KkRqbELCLV3SpqUsmXijz9OA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g6x1uev0Ty/VHQiD8m9QlqrJpr4yzs1T5xBgiUFsVKBE34KpqWb4ObgSSDHnFaZ+K
-	 6tRgIAIFgVfkWn47hKBFPfivTnjatMiBS8EqY78hmwn3IPgtCVnBBZYl+6C71atXOx
-	 yPpUTLgTpqN0LySf4YHaqwwlJLscAWE6G9jQN2Ms=
+	b=qrnXbTlAIN8CGiduBBtzPMI2r4vFGuv0/XgaqyFuZVqSHdGZJwXJJ1pQMtQjvNmDp
+	 DcQ3oYT2nIJN3UkGY0eNnGNkZlLaiT1+CK7OFsDc4Tqmt6A0lgbbOCDxoa5asKdwPM
+	 RfVJ3FvTz3wKRQKZfFYjuO47AB39rlRj5YgoEXG4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389383AbfEWTRW (ORCPT
+        id S2389409AbfEWTR1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:17:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52368 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:17:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52494 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389384AbfEWTRS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:17:18 -0400
+        id S2388952AbfEWTRX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:17:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 46E4221851;
-        Thu, 23 May 2019 19:17:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B4FD0205ED;
+        Thu, 23 May 2019 19:17:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639037;
-        bh=+athbFoOd2Xxcsmu54xtO7qi37LKpNoQwFHL9MONUjo=;
+        s=default; t=1558639043;
+        bh=VhYHj1JGEzybdzdBDT8KkRqbELCLV3SpqUsmXijz9OA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h/0cWW4pIQUWMtc00PLiVP/8JTONFZutVx5QAoDE0MswZBNJqHBCMKts0brpk5Kas
-         ew8lcLVEvanPKDjESdJdbW6LzYtHBXGFBUKAE/PJDQS72dJ5ubtJb0jE/UpN5yz5JU
-         wGGJMmv5lpKA9qSTq8oZZXOu9sqqPCpYfpy0Q058=
+        b=T+tWFU0+wTsW0grRAy5E27PPzjJih+07O8+Fhp1FwGP8b2+S9f4JwQ2IrWpHNVf1k
+         Barxcz31PwIaGjco5saPdH5pVt+hrm/5VDQ36WLewwtpDffuSQUJIcOYDm3Jw6DHmQ
+         Du7RWoWu0OWAh7OLfBIZWo1vzyFhAHxYFBgePCjQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 4.19 056/114] perf intel-pt: Fix instructions sampling rate
-Date:   Thu, 23 May 2019 21:05:55 +0200
-Message-Id: <20190523181736.694301832@linuxfoundation.org>
+        stable@vger.kernel.org, Amir Goldstein <amir73il@gmail.com>,
+        Vivek Goyal <vgoyal@redhat.com>,
+        Miklos Szeredi <mszeredi@redhat.com>
+Subject: [PATCH 4.19 048/114] ovl: fix missing upper fs freeze protection on copy up for ioctl
+Date:   Thu, 23 May 2019 21:05:47 +0200
+Message-Id: <20190523181736.073093579@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181731.372074275@linuxfoundation.org>
 References: <20190523181731.372074275@linuxfoundation.org>
@@ -60,91 +60,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adrian Hunter <adrian.hunter@intel.com>
+From: Amir Goldstein <amir73il@gmail.com>
 
-commit 7ba8fa20e26eb3c0c04d747f7fd2223694eac4d5 upstream.
+commit 3428030da004a1128cbdcf93dc03e16f184d845b upstream.
 
-The timestamp used to determine if an instruction sample is made, is an
-estimate based on the number of instructions since the last known
-timestamp. A consequence is that it might go backwards, which results in
-extra samples. Change it so that a sample is only made when the
-timestamp goes forwards.
+Generalize the helper ovl_open_maybe_copy_up() and use it to copy up file
+with data before FS_IOC_SETFLAGS ioctl.
 
-Note this does not affect a sampling period of 0 or sampling periods
-specified as a count of instructions.
+The FS_IOC_SETFLAGS ioctl is a bit of an odd ball in vfs, which probably
+caused the confusion.  File may be open O_RDONLY, but ioctl modifies the
+file.  VFS does not call mnt_want_write_file() nor lock inode mutex, but
+fs-specific code for FS_IOC_SETFLAGS does.  So ovl_ioctl() calls
+mnt_want_write_file() for the overlay file, and fs-specific code calls
+mnt_want_write_file() for upper fs file, but there was no call for
+ovl_want_write() for copy up duration which prevents overlayfs from copying
+up on a frozen upper fs.
 
-Example:
-
- Before:
-
- $ perf script --itrace=i10us
- ls 13812 [003] 2167315.222583:       3270 instructions:u:      7fac71e2e494 __GI___tunables_init+0xf4 (/lib/x86_64-linux-gnu/ld-2.28.so)
- ls 13812 [003] 2167315.222667:      30902 instructions:u:      7fac71e2da0f _dl_cache_libcmp+0x2f (/lib/x86_64-linux-gnu/ld-2.28.so)
- ls 13812 [003] 2167315.222667:         10 instructions:u:      7fac71e2d9ff _dl_cache_libcmp+0x1f (/lib/x86_64-linux-gnu/ld-2.28.so)
- ls 13812 [003] 2167315.222667:          8 instructions:u:      7fac71e2d9ea _dl_cache_libcmp+0xa (/lib/x86_64-linux-gnu/ld-2.28.so)
- ls 13812 [003] 2167315.222667:         14 instructions:u:      7fac71e2d9ea _dl_cache_libcmp+0xa (/lib/x86_64-linux-gnu/ld-2.28.so)
- ls 13812 [003] 2167315.222667:          6 instructions:u:      7fac71e2d9ff _dl_cache_libcmp+0x1f (/lib/x86_64-linux-gnu/ld-2.28.so)
- ls 13812 [003] 2167315.222667:         14 instructions:u:      7fac71e2d9ff _dl_cache_libcmp+0x1f (/lib/x86_64-linux-gnu/ld-2.28.so)
- ls 13812 [003] 2167315.222667:          4 instructions:u:      7fac71e2dab2 _dl_cache_libcmp+0xd2 (/lib/x86_64-linux-gnu/ld-2.28.so)
- ls 13812 [003] 2167315.222728:      16423 instructions:u:      7fac71e2477a _dl_map_object_deps+0x1ba (/lib/x86_64-linux-gnu/ld-2.28.so)
- ls 13812 [003] 2167315.222734:      12731 instructions:u:      7fac71e27938 _dl_name_match_p+0x68 (/lib/x86_64-linux-gnu/ld-2.28.so)
- ...
-
- After:
- $ perf script --itrace=i10us
- ls 13812 [003] 2167315.222583:       3270 instructions:u:      7fac71e2e494 __GI___tunables_init+0xf4 (/lib/x86_64-linux-gnu/ld-2.28.so)
- ls 13812 [003] 2167315.222667:      30902 instructions:u:      7fac71e2da0f _dl_cache_libcmp+0x2f (/lib/x86_64-linux-gnu/ld-2.28.so)
- ls 13812 [003] 2167315.222728:      16479 instructions:u:      7fac71e2477a _dl_map_object_deps+0x1ba (/lib/x86_64-linux-gnu/ld-2.28.so)
- ...
-
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: stable@vger.kernel.org
-Fixes: f4aa081949e7b ("perf tools: Add Intel PT decoder")
-Link: http://lkml.kernel.org/r/20190510124143.27054-2-adrian.hunter@intel.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fixes: dab5ca8fd9dd ("ovl: add lsattr/chattr support")
+Cc: <stable@vger.kernel.org> # v4.19
+Signed-off-by: Amir Goldstein <amir73il@gmail.com>
+Acked-by: Vivek Goyal <vgoyal@redhat.com>
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/perf/util/intel-pt-decoder/intel-pt-decoder.c |   13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+ fs/overlayfs/copy_up.c   |    6 +++---
+ fs/overlayfs/file.c      |    5 ++---
+ fs/overlayfs/overlayfs.h |    2 +-
+ 3 files changed, 6 insertions(+), 7 deletions(-)
 
---- a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
-+++ b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
-@@ -888,16 +888,20 @@ static uint64_t intel_pt_next_period(str
- 	timestamp = decoder->timestamp + decoder->timestamp_insn_cnt;
- 	masked_timestamp = timestamp & decoder->period_mask;
- 	if (decoder->continuous_period) {
--		if (masked_timestamp != decoder->last_masked_timestamp)
-+		if (masked_timestamp > decoder->last_masked_timestamp)
- 			return 1;
- 	} else {
- 		timestamp += 1;
- 		masked_timestamp = timestamp & decoder->period_mask;
--		if (masked_timestamp != decoder->last_masked_timestamp) {
-+		if (masked_timestamp > decoder->last_masked_timestamp) {
- 			decoder->last_masked_timestamp = masked_timestamp;
- 			decoder->continuous_period = true;
- 		}
- 	}
-+
-+	if (masked_timestamp < decoder->last_masked_timestamp)
-+		return decoder->period_ticks;
-+
- 	return decoder->period_ticks - (timestamp - masked_timestamp);
+--- a/fs/overlayfs/copy_up.c
++++ b/fs/overlayfs/copy_up.c
+@@ -878,14 +878,14 @@ static bool ovl_open_need_copy_up(struct
+ 	return true;
  }
  
-@@ -926,7 +930,10 @@ static void intel_pt_sample_insn(struct
- 	case INTEL_PT_PERIOD_TICKS:
- 		timestamp = decoder->timestamp + decoder->timestamp_insn_cnt;
- 		masked_timestamp = timestamp & decoder->period_mask;
--		decoder->last_masked_timestamp = masked_timestamp;
-+		if (masked_timestamp > decoder->last_masked_timestamp)
-+			decoder->last_masked_timestamp = masked_timestamp;
-+		else
-+			decoder->last_masked_timestamp += decoder->period_ticks;
- 		break;
- 	case INTEL_PT_PERIOD_NONE:
- 	case INTEL_PT_PERIOD_MTC:
+-int ovl_open_maybe_copy_up(struct dentry *dentry, unsigned int file_flags)
++int ovl_maybe_copy_up(struct dentry *dentry, int flags)
+ {
+ 	int err = 0;
+ 
+-	if (ovl_open_need_copy_up(dentry, file_flags)) {
++	if (ovl_open_need_copy_up(dentry, flags)) {
+ 		err = ovl_want_write(dentry);
+ 		if (!err) {
+-			err = ovl_copy_up_flags(dentry, file_flags);
++			err = ovl_copy_up_flags(dentry, flags);
+ 			ovl_drop_write(dentry);
+ 		}
+ 	}
+--- a/fs/overlayfs/file.c
++++ b/fs/overlayfs/file.c
+@@ -116,11 +116,10 @@ static int ovl_real_fdget(const struct f
+ 
+ static int ovl_open(struct inode *inode, struct file *file)
+ {
+-	struct dentry *dentry = file_dentry(file);
+ 	struct file *realfile;
+ 	int err;
+ 
+-	err = ovl_open_maybe_copy_up(dentry, file->f_flags);
++	err = ovl_maybe_copy_up(file_dentry(file), file->f_flags);
+ 	if (err)
+ 		return err;
+ 
+@@ -390,7 +389,7 @@ static long ovl_ioctl(struct file *file,
+ 		if (ret)
+ 			return ret;
+ 
+-		ret = ovl_copy_up_with_data(file_dentry(file));
++		ret = ovl_maybe_copy_up(file_dentry(file), O_WRONLY);
+ 		if (!ret) {
+ 			ret = ovl_real_ioctl(file, cmd, arg);
+ 
+--- a/fs/overlayfs/overlayfs.h
++++ b/fs/overlayfs/overlayfs.h
+@@ -411,7 +411,7 @@ extern const struct file_operations ovl_
+ int ovl_copy_up(struct dentry *dentry);
+ int ovl_copy_up_with_data(struct dentry *dentry);
+ int ovl_copy_up_flags(struct dentry *dentry, int flags);
+-int ovl_open_maybe_copy_up(struct dentry *dentry, unsigned int file_flags);
++int ovl_maybe_copy_up(struct dentry *dentry, int flags);
+ int ovl_copy_xattr(struct dentry *old, struct dentry *new);
+ int ovl_set_attr(struct dentry *upper, struct kstat *stat);
+ struct ovl_fh *ovl_encode_real_fh(struct dentry *real, bool is_upper);
 
 
