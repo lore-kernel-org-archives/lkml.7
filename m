@@ -2,141 +2,203 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 013D6C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 14:44:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6388C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 14:45:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C85AC206BA
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 14:44:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rP6Xyj/q"
+	by mail.kernel.org (Postfix) with ESMTP id 9546F217D4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 14:45:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730936AbfEWOop (ORCPT
+        id S1730969AbfEWOpA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 10:44:45 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:38373 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730709AbfEWOon (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 10:44:43 -0400
-Received: by mail-pl1-f196.google.com with SMTP id f97so2860085plb.5
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 07:44:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=2Ky1NhTh6Sjvjan+qNl8ZXCfOCQ4Wh0D7lNZmX1Rk4s=;
-        b=rP6Xyj/q6gZKJRtGHb4s/nLwR57MhxbnQuw2lmcL3adCpoU5QQdXse548sY7W/zuGp
-         g3z9l8KWVy7T+jhAfzH4EGz7LVMEhKk/jgOsuOOZH6LVaBZp6ItlLieciyelHwkQi9vq
-         cyPa0I+iCP/5H0+wSOBK/+c68CkvPwr3dBsB3qkom9Zz39aMQ4lSgMFjNYrwKAk72L59
-         Er36+iRGksE9wtmaMGeW2U70CWZsgcLznWLbkqm42rTFioB6CT7z7+7rjDHBKi3I3NyA
-         rWeniayWC+nTUj/whE5g/LNk+Pqo2fUqzuNWP72MxRJjvYw2MjwFBpjGVQAA+vlkllFN
-         8k2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2Ky1NhTh6Sjvjan+qNl8ZXCfOCQ4Wh0D7lNZmX1Rk4s=;
-        b=qz2Lin7BsyoYR1pVFcQge8GF5b5LZt5xNAxd3JjftOgMBf3fJ9wk0hr+hjG+SbhgVq
-         VqmMM2CpJyzE4Ii8Ew9Lfhye13QF4UEEdJV7q7sh0eSxLODl8SqiRIZtc5lPoPbAew4e
-         FlXK89WaSTUvscr3kkDNjVvIeCSB+DdCWupnblPRrRKrWTbV2C3/rqWyEw3gcBa5s/fA
-         L337PaSK+Jhj6euNE0iMEEPldatIrSyt+t6wIVvS2RPCcY8g80tAuLYVRtWahh5v8I9i
-         ElkZIcoo3nb/FFZOCIxGUq7+sdmmS1lG3EFXsssVbH9Eo2WnnFQ3gYQGA0q343FMpo/s
-         kZHA==
-X-Gm-Message-State: APjAAAUqBPSCk12j39aTltli/+oAzVxo0gTG9d9PD94T4JICZ240jPt5
-        mXlmpSsn5/X8jAkybofok8r89w==
-X-Google-Smtp-Source: APXvYqzchItDvd9Ubge8eLDuQHoQswRIRqB8pGOfnTf4Aha7Nu59oyxPz1vEnqnJxz47wckbg4GLYQ==
-X-Received: by 2002:a17:902:2aab:: with SMTP id j40mr75540236plb.238.1558622682710;
-        Thu, 23 May 2019 07:44:42 -0700 (PDT)
-Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id c129sm39219824pfg.178.2019.05.23.07.44.41
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 23 May 2019 07:44:41 -0700 (PDT)
-Date:   Thu, 23 May 2019 07:45:08 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Thu, 23 May 2019 10:45:00 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:47978 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730709AbfEWOo7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 10:44:59 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B972A80D;
+        Thu, 23 May 2019 07:44:58 -0700 (PDT)
+Received: from mbp (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9DF2A3F690;
+        Thu, 23 May 2019 07:44:52 -0700 (PDT)
+Date:   Thu, 23 May 2019 15:44:49 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     enh <enh@google.com>, Evgenii Stepanov <eugenis@google.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Khalid Aziz <khalid.aziz@oracle.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
+        kvm@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] soc: qcom: apr: Don't use reg for domain id
-Message-ID: <20190523144508.GH2085@tuxbook-pro>
-References: <20190522015342.29501-1-bjorn.andersson@linaro.org>
- <e7046725-578d-8854-872b-a7837d0fc20a@linaro.org>
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alexander Deucher <Alexander.Deucher@amd.com>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
+Subject: Re: [PATCH v15 00/17] arm64: untag user pointers passed to the kernel
+Message-ID: <20190523144449.waam2mkyzhjpqpur@mbp>
+References: <cover.1557160186.git.andreyknvl@google.com>
+ <20190517144931.GA56186@arrakis.emea.arm.com>
+ <CAFKCwrj6JEtp4BzhqO178LFJepmepoMx=G+YdC8sqZ3bcBp3EQ@mail.gmail.com>
+ <20190521182932.sm4vxweuwo5ermyd@mbp>
+ <201905211633.6C0BF0C2@keescook>
+ <20190522101110.m2stmpaj7seezveq@mbp>
+ <CAJgzZoosKBwqXRyA6fb8QQSZXFqfHqe9qO9je5TogHhzuoGXJQ@mail.gmail.com>
+ <20190522163527.rnnc6t4tll7tk5zw@mbp>
+ <201905221316.865581CF@keescook>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e7046725-578d-8854-872b-a7837d0fc20a@linaro.org>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <201905221316.865581CF@keescook>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 23 May 07:38 PDT 2019, Srinivas Kandagatla wrote:
+On Wed, May 22, 2019 at 01:47:36PM -0700, Kees Cook wrote:
+> On Wed, May 22, 2019 at 05:35:27PM +0100, Catalin Marinas wrote:
+> > The two hard requirements I have for supporting any new hardware feature
+> > in Linux are (1) a single kernel image binary continues to run on old
+> > hardware while making use of the new feature if available and (2) old
+> > user space continues to run on new hardware while new user space can
+> > take advantage of the new feature.
+> 
+> Agreed! And I think the series meets these requirements, yes?
 
-> 
-> 
-> On 22/05/2019 02:53, Bjorn Andersson wrote:
-> > The reg property represents the address and size on the bus that a
-> > device lives, but for APR the parent is a rpmsg bus, which does not have
-> > numerical addresses. Simply defining #address/#size-cells to 1 and 0,
-> > respectively, to silence the compiler is not an appropriate solution.
-> > 
-> I agree.
-> 
-> > Replace the use of "reg" with an APR specific property.
-> > 
-> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > ---
-> Can you also change the example too.
-> 
+Yes. I mentioned this just to make sure people don't expect different
+kernel builds for different hardware features.
 
-Of course, sorry for missing that.
+There is also the obvious requirement which I didn't mention: new user
+space continues to run on new/subsequent kernel versions. That's one of
+the points of contention for this series (ignoring MTE) with the
+maintainers having to guarantee this without much effort. IOW, do the
+500K+ new lines in a subsequent kernel version break any user space out
+there? I'm only talking about the relaxed TBI ABI. Are the usual LTP,
+syskaller sufficient? Better static analysis would definitely help.
 
-> other than that am okay with the change.
+> > For MTE, we just can't enable it by default since there are applications
+> > who use the top byte of a pointer and expect it to be ignored rather
+> > than failing with a mismatched tag. Just think of a hwasan compiled
+> > binary where TBI is expected to work and you try to run it with MTE
+> > turned on.
 > 
-> Reviewed-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> 
+> Ah! Okay, here's the use-case I wasn't thinking of: the concern is TBI
+> conflicting with MTE. And anything that starts using TBI suddenly can't
+> run in the future because it's being interpreted as MTE bits? (Is that
+> the ABI concern?
 
-Thanks,
-Bjorn
+That's another aspect to figure out when we add the MTE support. I don't
+think we'd be able to do this without an explicit opt-in by the user.
 
-> --srini
-> > 
-> > The APR device was recently added to msm8996.dtsi, but this is still
-> > depending on working SMMU to provide functional audio support.
-> > 
-> >   Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt | 2 +-
-> >   drivers/soc/qcom/apr.c                                  | 2 +-
-> >   2 files changed, 2 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
-> > index bcc612cc7423..38d3c06abc41 100644
-> > --- a/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
-> > +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
-> > @@ -9,7 +9,7 @@ used for audio/voice services on the QDSP.
-> >   	Value type: <stringlist>
-> >   	Definition: must be "qcom,apr-v<VERSION-NUMBER>", example "qcom,apr-v2"
-> > -- reg
-> > +- qcom,apr-domain
-> >   	Usage: required
-> >   	Value type: <u32>
-> >   	Definition: Destination processor ID.
-> > diff --git a/drivers/soc/qcom/apr.c b/drivers/soc/qcom/apr.c
-> > index 74f8b9607daa..b83d71b2e0a4 100644
-> > --- a/drivers/soc/qcom/apr.c
-> > +++ b/drivers/soc/qcom/apr.c
-> > @@ -276,7 +276,7 @@ static int apr_probe(struct rpmsg_device *rpdev)
-> >   	if (!apr)
-> >   		return -ENOMEM;
-> > -	ret = of_property_read_u32(dev->of_node, "reg", &apr->dest_domain_id);
-> > +	ret = of_property_read_u32(dev->of_node, "qcom,apr-domain", &apr->dest_domain_id);
-> >   	if (ret) {
-> >   		dev_err(dev, "APR Domain ID not specified in DT\n");
-> >   		return ret;
-> > 
+Or, if we ever want MTE to be turned on by default (i.e. tag checking),
+even if everything is tagged with 0, we have to disallow TBI for user
+and this includes hwasan. There were a small number of programs using
+the TBI (I think some JavaScript compilers tried this). But now we are
+bringing in the hwasan support and this can be a large user base. Shall
+we add an ELF note for such binaries that use TBI/hwasan?
+
+This series is still required for MTE but we may decide not to relax the
+ABI blindly, therefore the opt-in (prctl) or personality idea.
+
+> I feel like we got into the weeds about ioctl()s and one-off bugs...)
+
+This needs solving as well. Most driver developers won't know why
+untagged_addr() is needed unless we have more rigorous types or type
+annotations and a tool to check them (we should probably revive the old
+sparse thread).
+
+> So there needs to be some way to let the kernel know which of three
+> things it should be doing:
+> 1- leaving userspace addresses as-is (present)
+> 2- wiping the top bits before using (this series)
+
+(I'd say tolerating rather than wiping since get_user still uses the tag
+in the current series)
+
+The current series does not allow any choice between 1 and 2, the
+default ABI basically becomes option 2.
+
+> 3- wiping the top bits for most things, but retaining them for MTE as
+>    needed (the future)
+
+2 and 3 are not entirely compatible as a tagged pointer may be checked
+against the memory colour by the hardware. So you can't have hwasan
+binary with MTE enabled.
+
+> I expect MTE to be the "default" in the future. Once a system's libc has
+> grown support for it, everything will be trying to use MTE. TBI will be
+> the special case (but TBI is effectively a prerequisite).
+
+The kernel handling of tagged pointers is indeed a prerequisite. The ABI
+distinction between the above 2 and 3 needs to be solved.
+
+> AFAICT, the only difference I see between 2 and 3 will be the tag handling
+> in usercopy (all other places will continue to ignore the top bits). Is
+> that accurate?
+
+Yes, mostly (for the kernel). If MTE is enabled by default for a hwasan
+binary, it will SEGFAULT (either in user space or in kernel uaccess).
+How does the kernel choose between 2 and 3?
+
+> Is "1" a per-process state we want to keep? (I assume not, but rather it
+> is available via no TBI/MTE CONFIG or a boot-time option, if at all?)
+
+Possibly, though not necessarily per process. For testing or if
+something goes wrong during boot, a command line option with a static
+label would do. The AT_FLAGS bit needs to be checked by user space. My
+preference would be per-process.
+
+> To choose between "2" and "3", it seems we need a per-process flag to
+> opt into TBI (and out of MTE).
+
+Or leave option 2 the default and get it to opt in to MTE.
+
+> For userspace, how would a future binary choose TBI over MTE? If it's
+> a library issue, we can't use an ELF bit, since the choice may be
+> "late" after ELF load (this implies the need for a prctl().) If it's
+> binary-only ("built with HWKASan") then an ELF bit seems sufficient.
+> And without the marking, I'd expect the kernel to enforce MTE when
+> there are high bits.
+
+The current plan is that a future binary issues a prctl(), after
+checking the HWCAP_MTE bit (as I replied to Elliot, the MTE instructions
+are not in the current NOP space). I'd expect this to be done by the
+libc or dynamic loader under the assumption that the binaries it loads
+do _not_ use the top pointer byte for anything else. With hwasan
+compiled objects this gets more confusing (any ELF note to identify
+them?).
+
+(there is also the risk of existing applications using TBI already but
+I'm not aware of any still using this feature other than hwasan)
+
+-- 
+Catalin
