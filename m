@@ -2,73 +2,82 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81A4CC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 14:48:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EB83C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 14:48:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 532A9206BA
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 14:48:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 730B3206BA
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 14:48:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fyB5smpX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730890AbfEWOsG (ORCPT
+        id S1730921AbfEWOsW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 10:48:06 -0400
-Received: from ms.lwn.net ([45.79.88.28]:34698 "EHLO ms.lwn.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730710AbfEWOsG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 10:48:06 -0400
-Received: from lwn.net (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id EBB7EAB5;
-        Thu, 23 May 2019 14:48:05 +0000 (UTC)
-Date:   Thu, 23 May 2019 08:48:05 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL] Documentation fixes for 5.2
-Message-ID: <20190523084805.63901c65@lwn.net>
-Organization: LWN.net
+        Thu, 23 May 2019 10:48:22 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:45146 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730710AbfEWOsW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 10:48:22 -0400
+Received: by mail-wr1-f68.google.com with SMTP id b18so6576356wrq.12
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 07:48:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2ckXbhMxVptMY6LVeqIsAfsudm6ALnBUEQ58+S9KXj0=;
+        b=fyB5smpXxQ9KIxobbDS0TRfpJeXoeZWx06EKZqy1KuSTst6qLOanF1sHYWgCHFAFIq
+         xIMk6rHIda9kxLH1MgsK5762Ye7n7Q4p/wLlelf46E5M5B4Zk7PqdyYy9Ku/yeo8Cxbl
+         vqeU6msoM9GJ7T8xYGsRZLDHXoMoqUeykdQjoD0RMe7wjL5meZsEO4k3hu+daQiQYj66
+         5nKa8c0XwZorE1pCZ+42S6lZo6W1FDtfkd3hTKDos6yww7SF8fhlHC/nWbvbqRP9wsQb
+         jL7cw1WAoQYnE+ZBQnWDTmf5uEC63a8WRie1e614QCWAiXnHv/4eUeRmogmddPiotw9o
+         Kedg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2ckXbhMxVptMY6LVeqIsAfsudm6ALnBUEQ58+S9KXj0=;
+        b=VmtJFO0ENjo1fq0oBtmnYNr4ieyMwQTl+Y+5oAaUBtBosStXl2o82Kz2Ce2qaCdS1K
+         59AoWdbYBgmQJ+fNDPden4WekQgZ7E3n1ih9eoNLVzjKfwvAyvXZuef8yJjcC4hurwh7
+         K27MXgjr2WscnBzJal0fRohrYjLJXN6ZAqLnEiEWdhOkYXTWwpzAGjXtt1zl/LXCazUO
+         Iw+HqnoSuo87F5pr2aqGOrGuKOh+qimT0SFduZhEvLIwXALyTUHf6Xg6PedMZ0+wtgmK
+         SmXIRMcClAZrpRdd6nbf8f/h3KjmXBqHFNONmUt+yxehlPcbdib3eGu22i/aOMQb9+va
+         e3KA==
+X-Gm-Message-State: APjAAAUt+trcjcFGVnifUXIaH+ylofA3Tud5uTVyJyfqw3GktRBn3JZg
+        wuiWLz2EN11hXysj/Vv1k/qzkH/YvmgMBmiwVNA=
+X-Google-Smtp-Source: APXvYqzJaa74jk0r/RYkks9NQS+a3OOWeFm+UyuWzIklKLTRV3IuVue8Qa5l6wrV/GBiRXApv/glEAm4BNsMi7Js+CU=
+X-Received: by 2002:adf:f6cb:: with SMTP id y11mr1385664wrp.67.1558622900872;
+ Thu, 23 May 2019 07:48:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
+References: <20190423102512.72265-1-benbjiang@tencent.com>
+In-Reply-To: <20190423102512.72265-1-benbjiang@tencent.com>
+From:   Stefan Hajnoczi <stefanha@gmail.com>
+Date:   Thu, 23 May 2019 15:48:07 +0100
+Message-ID: <CAJSP0QXwRESqPjV6HJEffY-t8z7LC5ZZQeKsqinap4yWy_T3dg@mail.gmail.com>
+Subject: Re: [PATCH] virtio/virtio_ring: do some comment fixes
+To:     Jiang Biao <benbjiang@tencent.com>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Linux Virtualization <virtualization@lists.linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit
-a188339ca5a396acc588e5851ed7e19f66b0ebd9:
+On Sun, May 19, 2019 at 5:17 PM Jiang Biao <benbjiang@tencent.com> wrote:
+>
+> There are lots of mismatches between comments and codes, this
+> patch do these comment fixes.
+>
+> Signed-off-by: Jiang Biao <benbjiang@tencent.com>
+> ---
+>  drivers/virtio/virtio_ring.c | 27 ++++++++++++++-------------
+>  1 file changed, 14 insertions(+), 13 deletions(-)
 
-  Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
-
-are available in the Git repository at:
-
-  git://git.lwn.net/linux.git tags/docs-5.2-fixes
-
-for you to fetch changes up to a65fd4f0def56f59822b2c49522d36319bc8da8b:
-
-  Documentation: kdump: fix minor typo (2019-05-21 09:31:28 -0600)
-
-----------------------------------------------------------------
-A handful of fixes for a docs build problem, along with catching the
-spdxcheck.py script up with the current state of affairs.
-
-----------------------------------------------------------------
-Cengiz Can (1):
-      Documentation: kdump: fix minor typo
-
-Randy Dunlap (1):
-      counter: fix Documentation build error due to incorrect source file name
-
-Sven Eckelmann (2):
-      scripts/spdxcheck.py: Fix path to deprecated licenses
-      scripts/spdxcheck.py: Add dual license subdirectory
-
- Documentation/driver-api/generic-counter.rst | 2 +-
- Documentation/kdump/kdump.txt                | 2 +-
- scripts/spdxcheck.py                         | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
