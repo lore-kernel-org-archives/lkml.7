@@ -2,117 +2,120 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D9F5C282E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 16:36:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09232C282E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 16:36:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FD0B20879
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 16:36:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="GorN/Qui"
+	by mail.kernel.org (Postfix) with ESMTP id DB19D21019
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 16:36:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731408AbfEWQgG (ORCPT
+        id S1731426AbfEWQgW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 12:36:06 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:41039 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731119AbfEWQgG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 12:36:06 -0400
-Received: by mail-pl1-f195.google.com with SMTP id f12so2961581plt.8
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 09:36:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=ZHrK+VEAX/VhtgbnGngaaCqD5utZFEMM219guRaxE+E=;
-        b=GorN/Qui+MVXqMMHGzBJqclGX9G6qBILF4AZy7hy0J2Jkz9bJv5a/lgqT77AO7krgL
-         t5pCAjjuJBDRMa2gSHydXKIZze53hCW2b2ix5/3EWQv556/nTMUaIHDAr2/emt1R90rs
-         dXn0pYf1PUHGFpkIoQWqHfXwJwBLb1vxtNl4M=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=ZHrK+VEAX/VhtgbnGngaaCqD5utZFEMM219guRaxE+E=;
-        b=j1k44vSwz2qIy386oY5Oo9uJKMFKDLpNiMxSYbbqVsXxSIerLBI/Ec2ePkq9Jg2JZV
-         UwBI63iigf8PHdJzxwbBaoUwcKc2t5O/bZ9AVoVwyXmeAiiRLrDb1P8hpIgbke04IRoL
-         k+HprgtZDWb3nZ/vs1HC2YWTb19KY/i3ZSF1cfIpBh2hReUnVu2abqjh8GF0D0zkPtfq
-         hO1pcEubrBFx7zPYbVSsEsTDKUpg7OK8WHWpdeKxpCGYdmwBPhQ97WDQiO0ScJFa/cL5
-         60/MLKn6yCSzfsURoTzwtdSbrBZrCYC3VRgQ7gq9wTtjhQeAjm7PmfIw51p9oKZCooGM
-         GLHA==
-X-Gm-Message-State: APjAAAXqaR+HtgWl0i4+EXCrAoe5ZwsHdzujS2Ghv6kXpfE5pOPDlBeP
-        h1gqCEgBzmOhkIU860QQDRPZew==
-X-Google-Smtp-Source: APXvYqxzC+ORWnTrrOuRAOV5GhS5hVztdWBZSW4dRBg2tKPt3YliHLug2gmkP3GPmyVy614jfIqcmg==
-X-Received: by 2002:a17:902:bd94:: with SMTP id q20mr77186915pls.146.1558629365385;
-        Thu, 23 May 2019 09:36:05 -0700 (PDT)
-Received: from [10.136.13.65] ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id q75sm41467250pfa.175.2019.05.23.09.36.03
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 23 May 2019 09:36:04 -0700 (PDT)
-Subject: Re: [PATCH 2/3] firmware: add offset to request_firmware_into_buf
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Luis Chamberlain <mcgrof@kernel.org>,
-        Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
+        Thu, 23 May 2019 12:36:22 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56428 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730752AbfEWQgV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 12:36:21 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 1484A308624A;
+        Thu, 23 May 2019 16:36:11 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.159])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 0D76C60C9E;
+        Thu, 23 May 2019 16:36:07 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Thu, 23 May 2019 18:36:08 +0200 (CEST)
+Date:   Thu, 23 May 2019 18:36:04 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     David Laight <David.Laight@ACULAB.COM>
+Cc:     'Deepa Dinamani' <deepa.kernel@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
         Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Olof Johansson <olof@lixom.net>
-References: <20190523025113.4605-1-scott.branden@broadcom.com>
- <20190523025113.4605-3-scott.branden@broadcom.com>
- <20190523055233.GB22946@kroah.com>
-From:   Scott Branden <scott.branden@broadcom.com>
-Message-ID: <15c47e4d-e70d-26bb-9747-0ad0aa81597b@broadcom.com>
-Date:   Thu, 23 May 2019 09:36:02 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Arnd Bergmann <arnd@arndb.de>,
+        "dbueso@suse.de" <dbueso@suse.de>,
+        "axboe@kernel.dk" <axboe@kernel.dk>,
+        Davidlohr Bueso <dave@stgolabs.net>, Eric Wong <e@80x24.org>,
+        Jason Baron <jbaron@akamai.com>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        linux-aio <linux-aio@kvack.org>,
+        Omar Kilani <omar.kilani@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH v2] signal: Adjust error codes according to
+ restore_user_sigmask()
+Message-ID: <20190523163604.GE23070@redhat.com>
+References: <20190522032144.10995-1-deepa.kernel@gmail.com>
+ <20190522150505.GA4915@redhat.com>
+ <CABeXuvrPM5xvzqUydbREapvwgy6deYreHp0aaMoSHyLB6+HGRg@mail.gmail.com>
+ <20190522161407.GB4915@redhat.com>
+ <CABeXuvpjrW5Gt95JC-_rYkOA=6RCD5OtkEQdwZVVqGCE3GkQOQ@mail.gmail.com>
+ <4f7b6dbeab1d424baaebd7a5df116349@AcuMS.aculab.com>
+ <20190523145944.GB23070@redhat.com>
+ <345cfba5edde470f9a68d913f44fa342@AcuMS.aculab.com>
 MIME-Version: 1.0
-In-Reply-To: <20190523055233.GB22946@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <345cfba5edde470f9a68d913f44fa342@AcuMS.aculab.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Thu, 23 May 2019 16:36:21 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
-
-On 2019-05-22 10:52 p.m., Greg Kroah-Hartman wrote:
-> On Wed, May 22, 2019 at 07:51:12PM -0700, Scott Branden wrote:
->> Add offset to request_firmware_into_buf to allow for portions
->> of firmware file to be read into a buffer.  Necessary where firmware
->> needs to be loaded in portions from file in memory constrained systems.
->>
->> Signed-off-by: Scott Branden <scott.branden@broadcom.com>
->> ---
->>   drivers/base/firmware_loader/firmware.h |  5 +++
->>   drivers/base/firmware_loader/main.c     | 49 +++++++++++++++++--------
->>   include/linux/firmware.h                |  8 +++-
->>   3 files changed, 45 insertions(+), 17 deletions(-)
-> No new firmware test for this new option?  How do we know it even works?
-
-I was unaware there are existing firmware tests.  Please let me know 
-where these tests exists and I can add a test for this new option.
-
-We have tested this with a new driver in development which requires the 
-firmware file to be read in portions into memory.  I can add my 
-tested-by and others to the commit message if desired.
-
-> :)
+On 05/23, David Laight wrote:
 >
-> thanks,
+> From: Oleg Nesterov
+> > On 05/23, David Laight wrote:
+> > >
+> > > I'm confused...
+> >
+> > Me too. To clarify, the current code is obviously buggy, pselect/whatever
+> > shouldn't return 0 (or anything else) if it was interrupted and we are going
+> > to deliver the signal.
 >
-> greg k-h
+> If it was interrupted the return value has to be EINTR.
 
-Regards,
+Yes, and this is what we need to fix.
 
-Scott
+> Whether any signal handlers are called is a separate matter.
+
+Not really... because in this case we know that the signal will be delivered,
+
+> > Not sure I understand... OK, suppose that you do
+> >
+> > 	block-all-signals;
+> > 	ret = pselect(..., sigmask(SIG_URG));
+> >
+> > if it returns success/timeout then the handler for SIG_URG should not be called?
+>
+> Ugg...
+> Posix probably allows the signal handler be called at the point the event
+> happens rather than being deferred until the system call completes.
+> Queueing up the signal handler to be run at a later time (syscall exit)
+> certainly makes sense.
+> Definitely safest to call the signal handler even if success/timeout
+> is returned.
+
+Why?
+
+> pselect() exists to stop the entry race, not the exit one.
+
+pselect() has to block SIG_URG again before it returns to user-mode, right?
+
+Suppose pselect() finds a ready fd, and this races with SIG_URG.
+
+Why do you think the handler should run?
+
+What if SIG_URG comes right after pselect() blocks SIG_URG again? I mean,
+how this differs the case when it comes before, but a ready fd was already
+found?
+
+Oleg.
 
