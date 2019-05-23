@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E755EC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:22:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40D14C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:22:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF564217D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:22:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 141422187F
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:22:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639329;
-	bh=gf+o3NeVqFACRQ7l+lxfdQbcSz6yhrDzSzQtgBf3Ekw=;
+	s=default; t=1558639334;
+	bh=Q/5OzBM4VQEOBvCfeonOdIK9aQC1KWHPkJclcmFLRO4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wugLDRitAFr7mavc8OSr8Ju5fxhp5wd2PNOqtfKF3yZ+LjOLXL4AWOqJaO8aAK+3P
-	 ddcz+BXrZZ0z6nTNJZdf8T4q/pduZzLypWdltLW350tlhR+t8+suN1xPrT66UHCSWO
-	 65YcP/MiROgInxAPwdhHye+JXxEpH2EdII2cBIk8=
+	b=QHrMu+6EdfljDg/nkz/82FnztCCsdOucswFmmyk0K/2TAyRXUJKTeTyH3IomOd6mz
+	 MErDdcMHrFbhCalPquLZMO7MOvQWWCSBZe0muBE8sL0AwaKQWJmJj0qC+RMvYseqkZ
+	 8cmwvX9Lq1VzOl9zGVqmMqBuEYKsCIaNaQ4mQsnk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390405AbfEWTWI (ORCPT
+        id S2390416AbfEWTWN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:22:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59738 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:22:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59876 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390361AbfEWTWD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:22:03 -0400
+        id S2390406AbfEWTWI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:22:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 56830205ED;
-        Thu, 23 May 2019 19:22:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A1C5F21841;
+        Thu, 23 May 2019 19:22:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639322;
-        bh=gf+o3NeVqFACRQ7l+lxfdQbcSz6yhrDzSzQtgBf3Ekw=;
+        s=default; t=1558639328;
+        bh=Q/5OzBM4VQEOBvCfeonOdIK9aQC1KWHPkJclcmFLRO4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MKHsGIKYwq4Guqva6wIZlolcRca6zXqTnNkoWS9U2HZFy31EP0gS++ap0uIncMUdt
-         fUbSvW3E/+180tCv0tC1wVwv7IatU7Vqu2CPqcmn6ft2q2VK7zt3fhkRq41rb7LD8K
-         pVmxrYWabAbfS/KJJCIT40Es3mP0iLISScuLe7rA=
+        b=EiOnNxdDSTk2yzJM5tmG7toeozy7R/XyG9Aa0VKKemuRleXijDXaT5LS9tmcRygRo
+         0750/1hgXzwpkhMuJFY3er5eMXj+0UjFfHMazbq/EZV40KuN+r1WRt6xF5Voll9JIJ
+         N2sQm0X+GunuJgthCcIJY+ZYJ6SCujKuOh/O0ZA0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jonas Karlman <jonas@kwiboo.se>,
-        Peter Geis <pgwipeout@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>
-Subject: [PATCH 5.0 054/139] clk: rockchip: fix wrong clock definitions for rk3328
-Date:   Thu, 23 May 2019 21:05:42 +0200
-Message-Id: <20190523181727.671865103@linuxfoundation.org>
+        stable@vger.kernel.org, Nicolai Stange <nstange@suse.de>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: [PATCH 5.0 064/139] x86_64: Add gap to int3 to allow for call emulation
+Date:   Thu, 23 May 2019 21:05:52 +0200
+Message-Id: <20190523181729.091826690@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181720.120897565@linuxfoundation.org>
 References: <20190523181720.120897565@linuxfoundation.org>
@@ -60,93 +61,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jonas Karlman <jonas@kwiboo.se>
+From: Josh Poimboeuf <jpoimboe@redhat.com>
 
-commit fb903392131a324a243c7731389277db1cd9f8df upstream.
+commit 2700fefdb2d9751c416ad56897e27d41e409324a upstream.
 
-This patch fixes definition of several clock gate and select register
-that is wrong for rk3328 referring to the TRM and vendor kernel.
-Also use correct number of softrst registers.
+To allow an int3 handler to emulate a call instruction, it must be able to
+push a return address onto the stack. Add a gap to the stack to allow the
+int3 handler to push the return address and change the return from int3 to
+jump straight to the emulated called function target.
 
-Fix clock definition for:
-- clk_crypto
-- aclk_h265
-- pclk_h265
-- aclk_h264
-- hclk_h264
-- aclk_axisram
-- aclk_gmac
-- aclk_usb3otg
+Link: http://lkml.kernel.org/r/20181130183917.hxmti5josgq4clti@treble
+Link: http://lkml.kernel.org/r/20190502162133.GX2623@hirez.programming.kicks-ass.net
 
-Fixes: fe3511ad8a1c ("clk: rockchip: add clock controller for rk3328")
+[
+  Note, this is needed to allow Live Kernel Patching to not miss calling a
+  patched function when tracing is enabled. -- Steven Rostedt
+]
+
 Cc: stable@vger.kernel.org
-Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
-Tested-by: Peter Geis <pgwipeout@gmail.com>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Fixes: b700e7f03df5 ("livepatch: kernel: add support for live patching")
+Tested-by: Nicolai Stange <nstange@suse.de>
+Reviewed-by: Nicolai Stange <nstange@suse.de>
+Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/clk/rockchip/clk-rk3328.c |   18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ arch/x86/entry/entry_64.S |   18 ++++++++++++++++--
+ 1 file changed, 16 insertions(+), 2 deletions(-)
 
---- a/drivers/clk/rockchip/clk-rk3328.c
-+++ b/drivers/clk/rockchip/clk-rk3328.c
-@@ -458,7 +458,7 @@ static struct rockchip_clk_branch rk3328
- 			RK3328_CLKSEL_CON(35), 15, 1, MFLAGS, 8, 7, DFLAGS,
- 			RK3328_CLKGATE_CON(2), 12, GFLAGS),
- 	COMPOSITE(SCLK_CRYPTO, "clk_crypto", mux_2plls_p, 0,
--			RK3328_CLKSEL_CON(20), 7, 1, MFLAGS, 0, 7, DFLAGS,
-+			RK3328_CLKSEL_CON(20), 7, 1, MFLAGS, 0, 5, DFLAGS,
- 			RK3328_CLKGATE_CON(2), 4, GFLAGS),
- 	COMPOSITE_NOMUX(SCLK_TSADC, "clk_tsadc", "clk_24m", 0,
- 			RK3328_CLKSEL_CON(22), 0, 10, DFLAGS,
-@@ -550,15 +550,15 @@ static struct rockchip_clk_branch rk3328
- 	GATE(0, "hclk_rkvenc_niu", "hclk_rkvenc", 0,
- 			RK3328_CLKGATE_CON(25), 1, GFLAGS),
- 	GATE(ACLK_H265, "aclk_h265", "aclk_rkvenc", 0,
--			RK3328_CLKGATE_CON(25), 0, GFLAGS),
-+			RK3328_CLKGATE_CON(25), 2, GFLAGS),
- 	GATE(PCLK_H265, "pclk_h265", "hclk_rkvenc", 0,
--			RK3328_CLKGATE_CON(25), 1, GFLAGS),
-+			RK3328_CLKGATE_CON(25), 3, GFLAGS),
- 	GATE(ACLK_H264, "aclk_h264", "aclk_rkvenc", 0,
--			RK3328_CLKGATE_CON(25), 0, GFLAGS),
-+			RK3328_CLKGATE_CON(25), 4, GFLAGS),
- 	GATE(HCLK_H264, "hclk_h264", "hclk_rkvenc", 0,
--			RK3328_CLKGATE_CON(25), 1, GFLAGS),
-+			RK3328_CLKGATE_CON(25), 5, GFLAGS),
- 	GATE(ACLK_AXISRAM, "aclk_axisram", "aclk_rkvenc", CLK_IGNORE_UNUSED,
--			RK3328_CLKGATE_CON(25), 0, GFLAGS),
-+			RK3328_CLKGATE_CON(25), 6, GFLAGS),
+--- a/arch/x86/entry/entry_64.S
++++ b/arch/x86/entry/entry_64.S
+@@ -881,7 +881,7 @@ apicinterrupt IRQ_WORK_VECTOR			irq_work
+  * @paranoid == 2 is special: the stub will never switch stacks.  This is for
+  * #DF: if the thread stack is somehow unusable, we'll still get a useful OOPS.
+  */
+-.macro idtentry sym do_sym has_error_code:req paranoid=0 shift_ist=-1
++.macro idtentry sym do_sym has_error_code:req paranoid=0 shift_ist=-1 create_gap=0
+ ENTRY(\sym)
+ 	UNWIND_HINT_IRET_REGS offset=\has_error_code*8
  
- 	COMPOSITE(SCLK_VENC_CORE, "sclk_venc_core", mux_4plls_p, 0,
- 			RK3328_CLKSEL_CON(51), 14, 2, MFLAGS, 8, 5, DFLAGS,
-@@ -663,7 +663,7 @@ static struct rockchip_clk_branch rk3328
+@@ -901,6 +901,20 @@ ENTRY(\sym)
+ 	jnz	.Lfrom_usermode_switch_stack_\@
+ 	.endif
  
- 	/* PD_GMAC */
- 	COMPOSITE(ACLK_GMAC, "aclk_gmac", mux_2plls_hdmiphy_p, 0,
--			RK3328_CLKSEL_CON(35), 6, 2, MFLAGS, 0, 5, DFLAGS,
-+			RK3328_CLKSEL_CON(25), 6, 2, MFLAGS, 0, 5, DFLAGS,
- 			RK3328_CLKGATE_CON(3), 2, GFLAGS),
- 	COMPOSITE_NOMUX(PCLK_GMAC, "pclk_gmac", "aclk_gmac", 0,
- 			RK3328_CLKSEL_CON(25), 8, 3, DFLAGS,
-@@ -733,7 +733,7 @@ static struct rockchip_clk_branch rk3328
++	.if \create_gap == 1
++	/*
++	 * If coming from kernel space, create a 6-word gap to allow the
++	 * int3 handler to emulate a call instruction.
++	 */
++	testb	$3, CS-ORIG_RAX(%rsp)
++	jnz	.Lfrom_usermode_no_gap_\@
++	.rept	6
++	pushq	5*8(%rsp)
++	.endr
++	UNWIND_HINT_IRET_REGS offset=8
++.Lfrom_usermode_no_gap_\@:
++	.endif
++
+ 	.if \paranoid
+ 	call	paranoid_entry
+ 	.else
+@@ -1132,7 +1146,7 @@ apicinterrupt3 HYPERV_STIMER0_VECTOR \
+ #endif /* CONFIG_HYPERV */
  
- 	/* PD_PERI */
- 	GATE(0, "aclk_peri_noc", "aclk_peri", CLK_IGNORE_UNUSED, RK3328_CLKGATE_CON(19), 11, GFLAGS),
--	GATE(ACLK_USB3OTG, "aclk_usb3otg", "aclk_peri", 0, RK3328_CLKGATE_CON(19), 4, GFLAGS),
-+	GATE(ACLK_USB3OTG, "aclk_usb3otg", "aclk_peri", 0, RK3328_CLKGATE_CON(19), 14, GFLAGS),
+ idtentry debug			do_debug		has_error_code=0	paranoid=1 shift_ist=DEBUG_STACK
+-idtentry int3			do_int3			has_error_code=0
++idtentry int3			do_int3			has_error_code=0	create_gap=1
+ idtentry stack_segment		do_stack_segment	has_error_code=1
  
- 	GATE(HCLK_SDMMC, "hclk_sdmmc", "hclk_peri", 0, RK3328_CLKGATE_CON(19), 0, GFLAGS),
- 	GATE(HCLK_SDIO, "hclk_sdio", "hclk_peri", 0, RK3328_CLKGATE_CON(19), 1, GFLAGS),
-@@ -913,7 +913,7 @@ static void __init rk3328_clk_init(struc
- 				     &rk3328_cpuclk_data, rk3328_cpuclk_rates,
- 				     ARRAY_SIZE(rk3328_cpuclk_rates));
- 
--	rockchip_register_softrst(np, 11, reg_base + RK3328_SOFTRST_CON(0),
-+	rockchip_register_softrst(np, 12, reg_base + RK3328_SOFTRST_CON(0),
- 				  ROCKCHIP_SOFTRST_HIWORD_MASK);
- 
- 	rockchip_register_restart_notifier(ctx, RK3328_GLB_SRST_FST, NULL);
+ #ifdef CONFIG_XEN_PV
 
 
