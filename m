@@ -2,87 +2,84 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C68FC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 11:55:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D71DC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 11:57:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FF4E21019
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 11:55:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558612557;
-	bh=puKLNTiE7cwyf6xYtoR1KxBZnqtcCNUUrpxzR1l2XNU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RwZWn5461d4OPMNIgjS3qoaaUfqH8YCc6KgzuLTOEFXuNo/hsW9nz+pP3iLH35tD/
-	 URTfOaQQfPCZ4YDOggLJcGqpUVx96qNCRAlYq5e4DmEReftApKOnNvkuLQCgHwp4bC
-	 tB9eht8Eg7cnP43TB5mMBkG8HwcU2ztP2MyK7gU4=
+	by mail.kernel.org (Postfix) with ESMTP id DB7C820881
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 11:57:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730589AbfEWLz4 (ORCPT
+        id S1730623AbfEWL5L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 07:55:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38014 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 07:57:11 -0400
+Received: from thoth.sbs.de ([192.35.17.2]:55478 "EHLO thoth.sbs.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730369AbfEWLz4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 07:55:56 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F26C20881;
-        Thu, 23 May 2019 11:55:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558612555;
-        bh=puKLNTiE7cwyf6xYtoR1KxBZnqtcCNUUrpxzR1l2XNU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bfSxSYHWib7RKerqZ7PBtGoXvOrTDtTmqD2U0Hu4ZJcKaES8KbxBFvBeXvdfPpmh+
-         cSCuoGOPeAIWKBGxrrDfczrinK/Nd2zWokRXbFG8k56NYkIEUxGNWLpz7ViQZ1ijgZ
-         Jo+Q2LcQ4DoiPoSMEoZuYGCunHxM6MPUTf4wdu9Y=
-Date:   Thu, 23 May 2019 13:55:53 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Simon =?iso-8859-1?Q?Sandstr=F6m?= <simon@nikanor.nu>
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        dan.carpenter@oracle.com
-Subject: Re: [PATCH 2/8] staging: kpc2000: use __func__ in debug messages
-Message-ID: <20190523115553.GA6953@kroah.com>
-References: <20190523113613.28342-1-simon@nikanor.nu>
- <20190523113613.28342-3-simon@nikanor.nu>
+        id S1729902AbfEWL5K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 07:57:10 -0400
+Received: from mail3.siemens.de (mail3.siemens.de [139.25.208.14])
+        by thoth.sbs.de (8.15.2/8.15.2) with ESMTPS id x4NBuu8j004284
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 23 May 2019 13:56:56 +0200
+Received: from pluscontrol-debian-server.ppmd.SIEMENS.NET (pluscontrol-debian-server.ppmd.siemens.net [146.254.63.6])
+        by mail3.siemens.de (8.15.2/8.15.2) with ESMTP id x4NBurG0026241;
+        Thu, 23 May 2019 13:56:53 +0200
+From:   Andreas Oetken <andreas.oetken@siemens.com>
+Cc:     andreas@oetken.name, m-karicheri2@ti.com, a-kramer@ti.com,
+        Andreas Oetken <andreas.oetken@siemens.com>,
+        Arvid Brodin <arvid.brodin@alten.se>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH V4] hsr: fix don't prune the master node from the node_db
+Date:   Thu, 23 May 2019 13:57:14 +0200
+Message-Id: <20190523115714.19412-1-andreas.oetken@siemens.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190523113613.28342-3-simon@nikanor.nu>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 01:36:07PM +0200, Simon Sandström wrote:
-> Fixes checkpatch.pl warning "Prefer using '"%s...", __func__' to using
-> '<function name>', this function's name, in a string".
-> 
-> Signed-off-by: Simon Sandström <simon@nikanor.nu>
-> ---
->  drivers/staging/kpc2000/kpc2000/cell_probe.c | 22 +++++++++++++-------
->  1 file changed, 14 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/staging/kpc2000/kpc2000/cell_probe.c b/drivers/staging/kpc2000/kpc2000/cell_probe.c
-> index 95bfbe4aae4d..7b850f3e808b 100644
-> --- a/drivers/staging/kpc2000/kpc2000/cell_probe.c
-> +++ b/drivers/staging/kpc2000/kpc2000/cell_probe.c
-> @@ -299,7 +299,8 @@ static int probe_core_uio(unsigned int core_num, struct kp2000_device *pcard,
->  
->  	kudev = kzalloc(sizeof(struct kpc_uio_device), GFP_KERNEL);
->  	if (!kudev) {
-> -		dev_err(&pcard->pdev->dev, "probe_core_uio: failed to kzalloc kpc_uio_device\n");
-> +		dev_err(&pcard->pdev->dev, "%s: failed to kzalloc kpc_uio_device\n",
-> +			__func__);
+Don't prune the master node in the hsr_prune_nodes function.
+Neither time_in[HSR_PT_SLAVE_A] nor time_in[HSR_PT_SLAVE_B]
+will ever be updated by hsr_register_frame_in for the master port.
+Thus, the master node will be repeatedly pruned leading to
+repeated packet loss.
+This bug never appeared because the hsr_prune_nodes function
+was only called once. Since commit 5150b45fd355
+("net: hsr: Fix node prune function for forget time expiry") this issue
+is fixed unveiling the issue described above.
 
-kmalloc and friend error messages should just be deleted.  Didn't
-checkpatch say something about that?
+Fixes: 5150b45fd355 ("net: hsr: Fix node prune function for forget time expiry")
+Signed-off-by: Andreas Oetken <andreas.oetken@siemens.com>
+Tested-by: Murali Karicheri <m-karicheri2@ti.com>
+---
+ net/hsr/hsr_framereg.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-thanks,
+diff --git a/net/hsr/hsr_framereg.c b/net/hsr/hsr_framereg.c
+index 9fa9abd83018..2d7a19750436 100644
+--- a/net/hsr/hsr_framereg.c
++++ b/net/hsr/hsr_framereg.c
+@@ -365,6 +365,14 @@ void hsr_prune_nodes(struct timer_list *t)
+ 
+ 	rcu_read_lock();
+ 	list_for_each_entry_rcu(node, &hsr->node_db, mac_list) {
++		/* Don't prune own node. Neither time_in[HSR_PT_SLAVE_A]
++		 * nor time_in[HSR_PT_SLAVE_B], will ever be updated for
++		 * the master port. Thus the master node will be repeatedly
++		 * pruned leading to packet loss.
++		 */
++		if (hsr_addr_is_self(hsr, node->macaddress_A))
++			continue;
++
+ 		/* Shorthand */
+ 		time_a = node->time_in[HSR_PT_SLAVE_A];
+ 		time_b = node->time_in[HSR_PT_SLAVE_B];
+-- 
+2.20.1
 
-greg k-h
