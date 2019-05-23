@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46DC8C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:22:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 396DDC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:22:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DDA820863
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:22:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05460206A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:22:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639361;
-	bh=JO93kZBkavKRxxjPGQBE5e3fDXC0T6WguLlmOIaYcPI=;
+	s=default; t=1558639364;
+	bh=Zn2SzCBZvQOavFqceAiCKkjNO8KtOuQz8mUA0ZXaXMQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=db8Qvdxv8ywjCLLL0fpqtjmkV0bT47chFGKN69TvsyuraAKZQ4b1qBcrCsESIlQYs
-	 qLMkwNcU8aZ3HH8cwRuEOCP6ZSN5om4x+adOXj3OgSiNq+LAv/QFlle/BvWjApuBCO
-	 odp/xIladJ8HzyoD040K3GfdxG9SQ8U6d4r2yh3I=
+	b=RYXPqe9BCx20HMAuD8Nf8q02Nx2tcrkSJ6ggXC+ohHvhSqFbjRp1a0okN4c7rdppG
+	 8UTLiD6PftWAJo0pq1rzmkdm8rzC3cEqq7+zi3QcW5u9pmOv/6IjoYH9+lY2qyyQ/M
+	 O2YmSle7bRnXGv7bkHxoNNSkwOoXVh19IkTK90E4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390530AbfEWTWk (ORCPT
+        id S2390542AbfEWTWn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:22:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60748 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:22:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60822 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389471AbfEWTWi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:22:38 -0400
+        id S2390531AbfEWTWk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:22:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3AF65206BA;
-        Thu, 23 May 2019 19:22:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE2F72054F;
+        Thu, 23 May 2019 19:22:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639357;
-        bh=JO93kZBkavKRxxjPGQBE5e3fDXC0T6WguLlmOIaYcPI=;
+        s=default; t=1558639360;
+        bh=Zn2SzCBZvQOavFqceAiCKkjNO8KtOuQz8mUA0ZXaXMQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s78nH9RZUpsMuMkMU6yDZMOUUI7VNFJpHOW9EARxWsjaEaYWPcLwR9xYSfZsH8+ew
-         flCH+sD1KuBPLdix4lYFFtt8Klm8ka4wmD2VXezYP6RBy53PXyWm5djNy0sSfvwf9I
-         jWdWw0BRQg8MytGquc5rfmjW1rNi0LL+fu60c/Cw=
+        b=PavKuH7AmvS0PJ/s5f02/vD/l1hT8AYbjrG7xQw4vDNCX7lGw6sk3Pj5/DLogvvgJ
+         Q7NXpjvmuCc3LilkZ+OLAshnfi4PKlkbz/0ekTJgQGs6D8T3gEF13IZY6VNedlSOko
+         u4d2Kw37+wle4J7OVYo2dH4+1ksIlWXvWJT//Hgw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Antonio SJ Musumeci <trapexit@spawn.link>,
+        stable@vger.kernel.org, Liu Bo <bo.liu@linux.alibaba.com>,
         Miklos Szeredi <mszeredi@redhat.com>
-Subject: [PATCH 5.0 058/139] fuse: fix writepages on 32bit
-Date:   Thu, 23 May 2019 21:05:46 +0200
-Message-Id: <20190523181728.230649018@linuxfoundation.org>
+Subject: [PATCH 5.0 059/139] fuse: honor RLIMIT_FSIZE in fuse_file_fallocate
+Date:   Thu, 23 May 2019 21:05:47 +0200
+Message-Id: <20190523181728.363246570@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181720.120897565@linuxfoundation.org>
 References: <20190523181720.120897565@linuxfoundation.org>
@@ -59,36 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miklos Szeredi <mszeredi@redhat.com>
+From: Liu Bo <bo.liu@linux.alibaba.com>
 
-commit 9de5be06d0a89ca97b5ab902694d42dfd2bb77d2 upstream.
+commit 0cbade024ba501313da3b7e5dd2a188a6bc491b5 upstream.
 
-Writepage requests were cropped to i_size & 0xffffffff, which meant that
-mmaped writes to any file larger than 4G might be silently discarded.
+fstests generic/228 reported this failure that fuse fallocate does not
+honor what 'ulimit -f' has set.
 
-Fix by storing the file size in a properly sized variable (loff_t instead
-of size_t).
+This adds the necessary inode_newsize_ok() check.
 
-Reported-by: Antonio SJ Musumeci <trapexit@spawn.link>
-Fixes: 6eaf4782eb09 ("fuse: writepages: crop secondary requests")
-Cc: <stable@vger.kernel.org> # v3.13
+Signed-off-by: Liu Bo <bo.liu@linux.alibaba.com>
+Fixes: 05ba1f082300 ("fuse: add FALLOCATE operation")
+Cc: <stable@vger.kernel.org> # v3.5
 Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/fuse/file.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/fuse/file.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
 --- a/fs/fuse/file.c
 +++ b/fs/fuse/file.c
-@@ -1530,7 +1530,7 @@ __acquires(fc->lock)
- {
- 	struct fuse_conn *fc = get_fuse_conn(inode);
- 	struct fuse_inode *fi = get_fuse_inode(inode);
--	size_t crop = i_size_read(inode);
-+	loff_t crop = i_size_read(inode);
- 	struct fuse_req *req;
+@@ -2987,6 +2987,13 @@ static long fuse_file_fallocate(struct f
+ 		}
+ 	}
  
- 	while (fi->writectr >= 0 && !list_empty(&fi->queued_writes)) {
++	if (!(mode & FALLOC_FL_KEEP_SIZE) &&
++	    offset + length > i_size_read(inode)) {
++		err = inode_newsize_ok(inode, offset + length);
++		if (err)
++			return err;
++	}
++
+ 	if (!(mode & FALLOC_FL_KEEP_SIZE))
+ 		set_bit(FUSE_I_SIZE_UNSTABLE, &fi->state);
+ 
 
 
