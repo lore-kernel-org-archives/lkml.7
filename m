@@ -2,113 +2,98 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 832FCC282DE
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 14:19:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E59ACC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 14:21:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6067820863
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 14:19:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B988620863
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 14:21:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558621269;
+	bh=SngMLq/SaK+aNcuF6oXQwtLNPwG07YFCWgpjSq2NuwU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=lTVXNwx0h9xhJQl47j4zk/DpZ8T3ztigfhCsPMTdPKVi2PKFcXmiclDvSiM1O5dHD
+	 rzvxHLond72/QR0LDq4HNSbk4A7t938EPUMesFuEMOE8hqtID2h7MLif5B0NvKqL43
+	 bpOIEnoWh2sbMCvhH23syp/JTqLHAHS45xeRjG5g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730844AbfEWOT0 (ORCPT
+        id S1730835AbfEWOVI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 10:19:26 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:47372 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730495AbfEWOT0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 10:19:26 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 90E3680D;
-        Thu, 23 May 2019 07:19:25 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9FBFA3F690;
-        Thu, 23 May 2019 07:19:23 -0700 (PDT)
-Date:   Thu, 23 May 2019 15:19:19 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     Andrea Parri <andrea.parri@amarulasolutions.com>,
-        linux-kernel@vger.kernel.org,
-        Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>, rcu@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will.deacon@arm.com>
-Subject: Re: [RFC PATCH] rcu: Make 'rcu_assign_pointer(p, v)' of type
- 'typeof(p)'
-Message-ID: <20190523141851.GA7523@lakrids.cambridge.arm.com>
-References: <1558618340-17254-1-git-send-email-andrea.parri@amarulasolutions.com>
- <20190523135013.GL28207@linux.ibm.com>
+        Thu, 23 May 2019 10:21:08 -0400
+Received: from casper.infradead.org ([85.118.1.10]:37006 "EHLO
+        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730706AbfEWOVI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 10:21:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=TZV/AEYN5ZrdVp6z4ufM+ly5FDL6G1ayJPeeq1/Pydc=; b=aQC29XaQ6wBjZE31gH2NegNJsi
+        PoKdjZX9ed3K0xuTvd1B+Y1tongtHnFj+meIyFAhvONfIwVNbCz+ZGf9s1HVZTv/HegKyuoanhBY2
+        nxP/Yqaihe+h/+eCde31Xm3hgxFqAMZVdL0404vo5navbn0Mb3Cq47Vt/26iNrSY303LBrKdbCTrH
+        rnVnVqPBftEq3dl2Rs36qFMRoyaGwezIfX9EWnGKbVcSdZe6lE3TfT0+pn9RYgs2nr6/dg3I4bncE
+        +WYLq6jSLWPqwvZxYehZieXX18Qi6tdUyQSgZyxCjGlUhb5Wl6wG8esdqQeEKocV08G7XGTPqjuIw
+        BGfLYKlA==;
+Received: from [179.182.168.126] (helo=coco.lan)
+        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hToaX-0001wl-Iw; Thu, 23 May 2019 14:20:58 +0000
+Date:   Thu, 23 May 2019 11:20:51 -0300
+From:   Mauro Carvalho Chehab <mchehab@kernel.org>
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        Shawnx Tu <shawnx.tu@intel.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: Signed-off-by missing for commits in the v4l-dvb
+ tree
+Message-ID: <20190523112051.20418ef4@coco.lan>
+In-Reply-To: <20190523141004.cfbuymuykjew4tyr@kekkonen.localdomain>
+References: <20190524000500.61cacf9e@canb.auug.org.au>
+        <20190523141004.cfbuymuykjew4tyr@kekkonen.localdomain>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190523135013.GL28207@linux.ibm.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 06:50:13AM -0700, Paul E. McKenney wrote:
-> On Thu, May 23, 2019 at 03:32:20PM +0200, Andrea Parri wrote:
-> > The expression
-> > 
-> >   rcu_assign_pointer(p, typeof(p) v)
-> > 
-> > is reported to be of type 'typeof(p)' in the documentation (c.f., e.g.,
-> > Documentation/RCU/whatisRCU.txt) but this is not the case: for example,
-> > the following snippet
-> > 
-> >   int **y;
-> >   int *x;
-> >   int *r0;
-> > 
-> >   ...
-> > 
-> >   r0 = rcu_assign_pointer(*y, x);
-> > 
-> > can currently result in the compiler warning
-> > 
-> >   warning: assignment to ‘int *’ from ‘uintptr_t’ {aka ‘long unsigned int’} makes pointer from integer without a cast [-Wint-conversion]
-> > 
-> > Cast the uintptr_t value to a typeof(p) value.
-> > 
-> > Signed-off-by: Andrea Parri <andrea.parri@amarulasolutions.com>
-> > Cc: "Paul E. McKenney" <paulmck@linux.ibm.com>
-> > Cc: Josh Triplett <josh@joshtriplett.org>
-> > Cc: Steven Rostedt <rostedt@goodmis.org>
-> > Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-> > Cc: Lai Jiangshan <jiangshanlai@gmail.com>
-> > Cc: Joel Fernandes <joel@joelfernandes.org>
-> > Cc: rcu@vger.kernel.org
-> > Cc: Peter Zijlstra <peterz@infradead.org>
-> > Cc: Will Deacon <will.deacon@arm.com>
-> > Cc: Mark Rutland <mark.rutland@arm.com>
-> > ---
-> > NOTE:
-> > 
-> > TBH, I'm not sure this is 'the right patch' (hence the RFC...): in
-> > fact, I'm currently missing the motivations for allowing assignments
-> > such as the "r0 = ..." assignment above in generic code.  (BTW, it's
-> > not currently possible to use such assignments in litmus tests...)
+Em Thu, 23 May 2019 17:10:05 +0300
+Sakari Ailus <sakari.ailus@linux.intel.com> escreveu:
+
+> Hi Stephen, Mauro,
 > 
-> Given that a quick (and perhaps error-prone) search of the uses of
-> rcu_assign_pointer() in v5.1 didn't find a single use of the return
-> value, let's please instead change the documentation and implementation
-> to eliminate the return value.
+> On Fri, May 24, 2019 at 12:05:00AM +1000, Stephen Rothwell wrote:
+> > Hi all,
+> > 
+> > Commits
+> > 
+> >   eeabf6320e2f ("media: Revert "[media] marvell-ccic: reset ccic phy when stop streaming for stability"")
+> >   bbf83ed40252c ("media: ov8856: modify register to fix test pattern")
+> > 
+> > are missing a Signed-off-by from their authors.  
+> 
+> Ouch.
+> 
+> Mauro, what do you prefer, reset the tree or what?
 
-FWIW, I completely agree, and for similar reasons I'd say we should do
-the same to WRITE_ONCE(), where this 'cool feature' has been inherited
-from.
+I'll drop bbf83ed40252c and the marvel-ccic patches after eeabf6320e2f,
+rebasing my tree.
 
-For WRITE_ONCE() there's at least one user that needs to be cleaned up
-first (relying on non-portable implementation detaisl of atomic*_set()),
-but I suspect rcu_assign_pointer() isn't used as much as a building
-block for low-level macros.
+> 
+> Shawn, Lubomir: please read "Developer's Certificate of Origin 1.1" in
+> Documentation/process/submitting-patches.rst and then resend with
+> appropriate SoB lines.
+> 
+
+
 
 Thanks,
-Mark.
+Mauro
