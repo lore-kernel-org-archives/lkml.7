@@ -2,83 +2,143 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D9B5C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 09:14:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65233C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 09:16:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FB7920863
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 09:14:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="MBdhBgQx";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="d1dwCVEK"
+	by mail.kernel.org (Postfix) with ESMTP id 30CBC20879
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 09:16:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730098AbfEWJOX (ORCPT
+        id S1729898AbfEWJQ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 05:14:23 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:34738 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726230AbfEWJOW (ORCPT
+        Thu, 23 May 2019 05:16:56 -0400
+Received: from twhmllg4.macronix.com ([122.147.135.202]:52423 "EHLO
+        TWHMLLG4.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726363AbfEWJQ4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 05:14:22 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id B267B61112; Thu, 23 May 2019 09:14:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1558602861;
-        bh=g/aF1fcs87FAU4oWz/pX9QK9P8kUWlwdWV9pHD7nOlE=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=MBdhBgQxRamHtmzoI0eXKv484ccT7Vs7gaRulzQ32ALQpezPdbHcAZMaQXLhBR2nh
-         UIq0Hg56GldP4LJDWCO9rohIRVGcofZe2+zjkHRp5dw9lcBNpGPk9Gq4wrN33+qN4I
-         6Lto9BLJIZuREYKi9U4zk+nkxqgiQW+47i5KFPCo=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3499161112;
-        Thu, 23 May 2019 09:14:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1558602860;
-        bh=g/aF1fcs87FAU4oWz/pX9QK9P8kUWlwdWV9pHD7nOlE=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=d1dwCVEK3jRwdE20TYG54xzHgUg2QyZlMYTa2zHEzPBZ5hz/Rj5LgWh5WLVZ85Esb
-         TrKKCE5NIa7EeeRuyRrOxfnn7sDMEhOT/LIzVqzP7DiAVnrDQev/HA6jAqhqGrbnDh
-         bz7iJlHKN63FiQeq2BY8nby4yd7wLgE/sMLFE2BA=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3499161112
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Weitao Hou <houweitaoo@gmail.com>
-Cc:     stas.yakovlev@gmail.com, davem@davemloft.net,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] wireless: fix intel typos in code comments
-References: <20190519033114.20271-1-houweitaoo@gmail.com>
-Date:   Thu, 23 May 2019 12:14:16 +0300
-In-Reply-To: <20190519033114.20271-1-houweitaoo@gmail.com> (Weitao Hou's
-        message of "Sun, 19 May 2019 11:31:14 +0800")
-Message-ID: <875zq1ednb.fsf@kamboji.qca.qualcomm.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        Thu, 23 May 2019 05:16:56 -0400
+Received: from twhfmnt1.mxic.com.tw (twhfm1p2.macronix.com [172.17.20.92])
+        by TWHMLLG4.macronix.com with ESMTP id x4N9G2se058184;
+        Thu, 23 May 2019 17:16:02 +0800 (GMT-8)
+        (envelope-from masonccyang@mxic.com.tw)
+Received: from MXML06C.mxic.com.tw (mxml06c.macronix.com [172.17.14.55])
+        by Forcepoint Email with ESMTP id 9068031A9482045BD690;
+        Thu, 23 May 2019 17:16:02 +0800 (CST)
+In-Reply-To: <0e2994d6-6efc-9f36-f681-609199f20b9f@cogentembedded.com>
+References: <1558423174-10748-1-git-send-email-masonccyang@mxic.com.tw> <1558423174-10748-4-git-send-email-masonccyang@mxic.com.tw> <0e2994d6-6efc-9f36-f681-609199f20b9f@cogentembedded.com>
+To:     "Sergei Shtylyov" <sergei.shtylyov@cogentembedded.com>
+Cc:     bbrezillon@kernel.org, broonie@kernel.org,
+        devicetree@vger.kernel.org,
+        "Geert Uytterhoeven" <geert+renesas@glider.be>,
+        "Simon Horman" <horms@verge.net.au>, juliensu@mxic.com.tw,
+        lee.jones@linaro.org, linux-kernel@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, linux-spi@vger.kernel.org,
+        marek.vasut@gmail.com, mark.rutland@arm.com,
+        miquel.raynal@bootlin.com, robh+dt@kernel.org
+Subject: Re: [PATCH v13 3/3] dt-bindings: mfd: Document Renesas R-Car Gen3 RPC-IF
+ controller bindings
 MIME-Version: 1.0
-Content-Type: text/plain
+X-KeepSent: B9416C97:8812436C-48258403:00329D12;
+ type=4; name=$KeepSent
+X-Mailer: Lotus Notes Release 8.5.3FP4 SHF90 June 10, 2013
+Message-ID: <OFB9416C97.8812436C-ON48258403.00329D12-48258403.0032E82E@mxic.com.tw>
+From:   masonccyang@mxic.com.tw
+Date:   Thu, 23 May 2019 17:16:03 +0800
+X-MIMETrack: Serialize by Router on MXML06C/TAIWAN/MXIC(Release 9.0.1FP10 HF265|July 25, 2018) at
+ 2019/05/23 PM 05:16:02,
+        Serialize complete at 2019/05/23 PM 05:16:02
+Content-Type: text/plain; charset="US-ASCII"
+X-MAIL: TWHMLLG4.macronix.com x4N9G2se058184
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Weitao Hou <houweitaoo@gmail.com> writes:
 
-> fix lengh to length
->
-> Signed-off-by: Weitao Hou <houweitaoo@gmail.com>
-> ---
->  drivers/net/wireless/intel/ipw2x00/ipw2200.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+Hi Sergei,
 
-Correct prefix is "ipw2x00:".
+> On 05/21/2019 10:19 AM, Mason Yang wrote:
+> 
+> > Document the bindings used by the Renesas R-Car Gen3 RPC-IF 
+controller.
+> > 
+> > Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
+> > ---
+> >  .../devicetree/bindings/mfd/renesas-rpc-if.txt     | 65 
+++++++++++++++++++++++
+> >  1 file changed, 65 insertions(+)
+> >  create mode 100644 
+Documentation/devicetree/bindings/mfd/renesas-rpc-if.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/mfd/renesas-rpc-if.txt 
+b/
+> Documentation/devicetree/bindings/mfd/renesas-rpc-if.txt
+> > new file mode 100644
+> > index 0000000..20ec85b
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/mfd/renesas-rpc-if.txt
+> > @@ -0,0 +1,65 @@
+> > +Renesas R-Car Gen3 RPC-IF controller Device Tree Bindings
+> > +---------------------------------------------------------
+> > +
+> > +RPC-IF supports both SPI NOR and HyperFlash (CFI-compliant flash)
+> > +
+> > +Required properties:
+> > +- compatible: should be an SoC-specific compatible value, followed by
+> > +      "renesas,rcar-gen3-rpc" as a fallback.
+> > +      supported SoC-specific values are:
+> > +      "renesas,r8a77995-rpc"   (R-Car D3)
+> > +- reg: should contain three register areas:
+> > +   first for RPC-IF registers,
+> > +   second for the direct mapping read mode and
+> > +   third for the write buffer area.
+> > +- reg-names: should contain "regs", "dirmap" and "wbuf"
+> > +- clocks: should contain 1 entries for the module's clock
+> > +- clock-names: should contain "rpc"
+> > +- power-domains: should contain system-controller(sysc) for 
+power-domain-cell
+> > +- resets: should contain clock pulse generator(cpg) for reset-cell,
+> > +     power-domain-cell and clock-cell
+> 
+>    That's just some nonsense, sorry...
+>    I suggest that you stop reposting your patches as I'm going to post
+> my version of this patchset RSN (based on your patches, of course) and 
+I'm
+> going to take care of fixing this file as well.
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches#commit_title_is_wrong
+okay, just let me know your patch then.
 
--- 
-Kalle Valo
+thanks & best regards,
+Mason
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information 
+and/or personal data, which is protected by applicable laws. Please be 
+reminded that duplication, disclosure, distribution, or use of this e-mail 
+(and/or its attachments) or any part thereof is prohibited. If you receive 
+this e-mail in error, please notify us immediately and delete this mail as 
+well as its attachment(s) from your system. In addition, please be 
+informed that collection, processing, and/or use of personal data is 
+prohibited unless expressly permitted by personal data protection laws. 
+Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
+
+
+
+============================================================================
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
+
