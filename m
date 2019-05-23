@@ -2,166 +2,138 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEAADC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:41:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC5C8C282DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:41:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5A582075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:41:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558640492;
-	bh=nZGcgFc2z8V4eaNeBmEJckrEFcB5RsTgV1d1vKVSKko=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yHtYFssogmId2zrGzUlwemSF7eB9uAQ5Kx5dHKc3J3qNMDtc2uCGaW7palUqpHzAa
-	 gkPVkn9/FuXyl1z1rzb4V30CSkENNFiyhVfG37wOacpSqnq01DUvWdVDfzI7i0dLWL
-	 wRpuTxVJFpsZsSZMgIWx9OGvx8CWsXpr4lULmJa4=
+	by mail.kernel.org (Postfix) with ESMTP id A61D02168B
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:41:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FtnxFgFC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390481AbfEWTlb (ORCPT
+        id S2390553AbfEWTlh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:41:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56300 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389233AbfEWTTy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:19:54 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A7802133D;
-        Thu, 23 May 2019 19:19:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639194;
-        bh=nZGcgFc2z8V4eaNeBmEJckrEFcB5RsTgV1d1vKVSKko=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QzTbwweZKLyGstodRi1KDDU6LVul3fqBbVh4ZydsoYkah9+tmPkDt7txd5z5Qb+rP
-         h9nqvvSm7CTASY0LWAccXOoC27CUuKxtJb1r61/nZi00U2DNX/Ts6LIfcUq7aIf0ZP
-         2ubh/wb6gPl4Prx3PdvmHcb4lw+1B8thHCFNC6Ho=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        Wei Wang <weiwan@google.com>, David Ahern <dsahern@gmail.com>,
-        Martin Lau <kafai@fb.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.0 002/139] ipv6: prevent possible fib6 leaks
-Date:   Thu, 23 May 2019 21:04:50 +0200
-Message-Id: <20190523181720.502832383@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190523181720.120897565@linuxfoundation.org>
-References: <20190523181720.120897565@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 23 May 2019 15:41:37 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:47918 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389233AbfEWTlf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:41:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Y4CF8VQ482x9+gF5CsOg/mXlQPERa3qs/eCs0oVRAJ8=; b=FtnxFgFCfEdc3mEAZAw8IsXF4
+        jQpoZBQ3b80gdnApy4UED7IQOONKMYS3liEa9vqS1CyVy5xj44NkYARQJZJzFhXCmbAN9cLJAJ608
+        4GU5MnZJHC16lhg91q/FopB9whBsFo1JoMQ5lrKNF57bReSLM1haCrprcPTP9OeZtlZ37LsiQNprS
+        bwFpdZ2W/fn+2lbz0zu+AO4SigjcCkqknzEFb0W/ZgQhQLl05fTV6EKHV4e154+YQOMRD5Cq56KQj
+        Yj4UsROp60Rm9vYLIgIjw6l/ItZUFWDZyYwz4+ryzdVyOrM1ewvkWJoDv7Aiqlj+C4h5XpDfleN1E
+        JsFu9hqfA==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hTtak-000431-T7; Thu, 23 May 2019 19:41:30 +0000
+Date:   Thu, 23 May 2019 12:41:30 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     Shakeel Butt <shakeelb@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kernel Team <kernel-team@fb.com>
+Subject: Re: xarray breaks thrashing detection and cgroup isolation
+Message-ID: <20190523194130.GA4598@bombadil.infradead.org>
+References: <20190523174349.GA10939@cmpxchg.org>
+ <20190523183713.GA14517@bombadil.infradead.org>
+ <CALvZod4o0sA8CM961ZCCp-Vv+i6awFY0U07oJfXFDiVfFiaZfg@mail.gmail.com>
+ <20190523190032.GA7873@bombadil.infradead.org>
+ <20190523192117.GA5723@cmpxchg.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190523192117.GA5723@cmpxchg.org>
+User-Agent: Mutt/1.9.2 (2017-12-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+On Thu, May 23, 2019 at 03:21:17PM -0400, Johannes Weiner wrote:
+> On Thu, May 23, 2019 at 12:00:32PM -0700, Matthew Wilcox wrote:
+> > On Thu, May 23, 2019 at 11:49:41AM -0700, Shakeel Butt wrote:
+> > > On Thu, May 23, 2019 at 11:37 AM Matthew Wilcox <willy@infradead.org> wrote:
+> > > > On Thu, May 23, 2019 at 01:43:49PM -0400, Johannes Weiner wrote:
+> > > > > I noticed that recent upstream kernels don't account the xarray nodes
+> > > > > of the page cache to the allocating cgroup, like we used to do for the
+> > > > > radix tree nodes.
+> > > > >
+> > > > > This results in broken isolation for cgrouped apps, allowing them to
+> > > > > escape their containment and harm other cgroups and the system with an
+> > > > > excessive build-up of nonresident information.
+> > > > >
+> > > > > It also breaks thrashing/refault detection because the page cache
+> > > > > lives in a different domain than the xarray nodes, and so the shadow
+> > > > > shrinker can reclaim nonresident information way too early when there
+> > > > > isn't much cache in the root cgroup.
+> > > > >
+> > > > > I'm not quite sure how to fix this, since the xarray code doesn't seem
+> > > > > to have per-tree gfp flags anymore like the radix tree did. We cannot
+> > > > > add SLAB_ACCOUNT to the radix_tree_node_cachep slab cache. And the
+> > > > > xarray api doesn't seem to really support gfp flags, either (xas_nomem
+> > > > > does, but the optimistic internal allocations have fixed gfp flags).
+> > > >
+> > > > Would it be a problem to always add __GFP_ACCOUNT to the fixed flags?
+> > > > I don't really understand cgroups.
+> > 
+> > > Also some users of xarray may not want __GFP_ACCOUNT. That's the
+> > > reason we had __GFP_ACCOUNT for page cache instead of hard coding it
+> > > in radix tree.
+> > 
+> > This is what I don't understand -- why would someone not want
+> > __GFP_ACCOUNT?  For a shared resource?  But the page cache is a shared
+> > resource.  So what is a good example of a time when an allocation should
+> > _not_ be accounted to the cgroup?
+> 
+> We used to cgroup-account every slab charge to cgroups per default,
+> until we changed it to a whitelist behavior:
+> 
+> commit b2a209ffa605994cbe3c259c8584ba1576d3310c
+> Author: Vladimir Davydov <vdavydov@virtuozzo.com>
+> Date:   Thu Jan 14 15:18:05 2016 -0800
+> 
+>     Revert "kernfs: do not account ino_ida allocations to memcg"
+>     
+>     Currently, all kmem allocations (namely every kmem_cache_alloc, kmalloc,
+>     alloc_kmem_pages call) are accounted to memory cgroup automatically.
+>     Callers have to explicitly opt out if they don't want/need accounting
+>     for some reason.  Such a design decision leads to several problems:
+>     
+>      - kmalloc users are highly sensitive to failures, many of them
+>        implicitly rely on the fact that kmalloc never fails, while memcg
+>        makes failures quite plausible.
 
-[ Upstream commit 61fb0d01680771f72cc9d39783fb2c122aaad51e ]
+Doesn't apply here.  The allocation under spinlock is expected to fail,
+and then we'll use xas_nomem() with the caller's specified GFP flags
+which may or may not include __GFP_ACCOUNT.
 
-At ipv6 route dismantle, fib6_drop_pcpu_from() is responsible
-for finding all percpu routes and set their ->from pointer
-to NULL, so that fib6_ref can reach its expected value (1).
+>      - A lot of objects are shared among different containers by design.
+>        Accounting such objects to one of containers is just unfair.
+>        Moreover, it might lead to pinning a dead memcg along with its kmem
+>        caches, which aren't tiny, which might result in noticeable increase
+>        in memory consumption for no apparent reason in the long run.
 
-The problem right now is that other cpus can still catch the
-route being deleted, since there is no rcu grace period
-between the route deletion and call to fib6_drop_pcpu_from()
+These objects are in the slab of radix_tree_nodes, and we'll already be
+accounting page cache nodes to the cgroup, so accounting random XArray
+nodes to the cgroups isn't going to make the problem worse.
 
-This can leak the fib6 and associated resources, since no
-notifier will take care of removing the last reference(s).
+>      - There are tons of short-lived objects. Accounting them to memcg will
+>        only result in slight noise and won't change the overall picture, but
+>        we still have to pay accounting overhead.
 
-I decided to add another boolean (fib6_destroying) instead
-of reusing/renaming exception_bucket_flushed to ease stable backports,
-and properly document the memory barriers used to implement this fix.
-
-This patch has been co-developped with Wei Wang.
-
-Fixes: 93531c674315 ("net/ipv6: separate handling of FIB entries from dst based routes")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Cc: Wei Wang <weiwan@google.com>
-Cc: David Ahern <dsahern@gmail.com>
-Cc: Martin Lau <kafai@fb.com>
-Acked-by: Wei Wang <weiwan@google.com>
-Acked-by: Martin KaFai Lau <kafai@fb.com>
-Reviewed-by: David Ahern <dsahern@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- include/net/ip6_fib.h |    3 ++-
- net/ipv6/ip6_fib.c    |   12 +++++++++---
- net/ipv6/route.c      |    7 +++++++
- 3 files changed, 18 insertions(+), 4 deletions(-)
-
---- a/include/net/ip6_fib.h
-+++ b/include/net/ip6_fib.h
-@@ -171,7 +171,8 @@ struct fib6_info {
- 					dst_nocount:1,
- 					dst_nopolicy:1,
- 					dst_host:1,
--					unused:3;
-+					fib6_destroying:1,
-+					unused:2;
- 
- 	struct fib6_nh			fib6_nh;
- 	struct rcu_head			rcu;
---- a/net/ipv6/ip6_fib.c
-+++ b/net/ipv6/ip6_fib.c
-@@ -909,6 +909,12 @@ static void fib6_drop_pcpu_from(struct f
- {
- 	int cpu;
- 
-+	/* Make sure rt6_make_pcpu_route() wont add other percpu routes
-+	 * while we are cleaning them here.
-+	 */
-+	f6i->fib6_destroying = 1;
-+	mb(); /* paired with the cmpxchg() in rt6_make_pcpu_route() */
-+
- 	/* release the reference to this fib entry from
- 	 * all of its cached pcpu routes
- 	 */
-@@ -932,6 +938,9 @@ static void fib6_purge_rt(struct fib6_in
- {
- 	struct fib6_table *table = rt->fib6_table;
- 
-+	if (rt->rt6i_pcpu)
-+		fib6_drop_pcpu_from(rt, table);
-+
- 	if (atomic_read(&rt->fib6_ref) != 1) {
- 		/* This route is used as dummy address holder in some split
- 		 * nodes. It is not leaked, but it still holds other resources,
-@@ -953,9 +962,6 @@ static void fib6_purge_rt(struct fib6_in
- 			fn = rcu_dereference_protected(fn->parent,
- 				    lockdep_is_held(&table->tb6_lock));
- 		}
--
--		if (rt->rt6i_pcpu)
--			fib6_drop_pcpu_from(rt, table);
- 	}
- }
- 
---- a/net/ipv6/route.c
-+++ b/net/ipv6/route.c
-@@ -1260,6 +1260,13 @@ static struct rt6_info *rt6_make_pcpu_ro
- 	prev = cmpxchg(p, NULL, pcpu_rt);
- 	BUG_ON(prev);
- 
-+	if (rt->fib6_destroying) {
-+		struct fib6_info *from;
-+
-+		from = xchg((__force struct fib6_info **)&pcpu_rt->from, NULL);
-+		fib6_info_release(from);
-+	}
-+
- 	return pcpu_rt;
- }
- 
-
+XArray nodes are generally not short-lived objects.
 
