@@ -1,83 +1,67 @@
 Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USB_DRIVES autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 833E0C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 16:19:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 460EBC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 16:19:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 610D02175B
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 16:19:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 252402175B
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 16:19:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731675AbfEWQTc (ORCPT
+        id S1731691AbfEWQTu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 12:19:32 -0400
-Received: from toryburch.com ([198.23.132.45]:53479 "EHLO timesharemyths.com"
-        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731254AbfEWQTc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 12:19:32 -0400
-To:     linux-kernel@vger.kernel.org
-Subject: Logo printing on the USB drives
-Message-ID: <3e5be09d88b518c98eb49ca5d3f95044@lucastirepros.com>
-Date:   Thu, 23 May 2019 15:20:26 +0200
-From:   "Stacy" <ryan@tanschmidit.tech>
-Reply-To: lucas@tanschmidit.tech
-MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+        Thu, 23 May 2019 12:19:50 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:48336 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731254AbfEWQTt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 12:19:49 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d8])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 12E461509B033;
+        Thu, 23 May 2019 09:19:49 -0700 (PDT)
+Date:   Thu, 23 May 2019 09:19:48 -0700 (PDT)
+Message-Id: <20190523.091948.2094790534090543013.davem@davemloft.net>
+To:     christophe.leroy@c-s.fr
+Cc:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH net-next v2] net: phy: lxt: Add suspend/resume support
+ to LXT971 and LXT973.
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <eb206b659fcae041be38d583ff139ca73e9e03c3.1558601485.git.christophe.leroy@c-s.fr>
+References: <eb206b659fcae041be38d583ff139ca73e9e03c3.1558601485.git.christophe.leroy@c-s.fr>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 23 May 2019 09:19:49 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: Christophe Leroy <christophe.leroy@c-s.fr>
+Date: Thu, 23 May 2019 08:55:32 +0000 (UTC)
 
-I am following up on my previous attempt to contact you.
-We wanted to check to see if you need any LOGO promotional products for
-your business?
+> All LXT PHYs implement the standard "power down" bit 11 of
+> BMCR, so this patch adds support using the generic
+> genphy_{suspend,resume} functions added by
+> commit 0f0ca340e57b ("phy: power management support").
+> 
+> LXT970 is left aside because all registers get cleared upon
+> "power down" exit.
+> 
+> Reviewed-by: Heiner Kallweit <hkallweit1@gmail.com>
+> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+> ---
+>  I'd be happy if you could also merge that into 4.19
+> 
+>  v2: revised commit log without the Fixes: tag.
 
-Our company manufactures USB Flash Drives that are custom printed with your
-logo.
-They make the perfect marketing tool for your business or organization.
-
-Looking for other items with your logo?   We can supply anything with your
-logo…
-
-Most Popular Items right now:
-- T-shirts, Hoodies
-- Table Covers printed with your brand
-- Pens
-- Water Bottles
-- Banners…
-- You name it we can make it and print on it for you!
-
-Our USB Pricing is at an ALL TIME LOW.
-We offer low minimum quantities and all memory sizes.
-
-Over 150 Stock Models as well as 100 % custom shaped USB drives in the
-shape of your Logo or
-product or just about anything else you can imagine!
-Ask about our End of the Year Promotions!
-
-We can pre-load your media files, images, presentations and files onto the
-drives for you.
-These are ideal handouts for trade shows, branding, corporate gifts and
-employees.
-
-* Please reply back and let me know what quantity and memory size you need
-for a Fast Quote!
-
-Are you a school or nonprofit?  Please let us know for even further
-discounts.
-
-Let us send you a quote!   We will EARN your business!
-
-Regards,
-
-Stacy Williams
-Custom Logo Products
-Whatsapp: +8617199402387
-
+Applied, thanks.
