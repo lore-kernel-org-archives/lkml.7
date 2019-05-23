@@ -2,248 +2,197 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9782C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 18:22:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4DEDC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 18:25:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91D7420673
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 18:22:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Jt7Fpt/P"
+	by mail.kernel.org (Postfix) with ESMTP id A70DC2075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 18:25:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731438AbfEWSWZ (ORCPT
+        id S1731415AbfEWSZC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 14:22:25 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:33858 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731443AbfEWSWH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 14:22:07 -0400
-Received: by mail-lf1-f65.google.com with SMTP id v18so5123367lfi.1
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 11:22:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=ExBErmLKvAHAcEzB9N5VayIpTNJEe2yiC9dz/BkkizE=;
-        b=Jt7Fpt/PNF3rJVbtyZwTEO5En1kS6xwPMi8rxm+kvjTx0YaNdEP90fpTn5S8UqN2GI
-         cHhg8f+t3VUw7xaVF2rKqUOuJN67s1dhzPuonwuom5jTwbKnbLeGDUeE/K3ONRS8MDZS
-         Hi6qhk3MwbxCyUwhOiw2TnjlfbgM4yq/A2SjIMlBBw62Zqh8qp360MkN9XlAeAj0ggrx
-         hW71K8v27oymqy5rtlzb36//GOX8GNMGTZaebKQz+wyYjBniLNAjLH4uITknVDQk2NLv
-         fwHHXizcIebDh4VnLStsKgwFHHCQrtL8yUnbKLbKuBoOXDKMtZLrz2iP7EFQwwETks+a
-         HuvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=ExBErmLKvAHAcEzB9N5VayIpTNJEe2yiC9dz/BkkizE=;
-        b=mV5HsgUF6zviYUVedD3uqczkwsO3liZbhnXhX1HTvfvafVZGmzNdWwKWyAgaMOWYw4
-         vYOiXwvDjnqvBEDb1pRnXbTjMdXjtpkAlCIVt83UyBmapC4MGaAtk5n6DPlH4FwEQaVy
-         YG1MPLvXZwkbPm7U8MdxufD0a3reg7LkPAPtr8d8t2dgbTh8+isDgkk/wrwbo04iGPT0
-         kUjOyQgmMgVrzsGWh5AGPckuc9v2QmlJesgIusP1xmKRGMP/XgsHNLutzUyYltr2csn2
-         bAqKV7rru0vIc/zoVlSPp0Y5v3aUcLRisP/efiKpPdaM0441MUMWyhlVIo/NezImp4ei
-         breA==
-X-Gm-Message-State: APjAAAXZwTHJwxZrYoxa4UqDqbuceOu3w4sLmJDE/M+VnZqAxNtCLWxE
-        2go4Vip7Txemx0/TOr7hEDz0hw==
-X-Google-Smtp-Source: APXvYqyuKp+KUf1ANU2TnmMoDCiXOQcu5BOgmmiE2kEc/r5Y2vAaPFJIM2apQHa7OaebirohqJapBQ==
-X-Received: by 2002:ac2:51d1:: with SMTP id u17mr7278737lfm.151.1558635724585;
-        Thu, 23 May 2019 11:22:04 -0700 (PDT)
-Received: from localhost.localdomain (59-201-94-178.pool.ukrtel.net. [178.94.201.59])
-        by smtp.gmail.com with ESMTPSA id n26sm59904lfi.90.2019.05.23.11.22.03
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 23 May 2019 11:22:04 -0700 (PDT)
-From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-To:     grygorii.strashko@ti.com, hawk@kernel.org, davem@davemloft.net
-Cc:     ast@kernel.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org, xdp-newbies@vger.kernel.org,
-        ilias.apalodimas@linaro.org, netdev@vger.kernel.org,
-        daniel@iogearbox.net, jakub.kicinski@netronome.com,
-        john.fastabend@gmail.com,
-        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-Subject: [PATCH net-next 1/3] net: ethernet: ti: davinci_cpdma: add dma mapped submit
-Date:   Thu, 23 May 2019 21:20:33 +0300
-Message-Id: <20190523182035.9283-2-ivan.khoronzhuk@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190523182035.9283-1-ivan.khoronzhuk@linaro.org>
-References: <20190523182035.9283-1-ivan.khoronzhuk@linaro.org>
+        Thu, 23 May 2019 14:25:02 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:47350 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731237AbfEWSZB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 14:25:01 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 2B909300C035;
+        Thu, 23 May 2019 18:25:01 +0000 (UTC)
+Received: from redhat.com (unknown [10.20.6.178])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 43CCC5D9C6;
+        Thu, 23 May 2019 18:25:00 +0000 (UTC)
+Date:   Thu, 23 May 2019 14:24:58 -0400
+From:   Jerome Glisse <jglisse@redhat.com>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Artemy Kovalyov <artemyko@mellanox.com>,
+        Moni Shoua <monis@mellanox.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Kaike Wan <kaike.wan@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>
+Subject: Re: [PATCH v4 0/1] Use HMM for ODP v4
+Message-ID: <20190523182458.GA3571@redhat.com>
+References: <20190521205321.GC3331@redhat.com>
+ <20190522005225.GA30819@ziepe.ca>
+ <20190522174852.GA23038@redhat.com>
+ <20190522235737.GD15389@ziepe.ca>
+ <20190523150432.GA5104@redhat.com>
+ <20190523154149.GB12159@ziepe.ca>
+ <20190523155207.GC5104@redhat.com>
+ <20190523163429.GC12159@ziepe.ca>
+ <20190523173302.GD5104@redhat.com>
+ <20190523175546.GE12159@ziepe.ca>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190523175546.GE12159@ziepe.ca>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Thu, 23 May 2019 18:25:01 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In case if dma mapped packet needs to be sent, like with XDP
-page pool, the "mapped" submit can be used. This patch adds dma
-mapped submit based on regular one.
+On Thu, May 23, 2019 at 02:55:46PM -0300, Jason Gunthorpe wrote:
+> On Thu, May 23, 2019 at 01:33:03PM -0400, Jerome Glisse wrote:
+> > On Thu, May 23, 2019 at 01:34:29PM -0300, Jason Gunthorpe wrote:
+> > > On Thu, May 23, 2019 at 11:52:08AM -0400, Jerome Glisse wrote:
+> > > > On Thu, May 23, 2019 at 12:41:49PM -0300, Jason Gunthorpe wrote:
+> > > > > On Thu, May 23, 2019 at 11:04:32AM -0400, Jerome Glisse wrote:
+> > > > > > On Wed, May 22, 2019 at 08:57:37PM -0300, Jason Gunthorpe wrote:
+> > > > > > > On Wed, May 22, 2019 at 01:48:52PM -0400, Jerome Glisse wrote:
+> > > > > > > 
+> > > > > > > > > > So attached is a rebase on top of 5.2-rc1, i have tested with pingpong
+> > > > > > > > > > (prefetch and not and different sizes). Seems to work ok.
+> > > > > > > > > 
+> > > > > > > > > Urk, it already doesn't apply to the rdma tree :(
+> > > > > > > > > 
+> > > > > > > > > The conflicts are a little more extensive than I'd prefer to handle..
+> > > > > > > > > Can I ask you to rebase it on top of this branch please:
+> > > > > > > > > 
+> > > > > > > > > https://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git/log/?h=wip/jgg-for-next
+> > > > > > > > > 
+> > > > > > > > > Specifically it conflicts with this patch:
+> > > > > > > > > 
+> > > > > > > > > https://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git/commit/?h=wip/jgg-for-next&id=d2183c6f1958e6b6dfdde279f4cee04280710e34
+> > > > > > > 
+> > > > > > > There is at least one more serious blocker here:
+> > > > > > > 
+> > > > > > > config ARCH_HAS_HMM_MIRROR
+> > > > > > >         bool
+> > > > > > >         default y
+> > > > > > >         depends on (X86_64 || PPC64)
+> > > > > > >         depends on MMU && 64BIT
+> > > > > > > 
+> > > > > > > I can't loose ARM64 support for ODP by merging this, that is too
+> > > > > > > serious of a regression.
+> > > > > > > 
+> > > > > > > Can you fix it?
+> > > > > > 
+> > > > > > 5.2 already has patch to fix the Kconfig (ARCH_HAS_HMM_MIRROR and
+> > > > > > ARCH_HAS_HMM_DEVICE replacing ARCH_HAS_HMM) I need to update nouveau
+> > > > > 
+> > > > > Newer than 5.2-rc1? Is this why ARCH_HAS_HMM_MIRROR is not used anywhere?
+> > > > 
+> > > > Yes this is multi-step update, first add the new Kconfig release n,
+> > > > update driver in release n+1, update core Kconfig in release n+2
+> > > > 
+> > > > So we are in release n (5.2), in 5.3 i will update nouveau and amdgpu
+> > > > so that in 5.4 in ca remove the old ARCH_HAS_HMM
+> > > 
+> > > Why don't you just send the patch for both parts to mm or to DRM?
+> > > 
+> > > This is very normal - as long as the resulting conflicts would be
+> > > small during there is no reason not to do this. Can you share the
+> > > combined patch?
+> > 
+> > This was tested in the past an resulted in failure. So for now i am
+> > taking the simplest and easiest path with the least burden for every
+> > maintainer. It only complexify my life.
+> 
+> I don't know what you tried to do in the past, but it happens all the
+> time, every merge cycle with success. Not everything can be done, but
+> changing the signature of one function with one call site should
+> really not be a problem.
+> 
+> > Note that mm is not a git tree and thus i can not play any git trick
+> > to help in this endeavor.
+> 
+> I am aware..
+> 
+> > > > > If mm takes the fixup patches so hmm mirror is as reliable as ODP's
+> > > > > existing stuff, and patch from you to enable ARM64, then we can
+> > > > > continue to merge into 5.3
+> > > > > 
+> > > > > So, let us try to get acks on those other threads..
+> > > > 
+> > > > I will be merging your patchset and Ralph and repost, they are only
+> > > > minor change mostly that you can not update the driver API in just
+> > > > one release.
+> > > 
+> > > Of course you can, we do it all the time. It requires some
+> > > co-ordination, but as long as the merge conflicts are not big it is
+> > > fine.
+> > > 
+> > > Merge the driver API change and the call site updates to -mm and
+> > > refain from merging horrendously conflicting patches through DRM.
+> > > 
+> > > In the case of the changes in my HMM RFC it is something like 2
+> > > lines in DRM that need touching, no problem at all.
+> > > 
+> > > If you want help I can volunteer make a hmm PR for Linus just for this
+> > > during the merge window - but Andrew would need to agree and ack the
+> > > patches.
+> > 
+> > This was tested in the past and i do not want to go over this issue
+> > again (or re-iterate the long emails discussion associated with that).
+> > It failed and it put the burden on every maintainers. So it is easier
+> > to do the multi-step thing.
+> > 
+> > You can take a peak at Ralph patchset and yours into one with minor
+> > changes here:
+> > 
+> > https://cgit.freedesktop.org/~glisse/linux/log/?h=hmm-5.3
+> 
+> Okay..
+> 
+> This patch needs to use down_read(&mm->mmap_sem) not READ_ONCE:
+> 
+>  mm/hmm: do not try to create hmm struct from within hmm_range_register()
+>  Driver should never call hmm_range_register() without a valid and active
+>  registered hmm_mirror and thus without a valid and active hmm struct. So
+>  if that happens just return -EFAULT.
+> 
+> Otherwise it is inconsisent with the locking scheme and has a use
+> after free race. 
 
-Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
----
- drivers/net/ethernet/ti/davinci_cpdma.c | 88 ++++++++++++++++++++-----
- drivers/net/ethernet/ti/davinci_cpdma.h |  2 +
- 2 files changed, 75 insertions(+), 15 deletions(-)
+I can not take mmap_sem in range_register, the READ_ONCE is fine and
+they are no race as we do take a reference on the hmm struct thus
+if we get are successful at taking that reference then hmm struct
+will remain valid. Also this API has always been use with active
+mirror and thus active hmm and thus mm->hmm will remain stable for
+all call to hmm_range_register(), it would be a bug otherwise.
 
-diff --git a/drivers/net/ethernet/ti/davinci_cpdma.c b/drivers/net/ethernet/ti/davinci_cpdma.c
-index 35bf14d8e7af..7f89b2299f05 100644
---- a/drivers/net/ethernet/ti/davinci_cpdma.c
-+++ b/drivers/net/ethernet/ti/davinci_cpdma.c
-@@ -125,6 +125,15 @@ struct cpdma_chan {
- 	u32				rate;
- };
- 
-+struct submit_info {
-+	struct cpdma_chan *chan;
-+	int directed;
-+	void *token;
-+	void *data;
-+	int flags;
-+	int len;
-+};
-+
- struct cpdma_control_info {
- 	u32		reg;
- 	u32		shift, mask;
-@@ -176,6 +185,8 @@ static struct cpdma_control_info controls[] = {
- 				 (directed << CPDMA_TO_PORT_SHIFT));	\
- 	} while (0)
- 
-+#define CPDMA_DMA_EXT_MAP		BIT(16)
-+
- static void cpdma_desc_pool_destroy(struct cpdma_ctlr *ctlr)
- {
- 	struct cpdma_desc_pool *pool = ctlr->pool;
-@@ -1002,10 +1013,12 @@ static void __cpdma_chan_submit(struct cpdma_chan *chan,
- 	}
- }
- 
--int cpdma_chan_submit(struct cpdma_chan *chan, void *token, void *data,
--		      int len, int directed)
-+static int cpdma_chan_submit_si(struct submit_info *si)
- {
-+	struct cpdma_chan		*chan = si->chan;
- 	struct cpdma_ctlr		*ctlr = chan->ctlr;
-+	int				len = si->len;
-+	int				swlen = len;
- 	struct cpdma_desc __iomem	*desc;
- 	dma_addr_t			buffer;
- 	unsigned long			flags;
-@@ -1037,16 +1050,22 @@ int cpdma_chan_submit(struct cpdma_chan *chan, void *token, void *data,
- 		chan->stats.runt_transmit_buff++;
- 	}
- 
--	buffer = dma_map_single(ctlr->dev, data, len, chan->dir);
--	ret = dma_mapping_error(ctlr->dev, buffer);
--	if (ret) {
--		cpdma_desc_free(ctlr->pool, desc, 1);
--		ret = -EINVAL;
--		goto unlock_ret;
--	}
--
- 	mode = CPDMA_DESC_OWNER | CPDMA_DESC_SOP | CPDMA_DESC_EOP;
--	cpdma_desc_to_port(chan, mode, directed);
-+	cpdma_desc_to_port(chan, mode, si->directed);
-+
-+	if (si->flags & CPDMA_DMA_EXT_MAP) {
-+		buffer = (dma_addr_t)si->data;
-+		dma_sync_single_for_device(ctlr->dev, buffer, len, chan->dir);
-+		swlen |= CPDMA_DMA_EXT_MAP;
-+	} else {
-+		buffer = dma_map_single(ctlr->dev, si->data, len, chan->dir);
-+		ret = dma_mapping_error(ctlr->dev, buffer);
-+		if (ret) {
-+			cpdma_desc_free(ctlr->pool, desc, 1);
-+			ret = -EINVAL;
-+			goto unlock_ret;
-+		}
-+	}
- 
- 	/* Relaxed IO accessors can be used here as there is read barrier
- 	 * at the end of write sequence.
-@@ -1055,9 +1074,9 @@ int cpdma_chan_submit(struct cpdma_chan *chan, void *token, void *data,
- 	writel_relaxed(buffer, &desc->hw_buffer);
- 	writel_relaxed(len, &desc->hw_len);
- 	writel_relaxed(mode | len, &desc->hw_mode);
--	writel_relaxed((uintptr_t)token, &desc->sw_token);
-+	writel_relaxed((uintptr_t)si->token, &desc->sw_token);
- 	writel_relaxed(buffer, &desc->sw_buffer);
--	writel_relaxed(len, &desc->sw_len);
-+	writel_relaxed(swlen, &desc->sw_len);
- 	desc_read(desc, sw_len);
- 
- 	__cpdma_chan_submit(chan, desc);
-@@ -1072,6 +1091,38 @@ int cpdma_chan_submit(struct cpdma_chan *chan, void *token, void *data,
- 	return ret;
- }
- 
-+int cpdma_chan_submit(struct cpdma_chan *chan, void *token, void *data, int len,
-+		      int directed)
-+{
-+	struct submit_info si;
-+
-+	si.chan = chan;
-+	si.token = token;
-+	si.data = data;
-+	si.len = len;
-+	si.directed = directed;
-+	si.flags = 0;
-+
-+	return cpdma_chan_submit_si(&si);
-+}
-+EXPORT_SYMBOL_GPL(cpdma_chan_submit);
-+
-+int cpdma_chan_submit_mapped(struct cpdma_chan *chan, void *token,
-+			     dma_addr_t data, int len, int directed)
-+{
-+	struct submit_info si;
-+
-+	si.chan = chan;
-+	si.token = token;
-+	si.data = (void *)data;
-+	si.len = len;
-+	si.directed = directed;
-+	si.flags = CPDMA_DMA_EXT_MAP;
-+
-+	return cpdma_chan_submit_si(&si);
-+}
-+EXPORT_SYMBOL_GPL(cpdma_chan_submit_mapped);
-+
- bool cpdma_check_free_tx_desc(struct cpdma_chan *chan)
- {
- 	struct cpdma_ctlr	*ctlr = chan->ctlr;
-@@ -1097,10 +1148,17 @@ static void __cpdma_chan_free(struct cpdma_chan *chan,
- 	uintptr_t			token;
- 
- 	token      = desc_read(desc, sw_token);
--	buff_dma   = desc_read(desc, sw_buffer);
- 	origlen    = desc_read(desc, sw_len);
- 
--	dma_unmap_single(ctlr->dev, buff_dma, origlen, chan->dir);
-+	buff_dma   = desc_read(desc, sw_buffer);
-+	if (origlen & CPDMA_DMA_EXT_MAP) {
-+		origlen &= ~CPDMA_DMA_EXT_MAP;
-+		dma_sync_single_for_cpu(ctlr->dev, buff_dma, origlen,
-+					chan->dir);
-+	} else {
-+		dma_unmap_single(ctlr->dev, buff_dma, origlen, chan->dir);
-+	}
-+
- 	cpdma_desc_free(pool, desc, 1);
- 	(*chan->handler)((void *)token, outlen, status);
- }
-diff --git a/drivers/net/ethernet/ti/davinci_cpdma.h b/drivers/net/ethernet/ti/davinci_cpdma.h
-index 10376062dafa..8f6f27185c63 100644
---- a/drivers/net/ethernet/ti/davinci_cpdma.h
-+++ b/drivers/net/ethernet/ti/davinci_cpdma.h
-@@ -77,6 +77,8 @@ int cpdma_chan_stop(struct cpdma_chan *chan);
- 
- int cpdma_chan_get_stats(struct cpdma_chan *chan,
- 			 struct cpdma_chan_stats *stats);
-+int cpdma_chan_submit_mapped(struct cpdma_chan *chan, void *token,
-+			     dma_addr_t data, int len, int directed);
- int cpdma_chan_submit(struct cpdma_chan *chan, void *token, void *data,
- 		      int len, int directed);
- int cpdma_chan_process(struct cpdma_chan *chan, int quota);
--- 
-2.17.1
+The READ_ONCE() is really just a safety net, it is not required and
+once the convertion to hmm_mirror is done it will go away.
 
+> 
+> I was not sure if the lock could be obtained safely here so I
+> preferred to use the no-lock alternative of passing in mirror. I still
+> think you should just change the single call site and sent to -mm.
+
+It is too painful with unmerge driver like amdgpu that are targeting
+5.3, those do target API that is in 5.2
+
+Cheers,
+Jérôme
