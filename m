@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96AE6C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:27:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48428C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:27:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DE22206BA
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:27:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15426217D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:27:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639626;
-	bh=W0f3EHcVEBs8UfuFtMj60PbcCvQ0hwXJbGh92iFhmzQ=;
+	s=default; t=1558639631;
+	bh=qqtzSOErxlsiyQ+y/Ki7LFxgaKu2TqUXZ3UHTW02tIA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aTjvEQnuGxf/O89xqqUwh+LoGD+Fk8zY+/kcund/sracD8Mend/CMJvzPFYcQqUOV
-	 e8XMJkn2Lt/kvWr5imngeUWXHJENbLYARtgGxS7EwSvYtxg2uJI669flx/W/VJZczo
-	 LVTB/RE1M3FjgUSppnUB2fBQXkRcTimj4nvRL0Ds=
+	b=EDNjKi0vg4SZ3bXEg712Yvcddf0ZC8Rw80aSnHcRg5lrucP7/sybub6Jal19cZD0G
+	 8vlT5sBO4msLY9W7XbQMAgtMDLFTjmMu/ZX15cr27noAXmA0x+SFo/X7Bupi+woclx
+	 8f291uzMxHQRc1dJoi9X2rCOpyTxKXAzcZfjckDk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391522AbfEWT1E (ORCPT
+        id S2391511AbfEWT1K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:27:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39122 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:27:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39254 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391496AbfEWT1C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:27:02 -0400
+        id S2389926AbfEWT1H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:27:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14A6B206BA;
-        Thu, 23 May 2019 19:27:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6123D21841;
+        Thu, 23 May 2019 19:27:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639621;
-        bh=W0f3EHcVEBs8UfuFtMj60PbcCvQ0hwXJbGh92iFhmzQ=;
+        s=default; t=1558639626;
+        bh=qqtzSOErxlsiyQ+y/Ki7LFxgaKu2TqUXZ3UHTW02tIA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BetIprL7AW8TNXHlFSrtoaLUwjOB17uIw3EHpKDZAdAY5Y/5w+fzss82BqyKe28oG
-         jVsuO41AELVZcSTzXxob95an3ycJrcvpQnnqGV0JQAyePZHybhorVKW3upd3OoSnY3
-         JRwA/dRXAnaximJoT8vTRzePh5BmrSC3wwc34/TU=
+        b=D5lN31LUs39FjX+liGDtCprWQcslWuMNyGx5/QzVdaE0juCeuYBBWw+fRMSiiBza0
+         vpeJ8ukhHzJSQTwLf3N9kAYfN0zgFLrQX/5PmmEhJKpOaKEMPdvHN0yyicmPguqWcW
+         uK6C55eTyVozCnY46Bv1FX38rOz2CuAZv9j4+H7w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tingwei Zhang <tingwei@codeaurora.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Subject: [PATCH 5.1 033/122] stm class: Fix channel free in stm output free path
-Date:   Thu, 23 May 2019 21:05:55 +0200
-Message-Id: <20190523181709.227475548@linuxfoundation.org>
+        stable@vger.kernel.org, Hou Tao <houtao1@huawei.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.1 035/122] brd: re-enable __GFP_HIGHMEM in brd_insert_page()
+Date:   Thu, 23 May 2019 21:05:57 +0200
+Message-Id: <20190523181709.506827080@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181705.091418060@linuxfoundation.org>
 References: <20190523181705.091418060@linuxfoundation.org>
@@ -60,40 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tingwei Zhang <tingwei@codeaurora.org>
+From: Hou Tao <houtao1@huawei.com>
 
-commit ee496da4c3915de3232b5f5cd20e21ae3e46fe8d upstream.
+commit f6b50160a06d4a0d6a3999ab0c5aec4f52dba248 upstream.
 
-Number of free masters is not set correctly in stm
-free path. Fix this by properly adding the number
-of output channels before setting them to 0 in
-stm_output_disclaim().
+__GFP_HIGHMEM is disabled if dax is enabled on brd, however
+dax support for brd has been removed since commit (7a862fbbdec6
+"brd: remove dax support"), so restore __GFP_HIGHMEM in
+brd_insert_page().
 
-Currently it is equivalent to doing nothing since
-master->nr_free is incremented by 0.
+Also remove the no longer applicable comments about DAX and highmem.
 
-Fixes: 7bd1d4093c2f ("stm class: Introduce an abstraction for System Trace Module devices")
-Signed-off-by: Tingwei Zhang <tingwei@codeaurora.org>
-Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc: stable@vger.kernel.org # v4.4
-Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: stable@vger.kernel.org
+Fixes: 7a862fbbdec6 ("brd: remove dax support")
+Signed-off-by: Hou Tao <houtao1@huawei.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hwtracing/stm/core.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/block/brd.c |    7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
---- a/drivers/hwtracing/stm/core.c
-+++ b/drivers/hwtracing/stm/core.c
-@@ -218,8 +218,8 @@ stm_output_disclaim(struct stm_device *s
- 	bitmap_release_region(&master->chan_map[0], output->channel,
- 			      ilog2(output->nr_chans));
- 
--	output->nr_chans = 0;
- 	master->nr_free += output->nr_chans;
-+	output->nr_chans = 0;
- }
- 
- /*
+--- a/drivers/block/brd.c
++++ b/drivers/block/brd.c
+@@ -96,13 +96,8 @@ static struct page *brd_insert_page(stru
+ 	/*
+ 	 * Must use NOIO because we don't want to recurse back into the
+ 	 * block or filesystem layers from page reclaim.
+-	 *
+-	 * Cannot support DAX and highmem, because our ->direct_access
+-	 * routine for DAX must return memory that is always addressable.
+-	 * If DAX was reworked to use pfns and kmap throughout, this
+-	 * restriction might be able to be lifted.
+ 	 */
+-	gfp_flags = GFP_NOIO | __GFP_ZERO;
++	gfp_flags = GFP_NOIO | __GFP_ZERO | __GFP_HIGHMEM;
+ 	page = alloc_page(gfp_flags);
+ 	if (!page)
+ 		return NULL;
 
 
