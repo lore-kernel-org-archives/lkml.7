@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2E54C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:34:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FB08C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:34:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 981AC20879
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:34:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 179B821873
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:34:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558640059;
-	bh=qNYODgqWKhdbPsHa9pHqWA8Zqitjdz0r1FPR3mUqAr0=;
+	s=default; t=1558640065;
+	bh=R4z72mLKfM2fz0ZjlVUj+eqeS+fwJHDSCzafb5yl/Y0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R/THZ9fnN4wd0zXUumtORN43j2I5GClz9XskBNwsy0NFx3+wndoPv3DY34uqYepU3
-	 zmC+ltA50kiiZ+qRd8h1prgGWT4ForsRshlNjEExBEZFRH7hF4cLhBnRahxhNCt6jk
-	 SCmB0YtPdUbW41jIS/GUsWw0XRih3jS7rv2B1d4o=
+	b=2H0B2rfuouJDZ9JpPiFWrobbtCn0FHPZIKEbaggFk/qQftl65SXAfvx6/O0c4N3Qo
+	 2Vs0e3DZjPLnTgg/Ryr/0PR5kaJKb/NmQ4GbfuRoqVlAr1xs/JGHWG60Wfwq2gUXgP
+	 5h4OFnBZcOyzJeg+vGErLhFKSLj5n58fxGeglzaA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392018AbfEWTeS (ORCPT
+        id S2391689AbfEWT17 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:34:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40398 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388778AbfEWT17 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 May 2019 15:27:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40248 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391671AbfEWT1x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:27:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F28320879;
-        Thu, 23 May 2019 19:27:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D85720879;
+        Thu, 23 May 2019 19:27:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639678;
-        bh=qNYODgqWKhdbPsHa9pHqWA8Zqitjdz0r1FPR3mUqAr0=;
+        s=default; t=1558639672;
+        bh=R4z72mLKfM2fz0ZjlVUj+eqeS+fwJHDSCzafb5yl/Y0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Zt1WeJxzN876MzXm8Yhoojx45A1p+mnifg85RqMkxXJHGKDS4oIpuUxy+cWn/UEMG
-         UGkQsx7IIs2wbfeFZ2zOqochNVBWoFDur0BihNeh2T8iJIrDX0rVRFteJ28ASfdpxY
-         dECfnim4rQUOblBJ/Yi1NPWKKcgOXOQQPusb6hsM=
+        b=TSZudQToHg4rNCbFGr4hw8YKJWnNZbdd42kyndVB+c+O2Fwo4ECs7pGfnLz/OPFBv
+         ute6yynA33HvXFdUZgVATqu0XbTsu6qUux9MxvAS1OP6a8Czr154LMQnaCYaY/yCww
+         uDJmoLNrvS2XfOtmzEsIEhyfBXjpnotYPW7OfW9Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Steve Longerbeam <slongerbeam@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
         Hans Verkuil <hverkuil-cisco@xs4all.nl>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 5.1 054/122] media: imx: Dont register IPU subdevs/links if CSI port missing
-Date:   Thu, 23 May 2019 21:06:16 +0200
-Message-Id: <20190523181711.867323134@linuxfoundation.org>
+Subject: [PATCH 5.1 052/122] media: imx: Clear fwnode link struct for each endpoint iteration
+Date:   Thu, 23 May 2019 21:06:14 +0200
+Message-Id: <20190523181711.614068954@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181705.091418060@linuxfoundation.org>
 References: <20190523181705.091418060@linuxfoundation.org>
@@ -63,204 +62,53 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Steve Longerbeam <slongerbeam@gmail.com>
 
-commit dee747f88167124884a918855c1f438e2f7f39e2 upstream.
+commit 107927fa597c99eaeee4f51865ca0956ec71b6a2 upstream.
 
-The second IPU internal sub-devices were being registered and links
-to them created even when the second IPU is not present. This is wrong
-for i.MX6 S/DL and i.MX53 which have only a single IPU.
+In imx_media_create_csi_of_links(), the 'struct v4l2_fwnode_link' must
+be cleared for each endpoint iteration, otherwise if the remote port
+has no "reg" property, link.remote_port will not be reset to zero.
+This was discovered on the i.MX53 SMD board, since the OV5642 connects
+directly to ipu1_csi0 and has a single source port with no "reg"
+property.
 
-Fixes: e130291212df5 ("[media] media: Add i.MX media core driver")
+Fixes: 621b08eabcddb ("media: staging/imx: remove static media link arrays")
 
 Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
 Cc: stable@vger.kernel.org
 Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/media/imx/imx-media-dev.c         |    7 --
- drivers/staging/media/imx/imx-media-internal-sd.c |   22 +-------
- drivers/staging/media/imx/imx-media-of.c          |   58 ++++++++++++++--------
- drivers/staging/media/imx/imx-media.h             |    3 -
- drivers/staging/media/imx/imx7-media-csi.c        |    2 
- 5 files changed, 46 insertions(+), 46 deletions(-)
+ drivers/staging/media/imx/imx-media-of.c |   15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
---- a/drivers/staging/media/imx/imx-media-dev.c
-+++ b/drivers/staging/media/imx/imx-media-dev.c
-@@ -477,13 +477,6 @@ static int imx_media_probe(struct platfo
- 		goto cleanup;
- 	}
- 
--	ret = imx_media_add_ipu_internal_subdevs(imxmd);
--	if (ret) {
--		v4l2_err(&imxmd->v4l2_dev,
--			 "add_ipu_internal_subdevs failed with %d\n", ret);
--		goto cleanup;
--	}
--
- 	ret = imx_media_dev_notifier_register(imxmd);
- 	if (ret)
- 		goto del_int;
---- a/drivers/staging/media/imx/imx-media-internal-sd.c
-+++ b/drivers/staging/media/imx/imx-media-internal-sd.c
-@@ -298,13 +298,14 @@ static int add_internal_subdev(struct im
- }
- 
- /* adds the internal subdevs in one ipu */
--static int add_ipu_internal_subdevs(struct imx_media_dev *imxmd, int ipu_id)
-+int imx_media_add_ipu_internal_subdevs(struct imx_media_dev *imxmd,
-+				       int ipu_id)
- {
- 	enum isd_enum i;
-+	int ret;
- 
- 	for (i = 0; i < num_isd; i++) {
- 		const struct internal_subdev *isd = &int_subdev[i];
--		int ret;
- 
- 		/*
- 		 * the CSIs are represented in the device-tree, so those
-@@ -322,25 +323,10 @@ static int add_ipu_internal_subdevs(stru
- 		}
- 
- 		if (ret)
--			return ret;
-+			goto remove;
- 	}
- 
- 	return 0;
--}
--
--int imx_media_add_ipu_internal_subdevs(struct imx_media_dev *imxmd)
--{
--	int ret;
--
--	ret = add_ipu_internal_subdevs(imxmd, 0);
--	if (ret)
--		goto remove;
--
--	ret = add_ipu_internal_subdevs(imxmd, 1);
--	if (ret)
--		goto remove;
--
--	return 0;
- 
- remove:
- 	imx_media_remove_ipu_internal_subdevs(imxmd);
 --- a/drivers/staging/media/imx/imx-media-of.c
 +++ b/drivers/staging/media/imx/imx-media-of.c
-@@ -23,36 +23,25 @@
- int imx_media_of_add_csi(struct imx_media_dev *imxmd,
- 			 struct device_node *csi_np)
+@@ -145,15 +145,18 @@ int imx_media_create_csi_of_links(struct
+ 				  struct v4l2_subdev *csi)
  {
+ 	struct device_node *csi_np = csi->dev->of_node;
+-	struct fwnode_handle *fwnode, *csi_ep;
+-	struct v4l2_fwnode_link link;
+ 	struct device_node *ep;
 -	int ret;
 -
- 	if (!of_device_is_available(csi_np)) {
- 		dev_dbg(imxmd->md.dev, "%s: %pOFn not enabled\n", __func__,
- 			csi_np);
--		/* unavailable is not an error */
--		return 0;
-+		return -ENODEV;
- 	}
+-	link.local_node = of_fwnode_handle(csi_np);
+-	link.local_port = CSI_SINK_PAD;
  
- 	/* add CSI fwnode to async notifier */
--	ret = imx_media_add_async_subdev(imxmd, of_fwnode_handle(csi_np), NULL);
--	if (ret) {
--		if (ret == -EEXIST) {
--			/* already added, everything is fine */
--			return 0;
--		}
--
--		/* other error, can't continue */
--		return ret;
--	}
--
--	return 0;
-+	return imx_media_add_async_subdev(imxmd, of_fwnode_handle(csi_np),
-+					  NULL);
- }
- EXPORT_SYMBOL_GPL(imx_media_of_add_csi);
- 
- int imx_media_add_of_subdevs(struct imx_media_dev *imxmd,
- 			     struct device_node *np)
- {
-+	bool ipu_found[2] = {false, false};
- 	struct device_node *csi_np;
- 	int i, ret;
-+	u32 ipu_id;
- 
- 	for (i = 0; ; i++) {
- 		csi_np = of_parse_phandle(np, "ports", i);
-@@ -60,12 +49,43 @@ int imx_media_add_of_subdevs(struct imx_
- 			break;
- 
- 		ret = imx_media_of_add_csi(imxmd, csi_np);
--		of_node_put(csi_np);
--		if (ret)
--			return ret;
-+		if (ret) {
-+			/* unavailable or already added is not an error */
-+			if (ret == -ENODEV || ret == -EEXIST) {
-+				of_node_put(csi_np);
-+				continue;
-+			}
+ 	for_each_child_of_node(csi_np, ep) {
++		struct fwnode_handle *fwnode, *csi_ep;
++		struct v4l2_fwnode_link link;
++		int ret;
 +
-+			/* other error, can't continue */
-+			goto err_out;
-+		}
++		memset(&link, 0, sizeof(link));
 +
-+		ret = of_alias_get_id(csi_np->parent, "ipu");
-+		if (ret < 0)
-+			goto err_out;
-+		if (ret > 1) {
-+			ret = -EINVAL;
-+			goto err_out;
-+		}
++		link.local_node = of_fwnode_handle(csi_np);
++		link.local_port = CSI_SINK_PAD;
 +
-+		ipu_id = ret;
-+
-+		if (!ipu_found[ipu_id]) {
-+			ret = imx_media_add_ipu_internal_subdevs(imxmd,
-+								 ipu_id);
-+			if (ret)
-+				goto err_out;
-+		}
-+
-+		ipu_found[ipu_id] = true;
- 	}
+ 		csi_ep = of_fwnode_handle(ep);
  
- 	return 0;
-+
-+err_out:
-+	imx_media_remove_ipu_internal_subdevs(imxmd);
-+	of_node_put(csi_np);
-+	return ret;
- }
- 
- /*
---- a/drivers/staging/media/imx/imx-media.h
-+++ b/drivers/staging/media/imx/imx-media.h
-@@ -252,7 +252,8 @@ struct imx_media_fim *imx_media_fim_init
- void imx_media_fim_free(struct imx_media_fim *fim);
- 
- /* imx-media-internal-sd.c */
--int imx_media_add_ipu_internal_subdevs(struct imx_media_dev *imxmd);
-+int imx_media_add_ipu_internal_subdevs(struct imx_media_dev *imxmd,
-+				       int ipu_id);
- int imx_media_create_ipu_internal_links(struct imx_media_dev *imxmd,
- 					struct v4l2_subdev *sd);
- void imx_media_remove_ipu_internal_subdevs(struct imx_media_dev *imxmd);
---- a/drivers/staging/media/imx/imx7-media-csi.c
-+++ b/drivers/staging/media/imx/imx7-media-csi.c
-@@ -1271,7 +1271,7 @@ static int imx7_csi_probe(struct platfor
- 	platform_set_drvdata(pdev, &csi->sd);
- 
- 	ret = imx_media_of_add_csi(imxmd, node);
--	if (ret < 0)
-+	if (ret < 0 && ret != -ENODEV && ret != -EEXIST)
- 		goto cleanup;
- 
- 	ret = imx_media_dev_notifier_register(imxmd);
+ 		fwnode = fwnode_graph_get_remote_endpoint(csi_ep);
 
 
