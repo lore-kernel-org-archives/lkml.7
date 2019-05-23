@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6081C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:27:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46B7FC46460
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:27:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8433020879
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:27:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 206FF217D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:27:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639667;
-	bh=uK2l6iJbIsZEh6rp+uQugI8F0dbT2f9ZUREWDTQJb4Q=;
+	s=default; t=1558639673;
+	bh=RiW2IQDV7rzyoBS0G8Gn9wdxSFA5At/oRHCRjO2mdbA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WnDfBkFtUNF0VxoTxtImvDHAfHUh7CIDI2m7YmiTVELr8HjJNdk6Wag1HiVDgg7T3
-	 UpRNDHSE37i8gksPrla/ubYT6P1+AuMBWRlUtqngbmArS2oDU7lfSX8xl/AwREiHL6
-	 FGNC0cLtFwYSciajdk+GC++Hkdx3esozbmNQd/II=
+	b=NPbVFO3Yi+70mz90t3leaXUuResTOgsiidJrRrxBUhVutyOXVDzUcVQ4DY1fRtiiW
+	 i0Ni/dcb9ph2c6tJCaHdo8KhAP4X80sjaEkkw4Ln0+tAPTloTSRblzUNefAOSQ4ibQ
+	 fkZiy7gjXHXAwVhWnDmgObXGoX0yvWO55GxpJxiI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391648AbfEWT1q (ORCPT
+        id S2391670AbfEWT1w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:27:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40042 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:27:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391251AbfEWT1m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:27:42 -0400
+        id S2391655AbfEWT1t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:27:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 73CB820879;
-        Thu, 23 May 2019 19:27:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D01A2206BA;
+        Thu, 23 May 2019 19:27:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639661;
-        bh=uK2l6iJbIsZEh6rp+uQugI8F0dbT2f9ZUREWDTQJb4Q=;
+        s=default; t=1558639667;
+        bh=RiW2IQDV7rzyoBS0G8Gn9wdxSFA5At/oRHCRjO2mdbA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PMgtO1uZupqiRuJIk1dzRVIXbJgwuGcdxsl7Pb6ytYSfJlGebpLcvss0r21jfz5OB
-         1+Iev5ujdZfyTjg+4tRS3DulTIsCdKNc1pIMO82LZOWcm1493cqqZNW0AQVBKiHuAZ
-         4OLvQuZqm0DfS92Vsvj+neaKXc8ljn9LXrsV8KEo=
+        b=XMDzOePo39I14V2S5Q3+X4sOt+LQ31UVuJzM6Wbe01zaUWcWVLMsSspzxKStyBG9m
+         gmKbyQcV+NRv6yCATmuj7Xo10dHOzS7hN+y+cTS1zLxh6WIWnn6+bBeTe/LNUxr4Tl
+         LCokjapn9/bw+oiwrWdQCya6V1fV88WjGuxvEtPE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Helge Deller <deller@gmx.de>
-Subject: [PATCH 5.1 032/122] parisc: Rename LEVEL to PA_ASM_LEVEL to avoid name clash with DRBD code
-Date:   Thu, 23 May 2019 21:05:54 +0200
-Message-Id: <20190523181709.137298315@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Subject: [PATCH 5.1 042/122] intel_th: msu: Fix single mode with IOMMU
+Date:   Thu, 23 May 2019 21:06:04 +0200
+Message-Id: <20190523181710.315492098@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181705.091418060@linuxfoundation.org>
 References: <20190523181705.091418060@linuxfoundation.org>
@@ -59,75 +59,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Helge Deller <deller@gmx.de>
+From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 
-commit 1829dda0e87f4462782ca81be474c7890efe31ce upstream.
+commit 4e0eaf239fb33ebc671303e2b736fa043462e2f4 upstream.
 
-LEVEL is a very common word, and now after many years it suddenly
-clashed with another LEVEL define in the DRBD code.
-Rename it to PA_ASM_LEVEL instead.
+Currently, the pages that are allocated for the single mode of MSC are not
+mapped into the device's dma space and the code is incorrectly using
+*_to_phys() in place of a dma address. This fails with IOMMU enabled and
+is otherwise bad practice.
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Helge Deller <deller@gmx.de>
-Cc: <stable@vger.kernel.org>
+Fix the single mode buffer allocation to map the pages into the device's
+DMA space.
+
+Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Fixes: ba82664c134e ("intel_th: Add Memory Storage Unit driver")
+Cc: stable@vger.kernel.org # v4.4+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/parisc/include/asm/assembly.h |    6 +++---
- arch/parisc/kernel/head.S          |    4 ++--
- arch/parisc/kernel/syscall.S       |    2 +-
- 3 files changed, 6 insertions(+), 6 deletions(-)
+ drivers/hwtracing/intel_th/msu.c |   35 ++++++++++++++++++++++++++++++++---
+ 1 file changed, 32 insertions(+), 3 deletions(-)
 
---- a/arch/parisc/include/asm/assembly.h
-+++ b/arch/parisc/include/asm/assembly.h
-@@ -61,14 +61,14 @@
- #define LDCW		ldcw,co
- #define BL		b,l
- # ifdef CONFIG_64BIT
--#  define LEVEL		2.0w
-+#  define PA_ASM_LEVEL	2.0w
- # else
--#  define LEVEL		2.0
-+#  define PA_ASM_LEVEL	2.0
- # endif
- #else
- #define LDCW		ldcw
- #define BL		bl
--#define LEVEL		1.1
-+#define PA_ASM_LEVEL	1.1
- #endif
+--- a/drivers/hwtracing/intel_th/msu.c
++++ b/drivers/hwtracing/intel_th/msu.c
+@@ -84,6 +84,7 @@ struct msc_iter {
+  * @reg_base:		register window base address
+  * @thdev:		intel_th_device pointer
+  * @win_list:		list of windows in multiblock mode
++ * @single_sgt:		single mode buffer
+  * @nr_pages:		total number of pages allocated for this buffer
+  * @single_sz:		amount of data in single mode
+  * @single_wrap:	single mode wrap occurred
+@@ -104,6 +105,7 @@ struct msc {
+ 	struct intel_th_device	*thdev;
  
- #ifdef __ASSEMBLY__
---- a/arch/parisc/kernel/head.S
-+++ b/arch/parisc/kernel/head.S
-@@ -22,7 +22,7 @@
- #include <linux/linkage.h>
- #include <linux/init.h>
+ 	struct list_head	win_list;
++	struct sg_table		single_sgt;
+ 	unsigned long		nr_pages;
+ 	unsigned long		single_sz;
+ 	unsigned int		single_wrap : 1;
+@@ -617,22 +619,45 @@ static void intel_th_msc_deactivate(stru
+  */
+ static int msc_buffer_contig_alloc(struct msc *msc, unsigned long size)
+ {
++	unsigned long nr_pages = size >> PAGE_SHIFT;
+ 	unsigned int order = get_order(size);
+ 	struct page *page;
++	int ret;
  
--	.level	LEVEL
-+	.level	PA_ASM_LEVEL
+ 	if (!size)
+ 		return 0;
  
- 	__INITDATA
- ENTRY(boot_args)
-@@ -258,7 +258,7 @@ stext_pdc_ret:
- 	ldo		R%PA(fault_vector_11)(%r10),%r10
++	ret = sg_alloc_table(&msc->single_sgt, 1, GFP_KERNEL);
++	if (ret)
++		goto err_out;
++
++	ret = -ENOMEM;
+ 	page = alloc_pages(GFP_KERNEL | __GFP_ZERO, order);
+ 	if (!page)
+-		return -ENOMEM;
++		goto err_free_sgt;
  
- $is_pa20:
--	.level		LEVEL /* restore 1.1 || 2.0w */
-+	.level		PA_ASM_LEVEL /* restore 1.1 || 2.0w */
- #endif /*!CONFIG_64BIT*/
- 	load32		PA(fault_vector_20),%r10
+ 	split_page(page, order);
+-	msc->nr_pages = size >> PAGE_SHIFT;
++	sg_set_buf(msc->single_sgt.sgl, page_address(page), size);
++
++	ret = dma_map_sg(msc_dev(msc)->parent->parent, msc->single_sgt.sgl, 1,
++			 DMA_FROM_DEVICE);
++	if (ret < 0)
++		goto err_free_pages;
++
++	msc->nr_pages = nr_pages;
+ 	msc->base = page_address(page);
+-	msc->base_addr = page_to_phys(page);
++	msc->base_addr = sg_dma_address(msc->single_sgt.sgl);
  
---- a/arch/parisc/kernel/syscall.S
-+++ b/arch/parisc/kernel/syscall.S
-@@ -48,7 +48,7 @@ registers).
- 	 */
- #define KILL_INSN	break	0,0
+ 	return 0;
++
++err_free_pages:
++	__free_pages(page, order);
++
++err_free_sgt:
++	sg_free_table(&msc->single_sgt);
++
++err_out:
++	return ret;
+ }
  
--	.level          LEVEL
-+	.level          PA_ASM_LEVEL
+ /**
+@@ -643,6 +668,10 @@ static void msc_buffer_contig_free(struc
+ {
+ 	unsigned long off;
  
- 	.text
++	dma_unmap_sg(msc_dev(msc)->parent->parent, msc->single_sgt.sgl,
++		     1, DMA_FROM_DEVICE);
++	sg_free_table(&msc->single_sgt);
++
+ 	for (off = 0; off < msc->nr_pages << PAGE_SHIFT; off += PAGE_SIZE) {
+ 		struct page *page = virt_to_page(msc->base + off);
  
 
 
