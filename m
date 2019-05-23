@@ -2,324 +2,385 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2AADC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 21:09:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97FE7C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 21:09:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A2EA2175B
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 21:09:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5646421841
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 21:09:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="A32rhnYX"
+	dkim=pass (1024-bit key) header.d=appneta.com header.i=@appneta.com header.b="LIzuQYIy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388288AbfEWVJW (ORCPT
+        id S2388304AbfEWVJY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 17:09:22 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:51979 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388175AbfEWVJU (ORCPT
+        Thu, 23 May 2019 17:09:24 -0400
+Received: from mail-pg1-f181.google.com ([209.85.215.181]:45977 "EHLO
+        mail-pg1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388232AbfEWVJS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 17:09:20 -0400
-Received: by mail-it1-f193.google.com with SMTP id m3so12319689itl.1
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 14:09:19 -0700 (PDT)
+        Thu, 23 May 2019 17:09:18 -0400
+Received: by mail-pg1-f181.google.com with SMTP id i21so3753477pgi.12
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 14:09:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DCdWUqMVpGTE6FqZCHfMHY8K5wiZoy6gpaWqmgZjo4s=;
-        b=A32rhnYX6zCMNDKeqhQiABgAOnCOQWdaexJX6FwyOkdYchKnAuxlqk7fFydjLWIfwd
-         5AL4B1MBOM8xJUzsYXX0MDDHYGCj+BX8IhSizIVp0oE/HV4ki28OTw22gTR5CHppV8gW
-         j8C6DfTJj1qs7EwaDfVk+X7H5X2mNL9HEDgmXCcg5R74Nxa4IBevjKLQrlXrc5EfEXIH
-         fcr840UeQuRHSIo3WLAUDl8qxtZLa8nqGeSkXCUg7+TmHlklab6S5JaTQ8WCCXvm0CU2
-         +MpJsvgPOGHvG5VK1A1c5iGS512iirBrxfSlpidenHDCtoogusqgsacKCQCzxDle9mfQ
-         IilQ==
+        d=appneta.com; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=SPWxLhLzjbcSJowkJYGTCbYUr1bDlyQ2z2VYymjpXdc=;
+        b=LIzuQYIymhL4BYQ7NXL17oiKjJYJ6LSj5XTF9omLaTOTP5ITMuDiyETQelGrFRTYCC
+         ZIkq0Td0lNyaoUx3Z5LO2dbyA8AUhcX8B9xlHfG26fl50HdaVL8wvqU7/Kx7GcgAVjHo
+         3Kr76/Csstl8wF9wcwHqNMX9OJ5JGJCGOKPTc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DCdWUqMVpGTE6FqZCHfMHY8K5wiZoy6gpaWqmgZjo4s=;
-        b=k7yuUj2CKA7JoHooKkE6J6nINgu10MXFpu3mxay0ApCj+jQ5nJwJfN5PC7E++nt1aX
-         i+2fxECzZT0G4qVcNdQcfnCssRyPZNlOWYfzxwjqV1a6JEYfSXS7jY7gvuf2Bf9iA/15
-         g8sBhEjL48zWhGiKD6cRXthr4jHgWyC294ErlmVvFATIhRO5ftD3T7fydXrDKHT2Bwv4
-         wblghJzzAO1AGJmmNBB1l73pElmuf4LZkWiPSOk2T2n0m7p3uRF5n0n6EhPramJ4pwqP
-         Rnf601EAg8K/AgLUL8b8k39gqfDbtP/86ELDnXtCUuYnrUGQnXEwcDmhC6gbnB4Y52GH
-         RXMA==
-X-Gm-Message-State: APjAAAVgzhfJpd1EcFJLtRByJ3MWh+UAc3oeeGr+LgkULWV1cH/YNvHD
-        KfDrKTUGiqTEsfPyzSwuVcN0qqO5e7k2G3b5PgQY4A==
-X-Google-Smtp-Source: APXvYqwJ+zx4+qJM/ykMGiFXVMSxdwVig7XuiPEKAOIX54Fi4grVYi4iqYEc2jlFZ/7AXf5nPrtmp2W9RJuL1g/PESI=
-X-Received: by 2002:a24:ca84:: with SMTP id k126mr14174410itg.104.1558645759476;
- Thu, 23 May 2019 14:09:19 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190523183516.583-1-atish.patra@wdc.com>
-In-Reply-To: <20190523183516.583-1-atish.patra@wdc.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Thu, 23 May 2019 22:09:06 +0100
-Message-ID: <CAKv+Gu9VnjtgdkqfJJ1qQQ0W=z+uYN9Y-1n3Md3tV+d6a63wZA@mail.gmail.com>
-Subject: Re: [v3 PATCH] RISC-V: Add a PE/COFF compliant Image header.
-To:     Atish Patra <atish.patra@wdc.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Anup Patel <Anup.Patel@wdc.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Zong Li <zong@andestech.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Tom Rini <trini@konsulko.com>, paul.walmsley@sifive.com,
-        Nick Kossifidis <mick@ics.forth.gr>,
-        linux-riscv@lists.infradead.org, marek.vasut@gmail.com,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=SPWxLhLzjbcSJowkJYGTCbYUr1bDlyQ2z2VYymjpXdc=;
+        b=RSsfhnWzEJjFB2vjdxUH6GiW7TYROLuJoMQlG20zakgjj0bau7hBFEmwnMRVkGFlZF
+         u9iPOX2qf7NlFVp9V3ohbAPWB2dsj5ic9gvY8I7vxgiLM8vkiMfJr0rFXzQBj11jk46x
+         o1GTRmvVOqLHSNsJyL/HFHnYBJ2RLbFYp4Hfy+fKdhO/sYubrFlcsLQMiXj8GjQWOaWB
+         aRVQbEFwDYRsYPCyMOj7fha9IIuHrlky98StxsW9SmXOT51fmqmBYYDc7s04bss5JU90
+         QBvE+d1PEqdCZABpG4exB8tjO1yPWsLkLoX8x78JWRfFoxujP5dp1lJARCDw2CBGo71C
+         BIjw==
+X-Gm-Message-State: APjAAAVDrC4H40B60+eAZQajlEtAgu3//qLnqPNY5wkHNUD1fHgiuzCS
+        HRKEqvkg1VJ7bNBt2S3X8azdDg==
+X-Google-Smtp-Source: APXvYqyv/H/LE0IdZ5dA9QUiXGDqKw8CMr2yhtC8EeJRZLaWNM9khpAEKcsp666JxO3Q2EEDeik7IQ==
+X-Received: by 2002:a17:90a:c588:: with SMTP id l8mr4336027pjt.59.1558645757359;
+        Thu, 23 May 2019 14:09:17 -0700 (PDT)
+Received: from localhost.localdomain (S010620c9d00fc332.vf.shawcable.net. [70.71.167.160])
+        by smtp.googlemail.com with ESMTPSA id y17sm333481pfn.79.2019.05.23.14.09.15
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 23 May 2019 14:09:16 -0700 (PDT)
+From:   Fred Klassen <fklassen@appneta.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Shuah Khan <shuah@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        Willem de Bruijn <willemb@google.com>
+Cc:     Fred Klassen <fklassen@appneta.com>
+Subject: [PATCH net 4/4] net/udpgso_bench_tx: audit error queue
+Date:   Thu, 23 May 2019 14:06:51 -0700
+Message-Id: <20190523210651.80902-5-fklassen@appneta.com>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20190523210651.80902-1-fklassen@appneta.com>
+References: <20190523210651.80902-1-fklassen@appneta.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 23 May 2019 at 19:35, Atish Patra <atish.patra@wdc.com> wrote:
->
-> Currently, last stage boot loaders such as U-Boot can accept only
-> uImage which is an unnecessary additional step in automating boot flows.
->
-> Add a PE/COFF compliant image header that boot loaders can parse and
-> directly load kernel flat Image. The existing booting methods will continue
-> to work as it is.
->
+This enhancement adds the '-a' option, which will count all CMSG
+messages on the error queue and print a summary report.
 
-This statement does not make sense. This patch does not implement a
-single one of the various elements that make up a valid PE/COFF
-header.
+Fixes: 3a687bef148d ("selftests: udp gso benchmark")
 
-The arm64 Image header has been designed in a way so that it can
-co-exist with a PE/COFF header in the same image, and this is what
-this patch duplicates. The arm64 Image header has nothing to do with
-PE/COFF.
+Example:
 
-A PE/COFF executable header consists of
-- the letters MZ at offset 0x0 (the MS-DOS header)
-- the offset to the PE header at offset 0x3c
-- the characters PE\0\0 at the offset mentioned above, followed by the
-standard COFF header fields
-- a PE32 or PE32+ (depending on the bitness) optional* header,
-followed by a set of section headers.
+    # ./udpgso_bench_tx -4uT -a -l5 -S 1472 -D 172.16.120.189
+    udp tx:    492 MB/s     8354 calls/s   8354 msg/s
+    udp tx:    477 MB/s     8106 calls/s   8106 msg/s
+    udp tx:    488 MB/s     8288 calls/s   8288 msg/s
+    udp tx:    882 MB/s    14975 calls/s  14975 msg/s
+    Summary over 5.000 seconds ...
+    sum udp tx:    696 MB/s      57696 calls (11539/s)  57696 msgs (11539/s)
+    Tx Timestamps: received:     57696   errors: 0
 
+This can be useful in tracking loss of messages when under load. For example,
+adding the '-z' option results in loss of TX timestamp messages:
 
+    # ./udpgso_bench_tx -4ucT -a -l5 -S 1472 -D 172.16.120.189 -p 3239 -z
+    udp tx:    490 MB/s     8325 calls/s   8325 msg/s
+    udp tx:    500 MB/s     8492 calls/s   8492 msg/s
+    udp tx:    883 MB/s    14985 calls/s  14985 msg/s
+    udp tx:    756 MB/s    12823 calls/s  12823 msg/s
+    Summary over 5.000 seconds ...
+    sum udp tx:    657 MB/s      54429 calls (10885/s)  54429 msgs (10885/s)
+    Tx Timestamps: received:     34046   errors: 0
+    Zerocopy acks: received:     54422   errors: 0
 
+Fixes: 3a687bef148d ("selftests: udp gso benchmark")
+Signed-off-by: Fred Klassen <fklassen@appneta.com>
+---
+ tools/testing/selftests/net/udpgso_bench_tx.c | 152 +++++++++++++++++++-------
+ 1 file changed, 113 insertions(+), 39 deletions(-)
 
-> Another goal of this header is to support EFI stub for RISC-V in future.
-> EFI specification needs PE/COFF image header in the beginning of the kernel
-> image in order to load it as an EFI application. In order to support
-> EFI stub, code0 should be replaced with "MZ" magic string and res5(at
-> offset 0x3c) should point to the rest of the PE/COFF header (which will
-> be added during EFI support).
->
-> This patch is based on ARM64 boot image header and provides an opprtunity
-> to combine both ARM64 & RISC-V image headers.
->
-> Tested on both QEMU and HiFive Unleashed using OpenSBI + U-Boot + Linux.
->
-> Signed-off-by: Atish Patra <atish.patra@wdc.com>
->
-> ---
-> I have not sent out corresponding U-Boot patch as all the changes are
-> compatible with current u-boot support. Once, the kernel header format
-> is agreed upon, I will update the U-Boot patch.
->
-> Changes from v2->v3
-> 1. Modified reserved fields to define a header version.
-> 2. Added header documentation.
->
-> Changes from v1-v2:
-> 1. Added additional reserved elements to make it fully PE compatible.
-> ---
->  Documentation/riscv/boot-image-header.txt | 50 ++++++++++++++++++
->  arch/riscv/include/asm/image.h            | 64 +++++++++++++++++++++++
->  arch/riscv/kernel/head.S                  | 32 ++++++++++++
->  3 files changed, 146 insertions(+)
->  create mode 100644 Documentation/riscv/boot-image-header.txt
->  create mode 100644 arch/riscv/include/asm/image.h
->
-> diff --git a/Documentation/riscv/boot-image-header.txt b/Documentation/riscv/boot-image-header.txt
-> new file mode 100644
-> index 000000000000..68abc2353cec
-> --- /dev/null
-> +++ b/Documentation/riscv/boot-image-header.txt
-> @@ -0,0 +1,50 @@
-> +                               Boot image header in RISC-V Linux
-> +                       =============================================
-> +
-> +Author: Atish Patra <atish.patra@wdc.com>
-> +Date  : 20 May 2019
-> +
-> +This document only describes the boot image header details for RISC-V Linux.
-> +The complete booting guide will be available at Documentation/riscv/booting.txt.
-> +
-> +The following 64-byte header is present in decompressed Linux kernel image.
-> +
-> +       u32 code0;                /* Executable code */
-> +       u32 code1;                /* Executable code */
-> +       u64 text_offset;          /* Image load offset, little endian */
-> +       u64 image_size;           /* Effective Image size, little endian */
-> +       u64 flags;                /* kernel flags, little endian */
-> +       u32 version;              /* Version of this header */
-> +       u32 res1  = 0;            /* Reserved */
-> +       u64 res2  = 0;            /* Reserved */
-> +       u64 magic = 0x5643534952; /* Magic number, little endian, "RISCV" */
-> +       u32 res3;                 /* Reserved for additional RISC-V specific header */
-> +       u32 res4;                 /* Reserved for PE COFF offset */
-> +
-> +This header format is compliant with PE/COFF header and largely inspired from
-> +ARM64 header. Thus, both ARM64 & RISC-V header can be combined into one common
-> +header in future.
-> +
-> +Notes:
-> +- This header can also be reused to support EFI stub for RISC-V in future. EFI
-> +  specification needs PE/COFF image header in the beginning of the kernel image
-> +  in order to load it as an EFI application. In order to support EFI stub,
-> +  code0 should be replaced with "MZ" magic string and res5(at offset 0x3c) should
-> +  point to the rest of the PE/COFF header.
-> +
-> +- version field indicate header version number.
-> +       Bits 0:15  - Minor version
-> +       Bits 16:31 - Major version
-> +
-> +  This preserves compatibility across newer and older version of the header.
-> +  The current version is defined as 0.1.
-> +
-> +- res3 is reserved for offset to any other additional fields. This makes the
-> +  header extendible in future. One example would be to accommodate ISA
-> +  extension for RISC-V in future. For current version, it is set to be zero.
-> +
-> +- In current header, the flag field has only one field.
-> +       Bit 0: Kernel endianness. 1 if BE, 0 if LE.
-> +
-> +- Image size is mandatory for boot loader to load kernel image. Booting will
-> +  fail otherwise.
-> diff --git a/arch/riscv/include/asm/image.h b/arch/riscv/include/asm/image.h
-> new file mode 100644
-> index 000000000000..61c9f20d2f19
-> --- /dev/null
-> +++ b/arch/riscv/include/asm/image.h
-> @@ -0,0 +1,64 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +
-> +#ifndef __ASM_IMAGE_H
-> +#define __ASM_IMAGE_H
-> +
-> +#define RISCV_IMAGE_MAGIC      "RISCV"
-> +
-> +
-> +#define RISCV_IMAGE_FLAG_BE_SHIFT      0
-> +#define RISCV_IMAGE_FLAG_BE_MASK       0x1
-> +
-> +#define RISCV_IMAGE_FLAG_LE            0
-> +#define RISCV_IMAGE_FLAG_BE            1
-> +
-> +
-> +#ifdef CONFIG_CPU_BIG_ENDIAN
-> +#define __HEAD_FLAG_BE         RISCV_IMAGE_FLAG_BE
-> +#else
-> +#define __HEAD_FLAG_BE         RISCV_IMAGE_FLAG_LE
-> +#endif
-> +
-> +#define __HEAD_FLAG(field)     (__HEAD_FLAG_##field << \
-> +                               RISCV_IMAGE_FLAG_##field##_SHIFT)
-> +
-> +#define __HEAD_FLAGS           (__HEAD_FLAG(BE))
-> +
-> +#define RISCV_HEADER_VERSION_MAJOR 0
-> +#define RISCV_HEADER_VERSION_MINOR 1
-> +
-> +#define RISCV_HEADER_VERSION (RISCV_HEADER_VERSION_MAJOR << 16 | \
-> +                             RISCV_HEADER_VERSION_MINOR)
-> +
-> +#ifndef __ASSEMBLY__
-> +/*
-> + * struct riscv_image_header - riscv kernel image header
-> + *
-> + * @code0:             Executable code
-> + * @code1:             Executable code
-> + * @text_offset:       Image load offset
-> + * @image_size:                Effective Image size
-> + * @flags:             kernel flags
-> + * @version:           version
-> + * @reserved:          reserved
-> + * @reserved:          reserved
-> + * @magic:             Magic number
-> + * @reserved:          reserved (will be used for additional RISC-V specific header)
-> + * @reserved:          reserved (will be used for PE COFF offset)
-> + */
-> +
-> +struct riscv_image_header {
-> +       u32 code0;
-> +       u32 code1;
-> +       u64 text_offset;
-> +       u64 image_size;
-> +       u64 flags;
-> +       u32 version;
-> +       u32 res1;
-> +       u64 res2;
-> +       u64 magic;
-> +       u32 res3;
-> +       u32 res4;
-> +};
-> +#endif /* __ASSEMBLY__ */
-> +#endif /* __ASM_IMAGE_H */
-> diff --git a/arch/riscv/kernel/head.S b/arch/riscv/kernel/head.S
-> index 370c66ce187a..577893bb150d 100644
-> --- a/arch/riscv/kernel/head.S
-> +++ b/arch/riscv/kernel/head.S
-> @@ -19,9 +19,41 @@
->  #include <asm/thread_info.h>
->  #include <asm/page.h>
->  #include <asm/csr.h>
-> +#include <asm/image.h>
->
->  __INIT
->  ENTRY(_start)
-> +       /*
-> +        * Image header expected by Linux boot-loaders. The image header data
-> +        * structure is described in asm/image.h.
-> +        * Do not modify it without modifying the structure and all bootloaders
-> +        * that expects this header format!!
-> +        */
-> +       /* jump to start kernel */
-> +       j _start_kernel
-> +       /* reserved */
-> +       .word 0
-> +       .balign 8
-> +#if __riscv_xlen == 64
-> +       /* Image load offset(2MB) from start of RAM */
-> +       .dword 0x200000
-> +#else
-> +       /* Image load offset(4MB) from start of RAM */
-> +       .dword 0x400000
-> +#endif
-> +       /* Effective size of kernel image */
-> +       .dword _end - _start
-> +       .dword __HEAD_FLAGS
-> +       .word RISCV_HEADER_VERSION
-> +       .word 0
-> +       .dword 0
-> +       .asciz RISCV_IMAGE_MAGIC
-> +       .word 0
-> +       .balign 4
-> +       .word 0
-> +
-> +.global _start_kernel
-> +_start_kernel:
->         /* Mask all interrupts */
->         csrw CSR_SIE, zero
->         csrw CSR_SIP, zero
-> --
-> 2.21.0
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+diff --git a/tools/testing/selftests/net/udpgso_bench_tx.c b/tools/testing/selftests/net/udpgso_bench_tx.c
+index 56e0d890b066..9924342a0b03 100644
+--- a/tools/testing/selftests/net/udpgso_bench_tx.c
++++ b/tools/testing/selftests/net/udpgso_bench_tx.c
+@@ -62,10 +62,19 @@ static bool	cfg_tcp;
+ static uint32_t	cfg_tx_ts = SOF_TIMESTAMPING_TX_SOFTWARE;
+ static bool	cfg_tx_tstamp;
+ static uint32_t	cfg_tos;
++static bool	cfg_audit;
+ static bool	cfg_verbose;
+ static bool	cfg_zerocopy;
+ static int	cfg_msg_nr;
+ static uint16_t	cfg_gso_size;
++static unsigned long total_num_msgs;
++static unsigned long total_num_sends;
++static unsigned long stat_tx_ts;
++static unsigned long stat_tx_ts_errors;
++static unsigned long tstart;
++static unsigned long tend;
++static unsigned long stat_zcopies;
++static unsigned long stat_zcopy_errors;
+ 
+ static socklen_t cfg_alen;
+ static struct sockaddr_storage cfg_dst_addr;
+@@ -137,8 +146,11 @@ static void flush_cmsg(struct cmsghdr *cmsg)
+ 			struct my_scm_timestamping *tss;
+ 
+ 			tss = (struct my_scm_timestamping *)CMSG_DATA(cmsg);
+-			fprintf(stderr, "tx timestamp = %lu.%09lu\n",
+-				tss->ts[i].tv_sec, tss->ts[i].tv_nsec);
++			if (tss->ts[i].tv_sec == 0)
++				stat_tx_ts_errors++;
++			if (cfg_verbose)
++				fprintf(stderr, "tx timestamp = %lu.%09lu\n",
++					tss->ts[i].tv_sec, tss->ts[i].tv_nsec);
+ 		} else {
+ 			error(1, 0,
+ 			      "unknown SOL_SOCKET cmsg type=%u level=%u\n",
+@@ -157,41 +169,52 @@ static void flush_cmsg(struct cmsghdr *cmsg)
+ 			switch (err->ee_origin) {
+ 			case SO_EE_ORIGIN_TIMESTAMPING:
+ 				// Got a TX timestamp from error queue
+-				fprintf(stderr,
+-					"got SO_EE_ORIGIN_TIMESTAMPING\n");
++				stat_tx_ts++;
++				if (cfg_verbose)
++					fprintf(stderr,
++						"got SO_EE_ORIGIN_TIMESTAMPING\n");
+ 				break;
+ 			case SO_EE_ORIGIN_ICMP:
+ 			case SO_EE_ORIGIN_ICMP6:
+-				fprintf(stderr,
+-					"received ICMP error: type=%u, code=%u\n",
+-					err->ee_type, err->ee_code);
++				if (cfg_verbose)
++					fprintf(stderr,
++						"received ICMP error: type=%u, code=%u\n",
++						err->ee_type, err->ee_code);
+ 				break;
+ 			case SO_EE_ORIGIN_ZEROCOPY:
+ 			{
+ 				__u32 lo = err->ee_info;
+ 				__u32 hi = err->ee_data;
+ 
+-				if (hi == lo - 1)
++				if (hi == lo - 1) {
+ 					// TX was aborted
+-					fprintf(stderr,
+-						"Zerocopy TX aborted: lo=%u hi=%u\n",
+-						lo, hi);
+-				if (hi == lo)
++					stat_zcopy_errors++;
++					if (cfg_verbose)
++						fprintf(stderr,
++							"Zerocopy TX aborted: lo=%u hi=%u\n",
++							lo, hi);
++				} else if (hi == lo) {
+ 					// single ID acknowledged
+-					fprintf(stderr,
+-						"Zerocopy TX ack ID: %u\n",
+-						lo);
+-				else
++					stat_zcopies++;
++					if (cfg_verbose)
++						fprintf(stderr,
++							"Zerocopy TX ack ID: %u\n",
++							lo);
++				} else {
+ 					// range of IDs acknowledged
+-					fprintf(stderr,
+-						"Zerocopy TX ack %u IDs %u to %u\n",
+-						hi - lo + 1, lo, hi);
++					stat_zcopies += hi - lo + 1;
++					if (cfg_verbose)
++						fprintf(stderr,
++							"Zerocopy TX ack %u IDs %u to %u\n",
++							hi - lo + 1, lo, hi);
++				}
+ 				break;
+ 			}
+ 			case SO_EE_ORIGIN_LOCAL:
+-				fprintf(stderr,
+-					"received packet with local origin: %u\n",
+-					err->ee_origin);
++				if (cfg_verbose)
++					fprintf(stderr,
++						"received packet with local origin: %u\n",
++						err->ee_origin);
+ 				break;
+ 			default:
+ 				error(0, 1,
+@@ -236,7 +259,7 @@ static void flush_errqueue_recv(int fd)
+ 		if (ret == -1)
+ 			error(1, errno, "errqueue");
+ 		msg.msg_flags = 0;
+-		if (cfg_verbose) {
++		if (cfg_audit || cfg_verbose) {
+ 			for (cmsg = CMSG_FIRSTHDR(&msg);
+ 					cmsg;
+ 					cmsg = CMSG_NXTHDR(&msg, cmsg))
+@@ -245,19 +268,21 @@ static void flush_errqueue_recv(int fd)
+ 	}
+ }
+ 
+-static void flush_errqueue(int fd)
++static void flush_errqueue(int fd, const bool do_poll)
+ {
+-	if (cfg_poll) {
++	if (do_poll) {
+ 		struct pollfd fds = { 0 };
+ 		int ret;
+ 
+ 		fds.fd = fd;
+ 		fds.events = POLLERR;
+-		ret = poll(&fds, 1, 1000);
+-		if (ret == 0)
+-			error(1, 0, "poll timeout");
+-		else if (ret < 0)
++		ret = poll(&fds, 1, 500);
++		if (ret == 0) {
++			if (cfg_verbose)
++				fprintf(stderr, "poll timeout\n");
++		} else if (ret < 0) {
+ 			error(1, errno, "poll");
++		}
+ 	}
+ 
+ 	flush_errqueue_recv(fd);
+@@ -458,7 +483,7 @@ static int send_udp_segment(int fd, char *data)
+ static void usage(const char *filepath)
+ {
+ 	error(1, 0,
+-	      "Usage: %s [-46cmHPtTuvz] [-C cpu] [-D dst ip] [-l secs] [-M messagenr] [-p port] [-q tos] [-s sendsize] [-S gsosize]",
++	      "Usage: %s [-46acmHPtTuvz] [-C cpu] [-D dst ip] [-l secs] [-M messagenr] [-p port] [-q tos] [-s sendsize] [-S gsosize]",
+ 	      filepath);
+ }
+ 
+@@ -467,7 +492,7 @@ static void parse_opts(int argc, char **argv)
+ 	int max_len, hdrlen;
+ 	int c;
+ 
+-	while ((c = getopt(argc, argv, "46cC:D:Hl:mM:p:s:q:PS:tTuvz")) != -1) {
++	while ((c = getopt(argc, argv, "46acC:D:Hl:mM:p:s:q:PS:tTuvz")) != -1) {
+ 		switch (c) {
+ 		case '4':
+ 			if (cfg_family != PF_UNSPEC)
+@@ -481,6 +506,9 @@ static void parse_opts(int argc, char **argv)
+ 			cfg_family = PF_INET6;
+ 			cfg_alen = sizeof(struct sockaddr_in6);
+ 			break;
++		case 'a':
++			cfg_audit = true;
++			break;
+ 		case 'c':
+ 			cfg_cache_trash = true;
+ 			break;
+@@ -599,6 +627,51 @@ static void set_tx_timestamping(int fd)
+ 		error(1, errno, "setsockopt tx timestamping");
+ }
+ 
++static void print_final_report(unsigned long num_msgs, unsigned long num_sends)
++{
++	unsigned long tdelta;
++
++	tdelta = tend - tstart;
++	if (!tdelta)
++		return;
++
++	fprintf(stderr, "Summary over %lu.%03lu seconds ...\n", tdelta / 1000,
++		tdelta % 1000);
++	fprintf(stderr,
++		"sum %s tx: %6lu MB/s %10lu calls (%lu/s) %10lu msgs (%lu/s)\n",
++		cfg_tcp ? "tcp" : "udp",
++		((num_msgs * cfg_payload_len) >> 10) / tdelta,
++		num_sends, num_sends * 1000 / tdelta,
++		num_msgs, num_msgs * 1000 / tdelta);
++	if (cfg_tx_tstamp)
++		fprintf(stderr,
++			"Tx Timestamps: received: %9lu   errors: %lu\n",
++			stat_tx_ts, stat_tx_ts_errors);
++
++	if (cfg_zerocopy)
++		fprintf(stderr,
++			"Zerocopy acks: received: %9lu   errors: %lu\n",
++			stat_zcopies, stat_zcopy_errors);
++}
++
++static void print_report(unsigned long num_msgs, unsigned long num_sends,
++			 const bool final)
++{
++	if (!final)
++		fprintf(stderr,
++			"%s tx: %6lu MB/s %8lu calls/s %6lu msg/s\n",
++			cfg_tcp ? "tcp" : "udp",
++			(num_msgs * cfg_payload_len) >> 20,
++			num_sends, num_msgs);
++
++	if (cfg_audit) {
++		total_num_msgs += num_msgs;
++		total_num_sends += num_sends;
++		if (final)
++			print_final_report(total_num_msgs, total_num_sends);
++	}
++}
++
+ int main(int argc, char **argv)
+ {
+ 	unsigned long num_msgs, num_sends;
+@@ -640,6 +713,8 @@ int main(int argc, char **argv)
+ 	num_msgs = 0;
+ 	num_sends = 0;
+ 	tnow = gettimeofday_ms();
++	tstart = tnow;
++	tend = tnow;
+ 	tstop = tnow + cfg_runtime_ms;
+ 	treport = tnow + 1000;
+ 
+@@ -654,19 +729,15 @@ int main(int argc, char **argv)
+ 		else
+ 			num_sends += send_udp(fd, buf[i]);
+ 		num_msgs++;
+-		if ((cfg_zerocopy && (num_msgs & 0xF) == 0) || cfg_tx_tstamp)
+-			flush_errqueue(fd);
++		if (cfg_tx_tstamp || (cfg_zerocopy && (num_msgs & 0xF) == 0))
++			flush_errqueue(fd, cfg_poll);
+ 
+ 		if (cfg_msg_nr && num_msgs >= cfg_msg_nr)
+ 			break;
+ 
+ 		tnow = gettimeofday_ms();
+ 		if (tnow > treport) {
+-			fprintf(stderr,
+-				"%s tx: %6lu MB/s %8lu calls/s %6lu msg/s\n",
+-				cfg_tcp ? "tcp" : "udp",
+-				(num_msgs * cfg_payload_len) >> 20,
+-				num_sends, num_msgs);
++			print_report(num_msgs, num_sends, false);
+ 			num_msgs = 0;
+ 			num_sends = 0;
+ 			treport = tnow + 1000;
+@@ -679,10 +750,13 @@ int main(int argc, char **argv)
+ 	} while (!interrupted && (cfg_runtime_ms == -1 || tnow < tstop));
+ 
+ 	if (cfg_zerocopy || cfg_tx_tstamp)
+-		flush_errqueue(fd);
++		flush_errqueue(fd, true);
+ 
+ 	if (close(fd))
+ 		error(1, errno, "close");
+ 
++	tend = tnow;
++	print_report(num_msgs, num_sends, true);
++
+ 	return 0;
+ }
+-- 
+2.11.0
+
