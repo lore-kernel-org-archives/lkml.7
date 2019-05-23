@@ -2,330 +2,207 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2856C282E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 18:07:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6755AC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 18:10:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFD7120881
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 18:07:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E3362184E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 18:10:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O2tL3kRX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387532AbfEWSHO (ORCPT
+        id S1731422AbfEWSKT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 14:07:14 -0400
-Received: from foss.arm.com ([217.140.101.70]:52132 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387509AbfEWSHL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 14:07:11 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 50C2B1684;
-        Thu, 23 May 2019 11:07:11 -0700 (PDT)
-Received: from ostrya.cambridge.arm.com (ostrya.cambridge.arm.com [10.1.196.129])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id A6D8B3F5AF;
-        Thu, 23 May 2019 11:07:09 -0700 (PDT)
-From:   Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-To:     joro@8bytes.org, alex.williamson@redhat.com
-Cc:     jacob.jun.pan@linux.intel.com, eric.auger@redhat.com,
-        ashok.raj@intel.com, yi.l.liu@linux.intel.com, robdclark@gmail.com,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
-Subject: [PATCH 4/4] iommu: Add recoverable fault reporting
-Date:   Thu, 23 May 2019 19:06:13 +0100
-Message-Id: <20190523180613.55049-5-jean-philippe.brucker@arm.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190523180613.55049-1-jean-philippe.brucker@arm.com>
-References: <20190523180613.55049-1-jean-philippe.brucker@arm.com>
+        Thu, 23 May 2019 14:10:19 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:40724 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731117AbfEWSKS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 14:10:18 -0400
+Received: by mail-pl1-f194.google.com with SMTP id g69so3060781plb.7
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 11:10:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=qogrVJOizjXohj66Ojog3iB0x5HKIyjxf0Fb3bKvncg=;
+        b=O2tL3kRXSUqWeMsaIAIz1NTqJRh3l/cyn7YerV7qbm6+THbzlsbi95yOKYxOMopA3L
+         nEfSIYE7/v9qv+4Nwa1psBbruMtvul0mHzmtkMJQFFzwyyflYgGFKNPVVzM68VbdYmO6
+         Yj8+Eq7ORqqp8FddWUBEbAGULiTi9ORD+m+dkKavoXhZRjzA/9jivMtUq/3W0o/6iECv
+         WTLASvVl8FrK2u48Exmbf3CKNh7v3x6GkA1EN5VOuCnRrRHW/FdWGigw+w3sicvCVwlu
+         t7rwa+C3+XqU3pvyzlSoYuSKsScHUR3oPiagApC2ig7yq34yfOZAYeeP2fwrZkkrTNYl
+         FppQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=qogrVJOizjXohj66Ojog3iB0x5HKIyjxf0Fb3bKvncg=;
+        b=J+KiRDSwm8Ibgpi+Oc+fkmM2KLxTdUd4G5TI/ANolcjFn4ZoeXQ9JM8JiUzLHtUsCI
+         r1WUCvmonmH+hsDefEuC1gcTPomsTK7ntx2w27u7QphOcl8uUPqsuCu0dLrnOArZd40Z
+         aZ7C742fOIJwbFGOVn8l0yta/rNVjlIocX56JWktYP7GBaz62VuY/bs4RrlvSEvEyFqc
+         vLhlxb7Mhoah6pnH8NzxFqf4yhDV4ABZmuo7lX/GPusVA4wmDVYiR2Fsy3V4VU6dpBAM
+         QguV4VwlMbkca626Fs3+NSZethb2pu3oMYe5pxR0b/Ir2E0fK3EfhhNJlQLnOBD7QMQV
+         daWQ==
+X-Gm-Message-State: APjAAAVPgmv/LIaO5w77UtsK81psubHgZHOaAuAFnyORP+V8/DYBCxIb
+        I4K/QVd3PdRgtDJwVsA/NBI=
+X-Google-Smtp-Source: APXvYqwEv3Z6GLKOi7kYkYMl5cifVoL8lQyTtBriohTMME3NoBA5wUHICmi8xxIok439uCzH5N+ijA==
+X-Received: by 2002:a17:902:bd94:: with SMTP id q20mr77764391pls.146.1558635017817;
+        Thu, 23 May 2019 11:10:17 -0700 (PDT)
+Received: from hari-Inspiron-1545 ([183.83.92.73])
+        by smtp.gmail.com with ESMTPSA id l20sm95360pff.102.2019.05.23.11.10.12
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 23 May 2019 11:10:17 -0700 (PDT)
+Date:   Thu, 23 May 2019 23:40:09 +0530
+From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hardik Singh Rathore <hardiksingh.k@gmail.com>,
+        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
+        Kimberly Brown <kimbrownkd@gmail.com>,
+        Jeeeun Evans <jeeeunevans@gmail.com>,
+        Anirudh Rayabharam <anirudh.rayabharam@gmail.com>,
+        Nishka Dasgupta <nishka.dasgupta@yahoo.com>,
+        Murray McAllister <murray.mcallister@insomniasec.com>,
+        Mamta Shukla <mamtashukla555@gmail.com>,
+        Puranjay Mohan <puranjay12@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Omer Efrat <omer.efrat@tandemg.com>,
+        Michael Straube <straube.linux@gmail.com>,
+        Emanuel Bennici <benniciemanuel78@gmail.com>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [Patch v4] staging: rtl8723bs: core: rtw_ap: fix Unneeded variable:
+ "ret". Return "0
+Message-ID: <20190523181009.GA9411@hari-Inspiron-1545>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some IOMMU hardware features, for example PCI PRI and Arm SMMU Stall,
-enable recoverable I/O page faults. Allow IOMMU drivers to report PRI Page
-Requests and Stall events through the new fault reporting API. The
-consumer of the fault can be either an I/O page fault handler in the host,
-or a guest OS.
+Function "rtw_sta_flush" always returns 0 value. So change
+ return type of rtw_sta_flush from int to void.
 
-Once handled, the fault must be completed by sending a page response back
-to the IOMMU. Add an iommu_page_response() function to complete a page
-fault.
+Same thing applies for rtw_hostapd_sta_flush
 
-Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+------
+ Changes v2 -
+       change return type of rtw_sta_flush
+ Changes v3 -
+       fix indentaion issue
+ Changes v4 -
+       prepare patch on linux-next
 ---
- drivers/iommu/iommu.c      | 95 +++++++++++++++++++++++++++++++++++++-
- include/linux/iommu.h      | 19 ++++++++
- include/uapi/linux/iommu.h | 34 ++++++++++++++
- 3 files changed, 146 insertions(+), 2 deletions(-)
+---
+ drivers/staging/rtl8723bs/core/rtw_ap.c           | 7 ++-----
+ drivers/staging/rtl8723bs/include/rtw_ap.h        | 2 +-
+ drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c | 4 ++--
+ drivers/staging/rtl8723bs/os_dep/ioctl_linux.c    | 7 +++----
+ 4 files changed, 8 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-index d546f7baa0d4..b09b3707f0e4 100644
---- a/drivers/iommu/iommu.c
-+++ b/drivers/iommu/iommu.c
-@@ -872,7 +872,14 @@ EXPORT_SYMBOL_GPL(iommu_group_unregister_notifier);
-  * @data: private data passed as argument to the handler
-  *
-  * When an IOMMU fault event is received, this handler gets called with the
-- * fault event and data as argument. The handler should return 0 on success.
-+ * fault event and data as argument. The handler should return 0 on success. If
-+ * the fault is recoverable (IOMMU_FAULT_PAGE_REQ), the handler should also
-+ * complete the fault by calling iommu_page_response() with one of the following
-+ * response code:
-+ * - IOMMU_PAGE_RESP_SUCCESS: retry the translation
-+ * - IOMMU_PAGE_RESP_INVALID: terminate the fault
-+ * - IOMMU_PAGE_RESP_FAILURE: terminate the fault and stop reporting
-+ *   page faults if possible.
-  *
-  * Return 0 if the fault handler was installed successfully, or an error.
-  */
-@@ -907,6 +914,8 @@ int iommu_register_device_fault_handler(struct device *dev,
- 	}
- 	param->fault_param->handler = handler;
- 	param->fault_param->data = data;
-+	mutex_init(&param->fault_param->lock);
-+	INIT_LIST_HEAD(&param->fault_param->faults);
- 
- done_unlock:
- 	mutex_unlock(&param->lock);
-@@ -937,6 +946,12 @@ int iommu_unregister_device_fault_handler(struct device *dev)
- 	if (!param->fault_param)
- 		goto unlock;
- 
-+	/* we cannot unregister handler if there are pending faults */
-+	if (!list_empty(&param->fault_param->faults)) {
-+		ret = -EBUSY;
-+		goto unlock;
-+	}
-+
- 	kfree(param->fault_param);
- 	param->fault_param = NULL;
- 	put_device(dev);
-@@ -953,13 +968,15 @@ EXPORT_SYMBOL_GPL(iommu_unregister_device_fault_handler);
-  * @evt: fault event data
-  *
-  * Called by IOMMU drivers when a fault is detected, typically in a threaded IRQ
-- * handler.
-+ * handler. When this function fails and the fault is recoverable, it is the
-+ * caller's responsibility to complete the fault.
-  *
-  * Return 0 on success, or an error.
-  */
- int iommu_report_device_fault(struct device *dev, struct iommu_fault_event *evt)
- {
- 	struct iommu_param *param = dev->iommu_param;
-+	struct iommu_fault_event *evt_pending = NULL;
- 	struct iommu_fault_param *fparam;
- 	int ret = 0;
- 
-@@ -974,7 +991,27 @@ int iommu_report_device_fault(struct device *dev, struct iommu_fault_event *evt)
- 		ret = -EINVAL;
- 		goto done_unlock;
- 	}
-+
-+	if (evt->fault.type == IOMMU_FAULT_PAGE_REQ &&
-+	    (evt->fault.prm.flags & IOMMU_FAULT_PAGE_REQUEST_LAST_PAGE)) {
-+		evt_pending = kmemdup(evt, sizeof(struct iommu_fault_event),
-+				      GFP_KERNEL);
-+		if (!evt_pending) {
-+			ret = -ENOMEM;
-+			goto done_unlock;
-+		}
-+		mutex_lock(&fparam->lock);
-+		list_add_tail(&evt_pending->list, &fparam->faults);
-+		mutex_unlock(&fparam->lock);
-+	}
-+
- 	ret = fparam->handler(evt, fparam->data);
-+	if (ret && evt_pending) {
-+		mutex_lock(&fparam->lock);
-+		list_del(&evt_pending->list);
-+		mutex_unlock(&fparam->lock);
-+		kfree(evt_pending);
-+	}
- done_unlock:
- 	mutex_unlock(&param->lock);
- 	return ret;
-@@ -1515,6 +1552,60 @@ int iommu_attach_device(struct iommu_domain *domain, struct device *dev)
- }
- EXPORT_SYMBOL_GPL(iommu_attach_device);
- 
-+int iommu_page_response(struct device *dev,
-+			struct iommu_page_response *msg)
-+{
-+	bool pasid_valid;
-+	int ret = -EINVAL;
-+	struct iommu_fault_event *evt;
-+	struct iommu_fault_page_request *prm;
-+	struct iommu_param *param = dev->iommu_param;
-+	struct iommu_domain *domain = iommu_get_domain_for_dev(dev);
-+
-+	if (!domain || !domain->ops->page_response)
-+		return -ENODEV;
-+
-+	/*
-+	 * Device iommu_param should have been allocated when device is
-+	 * added to its iommu_group.
-+	 */
-+	if (!param || !param->fault_param)
-+		return -EINVAL;
-+
-+	/* Only send response if there is a fault report pending */
-+	mutex_lock(&param->fault_param->lock);
-+	if (list_empty(&param->fault_param->faults)) {
-+		dev_warn_ratelimited(dev, "no pending PRQ, drop response\n");
-+		goto done_unlock;
-+	}
-+	/*
-+	 * Check if we have a matching page request pending to respond,
-+	 * otherwise return -EINVAL
-+	 */
-+	list_for_each_entry(evt, &param->fault_param->faults, list) {
-+		prm = &evt->fault.prm;
-+		pasid_valid = prm->flags & IOMMU_FAULT_PAGE_REQUEST_PASID_VALID;
-+
-+		if ((pasid_valid && prm->pasid != msg->pasid) ||
-+		    prm->grpid != msg->grpid)
-+			continue;
-+
-+		/* Sanitize the reply */
-+		msg->addr = prm->addr;
-+		msg->flags = pasid_valid ? IOMMU_PAGE_RESP_PASID_VALID : 0;
-+
-+		ret = domain->ops->page_response(dev, msg, evt->iommu_private);
-+		list_del(&evt->list);
-+		kfree(evt);
-+		break;
-+	}
-+
-+done_unlock:
-+	mutex_unlock(&param->fault_param->lock);
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(iommu_page_response);
-+
- static void __iommu_detach_device(struct iommu_domain *domain,
- 				  struct device *dev)
- {
-diff --git a/include/linux/iommu.h b/include/linux/iommu.h
-index f95e376a7ed3..a78c5f571082 100644
---- a/include/linux/iommu.h
-+++ b/include/linux/iommu.h
-@@ -227,6 +227,7 @@ struct iommu_sva_ops {
-  * @sva_bind: Bind process address space to device
-  * @sva_unbind: Unbind process address space from device
-  * @sva_get_pasid: Get PASID associated to a SVA handle
-+ * @page_response: handle page request response
-  * @pgsize_bitmap: bitmap of all possible supported page sizes
-  */
- struct iommu_ops {
-@@ -287,6 +288,10 @@ struct iommu_ops {
- 	void (*sva_unbind)(struct iommu_sva *handle);
- 	int (*sva_get_pasid)(struct iommu_sva *handle);
- 
-+	int (*page_response)(struct device *dev,
-+			     struct iommu_page_response *msg,
-+			     u64 iommu_private);
-+
- 	unsigned long pgsize_bitmap;
- };
- 
-@@ -311,11 +316,13 @@ struct iommu_device {
-  * unrecoverable faults such as DMA or IRQ remapping faults.
-  *
-  * @fault: fault descriptor
-+ * @list: pending fault event list, used for tracking responses
-  * @iommu_private: used by the IOMMU driver for storing fault-specific
-  *                 data. Users should not modify this field before
-  *                 sending the fault response.
-  */
- struct iommu_fault_event {
-+	struct list_head list;
- 	struct iommu_fault fault;
- 	u64 iommu_private;
- };
-@@ -324,10 +331,14 @@ struct iommu_fault_event {
-  * struct iommu_fault_param - per-device IOMMU fault data
-  * @handler: Callback function to handle IOMMU faults at device level
-  * @data: handler private data
-+ * @faults: holds the pending faults which needs response, e.g. page response.
-+ * @lock: protect pending faults list
-  */
- struct iommu_fault_param {
- 	iommu_dev_fault_handler_t handler;
- 	void *data;
-+	struct list_head faults;
-+	struct mutex lock;
- };
- 
- /**
-@@ -442,6 +453,8 @@ extern int iommu_unregister_device_fault_handler(struct device *dev);
- extern int iommu_report_device_fault(struct device *dev,
- 				     struct iommu_fault_event *evt);
- 
-+extern int iommu_page_response(struct device *dev,
-+			       struct iommu_page_response *msg);
- extern int iommu_group_id(struct iommu_group *group);
- extern struct iommu_group *iommu_group_get_for_dev(struct device *dev);
- extern struct iommu_domain *iommu_group_default_domain(struct iommu_group *);
-@@ -769,6 +782,12 @@ int iommu_report_device_fault(struct device *dev, struct iommu_fault_event *evt)
- 	return -ENODEV;
+diff --git a/drivers/staging/rtl8723bs/core/rtw_ap.c b/drivers/staging/rtl8723bs/core/rtw_ap.c
+index 912ac2f..7bebb41 100644
+--- a/drivers/staging/rtl8723bs/core/rtw_ap.c
++++ b/drivers/staging/rtl8723bs/core/rtw_ap.c
+@@ -2189,10 +2189,9 @@ u8 ap_free_sta(
+ 	return beacon_updated;
  }
  
-+static inline int iommu_page_response(struct device *dev,
-+				      struct iommu_page_response *msg)
-+{
-+	return -ENODEV;
-+}
-+
- static inline int iommu_group_id(struct iommu_group *group)
+-int rtw_sta_flush(struct adapter *padapter)
++void rtw_sta_flush(struct adapter *padapter)
  {
- 	return -ENODEV;
-diff --git a/include/uapi/linux/iommu.h b/include/uapi/linux/iommu.h
-index 796402174d6c..166500036557 100644
---- a/include/uapi/linux/iommu.h
-+++ b/include/uapi/linux/iommu.h
-@@ -115,4 +115,38 @@ struct iommu_fault {
- 		struct iommu_fault_page_request prm;
- 	};
- };
-+
-+/**
-+ * enum iommu_page_response_code - Return status of fault handlers
-+ * @IOMMU_PAGE_RESP_SUCCESS: Fault has been handled and the page tables
-+ *	populated, retry the access. This is "Success" in PCI PRI.
-+ * @IOMMU_PAGE_RESP_FAILURE: General error. Drop all subsequent faults from
-+ *	this device if possible. This is "Response Failure" in PCI PRI.
-+ * @IOMMU_PAGE_RESP_INVALID: Could not handle this fault, don't retry the
-+ *	access. This is "Invalid Request" in PCI PRI.
-+ */
-+enum iommu_page_response_code {
-+	IOMMU_PAGE_RESP_SUCCESS = 0,
-+	IOMMU_PAGE_RESP_INVALID,
-+	IOMMU_PAGE_RESP_FAILURE,
-+};
-+
-+/**
-+ * struct iommu_page_response - Generic page response information
-+ * @flags: encodes whether the corresponding fields are valid
-+ *         (IOMMU_FAULT_PAGE_RESPONSE_* values)
-+ * @pasid: Process Address Space ID
-+ * @grpid: Page Request Group Index
-+ * @code: response code from &enum iommu_page_response_code
-+ * @addr: page address
-+ */
-+struct iommu_page_response {
-+#define IOMMU_PAGE_RESP_PASID_VALID	(1 << 0)
-+	__u32	flags;
-+	__u32	pasid;
-+	__u32	grpid;
-+	__u32	code;
-+	__u64	addr;
-+};
-+
- #endif /* _UAPI_IOMMU_H */
+ 	struct list_head	*phead, *plist;
+-	int ret = 0;
+ 	struct sta_info *psta = NULL;
+ 	struct sta_priv *pstapriv = &padapter->stapriv;
+ 	struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
+@@ -2202,7 +2201,7 @@ int rtw_sta_flush(struct adapter *padapter)
+ 	DBG_871X(FUNC_NDEV_FMT"\n", FUNC_NDEV_ARG(padapter->pnetdev));
+ 
+ 	if ((pmlmeinfo->state&0x03) != WIFI_FW_AP_STATE)
+-		return ret;
++		return;
+ 
+ 	spin_lock_bh(&pstapriv->asoc_list_lock);
+ 	phead = &pstapriv->asoc_list;
+@@ -2226,8 +2225,6 @@ int rtw_sta_flush(struct adapter *padapter)
+ 	issue_deauth(padapter, bc_addr, WLAN_REASON_DEAUTH_LEAVING);
+ 
+ 	associated_clients_update(padapter, true);
+-
+-	return ret;
+ }
+ 
+ /* called > TSR LEVEL for USB or SDIO Interface*/
+diff --git a/drivers/staging/rtl8723bs/include/rtw_ap.h b/drivers/staging/rtl8723bs/include/rtw_ap.h
+index fd56c9db..d6f3a3a 100644
+--- a/drivers/staging/rtl8723bs/include/rtw_ap.h
++++ b/drivers/staging/rtl8723bs/include/rtw_ap.h
+@@ -31,7 +31,7 @@ u8 bss_cap_update_on_sta_leave(struct adapter *padapter, struct sta_info *psta);
+ void sta_info_update(struct adapter *padapter, struct sta_info *psta);
+ void ap_sta_info_defer_update(struct adapter *padapter, struct sta_info *psta);
+ u8 ap_free_sta(struct adapter *padapter, struct sta_info *psta, bool active, u16 reason);
+-int rtw_sta_flush(struct adapter *padapter);
++void rtw_sta_flush(struct adapter *padapter);
+ void start_ap_mode(struct adapter *padapter);
+ void stop_ap_mode(struct adapter *padapter);
+ 
+diff --git a/drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c b/drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c
+index 996bd1a..9bc6856 100644
+--- a/drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c
++++ b/drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c
+@@ -2870,9 +2870,9 @@ static int cfg80211_rtw_del_station(struct wiphy *wiphy, struct net_device *ndev
+ 
+ 		flush_all_cam_entry(padapter);	/* clear CAM */
+ 
+-		ret = rtw_sta_flush(padapter);
++		rtw_sta_flush(padapter);
+ 
+-		return ret;
++		return 0;
+ 	}
+ 
+ 
+diff --git a/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c b/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
+index bfbbcf0..236a462 100644
+--- a/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
++++ b/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
+@@ -3753,7 +3753,7 @@ static int rtw_set_beacon(struct net_device *dev, struct ieee_param *param, int
+ 
+ }
+ 
+-static int rtw_hostapd_sta_flush(struct net_device *dev)
++static void rtw_hostapd_sta_flush(struct net_device *dev)
+ {
+ 	/* _irqL irqL; */
+ 	/* struct list_head	*phead, *plist; */
+@@ -3765,8 +3765,7 @@ static int rtw_hostapd_sta_flush(struct net_device *dev)
+ 
+ 	flush_all_cam_entry(padapter);	/* clear CAM */
+ 
+-	return rtw_sta_flush(padapter);
+-
++	rtw_sta_flush(padapter);
+ }
+ 
+ static int rtw_add_sta(struct net_device *dev, struct ieee_param *param)
+@@ -4253,7 +4252,7 @@ static int rtw_hostapd_ioctl(struct net_device *dev, struct iw_point *p)
+ 	switch (param->cmd) {
+ 	case RTL871X_HOSTAPD_FLUSH:
+ 
+-		ret = rtw_hostapd_sta_flush(dev);
++		rtw_hostapd_sta_flush(dev);
+ 
+ 		break;
+ 
 -- 
-2.21.0
+2.7.4
 
