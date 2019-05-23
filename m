@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1FECC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:44:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16250C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:44:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FB3020851
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:44:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE7D220881
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:44:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558640683;
-	bh=5UCojV3+1l9pwyt7QHyOjN9adHUxg59F+wBeuWKbW/s=;
+	s=default; t=1558640687;
+	bh=jKqYAai376E/cIp343dxY9uOP9xaIB/uyNzS8yztJP8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Puvvkx8Q/GAFGUe5JYFeX1/syoa1JOK2H91lM8nTtTdgyQqBOgWtq6Sn2nxwiq282
-	 g+JvO5LrswGq3vQeclCpnbqpsuxxTqMBGxqR6nN2mCL1VJcLzTQ3WuSmxvLnmkRScN
-	 4veIbwMPeVj+Cl9hsFuhr2BSw+dJotS91YvrOrzc=
+	b=0eULSPurpyWV6ChreOXuWqu60fJdHoInteG94dIXipRoiJW/KpKrltq6IaVf0igf7
+	 hhvNEeWe6ai5zZpmWGT6tsbsYoICDvYiIqZamuPgKPjZpDQW0YIKD3J1ldNHcINhml
+	 qLR21fxPU/bj9951C2O/zM8d8TR+x2IWKVIeeZwg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387965AbfEWTQY (ORCPT
+        id S2389064AbfEWTop (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:16:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50882 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:44:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51078 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389144AbfEWTQQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:16:16 -0400
+        id S2389178AbfEWTQY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:16:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A2FF21841;
-        Thu, 23 May 2019 19:16:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D56521850;
+        Thu, 23 May 2019 19:16:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558638976;
-        bh=5UCojV3+1l9pwyt7QHyOjN9adHUxg59F+wBeuWKbW/s=;
+        s=default; t=1558638983;
+        bh=jKqYAai376E/cIp343dxY9uOP9xaIB/uyNzS8yztJP8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kEHcYYHtBwQDsR2vLEHPj8igyvqFVbSL3MavPuXyoKEekIjr3IcmZiz45YRke6IZp
-         DM6xwasRZMkDxY4BzwHBQzqwgqKUmY+Jsp7nfxhxYeWZrUAWP0ivG+aRVZW/NaREOj
-         /Ude+vjrQoYhqHBslyxeCP43iBcBPeV6MclsSxZY=
+        b=ZnnXk/HIcnKqpGfIgYIZ0rwuqTUQjGG1oD2/ZUhS3TT+Zz5PHgupNW1mSAvq/b06a
+         tgozMJpGLGZQsN7CRDVkDipH1ppCXT9hv3W6NdYGmtoBA6UctVzCLVGlQvu6NZGYza
+         Je8vga5J5qrWKz3l0uh+SxsXc0cwkI32PCw/wQe8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH 4.19 033/114] phy: ti-pipe3: fix missing bit-wise or operator when assigning val
-Date:   Thu, 23 May 2019 21:05:32 +0200
-Message-Id: <20190523181734.791120488@linuxfoundation.org>
+        stable@vger.kernel.org, Steve Longerbeam <slongerbeam@gmail.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: [PATCH 4.19 036/114] media: imx: Clear fwnode link struct for each endpoint iteration
+Date:   Thu, 23 May 2019 21:05:35 +0200
+Message-Id: <20190523181735.057210188@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181731.372074275@linuxfoundation.org>
 References: <20190523181731.372074275@linuxfoundation.org>
@@ -59,33 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Steve Longerbeam <slongerbeam@gmail.com>
 
-commit e6577cb5103b7ca7c0204c0c86ef4af8aa6288f6 upstream.
+commit 107927fa597c99eaeee4f51865ca0956ec71b6a2 upstream.
 
-There seems to be a missing bit-wise or operator when setting val,
-fix this by adding it in.
+In imx_media_create_csi_of_links(), the 'struct v4l2_fwnode_link' must
+be cleared for each endpoint iteration, otherwise if the remote port
+has no "reg" property, link.remote_port will not be reset to zero.
+This was discovered on the i.MX53 SMD board, since the OV5642 connects
+directly to ipu1_csi0 and has a single source port with no "reg"
+property.
 
-Fixes: 2796ceb0c18a ("phy: ti-pipe3: Update pcie phy settings")
-Cc: stable@vger.kernel.org # v4.19+
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Fixes: 621b08eabcddb ("media: staging/imx: remove static media link arrays")
+
+Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/phy/ti/phy-ti-pipe3.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/staging/media/imx/imx-media-of.c |   15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
---- a/drivers/phy/ti/phy-ti-pipe3.c
-+++ b/drivers/phy/ti/phy-ti-pipe3.c
-@@ -303,7 +303,7 @@ static void ti_pipe3_calibrate(struct ti
+--- a/drivers/staging/media/imx/imx-media-of.c
++++ b/drivers/staging/media/imx/imx-media-of.c
+@@ -233,15 +233,18 @@ int imx_media_create_csi_of_links(struct
+ 				  struct v4l2_subdev *csi)
+ {
+ 	struct device_node *csi_np = csi->dev->of_node;
+-	struct fwnode_handle *fwnode, *csi_ep;
+-	struct v4l2_fwnode_link link;
+ 	struct device_node *ep;
+-	int ret;
+-
+-	link.local_node = of_fwnode_handle(csi_np);
+-	link.local_port = CSI_SINK_PAD;
  
- 	val = ti_pipe3_readl(phy->phy_rx, PCIEPHYRX_ANA_PROGRAMMABILITY);
- 	val &= ~(INTERFACE_MASK | LOSD_MASK | MEM_PLLDIV);
--	val = (0x1 << INTERFACE_SHIFT | 0xA << LOSD_SHIFT);
-+	val |= (0x1 << INTERFACE_SHIFT | 0xA << LOSD_SHIFT);
- 	ti_pipe3_writel(phy->phy_rx, PCIEPHYRX_ANA_PROGRAMMABILITY, val);
+ 	for_each_child_of_node(csi_np, ep) {
++		struct fwnode_handle *fwnode, *csi_ep;
++		struct v4l2_fwnode_link link;
++		int ret;
++
++		memset(&link, 0, sizeof(link));
++
++		link.local_node = of_fwnode_handle(csi_np);
++		link.local_port = CSI_SINK_PAD;
++
+ 		csi_ep = of_fwnode_handle(ep);
  
- 	val = ti_pipe3_readl(phy->phy_rx, PCIEPHYRX_DIGITAL_MODES);
+ 		fwnode = fwnode_graph_get_remote_endpoint(csi_ep);
 
 
