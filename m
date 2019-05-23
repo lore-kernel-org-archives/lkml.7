@@ -2,224 +2,301 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2338C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 18:56:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F1C7C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 18:57:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B117D2175B
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 18:56:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="TpJGQEtd"
+	by mail.kernel.org (Postfix) with ESMTP id 372E22175B
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 18:57:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731570AbfEWS4x (ORCPT
+        id S1731610AbfEWS46 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 14:56:53 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:43368 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731475AbfEWS4w (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 14:56:52 -0400
-Received: by mail-qk1-f195.google.com with SMTP id z6so4450394qkl.10
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 11:56:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=tpvuJFfMZp6SvK9KDKtENhr68QaXMeztIkCmID+gkbc=;
-        b=TpJGQEtdvImqGvhe/eKjEO8QDgPwfoiipVfYsvu8wdLwgtVuQs8kpIoEKSmy0n5AAB
-         mmDdZeaG38F886HVHK0E7IZLM15b7j60azRHwJv9MkHjE5Nh2NWaG+wJeuz6JNMsZ0Xv
-         642umB9Dyh86aGukWzlCnmdW4YNJ65xUcN/wnwAnt7zF3TZBZBd70jSEXjY6RowpwQea
-         F3uOh5s2mo7Q5mTv7secDzKi88+CoKoQEm5gvuwoHDKH3U1sqEFonAVu8tY3/LS8U4fx
-         x1Brb8t6+vZ0sxn9c/N8shWB+d1dE7ghsqb8jhpX2ihTcwnJ2iwL1TVB4+OD3Sw4Pq0M
-         e3kw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=tpvuJFfMZp6SvK9KDKtENhr68QaXMeztIkCmID+gkbc=;
-        b=DaLp3S+JB6CYj19hHcUXJAJ8SBFb21y13KUkwHH0O0iyEmpeYAtIPI0ALX+lYdlhc+
-         eCYUsneq8bvgyeg2pAlkO3ovT49bApZmahkQZy145TPprsGWTrZ7JuXWArWcVYaFw3j9
-         nP8zrdjnolcsKO/NNAjqJ9qLGd+2G5+JjyGbdKeqjn2sGz8ZZgs7YleT04SrCMY19MWg
-         /n5BZJx47dsTJ3edEvvbVpz9Wpm2MQLCz5AqkuhOf0r2H8OwrX7SWwE2QrCzFNyeLbj5
-         WijJozBAcpBEct1sLu6iVGxzh5rhOQLt6nP9F9LpuyI2j0IgpTtfXbybH9ABSyOlmfkj
-         zVAA==
-X-Gm-Message-State: APjAAAX0y2GesQh6xbTwh4gZM618tiyVEZ1RT1nSG7EnREt4cbcraLD8
-        ZVDgsfB9xJeUDv6jsjP1mtPAbQ==
-X-Google-Smtp-Source: APXvYqzkCsMoxGu6ex5VfOPsujiJXvHMJTP9UN3a4hrFq/rsvsUHT12F9+IcJpnaX/OqFYYGhuK/pg==
-X-Received: by 2002:a37:de07:: with SMTP id h7mr4343499qkj.41.1558637811222;
-        Thu, 23 May 2019 11:56:51 -0700 (PDT)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id e133sm127413qkb.76.2019.05.23.11.56.50
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 23 May 2019 11:56:51 -0700 (PDT)
-Date:   Thu, 23 May 2019 11:56:46 -0700
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Joergen Andreasen <joergen.andreasen@microchip.com>
-Cc:     <netdev@vger.kernel.org>,
-        "Microchip Linux Driver Support" <UNGLinuxDriver@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next v2 1/1] net: mscc: ocelot: Implement port
- policers via tc command
-Message-ID: <20190523115630.7710cc49@cakuba.netronome.com>
-In-Reply-To: <20190523104939.2721-2-joergen.andreasen@microchip.com>
-References: <20190502094029.22526-1-joergen.andreasen@microchip.com>
-        <20190523104939.2721-1-joergen.andreasen@microchip.com>
-        <20190523104939.2721-2-joergen.andreasen@microchip.com>
-Organization: Netronome Systems, Ltd.
+        Thu, 23 May 2019 14:56:58 -0400
+Received: from foss.arm.com ([217.140.101.70]:52854 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731475AbfEWS46 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 14:56:58 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E4AA1A78;
+        Thu, 23 May 2019 11:56:57 -0700 (PDT)
+Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 07D6E3F5AF;
+        Thu, 23 May 2019 11:56:55 -0700 (PDT)
+Subject: Re: [PATCH 3/4] iommu: Introduce device fault report API
+To:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        joro@8bytes.org, alex.williamson@redhat.com
+Cc:     yi.l.liu@linux.intel.com, ashok.raj@intel.com,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
+References: <20190523180613.55049-1-jean-philippe.brucker@arm.com>
+ <20190523180613.55049-4-jean-philippe.brucker@arm.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <e56244fd-86fd-1fc9-17f7-d00179d586ac@arm.com>
+Date:   Thu, 23 May 2019 19:56:54 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190523180613.55049-4-jean-philippe.brucker@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 23 May 2019 12:49:39 +0200, Joergen Andreasen wrote:
-> Hardware offload of matchall classifier and police action are now
-> supported via the tc command.
-> Supported police parameters are: rate and burst.
+On 23/05/2019 19:06, Jean-Philippe Brucker wrote:
+> From: Jacob Pan <jacob.jun.pan@linux.intel.com>
 > 
-> Example:
+> Traditionally, device specific faults are detected and handled within
+> their own device drivers. When IOMMU is enabled, faults such as DMA
+> related transactions are detected by IOMMU. There is no generic
+> reporting mechanism to report faults back to the in-kernel device
+> driver or the guest OS in case of assigned devices.
 > 
-> Add:
-> tc qdisc add dev eth3 handle ffff: ingress
-> tc filter add dev eth3 parent ffff: prio 1 handle 2	\
-> 	matchall skip_sw				\
-> 	action police rate 100Mbit burst 10000
+> This patch introduces a registration API for device specific fault
+> handlers. This differs from the existing iommu_set_fault_handler/
+> report_iommu_fault infrastructures in several ways:
+> - it allows to report more sophisticated fault events (both
+>    unrecoverable faults and page request faults) due to the nature
+>    of the iommu_fault struct
+> - it is device specific and not domain specific.
 > 
-> Show:
-> tc -s -d qdisc show dev eth3
-> tc -s -d filter show dev eth3 ingress
+> The current iommu_report_device_fault() implementation only handles
+> the "shoot and forget" unrecoverable fault case. Handling of page
+> request faults or stalled faults will come later.
 > 
-> Delete:
-> tc filter del dev eth3 parent ffff: prio 1
-> tc qdisc del dev eth3 handle ffff: ingress
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> Signed-off-by: Ashok Raj <ashok.raj@intel.com>
+> Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+> Signed-off-by: Eric Auger <eric.auger@redhat.com>
+> ---
+>   drivers/iommu/iommu.c | 127 ++++++++++++++++++++++++++++++++++++++++++
+>   include/linux/iommu.h |  29 ++++++++++
+>   2 files changed, 156 insertions(+)
 > 
-> Signed-off-by: Joergen Andreasen <joergen.andreasen@microchip.com>
+> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+> index 67ee6623f9b2..d546f7baa0d4 100644
+> --- a/drivers/iommu/iommu.c
+> +++ b/drivers/iommu/iommu.c
+> @@ -644,6 +644,13 @@ int iommu_group_add_device(struct iommu_group *group, struct device *dev)
+>   		goto err_free_name;
+>   	}
+>   
+> +	dev->iommu_param = kzalloc(sizeof(*dev->iommu_param), GFP_KERNEL);
+> +	if (!dev->iommu_param) {
+> +		ret = -ENOMEM;
+> +		goto err_free_name;
+> +	}
+> +	mutex_init(&dev->iommu_param->lock);
+> +
 
-> diff --git a/drivers/net/ethernet/mscc/ocelot.c b/drivers/net/ethernet/mscc/ocelot.c
-> index d715ef4fc92f..3ec7864d9dc8 100644
-> --- a/drivers/net/ethernet/mscc/ocelot.c
-> +++ b/drivers/net/ethernet/mscc/ocelot.c
-> @@ -943,6 +943,7 @@ static const struct net_device_ops ocelot_port_netdev_ops = {
->  	.ndo_vlan_rx_kill_vid		= ocelot_vlan_rx_kill_vid,
->  	.ndo_set_features		= ocelot_set_features,
->  	.ndo_get_port_parent_id		= ocelot_get_port_parent_id,
-> +	.ndo_setup_tc			= ocelot_setup_tc,
->  };
->  
->  static void ocelot_get_strings(struct net_device *netdev, u32 sset, u8 *data)
-> @@ -1663,8 +1664,9 @@ int ocelot_probe_port(struct ocelot *ocelot, u8 port,
->  	dev->netdev_ops = &ocelot_port_netdev_ops;
->  	dev->ethtool_ops = &ocelot_ethtool_ops;
->  
-> -	dev->hw_features |= NETIF_F_HW_VLAN_CTAG_FILTER | NETIF_F_RXFCS;
-> -	dev->features |= NETIF_F_HW_VLAN_CTAG_FILTER;
-> +	dev->hw_features |= NETIF_F_HW_VLAN_CTAG_FILTER | NETIF_F_RXFCS |
-> +		NETIF_F_HW_TC;
-> +	dev->features |= NETIF_F_HW_VLAN_CTAG_FILTER | NETIF_F_HW_TC;
->  
->  	memcpy(dev->dev_addr, ocelot->base_mac, ETH_ALEN);
->  	dev->dev_addr[ETH_ALEN - 1] += port;
+Note that this gets a bit tricky when we come to move to move the 
+fwspec/ops/etc. into iommu_param, since that data can have a longer 
+lifespan than the group association. I'd suggest moving this management 
+out to the iommu_{probe,release}_device() level from the start, but 
+maybe we're happy to come back and change things later as necessary.
 
-You need to add a check in set_features to make sure nobody clears the
-NETIF_F_TC flag while something is offloaded, otherwise you will miss
-the REMOVE callback (it will bounce from the
-tc_cls_can_offload_and_chain0() check).
+Robin.
 
-> diff --git a/drivers/net/ethernet/mscc/ocelot_tc.c b/drivers/net/ethernet/mscc/ocelot_tc.c
-> new file mode 100644
-> index 000000000000..2412e0dbc267
-> --- /dev/null
-> +++ b/drivers/net/ethernet/mscc/ocelot_tc.c
-> @@ -0,0 +1,164 @@
-> +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-> +/* Microsemi Ocelot Switch TC driver
+>   	kobject_get(group->devices_kobj);
+>   
+>   	dev->iommu_group = group;
+> @@ -674,6 +681,8 @@ int iommu_group_add_device(struct iommu_group *group, struct device *dev)
+>   	mutex_unlock(&group->mutex);
+>   	dev->iommu_group = NULL;
+>   	kobject_put(group->devices_kobj);
+> +	kfree(dev->iommu_param);
+> +	dev->iommu_param = NULL;
+>   err_free_name:
+>   	kfree(device->name);
+>   err_remove_link:
+> @@ -721,6 +730,8 @@ void iommu_group_remove_device(struct device *dev)
+>   
+>   	trace_remove_device_from_group(group->id, dev);
+>   
+> +	kfree(dev->iommu_param);
+> +	dev->iommu_param = NULL;
+>   	kfree(device->name);
+>   	kfree(device);
+>   	dev->iommu_group = NULL;
+> @@ -854,6 +865,122 @@ int iommu_group_unregister_notifier(struct iommu_group *group,
+>   }
+>   EXPORT_SYMBOL_GPL(iommu_group_unregister_notifier);
+>   
+> +/**
+> + * iommu_register_device_fault_handler() - Register a device fault handler
+> + * @dev: the device
+> + * @handler: the fault handler
+> + * @data: private data passed as argument to the handler
 > + *
-> + * Copyright (c) 2019 Microsemi Corporation
+> + * When an IOMMU fault event is received, this handler gets called with the
+> + * fault event and data as argument. The handler should return 0 on success.
+> + *
+> + * Return 0 if the fault handler was installed successfully, or an error.
 > + */
-> +
-> +#include "ocelot_tc.h"
-> +#include "ocelot_police.h"
-> +#include <net/pkt_cls.h>
-> +
-> +static int ocelot_setup_tc_cls_matchall(struct ocelot_port *port,
-> +					struct tc_cls_matchall_offload *f,
-> +					bool ingress)
+> +int iommu_register_device_fault_handler(struct device *dev,
+> +					iommu_dev_fault_handler_t handler,
+> +					void *data)
 > +{
-> +	struct netlink_ext_ack *extack = f->common.extack;
-> +	struct ocelot_policer pol = { 0 };
-> +	struct flow_action_entry *action;
-> +	int err;
+> +	struct iommu_param *param = dev->iommu_param;
+> +	int ret = 0;
 > +
-> +	netdev_dbg(port->dev, "%s: port %u command %d cookie %lu\n",
-> +		   __func__, port->chip_port, f->command, f->cookie);
+> +	/*
+> +	 * Device iommu_param should have been allocated when device is
+> +	 * added to its iommu_group.
+> +	 */
+> +	if (!param)
+> +		return -EINVAL;
 > +
-> +	if (!ingress) {
-> +		NL_SET_ERR_MSG_MOD(extack, "Only ingress is supported");
-> +		return -EOPNOTSUPP;
+> +	mutex_lock(&param->lock);
+> +	/* Only allow one fault handler registered for each device */
+> +	if (param->fault_param) {
+> +		ret = -EBUSY;
+> +		goto done_unlock;
 > +	}
 > +
-> +	switch (f->command) {
-> +	case TC_CLSMATCHALL_REPLACE:
-> +		if (!flow_offload_has_one_action(&f->rule->action)) {
-> +			NL_SET_ERR_MSG_MOD(extack,
-> +					   "Only one action is supported");
-> +			return -EOPNOTSUPP;
-> +		}
-> +
-> +		action = &f->rule->action.entries[0];
-> +
-> +		if (action->id != FLOW_ACTION_POLICE) {
-> +			NL_SET_ERR_MSG_MOD(extack, "Unsupported action");
-> +			return -EOPNOTSUPP;
-> +		}
-
-Please also reject the offload if block is shared, as HW policer state
-cannot be shared between ports, the way it is in SW.  You have to save
-whether the block is shared or not at bind time, see:
-
-d6787147e15d ("net/sched: remove block pointer from common offload structure")
-
-> +		if (port->tc.police_id && port->tc.police_id != f->cookie) {
-> +			NL_SET_ERR_MSG_MOD(extack,
-> +					   "Only one policer per port is supported\n");
-> +			return -EEXIST;
-> +		}
-> +
-> +		pol.rate = (u32)div_u64(action->police.rate_bytes_ps, 1000) * 8;
-> +		pol.burst = (u32)div_u64(action->police.rate_bytes_ps *
-> +					 PSCHED_NS2TICKS(action->police.burst),
-> +					 PSCHED_TICKS_PER_SEC);
-> +
-> +		err = ocelot_port_policer_add(port, &pol);
-> +		if (err) {
-> +			NL_SET_ERR_MSG_MOD(extack, "Could not add policer\n");
-> +			return err;
-> +		}
-> +
-> +		port->tc.police_id = f->cookie;
-> +		return 0;
-> +	case TC_CLSMATCHALL_DESTROY:
-> +		if (port->tc.police_id != f->cookie)
-> +			return -ENOENT;
-> +
-> +		err = ocelot_port_policer_del(port);
-> +		if (err) {
-> +			NL_SET_ERR_MSG_MOD(extack,
-> +					   "Could not delete policer\n");
-> +			return err;
-> +		}
-> +		port->tc.police_id = 0;
-> +		return 0;
-> +	case TC_CLSMATCHALL_STATS: /* fall through */
-> +	default:
-> +		return -EOPNOTSUPP;
+> +	get_device(dev);
+> +	param->fault_param =
+> +		kzalloc(sizeof(struct iommu_fault_param), GFP_KERNEL);
+> +	if (!param->fault_param) {
+> +		put_device(dev);
+> +		ret = -ENOMEM;
+> +		goto done_unlock;
 > +	}
+> +	param->fault_param->handler = handler;
+> +	param->fault_param->data = data;
+> +
+> +done_unlock:
+> +	mutex_unlock(&param->lock);
+> +
+> +	return ret;
 > +}
+> +EXPORT_SYMBOL_GPL(iommu_register_device_fault_handler);
+> +
+> +/**
+> + * iommu_unregister_device_fault_handler() - Unregister the device fault handler
+> + * @dev: the device
+> + *
+> + * Remove the device fault handler installed with
+> + * iommu_register_device_fault_handler().
+> + *
+> + * Return 0 on success, or an error.
+> + */
+> +int iommu_unregister_device_fault_handler(struct device *dev)
+> +{
+> +	struct iommu_param *param = dev->iommu_param;
+> +	int ret = 0;
+> +
+> +	if (!param)
+> +		return -EINVAL;
+> +
+> +	mutex_lock(&param->lock);
+> +
+> +	if (!param->fault_param)
+> +		goto unlock;
+> +
+> +	kfree(param->fault_param);
+> +	param->fault_param = NULL;
+> +	put_device(dev);
+> +unlock:
+> +	mutex_unlock(&param->lock);
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(iommu_unregister_device_fault_handler);
+> +
+> +/**
+> + * iommu_report_device_fault() - Report fault event to device driver
+> + * @dev: the device
+> + * @evt: fault event data
+> + *
+> + * Called by IOMMU drivers when a fault is detected, typically in a threaded IRQ
+> + * handler.
+> + *
+> + * Return 0 on success, or an error.
+> + */
+> +int iommu_report_device_fault(struct device *dev, struct iommu_fault_event *evt)
+> +{
+> +	struct iommu_param *param = dev->iommu_param;
+> +	struct iommu_fault_param *fparam;
+> +	int ret = 0;
+> +
+> +	/* iommu_param is allocated when device is added to group */
+> +	if (!param || !evt)
+> +		return -EINVAL;
+> +
+> +	/* we only report device fault if there is a handler registered */
+> +	mutex_lock(&param->lock);
+> +	fparam = param->fault_param;
+> +	if (!fparam || !fparam->handler) {
+> +		ret = -EINVAL;
+> +		goto done_unlock;
+> +	}
+> +	ret = fparam->handler(evt, fparam->data);
+> +done_unlock:
+> +	mutex_unlock(&param->lock);
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(iommu_report_device_fault);
+> +
+>   /**
+>    * iommu_group_id - Return ID for a group
+>    * @group: the group to ID
+> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+> index d442f5f3fa93..f95e376a7ed3 100644
+> --- a/include/linux/iommu.h
+> +++ b/include/linux/iommu.h
+> @@ -340,6 +340,7 @@ struct iommu_fault_param {
+>    *	struct iommu_fwspec	*iommu_fwspec;
+>    */
+>   struct iommu_param {
+> +	struct mutex lock;
+>   	struct iommu_fault_param *fault_param;
+>   };
+>   
+> @@ -432,6 +433,15 @@ extern int iommu_group_register_notifier(struct iommu_group *group,
+>   					 struct notifier_block *nb);
+>   extern int iommu_group_unregister_notifier(struct iommu_group *group,
+>   					   struct notifier_block *nb);
+> +extern int iommu_register_device_fault_handler(struct device *dev,
+> +					iommu_dev_fault_handler_t handler,
+> +					void *data);
+> +
+> +extern int iommu_unregister_device_fault_handler(struct device *dev);
+> +
+> +extern int iommu_report_device_fault(struct device *dev,
+> +				     struct iommu_fault_event *evt);
+> +
+>   extern int iommu_group_id(struct iommu_group *group);
+>   extern struct iommu_group *iommu_group_get_for_dev(struct device *dev);
+>   extern struct iommu_domain *iommu_group_default_domain(struct iommu_group *);
+> @@ -740,6 +750,25 @@ static inline int iommu_group_unregister_notifier(struct iommu_group *group,
+>   	return 0;
+>   }
+>   
+> +static inline
+> +int iommu_register_device_fault_handler(struct device *dev,
+> +					iommu_dev_fault_handler_t handler,
+> +					void *data)
+> +{
+> +	return -ENODEV;
+> +}
+> +
+> +static inline int iommu_unregister_device_fault_handler(struct device *dev)
+> +{
+> +	return 0;
+> +}
+> +
+> +static inline
+> +int iommu_report_device_fault(struct device *dev, struct iommu_fault_event *evt)
+> +{
+> +	return -ENODEV;
+> +}
+> +
+>   static inline int iommu_group_id(struct iommu_group *group)
+>   {
+>   	return -ENODEV;
+> 
