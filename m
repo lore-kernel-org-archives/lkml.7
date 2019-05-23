@@ -2,118 +2,91 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39FA2C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 17:56:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52CC5C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 17:57:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A20E2186A
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 17:56:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BED820644
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 17:57:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YgMBxKYL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387407AbfEWR4q (ORCPT
+        id S1731453AbfEWR5l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 13:56:46 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36352 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731116AbfEWR4p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 13:56:45 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9C9F3307CDF2;
-        Thu, 23 May 2019 17:56:45 +0000 (UTC)
-Received: from kamzik.brq.redhat.com (unknown [10.43.2.160])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0ED9968386;
-        Thu, 23 May 2019 17:56:40 +0000 (UTC)
-Date:   Thu, 23 May 2019 19:56:38 +0200
-From:   Andrew Jones <drjones@redhat.com>
-To:     Thomas Huth <thuth@redhat.com>
-Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-s390@vger.kernel.org
-Subject: Re: [PATCH 9/9] KVM: selftests: Move kvm_create_max_vcpus test to
- generic code
-Message-ID: <20190523175638.5sc5zjbgsqe4bkes@kamzik.brq.redhat.com>
-References: <20190523164309.13345-1-thuth@redhat.com>
- <20190523164309.13345-10-thuth@redhat.com>
+        Thu, 23 May 2019 13:57:41 -0400
+Received: from mail-wr1-f44.google.com ([209.85.221.44]:39971 "EHLO
+        mail-wr1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731206AbfEWR5l (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 13:57:41 -0400
+Received: by mail-wr1-f44.google.com with SMTP id f10so7259514wre.7
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 10:57:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=npurEhQFkRrHzUL5AZ34/mton9sqbecFYDOR6wrDNXw=;
+        b=YgMBxKYLwA3BTuAwfHJvTccICQQi7eLvD+O2qkQAdY3215i9UdMt0BKfbs10bS1aJn
+         zRDm0yDNwiTPH3LFLziuiUmp39Q2kImc7WH2Rhx6/VD3ThUN5H5Y0FsnMT3hrSdB04tW
+         VYAs8UdoA/dtwSJ4+9oBuuCX85ijbib4/Dxy0FL70nEqGlG1RcVJ9moThn8ZDZa6ONvi
+         m6bSW/o63f9iCyxorHAk5Q7u3pUbxwIMyrK+piHoDBynsp8L6zA5zlCCl+0cHbIj81Qj
+         +nohXCZkkrl5+hUPYp7h45T3GPwzCTNA4XQeLgQnv2q/hzbKMomMiduHr03Anj6JJF2p
+         7APg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=npurEhQFkRrHzUL5AZ34/mton9sqbecFYDOR6wrDNXw=;
+        b=Lu+A0NBN5I4XxYv3Q9kYgXXAlv67SVN8Cd8t4elpV6/JuclUZfWOhBM/29lrmkd4K9
+         fCI5kJHukMuOMuFQJix+Us5GzNrhc9eSJrhmCougYHR1pWb+G3O5Mnd5gjCEhZVNTqDz
+         dF19TGDAPAc6OULhqh09XrsoyuJP4RF/MlkuV2gRRVZZIXhsM5Kb4xf3Pq/4FHpUC1sk
+         71M1A/8UHt34nMFEi8fUhgk9Q8tWg1Ohj02cUp4SGzQHJrRw8ojyweaWqA26MV3xY4ij
+         MlNFk6w8+RJtjc/PGCux8F/X8JTFnOhrQHRLz055lYbZoXg8eIo9Gpl6NG7+1AAnCWTD
+         wARQ==
+X-Gm-Message-State: APjAAAVku4Eci1bxmNSKlhHh93IojT/PLKAzSYbUkOCUn1HMDzm89coJ
+        24Kud8sllYIZeX+Vrj6ADF+5QDg=
+X-Google-Smtp-Source: APXvYqzSqkFIzvlcu8Dfoa2PcTkILCHL53QGzH957rp6Wl3AVKO80ws7Z+PKRSpk1jU5iYbOLC7xdg==
+X-Received: by 2002:adf:df8f:: with SMTP id z15mr55312765wrl.140.1558634259680;
+        Thu, 23 May 2019 10:57:39 -0700 (PDT)
+Received: from avx2 ([46.53.252.55])
+        by smtp.gmail.com with ESMTPSA id b5sm26243888wrp.92.2019.05.23.10.57.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 23 May 2019 10:57:38 -0700 (PDT)
+Date:   Thu, 23 May 2019 20:57:36 +0300
+From:   Alexey Dobriyan <adobriyan@gmail.com>
+To:     akpm@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH] elf: fix "start_code" evaluation
+Message-ID: <20190523175736.GA6222@avx2>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190523164309.13345-10-thuth@redhat.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Thu, 23 May 2019 17:56:45 +0000 (UTC)
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 06:43:09PM +0200, Thomas Huth wrote:
-> There is nothing x86-specific in the test apart from the VM_MODE_P52V48_4K
-> which we can now replace with VM_MODE_DEFAULT. Thus let's move the file to
-> the main folder and enable it for aarch64 and s390x, too.
-> 
-> Signed-off-by: Thomas Huth <thuth@redhat.com>
-> ---
->  tools/testing/selftests/kvm/Makefile                          | 4 +++-
->  .../testing/selftests/kvm/{x86_64 => }/kvm_create_max_vcpus.c | 3 ++-
->  2 files changed, 5 insertions(+), 2 deletions(-)
->  rename tools/testing/selftests/kvm/{x86_64 => }/kvm_create_max_vcpus.c (93%)
-> 
-> diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
-> index d8beb990c8f4..aef5bd1166cf 100644
-> --- a/tools/testing/selftests/kvm/Makefile
-> +++ b/tools/testing/selftests/kvm/Makefile
-> @@ -21,15 +21,17 @@ TEST_GEN_PROGS_x86_64 += x86_64/evmcs_test
->  TEST_GEN_PROGS_x86_64 += x86_64/hyperv_cpuid
->  TEST_GEN_PROGS_x86_64 += x86_64/vmx_close_while_nested_test
->  TEST_GEN_PROGS_x86_64 += x86_64/smm_test
-> -TEST_GEN_PROGS_x86_64 += x86_64/kvm_create_max_vcpus
->  TEST_GEN_PROGS_x86_64 += x86_64/vmx_set_nested_state_test
-> +TEST_GEN_PROGS_x86_64 += kvm_create_max_vcpus
->  TEST_GEN_PROGS_x86_64 += dirty_log_test
->  TEST_GEN_PROGS_x86_64 += clear_dirty_log_test
->  
->  TEST_GEN_PROGS_aarch64 += dirty_log_test
->  TEST_GEN_PROGS_aarch64 += clear_dirty_log_test
-> +TEST_GEN_PROGS_aarch64 += kvm_create_max_vcpus
->  
->  TEST_GEN_PROGS_s390x += s390x/sync_regs_test
-> +TEST_GEN_PROGS_s390x += kvm_create_max_vcpus
->  
->  TEST_GEN_PROGS += $(TEST_GEN_PROGS_$(UNAME_M))
->  LIBKVM += $(LIBKVM_$(UNAME_M))
-> diff --git a/tools/testing/selftests/kvm/x86_64/kvm_create_max_vcpus.c b/tools/testing/selftests/kvm/kvm_create_max_vcpus.c
-> similarity index 93%
-> rename from tools/testing/selftests/kvm/x86_64/kvm_create_max_vcpus.c
-> rename to tools/testing/selftests/kvm/kvm_create_max_vcpus.c
-> index 50e92996f918..db78ce07c416 100644
-> --- a/tools/testing/selftests/kvm/x86_64/kvm_create_max_vcpus.c
-> +++ b/tools/testing/selftests/kvm/kvm_create_max_vcpus.c
-> @@ -1,3 +1,4 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
->  /*
->   * kvm_create_max_vcpus
->   *
-> @@ -28,7 +29,7 @@ void test_vcpu_creation(int first_vcpu_id, int num_vcpus)
->  	printf("Testing creating %d vCPUs, with IDs %d...%d.\n",
->  	       num_vcpus, first_vcpu_id, first_vcpu_id + num_vcpus - 1);
->  
-> -	vm = vm_create(VM_MODE_P52V48_4K, DEFAULT_GUEST_PHY_PAGES, O_RDWR);
-> +	vm = vm_create(VM_MODE_DEFAULT, DEFAULT_GUEST_PHY_PAGES, O_RDWR);
->  
->  	for (i = 0; i < num_vcpus; i++) {
->  		int vcpu_id = first_vcpu_id + i;
-> -- 
-> 2.21.0
->
+Only executable ELF program headers should change ->start_code.
 
-Reviewed-by: Andrew Jones <drjones@redhat.com>
+Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
+---
+
+ fs/binfmt_elf.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/fs/binfmt_elf.c
++++ b/fs/binfmt_elf.c
+@@ -1026,7 +1026,7 @@ static int load_elf_binary(struct linux_binprm *bprm)
+ 			}
+ 		}
+ 		k = elf_ppnt->p_vaddr;
+-		if (k < start_code)
++		if ((elf_ppnt->p_flags & PF_X) && k < start_code)
+ 			start_code = k;
+ 		if (start_data < k)
+ 			start_data = k;
