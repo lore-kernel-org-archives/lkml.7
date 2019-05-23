@@ -4,50 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FF50C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:40:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06408C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:40:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1E9620881
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:40:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEC9E2133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:40:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558640426;
-	bh=F3ZuU/gwy/KLeQZjm6lkPc1LIF72DdiJ0KLUwHFmL9k=;
+	s=default; t=1558640445;
+	bh=mbmgRkQiwuLf6DbY/gT5XIYsFmE75IZy8W8zEZ8AzcQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hpTDlbEUQcPu+D0E3BXarwEJENfc2iD5sSH0Kc9VqkAb9kZ7e/vWsNefZ/u7ShFjK
-	 wDu50SXDsmUZJwobFmALez5vsZ/u+vmvRtnvLXLX1vKBlUmsjW49FCWIbacfJm4dLM
-	 fj8Zef6JFo4+4rHR5pPkdoG2QArSmrnq2fnNzMKA=
+	b=0DabreirKpYubwkeRzaA6DiHwi6Ww1nBKWgnKXPwWwESJGV1H5drG9/XhFxZf6URk
+	 N42Ke2F7f7WYKdynOSc0/niDWLZauxycWeAas9rbMPNDHLV3mELEkfefzWKQ9XgGBf
+	 4bCNs/WHo5Ft9z0Smv4mGQWrQh2bAk0YS1D7Fdvs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390215AbfEWTVP (ORCPT
+        id S2390597AbfEWTkp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:21:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58406 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:40:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57934 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389504AbfEWTVM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:21:12 -0400
+        id S2390146AbfEWTU4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:20:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2944220863;
-        Thu, 23 May 2019 19:21:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20645217D9;
+        Thu, 23 May 2019 19:20:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639271;
-        bh=F3ZuU/gwy/KLeQZjm6lkPc1LIF72DdiJ0KLUwHFmL9k=;
+        s=default; t=1558639255;
+        bh=mbmgRkQiwuLf6DbY/gT5XIYsFmE75IZy8W8zEZ8AzcQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zJU246g8yuUR4K2gatTCgs8h4n2Lhp4WwRgp3wTAuNuJiSjN36gcth4sLCLeEporM
-         JmIf6ssyqWxMG4ABbYgqadQeW4akyXoIryjPN0IKthYetG/IuvZOL3+a6jAv6OlnoA
-         /+gtA3Luvf2cchAdX4uMEqJm59vjFDSUf6XKGaUs=
+        b=N8/QuhbfUjEN3xFo+w0+EqEx4WdSOaTvugtvpQT6QX8PIKvuh/jMUmT1GqZS7YuH9
+         iWl0ckoQ7lPj/ZovPP2GjJCpDyrUkQbeZ38KZb4W+boZZOsTklVg7AxegxOEPjzgFe
+         Sj1JEyMESuadIm0I0zAV11KQp207xTX5PamOWC4o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiao Ni <xni@redhat.com>,
-        NeilBrown <neilb@suse.com>, Yufen Yu <yuyufen@huawei.com>,
-        Song Liu <songliubraving@fb.com>
-Subject: [PATCH 5.0 035/139] md: add mddev->pers to avoid potential NULL pointer dereference
-Date:   Thu, 23 May 2019 21:05:23 +0200
-Message-Id: <20190523181725.350796905@linuxfoundation.org>
+        stable@vger.kernel.org, Ira Weiny <ira.weiny@intel.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>, linux-mm@kvack.org,
+        Ingo Molnar <mingo@kernel.org>,
+        Justin Forbes <jmforbes@linuxtx.org>
+Subject: [PATCH 5.0 019/139] mm/gup: Remove the write parameter from gup_fast_permitted()
+Date:   Thu, 23 May 2019 21:05:07 +0200
+Message-Id: <20190523181723.124661314@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181720.120897565@linuxfoundation.org>
 References: <20190523181720.120897565@linuxfoundation.org>
@@ -60,41 +68,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yufen Yu <yuyufen@huawei.com>
+From: Ira Weiny <ira.weiny@intel.com>
 
-commit ee37e62191a59d253fc916b9fc763deb777211e2 upstream.
+commit ad8cfb9c42ef83ecf4079bc7d77e6557648e952b upstream.
 
-When doing re-add, we need to ensure rdev->mddev->pers is not NULL,
-which can avoid potential NULL pointer derefence in fallowing
-add_bound_rdev().
+The 'write' parameter is unused in gup_fast_permitted() so remove it.
 
-Fixes: a6da4ef85cef ("md: re-add a failed disk")
-Cc: Xiao Ni <xni@redhat.com>
-Cc: NeilBrown <neilb@suse.com>
-Cc: <stable@vger.kernel.org> # 4.4+
-Reviewed-by: NeilBrown <neilb@suse.com>
-Signed-off-by: Yufen Yu <yuyufen@huawei.com>
-Signed-off-by: Song Liu <songliubraving@fb.com>
+Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Dave Hansen <dave.hansen@intel.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: linux-mm@kvack.org
+Link: http://lkml.kernel.org/r/20190210223424.13934-1-ira.weiny@intel.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Justin Forbes <jmforbes@linuxtx.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/md.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ arch/x86/include/asm/pgtable_64.h |    3 +--
+ mm/gup.c                          |    6 +++---
+ 2 files changed, 4 insertions(+), 5 deletions(-)
 
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -2852,8 +2852,10 @@ state_store(struct md_rdev *rdev, const
- 			err = 0;
- 		}
- 	} else if (cmd_match(buf, "re-add")) {
--		if (test_bit(Faulty, &rdev->flags) && (rdev->raid_disk == -1) &&
--			rdev->saved_raid_disk >= 0) {
-+		if (!rdev->mddev->pers)
-+			err = -EINVAL;
-+		else if (test_bit(Faulty, &rdev->flags) && (rdev->raid_disk == -1) &&
-+				rdev->saved_raid_disk >= 0) {
- 			/* clear_bit is performed _after_ all the devices
- 			 * have their local Faulty bit cleared. If any writes
- 			 * happen in the meantime in the local node, they
+--- a/arch/x86/include/asm/pgtable_64.h
++++ b/arch/x86/include/asm/pgtable_64.h
+@@ -259,8 +259,7 @@ extern void init_extra_mapping_uc(unsign
+ extern void init_extra_mapping_wb(unsigned long phys, unsigned long size);
+ 
+ #define gup_fast_permitted gup_fast_permitted
+-static inline bool gup_fast_permitted(unsigned long start, int nr_pages,
+-		int write)
++static inline bool gup_fast_permitted(unsigned long start, int nr_pages)
+ {
+ 	unsigned long len, end;
+ 
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -1811,7 +1811,7 @@ static void gup_pgd_range(unsigned long
+  * Check if it's allowed to use __get_user_pages_fast() for the range, or
+  * we need to fall back to the slow version:
+  */
+-bool gup_fast_permitted(unsigned long start, int nr_pages, int write)
++bool gup_fast_permitted(unsigned long start, int nr_pages)
+ {
+ 	unsigned long len, end;
+ 
+@@ -1853,7 +1853,7 @@ int __get_user_pages_fast(unsigned long
+ 	 * block IPIs that come from THPs splitting.
+ 	 */
+ 
+-	if (gup_fast_permitted(start, nr_pages, write)) {
++	if (gup_fast_permitted(start, nr_pages)) {
+ 		local_irq_save(flags);
+ 		gup_pgd_range(start, end, write, pages, &nr);
+ 		local_irq_restore(flags);
+@@ -1895,7 +1895,7 @@ int get_user_pages_fast(unsigned long st
+ 	if (unlikely(!access_ok((void __user *)start, len)))
+ 		return -EFAULT;
+ 
+-	if (gup_fast_permitted(start, nr_pages, write)) {
++	if (gup_fast_permitted(start, nr_pages)) {
+ 		local_irq_disable();
+ 		gup_pgd_range(addr, end, write, pages, &nr);
+ 		local_irq_enable();
 
 
