@@ -2,182 +2,123 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74405C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 17:39:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19944C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 17:40:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48F712075B
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 17:39:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C+sioj7q"
+	by mail.kernel.org (Postfix) with ESMTP id E63742075B
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 17:40:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731349AbfEWRjs (ORCPT
+        id S1731392AbfEWRkg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 13:39:48 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:36266 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731195AbfEWRjs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 13:39:48 -0400
-Received: by mail-pf1-f195.google.com with SMTP id v80so3638400pfa.3
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 10:39:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=DdCWM/RhsOQBi0pr1uXjXm1hyU+XOF2nH7K19lGI0JY=;
-        b=C+sioj7qmwJk1QSoOfsngDiuLJlK3EJNqH6i27UnfGSFTVnd8roo3H/X0MHVKuHyOv
-         7mzjp+fg2SyOf98euai4crSM85/7N2g3AdSm+TAO9Ie47B/9wxjzzawW1bJVpY+HOdLF
-         bU3gcjyKBmAp9B/mQIMGZq6LyI+1KCC/gJ4tGQl0WBUKXqKJV9Ut3HgYyLmqRBvyicKL
-         SWkTglBEvsvn1VibOf1NOPzz94/22Tf2P53F95pviJxfOVSoenoaLzqgzdM1U7sx4hJE
-         P6ga/YDTHl+x5QG9yevsWytRnqj08aVSYoAN8obtkWqtyLmHmElaxF0H96c/gs15Hr/r
-         8o1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=DdCWM/RhsOQBi0pr1uXjXm1hyU+XOF2nH7K19lGI0JY=;
-        b=ErvkMS55p3zwYb9398a1/DMUxIqiqem2ZT/03usiuA8xAii9W/eQRFz2ThQaDf5gDQ
-         UprbxPLSonldC1GL8/hvdAeuS0ha3CWqRNF8cw3WDwd2mF/NHpy6e5br/WC3hp1sMbub
-         9UanApXu2+5133HIiUCVFPVZeOlRzlJkeR5zxmMS0ABe3MvWAdHM42d/hyENsff3UU6/
-         IKLbL2yFvMY4u8WsrIolfD/pQVG6WINszxxnJNJhVqBQ/VovECxORo7qbfrXszHEJhsl
-         zPcN7XxoPlWZ0s7i+6uPR+AVgtUi7nqXP97/uLmzv1MHB/96xLPUNPs9rSuFDGUBr+I+
-         vMAg==
-X-Gm-Message-State: APjAAAUxhaFLvAW+UR5w2X4Z9D2c2qQNwbtFFVeMKarq8K5J5QFJvYKS
-        AhrAHXQhwK4VmnbPkbFKRL4=
-X-Google-Smtp-Source: APXvYqw12QIYhc6B++mLMjMpKs3jMir9qCdWGSgMZ6dtTfT9Q1c16VGuWMiJbupO9QWp16A/JZJksA==
-X-Received: by 2002:a63:130d:: with SMTP id i13mr98791173pgl.396.1558633187315;
-        Thu, 23 May 2019 10:39:47 -0700 (PDT)
-Received: from hari-Inspiron-1545 ([183.83.92.73])
-        by smtp.gmail.com with ESMTPSA id t25sm57118pfq.91.2019.05.23.10.39.43
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 23 May 2019 10:39:46 -0700 (PDT)
-Date:   Thu, 23 May 2019 23:09:41 +0530
-From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Vatsala Narang <vatsalanarang@gmail.com>,
-        Emanuel Bennici <benniciemanuel78@gmail.com>,
-        Nishka Dasgupta <nishka.dasgupta@yahoo.com>,
-        Hardik Singh Rathore <hardiksingh.k@gmail.com>,
-        Madhumitha Prabakaran <madhumithabiw@gmail.com>,
-        Michael Straube <straube.linux@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, Paolo Abeni <pabeni@redhat.com>,
-        Alexander Duyck <alexander.h.duyck@intel.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [Patch v3] staging: rtl8723bs: core: rtw_mlme_ext: fix warning
- Unneeded variable: "ret"
-Message-ID: <20190523173940.GA6591@hari-Inspiron-1545>
+        Thu, 23 May 2019 13:40:36 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:45258 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731195AbfEWRkf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 13:40:35 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 0DD0830C1AF9;
+        Thu, 23 May 2019 17:40:35 +0000 (UTC)
+Received: from kamzik.brq.redhat.com (unknown [10.43.2.160])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7CCF55C219;
+        Thu, 23 May 2019 17:40:30 +0000 (UTC)
+Date:   Thu, 23 May 2019 19:40:28 +0200
+From:   Andrew Jones <drjones@redhat.com>
+To:     Thomas Huth <thuth@redhat.com>
+Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-s390@vger.kernel.org
+Subject: Re: [PATCH 5/9] KVM: selftests: Align memory region addresses to 1M
+ on s390x
+Message-ID: <20190523174028.3giefzff3l5eclki@kamzik.brq.redhat.com>
+References: <20190523164309.13345-1-thuth@redhat.com>
+ <20190523164309.13345-6-thuth@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190523164309.13345-6-thuth@redhat.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Thu, 23 May 2019 17:40:35 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch fixes below warnings reported by coccicheck
+On Thu, May 23, 2019 at 06:43:05PM +0200, Thomas Huth wrote:
+> On s390x, there is a constraint that memory regions have to be aligned
+> to 1M (or running the VM will fail). Introduce a new "alignment" variable
+> in the vm_userspace_mem_region_add() function which now can be used for
+> both, huge page and s390x alignment requirements.
+> 
+> Signed-off-by: Thomas Huth <thuth@redhat.com>
+> ---
+>  tools/testing/selftests/kvm/lib/kvm_util.c | 21 ++++++++++++++++-----
+>  1 file changed, 16 insertions(+), 5 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
+> index 08edb8436c47..656df9d5cd4d 100644
+> --- a/tools/testing/selftests/kvm/lib/kvm_util.c
+> +++ b/tools/testing/selftests/kvm/lib/kvm_util.c
+> @@ -559,6 +559,7 @@ void vm_userspace_mem_region_add(struct kvm_vm *vm,
+>  	unsigned long pmem_size = 0;
+>  	struct userspace_mem_region *region;
+>  	size_t huge_page_size = KVM_UTIL_PGS_PER_HUGEPG * vm->page_size;
+> +	size_t alignment;
+>  
+>  	TEST_ASSERT((guest_paddr % vm->page_size) == 0, "Guest physical "
+>  		"address not on a page boundary.\n"
+> @@ -608,9 +609,20 @@ void vm_userspace_mem_region_add(struct kvm_vm *vm,
+>  	TEST_ASSERT(region != NULL, "Insufficient Memory");
+>  	region->mmap_size = npages * vm->page_size;
+>  
+> -	/* Enough memory to align up to a huge page. */
+> +#ifdef __s390x__
+> +	/* On s390x, the host address must be aligned to 1M (due to PGSTEs) */
+> +	alignment = 0x100000;
+> +#else
+> +	alignment = 1;
+> +#endif
+> +
+>  	if (src_type == VM_MEM_SRC_ANONYMOUS_THP)
+> -		region->mmap_size += huge_page_size;
+> +		alignment = huge_page_size;
 
-drivers/staging/rtl8723bs/core/rtw_mlme_ext.c:1888:14-17: Unneeded
-variable: "ret". Return "_FAIL" on line 1920
-drivers/staging/rtl8723bs/core/rtw_mlme_ext.c:466:5-8: Unneeded
-variable: "res". Return "_SUCCESS" on line 494
+I guess s390x won't ever support VM_MEM_SRC_ANONYMOUS_THP? If it does,
+then we need 'alignment = max(huge_page_size, alignment)'. Actually
+that might be a nice way to write this anyway for future-proofing.
 
-Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
-----
-changes in v2:
-                change return type of init_mlme_ext_priv() from int to
-                void
-                We cant change return type of on_action_spct() it is a
-                call back function from action_handler.
-                So directly return _FAIL from this function.
-changes in v3:
-		Dont remove initilization of init_mlme_ext_priv
----
- drivers/staging/rtl8723bs/core/rtw_mlme_ext.c    | 9 ++-------
- drivers/staging/rtl8723bs/include/rtw_mlme_ext.h | 2 +-
- drivers/staging/rtl8723bs/os_dep/os_intfs.c      | 6 +-----
- 3 files changed, 4 insertions(+), 13 deletions(-)
-
-diff --git a/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c b/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c
-index 65e8cba..4b0129c 100644
---- a/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c
-+++ b/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c
-@@ -458,9 +458,8 @@ static u8 init_channel_set(struct adapter *padapter, u8 ChannelPlan, RT_CHANNEL_
- 	return chanset_size;
- }
- 
--int	init_mlme_ext_priv(struct adapter *padapter)
-+void	init_mlme_ext_priv(struct adapter *padapter)
- {
--	int	res = _SUCCESS;
- 	struct registry_priv *pregistrypriv = &padapter->registrypriv;
- 	struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
- 	struct mlme_priv *pmlmepriv = &padapter->mlmepriv;
-@@ -487,9 +486,6 @@ int	init_mlme_ext_priv(struct adapter *padapter)
- #ifdef DBG_FIXED_CHAN
- 	pmlmeext->fixed_chan = 0xFF;
- #endif
--
--	return res;
--
- }
- 
- void free_mlme_ext_priv(struct mlme_ext_priv *pmlmeext)
-@@ -1881,7 +1877,6 @@ unsigned int OnAtim(struct adapter *padapter, union recv_frame *precv_frame)
- 
- unsigned int on_action_spct(struct adapter *padapter, union recv_frame *precv_frame)
- {
--	unsigned int ret = _FAIL;
- 	struct sta_info *psta = NULL;
- 	struct sta_priv *pstapriv = &padapter->stapriv;
- 	u8 *pframe = precv_frame->u.hdr.rx_data;
-@@ -1913,7 +1908,7 @@ unsigned int on_action_spct(struct adapter *padapter, union recv_frame *precv_fr
- 	}
- 
- exit:
--	return ret;
-+	return _FAIL;
- }
- 
- unsigned int OnAction_back(struct adapter *padapter, union recv_frame *precv_frame)
-diff --git a/drivers/staging/rtl8723bs/include/rtw_mlme_ext.h b/drivers/staging/rtl8723bs/include/rtw_mlme_ext.h
-index f6eabad..0eb2da5 100644
---- a/drivers/staging/rtl8723bs/include/rtw_mlme_ext.h
-+++ b/drivers/staging/rtl8723bs/include/rtw_mlme_ext.h
-@@ -535,7 +535,7 @@ struct mlme_ext_priv
- };
- 
- void init_mlme_default_rate_set(struct adapter *padapter);
--int init_mlme_ext_priv(struct adapter *padapter);
-+void init_mlme_ext_priv(struct adapter *padapter);
- int init_hw_mlme_ext(struct adapter *padapter);
- void free_mlme_ext_priv (struct mlme_ext_priv *pmlmeext);
- extern void init_mlme_ext_timer(struct adapter *padapter);
-diff --git a/drivers/staging/rtl8723bs/os_dep/os_intfs.c b/drivers/staging/rtl8723bs/os_dep/os_intfs.c
-index 8a9d838..4afb35b 100644
---- a/drivers/staging/rtl8723bs/os_dep/os_intfs.c
-+++ b/drivers/staging/rtl8723bs/os_dep/os_intfs.c
-@@ -774,11 +774,7 @@ u8 rtw_init_drv_sw(struct adapter *padapter)
- 		goto exit;
- 	}
- 
--	if (init_mlme_ext_priv(padapter) == _FAIL) {
--		RT_TRACE(_module_os_intfs_c_, _drv_err_, ("\n Can't init mlme_ext_priv\n"));
--		ret8 = _FAIL;
--		goto exit;
--	}
-+	init_mlme_ext_priv(padapter); 
- 
- 	if (_rtw_init_xmit_priv(&padapter->xmitpriv, padapter) == _FAIL) {
- 		DBG_871X("Can't _rtw_init_xmit_priv\n");
--- 
-2.7.4
-
+> +
+> +	/* Add enough memory to align up if necessary */
+> +	if (alignment > 1)
+> +		region->mmap_size += alignment;
+> +
+>  	region->mmap_start = mmap(NULL, region->mmap_size,
+>  				  PROT_READ | PROT_WRITE,
+>  				  MAP_PRIVATE | MAP_ANONYMOUS
+> @@ -620,9 +632,8 @@ void vm_userspace_mem_region_add(struct kvm_vm *vm,
+>  		    "test_malloc failed, mmap_start: %p errno: %i",
+>  		    region->mmap_start, errno);
+>  
+> -	/* Align THP allocation up to start of a huge page. */
+> -	region->host_mem = align(region->mmap_start,
+> -				 src_type == VM_MEM_SRC_ANONYMOUS_THP ?  huge_page_size : 1);
+> +	/* Align host address */
+> +	region->host_mem = align(region->mmap_start, alignment);
+>  
+>  	/* As needed perform madvise */
+>  	if (src_type == VM_MEM_SRC_ANONYMOUS || src_type == VM_MEM_SRC_ANONYMOUS_THP) {
+> -- 
+> 2.21.0
+> 
