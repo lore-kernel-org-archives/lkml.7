@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8550DC282DE
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:15:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1357C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:15:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C8BF21841
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:15:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88F7F20863
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:15:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558638923;
-	bh=tQ4EPmHa88YeE+lsAVf8RF8bcxRpc2MVqWookuBRWD0=;
+	s=default; t=1558638925;
+	bh=7CsxQZnR9OEYV73h7mR3bBrUUkWb0cqJ/BNieI70RKk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gld0khlluQNBdzrwLef022BZW0kUi/ivClVztS1ZWSzSTOqmBf08ryG4onaJdPyPQ
-	 Ibx3NVr/hGJzRtIhzuD8phpQJcVY+m3vku/3P4z8Gy95YhTi8J37/ebxxy8A3qG2hj
-	 pvvTtIw47rj2pzAqfnuOnqTXnhGPgPAfbKdwubbw=
+	b=0/6J8NyWoYEakdvRlboE9y1eKo0bOHeIeJRocNIBxZfujZmz+P0rqoKefgRdqb7xr
+	 TF/t/mlfW7XK5a5R496sfj+hA2zNFZoxk4XVsHEwigmY27PyUSUUHQr/DPHKJ7L0gY
+	 iSoEMj9ve3vPI0fuZ5o3TEG1uMlsX4hjI8QwI8eo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388950AbfEWTPW (ORCPT
+        id S2388961AbfEWTPY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:15:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49642 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:15:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49700 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388939AbfEWTPU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:15:20 -0400
+        id S2388949AbfEWTPW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:15:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F0964217D7;
-        Thu, 23 May 2019 19:15:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B100520863;
+        Thu, 23 May 2019 19:15:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558638919;
-        bh=tQ4EPmHa88YeE+lsAVf8RF8bcxRpc2MVqWookuBRWD0=;
+        s=default; t=1558638922;
+        bh=7CsxQZnR9OEYV73h7mR3bBrUUkWb0cqJ/BNieI70RKk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KpejofUAkIGC8wpr2Cc8Wvb5xABlKXzdSXxdg3InDlPVdtrmx5Xbbfvxth7yn57Jd
-         w27dGhA1M84BQeN4bC7CEa7bOtreLsbPgIXPTNxaWV4sd+jTSMUD5UWzlqZTHrlxYm
-         6Bu9hJpqdRSJ42qObaz1U34QfSvRAflU/EJsitKE=
+        b=riHhQBKK7t12tUoZrGNCPWO3ChJDLU82QPzi7uRx7m5rs4rKzwcx2LHCfNIIlibjl
+         yzCqEK/mMbVDXio+pFNHkVJ57DbD1apwSXZ/kExiLTDaPGs2MWmPfr6d2ZTBIYpLB0
+         KuKqVUf0BIHzsm2BWaYYm022GlVZ/FpT0DAO8kr8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stefano Garzarella <sgarzare@redhat.com>,
+        stable@vger.kernel.org, Junwei Hu <hujunwei4@huawei.com>,
+        Wang Wang <wangwang2@huawei.com>,
+        Kang Zhou <zhoukang7@huawei.com>,
+        Suanming Mou <mousuanming@huawei.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 012/114] vsock/virtio: free packets during the socket release
-Date:   Thu, 23 May 2019 21:05:11 +0200
-Message-Id: <20190523181732.808465017@linuxfoundation.org>
+Subject: [PATCH 4.19 013/114] tipc: fix modprobe tipc failed after switch order of device registration
+Date:   Thu, 23 May 2019 21:05:12 +0200
+Message-Id: <20190523181732.929512140@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181731.372074275@linuxfoundation.org>
 References: <20190523181731.372074275@linuxfoundation.org>
@@ -59,42 +62,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefano Garzarella <sgarzare@redhat.com>
+From: Junwei Hu <hujunwei4@huawei.com>
 
-[ Upstream commit ac03046ece2b158ebd204dfc4896fd9f39f0e6c8 ]
+[ Upstream commit 532b0f7ece4cb2ffd24dc723ddf55242d1188e5e ]
 
-When the socket is released, we should free all packets
-queued in the per-socket list in order to avoid a memory
-leak.
+Error message printed:
+modprobe: ERROR: could not insert 'tipc': Address family not
+supported by protocol.
+when modprobe tipc after the following patch: switch order of
+device registration, commit 7e27e8d6130c
+("tipc: switch order of device registration to fix a crash")
 
-Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+Because sock_create_kern(net, AF_TIPC, ...) is called by
+tipc_topsrv_create_listener() in the initialization process
+of tipc_net_ops, tipc_socket_init() must be execute before that.
+
+I move tipc_socket_init() into function tipc_init_net().
+
+Fixes: 7e27e8d6130c
+("tipc: switch order of device registration to fix a crash")
+Signed-off-by: Junwei Hu <hujunwei4@huawei.com>
+Reported-by: Wang Wang <wangwang2@huawei.com>
+Reviewed-by: Kang Zhou <zhoukang7@huawei.com>
+Reviewed-by: Suanming Mou <mousuanming@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/vmw_vsock/virtio_transport_common.c |    7 +++++++
- 1 file changed, 7 insertions(+)
+ net/tipc/core.c |   14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
---- a/net/vmw_vsock/virtio_transport_common.c
-+++ b/net/vmw_vsock/virtio_transport_common.c
-@@ -786,12 +786,19 @@ static bool virtio_transport_close(struc
+--- a/net/tipc/core.c
++++ b/net/tipc/core.c
+@@ -66,6 +66,10 @@ static int __net_init tipc_init_net(stru
+ 	INIT_LIST_HEAD(&tn->node_list);
+ 	spin_lock_init(&tn->node_list_lock);
  
- void virtio_transport_release(struct vsock_sock *vsk)
- {
-+	struct virtio_vsock_sock *vvs = vsk->trans;
-+	struct virtio_vsock_pkt *pkt, *tmp;
- 	struct sock *sk = &vsk->sk;
- 	bool remove_sock = true;
- 
- 	lock_sock(sk);
- 	if (sk->sk_type == SOCK_STREAM)
- 		remove_sock = virtio_transport_close(vsk);
++	err = tipc_socket_init();
++	if (err)
++		goto out_socket;
 +
-+	list_for_each_entry_safe(pkt, tmp, &vvs->rx_queue, list) {
-+		list_del(&pkt->list);
-+		virtio_transport_free_pkt(pkt);
-+	}
- 	release_sock(sk);
+ 	err = tipc_sk_rht_init(net);
+ 	if (err)
+ 		goto out_sk_rht;
+@@ -92,6 +96,8 @@ out_subscr:
+ out_nametbl:
+ 	tipc_sk_rht_destroy(net);
+ out_sk_rht:
++	tipc_socket_stop();
++out_socket:
+ 	return err;
+ }
  
- 	if (remove_sock)
+@@ -102,6 +108,7 @@ static void __net_exit tipc_exit_net(str
+ 	tipc_bcast_stop(net);
+ 	tipc_nametbl_stop(net);
+ 	tipc_sk_rht_destroy(net);
++	tipc_socket_stop();
+ }
+ 
+ static struct pernet_operations tipc_net_ops = {
+@@ -137,10 +144,6 @@ static int __init tipc_init(void)
+ 	if (err)
+ 		goto out_pernet;
+ 
+-	err = tipc_socket_init();
+-	if (err)
+-		goto out_socket;
+-
+ 	err = tipc_bearer_setup();
+ 	if (err)
+ 		goto out_bearer;
+@@ -148,8 +151,6 @@ static int __init tipc_init(void)
+ 	pr_info("Started in single node mode\n");
+ 	return 0;
+ out_bearer:
+-	tipc_socket_stop();
+-out_socket:
+ 	unregister_pernet_subsys(&tipc_net_ops);
+ out_pernet:
+ 	tipc_unregister_sysctl();
+@@ -165,7 +166,6 @@ out_netlink:
+ static void __exit tipc_exit(void)
+ {
+ 	tipc_bearer_cleanup();
+-	tipc_socket_stop();
+ 	unregister_pernet_subsys(&tipc_net_ops);
+ 	tipc_netlink_stop();
+ 	tipc_netlink_compat_stop();
 
 
