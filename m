@@ -2,96 +2,100 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EBF7C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 12:02:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18E2CC282DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 12:02:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C5FD21019
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 12:02:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFD29217D4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 12:02:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="SaXnObYz"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=skidata.com header.i=@skidata.com header.b="kr7EZROg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730745AbfEWMCo (ORCPT
+        id S1730766AbfEWMCv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 08:02:44 -0400
-Received: from first.geanix.com ([116.203.34.67]:60988 "EHLO first.geanix.com"
+        Thu, 23 May 2019 08:02:51 -0400
+Received: from mail1.skidata.com ([91.230.2.99]:1640 "EHLO mail1.skidata.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730718AbfEWMCn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 08:02:43 -0400
-Received: from localhost (unknown [193.163.1.7])
-        by first.geanix.com (Postfix) with ESMTPSA id 9CC971173;
-        Thu, 23 May 2019 12:01:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=geanix.com; s=first;
-        t=1558612910; bh=4qHd8Py9Up+qZTBH6TcBDfKSmHpp4v/tKKzuTrnyayg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=SaXnObYzu6eGVxxRWGAjvw1VwK9pIMe87nh05+w8EmbgK4z8skYuqic6khjFx7h2K
-         S2I+nK61H8PBRBu3wtK77mwo0HQtFYPIb+OhEdxiAx5MUwgJb5E5vBiAVhqw8xpOiS
-         5ch5kIVOWPYK7rcVGM+Oi4X65oF4/yeIflIHqO7odryCv6EbyzgFqvfvQCV2kGpr3G
-         /4FSMI1xy/4hcU/g4Jk7wYa90wMTET7u43QigNbT+x0YAzTWpcZopZByjkvqJyKden
-         F4Ljg6HFOv1SneD7IpypXmtX0hTdcYXgmOpoKufFew/csKDormdgkpGXNF/3d8fty5
-         8JXjBxqHi9KWQ==
-From:   Esben Haabendal <esben@geanix.com>
-To:     netdev@vger.kernel.org
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        YueHaibing <yuehaibing@huawei.com>,
-        =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>,
-        Yang Wei <yang.wei9@zte.com.cn>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 4/4] net: ll_temac: Enable multicast support
-Date:   Thu, 23 May 2019 14:02:22 +0200
-Message-Id: <20190523120222.3807-5-esben@geanix.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190523120222.3807-1-esben@geanix.com>
-References: <20190523120222.3807-1-esben@geanix.com>
+        id S1730718AbfEWMCt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 08:02:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=skidata.com; i=@skidata.com; q=dns/txt; s=selector1;
+  t=1558612990; x=1590148990;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=Dt1RwWKGRYAmHL3AQGW/WA+Xv9Nz3QFAbtm/2pBA4V8=;
+  b=kr7EZROgALQK3PAU5bdZTG/k65AC8oC4toCZA0o6vHQI8+h0DHFk6rFF
+   Lm220aUD+efn+6BbdkiKScptnwSX65c4LnKJabekSIL+Zxgg+dR4NU9qa
+   FIEsqRgMupAwuGXJxpqjCbntSA8wL18ve9hD5RaBAqIiTNGzuNAtOGUjc
+   y2950S8AMsT1r6iBIP4nYAilu9ot9kdeDPL61Es3xaBbu/1GWeXIcoUYg
+   ISJuHAWIla65/0ENK39g8Yf0sjrfBYN5d8FGYbvv+b48fOxSKWrXK6j4a
+   QyIoVdrcPYxbAAqvpHP9JIloRUqX4pqdgQ/mxggENiv28e4L1JWBuHeQG
+   g==;
+IronPort-SDR: XfBgvtQ6XG95VFargmwHfeGTmwywlni3u9DY3/VMccbeIT9OT6G5vz5anaLVQnNErCM46IfWP5
+ 3BoO8nqsG48Qslyuxh5xrtGxLgQObJw4mgbqkLXoGDN1RflzoLQExoogRLIM9SA3D5e6bA6GD+
+ 1L6liGYURFeJhNZW0RWWeCXaY3Vi5Xwy16jBgJhTtMQQcy8qHsv+oHhZG4Ze1yNFCZswLqEAar
+ Bgfzn/FqLYCqVHD2k31mMvuu+lwp1RIkVeENr0QW6Laslyef3KUpMdhIwnzMxJYT19XAeRs+bo
+ Y5c=
+X-IronPort-AV: E=Sophos;i="5.60,502,1549926000"; 
+   d="scan'208";a="17248266"
+From:   Richard Leitner <richard.leitner@skidata.com>
+To:     <a.zummo@towertech.it>, <alexandre.belloni@bootlin.com>
+CC:     <linux-rtc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Richard Leitner <richard.leitner@skidata.com>
+Subject: [PATCH v2 2/4] rtc: s35390a: set uie_unsupported
+Date:   Thu, 23 May 2019 13:54:49 +0200
+Message-ID: <20190523115451.20007-3-richard.leitner@skidata.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190523115451.20007-1-richard.leitner@skidata.com>
+References: <20190523115451.20007-1-richard.leitner@skidata.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [192.168.111.252]
+X-ClientProxiedBy: sdex4srv.skidata.net (192.168.111.82) To
+ sdex5srv.skidata.net (192.168.111.83)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Multicast support have been tested and is working now.
+Alarms are only supported on a per minute basis. This is why
+uie_unsupported is set. Furthermore issue a warning when a second based
+alarm is requested.
 
-Signed-off-by: Esben Haabendal <esben@geanix.com>
+Signed-off-by: Richard Leitner <richard.leitner@skidata.com>
 ---
- drivers/net/ethernet/xilinx/ll_temac_main.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/rtc/rtc-s35390a.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/net/ethernet/xilinx/ll_temac_main.c b/drivers/net/ethernet/xilinx/ll_temac_main.c
-index 75da604..5d8894d 100644
---- a/drivers/net/ethernet/xilinx/ll_temac_main.c
-+++ b/drivers/net/ethernet/xilinx/ll_temac_main.c
-@@ -21,7 +21,6 @@
-  *
-  * TODO:
-  * - Factor out locallink DMA code into separate driver
-- * - Fix multicast assignment.
-  * - Fix support for hardware checksumming.
-  * - Testing.  Lots and lots of testing.
-  *
-@@ -1096,6 +1095,7 @@ static const struct net_device_ops temac_netdev_ops = {
- 	.ndo_open = temac_open,
- 	.ndo_stop = temac_stop,
- 	.ndo_start_xmit = temac_start_xmit,
-+	.ndo_set_rx_mode = temac_set_multicast_list,
- 	.ndo_set_mac_address = temac_set_mac_address,
- 	.ndo_validate_addr = eth_validate_addr,
- 	.ndo_do_ioctl = temac_ioctl,
-@@ -1161,7 +1161,6 @@ static int temac_probe(struct platform_device *pdev)
+diff --git a/drivers/rtc/rtc-s35390a.c b/drivers/rtc/rtc-s35390a.c
+index fb795c454077..4ca37f281ed9 100644
+--- a/drivers/rtc/rtc-s35390a.c
++++ b/drivers/rtc/rtc-s35390a.c
+@@ -289,6 +289,9 @@ static int s35390a_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alm)
+ 		alm->time.tm_min, alm->time.tm_hour, alm->time.tm_mday,
+ 		alm->time.tm_mon, alm->time.tm_year, alm->time.tm_wday);
  
- 	platform_set_drvdata(pdev, ndev);
- 	SET_NETDEV_DEV(ndev, &pdev->dev);
--	ndev->flags &= ~IFF_MULTICAST;  /* clear multicast */
- 	ndev->features = NETIF_F_SG;
- 	ndev->netdev_ops = &temac_netdev_ops;
- 	ndev->ethtool_ops = &temac_ethtool_ops;
++	if (alm->time.tm_sec != 0)
++		dev_warn(&client->dev, "Alarms are only supported on a per minute basis!\n");
++
+ 	/* disable interrupt (which deasserts the irq line) */
+ 	err = s35390a_set_reg(s35390a, S35390A_CMD_STATUS2, &sts, sizeof(sts));
+ 	if (err < 0)
+@@ -500,6 +503,9 @@ static int s35390a_probe(struct i2c_client *client,
+ 		goto exit_dummy;
+ 	}
+ 
++	/* supports per-minute alarms only, therefore set uie_unsupported */
++	s35390a->rtc->uie_unsupported = 1;
++
+ 	if (status1 & S35390A_FLAG_INT2)
+ 		rtc_update_irq(s35390a->rtc, 1, RTC_AF);
+ 
 -- 
-2.4.11
+2.20.1
 
