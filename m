@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBFDDC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:28:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AFC8C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:28:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA217206BA
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:28:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02EA72133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:28:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639726;
-	bh=qpl016BkmSFCvPID8ZSSBPcjs49qlh2T94srlmxYxog=;
+	s=default; t=1558639731;
+	bh=HouLTLqIqjRCwjXfcBrJZTlxNRJEi9ykC66tBSDO8QI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=011KzuVrcOXsNDwH7f4rDNCLZBwm0nQLBiCYM/X0oo3qL47JGvvpgUaXo+nu1fZ+z
-	 J+CyOChJqBzQo9XCEKOVtB0KNLEbvPGEAdAAclUYXX9tZwlmKimqAnO4mmkCBkz7tz
-	 6f+SplCzN3nBChBhkjEXTWxpvXFkqOS9aVOIm9VM=
+	b=Gi69/PLZITE0RJhwKios9mnrokKVHYMsleseM4zAwqMJC+dV8lodWVE6S0+eDyR5v
+	 4GjzmuNO0l7CjZpX5jyWcjHF5o/rZxTBk48E0DZUW0MtjgsrT4+2Sy/+WunPwnCzfU
+	 Eh5sbqHLrsE0FE9RbuB3ESnCN/OC81Fcsuw0Au/A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391821AbfEWT2p (ORCPT
+        id S2403755AbfEWT2u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:28:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41410 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:28:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41444 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391222AbfEWT2l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:28:41 -0400
+        id S2391810AbfEWT2o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:28:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 889722054F;
-        Thu, 23 May 2019 19:28:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3AC63206BA;
+        Thu, 23 May 2019 19:28:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639721;
-        bh=qpl016BkmSFCvPID8ZSSBPcjs49qlh2T94srlmxYxog=;
+        s=default; t=1558639723;
+        bh=HouLTLqIqjRCwjXfcBrJZTlxNRJEi9ykC66tBSDO8QI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=snqvrKZqCR+dP+UrWIgD3uRcGQM/YfG8+KnUdeIGRwanRlOwujJ649N6DIQJ3psra
-         5fboz1O9YQlvLwxfbQ9vPvJjF/Om1pm5FxBulruON4dQuXxpnFyGiUtkNncNRsJj9k
-         YleBCdvxBQAV32nvmVhJaTWBgdIgAnieOj/Uc0tY=
+        b=UUKkSCsgq/v5chWw/k1acTKEP+v4lPx64jgsbi2Zpqvr+DLwL5TcmkNpWyIKztz21
+         24maJhlA4sQ+rzNPTgj7/hH3o+tySpAX2vfC6etvZE6w4OAgjbMVxQXT4ZVYBPatCV
+         5bfvhVI5WCreARiMbrmGtumaP6TCpXzc+9nCJyMY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Douglas Anderson <dianders@chromium.org>,
-        Kees Cook <keescook@chromium.org>
-Subject: [PATCH 5.1 070/122] gcc-plugins: arm_ssp_per_task_plugin: Fix for older GCC < 6
-Date:   Thu, 23 May 2019 21:06:32 +0200
-Message-Id: <20190523181713.987899105@linuxfoundation.org>
+        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Joerg Roedel <jroedel@suse.de>
+Subject: [PATCH 5.1 071/122] iommu/tegra-smmu: Fix invalid ASID bits on Tegra30/114
+Date:   Thu, 23 May 2019 21:06:33 +0200
+Message-Id: <20190523181714.112401613@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181705.091418060@linuxfoundation.org>
 References: <20190523181705.091418060@linuxfoundation.org>
@@ -61,46 +60,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Packham <chris.packham@alliedtelesis.co.nz>
+From: Dmitry Osipenko <digetx@gmail.com>
 
-commit 259799ea5a9aa099a267f3b99e1f7078bbaf5c5e upstream.
+commit 43a0541e312f7136e081e6bf58f6c8a2e9672688 upstream.
 
-Use gen_rtx_set instead of gen_rtx_SET. The former is a wrapper macro
-that handles the difference between GCC versions implementing
-the latter.
+Both Tegra30 and Tegra114 have 4 ASID's and the corresponding bitfield of
+the TLB_FLUSH register differs from later Tegra generations that have 128
+ASID's.
 
-This fixes the following error on my system with g++ 5.4.0 as the host
-compiler
+In a result the PTE's are now flushed correctly from TLB and this fixes
+problems with graphics (randomly failing tests) on Tegra30.
 
-   HOSTCXX -fPIC scripts/gcc-plugins/arm_ssp_per_task_plugin.o
- scripts/gcc-plugins/arm_ssp_per_task_plugin.c:42:14: error: macro "gen_rtx_SET" requires 3 arguments, but only 2 given
-          mask)),
-               ^
- scripts/gcc-plugins/arm_ssp_per_task_plugin.c: In function ‘unsigned int arm_pertask_ssp_rtl_execute()’:
- scripts/gcc-plugins/arm_ssp_per_task_plugin.c:39:20: error: ‘gen_rtx_SET’ was not declared in this scope
-    emit_insn_before(gen_rtx_SET
-
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Fixes: 189af4657186 ("ARM: smp: add support for per-task stack canaries")
-Cc: stable@vger.kernel.org
-Tested-by: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Kees Cook <keescook@chromium.org>
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Acked-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- scripts/gcc-plugins/arm_ssp_per_task_plugin.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/iommu/tegra-smmu.c |   25 ++++++++++++++++++-------
+ 1 file changed, 18 insertions(+), 7 deletions(-)
 
---- a/scripts/gcc-plugins/arm_ssp_per_task_plugin.c
-+++ b/scripts/gcc-plugins/arm_ssp_per_task_plugin.c
-@@ -36,7 +36,7 @@ static unsigned int arm_pertask_ssp_rtl_
- 		mask = GEN_INT(sext_hwi(sp_mask, GET_MODE_PRECISION(Pmode)));
- 		masked_sp = gen_reg_rtx(Pmode);
+--- a/drivers/iommu/tegra-smmu.c
++++ b/drivers/iommu/tegra-smmu.c
+@@ -102,7 +102,6 @@ static inline u32 smmu_readl(struct tegr
+ #define  SMMU_TLB_FLUSH_VA_MATCH_ALL     (0 << 0)
+ #define  SMMU_TLB_FLUSH_VA_MATCH_SECTION (2 << 0)
+ #define  SMMU_TLB_FLUSH_VA_MATCH_GROUP   (3 << 0)
+-#define  SMMU_TLB_FLUSH_ASID(x)          (((x) & 0x7f) << 24)
+ #define  SMMU_TLB_FLUSH_VA_SECTION(addr) ((((addr) & 0xffc00000) >> 12) | \
+ 					  SMMU_TLB_FLUSH_VA_MATCH_SECTION)
+ #define  SMMU_TLB_FLUSH_VA_GROUP(addr)   ((((addr) & 0xffffc000) >> 12) | \
+@@ -205,8 +204,12 @@ static inline void smmu_flush_tlb_asid(s
+ {
+ 	u32 value;
  
--		emit_insn_before(gen_rtx_SET(masked_sp,
-+		emit_insn_before(gen_rtx_set(masked_sp,
- 					     gen_rtx_AND(Pmode,
- 							 stack_pointer_rtx,
- 							 mask)),
+-	value = SMMU_TLB_FLUSH_ASID_MATCH | SMMU_TLB_FLUSH_ASID(asid) |
+-		SMMU_TLB_FLUSH_VA_MATCH_ALL;
++	if (smmu->soc->num_asids == 4)
++		value = (asid & 0x3) << 29;
++	else
++		value = (asid & 0x7f) << 24;
++
++	value |= SMMU_TLB_FLUSH_ASID_MATCH | SMMU_TLB_FLUSH_VA_MATCH_ALL;
+ 	smmu_writel(smmu, value, SMMU_TLB_FLUSH);
+ }
+ 
+@@ -216,8 +219,12 @@ static inline void smmu_flush_tlb_sectio
+ {
+ 	u32 value;
+ 
+-	value = SMMU_TLB_FLUSH_ASID_MATCH | SMMU_TLB_FLUSH_ASID(asid) |
+-		SMMU_TLB_FLUSH_VA_SECTION(iova);
++	if (smmu->soc->num_asids == 4)
++		value = (asid & 0x3) << 29;
++	else
++		value = (asid & 0x7f) << 24;
++
++	value |= SMMU_TLB_FLUSH_ASID_MATCH | SMMU_TLB_FLUSH_VA_SECTION(iova);
+ 	smmu_writel(smmu, value, SMMU_TLB_FLUSH);
+ }
+ 
+@@ -227,8 +234,12 @@ static inline void smmu_flush_tlb_group(
+ {
+ 	u32 value;
+ 
+-	value = SMMU_TLB_FLUSH_ASID_MATCH | SMMU_TLB_FLUSH_ASID(asid) |
+-		SMMU_TLB_FLUSH_VA_GROUP(iova);
++	if (smmu->soc->num_asids == 4)
++		value = (asid & 0x3) << 29;
++	else
++		value = (asid & 0x7f) << 24;
++
++	value |= SMMU_TLB_FLUSH_ASID_MATCH | SMMU_TLB_FLUSH_VA_GROUP(iova);
+ 	smmu_writel(smmu, value, SMMU_TLB_FLUSH);
+ }
+ 
 
 
