@@ -2,110 +2,123 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9576C282CE
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 03:22:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4373C282CE
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 03:23:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96E962075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 03:22:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="FcSdihHY"
+	by mail.kernel.org (Postfix) with ESMTP id 8938F2075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 03:23:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729777AbfEWDW6 (ORCPT
+        id S1729826AbfEWDXK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 23:22:58 -0400
-Received: from mail-eopbgr140072.outbound.protection.outlook.com ([40.107.14.72]:48611
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728237AbfEWDW6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 23:22:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=I0rtOIBIqBF899Xf1I66bwMTzGs+Lq9hq0oUhmkYebo=;
- b=FcSdihHYjyznr9CIru/7rz09Zn0VC4TM4l2pZRcgrqYFWUPxbEV9U3eeSS8lo227O1RJz2c0sh5BwPZP0MdeZkBsBBtmqrtnE6KBR0LZ60siZFo3AsNzHfCaw5uu/Zunuf9HFdBPtki72EHL8YuieEcMRjBhiQ4vwsbVrU2xGAM=
-Received: from AM0PR04MB4211.eurprd04.prod.outlook.com (52.134.92.158) by
- AM0PR04MB6676.eurprd04.prod.outlook.com (20.179.255.161) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1922.16; Thu, 23 May 2019 03:22:54 +0000
-Received: from AM0PR04MB4211.eurprd04.prod.outlook.com
- ([fe80::c415:3cab:a042:2e13]) by AM0PR04MB4211.eurprd04.prod.outlook.com
- ([fe80::c415:3cab:a042:2e13%6]) with mapi id 15.20.1900.020; Thu, 23 May 2019
- 03:22:54 +0000
-From:   Aisheng Dong <aisheng.dong@nxp.com>
-To:     Anson Huang <anson.huang@nxp.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>,
-        "agross@kernel.org" <agross@kernel.org>,
-        "olof@lixom.net" <olof@lixom.net>,
-        "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>,
-        "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>,
-        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "dinguyen@kernel.org" <dinguyen@kernel.org>,
-        "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH V5 2/2] arm64: defconfig: Add i.MX SCU SoC info driver
-Thread-Topic: [PATCH V5 2/2] arm64: defconfig: Add i.MX SCU SoC info driver
-Thread-Index: AQHVEGblzlrg+sJQ0UyXeIb9I0g1x6Z4DK/g
-Date:   Thu, 23 May 2019 03:22:53 +0000
-Message-ID: <AM0PR04MB4211D3E1C91551964062C7C180010@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <1558505898-722-1-git-send-email-Anson.Huang@nxp.com>
- <1558505898-722-2-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1558505898-722-2-git-send-email-Anson.Huang@nxp.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=aisheng.dong@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: efa89dc6-da16-4479-caa3-08d6df2df1a8
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:AM0PR04MB6676;
-x-ms-traffictypediagnostic: AM0PR04MB6676:
-x-microsoft-antispam-prvs: <AM0PR04MB6676C3984456FBA85696DC4380010@AM0PR04MB6676.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:350;
-x-forefront-prvs: 00462943DE
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(376002)(366004)(136003)(396003)(39860400002)(189003)(199004)(186003)(44832011)(305945005)(8936002)(5660300002)(81156014)(7736002)(8676002)(25786009)(71200400001)(2201001)(71190400001)(74316002)(55016002)(81166006)(229853002)(316002)(26005)(11346002)(33656002)(446003)(256004)(66946007)(73956011)(4326008)(3846002)(76116006)(6116002)(52536014)(2501003)(558084003)(476003)(66066001)(2906002)(486006)(66556008)(64756008)(66446008)(66476007)(14454004)(6246003)(9686003)(110136005)(6506007)(99286004)(478600001)(6436002)(68736007)(7696005)(53936002)(102836004)(86362001)(76176011)(7416002)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB6676;H:AM0PR04MB4211.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: /lO6POIA9DwaRblDkWBnw9GfuHTiN4+moCkOtdGTOCm8TKniEYg89JsdGyDsMX35ByThqjMZIgTthGbn176C+p36lg6KCqg/VlKYGcdpO75e1ZGGpqRVUPrVFEtsQUVgO4dwv7/A+6tEHwsPAH6ltym1hKRpQiZlvRFjHC/EU3OT6HPVlu/DTiYNO0vmj0TSkMk3B0RmAFBadyWS2BlYtv1lytSbiZFO15wvgfd3p2rMcQGKxKVnaJqlyTjJrnsbqnh+dXUn/wiJ4sB+c3MUIEq+KFU1q2ImRDvKa3e5aFO5CG1SYOlC7Go7By78tQHV6KTD5rHqb5ZF46RlWmuGYfb3Dz4XYDvWIyZJ6S22+CYL/w/d9ZHSOfN7dO+C73ofq7oqtGRdRSO7uq5UPg8ChqYimnqQ4KK8ifvuL2EPV3M=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 22 May 2019 23:23:10 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58732 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728237AbfEWDXK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 23:23:10 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 017E5C057F2F;
+        Thu, 23 May 2019 03:23:10 +0000 (UTC)
+Received: from dhcp-128-65.nay.redhat.com (ovpn-12-185.pek2.redhat.com [10.72.12.185])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9AED218687;
+        Thu, 23 May 2019 03:23:06 +0000 (UTC)
+Date:   Thu, 23 May 2019 11:23:02 +0800
+From:   Dave Young <dyoung@redhat.com>
+To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>
+Cc:     linuxppc-dev@lists.ozlabs.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: Re: [PATCH] powerpc: Fix loading of kernel + initramfs with
+ kexec_file_load()
+Message-ID: <20190523032302.GD8174@dhcp-128-65.nay.redhat.com>
+References: <20190522220158.18479-1-bauerman@linux.ibm.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: efa89dc6-da16-4479-caa3-08d6df2df1a8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 May 2019 03:22:53.9587
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6676
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190522220158.18479-1-bauerman@linux.ibm.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Thu, 23 May 2019 03:23:10 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBGcm9tOiBBbnNvbiBIdWFuZw0KPiBTZW50OiBXZWRuZXNkYXksIE1heSAyMiwgMjAxOSAyOjI0
-IFBNDQo+IA0KPiBUaGlzIHBhdGNoIHNlbGVjdHMgQ09ORklHX0lNWF9TQ1VfU09DIGJ5IGRlZmF1
-bHQgdG8gc3VwcG9ydCBpLk1YIHN5c3RlbQ0KPiBjb250cm9sbGVyIHVuaXQgU29DIGluZm8gZHJp
-dmVyLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogQW5zb24gSHVhbmcgPEFuc29uLkh1YW5nQG54cC5j
-b20+DQoNClJldmlld2VkLWJ5OiBEb25nIEFpc2hlbmcgPGFpc2hlbmcuZG9uZ0BueHAuY29tPg0K
-DQpSZWdhcmRzDQpEb25nIEFpc2hlbmcNCg==
+On 05/22/19 at 07:01pm, Thiago Jung Bauermann wrote:
+> Commit b6664ba42f14 ("s390, kexec_file: drop arch_kexec_mem_walk()")
+> changed kexec_add_buffer() to skip searching for a memory location if
+> kexec_buf.mem is already set, and use the address that is there.
+> 
+> In powerpc code we reuse a kexec_buf variable for loading both the kernel
+> and the initramfs by resetting some of the fields between those uses, but
+> not mem. This causes kexec_add_buffer() to try to load the kernel at the
+> same address where initramfs will be loaded, which is naturally rejected:
+> 
+>   # kexec -s -l --initrd initramfs vmlinuz
+>   kexec_file_load failed: Invalid argument
+> 
+> Setting the mem field before every call to kexec_add_buffer() fixes this
+> regression.
+> 
+> Fixes: b6664ba42f14 ("s390, kexec_file: drop arch_kexec_mem_walk()")
+> Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
+> ---
+>  arch/powerpc/kernel/kexec_elf_64.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/powerpc/kernel/kexec_elf_64.c b/arch/powerpc/kernel/kexec_elf_64.c
+> index ba4f18a43ee8..52a29fc73730 100644
+> --- a/arch/powerpc/kernel/kexec_elf_64.c
+> +++ b/arch/powerpc/kernel/kexec_elf_64.c
+> @@ -547,6 +547,7 @@ static int elf_exec_load(struct kimage *image, struct elfhdr *ehdr,
+>  		kbuf.memsz = phdr->p_memsz;
+>  		kbuf.buf_align = phdr->p_align;
+>  		kbuf.buf_min = phdr->p_paddr + base;
+> +		kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
+>  		ret = kexec_add_buffer(&kbuf);
+>  		if (ret)
+>  			goto out;
+> @@ -581,7 +582,8 @@ static void *elf64_load(struct kimage *image, char *kernel_buf,
+>  	struct kexec_buf kbuf = { .image = image, .buf_min = 0,
+>  				  .buf_max = ppc64_rma_size };
+>  	struct kexec_buf pbuf = { .image = image, .buf_min = 0,
+> -				  .buf_max = ppc64_rma_size, .top_down = true };
+> +				  .buf_max = ppc64_rma_size, .top_down = true,
+> +				  .mem = KEXEC_BUF_MEM_UNKNOWN };
+>  
+>  	ret = build_elf_exec_info(kernel_buf, kernel_len, &ehdr, &elf_info);
+>  	if (ret)
+> @@ -606,6 +608,7 @@ static void *elf64_load(struct kimage *image, char *kernel_buf,
+>  		kbuf.bufsz = kbuf.memsz = initrd_len;
+>  		kbuf.buf_align = PAGE_SIZE;
+>  		kbuf.top_down = false;
+> +		kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
+>  		ret = kexec_add_buffer(&kbuf);
+>  		if (ret)
+>  			goto out;
+> @@ -638,6 +641,7 @@ static void *elf64_load(struct kimage *image, char *kernel_buf,
+>  	kbuf.bufsz = kbuf.memsz = fdt_size;
+>  	kbuf.buf_align = PAGE_SIZE;
+>  	kbuf.top_down = true;
+> +	kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
+>  	ret = kexec_add_buffer(&kbuf);
+>  	if (ret)
+>  		goto out;
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+
+Reviewed-by: Dave Young <dyoung@redhat.com>
+
+Thanks
+Dave
