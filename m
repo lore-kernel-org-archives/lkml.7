@@ -2,161 +2,162 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A6ADC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 21:55:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B494C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 21:57:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13F9A21773
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 21:55:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9C0D21773
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 21:57:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="KmwMdbus"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L28iF9YN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388403AbfEWVzy (ORCPT
+        id S2388436AbfEWV5I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 17:55:54 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:40992 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387535AbfEWVzx (ORCPT
+        Thu, 23 May 2019 17:57:08 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:37430 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387616AbfEWV5H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 17:55:53 -0400
-Received: by mail-pg1-f194.google.com with SMTP id z3so3814459pgp.8
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 14:55:53 -0700 (PDT)
+        Thu, 23 May 2019 17:57:07 -0400
+Received: by mail-ed1-f67.google.com with SMTP id w37so11304131edw.4;
+        Thu, 23 May 2019 14:57:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=PurhQGxmOt5OgX95ziE8Uz5xXLYO1YnGDYcH4NyaAV8=;
-        b=KmwMdbusxLFDrj22KnPcx5BKzA583dV/GrebLLNnmUsihWE/QMWs3lTIAouKLUwaop
-         LwgmVJQGVUg2aA+8mx4KJjU7bAF7LtGSr8FiMglX9PLU180cgIynnL0/9TXMA3mSW1M+
-         /UmO8YBNF1bNKg2+C2Nb60imYJGTKVl+XkH4yQ6Fxqbenfjbl/IPPANZqo6DAu95G16f
-         3MfFyVw8gm66EwDQbIfgC6fEkCdxWH+Uwd6/EWrWkuO+20grvDS8y/Fis3sO7q93IPon
-         ggEp6LFhzmrCxLh6InSejc0sfAGzRbxlvvT1/+7Z6b9W8sM4GU4RF8/D8lGBbGXY4321
-         unfw==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0hFIYP9BoSosYVt9SP0AzGwicw0FRzRX7GTueMZ052w=;
+        b=L28iF9YNdfgD6nZuWUZ5m9+n4a5Fn/zRIhYI05iWZEVwJVoLG+QsfmqyhIlO6wX28R
+         4IkzaxWuOuUP+VovDi6Erl4aCVdBTl4+h0JADwA3s/3Mcebfs/OsHPCZG9Kt91imqdO2
+         MeqtR5BY5VkTX6hU1xGVJEQJmBqB7D0d+fQXDdjDfxSflpJhZpsInHtMmOjCBiH+IhTZ
+         oDuIxOhLKC1GyX158YJYpCnOaOPcsUwUeEW0jtT+HDfUabJSyg2wuRETdomMphhG9BCA
+         msNX6ZhmuxID3wv18AkJi3n3AwOKVZrJFZ7RCDMn3zls1oEjwcLqaVfnKiSXXKPuk59F
+         S6aw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=PurhQGxmOt5OgX95ziE8Uz5xXLYO1YnGDYcH4NyaAV8=;
-        b=DnHYzdZjDctqGxOFh7/arY5WFL3t2eKkxeyKASzbfeqsc3vcv+Y5VjIxIa9dWI1jJ/
-         YWTqsK8ooD88TJYVCyyG+cQufTWtQJ0qJ3xVmVHzXcdxDgN5Hdnsn1hpG+kfOE7lwvRW
-         P/6CtARW8LmDqv9QQqXaYahSWNbNQ4RZ/oBSazkaKxgB5I66vHlrnuSNBDn4KxAQbk2a
-         JBcgDVd5UBSea4KO1w39it7tibWV6UigQSiZoidrdWkO32czm2Bj8f1c4eNhPZA1dEol
-         98upgQirId3pYRa8yjBctkZFVFqz5TUAwgOXfmgvfxVDJce2VX4IIhguo3Ei8JoQsDeI
-         akuw==
-X-Gm-Message-State: APjAAAV7nvlKsJ/rl5nFXdvXZqgFbfQvNEcRHWp6NMPSYkJhDEC5+wCr
-        rSbqHhyW1ca1/yY14dbLJpvQGw==
-X-Google-Smtp-Source: APXvYqxfZfJf2dgCCL/DsR8P6LzvbOxJ1paNuXirPE+CZvt+G3bi+/s0Wd3kQSCpvTmI4e02K3NZLg==
-X-Received: by 2002:a63:903:: with SMTP id 3mr86725371pgj.400.1558648553134;
-        Thu, 23 May 2019 14:55:53 -0700 (PDT)
-Received: from nuc7.sifive.com ([12.206.222.2])
-        by smtp.gmail.com with ESMTPSA id q75sm422403pfa.175.2019.05.23.14.55.51
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 23 May 2019 14:55:52 -0700 (PDT)
-From:   Alan Mikhak <alan.mikhak@sifive.com>
-X-Google-Original-From: Alan Mikhak < alan.mikhak@sifive.com >
-To:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kishon@ti.com, lorenzo.pieralisi@arm.com,
-        linux-riscv@lists.infradead.org, palmer@sifive.com,
-        paul.walmsley@sifive.com
-Cc:     Alan Mikhak <alan.mikhak@sifive.com>
-Subject: [PATCH v2] PCI: endpoint: Skip odd BAR when skipping 64bit BAR
-Date:   Thu, 23 May 2019 14:55:40 -0700
-Message-Id: <1558648540-14239-1-git-send-email-alan.mikhak@sifive.com>
-X-Mailer: git-send-email 2.7.4
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0hFIYP9BoSosYVt9SP0AzGwicw0FRzRX7GTueMZ052w=;
+        b=bTcWnuOkvDPNu3pM9doibdVwMLqfZeHlVK0SKnc7DEmFoXDknMm0J3l4dyueUCkcE3
+         95XJ/m2Dp95ZRRnZdiM2PJ+qXOoykmLopddpLuTe0QuXvXKE438q88AYzpeYuri0R/hu
+         hKqtWJLKfXIcs1eallwrt2tNyg9j7loYCW5slbTmAYEwD8cLXJ9BOwXvghyvi9DdCmvd
+         qxAcHzmL9XBwE4o5y8stu4w+bK2TV1WL4iLGV7DlK2mrEpWVJQSIuQ06FyTX9PN/o5Gz
+         N8+bSt9nI5w2OHXOV3Ym++5YcWvoZDhZ56YW485Bbo54BJh2aB0/8r8TsbPtFj3gxfrE
+         CvzA==
+X-Gm-Message-State: APjAAAVmH39p2r73cwaN1iAOlTRRBGFMw4xEhyMucXZU67aspoFeUSnJ
+        xohzv0Nw3OD2w61KlaLY6CxrCBVeX1qPwQit6SI=
+X-Google-Smtp-Source: APXvYqx9KDXJ9IwoB0tIocBE2RmIG6u6/T1Fb+03i2yHmtzhni66bmqLso1anlhpbYAoMoogIUJJLv2Ofq5PniVW6Z8=
+X-Received: by 2002:a50:b665:: with SMTP id c34mr99194045ede.148.1558648625357;
+ Thu, 23 May 2019 14:57:05 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190523210651.80902-1-fklassen@appneta.com> <20190523210651.80902-5-fklassen@appneta.com>
+In-Reply-To: <20190523210651.80902-5-fklassen@appneta.com>
+From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Date:   Thu, 23 May 2019 17:56:29 -0400
+Message-ID: <CAF=yD-KBNLr5KY-YQ1KMmZGCpYNefSJKaJkZNOwd8nRiedpQtA@mail.gmail.com>
+Subject: Re: [PATCH net 4/4] net/udpgso_bench_tx: audit error queue
+To:     Fred Klassen <fklassen@appneta.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-kselftest@vger.kernel.org,
+        Willem de Bruijn <willemb@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Always skip odd bar when skipping 64bit BARs in pci_epf_test_set_bar()
-and pci_epf_test_alloc_space().
+On Thu, May 23, 2019 at 5:11 PM Fred Klassen <fklassen@appneta.com> wrote:
+>
+> This enhancement adds the '-a' option, which will count all CMSG
+> messages on the error queue and print a summary report.
+>
+> Fixes: 3a687bef148d ("selftests: udp gso benchmark")
 
-Otherwise, pci_epf_test_set_bar() will call pci_epc_set_bar() on odd loop
-index when skipping reserved 64bit BAR. Moreover, pci_epf_test_alloc_space()
-will call pci_epf_alloc_space() on bind for odd loop index when BAR is 64bit
-but leaks on subsequent unbind by not calling pci_epf_free_space().
+Also not a fix, but an extension.
 
-Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
-Reviewed-by: Paul Walmsley <paul.walmsley@sifive.com>
----
- drivers/pci/endpoint/functions/pci-epf-test.c | 25 ++++++++++++-------------
- 1 file changed, 12 insertions(+), 13 deletions(-)
+>
+> Example:
+>
+>     # ./udpgso_bench_tx -4uT -a -l5 -S 1472 -D 172.16.120.189
+>     udp tx:    492 MB/s     8354 calls/s   8354 msg/s
+>     udp tx:    477 MB/s     8106 calls/s   8106 msg/s
+>     udp tx:    488 MB/s     8288 calls/s   8288 msg/s
+>     udp tx:    882 MB/s    14975 calls/s  14975 msg/s
+>     Summary over 5.000 seconds ...
+>     sum udp tx:    696 MB/s      57696 calls (11539/s)  57696 msgs (11539/s)
+>     Tx Timestamps: received:     57696   errors: 0
+>
+> This can be useful in tracking loss of messages when under load. For example,
+> adding the '-z' option results in loss of TX timestamp messages:
+>
+>     # ./udpgso_bench_tx -4ucT -a -l5 -S 1472 -D 172.16.120.189 -p 3239 -z
+>     udp tx:    490 MB/s     8325 calls/s   8325 msg/s
+>     udp tx:    500 MB/s     8492 calls/s   8492 msg/s
+>     udp tx:    883 MB/s    14985 calls/s  14985 msg/s
+>     udp tx:    756 MB/s    12823 calls/s  12823 msg/s
+>     Summary over 5.000 seconds ...
+>     sum udp tx:    657 MB/s      54429 calls (10885/s)  54429 msgs (10885/s)
+>     Tx Timestamps: received:     34046   errors: 0
+>     Zerocopy acks: received:     54422   errors: 0
 
-diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-index 27806987e93b..96156a537922 100644
---- a/drivers/pci/endpoint/functions/pci-epf-test.c
-+++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-@@ -389,7 +389,7 @@ static void pci_epf_test_unbind(struct pci_epf *epf)
- 
- static int pci_epf_test_set_bar(struct pci_epf *epf)
- {
--	int bar;
-+	int bar, add;
- 	int ret;
- 	struct pci_epf_bar *epf_bar;
- 	struct pci_epc *epc = epf->epc;
-@@ -400,8 +400,14 @@ static int pci_epf_test_set_bar(struct pci_epf *epf)
- 
- 	epc_features = epf_test->epc_features;
- 
--	for (bar = BAR_0; bar <= BAR_5; bar++) {
-+	for (bar = BAR_0; bar <= BAR_5; bar += add) {
- 		epf_bar = &epf->bar[bar];
-+		/*
-+		 * pci_epc_set_bar() sets PCI_BASE_ADDRESS_MEM_TYPE_64
-+		 * if the specific implementation required a 64-bit BAR,
-+		 * even if we only requested a 32-bit BAR.
-+		 */
-+		add = (epf_bar->flags & PCI_BASE_ADDRESS_MEM_TYPE_64) ? 2 : 1;
- 
- 		if (!!(epc_features->reserved_bar & (1 << bar)))
- 			continue;
-@@ -413,13 +419,6 @@ static int pci_epf_test_set_bar(struct pci_epf *epf)
- 			if (bar == test_reg_bar)
- 				return ret;
- 		}
--		/*
--		 * pci_epc_set_bar() sets PCI_BASE_ADDRESS_MEM_TYPE_64
--		 * if the specific implementation required a 64-bit BAR,
--		 * even if we only requested a 32-bit BAR.
--		 */
--		if (epf_bar->flags & PCI_BASE_ADDRESS_MEM_TYPE_64)
--			bar++;
- 	}
- 
- 	return 0;
-@@ -431,7 +430,7 @@ static int pci_epf_test_alloc_space(struct pci_epf *epf)
- 	struct device *dev = &epf->dev;
- 	struct pci_epf_bar *epf_bar;
- 	void *base;
--	int bar;
-+	int bar, add;
- 	enum pci_barno test_reg_bar = epf_test->test_reg_bar;
- 	const struct pci_epc_features *epc_features;
- 
-@@ -445,8 +444,10 @@ static int pci_epf_test_alloc_space(struct pci_epf *epf)
- 	}
- 	epf_test->reg[test_reg_bar] = base;
- 
--	for (bar = BAR_0; bar <= BAR_5; bar++) {
-+	for (bar = BAR_0; bar <= BAR_5; bar += add) {
- 		epf_bar = &epf->bar[bar];
-+		add = (epf_bar->flags & PCI_BASE_ADDRESS_MEM_TYPE_64) ? 2 : 1;
-+
- 		if (bar == test_reg_bar)
- 			continue;
- 
-@@ -459,8 +460,6 @@ static int pci_epf_test_alloc_space(struct pci_epf *epf)
- 			dev_err(dev, "Failed to allocate space for BAR%d\n",
- 				bar);
- 		epf_test->reg[bar] = base;
--		if (epf_bar->flags & PCI_BASE_ADDRESS_MEM_TYPE_64)
--			bar++;
- 	}
- 
- 	return 0;
--- 
-2.7.4
+This would probably also be more useful as regression test if it is in
+the form of a pass/fail test: if timestamps are requested and total
+count is zero, then the feature is broken and the process should exit
+with an error.
 
+>
+> Fixes: 3a687bef148d ("selftests: udp gso benchmark")
+
+Repeated
+
+> Signed-off-by: Fred Klassen <fklassen@appneta.com>
+> ---
+>  tools/testing/selftests/net/udpgso_bench_tx.c | 152 +++++++++++++++++++-------
+>  1 file changed, 113 insertions(+), 39 deletions(-)
+>
+> diff --git a/tools/testing/selftests/net/udpgso_bench_tx.c b/tools/testing/selftests/net/udpgso_bench_tx.c
+> index 56e0d890b066..9924342a0b03 100644
+> --- a/tools/testing/selftests/net/udpgso_bench_tx.c
+> +++ b/tools/testing/selftests/net/udpgso_bench_tx.c
+> @@ -62,10 +62,19 @@ static bool cfg_tcp;
+>  static uint32_t        cfg_tx_ts = SOF_TIMESTAMPING_TX_SOFTWARE;
+>  static bool    cfg_tx_tstamp;
+>  static uint32_t        cfg_tos;
+> +static bool    cfg_audit;
+>  static bool    cfg_verbose;
+>  static bool    cfg_zerocopy;
+>  static int     cfg_msg_nr;
+>  static uint16_t        cfg_gso_size;
+> +static unsigned long total_num_msgs;
+> +static unsigned long total_num_sends;
+> +static unsigned long stat_tx_ts;
+> +static unsigned long stat_tx_ts_errors;
+> +static unsigned long tstart;
+> +static unsigned long tend;
+> +static unsigned long stat_zcopies;
+> +static unsigned long stat_zcopy_errors;
+>
+>  static socklen_t cfg_alen;
+>  static struct sockaddr_storage cfg_dst_addr;
+> @@ -137,8 +146,11 @@ static void flush_cmsg(struct cmsghdr *cmsg)
+>                         struct my_scm_timestamping *tss;
+>
+>                         tss = (struct my_scm_timestamping *)CMSG_DATA(cmsg);
+> -                       fprintf(stderr, "tx timestamp = %lu.%09lu\n",
+> -                               tss->ts[i].tv_sec, tss->ts[i].tv_nsec);
+> +                       if (tss->ts[i].tv_sec == 0)
+> +                               stat_tx_ts_errors++;
+> +                       if (cfg_verbose)
+> +                               fprintf(stderr, "tx timestamp = %lu.%09lu\n",
+> +                                       tss->ts[i].tv_sec, tss->ts[i].tv_nsec);
+
+changes unrelated to this feature?
