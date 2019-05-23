@@ -2,160 +2,109 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95C8BC04AAC
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 06:54:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17C06C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 06:54:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63D6D2175B
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 06:54:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE3A1217D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 06:54:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="b5czmhY9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729892AbfEWGy3 (ORCPT
+        id S1728866AbfEWGyR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 02:54:29 -0400
-Received: from verein.lst.de ([213.95.11.211]:44441 "EHLO newverein.lst.de"
+        Thu, 23 May 2019 02:54:17 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:11636 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728420AbfEWGy2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 02:54:28 -0400
-Received: by newverein.lst.de (Postfix, from userid 2005)
-        id BB60F68B20; Thu, 23 May 2019 08:54:04 +0200 (CEST)
-From:   Torsten Duwe <duwe@lst.de>
-To:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Sean Paul <seanpaul@chromium.org>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        Harald Geyer <harald@ccbib.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 6/6] arm64: dts: allwinner: a64: enable ANX6345 bridge on Teres-I
-References: <20190523065013.2719D68B05@newverein.lst.de>
-Message-Id: <20190523065404.BB60F68B20@newverein.lst.de>
-Date:   Thu, 23 May 2019 08:54:04 +0200 (CEST)
+        id S1726299AbfEWGyQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 02:54:16 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 458gGG31zHz9v2C7;
+        Thu, 23 May 2019 08:54:14 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=b5czmhY9; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id sXWhCKzIm3Ok; Thu, 23 May 2019 08:54:14 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 458gGG1rzGz9v2By;
+        Thu, 23 May 2019 08:54:14 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1558594454; bh=s/0qOfM4Cscsf5U/dbKG8fcNN0atFD4/cWnRCbh6PDw=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=b5czmhY9iGhGsbJ03OHxeREVJn/XcniinN+G4e+jMw6pPxslXAhnaROXUbdNmE9G4
+         6H0+/agMaD4yYwgse634XOE7NqC97NzZTRaQkWynmzxxehol/m3YiMmJ8DctmBdOb0
+         WjlUUcptLeJ3FJxVCx28ObZj2ArEhcR7/CEOj3LE=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 37B2C8B77D;
+        Thu, 23 May 2019 08:54:15 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id qsNF3mH3L8eW; Thu, 23 May 2019 08:54:15 +0200 (CEST)
+Received: from PO15451 (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id DF4478B75A;
+        Thu, 23 May 2019 08:54:14 +0200 (CEST)
+Subject: Re: [PATCH] powerpc/32s: Include <linux/moduleloader.h> header file
+ to fix a warning
+To:     Mathieu Malaterre <malat@debian.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Paul Mackerras <paulus@samba.org>, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org
+References: <20190523064956.29008-1-malat@debian.org>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <14b3a3c9-acbd-67b4-9187-912bb1be887f@c-s.fr>
+Date:   Thu, 23 May 2019 08:54:14 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <20190523064956.29008-1-malat@debian.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Icenowy Zheng <icenowy@aosc.io>
 
-Teres-I has an anx6345 bridge connected to the RGB666 LCD output, and
-the I2C controlling signals are connected to I2C0 bus. eDP output goes
-to an Innolux N116BGE panel.
 
-Enable it in the device tree.
+Le 23/05/2019 à 08:49, Mathieu Malaterre a écrit :
+> In commit 2edb16efc899 ("powerpc/32: Add KASAN support") support for
+> KASAN has been added. However building it as module leads to (warning
+> treated as error with W=1):
+> 
+>    arch/powerpc/mm/kasan/kasan_init_32.c:135:7: error: no previous prototype for 'module_alloc' [-Werror=missing-prototypes]
+> 
+> Make sure to include <linux/moduleloader.h> to provide the following
+> prototype: module_alloc.
+> 
+> Signed-off-by: Mathieu Malaterre <malat@debian.org>
 
-Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-Signed-off-by: Torsten Duwe <duwe@suse.de>
----
- arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts |   65 +++++++++++++++++--
- 1 file changed, 61 insertions(+), 4 deletions(-)
+Fixes: 2edb16efc899 ("powerpc/32: Add KASAN support")
+Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
 
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
-@@ -65,6 +65,21 @@
- 		};
- 	};
- 
-+	panel: panel {
-+		compatible ="innolux,n116bge", "simple-panel";
-+		status = "okay";
-+		power-supply = <&reg_dcdc1>;
-+		backlight = <&backlight>;
-+
-+		ports {
-+			panel_in: port {
-+				panel_in_edp: endpoint {
-+					remote-endpoint = <&anx6345_out>;
-+				};
-+			};
-+		};
-+	};
-+
- 	reg_usb1_vbus: usb1-vbus {
- 		compatible = "regulator-fixed";
- 		regulator-name = "usb1-vbus";
-@@ -81,20 +96,48 @@
- 	};
- };
- 
-+&de {
-+	status = "okay";
-+};
-+
- &ehci1 {
- 	status = "okay";
- };
- 
- 
--/* The ANX6345 eDP-bridge is on i2c0. There is no linux (mainline)
-- * driver for this chip at the moment, the bootloader initializes it.
-- * However it can be accessed with the i2c-dev driver from user space.
-- */
- &i2c0 {
- 	clock-frequency = <100000>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&i2c0_pins>;
- 	status = "okay";
-+
-+	anx6345: anx6345@38 {
-+		compatible = "analogix,anx6345";
-+		reg = <0x38>;
-+		reset-gpios = <&pio 3 24 GPIO_ACTIVE_LOW>; /* PD24 */
-+		dvdd25-supply = <&reg_dldo2>;
-+		dvdd12-supply = <&reg_dldo3>;
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				anx6345_in: endpoint {
-+					remote-endpoint = <&tcon0_out_anx6345>;
-+				};
-+			};
-+			port@1 {
-+				anx6345_out: endpoint {
-+					remote-endpoint = <&panel_in_edp>;
-+				};
-+			};
-+		};
-+	};
-+};
-+
-+&mixer0 {
-+	status = "okay";
- };
- 
- &mmc0 {
-@@ -279,6 +322,20 @@
- 	vcc-hdmi-supply = <&reg_dldo1>;
- };
- 
-+&tcon0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&lcd_rgb666_pins>;
-+
-+	status = "okay";
-+};
-+
-+&tcon0_out {
-+	tcon0_out_anx6345: endpoint@0 {
-+		reg = <0>;
-+		remote-endpoint = <&anx6345_in>;
-+	};
-+};
-+
- &uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_pb_pins>;
+> ---
+>   arch/powerpc/mm/kasan/kasan_init_32.c | 1 +
+>   1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/powerpc/mm/kasan/kasan_init_32.c b/arch/powerpc/mm/kasan/kasan_init_32.c
+> index 0d62be3cba47..0c31e440d094 100644
+> --- a/arch/powerpc/mm/kasan/kasan_init_32.c
+> +++ b/arch/powerpc/mm/kasan/kasan_init_32.c
+> @@ -7,6 +7,7 @@
+>   #include <linux/memblock.h>
+>   #include <linux/sched/task.h>
+>   #include <linux/vmalloc.h>
+> +#include <linux/moduleloader.h>
+>   #include <asm/pgalloc.h>
+>   #include <asm/code-patching.h>
+>   #include <mm/mmu_decl.h>
+> 
