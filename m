@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74820C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:17:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 401B6C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:17:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BD02217D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:17:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1949821841
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:17:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639023;
-	bh=AxJsAR8dpjeA9qCIvZZYVwgDd+oYyxFSMJaIX6clBMk=;
+	s=default; t=1558639027;
+	bh=CkhJWWovJv915sm3zeYlhRMA9YJ4VBZWiythXchG4HE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OkbsK1N0otwBU8sWDvXdfRB1nYslV29jvzEjeCzcokBrL9sdaVsQDcf1xXsNRRPnU
-	 S1XEEu1y2+eZE6HZAUPG6rBOGAlOctjIK03ReW2/oLSEOg28nC1J/ucTmrtdBFjiDn
-	 M/Ej5m7hQz1Dg1vNHKyDA5RN3mBupX8R4DISZ+io=
+	b=Y0zo0qK7osvGBgIPFHVCHOkKInUZZguPs+zDjl5wwm7Jms//2KasJZ/sarLOR0rt2
+	 6alX0qph28wRjH81u4DWs9Tiy2ghrT95hvYmcTRgks4NDx9VzVJsZ+hoOdITHfmI4x
+	 ji0SCeCsu7CgTCQowhsLgCI0CQqdzCd2XQkTO5c8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389317AbfEWTRC (ORCPT
+        id S2389328AbfEWTRG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:17:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51904 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:17:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51986 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389297AbfEWTRA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:17:00 -0400
+        id S2387581AbfEWTRC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:17:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AFD77217D9;
-        Thu, 23 May 2019 19:16:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 704C62184E;
+        Thu, 23 May 2019 19:17:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639019;
-        bh=AxJsAR8dpjeA9qCIvZZYVwgDd+oYyxFSMJaIX6clBMk=;
+        s=default; t=1558639021;
+        bh=CkhJWWovJv915sm3zeYlhRMA9YJ4VBZWiythXchG4HE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jAJYDyqVI23k+jY9AYv/Cw4WWulEzi5tYZjl3UkBXDPckVXDhEXiBdICGmwPXkyLq
-         YMo8RLRDgzT11O81KaIJZ9oMWStx+46eYQFGgMuV9dni2ANaqhrvezgzsXrvp+uiqX
-         Bj6LWcvSC1iEiaBM/4HIuhh75ZCeagIB+acIxJGc=
+        b=gP1+K59Ti4CosxkzQ3uviWrrCk9UQBUIIvI4wpZVfm/vJL98iCSMT1a239Az+xMKL
+         6nvLYGWXedauZKdlgTiVm1oENQQFjK4cbWtlWwI/Wrsmhc56jefmc6oh09NCCt/GEA
+         gwnyoGZZ9PT/eHAdmFk3kyR6vn62t8RV7AGtBlzU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yifeng Li <tomli@tomli.me>,
-        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        Teddy Wang <teddy.wang@siliconmotion.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: [PATCH 4.19 066/114] fbdev: sm712fb: fix crashes during framebuffer writes by correctly mapping VRAM
-Date:   Thu, 23 May 2019 21:06:05 +0200
-Message-Id: <20190523181737.630249629@linuxfoundation.org>
+        stable@vger.kernel.org, Jeff Layton <jlayton@kernel.org>,
+        "Yan, Zheng" <zyan@redhat.com>, Ilya Dryomov <idryomov@gmail.com>
+Subject: [PATCH 4.19 050/114] ceph: flush dirty inodes before proceeding with remount
+Date:   Thu, 23 May 2019 21:05:49 +0200
+Message-Id: <20190523181736.234861972@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181731.372074275@linuxfoundation.org>
 References: <20190523181731.372074275@linuxfoundation.org>
@@ -61,147 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yifeng Li <tomli@tomli.me>
+From: Jeff Layton <jlayton@kernel.org>
 
-commit 9e0e59993df0601cddb95c4f6c61aa3d5e753c00 upstream.
+commit 00abf69dd24f4444d185982379c5cc3bb7b6d1fc upstream.
 
-On a Thinkpad s30 (Pentium III / i440MX, Lynx3DM), running fbtest or X
-will crash the machine instantly, because the VRAM/framebuffer is not
-mapped correctly.
+xfstest generic/452 was triggering a "Busy inodes after umount" warning.
+ceph was allowing the mount to go read-only without first flushing out
+dirty inodes in the cache. Ensure we sync out the filesystem before
+allowing a remount to proceed.
 
-On SM712, the framebuffer starts at the beginning of address space, but
-SM720's framebuffer starts at the 1 MiB offset from the beginning. However,
-sm712fb fails to take this into account, as a result, writing to the
-framebuffer will destroy all the registers and kill the system immediately.
-Another problem is the driver assumes 8 MiB of VRAM for SM720, but some
-SM720 system, such as this IBM Thinkpad, only has 4 MiB of VRAM.
-
-Fix this problem by removing the hardcoded VRAM size, adding a function to
-query the amount of VRAM from register MCR76 on SM720, and adding proper
-framebuffer offset.
-
-Please note that the memory map may have additional problems on Big-Endian
-system, which is not available for testing by myself. But I highly suspect
-that the original code is also broken on Big-Endian machines for SM720, so
-at least we are not making the problem worse. More, the driver also assumed
-SM710/SM712 has 4 MiB of VRAM, but it has a 2 MiB version as well, and used
-in earlier laptops, such as IBM Thinkpad 240X, the driver would probably
-crash on them. I've never seen one of those machines and cannot fix it, but
-I have documented these problems in the comments.
-
-Signed-off-by: Yifeng Li <tomli@tomli.me>
-Tested-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Cc: Teddy Wang <teddy.wang@siliconmotion.com>
-Cc: <stable@vger.kernel.org>  # v4.4+
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc: stable@vger.kernel.org
+Link: http://tracker.ceph.com/issues/39571
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+Reviewed-by: "Yan, Zheng" <zyan@redhat.com>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/video/fbdev/sm712.h   |    5 ----
- drivers/video/fbdev/sm712fb.c |   48 ++++++++++++++++++++++++++++++++++++++----
- 2 files changed, 44 insertions(+), 9 deletions(-)
+ fs/ceph/super.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/drivers/video/fbdev/sm712.h
-+++ b/drivers/video/fbdev/sm712.h
-@@ -19,11 +19,6 @@
- #define SCREEN_Y_RES      600
- #define SCREEN_BPP        16
- 
--/*Assume SM712 graphics chip has 4MB VRAM */
--#define SM712_VIDEOMEMORYSIZE	  0x00400000
--/*Assume SM722 graphics chip has 8MB VRAM */
--#define SM722_VIDEOMEMORYSIZE	  0x00800000
--
- #define dac_reg	(0x3c8)
- #define dac_val	(0x3c9)
- 
---- a/drivers/video/fbdev/sm712fb.c
-+++ b/drivers/video/fbdev/sm712fb.c
-@@ -1329,6 +1329,11 @@ static int smtc_map_smem(struct smtcfb_i
- {
- 	sfb->fb->fix.smem_start = pci_resource_start(pdev, 0);
- 
-+	if (sfb->chip_id == 0x720)
-+		/* on SM720, the framebuffer starts at the 1 MB offset */
-+		sfb->fb->fix.smem_start += 0x00200000;
-+
-+	/* XXX: is it safe for SM720 on Big-Endian? */
- 	if (sfb->fb->var.bits_per_pixel == 32)
- 		sfb->fb->fix.smem_start += big_addr;
- 
-@@ -1366,12 +1371,45 @@ static inline void sm7xx_init_hw(void)
- 	outb_p(0x11, 0x3c5);
+--- a/fs/ceph/super.c
++++ b/fs/ceph/super.c
+@@ -819,6 +819,12 @@ static void ceph_umount_begin(struct sup
+ 	return;
  }
  
-+static u_long sm7xx_vram_probe(struct smtcfb_info *sfb)
++static int ceph_remount(struct super_block *sb, int *flags, char *data)
 +{
-+	u8 vram;
-+
-+	switch (sfb->chip_id) {
-+	case 0x710:
-+	case 0x712:
-+		/*
-+		 * Assume SM712 graphics chip has 4MB VRAM.
-+		 *
-+		 * FIXME: SM712 can have 2MB VRAM, which is used on earlier
-+		 * laptops, such as IBM Thinkpad 240X. This driver would
-+		 * probably crash on those machines. If anyone gets one of
-+		 * those and is willing to help, run "git blame" and send me
-+		 * an E-mail.
-+		 */
-+		return 0x00400000;
-+	case 0x720:
-+		outb_p(0x76, 0x3c4);
-+		vram = inb_p(0x3c5) >> 6;
-+
-+		if (vram == 0x00)
-+			return 0x00800000;  /* 8 MB */
-+		else if (vram == 0x01)
-+			return 0x01000000;  /* 16 MB */
-+		else if (vram == 0x02)
-+			return 0x00400000;  /* illegal, fallback to 4 MB */
-+		else if (vram == 0x03)
-+			return 0x00400000;  /* 4 MB */
-+	}
-+	return 0;  /* unknown hardware */
++	sync_filesystem(sb);
++	return 0;
 +}
 +
- static int smtcfb_pci_probe(struct pci_dev *pdev,
- 			    const struct pci_device_id *ent)
- {
- 	struct smtcfb_info *sfb;
- 	struct fb_info *info;
--	u_long smem_size = 0x00800000;	/* default 8MB */
-+	u_long smem_size;
- 	int err;
- 	unsigned long mmio_base;
- 
-@@ -1428,12 +1466,15 @@ static int smtcfb_pci_probe(struct pci_d
- 	mmio_base = pci_resource_start(pdev, 0);
- 	pci_read_config_byte(pdev, PCI_REVISION_ID, &sfb->chip_rev_id);
- 
-+	smem_size = sm7xx_vram_probe(sfb);
-+	dev_info(&pdev->dev, "%lu MiB of VRAM detected.\n",
-+					smem_size / 1048576);
-+
- 	switch (sfb->chip_id) {
- 	case 0x710:
- 	case 0x712:
- 		sfb->fb->fix.mmio_start = mmio_base + 0x00400000;
- 		sfb->fb->fix.mmio_len = 0x00400000;
--		smem_size = SM712_VIDEOMEMORYSIZE;
- 		sfb->lfb = ioremap(mmio_base, mmio_addr);
- 		if (!sfb->lfb) {
- 			dev_err(&pdev->dev,
-@@ -1465,8 +1506,7 @@ static int smtcfb_pci_probe(struct pci_d
- 	case 0x720:
- 		sfb->fb->fix.mmio_start = mmio_base;
- 		sfb->fb->fix.mmio_len = 0x00200000;
--		smem_size = SM722_VIDEOMEMORYSIZE;
--		sfb->dp_regs = ioremap(mmio_base, 0x00a00000);
-+		sfb->dp_regs = ioremap(mmio_base, 0x00200000 + smem_size);
- 		sfb->lfb = sfb->dp_regs + 0x00200000;
- 		sfb->mmio = (smtc_regbaseaddress =
- 		    sfb->dp_regs + 0x000c0000);
+ static const struct super_operations ceph_super_ops = {
+ 	.alloc_inode	= ceph_alloc_inode,
+ 	.destroy_inode	= ceph_destroy_inode,
+@@ -826,6 +832,7 @@ static const struct super_operations cep
+ 	.drop_inode	= ceph_drop_inode,
+ 	.sync_fs        = ceph_sync_fs,
+ 	.put_super	= ceph_put_super,
++	.remount_fs	= ceph_remount,
+ 	.show_options   = ceph_show_options,
+ 	.statfs		= ceph_statfs,
+ 	.umount_begin   = ceph_umount_begin,
 
 
