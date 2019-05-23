@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2900C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:29:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68E1FC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:29:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B82A120879
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:29:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34FFE20879
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:29:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639770;
-	bh=3rxfAX4mLHvVaXl+hX9hwHnq3HJQHQSfrnr68pxQPQk=;
+	s=default; t=1558639774;
+	bh=oheSv95oFkn+VVV3lf9Ovz2363O9f+rCEsKN1nvHhuA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k8fyD0uPAMgYUUOonYUp34z6t0CkNrAxL8iGhXwukj4nrPTqMMhdLmpXn3NAbX4zz
-	 TwRqn/+xrQhcu6GxQ+AW4tVo18uK9sUAGbitxS5Zm6P0cdc790cjGoeSaRtWBOnJYo
-	 os6tj1Zx8VsDlhS46vcc5cbIzvmcoGcZX1pjwTzI=
+	b=TtzS6IBPv/scf5nTWDbhT5zJu0eB+/EeV1x573FjTx/kdu2stVPd542OD/4O0+aWG
+	 wO+6tS8p1sb9gfr15GIA6/TcAbss+hSb01OAE/mUo/Qy6HUpGsXRNIUxou5q8ID8Am
+	 FrQ6dHa2wfZhKy69w7ymqisYQnW6ejxeyyv2UEm0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391973AbfEWT3a (ORCPT
+        id S2391979AbfEWT3d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:29:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42586 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:29:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42658 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391435AbfEWT31 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:29:27 -0400
+        id S2390954AbfEWT3a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:29:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 59C6120879;
-        Thu, 23 May 2019 19:29:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 153B82133D;
+        Thu, 23 May 2019 19:29:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639766;
-        bh=3rxfAX4mLHvVaXl+hX9hwHnq3HJQHQSfrnr68pxQPQk=;
+        s=default; t=1558639769;
+        bh=oheSv95oFkn+VVV3lf9Ovz2363O9f+rCEsKN1nvHhuA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U0iVKVtv3FR6Ie6iFDroO0UE1rioN6Ncw2WwO66QPzCSrzKY65+wV1XkUXxrjTE4L
-         tbwKxGO7dXtxmz+PzOGCYseuXoHlUXCE+aLDh3fqUFyuZ70pp8ZixRU1j82lOY7qug
-         /2JUiu5AonPz5dDvVw/UM0wuyVqtcng/oHwF4SuI=
+        b=tez/qfI7Dk2KLN6tTEDKDAZAGl1d1UNiZnzHNq7QoJ7qUNIAU/O4/oL9EOt1ibKze
+         I/DgcDKOGGOalS+4KZxfgwGtpJL/3ur031CMg3CQagFZuk3R1sRzM5BFH6rG/0eYdp
+         55JQdgrXmDJuFqPd8MLhVEwNOml0XsPE7d8A//i8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
         Teddy Wang <teddy.wang@siliconmotion.com>,
         Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: [PATCH 5.1 087/122] fbdev: sm712fb: fix VRAM detection, dont set SR70/71/74/75
-Date:   Thu, 23 May 2019 21:06:49 +0200
-Message-Id: <20190523181716.431314928@linuxfoundation.org>
+Subject: [PATCH 5.1 088/122] fbdev: sm712fb: fix white screen of death on reboot, dont set CR3B-CR3F
+Date:   Thu, 23 May 2019 21:06:50 +0200
+Message-Id: <20190523181716.585564257@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181705.091418060@linuxfoundation.org>
 References: <20190523181705.091418060@linuxfoundation.org>
@@ -63,18 +63,22 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Yifeng Li <tomli@tomli.me>
 
-commit dcf9070595e100942c539e229dde4770aaeaa4e9 upstream.
+commit 8069053880e0ee3a75fd6d7e0a30293265fe3de4 upstream.
 
-On a Thinkpad s30 (Pentium III / i440MX, Lynx3DM), the amount of Video
-RAM is not detected correctly by the xf86-video-siliconmotion driver.
-This is because sm712fb overwrites the GPR71 Scratch Pad Register, which
-is set by BIOS on x86 and used to indicate amount of VRAM.
+On a Thinkpad s30 (Pentium III / i440MX, Lynx3DM), rebooting with
+sm712fb framebuffer driver would cause a white screen of death on
+the next POST, presumably the proper timings for the LCD panel was
+not reprogrammed properly by the BIOS.
 
-Other Scratch Pad Registers, including GPR70/74/75, don't have the same
-side-effect, but overwriting to them is still questionable, as they are
-not related to modesetting.
+Experiments showed a few CRTC Scratch Registers, including CRT3D,
+CRT3E and CRT3F may be used internally by BIOS as some flags. CRT3B is
+a hardware testing register, we shouldn't mess with it. CRT3C has
+blanking signal and line compare control, which is not needed for this
+driver.
 
-Stop writing to SR70/71/74/75 (a.k.a GPR70/71/74/75).
+Stop writing to CR3B-CR3F (a.k.a CRT3B-CRT3F) registers. Even if these
+registers don't have side-effect on other systems, writing to them is
+also highly questionable.
 
 Signed-off-by: Yifeng Li <tomli@tomli.me>
 Tested-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
@@ -84,21 +88,24 @@ Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/video/fbdev/sm712fb.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/video/fbdev/sm712fb.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
 --- a/drivers/video/fbdev/sm712fb.c
 +++ b/drivers/video/fbdev/sm712fb.c
-@@ -1146,7 +1146,9 @@ static void sm7xx_set_timing(struct smtc
- 		/* init SEQ register SR30 - SR75 */
- 		for (i = 0; i < SIZE_SR30_SR75; i++)
- 			if ((i + 0x30) != 0x30 && (i + 0x30) != 0x62 &&
--			    (i + 0x30) != 0x6a && (i + 0x30) != 0x6b)
-+			    (i + 0x30) != 0x6a && (i + 0x30) != 0x6b &&
-+			    (i + 0x30) != 0x70 && (i + 0x30) != 0x71 &&
-+			    (i + 0x30) != 0x74 && (i + 0x30) != 0x75)
- 				smtc_seqw(i + 0x30,
- 					  vgamode[j].init_sr30_sr75[i]);
+@@ -1173,8 +1173,12 @@ static void sm7xx_set_timing(struct smtc
+ 			smtc_crtcw(i, vgamode[j].init_cr00_cr18[i]);
  
+ 		/* init CRTC register CR30 - CR4D */
+-		for (i = 0; i < SIZE_CR30_CR4D; i++)
++		for (i = 0; i < SIZE_CR30_CR4D; i++) {
++			if ((i + 0x30) >= 0x3B && (i + 0x30) <= 0x3F)
++				/* side-effect, don't write to CR3B-CR3F */
++				continue;
+ 			smtc_crtcw(i + 0x30, vgamode[j].init_cr30_cr4d[i]);
++		}
+ 
+ 		/* init CRTC register CR90 - CRA7 */
+ 		for (i = 0; i < SIZE_CR90_CRA7; i++)
 
 
