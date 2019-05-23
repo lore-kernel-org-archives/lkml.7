@@ -2,100 +2,80 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94A67C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 13:18:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA481C282E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 13:19:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64CD02075B
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 13:18:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558617487;
-	bh=eSnzH8gIbU9tJo6la2gamT3PIFGOBGMMJHt4i5H7kKg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=z/nGAKOTXYNLytDsi97mZCtsG3zMfjf/gnwqMjg+NhVyk+VLzDaY6OSPBzC0fAK2F
-	 1scF7rmirhxdVOWk6OYzEJ+zDl09x80PyhUoPxksMNHwqkDr5F+BPkAPuonxvEM1jX
-	 /mjhLckxRvZaK8WmTPyVIqCkBvu4L2DxbWxQbkPs=
+	by mail.kernel.org (Postfix) with ESMTP id 851782075B
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 13:19:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730779AbfEWNSG (ORCPT
+        id S1730612AbfEWNTB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 09:18:06 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:49486 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730323AbfEWNSF (ORCPT
+        Thu, 23 May 2019 09:19:01 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:36618 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726310AbfEWNTB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 09:18:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=eSnzH8gIbU9tJo6la2gamT3PIFGOBGMMJHt4i5H7kKg=; b=lw7G/4RrH9Bm3DNiQrsfJaqQe
-        WKKv/vODnOA81N7DCMb7ceVMt8TQQRWXaUgPnbWJJZFLUaBwQMA0ZfqYDpZWTLh+EeH/NQaVUhn8A
-        XpGQal/q4oCNwN67wjZz8c7ROPNr+jWnTZGBbk6QZXYgFNulj2mcg4ytF/WYo4/m86N8s=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hTnbU-0000By-Ks; Thu, 23 May 2019 13:17:52 +0000
-Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 27CAA1126D24; Thu, 23 May 2019 14:17:52 +0100 (BST)
-Date:   Thu, 23 May 2019 14:17:52 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Jon Hunter <jonathanh@nvidia.com>
-Cc:     alsa-devel@alsa-project.org, Jaroslav Kysela <perex@perex.cz>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
-        Takashi Iwai <tiwai@suse.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Subject: Re: Applied "ASoC: simple-card: Fix configuration of DAI format" to
- the asoc tree
-Message-ID: <20190523131752.GE17245@sirena.org.uk>
-References: <20190521203241.B277E1126D1B@debutante.sirena.org.uk>
- <51ce00db-05ce-ba66-f1be-74c800f6daed@nvidia.com>
+        Thu, 23 May 2019 09:19:01 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 358BF263ABB
+Subject: Re: mainline/master boot bisection: v5.2-rc1-165-g54dee406374c on
+ rk3288-veyron-jaq
+To:     Mark Brown <broonie@kernel.org>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Elaine Zhang <zhangqing@rock-chips.com>
+Cc:     tomeu.vizoso@collabora.com, guillaume.tucker@collabora.com,
+        mgalka@collabora.com, matthew.hart@linaro.org,
+        khilman@baylibre.com, Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Heiko Stuebner <heiko@sntech.de>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        Zhang Rui <rui.zhang@intel.com>,
+        linux-arm-kernel@lists.infradead.org
+References: <5ce6040d.1c69fb81.60b3b.29fb@mx.google.com>
+ <20190523131207.GC17245@sirena.org.uk>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <ac2f06ac-2bf5-7af6-06c3-37b865c43738@collabora.com>
+Date:   Thu, 23 May 2019 15:18:56 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="XuV1QlJbYrcVoo+x"
-Content-Disposition: inline
-In-Reply-To: <51ce00db-05ce-ba66-f1be-74c800f6daed@nvidia.com>
-X-Cookie: I brake for chezlogs!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190523131207.GC17245@sirena.org.uk>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Mark,
 
---XuV1QlJbYrcVoo+x
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 23/5/19 15:12, Mark Brown wrote:
+> On Wed, May 22, 2019 at 07:23:09PM -0700, kernelci.org bot wrote:
+> 
+>>   Details:    https://kernelci.org/boot/id/5ce5984c59b514e6a47a364c
+>>   Plain log:  https://storage.kernelci.org//mainline/master/v5.2-rc1-165-g54dee406374c/arm/multi_v7_defconfig+CONFIG_EFI=y+CONFIG_ARM_LPAE=y/gcc-8/lab-collabora/boot-rk3288-veyron-jaq.txt
+>>   HTML log:   https://storage.kernelci.org//mainline/master/v5.2-rc1-165-g54dee406374c/arm/multi_v7_defconfig+CONFIG_EFI=y+CONFIG_ARM_LPAE=y/gcc-8/lab-collabora/boot-rk3288-veyron-jaq.html
+>>   Result:     28694e009e51 thermal: rockchip: fix up the tsadc pinctrl setting error
+> 
+> It looks like this issue has persisted for a while without any kind of
+> fix happening - given that the bisection has identified this commit as
+> causing the regression and confirmed that reverting it fixes shouldn't
+> we just revert?  My guess would be that there's some error with the
+> pinctrl settings in the DT for the board.
+> 
 
-On Thu, May 23, 2019 at 09:54:25AM +0100, Jon Hunter wrote:
+After some discussion Heiko sent a patch that reverts the offending commit one
+day ago [1] and it's waiting for maintainer to pick-up the patch.
 
-> Please can you drop this patch?
+The reason why we think is best reverting that fix it is explained here [2]
 
-> Per some offline review with Morimoto-san, it turns out that the actual
-> issue resided in my DT (which was incorrect) and not the simple-card
-> machine driver.
+[1] https://lkml.org/lkml/2019/5/22/467
+[2] https://lkml.org/lkml/2019/4/30/270
 
-Sure, can you send a patch doing a revert with a commit log explaining
-why please?
-
---XuV1QlJbYrcVoo+x
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlzmnX8ACgkQJNaLcl1U
-h9DyeAf/aqaSRpEHFdpE0yh4ivOxtAiWHU4BGbL0CGJ3CqeO3BzuYJQHxDNAgNWe
-6+jnVf+RcMVwAFOJ3E4fqt6rYsQ+qIf/aHRGKmUX++TapvVWGnYCMZ6QK3FugGdp
-9YAdt2Go05f+SuPe8xCpgnh2NZubzLRmKycDBbW9xc9C7OOgi+2BxXpdyL7Z66bH
-cYsJ/OdsgDBVnrl2wT4xVMfS6C4x93ym2m4BZEls7E9tyV3E4niW/wMcTlC3I2gd
-SvunVwfZf/3SagJYwJpOBl2zFX/Mi27G+b0O3uCXpidWAZag2CgDPtB2CoAH7/XH
-r9LWxEXv8rzMATbdPAIp9UFP+BE4JA==
-=jm60
------END PGP SIGNATURE-----
-
---XuV1QlJbYrcVoo+x--
+Thanks,
+ Enric
