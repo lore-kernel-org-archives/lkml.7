@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8BECC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:12:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BC8DC282E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:12:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 913E7217D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:12:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 045AD2184B
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:12:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558638742;
-	bh=YBMr8ol5ddUzuPtejLpdxwDOqyjzDxIYdtVrFGBFFaU=;
+	s=default; t=1558638745;
+	bh=9tqMZWqEHULiuOWDI2seNvJ1xyybwcMj/Ewo4lbLsvc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LMKEwDqLLl1Qa4XRcAf8k5AKf4Oc+ht6vdXPIiZcNM5S8OIVbsq091dN9Jbm8HMca
-	 cMvqp10bCr4m6z2sD2H4/MRKSliRxqgDv3Lc5Zj3C5VAO0TJ1VNZqz/z0RzJe17/YN
-	 UqSAXWDdlQXtsfHMuqhGf3DvcFXdR+atkzU7OCOg=
+	b=koRU+Hl1QDSFroP8C8LS222FnvPYbn+0tm99YvV+ByfdQcqEeAGvltpo5UgLRIpvs
+	 5lCqZt6qx4CfCp5oy3iRpuBL5JOCB154qXNg+nBssXbXU1zp/P1pKHQjWH2xN/O0o2
+	 5u2Hoxnvlv80ur5oCAg/p8KGDhvThOuu+tF0PqAU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388440AbfEWTMV (ORCPT
+        id S2388453AbfEWTMY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:12:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46042 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:12:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46096 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388427AbfEWTMS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:12:18 -0400
+        id S2388436AbfEWTMV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:12:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 252E92184B;
-        Thu, 23 May 2019 19:12:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C5FA921855;
+        Thu, 23 May 2019 19:12:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558638737;
-        bh=YBMr8ol5ddUzuPtejLpdxwDOqyjzDxIYdtVrFGBFFaU=;
+        s=default; t=1558638740;
+        bh=9tqMZWqEHULiuOWDI2seNvJ1xyybwcMj/Ewo4lbLsvc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r+z64VZSFdOKHV4AlHcmRRwKQz3Tdn/8ty7Crx6s6sgmKeCZP9JzZXZ56O5pEia6V
-         bMpf2E7fYZhftdBR1HnlD/ddfzqT4c3KMFRIJWqOig+4pEUxxwTRfe+n3rXzXQH6LH
-         9RWUP88Rb1Qha2fbmeq3ohpDrMKQSB9KDhJlrClA=
+        b=Gh556ev1DXvHa9eAEGLdY+uGOVVzOwjxsN8xsw12qccUBR/ER3ikjCXHCtC3LT0h/
+         94pIhyUH0if0/Icfhl8FqqYVROusHXS1mf1NNAeHa6Wkpr0m5B3nx7Kzb/kKMF94CY
+         8W75alejmisQL4fsjn375Kc0mI7EGGIpqQrRa9fc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
         Teddy Wang <teddy.wang@siliconmotion.com>,
         Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: [PATCH 4.14 46/77] fbdev: sm712fb: fix support for 1024x768-16 mode
-Date:   Thu, 23 May 2019 21:06:04 +0200
-Message-Id: <20190523181726.446597096@linuxfoundation.org>
+Subject: [PATCH 4.14 47/77] fbdev: sm712fb: use 1024x768 by default on non-MIPS, fix garbled display
+Date:   Thu, 23 May 2019 21:06:05 +0200
+Message-Id: <20190523181726.555788038@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181719.982121681@linuxfoundation.org>
 References: <20190523181719.982121681@linuxfoundation.org>
@@ -63,14 +63,18 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Yifeng Li <tomli@tomli.me>
 
-commit 6053d3a4793e5bde6299ac5388e76a3bf679ff65 upstream.
+commit 4ed7d2ccb7684510ec5f7a8f7ef534bc6a3d55b2 upstream.
 
-In order to support the 1024x600 panel on Yeeloong Loongson MIPS
-laptop, the original 1024x768-16 table was modified to 1024x600-16,
-without leaving the original. It causes problem on x86 laptop as
-the 1024x768-16 support was still claimed but not working.
+Loongson MIPS netbooks use 1024x600 LCD panels, which is the original
+target platform of this driver, but nearly all old x86 laptops have
+1024x768. Lighting 768 panels using 600's timings would partially
+garble the display. Since it's not possible to distinguish them reliably,
+we change the default to 768, but keep 600 as-is on MIPS.
 
-Fix it by introducing the 1024x768-16 mode.
+Further, earlier laptops, such as IBM Thinkpad 240X, has a 800x600 LCD
+panel, this driver would probably garbled those display. As we don't
+have one for testing, the original behavior of the driver is kept as-is,
+but the problem has been documented is the comments.
 
 Signed-off-by: Yifeng Li <tomli@tomli.me>
 Tested-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
@@ -80,76 +84,101 @@ Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/video/fbdev/sm712fb.c |   59 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 59 insertions(+)
+ drivers/video/fbdev/sm712.h   |    7 +++--
+ drivers/video/fbdev/sm712fb.c |   53 +++++++++++++++++++++++++++++++-----------
+ 2 files changed, 44 insertions(+), 16 deletions(-)
 
+--- a/drivers/video/fbdev/sm712.h
++++ b/drivers/video/fbdev/sm712.h
+@@ -15,9 +15,10 @@
+ 
+ #define FB_ACCEL_SMI_LYNX 88
+ 
+-#define SCREEN_X_RES      1024
+-#define SCREEN_Y_RES      600
+-#define SCREEN_BPP        16
++#define SCREEN_X_RES          1024
++#define SCREEN_Y_RES_PC       768
++#define SCREEN_Y_RES_NETBOOK  600
++#define SCREEN_BPP            16
+ 
+ #define dac_reg	(0x3c8)
+ #define dac_val	(0x3c9)
 --- a/drivers/video/fbdev/sm712fb.c
 +++ b/drivers/video/fbdev/sm712fb.c
-@@ -530,6 +530,65 @@ static const struct modeinit vgamode[] =
- 			0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x15, 0x03,
- 		},
- 	},
-+	{	/*  1024 x 768  16Bpp  60Hz */
-+		1024, 768, 16, 60,
-+		/*  Init_MISC */
-+		0xEB,
-+		{	/*  Init_SR0_SR4 */
-+			0x03, 0x01, 0x0F, 0x03, 0x0E,
-+		},
-+		{	/*  Init_SR10_SR24 */
-+			0xF3, 0xB6, 0xC0, 0xDD, 0x00, 0x0E, 0x17, 0x2C,
-+			0x99, 0x02, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00,
-+			0xC4, 0x30, 0x02, 0x01, 0x01,
-+		},
-+		{	/*  Init_SR30_SR75 */
-+			0x38, 0x03, 0x20, 0x09, 0xC0, 0x3A, 0x3A, 0x3A,
-+			0x3A, 0x3A, 0x3A, 0x3A, 0x00, 0x00, 0x03, 0xFF,
-+			0x00, 0xFC, 0x00, 0x00, 0x20, 0x18, 0x00, 0xFC,
-+			0x20, 0x0C, 0x44, 0x20, 0x00, 0x00, 0x00, 0x3A,
-+			0x06, 0x68, 0xA7, 0x7F, 0x83, 0x24, 0xFF, 0x03,
-+			0x0F, 0x60, 0x59, 0x3A, 0x3A, 0x00, 0x00, 0x3A,
-+			0x01, 0x80, 0x7E, 0x1A, 0x1A, 0x00, 0x00, 0x00,
-+			0x50, 0x03, 0x74, 0x14, 0x3B, 0x0D, 0x09, 0x02,
-+			0x04, 0x45, 0x30, 0x30, 0x40, 0x20,
-+		},
-+		{	/*  Init_SR80_SR93 */
-+			0xFF, 0x07, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x3A,
-+			0xF7, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0x3A, 0x3A,
-+			0x00, 0x00, 0x00, 0x00,
-+		},
-+		{	/*  Init_SRA0_SRAF */
-+			0x00, 0xFB, 0x9F, 0x01, 0x00, 0xED, 0xED, 0xED,
-+			0x7B, 0xFB, 0xFF, 0xFF, 0x97, 0xEF, 0xBF, 0xDF,
-+		},
-+		{	/*  Init_GR00_GR08 */
-+			0x00, 0x00, 0x00, 0x00, 0x00, 0x40, 0x05, 0x0F,
-+			0xFF,
-+		},
-+		{	/*  Init_AR00_AR14 */
-+			0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
-+			0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F,
-+			0x41, 0x00, 0x0F, 0x00, 0x00,
-+		},
-+		{	/*  Init_CR00_CR18 */
-+			0xA3, 0x7F, 0x7F, 0x00, 0x85, 0x16, 0x24, 0xF5,
-+			0x00, 0x60, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-+			0x03, 0x09, 0xFF, 0x80, 0x40, 0xFF, 0x00, 0xE3,
-+			0xFF,
-+		},
-+		{	/*  Init_CR30_CR4D */
-+			0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x02, 0x20,
-+			0x00, 0x00, 0x00, 0x40, 0x00, 0xFF, 0xBF, 0xFF,
-+			0xA3, 0x7F, 0x00, 0x86, 0x15, 0x24, 0xFF, 0x00,
-+			0x01, 0x07, 0xE5, 0x20, 0x7F, 0xFF,
-+		},
-+		{	/*  Init_CR90_CRA7 */
-+			0x55, 0xD9, 0x5D, 0xE1, 0x86, 0x1B, 0x8E, 0x26,
-+			0xDA, 0x8D, 0xDE, 0x94, 0x00, 0x00, 0x18, 0x00,
-+			0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x15, 0x03,
-+		},
-+	},
- 	{	/*  mode#5: 1024 x 768  24Bpp  60Hz */
- 		1024, 768, 24, 60,
- 		/*  Init_MISC */
+@@ -1463,6 +1463,43 @@ static u_long sm7xx_vram_probe(struct sm
+ 	return 0;  /* unknown hardware */
+ }
+ 
++static void sm7xx_resolution_probe(struct smtcfb_info *sfb)
++{
++	/* get mode parameter from smtc_scr_info */
++	if (smtc_scr_info.lfb_width != 0) {
++		sfb->fb->var.xres = smtc_scr_info.lfb_width;
++		sfb->fb->var.yres = smtc_scr_info.lfb_height;
++		sfb->fb->var.bits_per_pixel = smtc_scr_info.lfb_depth;
++		goto final;
++	}
++
++	/*
++	 * No parameter, default resolution is 1024x768-16.
++	 *
++	 * FIXME: earlier laptops, such as IBM Thinkpad 240X, has a 800x600
++	 * panel, also see the comments about Thinkpad 240X above.
++	 */
++	sfb->fb->var.xres = SCREEN_X_RES;
++	sfb->fb->var.yres = SCREEN_Y_RES_PC;
++	sfb->fb->var.bits_per_pixel = SCREEN_BPP;
++
++#ifdef CONFIG_MIPS
++	/*
++	 * Loongson MIPS netbooks use 1024x600 LCD panels, which is the original
++	 * target platform of this driver, but nearly all old x86 laptops have
++	 * 1024x768. Lighting 768 panels using 600's timings would partially
++	 * garble the display, so we don't want that. But it's not possible to
++	 * distinguish them reliably.
++	 *
++	 * So we change the default to 768, but keep 600 as-is on MIPS.
++	 */
++	sfb->fb->var.yres = SCREEN_Y_RES_NETBOOK;
++#endif
++
++final:
++	big_pixel_depth(sfb->fb->var.bits_per_pixel, smtc_scr_info.lfb_depth);
++}
++
+ static int smtcfb_pci_probe(struct pci_dev *pdev,
+ 			    const struct pci_device_id *ent)
+ {
+@@ -1508,19 +1545,6 @@ static int smtcfb_pci_probe(struct pci_d
+ 
+ 	sm7xx_init_hw();
+ 
+-	/* get mode parameter from smtc_scr_info */
+-	if (smtc_scr_info.lfb_width != 0) {
+-		sfb->fb->var.xres = smtc_scr_info.lfb_width;
+-		sfb->fb->var.yres = smtc_scr_info.lfb_height;
+-		sfb->fb->var.bits_per_pixel = smtc_scr_info.lfb_depth;
+-	} else {
+-		/* default resolution 1024x600 16bit mode */
+-		sfb->fb->var.xres = SCREEN_X_RES;
+-		sfb->fb->var.yres = SCREEN_Y_RES;
+-		sfb->fb->var.bits_per_pixel = SCREEN_BPP;
+-	}
+-
+-	big_pixel_depth(sfb->fb->var.bits_per_pixel, smtc_scr_info.lfb_depth);
+ 	/* Map address and memory detection */
+ 	mmio_base = pci_resource_start(pdev, 0);
+ 	pci_read_config_byte(pdev, PCI_REVISION_ID, &sfb->chip_rev_id);
+@@ -1582,6 +1606,9 @@ static int smtcfb_pci_probe(struct pci_d
+ 		goto failed_fb;
+ 	}
+ 
++	/* probe and decide resolution */
++	sm7xx_resolution_probe(sfb);
++
+ 	/* can support 32 bpp */
+ 	if (sfb->fb->var.bits_per_pixel == 15)
+ 		sfb->fb->var.bits_per_pixel = 16;
 
 
