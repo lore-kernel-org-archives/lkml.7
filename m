@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C80EC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:31:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52027C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:31:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B130217D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:31:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 299B52184E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:31:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639873;
-	bh=KYikK1JLLVyzvW7pXda+GM9WVHPirwtjFfbWEW8PFiQ=;
+	s=default; t=1558639877;
+	bh=Pycf4tZHJJVc1EdtrAOP6wlos8p2T3C9kGsXHQzPX0I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S21QfppA+xFPj2C9g8bLcFOZUeShGMqiDoy6LCXYYsZUyNuONktYAWRdiJ8Dh4OQ6
-	 SVwXNzl/pCYzFlJqZ1fQRbIuOd6RR+nZhqnMi7f/Qil/ttkKEUg/S3LhXjwVw+q4va
-	 0uqZ8Nx5p+FhROsex26bIn7EhGqQwJ3hcvOYpaec=
+	b=qPYcgnMF79EGF/S1vMuWpoJzHSKbszN/yUzKpa6Eyfir5bU9dffbtROHT4KzGQ4vc
+	 Ap7uai6J8w9MDprgqViPQWliXvT/i1iESNpIx/Eds0UdeHB1V8JCEfqLx92BRxV4fk
+	 Pc9sxBh2P9P6R2m2JoTjXc9ipgP65faAD8n/lOyY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392237AbfEWTbM (ORCPT
+        id S2403806AbfEWTbQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:31:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44816 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:31:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44942 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391788AbfEWTbH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:31:07 -0400
+        id S2392233AbfEWTbM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:31:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 01EE5206BA;
-        Thu, 23 May 2019 19:31:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 57697206BA;
+        Thu, 23 May 2019 19:31:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639866;
-        bh=KYikK1JLLVyzvW7pXda+GM9WVHPirwtjFfbWEW8PFiQ=;
+        s=default; t=1558639871;
+        bh=Pycf4tZHJJVc1EdtrAOP6wlos8p2T3C9kGsXHQzPX0I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Js0xCIuZlf4ufqRiqnu+XksSpVhzokPncBLeqaay6C8den/JNHxw5ds8Kw3sKuqtM
-         F2Ks+IkKQfV9liZeZUsd28nL+0z4XJPKlgTuiK9diNqezHaBwAZF1E3mpKHRz5O5RL
-         99T6A/68OZfa5ythJcV+4mJXA2okl9SXvaBjXRns=
+        b=ls0VEv5e9zRc6dYSqwuBN1iKy88mXlN8MbuJtmP7XmsN59tBP0QeNVSFxEz3jB8UB
+         9dWwBtswGAJH5CnFoo6ZEx2HFdG5frwCM9jAZMjyfY0jgL+CZpyKYGt6vLXItu8VmW
+         suPP3txPFQuPd23pn/3u/KpKNK0/V5/TH9iLUN0I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        James Prestwood <james.prestwood@linux.intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 5.1 095/122] PCI: Mark Atheros AR9462 to avoid bus reset
-Date:   Thu, 23 May 2019 21:06:57 +0200
-Message-Id: <20190523181717.757997306@linuxfoundation.org>
+        stable@vger.kernel.org, Xiang Chen <chenxiang66@hisilicon.com>,
+        John Garry <john.garry@huawei.com>,
+        Robin Murphy <robin.murphy@arm.com>
+Subject: [PATCH 5.1 115/122] driver core: Postpone DMA tear-down until after devres release for probe failure
+Date:   Thu, 23 May 2019 21:07:17 +0200
+Message-Id: <20190523181720.748780763@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181705.091418060@linuxfoundation.org>
 References: <20190523181705.091418060@linuxfoundation.org>
@@ -60,34 +60,117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Prestwood <james.prestwood@linux.intel.com>
+From: John Garry <john.garry@huawei.com>
 
-commit 6afb7e26978da5e86e57e540fdce65c8b04f398a upstream.
+commit 0b777eee88d712256ba8232a9429edb17c4f9ceb upstream.
 
-When using PCI passthrough with this device, the host machine locks up
-completely when starting the VM, requiring a hard reboot.  Add a quirk to
-avoid bus resets on this device.
+In commit 376991db4b64 ("driver core: Postpone DMA tear-down until after
+devres release"), we changed the ordering of tearing down the device DMA
+ops and releasing all the device's resources; this was because the DMA ops
+should be maintained until we release the device's managed DMA memories.
 
-Fixes: c3e59ee4e766 ("PCI: Mark Atheros AR93xx to avoid bus reset")
-Link: https://lore.kernel.org/linux-pci/20190107213248.3034-1-james.prestwood@linux.intel.com
-Signed-off-by: James Prestwood <james.prestwood@linux.intel.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-CC: stable@vger.kernel.org	# v3.14+
+However, we have seen another crash on an arm64 system when a
+device driver probe fails:
+
+  hisi_sas_v3_hw 0000:74:02.0: Adding to iommu group 2
+  scsi host1: hisi_sas_v3_hw
+  BUG: Bad page state in process swapper/0  pfn:313f5
+  page:ffff7e0000c4fd40 count:1 mapcount:0
+  mapping:0000000000000000 index:0x0
+  flags: 0xfffe00000001000(reserved)
+  raw: 0fffe00000001000 ffff7e0000c4fd48 ffff7e0000c4fd48
+0000000000000000
+  raw: 0000000000000000 0000000000000000 00000001ffffffff
+0000000000000000
+  page dumped because: PAGE_FLAGS_CHECK_AT_FREE flag(s) set
+  bad because of flags: 0x1000(reserved)
+  Modules linked in:
+  CPU: 49 PID: 1 Comm: swapper/0 Not tainted
+5.1.0-rc1-43081-g22d97fd-dirty #1433
+  Hardware name: Huawei D06/D06, BIOS Hisilicon D06 UEFI
+RC0 - V1.12.01 01/29/2019
+  Call trace:
+  dump_backtrace+0x0/0x118
+  show_stack+0x14/0x1c
+  dump_stack+0xa4/0xc8
+  bad_page+0xe4/0x13c
+  free_pages_check_bad+0x4c/0xc0
+  __free_pages_ok+0x30c/0x340
+  __free_pages+0x30/0x44
+  __dma_direct_free_pages+0x30/0x38
+  dma_direct_free+0x24/0x38
+  dma_free_attrs+0x9c/0xd8
+  dmam_release+0x20/0x28
+  release_nodes+0x17c/0x220
+  devres_release_all+0x34/0x54
+  really_probe+0xc4/0x2c8
+  driver_probe_device+0x58/0xfc
+  device_driver_attach+0x68/0x70
+  __driver_attach+0x94/0xdc
+  bus_for_each_dev+0x5c/0xb4
+  driver_attach+0x20/0x28
+  bus_add_driver+0x14c/0x200
+  driver_register+0x6c/0x124
+  __pci_register_driver+0x48/0x50
+  sas_v3_pci_driver_init+0x20/0x28
+  do_one_initcall+0x40/0x25c
+  kernel_init_freeable+0x2b8/0x3c0
+  kernel_init+0x10/0x100
+  ret_from_fork+0x10/0x18
+  Disabling lock debugging due to kernel taint
+  BUG: Bad page state in process swapper/0  pfn:313f6
+  page:ffff7e0000c4fd80 count:1 mapcount:0
+mapping:0000000000000000 index:0x0
+[   89.322983] flags: 0xfffe00000001000(reserved)
+  raw: 0fffe00000001000 ffff7e0000c4fd88 ffff7e0000c4fd88
+0000000000000000
+  raw: 0000000000000000 0000000000000000 00000001ffffffff
+0000000000000000
+
+The crash occurs for the same reason.
+
+In this case, on the really_probe() failure path, we are still clearing
+the DMA ops prior to releasing the device's managed memories.
+
+This patch fixes this issue by reordering the DMA ops teardown and the
+call to devres_release_all() on the failure path.
+
+Reported-by: Xiang Chen <chenxiang66@hisilicon.com>
+Tested-by: Xiang Chen <chenxiang66@hisilicon.com>
+Signed-off-by: John Garry <john.garry@huawei.com>
+Reviewed-by: Robin Murphy <robin.murphy@arm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pci/quirks.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/base/dd.c |    5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -3408,6 +3408,7 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_A
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x0032, quirk_no_bus_reset);
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x003c, quirk_no_bus_reset);
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x0033, quirk_no_bus_reset);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x0034, quirk_no_bus_reset);
+--- a/drivers/base/dd.c
++++ b/drivers/base/dd.c
+@@ -490,7 +490,7 @@ re_probe:
+ 	if (dev->bus->dma_configure) {
+ 		ret = dev->bus->dma_configure(dev);
+ 		if (ret)
+-			goto dma_failed;
++			goto probe_failed;
+ 	}
  
- /*
-  * Root port on some Cavium CN8xxx chips do not successfully complete a bus
+ 	if (driver_sysfs_add(dev)) {
+@@ -546,14 +546,13 @@ re_probe:
+ 	goto done;
+ 
+ probe_failed:
+-	arch_teardown_dma_ops(dev);
+-dma_failed:
+ 	if (dev->bus)
+ 		blocking_notifier_call_chain(&dev->bus->p->bus_notifier,
+ 					     BUS_NOTIFY_DRIVER_NOT_BOUND, dev);
+ pinctrl_bind_failed:
+ 	device_links_no_driver(dev);
+ 	devres_release_all(dev);
++	arch_teardown_dma_ops(dev);
+ 	driver_sysfs_remove(dev);
+ 	dev->driver = NULL;
+ 	dev_set_drvdata(dev, NULL);
 
 
