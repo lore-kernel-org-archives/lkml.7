@@ -2,106 +2,256 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6170C282E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 13:54:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF996C282DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 13:54:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A92D62133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 13:54:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97CAA2133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 13:54:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AYqyVghC"
+	dkim=pass (2048-bit key) header.d=fixposition.ch header.i=@fixposition.ch header.b="TbW6+/HN";
+	dkim=pass (2048-bit key) header.d=fixposition.ch header.i=@fixposition.ch header.b="RNvdWUXD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730855AbfEWNx7 (ORCPT
+        id S1730874AbfEWNyP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 09:53:59 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:44715 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730323AbfEWNx5 (ORCPT
+        Thu, 23 May 2019 09:54:15 -0400
+Received: from mail.fixposition.ch ([212.51.146.252]:51390 "EHLO
+        mail.fixposition.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730323AbfEWNyP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 09:53:57 -0400
-Received: by mail-pg1-f196.google.com with SMTP id n2so3172062pgp.11;
-        Thu, 23 May 2019 06:53:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=wBOus5XnMT/GSFm7Ta2azVSwxrEw9Cm7MC3BR8HqZMQ=;
-        b=AYqyVghC2krw5toK68f4xOM57O3RMbSdGaDaNMebJfETjLn/GEMAAcQ1+mBmNK7dmY
-         ljlsrUa3QizI/pO79Q0a+D9ZxtBFPJINAA3WfdMDmbO7wuqpe/eDcKr/c0BnlYfOnrXa
-         36hY+yot8t+cf59FWTZ8oaW1/5sLEBxOsHzdzDjIODlgJ/Sx1EeCr8+v/SVOg59hBL9q
-         7MKg//dmuoJlbxnZ+uBtuz/Z9FXj6R0MA+KRgL+/hQxR4g/oFHV6OHZW4LuUvfi2LB97
-         7nQMQZtL2Oyhx1B7qaZPxKD3pBgF2PVEst0tGfbE9MLIUtr41utsqNJaltFKndXPZFyv
-         xpJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=wBOus5XnMT/GSFm7Ta2azVSwxrEw9Cm7MC3BR8HqZMQ=;
-        b=ehRd8E93chCojwH/SruG6YBzvqLPLg6/YdztZ+xVKEcTKOwyzHpK5V/RTV7DAc3sdH
-         5wyjdhJVBjYyZQswTlzBNWc44vJ0uwQC+4F0+qpMCuF5bkPQvUTIYp8Xnp5xjGXzUpJ5
-         lvJi7WgxIbZZQXIK4lV/QBwYkJnSPvnix4m73IGaalqpt0fet+Gjrxhar+QTo5jGIpZH
-         AW4DoblVb2kNeeK8Gfz7Vmm0Y1nJzAL6Q5pfdnYgAOw2/ou5gNh20CX6I8GwkbI0kCe7
-         HmWbfBT9RQDZGbcx3+ambNCx8SrkkEdJ3c8Rxj+6xqKb7In6uo3aqxJDfLGDZdt/XpBZ
-         y+Ow==
-X-Gm-Message-State: APjAAAV1VqHDKlO3Ayes0snIg5jYIE/LOwR0aT0zoB2RYSJslLh+2oEu
-        6EY+ktjuC9Hs5czDO09JepZM7QmwXQg=
-X-Google-Smtp-Source: APXvYqyjfGFyvo1lLdMR/jT+jVGxH8yZMja3v8JHFTQYYTIDpJj5qCC6LIDRsy0lm1J2aJ3us2ZShg==
-X-Received: by 2002:a62:2ec4:: with SMTP id u187mr103116784pfu.84.1558619636990;
-        Thu, 23 May 2019 06:53:56 -0700 (PDT)
-Received: from zhanggen-UX430UQ ([66.42.35.75])
-        by smtp.gmail.com with ESMTPSA id q70sm959922pja.31.2019.05.23.06.53.38
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 23 May 2019 06:53:56 -0700 (PDT)
-Date:   Thu, 23 May 2019 21:53:26 +0800
-From:   Gen Zhang <blackgod016574@gmail.com>
-To:     kvalo@codeaurora.org, eyalreizer@gmail.com
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] sdio: Fix a memory leaking bug in wl1271_probe()
-Message-ID: <20190523135326.GA25841@zhanggen-UX430UQ>
+        Thu, 23 May 2019 09:54:15 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.fixposition.ch (Postfix) with ESMTP id 3BAA81FD7B;
+        Thu, 23 May 2019 15:54:12 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fixposition.ch;
+        s=mail; t=1558619652;
+        bh=PA8e0mAyI05eeyPdXbeaUuDGGdyjfTjWwscmDMjVUoc=;
+        h=In-Reply-To:From:Date:Cc:To:Subject:From;
+        b=TbW6+/HNtYT4iA3Zlv2GRktYYVo8WRtdfHUo2cJZhfQ9uzv5sgYFOrH1foCpqR0Y/
+         BYFETHtc/PvCR7wKbgnSKlD+w7FYOFI1mfV80lXCJ0YTdrdTBayjxJ6L1cFy7pUelA
+         QzcefFh4N6H2N13IsJVxPNxOIfWOFI3OIxuGeLBMVb8oweeHL+vEOWBEYyduh5WGqN
+         6EVvZ5BI592/ZapYwo/HwsQSxpVmHLPoQBYSuXoU6lP5+aEvN33765+8fnC+EkflXm
+         GZpDvCp1j7RbbASmNxPVitTstTU/jsy+IFC0bZAjOIH2lSkg3Pet5quuGbCadAoW+w
+         80c1XLAa97aIQ==
+X-Virus-Scanned: Debian amavisd-new at fixposition.ch
+Received: from mail.fixposition.ch ([127.0.0.1])
+        by localhost (mail.fixposition.ch [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id x8T_B6QxQIWG; Thu, 23 May 2019 15:54:09 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.fixposition.ch (Postfix) with ESMTP id 1C8A51FF91;
+        Thu, 23 May 2019 15:54:09 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fixposition.ch;
+        s=mail; t=1558619649;
+        bh=PA8e0mAyI05eeyPdXbeaUuDGGdyjfTjWwscmDMjVUoc=;
+        h=In-Reply-To:From:Date:Cc:To:Subject:From;
+        b=RNvdWUXDs4JozcTX5gUu7ovxs4aHnKIH+PZ1JX7bkcPMID0+HUINTM73aBn7mAdQj
+         A9u0DdPwp7kE0NBIS7gqmwxvg78JWJp2pIZOwngjHsNZDW/HmZLxSf1xuMryks0fg8
+         zPWRLd1Scn/HcnQS001jo+ZRqC3vBbte2MON66mR6+Q6XUM1GDti3hw3t7rA1eoEFC
+         WTOZ/XHWECmPVWHonKQ3TC9i39OPOPBd4RNxL/4y3dXnA2JdyJE/TrO3pOYMRNxZkN
+         WPK83fWZx+JSCb3gaxTDa6Mb9ovP2qS8EcsAc6xT5wHuGW0qy6HLTQZJx6az9Sb/Z0
+         g1jTrqU+T5x8g==
+Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <MN2PR12MB337375FCA3AAA2EB5F08B15AC4010@MN2PR12MB3373.namprd12.prod.outlook.com>
+From:   "Andreea Lutac" <andreea.lutac@fixposition.ch>
+X-Forward: 82.130.71.40
+Date:   Thu, 23 May 2019 15:54:09 +0200
+Cc:     =?utf-8?q?stevemo=40skydio=2Ecom?= <stevemo@skydio.com>,
+        =?utf-8?q?jic23=40kernel=2Eorg?= <jic23@kernel.org>,
+        =?utf-8?q?knaack=2Eh=40gmx=2Ede?= <knaack.h@gmx.de>,
+        =?utf-8?q?lars=40metafoo=2Ede?= <lars@metafoo.de>,
+        =?utf-8?q?pmeerw=40pmeerw=2Enet?= <pmeerw@pmeerw.net>,
+        =?utf-8?q?linux-iio=40vger=2Ekernel=2Eorg?= 
+        <linux-iio@vger.kernel.org>,
+        =?utf-8?q?linux-kernel=40vger=2Ekernel=2Eorg?= 
+        <linux-kernel@vger.kernel.org>
+To:     "Jean-Baptiste Maneyrol" <JManeyrol@invensense.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Message-ID: <42bd-5ce6a600-59-ca9e8b0@181727209>
+Subject: =?utf-8?q?Re=3A?= ICM20602 buffer issues with the =?utf-8?q?inv=5Fmpu6050?= 
+ driver
+User-Agent: SOGoMail 4.0.7
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In wl1271_probe(), 'glue->core' is allocated by platform_device_alloc(),
-when this allocation fails, ENOMEM is returned. However, 'pdev_data'
-and 'glue' are allocated by devm_kzalloc() before 'glue->core'. When
-platform_device_alloc() returns NULL, we should also free 'pdev_data'
-and 'glue' before wl1271_probe() ends to prevent leaking memory.
+Hi Jean-Baptiste,
 
-Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
----
-diff --git a/drivers/net/wireless/ti/wlcore/sdio.c b/drivers/net/wireless/ti/wlcore/sdio.c
-index 4d4b0770..e134f30 100644
---- a/drivers/net/wireless/ti/wlcore/sdio.c
-+++ b/drivers/net/wireless/ti/wlcore/sdio.c
-@@ -340,7 +340,7 @@ static int wl1271_probe(struct sdio_func *func,
- 	if (!glue->core) {
- 		dev_err(glue->dev, "can't allocate platform_device");
- 		ret = -ENOMEM;
--		goto out;
-+		goto out_free;
- 	}
- 
- 	glue->core->dev.parent = &func->dev;
-@@ -385,6 +385,10 @@ static int wl1271_probe(struct sdio_func *func,
- out_dev_put:
- 	platform_device_put(glue->core);
- 
-+out_free:
-+	devm_kfree(&func->dev, pdev_data);
-+	devm_kfree(&func->dev, glue);
-+
- out:
- 	return ret;
- }
----
+Thank you for the prompt response. Your explanation makes sense and I k=
+now how to at least work around this issue for now. For my current purp=
+oses, it is still useful to have the temperature data as well, so I'll =
+stick to reading all 14 bytes for now and then see if there's a way to =
+permanently enable temp as a more long-term solution.
+
+I probably wouldn't have come across this problem had it not been the c=
+ase that libiio fails to enable the temp channel. Looking into it I fou=
+nd that libiio has an open issue where channels like temp that are neit=
+her modified, nor indexed are not counted as scan elements and thus can=
+'t be enabled. So just in case someone facing a similar issue comes acr=
+oss this thread, this can be either worked around by making temp an ind=
+exed channel in the driver and hopefully solved definitively by waiting=
+ for the fix to be merged into libiio.
+
+Thanks for all the help!
+All the best,
+Andreea
+
+
+On Thursday, May 23, 2019 12:12 CEST, Jean-Baptiste Maneyrol <JManeyrol=
+@invensense.com> wrote: 
+
+> Hi Andreea,
+> 
+> I understand the issue now. The problem is that temperature data are =
+always present in the FIFO. Even when the attribute is disabled. This i=
+s a limitation of this chip and cannot be changed on the hardware side.=
+
+> 
+> When temp attribute is disabled while accel and gyro are on, the iio =
+buffer is expecting to have 12 bytes with accel + gyro data. But the dr=
+iver will still provides 14 bytes with temperature in the middle since =
+the FIFO will contain that. Always enabling temperature attribute on us=
+erspace will solve this issue, but that's certainly not the best.
+> 
+> A correct solution would be to enforce temperature data in iio buffer=
+ by having the temp attribute always enabled and read-only in userspace=
+. That would reflect correctly the chip capabilities. But I don't know =
+if this is feasible. A workaround would be to add data post-processing =
+in the driver and delete temp data when it is disabled. But I don't lik=
+e this kind of workaround because that goes against iio buffer design p=
+rinciple.
+> 
+> Hope this help you.
+> 
+> Best regards,
+> Jean-Baptiste Maneyrol
+> 
+> From: Andreea Lutac <andreea.lutac@fixposition.ch>
+> Sent: Thursday, May 23, 2019 11:44
+> To: Jean-Baptiste Maneyrol
+> Cc: stevemo@skydio.com; jic23@kernel.org; knaack.h@gmx.de; lars@metaf=
+oo.de; pmeerw@pmeerw.net; linux-iio@vger.kernel.org; linux-kernel@vger.=
+kernel.org
+> Subject: Re: ICM20602 buffer issues with the inv=5Fmpu6050 driver
+> =C2=A0
+> =C2=A0CAUTION: This email originated from outside of the organization=
+. Please make sure the sender is who they say they are and do not click=
+ links or open attachments unless you recognize the sender and know the=
+ content is safe.
+> 
+> Hi Jean-Baptiste and Stepan,
+> 
+> Thanks so much for the replies and the advice. I've dug a bit deeper =
+into this and added a few printk statements to the driver, as suggested=
+ by Stepan. It looks like the device is getting recognized correctly as=
+ ICM20602 and the buffer is being filled with 14 bytes as expected.
+> 
+> But I've identified some strange behaviour regarding the temperature =
+channeI. If I manually enable all 7 scan elements and read 14 bytes fro=
+m the device file, the readings appear correct and change accordingly w=
+hen I move the chip around. However, if I set in=5Ftemp=5Fen set to 0 (=
+with everything else still enabled) and read 12 bytes, the buffer doesn=
+'t seem to acknowledge this change and shift the gyro values up, instea=
+d getting only the first 12 bytes (accel=5Fx, accel=5Fy, accel=5Fz, tem=
+p, gyro=5Fx, gyro=5Fy), without gyro=5Fz. So this is why it looks as if=
+ temp is replacing gyro=5Fx.
+> I made a pastebin here with some of the (unconverted) values I got wh=
+ile testing these cases: https://urldefense.proofpoint.com/v2/url?u=3Dh=
+ttps-3A=5F=5Fpastebin.com=5FBYVqDNch&d=3DDwIFaQ&c=3DWoJWtq5JV8YrKnzRxvD=
+8NxmTP=5F1wxfE0prPmo0NeZwg&r=3D4jiDX=5F1brsSWfCjfA6Ovj1d4h9MF8q7Xk5aBwG=
+28mVk&m=3DsbkHiUlsj8pOWjf2iTq5CXEFvv-MNyqBKOqCjxOj9kc&s=3DPmb23R-DoTj9h=
+DwYk3qqiUfOCUWbtfpVQjUZ1lajeFI&e=3D
+> 
+> Attempting the same reads with my C++ program via libiio always resul=
+ts in only the first 12 bytes being read, as for some strange reason li=
+biio fails to enable the temperature channel, so iio=5Fdevice=5Fget=5Fs=
+ample=5Fsize() is always 12 and it's actually gyro=5Fz that I can't get=
+ to.
+> 
+> I'll try to look through the code that is supposed to enable a channe=
+l and see why it's not succeeding via libiio. Do you have any clue as t=
+o which bit of code does the adjustment of the buffer values according =
+to which channels are enabled? Is this done in the driver or deeper in =
+the kernel?
+> 
+> Thanks once again for the help!
+> Best regards,
+> Andreea
+> 
+> On Wednesday, May 22, 2019 16:33 CEST, Jean-Baptiste Maneyrol <JManey=
+rol@invensense.com> wrote:
+> 
+> > Hello,
+> >
+> > I had a look inside the driver to verify the buffer implementation.=
+ It looks correct to me. I don't see where the problem can come from. I=
+ am sorry I don't have a setup currently to test in live.
+> >
+> > For sure you can have a different result by reading the buffer thro=
+ugh the char device file compared to reading the raw sysfs entry. The b=
+uffer is taking the data from the FIFO and the raw sysfs from the senso=
+r data registers.
+> >
+> > You can perhaps test value 1 by 1 in the buffer, and verify the cor=
+rectness of every attributes. If you can also send a complete buffer lo=
+g that would be helpful.
+> > Every data is 2 bytes long and in the following order: accel=5Fx, a=
+ccel=5Fy, accel=5Fz, temp, gyro=5Fx, gyro=5Fy, gyro=5Fz
+> >
+> > Best regards,
+> > JB Maneyrol
+> >
+> > From: Andreea Lutac <andreea.lutac@fixposition.ch>
+> > Sent: Tuesday, May 21, 2019 12:40
+> > Cc: Jean-Baptiste Maneyrol; stevemo@skydio.com; jic23@kernel.org; k=
+naack.h@gmx.de; lars@metafoo.de; pmeerw@pmeerw.net; linux-iio@vger.kern=
+el.org; linux-kernel@vger.kernel.org
+> > Subject: ICM20602 buffer issues with the inv=5Fmpu6050 driver
+> > =C2=A0
+> > Hello,
+> >
+> > I've been trying to get some data samples from the ICM20602 IMU usi=
+ng the mpu6050 driver which recently added support for it, but I'm enco=
+untering an issue with the ordering of the data in the FIFO.
+> > According to the specs of the device, if the accel and gyro XYZ cha=
+nnels are enabled, then the hardware FIFO is filled with 14 bytes corre=
+sponding to the following channels: accel=5Fx, accel=5Fy, accel=5Fz, te=
+mp, anglvel=5Fx, anglvel=5Fy, anglvel=5Fz. However, when reading out th=
+e buffer, the value I get for anglvel=5Fx seems to actually be the temp=
+erature. This=C2=A0 occurs both when reading with iio=5Fchannel=5Fread =
+(via libiio) and also if I read directly from /dev/iio:device with only=
+ in=5Fanglvel=5Fx=5Fen set. But in=5Fanglvel=5Fx=5Fraw reports correct =
+values, which made me suspect that maybe somewhere in the driver this i=
+nterleaved temp channel is not accounted for in the buffer structure.
+> >
+> > I had a look at the driver code and inv=5Fmpu6050=5Fread=5Ffifo() i=
+n particular, but I can't identify anything amiss. I've applied the rec=
+ent patch that added the extra 2 temperature bytes ( ), but the problem=
+ persists. So far I've tried changing the size of the data buffer, defi=
+ned in inv=5Fmpu=5Fiio.h:
+> >
+> > /* 6 + 6 round up and plus 8 */
+> > #define INV=5FMPU6050=5FOUTPUT=5FDATA=5FSIZE=C2=A0=C2=A0=C2=A0=C2=A0=
+ 24
+> >
+> > from 24 to 32, according to the intuition that 24 corresponds to re=
+adings without temperature (i.e. 6 bytes for accel, rounded up to 8 + 6=
+ bytes for gyro, rounded up to 8 + 8 bytes for the timestamp =3D 24) an=
+d thus another 8 bytes would be needed, but that doesn't seem to have s=
+olved it.
+> >
+> > I'm quite new to driver development though, so I think there might =
+be something I'm not getting. I would be really grateful if anyone coul=
+d shed some light over what's happening here or give some advice as to =
+what I could be doing wrong.
+> >
+> > Best regards,
+> > Andreea Lutac
+> >
+>
+
