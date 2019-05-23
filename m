@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02BE2C282DE
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:33:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 127CFC46460
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:33:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE7A62133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:33:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDF9720879
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:33:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639982;
-	bh=bKs5VgwY2UPSlE56fRRjQSE74HLtE6QYQqPNJaat+zg=;
+	s=default; t=1558639998;
+	bh=a9UcbVbIAa9yFWsS81lStfkrnBa1VMhlC8V7xi8PUFQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VI7qBLS3k3PvVZZOlcUTQU0C+mcfxPNfZ475G5qRcylyPOPnZrWxhZJOk2xIY9lde
-	 zCaudDMwknt5PEIDC10nAk8mKgXqujWOmOGxMzaZFIcNrdqoO+8QgpMJhbuqlshWTQ
-	 KuEIRe/3z9HLN3a94DoBFEJg3151g6EkGq9lqaH4=
+	b=ajFzMhKbFoK7zvc/8jEBytT+xu4e4/V4ZWYGQ2t9zDUH9/a4Nsog95Pk5yIO4idyN
+	 t0tHtkqh6Xo7LIWPcTHM9YDdFdnCdU/xhTur3uKbWBGQtqq7LDvyEjP0SO4WcSXzJ2
+	 74odJrR/i3+ufmNAOoOge5Aze8IUYSKry7YskC3E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392038AbfEWTaD (ORCPT
+        id S2391906AbfEWT3O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:30:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43216 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:29:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42190 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392018AbfEWTaA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:30:00 -0400
+        id S2391891AbfEWT3L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:29:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91539217D7;
-        Thu, 23 May 2019 19:29:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 38079217D9;
+        Thu, 23 May 2019 19:29:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639799;
-        bh=bKs5VgwY2UPSlE56fRRjQSE74HLtE6QYQqPNJaat+zg=;
+        s=default; t=1558639750;
+        bh=a9UcbVbIAa9yFWsS81lStfkrnBa1VMhlC8V7xi8PUFQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gt5FhsLvCxtQByiFGyNSdf1ifmkJZqPqSaz0+/tZYlvLzxGUttJ9p4SkczVF6sujo
-         uVmC64+CPXMprHvFjKMPhZfla0dpzLQQ+eAbu5C/J2d0tLyuCmLLxYxbEZVdYUV/3U
-         kVs+ul5aiI66OanCca6rL0h0dw8NNoOLRL/k4iAI=
+        b=bShqE1UDZEsQnsUeaGDTzlwbZdarA44ejH2A5Ih9UDjukf7p9pR7n2SzcpEOXDkT/
+         6NZSTbdtvMD7aQWZr/6L3dSwGkogx4agmllANOPXarqyczi+bYUIaUzAAD7DYJy+ML
+         q9f/veXtf0BBxGMR+l3x8jhUOngBhAUSHpLRQQpc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 5.1 080/122] perf intel-pt: Fix improved sample timestamp
-Date:   Thu, 23 May 2019 21:06:42 +0200
-Message-Id: <20190523181715.374011582@linuxfoundation.org>
+        stable@vger.kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
+        Bernie Thompson <bernie@plugable.com>,
+        Ladislav Michl <ladis@linux-mips.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: [PATCH 5.1 065/122] udlfb: introduce a rendering mutex
+Date:   Thu, 23 May 2019 21:06:27 +0200
+Message-Id: <20190523181713.287323463@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181705.091418060@linuxfoundation.org>
 References: <20190523181705.091418060@linuxfoundation.org>
@@ -60,96 +61,149 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adrian Hunter <adrian.hunter@intel.com>
+From: Mikulas Patocka <mpatocka@redhat.com>
 
-commit 61b6e08dc8e3ea80b7485c9b3f875ddd45c8466b upstream.
+commit babc250e278eac7b0e671bdaedf833759b43bb78 upstream.
 
-The decoder uses its current timestamp in samples. Usually that is a
-timestamp that has already passed, but in some cases it is a timestamp
-for a branch that the decoder is walking towards, and consequently
-hasn't reached.
+Rendering calls may be done simultaneously from the workqueue,
+dlfb_ops_write, dlfb_ops_ioctl, dlfb_ops_set_par and dlfb_dpy_deferred_io.
+The code is robust enough so that it won't crash on concurrent rendering.
 
-The intel_pt_sample_time() function decides which is which, but was not
-handling TNT packets exactly correctly.
+However, concurrent rendering may cause display corruption if the same
+pixel is simultaneously being rendered. In order to avoid this corruption,
+this patch adds a mutex around the rendering calls.
 
-In the case of TNT, the timestamp applies to the first branch, so the
-decoder must first walk to that branch.
-
-That means intel_pt_sample_time() should return true for TNT, and this
-patch makes that change. However, if the first branch is a non-taken
-branch (i.e. a 'N'), then intel_pt_sample_time() needs to return false
-for subsequent taken branches in the same TNT packet.
-
-To handle that, introduce a new state INTEL_PT_STATE_TNT_CONT to
-distinguish the cases.
-
-Note that commit 3f04d98e972b5 ("perf intel-pt: Improve sample
-timestamp") was also a stable fix and appears, for example, in v4.4
-stable tree as commit a4ebb58fd124 ("perf intel-pt: Improve sample
-timestamp").
-
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: stable@vger.kernel.org # v4.4+
-Fixes: 3f04d98e972b5 ("perf intel-pt: Improve sample timestamp")
-Link: http://lkml.kernel.org/r/20190510124143.27054-3-adrian.hunter@intel.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+Cc: Bernie Thompson <bernie@plugable.com>
+Cc: Ladislav Michl <ladis@linux-mips.org>
+Cc: <stable@vger.kernel.org>
+[b.zolnierkie: replace "dlfb:" with "uldfb:" in the patch summary]
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/perf/util/intel-pt-decoder/intel-pt-decoder.c |   13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+ drivers/video/fbdev/udlfb.c |   41 ++++++++++++++++++++++++++++++-----------
+ include/video/udlfb.h       |    1 +
+ 2 files changed, 31 insertions(+), 11 deletions(-)
 
---- a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
-+++ b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
-@@ -58,6 +58,7 @@ enum intel_pt_pkt_state {
- 	INTEL_PT_STATE_NO_IP,
- 	INTEL_PT_STATE_ERR_RESYNC,
- 	INTEL_PT_STATE_IN_SYNC,
-+	INTEL_PT_STATE_TNT_CONT,
- 	INTEL_PT_STATE_TNT,
- 	INTEL_PT_STATE_TIP,
- 	INTEL_PT_STATE_TIP_PGD,
-@@ -72,8 +73,9 @@ static inline bool intel_pt_sample_time(
- 	case INTEL_PT_STATE_NO_IP:
- 	case INTEL_PT_STATE_ERR_RESYNC:
- 	case INTEL_PT_STATE_IN_SYNC:
--	case INTEL_PT_STATE_TNT:
-+	case INTEL_PT_STATE_TNT_CONT:
- 		return true;
-+	case INTEL_PT_STATE_TNT:
- 	case INTEL_PT_STATE_TIP:
- 	case INTEL_PT_STATE_TIP_PGD:
- 	case INTEL_PT_STATE_FUP:
-@@ -1261,7 +1263,9 @@ static int intel_pt_walk_tnt(struct inte
- 				return -ENOENT;
- 			}
- 			decoder->tnt.count -= 1;
--			if (!decoder->tnt.count)
-+			if (decoder->tnt.count)
-+				decoder->pkt_state = INTEL_PT_STATE_TNT_CONT;
-+			else
- 				decoder->pkt_state = INTEL_PT_STATE_IN_SYNC;
- 			decoder->tnt.payload <<= 1;
- 			decoder->state.from_ip = decoder->ip;
-@@ -1292,7 +1296,9 @@ static int intel_pt_walk_tnt(struct inte
+--- a/drivers/video/fbdev/udlfb.c
++++ b/drivers/video/fbdev/udlfb.c
+@@ -596,7 +596,7 @@ static int dlfb_render_hline(struct dlfb
  
- 		if (intel_pt_insn.branch == INTEL_PT_BR_CONDITIONAL) {
- 			decoder->tnt.count -= 1;
--			if (!decoder->tnt.count)
-+			if (decoder->tnt.count)
-+				decoder->pkt_state = INTEL_PT_STATE_TNT_CONT;
-+			else
- 				decoder->pkt_state = INTEL_PT_STATE_IN_SYNC;
- 			if (decoder->tnt.payload & BIT63) {
- 				decoder->tnt.payload <<= 1;
-@@ -2372,6 +2378,7 @@ const struct intel_pt_state *intel_pt_de
- 			err = intel_pt_walk_trace(decoder);
- 			break;
- 		case INTEL_PT_STATE_TNT:
-+		case INTEL_PT_STATE_TNT_CONT:
- 			err = intel_pt_walk_tnt(decoder);
- 			if (err == -EAGAIN)
- 				err = intel_pt_walk_trace(decoder);
+ static int dlfb_handle_damage(struct dlfb_data *dlfb, int x, int y, int width, int height)
+ {
+-	int i;
++	int i, ret;
+ 	char *cmd;
+ 	cycles_t start_cycles, end_cycles;
+ 	int bytes_sent = 0;
+@@ -606,21 +606,29 @@ static int dlfb_handle_damage(struct dlf
+ 
+ 	start_cycles = get_cycles();
+ 
++	mutex_lock(&dlfb->render_mutex);
++
+ 	aligned_x = DL_ALIGN_DOWN(x, sizeof(unsigned long));
+ 	width = DL_ALIGN_UP(width + (x-aligned_x), sizeof(unsigned long));
+ 	x = aligned_x;
+ 
+ 	if ((width <= 0) ||
+ 	    (x + width > dlfb->info->var.xres) ||
+-	    (y + height > dlfb->info->var.yres))
+-		return -EINVAL;
++	    (y + height > dlfb->info->var.yres)) {
++		ret = -EINVAL;
++		goto unlock_ret;
++	}
+ 
+-	if (!atomic_read(&dlfb->usb_active))
+-		return 0;
++	if (!atomic_read(&dlfb->usb_active)) {
++		ret = 0;
++		goto unlock_ret;
++	}
+ 
+ 	urb = dlfb_get_urb(dlfb);
+-	if (!urb)
+-		return 0;
++	if (!urb) {
++		ret = 0;
++		goto unlock_ret;
++	}
+ 	cmd = urb->transfer_buffer;
+ 
+ 	for (i = y; i < y + height ; i++) {
+@@ -654,7 +662,11 @@ error:
+ 		    >> 10)), /* Kcycles */
+ 		   &dlfb->cpu_kcycles_used);
+ 
+-	return 0;
++	ret = 0;
++
++unlock_ret:
++	mutex_unlock(&dlfb->render_mutex);
++	return ret;
+ }
+ 
+ static void dlfb_init_damage(struct dlfb_data *dlfb)
+@@ -782,17 +794,19 @@ static void dlfb_dpy_deferred_io(struct
+ 	int bytes_identical = 0;
+ 	int bytes_rendered = 0;
+ 
++	mutex_lock(&dlfb->render_mutex);
++
+ 	if (!fb_defio)
+-		return;
++		goto unlock_ret;
+ 
+ 	if (!atomic_read(&dlfb->usb_active))
+-		return;
++		goto unlock_ret;
+ 
+ 	start_cycles = get_cycles();
+ 
+ 	urb = dlfb_get_urb(dlfb);
+ 	if (!urb)
+-		return;
++		goto unlock_ret;
+ 
+ 	cmd = urb->transfer_buffer;
+ 
+@@ -825,6 +839,8 @@ error:
+ 	atomic_add(((unsigned int) ((end_cycles - start_cycles)
+ 		    >> 10)), /* Kcycles */
+ 		   &dlfb->cpu_kcycles_used);
++unlock_ret:
++	mutex_unlock(&dlfb->render_mutex);
+ }
+ 
+ static int dlfb_get_edid(struct dlfb_data *dlfb, char *edid, int len)
+@@ -986,6 +1002,8 @@ static void dlfb_ops_destroy(struct fb_i
+ 
+ 	cancel_work_sync(&dlfb->damage_work);
+ 
++	mutex_destroy(&dlfb->render_mutex);
++
+ 	if (info->cmap.len != 0)
+ 		fb_dealloc_cmap(&info->cmap);
+ 	if (info->monspecs.modedb)
+@@ -1682,6 +1700,7 @@ static int dlfb_usb_probe(struct usb_int
+ 	dlfb->ops = dlfb_ops;
+ 	info->fbops = &dlfb->ops;
+ 
++	mutex_init(&dlfb->render_mutex);
+ 	dlfb_init_damage(dlfb);
+ 	spin_lock_init(&dlfb->damage_lock);
+ 	INIT_WORK(&dlfb->damage_work, dlfb_damage_work);
+--- a/include/video/udlfb.h
++++ b/include/video/udlfb.h
+@@ -48,6 +48,7 @@ struct dlfb_data {
+ 	int base8;
+ 	u32 pseudo_palette[256];
+ 	int blank_mode; /*one of FB_BLANK_ */
++	struct mutex render_mutex;
+ 	int damage_x;
+ 	int damage_y;
+ 	int damage_x2;
 
 
