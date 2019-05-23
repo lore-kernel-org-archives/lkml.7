@@ -2,109 +2,224 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_MED,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C4D0C282DE
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 18:49:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2338C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 18:56:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7A5D2175B
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 18:49:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B117D2175B
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 18:56:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="u0BN/6Ny"
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="TpJGQEtd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731529AbfEWSty (ORCPT
+        id S1731570AbfEWS4x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 14:49:54 -0400
-Received: from mail-yw1-f49.google.com ([209.85.161.49]:42929 "EHLO
-        mail-yw1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731397AbfEWStx (ORCPT
+        Thu, 23 May 2019 14:56:53 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:43368 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731475AbfEWS4w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 14:49:53 -0400
-Received: by mail-yw1-f49.google.com with SMTP id s5so2655292ywd.9
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 11:49:53 -0700 (PDT)
+        Thu, 23 May 2019 14:56:52 -0400
+Received: by mail-qk1-f195.google.com with SMTP id z6so4450394qkl.10
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 11:56:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=q/4hzu5ZLVp3mgIPesJPmq/IWbfe4flwA2HG1sCD0TQ=;
-        b=u0BN/6Ny8Z4+blOm22Z5UCSC8Wy5XnV4pzNa9RSEvcRmexqQPvcwNghBha2X4MQ36C
-         7dzsdV+f6ydrqcsngoZ6b81Z6BiBjBfDHoUWeZaLAK49agcruYHxVKfgwvl6vkbI7a2g
-         qWF7FK3K5DeBcV4zvxpXp0o81by/At5dYBRjnk7yfQBXl0RTZNucfLEpe2dPkSFCumKX
-         lM23S8zrXdpTm2qs3mlX+TjAUJg+SGmA3p+ePvgDlWxlg/5n+eJfvBZ/ka/EFGLzfvai
-         bSt2zk6ItfPP82e9IfgqRiHMA9BW3IYp9vtRWaIl180exc8Z8hQL9gAUR3c4PwBkBOO2
-         q+Yw==
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=tpvuJFfMZp6SvK9KDKtENhr68QaXMeztIkCmID+gkbc=;
+        b=TpJGQEtdvImqGvhe/eKjEO8QDgPwfoiipVfYsvu8wdLwgtVuQs8kpIoEKSmy0n5AAB
+         mmDdZeaG38F886HVHK0E7IZLM15b7j60azRHwJv9MkHjE5Nh2NWaG+wJeuz6JNMsZ0Xv
+         642umB9Dyh86aGukWzlCnmdW4YNJ65xUcN/wnwAnt7zF3TZBZBd70jSEXjY6RowpwQea
+         F3uOh5s2mo7Q5mTv7secDzKi88+CoKoQEm5gvuwoHDKH3U1sqEFonAVu8tY3/LS8U4fx
+         x1Brb8t6+vZ0sxn9c/N8shWB+d1dE7ghsqb8jhpX2ihTcwnJ2iwL1TVB4+OD3Sw4Pq0M
+         e3kw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=q/4hzu5ZLVp3mgIPesJPmq/IWbfe4flwA2HG1sCD0TQ=;
-        b=m8zyB0fvAZ+2G6jFniR64pk0oRa0EMsF7IIFT9DImYbINBuwcuPJo3kukpiTrLrZ5u
-         OegjNzEk5ca4pObDkCYvpKiwNq3nsnr7503PwH7zWJsbudaWu+qpWMgF8JFPJIFBrkye
-         2xODCiFuxKlIne+a5mnx/1UEbUpzabRR1GOdQFVWpyS0KUzwQsx3k8f+TXyR/sajPKdm
-         kuVNpZSyFKVB2vvZbB3CZ5Igji5DMvP28sfBsawL0xaiSsvhcDv+BQm+ps4I1ISE1N8t
-         KulF6B7Wc5XGE6PrSbfVQeE+1aZGT8HZqFTaEn6YQslSkbFhYhr4VuACRXr5NzGPWgS8
-         5sKg==
-X-Gm-Message-State: APjAAAWYeMpEObKyx3qL7rrZI+nVas2gl2ujKtT3zscc1VPxmkcRNv4y
-        gr/A44KmmJT/+iGWufwr4IoYnKVE1jdbLbhmlZOdRw==
-X-Google-Smtp-Source: APXvYqzw3j/oSC5Q9iYfqvGAp+HoFdUfIIMs+Btzd/EKLDObZYBH8mQUpoL/qVeAVC9OPWePoER5CA68wIGZsaWSqM0=
-X-Received: by 2002:a81:5ec3:: with SMTP id s186mr47879009ywb.308.1558637392374;
- Thu, 23 May 2019 11:49:52 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=tpvuJFfMZp6SvK9KDKtENhr68QaXMeztIkCmID+gkbc=;
+        b=DaLp3S+JB6CYj19hHcUXJAJ8SBFb21y13KUkwHH0O0iyEmpeYAtIPI0ALX+lYdlhc+
+         eCYUsneq8bvgyeg2pAlkO3ovT49bApZmahkQZy145TPprsGWTrZ7JuXWArWcVYaFw3j9
+         nP8zrdjnolcsKO/NNAjqJ9qLGd+2G5+JjyGbdKeqjn2sGz8ZZgs7YleT04SrCMY19MWg
+         /n5BZJx47dsTJ3edEvvbVpz9Wpm2MQLCz5AqkuhOf0r2H8OwrX7SWwE2QrCzFNyeLbj5
+         WijJozBAcpBEct1sLu6iVGxzh5rhOQLt6nP9F9LpuyI2j0IgpTtfXbybH9ABSyOlmfkj
+         zVAA==
+X-Gm-Message-State: APjAAAX0y2GesQh6xbTwh4gZM618tiyVEZ1RT1nSG7EnREt4cbcraLD8
+        ZVDgsfB9xJeUDv6jsjP1mtPAbQ==
+X-Google-Smtp-Source: APXvYqzkCsMoxGu6ex5VfOPsujiJXvHMJTP9UN3a4hrFq/rsvsUHT12F9+IcJpnaX/OqFYYGhuK/pg==
+X-Received: by 2002:a37:de07:: with SMTP id h7mr4343499qkj.41.1558637811222;
+        Thu, 23 May 2019 11:56:51 -0700 (PDT)
+Received: from cakuba.netronome.com ([66.60.152.14])
+        by smtp.gmail.com with ESMTPSA id e133sm127413qkb.76.2019.05.23.11.56.50
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 23 May 2019 11:56:51 -0700 (PDT)
+Date:   Thu, 23 May 2019 11:56:46 -0700
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Joergen Andreasen <joergen.andreasen@microchip.com>
+Cc:     <netdev@vger.kernel.org>,
+        "Microchip Linux Driver Support" <UNGLinuxDriver@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next v2 1/1] net: mscc: ocelot: Implement port
+ policers via tc command
+Message-ID: <20190523115630.7710cc49@cakuba.netronome.com>
+In-Reply-To: <20190523104939.2721-2-joergen.andreasen@microchip.com>
+References: <20190502094029.22526-1-joergen.andreasen@microchip.com>
+        <20190523104939.2721-1-joergen.andreasen@microchip.com>
+        <20190523104939.2721-2-joergen.andreasen@microchip.com>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-References: <20190523174349.GA10939@cmpxchg.org> <20190523183713.GA14517@bombadil.infradead.org>
-In-Reply-To: <20190523183713.GA14517@bombadil.infradead.org>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Thu, 23 May 2019 11:49:41 -0700
-Message-ID: <CALvZod4o0sA8CM961ZCCp-Vv+i6awFY0U07oJfXFDiVfFiaZfg@mail.gmail.com>
-Subject: Re: xarray breaks thrashing detection and cgroup isolation
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux MM <linux-mm@kvack.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kernel Team <kernel-team@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 11:37 AM Matthew Wilcox <willy@infradead.org> wrote:
->
-> On Thu, May 23, 2019 at 01:43:49PM -0400, Johannes Weiner wrote:
-> > I noticed that recent upstream kernels don't account the xarray nodes
-> > of the page cache to the allocating cgroup, like we used to do for the
-> > radix tree nodes.
-> >
-> > This results in broken isolation for cgrouped apps, allowing them to
-> > escape their containment and harm other cgroups and the system with an
-> > excessive build-up of nonresident information.
-> >
-> > It also breaks thrashing/refault detection because the page cache
-> > lives in a different domain than the xarray nodes, and so the shadow
-> > shrinker can reclaim nonresident information way too early when there
-> > isn't much cache in the root cgroup.
-> >
-> > I'm not quite sure how to fix this, since the xarray code doesn't seem
-> > to have per-tree gfp flags anymore like the radix tree did. We cannot
-> > add SLAB_ACCOUNT to the radix_tree_node_cachep slab cache. And the
-> > xarray api doesn't seem to really support gfp flags, either (xas_nomem
-> > does, but the optimistic internal allocations have fixed gfp flags).
->
-> Would it be a problem to always add __GFP_ACCOUNT to the fixed flags?
-> I don't really understand cgroups.
+On Thu, 23 May 2019 12:49:39 +0200, Joergen Andreasen wrote:
+> Hardware offload of matchall classifier and police action are now
+> supported via the tc command.
+> Supported police parameters are: rate and burst.
+> 
+> Example:
+> 
+> Add:
+> tc qdisc add dev eth3 handle ffff: ingress
+> tc filter add dev eth3 parent ffff: prio 1 handle 2	\
+> 	matchall skip_sw				\
+> 	action police rate 100Mbit burst 10000
+> 
+> Show:
+> tc -s -d qdisc show dev eth3
+> tc -s -d filter show dev eth3 ingress
+> 
+> Delete:
+> tc filter del dev eth3 parent ffff: prio 1
+> tc qdisc del dev eth3 handle ffff: ingress
+> 
+> Signed-off-by: Joergen Andreasen <joergen.andreasen@microchip.com>
 
-Does xarray cache allocated nodes, something like radix tree's:
+> diff --git a/drivers/net/ethernet/mscc/ocelot.c b/drivers/net/ethernet/mscc/ocelot.c
+> index d715ef4fc92f..3ec7864d9dc8 100644
+> --- a/drivers/net/ethernet/mscc/ocelot.c
+> +++ b/drivers/net/ethernet/mscc/ocelot.c
+> @@ -943,6 +943,7 @@ static const struct net_device_ops ocelot_port_netdev_ops = {
+>  	.ndo_vlan_rx_kill_vid		= ocelot_vlan_rx_kill_vid,
+>  	.ndo_set_features		= ocelot_set_features,
+>  	.ndo_get_port_parent_id		= ocelot_get_port_parent_id,
+> +	.ndo_setup_tc			= ocelot_setup_tc,
+>  };
+>  
+>  static void ocelot_get_strings(struct net_device *netdev, u32 sset, u8 *data)
+> @@ -1663,8 +1664,9 @@ int ocelot_probe_port(struct ocelot *ocelot, u8 port,
+>  	dev->netdev_ops = &ocelot_port_netdev_ops;
+>  	dev->ethtool_ops = &ocelot_ethtool_ops;
+>  
+> -	dev->hw_features |= NETIF_F_HW_VLAN_CTAG_FILTER | NETIF_F_RXFCS;
+> -	dev->features |= NETIF_F_HW_VLAN_CTAG_FILTER;
+> +	dev->hw_features |= NETIF_F_HW_VLAN_CTAG_FILTER | NETIF_F_RXFCS |
+> +		NETIF_F_HW_TC;
+> +	dev->features |= NETIF_F_HW_VLAN_CTAG_FILTER | NETIF_F_HW_TC;
+>  
+>  	memcpy(dev->dev_addr, ocelot->base_mac, ETH_ALEN);
+>  	dev->dev_addr[ETH_ALEN - 1] += port;
 
-static DEFINE_PER_CPU(struct radix_tree_preload, radix_tree_preloads) = { 0, };
+You need to add a check in set_features to make sure nobody clears the
+NETIF_F_TC flag while something is offloaded, otherwise you will miss
+the REMOVE callback (it will bounce from the
+tc_cls_can_offload_and_chain0() check).
 
-For the cached one, no __GFP_ACCOUNT flag.
+> diff --git a/drivers/net/ethernet/mscc/ocelot_tc.c b/drivers/net/ethernet/mscc/ocelot_tc.c
+> new file mode 100644
+> index 000000000000..2412e0dbc267
+> --- /dev/null
+> +++ b/drivers/net/ethernet/mscc/ocelot_tc.c
+> @@ -0,0 +1,164 @@
+> +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
+> +/* Microsemi Ocelot Switch TC driver
+> + *
+> + * Copyright (c) 2019 Microsemi Corporation
+> + */
+> +
+> +#include "ocelot_tc.h"
+> +#include "ocelot_police.h"
+> +#include <net/pkt_cls.h>
+> +
+> +static int ocelot_setup_tc_cls_matchall(struct ocelot_port *port,
+> +					struct tc_cls_matchall_offload *f,
+> +					bool ingress)
+> +{
+> +	struct netlink_ext_ack *extack = f->common.extack;
+> +	struct ocelot_policer pol = { 0 };
+> +	struct flow_action_entry *action;
+> +	int err;
+> +
+> +	netdev_dbg(port->dev, "%s: port %u command %d cookie %lu\n",
+> +		   __func__, port->chip_port, f->command, f->cookie);
+> +
+> +	if (!ingress) {
+> +		NL_SET_ERR_MSG_MOD(extack, "Only ingress is supported");
+> +		return -EOPNOTSUPP;
+> +	}
+> +
+> +	switch (f->command) {
+> +	case TC_CLSMATCHALL_REPLACE:
+> +		if (!flow_offload_has_one_action(&f->rule->action)) {
+> +			NL_SET_ERR_MSG_MOD(extack,
+> +					   "Only one action is supported");
+> +			return -EOPNOTSUPP;
+> +		}
+> +
+> +		action = &f->rule->action.entries[0];
+> +
+> +		if (action->id != FLOW_ACTION_POLICE) {
+> +			NL_SET_ERR_MSG_MOD(extack, "Unsupported action");
+> +			return -EOPNOTSUPP;
+> +		}
 
-Also some users of xarray may not want __GFP_ACCOUNT. That's the
-reason we had __GFP_ACCOUNT for page cache instead of hard coding it
-in radix tree.
+Please also reject the offload if block is shared, as HW policer state
+cannot be shared between ports, the way it is in SW.  You have to save
+whether the block is shared or not at bind time, see:
 
-Shakeel
+d6787147e15d ("net/sched: remove block pointer from common offload structure")
+
+> +		if (port->tc.police_id && port->tc.police_id != f->cookie) {
+> +			NL_SET_ERR_MSG_MOD(extack,
+> +					   "Only one policer per port is supported\n");
+> +			return -EEXIST;
+> +		}
+> +
+> +		pol.rate = (u32)div_u64(action->police.rate_bytes_ps, 1000) * 8;
+> +		pol.burst = (u32)div_u64(action->police.rate_bytes_ps *
+> +					 PSCHED_NS2TICKS(action->police.burst),
+> +					 PSCHED_TICKS_PER_SEC);
+> +
+> +		err = ocelot_port_policer_add(port, &pol);
+> +		if (err) {
+> +			NL_SET_ERR_MSG_MOD(extack, "Could not add policer\n");
+> +			return err;
+> +		}
+> +
+> +		port->tc.police_id = f->cookie;
+> +		return 0;
+> +	case TC_CLSMATCHALL_DESTROY:
+> +		if (port->tc.police_id != f->cookie)
+> +			return -ENOENT;
+> +
+> +		err = ocelot_port_policer_del(port);
+> +		if (err) {
+> +			NL_SET_ERR_MSG_MOD(extack,
+> +					   "Could not delete policer\n");
+> +			return err;
+> +		}
+> +		port->tc.police_id = 0;
+> +		return 0;
+> +	case TC_CLSMATCHALL_STATS: /* fall through */
+> +	default:
+> +		return -EOPNOTSUPP;
+> +	}
+> +}
