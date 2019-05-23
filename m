@@ -2,57 +2,60 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6A1AC282DE
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:25:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB68CC282DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:25:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B00822054F
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:25:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 934DE21871
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:25:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639539;
-	bh=q86KOwhOagZeZ7tD6NY2jFgZ6s+ArKqafjIKr0GqakM=;
+	s=default; t=1558639543;
+	bh=gOg6ApEAJe4wnqGZX/rysUCWcIgdXxexgYaNqQLTak4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Qcm2NYLpRK8TI9V2gCt+BEKodspzVKYI1vEYSeVhuZQrpBebyvz3Nmjaw5SZiHymf
-	 XE2/SnbykWIvsVJ1zlvIzEgoceX9V/zpNPbmJRc+lorJS5crbygIRUnkBH+uCQLZto
-	 Cyg0zILwktuKryvdDUbWQuVo/8Ocv/252Frd2DJA=
+	b=JDiu9g19YoMTetqOz7aMXD61GWEOvbB1Vvfxf5yrvSQD652ILe0YDmVoYT9laFzKJ
+	 bGIDVF+MV/d8llSgvrUgtuiSBsjN7lyrn+/Cty5pTvmDctkZtcIrDDoyF4o1HsfpUB
+	 aq7SjKuBWtJNiPLvdxKXFX0x1T7I1nFXme6BXEDU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390837AbfEWTZj (ORCPT
+        id S2391158AbfEWTZm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:25:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37142 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:25:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37212 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391134AbfEWTZf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:25:35 -0400
+        id S2391130AbfEWTZi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:25:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BDA2020868;
-        Thu, 23 May 2019 19:25:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 434EA21851;
+        Thu, 23 May 2019 19:25:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639535;
-        bh=q86KOwhOagZeZ7tD6NY2jFgZ6s+ArKqafjIKr0GqakM=;
+        s=default; t=1558639537;
+        bh=gOg6ApEAJe4wnqGZX/rysUCWcIgdXxexgYaNqQLTak4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HZ9SysgSO4ECyh04l7inclYnyZf4UMl+J6dz3fa6EcQZytqdCMlunxusjRF1JJTm1
-         wSkvBB+QB2uwjm3OVh20l/EoSh+Gso0mIVFNfVdCXN0b8rJi/mjI8h2ekwRJ4TW6Pn
-         /bbYvFu3VFfIxjNUxC68hYoMQD9/iLh7SoLLmprc=
+        b=rVDBcA8hGHsLNvwrshD5xU2p9VJHjP3O+wvM5WR4HfU2lW4k1IxYPQiZJK6hluY0T
+         nXimx8HO9QTv63M1NscoSjt4cEgt1MyLiRFvOJDLunrWDTt24yJXUBfJSDLedq4VFj
+         KHcKhid0FHQbWiZXo3JzIMXdhK4ZTL8mMKqmVrpM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Jiri Olsa <jolsa@kernel.org>,
-        linux-snps-arc@lists.infradead.org,
+        stable@vger.kernel.org, Robert Walker <robert.walker@arm.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Mike Leach <mike.leach@linaro.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Vineet Gupta <Vineet.Gupta1@synopsys.com>,
+        Suzuki K Poulouse <suzuki.poulose@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 131/139] perf bench numa: Add define for RUSAGE_THREAD if not present
-Date:   Thu, 23 May 2019 21:06:59 +0200
-Message-Id: <20190523181736.167614424@linuxfoundation.org>
+Subject: [PATCH 5.0 132/139] perf cs-etm: Always allocate memory for cs_etm_queue::prev_packet
+Date:   Thu, 23 May 2019 21:07:00 +0200
+Message-Id: <20190523181736.244509976@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181720.120897565@linuxfoundation.org>
 References: <20190523181720.120897565@linuxfoundation.org>
@@ -65,64 +68,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit bf561d3c13423fc54daa19b5d49dc15fafdb7acc ]
+[ Upstream commit 35bb59c10a6d0578806dd500477dae9cb4be344e ]
 
-While cross building perf to the ARC architecture on a fedora 30 host,
-we were failing with:
+Robert Walker reported a segmentation fault is observed when process
+CoreSight trace data; this issue can be easily reproduced by the command
+'perf report --itrace=i1000i' for decoding tracing data.
 
-      CC       /tmp/build/perf/bench/numa.o
-  bench/numa.c: In function ‘worker_thread’:
-  bench/numa.c:1261:12: error: ‘RUSAGE_THREAD’ undeclared (first use in this function); did you mean ‘SIGEV_THREAD’?
-    getrusage(RUSAGE_THREAD, &rusage);
-              ^~~~~~~~~~~~~
-              SIGEV_THREAD
-  bench/numa.c:1261:12: note: each undeclared identifier is reported only once for each function it appears in
+If neither the 'b' flag (synthesize branches events) nor 'l' flag
+(synthesize last branch entries) are specified to option '--itrace',
+cs_etm_queue::prev_packet will not been initialised.  After merging the
+code to support exception packets and sample flags, there introduced a
+number of uses of cs_etm_queue::prev_packet without checking whether it
+is valid, for these cases any accessing to uninitialised prev_packet
+will cause crash.
 
-[perfbuilder@60d5802468f6 perf]$ /arc_gnu_2019.03-rc1_prebuilt_uclibc_le_archs_linux_install/bin/arc-linux-gcc --version | head -1
-arc-linux-gcc (ARCv2 ISA Linux uClibc toolchain 2019.03-rc1) 8.3.1 20190225
-[perfbuilder@60d5802468f6 perf]$
+As cs_etm_queue::prev_packet is used more widely now and it's already
+hard to follow which functions have been called in a context where the
+validity of cs_etm_queue::prev_packet has been checked, this patch
+always allocates memory for cs_etm_queue::prev_packet.
 
-Trying to reproduce a report by Vineet, I noticed that, with just
-cross-built zlib and numactl libraries, I ended up with the above
-failure.
-
-So, since RUSAGE_THREAD is available as a define, check for that and
-numactl libraries, I ended up with the above failure.
-
-So, since RUSAGE_THREAD is available as a define in the system headers,
-check if it is defined in the 'perf bench numa' sources and define it if
-not.
-
-Now it builds and I have to figure out if the problem reported by Vineet
-only takes place if we have libelf or some other library available.
-
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: linux-snps-arc@lists.infradead.org
+Reported-by: Robert Walker <robert.walker@arm.com>
+Suggested-by: Robert Walker <robert.walker@arm.com>
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+Tested-by: Robert Walker <robert.walker@arm.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Mike Leach <mike.leach@linaro.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Link: https://lkml.kernel.org/n/tip-2wb4r1gir9xrevbpq7qp0amk@git.kernel.org
+Cc: Suzuki K Poulouse <suzuki.poulose@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Fixes: 7100b12cf474 ("perf cs-etm: Generate branch sample for exception packet")
+Fixes: 24fff5eb2b93 ("perf cs-etm: Avoid stale branch samples when flush packet")
+Link: http://lkml.kernel.org/r/20190428083228.20246-1-leo.yan@linaro.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/bench/numa.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ tools/perf/util/cs-etm.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/bench/numa.c b/tools/perf/bench/numa.c
-index 44195514b19e6..fa56fde6e8d80 100644
---- a/tools/perf/bench/numa.c
-+++ b/tools/perf/bench/numa.c
-@@ -38,6 +38,10 @@
- #include <numa.h>
- #include <numaif.h>
+diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+index 27a374ddf6615..947f1bb2fbdfb 100644
+--- a/tools/perf/util/cs-etm.c
++++ b/tools/perf/util/cs-etm.c
+@@ -345,11 +345,9 @@ static struct cs_etm_queue *cs_etm__alloc_queue(struct cs_etm_auxtrace *etm,
+ 	if (!etmq->packet)
+ 		goto out_free;
  
-+#ifndef RUSAGE_THREAD
-+# define RUSAGE_THREAD 1
-+#endif
-+
- /*
-  * Regular printout to the terminal, supressed if -q is specified:
-  */
+-	if (etm->synth_opts.last_branch || etm->sample_branches) {
+-		etmq->prev_packet = zalloc(szp);
+-		if (!etmq->prev_packet)
+-			goto out_free;
+-	}
++	etmq->prev_packet = zalloc(szp);
++	if (!etmq->prev_packet)
++		goto out_free;
+ 
+ 	if (etm->synth_opts.last_branch) {
+ 		size_t sz = sizeof(struct branch_stack);
 -- 
 2.20.1
 
