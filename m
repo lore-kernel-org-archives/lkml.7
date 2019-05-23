@@ -2,198 +2,107 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30BDAC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 21:46:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5459C282DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 21:48:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E938D2168B
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 21:46:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A619920868
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 21:48:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vF7wzIaf"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Zhdv63Et"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388397AbfEWVq3 (ORCPT
+        id S2388426AbfEWVsN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 17:46:29 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:35050 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388232AbfEWVq2 (ORCPT
+        Thu, 23 May 2019 17:48:13 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:38463 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388166AbfEWVsM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 17:46:28 -0400
-Received: by mail-ed1-f67.google.com with SMTP id p26so11282000edr.2;
-        Thu, 23 May 2019 14:46:26 -0700 (PDT)
+        Thu, 23 May 2019 17:48:12 -0400
+Received: by mail-pl1-f193.google.com with SMTP id f97so3273952plb.5
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 14:48:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hS1J+L8InX8t+S5g40fUDrEZZWAutsMmjF58rVNfY4A=;
-        b=vF7wzIafOwzPH1p6LsShpR37Mg3sBS7pnLiT2O9iV6X1EtYSjTwLFwI1Br/cLiMXt2
-         RwhRLJ6sJ8W8XSai7YLJK5m3TJbd46SuWj7BgeZG4WUd4KKSpPrpTbI+ff62ThALF71C
-         odj8iC1OSSKR/yrb1wuok+xjLsOJO0qivUJqCPfh9PBISpU6oulbKPK4Vf1ZdTq4f//q
-         3N4a0kdGoEHNkmU/wZx5V5PaWeMeebWVmHcI783Ik9w5f+UmCmSyThzR/d02njmGhDq+
-         XzHD//Fm/PwpHXQf1ljwBKIyq9nnSNpVikR1A3hDfePxb8GaqeIJCk4D8XaeNI1moqnl
-         5qCw==
+        d=sifive.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=cRjsWIBkFu7xChKc5ODPWxRtyAuuqlLwnhGlual1d7o=;
+        b=Zhdv63Etq9ZqvxrpKVb9soHIGj0Q24oISvjDjej3wPUUd/Cnb+UldZiZtfrDTaIgu4
+         k/3l6z4swcOXGNbr7U7MmMkvFFMhvHlsvYBN1lmFjkeK6VbWXm5sjP1aWe9DSHu1k1fH
+         +cN0PVDMxA8slbCi7HJThOcm7ANy2YsLJFyrzLpf3iC3NXZ/pUASClHd3DQAmJYekNSX
+         u5PpK/415fxUlaYwU1eLb6sqZCWwrUM4eIeYNMam/BkP+B1PYCzfQsTmmVxb+B6ApH+H
+         bd7TG4fOrpjsWnsZoHWIFNl/habsr+Nqb1HSaXiq0no7Go4qLaX7JC+frOnhw9DqukLe
+         ySFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hS1J+L8InX8t+S5g40fUDrEZZWAutsMmjF58rVNfY4A=;
-        b=d1AEp2ysj2JLc09oB3E281wUGCkk8dSHQr50i0HT73+zlJeJ0HIJPrdthuh55zALl3
-         wP79v8SfzlWt8+lnXpbUHu5OpoX+aOfKbi+Kibd/PbbcLzyK8Anb9QQ3DRL82edUpsUk
-         Q2eCpGgogHh2fGbSu5gQSV0ygokG7FFYVC5I4PvNBrpcfINJxptvtc1JIPaBI4M6E45D
-         /nWr2Ma0LZsHyMI1FFvOkNsHlZ361LpQwJGJXAsO4wJBHCiKYXOPYG/zudObp8xQ777h
-         LM8xjaa9kNnnPSOjmF9+K2uHyShs+nEvSrlmKxto+8b3VYHwfZUz0ow4yA2sszcvj9Pu
-         ge1g==
-X-Gm-Message-State: APjAAAXF3YXgeRx22mGBGVM9aUwu41zPAZ9GJNPq/hhiJ9sn1R706iSh
-        DI7g73mqhy/scJdvOLUGqVdEw1QoGvIMboUVrLA=
-X-Google-Smtp-Source: APXvYqwRs1XOL8neFbNGaC+e+ESBojE/AQYVeCKksTEz4shDZdYlC7mr4NocdxwmtEAjUnfC/5JJpyz2nvSkbDYoeDo=
-X-Received: by 2002:a50:b665:: with SMTP id c34mr99149662ede.148.1558647986054;
- Thu, 23 May 2019 14:46:26 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190523210651.80902-1-fklassen@appneta.com> <20190523210651.80902-3-fklassen@appneta.com>
-In-Reply-To: <20190523210651.80902-3-fklassen@appneta.com>
-From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Date:   Thu, 23 May 2019 17:45:49 -0400
-Message-ID: <CAF=yD-Lcg2wkGoKm8yGNnb_z5925PJztEAej-ahvz=2G35ke4g@mail.gmail.com>
-Subject: Re: [PATCH net 2/4] net/udpgso_bench_tx: options to exercise TX CMSG
-To:     Fred Klassen <fklassen@appneta.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-kselftest@vger.kernel.org,
-        Willem de Bruijn <willemb@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=cRjsWIBkFu7xChKc5ODPWxRtyAuuqlLwnhGlual1d7o=;
+        b=qITm6l0vuG0vhHkVoOTBGULRhnhbG2cPUq+b6F9f+0SbcHMcPKcJ0OXXEfM+FLHOCc
+         kSUY+CzbYFQaFBXzHMUyZCPvw/2TC7vo9UKtnpw8RjCeen95dwApR6EB4TiYkRdBTGBl
+         8UIJYkX+KZY4kKIcW20vkjUMOivnyB5k0auLrbgeiyqsj0LajMwskHfATPrV5wk7L/Ip
+         bhPI8BKxzYL2ds55YD0s2aSrWEIZEYEJW16ZGN9rQQAjSNa9vtsSARnw6ZuEkOl+REWY
+         VsEr7FO/T9mlAD4e+icyYzPoOAI7l70ciNivO0GPqNjaVdoJv2CTTgTOmUJge4F8wd5E
+         OmZw==
+X-Gm-Message-State: APjAAAVNs0Wa4Vew4+VkQKn636vCK/VjPHkzsJrWIa2iN/iXuiODJlWd
+        eC4z70BnWgapejordF52jfJe3Q==
+X-Google-Smtp-Source: APXvYqwYpmQE4QulweV//CaaANh0ZzjwCj5mOtvZC5LJ9Go4sqfKX4lZUjjLrMyvaVKS4b5H7zgJWw==
+X-Received: by 2002:a17:902:4e:: with SMTP id 72mr49493273pla.80.1558648091144;
+        Thu, 23 May 2019 14:48:11 -0700 (PDT)
+Received: from nuc7.sifive.com ([12.206.222.2])
+        by smtp.gmail.com with ESMTPSA id f22sm280757pgl.25.2019.05.23.14.48.09
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Thu, 23 May 2019 14:48:10 -0700 (PDT)
+From:   Alan Mikhak <alan.mikhak@sifive.com>
+X-Google-Original-From: Alan Mikhak < alan.mikhak@sifive.com >
+To:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kishon@ti.com, lorenzo.pieralisi@arm.com,
+        linux-riscv@lists.infradead.org, palmer@sifive.com,
+        paul.walmsley@sifive.com
+Cc:     Alan Mikhak <alan.mikhak@sifive.com>
+Subject: [PATCH v2] PCI: endpoint: Allocate enough space for fixed size BAR
+Date:   Thu, 23 May 2019 14:47:59 -0700
+Message-Id: <1558648079-13893-1-git-send-email-alan.mikhak@sifive.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 5:11 PM Fred Klassen <fklassen@appneta.com> wrote:
->
-> This enhancement adds options that facilitate load testing with
-> additional TX CMSG options, and to optionally print results of
-> various send CMSG operations.
->
-> These options are especially useful in isolating situations
-> where error-queue messages are lost when combined with other
-> CMSG operations (e.g. SO_ZEROCOPY).
->
-> New options:
->
->     -T - add TX CMSG that requests TX software timestamps
->     -H - similar to -T except request TX hardware timestamps
->     -q - add IP_TOS/IPV6_TCLASS TX CMSG
->     -P - call poll() before reading error queue
->     -v - print detailed results
->
-> Fixes: 3a687bef148d ("selftests: udp gso benchmark")
+PCI endpoint test function code should honor the .bar_fixed_size parameter
+from underlying endpoint controller drivers or results may be unexpected.
 
-This is not a fix, but an extension. Fixes tags help with backporting
-to stable kernels. There is something to be said to backport the main
-change and support SO_TIMESTAMPING + UDP_GSO on older kernels,
-especially since it is very concise. But the tests should probably be
-in a separate patch set targeting net-next.
+In pci_epf_test_alloc_space(), check if BAR being used for test register
+space is a fixed size BAR. If so, allocate the required fixed size.
 
+Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
+---
+ drivers/pci/endpoint/functions/pci-epf-test.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-> Signed-off-by: Fred Klassen <fklassen@appneta.com>
-> ---
->  tools/testing/selftests/net/udpgso_bench_tx.c | 290 ++++++++++++++++++++++++--
->  1 file changed, 273 insertions(+), 17 deletions(-)
->
-> diff --git a/tools/testing/selftests/net/udpgso_bench_tx.c b/tools/testing/selftests/net/udpgso_bench_tx.c
-> index 4074538b5df5..a900f016b9e7 100644
-> --- a/tools/testing/selftests/net/udpgso_bench_tx.c
-> +++ b/tools/testing/selftests/net/udpgso_bench_tx.c
-> @@ -5,6 +5,8 @@
->  #include <arpa/inet.h>
->  #include <errno.h>
->  #include <error.h>
-> +#include <linux/errqueue.h>
-> +#include <linux/net_tstamp.h>
->  #include <netinet/if_ether.h>
->  #include <netinet/in.h>
->  #include <netinet/ip.h>
-> @@ -19,6 +21,7 @@
->  #include <string.h>
->  #include <sys/socket.h>
->  #include <sys/time.h>
-> +#include <sys/poll.h>
->  #include <sys/types.h>
->  #include <unistd.h>
->
-> @@ -34,6 +37,10 @@
->  #define SO_ZEROCOPY    60
->  #endif
->
-> +#ifndef SO_EE_ORIGIN_ZEROCOPY
-> +#define SO_EE_ORIGIN_ZEROCOPY 5
-> +#endif
-> +
->  #ifndef MSG_ZEROCOPY
->  #define MSG_ZEROCOPY   0x4000000
->  #endif
-> @@ -48,9 +55,14 @@ static uint16_t      cfg_mss;
->  static int     cfg_payload_len = (1472 * 42);
->  static int     cfg_port        = 8000;
->  static int     cfg_runtime_ms  = -1;
-> +static bool    cfg_poll;
->  static bool    cfg_segment;
->  static bool    cfg_sendmmsg;
->  static bool    cfg_tcp;
-> +static uint32_t        cfg_tx_ts = SOF_TIMESTAMPING_TX_SOFTWARE;
-> +static bool    cfg_tx_tstamp;
-> +static uint32_t        cfg_tos;
-> +static bool    cfg_verbose;
->  static bool    cfg_zerocopy;
->  static int     cfg_msg_nr;
->  static uint16_t        cfg_gso_size;
-> @@ -58,6 +70,10 @@ static uint16_t      cfg_gso_size;
->  static socklen_t cfg_alen;
->  static struct sockaddr_storage cfg_dst_addr;
->
-> +struct my_scm_timestamping {
-> +       struct timespec ts[3];
-> +};
-> +
+diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+index 27806987e93b..7d41e6684b87 100644
+--- a/drivers/pci/endpoint/functions/pci-epf-test.c
++++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+@@ -434,10 +434,16 @@ static int pci_epf_test_alloc_space(struct pci_epf *epf)
+ 	int bar;
+ 	enum pci_barno test_reg_bar = epf_test->test_reg_bar;
+ 	const struct pci_epc_features *epc_features;
++	size_t test_reg_size;
+ 
+ 	epc_features = epf_test->epc_features;
+ 
+-	base = pci_epf_alloc_space(epf, sizeof(struct pci_epf_test_reg),
++	if (epc_features->bar_fixed_size[test_reg_bar])
++		test_reg_size = bar_size[test_reg_bar];
++	else
++		test_reg_size = sizeof(struct pci_epf_test_reg);
++
++	base = pci_epf_alloc_space(epf, test_reg_size,
+ 				   test_reg_bar, epc_features->align);
+ 	if (!base) {
+ 		dev_err(dev, "Failed to allocated register space\n");
+-- 
+2.7.4
 
-This and the above should not be needed if including <linux/errqueue.h>
-
-It may be absent if relying on the host header files, but the
-kselftest build system should correctly use the files from the kernel
-source tree.
-
->  static bool interrupted;
->  static char buf[NUM_PKT][ETH_MAX_MTU];
->
-> @@ -89,20 +105,20 @@ static int set_cpu(int cpu)
->
->  static void setup_sockaddr(int domain, const char *str_addr, void *sockaddr)
->  {
-> -       struct sockaddr_in6 *addr6 = (void *) sockaddr;
-> -       struct sockaddr_in *addr4 = (void *) sockaddr;
-> +       struct sockaddr_in6 *addr6 = (void *)sockaddr;
-> +       struct sockaddr_in *addr4 = (void *)sockaddr;
->
->         switch (domain) {
->         case PF_INET:
->                 addr4->sin_family = AF_INET;
->                 addr4->sin_port = htons(cfg_port);
-> -               if (inet_pton(AF_INET, str_addr, &(addr4->sin_addr)) != 1)
-> +               if (inet_pton(AF_INET, str_addr, &addr4->sin_addr) != 1)
->                         error(1, 0, "ipv4 parse error: %s", str_addr);
->                 break;
->         case PF_INET6:
->                 addr6->sin6_family = AF_INET6;
->                 addr6->sin6_port = htons(cfg_port);
-> -               if (inet_pton(AF_INET6, str_addr, &(addr6->sin6_addr)) != 1)
-> +               if (inet_pton(AF_INET6, str_addr, &addr6->sin6_addr) != 1)
-
-Please do not include style changes like these. Try to minimize
-changes required to add the new feature.
