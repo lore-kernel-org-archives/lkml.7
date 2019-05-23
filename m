@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E90EC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:14:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A541AC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:14:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D941D2133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:14:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BA532133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:14:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558638873;
-	bh=MJDx3NVKSGNVeTKAQU5Is+w+VaFezvqUHSFZbahXyHU=;
+	s=default; t=1558638875;
+	bh=hX43FfC+E3KQpwRretDirSd1QnLweHcRZS0cKJarNic=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D4w7Bo/HBWVz1PCyGRGcpIL8Lr5R7lhvjo+YJd3Pc2oxKoM92gcdBN5GwmJcjEmxu
-	 mtH8m480MroDzYlgRVq+vvN4a0ABmt2KTbMvWVzZCmd3fxuZm2mgG2MQnylALr8E0h
-	 Aq5/UIPMKbjDd5N2k+4m9or95juQdEQBYYp1eirc=
+	b=xhwAFSDRbdNKC4WxeYJXE1pWvlPB+0I6GxkIMqXvKH561KEGiGFGGQsPUVdmQfhGk
+	 Nyv1+9BgCQuFmPiGiZruSil1n/H2iiRhbhQ/GNS/TU4UK+5xEKI88TiPS00pyQk384
+	 d08KJOY57KE57uhb9FP1gW7G5CMO2ndm7vBmt+dM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388782AbfEWTOc (ORCPT
+        id S2388797AbfEWTOe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:14:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48500 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:14:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48566 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387468AbfEWTO3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:14:29 -0400
+        id S2388769AbfEWTOb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:14:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E9D12217D7;
-        Thu, 23 May 2019 19:14:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A6CE620863;
+        Thu, 23 May 2019 19:14:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558638868;
-        bh=MJDx3NVKSGNVeTKAQU5Is+w+VaFezvqUHSFZbahXyHU=;
+        s=default; t=1558638871;
+        bh=hX43FfC+E3KQpwRretDirSd1QnLweHcRZS0cKJarNic=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1r74pPQN4Bw2vyb7q0FQ2uJ9vabUwn1F64bCozFoPfc6fmPOh2F+l5AMb2alUzkUM
-         1znDXYN/EN1VTNXgmqaT/NW9TVcQz/A1lnGukklYJ4/9Bmqy2eQrd3ZQBhoGOtK/AW
-         kncgvGR9QIkHmhvgv1fz1Nva9J+5FM2ft0OO2cQw=
+        b=eFYCX5xQLt1DxJiuE2fh5jgXZazeaUcfHL8+ObahSv/n5WPdIrK2D0iQDZRvK9gF5
+         4US2OMy55Cudq/nPdRhRGujpCfIkDBxwt+4RKzSPvoam7dkmr3nmrpWFtUphkzxHp5
+         HJraOATDdoMWPXQ+/On+7cxWmVnKcZGby+kdILuA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yunjian Wang <wangyunjian@huawei.com>,
-        Tariq Toukan <tariqt@mellanox.com>,
+        stable@vger.kernel.org, Willem de Bruijn <willemb@google.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 005/114] net/mlx4_core: Change the error print to info print
-Date:   Thu, 23 May 2019 21:05:04 +0200
-Message-Id: <20190523181731.994925501@linuxfoundation.org>
+Subject: [PATCH 4.19 006/114] net: test nouarg before dereferencing zerocopy pointers
+Date:   Thu, 23 May 2019 21:05:05 +0200
+Message-Id: <20190523181732.143082610@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181731.372074275@linuxfoundation.org>
 References: <20190523181731.372074275@linuxfoundation.org>
@@ -60,32 +59,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yunjian Wang <wangyunjian@huawei.com>
+From: Willem de Bruijn <willemb@google.com>
 
-[ Upstream commit 00f9fec48157f3734e52130a119846e67a12314b ]
+[ Upstream commit 185ce5c38ea76f29b6bd9c7c8c7a5e5408834920 ]
 
-The error print within mlx4_flow_steer_promisc_add() should
-be a info print.
+Zerocopy skbs without completion notification were added for packet
+sockets with PACKET_TX_RING user buffers. Those signal completion
+through the TP_STATUS_USER bit in the ring. Zerocopy annotation was
+added only to avoid premature notification after clone or orphan, by
+triggering a copy on these paths for these packets.
 
-Fixes: 592e49dda812 ('net/mlx4: Implement promiscuous mode with device managed flow-steering')
-Signed-off-by: Yunjian Wang <wangyunjian@huawei.com>
-Reviewed-by: Tariq Toukan <tariqt@mellanox.com>
+The mechanism had to define a special "no-uarg" mode because packet
+sockets already use skb_uarg(skb) == skb_shinfo(skb)->destructor_arg
+for a different pointer.
+
+Before deferencing skb_uarg(skb), verify that it is a real pointer.
+
+Fixes: 5cd8d46ea1562 ("packet: copy user buffers before orphan or clone")
+Signed-off-by: Willem de Bruijn <willemb@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/mellanox/mlx4/mcg.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/skbuff.h |    9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
---- a/drivers/net/ethernet/mellanox/mlx4/mcg.c
-+++ b/drivers/net/ethernet/mellanox/mlx4/mcg.c
-@@ -1492,7 +1492,7 @@ int mlx4_flow_steer_promisc_add(struct m
- 	rule.port = port;
- 	rule.qpn = qpn;
- 	INIT_LIST_HEAD(&rule.list);
--	mlx4_err(dev, "going promisc on %x\n", port);
-+	mlx4_info(dev, "going promisc on %x\n", port);
+--- a/include/linux/skbuff.h
++++ b/include/linux/skbuff.h
+@@ -1333,10 +1333,12 @@ static inline void skb_zcopy_clear(struc
+ 	struct ubuf_info *uarg = skb_zcopy(skb);
  
- 	return  mlx4_flow_attach(dev, &rule, regid_p);
+ 	if (uarg) {
+-		if (uarg->callback == sock_zerocopy_callback) {
++		if (skb_zcopy_is_nouarg(skb)) {
++			/* no notification callback */
++		} else if (uarg->callback == sock_zerocopy_callback) {
+ 			uarg->zerocopy = uarg->zerocopy && zerocopy;
+ 			sock_zerocopy_put(uarg);
+-		} else if (!skb_zcopy_is_nouarg(skb)) {
++		} else {
+ 			uarg->callback(uarg, zerocopy);
+ 		}
+ 
+@@ -2587,7 +2589,8 @@ static inline int skb_orphan_frags(struc
+ {
+ 	if (likely(!skb_zcopy(skb)))
+ 		return 0;
+-	if (skb_uarg(skb)->callback == sock_zerocopy_callback)
++	if (!skb_zcopy_is_nouarg(skb) &&
++	    skb_uarg(skb)->callback == sock_zerocopy_callback)
+ 		return 0;
+ 	return skb_copy_ubufs(skb, gfp_mask);
  }
 
 
