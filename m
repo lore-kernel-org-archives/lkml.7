@@ -2,126 +2,86 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F6F1C282E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 12:02:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 854F0C282DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 12:02:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EECF21019
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 12:02:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41F2F20881
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 12:02:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="mYh3up+P"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=skidata.com header.i=@skidata.com header.b="mEoSrR4R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730529AbfEWMCK (ORCPT
+        id S1730585AbfEWMCV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 08:02:10 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:9815 "EHLO pegase1.c-s.fr"
+        Thu, 23 May 2019 08:02:21 -0400
+Received: from mail1.skidata.com ([91.230.2.99]:1617 "EHLO mail1.skidata.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728309AbfEWMCJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 08:02:09 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 458p5V4Lx7z9v2NT;
-        Thu, 23 May 2019 14:02:06 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=mYh3up+P; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id t0X21tqOHZa6; Thu, 23 May 2019 14:02:06 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 458p5V2pLmz9v2NS;
-        Thu, 23 May 2019 14:02:06 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1558612926; bh=dxjR5/OUEbuHjryrELjiCz2BmB568YPeDBsdsR3B27c=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=mYh3up+PAV5q1CkXEn+MOv/nsPx6DdMICOFeThJ9qrLIPZA+jhtbkBC+HHc9/cL0A
-         hZ2n1Zjj7fl/dhUGlc8qA57UwniCg+wLUPsvmBPHhgH6vGW6sFn8oCHfLDVYRlxTco
-         ll+LSYtlKlkVUYiJJDsANgkM8wdmay41mIKPj+do=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 9C6A68B860;
-        Thu, 23 May 2019 14:02:07 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id r1aNl5ZvA7nM; Thu, 23 May 2019 14:02:07 +0200 (CEST)
-Received: from PO15451 (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 895C78B858;
-        Thu, 23 May 2019 14:02:06 +0200 (CEST)
-Subject: Re: [PATCH] powerpc/power: Expose pfn_is_nosave prototype
-To:     Mathieu Malaterre <malat@debian.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Len Brown <len.brown@intel.com>, linux-pm@vger.kernel.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        linux-kernel@vger.kernel.org, Paul Mackerras <paulus@samba.org>,
-        Pavel Machek <pavel@ucw.cz>, linuxppc-dev@lists.ozlabs.org
-References: <20190523114736.30268-1-malat@debian.org>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <11ffdbd5-60a9-b1fa-aa83-9d3c60e3d462@c-s.fr>
-Date:   Thu, 23 May 2019 14:02:05 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1728309AbfEWMCV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 08:02:21 -0400
+X-Greylist: delayed 427 seconds by postgrey-1.27 at vger.kernel.org; Thu, 23 May 2019 08:02:20 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=skidata.com; i=@skidata.com; q=dns/txt; s=selector1;
+  t=1558612963; x=1590148963;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=TxGXbfw7z2292Z6hKFmKjnZyC5PGKjytRrBvM3a9feQ=;
+  b=mEoSrR4RWwIu4bsbpPQ4NtwhW0u67Y/BvGwkFAc1TnR3nKQqKiX8gmrB
+   TgETUNeeX9SArl5AbjCAR+QFDr5na3krjVyTfp1AncRtqKqngSTYCMZ4G
+   YeZn5T/wAkky6w57JuCM/8bRR+C7ybIIOI9AuFMZEE9YjvN92kgXS5ImH
+   RbaN54acBmWcpqd49tcnvEpoThiG8uUDkCSiAGu4vpSGr1/CLCQ5x22Xs
+   hcVVBo8UfS6dMrf4k2ADZlxkq4fXPSUMysjAXgKnqIIOhR3mZPkSCNHzW
+   T8ZIbGmZCvt62g2VZoS/CD5+EIpR5VjLy+m10FJw4+xvkE+NQGoe+4QHv
+   Q==;
+IronPort-SDR: GjI7Wes/nu3epiSwuwoBb18m62MUi8Drc+pJORFAZtrYEVK2dKGSpaQiVfpPRFGjy5wcXFZv92
+ kXG/fb+i9bLeLdx45nz9l2c8dT7vP9BadkL30Vobliv5RBIxoVBn191Vqq4WpWw+USLu4TJjwH
+ 5xLc1AdtrCLikmBuT8Upc2RpsM8neeiwVAw+cUtmfYrBfq4ooum9ujYe80Au5Llf8Ku2y9yJyL
+ qFr6j9IgqO8dmk+8X30CyYoV9PBNf7Hdsm97FMHDD0h5LSbVeK7d+s9nt8q7droksQ0DMI3T4e
+ ECw=
+X-IronPort-AV: E=Sophos;i="5.60,502,1549926000"; 
+   d="scan'208";a="17248255"
+From:   Richard Leitner <richard.leitner@skidata.com>
+To:     <a.zummo@towertech.it>, <alexandre.belloni@bootlin.com>
+CC:     <linux-rtc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Richard Leitner <richard.leitner@skidata.com>
+Subject: [PATCH v2 0/4] rtc: s35390a: uie_unsupported and minor fixes
+Date:   Thu, 23 May 2019 13:54:47 +0200
+Message-ID: <20190523115451.20007-1-richard.leitner@skidata.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20190523114736.30268-1-malat@debian.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [192.168.111.252]
+X-ClientProxiedBy: sdex4srv.skidata.net (192.168.111.82) To
+ sdex5srv.skidata.net (192.168.111.83)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+As the s35390a does only support per-minute based alarms we have to
+set the uie_unsupported flag. Otherwise it delays for 10sec and 
+fails afterwards with modern hwclock versions.
 
+Furthermore some other minor changes are made.
 
-Le 23/05/2019 à 13:47, Mathieu Malaterre a écrit :
-> The declaration for pfn_is_nosave is only available in
-> kernel/power/power.h. Since this function can be override in arch,
-> expose it globally. Having a prototype will make sure to avoid warning
-> (sometime treated as error with W=1) such as:
-> 
->    arch/powerpc/kernel/suspend.c:18:5: error: no previous prototype for 'pfn_is_nosave' [-Werror=missing-prototypes]
-> 
-> This moves the declaration into a globally visible header file and add
-> missing include to avoid a warning in powerpc.
+All patches were tested on an i.MX6 platform.
 
-Then you should also drop it from kernel/power/power.h and 
-arch/s390/kernel/entry.h
+CHANGES v2:
+ - use BIT in "clarify INT2 pin output modes"
+ - add "change FLAG defines to use BIT macro"
 
-Christophe
+Richard Leitner (4):
+  rtc: s35390a: clarify INT2 pin output modes
+  rtc: s35390a: set uie_unsupported
+  rtc: s35390a: introduce struct device in probe
+  rtc: s35390a: change FLAG defines to use BIT macro
 
-> 
-> Signed-off-by: Mathieu Malaterre <malat@debian.org>
-> ---
->   arch/powerpc/kernel/suspend.c | 1 +
->   include/linux/suspend.h       | 1 +
->   2 files changed, 2 insertions(+)
-> 
-> diff --git a/arch/powerpc/kernel/suspend.c b/arch/powerpc/kernel/suspend.c
-> index a531154cc0f3..9e1b6b894245 100644
-> --- a/arch/powerpc/kernel/suspend.c
-> +++ b/arch/powerpc/kernel/suspend.c
-> @@ -8,6 +8,7 @@
->    */
->   
->   #include <linux/mm.h>
-> +#include <linux/suspend.h>
->   #include <asm/page.h>
->   #include <asm/sections.h>
->   
-> diff --git a/include/linux/suspend.h b/include/linux/suspend.h
-> index 3f529ad9a9d2..2660bbdf5230 100644
-> --- a/include/linux/suspend.h
-> +++ b/include/linux/suspend.h
-> @@ -395,6 +395,7 @@ extern bool system_entering_hibernation(void);
->   extern bool hibernation_available(void);
->   asmlinkage int swsusp_save(void);
->   extern struct pbe *restore_pblist;
-> +int pfn_is_nosave(unsigned long pfn);
->   #else /* CONFIG_HIBERNATION */
->   static inline void register_nosave_region(unsigned long b, unsigned long e) {}
->   static inline void register_nosave_region_late(unsigned long b, unsigned long e) {}
-> 
+ drivers/rtc/rtc-s35390a.c | 55 +++++++++++++++++++++------------------
+ 1 file changed, 29 insertions(+), 26 deletions(-)
+
+-- 
+2.20.1
+
