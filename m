@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FA18C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:24:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 175BEC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:24:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC54921851
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:24:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8C7F2054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:24:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639457;
-	bh=2ptE7vIvQyhsyXR24RemViMRC03B+p8ztYdpEcbI6Q8=;
+	s=default; t=1558639462;
+	bh=tYOK5UjmDOen6D4s1GWJrMLr3jUVp3wk9PRppDv5W7Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2G3eQ6deVlZjLD/ici4xwzZb+DpEelwNCUViWUWgu6c4s6myw8XRhsidFdBEz85ML
-	 MEooJw6OmssFUPPkcsKr8Khk8x+A8WQYfBAHNf4EFHTFhCX+NVhej+SX1pe2EFykuS
-	 RnsFRr4UmOSq/8PUHgilfAQIvCejdpm5QtEDVfOo=
+	b=ZKA4r6veqTUZu41jhYOCcfr2t/AkyZeqBgcM5QKT5ksoRL6Qjb8gp8QR/gQ6SqVfZ
+	 VrCu4IhBbl5NDYSyOvy4JPN08GIg3lKDvtL4HcioWZcGJBQYVLQQDL2Vgb60uxCGX2
+	 Q7WuA7bvLVRkTfIHbc2GJ0Nn0YP4rCxRPCFlEJ9U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390862AbfEWTYR (ORCPT
+        id S2390872AbfEWTYV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:24:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35124 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:24:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35190 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389827AbfEWTYP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:24:15 -0400
+        id S2389827AbfEWTYR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:24:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 32E8120868;
-        Thu, 23 May 2019 19:24:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC5C02184E;
+        Thu, 23 May 2019 19:24:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639454;
-        bh=2ptE7vIvQyhsyXR24RemViMRC03B+p8ztYdpEcbI6Q8=;
+        s=default; t=1558639457;
+        bh=tYOK5UjmDOen6D4s1GWJrMLr3jUVp3wk9PRppDv5W7Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KZW7JzyUpX8YWzjLbzRxYjre6U1u54rIALoI1odX33yXD+O/8432qArjXX610Ty/0
-         1UyzWZKkEWiwqn8PmH6quY3SyY9Cr/ihpd4aTsuaF2JIjbyAupuU6zCkVbhK3DR7JU
-         kWlpdtk9xVTYhBZpFw2cLGMzjT4MUqJ9G1VrYdwU=
+        b=h0nmkJKePFW96EyhPG0PgTWSi4UzeC0+e3EM5mBQt9Dp6i+JYJp2IbKtxJJLPVfMr
+         zJ4XTjbr+Y1H2WZtDRzQUkrCiqKsv6UOf9c5a1TtokC3dnbbw4m7KQwy5EotqHCKtg
+         u+sPRwRZOiqY1NJ3TeApQGUztB+xSDZnkqLLligI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Damien Le Moal <damien.lemoal@wdc.com>,
-        Shaun Tancheff <shaun@tancheff.com>,
+        stable@vger.kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
         Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 5.0 094/139] dm zoned: Fix zone report handling
-Date:   Thu, 23 May 2019 21:06:22 +0200
-Message-Id: <20190523181732.836411863@linuxfoundation.org>
+Subject: [PATCH 5.0 095/139] dm delay: fix a crash when invalid device is specified
+Date:   Thu, 23 May 2019 21:06:23 +0200
+Message-Id: <20190523181732.964946960@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181720.120897565@linuxfoundation.org>
 References: <20190523181720.120897565@linuxfoundation.org>
@@ -60,57 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Damien Le Moal <damien.lemoal@wdc.com>
+From: Mikulas Patocka <mpatocka@redhat.com>
 
-commit 7aedf75ff740a98f3683439449cd91c8662d03b2 upstream.
+commit 81bc6d150ace6250503b825d9d0c10f7bbd24095 upstream.
 
-The function blkdev_report_zones() returns success even if no zone
-information is reported (empty report). Empty zone reports can only
-happen if the report start sector passed exceeds the device capacity.
-The conditions for this to happen are either a bug in the caller code,
-or, a change in the device that forced the low level driver to change
-the device capacity to a value that is lower than the report start
-sector. This situation includes a failed disk revalidation resulting in
-the disk capacity being changed to 0.
+When the target line contains an invalid device, delay_ctr() will call
+delay_dtr() with NULL workqueue.  Attempting to destroy the NULL
+workqueue causes a crash.
 
-If this change happens while dm-zoned is in its initialization phase
-executing dmz_init_zones(), this function may enter an infinite loop
-and hang the system. To avoid this, add a check to disallow empty zone
-reports and bail out early. Also fix the function dmz_update_zone() to
-make sure that the report for the requested zone was correctly obtained.
-
-Fixes: 3b1a94c88b79 ("dm zoned: drive-managed zoned block device target")
+Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
 Cc: stable@vger.kernel.org
-Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
-Reviewed-by: Shaun Tancheff <shaun@tancheff.com>
-Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
 Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/dm-zoned-metadata.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/md/dm-delay.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/md/dm-zoned-metadata.c
-+++ b/drivers/md/dm-zoned-metadata.c
-@@ -1169,6 +1169,9 @@ static int dmz_init_zones(struct dmz_met
- 			goto out;
- 		}
+--- a/drivers/md/dm-delay.c
++++ b/drivers/md/dm-delay.c
+@@ -121,7 +121,8 @@ static void delay_dtr(struct dm_target *
+ {
+ 	struct delay_c *dc = ti->private;
  
-+		if (!nr_blkz)
-+			break;
-+
- 		/* Process report */
- 		for (i = 0; i < nr_blkz; i++) {
- 			ret = dmz_init_zone(zmd, zone, &blkz[i]);
-@@ -1204,6 +1207,8 @@ static int dmz_update_zone(struct dmz_me
- 	/* Get zone information from disk */
- 	ret = blkdev_report_zones(zmd->dev->bdev, dmz_start_sect(zmd, zone),
- 				  &blkz, &nr_blkz, GFP_NOIO);
-+	if (!nr_blkz)
-+		ret = -EIO;
- 	if (ret) {
- 		dmz_dev_err(zmd->dev, "Get zone %u report failed",
- 			    dmz_id(zmd, zone));
+-	destroy_workqueue(dc->kdelayd_wq);
++	if (dc->kdelayd_wq)
++		destroy_workqueue(dc->kdelayd_wq);
+ 
+ 	if (dc->read.dev)
+ 		dm_put_device(ti, dc->read.dev);
 
 
