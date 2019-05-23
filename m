@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72D03C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:26:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8024C282DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:26:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C7E4217D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:26:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE8EF217D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:26:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639606;
-	bh=dXu6vL91nMy3bz87zBqHyFSpPCE7kSEJxLm1GK61tzQ=;
+	s=default; t=1558639609;
+	bh=E8Fez+UjFAXlTw7Yz7IfL44Gcey0YmhWjuPBqO4+gB0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mX5c1tKUD/ZwVeO6sNK8NCidWr22yv/DstzZ4T3GqSSv7zokWNGnyZ6N+kGDSKdOt
-	 6L/G8a6qmClRGNqIaky49gODJK1/t4Qt+YCXRDDMTMrIZU2gZyqT2miXyx0QA/qc0n
-	 Gph/3AI9EGoS+bHU1rnKaQtDHb+UvAYPN4G8XfSs=
+	b=RQc/DR1GoRpz6rSBYdhdbWMJInyv+3kvK/6WlY9VwhArRdSHyXIXdCxVT1s4NILtE
+	 tUyPYIzrpqhlOEhu30jgw1b3EOAPIn/f06btd8MHLrdwuYcSS+nZWfAG6MYNM+SK/C
+	 iHFNBhmVuLnWqT4k2+SvCFO4l4c/mHIOzGJBqGqU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390033AbfEWT0p (ORCPT
+        id S2391434AbfEWT0s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:26:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38596 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:26:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38648 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391389AbfEWT0l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:26:41 -0400
+        id S2391407AbfEWT0n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:26:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3647206BA;
-        Thu, 23 May 2019 19:26:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 883352054F;
+        Thu, 23 May 2019 19:26:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639600;
-        bh=dXu6vL91nMy3bz87zBqHyFSpPCE7kSEJxLm1GK61tzQ=;
+        s=default; t=1558639603;
+        bh=E8Fez+UjFAXlTw7Yz7IfL44Gcey0YmhWjuPBqO4+gB0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y/TgycbV5sxEqwIOCc7RdEkPGzIN+96gCm62A2x7S1iHsyMVoEYa39DfgmmLZ19MA
-         W2za+wjR2xUBkQtvbgwMBDZhOOCtkhYWKZLh2nPv3KEWx9AKAmSfm7XXuHxhHqqhrW
-         JM8bgTIH8PPC2J4p3J/eDj4/YoE7luH7DKU91z3g=
+        b=slQcr1KyTVuyuiQGW74AGrVeIYg6dtpIZxbEGun4GhGdnJ0ccYDTwWIkkINqu4QRh
+         SBEnaBeMIGKKYQIoW7Zrz/CM6sK5dhgqbkcn3piyKDvbmFEsxXpsw0ngByoQDAbIru
+         zSPL+vRrlwIePUJcWU06L2bIwW6tZo3jFAWlTKc4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Pieter Jansen van Vuuren 
-        <pieter.jansenvanvuuren@netronome.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        John Hurley <john.hurley@netronome.com>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Guillaume Nault <gnault@redhat.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.1 008/122] nfp: flower: add rcu locks when accessing netdev for tunnels
-Date:   Thu, 23 May 2019 21:05:30 +0200
-Message-Id: <20190523181706.119321601@linuxfoundation.org>
+Subject: [PATCH 5.1 009/122] ppp: deflate: Fix possible crash in deflate_init
+Date:   Thu, 23 May 2019 21:05:31 +0200
+Message-Id: <20190523181706.253522161@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181705.091418060@linuxfoundation.org>
 References: <20190523181705.091418060@linuxfoundation.org>
@@ -63,82 +61,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pieter Jansen van Vuuren <pieter.jansenvanvuuren@netronome.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit cb07d915bf278a7a3938b983bbcb4921366b5eff ]
+[ Upstream commit 3ebe1bca58c85325c97a22d4fc3f5b5420752e6f ]
 
-Add rcu locks when accessing netdev when processing route request
-and tunnel keep alive messages received from hardware.
+BUG: unable to handle kernel paging request at ffffffffa018f000
+PGD 3270067 P4D 3270067 PUD 3271063 PMD 2307eb067 PTE 0
+Oops: 0000 [#1] PREEMPT SMP
+CPU: 0 PID: 4138 Comm: modprobe Not tainted 5.1.0-rc7+ #1
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
+rel-1.9.3-0-ge2fc41e-prebuilt.qemu-project.org 04/01/2014
+RIP: 0010:ppp_register_compressor+0x3e/0xd0 [ppp_generic]
+Code: 98 4a 3f e2 48 8b 15 c1 67 00 00 41 8b 0c 24 48 81 fa 40 f0 19 a0
+75 0e eb 35 48 8b 12 48 81 fa 40 f0 19 a0 74
+RSP: 0018:ffffc90000d93c68 EFLAGS: 00010287
+RAX: ffffffffa018f000 RBX: ffffffffa01a3000 RCX: 000000000000001a
+RDX: ffff888230c750a0 RSI: 0000000000000000 RDI: ffffffffa019f000
+RBP: ffffc90000d93c80 R08: 0000000000000001 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: ffffffffa0194080
+R13: ffff88822ee1a700 R14: 0000000000000000 R15: ffffc90000d93e78
+FS:  00007f2339557540(0000) GS:ffff888237a00000(0000)
+knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffffffffa018f000 CR3: 000000022bde4000 CR4: 00000000000006f0
+Call Trace:
+ ? 0xffffffffa01a3000
+ deflate_init+0x11/0x1000 [ppp_deflate]
+ ? 0xffffffffa01a3000
+ do_one_initcall+0x6c/0x3cc
+ ? kmem_cache_alloc_trace+0x248/0x3b0
+ do_init_module+0x5b/0x1f1
+ load_module+0x1db1/0x2690
+ ? m_show+0x1d0/0x1d0
+ __do_sys_finit_module+0xc5/0xd0
+ __x64_sys_finit_module+0x15/0x20
+ do_syscall_64+0x6b/0x1d0
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-Fixes: 8e6a9046b66a ("nfp: flower vxlan neighbour offload")
-Fixes: 856f5b135758 ("nfp: flower vxlan neighbour keep-alive")
-Signed-off-by: Pieter Jansen van Vuuren <pieter.jansenvanvuuren@netronome.com>
-Reviewed-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-Reviewed-by: John Hurley <john.hurley@netronome.com>
+If ppp_deflate fails to register in deflate_init,
+module initialization failed out, however
+ppp_deflate_draft may has been regiestred and not
+unregistered before return.
+Then the seconed modprobe will trigger crash like this.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Acked-by: Guillaume Nault <gnault@redhat.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/netronome/nfp/flower/tunnel_conf.c |   17 ++++++++++------
- 1 file changed, 11 insertions(+), 6 deletions(-)
+ drivers/net/ppp/ppp_deflate.c |   20 ++++++++++++++------
+ 1 file changed, 14 insertions(+), 6 deletions(-)
 
---- a/drivers/net/ethernet/netronome/nfp/flower/tunnel_conf.c
-+++ b/drivers/net/ethernet/netronome/nfp/flower/tunnel_conf.c
-@@ -168,6 +168,7 @@ void nfp_tunnel_keep_alive(struct nfp_ap
- 		return;
- 	}
+--- a/drivers/net/ppp/ppp_deflate.c
++++ b/drivers/net/ppp/ppp_deflate.c
+@@ -610,12 +610,20 @@ static struct compressor ppp_deflate_dra
  
-+	rcu_read_lock();
- 	for (i = 0; i < count; i++) {
- 		ipv4_addr = payload->tun_info[i].ipv4;
- 		port = be32_to_cpu(payload->tun_info[i].egress_port);
-@@ -183,6 +184,7 @@ void nfp_tunnel_keep_alive(struct nfp_ap
- 		neigh_event_send(n, NULL);
- 		neigh_release(n);
- 	}
-+	rcu_read_unlock();
+ static int __init deflate_init(void)
+ {
+-        int answer = ppp_register_compressor(&ppp_deflate);
+-        if (answer == 0)
+-                printk(KERN_INFO
+-		       "PPP Deflate Compression module registered\n");
+-	ppp_register_compressor(&ppp_deflate_draft);
+-        return answer;
++	int rc;
++
++	rc = ppp_register_compressor(&ppp_deflate);
++	if (rc)
++		return rc;
++
++	rc = ppp_register_compressor(&ppp_deflate_draft);
++	if (rc) {
++		ppp_unregister_compressor(&ppp_deflate);
++		return rc;
++	}
++
++	pr_info("PPP Deflate Compression module registered\n");
++	return 0;
  }
  
- static int
-@@ -366,9 +368,10 @@ void nfp_tunnel_request_route(struct nfp
- 
- 	payload = nfp_flower_cmsg_get_data(skb);
- 
-+	rcu_read_lock();
- 	netdev = nfp_app_repr_get(app, be32_to_cpu(payload->ingress_port));
- 	if (!netdev)
--		goto route_fail_warning;
-+		goto fail_rcu_unlock;
- 
- 	flow.daddr = payload->ipv4_addr;
- 	flow.flowi4_proto = IPPROTO_UDP;
-@@ -378,21 +381,23 @@ void nfp_tunnel_request_route(struct nfp
- 	rt = ip_route_output_key(dev_net(netdev), &flow);
- 	err = PTR_ERR_OR_ZERO(rt);
- 	if (err)
--		goto route_fail_warning;
-+		goto fail_rcu_unlock;
- #else
--	goto route_fail_warning;
-+	goto fail_rcu_unlock;
- #endif
- 
- 	/* Get the neighbour entry for the lookup */
- 	n = dst_neigh_lookup(&rt->dst, &flow.daddr);
- 	ip_rt_put(rt);
- 	if (!n)
--		goto route_fail_warning;
--	nfp_tun_write_neigh(n->dev, app, &flow, n, GFP_KERNEL);
-+		goto fail_rcu_unlock;
-+	nfp_tun_write_neigh(n->dev, app, &flow, n, GFP_ATOMIC);
- 	neigh_release(n);
-+	rcu_read_unlock();
- 	return;
- 
--route_fail_warning:
-+fail_rcu_unlock:
-+	rcu_read_unlock();
- 	nfp_flower_cmsg_warn(app, "Requested route not found.\n");
- }
- 
+ static void __exit deflate_cleanup(void)
 
 
