@@ -2,130 +2,105 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0AFAC282CE
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 01:56:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFF87C282CE
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 01:56:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CE3F2173C
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 01:56:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67AD52173C
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 01:56:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=wavesemi.onmicrosoft.com header.i=@wavesemi.onmicrosoft.com header.b="PHwnI/yp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a4rFogx1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729981AbfEWB4p (ORCPT
+        id S1729950AbfEWB4o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 21:56:45 -0400
-Received: from mail-eopbgr760111.outbound.protection.outlook.com ([40.107.76.111]:64430
-        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729906AbfEWB4o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 22 May 2019 21:56:44 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:46386 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727305AbfEWB4n (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 21:56:43 -0400
+Received: by mail-ed1-f66.google.com with SMTP id f37so6642790edb.13
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 18:56:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=wavesemi.onmicrosoft.com; s=selector1-wavesemi-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RA3fROGId0YERH1Os19dww+AQRC8kViJyoxSSa08Gl4=;
- b=PHwnI/yprv7KH0DmTlvdozvdVJBKgbw8u4h5+S/9oNUuXrF8UPPS+7WDDVYMbFAh7MqLQ9sV7G57d8b1OJQWns00mpdRUaIiLxv+ke8kE/U2EIjsEaZE1fgt+nECSvetzdggANw4PWVX85kwbRsrfIwjehTr2pBlgRm6tUZ8fbA=
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.174.162.17) by
- MWHPR2201MB1184.namprd22.prod.outlook.com (10.174.171.39) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1922.16; Thu, 23 May 2019 01:56:42 +0000
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::90ff:8d19:8459:834b]) by MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::90ff:8d19:8459:834b%7]) with mapi id 15.20.1922.017; Thu, 23 May 2019
- 01:56:42 +0000
-From:   Paul Burton <paul.burton@mips.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <pburton@wavecomp.com>,
-        James Hogan <jhogan@kernel.org>,
-        Atsushi Nemoto <anemo@mba.ocn.ne.jp>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        "Maciej W . Rozycki" <macro@linux-mips.org>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
-Subject: Re: [PATCH] MIPS: TXx9: Fix boot crash in free_initmem()
-Thread-Topic: [PATCH] MIPS: TXx9: Fix boot crash in free_initmem()
-Thread-Index: AQHVEHaN6hs4HpqTb0uEoailppzfaKZ39JkA
-Date:   Thu, 23 May 2019 01:56:41 +0000
-Message-ID: <MWHPR2201MB1277268FA658B58629931DC5C1010@MWHPR2201MB1277.namprd22.prod.outlook.com>
-References: <20190522081535.16583-1-geert@linux-m68k.org>
-In-Reply-To: <20190522081535.16583-1-geert@linux-m68k.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BYAPR11CA0037.namprd11.prod.outlook.com
- (2603:10b6:a03:80::14) To MWHPR2201MB1277.namprd22.prod.outlook.com
- (2603:10b6:301:24::17)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=pburton@wavecomp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [12.94.197.246]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 3839860b-9e5b-4ca5-eb37-08d6df21e68c
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:MWHPR2201MB1184;
-x-ms-traffictypediagnostic: MWHPR2201MB1184:
-x-microsoft-antispam-prvs: <MWHPR2201MB1184CFD13D62993DF7385859C1010@MWHPR2201MB1184.namprd22.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 00462943DE
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(346002)(396003)(39850400004)(136003)(366004)(189003)(199004)(486006)(52116002)(99286004)(476003)(256004)(6916009)(81166006)(81156014)(6246003)(42882007)(8676002)(76176011)(8936002)(7696005)(53936002)(66946007)(68736007)(66556008)(64756008)(316002)(66446008)(66476007)(73956011)(44832011)(54906003)(71200400001)(186003)(71190400001)(6436002)(33656002)(6116002)(3846002)(26005)(74316002)(5660300002)(6506007)(52536014)(446003)(11346002)(386003)(2906002)(55016002)(229853002)(9686003)(45080400002)(102836004)(4326008)(7736002)(305945005)(66066001)(478600001)(14454004)(25786009);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1184;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: wavecomp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 4ildBvarFenDFS4WzIzmAZQvsIoKYRjIfRZRljxC0oL/kDuIQbwnBLcwPXXeqaGkEOUQnFYBQT1LB0II6u9AAKfwJ7U3yuw1/15ASr2ac8oMaa6fR1dDI4LAbn1jv4RhOHPd0MT3E33GepuJaj557MwwJsBVuOouzTHhfgvW+1IHzMjNXZWWGn0L6/AcpyaLqg+oh0T+u8xJLJcWdKYKBwyBC+8d7An+8rZ3oJUwcKpm+Qlw2hISyr+FvjjThDaDXE3hDi7vpy2FLqfofETKElnhMDoSe/aTg//7PANP0cFKckZV4EPcufR3yevS8nKhyUbpyMsi2VHhlkQawZYD1NBfOA/TnHRREEo07t5XozkW/5CDIXHOpyo7XQoeotj/DHaTtGmoobM2/d17n4FdjEJibpunwGPdSwXt3uQ4OeY=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=VeCxUerMSUiEe1VSBy4pwjo+lY6Ie9i6gDJMGA8Iaqo=;
+        b=a4rFogx1/clKbND5YbpRBpPdX0an/nN716Pu2fh6o0JIN+LIie20RXWA6ei8QBxE/M
+         dtSIQF2nxSINr/GTsfn3mhZGWUyMy94gHEGWpSjfJlD9TDSH7yhAXbyUKrKcuCfO/mne
+         PRDLz/6ule8aOwm/VBaG9MpFj4UIOXU1U6UnqIpTcQZIzBpSlMiVU0lv/2rzAFtFSAgy
+         Ypgkbeh6K+w+QhDgPEQAPiHzeAddh4ptxtGNVMm2jGw1XO+oFSo8eJuRHdmNE2Qc2DMV
+         cLKT4Ihj4AODdvK4hE3vQyzHDm3YNAFblSLcHZqUE7hdlFAUmHGcqO2DyxtWZG9HYevY
+         7RgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VeCxUerMSUiEe1VSBy4pwjo+lY6Ie9i6gDJMGA8Iaqo=;
+        b=GfJOJFM5mQI3+1dGRdFud1dw+jVQ35oeYan6tQUMandAvpIB2RGwNjFbgnp1hbco9c
+         l9jAcsogzD9LsJj5to2AuiIzGzElW1QsQhOnr55AqJQJdTcQGCQlzTk2Z9pm3GzoE9dh
+         5cTFJvwK4JCLPfNwy5mGfweBmV07vKyPZsi6F5t3xl6NsmVucpc9/4KT3gv1dLoZd8Rf
+         tl29lF3U6kMs7UB/IM7Gst7xkuxxU284SwEFcuDCLKVBV3nbmm25DSxghgoW8WQ/Zi0h
+         98Yq4YVIuIOGQHdwASfaXKuFZMis4J/3JkDjYauHsQ16xLt3LX3dxrzo0WtncNEFXU8L
+         BWpg==
+X-Gm-Message-State: APjAAAVtwrMBiF0K9spRkHuWIJbuTdk4TUUOF+ImihTQpqPz9d2ddche
+        tbPZM1tKwHwDtnXkhoR5lCg=
+X-Google-Smtp-Source: APXvYqycu1jKQPpza8Qm3X9Vyhz7ORChxsltnLGa9v8vBaZ6meENQQaydK/+g87mkllBa53MNUMOGA==
+X-Received: by 2002:a05:6402:13cf:: with SMTP id a15mr93574743edx.70.1558576601675;
+        Wed, 22 May 2019 18:56:41 -0700 (PDT)
+Received: from archlinux-epyc ([2a01:4f9:2b:2b15::2])
+        by smtp.gmail.com with ESMTPSA id d24sm4146285ejt.12.2019.05.22.18.56.40
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 22 May 2019 18:56:41 -0700 (PDT)
+Date:   Wed, 22 May 2019 18:56:39 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Cliff Whickman <cpw@sgi.com>, Robin Holt <robinmholt@gmail.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux@googlegroups.com
+Subject: Re: -Wuninitialized warning in drivers/misc/sgi-xp/xpc_partition.c
+Message-ID: <20190523015639.GB17819@archlinux-epyc>
+References: <20190503033340.GA7980@archlinux-i9>
 MIME-Version: 1.0
-X-OriginatorOrg: mips.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3839860b-9e5b-4ca5-eb37-08d6df21e68c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 May 2019 01:56:41.8396
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: pburton@wavecomp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1184
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190503033340.GA7980@archlinux-i9>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGVsbG8sDQoNCkdlZXJ0IFV5dHRlcmhvZXZlbiB3cm90ZToNCj4gT24gcmJ0eDQ5Mjc6DQo+IA0K
-PiBCVUc6IEJhZCBwYWdlIHN0YXRlIGluIHByb2Nlc3Mgc3dhcHBlciAgcGZuOjAwMDAxDQo+IHBh
-Z2U6ODA0Yjc4MjAgcmVmY291bnQ6MCBtYXBjb3VudDotMTI4IG1hcHBpbmc6MDAwMDAwMDAgaW5k
-ZXg6MHgxDQo+IGZsYWdzOiAweDAoKQ0KPiByYXc6IDAwMDAwMDAwIDAwMDAwMTAwIDAwMDAwMjAw
-IDAwMDAwMDAwIDAwMDAwMDAxIDAwMDAwMDAwIGZmZmZmZjdmIDAwMDAwMDAwDQo+IHBhZ2UgZHVt
-cGVkIGJlY2F1c2U6IG5vbnplcm8gbWFwY291bnQNCj4gTW9kdWxlcyBsaW5rZWQgaW46DQo+IENQ
-VTogMCBQSUQ6IDEgQ29tbTogc3dhcHBlciBOb3QgdGFpbnRlZCA1LjIuMC1yYzEtcmJ0eDQ5Mjct
-MDA0NjgtZzNjMDVlYTNkNDA3N2I3NTYgIzE0MQ0KPiBTdGFjayA6IDAwMDAwMDAwIDEwMDA4NDAw
-IDgwNDBkYzRjIDg3YzFiOTc0IDgwNDRhZjYzIDgwNDBkYzRjIDAwMDAwMDAxIDgwNGEzNDkwDQo+
-IDAwMDAwMDAxIDgxMDAwMDAwIDAwMzBmMjMxIDgwMTQ4NTU4IDAwMDAwMDAzIDEwMDA4NDAwIDg3
-YzFkZDgwIDNkMGY5YTJjDQo+IDAwMDAwMDAwIDAwMDAwMDAwIDgwNGIwMDAwIDAwMDAwMDAwIDAw
-MDAwMDA3IDAwMDAwMDAwIDAwMDAwMDgxIDAwMDAwMDAwDQo+IDYyNzIyZDMxIDAwMDAwMDgwIDgw
-NGIwMDAwIDM5MzQ3ODc0IDAwMDAwMDAwIDgwNGI3ODIwIDgwNDBjZTE4IDgxMDAwMDEwDQo+IDAw
-MDAwMDAxIDAwMDAwMDA3IDAwMDAwMDAxIDgxMDAwMDAwIDAwMDAwMDE4IDgwMjFkZTI0IDAwMDAw
-MDAwIDgwNGEwMDAwDQo+IC4uLg0KPiBDYWxsIFRyYWNlOg0KPiBbPDgwMTBhZGVjPl0gc2hvd19z
-dGFjaysweDc0LzB4MTA0DQo+IFs8ODAxYTVlNDQ+XSBiYWRfcGFnZSsweDEzMC8weDEzOA0KPiBb
-PDgwMWE2NTRjPl0gZnJlZV9wY3BwYWdlc19idWxrKzB4MTdjLzB4M2IwDQo+IFs8ODAxYTc4OWM+
-XSBmcmVlX3VucmVmX3BhZ2UrMHg0MC8weDY4DQo+IFs8ODAxMTIwZjQ+XSBmcmVlX2luaXRfcGFn
-ZXMrMHhlYy8weDEwNA0KPiBbPDgwM2JkZGU4Pl0gZnJlZV9pbml0bWVtKzB4MTAvMHg1OA0KPiBb
-PDgwM2JkYjhjPl0ga2VybmVsX2luaXQrMHgyMC8weDEwMA0KPiBbPDgwMTA1N2M4Pl0gcmV0X2Zy
-b21fa2VybmVsX3RocmVhZCsweDE0LzB4MWMNCj4gDQo+IEFzIG9mIGNvbW1pdCBiOTNkZGM0Zjkx
-NTYyMDVlICgibWlwczogUmVzZXJ2ZSBtZW1vcnkgZm9yIHRoZSBrZXJuZWwNCj4gaW1hZ2UgcmVz
-b3VyY2VzIiksIGJvb3RtZW1faW5pdCgpIG5vIGxvbmdlciByZXNlcnZlcyB0aGUgbWVtb3J5IGJl
-bG93DQo+IHRoZSBrZXJuZWwsIHdoaWxlIHByb21fZnJlZV9wcm9tX21lbW9yeSgpIHN0aWxsIGZy
-ZWVzIGl0Lg0KPiANCj4gRml4IHRoaXMgYnkgcmV2ZXJ0aW5nIGNvbW1pdCBiNjI2M2ZmMmQ2ZTU4
-Y2MyICgiTUlQUzogVFh4OTogSW1wbGVtZW50DQo+IHByb21fZnJlZV9wcm9tX21lbW9yeSIpLg0K
-PiANCj4gU3VnZ2VzdGVkLWJ5OiBTZXJnZSBTZW1pbiA8ZmFuY2VyLmxhbmNlckBnbWFpbC5jb20+
-DQo+IEZpeGVzOiBiOTNkZGM0ZjkxNTYyMDVlICgibWlwczogUmVzZXJ2ZSBtZW1vcnkgZm9yIHRo
-ZSBrZXJuZWwgaW1hZ2UgcmVzb3VyY2VzIikNCj4gU2lnbmVkLW9mZi1ieTogR2VlcnQgVXl0dGVy
-aG9ldmVuIDxnZWVydEBsaW51eC1tNjhrLm9yZz4NCj4gUmV2aWV3ZWQtYnk6IEF0c3VzaGkgTmVt
-b3RvIDxhbmVtb0BtYmEub2NuLm5lLmpwPg0KDQpBcHBsaWVkIHRvIG1pcHMtZml4ZXMuDQoNClRo
-YW5rcywNCiAgICBQYXVsDQoNClsgVGhpcyBtZXNzYWdlIHdhcyBhdXRvLWdlbmVyYXRlZDsgaWYg
-eW91IGJlbGlldmUgYW55dGhpbmcgaXMgaW5jb3JyZWN0DQogIHRoZW4gcGxlYXNlIGVtYWlsIHBh
-dWwuYnVydG9uQG1pcHMuY29tIHRvIHJlcG9ydCBpdC4gXQ0K
+On Thu, May 02, 2019 at 08:33:40PM -0700, Nathan Chancellor wrote:
+> Hi all,
+> 
+> When building with -Wuninitialized, Clang warns:
+> 
+> drivers/misc/sgi-xp/xpc_partition.c:73:14: warning: variable 'buf' is uninitialized when used within its own initialization [-Wuninitialized]
+>         void *buf = buf;
+>               ~~~   ^~~
+> 1 warning generated.
+> 
+> I am not really sure how to properly initialize buf in this instance.
+> I would assume it would involve xpc_kmalloc_cacheline_aligned like
+> further down in the function but maybe not, this function isn't entirely
+> clear. Could we get your input, this is one of the last warnings I see
+> in a few allyesconfig builds.
+> 
+> Thanks,
+> Nathan
+
+Hi all,
+
+Friendly ping for comments/input. This is one of a few remaining
+warnings I see, it'd be nice to get it fixed up so we can turn it on for
+the whole kernel.
+
+Cheers,
+Nathan
