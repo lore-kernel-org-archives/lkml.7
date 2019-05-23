@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 069A7C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 10:36:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B488C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 10:36:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB0F72168B
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 10:36:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 224AA2168B
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 10:36:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730793AbfEWKgO (ORCPT
+        id S1730820AbfEWKgU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 06:36:14 -0400
-Received: from foss.arm.com ([217.140.101.70]:43142 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730658AbfEWKfr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 06:35:47 -0400
+        Thu, 23 May 2019 06:36:20 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:43118 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730618AbfEWKfm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 06:35:42 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BCCA415BF;
-        Thu, 23 May 2019 03:35:46 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 09CF7341;
+        Thu, 23 May 2019 03:35:42 -0700 (PDT)
 Received: from usa.arm.com (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id A06F23F718;
-        Thu, 23 May 2019 03:35:44 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E82C43F718;
+        Thu, 23 May 2019 03:35:39 -0700 (PDT)
 From:   Sudeep Holla <sudeep.holla@arm.com>
 To:     kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org
 Cc:     Sudeep Holla <sudeep.holla@arm.com>, kvm@vger.kernel.org,
@@ -36,9 +36,9 @@ Cc:     Sudeep Holla <sudeep.holla@arm.com>, kvm@vger.kernel.org,
         Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will.deacon@arm.com>,
         Julien Thierry <julien.thierry@arm.com>
-Subject: [PATCH v2 11/15] arm64: KVM/debug: trap all accesses to SPE controls at EL1
-Date:   Thu, 23 May 2019 11:34:58 +0100
-Message-Id: <20190523103502.25925-12-sudeep.holla@arm.com>
+Subject: [PATCH v2 09/15] arm64: KVM: add support to save/restore SPE profiling buffer controls
+Date:   Thu, 23 May 2019 11:34:56 +0100
+Message-Id: <20190523103502.25925-10-sudeep.holla@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190523103502.25925-1-sudeep.holla@arm.com>
 References: <20190523103502.25925-1-sudeep.holla@arm.com>
@@ -47,36 +47,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that we have all the save/restore mechanism in place, lets enable
-trapping of accesses to SPE profiling buffer controls at EL1 to EL2.
-This will also change the translation regime used by buffer from EL2
-stage 1 to EL1 stage 1 on VHE systems.
+Currently since we don't support profiling using SPE in the guests,
+we just save the PMSCR_EL1, flush the profiling buffers and disable
+sampling. However in order to support simultaneous sampling both in
+the host and guests, we need to save and reatore the complete SPE
+profiling buffer controls' context.
+
+Let's add the support for the same and keep it disabled for now.
+We can enable it conditionally only if guests are allowed to use
+SPE.
 
 Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 ---
- arch/arm64/kvm/hyp/switch.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm64/kvm/hyp/debug-sr.c | 44 ++++++++++++++++++++++++++++-------
+ 1 file changed, 35 insertions(+), 9 deletions(-)
 
-diff --git a/arch/arm64/kvm/hyp/switch.c b/arch/arm64/kvm/hyp/switch.c
-index 844f0dd7a7f0..881901825a85 100644
---- a/arch/arm64/kvm/hyp/switch.c
-+++ b/arch/arm64/kvm/hyp/switch.c
-@@ -110,6 +110,7 @@ static void activate_traps_vhe(struct kvm_vcpu *vcpu)
- 
- 	write_sysreg(val, cpacr_el1);
- 
-+	write_sysreg(vcpu->arch.mdcr_el2 | 2 << MDCR_EL2_E2PB_SHIFT, mdcr_el2);
- 	write_sysreg(kvm_get_hyp_vector(), vbar_el1);
- }
- NOKPROBE_SYMBOL(activate_traps_vhe);
-@@ -127,6 +128,7 @@ static void __hyp_text __activate_traps_nvhe(struct kvm_vcpu *vcpu)
- 		__activate_traps_fpsimd32(vcpu);
+diff --git a/arch/arm64/kvm/hyp/debug-sr.c b/arch/arm64/kvm/hyp/debug-sr.c
+index a2714a5eb3e9..a4e6eaf5934f 100644
+--- a/arch/arm64/kvm/hyp/debug-sr.c
++++ b/arch/arm64/kvm/hyp/debug-sr.c
+@@ -66,7 +66,8 @@
+ 	default:	write_debug(ptr[0], reg, 0);			\
  	}
  
-+	write_sysreg(vcpu->arch.mdcr_el2 | 2 << MDCR_EL2_E2PB_SHIFT, mdcr_el2);
- 	write_sysreg(val, cptr_el2);
+-static void __hyp_text __debug_save_spe_nvhe(struct kvm_cpu_context *ctxt)
++static void __hyp_text
++__debug_save_spe_nvhe(struct kvm_cpu_context *ctxt, bool full_ctxt)
+ {
+ 	u64 reg;
+ 
+@@ -83,22 +84,37 @@ static void __hyp_text __debug_save_spe_nvhe(struct kvm_cpu_context *ctxt)
+ 	if (reg & BIT(SYS_PMBIDR_EL1_P_SHIFT))
+ 		return;
+ 
+-	/* No; is the host actually using the thing? */
+-	reg = read_sysreg_s(SYS_PMBLIMITR_EL1);
+-	if (!(reg & BIT(SYS_PMBLIMITR_EL1_E_SHIFT)))
++	/* Save the control register and disable data generation */
++	ctxt->sys_regs[PMSCR_EL1] = read_sysreg_el1_s(SYS_PMSCR);
++
++	if (!ctxt->sys_regs[PMSCR_EL1])
+ 		return;
+ 
+-	/* Yes; save the control register and disable data generation */
+-	ctxt->sys_regs[PMSCR_EL1] = read_sysreg_el1_s(SYS_PMSCR);
+ 	write_sysreg_el1_s(0, SYS_PMSCR);
+ 	isb();
+ 
+ 	/* Now drain all buffered data to memory */
+ 	psb_csync();
+ 	dsb(nsh);
++
++	if (!full_ctxt)
++		return;
++
++	ctxt->sys_regs[PMBLIMITR_EL1] = read_sysreg_s(SYS_PMBLIMITR_EL1);
++	write_sysreg_s(0, SYS_PMBLIMITR_EL1);
++	isb();
++
++	ctxt->sys_regs[PMSICR_EL1] = read_sysreg_s(SYS_PMSICR_EL1);
++	ctxt->sys_regs[PMSIRR_EL1] = read_sysreg_s(SYS_PMSIRR_EL1);
++	ctxt->sys_regs[PMSFCR_EL1] = read_sysreg_s(SYS_PMSFCR_EL1);
++	ctxt->sys_regs[PMSEVFR_EL1] = read_sysreg_s(SYS_PMSEVFR_EL1);
++	ctxt->sys_regs[PMSLATFR_EL1] = read_sysreg_s(SYS_PMSLATFR_EL1);
++	ctxt->sys_regs[PMBPTR_EL1] = read_sysreg_s(SYS_PMBPTR_EL1);
++	ctxt->sys_regs[PMBSR_EL1] = read_sysreg_s(SYS_PMBSR_EL1);
  }
  
+-static void __hyp_text __debug_restore_spe_nvhe(struct kvm_cpu_context *ctxt)
++static void __hyp_text
++__debug_restore_spe_nvhe(struct kvm_cpu_context *ctxt, bool full_ctxt)
+ {
+ 	if (!ctxt->sys_regs[PMSCR_EL1])
+ 		return;
+@@ -107,6 +123,16 @@ static void __hyp_text __debug_restore_spe_nvhe(struct kvm_cpu_context *ctxt)
+ 	isb();
+ 
+ 	/* Re-enable data generation */
++	if (full_ctxt) {
++		write_sysreg_s(ctxt->sys_regs[PMBPTR_EL1], SYS_PMBPTR_EL1);
++		write_sysreg_s(ctxt->sys_regs[PMBLIMITR_EL1], SYS_PMBLIMITR_EL1);
++		write_sysreg_s(ctxt->sys_regs[PMSFCR_EL1], SYS_PMSFCR_EL1);
++		write_sysreg_s(ctxt->sys_regs[PMSEVFR_EL1], SYS_PMSEVFR_EL1);
++		write_sysreg_s(ctxt->sys_regs[PMSLATFR_EL1], SYS_PMSLATFR_EL1);
++		write_sysreg_s(ctxt->sys_regs[PMSIRR_EL1], SYS_PMSIRR_EL1);
++		write_sysreg_s(ctxt->sys_regs[PMSICR_EL1], SYS_PMSICR_EL1);
++		write_sysreg_s(ctxt->sys_regs[PMBSR_EL1], SYS_PMBSR_EL1);
++	}
+ 	write_sysreg_el1_s(ctxt->sys_regs[PMSCR_EL1], SYS_PMSCR);
+ }
+ 
+@@ -179,7 +205,7 @@ void __hyp_text __debug_restore_host_context(struct kvm_vcpu *vcpu)
+ 	guest_ctxt = &vcpu->arch.ctxt;
+ 
+ 	if (!has_vhe())
+-		__debug_restore_spe_nvhe(host_ctxt);
++		__debug_restore_spe_nvhe(host_ctxt, false);
+ 
+ 	if (!(vcpu->arch.flags & KVM_ARM64_DEBUG_DIRTY))
+ 		return;
+@@ -203,7 +229,7 @@ void __hyp_text __debug_save_host_context(struct kvm_vcpu *vcpu)
+ 
+ 	host_ctxt = kern_hyp_va(vcpu->arch.host_cpu_context);
+ 	if (!has_vhe())
+-		__debug_save_spe_nvhe(host_ctxt);
++		__debug_save_spe_nvhe(host_ctxt, false);
+ }
+ 
+ void __hyp_text __debug_save_guest_context(struct kvm_vcpu *vcpu)
 -- 
 2.17.1
 
