@@ -7,56 +7,56 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2A54C282E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 09:27:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1BC5C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 09:27:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7036B20675
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 09:27:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDD9C20675
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 09:27:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="pS7uVPzC"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="UlNn7Ngd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730268AbfEWJ1G (ORCPT
+        id S1730115AbfEWJ1u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 05:27:06 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:45249 "EHLO
+        Thu, 23 May 2019 05:27:50 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:59593 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726429AbfEWJ1G (ORCPT
+        with ESMTP id S1726309AbfEWJ1t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 05:27:06 -0400
+        Thu, 23 May 2019 05:27:49 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4N9QuRG4041804
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4N9Rcpd4042097
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 23 May 2019 02:26:56 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4N9QuRG4041804
+        Thu, 23 May 2019 02:27:38 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4N9Rcpd4042097
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1558603616;
-        bh=PzWiXWbuZBSOSkVnmtdtZG78MA42jnTVqc1lbPq3Ihg=;
+        s=2019051801; t=1558603659;
+        bh=8/XC8mh+H2ci+20MGNdj6Eua2Kx6OCat7fjk8pjiyEs=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=pS7uVPzCi1kxl2D2vUpzGbJq3p9hrXiAkIWTPsGdyZSPExwd72uNFbo5hGYhXRHOg
-         o64+3ZXCUtqXhCnkicTq6n6cubVMZ8Vjt7O0cKuB3oXmCo/ChOywzuZcVH0oDBVGoI
-         wXM0uVH0GNEO9fVYMqPgTk8zv1Pr2BUWdtOyjPHefBFnyWo5YS1TupwZZt/1tW0X8t
-         XFxGhoFs16PwRXCnKOOYT99BqR5S7iq6feFSpHRmPb/rywjmm+c4G7FC8lIFF8m4xP
-         0Ob4HK4aOtWyt8YRK5DLpxRCPQhVDHl9dqewiLet0MAN8/6meeFgc3WTRkAMgFdBkk
-         VtnA6xrJgUdYA==
+        b=UlNn7Ngdaqw9yvEdkeje3s7ASD0bvWjHo2c1EVNA3zJag3JM4Cxc+HZ5gdTEcTAGX
+         N/mlEstxJRcp2QsPxd1rnTwrr7rQYx6GTWanNc4QDRJXmVG9WerEuoriZO74BkDkT2
+         dbJVQcB+yv35GhuPokayL1sp+DyLT8AqQvvAbjAhKwY75X+9xf00oVECPe7ASdEeda
+         Nx9SmhrzSe6pj7kuHWloadMFahfD1tA/o6pZKUX+Pbl1ZN31VGoN8drrf/g8Wngld/
+         nbeXzu5++HZ/IqQalZ+KZDwHO/XPK0u7VsnLV3Uf80QkX70t5xYJ9O/XRPRRaYKGL8
+         f2bzQkSR6JkKw==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4N9Qta54041801;
-        Thu, 23 May 2019 02:26:55 -0700
-Date:   Thu, 23 May 2019 02:26:55 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4N9Rcr94042094;
+        Thu, 23 May 2019 02:27:38 -0700
+Date:   Thu, 23 May 2019 02:27:38 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Zhang Rui <tipbot@zytor.com>
-Message-ID: <tip-32fb480e0a2cf1f71e4174d6477198c94dbc746c@git.kernel.org>
-Cc:     peterz@infradead.org, rafael.j.wysocki@intel.com, hpa@zytor.com,
-        rui.zhang@intel.com, tglx@linutronix.de, mingo@kernel.org,
-        linux-kernel@vger.kernel.org, len.brown@intel.com
-Reply-To: rafael.j.wysocki@intel.com, hpa@zytor.com, peterz@infradead.org,
-          len.brown@intel.com, mingo@kernel.org,
-          linux-kernel@vger.kernel.org, rui.zhang@intel.com,
-          tglx@linutronix.de
-In-Reply-To: <9fcb4719aeb7efccf3bc75ed8dd559e46121649f.1557769318.git.len.brown@intel.com>
-References: <9fcb4719aeb7efccf3bc75ed8dd559e46121649f.1557769318.git.len.brown@intel.com>
+Message-ID: <tip-724adec33c2491f26f739f285ddca25fca226e48@git.kernel.org>
+Cc:     len.brown@intel.com, linux-kernel@vger.kernel.org, hpa@zytor.com,
+        mingo@kernel.org, tglx@linutronix.de, rui.zhang@intel.com,
+        peterz@infradead.org
+Reply-To: rui.zhang@intel.com, mingo@kernel.org, tglx@linutronix.de,
+          peterz@infradead.org, hpa@zytor.com,
+          linux-kernel@vger.kernel.org, len.brown@intel.com
+In-Reply-To: <281695c854d38d3bdec803480c3049c36198ca44.1557769318.git.len.brown@intel.com>
+References: <281695c854d38d3bdec803480c3049c36198ca44.1557769318.git.len.brown@intel.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/topology] powercap/intel_rapl: Support multi-die/package
-Git-Commit-ID: 32fb480e0a2cf1f71e4174d6477198c94dbc746c
+Subject: [tip:x86/topology] thermal/x86_pkg_temp_thermal: Support
+ multi-die/package
+Git-Commit-ID: 724adec33c2491f26f739f285ddca25fca226e48
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -70,55 +70,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  32fb480e0a2cf1f71e4174d6477198c94dbc746c
-Gitweb:     https://git.kernel.org/tip/32fb480e0a2cf1f71e4174d6477198c94dbc746c
+Commit-ID:  724adec33c2491f26f739f285ddca25fca226e48
+Gitweb:     https://git.kernel.org/tip/724adec33c2491f26f739f285ddca25fca226e48
 Author:     Zhang Rui <rui.zhang@intel.com>
-AuthorDate: Mon, 13 May 2019 13:58:51 -0400
+AuthorDate: Mon, 13 May 2019 13:58:52 -0400
 Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Thu, 23 May 2019 10:08:32 +0200
+CommitDate: Thu, 23 May 2019 10:08:33 +0200
 
-powercap/intel_rapl: Support multi-die/package
+thermal/x86_pkg_temp_thermal: Support multi-die/package
 
-RAPL "package" domains are actually implemented in hardware per-die.
-Thus, the new multi-die/package systems have mulitple domains
-within each physical package.
+Package temperature sensors are actually implemented in hardware per-die.
+Thus, the new multi-die/package systems sport mulitple package thermal
+zones for each package.
 
-Update the intel_rapl driver to be "die aware" -- exporting multiple
-domains within a single package, when present.  No change on single
-die/package systems.
+Update the x86_pkg_temp_thermal to be "multi-die-aware", so it can expose
+multiple zones per package, instead of just one.
 
 Signed-off-by: Zhang Rui <rui.zhang@intel.com>
 Signed-off-by: Len Brown <len.brown@intel.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Reviewed-by: Ingo Molnar <mingo@kernel.org>
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: linux-pm@vger.kernel.org
-Link: https://lkml.kernel.org/r/9fcb4719aeb7efccf3bc75ed8dd559e46121649f.1557769318.git.len.brown@intel.com
+Link: https://lkml.kernel.org/r/281695c854d38d3bdec803480c3049c36198ca44.1557769318.git.len.brown@intel.com
 
 ---
- drivers/powercap/intel_rapl.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/thermal/intel/x86_pkg_temp_thermal.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/powercap/intel_rapl.c b/drivers/powercap/intel_rapl.c
-index 3c3c0c23180b..9202dbcef96d 100644
---- a/drivers/powercap/intel_rapl.c
-+++ b/drivers/powercap/intel_rapl.c
-@@ -266,7 +266,7 @@ static struct rapl_domain *platform_rapl_domain; /* Platform (PSys) domain */
- /* caller to ensure CPU hotplug lock is held */
- static struct rapl_package *rapl_find_package_domain(int cpu)
+diff --git a/drivers/thermal/intel/x86_pkg_temp_thermal.c b/drivers/thermal/intel/x86_pkg_temp_thermal.c
+index 1ef937d799e4..405b3858900a 100644
+--- a/drivers/thermal/intel/x86_pkg_temp_thermal.c
++++ b/drivers/thermal/intel/x86_pkg_temp_thermal.c
+@@ -122,7 +122,7 @@ err_out:
+  */
+ static struct pkg_device *pkg_temp_thermal_get_dev(unsigned int cpu)
  {
--	int id = topology_physical_package_id(cpu);
-+	int id = topology_logical_die_id(cpu);
- 	struct rapl_package *rp;
+-	int pkgid = topology_logical_package_id(cpu);
++	int pkgid = topology_logical_die_id(cpu);
  
- 	list_for_each_entry(rp, &rapl_packages, plist) {
-@@ -1459,7 +1459,7 @@ static void rapl_remove_package(struct rapl_package *rp)
- /* called from CPU hotplug notifier, hotplug lock held */
- static struct rapl_package *rapl_add_package(int cpu)
+ 	if (pkgid >= 0 && pkgid < max_packages)
+ 		return packages[pkgid];
+@@ -353,7 +353,7 @@ static int pkg_thermal_notify(u64 msr_val)
+ 
+ static int pkg_temp_thermal_device_add(unsigned int cpu)
  {
--	int id = topology_physical_package_id(cpu);
-+	int id = topology_logical_die_id(cpu);
- 	struct rapl_package *rp;
- 	int ret;
+-	int pkgid = topology_logical_package_id(cpu);
++	int pkgid = topology_logical_die_id(cpu);
+ 	u32 tj_max, eax, ebx, ecx, edx;
+ 	struct pkg_device *pkgdev;
+ 	int thres_count, err;
+@@ -449,7 +449,7 @@ static int pkg_thermal_cpu_offline(unsigned int cpu)
+ 	 * worker will see the package anymore.
+ 	 */
+ 	if (lastcpu) {
+-		packages[topology_logical_package_id(cpu)] = NULL;
++		packages[topology_logical_die_id(cpu)] = NULL;
+ 		/* After this point nothing touches the MSR anymore. */
+ 		wrmsr(MSR_IA32_PACKAGE_THERM_INTERRUPT,
+ 		      pkgdev->msr_pkg_therm_low, pkgdev->msr_pkg_therm_high);
+@@ -515,7 +515,7 @@ static int __init pkg_temp_thermal_init(void)
+ 	if (!x86_match_cpu(pkg_temp_thermal_ids))
+ 		return -ENODEV;
  
+-	max_packages = topology_max_packages();
++	max_packages = topology_max_packages() * topology_max_die_per_package();
+ 	packages = kcalloc(max_packages, sizeof(struct pkg_device *),
+ 			   GFP_KERNEL);
+ 	if (!packages)
