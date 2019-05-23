@@ -4,53 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9025C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:32:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B899C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:32:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96A8720879
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:32:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4B88206BA
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:32:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639923;
-	bh=q0NoChondQNBMPI/IILqxPHisepa81MuFB32CinsJs4=;
+	s=default; t=1558639925;
+	bh=9tqMZWqEHULiuOWDI2seNvJ1xyybwcMj/Ewo4lbLsvc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lnY5/utmX1LjWmuMMpeDkuKRgTReCjpQPHO4ZltOoyO0W3y/tTkK0F4t4shWBDqEh
-	 uLI1qlX3kmbFD0Kjh9k5/JSsWH499sB4GeYdOCdJ1lWeDo88jK/0GOt4WQL27h7lRx
-	 rHmf42/5d9/jJqUZk2CfsN2uRxlYQjgRo2b0RW0k=
+	b=s2j3duJsHl8J/ahUa9a6RH/7wSi/aJPpuCPAA0r6QfL3Sw9qTh6L9n7gaE7poMuVE
+	 6VZERqheeo47gHhtkf4WIuWqw2n0F1vz6n2kT5OrK5MSddSW0BE3kCDs+1+lYYts5n
+	 kiHmYM4O3tvRP1XltS6wcMfZZzD8JPmWR9QUWg34=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392108AbfEWTcC (ORCPT
+        id S2392252AbfEWTcE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:32:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45788 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:32:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45842 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403886AbfEWTb7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:31:59 -0400
+        id S2391945AbfEWTcD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:32:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 79D0D2054F;
-        Thu, 23 May 2019 19:31:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2345B21881;
+        Thu, 23 May 2019 19:32:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639919;
-        bh=q0NoChondQNBMPI/IILqxPHisepa81MuFB32CinsJs4=;
+        s=default; t=1558639921;
+        bh=9tqMZWqEHULiuOWDI2seNvJ1xyybwcMj/Ewo4lbLsvc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n8zDyE/bLYpEiBg2FLAsl80sR1Kx/SsQTK8AsRNhWYmQV/8MQFLFLUxnVN+mZn1nr
-         u9FW8LiPY/4hsCP+T5Nfe6DfDsZd2OFWFvMwawCNrAgB6xYrAv1KQr38coTlgfoZII
-         TCTgHs/LGP+NpYgjpqIecO0J1IArCwkckqdUg86M=
+        b=TkPtJD7J6OzuNymBw+KpEimKMm42fmkrHghKQX04XFdmZhB41EfAgiAaYrXsi90RB
+         bLDF5i+TiOKS0GISv+LZc3YhHxgk6XHGsrkREXmhNRLmvhrs2DoZ8ywEvQaV+owOr/
+         Q0Q3X0yetCCgnNB/3NsUtY2SadDHMbZ47pXwsH68=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Mulu He <muluhe@codeaurora.org>
-Subject: [PATCH 4.19 022/114] stm class: Fix channel bitmap on 32-bit systems
-Date:   Thu, 23 May 2019 21:05:21 +0200
-Message-Id: <20190523181733.894465792@linuxfoundation.org>
+        stable@vger.kernel.org, Yifeng Li <tomli@tomli.me>,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+        Teddy Wang <teddy.wang@siliconmotion.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: [PATCH 5.1 092/122] fbdev: sm712fb: use 1024x768 by default on non-MIPS, fix garbled display
+Date:   Thu, 23 May 2019 21:06:54 +0200
+Message-Id: <20190523181717.258003900@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190523181731.372074275@linuxfoundation.org>
-References: <20190523181731.372074275@linuxfoundation.org>
+In-Reply-To: <20190523181705.091418060@linuxfoundation.org>
+References: <20190523181705.091418060@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,45 +61,124 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+From: Yifeng Li <tomli@tomli.me>
 
-commit 51e0f227812ed81a368de54157ebe14396b4be03 upstream.
+commit 4ed7d2ccb7684510ec5f7a8f7ef534bc6a3d55b2 upstream.
 
-Commit 7bd1d4093c2f ("stm class: Introduce an abstraction for System Trace
-Module devices") naively calculates the channel bitmap size in 64-bit
-chunks regardless of the size of underlying unsigned long, making the
-bitmap half as big on a 32-bit system. This leads to an out of bounds
-access with the upper half of the bitmap.
+Loongson MIPS netbooks use 1024x600 LCD panels, which is the original
+target platform of this driver, but nearly all old x86 laptops have
+1024x768. Lighting 768 panels using 600's timings would partially
+garble the display. Since it's not possible to distinguish them reliably,
+we change the default to 768, but keep 600 as-is on MIPS.
 
-Fix this by using BITS_TO_LONGS. While at it, convert to using
-struct_size() for the total size calculation of the master struct.
+Further, earlier laptops, such as IBM Thinkpad 240X, has a 800x600 LCD
+panel, this driver would probably garbled those display. As we don't
+have one for testing, the original behavior of the driver is kept as-is,
+but the problem has been documented is the comments.
 
-Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Fixes: 7bd1d4093c2f ("stm class: Introduce an abstraction for System Trace Module devices")
-Reported-by: Mulu He <muluhe@codeaurora.org>
-Cc: stable@vger.kernel.org # v4.4+
+Signed-off-by: Yifeng Li <tomli@tomli.me>
+Tested-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Cc: Teddy Wang <teddy.wang@siliconmotion.com>
+Cc: <stable@vger.kernel.org>  # v4.4+
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hwtracing/stm/core.c |    7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ drivers/video/fbdev/sm712.h   |    7 +++--
+ drivers/video/fbdev/sm712fb.c |   53 +++++++++++++++++++++++++++++++-----------
+ 2 files changed, 44 insertions(+), 16 deletions(-)
 
---- a/drivers/hwtracing/stm/core.c
-+++ b/drivers/hwtracing/stm/core.c
-@@ -166,11 +166,10 @@ stm_master(struct stm_device *stm, unsig
- static int stp_master_alloc(struct stm_device *stm, unsigned int idx)
+--- a/drivers/video/fbdev/sm712.h
++++ b/drivers/video/fbdev/sm712.h
+@@ -15,9 +15,10 @@
+ 
+ #define FB_ACCEL_SMI_LYNX 88
+ 
+-#define SCREEN_X_RES      1024
+-#define SCREEN_Y_RES      600
+-#define SCREEN_BPP        16
++#define SCREEN_X_RES          1024
++#define SCREEN_Y_RES_PC       768
++#define SCREEN_Y_RES_NETBOOK  600
++#define SCREEN_BPP            16
+ 
+ #define dac_reg	(0x3c8)
+ #define dac_val	(0x3c9)
+--- a/drivers/video/fbdev/sm712fb.c
++++ b/drivers/video/fbdev/sm712fb.c
+@@ -1463,6 +1463,43 @@ static u_long sm7xx_vram_probe(struct sm
+ 	return 0;  /* unknown hardware */
+ }
+ 
++static void sm7xx_resolution_probe(struct smtcfb_info *sfb)
++{
++	/* get mode parameter from smtc_scr_info */
++	if (smtc_scr_info.lfb_width != 0) {
++		sfb->fb->var.xres = smtc_scr_info.lfb_width;
++		sfb->fb->var.yres = smtc_scr_info.lfb_height;
++		sfb->fb->var.bits_per_pixel = smtc_scr_info.lfb_depth;
++		goto final;
++	}
++
++	/*
++	 * No parameter, default resolution is 1024x768-16.
++	 *
++	 * FIXME: earlier laptops, such as IBM Thinkpad 240X, has a 800x600
++	 * panel, also see the comments about Thinkpad 240X above.
++	 */
++	sfb->fb->var.xres = SCREEN_X_RES;
++	sfb->fb->var.yres = SCREEN_Y_RES_PC;
++	sfb->fb->var.bits_per_pixel = SCREEN_BPP;
++
++#ifdef CONFIG_MIPS
++	/*
++	 * Loongson MIPS netbooks use 1024x600 LCD panels, which is the original
++	 * target platform of this driver, but nearly all old x86 laptops have
++	 * 1024x768. Lighting 768 panels using 600's timings would partially
++	 * garble the display, so we don't want that. But it's not possible to
++	 * distinguish them reliably.
++	 *
++	 * So we change the default to 768, but keep 600 as-is on MIPS.
++	 */
++	sfb->fb->var.yres = SCREEN_Y_RES_NETBOOK;
++#endif
++
++final:
++	big_pixel_depth(sfb->fb->var.bits_per_pixel, smtc_scr_info.lfb_depth);
++}
++
+ static int smtcfb_pci_probe(struct pci_dev *pdev,
+ 			    const struct pci_device_id *ent)
  {
- 	struct stp_master *master;
--	size_t size;
+@@ -1508,19 +1545,6 @@ static int smtcfb_pci_probe(struct pci_d
  
--	size = ALIGN(stm->data->sw_nchannels, 8) / 8;
--	size += sizeof(struct stp_master);
--	master = kzalloc(size, GFP_ATOMIC);
-+	master = kzalloc(struct_size(master, chan_map,
-+				     BITS_TO_LONGS(stm->data->sw_nchannels)),
-+			 GFP_ATOMIC);
- 	if (!master)
- 		return -ENOMEM;
+ 	sm7xx_init_hw();
  
+-	/* get mode parameter from smtc_scr_info */
+-	if (smtc_scr_info.lfb_width != 0) {
+-		sfb->fb->var.xres = smtc_scr_info.lfb_width;
+-		sfb->fb->var.yres = smtc_scr_info.lfb_height;
+-		sfb->fb->var.bits_per_pixel = smtc_scr_info.lfb_depth;
+-	} else {
+-		/* default resolution 1024x600 16bit mode */
+-		sfb->fb->var.xres = SCREEN_X_RES;
+-		sfb->fb->var.yres = SCREEN_Y_RES;
+-		sfb->fb->var.bits_per_pixel = SCREEN_BPP;
+-	}
+-
+-	big_pixel_depth(sfb->fb->var.bits_per_pixel, smtc_scr_info.lfb_depth);
+ 	/* Map address and memory detection */
+ 	mmio_base = pci_resource_start(pdev, 0);
+ 	pci_read_config_byte(pdev, PCI_REVISION_ID, &sfb->chip_rev_id);
+@@ -1582,6 +1606,9 @@ static int smtcfb_pci_probe(struct pci_d
+ 		goto failed_fb;
+ 	}
+ 
++	/* probe and decide resolution */
++	sm7xx_resolution_probe(sfb);
++
+ 	/* can support 32 bpp */
+ 	if (sfb->fb->var.bits_per_pixel == 15)
+ 		sfb->fb->var.bits_per_pixel = 16;
 
 
