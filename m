@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97D31C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:18:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57A5DC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:18:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F7BC21855
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:18:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EBB121851
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:18:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639110;
-	bh=M43iYBL2/sR04SYtZRTjxjXOqo+J3N4c2fF66lDFwBw=;
+	s=default; t=1558639113;
+	bh=DuOmr3PJqdUA6uHfS2m2GxoEp90IkVIbIqMtz+phuZ4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rqOfXxcXhz8Jed9wfRCX/xDeV+KYN//bgwMsTDxS40t+V+A7kG7x+vLhGrbMyPo9l
-	 CNa8srcnbtuar5ErJiFOoUgGVFOL8Evwg5eaViFxvYzoRWCmOzeSH0bMugHrpDpBmH
-	 Wn4jD7+ZSV/D5hZVgiYNE7JiZ1KKEKoM6RfLyT/s=
+	b=d2L0oY7cgD5u0mEXEly+8ExdLWmV93UVEFN0Zv/dKHPGGppSP/3cAkQxu6v9nynDY
+	 ucfen+/fnCWkfyqm+7nuZcN0xGHwKiznLmIUm2mqv3SW29ZUkvlo+OedqvJI11ah5J
+	 0T+aumtt9FJdY7Phn/kIvdQWYbcr2epob0zwT4G8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389623AbfEWTS3 (ORCPT
+        id S2389652AbfEWTSc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:18:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53972 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:18:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54034 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388941AbfEWTS2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:18:28 -0400
+        id S2388847AbfEWTSb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:18:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2BE7920863;
-        Thu, 23 May 2019 19:18:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F2601217D9;
+        Thu, 23 May 2019 19:18:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639107;
-        bh=M43iYBL2/sR04SYtZRTjxjXOqo+J3N4c2fF66lDFwBw=;
+        s=default; t=1558639110;
+        bh=DuOmr3PJqdUA6uHfS2m2GxoEp90IkVIbIqMtz+phuZ4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Uz9m9F9/7VwKphUPtql6dY2jDyFIwCH8NTsU9Gsc5UmkM5ul+aToVZrsXDANmIe3/
-         oQvQv5yXjYSZqEzn7v+DGQP0fwaGiM9lofBBqliKNOsppVFnzYWxGuUqiqQR6e9hcF
-         fPoqEEC0FbdzzSnN5cHDWrYTzys9a+2hzqXfeZOQ=
+        b=DVCcuP0A+ANHnmJM2klLocThgdzpphID5w1UpRYqywDKmwhGgz79CTEpydDRM7une
+         1y2j7Mjsb44buAJmN4log93QHcQAjfsiFiSNXmJOYGJh+Hx6W+zmLUN/3qSrdHNdv5
+         3vZrRauR7fW+urGHxwrd1DMmT8tIcY5CJqfyJni8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
-        Mukesh Ojha <mojha@codeaurora.org>,
-        Stefan Schmidt <stefan@datenfreihafen.org>,
+        stable@vger.kernel.org, Andrew Jones <drjones@redhat.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 097/114] net: ieee802154: fix missing checks for regmap_update_bits
-Date:   Thu, 23 May 2019 21:06:36 +0200
-Message-Id: <20190523181740.072873627@linuxfoundation.org>
+Subject: [PATCH 4.19 098/114] KVM: arm/arm64: Ensure vcpu target is unset on reset failure
+Date:   Thu, 23 May 2019 21:06:37 +0200
+Message-Id: <20190523181740.125067227@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181731.372074275@linuxfoundation.org>
 References: <20190523181731.372074275@linuxfoundation.org>
@@ -61,50 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 22e8860cf8f777fbf6a83f2fb7127f682a8e9de4 ]
+[ Upstream commit 811328fc3222f7b55846de0cd0404339e2e1e6d7 ]
 
-regmap_update_bits could fail and deserves a check.
+A failed KVM_ARM_VCPU_INIT should not set the vcpu target,
+as the vcpu target is used by kvm_vcpu_initialized() to
+determine if other vcpu ioctls may proceed. We need to set
+the target before calling kvm_reset_vcpu(), but if that call
+fails, we should then unset it and clear the feature bitmap
+while we're at it.
 
-The patch adds the checks and if it fails, returns its error
-code upstream.
-
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
-Signed-off-by: Stefan Schmidt <stefan@datenfreihafen.org>
+Signed-off-by: Andrew Jones <drjones@redhat.com>
+[maz: Simplified patch, completed commit message]
+Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ieee802154/mcr20a.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ virt/kvm/arm/arm.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ieee802154/mcr20a.c b/drivers/net/ieee802154/mcr20a.c
-index 04891429a5542..fe4057fca83d8 100644
---- a/drivers/net/ieee802154/mcr20a.c
-+++ b/drivers/net/ieee802154/mcr20a.c
-@@ -539,6 +539,8 @@ mcr20a_start(struct ieee802154_hw *hw)
- 	dev_dbg(printdev(lp), "no slotted operation\n");
- 	ret = regmap_update_bits(lp->regmap_dar, DAR_PHY_CTRL1,
- 				 DAR_PHY_CTRL1_SLOTTED, 0x0);
-+	if (ret < 0)
-+		return ret;
+diff --git a/virt/kvm/arm/arm.c b/virt/kvm/arm/arm.c
+index 1415e36fed3db..fef3527af3bd7 100644
+--- a/virt/kvm/arm/arm.c
++++ b/virt/kvm/arm/arm.c
+@@ -949,7 +949,7 @@ int kvm_vm_ioctl_irq_line(struct kvm *kvm, struct kvm_irq_level *irq_level,
+ static int kvm_vcpu_set_target(struct kvm_vcpu *vcpu,
+ 			       const struct kvm_vcpu_init *init)
+ {
+-	unsigned int i;
++	unsigned int i, ret;
+ 	int phys_target = kvm_target_cpu();
  
- 	/* enable irq */
- 	enable_irq(lp->spi->irq);
-@@ -546,11 +548,15 @@ mcr20a_start(struct ieee802154_hw *hw)
- 	/* Unmask SEQ interrupt */
- 	ret = regmap_update_bits(lp->regmap_dar, DAR_PHY_CTRL2,
- 				 DAR_PHY_CTRL2_SEQMSK, 0x0);
-+	if (ret < 0)
-+		return ret;
+ 	if (init->target != phys_target)
+@@ -984,9 +984,14 @@ static int kvm_vcpu_set_target(struct kvm_vcpu *vcpu,
+ 	vcpu->arch.target = phys_target;
  
- 	/* Start the RX sequence */
- 	dev_dbg(printdev(lp), "start the RX sequence\n");
- 	ret = regmap_update_bits(lp->regmap_dar, DAR_PHY_CTRL1,
- 				 DAR_PHY_CTRL1_XCVSEQ_MASK, MCR20A_XCVSEQ_RX);
-+	if (ret < 0)
-+		return ret;
+ 	/* Now we know what it is, we can reset it. */
+-	return kvm_reset_vcpu(vcpu);
+-}
++	ret = kvm_reset_vcpu(vcpu);
++	if (ret) {
++		vcpu->arch.target = -1;
++		bitmap_zero(vcpu->arch.features, KVM_VCPU_MAX_FEATURES);
++	}
  
- 	return 0;
- }
++	return ret;
++}
+ 
+ static int kvm_arch_vcpu_ioctl_vcpu_init(struct kvm_vcpu *vcpu,
+ 					 struct kvm_vcpu_init *init)
 -- 
 2.20.1
 
