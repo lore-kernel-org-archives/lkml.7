@@ -2,129 +2,111 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9C19C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 17:57:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05A0DC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 17:58:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E0982186A
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 17:57:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="nsqB1IeZ"
+	by mail.kernel.org (Postfix) with ESMTP id D98E32186A
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 17:58:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731504AbfEWR55 (ORCPT
+        id S1731531AbfEWR6D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 13:57:57 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:14026 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731311AbfEWR55 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 13:57:57 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ce6df1f0001>; Thu, 23 May 2019 10:57:52 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 23 May 2019 10:57:56 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 23 May 2019 10:57:56 -0700
-Received: from [10.2.169.219] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 23 May
- 2019 17:57:52 +0000
-Subject: Re: [PATCH 1/1] infiniband/mm: convert put_page() to put_user_page*()
-To:     Jerome Glisse <jglisse@redhat.com>
-CC:     Andrew Morton <akpm@linux-foundation.org>, <linux-mm@kvack.org>,
-        "Jason Gunthorpe" <jgg@ziepe.ca>,
-        LKML <linux-kernel@vger.kernel.org>,
-        <linux-rdma@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-        Doug Ledford <dledford@redhat.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        "Dennis Dalessandro" <dennis.dalessandro@intel.com>,
-        Christian Benvenuti <benve@cisco.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Ira Weiny <ira.weiny@intel.com>
-References: <20190523072537.31940-1-jhubbard@nvidia.com>
- <20190523072537.31940-2-jhubbard@nvidia.com>
- <20190523153133.GB5104@redhat.com>
-From:   John Hubbard <jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <708b9fc4-9afd-345e-83f7-2ceae673a4fd@nvidia.com>
-Date:   Thu, 23 May 2019 10:56:56 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 23 May 2019 13:58:03 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:44012 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731311AbfEWR6C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 13:58:02 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id E7F623086239;
+        Thu, 23 May 2019 17:58:01 +0000 (UTC)
+Received: from kamzik.brq.redhat.com (unknown [10.43.2.160])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 75D1F100200D;
+        Thu, 23 May 2019 17:57:55 +0000 (UTC)
+Date:   Thu, 23 May 2019 19:57:53 +0200
+From:   Andrew Jones <drjones@redhat.com>
+To:     Thomas Huth <thuth@redhat.com>
+Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-s390@vger.kernel.org
+Subject: Re: [PATCH 2/9] KVM: selftests: Guard struct kvm_vcpu_events with
+ __KVM_HAVE_VCPU_EVENTS
+Message-ID: <20190523175753.fpfapsh2hg3pjpqe@kamzik.brq.redhat.com>
+References: <20190523164309.13345-1-thuth@redhat.com>
+ <20190523164309.13345-3-thuth@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20190523153133.GB5104@redhat.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL106.nvidia.com (172.18.146.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1558634272; bh=L+NsLVitjlajK5Fndh2v4VhhHtFHNGHsvBcTolR7zkE=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=nsqB1IeZFCuxxH6mHCvcXZ7r8Pp4bj2szDVLBKtv72WLrTh+NFjrf0A9KJEyx6nYx
-         xdOeSAheQUOMNx3oiM4T5lPXrconSMMy+s+NQQGNgYdc8sEtCh47sE/Vm2HaLAaAiM
-         ZkDCNxXsOFRKAzoqGDNk4VwTtjSCvSWvNbEHPsRyJWAOhct4eHLdLrjBtMsYIdiBlt
-         5oCBCOxrHcv0zQQw/jFLI9tSx2R80yUokM0UWuJfUGjOnoC4ZlmwXm8CgKnBSRfcj9
-         tGwlXMkJwAUQcdbP4pb8SVB7v69N3DEB/BN9mMBxHFJfBkMi22AShiQE/7gH5lfnTw
-         1abZmIUAVz0tA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190523164309.13345-3-thuth@redhat.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Thu, 23 May 2019 17:58:02 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/23/19 8:31 AM, Jerome Glisse wrote:
-[...]
->=20
-> Reviewed-by: J=C3=A9r=C3=B4me Glisse <jglisse@redhat.com>
->=20
+On Thu, May 23, 2019 at 06:43:02PM +0200, Thomas Huth wrote:
+> The struct kvm_vcpu_events code is only available on certain architectures
+> (arm, arm64 and x86). To be able to compile kvm_util.c also for other
+> architectures, we have to fence the code with __KVM_HAVE_VCPU_EVENTS.
+> 
+> Reviewed-by: David Hildenbrand <david@redhat.com>
+> Signed-off-by: Thomas Huth <thuth@redhat.com>
+> ---
+>  tools/testing/selftests/kvm/include/kvm_util.h | 2 ++
+>  tools/testing/selftests/kvm/lib/kvm_util.c     | 2 ++
+>  2 files changed, 4 insertions(+)
+> 
+> diff --git a/tools/testing/selftests/kvm/include/kvm_util.h b/tools/testing/selftests/kvm/include/kvm_util.h
+> index a5a4b28f14d8..b8bf961074fe 100644
+> --- a/tools/testing/selftests/kvm/include/kvm_util.h
+> +++ b/tools/testing/selftests/kvm/include/kvm_util.h
+> @@ -114,10 +114,12 @@ void vcpu_sregs_set(struct kvm_vm *vm, uint32_t vcpuid,
+>  		    struct kvm_sregs *sregs);
+>  int _vcpu_sregs_set(struct kvm_vm *vm, uint32_t vcpuid,
+>  		    struct kvm_sregs *sregs);
+> +#ifdef __KVM_HAVE_VCPU_EVENTS
+>  void vcpu_events_get(struct kvm_vm *vm, uint32_t vcpuid,
+>  		     struct kvm_vcpu_events *events);
+>  void vcpu_events_set(struct kvm_vm *vm, uint32_t vcpuid,
+>  		     struct kvm_vcpu_events *events);
+> +#endif
+>  #ifdef __x86_64__
+>  void vcpu_nested_state_get(struct kvm_vm *vm, uint32_t vcpuid,
+>  			   struct kvm_nested_state *state);
+> diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
+> index ba1359ac504f..08edb8436c47 100644
+> --- a/tools/testing/selftests/kvm/lib/kvm_util.c
+> +++ b/tools/testing/selftests/kvm/lib/kvm_util.c
+> @@ -1224,6 +1224,7 @@ void vcpu_regs_set(struct kvm_vm *vm, uint32_t vcpuid, struct kvm_regs *regs)
+>  		ret, errno);
+>  }
+>  
+> +#ifdef __KVM_HAVE_VCPU_EVENTS
+>  void vcpu_events_get(struct kvm_vm *vm, uint32_t vcpuid,
+>  		     struct kvm_vcpu_events *events)
+>  {
+> @@ -1249,6 +1250,7 @@ void vcpu_events_set(struct kvm_vm *vm, uint32_t vcpuid,
+>  	TEST_ASSERT(ret == 0, "KVM_SET_VCPU_EVENTS, failed, rc: %i errno: %i",
+>  		ret, errno);
+>  }
+> +#endif
+>  
+>  #ifdef __x86_64__
+>  void vcpu_nested_state_get(struct kvm_vm *vm, uint32_t vcpuid,
+> -- 
+> 2.21.0
+>
 
-Thanks for the review!
-
-> Between i have a wishlist see below
-[...]
->> diff --git a/drivers/infiniband/core/umem.c b/drivers/infiniband/core/um=
-em.c
->> index e7ea819fcb11..673f0d240b3e 100644
->> --- a/drivers/infiniband/core/umem.c
->> +++ b/drivers/infiniband/core/umem.c
->> @@ -54,9 +54,10 @@ static void __ib_umem_release(struct ib_device *dev, =
-struct ib_umem *umem, int d
->>  =20
->>   	for_each_sg_page(umem->sg_head.sgl, &sg_iter, umem->sg_nents, 0) {
->>   		page =3D sg_page_iter_page(&sg_iter);
->> -		if (!PageDirty(page) && umem->writable && dirty)
->> -			set_page_dirty_lock(page);
->> -		put_page(page);
->> +		if (umem->writable && dirty)
->> +			put_user_pages_dirty_lock(&page, 1);
->> +		else
->> +			put_user_page(page);
->=20
-> Can we get a put_user_page_dirty(struct page 8*pages, bool dirty, npages)=
- ?
->=20
-> It is a common pattern that we might have to conditionaly dirty the pages
-> and i feel it would look cleaner if we could move the branch within the
-> put_user_page*() function.
->=20
-
-This sounds reasonable to me, do others have a preference on this? Last tim=
-e
-we discussed it, I recall there was interest in trying to handle the sg lis=
-ts,
-which was where a lot of focus was. I'm not sure if there was a preference =
-one=20
-way or the other, on adding more of these helpers.
-
-
-thanks,
---=20
-John Hubbard
-NVIDIA
+Reviewed-by: Andrew Jones <drjones@redhat.com>
