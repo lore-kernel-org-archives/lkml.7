@@ -2,101 +2,63 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18757C282E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 10:28:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94403C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 10:32:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E56CD21019
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 10:28:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E2FF21019
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 10:32:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730406AbfEWK2V (ORCPT
+        id S1730234AbfEWKcu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 06:28:21 -0400
-Received: from foss.arm.com ([217.140.101.70]:42882 "EHLO foss.arm.com"
+        Thu, 23 May 2019 06:32:50 -0400
+Received: from mail5.windriver.com ([192.103.53.11]:57282 "EHLO mail5.wrs.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729972AbfEWK2U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 06:28:20 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0A688341;
-        Thu, 23 May 2019 03:28:20 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E1AA03F718;
-        Thu, 23 May 2019 03:28:15 -0700 (PDT)
-Date:   Thu, 23 May 2019 11:28:13 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        David Miller <davem@davemloft.net>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        James Hogan <jhogan@kernel.org>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Matt Turner <mattst88@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Burton <paul.burton@mips.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Richard Henderson <rth@twiddle.net>,
-        "# 3.4.x" <stable@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tony Luck <tony.luck@intel.com>,
-        Vineet Gupta <vgupta@synopsys.com>
-Subject: Re: [PATCH 00/18] locking/atomic: atomic64 type cleanup
-Message-ID: <20190523102813.GC3370@lakrids.cambridge.arm.com>
-References: <20190522132250.26499-1-mark.rutland@arm.com>
- <CAK8P3a3X-7Yq9W+wEMRf3QvoEhrPHYmYukLaAr_39iKhJLC-bA@mail.gmail.com>
+        id S1727466AbfEWKcu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 06:32:50 -0400
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
+        by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id x4NAUiWV008275
+        (version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
+        Thu, 23 May 2019 03:30:55 -0700
+Received: from [128.224.155.90] (128.224.155.90) by ALA-HCA.corp.ad.wrs.com
+ (147.11.189.50) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 23 May
+ 2019 03:30:34 -0700
+Subject: Re: [PATCH v2] tipc: Avoid copying bytes beyond the supplied data
+To:     Chris Packham <Chris.Packham@alliedtelesis.co.nz>,
+        "jon.maloy@ericsson.com" <jon.maloy@ericsson.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "niveditas98@gmail.com" <niveditas98@gmail.com>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "tipc-discussion@lists.sourceforge.net" 
+        <tipc-discussion@lists.sourceforge.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20190520034536.22782-1-chris.packham@alliedtelesis.co.nz>
+ <2830aab3-3fa9-36d2-5646-d5e4672ae263@windriver.com>
+ <00ce1b1e52ac4b729d982c86127334aa@svr-chch-ex1.atlnz.lc>
+From:   Ying Xue <ying.xue@windriver.com>
+Message-ID: <11c81207-54dd-16d5-3f33-1ccf45a06dac@windriver.com>
+Date:   Thu, 23 May 2019 18:20:45 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a3X-7Yq9W+wEMRf3QvoEhrPHYmYukLaAr_39iKhJLC-bA@mail.gmail.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+In-Reply-To: <00ce1b1e52ac4b729d982c86127334aa@svr-chch-ex1.atlnz.lc>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [128.224.155.90]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 22, 2019 at 11:18:59PM +0200, Arnd Bergmann wrote:
-> On Wed, May 22, 2019 at 3:23 PM Mark Rutland <mark.rutland@arm.com> wrote:
-> >
-> > Currently architectures return inconsistent types for atomic64 ops. Some return
-> > long (e..g. powerpc), some return long long (e.g. arc), and some return s64
-> > (e.g. x86).
-> >
-> > This is a bit messy, and causes unnecessary pain (e.g. as values must be cast
-> > before they can be printed [1]).
-> >
-> > This series reworks all the atomic64 implementations to use s64 as the base
-> > type for atomic64_t (as discussed [2]), and to ensure that this type is
-> > consistently used for parameters and return values in the API, avoiding further
-> > problems in this area.
-> >
-> > This series (based on v5.1-rc1) can also be found in my atomics/type-cleanup
-> > branch [3] on kernel.org.
-> 
-> Nice cleanup!
-> 
-> I've provided an explicit Ack for the asm-generic patch if someone wants
-> to pick up the entire series, but I can also put it all into my asm-generic
-> tree if you want, after more people have had a chance to take a look.
+On 5/23/19 4:46 AM, Chris Packham wrote:
+> On most distros that is generated from include/uapi in the kernel source 
+> and packaged as part of libc or a kernel-headers package. So once this 
+> patch is accepted and makes it into the distros 
+> /usr/include/linux/tipc_config.h will have this fix.
 
-Thanks!
-
-I had assumed that this would go through the tip tree, as previous
-atomic rework had, but I have no preference as to how this gets merged.
-
-I'm not sure what the policy is, so I'll leave it to Peter and Will to
-say.
-
-Mark.
+Thanks for the clarification. You are right, so it's unnecessary to make
+any change.
