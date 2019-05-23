@@ -2,179 +2,118 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90D15C46470
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:51:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F295C04AAC
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:51:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BF8B20675
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:51:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B32020675
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:51:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729891AbfEWIvM (ORCPT
+        id S1730070AbfEWIvT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 04:51:12 -0400
-Received: from mx2.suse.de ([195.135.220.15]:55230 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726230AbfEWIvM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 04:51:12 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id B42A7ADD8;
-        Thu, 23 May 2019 08:51:09 +0000 (UTC)
-Message-ID: <c756c54d5e924d61b8ec6eccecf9bfdce7c2b543.camel@suse.de>
-Subject: Re: [RFC v2 3/5] clk: bcm2835: use firmware interface to update pllb
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Stefan Wahren <stefan.wahren@i2se.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Eric Anholt <eric@anholt.net>
-Cc:     linux-arm-kernel@lists.infradead.org, ptesarik@suse.com,
-        sboyd@kernel.org, viresh.kumar@linaro.org, mturquette@baylibre.com,
-        linux-pm@vger.kernel.org, rjw@rjwysocki.net,
-        linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-clk@vger.kernel.org, mbrugger@suse.de, ssuloev@orpaltech.com
-Date:   Thu, 23 May 2019 10:51:07 +0200
-In-Reply-To: <1599901940.259900.1558475026379@email.ionos.de>
-References: <20190520104708.11980-1-nsaenzjulienne@suse.de>
-         <20190520104708.11980-4-nsaenzjulienne@suse.de>
-         <ebc78880-418f-f507-021c-41295113e041@i2se.com>
-         <6383b357-3f7e-f031-f59f-61c598e44763@i2se.com>
-         <a142b72b828a798610d885d81189dd21b1870d78.camel@suse.de>
-         <1599901940.259900.1558475026379@email.ionos.de>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-rttIxA1wzU/XwAkxrIx0"
-User-Agent: Evolution 3.32.2 
+        Thu, 23 May 2019 04:51:19 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:45581 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726230AbfEWIvT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 04:51:19 -0400
+Received: by mail-qt1-f194.google.com with SMTP id t1so5768662qtc.12;
+        Thu, 23 May 2019 01:51:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=G/4b99ppThyzVBjBPQF+fjXgPnHh7TF65Bh6HAL+CAA=;
+        b=iFQSvgGEi/wnsVDHD3d2/T7gIoSuhHyhAWlPcj3h16JjOG0JWVNSzRCgFWNFrCqHvq
+         argIZdS1fQFfc5vI4uWYO00olGvHzlOkZjUHjF2c0LWvOzCkmQS+zJFcjixyOlzwkuDz
+         0/jIxiRafQoAcoyzCPqXiB5YMADg3e5NERv2x3nBKZTPgag5NReR+beeBrBYY0ffYUaz
+         UK4YC+GkPp+wIsx0QNdEeFyZSbmQqHugOwYL2BSzRVdsMgKXHQC2VqgCplurdeNvkOa3
+         RrkXHcu98oO6IjndAsxaTWRr9YttklOV+MnRdXSwkk+1VoT1BpYsfHa5+fhwhLxnHWW9
+         hXuQ==
+X-Gm-Message-State: APjAAAXSMJ8HYYdXPKovohrAn/sk9UOI4OwCnhOm4g7PWUdaqRIobPdp
+        yVQNZFq2t81D7Psq7hrhy/W+g+E7lf4bUv0U4OE=
+X-Google-Smtp-Source: APXvYqz1mhfFsmpde2hm5zn0CKwPeOeJVfXj4XsHMSIoPLUZWkSUMq+0rPz7Qf99e4MM4Xocw9e6dHu+Ltod5QGW6WI=
+X-Received: by 2002:ac8:1c51:: with SMTP id j17mr78503342qtk.7.1558601478000;
+ Thu, 23 May 2019 01:51:18 -0700 (PDT)
 MIME-Version: 1.0
+References: <20190502151548.11143-1-natechancellor@gmail.com>
+ <CAKwvOd=nvKGGW5jvN+WFUXzOm9xeiNNUD0F9--9YcpuRmnWWhA@mail.gmail.com>
+ <20190503031718.GB6969@archlinux-i9> <20190523015415.GA17819@archlinux-epyc>
+In-Reply-To: <20190523015415.GA17819@archlinux-epyc>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 23 May 2019 10:51:01 +0200
+Message-ID: <CAK8P3a001V5qQo4vGfpugtmrnFfUNeP_q4KY-YS7rP_L91HY1A@mail.gmail.com>
+Subject: Re: [PATCH] rsi: Properly initialize data in rsi_sdio_ta_reset
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Amitkumar Karwar <amitkarwar@gmail.com>,
+        Siva Rebbagondla <siva8118@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, May 23, 2019 at 3:54 AM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
+>
+> On Thu, May 02, 2019 at 08:17:18PM -0700, Nathan Chancellor wrote:
+> > On Thu, May 02, 2019 at 11:18:01AM -0700, Nick Desaulniers wrote:
+> > > On Thu, May 2, 2019 at 8:16 AM Nathan Chancellor
+> > > u8 data [4];
+> >
+> > data was __le32 in rsi_reset_chip() before commit f700546682a6 ("rsi:
+> > fix nommu_map_sg overflow kernel panic").
+> >
+> > I wonder if this would be okay for this function:
+> >
+> > -------------------------------------------------
+> >
+> > diff --git a/drivers/net/wireless/rsi/rsi_91x_sdio.c b/drivers/net/wireless/rsi/rsi_91x_sdio.c
+> > index f9c67ed473d1..0330c50ab99c 100644
+> > --- a/drivers/net/wireless/rsi/rsi_91x_sdio.c
+> > +++ b/drivers/net/wireless/rsi/rsi_91x_sdio.c
+> > @@ -927,7 +927,7 @@ static int rsi_sdio_ta_reset(struct rsi_hw *adapter)
+> >  {
+> >         int status;
+> >         u32 addr;
+> > -       u8 *data;
+> > +       u8 data;
+> >
+> >         status = rsi_sdio_master_access_msword(adapter, TA_BASE_ADDR);
+> >         if (status < 0) {
+> > @@ -937,7 +937,7 @@ static int rsi_sdio_ta_reset(struct rsi_hw *adapter)
+> >         }
+> >
+> >         rsi_dbg(INIT_ZONE, "%s: Bring TA out of reset\n", __func__);
+> > -       put_unaligned_le32(TA_HOLD_THREAD_VALUE, data);
+> > +       put_unaligned_le32(TA_HOLD_THREAD_VALUE, &data);
+> >         addr = TA_HOLD_THREAD_REG | RSI_SD_REQUEST_MASTER;
+> >         status = rsi_sdio_write_register_multiple(adapter, addr,
+> >                                                   (u8 *)&data,
 
---=-rttIxA1wzU/XwAkxrIx0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+This is clearly not ok, as put_unaligned_le32() stores four bytes, and
+the local variable is only one byte!
 
-On Tue, 2019-05-21 at 23:43 +0200, Stefan Wahren wrote:
-> > Nicolas Saenz Julienne <nsaenzjulienne@suse.de> hat am 21. Mai 2019 um =
-17:47
-> > geschrieben:
-> >=20
-> >=20
-> > Hi Stefan, thanks for your comments!
-> >=20
-> > On Tue, 2019-05-21 at 14:40 +0200, Stefan Wahren wrote:
-> > > Hi Nicolas,
-> > >=20
-> > > On 20.05.19 14:11, Stefan Wahren wrote:
-> > > > Hi Nicolas,
-> > > >=20
-> > > > the following comments applies only in case Eric is fine with the w=
-hole
-> > > > approach.
-> > > >=20
-> > > > On 20.05.19 12:47, Nicolas Saenz Julienne wrote:
-> > > > > Raspberry Pi's firmware, which runs in a dedicated processor, kee=
-ps
-> > > > maybe we should clarify that the firmware is running in the VPU
-> > > > > track of the board's temperature and voltage. It's resposible for
-> > > > > scaling the CPU frequency whenever it deems the device reached an
-> > > > > unsafe
-> > > > > state. On top of that the firmware provides an interface which al=
-lows
-> > > > > Linux to to query the clock's state or change it's frequency.
-> > > > I think this requires a separate update of the devicetree binding.
-> > > > > Being the sole user of the bcm2835 clock driver, this integrates =
-the
-> > > > > firmware interface into the clock driver and adds a first user: t=
-he
-> > > > > CPU
-> > > > > pll, also known as 'pllb'.
-> > > > Please verify that the kernel still works (and this clock driver pr=
-obe)
-> > > > under the following conditions:
-> > > >=20
-> > > > - CONFIG_RASPBERRYPI_FIRMWARE=3Dn
-> > > > - CONFIG_RASPBERRYPI_FIRMWARE=3Dm
-> > > > - older DTBs without patch #1
-> > > i thought about this and the case this driver would return
-> > > -EPROBE_DEFER. The clock driver is too essential for doing such a thi=
-ng.
-> > > So i think the best solution would be to move these changes into a
-> > > separate driver which should be register by the clock driver (similia=
-r
-> > > to vchiq). This also avoid the need of a new device tree binding.
-> >=20
-> > I understand your concerns.
-> >=20
-> > Wouldn't you prefer registering the device trough the device tree? I'd =
-go
-> > with
-> > the same approach as the firmware touchscreen driver, which is register=
-ed
-> > after
-> > the firmware's probe trough dt's 'simple-bus'. That said, it's not a
-> > strongly
-> > held opinion, I'm happy with whatever solution as long as it works.
->=20
-> A devicetree binding always introduce some kind of inflexibility. In case
-> someone finds a better solution later things can get really messy. A rece=
-nt
-> example is the clock handling for i2c-bcm2835.
+Also, sdio does use DMA for transfers, so the variable has to be
+dynamically allocated. I think your original patch was correct.
+The only change I'd possibly make would be to use
+RSI_9116_REG_SIZE instead of sizeof(u32).
 
-Fair enough.
+> Did any of the maintainers have any comments on what the correct
+> solution is here to resolve this warning? It is one of the few left
+> before we can turn on -Wuninitialized for the whole kernel.
 
-> > I get from your comments that you'd like the register based version of
-> > 'pllb'
-> > and 'pllb_arm' to be loaded if for some reason the firmware isn't avail=
-able.
-> > Is
-> > that right?=20
->=20
-> This wasn't my intention. I would prefer a simple approch here (no handov=
-er).=20
->=20
-> > The main problem I see with this is the duplication of 'pllb' and
-> > 'pllb_arm'. Both drivers will create the same clock device through diff=
-erent
-> > interfaces. Any suggestions on how to deal with that? If not I can simp=
-ly
-> > remove 'pllb' and 'pllb_arm' from clk-bcm2835.c.
->=20
-> Yes. So even if this driver is disabled, there shouldn't be a regression.=
- Or
-> did i miss something?
+I would argue that this should not stop us from turning it on, as the
+warning is for a clear bug in the code that absolutely needs to be
+fixed, rather than a false-positive.
 
-No, there shoudn't be any regressions as these clocks are not being used at=
- the
-moment.
-
-I'll send a follow-up series soon :)
-
-Regrads,
-Nicolas
-
-
---=-rttIxA1wzU/XwAkxrIx0
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAlzmXvsACgkQlfZmHno8
-x/5grgf8DaKHj4n6xgx7Eziw8ZvWeoGXlEqp0jORn3i0LMRCmP3NfeQjeI6JKcqk
-cr+LKsKAOdKqi+LSK5E97AD+dhifsZBkQWdXiiWmlqTALBoRx9jug+Bz5hcXQWSP
-GEc7b3ptWKWhdHCkNYDPUMs/2QECyhvdzS64cqzxyWVitzkue3oucEuHBB0zKEVS
-d4O3HJXxgFhUE0hyBEmlaPm94mBq9wIywm01Ifj2Lmzb/gXrM8mYfyZoxW9jM7tl
-2bXiN04WcM6kSq+J4t+3v+baNCP6YlHDnDU7scJ2grPkydirg+E5O87YrKJ0RGys
-okD9UnL1HYEPsLM94xjqSw+H5f2sgQ==
-=kYhp
------END PGP SIGNATURE-----
-
---=-rttIxA1wzU/XwAkxrIx0--
-
+       Arnd
