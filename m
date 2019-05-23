@@ -2,467 +2,236 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94729C282DE
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 17:29:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F191C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 17:31:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6769E2133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 17:29:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFC5C2175B
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 17:31:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AXdFNh6z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731277AbfEWR3q (ORCPT
+        id S1731319AbfEWRbD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 13:29:46 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:51476 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730957AbfEWR3q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 13:29:46 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3DF7F374;
-        Thu, 23 May 2019 10:29:45 -0700 (PDT)
-Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 020A63F5AF;
-        Thu, 23 May 2019 10:29:43 -0700 (PDT)
-Subject: Re: [PATCH v3] EDAC, mellanox: Add ECC support for BlueField DDR4
-To:     Junhan Zhou <Junhan@mellanox.com>
-Cc:     Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Liming Sun <lsun@mellanox.com>, linux-edac@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <e59276b6f3dc165703ddcb47a8a006d8a62d9c95.1551216637.git.Junhan@mellanox.com>
- <1553178667-21073-1-git-send-email-Junhan@mellanox.com>
-From:   James Morse <james.morse@arm.com>
-Message-ID: <d0d3ee30-8f9c-521f-9915-50d8ac3913dc@arm.com>
-Date:   Thu, 23 May 2019 18:29:41 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+        Thu, 23 May 2019 13:31:03 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:39072 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730904AbfEWRbC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 13:31:02 -0400
+Received: by mail-wr1-f65.google.com with SMTP id w8so7182014wrl.6;
+        Thu, 23 May 2019 10:31:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=MnmPtd13D8a9dFFGhJ+iINcRL6VlzTwwNXyGnOS9P8s=;
+        b=AXdFNh6zjPSns6vq7L/S6ful1yMtAzmegpn26bTknvORaI3URXxBUTv8Xp/k4eubP6
+         572Qnk6DlmF8notkypYg3qMKzwyzheEvET23blhLTPjyLZao14XoIgYyaKXRnWJavZbs
+         oTgSzsLfWZH6Y5nmN4IBWZ3iwjZP7b7+l0+d1cjHXkanDW36krMMuZDvD6t8uz2O6Bp9
+         6OG0It76CRnenkjwAYf2+BSWrn5Ef7LZikxi9id66Q4A5RENR+V3wL4jlgZLNUQHaold
+         /BFBmTz7D8g1Nwl5AoOUwKrDoi6NsxhG+FDk20IDm0dxfD9AEU2WTJOKKxq72HMYaH0F
+         Jtig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=MnmPtd13D8a9dFFGhJ+iINcRL6VlzTwwNXyGnOS9P8s=;
+        b=D77wuDQuz/MDYxgRd24UPrinC+ITsv1S0SMRM3rqFxOkwChiWiQs9feUrFfGSXnBC3
+         hX6xkHR4I8xYpl+TQqOAshil1KcNoRIrVobLgeGuUjocvDIuXXC4oLXPkc9IK5k1PZk6
+         idpcQRarqCAyUezE3ykGmX6d1HjcByoa0aJt4CTKbTDvji1T56QcpQFFEoxXHKF+c98/
+         TD+P9QM8QuFkINn89iqbjuzwx26Ug3Ig+4KCeIHJzpwSss/Xf4jH1NLSmzK3Sp4T2c2w
+         3QUxIso6u1fP5CUg/2RQaEF7Lm+910CNWrEaV74+KBXBDWYdrFfb4pHNzdjWbDh4Nc8B
+         ahQQ==
+X-Gm-Message-State: APjAAAUBwZpcfdYHlEwr42WlRDCMGJoF0srRLNQfrlJeN4KuEidsheyo
+        jQw/oY+wc5Pv5P7eXHYzAng=
+X-Google-Smtp-Source: APXvYqyg8dtvzFR12TyR+1NJ1FkLY5vjomXq5yABkYnmStYL0Loj3lA2u14z5zQGYJBYaWvRji7YEA==
+X-Received: by 2002:adf:dfd0:: with SMTP id q16mr4819351wrn.235.1558632660309;
+        Thu, 23 May 2019 10:31:00 -0700 (PDT)
+Received: from [10.67.49.213] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id a124sm243837wmh.3.2019.05.23.10.30.57
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 23 May 2019 10:30:59 -0700 (PDT)
+Subject: Re: [PATCH 0/2] mailbox: arm: introduce smc triggered mailbox
+To:     Peng Fan <peng.fan@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>,
+        "sudeep.holla@arm.com" <sudeep.holla@arm.com>
+Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "andre.przywara@arm.com" <andre.przywara@arm.com>,
+        "van.freenix@gmail.com" <van.freenix@gmail.com>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+References: <20190523060437.11059-1-peng.fan@nxp.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+ M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
+Message-ID: <4ba2b243-5622-bb27-6fc3-cd9457430e54@gmail.com>
+Date:   Thu, 23 May 2019 10:30:50 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <1553178667-21073-1-git-send-email-Junhan@mellanox.com>
+In-Reply-To: <20190523060437.11059-1-peng.fan@nxp.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Junhan,
+Hi,
 
-On 21/03/2019 14:31, Junhan Zhou wrote:
-> Add ECC support for Mellanox BlueField SoC DDR controller.
-> This requires SMC to the running Arm Trusted Firmware to report
-> what is the current memory configuration.
+On 5/22/19 10:50 PM, Peng Fan wrote:
+> This is a modified version from Andre Przywara's patch series
+> https://lore.kernel.org/patchwork/cover/812997/.
+> [1] is a draft implementation of i.MX8MM SCMI ATF implementation that
+> use smc as mailbox, power/clk is included, but only part of clk has been
+> implemented to work with hardware, power domain only supports get name
+> for now.
+> 
+> The traditional Linux mailbox mechanism uses some kind of dedicated hardware
+> IP to signal a condition to some other processing unit, typically a dedicated
+> management processor.
+> This mailbox feature is used for instance by the SCMI protocol to signal a
+> request for some action to be taken by the management processor.
+> However some SoCs does not have a dedicated management core to provide
+> those services. In order to service TEE and to avoid linux shutdown
+> power and clock that used by TEE, need let firmware to handle power
+> and clock, the firmware here is ARM Trusted Firmware that could also
+> run SCMI service.
+> 
+> The existing SCMI implementation uses a rather flexible shared memory
+> region to communicate commands and their parameters, it still requires a
+> mailbox to actually trigger the action.
 
-Sorry for the delay on this, it slipped through the cracks. (Please don't reply with new
-patches to the discussion of an old patch/series, this makes it look like ongoing
-discussion on a v1, and v2 never arrives!)
+We have had something similar done internally with a couple of minor
+differences:
 
+- a SGI is used to send SCMI notifications/delayed replies to support
+asynchronism (patches are in the works to actually add that to the Linux
+SCMI framework). There is no good support for SGI in the kernel right
+now so we hacked up something from the existing SMP code and adding the
+ability to register our own IPI handlers (SHAME!). Using a PPI should
+work and should allow for using request_irq() AFAICT.
 
-> diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
-> index 47eb4d1..404d853 100644
-> --- a/drivers/edac/Kconfig
-> +++ b/drivers/edac/Kconfig
-> @@ -504,4 +504,11 @@ config EDAC_ASPEED
->  	  First, ECC must be configured in the bootloader. Then, this driver
->  	  will expose error counters via the EDAC kernel framework.
->  
-> +config EDAC_BLUEFIELD
-> +	tristate "Mellanox BlueField Memory ECC"
-> +	depends on ARM64 && ((MELLANOX_PLATFORM && ACPI) || COMPILE_TEST)
+- the mailbox identifier is indicated as part of the SMC call such that
+we can have multiple SCMI mailboxes serving both standard protocols and
+non-standard (in the 0x80 and above) range, also they may have different
+throughput (in hindsight, these could simply be different channels)
 
-What is the MELLANOX_PLATFORM needed for? Is it just to turn off a set of drivers in one
-go? I can't see what other infrastructure you depend on.
+Your patch series looks both good and useful to me, I would just put a
+provision in the binding to support an optional interrupt such that
+asynchronism gets reasonably easy to plug in when it is available (and
+desirable).
 
-
-> +	help
-> +	  Support for error detection and correction on the
-> +	  Mellanox BlueField SoCs.
-> +
->  endif # EDAC
-
-
-> diff --git a/drivers/edac/bluefield_edac.c b/drivers/edac/bluefield_edac.c
-> new file mode 100644
-> index 0000000..88f51f7
-> --- /dev/null
-> +++ b/drivers/edac/bluefield_edac.c
-> @@ -0,0 +1,396 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Bluefield-specific EDAC driver.
-> + *
-> + * Copyright (c) 2019 Mellanox Technologies.
-> + */
-> +
-> +#include <linux/acpi.h>
-> +#include <linux/arm-smccc.h>
-> +#include <linux/edac.h>
-> +#include <linux/io.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +
-> +#include "edac_module.h"
-> +
-> +#define DRIVER_NAME		"bluefield-edac"
-> +
-> +/*
-> + * Mellanox BlueField EMI (External Memory Interface) register definitions.
-> + * Registers which have individual bitfields have a union defining the
-> + * bitfields following the address define.
-> + */
-> +
-> +#define MLXBF_EMI_DRAM_ECC_COUNT 0x340
-> +
-> +union mlxbf_emi_dram_ecc_count {
-> +	struct {
-> +		u32 single_error_count : 16;
-> +		u32 double_error_count : 16;
-> +	};
-> +
-> +	u32 word;
-> +};
-> +
-> +#define MLXBF_EMI_DRAM_ECC_ERROR 0x348
-> +
-> +union mlxbf_emi_dram_ecc_error {
-> +	struct {
-> +		u32 dram_ecc_single : 1;
-> +		u32 __reserved_0    : 15;
-> +		u32 dram_ecc_double : 1;
-> +		u32 __reserved_1    : 15;
-> +	};
-> +
-> +	u32 word;
-> +};
-> +
-> +#define MLXBF_EMI_DRAM_ECC_LATCH_SELECT 0x354
-> +
-> +union mlxbf_emi_dram_ecc_latch_select {
-> +	struct {
-> +		u32 dram_ecc_first : 1;
-> +		u32 __reserved_0   : 15;
-> +		u32 edge_sel       : 4;
-> +		u32 __reserved_1   : 4;
-> +		u32 start          : 1;
-> +		u32 __reserved_2   : 7;
-> +	};
-> +
-> +	u32 word;
-> +};
-> +
-> +#define MLXBF_EMI_DRAM_ERR_ADDR_0 0x358
-> +
-> +#define MLXBF_EMI_DRAM_ERR_ADDR_1 0x37c
-> +
-> +#define MLXBF_EMI_DRAM_SYNDROM 0x35c
-> +
-> +union mlxbf_emi_dram_syndrom {
-> +	struct {
-> +		u32 derr         : 1;
-> +		u32 serr         : 1;
-> +		u32 __reserved_0 : 14;
-> +		/* ECC syndrome (error bit according to the Hamming code). */
-> +		u32 syndrom      : 10;
-> +		u32 __reserved_1 : 6;
-> +	};
-> +
-> +	u32 word;
-> +};
-> +
-> +#define MLXBF_EMI_DRAM_ADDITIONAL_INFO_0 0x364
-> +
-> +union mlxbf_emi_dram_additional_info_0 {
-> +	struct {
-> +		u32 err_bank     : 4;
-> +		u32 err_lrank    : 2;
-> +		u32 __reserved_0 : 2;
-> +		u32 err_prank    : 2;
-> +		u32 __reserved_1 : 6;
-> +		u32 err_edge     : 8;
-> +		u32 __reserved_2 : 8;
-> +	};
-> +
-> +	u32 word;
-> +};
-
-... you're expecting the compiler to pack this bitfield in exactly the same way your
-hardware did. I don't think that's guaranteed.
-It evidently works for your current compiler, but another compiler may pack this structure
-differently. Toggling endianness will break this, (arm64 supports both). If your platform
-supports aarch32, someone may want to get 32bit arm running, which may have different
-compiler behaviour.
-
-You are also using bitfields between hardware and firmware, so its currently possible the
-firmware requires the kernel to be built with a compiler that means it can't interact with
-the hardware...
-
-When this has come up in the past, the advice was not to use bitfields:
-https://lore.kernel.org/lkml/1077080607.1078.109.camel@gaston/
-
-Please use shifts and masks.
+> 
+> This patch series provides a Linux mailbox compatible service which uses
+> smc calls to invoke firmware code, for instance taking care of SCMI requests.
+> The actual requests are still communicated using the standard SCMI way of
+> shared memory regions, but a dedicated mailbox hardware IP can be replaced via
+> this new driver.
+> 
+> This simple driver uses the architected SMC calling convention to trigger
+> firmware services, also allows for using "HVC" calls to call into hypervisors
+> or firmware layers running in the EL2 exception level.
+> 
+> Patch 1 contains the device tree binding documentation, patch 2 introduces
+> the actual mailbox driver.
+> 
+> Please note that this driver just provides a generic mailbox mechanism,
+> though this is synchronous and one-way only (triggered by the OS only,
+> without providing an asynchronous way of triggering request from the
+> firmware).
+> And while providing SCMI services was the reason for this exercise, this
+> driver is in no way bound to this use case, but can be used generically
+> where the OS wants to signal a mailbox condition to firmware or a
+> hypervisor.
+> Also the driver is in no way meant to replace any existing firmware
+> interface, but actually to complement existing interfaces.
+> 
+> [1] https://github.com/MrVan/arm-trusted-firmware/tree/scmi
+> 
+> Peng Fan (2):
+>   DT: mailbox: add binding doc for the ARM SMC mailbox
+>   mailbox: introduce ARM SMC based mailbox
+> 
+>  .../devicetree/bindings/mailbox/arm-smc.txt        |  96 +++++++++++++
+>  drivers/mailbox/Kconfig                            |   7 +
+>  drivers/mailbox/Makefile                           |   2 +
+>  drivers/mailbox/arm-smc-mailbox.c                  | 154 +++++++++++++++++++++
+>  include/linux/mailbox/arm-smc-mailbox.h            |  10 ++
+>  5 files changed, 269 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mailbox/arm-smc.txt
+>  create mode 100644 drivers/mailbox/arm-smc-mailbox.c
+>  create mode 100644 include/linux/mailbox/arm-smc-mailbox.h
+> 
 
 
-> +#define MLXBF_EDAC_DIMM_PER_MC		2
-> +#define MLXBF_EDAC_ERROR_GRAIN		8
-
-If these numbers changed, would it still be a BlueField SoC?
-(if next years made-up:BlueField2 supports more Dimms per MC, it would be better to make
-this a property in the firmware table).
-
-
-> +/*
-> + * Request MLNX_SIP_GET_DIMM_INFO
-> + *
-> + * Retrieve information about DIMM on a certain slot.
-> + *
-> + * Call register usage:
-> + * a0: MLNX_SIP_GET_DIMM_INFO
-> + * a1: (Memory controller index) << 16 | (Dimm index in memory controller)
-> + * a2-7: not used.
-> + *
-> + * Return status:
-> + * a0: dimm_info_smc union defined below describing the DIMM.
-> + * a1-3: not used.
-> + */
-
-Have Mellanox published these call numbers/arguments in a document somewhere? If they
-differ with the firmware, it would be good to know which side needs fixing.
-
-It is a little odd that you read the number of memory controllers from the ACPI table, but
-use an SMC call to read the DIMM information.
-Is it too-late to describe the DIMMs in the ACPI table too? (this would let firmware
-hard-code it on platforms where it could never change, instead of having to support a
-runtime call)
-
-The DIMM information should also be in the SMBIOS table. See ghes_edac.c for some code
-that uses this. SMBIOS isn't popular in the arm world: but edac already uses this, and we
-want to match DIMM numbers with the text on the board's silk-screen so the user can
-replace the correct DIMM.
-
-
-> +#define MLNX_SIP_GET_DIMM_INFO		0x82000008
-> +
-> +/* Format for the SMC response about the memory information */
-> +union dimm_info_smc {
-> +	struct {
-> +		unsigned long size_GB : 16;
-> +		unsigned long is_rdimm : 1;
-> +		unsigned long is_lrdimm : 1;
-> +		unsigned long is_nvdimm : 1;
-> +		unsigned long __reserved0 : 2;
-> +		unsigned long ranks : 3;
-> +		unsigned long package_X : 8;	/* Bits per memory package */
-> +		unsigned long __reserved1 : 32;
-> +	};
-> +	unsigned long val;
-> +};
-
-If your firmware and the kernel were built with different compilers, this isn't guaranteed
-to work. Please use shifts and masks.
-
-
-> +struct bluefield_edac_priv {
-> +	int dimm_ranks[MLXBF_EDAC_DIMM_PER_MC];
-> +	void __iomem *emi_base;
-> +};
-> +
-> +static unsigned long smc_call1(unsigned long smc_op, unsigned long smc_arg)
-> +{
-> +	struct arm_smccc_res res;
-> +
-> +	arm_smccc_smc(smc_op, smc_arg, 0, 0, 0, 0, 0, 0, &res);
-> +
-> +	return res.a0;
-> +}
-> +
-> +/*
-> + * Gather the ECC information from the External Memory Interface registers
-> + * and report it to the edac handler.
-> + */
-> +static void bluefield_gather_report_ecc(struct mem_ctl_info *mci,
-> +					int error_cnt,
-> +					int is_single_ecc)
-> +{
-> +	struct bluefield_edac_priv *priv = mci->pvt_info;
-> +	union mlxbf_emi_dram_additional_info_0 edai0;
-> +	union mlxbf_emi_dram_ecc_latch_select edels;
-> +	union mlxbf_emi_dram_syndrom eds;
-> +	enum hw_event_mc_err_type ecc_type;
-> +	unsigned long ecc_dimm_addr;
-> +	int ecc_dimm;
-> +	u32 edea0;
-> +	u32 edea1;
-> +
-> +	ecc_type = is_single_ecc ? HW_EVENT_ERR_CORRECTED :
-> +				   HW_EVENT_ERR_UNCORRECTED;
-> +
-> +	/*
-> +	 * Tell the External Memory Interface to populate the relevant
-> +	 * registers with information about the last ECC error occurrence.
-> +	 */
-> +	edels.word = 0;
-> +	edels.start = 1;
-
-
-> +	writel(edels.word, priv->emi_base + MLXBF_EMI_DRAM_ECC_LATCH_SELECT);
-> +
-> +	/*
-> +	 * Verify that the ECC reported info in the registers is of the
-> +	 * same type as the one asked to report. If not, just report the
-> +	 * error without the detailed information.
-> +	 */
-> +	eds.word = readl(priv->emi_base + MLXBF_EMI_DRAM_SYNDROM);
-
-Does the device need to have seen the write to MLXBF_EMI_DRAM_ECC_LATCH_SELECT before it
-sees this read?
-
-Will Deacon gave a presentation on this stuff at ELCE:
-https://elinux.org/images/a/a8/Uh-oh-Its-IO-Ordering-Will-Deacon-Arm.pdf
-
-(I don't understand this stuff, so may have it totally wrong here:)
-
-From the arch code's definitions of these:
-| #define writel(v,c)	({ __iowmb(); writel_relaxed((v),(c)); })
-| #define readl(c)	({ u32 __v = readl_relaxed(c); __iormb(__v); __v; })
-
-This means you've got back-to-back writel_relaxed()/readl_relaxed() here, and probably
-need an mb() between them.
-
-(slides 17 and 19 of that pdf are handy).
-
-As an example,
-drivers/edac/cell.c::cell_edac_check() has this out_be64(); mb(); in_be64() sequence,
-which I think is the same.
-
-
-> +	if ((is_single_ecc && !eds.serr) || (!is_single_ecc && !eds.derr)) {
-> +		edac_mc_handle_error(ecc_type, mci, error_cnt, 0, 0, 0,
-> +				     0, 0, -1, mci->ctl_name, "");
-> +		return;
-> +	}
-> +
-> +	edai0.word = readl(priv->emi_base + MLXBF_EMI_DRAM_ADDITIONAL_INFO_0);
-> +
-> +	ecc_dimm = edai0.err_prank >= 2 && priv->dimm_ranks[0] <= 2;
-> +
-> +	edea0 = readl(priv->emi_base + MLXBF_EMI_DRAM_ERR_ADDR_0);
-> +	edea1 = readl(priv->emi_base + MLXBF_EMI_DRAM_ERR_ADDR_1);
-> +
-> +	ecc_dimm_addr = ((unsigned long)edea1 << 32) | edea0;
-> +
-> +	edac_mc_handle_error(ecc_type, mci, error_cnt,
-
-> +			     ecc_dimm_addr / 0x1000,
-
-Please use PFN_DOWN() to take account of the (configurable!) kernel PAGE_SIZE.
-
-
-> 			     ecc_dimm_addr & 0xfff,
-Please use something like PAGE_MASK, to take account of the PAGE_SIZE.
-
-
-> +			     eds.syndrom, ecc_dimm, 0, 0, mci->ctl_name, "");
-> +}
-> +
-> +static void bluefield_edac_check(struct mem_ctl_info *mci)
-> +{
-> +	union mlxbf_emi_dram_ecc_error edee = { .word = 0 };
-> +	struct bluefield_edac_priv *priv = mci->pvt_info;
-> +	union mlxbf_emi_dram_ecc_count edec;
-> +
-> +	/*
-> +	 * The memory controller might not be initialized by the firmware
-> +	 * when there isn't memory, which may lead to bad register readings.
-> +	 */
-> +	if (mci->edac_cap == EDAC_FLAG_NONE)
-> +		return;
-> +
-> +	edec.word = readl(priv->emi_base + MLXBF_EMI_DRAM_ECC_COUNT);
-> +
-> +	if (edec.single_error_count) {
-> +		edee.dram_ecc_single = 1;
-> +
-> +		bluefield_gather_report_ecc(mci, edec.single_error_count, 1);
-> +	}
-> +
-> +	if (edec.double_error_count) {
-> +		edee.dram_ecc_double = 1;
-> +
-> +		bluefield_gather_report_ecc(mci, edec.double_error_count, 0);
-> +	}
-> +
-> +	/* Write to clear reported errors. */
-> +	if (edec.word)
-> +		writel(edee.word, priv->emi_base + MLXBF_EMI_DRAM_ECC_ERROR);
-> +}
-> +
-> +/* Initialize the DIMMs information for the given memory controller. */
-> +static void bluefield_edac_init_dimms(struct mem_ctl_info *mci)
-> +{
-> +	struct bluefield_edac_priv *priv = mci->pvt_info;
-> +	int mem_ctrl_idx = mci->mc_idx;
-> +	union dimm_info_smc smc_info;
-> +	struct dimm_info *dimm;
-> +	unsigned long smc_arg;
-> +	int is_empty = 1;
-> +	int i;
-> +
-> +	for (i = 0; i < MLXBF_EDAC_DIMM_PER_MC; i++) {
-> +		dimm = mci->dimms[i];
-> +
-> +		smc_arg = mem_ctrl_idx << 16 | i;
-> +		smc_info = (union dimm_info_smc) {
-> +			.val = smc_call1(MLNX_SIP_GET_DIMM_INFO, smc_arg),
-> +		};
-> +
-> +		if (!smc_info.size_GB) {
-> +			dimm->mtype = MEM_EMPTY;
-> +			continue;
-> +		}
-> +
-> +		is_empty = 0;
-> +
-> +		dimm->edac_mode = EDAC_SECDED;
-> +
-> +		if (smc_info.is_nvdimm)
-> +			dimm->mtype = MEM_NVDIMM;
-> +		else if (smc_info.is_lrdimm)
-> +			dimm->mtype = MEM_LRDDR4;
-> +		else if (smc_info.is_rdimm)
-> +			dimm->mtype = MEM_RDDR4;
-> +		else
-> +			dimm->mtype = MEM_DDR4;
-> +
-> +		dimm->nr_pages = smc_info.size_GB * 256 * 1024;
-
-How come PAGE_SIZE doesn't appear here?
-You may want to use SZ_1G and friends as part of the calculation to make it more readable.
-
-
-> +		dimm->grain = MLXBF_EDAC_ERROR_GRAIN;
-> +
-> +		/* Mem controller for BlueField only supports x4, x8 and x16 */
-> +		if (smc_info.package_X == 4)
-> +			dimm->dtype = DEV_X4;
-> +		else if (smc_info.package_X == 8)
-> +			dimm->dtype = DEV_X8;
-> +		else if (smc_info.package_X == 16)
-> +			dimm->dtype = DEV_X16;
-> +		else
-> +			dimm->dtype = DEV_UNKNOWN;
-> +
-> +		priv->dimm_ranks[i] = smc_info.ranks;
-> +	}
-> +
-> +	if (is_empty)
-> +		mci->edac_cap = EDAC_FLAG_NONE;
-> +	else
-> +		mci->edac_cap = EDAC_FLAG_SECDED;
-> +}
-
-
-Thanks,
-
-James
+-- 
+Florian
