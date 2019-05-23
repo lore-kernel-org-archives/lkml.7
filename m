@@ -7,52 +7,53 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67DAAC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:49:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02A6CC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:49:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D19920851
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:49:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C787420881
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:49:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558640978;
-	bh=Ren6fYJ1AgHiBJE0wCKb8AxSxvNWuj5gXEsTsbWCnY4=;
+	s=default; t=1558640981;
+	bh=f1WChCHh2g9gQRPvWkwNKXNLAL9hPKJYXZ1abqo6dzI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FIVQnCo7KsAtek/jfZ5otRfeq+Taauaah/OXXiJpPXXitlzV6j02LmKdgrTi0RftK
-	 d66eM0JtHLRB2GpPHiN6ekBkoDkdUOg+kZxgy36jqlV0pGrSgcvTF/y6lKJ4iLZqTK
-	 Kay6+FqTKWOAVymMM+l5ZMpvj39ogfKJVr5r9ZxA=
+	b=Hu/RlWn0QCyEMj66RZ9d7T9iTl1ZbZ0Z4qTmN6ZiyCT4WNfiK5fUI/LojcjD+yXiQ
+	 tAHJe8S9TJCKsmT31HYKq4QwcGYWW6+v6qXVzuFC6YLCCmvnSBZWKPqrPZLTfUvzwm
+	 /YngX2BP8xClrm7GD8ZDquONO4k0H5zyHVm2IcBw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387938AbfEWTKo (ORCPT
+        id S2387923AbfEWTKn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:10:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44046 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:10:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43986 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387904AbfEWTKl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:10:41 -0400
+        id S2387890AbfEWTKi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:10:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5BCF2184E;
-        Thu, 23 May 2019 19:10:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 25C5521871;
+        Thu, 23 May 2019 19:10:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558638640;
-        bh=Ren6fYJ1AgHiBJE0wCKb8AxSxvNWuj5gXEsTsbWCnY4=;
+        s=default; t=1558638637;
+        bh=f1WChCHh2g9gQRPvWkwNKXNLAL9hPKJYXZ1abqo6dzI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RDA349f8vqgQNivu2YguXRSoS7HyllUlbQDA2lh41KqfHHpVNpqm0WTYicLRjiyAK
-         YCeGADQNH3iErd26S3srhWGwIuH8dHSzoA5jkxD7n6y8MuJFrlIpMtRagiJXdqIBLq
-         rYA1Fp5rUsNIDvc+ukgWmUzd2HWhK0weW0G4eA1s=
+        b=OvMwpeoMdLiRQtBmGR0Blg0P/9NaG5yFkzW7plV1udMtJoFLTu3rgxm2kCn+EdLJB
+         74Xq2j05ft2O8mIKvNqfMaNIfB+eJVIRnIhOn4iwAq7yIaQg784K9/nQmFWqyHFgt+
+         dtK+LlNMOYD8rmSMkuuxfJ55eJxJWetkKxr7I9Ic=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiri Pirko <jiri@resnulli.us>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 10/77] net: Always descend into dsa/
-Date:   Thu, 23 May 2019 21:05:28 +0200
-Message-Id: <20190523181721.550323227@linuxfoundation.org>
+Subject: [PATCH 4.14 01/77] net: avoid weird emergency message
+Date:   Thu, 23 May 2019 21:05:19 +0200
+Message-Id: <20190523181720.184010954@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181719.982121681@linuxfoundation.org>
 References: <20190523181719.982121681@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,38 +62,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 0fe9f173d6cda95874edeb413b1fa9907b5ae830 ]
+[ Upstream commit d7c04b05c9ca14c55309eb139430283a45c4c25f ]
 
-Jiri reported that with a kernel built with CONFIG_FIXED_PHY=y,
-CONFIG_NET_DSA=m and CONFIG_NET_DSA_LOOP=m, we would not get to a
-functional state where the mock-up driver is registered. Turns out that
-we are not descending into drivers/net/dsa/ unconditionally, and we
-won't be able to link-in dsa_loop_bdinfo.o which does the actual mock-up
-mdio device registration.
+When host is under high stress, it is very possible thread
+running netdev_wait_allrefs() returns from msleep(250)
+10 seconds late.
 
-Reported-by: Jiri Pirko <jiri@resnulli.us>
-Fixes: 40013ff20b1b ("net: dsa: Fix functional dsa-loop dependency on FIXED_PHY")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
-Tested-by: Jiri Pirko <jiri@resnulli.us>
+This leads to these messages in the syslog :
+
+[...] unregister_netdevice: waiting for syz_tun to become free. Usage count = 0
+
+If the device refcount is zero, the wait is over.
+
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/Makefile |    2 +-
+ net/core/dev.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/Makefile
-+++ b/drivers/net/Makefile
-@@ -41,7 +41,7 @@ obj-$(CONFIG_DEV_APPLETALK) += appletalk
- obj-$(CONFIG_CAIF) += caif/
- obj-$(CONFIG_CAN) += can/
- obj-$(CONFIG_ETRAX_ETHERNET) += cris/
--obj-$(CONFIG_NET_DSA) += dsa/
-+obj-y += dsa/
- obj-$(CONFIG_ETHERNET) += ethernet/
- obj-$(CONFIG_FDDI) += fddi/
- obj-$(CONFIG_HIPPI) += hippi/
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -7852,7 +7852,7 @@ static void netdev_wait_allrefs(struct n
+ 
+ 		refcnt = netdev_refcnt_read(dev);
+ 
+-		if (time_after(jiffies, warning_time + 10 * HZ)) {
++		if (refcnt && time_after(jiffies, warning_time + 10 * HZ)) {
+ 			pr_emerg("unregister_netdevice: waiting for %s to become free. Usage count = %d\n",
+ 				 dev->name, refcnt);
+ 			warning_time = jiffies;
 
 
