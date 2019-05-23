@@ -2,107 +2,158 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35E1BC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 09:54:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D811C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 09:55:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09CB120863
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 09:54:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42D6820863
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 09:55:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="O0wuggV6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730363AbfEWJyR (ORCPT
+        id S1730219AbfEWJzL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 05:54:17 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:53394 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728109AbfEWJyQ (ORCPT
+        Thu, 23 May 2019 05:55:11 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:40397 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726846AbfEWJzK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 05:54:16 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4N9qSq5146106
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 05:54:16 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2snqnnd2mk-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 05:54:16 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
-        Thu, 23 May 2019 10:54:13 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 23 May 2019 10:54:09 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4N9s8wC51577044
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 23 May 2019 09:54:08 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 69E3FA4059;
-        Thu, 23 May 2019 09:54:08 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CB0B1A4040;
-        Thu, 23 May 2019 09:54:07 +0000 (GMT)
-Received: from rapoport-lnx (unknown [9.148.8.112])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Thu, 23 May 2019 09:54:07 +0000 (GMT)
-Date:   Thu, 23 May 2019 12:54:06 +0300
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Will Deacon <will.deacon@arm.com>
-Cc:     Steven Price <steven.price@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: Bad virt_to_phys since commit 54c7a8916a887f35
-References: <20190516133820.GA43059@lakrids.cambridge.arm.com>
- <20190516134105.GB43059@lakrids.cambridge.arm.com>
- <e70ead93-2fe9-faf9-9e77-9df15809bad6@arm.com>
- <20190516141640.GC43059@lakrids.cambridge.arm.com>
- <d265e5fe-c061-17a0-427d-0e6f31be17f3@arm.com>
- <20190523093138.GB26646@fuggles.cambridge.arm.com>
+        Thu, 23 May 2019 05:55:10 -0400
+Received: by mail-ed1-f65.google.com with SMTP id j12so8354488eds.7
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 02:55:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brauner.io; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=XcnGRhVVyNL37UuM2RMXdYZmMPDHmNAhLUCRA5xcUDo=;
+        b=O0wuggV6ZTRRY9IuFVi+Hy5ZffEWKgbDaxa4tUMjnr9ukzoVJ+6ESsFv482ScAF+lN
+         mZJQMUGVUc4J6DhDCUH25aotoYsf10ISXjQ03OgcydZlHj6YMDwmwdTgHrQqfRbY0b2e
+         +MkrirnkhnUODJSGZeiiTghbv1k678cPmDD5fU0dyiykv7ixjjepA8wUU/TvIq5ADMeM
+         kIanjFRf+sWTGKkUkejAd32KCh2rj29VqwW4ask3xJXreRH1UwkrmEqpFdxwP5lfiJyz
+         B7vkZAjE7n6GGVkd8y1t6z+9fq6lyZO7i9b0KYvFE/HJTlsRZElQrWIEP1p047EJSUyE
+         oRWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=XcnGRhVVyNL37UuM2RMXdYZmMPDHmNAhLUCRA5xcUDo=;
+        b=KQDHN0YLV40ktTRj6RKBdv7f+hm1YME0KcIzOU0Mrmb88V8HnkP/4tNGh2r1UArBnq
+         gVk/P+EPbqBjTYeoojS3d5WkZGFw+m2riXXrIpvMpW69V/oqaxyX/wiPj4gvU+FI6vg9
+         /Td20v/r3lYVYKP8+tgh98zWB3IBTZuASneRL1GfFtMgxWWuRyDmR2r8Cp14Xr7HFp7L
+         zl8mrrigEXba5gw3Rlo0uvr8dm5ekul7b1Y45mVeH4coKTHXi6VyT7L82bW/IcfFOuPr
+         bL/OHqB99ySzVZjEEhtA+tkYvgfl1f9DjvNwc6ehtoYFXA7q3lz+m8AcBpftxLwozSrq
+         cWew==
+X-Gm-Message-State: APjAAAUsNlebc0isRn9UHVTVm957DTnRTK3Gyd01Eap/NTQrkcLzuzhR
+        HAuNeW+rN6j+1aPyMwqKZCMkSA==
+X-Google-Smtp-Source: APXvYqybccPv5N0s4ahkfYQemfrz5kSo1mA+KsJL9r2ibL+W2QszQceCSAyrL2eQwh8lWs+J+tYolQ==
+X-Received: by 2002:a50:ad77:: with SMTP id z52mr95891367edc.174.1558605309242;
+        Thu, 23 May 2019 02:55:09 -0700 (PDT)
+Received: from brauner.io (178-197-142-46.pool.kielnet.net. [46.142.197.178])
+        by smtp.gmail.com with ESMTPSA id o47sm7838488edc.37.2019.05.23.02.55.08
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 23 May 2019 02:55:08 -0700 (PDT)
+Date:   Thu, 23 May 2019 11:55:07 +0200
+From:   Christian Brauner <christian@brauner.io>
+To:     Amir Goldstein <amir73il@gmail.com>
+Cc:     Jan Kara <jack@suse.cz>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] fanotify: remove redundant capable(CAP_SYS_ADMIN)s
+Message-ID: <20190523095506.nyei5nogvv63lm4a@brauner.io>
+References: <20190522163150.16849-1-christian@brauner.io>
+ <CAOQ4uxjV=7=FXuyccBK9Pu1B7o-w-pbc1FQXJxY4q6z8E93KOg@mail.gmail.com>
+ <EB97EF04-D44F-4320-ACDC-C536EED03BA4@brauner.io>
+ <CAOQ4uxhodqVw0DVfcvXYH5vBf4LKcv7t388ZwXeZPBTcEMzGSw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190523093138.GB26646@fuggles.cambridge.arm.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-TM-AS-GCONF: 00
-x-cbid: 19052309-0016-0000-0000-0000027EA6F3
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19052309-0017-0000-0000-000032DB9D09
-Message-Id: <20190523095405.GE23850@rapoport-lnx>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-23_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=793 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905230070
+In-Reply-To: <CAOQ4uxhodqVw0DVfcvXYH5vBf4LKcv7t388ZwXeZPBTcEMzGSw@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 10:31:38AM +0100, Will Deacon wrote:
-> Hi Steven,
+On Wed, May 22, 2019 at 11:00:22PM +0300, Amir Goldstein wrote:
+> On Wed, May 22, 2019 at 9:57 PM Christian Brauner <christian@brauner.io> wrote:
+> >
+> > On May 22, 2019 8:29:37 PM GMT+02:00, Amir Goldstein <amir73il@gmail.com> wrote:
+> > >On Wed, May 22, 2019 at 7:32 PM Christian Brauner
+> > ><christian@brauner.io> wrote:
+> > >>
+> > >> This removes two redundant capable(CAP_SYS_ADMIN) checks from
+> > >> fanotify_init().
+> > >> fanotify_init() guards the whole syscall with capable(CAP_SYS_ADMIN)
+> > >at the
+> > >> beginning. So the other two capable(CAP_SYS_ADMIN) checks are not
+> > >needed.
+> > >
+> > >It's intentional:
+> > >
+> > >commit e7099d8a5a34d2876908a9fab4952dabdcfc5909
+> > >Author: Eric Paris <eparis@redhat.com>
+> > >Date:   Thu Oct 28 17:21:57 2010 -0400
+> > >
+> > >    fanotify: limit the number of marks in a single fanotify group
+> > >
+> > >There is currently no limit on the number of marks a given fanotify
+> > >group
+> > >can have.  Since fanotify is gated on CAP_SYS_ADMIN this was not seen
+> > >as
+> > >a serious DoS threat.  This patch implements a default of 8192, the
+> > >same as
+> > >inotify to work towards removing the CAP_SYS_ADMIN gating and
+> > >eliminating
+> > >    the default DoS'able status.
+> > >
+> > >    Signed-off-by: Eric Paris <eparis@redhat.com>
+> > >
+> > >There idea is to eventually remove the gated CAP_SYS_ADMIN.
+> > >There is no reason that fanotify could not be used by unprivileged
+> > >users
+> > >to setup inotify style watch on an inode or directories children, see:
+> > >https://patchwork.kernel.org/patch/10668299/
+> > >
+> > >>
+> > >> Fixes: 5dd03f55fd2 ("fanotify: allow userspace to override max queue
+> > >depth")
+> > >> Fixes: ac7e22dcfaf ("fanotify: allow userspace to override max
+> > >marks")
+> > >
+> > >Fixes is used to tag bug fixes for stable.
+> > >There is no bug.
+> > >
+> > >Thanks,
+> > >Amir.
+> >
+> > Interesting. When do you think the gate can be removed?
 > 
-> On Thu, May 16, 2019 at 03:20:59PM +0100, Steven Price wrote:
-> > I'll spin a real patch and add your Tested-by
+> Nobody is working on this AFAIK.
+> What I posted was a simple POC, but I have no use case for this.
+> In the patchwork link above, Jan has listed the prerequisites for
+> removing the gate.
 > 
-> Did you send this out? I can't spot it in my inbox.
- 
-https://lore.kernel.org/lkml/20190516143125.48948-1-steven.price@arm.com
-
-And Andrew already took it to the -mm tree.
-
-> Cheers,
+> One of the prerequisites is FAN_REPORT_FID, which is now merged.
+> When events gets reported with fid instead of fd, unprivileged user
+> (hopefully) cannot use fid for privilege escalation.
 > 
-> Will
+> > I was looking into switching from inotify to fanotify but since it's not usable from
+> > non-initial userns it's a no-no
+> > since we support nested workloads.
 > 
+> One of Jan's questions was what is the benefit of using inotify-compatible
+> fanotify vs. using inotify.
+> So what was the reason you were looking into switching from inotify to fanotify?
+> Is it because of mount/filesystem watch? Because making those available for
 
--- 
-Sincerely yours,
-Mike.
+Yeah. Well, I would need to look but you could probably do it safely for
+filesystems mountable in user namespaces (which are few).
+Can you do a bind-mount and then place a watch on the bind-mount or is
+this superblock based?
 
+Thanks!
+Christian
