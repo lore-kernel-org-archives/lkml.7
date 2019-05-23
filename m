@@ -2,181 +2,97 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ED3BC04AAC
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:01:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE9F3C04AAC
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:03:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D072720862
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:01:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558598514;
-	bh=iGHQJBYwVcFjE73/eLXU8i02Shdf1r/OQvonS87T6bI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GvrKUnr7E0NnBUdUO118hvTreI+o6B4/U+Pro1ymarnTzpMEzailNyAGHzlCe/ms0
-	 keNS3DOa1ErJdBqgkgKC9WbglHtZeS8n6mVtmu0N/S0OmqBgIs3K8eUd1KKU4ibCHw
-	 /SrOxdVO9wc2gXobuNefK1hUmtdEV8ixl4tM5u3E=
+	by mail.kernel.org (Postfix) with ESMTP id 7AE9320862
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:03:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nikanor-nu.20150623.gappssmtp.com header.i=@nikanor-nu.20150623.gappssmtp.com header.b="Heyrg98N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728145AbfEWIBx (ORCPT
+        id S1729155AbfEWIDF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 04:01:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46602 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725814AbfEWIBw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 04:01:52 -0400
-Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E46FD20862;
-        Thu, 23 May 2019 08:01:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558598511;
-        bh=iGHQJBYwVcFjE73/eLXU8i02Shdf1r/OQvonS87T6bI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lTaV/UQzvpTJ37ykpnlv2M57xZAIk4HIfVuw5Oh0W9cJK5eLkjrfRjjjLLaBWYkPj
-         tP/A1I5UZte6ioC9PcP0TsabyKeOpt7PeABtvwHQahS62rNv73Ln9OP2R/spIOSkyF
-         OlIUOqPpW/HgVyGawc5xkZ7k34yEDpugSW6hQ/AI=
-Date:   Thu, 23 May 2019 16:00:51 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Xiaowei Bao <xiaowei.bao@nxp.com>
-Cc:     Leo Li <leoyang.li@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCHv2] arm64: dts: ls1028a: add flexspi nodes
-Message-ID: <20190523080049.GI9261@dragon>
-References: <20190515110924.13726-1-xiaowei.bao@nxp.com>
+        Thu, 23 May 2019 04:03:05 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:34522 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725814AbfEWIDE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 04:03:04 -0400
+Received: by mail-lj1-f193.google.com with SMTP id j24so4572219ljg.1
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 01:03:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=nikanor-nu.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=GPOuorQ32uJ+YRQwwZE95bT2omKKOwwwtpWjGVHMWoc=;
+        b=Heyrg98N4Wo26gnY/JVGTBNNmNoWbhwP0yo4dKt8H+O8ILQDm1qKexfQsxO7gNi1GT
+         S7SHMEETOSgo5Joz3ay/FP4fFXkduXjtlpBbDX5lk3eWOKhg5xaH6fhamfXysIWm+kUh
+         Hmwp5bh9RrKnQDbQwhrnGQsIGG9WNAPMdomWdMGEEvTMNO+zbduR3Mpx83FcWC3ZLTDp
+         cmlMeY9LFjqiDOV9m6NVxZcIhiwBFgFdg1+fmVBbhfSR4tCRcVzxRGoOuOKGllD9rYZ/
+         YQhOeOnC19jtgPxSN4yqu/3vMsT6tdGJFQrXx69LNdX8TJtbYyEediVig3ukUfUgYKgB
+         w/hg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=GPOuorQ32uJ+YRQwwZE95bT2omKKOwwwtpWjGVHMWoc=;
+        b=FUhZRsXzSEj7EvQI/LWGz9UrnQalnUYCW9bYZSjoCx2hwRNWRtAAmfL08j/P/FbaGL
+         obcoftnVFSpxqfzoHroZ/qy1hbpIxbEmZny1I2rak9Bibb+xAXJ6uYl71aQPMHEnspba
+         aCcFO3cHxhqIloo2wCnHEL97ByrJp50MPvlAEQa04rlcZ6lqtUo77uga8OFtGahb1wEF
+         2Ts8oJwvx+JrskVlzLtyM/rj/JExkaVYFCpMReWjAzxmXOe9r2QBWlFTXBI96mmoIezi
+         Dtf8SNKRD1YRvJ/Y+nr+x1ksvtvrfz357kNh88WYbOo5dG5IfDV25R2HbfQCwhGV4+3y
+         Un9g==
+X-Gm-Message-State: APjAAAV1nhWbgKK5y0SeziS5WFFZzk/XKM13D9TQDwfimLOjcien+bi2
+        3AagdNEsPUtjMmiQV4uwUuc/Ww==
+X-Google-Smtp-Source: APXvYqyoOD/ptktk0ASGAWXNuvhw2DiZr5qttk4R7BCV+c0nQHZ/sm8WqfO9PEdrq6z1NP1e4oRcpg==
+X-Received: by 2002:a2e:5bca:: with SMTP id m71mr45364215lje.116.1558598582716;
+        Thu, 23 May 2019 01:03:02 -0700 (PDT)
+Received: from dev.nikanor.nu (78-72-133-4-no161.tbcn.telia.com. [78.72.133.4])
+        by smtp.gmail.com with ESMTPSA id p5sm5891662lfc.80.2019.05.23.01.03.01
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 23 May 2019 01:03:02 -0700 (PDT)
+Date:   Thu, 23 May 2019 10:03:00 +0200
+From:   Simon =?utf-8?Q?Sandstr=C3=B6m?= <simon@nikanor.nu>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     jeremy@azazel.net, dan.carpenter@oracle.com,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/6] staging: kpc2000: fix indent in cell_probe.c
+Message-ID: <20190523080300.kri23fma2sqabvh4@dev.nikanor.nu>
+References: <20190522205849.17444-1-simon@nikanor.nu>
+ <20190522205849.17444-2-simon@nikanor.nu>
+ <20190523072625.GA16429@kroah.com>
+ <20190523072759.GA16656@kroah.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190515110924.13726-1-xiaowei.bao@nxp.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20190523072759.GA16656@kroah.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 15, 2019 at 11:09:25AM +0000, Xiaowei Bao wrote:
-> From: Xiaowei Bao <xiaowei.bao@nxp.com>
+On Thu, May 23, 2019 at 09:27:59AM +0200, Greg KH wrote:
+> On Thu, May 23, 2019 at 09:26:25AM +0200, Greg KH wrote:
+> > 
+> > This chunk does not match what you said this commit did :(
+> > 
+> > Please fix up and resend.
 > 
-> Add fspi node property for LS1028A SoC for FlexSPI driver.
-> Property added for the FlexSPI controller and for the connected
-> slave device for the LS1028ARDB and LS1028AQDS target.
-> This is having one SPI-NOR flash device, mt35xu02g connected at
-> CS0.
+> Actually, wait, rebase and resend after I apply your other patches.
+> I'll hand-edit this patch to remove this chunk as your other fixes are
+> good...
 > 
-> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
-> ---
-> v2:
->  - modify the commit message and the dts format.
+> thanks,
 > 
->  arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts |   15 +++++++++++++++
->  arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts |   15 +++++++++++++++
->  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi    |   12 ++++++++++++
->  3 files changed, 42 insertions(+), 0 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
-> index 5bcd491..6e12806 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
-> @@ -158,6 +158,21 @@
->  	};
->  };
->  
-> +&fspi {
+> greg k-h
 
-Keep the labeling node sort alphabetically.  That said, &fspi should be
-added before &i2c0.
+Wops. OK, will do.
 
-> +	status = "okay";
+Thanks
 
-Please have newline between property and child node.
-
-> +	mt35xu02g: flash@0 {
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		compatible = "spansion,m25p80";
-
-Please start properties with compatible.
-
-> +		m25p,fast-read;
-> +		spi-max-frequency = <20000000>;
-> +		reg = <0>;
-> +		/* The following setting enables 1-1-8 (CMD-ADDR-DATA) mode */
-> +		spi-rx-bus-width = <8>; /* 8 SPI Rx lines */
-> +		spi-tx-bus-width = <1>; /* 1 SPI Tx line */
-> +	};
-> +};
-> +
->  &sai1 {
->  	status = "okay";
->  };
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
-> index 25d2370..5d39616 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
-> @@ -136,6 +136,21 @@
->  	};
->  };
->  
-> +&fspi {
-> +	status = "okay";
-> +	mt35xu02g: flash@0 {
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		compatible = "spansion,m25p80";
-> +		m25p,fast-read;
-> +		spi-max-frequency = <20000000>;
-> +		reg = <0>;
-> +		/* The following setting enables 1-1-8 (CMD-ADDR-DATA) mode */
-> +		spi-rx-bus-width = <8>; /* 8 SPI Rx lines */
-> +		spi-tx-bus-width = <1>; /* 1 SPI Tx line */
-> +	};
-> +};
-> +
->  &duart0 {
->  	status = "okay";
->  };
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> index ba71a33..a27cd60 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> @@ -109,6 +109,18 @@
->  		};
->  	};
->  
-> +	fspi: spi@20c0000 {
-
-Are you sure you want to add this device node outside of 'soc' node?
-
-> +		compatible = "nxp,lx2160a-fspi", "simple-bus";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		reg = <0x0 0x20c0000 0x0 0x10000>,
-> +		    <0x0 0x20000000 0x0 0x10000000>;
-
-Fix the indentation to git it aligned with above '<'.
-
-> +		reg-names = "FSPI", "FSPI-memory";
-> +		interrupts = <0 25 0x4>; /* Level high type */
-
-interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
-
-Shawn
-
-> +		clocks = <&clockgen 4 3>, <&clockgen 4 3>;
-> +		clock-names = "fspi_en", "fspi";
-> +	};
-> +
->  	soc: soc {
->  		compatible = "simple-bus";
->  		#address-cells = <2>;
-> -- 
-> 1.7.1
-> 
+- Simon
