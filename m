@@ -2,97 +2,121 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B454C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:10:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DDDFC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:10:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44087217D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:10:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558638608;
-	bh=vpp/1jvOvk7EC5ZgYj32HlkGdixLiQpHnrgPXUKWzDU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rO2xHKY2IhAjQcdkLhvh/yRDshCqgX5voaugms+ZD1dwQeQl09sqHr+DkKCI2Jr3K
-	 F41IsZ5YSrQ6labKPdo3VNcN8ZSIqfEQtLzgQJzJdGmDDTZkQI/DUYUUV8L9PL2zyT
-	 E+6O7jI8UCfoUuyjOOj/iD+HjiYMBfiF8yrFJpcY=
+	by mail.kernel.org (Postfix) with ESMTP id 655ED217D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:10:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="jTerZ5K9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387694AbfEWTKH (ORCPT
+        id S2387729AbfEWTKL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:10:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43396 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387650AbfEWTKF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:10:05 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF6D92133D;
-        Thu, 23 May 2019 19:10:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558638605;
-        bh=vpp/1jvOvk7EC5ZgYj32HlkGdixLiQpHnrgPXUKWzDU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mH2rG4v6U8wGczzH2bCMefw6NbCM2eqR0tW2TIjLN9s+WEIVJxc+AAs0z7uaGu9RW
-         uQtp1COnBeHGV+5qX3rIDSKYUFtTaeJ/ZrXEE5NzFq1MhJNZ+d/RyJpuPU+0a9j+Kf
-         sP6Jx3UDoAJbItTyAg3TqmV2nhwltcRZaU6XX+AY=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Su Yanjun <suyj.fnst@cn.fujitsu.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 43/53] xfrm6_tunnel: Fix potential panic when unloading xfrm6_tunnel module
-Date:   Thu, 23 May 2019 21:06:07 +0200
-Message-Id: <20190523181717.800776441@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190523181710.981455400@linuxfoundation.org>
-References: <20190523181710.981455400@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 23 May 2019 15:10:11 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:40172 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387704AbfEWTKK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:10:10 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4NJA6Nk028160;
+        Thu, 23 May 2019 14:10:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1558638606;
+        bh=bJbg1A/txouFJSm6HDuK7A27QEfGpODsy5IJMrZQuaU=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=jTerZ5K9nLu0AxG9WFvwpQY4AaaG0eDboGnkSqJJf2u+ZiNrG+rCg5u8xMvyFw7o7
+         it6zQ3fBe50bN1Ew667cTEde6JHbsreD69XqWg8ZZrrCqhpOE3gA6HNfJtIbAPNU68
+         Wfw++lFhaqYj8gO6GE9N5CYJMpWjVfYgE5J3Aibs=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4NJA60F005401
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 23 May 2019 14:10:06 -0500
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 23
+ May 2019 14:10:05 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Thu, 23 May 2019 14:10:05 -0500
+Received: from [10.250.90.63] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4NJA55D024840;
+        Thu, 23 May 2019 14:10:05 -0500
+Subject: Re: [RESEND PATCH v4 6/6] leds: lm36274: Introduce the TI LM36274 LED
+ driver
+To:     Pavel Machek <pavel@ucw.cz>
+CC:     <jacek.anaszewski@gmail.com>, <broonie@kernel.org>,
+        <lgirdwood@gmail.com>, <lee.jones@linaro.org>,
+        <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20190522192733.13422-1-dmurphy@ti.com>
+ <20190522192733.13422-7-dmurphy@ti.com> <20190523125012.GB20354@amd>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <0c2bd6af-92c5-2458-dc41-1ea413545347@ti.com>
+Date:   Thu, 23 May 2019 14:09:49 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190523125012.GB20354@amd>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 6ee02a54ef990a71bf542b6f0a4e3321de9d9c66 ]
+Pavel
 
-When unloading xfrm6_tunnel module, xfrm6_tunnel_fini directly
-frees the xfrm6_tunnel_spi_kmem. Maybe someone has gotten the
-xfrm6_tunnel_spi, so need to wait it.
+Thanks for the review
 
-Fixes: 91cc3bb0b04ff("xfrm6_tunnel: RCU conversion")
-Signed-off-by: Su Yanjun <suyj.fnst@cn.fujitsu.com>
-Acked-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- net/ipv6/xfrm6_tunnel.c | 4 ++++
- 1 file changed, 4 insertions(+)
+On 5/23/19 7:50 AM, Pavel Machek wrote:
+> Hi!
+> 
+>> +++ b/drivers/leds/leds-lm36274.c
+> 
+>> +static int lm36274_parse_dt(struct lm36274 *lm36274_data)
+>> +{
+>> +	struct fwnode_handle *child = NULL;
+>> +	char label[LED_MAX_NAME_SIZE];
+>> +	struct device *dev = &lm36274_data->pdev->dev;
+>> +	const char *name;
+>> +	int child_cnt;
+>> +	int ret = -EINVAL;
+>> +
+>> +	/* There should only be 1 node */
+>> +	child_cnt = device_get_child_node_count(dev);
+>> +	if (child_cnt != 1)
+>> +		return ret;
+> 
+> I'd do explicit "return -EINVAL" here.
+> 
 
-diff --git a/net/ipv6/xfrm6_tunnel.c b/net/ipv6/xfrm6_tunnel.c
-index 3a2701d42f471..07b7b2540579c 100644
---- a/net/ipv6/xfrm6_tunnel.c
-+++ b/net/ipv6/xfrm6_tunnel.c
-@@ -391,6 +391,10 @@ static void __exit xfrm6_tunnel_fini(void)
- 	xfrm6_tunnel_deregister(&xfrm6_tunnel_handler, AF_INET6);
- 	xfrm_unregister_type(&xfrm6_tunnel_type, AF_INET6);
- 	unregister_pernet_subsys(&xfrm6_tunnel_net_ops);
-+	/* Someone maybe has gotten the xfrm6_tunnel_spi.
-+	 * So need to wait it.
-+	 */
-+	rcu_barrier();
- 	kmem_cache_destroy(xfrm6_tunnel_spi_kmem);
- }
- 
--- 
-2.20.1
+ACK
 
+>> +static int lm36274_probe(struct platform_device *pdev)
+>> +{
+>> +	struct ti_lmu *lmu = dev_get_drvdata(pdev->dev.parent);
+>> +	struct lm36274 *lm36274_data;
+>> +	int ret;
+>> +
+>> +	lm36274_data = devm_kzalloc(&pdev->dev, sizeof(*lm36274_data),
+>> +				    GFP_KERNEL);
+>> +	if (!lm36274_data) {
+>> +		ret = -ENOMEM;
+>> +		return ret;
+>> +	}
+> 
+> And certainly do "return -ENOMEM" explicitly here.
+> 
 
+ACK
 
+> Acked-by: Pavel Machek <pavel@ucw.cz>
+> 									Pavel
+> 
