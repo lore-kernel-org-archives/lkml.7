@@ -5,49 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBC49C282E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:36:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEE6CC282DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:37:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9670520879
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:36:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2E7E20879
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:37:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558640215;
-	bh=kCwI7fij1tPgTRlkmNRfUNwBryNuncmVVpP1yx5LDCU=;
+	s=default; t=1558640222;
+	bh=xtA7q6c2/sfqevBED4EvpHYBLlPG8k0kYl30tMHaLVo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wtAk7veHBsLKz8UuFo964Gf/DgBlcf3A54ACNtUmOdzyDMuy3MuWczeHkwG+PZhSb
-	 ViPRNDNPhKmj85uFMkDYEY5/6Fsodneaq0kdnvr7PrFf/i4TBQ1YDXlKfO5bm5mvPY
-	 Aot8MYyHsAbl2MNZWU8uwRiAfKtk/RHLtqJzM1V8=
+	b=pGAOlGEfbTJcpRpp+/1ifCdYEXowEquZd83y9phcBO+f38mGpkjqYIyGNS/TK+piJ
+	 VVuBK4MAfewh5SPLM+r7cty1O1F219voBObQUkkCJcU5FXFcS9Tk6cDo2B7QnUGtFf
+	 BbFpMLMyobIkAV2W1LA7tyDcLtDcSypJYMZwJAQ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390432AbfEWTZE (ORCPT
+        id S2391006AbfEWTYy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:25:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36310 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:24:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390658AbfEWTZB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:25:01 -0400
+        id S2390995AbfEWTYu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:24:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8DB62184E;
-        Thu, 23 May 2019 19:24:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E67B217D9;
+        Thu, 23 May 2019 19:24:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639500;
-        bh=kCwI7fij1tPgTRlkmNRfUNwBryNuncmVVpP1yx5LDCU=;
+        s=default; t=1558639489;
+        bh=xtA7q6c2/sfqevBED4EvpHYBLlPG8k0kYl30tMHaLVo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sS8dyMe1WtBjQTmf4iEN55qFC0pVwHmcdHAh/AqmuEcnHHwrvhKUcx65n+AJaHREr
-         B6oytpHUyIfqEI61MhANwFxg/EoGqr9aplRW63Nn0GZM+SePVJXQEagAPdqm9kAu1V
-         35BPxbAOFQNV+Dn13wOmgoHBLPfXHozlrPTJycZ4=
+        b=twvD5beIqfQ7u41zH16SDW9HvCRSPbDL1gXyFF0bDG3SLrEt2tbHScwjnx/IaVajg
+         O5L9t5yd9rIkK32Le8jaNrgo4D6n483DY8qEceWlAQ2FwvpPaTQ4mxhPCEfPH+sXMq
+         umEBf+o+/w4hht9tXEzJ0ODAJCvAspaQP5T0QWiI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Paul Mackerras <paulus@ozlabs.org>,
+        stable@vger.kernel.org, Luca Coelho <luciano.coelho@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 111/139] KVM: PPC: Book3S: Protect memslots while validating user address
-Date:   Thu, 23 May 2019 21:06:39 +0200
-Message-Id: <20190523181734.500651047@linuxfoundation.org>
+Subject: [PATCH 5.0 124/139] iwlwifi: mvm: check for length correctness in iwl_mvm_create_skb()
+Date:   Thu, 23 May 2019 21:06:52 +0200
+Message-Id: <20190523181735.567214622@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181720.120897565@linuxfoundation.org>
 References: <20190523181720.120897565@linuxfoundation.org>
@@ -60,75 +59,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 345077c8e172c255ea0707214303ccd099e5656b ]
+[ Upstream commit de1887c064b9996ac03120d90d0a909a3f678f98 ]
 
-Guest physical to user address translation uses KVM memslots and reading
-these requires holding the kvm->srcu lock. However recently introduced
-kvmppc_tce_validate() broke the rule (see the lockdep warning below).
+We don't check for the validity of the lengths in the packet received
+from the firmware.  If the MPDU length received in the rx descriptor
+is too short to contain the header length and the crypt length
+together, we may end up trying to copy a negative number of bytes
+(headlen - hdrlen < 0) which will underflow and cause us to try to
+copy a huge amount of data.  This causes oopses such as this one:
 
-This moves srcu_read_lock(&vcpu->kvm->srcu) earlier to protect
-kvmppc_tce_validate() as well.
-
-=============================
-WARNING: suspicious RCU usage
-5.1.0-rc2-le_nv2_aikATfstn1-p1 #380 Not tainted
------------------------------
-include/linux/kvm_host.h:605 suspicious rcu_dereference_check() usage!
-
-other info that might help us debug this:
-
-rcu_scheduler_active = 2, debug_locks = 1
-1 lock held by qemu-system-ppc/8020:
- #0: 0000000094972fe9 (&vcpu->mutex){+.+.}, at: kvm_vcpu_ioctl+0xdc/0x850 [kvm]
-
-stack backtrace:
-CPU: 44 PID: 8020 Comm: qemu-system-ppc Not tainted 5.1.0-rc2-le_nv2_aikATfstn1-p1 #380
+BUG: unable to handle kernel paging request at ffff896be2970000
+PGD 5e201067 P4D 5e201067 PUD 5e205067 PMD 16110d063 PTE 8000000162970161
+Oops: 0003 [#1] PREEMPT SMP NOPTI
+CPU: 2 PID: 1824 Comm: irq/134-iwlwifi Not tainted 4.19.33-04308-geea41cf4930f #1
+Hardware name: [...]
+RIP: 0010:memcpy_erms+0x6/0x10
+Code: 90 90 90 90 eb 1e 0f 1f 00 48 89 f8 48 89 d1 48 c1 e9 03 83 e2 07 f3 48 a5 89 d1 f3 a4 c3 66 0f 1f 44 00 00 48 89 f8 48 89 d1 <f3> a4 c3
+ 0f 1f 80 00 00 00 00 48 89 f8 48 83 fa 20 72 7e 40 38 fe
+RSP: 0018:ffffa4630196fc60 EFLAGS: 00010287
+RAX: ffff896be2924618 RBX: ffff896bc8ecc600 RCX: 00000000fffb4610
+RDX: 00000000fffffff8 RSI: ffff896a835e2a38 RDI: ffff896be2970000
+RBP: ffffa4630196fd30 R08: ffff896bc8ecc600 R09: ffff896a83597000
+R10: ffff896bd6998400 R11: 000000000200407f R12: ffff896a83597050
+R13: 00000000fffffff8 R14: 0000000000000010 R15: ffff896a83597038
+FS:  0000000000000000(0000) GS:ffff896be8280000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffff896be2970000 CR3: 000000005dc12002 CR4: 00000000003606e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 Call Trace:
-[c000003fece8f740] [c000000000bcc134] dump_stack+0xe8/0x164 (unreliable)
-[c000003fece8f790] [c000000000181be0] lockdep_rcu_suspicious+0x130/0x170
-[c000003fece8f810] [c0000000000d5f50] kvmppc_tce_to_ua+0x280/0x290
-[c000003fece8f870] [c00800001a7e2c78] kvmppc_tce_validate+0x80/0x1b0 [kvm]
-[c000003fece8f8e0] [c00800001a7e3fac] kvmppc_h_put_tce+0x94/0x3e4 [kvm]
-[c000003fece8f9a0] [c00800001a8baac4] kvmppc_pseries_do_hcall+0x30c/0xce0 [kvm_hv]
-[c000003fece8fa10] [c00800001a8bd89c] kvmppc_vcpu_run_hv+0x694/0xec0 [kvm_hv]
-[c000003fece8fae0] [c00800001a7d95dc] kvmppc_vcpu_run+0x34/0x48 [kvm]
-[c000003fece8fb00] [c00800001a7d56bc] kvm_arch_vcpu_ioctl_run+0x2f4/0x400 [kvm]
-[c000003fece8fb90] [c00800001a7c3618] kvm_vcpu_ioctl+0x460/0x850 [kvm]
-[c000003fece8fd00] [c00000000041c4f4] do_vfs_ioctl+0xe4/0x930
-[c000003fece8fdb0] [c00000000041ce04] ksys_ioctl+0xc4/0x110
-[c000003fece8fe00] [c00000000041ce78] sys_ioctl+0x28/0x80
-[c000003fece8fe20] [c00000000000b5a4] system_call+0x5c/0x70
+ iwl_mvm_rx_mpdu_mq+0xb51/0x121b [iwlmvm]
+ iwl_pcie_rx_handle+0x58c/0xa89 [iwlwifi]
+ iwl_pcie_irq_rx_msix_handler+0xd9/0x12a [iwlwifi]
+ irq_thread_fn+0x24/0x49
+ irq_thread+0xb0/0x122
+ kthread+0x138/0x140
+ ret_from_fork+0x1f/0x40
 
-Fixes: 42de7b9e2167 ("KVM: PPC: Validate TCEs against preregistered memory page sizes", 2018-09-10)
-Signed-off-by: Alexey Kardashevskiy <aik@ozlabs.ru>
-Signed-off-by: Paul Mackerras <paulus@ozlabs.org>
+Fix that by checking the lengths for correctness and trigger a warning
+to show that we have received wrong data.
+
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kvm/book3s_64_vio.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/wireless/intel/iwlwifi/mvm/rxmq.c | 28 ++++++++++++++++---
+ 1 file changed, 24 insertions(+), 4 deletions(-)
 
-diff --git a/arch/powerpc/kvm/book3s_64_vio.c b/arch/powerpc/kvm/book3s_64_vio.c
-index 532ab79734c7a..d43e8fe6d4241 100644
---- a/arch/powerpc/kvm/book3s_64_vio.c
-+++ b/arch/powerpc/kvm/book3s_64_vio.c
-@@ -543,14 +543,14 @@ long kvmppc_h_put_tce(struct kvm_vcpu *vcpu, unsigned long liobn,
- 	if (ret != H_SUCCESS)
- 		return ret;
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/rxmq.c b/drivers/net/wireless/intel/iwlwifi/mvm/rxmq.c
+index 7bd8676508f54..519c7dd47f694 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/rxmq.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/rxmq.c
+@@ -143,9 +143,9 @@ static inline int iwl_mvm_check_pn(struct iwl_mvm *mvm, struct sk_buff *skb,
+ }
  
-+	idx = srcu_read_lock(&vcpu->kvm->srcu);
+ /* iwl_mvm_create_skb Adds the rxb to a new skb */
+-static void iwl_mvm_create_skb(struct sk_buff *skb, struct ieee80211_hdr *hdr,
+-			       u16 len, u8 crypt_len,
+-			       struct iwl_rx_cmd_buffer *rxb)
++static int iwl_mvm_create_skb(struct iwl_mvm *mvm, struct sk_buff *skb,
++			      struct ieee80211_hdr *hdr, u16 len, u8 crypt_len,
++			      struct iwl_rx_cmd_buffer *rxb)
+ {
+ 	struct iwl_rx_packet *pkt = rxb_addr(rxb);
+ 	struct iwl_rx_mpdu_desc *desc = (void *)pkt->data;
+@@ -178,6 +178,20 @@ static void iwl_mvm_create_skb(struct sk_buff *skb, struct ieee80211_hdr *hdr,
+ 	 * present before copying packet data.
+ 	 */
+ 	hdrlen += crypt_len;
 +
- 	ret = kvmppc_tce_validate(stt, tce);
- 	if (ret != H_SUCCESS)
--		return ret;
-+		goto unlock_exit;
++	if (WARN_ONCE(headlen < hdrlen,
++		      "invalid packet lengths (hdrlen=%d, len=%d, crypt_len=%d)\n",
++		      hdrlen, len, crypt_len)) {
++		/*
++		 * We warn and trace because we want to be able to see
++		 * it in trace-cmd as well.
++		 */
++		IWL_DEBUG_RX(mvm,
++			     "invalid packet lengths (hdrlen=%d, len=%d, crypt_len=%d)\n",
++			     hdrlen, len, crypt_len);
++		return -EINVAL;
++	}
++
+ 	skb_put_data(skb, hdr, hdrlen);
+ 	skb_put_data(skb, (u8 *)hdr + hdrlen + pad_len, headlen - hdrlen);
  
- 	dir = iommu_tce_direction(tce);
+@@ -190,6 +204,8 @@ static void iwl_mvm_create_skb(struct sk_buff *skb, struct ieee80211_hdr *hdr,
+ 		skb_add_rx_frag(skb, 0, rxb_steal_page(rxb), offset,
+ 				fraglen, rxb->truesize);
+ 	}
++
++	return 0;
+ }
  
--	idx = srcu_read_lock(&vcpu->kvm->srcu);
--
- 	if ((dir != DMA_NONE) && kvmppc_tce_to_ua(vcpu->kvm, tce, &ua, NULL)) {
- 		ret = H_PARAMETER;
- 		goto unlock_exit;
+ /* iwl_mvm_pass_packet_to_mac80211 - passes the packet for mac80211 */
+@@ -1600,7 +1616,11 @@ void iwl_mvm_rx_mpdu_mq(struct iwl_mvm *mvm, struct napi_struct *napi,
+ 			rx_status->boottime_ns = ktime_get_boot_ns();
+ 	}
+ 
+-	iwl_mvm_create_skb(skb, hdr, len, crypt_len, rxb);
++	if (iwl_mvm_create_skb(mvm, skb, hdr, len, crypt_len, rxb)) {
++		kfree_skb(skb);
++		goto out;
++	}
++
+ 	if (!iwl_mvm_reorder(mvm, napi, queue, sta, skb, desc))
+ 		iwl_mvm_pass_packet_to_mac80211(mvm, napi, skb, queue, sta);
+ out:
 -- 
 2.20.1
 
