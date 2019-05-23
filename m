@@ -2,175 +2,188 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFB52C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 21:43:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9318C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 21:43:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D50F2168B
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 21:43:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="i5j6lJ3z"
+	by mail.kernel.org (Postfix) with ESMTP id 9723A2168B
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 21:43:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388301AbfEWVnh (ORCPT
+        id S2388340AbfEWVnw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 17:43:37 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:53272 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387709AbfEWVnh (ORCPT
+        Thu, 23 May 2019 17:43:52 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:35584 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388219AbfEWVnv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 17:43:37 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4NLYrP6194020;
-        Thu, 23 May 2019 21:42:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=fChv2jZysnH0YR2y5rlBhLoHF4XJSOv5yE7IjBMa6MI=;
- b=i5j6lJ3z4Hf6Mwe1uFCyW+Dx0BGc6CLgnMT05UhOAfwtXEFuubZ+5cv8bNXRQH8SGgIo
- 3OyLnYWAZcw9X87yhv0YScSmwlfD77yg0wTvg1PD2uhxSUM5Gy8pVikHFeRo6px2TaaX
- 1T5zqOZo/S3v8s0hewcbGZ3eIMfGRoZXC5u4QclbQcN+yRHCnMRvFytz7HBe/xVcQAjJ
- q7QGNHrFLf5im7IlibITLPPps1G2JhmeRisj45eynyh1gJCP32P+yM8kZMYnSTS9vT+Y
- qf/xCuv9cZn8I8m8yv46kQ4CowM5trlHuA6dN6lqyIZI05Jf3nu9oHXNSoc9l5912SdM mQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2130.oracle.com with ESMTP id 2smsk5n8d7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 23 May 2019 21:42:41 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4NLfaot156717;
-        Thu, 23 May 2019 21:42:41 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 2smsgtgmuy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 23 May 2019 21:42:41 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x4NLgaOB031829;
-        Thu, 23 May 2019 21:42:37 GMT
-Received: from [192.168.1.16] (/24.9.64.241)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 23 May 2019 21:42:36 +0000
-Subject: Re: [PATCH v15 00/17] arm64: untag user pointers passed to the kernel
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Evgenii Stepanov <eugenis@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
-        kvm@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
-        Elliott Hughes <enh@google.com>
-References: <cover.1557160186.git.andreyknvl@google.com>
- <20190517144931.GA56186@arrakis.emea.arm.com>
- <CAFKCwrj6JEtp4BzhqO178LFJepmepoMx=G+YdC8sqZ3bcBp3EQ@mail.gmail.com>
- <20190521182932.sm4vxweuwo5ermyd@mbp> <201905211633.6C0BF0C2@keescook>
- <6049844a-65f5-f513-5b58-7141588fef2b@oracle.com>
- <20190523201105.oifkksus4rzcwqt4@mbp>
-From:   Khalid Aziz <khalid.aziz@oracle.com>
-Organization: Oracle Corp
-Message-ID: <047e3b90-d73e-0ca8-869c-d03b7580e644@oracle.com>
-Date:   Thu, 23 May 2019 15:42:33 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 23 May 2019 17:43:51 -0400
+Received: by mail-ot1-f66.google.com with SMTP id n14so6879183otk.2;
+        Thu, 23 May 2019 14:43:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3Hbgz3hxp/a58+ErXmRrOWz2gL6UQg1j+v6ltJTHI20=;
+        b=g+AeDYejN8Cqvo7XGZ0tA4GyxBbiPJD/0MJJeI8oHDK+l11vr2TyG50riYCROQ3Xmo
+         bpasr2eo39pbR+8yQZdNbqvnwAQV/aC106UKDNi9DnsiI+bhVK7E2Kl4+nbB9LA60yzP
+         Zv8SVpev/ZlJpncbBI+Y9jcnr8kSWSKA3/otIkfhN/7VWe4rzoxwqXT0+DoQxOQ8rPjt
+         Vc/Nf4ePwlkY9G1I4SjZ9/N/+SuwoAOppe5wGqlGmLYHrqKjYwRz8iukQeePc04KeYv+
+         lWwxUczabx4sY9TfUHR/hA8JeKVy8iphhHD6x0azrzBfYSwg2xZLl+5+oIOf5GYyWQQ9
+         mwZg==
+X-Gm-Message-State: APjAAAWhqU6K3l5xOlSgmKJQE3u0JfJZWwgcevAbPDbdC19qp5vi8W1m
+        fWQcc+yeSh0UOY1TPL6jLEwuzhRLRZw=
+X-Google-Smtp-Source: APXvYqyBQe0jIYg3Olqc4vtTXDpQjou0tLjVoPVwklion2GyfaA+cAVbLG9kyUt5KfbBAzI5r+2WmQ==
+X-Received: by 2002:a05:6830:1d5:: with SMTP id r21mr5182368ota.155.1558647830206;
+        Thu, 23 May 2019 14:43:50 -0700 (PDT)
+Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com. [209.85.167.182])
+        by smtp.gmail.com with ESMTPSA id j189sm241147oia.2.2019.05.23.14.43.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 23 May 2019 14:43:49 -0700 (PDT)
+Received: by mail-oi1-f182.google.com with SMTP id y124so5552389oiy.3;
+        Thu, 23 May 2019 14:43:49 -0700 (PDT)
+X-Received: by 2002:aca:ed57:: with SMTP id l84mr366380oih.13.1558647828917;
+ Thu, 23 May 2019 14:43:48 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190523201105.oifkksus4rzcwqt4@mbp>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9266 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1905230138
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9266 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905230138
+References: <20180105094009.22599-1-ran.wang_1@nxp.com> <20180105094009.22599-4-ran.wang_1@nxp.com>
+In-Reply-To: <20180105094009.22599-4-ran.wang_1@nxp.com>
+From:   Li Yang <leoyang.li@nxp.com>
+Date:   Thu, 23 May 2019 16:43:36 -0500
+X-Gmail-Original-Message-ID: <CADRPPNS7iai2DwBjV0XTmxJKJ-diGzYMDg9Bfavjmai5Q=EW+g@mail.gmail.com>
+Message-ID: <CADRPPNS7iai2DwBjV0XTmxJKJ-diGzYMDg9Bfavjmai5Q=EW+g@mail.gmail.com>
+Subject: Re: [PATCH 4/4] xHCI: Handle dwc3 erratum on USB3 HW LPM feature.
+To:     Ran Wang <ran.wang_1@nxp.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>, linux-usb@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/23/19 2:11 PM, Catalin Marinas wrote:
-> Hi Khalid,
->=20
-> On Thu, May 23, 2019 at 11:51:40AM -0600, Khalid Aziz wrote:
->> On 5/21/19 6:04 PM, Kees Cook wrote:
->>> As an aside: I think Sparc ADI support in Linux actually side-stepped=
+On Fri, Jan 5, 2018 at 4:00 AM Ran Wang <ran.wang_1@nxp.com> wrote:
+>
+> Synopsys STARS ticket: 90000969472(A-010131)
+>
+> Description: This erratum is applicable for the USB 3.0 Super
+> Speed host mode operation. When the U2 timer expires while in
+> U1 mode, the USB 3.0 controller completes a U1->U2 entry operation
+> lasting three mac3_clk (24 ns). If the xHCI driver issues a
+> U3 request during this operation, thecontroller drops this request.
+>
+> Impact: The controller ignores the request when the xHCI driver
+> programs the U3 entry (PORTSC.PLS = U3).
+>
+> Workaround:
+> 1. Before initiating U3 entry, save PORTPMSC.
+> 2. Disable U2 entry by programming PORTPMSC[U2 Timeout] = h'FF.
+> 3. After U3 entry, re-enable the U2 timer by programming PORTPMSC
+> with the value saved in Step 1.
 
->>> this[1] (i.e. chose "solution 1"): "All addresses passed to kernel mu=
-st
->>> be non-ADI tagged addresses." (And sadly, "Kernel does not enable ADI=
+Hi Mathias,
 
->>> for kernel code.") I think this was a mistake we should not repeat fo=
-r
->>> arm64 (we do seem to be at least in agreement about this, I think).
->>>
->>> [1] https://lore.kernel.org/patchwork/patch/654481/
->>
->> That is a very early version of the sparc ADI patch. Support for tagge=
-d
->> addresses in syscalls was added in later versions and is in the patch
->> that is in the kernel.
->=20
-> I tried to figure out but I'm not familiar with the sparc port. How did=
+Could you help to review this patch?
 
-> you solve the tagged address going into various syscall implementations=
+Hi Ran,
 
-> in the kernel (e.g. sys_write)? Is the tag removed on kernel entry or i=
-t
-> ends up deeper in the core code?
+Since this is an dwc3 related hardware issue, can it be addressed in
+the dwc3 layer instead of in the common xhci layer?
 
-Tag is not removed from the user addresses. Kernel passes tagged
-addresses to copy_from_user and copy_to_user. MMU checks the tag
-embedded in the address when kernel accesses userspace addresses. This
-maintains the ADI integrity even when userspace attempts to access any
-userspace addresses through system calls.
-
-On sparc, access_ok() is defined as:
-
-#define access_ok(addr, size) __access_ok((unsigned long)(addr), size)
-#define __access_ok(addr, size) (__user_ok((addr) & get_fs().seg, (size))=
-)
-#define __user_ok(addr, size) ({ (void)(size); (addr) < STACK_TOP; })
-
-STACK_TOP for M7 processor (which is the first sparc processor to
-support ADI) is 0xfff8000000000000UL. Tagged addresses pass the
-access_ok() check fine. Any tag mismatches that happen during kernel
-access to userspace addresses are handled by do_mcd_err().
-
---
-Khalid
-
+>
+> Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
+> ---
+>  drivers/usb/host/xhci-hub.c  |   22 ++++++++++++++++++++++
+>  drivers/usb/host/xhci-plat.c |    6 +++++-
+>  drivers/usb/host/xhci.h      |    1 +
+>  3 files changed, 28 insertions(+), 1 deletions(-)
+>
+> diff --git a/drivers/usb/host/xhci-hub.c b/drivers/usb/host/xhci-hub.c
+> index f070f94..a61185e 100644
+> --- a/drivers/usb/host/xhci-hub.c
+> +++ b/drivers/usb/host/xhci-hub.c
+> @@ -676,12 +676,34 @@ void xhci_set_link_state(struct xhci_hcd *xhci, __le32 __iomem **port_array,
+>                                 int port_id, u32 link_state)
+>  {
+>         u32 temp;
+> +       u32 portpmsc_u2_backup = 0;
+> +
+> +       /* Backup U2 timeout info before initiating U3 entry erratum A-010131 */
+> +       if (xhci->shared_hcd->speed >= HCD_USB3 &&
+> +                       link_state == USB_SS_PORT_LS_U3 &&
+> +                       (xhci->quirks & XHCI_DIS_U1U2_WHEN_U3)) {
+> +               portpmsc_u2_backup = readl(port_array[port_id] + PORTPMSC);
+> +               portpmsc_u2_backup &= PORT_U2_TIMEOUT_MASK;
+> +               temp = readl(port_array[port_id] + PORTPMSC);
+> +               temp |= PORT_U2_TIMEOUT_MASK;
+> +               writel(temp, port_array[port_id] + PORTPMSC);
+> +       }
+>
+>         temp = readl(port_array[port_id]);
+>         temp = xhci_port_state_to_neutral(temp);
+>         temp &= ~PORT_PLS_MASK;
+>         temp |= PORT_LINK_STROBE | link_state;
+>         writel(temp, port_array[port_id]);
+> +
+> +       /* Restore U2 timeout info after U3 entry complete */
+> +       if (xhci->shared_hcd->speed >= HCD_USB3 &&
+> +                       link_state == USB_SS_PORT_LS_U3 &&
+> +                       (xhci->quirks & XHCI_DIS_U1U2_WHEN_U3)) {
+> +               temp = readl(port_array[port_id] + PORTPMSC);
+> +               temp &= ~PORT_U2_TIMEOUT_MASK;
+> +               temp |= portpmsc_u2_backup;
+> +               writel(temp, port_array[port_id] + PORTPMSC);
+> +       }
+>  }
+>
+>  static void xhci_set_remote_wake_mask(struct xhci_hcd *xhci,
+> diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
+> index 1969e56..616c56e 100644
+> --- a/drivers/usb/host/xhci-plat.c
+> +++ b/drivers/usb/host/xhci-plat.c
+> @@ -266,8 +266,12 @@ static int xhci_plat_probe(struct platform_device *pdev)
+>         if (device_property_read_bool(sysdev, "usb2-lpm-disable"))
+>                 xhci->quirks |= XHCI_HW_LPM_DISABLE;
+>
+> -       if (device_property_read_bool(sysdev, "usb3-lpm-capable"))
+> +       if (device_property_read_bool(sysdev, "usb3-lpm-capable")) {
+>                 xhci->quirks |= XHCI_LPM_SUPPORT;
+> +               if (device_property_read_bool(sysdev,
+> +                                       "snps,dis-u1u2-when-u3-quirk"))
+> +                       xhci->quirks |= XHCI_DIS_U1U2_WHEN_U3;
+> +       }
+>
+>         if (device_property_read_bool(&pdev->dev, "quirk-broken-port-ped"))
+>                 xhci->quirks |= XHCI_BROKEN_PORT_PED;
+> diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
+> index b966cd8..9704779 100644
+> --- a/drivers/usb/host/xhci.h
+> +++ b/drivers/usb/host/xhci.h
+> @@ -1835,6 +1835,7 @@ struct xhci_hcd {
+>  /* Reserved. It was XHCI_U2_DISABLE_WAKE */
+>  #define XHCI_ASMEDIA_MODIFY_FLOWCONTROL        (1 << 28)
+>  #define XHCI_HW_LPM_DISABLE    (1 << 29)
+> +#define XHCI_DIS_U1U2_WHEN_U3 (1 << 30)
+>
+>         unsigned int            num_active_eps;
+>         unsigned int            limit_active_eps;
+> --
+> 1.7.1
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
