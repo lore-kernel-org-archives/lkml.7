@@ -7,51 +7,56 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E5BFC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:25:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7E18C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:26:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11C4621850
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:25:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9632E206BA
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:26:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639557;
-	bh=EhYtP/rpvE8jWFvUYVqzJ7BQ2mvQOotty2PPRp7l7Lw=;
+	s=default; t=1558639560;
+	bh=2oQPVjb/XH6t5N0VlZPojdoMnrm+tfWh1CGpuHuzy8M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RHotZV655Nhos6pwSc2T5njdaO0W86uyjrxfzBHwCBKXdU883KSXalLhctMy40ZAS
-	 jnhvjlqdE86e+6kBYtqmAKBSaoAgMUDJ9lGklNPZjvMxUII92ZJIlrHOaMKkz3y/tg
-	 Ezmhp0DYo9BMl2TBhu2HdqcbdD83UpfPl5rLO+ew=
+	b=gxVGR5r6GZ0z/ZcDkXF5mrVHAA/WINVjj4mtMRWxBek74QK3Gtlr5h8pqh45QBlHQ
+	 T9XimQ1OpaNpoDo0tdHFE4f0EYGq+/hUJF4VoBlBldB2X3rt0iW0HH2pNox8DvuRk5
+	 +1/s5gIPgo9pjx6DQt3cFgx5MGdsrW+MmdctnS28=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391218AbfEWTZ4 (ORCPT
+        id S2391248AbfEWTZ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:25:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37582 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:25:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37668 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391198AbfEWTZw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:25:52 -0400
+        id S2391228AbfEWTZ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:25:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED55220868;
-        Thu, 23 May 2019 19:25:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D4F6217D9;
+        Thu, 23 May 2019 19:25:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639551;
-        bh=EhYtP/rpvE8jWFvUYVqzJ7BQ2mvQOotty2PPRp7l7Lw=;
+        s=default; t=1558639556;
+        bh=2oQPVjb/XH6t5N0VlZPojdoMnrm+tfWh1CGpuHuzy8M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0jBV/gwhQSLDUhetVhJWEmQwXJH5mUSqc6GXUlFVVtOrVVWEM+qN1y6hdiuHiOLlr
-         O77B3PaDPTxEGRpx5rmEbaI0MiXE/eeQNUN0FH8EQBB1sTv2rzZjUuT1FM24u6tS+G
-         6IoUtPYG14Zn1sS2oxpOXavgE4Lw366vaoLhvq7E=
+        b=Se5eqo7YphNDsf/vlKqGOvdtp3p/oyMHFtnr7O2NEU7qZsiiIv2fqcl6GkbJa4FeH
+         V6j/hJe25e5ICGJwCxV4a33UZy2Wz1Mc5FQThW43Nii4p7PDanqhMRVAFcoj+fr7cW
+         ifOmkO+fYTfewcRTY0YJxXPTcU9DBFuCbC8lKrHA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chenbo Feng <fengc@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>
-Subject: [PATCH 5.0 137/139] bpf: relax inode permission check for retrieving bpf program
-Date:   Thu, 23 May 2019 21:07:05 +0200
-Message-Id: <20190523181736.640635204@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Mikael Magnusson <mikael.kernel@lists.m7n.se>,
+        Wei Wang <weiwan@google.com>, Martin Lau <kafai@fb.com>,
+        Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        David Ahern <dsahern@gmail.com>
+Subject: [PATCH 5.1 001/122] ipv6: fix src addr routing with the exception table
+Date:   Thu, 23 May 2019 21:05:23 +0200
+Message-Id: <20190523181705.324928617@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190523181720.120897565@linuxfoundation.org>
-References: <20190523181720.120897565@linuxfoundation.org>
+In-Reply-To: <20190523181705.091418060@linuxfoundation.org>
+References: <20190523181705.091418060@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -60,38 +65,137 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chenbo Feng <fengc@google.com>
+From: Wei Wang <weiwan@google.com>
 
-commit e547ff3f803e779a3898f1f48447b29f43c54085 upstream.
+[ Upstream commit 510e2ceda031eed97a7a0f9aad65d271a58b460d ]
 
-For iptable module to load a bpf program from a pinned location, it
-only retrieve a loaded program and cannot change the program content so
-requiring a write permission for it might not be necessary.
-Also when adding or removing an unrelated iptable rule, it might need to
-flush and reload the xt_bpf related rules as well and triggers the inode
-permission check. It might be better to remove the write premission
-check for the inode so we won't need to grant write access to all the
-processes that flush and restore iptables rules.
+When inserting route cache into the exception table, the key is
+generated with both src_addr and dest_addr with src addr routing.
+However, current logic always assumes the src_addr used to generate the
+key is a /128 host address. This is not true in the following scenarios:
+1. When the route is a gateway route or does not have next hop.
+   (rt6_is_gw_or_nonexthop() == false)
+2. When calling ip6_rt_cache_alloc(), saddr is passed in as NULL.
+This means, when looking for a route cache in the exception table, we
+have to do the lookup twice: first time with the passed in /128 host
+address, second time with the src_addr stored in fib6_info.
 
-Signed-off-by: Chenbo Feng <fengc@google.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+This solves the pmtu discovery issue reported by Mikael Magnusson where
+a route cache with a lower mtu info is created for a gateway route with
+src addr. However, the lookup code is not able to find this route cache.
+
+Fixes: 2b760fcf5cfb ("ipv6: hook up exception table to store dst cache")
+Reported-by: Mikael Magnusson <mikael.kernel@lists.m7n.se>
+Bisected-by: David Ahern <dsahern@gmail.com>
+Signed-off-by: Wei Wang <weiwan@google.com>
+Cc: Martin Lau <kafai@fb.com>
+Cc: Eric Dumazet <edumazet@google.com>
+Acked-by: Martin KaFai Lau <kafai@fb.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- kernel/bpf/inode.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/ipv6/route.c |   51 +++++++++++++++++++++++++++------------------------
+ 1 file changed, 27 insertions(+), 24 deletions(-)
 
---- a/kernel/bpf/inode.c
-+++ b/kernel/bpf/inode.c
-@@ -518,7 +518,7 @@ out:
- static struct bpf_prog *__get_prog_inode(struct inode *inode, enum bpf_prog_type type)
- {
- 	struct bpf_prog *prog;
--	int ret = inode_permission(inode, MAY_READ | MAY_WRITE);
-+	int ret = inode_permission(inode, MAY_READ);
- 	if (ret)
- 		return ERR_PTR(ret);
+--- a/net/ipv6/route.c
++++ b/net/ipv6/route.c
+@@ -110,8 +110,8 @@ static int rt6_fill_node(struct net *net
+ 			 int iif, int type, u32 portid, u32 seq,
+ 			 unsigned int flags);
+ static struct rt6_info *rt6_find_cached_rt(struct fib6_info *rt,
+-					   struct in6_addr *daddr,
+-					   struct in6_addr *saddr);
++					   const struct in6_addr *daddr,
++					   const struct in6_addr *saddr);
  
+ #ifdef CONFIG_IPV6_ROUTE_INFO
+ static struct fib6_info *rt6_add_route_info(struct net *net,
+@@ -1529,31 +1529,44 @@ out:
+  * Caller has to hold rcu_read_lock()
+  */
+ static struct rt6_info *rt6_find_cached_rt(struct fib6_info *rt,
+-					   struct in6_addr *daddr,
+-					   struct in6_addr *saddr)
++					   const struct in6_addr *daddr,
++					   const struct in6_addr *saddr)
+ {
++	const struct in6_addr *src_key = NULL;
+ 	struct rt6_exception_bucket *bucket;
+-	struct in6_addr *src_key = NULL;
+ 	struct rt6_exception *rt6_ex;
+ 	struct rt6_info *res = NULL;
+ 
+-	bucket = rcu_dereference(rt->rt6i_exception_bucket);
+-
+ #ifdef CONFIG_IPV6_SUBTREES
+ 	/* rt6i_src.plen != 0 indicates rt is in subtree
+ 	 * and exception table is indexed by a hash of
+ 	 * both rt6i_dst and rt6i_src.
+-	 * Otherwise, the exception table is indexed by
+-	 * a hash of only rt6i_dst.
++	 * However, the src addr used to create the hash
++	 * might not be exactly the passed in saddr which
++	 * is a /128 addr from the flow.
++	 * So we need to use f6i->fib6_src to redo lookup
++	 * if the passed in saddr does not find anything.
++	 * (See the logic in ip6_rt_cache_alloc() on how
++	 * rt->rt6i_src is updated.)
+ 	 */
+ 	if (rt->fib6_src.plen)
+ 		src_key = saddr;
++find_ex:
+ #endif
++	bucket = rcu_dereference(rt->rt6i_exception_bucket);
+ 	rt6_ex = __rt6_find_exception_rcu(&bucket, daddr, src_key);
+ 
+ 	if (rt6_ex && !rt6_check_expired(rt6_ex->rt6i))
+ 		res = rt6_ex->rt6i;
+ 
++#ifdef CONFIG_IPV6_SUBTREES
++	/* Use fib6_src as src_key and redo lookup */
++	if (!res && src_key && src_key != &rt->fib6_src.addr) {
++		src_key = &rt->fib6_src.addr;
++		goto find_ex;
++	}
++#endif
++
+ 	return res;
+ }
+ 
+@@ -2608,10 +2621,8 @@ out:
+ u32 ip6_mtu_from_fib6(struct fib6_info *f6i, struct in6_addr *daddr,
+ 		      struct in6_addr *saddr)
+ {
+-	struct rt6_exception_bucket *bucket;
+-	struct rt6_exception *rt6_ex;
+-	struct in6_addr *src_key;
+ 	struct inet6_dev *idev;
++	struct rt6_info *rt;
+ 	u32 mtu = 0;
+ 
+ 	if (unlikely(fib6_metric_locked(f6i, RTAX_MTU))) {
+@@ -2620,18 +2631,10 @@ u32 ip6_mtu_from_fib6(struct fib6_info *
+ 			goto out;
+ 	}
+ 
+-	src_key = NULL;
+-#ifdef CONFIG_IPV6_SUBTREES
+-	if (f6i->fib6_src.plen)
+-		src_key = saddr;
+-#endif
+-
+-	bucket = rcu_dereference(f6i->rt6i_exception_bucket);
+-	rt6_ex = __rt6_find_exception_rcu(&bucket, daddr, src_key);
+-	if (rt6_ex && !rt6_check_expired(rt6_ex->rt6i))
+-		mtu = dst_metric_raw(&rt6_ex->rt6i->dst, RTAX_MTU);
+-
+-	if (likely(!mtu)) {
++	rt = rt6_find_cached_rt(f6i, daddr, saddr);
++	if (unlikely(rt)) {
++		mtu = dst_metric_raw(&rt->dst, RTAX_MTU);
++	} else {
+ 		struct net_device *dev = fib6_info_nh_dev(f6i);
+ 
+ 		mtu = IPV6_MIN_MTU;
 
 
