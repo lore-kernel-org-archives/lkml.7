@@ -5,51 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01BBDC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:18:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B6ACC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:18:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA95621851
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:18:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 420A62133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:18:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639121;
-	bh=bd8CLshTdtJtuUpp8mPtIPDnOT6V9ey41gamWfUD9Ok=;
+	s=default; t=1558639127;
+	bh=pqomUC/mB5B0Tu67ZwAH0uPUO3ocK5ML1K59knVGFLc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L2t2lsUzl01qurYwcl1HbLPJBnuURAfXxE4E+SiOkSyWER6l84ofW3mRFWRqxfOVL
-	 C26HT/zHjjZxTzbz+eYFFNDg3pfCfZCZW0EYH2Ms4n1gw2FlCNLe1fyOTembyclU2f
-	 VLrAH8kFWgz2cS6WyUPfyY/+PXygzxXIPK8+Poog=
+	b=uvglxtn93UUiUl4IfwvtF+s5eCF3/Qt+4WIq9hguzmq2bSWpQdSB1vTc8InBLiggK
+	 bvoro6p2En4CcRt7AyK1mwD190xG821hFzCB61ib7JAWEvZgW5NYl7EfxJ1RqgacA4
+	 EVdna806j/1NPlY2Ot0el2ZiaEPlyhFjqmVzy4rc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389671AbfEWTSk (ORCPT
+        id S2389200AbfEWTSq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:18:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54154 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:18:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54362 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389660AbfEWTSg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:18:36 -0400
+        id S2389660AbfEWTSo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:18:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 58E9920863;
-        Thu, 23 May 2019 19:18:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 206692184E;
+        Thu, 23 May 2019 19:18:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639115;
-        bh=bd8CLshTdtJtuUpp8mPtIPDnOT6V9ey41gamWfUD9Ok=;
+        s=default; t=1558639123;
+        bh=pqomUC/mB5B0Tu67ZwAH0uPUO3ocK5ML1K59knVGFLc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CtjpyS/o5VGH9IH2Xlz5L1DNinymI+0YjoNLz8pBHbtigauONW+G6bGweNSk0Zq8P
-         AHlu8AsHfvB/DuyGspSrQ8avdi8VkwnWr3Q3cTV3EB3IItv6yXIpRz45qlh4oH929K
-         WAHJ+P2+2h06sw47FOICbEZ1ftI5Lw20h3ljvQXo=
+        b=VZKVKr63dIMIK16FCLtLIey8nr9K3cjNgXoBReaKfzwfFsusdZWKlIQsn4i6aWAb6
+         xxSEcglFMotYrKtyyHNqyZHm1VWW4S4o64z5v/9TK6/p6f/VvsB5MUV4ML0hVWbWHk
+         VdA7EGFgcNxXxng1u452QtABJGsK//4U/tEbcPxU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Roman Gushchin <guro@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 100/114] bpf: Fix preempt_enable_no_resched() abuse
-Date:   Thu, 23 May 2019 21:06:39 +0200
-Message-Id: <20190523181740.223939766@linuxfoundation.org>
+        stable@vger.kernel.org, "Tobin C. Harding" <tobin@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 103/114] sched/cpufreq: Fix kobject memleak
+Date:   Thu, 23 May 2019 21:06:42 +0200
+Message-Id: <20190523181740.376885118@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181731.372074275@linuxfoundation.org>
 References: <20190523181731.372074275@linuxfoundation.org>
@@ -62,34 +65,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 0edd6b64d1939e9e9168ff27947995bb7751db5d ]
+[ Upstream commit 9a4f26cc98d81b67ecc23b890c28e2df324e29f3 ]
 
-Unless the very next line is schedule(), or implies it, one must not use
-preempt_enable_no_resched(). It can cause a preemption to go missing and
-thereby cause arbitrary delays, breaking the PREEMPT=y invariant.
+Currently the error return path from kobject_init_and_add() is not
+followed by a call to kobject_put() - which means we are leaking
+the kobject.
 
-Cc: Roman Gushchin <guro@fb.com>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Fix it by adding a call to kobject_put() in the error path of
+kobject_init_and_add().
+
+Signed-off-by: Tobin C. Harding <tobin@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Tobin C. Harding <tobin@kernel.org>
+Cc: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>
+Link: http://lkml.kernel.org/r/20190430001144.24890-1-tobin@kernel.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/bpf.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/sched/cpufreq_schedutil.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/include/linux/bpf.h b/include/linux/bpf.h
-index 523481a3471b5..fd95f2efe5f32 100644
---- a/include/linux/bpf.h
-+++ b/include/linux/bpf.h
-@@ -400,7 +400,7 @@ int bpf_prog_array_copy(struct bpf_prog_array __rcu *old_array,
- 		}					\
- _out:							\
- 		rcu_read_unlock();			\
--		preempt_enable_no_resched();		\
-+		preempt_enable();			\
- 		_ret;					\
- 	 })
+diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
+index 217f81ecae176..4e3625109b28d 100644
+--- a/kernel/sched/cpufreq_schedutil.c
++++ b/kernel/sched/cpufreq_schedutil.c
+@@ -751,6 +751,7 @@ out:
+ 	return 0;
+ 
+ fail:
++	kobject_put(&tunables->attr_set.kobj);
+ 	policy->governor_data = NULL;
+ 	sugov_tunables_free(tunables);
  
 -- 
 2.20.1
