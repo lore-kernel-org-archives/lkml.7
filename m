@@ -4,141 +4,112 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB783C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 17:52:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB926C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 17:53:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0854217D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 17:52:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68DD92186A
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 17:53:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="vDS9uTH4"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="atEA2SB8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731446AbfEWRwb (ORCPT
+        id S1731387AbfEWRx4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 13:52:31 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:49208 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730928AbfEWRwb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 13:52:31 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4NHcV4s194594;
-        Thu, 23 May 2019 17:51:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=2Qeh79aDTooqgUiqrhLo6Vy7tycJTudTXGs6zz5dfRs=;
- b=vDS9uTH4+Zc8nPFLnuUvRu142pBiqAxGE5BbMuCn+MA1cOmcParAIWPYB10Gy4C7hxOT
- CRf7KLq6LlEZK+PTvChfiuPo3LEMa9ckzl+/kAdOakkMJYpGPlnCYhLx+3+n6Ntz8J6i
- 3fNosLO+WWxHrhBnbE6IQD52DA+Q7+ZHzBvkxtJ6IhCd+FH3wqHlFGg3maBxYupT10pT
- epJuSNSnm8akAZ06VD98fPXl3vSfL7K8WT0tE28XcUzOExtBXHl5878ViO1cXVVBk4Tq
- 4+ZzcfJ8p6oqlalneN0hlMs1txpq4s5U0HxUj4eJGEhRr1s4PIHpmSUBA5IcjIQCgxcH gg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2smsk5c473-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 23 May 2019 17:51:53 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4NHpCpe145061;
-        Thu, 23 May 2019 17:51:52 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 2smshfd4y8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 23 May 2019 17:51:52 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x4NHphUB003086;
-        Thu, 23 May 2019 17:51:44 GMT
-Received: from [192.168.1.16] (/24.9.64.241)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 23 May 2019 17:51:43 +0000
-Subject: Re: [PATCH v15 00/17] arm64: untag user pointers passed to the kernel
-To:     Kees Cook <keescook@chromium.org>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Cc:     Evgenii Stepanov <eugenis@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
-        kvm@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
-        Elliott Hughes <enh@google.com>
-References: <cover.1557160186.git.andreyknvl@google.com>
- <20190517144931.GA56186@arrakis.emea.arm.com>
- <CAFKCwrj6JEtp4BzhqO178LFJepmepoMx=G+YdC8sqZ3bcBp3EQ@mail.gmail.com>
- <20190521182932.sm4vxweuwo5ermyd@mbp> <201905211633.6C0BF0C2@keescook>
-From:   Khalid Aziz <khalid.aziz@oracle.com>
-Organization: Oracle Corp
-Message-ID: <6049844a-65f5-f513-5b58-7141588fef2b@oracle.com>
-Date:   Thu, 23 May 2019 11:51:40 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <201905211633.6C0BF0C2@keescook>
-Content-Type: text/plain; charset=utf-8
+        Thu, 23 May 2019 13:53:56 -0400
+Received: from mail-eopbgr70085.outbound.protection.outlook.com ([40.107.7.85]:28352
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730899AbfEWRx4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 13:53:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/xjf5SFKB5ODXOe4Q8/8+7+jabJoQJfJuPLFXDrRa4c=;
+ b=atEA2SB8JMK9gKyZuKFl4Wf7S24+ks6ItyeAk6nuUL8NTtXXT0Ip+ZOF529pGEOHOUghZR4pbOf3bMguqyfSgd18iky6Dz8r3nSbAnh3s8ukyZIq5cUz+l/9bAkp9KtF9iFdE7N6Ei1Gy5k2e8cdyX0Az0biqfA9UaHtEJXB3jc=
+Received: from AM0PR0402MB3476.eurprd04.prod.outlook.com (52.133.50.141) by
+ AM0PR0402MB3889.eurprd04.prod.outlook.com (52.133.38.157) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1900.17; Thu, 23 May 2019 17:53:51 +0000
+Received: from AM0PR0402MB3476.eurprd04.prod.outlook.com
+ ([fe80::1cc6:b168:7419:aa48]) by AM0PR0402MB3476.eurprd04.prod.outlook.com
+ ([fe80::1cc6:b168:7419:aa48%6]) with mapi id 15.20.1900.020; Thu, 23 May 2019
+ 17:53:51 +0000
+From:   Horia Geanta <horia.geanta@nxp.com>
+To:     Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+CC:     Robin Murphy <robin.murphy@arm.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH] swiotlb: sync buffer when mapping FROM_DEVICE
+Thread-Topic: [PATCH] swiotlb: sync buffer when mapping FROM_DEVICE
+Thread-Index: AQHVEG7XwyI2zYKLCECD0q7/YpNC2Q==
+Date:   Thu, 23 May 2019 17:53:51 +0000
+Message-ID: <AM0PR0402MB3476A633E03202C26D15CB5698010@AM0PR0402MB3476.eurprd04.prod.outlook.com>
+References: <20190522072018.10660-1-horia.geanta@nxp.com>
+ <20190522123243.GA26390@lst.de>
+ <6cbe5470-16a6-17e9-337d-6ba18b16b6e8@arm.com>
+ <20190522130921.GA26874@lst.de>
+ <fdfd7318-7999-1fe6-01b6-ae1fb7ba8c30@arm.com>
+ <20190522133400.GA27229@lst.de>
+ <CGME20190522135556epcas2p34e0c14f2565abfdccc7035463f60a71b@epcas2p3.samsung.com>
+ <ed26de5e-aee4-4e19-095c-cc551012d475@arm.com>
+ <0c79721a-11cb-c945-5626-3d43cc299fe6@samsung.com>
+ <20190523164332.GA22245@lst.de>
+Accept-Language: en-US
 Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=horia.geanta@nxp.com; 
+x-originating-ip: [94.69.234.123]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 356fd88b-93bd-4e45-1136-08d6dfa79dce
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:AM0PR0402MB3889;
+x-ms-traffictypediagnostic: AM0PR0402MB3889:
+x-microsoft-antispam-prvs: <AM0PR0402MB3889F5FB4AC0350355A655AE98010@AM0PR0402MB3889.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-forefront-prvs: 00462943DE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(366004)(346002)(136003)(376002)(39860400002)(189003)(199004)(53936002)(4326008)(53546011)(8936002)(6506007)(316002)(7736002)(305945005)(110136005)(3846002)(74316002)(6246003)(6116002)(5660300002)(66946007)(4744005)(33656002)(76116006)(64756008)(66476007)(66446008)(66556008)(186003)(73956011)(8676002)(476003)(52536014)(66066001)(81166006)(14444005)(81156014)(26005)(9686003)(256004)(102836004)(6436002)(55016002)(99286004)(486006)(229853002)(86362001)(14454004)(446003)(7696005)(44832011)(2906002)(54906003)(25786009)(71200400001)(68736007)(71190400001)(478600001)(76176011);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR0402MB3889;H:AM0PR0402MB3476.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: wCx6scCvRm17hTEpxIFGhx9za4I/XyE2oi0K623SOfPjgthZYXIQppRIqqTwgq26MNuYAiJ1JJcNxC/y81FIwF1I7ZUrBXPlzXqBw2wp0i1/Ic98GPluZSIt1jcu//4NbBjFNIs++RDT1oJRooeUuJk/pDxTPGVOxtO4M/t2aK6FD1GNH0SP81LELMhx+4JqcMybP0+IIfsfwVF53+IdlIl2tEq8WEjjVtDkGc5qJcldAMzudttOOKxSzE55oc75n1Zs/L3GahSerGCtPvNUN3NUb5/921j4tvSjJ2JVPQj/tw1jq4PkU3GHeoYDrEAcILqpyssDdTDflC7yRWlgVV6yDRGz/4zxWOFyiMx/8YxAW3HG43vyeLoQLmKut+jAHiYzmqcENb+Q0NS6cw+pEpxMA2dMu0aTyFgckHIO9PU=
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9265 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1905230119
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9265 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905230119
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 356fd88b-93bd-4e45-1136-08d6dfa79dce
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 May 2019 17:53:51.7974
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR0402MB3889
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/21/19 6:04 PM, Kees Cook wrote:
-> As an aside: I think Sparc ADI support in Linux actually side-stepped
-> this[1] (i.e. chose "solution 1"): "All addresses passed to kernel must=
-
-> be non-ADI tagged addresses." (And sadly, "Kernel does not enable ADI
-> for kernel code.") I think this was a mistake we should not repeat for
-> arm64 (we do seem to be at least in agreement about this, I think).
->=20
-> [1] https://lore.kernel.org/patchwork/patch/654481/
-
-
-That is a very early version of the sparc ADI patch. Support for tagged
-addresses in syscalls was added in later versions and is in the patch
-that is in the kernel.
-
-That part "Kernel does not enable ADI for kernel code." is correct. It
-is a possible enhancement for future.
-
---
-Khalid
-
+On 5/23/2019 7:43 PM, Christoph Hellwig wrote:=0A=
+> On Thu, May 23, 2019 at 07:35:07AM +0200, Marek Szyprowski wrote:=0A=
+>> Don't we have DMA_BIDIRECTIONAL for such case?=0A=
+> =0A=
+> Not sure if it was intended for that case, but it definitively should=0A=
+> do the right thing for swiotlb, and it should also do the right thing=0A=
+> in terms of cache maintainance.=0A=
+> =0A=
+>> Maybe we should update =0A=
+>> documentation a bit to point that DMA_FROM_DEVICE expects the whole =0A=
+>> buffer to be filled by the device?=0A=
+> =0A=
+> Probably. Horia, can you try to use DMA_BIDIRECTIONAL?=0A=
+> =0A=
+This works, but at the cost of performance - all the cache lines being writ=
+ten=0A=
+back to memory, just to be overwritten by the device.=0A=
+=0A=
+Thanks,=0A=
+Horia=0A=
