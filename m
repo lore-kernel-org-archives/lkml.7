@@ -2,107 +2,199 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5459C282DE
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 21:48:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7249C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 21:49:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A619920868
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 21:48:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6916320868
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 21:49:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Zhdv63Et"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="X//cpGAK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388426AbfEWVsN (ORCPT
+        id S2388394AbfEWVtw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 17:48:13 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:38463 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388166AbfEWVsM (ORCPT
+        Thu, 23 May 2019 17:49:52 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:58870 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388134AbfEWVtw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 17:48:12 -0400
-Received: by mail-pl1-f193.google.com with SMTP id f97so3273952plb.5
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 14:48:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=cRjsWIBkFu7xChKc5ODPWxRtyAuuqlLwnhGlual1d7o=;
-        b=Zhdv63Etq9ZqvxrpKVb9soHIGj0Q24oISvjDjej3wPUUd/Cnb+UldZiZtfrDTaIgu4
-         k/3l6z4swcOXGNbr7U7MmMkvFFMhvHlsvYBN1lmFjkeK6VbWXm5sjP1aWe9DSHu1k1fH
-         +cN0PVDMxA8slbCi7HJThOcm7ANy2YsLJFyrzLpf3iC3NXZ/pUASClHd3DQAmJYekNSX
-         u5PpK/415fxUlaYwU1eLb6sqZCWwrUM4eIeYNMam/BkP+B1PYCzfQsTmmVxb+B6ApH+H
-         bd7TG4fOrpjsWnsZoHWIFNl/habsr+Nqb1HSaXiq0no7Go4qLaX7JC+frOnhw9DqukLe
-         ySFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=cRjsWIBkFu7xChKc5ODPWxRtyAuuqlLwnhGlual1d7o=;
-        b=qITm6l0vuG0vhHkVoOTBGULRhnhbG2cPUq+b6F9f+0SbcHMcPKcJ0OXXEfM+FLHOCc
-         kSUY+CzbYFQaFBXzHMUyZCPvw/2TC7vo9UKtnpw8RjCeen95dwApR6EB4TiYkRdBTGBl
-         8UIJYkX+KZY4kKIcW20vkjUMOivnyB5k0auLrbgeiyqsj0LajMwskHfATPrV5wk7L/Ip
-         bhPI8BKxzYL2ds55YD0s2aSrWEIZEYEJW16ZGN9rQQAjSNa9vtsSARnw6ZuEkOl+REWY
-         VsEr7FO/T9mlAD4e+icyYzPoOAI7l70ciNivO0GPqNjaVdoJv2CTTgTOmUJge4F8wd5E
-         OmZw==
-X-Gm-Message-State: APjAAAVNs0Wa4Vew4+VkQKn636vCK/VjPHkzsJrWIa2iN/iXuiODJlWd
-        eC4z70BnWgapejordF52jfJe3Q==
-X-Google-Smtp-Source: APXvYqwYpmQE4QulweV//CaaANh0ZzjwCj5mOtvZC5LJ9Go4sqfKX4lZUjjLrMyvaVKS4b5H7zgJWw==
-X-Received: by 2002:a17:902:4e:: with SMTP id 72mr49493273pla.80.1558648091144;
-        Thu, 23 May 2019 14:48:11 -0700 (PDT)
-Received: from nuc7.sifive.com ([12.206.222.2])
-        by smtp.gmail.com with ESMTPSA id f22sm280757pgl.25.2019.05.23.14.48.09
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 23 May 2019 14:48:10 -0700 (PDT)
-From:   Alan Mikhak <alan.mikhak@sifive.com>
-X-Google-Original-From: Alan Mikhak < alan.mikhak@sifive.com >
-To:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kishon@ti.com, lorenzo.pieralisi@arm.com,
-        linux-riscv@lists.infradead.org, palmer@sifive.com,
-        paul.walmsley@sifive.com
-Cc:     Alan Mikhak <alan.mikhak@sifive.com>
-Subject: [PATCH v2] PCI: endpoint: Allocate enough space for fixed size BAR
-Date:   Thu, 23 May 2019 14:47:59 -0700
-Message-Id: <1558648079-13893-1-git-send-email-alan.mikhak@sifive.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 23 May 2019 17:49:52 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4NLhifU004317;
+        Thu, 23 May 2019 21:49:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=CA4BRvH7LpSOvdwGQ1RgbPK5R7ura7qGqy4SrVn6TGs=;
+ b=X//cpGAKkvYu1m1BjaIbh5y4EYuwM+8rZjWW5aAmW0vi1toc+ON7ojqHQsbcK6pAW1oD
+ bdaUeEmghYKNyuWdojEirpuCtcEnGnpjzGNjA/TAPNGPvcylGBa+20OGWCMnCwLHj8Tf
+ YRS6xbAb5NCY6/3hnPEk+xsQaxia6MP4a6XjVZSvoh9chZIbCYwa7XRJ+TOdhejZB+v7
+ XSe3hifUXqlRGwDwQJJUjbd8e+die4vTzQ+aF3wEY1CdthC5hOmZQere78SM0w/UZFJa
+ y1F1RpJmvyYHjzu9jq9fzTHoce2ebfeYA5vSKPJb2pXe3nPIQrp8MMBgMFftquXsLaI1 XQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2130.oracle.com with ESMTP id 2smsk5n948-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 23 May 2019 21:49:13 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4NLmFZJ185512;
+        Thu, 23 May 2019 21:49:12 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 2smsgvrm93-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 23 May 2019 21:49:12 +0000
+Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x4NLn8SI003595;
+        Thu, 23 May 2019 21:49:09 GMT
+Received: from [192.168.1.16] (/24.9.64.241)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 23 May 2019 21:49:08 +0000
+Subject: Re: [PATCH v15 00/17] arm64: untag user pointers passed to the kernel
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Evgenii Stepanov <eugenis@google.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
+        kvm@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alexander Deucher <Alexander.Deucher@amd.com>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
+        Elliott Hughes <enh@google.com>
+References: <cover.1557160186.git.andreyknvl@google.com>
+ <20190517144931.GA56186@arrakis.emea.arm.com>
+ <CAFKCwrj6JEtp4BzhqO178LFJepmepoMx=G+YdC8sqZ3bcBp3EQ@mail.gmail.com>
+ <20190521182932.sm4vxweuwo5ermyd@mbp> <201905211633.6C0BF0C2@keescook>
+ <6049844a-65f5-f513-5b58-7141588fef2b@oracle.com>
+ <20190523201105.oifkksus4rzcwqt4@mbp>
+From:   Khalid Aziz <khalid.aziz@oracle.com>
+Organization: Oracle Corp
+Message-ID: <ffe58af3-7c70-d559-69f6-1f6ebcb0fec6@oracle.com>
+Date:   Thu, 23 May 2019 15:49:05 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <20190523201105.oifkksus4rzcwqt4@mbp>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9266 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1905230139
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9266 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905230139
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PCI endpoint test function code should honor the .bar_fixed_size parameter
-from underlying endpoint controller drivers or results may be unexpected.
+On 5/23/19 2:11 PM, Catalin Marinas wrote:
+> Hi Khalid,
+>=20
+> On Thu, May 23, 2019 at 11:51:40AM -0600, Khalid Aziz wrote:
+>> On 5/21/19 6:04 PM, Kees Cook wrote:
+>>> As an aside: I think Sparc ADI support in Linux actually side-stepped=
 
-In pci_epf_test_alloc_space(), check if BAR being used for test register
-space is a fixed size BAR. If so, allocate the required fixed size.
+>>> this[1] (i.e. chose "solution 1"): "All addresses passed to kernel mu=
+st
+>>> be non-ADI tagged addresses." (And sadly, "Kernel does not enable ADI=
 
-Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
----
- drivers/pci/endpoint/functions/pci-epf-test.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+>>> for kernel code.") I think this was a mistake we should not repeat fo=
+r
+>>> arm64 (we do seem to be at least in agreement about this, I think).
+>>>
+>>> [1] https://lore.kernel.org/patchwork/patch/654481/
+>>
+>> That is a very early version of the sparc ADI patch. Support for tagge=
+d
+>> addresses in syscalls was added in later versions and is in the patch
+>> that is in the kernel.
+>=20
+> I tried to figure out but I'm not familiar with the sparc port. How did=
 
-diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-index 27806987e93b..7d41e6684b87 100644
---- a/drivers/pci/endpoint/functions/pci-epf-test.c
-+++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-@@ -434,10 +434,16 @@ static int pci_epf_test_alloc_space(struct pci_epf *epf)
- 	int bar;
- 	enum pci_barno test_reg_bar = epf_test->test_reg_bar;
- 	const struct pci_epc_features *epc_features;
-+	size_t test_reg_size;
- 
- 	epc_features = epf_test->epc_features;
- 
--	base = pci_epf_alloc_space(epf, sizeof(struct pci_epf_test_reg),
-+	if (epc_features->bar_fixed_size[test_reg_bar])
-+		test_reg_size = bar_size[test_reg_bar];
-+	else
-+		test_reg_size = sizeof(struct pci_epf_test_reg);
+> you solve the tagged address going into various syscall implementations=
+
+> in the kernel (e.g. sys_write)? Is the tag removed on kernel entry or i=
+t
+> ends up deeper in the core code?
+>=20
+
+Another spot I should point out in ADI patch - Tags are not stored in
+VMAs and IOMMU does not support ADI tags on M7. ADI tags are stripped
+before userspace addresses are passed to IOMMU in the following snippet
+from the patch:
+
+diff --git a/arch/sparc/mm/gup.c b/arch/sparc/mm/gup.c
+index 5335ba3c850e..357b6047653a 100644
+--- a/arch/sparc/mm/gup.c
++++ b/arch/sparc/mm/gup.c
+@@ -201,6 +202,24 @@ int __get_user_pages_fast(unsigned long start, int
+nr_pages
+, int write,
+        pgd_t *pgdp;
+        int nr =3D 0;
+
++#ifdef CONFIG_SPARC64
++       if (adi_capable()) {
++               long addr =3D start;
 +
-+	base = pci_epf_alloc_space(epf, test_reg_size,
- 				   test_reg_bar, epc_features->align);
- 	if (!base) {
- 		dev_err(dev, "Failed to allocated register space\n");
--- 
-2.7.4
++               /* If userspace has passed a versioned address, kernel
++                * will not find it in the VMAs since it does not store
++                * the version tags in the list of VMAs. Storing version
++                * tags in list of VMAs is impractical since they can be
++                * changed any time from userspace without dropping into
++                * kernel. Any address search in VMAs will be done with
++                * non-versioned addresses. Ensure the ADI version bits
++                * are dropped here by sign extending the last bit before=
+
++                * ADI bits. IOMMU does not implement version tags.
++                */
++               addr =3D (addr << (long)adi_nbits()) >> (long)adi_nbits()=
+;
++               start =3D addr;
++       }
++#endif
+        start &=3D PAGE_MASK;
+        addr =3D start;
+        len =3D (unsigned long) nr_pages << PAGE_SHIFT;
+
+
+--
+Khalid
+
 
