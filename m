@@ -4,57 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFE0FC282DE
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:38:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FAF1C282DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:38:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F5192075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:38:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BF732075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:38:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558640301;
-	bh=OGUu2Sgn161BC2t3viF5PL0nsPJFqDhoMlU0WpAaogM=;
+	s=default; t=1558640306;
+	bh=BsoZT09ICDrr9PYbWIynPJCrWWofqYTqYBk2e6ffaWw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZuPvWP5mkCHmAiHQ2QLsBYEdHT7FuXF1jbfNpnglWJo8D83zR3/P3artS4KDmxqUF
-	 aI5pbDHzIVrLmkWZwncuvwKvt/xofR7I9bQ33ioVwTBVZ+sRYZOqcxyctQ65fkF5iL
-	 s9sxeDSu+saS9xtygfCGiiLh68uHwloCyhBlfcm4=
+	b=09w5VeK1gqSf5WkyNJEIugEMWkNfltr2PLpW/I1hJ/gaNXQJ3r5h/aEO/cVK9a4zp
+	 JH0XlFn5mjqlwAYvOqcXr5dL423PUUbmflT1guD7SOhFZYNB2YvYcTQhuiRT9TW0yk
+	 eqhkKh1p53V6JH2ZOXiIUDu/hLXdKL3EpCu13q4I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391285AbfEWTiU (ORCPT
+        id S2390671AbfEWTXP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:38:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33760 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:23:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33376 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390689AbfEWTXY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:23:24 -0400
+        id S2389946AbfEWTXL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:23:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C78DB2133D;
-        Thu, 23 May 2019 19:23:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CAF9F217D9;
+        Thu, 23 May 2019 19:23:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639403;
-        bh=OGUu2Sgn161BC2t3viF5PL0nsPJFqDhoMlU0WpAaogM=;
+        s=default; t=1558639390;
+        bh=BsoZT09ICDrr9PYbWIynPJCrWWofqYTqYBk2e6ffaWw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Hb+8msRb3vaKvREwcdjpzVP7jZt5fWFbuZyxaL1gnc5igJTDgDWHGfUzwosFna/Bz
-         KVSQGbatpXItnP8U0Iawz7UCUz3NQLZgtTRDPHeibBSoZ/PQXHJ6l4CRC0ctVqZ2+E
-         lIPxEP1W6D/MJ2LsIElVV35Va1plIAMNbnnEecZ8=
+        b=UxHDdPc0I0s/v/LkJdXvBlUzAGA8ajOUIIgMGG8d/KZyhTUFEyj41xxvCVovAPAuh
+         4E4VjbYeQvvcok+uun/XiLF89Lw5jXNiny6ebhquiAVZVAUyJWmfwqqwwkNTsaZaaL
+         xODbcW/eTLSjrpEOqneJxyk/1QmTerBuOUKBZ7OM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, James Hilliard <james.hilliard1@gmail.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Borislav Petkov <bp@alien8.de>,
-        James Morse <james.morse@arm.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Matt Fleming <matt@codeblueprint.co.uk>,
-        Peter Jones <pjones@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 5.0 076/139] fbdev/efifb: Ignore framebuffer memmap entries that lack any memory types
-Date:   Thu, 23 May 2019 21:06:04 +0200
-Message-Id: <20190523181730.726918040@linuxfoundation.org>
+        stable@vger.kernel.org, Lyude Paul <lyude@redhat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        Karol Herbst <kherbst@redhat.com>,
+        Ben Skeggs <skeggsb@gmail.com>
+Subject: [PATCH 5.0 087/139] PCI: Reset Lenovo ThinkPad P50 nvgpu at boot if necessary
+Date:   Thu, 23 May 2019 21:06:15 +0200
+Message-Id: <20190523181732.035427564@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181720.120897565@linuxfoundation.org>
 References: <20190523181720.120897565@linuxfoundation.org>
@@ -67,75 +62,151 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+From: Lyude Paul <lyude@redhat.com>
 
-commit f8585539df0a1527c78b5d760665c89fe1c105a9 upstream.
+commit e0547c81bfcfad01cbbfa93a5e66bb98ab932f80 upstream.
 
-The following commit:
+On ThinkPad P50 SKUs with an Nvidia Quadro M1000M instead of the M2000M
+variant, the BIOS does not always reset the secondary Nvidia GPU during
+reboot if the laptop is configured in Hybrid Graphics mode.  The reason is
+unknown, but the following steps and possibly a good bit of patience will
+reproduce the issue:
 
-  38ac0287b7f4 ("fbdev/efifb: Honour UEFI memory map attributes when mapping the FB")
+  1. Boot up the laptop normally in Hybrid Graphics mode
+  2. Make sure nouveau is loaded and that the GPU is awake
+  3. Allow the Nvidia GPU to runtime suspend itself after being idle
+  4. Reboot the machine, the more sudden the better (e.g. sysrq-b may help)
+  5. If nouveau loads up properly, reboot the machine again and go back to
+     step 2 until you reproduce the issue
 
-updated the EFI framebuffer code to use memory mappings for the linear
-framebuffer that are permitted by the memory attributes described by the
-EFI memory map for the particular region, if the framebuffer happens to
-be covered by the EFI memory map (which is typically only the case for
-framebuffers in shared memory). This is required since non-x86 systems
-may require cacheable attributes for memory mappings that are shared
-with other masters (such as GPUs), and this information cannot be
-described by the Graphics Output Protocol (GOP) EFI protocol itself,
-and so we rely on the EFI memory map for this.
+This results in some very strange behavior: the GPU will be left in exactly
+the same state it was in when the previously booted kernel started the
+reboot.  This has all sorts of bad side effects: for starters, this
+completely breaks nouveau starting with a mysterious EVO channel failure
+that happens well before we've actually used the EVO channel for anything:
 
-As reported by James, this breaks some x86 systems:
+  nouveau 0000:01:00.0: disp: chid 0 mthd 0000 data 00000400 00001000 00000002
 
-  [ 1.173368] efifb: probing for efifb
-  [ 1.173386] efifb: abort, cannot remap video memory 0x1d5000 @ 0xcf800000
-  [ 1.173395] Trying to free nonexistent resource <00000000cf800000-00000000cf9d4bff>
-  [ 1.173413] efi-framebuffer: probe of efi-framebuffer.0 failed with error -5
+This causes a timeout trying to bring up the GR ctx:
 
-The problem turns out to be that the memory map entry that describes the
-framebuffer has no memory attributes listed at all, and so we end up with
-a mem_flags value of 0x0.
+  nouveau 0000:01:00.0: timeout
+  WARNING: CPU: 0 PID: 12 at drivers/gpu/drm/nouveau/nvkm/engine/gr/ctxgf100.c:1547 gf100_grctx_generate+0x7b2/0x850 [nouveau]
+  Hardware name: LENOVO 20EQS64N0B/20EQS64N0B, BIOS N1EET82W (1.55 ) 12/18/2018
+  Workqueue: events_long drm_dp_mst_link_probe_work [drm_kms_helper]
+  ...
+  nouveau 0000:01:00.0: gr: wait for idle timeout (en: 1, ctxsw: 0, busy: 1)
+  nouveau 0000:01:00.0: gr: wait for idle timeout (en: 1, ctxsw: 0, busy: 1)
+  nouveau 0000:01:00.0: fifo: fault 01 [WRITE] at 0000000000008000 engine 00 [GR] client 15 [HUB/SCC_NB] reason c4 [] on channel -1 [0000000000 unknown]
 
-So work around this by ensuring that the memory map entry's attribute field
-has a sane value before using it to mask the set of usable attributes.
+The GPU never manages to recover.  Booting without loading nouveau causes
+issues as well, since the GPU starts sending spurious interrupts that cause
+other device's IRQs to get disabled by the kernel:
 
-Reported-by: James Hilliard <james.hilliard1@gmail.com>
-Tested-by: James Hilliard <james.hilliard1@gmail.com>
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: <stable@vger.kernel.org> # v4.19+
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: James Morse <james.morse@arm.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Matt Fleming <matt@codeblueprint.co.uk>
-Cc: Peter Jones <pjones@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-efi@vger.kernel.org
-Fixes: 38ac0287b7f4 ("fbdev/efifb: Honour UEFI memory map attributes when ...")
-Link: http://lkml.kernel.org/r/20190516213159.3530-2-ard.biesheuvel@linaro.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+  irq 16: nobody cared (try booting with the "irqpoll" option)
+  ...
+  handlers:
+  [<000000007faa9e99>] i801_isr [i2c_i801]
+  Disabling IRQ #16
+  ...
+  serio: RMI4 PS/2 pass-through port at rmi4-00.fn03
+  i801_smbus 0000:00:1f.4: Timeout waiting for interrupt!
+  i801_smbus 0000:00:1f.4: Transaction timeout
+  rmi4_f03 rmi4-00.fn03: rmi_f03_pt_write: Failed to write to F03 TX register (-110).
+  i801_smbus 0000:00:1f.4: Timeout waiting for interrupt!
+  i801_smbus 0000:00:1f.4: Transaction timeout
+  rmi4_physical rmi4-00: rmi_driver_set_irq_bits: Failed to change enabled interrupts!
+
+This causes the touchpad and sometimes other things to get disabled.
+
+Since this happens without nouveau, we can't fix this problem from nouveau
+itself.
+
+Add a PCI quirk for the specific P50 variant of this GPU.  Make sure the
+GPU is advertising NoReset- so we don't reset the GPU when the machine is
+in Dedicated graphics mode (where the GPU being initialized by the BIOS is
+normal and expected).  Map the GPU MMIO space and read the magic 0x2240c
+register, which will have bit 1 set if the device was POSTed during a
+previous boot.  Once we've confirmed all of this, reset the GPU and
+re-disable it - bringing it back to a healthy state.
+
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=203003
+Link: https://lore.kernel.org/lkml/20190212220230.1568-1-lyude@redhat.com
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Cc: nouveau@lists.freedesktop.org
+Cc: dri-devel@lists.freedesktop.org
+Cc: Karol Herbst <kherbst@redhat.com>
+Cc: Ben Skeggs <skeggsb@gmail.com>
+Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/video/fbdev/efifb.c |    8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/pci/quirks.c |   58 +++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 58 insertions(+)
 
---- a/drivers/video/fbdev/efifb.c
-+++ b/drivers/video/fbdev/efifb.c
-@@ -476,8 +476,12 @@ static int efifb_probe(struct platform_d
- 		 * If the UEFI memory map covers the efifb region, we may only
- 		 * remap it using the attributes the memory map prescribes.
- 		 */
--		mem_flags |= EFI_MEMORY_WT | EFI_MEMORY_WB;
--		mem_flags &= md.attribute;
-+		md.attribute &= EFI_MEMORY_UC | EFI_MEMORY_WC |
-+				EFI_MEMORY_WT | EFI_MEMORY_WB;
-+		if (md.attribute) {
-+			mem_flags |= EFI_MEMORY_WT | EFI_MEMORY_WB;
-+			mem_flags &= md.attribute;
-+		}
- 	}
- 	if (mem_flags & EFI_MEMORY_WC)
- 		info->screen_base = ioremap_wc(efifb_fix.smem_start,
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -5122,3 +5122,61 @@ SWITCHTEC_QUIRK(0x8573);  /* PFXI 48XG3
+ SWITCHTEC_QUIRK(0x8574);  /* PFXI 64XG3 */
+ SWITCHTEC_QUIRK(0x8575);  /* PFXI 80XG3 */
+ SWITCHTEC_QUIRK(0x8576);  /* PFXI 96XG3 */
++
++/*
++ * On Lenovo Thinkpad P50 SKUs with a Nvidia Quadro M1000M, the BIOS does
++ * not always reset the secondary Nvidia GPU between reboots if the system
++ * is configured to use Hybrid Graphics mode.  This results in the GPU
++ * being left in whatever state it was in during the *previous* boot, which
++ * causes spurious interrupts from the GPU, which in turn causes us to
++ * disable the wrong IRQ and end up breaking the touchpad.  Unsurprisingly,
++ * this also completely breaks nouveau.
++ *
++ * Luckily, it seems a simple reset of the Nvidia GPU brings it back to a
++ * clean state and fixes all these issues.
++ *
++ * When the machine is configured in Dedicated display mode, the issue
++ * doesn't occur.  Fortunately the GPU advertises NoReset+ when in this
++ * mode, so we can detect that and avoid resetting it.
++ */
++static void quirk_reset_lenovo_thinkpad_p50_nvgpu(struct pci_dev *pdev)
++{
++	void __iomem *map;
++	int ret;
++
++	if (pdev->subsystem_vendor != PCI_VENDOR_ID_LENOVO ||
++	    pdev->subsystem_device != 0x222e ||
++	    !pdev->reset_fn)
++		return;
++
++	if (pci_enable_device_mem(pdev))
++		return;
++
++	/*
++	 * Based on nvkm_device_ctor() in
++	 * drivers/gpu/drm/nouveau/nvkm/engine/device/base.c
++	 */
++	map = pci_iomap(pdev, 0, 0x23000);
++	if (!map) {
++		pci_err(pdev, "Can't map MMIO space\n");
++		goto out_disable;
++	}
++
++	/*
++	 * Make sure the GPU looks like it's been POSTed before resetting
++	 * it.
++	 */
++	if (ioread32(map + 0x2240c) & 0x2) {
++		pci_info(pdev, FW_BUG "GPU left initialized by EFI, resetting\n");
++		ret = pci_reset_function(pdev);
++		if (ret < 0)
++			pci_err(pdev, "Failed to reset GPU: %d\n", ret);
++	}
++
++	iounmap(map);
++out_disable:
++	pci_disable_device(pdev);
++}
++DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_NVIDIA, 0x13b1,
++			      PCI_CLASS_DISPLAY_VGA, 8,
++			      quirk_reset_lenovo_thinkpad_p50_nvgpu);
 
 
