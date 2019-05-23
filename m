@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BDF5C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:16:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D572C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:16:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03F4E21841
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:16:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08A682184E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:16:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639002;
-	bh=HouLTLqIqjRCwjXfcBrJZTlxNRJEi9ykC66tBSDO8QI=;
+	s=default; t=1558639005;
+	bh=oe3Ks5A33FJZZy8e0C9HZahremKFJ9LlOQk49bdyEpU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0xXL+6qDSdIq9bYewSJuuFchf9P2WVRVGv7WGVDe5MDc7LXe1UnjD3nQnTpAKHbuL
-	 mOqUgvpyfZDqWKumAJYd59PVBFjg3mGtxTPT79PBrjmi5Hq74kdkdVgqFew/SfMd80
-	 M4dpH+Oau2w/CW8uVwDlTtZ4ONNxOfOkPT9qPF1c=
+	b=f3Dp/8XVBagjbkgLSQgNHnmGTaLQuEjKupa2gqbbO52E3SQRov26ICcjG57bTDTuP
+	 Z+JfdkJx9yKmzix5IyPKNx/kCU/Bi3srYlIou0+tcKjXEAq1apT2tZkAwoxaNLaKVV
+	 tF1iVYKGm3yR9+J1nkgTxgXHVUW7/W2OZt2fjpJQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389232AbfEWTQk (ORCPT
+        id S2389239AbfEWTQn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:16:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51284 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:16:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51322 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388819AbfEWTQf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:16:35 -0400
+        id S2388748AbfEWTQi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:16:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3E63E217D7;
-        Thu, 23 May 2019 19:16:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 105AF217D9;
+        Thu, 23 May 2019 19:16:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558638994;
-        bh=HouLTLqIqjRCwjXfcBrJZTlxNRJEi9ykC66tBSDO8QI=;
+        s=default; t=1558638997;
+        bh=oe3Ks5A33FJZZy8e0C9HZahremKFJ9LlOQk49bdyEpU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=drF109dy9gMnI0oKmipeY+T12O2063Dg8g3HyLNNugib1GTOIJW6F06szZKs6RPmL
-         844nPesqK2ZD0oRaVeHJoZDMpKvf6YxQi6a/KW5JtGwO9tfZrv5KkmxOQtkc8sNAla
-         1XvJLZoOn9/FFx1MXKSfdBs8fsNchaEsoJoQORcs=
+        b=QIOg1LOPaLYhDpYuXZmYkcYnW26ALIr/YUzfkeuOxCPHEq/4f2Dv/Z583kNoK+JDB
+         NDEHAiytKsrUZBgVJWuL8+mJj4znbGXY+DMM7u8WO6MjhnEIHuu9dO9oV/ZWZEH2Kg
+         5d9xP2Qux9BnSiooY0Hpv4cq7WpS9uPFwG58B99g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 4.19 049/114] iommu/tegra-smmu: Fix invalid ASID bits on Tegra30/114
-Date:   Thu, 23 May 2019 21:05:48 +0200
-Message-Id: <20190523181736.156742338@linuxfoundation.org>
+        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 4.19 058/114] perf intel-pt: Fix sample timestamp wrt non-taken branches
+Date:   Thu, 23 May 2019 21:05:57 +0200
+Message-Id: <20190523181736.849861730@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181731.372074275@linuxfoundation.org>
 References: <20190523181731.372074275@linuxfoundation.org>
@@ -60,81 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Osipenko <digetx@gmail.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
 
-commit 43a0541e312f7136e081e6bf58f6c8a2e9672688 upstream.
+commit 1b6599a9d8e6c9f7e9b0476012383b1777f7fc93 upstream.
 
-Both Tegra30 and Tegra114 have 4 ASID's and the corresponding bitfield of
-the TLB_FLUSH register differs from later Tegra generations that have 128
-ASID's.
+The sample timestamp is updated to ensure that the timestamp represents
+the time of the sample and not a branch that the decoder is still
+walking towards. The sample timestamp is updated when the decoder
+returns, but the decoder does not return for non-taken branches. Update
+the sample timestamp then also.
 
-In a result the PTE's are now flushed correctly from TLB and this fixes
-problems with graphics (randomly failing tests) on Tegra30.
+Note that commit 3f04d98e972b5 ("perf intel-pt: Improve sample
+timestamp") was also a stable fix and appears, for example, in v4.4
+stable tree as commit a4ebb58fd124 ("perf intel-pt: Improve sample
+timestamp").
 
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-Acked-by: Thierry Reding <treding@nvidia.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: stable@vger.kernel.org # v4.4+
+Fixes: 3f04d98e972b ("perf intel-pt: Improve sample timestamp")
+Link: http://lkml.kernel.org/r/20190510124143.27054-4-adrian.hunter@intel.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iommu/tegra-smmu.c |   25 ++++++++++++++++++-------
- 1 file changed, 18 insertions(+), 7 deletions(-)
+ tools/perf/util/intel-pt-decoder/intel-pt-decoder.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/drivers/iommu/tegra-smmu.c
-+++ b/drivers/iommu/tegra-smmu.c
-@@ -102,7 +102,6 @@ static inline u32 smmu_readl(struct tegr
- #define  SMMU_TLB_FLUSH_VA_MATCH_ALL     (0 << 0)
- #define  SMMU_TLB_FLUSH_VA_MATCH_SECTION (2 << 0)
- #define  SMMU_TLB_FLUSH_VA_MATCH_GROUP   (3 << 0)
--#define  SMMU_TLB_FLUSH_ASID(x)          (((x) & 0x7f) << 24)
- #define  SMMU_TLB_FLUSH_VA_SECTION(addr) ((((addr) & 0xffc00000) >> 12) | \
- 					  SMMU_TLB_FLUSH_VA_MATCH_SECTION)
- #define  SMMU_TLB_FLUSH_VA_GROUP(addr)   ((((addr) & 0xffffc000) >> 12) | \
-@@ -205,8 +204,12 @@ static inline void smmu_flush_tlb_asid(s
- {
- 	u32 value;
- 
--	value = SMMU_TLB_FLUSH_ASID_MATCH | SMMU_TLB_FLUSH_ASID(asid) |
--		SMMU_TLB_FLUSH_VA_MATCH_ALL;
-+	if (smmu->soc->num_asids == 4)
-+		value = (asid & 0x3) << 29;
-+	else
-+		value = (asid & 0x7f) << 24;
-+
-+	value |= SMMU_TLB_FLUSH_ASID_MATCH | SMMU_TLB_FLUSH_VA_MATCH_ALL;
- 	smmu_writel(smmu, value, SMMU_TLB_FLUSH);
- }
- 
-@@ -216,8 +219,12 @@ static inline void smmu_flush_tlb_sectio
- {
- 	u32 value;
- 
--	value = SMMU_TLB_FLUSH_ASID_MATCH | SMMU_TLB_FLUSH_ASID(asid) |
--		SMMU_TLB_FLUSH_VA_SECTION(iova);
-+	if (smmu->soc->num_asids == 4)
-+		value = (asid & 0x3) << 29;
-+	else
-+		value = (asid & 0x7f) << 24;
-+
-+	value |= SMMU_TLB_FLUSH_ASID_MATCH | SMMU_TLB_FLUSH_VA_SECTION(iova);
- 	smmu_writel(smmu, value, SMMU_TLB_FLUSH);
- }
- 
-@@ -227,8 +234,12 @@ static inline void smmu_flush_tlb_group(
- {
- 	u32 value;
- 
--	value = SMMU_TLB_FLUSH_ASID_MATCH | SMMU_TLB_FLUSH_ASID(asid) |
--		SMMU_TLB_FLUSH_VA_GROUP(iova);
-+	if (smmu->soc->num_asids == 4)
-+		value = (asid & 0x3) << 29;
-+	else
-+		value = (asid & 0x7f) << 24;
-+
-+	value |= SMMU_TLB_FLUSH_ASID_MATCH | SMMU_TLB_FLUSH_VA_GROUP(iova);
- 	smmu_writel(smmu, value, SMMU_TLB_FLUSH);
- }
- 
+--- a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
++++ b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
+@@ -1313,8 +1313,11 @@ static int intel_pt_walk_tnt(struct inte
+ 				return 0;
+ 			}
+ 			decoder->ip += intel_pt_insn.length;
+-			if (!decoder->tnt.count)
++			if (!decoder->tnt.count) {
++				decoder->sample_timestamp = decoder->timestamp;
++				decoder->sample_insn_cnt = decoder->timestamp_insn_cnt;
+ 				return -EAGAIN;
++			}
+ 			decoder->tnt.payload <<= 1;
+ 			continue;
+ 		}
 
 
