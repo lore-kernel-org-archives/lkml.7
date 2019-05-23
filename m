@@ -2,131 +2,107 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6064C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:38:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00CDDC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:38:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BD0720881
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:38:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558640314;
-	bh=uoGfpUeuIvKrRjJ8W9UmvXGRoaQW3kSZZ1iO8OjKlIc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nNEyy8ZIn+oBKUkUb4CGl+UFHCs2lN75FMzqx/AlJ1OlEKJ8mtYlV6JTOi5B/aZ5I
-	 VR4LrO2CNolx9YbxcAkU++mUscVVGaUxlBdGQYrppEyrBG4w68Pyx8uhxy7S8WRCeE
-	 m05VHYMGewPZcKhD/bITxk9S1oArv4pqnayiimqw=
+	by mail.kernel.org (Postfix) with ESMTP id CA3F62075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:38:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dEsVb+71"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391339AbfEWTie (ORCPT
+        id S2391384AbfEWTik (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:38:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33436 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390653AbfEWTXN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:23:13 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B4E02054F;
-        Thu, 23 May 2019 19:23:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639393;
-        bh=uoGfpUeuIvKrRjJ8W9UmvXGRoaQW3kSZZ1iO8OjKlIc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DwvfWQEehGmIrjPcKGZ2hQdrf1T2XqrcN00/6m3LMIiRXpKIeQNAqxYpSO5iP/m29
-         9J+eYyodZ0Bg2szFOhNDPRGfkVjILNSo3p01Q6mOEYcqoihOyXVvJv4OLzT+mT4lzu
-         C3Gd0HPfSnK2cy18dwkFpUpx5x29dCTqOBaqxx6M=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 5.0 088/139] PCI: Init PCIe feature bits for managed host bridge alloc
-Date:   Thu, 23 May 2019 21:06:16 +0200
-Message-Id: <20190523181732.147946351@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190523181720.120897565@linuxfoundation.org>
-References: <20190523181720.120897565@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 23 May 2019 15:38:40 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:52901 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390653AbfEWTii (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:38:38 -0400
+Received: by mail-wm1-f67.google.com with SMTP id y3so7046269wmm.2
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 12:38:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=usHFsL/Ku0+Qt69lCmqe22nPRQ+KCZhK+aj6hDp84KA=;
+        b=dEsVb+717tCpXM8S8/JVSdaPBKgC83leuc1FOaorAZjd+ULMl6eVEbEy2UPyYsCWUS
+         mZh7R6nEIeJNMWh3SVxRpUQG4GqALYcrNmdzk5ytH9Li/qOOm8nlLHyKs+qYkU8r3392
+         ma2KBLIJutn+5Gmum7VdZSYnYE52esHH2dxBAJ6hW2VRC353R0zjMxfFV2327qj+KdU2
+         aPHX7J9eB+KtvkI8MM0Yt59wOkgZLOcMrbe/pc+3hbJG90+avzfCAoAGezfgnU4D95OC
+         +a8BEz2AA0Qyc5zDGQL/+pI/U3Zt2lgbkKZrEq7qNvP5Apux5z8CxI/YRrJgv6UnrheQ
+         +0ZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=usHFsL/Ku0+Qt69lCmqe22nPRQ+KCZhK+aj6hDp84KA=;
+        b=OflHMISr5Y13ktDIFQ04MWuWky51GZcnnk7bWU2plAox7X0Xfvv4kxLAaXYTcAPyTv
+         djcvfztwfYOWyyqHP1qVOAqqS/hpo0zKPoNwp1tVb0zs3xW5c+8izO2XESr0cI6uzVPC
+         8/Z1pWn+M6gj1tTCyxpowtRnbbFFAkVmnVT/CZ7EXMY4bIt8HO0ZuU3HDRCAIHoDUK/9
+         w3PfEJThYIo1oVp+0Rc4qZKEvjdTqvKSSx5bFWQODFcm1ttJxq1qE42oa9gvGEr8J1ou
+         obLqknWGRfN/6WSJk5Tt2bAcj/8sHbuNaBCNimeANC4cRMWtRcrzXv/bPDP5Rcm25O5Y
+         mcFw==
+X-Gm-Message-State: APjAAAUYtGg5gq1JLfURQDMC+ZY6YT0TZi+3YoPOSLoYnzIAFWXDqYXP
+        1brio54Ekwu4QPoNZFtrEQj3Wg==
+X-Google-Smtp-Source: APXvYqw6ha7d5sNzeDFQr/ijdtNE/bEpoeVCKgQGVyf/DObuR09g3pB8MvOSpCNmuBgVeq+biOQ4CA==
+X-Received: by 2002:a1c:20d7:: with SMTP id g206mr12847712wmg.136.1558640315678;
+        Thu, 23 May 2019 12:38:35 -0700 (PDT)
+Received: from [192.168.43.165] ([37.170.182.188])
+        by smtp.googlemail.com with ESMTPSA id o6sm365890wrh.55.2019.05.23.12.38.34
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 23 May 2019 12:38:35 -0700 (PDT)
+Subject: Re: [PATCH] clocksource/drivers/ixp4xx: Implement delay timer
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+References: <20190523181602.3284-1-linus.walleij@linaro.org>
+ <3496e81f-ea63-794d-0d8a-8eba9f2f6853@linaro.org>
+ <CACRpkdZ5LCeqkvJrN-TAcSy7knNOQhGV7M_wfZZ4Rz5ah87KnA@mail.gmail.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <08ab3a6e-5167-02e8-9d46-0186b92c8a71@linaro.org>
+Date:   Thu, 23 May 2019 21:38:33 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <CACRpkdZ5LCeqkvJrN-TAcSy7knNOQhGV7M_wfZZ4Rz5ah87KnA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+On 23/05/2019 21:34, Linus Walleij wrote:
+> On Thu, May 23, 2019 at 9:21 PM Daniel Lezcano
+> <daniel.lezcano@linaro.org> wrote:
+>> On 23/05/2019 20:16, Linus Walleij wrote:
+> 
+>>> This adds delay timer functionality to the IXP4xx
+>>> timer driver.
+>>>
+>>> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+>>
+>> The patch does not apply on tip/timers/core
+> 
+> This seems to be because tip/timers/core is not yet containing
+> the commits from v5.2-rc1.
+> 
+> Maybe I just send my patches too early after the merge window :)
 
-commit 6302bf3ef78dd210b5ff4a922afcb7d8eff8a211 upstream.
+Ok, I see thanks!
 
-Two functions allocate a host bridge: devm_pci_alloc_host_bridge() and
-pci_alloc_host_bridge().  At the moment, only the unmanaged one initializes
-the PCIe feature bits, which prevents from using features such as hotplug
-or AER on some systems, when booting with device tree.  Make the
-initialization code common.
 
-Fixes: 02bfeb484230 ("PCI/portdrv: Simplify PCIe feature permission checking")
-Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-CC: stable@vger.kernel.org	# v4.17+
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
----
- drivers/pci/probe.c |   23 ++++++++++++++---------
- 1 file changed, 14 insertions(+), 9 deletions(-)
-
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -535,16 +535,9 @@ static void pci_release_host_bridge_dev(
- 	kfree(to_pci_host_bridge(dev));
- }
- 
--struct pci_host_bridge *pci_alloc_host_bridge(size_t priv)
-+static void pci_init_host_bridge(struct pci_host_bridge *bridge)
- {
--	struct pci_host_bridge *bridge;
--
--	bridge = kzalloc(sizeof(*bridge) + priv, GFP_KERNEL);
--	if (!bridge)
--		return NULL;
--
- 	INIT_LIST_HEAD(&bridge->windows);
--	bridge->dev.release = pci_release_host_bridge_dev;
- 
- 	/*
- 	 * We assume we can manage these PCIe features.  Some systems may
-@@ -557,6 +550,18 @@ struct pci_host_bridge *pci_alloc_host_b
- 	bridge->native_shpc_hotplug = 1;
- 	bridge->native_pme = 1;
- 	bridge->native_ltr = 1;
-+}
-+
-+struct pci_host_bridge *pci_alloc_host_bridge(size_t priv)
-+{
-+	struct pci_host_bridge *bridge;
-+
-+	bridge = kzalloc(sizeof(*bridge) + priv, GFP_KERNEL);
-+	if (!bridge)
-+		return NULL;
-+
-+	pci_init_host_bridge(bridge);
-+	bridge->dev.release = pci_release_host_bridge_dev;
- 
- 	return bridge;
- }
-@@ -571,7 +576,7 @@ struct pci_host_bridge *devm_pci_alloc_h
- 	if (!bridge)
- 		return NULL;
- 
--	INIT_LIST_HEAD(&bridge->windows);
-+	pci_init_host_bridge(bridge);
- 	bridge->dev.release = devm_pci_release_host_bridge_dev;
- 
- 	return bridge;
-
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
