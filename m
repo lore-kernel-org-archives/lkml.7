@@ -2,166 +2,126 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F1C3C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 12:00:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F6F1C282E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 12:02:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B5C220881
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 12:00:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EECF21019
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 12:02:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="mYh3up+P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730477AbfEWMAu (ORCPT
+        id S1730529AbfEWMCK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 08:00:50 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:46804 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729698AbfEWMAt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 08:00:49 -0400
-Received: by mail-wr1-f65.google.com with SMTP id r7so5942839wrr.13
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 05:00:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to;
-        bh=kK5j/gHOq84BsPW6f6bpX4ZZR9uGYZS8v5NTjclW2MI=;
-        b=uNiRsWhgXRafBIlxL8nfzEasHOyoFkcmMIr2KimeCVSPPgR61tEwrgZA60d7asHi9j
-         wIaWRLb/tMs4drIfYH9ehNdq7BBOg0rJ54glLK0JqdrY11MQC6YR2LVW7UE139dMHs/Z
-         g2iYaudUFclHbEDHMUwg4Tz+0dWVZtVDixGkivvG61for8gnqIVQfncty0AEldYmVDtO
-         NrYLsellLM5klAeIYRSEGZ5S5ri4Ls2dQSNT8KjcuSVDqV0A1eRVufeScYkYB0s+KZqi
-         6dgewh1WiuEHQ9V0kLB6VI30x+ZSKlELODWsv5rLc30yBShRrJ1e1E+3qXz4z7/YzntI
-         98XQ==
-X-Gm-Message-State: APjAAAVgEnXYPcBBGjJaB28CEctvZlwQUvXbws632T1A9rM6VJxcZXvM
-        4x5ilQTG65yeSNFIaeLMHUjmCA==
-X-Google-Smtp-Source: APXvYqzwLNqb2vVtGLlLihX2MEb17pbb/o5OQOxM+abjogysd5XSy+Jvy2mUO+jFwq610+25kTZ2TA==
-X-Received: by 2002:adf:ea89:: with SMTP id s9mr1952317wrm.322.1558612847790;
-        Thu, 23 May 2019 05:00:47 -0700 (PDT)
-Received: from [192.168.1.38] (228.red-83-52-173.dynamicip.rima-tde.net. [83.52.173.228])
-        by smtp.gmail.com with ESMTPSA id w185sm10728213wma.39.2019.05.23.05.00.46
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Thu, 23 May 2019 05:00:47 -0700 (PDT)
-Subject: Re: [Qemu-devel] Running linux on qemu omap
-To:     Thomas Huth <thuth@redhat.com>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Corentin Labbe <clabbe.montjoie@gmail.com>
-Cc:     Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org,
-        qemu-devel@nongnu.org, linux-kernel@vger.kernel.org,
-        Peter Maydell <peter.maydell@linaro.org>
-References: <20190520190533.GA28160@Red>
- <20190521232323.GD3621@darkstar.musicnaut.iki.fi>
- <20190522093341.GA32154@Red>
- <20190522181904.GE3621@darkstar.musicnaut.iki.fi>
- <8977e2bb-8d9e-f4fd-4c44-b4f67e0e7314@redhat.com>
-From:   =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <philmd@redhat.com>
-Openpgp: id=89C1E78F601EE86C867495CBA2A3FD6EDEADC0DE;
- url=http://pgp.mit.edu/pks/lookup?op=get&search=0xA2A3FD6EDEADC0DE
-Message-ID: <c2972889-fe60-7614-fb6e-e57ddf780a54@redhat.com>
-Date:   Thu, 23 May 2019 14:00:41 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thu, 23 May 2019 08:02:10 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:9815 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728309AbfEWMCJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 08:02:09 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 458p5V4Lx7z9v2NT;
+        Thu, 23 May 2019 14:02:06 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=mYh3up+P; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id t0X21tqOHZa6; Thu, 23 May 2019 14:02:06 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 458p5V2pLmz9v2NS;
+        Thu, 23 May 2019 14:02:06 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1558612926; bh=dxjR5/OUEbuHjryrELjiCz2BmB568YPeDBsdsR3B27c=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=mYh3up+PAV5q1CkXEn+MOv/nsPx6DdMICOFeThJ9qrLIPZA+jhtbkBC+HHc9/cL0A
+         hZ2n1Zjj7fl/dhUGlc8qA57UwniCg+wLUPsvmBPHhgH6vGW6sFn8oCHfLDVYRlxTco
+         ll+LSYtlKlkVUYiJJDsANgkM8wdmay41mIKPj+do=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 9C6A68B860;
+        Thu, 23 May 2019 14:02:07 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id r1aNl5ZvA7nM; Thu, 23 May 2019 14:02:07 +0200 (CEST)
+Received: from PO15451 (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 895C78B858;
+        Thu, 23 May 2019 14:02:06 +0200 (CEST)
+Subject: Re: [PATCH] powerpc/power: Expose pfn_is_nosave prototype
+To:     Mathieu Malaterre <malat@debian.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Len Brown <len.brown@intel.com>, linux-pm@vger.kernel.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        linux-kernel@vger.kernel.org, Paul Mackerras <paulus@samba.org>,
+        Pavel Machek <pavel@ucw.cz>, linuxppc-dev@lists.ozlabs.org
+References: <20190523114736.30268-1-malat@debian.org>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <11ffdbd5-60a9-b1fa-aa83-9d3c60e3d462@c-s.fr>
+Date:   Thu, 23 May 2019 14:02:05 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <8977e2bb-8d9e-f4fd-4c44-b4f67e0e7314@redhat.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="N3gK20x9xpooVg0mf1GhPnBDZSkp1nIkO"
+In-Reply-To: <20190523114736.30268-1-malat@debian.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---N3gK20x9xpooVg0mf1GhPnBDZSkp1nIkO
-Content-Type: multipart/mixed; boundary="PdV5Opk5aiZJQzRy0CJ7xPo7FQaFRUuX4";
- protected-headers="v1"
-From: =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <philmd@redhat.com>
-To: Thomas Huth <thuth@redhat.com>, Aaro Koskinen <aaro.koskinen@iki.fi>,
- Corentin Labbe <clabbe.montjoie@gmail.com>
-Cc: Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org,
- qemu-devel@nongnu.org, linux-kernel@vger.kernel.org,
- Peter Maydell <peter.maydell@linaro.org>
-Message-ID: <c2972889-fe60-7614-fb6e-e57ddf780a54@redhat.com>
-Subject: Re: [Qemu-devel] Running linux on qemu omap
-References: <20190520190533.GA28160@Red>
- <20190521232323.GD3621@darkstar.musicnaut.iki.fi>
- <20190522093341.GA32154@Red>
- <20190522181904.GE3621@darkstar.musicnaut.iki.fi>
- <8977e2bb-8d9e-f4fd-4c44-b4f67e0e7314@redhat.com>
-In-Reply-To: <8977e2bb-8d9e-f4fd-4c44-b4f67e0e7314@redhat.com>
-
---PdV5Opk5aiZJQzRy0CJ7xPo7FQaFRUuX4
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-
-On 5/23/19 1:27 PM, Thomas Huth wrote:
-> On 22/05/2019 20.19, Aaro Koskinen wrote:
->> Hi,
->>
->> On Wed, May 22, 2019 at 11:33:41AM +0200, Corentin Labbe wrote:
->>> qemu-system-arm -M help |grep OMAP
->>> cheetah              Palm Tungsten|E aka. Cheetah PDA (OMAP310)
->>> n800                 Nokia N800 tablet aka. RX-34 (OMAP2420)
->>> n810                 Nokia N810 tablet aka. RX-44 (OMAP2420)
->>> sx1                  Siemens SX1 (OMAP310) V2
->>> sx1-v1               Siemens SX1 (OMAP310) V1
->>>
->>>>> The maximum I can get with omap1_defconfig is
->>>>> qemu-system-arm -kernel zImage -nographic -machine cheetah -append =
-'root=3D/dev/ram0 console=3DttyO0'
->>>>> Uncompressing Linux... done, booting the kernel.
->>>>> then nothing more.
->>
->> With N800/N810 omap2plus_defconfig should be used instead. However,
->> I don't think that works either (but haven't tried recently). Also wit=
-h
->> N800/N810 you need to append the DTB file to the kernel image.
->=20
-> FWIW, Philippe recently posted a mail how to run older kernels on n810:=
-
->=20
-> https://www.mail-archive.com/qemu-devel@nongnu.org/msg610653.html
-
-What I use as reference for testing ARM boards [*] is the work of
-Guenter Roeck:
-https://github.com/groeck/linux-build-test/blob/master/rootfs/arm/run-qem=
-u-arm.sh
-
-However I can see than none of the board listed by Corentin are tested
-=2E.. That reminder me I never succeed at using the Cheetah PDA. So the
-OMAP310 is probably bitroting in QEMU...
-
-[*] and slowly add to upstream patches he sent that fell through the
-cracks of qemu-devel.
-
-Regards,
-
-Phil.
 
 
---PdV5Opk5aiZJQzRy0CJ7xPo7FQaFRUuX4--
+Le 23/05/2019 à 13:47, Mathieu Malaterre a écrit :
+> The declaration for pfn_is_nosave is only available in
+> kernel/power/power.h. Since this function can be override in arch,
+> expose it globally. Having a prototype will make sure to avoid warning
+> (sometime treated as error with W=1) such as:
+> 
+>    arch/powerpc/kernel/suspend.c:18:5: error: no previous prototype for 'pfn_is_nosave' [-Werror=missing-prototypes]
+> 
+> This moves the declaration into a globally visible header file and add
+> missing include to avoid a warning in powerpc.
 
---N3gK20x9xpooVg0mf1GhPnBDZSkp1nIkO
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+Then you should also drop it from kernel/power/power.h and 
+arch/s390/kernel/entry.h
 
------BEGIN PGP SIGNATURE-----
+Christophe
 
-iQIzBAEBCAAdFiEEicHnj2Ae6GyGdJXLoqP9bt6twN4FAlzmi20ACgkQoqP9bt6t
-wN5i6xAAuRhP+m1TluijQk+H4g7hsK/vz9VkbGudZ6gk2C/UtPJg2KvLWw1lMCuL
-sy2snYHuKXs90yRbe1D4Ivf0HHzekXCPi94YxEckWh4UQO5J3SqCB5CSlq4HoMcj
-frBtor0Zfn3pKxHSIvIse+kcAem/JR5NJAqWALlpZz2vz+SOQ9IrhFfDgCr8ez0z
-oaFQ1JC93fGzGfXdTa/LkvANHt2f0JSknpqu7yJpN2ZmNVizpDkGo1bbHsPJqotv
-P+EUSvihxvNjkQz0hXALVoXG1WKQeGHCi6+ZnoeQnV029DVQdj5tJIL3wGAANXNY
-o584oXdqeJ3bRvqUi945CyGhrvTqPDL85t6AEuRln31we2LcnB/Rq+iA7M+UX7ZM
-9xF63BmSEDZxHpBBi4EYc4DpVmDJXhZjYSiVCQbXVoMCFt6RbFHCKxIyFlmjod+S
-i/lRnzNbTEj1+5LuYHiN09ILJqjQqp7oVhDcBevKLwT1N8TTNpuwQwx31nL54tBa
-Y8InAsmpjgduXTu9vpDvK68F5TpoY0I0RROdj+Z5wrFJ9sTIfo7E58p+w9XivXww
-+v6oCr6Dod3t5UwvxyAZTQuOce6Sqk1i4oBMNCZ8OIP8tVM9Pi90pwfOgtb62EEj
-czDvTUF8Bt5W6/3Px5fW8FDR0HhejhunK4B0s40hH1ZqT/TXyog=
-=LlYn
------END PGP SIGNATURE-----
-
---N3gK20x9xpooVg0mf1GhPnBDZSkp1nIkO--
+> 
+> Signed-off-by: Mathieu Malaterre <malat@debian.org>
+> ---
+>   arch/powerpc/kernel/suspend.c | 1 +
+>   include/linux/suspend.h       | 1 +
+>   2 files changed, 2 insertions(+)
+> 
+> diff --git a/arch/powerpc/kernel/suspend.c b/arch/powerpc/kernel/suspend.c
+> index a531154cc0f3..9e1b6b894245 100644
+> --- a/arch/powerpc/kernel/suspend.c
+> +++ b/arch/powerpc/kernel/suspend.c
+> @@ -8,6 +8,7 @@
+>    */
+>   
+>   #include <linux/mm.h>
+> +#include <linux/suspend.h>
+>   #include <asm/page.h>
+>   #include <asm/sections.h>
+>   
+> diff --git a/include/linux/suspend.h b/include/linux/suspend.h
+> index 3f529ad9a9d2..2660bbdf5230 100644
+> --- a/include/linux/suspend.h
+> +++ b/include/linux/suspend.h
+> @@ -395,6 +395,7 @@ extern bool system_entering_hibernation(void);
+>   extern bool hibernation_available(void);
+>   asmlinkage int swsusp_save(void);
+>   extern struct pbe *restore_pblist;
+> +int pfn_is_nosave(unsigned long pfn);
+>   #else /* CONFIG_HIBERNATION */
+>   static inline void register_nosave_region(unsigned long b, unsigned long e) {}
+>   static inline void register_nosave_region_late(unsigned long b, unsigned long e) {}
+> 
