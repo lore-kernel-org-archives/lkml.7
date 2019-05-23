@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48428C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:27:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0077C282DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:27:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15426217D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:27:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7FAF217D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:27:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639631;
-	bh=qqtzSOErxlsiyQ+y/Ki7LFxgaKu2TqUXZ3UHTW02tIA=;
+	s=default; t=1558639632;
+	bh=3ZhTXSwncieJow4pLP8cZK9G6BTxT9zbZnxIHYnH+bs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EDNjKi0vg4SZ3bXEg712Yvcddf0ZC8Rw80aSnHcRg5lrucP7/sybub6Jal19cZD0G
-	 8vlT5sBO4msLY9W7XbQMAgtMDLFTjmMu/ZX15cr27noAXmA0x+SFo/X7Bupi+woclx
-	 8f291uzMxHQRc1dJoi9X2rCOpyTxKXAzcZfjckDk=
+	b=xeW9In7HIjJc9w5XkaM7ycSRo3SPvjmB55E6+Nm7XImgiAzsoOkEBVpAYrFuImIwK
+	 59QrlHgqtged29zgAisEVAQgFv0kVtNYr8Br7hJw9kF6kILHAO0AYZymdZuCCLW8Gt
+	 NO8HC4FeeNAaQUxW+OhdU3yd355E9gi+UO2ep/34=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391511AbfEWT1K (ORCPT
+        id S2391551AbfEWT1M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:27:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39254 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:27:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39292 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389926AbfEWT1H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:27:07 -0400
+        id S2391536AbfEWT1K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:27:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6123D21841;
-        Thu, 23 May 2019 19:27:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 06E8D206BA;
+        Thu, 23 May 2019 19:27:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639626;
-        bh=qqtzSOErxlsiyQ+y/Ki7LFxgaKu2TqUXZ3UHTW02tIA=;
+        s=default; t=1558639629;
+        bh=3ZhTXSwncieJow4pLP8cZK9G6BTxT9zbZnxIHYnH+bs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D5lN31LUs39FjX+liGDtCprWQcslWuMNyGx5/QzVdaE0juCeuYBBWw+fRMSiiBza0
-         vpeJ8ukhHzJSQTwLf3N9kAYfN0zgFLrQX/5PmmEhJKpOaKEMPdvHN0yyicmPguqWcW
-         uK6C55eTyVozCnY46Bv1FX38rOz2CuAZv9j4+H7w=
+        b=2d7gNeQvZQmkUvONDfpeTf8p5gT3CeTIBs671zveMuZe14ivizAEQvliwzCrUvP76
+         YMAsb1TGjBQ5MwcSC5Maj4F5vXFqKtzffjddYq3FPz6IXsxoQTGYXA/hH4y52j7YD0
+         hFIsb7ti4jXAHDNp98j6ZcTJcLRRN9sEFeB4dOOU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hou Tao <houtao1@huawei.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.1 035/122] brd: re-enable __GFP_HIGHMEM in brd_insert_page()
-Date:   Thu, 23 May 2019 21:05:57 +0200
-Message-Id: <20190523181709.506827080@linuxfoundation.org>
+        stable@vger.kernel.org, "chengjian (D)" <cj.chengjian@huawei.com>,
+        Paul Moore <paul@paul-moore.com>,
+        John Johansen <john.johansen@canonical.com>,
+        James Morris <james.morris@microsoft.com>,
+        Casey Schaufler <casey@schaufler-ca.com>
+Subject: [PATCH 5.1 036/122] proc: prevent changes to overridden credentials
+Date:   Thu, 23 May 2019 21:05:58 +0200
+Message-Id: <20190523181709.625861225@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181705.091418060@linuxfoundation.org>
 References: <20190523181705.091418060@linuxfoundation.org>
@@ -59,43 +62,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hou Tao <houtao1@huawei.com>
+From: Paul Moore <paul@paul-moore.com>
 
-commit f6b50160a06d4a0d6a3999ab0c5aec4f52dba248 upstream.
+commit 35a196bef449b5824033865b963ed9a43fb8c730 upstream.
 
-__GFP_HIGHMEM is disabled if dax is enabled on brd, however
-dax support for brd has been removed since commit (7a862fbbdec6
-"brd: remove dax support"), so restore __GFP_HIGHMEM in
-brd_insert_page().
+Prevent userspace from changing the the /proc/PID/attr values if the
+task's credentials are currently overriden.  This not only makes sense
+conceptually, it also prevents some really bizarre error cases caused
+when trying to commit credentials to a task with overridden
+credentials.
 
-Also remove the no longer applicable comments about DAX and highmem.
-
-Cc: stable@vger.kernel.org
-Fixes: 7a862fbbdec6 ("brd: remove dax support")
-Signed-off-by: Hou Tao <houtao1@huawei.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Cc: <stable@vger.kernel.org>
+Reported-by: "chengjian (D)" <cj.chengjian@huawei.com>
+Signed-off-by: Paul Moore <paul@paul-moore.com>
+Acked-by: John Johansen <john.johansen@canonical.com>
+Acked-by: James Morris <james.morris@microsoft.com>
+Acked-by: Casey Schaufler <casey@schaufler-ca.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/block/brd.c |    7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+ fs/proc/base.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/drivers/block/brd.c
-+++ b/drivers/block/brd.c
-@@ -96,13 +96,8 @@ static struct page *brd_insert_page(stru
- 	/*
- 	 * Must use NOIO because we don't want to recurse back into the
- 	 * block or filesystem layers from page reclaim.
--	 *
--	 * Cannot support DAX and highmem, because our ->direct_access
--	 * routine for DAX must return memory that is always addressable.
--	 * If DAX was reworked to use pfns and kmap throughout, this
--	 * restriction might be able to be lifted.
- 	 */
--	gfp_flags = GFP_NOIO | __GFP_ZERO;
-+	gfp_flags = GFP_NOIO | __GFP_ZERO | __GFP_HIGHMEM;
- 	page = alloc_page(gfp_flags);
- 	if (!page)
- 		return NULL;
+--- a/fs/proc/base.c
++++ b/fs/proc/base.c
+@@ -2540,6 +2540,11 @@ static ssize_t proc_pid_attr_write(struc
+ 		rcu_read_unlock();
+ 		return -EACCES;
+ 	}
++	/* Prevent changes to overridden credentials. */
++	if (current_cred() != current_real_cred()) {
++		rcu_read_unlock();
++		return -EBUSY;
++	}
+ 	rcu_read_unlock();
+ 
+ 	if (count > PAGE_SIZE)
 
 
