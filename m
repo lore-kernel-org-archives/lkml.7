@@ -2,113 +2,123 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,PLING_QUERY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AE3DC04AAC
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:37:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC879C04AAC
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:39:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F210C20881
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:37:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD2D120881
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:39:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="qHg2rjE3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729793AbfEWIh1 (ORCPT
+        id S1729866AbfEWIjb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 04:37:27 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:52835 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726230AbfEWIh0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 04:37:26 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 1022A8026C; Thu, 23 May 2019 10:37:14 +0200 (CEST)
-Date:   Thu, 23 May 2019 10:37:24 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     kernel list <linux-kernel@vger.kernel.org>, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org
-Subject: 5.1.0-next-20190520 -- emacs segfaults on 32-bit machine Re:
- 5.2-rc0.8: emacs segfaults?! x220, with 32-bit userland
-Message-ID: <20190523083724.GA21185@amd>
-References: <20190519221700.GA7154@amd>
- <20190520160636.z6fpjiidc2d5ko5g@linutronix.de>
- <20190520231342.GA20835@amd>
- <20190521073240.mikv2ufwyriy4q7r@linutronix.de>
- <20190522183329.GB10003@amd>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="FL5UXtIhxfXey3p5"
-Content-Disposition: inline
-In-Reply-To: <20190522183329.GB10003@amd>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+        Thu, 23 May 2019 04:39:31 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:8671 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726070AbfEWIja (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 04:39:30 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 458jbg5PJgz9tybB;
+        Thu, 23 May 2019 10:39:27 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=qHg2rjE3; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id OWyPUnGABWAd; Thu, 23 May 2019 10:39:27 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 458jbg45Bxz9tyb8;
+        Thu, 23 May 2019 10:39:27 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1558600767; bh=IkYWeZ4tDG4CTAbPN5POqn8JSBG26w6X70unKoUvBPM=;
+        h=From:Subject:To:Cc:Date:From;
+        b=qHg2rjE3OqyRKas86pc9/NGYDIII6/uVB0IAX3H9hHyYs9na347WtU7xnQmxxOrHI
+         ATgiOEP0CmRJyc0GQhr0RTlSB6F3LJ8EQpqEubQW6WWat7ntmekc1NbfJ/+4mmPk4I
+         DElM4EKV4T+9+2nW8XFF4YxEP/PAOS8nLw0ptvio=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 948398B851;
+        Thu, 23 May 2019 10:39:28 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id 1AzVhv0qAqSB; Thu, 23 May 2019 10:39:28 +0200 (CEST)
+Received: from po16846vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 537F68B77D;
+        Thu, 23 May 2019 10:39:28 +0200 (CEST)
+Received: by po16846vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id 12F2168517; Thu, 23 May 2019 08:39:27 +0000 (UTC)
+Message-Id: <97664671a229a4240bfb22f69ec4743e837c2b83.1558600628.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH] powerpc/32: fix build failure on book3e with KVM
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Thu, 23 May 2019 08:39:27 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Build failure was introduced by the commit identified below,
+due to missed macro expension leading to wrong called function's name.
 
---FL5UXtIhxfXey3p5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+arch/powerpc/kernel/head_fsl_booke.o: In function `SystemCall':
+arch/powerpc/kernel/head_fsl_booke.S:416: undefined reference to `kvmppc_handler_BOOKE_INTERRUPT_SYSCALL_SPRN_SRR1'
+Makefile:1052: recipe for target 'vmlinux' failed
 
-Hi!
+The called function should be kvmppc_handler_8_0x01B(). This patch fixes it.
 
-> I did not notice any new crashes.
+Reported-by: Paul Mackerras <paulus@ozlabs.org>
+Fixes: 1a4b739bbb4f ("powerpc/32: implement fast entry for syscalls on BOOKE")
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+---
+ arch/powerpc/kernel/head_booke.h     | 4 ++--
+ arch/powerpc/kernel/head_fsl_booke.S | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-New crash now; different machine, way -next kernel... and I even have
-a backtrace.
+diff --git a/arch/powerpc/kernel/head_booke.h b/arch/powerpc/kernel/head_booke.h
+index bfeb469e8106..dec0912a6508 100644
+--- a/arch/powerpc/kernel/head_booke.h
++++ b/arch/powerpc/kernel/head_booke.h
+@@ -83,7 +83,7 @@ END_BTB_FLUSH_SECTION
+ 	SAVE_4GPRS(3, r11);						     \
+ 	SAVE_2GPRS(7, r11)
+ 
+-.macro SYSCALL_ENTRY trapno intno
++.macro SYSCALL_ENTRY trapno intno srr1
+ 	mfspr	r10, SPRN_SPRG_THREAD
+ #ifdef CONFIG_KVM_BOOKE_HV
+ BEGIN_FTR_SECTION
+@@ -94,7 +94,7 @@ BEGIN_FTR_SECTION
+ 	mfspr	r11, SPRN_SRR1
+ 	mtocrf	0x80, r11	/* check MSR[GS] without clobbering reg */
+ 	bf	3, 1975f
+-	b	kvmppc_handler_BOOKE_INTERRUPT_\intno\()_SPRN_SRR1
++	b	kvmppc_handler_\intno\()_\srr1
+ 1975:
+ 	mr	r12, r13
+ 	lwz	r13, THREAD_NORMSAVE(2)(r10)
+diff --git a/arch/powerpc/kernel/head_fsl_booke.S b/arch/powerpc/kernel/head_fsl_booke.S
+index 6621f230cc37..2b39f42c3676 100644
+--- a/arch/powerpc/kernel/head_fsl_booke.S
++++ b/arch/powerpc/kernel/head_fsl_booke.S
+@@ -413,7 +413,7 @@ interrupt_base:
+ 
+ 	/* System Call Interrupt */
+ 	START_EXCEPTION(SystemCall)
+-	SYSCALL_ENTRY   0xc00 SYSCALL
++	SYSCALL_ENTRY   0xc00 BOOKE_INTERRUPT_SYSCALL SPRN_SRR1
+ 
+ 	/* Auxiliary Processor Unavailable Interrupt */
+ 	EXCEPTION(0x2900, AP_UNAVAIL, AuxillaryProcessorUnavailable, \
+-- 
+2.13.3
 
-								Pavel
-
-pavel@amd:~$ e cip/HOURS
-Fatal error 11: Segmentation fault
-Backtrace:
-emacs[0x8138719]
-emacs[0x8120446]
-emacs[0x813758e]
-emacs[0x81375fb]
-/lib/i386-linux-gnu/i686/cmov/libpthread.so.0(+0xecb8)[0xb636ccb8]
-/lib/i386-linux-gnu/i686/cmov/libc.so.6(+0xebbf3)[0xb6283bf3]
-/lib/i386-linux-gnu/i686/cmov/libc.so.6(pselect+0xd3)[0xb627c363]
-emacs[0x81ffdd9]
-emacs[0x81c7ba4]
-emacs[0x8127815]
-emacs[0x812ada3]
-emacs[0x812bdad]
-emacs[0x812d838]
-emacs[0x818b76c]
-emacs[0x8120890]
-emacs[0x818b66b]
-emacs[0x8124b84]
-emacs[0x8124e3f]
-emacs[0x8059cb0]
-/lib/i386-linux-gnu/i686/cmov/libc.so.6(__libc_start_main+0xf3)[0xb61b1a63]
-emacs[0x805a76f]
-^CSegmentation fault (core dumped)
-pavel@amd:~$ uname -a
-Linux amd 5.1.0-next-20190520 #285 SMP Mon May 20 13:20:20 CEST 2019
-i686 GNU/Linux
-pavel@amd:~$ dmesg | grep fpu
-[    0.000000] x86/fpu: x87 FPU will use FXSAVE
-"Genuine Intel(R) CPU           T2400  @ 1.83GHz"
-
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---FL5UXtIhxfXey3p5
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlzmW8QACgkQMOfwapXb+vIKHACeMax3ol/Lt6Gf9KxytTAlIA29
-+18An150AL20CBY9DdGxQpIK1lMMSKqR
-=y+0N
------END PGP SIGNATURE-----
-
---FL5UXtIhxfXey3p5--
