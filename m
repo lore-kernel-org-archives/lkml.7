@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 106BBC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:24:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBE05C282DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:24:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8FE020868
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:24:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1BBB2054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:24:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639446;
-	bh=Fn75vAqq208ZamoG1r5eXuJPt0CbASeV6eFZIIJezJ0=;
+	s=default; t=1558639448;
+	bh=3LCnykdvczOHiMlWD1ftBlEW8L15TV0zrYb9NTJ2fds=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JNnhuT4zMLxDyjloUarWCObrk9azVcQ5jP1SGBI06opgvXJWB7fQIa0tKHI9WY2ih
-	 Vcdj/6LkYMRwHvACh5aSIGLeNoCuBSSj92BgC2I2XWLGV5zh7y2HuLbARHsd7tU1gM
-	 V8GAwW/j4w4h6kbcONxHf6ebF2hWSaY8iLRaNwRg=
+	b=J4DBIjAR3gz5Cp6k0E08tQXrmRJ5AoXAoZ0juPfc4miacBU6XmYtNWxAn1B9BuDch
+	 M8qsgsDz9xKEvNyj+2K3MU3dzgitsxTXIaaNUc7xlybXFFNAE2Bs15zsZVCvfgauwV
+	 SO0iSq+ysXkebkyNCcU6AGFoqdMni/UC854as9hk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390826AbfEWTYG (ORCPT
+        id S2390836AbfEWTYH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:24:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34868 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:24:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34788 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390797AbfEWTYE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:24:04 -0400
+        id S2390455AbfEWTYC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:24:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 899302054F;
-        Thu, 23 May 2019 19:24:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D80CE20868;
+        Thu, 23 May 2019 19:24:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639444;
-        bh=Fn75vAqq208ZamoG1r5eXuJPt0CbASeV6eFZIIJezJ0=;
+        s=default; t=1558639441;
+        bh=3LCnykdvczOHiMlWD1ftBlEW8L15TV0zrYb9NTJ2fds=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=amagaIFX+g5f1VpJPvox6yNX9xxquCQCiODNpDjuvIU478tqp9NJRk5rJp7P+NuMQ
-         F+n10ObqdXa+pX6uAr1ZxWOhYZ5H5h+Po012hi6A0T7GmfdlXClW2VkVTA2THJEDHS
-         QS2LIIAUklzZgfyMQpd804gyX3jpPYWQLSdIu1K4=
+        b=DUD80yJxNKC/K3Zy03aU80WrAddJi/ezLVsf40NvM3skYWL1F5kHoIJdacdqcA6DR
+         Fr2I84lYH+A0V3VRnAVmO7/5EefzROaUuHHZb7zcETakGuUW+10U1l67kMsqncLd8a
+         sw/v5dCPTN29S3IUpFAWQYGGq5PEJfK3JZBVWJV4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
+        stable@vger.kernel.org, Martin Willi <martin@strongswan.org>,
         Steffen Klassert <steffen.klassert@secunet.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 107/139] xfrm4: Fix uninitialized memory read in _decode_session4
-Date:   Thu, 23 May 2019 21:06:35 +0200
-Message-Id: <20190523181734.150769677@linuxfoundation.org>
+Subject: [PATCH 5.0 106/139] xfrm: Honor original L3 slave device in xfrmi policy lookup
+Date:   Thu, 23 May 2019 21:06:34 +0200
+Message-Id: <20190523181734.066870227@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181720.120897565@linuxfoundation.org>
 References: <20190523181720.120897565@linuxfoundation.org>
@@ -60,113 +60,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 8742dc86d0c7a9628117a989c11f04a9b6b898f3 ]
+[ Upstream commit 025c65e119bf58b610549ca359c9ecc5dee6a8d2 ]
 
-We currently don't reload pointers pointing into skb header
-after doing pskb_may_pull() in _decode_session4(). So in case
-pskb_may_pull() changed the pointers, we read from random
-memory. Fix this by putting all the needed infos on the
-stack, so that we don't need to access the header pointers
-after doing pskb_may_pull().
+If an xfrmi is associated to a vrf layer 3 master device,
+xfrm_policy_check() fails after traffic decapsulation. The input
+interface is replaced by the layer 3 master device, and hence
+xfrmi_decode_session() can't match the xfrmi anymore to satisfy
+policy checking.
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Extend ingress xfrmi lookup to honor the original layer 3 slave
+device, allowing xfrm interfaces to operate within a vrf domain.
+
+Fixes: f203b76d7809 ("xfrm: Add virtual xfrm interfaces")
+Signed-off-by: Martin Willi <martin@strongswan.org>
 Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/xfrm4_policy.c | 24 +++++++++++++-----------
- 1 file changed, 13 insertions(+), 11 deletions(-)
+ include/net/xfrm.h        |  3 ++-
+ net/xfrm/xfrm_interface.c | 17 ++++++++++++++---
+ net/xfrm/xfrm_policy.c    |  2 +-
+ 3 files changed, 17 insertions(+), 5 deletions(-)
 
-diff --git a/net/ipv4/xfrm4_policy.c b/net/ipv4/xfrm4_policy.c
-index d73a6d6652f60..2b144b92ae46a 100644
---- a/net/ipv4/xfrm4_policy.c
-+++ b/net/ipv4/xfrm4_policy.c
-@@ -111,7 +111,8 @@ static void
- _decode_session4(struct sk_buff *skb, struct flowi *fl, int reverse)
- {
- 	const struct iphdr *iph = ip_hdr(skb);
--	u8 *xprth = skb_network_header(skb) + iph->ihl * 4;
-+	int ihl = iph->ihl;
-+	u8 *xprth = skb_network_header(skb) + ihl * 4;
- 	struct flowi4 *fl4 = &fl->u.ip4;
- 	int oif = 0;
+diff --git a/include/net/xfrm.h b/include/net/xfrm.h
+index 902437dfbce77..c9b0b2b5d672f 100644
+--- a/include/net/xfrm.h
++++ b/include/net/xfrm.h
+@@ -295,7 +295,8 @@ struct xfrm_replay {
+ };
  
-@@ -122,6 +123,11 @@ _decode_session4(struct sk_buff *skb, struct flowi *fl, int reverse)
- 	fl4->flowi4_mark = skb->mark;
- 	fl4->flowi4_oif = reverse ? skb->skb_iif : oif;
+ struct xfrm_if_cb {
+-	struct xfrm_if	*(*decode_session)(struct sk_buff *skb);
++	struct xfrm_if	*(*decode_session)(struct sk_buff *skb,
++					   unsigned short family);
+ };
  
-+	fl4->flowi4_proto = iph->protocol;
-+	fl4->daddr = reverse ? iph->saddr : iph->daddr;
-+	fl4->saddr = reverse ? iph->daddr : iph->saddr;
-+	fl4->flowi4_tos = iph->tos;
-+
- 	if (!ip_is_fragment(iph)) {
- 		switch (iph->protocol) {
- 		case IPPROTO_UDP:
-@@ -133,7 +139,7 @@ _decode_session4(struct sk_buff *skb, struct flowi *fl, int reverse)
- 			    pskb_may_pull(skb, xprth + 4 - skb->data)) {
- 				__be16 *ports;
- 
--				xprth = skb_network_header(skb) + iph->ihl * 4;
-+				xprth = skb_network_header(skb) + ihl * 4;
- 				ports = (__be16 *)xprth;
- 
- 				fl4->fl4_sport = ports[!!reverse];
-@@ -146,7 +152,7 @@ _decode_session4(struct sk_buff *skb, struct flowi *fl, int reverse)
- 			    pskb_may_pull(skb, xprth + 2 - skb->data)) {
- 				u8 *icmp;
- 
--				xprth = skb_network_header(skb) + iph->ihl * 4;
-+				xprth = skb_network_header(skb) + ihl * 4;
- 				icmp = xprth;
- 
- 				fl4->fl4_icmp_type = icmp[0];
-@@ -159,7 +165,7 @@ _decode_session4(struct sk_buff *skb, struct flowi *fl, int reverse)
- 			    pskb_may_pull(skb, xprth + 4 - skb->data)) {
- 				__be32 *ehdr;
- 
--				xprth = skb_network_header(skb) + iph->ihl * 4;
-+				xprth = skb_network_header(skb) + ihl * 4;
- 				ehdr = (__be32 *)xprth;
- 
- 				fl4->fl4_ipsec_spi = ehdr[0];
-@@ -171,7 +177,7 @@ _decode_session4(struct sk_buff *skb, struct flowi *fl, int reverse)
- 			    pskb_may_pull(skb, xprth + 8 - skb->data)) {
- 				__be32 *ah_hdr;
- 
--				xprth = skb_network_header(skb) + iph->ihl * 4;
-+				xprth = skb_network_header(skb) + ihl * 4;
- 				ah_hdr = (__be32 *)xprth;
- 
- 				fl4->fl4_ipsec_spi = ah_hdr[1];
-@@ -183,7 +189,7 @@ _decode_session4(struct sk_buff *skb, struct flowi *fl, int reverse)
- 			    pskb_may_pull(skb, xprth + 4 - skb->data)) {
- 				__be16 *ipcomp_hdr;
- 
--				xprth = skb_network_header(skb) + iph->ihl * 4;
-+				xprth = skb_network_header(skb) + ihl * 4;
- 				ipcomp_hdr = (__be16 *)xprth;
- 
- 				fl4->fl4_ipsec_spi = htonl(ntohs(ipcomp_hdr[1]));
-@@ -196,7 +202,7 @@ _decode_session4(struct sk_buff *skb, struct flowi *fl, int reverse)
- 				__be16 *greflags;
- 				__be32 *gre_hdr;
- 
--				xprth = skb_network_header(skb) + iph->ihl * 4;
-+				xprth = skb_network_header(skb) + ihl * 4;
- 				greflags = (__be16 *)xprth;
- 				gre_hdr = (__be32 *)xprth;
- 
-@@ -213,10 +219,6 @@ _decode_session4(struct sk_buff *skb, struct flowi *fl, int reverse)
- 			break;
- 		}
- 	}
--	fl4->flowi4_proto = iph->protocol;
--	fl4->daddr = reverse ? iph->saddr : iph->daddr;
--	fl4->saddr = reverse ? iph->daddr : iph->saddr;
--	fl4->flowi4_tos = iph->tos;
+ void xfrm_if_register_cb(const struct xfrm_if_cb *ifcb);
+diff --git a/net/xfrm/xfrm_interface.c b/net/xfrm/xfrm_interface.c
+index dbb3c1945b5c9..85fec98676d34 100644
+--- a/net/xfrm/xfrm_interface.c
++++ b/net/xfrm/xfrm_interface.c
+@@ -70,17 +70,28 @@ static struct xfrm_if *xfrmi_lookup(struct net *net, struct xfrm_state *x)
+ 	return NULL;
  }
  
- static void xfrm4_update_pmtu(struct dst_entry *dst, struct sock *sk,
+-static struct xfrm_if *xfrmi_decode_session(struct sk_buff *skb)
++static struct xfrm_if *xfrmi_decode_session(struct sk_buff *skb,
++					    unsigned short family)
+ {
+ 	struct xfrmi_net *xfrmn;
+-	int ifindex;
+ 	struct xfrm_if *xi;
++	int ifindex = 0;
+ 
+ 	if (!secpath_exists(skb) || !skb->dev)
+ 		return NULL;
+ 
++	switch (family) {
++	case AF_INET6:
++		ifindex = inet6_sdif(skb);
++		break;
++	case AF_INET:
++		ifindex = inet_sdif(skb);
++		break;
++	}
++	if (!ifindex)
++		ifindex = skb->dev->ifindex;
++
+ 	xfrmn = net_generic(xs_net(xfrm_input_state(skb)), xfrmi_net_id);
+-	ifindex = skb->dev->ifindex;
+ 
+ 	for_each_xfrmi_rcu(xfrmn->xfrmi[0], xi) {
+ 		if (ifindex == xi->dev->ifindex &&
+diff --git a/net/xfrm/xfrm_policy.c b/net/xfrm/xfrm_policy.c
+index 8d1a898d0ba56..a6b58df7a70f6 100644
+--- a/net/xfrm/xfrm_policy.c
++++ b/net/xfrm/xfrm_policy.c
+@@ -3313,7 +3313,7 @@ int __xfrm_policy_check(struct sock *sk, int dir, struct sk_buff *skb,
+ 	ifcb = xfrm_if_get_cb();
+ 
+ 	if (ifcb) {
+-		xi = ifcb->decode_session(skb);
++		xi = ifcb->decode_session(skb, family);
+ 		if (xi) {
+ 			if_id = xi->p.if_id;
+ 			net = xi->net;
 -- 
 2.20.1
 
