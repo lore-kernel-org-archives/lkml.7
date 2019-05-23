@@ -6,177 +6,136 @@ X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 902DFC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 23:43:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE144C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 23:43:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F8C42175B
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 23:43:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 925AB2133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 23:43:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388658AbfEWXna (ORCPT
+        id S2388685AbfEWXnk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 19:43:30 -0400
-Received: from outgoing-stata.csail.mit.edu ([128.30.2.210]:50927 "EHLO
-        outgoing-stata.csail.mit.edu" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388297AbfEWXn3 (ORCPT
+        Thu, 23 May 2019 19:43:40 -0400
+Received: from gateway33.websitewelcome.com ([192.185.145.221]:48077 "EHLO
+        gateway33.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388661AbfEWXnj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 19:43:29 -0400
-Received: from [4.30.142.84] (helo=srivatsab-a01.vmware.com)
-        by outgoing-stata.csail.mit.edu with esmtpsa (TLS1.2:RSA_AES_128_CBC_SHA1:128)
-        (Exim 4.82)
-        (envelope-from <srivatsa@csail.mit.edu>)
-        id 1hTxMo-000QQB-NK; Thu, 23 May 2019 19:43:22 -0400
-Subject: Re: CFQ idling kills I/O performance on ext4 with blkio cgroup
- controller
-To:     Paolo Valente <paolo.valente@linaro.org>
-Cc:     linux-fsdevel@vger.kernel.org,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-ext4@vger.kernel.org, cgroups@vger.kernel.org,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Jens Axboe <axboe@kernel.dk>, Jan Kara <jack@suse.cz>,
-        jmoyer@redhat.com, Theodore Ts'o <tytso@mit.edu>,
-        amakhalov@vmware.com, anishs@vmware.com, srivatsab@vmware.com
-References: <8d72fcf7-bbb4-2965-1a06-e9fc177a8938@csail.mit.edu>
- <1812E450-14EF-4D5A-8F31-668499E13652@linaro.org>
- <46c6a4be-f567-3621-2e16-0e341762b828@csail.mit.edu>
- <07D11833-8285-49C2-943D-E4C1D23E8859@linaro.org>
- <A0DFE635-EFEC-4670-AD70-5D813E170BEE@linaro.org>
- <5B6570A2-541A-4CF8-98E0-979EA6E3717D@linaro.org>
- <2CB39B34-21EE-4A95-A073-8633CF2D187C@linaro.org>
- <FC24E25F-4578-454D-AE2B-8D8D352478D8@linaro.org>
- <0e3fdf31-70d9-26eb-7b42-2795d4b03722@csail.mit.edu>
- <F5E29C98-6CC4-43B8-994D-0B5354EECBF3@linaro.org>
- <686D6469-9DE7-4738-B92A-002144C3E63E@linaro.org>
- <01d55216-5718-767a-e1e6-aadc67b632f4@csail.mit.edu>
- <CA8A23E2-6F22-4444-9A20-E052A94CAA9B@linaro.org>
- <cc148388-3c82-d7c0-f9ff-8c31bb5dc77d@csail.mit.edu>
- <6FE0A98F-1E3D-4EF6-8B38-2C85741924A4@linaro.org>
- <2A58C239-EF3F-422B-8D87-E7A3B500C57C@linaro.org>
-From:   "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
-Message-ID: <a04368ba-f1d5-8f2c-1279-a685a137d024@csail.mit.edu>
-Date:   Thu, 23 May 2019 16:43:20 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
- Gecko/20100101 Thunderbird/60.6.1
+        Thu, 23 May 2019 19:43:39 -0400
+Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
+        by gateway33.websitewelcome.com (Postfix) with ESMTP id 34599DBE81B
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 18:43:37 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id TxN3ht3Rl2PzOTxN3hGuhF; Thu, 23 May 2019 18:43:37 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.47.159] (port=44276 helo=[192.168.1.76])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.91)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hTxN2-001tlo-Mo; Thu, 23 May 2019 18:43:36 -0500
+Subject: Re: [PATCH net-next] xprtrdma: Use struct_size() in kzalloc()
+To:     David Miller <davem@davemloft.net>
+Cc:     chuck.lever@oracle.com, trond.myklebust@hammerspace.com,
+        anna.schumaker@netapp.com, bfields@fieldses.org,
+        jlayton@kernel.org, linux-nfs@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <07CB966E-A946-4956-8480-C0FC13E13E4E@oracle.com>
+ <ad9eccc7-afd2-3419-b886-6210eeabd5b5@embeddedor.com>
+ <70ca0dea-6f1f-922c-7c5d-e79c6cf6ecb5@embeddedor.com>
+ <20190523.163229.1499181553844972278.davem@davemloft.net>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Message-ID: <c8d7982b-cf18-adc0-aa70-81b8ee5ae780@embeddedor.com>
+Date:   Thu, 23 May 2019 18:43:34 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <2A58C239-EF3F-422B-8D87-E7A3B500C57C@linaro.org>
-Content-Type: text/plain; charset=windows-1252
+In-Reply-To: <20190523.163229.1499181553844972278.davem@davemloft.net>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.47.159
+X-Source-L: No
+X-Exim-ID: 1hTxN2-001tlo-Mo
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.1.76]) [189.250.47.159]:44276
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 21
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/23/19 10:22 AM, Paolo Valente wrote:
+
+
+On 5/23/19 6:32 PM, David Miller wrote:
+> From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+> Date: Thu, 23 May 2019 17:36:00 -0500
 > 
->> Il giorno 23 mag 2019, alle ore 11:19, Paolo Valente <paolo.valente@linaro.org> ha scritto:
+>> Hi Dave,
 >>
->>> Il giorno 23 mag 2019, alle ore 04:30, Srivatsa S. Bhat <srivatsa@csail.mit.edu> ha scritto:
->>>
-[...]
->>> Also, I'm very happy to run additional tests or experiments to help
->>> track down this issue. So, please don't hesitate to let me know if
->>> you'd like me to try anything else or get you additional traces etc. :)
->>>
->>
->> Here's to you!  :) I've attached a new small improvement that may
->> reduce fluctuations (path to apply on top of the others, of course).
->> Unfortunately, I don't expect this change to boost the throughput
->> though.
->>
->> In contrast, I've thought of a solution that might be rather
->> effective: making BFQ aware (heuristically) of trivial
->> synchronizations between processes in different groups.  This will
->> require a little more work and time.
->>
+>> I wonder if you can take this patch.
 > 
-> Hi Srivatsa,
-> I'm back :)
-> 
-> First, there was a mistake in the last patch I sent you, namely in
-> 0001-block-bfq-re-sample-req-service-times-when-possible.patch.
-> Please don't apply that patch at all.
-> 
-> I've attached a new series of patches instead.  The first patch in this
-> series is a fixed version of the faulty patch above (if I'm creating too
-> much confusion, I'll send you again all patches to apply on top of
-> mainline).
+> The sunrpc/nfs maintainer should take this.  I never take patches in that
+> area.
 > 
 
-No problem, I got it :)
+Yep. Chuck just let me know that Anna is who take these patches.
 
-> This series also implements the more effective idea I told you a few
-> hours ago.  In my system, the loss is now around only 10%, even with
-> low_latency on.
-> 
+Hopefully, she will take this one soon.
 
-When trying to run multiple dd tasks simultaneously, I get the kernel
-panic shown below (mainline is fine, without these patches).
-
-[  568.232231] BUG: kernel NULL pointer dereference, address: 0000000000000024
-[  568.232257] #PF: supervisor read access in kernel mode
-[  568.232273] #PF: error_code(0x0000) - not-present page
-[  568.232289] PGD 0 P4D 0
-[  568.232299] Oops: 0000 [#1] SMP PTI
-[  568.232312] CPU: 0 PID: 1029 Comm: dd Tainted: G            E     5.1.0-io-dbg-4+ #6
-[  568.232334] Hardware name: VMware, Inc. VMware Virtual Platform/440BX Desktop Reference Platform, BIOS 6.00 04/05/2016
-[  568.232388] RIP: 0010:bfq_serv_to_charge+0x21/0x50
-[  568.232404] Code: ff e8 c3 5e bc ff 0f 1f 00 0f 1f 44 00 00 48 8b 86 20 01 00 00 55 48 89 e5 53 48 89 fb a8 40 75 09 83 be a0 01 00 00 01 76 09 <8b> 43 24 c1 e8 09 5b 5d c3 48 8b 7e 08 e8 5d fd ff ff 84 c0 75 ea
-[  568.232473] RSP: 0018:ffffa73a42dab750 EFLAGS: 00010002
-[  568.232489] RAX: 0000000000001052 RBX: 0000000000000000 RCX: ffffa73a42dab7a0
-[  568.232510] RDX: ffffa73a42dab657 RSI: ffff8b7b6ba2ab70 RDI: 0000000000000000
-[  568.232530] RBP: ffffa73a42dab758 R08: 0000000000000000 R09: 0000000000000001
-[  568.232551] R10: 0000000000000000 R11: ffffa73a42dab7a0 R12: ffff8b7b6aed3800
-[  568.232571] R13: 0000000000000000 R14: 0000000000000000 R15: ffff8b7b6aed3800
-[  568.232592] FS:  00007fb5b0724540(0000) GS:ffff8b7b6f800000(0000) knlGS:0000000000000000
-[  568.232615] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  568.232632] CR2: 0000000000000024 CR3: 00000004266be002 CR4: 00000000001606f0
-[  568.232690] Call Trace:
-[  568.232703]  bfq_select_queue+0x781/0x1000
-[  568.232717]  bfq_dispatch_request+0x1d7/0xd60
-[  568.232731]  ? bfq_bfqq_handle_idle_busy_switch.isra.36+0x2cd/0xb20
-[  568.232751]  blk_mq_do_dispatch_sched+0xa8/0xe0
-[  568.232765]  blk_mq_sched_dispatch_requests+0xe3/0x150
-[  568.232783]  __blk_mq_run_hw_queue+0x56/0x100
-[  568.232798]  __blk_mq_delay_run_hw_queue+0x107/0x160
-[  568.232814]  blk_mq_run_hw_queue+0x75/0x190
-[  568.232828]  blk_mq_sched_insert_requests+0x7a/0x100
-[  568.232844]  blk_mq_flush_plug_list+0x1d7/0x280
-[  568.232859]  blk_flush_plug_list+0xc2/0xe0
-[  568.232872]  blk_finish_plug+0x2c/0x40
-[  568.232886]  ext4_writepages+0x592/0xe60
-[  568.233381]  ? ext4_mark_iloc_dirty+0x52b/0x860
-[  568.233851]  do_writepages+0x3c/0xd0
-[  568.234304]  ? ext4_mark_inode_dirty+0x1a0/0x1a0
-[  568.234748]  ? do_writepages+0x3c/0xd0
-[  568.235197]  ? __generic_write_end+0x4e/0x80
-[  568.235644]  __filemap_fdatawrite_range+0xa5/0xe0
-[  568.236089]  ? __filemap_fdatawrite_range+0xa5/0xe0
-[  568.236533]  ? ext4_da_write_end+0x13c/0x280
-[  568.236983]  file_write_and_wait_range+0x5a/0xb0
-[  568.237407]  ext4_sync_file+0x11e/0x3e0
-[  568.237819]  vfs_fsync_range+0x48/0x80
-[  568.238217]  ext4_file_write_iter+0x234/0x3d0
-[  568.238610]  ? _cond_resched+0x19/0x40
-[  568.238982]  new_sync_write+0x112/0x190
-[  568.239347]  __vfs_write+0x29/0x40
-[  568.239705]  vfs_write+0xb1/0x1a0
-[  568.240078]  ksys_write+0x89/0xc0
-[  568.240428]  __x64_sys_write+0x1a/0x20
-[  568.240771]  do_syscall_64+0x5b/0x140
-[  568.241115]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-[  568.241456] RIP: 0033:0x7fb5b02325f4
-[  568.241787] Code: 00 f7 d8 64 89 02 48 c7 c0 ff ff ff ff eb b3 0f 1f 80 00 00 00 00 48 8d 05 09 11 2d 00 8b 00 85 c0 75 13 b8 01 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 54 f3 c3 66 90 41 54 55 49 89 d4 53 48 89 f5
-[  568.242842] RSP: 002b:00007ffcb12e2968 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-[  568.243220] RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007fb5b02325f4
-[  568.243616] RDX: 0000000000000200 RSI: 000055698f2ad000 RDI: 0000000000000001
-[  568.244026] RBP: 0000000000000200 R08: 0000000000000004 R09: 0000000000000003
-[  568.244401] R10: 00007fb5b04feca0 R11: 0000000000000246 R12: 000055698f2ad000
-[  568.244775] R13: 0000000000000000 R14: 0000000000000000 R15: 000055698f2ad000
-[  568.245154] Modules linked in: xt_MASQUERADE(E) nf_conntrack_netlink(E) nfnetlink(E) xfrm_user(E) xfrm_algo(E) xt_addrtype(E) br_netfilter(E) bridge(E) stp(E) llc(E) overlay(E) vmw_vsock_vmci_transport(E) vsock(E) ip6table_filter(E) ip6_tables(E) xt_conntrack(E) iptable_mangle(E) iptable_nat(E) nf_nat(E) iptable_filter
-[  568.248651] CR2: 0000000000000024
-[  568.249142] ---[ end trace 0ddd315e0a5bdfba ]---
-
-
-Regards,
-Srivatsa
-VMware Photon OS
+Thanks
+--
+Gustavo
