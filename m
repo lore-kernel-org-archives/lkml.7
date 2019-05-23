@@ -2,120 +2,146 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60482C04AAC
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 05:53:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88990C04AAC
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 06:02:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E82C2175B
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 05:53:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AD022075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 06:02:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="paGyFWN2"
+	dkim=pass (2048-bit key) header.d=who-t.net header.i=@who-t.net header.b="aEXqDhR0";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="hhDRWbwm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729947AbfEWFxp (ORCPT
+        id S1727269AbfEWGCE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 01:53:45 -0400
-Received: from mail-pg1-f175.google.com ([209.85.215.175]:42669 "EHLO
-        mail-pg1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726359AbfEWFxp (ORCPT
+        Thu, 23 May 2019 02:02:04 -0400
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:45513 "EHLO
+        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726081AbfEWGCE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 01:53:45 -0400
-Received: by mail-pg1-f175.google.com with SMTP id e17so2382103pgo.9
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 22:53:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=vsdU5h/JC9pv4aYPKeA7tyb+gDcuPa26p02OCnzHaD8=;
-        b=paGyFWN24bYRxA6znxnHSznLozAL0ut2UZKWJjip4oiEtIBrrBPud+5tV2O+XZytmR
-         WgIQ8HZs7T3ur4UYNxNojeyzZDHjeO3RUqXGGJh9WnZ2BoXPIcCAExPfmPO1zX7jrvXU
-         LMmCiFt6pbQln7tvn9WL3ntLwqbZfVe2IAMrAQ1I9agjpDazRtNKwh2OJ6Wak1JNxS+S
-         PzwphHmmC8pxRC3NmYIMTXQ5IdjARjE/QF7moYX6S9+fdpNVOp7f7ZoX5loIQqGyi6OM
-         YLo2oixcY+shyCNgCOHjhQrtr2qmFkhyfJbVx0gCJGyZTeKx7PHNISiNXwYkgGRUQBPh
-         SyUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=vsdU5h/JC9pv4aYPKeA7tyb+gDcuPa26p02OCnzHaD8=;
-        b=LiOiTyOfq854JzJGvq+iBpTwY7XKTEl85OOy7qJ5HOaZchAt/U2HQp0sVOylDNHTmv
-         w7oFheX51r8PcX4AUbNsleo7fdLYpFI5mxGzz0QqHvZZAnzSWbsdwRPPDjz33VmYSz6g
-         b/KnI5xWbH9tZqdYULt39JTqLq0iFq4Pf4lRk6KWJ982jYG0TSu7QPgagvIn8TYtiejM
-         cy0hvBHDacKPrS3SlyfPg1njZaROSYEtz8kdaL4sONfptMbKQzWKZWEV/o9VgqvSwsFW
-         x45bDRvAHzxnzpKAAkAGH0ju+MgF8msU9GLQ93aVS9rxltjzP7iHJwIIUD3qi76JKKqd
-         sEDg==
-X-Gm-Message-State: APjAAAUNuyrDAkzt4aBU5og5NXkpOOETa1YfyYsaNXBhP0lmNlEA8DZm
-        lrbVeuUPEQolWH0rxXTqyFz2DE2z7BZT8Q==
-X-Google-Smtp-Source: APXvYqyeDaZz9YUJQTVSBO9ROnlxKQdVPA1g1kS+N9W6BG20wZ5ZmgKLHN+CNRrwocvLh7N2zw8USg==
-X-Received: by 2002:a63:b00e:: with SMTP id h14mr91601278pgf.321.1558590824444;
-        Wed, 22 May 2019 22:53:44 -0700 (PDT)
-Received: from Gentoo ([103.231.90.171])
-        by smtp.gmail.com with ESMTPSA id i12sm32241040pfd.33.2019.05.22.22.53.40
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 22 May 2019 22:53:43 -0700 (PDT)
-Date:   Thu, 23 May 2019 11:23:31 +0530
-From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
-To:     Konstantin Ryabitsev <konstantin@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: PSA: Do not use "Reported-By" without reporter's approval
-Message-ID: <20190523055331.GA16577@Gentoo>
-References: <20190522193011.GB21412@chatter.i7.local>
+        Thu, 23 May 2019 02:02:04 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id E02732839F;
+        Thu, 23 May 2019 02:02:02 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Thu, 23 May 2019 02:02:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=who-t.net; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:content-transfer-encoding:in-reply-to; s=fm3; bh=L
+        csOEVamQy2pc64GAfEQRhVRNjB43ljzJOtJYgn4nCA=; b=aEXqDhR0dur6J6hfj
+        bXOS73z54KRCysXrk6vlu04AEFk6xFyOdQU78ZFZ4Xx/uSlWEAvrg/RWQR8smbj4
+        UymlqRv8mrJ49PjFZxQ95NctR8JlUCSOXy3Z5BmtSnSzH8ExRVCAGlLNwnHxeFkg
+        E4AqLJw4dXSBbYU+7NincZ0ME2XQhMs7ZuHC53TVUooboQJlM1MR5fp7G8OZl3FS
+        VdrB0OexJinEdZzDaOfCi+l9Yj9jH20tenCP1421lCOHDkdKA4vfn2OiF4mcgP6C
+        JpTqeJawNNc2/X07CShqxSAJbyPdXYdIzrmUE+XA2eWnm3O7JCtihfckHAYs91te
+        qvUyA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm2; bh=LcsOEVamQy2pc64GAfEQRhVRNjB43ljzJOtJYgn4n
+        CA=; b=hhDRWbwmltxkSqEcdU6S7Ogwr9Zx4r40+97zVAJzDtc/63aEFAb+xrPtN
+        40P3U9gFxEGb9bzMUN3ys9yxUSMK7V/3IMCl0CR/PqbI5IZSwsqPUTAYXW1XJA3I
+        b+SPy/4V8Np4cc95Se7/0k21HepYQMZL++n3jCydfgwPhTuLD0kBmNSrx5DLGYyq
+        vLiYpsXZlLeHhYgSLJEGHve5DMp90SVR4w2yQ3k15i+iszBDxM5/rXFWaKDoRND8
+        Bc8XhfYYoySHWQD/Pmml9W5Ux5KXa4JCzr9B0Z8HxFPE1cjdMX7ma8W+Iu3B90WP
+        mLl6l/xmb/H1MbghkLIcd6jX6w2mQ==
+X-ME-Sender: <xms:WTfmXK9mcDtK85sxQHb0Y6i_0NS-j2orAAQ7BHHE30Sc7kBm3iauZg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddruddufedguddtgecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpeffhffvuffkfhggtggugfgjfgesthekredttderudenucfhrhhomheprfgv
+    thgvrhcujfhuthhtvghrvghruceophgvthgvrhdrhhhuthhtvghrvghrseifhhhoqdhtrd
+    hnvghtqeenucffohhmrghinhepfhhrvggvuggvshhkthhophdrohhrghenucfkphepuddu
+    jedrvddtrdeiledrudegvdenucfrrghrrghmpehmrghilhhfrhhomhepphgvthgvrhdrhh
+    huthhtvghrvghrseifhhhoqdhtrdhnvghtnecuvehluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:WjfmXE3EQRl9PQGpSfGN8VQOw5Tx5fHdd3yHFmz4iAbG_6-E8j4iHQ>
+    <xmx:WjfmXFBMrKZ-DlWaF_VdrPUmen2t6WK12PWnEBAJtDkT6QpfstHK1w>
+    <xmx:WjfmXGlp8YQUPL-gDmjqVz4aeBA75zXdWl6Rs8sVxrjTKf-_ZeiXDA>
+    <xmx:WjfmXP_EvbjF-mzkphsDa8e-Ugcva8mli4FwFZZNlRk6MqYKjwyZow>
+Received: from jelly (117-20-69-142.751445.bne.nbn.aussiebb.net [117.20.69.142])
+        by mail.messagingengine.com (Postfix) with ESMTPA id D02DD380085;
+        Thu, 23 May 2019 02:01:58 -0400 (EDT)
+Date:   Thu, 23 May 2019 16:01:54 +1000
+From:   Peter Hutterer <peter.hutterer@who-t.net>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+Cc:     Xiaoxiao Liu <xiaoxiao.liu-1@cn.alps.com>,
+        dmitry.torokhov@gmail.com, Hui Wang <hui.wang@canonical.com>,
+        XiaoXiao Liu <sliuuxiaonxiao@gmail.com>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Xiaojian Cao <xiaojian.cao@cn.alps.com>,
+        "zhangfp1@lenovo.com" <zhangfp1@lenovo.com>
+Subject: Re: =?utf-8?B?562U5aSNOiDnrZTlpI06IOetlA==?=
+ =?utf-8?B?5aSNOiBbUEFUQ0hdIGlucHV0?= =?utf-8?Q?=3A?= alps-fix the issue the
+ special alps trackpoint do not work.
+Message-ID: <20190523060154.GA10526@jelly>
+References: <20190520110149.27107-1-sliuuxiaonxiao@gmail.com>
+ <OSBPR01MB485510A2A32CD9D2CE5EF7A1DA070@OSBPR01MB4855.jpnprd01.prod.outlook.com>
+ <345b62e1-407e-7a03-9b03-486bbf5a0a8e@canonical.com>
+ <20190521094622.syeub6tcqhbyc7sg@pali>
+ <OSBPR01MB4855D744473149D037612506DA000@OSBPR01MB4855.jpnprd01.prod.outlook.com>
+ <20190522063546.kb74mxeprkauicul@pali>
+ <OSBPR01MB48550B43F78BBFBDC20D414DDA000@OSBPR01MB4855.jpnprd01.prod.outlook.com>
+ <20190522074030.64sy7xt3wnomtxjb@pali>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="17pEHd4RhPHOinZp"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20190522193011.GB21412@chatter.i7.local>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190522074030.64sy7xt3wnomtxjb@pali>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, May 22, 2019 at 09:40:30AM +0200, Pali Rohár wrote:
+> On Wednesday 22 May 2019 07:30:43 Xiaoxiao Liu wrote:
+> > Hi Pali,
+> > 
+> > Ok, and cannot you set ALPS_DUALPOINT flag based on that
+> > alps_check_is_trackpoint() result and then update
+> > alps_process_packet_ss4_v3() code to supports also
+> > V8 trackpoint packets?
+> > --> Yes, we can do like so, when we use the v8 method to process the trackpoint , the mouse speed is not ideal.
+> >       Then we choose the standard mouse driver.
+> 
+> Mouse speed is something which is configurable. Have you configured it
+> somehow? Also there is libinput project should handle these settings
+> more properly.
+> 
+> Adding Peter Hutterer, maintainer of libinput to loop. I think he could
+> help with this problem.
 
---17pEHd4RhPHOinZp
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
+libinput has a quirk for a magic multiplier on trackpoints. it was the only
+solution I found that came close to "working" given that every device seems
+to provide some other random magic data. Doc for it is here:
+https://wayland.freedesktop.org/libinput/doc/latest/trackpoint-configuration.html
 
-Make sense Kai!
+There are also different speeds depending on which xorg driver you'd use (or
+libinput/Wayland), so a "mouse speed is not ideal" is almost a guarantee,
+given a large enough variety of setups :) That's why we have the speed
+toggle, but I'm happy to hear any suggestions on how to make the trackpoint
+more useful (in libinput anyway).
 
-On 15:30 Wed 22 May , Konstantin Ryabitsev wrote:
->Hello, all:
->
->It is common courtesy to include this tagline when submitting patches:
->
->Reported-By: J. Doe <jdoe@example.com>
->
->Please ask the reporter's permission before doing so (even if they'd
->submitted a public bugzilla report or sent a report to the mailing
->list). They need to understand and agree that:
->
->- their name and email address will become a permanent, non-excisable
->  part of the Linux Kernel git history
->- their name and email address will be stored on multiple public
->  archival copies of the linux kernel mailing list, collected and
->  managed by different legal entities
->
->With or without GDPR laws, this is something the reporter needs to be
->aware of and they need to be okay with it, as a matter of courtesy.
->
->-K
+> I do not think it is a good idea to force back to generic PS/2 mouse
+> driver for touchpads and trackpoints. Native drivers for touchpads and
+> trackpoints supports multitouch, absolute reporting and lot of other
+> things... Also calculation of mouse speed from absolute positions on
+> touchpads can be more easily fixed as from emulated relative movements.
 
---17pEHd4RhPHOinZp
-Content-Type: application/pgp-signature; name="signature.asc"
+Yeah, agree. Using PS/2 mouse drivers means you lose *all* the extra
+features touchpads have like palm detection, tapping, scrolling, gestures,
+etc.
 
------BEGIN PGP SIGNATURE-----
+Cheers,
+   Peter
 
-iQEzBAABCAAdFiEEnwF+nWawchZUPOuwsjqdtxFLKRUFAlzmNVcACgkQsjqdtxFL
-KRWA6Qf+Oxwa6kXBNelJ+GAEnOseXyo6i53MlFHJaBHqImluJFfkxCbOBCtZ1gaF
-Tc6dt9+ZYpatCkx+UuTigC1shcqqULieWFz/Olf/JWfdLvvtLudzDDmyfcOF20QV
-YCGOTjTLhxp8EQ4zJqi/fq8/JGrmcHT4JRDifo1Gjhf9fVWaYS7hX8Vjg7qxyupS
-F+4Az5t0nbJQaiRbTlWTuRo2jOUIE+mAMQR9jGIz9bS1uylmSPwIXN/m6tKMf07J
-K4ayzD9Jc1wOMqfDPxD7EScOzZQYkj2sph20LFuiTBnb/bGUdd9QHLlouT/3B+fJ
-/NRwzaM3NmJ0OdoBpgR4DmVxxlsoFg==
-=otcg
------END PGP SIGNATURE-----
+> 
+> Dmitry, what is your opinion about this problem? What should psmouse.ko
+> do in this situation? Disallow usage of absolute mode and force bare
+> PS/2 relative mode?
 
---17pEHd4RhPHOinZp--
