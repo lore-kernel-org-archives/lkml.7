@@ -2,175 +2,122 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07206C04AAC
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:54:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1097BC04AAC
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:55:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9F8C2075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:54:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3C8D2081C
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:55:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="N2+5ucc9"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="Iklke5qB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730242AbfEWIyc (ORCPT
+        id S1730235AbfEWIze (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 04:54:32 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:4201 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725814AbfEWIyc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 04:54:32 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ce65fc50000>; Thu, 23 May 2019 01:54:30 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 23 May 2019 01:54:30 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 23 May 2019 01:54:30 -0700
-Received: from [10.21.132.148] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 23 May
- 2019 08:54:27 +0000
-Subject: Re: Applied "ASoC: simple-card: Fix configuration of DAI format" to
- the asoc tree
-To:     Mark Brown <broonie@kernel.org>
-CC:     <alsa-devel@alsa-project.org>, Jaroslav Kysela <perex@perex.cz>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        <linux-kernel@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        Takashi Iwai <tiwai@suse.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-References: <20190521203241.B277E1126D1B@debutante.sirena.org.uk>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <51ce00db-05ce-ba66-f1be-74c800f6daed@nvidia.com>
-Date:   Thu, 23 May 2019 09:54:25 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190521203241.B277E1126D1B@debutante.sirena.org.uk>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1558601671; bh=nEAGdQpsuiGbyUsp/OlVYhTmZlrhOGEiFb+mN7BRwqw=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=N2+5ucc9z+nzenpVaXE1PYc49m0cyFnjFgsAW6RgYS4Hp11q0bDfUuYgvXHCWh4oS
-         oriY7nwHGrMh8TTZxErFOOCTVLxm4uAWYh9DRlfXSJRJkpL12X1qwON+Ltws7aN9/u
-         lvhPydHp4bgR3hNb0v3L8/6SwLpuG/xtDNVbrdCk85JuSFz3jtosfMQ0m2Vg/yn5Fg
-         BtIiTDsqUQmJJCrRpN6e9faG6VUwBRFDCMFEuoZVcZSCEh83IUxWkAz4QtBl06KIZN
-         ndSyC7/fcvp6i49+WYjAA+evZg75nqhW8JaE+sbkTazEDxL1zLtKlSQutM/0NcGP2m
-         7CMReaH9tJbww==
+        Thu, 23 May 2019 04:55:34 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:46536 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726309AbfEWIze (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 04:55:34 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 458jyC6mxqz9tyns;
+        Thu, 23 May 2019 10:55:31 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=Iklke5qB; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id YcF6C1XFYA7y; Thu, 23 May 2019 10:55:31 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 458jyC5ftdz9tynv;
+        Thu, 23 May 2019 10:55:31 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1558601731; bh=xXmpQ/75lHG0vDCaj7oB0x3Jy9haJlwrNP69w581+Es=;
+        h=From:Subject:To:Cc:Date:From;
+        b=Iklke5qBPVYb4Jca8Y5JfCXqwMg5aFclhkjppUMKscRZsfSZG8BIrM7zm1bilHEEw
+         4t0V23pDenwRRYSXGDMhoRZ1JcoWpcMzrgQyRIikYpkq5Z9RJO2ffNotpjXklnibhc
+         qMiG+KbmmqwJI5QaTJ8ls3E4yzM22x1c39mHBDTc=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id A27DD8B851;
+        Thu, 23 May 2019 10:55:32 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id ggCwlvWywLJG; Thu, 23 May 2019 10:55:32 +0200 (CEST)
+Received: from po16846vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 50DBE8B77D;
+        Thu, 23 May 2019 10:55:32 +0200 (CEST)
+Received: by po16846vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id 303D868518; Thu, 23 May 2019 08:55:32 +0000 (UTC)
+Message-Id: <eb206b659fcae041be38d583ff139ca73e9e03c3.1558601485.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH net-next v2] net: phy: lxt: Add suspend/resume support to LXT971 and
+ LXT973.
+To:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Date:   Thu, 23 May 2019 08:55:32 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mark,
+All LXT PHYs implement the standard "power down" bit 11 of
+BMCR, so this patch adds support using the generic
+genphy_{suspend,resume} functions added by
+commit 0f0ca340e57b ("phy: power management support").
 
-On 21/05/2019 21:32, Mark Brown wrote:
-> The patch
-> 
->    ASoC: simple-card: Fix configuration of DAI format
-> 
-> has been applied to the asoc tree at
-> 
->    https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.2
-> 
-> All being well this means that it will be integrated into the linux-next
-> tree (usually sometime in the next 24 hours) and sent to Linus during
-> the next merge window (or sooner if it is a bug fix), however if
-> problems are discovered then the patch may be dropped or reverted.  
-> 
-> You may get further e-mails resulting from automated or manual testing
-> and review of the tree, please engage with people reporting problems and
-> send followup patches addressing any issues that are reported if needed.
-> 
-> If any updates are required or you are submitting further changes they
-> should be sent as incremental updates against current git, existing
-> patches will not be replaced.
-> 
-> Please add any relevant lists and maintainers to the CCs when replying
-> to this mail.
-> 
-> Thanks,
-> Mark
-> 
-> From 069d037aea98ffa64c26d4b1dc958fb8f39f5c2b Mon Sep 17 00:00:00 2001
-> From: Jon Hunter <jonathanh@nvidia.com>
-> Date: Thu, 16 May 2019 18:51:26 +0100
-> Subject: [PATCH] ASoC: simple-card: Fix configuration of DAI format
-> 
-> When configuring a codec to be both bit-clock and frame-master, it was
-> found that the codec was always configured as bit-clock and frame-slave.
-> Looking at the simple_dai_link_of() function there appears to be two
-> problems with the configuration of the DAI format, which are ...
-> 
-> 1. The function asoc_simple_parse_daifmt() is called before the function
->    asoc_simple_parse_codec() and this means that the device-tree node
->    for the codec has not been parsed yet, which is needed by the
->    function asoc_simple_parse_daifmt() to determine who is the codec.
-> 2. The phandle passed to asoc_simple_parse_daifmt() is the phandle to
->    the 'codec' node and not the phandle of the actual codec defined by
->    the 'sound-dai' property under the 'codec' node.
-> 
-> Fix the above by moving the call to asoc_simple_parse_daifmt() after the
-> the call to asoc_simple_parse_codec() and pass the phandle for the codec
-> to asoc_simple_parse_daifmt().
-Please can you drop this patch?
+LXT970 is left aside because all registers get cleared upon
+"power down" exit.
 
-Per some offline review with Morimoto-san, it turns out that the actual
-issue resided in my DT (which was incorrect) and not the simple-card
-machine driver.
+Reviewed-by: Heiner Kallweit <hkallweit1@gmail.com>
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+---
+ I'd be happy if you could also merge that into 4.19
 
-In my DT I incorrectly had ...
+ v2: revised commit log without the Fixes: tag.
 
-sound {
-	compatible = "simple-audio-card";
+ drivers/net/phy/lxt.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-	...
-=>	simple-audio-card,bitclock-master = <&codec>;
-=>	simple-audio-card,frame-master = <&codec>;
-	...
-
-	simple-audio-card,cpu {
-		sound-dai = <&xxx>;
-	};
-
-	simple-audio-card,codec {
-=>		sound-dai = <&codec>;
-	};
-};
-
-But I should have had ...
-
-sound {
-	compatible = "simple-audio-card";
-
-	...
-=>	simple-audio-card,bitclock-master = <&codec>;
-=>	simple-audio-card,frame-master = <&codec>;
-	...
-
-	simple-audio-card,cpu {
-		sound-dai = <&xxx>;
-	};
-
-=>	codec: simple-audio-card,codec {	/* simple-card wants here */
-		sound-dai = <&xxx>;		/* not here */
-	};
-};
-
-Thanks to Morimoto-san for correcting me!
-
-Cheers
-Jon
-
+diff --git a/drivers/net/phy/lxt.c b/drivers/net/phy/lxt.c
+index 314486288119..356bd6472f49 100644
+--- a/drivers/net/phy/lxt.c
++++ b/drivers/net/phy/lxt.c
+@@ -262,6 +262,8 @@ static struct phy_driver lxt97x_driver[] = {
+ 	/* PHY_BASIC_FEATURES */
+ 	.ack_interrupt	= lxt971_ack_interrupt,
+ 	.config_intr	= lxt971_config_intr,
++	.suspend	= genphy_suspend,
++	.resume		= genphy_resume,
+ }, {
+ 	.phy_id		= 0x00137a10,
+ 	.name		= "LXT973-A2",
+@@ -271,6 +273,8 @@ static struct phy_driver lxt97x_driver[] = {
+ 	.probe		= lxt973_probe,
+ 	.config_aneg	= lxt973_config_aneg,
+ 	.read_status	= lxt973a2_read_status,
++	.suspend	= genphy_suspend,
++	.resume		= genphy_resume,
+ }, {
+ 	.phy_id		= 0x00137a10,
+ 	.name		= "LXT973",
+@@ -279,6 +283,8 @@ static struct phy_driver lxt97x_driver[] = {
+ 	.flags		= 0,
+ 	.probe		= lxt973_probe,
+ 	.config_aneg	= lxt973_config_aneg,
++	.suspend	= genphy_suspend,
++	.resume		= genphy_resume,
+ } };
+ 
+ module_phy_driver(lxt97x_driver);
 -- 
-nvpublic
+2.13.3
+
