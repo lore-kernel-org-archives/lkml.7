@@ -2,118 +2,127 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F295C04AAC
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:51:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 134E5C04AAC
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:52:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B32020675
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:51:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6FD421019
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:52:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558601525;
+	bh=GvIxnz2QDkzaDXhCwkyYIbh58BouSz387m9539g/2A8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qKBbBgcrzEdyIEGK7kfHl6trBssq5OAioYK918PkxCH/cHEaZvu10UC98t/kgGfj4
+	 0xXvD36lH3Al5cHg/PFV14JZ2NmhvkoJLtFGJrU29SSWti2/Iq+P2Gq7JLG7ASOy37
+	 e2rrJp/fhQTgagSiMlDNN6vdOXiyqL9m6xH7Umug=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730070AbfEWIvT (ORCPT
+        id S1730126AbfEWIwF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 04:51:19 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:45581 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726230AbfEWIvT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 04:51:19 -0400
-Received: by mail-qt1-f194.google.com with SMTP id t1so5768662qtc.12;
-        Thu, 23 May 2019 01:51:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=G/4b99ppThyzVBjBPQF+fjXgPnHh7TF65Bh6HAL+CAA=;
-        b=iFQSvgGEi/wnsVDHD3d2/T7gIoSuhHyhAWlPcj3h16JjOG0JWVNSzRCgFWNFrCqHvq
-         argIZdS1fQFfc5vI4uWYO00olGvHzlOkZjUHjF2c0LWvOzCkmQS+zJFcjixyOlzwkuDz
-         0/jIxiRafQoAcoyzCPqXiB5YMADg3e5NERv2x3nBKZTPgag5NReR+beeBrBYY0ffYUaz
-         UK4YC+GkPp+wIsx0QNdEeFyZSbmQqHugOwYL2BSzRVdsMgKXHQC2VqgCplurdeNvkOa3
-         RrkXHcu98oO6IjndAsxaTWRr9YttklOV+MnRdXSwkk+1VoT1BpYsfHa5+fhwhLxnHWW9
-         hXuQ==
-X-Gm-Message-State: APjAAAXSMJ8HYYdXPKovohrAn/sk9UOI4OwCnhOm4g7PWUdaqRIobPdp
-        yVQNZFq2t81D7Psq7hrhy/W+g+E7lf4bUv0U4OE=
-X-Google-Smtp-Source: APXvYqz1mhfFsmpde2hm5zn0CKwPeOeJVfXj4XsHMSIoPLUZWkSUMq+0rPz7Qf99e4MM4Xocw9e6dHu+Ltod5QGW6WI=
-X-Received: by 2002:ac8:1c51:: with SMTP id j17mr78503342qtk.7.1558601478000;
- Thu, 23 May 2019 01:51:18 -0700 (PDT)
+        Thu, 23 May 2019 04:52:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34272 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726081AbfEWIwE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 04:52:04 -0400
+Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9633220675;
+        Thu, 23 May 2019 08:52:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558601523;
+        bh=GvIxnz2QDkzaDXhCwkyYIbh58BouSz387m9539g/2A8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=cGQ/xj15H4e7wzpcSW5LwgkL0k2fAuxUfKby8GOqJq7U+CObYxAh8WO4TLHsuSU42
+         5OmnsByuClenpeucDd2R6GXBQ9Q2yBeqlfsJP9xf/abAQ4i3T1VngiNyi/Mf833qTw
+         +QEBNS3NTcj3UbMAhjKZ/c3iC5Hv1hkYAHSrkH3c=
+Date:   Thu, 23 May 2019 16:51:04 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Ran Wang <ran.wang_1@nxp.com>,
+        Bhaskar Upadhaya <bhaskar.upadhaya@nxp.com>
+Cc:     Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] arm64: dts: ls1028a: Fix CPU idle fail.
+Message-ID: <20190523085104.GP9261@dragon>
+References: <20190517045753.3709-1-ran.wang_1@nxp.com>
 MIME-Version: 1.0
-References: <20190502151548.11143-1-natechancellor@gmail.com>
- <CAKwvOd=nvKGGW5jvN+WFUXzOm9xeiNNUD0F9--9YcpuRmnWWhA@mail.gmail.com>
- <20190503031718.GB6969@archlinux-i9> <20190523015415.GA17819@archlinux-epyc>
-In-Reply-To: <20190523015415.GA17819@archlinux-epyc>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 23 May 2019 10:51:01 +0200
-Message-ID: <CAK8P3a001V5qQo4vGfpugtmrnFfUNeP_q4KY-YS7rP_L91HY1A@mail.gmail.com>
-Subject: Re: [PATCH] rsi: Properly initialize data in rsi_sdio_ta_reset
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Amitkumar Karwar <amitkarwar@gmail.com>,
-        Siva Rebbagondla <siva8118@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190517045753.3709-1-ran.wang_1@nxp.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 3:54 AM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
->
-> On Thu, May 02, 2019 at 08:17:18PM -0700, Nathan Chancellor wrote:
-> > On Thu, May 02, 2019 at 11:18:01AM -0700, Nick Desaulniers wrote:
-> > > On Thu, May 2, 2019 at 8:16 AM Nathan Chancellor
-> > > u8 data [4];
-> >
-> > data was __le32 in rsi_reset_chip() before commit f700546682a6 ("rsi:
-> > fix nommu_map_sg overflow kernel panic").
-> >
-> > I wonder if this would be okay for this function:
-> >
-> > -------------------------------------------------
-> >
-> > diff --git a/drivers/net/wireless/rsi/rsi_91x_sdio.c b/drivers/net/wireless/rsi/rsi_91x_sdio.c
-> > index f9c67ed473d1..0330c50ab99c 100644
-> > --- a/drivers/net/wireless/rsi/rsi_91x_sdio.c
-> > +++ b/drivers/net/wireless/rsi/rsi_91x_sdio.c
-> > @@ -927,7 +927,7 @@ static int rsi_sdio_ta_reset(struct rsi_hw *adapter)
-> >  {
-> >         int status;
-> >         u32 addr;
-> > -       u8 *data;
-> > +       u8 data;
-> >
-> >         status = rsi_sdio_master_access_msword(adapter, TA_BASE_ADDR);
-> >         if (status < 0) {
-> > @@ -937,7 +937,7 @@ static int rsi_sdio_ta_reset(struct rsi_hw *adapter)
-> >         }
-> >
-> >         rsi_dbg(INIT_ZONE, "%s: Bring TA out of reset\n", __func__);
-> > -       put_unaligned_le32(TA_HOLD_THREAD_VALUE, data);
-> > +       put_unaligned_le32(TA_HOLD_THREAD_VALUE, &data);
-> >         addr = TA_HOLD_THREAD_REG | RSI_SD_REQUEST_MASTER;
-> >         status = rsi_sdio_write_register_multiple(adapter, addr,
-> >                                                   (u8 *)&data,
+On Fri, May 17, 2019 at 12:57:53PM +0800, Ran Wang wrote:
+> PSCI spec define 1st parameter's bit 16 of function CPU_SUSPEND to
+> indicate CPU State Type: 0 for standby, 1 for power down. In this
+> case, we want to select standby for CPU idle feature. But current
+> setting wrongly select power down and cause CPU SUSPEND fail every
+> time. Need this fix.
+> 
+> Fixes: 8897f3255c9c ("arm64: dts: Add support for NXP LS1028A SoC")
+> Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
 
-This is clearly not ok, as put_unaligned_le32() stores four bytes, and
-the local variable is only one byte!
+Leo, Bhaskar,
 
-Also, sdio does use DMA for transfers, so the variable has to be
-dynamically allocated. I think your original patch was correct.
-The only change I'd possibly make would be to use
-RSI_9116_REG_SIZE instead of sizeof(u32).
+Do you guys agree with it?
 
-> Did any of the maintainers have any comments on what the correct
-> solution is here to resolve this warning? It is one of the few left
-> before we can turn on -Wuninitialized for the whole kernel.
+Shawn
 
-I would argue that this should not stop us from turning it on, as the
-warning is for a clear bug in the code that absolutely needs to be
-fixed, rather than a false-positive.
-
-       Arnd
+> ---
+>  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi |   18 +++++++++---------
+>  1 files changed, 9 insertions(+), 9 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> index b045812..bf7f845 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> @@ -28,7 +28,7 @@
+>  			enable-method = "psci";
+>  			clocks = <&clockgen 1 0>;
+>  			next-level-cache = <&l2>;
+> -			cpu-idle-states = <&CPU_PH20>;
+> +			cpu-idle-states = <&CPU_PW20>;
+>  		};
+>  
+>  		cpu1: cpu@1 {
+> @@ -38,7 +38,7 @@
+>  			enable-method = "psci";
+>  			clocks = <&clockgen 1 0>;
+>  			next-level-cache = <&l2>;
+> -			cpu-idle-states = <&CPU_PH20>;
+> +			cpu-idle-states = <&CPU_PW20>;
+>  		};
+>  
+>  		l2: l2-cache {
+> @@ -53,13 +53,13 @@
+>  		 */
+>  		entry-method = "arm,psci";
+>  
+> -		CPU_PH20: cpu-ph20 {
+> -			compatible = "arm,idle-state";
+> -			idle-state-name = "PH20";
+> -			arm,psci-suspend-param = <0x00010000>;
+> -			entry-latency-us = <1000>;
+> -			exit-latency-us = <1000>;
+> -			min-residency-us = <3000>;
+> +		CPU_PW20: cpu-pw20 {
+> +			  compatible = "arm,idle-state";
+> +			  idle-state-name = "PW20";
+> +			  arm,psci-suspend-param = <0x0>;
+> +			  entry-latency-us = <2000>;
+> +			  exit-latency-us = <2000>;
+> +			  min-residency-us = <6000>;
+>  		};
+>  	};
+>  
+> -- 
+> 1.7.1
+> 
