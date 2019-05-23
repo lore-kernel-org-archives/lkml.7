@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EB3DC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:38:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08E0BC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:38:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 050FA21851
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:38:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3B1A20881
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:38:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558640327;
-	bh=YBMr8ol5ddUzuPtejLpdxwDOqyjzDxIYdtVrFGBFFaU=;
+	s=default; t=1558640336;
+	bh=HouLTLqIqjRCwjXfcBrJZTlxNRJEi9ykC66tBSDO8QI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xRX3dOZJyEx5jCMsAWEhzID+klHv8babwG2DfRMp8lsG2fA1L/Cq+xtFhRC1y3qfY
-	 wEvafBjAIZZSOzPvAUoMC1HXNJyiV0ShtXZogLauXMjF1fmdfM2BPgTBTqqhJOtzYA
-	 s7+ge9P7Nl1JqR4TXffwIC/f6eBbTnHpXCTirWqQ=
+	b=PAeK89+c0ORlXLLXHHR7zxW/AsvQAtYm77Z+uE64iA2wPl1MB4vIdOz4LMe/Wwgk1
+	 C7sd77B5xGkIK0SnAqzER77NetDqJllNaVZsYwSucT6U0E7RMEdnMOdQOG4YNxG1oq
+	 L0i3mE5p8PYiU8Ei8ssUGqFez6y9kcSBQ5b8TCBs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390619AbfEWTXG (ORCPT
+        id S2390562AbfEWTWv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:23:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33010 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:22:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32832 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389813AbfEWTW5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:22:57 -0400
+        id S2389471AbfEWTWt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:22:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F340E2054F;
-        Thu, 23 May 2019 19:22:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D9762133D;
+        Thu, 23 May 2019 19:22:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639376;
-        bh=YBMr8ol5ddUzuPtejLpdxwDOqyjzDxIYdtVrFGBFFaU=;
+        s=default; t=1558639368;
+        bh=HouLTLqIqjRCwjXfcBrJZTlxNRJEi9ykC66tBSDO8QI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S8bEncO0kX962T/bVUY/2uiCWndMehEwYltNqsZtkMywIyox/0XmtoZMEOEraecIA
-         XztAX893w253nLgxkouj3g1mzCgGO/Wp2pshej2NbBwsI9q1H2+YkJ8al18xnB+KwH
-         ObS1i3CZHcnyrUReiJxQPhoJ8gzCnxxaYJz6FtFo=
+        b=0wlVdDEYsNU26t8PqitKukA/JXR/Ep+GWCFURk7eSZQenMv4Z3RZdDpStWT/E/l8o
+         ZhPqjkoKX4DmTwhK+PFaQvytNKC41RFJ8nRVDb6ZJcFnuspYNszw9Xu/TiHg/N37uu
+         c37LnWcxw3HdelBCZvkr7mHq1/NoAoACKQ8AjgAE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yifeng Li <tomli@tomli.me>,
-        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        Teddy Wang <teddy.wang@siliconmotion.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: [PATCH 5.0 082/139] fbdev: sm712fb: fix support for 1024x768-16 mode
-Date:   Thu, 23 May 2019 21:06:10 +0200
-Message-Id: <20190523181731.515664293@linuxfoundation.org>
+        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Joerg Roedel <jroedel@suse.de>
+Subject: [PATCH 5.0 062/139] iommu/tegra-smmu: Fix invalid ASID bits on Tegra30/114
+Date:   Thu, 23 May 2019 21:05:50 +0200
+Message-Id: <20190523181728.813043955@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181720.120897565@linuxfoundation.org>
 References: <20190523181720.120897565@linuxfoundation.org>
@@ -61,95 +60,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yifeng Li <tomli@tomli.me>
+From: Dmitry Osipenko <digetx@gmail.com>
 
-commit 6053d3a4793e5bde6299ac5388e76a3bf679ff65 upstream.
+commit 43a0541e312f7136e081e6bf58f6c8a2e9672688 upstream.
 
-In order to support the 1024x600 panel on Yeeloong Loongson MIPS
-laptop, the original 1024x768-16 table was modified to 1024x600-16,
-without leaving the original. It causes problem on x86 laptop as
-the 1024x768-16 support was still claimed but not working.
+Both Tegra30 and Tegra114 have 4 ASID's and the corresponding bitfield of
+the TLB_FLUSH register differs from later Tegra generations that have 128
+ASID's.
 
-Fix it by introducing the 1024x768-16 mode.
+In a result the PTE's are now flushed correctly from TLB and this fixes
+problems with graphics (randomly failing tests) on Tegra30.
 
-Signed-off-by: Yifeng Li <tomli@tomli.me>
-Tested-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Cc: Teddy Wang <teddy.wang@siliconmotion.com>
-Cc: <stable@vger.kernel.org>  # v4.4+
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Acked-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/video/fbdev/sm712fb.c |   59 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 59 insertions(+)
+ drivers/iommu/tegra-smmu.c |   25 ++++++++++++++++++-------
+ 1 file changed, 18 insertions(+), 7 deletions(-)
 
---- a/drivers/video/fbdev/sm712fb.c
-+++ b/drivers/video/fbdev/sm712fb.c
-@@ -530,6 +530,65 @@ static const struct modeinit vgamode[] =
- 			0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x15, 0x03,
- 		},
- 	},
-+	{	/*  1024 x 768  16Bpp  60Hz */
-+		1024, 768, 16, 60,
-+		/*  Init_MISC */
-+		0xEB,
-+		{	/*  Init_SR0_SR4 */
-+			0x03, 0x01, 0x0F, 0x03, 0x0E,
-+		},
-+		{	/*  Init_SR10_SR24 */
-+			0xF3, 0xB6, 0xC0, 0xDD, 0x00, 0x0E, 0x17, 0x2C,
-+			0x99, 0x02, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00,
-+			0xC4, 0x30, 0x02, 0x01, 0x01,
-+		},
-+		{	/*  Init_SR30_SR75 */
-+			0x38, 0x03, 0x20, 0x09, 0xC0, 0x3A, 0x3A, 0x3A,
-+			0x3A, 0x3A, 0x3A, 0x3A, 0x00, 0x00, 0x03, 0xFF,
-+			0x00, 0xFC, 0x00, 0x00, 0x20, 0x18, 0x00, 0xFC,
-+			0x20, 0x0C, 0x44, 0x20, 0x00, 0x00, 0x00, 0x3A,
-+			0x06, 0x68, 0xA7, 0x7F, 0x83, 0x24, 0xFF, 0x03,
-+			0x0F, 0x60, 0x59, 0x3A, 0x3A, 0x00, 0x00, 0x3A,
-+			0x01, 0x80, 0x7E, 0x1A, 0x1A, 0x00, 0x00, 0x00,
-+			0x50, 0x03, 0x74, 0x14, 0x3B, 0x0D, 0x09, 0x02,
-+			0x04, 0x45, 0x30, 0x30, 0x40, 0x20,
-+		},
-+		{	/*  Init_SR80_SR93 */
-+			0xFF, 0x07, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x3A,
-+			0xF7, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0x3A, 0x3A,
-+			0x00, 0x00, 0x00, 0x00,
-+		},
-+		{	/*  Init_SRA0_SRAF */
-+			0x00, 0xFB, 0x9F, 0x01, 0x00, 0xED, 0xED, 0xED,
-+			0x7B, 0xFB, 0xFF, 0xFF, 0x97, 0xEF, 0xBF, 0xDF,
-+		},
-+		{	/*  Init_GR00_GR08 */
-+			0x00, 0x00, 0x00, 0x00, 0x00, 0x40, 0x05, 0x0F,
-+			0xFF,
-+		},
-+		{	/*  Init_AR00_AR14 */
-+			0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
-+			0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F,
-+			0x41, 0x00, 0x0F, 0x00, 0x00,
-+		},
-+		{	/*  Init_CR00_CR18 */
-+			0xA3, 0x7F, 0x7F, 0x00, 0x85, 0x16, 0x24, 0xF5,
-+			0x00, 0x60, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-+			0x03, 0x09, 0xFF, 0x80, 0x40, 0xFF, 0x00, 0xE3,
-+			0xFF,
-+		},
-+		{	/*  Init_CR30_CR4D */
-+			0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x02, 0x20,
-+			0x00, 0x00, 0x00, 0x40, 0x00, 0xFF, 0xBF, 0xFF,
-+			0xA3, 0x7F, 0x00, 0x86, 0x15, 0x24, 0xFF, 0x00,
-+			0x01, 0x07, 0xE5, 0x20, 0x7F, 0xFF,
-+		},
-+		{	/*  Init_CR90_CRA7 */
-+			0x55, 0xD9, 0x5D, 0xE1, 0x86, 0x1B, 0x8E, 0x26,
-+			0xDA, 0x8D, 0xDE, 0x94, 0x00, 0x00, 0x18, 0x00,
-+			0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x15, 0x03,
-+		},
-+	},
- 	{	/*  mode#5: 1024 x 768  24Bpp  60Hz */
- 		1024, 768, 24, 60,
- 		/*  Init_MISC */
+--- a/drivers/iommu/tegra-smmu.c
++++ b/drivers/iommu/tegra-smmu.c
+@@ -102,7 +102,6 @@ static inline u32 smmu_readl(struct tegr
+ #define  SMMU_TLB_FLUSH_VA_MATCH_ALL     (0 << 0)
+ #define  SMMU_TLB_FLUSH_VA_MATCH_SECTION (2 << 0)
+ #define  SMMU_TLB_FLUSH_VA_MATCH_GROUP   (3 << 0)
+-#define  SMMU_TLB_FLUSH_ASID(x)          (((x) & 0x7f) << 24)
+ #define  SMMU_TLB_FLUSH_VA_SECTION(addr) ((((addr) & 0xffc00000) >> 12) | \
+ 					  SMMU_TLB_FLUSH_VA_MATCH_SECTION)
+ #define  SMMU_TLB_FLUSH_VA_GROUP(addr)   ((((addr) & 0xffffc000) >> 12) | \
+@@ -205,8 +204,12 @@ static inline void smmu_flush_tlb_asid(s
+ {
+ 	u32 value;
+ 
+-	value = SMMU_TLB_FLUSH_ASID_MATCH | SMMU_TLB_FLUSH_ASID(asid) |
+-		SMMU_TLB_FLUSH_VA_MATCH_ALL;
++	if (smmu->soc->num_asids == 4)
++		value = (asid & 0x3) << 29;
++	else
++		value = (asid & 0x7f) << 24;
++
++	value |= SMMU_TLB_FLUSH_ASID_MATCH | SMMU_TLB_FLUSH_VA_MATCH_ALL;
+ 	smmu_writel(smmu, value, SMMU_TLB_FLUSH);
+ }
+ 
+@@ -216,8 +219,12 @@ static inline void smmu_flush_tlb_sectio
+ {
+ 	u32 value;
+ 
+-	value = SMMU_TLB_FLUSH_ASID_MATCH | SMMU_TLB_FLUSH_ASID(asid) |
+-		SMMU_TLB_FLUSH_VA_SECTION(iova);
++	if (smmu->soc->num_asids == 4)
++		value = (asid & 0x3) << 29;
++	else
++		value = (asid & 0x7f) << 24;
++
++	value |= SMMU_TLB_FLUSH_ASID_MATCH | SMMU_TLB_FLUSH_VA_SECTION(iova);
+ 	smmu_writel(smmu, value, SMMU_TLB_FLUSH);
+ }
+ 
+@@ -227,8 +234,12 @@ static inline void smmu_flush_tlb_group(
+ {
+ 	u32 value;
+ 
+-	value = SMMU_TLB_FLUSH_ASID_MATCH | SMMU_TLB_FLUSH_ASID(asid) |
+-		SMMU_TLB_FLUSH_VA_GROUP(iova);
++	if (smmu->soc->num_asids == 4)
++		value = (asid & 0x3) << 29;
++	else
++		value = (asid & 0x7f) << 24;
++
++	value |= SMMU_TLB_FLUSH_ASID_MATCH | SMMU_TLB_FLUSH_VA_GROUP(iova);
+ 	smmu_writel(smmu, value, SMMU_TLB_FLUSH);
+ }
+ 
 
 
