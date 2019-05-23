@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64A4CC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:31:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F905C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:31:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B4BA217D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:31:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06C8B2133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:31:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639895;
-	bh=45/JiBrYveEN+Rj7Z+64oGLJm0MNpL+7SLALyvLUOq4=;
+	s=default; t=1558639899;
+	bh=2H4WkPeaT7GbdER8vV0gdNQzX/x+46HZ+8L6I0jfARU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KFFQhbaPc0h+3IlI8jmVd+6yh7QCELtJcpWTlRDGUJ6f2U9rlhapBERbSBF3Fz/bQ
-	 jiSzYUDUuLgKXxPiviQ+uVGka1TxL6qOdMeXSjtlUOp9Arbzvpk7UTUQl8y6/mDeAX
-	 P1642yFbYI1w/zhEalc0JpRBc9WEnbKDdFDaOZdM=
+	b=gxitgIKouMVFcv1s+urj4mRkmexiGo+t3XaYOb1yrNdR56O76esX+golusT5BdWk9
+	 d5Fjg0TNBlaCR94SGvRSQK5SXxmPGVb6SBp5DSgWyz7A9gbU+84E1vSQ8J/GgYBUA7
+	 tc07jnD3Wjx6eynvJSmPM3aeo3VdKPME6AkT301M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392248AbfEWTbe (ORCPT
+        id S2403879AbfEWTbh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:31:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45374 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:31:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45406 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403863AbfEWTbb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:31:31 -0400
+        id S2392244AbfEWTbe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:31:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 404DC20879;
-        Thu, 23 May 2019 19:31:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA87B20879;
+        Thu, 23 May 2019 19:31:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639890;
-        bh=45/JiBrYveEN+Rj7Z+64oGLJm0MNpL+7SLALyvLUOq4=;
+        s=default; t=1558639893;
+        bh=2H4WkPeaT7GbdER8vV0gdNQzX/x+46HZ+8L6I0jfARU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S02OvLU6jCQ/QC3lDM1tuBuwxaJTjP+AKLZauUPemWE28yYYnjfxd8TSq0hrub2LP
-         a8kqpPPshKdAYhUSF03NTbmi3ttXE/5c7PHKdcl45TCODcz0PMTJodtgV5Uoyj8odz
-         xbMGugWUNXO0H7sr0J7fVjPv+5rrJINmhsAcsGjQ=
+        b=fGj2UHfluQBDptAmwQ5ldKS1EnqJMwgd4eIYRlbvQ8+uAd6jlWzZ0Z7Qfs6ZOBbjB
+         xFM+sTlNSzDFpqRsa7ALQfQMb8mk+XPjXg206eZp2aZIKc05Azdybm/Fiht7eyuKJc
+         RYGjWoXFCVq/df34Lvevb4VilaJLqZ4tYHn9NHlc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adam Ford <aford173@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>
-Subject: [PATCH 5.1 122/122] ARM: dts: imx6q-logicpd: Reduce inrush current on start
-Date:   Thu, 23 May 2019 21:07:24 +0200
-Message-Id: <20190523181721.785614665@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>,
+        Nigel Croxon <ncroxon@redhat.com>,
+        Song Liu <songliubraving@fb.com>
+Subject: [PATCH 5.1 113/122] md/raid: raid5 preserve the writeback action after the parity check
+Date:   Thu, 23 May 2019 21:07:15 +0200
+Message-Id: <20190523181720.440484774@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181705.091418060@linuxfoundation.org>
 References: <20190523181705.091418060@linuxfoundation.org>
@@ -59,36 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adam Ford <aford173@gmail.com>
+From: Nigel Croxon <ncroxon@redhat.com>
 
-commit dbb58e291cd47e594b64293bd91a4ce40626513c upstream.
+commit b2176a1dfb518d870ee073445d27055fea64dfb8 upstream.
 
-The main 3.3V regulator sources a series of additional regulators.
-This patch adds a small delay, so when the 3.3V regulator comes
-on it delays a bit before the subsequent regulators can come on.
-This reduces the inrush current a bit on the external DC power
-supply to help prevent a situation where the sourcing power supply
-cannot source enough current and overloads and the kit fails to
-start.
+The problem is that any 'uptodate' vs 'disks' check is not precise
+in this path. Put a "WARN_ON(!test_bit(R5_UPTODATE, &dev->flags)" on the
+device that might try to kick off writes and then skip the action.
+Better to prevent the raid driver from taking unexpected action *and* keep
+the system alive vs killing the machine with BUG_ON.
 
-Fixes: 1c207f911fe9 ("ARM: dts: imx: Add support for Logic PD i.MX6QD EVM")
-Signed-off-by: Adam Ford <aford173@gmail.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Note: fixed warning reported by kbuild test robot <lkp@intel.com>
+
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Nigel Croxon <ncroxon@redhat.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/boot/dts/imx6-logicpd-baseboard.dtsi |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/md/raid5.c |   10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
---- a/arch/arm/boot/dts/imx6-logicpd-baseboard.dtsi
-+++ b/arch/arm/boot/dts/imx6-logicpd-baseboard.dtsi
-@@ -100,6 +100,7 @@
- 		regulator-min-microvolt = <3300000>;
- 		regulator-max-microvolt = <3300000>;
- 		gpio = <&gpio1 26 GPIO_ACTIVE_HIGH>;
-+		startup-delay-us = <70000>;
- 		enable-active-high;
- 		regulator-always-on;
- 	};
+--- a/drivers/md/raid5.c
++++ b/drivers/md/raid5.c
+@@ -4187,7 +4187,7 @@ static void handle_parity_checks6(struct
+ 		/* now write out any block on a failed drive,
+ 		 * or P or Q if they were recomputed
+ 		 */
+-		BUG_ON(s->uptodate < disks - 1); /* We don't need Q to recover */
++		dev = NULL;
+ 		if (s->failed == 2) {
+ 			dev = &sh->dev[s->failed_num[1]];
+ 			s->locked++;
+@@ -4212,6 +4212,14 @@ static void handle_parity_checks6(struct
+ 			set_bit(R5_LOCKED, &dev->flags);
+ 			set_bit(R5_Wantwrite, &dev->flags);
+ 		}
++		if (WARN_ONCE(dev && !test_bit(R5_UPTODATE, &dev->flags),
++			      "%s: disk%td not up to date\n",
++			      mdname(conf->mddev),
++			      dev - (struct r5dev *) &sh->dev)) {
++			clear_bit(R5_LOCKED, &dev->flags);
++			clear_bit(R5_Wantwrite, &dev->flags);
++			s->locked--;
++		}
+ 		clear_bit(STRIPE_DEGRADED, &sh->state);
+ 
+ 		set_bit(STRIPE_INSYNC, &sh->state);
 
 
