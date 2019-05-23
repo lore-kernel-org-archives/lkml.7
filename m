@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62335C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:10:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CC8AC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:10:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30A14217F9
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:10:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03A0F217F9
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:10:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558638628;
-	bh=zMokBmG2SiKr56AHDr4LskiULYRSW7ptbdGvkBWruxw=;
+	s=default; t=1558638631;
+	bh=97IRIs3gLrfSnPdxUy1ZyEwZGxnbK110X/WNgklQPk8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MiJti3tlzRxqg/4vwhIOMGV7pw+lb9mx1nAfUJqmxmY6f8pbxQTgLLvKJ6pajwGgp
-	 THPLUeJ1T6EFRpmajBuQqtOilvLO7dvyIHKAuck+YT4VJxio0DMM0eV9rnrKzhL7sk
-	 xsEYGeGcHcPXOjb8XbE2/65KkxZAVAwYxm5Dm/go=
+	b=In3uTa1Z86VWIzKACeGNWB/tRLQi+TIHsTRc2g4phjPkPgN4XoW+CZWwL9UvYPsnK
+	 8f0PWzJilqgCMspC8FVu+bGiMc9gqB34h6wTC4W7W6ORhxGc1jzgr1dBJSrfw1iC2F
+	 QAcI3wwCy7WOBVpzsgKd6V7D8da/WUHf+atE4XQc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387823AbfEWTK1 (ORCPT
+        id S2387839AbfEWTK3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:10:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43676 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:10:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43766 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387789AbfEWTKW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:10:22 -0400
+        id S2387821AbfEWTK1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:10:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3061C217D7;
-        Thu, 23 May 2019 19:10:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 87DEB217D9;
+        Thu, 23 May 2019 19:10:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558638621;
-        bh=zMokBmG2SiKr56AHDr4LskiULYRSW7ptbdGvkBWruxw=;
+        s=default; t=1558638627;
+        bh=97IRIs3gLrfSnPdxUy1ZyEwZGxnbK110X/WNgklQPk8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AvVOGvixZJkd7ZD/RCWRrjixe/1phTotUiVk2Xp3jttW/vJI6iCnoherNfXOdhdhB
-         H/r5jAKRcRjgFUAfb48cARgdvKZROkBxXeT5E0JZwdPXM7U4Y81RcMZsbNyedo8fk6
-         bx9uOKs5Nw3hiUaH5Fle9MvKo8W3T1Vfo1yKs/GM=
+        b=Gs1CpTqXRMX1S4yZuGSQBHHoVi4tfgeyiti6V5+2/Jk4GmKvel3TQ+PrC522SxXIt
+         m2PqoYyDc3DHhUlyINbCNRNm0b5yerdoHPmbz+8ctd8jZrYRq5/HvQa9N/MRHxiRdt
+         T2HJiAIOFtGYp7Qc0tPpub/v109GUAtaMBdJosTg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrew Jones <drjones@redhat.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
+        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 47/53] KVM: arm/arm64: Ensure vcpu target is unset on reset failure
-Date:   Thu, 23 May 2019 21:06:11 +0200
-Message-Id: <20190523181718.436163153@linuxfoundation.org>
+Subject: [PATCH 4.9 49/53] ufs: fix braino in ufs_get_inode_gid() for solaris UFS flavour
+Date:   Thu, 23 May 2019 21:06:13 +0200
+Message-Id: <20190523181718.718899106@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181710.981455400@linuxfoundation.org>
 References: <20190523181710.981455400@linuxfoundation.org>
@@ -60,53 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 811328fc3222f7b55846de0cd0404339e2e1e6d7 ]
+[ Upstream commit 4e9036042fedaffcd868d7f7aa948756c48c637d ]
 
-A failed KVM_ARM_VCPU_INIT should not set the vcpu target,
-as the vcpu target is used by kvm_vcpu_initialized() to
-determine if other vcpu ioctls may proceed. We need to set
-the target before calling kvm_reset_vcpu(), but if that call
-fails, we should then unset it and clear the feature bitmap
-while we're at it.
+To choose whether to pick the GID from the old (16bit) or new (32bit)
+field, we should check if the old gid field is set to 0xffff.  Mainline
+checks the old *UID* field instead - cut'n'paste from the corresponding
+code in ufs_get_inode_uid().
 
-Signed-off-by: Andrew Jones <drjones@redhat.com>
-[maz: Simplified patch, completed commit message]
-Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+Fixes: 252e211e90ce
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/kvm/arm.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ fs/ufs/util.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/kvm/arm.c b/arch/arm/kvm/arm.c
-index a670c70f4def9..dfc00a5bdc10d 100644
---- a/arch/arm/kvm/arm.c
-+++ b/arch/arm/kvm/arm.c
-@@ -801,7 +801,7 @@ int kvm_vm_ioctl_irq_line(struct kvm *kvm, struct kvm_irq_level *irq_level,
- static int kvm_vcpu_set_target(struct kvm_vcpu *vcpu,
- 			       const struct kvm_vcpu_init *init)
- {
--	unsigned int i;
-+	unsigned int i, ret;
- 	int phys_target = kvm_target_cpu();
- 
- 	if (init->target != phys_target)
-@@ -836,9 +836,14 @@ static int kvm_vcpu_set_target(struct kvm_vcpu *vcpu,
- 	vcpu->arch.target = phys_target;
- 
- 	/* Now we know what it is, we can reset it. */
--	return kvm_reset_vcpu(vcpu);
--}
-+	ret = kvm_reset_vcpu(vcpu);
-+	if (ret) {
-+		vcpu->arch.target = -1;
-+		bitmap_zero(vcpu->arch.features, KVM_VCPU_MAX_FEATURES);
-+	}
- 
-+	return ret;
-+}
- 
- static int kvm_arch_vcpu_ioctl_vcpu_init(struct kvm_vcpu *vcpu,
- 					 struct kvm_vcpu_init *init)
+diff --git a/fs/ufs/util.h b/fs/ufs/util.h
+index 398019fb14481..9c4fb1fc0822a 100644
+--- a/fs/ufs/util.h
++++ b/fs/ufs/util.h
+@@ -228,7 +228,7 @@ ufs_get_inode_gid(struct super_block *sb, struct ufs_inode *inode)
+ 	case UFS_UID_44BSD:
+ 		return fs32_to_cpu(sb, inode->ui_u3.ui_44.ui_gid);
+ 	case UFS_UID_EFT:
+-		if (inode->ui_u1.oldids.ui_suid == 0xFFFF)
++		if (inode->ui_u1.oldids.ui_sgid == 0xFFFF)
+ 			return fs32_to_cpu(sb, inode->ui_u3.ui_sun.ui_gid);
+ 		/* Fall through */
+ 	default:
 -- 
 2.20.1
 
