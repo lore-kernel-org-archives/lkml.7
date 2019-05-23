@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8024C282DE
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:26:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69F4CC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:26:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE8EF217D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:26:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4057920868
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:26:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639609;
-	bh=E8Fez+UjFAXlTw7Yz7IfL44Gcey0YmhWjuPBqO4+gB0=;
+	s=default; t=1558639612;
+	bh=jMH2V8R1fuWoPmimjUQZRU65tG7hPgPWcO3zfI/9mnk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RQc/DR1GoRpz6rSBYdhdbWMJInyv+3kvK/6WlY9VwhArRdSHyXIXdCxVT1s4NILtE
-	 tUyPYIzrpqhlOEhu30jgw1b3EOAPIn/f06btd8MHLrdwuYcSS+nZWfAG6MYNM+SK/C
-	 iHFNBhmVuLnWqT4k2+SvCFO4l4c/mHIOzGJBqGqU=
+	b=hNxiPcLSQRxagfFKYIXkhn9HfSfwoWlSd9Avt/o+0lYhEzmlUPbEc36fAgUSzCYl4
+	 b9ZUb0WbXjwsTkpUbitSth+t7GMkhrtOa6np3bPv9Er42EqvLBDDzcam9NyqP2QPUF
+	 o0w1mEMhIuaft/reNYk2NZmhB+hfSUTJbmia1bTQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391434AbfEWT0s (ORCPT
+        id S2391443AbfEWT0v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:26:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38648 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:26:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38766 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391407AbfEWT0n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:26:43 -0400
+        id S2390856AbfEWT0s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:26:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 883352054F;
-        Thu, 23 May 2019 19:26:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE06C20868;
+        Thu, 23 May 2019 19:26:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639603;
-        bh=E8Fez+UjFAXlTw7Yz7IfL44Gcey0YmhWjuPBqO4+gB0=;
+        s=default; t=1558639608;
+        bh=jMH2V8R1fuWoPmimjUQZRU65tG7hPgPWcO3zfI/9mnk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=slQcr1KyTVuyuiQGW74AGrVeIYg6dtpIZxbEGun4GhGdnJ0ccYDTwWIkkINqu4QRh
-         SBEnaBeMIGKKYQIoW7Zrz/CM6sK5dhgqbkcn3piyKDvbmFEsxXpsw0ngByoQDAbIru
-         zSPL+vRrlwIePUJcWU06L2bIwW6tZo3jFAWlTKc4=
+        b=SQSLsy/3dNi2eWZ1ExJBd9VzjXxsrnxeES6bleS+76cReMwfOdiiujdrYdHlQiKkK
+         rhXvRLTRueHhikACQUU607uTeTqmLlRO7xIF5BGqIsmigveH2S6DKvsjH+prrARmlu
+         Y58SXpZjrrFm0S7ZbAXxyRKXUxM69fypmIiRO6l8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Guillaume Nault <gnault@redhat.com>,
+        stable@vger.kernel.org, Junwei Hu <hujunwei4@huawei.com>,
+        Wang Wang <wangwang2@huawei.com>,
+        Xiaogang Wang <wangxiaogang3@huawei.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.1 009/122] ppp: deflate: Fix possible crash in deflate_init
-Date:   Thu, 23 May 2019 21:05:31 +0200
-Message-Id: <20190523181706.253522161@linuxfoundation.org>
+Subject: [PATCH 5.1 011/122] tipc: switch order of device registration to fix a crash
+Date:   Thu, 23 May 2019 21:05:33 +0200
+Message-Id: <20190523181706.458976658@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181705.091418060@linuxfoundation.org>
 References: <20190523181705.091418060@linuxfoundation.org>
@@ -61,86 +61,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Junwei Hu <hujunwei4@huawei.com>
 
-[ Upstream commit 3ebe1bca58c85325c97a22d4fc3f5b5420752e6f ]
+[ Upstream commit 7e27e8d6130c5e88fac9ddec4249f7f2337fe7f8 ]
 
-BUG: unable to handle kernel paging request at ffffffffa018f000
-PGD 3270067 P4D 3270067 PUD 3271063 PMD 2307eb067 PTE 0
-Oops: 0000 [#1] PREEMPT SMP
-CPU: 0 PID: 4138 Comm: modprobe Not tainted 5.1.0-rc7+ #1
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
-rel-1.9.3-0-ge2fc41e-prebuilt.qemu-project.org 04/01/2014
-RIP: 0010:ppp_register_compressor+0x3e/0xd0 [ppp_generic]
-Code: 98 4a 3f e2 48 8b 15 c1 67 00 00 41 8b 0c 24 48 81 fa 40 f0 19 a0
-75 0e eb 35 48 8b 12 48 81 fa 40 f0 19 a0 74
-RSP: 0018:ffffc90000d93c68 EFLAGS: 00010287
-RAX: ffffffffa018f000 RBX: ffffffffa01a3000 RCX: 000000000000001a
-RDX: ffff888230c750a0 RSI: 0000000000000000 RDI: ffffffffa019f000
-RBP: ffffc90000d93c80 R08: 0000000000000001 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: ffffffffa0194080
-R13: ffff88822ee1a700 R14: 0000000000000000 R15: ffffc90000d93e78
-FS:  00007f2339557540(0000) GS:ffff888237a00000(0000)
-knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffffffa018f000 CR3: 000000022bde4000 CR4: 00000000000006f0
-Call Trace:
- ? 0xffffffffa01a3000
- deflate_init+0x11/0x1000 [ppp_deflate]
- ? 0xffffffffa01a3000
- do_one_initcall+0x6c/0x3cc
- ? kmem_cache_alloc_trace+0x248/0x3b0
- do_init_module+0x5b/0x1f1
- load_module+0x1db1/0x2690
- ? m_show+0x1d0/0x1d0
- __do_sys_finit_module+0xc5/0xd0
- __x64_sys_finit_module+0x15/0x20
- do_syscall_64+0x6b/0x1d0
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
+When tipc is loaded while many processes try to create a TIPC socket,
+a crash occurs:
+ PANIC: Unable to handle kernel paging request at virtual
+ address "dfff20000000021d"
+ pc : tipc_sk_create+0x374/0x1180 [tipc]
+ lr : tipc_sk_create+0x374/0x1180 [tipc]
+   Exception class = DABT (current EL), IL = 32 bits
+ Call trace:
+  tipc_sk_create+0x374/0x1180 [tipc]
+  __sock_create+0x1cc/0x408
+  __sys_socket+0xec/0x1f0
+  __arm64_sys_socket+0x74/0xa8
+ ...
 
-If ppp_deflate fails to register in deflate_init,
-module initialization failed out, however
-ppp_deflate_draft may has been regiestred and not
-unregistered before return.
-Then the seconed modprobe will trigger crash like this.
+This is due to race between sock_create and unfinished
+register_pernet_device. tipc_sk_insert tries to do
+"net_generic(net, tipc_net_id)".
+but tipc_net_id is not initialized yet.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Acked-by: Guillaume Nault <gnault@redhat.com>
+So switch the order of the two to close the race.
+
+This can be reproduced with multiple processes doing socket(AF_TIPC, ...)
+and one process doing module removal.
+
+Fixes: a62fbccecd62 ("tipc: make subscriber server support net namespace")
+Signed-off-by: Junwei Hu <hujunwei4@huawei.com>
+Reported-by: Wang Wang <wangwang2@huawei.com>
+Reviewed-by: Xiaogang Wang <wangxiaogang3@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ppp/ppp_deflate.c |   20 ++++++++++++++------
- 1 file changed, 14 insertions(+), 6 deletions(-)
+ net/tipc/core.c |   14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
---- a/drivers/net/ppp/ppp_deflate.c
-+++ b/drivers/net/ppp/ppp_deflate.c
-@@ -610,12 +610,20 @@ static struct compressor ppp_deflate_dra
+--- a/net/tipc/core.c
++++ b/net/tipc/core.c
+@@ -129,10 +129,6 @@ static int __init tipc_init(void)
+ 	if (err)
+ 		goto out_netlink_compat;
  
- static int __init deflate_init(void)
+-	err = tipc_socket_init();
+-	if (err)
+-		goto out_socket;
+-
+ 	err = tipc_register_sysctl();
+ 	if (err)
+ 		goto out_sysctl;
+@@ -141,6 +137,10 @@ static int __init tipc_init(void)
+ 	if (err)
+ 		goto out_pernet;
+ 
++	err = tipc_socket_init();
++	if (err)
++		goto out_socket;
++
+ 	err = tipc_bearer_setup();
+ 	if (err)
+ 		goto out_bearer;
+@@ -148,12 +148,12 @@ static int __init tipc_init(void)
+ 	pr_info("Started in single node mode\n");
+ 	return 0;
+ out_bearer:
++	tipc_socket_stop();
++out_socket:
+ 	unregister_pernet_subsys(&tipc_net_ops);
+ out_pernet:
+ 	tipc_unregister_sysctl();
+ out_sysctl:
+-	tipc_socket_stop();
+-out_socket:
+ 	tipc_netlink_compat_stop();
+ out_netlink_compat:
+ 	tipc_netlink_stop();
+@@ -165,10 +165,10 @@ out_netlink:
+ static void __exit tipc_exit(void)
  {
--        int answer = ppp_register_compressor(&ppp_deflate);
--        if (answer == 0)
--                printk(KERN_INFO
--		       "PPP Deflate Compression module registered\n");
--	ppp_register_compressor(&ppp_deflate_draft);
--        return answer;
-+	int rc;
-+
-+	rc = ppp_register_compressor(&ppp_deflate);
-+	if (rc)
-+		return rc;
-+
-+	rc = ppp_register_compressor(&ppp_deflate_draft);
-+	if (rc) {
-+		ppp_unregister_compressor(&ppp_deflate);
-+		return rc;
-+	}
-+
-+	pr_info("PPP Deflate Compression module registered\n");
-+	return 0;
- }
+ 	tipc_bearer_cleanup();
++	tipc_socket_stop();
+ 	unregister_pernet_subsys(&tipc_net_ops);
+ 	tipc_netlink_stop();
+ 	tipc_netlink_compat_stop();
+-	tipc_socket_stop();
+ 	tipc_unregister_sysctl();
  
- static void __exit deflate_cleanup(void)
+ 	pr_info("Deactivated\n");
 
 
