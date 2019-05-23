@@ -2,52 +2,58 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92CF4C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:23:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B04CC282DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:23:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A14820868
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:23:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22CE9217D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:23:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639399;
-	bh=KYikK1JLLVyzvW7pXda+GM9WVHPirwtjFfbWEW8PFiQ=;
+	s=default; t=1558639403;
+	bh=GoC1OIA003h0+CxziUkA4dOZlYYlol8sXKPimKJOX4g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z1Mw5LNw1lXJCtrPYJIPb0b+CeoW0cS4RWOiipQC6kpnNfZ+krEkEdbpxE2Pvv+uT
-	 EJfqi67gwv5ZoSVjgNEcd8dJhadiv+Gypxm8akeYCmEaq6mTN7Qjki0mZpbqhtEZsm
-	 vYoUjTsO/XFp03iQCWyjRHiMkGzbG6J/uAdE85tY=
+	b=vezrl/7Zw2PGOwia5eQ4sSNeoEuELhnEu2UNbUNvYAenWR8EW6ksPsa8EnW4jmxgM
+	 GnjAv477BxbywnD/t1a42cAOD7olWlkuRAZAELL5eem9IRc38DMFouYfk40bJc5/9p
+	 WMq/T5vAicgxce9rxrLiGA8w23nN2LC1S0FUAooI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390688AbfEWTXR (ORCPT
+        id S2390698AbfEWTXW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:23:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33312 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:23:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390633AbfEWTXI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:23:08 -0400
+        id S2390689AbfEWTXS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:23:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B1B82054F;
-        Thu, 23 May 2019 19:23:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE8AC2054F;
+        Thu, 23 May 2019 19:23:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639387;
-        bh=KYikK1JLLVyzvW7pXda+GM9WVHPirwtjFfbWEW8PFiQ=;
+        s=default; t=1558639398;
+        bh=GoC1OIA003h0+CxziUkA4dOZlYYlol8sXKPimKJOX4g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pin7bLv9LB1msOpVB3z4m3hSrkHfH/072XeJofxWz7tH/p0PM3fmywZyGtS5jrvsK
-         wnLiMz3ctihlHHu4kvuJIV4mAaiXrMPe4jjo5i5WQ1HlnT8OvVIKK1FXdepVcARNJg
-         Uu25C2K6zOMPr1rswPRloy4Sn1yXhE10Z6MEqfYQ=
+        b=svs4YV56Wk44zl6BDKiyxNGJj861W4RremJ8uRoO5vfDfLvH20Vh06BDoQpiNM1EM
+         Rd34XLT7JqwXoszrJvp/2hifA2Tz/vs1SYYXPtUdqFsI4itI2hcAFEpZr+iGi0YRti
+         7/l9KVwS6DFW+dmkbWOpdVeerEcBwxoZA7gFXZGQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        James Prestwood <james.prestwood@linux.intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 5.0 086/139] PCI: Mark Atheros AR9462 to avoid bus reset
-Date:   Thu, 23 May 2019 21:06:14 +0200
-Message-Id: <20190523181731.943827021@linuxfoundation.org>
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Mukesh Ojha <mojha@codeaurora.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 5.0 074/139] objtool: Allow AR to be overridden with HOSTAR
+Date:   Thu, 23 May 2019 21:06:02 +0200
+Message-Id: <20190523181730.450116913@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181720.120897565@linuxfoundation.org>
 References: <20190523181720.120897565@linuxfoundation.org>
@@ -60,34 +66,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Prestwood <james.prestwood@linux.intel.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-commit 6afb7e26978da5e86e57e540fdce65c8b04f398a upstream.
+commit 8ea58f1e8b11cca3087b294779bf5959bf89cc10 upstream.
 
-When using PCI passthrough with this device, the host machine locks up
-completely when starting the VM, requiring a hard reboot.  Add a quirk to
-avoid bus resets on this device.
+Currently, this Makefile hardcodes GNU ar, meaning that if it is not
+available, there is no way to supply a different one and the build will
+fail.
 
-Fixes: c3e59ee4e766 ("PCI: Mark Atheros AR93xx to avoid bus reset")
-Link: https://lore.kernel.org/linux-pci/20190107213248.3034-1-james.prestwood@linux.intel.com
-Signed-off-by: James Prestwood <james.prestwood@linux.intel.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-CC: stable@vger.kernel.org	# v3.14+
+  $ make AR=llvm-ar CC=clang LD=ld.lld HOSTAR=llvm-ar HOSTCC=clang \
+         HOSTLD=ld.lld HOSTLDFLAGS=-fuse-ld=lld defconfig modules_prepare
+  ...
+    AR       /out/tools/objtool/libsubcmd.a
+  /bin/sh: 1: ar: not found
+  ...
+
+Follow the logic of HOST{CC,LD} and allow the user to specify a
+different ar tool via HOSTAR (which is used elsewhere in other
+tools/ Makefiles).
+
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+Cc: <stable@vger.kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: http://lkml.kernel.org/r/80822a9353926c38fd7a152991c6292491a9d0e8.1558028966.git.jpoimboe@redhat.com
+Link: https://github.com/ClangBuiltLinux/linux/issues/481
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pci/quirks.c |    1 +
- 1 file changed, 1 insertion(+)
+ tools/objtool/Makefile |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -3408,6 +3408,7 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_A
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x0032, quirk_no_bus_reset);
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x003c, quirk_no_bus_reset);
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x0033, quirk_no_bus_reset);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x0034, quirk_no_bus_reset);
+--- a/tools/objtool/Makefile
++++ b/tools/objtool/Makefile
+@@ -7,11 +7,12 @@ ARCH := x86
+ endif
  
- /*
-  * Root port on some Cavium CN8xxx chips do not successfully complete a bus
+ # always use the host compiler
++HOSTAR	?= ar
+ HOSTCC	?= gcc
+ HOSTLD	?= ld
++AR	 = $(HOSTAR)
+ CC	 = $(HOSTCC)
+ LD	 = $(HOSTLD)
+-AR	 = ar
+ 
+ ifeq ($(srctree),)
+ srctree := $(patsubst %/,%,$(dir $(CURDIR)))
 
 
