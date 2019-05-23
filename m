@@ -2,135 +2,81 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0110C282CE
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 01:10:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7300C282CE
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 01:17:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70CC021019
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 01:10:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63D8F21019
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 01:17:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="BLjbFIif"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Scqdsfup"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728960AbfEWBKS (ORCPT
+        id S1728593AbfEWBRm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 21:10:18 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:18878 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727305AbfEWBKS (ORCPT
+        Wed, 22 May 2019 21:17:42 -0400
+Received: from mail-pl1-f174.google.com ([209.85.214.174]:43723 "EHLO
+        mail-pl1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727305AbfEWBRm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 21:10:18 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ce5f2f50000>; Wed, 22 May 2019 18:10:13 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 22 May 2019 18:10:17 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 22 May 2019 18:10:17 -0700
-Received: from [10.2.170.210] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 23 May
- 2019 01:10:15 +0000
-Subject: Re: [PATCH V5 4/4] spi: tegra114: add support for TX and RX trimmers
-To:     Nathan Chancellor <natechancellor@gmail.com>
-CC:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <ldewangan@nvidia.com>, <broonie@kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-spi@vger.kernel.org>
-References: <1557810235-16401-1-git-send-email-skomatineni@nvidia.com>
- <1557810235-16401-5-git-send-email-skomatineni@nvidia.com>
- <20190523010235.GA105588@archlinux-epyc>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <09040f7e-537c-4dd4-19d3-faa1aa45f0cf@nvidia.com>
-Date:   Wed, 22 May 2019 18:10:14 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 22 May 2019 21:17:42 -0400
+Received: by mail-pl1-f174.google.com with SMTP id gn7so1896957plb.10
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 18:17:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=clAxQ37OE8bsUk7gVdrKB+HDUP0KUPp+G1oPTKfKdDc=;
+        b=ScqdsfupCb7NmB9U/D/GcTBTic5TSqxyWBVFvc0F6ofWaz0O4bev7rxjtyocYvoMGV
+         HPxWcxz1kgXs+SPT9AfVA5YVchY+iE5X1PwL47/N8Ms7pDRfsxABaIlizM/QLmVGWCjG
+         sUZyd5u8sKMuPsG6V/cTHwZRPqLCnNeGejzcyn1sBkDEe77CPyzIu1tGLr+H+i/uMEDH
+         8vD4GInOhLglcva4hgphHgiZPnLlDVBKA62TTgv7mVx7rEiTU6POTI24KProiw1hlRR7
+         kLVdhwSbLaVWzlB7jVkSd2BhA8W/UbJ5zfggXScNa6vxMXphTS63GOp8GEtlC/AQ+HBj
+         OmYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=clAxQ37OE8bsUk7gVdrKB+HDUP0KUPp+G1oPTKfKdDc=;
+        b=iuWQnd0nPiHvNIqHpI+qAUaTyeDYxSKdFDgCPGytvTjyKiqZKAkGkA4msL4z1OzSdE
+         lwBY0/JTAi28VARZ5aCKpf1Q/7ZL5oGg8Qi7b79328sSYpTHjEr7S1zrsoLVnzAcbj+1
+         OrejoDsgmdOdsMPvLP7l3RLvc3miqqCYlDv+BQeqvcUa9Q6zickvL7APDP4INjByHfEe
+         3tY3QZPiOw2srVb1K1FsPp3pGyZnO/bcmWsywryhFFcyJjizugLBGQqGJthA9aNnY6L1
+         8DmtqjkSiImJGY0EeR8XHSDvZwuKy4QrkX9kTbMfHhx/xbU51oNzCYCNCgYNds9ZJIOJ
+         XLIQ==
+X-Gm-Message-State: APjAAAXQlalYnxCXCJbd7NwmXAiPx1M7OEFFD0f86wuSpsQME/xVAwRD
+        jfXgn0opyEdlIY0G+OzrknLLS/yQN05GGA==
+X-Google-Smtp-Source: APXvYqyQnKtITnfqWgUCUcIhVkLVldAY4dPREWKbnFi/I07pgvEu47PSVrY6y+2sb4PNYD5MTOQ3DA==
+X-Received: by 2002:a17:902:d706:: with SMTP id w6mr46727394ply.261.1558574261594;
+        Wed, 22 May 2019 18:17:41 -0700 (PDT)
+Received: from zhanggen-UX430UQ ([66.42.35.75])
+        by smtp.gmail.com with ESMTPSA id u20sm34106856pfm.145.2019.05.22.18.17.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 22 May 2019 18:17:40 -0700 (PDT)
+Date:   Thu, 23 May 2019 09:17:23 +0800
+From:   Gen Zhang <blackgod016574@gmail.com>
+To:     akpm@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: [A General Question] What should I do after getting Reviewed-by from
+ a maintainer?
+Message-ID: <20190523011723.GA15242@zhanggen-UX430UQ>
 MIME-Version: 1.0
-In-Reply-To: <20190523010235.GA105588@archlinux-epyc>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL104.nvidia.com (172.18.146.11) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1558573813; bh=Om5qRlJmMYDBd6pppDmWgx6ImBSGofLGq85gMS4fwrM=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=BLjbFIif7hT9p1KI8FRv5TSWQ1J7rvWDZjWHTwHZcrAnlITLUSXho4350pqTaaSyF
-         T4+C0cIbC6o6jR5H5WaKfRaWqIWPijfUMouI9Fnvf9UUTWm/qixDL9Q3DsytLADKE+
-         nignHV7jK1QLoLe2tQ0FS3oVJOpeowDcWk6kJaHGF9zaoSATOLZ/ZR5rvTrD5GOilp
-         ux4QZ+cUV5g4YvgCuLWNGHLSERhxt2yCXbh82qBZjwD4wz895mcd6EAAQvDnWnpCm5
-         VuRDEaJr2syqvpvJuqCRbFL7aRipVwWiOyqZSnxfZQCQUXGFj2S7Qfo+xNo09MnfMb
-         8o4e1NbcqbdIw==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nathan
-
-Thanks for finding it. I missed to set it to master cleanup when I 
-updated the patch.
-
-Will send the patch fixing this.
-
+Hi Andrew,
+I am starting submitting patches these days and got some patches 
+"Reviewed-by" from maintainers. After checking the 
+submitting-patches.html, I figured out what "Reviewed-by" means. But I
+didn't get the guidance on what to do after getting "Reviewed-by".
+Am I supposed to send this patch to more maintainers? Or something else?
 Thanks
-
-Sowjanya
-
-On 5/22/19 6:02 PM, Nathan Chancellor wrote:
-> Hi Sowjanya,
->
-> On Mon, May 13, 2019 at 10:03:55PM -0700, Sowjanya Komatineni wrote:
->> Tegra SPI master controller has programmable trimmers to adjust the
->> data with respect to the clock.
->>
->> These trimmers are programmed in TX_CLK_TAP_DELAY and RX_CLK_TAP_DELAY
->> fields of COMMAND2 register.
->>
->> SPI TX trimmer is to adjust the outgoing data with respect to the
->> outgoing clock and SPI RX trimmer is to adjust the loopback clock with
->> respect to the incoming data from the slave device.
->>
->> These trimmers vary based on trace lengths of the platform design for
->> each of the slaves on the SPI bus and optimal value programmed is from
->> the platform validation across PVT.
->>
->> This patch adds support for configuring TX and RX clock delay trimmers
->> through the device tree properties.
->>
->> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->> ---
->>   drivers/spi/spi-tegra114.c | 67 ++++++++++++++++++++++++++++++++++++++++++++--
->>   1 file changed, 65 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/spi/spi-tegra114.c b/drivers/spi/spi-tegra114.c
->> index e59ff7c1cee6..253a7f182fc9 100644
->> --- a/drivers/spi/spi-tegra114.c
->> +++ b/drivers/spi/spi-tegra114.c
-> <snip>
->
->> +static void tegra_spi_cleanup(struct spi_device *spi)
->> +{
->> +	struct tegra_spi_client_data *cdata = spi->controller_data;
->> +
->> +	spi->controller_data = NULL;
->> +	if (spi->dev.of_node)
->> +		kfree(cdata);
->> +}
->> +
-> This function is not called anywhere and it is marked as static so it
-> triggers an unused function warning. Was that intentional?
->
-> drivers/spi/spi-tegra114.c:938:13: warning: unused function 'tegra_spi_cleanup' [-Wunused-function]
-> static void tegra_spi_cleanup(struct spi_device *spi)
->              ^
-> 1 warning generated.
->
-> Cheers,
-> Nathan
+Gen
