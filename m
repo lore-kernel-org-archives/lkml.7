@@ -2,51 +2,51 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9859FC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:17:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9D8EC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:17:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F70420863
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:17:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5B4C2133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:17:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639066;
-	bh=EjlE2ovGcgePIpb0P9J+WLinGF9krRSoTGEpCVh9Smc=;
+	s=default; t=1558639070;
+	bh=BLX5G35cxlrNnJA6vomteX9aMzUjS8JM9fQH8dsdSzs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RHUDJqj8i+d4LHOCSgMch7OhaNaZTwOvNNLYnfwFqsxERtI+GgAv9EtQq3+qsJgky
-	 Lxfo8thXxy/FMq0ZwoU+Tig3mzM4fc2V8vr9+c/YyTtx1pIK0neyivj3CwnP+dVsE1
-	 ifWyYEhIyQjHICNkJBzcDqFjOkMzzUhgLPFc8kFk=
+	b=MheD/UgQ2XdXbdVtL9G7T5gOp+VLk/INpsmz4N5oPBTbR7ntiU1xlFwL/V6xMGbl/
+	 4Bu/PZlVrx7wBxK6gKUAmLceWKkRTUqLk5amMrWSBIZNv2Vbbz19wgOq6xuqICCCXU
+	 8PG7gkxyoisWrjzfUP9Vvj4jMK0QQITKtZcKW0hY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389469AbfEWTRl (ORCPT
+        id S2389484AbfEWTRu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:17:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52824 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:17:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53050 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389460AbfEWTRh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:17:37 -0400
+        id S2388790AbfEWTRs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:17:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 306A02133D;
-        Thu, 23 May 2019 19:17:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E235420863;
+        Thu, 23 May 2019 19:17:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639056;
-        bh=EjlE2ovGcgePIpb0P9J+WLinGF9krRSoTGEpCVh9Smc=;
+        s=default; t=1558639067;
+        bh=BLX5G35cxlrNnJA6vomteX9aMzUjS8JM9fQH8dsdSzs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Vzhu/n4wmViVeSKgzDVZG3lf/j/3AHvmWFX2jbhAlNlb9n/3NBo78DiRosAIGijja
-         nXJljYzTa6X+p46WZ7aNvj+tA3pUhZjobMxh3kUKKpUXBgkpREU+2oBV/DMREOaIsb
-         dSnVKI8WzkucWM9pqPyC6lpd5HfFivsxaNnleGbA=
+        b=WcjJWZKTreiI2DPINFhFefBmZGAzUr9VTtgA47OXLwn1kF4BN1y3YCXpyL47gptVh
+         F4SUbZRRU1weNHArLhPa4ClJQAIRIfl6DYFvTu2x+AvN3U0ugdyhMXXcQdWW7lO902
+         16yJoPlpAw4hlpKg285yz3tD41uSS2lTM2GyZq/k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 4.19 080/114] dm integrity: correctly calculate the size of metadata area
-Date:   Thu, 23 May 2019 21:06:19 +0200
-Message-Id: <20190523181738.973182902@linuxfoundation.org>
+        stable@vger.kernel.org, Kirill Smelkov <kirr@nexedi.com>,
+        Miklos Szeredi <mszeredi@redhat.com>
+Subject: [PATCH 4.19 082/114] fuse: Add FOPEN_STREAM to use stream_open()
+Date:   Thu, 23 May 2019 21:06:21 +0200
+Message-Id: <20190523181739.135794147@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181731.372074275@linuxfoundation.org>
 References: <20190523181731.372074275@linuxfoundation.org>
@@ -59,48 +59,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mikulas Patocka <mpatocka@redhat.com>
+From: Kirill Smelkov <kirr@nexedi.com>
 
-commit 30bba430ddf737978e40561198693ba91386dac1 upstream.
+commit bbd84f33652f852ce5992d65db4d020aba21f882 upstream.
 
-When we use separate devices for data and metadata, dm-integrity would
-incorrectly calculate the size of the metadata device as if it had
-512-byte block size - and it would refuse activation with larger block
-size and smaller metadata device.
+Starting from commit 9c225f2655e3 ("vfs: atomic f_pos accesses as per
+POSIX") files opened even via nonseekable_open gate read and write via lock
+and do not allow them to be run simultaneously. This can create read vs
+write deadlock if a filesystem is trying to implement a socket-like file
+which is intended to be simultaneously used for both read and write from
+filesystem client.  See commit 10dce8af3422 ("fs: stream_open - opener for
+stream-like files so that read and write can run simultaneously without
+deadlock") for details and e.g. commit 581d21a2d02a ("xenbus: fix deadlock
+on writes to /proc/xen/xenbus") for a similar deadlock example on
+/proc/xen/xenbus.
 
-Fix this so that it takes actual block size into account, which fixes
-the following reported issue:
-https://gitlab.com/cryptsetup/cryptsetup/issues/450
+To avoid such deadlock it was tempting to adjust fuse_finish_open to use
+stream_open instead of nonseekable_open on just FOPEN_NONSEEKABLE flags,
+but grepping through Debian codesearch shows users of FOPEN_NONSEEKABLE,
+and in particular GVFS which actually uses offset in its read and write
+handlers
 
-Fixes: 356d9d52e122 ("dm integrity: allow separate metadata device")
-Cc: stable@vger.kernel.org # v4.19+
-Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+	https://codesearch.debian.net/search?q=-%3Enonseekable+%3D
+	https://gitlab.gnome.org/GNOME/gvfs/blob/1.40.0-6-gcbc54396/client/gvfsfusedaemon.c#L1080
+	https://gitlab.gnome.org/GNOME/gvfs/blob/1.40.0-6-gcbc54396/client/gvfsfusedaemon.c#L1247-1346
+	https://gitlab.gnome.org/GNOME/gvfs/blob/1.40.0-6-gcbc54396/client/gvfsfusedaemon.c#L1399-1481
+
+so if we would do such a change it will break a real user.
+
+Add another flag (FOPEN_STREAM) for filesystem servers to indicate that the
+opened handler is having stream-like semantics; does not use file position
+and thus the kernel is free to issue simultaneous read and write request on
+opened file handle.
+
+This patch together with stream_open() should be added to stable kernels
+starting from v3.14+. This will allow to patch OSSPD and other FUSE
+filesystems that provide stream-like files to return FOPEN_STREAM |
+FOPEN_NONSEEKABLE in open handler and this way avoid the deadlock on all
+kernel versions. This should work because fuse_finish_open ignores unknown
+open flags returned from a filesystem and so passing FOPEN_STREAM to a
+kernel that is not aware of this flag cannot hurt. In turn the kernel that
+is not aware of FOPEN_STREAM will be < v3.14 where just FOPEN_NONSEEKABLE
+is sufficient to implement streams without read vs write deadlock.
+
+Cc: stable@vger.kernel.org # v3.14+
+Signed-off-by: Kirill Smelkov <kirr@nexedi.com>
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/dm-integrity.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/fuse/file.c            |    4 +++-
+ include/uapi/linux/fuse.h |    2 ++
+ 2 files changed, 5 insertions(+), 1 deletion(-)
 
---- a/drivers/md/dm-integrity.c
-+++ b/drivers/md/dm-integrity.c
-@@ -2557,7 +2557,7 @@ static int calculate_device_limits(struc
- 		if (last_sector < ic->start || last_sector >= ic->meta_device_sectors)
- 			return -EINVAL;
- 	} else {
--		__u64 meta_size = ic->provided_data_sectors * ic->tag_size;
-+		__u64 meta_size = (ic->provided_data_sectors >> ic->sb->log2_sectors_per_block) * ic->tag_size;
- 		meta_size = (meta_size + ((1U << (ic->log2_buffer_sectors + SECTOR_SHIFT)) - 1))
- 				>> (ic->log2_buffer_sectors + SECTOR_SHIFT);
- 		meta_size <<= ic->log2_buffer_sectors;
-@@ -3428,7 +3428,7 @@ try_smaller_buffer:
- 	DEBUG_print("	journal_sections %u\n", (unsigned)le32_to_cpu(ic->sb->journal_sections));
- 	DEBUG_print("	journal_entries %u\n", ic->journal_entries);
- 	DEBUG_print("	log2_interleave_sectors %d\n", ic->sb->log2_interleave_sectors);
--	DEBUG_print("	device_sectors 0x%llx\n", (unsigned long long)ic->device_sectors);
-+	DEBUG_print("	data_device_sectors 0x%llx\n", (unsigned long long)ic->data_device_sectors);
- 	DEBUG_print("	initial_sectors 0x%x\n", ic->initial_sectors);
- 	DEBUG_print("	metadata_run 0x%x\n", ic->metadata_run);
- 	DEBUG_print("	log2_metadata_run %d\n", ic->log2_metadata_run);
+--- a/fs/fuse/file.c
++++ b/fs/fuse/file.c
+@@ -179,7 +179,9 @@ void fuse_finish_open(struct inode *inod
+ 		file->f_op = &fuse_direct_io_file_operations;
+ 	if (!(ff->open_flags & FOPEN_KEEP_CACHE))
+ 		invalidate_inode_pages2(inode->i_mapping);
+-	if (ff->open_flags & FOPEN_NONSEEKABLE)
++	if (ff->open_flags & FOPEN_STREAM)
++		stream_open(inode, file);
++	else if (ff->open_flags & FOPEN_NONSEEKABLE)
+ 		nonseekable_open(inode, file);
+ 	if (fc->atomic_o_trunc && (file->f_flags & O_TRUNC)) {
+ 		struct fuse_inode *fi = get_fuse_inode(inode);
+--- a/include/uapi/linux/fuse.h
++++ b/include/uapi/linux/fuse.h
+@@ -219,10 +219,12 @@ struct fuse_file_lock {
+  * FOPEN_DIRECT_IO: bypass page cache for this open file
+  * FOPEN_KEEP_CACHE: don't invalidate the data cache on open
+  * FOPEN_NONSEEKABLE: the file is not seekable
++ * FOPEN_STREAM: the file is stream-like (no file position at all)
+  */
+ #define FOPEN_DIRECT_IO		(1 << 0)
+ #define FOPEN_KEEP_CACHE	(1 << 1)
+ #define FOPEN_NONSEEKABLE	(1 << 2)
++#define FOPEN_STREAM		(1 << 4)
+ 
+ /**
+  * INIT request/reply flags
 
 
