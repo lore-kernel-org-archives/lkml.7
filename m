@@ -2,169 +2,94 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03D2AC04AAC
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 07:19:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1D16C04AAC
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 07:20:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7B8921019
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 07:19:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558595993;
-	bh=UiHyCFXjL7dy8g+ulDW/+CR0M95VuCg7XORYNuE3pCQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zQY9KhuWG1JzRIR4RU4Ns5lFDx9QO6sdroR613k5BExCw10/nZQMrzv8DSRFtAnPn
-	 /UvzltwtUwrfgj60H1qrRSlzDx1BPh/WcDK18e5h1u21XDZQtoZG3bzaHo7CxefCC0
-	 C5wRreqatJXnt1D4OpfaN9XqaEQ+8/XwZIoPJ/M0=
+	by mail.kernel.org (Postfix) with ESMTP id A26E920863
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 07:20:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nkF10v4J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728511AbfEWHTw (ORCPT
+        id S1729185AbfEWHUT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 03:19:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34050 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726230AbfEWHTw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 03:19:52 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C359220863;
-        Thu, 23 May 2019 07:19:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558595990;
-        bh=UiHyCFXjL7dy8g+ulDW/+CR0M95VuCg7XORYNuE3pCQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Mf6sUuxrbbuN7C8KpKmxn7e0BOLVyOMzy/QlB6sH4wB7AEAjlJ+1tnn9S237AbrM3
-         8Vo2V9HnmAyf1rwOfAvFhkP9D3rguCTUACSPiAj6fJWrUo70BwrtOYVRTm56NrThCT
-         0rWo6WIpNXoZaOyz6h7bWMCM1i88PUf6fwTSqYMM=
-Date:   Thu, 23 May 2019 09:19:48 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Hariprasad Kelam <hariprasad.kelam@gmail.com>
-Cc:     Nishka Dasgupta <nishka.dasgupta@yahoo.com>,
-        Vatsala Narang <vatsalanarang@gmail.com>,
-        Emanuel Bennici <benniciemanuel78@gmail.com>,
-        Henriette Hofmeier <passt@h-hofmeier.de>,
-        Payal Kshirsagar <payal.s.kshirsagar.98@gmail.com>,
-        Hardik Singh Rathore <hardiksingh.k@gmail.com>,
-        Madhumitha Prabakaran <madhumithabiw@gmail.com>,
-        Michael Straube <straube.linux@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>, Paolo Abeni <pabeni@redhat.com>,
-        Alexander Duyck <alexander.h.duyck@intel.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] staging: rtl8723bs: core: rtw_mlme_ext: fix warning
- Unneeded variable: "ret"
-Message-ID: <20190523071948.GB24998@kroah.com>
-References: <20190522175501.GA8383@hari-Inspiron-1545>
+        Thu, 23 May 2019 03:20:19 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:33927 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726230AbfEWHUS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 03:20:18 -0400
+Received: by mail-pg1-f196.google.com with SMTP id c13so2663303pgt.1;
+        Thu, 23 May 2019 00:20:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=vVdvf+2AWc5KiT7ANjzVMpQGfeM7dtNm+6KXSHSOP8k=;
+        b=nkF10v4JCYOwrht2XoSkD6Q0oMFEuMm3xKt/rhQixekJiLi3cOetXjAl267F2iQQqi
+         Db0+puF7qIf5sKMnOz0BPNWy6L+8aZPauRH7tN8oeztJ/rMZBDnd6JCCivAZ3aJbHPpi
+         URSNZi3GMStxpBNBOxLUbb77WRvTzkm7iTmT7rYAkbJJrCC+Cv+lBsUyMKz/d8F9cuzV
+         qv9hIp3idIRJbU2+3tfLArt8woNUjaDO01cVpqZJumWRkzkyWYb2rWg7L5kKruIfc+UH
+         BZnDTo9mPhYxsbye+Z2SvlwuRt7rAYgjAXjnuSBdGPMpHF+TtUYexuXvUJnb8k4da0gw
+         WnjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=vVdvf+2AWc5KiT7ANjzVMpQGfeM7dtNm+6KXSHSOP8k=;
+        b=Z/KpqHzl4prA/DYsu9ELRdIGdrcxar38U+EiMM4D2WeAyddMtWFxiyvJEYqWYDs9mX
+         00KUld6CIe8qHm/31STqOMp3ZLo4nzL/CNnOG0Sf+MAdPT3WEYVmABLQyeEOTVIUnn3f
+         m49VQGz1DPK5oUc9W8BIVmZfvW2d3lSqeCyBa0nE718UCaFVHo0F+fyzZegYnqv4O1OG
+         J0iP/rmdoIg12oZtCF63Zr0NgRbLzMLQFNKR0mT3WNGVuX8Ymqo2Y4+TALL6WtNi8xsr
+         GFmZ6j32Wh86KpmZIHt6TLMMojddm5TbhLNmF0gJM/7FlnITupkRQwd+5IXux+XQoymy
+         lsGQ==
+X-Gm-Message-State: APjAAAWhpcWO6pPWeWS+kQV1SOt1HiECznktiD/fF9wRr3faDI7A0GQd
+        2lsG1Ah4igLLe6XTWpxi+BQ=
+X-Google-Smtp-Source: APXvYqyfsahn4cHjUoe4Kd29p3jy4+veEkTqMNNg7fxpDMnCTvtKIY28QJKZIB28YRlB1nwzmKbc8w==
+X-Received: by 2002:a17:90a:3510:: with SMTP id q16mr217374pjb.13.1558596017252;
+        Thu, 23 May 2019 00:20:17 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id n27sm58830999pfb.129.2019.05.23.00.20.16
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 23 May 2019 00:20:16 -0700 (PDT)
+Date:   Thu, 23 May 2019 00:20:15 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Danct12 <danct12@disroot.org>, linux-input@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] input: silead: Add MSSL0017 to acpi_device_id.
+Message-ID: <20190523072015.GB121292@dtor-ws>
+References: <20190522045455.15769-1-danct12@disroot.org>
+ <6c18472f-bedd-6e6d-121c-8a311495c3c3@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190522175501.GA8383@hari-Inspiron-1545>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <6c18472f-bedd-6e6d-121c-8a311495c3c3@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 22, 2019 at 11:25:01PM +0530, Hariprasad Kelam wrote:
-> This patch fixes below warnings reported by coccicheck
+On Wed, May 22, 2019 at 12:12:47PM +0200, Hans de Goede wrote:
+> Hi,
 > 
-> drivers/staging/rtl8723bs/core/rtw_mlme_ext.c:1888:14-17: Unneeded
-> variable: "ret". Return "_FAIL" on line 1920
-> drivers/staging/rtl8723bs/core/rtw_mlme_ext.c:466:5-8: Unneeded
-> variable: "res". Return "_SUCCESS" on line 494
+> On 22-05-19 06:54, Danct12 wrote:
+> > On Chuwi Hi10 Plus, the Silead device id is MSSL0017.
+> > 
+> > Signed-off-by: Danct12 <danct12@disroot.org>
 > 
-> Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
-> ----
-> changes in v2:
-> 		change return type of init_mlme_ext_priv() from int to
->                 void
-> 		We cant change return type of on_action_spct() it is a
->                 call back function from action_handler.
-> 		So directly return _FAIL from this function.
-> ----
-> ---
->  drivers/staging/rtl8723bs/core/rtw_mlme_ext.c    | 9 ++-------
->  drivers/staging/rtl8723bs/include/rtw_mlme_ext.h | 2 +-
->  drivers/staging/rtl8723bs/os_dep/os_intfs.c      | 5 -----
->  3 files changed, 3 insertions(+), 13 deletions(-)
+> Patch looks good to me:
 > 
-> diff --git a/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c b/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c
-> index d110d45..b240a40 100644
-> --- a/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c
-> +++ b/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c
-> @@ -461,9 +461,8 @@ static u8 init_channel_set(struct adapter *padapter, u8 ChannelPlan, RT_CHANNEL_
->  	return chanset_size;
->  }
->  
-> -int	init_mlme_ext_priv(struct adapter *padapter)
-> +void	init_mlme_ext_priv(struct adapter *padapter)
->  {
-> -	int	res = _SUCCESS;
->  	struct registry_priv *pregistrypriv = &padapter->registrypriv;
->  	struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
->  	struct mlme_priv *pmlmepriv = &(padapter->mlmepriv);
-> @@ -490,9 +489,6 @@ int	init_mlme_ext_priv(struct adapter *padapter)
->  #ifdef DBG_FIXED_CHAN
->  	pmlmeext->fixed_chan = 0xFF;
->  #endif
-> -
-> -	return res;
-> -
->  }
->  
->  void free_mlme_ext_priv(struct mlme_ext_priv *pmlmeext)
-> @@ -1885,7 +1881,6 @@ unsigned int OnAtim(struct adapter *padapter, union recv_frame *precv_frame)
->  
->  unsigned int on_action_spct(struct adapter *padapter, union recv_frame *precv_frame)
->  {
-> -	unsigned int ret = _FAIL;
->  	struct sta_info *psta = NULL;
->  	struct sta_priv *pstapriv = &padapter->stapriv;
->  	u8 *pframe = precv_frame->u.hdr.rx_data;
-> @@ -1917,7 +1912,7 @@ unsigned int on_action_spct(struct adapter *padapter, union recv_frame *precv_fr
->  	}
->  
->  exit:
-> -	return ret;
-> +	return _FAIL;
->  }
->  
->  unsigned int OnAction_back(struct adapter *padapter, union recv_frame *precv_frame)
-> diff --git a/drivers/staging/rtl8723bs/include/rtw_mlme_ext.h b/drivers/staging/rtl8723bs/include/rtw_mlme_ext.h
-> index f6eabad..0eb2da5 100644
-> --- a/drivers/staging/rtl8723bs/include/rtw_mlme_ext.h
-> +++ b/drivers/staging/rtl8723bs/include/rtw_mlme_ext.h
-> @@ -535,7 +535,7 @@ struct mlme_ext_priv
->  };
->  
->  void init_mlme_default_rate_set(struct adapter *padapter);
-> -int init_mlme_ext_priv(struct adapter *padapter);
-> +void init_mlme_ext_priv(struct adapter *padapter);
->  int init_hw_mlme_ext(struct adapter *padapter);
->  void free_mlme_ext_priv (struct mlme_ext_priv *pmlmeext);
->  extern void init_mlme_ext_timer(struct adapter *padapter);
-> diff --git a/drivers/staging/rtl8723bs/os_dep/os_intfs.c b/drivers/staging/rtl8723bs/os_dep/os_intfs.c
-> index 8a9d838..c2422e5 100644
-> --- a/drivers/staging/rtl8723bs/os_dep/os_intfs.c
-> +++ b/drivers/staging/rtl8723bs/os_dep/os_intfs.c
-> @@ -774,11 +774,6 @@ u8 rtw_init_drv_sw(struct adapter *padapter)
->  		goto exit;
->  	}
->  
-> -	if (init_mlme_ext_priv(padapter) == _FAIL) {
-> -		RT_TRACE(_module_os_intfs_c_, _drv_err_, ("\n Can't init mlme_ext_priv\n"));
-> -		ret8 = _FAIL;
-> -		goto exit;
-> -	}
+> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 
-Why did you delete the call to this function entirely?
+We however need to have a real name for the Signed-off-by.
 
-Is that ok?  Why?
+Thanks.
 
-thanks,
-
-greg k-h
+-- 
+Dmitry
