@@ -2,124 +2,190 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FB53C282E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:03:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BCB0C282E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:03:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 104762177E
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:03:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 041B3217D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:03:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RlkSfawB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387437AbfEWTDc (ORCPT
+        id S2387462AbfEWTDn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:03:32 -0400
-Received: from mga06.intel.com ([134.134.136.31]:61396 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387414AbfEWTDc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:03:32 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 May 2019 12:03:30 -0700
-X-ExtLoop1: 1
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by orsmga008.jf.intel.com with ESMTP; 23 May 2019 12:03:30 -0700
-Date:   Thu, 23 May 2019 12:04:24 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     Jason Gunthorpe <jgg@mellanox.com>,
-        "john.hubbard@gmail.com" <john.hubbard@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        Doug Ledford <dledford@redhat.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Christian Benvenuti <benve@cisco.com>, Jan Kara <jack@suse.cz>
-Subject: Re: [PATCH 1/1] infiniband/mm: convert put_page() to put_user_page*()
-Message-ID: <20190523190423.GA19578@iweiny-DESK2.sc.intel.com>
-References: <20190523072537.31940-1-jhubbard@nvidia.com>
- <20190523072537.31940-2-jhubbard@nvidia.com>
- <20190523172852.GA27175@iweiny-DESK2.sc.intel.com>
- <20190523173222.GH12145@mellanox.com>
- <fa6d7d7c-13a3-0586-6384-768ebb7f0561@nvidia.com>
+        Thu, 23 May 2019 15:03:43 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:33501 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387438AbfEWTDm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:03:42 -0400
+Received: by mail-pf1-f195.google.com with SMTP id z28so3760949pfk.0
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 12:03:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=im5wAsqOPNS931rpYbyT5hlh62m2CH14bT+VTX4iFi8=;
+        b=RlkSfawB6Tvp5PVs0RZeAovH/9G7JM9zTU/uREplPlpKkKRhJC8+1SgmGs1ojpexJC
+         unerpaqfCG1W30Ow61ehhZEDTQehxhBipf6KSh/blo/DjVNa0UxIpTpB8ZebBnH7nylW
+         wwXq5nxW7bPh05ldVyU5j+9F4fLepvTz8Fot7IEABAFidlS9CXdtSY1C1oM9lvy6FO50
+         sBXTy9BvdeVQwHSF1zrI2FdZ+r9Pfh2qNZW/8C8J7YawnL0RHT4izwKa1UM50IzuRFbx
+         zhIi8MEApWcwXP4DQqZe0tai7vElfRLD/VHcinMdAi/tUR1o9RcjW+/9UDYLFdEY4YB9
+         M7Pg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=im5wAsqOPNS931rpYbyT5hlh62m2CH14bT+VTX4iFi8=;
+        b=kaZ9xO6yHfKRIuFGp7cAk+3dMvHLXzWkGTOF71+aAiA4A38uFQWsk2F9chFl5KSU38
+         87uB8jPyJD5vn2PUI8kOYYjUBvO2TA4LeKy50YF66mZWLIXZElZHNsfeDYpNLmClv6zO
+         ytvIh3wFTurYkyvXP3TsAftccSlil4ADjBpzwnuFo+9sHqFtNzbPO3fER3//4vilk17B
+         IkIisHnPV1cGuHDx17UtW3gZ7yFl4wSI9Sg/Er64t6UqE4eWtDtkhczCCIB9D8DTY6iT
+         Y/AW5Gu7KOyHB10ufhzBrTFwH+XO4AV19mdw87PvlmghD9W2k7jnglc17Mqax97wJEYY
+         OUOQ==
+X-Gm-Message-State: APjAAAWKyWhLVFN6BqkNye/k6qnJNTyEqim7j2wdEVN9VJvlCthnSj2Q
+        /ghQMujBVmDYtwzYeaysqjAAwA==
+X-Google-Smtp-Source: APXvYqwUezZglFJTkVqKMfs/5cMfpnZQCtviFEOwA6H6Iww//+PsP5Mjj+zlaHjBoZtuyERN4e3lLw==
+X-Received: by 2002:a63:d816:: with SMTP id b22mr98259664pgh.16.1558638221127;
+        Thu, 23 May 2019 12:03:41 -0700 (PDT)
+Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id a37sm110542pga.67.2019.05.23.12.03.39
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 23 May 2019 12:03:40 -0700 (PDT)
+Date:   Thu, 23 May 2019 12:03:38 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v7 2/4] soc: qcom: Add AOSS QMP driver
+Message-ID: <20190523190338.GT31438@minitux>
+References: <20190501043734.26706-1-bjorn.andersson@linaro.org>
+ <20190501043734.26706-3-bjorn.andersson@linaro.org>
+ <CAD=FV=VVxKSp6e=j8YM8JBrhsF+T=0=8xDjd_817hphOMWHVFA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <fa6d7d7c-13a3-0586-6384-768ebb7f0561@nvidia.com>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+In-Reply-To: <CAD=FV=VVxKSp6e=j8YM8JBrhsF+T=0=8xDjd_817hphOMWHVFA@mail.gmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 10:46:38AM -0700, John Hubbard wrote:
-> On 5/23/19 10:32 AM, Jason Gunthorpe wrote:
-> > On Thu, May 23, 2019 at 10:28:52AM -0700, Ira Weiny wrote:
-> > > > @@ -686,8 +686,8 @@ int ib_umem_odp_map_dma_pages(struct ib_umem_odp *umem_odp, u64 user_virt,
-> > > >   			 * ib_umem_odp_map_dma_single_page().
-> > > >   			 */
-> > > >   			if (npages - (j + 1) > 0)
-> > > > -				release_pages(&local_page_list[j+1],
-> > > > -					      npages - (j + 1));
-> > > > +				put_user_pages(&local_page_list[j+1],
-> > > > +					       npages - (j + 1));
-> > > 
-> > > I don't know if we discussed this before but it looks like the use of
-> > > release_pages() was not entirely correct (or at least not necessary) here.  So
-> > > I think this is ok.
-> > 
-> > Oh? John switched it from a put_pages loop to release_pages() here:
-> > 
-> > commit 75a3e6a3c129cddcc683538d8702c6ef998ec589
-> > Author: John Hubbard <jhubbard@nvidia.com>
-> > Date:   Mon Mar 4 11:46:45 2019 -0800
-> > 
-> >      RDMA/umem: minor bug fix in error handling path
-> >      1. Bug fix: fix an off by one error in the code that cleans up if it fails
-> >         to dma-map a page, after having done a get_user_pages_remote() on a
-> >         range of pages.
-> >      2. Refinement: for that same cleanup code, release_pages() is better than
-> >         put_page() in a loop.
-> > 
-> > And now we are going to back something called put_pages() that
-> > implements the same for loop the above removed?
-> > 
-> > Seems like we are going in circles?? John?
-> > 
+On Thu 23 May 09:38 PDT 2019, Doug Anderson wrote:
+
+> Hi,
 > 
-> put_user_pages() is meant to be a drop-in replacement for release_pages(),
-> so I made the above change as an interim step in moving the callsite from
-> a loop, to a single call.
+> On Tue, Apr 30, 2019 at 9:38 PM Bjorn Andersson
+> <bjorn.andersson@linaro.org> wrote:
+> >
+> > +static int qmp_qdss_clk_prepare(struct clk_hw *hw)
+> > +{
+> > +       struct qmp *qmp = container_of(hw, struct qmp, qdss_clk);
+> > +       char buf[QMP_MSG_LEN] = "{class: clock, res: qdss, val: 1}";
 > 
-> And at some point, it may be possible to find a way to optimize put_user_pages()
-> in a similar way to the batching that release_pages() does, that was part
-> of the plan for this.
+> nit: "static const" the buf?  No need to copy it to the stack each
+> time.  In qmp_qdss_clk_unprepare() too.
 > 
-> But I do see what you mean: in the interim, maybe put_user_pages() should
-> just be calling release_pages(), how does that change sound?
 
-I'm certainly not the expert here but FWICT release_pages() was originally
-designed to work with the page cache.
+Thanks, that makes sense.
 
-aabfb57296e3  mm: memcontrol: do not kill uncharge batching in free_pages_and_swap_cache
+> ...your string is also now fixed at 34 bytes big (including the '\0').
+> Do we still need to send exactly 96 bytes, or can we dumb this down to
+> 36?  We'll get a compile error if we overflow, right?  If this truly
+> needs to be exactly 96 bytes maybe qmp_send()'s error checks should
+> check for things being exactly 96 bytes instead of checking for > and
+> % 4.
+> 
 
-But at some point it was changed to be more general?
+I double checked with my contacts and the only requirement here is that
+memory has to be word-accessed, so I'll figure out a sane way to write
+this.
 
-ea1754a08476 mm, fs: remove remaining PAGE_CACHE_* and page_cache_{get,release} usage
+> 
+> > +static int qmp_qdss_clk_add(struct qmp *qmp)
+> > +{
+> > +       struct clk_init_data qdss_init = {
+> > +               .ops = &qmp_qdss_clk_ops,
+> > +               .name = "qdss",
+> > +       };
+> 
+> Can't qdss_init be "static const"?  That had the advantage of not
+> needing to construct it on the stack and also of it having a longer
+> lifetime.  It looks like clk_register() stores the "hw" pointer in its
+> structure and the "hw" structure will have a pointer here.  While I
+> can believe that it never looks at it again, it's nice if that pointer
+> doesn't point somewhere on an old stack.
+> 
 
-... and it is exported and used outside of the swapping code... and used at
-lease 1 place to directly "put" pages gotten from get_user_pages_fast()
-[arch/x86/kvm/svm.c]
+The purpose here was for clk_hw_register() to consume it and never look
+back, but I agree that it's a bit fragile. I'll review Stephen's
+proposed patch.
 
-From that it seems like it is safe.
+> I suppose we could go the other way and try to mark more stuff in this
+> module as __init and __initdata, but even then at least the pointer
+> won't be onto a stack.  ;-)
+> 
+> 
+> > +       int ret;
+> > +
+> > +       qmp->qdss_clk.init = &qdss_init;
+> > +       ret = clk_hw_register(qmp->dev, &qmp->qdss_clk);
+> > +       if (ret < 0) {
+> > +               dev_err(qmp->dev, "failed to register qdss clock\n");
+> > +               return ret;
+> > +       }
+> > +
+> > +       return of_clk_add_hw_provider(qmp->dev->of_node, of_clk_hw_simple_get,
+> > +                                     &qmp->qdss_clk);
+> 
+> devm_clk_hw_register() and devm_of_clk_add_hw_provider()?  If you're
+> worried about ordering you could always throw in
+> devm_add_action_or_reset() to handle the qmp_pd_remove(), qmp_close()
+> and mbox_free_channel().
+> 
+> ...with that you could fully get rid of qmp_remove() and also your
+> setting of drvdata.
+> 
 
-But I don't see where release_page() actually calls put_page() anywhere?  What
-am I missing?
+Yeah, I was worried about qmp_close() before unregistering the clock.
+I'll take another look, will at least have to fix the error handling on
+of_clk_add_hw_provider()
 
-Ira
+> 
+> > +static void qmp_pd_remove(struct qmp *qmp)
+> > +{
+> > +       struct genpd_onecell_data *data = &qmp->pd_data;
+> > +       struct device *dev = qmp->dev;
+> > +       int i;
+> > +
+> > +       of_genpd_del_provider(dev->of_node);
+> > +
+> > +       for (i = 0; i < data->num_domains; i++)
+> > +               pm_genpd_remove(data->domains[i]);
+> 
+> Still feels like the above loop would be better as:
+>   for (i = data->num_domains - 1; i >= 0; i--)
+> 
 
+To me this carries a message that the removal order is significant,
+which I'm unable to convince myself that it is.
+
+> 
+> (BTW: any way you could add me to the CC list for future patches so I
+> notice them earlier?)
+> 
+
+Yes of course, thanks for your review.
+
+Regards,
+Bjorn
