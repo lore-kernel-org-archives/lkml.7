@@ -2,52 +2,57 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-14.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4487EC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:25:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6A1AC282DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:25:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BD1E2054F
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:25:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B00822054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:25:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639537;
-	bh=Xg4SI+wV6/A9we+BkFkPo3EFKMH/5g4BxEpjtX5DYwc=;
+	s=default; t=1558639539;
+	bh=q86KOwhOagZeZ7tD6NY2jFgZ6s+ArKqafjIKr0GqakM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dO5fxj7i5G2IDMLlkrEIyjEEMHI6t11ZiQWt0TT7EuTo0EqlKVcwhroT6RoeK2shr
-	 sof4hbnBrsiH5Git8wQRBRoE0Wlm2UFT5fnjEpGWo5kUOdsB26Eu64AxLy0YXq84zh
-	 VRbyybttszARFNPwjJVRXxPt80Qn52O3vFKvhUDY=
+	b=Qcm2NYLpRK8TI9V2gCt+BEKodspzVKYI1vEYSeVhuZQrpBebyvz3Nmjaw5SZiHymf
+	 XE2/SnbykWIvsVJ1zlvIzEgoceX9V/zpNPbmJRc+lorJS5crbygIRUnkBH+uCQLZto
+	 Cyg0zILwktuKryvdDUbWQuVo/8Ocv/252Frd2DJA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390827AbfEWTZg (ORCPT
+        id S2390837AbfEWTZj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:25:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37044 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:25:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37142 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391121AbfEWTZa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:25:30 -0400
+        id S2391134AbfEWTZf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:25:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 61F75217D7;
-        Thu, 23 May 2019 19:25:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BDA2020868;
+        Thu, 23 May 2019 19:25:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639529;
-        bh=Xg4SI+wV6/A9we+BkFkPo3EFKMH/5g4BxEpjtX5DYwc=;
+        s=default; t=1558639535;
+        bh=q86KOwhOagZeZ7tD6NY2jFgZ6s+ArKqafjIKr0GqakM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tPvuuaBYNK207oNHgRCaSOM++jeGJIzIz6egHk601at8SRW1+KcFppdmJRfvBAbDq
-         r5Z2oUO8XozUQ29o5g2yH/vvj+OUCTE000B3eXnHJTmN918wVnjRWtPI1kJpQKmmuS
-         YOzfekNPZ/HR9Jzwau4hZ0yWUOXCcM5qziSEDvBI=
+        b=HZ9SysgSO4ECyh04l7inclYnyZf4UMl+J6dz3fa6EcQZytqdCMlunxusjRF1JJTm1
+         wSkvBB+QB2uwjm3OVh20l/EoSh+Gso0mIVFNfVdCXN0b8rJi/mjI8h2ekwRJ4TW6Pn
+         /bbYvFu3VFfIxjNUxC68hYoMQD9/iLh7SoLLmprc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>
-Subject: [PATCH 5.0 139/139] bpf, lru: avoid messing with eviction heuristics upon syscall lookup
-Date:   Thu, 23 May 2019 21:07:07 +0200
-Message-Id: <20190523181736.803086078@linuxfoundation.org>
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Jiri Olsa <jolsa@kernel.org>,
+        linux-snps-arc@lists.infradead.org,
+        Namhyung Kim <namhyung@kernel.org>,
+        Vineet Gupta <Vineet.Gupta1@synopsys.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 131/139] perf bench numa: Add define for RUSAGE_THREAD if not present
+Date:   Thu, 23 May 2019 21:06:59 +0200
+Message-Id: <20190523181736.167614424@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181720.120897565@linuxfoundation.org>
 References: <20190523181720.120897565@linuxfoundation.org>
@@ -60,106 +65,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Borkmann <daniel@iogearbox.net>
+[ Upstream commit bf561d3c13423fc54daa19b5d49dc15fafdb7acc ]
 
-commit 50b045a8c0ccf44f76640ac3eea8d80ca53979a3 upstream.
+While cross building perf to the ARC architecture on a fedora 30 host,
+we were failing with:
 
-One of the biggest issues we face right now with picking LRU map over
-regular hash table is that a map walk out of user space, for example,
-to just dump the existing entries or to remove certain ones, will
-completely mess up LRU eviction heuristics and wrong entries such
-as just created ones will get evicted instead. The reason for this
-is that we mark an entry as "in use" via bpf_lru_node_set_ref() from
-system call lookup side as well. Thus upon walk, all entries are
-being marked, so information of actual least recently used ones
-are "lost".
+      CC       /tmp/build/perf/bench/numa.o
+  bench/numa.c: In function ‘worker_thread’:
+  bench/numa.c:1261:12: error: ‘RUSAGE_THREAD’ undeclared (first use in this function); did you mean ‘SIGEV_THREAD’?
+    getrusage(RUSAGE_THREAD, &rusage);
+              ^~~~~~~~~~~~~
+              SIGEV_THREAD
+  bench/numa.c:1261:12: note: each undeclared identifier is reported only once for each function it appears in
 
-In case of Cilium where it can be used (besides others) as a BPF
-based connection tracker, this current behavior causes disruption
-upon control plane changes that need to walk the map from user space
-to evict certain entries. Discussion result from bpfconf [0] was that
-we should simply just remove marking from system call side as no
-good use case could be found where it's actually needed there.
-Therefore this patch removes marking for regular LRU and per-CPU
-flavor. If there ever should be a need in future, the behavior could
-be selected via map creation flag, but due to mentioned reason we
-avoid this here.
+[perfbuilder@60d5802468f6 perf]$ /arc_gnu_2019.03-rc1_prebuilt_uclibc_le_archs_linux_install/bin/arc-linux-gcc --version | head -1
+arc-linux-gcc (ARCv2 ISA Linux uClibc toolchain 2019.03-rc1) 8.3.1 20190225
+[perfbuilder@60d5802468f6 perf]$
 
-  [0] http://vger.kernel.org/bpfconf.html
+Trying to reproduce a report by Vineet, I noticed that, with just
+cross-built zlib and numactl libraries, I ended up with the above
+failure.
 
-Fixes: 29ba732acbee ("bpf: Add BPF_MAP_TYPE_LRU_HASH")
-Fixes: 8f8449384ec3 ("bpf: Add BPF_MAP_TYPE_LRU_PERCPU_HASH")
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Martin KaFai Lau <kafai@fb.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+So, since RUSAGE_THREAD is available as a define, check for that and
+numactl libraries, I ended up with the above failure.
 
+So, since RUSAGE_THREAD is available as a define in the system headers,
+check if it is defined in the 'perf bench numa' sources and define it if
+not.
+
+Now it builds and I have to figure out if the problem reported by Vineet
+only takes place if we have libelf or some other library available.
+
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: linux-snps-arc@lists.infradead.org
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Link: https://lkml.kernel.org/n/tip-2wb4r1gir9xrevbpq7qp0amk@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/bpf/hashtab.c |   23 ++++++++++++++++++-----
- 1 file changed, 18 insertions(+), 5 deletions(-)
+ tools/perf/bench/numa.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/kernel/bpf/hashtab.c
-+++ b/kernel/bpf/hashtab.c
-@@ -527,18 +527,30 @@ static u32 htab_map_gen_lookup(struct bp
- 	return insn - insn_buf;
- }
+diff --git a/tools/perf/bench/numa.c b/tools/perf/bench/numa.c
+index 44195514b19e6..fa56fde6e8d80 100644
+--- a/tools/perf/bench/numa.c
++++ b/tools/perf/bench/numa.c
+@@ -38,6 +38,10 @@
+ #include <numa.h>
+ #include <numaif.h>
  
--static void *htab_lru_map_lookup_elem(struct bpf_map *map, void *key)
-+static __always_inline void *__htab_lru_map_lookup_elem(struct bpf_map *map,
-+							void *key, const bool mark)
- {
- 	struct htab_elem *l = __htab_map_lookup_elem(map, key);
- 
- 	if (l) {
--		bpf_lru_node_set_ref(&l->lru_node);
-+		if (mark)
-+			bpf_lru_node_set_ref(&l->lru_node);
- 		return l->key + round_up(map->key_size, 8);
- 	}
- 
- 	return NULL;
- }
- 
-+static void *htab_lru_map_lookup_elem(struct bpf_map *map, void *key)
-+{
-+	return __htab_lru_map_lookup_elem(map, key, true);
-+}
++#ifndef RUSAGE_THREAD
++# define RUSAGE_THREAD 1
++#endif
 +
-+static void *htab_lru_map_lookup_elem_sys(struct bpf_map *map, void *key)
-+{
-+	return __htab_lru_map_lookup_elem(map, key, false);
-+}
-+
- static u32 htab_lru_map_gen_lookup(struct bpf_map *map,
- 				   struct bpf_insn *insn_buf)
- {
-@@ -1215,6 +1227,7 @@ const struct bpf_map_ops htab_lru_map_op
- 	.map_free = htab_map_free,
- 	.map_get_next_key = htab_map_get_next_key,
- 	.map_lookup_elem = htab_lru_map_lookup_elem,
-+	.map_lookup_elem_sys_only = htab_lru_map_lookup_elem_sys,
- 	.map_update_elem = htab_lru_map_update_elem,
- 	.map_delete_elem = htab_lru_map_delete_elem,
- 	.map_gen_lookup = htab_lru_map_gen_lookup,
-@@ -1246,7 +1259,6 @@ static void *htab_lru_percpu_map_lookup_
- 
- int bpf_percpu_hash_copy(struct bpf_map *map, void *key, void *value)
- {
--	struct bpf_htab *htab = container_of(map, struct bpf_htab, map);
- 	struct htab_elem *l;
- 	void __percpu *pptr;
- 	int ret = -ENOENT;
-@@ -1262,8 +1274,9 @@ int bpf_percpu_hash_copy(struct bpf_map
- 	l = __htab_map_lookup_elem(map, key);
- 	if (!l)
- 		goto out;
--	if (htab_is_lru(htab))
--		bpf_lru_node_set_ref(&l->lru_node);
-+	/* We do not mark LRU map element here in order to not mess up
-+	 * eviction heuristics when user space does a map walk.
-+	 */
- 	pptr = htab_elem_get_ptr(l, map->key_size);
- 	for_each_possible_cpu(cpu) {
- 		bpf_long_memcpy(value + off,
+ /*
+  * Regular printout to the terminal, supressed if -q is specified:
+  */
+-- 
+2.20.1
+
 
 
