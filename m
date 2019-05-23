@@ -2,101 +2,115 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF739C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 13:09:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02959C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 13:11:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD99C20851
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 13:09:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C400820851
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 13:11:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="NFUEa1xO";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="iopALxqe"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="BLXPB4DC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730611AbfEWNJh (ORCPT
+        id S1730658AbfEWNL3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 09:09:37 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:43616 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726310AbfEWNJg (ORCPT
+        Thu, 23 May 2019 09:11:29 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:37487 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726310AbfEWNL2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 09:09:36 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 53F4C6087A; Thu, 23 May 2019 13:09:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1558616976;
-        bh=wfXAsv/D6tc2pz76WMJTOlgUtKHJzRfaFaV69eXWLao=;
-        h=From:Subject:To:Cc:Date:From;
-        b=NFUEa1xOwYbpvtJfzWND+VGOOYp1tN57Zc4ZHjSuQAy1iJOnLx3GKtTGc0oUEClk4
-         A3aAJRZ4N4fw4VciptE5e8rGw8m8xwPZkNekzOVvhUrMuraqexA8QXK0VFeyq2O531
-         8aEOkVKbN6KBlEWaOeUjQrogrCcZpkWse6XjfCTo=
-Received: from [10.204.79.15] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mojha@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4467260388;
-        Thu, 23 May 2019 13:09:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1558616975;
-        bh=wfXAsv/D6tc2pz76WMJTOlgUtKHJzRfaFaV69eXWLao=;
-        h=From:Subject:To:Cc:Date:From;
-        b=iopALxqe4UjLh7YxbAj5A2jLZNrr7riwpgd9nw81qmTPOULMuNSxSMwNC+u2Imrcq
-         0EYcBwFoIfM8MKZgXBdE/GwKCVscxOfrdajjSnxiM8isL4qyIjsWxT38t7T/XwDX/b
-         FIjOIWB03H2wCu9QRO4L3htvfNO5A8b5+bT4EaGU=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4467260388
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
-From:   Mukesh Ojha <mojha@codeaurora.org>
-Subject: Perf: Preserving the event across CPU hotunplug/plug and Creation of
- an event on offine CPU
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Message-ID: <b94d3165-9870-9aa3-f76c-38383b649398@codeaurora.org>
-Date:   Thu, 23 May 2019 18:39:23 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 23 May 2019 09:11:28 -0400
+Received: by mail-ot1-f66.google.com with SMTP id r10so5354460otd.4
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 06:11:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2NQoQ/laq1oYfg4OPGpMMgUuGm2m5zflmCWAX0cf5lI=;
+        b=BLXPB4DCl41HOQ1mf12XPci8Inwo2NGNn83mwHy63yYcRGpk3jGl+Gpy04h6PXXBSI
+         F93f4WfGJQd0hNostZDzlKKtImjU9WJerCK9kY/88Ob2luPK+3+A6tlCt4DcdH1BMiTF
+         QsNVB0p0EM1m2Srhnl46IU3Xzdax90S8M1Trg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2NQoQ/laq1oYfg4OPGpMMgUuGm2m5zflmCWAX0cf5lI=;
+        b=kygKqE3Ezzpssn2jewmaMpRoeX8Y2FLkFXA+i1WC0bgMXlkg9TmfG0WfgPfODBSgVd
+         XQSQCH4H9NPfhzczXzDGS8fm6Hp2BlKaPM1yQogxah98CUsW7y0YYTu+FaHIvgMzKO8t
+         iINLHJhdFo8GCzJF//yH5Iu4mjNuY/hjwTZpe/s53taPZWkipGsJnQR7NjuyCNI9e0NL
+         FIzcvZHNzNABBXecpvwawToYGPAHpgocywGvTP7Llp1jeG8L06oKnsYM/I/Q38X5LEA2
+         ih4I35MAY81yNz+Tmj555QvYQSc7JsZ+MwESjJMB78IgEOxEbkRjP9WVih73RaP7huLy
+         9+pg==
+X-Gm-Message-State: APjAAAVdLRcp0G1/2SGlCpvUIDDl8zHtiOZW88zwehWEWLOGFnCDxWgV
+        5TMFWn7XRhnrafsp1XUoX6+sDhXgh0IL8jN6FOZT8Q==
+X-Google-Smtp-Source: APXvYqxgNgKbbCitW3Ugw4bFFPH6+OTbWM7dO+fzhxCE451+DtNbDtUKJoByZC2Umozp0zdgCnY8j7F2+VioH+/8mMU=
+X-Received: by 2002:a05:6830:16d2:: with SMTP id l18mr24911325otr.303.1558617087702;
+ Thu, 23 May 2019 06:11:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <20190521105151.51ffa942@canb.auug.org.au> <20190523115355.joyeqlmbjkufueyn@flea>
+ <20190523230409.31da92b9@canb.auug.org.au>
+In-Reply-To: <20190523230409.31da92b9@canb.auug.org.au>
+From:   Daniel Vetter <daniel.vetter@ffwll.ch>
+Date:   Thu, 23 May 2019 15:11:15 +0200
+Message-ID: <CAKMK7uHvUFtRNn5j6TnmBrs5ndkSuNwJWzB026j2zczaV9O_Tg@mail.gmail.com>
+Subject: Re: linux-next: manual merge of the drm-misc tree with Linus' tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
+        Intel Graphics <intel-gfx@lists.freedesktop.org>,
+        DRI <dri-devel@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jyri Sarha <jsarha@ti.com>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Thierry Reding <treding@nvidia.com>,
+        Sean Paul <seanpaul@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peter/All,
+On Thu, May 23, 2019 at 3:04 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>
+> Hi Maxime,
+>
+> On Thu, 23 May 2019 13:53:55 +0200 Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> >
+> > On Tue, May 21, 2019 at 10:51:51AM +1000, Stephen Rothwell wrote:
+> > >
+> > > Today's linux-next merge of the drm-misc tree got a conflict in:
+> > >
+> > >   Documentation/devicetree/bindings/vendor-prefixes.txt
+> > >
+> > > between commit:
+> > >
+> > >   8122de54602e ("dt-bindings: Convert vendor prefixes to json-schema")
+> > >
+> > > from Linus' tree and commits:
+> > >
+> > >   b4a2c0055a4f ("dt-bindings: Add vendor prefix for VXT Ltd")
+> > >   b1b0d36bdb15 ("dt-bindings: drm/panel: simple: Add binding for TFC S9700RTWV43TR-01B")
+> > >   fbd8b69ab616 ("dt-bindings: Add vendor prefix for Evervision Electronics")
+> > >
+> > > from the drm-misc tree.
+> >
+> > I just took your patch and pushed a temp branch there:
+> > https://git.kernel.org/pub/scm/linux/kernel/git/mripard/linux.git/commit/?h=drm-misc-next&id=3832f2cad5307ebcedeead13fbd8d3cf06ba5e90
+> >
+> > Rob, Stephen, are you ok with the change? If so, I'll push it.
+>
+> All that needs to be done is for my patch (slightly corrected) needs to
+> be applied to the drm-misc tree.  That tree already has the back merge
+> of Linus' tree and the txt file has been removed (my patch should have
+> been applied as part of the merge resolution but doing it later is fine).
 
-This is regarding the discussion happen in the past about 
-https://lkml.org/lkml/2018/2/15/1324
-
-Where the exact ask is to allow preserving and creation of events on a 
-offline CPU, so that when the CPU
-comes online it will start counting.
-
-I had a look at your patch too and resolve crash during while trying to 
-create an event on an offline cpu.
-
-In your patch,  you seem to disable event when cpu goes offline which is 
-exactly deleting the event
-from the pmu and add when it comes online, it seems to  work.
-
-But, For the purpose of allowing the creation of event while CPU is 
-offline is not able to count event while
-CPU coming online, for that i did some change, that did work.
-
-Also, I have query about the events which gets destroyed while CPU is 
-offline and we need to remove them
-once cpu comes online right ? As Raghavendra also queried the same in 
-the above thread.
-
-Don't we need  a list where we maintain the events which gets destroyed 
-while CPU is dead ?
-and clean it  up when CPU comes online ?
-
-Thanks.
-Mukesh
-
-
+That commit is on top of drm-misc, and somehow the .txt version has
+been resurrect in drm-misc-next (so needs to be re-deleted too).
+-Daniel
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
++41 (0) 79 365 57 48 - http://blog.ffwll.ch
