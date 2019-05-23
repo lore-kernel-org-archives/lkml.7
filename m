@@ -2,106 +2,117 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73C6CC282CE
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 00:44:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F946C282CE
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 00:51:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E00921773
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 00:44:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6B042173C
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 00:51:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GSxBqiox"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730329AbfEWAoQ (ORCPT
+        id S1729401AbfEWAvv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 20:44:16 -0400
-Received: from out02.mta.xmission.com ([166.70.13.232]:57521 "EHLO
-        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729523AbfEWAnK (ORCPT
+        Wed, 22 May 2019 20:51:51 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:39453 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727691AbfEWAvv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 20:43:10 -0400
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1hTbp7-0008Ri-Nd; Wed, 22 May 2019 18:43:09 -0600
-Received: from ip72-206-97-68.om.om.cox.net ([72.206.97.68] helo=x220.int.ebiederm.org)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_CBC_SHA256:128)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1hTbnf-0005Z3-5l; Wed, 22 May 2019 18:41:48 -0600
-From:   "Eric W. Biederman" <ebiederm@xmission.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>, linux-arch@vger.kernel.org
-Date:   Wed, 22 May 2019 19:39:08 -0500
-Message-Id: <20190523003916.20726-19-ebiederm@xmission.com>
-X-Mailer: git-send-email 2.21.0.dirty
-In-Reply-To: <20190523003916.20726-1-ebiederm@xmission.com>
-References: <20190523003916.20726-1-ebiederm@xmission.com>
+        Wed, 22 May 2019 20:51:51 -0400
+Received: by mail-pl1-f195.google.com with SMTP id g9so1882556plm.6;
+        Wed, 22 May 2019 17:51:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=EtI2yTs0dm+wBL3L4OREVCU991i3TViCrOTKp+Dkrtw=;
+        b=GSxBqioxM2Dcbf7KXoxqMREdN3jogWsbl96O/urW3iGiaxyXGj+56tzGyA6n1sCZUO
+         GPZXIsZy6BaGApw/t24/m/khqz00LA5ZrCSnUfWIP0SPpXiWZ1UJH0Y7xc9B75sMBOV5
+         2afOfifxqq303JGOWnC47h0AX9YU5YrPtiZSl7F+E+BsxHt8WopRKtjry/+OQjUnnJBv
+         LfFJNy7b4U26pGMMGrk97y1SAtdgkWqs1G3r3lxwQcMgxlTBZB7TwAEs6iWmdJaMT5VQ
+         sQPL0QnPIVH7k6IwNm4m/42MDK4/UWcrMatLv7oiH4I62LRuY25X/B/KVp86BpjZXllJ
+         /GeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=EtI2yTs0dm+wBL3L4OREVCU991i3TViCrOTKp+Dkrtw=;
+        b=GFF691bTlX+vR1/6BSsHug3yBE4lyDImbioZ6BbY30gBlyV39bFPrXkVGNfirbUrDk
+         rhLWqIlaYVNJGXcuTeW4+NyVm2ZCJh7Oi47pZepQkqXpzYgTup/2CC6/vzivR5uIxJmE
+         ULz9/IOzab8lxRLk8cqiSivuFy28D2X7pYmLXVjiaKq06GULPTkpFtwb+xjdiCh9fO3q
+         EGGGPYZN+U56jc7yjW9Gdci6bBkCNwccXdTeTyQdC1k+P07XKDq7q8PE4viSeqnYfTzx
+         olQOPCZuUKwUDl3lbZBsyfsccsRQeu6V9oYQmulxLldkBTWuy2+7IypNTeUM6JtNJD0k
+         Mr8g==
+X-Gm-Message-State: APjAAAXP2mYZeZfc6Ffk+VvAD7NAOiMRd1WW/BnX+YRUO+UFkdIuozrs
+        Os8UVOZAQ+s7tOiRKAQQlykgviG6rpd97Q==
+X-Google-Smtp-Source: APXvYqzwNfWNKzgHzXq1BGR2F1WhVCqqyoNM6BTWmHvMZnb5iOaor6b3x1w5X9rfxMxBttPDc3JlEg==
+X-Received: by 2002:a17:902:24c7:: with SMTP id l7mr44234382plg.192.1558572710498;
+        Wed, 22 May 2019 17:51:50 -0700 (PDT)
+Received: from zhanggen-UX430UQ ([66.42.35.75])
+        by smtp.gmail.com with ESMTPSA id o66sm30182106pfb.184.2019.05.22.17.51.42
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 22 May 2019 17:51:49 -0700 (PDT)
+Date:   Thu, 23 May 2019 08:51:33 +0800
+From:   Gen Zhang <blackgod016574@gmail.com>
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>, dvhart@infradead.org
+Cc:     linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] efi_64: Fix a missing-check bug in
+ arch/x86/platform/efi/efi_64.c
+Message-ID: <20190523005133.GA14881@zhanggen-UX430UQ>
+References: <20190517082633.GA3890@zhanggen-UX430UQ>
+ <CAKv+Gu98JNK34Q6MNOe3aq0W5rbv6hUFiuc7cHxHJat5aTk_gg@mail.gmail.com>
+ <20190517090628.GA4162@zhanggen-UX430UQ>
+ <CAKv+Gu_mwFpdtNZm9QMFn69+vOMTOpv9gvuhnBL2NBXvwkhXqg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-XM-SPF: eid=1hTbnf-0005Z3-5l;;;mid=<20190523003916.20726-19-ebiederm@xmission.com>;;;hst=in01.mta.xmission.com;;;ip=72.206.97.68;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1+bKbUzlq5gxopT7fPoQdp0fJB4iJOIX4M=
-X-SA-Exim-Connect-IP: 72.206.97.68
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: [REVIEW][PATCH 18/26] signal/unicore32: Remove tsk parameter from __do_user_fault
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKv+Gu_mwFpdtNZm9QMFn69+vOMTOpv9gvuhnBL2NBXvwkhXqg@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The __do_user_fault function is always called with tsk == current.
-Make that obvious by removing the tsk parameter.
+In efi_call_phys_prolog(), save_pgd is allocated by kmalloc_array(). 
+And it is dereferenced in the following codes. However, memory 
+allocation functions such as kmalloc_array() may fail. Dereferencing
+this save_pgd null pointer may cause the kernel go wrong. Thus we  
+should check this allocation.
+Further, if efi_call_phys_prolog() returns NULL, we should abort the
+process in phys_efi_set_virtual_address_map(), and return EFI_ABORTED.
 
-This makes it clear that __do_user_fault calls force_sig_fault
-on the current task.
+Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
 
-Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
 ---
- arch/unicore32/mm/fault.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
-
-diff --git a/arch/unicore32/mm/fault.c b/arch/unicore32/mm/fault.c
-index b9a3a50644c1..cadee0b3b4e0 100644
---- a/arch/unicore32/mm/fault.c
-+++ b/arch/unicore32/mm/fault.c
-@@ -116,10 +116,11 @@ static void __do_kernel_fault(struct mm_struct *mm, unsigned long addr,
-  * Something tried to access memory that isn't in our memory map..
-  * User mode accesses just cause a SIGSEGV
-  */
--static void __do_user_fault(struct task_struct *tsk, unsigned long addr,
--		unsigned int fsr, unsigned int sig, int code,
--		struct pt_regs *regs)
-+static void __do_user_fault(unsigned long addr, unsigned int fsr,
-+			    unsigned int sig, int code,	struct pt_regs *regs)
- {
-+	struct task_struct *tsk = current;
-+
- 	tsk->thread.address = addr;
- 	tsk->thread.error_code = fsr;
- 	tsk->thread.trap_no = 14;
-@@ -136,7 +137,7 @@ void do_bad_area(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
- 	 * have no context to handle this fault with.
- 	 */
- 	if (user_mode(regs))
--		__do_user_fault(tsk, addr, fsr, SIGSEGV, SEGV_MAPERR, regs);
-+		__do_user_fault(addr, fsr, SIGSEGV, SEGV_MAPERR, regs);
- 	else
- 		__do_kernel_fault(mm, addr, fsr, regs);
- }
-@@ -310,7 +311,7 @@ static int do_pf(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
- 		code = fault == VM_FAULT_BADACCESS ? SEGV_ACCERR : SEGV_MAPERR;
- 	}
+diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
+index e1cb01a..a7189a3 100644
+--- a/arch/x86/platform/efi/efi.c
++++ b/arch/x86/platform/efi/efi.c
+@@ -85,6 +85,8 @@ static efi_status_t __init phys_efi_set_virtual_address_map(
+ 	pgd_t *save_pgd;
  
--	__do_user_fault(tsk, addr, fsr, sig, code, regs);
-+	__do_user_fault(addr, fsr, sig, code, regs);
- 	return 0;
+ 	save_pgd = efi_call_phys_prolog();
++	if (!save_pgd)
++		return EFI_ABORTED;
  
- no_context:
--- 
-2.21.0
-
+ 	/* Disable interrupts around EFI calls: */
+ 	local_irq_save(flags);
+diff --git a/arch/x86/platform/efi/efi_64.c b/arch/x86/platform/efi/efi_64.c
+index cf0347f..828460a 100644
+--- a/arch/x86/platform/efi/efi_64.c
++++ b/arch/x86/platform/efi/efi_64.c
+@@ -91,6 +91,8 @@ pgd_t * __init efi_call_phys_prolog(void)
+ 
+ 	n_pgds = DIV_ROUND_UP((max_pfn << PAGE_SHIFT), PGDIR_SIZE);
+ 	save_pgd = kmalloc_array(n_pgds, sizeof(*save_pgd), GFP_KERNEL);
++	if (!save_pgd)
++		return NULL;
+ 
+ 	/*
+ 	 * Build 1:1 identity mapping for efi=old_map usage. Note that
+---
