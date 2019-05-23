@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6110C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:24:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24F57C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:24:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C0882186A
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:24:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFD3A2186A
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:24:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639467;
-	bh=DJK/MLF8I8/9SV0MixHGtroPi+wrkXjpjj37u+nsvLo=;
+	s=default; t=1558639473;
+	bh=YzxVZagn4yBuXs8rIInrK+XHSs1m65ndjNkEB/hNnqw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r2q/+/hMDCIqHW2Edxg6RBfja+K3Gbm5ad+5334WjAtUfBx9hror3GkaQUBdvqWCb
-	 DrKUOVFcMpcKLY69uKGDCTdIfTQb/9Rqh1LLWWRDQCvPF4kfGb7BnfyS478QRgL6AC
-	 0AWYsbbiWpIYeYyz/n789PeXR5ooD5xcI0xwTSZ0=
+	b=O7NP0v5vjDNd3k8oO0SdhbpZ8P6ZMB/phAg9NP5R9tD9IOAsUdCJRhH89QXSNY48m
+	 C0fHU3tuGsS/2DP97dwLeocUKLPXgJBmVi7D3INhOEci1GzD0sZrJsMoKr4D5mPyOI
+	 SSg9cGmJXmJPsfhaMShFv86ii4tDMUnY1Bpg6NJ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390902AbfEWTY0 (ORCPT
+        id S2390923AbfEWTYc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:24:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35252 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:24:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35474 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390868AbfEWTYU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:24:20 -0400
+        id S2390434AbfEWTY3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:24:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A49921851;
-        Thu, 23 May 2019 19:24:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9EBEF21872;
+        Thu, 23 May 2019 19:24:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639460;
-        bh=DJK/MLF8I8/9SV0MixHGtroPi+wrkXjpjj37u+nsvLo=;
+        s=default; t=1558639468;
+        bh=YzxVZagn4yBuXs8rIInrK+XHSs1m65ndjNkEB/hNnqw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WDcuIiz8sMFUWTRpaNdHSQf5TF2PCY3H0qlcNKEz/7CKIecIhirBuqfw52AWiKtqY
-         RTcYTFfAA/qoOFpQSsuVfhKteKsClsuQf0JrxndP4SEPe3xnHLZC7o/y2Cn2LiSeNj
-         JBXtAWSpYlIelSVdKiobk5EHaklQqCzIH4HMqSMo=
+        b=o/p6J1/R0CsJPKQ8b4b4DIuWJzFBacTvZ3ZYO83a835ifb9CbtgrLbUxxrKbefTgD
+         BDCtVBDpbVCMJRob10MpnJpIUaaM2RuvjJmRBB1FTmnJco+r8BtaxDlBx70nAVxWwK
+         C0tpESgxdgWPikxQY1kwzHBcW0yzCWAFASHSCeOE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Milan Broz <gmazyland@gmail.com>,
-        Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 5.0 096/139] dm crypt: move detailed message into debug level
-Date:   Thu, 23 May 2019 21:06:24 +0200
-Message-Id: <20190523181733.086735055@linuxfoundation.org>
+        stable@vger.kernel.org, Kirill Smelkov <kirr@nexedi.com>,
+        Miklos Szeredi <mszeredi@redhat.com>
+Subject: [PATCH 5.0 099/139] fuse: Add FOPEN_STREAM to use stream_open()
+Date:   Thu, 23 May 2019 21:06:27 +0200
+Message-Id: <20190523181733.421233135@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181720.120897565@linuxfoundation.org>
 References: <20190523181720.120897565@linuxfoundation.org>
@@ -59,73 +59,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Milan Broz <gmazyland@gmail.com>
+From: Kirill Smelkov <kirr@nexedi.com>
 
-commit 7a1cd7238fde6ab367384a4a2998cba48330c398 upstream.
+commit bbd84f33652f852ce5992d65db4d020aba21f882 upstream.
 
-The information about tag size should not be printed without debug info
-set. Also print device major:minor in the error message to identify the
-device instance.
+Starting from commit 9c225f2655e3 ("vfs: atomic f_pos accesses as per
+POSIX") files opened even via nonseekable_open gate read and write via lock
+and do not allow them to be run simultaneously. This can create read vs
+write deadlock if a filesystem is trying to implement a socket-like file
+which is intended to be simultaneously used for both read and write from
+filesystem client.  See commit 10dce8af3422 ("fs: stream_open - opener for
+stream-like files so that read and write can run simultaneously without
+deadlock") for details and e.g. commit 581d21a2d02a ("xenbus: fix deadlock
+on writes to /proc/xen/xenbus") for a similar deadlock example on
+/proc/xen/xenbus.
 
-Also use rate limiting and debug level for info about used crypto API
-implementaton.  This is important because during online reencryption
-the existing message saturates syslog (because we are moving hotzone
-across the whole device).
+To avoid such deadlock it was tempting to adjust fuse_finish_open to use
+stream_open instead of nonseekable_open on just FOPEN_NONSEEKABLE flags,
+but grepping through Debian codesearch shows users of FOPEN_NONSEEKABLE,
+and in particular GVFS which actually uses offset in its read and write
+handlers
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Milan Broz <gmazyland@gmail.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+	https://codesearch.debian.net/search?q=-%3Enonseekable+%3D
+	https://gitlab.gnome.org/GNOME/gvfs/blob/1.40.0-6-gcbc54396/client/gvfsfusedaemon.c#L1080
+	https://gitlab.gnome.org/GNOME/gvfs/blob/1.40.0-6-gcbc54396/client/gvfsfusedaemon.c#L1247-1346
+	https://gitlab.gnome.org/GNOME/gvfs/blob/1.40.0-6-gcbc54396/client/gvfsfusedaemon.c#L1399-1481
+
+so if we would do such a change it will break a real user.
+
+Add another flag (FOPEN_STREAM) for filesystem servers to indicate that the
+opened handler is having stream-like semantics; does not use file position
+and thus the kernel is free to issue simultaneous read and write request on
+opened file handle.
+
+This patch together with stream_open() should be added to stable kernels
+starting from v3.14+. This will allow to patch OSSPD and other FUSE
+filesystems that provide stream-like files to return FOPEN_STREAM |
+FOPEN_NONSEEKABLE in open handler and this way avoid the deadlock on all
+kernel versions. This should work because fuse_finish_open ignores unknown
+open flags returned from a filesystem and so passing FOPEN_STREAM to a
+kernel that is not aware of this flag cannot hurt. In turn the kernel that
+is not aware of FOPEN_STREAM will be < v3.14 where just FOPEN_NONSEEKABLE
+is sufficient to implement streams without read vs write deadlock.
+
+Cc: stable@vger.kernel.org # v3.14+
+Signed-off-by: Kirill Smelkov <kirr@nexedi.com>
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/dm-crypt.c |    9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ fs/fuse/file.c            |    4 +++-
+ include/uapi/linux/fuse.h |    2 ++
+ 2 files changed, 5 insertions(+), 1 deletion(-)
 
---- a/drivers/md/dm-crypt.c
-+++ b/drivers/md/dm-crypt.c
-@@ -949,6 +949,7 @@ static int crypt_integrity_ctr(struct cr
- {
- #ifdef CONFIG_BLK_DEV_INTEGRITY
- 	struct blk_integrity *bi = blk_get_integrity(cc->dev->bdev->bd_disk);
-+	struct mapped_device *md = dm_table_get_md(ti->table);
+--- a/fs/fuse/file.c
++++ b/fs/fuse/file.c
+@@ -181,7 +181,9 @@ void fuse_finish_open(struct inode *inod
+ 		file->f_op = &fuse_direct_io_file_operations;
+ 	if (!(ff->open_flags & FOPEN_KEEP_CACHE))
+ 		invalidate_inode_pages2(inode->i_mapping);
+-	if (ff->open_flags & FOPEN_NONSEEKABLE)
++	if (ff->open_flags & FOPEN_STREAM)
++		stream_open(inode, file);
++	else if (ff->open_flags & FOPEN_NONSEEKABLE)
+ 		nonseekable_open(inode, file);
+ 	if (fc->atomic_o_trunc && (file->f_flags & O_TRUNC)) {
+ 		struct fuse_inode *fi = get_fuse_inode(inode);
+--- a/include/uapi/linux/fuse.h
++++ b/include/uapi/linux/fuse.h
+@@ -226,11 +226,13 @@ struct fuse_file_lock {
+  * FOPEN_KEEP_CACHE: don't invalidate the data cache on open
+  * FOPEN_NONSEEKABLE: the file is not seekable
+  * FOPEN_CACHE_DIR: allow caching this directory
++ * FOPEN_STREAM: the file is stream-like (no file position at all)
+  */
+ #define FOPEN_DIRECT_IO		(1 << 0)
+ #define FOPEN_KEEP_CACHE	(1 << 1)
+ #define FOPEN_NONSEEKABLE	(1 << 2)
+ #define FOPEN_CACHE_DIR		(1 << 3)
++#define FOPEN_STREAM		(1 << 4)
  
- 	/* From now we require underlying device with our integrity profile */
- 	if (!bi || strcasecmp(bi->profile->name, "DM-DIF-EXT-TAG")) {
-@@ -968,7 +969,7 @@ static int crypt_integrity_ctr(struct cr
- 
- 	if (crypt_integrity_aead(cc)) {
- 		cc->integrity_tag_size = cc->on_disk_tag_size - cc->integrity_iv_size;
--		DMINFO("Integrity AEAD, tag size %u, IV size %u.",
-+		DMDEBUG("%s: Integrity AEAD, tag size %u, IV size %u.", dm_device_name(md),
- 		       cc->integrity_tag_size, cc->integrity_iv_size);
- 
- 		if (crypto_aead_setauthsize(any_tfm_aead(cc), cc->integrity_tag_size)) {
-@@ -976,7 +977,7 @@ static int crypt_integrity_ctr(struct cr
- 			return -EINVAL;
- 		}
- 	} else if (cc->integrity_iv_size)
--		DMINFO("Additional per-sector space %u bytes for IV.",
-+		DMDEBUG("%s: Additional per-sector space %u bytes for IV.", dm_device_name(md),
- 		       cc->integrity_iv_size);
- 
- 	if ((cc->integrity_tag_size + cc->integrity_iv_size) != bi->tag_size) {
-@@ -1890,7 +1891,7 @@ static int crypt_alloc_tfms_skcipher(str
- 	 * algorithm implementation is used.  Help people debug performance
- 	 * problems by logging the ->cra_driver_name.
- 	 */
--	DMINFO("%s using implementation \"%s\"", ciphermode,
-+	DMDEBUG_LIMIT("%s using implementation \"%s\"", ciphermode,
- 	       crypto_skcipher_alg(any_tfm(cc))->base.cra_driver_name);
- 	return 0;
- }
-@@ -1910,7 +1911,7 @@ static int crypt_alloc_tfms_aead(struct
- 		return err;
- 	}
- 
--	DMINFO("%s using implementation \"%s\"", ciphermode,
-+	DMDEBUG_LIMIT("%s using implementation \"%s\"", ciphermode,
- 	       crypto_aead_alg(any_tfm_aead(cc))->base.cra_driver_name);
- 	return 0;
- }
+ /**
+  * INIT request/reply flags
 
 
