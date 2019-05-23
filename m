@@ -2,75 +2,171 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0440EC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 10:24:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DEC0C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 10:25:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1E152168B
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 10:24:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B66321019
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 10:25:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uZJ1ml/S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730541AbfEWKYj (ORCPT
+        id S1730575AbfEWKZV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 06:24:39 -0400
-Received: from foss.arm.com ([217.140.101.70]:42706 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727434AbfEWKYi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 06:24:38 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7582D15AB;
-        Thu, 23 May 2019 03:24:38 -0700 (PDT)
-Received: from e111045-lin.cambridge.arm.com (unknown [10.1.39.23])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5623A3F718;
-        Thu, 23 May 2019 03:24:36 -0700 (PDT)
-From:   Ard Biesheuvel <ard.biesheuvel@arm.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     marc.zyngier@arm.com, mark.rutland@arm.com,
-        linux-kernel@vger.kernel.org,
-        Ard Biesheuvel <ard.biesheuvel@arm.com>,
-        Nadav Amit <namit@vmware.com>,
-        Rick Edgecombe <rick.p.edgecombe@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        James Morse <james.morse@arm.com>
-Subject: [PATCH 4/4] arm64: bpf: do not allocate executable memory
-Date:   Thu, 23 May 2019 11:22:56 +0100
-Message-Id: <20190523102256.29168-5-ard.biesheuvel@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190523102256.29168-1-ard.biesheuvel@arm.com>
-References: <20190523102256.29168-1-ard.biesheuvel@arm.com>
+        Thu, 23 May 2019 06:25:21 -0400
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:44829 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727434AbfEWKZV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 06:25:21 -0400
+Received: by mail-yw1-f66.google.com with SMTP id e74so2055017ywe.11;
+        Thu, 23 May 2019 03:25:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+NNHjqxy4cA1iR7igWdvYkQtAM2DdUoWQ0xcNKGlcUE=;
+        b=uZJ1ml/SqGhO6uZamvp643xn91paeHnqdxomJBvL9LrsYcy8HSgeAjB/fF6RfDeAKw
+         suZdXa7S2gd3yDtpE57xSS+ijPDHrJ5fiyz2PTg6IJI5MaViKze6osc2qKSDcTnFvFSJ
+         4/c62F8cPWHSY+JakXytNEFIvinZTDg75pTKNjZM+AMRdEPLl/03j44a1i8UV1CUU8xU
+         7nSEOqP3oWadaUwlRLXAjl2TTf1v6GaHm1KdFPEsRZ2Teo6f2Z2oV2uK1QM+TRgqTKO6
+         O1KkRhDgbnp1oQzd1h8J/L1F9bSk5O8iOo1b9AkYBGUexnd42PUu87SD8cGvbdeIs7qT
+         I1+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+NNHjqxy4cA1iR7igWdvYkQtAM2DdUoWQ0xcNKGlcUE=;
+        b=AcGtL7x2ObQo3yF21KZ+clORQUY0BPExei6NvKBeFWUFexAzlDcLnmboKAzxSU4+GZ
+         dI/wMjYkIS6rkVf5ZmnP92NQ6y0WZBF7WjrQUtFGxkag2SAm8dOq1CGa/s95J/sO7H6v
+         84vNIqpJdylOd/8byspGZHqsP0sTxPkiQBhmMgySZpJP4+nLYQs4kG9gUQQGIfPdW0cf
+         YBgx28Sb5OXYNIeyAjiMaWggwhk2KA2yST9j8LX79LBvYkIRsmJa706MBgzN0UT6HS6A
+         igy0uVgngJ1xBXB999FvEKFKSktU9ukjUejiffzTg88U4WXFCeNrDY2tpKEwEsXCKgOH
+         A9sg==
+X-Gm-Message-State: APjAAAWirfEIa7n0nt2sfPST1e/CwKpsHX4RGNMGVaGMPMU0/79Hqe3m
+        +dfEik3tsIUeSm9AIvHHvTmbZmlX1c563TAKd8U=
+X-Google-Smtp-Source: APXvYqw7w14u3jrVFRwPHVUPg848bC02eoNql2Zpmdzv1MBhrwImOVrrYWjfI+Bfq7H2/0t3f+tF/JPZHbDa8SJnPy8=
+X-Received: by 2002:a81:4f06:: with SMTP id d6mr30466460ywb.379.1558607120083;
+ Thu, 23 May 2019 03:25:20 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190522163150.16849-1-christian@brauner.io> <CAOQ4uxjV=7=FXuyccBK9Pu1B7o-w-pbc1FQXJxY4q6z8E93KOg@mail.gmail.com>
+ <EB97EF04-D44F-4320-ACDC-C536EED03BA4@brauner.io> <CAOQ4uxhodqVw0DVfcvXYH5vBf4LKcv7t388ZwXeZPBTcEMzGSw@mail.gmail.com>
+ <20190523095506.nyei5nogvv63lm4a@brauner.io>
+In-Reply-To: <20190523095506.nyei5nogvv63lm4a@brauner.io>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Thu, 23 May 2019 13:25:08 +0300
+Message-ID: <CAOQ4uxiBeAzsE+b=tE7+9=25-qS7ohuTdEswYOt8DrCp6eAMuw@mail.gmail.com>
+Subject: Re: [PATCH] fanotify: remove redundant capable(CAP_SYS_ADMIN)s
+To:     Christian Brauner <christian@brauner.io>
+Cc:     Jan Kara <jack@suse.cz>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Matthew Bobrowski <mbobrowski@mbobrowski.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The BPF code now takes care of mapping the code pages executable
-after mapping them read-only, to ensure that no RWX mapped regions
-are needed, even transiently. This means we can drop the executable
-permissions from the mapping at allocation time.
+On Thu, May 23, 2019 at 12:55 PM Christian Brauner <christian@brauner.io> wrote:
+>
+> On Wed, May 22, 2019 at 11:00:22PM +0300, Amir Goldstein wrote:
+> > On Wed, May 22, 2019 at 9:57 PM Christian Brauner <christian@brauner.io> wrote:
+> > >
+> > > On May 22, 2019 8:29:37 PM GMT+02:00, Amir Goldstein <amir73il@gmail.com> wrote:
+> > > >On Wed, May 22, 2019 at 7:32 PM Christian Brauner
+> > > ><christian@brauner.io> wrote:
+> > > >>
+> > > >> This removes two redundant capable(CAP_SYS_ADMIN) checks from
+> > > >> fanotify_init().
+> > > >> fanotify_init() guards the whole syscall with capable(CAP_SYS_ADMIN)
+> > > >at the
+> > > >> beginning. So the other two capable(CAP_SYS_ADMIN) checks are not
+> > > >needed.
+> > > >
+> > > >It's intentional:
+> > > >
+> > > >commit e7099d8a5a34d2876908a9fab4952dabdcfc5909
+> > > >Author: Eric Paris <eparis@redhat.com>
+> > > >Date:   Thu Oct 28 17:21:57 2010 -0400
+> > > >
+> > > >    fanotify: limit the number of marks in a single fanotify group
+> > > >
+> > > >There is currently no limit on the number of marks a given fanotify
+> > > >group
+> > > >can have.  Since fanotify is gated on CAP_SYS_ADMIN this was not seen
+> > > >as
+> > > >a serious DoS threat.  This patch implements a default of 8192, the
+> > > >same as
+> > > >inotify to work towards removing the CAP_SYS_ADMIN gating and
+> > > >eliminating
+> > > >    the default DoS'able status.
+> > > >
+> > > >    Signed-off-by: Eric Paris <eparis@redhat.com>
+> > > >
+> > > >There idea is to eventually remove the gated CAP_SYS_ADMIN.
+> > > >There is no reason that fanotify could not be used by unprivileged
+> > > >users
+> > > >to setup inotify style watch on an inode or directories children, see:
+> > > >https://patchwork.kernel.org/patch/10668299/
+> > > >
+> > > >>
+> > > >> Fixes: 5dd03f55fd2 ("fanotify: allow userspace to override max queue
+> > > >depth")
+> > > >> Fixes: ac7e22dcfaf ("fanotify: allow userspace to override max
+> > > >marks")
+> > > >
+> > > >Fixes is used to tag bug fixes for stable.
+> > > >There is no bug.
+> > > >
+> > > >Thanks,
+> > > >Amir.
+> > >
+> > > Interesting. When do you think the gate can be removed?
+> >
+> > Nobody is working on this AFAIK.
+> > What I posted was a simple POC, but I have no use case for this.
+> > In the patchwork link above, Jan has listed the prerequisites for
+> > removing the gate.
+> >
+> > One of the prerequisites is FAN_REPORT_FID, which is now merged.
+> > When events gets reported with fid instead of fd, unprivileged user
+> > (hopefully) cannot use fid for privilege escalation.
+> >
+> > > I was looking into switching from inotify to fanotify but since it's not usable from
+> > > non-initial userns it's a no-no
+> > > since we support nested workloads.
+> >
+> > One of Jan's questions was what is the benefit of using inotify-compatible
+> > fanotify vs. using inotify.
+> > So what was the reason you were looking into switching from inotify to fanotify?
+> > Is it because of mount/filesystem watch? Because making those available for
+>
+> Yeah. Well, I would need to look but you could probably do it safely for
+> filesystems mountable in user namespaces (which are few).
+> Can you do a bind-mount and then place a watch on the bind-mount or is
+> this superblock based?
+>
 
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@arm.com>
----
- arch/arm64/net/bpf_jit_comp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Either.
+FAN_MARK_MOUNT was there from day 1 of fanotify.
+FAN_MARK_FILESYSTEM was merged to Linux Linux 4.20.
 
-diff --git a/arch/arm64/net/bpf_jit_comp.c b/arch/arm64/net/bpf_jit_comp.c
-index df845cee438e..aef4ff467222 100644
---- a/arch/arm64/net/bpf_jit_comp.c
-+++ b/arch/arm64/net/bpf_jit_comp.c
-@@ -981,7 +981,7 @@ void *bpf_jit_alloc_exec(unsigned long size)
- {
- 	return __vmalloc_node_range(size, PAGE_SIZE, BPF_JIT_REGION_START,
- 				    BPF_JIT_REGION_END, GFP_KERNEL,
--				    PAGE_KERNEL_EXEC, 0, NUMA_NO_NODE,
-+				    PAGE_KERNEL, 0, NUMA_NO_NODE,
- 				    __builtin_return_address(0));
- }
- 
--- 
-2.17.1
+But directory modification events that are supported since v5.1 are
+not available
+with FAN_MARK_MOUNT, see:
+https://github.com/amir73il/man-pages/blob/fanotify_fid/man2/fanotify_init.2#L97
 
+Matthew,
+
+Perhaps this fact is worth a mention in the linked entry for FAN_REPORT_FID
+in fanotify_init.2 in addition to the comment on the entry for FAN_MARK_MOUNT
+in fanotify_mark.2.
+
+Thanks,
+Amir.
