@@ -4,66 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47113C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:24:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8FC8C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:25:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D4D221850
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:24:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82E5D2133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:25:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639499;
-	bh=cLLt/rInlk/yS1RnHy6KiOCgBywX0s/xE3MlAWS9mKY=;
+	s=default; t=1558639502;
+	bh=FxkdIhG38ihpYGCunrzIqZkGUeuxlN4iMAdCgEIL3v8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RP1Wvq4SM8JswPfJcYHB+GxD54YsMFPPT5XgpALg8+yO+WVB3/8imj8roOvadfzSP
-	 B5wdltSFBYgxM3BoaUbAcBvXxmhdHJRcXfhiNMm1jgzEN3o9Dr49FQlmtDmgP7+SVb
-	 y4xmO7MrbfNNmfwlfc+akV+HmU29DGWoL/YZWQHo=
+	b=RRzKSEl1X62dIR7wOVDpnlD72Uxig+5ByN5d7n8DscMN+KkEb2BWXLO4GzTahULCy
+	 X0q+FeMyhsg8pWoO0bnmEOgESh5M8jsiLgLwIo7bmY19Pb59eH6hXn/RO7jwMfJjpr
+	 yy/e1xqEuaUl4TkqARIazuI5n9d9J6taxFOl58Z8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389936AbfEWTY6 (ORCPT
+        id S2390659AbfEWTZB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:24:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36118 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:25:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391016AbfEWTYz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:24:55 -0400
+        id S2391019AbfEWTY6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:24:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4009920868;
-        Thu, 23 May 2019 19:24:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2586D217D7;
+        Thu, 23 May 2019 19:24:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639494;
-        bh=cLLt/rInlk/yS1RnHy6KiOCgBywX0s/xE3MlAWS9mKY=;
+        s=default; t=1558639497;
+        bh=FxkdIhG38ihpYGCunrzIqZkGUeuxlN4iMAdCgEIL3v8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NoE6keBiJuXJbGi9nwr5kuWZ4EtHODzPOAr+sKn+01X8m9Nh/dOg1nlAFplZ3B5oP
-         9+1g+jL3WtXWfc5sK4Jrym0jINW/b94Rz7eSdI2KS6maQqQUe+nqiBM3odWSebYft8
-         v+r/YMRC3ThbRs5H4+Ev+LSJZIAtfvg5yb2FX2QY=
+        b=MOnaQInDBmYTd+MKS+uKYG2kbyn5Kop+ryqR1NYcl0LHmSZ0E5Bm16TRNdpFDcPtf
+         WCvGeH8F/cex/dgd007vveP9hScNW1GHIKgW1vUg7Embz65FDSzp5xqmsAhPNGBgQg
+         7IXXpk/a1rgT5G8FNCRw4JQpJs2NrckSEm2Tae4w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Li RongQing <lirongqing@baidu.com>,
-        Gary R Hook <gary.hook@amd.com>,
-        Borislav Petkov <bp@suse.de>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Coly Li <colyli@suse.de>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Kent Overstreet <kent.overstreet@gmail.com>,
-        "luto@kernel.org" <luto@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>,
+        stable@vger.kernel.org, Peter Xu <peterx@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 126/139] x86/mm/mem_encrypt: Disable all instrumentation for early SME setup
-Date:   Thu, 23 May 2019 21:06:54 +0200
-Message-Id: <20190523181735.737390919@linuxfoundation.org>
+Subject: [PATCH 5.0 127/139] KVM: fix KVM_CLEAR_DIRTY_LOG for memory slots of unaligned size
+Date:   Thu, 23 May 2019 21:06:55 +0200
+Message-Id: <20190523181735.824545490@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181720.120897565@linuxfoundation.org>
 References: <20190523181720.120897565@linuxfoundation.org>
@@ -76,100 +60,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b51ce3744f115850166f3d6c292b9c8cb849ad4f ]
+[ Upstream commit 76d58e0f07ec203bbdfcaabd9a9fc10a5a3ed5ea ]
 
-Enablement of AMD's Secure Memory Encryption feature is determined very
-early after start_kernel() is entered. Part of this procedure involves
-scanning the command line for the parameter 'mem_encrypt'.
+If a memory slot's size is not a multiple of 64 pages (256K), then
+the KVM_CLEAR_DIRTY_LOG API is unusable: clearing the final 64 pages
+either requires the requested page range to go beyond memslot->npages,
+or requires log->num_pages to be unaligned, and kvm_clear_dirty_log_protect
+requires log->num_pages to be both in range and aligned.
 
-To determine intended state, the function sme_enable() uses library
-functions cmdline_find_option() and strncmp(). Their use occurs early
-enough such that it cannot be assumed that any instrumentation subsystem
-is initialized.
+To allow this case, allow log->num_pages not to be a multiple of 64 if
+it ends exactly on the last page of the slot.
 
-For example, making calls to a KASAN-instrumented function before KASAN
-is set up will result in the use of uninitialized memory and a boot
-failure.
-
-When AMD's SME support is enabled, conditionally disable instrumentation
-of these dependent functions in lib/string.c and arch/x86/lib/cmdline.c.
-
- [ bp: Get rid of intermediary nostackp var and cleanup whitespace. ]
-
-Fixes: aca20d546214 ("x86/mm: Add support to make use of Secure Memory Encryption")
-Reported-by: Li RongQing <lirongqing@baidu.com>
-Signed-off-by: Gary R Hook <gary.hook@amd.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Boris Brezillon <bbrezillon@kernel.org>
-Cc: Coly Li <colyli@suse.de>
-Cc: "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Kent Overstreet <kent.overstreet@gmail.com>
-Cc: "luto@kernel.org" <luto@kernel.org>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: "mingo@redhat.com" <mingo@redhat.com>
-Cc: "peterz@infradead.org" <peterz@infradead.org>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/155657657552.7116.18363762932464011367.stgit@sosrh3.amd.com
+Reported-by: Peter Xu <peterx@redhat.com>
+Fixes: 98938aa8edd6 ("KVM: validate userspace input in kvm_clear_dirty_log_protect()", 2019-01-02)
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/lib/Makefile | 12 ++++++++++++
- lib/Makefile          | 11 +++++++++++
- 2 files changed, 23 insertions(+)
+ Documentation/virtual/kvm/api.txt            | 5 +++--
+ tools/testing/selftests/kvm/dirty_log_test.c | 9 ++++++---
+ virt/kvm/kvm_main.c                          | 7 ++++---
+ 3 files changed, 13 insertions(+), 8 deletions(-)
 
-diff --git a/arch/x86/lib/Makefile b/arch/x86/lib/Makefile
-index 140e61843a079..3cb3af51ec897 100644
---- a/arch/x86/lib/Makefile
-+++ b/arch/x86/lib/Makefile
-@@ -6,6 +6,18 @@
- # Produces uninteresting flaky coverage.
- KCOV_INSTRUMENT_delay.o	:= n
+diff --git a/Documentation/virtual/kvm/api.txt b/Documentation/virtual/kvm/api.txt
+index ba8927c0d45c4..a1b8e6d92298c 100644
+--- a/Documentation/virtual/kvm/api.txt
++++ b/Documentation/virtual/kvm/api.txt
+@@ -3790,8 +3790,9 @@ The ioctl clears the dirty status of pages in a memory slot, according to
+ the bitmap that is passed in struct kvm_clear_dirty_log's dirty_bitmap
+ field.  Bit 0 of the bitmap corresponds to page "first_page" in the
+ memory slot, and num_pages is the size in bits of the input bitmap.
+-Both first_page and num_pages must be a multiple of 64.  For each bit
+-that is set in the input bitmap, the corresponding page is marked "clean"
++first_page must be a multiple of 64; num_pages must also be a multiple of
++64 unless first_page + num_pages is the size of the memory slot.  For each
++bit that is set in the input bitmap, the corresponding page is marked "clean"
+ in KVM's dirty bitmap, and dirty tracking is re-enabled for that page
+ (for example via write-protection, or by clearing the dirty bit in
+ a page table entry).
+diff --git a/tools/testing/selftests/kvm/dirty_log_test.c b/tools/testing/selftests/kvm/dirty_log_test.c
+index 4715cfba20dce..93f99c6b7d79e 100644
+--- a/tools/testing/selftests/kvm/dirty_log_test.c
++++ b/tools/testing/selftests/kvm/dirty_log_test.c
+@@ -288,8 +288,11 @@ static void run_test(enum vm_guest_mode mode, unsigned long iterations,
+ #endif
+ 	max_gfn = (1ul << (guest_pa_bits - guest_page_shift)) - 1;
+ 	guest_page_size = (1ul << guest_page_shift);
+-	/* 1G of guest page sized pages */
+-	guest_num_pages = (1ul << (30 - guest_page_shift));
++	/*
++	 * A little more than 1G of guest page sized pages.  Cover the
++	 * case where the size is not aligned to 64 pages.
++	 */
++	guest_num_pages = (1ul << (30 - guest_page_shift)) + 3;
+ 	host_page_size = getpagesize();
+ 	host_num_pages = (guest_num_pages * guest_page_size) / host_page_size +
+ 			 !!((guest_num_pages * guest_page_size) % host_page_size);
+@@ -359,7 +362,7 @@ static void run_test(enum vm_guest_mode mode, unsigned long iterations,
+ 		kvm_vm_get_dirty_log(vm, TEST_MEM_SLOT_INDEX, bmap);
+ #ifdef USE_CLEAR_DIRTY_LOG
+ 		kvm_vm_clear_dirty_log(vm, TEST_MEM_SLOT_INDEX, bmap, 0,
+-				       DIV_ROUND_UP(host_num_pages, 64) * 64);
++				       host_num_pages);
+ #endif
+ 		vm_dirty_log_verify(bmap);
+ 		iteration++;
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index b5238bcba72cb..4cc0d8a46891f 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -1241,7 +1241,7 @@ int kvm_clear_dirty_log_protect(struct kvm *kvm,
+ 	if (as_id >= KVM_ADDRESS_SPACE_NUM || id >= KVM_USER_MEM_SLOTS)
+ 		return -EINVAL;
  
-+# Early boot use of cmdline; don't instrument it
-+ifdef CONFIG_AMD_MEM_ENCRYPT
-+KCOV_INSTRUMENT_cmdline.o := n
-+KASAN_SANITIZE_cmdline.o  := n
-+
-+ifdef CONFIG_FUNCTION_TRACER
-+CFLAGS_REMOVE_cmdline.o = -pg
-+endif
-+
-+CFLAGS_cmdline.o := $(call cc-option, -fno-stack-protector)
-+endif
-+
- inat_tables_script = $(srctree)/arch/x86/tools/gen-insn-attr-x86.awk
- inat_tables_maps = $(srctree)/arch/x86/lib/x86-opcode-map.txt
- quiet_cmd_inat_tables = GEN     $@
-diff --git a/lib/Makefile b/lib/Makefile
-index e1b59da714186..d1f312096bec5 100644
---- a/lib/Makefile
-+++ b/lib/Makefile
-@@ -17,6 +17,17 @@ KCOV_INSTRUMENT_list_debug.o := n
- KCOV_INSTRUMENT_debugobjects.o := n
- KCOV_INSTRUMENT_dynamic_debug.o := n
+-	if ((log->first_page & 63) || (log->num_pages & 63))
++	if (log->first_page & 63)
+ 		return -EINVAL;
  
-+# Early boot use of cmdline, don't instrument it
-+ifdef CONFIG_AMD_MEM_ENCRYPT
-+KASAN_SANITIZE_string.o := n
-+
-+ifdef CONFIG_FUNCTION_TRACER
-+CFLAGS_REMOVE_string.o = -pg
-+endif
-+
-+CFLAGS_string.o := $(call cc-option, -fno-stack-protector)
-+endif
-+
- lib-y := ctype.o string.o vsprintf.o cmdline.o \
- 	 rbtree.o radix-tree.o timerqueue.o xarray.o \
- 	 idr.o int_sqrt.o extable.o \
+ 	slots = __kvm_memslots(kvm, as_id);
+@@ -1254,8 +1254,9 @@ int kvm_clear_dirty_log_protect(struct kvm *kvm,
+ 	n = ALIGN(log->num_pages, BITS_PER_LONG) / 8;
+ 
+ 	if (log->first_page > memslot->npages ||
+-	    log->num_pages > memslot->npages - log->first_page)
+-			return -EINVAL;
++	    log->num_pages > memslot->npages - log->first_page ||
++	    (log->num_pages < memslot->npages - log->first_page && (log->num_pages & 63)))
++	    return -EINVAL;
+ 
+ 	*flush = false;
+ 	dirty_bitmap_buffer = kvm_second_dirty_bitmap(memslot);
 -- 
 2.20.1
 
