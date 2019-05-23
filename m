@@ -4,54 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A502C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:19:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D58BC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:19:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 608132189E
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:19:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8469205ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:19:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639179;
-	bh=kesfgwBqgVXPkLx/zEwnlJg4dQOQm0nNiBwMUCHiobU=;
+	s=default; t=1558639187;
+	bh=6iyfwPKAbzU3TmzNWS+7v0/dlkiVwbpQX5lTsHKyZ7Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UizOC+EkrJu3vsy+A5X9sd3sKosQAe0roWAh77y45VeV06tCWUR4/W+uMnU1QMVaB
-	 tX+mWMaXRyyGpww8sSza0/QL32aEVPoSR9nff3H1uWqc1aBbuCJxr+CXLznaUq0oml
-	 4uIfJaF3jJZ7G9eEqdmVXyz/64fpR0+7VOnjJbfo=
+	b=SEFeCHqgPpsA3uJcai/ir+lkadAidXBcW7FaJMrv/Z0yJqudgmWsEoqNj8f6rChFm
+	 GjHec+b5G7V7P4L0wHtuWgIhNXQYP2wGckQmoHPwVKW96GKH46luUm8ujj6KNl4tYX
+	 AW8tl3vYHkNwyxl1bT8WqjEg39BL37WmAHbEQM78=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389229AbfEWTTi (ORCPT
+        id S2389896AbfEWTTq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:19:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55740 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:19:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388715AbfEWTTg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:19:36 -0400
+        id S2388715AbfEWTTl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:19:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B4992133D;
-        Thu, 23 May 2019 19:19:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F2D1D205ED;
+        Thu, 23 May 2019 19:19:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639175;
-        bh=kesfgwBqgVXPkLx/zEwnlJg4dQOQm0nNiBwMUCHiobU=;
+        s=default; t=1558639180;
+        bh=6iyfwPKAbzU3TmzNWS+7v0/dlkiVwbpQX5lTsHKyZ7Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WIc318X0NXF4+RmWoXQXCsDnvhK1MqSAwcgODxbros/QeaxFCJ0CZfyTnoddHGb7L
-         dGoAIBrU78sQ4jOfaCQyTBFZx32jX8iZaTjBFkLAIr67pqrHZpQEr5HSkXWC5K1voX
-         XTfHqSsyySSaxUNpaxYVy7FpskUAi00DSqCkNXXA=
+        b=ug0UfAVpOqEqkZ4iaHlpJ5NYMyklyvwQYNETfOcQataiZUXANVo6K2o7RhbW8MGVm
+         GXCweDH6+YZax6b2n75qn56Lh2/iAuqlRBmM3l6/lfTWzB7T5vlre6tIVwJmfHjOoA
+         WCK2c2FErLTK/GN42RP92195y8kq79LzRUQ+iS54=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>
-Subject: [PATCH 4.19 114/114] bpf, lru: avoid messing with eviction heuristics upon syscall lookup
-Date:   Thu, 23 May 2019 21:06:53 +0200
-Message-Id: <20190523181740.955032364@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Mikael Magnusson <mikael.kernel@lists.m7n.se>,
+        Wei Wang <weiwan@google.com>, Martin Lau <kafai@fb.com>,
+        Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        David Ahern <dsahern@gmail.com>
+Subject: [PATCH 5.0 001/139] ipv6: fix src addr routing with the exception table
+Date:   Thu, 23 May 2019 21:04:49 +0200
+Message-Id: <20190523181720.358465447@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190523181731.372074275@linuxfoundation.org>
-References: <20190523181731.372074275@linuxfoundation.org>
+In-Reply-To: <20190523181720.120897565@linuxfoundation.org>
+References: <20190523181720.120897565@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -60,106 +65,137 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Borkmann <daniel@iogearbox.net>
+From: Wei Wang <weiwan@google.com>
 
-commit 50b045a8c0ccf44f76640ac3eea8d80ca53979a3 upstream.
+[ Upstream commit 510e2ceda031eed97a7a0f9aad65d271a58b460d ]
 
-One of the biggest issues we face right now with picking LRU map over
-regular hash table is that a map walk out of user space, for example,
-to just dump the existing entries or to remove certain ones, will
-completely mess up LRU eviction heuristics and wrong entries such
-as just created ones will get evicted instead. The reason for this
-is that we mark an entry as "in use" via bpf_lru_node_set_ref() from
-system call lookup side as well. Thus upon walk, all entries are
-being marked, so information of actual least recently used ones
-are "lost".
+When inserting route cache into the exception table, the key is
+generated with both src_addr and dest_addr with src addr routing.
+However, current logic always assumes the src_addr used to generate the
+key is a /128 host address. This is not true in the following scenarios:
+1. When the route is a gateway route or does not have next hop.
+   (rt6_is_gw_or_nonexthop() == false)
+2. When calling ip6_rt_cache_alloc(), saddr is passed in as NULL.
+This means, when looking for a route cache in the exception table, we
+have to do the lookup twice: first time with the passed in /128 host
+address, second time with the src_addr stored in fib6_info.
 
-In case of Cilium where it can be used (besides others) as a BPF
-based connection tracker, this current behavior causes disruption
-upon control plane changes that need to walk the map from user space
-to evict certain entries. Discussion result from bpfconf [0] was that
-we should simply just remove marking from system call side as no
-good use case could be found where it's actually needed there.
-Therefore this patch removes marking for regular LRU and per-CPU
-flavor. If there ever should be a need in future, the behavior could
-be selected via map creation flag, but due to mentioned reason we
-avoid this here.
+This solves the pmtu discovery issue reported by Mikael Magnusson where
+a route cache with a lower mtu info is created for a gateway route with
+src addr. However, the lookup code is not able to find this route cache.
 
-  [0] http://vger.kernel.org/bpfconf.html
-
-Fixes: 29ba732acbee ("bpf: Add BPF_MAP_TYPE_LRU_HASH")
-Fixes: 8f8449384ec3 ("bpf: Add BPF_MAP_TYPE_LRU_PERCPU_HASH")
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Fixes: 2b760fcf5cfb ("ipv6: hook up exception table to store dst cache")
+Reported-by: Mikael Magnusson <mikael.kernel@lists.m7n.se>
+Bisected-by: David Ahern <dsahern@gmail.com>
+Signed-off-by: Wei Wang <weiwan@google.com>
+Cc: Martin Lau <kafai@fb.com>
+Cc: Eric Dumazet <edumazet@google.com>
 Acked-by: Martin KaFai Lau <kafai@fb.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- kernel/bpf/hashtab.c |   23 ++++++++++++++++++-----
- 1 file changed, 18 insertions(+), 5 deletions(-)
+ net/ipv6/route.c |   51 +++++++++++++++++++++++++++------------------------
+ 1 file changed, 27 insertions(+), 24 deletions(-)
 
---- a/kernel/bpf/hashtab.c
-+++ b/kernel/bpf/hashtab.c
-@@ -518,18 +518,30 @@ static u32 htab_map_gen_lookup(struct bp
- 	return insn - insn_buf;
+--- a/net/ipv6/route.c
++++ b/net/ipv6/route.c
+@@ -110,8 +110,8 @@ static int rt6_fill_node(struct net *net
+ 			 int iif, int type, u32 portid, u32 seq,
+ 			 unsigned int flags);
+ static struct rt6_info *rt6_find_cached_rt(struct fib6_info *rt,
+-					   struct in6_addr *daddr,
+-					   struct in6_addr *saddr);
++					   const struct in6_addr *daddr,
++					   const struct in6_addr *saddr);
+ 
+ #ifdef CONFIG_IPV6_ROUTE_INFO
+ static struct fib6_info *rt6_add_route_info(struct net *net,
+@@ -1529,31 +1529,44 @@ out:
+  * Caller has to hold rcu_read_lock()
+  */
+ static struct rt6_info *rt6_find_cached_rt(struct fib6_info *rt,
+-					   struct in6_addr *daddr,
+-					   struct in6_addr *saddr)
++					   const struct in6_addr *daddr,
++					   const struct in6_addr *saddr)
+ {
++	const struct in6_addr *src_key = NULL;
+ 	struct rt6_exception_bucket *bucket;
+-	struct in6_addr *src_key = NULL;
+ 	struct rt6_exception *rt6_ex;
+ 	struct rt6_info *res = NULL;
+ 
+-	bucket = rcu_dereference(rt->rt6i_exception_bucket);
+-
+ #ifdef CONFIG_IPV6_SUBTREES
+ 	/* rt6i_src.plen != 0 indicates rt is in subtree
+ 	 * and exception table is indexed by a hash of
+ 	 * both rt6i_dst and rt6i_src.
+-	 * Otherwise, the exception table is indexed by
+-	 * a hash of only rt6i_dst.
++	 * However, the src addr used to create the hash
++	 * might not be exactly the passed in saddr which
++	 * is a /128 addr from the flow.
++	 * So we need to use f6i->fib6_src to redo lookup
++	 * if the passed in saddr does not find anything.
++	 * (See the logic in ip6_rt_cache_alloc() on how
++	 * rt->rt6i_src is updated.)
+ 	 */
+ 	if (rt->fib6_src.plen)
+ 		src_key = saddr;
++find_ex:
+ #endif
++	bucket = rcu_dereference(rt->rt6i_exception_bucket);
+ 	rt6_ex = __rt6_find_exception_rcu(&bucket, daddr, src_key);
+ 
+ 	if (rt6_ex && !rt6_check_expired(rt6_ex->rt6i))
+ 		res = rt6_ex->rt6i;
+ 
++#ifdef CONFIG_IPV6_SUBTREES
++	/* Use fib6_src as src_key and redo lookup */
++	if (!res && src_key && src_key != &rt->fib6_src.addr) {
++		src_key = &rt->fib6_src.addr;
++		goto find_ex;
++	}
++#endif
++
+ 	return res;
  }
  
--static void *htab_lru_map_lookup_elem(struct bpf_map *map, void *key)
-+static __always_inline void *__htab_lru_map_lookup_elem(struct bpf_map *map,
-+							void *key, const bool mark)
+@@ -2614,10 +2627,8 @@ out:
+ u32 ip6_mtu_from_fib6(struct fib6_info *f6i, struct in6_addr *daddr,
+ 		      struct in6_addr *saddr)
  {
- 	struct htab_elem *l = __htab_map_lookup_elem(map, key);
+-	struct rt6_exception_bucket *bucket;
+-	struct rt6_exception *rt6_ex;
+-	struct in6_addr *src_key;
+ 	struct inet6_dev *idev;
++	struct rt6_info *rt;
+ 	u32 mtu = 0;
  
- 	if (l) {
--		bpf_lru_node_set_ref(&l->lru_node);
-+		if (mark)
-+			bpf_lru_node_set_ref(&l->lru_node);
- 		return l->key + round_up(map->key_size, 8);
+ 	if (unlikely(fib6_metric_locked(f6i, RTAX_MTU))) {
+@@ -2626,18 +2637,10 @@ u32 ip6_mtu_from_fib6(struct fib6_info *
+ 			goto out;
  	}
  
- 	return NULL;
- }
+-	src_key = NULL;
+-#ifdef CONFIG_IPV6_SUBTREES
+-	if (f6i->fib6_src.plen)
+-		src_key = saddr;
+-#endif
+-
+-	bucket = rcu_dereference(f6i->rt6i_exception_bucket);
+-	rt6_ex = __rt6_find_exception_rcu(&bucket, daddr, src_key);
+-	if (rt6_ex && !rt6_check_expired(rt6_ex->rt6i))
+-		mtu = dst_metric_raw(&rt6_ex->rt6i->dst, RTAX_MTU);
+-
+-	if (likely(!mtu)) {
++	rt = rt6_find_cached_rt(f6i, daddr, saddr);
++	if (unlikely(rt)) {
++		mtu = dst_metric_raw(&rt->dst, RTAX_MTU);
++	} else {
+ 		struct net_device *dev = fib6_info_nh_dev(f6i);
  
-+static void *htab_lru_map_lookup_elem(struct bpf_map *map, void *key)
-+{
-+	return __htab_lru_map_lookup_elem(map, key, true);
-+}
-+
-+static void *htab_lru_map_lookup_elem_sys(struct bpf_map *map, void *key)
-+{
-+	return __htab_lru_map_lookup_elem(map, key, false);
-+}
-+
- static u32 htab_lru_map_gen_lookup(struct bpf_map *map,
- 				   struct bpf_insn *insn_buf)
- {
-@@ -1206,6 +1218,7 @@ const struct bpf_map_ops htab_lru_map_op
- 	.map_free = htab_map_free,
- 	.map_get_next_key = htab_map_get_next_key,
- 	.map_lookup_elem = htab_lru_map_lookup_elem,
-+	.map_lookup_elem_sys_only = htab_lru_map_lookup_elem_sys,
- 	.map_update_elem = htab_lru_map_update_elem,
- 	.map_delete_elem = htab_lru_map_delete_elem,
- 	.map_gen_lookup = htab_lru_map_gen_lookup,
-@@ -1237,7 +1250,6 @@ static void *htab_lru_percpu_map_lookup_
- 
- int bpf_percpu_hash_copy(struct bpf_map *map, void *key, void *value)
- {
--	struct bpf_htab *htab = container_of(map, struct bpf_htab, map);
- 	struct htab_elem *l;
- 	void __percpu *pptr;
- 	int ret = -ENOENT;
-@@ -1253,8 +1265,9 @@ int bpf_percpu_hash_copy(struct bpf_map
- 	l = __htab_map_lookup_elem(map, key);
- 	if (!l)
- 		goto out;
--	if (htab_is_lru(htab))
--		bpf_lru_node_set_ref(&l->lru_node);
-+	/* We do not mark LRU map element here in order to not mess up
-+	 * eviction heuristics when user space does a map walk.
-+	 */
- 	pptr = htab_elem_get_ptr(l, map->key_size);
- 	for_each_possible_cpu(cpu) {
- 		bpf_long_memcpy(value + off,
+ 		mtu = IPV6_MIN_MTU;
 
 
