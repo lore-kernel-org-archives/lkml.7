@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55428C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:16:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64A11C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:16:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30F9B217D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:16:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39094217D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:16:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558638990;
-	bh=MW32hsEj+bBsxFl2lvUcnJoAOxMKjk7PbtOnPJNOI0M=;
+	s=default; t=1558638998;
+	bh=RiW2IQDV7rzyoBS0G8Gn9wdxSFA5At/oRHCRjO2mdbA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OpU0FWGoS1+viX8xRWy1ntqOOfCt7cJKTE/BPkYH1cCGhdBw7tzvtqWlw7IS/KpN2
-	 Xfaw6W047l7lt7LXcG04mpazBQCSBhJeKS+fjjWXmilF6SP9szVsDt9LpiiVKhvWOq
-	 3IwhYPKoEbAPTLX5MtiA/rD7FjY1IbHkiwcOd2o8=
+	b=ZorHMwToDIu+C7IXW9I/ECvXs33V0cSoiedN6JUWRhAsWilI3VMLhHri5TPr455PT
+	 w7JIpycODZisUHJ7h9QzP/rIIseqOKzlniuxHH8wMBfusHkCHf/VKJ1PyWMnI1WIs8
+	 XCW7nkN1ziqEZUs6KxJBd1TAwuAIsHST/R+GvOpE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388532AbfEWTQ3 (ORCPT
+        id S2389222AbfEWTQg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:16:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51118 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:16:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51236 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389191AbfEWTQ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:16:27 -0400
+        id S2389204AbfEWTQc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:16:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2FC292133D;
-        Thu, 23 May 2019 19:16:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 85EAA2133D;
+        Thu, 23 May 2019 19:16:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558638986;
-        bh=MW32hsEj+bBsxFl2lvUcnJoAOxMKjk7PbtOnPJNOI0M=;
+        s=default; t=1558638992;
+        bh=RiW2IQDV7rzyoBS0G8Gn9wdxSFA5At/oRHCRjO2mdbA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vMFNak5ZMzenS5Zt7t1mHI+r6zh5sHosz9s3Md1XoRNzKRWNW3qNN9HuX5aJmnFaA
-         UKW95wzJa6Yyv1ftQDxyw0yulvDXCwvBVcIhc4GgakvWys8ZJraV5eiU2ZJK9HYBGB
-         rBc8/uOoFvBrt0whQ7QSfqi4ZxFxB1GONkKbf6yU=
+        b=qwAh5nsuSqTePULHJ6lceVTiKJ5MMfV1FY6USDsQ1LL9IdpnKGgVedhhUCKAF7Hyd
+         4DdN++UthbtaEd3wRoDb6oRNbJ0BR0Kz8l7rz/uUhQ+DGdBJkYVouJ/noT9iKJE+dA
+         b0BvEBS6mcY/mnfx499VcqFg/d282rycnI2yXREk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, ZhangXiaoxu <zhangxiaoxu5@huawei.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>
-Subject: [PATCH 4.19 037/114] NFS4: Fix v4.0 client state corruption when mount
-Date:   Thu, 23 May 2019 21:05:36 +0200
-Message-Id: <20190523181735.144281654@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Subject: [PATCH 4.19 029/114] intel_th: msu: Fix single mode with IOMMU
+Date:   Thu, 23 May 2019 21:05:28 +0200
+Message-Id: <20190523181734.488829904@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181731.372074275@linuxfoundation.org>
 References: <20190523181731.372074275@linuxfoundation.org>
@@ -59,47 +59,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: ZhangXiaoxu <zhangxiaoxu5@huawei.com>
+From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 
-commit f02f3755dbd14fb935d24b14650fff9ba92243b8 upstream.
+commit 4e0eaf239fb33ebc671303e2b736fa043462e2f4 upstream.
 
-stat command with soft mount never return after server is stopped.
+Currently, the pages that are allocated for the single mode of MSC are not
+mapped into the device's dma space and the code is incorrectly using
+*_to_phys() in place of a dma address. This fails with IOMMU enabled and
+is otherwise bad practice.
 
-When alloc a new client, the state of the client will be set to
-NFS4CLNT_LEASE_EXPIRED.
+Fix the single mode buffer allocation to map the pages into the device's
+DMA space.
 
-When the server is stopped, the state manager will work, and accord
-the state to recover. But the state is NFS4CLNT_LEASE_EXPIRED, it
-will drain the slot table and lead other task to wait queue, until
-the client recovered. Then the stat command is hung.
-
-When discover server trunking, the client will renew the lease,
-but check the client state, it lead the client state corruption.
-
-So, we need to call state manager to recover it when detect server
-ip trunking.
-
-Signed-off-by: ZhangXiaoxu <zhangxiaoxu5@huawei.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Fixes: ba82664c134e ("intel_th: Add Memory Storage Unit driver")
+Cc: stable@vger.kernel.org # v4.4+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/nfs/nfs4state.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/hwtracing/intel_th/msu.c |   35 ++++++++++++++++++++++++++++++++---
+ 1 file changed, 32 insertions(+), 3 deletions(-)
 
---- a/fs/nfs/nfs4state.c
-+++ b/fs/nfs/nfs4state.c
-@@ -159,6 +159,10 @@ int nfs40_discover_server_trunking(struc
- 		/* Sustain the lease, even if it's empty.  If the clientid4
- 		 * goes stale it's of no use for trunking discovery. */
- 		nfs4_schedule_state_renewal(*result);
+--- a/drivers/hwtracing/intel_th/msu.c
++++ b/drivers/hwtracing/intel_th/msu.c
+@@ -84,6 +84,7 @@ struct msc_iter {
+  * @reg_base:		register window base address
+  * @thdev:		intel_th_device pointer
+  * @win_list:		list of windows in multiblock mode
++ * @single_sgt:		single mode buffer
+  * @nr_pages:		total number of pages allocated for this buffer
+  * @single_sz:		amount of data in single mode
+  * @single_wrap:	single mode wrap occurred
+@@ -104,6 +105,7 @@ struct msc {
+ 	struct intel_th_device	*thdev;
+ 
+ 	struct list_head	win_list;
++	struct sg_table		single_sgt;
+ 	unsigned long		nr_pages;
+ 	unsigned long		single_sz;
+ 	unsigned int		single_wrap : 1;
+@@ -617,22 +619,45 @@ static void intel_th_msc_deactivate(stru
+  */
+ static int msc_buffer_contig_alloc(struct msc *msc, unsigned long size)
+ {
++	unsigned long nr_pages = size >> PAGE_SHIFT;
+ 	unsigned int order = get_order(size);
+ 	struct page *page;
++	int ret;
+ 
+ 	if (!size)
+ 		return 0;
+ 
++	ret = sg_alloc_table(&msc->single_sgt, 1, GFP_KERNEL);
++	if (ret)
++		goto err_out;
 +
-+		/* If the client state need to recover, do it. */
-+		if (clp->cl_state)
-+			nfs4_schedule_state_manager(clp);
- 	}
- out:
- 	return status;
++	ret = -ENOMEM;
+ 	page = alloc_pages(GFP_KERNEL | __GFP_ZERO, order);
+ 	if (!page)
+-		return -ENOMEM;
++		goto err_free_sgt;
+ 
+ 	split_page(page, order);
+-	msc->nr_pages = size >> PAGE_SHIFT;
++	sg_set_buf(msc->single_sgt.sgl, page_address(page), size);
++
++	ret = dma_map_sg(msc_dev(msc)->parent->parent, msc->single_sgt.sgl, 1,
++			 DMA_FROM_DEVICE);
++	if (ret < 0)
++		goto err_free_pages;
++
++	msc->nr_pages = nr_pages;
+ 	msc->base = page_address(page);
+-	msc->base_addr = page_to_phys(page);
++	msc->base_addr = sg_dma_address(msc->single_sgt.sgl);
+ 
+ 	return 0;
++
++err_free_pages:
++	__free_pages(page, order);
++
++err_free_sgt:
++	sg_free_table(&msc->single_sgt);
++
++err_out:
++	return ret;
+ }
+ 
+ /**
+@@ -643,6 +668,10 @@ static void msc_buffer_contig_free(struc
+ {
+ 	unsigned long off;
+ 
++	dma_unmap_sg(msc_dev(msc)->parent->parent, msc->single_sgt.sgl,
++		     1, DMA_FROM_DEVICE);
++	sg_free_table(&msc->single_sgt);
++
+ 	for (off = 0; off < msc->nr_pages << PAGE_SHIFT; off += PAGE_SIZE) {
+ 		struct page *page = virt_to_page(msc->base + off);
+ 
 
 
