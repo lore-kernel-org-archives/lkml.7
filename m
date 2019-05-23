@@ -2,176 +2,314 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4B75C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 02:50:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15341C282CE
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 02:51:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D0FC21841
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 02:50:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A97462173C
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 02:51:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="CSvmpxzP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G/T2Z7QE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729721AbfEWCub (ORCPT
+        id S1729794AbfEWCvF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 22:50:31 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:45004 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727802AbfEWCua (ORCPT
+        Wed, 22 May 2019 22:51:05 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:36425 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727802AbfEWCvF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 22:50:30 -0400
-Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com [209.85.217.44]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id x4N2oFjD014618;
-        Thu, 23 May 2019 11:50:16 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x4N2oFjD014618
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1558579816;
-        bh=2/FugdO2450EGjLSvjVI5FNYBjL5g1ZfuRbjKTuspjk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=CSvmpxzPkU2LHsR9dH7CWIjYKucvLevctvHA7v5ONetX796qRZ1xbCWNqGXa9XwVI
-         vQAQo+KiE2WYWDesNWHle3/0jQGRB83XXCX/CXeXwmLJVoLdQjPiT+K+jnVhrhUfOu
-         tm/HUoLPbtiXp7ykFzGxbzSU5T+Z0lqXgsIwhDeAl4oIeQRKv65HiawMrZhatj2GZ5
-         pQz5REwF0Kej+deu7CvPaT0WUOxqgI7SZ2ITehIbGUYVPk/+u3nH9vLR7Ekk5c6mvg
-         D/LkSQzS4ADtu3MOaEfRhUIT/SeD/df/vrdgfkSedUXQOOJOR354EprRyHbcDY5hNg
-         pVQbw7zfgHPSA==
-X-Nifty-SrcIP: [209.85.217.44]
-Received: by mail-vs1-f44.google.com with SMTP id d128so2646752vsc.10;
-        Wed, 22 May 2019 19:50:16 -0700 (PDT)
-X-Gm-Message-State: APjAAAXCqKNItr8XEFsj2X9svS0Hej9fNMpbYLl3yvpSNGuqsu2XTp5T
-        Qhxd/NtX99s+ne+exBTi9cadK3//EBuRCs7Nb9k=
-X-Google-Smtp-Source: APXvYqyyUQRDo34h8x9tqqKP8C5sThOQ4CucA4sp0PJzI8TeKi1Fk+k9xQaLmwClSBfAo0Z5KvKi8o5tYXUAshG+xqA=
-X-Received: by 2002:a05:6102:3d9:: with SMTP id n25mr19610186vsq.181.1558579815029;
- Wed, 22 May 2019 19:50:15 -0700 (PDT)
+        Wed, 22 May 2019 22:51:05 -0400
+Received: by mail-pg1-f194.google.com with SMTP id a3so2307308pgb.3
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 19:51:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=HIP1lCMDkhKcZ9WTB59tINzSGSxaLnOTeRaBLhbdjGA=;
+        b=G/T2Z7QEekY80BE4VeokJq4eLWaaPLM8K8yWsqvVBXQ5rsa3M41KTrq9jPGvAAv12R
+         Wi8aE1mfLtdbUOHWs6/WUtUPWNW6FBwHlykmHwFTri2Jr8yBU2tBhETQsDZffIIUUSsE
+         Go6+HQ35XmWZ3uKdGR5ZIVUFBFSUZicw1NrUqzLhMQTF2WPpW4KafR06NqUsrW8t8ImZ
+         nP34EU2Vey4A5p0wuSNBwEamQusJOK7MUNtZ5u2gORZvHAbLExYvTvkwFuTYC9Qvk1ty
+         l58rT+77SnGpzuoJPoDNA1GyDTlNGpJqOxsdUb4otoPYwsBKCUNgVE2ypspnkjNud3xf
+         rLoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=HIP1lCMDkhKcZ9WTB59tINzSGSxaLnOTeRaBLhbdjGA=;
+        b=aU5dnK2QvVb/8zVwR5WU6uKfWOoaAtvhpss0l0Tu7MeyL+3k0u6nMSWcVGJ/TWYGLg
+         eTwQY0nL8ZHdS888vs8QmlXKQMfqpFKvW6TFa2oXFx0CMhFxSZSNqKszRUXpK+kwX3lj
+         JF1UEQGc5OH9Ham7RT2bjbs5UpeThaTYLD5yZzFrgXuRv9fYICCRuHbKV13eYekkOOdK
+         ivxBhZ9qKGGtdzGh1yhimKQHnf6izceK/EmxDJPC7KYjvMzXYPdIezlixt62le98e9jC
+         s7jKt3hZzPhghXnNFqYIL0MY4sDi7tIbDx0f7s3X3/XEL8zKYaSEW8exuSVBLczd3dd4
+         mHCA==
+X-Gm-Message-State: APjAAAW+8Z8dJQzC3yP/k1mjejaJttxTKOnwgvaBEnUKWrgLHeRoScqR
+        7rOL5XaD0pAM7S0bg0FC4FM=
+X-Google-Smtp-Source: APXvYqzQiAYnOOz611zIjb6ajYAA1KLL6Poy2Akm2r3k7dvv08It+rjBo2BptF0jkmIPP5lmfqmIqA==
+X-Received: by 2002:aa7:81d1:: with SMTP id c17mr80847650pfn.174.1558579864655;
+        Wed, 22 May 2019 19:51:04 -0700 (PDT)
+Received: from hari-Inspiron-1545 ([183.83.92.73])
+        by smtp.gmail.com with ESMTPSA id m2sm578457pgq.48.2019.05.22.19.51.01
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 22 May 2019 19:51:04 -0700 (PDT)
+Date:   Thu, 23 May 2019 08:20:59 +0530
+From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
+To:     reg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
+        Hardik Singh Rathore <hardiksingh.k@gmail.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [Patch v2] staging: rtl8723bs: core: rtw_recv: fix warning
+ Comparison to NULL
+Message-ID: <20190523025059.GA6366@hari-Inspiron-1545>
 MIME-Version: 1.0
-References: <20190521133257.GA21471@kroah.com> <CAK7LNASZWLwYC2E3vBkXhp7wt9zBWkFrR+NTnxTyLn1zO66a0w@mail.gmail.com>
- <eae2d0e80824cc84965c571a0ea097e14d3f498c.camel@perches.com>
-In-Reply-To: <eae2d0e80824cc84965c571a0ea097e14d3f498c.camel@perches.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Thu, 23 May 2019 11:49:38 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQ=M0ejV3C8bgjuMxdRR9v=2-GRdXeUjFR6URrrtYPCnA@mail.gmail.com>
-Message-ID: <CAK7LNAQ=M0ejV3C8bgjuMxdRR9v=2-GRdXeUjFR6URrrtYPCnA@mail.gmail.com>
-Subject: Re: [GIT PULL] SPDX update for 5.2-rc1 - round 1
-To:     Joe Perches <joe@perches.com>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-spdx@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 22, 2019 at 3:37 PM Joe Perches <joe@perches.com> wrote:
->
-> On Wed, 2019-05-22 at 13:32 +0900, Masahiro Yamada wrote:
-> > On Tue, May 21, 2019 at 10:34 PM Greg KH <gregkh@linuxfoundation.org> wrote:
-> []
-> > >  - Add GPL-2.0-only or GPL-2.0-or-later tags to files where our scan
-> > >     tools can determine the license text in the file itself.  Where this
-> > >     happens, the license text is removed, in order to cut down on the
-> > >     700+ different ways we have in the kernel today, in a quest to get
-> > >     rid of all of these.
-> []
-> > I have been wondering for a while
-> > which version of spdx tags I should use in my work.
-> >
-> > I know the 'GPL-2.0' tag is already deprecated.
-> > (https://spdx.org/licenses/GPL-2.0.html)
-> >
-> > But, I saw negative reaction to this:
-> > https://lore.kernel.org/patchwork/patch/975394/
-> >
-> > Nor "-only" / "-or-later" are documented in
-> > Documentation/process/license-rules.rst
-> >
-> > In this patch series, Thomas used 'GPL-2.0-only' and 'GPL-2.0-or-later'
-> > instead of 'GPL-2.0' and 'GPL-2.0+'.
-> >
-> > Now, we have a great number of users of spdx v3 tags.
-> > $ git grep -P 'SPDX-License-Identifier.*(?:-or-later|-only)'| wc -l
-> > 4135
-> > So, what I understood is:
-> >
-> >   For newly added tags, '*-only' and '*-or-later' are preferred.
-> >
-> > (But, we do not convert existing spdx v2 tags globally.)
-> >
-> >
-> > "
-> > Joe's patch was not merged, but at least
-> > Documentation/process/license-rules.rst
-> > should be updated in my opinion.
-> >
-> > (Perhaps, checkpatch.pl can suggest newer tags in case
-> > patch submitters do not even know that deprecation.)
->
-> I'd still prefer the kernel use of a single SPDX style.
->
-> I don't know why the -only and -or-later forms were
-> used for this patch, but I like it.
->
-> I believe the -only and -or-later are more intelligible
-> as a trivial reading of
->
->         SPDX-License-Identifier: GPL-2.0
->
-> would generally mean to me the original
-> GPL-2.0 license without the elision of the
-> (or at your option, any later version) bits
->
-> whereas
->
->         SPDX-License-Identifier: GPL-2.0-only
->
-> seems fairly descriptive.
->
-> Is it agreed that the GPL-<v>-only and GPL-<v>-or-later
-> forms should be preferred for new SPDX identifiers?
+fix below warning reported by checkpatch
 
+CHECK: Comparison to NULL could be written
+"!precvpriv->pallocated_frame_buf"
+CHECK: Comparison to NULL could be written "padapter"
 
-I agree.
+Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+-----
+changes in v2:
+		Corected few erorrs like (!*psta == NULL) pointed in
+		review
+---
+ drivers/staging/rtl8723bs/core/rtw_recv.c | 48 +++++++++++++++----------------
+ 1 file changed, 24 insertions(+), 24 deletions(-)
 
+diff --git a/drivers/staging/rtl8723bs/core/rtw_recv.c b/drivers/staging/rtl8723bs/core/rtw_recv.c
+index b9f758e..b9c9bba 100644
+--- a/drivers/staging/rtl8723bs/core/rtw_recv.c
++++ b/drivers/staging/rtl8723bs/core/rtw_recv.c
+@@ -50,7 +50,7 @@ sint _rtw_init_recv_priv(struct recv_priv *precvpriv, struct adapter *padapter)
+ 
+ 	precvpriv->pallocated_frame_buf = vzalloc(NR_RECVFRAME * sizeof(union recv_frame) + RXFRAME_ALIGN_SZ);
+ 
+-	if (precvpriv->pallocated_frame_buf == NULL) {
++	if (!precvpriv->pallocated_frame_buf) {
+ 		res = _FAIL;
+ 		goto exit;
+ 	}
+@@ -122,7 +122,7 @@ union recv_frame *_rtw_alloc_recvframe(struct __queue *pfree_recv_queue)
+ 
+ 		list_del_init(&precvframe->u.hdr.list);
+ 		padapter = precvframe->u.hdr.adapter;
+-		if (padapter != NULL) {
++		if (padapter) {
+ 			precvpriv = &padapter->recvpriv;
+ 			if (pfree_recv_queue == &precvpriv->free_recv_queue)
+ 				precvpriv->free_recvframe_cnt--;
+@@ -160,7 +160,7 @@ int rtw_free_recvframe(union recv_frame *precvframe, struct __queue *pfree_recv_
+ 
+ 	list_add_tail(&(precvframe->u.hdr.list), get_list_head(pfree_recv_queue));
+ 
+-	if (padapter != NULL) {
++	if (padapter) {
+ 		if (pfree_recv_queue == &precvpriv->free_recv_queue)
+ 				precvpriv->free_recvframe_cnt++;
+ 	}
+@@ -183,7 +183,7 @@ sint _rtw_enqueue_recvframe(union recv_frame *precvframe, struct __queue *queue)
+ 
+ 	list_add_tail(&(precvframe->u.hdr.list), get_list_head(queue));
+ 
+-	if (padapter != NULL)
++	if (padapter)
+ 		if (queue == &precvpriv->free_recv_queue)
+ 			precvpriv->free_recvframe_cnt++;
+ 
+@@ -334,7 +334,7 @@ sint recvframe_chkmic(struct adapter *adapter,  union recv_frame *precvframe)
+ 			prxattrib->ra[0], prxattrib->ra[1], prxattrib->ra[2], prxattrib->ra[3], prxattrib->ra[4], prxattrib->ra[5]));
+ 
+ 		/* calculate mic code */
+-		if (stainfo != NULL) {
++		if (stainfo) {
+ 			if (IS_MCAST(prxattrib->ra)) {
+ 				/* mickey =&psecuritypriv->dot118021XGrprxmickey.skey[0]; */
+ 				/* iv = precvframe->u.hdr.rx_data+prxattrib->hdrlen; */
+@@ -570,7 +570,7 @@ union recv_frame *portctrl(struct adapter *adapter, union recv_frame *precv_fram
+ 	RT_TRACE(_module_rtl871x_recv_c_, _drv_info_, ("########portctrl:adapter->securitypriv.dot11AuthAlgrthm =%d\n", adapter->securitypriv.dot11AuthAlgrthm));
+ 
+ 	if (auth_alg == 2) {
+-		if ((psta != NULL) && (psta->ieee8021x_blocked)) {
++		if ((psta) && (psta->ieee8021x_blocked)) {
+ 			__be16 be_tmp;
+ 
+ 			/* blocked */
+@@ -859,7 +859,7 @@ sint sta2sta_data_frame(
+ 	else
+ 		*psta = rtw_get_stainfo(pstapriv, sta_addr); /*  get ap_info */
+ 
+-	if (*psta == NULL) {
++	if (!*psta) {
+ 		RT_TRACE(_module_rtl871x_recv_c_, _drv_err_, ("can't get psta under sta2sta_data_frame ; drop pkt\n"));
+ 		ret = _FAIL;
+ 		goto exit;
+@@ -942,7 +942,7 @@ sint ap2sta_data_frame(
+ 		else
+ 			*psta = rtw_get_stainfo(pstapriv, pattrib->bssid); /*  get ap_info */
+ 
+-		if (*psta == NULL) {
++		if (!*psta) {
+ 			RT_TRACE(_module_rtl871x_recv_c_, _drv_err_, ("ap2sta: can't get psta under STATION_MODE ; drop pkt\n"));
+ 			#ifdef DBG_RX_DROP_FRAME
+ 			DBG_871X("DBG_RX_DROP_FRAME %s can't get psta under STATION_MODE ; drop pkt\n", __func__);
+@@ -974,7 +974,7 @@ sint ap2sta_data_frame(
+ 
+ 
+ 		*psta = rtw_get_stainfo(pstapriv, pattrib->bssid); /*  get sta_info */
+-		if (*psta == NULL) {
++		if (!*psta) {
+ 			RT_TRACE(_module_rtl871x_recv_c_, _drv_err_, ("can't get psta under MP_MODE ; drop pkt\n"));
+ 			#ifdef DBG_RX_DROP_FRAME
+ 			DBG_871X("DBG_RX_DROP_FRAME %s can't get psta under WIFI_MP_STATE ; drop pkt\n", __func__);
+@@ -991,7 +991,7 @@ sint ap2sta_data_frame(
+ 	} else {
+ 		if (!memcmp(myhwaddr, pattrib->dst, ETH_ALEN) && (!bmcast)) {
+ 			*psta = rtw_get_stainfo(pstapriv, pattrib->bssid); /*  get sta_info */
+-			if (*psta == NULL) {
++			if (!*psta) {
+ 
+ 				/* for AP multicast issue , modify by yiwei */
+ 				static unsigned long send_issue_deauth_time;
+@@ -1042,7 +1042,7 @@ sint sta2ap_data_frame(
+ 		}
+ 
+ 		*psta = rtw_get_stainfo(pstapriv, pattrib->src);
+-		if (*psta == NULL) {
++		if (!*psta) {
+ 			RT_TRACE(_module_rtl871x_recv_c_, _drv_err_, ("can't get psta under AP_MODE; drop pkt\n"));
+ 			DBG_871X("issue_deauth to sta =" MAC_FMT " for the reason(7)\n", MAC_ARG(pattrib->src));
+ 
+@@ -1099,7 +1099,7 @@ sint validate_recv_ctrl_frame(struct adapter *padapter, union recv_frame *precv_
+ 		return _FAIL;
+ 
+ 	psta = rtw_get_stainfo(pstapriv, GetAddr2Ptr(pframe));
+-	if (psta == NULL)
++	if (!psta)
+ 		return _FAIL;
+ 
+ 	/* for rx pkt statistics */
+@@ -1226,7 +1226,7 @@ sint validate_recv_mgnt_frame(struct adapter *padapter, union recv_frame *precv_
+ 	RT_TRACE(_module_rtl871x_recv_c_, _drv_info_, ("+validate_recv_mgnt_frame\n"));
+ 
+ 	precv_frame = recvframe_chk_defrag(padapter, precv_frame);
+-	if (precv_frame == NULL) {
++	if (!precv_frame) {
+ 		RT_TRACE(_module_rtl871x_recv_c_, _drv_notice_, ("%s: fragment packet\n", __func__));
+ 		return _SUCCESS;
+ 	}
+@@ -1274,7 +1274,7 @@ sint validate_recv_data_frame(struct adapter *adapter, union recv_frame *precv_f
+ 	psa = get_sa(ptr);
+ 	pbssid = get_hdr_bssid(ptr);
+ 
+-	if (pbssid == NULL) {
++	if (!pbssid) {
+ 		#ifdef DBG_RX_DROP_FRAME
+ 		DBG_871X("DBG_RX_DROP_FRAME %s pbssid == NULL\n", __func__);
+ 		#endif
+@@ -1329,7 +1329,7 @@ sint validate_recv_data_frame(struct adapter *adapter, union recv_frame *precv_f
+ 	}
+ 
+ 
+-	if (psta == NULL) {
++	if (!psta) {
+ 		RT_TRACE(_module_rtl871x_recv_c_, _drv_err_, (" after to_fr_ds_chk; psta == NULL\n"));
+ 		#ifdef DBG_RX_DROP_FRAME
+ 		DBG_871X("DBG_RX_DROP_FRAME %s psta == NULL\n", __func__);
+@@ -1426,7 +1426,7 @@ static sint validate_80211w_mgmt(struct adapter *adapter, union recv_frame *prec
+ 			/* actual management data frame body */
+ 			data_len = pattrib->pkt_len - pattrib->hdrlen - pattrib->iv_len - pattrib->icv_len;
+ 			mgmt_DATA = rtw_zmalloc(data_len);
+-			if (mgmt_DATA == NULL) {
++			if (!mgmt_DATA) {
+ 				DBG_871X("%s mgmt allocate fail  !!!!!!!!!\n", __func__);
+ 				goto validate_80211w_fail;
+ 			}
+@@ -1811,7 +1811,7 @@ union recv_frame *recvframe_chk_defrag(struct adapter *padapter, union recv_fram
+ 
+ 	psta_addr = pfhdr->attrib.ta;
+ 	psta = rtw_get_stainfo(pstapriv, psta_addr);
+-	if (psta == NULL) {
++	if (!psta) {
+ 		u8 type = GetFrameType(pfhdr->rx_data);
+ 		if (type != WIFI_DATA_TYPE) {
+ 			psta = rtw_get_bcmc_stainfo(padapter);
+@@ -1827,7 +1827,7 @@ union recv_frame *recvframe_chk_defrag(struct adapter *padapter, union recv_fram
+ 	if (ismfrag == 1) {
+ 		/* 0~(n-1) fragment frame */
+ 		/* enqueue to defraf_g */
+-		if (pdefrag_q != NULL) {
++		if (pdefrag_q) {
+ 			if (fragnum == 0)
+ 				/* the first fragment */
+ 				if (!list_empty(&pdefrag_q->queue))
+@@ -1858,7 +1858,7 @@ union recv_frame *recvframe_chk_defrag(struct adapter *padapter, union recv_fram
+ 	if ((ismfrag == 0) && (fragnum != 0)) {
+ 		/* the last fragment frame */
+ 		/* enqueue the last fragment */
+-		if (pdefrag_q != NULL) {
++		if (pdefrag_q) {
+ 			/* spin_lock(&pdefrag_q->lock); */
+ 			phead = get_list_head(pdefrag_q);
+ 			list_add_tail(&pfhdr->list, phead);
+@@ -1879,7 +1879,7 @@ union recv_frame *recvframe_chk_defrag(struct adapter *padapter, union recv_fram
+ 	}
+ 
+ 
+-	if ((prtnframe != NULL) && (prtnframe->u.hdr.attrib.privacy)) {
++	if ((prtnframe) && (prtnframe->u.hdr.attrib.privacy)) {
+ 		/* after defrag we must check tkip mic code */
+ 		if (recvframe_chkmic(padapter,  prtnframe) == _FAIL) {
+ 			RT_TRACE(_module_rtl871x_recv_c_, _drv_err_, ("recvframe_chkmic(padapter,  prtnframe) == _FAIL\n"));
+@@ -1922,7 +1922,7 @@ static int amsdu_to_msdu(struct adapter *padapter, union recv_frame *prframe)
+ 		}
+ 
+ 		sub_pkt = rtw_os_alloc_msdu_pkt(prframe, nSubframe_Length, pdata);
+-		if (sub_pkt == NULL) {
++		if (!sub_pkt) {
+ 			DBG_871X("%s(): allocate sub packet fail !!!\n", __func__);
+ 			break;
+ 		}
+@@ -2451,7 +2451,7 @@ static int recv_func_posthandle(struct adapter *padapter, union recv_frame *prfr
+ 	DBG_COUNTER(padapter->rx_logs.core_rx_post);
+ 
+ 	prframe = decryptor(padapter, prframe);
+-	if (prframe == NULL) {
++	if (!prframe) {
+ 		RT_TRACE(_module_rtl871x_recv_c_, _drv_err_, ("decryptor: drop pkt\n"));
+ 		#ifdef DBG_RX_DROP_FRAME
+ 		DBG_871X("DBG_RX_DROP_FRAME %s decryptor: drop pkt\n", __func__);
+@@ -2462,7 +2462,7 @@ static int recv_func_posthandle(struct adapter *padapter, union recv_frame *prfr
+ 	}
+ 
+ 	prframe = recvframe_chk_defrag(padapter, prframe);
+-	if (prframe == NULL)	{
++	if (!prframe)	{
+ 		RT_TRACE(_module_rtl871x_recv_c_, _drv_err_, ("recvframe_chk_defrag: drop pkt\n"));
+ 		#ifdef DBG_RX_DROP_FRAME
+ 		DBG_871X("DBG_RX_DROP_FRAME %s recvframe_chk_defrag: drop pkt\n", __func__);
+@@ -2472,7 +2472,7 @@ static int recv_func_posthandle(struct adapter *padapter, union recv_frame *prfr
+ 	}
+ 
+ 	prframe = portctrl(padapter, prframe);
+-	if (prframe == NULL) {
++	if (!prframe) {
+ 		RT_TRACE(_module_rtl871x_recv_c_, _drv_err_, ("portctrl: drop pkt\n"));
+ 		#ifdef DBG_RX_DROP_FRAME
+ 		DBG_871X("DBG_RX_DROP_FRAME %s portctrl: drop pkt\n", __func__);
+-- 
+2.7.4
 
-> If so, I'll submit a checkpatch patch.
-
-That will be nice.
-
-
-> I could also wire up a patch to checkpatch and docs to
-> remove the /* */
-> requirement for .h files and prefer
-> the generic // form for both .c and
-> .h files as the
-> current minimum tooling versions now all allow //
-> comments
-> .
-
-We have control for minimal tool versions for building the kernel,
-so I think // will be OK for in-kernel headers.
-
-
-On the other hand, I am not quite sure about UAPI headers.
-We cannot define minimum tool versions
-for building user-space.
-Perhaps, using // in UAPI headers causes a problem
-if an ancient compiler is used?
-
-
-BTW, if we allow to use // in header files,
-we have no reason to forbid // in assembly files either.
-
-We use *.S files (assembly that should be preprocessed)
-instead of *.s files.
-
-So, comments are ripped off by CPP anyway
-whichever comment style is used.
-
-
---
-Best Regards
-Masahiro Yamada
