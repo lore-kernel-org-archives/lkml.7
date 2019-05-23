@@ -2,85 +2,112 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CC4DC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 14:58:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47237C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 14:59:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AC4C20881
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 14:58:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 233412175B
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 14:59:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730850AbfEWO6p (ORCPT
+        id S1730910AbfEWO7b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 10:58:45 -0400
-Received: from foss.arm.com ([217.140.101.70]:48230 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730709AbfEWO6p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 10:58:45 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 78F4E80D;
-        Thu, 23 May 2019 07:58:44 -0700 (PDT)
-Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6134F3F690;
-        Thu, 23 May 2019 07:58:42 -0700 (PDT)
-Date:   Thu, 23 May 2019 15:58:39 +0100
-From:   Will Deacon <will.deacon@arm.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Waiman Long <longman@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        huang ying <huang.ying.caritas@gmail.com>
-Subject: Re: [PATCH] locking/lock_events: Use this_cpu_add() when necessary
-Message-ID: <20190523145839.GB31896@fuggles.cambridge.arm.com>
-References: <20190522153953.30341-1-longman@redhat.com>
- <CAHk-=wjit1=wf-JxUebS4_9WUCKbnfGPt0QF13-LijmumMEB-Q@mail.gmail.com>
+        Thu, 23 May 2019 10:59:31 -0400
+Received: from out02.mta.xmission.com ([166.70.13.232]:52242 "EHLO
+        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730719AbfEWO7a (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 10:59:30 -0400
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1hTpBo-00030K-MM; Thu, 23 May 2019 08:59:28 -0600
+Received: from ip72-206-97-68.om.om.cox.net ([72.206.97.68] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1hTpBn-0005AC-PE; Thu, 23 May 2019 08:59:28 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Will Deacon <will.deacon@arm.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Linux Containers <containers@lists.linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>, linux-arch@vger.kernel.org,
+        Dave Martin <Dave.Martin@arm.com>,
+        James Morse <james.morse@arm.com>
+References: <20190523003916.20726-1-ebiederm@xmission.com>
+        <20190523003916.20726-4-ebiederm@xmission.com>
+        <20190523101702.GG26646@fuggles.cambridge.arm.com>
+Date:   Thu, 23 May 2019 09:59:20 -0500
+In-Reply-To: <20190523101702.GG26646@fuggles.cambridge.arm.com> (Will Deacon's
+        message of "Thu, 23 May 2019 11:17:02 +0100")
+Message-ID: <87d0k9gqt3.fsf@xmission.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wjit1=wf-JxUebS4_9WUCKbnfGPt0QF13-LijmumMEB-Q@mail.gmail.com>
-User-Agent: Mutt/1.11.1+86 (6f28e57d73f2) ()
+Content-Type: text/plain
+X-XM-SPF: eid=1hTpBn-0005AC-PE;;;mid=<87d0k9gqt3.fsf@xmission.com>;;;hst=in02.mta.xmission.com;;;ip=72.206.97.68;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1+nHg2SfTEM+VVuC4vmrmmS7rYHAMpU7QI=
+X-SA-Exim-Connect-IP: 72.206.97.68
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [REVIEW][PATCH 03/26] signal/arm64: Use force_sig not force_sig_fault for SIGKILL
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 22, 2019 at 12:54:13PM -0700, Linus Torvalds wrote:
-> On Wed, May 22, 2019 at 8:40 AM Waiman Long <longman@redhat.com> wrote:
-> >
-> > +#if defined(CONFIG_PREEMPT) && \
-> > +   (defined(CONFIG_DEBUG_PREEMPT) || !defined(CONFIG_X86))
-> > +#define lockevent_percpu_inc(x)                this_cpu_inc(x)
-> > +#define lockevent_percpu_add(x, v)     this_cpu_add(x, v)
-> 
-> Why that CONFIG_X86 special case?
-> 
-> On x86, the regular non-underscore versionm is perfectly fine, and the
-> underscore is no faster or simpler.
-> 
-> So just make it be
-> 
->    #if defined(CONFIG_PREEMPT)
->      .. non-underscore versions..
->    #else
->      .. underscore versions ..
->    #endif
-> 
-> and realize that x86 simply doesn't _care_. On x86, it will be one
-> single instruction regardless.
-> 
-> Non-x86 may prefer the underscore versions for the non-preempt case.
+Will Deacon <will.deacon@arm.com> writes:
 
-To be honest, given this depends on LOCK_EVENT_COUNTS, I'd be inclined to
-keep things simple and drop the underscore versions entirely. Saves having
-to worry about things like "could I take an interrupt during the add?".
+> On Wed, May 22, 2019 at 07:38:53PM -0500, Eric W. Biederman wrote:
+>> It really only matters to debuggers but the SIGKILL does not have any
+>> si_codes that use the fault member of the siginfo union.  Correct this
+>> the simple way and call force_sig instead of force_sig_fault when the
+>> signal is SIGKILL.
+>> 
+>> Cc: stable@vger.kernel.org
+>> Cc: Dave Martin <Dave.Martin@arm.com>
+>> Cc: James Morse <james.morse@arm.com>
+>> Cc: Will Deacon <will.deacon@arm.com>
+>> Fixes: af40ff687bc9 ("arm64: signal: Ensure si_code is valid for all fault signals")
+>> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+>> ---
+>>  arch/arm64/kernel/traps.c | 5 +++++
+>>  1 file changed, 5 insertions(+)
+>> 
+>> diff --git a/arch/arm64/kernel/traps.c b/arch/arm64/kernel/traps.c
+>> index ade32046f3fe..0feb17bdcaa0 100644
+>> --- a/arch/arm64/kernel/traps.c
+>> +++ b/arch/arm64/kernel/traps.c
+>> @@ -282,6 +282,11 @@ void arm64_notify_die(const char *str, struct pt_regs *regs,
+>>  		current->thread.fault_address = 0;
+>>  		current->thread.fault_code = err;
+>>  
+>> +		if (signo == SIGKILL) {
+>> +			arm64_show_signal(signo, str);
+>> +			force_sig(signo, current);
+>> +			return;
+>> +		}
+>
+> I know it's a bit of a misnomer, but I'd rather do this check inside
+> arm64_force_sig_fault, since I think we have other callers (e.g.
+> do_bad_area()) which also blindly pass in SIGKILL here.
 
-Will
+Sigh.  You are right.
+
+I thought I had checked for that when I made my change there.  But
+do_bad_area will definitely do that, and that was one of the cases that
+jumped out at me as needing to be fixed, when I skimmed the arm code.
+
+I will respin this patch to move that lower.
+
+> We could rename the thing if necessary.
+
+I would not mind but as long as we aren't misusing the generic bits
+I won't have alarm bells going of in my head when I look at their
+users.
+
+Eric
+
