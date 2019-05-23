@@ -2,121 +2,80 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EA8EC282E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:02:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A3BFC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:03:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BDA320657
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:02:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B0CB20881
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:03:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730933AbfEWPCs (ORCPT
+        id S1730944AbfEWPDW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 11:02:48 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:28248 "EHLO mx1.redhat.com"
+        Thu, 23 May 2019 11:03:22 -0400
+Received: from foss.arm.com ([217.140.101.70]:48332 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730708AbfEWPCs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 11:02:48 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B7638317917D;
-        Thu, 23 May 2019 15:02:42 +0000 (UTC)
-Received: from [10.10.66.2] (ovpn-66-2.rdu2.redhat.com [10.10.66.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id D54187D59D;
-        Thu, 23 May 2019 15:02:40 +0000 (UTC)
-From:   "Benjamin Coddington" <bcodding@redhat.com>
-To:     "Sasha Levin" <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        "Roberto Bergantinos Corpas" <rbergant@redhat.com>,
-        "Anna Schumaker" <Anna.Schumaker@Netapp.com>,
-        linux-nfs@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 5.1 004/375] NFS: make nfs_match_client killable
-Date:   Thu, 23 May 2019 11:02:39 -0400
-Message-ID: <E7EBFAFD-D312-4EBA-970B-54F07EDD1F9D@redhat.com>
-In-Reply-To: <20190522192115.22666-4-sashal@kernel.org>
-References: <20190522192115.22666-1-sashal@kernel.org>
- <20190522192115.22666-4-sashal@kernel.org>
+        id S1730672AbfEWPDW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 11:03:22 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E5FC580D;
+        Thu, 23 May 2019 08:03:21 -0700 (PDT)
+Received: from e110467-lin.cambridge.arm.com (e110467-lin.cambridge.arm.com [10.1.196.75])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 852053F690;
+        Thu, 23 May 2019 08:03:20 -0700 (PDT)
+From:   Robin Murphy <robin.murphy@arm.com>
+To:     linux-mm@kvack.org
+Cc:     akpm@linux-foundation.org, will.deacon@arm.com,
+        catalin.marinas@arm.com, anshuman.khandual@arm.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/4] Devmap cleanups + arm64 support
+Date:   Thu, 23 May 2019 16:03:12 +0100
+Message-Id: <cover.1558547956.git.robin.murphy@arm.com>
+X-Mailer: git-send-email 2.21.0.dirty
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Thu, 23 May 2019 15:02:47 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sasha,  if you take this one, you'll need the fix for it:
+Hi all,
 
-c260121a97a3 ("NFS: Fix a double unlock from nfs_match,get_client")
+Here's a refresh of my devmap stuff, now including the end goal as
+well. Patches #1 to #3 are just a rebase of v2, and I hope are ready to
+be picked up in the mm tree (#1 is currently doing double-duty in Dan's
+subsection series as well). Patch #4 could either go via mm if Will and
+Catalin agree, or could go via arm64 with a small tweak to let it build
+(but otherwise do nothing) until it meets up with #3 again.
 
-I didn't see this fix go through my inbox for your stable tree, so 
-apologies if maybe I missed it.
+Robin.
 
-Looks like you are also applying this one to 4.19 and 4.14, -- I'll just 
-reply once here.
 
-Ben
+Robin Murphy (4):
+  mm/memremap: Rename and consolidate SECTION_SIZE
+  mm: clean up is_device_*_page() definitions
+  mm: introduce ARCH_HAS_PTE_DEVMAP
+  arm64: mm: Implement pte_devmap support
 
-On 22 May 2019, at 15:15, Sasha Levin wrote:
+ arch/arm64/Kconfig                           |  1 +
+ arch/arm64/include/asm/pgtable-prot.h        |  1 +
+ arch/arm64/include/asm/pgtable.h             | 19 ++++++++
+ arch/powerpc/Kconfig                         |  2 +-
+ arch/powerpc/include/asm/book3s/64/pgtable.h |  1 -
+ arch/x86/Kconfig                             |  2 +-
+ arch/x86/include/asm/pgtable.h               |  4 +-
+ arch/x86/include/asm/pgtable_types.h         |  1 -
+ include/linux/mm.h                           | 47 +++++++-------------
+ include/linux/mmzone.h                       |  1 +
+ include/linux/pfn_t.h                        |  4 +-
+ kernel/memremap.c                            | 10 ++---
+ mm/Kconfig                                   |  5 +--
+ mm/gup.c                                     |  2 +-
+ mm/hmm.c                                     |  2 -
+ 15 files changed, 50 insertions(+), 52 deletions(-)
 
-> From: Roberto Bergantinos Corpas <rbergant@redhat.com>
->
-> [ Upstream commit 950a578c6128c2886e295b9c7ecb0b6b22fcc92b ]
->
->     Actually we don't do anything with return value from
->     nfs_wait_client_init_complete in nfs_match_client, as a
->     consequence if we get a fatal signal and client is not
->     fully initialised, we'll loop to "again" label
->
->     This has been proven to cause soft lockups on some scenarios
->     (no-carrier but configured network interfaces)
->
-> Signed-off-by: Roberto Bergantinos Corpas <rbergant@redhat.com>
-> Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
-> Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  fs/nfs/client.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
->
-> diff --git a/fs/nfs/client.c b/fs/nfs/client.c
-> index 90d71fda65cec..350cfa561e0e8 100644
-> --- a/fs/nfs/client.c
-> +++ b/fs/nfs/client.c
-> @@ -284,6 +284,7 @@ static struct nfs_client *nfs_match_client(const 
-> struct nfs_client_initdata *dat
->  	struct nfs_client *clp;
->  	const struct sockaddr *sap = data->addr;
->  	struct nfs_net *nn = net_generic(data->net, nfs_net_id);
-> +	int error;
->
->  again:
->  	list_for_each_entry(clp, &nn->nfs_client_list, cl_share_link) {
-> @@ -296,8 +297,10 @@ static struct nfs_client *nfs_match_client(const 
-> struct nfs_client_initdata *dat
->  		if (clp->cl_cons_state > NFS_CS_READY) {
->  			refcount_inc(&clp->cl_count);
->  			spin_unlock(&nn->nfs_client_lock);
-> -			nfs_wait_client_init_complete(clp);
-> +			error = nfs_wait_client_init_complete(clp);
->  			nfs_put_client(clp);
-> +			if (error < 0)
-> +				return ERR_PTR(error);
->  			spin_lock(&nn->nfs_client_lock);
->  			goto again;
->  		}
-> @@ -407,6 +410,8 @@ struct nfs_client *nfs_get_client(const struct 
-> nfs_client_initdata *cl_init)
->  		clp = nfs_match_client(cl_init);
->  		if (clp) {
->  			spin_unlock(&nn->nfs_client_lock);
-> +			if (IS_ERR(clp))
-> +				return clp;
->  			if (new)
->  				new->rpc_ops->free_client(new);
->  			return nfs_found_client(cl_init, clp);
-> -- 
-> 2.20.1
+-- 
+2.21.0.dirty
+
