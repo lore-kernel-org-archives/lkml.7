@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38C26C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:18:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01BBDC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:18:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11540217D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:18:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA95621851
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:18:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639118;
-	bh=1hgkY4yzVrjXOqqlqgdnjXR95zAPc8GnS0AZuzrKBkk=;
+	s=default; t=1558639121;
+	bh=bd8CLshTdtJtuUpp8mPtIPDnOT6V9ey41gamWfUD9Ok=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xoiJz6V2UVztj7dcjiEQ1HmdD+0g1TK+1yB+mOxA6MovbU2Mk9i+HA434niJ1+7O8
-	 V8TyYyenbEqJJnwEsGTyxIt0oIyai/VaV7e/xWg98iMJoyEguGPJFcVYIspqxwrS0G
-	 awVjh28C+EsehU5vtgicxSdCaCC0rKCkBbDlJVzc=
+	b=L2t2lsUzl01qurYwcl1HbLPJBnuURAfXxE4E+SiOkSyWER6l84ofW3mRFWRqxfOVL
+	 C26HT/zHjjZxTzbz+eYFFNDg3pfCfZCZW0EYH2Ms4n1gw2FlCNLe1fyOTembyclU2f
+	 VLrAH8kFWgz2cS6WyUPfyY/+PXygzxXIPK8+Poog=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388821AbfEWTSh (ORCPT
+        id S2389671AbfEWTSk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:18:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54088 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:18:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54154 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388869AbfEWTSd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:18:33 -0400
+        id S2389660AbfEWTSg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:18:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B08EA20863;
-        Thu, 23 May 2019 19:18:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 58E9920863;
+        Thu, 23 May 2019 19:18:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639113;
-        bh=1hgkY4yzVrjXOqqlqgdnjXR95zAPc8GnS0AZuzrKBkk=;
+        s=default; t=1558639115;
+        bh=bd8CLshTdtJtuUpp8mPtIPDnOT6V9ey41gamWfUD9Ok=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D24piMQSwPcJtbRtaHpTYHisjXpLq9e1adNNGaAYZQY4xyZXxnJ6FCgkj/Fe3sHsl
-         Jr2lscWPiTjSxvhty+5cuY/OeVL6RgDAU5cOsicTtfQKxsVjJainDU9isVdmZKFlS1
-         wbGebgt6Lb+DmgHue5tNOduXuXju0VWLZrDZhIQU=
+        b=CtjpyS/o5VGH9IH2Xlz5L1DNinymI+0YjoNLz8pBHbtigauONW+G6bGweNSk0Zq8P
+         AHlu8AsHfvB/DuyGspSrQ8avdi8VkwnWr3Q3cTV3EB3IItv6yXIpRz45qlh4oH929K
+         WAHJ+P2+2h06sw47FOICbEZ1ftI5Lw20h3ljvQXo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Chris Healy <cphealy@gmail.com>, linux-pm@vger.kernel.org,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        stable@vger.kernel.org, Roman Gushchin <guro@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 099/114] power: supply: sysfs: prevent endless uevent loop with CONFIG_POWER_SUPPLY_DEBUG
-Date:   Thu, 23 May 2019 21:06:38 +0200
-Message-Id: <20190523181740.177176921@linuxfoundation.org>
+Subject: [PATCH 4.19 100/114] bpf: Fix preempt_enable_no_resched() abuse
+Date:   Thu, 23 May 2019 21:06:39 +0200
+Message-Id: <20190523181740.223939766@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181731.372074275@linuxfoundation.org>
 References: <20190523181731.372074275@linuxfoundation.org>
@@ -61,65 +62,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 349ced9984ff540ce74ca8a0b2e9b03dc434b9dd ]
+[ Upstream commit 0edd6b64d1939e9e9168ff27947995bb7751db5d ]
 
-Fix a similar endless event loop as was done in commit
-8dcf32175b4e ("i2c: prevent endless uevent loop with
-CONFIG_I2C_DEBUG_CORE"):
+Unless the very next line is schedule(), or implies it, one must not use
+preempt_enable_no_resched(). It can cause a preemption to go missing and
+thereby cause arbitrary delays, breaking the PREEMPT=y invariant.
 
-  The culprit is the dev_dbg printk in the i2c uevent handler. If
-  this is activated (for instance by CONFIG_I2C_DEBUG_CORE) it results
-  in an endless loop with systemd-journald.
-
-  This happens if user-space scans the system log and reads the uevent
-  file to get information about a newly created device, which seems
-  fair use to me. Unfortunately reading the "uevent" file uses the
-  same function that runs for creating the uevent for a new device,
-  generating the next syslog entry
-
-Both CONFIG_I2C_DEBUG_CORE and CONFIG_POWER_SUPPLY_DEBUG were reported
-in https://bugs.freedesktop.org/show_bug.cgi?id=76886 but only former
-seems to have been fixed. Drop debug prints as it was done in I2C
-subsystem to resolve the issue.
-
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Chris Healy <cphealy@gmail.com>
-Cc: linux-pm@vger.kernel.org
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc: Roman Gushchin <guro@fb.com>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/power/supply/power_supply_sysfs.c | 6 ------
- 1 file changed, 6 deletions(-)
+ include/linux/bpf.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/supply/power_supply_sysfs.c
-index 6170ed8b6854b..5a2757a7f4088 100644
---- a/drivers/power/supply/power_supply_sysfs.c
-+++ b/drivers/power/supply/power_supply_sysfs.c
-@@ -382,15 +382,11 @@ int power_supply_uevent(struct device *dev, struct kobj_uevent_env *env)
- 	char *prop_buf;
- 	char *attrname;
+diff --git a/include/linux/bpf.h b/include/linux/bpf.h
+index 523481a3471b5..fd95f2efe5f32 100644
+--- a/include/linux/bpf.h
++++ b/include/linux/bpf.h
+@@ -400,7 +400,7 @@ int bpf_prog_array_copy(struct bpf_prog_array __rcu *old_array,
+ 		}					\
+ _out:							\
+ 		rcu_read_unlock();			\
+-		preempt_enable_no_resched();		\
++		preempt_enable();			\
+ 		_ret;					\
+ 	 })
  
--	dev_dbg(dev, "uevent\n");
--
- 	if (!psy || !psy->desc) {
- 		dev_dbg(dev, "No power supply yet\n");
- 		return ret;
- 	}
- 
--	dev_dbg(dev, "POWER_SUPPLY_NAME=%s\n", psy->desc->name);
--
- 	ret = add_uevent_var(env, "POWER_SUPPLY_NAME=%s", psy->desc->name);
- 	if (ret)
- 		return ret;
-@@ -426,8 +422,6 @@ int power_supply_uevent(struct device *dev, struct kobj_uevent_env *env)
- 			goto out;
- 		}
- 
--		dev_dbg(dev, "prop %s=%s\n", attrname, prop_buf);
--
- 		ret = add_uevent_var(env, "POWER_SUPPLY_%s=%s", attrname, prop_buf);
- 		kfree(attrname);
- 		if (ret)
 -- 
 2.20.1
 
