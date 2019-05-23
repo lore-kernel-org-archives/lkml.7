@@ -2,125 +2,158 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_MED,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 094D9C04AAC
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 06:58:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49737C04AAC
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 06:59:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF1052175B
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 06:58:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF0DC2133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 06:59:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RlctLp6c"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LsHY8NEg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728185AbfEWG60 (ORCPT
+        id S1728237AbfEWG7y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 02:58:26 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:37605 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725806AbfEWG60 (ORCPT
+        Thu, 23 May 2019 02:59:54 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:44673 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725814AbfEWG7x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 02:58:26 -0400
-Received: by mail-ed1-f65.google.com with SMTP id w37so7679162edw.4
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 23:58:25 -0700 (PDT)
+        Thu, 23 May 2019 02:59:53 -0400
+Received: by mail-pg1-f193.google.com with SMTP id n2so2604634pgp.11
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 23:59:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MKO+DbOAmUO3UBihlXAri8/RQt56WDZm5zJVnszm8uU=;
-        b=RlctLp6cuIItdscVbhYypMHPj+Ma4ehi4/3P5Fh1Y+zPTk1rgIfMjbBUvMFI2WIT1c
-         OFAS3xr7hd0hi7kMK4HcQl18M2h8IDOSywX7q3QOLnTFrH4Ik2YLQKcwV1N6QbsCUMsz
-         hcrHwTRaETP0KVZ9DUKJoK3WD3dKNtRTnw727dAp6EXfZ56HM4V+jGSfZ7lbqCX3m/o1
-         WTAAOXPXHZwrVW5hiQS9WcO8JZuXQoNpigomXx0plq1pJ+EUD7S2OwtWTStKnBF/HuL3
-         ZqHSI3TFNawJbIQ0SNaHAIxByF4RCrKqFnrvLzTA0uYMuPiuhRw8uKWB59H8OgF5+rYs
-         Re8Q==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ttP/4fpxH6Y8Dru2/qv3TInM/GG4T6a2AqT579g6WtY=;
+        b=LsHY8NEgXvz4fbJbH3G2r3/rwzZdFJcfqoKgUrt94Qm4vAAZSYJpPw8rL2jkS4yJag
+         thV+CubU9iRnlRDUlcducksBWNxB9XVPmR4gBP1R5Al1An9LdnxSwXyigiPJeje8WJzw
+         SV8ZxkHkrauUNgjzyXgb5/8CAldf1Ytt3wg4SQPXrOyVIZQGvlir1nBuAiiat9k/6ORV
+         SZeG6rk9X0xVf9+VqTyhY8qrGu7wMdtB385ZT+QK+sTNVwwArCaVun4kGOb653ze2Z38
+         jnVfs6Jos0wNILgIrbPk3r2LqiMR7tn1V24W/cpx9lZFpAjKrejzFSRe5B8lTNIQGBZm
+         tFfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MKO+DbOAmUO3UBihlXAri8/RQt56WDZm5zJVnszm8uU=;
-        b=O74tUSmwfQkF3avSdMPkBXTFWXcn+KpQgeDSn9BrpZVsEIJRgI6x6HHzgEU6jhs1AE
-         OXIhC44iObB3VqbZITMdTov+p33EK4GW/tdRFKaTbfFHKrevyMtFjdaeuqijp5vTqqlq
-         6xcwftZrOhoh8te8V3Hl1ER0Mu/BrsGAaVqfvAK0SBGot8eKgD7xWeWnfZpzCd5U89IH
-         cLKuMPI34vH51ATbBfR1vwuCqjYl5YI8SFUfr7mw7MgUBqitb8ql/4psLUi3gUZ8KPOs
-         +yFOemqteOpW2M9yaxPZdkl9R8hBZGH8w4zPB6xhliJaDTf7d2r8qEW6DP5J7O/Uiv68
-         UreA==
-X-Gm-Message-State: APjAAAXbHrW3ZYO/OauOKW99cALzFfgbe9lopyq6etrLYHK7Qx+E3uDj
-        sGJZ3n8Vkx9NuDQ8HtXsKF00CxpCCMik0UGpkeGeAA==
-X-Google-Smtp-Source: APXvYqw9XphmU/9Iv55oT16C4cbJJ42QuGbIrT7AOxWCaolB9QXeveJ3SnsetdAsmf8WaQliON6ZZTGdw+Tc5eexa4w=
-X-Received: by 2002:a50:a3dc:: with SMTP id t28mr93416040edb.256.1558594703849;
- Wed, 22 May 2019 23:58:23 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ttP/4fpxH6Y8Dru2/qv3TInM/GG4T6a2AqT579g6WtY=;
+        b=iD1OfISsKO1Pc37Sci+NtgMpx4j7NvBjGPBEtjVpIIyKTVZBuhHRZ0e409yw6Iebp5
+         c/UeaCLdmbaKYkLN6h6k4ZnPlKB0arZRl84arus0XBe74jFzmTQbDiviqCxo8trqXmMc
+         8zjqfR7LKkNfEE+fQB/N59x1eSZazrtGkr/ODgAdxjjvIdp9H2QYrgvU30nSh4Mty051
+         vD7PX2mxWGKS7emBXd4dyw0VDhEE+7ABHcKsxpbMVoGUWK4xDhpDziDEPXUPs4PiATzQ
+         WVj1xI7eZ/W77UMgUxCaGByTLmBMf3qheUWqEWPeYhUIk0V9fqm8O0JJl1rGtm3byhE3
+         1A5Q==
+X-Gm-Message-State: APjAAAUsYln5QWeq/LTdR+y+SFSDMQjxUBq1SfxUiEWICATDlzoA9UlM
+        lvGukuADbMm1VluourV1fDQ=
+X-Google-Smtp-Source: APXvYqztAm+HRTVxFcCMQOrTwcYmrmZ7Lcw/Ye5QFRvDfuScthzWWIz20vs2srxigaXFQs2RIvzdCg==
+X-Received: by 2002:a62:54c7:: with SMTP id i190mr79166699pfb.87.1558594792896;
+        Wed, 22 May 2019 23:59:52 -0700 (PDT)
+Received: from localhost ([110.70.27.122])
+        by smtp.gmail.com with ESMTPSA id a9sm38161607pgw.72.2019.05.22.23.59.51
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 22 May 2019 23:59:52 -0700 (PDT)
+Date:   Thu, 23 May 2019 15:59:47 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Subject: Re: [PATCHv2 4/4] printk: make sure we always print console disabled
+ message
+Message-ID: <20190523065947.GB18333@jagdpanzerIV>
+References: <20190426053302.4332-1-sergey.senozhatsky@gmail.com>
+ <20190426053302.4332-5-sergey.senozhatsky@gmail.com>
+ <20190426054445.GA564@jagdpanzerIV>
+ <20190515144702.uja2mk2vfip6maws@pathway.suse.cz>
 MIME-Version: 1.0
-References: <20190503033340.GA7980@archlinux-i9> <20190523015639.GB17819@archlinux-epyc>
- <20190523055258.GC22946@kroah.com>
-In-Reply-To: <20190523055258.GC22946@kroah.com>
-From:   Stephen Hines <srhines@google.com>
-Date:   Wed, 22 May 2019 23:58:12 -0700
-Message-ID: <CAAzmS69VFrTPzZ8DY_NPPTZYtBssocRnQOFAyo3VbSTO4CesbA@mail.gmail.com>
-Subject: Re: -Wuninitialized warning in drivers/misc/sgi-xp/xpc_partition.c
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Cliff Whickman <cpw@sgi.com>,
-        Robin Holt <robinmholt@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190515144702.uja2mk2vfip6maws@pathway.suse.cz>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nathan,
+On (05/15/19 16:47), Petr Mladek wrote:
+> On Fri 2019-04-26 14:44:45, Sergey Senozhatsky wrote:
+> > 
+> > Forgot to mention that the series is still in RFC phase.
+> > 
+> > 
+> > On (04/26/19 14:33), Sergey Senozhatsky wrote:
+> > [..]
+> > > +++ b/kernel/printk/printk.c
+> > > @@ -2613,6 +2613,12 @@ static int __unregister_console(struct console *console)
+> > >  	pr_info("%sconsole [%s%d] disabled\n",
+> > >  		(console->flags & CON_BOOT) ? "boot" : "",
+> > >  		console->name, console->index);
+> > > +	/*
+> > > +	 * Print 'console disabled' on all the consoles, including the
+> > > +	 * one we are about to unregister.
+> > > +	 */
+> > > +	console_unlock();
+> > > +	console_lock();
+> > >  
+> > >  	res = _braille_unregister_console(console);
+> > >  	if (res)
+> > 
+> > Need to think more if this is race free...
+> 
+> I am afraid that it is racy against for_each_console() when
+> removing the boot consoles.
 
-Since this kind of self-initialization is considered undefined
-behavior, the simplest fix here is to just initialize to NULL. It's a
-reasonable interpretation of what is currently written, and will at
-least make the existing code more deterministic.
+Can you explain? Do you mean that we can execute two paths unregistering
+the same bcon?
 
-Thanks,
-Steve
+	CPU0					CPU1
 
-On Wed, May 22, 2019 at 10:53 PM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Wed, May 22, 2019 at 06:56:39PM -0700, Nathan Chancellor wrote:
-> > On Thu, May 02, 2019 at 08:33:40PM -0700, Nathan Chancellor wrote:
-> > > Hi all,
-> > >
-> > > When building with -Wuninitialized, Clang warns:
-> > >
-> > > drivers/misc/sgi-xp/xpc_partition.c:73:14: warning: variable 'buf' is uninitialized when used within its own initialization [-Wuninitialized]
-> > >         void *buf = buf;
-> > >               ~~~   ^~~
-> > > 1 warning generated.
-> > >
-> > > I am not really sure how to properly initialize buf in this instance.
-> > > I would assume it would involve xpc_kmalloc_cacheline_aligned like
-> > > further down in the function but maybe not, this function isn't entirely
-> > > clear. Could we get your input, this is one of the last warnings I see
-> > > in a few allyesconfig builds.
-> > >
-> > > Thanks,
-> > > Nathan
-> >
-> > Hi all,
-> >
-> > Friendly ping for comments/input. This is one of a few remaining
-> > warnings I see, it'd be nice to get it fixed up so we can turn it on for
-> > the whole kernel.
->
-> Patches are gladly welcome :)
->
-> thanks,
->
-> greg k-h
->
-> --
-> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
-> To post to this group, send email to clang-built-linux@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20190523055258.GC22946%40kroah.com.
-> For more options, visit https://groups.google.com/d/optout.
+	console_lock();
+	__unregister_console(bconA)		console_lock();
+	console_unlock();
+
+						__unregister_console(bconA);
+						for (a = console_drivers->next ...)
+							if (a == console)
+								unregister();
+							// console bconA is
+							// not in the list
+							// anymore
+						console_unlock();
+
+	for (a = console_drivers->next ...)
+		if (a == console)
+	console_unlock();
+
+
+This CPU0 will never see bconA in the console drivers list.
+But... it will try to do
+
+	console->flags &= ~CON_ENABLED;
+
+Which we need to fix.
+
+Do not disable console which is not on the console_drivers list.
+
+---
+index 1177ea4b3fe1..e729992cb4e4 100644
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -2660,7 +2660,8 @@ static int __unregister_console(struct console *console)
+ 	if (console_drivers != NULL && console->flags & CON_CONSDEV)
+ 		console_drivers->flags |= CON_CONSDEV;
+ 
+-	console->flags &= ~CON_ENABLED;
++	if (!res)
++		console->flags &= ~CON_ENABLED;
+ 	return res;
+ }
+ 
+---
+	-ss
