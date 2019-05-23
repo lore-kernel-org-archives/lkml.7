@@ -5,52 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CBF4C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:19:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A430C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:19:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64B9A217D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:19:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 322BD21850
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:19:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639156;
-	bh=HNGLaFlvxUey+wgNM8bSXPpa0u4wbFLvqAw5Xwmpc7w=;
+	s=default; t=1558639159;
+	bh=bRb71DgIwaKU9E1FlAcEhiJKsv7N3o3aG9uJBnOiaik=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xZPJQTFhPHeBKddjp06tUO6HPahcfjRv6jAxj8BexPlMVXj/E2HeNM7HxxfdCoWd1
-	 FHTZ30stfEaK7t/XX5sqrq6O5T3TXgz6WTBrGOrTqOmoG/y5rzZQ/M5HayAd3Jzjr6
-	 sxl389OuMzBpXL/IWtL2lfH3uFHaImANBm3SpG+w=
+	b=aNUMPQrWCRix3TjSRF6sXsV0NRzx6rKV8jT2ugojWfuF3yw6PQrtYjLMezkF07R66
+	 jZZbcElu34DnKcE2kp1kCMvf6p2e50Et8CoHeHDF3p4MPN0VQR/kWSnhrjFa2+zzMw
+	 RI4HXdDex6+Tk9XpJZlImBUbO36hcjhGKS0GEgp4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389769AbfEWTTP (ORCPT
+        id S2389779AbfEWTTS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:19:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55024 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:19:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55184 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389753AbfEWTTM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:19:12 -0400
+        id S2388977AbfEWTTQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:19:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5CDB22133D;
-        Thu, 23 May 2019 19:19:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6AC722133D;
+        Thu, 23 May 2019 19:19:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639150;
-        bh=HNGLaFlvxUey+wgNM8bSXPpa0u4wbFLvqAw5Xwmpc7w=;
+        s=default; t=1558639155;
+        bh=bRb71DgIwaKU9E1FlAcEhiJKsv7N3o3aG9uJBnOiaik=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EyPNH0+JMEDAE6BMmw76nmg9meqJYxYIl8uq1WxwRS71RnOzcpsQmgsXZODRUCfZx
-         Xt80vi2VToSo1SLdWxjOzztfN9wI/kE97Tr/N9Uge/5A9Gzwx1Lj/Z7RF/gPmAcHDA
-         KxPG3ATOaw5O29odX+Nnf3EmydA9gN/yyDH5eVPc=
+        b=VtsI00ZTJkcF/sT5KrRbHbBGbxUnmY4VFMMPIdGBde/sEb0PRucnOmSSeUGFQUcc0
+         FiM47npwyjoSwnyY6IRvD18+PewZD2ZoLdrNh7mZdXgsk0isWL/hf9mL6oL1DRn5bF
+         skz5NNVqTmmq4n9CWqYzP0kDHVYRkapVeZ4YkqtU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+0bf0519d6e0de15914fe@syzkaller.appspotmail.com,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 086/114] xfrm: clean up xfrm protocol checks
-Date:   Thu, 23 May 2019 21:06:25 +0200
-Message-Id: <20190523181739.411590584@linuxfoundation.org>
+        stable@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        David Arcari <darcari@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Lendacky Thomas <Thomas.Lendacky@amd.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Stephane Eranian <eranian@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vince Weaver <vincent.weaver@maine.edu>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 107/114] perf/x86/intel: Fix race in intel_pmu_disable_event()
+Date:   Thu, 23 May 2019 21:06:46 +0200
+Message-Id: <20190523181740.591800976@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181731.372074275@linuxfoundation.org>
 References: <20190523181731.372074275@linuxfoundation.org>
@@ -63,135 +69,120 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit dbb2483b2a46fbaf833cfb5deb5ed9cace9c7399 ]
+[ Upstream commit 6f55967ad9d9752813e36de6d5fdbd19741adfc7 ]
 
-In commit 6a53b7593233 ("xfrm: check id proto in validate_tmpl()")
-I introduced a check for xfrm protocol, but according to Herbert
-IPSEC_PROTO_ANY should only be used as a wildcard for lookup, so
-it should be removed from validate_tmpl().
+New race in x86_pmu_stop() was introduced by replacing the
+atomic __test_and_clear_bit() of cpuc->active_mask by separate
+test_bit() and __clear_bit() calls in the following commit:
 
-And, IPSEC_PROTO_ANY is expected to only match 3 IPSec-specific
-protocols, this is why xfrm_state_flush() could still miss
-IPPROTO_ROUTING, which leads that those entries are left in
-net->xfrm.state_all before exit net. Fix this by replacing
-IPSEC_PROTO_ANY with zero.
+  3966c3feca3f ("x86/perf/amd: Remove need to check "running" bit in NMI handler")
 
-This patch also extracts the check from validate_tmpl() to
-xfrm_id_proto_valid() and uses it in parse_ipsecrequest().
-With this, no other protocols should be added into xfrm.
+The race causes panic for PEBS events with enabled callchains:
 
-Fixes: 6a53b7593233 ("xfrm: check id proto in validate_tmpl()")
-Reported-by: syzbot+0bf0519d6e0de15914fe@syzkaller.appspotmail.com
-Cc: Steffen Klassert <steffen.klassert@secunet.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
-Acked-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+  BUG: unable to handle kernel NULL pointer dereference at 0000000000000000
+  ...
+  RIP: 0010:perf_prepare_sample+0x8c/0x530
+  Call Trace:
+   <NMI>
+   perf_event_output_forward+0x2a/0x80
+   __perf_event_overflow+0x51/0xe0
+   handle_pmi_common+0x19e/0x240
+   intel_pmu_handle_irq+0xad/0x170
+   perf_event_nmi_handler+0x2e/0x50
+   nmi_handle+0x69/0x110
+   default_do_nmi+0x3e/0x100
+   do_nmi+0x11a/0x180
+   end_repeat_nmi+0x16/0x1a
+  RIP: 0010:native_write_msr+0x6/0x20
+  ...
+   </NMI>
+   intel_pmu_disable_event+0x98/0xf0
+   x86_pmu_stop+0x6e/0xb0
+   x86_pmu_del+0x46/0x140
+   event_sched_out.isra.97+0x7e/0x160
+  ...
+
+The event is configured to make samples from PEBS drain code,
+but when it's disabled, we'll go through NMI path instead,
+where data->callchain will not get allocated and we'll crash:
+
+          x86_pmu_stop
+            test_bit(hwc->idx, cpuc->active_mask)
+            intel_pmu_disable_event(event)
+            {
+              ...
+              intel_pmu_pebs_disable(event);
+              ...
+
+EVENT OVERFLOW ->  <NMI>
+                     intel_pmu_handle_irq
+                       handle_pmi_common
+   TEST PASSES ->        test_bit(bit, cpuc->active_mask))
+                           perf_event_overflow
+                             perf_prepare_sample
+                             {
+                               ...
+                               if (!(sample_type & __PERF_SAMPLE_CALLCHAIN_EARLY))
+                                     data->callchain = perf_callchain(event, regs);
+
+         CRASH ->              size += data->callchain->nr;
+                             }
+                   </NMI>
+              ...
+              x86_pmu_disable_event(event)
+            }
+
+            __clear_bit(hwc->idx, cpuc->active_mask);
+
+Fixing this by disabling the event itself before setting
+off the PEBS bit.
+
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: David Arcari <darcari@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Lendacky Thomas <Thomas.Lendacky@amd.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vince Weaver <vincent.weaver@maine.edu>
+Fixes: 3966c3feca3f ("x86/perf/amd: Remove need to check "running" bit in NMI handler")
+Link: http://lkml.kernel.org/r/20190504151556.31031-1-jolsa@kernel.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/net/xfrm.h      | 17 +++++++++++++++++
- net/ipv6/xfrm6_tunnel.c |  2 +-
- net/key/af_key.c        |  4 +++-
- net/xfrm/xfrm_state.c   |  2 +-
- net/xfrm/xfrm_user.c    | 14 +-------------
- 5 files changed, 23 insertions(+), 16 deletions(-)
+ arch/x86/events/intel/core.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/include/net/xfrm.h b/include/net/xfrm.h
-index 5e3daf53b3d1e..3e966c632f3b2 100644
---- a/include/net/xfrm.h
-+++ b/include/net/xfrm.h
-@@ -1430,6 +1430,23 @@ static inline int xfrm_state_kern(const struct xfrm_state *x)
- 	return atomic_read(&x->tunnel_users);
- }
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index a759e59990fbd..09c53bcbd497d 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -2074,15 +2074,19 @@ static void intel_pmu_disable_event(struct perf_event *event)
+ 	cpuc->intel_ctrl_host_mask &= ~(1ull << hwc->idx);
+ 	cpuc->intel_cp_status &= ~(1ull << hwc->idx);
  
-+static inline bool xfrm_id_proto_valid(u8 proto)
-+{
-+	switch (proto) {
-+	case IPPROTO_AH:
-+	case IPPROTO_ESP:
-+	case IPPROTO_COMP:
-+#if IS_ENABLED(CONFIG_IPV6)
-+	case IPPROTO_ROUTING:
-+	case IPPROTO_DSTOPTS:
-+#endif
-+		return true;
-+	default:
-+		return false;
-+	}
-+}
-+
-+/* IPSEC_PROTO_ANY only matches 3 IPsec protocols, 0 could match all. */
- static inline int xfrm_id_proto_match(u8 proto, u8 userproto)
- {
- 	return (!userproto || proto == userproto ||
-diff --git a/net/ipv6/xfrm6_tunnel.c b/net/ipv6/xfrm6_tunnel.c
-index 12cb3aa990af4..d9e5f6808811a 100644
---- a/net/ipv6/xfrm6_tunnel.c
-+++ b/net/ipv6/xfrm6_tunnel.c
-@@ -345,7 +345,7 @@ static void __net_exit xfrm6_tunnel_net_exit(struct net *net)
- 	unsigned int i;
- 
- 	xfrm_flush_gc();
--	xfrm_state_flush(net, IPSEC_PROTO_ANY, false, true);
-+	xfrm_state_flush(net, 0, false, true);
- 
- 	for (i = 0; i < XFRM6_TUNNEL_SPI_BYADDR_HSIZE; i++)
- 		WARN_ON_ONCE(!hlist_empty(&xfrm6_tn->spi_byaddr[i]));
-diff --git a/net/key/af_key.c b/net/key/af_key.c
-index 7d4bed9550605..0b79c9aa8eb1f 100644
---- a/net/key/af_key.c
-+++ b/net/key/af_key.c
-@@ -1951,8 +1951,10 @@ parse_ipsecrequest(struct xfrm_policy *xp, struct sadb_x_ipsecrequest *rq)
- 
- 	if (rq->sadb_x_ipsecrequest_mode == 0)
- 		return -EINVAL;
-+	if (!xfrm_id_proto_valid(rq->sadb_x_ipsecrequest_proto))
-+		return -EINVAL;
- 
--	t->id.proto = rq->sadb_x_ipsecrequest_proto; /* XXX check proto */
-+	t->id.proto = rq->sadb_x_ipsecrequest_proto;
- 	if ((mode = pfkey_mode_to_xfrm(rq->sadb_x_ipsecrequest_mode)) < 0)
- 		return -EINVAL;
- 	t->mode = mode;
-diff --git a/net/xfrm/xfrm_state.c b/net/xfrm/xfrm_state.c
-index 3f729cd512aff..11e09eb138d60 100644
---- a/net/xfrm/xfrm_state.c
-+++ b/net/xfrm/xfrm_state.c
-@@ -2386,7 +2386,7 @@ void xfrm_state_fini(struct net *net)
- 
- 	flush_work(&net->xfrm.state_hash_work);
- 	flush_work(&xfrm_state_gc_work);
--	xfrm_state_flush(net, IPSEC_PROTO_ANY, false, true);
-+	xfrm_state_flush(net, 0, false, true);
- 
- 	WARN_ON(!list_empty(&net->xfrm.state_all));
- 
-diff --git a/net/xfrm/xfrm_user.c b/net/xfrm/xfrm_user.c
-index 060afc4ffd958..2122f89f61555 100644
---- a/net/xfrm/xfrm_user.c
-+++ b/net/xfrm/xfrm_user.c
-@@ -1513,20 +1513,8 @@ static int validate_tmpl(int nr, struct xfrm_user_tmpl *ut, u16 family)
- 			return -EINVAL;
- 		}
- 
--		switch (ut[i].id.proto) {
--		case IPPROTO_AH:
--		case IPPROTO_ESP:
--		case IPPROTO_COMP:
--#if IS_ENABLED(CONFIG_IPV6)
--		case IPPROTO_ROUTING:
--		case IPPROTO_DSTOPTS:
--#endif
--		case IPSEC_PROTO_ANY:
--			break;
--		default:
-+		if (!xfrm_id_proto_valid(ut[i].id.proto))
- 			return -EINVAL;
--		}
+-	if (unlikely(event->attr.precise_ip))
+-		intel_pmu_pebs_disable(event);
 -
+ 	if (unlikely(hwc->config_base == MSR_ARCH_PERFMON_FIXED_CTR_CTRL)) {
+ 		intel_pmu_disable_fixed(hwc);
+ 		return;
  	}
  
- 	return 0;
+ 	x86_pmu_disable_event(event);
++
++	/*
++	 * Needs to be called after x86_pmu_disable_event,
++	 * so we don't trigger the event without PEBS bit set.
++	 */
++	if (unlikely(event->attr.precise_ip))
++		intel_pmu_pebs_disable(event);
+ }
+ 
+ static void intel_pmu_del_event(struct perf_event *event)
 -- 
 2.20.1
 
