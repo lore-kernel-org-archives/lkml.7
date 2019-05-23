@@ -2,247 +2,110 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44104C282CE
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 01:34:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22E54C282CE
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 01:35:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E652020B1F
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 01:34:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA9E220B1F
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 01:35:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QNfaqtv6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729614AbfEWBey (ORCPT
+        id S1729717AbfEWBf1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 21:34:54 -0400
-Received: from regular1.263xmail.com ([211.150.70.200]:44536 "EHLO
-        regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727305AbfEWBex (ORCPT
+        Wed, 22 May 2019 21:35:27 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:41128 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727305AbfEWBf0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 21:34:53 -0400
-Received: from zhangqing?rock-chips.com (unknown [192.168.167.243])
-        by regular1.263xmail.com (Postfix) with ESMTP id 3637E32F;
-        Thu, 23 May 2019 09:34:41 +0800 (CST)
-X-263anti-spam: KSV:0;BIG:0;
-X-MAIL-GRAY: 0
-X-MAIL-DELIVERY: 1
-X-KSVirus-check: 0
-X-ADDR-CHECKED4: 1
-X-ABS-CHECKED: 1
-X-SKE-CHECKED: 1
-X-ANTISPAM-LEVEL: 2
-Received: from [172.16.12.236] (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P9439T139953098970880S1558575278592295_;
-        Thu, 23 May 2019 09:34:40 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <0e1d8dc2cb0969a06cf6b0c8eac81de2>
-X-RL-SENDER: zhangqing@rock-chips.com
-X-SENDER: zhangqing@rock-chips.com
-X-LOGIN-NAME: zhangqing@rock-chips.com
-X-FST-TO: vicencb@gmail.com
-X-SENDER-IP: 58.22.7.114
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 0
-Subject: Re: [PATCH v3 1/3] thermal: rockchip: fix up the tsadc pinctrl
- setting error
-To:     Heiko Stuebner <heiko@sntech.de>,
-        Enric Balletbo Serra <eballetbo@gmail.com>
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        huangtao@rock-chips.com, Linux PM list <linux-pm@vger.kernel.org>,
-        xxx@rock-chips.com, xf@rock-chips.com,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Doug Anderson <dianders@chromium.org>, vicencb@gmail.com
-References: <1556618986-18923-1-git-send-email-zhangqing@rock-chips.com>
- <785392a0-282a-1e51-a4d6-a6d5ca478949@linaro.org>
- <CAFqH_53nbiwzQKctNa7MBzgCcsRFn1p8g31Xgvo3E9k6eA8AKw@mail.gmail.com>
- <2174314.1vfUlvne1O@phil>
-From:   "elaine.zhang" <zhangqing@rock-chips.com>
-Organization: rockchip
-Message-ID: <a6780f8f-4144-f817-b4b8-c40f6aa5e806@rock-chips.com>
-Date:   Thu, 23 May 2019 09:34:37 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 22 May 2019 21:35:26 -0400
+Received: by mail-ot1-f67.google.com with SMTP id l25so3920307otp.8
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 18:35:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Py6c/Iu/9IaiaLPHGtJCGvpx9eg89xJPkl6DsJ/JuAE=;
+        b=QNfaqtv6AqfoF3fsF+nZn+mJrS1Es390itSMlBewn6ygvwxvqvHIl8GzmJYMu+upt0
+         LPSdwZi9n0Eimidg0zKa4Y8MrIO7on4UbGXNJ+h6caxchun/Wr8Kmsh7dyIpyrVIBOuj
+         12BlWS60Kh2JPX+ugupWfHGEGllWVlfrJSP7fPRdtw4FccK9DR0EgEP3jwJW/tlMNB7G
+         qs2OT/HwnvtYO/5hJQJ/grjjlzWjl74SioOHMaCvCqvA0lnnQ0eshzHII3WNvIS+2UNs
+         QjIQNV5ARnnEXvmxTRH7+EHy0pziRnasH1T8ieQnAEXzlFKQgq2MfAod+Ty83GFrDX75
+         SaNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Py6c/Iu/9IaiaLPHGtJCGvpx9eg89xJPkl6DsJ/JuAE=;
+        b=V5UeaJXz1iDz748kQalV1I2l6/NFTT9MVr/PM2cDuSEXJmDrJTPqTEg3BUg39M4cGW
+         0LnJZ3iwgdrqvLtUVxmLeLbogsWa0rc6QWw8VcIvZPp6vqQlJWRqGqXUhW174iYCaW+S
+         iMsDi4mqiHksfZf58qzNe0RR6DMBATR6kfE6Q5M53QZmGq4c6SUGH7ShX5ySdaHwAv9w
+         2djdjiZc/WC622brJ8Dsj7SzyriMu5z3QRAxeX9rGNeDIR6KWk47cVMEov1tQsXvHHOi
+         oVlzUWB22vZ1xsokVL6I/DB4CEY5QLul7U6pwu82u7QBNTw3oamYPTIj0bCUi6cPdSGZ
+         CAGA==
+X-Gm-Message-State: APjAAAXWz4jDhHqvQmpi9Dw6znMieSqkmnCMpFhGRAKlfrCXX15m+6D0
+        LmThpshBI51pbqUVEHv2biXfw19xDhduigSZ5g0=
+X-Google-Smtp-Source: APXvYqzyV+0g6YcgYh0pf1dd1V/6yGNW5OOp2cYuAA9VVcsWFyG1b2eqtqLCB13lEPVEuWnFMV4qE+rX6dzMtudL34M=
+X-Received: by 2002:a9d:57cd:: with SMTP id q13mr37664016oti.327.1558575326154;
+ Wed, 22 May 2019 18:35:26 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <2174314.1vfUlvne1O@phil>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <cover.1558526487.git.gneukum1@gmail.com> <932843299b814f3a22dd176771b46be14ceefeea.1558526487.git.gneukum1@gmail.com>
+ <20190522122714.GA2270@kroah.com>
+In-Reply-To: <20190522122714.GA2270@kroah.com>
+From:   Geordan Neukum <gneukum1@gmail.com>
+Date:   Thu, 23 May 2019 01:35:02 +0000
+Message-ID: <CA+T6rvEXCBukwmFS-Z4DFNoFBv9OToWwAYA2AXWBVa5mUG10zA@mail.gmail.com>
+Subject: Re: [PATCH 1/6] staging: kpc2000: make kconfig symbol 'KPC2000'
+ select dependencies
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-hi, Heiko & Enric:
+On Wed, May 22, 2019 at 12:27 PM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+> depends on is better than select.  There's a change to depend on UIO for
+> this code already in my -linus branch which will show up in Linus's tree
+> in a week or so.
 
-在 2019/5/22 下午8:27, Heiko Stuebner 写道:
-> Hi Enric,
->
-> Am Montag, 20. Mai 2019, 15:38:32 CEST schrieb Enric Balletbo Serra:
->> Hi all,
->>
->> As pointed by [1] and [2] this commit, that now is upstream, breaks
->> veyron (rk3288) and kevin (rk3399) boards. The problem is especially
->> critical for veyron boards because they don't boot anymore.
->>
->> I didn't look deep at the problem but I have some concerns about this
->> patch, see below.
->>
->> [1] https://www.spinics.net/lists/linux-rockchip/msg24657.html
->> [2] https://www.spinics.net/lists/linux-rockchip/msg24735.html
->>
->> Missatge de Daniel Lezcano <daniel.lezcano@linaro.org> del dia dt., 30
->> d’abr. 2019 a les 15:39:
->>> On 30/04/2019 12:09, Elaine Zhang wrote:
->>>> Explicitly use the pinctrl to set/unset the right mode
->>>> instead of relying on the pinctrl init mode.
->>>> And it requires setting the tshut polarity before select pinctrl.
->>>>
->>>> When the temperature sensor mode is set to 0, it will automatically
->>>> reset the board via the Clock-Reset-Unit (CRU) if the over temperature
->>>> threshold is reached. However, when the pinctrl initializes, it does a
->>>> transition to "otp_out" which may lead the SoC restart all the time.
->>>>
->>>> "otp_out" IO may be connected to the RESET circuit on the hardware.
->>>> If the IO is in the wrong state, it will trigger RESET.
->>>> (similar to the effect of pressing the RESET button)
->>>> which will cause the soc to restart all the time.
->>>>
->>>> Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
->>> Reviewed-by: Daniel Lezcano <daniel.lezcano@linaro.org>
->>>
->>>
->>>
->>>> ---
->>>>   drivers/thermal/rockchip_thermal.c | 36 +++++++++++++++++++++++++++++++++---
->>>>   1 file changed, 33 insertions(+), 3 deletions(-)
->>>>
->>>> diff --git a/drivers/thermal/rockchip_thermal.c b/drivers/thermal/rockchip_thermal.c
->>>> index 9c7643d62ed7..6dc7fc516abf 100644
->>>> --- a/drivers/thermal/rockchip_thermal.c
->>>> +++ b/drivers/thermal/rockchip_thermal.c
->>>> @@ -172,6 +172,9 @@ struct rockchip_thermal_data {
->>>>        int tshut_temp;
->>>>        enum tshut_mode tshut_mode;
->>>>        enum tshut_polarity tshut_polarity;
->>>> +     struct pinctrl *pinctrl;
->>>> +     struct pinctrl_state *gpio_state;
->>>> +     struct pinctrl_state *otp_state;
->>>>   };
->>>>
->>>>   /**
->>>> @@ -1242,6 +1245,8 @@ static int rockchip_thermal_probe(struct platform_device *pdev)
->>>>                return error;
->>>>        }
->>>>
->>>> +     thermal->chip->control(thermal->regs, false);
->>>> +
->> That's the line that causes the hang. Commenting this makes the veyron
->> boot again. Probably this needs to go after chip->initialize?
-> It needs to go after the clk_enable calls.
-> At this point the tsadc may still be unclocked.
+Noted on both accounts. Thanks for the feedback and sorry for the
+inconvenience on the latter.
 
-The clk is enable by default.
+> Are you sure we need MFD_CORE as well for this code?
 
+I noticed the build issue when working locally. I was doing
+something along the lines of: 'make distclean && make x86_64_defconfig',
+selecting 'CONFIG_KPC2000' and 'CONFIG_UIO' via menuconfig, then
+running a good old 'make'. From make, I received an error along the
+lines of:
 
-The reason for this modification:
+ERROR: "mfd_remove_devices"
+[drivers/staging/kpc2000/kpc2000/kpc2000.ko] undefined!
+ERROR: "mfd_add_devices" [drivers/staging/kpc2000/kpc2000/kpc2000.ko] undefined!
+make[1]: *** [scripts/Makefile.modpost:91: __modpost] Error 1
+make: *** [Makefile:1290: modules] Error 2
 
-The otp Pin polarity setting for tsadc must be set when tsadc is turned off.
+which appears to indicate that those two symbols are undefined. When
+I looked, it appeared that those symbols were exported from the
+mfd-core which is why I also threw in a select for that Kconfig
+symbol. Assuming that I didn't do something silly above, I'd be happy
+to submit a new patch (with only a depends on for MFD_CORE) as I
+continue trying to fix up the i2c driver.
 
-The order:
+>Why hasn't that been seen on any build errors?
 
-Close the tsadc->Set the otp pin polarity ->Set the pinctrl->initialize 
-the tsadc->Open the tsadc
+To be honest, I can't say that I'm familiar with all of the different
+build bots out there so I can't even begin to speculate on that one.
+If someone could point me in the right direction there, I'd be happy
+to investigate further.
 
-
-As for the problem you mentioned, I guess: The default polarity of otp 
-does not match the default state, that is, the otp is triggered by 
-default, and then the reset circuit of the hardware takes effect and is 
-restarted all the time.
-Modification:
-1. For this hardware, otp pin default state is modified.
-2. The mode of using CRU is rockchip,hw-tshut-mode = <0> in DTS;
-/* tshut mode 0:CRU 1:GPIO */
-
-Recommended use method 2. You can try it.
-
->
->>>>        error = clk_prepare_enable(thermal->clk);
->>>>        if (error) {
->>>>                dev_err(&pdev->dev, "failed to enable converter clock: %d\n",
->>>> @@ -1267,6 +1272,30 @@ static int rockchip_thermal_probe(struct platform_device *pdev)
->>>>        thermal->chip->initialize(thermal->grf, thermal->regs,
->>>>                                  thermal->tshut_polarity);
->>>>
->>>> +     if (thermal->tshut_mode == TSHUT_MODE_GPIO) {
->>>> +             thermal->pinctrl = devm_pinctrl_get(&pdev->dev);
->>>> +             if (IS_ERR(thermal->pinctrl)) {
->>>> +                     dev_err(&pdev->dev, "failed to find thermal pinctrl\n");
->>>> +                     return PTR_ERR(thermal->pinctrl);
->>>> +             }
->>>> +
->>>> +             thermal->gpio_state = pinctrl_lookup_state(thermal->pinctrl,
->>>> +                                                        "gpio");
->> Shouldn't this mode be documented properly in the binding first?
-> More importantly, it should be _backwards-compatible_, aka work with
-> old devicetrees without that property and not break thermal handling for
-> them entirely.
-If need  _backwards-compatible_,  It's can't return 
-PTR_ERR(thermal->pinctrl) when get
-
-devm_pinctrl_get failed.
-
->
->> The binding [3] talks about init, default and sleep states but *not*
->> gpio and otpout. The patch series looks incomplete to me or not using
->> the proper names.
->>
->> [3] https://elixir.bootlin.com/linux/v5.2-rc1/source/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
->>
->>>> +             if (IS_ERR_OR_NULL(thermal->gpio_state)) {
->>>> +                     dev_err(&pdev->dev, "failed to find thermal gpio state\n");
->>>> +                     return -EINVAL;
->>>> +             }
->>>> +
->>>> +             thermal->otp_state = pinctrl_lookup_state(thermal->pinctrl,
->>>> +                                                       "otpout");
->>>> +             if (IS_ERR_OR_NULL(thermal->otp_state)) {
->>>> +                     dev_err(&pdev->dev, "failed to find thermal otpout state\n");
->>>> +                     return -EINVAL;
->>>> +             }
->>>> +
->> Same here otpout is not a documented.
->>
->> As this change is now in mainline and is causing veyron to hang I'd
->> suggest reverting this change for now. Even fixing the root cause
->> (maybe the one I pointed above) after this patch we will have the
->> thermal driver to fail because "gpio" and "otpout" states are not
->> defined nor documented (a change on this will need some reviews and
->> acks and time I guess).
-> I definitly agree here. Handling + checking the binding change
-> as well as needed fallback code is definitly not material for -rc-kernels
-> so we should just revert for now and let Elaine fix the issues for 5.3.
->
-> Anyone volunteering for sending a revert-patch to Eduardo? :-)
-
-I agree to revert the patch,and I will correct it and push it later.
-
-Do I need to commit the revert the patch now?@Heiko
-
->
-> Heiko
->
->
->
->
->
->
->
-
-
+Thanks again for your feedback all,
+Geordan Neukum
