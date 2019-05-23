@@ -2,50 +2,51 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6492BC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:34:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70134C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:34:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FBC120879
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:34:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41A4520879
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:34:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558640075;
-	bh=ow9hKQKsbzGvMcV3sIhqnSFZYk7sMTc+pGErhTDXwhc=;
+	s=default; t=1558640079;
+	bh=2C2QQ3bMoLYNqfonrJ8jPSLJoDzjfVJiXseepizVle8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PMsYXsFrJdKc2Cf+ET+ZX/cmuFZuUENisftbXIvYUJ27Vxm0WvJ8i2PlL8gqqk76B
-	 ZFc88waPHxONArXZdcG3OxQPuremyIu3JqH1bQCgg1emwNgIeM2WA3WytHySCtsW/V
-	 sfQAtxYAAxwnCRD/wPd4eFYC4sfOYYfcrWF3WHrM=
+	b=roME6E3JQFt9/ifnNB9+/bYibSKS4sQxqpgN/Z9DbtFnge82fx3q4BVmRHbUTUZln
+	 8+zmZL2NVOBGaJItxm9arfRxwxixPUt7PKdc9k8lGPD9IMbTxWFToYW8F5UP211uoB
+	 TQhqIJ4GIVN3B6HN2GLU3HI3DRbonu/VwHjrUczs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391657AbfEWT1t (ORCPT
+        id S2391638AbfEWT1n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:27:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40094 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:27:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391646AbfEWT1p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:27:45 -0400
+        id S2391266AbfEWT1j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:27:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 285162054F;
-        Thu, 23 May 2019 19:27:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B67882054F;
+        Thu, 23 May 2019 19:27:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639664;
-        bh=ow9hKQKsbzGvMcV3sIhqnSFZYk7sMTc+pGErhTDXwhc=;
+        s=default; t=1558639659;
+        bh=2C2QQ3bMoLYNqfonrJ8jPSLJoDzjfVJiXseepizVle8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tl/ErE5O5vO7M9j2FH43LqIhfrY/pgA7R6Kxk8kHWuP+PerrwzOje8adC1jMnlnBF
-         jC1J5CoSGZx+2NoqilcSCKlupmY9vBQue9boPfpmiZEISrGRa5Og91CdrTJd8XHAGG
-         8J5+4XSyeGkYk7HzdkI6TDq/Gjfu19iuCFT3Nc1Q=
+        b=XeQ+JpKAFuk6XoL1OrR/+ylGCKAgk+Fhh96Xx70e/37UnvZd637Y7JnX2BY/4q4jb
+         20njbi7qypjlFLBg9vHL8zfVBwupX102envTD1VwLTeixiPukGcRcI5bDKhXJGexBR
+         X2Xk3Rfs14QZ/gFCzIQ76jYFO5Ub8Gfp6YrwjYCE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 5.1 023/122] net/mlx5e: Fix ethtool rxfh commands when CONFIG_MLX5_EN_RXNFC is disabled
-Date:   Thu, 23 May 2019 21:05:45 +0200
-Message-Id: <20190523181707.830609919@linuxfoundation.org>
+        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        Helge Deller <deller@gmx.de>
+Subject: [PATCH 5.1 031/122] parisc: Use PA_ASM_LEVEL in boot code
+Date:   Thu, 23 May 2019 21:05:53 +0200
+Message-Id: <20190523181708.990957374@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181705.091418060@linuxfoundation.org>
 References: <20190523181705.091418060@linuxfoundation.org>
@@ -58,58 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Saeed Mahameed <saeedm@mellanox.com>
+From: Helge Deller <deller@gmx.de>
 
-[ Upstream commit 8f0916c6dc5cd5e3bc52416fa2a9ff4075080180 ]
+commit bdca5d64ee92abeacd6dada0bc6f6f8e6350dd67 upstream.
 
-ethtool user spaces needs to know ring count via ETHTOOL_GRXRINGS when
-executing (ethtool -x) which is retrieved via ethtool get_rxnfc callback,
-in mlx5 this callback is disabled when CONFIG_MLX5_EN_RXNFC=n.
+The LEVEL define clashed with the DRBD code.
 
-This patch allows only ETHTOOL_GRXRINGS command on mlx5e_get_rxnfc() when
-CONFIG_MLX5_EN_RXNFC is disabled, so ethtool -x will continue working.
-
-Fixes: fe6d86b3c316 ("net/mlx5e: Add CONFIG_MLX5_EN_RXNFC for ethtool rx nfc")
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Helge Deller <deller@gmx.de>
+Cc: <stable@vger.kernel.org> # v4.14+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c |   18 +++++++++++++++++-
- 1 file changed, 17 insertions(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
-@@ -1901,6 +1901,22 @@ static int mlx5e_flash_device(struct net
- 	return mlx5e_ethtool_flash_device(priv, flash);
- }
+---
+ arch/parisc/boot/compressed/head.S |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+--- a/arch/parisc/boot/compressed/head.S
++++ b/arch/parisc/boot/compressed/head.S
+@@ -22,7 +22,7 @@
+ 	__HEAD
  
-+#ifndef CONFIG_MLX5_EN_RXNFC
-+/* When CONFIG_MLX5_EN_RXNFC=n we only support ETHTOOL_GRXRINGS
-+ * otherwise this function will be defined from en_fs_ethtool.c
-+ */
-+static int mlx5e_get_rxnfc(struct net_device *dev, struct ethtool_rxnfc *info, u32 *rule_locs)
-+{
-+	struct mlx5e_priv *priv = netdev_priv(dev);
-+
-+	if (info->cmd != ETHTOOL_GRXRINGS)
-+		return -EOPNOTSUPP;
-+	/* ring_count is needed by ethtool -x */
-+	info->data = priv->channels.params.num_channels;
-+	return 0;
-+}
-+#endif
-+
- const struct ethtool_ops mlx5e_ethtool_ops = {
- 	.get_drvinfo       = mlx5e_get_drvinfo,
- 	.get_link          = ethtool_op_get_link,
-@@ -1919,8 +1935,8 @@ const struct ethtool_ops mlx5e_ethtool_o
- 	.get_rxfh_indir_size = mlx5e_get_rxfh_indir_size,
- 	.get_rxfh          = mlx5e_get_rxfh,
- 	.set_rxfh          = mlx5e_set_rxfh,
--#ifdef CONFIG_MLX5_EN_RXNFC
- 	.get_rxnfc         = mlx5e_get_rxnfc,
-+#ifdef CONFIG_MLX5_EN_RXNFC
- 	.set_rxnfc         = mlx5e_set_rxnfc,
+ ENTRY(startup)
+-	 .level LEVEL
++	 .level PA_ASM_LEVEL
+ 
+ #define PSW_W_SM	0x200
+ #define PSW_W_BIT       36
+@@ -63,7 +63,7 @@ $bss_loop:
+ 	load32	BOOTADDR(decompress_kernel),%r3
+ 
+ #ifdef CONFIG_64BIT
+-	.level LEVEL
++	.level PA_ASM_LEVEL
+ 	ssm	PSW_W_SM, %r0		/* set W-bit */
+ 	depdi	0, 31, 32, %r3
  #endif
- 	.flash_device      = mlx5e_flash_device,
+@@ -72,7 +72,7 @@ $bss_loop:
+ 
+ startup_continue:
+ #ifdef CONFIG_64BIT
+-	.level LEVEL
++	.level PA_ASM_LEVEL
+ 	rsm	PSW_W_SM, %r0		/* clear W-bit */
+ #endif
+ 
 
 
