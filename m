@@ -5,55 +5,56 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B477C04AAC
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 07:38:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B4ADC04AAC
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 07:38:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DBCF2075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 07:38:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 591A42133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 07:38:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="eVCsOiup"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="dyQiukpO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730527AbfEWHiR (ORCPT
+        id S1730476AbfEWHiM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 03:38:17 -0400
-Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:43586 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730135AbfEWHhb (ORCPT
+        Thu, 23 May 2019 03:38:12 -0400
+Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:43612 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730188AbfEWHhb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 May 2019 03:37:31 -0400
 Received: from mailhost.synopsys.com (dc2-mailhost2.synopsys.com [10.12.135.162])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 8EFE1C018A;
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 4BB32C0199;
         Thu, 23 May 2019 07:37:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1558597057; bh=lIKxXg1RXJcwgYIT22UO3sRPedxBt/awS1mUiwd62oU=;
+        t=1558597058; bh=UiKf7HDuJujDmZp22y/1Bu+T4dmQ9e5+EBajegy2VME=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=eVCsOiupF4b5JMOIg8oc1S0WoXlYV/AIZD5HOVoHkPpME7hwFF3cC+7n0yBexXhHe
-         zZFjaHROrYYPZQCQekei9iMVl8gZ0He9PiGKuo1+xVZPzmfbHwlkztZrSX/ZQCm0S2
-         c9cmiCdIcfUEZmL7tatL0cHtGhtruB66NUcSrqX4XIq1wFrzFWNqeqg6GW5cQ8nXih
-         Joom2uflsuEtAizx76Z+kq1UZBJQzdVkfnyLv3172v6hdyzXurdYGxYgDIAUR87nIM
-         pM5XtdmN1ub7mYjTzsavuHrgmURuFO80r/wdO2JllRWXkfC0QLjVxu1ZvSsN9l+WES
-         NKXE7sQf6XQMw==
+        b=dyQiukpOyxpmomgcInVHhluX8nMcfekCiAwczhUm+6gEMU0su+36ieJ2GJnQXqNTp
+         jc1NLEPOMWQ5srF/8mqc0Bpr7rPwvzFCvP3yUHmfDVBlNK4NM4p3j66//d12N1w72J
+         quUTg2gkpLhG7oWV9OMWc4fgktEr7oZNxBtaQ/3TxIlTMsZNWyllP62HgT5yQIUi9i
+         inNlX+Nozpd56c6XLhkwMmsMnWN1wN51gYv32M5qJwT39pr8BDeurBStQ6CYMo/+le
+         tkLdZbOWcez0NDkOLsNj09u5r/GQaRghWsmqFHJPb0+JXr7txtLgnbTC+fYfr9uZId
+         ALt+ULfQvZf+A==
 Received: from de02.synopsys.com (germany.internal.synopsys.com [10.225.17.21])
-        by mailhost.synopsys.com (Postfix) with ESMTP id EE28DA00A5;
+        by mailhost.synopsys.com (Postfix) with ESMTP id 5DB23A00A2;
         Thu, 23 May 2019 07:37:29 +0000 (UTC)
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by de02.synopsys.com (Postfix) with ESMTP id 75E443D94A;
+        by de02.synopsys.com (Postfix) with ESMTP id 4EE423D944;
         Thu, 23 May 2019 09:37:28 +0200 (CEST)
 From:   Jose Abreu <Jose.Abreu@synopsys.com>
 To:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
+Cc:     Corentin Labbe <clabbe@baylibre.com>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
         Joao Pinto <Joao.Pinto@synopsys.com>,
         "David S . Miller" <davem@davemloft.net>,
         Giuseppe Cavallaro <peppe.cavallaro@st.com>,
         Alexandre Torgue <alexandre.torgue@st.com>
-Subject: [PATCH net-next 08/18] net: stmmac: dwmac1000: Also pass control frames while in promisc mode
-Date:   Thu, 23 May 2019 09:36:58 +0200
-Message-Id: <01b51a808bb53e80543810cbb2b223248ef00682.1558596600.git.joabreu@synopsys.com>
+Subject: [PATCH net-next 06/18] net: ethernet: stmmac: dwmac-sun8i: Enable control of loopback
+Date:   Thu, 23 May 2019 09:36:56 +0200
+Message-Id: <c1c6edfd3f0461bad427cb9174c6d33e9d71fc7a.1558596600.git.joabreu@synopsys.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1558596599.git.joabreu@synopsys.com>
 References: <cover.1558596599.git.joabreu@synopsys.com>
@@ -64,46 +65,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order for the selftests to run the Flow Control selftest we need to
-also pass pause frames to the stack.
+From: Corentin Labbe <clabbe@baylibre.com>
 
-Pass this type of frames while in promiscuous mode.
+This patch enable use of set_mac_loopback in dwmac-sun8i
 
+Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
 Signed-off-by: Jose Abreu <joabreu@synopsys.com>
 Cc: Joao Pinto <jpinto@synopsys.com>
 Cc: David S. Miller <davem@davemloft.net>
 Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
 Cc: Alexandre Torgue <alexandre.torgue@st.com>
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac1000.h      | 1 +
- drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c | 2 +-
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac1000.h b/drivers/net/ethernet/stmicro/stmmac/dwmac1000.h
-index 184ca13c8f79..56a69fb6f0b9 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac1000.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac1000.h
-@@ -146,6 +146,7 @@ enum inter_frame_gap {
- #define GMAC_FRAME_FILTER_DAIF	0x00000008	/* DA Inverse Filtering */
- #define GMAC_FRAME_FILTER_PM	0x00000010	/* Pass all multicast */
- #define GMAC_FRAME_FILTER_DBF	0x00000020	/* Disable Broadcast frames */
-+#define GMAC_FRAME_FILTER_PCF	0x00000080	/* Pass Control frames */
- #define GMAC_FRAME_FILTER_SAIF	0x00000100	/* Inverse Filtering */
- #define GMAC_FRAME_FILTER_SAF	0x00000200	/* Source Address Filter */
- #define GMAC_FRAME_FILTER_HPF	0x00000400	/* Hash or perfect Filter */
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
-index 398303c783f4..8ca73bd15e07 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
-@@ -172,7 +172,7 @@ static void dwmac1000_set_filter(struct mac_device_info *hw,
- 	memset(mc_filter, 0, sizeof(mc_filter));
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
+index 195669f550f0..f7ff5858e522 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
+@@ -986,6 +986,18 @@ static void sun8i_dwmac_exit(struct platform_device *pdev, void *priv)
+ 		regulator_disable(gmac->regulator);
+ }
  
- 	if (dev->flags & IFF_PROMISC) {
--		value = GMAC_FRAME_FILTER_PR;
-+		value = GMAC_FRAME_FILTER_PR | GMAC_FRAME_FILTER_PCF;
- 	} else if (dev->flags & IFF_ALLMULTI) {
- 		value = GMAC_FRAME_FILTER_PM;	/* pass all multi */
- 	} else if (!netdev_mc_empty(dev)) {
++static void sun8i_dwmac_set_mac_loopback(void __iomem *ioaddr, bool enable)
++{
++	u32 value = readl(ioaddr + EMAC_BASIC_CTL0);
++
++	if (enable)
++		value |= EMAC_LOOPBACK;
++	else
++		value &= ~EMAC_LOOPBACK;
++
++	writel(value, ioaddr + EMAC_BASIC_CTL0);
++}
++
+ static const struct stmmac_ops sun8i_dwmac_ops = {
+ 	.core_init = sun8i_dwmac_core_init,
+ 	.set_mac = sun8i_dwmac_set_mac,
+@@ -995,6 +1007,7 @@ static const struct stmmac_ops sun8i_dwmac_ops = {
+ 	.flow_ctrl = sun8i_dwmac_flow_ctrl,
+ 	.set_umac_addr = sun8i_dwmac_set_umac_addr,
+ 	.get_umac_addr = sun8i_dwmac_get_umac_addr,
++	.set_mac_loopback = sun8i_dwmac_set_mac_loopback,
+ };
+ 
+ static struct mac_device_info *sun8i_dwmac_setup(void *ppriv)
 -- 
 2.7.4
 
