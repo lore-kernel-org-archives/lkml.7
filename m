@@ -2,102 +2,171 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 858FDC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 09:02:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97411C282E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 09:03:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42F3920856
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 09:02:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="EuoySJLX"
+	by mail.kernel.org (Postfix) with ESMTP id 6392C20856
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 09:03:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729820AbfEWJCQ (ORCPT
+        id S1730029AbfEWJDe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 05:02:16 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:39884 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726310AbfEWJCO (ORCPT
+        Thu, 23 May 2019 05:03:34 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:56179 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727232AbfEWJDe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 05:02:14 -0400
-Received: by mail-lj1-f194.google.com with SMTP id a10so4724605ljf.6
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 02:02:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Gj20cOvCKG7FD6jjJZtVF7qSWx9DiKga9phOOUa5uL0=;
-        b=EuoySJLXx37Ig1+YyIG4I/3BaQIryrpMyTLOmPHVFfrljh21Kk/gfRyCqL2KRfePZs
-         WMzxC70vK9qld+zfU5f87R+8E9i4CYMZYPzyqzZRD/I9tcQY5MN/Nmk05X5MxxxBzUZI
-         N8IoXckh1XX1bkvlY5310s2DxqypJ6QtFwxaB31LjPLSgfVzeArJHigGqXal7Rukzyns
-         ldmV27ywrVB7Yv7BYzWKGNhgLyVnl985TWcjIFHPdzY0jttTUE0ayLB7GWjxhqexGnRi
-         HBT2d1E7Fquudb/RFmE9vTA4z5/6tKQMY+IV6321ZPnZFZdyh2PeruJZdKvJhVs2vQQZ
-         1mQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Gj20cOvCKG7FD6jjJZtVF7qSWx9DiKga9phOOUa5uL0=;
-        b=dGKsk0rq5MhxFLEN/UAWlBhSdtDzXrvL+MEKMRuzr89zfSk5iFUhjUVfpiCXEcRgmg
-         jYwzV855+GXrRganIwNg4HiIfubnRVX3pCnTtyNfrntrns9yGItC5jzHkR/026NK1qvU
-         2FoRxLB5PKwpOHGZiZLTpTX4bx4Sz9Y+WWJyUfkHDlKGhw3QCN6F0bALwCNbcXLRmgSa
-         fd3e773UFqO4UAstVRaXRhC3yxWdzfq3uTfkAOys5G1IAKztpgflmenO1RY+21LmjWOu
-         eyoE6gbyBrntCl5qQPs1Xe06iHyVDZ6YKjH1Xhua3NBzdVRoGGJelRJIzFLm4kcYeIR8
-         CFqQ==
-X-Gm-Message-State: APjAAAWDhVO7aiVCuXEolPVZqC05fgVaN3ecTlrqWD4rKo/rDdxW0qQt
-        sqYtL+EYuKOopNQ+R51YUQ4naSCNIO8=
-X-Google-Smtp-Source: APXvYqxPaMVeCackWtR3g29FOBmPiAoKz56PxWB50NRD/oRvnQhsmUP70kx+ZRAOaYMkgO0PT7HeFQ==
-X-Received: by 2002:a2e:8516:: with SMTP id j22mr18222831lji.119.1558602131959;
-        Thu, 23 May 2019 02:02:11 -0700 (PDT)
-Received: from [192.168.0.199] ([31.173.80.169])
-        by smtp.gmail.com with ESMTPSA id p78sm5847549lja.95.2019.05.23.02.02.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 23 May 2019 02:02:11 -0700 (PDT)
-Subject: Re: [PATCH V3] hsr: fix don't prune the master node from the node_db
-To:     Andreas Oetken <andreas.oetken@siemens.com>
-Cc:     andreas@oetken.name, m-karicheri2@ti.com, a-kramer@ti.com,
-        Arvid Brodin <arvid.brodin@alten.se>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190523070238.17560-1-andreas.oetken@siemens.com>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Message-ID: <1ce497cb-f121-7f73-e39f-a0474a33bc90@cogentembedded.com>
-Date:   Thu, 23 May 2019 12:02:00 +0300
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190523070238.17560-1-andreas.oetken@siemens.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Thu, 23 May 2019 05:03:34 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-109-QAnUYR_ZPWu03W_8XUVOfg-1; Thu, 23 May 2019 10:03:30 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Thu, 23 May 2019 10:03:29 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Thu, 23 May 2019 10:03:29 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Deepa Dinamani' <deepa.kernel@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>
+CC:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Arnd Bergmann" <arnd@arndb.de>, "dbueso@suse.de" <dbueso@suse.de>,
+        "axboe@kernel.dk" <axboe@kernel.dk>,
+        Davidlohr Bueso <dave@stgolabs.net>, Eric Wong <e@80x24.org>,
+        Jason Baron <jbaron@akamai.com>,
+        "Linux FS-devel Mailing List" <linux-fsdevel@vger.kernel.org>,
+        linux-aio <linux-aio@kvack.org>,
+        Omar Kilani <omar.kilani@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: RE: [PATCH v2] signal: Adjust error codes according to
+ restore_user_sigmask()
+Thread-Topic: [PATCH v2] signal: Adjust error codes according to
+ restore_user_sigmask()
+Thread-Index: AQHVELwtsgR+BAQFXk2JV68Wk/7LjKZ4aINA
+Date:   Thu, 23 May 2019 09:03:29 +0000
+Message-ID: <4f7b6dbeab1d424baaebd7a5df116349@AcuMS.aculab.com>
+References: <20190522032144.10995-1-deepa.kernel@gmail.com>
+ <20190522150505.GA4915@redhat.com>
+ <CABeXuvrPM5xvzqUydbREapvwgy6deYreHp0aaMoSHyLB6+HGRg@mail.gmail.com>
+ <20190522161407.GB4915@redhat.com>
+ <CABeXuvpjrW5Gt95JC-_rYkOA=6RCD5OtkEQdwZVVqGCE3GkQOQ@mail.gmail.com>
+In-Reply-To: <CABeXuvpjrW5Gt95JC-_rYkOA=6RCD5OtkEQdwZVVqGCE3GkQOQ@mail.gmail.com>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
+MIME-Version: 1.0
+X-MC-Unique: QAnUYR_ZPWu03W_8XUVOfg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+RnJvbTogRGVlcGEgRGluYW1hbmkNCj4gU2VudDogMjIgTWF5IDIwMTkgMTc6MzQNCj4gT24gV2Vk
+LCBNYXkgMjIsIDIwMTkgYXQgOToxNCBBTSBPbGVnIE5lc3Rlcm92IDxvbGVnQHJlZGhhdC5jb20+
+IHdyb3RlOg0KPiA+DQo+ID4gT24gMDUvMjIsIERlZXBhIERpbmFtYW5pIHdyb3RlOg0KPiA+ID4N
+Cj4gPiA+IC1EZWVwYQ0KPiA+ID4NCj4gPiA+ID4gT24gTWF5IDIyLCAyMDE5LCBhdCA4OjA1IEFN
+LCBPbGVnIE5lc3Rlcm92IDxvbGVnQHJlZGhhdC5jb20+IHdyb3RlOg0KPiA+ID4gPg0KPiA+ID4g
+Pj4gT24gMDUvMjEsIERlZXBhIERpbmFtYW5pIHdyb3RlOg0KPiA+ID4gPj4NCj4gPiA+ID4+IE5v
+dGUgdGhhdCB0aGlzIHBhdGNoIHJldHVybnMgaW50ZXJydXB0ZWQgZXJyb3JzIChFSU5UUiwgRVJF
+U1RBUlROT0hBTkQsDQo+ID4gPiA+PiBldGMpIG9ubHkgd2hlbiB0aGVyZSBpcyBubyBvdGhlciBl
+cnJvci4gSWYgdGhlcmUgaXMgYSBzaWduYWwgYW5kIGFuIGVycm9yDQo+ID4gPiA+PiBsaWtlIEVJ
+TlZBTCwgdGhlIHN5c2NhbGxzIHJldHVybiAtRUlOVkFMIHJhdGhlciB0aGFuIHRoZSBpbnRlcnJ1
+cHRlZA0KPiA+ID4gPj4gZXJyb3IgY29kZXMuDQo+ID4gPiA+DQo+ID4gPiA+IFVnaC4gSSBuZWVk
+IHRvIHJlLWNoZWNrLCBidXQgYXQgZmlyc3QgZ2xhbmNlIEkgcmVhbGx5IGRpc2xpa2UgdGhpcyBj
+aGFuZ2UuDQo+ID4gPiA+DQo+ID4gPiA+IEkgdGhpbmsgd2UgY2FuIGZpeCB0aGUgcHJvYmxlbSBf
+YW5kXyBzaW1wbGlmeSB0aGUgY29kZS4gU29tZXRoaW5nIGxpa2UgYmVsb3cuDQo+ID4gPiA+IFRo
+ZSBwYXRjaCBpcyBvYnZpb3VzbHkgaW5jb21wbGV0ZSwgaXQgY2hhbmdlcyBvbmx5IG9ubHkgb25l
+IGNhbGxlciBvZg0KPiA+ID4gPiBzZXRfdXNlcl9zaWdtYXNrKCksIGVwb2xsX3B3YWl0KCkgdG8g
+ZXhwbGFpbiB3aGF0IEkgbWVhbi4NCj4gPiA+ID4gcmVzdG9yZV91c2VyX3NpZ21hc2soKSBzaG91
+bGQgc2ltcGx5IGRpZS4gQWx0aG91Z2ggcGVyaGFwcyBhbm90aGVyIGhlbHBlcg0KPiA+ID4gPiBt
+YWtlcyBzZW5zZSB0byBhZGQgV0FSTl9PTih0ZXN0X3Rza19yZXN0b3JlX3NpZ21hc2soKSAmJiAh
+c2lnbmFsX3BlbmRpbmcpLg0KPiA+ID4NCj4gPiA+IHJlc3RvcmVfdXNlcl9zaWdtYXNrKCkgd2Fz
+IGFkZGVkIGJlY2F1c2Ugb2YgYWxsIHRoZSB2YXJpYW50cyBvZiB0aGVzZQ0KPiA+ID4gc3lzY2Fs
+bHMgd2UgYWRkZWQgYmVjYXVzZSBvZiB5MjAzOCBhcyBub3RlZCBpbiBjb21taXQgbWVzc2FnZToN
+Cj4gPiA+DQo+ID4gPiAgIHNpZ25hbDogQWRkIHJlc3RvcmVfdXNlcl9zaWdtYXNrKCkNCj4gPiA+
+DQo+ID4gPiAgICAgUmVmYWN0b3IgdGhlIGxvZ2ljIHRvIHJlc3RvcmUgdGhlIHNpZ21hc2sgYmVm
+b3JlIHRoZSBzeXNjYWxsDQo+ID4gPiAgICAgcmV0dXJucyBpbnRvIGFuIGFwaS4NCj4gPiA+ICAg
+ICBUaGlzIGlzIHVzZWZ1bCBmb3IgdmVyc2lvbnMgb2Ygc3lzY2FsbHMgdGhhdCBwYXNzIGluIHRo
+ZQ0KPiA+ID4gICAgIHNpZ21hc2sgYW5kIGV4cGVjdCB0aGUgY3VycmVudC0+c2lnbWFzayB0byBi
+ZSBjaGFuZ2VkIGR1cmluZw0KPiA+ID4gICAgIHRoZSBleGVjdXRpb24gYW5kIHJlc3RvcmVkIGFm
+dGVyIHRoZSBleGVjdXRpb24gb2YgdGhlIHN5c2NhbGwuDQo+ID4gPg0KPiA+ID4gICAgIFdpdGgg
+dGhlIGFkdmVudCBvZiBuZXcgeTIwMzggc3lzY2FsbHMgaW4gdGhlIHN1YnNlcXVlbnQgcGF0Y2hl
+cywNCj4gPiA+ICAgICB3ZSBhZGQgdHdvIG1vcmUgbmV3IHZlcnNpb25zIG9mIHRoZSBzeXNjYWxs
+cyAoZm9yIHBzZWxlY3QsIHBwb2xsDQo+ID4gPiAgICAgYW5kIGlvX3BnZXRldmVudHMpIGluIGFk
+ZGl0aW9uIHRvIHRoZSBleGlzdGluZyBuYXRpdmUgYW5kIGNvbXBhdA0KPiA+ID4gICAgIHZlcnNp
+b25zLiBBZGRpbmcgc3VjaCBhbiBhcGkgcmVkdWNlcyB0aGUgbG9naWMgdGhhdCB3b3VsZCBuZWVk
+IHRvDQo+ID4gPiAgICAgYmUgcmVwbGljYXRlZCBvdGhlcndpc2UuDQo+ID4NCj4gPiBBZ2Fpbiwg
+SSBuZWVkIHRvIHJlLWNoZWNrLCB3aWxsIGNvbnRpbnVlIHRvbW9ycm93LiBCdXQgc28gZmFyIEkg
+YW0gbm90IHN1cmUNCj4gPiB0aGlzIGhlbHBlciBjYW4gYWN0dWFsbHkgaGVscC4NCj4gPg0KPiA+
+ID4gPiAtLS0gYS9mcy9ldmVudHBvbGwuYw0KPiA+ID4gPiArKysgYi9mcy9ldmVudHBvbGwuYw0K
+PiA+ID4gPiBAQCAtMjMxOCwxOSArMjMxOCwxOSBAQCBTWVNDQUxMX0RFRklORTYoZXBvbGxfcHdh
+aXQsIGludCwgZXBmZCwgc3RydWN0IGVwb2xsX2V2ZW50IF9fdXNlciAqLA0KPiBldmVudHMsDQo+
+ID4gPiA+ICAgICAgICBzaXplX3QsIHNpZ3NldHNpemUpDQo+ID4gPiA+IHsNCj4gPiA+ID4gICAg
+aW50IGVycm9yOw0KPiA+ID4gPiAtICAgIHNpZ3NldF90IGtzaWdtYXNrLCBzaWdzYXZlZDsNCj4g
+PiA+ID4NCj4gPiA+ID4gICAgLyoNCj4gPiA+ID4gICAgICogSWYgdGhlIGNhbGxlciB3YW50cyBh
+IGNlcnRhaW4gc2lnbmFsIG1hc2sgdG8gYmUgc2V0IGR1cmluZyB0aGUgd2FpdCwNCj4gPiA+ID4g
+ICAgICogd2UgYXBwbHkgaXQgaGVyZS4NCj4gPiA+ID4gICAgICovDQo+ID4gPiA+IC0gICAgZXJy
+b3IgPSBzZXRfdXNlcl9zaWdtYXNrKHNpZ21hc2ssICZrc2lnbWFzaywgJnNpZ3NhdmVkLCBzaWdz
+ZXRzaXplKTsNCj4gPiA+ID4gKyAgICBlcnJvciA9IHNldF91c2VyX3NpZ21hc2soc2lnbWFzaywg
+c2lnc2V0c2l6ZSk7DQo+ID4gPiA+ICAgIGlmIChlcnJvcikNCj4gPiA+ID4gICAgICAgIHJldHVy
+biBlcnJvcjsNCj4gPiA+ID4NCj4gPiA+ID4gICAgZXJyb3IgPSBkb19lcG9sbF93YWl0KGVwZmQs
+IGV2ZW50cywgbWF4ZXZlbnRzLCB0aW1lb3V0KTsNCj4gPiA+ID4NCj4gPiA+ID4gLSAgICByZXN0
+b3JlX3VzZXJfc2lnbWFzayhzaWdtYXNrLCAmc2lnc2F2ZWQpOw0KPiA+ID4gPiArICAgIGlmIChl
+cnJvciAhPSAtRUlOVFIpDQo+ID4gPg0KPiA+ID4gQXMgeW91IGFkZHJlc3MgYWxsIHRoZSBvdGhl
+ciBzeXNjYWxscyB0aGlzIGNvbmRpdGlvbiBiZWNvbWVzIG1vcmUgYW5kDQo+ID4gPiBtb3JlIGNv
+bXBsaWNhdGVkLg0KPiA+DQo+ID4gTWF5IGJlLg0KPiA+DQo+ID4gPiA+IC0tLSBhL2luY2x1ZGUv
+bGludXgvc2NoZWQvc2lnbmFsLmgNCj4gPiA+ID4gKysrIGIvaW5jbHVkZS9saW51eC9zY2hlZC9z
+aWduYWwuaA0KPiA+ID4gPiBAQCAtNDE2LDcgKzQxNiw2IEBAIHZvaWQgdGFza19qb2luX2dyb3Vw
+X3N0b3Aoc3RydWN0IHRhc2tfc3RydWN0ICp0YXNrKTsNCj4gPiA+ID4gc3RhdGljIGlubGluZSB2
+b2lkIHNldF9yZXN0b3JlX3NpZ21hc2sodm9pZCkNCj4gPiA+ID4gew0KPiA+ID4gPiAgICBzZXRf
+dGhyZWFkX2ZsYWcoVElGX1JFU1RPUkVfU0lHTUFTSyk7DQo+ID4gPiA+IC0gICAgV0FSTl9PTigh
+dGVzdF90aHJlYWRfZmxhZyhUSUZfU0lHUEVORElORykpOw0KPiA+ID4NCj4gPiA+IFNvIHlvdSBh
+bHdheXMgd2FudCBkb19zaWduYWwoKSB0byBiZSBjYWxsZWQ/DQo+ID4NCj4gPiBXaHkgZG8geW91
+IHRoaW5rIHNvPyBOby4gVGhpcyBpcyBqdXN0IHRvIGF2b2lkIHRoZSB3YXJuaW5nLCBiZWNhdXNl
+IHdpdGggdGhlDQo+ID4gcGF0Y2ggSSBzZW50IHNldF9yZXN0b3JlX3NpZ21hc2soKSBpcyBjYWxs
+ZWQgImluIGFkdmFuY2UiLg0KPiA+DQo+ID4gPiBZb3Ugd2lsbCBoYXZlIHRvIGNoZWNrIGVhY2gg
+YXJjaGl0ZWN0dXJlJ3MgaW1wbGVtZW50YXRpb24gb2YNCj4gPiA+IGRvX3NpZ25hbCgpIHRvIGNo
+ZWNrIGlmIHRoYXQgaGFzIGFueSBzaWRlIGVmZmVjdHMuDQo+ID4NCj4gPiBJIGRvbid0IHRoaW5r
+IHNvLg0KPiANCj4gV2h5IG5vdD8NCj4gDQo+ID4gPiBBbHRob3VnaCB0aGlzIGlzIG5vdCB3aGF0
+IHRoZSBwYXRjaCBpcyBzb2x2aW5nLg0KPiA+DQo+ID4gU3VyZS4gQnV0IHlvdSBrbm93LCBhZnRl
+ciBJIHRyaWVkIHRvIHJlYWQgdGhlIGNoYW5nZWxvZywgSSBhbSBub3Qgc3VyZQ0KPiA+IEkgdW5k
+ZXJzdGFuZCB3aGF0IGV4YWN0bHkgeW91IGFyZSB0cnlpbmcgdG8gZml4LiBDb3VsZCB5b3UgcGxl
+YXNlIGV4cGxhaW4NCj4gPiB0aGlzIHBhcnQNCj4gPg0KPiA+ICAgICAgICAgVGhlIGJlaGF2aW9y
+DQo+ID4gICAgICAgICBiZWZvcmUgODU0YTZlZDU2ODM5YSB3YXMgdGhhdCB0aGUgc2lnbmFscyB3
+ZXJlIGRyb3BwZWQgYWZ0ZXIgdGhlIGVycm9yDQo+ID4gICAgICAgICBjb2RlIHdhcyBkZWNpZGVk
+LiBUaGlzIHJlc3VsdGVkIGluIGxvc3Qgc2lnbmFscyBidXQgdGhlIHVzZXJzcGFjZSBkaWQgbm90
+DQo+ID4gICAgICAgICBub3RpY2UgaXQNCj4gPg0KPiA+ID8gSSBmYWlsIHRvIHVuZGVyc3RhbmQg
+aXQsIHNvcnJ5LiBJdCBsb29rcyBhcyBpZiB0aGUgY29kZSB3YXMgYWxyZWFkeSBidWdneSBiZWZv
+cmUNCj4gPiB0aGF0IGNvbW1pdCBhbmQgaXQgY291bGQgbWlzcyBhIHNpZ25hbCBvciBzb21ldGhp
+bmcgbGlrZSB0aGlzLCBidXQgSSBkbyBub3Qgc2VlIGhvdy4NCj4gDQo+IERpZCB5b3UgcmVhZCB0
+aGUgZXhwbGFuYXRpb24gcG9pbnRlZCB0byBpbiB0aGUgY29tbWl0IHRleHQ/IDoNCj4gDQo+IGh0
+dHBzOi8vbG9yZS5rZXJuZWwub3JnL2xpbnV4LWZzZGV2ZWwvMjAxOTA0MjcwOTMzMTkuc2dpY3Fp
+azJvcWtlejN3a0BkY3ZyLw0KPiANCj4gTGV0IG1lIGtub3cgd2hhdCBwYXJ0IHlvdSBkb24ndCB1
+bmRlcnN0YW5kIGFuZCBJIGNhbiBleHBsYWluIG1vcmUuDQo+IA0KPiBJdCB3b3VsZCBiZSBiZXR0
+ZXIgdG8gdW5kZXJzdGFuZCB0aGUgaXNzc3VlIGJlZm9yZSB3ZSBzdGFydCBkaXNjdXNzaW5nIHRo
+ZSBmaXguDQoNCg0KSSdtIGNvbmZ1c2VkLi4uDQpJIHRob3VnaHQ6DQoNCkVJTlRSIHNob3VsZCBv
+bmx5IGJlIHJldHVybmVkIGlmIGEgYmxvY2tpbmcgc2xlZXAgKGVnIGluIGRvX2Vwb2xsX3dhaXQo
+KSBpdHNlbGYpDQp3YXMgaW50ZXJydXB0ZWQgYnkgYSBzaWduYWwgdGhhdCB3YXMgZW5hYmxlZCBh
+dCB0aGUgdGltZSBvZiB0aGUgc2xlZXAuDQoNClRoZSBoYW5kbGVycyBmb3IgYWxsIHVuYmxvY2tl
+ZCBzaWduYWxzIHNob3VsZCBiZSBydW4gb24gcmV0dXJuIHRvIHVzZXIuDQpUaGlzIGlzIGFmdGVy
+IHRoZSBtYXNrIGhhcyBiZWVuIHJlc3RvcmVkIGFuZCByZWdhcmRsZXNzIG9mIHRoZSBlcnJvciBj
+b2RlLg0KDQpTbyBlcG9sbCgpIGNhbiByZXR1cm4gJ3N1Y2Nlc3MnIG9yICd0aW1lb3V0JyAoZXRj
+KSBhbmQgdGhlIGhhbmRsZXIgZm9yIFNJR19VUkcNCnNob3VsZCBzdGlsbCBiZSBjYWxsZWQuDQpU
+aGlzIGlzIGV4YWN0bHkgZXF1aXZhbGVudCB0byB0aGUgaW50ZXJydXB0IHRoYXQgZ2VuZXJhdGVz
+IHRoZSBzaWduYWwgaGFwcGVuaW5nDQpqdXN0IGFmdGVyIHRoZSAncmV0dXJuIHRvIHVzZXInIG9m
+IHRoZSBzeXN0ZW0gY2FsbC4NCg0KCURhdmlkDQoNCi0NClJlZ2lzdGVyZWQgQWRkcmVzcyBMYWtl
+c2lkZSwgQnJhbWxleSBSb2FkLCBNb3VudCBGYXJtLCBNaWx0b24gS2V5bmVzLCBNSzEgMVBULCBV
+Sw0KUmVnaXN0cmF0aW9uIE5vOiAxMzk3Mzg2IChXYWxlcykNCg==
 
-On 23.05.2019 10:02, Andreas Oetken wrote:
-
-> Don't prune master node in the hsr_prune_nodes function.
-> Neither time_in[HSR_PT_SLAVE_A], nor time_in[HSR_PT_SLAVE_B],
-> will ever be updated by hsr_register_frame_in for the master port.
-> Thus the master node will be repeatedly pruned leading to
-> repeated packet loss.
-> This bug never appeared because the hsr_prune_nodes function
-> was only called once. Since commit 5150b45fd355
-> ("net: hsr: Fix node prune function for forget time expiry") this issue
-> is fixed unvealing the issue described above.
-            ^^^^^^^^^
-    My spellchecker trips on this word. I think it should be either 
-"unveiling" or "revealing"...
-
->  Fixes: 5150b45fd355 ("net: hsr: Fix node prune function for forget time expiry")
-> Signed-off-by: Andreas Oetken <andreas.oetken@siemens.com>
-> Tested-by: Murali Karicheri <m-karicheri2@ti.com>
-[...]
-
-MBR, Sergei
