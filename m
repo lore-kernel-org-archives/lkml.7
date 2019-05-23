@@ -2,100 +2,70 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5B40C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 16:54:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50325C282E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 16:54:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DB9621773
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 16:54:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558630470;
-	bh=gFMSCvOoFs6DdCkevFbuQW1+KGO3T+X8fVWaMcoMs2Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=U8pjZUF7GKwlSmf/TIOgoKK3MMWi3FWrpOmYTN2/s6NOJ3eKAQdMqNOaNkktTK4pO
-	 j0E9O0qf1lCI+p/pB6oIKV7fBlnzWorPMApZfttF9Cbk1BJEBmuyEMBeTKjR5/0l88
-	 j5bHU2CKczV2pWwyz0pjXvLWHTTk5UuQZqU3mzyc=
+	by mail.kernel.org (Postfix) with ESMTP id 2EE2A2133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 16:54:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731170AbfEWQy2 (ORCPT
+        id S1731234AbfEWQyj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 12:54:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37228 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 12:54:39 -0400
+Received: from namei.org ([65.99.196.166]:34068 "EHLO namei.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730790AbfEWQy1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 12:54:27 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C1E12133D;
-        Thu, 23 May 2019 16:54:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558630466;
-        bh=gFMSCvOoFs6DdCkevFbuQW1+KGO3T+X8fVWaMcoMs2Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BdRtwwLHom73mP48vZGqdwC5nVKgUXI53YjFzBTB71Uh3f5OQL2zQ43rNfTAtC+cj
-         jxxuRgNp1e4HeuLNRLNqUnAnROtcgfa7Zqb7eUJeAafTMXtGZsGJF3kvCsK7JT6SZD
-         vtinHCcVib/eLnkmonHo0UdIQ0c/2PA4E4E1yPys=
-Date:   Thu, 23 May 2019 18:54:24 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Scott Branden <scott.branden@broadcom.com>
-Cc:     Luis Chamberlain <mcgrof@kernel.org>,
-        Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCH 2/3] firmware: add offset to request_firmware_into_buf
-Message-ID: <20190523165424.GA21048@kroah.com>
-References: <20190523025113.4605-1-scott.branden@broadcom.com>
- <20190523025113.4605-3-scott.branden@broadcom.com>
- <20190523055233.GB22946@kroah.com>
- <15c47e4d-e70d-26bb-9747-0ad0aa81597b@broadcom.com>
+        id S1730790AbfEWQyj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 12:54:39 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by namei.org (8.14.4/8.14.4) with ESMTP id x4NGsKW4031672;
+        Thu, 23 May 2019 16:54:20 GMT
+Date:   Fri, 24 May 2019 02:54:20 +1000 (AEST)
+From:   James Morris <jmorris@namei.org>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+cc:     Matthew Garrett <matthewgarrett@google.com>,
+        linux-integrity@vger.kernel.org, peterhuewe@gmx.de, jgg@ziepe.ca,
+        roberto.sassu@huawei.com, linux-efi@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, tweek@google.com, bsz@semihalf.com
+Subject: Re: [PATCH V7 0/4] Add support for crypto agile logs
+In-Reply-To: <20190523122610.GA12327@linux.intel.com>
+Message-ID: <alpine.LRH.2.21.1905240252440.31508@namei.org>
+References: <20190520205501.177637-1-matthewgarrett@google.com> <20190523121449.GA9997@linux.intel.com> <20190523122610.GA12327@linux.intel.com>
+User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <15c47e4d-e70d-26bb-9747-0ad0aa81597b@broadcom.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 09:36:02AM -0700, Scott Branden wrote:
-> Hi Greg,
+On Thu, 23 May 2019, Jarkko Sakkinen wrote:
+
+> On Thu, May 23, 2019 at 03:14:49PM +0300, Jarkko Sakkinen wrote:
+> > On Mon, May 20, 2019 at 01:54:57PM -0700, Matthew Garrett wrote:
+> > > Identical to previous version except without the KSAN workaround - Ard
+> > > has a better solution for that.
+> > 
+> > 
+> > Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> > Tested-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 > 
-> On 2019-05-22 10:52 p.m., Greg Kroah-Hartman wrote:
-> > On Wed, May 22, 2019 at 07:51:12PM -0700, Scott Branden wrote:
-> > > Add offset to request_firmware_into_buf to allow for portions
-> > > of firmware file to be read into a buffer.  Necessary where firmware
-> > > needs to be loaded in portions from file in memory constrained systems.
-> > > 
-> > > Signed-off-by: Scott Branden <scott.branden@broadcom.com>
-> > > ---
-> > >   drivers/base/firmware_loader/firmware.h |  5 +++
-> > >   drivers/base/firmware_loader/main.c     | 49 +++++++++++++++++--------
-> > >   include/linux/firmware.h                |  8 +++-
-> > >   3 files changed, 45 insertions(+), 17 deletions(-)
-> > No new firmware test for this new option?  How do we know it even works?
-> 
-> I was unaware there are existing firmware tests.  Please let me know where
-> these tests exists and I can add a test for this new option.
+> Only applied to my master at this point becaues the patches from
+> my earlier PRs are not yet mirrored to security/next-general.
 
-tools/testing/selftests/firmware/
+Which PRs are these?
 
-> We have tested this with a new driver in development which requires the
-> firmware file to be read in portions into memory.  I can add my tested-by
-> and others to the commit message if desired.
+btw, Linus wants security subsystem maintainers to submit PRs directly to 
+him from now on.
 
-I can't take new apis without an in-kernel user, you all know this...
+I'll only be carrying patches for the core LSM and new security mechanisms 
+before they're merged and have a maintainer assigned.
 
-thanks,
 
-greg k-h
+-- 
+James Morris
+<jmorris@namei.org>
+
