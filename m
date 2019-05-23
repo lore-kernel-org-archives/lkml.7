@@ -2,78 +2,98 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A73AC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:07:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DC58C282E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:08:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E7F72133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:07:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="Mey49fOA"
+	by mail.kernel.org (Postfix) with ESMTP id 1BA91217D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:08:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558638495;
+	bh=33G58YR+16EHvNo+jVGF2xS+GJFDlcqpbp4ZAZXzQYo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=pcD0Sl5+9k2iZ2dSQiWb5plS/MJVBLqWnH+QAJpoxpLo05HNC/3JtVF+2V+wMNi62
+	 3qJjTjFfTVrMnDuS41MplfMkfSE47vk+lAne2ZxAAJQNXWiaTYQ6/yuBHuIpsNEjbQ
+	 WQrgozO3elpq3t+nXccHibRVWtnGe96Z7bZwcwjs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731590AbfEWTHP (ORCPT
+        id S1731654AbfEWTIO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:07:15 -0400
-Received: from knopi.disroot.org ([178.21.23.139]:35012 "EHLO
-        knopi.disroot.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731464AbfEWTHP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:07:15 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by disroot.org (Postfix) with ESMTP id 1DBEA31D51;
-        Thu, 23 May 2019 21:07:13 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at disroot.org
-Received: from knopi.disroot.org ([127.0.0.1])
-        by localhost (disroot.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 73kF_Qb1l6j5; Thu, 23 May 2019 21:07:11 +0200 (CEST)
-From:   Daniel Smith <danct12@disroot.org>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-        t=1558638431; bh=80tieOKqOyKyqCagUUFd4AVkjajAKOxE5qwgMUdCc58=;
-        h=From:To:Cc:Subject:Date;
-        b=Mey49fOAHRSXSrpxL2YMBQRq8r9++pUFZ5Huo1dDnMmXwlgzfb5n0Pb4WFYjUM+cL
-         K40RF9kLyz2jJW3J9csP5eYf8XEElUxBerX3V8gc0usdGsTk+tH2V4OtHAIscUL+iZ
-         HoNKURRjBBlXkAeFhYGIDsGuO0Py7D3vRs5Q2+3+DlHju8CvQBF9pO/8dUFc8nnScx
-         EhRILEKT1y6dWoNee2m1YQpZC1MJfi3AApT2JDKXCMmDNCRRShGYkg9Ahcgu17LRps
-         0EHUfRgSQVSD1EpVaJGus77rXpmlt6I/rkld0A3D1BVBs4YMa+6yXR/Nc06ikRee2Z
-         0h4YX7mZnjlMA==
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Daniel Smith <danct12@disroot.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] input: silead: Add MSSL0017 to acpi_device_id.
-Date:   Fri, 24 May 2019 02:06:59 +0700
-Message-Id: <20190523190659.3117-1-danct12@disroot.org>
-Mime-Version: 1.0
+        Thu, 23 May 2019 15:08:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40900 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731464AbfEWTIO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:08:14 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 020732133D;
+        Thu, 23 May 2019 19:08:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558638493;
+        bh=33G58YR+16EHvNo+jVGF2xS+GJFDlcqpbp4ZAZXzQYo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=wcF4OdILkHkeANFSdoL3C9fhC+zTHAl/tLOFmK91R+AXzB4cJONafVsXPrycaFX0c
+         ymQ5PZaXRD3IxFBuH6JwZ9lLKoYDPj3CSkKSpgsSFsV0da92Gp2nxPRaDq8D+SyzdR
+         /JhZwyxv45Qr/bWUnKe25ThEEiSajeamtNCjIkxo=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 01/53] net: avoid weird emergency message
+Date:   Thu, 23 May 2019 21:05:25 +0200
+Message-Id: <20190523181711.173625689@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190523181710.981455400@linuxfoundation.org>
+References: <20190523181710.981455400@linuxfoundation.org>
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Chuwi Hi10 Plus, the Silead device id is MSSL0017.
+From: Eric Dumazet <edumazet@google.com>
 
-Signed-off-by: Daniel Smith <danct12@disroot.org>
+[ Upstream commit d7c04b05c9ca14c55309eb139430283a45c4c25f ]
+
+When host is under high stress, it is very possible thread
+running netdev_wait_allrefs() returns from msleep(250)
+10 seconds late.
+
+This leads to these messages in the syslog :
+
+[...] unregister_netdevice: waiting for syz_tun to become free. Usage count = 0
+
+If the device refcount is zero, the wait is over.
+
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/input/touchscreen/silead.c | 1 +
- 1 file changed, 1 insertion(+)
+ net/core/dev.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/input/touchscreen/silead.c b/drivers/input/touchscreen/silead.c
-index 09241d4cdebc..06f0eb04a8fd 100644
---- a/drivers/input/touchscreen/silead.c
-+++ b/drivers/input/touchscreen/silead.c
-@@ -617,6 +617,7 @@ static const struct acpi_device_id silead_ts_acpi_match[] = {
- 	{ "MSSL1680", 0 },
- 	{ "MSSL0001", 0 },
- 	{ "MSSL0002", 0 },
-+	{ "MSSL0017", 0 },
- 	{ }
- };
- MODULE_DEVICE_TABLE(acpi, silead_ts_acpi_match);
--- 
-2.21.0
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -7499,7 +7499,7 @@ static void netdev_wait_allrefs(struct n
+ 
+ 		refcnt = netdev_refcnt_read(dev);
+ 
+-		if (time_after(jiffies, warning_time + 10 * HZ)) {
++		if (refcnt && time_after(jiffies, warning_time + 10 * HZ)) {
+ 			pr_emerg("unregister_netdevice: waiting for %s to become free. Usage count = %d\n",
+ 				 dev->name, refcnt);
+ 			warning_time = jiffies;
+
 
