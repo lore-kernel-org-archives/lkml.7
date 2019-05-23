@@ -7,42 +7,42 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DAADC04AAC
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 07:39:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 460CCC282DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 07:39:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A87252133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 07:39:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 095112075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 07:39:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="DJWNWDpi"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="mZSR9f3k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730670AbfEWHjJ (ORCPT
+        id S1730007AbfEWHha (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 03:39:09 -0400
-Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:43558 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730028AbfEWHha (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 May 2019 03:37:30 -0400
+Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:46686 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726309AbfEWHh3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 03:37:29 -0400
 Received: from mailhost.synopsys.com (dc2-mailhost2.synopsys.com [10.12.135.162])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 8FCD9C018B;
-        Thu, 23 May 2019 07:37:37 +0000 (UTC)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 831E3C0095;
+        Thu, 23 May 2019 07:37:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1558597057; bh=LkEzbueEZM+9KXgn+A8Cco7C+QnrFO7jYLfUbPJFGl4=;
+        t=1558597035; bh=pP5DR9i3AWyLzsZCvhK9gxgeY8E2DkEss6ulcg1/dFg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=DJWNWDpibe8Dd//0O+v5pqi5tNTO025vipglAOuZBL4DpHy8AeAUbQjjc02+1WIUS
-         rp7bVncYRwlTvVqp+rrQuZkxXiroARRq4IAZoJxkq7s/L/Th+1+Su4RUg+ARmDQw0I
-         lU0rYHaJlpjLwcMhEVlubb28FMBMBsPby04LdSyZM7rwJmHKoQXh42dloHCaZ4F4G2
-         4EXTOu1PIZUIFHan59hlw/oB1Rxys+VAxWxgQkt3vF8Zk4qpEJm3bOtrUQiNO6PYMw
-         /IqTAxt3U1DuVeap0lUROWG3JhG9I4IaFND/pVyOaA+BXX3tGyt66Hdr0RkY4XrJRv
-         RQFaxnkX7+JAw==
-Received: from de02.synopsys.com (germany.internal.synopsys.com [10.225.17.21])
-        by mailhost.synopsys.com (Postfix) with ESMTP id E80F9A0095;
-        Thu, 23 May 2019 07:37:29 +0000 (UTC)
+        b=mZSR9f3kiHtjQIrqbVtyFlfUrtPrp5E2sP7EgKrfWx5qY5Oi3ix7HXRI0nhFNoeIe
+         dqhHiI7K70UopjKObihk3RjtWqbcywS1iN9bphjIsF9/9oDwy46j56wahXbkHUIdAC
+         GcHEWSOCYDALcEwNuIXqGoguwiwNmpKkbAWFX4i0zDHWmkK66YHdkr+tzPa9ZcDqcD
+         Reab0W6uycxrIRDc6RgJc7QY3lHlGtnu1obv7kzYtzlDcgp4utVdl74WqURBF3aBOe
+         aXSd+ezEvuhN4I8BUqr/Wbq+nxgosCz52VfsLE1RAlnno23tf7hEq9+tvYig1SsVCI
+         xxFz3l4XCuLSA==
+Received: from de02.synopsys.com (de02.internal.synopsys.com [10.225.17.21])
+        by mailhost.synopsys.com (Postfix) with ESMTP id E625BA00A0;
+        Thu, 23 May 2019 07:37:28 +0000 (UTC)
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by de02.synopsys.com (Postfix) with ESMTP id 601703D947;
+        by de02.synopsys.com (Postfix) with ESMTP id 172153D93B;
         Thu, 23 May 2019 09:37:28 +0200 (CEST)
 From:   Jose Abreu <Jose.Abreu@synopsys.com>
 To:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org
@@ -50,10 +50,11 @@ Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
         Joao Pinto <Joao.Pinto@synopsys.com>,
         "David S . Miller" <davem@davemloft.net>,
         Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>
-Subject: [PATCH net-next 07/18] net: stmmac: Switch MMC functions to HWIF callbacks
-Date:   Thu, 23 May 2019 09:36:57 +0200
-Message-Id: <127d1c1b620cac7aa0dd5f0f3c6899abc6369e84.1558596600.git.joabreu@synopsys.com>
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Corentin Labbe <clabbe.montjoie@gmail.com>
+Subject: [PATCH net-next 03/18] net: stmmac: dwmac1000: Add MAC loopback support
+Date:   Thu, 23 May 2019 09:36:53 +0200
+Message-Id: <2d2987abead97d9ce2ca82cdf543bce06bb63b1d.1558596600.git.joabreu@synopsys.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1558596599.git.joabreu@synopsys.com>
 References: <cover.1558596599.git.joabreu@synopsys.com>
@@ -64,246 +65,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-XGMAC has a different MMC module. Lets use HWIF callbacks for MMC module
-so that correct callbacks are automatically selected.
+In preparation for the addition of stmmac selftests we implement the MAC
+loopback callback in dwmac1000 core.
 
 Signed-off-by: Jose Abreu <joabreu@synopsys.com>
 Cc: Joao Pinto <jpinto@synopsys.com>
 Cc: David S. Miller <davem@davemloft.net>
 Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
 Cc: Alexandre Torgue <alexandre.torgue@st.com>
+Cc: Corentin Labbe <clabbe.montjoie@gmail.com>
 ---
- drivers/net/ethernet/stmicro/stmmac/common.h         |  1 +
- drivers/net/ethernet/stmicro/stmmac/hwif.c           |  9 +++++++++
- drivers/net/ethernet/stmicro/stmmac/hwif.h           | 17 +++++++++++++++++
- drivers/net/ethernet/stmicro/stmmac/mmc.h            |  4 ----
- drivers/net/ethernet/stmicro/stmmac/mmc_core.c       | 13 ++++++++++---
- drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c |  2 +-
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c    |  4 ++--
- 7 files changed, 40 insertions(+), 10 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/common.h b/drivers/net/ethernet/stmicro/stmmac/common.h
-index 272b9ca66314..1961fe9144ca 100644
---- a/drivers/net/ethernet/stmicro/stmmac/common.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/common.h
-@@ -424,6 +424,7 @@ struct mac_device_info {
- 	const struct stmmac_mode_ops *mode;
- 	const struct stmmac_hwtimestamp *ptp;
- 	const struct stmmac_tc_ops *tc;
-+	const struct stmmac_mmc_ops *mmc;
- 	struct mii_regs mii;	/* MII register Addresses */
- 	struct mac_link link;
- 	void __iomem *pcsr;     /* vpointer to device CSRs */
-diff --git a/drivers/net/ethernet/stmicro/stmmac/hwif.c b/drivers/net/ethernet/stmicro/stmmac/hwif.c
-index 81b966a8261b..6c61b753b55e 100644
---- a/drivers/net/ethernet/stmicro/stmmac/hwif.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/hwif.c
-@@ -81,6 +81,7 @@ static const struct stmmac_hwif_entry {
- 	const void *hwtimestamp;
- 	const void *mode;
- 	const void *tc;
-+	const void *mmc;
- 	int (*setup)(struct stmmac_priv *priv);
- 	int (*quirks)(struct stmmac_priv *priv);
- } stmmac_hw[] = {
-@@ -100,6 +101,7 @@ static const struct stmmac_hwif_entry {
- 		.hwtimestamp = &stmmac_ptp,
- 		.mode = NULL,
- 		.tc = NULL,
-+		.mmc = &dwmac_mmc_ops,
- 		.setup = dwmac100_setup,
- 		.quirks = stmmac_dwmac1_quirks,
- 	}, {
-@@ -117,6 +119,7 @@ static const struct stmmac_hwif_entry {
- 		.hwtimestamp = &stmmac_ptp,
- 		.mode = NULL,
- 		.tc = NULL,
-+		.mmc = &dwmac_mmc_ops,
- 		.setup = dwmac1000_setup,
- 		.quirks = stmmac_dwmac1_quirks,
- 	}, {
-@@ -134,6 +137,7 @@ static const struct stmmac_hwif_entry {
- 		.hwtimestamp = &stmmac_ptp,
- 		.mode = NULL,
- 		.tc = &dwmac510_tc_ops,
-+		.mmc = &dwmac_mmc_ops,
- 		.setup = dwmac4_setup,
- 		.quirks = stmmac_dwmac4_quirks,
- 	}, {
-@@ -151,6 +155,7 @@ static const struct stmmac_hwif_entry {
- 		.hwtimestamp = &stmmac_ptp,
- 		.mode = &dwmac4_ring_mode_ops,
- 		.tc = &dwmac510_tc_ops,
-+		.mmc = &dwmac_mmc_ops,
- 		.setup = dwmac4_setup,
- 		.quirks = NULL,
- 	}, {
-@@ -168,6 +173,7 @@ static const struct stmmac_hwif_entry {
- 		.hwtimestamp = &stmmac_ptp,
- 		.mode = &dwmac4_ring_mode_ops,
- 		.tc = &dwmac510_tc_ops,
-+		.mmc = &dwmac_mmc_ops,
- 		.setup = dwmac4_setup,
- 		.quirks = NULL,
- 	}, {
-@@ -185,6 +191,7 @@ static const struct stmmac_hwif_entry {
- 		.hwtimestamp = &stmmac_ptp,
- 		.mode = &dwmac4_ring_mode_ops,
- 		.tc = &dwmac510_tc_ops,
-+		.mmc = &dwmac_mmc_ops,
- 		.setup = dwmac4_setup,
- 		.quirks = NULL,
- 	}, {
-@@ -202,6 +209,7 @@ static const struct stmmac_hwif_entry {
- 		.hwtimestamp = &stmmac_ptp,
- 		.mode = NULL,
- 		.tc = &dwmac510_tc_ops,
-+		.mmc = NULL,
- 		.setup = dwxgmac2_setup,
- 		.quirks = NULL,
- 	},
-@@ -267,6 +275,7 @@ int stmmac_hwif_init(struct stmmac_priv *priv)
- 		mac->ptp = mac->ptp ? : entry->hwtimestamp;
- 		mac->mode = mac->mode ? : entry->mode;
- 		mac->tc = mac->tc ? : entry->tc;
-+		mac->mmc = mac->mmc ? : entry->mmc;
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
+index 0877bde6e860..398303c783f4 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
+@@ -499,6 +499,18 @@ static void dwmac1000_debug(void __iomem *ioaddr, struct stmmac_extra_stats *x,
+ 		x->mac_gmii_rx_proto_engine++;
+ }
  
- 		priv->hw = mac;
- 		priv->ptpaddr = priv->ioaddr + entry->regs.ptp_off;
-diff --git a/drivers/net/ethernet/stmicro/stmmac/hwif.h b/drivers/net/ethernet/stmicro/stmmac/hwif.h
-index 9a000dc31d9e..2acfbc70e3c8 100644
---- a/drivers/net/ethernet/stmicro/stmmac/hwif.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/hwif.h
-@@ -6,6 +6,7 @@
- #define __STMMAC_HWIF_H__
- 
- #include <linux/netdevice.h>
-+#include <linux/stmmac.h>
- 
- #define stmmac_do_void_callback(__priv, __module, __cname,  __arg0, __args...) \
- ({ \
-@@ -468,6 +469,21 @@ struct stmmac_tc_ops {
- #define stmmac_tc_setup_cbs(__priv, __args...) \
- 	stmmac_do_callback(__priv, tc, setup_cbs, __args)
- 
-+struct stmmac_counters;
++static void dwmac1000_set_mac_loopback(void __iomem *ioaddr, bool enable)
++{
++	u32 value = readl(ioaddr + GMAC_CONTROL);
 +
-+struct stmmac_mmc_ops {
-+	void (*ctrl)(void __iomem *ioaddr, unsigned int mode);
-+	void (*intr_all_mask)(void __iomem *ioaddr);
-+	void (*read)(void __iomem *ioaddr, struct stmmac_counters *mmc);
-+};
++	if (enable)
++		value |= GMAC_CONTROL_LM;
++	else
++		value &= ~GMAC_CONTROL_LM;
 +
-+#define stmmac_mmc_ctrl(__priv, __args...) \
-+	stmmac_do_void_callback(__priv, mmc, ctrl, __args)
-+#define stmmac_mmc_intr_all_mask(__priv, __args...) \
-+	stmmac_do_void_callback(__priv, mmc, intr_all_mask, __args)
-+#define stmmac_mmc_read(__priv, __args...) \
-+	stmmac_do_void_callback(__priv, mmc, read, __args)
++	writel(value, ioaddr + GMAC_CONTROL);
++}
 +
- struct stmmac_regs_off {
- 	u32 ptp_off;
- 	u32 mmc_off;
-@@ -486,6 +502,7 @@ extern const struct stmmac_tc_ops dwmac510_tc_ops;
- extern const struct stmmac_ops dwxgmac210_ops;
- extern const struct stmmac_dma_ops dwxgmac210_dma_ops;
- extern const struct stmmac_desc_ops dwxgmac210_desc_ops;
-+extern const struct stmmac_mmc_ops dwmac_mmc_ops;
- 
- #define GMAC_VERSION		0x00000020	/* GMAC CORE Version */
- #define GMAC4_VERSION		0x00000110	/* GMAC4+ CORE Version */
-diff --git a/drivers/net/ethernet/stmicro/stmmac/mmc.h b/drivers/net/ethernet/stmicro/stmmac/mmc.h
-index c037326331f5..e2bd90a4d34f 100644
---- a/drivers/net/ethernet/stmicro/stmmac/mmc.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/mmc.h
-@@ -128,8 +128,4 @@ struct stmmac_counters {
- 	unsigned int mmc_rx_icmp_err_octets;
+ const struct stmmac_ops dwmac1000_ops = {
+ 	.core_init = dwmac1000_core_init,
+ 	.set_mac = stmmac_set_mac,
+@@ -518,6 +530,7 @@ const struct stmmac_ops dwmac1000_ops = {
+ 	.pcs_ctrl_ane = dwmac1000_ctrl_ane,
+ 	.pcs_rane = dwmac1000_rane,
+ 	.pcs_get_adv_lp = dwmac1000_get_adv_lp,
++	.set_mac_loopback = dwmac1000_set_mac_loopback,
  };
  
--void dwmac_mmc_ctrl(void __iomem *ioaddr, unsigned int mode);
--void dwmac_mmc_intr_all_mask(void __iomem *ioaddr);
--void dwmac_mmc_read(void __iomem *ioaddr, struct stmmac_counters *mmc);
--
- #endif /* __MMC_H__ */
-diff --git a/drivers/net/ethernet/stmicro/stmmac/mmc_core.c b/drivers/net/ethernet/stmicro/stmmac/mmc_core.c
-index e9b04c28980f..b8c598125cfe 100644
---- a/drivers/net/ethernet/stmicro/stmmac/mmc_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/mmc_core.c
-@@ -20,6 +20,7 @@
- 
- #include <linux/kernel.h>
- #include <linux/io.h>
-+#include "hwif.h"
- #include "mmc.h"
- 
- /* MAC Management Counters register offset */
-@@ -128,7 +129,7 @@
- #define MMC_RX_ICMP_GD_OCTETS		0x180
- #define MMC_RX_ICMP_ERR_OCTETS		0x184
- 
--void dwmac_mmc_ctrl(void __iomem *mmcaddr, unsigned int mode)
-+static void dwmac_mmc_ctrl(void __iomem *mmcaddr, unsigned int mode)
- {
- 	u32 value = readl(mmcaddr + MMC_CNTRL);
- 
-@@ -141,7 +142,7 @@ void dwmac_mmc_ctrl(void __iomem *mmcaddr, unsigned int mode)
- }
- 
- /* To mask all all interrupts.*/
--void dwmac_mmc_intr_all_mask(void __iomem *mmcaddr)
-+static void dwmac_mmc_intr_all_mask(void __iomem *mmcaddr)
- {
- 	writel(MMC_DEFAULT_MASK, mmcaddr + MMC_RX_INTR_MASK);
- 	writel(MMC_DEFAULT_MASK, mmcaddr + MMC_TX_INTR_MASK);
-@@ -153,7 +154,7 @@ void dwmac_mmc_intr_all_mask(void __iomem *mmcaddr)
-  * counter after a read. So all the field of the mmc struct
-  * have to be incremented.
-  */
--void dwmac_mmc_read(void __iomem *mmcaddr, struct stmmac_counters *mmc)
-+static void dwmac_mmc_read(void __iomem *mmcaddr, struct stmmac_counters *mmc)
- {
- 	mmc->mmc_tx_octetcount_gb += readl(mmcaddr + MMC_TX_OCTETCOUNT_GB);
- 	mmc->mmc_tx_framecount_gb += readl(mmcaddr + MMC_TX_FRAMECOUNT_GB);
-@@ -266,3 +267,9 @@ void dwmac_mmc_read(void __iomem *mmcaddr, struct stmmac_counters *mmc)
- 	mmc->mmc_rx_icmp_gd_octets += readl(mmcaddr + MMC_RX_ICMP_GD_OCTETS);
- 	mmc->mmc_rx_icmp_err_octets += readl(mmcaddr + MMC_RX_ICMP_ERR_OCTETS);
- }
-+
-+const struct stmmac_mmc_ops dwmac_mmc_ops = {
-+	.ctrl = dwmac_mmc_ctrl,
-+	.intr_all_mask = dwmac_mmc_intr_all_mask,
-+	.read = dwmac_mmc_read,
-+};
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c
-index 3c749c327cbd..b9f29df7e98a 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c
-@@ -537,7 +537,7 @@ static void stmmac_get_ethtool_stats(struct net_device *dev,
- 	if (ret) {
- 		/* If supported, for new GMAC chips expose the MMC counters */
- 		if (priv->dma_cap.rmon) {
--			dwmac_mmc_read(priv->mmcaddr, &priv->mmc);
-+			stmmac_mmc_read(priv, priv->mmcaddr, &priv->mmc);
- 
- 			for (i = 0; i < STMMAC_MMC_STATS_LEN; i++) {
- 				char *p;
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index 5ab2733e15e2..571b4a619ed6 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -2128,10 +2128,10 @@ static void stmmac_mmc_setup(struct stmmac_priv *priv)
- 	unsigned int mode = MMC_CNTRL_RESET_ON_READ | MMC_CNTRL_COUNTER_RESET |
- 			    MMC_CNTRL_PRESET | MMC_CNTRL_FULL_HALF_PRESET;
- 
--	dwmac_mmc_intr_all_mask(priv->mmcaddr);
-+	stmmac_mmc_intr_all_mask(priv, priv->mmcaddr);
- 
- 	if (priv->dma_cap.rmon) {
--		dwmac_mmc_ctrl(priv->mmcaddr, mode);
-+		stmmac_mmc_ctrl(priv, priv->mmcaddr, mode);
- 		memset(&priv->mmc, 0, sizeof(struct stmmac_counters));
- 	} else
- 		netdev_info(priv->dev, "No MAC Management Counters available\n");
+ int dwmac1000_setup(struct stmmac_priv *priv)
 -- 
 2.7.4
 
