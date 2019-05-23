@@ -7,56 +7,52 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D58BC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:19:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5743C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:19:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8469205ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:19:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D89B217D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:19:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639187;
-	bh=6iyfwPKAbzU3TmzNWS+7v0/dlkiVwbpQX5lTsHKyZ7Y=;
+	s=default; t=1558639189;
+	bh=cxORtVLZP9N1JgEBSLNHRer0WoQk/Htx/XhE4ha/v+c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SEFeCHqgPpsA3uJcai/ir+lkadAidXBcW7FaJMrv/Z0yJqudgmWsEoqNj8f6rChFm
-	 GjHec+b5G7V7P4L0wHtuWgIhNXQYP2wGckQmoHPwVKW96GKH46luUm8ujj6KNl4tYX
-	 AW8tl3vYHkNwyxl1bT8WqjEg39BL37WmAHbEQM78=
+	b=y6b/s/hE1D39sww2ExdeEru84Wq4QMjjyQt1AUIBjVIyjo3qai0aoObIZRHSoZjMd
+	 EolbIja9zaXfC0viEc4CXa7k2XGNMdaUQ+NlzHiu3JlhooIrKUWSTSUxFyUH/nuhUT
+	 GedDOxkK+zAZLbxTOk141MttHi9noeNpi1nv8c7c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389896AbfEWTTq (ORCPT
+        id S2389907AbfEWTTs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:19:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55892 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:19:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388715AbfEWTTl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:19:41 -0400
+        id S2389233AbfEWTTo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:19:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2D1D205ED;
-        Thu, 23 May 2019 19:19:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A960021855;
+        Thu, 23 May 2019 19:19:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639180;
-        bh=6iyfwPKAbzU3TmzNWS+7v0/dlkiVwbpQX5lTsHKyZ7Y=;
+        s=default; t=1558639183;
+        bh=cxORtVLZP9N1JgEBSLNHRer0WoQk/Htx/XhE4ha/v+c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ug0UfAVpOqEqkZ4iaHlpJ5NYMyklyvwQYNETfOcQataiZUXANVo6K2o7RhbW8MGVm
-         GXCweDH6+YZax6b2n75qn56Lh2/iAuqlRBmM3l6/lfTWzB7T5vlre6tIVwJmfHjOoA
-         WCK2c2FErLTK/GN42RP92195y8kq79LzRUQ+iS54=
+        b=dDymJIc3eNAtzSGSG3BrlDYR+J0N0Que0hHFrqn01JEzCz573Lop98KAQ3KegQCQJ
+         j39EDYNbmpW9NDlQJx9v42fHkftjXeDpXht8E6Tizasmd83elZ1UNTdfPcuJAMwV+6
+         klfkddFLlyxqb1DeHmeL5cHQ7A3OoCByykfL0Qmg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mikael Magnusson <mikael.kernel@lists.m7n.se>,
-        Wei Wang <weiwan@google.com>, Martin Lau <kafai@fb.com>,
-        Eric Dumazet <edumazet@google.com>,
+        stable@vger.kernel.org, Sabrina Dubroca <sd@queasysnail.net>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
         "David S. Miller" <davem@davemloft.net>,
-        David Ahern <dsahern@gmail.com>
-Subject: [PATCH 5.0 001/139] ipv6: fix src addr routing with the exception table
-Date:   Thu, 23 May 2019 21:04:49 +0200
-Message-Id: <20190523181720.358465447@linuxfoundation.org>
+        Dan Winship <danw@redhat.com>
+Subject: [PATCH 5.0 010/139] rtnetlink: always put IFLA_LINK for links with a link-netnsid
+Date:   Thu, 23 May 2019 21:04:58 +0200
+Message-Id: <20190523181721.745802042@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181720.120897565@linuxfoundation.org>
 References: <20190523181720.120897565@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -65,137 +61,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Wang <weiwan@google.com>
+From: Sabrina Dubroca <sd@queasysnail.net>
 
-[ Upstream commit 510e2ceda031eed97a7a0f9aad65d271a58b460d ]
+[ Upstream commit feadc4b6cf42a53a8a93c918a569a0b7e62bd350 ]
 
-When inserting route cache into the exception table, the key is
-generated with both src_addr and dest_addr with src addr routing.
-However, current logic always assumes the src_addr used to generate the
-key is a /128 host address. This is not true in the following scenarios:
-1. When the route is a gateway route or does not have next hop.
-   (rt6_is_gw_or_nonexthop() == false)
-2. When calling ip6_rt_cache_alloc(), saddr is passed in as NULL.
-This means, when looking for a route cache in the exception table, we
-have to do the lookup twice: first time with the passed in /128 host
-address, second time with the src_addr stored in fib6_info.
+Currently, nla_put_iflink() doesn't put the IFLA_LINK attribute when
+iflink == ifindex.
 
-This solves the pmtu discovery issue reported by Mikael Magnusson where
-a route cache with a lower mtu info is created for a gateway route with
-src addr. However, the lookup code is not able to find this route cache.
+In some cases, a device can be created in a different netns with the
+same ifindex as its parent. That device will not dump its IFLA_LINK
+attribute, which can confuse some userspace software that expects it.
+For example, if the last ifindex created in init_net and foo are both
+8, these commands will trigger the issue:
 
-Fixes: 2b760fcf5cfb ("ipv6: hook up exception table to store dst cache")
-Reported-by: Mikael Magnusson <mikael.kernel@lists.m7n.se>
-Bisected-by: David Ahern <dsahern@gmail.com>
-Signed-off-by: Wei Wang <weiwan@google.com>
-Cc: Martin Lau <kafai@fb.com>
-Cc: Eric Dumazet <edumazet@google.com>
-Acked-by: Martin KaFai Lau <kafai@fb.com>
+    ip link add parent type dummy                   # ifindex 9
+    ip link add link parent netns foo type macvlan  # ifindex 9 in ns foo
+
+So, in case a device puts the IFLA_LINK_NETNSID attribute in a dump,
+always put the IFLA_LINK attribute as well.
+
+Thanks to Dan Winship for analyzing the original OpenShift bug down to
+the missing netlink attribute.
+
+v2: change Fixes tag, it's been here forever, as Nicolas Dichtel said
+    add Nicolas' ack
+v3: change Fixes tag
+    fix subject typo, spotted by Edward Cree
+
+Analyzed-by: Dan Winship <danw@redhat.com>
+Fixes: d8a5ec672768 ("[NET]: netlink support for moving devices between network namespaces.")
+Signed-off-by: Sabrina Dubroca <sd@queasysnail.net>
+Acked-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv6/route.c |   51 +++++++++++++++++++++++++++------------------------
- 1 file changed, 27 insertions(+), 24 deletions(-)
+ net/core/rtnetlink.c |   16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
---- a/net/ipv6/route.c
-+++ b/net/ipv6/route.c
-@@ -110,8 +110,8 @@ static int rt6_fill_node(struct net *net
- 			 int iif, int type, u32 portid, u32 seq,
- 			 unsigned int flags);
- static struct rt6_info *rt6_find_cached_rt(struct fib6_info *rt,
--					   struct in6_addr *daddr,
--					   struct in6_addr *saddr);
-+					   const struct in6_addr *daddr,
-+					   const struct in6_addr *saddr);
- 
- #ifdef CONFIG_IPV6_ROUTE_INFO
- static struct fib6_info *rt6_add_route_info(struct net *net,
-@@ -1529,31 +1529,44 @@ out:
-  * Caller has to hold rcu_read_lock()
-  */
- static struct rt6_info *rt6_find_cached_rt(struct fib6_info *rt,
--					   struct in6_addr *daddr,
--					   struct in6_addr *saddr)
-+					   const struct in6_addr *daddr,
-+					   const struct in6_addr *saddr)
- {
-+	const struct in6_addr *src_key = NULL;
- 	struct rt6_exception_bucket *bucket;
--	struct in6_addr *src_key = NULL;
- 	struct rt6_exception *rt6_ex;
- 	struct rt6_info *res = NULL;
- 
--	bucket = rcu_dereference(rt->rt6i_exception_bucket);
--
- #ifdef CONFIG_IPV6_SUBTREES
- 	/* rt6i_src.plen != 0 indicates rt is in subtree
- 	 * and exception table is indexed by a hash of
- 	 * both rt6i_dst and rt6i_src.
--	 * Otherwise, the exception table is indexed by
--	 * a hash of only rt6i_dst.
-+	 * However, the src addr used to create the hash
-+	 * might not be exactly the passed in saddr which
-+	 * is a /128 addr from the flow.
-+	 * So we need to use f6i->fib6_src to redo lookup
-+	 * if the passed in saddr does not find anything.
-+	 * (See the logic in ip6_rt_cache_alloc() on how
-+	 * rt->rt6i_src is updated.)
- 	 */
- 	if (rt->fib6_src.plen)
- 		src_key = saddr;
-+find_ex:
- #endif
-+	bucket = rcu_dereference(rt->rt6i_exception_bucket);
- 	rt6_ex = __rt6_find_exception_rcu(&bucket, daddr, src_key);
- 
- 	if (rt6_ex && !rt6_check_expired(rt6_ex->rt6i))
- 		res = rt6_ex->rt6i;
- 
-+#ifdef CONFIG_IPV6_SUBTREES
-+	/* Use fib6_src as src_key and redo lookup */
-+	if (!res && src_key && src_key != &rt->fib6_src.addr) {
-+		src_key = &rt->fib6_src.addr;
-+		goto find_ex;
-+	}
-+#endif
-+
- 	return res;
+--- a/net/core/rtnetlink.c
++++ b/net/core/rtnetlink.c
+@@ -1502,14 +1502,15 @@ static int put_master_ifindex(struct sk_
+ 	return ret;
  }
  
-@@ -2614,10 +2627,8 @@ out:
- u32 ip6_mtu_from_fib6(struct fib6_info *f6i, struct in6_addr *daddr,
- 		      struct in6_addr *saddr)
+-static int nla_put_iflink(struct sk_buff *skb, const struct net_device *dev)
++static int nla_put_iflink(struct sk_buff *skb, const struct net_device *dev,
++			  bool force)
  {
--	struct rt6_exception_bucket *bucket;
--	struct rt6_exception *rt6_ex;
--	struct in6_addr *src_key;
- 	struct inet6_dev *idev;
-+	struct rt6_info *rt;
- 	u32 mtu = 0;
+ 	int ifindex = dev_get_iflink(dev);
  
- 	if (unlikely(fib6_metric_locked(f6i, RTAX_MTU))) {
-@@ -2626,18 +2637,10 @@ u32 ip6_mtu_from_fib6(struct fib6_info *
- 			goto out;
+-	if (dev->ifindex == ifindex)
+-		return 0;
++	if (force || dev->ifindex != ifindex)
++		return nla_put_u32(skb, IFLA_LINK, ifindex);
+ 
+-	return nla_put_u32(skb, IFLA_LINK, ifindex);
++	return 0;
+ }
+ 
+ static noinline_for_stack int nla_put_ifalias(struct sk_buff *skb,
+@@ -1526,6 +1527,8 @@ static int rtnl_fill_link_netnsid(struct
+ 				  const struct net_device *dev,
+ 				  struct net *src_net)
+ {
++	bool put_iflink = false;
++
+ 	if (dev->rtnl_link_ops && dev->rtnl_link_ops->get_link_net) {
+ 		struct net *link_net = dev->rtnl_link_ops->get_link_net(dev);
+ 
+@@ -1534,10 +1537,12 @@ static int rtnl_fill_link_netnsid(struct
+ 
+ 			if (nla_put_s32(skb, IFLA_LINK_NETNSID, id))
+ 				return -EMSGSIZE;
++
++			put_iflink = true;
+ 		}
  	}
  
--	src_key = NULL;
--#ifdef CONFIG_IPV6_SUBTREES
--	if (f6i->fib6_src.plen)
--		src_key = saddr;
--#endif
--
--	bucket = rcu_dereference(f6i->rt6i_exception_bucket);
--	rt6_ex = __rt6_find_exception_rcu(&bucket, daddr, src_key);
--	if (rt6_ex && !rt6_check_expired(rt6_ex->rt6i))
--		mtu = dst_metric_raw(&rt6_ex->rt6i->dst, RTAX_MTU);
--
--	if (likely(!mtu)) {
-+	rt = rt6_find_cached_rt(f6i, daddr, saddr);
-+	if (unlikely(rt)) {
-+		mtu = dst_metric_raw(&rt->dst, RTAX_MTU);
-+	} else {
- 		struct net_device *dev = fib6_info_nh_dev(f6i);
+-	return 0;
++	return nla_put_iflink(skb, dev, put_iflink);
+ }
  
- 		mtu = IPV6_MIN_MTU;
+ static int rtnl_fill_link_af(struct sk_buff *skb,
+@@ -1623,7 +1628,6 @@ static int rtnl_fill_ifinfo(struct sk_bu
+ #ifdef CONFIG_RPS
+ 	    nla_put_u32(skb, IFLA_NUM_RX_QUEUES, dev->num_rx_queues) ||
+ #endif
+-	    nla_put_iflink(skb, dev) ||
+ 	    put_master_ifindex(skb, dev) ||
+ 	    nla_put_u8(skb, IFLA_CARRIER, netif_carrier_ok(dev)) ||
+ 	    (dev->qdisc &&
 
 
