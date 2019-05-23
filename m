@@ -2,105 +2,199 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFF87C282CE
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 01:56:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD3C7C282CE
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 02:00:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67AD52173C
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 01:56:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a4rFogx1"
+	by mail.kernel.org (Postfix) with ESMTP id 6435121019
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 02:00:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729950AbfEWB4o (ORCPT
+        id S1729808AbfEWCA6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 21:56:44 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:46386 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727305AbfEWB4n (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 21:56:43 -0400
-Received: by mail-ed1-f66.google.com with SMTP id f37so6642790edb.13
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 18:56:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=VeCxUerMSUiEe1VSBy4pwjo+lY6Ie9i6gDJMGA8Iaqo=;
-        b=a4rFogx1/clKbND5YbpRBpPdX0an/nN716Pu2fh6o0JIN+LIie20RXWA6ei8QBxE/M
-         dtSIQF2nxSINr/GTsfn3mhZGWUyMy94gHEGWpSjfJlD9TDSH7yhAXbyUKrKcuCfO/mne
-         PRDLz/6ule8aOwm/VBaG9MpFj4UIOXU1U6UnqIpTcQZIzBpSlMiVU0lv/2rzAFtFSAgy
-         Ypgkbeh6K+w+QhDgPEQAPiHzeAddh4ptxtGNVMm2jGw1XO+oFSo8eJuRHdmNE2Qc2DMV
-         cLKT4Ihj4AODdvK4hE3vQyzHDm3YNAFblSLcHZqUE7hdlFAUmHGcqO2DyxtWZG9HYevY
-         7RgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VeCxUerMSUiEe1VSBy4pwjo+lY6Ie9i6gDJMGA8Iaqo=;
-        b=GfJOJFM5mQI3+1dGRdFud1dw+jVQ35oeYan6tQUMandAvpIB2RGwNjFbgnp1hbco9c
-         l9jAcsogzD9LsJj5to2AuiIzGzElW1QsQhOnr55AqJQJdTcQGCQlzTk2Z9pm3GzoE9dh
-         5cTFJvwK4JCLPfNwy5mGfweBmV07vKyPZsi6F5t3xl6NsmVucpc9/4KT3gv1dLoZd8Rf
-         tl29lF3U6kMs7UB/IM7Gst7xkuxxU284SwEFcuDCLKVBV3nbmm25DSxghgoW8WQ/Zi0h
-         98Yq4YVIuIOGQHdwASfaXKuFZMis4J/3JkDjYauHsQ16xLt3LX3dxrzo0WtncNEFXU8L
-         BWpg==
-X-Gm-Message-State: APjAAAVtwrMBiF0K9spRkHuWIJbuTdk4TUUOF+ImihTQpqPz9d2ddche
-        tbPZM1tKwHwDtnXkhoR5lCg=
-X-Google-Smtp-Source: APXvYqycu1jKQPpza8Qm3X9Vyhz7ORChxsltnLGa9v8vBaZ6meENQQaydK/+g87mkllBa53MNUMOGA==
-X-Received: by 2002:a05:6402:13cf:: with SMTP id a15mr93574743edx.70.1558576601675;
-        Wed, 22 May 2019 18:56:41 -0700 (PDT)
-Received: from archlinux-epyc ([2a01:4f9:2b:2b15::2])
-        by smtp.gmail.com with ESMTPSA id d24sm4146285ejt.12.2019.05.22.18.56.40
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 22 May 2019 18:56:41 -0700 (PDT)
-Date:   Wed, 22 May 2019 18:56:39 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Cliff Whickman <cpw@sgi.com>, Robin Holt <robinmholt@gmail.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux@googlegroups.com
-Subject: Re: -Wuninitialized warning in drivers/misc/sgi-xp/xpc_partition.c
-Message-ID: <20190523015639.GB17819@archlinux-epyc>
-References: <20190503033340.GA7980@archlinux-i9>
+        Wed, 22 May 2019 22:00:58 -0400
+Received: from mx1.mailbox.org ([80.241.60.212]:47140 "EHLO mx1.mailbox.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727691AbfEWCA5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 22:00:57 -0400
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:105:465:1:2:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mx1.mailbox.org (Postfix) with ESMTPS id 6311252105;
+        Thu, 23 May 2019 04:00:53 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp2.mailbox.org ([80.241.60.241])
+        by spamfilter05.heinlein-hosting.de (spamfilter05.heinlein-hosting.de [80.241.56.123]) (amavisd-new, port 10030)
+        with ESMTP id IywjhBoiZwGj; Thu, 23 May 2019 04:00:27 +0200 (CEST)
+Date:   Thu, 23 May 2019 12:00:09 +1000
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Christian Brauner <christian@brauner.io>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
+        David Drysdale <drysdale@google.com>,
+        Chanho Min <chanho.min@lge.com>,
+        Oleg Nesterov <oleg@redhat.com>, Aleksa Sarai <asarai@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Containers <containers@lists.linux-foundation.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>
+Subject: Re: [PATCH RFC v8 01/10] namei: obey trailing magic-link DAC
+ permissions
+Message-ID: <20190523020009.mi25uziu2b3whf4l@yavin>
+References: <20190520133305.11925-1-cyphar@cyphar.com>
+ <20190520133305.11925-2-cyphar@cyphar.com>
+ <CALCETrVCwe49q5mu=f6jTYNSgosQSjjY5chukMPo6eZtQGqo5g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="mqlbmyoyuxzxnuxp"
 Content-Disposition: inline
-In-Reply-To: <20190503033340.GA7980@archlinux-i9>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <CALCETrVCwe49q5mu=f6jTYNSgosQSjjY5chukMPo6eZtQGqo5g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 02, 2019 at 08:33:40PM -0700, Nathan Chancellor wrote:
-> Hi all,
-> 
-> When building with -Wuninitialized, Clang warns:
-> 
-> drivers/misc/sgi-xp/xpc_partition.c:73:14: warning: variable 'buf' is uninitialized when used within its own initialization [-Wuninitialized]
->         void *buf = buf;
->               ~~~   ^~~
-> 1 warning generated.
-> 
-> I am not really sure how to properly initialize buf in this instance.
-> I would assume it would involve xpc_kmalloc_cacheline_aligned like
-> further down in the function but maybe not, this function isn't entirely
-> clear. Could we get your input, this is one of the last warnings I see
-> in a few allyesconfig builds.
-> 
-> Thanks,
-> Nathan
 
-Hi all,
+--mqlbmyoyuxzxnuxp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Friendly ping for comments/input. This is one of a few remaining
-warnings I see, it'd be nice to get it fixed up so we can turn it on for
-the whole kernel.
+On 2019-05-22, Andy Lutomirski <luto@kernel.org> wrote:
+> On Mon, May 20, 2019 at 6:34 AM Aleksa Sarai <cyphar@cyphar.com> wrote:
+> > One final exception is given, which is that non-O_PATH file descriptors
+> > are given re-open rights equivalent to the permissions available at
+> > open-time. This allows for O_RDONLY file descriptors to be re-opened
+> > O_RDWR as long as the user had MAY_WRITE access at the time of opening
+> > the O_RDONLY descriptor. This is necessary to avoid breaking userspace
+> > (some of the kernel's own selftests depended on this "feature").
+>=20
+> Can you clarify this exception a bit?  I'd like to make sure it's not
+> such a huge exception that it invalidates the whole point of the
+> patch.
 
-Cheers,
-Nathan
+Sure. This exception applies to regular file opens, and the idea is that
+the user had permissions to open the file O_RDWR originally (even if
+they opened it O_RDONLY) so re-opening it O_RDWR later should not be an
+issue (they could've just opened it O_RDWR in the first place). These
+permissions still get masked by nd->opath_mask, so opening a magic-link
+or including an O_PATH doesn't increase the permission set.
+
+This does mean that an O_RDONLY open (if the user could've done an
+O_RDWR and still done the open) results in an FMODE_PATH_WRITE. To be
+honest, I'm still on the fence whether this is a great idea or not (and
+I'd prefer to not include it). Though, I don't think it invalidates the
+patch though, since the attack scenario of a read-only file being
+re-opened later as read-write is still blocked.
+
+The main reason for including it is the concern that there is some
+program from 1993 running in a basement somewhere that depends on this
+that we don't know about. Though, as a counter-example, I have run this
+patchset (without this exception) on my laptop for a few days without
+any visible issues.
+
+> If you open a file for execute, by actually exec()ing it or by using
+> something like the proposed O_MAYEXEC, and you have inode_permission
+> to write, do you still end up with FMODE_PATH_WRITE? The code looks
+> like it does, and this seems like it might be a mistake.
+
+I'm not sure about the execve(2) example -- after all, you don't get an
+fd from execve(2) and /proc/self/exe still has a mode a+rx.
+
+I'm also not sure what the semantics of a hypothetical O_MAYEXEC would
+be -- but we'd probably want to discuss re-opening semantics when it
+gets included. I would argue that since O_MAYEXEC would likely be merged
+after this, no userspace code would depend on this mis-feature and we
+could decide to not include FMODE_EXECv2 in the handling of additional
+permissions.
+
+As an aside, I did originally implement RESOLVE_UPGRADE_NOEXEC (and the
+corresponding FMODE_PATH_EXEC handling). It worked for the most part,
+though execveat(AT_EMPTY_PATH) would need some additional changes to do
+the may_open_magiclink() checks and I decided against including it here
+until we had an O_MAYEXEC.
+
+> Is there any way for user code to read out these new file mode bits?
+
+There is, but it's not exactly trivial. You could check the mode of
+/proc/self/fd and then compare it to the acc_mode of the "flags"
+/proc/self/fdinfo. The bits present in /proc/self/fd but not in acc_mode
+are the FMODE_PATH_* bits.
+
+However, this is quite an ugly way of doing it. I see two options to
+make it easier:
+
+ 1. We can add additional information to fdinfo so it includes that
+    FMODE_PATH_* bits to indicate how the fd can be upgraded.
+
+ 2. Previously, only the u bits of the fd mode were used to represent the
+    open flags. We could add the FMODE_PATH_* permissions to the g bits
+    and change how the permission check in trailing_symlink() operates.
+
+    The really neat thing here is that we could then know for sure which
+    fmode bits are set during name lookup of a magic-link rather than
+    assuming they're all FMODE_PATH_* bits.
+
+    In addition, userspace that depends on checking the u bits of an fd
+    mode would continue to work (though I'm not aware of any userspace
+    code that does depend on this).
+
+Option 2 seems nicer to me in some respects, but it has the additional
+cost of making the permission check less obvious (it's no longer an
+"inode_permission" and is instead something different with a weird new
+set of semantics). Then again, the modes of magic-links weren't obeyed
+in the first place so I'd argue these semantics are entirely up for us
+to decide.
+
+> What are actual examples of uses for this exception?  Breaking
+> selftests is not, in and of itself, a huge problem.
+
+Not as far as I know. All of the re-opening users I know of do re-opens
+of O_PATH or are re-opening with the same (or fewer) privileges. I also
+ran this for a few days on my laptop without this exception, and didn't
+have any visible issues.
+
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
+
+--mqlbmyoyuxzxnuxp
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEb6Gz4/mhjNy+aiz1Snvnv3Dem58FAlzl/qUACgkQSnvnv3De
+m5/O+RAA3pdApPb48XJD4ExYCVJOdzKgy9Tfayj+cr3F5V3uVAGmdpXpXSsQHlT7
+wi+V5W6qsycYQPdn+JzKbVHwNaAlmsKNIowUDQ7NMykj+JjfPFPBWmbt1PVe9qej
+z9Q5WSFI3wefQGmQrP8VCKvnAo9WrYpe4ns/76SDEf2wHZD29QrK6ODPK83XJ/E4
+3BOets8Bp+pfM5jko9rRGS5jhvnNNd1zu5NMu4folvCC8AjmwvGBpJomrjSJKeGo
+zevcwNtMtp6ZPQiuCJQDDG7op4o21Fm+daifODOorh/wrrgp39AVTcNnHZrVVUnR
+ac03BeIzK7Y6TjQSRMn5cBfgeB8RrDxtzAtRSyEWGCkmvM9es9+eOEjn6f1dYF96
+sN75Kp1MAsPpLV5cmKSHCrPzRepKYm2vZJWrFE0igwj476z9y+Nx4DJR3iVbjaNS
+oFk4LtujWazXWzUKB7/a/s7IBwjsV6XZqKmbGthlOaEQniBEYyq+KboyHmODZj0n
+7TZnqJW1eXxYbRIEoagCjYwOF+F8m/ViGL4rSIkIgTqZ40+PTXL4372ikSo5TTCj
+6RMH7+NGZMMllmuy6p3/2jZgwZJexnky+G4TsRYH5O0AhcwvLjn0efg7w/zncl+6
+gQkl4hnn30STItTrQD5EfjRoowVNTp4BiPlKu8nmIwZEPB9Rjq0=
+=zmQ7
+-----END PGP SIGNATURE-----
+
+--mqlbmyoyuxzxnuxp--
