@@ -2,119 +2,106 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13F05C46460
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 21:06:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A776C282E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 21:07:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7E4E2177E
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 21:06:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 404C9204EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 21:07:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X1/pu0J+"
+	dkim=pass (2048-bit key) header.d=rajagiritech-edu-in.20150623.gappssmtp.com header.i=@rajagiritech-edu-in.20150623.gappssmtp.com header.b="IxyjS7QI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731648AbfEWVG6 (ORCPT
+        id S1731714AbfEWVHV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 17:06:58 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:52666 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731537AbfEWVG6 (ORCPT
+        Thu, 23 May 2019 17:07:21 -0400
+Received: from mail-pf1-f177.google.com ([209.85.210.177]:36376 "EHLO
+        mail-pf1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731666AbfEWVHU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 17:06:58 -0400
-Received: by mail-it1-f193.google.com with SMTP id t184so12283158itf.2;
-        Thu, 23 May 2019 14:06:57 -0700 (PDT)
+        Thu, 23 May 2019 17:07:20 -0400
+Received: by mail-pf1-f177.google.com with SMTP id v80so3934316pfa.3
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 14:07:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=rajagiritech-edu-in.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=qdKz+TOs1wCAyZUw0giltCYWrjHfuqYDcD0Y730vB18=;
-        b=X1/pu0J+wGbtPR2O2S+IZYCGPHacIpZIWlZOFWyrcdChosOCsJjjuHh8Pmjbpcd/iR
-         v93QHkkPBOa+2R+cA7xBGf3GJGK02mE+fvVDdEqB4GgsTipeTPJ6UQCrvJq1kJdFsskk
-         Hf68qhuoJF1y72HyQhy9UTR3pwbJ0O9GFSXpJUdO0NLDRyZ927qoRsk/ndLeG80c6yon
-         KvRUWEcuvxzy08YY3EsZPEefJ9KlXLSN7/HrXAx4ZcfMc7utGhKD2QaS4QFHFQqcxvSq
-         u6HahTlnlzCTKgxbW3PKFhDSjhK486kZuopYnyXvidTzXDyRLyYdnh+FR0DcMA72iFhD
-         4IYQ==
+        bh=ZTioGuKOgNO6SwugnrEDEktz7xGxS3YWSFmCmowDiZ8=;
+        b=IxyjS7QI/iWlVolD7qMxHAsrVnEz6vYW71ld0uA+5lDEvFXgNW5y/+Hovb10dtf0fk
+         Pg6Q1W5Z978oA4Q50rBxaWG9aZoy1bha2AtsABYeJSCXvM8bvkBZe/H7yebqDH4tZPmb
+         e3KCf7zt3QR2PwmHVAlWsefxzk/UkrygDd1Uaw5e8miN15gBHL6N1BLt2cSjBeE8pV9v
+         0yEEQxhqQpHE+4rX9vVQHwlzDvEily5DxK5axwiUyupU/tLG3xoW/cechfBnsByTQiuO
+         mLRIdBQbbuT12JKswtN7ln/DniAJ2Wb+AFrXu6zhCVMik0qJAZtehXqlyAZ0Ssage/4R
+         /RDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=qdKz+TOs1wCAyZUw0giltCYWrjHfuqYDcD0Y730vB18=;
-        b=q2kjOeNLaruz5fmvyfCne3jSuaf8mYtxhxjfy9NBJ93DP26a1Vvo8X7opb6xajTwim
-         FCI62uCmeKsDyt2cZg8pfzRwLnnacCw+jPyu/IYG9U8wuJGTvPXItHAgkrybYyuyqUT4
-         vnTAjdiFhc6WaTYKpA3FaFmgJSuKfUjZAMhPxPaTEGgAFQ4orpiqMmoysuq6or1cBy7/
-         bsaLC4BIt6WGkrpLML+ZMm/9vEH2RGINbZE8+oY9mFSf5BHYc7u+/OZx9nS2647nyZst
-         Hn1iRkgaH5VqN9A+OgTWhjvDIkGvi2ZVVESXwdbckqefRbDZo0gGZgptXBDtNiCVh4bL
-         AWIw==
-X-Gm-Message-State: APjAAAXwSo24peNtu5zbjbvwO5v/O/2uhWZkuxb5OX1x8NvFDwHzS+Kr
-        Ux0X58s5HblrdCFv+f9JTDezwAjui48HM5sGZ1Y=
-X-Google-Smtp-Source: APXvYqw39Es/1/4zjenOfZ0CdT39/+9yH2SVWfYxIvNq4CN3m21LbaDD6pNQgMJJnPBaS4n8+lARacqZ1hZGTol3H8M=
-X-Received: by 2002:a24:e084:: with SMTP id c126mr14417307ith.124.1558645617016;
- Thu, 23 May 2019 14:06:57 -0700 (PDT)
+        bh=ZTioGuKOgNO6SwugnrEDEktz7xGxS3YWSFmCmowDiZ8=;
+        b=B/otwtLq8ko0+MPBl1rRP1eRBojvHYq17391Lt4tqymvwn8SahxokJjKUae1WAPOAS
+         IMwXi/M2ZKZkLtbfrvG1YiLM7ENuQ1NCBMryIzBYg70rwCc/Gs5MuphhbgII9zcdeeiR
+         4IMYCcWJALtpZmz1ZyzksZjWjbm8yMJSWQB4EFxiaBzBWpQnAUoZVXswmgzOKjzfunpQ
+         YqnXPq3qHuhsz0GHJgMWNJpTgoKHD97YJQq0DuR/ZoBq6vFMY2qmMeMLVdR48NMee2hc
+         ReaZ5eAQeBNFWa5oJiO9fvmIMOcl3qtsQm8bTGejEYLZW9A69d4UW1cJPVwWHV5qTYyt
+         ZHYw==
+X-Gm-Message-State: APjAAAXbLU5MvwFKRB+GNXmfkbHS5tCNo6T7qL9fOfyAtTCBj+Q3rILR
+        Y37xi+DTrkPDotk4vylwvSBDlzAuH5cdYZT8e7kmDg==
+X-Google-Smtp-Source: APXvYqzuzYiOYVO1qbzCh4Aabm6AuxyJ016kEM0zJSXu1CU6EAU3utELN2tXg74h76qjcEGbSDT5iAY80582D/hn8Oc=
+X-Received: by 2002:a63:550c:: with SMTP id j12mr5619579pgb.450.1558645640095;
+ Thu, 23 May 2019 14:07:20 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190522032144.10995-1-deepa.kernel@gmail.com>
- <20190522150505.GA4915@redhat.com> <CABeXuvrPM5xvzqUydbREapvwgy6deYreHp0aaMoSHyLB6+HGRg@mail.gmail.com>
- <20190522161407.GB4915@redhat.com> <CABeXuvpjrW5Gt95JC-_rYkOA=6RCD5OtkEQdwZVVqGCE3GkQOQ@mail.gmail.com>
- <4f7b6dbeab1d424baaebd7a5df116349@AcuMS.aculab.com> <20190523145944.GB23070@redhat.com>
- <345cfba5edde470f9a68d913f44fa342@AcuMS.aculab.com> <20190523163604.GE23070@redhat.com>
- <f0eced5677c144debfc5a69d0d327bc1@AcuMS.aculab.com> <CABeXuvo-wey+NHWb4gi=FSRrjJOKkVcLPQ-J+dchJeHEbhGQ6g@mail.gmail.com>
- <CABeXuvo5Y0aHgo-xMzmW7V02g+ysGqAkdoCAkW7L6LkukdvAcg@mail.gmail.com>
-In-Reply-To: <CABeXuvo5Y0aHgo-xMzmW7V02g+ysGqAkdoCAkW7L6LkukdvAcg@mail.gmail.com>
-From:   Deepa Dinamani <deepa.kernel@gmail.com>
-Date:   Thu, 23 May 2019 14:06:45 -0700
-Message-ID: <CABeXuvrKAz3epJjc9J21K-dET1Om9C=3gaDOUiQ96C39x4MAVg@mail.gmail.com>
-Subject: Re: [PATCH v2] signal: Adjust error codes according to restore_user_sigmask()
-To:     David Laight <David.Laight@aculab.com>
-Cc:     Oleg Nesterov <oleg@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "dbueso@suse.de" <dbueso@suse.de>,
-        "axboe@kernel.dk" <axboe@kernel.dk>,
-        Davidlohr Bueso <dave@stgolabs.net>, Eric Wong <e@80x24.org>,
-        Jason Baron <jbaron@akamai.com>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        linux-aio <linux-aio@kvack.org>,
-        Omar Kilani <omar.kilani@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
+References: <CAG=yYwk+g28_dnOcN--w-PLbGtA2oM5tq14W4X5bBjdurnF2iA@mail.gmail.com>
+ <20190523174739.GY3274@piout.net>
+In-Reply-To: <20190523174739.GY3274@piout.net>
+From:   Jeffrin Thalakkottoor <jeffrin@rajagiritech.edu.in>
+Date:   Fri, 24 May 2019 02:36:42 +0530
+Message-ID: <CAG=yYwmrE30nROqn63oAkXN9BCqfmo4T7+QPN-H3mSGG9dLU4A@mail.gmail.com>
+Subject: Re: about selftests/rtc test related stuff
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     a.zummo@towertech.it, Shuah Khan <shuah@kernel.org>,
+        linux-rtc@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Just adding a little more clarification, there is an additional change
-> between [a] and [b].
-> As per [a] we would just restore the signal instead of changing the
-> saved_sigmask and the signal could get delivered right then. [b]
-> changes this to happen at syscall exit:
+On Thu, May 23, 2019 at 11:17 PM Alexandre Belloni
+<alexandre.belloni@bootlin.com> wrote:
+> Your user probably doesn't have access to the rtc device file.
+anyway thanks related
+Following is the result with sudo....
+------------------------x--------------------------------------x----------------------------
+$sudo ./rtctest
+[sudo] password for jeffrin:
+[==========] Running 7 tests from 2 test cases.
+[ RUN      ] rtc.date_read
+rtctest.c:49:rtc.date_read:Current RTC date/time is 23/05/2019 20:49:49.
+[       OK ] rtc.date_read
+[ RUN      ] rtc.uie_read
+[       OK ] rtc.uie_read
+[ RUN      ] rtc.uie_select
+[       OK ] rtc.uie_select
+[ RUN      ] rtc.alarm_alm_set
+rtctest.c:137:rtc.alarm_alm_set:Alarm time now set to 20:49:58.
+rtctest.c:156:rtc.alarm_alm_set:data: 1a0
+[       OK ] rtc.alarm_alm_set
+[ RUN      ] rtc.alarm_wkalm_set
+rtctest.c:195:rtc.alarm_wkalm_set:Alarm time now set to 23/05/2019 20:50:01.
+[       OK ] rtc.alarm_wkalm_set
+[ RUN      ] rtc.alarm_alm_set_minute
+rtctest.c:239:rtc.alarm_alm_set_minute:Alarm time now set to 20:51:00.
+Alarm clock
+$rtctest.c:258:rtc.alarm_alm_set_minute:data: 1a0
 
-Rewording above, as there seems to be a few misrepresentations:
+$
 
-Just adding a little more clarification, there is an additional change
-between [a] and [b].
-As per [a] we would just restore the signal mask instead of changing
-the saved_sigmask and the even the blocked signals could get delivered
-right then. [b] changes the restoration to happen at syscall exit:
+------------------------x--------------------------------------x----------------------------
 
-> void restore_user_sigmask(const void __user *usigmask, sigset_t *sigsaved)
-> {
->
->            <snip>
->
->           /*
->            * When signals are pending, do not restore them here.
->            * Restoring sigmask here can lead to delivering signals
-> that the above
->            * syscalls are intended to block because of the sigmask passed in.
->            */
->            if (signal_pending(current)) {
->            current->saved_sigmask = *sigsaved;
->            set_restore_sigmask();
->            return;
-> }
 
- -Deepa
+-- 
+software engineer
+rajagiri school of engineering and technology
