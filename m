@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A56FC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:26:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FBA1C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:26:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31B0521841
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:26:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A3C020868
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:26:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639582;
-	bh=J41EuJLG+sXz2i4AKh/xVoeOsnYj33XSb3EDyOR4SOo=;
+	s=default; t=1558639586;
+	bh=kb8W47znFWhlJNjuW2dsbV4ms7hrv9g04OWiTDm4HYg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hLnRs2HcLFrrCs9iofEq6wjCbjwJDN85Li0jBsWdXv7yVE3HDX4vlAzjYKBGkXGxo
-	 WxPPOEigNZV2qs6X1PIBESQZJnfCyzrXC0eP7RBXwR4fAwVv7WUEOlZ7Jwrvecx7zY
-	 IG7+ufQ2YmH3yCkjXaMFbHvSo6mXl9zvmBkz6Afo=
+	b=0lZ5f//iMvIa2MeMiAo3Ogh+mNqi7as1U3EGyNnjQO3cQIWzXSAo8d819mm4wI5Ot
+	 OzsJFFCxEI3SsiV4lCG2UVFqe0m50Wm4+dxB281vHFMvct1Amqed2UYNSU/Rhuu9S+
+	 VA0eZ+HDJ7hSgcx89hf7RAu/P9S2IETBQeTRQK7U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390038AbfEWT0V (ORCPT
+        id S2391331AbfEWT0Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:26:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38124 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:26:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38194 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390636AbfEWT0T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:26:19 -0400
+        id S2390636AbfEWT0V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:26:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F14C920868;
-        Thu, 23 May 2019 19:26:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9ED22217D9;
+        Thu, 23 May 2019 19:26:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639578;
-        bh=J41EuJLG+sXz2i4AKh/xVoeOsnYj33XSb3EDyOR4SOo=;
+        s=default; t=1558639581;
+        bh=kb8W47znFWhlJNjuW2dsbV4ms7hrv9g04OWiTDm4HYg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pjS7/piVzC6JoSPF4MeteIaG4LZWgT2nci9aXRLzPfieAgWwe5qsrFzl4CLoM40ac
-         JvZElRO5Vvmg2VGQN3EtnIYLpIhK8Z8TmGq+VTLILBR6Up9ftkELcH8A2RaxBqFHkM
-         edoTNwW7CVEH5LFFxWi0qUyoA/2Pr+W1bfNnZqo0=
+        b=N7qFLFttQxBvlJItcEyNPv8rh/f190QGdaTYlnhYUZgQrRcLpm364XTMMBatWcQMS
+         zmpnFm/ctwCHr9td9xA0ItG8NE+6sTXmFeknDJAzyhvv9nRdezyxDhwBf76ospMsPM
+         LN8e4l/0AfWkfUe37Thsmrig+R8RrGiGhinfvY9o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jianbo Liu <jianbol@mellanox.com>,
-        Edward Cree <ecree@solarflare.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.1 017/122] net/mlx5e: Fix calling wrong function to get inner vlan key and mask
-Date:   Thu, 23 May 2019 21:05:39 +0200
-Message-Id: <20190523181707.134169459@linuxfoundation.org>
+        stable@vger.kernel.org, Bodong Wang <bodong@mellanox.com>,
+        Alex Rosenbaum <alexr@mellanox.com>,
+        Daniel Jurgens <danielj@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: [PATCH 5.1 018/122] net/mlx5: Fix peer pf disable hca command
+Date:   Thu, 23 May 2019 21:05:40 +0200
+Message-Id: <20190523181707.268851900@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181705.091418060@linuxfoundation.org>
 References: <20190523181705.091418060@linuxfoundation.org>
@@ -60,39 +61,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jianbo Liu <jianbol@mellanox.com>
+From: Bodong Wang <bodong@mellanox.com>
 
-[ Upstream commit 12d5cbf89a6599f6bbd7b373dba0e74b5bd9c505 ]
+[ Upstream commit dd06486710d251140edc86ec3bbef0c25dcec1cb ]
 
-When flow_rule_match_XYZ() functions were first introduced,
-flow_rule_match_cvlan() for inner vlan is missing.
+The command was mistakenly using enable_hca in embedded CPU field.
 
-In mlx5_core driver, to get inner vlan key and mask, flow_rule_match_vlan()
-is just called, which is wrong because it obtains outer vlan information by
-FLOW_DISSECTOR_KEY_VLAN.
-
-This commit fixes this by changing to call flow_rule_match_cvlan() after
-it's added.
-
-Fixes: 8f2566225ae2 ("flow_offload: add flow_rule and flow_match structures and use them")
-Signed-off-by: Jianbo Liu <jianbol@mellanox.com>
-Signed-off-by: Edward Cree <ecree@solarflare.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 22e939a91dcb (net/mlx5: Update enable HCA dependency)
+Signed-off-by: Bodong Wang <bodong@mellanox.com>
+Reported-by: Alex Rosenbaum <alexr@mellanox.com>
+Signed-off-by: Alex Rosenbaum <alexr@mellanox.com>
+Reviewed-by: Daniel Jurgens <danielj@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/en_tc.c |    2 +-
+ drivers/net/ethernet/mellanox/mlx5/core/ecpf.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
-@@ -1561,7 +1561,7 @@ static int __parse_cls_flower(struct mlx
- 	if (flow_rule_match_key(rule, FLOW_DISSECTOR_KEY_CVLAN)) {
- 		struct flow_match_vlan match;
+--- a/drivers/net/ethernet/mellanox/mlx5/core/ecpf.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/ecpf.c
+@@ -26,7 +26,7 @@ static int mlx5_peer_pf_disable_hca(stru
  
--		flow_rule_match_vlan(rule, &match);
-+		flow_rule_match_cvlan(rule, &match);
- 		if (match.mask->vlan_id ||
- 		    match.mask->vlan_priority ||
- 		    match.mask->vlan_tpid) {
+ 	MLX5_SET(disable_hca_in, in, opcode, MLX5_CMD_OP_DISABLE_HCA);
+ 	MLX5_SET(disable_hca_in, in, function_id, 0);
+-	MLX5_SET(enable_hca_in, in, embedded_cpu_function, 0);
++	MLX5_SET(disable_hca_in, in, embedded_cpu_function, 0);
+ 	return mlx5_cmd_exec(dev, in, sizeof(in), out, sizeof(out));
+ }
+ 
 
 
