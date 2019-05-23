@@ -2,193 +2,166 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A7ADC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 09:33:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81175C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 09:33:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FFA821773
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 09:33:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="noyZXq8Q"
+	by mail.kernel.org (Postfix) with ESMTP id 513D621019
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 09:33:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558604011;
+	bh=oJnvgKctkTsQXW1nRvLR74e52CYy5mqld95knmHvY/4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mAVbqCFx/zcqFGGogm0IgDFYtZUWUibdlgHCc39VagmBCxQ0A6ZFunwYzcdXMadYY
+	 k4M3HYKkKba7PMqbIGosrOCTmtK1f8Rmb0cXIb+ReraxaJKXoQhto5PHAgrGErrLWv
+	 W3pCNqmVjAgT2Ioc3ZeLc8Vx5S5gVFBxrWKcyfQU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730356AbfEWJd1 (ORCPT
+        id S1730359AbfEWJda (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 05:33:27 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:46171 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726913AbfEWJd0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 05:33:26 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4N9VGVs4042683
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 23 May 2019 02:31:16 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4N9VGVs4042683
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1558603876;
-        bh=+M7EPqU26h0B1Z1u98UjZuykFHUDbS0wqvAvgIAiVWU=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=noyZXq8Qce3/Jxjrmg1kUegqU5mDUtY+Uo+hQYVWGW6+S/meEZXcx37N20/ppnJ5S
-         4B+Yp6fWzBLJpBu29+n5N3/V3cFUVp0FDvoQmPHCfBvxtdDajNGhMBir9gs4haPSsD
-         mT/1ImEUBrVfaciCj9dkHdKqnll2oqfMCKjAMBj4VEUXol9QBHmCyIvbsPTKNXBJW5
-         UQNrjDqH/vGQnlTpYaGxXQ0F6rEH9DIijwIA1QZmASK/DeE7CO3cq9WSZkEziHGsK4
-         Zbz0wKa+rjnjrz+6axP6Jlnul65tQqsL3NIKe5Gy/YKd6bZArNPf0VIACyJ4D0gMX0
-         Z67VQNhAAlOFg==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4N9VFAp4042680;
-        Thu, 23 May 2019 02:31:15 -0700
-Date:   Thu, 23 May 2019 02:31:15 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Kan Liang <tipbot@zytor.com>
-Message-ID: <tip-1ff4a47b2d0c13b755b2eeeb0e23be6c056d5dd9@git.kernel.org>
-Cc:     mingo@kernel.org, hpa@zytor.com, peterz@infradead.org,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de,
-        kan.liang@linux.intel.com, len.brown@intel.com
-Reply-To: hpa@zytor.com, mingo@kernel.org, peterz@infradead.org,
-          linux-kernel@vger.kernel.org, tglx@linutronix.de,
-          kan.liang@linux.intel.com, len.brown@intel.com
-In-Reply-To: <a25bba4a5b480aa4e9f8190005d7f5f53e29c8da.1557769318.git.len.brown@intel.com>
-References: <a25bba4a5b480aa4e9f8190005d7f5f53e29c8da.1557769318.git.len.brown@intel.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/topology] perf/x86/intel/uncore: Support multi-die/package
-Git-Commit-ID: 1ff4a47b2d0c13b755b2eeeb0e23be6c056d5dd9
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Thu, 23 May 2019 05:33:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47006 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726913AbfEWJd2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 05:33:28 -0400
+Received: from earth.universe (host-091-097-045-018.ewe-ip-backbone.de [91.97.45.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C220220675;
+        Thu, 23 May 2019 09:33:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558604008;
+        bh=oJnvgKctkTsQXW1nRvLR74e52CYy5mqld95knmHvY/4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=sp/5OXrGoPLMjtuOycQR9EF4c3ltP9LVMOowt6r0XNYWRXSJd9fATJGRJX4VJP7zf
+         QYldPePwx+JVM6V4Nc+J1IQ8puJGkGuDnd9coflRgOrqHz4ELvFC97QmX1VfZOKR2p
+         5139yk7dIolljUiEh2WqxZARw+9NJExZmFbCEl18=
+Received: by earth.universe (Postfix, from userid 1000)
+        id 23FEC3C0EA7; Thu, 23 May 2019 11:33:25 +0200 (CEST)
+Date:   Thu, 23 May 2019 11:33:25 +0200
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     kernel list <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-omap@vger.kernel.org, tony@atomide.com, nekit1000@gmail.com,
+        mpartap@gmx.net, merlijn@wizzup.org
+Subject: Re: 5.2-rc1 on droid4: spi crash
+Message-ID: <20190523093325.6si5jpvrvyktpax6@earth.universe>
+References: <20190523090926.GA9106@amd>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ungvfzrp4zeutewo"
 Content-Disposition: inline
+In-Reply-To: <20190523090926.GA9106@amd>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  1ff4a47b2d0c13b755b2eeeb0e23be6c056d5dd9
-Gitweb:     https://git.kernel.org/tip/1ff4a47b2d0c13b755b2eeeb0e23be6c056d5dd9
-Author:     Kan Liang <kan.liang@linux.intel.com>
-AuthorDate: Mon, 13 May 2019 13:58:57 -0400
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Thu, 23 May 2019 10:08:35 +0200
 
-perf/x86/intel/uncore: Support multi-die/package
+--ungvfzrp4zeutewo
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Uncore becomes die-scope on Xeon Cascade Lake-AP. Uncore driver needs to
-support die-scope uncore units.
+Hi,
 
-Use topology_logical_die_id() to replace topology_logical_package_id().
-For previous platforms which doesn't have multi-die,
-topology_logical_die_id() is identical as topology_logical_package_id().
+On Thu, May 23, 2019 at 11:09:26AM +0200, Pavel Machek wrote:
+> This was greeting me overnight... I don't yet know how reproducible it
+> is, it happened once so far.
 
-In pci_probe()/remove(), the group id reads from PCI BUS is logical die id
-for multi-die systems.
+Please pipe the stacktrace into ./scripts/decode_stacktrace.sh
+to get a readable stacktrace, otherwise this is pretty much useless.
+FWIW the only SPI device in the Droid 4 is the PMIC.
 
-Use topology_die_cpumask() to replace topology_core_cpumask().
-For previous platforms which doesn't have multi-die,
-topology_die_cpumask() is identical as topology_core_cpumask().
+-- Sebastian
 
-There is no functional change for previous platforms.
+> root@devuan:/sys/class/leds#
+> Message from syslogd@devuan at May 23 00:11:31 ...
+>  kernel:[14889.641143] Internal error: Oops: 5 [#1] SMP ARM
+>=20
+> Message from syslogd@devuan at May 23 00:11:51 ...
+>  kernel:[14909.638275] Process spi0 (pid: 100, stack limit =3D
+>  0x97305d31)
+>=20
+> Message from syslogd@devuan at May 23 00:11:51 ...
+>  kernel:[14909.650238] Stack: (0xedee7ed0 to 0xedee8000)
+>=20
+> Message from syslogd@devuan at May 23 00:11:51 ...
+>  kernel:[14909.652069] 7ec0:
+>  00000000 00000000 eba35c14 eba35c50
+>=20
+> Message from syslogd@devuan at May 23 00:11:51 ...
+>  kernel:[14909.662841] 7ee0: edd93000 edd93360 ede3da50 c052683c
+>  ffffffff edadcc10 edadcc9c 00000004
+>=20
+> Message from syslogd@devuan at May 23 00:11:51 ...
+>  kernel:[14909.671051] 7f00: 00000000 ede3d800 600f0013 edd93000
+>  eba35c14 eba35c50 edadcc10 edadcc10
+>=20
+> Message from syslogd@devuan at May 23 00:11:51 ...
+>  kernel:[14909.679260] 7f20: 00000002 00000001 edd9322c c0526cb4
+>  edd932a4 edb34600 edd932a0 edd932a4
+>=20
+> Message from syslogd@devuan at May 23 00:11:51 ...
+>  kernel:[14909.687499] 7f40: 00000000 edd932d0 edd932a0 edd932a4
+>  00000000 00000001 c0e82d14 edd932b4
+>=20
+> Message from syslogd@devuan at May 23 00:11:51 ...
+>  kernel:[14909.695709] 7f60: c0e82d14 c0148f40 00000000 edca5580
+>  00000000 ede39400 edca55a8 edd932a0
+>=20
+> Message from syslogd@devuan at May 23 00:11:51 ...
+>  kernel:[14909.703918] 7f80: ed88dd48 c0148e74 00000000 c01491ec
+>  ede39400 c01490dc 00000000 00000000
+>=20
+> Message from syslogd@devuan at May 23 00:11:51 ...
+>  kernel:[14909.708251] 7fa0: 00000000 00000000 00000000 c01010e8
+>  00000000 00000000 00000000 00000000
+>=20
+> Message from syslogd@devuan at May 23 00:11:51 ...
+>  kernel:[14909.720367] 7fc0: 00000000 00000000 00000000 00000000
+>  00000000 00000000 00000000 00000000
+>=20
+> Message from syslogd@devuan at May 23 00:11:51 ...
+>  kernel:[14909.724334] 7fe0: 00000000 00000000 00000000 00000000
+>  00000013 00000000 00000000 00000000
+>=20
+> Message from syslogd@devuan at May 23 00:11:51 ...
+>  kernel:[14909.807312] Code: e3a08c02 e5954034 e1a01005 e1a00007
+>  (e5943008)
+>  Write failed: Broken pipe
+>  pavel@duo:/data/l/k$
+> =20
+> --=20
+> (english) http://www.livejournal.com/~pavelmachek
+> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/b=
+log.html
 
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Signed-off-by: Len Brown <len.brown@intel.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Ingo Molnar <mingo@kernel.org>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/a25bba4a5b480aa4e9f8190005d7f5f53e29c8da.1557769318.git.len.brown@intel.com
 
----
- arch/x86/events/intel/uncore.c | 20 +++++++++++---------
- 1 file changed, 11 insertions(+), 9 deletions(-)
 
-diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
-index fc40a1473058..aeb5eae83750 100644
---- a/arch/x86/events/intel/uncore.c
-+++ b/arch/x86/events/intel/uncore.c
-@@ -100,7 +100,7 @@ ssize_t uncore_event_show(struct kobject *kobj,
- 
- struct intel_uncore_box *uncore_pmu_to_box(struct intel_uncore_pmu *pmu, int cpu)
- {
--	unsigned int pkgid = topology_logical_package_id(cpu);
-+	unsigned int pkgid = topology_logical_die_id(cpu);
- 
- 	/*
- 	 * The unsigned check also catches the '-1' return value for non
-@@ -942,7 +942,8 @@ static int uncore_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id
- 	if (phys_id < 0)
- 		return -ENODEV;
- 
--	pkg = topology_phys_to_logical_pkg(phys_id);
-+	pkg = (topology_max_die_per_package() > 1) ? phys_id :
-+					topology_phys_to_logical_pkg(phys_id);
- 	if (pkg < 0)
- 		return -EINVAL;
- 
-@@ -1033,7 +1034,8 @@ static void uncore_pci_remove(struct pci_dev *pdev)
- 
- 	box = pci_get_drvdata(pdev);
- 	if (!box) {
--		pkg = topology_phys_to_logical_pkg(phys_id);
-+		pkg = (topology_max_die_per_package() > 1) ? phys_id :
-+					topology_phys_to_logical_pkg(phys_id);
- 		for (i = 0; i < UNCORE_EXTRA_PCI_DEV_MAX; i++) {
- 			if (uncore_extra_pci_dev[pkg].dev[i] == pdev) {
- 				uncore_extra_pci_dev[pkg].dev[i] = NULL;
-@@ -1110,7 +1112,7 @@ static void uncore_change_type_ctx(struct intel_uncore_type *type, int old_cpu,
- 	struct intel_uncore_box *box;
- 	int i, pkg;
- 
--	pkg = topology_logical_package_id(old_cpu < 0 ? new_cpu : old_cpu);
-+	pkg = topology_logical_die_id(old_cpu < 0 ? new_cpu : old_cpu);
- 	for (i = 0; i < type->num_boxes; i++, pmu++) {
- 		box = pmu->boxes[pkg];
- 		if (!box)
-@@ -1151,7 +1153,7 @@ static int uncore_event_cpu_offline(unsigned int cpu)
- 	if (!cpumask_test_and_clear_cpu(cpu, &uncore_cpu_mask))
- 		goto unref;
- 	/* Find a new cpu to collect uncore events */
--	target = cpumask_any_but(topology_core_cpumask(cpu), cpu);
-+	target = cpumask_any_but(topology_die_cpumask(cpu), cpu);
- 
- 	/* Migrate uncore events to the new target */
- 	if (target < nr_cpu_ids)
-@@ -1164,7 +1166,7 @@ static int uncore_event_cpu_offline(unsigned int cpu)
- 
- unref:
- 	/* Clear the references */
--	pkg = topology_logical_package_id(cpu);
-+	pkg = topology_logical_die_id(cpu);
- 	for (; *types; types++) {
- 		type = *types;
- 		pmu = type->pmus;
-@@ -1223,7 +1225,7 @@ static int uncore_event_cpu_online(unsigned int cpu)
- 	struct intel_uncore_box *box;
- 	int i, ret, pkg, target;
- 
--	pkg = topology_logical_package_id(cpu);
-+	pkg = topology_logical_die_id(cpu);
- 	ret = allocate_boxes(types, pkg, cpu);
- 	if (ret)
- 		return ret;
-@@ -1242,7 +1244,7 @@ static int uncore_event_cpu_online(unsigned int cpu)
- 	 * Check if there is an online cpu in the package
- 	 * which collects uncore events already.
- 	 */
--	target = cpumask_any_and(&uncore_cpu_mask, topology_core_cpumask(cpu));
-+	target = cpumask_any_and(&uncore_cpu_mask, topology_die_cpumask(cpu));
- 	if (target < nr_cpu_ids)
- 		return 0;
- 
-@@ -1417,7 +1419,7 @@ static int __init intel_uncore_init(void)
- 	if (boot_cpu_has(X86_FEATURE_HYPERVISOR))
- 		return -ENODEV;
- 
--	max_packages = topology_max_packages();
-+	max_packages = topology_max_packages() * topology_max_die_per_package();
- 
- 	uncore_init = (struct intel_uncore_init_fun *)id->driver_data;
- 	if (uncore_init->pci_init) {
+--ungvfzrp4zeutewo
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlzmaN8ACgkQ2O7X88g7
++pqvEw/9GaGTkn2sdHP4E/nBVDOskOXymv3VuTAymJjFtLO14SxcogFTV5NXoyiw
+o8Mcu5Yq+aFehyzelPPHYRBxM795P+r+r5pGzDLkwxHFIJ9NPGmXs/LT6ByTIDjv
+HD0lqG0zL8TUI/+xhlVHcDqYCk8DMh9Jnu8YN3dovQBIF9AEl2zxfnTLcY1JTl93
+pAaXBcfwQ8vq++0vSIX4zYDh9UDUwHW6u2TR0vK0fM67/XD3WmM5YESelVtIxk7S
+NuRtYGKePQ+A+LvR+IXDg4p9o9IHZZ+a9WkiWfNa7r/rrWijYN1qN33FQmWBzGmd
+gFN6VO6SMsjO8PDn1/xDrDMvih4lc5YuhTI29uQTBzTFe8aPdYGFMu8JBr28XQKB
+3np8vxbB6Zp1dNngl9so9XjUba4UrQ3f+emh9seY/s8OVHNp2WOSItp9js25pNoV
+7ch1PIlAdSCZ30eWrFoVarj67Hv9/NV477jCwMqU27cbTyNYr3B4sb+O99H1IWAI
+s+U4DukAZftmepJlsftiosUZrNiwMASDiBfevBx3Y8nCI/W1HQ9L+//WfE84VVDt
+L4mCd2rFSswvXMKaPpWXFdLkNhNqyqA3ZYVaXt8IQdHZzy8RW125kenxiJOV1zz0
+05COfbMVDrAZYxCpcZWXJ7JXgVtxfHeSgvF8pGgpQAbUi1OcKxA=
+=Gk9g
+-----END PGP SIGNATURE-----
+
+--ungvfzrp4zeutewo--
