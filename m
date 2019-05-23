@@ -2,114 +2,123 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,PLING_QUERY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 663A2C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:57:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A504C282DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:58:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A32A2081C
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:57:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6BE42081C
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:58:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729958AbfEWI54 (ORCPT
+        id S1730151AbfEWI6L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 04:57:56 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:53490 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726230AbfEWI5z (ORCPT
+        Thu, 23 May 2019 04:58:11 -0400
+Received: from twhmllg4.macronix.com ([211.75.127.132]:48787 "EHLO
+        TWHMLLG4.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727428AbfEWI6L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 04:57:55 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id C9F058032F; Thu, 23 May 2019 10:57:42 +0200 (CEST)
-Date:   Thu, 23 May 2019 10:57:52 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     kernel list <linux-kernel@vger.kernel.org>, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org
-Subject: Re: 5.1.0-next-20190520 -- emacs segfaults on 32-bit machine Re:
- 5.2-rc0.8: emacs segfaults?! x220, with 32-bit userland
-Message-ID: <20190523085752.GA2241@amd>
-References: <20190519221700.GA7154@amd>
- <20190520160636.z6fpjiidc2d5ko5g@linutronix.de>
- <20190520231342.GA20835@amd>
- <20190521073240.mikv2ufwyriy4q7r@linutronix.de>
- <20190522183329.GB10003@amd>
- <20190523083724.GA21185@amd>
+        Thu, 23 May 2019 04:58:11 -0400
+Received: from twhfmnt1.mxic.com.tw (twhfm1p2.macronix.com [172.17.20.92])
+        by TWHMLLG4.macronix.com with ESMTP id x4N8w1Kv035351;
+        Thu, 23 May 2019 16:58:01 +0800 (GMT-8)
+        (envelope-from masonccyang@mxic.com.tw)
+Received: from MXML06C.mxic.com.tw (mxml06c.mxic.com.tw [172.17.14.55])
+        by Forcepoint Email with ESMTP id 84B201FAC184BC8B8955;
+        Thu, 23 May 2019 16:58:01 +0800 (CST)
+In-Reply-To: <20190520142333.390091d5@xps13>
+References: <1555320234-15802-1-git-send-email-masonccyang@mxic.com.tw> <1555320234-15802-3-git-send-email-masonccyang@mxic.com.tw>
+        <20190512151820.4f2dd9da@xps13> <OF074A1F06.5C1A58BE-ON482583FD.0031CD95-482583FD.003437AD@mxic.com.tw> <20190520142333.390091d5@xps13>
+To:     "Miquel Raynal" <miquel.raynal@bootlin.com>
+Cc:     bbrezillon@kernel.org, broonie@kernel.org,
+        christophe.kerello@st.com, computersforpeace@gmail.com,
+        devicetree@vger.kernel.org, dwmw2@infradead.org,
+        geert@linux-m68k.org, juliensu@mxic.com.tw, lee.jones@linaro.org,
+        liang.yang@amlogic.com, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org,
+        marcel.ziswiler@toradex.com, marek.vasut@gmail.com,
+        mark.rutland@arm.com, paul.burton@mips.com, richard@nod.at,
+        robh+dt@kernel.org, stefan@agner.ch, zhengxunli@mxic.com.tw
+Subject: Re: [PATCH v3 2/4] mtd: rawnand: Add Macronix MX25F0A NAND controller
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="pf9I7BMVVzbSWLtt"
-Content-Disposition: inline
-In-Reply-To: <20190523083724.GA21185@amd>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+X-KeepSent: ADC47344:0F9941B2-48258403:002336E3;
+ type=4; name=$KeepSent
+X-Mailer: Lotus Notes Release 8.5.3FP4 SHF90 June 10, 2013
+Message-ID: <OFADC47344.0F9941B2-ON48258403.002336E3-48258403.003141F0@mxic.com.tw>
+From:   masonccyang@mxic.com.tw
+Date:   Thu, 23 May 2019 16:58:02 +0800
+X-MIMETrack: Serialize by Router on MXML06C/TAIWAN/MXIC(Release 9.0.1FP10 HF265|July 25, 2018) at
+ 2019/05/23 PM 04:58:01,
+        Serialize complete at 2019/05/23 PM 04:58:01
+Content-Type: text/plain; charset="US-ASCII"
+X-MAIL: TWHMLLG4.macronix.com x4N8w1Kv035351
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---pf9I7BMVVzbSWLtt
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi Miquel,
 
-Hi!
+> > 
+> > > > +
+> > > > +static void mxic_nand_select_chip(struct nand_chip *chip, int 
+chipnr) 
+> > > 
+> > > _select_target() is preferred now 
+> > 
+> > Do you mean I implement mxic_nand_select_target() to control #CS ?
+> > 
+> > If so, I need to call mxic_nand_select_target( ) to control #CS ON
+> > and then #CS OFF in _exec_op() due to nand_select_target()<in 
+nand_base,c>
+> > is still calling chip->legacy.select_chip ?
+> 
+> You must forget about the ->select_chip() callback. Now it should be
+> handled directly from the controller driver. Please have a look at the
+> commit pointed against the marvell_nand.c driver.
 
-> > I did not notice any new crashes.
->=20
-> New crash now; different machine, way -next kernel... and I even have
-> a backtrace.
+I have no Marvell NFC datasheet and have one question.
 
-And one more crash, on x220:
+In marvell_nand.c, there is no xxx_deselect_target() or 
+something like that doing #CS OFF.
+marvell_nfc_select_target() seems always to make one of chip or die
+#CS keep low.
 
-pavel@duo:/data/l/linux-next-32$ uname -a
-Linux duo 5.2.0-rc1+ #32 SMP Mon May 20 12:51:17 CEST 2019 x86_64
-GNU/Linux
-pavel@duo:~$ fg
-e cip/HOURS
-Fatal error 11: Segmentation fault
-Backtrace:
-emacs[0x8138719]
-emacs[0x8120446]
-emacs[0x813758e]
-emacs[0x81375fb]
-/lib/i386-linux-gnu/i686/cmov/libpthread.so.0(+0xecb8)[0xf634fcb8]
-/lib/i386-linux-gnu/i686/cmov/libc.so.6(+0xebbf3)[0xf6266bf3]
-/lib/i386-linux-gnu/i686/cmov/libc.so.6(pselect+0xd3)[0xf625f363]
-emacs[0x81ffdd9]
-emacs[0x81c7ba4]
-emacs[0x8127815]
-emacs[0x812ada3]
-emacs[0x812bdad]
-emacs[0x812d838]
-emacs[0x818b76c]
-emacs[0x8120890]
-emacs[0x818b66b]
-emacs[0x8124b84]
-emacs[0x8124e3f]
-emacs[0x8059cb0]
-/lib/i386-linux-gnu/i686/cmov/libc.so.6(__libc_start_main+0xf3)[0xf6194a63]
-emacs[0x805a76f]
-^P/data/pavel/bin/e: line 2: 12713 Segmentation fault      (core
-dumped) emacs -nw $*
-pavel@duo:~$ fg
+Is it right ?
 
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+How to make all #CS keep high for NAND to enter 
+low-power standby mode if driver don't use "legacy.select_chip()" ?
 
---pf9I7BMVVzbSWLtt
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+thanks & best regards,
+Mason
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+CONFIDENTIALITY NOTE:
 
-iEYEARECAAYFAlzmYJAACgkQMOfwapXb+vK9SACeOdCFnzVjgh1CaVG93OCWopYI
-5K0AnjkUQVkOcJzugH9mldVuCNtclTvz
-=Yeyj
------END PGP SIGNATURE-----
+This e-mail and any attachments may contain confidential information 
+and/or personal data, which is protected by applicable laws. Please be 
+reminded that duplication, disclosure, distribution, or use of this e-mail 
+(and/or its attachments) or any part thereof is prohibited. If you receive 
+this e-mail in error, please notify us immediately and delete this mail as 
+well as its attachment(s) from your system. In addition, please be 
+informed that collection, processing, and/or use of personal data is 
+prohibited unless expressly permitted by personal data protection laws. 
+Thank you for your attention and cooperation.
 
---pf9I7BMVVzbSWLtt--
+Macronix International Co., Ltd.
+
+=====================================================================
+
+
+
+============================================================================
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
+
