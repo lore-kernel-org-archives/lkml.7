@@ -4,51 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 061BBC282E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:32:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4C19C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:32:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C695F20675
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:32:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B25020879
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:32:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639968;
-	bh=s72rLvTOwA5x4B2XRi8yDybv5ixqBUHpoT+rgHvTsdc=;
+	s=default; t=1558639977;
+	bh=PBtTUBAOYf3seKE7fedPr1UQ96MftwcjzEdHhxafmvk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=stO3nL6D5AEJ0Z3d2My2Z3vQTkz4lWEWyZu18Q3IM0RQ2WJIeOIESVUWIDA0E2zri
-	 sd3nFQcbcOxLJBmcvuBsK7o1RORvKGS2ohLPSYi0AqWLCKtTaoQK4g9SlhUqNFTHPl
-	 SddYH06LB8iFfgMz2h7tkDmATV2LEBxMET5mHseQ=
+	b=lS7Ci0SgbU6BTaN7NdoK9BZ8ZJ6nBBO3tgI/hh1knXKIk60dxNzNJjgvGquWNftSA
+	 k6SYq24FsnUW3j5DmUdgSlB4poBwvkqm3NQuDNdThMoiWMl2hrn+p4A0e4zl+vxpRs
+	 a12SqYpTwfKeI+++AT1Fs1UnZQ0uq+9uH4w/MrME=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392120AbfEWTaW (ORCPT
+        id S2392061AbfEWTaH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:30:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43792 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:30:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43366 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392102AbfEWTaS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:30:18 -0400
+        id S2391787AbfEWTaE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:30:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3EA6021855;
-        Thu, 23 May 2019 19:30:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB2A8206BA;
+        Thu, 23 May 2019 19:30:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639817;
-        bh=s72rLvTOwA5x4B2XRi8yDybv5ixqBUHpoT+rgHvTsdc=;
+        s=default; t=1558639804;
+        bh=PBtTUBAOYf3seKE7fedPr1UQ96MftwcjzEdHhxafmvk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yBpsTC6760S5NV5fn8XS0xPjTGu3e5RuTigGInIpDS279wdU6GDnLnn1ZB4z/UGb6
-         eZStCrX+RVkcgK5lNbRad6eBgGsDTt9bbEXGA/F+wKde3z+WAe4JSwx2b56OIoYnC1
-         rwBlHdE8OwUsNd7u41/gnQG+h4pOjv1L7teMt4AY=
+        b=k6AZjSvGELd0cPox94KdfsyDHHd7FF4zWvV+pH1ccJj8FkACXXkzUGIeDAJ55CTu7
+         jRRRjNtG01Q9d7NWMSbXNNXGArFABC3dLm1j8C7Wk8fmTNlLTihN2Yl4AKuFQi77/A
+         EGOLSb/Ou9jSPT6ngy6U6QPb7pZyvP5TeKl4Gqpo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andreas Ziegler <andreas.ziegler@fau.de>,
+        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        Paul Burton <paul.burton@mips.com>, linux-mips@linux-mips.org,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 5.1 077/122] tracing: probeevent: Fix to make the type of $comm string
-Date:   Thu, 23 May 2019 21:06:39 +0200
-Message-Id: <20190523181714.962759068@linuxfoundation.org>
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org
+Subject: [PATCH 5.1 082/122] MIPS: perf: Fix build with CONFIG_CPU_BMIPS5000 enabled
+Date:   Thu, 23 May 2019 21:06:44 +0200
+Message-Id: <20190523181715.727675622@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181705.091418060@linuxfoundation.org>
 References: <20190523181705.091418060@linuxfoundation.org>
@@ -61,52 +67,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-commit 3dd1f7f24f8ceec00bbbc364c2ac3c893f0fdc4c upstream.
+commit 1b1f01b653b408ebe58fec78c566d1075d285c64 upstream.
 
-Fix to make the type of $comm "string".  If we set the other type to $comm
-argument, it shows meaningless value or wrong data. Currently probe events
-allow us to set string array type (e.g. ":string[2]"), or other digit types
-like x8 on $comm. But since clearly $comm is just a string data, it should
-not be fetched by other types including array.
+arch/mips/kernel/perf_event_mipsxx.c: In function 'mipsxx_pmu_enable_event':
+arch/mips/kernel/perf_event_mipsxx.c:326:21: error: unused variable 'event' [-Werror=unused-variable]
+  struct perf_event *event = container_of(evt, struct perf_event, hw);
+                     ^~~~~
 
-Link: http://lkml.kernel.org/r/155723736241.9149.14582064184468574539.stgit@devnote2
+Fix this by making use of IS_ENABLED() to simplify the code and avoid
+unnecessary ifdefery.
 
-Cc: Andreas Ziegler <andreas.ziegler@fau.de>
+Fixes: 84002c88599d ("MIPS: perf: Fix perf with MT counting other threads")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: linux-mips@linux-mips.org
+Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Ingo Molnar <mingo@redhat.com>
-Cc: stable@vger.kernel.org
-Fixes: 533059281ee5 ("tracing: probeevent: Introduce new argument fetching code")
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: James Hogan <jhogan@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-mips@vger.kernel.org
+Cc: stable@vger.kernel.org # v4.18+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/trace/trace_probe.c |   13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ arch/mips/kernel/perf_event_mipsxx.c |   21 +++------------------
+ 1 file changed, 3 insertions(+), 18 deletions(-)
 
---- a/kernel/trace/trace_probe.c
-+++ b/kernel/trace/trace_probe.c
-@@ -420,13 +420,14 @@ static int traceprobe_parse_probe_arg_bo
- 				return -E2BIG;
- 		}
+--- a/arch/mips/kernel/perf_event_mipsxx.c
++++ b/arch/mips/kernel/perf_event_mipsxx.c
+@@ -64,17 +64,11 @@ struct mips_perf_event {
+ 	#define CNTR_EVEN	0x55555555
+ 	#define CNTR_ODD	0xaaaaaaaa
+ 	#define CNTR_ALL	0xffffffff
+-#ifdef CONFIG_MIPS_MT_SMP
+ 	enum {
+ 		T  = 0,
+ 		V  = 1,
+ 		P  = 2,
+ 	} range;
+-#else
+-	#define T
+-	#define V
+-	#define P
+-#endif
+ };
+ 
+ static struct mips_perf_event raw_event;
+@@ -325,9 +319,7 @@ static void mipsxx_pmu_enable_event(stru
+ {
+ 	struct perf_event *event = container_of(evt, struct perf_event, hw);
+ 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+-#ifdef CONFIG_MIPS_MT_SMP
+ 	unsigned int range = evt->event_base >> 24;
+-#endif /* CONFIG_MIPS_MT_SMP */
+ 
+ 	WARN_ON(idx < 0 || idx >= mipspmu.num_counters);
+ 
+@@ -336,21 +328,15 @@ static void mipsxx_pmu_enable_event(stru
+ 		/* Make sure interrupt enabled. */
+ 		MIPS_PERFCTRL_IE;
+ 
+-#ifdef CONFIG_CPU_BMIPS5000
+-	{
++	if (IS_ENABLED(CONFIG_CPU_BMIPS5000)) {
+ 		/* enable the counter for the calling thread */
+ 		cpuc->saved_ctrl[idx] |=
+ 			(1 << (12 + vpe_id())) | BRCM_PERFCTRL_TC;
+-	}
+-#else
+-#ifdef CONFIG_MIPS_MT_SMP
+-	if (range > V) {
++	} else if (IS_ENABLED(CONFIG_MIPS_MT_SMP) && range > V) {
+ 		/* The counter is processor wide. Set it up to count all TCs. */
+ 		pr_debug("Enabling perf counter for all TCs\n");
+ 		cpuc->saved_ctrl[idx] |= M_TC_EN_ALL;
+-	} else
+-#endif /* CONFIG_MIPS_MT_SMP */
+-	{
++	} else {
+ 		unsigned int cpu, ctrl;
+ 
+ 		/*
+@@ -365,7 +351,6 @@ static void mipsxx_pmu_enable_event(stru
+ 		cpuc->saved_ctrl[idx] |= ctrl;
+ 		pr_debug("Enabling perf counter for CPU%d\n", cpu);
  	}
--	/*
--	 * The default type of $comm should be "string", and it can't be
--	 * dereferenced.
--	 */
--	if (!t && strcmp(arg, "$comm") == 0)
-+
-+	/* Since $comm can not be dereferred, we can find $comm by strcmp */
-+	if (strcmp(arg, "$comm") == 0) {
-+		/* The type of $comm must be "string", and not an array. */
-+		if (parg->count || (t && strcmp(t, "string")))
-+			return -EINVAL;
- 		parg->type = find_fetch_type("string");
--	else
-+	} else
- 		parg->type = find_fetch_type(t);
- 	if (!parg->type) {
- 		pr_info("Unsupported type: %s\n", t);
+-#endif /* CONFIG_CPU_BMIPS5000 */
+ 	/*
+ 	 * We do not actually let the counter run. Leave it until start().
+ 	 */
 
 
