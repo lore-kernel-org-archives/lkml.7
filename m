@@ -4,110 +4,104 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EF21C282DE
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 23:56:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 352DFC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 23:58:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FAD221738
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 23:56:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF4A92177E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 23:58:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="AnLJrehX"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="e+/gloxc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388702AbfEWX4X (ORCPT
+        id S2388664AbfEWX6F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 19:56:23 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:37445 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388232AbfEWX4T (ORCPT
+        Thu, 23 May 2019 19:58:05 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:45267 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388232AbfEWX6F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 19:56:19 -0400
-Received: by mail-lj1-f196.google.com with SMTP id h19so1587985ljj.4
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 16:56:18 -0700 (PDT)
+        Thu, 23 May 2019 19:58:05 -0400
+Received: by mail-lj1-f194.google.com with SMTP id r76so1591328lja.12
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 16:58:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sifive.com; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=Rwcv7ftRka+X8HiYdZS3z2oKZ4APHYrkaB4F2nbQq/A=;
-        b=AnLJrehX/9SKzLuWRrRIqP+/yUIsQFZcIiCHKFCoKVjJLszzRW631gMNPPgRA8tOP1
-         wrqfXWhHRRoqYvBwzWiiheJDTGkKdbcNN+ngCaynpJWye/aRivH1AzTDYkZsRNUu7XfN
-         Hzogg9u4Z5W+AR7yKg7u5qHSEeRnmQkCh0b3VhGWXUmBZ+yBgXFGWM1CQrCPUYaKuyHT
-         dGVRDU156ornBXx5rdkou5+WPU/hu7WGJdKQ1X81ezANzfm5ub1f9DQNvAR0T+WQUqB4
-         8w9RzQRnOTfbvcIe+5gkLnKMB7IZcjZ1IAmhe3nznq8L+Sfaz0nuOiW1V0H+zHcEx/UE
-         OWkg==
+        bh=XOaG+GEFquIWc8ZqL+TFm0HU4q3YYIEJg9ZNEaLldJA=;
+        b=e+/gloxcunIS64ypJ+CKWxOR6GHBOe89ee8OezcPnTixwXbrsj4kCp/H/qB/aRRzIh
+         QByPd96mLzxgV0ur/42UdEdAgLZta9m8/n8uZwMOjeSb+TCAnc5IAjCkYySrExJSMb2d
+         5Z95YKknKuZcNyY2ZBYmfV86byhj48xIMZADt3C/Bsyc5/tMvZzKhPLYGPDo19Yqvmjv
+         Fud3GSHNHsFt1hu/P7rIEGw5vTXg2484c7fMGi49h6KWxersG0QgNTO1cpjLK/UmrfDl
+         qsm3ycA+ZCK/MN4Cc9W533cBQNXDsSoSEJKuP2E1y+UuI6XDwek9p6GetycEEkiOPmfm
+         YvEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to;
-        bh=Rwcv7ftRka+X8HiYdZS3z2oKZ4APHYrkaB4F2nbQq/A=;
-        b=TTnP1llhhNJg1VCmLK4F3nJpuoj2I4DV727Hy4HhlVBfy4pUwbCJ63Z2waMz0wrSo6
-         0nHL7oHYGm2vatfvQev4kgyHNGg6ItXW+Dey2NPe3qh/tQSg1GGBRLcEDMIWm1h5n6o6
-         y6VnllP8oqTlZLJ5nB7pq1O0ECwJM2tNu+RdOwhTWtfWzf7UeQUN8PhL1uSylAf9gKRp
-         24NY4+IojnYg8v4+Ql+Mv8fgGiuTfZZAuNQGO9wTVAVh+aGgJSUWOlPGlavUYYJlJBG5
-         n+OhFbNO/0FvkU+9UvuZ0qjY7zOgqjFuI5p6pmLDJCdsWD52WUM3/l0waage8QguIY2p
-         SzbA==
-X-Gm-Message-State: APjAAAVyq+OROKiJBJ/To97I9pKyZcQBrn1fggArmOpV0Z8utpPSnP8J
-        QEVMcRvKdYwb6n08ndCiH2fpitsajioDp0PzHfJD5g==
-X-Google-Smtp-Source: APXvYqzYv7m8kDn0KpeHZdh5ZzlR7YUak9Qm+XHYYicHUR74JCz6mwG62iVCuLEISNmZxFqT3y6cpf3pLq0Fp50gAM0=
-X-Received: by 2002:a2e:655b:: with SMTP id z88mr46764454ljb.108.1558655777580;
- Thu, 23 May 2019 16:56:17 -0700 (PDT)
+        bh=XOaG+GEFquIWc8ZqL+TFm0HU4q3YYIEJg9ZNEaLldJA=;
+        b=ow+atmzn+amflvzLhENbi7Y20yFAEIxr/NAi9572+aPpMc7FbMQHY6c6faLMzdJqP2
+         2SoWAONsSUG71Ep+fwPAPeXqQgAMgScEGOKIH1J9NsccXzWfxpQRWb9jSgl2OyS7MZfA
+         9Hac9docNZGblBpMiHye3tGUmL58R4bLAXhMyCsg/WoUudiOiPXXrpiMjlrrk+vR3DTm
+         Qa6ZqQwBYVqvy0GBJkTPh8W7S51V2r1oy21NPyakbqQ+4VDAAqJPHJRGbGHEbZ9L/IQc
+         vRxfvyzA2EeUbbpWzu9oYGFV9mLdyM3Y8Gjv6Y8IOwzkGlSeFa8z5dJpUBUlbOZvUZdg
+         0hbA==
+X-Gm-Message-State: APjAAAXtescqX8OPbjd359R5MfoDQZuyAz+cdlDP9c67bjYHhD+11csH
+        u0oo/vISkS2C3amx+e2X4vtIJyGuJ0afEu42gAG3Ug==
+X-Google-Smtp-Source: APXvYqz7QckuaSLcN3Ux3XggQtq3/yHHrcwrhdr4OBzCv7p72vzW4vje4uHz3AT/cEgJbPkLOntoCGlEE9G8OL+e5sI=
+X-Received: by 2002:a2e:874b:: with SMTP id q11mr22243701ljj.48.1558655883455;
+ Thu, 23 May 2019 16:58:03 -0700 (PDT)
 MIME-Version: 1.0
-References: <1558648079-13893-1-git-send-email-alan.mikhak@sifive.com>
-In-Reply-To: <1558648079-13893-1-git-send-email-alan.mikhak@sifive.com>
+References: <1558647944-13816-1-git-send-email-alan.mikhak@sifive.com>
+In-Reply-To: <1558647944-13816-1-git-send-email-alan.mikhak@sifive.com>
 From:   Alan Mikhak <alan.mikhak@sifive.com>
-Date:   Thu, 23 May 2019 16:56:06 -0700
-Message-ID: <CABEDWGxMXg7RAgrUL-7W6vgC0BpCj9ys+i7myjxdBgn3vn_P6Q@mail.gmail.com>
-Subject: Re: [PATCH v2] PCI: endpoint: Allocate enough space for fixed size BAR
+Date:   Thu, 23 May 2019 16:57:52 -0700
+Message-ID: <CABEDWGyb3zTaiRqt7-mvrS6Dvhu0Fkhjp4nvaJ-vaJrD3n=0_Q@mail.gmail.com>
+Subject: Re: [PATCH v2] PCI: endpoint: Set endpoint controller pointer to null
 To:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         kishon@ti.com, lorenzo.pieralisi@arm.com,
         linux-riscv@lists.infradead.org,
         Palmer Dabbelt <palmer@sifive.com>,
         Paul Walmsley <paul.walmsley@sifive.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        gustavo.pimentel@synopsys.com, wen.yang99@zte.com.cn, kjlu@umn.edu
+        Bjorn Helgaas <bhelgaas@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+Bjorn Helgaas, +Gustavo Pimentel, +Wen Yang, +Kangjie Lu
++Bjorn Helgaas
 
-On Thu, May 23, 2019 at 2:48 PM Alan Mikhak <alan.mikhak@sifive.com> wrote:
+On Thu, May 23, 2019 at 2:46 PM Alan Mikhak <alan.mikhak@sifive.com> wrote:
 >
-> PCI endpoint test function code should honor the .bar_fixed_size parameter
-> from underlying endpoint controller drivers or results may be unexpected.
+> Set endpoint controller pointer to null in pci_epc_remove_epf()
+> to avoid -EBUSY on subsequent call to pci_epc_add_epf().
 >
-> In pci_epf_test_alloc_space(), check if BAR being used for test register
-> space is a fixed size BAR. If so, allocate the required fixed size.
+> Requires checking for null endpoint function pointer.
 >
 > Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
 > ---
->  drivers/pci/endpoint/functions/pci-epf-test.c | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
+>  drivers/pci/endpoint/pci-epc-core.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 >
-> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-> index 27806987e93b..7d41e6684b87 100644
-> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
-> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-> @@ -434,10 +434,16 @@ static int pci_epf_test_alloc_space(struct pci_epf *epf)
->         int bar;
->         enum pci_barno test_reg_bar = epf_test->test_reg_bar;
->         const struct pci_epc_features *epc_features;
-> +       size_t test_reg_size;
+> diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
+> index e4712a0f249c..2091508c1620 100644
+> --- a/drivers/pci/endpoint/pci-epc-core.c
+> +++ b/drivers/pci/endpoint/pci-epc-core.c
+> @@ -519,11 +519,12 @@ void pci_epc_remove_epf(struct pci_epc *epc, struct pci_epf *epf)
+>  {
+>         unsigned long flags;
 >
->         epc_features = epf_test->epc_features;
+> -       if (!epc || IS_ERR(epc))
+> +       if (!epc || IS_ERR(epc) || !epf)
+>                 return;
 >
-> -       base = pci_epf_alloc_space(epf, sizeof(struct pci_epf_test_reg),
-> +       if (epc_features->bar_fixed_size[test_reg_bar])
-> +               test_reg_size = bar_size[test_reg_bar];
-> +       else
-> +               test_reg_size = sizeof(struct pci_epf_test_reg);
-> +
-> +       base = pci_epf_alloc_space(epf, test_reg_size,
->                                    test_reg_bar, epc_features->align);
->         if (!base) {
->                 dev_err(dev, "Failed to allocated register space\n");
+>         spin_lock_irqsave(&epc->lock, flags);
+>         list_del(&epf->list);
+> +       epf->epc = NULL;
+>         spin_unlock_irqrestore(&epc->lock, flags);
+>  }
+>  EXPORT_SYMBOL_GPL(pci_epc_remove_epf);
 > --
 > 2.7.4
 >
