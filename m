@@ -2,235 +2,128 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F1A4C282DE
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 17:44:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58174C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 17:45:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EBE221850
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 17:44:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 296C221851
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 17:45:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vI2eAyq9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731416AbfEWRoA (ORCPT
+        id S1731449AbfEWRpH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 13:44:00 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:51676 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731098AbfEWRn7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 13:43:59 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 38A8E374;
-        Thu, 23 May 2019 10:43:59 -0700 (PDT)
-Received: from mbp (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1EE343F5AF;
-        Thu, 23 May 2019 10:43:52 -0700 (PDT)
-Date:   Thu, 23 May 2019 18:43:46 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     enh <enh@google.com>, Evgenii Stepanov <eugenis@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Khalid Aziz <khalid.aziz@oracle.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
-        kvm@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
-Subject: Re: [PATCH v15 00/17] arm64: untag user pointers passed to the kernel
-Message-ID: <20190523174345.6sv3kcipkvlwfmox@mbp>
-References: <20190517144931.GA56186@arrakis.emea.arm.com>
- <CAFKCwrj6JEtp4BzhqO178LFJepmepoMx=G+YdC8sqZ3bcBp3EQ@mail.gmail.com>
- <20190521182932.sm4vxweuwo5ermyd@mbp>
- <201905211633.6C0BF0C2@keescook>
- <20190522101110.m2stmpaj7seezveq@mbp>
- <CAJgzZoosKBwqXRyA6fb8QQSZXFqfHqe9qO9je5TogHhzuoGXJQ@mail.gmail.com>
- <20190522163527.rnnc6t4tll7tk5zw@mbp>
- <201905221316.865581CF@keescook>
- <20190523144449.waam2mkyzhjpqpur@mbp>
- <201905230917.DEE7A75EF0@keescook>
+        Thu, 23 May 2019 13:45:07 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:35063 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730899AbfEWRpH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 13:45:07 -0400
+Received: by mail-wm1-f68.google.com with SMTP id w9so542808wmi.0;
+        Thu, 23 May 2019 10:45:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=vuxVMAWDY8cHqFufnZqQDPDTejTS+OO13eju916wpAM=;
+        b=vI2eAyq9hKq3yUb8UJwbCHWls1VGJxRoodfP5z/Amr8kMKr36po8hAhqBGAnkouHaF
+         afZ8awEuD5giCGcI0q/4bI/KHvjtqhVdfhgcThVvn872EYmcSqrgEcBBOpXtcdJBi5w7
+         IxQBguL/jHZK2AFghT+H6ZmwRI3akQrcUcxyIbQzpK1Od66MWiyvWNCslZ0sZ4O5PVcP
+         f2LAS6nZbcCk4e5vtd9tcYYli8P8H0d+f/JpoOz6CQHafLaz7Zv+olNGZoAHk3UErGa6
+         ko5zawNE1pAVoAiKIZk0/M17jEK6BWm758t13RTckNgmozGqh2P1PEIEZ5jM33dj1g1b
+         7wcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=vuxVMAWDY8cHqFufnZqQDPDTejTS+OO13eju916wpAM=;
+        b=TJq8x1TArYNjYuDoWNj6e3EgaIfJRihLaeKFqsQNbQNstwRypv0q6YD6F5l+IibOmx
+         BpeYKVf2MMhNGg60CYj+cWtSi9hiH+c1h5vL2yncafLQKy/UEuSyYdAp8IFWwO/oiPYE
+         1Qmp4lC6b5XdUTuMg3lgnPFgUpZODDBTziSUC4kOhhAH6Gf1PqW5dEL6+jfmjYKjWKxB
+         X+uW2L4LtYq8FSQZ5XszLDyh5/nDDEBFrGvfdArDdlLlMXoyx7YykKLDEKy6fihdfkIB
+         oWxuwohYuwnhfylXvASLaaOu2LFxDibsa2bP9+t3vDuf4VGkPj8N1k3M9KbuUipOyF6+
+         cAcw==
+X-Gm-Message-State: APjAAAXiRbHVpPZIX2hrZAtAtu28+0+khtAqOxP3ce3rPWp+xfDatAaY
+        gHcyMb54MByxUKOJ4i2TuxBsYiCq
+X-Google-Smtp-Source: APXvYqxNJqc/gQ7grU9j6U0zREsGXnv+Lf9QVw3rz191xYvNdZT5fQgdkL2G2wKSyuaEs7TrBgJ8LA==
+X-Received: by 2002:a1c:1d4:: with SMTP id 203mr13794857wmb.76.1558633503852;
+        Thu, 23 May 2019 10:45:03 -0700 (PDT)
+Received: from ?IPv6:2003:ea:8be9:7a00:3cd1:e8fe:d810:b3f0? (p200300EA8BE97A003CD1E8FED810B3F0.dip0.t-ipconnect.de. [2003:ea:8be9:7a00:3cd1:e8fe:d810:b3f0])
+        by smtp.googlemail.com with ESMTPSA id n2sm5676383wro.13.2019.05.23.10.45.02
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 23 May 2019 10:45:03 -0700 (PDT)
+Subject: Re: r8169: Link only up after 16 s (A link change request failed with
+ some changes committed already. Interface enp3s0 may have been left with an
+ inconsistent configuration, please check.)
+To:     Paul Menzel <pmenzel@molgen.mpg.de>,
+        Realtek linux nic maintainers <nic_swsd@realtek.com>
+Cc:     netdev@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <a05b0b6c-505c-db61-96ac-813e68a26cc6@molgen.mpg.de>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Message-ID: <abb2d596-d9fe-5426-8f1d-2ef4a7eb9e1a@gmail.com>
+Date:   Thu, 23 May 2019 19:44:57 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <201905230917.DEE7A75EF0@keescook>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <a05b0b6c-505c-db61-96ac-813e68a26cc6@molgen.mpg.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 09:38:19AM -0700, Kees Cook wrote:
-> On Thu, May 23, 2019 at 03:44:49PM +0100, Catalin Marinas wrote:
-> > There is also the obvious requirement which I didn't mention: new user
-> > space continues to run on new/subsequent kernel versions. That's one of
-> > the points of contention for this series (ignoring MTE) with the
-> > maintainers having to guarantee this without much effort. IOW, do the
-> > 500K+ new lines in a subsequent kernel version break any user space out
-> > there? I'm only talking about the relaxed TBI ABI. Are the usual LTP,
-> > syskaller sufficient? Better static analysis would definitely help.
+On 23.05.2019 13:00, Paul Menzel wrote:
+> Dear Linux folks,
 > 
-> We can't have perfect coverage of people actively (or accidentally)
-> working to trick static analyzers (and the compiler) into "forgetting"
-> about a __user annotation. We can certainly improve analysis (I see
-> the other sub-thread on that), but I'd like that work not to block
-> this series.
-
-I don't want to block this series either as it's a prerequisite for MTE
-but at the moment I'm not confident we tracked down all the places where
-things can break and what the future effort will be to analyse new
-kernel changes.
-
-We've made lots of progress since March last year (I think when the
-first version was posted) by both identifying new places in the kernel
-that need untagging and limiting the ranges that user space can tag
-(e.g. an mmap() on a device should not allow tagged pointers). Can we
-say we are done or more investigation is needed?
-
-> What on this front would you be comfortable with? Given it's a new
-> feature isn't it sufficient to have a CONFIG (and/or boot option)?
-
-I'd rather avoid re-building kernels. A boot option would do, unless we
-see value in a per-process (inherited) personality or prctl. The
-per-process option has the slight advantage that I can boot my machine
-normally while being able to run LTP with a relaxed ABI (and a new libc
-which tags pointers). I admit I don't have a very strong argument on a
-per-process opt-in.
-
-Another option would be a sysctl control together with a cmdline option.
-
-> > Or, if we ever want MTE to be turned on by default (i.e. tag checking),
-> > even if everything is tagged with 0, we have to disallow TBI for user
-> > and this includes hwasan. There were a small number of programs using
-> > the TBI (I think some JavaScript compilers tried this). But now we are
-> > bringing in the hwasan support and this can be a large user base. Shall
-> > we add an ELF note for such binaries that use TBI/hwasan?
 > 
-> Just to be clear, you say "disallow TBI for user" -- you mean a
-> particular process, yes? i.e. there is no architectural limitation that
-> says once we're using MTE nothing can switch to TBI. i.e. a process is
-> either doing MTE or TBI (or nothing, but that's the same as TBI).
-
-I may have answered this below. The architecture does not allow TBI
-(i.e. faults) if MTE is enabled for a process and address range.
-
-> > > So there needs to be some way to let the kernel know which of three
-> > > things it should be doing:
-> > > 1- leaving userspace addresses as-is (present)
-> > > 2- wiping the top bits before using (this series)
-> > 
-> > (I'd say tolerating rather than wiping since get_user still uses the tag
-> > in the current series)
-> > 
-> > The current series does not allow any choice between 1 and 2, the
-> > default ABI basically becomes option 2.
+> I optimized the Linux kernel configuration on my ASRock E350M1, and it now
+> boots really fast.
 > 
-> What about testing tools that intentionally insert high bits for syscalls
-> and are _expecting_ them to fail? It seems the TBI series will break them?
-> In that case, do we need to opt into TBI as well?
-
-If there are such tools, then we may need a per-process control. It's
-basically an ABI change.
-
-> > > 3- wiping the top bits for most things, but retaining them for MTE as
-> > >    needed (the future)
-> > 
-> > 2 and 3 are not entirely compatible as a tagged pointer may be checked
-> > against the memory colour by the hardware. So you can't have hwasan
-> > binary with MTE enabled.
+> Unfortunately, that seems to cause the network driver to hit some corner
+> case, so that the link is supposedly down, although it should be up. The
+> cable is plugged in the whole time.
 > 
-> Right: a process must be either MTE or TBI, not both.
-
-Indeed.
-
-> > > I expect MTE to be the "default" in the future. Once a system's libc has
-> > > grown support for it, everything will be trying to use MTE. TBI will be
-> > > the special case (but TBI is effectively a prerequisite).
-> > 
-> > The kernel handling of tagged pointers is indeed a prerequisite. The ABI
-> > distinction between the above 2 and 3 needs to be solved.
+> ```
+> [    2.990757] libphy: r8169: probed
+> [    2.992661] r8169 0000:03:00.0 eth0: RTL8168e/8111e, bc:5f:f4:c8:d3:98, XID 2c2, IRQ 28
+> [    2.992669] r8169 0000:03:00.0 eth0: jumbo features [frames: 9200 bytes, tx checksumming: ko]
+> [    3.294484] usb 5-2: new low-speed USB device number 2 using ohci-pci
+> [    3.458711] usb 5-2: New USB device found, idVendor=1241, idProduct=1122, bcdDevice= 1.00
+> [    3.458718] usb 5-2: New USB device strings: Mfr=0, Product=0, SerialNumber=0
+> [    3.485065] input: HID 1241:1122 as /devices/pci0000:00/0000:00:12.0/usb5/5-2/5-2:1.0/0003:1241:1122.0001/input/input14
+> [    3.485320] hid-generic 0003:1241:1122.0001: input,hidraw0: USB HID v1.00 Mouse [HID 1241:1122] on usb-0000:00:12.0-2/input0
+> [    3.967622] random: crng init done
+> [    3.967628] random: 7 urandom warning(s) missed due to ratelimiting
+> [    4.323449] r8169 0000:03:00.0 enp3s0: renamed from eth0
+> [    4.363774] RTL8211DN Gigabit Ethernet r8169-300:00: attached PHY driver [RTL8211DN Gigabit Ethernet] (mii_bus:phy_addr=r8169-300:00, irq=IGNORE)
+> [    4.576887] r8169 0000:03:00.0 enp3s0: Link is Down
+> [    4.577167] A link change request failed with some changes committed already. Interface enp3s0 may have been left with an inconsistent configuration, please check.
+> [   16.377520] r8169 0000:03:00.0 enp3s0: Link is Up - 100Mbps/Full - flow control rx/tx
+> [   16.377553] IPv6: ADDRCONF(NETDEV_CHANGE): enp3s0: link becomes ready
+> ```
 > 
-> Does that need solving now or when the MTE series appears? As there is
-> no reason to distinguish between "normal" and "TBI", that doesn't seem
-> to need solving at this point?
-
-We don't need to solve 2 vs 3 as long as option 3 is an explicit opt-in
-(prctl) by the user. Otherwise the kernel cannot guess whether the user
-is using TBI or not (and if it does and still opts in to MTE, we can say
-it's a user problem ;)).
-
-> > > To choose between "2" and "3", it seems we need a per-process flag to
-> > > opt into TBI (and out of MTE).
-> > 
-> > Or leave option 2 the default and get it to opt in to MTE.
+> It happens with all Linux kernels I tried. Please find all Linux
+> messages attached.
 > 
-> Given that MTE has to "start" at some point in the binary lifetime, I'm
-> fine with opting into MTE. I do expect, though, this will feel redundant
-> in a couple years as everything will immediately opt-in. But, okay, this
-> is therefore an issue for the MTE series.
+> Could you please tell me, how this can be debugged and solved?
+> 
+This warning is triggered by errors in do_setlink() in net/core/rtnetlink.c
+I'd say:
+1. Which kernel config options did you change as part of the optimization?
+   (If I understand you correctly the warning didn't pop up before.)
+2. Try to find out which call in do_setlink() fails and which errno is returned.
 
-Unless Google phases out hwasan soon ;), they may live in parallel for a
-while, so a choice of TBI vs MTE.
-
-> Alright, the tl;dr appears to be:
-> - you want more assurances that we can find __user stripping in the
->   kernel more easily. (But this seems like a parallel problem.)
-
-Yes, and that we found all (most) cases now. The reason I don't see it
-as a parallel problem is that, as maintainer, I promise an ABI to user
-and I'd rather stick to it. I don't want, for example, ncurses to stop
-working because of some ioctl() rejecting tagged pointers.
-
-If it's just the occasional one-off bug I'm fine to deal with it. But
-no-one convinced me yet that this is the case.
-
-As for the generic driver code (filesystems or other subsystems),
-without some clear direction for developers, together with static
-checking/sparse, on how user pointers are cast to longs (one example),
-it would become my responsibility to identify and fix them up with any
-kernel release. This series is not providing such guidance, just adding
-untagged_addr() in some places that we think matter.
-
-> - we might need to opt in to TBI with a prctl()
-
-Yes, although still up for discussion.
-
-> - all other concerns are for the future MTE series (though it sounds
->   like HWCAP_MTE and a prctl() solve those issues too).
-
-Indeed.
-
-> Is this accurate? What do you see as the blockers for this series at
-> this point?
-
-Well, see my comment on your first bullet point above ;).
-
-And thanks for summarising it.
-
--- 
-Catalin
+> 
+> Kind regards,
+> 
+> Paul
+> 
+Heiner
