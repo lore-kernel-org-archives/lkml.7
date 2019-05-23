@@ -2,127 +2,161 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53084C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 21:53:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A6ADC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 21:55:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DE5A21773
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 21:53:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13F9A21773
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 21:55:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NqB8pFlG"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="KmwMdbus"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388408AbfEWVxc (ORCPT
+        id S2388403AbfEWVzy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 17:53:32 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:36945 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387709AbfEWVxb (ORCPT
+        Thu, 23 May 2019 17:55:54 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:40992 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387535AbfEWVzx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 17:53:31 -0400
-Received: by mail-ed1-f66.google.com with SMTP id w37so11291885edw.4;
-        Thu, 23 May 2019 14:53:30 -0700 (PDT)
+        Thu, 23 May 2019 17:55:53 -0400
+Received: by mail-pg1-f194.google.com with SMTP id z3so3814459pgp.8
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 14:55:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VhQSjUZmgcEW8XYx/F0uZNmJ222g1uNFRqG0lEK0f4k=;
-        b=NqB8pFlGZ7gHJ3UNbEmaDyLrJE5Xg6/abm2vfrRKeelpjhlPWdVpyrtyo4RwOia5ov
-         TJpAr1DdbC6g0Lfz8WRL7QsuQXSVj/OsIDCVi+orIY2kmLs9nqUnDe73oGgdpvKNPYvB
-         UvdzPfTV/tNQzOsvTWiK0lfREtgxexqT9e/K16p5dXF7MgbZM3oi03ydnlgLZeD5mrv9
-         YehoCjivnVIQUhmMv9gxvveTajMFULhHSZOVYckKQW7JImYDiw3WAZl2Ez0p7z9LtTVF
-         7n72mb5P8/5aqZKi+4nspkXWSRUbnrzwPsw37vNEA0gWuGO0qlkgInc7yltIUc9r8S7c
-         xKog==
+        d=sifive.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=PurhQGxmOt5OgX95ziE8Uz5xXLYO1YnGDYcH4NyaAV8=;
+        b=KmwMdbusxLFDrj22KnPcx5BKzA583dV/GrebLLNnmUsihWE/QMWs3lTIAouKLUwaop
+         LwgmVJQGVUg2aA+8mx4KJjU7bAF7LtGSr8FiMglX9PLU180cgIynnL0/9TXMA3mSW1M+
+         /UmO8YBNF1bNKg2+C2Nb60imYJGTKVl+XkH4yQ6Fxqbenfjbl/IPPANZqo6DAu95G16f
+         3MfFyVw8gm66EwDQbIfgC6fEkCdxWH+Uwd6/EWrWkuO+20grvDS8y/Fis3sO7q93IPon
+         ggEp6LFhzmrCxLh6InSejc0sfAGzRbxlvvT1/+7Z6b9W8sM4GU4RF8/D8lGBbGXY4321
+         unfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VhQSjUZmgcEW8XYx/F0uZNmJ222g1uNFRqG0lEK0f4k=;
-        b=jrwQ4p47ky5R3lVUTXc7oliHSAn3Xl8QwBUghfsH8cKHgfOAREsORbcXaQH8157FkO
-         6ZLfoFpIO5K9UHIfJzWCtKRiGLYA/n7WUKznPCWpAaH+dkSn2/2nOoqKapjvyBodtBBT
-         YbaJZ4ZAmemnWWvr+tcLQWvx19kaQt2e178PxB2n0XFwrdApqjhKqoKbvdMHLKU66LTS
-         7/Za/ivTt/p4Dy7Nskt3k83qR1WyEk1e7c0Cd93G1To5qBnUrcWZpuRsrFGyAx1prhV4
-         XPyJBdjzFjKDAWfoJNiRSOa6bm4Nbdwzg+fnW5aYPRdWpGMhMtLIkzt0JdnD6ex1iH3O
-         s8FA==
-X-Gm-Message-State: APjAAAVEdxJeoB3V9B+pLkJlPluOzQyUgk/4IIUnITg/5JRNOOeP2+oi
-        Ycut9qqTjzAcyNSORUmumYGK4SMBE+6/tD8rsqk=
-X-Google-Smtp-Source: APXvYqzhCQlNbnJ+1k7klU9fj1/nA1jkZp3jFI//dEQT9LK/W/F+VxpnvtrMXP4S9Q81xRNKX52jGaJpekRtRqFneks=
-X-Received: by 2002:a17:906:6a97:: with SMTP id p23mr26581568ejr.203.1558648409785;
- Thu, 23 May 2019 14:53:29 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190523210651.80902-1-fklassen@appneta.com> <20190523210651.80902-3-fklassen@appneta.com>
-In-Reply-To: <20190523210651.80902-3-fklassen@appneta.com>
-From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Date:   Thu, 23 May 2019 17:52:53 -0400
-Message-ID: <CAF=yD-JBf6k7VLa6FQowuD5xDFbq5cB4ScTi7kb1hieQFDKnbg@mail.gmail.com>
-Subject: Re: [PATCH net 2/4] net/udpgso_bench_tx: options to exercise TX CMSG
-To:     Fred Klassen <fklassen@appneta.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-kselftest@vger.kernel.org,
-        Willem de Bruijn <willemb@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=PurhQGxmOt5OgX95ziE8Uz5xXLYO1YnGDYcH4NyaAV8=;
+        b=DnHYzdZjDctqGxOFh7/arY5WFL3t2eKkxeyKASzbfeqsc3vcv+Y5VjIxIa9dWI1jJ/
+         YWTqsK8ooD88TJYVCyyG+cQufTWtQJ0qJ3xVmVHzXcdxDgN5Hdnsn1hpG+kfOE7lwvRW
+         P/6CtARW8LmDqv9QQqXaYahSWNbNQ4RZ/oBSazkaKxgB5I66vHlrnuSNBDn4KxAQbk2a
+         JBcgDVd5UBSea4KO1w39it7tibWV6UigQSiZoidrdWkO32czm2Bj8f1c4eNhPZA1dEol
+         98upgQirId3pYRa8yjBctkZFVFqz5TUAwgOXfmgvfxVDJce2VX4IIhguo3Ei8JoQsDeI
+         akuw==
+X-Gm-Message-State: APjAAAV7nvlKsJ/rl5nFXdvXZqgFbfQvNEcRHWp6NMPSYkJhDEC5+wCr
+        rSbqHhyW1ca1/yY14dbLJpvQGw==
+X-Google-Smtp-Source: APXvYqxfZfJf2dgCCL/DsR8P6LzvbOxJ1paNuXirPE+CZvt+G3bi+/s0Wd3kQSCpvTmI4e02K3NZLg==
+X-Received: by 2002:a63:903:: with SMTP id 3mr86725371pgj.400.1558648553134;
+        Thu, 23 May 2019 14:55:53 -0700 (PDT)
+Received: from nuc7.sifive.com ([12.206.222.2])
+        by smtp.gmail.com with ESMTPSA id q75sm422403pfa.175.2019.05.23.14.55.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Thu, 23 May 2019 14:55:52 -0700 (PDT)
+From:   Alan Mikhak <alan.mikhak@sifive.com>
+X-Google-Original-From: Alan Mikhak < alan.mikhak@sifive.com >
+To:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kishon@ti.com, lorenzo.pieralisi@arm.com,
+        linux-riscv@lists.infradead.org, palmer@sifive.com,
+        paul.walmsley@sifive.com
+Cc:     Alan Mikhak <alan.mikhak@sifive.com>
+Subject: [PATCH v2] PCI: endpoint: Skip odd BAR when skipping 64bit BAR
+Date:   Thu, 23 May 2019 14:55:40 -0700
+Message-Id: <1558648540-14239-1-git-send-email-alan.mikhak@sifive.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 5:11 PM Fred Klassen <fklassen@appneta.com> wrote:
->
-> This enhancement adds options that facilitate load testing with
-> additional TX CMSG options, and to optionally print results of
-> various send CMSG operations.
->
-> These options are especially useful in isolating situations
-> where error-queue messages are lost when combined with other
-> CMSG operations (e.g. SO_ZEROCOPY).
->
-> New options:
->
->     -T - add TX CMSG that requests TX software timestamps
->     -H - similar to -T except request TX hardware timestamps
->     -q - add IP_TOS/IPV6_TCLASS TX CMSG
+Always skip odd bar when skipping 64bit BARs in pci_epf_test_set_bar()
+and pci_epf_test_alloc_space().
 
-To ensure that we do not regress, when adding options, please consider
-(just a general suggestion, not a strong request for this patch set)
-updating the kselftest to run a variant of the test with the new code
-coverage. In this case, make the code pass/fail instead of only user
-interpretable and add variants to udpgso.sh.
+Otherwise, pci_epf_test_set_bar() will call pci_epc_set_bar() on odd loop
+index when skipping reserved 64bit BAR. Moreover, pci_epf_test_alloc_space()
+will call pci_epf_alloc_space() on bind for odd loop index when BAR is 64bit
+but leaks on subsequent unbind by not calling pci_epf_free_space().
 
->     -P - call poll() before reading error queue
->     -v - print detailed results
->
-> Fixes: 3a687bef148d ("selftests: udp gso benchmark")
-> Signed-off-by: Fred Klassen <fklassen@appneta.com>
+Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
+Reviewed-by: Paul Walmsley <paul.walmsley@sifive.com>
+---
+ drivers/pci/endpoint/functions/pci-epf-test.c | 25 ++++++++++++-------------
+ 1 file changed, 12 insertions(+), 13 deletions(-)
 
-> +static void flush_errqueue_recv(int fd)
->  {
->         struct msghdr msg = {0};        /* flush */
-> +       struct cmsghdr *cmsg;
-> +       struct iovec entry;
-> +       char control[1024];
+diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+index 27806987e93b..96156a537922 100644
+--- a/drivers/pci/endpoint/functions/pci-epf-test.c
++++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+@@ -389,7 +389,7 @@ static void pci_epf_test_unbind(struct pci_epf *epf)
+ 
+ static int pci_epf_test_set_bar(struct pci_epf *epf)
+ {
+-	int bar;
++	int bar, add;
+ 	int ret;
+ 	struct pci_epf_bar *epf_bar;
+ 	struct pci_epc *epc = epf->epc;
+@@ -400,8 +400,14 @@ static int pci_epf_test_set_bar(struct pci_epf *epf)
+ 
+ 	epc_features = epf_test->epc_features;
+ 
+-	for (bar = BAR_0; bar <= BAR_5; bar++) {
++	for (bar = BAR_0; bar <= BAR_5; bar += add) {
+ 		epf_bar = &epf->bar[bar];
++		/*
++		 * pci_epc_set_bar() sets PCI_BASE_ADDRESS_MEM_TYPE_64
++		 * if the specific implementation required a 64-bit BAR,
++		 * even if we only requested a 32-bit BAR.
++		 */
++		add = (epf_bar->flags & PCI_BASE_ADDRESS_MEM_TYPE_64) ? 2 : 1;
+ 
+ 		if (!!(epc_features->reserved_bar & (1 << bar)))
+ 			continue;
+@@ -413,13 +419,6 @@ static int pci_epf_test_set_bar(struct pci_epf *epf)
+ 			if (bar == test_reg_bar)
+ 				return ret;
+ 		}
+-		/*
+-		 * pci_epc_set_bar() sets PCI_BASE_ADDRESS_MEM_TYPE_64
+-		 * if the specific implementation required a 64-bit BAR,
+-		 * even if we only requested a 32-bit BAR.
+-		 */
+-		if (epf_bar->flags & PCI_BASE_ADDRESS_MEM_TYPE_64)
+-			bar++;
+ 	}
+ 
+ 	return 0;
+@@ -431,7 +430,7 @@ static int pci_epf_test_alloc_space(struct pci_epf *epf)
+ 	struct device *dev = &epf->dev;
+ 	struct pci_epf_bar *epf_bar;
+ 	void *base;
+-	int bar;
++	int bar, add;
+ 	enum pci_barno test_reg_bar = epf_test->test_reg_bar;
+ 	const struct pci_epc_features *epc_features;
+ 
+@@ -445,8 +444,10 @@ static int pci_epf_test_alloc_space(struct pci_epf *epf)
+ 	}
+ 	epf_test->reg[test_reg_bar] = base;
+ 
+-	for (bar = BAR_0; bar <= BAR_5; bar++) {
++	for (bar = BAR_0; bar <= BAR_5; bar += add) {
+ 		epf_bar = &epf->bar[bar];
++		add = (epf_bar->flags & PCI_BASE_ADDRESS_MEM_TYPE_64) ? 2 : 1;
++
+ 		if (bar == test_reg_bar)
+ 			continue;
+ 
+@@ -459,8 +460,6 @@ static int pci_epf_test_alloc_space(struct pci_epf *epf)
+ 			dev_err(dev, "Failed to allocate space for BAR%d\n",
+ 				bar);
+ 		epf_test->reg[bar] = base;
+-		if (epf_bar->flags & PCI_BASE_ADDRESS_MEM_TYPE_64)
+-			bar++;
+ 	}
+ 
+ 	return 0;
+-- 
+2.7.4
 
-can use more precise CMSG_SPACE based on worst case expectations, like
-in udp_sendmmsg
-
-> +       char buf[1500];
-
-no need for payload
-
-> +static void flush_errqueue(int fd)
-> +{
-> +       if (cfg_poll) {
-> +               struct pollfd fds = { 0 };
-> +               int ret;
-> +
-> +               fds.fd = fd;
-> +               fds.events = POLLERR;
-
-no need to pass POLLERR, it is always returned in revents.
