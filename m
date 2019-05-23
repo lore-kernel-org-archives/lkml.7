@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEE6CC282DE
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:37:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C74D5C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:37:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2E7E20879
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:37:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1DDF2177E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:37:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558640222;
-	bh=xtA7q6c2/sfqevBED4EvpHYBLlPG8k0kYl30tMHaLVo=;
+	s=default; t=1558640234;
+	bh=GyjR03mRx2uHGsBoqy5JZU2GuWAvJ8HEefr05o0g4lw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pGAOlGEfbTJcpRpp+/1ifCdYEXowEquZd83y9phcBO+f38mGpkjqYIyGNS/TK+piJ
-	 VVuBK4MAfewh5SPLM+r7cty1O1F219voBObQUkkCJcU5FXFcS9Tk6cDo2B7QnUGtFf
-	 BbFpMLMyobIkAV2W1LA7tyDcLtDcSypJYMZwJAQ0=
+	b=VGYFd3kuLw7JisJvdQyMBQ56FIACif39S1OjDfSh37E31nrye7+DhIXtE2wIqTewY
+	 LesDBfDSXXP6/xbp+KuvL1egrO2OH9MG53MH1fWKT21OK/vyxR1cn9LFIPndBunDNo
+	 TLWnRb62Bhv9U5lG/gs+E4DO7E7P7ekyMhHTNzok=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391006AbfEWTYy (ORCPT
+        id S2390949AbfEWTYj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:24:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35968 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:24:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35586 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390995AbfEWTYu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:24:50 -0400
+        id S2390926AbfEWTYe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:24:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E67B217D9;
-        Thu, 23 May 2019 19:24:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DBE5F217D9;
+        Thu, 23 May 2019 19:24:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639489;
-        bh=xtA7q6c2/sfqevBED4EvpHYBLlPG8k0kYl30tMHaLVo=;
+        s=default; t=1558639473;
+        bh=GyjR03mRx2uHGsBoqy5JZU2GuWAvJ8HEefr05o0g4lw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=twvD5beIqfQ7u41zH16SDW9HvCRSPbDL1gXyFF0bDG3SLrEt2tbHScwjnx/IaVajg
-         O5L9t5yd9rIkK32Le8jaNrgo4D6n483DY8qEceWlAQ2FwvpPaTQ4mxhPCEfPH+sXMq
-         umEBf+o+/w4hht9tXEzJ0ODAJCvAspaQP5T0QWiI=
+        b=ZwbFMcWHnKmnSLYTX/QZtfwW3JU7lkKFDOtzr7OJDJCBAYGs7Ld++MFkPqhOqKjzi
+         JQuwEcYBF8GOlNDr37Gwb0JRGBkTI83zcpDB3dilhojxVLtbJ7D16gN9+Oc2FjWa6Z
+         CvbNHoOIfwVAQYEGkEHo4XJ4XxkWyHDMDnnneuwo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Luca Coelho <luciano.coelho@intel.com>,
+        stable@vger.kernel.org,
+        Suraj Jitindar Singh <sjitindarsingh@gmail.com>,
+        Paul Mackerras <paulus@ozlabs.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 124/139] iwlwifi: mvm: check for length correctness in iwl_mvm_create_skb()
-Date:   Thu, 23 May 2019 21:06:52 +0200
-Message-Id: <20190523181735.567214622@linuxfoundation.org>
+Subject: [PATCH 5.0 110/139] KVM: PPC: Book3S HV: Perserve PSSCR FAKE_SUSPEND bit on guest exit
+Date:   Thu, 23 May 2019 21:06:38 +0200
+Message-Id: <20190523181734.418749537@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181720.120897565@linuxfoundation.org>
 References: <20190523181720.120897565@linuxfoundation.org>
@@ -59,112 +61,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit de1887c064b9996ac03120d90d0a909a3f678f98 ]
+[ Upstream commit 7cb9eb106d7a4efab6bcf30ec9503f1d703c77f5 ]
 
-We don't check for the validity of the lengths in the packet received
-from the firmware.  If the MPDU length received in the rx descriptor
-is too short to contain the header length and the crypt length
-together, we may end up trying to copy a negative number of bytes
-(headlen - hdrlen < 0) which will underflow and cause us to try to
-copy a huge amount of data.  This causes oopses such as this one:
+There is a hardware bug in some POWER9 processors where a treclaim in
+fake suspend mode can cause an inconsistency in the XER[SO] bit across
+the threads of a core, the workaround being to force the core into SMT4
+when doing the treclaim.
 
-BUG: unable to handle kernel paging request at ffff896be2970000
-PGD 5e201067 P4D 5e201067 PUD 5e205067 PMD 16110d063 PTE 8000000162970161
-Oops: 0003 [#1] PREEMPT SMP NOPTI
-CPU: 2 PID: 1824 Comm: irq/134-iwlwifi Not tainted 4.19.33-04308-geea41cf4930f #1
-Hardware name: [...]
-RIP: 0010:memcpy_erms+0x6/0x10
-Code: 90 90 90 90 eb 1e 0f 1f 00 48 89 f8 48 89 d1 48 c1 e9 03 83 e2 07 f3 48 a5 89 d1 f3 a4 c3 66 0f 1f 44 00 00 48 89 f8 48 89 d1 <f3> a4 c3
- 0f 1f 80 00 00 00 00 48 89 f8 48 83 fa 20 72 7e 40 38 fe
-RSP: 0018:ffffa4630196fc60 EFLAGS: 00010287
-RAX: ffff896be2924618 RBX: ffff896bc8ecc600 RCX: 00000000fffb4610
-RDX: 00000000fffffff8 RSI: ffff896a835e2a38 RDI: ffff896be2970000
-RBP: ffffa4630196fd30 R08: ffff896bc8ecc600 R09: ffff896a83597000
-R10: ffff896bd6998400 R11: 000000000200407f R12: ffff896a83597050
-R13: 00000000fffffff8 R14: 0000000000000010 R15: ffff896a83597038
-FS:  0000000000000000(0000) GS:ffff896be8280000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffff896be2970000 CR3: 000000005dc12002 CR4: 00000000003606e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- iwl_mvm_rx_mpdu_mq+0xb51/0x121b [iwlmvm]
- iwl_pcie_rx_handle+0x58c/0xa89 [iwlwifi]
- iwl_pcie_irq_rx_msix_handler+0xd9/0x12a [iwlwifi]
- irq_thread_fn+0x24/0x49
- irq_thread+0xb0/0x122
- kthread+0x138/0x140
- ret_from_fork+0x1f/0x40
+The FAKE_SUSPEND bit (bit 10) in the PSSCR is used to control whether a
+thread is in fake suspend or real suspend. The important difference here
+being that thread reconfiguration is blocked in real suspend but not
+fake suspend mode.
 
-Fix that by checking the lengths for correctness and trigger a warning
-to show that we have received wrong data.
+When we exit a guest which was in fake suspend mode, we force the core
+into SMT4 while we do the treclaim in kvmppc_save_tm_hv().
+However on the new exit path introduced with the function
+kvmhv_run_single_vcpu() we restore the host PSSCR before calling
+kvmppc_save_tm_hv() which means that if we were in fake suspend mode we
+put the thread into real suspend mode when we clear the
+PSSCR[FAKE_SUSPEND] bit. This means that we block thread reconfiguration
+and the thread which is trying to get the core into SMT4 before it can
+do the treclaim spins forever since it itself is blocking thread
+reconfiguration. The result is that that core is essentially lost.
 
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+This results in a trace such as:
+[   93.512904] CPU: 7 PID: 13352 Comm: qemu-system-ppc Not tainted 5.0.0 #4
+[   93.512905] NIP:  c000000000098a04 LR: c0000000000cc59c CTR: 0000000000000000
+[   93.512908] REGS: c000003fffd2bd70 TRAP: 0100   Not tainted  (5.0.0)
+[   93.512908] MSR:  9000000302883033 <SF,HV,VEC,VSX,FP,ME,IR,DR,RI,LE,TM[SE]>  CR: 22222444  XER: 00000000
+[   93.512914] CFAR: c000000000098a5c IRQMASK: 3
+[   93.512915] PACATMSCRATCH: 0000000000000001
+[   93.512916] GPR00: 0000000000000001 c000003f6cc1b830 c000000001033100 0000000000000004
+[   93.512928] GPR04: 0000000000000004 0000000000000002 0000000000000004 0000000000000007
+[   93.512930] GPR08: 0000000000000000 0000000000000004 0000000000000000 0000000000000004
+[   93.512932] GPR12: c000203fff7fc000 c000003fffff9500 0000000000000000 0000000000000000
+[   93.512935] GPR16: 2000000000300375 000000000000059f 0000000000000000 0000000000000000
+[   93.512951] GPR20: 0000000000000000 0000000000080053 004000000256f41f c000003f6aa88ef0
+[   93.512953] GPR24: c000003f6aa89100 0000000000000010 0000000000000000 0000000000000000
+[   93.512956] GPR28: c000003f9e9a0800 0000000000000000 0000000000000001 c000203fff7fc000
+[   93.512959] NIP [c000000000098a04] pnv_power9_force_smt4_catch+0x1b4/0x2c0
+[   93.512960] LR [c0000000000cc59c] kvmppc_save_tm_hv+0x40/0x88
+[   93.512960] Call Trace:
+[   93.512961] [c000003f6cc1b830] [0000000000080053] 0x80053 (unreliable)
+[   93.512965] [c000003f6cc1b8a0] [c00800001e9cb030] kvmhv_p9_guest_entry+0x508/0x6b0 [kvm_hv]
+[   93.512967] [c000003f6cc1b940] [c00800001e9cba44] kvmhv_run_single_vcpu+0x2dc/0xb90 [kvm_hv]
+[   93.512968] [c000003f6cc1ba10] [c00800001e9cc948] kvmppc_vcpu_run_hv+0x650/0xb90 [kvm_hv]
+[   93.512969] [c000003f6cc1bae0] [c00800001e8f620c] kvmppc_vcpu_run+0x34/0x48 [kvm]
+[   93.512971] [c000003f6cc1bb00] [c00800001e8f2d4c] kvm_arch_vcpu_ioctl_run+0x2f4/0x400 [kvm]
+[   93.512972] [c000003f6cc1bb90] [c00800001e8e3918] kvm_vcpu_ioctl+0x460/0x7d0 [kvm]
+[   93.512974] [c000003f6cc1bd00] [c0000000003ae2c0] do_vfs_ioctl+0xe0/0x8e0
+[   93.512975] [c000003f6cc1bdb0] [c0000000003aeb24] ksys_ioctl+0x64/0xe0
+[   93.512978] [c000003f6cc1be00] [c0000000003aebc8] sys_ioctl+0x28/0x80
+[   93.512981] [c000003f6cc1be20] [c00000000000b3a4] system_call+0x5c/0x70
+[   93.512983] Instruction dump:
+[   93.512986] 419dffbc e98c0000 2e8b0000 38000001 60000000 60000000 60000000 40950068
+[   93.512993] 392bffff 39400000 79290020 39290001 <7d2903a6> 60000000 60000000 7d235214
+
+To fix this we preserve the PSSCR[FAKE_SUSPEND] bit until we call
+kvmppc_save_tm_hv() which will mean the core can get into SMT4 and
+perform the treclaim. Note kvmppc_save_tm_hv() clears the
+PSSCR[FAKE_SUSPEND] bit again so there is no need to explicitly do that.
+
+Fixes: 95a6432ce9038 ("KVM: PPC: Book3S HV: Streamlined guest entry/exit path on P9 for radix guests")
+
+Signed-off-by: Suraj Jitindar Singh <sjitindarsingh@gmail.com>
+Signed-off-by: Paul Mackerras <paulus@ozlabs.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/mvm/rxmq.c | 28 ++++++++++++++++---
- 1 file changed, 24 insertions(+), 4 deletions(-)
+ arch/powerpc/kvm/book3s_hv.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/rxmq.c b/drivers/net/wireless/intel/iwlwifi/mvm/rxmq.c
-index 7bd8676508f54..519c7dd47f694 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/rxmq.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/rxmq.c
-@@ -143,9 +143,9 @@ static inline int iwl_mvm_check_pn(struct iwl_mvm *mvm, struct sk_buff *skb,
- }
+diff --git a/arch/powerpc/kvm/book3s_hv.c b/arch/powerpc/kvm/book3s_hv.c
+index 5a066fc299e17..f17065f2c962f 100644
+--- a/arch/powerpc/kvm/book3s_hv.c
++++ b/arch/powerpc/kvm/book3s_hv.c
+@@ -3407,7 +3407,9 @@ static int kvmhv_load_hv_regs_and_go(struct kvm_vcpu *vcpu, u64 time_limit,
+ 	vcpu->arch.shregs.sprg2 = mfspr(SPRN_SPRG2);
+ 	vcpu->arch.shregs.sprg3 = mfspr(SPRN_SPRG3);
  
- /* iwl_mvm_create_skb Adds the rxb to a new skb */
--static void iwl_mvm_create_skb(struct sk_buff *skb, struct ieee80211_hdr *hdr,
--			       u16 len, u8 crypt_len,
--			       struct iwl_rx_cmd_buffer *rxb)
-+static int iwl_mvm_create_skb(struct iwl_mvm *mvm, struct sk_buff *skb,
-+			      struct ieee80211_hdr *hdr, u16 len, u8 crypt_len,
-+			      struct iwl_rx_cmd_buffer *rxb)
- {
- 	struct iwl_rx_packet *pkt = rxb_addr(rxb);
- 	struct iwl_rx_mpdu_desc *desc = (void *)pkt->data;
-@@ -178,6 +178,20 @@ static void iwl_mvm_create_skb(struct sk_buff *skb, struct ieee80211_hdr *hdr,
- 	 * present before copying packet data.
- 	 */
- 	hdrlen += crypt_len;
-+
-+	if (WARN_ONCE(headlen < hdrlen,
-+		      "invalid packet lengths (hdrlen=%d, len=%d, crypt_len=%d)\n",
-+		      hdrlen, len, crypt_len)) {
-+		/*
-+		 * We warn and trace because we want to be able to see
-+		 * it in trace-cmd as well.
-+		 */
-+		IWL_DEBUG_RX(mvm,
-+			     "invalid packet lengths (hdrlen=%d, len=%d, crypt_len=%d)\n",
-+			     hdrlen, len, crypt_len);
-+		return -EINVAL;
-+	}
-+
- 	skb_put_data(skb, hdr, hdrlen);
- 	skb_put_data(skb, (u8 *)hdr + hdrlen + pad_len, headlen - hdrlen);
- 
-@@ -190,6 +204,8 @@ static void iwl_mvm_create_skb(struct sk_buff *skb, struct ieee80211_hdr *hdr,
- 		skb_add_rx_frag(skb, 0, rxb_steal_page(rxb), offset,
- 				fraglen, rxb->truesize);
- 	}
-+
-+	return 0;
- }
- 
- /* iwl_mvm_pass_packet_to_mac80211 - passes the packet for mac80211 */
-@@ -1600,7 +1616,11 @@ void iwl_mvm_rx_mpdu_mq(struct iwl_mvm *mvm, struct napi_struct *napi,
- 			rx_status->boottime_ns = ktime_get_boot_ns();
- 	}
- 
--	iwl_mvm_create_skb(skb, hdr, len, crypt_len, rxb);
-+	if (iwl_mvm_create_skb(mvm, skb, hdr, len, crypt_len, rxb)) {
-+		kfree_skb(skb);
-+		goto out;
-+	}
-+
- 	if (!iwl_mvm_reorder(mvm, napi, queue, sta, skb, desc))
- 		iwl_mvm_pass_packet_to_mac80211(mvm, napi, skb, queue, sta);
- out:
+-	mtspr(SPRN_PSSCR, host_psscr);
++	/* Preserve PSSCR[FAKE_SUSPEND] until we've called kvmppc_save_tm_hv */
++	mtspr(SPRN_PSSCR, host_psscr |
++	      (local_paca->kvm_hstate.fake_suspend << PSSCR_FAKE_SUSPEND_LG));
+ 	mtspr(SPRN_HFSCR, host_hfscr);
+ 	mtspr(SPRN_CIABR, host_ciabr);
+ 	mtspr(SPRN_DAWR, host_dawr);
 -- 
 2.20.1
 
