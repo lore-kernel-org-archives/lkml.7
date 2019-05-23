@@ -2,125 +2,165 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C576AC46460
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 14:02:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A735C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 14:04:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 956652133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 14:02:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S0WIOvfh"
+	by mail.kernel.org (Postfix) with ESMTP id CE32A2133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 14:04:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730863AbfEWOCk (ORCPT
+        id S1730769AbfEWOE2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 10:02:40 -0400
-Received: from mail-yb1-f194.google.com ([209.85.219.194]:33989 "EHLO
-        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730323AbfEWOCk (ORCPT
+        Thu, 23 May 2019 10:04:28 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:45592 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730323AbfEWOE2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 10:02:40 -0400
-Received: by mail-yb1-f194.google.com with SMTP id v78so2319570ybv.1;
-        Thu, 23 May 2019 07:02:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=sqmYovtDH2Cha2ixUIjp55v47f+tfN+Y/9nD/H0oaXU=;
-        b=S0WIOvfhxfwfAv7ibPxBjD1HBQmHhdi/cM0k2xwZ5e8ECTMVUNqunHYdnAhuKwbDjN
-         Xu8BiJho9SPuTk4wu04jroQpaoDnl0YqNbEBdkaBe0laaCkOz5PxNJYrP4byiu9iu+Ni
-         eV4lSa657lsml6+XQgvFORwIB0LQsbP42cOpgFiECUEFMVbmejiHv41dxvs0CX90H/zU
-         eO/mQkOQphWmY9HEo7Bhr0TaEcA4QYzakZtp2LXeixe/zuJ9XD/QjJrLOVSYQGCPuHv6
-         dIknKspngjhSiFsIIKxxDn6P2LsfxGt8rRbCGnUedOOG7Y5tW1z4iLSqn1Ik8Fr5CK/9
-         SiTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=sqmYovtDH2Cha2ixUIjp55v47f+tfN+Y/9nD/H0oaXU=;
-        b=FM2P4M8e1PAahJdGlYeyKtF0lacsyWsmdRMgRPY6dtsr7hhbMg7+oUk4z8B5yjgJeL
-         5XMrO+xK5qxwu2w9N4saWItPJ2StW60capq3MBk+xCEx7+mVwxid/wJ+06P/b6Hu8VN7
-         ZHK+hgav1d8AZ29hTxcOwEY5MPFV0je6YXVcDo67DEhO8C21uYmRmG4l8TrkdB0Wj0ey
-         HOd8O4kA4F5yckfSvOiCXm4DBbpPXjQwaosxC8EPGXIilLwGGM/zckfGjX/XC4b73bmE
-         MawLdOm7HIyxun1C5gqQj8CutNx+YddZmskGsH4oPGecEZWc08/zWFKatlK5KOBR0Ony
-         g3RA==
-X-Gm-Message-State: APjAAAWpUszFfhl+CzyoIgT7Fn0O8OH7kmHJDjlkC39kaIFnX7RZdJcG
-        7mvA4tpgait4j1a+BFxqIkLlJBZl9M/etCXcrMc=
-X-Google-Smtp-Source: APXvYqxgIVauTGVCqLlR4n4GbP/KO2TXbfyg5FKYwg7m799qm8qa/AQBMYaFifalBrQB2p3zYAor1U7RqgV1eyk1QRs=
-X-Received: by 2002:a25:340e:: with SMTP id b14mr4677744yba.82.1558620159194;
- Thu, 23 May 2019 07:02:39 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190521160330.28402-1-peron.clem@gmail.com> <20190521160330.28402-4-peron.clem@gmail.com>
- <20190522103243.mmrfato5p2mhtf4j@flea> <CAJiuCcdaZVLQyupEf8HPaUySakufXXAhzundo6VeyQaAyZ8Trw@mail.gmail.com>
- <20190523125716.g4euwplfsvw4vqzl@flea>
-In-Reply-To: <20190523125716.g4euwplfsvw4vqzl@flea>
-From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date:   Thu, 23 May 2019 16:02:28 +0200
-Message-ID: <CAJiuCcdE-RtiGpPKe-BMJpS-m=wOXy+30vS7iAvd6Ng7gaZWNg@mail.gmail.com>
-Subject: Re: [PATCH v4 3/5] dt-bindings: watchdog: add Allwinner H6 r_watchdog
-To:     Maxime Ripard <maxime.ripard@bootlin.com>
-Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Rob Herring <robh+dt@kernel.org>,
+        Thu, 23 May 2019 10:04:28 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4NE2lp7078599
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 10:04:27 -0400
+Received: from e14.ny.us.ibm.com (e14.ny.us.ibm.com [129.33.205.204])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2snub2587m-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 10:04:11 -0400
+Received: from localhost
+        by e14.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Thu, 23 May 2019 15:04:00 +0100
+Received: from b01cxnp22034.gho.pok.ibm.com (9.57.198.24)
+        by e14.ny.us.ibm.com (146.89.104.201) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 23 May 2019 15:03:56 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4NE3tF025428200
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 23 May 2019 14:03:55 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3D9A5B205F;
+        Thu, 23 May 2019 14:03:55 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0EDE3B2070;
+        Thu, 23 May 2019 14:03:55 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.216])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu, 23 May 2019 14:03:55 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 418F516C0FB0; Thu, 23 May 2019 07:03:56 -0700 (PDT)
+Date:   Thu, 23 May 2019 07:03:56 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     Andrea Parri <andrea.parri@amarulasolutions.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>, linux-watchdog@vger.kernel.org,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Dhaval Giani <dhaval.giani@gmail.com>,
+        Sasha Levin <alexander.levin@microsoft.com>,
+        shuah <shuah@kernel.org>, Kevin Hilman <khilman@baylibre.com>,
+        Tim Bird <tbird20d@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        "Carpenter,Dan" <dan.carpenter@oracle.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        gustavo padovan <gustavo.padovan@collabora.co.uk>,
+        knut omang <knut.omang@oracle.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Alan Stern <stern@rowland.harvard.edu>
+Subject: Re: Linux Testing Microconference at LPC
+Reply-To: paulmck@linux.ibm.com
+References: <CAPhKKr_uVTFAzne0QkZFUGfb8RxQdVFx41G9kXRY7sFN-=pZ6w@mail.gmail.com>
+ <20190423102250.GA56999@lakrids.cambridge.arm.com>
+ <20190512004008.GA6062@andrea>
+ <CACT4Y+aj8i0VNad91F-QkHNsXYXUFrYF+j=wnG-USzfQfoD55A@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACT4Y+aj8i0VNad91F-QkHNsXYXUFrYF+j=wnG-USzfQfoD55A@mail.gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19052314-0052-0000-0000-000003C5FE0C
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011149; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01207468; UDB=6.00634135; IPR=6.00988448;
+ MB=3.00027018; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-23 14:04:00
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19052314-0053-0000-0000-00006103E0A6
+Message-Id: <20190523140356.GN28207@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-23_12:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905230097
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 23 May 2019 at 14:57, Maxime Ripard <maxime.ripard@bootlin.com> wro=
-te:
->
-> On Wed, May 22, 2019 at 06:15:26PM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
-> > Hi Maxime,
+On Wed, May 22, 2019 at 05:52:17PM +0200, Dmitry Vyukov wrote:
+> On Sun, May 12, 2019 at 2:40 AM Andrea Parri
+> <andrea.parri@amarulasolutions.com> wrote:
 > >
-> > On Wed, 22 May 2019 at 12:32, Maxime Ripard <maxime.ripard@bootlin.com>=
- wrote:
-> > >
-> > > On Tue, May 21, 2019 at 06:03:28PM +0200, Cl=C3=A9ment P=C3=A9ron wro=
-te:
-> > > > Allwinner H6 has a second watchdog on the r-blocks which is
-> > > > compatible with the A31.
+> > On Tue, Apr 23, 2019 at 11:22:50AM +0100, Mark Rutland wrote:
+> > > On Thu, Apr 11, 2019 at 10:37:51AM -0700, Dhaval Giani wrote:
+> > > > Hi Folks,
 > > > >
-> > > > This commit add the H6 compatible for the r_watchdog.
+> > > > This is a call for participation for the Linux Testing microconference
+> > > > at LPC this year.
 > > > >
-> > > > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
+> > > > For those who were at LPC last year, as the closing panel mentioned,
+> > > > testing is probably the next big push needed to improve quality. From
+> > > > getting more selftests in, to regression testing to ensure we don't
+> > > > break realtime as more of PREEMPT_RT comes in, to more stable distros,
+> > > > we need more testing around the kernel.
+> > > >
+> > > > We have talked about different efforts around testing, such as fuzzing
+> > > > (using syzkaller and trinity), automating fuzzing with syzbot, 0day
+> > > > testing, test frameworks such as ktests, smatch to find bugs in the
+> > > > past. We want to push this discussion further this year and are
+> > > > interested in hearing from you what you want to talk about, and where
+> > > > kernel testing needs to go next.
 > > >
-> > > Unless you have some evidence that the two blocks are different, then
-> > > you should just reuse the same one.
+> > > I'd be interested to discuss what we could do with annotations and
+> > > compiler instrumentation to make the kernel more amenable to static and
+> > > dynamic analysis (and to some extent, documenting implicit
+> > > requirements).
+> > >
+> > > One idea that I'd like to explore in the context of RT is to annotate
+> > > function signatures with their required IRQ/preempt context, such that
+> > > we could dynamically check whether those requirements were violated
+> > > (even if it didn't happen to cause a problem at that point in time), and
+> > > static analysis would be able to find some obviously broken usage. I had
+> > > some rough ideas of how to do the dynamic part atop/within ftrace. Maybe
+> > > there are similar problems elsewhere.
+> > >
+> > > I know that some clang folk were interested in similar stuff. IIRC Nick
+> > > Desaulniers was interested in whether clang's thread safety analysis
+> > > tooling could be applied to the kernel (e.g. based on lockdep
+> > > annotations).
 > >
-> > I have no evidence it's different nor identical, it's not documented
-> > in the user manual.
-> > I thought it would better to have separate bindings in case there is a
-> > difference.
-> > Than don't have and find later that we have to introduce one.
->
-> It's a tradeoff. Pushing your logic to the limit, we would have a
-> compatible for each controller embedded in an SoC.
->
-> This would be unmaintainable, and slightly useless since that case is
-> very unlikely.
->
-> However, having differences between SoCs is quite common, hence why we
-> have different compatibles for each SoC.
-Yes, that make sense, I will send a new version soon,
+> > FWIW, I'd also be interested in discussing these developments.
+> >
+> > There have been several activities/projects related to such "tooling"
+> > (thread safety analysis) recently:  I could point out the (brand new)
+> > Google Summer of Code "Applying Clang Thread Safety Analyser to Linux
+> > Kernel" project [1] and (for the "dynamic analysis" side) the efforts
+> > to revive the Kernel Thread sanitizer [2].  I should also mention the
+> > efforts to add (support for) "unmarked" accesses and to formalize the
+> > notion of "data race" in the memory consistency model [3].
+> >
+> > So, again, I'd welcome a discussion on these works/ideas.
+> >
+> > Thanks,
+> >   Andrea
+> 
+> I would be interested in discussing all of this too: thread safety
+> annotations, ktsan, unmarked accesses.
 
-Thanks for the review,
-Cl=C3=A9ment
+Sounds like a great discussion!  Might this fit into Sasha Levin's
+and Dhaval Giani's proposed Testing & Fuzzing MC?
 
->
-> Maxime
->
-> --
-> Maxime Ripard, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
+							Thanx, Paul
+
