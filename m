@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79EF2C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:38:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22F70C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:38:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49E0A2075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:38:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1E012075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:38:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558640286;
-	bh=UzqSZtW2KajiKLccwmz24NY1Imd9fAY7yZ/3SJfDf2M=;
+	s=default; t=1558640296;
+	bh=3rxfAX4mLHvVaXl+hX9hwHnq3HJQHQSfrnr68pxQPQk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XBXhg5e7jbqZW6DxufWw3pWjCht7//PrQeuMpZHH5e2fDmpRtS6NqDawM5a+2b9VP
-	 GGZlTwJQEOCXSlEzJOrtdaKokDUVN/yaG2r9HpDWBJotT3VyWFsMyDgFtrzhjHBDGK
-	 fule+wNKXw+HyLpqg741nOpBF9tCJUQSXkTDdeKg=
+	b=x4D7nrs6Dm6cb7ccOsUtz4OmDYiZEwfHWHfVuwfAUv6o3Qyriy1RLbX865Oz7nvZi
+	 PnkNLHNlOzSgbBt+Tlpu6ewkLCTniXeg9DshyAsTp1Q7v7XcGAoTfhW4UYDoXMlXT5
+	 bjtCX+8dNJw0BbvXOlgC6BdKdFebSq4LIOhL6pWA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391027AbfEWTiF (ORCPT
+        id S2391009AbfEWTiP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:38:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34246 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:38:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33886 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390136AbfEWTXn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:23:43 -0400
+        id S2390336AbfEWTX3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:23:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E5E1E2133D;
-        Thu, 23 May 2019 19:23:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6162D21841;
+        Thu, 23 May 2019 19:23:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639422;
-        bh=UzqSZtW2KajiKLccwmz24NY1Imd9fAY7yZ/3SJfDf2M=;
+        s=default; t=1558639408;
+        bh=3rxfAX4mLHvVaXl+hX9hwHnq3HJQHQSfrnr68pxQPQk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e+WbKBg1xqIkDQZIh7kQ1u5wMRsdWBEsPzyIMx/kpMvnEjIoNQG/dyFTcbsdH7+bU
-         KDEq9OMIvKLYn3YxHeN70KuQT61dOpoV0/D/nVqORn6jj8zKL8FO/HAOArMfF1aRvv
-         KE8ilCqFbliAQfVZffvee1u2yvDrNFZEZujyOPbw=
+        b=Pqjin1Rol+xuWfgTleSKUhjvGLc3NxcvqvbKgiCYAqXPlepyiMhlP8FwiFTQdmHNT
+         oZZ0XYmi6orDgGX6K6RgABQbW2xNsJdXT4NNMReiEe6V0GqIJORE1m+LHjylY2AXRl
+         /6K1yKpAv18hs6Y5zDdHwGLTTjK6Vd8rEaysHZxU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Stefan=20M=C3=A4tje?= <stefan.maetje@esd.eu>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH 5.0 091/139] PCI: Factor out pcie_retrain_link() function
-Date:   Thu, 23 May 2019 21:06:19 +0200
-Message-Id: <20190523181732.449095988@linuxfoundation.org>
+        stable@vger.kernel.org, Yifeng Li <tomli@tomli.me>,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+        Teddy Wang <teddy.wang@siliconmotion.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: [PATCH 5.0 078/139] fbdev: sm712fb: fix VRAM detection, dont set SR70/71/74/75
+Date:   Thu, 23 May 2019 21:06:06 +0200
+Message-Id: <20190523181731.017644887@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181720.120897565@linuxfoundation.org>
 References: <20190523181720.120897565@linuxfoundation.org>
@@ -61,85 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Mätje <stefan.maetje@esd.eu>
+From: Yifeng Li <tomli@tomli.me>
 
-commit 86fa6a344209d9414ea962b1f1ac6ade9dd7563a upstream.
+commit dcf9070595e100942c539e229dde4770aaeaa4e9 upstream.
 
-Factor out pcie_retrain_link() to use for Pericom Retrain Link quirk.  No
-functional change intended.
+On a Thinkpad s30 (Pentium III / i440MX, Lynx3DM), the amount of Video
+RAM is not detected correctly by the xf86-video-siliconmotion driver.
+This is because sm712fb overwrites the GPR71 Scratch Pad Register, which
+is set by BIOS on x86 and used to indicate amount of VRAM.
 
-Signed-off-by: Stefan Mätje <stefan.maetje@esd.eu>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-CC: stable@vger.kernel.org
+Other Scratch Pad Registers, including GPR70/74/75, don't have the same
+side-effect, but overwriting to them is still questionable, as they are
+not related to modesetting.
+
+Stop writing to SR70/71/74/75 (a.k.a GPR70/71/74/75).
+
+Signed-off-by: Yifeng Li <tomli@tomli.me>
+Tested-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Cc: Teddy Wang <teddy.wang@siliconmotion.com>
+Cc: <stable@vger.kernel.org>  # v4.4+
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pci/pcie/aspm.c |   40 ++++++++++++++++++++++++----------------
- 1 file changed, 24 insertions(+), 16 deletions(-)
+ drivers/video/fbdev/sm712fb.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/pci/pcie/aspm.c
-+++ b/drivers/pci/pcie/aspm.c
-@@ -196,6 +196,29 @@ static void pcie_clkpm_cap_init(struct p
- 	link->clkpm_capable = (blacklist) ? 0 : capable;
- }
+--- a/drivers/video/fbdev/sm712fb.c
++++ b/drivers/video/fbdev/sm712fb.c
+@@ -1146,7 +1146,9 @@ static void sm7xx_set_timing(struct smtc
+ 		/* init SEQ register SR30 - SR75 */
+ 		for (i = 0; i < SIZE_SR30_SR75; i++)
+ 			if ((i + 0x30) != 0x30 && (i + 0x30) != 0x62 &&
+-			    (i + 0x30) != 0x6a && (i + 0x30) != 0x6b)
++			    (i + 0x30) != 0x6a && (i + 0x30) != 0x6b &&
++			    (i + 0x30) != 0x70 && (i + 0x30) != 0x71 &&
++			    (i + 0x30) != 0x74 && (i + 0x30) != 0x75)
+ 				smtc_seqw(i + 0x30,
+ 					  vgamode[j].init_sr30_sr75[i]);
  
-+static bool pcie_retrain_link(struct pcie_link_state *link)
-+{
-+	struct pci_dev *parent = link->pdev;
-+	unsigned long start_jiffies;
-+	u16 reg16;
-+
-+	pcie_capability_read_word(parent, PCI_EXP_LNKCTL, &reg16);
-+	reg16 |= PCI_EXP_LNKCTL_RL;
-+	pcie_capability_write_word(parent, PCI_EXP_LNKCTL, reg16);
-+
-+	/* Wait for link training end. Break out after waiting for timeout */
-+	start_jiffies = jiffies;
-+	for (;;) {
-+		pcie_capability_read_word(parent, PCI_EXP_LNKSTA, &reg16);
-+		if (!(reg16 & PCI_EXP_LNKSTA_LT))
-+			break;
-+		if (time_after(jiffies, start_jiffies + LINK_RETRAIN_TIMEOUT))
-+			break;
-+		msleep(1);
-+	}
-+	return !(reg16 & PCI_EXP_LNKSTA_LT);
-+}
-+
- /*
-  * pcie_aspm_configure_common_clock: check if the 2 ends of a link
-  *   could use common clock. If they are, configure them to use the
-@@ -205,7 +228,6 @@ static void pcie_aspm_configure_common_c
- {
- 	int same_clock = 1;
- 	u16 reg16, parent_reg, child_reg[8];
--	unsigned long start_jiffies;
- 	struct pci_dev *child, *parent = link->pdev;
- 	struct pci_bus *linkbus = parent->subordinate;
- 	/*
-@@ -263,21 +285,7 @@ static void pcie_aspm_configure_common_c
- 		reg16 &= ~PCI_EXP_LNKCTL_CCC;
- 	pcie_capability_write_word(parent, PCI_EXP_LNKCTL, reg16);
- 
--	/* Retrain link */
--	reg16 |= PCI_EXP_LNKCTL_RL;
--	pcie_capability_write_word(parent, PCI_EXP_LNKCTL, reg16);
--
--	/* Wait for link training end. Break out after waiting for timeout */
--	start_jiffies = jiffies;
--	for (;;) {
--		pcie_capability_read_word(parent, PCI_EXP_LNKSTA, &reg16);
--		if (!(reg16 & PCI_EXP_LNKSTA_LT))
--			break;
--		if (time_after(jiffies, start_jiffies + LINK_RETRAIN_TIMEOUT))
--			break;
--		msleep(1);
--	}
--	if (!(reg16 & PCI_EXP_LNKSTA_LT))
-+	if (pcie_retrain_link(link))
- 		return;
- 
- 	/* Training failed. Restore common clock configurations */
 
 
