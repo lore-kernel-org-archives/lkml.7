@@ -4,57 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9267C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:22:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4B32C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:23:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF7912133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:22:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AF8D21841
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:23:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639379;
-	bh=PBtTUBAOYf3seKE7fedPr1UQ96MftwcjzEdHhxafmvk=;
+	s=default; t=1558639383;
+	bh=9tqMZWqEHULiuOWDI2seNvJ1xyybwcMj/Ewo4lbLsvc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yt7T9cuiAuTx1WPW+AKOckYV1HOtkbOocBMbdsezXjwPOwJ0h0VE4Lo5f+yTs3ogG
-	 X5GT+Jy4rh1GsaSJkdWXYmhBiVblWG9127BwmGqMcQYg+3G3g/OMk2oczk6Qt91MIh
-	 kdYdGreRN1Gv25Pab9lp2wJY1zEvxVCJFXxeJFFg=
+	b=B/WwuQl3c0mbrtUiTt+lIaBn4VpGgvdFXY0crlL4ka3QcYWZu8AFsn7qdfsp5vZOo
+	 WLtnVhkkPnxJ1MDZ1Lbt3HuyjGKEJ7n/1T+ag+I/as2CnF700/oc1mXyTbzGS7MkXc
+	 hsW2R/cqUaOLMYAyTMvY34bflbZRlo5ns7rHs93Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390219AbfEWTW7 (ORCPT
+        id S2390608AbfEWTXC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:22:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32952 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:23:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33104 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390578AbfEWTWy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:22:54 -0400
+        id S2389839AbfEWTW7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:22:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 59AC3206BA;
-        Thu, 23 May 2019 19:22:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1E6D20868;
+        Thu, 23 May 2019 19:22:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639373;
-        bh=PBtTUBAOYf3seKE7fedPr1UQ96MftwcjzEdHhxafmvk=;
+        s=default; t=1558639379;
+        bh=9tqMZWqEHULiuOWDI2seNvJ1xyybwcMj/Ewo4lbLsvc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ad7z8kjl89sYSD86X8f1Gk6siyWOaGttZb2SvMjM5hZ2S4sh7Fq3xkgl/KIPRQTRV
-         Gjbie5lqddRVWhMenb0Vy3/Tcm3O4fC0ZgiC2t6KAeB2rz52urKnEMuvdCMVAXXywG
-         I+ZlA00XchyPkYye4e5qiJdbYJZEH4uyH7Yul+pI=
+        b=pbK+70YFQE70L4nrEyr8Mu2NVpwsbc0QjsovXbah7lNrNtm+vLBTobnmGiOVHC2d4
+         YzAx6jv4bH/5IId4CcmCTvCPPp+oHiKVc1ona4wuLXCaIt78lEzNqlLH49S+sA5+ls
+         /v4so7uEpHmrAEx1XOQAvX30BCGx/DV1DfplEwH0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
-        Paul Burton <paul.burton@mips.com>, linux-mips@linux-mips.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org
-Subject: [PATCH 5.0 073/139] MIPS: perf: Fix build with CONFIG_CPU_BMIPS5000 enabled
-Date:   Thu, 23 May 2019 21:06:01 +0200
-Message-Id: <20190523181730.299366832@linuxfoundation.org>
+        stable@vger.kernel.org, Yifeng Li <tomli@tomli.me>,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+        Teddy Wang <teddy.wang@siliconmotion.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: [PATCH 5.0 083/139] fbdev: sm712fb: use 1024x768 by default on non-MIPS, fix garbled display
+Date:   Thu, 23 May 2019 21:06:11 +0200
+Message-Id: <20190523181731.621894743@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181720.120897565@linuxfoundation.org>
 References: <20190523181720.120897565@linuxfoundation.org>
@@ -67,101 +61,124 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Yifeng Li <tomli@tomli.me>
 
-commit 1b1f01b653b408ebe58fec78c566d1075d285c64 upstream.
+commit 4ed7d2ccb7684510ec5f7a8f7ef534bc6a3d55b2 upstream.
 
-arch/mips/kernel/perf_event_mipsxx.c: In function 'mipsxx_pmu_enable_event':
-arch/mips/kernel/perf_event_mipsxx.c:326:21: error: unused variable 'event' [-Werror=unused-variable]
-  struct perf_event *event = container_of(evt, struct perf_event, hw);
-                     ^~~~~
+Loongson MIPS netbooks use 1024x600 LCD panels, which is the original
+target platform of this driver, but nearly all old x86 laptops have
+1024x768. Lighting 768 panels using 600's timings would partially
+garble the display. Since it's not possible to distinguish them reliably,
+we change the default to 768, but keep 600 as-is on MIPS.
 
-Fix this by making use of IS_ENABLED() to simplify the code and avoid
-unnecessary ifdefery.
+Further, earlier laptops, such as IBM Thinkpad 240X, has a 800x600 LCD
+panel, this driver would probably garbled those display. As we don't
+have one for testing, the original behavior of the driver is kept as-is,
+but the problem has been documented is the comments.
 
-Fixes: 84002c88599d ("MIPS: perf: Fix perf with MT counting other threads")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Cc: linux-mips@linux-mips.org
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: James Hogan <jhogan@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-mips@vger.kernel.org
-Cc: stable@vger.kernel.org # v4.18+
+Signed-off-by: Yifeng Li <tomli@tomli.me>
+Tested-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Cc: Teddy Wang <teddy.wang@siliconmotion.com>
+Cc: <stable@vger.kernel.org>  # v4.4+
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/mips/kernel/perf_event_mipsxx.c |   21 +++------------------
- 1 file changed, 3 insertions(+), 18 deletions(-)
+ drivers/video/fbdev/sm712.h   |    7 +++--
+ drivers/video/fbdev/sm712fb.c |   53 +++++++++++++++++++++++++++++++-----------
+ 2 files changed, 44 insertions(+), 16 deletions(-)
 
---- a/arch/mips/kernel/perf_event_mipsxx.c
-+++ b/arch/mips/kernel/perf_event_mipsxx.c
-@@ -64,17 +64,11 @@ struct mips_perf_event {
- 	#define CNTR_EVEN	0x55555555
- 	#define CNTR_ODD	0xaaaaaaaa
- 	#define CNTR_ALL	0xffffffff
--#ifdef CONFIG_MIPS_MT_SMP
- 	enum {
- 		T  = 0,
- 		V  = 1,
- 		P  = 2,
- 	} range;
--#else
--	#define T
--	#define V
--	#define P
--#endif
- };
+--- a/drivers/video/fbdev/sm712.h
++++ b/drivers/video/fbdev/sm712.h
+@@ -15,9 +15,10 @@
  
- static struct mips_perf_event raw_event;
-@@ -325,9 +319,7 @@ static void mipsxx_pmu_enable_event(stru
+ #define FB_ACCEL_SMI_LYNX 88
+ 
+-#define SCREEN_X_RES      1024
+-#define SCREEN_Y_RES      600
+-#define SCREEN_BPP        16
++#define SCREEN_X_RES          1024
++#define SCREEN_Y_RES_PC       768
++#define SCREEN_Y_RES_NETBOOK  600
++#define SCREEN_BPP            16
+ 
+ #define dac_reg	(0x3c8)
+ #define dac_val	(0x3c9)
+--- a/drivers/video/fbdev/sm712fb.c
++++ b/drivers/video/fbdev/sm712fb.c
+@@ -1463,6 +1463,43 @@ static u_long sm7xx_vram_probe(struct sm
+ 	return 0;  /* unknown hardware */
+ }
+ 
++static void sm7xx_resolution_probe(struct smtcfb_info *sfb)
++{
++	/* get mode parameter from smtc_scr_info */
++	if (smtc_scr_info.lfb_width != 0) {
++		sfb->fb->var.xres = smtc_scr_info.lfb_width;
++		sfb->fb->var.yres = smtc_scr_info.lfb_height;
++		sfb->fb->var.bits_per_pixel = smtc_scr_info.lfb_depth;
++		goto final;
++	}
++
++	/*
++	 * No parameter, default resolution is 1024x768-16.
++	 *
++	 * FIXME: earlier laptops, such as IBM Thinkpad 240X, has a 800x600
++	 * panel, also see the comments about Thinkpad 240X above.
++	 */
++	sfb->fb->var.xres = SCREEN_X_RES;
++	sfb->fb->var.yres = SCREEN_Y_RES_PC;
++	sfb->fb->var.bits_per_pixel = SCREEN_BPP;
++
++#ifdef CONFIG_MIPS
++	/*
++	 * Loongson MIPS netbooks use 1024x600 LCD panels, which is the original
++	 * target platform of this driver, but nearly all old x86 laptops have
++	 * 1024x768. Lighting 768 panels using 600's timings would partially
++	 * garble the display, so we don't want that. But it's not possible to
++	 * distinguish them reliably.
++	 *
++	 * So we change the default to 768, but keep 600 as-is on MIPS.
++	 */
++	sfb->fb->var.yres = SCREEN_Y_RES_NETBOOK;
++#endif
++
++final:
++	big_pixel_depth(sfb->fb->var.bits_per_pixel, smtc_scr_info.lfb_depth);
++}
++
+ static int smtcfb_pci_probe(struct pci_dev *pdev,
+ 			    const struct pci_device_id *ent)
  {
- 	struct perf_event *event = container_of(evt, struct perf_event, hw);
- 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
--#ifdef CONFIG_MIPS_MT_SMP
- 	unsigned int range = evt->event_base >> 24;
--#endif /* CONFIG_MIPS_MT_SMP */
+@@ -1508,19 +1545,6 @@ static int smtcfb_pci_probe(struct pci_d
  
- 	WARN_ON(idx < 0 || idx >= mipspmu.num_counters);
+ 	sm7xx_init_hw();
  
-@@ -336,21 +328,15 @@ static void mipsxx_pmu_enable_event(stru
- 		/* Make sure interrupt enabled. */
- 		MIPS_PERFCTRL_IE;
- 
--#ifdef CONFIG_CPU_BMIPS5000
--	{
-+	if (IS_ENABLED(CONFIG_CPU_BMIPS5000)) {
- 		/* enable the counter for the calling thread */
- 		cpuc->saved_ctrl[idx] |=
- 			(1 << (12 + vpe_id())) | BRCM_PERFCTRL_TC;
+-	/* get mode parameter from smtc_scr_info */
+-	if (smtc_scr_info.lfb_width != 0) {
+-		sfb->fb->var.xres = smtc_scr_info.lfb_width;
+-		sfb->fb->var.yres = smtc_scr_info.lfb_height;
+-		sfb->fb->var.bits_per_pixel = smtc_scr_info.lfb_depth;
+-	} else {
+-		/* default resolution 1024x600 16bit mode */
+-		sfb->fb->var.xres = SCREEN_X_RES;
+-		sfb->fb->var.yres = SCREEN_Y_RES;
+-		sfb->fb->var.bits_per_pixel = SCREEN_BPP;
 -	}
--#else
--#ifdef CONFIG_MIPS_MT_SMP
--	if (range > V) {
-+	} else if (IS_ENABLED(CONFIG_MIPS_MT_SMP) && range > V) {
- 		/* The counter is processor wide. Set it up to count all TCs. */
- 		pr_debug("Enabling perf counter for all TCs\n");
- 		cpuc->saved_ctrl[idx] |= M_TC_EN_ALL;
--	} else
--#endif /* CONFIG_MIPS_MT_SMP */
--	{
-+	} else {
- 		unsigned int cpu, ctrl;
- 
- 		/*
-@@ -365,7 +351,6 @@ static void mipsxx_pmu_enable_event(stru
- 		cpuc->saved_ctrl[idx] |= ctrl;
- 		pr_debug("Enabling perf counter for CPU%d\n", cpu);
+-
+-	big_pixel_depth(sfb->fb->var.bits_per_pixel, smtc_scr_info.lfb_depth);
+ 	/* Map address and memory detection */
+ 	mmio_base = pci_resource_start(pdev, 0);
+ 	pci_read_config_byte(pdev, PCI_REVISION_ID, &sfb->chip_rev_id);
+@@ -1582,6 +1606,9 @@ static int smtcfb_pci_probe(struct pci_d
+ 		goto failed_fb;
  	}
--#endif /* CONFIG_CPU_BMIPS5000 */
- 	/*
- 	 * We do not actually let the counter run. Leave it until start().
- 	 */
+ 
++	/* probe and decide resolution */
++	sm7xx_resolution_probe(sfb);
++
+ 	/* can support 32 bpp */
+ 	if (sfb->fb->var.bits_per_pixel == 15)
+ 		sfb->fb->var.bits_per_pixel = 16;
 
 
