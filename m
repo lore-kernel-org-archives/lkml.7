@@ -2,296 +2,257 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B62A1C282DE
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:58:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A67E7C282E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:58:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94E4020868
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:58:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6706320851
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:58:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ageej1MS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731160AbfEWP6r (ORCPT
+        id S1731189AbfEWP6z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 11:58:47 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:35226 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730752AbfEWP6r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 11:58:47 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 8124889C37;
-        Thu, 23 May 2019 15:58:46 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-121-142.rdu2.redhat.com [10.10.121.142])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 582485D707;
-        Thu, 23 May 2019 15:58:43 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
- Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
- Kingdom.
- Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH 2/2] KEYS: Provide KEYCTL_GRANT_PERMISSION
-From:   David Howells <dhowells@redhat.com>
-To:     keyrings@vger.kernel.org
-Cc:     dhowells@redhat.com, linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Thu, 23 May 2019 16:58:43 +0100
-Message-ID: <155862712317.24863.13455329541359881229.stgit@warthog.procyon.org.uk>
-In-Reply-To: <155862710003.24863.11807972177275927370.stgit@warthog.procyon.org.uk>
-References: <155862710003.24863.11807972177275927370.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/unknown-version
+        Thu, 23 May 2019 11:58:55 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:45447 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731163AbfEWP6y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 11:58:54 -0400
+Received: by mail-lf1-f65.google.com with SMTP id n22so4773703lfe.12
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 08:58:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=814odXxcuVfRati0gurkRFNz500nIRSYGE0iZM3L0Ng=;
+        b=Ageej1MS07LK+EGbOwJeeZnHugvJ2fp8glfAPww4ixElzxf7Mr9k2u3Mrabn3FHQUH
+         6SO7ORaAoUQeMS/Ib6Jl+nwx3QQAX0PLJpWHFwC/5HtQRVID9SLQlvX7gW7ilcysorAR
+         A+cR1aXqoTu1wpK+PtW6Ijizg+zeJiF6Oc3y9NKLtVw2t4RFENGr5XhLiidgTWI2kqjs
+         PIPdiyY4xg9HDeqVu1M6xogSrHQPgl5Y7RjoiNsU6Lem3maqXBls43ZlALdMseQC0soh
+         qT86xHUKoGeN1JHZryZcT3CdO7vl+5N9A0Ym+LwtzsGFDst88ctcyGNcvFIDB7+5tCKe
+         oRZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=814odXxcuVfRati0gurkRFNz500nIRSYGE0iZM3L0Ng=;
+        b=Bopi7Po6B1SMEXB5mPgcCxsGUKVSbKZlwHAdGVyKCLuS1jcpjW9kp7dwWybw0v6358
+         Ya2Nq9iqvF+UJcTkasA6YW+hZ6rILdjNWNYMu59c7HTnpzUfh/ahe0e3fDx+vlro0OeS
+         Ydfo2ylaSnjkklNBy8+Dya5fKNCzqTbluU7AwhkWQgabLZ9atgivMJS6LfF7HU2ESbS/
+         bMxOv2TkSp9KyfI6NUpnWCb4J79kg38+TXCLv4v8gvNIVrahw/lnNYLUYu/1GNd9yn9s
+         2F6r+1qwxM+ovf1WaC2QPiNamyRPgEvq4BCi8+ii50Ow9DlWjs2H6TwnJNp2NeWSt2nk
+         2XyQ==
+X-Gm-Message-State: APjAAAXQQe0Qsik/yoaXHFNXlIydh41AJKYmo00wEgjh5Vb3bAHngYZi
+        /Wsu/AM9bAY2MuJ57GC9wlLPKw==
+X-Google-Smtp-Source: APXvYqymlMgaC20dZjIqJXcTZKOZ7c3DdFnP/su1Uisd7tkxD46l7+ihMKv9WheB40KSvyOITAnCzQ==
+X-Received: by 2002:ac2:4286:: with SMTP id m6mr6324069lfh.150.1558627131672;
+        Thu, 23 May 2019 08:58:51 -0700 (PDT)
+Received: from [10.44.66.8] ([212.45.67.2])
+        by smtp.googlemail.com with ESMTPSA id r27sm385711lfp.73.2019.05.23.08.58.50
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 23 May 2019 08:58:51 -0700 (PDT)
+Subject: Re: [PATCH v2 4/4] dt-bindings: interconnect: qcs404: Introduce
+ qcom,qos DT property
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>, robh+dt@kernel.org
+Cc:     vkoul@kernel.org, evgreen@chromium.org, daidavid1@codeaurora.org,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+References: <20190415104357.5305-1-georgi.djakov@linaro.org>
+ <20190415104357.5305-5-georgi.djakov@linaro.org>
+ <20190418225150.GN27005@builder>
+From:   Georgi Djakov <georgi.djakov@linaro.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=georgi.djakov@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+ KEmKjLDvB0pePJkdTw==
+Message-ID: <a507a79e-e4da-4129-f52b-8db9927dc2a4@linaro.org>
+Date:   Thu, 23 May 2019 18:58:47 +0300
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Thu, 23 May 2019 15:58:46 +0000 (UTC)
+In-Reply-To: <20190418225150.GN27005@builder>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Provide a keyctl() operation to grant/remove permissions.  The grant
-operation, wrapped by libkeyutils, looks like:
+Hi Bjorn and Rob,
 
-	int ret = keyctl_grant_permission(key_serial_t key,
-					  enum key_ace_subject_type type,
-					  unsigned int subject,
-					  unsigned int perm);
+On 4/19/19 01:51, Bjorn Andersson wrote:
+> On Mon 15 Apr 03:43 PDT 2019, Georgi Djakov wrote:
+> 
+>> There are separate hardware blocks per each interconnect that allow QoS
+>> configuration to be applied to each port (node). There are different kinds of
+>> priorities that could be set on these ports. Each port supports also various
+>> QoS modes such as "fixed", "limiter", "bypass" and "regulator". Depending on
+>> the mode, there are a few additional knobs that could be configured.
+>>
+>> Introduce the qcom,qos property, so that we describe this relation in DT and
+>> allow the interconnect provider drivers can make use of it.
+>>
+> 
+> As the example shows we will end up with two nodes describing the same
+> hardware with pretty much identical set of properties.
 
-Where key is the key to be modified, type and subject represent the subject
-to which permission is to be granted (or removed) and perm is the set of
-permissions to be granted.  0 is returned on success.  SET_SECURITY
-permission is required for this.
+I am still split and hesitant about what would be the best way to represent this
+in DT and it would be nice to reach some conclusion.
 
-The subject type currently must be KEY_ACE_SUBJ_STANDARD for the moment
-(other subject types will come along later).
+So the idea is that the QoS driver could be a standalone driver that does some
+static QoS configuration. The clocks i have listed in the example below are not
+the same, sorry. We should list there some of the interface clocks that need to
+be enabled before configuring the port priorities instead. For example USB or
+UFS axi clock and not the NoC clocks.
 
-For subject type KEY_ACE_SUBJ_STANDARD, the following subject values are
-available:
+This makes the DT properties of the two nodes different. Оn one side we collect
+bandwidth requests and send them to the remote processor (RPM) and each NoC is
+represented in DT as child of RPM (like the rpm controlled regulators and
+clocks). On the other side we also have the mmio registers for configuring port
+priorities that may fit in DT under soc {} with their mmio registers and a list
+of iface clocks.
 
-	KEY_ACE_POSSESSOR	The possessor of the key
-	KEY_ACE_OWNER		The owner of the key
-	KEY_ACE_GROUP		The key's group
-	KEY_ACE_EVERYONE	Everyone
+> I really do think it's better to represent and implement the NoC
+> controllers on the mmio/platform bus and have a small "proxy" as a child
+> of the RPM.
+>
+> By doing this you avoid the duplication of the clock properties and you
+> don't need the qcom,qos reference to pair up each "bus performance
+> driver" to the "bus qos driver".
 
-perm lists the permissions to be granted:
+The clock properties would contain different set of clocks - NoC clocks for the
+DT nodes in rpm {} and the iface clocks for the QoS DT nodes in soc {}.
 
-	KEY_ACE_VIEW		Can view the key metadata
-	KEY_ACE_READ		Can read the key content
-	KEY_ACE_WRITE		Can update/modify the key content
-	KEY_ACE_SEARCH		Can find the key by searching/requesting
-	KEY_ACE_LINK		Can make a link to the key
-	KEY_ACE_SET_SECURITY	Can set security
-	KEY_ACE_INVAL		Can invalidate
-	KEY_ACE_REVOKE		Can revoke
-	KEY_ACE_JOIN		Can join this keyring
-	KEY_ACE_CLEAR		Can clear this keyring
+> And you still maintain the idea that the entity you request bandwidth
+> votes with are the NoC controller (which also will be the QoS
+> controller).
 
-If an ACE already exists for the subject, then the permissions mask will be
-overwritten; if perm is 0, it will be deleted.
+I assume that the entities are the NoC controllers that we talk to through the RPM.
 
-Currently, the internal ACL is limited to a maximum of 16 entries.
+Thanks,
+Georgi
 
-For example:
-
-	int ret = keyctl_grant_permission(key,
-					  KEY_ACE_SUBJ_STANDARD,
-					  KEY_ACE_OWNER,
-					  KEY_ACE_VIEW | KEY_ACE_READ);
-
-Signed-off-by: David Howells <dhowells@redhat.com>
----
-
- include/uapi/linux/keyctl.h |    1 
- security/keys/compat.c      |    2 +
- security/keys/internal.h    |    5 ++
- security/keys/keyctl.c      |    5 ++
- security/keys/permission.c  |  119 +++++++++++++++++++++++++++++++++++++++++++
- 5 files changed, 132 insertions(+)
-
-diff --git a/include/uapi/linux/keyctl.h b/include/uapi/linux/keyctl.h
-index eb0bfd491374..00b476fa6945 100644
---- a/include/uapi/linux/keyctl.h
-+++ b/include/uapi/linux/keyctl.h
-@@ -131,6 +131,7 @@ enum key_ace_standard_subject {
- #define KEYCTL_PKEY_VERIFY		28	/* Verify a public key signature */
- #define KEYCTL_RESTRICT_KEYRING		29	/* Restrict keys allowed to link to a keyring */
- #define KEYCTL_MOVE			30	/* Move keys between keyrings */
-+#define KEYCTL_GRANT_PERMISSION		31	/* Grant a permit to a key */
- 
- /* keyctl structures */
- struct keyctl_dh_params {
-diff --git a/security/keys/compat.c b/security/keys/compat.c
-index b326bc4f84d7..30c23a3cadb8 100644
---- a/security/keys/compat.c
-+++ b/security/keys/compat.c
-@@ -161,6 +161,8 @@ COMPAT_SYSCALL_DEFINE5(keyctl, u32, option,
- 
- 	case KEYCTL_MOVE:
- 		return keyctl_keyring_move(arg2, arg3, arg4, arg5);
-+	case KEYCTL_GRANT_PERMISSION:
-+		return keyctl_grant_permission(arg2, arg3, arg4, arg5);
- 
- 	default:
- 		return -EOPNOTSUPP;
-diff --git a/security/keys/internal.h b/security/keys/internal.h
-index 36cac9f7dbc1..99eccbd2ee7b 100644
---- a/security/keys/internal.h
-+++ b/security/keys/internal.h
-@@ -336,6 +336,11 @@ static inline long keyctl_pkey_e_d_s(int op,
- }
- #endif
- 
-+extern long keyctl_grant_permission(key_serial_t keyid,
-+				    enum key_ace_subject_type type,
-+				    unsigned int subject,
-+				    unsigned int perm);
-+
- /*
-  * Debugging key validation
-  */
-diff --git a/security/keys/keyctl.c b/security/keys/keyctl.c
-index 51fae94ae2e0..d503758f9deb 100644
---- a/security/keys/keyctl.c
-+++ b/security/keys/keyctl.c
-@@ -1860,6 +1860,11 @@ SYSCALL_DEFINE5(keyctl, int, option, unsigned long, arg2, unsigned long, arg3,
- 					   (key_serial_t)arg3,
- 					   (key_serial_t)arg4,
- 					   (unsigned int)arg5);
-+	case KEYCTL_GRANT_PERMISSION:
-+		return keyctl_grant_permission((key_serial_t)arg2,
-+					       (enum key_ace_subject_type)arg3,
-+					       (unsigned int)arg4,
-+					       (unsigned int)arg5);
- 
- 	default:
- 		return -EOPNOTSUPP;
-diff --git a/security/keys/permission.c b/security/keys/permission.c
-index 1f6a736d5acd..354ac539402c 100644
---- a/security/keys/permission.c
-+++ b/security/keys/permission.c
-@@ -273,3 +273,122 @@ long key_set_acl(struct key *key, struct key_acl *acl)
- 	key_put_acl(acl);
- 	return 0;
- }
-+
-+/*
-+ * Allocate a new ACL with an extra ACE slot.
-+ */
-+static struct key_acl *key_alloc_acl(const struct key_acl *old_acl, int nr, int skip)
-+{
-+	struct key_acl *acl;
-+	int nr_ace, i, j = 0;
-+
-+	nr_ace = old_acl->nr_ace + nr;
-+	if (nr_ace > 16)
-+		return ERR_PTR(-EINVAL);
-+
-+	acl = kzalloc(struct_size(acl, aces, nr_ace), GFP_KERNEL);
-+	if (!acl)
-+		return ERR_PTR(-ENOMEM);
-+
-+	refcount_set(&acl->usage, 1);
-+	acl->nr_ace = nr_ace;
-+	for (i = 0; i < old_acl->nr_ace; i++) {
-+		if (i == skip)
-+			continue;
-+		acl->aces[j] = old_acl->aces[i];
-+		j++;
-+	}
-+	return acl;
-+}
-+
-+/*
-+ * Generate the revised ACL.
-+ */
-+static long key_change_acl(struct key *key, struct key_ace *new_ace)
-+{
-+	struct key_acl *acl, *old;
-+	int i;
-+
-+	old = rcu_dereference_protected(key->acl, lockdep_is_held(&key->sem));
-+
-+	for (i = 0; i < old->nr_ace; i++)
-+		if (old->aces[i].type == new_ace->type &&
-+		    old->aces[i].subject_id == new_ace->subject_id)
-+			goto found_match;
-+
-+	if (new_ace->perm == 0)
-+		return 0; /* No permissions to remove.  Add deny record? */
-+
-+	acl = key_alloc_acl(old, 1, -1);
-+	if (IS_ERR(acl))
-+		return PTR_ERR(acl);
-+	acl->aces[i] = *new_ace;
-+	goto change;
-+
-+found_match:
-+	if (new_ace->perm == 0)
-+		goto delete_ace;
-+	if (new_ace->perm == old->aces[i].perm)
-+		return 0;
-+	acl = key_alloc_acl(old, 0, -1);
-+	if (IS_ERR(acl))
-+		return PTR_ERR(acl);
-+	acl->aces[i].perm = new_ace->perm;
-+	goto change;
-+
-+delete_ace:
-+	acl = key_alloc_acl(old, -1, i);
-+	if (IS_ERR(acl))
-+		return PTR_ERR(acl);
-+	goto change;
-+
-+change:
-+	return key_set_acl(key, acl);
-+}
-+
-+/*
-+ * Add, alter or remove (if perm == 0) an ACE in a key's ACL.
-+ */
-+long keyctl_grant_permission(key_serial_t keyid,
-+			     enum key_ace_subject_type type,
-+			     unsigned int subject,
-+			     unsigned int perm)
-+{
-+	struct key_ace new_ace;
-+	struct key *key;
-+	key_ref_t key_ref;
-+	long ret;
-+
-+	new_ace.type = type;
-+	new_ace.perm = perm;
-+
-+	switch (type) {
-+	case KEY_ACE_SUBJ_STANDARD:
-+		if (subject >= nr__key_ace_standard_subject)
-+			return -ENOENT;
-+		new_ace.subject_id = subject;
-+		break;
-+
-+	default:
-+		return -ENOENT;
-+	}
-+
-+	key_ref = lookup_user_key(keyid, KEY_LOOKUP_PARTIAL, KEY_NEED_SETSEC);
-+	if (IS_ERR(key_ref)) {
-+		ret = PTR_ERR(key_ref);
-+		goto error;
-+	}
-+
-+	key = key_ref_to_ptr(key_ref);
-+
-+	down_write(&key->sem);
-+
-+	/* If we're not the sysadmin, we can only change a key that we own */
-+	ret = -EACCES;
-+	if (capable(CAP_SYS_ADMIN) || uid_eq(key->uid, current_fsuid()))
-+		ret = key_change_acl(key, &new_ace);
-+	up_write(&key->sem);
-+	key_put(key);
-+error:
-+	return ret;
-+}
-
+> 
+> Regards,
+> Bjorn
+> 
+>> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+>> ---
+>>
+>> v2:
+>> - New patch.
+>>
+>>  .../bindings/interconnect/qcom,qcs404.txt     | 31 +++++++++++++++++++
+>>  1 file changed, 31 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/interconnect/qcom,qcs404.txt b/Documentation/devicetree/bindings/interconnect/qcom,qcs404.txt
+>> index 9befcd14a5b5..b971e0ee2963 100644
+>> --- a/Documentation/devicetree/bindings/interconnect/qcom,qcs404.txt
+>> +++ b/Documentation/devicetree/bindings/interconnect/qcom,qcs404.txt
+>> @@ -11,9 +11,37 @@ Required properties :
+>>  Optional properties :
+>>  clocks : list of phandles and specifiers to all interconnect bus clocks
+>>  clock-names : clock names should include both "bus_clk" and "bus_a_clk"
+>> +qcom,qos : phandle to the QoS device-tree node
+>>  
+>>  Example:
+>>  
+>> +soc {
+>> +	...
+>> +	bimc_qos: interconnect@400000 {
+>> +		compatible = "qcom,qcs404-bimc-qos";
+>> +		reg = <0x400000 0x80000>;
+>> +		clock-names = "bus_clk", "bus_a_clk";
+>> +		clocks = <&rpmcc RPM_SMD_BIMC_CLK>,
+>> +			<&rpmcc RPM_SMD_BIMC_A_CLK>;
+>> +	};
+>> +
+>> +	pcnoc_qos: interconnect@500000 {
+>> +		compatible = "qcom,qcs404-pcnoc-qos";
+>> +		reg = <0x500000 0x15080>;
+>> +		clock-names = "bus_clk", "bus_a_clk";
+>> +		clocks = <&rpmcc RPM_SMD_PNOC_CLK>,
+>> +			<&rpmcc RPM_SMD_PNOC_A_CLK>;
+>> +	};
+>> +
+>> +	snoc_qos: interconnect@580000 {
+>> +		compatible = "qcom,qcs404-snoc-qos";
+>> +		reg = <0x580000 0x14000>;
+>> +		clock-names = "bus_clk", "bus_a_clk";
+>> +		clocks = <&rpmcc RPM_SMD_SNOC_CLK>,
+>> +			<&rpmcc RPM_SMD_SNOC_A_CLK>;
+>> +	};
+>> +};
+>> +
+>>  rpm-glink {
+>>  	...
+>>  	rpm_requests: glink-channel {
+>> @@ -24,6 +52,7 @@ rpm-glink {
+>>  			clock-names = "bus_clk", "bus_a_clk";
+>>  			clocks = <&rpmcc RPM_SMD_BIMC_CLK>,
+>>  				<&rpmcc RPM_SMD_BIMC_A_CLK>;
+>> +			qcom,qos = <&bimc_qos>;
+>>  		};
+>>  
+>>  		pnoc: interconnect@1 {
+>> @@ -32,6 +61,7 @@ rpm-glink {
+>>  			clock-names = "bus_clk", "bus_a_clk";
+>>  			clocks = <&rpmcc RPM_SMD_PNOC_CLK>,
+>>  				<&rpmcc RPM_SMD_PNOC_A_CLK>;
+>> +			qcom,qos = <&pcnoc_qos>;
+>>  		};
+>>  
+>>  		snoc: interconnect@2 {
+>> @@ -40,6 +70,7 @@ rpm-glink {
+>>  			clock-names = "bus_clk", "bus_a_clk";
+>>  			clocks = <&rpmcc RPM_SMD_SNOC_CLK>,
+>>  				<&rpmcc RPM_SMD_SNOC_A_CLK>;
+>> +			qcom,qos = <&snoc_qos>;
+>>  		};
+>>  	};
+>>  };
