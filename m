@@ -2,127 +2,111 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AF3CC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 13:49:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C15BC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 13:50:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D84E20B1F
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 13:49:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558619369;
-	bh=gMgfksfx1oP75DaboTVV3ofxY+5gYWLWw2kn+1bsRV8=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=zd7KCVaqR7hYlsoVghGZkeqheCqSpkKL7pTVZ1mWuXgsowtJLJ2Y+qiH3iE7gnLZU
-	 JStwzNHLLCqTwiZLq1pno3pLaKrMg9U5NqtXfDjNL+hIs5NO0nsezW/h9vSaBWk1x+
-	 1dwz0lCf1X9gFfmDUgL3/LLEy3WKosTYWEX1tLqY=
+	by mail.kernel.org (Postfix) with ESMTP id CFEA520B1F
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 13:50:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="LHZwAGCC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731039AbfEWNt2 (ORCPT
+        id S1730777AbfEWNul (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 09:49:28 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:45232 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730916AbfEWNtM (ORCPT
+        Thu, 23 May 2019 09:50:41 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:48658 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730495AbfEWNul (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 09:49:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=1kjp5B2XtNPpJsBQ7cTydAyUIRbu7ky/JeLneZsTG7w=; b=Hmwi4vH6Io2f
-        jremk+WTRjz/gl7NgjzxDjZ/TrPF3FBmhqZllJlfRwqnUdqk6gxQiR7HcFkPIdEdYlIpDKkV9pzNj
-        waetbex3+oyh/5XvBrnVUbsOSFS7Edlz1oQGVHGH5WWNr4e0kiruMCvCYFd2F0dv18PwS3sDOQDqY
-        wTD6E=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hTo5k-0000FU-MJ; Thu, 23 May 2019 13:49:08 +0000
-Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id A81C51126D25; Thu, 23 May 2019 14:49:06 +0100 (BST)
-From:   Mark Brown <broonie@kernel.org>
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     broonie@kernel.org, jonathanh@nvidia.com, ldewangan@nvidia.com,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-tegra@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        natechancellor@gmail.com, thierry.reding@gmail.com
-Subject: Applied "spi: tegra114: set master cleanup and also invoke it on probe error" to the spi tree
-In-Reply-To: <1558574945-19275-1-git-send-email-skomatineni@nvidia.com>
-X-Patchwork-Hint: ignore
-Message-Id: <20190523134906.A81C51126D25@debutante.sirena.org.uk>
-Date:   Thu, 23 May 2019 14:49:06 +0100 (BST)
+        Thu, 23 May 2019 09:50:41 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4NDoZ0m014524;
+        Thu, 23 May 2019 08:50:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1558619435;
+        bh=/iyye2ek1YfSfYPIG48/zDexo+U1o6msUMjecZkKJRM=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=LHZwAGCCYUWq9VqkVBw3MhZ8eXZxwmXIfjd17OttBn/Eg1MN3UiaNY00krWK8vJd/
+         8zls0QeBunaBK71mBdnO/wJW3dkAq96ny+v5zUaWognQ8XWEgp933Bmi13kMFGaSvg
+         Ve+BLb5rhBKMblbWABwcgDXRA+u0HyJr1prB9Nhs=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4NDoZhJ041563
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 23 May 2019 08:50:35 -0500
+Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 23
+ May 2019 08:50:34 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Thu, 23 May 2019 08:50:35 -0500
+Received: from [10.250.90.63] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4NDoYpv115882;
+        Thu, 23 May 2019 08:50:34 -0500
+Subject: Re: [RESEND PATCH v4 1/6] regulator: lm363x: Make the gpio register
+ enable flexible
+To:     Mark Brown <broonie@kernel.org>
+CC:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>,
+        <lgirdwood@gmail.com>, <lee.jones@linaro.org>,
+        <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20190522192733.13422-1-dmurphy@ti.com>
+ <20190522192733.13422-2-dmurphy@ti.com>
+ <20190523130311.GA17245@sirena.org.uk>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <d4673abc-442c-83eb-1830-7f7ed9d8419e@ti.com>
+Date:   Thu, 23 May 2019 08:50:20 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <20190523130311.GA17245@sirena.org.uk>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
-
-   spi: tegra114: set master cleanup and also invoke it on probe error
-
-has been applied to the spi tree at
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.3
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
 Mark
 
-From 0e896f380b845d3fb889f27eb6026cd494bb3cd8 Mon Sep 17 00:00:00 2001
-From: Sowjanya Komatineni <skomatineni@nvidia.com>
-Date: Wed, 22 May 2019 18:29:04 -0700
-Subject: [PATCH] spi: tegra114: set master cleanup and also invoke it on probe
- error
+On 5/23/19 8:03 AM, Mark Brown wrote:
+> On Wed, May 22, 2019 at 02:27:28PM -0500, Dan Murphy wrote:
+>> The use of and enablement of the GPIO can be used across devices.
+>> Use the enable_reg in the regulator descriptor for the register to
+>> write.
+> 
+>> @@ -263,8 +263,8 @@ static int lm363x_regulator_probe(struct platform_device *pdev)
+>>  
+>>  	if (gpiod) {
+>>  		cfg.ena_gpiod = gpiod;
+>> -
+>> -		ret = regmap_update_bits(regmap, LM3632_REG_BIAS_CONFIG,
+>> +		ret = regmap_update_bits(regmap,
+>> +					 lm363x_regulator_desc[id].enable_reg,
+>>  					 LM3632_EXT_EN_MASK,
+>>  					 LM3632_EXT_EN_MASK);
+>>  		if (ret) {
+> 
+> Is it guaranteed that the bitmask for enabling the use of the GPIO is
+> going to be the same for all regulators?  The bitmasks for the regulator
+> enable look to be different, and it also looks like this setting might
+> affect multiple regulators since it seems there are multiple enable bits
+> in the same register.  If this affects multiple regulators then how's
+> that working at the minute?
+> 
 
-This patch sets master cleanup and also invokes tegra spi clean on
-tegra spi probe failure to release tegra spi client data.
+Yes for the 3632 and 36274 bit0 is the EXT_EN for LCM on these chips.
+LM3631 does not have LCM GPIO control so there is no setting and this should not be called.
+If it is then the developer implemented the DT wrong.
 
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/spi/spi-tegra114.c | 3 +++
- 1 file changed, 3 insertions(+)
+LM3631 - No LCM GPIO control
 
-diff --git a/drivers/spi/spi-tegra114.c b/drivers/spi/spi-tegra114.c
-index 253a7f182fc9..15f9368fc0f8 100644
---- a/drivers/spi/spi-tegra114.c
-+++ b/drivers/spi/spi-tegra114.c
-@@ -966,6 +966,8 @@ static int tegra_spi_setup(struct spi_device *spi)
- 	ret = pm_runtime_get_sync(tspi->dev);
- 	if (ret < 0) {
- 		dev_err(tspi->dev, "pm runtime failed, e = %d\n", ret);
-+		if (cdata)
-+			tegra_spi_cleanup(spi);
- 		return ret;
- 	}
- 
-@@ -1331,6 +1333,7 @@ static int tegra_spi_probe(struct platform_device *pdev)
- 			    SPI_TX_DUAL | SPI_RX_DUAL | SPI_3WIRE;
- 	master->bits_per_word_mask = SPI_BPW_RANGE_MASK(4, 32);
- 	master->setup = tegra_spi_setup;
-+	master->cleanup = tegra_spi_cleanup;
- 	master->transfer_one_message = tegra_spi_transfer_one_message;
- 	master->set_cs_timing = tegra_spi_set_hw_cs_timing;
- 	master->num_chipselect = MAX_CHIP_SELECT;
--- 
-2.20.1
+LM36274 reg 0x09 bit 0 7.6.9 of the data sheet
+LM3632 reg 0x0c bit 0 7.6.12 of the data sheet
 
+Dan
