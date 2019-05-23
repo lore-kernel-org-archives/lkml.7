@@ -2,53 +2,52 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D419DC282E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:18:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCD76C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:18:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABB7C21855
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:18:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94AC020863
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:18:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639102;
-	bh=r0YV2d7Kb4ORO5KhwBeQugIwHS3gDCFSoFs1q5XHlPg=;
+	s=default; t=1558639106;
+	bh=tT3A7MgSY8GySfsmmxxmN0nbp6Jz1o10Gaxx8+h9/P8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DCulXPKyEk/F/x9jfo6nUWaqBGjwORJhpait/WlkgdlTsc1p1gKQybyEK41nO7KIr
-	 ERx++9uP3XBTPmkCLPjjvHn8THKDptO0O+pQGDjrFyw+WDT+aSqIazM1mTIHW87sAM
-	 TvRro0SYlPjbdp/0wBz39V1X0b1mhl2Z5KpGc2fU=
+	b=PPW90AI1zA0a7C65/GW8rsem8w6P9oqBXKDjcOiHxcyMQmZqSqiJm1Z2JrJspl5FG
+	 mL6UY6x3BPKpi8IDZToVool7JuVp3MzQlx2cWzTh2YXJSeMJHWKc3xgjhfDNaL9zIP
+	 BI/VUxQU9OgsO3+QowTNeuPTFe6IoZghgQdJCeXM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389584AbfEWTSV (ORCPT
+        id S2389614AbfEWTS0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:18:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53694 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:18:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53840 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388250AbfEWTSS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:18:18 -0400
+        id S2389588AbfEWTSX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:18:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 740CA20863;
-        Thu, 23 May 2019 19:18:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C8E93217D9;
+        Thu, 23 May 2019 19:18:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639096;
-        bh=r0YV2d7Kb4ORO5KhwBeQugIwHS3gDCFSoFs1q5XHlPg=;
+        s=default; t=1558639102;
+        bh=tT3A7MgSY8GySfsmmxxmN0nbp6Jz1o10Gaxx8+h9/P8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=olEzaOoLSuCh6mPUtwZTFyMr7uwpu/k5V0iuLxUAwq0bJB6OqNAv2+wlv+L9ddnMc
-         6whIiGYxycGvGqBh/frWiH0h77l/3v+HeVioe5T8YA30E4iThJW1AdsspZ6wCoHfsI
-         krdnqbXApBynhzZV2E0tMw4CsLmBp1c5VhY6GJac=
+        b=jRagaAofvKJOwYReE0dTB02G+CyPx3qwADDirPta6zElNOC+eX6v9DnM4jXObFBMV
+         fEZDI+EgMPtg7IfNEjK8LMNHZ7SvjbZhkggD3RxR0xVjTlCCmtulYsr6lzWzduRjhy
+         s8ni1luJ1U0EC+zy7NmpeeVsYIf2lKuFkKQE+6+w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Stefan=20M=C3=A4tje?= <stefan.maetje@esd.eu>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH 4.19 076/114] PCI: Work around Pericom PCIe-to-PCI bridge Retrain Link erratum
-Date:   Thu, 23 May 2019 21:06:15 +0200
-Message-Id: <20190523181738.630668446@linuxfoundation.org>
+        stable@vger.kernel.org, Sabrina Dubroca <sd@queasysnail.net>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 087/114] esp4: add length check for UDP encapsulation
+Date:   Thu, 23 May 2019 21:06:26 +0200
+Message-Id: <20190523181739.478982228@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181731.372074275@linuxfoundation.org>
 References: <20190523181731.372074275@linuxfoundation.org>
@@ -61,98 +60,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Mätje <stefan.maetje@esd.eu>
+[ Upstream commit 8dfb4eba4100e7cdd161a8baef2d8d61b7a7e62e ]
 
-commit 4ec73791a64bab25cabf16a6067ee478692e506d upstream.
+esp_output_udp_encap can produce a length that doesn't fit in the 16
+bits of a UDP header's length field. In that case, we'll send a
+fragmented packet whose length is larger than IP_MAX_MTU (resulting in
+"Oversized IP packet" warnings on receive) and with a bogus UDP
+length.
 
-Due to an erratum in some Pericom PCIe-to-PCI bridges in reverse mode
-(conventional PCI on primary side, PCIe on downstream side), the Retrain
-Link bit needs to be cleared manually to allow the link training to
-complete successfully.
+To prevent this, add a length check to esp_output_udp_encap and return
+ -EMSGSIZE on failure.
 
-If it is not cleared manually, the link training is continuously restarted
-and no devices below the PCI-to-PCIe bridge can be accessed.  That means
-drivers for devices below the bridge will be loaded but won't work and may
-even crash because the driver is only reading 0xffff.
+This seems to be older than git history.
 
-See the Pericom Errata Sheet PI7C9X111SLB_errata_rev1.2_102711.pdf for
-details.  Devices known as affected so far are: PI7C9X110, PI7C9X111SL,
-PI7C9X130.
-
-Add a new flag, clear_retrain_link, in struct pci_dev.  Quirks for affected
-devices set this bit.
-
-Note that pcie_retrain_link() lives in aspm.c because that's currently the
-only place we use it, but this erratum is not specific to ASPM, and we may
-retrain links for other reasons in the future.
-
-Signed-off-by: Stefan Mätje <stefan.maetje@esd.eu>
-[bhelgaas: apply regardless of CONFIG_PCIEASPM]
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-CC: stable@vger.kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Sabrina Dubroca <sd@queasysnail.net>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/pcie/aspm.c |    9 +++++++++
- drivers/pci/quirks.c    |   17 +++++++++++++++++
- include/linux/pci.h     |    2 ++
- 3 files changed, 28 insertions(+)
+ net/ipv4/esp4.c | 20 +++++++++++++++-----
+ 1 file changed, 15 insertions(+), 5 deletions(-)
 
---- a/drivers/pci/pcie/aspm.c
-+++ b/drivers/pci/pcie/aspm.c
-@@ -207,6 +207,15 @@ static bool pcie_retrain_link(struct pci
- 	pcie_capability_read_word(parent, PCI_EXP_LNKCTL, &reg16);
- 	reg16 |= PCI_EXP_LNKCTL_RL;
- 	pcie_capability_write_word(parent, PCI_EXP_LNKCTL, reg16);
-+	if (parent->clear_retrain_link) {
-+		/*
-+		 * Due to an erratum in some devices the Retrain Link bit
-+		 * needs to be cleared again manually to allow the link
-+		 * training to succeed.
-+		 */
-+		reg16 &= ~PCI_EXP_LNKCTL_RL;
-+		pcie_capability_write_word(parent, PCI_EXP_LNKCTL, reg16);
+diff --git a/net/ipv4/esp4.c b/net/ipv4/esp4.c
+index 12a43a5369a54..114f9def1ec54 100644
+--- a/net/ipv4/esp4.c
++++ b/net/ipv4/esp4.c
+@@ -223,7 +223,7 @@ static void esp_output_fill_trailer(u8 *tail, int tfclen, int plen, __u8 proto)
+ 	tail[plen - 1] = proto;
+ }
+ 
+-static void esp_output_udp_encap(struct xfrm_state *x, struct sk_buff *skb, struct esp_info *esp)
++static int esp_output_udp_encap(struct xfrm_state *x, struct sk_buff *skb, struct esp_info *esp)
+ {
+ 	int encap_type;
+ 	struct udphdr *uh;
+@@ -231,6 +231,7 @@ static void esp_output_udp_encap(struct xfrm_state *x, struct sk_buff *skb, stru
+ 	__be16 sport, dport;
+ 	struct xfrm_encap_tmpl *encap = x->encap;
+ 	struct ip_esp_hdr *esph = esp->esph;
++	unsigned int len;
+ 
+ 	spin_lock_bh(&x->lock);
+ 	sport = encap->encap_sport;
+@@ -238,11 +239,14 @@ static void esp_output_udp_encap(struct xfrm_state *x, struct sk_buff *skb, stru
+ 	encap_type = encap->encap_type;
+ 	spin_unlock_bh(&x->lock);
+ 
++	len = skb->len + esp->tailen - skb_transport_offset(skb);
++	if (len + sizeof(struct iphdr) >= IP_MAX_MTU)
++		return -EMSGSIZE;
++
+ 	uh = (struct udphdr *)esph;
+ 	uh->source = sport;
+ 	uh->dest = dport;
+-	uh->len = htons(skb->len + esp->tailen
+-		  - skb_transport_offset(skb));
++	uh->len = htons(len);
+ 	uh->check = 0;
+ 
+ 	switch (encap_type) {
+@@ -259,6 +263,8 @@ static void esp_output_udp_encap(struct xfrm_state *x, struct sk_buff *skb, stru
+ 
+ 	*skb_mac_header(skb) = IPPROTO_UDP;
+ 	esp->esph = esph;
++
++	return 0;
+ }
+ 
+ int esp_output_head(struct xfrm_state *x, struct sk_buff *skb, struct esp_info *esp)
+@@ -272,8 +278,12 @@ int esp_output_head(struct xfrm_state *x, struct sk_buff *skb, struct esp_info *
+ 	int tailen = esp->tailen;
+ 
+ 	/* this is non-NULL only with UDP Encapsulation */
+-	if (x->encap)
+-		esp_output_udp_encap(x, skb, esp);
++	if (x->encap) {
++		int err = esp_output_udp_encap(x, skb, esp);
++
++		if (err < 0)
++			return err;
 +	}
  
- 	/* Wait for link training end. Break out after waiting for timeout */
- 	start_jiffies = jiffies;
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -2220,6 +2220,23 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_IN
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x10f4, quirk_disable_aspm_l0s);
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x1508, quirk_disable_aspm_l0s);
- 
-+/*
-+ * Some Pericom PCIe-to-PCI bridges in reverse mode need the PCIe Retrain
-+ * Link bit cleared after starting the link retrain process to allow this
-+ * process to finish.
-+ *
-+ * Affected devices: PI7C9X110, PI7C9X111SL, PI7C9X130.  See also the
-+ * Pericom Errata Sheet PI7C9X111SLB_errata_rev1.2_102711.pdf.
-+ */
-+static void quirk_enable_clear_retrain_link(struct pci_dev *dev)
-+{
-+	dev->clear_retrain_link = 1;
-+	pci_info(dev, "Enable PCIe Retrain Link quirk\n");
-+}
-+DECLARE_PCI_FIXUP_HEADER(0x12d8, 0xe110, quirk_enable_clear_retrain_link);
-+DECLARE_PCI_FIXUP_HEADER(0x12d8, 0xe111, quirk_enable_clear_retrain_link);
-+DECLARE_PCI_FIXUP_HEADER(0x12d8, 0xe130, quirk_enable_clear_retrain_link);
-+
- static void fixup_rev1_53c810(struct pci_dev *dev)
- {
- 	u32 class = dev->class;
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -346,6 +346,8 @@ struct pci_dev {
- 	unsigned int	hotplug_user_indicators:1; /* SlotCtl indicators
- 						      controlled exclusively by
- 						      user sysfs */
-+	unsigned int	clear_retrain_link:1;	/* Need to clear Retrain Link
-+						   bit manually */
- 	unsigned int	d3_delay;	/* D3->D0 transition time in ms */
- 	unsigned int	d3cold_delay;	/* D3cold->D0 transition time in ms */
- 
+ 	if (!skb_cloned(skb)) {
+ 		if (tailen <= skb_tailroom(skb)) {
+-- 
+2.20.1
+
 
 
