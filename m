@@ -2,91 +2,129 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52CC5C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 17:57:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9C19C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 17:57:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BED820644
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 17:57:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E0982186A
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 17:57:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YgMBxKYL"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="nsqB1IeZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731453AbfEWR5l (ORCPT
+        id S1731504AbfEWR55 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 13:57:41 -0400
-Received: from mail-wr1-f44.google.com ([209.85.221.44]:39971 "EHLO
-        mail-wr1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731206AbfEWR5l (ORCPT
+        Thu, 23 May 2019 13:57:57 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:14026 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731311AbfEWR55 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 13:57:41 -0400
-Received: by mail-wr1-f44.google.com with SMTP id f10so7259514wre.7
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 10:57:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=npurEhQFkRrHzUL5AZ34/mton9sqbecFYDOR6wrDNXw=;
-        b=YgMBxKYLwA3BTuAwfHJvTccICQQi7eLvD+O2qkQAdY3215i9UdMt0BKfbs10bS1aJn
-         zRDm0yDNwiTPH3LFLziuiUmp39Q2kImc7WH2Rhx6/VD3ThUN5H5Y0FsnMT3hrSdB04tW
-         VYAs8UdoA/dtwSJ4+9oBuuCX85ijbib4/Dxy0FL70nEqGlG1RcVJ9moThn8ZDZa6ONvi
-         m6bSW/o63f9iCyxorHAk5Q7u3pUbxwIMyrK+piHoDBynsp8L6zA5zlCCl+0cHbIj81Qj
-         +nohXCZkkrl5+hUPYp7h45T3GPwzCTNA4XQeLgQnv2q/hzbKMomMiduHr03Anj6JJF2p
-         7APg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=npurEhQFkRrHzUL5AZ34/mton9sqbecFYDOR6wrDNXw=;
-        b=Lu+A0NBN5I4XxYv3Q9kYgXXAlv67SVN8Cd8t4elpV6/JuclUZfWOhBM/29lrmkd4K9
-         fCI5kJHukMuOMuFQJix+Us5GzNrhc9eSJrhmCougYHR1pWb+G3O5Mnd5gjCEhZVNTqDz
-         dF19TGDAPAc6OULhqh09XrsoyuJP4RF/MlkuV2gRRVZZIXhsM5Kb4xf3Pq/4FHpUC1sk
-         71M1A/8UHt34nMFEi8fUhgk9Q8tWg1Ohj02cUp4SGzQHJrRw8ojyweaWqA26MV3xY4ij
-         MlNFk6w8+RJtjc/PGCux8F/X8JTFnOhrQHRLz055lYbZoXg8eIo9Gpl6NG7+1AAnCWTD
-         wARQ==
-X-Gm-Message-State: APjAAAVku4Eci1bxmNSKlhHh93IojT/PLKAzSYbUkOCUn1HMDzm89coJ
-        24Kud8sllYIZeX+Vrj6ADF+5QDg=
-X-Google-Smtp-Source: APXvYqzSqkFIzvlcu8Dfoa2PcTkILCHL53QGzH957rp6Wl3AVKO80ws7Z+PKRSpk1jU5iYbOLC7xdg==
-X-Received: by 2002:adf:df8f:: with SMTP id z15mr55312765wrl.140.1558634259680;
-        Thu, 23 May 2019 10:57:39 -0700 (PDT)
-Received: from avx2 ([46.53.252.55])
-        by smtp.gmail.com with ESMTPSA id b5sm26243888wrp.92.2019.05.23.10.57.38
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 23 May 2019 10:57:38 -0700 (PDT)
-Date:   Thu, 23 May 2019 20:57:36 +0300
-From:   Alexey Dobriyan <adobriyan@gmail.com>
-To:     akpm@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH] elf: fix "start_code" evaluation
-Message-ID: <20190523175736.GA6222@avx2>
+        Thu, 23 May 2019 13:57:57 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ce6df1f0001>; Thu, 23 May 2019 10:57:52 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 23 May 2019 10:57:56 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 23 May 2019 10:57:56 -0700
+Received: from [10.2.169.219] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 23 May
+ 2019 17:57:52 +0000
+Subject: Re: [PATCH 1/1] infiniband/mm: convert put_page() to put_user_page*()
+To:     Jerome Glisse <jglisse@redhat.com>
+CC:     Andrew Morton <akpm@linux-foundation.org>, <linux-mm@kvack.org>,
+        "Jason Gunthorpe" <jgg@ziepe.ca>,
+        LKML <linux-kernel@vger.kernel.org>,
+        <linux-rdma@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        Doug Ledford <dledford@redhat.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        "Dennis Dalessandro" <dennis.dalessandro@intel.com>,
+        Christian Benvenuti <benve@cisco.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Ira Weiny <ira.weiny@intel.com>
+References: <20190523072537.31940-1-jhubbard@nvidia.com>
+ <20190523072537.31940-2-jhubbard@nvidia.com>
+ <20190523153133.GB5104@redhat.com>
+From:   John Hubbard <jhubbard@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <708b9fc4-9afd-345e-83f7-2ceae673a4fd@nvidia.com>
+Date:   Thu, 23 May 2019 10:56:56 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190523153133.GB5104@redhat.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL106.nvidia.com (172.18.146.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1558634272; bh=L+NsLVitjlajK5Fndh2v4VhhHtFHNGHsvBcTolR7zkE=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=nsqB1IeZFCuxxH6mHCvcXZ7r8Pp4bj2szDVLBKtv72WLrTh+NFjrf0A9KJEyx6nYx
+         xdOeSAheQUOMNx3oiM4T5lPXrconSMMy+s+NQQGNgYdc8sEtCh47sE/Vm2HaLAaAiM
+         ZkDCNxXsOFRKAzoqGDNk4VwTtjSCvSWvNbEHPsRyJWAOhct4eHLdLrjBtMsYIdiBlt
+         5oCBCOxrHcv0zQQw/jFLI9tSx2R80yUokM0UWuJfUGjOnoC4ZlmwXm8CgKnBSRfcj9
+         tGwlXMkJwAUQcdbP4pb8SVB7v69N3DEB/BN9mMBxHFJfBkMi22AShiQE/7gH5lfnTw
+         1abZmIUAVz0tA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Only executable ELF program headers should change ->start_code.
+On 5/23/19 8:31 AM, Jerome Glisse wrote:
+[...]
+>=20
+> Reviewed-by: J=C3=A9r=C3=B4me Glisse <jglisse@redhat.com>
+>=20
 
-Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
----
+Thanks for the review!
 
- fs/binfmt_elf.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> Between i have a wishlist see below
+[...]
+>> diff --git a/drivers/infiniband/core/umem.c b/drivers/infiniband/core/um=
+em.c
+>> index e7ea819fcb11..673f0d240b3e 100644
+>> --- a/drivers/infiniband/core/umem.c
+>> +++ b/drivers/infiniband/core/umem.c
+>> @@ -54,9 +54,10 @@ static void __ib_umem_release(struct ib_device *dev, =
+struct ib_umem *umem, int d
+>>  =20
+>>   	for_each_sg_page(umem->sg_head.sgl, &sg_iter, umem->sg_nents, 0) {
+>>   		page =3D sg_page_iter_page(&sg_iter);
+>> -		if (!PageDirty(page) && umem->writable && dirty)
+>> -			set_page_dirty_lock(page);
+>> -		put_page(page);
+>> +		if (umem->writable && dirty)
+>> +			put_user_pages_dirty_lock(&page, 1);
+>> +		else
+>> +			put_user_page(page);
+>=20
+> Can we get a put_user_page_dirty(struct page 8*pages, bool dirty, npages)=
+ ?
+>=20
+> It is a common pattern that we might have to conditionaly dirty the pages
+> and i feel it would look cleaner if we could move the branch within the
+> put_user_page*() function.
+>=20
 
---- a/fs/binfmt_elf.c
-+++ b/fs/binfmt_elf.c
-@@ -1026,7 +1026,7 @@ static int load_elf_binary(struct linux_binprm *bprm)
- 			}
- 		}
- 		k = elf_ppnt->p_vaddr;
--		if (k < start_code)
-+		if ((elf_ppnt->p_flags & PF_X) && k < start_code)
- 			start_code = k;
- 		if (start_data < k)
- 			start_data = k;
+This sounds reasonable to me, do others have a preference on this? Last tim=
+e
+we discussed it, I recall there was interest in trying to handle the sg lis=
+ts,
+which was where a lot of focus was. I'm not sure if there was a preference =
+one=20
+way or the other, on adding more of these helpers.
+
+
+thanks,
+--=20
+John Hubbard
+NVIDIA
