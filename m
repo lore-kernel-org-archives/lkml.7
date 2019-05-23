@@ -4,46 +4,46 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCA9BC04AAC
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 07:38:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AA56C04AAC
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 07:38:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BC562075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 07:38:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59ACA2075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 07:38:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="erG7Kki4"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="KFUek1Lh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730422AbfEWHiF (ORCPT
+        id S1730502AbfEWHiP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 03:38:05 -0400
-Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:43630 "EHLO
+        Thu, 23 May 2019 03:38:15 -0400
+Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:43622 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730202AbfEWHhb (ORCPT
+        by vger.kernel.org with ESMTP id S1730196AbfEWHhb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 May 2019 03:37:31 -0400
 Received: from mailhost.synopsys.com (dc2-mailhost2.synopsys.com [10.12.135.162])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 7341FC019C;
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 5F8ECC019A;
         Thu, 23 May 2019 07:37:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1558597058; bh=sqNeNnhFIza31bv3sRCKiuGYnwSngPvoI+RLGZM7FZY=;
+        t=1558597058; bh=8ckx/1E0aeUvuEZVuhOKqivMFtxHIShxMND0slJzIg0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=erG7Kki4vx70SSPbAb5Kl7uA9tx8JBgTRjKAPppmMcuIMSN0FahC8qL+lOkdoj7k0
-         k41Krr+1L2FwT2dGF5t4nPX21y38WkRt/g5yx1ba23dApEmabAWP39WMcgHaR2LG8n
-         r6yQ9pvea6NtDtSqaVuxi7ATfgm5NnlAvQ2N+bMQ95yO6Az+Rr0A/2Zbs5Wd4StguB
-         9cqxCmc48oZk2kQSUigSdN6IPKlrP0l9khFK01aL9a0ohRCfhTl5PmKfpUKBqFumbX
-         cllWusmSzJsq1uM1ChVPUWl3dPkEJ/COqx4mlnDu5q4WcyceR8ZrBq/XRIhTFOLrpm
-         tgpEFgY44NjXA==
-Received: from de02.synopsys.com (de02.internal.synopsys.com [10.225.17.21])
-        by mailhost.synopsys.com (Postfix) with ESMTP id F246EA00A4;
+        b=KFUek1Lh8/7VOgs1ZTcst7qif86Lr/jGaqiuwB/buYBNhBvGCSJuMc/j5ZZULRE7o
+         xyN4fQDYw1Lk9htXH+S4RAwLGpqZCEVgqVU1oU5NHeqbtnXg9Ct1lEO7GAsaNdEu1n
+         CJ/0DkS1/cnbfuWMspmlSfD7Qjpupn/ku6sViVkK4nKu7vwbzxa0B+0A0vUqJ+x/uA
+         BRb706VE1t2BLAZJ0weIcT7scJrHHfO+J4OnMXn4vLX497nFVmtYlxFIyzcryqXNX7
+         TWA/DqChLPAUiEYkiSIPzJFFzX7to8my1uni7/bx9/11m3dFuwJzd4667Cw1EY7jXV
+         oMSbkD1ZmaKRA==
+Received: from de02.synopsys.com (germany.internal.synopsys.com [10.225.17.21])
+        by mailhost.synopsys.com (Postfix) with ESMTP id E0563A0245;
         Thu, 23 May 2019 07:37:30 +0000 (UTC)
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by de02.synopsys.com (Postfix) with ESMTP id 39F973D970;
-        Thu, 23 May 2019 09:37:29 +0200 (CEST)
+        by de02.synopsys.com (Postfix) with ESMTP id EB3D73D964;
+        Thu, 23 May 2019 09:37:28 +0200 (CEST)
 From:   Jose Abreu <Jose.Abreu@synopsys.com>
 To:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org
 Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
@@ -51,9 +51,9 @@ Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
         "David S . Miller" <davem@davemloft.net>,
         Giuseppe Cavallaro <peppe.cavallaro@st.com>,
         Alexandre Torgue <alexandre.torgue@st.com>
-Subject: [PATCH net-next 18/18] net: stmmac: Prevent missing interrupts when running NAPI
-Date:   Thu, 23 May 2019 09:37:08 +0200
-Message-Id: <f8ec046e59eb5925887e99ea988b7081b58cf7d9.1558596600.git.joabreu@synopsys.com>
+Subject: [PATCH net-next 14/18] net: stmmac: dwmac4/5: Fix Hash Filter
+Date:   Thu, 23 May 2019 09:37:04 +0200
+Message-Id: <f3aafd26301dbb6015dc65ca255798ee1ad87816.1558596600.git.joabreu@synopsys.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1558596599.git.joabreu@synopsys.com>
 References: <cover.1558596599.git.joabreu@synopsys.com>
@@ -64,12 +64,9 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When we trigger NAPI we are disabling interrupts but in case we receive
-or send a packet in the meantime, as interrupts are disabled, we will
-miss this event.
+In order for hash filter to work we need to set the HPF bit.
 
-Trigger both NAPI instances (RX and TX) when at least one event happens
-so that we don't miss any interrupts.
+Fout out while running stmmac selftests
 
 Signed-off-by: Jose Abreu <joabreu@synopsys.com>
 Cc: Joao Pinto <jpinto@synopsys.com>
@@ -77,23 +74,35 @@ Cc: David S. Miller <davem@davemloft.net>
 Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
 Cc: Alexandre Torgue <alexandre.torgue@st.com>
 ---
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/ethernet/stmicro/stmmac/dwmac4.h      | 1 +
+ drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c | 2 ++
+ 2 files changed, 3 insertions(+)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index 571b4a619ed6..603dfc639dd2 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -2058,6 +2058,9 @@ static int stmmac_napi_check(struct stmmac_priv *priv, u32 chan)
- 						 &priv->xstats, chan);
- 	struct stmmac_channel *ch = &priv->channel[chan];
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4.h b/drivers/net/ethernet/stmicro/stmmac/dwmac4.h
+index c3cbca804bcd..01c10893b7a5 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac4.h
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4.h
+@@ -65,6 +65,7 @@
+ #define GMAC_PACKET_FILTER_HMC		BIT(2)
+ #define GMAC_PACKET_FILTER_PM		BIT(4)
+ #define GMAC_PACKET_FILTER_PCF		BIT(7)
++#define GMAC_PACKET_FILTER_HPF		BIT(10)
  
-+	if (status)
-+		status |= handle_rx | handle_tx;
+ #define GMAC_MAX_PERFECT_ADDRESSES	128
+ 
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
+index 02a3a7e2db6e..094bd069c093 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
+@@ -438,6 +438,8 @@ static void dwmac4_set_filter(struct mac_device_info *hw,
+ 		writel(mc_filter[1], ioaddr + GMAC_HASH_TAB_32_63);
+ 	}
+ 
++	value |= GMAC_PACKET_FILTER_HPF;
 +
- 	if ((status & handle_rx) && (chan < priv->plat->rx_queues_to_use)) {
- 		stmmac_disable_dma_irq(priv, priv->ioaddr, chan);
- 		napi_schedule_irqoff(&ch->rx_napi);
+ 	/* Handle multiple unicast addresses */
+ 	if (netdev_uc_count(dev) > GMAC_MAX_PERFECT_ADDRESSES) {
+ 		/* Switch to promiscuous mode if more than 128 addrs
 -- 
 2.7.4
 
