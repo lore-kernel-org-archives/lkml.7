@@ -2,51 +2,53 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 725D5C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:24:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6A6BC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:24:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A73421855
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:24:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8F9221855
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:24:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639452;
-	bh=wdvLYU0V9kXOEHMPxIsAKDlMGadyS9R76RveS7XoumM=;
+	s=default; t=1558639455;
+	bh=tXoZMYc7cpMKx8LYA+rpYZH2ULjsUpEYydwxB8RBcrA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S1nlUcA5meSVutBh4iv+9YiZKlrxNllOShwkD54/dZEPSgwoM0BiA9ecKYwVPjcy7
-	 dP1AqrAVEQSBTYG8sbrLcvyqv4Jqhc0XKBMlVB7En8f255D/ad/34NNoomTP39AHeu
-	 zZegHf9ldUPV5VbdVTn3Ck7zbnK0f6enf6DPSHh8=
+	b=lTgrvjnnu7p5JcG843gKX3EqeoV2uzQc8XImU3OSl/ppbAh0H/qA1piWEa+Qb89sf
+	 oDh/3q/NxRnhXqAZDm3n4RvITlMOVXXFnCW5RBy4p5CtlRAA29zqkd2c/yXhmbvqNs
+	 I3Y1P4kb+AFV59t85eyFVt8KL/izHKFJmJ1ZzfQ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389863AbfEWTYL (ORCPT
+        id S2390851AbfEWTYO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:24:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34912 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:24:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35010 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390829AbfEWTYH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:24:07 -0400
+        id S2389827AbfEWTYK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:24:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 35EB22054F;
-        Thu, 23 May 2019 19:24:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D5AE7217D9;
+        Thu, 23 May 2019 19:24:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639446;
-        bh=wdvLYU0V9kXOEHMPxIsAKDlMGadyS9R76RveS7XoumM=;
+        s=default; t=1558639449;
+        bh=tXoZMYc7cpMKx8LYA+rpYZH2ULjsUpEYydwxB8RBcrA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GTV9Qg/glsSBklvyRerpm1qvzQ4HDF03DzccUd5jvCRVehryHUVkVUdS0GGMNqWgI
-         xTnKNVi67cmG9UBYCcn7x9J9sQa/NMEZJGqij1GNPX+HPP1WjTo9kY90P0FgxIl/Qs
-         b+UYCvgqlu0AHciuPIjFrJNRD8VjooqpVd96Ehfk=
+        b=2sfwj4COZ+4X5jt8efCc0ih6oHDwirhePlSv0aC5xhPJdJPTQlfIZ58ENPozoY4Qu
+         aGduGcnZJtgJPTtw3fVkDPX7VlZXsB0pw3JLrjjx9gDxaEl7qm3vG+06A/0NeaLTAa
+         6pCZGA95y5+jeqIAh5CIe05sxVIZIaLxpOcrG2/Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vineet Gupta <vgupta@synopsys.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 108/139] ARC: PAE40: dont panic and instead turn off hw ioc
-Date:   Thu, 23 May 2019 21:06:36 +0200
-Message-Id: <20190523181734.230904246@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Stefan=20M=C3=A4tje?= <stefan.maetje@esd.eu>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH 5.0 092/139] PCI: Work around Pericom PCIe-to-PCI bridge Retrain Link erratum
+Date:   Thu, 23 May 2019 21:06:20 +0200
+Message-Id: <20190523181732.546172615@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181720.120897565@linuxfoundation.org>
 References: <20190523181720.120897565@linuxfoundation.org>
@@ -59,74 +61,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 99bd5fcc505d65ea9c60619202f0b2d926eabbe9 ]
+From: Stefan Mätje <stefan.maetje@esd.eu>
 
-HSDK currently panics when built for HIGHMEM/ARC_HAS_PAE40 because ioc
-is enabled with default which doesn't work for the 2 non contiguous
-memory nodes. So get PAE working by disabling ioc instead.
+commit 4ec73791a64bab25cabf16a6067ee478692e506d upstream.
 
-Tested with !PAE40 by forcing @ioc_enable=0 and running the glibc
-testsuite over ssh
+Due to an erratum in some Pericom PCIe-to-PCI bridges in reverse mode
+(conventional PCI on primary side, PCIe on downstream side), the Retrain
+Link bit needs to be cleared manually to allow the link training to
+complete successfully.
 
-Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+If it is not cleared manually, the link training is continuously restarted
+and no devices below the PCI-to-PCIe bridge can be accessed.  That means
+drivers for devices below the bridge will be loaded but won't work and may
+even crash because the driver is only reading 0xffff.
+
+See the Pericom Errata Sheet PI7C9X111SLB_errata_rev1.2_102711.pdf for
+details.  Devices known as affected so far are: PI7C9X110, PI7C9X111SL,
+PI7C9X130.
+
+Add a new flag, clear_retrain_link, in struct pci_dev.  Quirks for affected
+devices set this bit.
+
+Note that pcie_retrain_link() lives in aspm.c because that's currently the
+only place we use it, but this erratum is not specific to ASPM, and we may
+retrain links for other reasons in the future.
+
+Signed-off-by: Stefan Mätje <stefan.maetje@esd.eu>
+[bhelgaas: apply regardless of CONFIG_PCIEASPM]
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+CC: stable@vger.kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/arc/mm/cache.c | 31 ++++++++++++++++---------------
- 1 file changed, 16 insertions(+), 15 deletions(-)
+ drivers/pci/pcie/aspm.c |    9 +++++++++
+ drivers/pci/quirks.c    |   17 +++++++++++++++++
+ include/linux/pci.h     |    2 ++
+ 3 files changed, 28 insertions(+)
 
-diff --git a/arch/arc/mm/cache.c b/arch/arc/mm/cache.c
-index 4135abec3fb09..63e6e65046992 100644
---- a/arch/arc/mm/cache.c
-+++ b/arch/arc/mm/cache.c
-@@ -113,10 +113,24 @@ static void read_decode_cache_bcr_arcv2(int cpu)
- 	}
- 
- 	READ_BCR(ARC_REG_CLUSTER_BCR, cbcr);
--	if (cbcr.c)
-+	if (cbcr.c) {
- 		ioc_exists = 1;
--	else
-+
+--- a/drivers/pci/pcie/aspm.c
++++ b/drivers/pci/pcie/aspm.c
+@@ -205,6 +205,15 @@ static bool pcie_retrain_link(struct pci
+ 	pcie_capability_read_word(parent, PCI_EXP_LNKCTL, &reg16);
+ 	reg16 |= PCI_EXP_LNKCTL_RL;
+ 	pcie_capability_write_word(parent, PCI_EXP_LNKCTL, reg16);
++	if (parent->clear_retrain_link) {
 +		/*
-+		 * As for today we don't support both IOC and ZONE_HIGHMEM enabled
-+		 * simultaneously. This happens because as of today IOC aperture covers
-+		 * only ZONE_NORMAL (low mem) and any dma transactions outside this
-+		 * region won't be HW coherent.
-+		 * If we want to use both IOC and ZONE_HIGHMEM we can use
-+		 * bounce_buffer to handle dma transactions to HIGHMEM.
-+		 * Also it is possible to modify dma_direct cache ops or increase IOC
-+		 * aperture size if we are planning to use HIGHMEM without PAE.
++		 * Due to an erratum in some devices the Retrain Link bit
++		 * needs to be cleared again manually to allow the link
++		 * training to succeed.
 +		 */
-+		if (IS_ENABLED(CONFIG_HIGHMEM) || is_pae40_enabled())
-+			ioc_enable = 0;
-+	} else {
- 		ioc_enable = 0;
++		reg16 &= ~PCI_EXP_LNKCTL_RL;
++		pcie_capability_write_word(parent, PCI_EXP_LNKCTL, reg16);
 +	}
  
- 	/* HS 2.0 didn't have AUX_VOL */
- 	if (cpuinfo_arc700[cpu].core.family > 0x51) {
-@@ -1158,19 +1172,6 @@ noinline void __init arc_ioc_setup(void)
- 	if (!ioc_enable)
- 		return;
+ 	/* Wait for link training end. Break out after waiting for timeout */
+ 	start_jiffies = jiffies;
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -2245,6 +2245,23 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_IN
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x10f4, quirk_disable_aspm_l0s);
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x1508, quirk_disable_aspm_l0s);
  
--	/*
--	 * As for today we don't support both IOC and ZONE_HIGHMEM enabled
--	 * simultaneously. This happens because as of today IOC aperture covers
--	 * only ZONE_NORMAL (low mem) and any dma transactions outside this
--	 * region won't be HW coherent.
--	 * If we want to use both IOC and ZONE_HIGHMEM we can use
--	 * bounce_buffer to handle dma transactions to HIGHMEM.
--	 * Also it is possible to modify dma_direct cache ops or increase IOC
--	 * aperture size if we are planning to use HIGHMEM without PAE.
--	 */
--	if (IS_ENABLED(CONFIG_HIGHMEM))
--		panic("IOC and HIGHMEM can't be used simultaneously");
--
- 	/* Flush + invalidate + disable L1 dcache */
- 	__dc_disable();
++/*
++ * Some Pericom PCIe-to-PCI bridges in reverse mode need the PCIe Retrain
++ * Link bit cleared after starting the link retrain process to allow this
++ * process to finish.
++ *
++ * Affected devices: PI7C9X110, PI7C9X111SL, PI7C9X130.  See also the
++ * Pericom Errata Sheet PI7C9X111SLB_errata_rev1.2_102711.pdf.
++ */
++static void quirk_enable_clear_retrain_link(struct pci_dev *dev)
++{
++	dev->clear_retrain_link = 1;
++	pci_info(dev, "Enable PCIe Retrain Link quirk\n");
++}
++DECLARE_PCI_FIXUP_HEADER(0x12d8, 0xe110, quirk_enable_clear_retrain_link);
++DECLARE_PCI_FIXUP_HEADER(0x12d8, 0xe111, quirk_enable_clear_retrain_link);
++DECLARE_PCI_FIXUP_HEADER(0x12d8, 0xe130, quirk_enable_clear_retrain_link);
++
+ static void fixup_rev1_53c810(struct pci_dev *dev)
+ {
+ 	u32 class = dev->class;
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -348,6 +348,8 @@ struct pci_dev {
+ 	unsigned int	hotplug_user_indicators:1; /* SlotCtl indicators
+ 						      controlled exclusively by
+ 						      user sysfs */
++	unsigned int	clear_retrain_link:1;	/* Need to clear Retrain Link
++						   bit manually */
+ 	unsigned int	d3_delay;	/* D3->D0 transition time in ms */
+ 	unsigned int	d3cold_delay;	/* D3cold->D0 transition time in ms */
  
--- 
-2.20.1
-
 
 
