@@ -2,56 +2,52 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67F4CC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:42:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 133D2C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:42:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 420D120881
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:42:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFCB320881
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:42:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558640535;
-	bh=q86KOwhOagZeZ7tD6NY2jFgZ6s+ArKqafjIKr0GqakM=;
+	s=default; t=1558640542;
+	bh=zo4BNT2y5vGThUf1YBTI4tm47+GcKrXMdYgr+k3oHic=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lm5zHeQFqAKBuze3/FwkFHSCLvuf3Fn2FczzBckumZGd9dTJjZi6mrB4goYf9sNBZ
-	 Y2FIIEQe0pT/ty7KmsGwKD2jHRMmET6ak6tihWdEGnxBoyRSduXnBtbQa9kOpI3z7u
-	 BZU4rPLLut6YtXXlCSu24gRxo1xua/FVOGvFLm6Q=
+	b=ZUsXdMkqL62gJXjyqTCjsysCRuXFh/t02b1Te0XGgTCdYBgKoCCbQsDuCqOFWcNuM
+	 XvsHmHJT4d2n+QOX+uUCIJM/+Mw5ylhbQAMSsTUpjRcyMo12DOL3rziINYI0tJgRU6
+	 jCV9zL+++Y8X3fXz8vb3/1ZPliG2vgnYIrXXZAPU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389791AbfEWTTU (ORCPT
+        id S2390299AbfEWTmV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:19:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55110 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:42:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54962 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389757AbfEWTTO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:19:14 -0400
+        id S2389747AbfEWTTI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:19:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 018BB20863;
-        Thu, 23 May 2019 19:19:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B15A0205ED;
+        Thu, 23 May 2019 19:19:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639153;
-        bh=q86KOwhOagZeZ7tD6NY2jFgZ6s+ArKqafjIKr0GqakM=;
+        s=default; t=1558639148;
+        bh=zo4BNT2y5vGThUf1YBTI4tm47+GcKrXMdYgr+k3oHic=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hyKqTVsoiOk8N16v3vXCwQy8fqVIWX2Lhq5B7ZwNPNMeacvb7EDX7ev7y0FbZnhYh
-         8sNIQ+s+e8NUazZ5SUtoe5TOIS4qLHP/MTByyofy5qbu6bzqNIMv/VW1GIlOK2KB0h
-         9ZRgHWjnf/diziA9CcB2/cTHW3ybIfx2kZAFkxBU=
+        b=KUHS9hsMhTSISoqAsSQ1IhyM1ZB2UeGuvb93Veqcn9cLtHVCmM3FqBLWitkTTc/I3
+         CJBYb8rJ9fptANOclPCCm9lcmOLgyiHmE3ihtG6itMq+HvXDbcFLCEqAPGltXcGj60
+         nYtGuHJb7zCBVymaeiT55WQS/Q4S/aJgS3p3DDZI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Jiri Olsa <jolsa@kernel.org>,
-        linux-snps-arc@lists.infradead.org,
-        Namhyung Kim <namhyung@kernel.org>,
-        Vineet Gupta <Vineet.Gupta1@synopsys.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        stable@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 106/114] perf bench numa: Add define for RUSAGE_THREAD if not present
-Date:   Thu, 23 May 2019 21:06:45 +0200
-Message-Id: <20190523181740.534792361@linuxfoundation.org>
+Subject: [PATCH 4.19 095/114] x86: kvm: hyper-v: deal with buggy TLB flush requests from WS2012
+Date:   Thu, 23 May 2019 21:06:34 +0200
+Message-Id: <20190523181739.956056404@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181731.372074275@linuxfoundation.org>
 References: <20190523181731.372074275@linuxfoundation.org>
@@ -64,64 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit bf561d3c13423fc54daa19b5d49dc15fafdb7acc ]
+[ Upstream commit da66761c2d93a46270d69001abb5692717495a68 ]
 
-While cross building perf to the ARC architecture on a fedora 30 host,
-we were failing with:
+It was reported that with some special Multi Processor Group configuration,
+e.g:
+ bcdedit.exe /set groupsize 1
+ bcdedit.exe /set maxgroup on
+ bcdedit.exe /set groupaware on
+for a 16-vCPU guest WS2012 shows BSOD on boot when PV TLB flush mechanism
+is in use.
 
-      CC       /tmp/build/perf/bench/numa.o
-  bench/numa.c: In function ‘worker_thread’:
-  bench/numa.c:1261:12: error: ‘RUSAGE_THREAD’ undeclared (first use in this function); did you mean ‘SIGEV_THREAD’?
-    getrusage(RUSAGE_THREAD, &rusage);
-              ^~~~~~~~~~~~~
-              SIGEV_THREAD
-  bench/numa.c:1261:12: note: each undeclared identifier is reported only once for each function it appears in
+Tracing kvm_hv_flush_tlb immediately reveals the issue:
 
-[perfbuilder@60d5802468f6 perf]$ /arc_gnu_2019.03-rc1_prebuilt_uclibc_le_archs_linux_install/bin/arc-linux-gcc --version | head -1
-arc-linux-gcc (ARCv2 ISA Linux uClibc toolchain 2019.03-rc1) 8.3.1 20190225
-[perfbuilder@60d5802468f6 perf]$
+ kvm_hv_flush_tlb: processor_mask 0x0 address_space 0x0 flags 0x2
 
-Trying to reproduce a report by Vineet, I noticed that, with just
-cross-built zlib and numactl libraries, I ended up with the above
-failure.
+The only flag set in this request is HV_FLUSH_ALL_VIRTUAL_ADDRESS_SPACES,
+however, processor_mask is 0x0 and no HV_FLUSH_ALL_PROCESSORS is specified.
+We don't flush anything and apparently it's not what Windows expects.
 
-So, since RUSAGE_THREAD is available as a define, check for that and
-numactl libraries, I ended up with the above failure.
+TLFS doesn't say anything about such requests and newer Windows versions
+seem to be unaffected. This all feels like a WS2012 bug, which is, however,
+easy to workaround in KVM: let's flush everything when we see an empty
+flush request, over-flushing doesn't hurt.
 
-So, since RUSAGE_THREAD is available as a define in the system headers,
-check if it is defined in the 'perf bench numa' sources and define it if
-not.
-
-Now it builds and I have to figure out if the problem reported by Vineet
-only takes place if we have libelf or some other library available.
-
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: linux-snps-arc@lists.infradead.org
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Link: https://lkml.kernel.org/n/tip-2wb4r1gir9xrevbpq7qp0amk@git.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/bench/numa.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/x86/kvm/hyperv.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/bench/numa.c b/tools/perf/bench/numa.c
-index 44195514b19e6..fa56fde6e8d80 100644
---- a/tools/perf/bench/numa.c
-+++ b/tools/perf/bench/numa.c
-@@ -38,6 +38,10 @@
- #include <numa.h>
- #include <numaif.h>
+diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
+index 01d209ab5481b..229d996051653 100644
+--- a/arch/x86/kvm/hyperv.c
++++ b/arch/x86/kvm/hyperv.c
+@@ -1291,7 +1291,16 @@ static u64 kvm_hv_flush_tlb(struct kvm_vcpu *current_vcpu, u64 ingpa,
+ 				       flush.address_space, flush.flags);
  
-+#ifndef RUSAGE_THREAD
-+# define RUSAGE_THREAD 1
-+#endif
+ 		sparse_banks[0] = flush.processor_mask;
+-		all_cpus = flush.flags & HV_FLUSH_ALL_PROCESSORS;
 +
- /*
-  * Regular printout to the terminal, supressed if -q is specified:
-  */
++		/*
++		 * Work around possible WS2012 bug: it sends hypercalls
++		 * with processor_mask = 0x0 and HV_FLUSH_ALL_PROCESSORS clear,
++		 * while also expecting us to flush something and crashing if
++		 * we don't. Let's treat processor_mask == 0 same as
++		 * HV_FLUSH_ALL_PROCESSORS.
++		 */
++		all_cpus = (flush.flags & HV_FLUSH_ALL_PROCESSORS) ||
++			flush.processor_mask == 0;
+ 	} else {
+ 		if (unlikely(kvm_read_guest(kvm, ingpa, &flush_ex,
+ 					    sizeof(flush_ex))))
 -- 
 2.20.1
 
