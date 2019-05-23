@@ -2,123 +2,185 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC879C04AAC
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:39:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD4FDC04AAC
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:40:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD2D120881
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:39:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="qHg2rjE3"
+	by mail.kernel.org (Postfix) with ESMTP id 855262177E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:40:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729866AbfEWIjb (ORCPT
+        id S1729971AbfEWIkL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 04:39:31 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:8671 "EHLO pegase1.c-s.fr"
+        Thu, 23 May 2019 04:40:11 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:34188 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726070AbfEWIja (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 04:39:30 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 458jbg5PJgz9tybB;
-        Thu, 23 May 2019 10:39:27 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=qHg2rjE3; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id OWyPUnGABWAd; Thu, 23 May 2019 10:39:27 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 458jbg45Bxz9tyb8;
-        Thu, 23 May 2019 10:39:27 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1558600767; bh=IkYWeZ4tDG4CTAbPN5POqn8JSBG26w6X70unKoUvBPM=;
-        h=From:Subject:To:Cc:Date:From;
-        b=qHg2rjE3OqyRKas86pc9/NGYDIII6/uVB0IAX3H9hHyYs9na347WtU7xnQmxxOrHI
-         ATgiOEP0CmRJyc0GQhr0RTlSB6F3LJ8EQpqEubQW6WWat7ntmekc1NbfJ/+4mmPk4I
-         DElM4EKV4T+9+2nW8XFF4YxEP/PAOS8nLw0ptvio=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 948398B851;
-        Thu, 23 May 2019 10:39:28 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id 1AzVhv0qAqSB; Thu, 23 May 2019 10:39:28 +0200 (CEST)
-Received: from po16846vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 537F68B77D;
-        Thu, 23 May 2019 10:39:28 +0200 (CEST)
-Received: by po16846vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 12F2168517; Thu, 23 May 2019 08:39:27 +0000 (UTC)
-Message-Id: <97664671a229a4240bfb22f69ec4743e837c2b83.1558600628.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH] powerpc/32: fix build failure on book3e with KVM
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Thu, 23 May 2019 08:39:27 +0000 (UTC)
+        id S1725814AbfEWIkL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 04:40:11 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id F0A4E309264F;
+        Thu, 23 May 2019 08:40:09 +0000 (UTC)
+Received: from [10.36.116.197] (ovpn-116-197.ams2.redhat.com [10.36.116.197])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2FE3065F42;
+        Thu, 23 May 2019 08:40:06 +0000 (UTC)
+Subject: Re: [PATCH V3 2/4] arm64/mm: Hold memory hotplug lock while walking
+ for kernel page table dump
+To:     Michal Hocko <mhocko@kernel.org>,
+        Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, akpm@linux-foundation.org,
+        catalin.marinas@arm.com, will.deacon@arm.com,
+        mgorman@techsingularity.net, james.morse@arm.com,
+        robin.murphy@arm.com, cpandya@codeaurora.org,
+        arunks@codeaurora.org, dan.j.williams@intel.com, osalvador@suse.de,
+        cai@lca.pw, logang@deltatee.com, ira.weiny@intel.com
+References: <1557824407-19092-1-git-send-email-anshuman.khandual@arm.com>
+ <1557824407-19092-3-git-send-email-anshuman.khandual@arm.com>
+ <20190515165847.GH16651@dhcp22.suse.cz>
+ <20190516102354.GB40960@lakrids.cambridge.arm.com>
+ <a141ffa1-aa81-39df-11ba-9e18046356ff@arm.com>
+ <20190516111607.GR16651@dhcp22.suse.cz>
+From:   David Hildenbrand <david@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <ec7e5085-c61e-9d8b-73e9-8dca28288d47@redhat.com>
+Date:   Thu, 23 May 2019 10:40:05 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <20190516111607.GR16651@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Thu, 23 May 2019 08:40:10 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Build failure was introduced by the commit identified below,
-due to missed macro expension leading to wrong called function's name.
+On 16.05.19 13:16, Michal Hocko wrote:
+> On Thu 16-05-19 16:36:12, Anshuman Khandual wrote:
+>> On 05/16/2019 03:53 PM, Mark Rutland wrote:
+>>> Hi Michal,
+>>>
+>>> On Wed, May 15, 2019 at 06:58:47PM +0200, Michal Hocko wrote:
+>>>> On Tue 14-05-19 14:30:05, Anshuman Khandual wrote:
+>>>>> The arm64 pagetable dump code can race with concurrent modification of the
+>>>>> kernel page tables. When a leaf entries are modified concurrently, the dump
+>>>>> code may log stale or inconsistent information for a VA range, but this is
+>>>>> otherwise not harmful.
+>>>>>
+>>>>> When intermediate levels of table are freed, the dump code will continue to
+>>>>> use memory which has been freed and potentially reallocated for another
+>>>>> purpose. In such cases, the dump code may dereference bogus addressses,
+>>>>> leading to a number of potential problems.
+>>>>>
+>>>>> Intermediate levels of table may by freed during memory hot-remove, or when
+>>>>> installing a huge mapping in the vmalloc region. To avoid racing with these
+>>>>> cases, take the memory hotplug lock when walking the kernel page table.
+>>>>
+>>>> Why is this a problem only on arm64 
+>>>
+>>> It looks like it's not -- I think we're just the first to realise this.
+>>>
+>>> AFAICT x86's debugfs ptdump has the same issue if run conccurently with
+>>> memory hot remove. If 32-bit arm supported hot-remove, its ptdump code
+>>> would have the same issue.
+>>>
+>>>> and why do we even care for debugfs? Does anybody rely on this thing
+>>>> to be reliable? Do we even need it? Who is using the file?
+>>>
+>>> The debugfs part is used intermittently by a few people working on the
+>>> arm64 kernel page tables. We use that both to sanity-check that kernel
+>>> page tables are created/updated correctly after changes to the arm64 mmu
+>>> code, and also to debug issues if/when we encounter issues that appear
+>>> to be the result of kernel page table corruption.
+>>>
+>>> So while it's rare to need it, it's really useful to have when we do
+>>> need it, and I'd rather not remove it. I'd also rather that it didn't
+>>> have latent issues where we can accidentally crash the kernel when using
+>>> it, which is what this patch is addressing.
+>>>
+>>>> I am asking because I would really love to make mem hotplug locking less
+>>>> scattered outside of the core MM than more. Most users simply shouldn't
+>>>> care. Pfn walkers should rely on pfn_to_online_page.
+>>>
+>>> I'm not sure if that would help us here; IIUC pfn_to_online_page() alone
+>>> doesn't ensure that the page remains online. Is there a way to achieve
+>>> that other than get_online_mems()?
+>>
+>> Still wondering how pfn_to_online_page() is applicable here. It validates
+>> a given PFN and whether its online from sparse section mapping perspective
+>> before giving it's struct page. IIUC it is used during a linear scanning
+>> of a physical address range not for a page table walk. So how it can solve
+>> the problem when a struct page which was used as an intermediate level page
+>> table page gets released back to the buddy from another concurrent thread ?
+> 
+> Well, my comment about pfn_to_online_page was more generic and it might
+> not apply to this specific case. I meant to say that the code outside of
+> the core MM shouldn't really care about the hotplug locking.
+> 
 
-arch/powerpc/kernel/head_fsl_booke.o: In function `SystemCall':
-arch/powerpc/kernel/head_fsl_booke.S:416: undefined reference to `kvmppc_handler_BOOKE_INTERRUPT_SYSCALL_SPRN_SRR1'
-Makefile:1052: recipe for target 'vmlinux' failed
+What am I missing, how is it guaranteed that a page doesn't get
+offlined/removed without holding a lock here?
 
-The called function should be kvmppc_handler_8_0x01B(). This patch fixes it.
+We would at least need some RCU mechnism or similar to sync against
+pages vanishing.
 
-Reported-by: Paul Mackerras <paulus@ozlabs.org>
-Fixes: 1a4b739bbb4f ("powerpc/32: implement fast entry for syscalls on BOOKE")
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
----
- arch/powerpc/kernel/head_booke.h     | 4 ++--
- arch/powerpc/kernel/head_fsl_booke.S | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
+pfn_to_online_page() assumes that somebody touches a page he doesn't
+own. There has to be some way for core-mm to realize this and defer
+offlining/removinf.
 
-diff --git a/arch/powerpc/kernel/head_booke.h b/arch/powerpc/kernel/head_booke.h
-index bfeb469e8106..dec0912a6508 100644
---- a/arch/powerpc/kernel/head_booke.h
-+++ b/arch/powerpc/kernel/head_booke.h
-@@ -83,7 +83,7 @@ END_BTB_FLUSH_SECTION
- 	SAVE_4GPRS(3, r11);						     \
- 	SAVE_2GPRS(7, r11)
- 
--.macro SYSCALL_ENTRY trapno intno
-+.macro SYSCALL_ENTRY trapno intno srr1
- 	mfspr	r10, SPRN_SPRG_THREAD
- #ifdef CONFIG_KVM_BOOKE_HV
- BEGIN_FTR_SECTION
-@@ -94,7 +94,7 @@ BEGIN_FTR_SECTION
- 	mfspr	r11, SPRN_SRR1
- 	mtocrf	0x80, r11	/* check MSR[GS] without clobbering reg */
- 	bf	3, 1975f
--	b	kvmppc_handler_BOOKE_INTERRUPT_\intno\()_SPRN_SRR1
-+	b	kvmppc_handler_\intno\()_\srr1
- 1975:
- 	mr	r12, r13
- 	lwz	r13, THREAD_NORMSAVE(2)(r10)
-diff --git a/arch/powerpc/kernel/head_fsl_booke.S b/arch/powerpc/kernel/head_fsl_booke.S
-index 6621f230cc37..2b39f42c3676 100644
---- a/arch/powerpc/kernel/head_fsl_booke.S
-+++ b/arch/powerpc/kernel/head_fsl_booke.S
-@@ -413,7 +413,7 @@ interrupt_base:
- 
- 	/* System Call Interrupt */
- 	START_EXCEPTION(SystemCall)
--	SYSCALL_ENTRY   0xc00 SYSCALL
-+	SYSCALL_ENTRY   0xc00 BOOKE_INTERRUPT_SYSCALL SPRN_SRR1
- 
- 	/* Auxiliary Processor Unavailable Interrupt */
- 	EXCEPTION(0x2900, AP_UNAVAIL, AuxillaryProcessorUnavailable, \
 -- 
-2.13.3
 
+Thanks,
+
+David / dhildenb
