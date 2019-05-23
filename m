@@ -2,199 +2,121 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD3C7C282CE
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 02:00:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 951F5C282CE
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 02:09:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6435121019
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 02:00:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D20F20B1F
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 02:09:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="nP+EimQW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729808AbfEWCA6 (ORCPT
+        id S1729828AbfEWCJA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 22:00:58 -0400
-Received: from mx1.mailbox.org ([80.241.60.212]:47140 "EHLO mx1.mailbox.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727691AbfEWCA5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 22:00:57 -0400
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:105:465:1:2:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mx1.mailbox.org (Postfix) with ESMTPS id 6311252105;
-        Thu, 23 May 2019 04:00:53 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp2.mailbox.org ([80.241.60.241])
-        by spamfilter05.heinlein-hosting.de (spamfilter05.heinlein-hosting.de [80.241.56.123]) (amavisd-new, port 10030)
-        with ESMTP id IywjhBoiZwGj; Thu, 23 May 2019 04:00:27 +0200 (CEST)
-Date:   Thu, 23 May 2019 12:00:09 +1000
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Christian Brauner <christian@brauner.io>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
-        David Drysdale <drysdale@google.com>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>, Aleksa Sarai <asarai@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>
-Subject: Re: [PATCH RFC v8 01/10] namei: obey trailing magic-link DAC
- permissions
-Message-ID: <20190523020009.mi25uziu2b3whf4l@yavin>
-References: <20190520133305.11925-1-cyphar@cyphar.com>
- <20190520133305.11925-2-cyphar@cyphar.com>
- <CALCETrVCwe49q5mu=f6jTYNSgosQSjjY5chukMPo6eZtQGqo5g@mail.gmail.com>
+        Wed, 22 May 2019 22:09:00 -0400
+Received: from mail-eopbgr60084.outbound.protection.outlook.com ([40.107.6.84]:64142
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727854AbfEWCJA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 22:09:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MwZgzs/4aZwNfCjdz+/ne/jbJMPxd4bUOyyhLYXEmVI=;
+ b=nP+EimQWUqrXt5cXHaVpbVhy9ZH0Qhzk9/N8pJLoVsYEIZArUpMWK+JjZhixjfAkEwKt6YzZUk4IbDXAjv9uQ73WmK9LUTo7ME0k2MXH+Ydx6ljp8vfknOuWbPlf42I7KMpJ5FFL9oECyA8N7GB96CvUPqYnmsYB2ECqIlrFaq0=
+Received: from VI1PR04MB4543.eurprd04.prod.outlook.com (20.177.55.90) by
+ VI1PR04MB6094.eurprd04.prod.outlook.com (20.179.25.148) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1900.17; Thu, 23 May 2019 02:08:55 +0000
+Received: from VI1PR04MB4543.eurprd04.prod.outlook.com
+ ([fe80::5062:df97:a70b:93f8]) by VI1PR04MB4543.eurprd04.prod.outlook.com
+ ([fe80::5062:df97:a70b:93f8%7]) with mapi id 15.20.1900.020; Thu, 23 May 2019
+ 02:08:54 +0000
+From:   Robin Gong <yibin.gong@nxp.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     "broonie@kernel.org" <broonie@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        "plyatov@gmail.com" <plyatov@gmail.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>
+Subject: RE: [EXT] Re: [PATCH v4 10/14] dma: imx-sdma: add i.mx6ul/6sx
+ compatible name
+Thread-Topic: [EXT] Re: [PATCH v4 10/14] dma: imx-sdma: add i.mx6ul/6sx
+ compatible name
+Thread-Index: AQHVEIU1vbltRMJezUidB/k1RHkv66Z3Kd0AgADL88A=
+Date:   Thu, 23 May 2019 02:08:54 +0000
+Message-ID: <VI1PR04MB4543BE5BB829A2BFDA48824789010@VI1PR04MB4543.eurprd04.prod.outlook.com>
+References: <1558548188-1155-1-git-send-email-yibin.gong@nxp.com>
+ <1558548188-1155-11-git-send-email-yibin.gong@nxp.com>
+ <20190522135128.GA24987@bogus>
+In-Reply-To: <20190522135128.GA24987@bogus>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yibin.gong@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 817b28b3-d63c-44eb-92dc-08d6df239bc7
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB6094;
+x-ms-traffictypediagnostic: VI1PR04MB6094:
+x-microsoft-antispam-prvs: <VI1PR04MB6094D46D8E2A38D25049248E89010@VI1PR04MB6094.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 00462943DE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(346002)(366004)(39860400002)(136003)(376002)(13464003)(189003)(199004)(446003)(476003)(11346002)(4744005)(71190400001)(71200400001)(52536014)(5660300002)(2906002)(486006)(186003)(68736007)(66446008)(64756008)(66556008)(66476007)(66946007)(73956011)(6116002)(26005)(3846002)(7736002)(76116006)(305945005)(81156014)(81166006)(86362001)(66066001)(6916009)(316002)(74316002)(8676002)(8936002)(33656002)(7416002)(54906003)(76176011)(7696005)(229853002)(25786009)(102836004)(256004)(14444005)(4326008)(99286004)(53936002)(55016002)(9686003)(478600001)(6436002)(6506007)(6246003)(14454004);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB6094;H:VI1PR04MB4543.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 3K3cPhbNnzwtDRRdVPWB7LqwrE1SytmzdbFbuVWzSXwQZk3Y7rA0D2XnHHotVTwx3+sRL6VDKWi/xQHHiF6yFOFhIZT9Wd/aljoL8Lx5wOsbGuPHmU5mqHJO63/04mu916C8MXbmFOZklhC+ZuvCV8veFV2h9d2TCHgTZNUqRTRO0642CtdTdz5ibtYipB/riCr8VKtr1VkNBDp102UhasX3I5J4Xvra1cki0WLom6AyaUt/UsqL+Rikl+XKAckrNigKNMyLr9/kV9jCuaBDR6vIHIIIeu1Iop1OeyKgwAnK2AgeUJ9LGAJYrr3a0xbKyuZEo2flSHijZx4vyygD+sxrFhKNJt4szoidsugeYeiY8AUvUU8XZJsI2H4l2PuFKpp1D+XGfLH/uC2XXYdCxB49FYJ8VGstqB2hL0HBwPg=
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="mqlbmyoyuxzxnuxp"
-Content-Disposition: inline
-In-Reply-To: <CALCETrVCwe49q5mu=f6jTYNSgosQSjjY5chukMPo6eZtQGqo5g@mail.gmail.com>
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 817b28b3-d63c-44eb-92dc-08d6df239bc7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 May 2019 02:08:54.8391
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB6094
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---mqlbmyoyuxzxnuxp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On 2019-05-22, Andy Lutomirski <luto@kernel.org> wrote:
-> On Mon, May 20, 2019 at 6:34 AM Aleksa Sarai <cyphar@cyphar.com> wrote:
-> > One final exception is given, which is that non-O_PATH file descriptors
-> > are given re-open rights equivalent to the permissions available at
-> > open-time. This allows for O_RDONLY file descriptors to be re-opened
-> > O_RDWR as long as the user had MAY_WRITE access at the time of opening
-> > the O_RDONLY descriptor. This is necessary to avoid breaking userspace
-> > (some of the kernel's own selftests depended on this "feature").
->=20
-> Can you clarify this exception a bit?  I'd like to make sure it's not
-> such a huge exception that it invalidates the whole point of the
-> patch.
-
-Sure. This exception applies to regular file opens, and the idea is that
-the user had permissions to open the file O_RDWR originally (even if
-they opened it O_RDONLY) so re-opening it O_RDWR later should not be an
-issue (they could've just opened it O_RDWR in the first place). These
-permissions still get masked by nd->opath_mask, so opening a magic-link
-or including an O_PATH doesn't increase the permission set.
-
-This does mean that an O_RDONLY open (if the user could've done an
-O_RDWR and still done the open) results in an FMODE_PATH_WRITE. To be
-honest, I'm still on the fence whether this is a great idea or not (and
-I'd prefer to not include it). Though, I don't think it invalidates the
-patch though, since the attack scenario of a read-only file being
-re-opened later as read-write is still blocked.
-
-The main reason for including it is the concern that there is some
-program from 1993 running in a basement somewhere that depends on this
-that we don't know about. Though, as a counter-example, I have run this
-patchset (without this exception) on my laptop for a few days without
-any visible issues.
-
-> If you open a file for execute, by actually exec()ing it or by using
-> something like the proposed O_MAYEXEC, and you have inode_permission
-> to write, do you still end up with FMODE_PATH_WRITE? The code looks
-> like it does, and this seems like it might be a mistake.
-
-I'm not sure about the execve(2) example -- after all, you don't get an
-fd from execve(2) and /proc/self/exe still has a mode a+rx.
-
-I'm also not sure what the semantics of a hypothetical O_MAYEXEC would
-be -- but we'd probably want to discuss re-opening semantics when it
-gets included. I would argue that since O_MAYEXEC would likely be merged
-after this, no userspace code would depend on this mis-feature and we
-could decide to not include FMODE_EXECv2 in the handling of additional
-permissions.
-
-As an aside, I did originally implement RESOLVE_UPGRADE_NOEXEC (and the
-corresponding FMODE_PATH_EXEC handling). It worked for the most part,
-though execveat(AT_EMPTY_PATH) would need some additional changes to do
-the may_open_magiclink() checks and I decided against including it here
-until we had an O_MAYEXEC.
-
-> Is there any way for user code to read out these new file mode bits?
-
-There is, but it's not exactly trivial. You could check the mode of
-/proc/self/fd and then compare it to the acc_mode of the "flags"
-/proc/self/fdinfo. The bits present in /proc/self/fd but not in acc_mode
-are the FMODE_PATH_* bits.
-
-However, this is quite an ugly way of doing it. I see two options to
-make it easier:
-
- 1. We can add additional information to fdinfo so it includes that
-    FMODE_PATH_* bits to indicate how the fd can be upgraded.
-
- 2. Previously, only the u bits of the fd mode were used to represent the
-    open flags. We could add the FMODE_PATH_* permissions to the g bits
-    and change how the permission check in trailing_symlink() operates.
-
-    The really neat thing here is that we could then know for sure which
-    fmode bits are set during name lookup of a magic-link rather than
-    assuming they're all FMODE_PATH_* bits.
-
-    In addition, userspace that depends on checking the u bits of an fd
-    mode would continue to work (though I'm not aware of any userspace
-    code that does depend on this).
-
-Option 2 seems nicer to me in some respects, but it has the additional
-cost of making the permission check less obvious (it's no longer an
-"inode_permission" and is instead something different with a weird new
-set of semantics). Then again, the modes of magic-links weren't obeyed
-in the first place so I'd argue these semantics are entirely up for us
-to decide.
-
-> What are actual examples of uses for this exception?  Breaking
-> selftests is not, in and of itself, a huge problem.
-
-Not as far as I know. All of the re-opening users I know of do re-opens
-of O_PATH or are re-opening with the same (or fewer) privileges. I also
-ran this for a few days on my laptop without this exception, and didn't
-have any visible issues.
-
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
-
---mqlbmyoyuxzxnuxp
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEb6Gz4/mhjNy+aiz1Snvnv3Dem58FAlzl/qUACgkQSnvnv3De
-m5/O+RAA3pdApPb48XJD4ExYCVJOdzKgy9Tfayj+cr3F5V3uVAGmdpXpXSsQHlT7
-wi+V5W6qsycYQPdn+JzKbVHwNaAlmsKNIowUDQ7NMykj+JjfPFPBWmbt1PVe9qej
-z9Q5WSFI3wefQGmQrP8VCKvnAo9WrYpe4ns/76SDEf2wHZD29QrK6ODPK83XJ/E4
-3BOets8Bp+pfM5jko9rRGS5jhvnNNd1zu5NMu4folvCC8AjmwvGBpJomrjSJKeGo
-zevcwNtMtp6ZPQiuCJQDDG7op4o21Fm+daifODOorh/wrrgp39AVTcNnHZrVVUnR
-ac03BeIzK7Y6TjQSRMn5cBfgeB8RrDxtzAtRSyEWGCkmvM9es9+eOEjn6f1dYF96
-sN75Kp1MAsPpLV5cmKSHCrPzRepKYm2vZJWrFE0igwj476z9y+Nx4DJR3iVbjaNS
-oFk4LtujWazXWzUKB7/a/s7IBwjsV6XZqKmbGthlOaEQniBEYyq+KboyHmODZj0n
-7TZnqJW1eXxYbRIEoagCjYwOF+F8m/ViGL4rSIkIgTqZ40+PTXL4372ikSo5TTCj
-6RMH7+NGZMMllmuy6p3/2jZgwZJexnky+G4TsRYH5O0AhcwvLjn0efg7w/zncl+6
-gQkl4hnn30STItTrQD5EfjRoowVNTp4BiPlKu8nmIwZEPB9Rjq0=
-=zmQ7
------END PGP SIGNATURE-----
-
---mqlbmyoyuxzxnuxp--
+SGkgUm9iLA0KCVRoYW5rIHlvdSBmb3IgeW91ciByZW1pbmRpbmcsIEkgaGF2ZSBhZGRlZCBBY2tl
+ZC1ieSB0YWdzIGdvdHRlbiBmcm9tIE1hcmsgYW5kIFZpbm9kIGluIHY0IHBhdGNoIHNldCwgYnV0
+IHRoZXJlIGlzIHN0aWxsIG9uZSB1cGRhdGUgKA0KcmVtb3ZlIGNoZWNraW5nICdldmVudF9pZDEn
+IHplcm8gYXMgJ2V2ZW50X2lkMCcuKSBmb3IgVmlub2QncyBjb25jZXJuLCBzbyBJIHNlbnQgbmV3
+IHY0Lg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBSb2IgSGVycmluZyA8
+cm9iaEBrZXJuZWwub3JnPg0KPiBTZW50OiAyMDE5xOo11MIyMsjVIDIxOjUxPiANCj4gT24gV2Vk
+LCAyMiBNYXkgMjAxOSAxMDowMDozOCArMDAwMCwgUm9iaW4gR29uZyB3cm90ZToNCj4gPiBBZGQg
+aS5teDZ1bCBhbmQgaS5teDZzeCBjb21wYXRpYmxlIG5hbWUgaW4gYmluZGluZyBkb2MuDQo+ID4N
+Cj4gPiBTaWduZWQtb2ZmLWJ5OiBSb2JpbiBHb25nIDx5aWJpbi5nb25nQG54cC5jb20+DQo+ID4g
+LS0tDQo+ID4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kbWEvZnNsLWlteC1z
+ZG1hLnR4dCB8IDIgKysNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKQ0KPiA+
+DQo+IA0KPiBQbGVhc2UgYWRkIEFja2VkLWJ5L1Jldmlld2VkLWJ5IHRhZ3Mgd2hlbiBwb3N0aW5n
+IG5ldyB2ZXJzaW9ucy4gSG93ZXZlciwNCj4gdGhlcmUncyBubyBuZWVkIHRvIHJlcG9zdCBwYXRj
+aGVzICpvbmx5KiB0byBhZGQgdGhlIHRhZ3MuIFRoZSB1cHN0cmVhbQ0KPiBtYWludGFpbmVyIHdp
+bGwgZG8gdGhhdCBmb3IgYWNrcyByZWNlaXZlZCBvbiB0aGUgdmVyc2lvbiB0aGV5IGFwcGx5Lg0K
+PiANCj4gSWYgYSB0YWcgd2FzIG5vdCBhZGRlZCBvbiBwdXJwb3NlLCBwbGVhc2Ugc3RhdGUgd2h5
+IGFuZCB3aGF0IGNoYW5nZWQuDQo=
