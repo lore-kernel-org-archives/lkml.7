@@ -2,271 +2,105 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_MED,
-	URIBL_BLOCKED,USER_AGENT_MUTT,USER_IN_DEF_DKIM_WL autolearn=unavailable
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B85DEC282DE
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:54:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C3FAC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:55:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DF0C20881
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:54:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DCB720856
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:55:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OLTWrxv9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eik15vTz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387826AbfEWTys (ORCPT
+        id S2387849AbfEWTzW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:54:48 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:42522 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387533AbfEWTyr (ORCPT
+        Thu, 23 May 2019 15:55:22 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:42222 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387408AbfEWTzV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:54:47 -0400
-Received: by mail-pl1-f193.google.com with SMTP id go2so3154603plb.9
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 12:54:46 -0700 (PDT)
+        Thu, 23 May 2019 15:55:21 -0400
+Received: by mail-pg1-f195.google.com with SMTP id 33so707514pgv.9;
+        Thu, 23 May 2019 12:55:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=U3LLk369lx0l/Cax30ZKFIWopXk4cwhU19zVTBRdyDg=;
-        b=OLTWrxv9KFJRtLRvrA9iUwbxM3MnJ4We26ubghbbb7/DT61JHNFhpo+x+taiQkkHt3
-         r/VxXdmi7n8S4NX8La2p0v7lijEBYWBI+doPOfIBDZSx+/XGRSaXHENBlfcUmq2o+jgZ
-         RDzlec51PgRhBXrzNQbZUEbyI42vchEtJo4dqUzVms+sGCcoZ4gNgkW8fPYO9wdL4AnS
-         8b6OImpZAUeTBqm4cp4COeRgvY4x0Q1AGguiT+q/Abv0cUFWY7gxEPacHz97RaGNFDf2
-         s4dLzoanFzg144hLIhWtb/hmNoaIqInf5nr+Uxw+Rndhtm2nV+8Vhwy4H3gRAAgt9vc4
-         2ilQ==
+        bh=ov8W75TETIIhrb7PLZgvB0T529nH+1XtURSj91jvV5g=;
+        b=eik15vTz8yba/0+/Uixcb3DnvyedjS/9VPDmbbVGkKDM407EPb8txewgOmDssJQEar
+         auMO4f5PCN/dY8KCqkvYmUx247tYY5yo2tx85lgGwuLzJRCDstVqZnPfWG6/wLZrHvuA
+         sxSfdgPlrz4VFRw8xL58xPwoMAuEOeWjI1aSza+muPnbEmq3yrJvT+w4iWv+6578NdS4
+         bWN1qNlUi89LfQy9Jz7Lz+K5qJ+3HSLjdZZfjMrBGdCJfWmTy0px2xCdkquooGVZUhOo
+         kxDCKE9xaTUh20iLZnvVeG8NQQp/SAzALn8Xl1uuNDUptIuOweaRKdx5vq5OwjEv4Usy
+         UaBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=U3LLk369lx0l/Cax30ZKFIWopXk4cwhU19zVTBRdyDg=;
-        b=gk9CDobdzgF7Bdyfnw2lV+WN4vF/J8WsE7WLRVfuGi1AtDsoNnDztgw0oeIur89Gol
-         cyBaa8I/TVwPm38oCHm7p3O5E6Vtn88oS6jaoqhDqLLSQCxkF1BbU8yjUS3MUj+2r7P1
-         HkPgmjZLL9ZkWMxPPY1mr3lTfNfSUvuuLoojwXb/0w7Qs+4/Ce8y2nBS78Yq6mbeP9U6
-         KUZkPbC8/4n1n16GBxVd4hIW3R1w9zbIyvoYXqSU/0c1uj9lWg50+QmhUNmkHc0dwIl/
-         NUKPnAY/V9i52YuqKHEMzS5/W4h+hFa9aTk9K72hlatZEvAnUUOnQ5jIgZxgSIyIQjm4
-         nziA==
-X-Gm-Message-State: APjAAAVZdmI0lYW9PMjzrnLotpmrVygIV8FmWCWuJ59tz3BhZJJedwTZ
-        SkuANtCvRJ0eKrsMumZ3DEsNZQ==
-X-Google-Smtp-Source: APXvYqzEzxMwTyuepztbi3qnj0NnQB4vzeT8DtYtsUPRejRPP7KXhwsUDoF51TbaFdkdCSvBeqW3aQ==
-X-Received: by 2002:a17:902:bd91:: with SMTP id q17mr99231198pls.13.1558641285152;
-        Thu, 23 May 2019 12:54:45 -0700 (PDT)
-Received: from google.com ([2620:15c:202:201:bc61:d85d:eb16:9036])
-        by smtp.gmail.com with ESMTPSA id y16sm256381pfo.133.2019.05.23.12.54.43
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 23 May 2019 12:54:43 -0700 (PDT)
-Date:   Thu, 23 May 2019 12:54:38 -0700
-From:   Benson Leung <bleung@google.com>
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     linux-pm@vger.kernel.org, sre@kernel.org,
-        Sameer Nanda <snanda@chromium.org>, bleung@chromium.org,
-        rjw@rjwysocki.net, gwendal@chromium.org,
-        linux-kernel@vger.kernel.org, Len Brown <len.brown@intel.com>,
-        groeck@chromium.org, Adam.Thomson.Opensource@diasemi.com,
-        kernel@collabora.com, Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v4 1/2] power: supply: add input power and voltage limit
- properties
-Message-ID: <20190523195438.GA110498@google.com>
-References: <20190507095248.17915-1-enric.balletbo@collabora.com>
+        bh=ov8W75TETIIhrb7PLZgvB0T529nH+1XtURSj91jvV5g=;
+        b=ULXds4+9WmOoZXkJxXE8bCA6bHXZOFrq0r7mOvcRnE8RrwhWbql3w16JjL84MJsKFl
+         9PxbGuz/EHPViysw6lZFruGFYDRumIPj9ocncLhtS0nCMFI13Bx03ZnCJwb9qzHGLuhc
+         39o+Qygpj8e8v0TcDL6wmGvijVuXaootKxv/YPeJZzIOEZZY2qtP/GvU4Gs4k6vesntF
+         BKHbU4BCyAmE3chvj/gnp+OpkXYQ8ouxh2gpKBAo/xdhHoU7F5Aoaf7gtWrLGZWFlDze
+         53/nNPvF3W8I71XbNdio+RVn8U5sVmgQHKd8RrLkUoFbzowYG3oXhi/R9VSngl1XB04Q
+         l7bA==
+X-Gm-Message-State: APjAAAWRYiMDMqGzf3JlfVHIuINAtBycI3RZs1MXGLicRpFLSBcZoYVK
+        hEDSnS1ToPe1MTWq4QMcZoaFZr8Q
+X-Google-Smtp-Source: APXvYqwjhSgywYjq5+Riagp67CM64t59478zb9hwhA1cFViYzPtCaDhLNnFRSrHHA9nuob/i0XvMaw==
+X-Received: by 2002:aa7:8157:: with SMTP id d23mr79731075pfn.92.1558641320707;
+        Thu, 23 May 2019 12:55:20 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id s2sm249860pfe.105.2019.05.23.12.55.19
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 23 May 2019 12:55:20 -0700 (PDT)
+Date:   Thu, 23 May 2019 12:55:18 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Daniel Smith <danct12@disroot.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>, linux-input@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] input: silead: Add MSSL0017 to acpi_device_id.
+Message-ID: <20190523195518.GA176265@dtor-ws>
+References: <20190523190659.3117-1-danct12@disroot.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="oyUTqETQ0mS9luUI"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190507095248.17915-1-enric.balletbo@collabora.com>
+In-Reply-To: <20190523190659.3117-1-danct12@disroot.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, May 24, 2019 at 02:06:59AM +0700, Daniel Smith wrote:
+> On Chuwi Hi10 Plus, the Silead device id is MSSL0017.
+> 
+> Signed-off-by: Daniel Smith <danct12@disroot.org>
 
---oyUTqETQ0mS9luUI
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi Enric,
-
-On Tue, May 07, 2019 at 11:52:47AM +0200, Enric Balletbo i Serra wrote:
-> For thermal management strategy you might be interested on limit the
-> input power for a power supply. We already have current limit but
-> basically what we probably want is to limit power. So, introduce the
-> input_power_limit property.
->=20
-> Although the common use case is limit the input power, in some
-> specific cases it is the voltage that is problematic (i.e some regulators
-> have different efficiencies at higher voltage resulting in more heat).
-> So introduce also the input_voltage_limit property.
->=20
-> This happens in one Chromebook and is used on the Pixel C's thermal
-> management strategy to effectively limit the input power to 5V 3A when
-> the screen is on. When the screen is on, the display, the CPU, and the GPU
-> all contribute more heat to the system than while the screen is off, and
-> we made a tradeoff to throttle the charger in order to give more of the
-> thermal budget to those other components.
->=20
-> So there's nothing fundamentally broken about the hardware that would
-> cause the Pixel C to malfunction if we were charging at 9V or 12V instead
-> of 5V when the screen is on, i.e. if userspace doesn't change this.
->=20
-> What would happen is that you wouldn't meet Google's skin temperature
-> targets on the system if the charger was allowed to run at 9V or 12V with
-> the screen on.
->=20
-> For folks hacking on Pixel Cs (which is now outside of Google's official
-> support window for Android) and customizing their own kernel and userspace
-> this would be acceptable, but we wanted to expose this feature in the
-> power supply properties because the feature does exist in the Emedded
-> Controller firmware of the Pixel C and all of Google's Chromebooks with
-> USB-C made since 2015 in case someone running an up to date kernel wanted
-> to limit the charging power for thermal or other reasons.
->=20
-> This patch exposes a new property, similar to input current limit, to
-> re-configure the maximum voltage from the external supply at runtime
-> based on system-level knowledge or user input.
->=20
-> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> Reviewed-by: Guenter Roeck <groeck@chromium.org>
-> Acked-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-
-Reviewed-by: Benson Leung <bleung@chromium.org>
+Applied keeping Hans' reviewed-by from the previous version; thank you.
 
 > ---
->=20
-> Changes in v4:
-> - Add also input_power_limit.
->=20
-> Changes in v3:
-> - Improve commit log and documentation with Benson comments.
->=20
-> Changes in v2:
-> - Document the new property in ABI/testing/sysfs-class-power.
-> - Add the Reviewed-by Guenter Roeck tag.
->=20
->  Documentation/ABI/testing/sysfs-class-power | 32 +++++++++++++++++++++
->  Documentation/power/power_supply_class.txt  |  4 +++
->  drivers/power/supply/power_supply_sysfs.c   |  2 ++
->  include/linux/power_supply.h                |  2 ++
->  4 files changed, 40 insertions(+)
->=20
-> diff --git a/Documentation/ABI/testing/sysfs-class-power b/Documentation/=
-ABI/testing/sysfs-class-power
-> index 5e23e22dce1b..962a27a1daf8 100644
-> --- a/Documentation/ABI/testing/sysfs-class-power
-> +++ b/Documentation/ABI/testing/sysfs-class-power
-> @@ -331,10 +331,42 @@ Description:
->  		supply. Normally this is configured based on the type of
->  		connection made (e.g. A configured SDP should output a maximum
->  		of 500mA so the input current limit is set to the same value).
-> +		Use preferably input_power_limit, and for problems that can be
-> +		solved using power limit use input_current_limit.
-> =20
->  		Access: Read, Write
->  		Valid values: Represented in microamps
-> =20
-> +What:		/sys/class/power_supply/<supply_name>/input_voltage_limit
-> +Date:		May 2019
-> +Contact:	linux-pm@vger.kernel.org
-> +Description:
-> +		This entry configures the incoming VBUS voltage limit currently
-> +		set in the supply. Normally this is configured based on
-> +		system-level knowledge or user input (e.g. This is part of the
-> +		Pixel C's thermal management strategy to effectively limit the
-> +		input power to 5V when the screen is on to meet Google's skin
-> +		temperature targets). Note that this feature should not be
-> +		used for safety critical things.
-> +		Use preferably input_power_limit, and for problems that can be
-> +		solved using power limit use input_voltage_limit.
-> +
-> +		Access: Read, Write
-> +		Valid values: Represented in microvolts
-> +
-> +What:		/sys/class/power_supply/<supply_name>/input_power_limit
-> +Date:		May 2019
-> +Contact:	linux-pm@vger.kernel.org
-> +Description:
-> +		This entry configures the incoming power limit currently set
-> +		in the supply. Normally this is configured based on
-> +		system-level knowledge or user input. Use preferably this
-> +		feature to limit the incoming power and use current/voltage
-> +		limit only for problems that can be solved using power limit.
-> +
-> +		Access: Read, Write
-> +		Valid values: Represented in microwatts
-> +
->  What:		/sys/class/power_supply/<supply_name>/online,
->  Date:		May 2007
->  Contact:	linux-pm@vger.kernel.org
-> diff --git a/Documentation/power/power_supply_class.txt b/Documentation/p=
-ower/power_supply_class.txt
-> index 300d37896e51..1e3c705111db 100644
-> --- a/Documentation/power/power_supply_class.txt
-> +++ b/Documentation/power/power_supply_class.txt
-> @@ -137,6 +137,10 @@ power supply object.
-> =20
->  INPUT_CURRENT_LIMIT - input current limit programmed by charger. Indicat=
-es
->  the current drawn from a charging source.
-> +INPUT_VOLTAGE_LIMIT - input voltage limit programmed by charger. Indicat=
-es
-> +the voltage limit from a charging source.
-> +INPUT_POWER_LIMIT - input power limit programmed by charger. Indicates
-> +the power limit from a charging source.
-> =20
->  CHARGE_CONTROL_LIMIT - current charge control limit setting
->  CHARGE_CONTROL_LIMIT_MAX - maximum charge control limit setting
-> diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/su=
-pply/power_supply_sysfs.c
-> index 5358a80d854f..860db617d241 100644
-> --- a/drivers/power/supply/power_supply_sysfs.c
-> +++ b/drivers/power/supply/power_supply_sysfs.c
-> @@ -275,6 +275,8 @@ static struct device_attribute power_supply_attrs[] =
-=3D {
->  	POWER_SUPPLY_ATTR(charge_control_limit),
->  	POWER_SUPPLY_ATTR(charge_control_limit_max),
->  	POWER_SUPPLY_ATTR(input_current_limit),
-> +	POWER_SUPPLY_ATTR(input_voltage_limit),
-> +	POWER_SUPPLY_ATTR(input_power_limit),
->  	POWER_SUPPLY_ATTR(energy_full_design),
->  	POWER_SUPPLY_ATTR(energy_empty_design),
->  	POWER_SUPPLY_ATTR(energy_full),
-> diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
-> index 2f9c201a54d1..ba135a5d8996 100644
-> --- a/include/linux/power_supply.h
-> +++ b/include/linux/power_supply.h
-> @@ -122,6 +122,8 @@ enum power_supply_property {
->  	POWER_SUPPLY_PROP_CHARGE_CONTROL_LIMIT,
->  	POWER_SUPPLY_PROP_CHARGE_CONTROL_LIMIT_MAX,
->  	POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT,
-> +	POWER_SUPPLY_PROP_INPUT_VOLTAGE_LIMIT,
-> +	POWER_SUPPLY_PROP_INPUT_POWER_LIMIT,
->  	POWER_SUPPLY_PROP_ENERGY_FULL_DESIGN,
->  	POWER_SUPPLY_PROP_ENERGY_EMPTY_DESIGN,
->  	POWER_SUPPLY_PROP_ENERGY_FULL,
-> --=20
-> 2.20.1
->=20
+>  drivers/input/touchscreen/silead.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/input/touchscreen/silead.c b/drivers/input/touchscreen/silead.c
+> index 09241d4cdebc..06f0eb04a8fd 100644
+> --- a/drivers/input/touchscreen/silead.c
+> +++ b/drivers/input/touchscreen/silead.c
+> @@ -617,6 +617,7 @@ static const struct acpi_device_id silead_ts_acpi_match[] = {
+>  	{ "MSSL1680", 0 },
+>  	{ "MSSL0001", 0 },
+>  	{ "MSSL0002", 0 },
+> +	{ "MSSL0017", 0 },
+>  	{ }
+>  };
+>  MODULE_DEVICE_TABLE(acpi, silead_ts_acpi_match);
+> -- 
+> 2.21.0
+> 
 
---=20
-Benson Leung
-Staff Software Engineer
-Chrome OS Kernel
-Google Inc.
-bleung@google.com
-Chromium OS Project
-bleung@chromium.org
-
---oyUTqETQ0mS9luUI
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQQCtZK6p/AktxXfkOlzbaomhzOwwgUCXOb6fgAKCRBzbaomhzOw
-wruNAP4zRqtnStUyRbBYdBhaBh/GyqZhsVOldLx65aej/QKwlgD/c1Jt+QIZMNyj
-e5t4yql/iUJbui2eMgpTtAy0FERpEgE=
-=37gh
------END PGP SIGNATURE-----
-
---oyUTqETQ0mS9luUI--
+-- 
+Dmitry
