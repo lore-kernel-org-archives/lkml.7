@@ -2,130 +2,121 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D779DC282E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:01:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EA8EC282E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:02:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC9DA20881
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:01:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ylu32Xyv"
+	by mail.kernel.org (Postfix) with ESMTP id 5BDA320657
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:02:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730881AbfEWPB6 (ORCPT
+        id S1730933AbfEWPCs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 11:01:58 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:40069 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730751AbfEWPB5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 11:01:57 -0400
-Received: by mail-pl1-f193.google.com with SMTP id g69so2871015plb.7
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 08:01:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=9HPbB+/1XsdXIOfekp8uwS00PlsQpqBLPqA5cNuO+gA=;
-        b=ylu32XyvB6DWk0CsJb509nElZsZmOoFdPwMEL7u9OSkrpMlho3jb6QCQxy/15T3wMp
-         BkhEPVUE6VEjBnuopij1rHk8QYCaghvYH8nfxns4iMxmCIThEKBsFr7NIzJeo60nFE+u
-         j6xCj8u/NAAWkIaUwYdcd9Kt6fLrmLFbXPzLInYfEWgAd9vYUSbaXz6Y21iIppxWCiEw
-         fhyvwnbHOdYDua1hNZPpaKxj+en82dkzN3OBIe3f3ehQmxjE/wF1eI+jGQcTWy4jWIaI
-         A/hn1rjsz8tLHDQY/Lwgn4XetVvulMZwBrTFYJ920MSzUw7+NoxvcOic0caAQyyoHKGo
-         JetQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=9HPbB+/1XsdXIOfekp8uwS00PlsQpqBLPqA5cNuO+gA=;
-        b=g8nBqubIeukcYIqO5WmsMeqqDeKHsFOWpEKe0paZoC3C6txIws/GnmKsTvQrQbKh1Y
-         /C1v/B3Qtu9Lk+E0M+gIToTFYDuNHQsDFcmBRr+pd48/5+1IsftCqon1tO6JPPErOnPP
-         bEyW4/koJyGOaExbrPLgo7kLO5ivSzPRY4N7me5qvu2Hbj5pp40peq5qEeNspmz5EokH
-         xfPubFos+nrvA3rHB0ZBiRievfQhOGL+jsmL6SHjYACkLQugzuXvBGvosFn9UmzKYNBZ
-         6uxk3BUc19mNG4ThJW98OOEzxSpji+Wgb0euGCWvP96oWPGfheqncXD4aArZ9N57ppIX
-         bJcw==
-X-Gm-Message-State: APjAAAVQ6bqmWZu4PJcfqO4W5JpUUV5M4NRBJAFyFN9Qp773hZZl5+Ow
-        A7mA8mXrvua2GR2/nxYXsU8olQ==
-X-Google-Smtp-Source: APXvYqzIj2BwrvMPQRJHJSSCOwmfUvkSruAz2K1zWiJscGPLw6+nznE6Ym2LMHGMG9AawDFEugtI+g==
-X-Received: by 2002:a17:902:2de4:: with SMTP id p91mr82211589plb.300.1558623717040;
-        Thu, 23 May 2019 08:01:57 -0700 (PDT)
-Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id t2sm25418248pfh.166.2019.05.23.08.01.55
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 23 May 2019 08:01:56 -0700 (PDT)
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Andy Gross <agross@kernel.org>,
-        David Brown <david.brown@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] soc: qcom: apr: Don't use reg for domain id
-Date:   Thu, 23 May 2019 08:01:53 -0700
-Message-Id: <20190523150153.13136-1-bjorn.andersson@linaro.org>
-X-Mailer: git-send-email 2.18.0
+        Thu, 23 May 2019 11:02:48 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:28248 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730708AbfEWPCs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 11:02:48 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id B7638317917D;
+        Thu, 23 May 2019 15:02:42 +0000 (UTC)
+Received: from [10.10.66.2] (ovpn-66-2.rdu2.redhat.com [10.10.66.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D54187D59D;
+        Thu, 23 May 2019 15:02:40 +0000 (UTC)
+From:   "Benjamin Coddington" <bcodding@redhat.com>
+To:     "Sasha Levin" <sashal@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        "Roberto Bergantinos Corpas" <rbergant@redhat.com>,
+        "Anna Schumaker" <Anna.Schumaker@Netapp.com>,
+        linux-nfs@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 5.1 004/375] NFS: make nfs_match_client killable
+Date:   Thu, 23 May 2019 11:02:39 -0400
+Message-ID: <E7EBFAFD-D312-4EBA-970B-54F07EDD1F9D@redhat.com>
+In-Reply-To: <20190522192115.22666-4-sashal@kernel.org>
+References: <20190522192115.22666-1-sashal@kernel.org>
+ <20190522192115.22666-4-sashal@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; format=flowed
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Thu, 23 May 2019 15:02:47 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The reg property represents the address and size on the bus that a
-device lives, but for APR the parent is a rpmsg bus, which does not have
-numerical addresses. Simply defining #address/#size-cells to 1 and 0,
-respectively, to silence the compiler is not an appropriate solution.
+Hi Sasha,  if you take this one, you'll need the fix for it:
 
-Replace the use of "reg" with an APR specific property.
+c260121a97a3 ("NFS: Fix a double unlock from nfs_match,get_client")
 
-Reviewed-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
+I didn't see this fix go through my inbox for your stable tree, so 
+apologies if maybe I missed it.
 
-Changes since v1:
-- Fixed example to match change
+Looks like you are also applying this one to 4.19 and 4.14, -- I'll just 
+reply once here.
 
- Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt | 6 +++---
- drivers/soc/qcom/apr.c                                  | 2 +-
- 2 files changed, 4 insertions(+), 4 deletions(-)
+Ben
 
-diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
-index bcc612cc7423..db501269f47b 100644
---- a/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
-+++ b/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
-@@ -9,7 +9,7 @@ used for audio/voice services on the QDSP.
- 	Value type: <stringlist>
- 	Definition: must be "qcom,apr-v<VERSION-NUMBER>", example "qcom,apr-v2"
- 
--- reg
-+- qcom,apr-domain
- 	Usage: required
- 	Value type: <u32>
- 	Definition: Destination processor ID.
-@@ -49,9 +49,9 @@ by the individual bindings for the specific service
- The following example represents a QDSP based sound card on a MSM8996 device
- which uses apr as communication between Apps and QDSP.
- 
--	apr@4 {
-+	apr {
- 		compatible = "qcom,apr-v2";
--		reg = <APR_DOMAIN_ADSP>;
-+		qcom,apr-domain = <APR_DOMAIN_ADSP>;
- 
- 		q6core@3 {
- 			compatible = "qcom,q6core";
-diff --git a/drivers/soc/qcom/apr.c b/drivers/soc/qcom/apr.c
-index 74f8b9607daa..b83d71b2e0a4 100644
---- a/drivers/soc/qcom/apr.c
-+++ b/drivers/soc/qcom/apr.c
-@@ -276,7 +276,7 @@ static int apr_probe(struct rpmsg_device *rpdev)
- 	if (!apr)
- 		return -ENOMEM;
- 
--	ret = of_property_read_u32(dev->of_node, "reg", &apr->dest_domain_id);
-+	ret = of_property_read_u32(dev->of_node, "qcom,apr-domain", &apr->dest_domain_id);
- 	if (ret) {
- 		dev_err(dev, "APR Domain ID not specified in DT\n");
- 		return ret;
--- 
-2.18.0
+On 22 May 2019, at 15:15, Sasha Levin wrote:
 
+> From: Roberto Bergantinos Corpas <rbergant@redhat.com>
+>
+> [ Upstream commit 950a578c6128c2886e295b9c7ecb0b6b22fcc92b ]
+>
+>     Actually we don't do anything with return value from
+>     nfs_wait_client_init_complete in nfs_match_client, as a
+>     consequence if we get a fatal signal and client is not
+>     fully initialised, we'll loop to "again" label
+>
+>     This has been proven to cause soft lockups on some scenarios
+>     (no-carrier but configured network interfaces)
+>
+> Signed-off-by: Roberto Bergantinos Corpas <rbergant@redhat.com>
+> Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
+> Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  fs/nfs/client.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+>
+> diff --git a/fs/nfs/client.c b/fs/nfs/client.c
+> index 90d71fda65cec..350cfa561e0e8 100644
+> --- a/fs/nfs/client.c
+> +++ b/fs/nfs/client.c
+> @@ -284,6 +284,7 @@ static struct nfs_client *nfs_match_client(const 
+> struct nfs_client_initdata *dat
+>  	struct nfs_client *clp;
+>  	const struct sockaddr *sap = data->addr;
+>  	struct nfs_net *nn = net_generic(data->net, nfs_net_id);
+> +	int error;
+>
+>  again:
+>  	list_for_each_entry(clp, &nn->nfs_client_list, cl_share_link) {
+> @@ -296,8 +297,10 @@ static struct nfs_client *nfs_match_client(const 
+> struct nfs_client_initdata *dat
+>  		if (clp->cl_cons_state > NFS_CS_READY) {
+>  			refcount_inc(&clp->cl_count);
+>  			spin_unlock(&nn->nfs_client_lock);
+> -			nfs_wait_client_init_complete(clp);
+> +			error = nfs_wait_client_init_complete(clp);
+>  			nfs_put_client(clp);
+> +			if (error < 0)
+> +				return ERR_PTR(error);
+>  			spin_lock(&nn->nfs_client_lock);
+>  			goto again;
+>  		}
+> @@ -407,6 +410,8 @@ struct nfs_client *nfs_get_client(const struct 
+> nfs_client_initdata *cl_init)
+>  		clp = nfs_match_client(cl_init);
+>  		if (clp) {
+>  			spin_unlock(&nn->nfs_client_lock);
+> +			if (IS_ERR(clp))
+> +				return clp;
+>  			if (new)
+>  				new->rpc_ops->free_client(new);
+>  			return nfs_found_client(cl_init, clp);
+> -- 
+> 2.20.1
