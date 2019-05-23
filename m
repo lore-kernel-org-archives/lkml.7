@@ -2,111 +2,81 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38042C282DE
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 05:26:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25B74C04AAC
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 05:33:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 082802133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 05:26:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558589170;
-	bh=XOl00H+dhpzv1UEwzhQKsvEktvq/R8iItH2f+6S5/fw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OlG2siKMZTVAq9MTvhow2Qyoty7kxjOYmDCDFX6D9xP/t3l2BApS8vVlu3VK+sTkL
-	 02th8m6nQyE4JyFleDOBvAEe2x2bvKqBgVUSm/i7nDgJDY20hqHJcsMAi3HvZdDNj9
-	 fFRYxsoxF0JqxmQt9YUL596MKsJjGo3tQvzNSFtw=
+	by mail.kernel.org (Postfix) with ESMTP id F21DB20881
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 05:32:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726636AbfEWF0J (ORCPT
+        id S1726431AbfEWFc7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 01:26:09 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:42034 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725806AbfEWF0I (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 01:26:08 -0400
-Received: by mail-lj1-f196.google.com with SMTP id 188so4187815ljf.9;
-        Wed, 22 May 2019 22:26:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2zCsyXvXKQNDrlDAaTPYsiKB9L/0GPY7IwNwkSTGIws=;
-        b=Ta9mRdKZaIppt1lVoJqu6fTlJpOePKt8UpD0P1KlB+5Dhq5IRFRgjf30yH3w11W0Rz
-         YEOutIeR2eVbTVwwM8xE3TG1Vw0rLpHI7yHMe9wcgF24eWV6mrZTEbwCl2QDJ78Tq7sS
-         lgH1nF185LcEsLWnvD3WzxR0BfM5VB26/nckreMvZB1LkZvhNTYp67QtaOeA4auI3qSV
-         ariGldx5mrqJSCxVgiZVcVyyLMQPSTwKpJaSV2UceiNy8Ghuy+BjmPZFZNSqV/Pppv/S
-         KyuoB7s00FCTXWyMy8Gp1LXYFNh8dalME8JNdybe9xzB94j0j1BzAAVi6+LEI6YiQCtk
-         NRhQ==
-X-Gm-Message-State: APjAAAVmJ0K2kf1riWIKV/jpH/NMT1GSMt2qQyPq/46QuAcnSdHhea2k
-        LPxNW1FoM0hSmodbVTpviw5PF35pidc=
-X-Google-Smtp-Source: APXvYqyA+ouMbSVPDNeED1P3R2zPHpVIba71XK7OdTwYvUvWtpyQh9fTIn1geqaP7SOnZMdVP0vS5Q==
-X-Received: by 2002:a2e:9259:: with SMTP id v25mr4076631ljg.46.1558589166763;
-        Wed, 22 May 2019 22:26:06 -0700 (PDT)
-Received: from xi.terra (c-74bee655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.190.116])
-        by smtp.gmail.com with ESMTPSA id p5sm5818207lfc.80.2019.05.22.22.26.05
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 22 May 2019 22:26:05 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.91)
-        (envelope-from <johan@kernel.org>)
-        id 1hTgEq-00043C-Ic; Thu, 23 May 2019 07:26:01 +0200
-Date:   Thu, 23 May 2019 07:26:00 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Johan Hovold <johan@kernel.org>, linux-usb@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 5.1 077/375] USB: serial: fix initial-termios
- handling
-Message-ID: <20190523052600.GA15348@localhost>
-References: <20190522192115.22666-1-sashal@kernel.org>
- <20190522192115.22666-77-sashal@kernel.org>
+        Thu, 23 May 2019 01:32:59 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:49296 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725806AbfEWFc6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 01:32:58 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 7DDBA308213A;
+        Thu, 23 May 2019 05:32:58 +0000 (UTC)
+Received: from xz-x1 (dhcp-15-205.nay.redhat.com [10.66.15.205])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B2A8260BC3;
+        Thu, 23 May 2019 05:32:56 +0000 (UTC)
+Date:   Thu, 23 May 2019 13:32:54 +0800
+From:   Peter Xu <peterx@redhat.com>
+To:     Frederic Weisbecker <frederic@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH] tick/sched: Drop duplicated tick_sched.inidle
+Message-ID: <20190523053254.GA2517@xz-x1>
+References: <20190522032906.11963-1-peterx@redhat.com>
+ <20190522121837.GA11692@lerouge>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190522192115.22666-77-sashal@kernel.org>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190522121837.GA11692@lerouge>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Thu, 23 May 2019 05:32:58 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sasha,
+On Wed, May 22, 2019 at 02:18:41PM +0200, Frederic Weisbecker wrote:
+> On Wed, May 22, 2019 at 11:29:06AM +0800, Peter Xu wrote:
+> > It is set before entering idle and cleared when quitting idle, though
+> > it seems to be a complete duplicate of tick_sched.idle_active.  We
+> > should probably be able to use any one of them to replace the other.
+> 
+> Not exactly.
+> 
+> @inidle is set on idle entry and cleared on idle exit.
+> @idle_active is the same but it's cleared during idle interrupts
+> so that idle_sleeptime only account real idle time.
+> 
+> And note below:
+> 
+> > @@ -1017,7 +1015,7 @@ void tick_nohz_irq_exit(void)
+> >  {
+> >  	struct tick_sched *ts = this_cpu_ptr(&tick_cpu_sched);
+> >  
+> > -	if (ts->inidle)
+> > +	if (ts->idle_active)
+> >  		tick_nohz_start_idle(ts);
+> 
+> idle_active will always be cleared here from tick_nohz_irq_enter().
+> We actually want to conditionally set it again depending on the inidle value.
 
-On Wed, May 22, 2019 at 03:16:17PM -0400, Sasha Levin wrote:
-> From: Johan Hovold <johan@kernel.org>
-> 
-> [ Upstream commit 579bebe5dd522580019e7b10b07daaf500f9fb1e ]
-> 
-> The USB-serial driver init_termios callback is used to override the
-> default initial terminal settings provided by USB-serial core.
-> 
-> After a bug was fixed in the original implementation introduced by
-> commit fe1ae7fdd2ee ("tty: USB serial termios bits"), the init_termios
-> callback was no longer called just once on first use as intended but
-> rather on every (first) open.
-> 
-> This specifically meant that the terminal settings saved on (final)
-> close were ignored when reopening a port for drivers overriding the
-> initial settings.
-> 
-> Also update the outdated function header referring to the creation of
-> termios objects.
-> 
-> Fixes: 7e29bb4b779f ("usb-serial: fix termios initialization logic")
-> Signed-off-by: Johan Hovold <johan@kernel.org>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
+You are right; I've missed the calls from irq enter/exit. Thanks, Frederic.
 
-The stable tag was left out on purpose as this is essentially a new
-feature, and definitely a behavioural change which should not be
-backported.
-
-Please drop from your autosel queues.
-
-Also, may I ask you again not to include usb-serial (and drivers/gnss)
-in your autosel processing.
-
-Thanks,
-Johan
+-- 
+Peter Xu
+ 
