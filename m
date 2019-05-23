@@ -2,96 +2,104 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7545FC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:00:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88FDDC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:00:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43E1420881
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:00:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 545FB20881
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:00:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558623626;
+	bh=xJMkwCyY4/2C56CJmLlJPx2roTyR5mzhQpE9uHoRZBc=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=SI4CPOp59LOPRUuRlNKLT5hE2O+3eDRtiXz+PJdY1ueujP6gIhfjFsE/ztPR8vycV
+	 th3UpvvDrxg7+9Zh7mfHzNgWb8jXZSBw864ZWTv9CfHn57bMOUCLUljJq5173LelUX
+	 XxrMCVnOWK9XwkzKE49v0zg/rPGbyxVCAb7S6FqM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730985AbfEWPAB (ORCPT
+        id S1731014AbfEWPAZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 11:00:01 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:57502 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730796AbfEWO77 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 10:59:59 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D5BD88110C;
-        Thu, 23 May 2019 14:59:53 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.159])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 84FC0438A;
-        Thu, 23 May 2019 14:59:48 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Thu, 23 May 2019 16:59:51 +0200 (CEST)
-Date:   Thu, 23 May 2019 16:59:45 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     David Laight <David.Laight@ACULAB.COM>
-Cc:     'Deepa Dinamani' <deepa.kernel@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "dbueso@suse.de" <dbueso@suse.de>,
-        "axboe@kernel.dk" <axboe@kernel.dk>,
-        Davidlohr Bueso <dave@stgolabs.net>, Eric Wong <e@80x24.org>,
-        Jason Baron <jbaron@akamai.com>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        linux-aio <linux-aio@kvack.org>,
-        Omar Kilani <omar.kilani@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH v2] signal: Adjust error codes according to
- restore_user_sigmask()
-Message-ID: <20190523145944.GB23070@redhat.com>
-References: <20190522032144.10995-1-deepa.kernel@gmail.com>
- <20190522150505.GA4915@redhat.com>
- <CABeXuvrPM5xvzqUydbREapvwgy6deYreHp0aaMoSHyLB6+HGRg@mail.gmail.com>
- <20190522161407.GB4915@redhat.com>
- <CABeXuvpjrW5Gt95JC-_rYkOA=6RCD5OtkEQdwZVVqGCE3GkQOQ@mail.gmail.com>
- <4f7b6dbeab1d424baaebd7a5df116349@AcuMS.aculab.com>
+        Thu, 23 May 2019 11:00:25 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:35057 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730741AbfEWPAZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 11:00:25 -0400
+Received: by mail-oi1-f196.google.com with SMTP id a132so4618320oib.2;
+        Thu, 23 May 2019 08:00:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=qeElCV+Nxu7+CjCipGaoQ8bPDQ/OvLxQiVOvXHGO8wU=;
+        b=akLkGPnb5jcklOwOikBbzeKdN4MhmgNNvcC31lc16knee4JUvBRHr12oVT8QBa++Tw
+         LWT7OocUINANzTc/5lbDncqm5NVs5+moYTfGmrPfkyh88SWdc5IlCpGnsvRgaIVYGroU
+         ZZPiKz/V6N8sPhS+7P8zCcAt8z2JU76Av4sRvhn+lFacw84/i35XNTKpTNgIN19PIHcz
+         Fto8cf7v2hC40aPoXgj9kEQgNDhCi3FBanxjH0UkLLydreBCjMLDH5ngo6ScB77Xpk1V
+         hUU5/HmXTnqQlg6MDN8vPUK2sUABAkb4WlIkjlMf9I4WzaPRhV8R4iWEyka7VvaLJCJy
+         IYVg==
+X-Gm-Message-State: APjAAAX8Eguj6YfFh07OI4aiF+CfTK2d/7KPZ3FIdAdGIy2C/kYPq0sb
+        v+61XbT64FBr3RnmMx4Ne4rVE1E=
+X-Google-Smtp-Source: APXvYqw+Zx4Tu7B3lsgAaVXYIU6YlWQRJGzzP06SV1533OP9OPc7wxuh08Z0YveCkf05D3ocehL3hw==
+X-Received: by 2002:aca:7552:: with SMTP id q79mr3041138oic.85.1558623623408;
+        Thu, 23 May 2019 08:00:23 -0700 (PDT)
+Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.googlemail.com with ESMTPSA id f5sm9256735oto.67.2019.05.23.08.00.22
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 23 May 2019 08:00:22 -0700 (PDT)
+From:   Rob Herring <robh@kernel.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     devicetree@vger.kernel.org, Joe Perches <joe@perches.com>
+Subject: [PATCH v2] checkpatch.pl: Update DT vendor prefix check
+Date:   Thu, 23 May 2019 10:00:22 -0500
+Message-Id: <20190523150022.2747-1-robh@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4f7b6dbeab1d424baaebd7a5df116349@AcuMS.aculab.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Thu, 23 May 2019 14:59:59 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/23, David Laight wrote:
->
-> I'm confused...
+In commit 8122de54602e ("dt-bindings: Convert vendor prefixes to
+json-schema"), vendor-prefixes.txt has been converted to a DT schema.
+Update the checkpatch.pl DT check to extract vendor prefixes from the new
+vendor-prefixes.yaml file.
 
-Me too. To clarify, the current code is obviously buggy, pselect/whatever
-shouldn't return 0 (or anything else) if it was interrupted and we are going
-to deliver the signal.
+Fixes: 8122de54602e ("dt-bindings: Convert vendor prefixes to json-schema")
+Cc: Joe Perches <joe@perches.com>
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+v2: Handle vendor prefixes with '-' using Joe's reworked grep
 
-But it seems that Deepa has other concerns which I do not understand at all.
+ scripts/checkpatch.pl | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-In any case, the signal_pending() check _inside_ restore_user_sigmask() can't
-be right, with or without this patch. If nothing else, a signal can come right
-after the check.
-
-> So epoll() can return 'success' or 'timeout' (etc) and the handler for SIG_URG
-> should still be called.
-
-Not sure I understand... OK, suppose that you do
-
-	block-all-signals;
-	ret = pselect(..., sigmask(SIG_URG));
-
-if it returns success/timeout then the handler for SIG_URG should not be called?
-
-or I am totally confused...
-
-Oleg.
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index bb28b178d929..342c7c781ba5 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -3027,7 +3027,7 @@ sub process {
+ 			my @compats = $rawline =~ /\"([a-zA-Z0-9\-\,\.\+_]+)\"/g;
+ 
+ 			my $dt_path = $root . "/Documentation/devicetree/bindings/";
+-			my $vp_file = $dt_path . "vendor-prefixes.txt";
++			my $vp_file = $dt_path . "vendor-prefixes.yaml";
+ 
+ 			foreach my $compat (@compats) {
+ 				my $compat2 = $compat;
+@@ -3042,7 +3042,7 @@ sub process {
+ 
+ 				next if $compat !~ /^([a-zA-Z0-9\-]+)\,/;
+ 				my $vendor = $1;
+-				`grep -Eq "^$vendor\\b" $vp_file`;
++				`grep -Eq "\\"\\^\Q$vendor\E,\\.\\*\\":" $vp_file`;
+ 				if ( $? >> 8 ) {
+ 					WARN("UNDOCUMENTED_DT_STRING",
+ 					     "DT compatible string vendor \"$vendor\" appears un-documented -- check $vp_file\n" . $herecurr);
+-- 
+2.20.1
 
