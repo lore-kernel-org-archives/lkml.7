@@ -2,121 +2,298 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F126BC282CE
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 02:18:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 071D1C282CE
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 02:23:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A373B20B1F
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 02:18:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8321D20881
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 02:23:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="b34BiZjo"
+	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="NrSed+fz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729654AbfEWCSQ (ORCPT
+        id S1729535AbfEWCXM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 22:18:16 -0400
-Received: from mail-eopbgr130078.outbound.protection.outlook.com ([40.107.13.78]:1038
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727305AbfEWCSQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 22:18:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yqaTJtux+lWdFM11IqGkLWvFA0WYDpmJrHnerLDRBDM=;
- b=b34BiZjoVGaBlPYGbxFxemSo51casMzvJCTilprkEdeJFES5LvENPZSFBD30/GNDStplaHqce2BJ5JVdHyhEd1oRFvMV7+gPAUohfD33nAUrLvDfNog26FE8AUesWoopv0Uzj/rj5zy9lnDCl515zMtFpyFcW6Aq1ESGGncXXcg=
-Received: from VI1PR04MB4543.eurprd04.prod.outlook.com (20.177.55.90) by
- VI1PR04MB5807.eurprd04.prod.outlook.com (20.178.204.29) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1922.16; Thu, 23 May 2019 02:18:10 +0000
-Received: from VI1PR04MB4543.eurprd04.prod.outlook.com
- ([fe80::5062:df97:a70b:93f8]) by VI1PR04MB4543.eurprd04.prod.outlook.com
- ([fe80::5062:df97:a70b:93f8%7]) with mapi id 15.20.1900.020; Thu, 23 May 2019
- 02:18:10 +0000
-From:   Robin Gong <yibin.gong@nxp.com>
-To:     Lucas Stach <l.stach@pengutronix.de>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-        "plyatov@gmail.com" <plyatov@gmail.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>
-CC:     "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>
-Subject: RE:Re: [PATCH v4 00/14] add ecspi ERR009165 for i.mx6/7 soc family
-Thread-Topic: Re: [PATCH v4 00/14] add ecspi ERR009165 for i.mx6/7 soc family
-Thread-Index: AdURDIuPRlx991CcRFGr8aoDaMhF+Q==
-Date:   Thu, 23 May 2019 02:18:10 +0000
-Message-ID: <VI1PR04MB45434A8AB7BC8B3DADBFCD5D89010@VI1PR04MB4543.eurprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yibin.gong@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: c3b08190-7cb3-4b82-2466-08d6df24e6f9
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB5807;
-x-ms-traffictypediagnostic: VI1PR04MB5807:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <VI1PR04MB58070808651E8B5314FC837C89010@VI1PR04MB5807.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 00462943DE
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(396003)(136003)(366004)(376002)(346002)(189003)(199004)(13464003)(8936002)(99286004)(476003)(14454004)(110136005)(81166006)(33656002)(45080400002)(54906003)(478600001)(6116002)(966005)(71200400001)(71190400001)(3846002)(486006)(68736007)(64756008)(66556008)(66446008)(73956011)(66946007)(76116006)(66476007)(316002)(9686003)(55016002)(6306002)(6436002)(53936002)(2501003)(7696005)(6506007)(4326008)(7416002)(74316002)(102836004)(81156014)(26005)(2906002)(25786009)(14444005)(186003)(86362001)(256004)(5660300002)(52536014)(8676002)(305945005)(2201001)(66066001)(7736002)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5807;H:VI1PR04MB4543.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: DO1Ogv0ky5Ioo2TomolfMJFyqfZHQ1D0MfgzNqmn9ZBQY9nntGB81m98nrEWqnYKDdACTsxgjfyvWbJMe6/uOs3jqIzVWVqVBuGv/xnpqsE6+60tbb1bZbOU8nyWWghypg9Dw5wpx8iQb8rgsB51Z7lZywDiP9rTzdx/7r92DhGwUkMtAX9G0r43vJihRbAs4JX7F1LkFtWevBZQR8v75qvw40nm7KYnW5CGRwPySECgtzj2MzgccB+5ZGBOvmbNjCguYnpUlP/xlLyTa3DZYQpDUw8CLtN9HxRGFJuCwtI8+2TYwAZeHWrTzyrpWLIVGffdJ7ju6XJybz/3dKKSFbU1DKxIW+7znx1YFOBOuQwJOwywHIoUZpvW7/hOh7qePIsIMqHuVpbGer5sizgR3e/KpjY1bJtll8B3bjMCy00=
+        Wed, 22 May 2019 22:23:12 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:44783 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728022AbfEWCXM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 22 May 2019 22:23:12 -0400
+Received: by mail-wr1-f66.google.com with SMTP id w13so4382228wru.11
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 19:23:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:subject:to
+         :from:cc;
+        bh=Hnjt/K9t57LlxXJzyl6rEPuBPixyxFUWutrkuh4rjao=;
+        b=NrSed+fzL4RpCD8iPSFxux0YoMWBD5xiClJpTElPXsPOMJV0wLIzY1OKWA0+QVKYgN
+         EQnwBtfcLzE6ggFS2KRh+QWtZYrfDOx7I/edfC1rfz2my86qCXV8rZU+OGKMrKa0+J24
+         FijrlJNzoz6dIYKb9O5YgWusWhx/3xcGx3MA4Nr/Ct8zwi3vOI6q6vJRSTBvdKg3/c8W
+         0xCbyC9YsJUiayUGYaxt/iK6hQPda3xZA8n5bb/Ja+sxPqQ6+iPG58Ypcy3sIXN6KV6S
+         +0pHMt6321DPa/1c4ilxlhUCE+9SZFV0kuThs9ex1/Gv2M1uhrKJL0EqKaWZsRG4YxEc
+         b6RQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:subject:to:from:cc;
+        bh=Hnjt/K9t57LlxXJzyl6rEPuBPixyxFUWutrkuh4rjao=;
+        b=CE7Fcof4yCRHLibjliCKnNIRkUrylqgTG81Rr/wx4hRGvvcVjKaOT2M4cwME+uD5I8
+         k37SSIr9a5zh1xeMakBUWR05R2ThVxQFb5H08RJDLSp2vrUDnpH5+yeBeMJGOGUXsfDL
+         0j7/J0JlNTVetjTw8tYc2lW+OLHaxJ5uVHWeOs9ImHuZyvJsGKLf453wzyfCFzxWp3lp
+         RCic5SkerHVgDtOmdZX1togq7Ru7LxFL4fGyutQtpiU02sGPnrJQf03v8/B3OpZsDi7q
+         EMYfVp+a3MWdK0bjAg8/uZ3QmklezRteNO2n24acztEM/U2aGZXT4T1ZXxrg9h1EZhg1
+         /i/g==
+X-Gm-Message-State: APjAAAWj8H6WFMOLTKiwDc6fcMqr/jRScLNEy043BmtPQ838es7+qkIH
+        GRsA1SnK/7zxZtk42u+OLoG91w==
+X-Google-Smtp-Source: APXvYqz/QxREnLfKEm8J2aD73wASeFN0MHotPjc9HnDx/Tdd4uk9S2oBIQ4E+6qRfQN3d6BY6eD6Ng==
+X-Received: by 2002:a5d:6a8c:: with SMTP id s12mr24929353wru.326.1558578190207;
+        Wed, 22 May 2019 19:23:10 -0700 (PDT)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id l16sm42303704wrb.40.2019.05.22.19.23.08
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 22 May 2019 19:23:09 -0700 (PDT)
+Message-ID: <5ce6040d.1c69fb81.60b3b.29fb@mx.google.com>
+Date:   Wed, 22 May 2019 19:23:09 -0700 (PDT)
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c3b08190-7cb3-4b82-2466-08d6df24e6f9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 May 2019 02:18:10.5088
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5807
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Report-Type: bisect
+X-Kernelci-Tree: mainline
+X-Kernelci-Lab-Name: lab-collabora
+X-Kernelci-Branch: master
+X-Kernelci-Kernel: v5.2-rc1-165-g54dee406374c
+Subject: mainline/master boot bisection: v5.2-rc1-165-g54dee406374c on
+ rk3288-veyron-jaq
+To:     tomeu.vizoso@collabora.com, guillaume.tucker@collabora.com,
+        mgalka@collabora.com, broonie@kernel.org, matthew.hart@linaro.org,
+        khilman@baylibre.com, enric.balletbo@collabora.com,
+        Elaine Zhang <zhangqing@rock-chips.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+From:   "kernelci.org bot" <bot@kernelci.org>
+Cc:     Heiko Stuebner <heiko@sntech.de>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        Zhang Rui <rui.zhang@intel.com>,
+        linux-arm-kernel@lists.infradead.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBMdWNhcyBTdGFjaCA8bC5zdGFj
-aEBwZW5ndXRyb25peC5kZT4NCj4gU2VudDogMjAxOeW5tDXmnIgyMuaXpSAxODoxMA0KPiBIaSBS
-b2JpbiwNCj4gDQo+IEFtIE1pdHR3b2NoLCBkZW4gMjIuMDUuMjAxOSwgMDk6NTkgKzAwMDAgc2No
-cmllYiBSb2JpbiBHb25nOg0KPiA+ICAgVGhlcmUgaXMgZWNzcGkgRVJSMDA5MTY1IG9uIGkubXg2
-Lzcgc29jIGZhbWlseSwgd2hpY2ggY2F1c2UgRklGTw0KPiA+IHRyYW5zZmVyIHRvIGJlIHNlbmQg
-dHdpY2UgaW4gRE1BIG1vZGUuIFBsZWFzZSBnZXQgbW9yZSBpbmZvcm1hdGlvbiBmcm9tOg0KPiA+
-IGh0dHBzOi8vZXVyMDEuc2FmZWxpbmtzLnByb3RlY3Rpb24ub3V0bG9vay5jb20vP3VybD1odHRw
-cyUzQSUyRiUyRnd3dy4NCj4gDQo+IEkgaGF2ZW4ndCB0ZXN0ZWQgdGhpcyBzbyBhc2tpbmcgdGhl
-IG9idmlvdXMgcXVlc3Rpb246IHdoYXQgaGFwcGVucyB3aGVuIHRoaXMNCj4gc2VyaWVzIGlzIGFw
-cGxpZWQgd2l0aG91dCB0aGUgUkFNIHNjcmlwdCBiZWluZyBwcmVzZW50IG9uIHRoZSBzeXN0ZW0/
-IFdpbGwgaXQNCj4gcmVuZGVyIFNQSSB1bnVzYWJsZT8gSSBndWVzcyBzbyBzaW5jZSBpdCBjaGFu
-Z2VzIHRoZSBmbG93IGJldHdlZW4gdGhlIFNQSSBjb3JlDQo+IGFuZCBETUEgY29udHJvbGxlci4g
-Q2FuIHdlIHNvbWVob3cgZGV0ZWN0IHRoYXQgU0RNQSBpc24ndCB1c2luZyB0aGUgY29ycmVjdA0K
-PiBSQU0gc2NyaXB0IGFuZCBmYWxsIGJhY2sgdG8gUElPIG1vZGUgaW4gdGhlIFNQSSBkcml2ZXIg
-aW4gdGhhdCBjYXNlPw0KPiANCj4gQ3VycmVudGx5IHVzaW5nIHRoZSBSQU0gc2NyaXB0IGlzIG5v
-dCBhbiBvcHRpb24gaW4gYSBsb3Qgb2YgdXNlLWNhc2VzLCBhcyBpdCBzdGlsbA0KPiBicmVha3Mg
-c2VyaWFsIERNQSBzdXBwb3J0LiBUaGUgZml4IGZvciB0aGUgc2VyaWFsIGlzc3VlIHJlYWxseSBu
-ZWVkcyB0byBiZQ0KPiByZW1vdmUgdGhlIGJyb2tlbiBzZXJpYWwgc2NyaXB0IGZyb20gdGhlIFJB
-TSBmaXJtd2FyZSwgbm90IGNoYW5nZSB0aGUgc2VyaWFsDQo+IGRyaXZlciB0byBkZWFsIHdpdGgg
-dGhlIGJyb2tlbiBiZWhhdmlvciBpbnRyb2R1Y2VkIGJ5IHRoZSBSQU0gc2NyaXB0Lg0KT2theSwg
-SSdsbCB0cnkgdG8gbWVyZ2UgYW5vdGhlciBwYXRjaCB3aGljaCBmaXggVUFSVCBkcml2ZXIgZnVu
-Y3Rpb24gYnJva2VuIGlzc3VlIHdpdGggcmFtIHNjcmlwdCBzbyB0aGF0IG5vIGFueSBicm9rZW4g
-Zm9yIHRoaXMgcGF0Y2ggc2V0Lg0KPiANCj4gUmVnYXJkcywNCj4gTHVjYXMNCg==
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+* This automated bisection report was sent to you on the basis  *
+* that you may be involved with the breaking commit it has      *
+* found.  No manual investigation has been done to verify it,   *
+* and the root cause of the problem may be somewhere else.      *
+* Hope this helps!                                              *
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+
+mainline/master boot bisection: v5.2-rc1-165-g54dee406374c on rk3288-veyron=
+-jaq
+
+Summary:
+  Start:      54dee406374c Merge tag 'arm64-fixes' of git://git.kernel.org/=
+pub/scm/linux/kernel/git/arm64/linux
+  Details:    https://kernelci.org/boot/id/5ce5984c59b514e6a47a364c
+  Plain log:  https://storage.kernelci.org//mainline/master/v5.2-rc1-165-g5=
+4dee406374c/arm/multi_v7_defconfig+CONFIG_EFI=3Dy+CONFIG_ARM_LPAE=3Dy/gcc-8=
+/lab-collabora/boot-rk3288-veyron-jaq.txt
+  HTML log:   https://storage.kernelci.org//mainline/master/v5.2-rc1-165-g5=
+4dee406374c/arm/multi_v7_defconfig+CONFIG_EFI=3Dy+CONFIG_ARM_LPAE=3Dy/gcc-8=
+/lab-collabora/boot-rk3288-veyron-jaq.html
+  Result:     28694e009e51 thermal: rockchip: fix up the tsadc pinctrl sett=
+ing error
+
+Checks:
+  revert:     PASS
+  verify:     PASS
+
+Parameters:
+  Tree:       mainline
+  URL:        git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.=
+git
+  Branch:     master
+  Target:     rk3288-veyron-jaq
+  CPU arch:   arm
+  Lab:        lab-collabora
+  Compiler:   gcc-8
+  Config:     multi_v7_defconfig+CONFIG_EFI=3Dy+CONFIG_ARM_LPAE=3Dy
+  Test suite: boot
+
+Breaking commit found:
+
+---------------------------------------------------------------------------=
+----
+commit 28694e009e512451ead5519dd801f9869acb1f60
+Author: Elaine Zhang <zhangqing@rock-chips.com>
+Date:   Tue Apr 30 18:09:44 2019 +0800
+
+    thermal: rockchip: fix up the tsadc pinctrl setting error
+    =
+
+    Explicitly use the pinctrl to set/unset the right mode
+    instead of relying on the pinctrl init mode.
+    And it requires setting the tshut polarity before select pinctrl.
+    =
+
+    When the temperature sensor mode is set to 0, it will automatically
+    reset the board via the Clock-Reset-Unit (CRU) if the over temperature
+    threshold is reached. However, when the pinctrl initializes, it does a
+    transition to "otp_out" which may lead the SoC restart all the time.
+    =
+
+    "otp_out" IO may be connected to the RESET circuit on the hardware.
+    If the IO is in the wrong state, it will trigger RESET.
+    (similar to the effect of pressing the RESET button)
+    which will cause the soc to restart all the time.
+    =
+
+    Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
+    Reviewed-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+    Signed-off-by: Eduardo Valentin <edubezval@gmail.com>
+
+diff --git a/drivers/thermal/rockchip_thermal.c b/drivers/thermal/rockchip_=
+thermal.c
+index 9c7643d62ed7..6dc7fc516abf 100644
+--- a/drivers/thermal/rockchip_thermal.c
++++ b/drivers/thermal/rockchip_thermal.c
+@@ -172,6 +172,9 @@ struct rockchip_thermal_data {
+ 	int tshut_temp;
+ 	enum tshut_mode tshut_mode;
+ 	enum tshut_polarity tshut_polarity;
++	struct pinctrl *pinctrl;
++	struct pinctrl_state *gpio_state;
++	struct pinctrl_state *otp_state;
+ };
+ =
+
+ /**
+@@ -1242,6 +1245,8 @@ static int rockchip_thermal_probe(struct platform_dev=
+ice *pdev)
+ 		return error;
+ 	}
+ =
+
++	thermal->chip->control(thermal->regs, false);
++
+ 	error =3D clk_prepare_enable(thermal->clk);
+ 	if (error) {
+ 		dev_err(&pdev->dev, "failed to enable converter clock: %d\n",
+@@ -1267,6 +1272,30 @@ static int rockchip_thermal_probe(struct platform_de=
+vice *pdev)
+ 	thermal->chip->initialize(thermal->grf, thermal->regs,
+ 				  thermal->tshut_polarity);
+ =
+
++	if (thermal->tshut_mode =3D=3D TSHUT_MODE_GPIO) {
++		thermal->pinctrl =3D devm_pinctrl_get(&pdev->dev);
++		if (IS_ERR(thermal->pinctrl)) {
++			dev_err(&pdev->dev, "failed to find thermal pinctrl\n");
++			return PTR_ERR(thermal->pinctrl);
++		}
++
++		thermal->gpio_state =3D pinctrl_lookup_state(thermal->pinctrl,
++							   "gpio");
++		if (IS_ERR_OR_NULL(thermal->gpio_state)) {
++			dev_err(&pdev->dev, "failed to find thermal gpio state\n");
++			return -EINVAL;
++		}
++
++		thermal->otp_state =3D pinctrl_lookup_state(thermal->pinctrl,
++							  "otpout");
++		if (IS_ERR_OR_NULL(thermal->otp_state)) {
++			dev_err(&pdev->dev, "failed to find thermal otpout state\n");
++			return -EINVAL;
++		}
++
++		pinctrl_select_state(thermal->pinctrl, thermal->otp_state);
++	}
++
+ 	for (i =3D 0; i < thermal->chip->chn_num; i++) {
+ 		error =3D rockchip_thermal_register_sensor(pdev, thermal,
+ 						&thermal->sensors[i],
+@@ -1337,8 +1366,8 @@ static int __maybe_unused rockchip_thermal_suspend(st=
+ruct device *dev)
+ =
+
+ 	clk_disable(thermal->pclk);
+ 	clk_disable(thermal->clk);
+-
+-	pinctrl_pm_select_sleep_state(dev);
++	if (thermal->tshut_mode =3D=3D TSHUT_MODE_GPIO)
++		pinctrl_select_state(thermal->pinctrl, thermal->gpio_state);
+ =
+
+ 	return 0;
+ }
+@@ -1383,7 +1412,8 @@ static int __maybe_unused rockchip_thermal_resume(str=
+uct device *dev)
+ 	for (i =3D 0; i < thermal->chip->chn_num; i++)
+ 		rockchip_thermal_toggle_sensor(&thermal->sensors[i], true);
+ =
+
+-	pinctrl_pm_select_default_state(dev);
++	if (thermal->tshut_mode =3D=3D TSHUT_MODE_GPIO)
++		pinctrl_select_state(thermal->pinctrl, thermal->otp_state);
+ =
+
+ 	return 0;
+ }
+---------------------------------------------------------------------------=
+----
+
+
+Git bisection log:
+
+---------------------------------------------------------------------------=
+----
+git bisect start
+# good: [83f3ef3de625a5766de2382f9e077d4daafd5bac] Merge tag 'libnvdimm-fix=
+es-5.2-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm
+git bisect good 83f3ef3de625a5766de2382f9e077d4daafd5bac
+# bad: [54dee406374ce8adb352c48e175176247cb8db7c] Merge tag 'arm64-fixes' o=
+f git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux
+git bisect bad 54dee406374ce8adb352c48e175176247cb8db7c
+# bad: [dc413a90edbe715bebebe859dc072ef73d490d70] Merge tag 'armsoc-drivers=
+' of git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc
+git bisect bad dc413a90edbe715bebebe859dc072ef73d490d70
+# good: [b45da609a02460c6a34c395f03f891f1fb2a021a] Merge tag 'imx-bindings-=
+5.2' of git://git.kernel.org/pub/scm/linux/kernel/git/shawnguo/linux into a=
+rm/dt
+git bisect good b45da609a02460c6a34c395f03f891f1fb2a021a
+# good: [6cbc4d88ad208d6f5b9567bac2fff038e1bbfa77] Merge tag 'bitmain-soc-5=
+.2' of git://git.kernel.org/pub/scm/linux/kernel/git/mani/linux-bitmain int=
+o arm/dt
+git bisect good 6cbc4d88ad208d6f5b9567bac2fff038e1bbfa77
+# bad: [a455eda33faafcaac1effb31d682765b14ef868c] Merge branch 'linus' of g=
+it://git.kernel.org/pub/scm/linux/kernel/git/evalenti/linux-soc-thermal
+git bisect bad a455eda33faafcaac1effb31d682765b14ef868c
+# bad: [ffd1b122d3a17783b68cfd03b0479dffedf0d960] thermal: rockchip: Suppor=
+t the PX30 SoC in thermal driver
+git bisect bad ffd1b122d3a17783b68cfd03b0479dffedf0d960
+# good: [3e6a8fb3308419129c7a52de6eb42feef5a919a0] drivers: thermal: tsens:=
+ Add new operation to check if a sensor is enabled
+git bisect good 3e6a8fb3308419129c7a52de6eb42feef5a919a0
+# good: [d36e2fa025387567710df740fd4dce1d5001b226] thermal: generic-adc: ma=
+ke lookup table optional
+git bisect good d36e2fa025387567710df740fd4dce1d5001b226
+# good: [42cd9b049829d7facbd45ab503d763a86251e81b] thermal/drivers/cpu_cool=
+ing: Fixup the header and copyright
+git bisect good 42cd9b049829d7facbd45ab503d763a86251e81b
+# good: [6ec8070b9d48294fbe865535c167a79527eaf357] thermal: Fix build error=
+ of missing devm_ioremap_resource on UM
+git bisect good 6ec8070b9d48294fbe865535c167a79527eaf357
+# bad: [28694e009e512451ead5519dd801f9869acb1f60] thermal: rockchip: fix up=
+ the tsadc pinctrl setting error
+git bisect bad 28694e009e512451ead5519dd801f9869acb1f60
+# good: [fcc6d4cadadcc977911c6bfcdd95d379f4082c74] thermal: broadcom: Remov=
+e ACPI support
+git bisect good fcc6d4cadadcc977911c6bfcdd95d379f4082c74
+# first bad commit: [28694e009e512451ead5519dd801f9869acb1f60] thermal: roc=
+kchip: fix up the tsadc pinctrl setting error
+---------------------------------------------------------------------------=
+----
