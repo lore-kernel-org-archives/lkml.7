@@ -2,85 +2,156 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8E1FC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:40:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BE1FC282DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:40:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C87BF2133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:40:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 358372075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:40:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558640413;
+	bh=6N8fhzPrYRvSgTF2+kpthjURSoMeS6rdVqEgNaWNgpQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=qygt3+bvIUeNLLJUX0jAtHeNGs9rszpvLMNUjGrbAAS6lPE0IshYZuuA7egTl7Jqy
+	 eQJsAxswsWUtesf59aBqeROqD4ld86EhzUZDCQF32GfgG+UEV6VYef0ehAmr1zxtR4
+	 jcIon4IQalNjCMvO7/Z4/l6qGTKPTAdtclL93Bl4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390981AbfEWTkF (ORCPT
+        id S2390263AbfEWTVZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:40:05 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:53712 "EHLO mx1.redhat.com"
+        Thu, 23 May 2019 15:21:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58684 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390281AbfEWTkD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:40:03 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S2390251AbfEWTVX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:21:23 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 356F988E63;
-        Thu, 23 May 2019 19:40:02 +0000 (UTC)
-Received: from redhat.com (unknown [10.20.6.178])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4820A60BF3;
-        Thu, 23 May 2019 19:40:01 +0000 (UTC)
-Date:   Thu, 23 May 2019 15:39:59 -0400
-From:   Jerome Glisse <jglisse@redhat.com>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Artemy Kovalyov <artemyko@mellanox.com>,
-        Moni Shoua <monis@mellanox.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Kaike Wan <kaike.wan@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>
-Subject: Re: [PATCH v4 0/1] Use HMM for ODP v4
-Message-ID: <20190523193959.GA5658@redhat.com>
-References: <20190522174852.GA23038@redhat.com>
- <20190522235737.GD15389@ziepe.ca>
- <20190523150432.GA5104@redhat.com>
- <20190523154149.GB12159@ziepe.ca>
- <20190523155207.GC5104@redhat.com>
- <20190523163429.GC12159@ziepe.ca>
- <20190523173302.GD5104@redhat.com>
- <20190523175546.GE12159@ziepe.ca>
- <20190523182458.GA3571@redhat.com>
- <20190523191038.GG12159@ziepe.ca>
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E0AF21841;
+        Thu, 23 May 2019 19:21:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558639282;
+        bh=6N8fhzPrYRvSgTF2+kpthjURSoMeS6rdVqEgNaWNgpQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=RRPJQb4y38+2WUuYuOjQfSOGZiCn36iQ9nMga8P47mStOuf4ZxhQfL490MzZyFJOt
+         I9oqn+sr8bJrsEHBT5eJIzGnIPGZNd3NwQpaeMW1ijlmvB+UlZ2InnSOenvvq095kE
+         +Vygw06J9edLt9LhIwcsTL6VzrdSdJW3bGAA8ngk=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Jason Gunthorpe <jgg@mellanox.com>,
+        Haggai Eran <haggaie@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>
+Subject: [PATCH 5.0 047/139] RDMA/mlx5: Use get_zeroed_page() for clock_info
+Date:   Thu, 23 May 2019 21:05:35 +0200
+Message-Id: <20190523181726.804257772@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190523181720.120897565@linuxfoundation.org>
+References: <20190523181720.120897565@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190523191038.GG12159@ziepe.ca>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Thu, 23 May 2019 19:40:02 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 04:10:38PM -0300, Jason Gunthorpe wrote:
-> 
-> On Thu, May 23, 2019 at 02:24:58PM -0400, Jerome Glisse wrote:
-> > I can not take mmap_sem in range_register, the READ_ONCE is fine and
-> > they are no race as we do take a reference on the hmm struct thus
-> 
-> Of course there are use after free races with a READ_ONCE scheme, I
-> shouldn't have to explain this.
+From: Jason Gunthorpe <jgg@mellanox.com>
 
-Well i can not think of anything again here the mm->hmm can not
-change while driver is calling hmm_range_register() so if you
-want i can remove the READ_ONCE() this does not change anything.
+commit ddcdc368b1033e19fd3a5f750752e10e28a87826 upstream.
+
+get_zeroed_page() returns a virtual address for the page which is better
+than allocating a struct page and doing a permanent kmap on it.
+
+Cc: stable@vger.kernel.org
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Reviewed-by: Haggai Eran <haggaie@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/infiniband/hw/mlx5/main.c                   |    5 ++-
+ drivers/net/ethernet/mellanox/mlx5/core/lib/clock.c |   30 +++++++-------------
+ include/linux/mlx5/driver.h                         |    1 
+ 3 files changed, 14 insertions(+), 22 deletions(-)
+
+--- a/drivers/infiniband/hw/mlx5/main.c
++++ b/drivers/infiniband/hw/mlx5/main.c
+@@ -1986,11 +1986,12 @@ static int mlx5_ib_mmap_clock_info_page(
+ 		return -EPERM;
+ 	vma->vm_flags &= ~VM_MAYWRITE;
+ 
+-	if (!dev->mdev->clock_info_page)
++	if (!dev->mdev->clock_info)
+ 		return -EOPNOTSUPP;
+ 
+ 	return rdma_user_mmap_page(&context->ibucontext, vma,
+-				   dev->mdev->clock_info_page, PAGE_SIZE);
++				   virt_to_page(dev->mdev->clock_info),
++				   PAGE_SIZE);
+ }
+ 
+ static int uar_mmap(struct mlx5_ib_dev *dev, enum mlx5_ib_mmap_cmd cmd,
+--- a/drivers/net/ethernet/mellanox/mlx5/core/lib/clock.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/lib/clock.c
+@@ -535,23 +535,16 @@ void mlx5_init_clock(struct mlx5_core_de
+ 	do_div(ns, NSEC_PER_SEC / HZ);
+ 	clock->overflow_period = ns;
+ 
+-	mdev->clock_info_page = alloc_page(GFP_KERNEL);
+-	if (mdev->clock_info_page) {
+-		mdev->clock_info = kmap(mdev->clock_info_page);
+-		if (!mdev->clock_info) {
+-			__free_page(mdev->clock_info_page);
+-			mlx5_core_warn(mdev, "failed to map clock page\n");
+-		} else {
+-			mdev->clock_info->sign   = 0;
+-			mdev->clock_info->nsec   = clock->tc.nsec;
+-			mdev->clock_info->cycles = clock->tc.cycle_last;
+-			mdev->clock_info->mask   = clock->cycles.mask;
+-			mdev->clock_info->mult   = clock->nominal_c_mult;
+-			mdev->clock_info->shift  = clock->cycles.shift;
+-			mdev->clock_info->frac   = clock->tc.frac;
+-			mdev->clock_info->overflow_period =
+-						clock->overflow_period;
+-		}
++	mdev->clock_info =
++		(struct mlx5_ib_clock_info *)get_zeroed_page(GFP_KERNEL);
++	if (mdev->clock_info) {
++		mdev->clock_info->nsec = clock->tc.nsec;
++		mdev->clock_info->cycles = clock->tc.cycle_last;
++		mdev->clock_info->mask = clock->cycles.mask;
++		mdev->clock_info->mult = clock->nominal_c_mult;
++		mdev->clock_info->shift = clock->cycles.shift;
++		mdev->clock_info->frac = clock->tc.frac;
++		mdev->clock_info->overflow_period = clock->overflow_period;
+ 	}
+ 
+ 	INIT_WORK(&clock->pps_info.out_work, mlx5_pps_out);
+@@ -599,8 +592,7 @@ void mlx5_cleanup_clock(struct mlx5_core
+ 	cancel_delayed_work_sync(&clock->overflow_work);
+ 
+ 	if (mdev->clock_info) {
+-		kunmap(mdev->clock_info_page);
+-		__free_page(mdev->clock_info_page);
++		free_page((unsigned long)mdev->clock_info);
+ 		mdev->clock_info = NULL;
+ 	}
+ 
+--- a/include/linux/mlx5/driver.h
++++ b/include/linux/mlx5/driver.h
+@@ -677,7 +677,6 @@ struct mlx5_core_dev {
+ #endif
+ 	struct mlx5_clock        clock;
+ 	struct mlx5_ib_clock_info  *clock_info;
+-	struct page             *clock_info_page;
+ 	struct mlx5_fw_tracer   *tracer;
+ };
+ 
 
 
-> If you cannot take the read mmap sem (why not?), then please use my
-> version and push the update to the driver through -mm..
-
-Please see previous threads on why it was a failure.
-
-Cheers,
-Jérôme
