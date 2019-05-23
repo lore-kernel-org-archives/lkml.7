@@ -2,101 +2,87 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53CBDC04AAC
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 05:34:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 179D0C282DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 05:35:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2362A20881
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 05:34:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="Vw6rlYbl"
+	by mail.kernel.org (Postfix) with ESMTP id D507721773
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 05:35:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558589708;
+	bh=axoFYG+Ewq4P5tKjbxbISXb6YfmQNDHpVw2dJGFc954=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Z4ePDsW8k2XO5s8jwGtRQHKKcjYmy+KYMvcI8kCJgFOOHLF1iw5AUNbtiTpxTEqU3
+	 N6SL0PKwXl2jhXM8TNPaxwCDp57qG2C3lHtddvpUJCnpH/tLw+8RsUgP8Vf8airMAK
+	 yy+ZKWbkQvRI/Q9ovtW1WyXVAwtx9Fca44pAJXnw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728600AbfEWFeo (ORCPT
+        id S1729160AbfEWFfI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 01:34:44 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:38560 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725786AbfEWFeo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 01:34:44 -0400
-Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4N5UEcs030582
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 22:34:43 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=facebook;
- bh=a0uF7x09L2/WjWeppBCueqrZ16Oc1jezGkJgcOEFv98=;
- b=Vw6rlYblhLg7w2L4eqUFjvG9YJrMiFg9xSflmW2R1zbMvq75wAQeKilI5+1qaKNOqkWg
- I3kPpUshbsKzVHBBCrwhbBlzEJON7z/qYtO+IAIAnVFMcYq7iGTjZMFzapPItYaD++xB
- iAIRyw0W6AvPSwjjoiF69rjXnAfURCA+niA= 
-Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2sngqdrqtu-6
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 22:34:43 -0700
-Received: from mx-out.facebook.com (2620:10d:c081:10::13) by
- mail.thefacebook.com (2620:10d:c081:35::125) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5;
- Wed, 22 May 2019 22:34:33 -0700
-Received: by devbig006.ftw2.facebook.com (Postfix, from userid 4523)
-        id 69A9F62E2CA2; Wed, 22 May 2019 22:34:31 -0700 (PDT)
-Smtp-Origin-Hostprefix: devbig
-From:   Song Liu <songliubraving@fb.com>
-Smtp-Origin-Hostname: devbig006.ftw2.facebook.com
-To:     <linux-kernel@vger.kernel.org>, <bpf@vger.kernel.org>
-CC:     <kernel-team@fb.com>, Song Liu <songliubraving@fb.com>,
-        Kairui Song <kasong@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Smtp-Origin-Cluster: ftw2c04
-Subject: [PATCH v2] perf/x86: always include regs->ip in callchain
-Date:   Wed, 22 May 2019 22:34:29 -0700
-Message-ID: <20190523053429.3567376-1-songliubraving@fb.com>
-X-Mailer: git-send-email 2.17.1
-X-FB-Internal: Safe
+        Thu, 23 May 2019 01:35:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40194 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725786AbfEWFfH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 01:35:07 -0400
+Received: from localhost (unknown [122.167.116.27])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA71820881;
+        Thu, 23 May 2019 05:34:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558589706;
+        bh=axoFYG+Ewq4P5tKjbxbISXb6YfmQNDHpVw2dJGFc954=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bOWOSmD2i59EAn8qv2c2koqfOlVadTTmuQ4MnCpL4LVwqUJNOReOP/tQ7pGRtxI7F
+         IOeCTIR+iMN671PifxwpfqUjP1b0Y2hCPJ3pomtULk+wIg5iVrg0aZQp14P3S5rtkI
+         c6QbUl8TLEViprRBJ4rQR9wFq2uG6gATwE95NuJg=
+Date:   Thu, 23 May 2019 11:04:33 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Robin Gong <yibin.gong@nxp.com>
+Cc:     "robh@kernel.org" <robh@kernel.org>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        "plyatov@gmail.com" <plyatov@gmail.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>
+Subject: Re: [PATCH v4 11/14] dmaengine: imx-sdma: fix ecspi1 rx dma not work
+ on i.mx8mm
+Message-ID: <20190523053433.GU15118@vkoul-mobl>
+References: <1558548188-1155-1-git-send-email-yibin.gong@nxp.com>
+ <1558548188-1155-12-git-send-email-yibin.gong@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-23_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=761 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905230039
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1558548188-1155-12-git-send-email-yibin.gong@nxp.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit d15d356887e7 removes regs->ip for !perf_hw_regs(regs) case. This
-patch adds regs->ip back.
+On 22-05-19, 10:00, Robin Gong wrote:
+> Because the number of ecspi1 rx event on i.mx8mm is 0, the condition
+> check ignore such special case without dma channel enabled, which caused
+> ecspi1 rx works failed. Actually, no need to check event_id0/event_id1
+> and replace checking 'event_id1' with 'DMA_DEV_TO_DEV', so that configure
+> event_id1 only in case DEV_TO_DEV.
 
-Fixes: d15d356887e7 ("perf/x86: Make perf callchains work without CONFIG_FRAME_POINTER")
-Cc: Kairui Song <kasong@redhat.com>
-Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Song Liu <songliubraving@fb.com>
----
- arch/x86/events/core.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Acked-by: Vinod Koul <vkoul@kernel.org>
 
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index f315425d8468..7b8a9eb4d5fd 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -2402,9 +2402,9 @@ perf_callchain_kernel(struct perf_callchain_entry_ctx *entry, struct pt_regs *re
- 		return;
- 	}
- 
-+	if (perf_callchain_store(entry, regs->ip))
-+		return;
- 	if (perf_hw_regs(regs)) {
--		if (perf_callchain_store(entry, regs->ip))
--			return;
- 		unwind_start(&state, current, regs, NULL);
- 	} else {
- 		unwind_start(&state, current, NULL, (void *)regs->sp);
 -- 
-2.17.1
-
+~Vinod
