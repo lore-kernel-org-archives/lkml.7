@@ -2,93 +2,108 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C4C9C46460
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 20:10:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39136C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 20:11:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B4F0217D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 20:10:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558642224;
-	bh=3yF8w2VV4QBGzb5d6BH5b3ScZobgQIIiUX1uFAiyMjA=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=neKA99jvCFkrTZkOUOIpjSWRsPrsrts34pboyUHoKCitT2i/3sRZ10dVPbzICikkL
-	 6ujfuBMuNUwr2u83UAjKgm0tOLgp+bbsutvsNqk+JMeZLyuQbH1SRy4Nv2atPFyGF0
-	 blLVIRpoLf1i85JMfvAL7MQ1+pmLZCy7ReuSl/Lo=
+	by mail.kernel.org (Postfix) with ESMTP id 1526A2175B
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 20:11:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387608AbfEWUKX (ORCPT
+        id S2387820AbfEWULU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 16:10:23 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:34695 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726451AbfEWUKX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 16:10:23 -0400
-Received: by mail-qt1-f194.google.com with SMTP id h1so8335321qtp.1;
-        Thu, 23 May 2019 13:10:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=585EA/9QdrC8ttaOegqbqCYCmJj3t9y5kPeRgmFvmQU=;
-        b=BjDQx/aqRTL8cmzbKP9ozYJ06Rudmjm02bUEfaWfs3xbg8AEuFu4zJWCqJzllfcUdi
-         jes759ywoNSZMRnn9E988WjqqHdMYsRUR3q8nnZSeLba27gShwrpvHVCgcwfs60QGTrl
-         agdV2eCr5U2bDc+5C3VS9lXtvMc7ZkgvSgXnvMAY6hp4+VmyOCqjjjHSKk4dl3DrfCiP
-         CUeUV7xV9B9E3CE0KEht2oI7/9aacBfFhrkS+NhetypXHkB8D9tgiAwW4rXso9W0GLnF
-         TkL/17DY5VdsNbXfYlbWEXinJCJ26yB9K1hIbX7PyPfqVtirnekr++H2FToXKa8T9L9c
-         MqSQ==
-X-Gm-Message-State: APjAAAX3BbY/9QcT6VnH2Ac6wWyJvr+Wfjo5EDoPzXSyK/dd/2MzXHLk
-        yCiD9xV4IKrRjnkI9TO9iQA=
-X-Google-Smtp-Source: APXvYqwXxUwgW3G6qNOTwdf3P1C0u9M0H/XrqaywYGlY0Hb4zIk0gySRyF/2GR7F7YsZcRvg59GGVw==
-X-Received: by 2002:ac8:3708:: with SMTP id o8mr82304369qtb.237.1558642221889;
-        Thu, 23 May 2019 13:10:21 -0700 (PDT)
-Received: from dennisz-mbp.thefacebook.com ([163.114.130.128])
-        by smtp.gmail.com with ESMTPSA id d17sm166171qkb.91.2019.05.23.13.10.20
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 23 May 2019 13:10:20 -0700 (PDT)
-From:   Dennis Zhou <dennis@kernel.org>
-To:     Jens Axboe <axboe@kernel.dk>, Josef Bacik <josef@toxicpanda.com>
-Cc:     kernel-team@fb.com, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Dennis Zhou <dennis@kernel.org>
-Subject: [PATCH] blk-iolatency: only account submitted bios
-Date:   Thu, 23 May 2019 16:10:18 -0400
-Message-Id: <20190523201018.49615-1-dennis@kernel.org>
-X-Mailer: git-send-email 2.13.5
+        Thu, 23 May 2019 16:11:20 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:55844 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726451AbfEWULT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 16:11:19 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1A48EA78;
+        Thu, 23 May 2019 13:11:19 -0700 (PDT)
+Received: from mbp (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BBB143F690;
+        Thu, 23 May 2019 13:11:12 -0700 (PDT)
+Date:   Thu, 23 May 2019 21:11:05 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Khalid Aziz <khalid.aziz@oracle.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Evgenii Stepanov <eugenis@google.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
+        kvm@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alexander Deucher <Alexander.Deucher@amd.com>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
+        Elliott Hughes <enh@google.com>
+Subject: Re: [PATCH v15 00/17] arm64: untag user pointers passed to the kernel
+Message-ID: <20190523201105.oifkksus4rzcwqt4@mbp>
+References: <cover.1557160186.git.andreyknvl@google.com>
+ <20190517144931.GA56186@arrakis.emea.arm.com>
+ <CAFKCwrj6JEtp4BzhqO178LFJepmepoMx=G+YdC8sqZ3bcBp3EQ@mail.gmail.com>
+ <20190521182932.sm4vxweuwo5ermyd@mbp>
+ <201905211633.6C0BF0C2@keescook>
+ <6049844a-65f5-f513-5b58-7141588fef2b@oracle.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6049844a-65f5-f513-5b58-7141588fef2b@oracle.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As is, iolatency recognizes done_bio and cleanup as ending paths. If a
-request is marked REQ_NOWAIT and fails to get a request, the bio is
-cleaned up via rq_qos_cleanup() and ended in bio_wouldblock_error().
-This results in underflowing the inflight counter. Fix this by only
-accounting bios that were actually submitted.
+Hi Khalid,
 
-Signed-off-by: Dennis Zhou <dennis@kernel.org>
-Cc: Josef Bacik <josef@toxicpanda.com>
----
- block/blk-iolatency.c | 4 ++++
- 1 file changed, 4 insertions(+)
+On Thu, May 23, 2019 at 11:51:40AM -0600, Khalid Aziz wrote:
+> On 5/21/19 6:04 PM, Kees Cook wrote:
+> > As an aside: I think Sparc ADI support in Linux actually side-stepped
+> > this[1] (i.e. chose "solution 1"): "All addresses passed to kernel must
+> > be non-ADI tagged addresses." (And sadly, "Kernel does not enable ADI
+> > for kernel code.") I think this was a mistake we should not repeat for
+> > arm64 (we do seem to be at least in agreement about this, I think).
+> > 
+> > [1] https://lore.kernel.org/patchwork/patch/654481/
+> 
+> That is a very early version of the sparc ADI patch. Support for tagged
+> addresses in syscalls was added in later versions and is in the patch
+> that is in the kernel.
 
-diff --git a/block/blk-iolatency.c b/block/blk-iolatency.c
-index 507212d75ee2..58bac44ba78a 100644
---- a/block/blk-iolatency.c
-+++ b/block/blk-iolatency.c
-@@ -599,6 +599,10 @@ static void blkcg_iolatency_done_bio(struct rq_qos *rqos, struct bio *bio)
- 	if (!blkg || !bio_flagged(bio, BIO_TRACKED))
- 		return;
- 
-+	/* We didn't actually submit this bio, don't account it. */
-+	if (bio->bi_status == BLK_STS_AGAIN)
-+		return;
-+
- 	iolat = blkg_to_lat(bio->bi_blkg);
- 	if (!iolat)
- 		return;
+I tried to figure out but I'm not familiar with the sparc port. How did
+you solve the tagged address going into various syscall implementations
+in the kernel (e.g. sys_write)? Is the tag removed on kernel entry or it
+ends up deeper in the core code?
+
+Thanks.
+
 -- 
-2.17.1
-
+Catalin
