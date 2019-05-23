@@ -2,104 +2,85 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72B7EC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:40:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8E1FC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:40:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 430DB2075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:40:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558640402;
-	bh=HiFtAIKrl+Yj/b7btEiQx9X+/cf8POcNBsL9C668gKc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sHbOMqlS2GgMIIHabrhMlT2MKyIH+MX5j67vMJcIxZhwbw32ibmZxbqT2g9zHGIXj
-	 eItDIzfvvFaAylrLKR9ERRCKmQ3hHMA1gbdskpCVaPz/6zw3FYBHZ9tI4Z8cO7458H
-	 SUu6ow+RK2Tibn5t04QB/1eQVRF1XXUf8U/0rNUw=
+	by mail.kernel.org (Postfix) with ESMTP id C87BF2133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:40:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390309AbfEWTVj (ORCPT
+        id S2390981AbfEWTkF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:21:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58968 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:40:05 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:53712 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390290AbfEWTVd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:21:33 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S2390281AbfEWTkD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:40:03 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ACACF20863;
-        Thu, 23 May 2019 19:21:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639293;
-        bh=HiFtAIKrl+Yj/b7btEiQx9X+/cf8POcNBsL9C668gKc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vRqZ8KPIOWKOwGzI8nAWoepsHZ+j/K4g9QIdG5Lx4wR8uQwxLxPd3Ao+J7UAsJHfg
-         keJ0xBQ5NSt0lEfm23EyYfR1qWOfXDsTd/xns9stDwawjNAJEe/suZmQk3NYjbmtiB
-         F7uzGUTx7Vcrhju0E4DI/KwR7BvEU89K1xBt/xX8=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhong Kaihua <zhongkaihua@huawei.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Zhangfei Gao <zhangfei.gao@linaro.org>,
-        Dong Zhang <zhangdong46@hisilicon.com>,
-        Leo Yan <leo.yan@linaro.org>, Stephen Boyd <sboyd@kernel.org>
-Subject: [PATCH 5.0 051/139] clk: hi3660: Mark clk_gate_ufs_subsys as critical
-Date:   Thu, 23 May 2019 21:05:39 +0200
-Message-Id: <20190523181727.303517530@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190523181720.120897565@linuxfoundation.org>
-References: <20190523181720.120897565@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by mx1.redhat.com (Postfix) with ESMTPS id 356F988E63;
+        Thu, 23 May 2019 19:40:02 +0000 (UTC)
+Received: from redhat.com (unknown [10.20.6.178])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4820A60BF3;
+        Thu, 23 May 2019 19:40:01 +0000 (UTC)
+Date:   Thu, 23 May 2019 15:39:59 -0400
+From:   Jerome Glisse <jglisse@redhat.com>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Artemy Kovalyov <artemyko@mellanox.com>,
+        Moni Shoua <monis@mellanox.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Kaike Wan <kaike.wan@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>
+Subject: Re: [PATCH v4 0/1] Use HMM for ODP v4
+Message-ID: <20190523193959.GA5658@redhat.com>
+References: <20190522174852.GA23038@redhat.com>
+ <20190522235737.GD15389@ziepe.ca>
+ <20190523150432.GA5104@redhat.com>
+ <20190523154149.GB12159@ziepe.ca>
+ <20190523155207.GC5104@redhat.com>
+ <20190523163429.GC12159@ziepe.ca>
+ <20190523173302.GD5104@redhat.com>
+ <20190523175546.GE12159@ziepe.ca>
+ <20190523182458.GA3571@redhat.com>
+ <20190523191038.GG12159@ziepe.ca>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190523191038.GG12159@ziepe.ca>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Thu, 23 May 2019 19:40:02 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leo Yan <leo.yan@linaro.org>
+On Thu, May 23, 2019 at 04:10:38PM -0300, Jason Gunthorpe wrote:
+> 
+> On Thu, May 23, 2019 at 02:24:58PM -0400, Jerome Glisse wrote:
+> > I can not take mmap_sem in range_register, the READ_ONCE is fine and
+> > they are no race as we do take a reference on the hmm struct thus
+> 
+> Of course there are use after free races with a READ_ONCE scheme, I
+> shouldn't have to explain this.
 
-commit 9f77a60669d13ed4ddfa6cd7374c9d88da378ffa upstream.
-
-clk_gate_ufs_subsys is a system bus clock, turning off it will
-introduce lockup issue during system suspend flow.  Let's mark
-clk_gate_ufs_subsys as critical clock, thus keeps it on during
-system suspend and resume.
-
-Fixes: d374e6fd5088 ("clk: hisilicon: Add clock driver for hi3660 SoC")
-Cc: stable@vger.kernel.org
-Cc: Zhong Kaihua <zhongkaihua@huawei.com>
-Cc: John Stultz <john.stultz@linaro.org>
-Cc: Zhangfei Gao <zhangfei.gao@linaro.org>
-Suggested-by: Dong Zhang <zhangdong46@hisilicon.com>
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/clk/hisilicon/clk-hi3660.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
-
---- a/drivers/clk/hisilicon/clk-hi3660.c
-+++ b/drivers/clk/hisilicon/clk-hi3660.c
-@@ -163,8 +163,12 @@ static const struct hisi_gate_clock hi36
- 	  "clk_isp_snclk_mux", CLK_SET_RATE_PARENT, 0x50, 17, 0, },
- 	{ HI3660_CLK_GATE_ISP_SNCLK2, "clk_gate_isp_snclk2",
- 	  "clk_isp_snclk_mux", CLK_SET_RATE_PARENT, 0x50, 18, 0, },
-+	/*
-+	 * clk_gate_ufs_subsys is a system bus clock, mark it as critical
-+	 * clock and keep it on for system suspend and resume.
-+	 */
- 	{ HI3660_CLK_GATE_UFS_SUBSYS, "clk_gate_ufs_subsys", "clk_div_sysbus",
--	  CLK_SET_RATE_PARENT, 0x50, 21, 0, },
-+	  CLK_SET_RATE_PARENT | CLK_IS_CRITICAL, 0x50, 21, 0, },
- 	{ HI3660_PCLK_GATE_DSI0, "pclk_gate_dsi0", "clk_div_cfgbus",
- 	  CLK_SET_RATE_PARENT, 0x50, 28, 0, },
- 	{ HI3660_PCLK_GATE_DSI1, "pclk_gate_dsi1", "clk_div_cfgbus",
+Well i can not think of anything again here the mm->hmm can not
+change while driver is calling hmm_range_register() so if you
+want i can remove the READ_ONCE() this does not change anything.
 
 
+> If you cannot take the read mmap sem (why not?), then please use my
+> version and push the update to the driver through -mm..
+
+Please see previous threads on why it was a failure.
+
+Cheers,
+Jérôme
