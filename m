@@ -2,180 +2,147 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10ACBC04AAC
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:25:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9792FC04AAC
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:27:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC94A20862
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:25:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5222520862
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:27:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=azazel.net header.i=@azazel.net header.b="fajj1X75"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728863AbfEWIZb (ORCPT
+        id S1729652AbfEWI1P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 04:25:31 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:41980 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725814AbfEWIZb (ORCPT
+        Thu, 23 May 2019 04:27:15 -0400
+Received: from kadath.azazel.net ([81.187.231.250]:60530 "EHLO
+        kadath.azazel.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726237AbfEWI1P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 04:25:31 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4N8NfPN013210
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 04:25:30 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2snqnn910j-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 04:25:30 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <tmricht@linux.ibm.com>;
-        Thu, 23 May 2019 09:25:27 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 23 May 2019 09:25:25 +0100
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4N8POVn27721754
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 23 May 2019 08:25:24 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 00B39A4062;
-        Thu, 23 May 2019 08:25:24 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AD729A405C;
-        Thu, 23 May 2019 08:25:23 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 23 May 2019 08:25:23 +0000 (GMT)
-From:   Thomas Richter <tmricht@linux.ibm.com>
-To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org
-Cc:     brueckner@linux.vnet.ibm.com, heiko.carstens@de.ibm.com,
-        Thomas Richter <tmricht@linux.ibm.com>
-Subject: [PATCHv2] perf report: Fix OOM error in TUI mode on s390
-Date:   Thu, 23 May 2019 10:25:21 +0200
-X-Mailer: git-send-email 2.17.1
-X-TM-AS-GCONF: 00
-x-cbid: 19052308-0028-0000-0000-000003709C83
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19052308-0029-0000-0000-000024304D91
-Message-Id: <20190523082521.78080-1-tmricht@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-23_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905230060
+        Thu, 23 May 2019 04:27:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=azazel.net;
+         s=20190108; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=laWNxyj4QxC3MlDfbc/zEczN2hqihpcdSWmuVHZuqco=; b=fajj1X75+kvgbtjDHr6oPFkEj/
+        MiNNaCTInJAOAbPSBJFJazJf3UWePctpC9O2VYE56tXqexuY7RNMBHpu1g3iQhE8+ruQpfM5mm/st
+        4PMs3lJ1OpLrijksb19mSp5eE0BZAK7B70NEUnZxRoP7hNXlKt6VcVfeXrwph+qCoXaBtR5+++8o5
+        o8c6aLJvwIy4XWpelzJbECR4b2wTZEpdAa2UieNKV/tQqqJGCXeXfvrI9G0sIIBJSHPXpvjuJKME9
+        s1wqTgPr0NiYYNxxPxwNhuL7zMEfnilScXqoedZRph5mPROiMfaagi1JR5JFNFiIMi21bqn3h6s+7
+        kYC/3/Wg==;
+Received: from celephais.dreamlands ([192.168.96.3] helo=azazel.net)
+        by kadath.azazel.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <jeremy@azazel.net>)
+        id 1hTj44-0000Ui-9t; Thu, 23 May 2019 09:27:04 +0100
+Date:   Thu, 23 May 2019 09:27:02 +0100
+From:   Jeremy Sowden <jeremy@azazel.net>
+To:     Nishka Dasgupta <nishka.dasgupta@yahoo.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: fieldbus: anybuss: Remove unnecessary variables
+Message-ID: <20190523082702.GB28231@azazel.net>
+References: <20190523063504.10530-1-nishka.dasgupta@yahoo.com>
+ <20190523072220.GC24998@kroah.com>
+ <b8cc12d9-2fe3-754b-be08-f23055a31ffe@yahoo.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="kORqDWCi7qDJ0mEj"
+Content-Disposition: inline
+In-Reply-To: <b8cc12d9-2fe3-754b-be08-f23055a31ffe@yahoo.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: 192.168.96.3
+X-SA-Exim-Mail-From: jeremy@azazel.net
+X-SA-Exim-Scanned: No (on kadath.azazel.net); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Debugging a OOM error using the TUI interface revealed this issue
-on s390:
 
-[tmricht@m83lp54 perf]$ cat /proc/kallsyms |sort
-....
-00000001119b7158 B radix_tree_node_cachep
-00000001119b8000 B __bss_stop
-00000001119b8000 B _end
-000003ff80002850 t autofs_mount	[autofs4]
-000003ff80002868 t autofs_show_options	[autofs4]
-000003ff80002a98 t autofs_evict_inode	[autofs4]
-....
+--kORqDWCi7qDJ0mEj
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-There is a huge gap between the last kernel symbol
-__bss_stop/_end and the first kernel module symbol
-autofs_mount (from autofs4 module).
+On 2019-05-23, at 13:51:18 +0530, Nishka Dasgupta wrote:
+> On 23/05/19 12:52 PM, Greg KH wrote:
+> > On Thu, May 23, 2019 at 12:05:01PM +0530, Nishka Dasgupta wrote:
+> > > In the functions export_reset_0 and export_reset_1 in
+> > > arcx-anybus.c, the only operation performed before return is
+> > > passing the variable cd (which takes the value of a function call
+> > > on one of the parameters) as argument to another function. Hence
+> > > the variable cd can be removed.  Issue found using Coccinelle.
+> > >
+> > > Signed-off-by: Nishka Dasgupta <nishka.dasgupta@yahoo.com>
+> > > ---
+> > >   drivers/staging/fieldbus/anybuss/arcx-anybus.c | 8 ++------
+> > >   1 file changed, 2 insertions(+), 6 deletions(-)
+> > >
+> > > diff --git a/drivers/staging/fieldbus/anybuss/arcx-anybus.c b/drivers/staging/fieldbus/anybuss/arcx-anybus.c
+> > > index 2ecffa42e561..e245f940a5c4 100644
+> > > --- a/drivers/staging/fieldbus/anybuss/arcx-anybus.c
+> > > +++ b/drivers/staging/fieldbus/anybuss/arcx-anybus.c
+> > > @@ -87,16 +87,12 @@ static int anybuss_reset(struct controller_priv *cd,
+> > >   static void export_reset_0(struct device *dev, bool assert)
+> > >   {
+> > > -	struct controller_priv *cd = dev_get_drvdata(dev);
+> > > -
+> > > -	anybuss_reset(cd, 0, assert);
+> > > +	anybuss_reset(dev_get_drvdata(dev), 0, assert);
+> > >   }
+> >
+> > While your patch is "correct", it's not the nicest thing.  The way the
+> > code looks today is to make it obvious we are passing a pointer to a
+> > struct controller_priv() into anybuss_reset().  But with your change, it
+> > looks like we are passing any random void pointer to it.
+> >
+> > So I'd prefer the original code please.
+>
+> Thank you, I'll drop this patch then.
+>
+> > Also, you forgot to cc: Sven on this patch, please always use the output
+> > of scripts/get_maintainer.pl.
+>
+> Which arguments should I use? If I use --nokeywords, --nogit,
+> --nogit-fallback and --norolestats then only your name and the two
+> mailing lists show up.  (Also, regarding the mailing lists: every mail
+> sent to linux-kernel@vger.kernel.org is bouncing; should I not send to
+> that list anymore?)
 
-After reading the kernel symbol table via functions:
+He is listed in the TODO:
 
- dso__load()
- +--> dso__load_kernel_sym()
-      +--> dso__load_kallsyms()
-	   +--> __dso_load_kallsyms()
-	        +--> symbols__fixup_end()
+  $ cat drivers/staging/fieldbus/TODO
+  TODO:
+  -Get more people/drivers to use the Fieldbus userspace ABI. It requires
+   verification/sign-off by multiple users.
 
-the symbol __bss_stop has a start address of 1119b8000 and
-an end address of 3ff80002850, as can be seen by this debug statement:
+  Contact: Sven Van Asbroeck <TheSven73@gmail.com>
 
-  symbols__fixup_end __bss_stop start:0x1119b8000 end:0x3ff80002850
+J.
 
-The size of symbol __bss_stop is 0x3fe6e64a850 bytes!
-It is the last kernel symbol and fills up the space until
-the first kernel module symbol.
+--kORqDWCi7qDJ0mEj
+Content-Type: application/pgp-signature; name="signature.asc"
 
-This size kills the TUI interface when executing the following
-code:
+-----BEGIN PGP SIGNATURE-----
 
-  process_sample_event()
-    hist_entry_iter__add()
-      hist_iter__report_callback()
-        hist_entry__inc_addr_samples()
-          symbol__inc_addr_samples(symbol = __bss_stop)
-            symbol__cycles_hist()
-               annotated_source__alloc_histograms(...,
-				                symbol__size(sym),
-		                                ...)
+iQIzBAABCgAdFiEEZ8d+2N/NBLDbUxIF0Z7UzfnX9sMFAlzmWU4ACgkQ0Z7UzfnX
+9sPxGxAAiDRI2wAkIGuK975XrPrMZwvvlMOXh5wuhf8FoE9y5nOnUchJ+ly61zS/
+21kZkjqEj8xySaijYwVSLVVfbB0rbM05b6dhHrscJ4GejDYeHSHvCNDY4j4uJqRW
+SpuC5rRq7L4Z7v7AoJMgL8K3WXYdqEcydU3+kx6JodMc6aJfWWzjfLaKF2oQWITH
+TsLk9MECPe143qLZe4Y/isjcvd5ixipcCy1wNv7VyXHf6ANWVf5R9LfOCgooe4uG
+A4Gu8g9BguUQHJyQR4J3oZjTxUzf/jyrISHBMGSm60miDC0PLUyejHOmV5E+BZ/U
+rVU9pZsEux/wfZR4AZkJ5TMF7Yn2bEKEJ4zhXoOHxZPYJi5guxwOe8exy4aBL+o+
+OoaU8w2u5GUKkZXk1UT+DtKCuJfk3CKvKNbvrYzbq6jHJTV0y8MZwomGPvPV0PG7
+ANBv2PXA0JuazFNzXcmgrBx42+3uaUlqtQrI6rsN1HDVuH8bo2Sbe/L3+eitqTvh
+O8hFrQZRpouX9aux0KtMvfvWg+Qg9OXnRBVT15KxCfUvCvG4XWYjfvIjVdWdc392
+X2To23kn1GqQ+R4FdVM1PTRQDpNTU0wH3q2WHjN9WWrcbZFFh8Tj2NeQmkAxVIod
+wj+2bYR6LLl3/l02zjGAnvYM+g4a3u0iXiokdZxmFpPx772iimE=
+=a6AF
+-----END PGP SIGNATURE-----
 
-This function allocates memory to save sample histograms.
-The symbol_size() marco is defined as sym->end - sym->start, which
-results in above value of 0x3fe6e64a850 bytes and
-the call to calloc() in annotated_source__alloc_histograms() fails.
-
-The histgram memory allocation might fail, make this failure
-no-fatal and continue processing.
-
-Output before:
-[tmricht@m83lp54 perf]$ ./perf --debug stderr=1 report -vvvvv \
-					      -i ~/slow.data 2>/tmp/2
-[tmricht@m83lp54 perf]$ tail -5 /tmp/2
-  __symbol__inc_addr_samples(875): ENOMEM! sym->name=__bss_stop,
-		start=0x1119b8000, addr=0x2aa0005eb08, end=0x3ff80002850,
-		func: 0
-problem adding hist entry, skipping event
-0x938b8 [0x8]: failed to process type: 68 [Cannot allocate memory]
-[tmricht@m83lp54 perf]$
-
-Output after:
-[tmricht@m83lp54 perf]$ ./perf --debug stderr=1 report -vvvvv \
-					      -i ~/slow.data 2>/tmp/2
-[tmricht@m83lp54 perf]$ tail -5 /tmp/2
-   symbol__inc_addr_samples map:0x1597830 start:0x110730000 end:0x3ff80002850
-   symbol__hists notes->src:0x2aa2a70 nr_hists:1
-   symbol__inc_addr_samples sym:unlink_anon_vmas src:0x2aa2a70
-   __symbol__inc_addr_samples: addr=0x11094c69e
-   0x11094c670 unlink_anon_vmas: period++ [addr: 0x11094c69e, 0x2e, evidx=0]
-   	=> nr_samples: 1, period: 526008
-[tmricht@m83lp54 perf]$
-
-There is no error about failed memory allocation and the TUI interface
-shows all entries.
-
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Reviewed-by: Hendrik Brueckner <brueckner@linux.ibm.com>
----
- tools/perf/util/annotate.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
-
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index 0b8573fd9b05..15be9d271f55 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -932,9 +932,8 @@ static int symbol__inc_addr_samples(struct symbol *sym, struct map *map,
- 	if (sym == NULL)
- 		return 0;
- 	src = symbol__hists(sym, evsel->evlist->nr_entries);
--	if (src == NULL)
--		return -ENOMEM;
--	return __symbol__inc_addr_samples(sym, map, src, evsel->idx, addr, sample);
-+	return (src) ?  __symbol__inc_addr_samples(sym, map, src, evsel->idx,
-+						   addr, sample) : 0;
- }
- 
- static int symbol__account_cycles(u64 addr, u64 start,
--- 
-2.19.1
-
+--kORqDWCi7qDJ0mEj--
