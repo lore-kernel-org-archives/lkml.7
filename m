@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3157AC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 09:06:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9345C282DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 09:06:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB3E22175B
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 09:06:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D86A2175B
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 09:06:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730245AbfEWJGi (ORCPT
+        id S1730276AbfEWJGl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 05:06:38 -0400
-Received: from foss.arm.com ([217.140.101.70]:40756 "EHLO foss.arm.com"
+        Thu, 23 May 2019 05:06:41 -0400
+Received: from foss.arm.com ([217.140.101.70]:40776 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729898AbfEWJGh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 05:06:37 -0400
+        id S1729898AbfEWJGj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 05:06:39 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 66D1515AB;
-        Thu, 23 May 2019 02:06:37 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C296015BF;
+        Thu, 23 May 2019 02:06:39 -0700 (PDT)
 Received: from usa.arm.com (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id B9A643F575;
-        Thu, 23 May 2019 02:06:34 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id A698E3F575;
+        Thu, 23 May 2019 02:06:37 -0700 (PDT)
 From:   Sudeep Holla <sudeep.holla@arm.com>
 To:     x86@kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
@@ -34,13 +34,10 @@ Cc:     Sudeep Holla <sudeep.holla@arm.com>,
         Oleg Nesterov <oleg@redhat.com>,
         Richard Weinberger <richard@nod.at>, jdike@addtoit.com,
         Steve Capper <Steve.Capper@arm.com>,
-        Haibo Xu <haibo.xu@arm.com>, Bin Lu <bin.lu@arm.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>
-Subject: [PATCH v4 2/4] x86: simplify _TIF_SYSCALL_EMU handling
-Date:   Thu, 23 May 2019 10:06:16 +0100
-Message-Id: <20190523090618.13410-3-sudeep.holla@arm.com>
+        Haibo Xu <haibo.xu@arm.com>, Bin Lu <bin.lu@arm.com>
+Subject: [PATCH v4 3/4] arm64: add PTRACE_SYSEMU{,SINGLESTEP} definations to uapi headers
+Date:   Thu, 23 May 2019 10:06:17 +0100
+Message-Id: <20190523090618.13410-4-sudeep.holla@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190523090618.13410-1-sudeep.holla@arm.com>
 References: <20190523090618.13410-1-sudeep.holla@arm.com>
@@ -49,53 +46,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The usage of emulated/_TIF_SYSCALL_EMU flags in syscall_trace_enter
-seems to be bit overcomplicated than required. Let's simplify it.
+x86 and um use 31 and 32 for PTRACE_SYSEMU and PTRACE_SYSEMU_SINGLESTEP
+while powerpc uses different value maybe for legacy reasons.
 
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Acked-by: Oleg Nesterov <oleg@redhat.com>
+Though handling of PTRACE_SYSEMU can be made architecture independent,
+it's hard to make these definations generic. To add to this existing
+mess few architectures like arm, c6x and sh use 31 for PTRACE_GETFDPIC
+(get the ELF fdpic loadmap address). It's not possible to move the
+definations to generic headers.
+
+So we unfortunately have to duplicate the same defination to ARM64 if
+we need to support PTRACE_SYSEMU and PTRACE_SYSEMU_SINGLESTEP.
+
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 ---
- arch/x86/entry/common.c | 17 ++++++-----------
- 1 file changed, 6 insertions(+), 11 deletions(-)
+ arch/arm64/include/uapi/asm/ptrace.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/x86/entry/common.c b/arch/x86/entry/common.c
-index a986b3c8294c..0a61705d62ec 100644
---- a/arch/x86/entry/common.c
-+++ b/arch/x86/entry/common.c
-@@ -72,23 +72,18 @@ static long syscall_trace_enter(struct pt_regs *regs)
+diff --git a/arch/arm64/include/uapi/asm/ptrace.h b/arch/arm64/include/uapi/asm/ptrace.h
+index d78623acb649..627ac57c1581 100644
+--- a/arch/arm64/include/uapi/asm/ptrace.h
++++ b/arch/arm64/include/uapi/asm/ptrace.h
+@@ -62,6 +62,9 @@
+ #define PSR_x		0x0000ff00	/* Extension		*/
+ #define PSR_c		0x000000ff	/* Control		*/
  
- 	struct thread_info *ti = current_thread_info();
- 	unsigned long ret = 0;
--	bool emulated = false;
- 	u32 work;
++/* syscall emulation path in ptrace */
++#define PTRACE_SYSEMU		  31
++#define PTRACE_SYSEMU_SINGLESTEP  32
  
- 	if (IS_ENABLED(CONFIG_DEBUG_ENTRY))
- 		BUG_ON(regs != task_pt_regs(current));
+ #ifndef __ASSEMBLY__
  
--	work = READ_ONCE(ti->flags) & _TIF_WORK_SYSCALL_ENTRY;
-+	work = READ_ONCE(ti->flags);
- 
--	if (unlikely(work & _TIF_SYSCALL_EMU))
--		emulated = true;
--
--	if ((emulated || (work & _TIF_SYSCALL_TRACE)) &&
--	    tracehook_report_syscall_entry(regs))
--		return -1L;
--
--	if (emulated)
--		return -1L;
-+	if (work & (_TIF_SYSCALL_TRACE | _TIF_SYSCALL_EMU)) {
-+		ret = tracehook_report_syscall_entry(regs);
-+		if (ret || (work & _TIF_SYSCALL_EMU))
-+			return -1L;
-+	}
- 
- #ifdef CONFIG_SECCOMP
- 	/*
 -- 
 2.17.1
 
