@@ -3,79 +3,86 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA481C282E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 13:19:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EEC3C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 13:19:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 851782075B
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 13:19:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33C802133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 13:19:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730612AbfEWNTB (ORCPT
+        id S1730740AbfEWNTV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 09:19:01 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:36618 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726310AbfEWNTB (ORCPT
+        Thu, 23 May 2019 09:19:21 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:39754 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726310AbfEWNTV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 09:19:01 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 358BF263ABB
-Subject: Re: mainline/master boot bisection: v5.2-rc1-165-g54dee406374c on
- rk3288-veyron-jaq
-To:     Mark Brown <broonie@kernel.org>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Elaine Zhang <zhangqing@rock-chips.com>
-Cc:     tomeu.vizoso@collabora.com, guillaume.tucker@collabora.com,
-        mgalka@collabora.com, matthew.hart@linaro.org,
-        khilman@baylibre.com, Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Heiko Stuebner <heiko@sntech.de>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        Zhang Rui <rui.zhang@intel.com>,
-        linux-arm-kernel@lists.infradead.org
-References: <5ce6040d.1c69fb81.60b3b.29fb@mx.google.com>
- <20190523131207.GC17245@sirena.org.uk>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <ac2f06ac-2bf5-7af6-06c3-37b865c43738@collabora.com>
-Date:   Thu, 23 May 2019 15:18:56 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 23 May 2019 09:19:21 -0400
+Received: from [5.158.153.53] (helo=nanos.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hTnco-00045s-PI; Thu, 23 May 2019 15:19:14 +0200
+Date:   Thu, 23 May 2019 15:19:14 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     TonyWWang-oc <TonyWWang-oc@zhaoxin.com>
+cc:     "mingo@redhat.com" <mingo@redhat.com>,
+        "hpa@zytor.com" <hpa@zytor.com>, "x86@kernel.org" <x86@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "lenb@kernel.org" <lenb@kernel.org>,
+        David Wang <DavidWang@zhaoxin.com>,
+        "Cooper Yan(BJ-RD)" <CooperYan@zhaoxin.com>,
+        "Qiyuan Wang(BJ-RD)" <QiyuanWang@zhaoxin.com>,
+        "Herry Yang(BJ-RD)" <HerryYang@zhaoxin.com>
+Subject: Re: [PATCH v1 1/3] x86/cpu: Create Zhaoxin processors architecture
+ support file
+In-Reply-To: <b3b31fab04814140b1feb13887c4aa2a@zhaoxin.com>
+Message-ID: <alpine.DEB.2.21.1905231516350.2291@nanos.tec.linutronix.de>
+References: <b3b31fab04814140b1feb13887c4aa2a@zhaoxin.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <20190523131207.GC17245@sirena.org.uk>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mark,
+On Thu, 23 May 2019, TonyWWang-oc wrote:
+> --- /dev/null
+> +++ b/arch/x86/kernel/cpu/zhaoxin.c
+> @@ -0,0 +1,178 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Zhaoxin Processor Support for Linux
+> + *
+> + * Copyright (c) 2019 Shanghai Zhaoxin Semiconductor Co., Ltd.
+> + *
+> + * Author: David Wang <davidwang@zhaoxin.com>
+> + *
+> + * This file is licensed under the terms of the GNU General
+> + * License v2.0 or later. See file COPYING for details.
 
-On 23/5/19 15:12, Mark Brown wrote:
-> On Wed, May 22, 2019 at 07:23:09PM -0700, kernelci.org bot wrote:
-> 
->>   Details:    https://kernelci.org/boot/id/5ce5984c59b514e6a47a364c
->>   Plain log:  https://storage.kernelci.org//mainline/master/v5.2-rc1-165-g54dee406374c/arm/multi_v7_defconfig+CONFIG_EFI=y+CONFIG_ARM_LPAE=y/gcc-8/lab-collabora/boot-rk3288-veyron-jaq.txt
->>   HTML log:   https://storage.kernelci.org//mainline/master/v5.2-rc1-165-g54dee406374c/arm/multi_v7_defconfig+CONFIG_EFI=y+CONFIG_ARM_LPAE=y/gcc-8/lab-collabora/boot-rk3288-veyron-jaq.html
->>   Result:     28694e009e51 thermal: rockchip: fix up the tsadc pinctrl setting error
-> 
-> It looks like this issue has persisted for a while without any kind of
-> fix happening - given that the bisection has identified this commit as
-> causing the regression and confirmed that reverting it fixes shouldn't
-> we just revert?  My guess would be that there's some error with the
-> pinctrl settings in the DT for the board.
-> 
+Please remove this boilerplate text. The SPDX license identifier is
+sufficient, but looking at that:
 
-After some discussion Heiko sent a patch that reverts the offending commit one
-day ago [1] and it's waiting for maintainer to pick-up the patch.
+> +// SPDX-License-Identifier: GPL-2.0
 
-The reason why we think is best reverting that fix it is explained here [2]
+That clearly disagrees with your boilerplate text which says 'v2.0 or
+later'. Assumed that you want or later, then the SPDX id needs to say so.
 
-[1] https://lkml.org/lkml/2019/5/22/467
-[2] https://lkml.org/lkml/2019/4/30/270
+// SPDX-License-Identifier: GPL-2.0-or-later
 
 Thanks,
- Enric
+
+	tglx
+
+
+
+
