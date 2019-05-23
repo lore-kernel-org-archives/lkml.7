@@ -2,132 +2,95 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 960F6C04AAC
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 07:27:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9437AC04AAC
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 07:28:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58CD52168B
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 07:27:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="dDhplhtn"
+	by mail.kernel.org (Postfix) with ESMTP id 47502217D4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 07:28:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558596484;
+	bh=NOvXott0D9tjo6Zrqp6W2nvmyfgz4981kAidWgHl2lw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=EtTryvZ6KTaK8l9vKZ1ICQsPx5dP14KP0/UUvx43q9608dd0OOQGOhjEWDGLVzma8
+	 SHWipbKKMTcT4QQIGWrciPJyjCnSn9Uy3z7foZa3RNLZW9f5X+u/9g+M57xdQ4QwMp
+	 kSNEGH7zMT3MGjnm+BRg5EmkgrMSv4Raq6rl6vvE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729910AbfEWH07 (ORCPT
+        id S1728761AbfEWH2D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 03:26:59 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:47349 "EHLO pegase1.c-s.fr"
+        Thu, 23 May 2019 03:28:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35890 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729781AbfEWH05 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 03:26:57 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 458gzy1zmFz9v23W;
-        Thu, 23 May 2019 09:26:54 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=dDhplhtn; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id r_mYKpjo8VNy; Thu, 23 May 2019 09:26:54 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 458gzy033Rz9v23V;
-        Thu, 23 May 2019 09:26:54 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1558596414; bh=y0ndvATBuFeBuD1aCpeFBhYVI+2u7k6MGm7Va98zHq8=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=dDhplhtnXkzFY/ATEefKFa2nsAnGJkFilJI74ov27kmHlMUaYVqU2Yxn1PJggw1Vj
-         FkFqdInH5+TEbZ+tQDPPc0vCpF9mximrMFysWuEUbDnaXQ7f06B4xd7JakVWPonEGa
-         wdcYmuMjpWQyeXrTcfQbk+m6N0tQz5rFZ/nS/qV4=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 032218B77D;
-        Thu, 23 May 2019 09:26:55 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id mYH4J9Ejz9ZD; Thu, 23 May 2019 09:26:54 +0200 (CEST)
-Received: from PO15451 (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 0E6578B75A;
-        Thu, 23 May 2019 09:26:54 +0200 (CEST)
-Subject: Re: [PATCH] powerpc/powernv: fix variable "c" set but not used
-To:     Qian Cai <cai@lca.pw>, benh@kernel.crashing.org, paulus@samba.org,
-        mpe@ellerman.id.au
-Cc:     aik@ozlabs.ru, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org
-References: <20190523023141.2973-1-cai@lca.pw>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <d0512822-ca22-75ec-3dd9-1024001632f5@c-s.fr>
-Date:   Thu, 23 May 2019 09:26:53 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1726222AbfEWH2D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 03:28:03 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8FB092168B;
+        Thu, 23 May 2019 07:28:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558596482;
+        bh=NOvXott0D9tjo6Zrqp6W2nvmyfgz4981kAidWgHl2lw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qSZHl4+l6q58tS08AulWiom5YQUviMyftpy2Yx393ooSdrh9XudIVusSF07GuRhIa
+         zOOthMRZJeD1KJqWcmYxlJ19oO/4ucY9o5nhitHxEmLGmiArqgfGyv1Gt6kUQerysG
+         aenpCRBGGqB0xktIA35VRm5sPJb5OMuPcjEZO/3o=
+Date:   Thu, 23 May 2019 09:27:59 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Simon =?iso-8859-1?Q?Sandstr=F6m?= <simon@nikanor.nu>
+Cc:     jeremy@azazel.net, dan.carpenter@oracle.com,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/6] staging: kpc2000: fix indent in cell_probe.c
+Message-ID: <20190523072759.GA16656@kroah.com>
+References: <20190522205849.17444-1-simon@nikanor.nu>
+ <20190522205849.17444-2-simon@nikanor.nu>
+ <20190523072625.GA16429@kroah.com>
 MIME-Version: 1.0
-In-Reply-To: <20190523023141.2973-1-cai@lca.pw>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190523072625.GA16429@kroah.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-Le 23/05/2019 Ã  04:31, Qian Cai a Ã©critÂ :
-> The commit 58629c0dc349 ("powerpc/powernv/npu: Fault user page into the
-> hypervisor's pagetable") introduced a variable "c" to be used in
-> __get_user() and __get_user_nocheck() which need to stay as macros for
-> performance reasons, and "c" is not actually used in
-> pnv_npu2_handle_fault(),
+On Thu, May 23, 2019 at 09:26:25AM +0200, Greg KH wrote:
+> On Wed, May 22, 2019 at 10:58:44PM +0200, Simon Sandström wrote:
+> > Use tabs instead of spaces for indentation.
+> > 
+> > Signed-off-by: Simon Sandström <simon@nikanor.nu>
+> > ---
+> >  drivers/staging/kpc2000/kpc2000/cell_probe.c | 574 +++++++++----------
+> >  1 file changed, 287 insertions(+), 287 deletions(-)
+> > 
+> > diff --git a/drivers/staging/kpc2000/kpc2000/cell_probe.c b/drivers/staging/kpc2000/kpc2000/cell_probe.c
+> > index 0181b0a8ff82..6e034d115b47 100644
+> > --- a/drivers/staging/kpc2000/kpc2000/cell_probe.c
+> > +++ b/drivers/staging/kpc2000/kpc2000/cell_probe.c
+> > @@ -25,7 +25,7 @@
+> >   *                                                              D                   C2S DMA Present
+> >   *                                                               DDD                C2S DMA Channel Number    [up to 8 channels]
+> >   *                                                                  II              IRQ Count [0 to 3 IRQs per core]
+> > -                                                                      1111111000
+> > + *                                                                    1111111000
+> >   *                                                                    IIIIIII       IRQ Base Number [up to 128 IRQs per card]
+> >   *                                                                           ___    Spare
+> >   *
 > 
-> arch/powerpc/platforms/powernv/npu-dma.c: In function 'pnv_npu2_handle_fault':
-> arch/powerpc/platforms/powernv/npu-dma.c:1122:7: warning: variable 'c'
-> set but not used [-Wunused-but-set-variable]
+> This chunk does not match what you said this commit did :(
 > 
-> Fixed it by appending the __maybe_unused attribute, so compilers would
-> ignore it.
+> Please fix up and resend.
 
-You are not fixing the problem, you are just hiding it.
+Actually, wait, rebase and resend after I apply your other patches.
+I'll hand-edit this patch to remove this chunk as your other fixes are
+good...
 
-If the result of __get_user() is unneeded, it means __get_user() is not 
-the good function to use.
+thanks,
 
-Should use fault_in_pages_readable() instead.
-
-A similar warning was fixed in commit 9f9eae5ce717 ("powerpc/kvm: Prefer 
-fault_in_pages_readable function")
-
-See 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/arch/powerpc?id=9f9eae5ce
-
-> 
-> Signed-off-by: Qian Cai <cai@lca.pw>
-
-You should add a Fixes: tag
-
-58629c0dc349 ("powerpc/powernv/npu: Fault user page into the 
-hypervisor's pagetable")
-
-Christophe
-
-> ---
->   arch/powerpc/platforms/powernv/npu-dma.c | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/powerpc/platforms/powernv/npu-dma.c b/arch/powerpc/platforms/powernv/npu-dma.c
-> index 495550432f3d..5bbe59573ee6 100644
-> --- a/arch/powerpc/platforms/powernv/npu-dma.c
-> +++ b/arch/powerpc/platforms/powernv/npu-dma.c
-> @@ -1119,7 +1119,8 @@ int pnv_npu2_handle_fault(struct npu_context *context, uintptr_t *ea,
->   	int i, is_write;
->   	struct page *page[1];
->   	const char __user *u;
-> -	char c;
-> +	/* To silence a -Wunused-but-set-variable warning. */
-> +	char c __maybe_unused;
->   
->   	/* mmap_sem should be held so the struct_mm must be present */
->   	struct mm_struct *mm = context->mm;
-> 
+greg k-h
