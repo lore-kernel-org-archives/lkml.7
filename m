@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 692BEC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:32:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C50FC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:32:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FB40206BA
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:32:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24BC420673
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:32:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639936;
-	bh=2ptE7vIvQyhsyXR24RemViMRC03B+p8ztYdpEcbI6Q8=;
+	s=default; t=1558639945;
+	bh=UzqSZtW2KajiKLccwmz24NY1Imd9fAY7yZ/3SJfDf2M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DemPtr8Rnu4YYCp7g3pmKcFP6F6cc8MqfQEatHkeQVRfKvJM7usOhiQ0DD5JPYFbd
-	 0gMVEhTt+QXamHmMN+jZXl9knNeFHyYu9UbUD6jrQpTOojjxy8c1IAzQy66LjH67PF
-	 mWr11uNGWeDPsIB3ukFX5Ft+Zb927JzRuQ1X2Hc8=
+	b=ySeviGMEgy6M5OJGtliUGZr27k6CkeE6h5bD0XUFDafpRvshCmIolV0ZLynIV7EX6
+	 wkWkoMiE5VT/l6qkCFL/3Jwj/ma1dJRN1fybMj5uenRAoUmf4YN56LynTnCAai++Z0
+	 wBY01RR+JDcjKtPzMayH45IGqBZgp9VUGgtEFDJA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392088AbfEWTcP (ORCPT
+        id S2392183AbfEWTcY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:32:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44720 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:32:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44530 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391932AbfEWTbB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:31:01 -0400
+        id S2391703AbfEWTax (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:30:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA8F821841;
-        Thu, 23 May 2019 19:31:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A0D932133D;
+        Thu, 23 May 2019 19:30:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639861;
-        bh=2ptE7vIvQyhsyXR24RemViMRC03B+p8ztYdpEcbI6Q8=;
+        s=default; t=1558639853;
+        bh=UzqSZtW2KajiKLccwmz24NY1Imd9fAY7yZ/3SJfDf2M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jfhq9qEyYpbIAUD/nAcpOMlwxpepODppugky/DGMX9kQXkZnX/XWhRF3seh2qGJR3
-         ChmJmb6YtonnCdBajUFCIpua+3KcQETCr83iFORa1VmlPMOayl7piAaR+E62TsZcNd
-         drk2/rJtyVnOKimfAZ+7e/azqYpibVoVZV+1YExA=
+        b=rNevLWMLQgoyC6ZM27gIj+ct6+rsCw801cdCbzIAYDoX8T4QetbAOhYHmevAYQH8V
+         FlL0Ame6E/9lPzOf+yisFnjsGp8uUc8dpQiSP48ySdi8QKt+yYNrvIzKI/Oxx/Bkx6
+         36fSyT+HpZm5bzZq9VVXD7kx1JFSoFkGbz8hJYMA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Damien Le Moal <damien.lemoal@wdc.com>,
-        Shaun Tancheff <shaun@tancheff.com>,
-        Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 5.1 103/122] dm zoned: Fix zone report handling
-Date:   Thu, 23 May 2019 21:07:05 +0200
-Message-Id: <20190523181718.941014095@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Stefan=20M=C3=A4tje?= <stefan.maetje@esd.eu>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH 5.1 100/122] PCI: Factor out pcie_retrain_link() function
+Date:   Thu, 23 May 2019 21:07:02 +0200
+Message-Id: <20190523181718.501169582@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181705.091418060@linuxfoundation.org>
 References: <20190523181705.091418060@linuxfoundation.org>
@@ -60,57 +61,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Damien Le Moal <damien.lemoal@wdc.com>
+From: Stefan Mätje <stefan.maetje@esd.eu>
 
-commit 7aedf75ff740a98f3683439449cd91c8662d03b2 upstream.
+commit 86fa6a344209d9414ea962b1f1ac6ade9dd7563a upstream.
 
-The function blkdev_report_zones() returns success even if no zone
-information is reported (empty report). Empty zone reports can only
-happen if the report start sector passed exceeds the device capacity.
-The conditions for this to happen are either a bug in the caller code,
-or, a change in the device that forced the low level driver to change
-the device capacity to a value that is lower than the report start
-sector. This situation includes a failed disk revalidation resulting in
-the disk capacity being changed to 0.
+Factor out pcie_retrain_link() to use for Pericom Retrain Link quirk.  No
+functional change intended.
 
-If this change happens while dm-zoned is in its initialization phase
-executing dmz_init_zones(), this function may enter an infinite loop
-and hang the system. To avoid this, add a check to disallow empty zone
-reports and bail out early. Also fix the function dmz_update_zone() to
-make sure that the report for the requested zone was correctly obtained.
-
-Fixes: 3b1a94c88b79 ("dm zoned: drive-managed zoned block device target")
-Cc: stable@vger.kernel.org
-Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
-Reviewed-by: Shaun Tancheff <shaun@tancheff.com>
-Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Signed-off-by: Stefan Mätje <stefan.maetje@esd.eu>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+CC: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/dm-zoned-metadata.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/pci/pcie/aspm.c |   40 ++++++++++++++++++++++++----------------
+ 1 file changed, 24 insertions(+), 16 deletions(-)
 
---- a/drivers/md/dm-zoned-metadata.c
-+++ b/drivers/md/dm-zoned-metadata.c
-@@ -1169,6 +1169,9 @@ static int dmz_init_zones(struct dmz_met
- 			goto out;
- 		}
+--- a/drivers/pci/pcie/aspm.c
++++ b/drivers/pci/pcie/aspm.c
+@@ -196,6 +196,29 @@ static void pcie_clkpm_cap_init(struct p
+ 	link->clkpm_capable = (blacklist) ? 0 : capable;
+ }
  
-+		if (!nr_blkz)
-+			break;
++static bool pcie_retrain_link(struct pcie_link_state *link)
++{
++	struct pci_dev *parent = link->pdev;
++	unsigned long start_jiffies;
++	u16 reg16;
 +
- 		/* Process report */
- 		for (i = 0; i < nr_blkz; i++) {
- 			ret = dmz_init_zone(zmd, zone, &blkz[i]);
-@@ -1204,6 +1207,8 @@ static int dmz_update_zone(struct dmz_me
- 	/* Get zone information from disk */
- 	ret = blkdev_report_zones(zmd->dev->bdev, dmz_start_sect(zmd, zone),
- 				  &blkz, &nr_blkz, GFP_NOIO);
-+	if (!nr_blkz)
-+		ret = -EIO;
- 	if (ret) {
- 		dmz_dev_err(zmd->dev, "Get zone %u report failed",
- 			    dmz_id(zmd, zone));
++	pcie_capability_read_word(parent, PCI_EXP_LNKCTL, &reg16);
++	reg16 |= PCI_EXP_LNKCTL_RL;
++	pcie_capability_write_word(parent, PCI_EXP_LNKCTL, reg16);
++
++	/* Wait for link training end. Break out after waiting for timeout */
++	start_jiffies = jiffies;
++	for (;;) {
++		pcie_capability_read_word(parent, PCI_EXP_LNKSTA, &reg16);
++		if (!(reg16 & PCI_EXP_LNKSTA_LT))
++			break;
++		if (time_after(jiffies, start_jiffies + LINK_RETRAIN_TIMEOUT))
++			break;
++		msleep(1);
++	}
++	return !(reg16 & PCI_EXP_LNKSTA_LT);
++}
++
+ /*
+  * pcie_aspm_configure_common_clock: check if the 2 ends of a link
+  *   could use common clock. If they are, configure them to use the
+@@ -205,7 +228,6 @@ static void pcie_aspm_configure_common_c
+ {
+ 	int same_clock = 1;
+ 	u16 reg16, parent_reg, child_reg[8];
+-	unsigned long start_jiffies;
+ 	struct pci_dev *child, *parent = link->pdev;
+ 	struct pci_bus *linkbus = parent->subordinate;
+ 	/*
+@@ -263,21 +285,7 @@ static void pcie_aspm_configure_common_c
+ 		reg16 &= ~PCI_EXP_LNKCTL_CCC;
+ 	pcie_capability_write_word(parent, PCI_EXP_LNKCTL, reg16);
+ 
+-	/* Retrain link */
+-	reg16 |= PCI_EXP_LNKCTL_RL;
+-	pcie_capability_write_word(parent, PCI_EXP_LNKCTL, reg16);
+-
+-	/* Wait for link training end. Break out after waiting for timeout */
+-	start_jiffies = jiffies;
+-	for (;;) {
+-		pcie_capability_read_word(parent, PCI_EXP_LNKSTA, &reg16);
+-		if (!(reg16 & PCI_EXP_LNKSTA_LT))
+-			break;
+-		if (time_after(jiffies, start_jiffies + LINK_RETRAIN_TIMEOUT))
+-			break;
+-		msleep(1);
+-	}
+-	if (!(reg16 & PCI_EXP_LNKSTA_LT))
++	if (pcie_retrain_link(link))
+ 		return;
+ 
+ 	/* Training failed. Restore common clock configurations */
 
 
