@@ -2,105 +2,167 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD803C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:21:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ED5DC282E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:23:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC88F20665
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:21:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71A61206BA
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:23:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731054AbfEWPVe (ORCPT
+        id S1730950AbfEWPXw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 11:21:34 -0400
-Received: from foss.arm.com ([217.140.101.70]:48894 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730947AbfEWPVc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 11:21:32 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5555380D;
-        Thu, 23 May 2019 08:21:32 -0700 (PDT)
-Received: from mbp (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3D6CE3F690;
-        Thu, 23 May 2019 08:21:26 -0700 (PDT)
-Date:   Thu, 23 May 2019 16:21:19 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     enh <enh@google.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Evgenii Stepanov <eugenis@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Khalid Aziz <khalid.aziz@oracle.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
-        kvm@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
-Subject: Re: [PATCH v15 00/17] arm64: untag user pointers passed to the kernel
-Message-ID: <20190523152118.t22z37mpqfwjjtkw@mbp>
-References: <cover.1557160186.git.andreyknvl@google.com>
- <20190517144931.GA56186@arrakis.emea.arm.com>
- <CAFKCwrj6JEtp4BzhqO178LFJepmepoMx=G+YdC8sqZ3bcBp3EQ@mail.gmail.com>
- <20190521182932.sm4vxweuwo5ermyd@mbp>
- <201905211633.6C0BF0C2@keescook>
- <20190522101110.m2stmpaj7seezveq@mbp>
- <CAJgzZoosKBwqXRyA6fb8QQSZXFqfHqe9qO9je5TogHhzuoGXJQ@mail.gmail.com>
- <20190522163527.rnnc6t4tll7tk5zw@mbp>
- <CAJgzZooc+wXBBXenm62n2zR8TVrv-y1pXMmHSdxeaNYhFLSzBA@mail.gmail.com>
+        Thu, 23 May 2019 11:23:52 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:40024 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730789AbfEWPXw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 11:23:52 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4NFHpt4034892;
+        Thu, 23 May 2019 11:23:15 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2snvuv4d1u-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 23 May 2019 11:23:15 -0400
+Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x4NFIK3u036897;
+        Thu, 23 May 2019 11:23:15 -0400
+Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2snvuv4d1b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 23 May 2019 11:23:15 -0400
+Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
+        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x4N9NSvQ003997;
+        Thu, 23 May 2019 09:27:54 GMT
+Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
+        by ppma01dal.us.ibm.com with ESMTP id 2sn84n1r0f-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 23 May 2019 09:27:54 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4NFND2v33096048
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 23 May 2019 15:23:13 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3A14CB2065;
+        Thu, 23 May 2019 15:23:13 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0C5AFB2068;
+        Thu, 23 May 2019 15:23:13 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.216])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu, 23 May 2019 15:23:12 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 533AB16C2987; Thu, 23 May 2019 08:23:14 -0700 (PDT)
+Date:   Thu, 23 May 2019 08:23:14 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     Andrea Parri <andrea.parri@amarulasolutions.com>,
+        linux-kernel@vger.kernel.org,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>, rcu@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will.deacon@arm.com>
+Subject: Re: [RFC PATCH] rcu: Make 'rcu_assign_pointer(p, v)' of type
+ 'typeof(p)'
+Message-ID: <20190523152314.GP28207@linux.ibm.com>
+Reply-To: paulmck@linux.ibm.com
+References: <1558618340-17254-1-git-send-email-andrea.parri@amarulasolutions.com>
+ <20190523135013.GL28207@linux.ibm.com>
+ <20190523141851.GA7523@lakrids.cambridge.arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAJgzZooc+wXBBXenm62n2zR8TVrv-y1pXMmHSdxeaNYhFLSzBA@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190523141851.GA7523@lakrids.cambridge.arm.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-23_12:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905230104
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 22, 2019 at 09:58:22AM -0700, enh wrote:
-> i was questioning the argument about the ioctl issues, and saying that
-> from my perspective, untagging bugs are not really any different than
-> any other kind of kernel bug.
+On Thu, May 23, 2019 at 03:19:19PM +0100, Mark Rutland wrote:
+> On Thu, May 23, 2019 at 06:50:13AM -0700, Paul E. McKenney wrote:
+> > On Thu, May 23, 2019 at 03:32:20PM +0200, Andrea Parri wrote:
+> > > The expression
+> > > 
+> > >   rcu_assign_pointer(p, typeof(p) v)
+> > > 
+> > > is reported to be of type 'typeof(p)' in the documentation (c.f., e.g.,
+> > > Documentation/RCU/whatisRCU.txt) but this is not the case: for example,
+> > > the following snippet
+> > > 
+> > >   int **y;
+> > >   int *x;
+> > >   int *r0;
+> > > 
+> > >   ...
+> > > 
+> > >   r0 = rcu_assign_pointer(*y, x);
+> > > 
+> > > can currently result in the compiler warning
+> > > 
+> > >   warning: assignment to ‘int *’ from ‘uintptr_t’ {aka ‘long unsigned int’} makes pointer from integer without a cast [-Wint-conversion]
+> > > 
+> > > Cast the uintptr_t value to a typeof(p) value.
+> > > 
+> > > Signed-off-by: Andrea Parri <andrea.parri@amarulasolutions.com>
+> > > Cc: "Paul E. McKenney" <paulmck@linux.ibm.com>
+> > > Cc: Josh Triplett <josh@joshtriplett.org>
+> > > Cc: Steven Rostedt <rostedt@goodmis.org>
+> > > Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+> > > Cc: Lai Jiangshan <jiangshanlai@gmail.com>
+> > > Cc: Joel Fernandes <joel@joelfernandes.org>
+> > > Cc: rcu@vger.kernel.org
+> > > Cc: Peter Zijlstra <peterz@infradead.org>
+> > > Cc: Will Deacon <will.deacon@arm.com>
+> > > Cc: Mark Rutland <mark.rutland@arm.com>
+> > > ---
+> > > NOTE:
+> > > 
+> > > TBH, I'm not sure this is 'the right patch' (hence the RFC...): in
+> > > fact, I'm currently missing the motivations for allowing assignments
+> > > such as the "r0 = ..." assignment above in generic code.  (BTW, it's
+> > > not currently possible to use such assignments in litmus tests...)
+> > 
+> > Given that a quick (and perhaps error-prone) search of the uses of
+> > rcu_assign_pointer() in v5.1 didn't find a single use of the return
+> > value, let's please instead change the documentation and implementation
+> > to eliminate the return value.
+> 
+> FWIW, I completely agree, and for similar reasons I'd say we should do
+> the same to WRITE_ONCE(), where this 'cool feature' has been inherited
+> from.
+> 
+> For WRITE_ONCE() there's at least one user that needs to be cleaned up
+> first (relying on non-portable implementation detaisl of atomic*_set()),
+> but I suspect rcu_assign_pointer() isn't used as much as a building
+> block for low-level macros.
 
-Once this series gets in, they are indeed just kernel bugs. What I want
-is an easier way to identify them, ideally before they trigger in the
-field.
+Agreed, for rcu_assign_pointer(), there were only a couple, and I checked
+them as well.  Doesn't mean I didn't miss something, of course!
 
-> i still don't see how this isn't just a regular testing/CI issue, the
-> same as any other kind of kernel bug. it's already the case that i can
-> get a bad kernel...
+I also got an offlist report of rcu_assign_pointer() not working for
+pointers to incomplete structures.  Which can be fixed by removing
+the RCU_INITIALIZER() from the second argument of the smp_store_release().
+Which destroys sparse's ability to check for __rcu.
 
-The testing would have a smaller code coverage in terms of drivers,
-filesystems than something like a static checker (though one does not
-exclude the other).
+One approach would be to have a separate rcu_assign_pointer_opaque()
+for opaque pointers, and people would just ignore the sparse warnings.
 
--- 
-Catalin
+Other suggestions?
+
+							Thanx, Paul
