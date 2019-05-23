@@ -2,187 +2,83 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31E5EC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:31:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AFFEC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:31:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02F37206BA
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:31:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OEstBFl6"
+	by mail.kernel.org (Postfix) with ESMTP id 1C4922175B
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:31:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731049AbfEWPba (ORCPT
+        id S1731074AbfEWPb5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 11:31:30 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:36756 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730760AbfEWPb3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 11:31:29 -0400
-Received: by mail-ed1-f66.google.com with SMTP id a8so9831471edx.3;
-        Thu, 23 May 2019 08:31:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=PiGyHyQZ8LHM1OYtHic8yAJxd7r19cMB3vpmM17O/Tk=;
-        b=OEstBFl6Pv5yiCjvX2V1LFuTtKFeAPY5Fm3hPe3+FLcRM7XuCG8Rst9B6j85OMvBUy
-         /0pQxT9n5M4qEqyib/2VTTznI1oVtk5L6U0XJgZne/3lkTey62apoBzMCFB8MCA6ezJ+
-         Qy6W1JIBKMbzyMjRrDghrsGeWh1rNQ6/619CVIy21T1T7/KqUmsYi6FZbZV185/l7JFO
-         WjBwfDLYbLemYGGYODwvap1dXV0XtscTFei7zPDjNSueCQLzrdf8Y2/ZU+CmdnTdQFQH
-         1mrLMioFHh3XM9DNbX/mfpcouT6Kt30Q0Sko7jSlGRL3qR5UccTHFjO0JLi0kcOIUDR1
-         RDaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=PiGyHyQZ8LHM1OYtHic8yAJxd7r19cMB3vpmM17O/Tk=;
-        b=O9S4c7/dzmovZiKzk3P4O/zmTOIn9fw5Z1RTyhTEov/pQ+Zn7VAYA0Q3bvOTHb5urn
-         KA3/BicGjtROV8ZUirl3Lp3dmFrjjL/119paOW9EtBYHmqRyNKsNy69JJ0ylV1SdRAvp
-         jtw0U/6qzuQwXE+d1i/FcIlvoxfwL1Xvzn/CzgYFDw1RDNl8R8roVXV+PgUU0CXPT1Yw
-         F5zrB6fWeUUTV2dndMxqG4NrLAu0Jy125EoQ2j6XpH/mD/RwlOeCu+mlybajo/+nc5CY
-         VNFg+otLnDHF3uP2RFxox6YeDbpJb9tQs6WXTHnWfLhARHT2TSgQF+F7RnRwbKM4obGg
-         Pb3g==
-X-Gm-Message-State: APjAAAW/eG0cfl6eFFaUz3P5KqzeIgSD0o4fTXoNL4MemCnPaia749eh
-        GUdfI/B3vf7nRf05ySwIic0=
-X-Google-Smtp-Source: APXvYqziauBYmeiv1KJjJonuVENYXzwdeuIYXeli6zRcLXfp+aqM29rGxkCEPB7y4q2vIDY2TbsO7Q==
-X-Received: by 2002:a50:bb24:: with SMTP id y33mr97321551ede.116.1558625487453;
-        Thu, 23 May 2019 08:31:27 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:4f9:2b:2b15::2])
-        by smtp.gmail.com with ESMTPSA id c20sm4498011ejr.69.2019.05.23.08.31.26
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 23 May 2019 08:31:26 -0700 (PDT)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Amitkumar Karwar <amitkarwar@gmail.com>,
-        Siva Rebbagondla <siva8118@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH v2 5.2] rsi: Properly initialize data in rsi_sdio_ta_reset
-Date:   Thu, 23 May 2019 08:30:08 -0700
-Message-Id: <20190523153007.112231-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.22.0.rc1
-In-Reply-To: <20190502151548.11143-1-natechancellor@gmail.com>
-References: <20190502151548.11143-1-natechancellor@gmail.com>
+        Thu, 23 May 2019 11:31:57 -0400
+Received: from foss.arm.com ([217.140.101.70]:49102 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730859AbfEWPb4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 11:31:56 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8E057A78;
+        Thu, 23 May 2019 08:31:56 -0700 (PDT)
+Received: from [10.1.196.93] (en101.cambridge.arm.com [10.1.196.93])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C3B813F690;
+        Thu, 23 May 2019 08:31:55 -0700 (PDT)
+Subject: Re: [PATCH v4 00/30] coresight: Support for ACPI bindings
+To:     leo.yan@linaro.org
+Cc:     linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org,
+        linux-kernel@vger.kernel.org
+References: <1558521304-27469-1-git-send-email-suzuki.poulose@arm.com>
+ <20190523143227.GC31751@leoy-ThinkPad-X240s>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <23a50436-4bcf-3439-c189-093e1a58438d@arm.com>
+Date:   Thu, 23 May 2019 16:31:54 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190523143227.GC31751@leoy-ThinkPad-X240s>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When building with -Wuninitialized, Clang warns:
+Hi Leo,
 
-drivers/net/wireless/rsi/rsi_91x_sdio.c:940:43: warning: variable 'data'
-is uninitialized when used here [-Wuninitialized]
-        put_unaligned_le32(TA_HOLD_THREAD_VALUE, data);
-                                                 ^~~~
-drivers/net/wireless/rsi/rsi_91x_sdio.c:930:10: note: initialize the
-variable 'data' to silence this warning
-        u8 *data;
-                ^
-                 = NULL
-1 warning generated.
+On 23/05/2019 15:32, Leo Yan wrote:
+> Hi Suzuki,
+> 
+> On Wed, May 22, 2019 at 11:34:33AM +0100, Suzuki K Poulose wrote:
+> 
+> [...]
+> 
+>> Changes since v2:
+>>   - Drop the patches exposing device links via sysfs, to be posted as separate
+>>     series.
+> 
+> Thanks for sharing the git tree linkage in another email.  Just want
+> to confirm, since patch set v3 you have dropped the patch "coresight:
+> Expose device connections via sysfs" [1], will you send out this patch
+> after ACPI binding support patches has been merged?
 
-Using Clang's suggestion of initializing data to NULL wouldn't work out
-because data will be dereferenced by put_unaligned_le32. Use kzalloc to
-properly initialize data, which matches a couple of other places in this
-driver.
+We are awaiting Mike's comment on the approach, as his CTI support also
+needs something similar.
 
-Fixes: e5a1ecc97e5f ("rsi: add firmware loading for 9116 device")
-Link: https://github.com/ClangBuiltLinux/linux/issues/464
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
----
+> 
+> When you send out the new patch for exposing device connection, please
+> loop me so that I can base on it for perf testing related works.
 
-v1 -> v2:
+Sure, will do. As such, the perf testing should not be affected by that
+series. It is just a helper to demonstrate the connections. But yes, it
+will definitely help you to choose an ETF for a cluster, if you had multiple
+ETFs on the system. Otherwise, you should be OK.
 
-* Use RSI_9116_REG_SIZE instead of sizeof(u32) for kzalloc thanks to
-  review from Arnd.
+Please be aware that the power management support is missing on ACPI platform.
+So you must make sure, by other means, that the debug domain is powered up.
 
- drivers/net/wireless/rsi/rsi_91x_sdio.c | 21 ++++++++++++++-------
- 1 file changed, 14 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/net/wireless/rsi/rsi_91x_sdio.c b/drivers/net/wireless/rsi/rsi_91x_sdio.c
-index f9c67ed473d1..b42cd50b837e 100644
---- a/drivers/net/wireless/rsi/rsi_91x_sdio.c
-+++ b/drivers/net/wireless/rsi/rsi_91x_sdio.c
-@@ -929,11 +929,15 @@ static int rsi_sdio_ta_reset(struct rsi_hw *adapter)
- 	u32 addr;
- 	u8 *data;
- 
-+	data = kzalloc(RSI_9116_REG_SIZE, GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
- 	status = rsi_sdio_master_access_msword(adapter, TA_BASE_ADDR);
- 	if (status < 0) {
- 		rsi_dbg(ERR_ZONE,
- 			"Unable to set ms word to common reg\n");
--		return status;
-+		goto err;
- 	}
- 
- 	rsi_dbg(INIT_ZONE, "%s: Bring TA out of reset\n", __func__);
-@@ -944,7 +948,7 @@ static int rsi_sdio_ta_reset(struct rsi_hw *adapter)
- 						  RSI_9116_REG_SIZE);
- 	if (status < 0) {
- 		rsi_dbg(ERR_ZONE, "Unable to hold TA threads\n");
--		return status;
-+		goto err;
- 	}
- 
- 	put_unaligned_le32(TA_SOFT_RST_CLR, data);
-@@ -954,7 +958,7 @@ static int rsi_sdio_ta_reset(struct rsi_hw *adapter)
- 						  RSI_9116_REG_SIZE);
- 	if (status < 0) {
- 		rsi_dbg(ERR_ZONE, "Unable to get TA out of reset\n");
--		return status;
-+		goto err;
- 	}
- 
- 	put_unaligned_le32(TA_PC_ZERO, data);
-@@ -964,7 +968,8 @@ static int rsi_sdio_ta_reset(struct rsi_hw *adapter)
- 						  RSI_9116_REG_SIZE);
- 	if (status < 0) {
- 		rsi_dbg(ERR_ZONE, "Unable to Reset TA PC value\n");
--		return -EINVAL;
-+		status = -EINVAL;
-+		goto err;
- 	}
- 
- 	put_unaligned_le32(TA_RELEASE_THREAD_VALUE, data);
-@@ -974,17 +979,19 @@ static int rsi_sdio_ta_reset(struct rsi_hw *adapter)
- 						  RSI_9116_REG_SIZE);
- 	if (status < 0) {
- 		rsi_dbg(ERR_ZONE, "Unable to release TA threads\n");
--		return status;
-+		goto err;
- 	}
- 
- 	status = rsi_sdio_master_access_msword(adapter, MISC_CFG_BASE_ADDR);
- 	if (status < 0) {
- 		rsi_dbg(ERR_ZONE, "Unable to set ms word to common reg\n");
--		return status;
-+		goto err;
- 	}
- 	rsi_dbg(INIT_ZONE, "***** TA Reset done *****\n");
- 
--	return 0;
-+err:
-+	kfree(data);
-+	return status;
- }
- 
- static struct rsi_host_intf_ops sdio_host_intf_ops = {
--- 
-2.22.0.rc1
-
+Cheers
+Suzuki
