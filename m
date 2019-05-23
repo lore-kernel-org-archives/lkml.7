@@ -2,137 +2,187 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3506C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:27:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31E5EC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:31:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C08C72175B
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:27:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02F37206BA
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:31:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OEstBFl6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731060AbfEWP1o (ORCPT
+        id S1731049AbfEWPba (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 11:27:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36172 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730829AbfEWP1o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 11:27:44 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 748FE206BA;
-        Thu, 23 May 2019 15:27:42 +0000 (UTC)
-Date:   Thu, 23 May 2019 11:27:40 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Leon Romanovsky <leon@kernel.org>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-xfs@vger.kernel.org,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        nouveau@lists.freedesktop.org,
-        linux-rdma <linux-rdma@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [RFC][PATCH] kernel.h: Add generic roundup_64() macro
-Message-ID: <20190523112740.7167aba4@gandalf.local.home>
-In-Reply-To: <CAHk-=wg5HqJ2Kfgpub+tCWQ2_FiFwEW9H1Rm+an-BLGaGvDDXw@mail.gmail.com>
-References: <20190523100013.52a8d2a6@gandalf.local.home>
-        <CAHk-=wg5HqJ2Kfgpub+tCWQ2_FiFwEW9H1Rm+an-BLGaGvDDXw@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 23 May 2019 11:31:30 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:36756 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730760AbfEWPb3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 11:31:29 -0400
+Received: by mail-ed1-f66.google.com with SMTP id a8so9831471edx.3;
+        Thu, 23 May 2019 08:31:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=PiGyHyQZ8LHM1OYtHic8yAJxd7r19cMB3vpmM17O/Tk=;
+        b=OEstBFl6Pv5yiCjvX2V1LFuTtKFeAPY5Fm3hPe3+FLcRM7XuCG8Rst9B6j85OMvBUy
+         /0pQxT9n5M4qEqyib/2VTTznI1oVtk5L6U0XJgZne/3lkTey62apoBzMCFB8MCA6ezJ+
+         Qy6W1JIBKMbzyMjRrDghrsGeWh1rNQ6/619CVIy21T1T7/KqUmsYi6FZbZV185/l7JFO
+         WjBwfDLYbLemYGGYODwvap1dXV0XtscTFei7zPDjNSueCQLzrdf8Y2/ZU+CmdnTdQFQH
+         1mrLMioFHh3XM9DNbX/mfpcouT6Kt30Q0Sko7jSlGRL3qR5UccTHFjO0JLi0kcOIUDR1
+         RDaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=PiGyHyQZ8LHM1OYtHic8yAJxd7r19cMB3vpmM17O/Tk=;
+        b=O9S4c7/dzmovZiKzk3P4O/zmTOIn9fw5Z1RTyhTEov/pQ+Zn7VAYA0Q3bvOTHb5urn
+         KA3/BicGjtROV8ZUirl3Lp3dmFrjjL/119paOW9EtBYHmqRyNKsNy69JJ0ylV1SdRAvp
+         jtw0U/6qzuQwXE+d1i/FcIlvoxfwL1Xvzn/CzgYFDw1RDNl8R8roVXV+PgUU0CXPT1Yw
+         F5zrB6fWeUUTV2dndMxqG4NrLAu0Jy125EoQ2j6XpH/mD/RwlOeCu+mlybajo/+nc5CY
+         VNFg+otLnDHF3uP2RFxox6YeDbpJb9tQs6WXTHnWfLhARHT2TSgQF+F7RnRwbKM4obGg
+         Pb3g==
+X-Gm-Message-State: APjAAAW/eG0cfl6eFFaUz3P5KqzeIgSD0o4fTXoNL4MemCnPaia749eh
+        GUdfI/B3vf7nRf05ySwIic0=
+X-Google-Smtp-Source: APXvYqziauBYmeiv1KJjJonuVENYXzwdeuIYXeli6zRcLXfp+aqM29rGxkCEPB7y4q2vIDY2TbsO7Q==
+X-Received: by 2002:a50:bb24:: with SMTP id y33mr97321551ede.116.1558625487453;
+        Thu, 23 May 2019 08:31:27 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:4f9:2b:2b15::2])
+        by smtp.gmail.com with ESMTPSA id c20sm4498011ejr.69.2019.05.23.08.31.26
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 23 May 2019 08:31:26 -0700 (PDT)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Amitkumar Karwar <amitkarwar@gmail.com>,
+        Siva Rebbagondla <siva8118@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH v2 5.2] rsi: Properly initialize data in rsi_sdio_ta_reset
+Date:   Thu, 23 May 2019 08:30:08 -0700
+Message-Id: <20190523153007.112231-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.22.0.rc1
+In-Reply-To: <20190502151548.11143-1-natechancellor@gmail.com>
+References: <20190502151548.11143-1-natechancellor@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 23 May 2019 08:10:44 -0700
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
+When building with -Wuninitialized, Clang warns:
 
-> On Thu, May 23, 2019 at 7:00 AM Steven Rostedt <rostedt@goodmis.org> wrote:
-> >
-> > +# define roundup_64(x, y) (                            \
-> > +{                                                      \
-> > +       typeof(y) __y = y;                              \
-> > +       typeof(x) __x = (x) + (__y - 1);                \
-> > +       do_div(__x, __y);                               \
-> > +       __x * __y;                                      \
-> > +}                                                      \
-> 
-> The thing about this is that it absolutely sucks for power-of-two arguments.
-> 
-> The regular roundup() that uses division has the compiler at least
-> optimize them to shifts - at least for constant cases. But do_div() is
-> meant for "we already know it's not a power of two", and the compiler
-> doesn't have any understanding of the internals.
-> 
-> And it looks to me like the use case you want this for is very much
-> probably a power of two. In which case division is all kinds of just
-> stupid.
-> 
-> And we already have a power-of-two round up function that works on
-> u64. It's called "round_up()".
-> 
-> I wish we had a better visual warning about the differences between
-> "round_up()" (limited to powers-of-two, but efficient, and works with
-> any size) and "roundup()" (generic, potentially horribly slow, and
-> doesn't work for 64-bit on 32-bit).
-> 
-> Side note: "round_up()" has the problem that it uses "x" twice.
-> 
-> End result: somebody should look at this, but I really don't like the
-> "force division" case that is likely horribly slow and nasty.
+drivers/net/wireless/rsi/rsi_91x_sdio.c:940:43: warning: variable 'data'
+is uninitialized when used here [-Wuninitialized]
+        put_unaligned_le32(TA_HOLD_THREAD_VALUE, data);
+                                                 ^~~~
+drivers/net/wireless/rsi/rsi_91x_sdio.c:930:10: note: initialize the
+variable 'data' to silence this warning
+        u8 *data;
+                ^
+                 = NULL
+1 warning generated.
 
-I haven't yet tested this, but what about something like the following:
+Using Clang's suggestion of initializing data to NULL wouldn't work out
+because data will be dereferenced by put_unaligned_le32. Use kzalloc to
+properly initialize data, which matches a couple of other places in this
+driver.
 
-# define roundup_64(x, y) (				\
-{							\
-	typeof(y) __y;					\
-	typeof(x) __x;					\
-							\
-	if (__builtin_constant_p(y) &&			\
-	    !(y & (y >> 1))) {				\
-		__x = round_up(x, y);			\
-	} else {					\
-		__y = y;				\
-		__x = (x) + (__y - 1);			\
-		do_div(__x, __y);			\
-		__x = __x * __y;			\
-	}						\
-	__x;						\
-}							\
-)
+Fixes: e5a1ecc97e5f ("rsi: add firmware loading for 9116 device")
+Link: https://github.com/ClangBuiltLinux/linux/issues/464
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+---
 
-If the compiler knows enough that y is a power of two, it will use the
-shift version. Otherwise, it doesn't know enough and would divide
-regardless. Or perhaps forget about the constant check, and just force
-the power of two check:
+v1 -> v2:
 
-# define roundup_64(x, y) (				\
-{							\
-	typeof(y) __y = y;				\
-	typeof(x) __x;					\
-							\
-	if (!(__y & (__y >> 1))) {			\
-		__x = round_up(x, y);			\
-	} else {					\
-		__x = (x) + (__y - 1);			\
-		do_div(__x, __y);			\
-		__x = __x * __y;			\
-	}						\
-	__x;						\
-}							\
-)
+* Use RSI_9116_REG_SIZE instead of sizeof(u32) for kzalloc thanks to
+  review from Arnd.
 
-This way even if the compiler doesn't know that this is a power of two,
-it will still do the shift if y ends up being one.
+ drivers/net/wireless/rsi/rsi_91x_sdio.c | 21 ++++++++++++++-------
+ 1 file changed, 14 insertions(+), 7 deletions(-)
 
--- Steve
+diff --git a/drivers/net/wireless/rsi/rsi_91x_sdio.c b/drivers/net/wireless/rsi/rsi_91x_sdio.c
+index f9c67ed473d1..b42cd50b837e 100644
+--- a/drivers/net/wireless/rsi/rsi_91x_sdio.c
++++ b/drivers/net/wireless/rsi/rsi_91x_sdio.c
+@@ -929,11 +929,15 @@ static int rsi_sdio_ta_reset(struct rsi_hw *adapter)
+ 	u32 addr;
+ 	u8 *data;
+ 
++	data = kzalloc(RSI_9116_REG_SIZE, GFP_KERNEL);
++	if (!data)
++		return -ENOMEM;
++
+ 	status = rsi_sdio_master_access_msword(adapter, TA_BASE_ADDR);
+ 	if (status < 0) {
+ 		rsi_dbg(ERR_ZONE,
+ 			"Unable to set ms word to common reg\n");
+-		return status;
++		goto err;
+ 	}
+ 
+ 	rsi_dbg(INIT_ZONE, "%s: Bring TA out of reset\n", __func__);
+@@ -944,7 +948,7 @@ static int rsi_sdio_ta_reset(struct rsi_hw *adapter)
+ 						  RSI_9116_REG_SIZE);
+ 	if (status < 0) {
+ 		rsi_dbg(ERR_ZONE, "Unable to hold TA threads\n");
+-		return status;
++		goto err;
+ 	}
+ 
+ 	put_unaligned_le32(TA_SOFT_RST_CLR, data);
+@@ -954,7 +958,7 @@ static int rsi_sdio_ta_reset(struct rsi_hw *adapter)
+ 						  RSI_9116_REG_SIZE);
+ 	if (status < 0) {
+ 		rsi_dbg(ERR_ZONE, "Unable to get TA out of reset\n");
+-		return status;
++		goto err;
+ 	}
+ 
+ 	put_unaligned_le32(TA_PC_ZERO, data);
+@@ -964,7 +968,8 @@ static int rsi_sdio_ta_reset(struct rsi_hw *adapter)
+ 						  RSI_9116_REG_SIZE);
+ 	if (status < 0) {
+ 		rsi_dbg(ERR_ZONE, "Unable to Reset TA PC value\n");
+-		return -EINVAL;
++		status = -EINVAL;
++		goto err;
+ 	}
+ 
+ 	put_unaligned_le32(TA_RELEASE_THREAD_VALUE, data);
+@@ -974,17 +979,19 @@ static int rsi_sdio_ta_reset(struct rsi_hw *adapter)
+ 						  RSI_9116_REG_SIZE);
+ 	if (status < 0) {
+ 		rsi_dbg(ERR_ZONE, "Unable to release TA threads\n");
+-		return status;
++		goto err;
+ 	}
+ 
+ 	status = rsi_sdio_master_access_msword(adapter, MISC_CFG_BASE_ADDR);
+ 	if (status < 0) {
+ 		rsi_dbg(ERR_ZONE, "Unable to set ms word to common reg\n");
+-		return status;
++		goto err;
+ 	}
+ 	rsi_dbg(INIT_ZONE, "***** TA Reset done *****\n");
+ 
+-	return 0;
++err:
++	kfree(data);
++	return status;
+ }
+ 
+ static struct rsi_host_intf_ops sdio_host_intf_ops = {
+-- 
+2.22.0.rc1
+
