@@ -4,28 +4,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA9A2C282CE
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 00:04:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AACD7C282CE
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 00:04:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D52721773
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 00:04:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6728A2173C
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 00:04:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730027AbfEWAE1 (ORCPT
+        id S1729923AbfEWAEU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 20:04:27 -0400
+        Wed, 22 May 2019 20:04:20 -0400
 Received: from ex13-edg-ou-001.vmware.com ([208.91.0.189]:13607 "EHLO
         EX13-EDG-OU-001.vmware.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729081AbfEWAEX (ORCPT
+        by vger.kernel.org with ESMTP id S1729685AbfEWAEC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 20:04:23 -0400
+        Wed, 22 May 2019 20:04:02 -0400
 Received: from sc9-mailhost2.vmware.com (10.113.161.72) by
  EX13-EDG-OU-001.vmware.com (10.113.208.155) with Microsoft SMTP Server id
- 15.0.1156.6; Wed, 22 May 2019 17:03:46 -0700
+ 15.0.1156.6; Wed, 22 May 2019 17:03:41 -0700
 Received: from rlwimi.localdomain (unknown [10.129.221.32])
-        by sc9-mailhost2.vmware.com (Postfix) with ESMTP id 90A8FB205A;
-        Wed, 22 May 2019 20:04:00 -0400 (EDT)
+        by sc9-mailhost2.vmware.com (Postfix) with ESMTP id 4310AB205A;
+        Wed, 22 May 2019 20:03:55 -0400 (EDT)
 From:   Matt Helsley <mhelsley@vmware.com>
 To:     LKML <linux-kernel@vger.kernel.org>
 CC:     Ingo Molnar <mingo@kernel.org>,
@@ -33,9 +33,9 @@ CC:     Ingo Molnar <mingo@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Steven Rostedt <rostedt@goodmis.org>,
         Matt Helsley <mhelsley@vmware.com>
-Subject: [RFC][PATCH 13/13] objtool: recordmcount: Convert do_func() relhdrs
-Date:   Wed, 22 May 2019 17:03:36 -0700
-Message-ID: <961c4d4d324919d1edb4d7501e2e3bc9189247de.1558569448.git.mhelsley@vmware.com>
+Subject: [RFC][PATCH 05/13] recordmcount: Kernel style function signature formatting
+Date:   Wed, 22 May 2019 17:03:28 -0700
+Message-ID: <940d4ce66df8d8943142fd178dc066699de249c0.1558569448.git.mhelsley@vmware.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <cover.1558569448.git.mhelsley@vmware.com>
 References: <cover.1558569448.git.mhelsley@vmware.com>
@@ -49,221 +49,121 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use objtool's ELF data structures to visit the relocation
-sections in the top-level ELF file walking function, do_func().
-This means we can pass pointers to the relocation header structures
-into nested functions and avoid the indexing patterns for them.
-
-These conversions don't use libelf/objtool to change the ELF
-file -- it only changes the way we walk the ELF sections and
-touch pages for memory mapping made by the old recordmcount code.
+The uwrite() and ulseek() functions are formatted inconsistently
+with the rest of the file and the kernel overall. While we're
+making other changes here let's fix this.
 
 Signed-off-by: Matt Helsley <mhelsley@vmware.com>
 ---
- tools/objtool/recordmcount.h | 70 ++++++++++++++++++------------------
- 1 file changed, 36 insertions(+), 34 deletions(-)
+ scripts/recordmcount.c | 21 +++++++--------------
+ scripts/recordmcount.h | 13 ++++++-------
+ 2 files changed, 13 insertions(+), 21 deletions(-)
 
-diff --git a/tools/objtool/recordmcount.h b/tools/objtool/recordmcount.h
-index ff14d45041f1..0db5cbabbc12 100644
---- a/tools/objtool/recordmcount.h
-+++ b/tools/objtool/recordmcount.h
-@@ -289,7 +289,7 @@ static unsigned get_mcountsym(Elf_Sym const *const sym0,
- 	return mcountsym;
+diff --git a/scripts/recordmcount.c b/scripts/recordmcount.c
+index 21dda8a19c4f..f32a81251d5d 100644
+--- a/scripts/recordmcount.c
++++ b/scripts/recordmcount.c
+@@ -52,8 +52,7 @@ static void *file_append; /* added to the end of the file */
+ static size_t file_append_size; /* how much is added to end of file */
+ 
+ /* Per-file resource cleanup when multiple files. */
+-static void
+-cleanup(void)
++static void cleanup(void)
+ {
+ 	if (!mmap_failed)
+ 		munmap(file_map, sb.st_size);
+@@ -68,8 +67,7 @@ cleanup(void)
+ 
+ /* ulseek, uwrite, ...:  Check return value for errors. */
+ 
+-static off_t
+-ulseek(off_t const offset, int const whence)
++static off_t ulseek(off_t const offset, int const whence)
+ {
+ 	switch (whence) {
+ 	case SEEK_SET:
+@@ -89,8 +87,7 @@ ulseek(off_t const offset, int const whence)
+ 	return file_ptr - file_map;
  }
  
--static void get_sym_str_and_relp(Elf_Shdr const *const relhdr,
-+static void get_sym_str_and_relp(GElf_Shdr const *const relhdr,
- 				 Elf_Ehdr const *const ehdr,
- 				 Elf_Sym const **sym0,
- 				 char const **str0,
-@@ -297,10 +297,10 @@ static void get_sym_str_and_relp(Elf_Shdr const *const relhdr,
+-static ssize_t
+-uwrite(void const *const buf, size_t const count)
++static ssize_t uwrite(void const *const buf, size_t const count)
  {
- 	Elf_Shdr *const shdr0 = (Elf_Shdr *)(_w(ehdr->e_shoff)
- 		+ (void *)ehdr);
--	unsigned const symsec_sh_link = w(relhdr->sh_link);
-+	unsigned const symsec_sh_link = relhdr->sh_link;
- 	Elf_Shdr const *const symsec = &shdr0[symsec_sh_link];
--	Elf_Shdr const *const strsec = &shdr0[w(symsec->sh_link)];
--	Elf_Rel const *const rel0 = (Elf_Rel const *)(_w(relhdr->sh_offset)
-+	Elf_Shdr const *const strsec = &shdr0[symsec->sh_link];
-+	Elf_Rel const *const rel0 = (Elf_Rel const *)(relhdr->sh_offset
- 		+ (void *)ehdr);
- 
- 	*sym0 = (Elf_Sym const *)(_w(symsec->sh_offset)
-@@ -320,9 +320,9 @@ static void get_sym_str_and_relp(Elf_Shdr const *const relhdr,
- static uint_t *sift_rel_mcount(uint_t *mlocp,
- 			       unsigned const offbase,
- 			       Elf_Rel **const mrelpp,
--			       Elf_Shdr const *const relhdr,
-+			       GElf_Shdr const *const relhdr,
- 			       Elf_Ehdr const *const ehdr,
--			       unsigned const recsym,
-+			       unsigned const recsym_index,
- 			       uint_t const recval,
- 			       unsigned const reltype)
- {
-@@ -331,8 +331,8 @@ static uint_t *sift_rel_mcount(uint_t *mlocp,
- 	Elf_Sym const *sym0;
- 	char const *str0;
- 	Elf_Rel const *relp;
--	unsigned rel_entsize = _w(relhdr->sh_entsize);
--	unsigned const nrel = _w(relhdr->sh_size) / rel_entsize;
-+	unsigned int rel_entsize = relhdr->sh_entsize;
-+	unsigned const nrel = relhdr->sh_size / rel_entsize;
- 	unsigned mcountsym = 0;
- 	unsigned t;
- 
-@@ -347,7 +347,7 @@ static uint_t *sift_rel_mcount(uint_t *mlocp,
- 				_w(_w(relp->r_offset) - recval + mcount_adjust);
- 			mrelp->r_offset = _w(offbase
- 				+ ((void *)mlocp - (void *)mloc0));
--			Elf_r_info(mrelp, recsym, reltype);
-+			Elf_r_info(mrelp, recsym_index, reltype);
- 			if (rel_entsize == sizeof(Elf_Rela)) {
- 				((Elf_Rela *)mrelp)->r_addend = addend;
- 				*mlocp++ = 0;
-@@ -367,7 +367,7 @@ static uint_t *sift_rel_mcount(uint_t *mlocp,
-  * that are not going to be traced. The mcount calls here will be converted
-  * into nops.
-  */
--static int nop_mcount(Elf_Shdr const *const relhdr,
-+static int nop_mcount(GElf_Shdr const *const relhdr,
- 		      Elf_Ehdr const *const ehdr,
- 		      const char *const txtname)
- {
-@@ -376,9 +376,9 @@ static int nop_mcount(Elf_Shdr const *const relhdr,
- 	Elf_Sym const *sym0;
- 	char const *str0;
- 	Elf_Rel const *relp;
--	Elf_Shdr const *const shdr = &shdr0[w(relhdr->sh_info)];
--	unsigned rel_entsize = _w(relhdr->sh_entsize);
--	unsigned const nrel = _w(relhdr->sh_size) / rel_entsize;
-+	Elf_Shdr const *const shdr = &shdr0[relhdr->sh_info];
-+	unsigned int rel_entsize = relhdr->sh_entsize;
-+	unsigned const nrel = relhdr->sh_size / rel_entsize;
- 	unsigned mcountsym = 0;
- 	unsigned t;
- 	int once = 0;
-@@ -470,13 +470,13 @@ static unsigned find_secsym_ndx(unsigned const txtndx,
+ 	size_t cnt = count;
+ 	off_t idx = 0;
+@@ -127,8 +124,7 @@ uwrite(void const *const buf, size_t const count)
+ 	return count;
  }
+ 
+-static void *
+-umalloc(size_t size)
++static void * umalloc(size_t size)
+ {
+ 	void *const addr = malloc(size);
+ 	if (addr == 0) {
+@@ -394,8 +390,7 @@ static uint32_t (*w)(uint32_t);
+ static uint32_t (*w2)(uint16_t);
+ 
+ /* Names of the sections that could contain calls to mcount. */
+-static int
+-is_mcounted_section_name(char const *const txtname)
++static int is_mcounted_section_name(char const *const txtname)
+ {
+ 	return strncmp(".text",          txtname, 5) == 0 ||
+ 		strcmp(".init.text",     txtname) == 0 ||
+@@ -446,8 +441,7 @@ static void MIPS64_r_info(Elf64_Rel *const rp, unsigned sym, unsigned type)
+ 	}).r_info;
+ }
+ 
+-static int
+-do_file(char const *const fname)
++static int do_file(char const *const fname)
+ {
+ 	Elf32_Ehdr *const ehdr = mmap_file(fname);
+ 	unsigned int reltype = 0;
+@@ -595,8 +589,7 @@ do_file(char const *const fname)
+ 	return rc;
+ }
+ 
+-int
+-main(int argc, char *argv[])
++int main(int argc, char *argv[])
+ {
+ 	const char ftrace[] = "/ftrace.o";
+ 	int ftrace_size = sizeof(ftrace) - 1;
+diff --git a/scripts/recordmcount.h b/scripts/recordmcount.h
+index 8423c51aa8e8..0ce8e0aaa5ec 100644
+--- a/scripts/recordmcount.h
++++ b/scripts/recordmcount.h
+@@ -476,11 +476,10 @@ static unsigned find_secsym_ndx(unsigned const txtndx,
+ char const *already_has_rel_mcount = "success"; /* our work here is done! */
  
  /* Evade ISO C restriction: no declaration after statement in has_rel_mcount. */
--static char const * __has_rel_mcount(Elf_Shdr const *const relhdr, /* reltype */
-+static char const * __has_rel_mcount(GElf_Shdr const *const relhdr, /* reltype */
- 				     Elf_Shdr const *const shdr0,
- 				     char const *const shstrtab,
- 				     char const *const fname)
+-static char const *
+-__has_rel_mcount(Elf_Shdr const *const relhdr,  /* is SHT_REL or SHT_RELA */
+-		 Elf_Shdr const *const shdr0,
+-		 char const *const shstrtab,
+-		 char const *const fname)
++static char const * __has_rel_mcount(Elf_Shdr const *const relhdr, /* reltype */
++				     Elf_Shdr const *const shdr0,
++				     char const *const shstrtab,
++				     char const *const fname)
  {
  	/* .sh_info depends on .sh_type == SHT_REL[,A] */
--	Elf_Shdr const *const txthdr = &shdr0[w(relhdr->sh_info)];
-+	Elf_Shdr const *const txthdr = &shdr0[relhdr->sh_info];
- 	char const *const txtname = &shstrtab[w(txthdr->sh_name)];
- 
- 	if (w(txthdr->sh_type) != SHT_PROGBITS ||
-@@ -485,30 +485,29 @@ static char const * __has_rel_mcount(Elf_Shdr const *const relhdr, /* reltype */
- 	return txtname;
- }
- 
--static char const *has_rel_mcount(Elf_Shdr const *const relhdr,
-+static char const *has_rel_mcount(GElf_Shdr const *const relhdr,
- 				  Elf_Shdr const *const shdr0,
- 				  char const *const shstrtab,
- 				  char const *const fname)
- {
--	if (w(relhdr->sh_type) != SHT_REL && w(relhdr->sh_type) != SHT_RELA)
-+	if (relhdr->sh_type != SHT_REL && relhdr->sh_type != SHT_RELA)
- 		return NULL;
- 	return __has_rel_mcount(relhdr, shdr0, shstrtab, fname);
- }
+ 	Elf_Shdr const *const txthdr = &shdr0[w(relhdr->sh_info)];
+@@ -532,8 +531,8 @@ static unsigned tot_relsize(Elf_Shdr const *const shdr0,
  
  
- static unsigned tot_relsize(Elf_Shdr const *const shdr0,
--			    unsigned nhdr,
- 			    const char *const shstrtab,
- 			    const char *const fname)
- {
-+	struct section *sec;
- 	unsigned totrelsz = 0;
--	Elf_Shdr const *shdrp = shdr0;
- 	char const *txtname;
- 
--	for (; nhdr; --nhdr, ++shdrp) {
--		txtname = has_rel_mcount(shdrp, shdr0, shstrtab, fname);
-+	list_for_each_entry(sec, &lf->sections, list) {
-+		txtname = has_rel_mcount(&sec->sh, shdr0, shstrtab, fname);
- 		if (txtname && is_mcounted_section_name(txtname))
--			totrelsz += _w(shdrp->sh_size);
-+			totrelsz += sec->sh.sh_size;
- 	}
- 	return totrelsz;
- }
-@@ -520,13 +519,11 @@ static int do_func(Elf_Ehdr *const ehdr, char const *const fname,
+ /* Overall supervision for Elf32 ET_REL file. */
+-static int
+-do_func(Elf_Ehdr *const ehdr, char const *const fname, unsigned const reltype)
++static int do_func(Elf_Ehdr *const ehdr, char const *const fname,
++		   unsigned const reltype)
  {
  	Elf_Shdr *const shdr0 = (Elf_Shdr *)(_w(ehdr->e_shoff)
  		+ (void *)ehdr);
--	unsigned const nhdr = w2(ehdr->e_shnum);
- 	Elf_Shdr *const shstr = &shdr0[w2(ehdr->e_shstrndx)];
- 	char const *const shstrtab = (char const *)(_w(shstr->sh_offset)
- 		+ (void *)ehdr);
- 
--	Elf_Shdr const *relhdr;
--	unsigned k;
-+	GElf_Shdr const *relhdr;
- 
- 	/* Upper bound on space: assume all relevant relocs are for mcount. */
- 	unsigned       totrelsz;
-@@ -540,12 +537,14 @@ static int do_func(Elf_Ehdr *const ehdr, char const *const fname,
- 	unsigned rel_entsize = 0;
- 	unsigned symsec_sh_link = 0;
- 
-+	struct section *sec;
-+
- 	int result = 0;
- 
- 	if (find_section_by_name(lf, "__mcount_loc") != NULL)
- 		return 0;
- 
--	totrelsz = tot_relsize(shdr0, nhdr, shstrtab, fname);
-+	totrelsz = tot_relsize(shdr0, shstrtab, fname);
- 	if (totrelsz == 0)
- 		return 0;
- 	mrel0 = umalloc(totrelsz);
-@@ -561,24 +560,27 @@ static int do_func(Elf_Ehdr *const ehdr, char const *const fname,
- 		return -1;
- 	}
- 
--	for (relhdr = shdr0, k = nhdr; k; --k, ++relhdr) {
--		char const *const txtname = has_rel_mcount(relhdr, shdr0,
-+	list_for_each_entry(sec, &lf->sections, list) {
-+		char const *txtname;
-+
-+		relhdr = &sec->sh;
-+		txtname = has_rel_mcount(relhdr, shdr0,
- 			shstrtab, fname);
- 		if (txtname && is_mcounted_section_name(txtname)) {
- 			uint_t recval = 0;
--			unsigned const int recsym = find_secsym_ndx(
--				w(relhdr->sh_info), txtname, &recval,
--				&shdr0[symsec_sh_link = w(relhdr->sh_link)],
-+			unsigned const int recsym_index = find_secsym_ndx(
-+				relhdr->sh_info, txtname, &recval,
-+				&shdr0[symsec_sh_link = relhdr->sh_link],
- 				ehdr);
--			if (recsym == missing_sym) {
-+			if (recsym_index == missing_sym) {
- 				result = -1;
- 				goto out;
- 			}
- 
--			rel_entsize = _w(relhdr->sh_entsize);
-+			rel_entsize = relhdr->sh_entsize;
- 			mlocp = sift_rel_mcount(mlocp,
- 				(void *)mlocp - (void *)mloc0, &mrelp,
--				relhdr, ehdr, recsym, recval, reltype);
-+				relhdr, ehdr, recsym_index, recval, reltype);
- 		} else if (txtname && (warn_on_notrace_sect || make_nop)) {
- 			/*
- 			 * This section is ignored by ftrace, but still
 -- 
 2.20.1
 
