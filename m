@@ -2,96 +2,75 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C040C04AAC
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 06:06:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D4AAC282DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 06:12:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0891621019
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 06:06:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A92920881
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 06:12:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727121AbfEWGG5 (ORCPT
+        id S1728620AbfEWGMG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 02:06:57 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:40662 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726237AbfEWGG4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 02:06:56 -0400
-Received: by mail-io1-f68.google.com with SMTP id s20so3895204ioj.7
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 23:06:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dNUktpedBrxulRohJ67/ZQIyhajUGPsEgfYnIkyhhQ8=;
-        b=jBIXPnNOLN6ICqPLo//7D+bnnf0d6ctnvI3cVOKSHzxyDFEmkdKfuiVkL5GcuMP136
-         svfCg3PPy2ASVMHpuHFVCPr3ScGM5t9MfA65Ey//hT3SpQ9wBY0GJ/ilMZJ8ybpS7axJ
-         X1BXaQtxp30c8XvGknkh6FePLYKhui3611+HHVJzg87O3aH2EKjU0woohGKjDCYuBI88
-         wPcKI/F5/aoRfM9JHO0Q3Mf5/9BYCfZ194z3i0WAGSlPcDWcymhndQAA7KkMCh3A06tM
-         37G8zCqlW7/Ade3UGNo1ZZ+jbkx9h1uKva7t0RHMas1mHZ1Sj4SmK0CV/SDYL7Pmv2WX
-         EYrQ==
-X-Gm-Message-State: APjAAAV29tv9c12TC38qu23nTErO+fvbg3PzoTSykT6wdQQNpsPQBoVR
-        M1xtCZpgWvc6FzhXez+5o/QYvGjKAqQf6qld4hph5L1voCrOAw==
-X-Google-Smtp-Source: APXvYqwL+rTJ8coX0NZseJHhduGDusNE2IYZsftgMszlpkAqf1otdDBkRNtA+47vpccRttGr3CjHVW1lepULvMCFt/g=
-X-Received: by 2002:a6b:7d0d:: with SMTP id c13mr10557094ioq.249.1558591616008;
- Wed, 22 May 2019 23:06:56 -0700 (PDT)
+        Thu, 23 May 2019 02:12:06 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:47428 "EHLO deadmen.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725873AbfEWGMG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 02:12:06 -0400
+Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
+        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
+        id 1hTgxQ-0001Dr-VE; Thu, 23 May 2019 14:12:05 +0800
+Received: from herbert by gondobar with local (Exim 4.89)
+        (envelope-from <herbert@gondor.apana.org.au>)
+        id 1hTgxO-0001EP-Sx; Thu, 23 May 2019 14:12:02 +0800
+Date:   Thu, 23 May 2019 14:12:02 +0800
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Iuliana Prodan <iuliana.prodan@nxp.com>
+Cc:     Horia Geanta <horia.geanta@nxp.com>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH v2 1/2] crypto: caam - fix pkcs1pad(rsa-caam, sha256)
+ failure because of invalid input
+Message-ID: <20190523061202.ic2vgimgzvvm6dzc@gondor.apana.org.au>
+References: <1557919546-360-1-git-send-email-iuliana.prodan@nxp.com>
 MIME-Version: 1.0
-References: <20190523053429.3567376-1-songliubraving@fb.com>
-In-Reply-To: <20190523053429.3567376-1-songliubraving@fb.com>
-From:   Kairui Song <kasong@redhat.com>
-Date:   Thu, 23 May 2019 14:06:44 +0800
-Message-ID: <CACPcB9cXUEhn1a14mq_axJfkR13dna4OfgDZ=YEr=LVKn8K5tg@mail.gmail.com>
-Subject: Re: [PATCH v2] perf/x86: always include regs->ip in callchain
-To:     Song Liu <songliubraving@fb.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        bpf@vger.kernel.org, Kernel Team <kernel-team@fb.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1557919546-360-1-git-send-email-iuliana.prodan@nxp.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 1:34 PM Song Liu <songliubraving@fb.com> wrote:
+On Wed, May 15, 2019 at 02:25:45PM +0300, Iuliana Prodan wrote:
 >
-> Commit d15d356887e7 removes regs->ip for !perf_hw_regs(regs) case. This
-> patch adds regs->ip back.
->
-> Fixes: d15d356887e7 ("perf/x86: Make perf callchains work without CONFIG_FRAME_POINTER")
-> Cc: Kairui Song <kasong@redhat.com>
-> Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Signed-off-by: Song Liu <songliubraving@fb.com>
-> ---
->  arch/x86/events/core.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-> index f315425d8468..7b8a9eb4d5fd 100644
-> --- a/arch/x86/events/core.c
-> +++ b/arch/x86/events/core.c
-> @@ -2402,9 +2402,9 @@ perf_callchain_kernel(struct perf_callchain_entry_ctx *entry, struct pt_regs *re
->                 return;
->         }
->
-> +       if (perf_callchain_store(entry, regs->ip))
-> +               return;
->         if (perf_hw_regs(regs)) {
-> -               if (perf_callchain_store(entry, regs->ip))
-> -                       return;
->                 unwind_start(&state, current, regs, NULL);
->         } else {
->                 unwind_start(&state, current, NULL, (void *)regs->sp);
-> --
-> 2.17.1
->
+> @@ -1058,6 +1105,14 @@ static int __init caam_pkc_init(void)
+>  		goto out_put_dev;
+>  	}
+>  
+> +	/* allocate zero buffer, used for padding input */
+> +	zero_buffer = kzalloc(CAAM_RSA_MAX_INPUT_SIZE - 1, GFP_DMA |
+> +			      GFP_KERNEL);
+> +	if (!zero_buffer) {
+> +		err = -ENOMEM;
+> +		goto out_put_dev;
+> +	}
+> +
+>  	err = crypto_register_akcipher(&caam_rsa);
+>  	if (err)
+>  		dev_warn(ctrldev, "%s alg registration failed\n",
 
-Hi, this will make !perf_hw_regs(regs) case print a double first level
-stack trace, which is wrong. And the actual problem that unwinder give
-empty calltrace in bpf is still not fixed.
+This patch does not apply on top of the caam patch-series from Horia.
+You're also going to leak zero_buffer if crypto_register_akcipher
+fails.
 
+Cheers,
 -- 
-Best Regards,
-Kairui Song
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
