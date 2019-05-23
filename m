@@ -2,168 +2,89 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CDBEC46470
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 02:26:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35C87C282CE
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 02:27:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53E3620881
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 02:26:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IBud/dDN"
+	by mail.kernel.org (Postfix) with ESMTP id DFAAF20881
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 02:27:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729656AbfEWC0X (ORCPT
+        id S1729709AbfEWC1t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 22:26:23 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:43065 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727305AbfEWC0W (ORCPT
+        Wed, 22 May 2019 22:27:49 -0400
+Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:49387 "EHLO
+        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727305AbfEWC1s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 22:26:22 -0400
-Received: by mail-pg1-f196.google.com with SMTP id f25so2261093pgv.10;
-        Wed, 22 May 2019 19:26:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=nW+e1rPCq+HaAq+HDzDlhXWHIc2ch7yv53hl57cH94s=;
-        b=IBud/dDNmkb2CKyRF+qnrkLEKivpBT51NpnCSYYi+tmggo/eEmSkaVHJQbqWL3qgTY
-         /TwLuTJHggUyYDL4hO9FZbJQN2Y+6FYwMHeW9A+XsR+xXH/idJtcDY2GI/C/lici8Ah+
-         M7AcRtqj2PxBYGT0ScNOfwLhQ2KSJwo8mYZvtwfc8t/IAoV0hLPVw7pUab0RfgqyqZkX
-         1isREY21r66/YjNMMyCM7eoMNWmL9i1B3pxQVo1e4G5vyCMndSb5GDhNYG1jzbcZ8Jq0
-         CSs8EmD0mSCP9f976tkbF2VHldZ1TXTusZdvXA9vgVTqj4sqDupVGQhYXYJIcSqEBvRe
-         56wg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=nW+e1rPCq+HaAq+HDzDlhXWHIc2ch7yv53hl57cH94s=;
-        b=ki9jL79Irjau6y8bROOjN94j9M0K4TcFkzLx95c967ACF3Qxugprz7e6Co3KHM23K4
-         jCqVkLaqTPe/yJUzWb+ItMp3lJZVeBaTG1jd2tTfk5wXv7rW7ybLNS7WmeqjzC8QIaR/
-         PaJf4tiTJ12nLMv7E2fPJc+vCD3c/oPrspz/YTZlQP70w/f2Ek4xYIIQroJciYfLd0KR
-         SUo66QNonRQbfGDi+1Auql7aBab6PlY1fTtGkbtE0rU5idYK6pMNN92MAtgIvU7WkNtX
-         K4249sPj6PkHRdT5Log03kVf8b5HOBVrlTtA/br3UA/7J0nOvs03xRWcyovDDIh+MXwj
-         7nsQ==
-X-Gm-Message-State: APjAAAV0czfOdrMgaCLs538hOCNyZa1uDnWN4iGuZJDhQ0sbquSMjZyX
-        5e5t9GwKuy4BP3F+jsDKOecPI2TdliM=
-X-Google-Smtp-Source: APXvYqylHSgH8QQKsP0a66EGksd9+DgjRpa3eK8Lc0JttTx6rug9I1jSz7asAoyO6+41AqHhjuR0Ew==
-X-Received: by 2002:a62:3085:: with SMTP id w127mr76542997pfw.170.1558578381777;
-        Wed, 22 May 2019 19:26:21 -0700 (PDT)
-Received: from localhost.localdomain ([123.139.57.214])
-        by smtp.gmail.com with ESMTPSA id s198sm35554384pfs.34.2019.05.22.19.26.19
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 22 May 2019 19:26:21 -0700 (PDT)
-From:   Gaowei Pu <pugaowei@gmail.com>
-To:     tytso@mit.edu
-Cc:     jack@suse.com, linux-ext4@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jan Kara <jack@suse.cz>
-Subject: [PATCH v2] jbd2: fix some print format mistakes
-Date:   Thu, 23 May 2019 10:26:03 +0800
-Message-Id: <20190523022603.13539-1-pugaowei@gmail.com>
-X-Mailer: git-send-email 2.21.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 22 May 2019 22:27:48 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01422;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0TSQws5W_1558578458;
+Received: from e19h19392.et15sqa.tbsite.net(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TSQws5W_1558578458)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 23 May 2019 10:27:45 +0800
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+To:     ying.huang@intel.com, hannes@cmpxchg.org, mhocko@suse.com,
+        mgorman@techsingularity.net, kirill.shutemov@linux.intel.com,
+        josef@toxicpanda.com, hughd@google.com, shakeelb@google.com,
+        akpm@linux-foundation.org
+Cc:     yang.shi@linux.alibaba.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: [v4 PATCH 1/2] mm: vmscan: remove double slab pressure by inc'ing sc->nr_scanned
+Date:   Thu, 23 May 2019 10:27:37 +0800
+Message-Id: <1558578458-83807-1-git-send-email-yang.shi@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are some print format mistakes in debug messages. Fix them.
+The commit 9092c71bb724 ("mm: use sc->priority for slab shrink targets")
+has broken up the relationship between sc->nr_scanned and slab pressure.
+The sc->nr_scanned can't double slab pressure anymore.  So, it sounds no
+sense to still keep sc->nr_scanned inc'ed.  Actually, it would prevent
+from adding pressure on slab shrink since excessive sc->nr_scanned would
+prevent from scan->priority raise.
 
-Signed-off-by: Gaowei Pu <pugaowei@gmail.com>
-Reviewed-by: Jan Kara <jack@suse.cz>
+The bonnie test doesn't show this would change the behavior of
+slab shrinkers.
 
-V2: add Reviewed-by.
+				w/		w/o
+			  /sec    %CP      /sec      %CP
+Sequential delete: 	3960.6    94.6    3997.6     96.2
+Random delete: 		2518      63.8    2561.6     64.6
+
+The slight increase of "/sec" without the patch would be caused by the
+slight increase of CPU usage.
+
+Cc: Josef Bacik <josef@toxicpanda.com>
+Cc: Michal Hocko <mhocko@kernel.org>
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
 ---
- fs/jbd2/journal.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+v4: Added Johannes's ack
 
-diff --git a/fs/jbd2/journal.c b/fs/jbd2/journal.c
-index 37e16d969925..565e99b67b30 100644
---- a/fs/jbd2/journal.c
-+++ b/fs/jbd2/journal.c
-@@ -203,7 +203,7 @@ static int kjournald2(void *arg)
- 	if (journal->j_flags & JBD2_UNMOUNT)
- 		goto end_loop;
+ mm/vmscan.c | 5 -----
+ 1 file changed, 5 deletions(-)
+
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index 7acd0af..b65bc50 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -1137,11 +1137,6 @@ static unsigned long shrink_page_list(struct list_head *page_list,
+ 		if (!sc->may_unmap && page_mapped(page))
+ 			goto keep_locked;
  
--	jbd_debug(1, "commit_sequence=%d, commit_request=%d\n",
-+	jbd_debug(1, "commit_sequence=%u, commit_request=%u\n",
- 		journal->j_commit_sequence, journal->j_commit_request);
+-		/* Double the slab pressure for mapped and swapcache pages */
+-		if ((page_mapped(page) || PageSwapCache(page)) &&
+-		    !(PageAnon(page) && !PageSwapBacked(page)))
+-			sc->nr_scanned++;
+-
+ 		may_enter_fs = (sc->gfp_mask & __GFP_FS) ||
+ 			(PageSwapCache(page) && (sc->gfp_mask & __GFP_IO));
  
- 	if (journal->j_commit_sequence != journal->j_commit_request) {
-@@ -324,7 +324,7 @@ static void journal_kill_thread(journal_t *journal)
-  * IO is in progress. do_get_write_access() handles this.
-  *
-  * The function returns a pointer to the buffer_head to be used for IO.
-- * 
-+ *
-  *
-  * Return value:
-  *  <0: Error
-@@ -500,7 +500,7 @@ int __jbd2_log_start_commit(journal_t *journal, tid_t target)
- 		 */
- 
- 		journal->j_commit_request = target;
--		jbd_debug(1, "JBD2: requesting commit %d/%d\n",
-+		jbd_debug(1, "JBD2: requesting commit %u/%u\n",
- 			  journal->j_commit_request,
- 			  journal->j_commit_sequence);
- 		journal->j_running_transaction->t_requested = jiffies;
-@@ -513,7 +513,7 @@ int __jbd2_log_start_commit(journal_t *journal, tid_t target)
- 		WARN_ONCE(1, "JBD2: bad log_start_commit: %u %u %u %u\n",
- 			  journal->j_commit_request,
- 			  journal->j_commit_sequence,
--			  target, journal->j_running_transaction ? 
-+			  target, journal->j_running_transaction ?
- 			  journal->j_running_transaction->t_tid : 0);
- 	return 0;
- }
-@@ -698,12 +698,12 @@ int jbd2_log_wait_commit(journal_t *journal, tid_t tid)
- #ifdef CONFIG_JBD2_DEBUG
- 	if (!tid_geq(journal->j_commit_request, tid)) {
- 		printk(KERN_ERR
--		       "%s: error: j_commit_request=%d, tid=%d\n",
-+		       "%s: error: j_commit_request=%u, tid=%u\n",
- 		       __func__, journal->j_commit_request, tid);
- 	}
- #endif
- 	while (tid_gt(tid, journal->j_commit_sequence)) {
--		jbd_debug(1, "JBD2: want %d, j_commit_sequence=%d\n",
-+		jbd_debug(1, "JBD2: want %u, j_commit_sequence=%u\n",
- 				  tid, journal->j_commit_sequence);
- 		read_unlock(&journal->j_state_lock);
- 		wake_up(&journal->j_wait_commit);
-@@ -944,7 +944,7 @@ int __jbd2_update_log_tail(journal_t *journal, tid_t tid, unsigned long block)
- 
- 	trace_jbd2_update_log_tail(journal, tid, block, freed);
- 	jbd_debug(1,
--		  "Cleaning journal tail from %d to %d (offset %lu), "
-+		  "Cleaning journal tail from %u to %u (offset %lu), "
- 		  "freeing %lu\n",
- 		  journal->j_tail_sequence, tid, block, freed);
- 
-@@ -1318,7 +1318,7 @@ static int journal_reset(journal_t *journal)
- 	 */
- 	if (sb->s_start == 0) {
- 		jbd_debug(1, "JBD2: Skipping superblock update on recovered sb "
--			"(start %ld, seq %d, errno %d)\n",
-+			"(start %ld, seq %u, errno %d)\n",
- 			journal->j_tail, journal->j_tail_sequence,
- 			journal->j_errno);
- 		journal->j_flags |= JBD2_FLUSHED;
-@@ -1453,7 +1453,7 @@ static void jbd2_mark_journal_empty(journal_t *journal, int write_op)
- 		return;
- 	}
- 
--	jbd_debug(1, "JBD2: Marking journal as empty (seq %d)\n",
-+	jbd_debug(1, "JBD2: Marking journal as empty (seq %u)\n",
- 		  journal->j_tail_sequence);
- 
- 	sb->s_sequence = cpu_to_be32(journal->j_tail_sequence);
 -- 
-2.21.0
+1.8.3.1
 
