@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4718BC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:11:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A35E4C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:11:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E5D72184B
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:11:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BEFD2184B
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:11:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558638697;
-	bh=WOEa1ws4HotOoIA7LVTMovEkyc6zTE+JoWJkweKPueU=;
+	s=default; t=1558638703;
+	bh=7/LfuKugaEIw8/6/NwDjKjfYoXPuvCZiob7fBgaTIWQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jm5FaZyJJH2OPO8W+KQ8MhDX6IPV7sJW3nZv33AyftRRzPjg6oNqaAngPenhBabq8
-	 8X9IYI6oAKqAEuwnMouW+DiQKxUzLBNsbypmcXbyYEwHvLkXPL6wZDoVRzpw9I0Z42
-	 ohg91o0sxX3GBXhMxOZjgZmDwcPrUSoLgOnxAe10=
+	b=ZxrIWZHdnI5fhNdCHa0I8/3N/Oyi9MeGMPAr/suxp1eYYu3VpU3B+43PkBrC8qgT1
+	 BHs7fWyGZHbYAbtHPNjLw4Tx2Y6VqYraFlBekd9O181L0RpvaB7jIn9Xsp5rNPQ7dG
+	 mp4QLTDP3tICVHCCNHlEgYcjcxayNQW8vCDTZjMo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388235AbfEWTLg (ORCPT
+        id S2388249AbfEWTLm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:11:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45010 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:11:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45036 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388217AbfEWTLe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:11:34 -0400
+        id S2387552AbfEWTLh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:11:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7151C2184B;
-        Thu, 23 May 2019 19:11:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5CEB7217F9;
+        Thu, 23 May 2019 19:11:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558638694;
-        bh=WOEa1ws4HotOoIA7LVTMovEkyc6zTE+JoWJkweKPueU=;
+        s=default; t=1558638696;
+        bh=7/LfuKugaEIw8/6/NwDjKjfYoXPuvCZiob7fBgaTIWQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=di2M9o8WkZsOJ5lautEsGesnH/VMsxKgreCaWlIH/B1IBTLhJfDku413q5P54SlIj
-         oN2E7DX6+q2z+YP9I/oQRcicKH4MoZdXD5fqX8noVT3RvpSPNZA5m5tuCrRV0TPoiv
-         uIfDBU4qsx2dUF0Pp+CQIB6bbD9RI2qdWpYDv7XA=
+        b=e/x1vDMZMosjIjcGkiR38NbAEn+xyJZyljGEdIRVaC5B8jVJma0YSioZ7HJ7iYGB6
+         U95gshgy0j5LU/da2qaalt9KmWMDkrJaee1baP5NsESqc9Df6M5UJn4y+svnRkO+9w
+         PTBBHr0tvCJStU4L8SdJfhxQCxTfwZ+yPx1hvhe0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 4.14 30/77] iommu/tegra-smmu: Fix invalid ASID bits on Tegra30/114
-Date:   Thu, 23 May 2019 21:05:48 +0200
-Message-Id: <20190523181724.380491661@linuxfoundation.org>
+        stable@vger.kernel.org, Jeff Layton <jlayton@kernel.org>,
+        "Yan, Zheng" <zyan@redhat.com>, Ilya Dryomov <idryomov@gmail.com>
+Subject: [PATCH 4.14 31/77] ceph: flush dirty inodes before proceeding with remount
+Date:   Thu, 23 May 2019 21:05:49 +0200
+Message-Id: <20190523181724.506434015@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181719.982121681@linuxfoundation.org>
 References: <20190523181719.982121681@linuxfoundation.org>
@@ -60,81 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Osipenko <digetx@gmail.com>
+From: Jeff Layton <jlayton@kernel.org>
 
-commit 43a0541e312f7136e081e6bf58f6c8a2e9672688 upstream.
+commit 00abf69dd24f4444d185982379c5cc3bb7b6d1fc upstream.
 
-Both Tegra30 and Tegra114 have 4 ASID's and the corresponding bitfield of
-the TLB_FLUSH register differs from later Tegra generations that have 128
-ASID's.
+xfstest generic/452 was triggering a "Busy inodes after umount" warning.
+ceph was allowing the mount to go read-only without first flushing out
+dirty inodes in the cache. Ensure we sync out the filesystem before
+allowing a remount to proceed.
 
-In a result the PTE's are now flushed correctly from TLB and this fixes
-problems with graphics (randomly failing tests) on Tegra30.
-
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-Acked-by: Thierry Reding <treding@nvidia.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Cc: stable@vger.kernel.org
+Link: http://tracker.ceph.com/issues/39571
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+Reviewed-by: "Yan, Zheng" <zyan@redhat.com>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iommu/tegra-smmu.c |   25 ++++++++++++++++++-------
- 1 file changed, 18 insertions(+), 7 deletions(-)
+ fs/ceph/super.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/drivers/iommu/tegra-smmu.c
-+++ b/drivers/iommu/tegra-smmu.c
-@@ -94,7 +94,6 @@ static inline u32 smmu_readl(struct tegr
- #define  SMMU_TLB_FLUSH_VA_MATCH_ALL     (0 << 0)
- #define  SMMU_TLB_FLUSH_VA_MATCH_SECTION (2 << 0)
- #define  SMMU_TLB_FLUSH_VA_MATCH_GROUP   (3 << 0)
--#define  SMMU_TLB_FLUSH_ASID(x)          (((x) & 0x7f) << 24)
- #define  SMMU_TLB_FLUSH_VA_SECTION(addr) ((((addr) & 0xffc00000) >> 12) | \
- 					  SMMU_TLB_FLUSH_VA_MATCH_SECTION)
- #define  SMMU_TLB_FLUSH_VA_GROUP(addr)   ((((addr) & 0xffffc000) >> 12) | \
-@@ -197,8 +196,12 @@ static inline void smmu_flush_tlb_asid(s
- {
- 	u32 value;
- 
--	value = SMMU_TLB_FLUSH_ASID_MATCH | SMMU_TLB_FLUSH_ASID(asid) |
--		SMMU_TLB_FLUSH_VA_MATCH_ALL;
-+	if (smmu->soc->num_asids == 4)
-+		value = (asid & 0x3) << 29;
-+	else
-+		value = (asid & 0x7f) << 24;
-+
-+	value |= SMMU_TLB_FLUSH_ASID_MATCH | SMMU_TLB_FLUSH_VA_MATCH_ALL;
- 	smmu_writel(smmu, value, SMMU_TLB_FLUSH);
+--- a/fs/ceph/super.c
++++ b/fs/ceph/super.c
+@@ -768,6 +768,12 @@ static void ceph_umount_begin(struct sup
+ 	return;
  }
  
-@@ -208,8 +211,12 @@ static inline void smmu_flush_tlb_sectio
- {
- 	u32 value;
- 
--	value = SMMU_TLB_FLUSH_ASID_MATCH | SMMU_TLB_FLUSH_ASID(asid) |
--		SMMU_TLB_FLUSH_VA_SECTION(iova);
-+	if (smmu->soc->num_asids == 4)
-+		value = (asid & 0x3) << 29;
-+	else
-+		value = (asid & 0x7f) << 24;
++static int ceph_remount(struct super_block *sb, int *flags, char *data)
++{
++	sync_filesystem(sb);
++	return 0;
++}
 +
-+	value |= SMMU_TLB_FLUSH_ASID_MATCH | SMMU_TLB_FLUSH_VA_SECTION(iova);
- 	smmu_writel(smmu, value, SMMU_TLB_FLUSH);
- }
- 
-@@ -219,8 +226,12 @@ static inline void smmu_flush_tlb_group(
- {
- 	u32 value;
- 
--	value = SMMU_TLB_FLUSH_ASID_MATCH | SMMU_TLB_FLUSH_ASID(asid) |
--		SMMU_TLB_FLUSH_VA_GROUP(iova);
-+	if (smmu->soc->num_asids == 4)
-+		value = (asid & 0x3) << 29;
-+	else
-+		value = (asid & 0x7f) << 24;
-+
-+	value |= SMMU_TLB_FLUSH_ASID_MATCH | SMMU_TLB_FLUSH_VA_GROUP(iova);
- 	smmu_writel(smmu, value, SMMU_TLB_FLUSH);
- }
- 
+ static const struct super_operations ceph_super_ops = {
+ 	.alloc_inode	= ceph_alloc_inode,
+ 	.destroy_inode	= ceph_destroy_inode,
+@@ -775,6 +781,7 @@ static const struct super_operations cep
+ 	.drop_inode	= ceph_drop_inode,
+ 	.sync_fs        = ceph_sync_fs,
+ 	.put_super	= ceph_put_super,
++	.remount_fs	= ceph_remount,
+ 	.show_options   = ceph_show_options,
+ 	.statfs		= ceph_statfs,
+ 	.umount_begin   = ceph_umount_begin,
 
 
