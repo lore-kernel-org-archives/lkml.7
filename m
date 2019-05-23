@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AC85C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:22:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F34AC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:22:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D77A620863
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:22:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14CA4206BA
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:22:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639367;
-	bh=6w0XLcK3kA/Yt7EYerfmqZO1sv5gIWUrf5GK4rnJhIk=;
+	s=default; t=1558639373;
+	bh=qpl016BkmSFCvPID8ZSSBPcjs49qlh2T94srlmxYxog=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EWBBOR8YHrAyxNFcxZnEcN8NMdZyd0k4r7D1IHpDE2QaMmPSj1Z/ZbGdcx7s0iO4F
-	 UI/bnwbAJdjle/K2RSsVk0sWhabQgakn8gfVEsUPpfibHFlOW6N/u44NB9WitMzohx
-	 WeUseymIJgXq4H5N0QnTvKBld4i0ft73SxC1daXA=
+	b=b5uJCuPx/KzBUNvq6Cv007EFMA2szKLWeLPjjgURifzRMsYnxLYm4lhCtrDJe9gJq
+	 pjCYv4DqF3TVltknKRDpC6paV8kZggEKbQW6ybs9IOrwm7iYPff9de5F8tgYATKPYZ
+	 z40CUhXAdGADOq7uQssIJfZPMZVJU51lP8pOfpWo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390551AbfEWTWr (ORCPT
+        id S2390574AbfEWTWw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:22:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60908 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:22:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60978 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389471AbfEWTWo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:22:44 -0400
+        id S2390148AbfEWTWq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:22:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A8BEA20868;
-        Thu, 23 May 2019 19:22:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 570D2206A3;
+        Thu, 23 May 2019 19:22:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639363;
-        bh=6w0XLcK3kA/Yt7EYerfmqZO1sv5gIWUrf5GK4rnJhIk=;
+        s=default; t=1558639365;
+        bh=qpl016BkmSFCvPID8ZSSBPcjs49qlh2T94srlmxYxog=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qXsZ78qZPgFF6CKvXReBFAfqk15LuG5P0Z99nMyksOeJkupVpXb7AVIEo0my9TVhA
-         GhEZezaVHP6fYguMaXmxBmbBqRsskXMY5byqT9e67uSvxBD+N7YZNIx71Ld2c7V0jl
-         jdNyQqwPL8sShZ5VaoIRvaFNI6B/IR+WKfoQLekk=
+        b=z1uh8xlTTtr0BP+GHPSw86YPEQ8mwnibVi4UbZSvhz/Su0122u2rQxYjQ13O8GfqR
+         MJOgFMron+JYfSBcJ98UZLgXXRLkorcuCMlBjBA9jzOe0cg3T7+/0zfytHYf0rT8Ci
+         pWT+cVb6yF2lnnqwGbWsBUHSOQdlJUIJ8j3xTWDY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Amir Goldstein <amir73il@gmail.com>,
-        Vivek Goyal <vgoyal@redhat.com>,
-        Miklos Szeredi <mszeredi@redhat.com>
-Subject: [PATCH 5.0 060/139] ovl: fix missing upper fs freeze protection on copy up for ioctl
-Date:   Thu, 23 May 2019 21:05:48 +0200
-Message-Id: <20190523181728.514620443@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        Douglas Anderson <dianders@chromium.org>,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH 5.0 061/139] gcc-plugins: arm_ssp_per_task_plugin: Fix for older GCC < 6
+Date:   Thu, 23 May 2019 21:05:49 +0200
+Message-Id: <20190523181728.668815727@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181720.120897565@linuxfoundation.org>
 References: <20190523181720.120897565@linuxfoundation.org>
@@ -60,89 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amir Goldstein <amir73il@gmail.com>
+From: Chris Packham <chris.packham@alliedtelesis.co.nz>
 
-commit 3428030da004a1128cbdcf93dc03e16f184d845b upstream.
+commit 259799ea5a9aa099a267f3b99e1f7078bbaf5c5e upstream.
 
-Generalize the helper ovl_open_maybe_copy_up() and use it to copy up file
-with data before FS_IOC_SETFLAGS ioctl.
+Use gen_rtx_set instead of gen_rtx_SET. The former is a wrapper macro
+that handles the difference between GCC versions implementing
+the latter.
 
-The FS_IOC_SETFLAGS ioctl is a bit of an odd ball in vfs, which probably
-caused the confusion.  File may be open O_RDONLY, but ioctl modifies the
-file.  VFS does not call mnt_want_write_file() nor lock inode mutex, but
-fs-specific code for FS_IOC_SETFLAGS does.  So ovl_ioctl() calls
-mnt_want_write_file() for the overlay file, and fs-specific code calls
-mnt_want_write_file() for upper fs file, but there was no call for
-ovl_want_write() for copy up duration which prevents overlayfs from copying
-up on a frozen upper fs.
+This fixes the following error on my system with g++ 5.4.0 as the host
+compiler
 
-Fixes: dab5ca8fd9dd ("ovl: add lsattr/chattr support")
-Cc: <stable@vger.kernel.org> # v4.19
-Signed-off-by: Amir Goldstein <amir73il@gmail.com>
-Acked-by: Vivek Goyal <vgoyal@redhat.com>
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+   HOSTCXX -fPIC scripts/gcc-plugins/arm_ssp_per_task_plugin.o
+ scripts/gcc-plugins/arm_ssp_per_task_plugin.c:42:14: error: macro "gen_rtx_SET" requires 3 arguments, but only 2 given
+          mask)),
+               ^
+ scripts/gcc-plugins/arm_ssp_per_task_plugin.c: In function ‘unsigned int arm_pertask_ssp_rtl_execute()’:
+ scripts/gcc-plugins/arm_ssp_per_task_plugin.c:39:20: error: ‘gen_rtx_SET’ was not declared in this scope
+    emit_insn_before(gen_rtx_SET
+
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Fixes: 189af4657186 ("ARM: smp: add support for per-task stack canaries")
+Cc: stable@vger.kernel.org
+Tested-by: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/overlayfs/copy_up.c   |    6 +++---
- fs/overlayfs/file.c      |    5 ++---
- fs/overlayfs/overlayfs.h |    2 +-
- 3 files changed, 6 insertions(+), 7 deletions(-)
+ scripts/gcc-plugins/arm_ssp_per_task_plugin.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/overlayfs/copy_up.c
-+++ b/fs/overlayfs/copy_up.c
-@@ -909,14 +909,14 @@ static bool ovl_open_need_copy_up(struct
- 	return true;
- }
+--- a/scripts/gcc-plugins/arm_ssp_per_task_plugin.c
++++ b/scripts/gcc-plugins/arm_ssp_per_task_plugin.c
+@@ -36,7 +36,7 @@ static unsigned int arm_pertask_ssp_rtl_
+ 		mask = GEN_INT(sext_hwi(sp_mask, GET_MODE_PRECISION(Pmode)));
+ 		masked_sp = gen_reg_rtx(Pmode);
  
--int ovl_open_maybe_copy_up(struct dentry *dentry, unsigned int file_flags)
-+int ovl_maybe_copy_up(struct dentry *dentry, int flags)
- {
- 	int err = 0;
- 
--	if (ovl_open_need_copy_up(dentry, file_flags)) {
-+	if (ovl_open_need_copy_up(dentry, flags)) {
- 		err = ovl_want_write(dentry);
- 		if (!err) {
--			err = ovl_copy_up_flags(dentry, file_flags);
-+			err = ovl_copy_up_flags(dentry, flags);
- 			ovl_drop_write(dentry);
- 		}
- 	}
---- a/fs/overlayfs/file.c
-+++ b/fs/overlayfs/file.c
-@@ -116,11 +116,10 @@ static int ovl_real_fdget(const struct f
- 
- static int ovl_open(struct inode *inode, struct file *file)
- {
--	struct dentry *dentry = file_dentry(file);
- 	struct file *realfile;
- 	int err;
- 
--	err = ovl_open_maybe_copy_up(dentry, file->f_flags);
-+	err = ovl_maybe_copy_up(file_dentry(file), file->f_flags);
- 	if (err)
- 		return err;
- 
-@@ -390,7 +389,7 @@ static long ovl_ioctl(struct file *file,
- 		if (ret)
- 			return ret;
- 
--		ret = ovl_copy_up_with_data(file_dentry(file));
-+		ret = ovl_maybe_copy_up(file_dentry(file), O_WRONLY);
- 		if (!ret) {
- 			ret = ovl_real_ioctl(file, cmd, arg);
- 
---- a/fs/overlayfs/overlayfs.h
-+++ b/fs/overlayfs/overlayfs.h
-@@ -421,7 +421,7 @@ extern const struct file_operations ovl_
- int ovl_copy_up(struct dentry *dentry);
- int ovl_copy_up_with_data(struct dentry *dentry);
- int ovl_copy_up_flags(struct dentry *dentry, int flags);
--int ovl_open_maybe_copy_up(struct dentry *dentry, unsigned int file_flags);
-+int ovl_maybe_copy_up(struct dentry *dentry, int flags);
- int ovl_copy_xattr(struct dentry *old, struct dentry *new);
- int ovl_set_attr(struct dentry *upper, struct kstat *stat);
- struct ovl_fh *ovl_encode_real_fh(struct dentry *real, bool is_upper);
+-		emit_insn_before(gen_rtx_SET(masked_sp,
++		emit_insn_before(gen_rtx_set(masked_sp,
+ 					     gen_rtx_AND(Pmode,
+ 							 stack_pointer_rtx,
+ 							 mask)),
 
 
