@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CABFC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:16:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E037C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:16:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73AC72186A
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:16:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79A9F2184E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:16:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639013;
-	bh=fvZOAFP5AIRVhhIqDeRi4wXWN+GCiBS8EQcBL1t27ak=;
+	s=default; t=1558639016;
+	bh=oheSv95oFkn+VVV3lf9Ovz2363O9f+rCEsKN1nvHhuA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hsY2eLQxmYJTzMY6yusBXiyHoLH4ODy/ZYk7XHKxaWrosN7LyHbLQuNkmXJwsB0sL
-	 GD21sQJ8HE7lGA1GVNUWz4Tao58n82xChfjEFjW33F8xOih/FfXJLG/WjYLP0BtlKF
-	 sel3SHzK63pqZ70dkqGuaK5FL/hOAqMyyhTTucK0=
+	b=FefPSI5MY+hKbX6ZwDMleWyA34U9lz/q2dkOlAyNL89zyytGqaS9KnxbsAVX72J4a
+	 ezNiHWgsZrHfpetN3aQc9o405bH3lIx2iLItA3c2MSoDAKNaVB4qHFQ36CAFKmBjPb
+	 n66Ghmz7NvCVUA0uryb3TUKdk1hu3Z9YWnoQQG18=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389278AbfEWTQw (ORCPT
+        id S2388407AbfEWTQz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:16:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51644 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:16:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51808 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389252AbfEWTQs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:16:48 -0400
+        id S2387916AbfEWTQy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:16:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5890217D9;
-        Thu, 23 May 2019 19:16:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A0F7217D9;
+        Thu, 23 May 2019 19:16:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639008;
-        bh=fvZOAFP5AIRVhhIqDeRi4wXWN+GCiBS8EQcBL1t27ak=;
+        s=default; t=1558639013;
+        bh=oheSv95oFkn+VVV3lf9Ovz2363O9f+rCEsKN1nvHhuA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W+SOyHZtUQD7s5nsJ8tLQMAl8KarLRRHcLM3AGbJk1qBuvbHMe8+aL/JgOfEomzLc
-         WiBWsGbk84VSPxcnWeiQPadD/RtLDl1lghoZhcnIgZmCCSZZ37xWoPZHgstcv23HCk
-         g9ASlqa+kiJo92IQfgqda0t7EOw+I1uYC+i6yEiw=
+        b=wKXqi7TTzZt2S3QmBOF4pI6TEeZr2tO+Hho85WdidU7vTp6U5MD0AjWhQoqyKncjr
+         XpdmAtotGb/kIQAYmidOBK5dbVxp7Gvs00lqsukhVzIJwXwR4z/KjviC/kWbKU2QMN
+         GX9bx0jqpre14IcaSFoNzOO0C6iFQpxyn4R9RViw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
         Teddy Wang <teddy.wang@siliconmotion.com>,
         Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: [PATCH 4.19 062/114] fbdev: sm712fb: fix brightness control on reboot, dont set SR30
-Date:   Thu, 23 May 2019 21:06:01 +0200
-Message-Id: <20190523181737.216064352@linuxfoundation.org>
+Subject: [PATCH 4.19 064/114] fbdev: sm712fb: fix white screen of death on reboot, dont set CR3B-CR3F
+Date:   Thu, 23 May 2019 21:06:03 +0200
+Message-Id: <20190523181737.398060692@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181731.372074275@linuxfoundation.org>
 References: <20190523181731.372074275@linuxfoundation.org>
@@ -63,20 +63,22 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Yifeng Li <tomli@tomli.me>
 
-commit 5481115e25e42b9215f2619452aa99c95f08492f upstream.
+commit 8069053880e0ee3a75fd6d7e0a30293265fe3de4 upstream.
 
 On a Thinkpad s30 (Pentium III / i440MX, Lynx3DM), rebooting with
-sm712fb framebuffer driver would cause the role of brightness up/down
-button to swap.
+sm712fb framebuffer driver would cause a white screen of death on
+the next POST, presumably the proper timings for the LCD panel was
+not reprogrammed properly by the BIOS.
 
-Experiments showed the FPR30 register caused this behavior. Moreover,
-even if this register don't have side-effect on other systems, over-
-writing it is also highly questionable, since it was originally
-configurated by the motherboard manufacturer by hardwiring pull-down
-resistors to indicate the type of LCD panel. We should not mess with
-it.
+Experiments showed a few CRTC Scratch Registers, including CRT3D,
+CRT3E and CRT3F may be used internally by BIOS as some flags. CRT3B is
+a hardware testing register, we shouldn't mess with it. CRT3C has
+blanking signal and line compare control, which is not needed for this
+driver.
 
-Stop writing to the SR30 (a.k.a FPR30) register.
+Stop writing to CR3B-CR3F (a.k.a CRT3B-CRT3F) registers. Even if these
+registers don't have side-effect on other systems, writing to them is
+also highly questionable.
 
 Signed-off-by: Yifeng Li <tomli@tomli.me>
 Tested-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
@@ -86,21 +88,24 @@ Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/video/fbdev/sm712fb.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/video/fbdev/sm712fb.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
 --- a/drivers/video/fbdev/sm712fb.c
 +++ b/drivers/video/fbdev/sm712fb.c
-@@ -1145,8 +1145,8 @@ static void sm7xx_set_timing(struct smtc
+@@ -1173,8 +1173,12 @@ static void sm7xx_set_timing(struct smtc
+ 			smtc_crtcw(i, vgamode[j].init_cr00_cr18[i]);
  
- 		/* init SEQ register SR30 - SR75 */
- 		for (i = 0; i < SIZE_SR30_SR75; i++)
--			if ((i + 0x30) != 0x62 && (i + 0x30) != 0x6a &&
--			    (i + 0x30) != 0x6b)
-+			if ((i + 0x30) != 0x30 && (i + 0x30) != 0x62 &&
-+			    (i + 0x30) != 0x6a && (i + 0x30) != 0x6b)
- 				smtc_seqw(i + 0x30,
- 					  vgamode[j].init_sr30_sr75[i]);
+ 		/* init CRTC register CR30 - CR4D */
+-		for (i = 0; i < SIZE_CR30_CR4D; i++)
++		for (i = 0; i < SIZE_CR30_CR4D; i++) {
++			if ((i + 0x30) >= 0x3B && (i + 0x30) <= 0x3F)
++				/* side-effect, don't write to CR3B-CR3F */
++				continue;
+ 			smtc_crtcw(i + 0x30, vgamode[j].init_cr30_cr4d[i]);
++		}
  
+ 		/* init CRTC register CR90 - CRA7 */
+ 		for (i = 0; i < SIZE_CR90_CRA7; i++)
 
 
