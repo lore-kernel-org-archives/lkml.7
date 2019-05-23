@@ -2,188 +2,191 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54AF0C282E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 10:41:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 597D7C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 10:42:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E3422133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 10:41:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F01B420851
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 10:42:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="SDlsxNUZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730466AbfEWKld (ORCPT
+        id S1730484AbfEWKmp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 06:41:33 -0400
-Received: from foss.arm.com ([217.140.101.70]:43578 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728518AbfEWKld (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 06:41:33 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A6A1A341;
-        Thu, 23 May 2019 03:41:32 -0700 (PDT)
-Received: from [192.168.1.123] (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DB19C3F718;
-        Thu, 23 May 2019 03:41:29 -0700 (PDT)
-Subject: Re: [PATCH v5 1/1] iommu/io-pgtable-arm: Add support to use system
- cache
-To:     Vivek Gautam <vivek.gautam@codeaurora.org>, will.deacon@arm.com,
-        joro@8bytes.org, iommu@lists.linux-foundation.org
-Cc:     pdaly@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, pratikp@codeaurora.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20190516093020.18028-1-vivek.gautam@codeaurora.org>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <a4826cd5-c190-c102-c42b-92b6040197bb@arm.com>
-Date:   Thu, 23 May 2019 11:41:24 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 23 May 2019 06:42:45 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:46843 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728109AbfEWKmo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 06:42:44 -0400
+Received: by mail-ed1-f68.google.com with SMTP id f37so8499576edb.13
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 03:42:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brauner.io; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=7G7KMOV6g3j20R/ypsMh4LtnKSKhlC+I/Mtee6H3XzM=;
+        b=SDlsxNUZ/CIEihxMH5EaxK8uvKSOcRfyJe0/2tao19I9okNaAeVF8G431fwJDiJ+Du
+         yIu2wRZeDxt4o2dTbsTIHod9g0eTR+mtbE7M1YN+HcB7VgCoqftONu8dnIKIzzncDQNZ
+         ph4t5K6Df51X8mj+1tViYQka1wgxpAyKhFfzM5o5lIecQvmX7sNkc7xAt0ghz3rf5HXv
+         w14HiPKnP1pgwVnFRPSJccQlk+P3U+XVSr54hkwlXYrTTlK5YIdnUghc0UPeW/YSMVdE
+         aItJGw8ouWlp5NruA2/ijz7o5Z5abhRjMWie+jDxySOOac/k6fT2+S8C4HNNz02DDGo1
+         YuOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=7G7KMOV6g3j20R/ypsMh4LtnKSKhlC+I/Mtee6H3XzM=;
+        b=MJoxBXJLTjfRHqf4TfejSATBg1B5yZlmCq9TrevpsoTDT0u/1c/2W339bgrU1MMfGz
+         jP8t1cR8PVTKpgQ46ZQN4Y7gCY/JRO9isZiprGdNPo3PY5qCpimd5UcMxFno8FomJ+EZ
+         +DWGhFj/yRmyZSirjosiOL8JNdoBqlOgO0LhJLAucTkD5wqLlvuPD9m3aEyTODc/MYQK
+         MyiWPfa+gay2yOwZ9MsuZdZWtkch/71im+mfpWNl2jtzXQJ6RXtjd6e+Y1K9FO9+tL2V
+         61zyNfJ22LwvSlDljiT+BGSjnwAzbTwa6Lee2/SrjbMjgP4wSma9jp2iyWakTvQwPqN8
+         16PA==
+X-Gm-Message-State: APjAAAXnMspUheCNKa4ytvGL3U7cZsNIAywsbeR0UuGKiTJU8kOfhiry
+        0s5Q7vfH3IFGwt5Dzn5D8RuE5g==
+X-Google-Smtp-Source: APXvYqzN6+LHawhNQbZh3C32p4pC9Pi4N3wSY5vZzUbEY1CaF2uw9XPRIUPRj+lUvwNp44q6Nu5sbg==
+X-Received: by 2002:a50:8ec7:: with SMTP id x7mr95579350edx.175.1558608162215;
+        Thu, 23 May 2019 03:42:42 -0700 (PDT)
+Received: from brauner.io (178-197-142-46.pool.kielnet.net. [46.142.197.178])
+        by smtp.gmail.com with ESMTPSA id l43sm7946861eda.70.2019.05.23.03.42.41
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 23 May 2019 03:42:41 -0700 (PDT)
+Date:   Thu, 23 May 2019 12:42:40 +0200
+From:   Christian Brauner <christian@brauner.io>
+To:     Amir Goldstein <amir73il@gmail.com>
+Cc:     Jan Kara <jack@suse.cz>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Matthew Bobrowski <mbobrowski@mbobrowski.org>
+Subject: Re: [PATCH] fanotify: remove redundant capable(CAP_SYS_ADMIN)s
+Message-ID: <20190523104239.u63u2uth4yyuuufs@brauner.io>
+References: <20190522163150.16849-1-christian@brauner.io>
+ <CAOQ4uxjV=7=FXuyccBK9Pu1B7o-w-pbc1FQXJxY4q6z8E93KOg@mail.gmail.com>
+ <EB97EF04-D44F-4320-ACDC-C536EED03BA4@brauner.io>
+ <CAOQ4uxhodqVw0DVfcvXYH5vBf4LKcv7t388ZwXeZPBTcEMzGSw@mail.gmail.com>
+ <20190523095506.nyei5nogvv63lm4a@brauner.io>
+ <CAOQ4uxiBeAzsE+b=tE7+9=25-qS7ohuTdEswYOt8DrCp6eAMuw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190516093020.18028-1-vivek.gautam@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAOQ4uxiBeAzsE+b=tE7+9=25-qS7ohuTdEswYOt8DrCp6eAMuw@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-05-16 10:30 am, Vivek Gautam wrote:
-> Few Qualcomm platforms such as, sdm845 have an additional outer
-> cache called as System cache, aka. Last level cache (LLC) that
-> allows non-coherent devices to upgrade to using caching.
-> This cache sits right before the DDR, and is tightly coupled
-> with the memory controller. The clients using this cache request
-> their slices from this system cache, make it active, and can then
-> start using it.
+On Thu, May 23, 2019 at 01:25:08PM +0300, Amir Goldstein wrote:
+> On Thu, May 23, 2019 at 12:55 PM Christian Brauner <christian@brauner.io> wrote:
+> >
+> > On Wed, May 22, 2019 at 11:00:22PM +0300, Amir Goldstein wrote:
+> > > On Wed, May 22, 2019 at 9:57 PM Christian Brauner <christian@brauner.io> wrote:
+> > > >
+> > > > On May 22, 2019 8:29:37 PM GMT+02:00, Amir Goldstein <amir73il@gmail.com> wrote:
+> > > > >On Wed, May 22, 2019 at 7:32 PM Christian Brauner
+> > > > ><christian@brauner.io> wrote:
+> > > > >>
+> > > > >> This removes two redundant capable(CAP_SYS_ADMIN) checks from
+> > > > >> fanotify_init().
+> > > > >> fanotify_init() guards the whole syscall with capable(CAP_SYS_ADMIN)
+> > > > >at the
+> > > > >> beginning. So the other two capable(CAP_SYS_ADMIN) checks are not
+> > > > >needed.
+> > > > >
+> > > > >It's intentional:
+> > > > >
+> > > > >commit e7099d8a5a34d2876908a9fab4952dabdcfc5909
+> > > > >Author: Eric Paris <eparis@redhat.com>
+> > > > >Date:   Thu Oct 28 17:21:57 2010 -0400
+> > > > >
+> > > > >    fanotify: limit the number of marks in a single fanotify group
+> > > > >
+> > > > >There is currently no limit on the number of marks a given fanotify
+> > > > >group
+> > > > >can have.  Since fanotify is gated on CAP_SYS_ADMIN this was not seen
+> > > > >as
+> > > > >a serious DoS threat.  This patch implements a default of 8192, the
+> > > > >same as
+> > > > >inotify to work towards removing the CAP_SYS_ADMIN gating and
+> > > > >eliminating
+> > > > >    the default DoS'able status.
+> > > > >
+> > > > >    Signed-off-by: Eric Paris <eparis@redhat.com>
+> > > > >
+> > > > >There idea is to eventually remove the gated CAP_SYS_ADMIN.
+> > > > >There is no reason that fanotify could not be used by unprivileged
+> > > > >users
+> > > > >to setup inotify style watch on an inode or directories children, see:
+> > > > >https://patchwork.kernel.org/patch/10668299/
+> > > > >
+> > > > >>
+> > > > >> Fixes: 5dd03f55fd2 ("fanotify: allow userspace to override max queue
+> > > > >depth")
+> > > > >> Fixes: ac7e22dcfaf ("fanotify: allow userspace to override max
+> > > > >marks")
+> > > > >
+> > > > >Fixes is used to tag bug fixes for stable.
+> > > > >There is no bug.
+> > > > >
+> > > > >Thanks,
+> > > > >Amir.
+> > > >
+> > > > Interesting. When do you think the gate can be removed?
+> > >
+> > > Nobody is working on this AFAIK.
+> > > What I posted was a simple POC, but I have no use case for this.
+> > > In the patchwork link above, Jan has listed the prerequisites for
+> > > removing the gate.
+> > >
+> > > One of the prerequisites is FAN_REPORT_FID, which is now merged.
+> > > When events gets reported with fid instead of fd, unprivileged user
+> > > (hopefully) cannot use fid for privilege escalation.
+> > >
+> > > > I was looking into switching from inotify to fanotify but since it's not usable from
+> > > > non-initial userns it's a no-no
+> > > > since we support nested workloads.
+> > >
+> > > One of Jan's questions was what is the benefit of using inotify-compatible
+> > > fanotify vs. using inotify.
+> > > So what was the reason you were looking into switching from inotify to fanotify?
+> > > Is it because of mount/filesystem watch? Because making those available for
+> >
+> > Yeah. Well, I would need to look but you could probably do it safely for
+> > filesystems mountable in user namespaces (which are few).
+> > Can you do a bind-mount and then place a watch on the bind-mount or is
+> > this superblock based?
+> >
 > 
-> There is a fundamental assumption that non-coherent devices can't
-> access caches. This change adds an exception where they *can* use
-> some level of cache despite still being non-coherent overall.
-> The coherent devices that use cacheable memory, and CPU make use of
-> this system cache by default.
+> Either.
+> FAN_MARK_MOUNT was there from day 1 of fanotify.
+> FAN_MARK_FILESYSTEM was merged to Linux Linux 4.20.
 > 
-> Looking at memory types, we have following -
-> a) Normal uncached :- MAIR 0x44, inner non-cacheable,
->                        outer non-cacheable;
-> b) Normal cached :-   MAIR 0xff, inner read write-back non-transient,
->                        outer read write-back non-transient;
->                        attribute setting for coherenet I/O devices.
-> and, for non-coherent i/o devices that can allocate in system cache
-> another type gets added -
-> c) Normal sys-cached :- MAIR 0xf4, inner non-cacheable,
->                          outer read write-back non-transient
-> 
-> Coherent I/O devices use system cache by marking the memory as
-> normal cached.
-> Non-coherent I/O devices should mark the memory as normal
-> sys-cached in page tables to use system cache.
-> 
-> Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+> But directory modification events that are supported since v5.1 are
+> not available
+> with FAN_MARK_MOUNT, see:
 
-Acked-by: Robin Murphy <robin.murphy@arm.com>
+Because you're worried about unprivileged users spying on events? Or
+something else?
+Because if you can do a bind-mount there's nothing preventing an
+unprivileged user to do a hand-rolled recursive inotify that would
+amount to the same thing anyway.
+(And btw, v5.1 really is a major step forward and I would really like to
+ use this api tbh.)
 
-There's a remote possibility that the IOMMU prot flag might be able to 
-be somewhat generalised in future for panfrost, as Mali appears to have 
-some pretty funky notions of cacheability, but this certainly looks fine 
-for now, thanks.
+Christian
 
-Robin.
-
-> ---
+> https://github.com/amir73il/man-pages/blob/fanotify_fid/man2/fanotify_init.2#L97
 > 
-> V3 version of this patch and related series can be found at [1].
-> V4 of this patch is available at [2].
+> Matthew,
 > 
-> The example usage of how a smmu master can make use of this protection
-> flag and set the correct memory attributes to start using system cache,
-> can be found at [3]; and here at [3] IOMMU_UPSTREAM_HINT is same as
-> IOMMU_QCOM_SYS_CACHE.
+> Perhaps this fact is worth a mention in the linked entry for FAN_REPORT_FID
+> in fanotify_init.2 in addition to the comment on the entry for FAN_MARK_MOUNT
+> in fanotify_mark.2.
 > 
-> Changes since v4:
->   - Changed ARM_LPAE_MAIR_ATTR_QCOM_SYS_CACHE to
->     ARM_LPAE_MAIR_ATTR_INC_OWBRWA.
->   - Changed ARM_LPAE_MAIR_ATTR_IDX_QCOM_SYS_CACHE to
->     ARM_LPAE_MAIR_ATTR_IDX_INC_OCACHE.
->   - Added comments to iommu protection flag - IOMMU_QCOM_SYS_CACHE.
-> 
-> Changes since v3:
->   - Dropping support to cache i/o page tables to system cache. Getting support
->     for data buffers is the first step.
->     Removed io-pgtable quirk and related change to add domain attribute.
-> 
-> Glmark2 numbers on SDM845 based cheza board:
-> 
-> S.No.|	with LLC support   |	without LLC support
->       |	for data buffers   |
-> ---------------------------------------------------		
-> 1    |	4480; 72.3fps      |	4042; 65.2fps
-> 2    |	4500; 72.6fps      |	4039; 65.1fps
-> 3    |	4523; 72.9fps	   |	4106; 66.2fps
-> 4    |	4489; 72.4fps	   |	4104; 66.2fps
-> 5    |	4518; 72.9fps	   |	4072; 65.7fps
-> 
-> [1] https://patchwork.kernel.org/cover/10772629/
-> [2] https://lore.kernel.org/patchwork/patch/1072936/
-> [3] https://patchwork.kernel.org/patch/10302791/
-> 
->   drivers/iommu/io-pgtable-arm.c | 9 ++++++++-
->   include/linux/iommu.h          | 6 ++++++
->   2 files changed, 14 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/iommu/io-pgtable-arm.c b/drivers/iommu/io-pgtable-arm.c
-> index 4e21efbc4459..2454ac11aa97 100644
-> --- a/drivers/iommu/io-pgtable-arm.c
-> +++ b/drivers/iommu/io-pgtable-arm.c
-> @@ -167,10 +167,12 @@
->   #define ARM_LPAE_MAIR_ATTR_MASK		0xff
->   #define ARM_LPAE_MAIR_ATTR_DEVICE	0x04
->   #define ARM_LPAE_MAIR_ATTR_NC		0x44
-> +#define ARM_LPAE_MAIR_ATTR_INC_OWBRWA	0xf4
->   #define ARM_LPAE_MAIR_ATTR_WBRWA	0xff
->   #define ARM_LPAE_MAIR_ATTR_IDX_NC	0
->   #define ARM_LPAE_MAIR_ATTR_IDX_CACHE	1
->   #define ARM_LPAE_MAIR_ATTR_IDX_DEV	2
-> +#define ARM_LPAE_MAIR_ATTR_IDX_INC_OCACHE	3
->   
->   #define ARM_MALI_LPAE_TTBR_ADRMODE_TABLE (3u << 0)
->   #define ARM_MALI_LPAE_TTBR_READ_INNER	BIT(2)
-> @@ -470,6 +472,9 @@ static arm_lpae_iopte arm_lpae_prot_to_pte(struct arm_lpae_io_pgtable *data,
->   		else if (prot & IOMMU_CACHE)
->   			pte |= (ARM_LPAE_MAIR_ATTR_IDX_CACHE
->   				<< ARM_LPAE_PTE_ATTRINDX_SHIFT);
-> +		else if (prot & IOMMU_QCOM_SYS_CACHE)
-> +			pte |= (ARM_LPAE_MAIR_ATTR_IDX_INC_OCACHE
-> +				<< ARM_LPAE_PTE_ATTRINDX_SHIFT);
->   	}
->   
->   	if (prot & IOMMU_NOEXEC)
-> @@ -857,7 +862,9 @@ arm_64_lpae_alloc_pgtable_s1(struct io_pgtable_cfg *cfg, void *cookie)
->   	      (ARM_LPAE_MAIR_ATTR_WBRWA
->   	       << ARM_LPAE_MAIR_ATTR_SHIFT(ARM_LPAE_MAIR_ATTR_IDX_CACHE)) |
->   	      (ARM_LPAE_MAIR_ATTR_DEVICE
-> -	       << ARM_LPAE_MAIR_ATTR_SHIFT(ARM_LPAE_MAIR_ATTR_IDX_DEV));
-> +	       << ARM_LPAE_MAIR_ATTR_SHIFT(ARM_LPAE_MAIR_ATTR_IDX_DEV)) |
-> +	      (ARM_LPAE_MAIR_ATTR_INC_OWBRWA
-> +	       << ARM_LPAE_MAIR_ATTR_SHIFT(ARM_LPAE_MAIR_ATTR_IDX_INC_OCACHE));
->   
->   	cfg->arm_lpae_s1_cfg.mair[0] = reg;
->   	cfg->arm_lpae_s1_cfg.mair[1] = 0;
-> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
-> index a815cf6f6f47..8ee3fbaf5855 100644
-> --- a/include/linux/iommu.h
-> +++ b/include/linux/iommu.h
-> @@ -41,6 +41,12 @@
->    * if the IOMMU page table format is equivalent.
->    */
->   #define IOMMU_PRIV	(1 << 5)
-> +/*
-> + * Non-coherent masters on few Qualcomm SoCs can use this page protection flag
-> + * to set correct cacheability attributes to use an outer level of cache -
-> + * last level cache, aka system cache.
-> + */
-> +#define IOMMU_QCOM_SYS_CACHE	(1 << 6)
->   
->   struct iommu_ops;
->   struct iommu_group;
-> 
+> Thanks,
+> Amir.
