@@ -4,56 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DC58C282E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:08:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA65BC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:08:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BA91217D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:08:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DEA7217F9
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:08:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558638495;
-	bh=33G58YR+16EHvNo+jVGF2xS+GJFDlcqpbp4ZAZXzQYo=;
+	s=default; t=1558638498;
+	bh=12OvtLJ+C7mV68x8yhIzFoFCz/QlQ+RzX5Rhw8VAU6Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pcD0Sl5+9k2iZ2dSQiWb5plS/MJVBLqWnH+QAJpoxpLo05HNC/3JtVF+2V+wMNi62
-	 3qJjTjFfTVrMnDuS41MplfMkfSE47vk+lAne2ZxAAJQNXWiaTYQ6/yuBHuIpsNEjbQ
-	 WQrgozO3elpq3t+nXccHibRVWtnGe96Z7bZwcwjs=
+	b=xYLDT4+sLKWLSoRnY/LCrOFVYfhIMyVWvWr/FCh+EOXDbsl0Z3N9jZjzJN7tgUffV
+	 Y8bkOTHQbPI/hvxt5jUo688XYaYevxqUtfh+gdxir9bKUeS2NyLPP9YpeTFGniSAMm
+	 SM1nqSmMs8rhVJyNDzzxB1mq+ZLF0wYlNX+F536I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731654AbfEWTIO (ORCPT
+        id S1731678AbfEWTIR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:08:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40900 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:08:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731464AbfEWTIO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:08:14 -0400
+        id S1731464AbfEWTIQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:08:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 020732133D;
-        Thu, 23 May 2019 19:08:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF085217D7;
+        Thu, 23 May 2019 19:08:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558638493;
-        bh=33G58YR+16EHvNo+jVGF2xS+GJFDlcqpbp4ZAZXzQYo=;
+        s=default; t=1558638496;
+        bh=12OvtLJ+C7mV68x8yhIzFoFCz/QlQ+RzX5Rhw8VAU6Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wcF4OdILkHkeANFSdoL3C9fhC+zTHAl/tLOFmK91R+AXzB4cJONafVsXPrycaFX0c
-         ymQ5PZaXRD3IxFBuH6JwZ9lLKoYDPj3CSkKSpgsSFsV0da92Gp2nxPRaDq8D+SyzdR
-         /JhZwyxv45Qr/bWUnKe25ThEEiSajeamtNCjIkxo=
+        b=XY1xs0c2oA/V2Bhen+NNyJMWiH0artpd6thpVQkDmRtEeMMumJ4k4hSi/UbYakVqE
+         ZiiNpIeHBV6bz8upfqf4TwraF+6tFoTV/AO+XppS+6Li18pgOcbRLZZ7ptBaENcFnD
+         rAuVo8ULXpfJqVLb085ErkQssX8py259IbMkekv8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
+        stable@vger.kernel.org, Yunjian Wang <wangyunjian@huawei.com>,
+        Tariq Toukan <tariqt@mellanox.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 01/53] net: avoid weird emergency message
-Date:   Thu, 23 May 2019 21:05:25 +0200
-Message-Id: <20190523181711.173625689@linuxfoundation.org>
+Subject: [PATCH 4.9 02/53] net/mlx4_core: Change the error print to info print
+Date:   Thu, 23 May 2019 21:05:26 +0200
+Message-Id: <20190523181711.324250202@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181710.981455400@linuxfoundation.org>
 References: <20190523181710.981455400@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,38 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Yunjian Wang <wangyunjian@huawei.com>
 
-[ Upstream commit d7c04b05c9ca14c55309eb139430283a45c4c25f ]
+[ Upstream commit 00f9fec48157f3734e52130a119846e67a12314b ]
 
-When host is under high stress, it is very possible thread
-running netdev_wait_allrefs() returns from msleep(250)
-10 seconds late.
+The error print within mlx4_flow_steer_promisc_add() should
+be a info print.
 
-This leads to these messages in the syslog :
-
-[...] unregister_netdevice: waiting for syz_tun to become free. Usage count = 0
-
-If the device refcount is zero, the wait is over.
-
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
+Fixes: 592e49dda812 ('net/mlx4: Implement promiscuous mode with device managed flow-steering')
+Signed-off-by: Yunjian Wang <wangyunjian@huawei.com>
+Reviewed-by: Tariq Toukan <tariqt@mellanox.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/core/dev.c |    2 +-
+ drivers/net/ethernet/mellanox/mlx4/mcg.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -7499,7 +7499,7 @@ static void netdev_wait_allrefs(struct n
+--- a/drivers/net/ethernet/mellanox/mlx4/mcg.c
++++ b/drivers/net/ethernet/mellanox/mlx4/mcg.c
+@@ -1490,7 +1490,7 @@ int mlx4_flow_steer_promisc_add(struct m
+ 	rule.port = port;
+ 	rule.qpn = qpn;
+ 	INIT_LIST_HEAD(&rule.list);
+-	mlx4_err(dev, "going promisc on %x\n", port);
++	mlx4_info(dev, "going promisc on %x\n", port);
  
- 		refcnt = netdev_refcnt_read(dev);
- 
--		if (time_after(jiffies, warning_time + 10 * HZ)) {
-+		if (refcnt && time_after(jiffies, warning_time + 10 * HZ)) {
- 			pr_emerg("unregister_netdevice: waiting for %s to become free. Usage count = %d\n",
- 				 dev->name, refcnt);
- 			warning_time = jiffies;
+ 	return  mlx4_flow_attach(dev, &rule, regid_p);
+ }
 
 
