@@ -2,122 +2,112 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1097BC04AAC
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:55:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DA89C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:56:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3C8D2081C
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:55:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C11A2075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 08:56:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="Iklke5qB"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="dTPlFvRN";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="MH+aR2Bi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730235AbfEWIze (ORCPT
+        id S1730228AbfEWI4t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 04:55:34 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:46536 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726309AbfEWIze (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 04:55:34 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 458jyC6mxqz9tyns;
-        Thu, 23 May 2019 10:55:31 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=Iklke5qB; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id YcF6C1XFYA7y; Thu, 23 May 2019 10:55:31 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 458jyC5ftdz9tynv;
-        Thu, 23 May 2019 10:55:31 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1558601731; bh=xXmpQ/75lHG0vDCaj7oB0x3Jy9haJlwrNP69w581+Es=;
-        h=From:Subject:To:Cc:Date:From;
-        b=Iklke5qBPVYb4Jca8Y5JfCXqwMg5aFclhkjppUMKscRZsfSZG8BIrM7zm1bilHEEw
-         4t0V23pDenwRRYSXGDMhoRZ1JcoWpcMzrgQyRIikYpkq5Z9RJO2ffNotpjXklnibhc
-         qMiG+KbmmqwJI5QaTJ8ls3E4yzM22x1c39mHBDTc=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id A27DD8B851;
-        Thu, 23 May 2019 10:55:32 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id ggCwlvWywLJG; Thu, 23 May 2019 10:55:32 +0200 (CEST)
-Received: from po16846vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 50DBE8B77D;
-        Thu, 23 May 2019 10:55:32 +0200 (CEST)
-Received: by po16846vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 303D868518; Thu, 23 May 2019 08:55:32 +0000 (UTC)
-Message-Id: <eb206b659fcae041be38d583ff139ca73e9e03c3.1558601485.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH net-next v2] net: phy: lxt: Add suspend/resume support to LXT971 and
- LXT973.
-To:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Date:   Thu, 23 May 2019 08:55:32 +0000 (UTC)
+        Thu, 23 May 2019 04:56:49 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:48618 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726230AbfEWI4t (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 04:56:49 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id CA8F56087A; Thu, 23 May 2019 08:56:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1558601807;
+        bh=QoKQwUVsXxnHAUsIMkOKP7NNW7ia3bSoaSYhBVtRhcg=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=dTPlFvRNEmYC83Nd6i6hbIH4UX1Uvko11xoqQIe2Emx/T5ij2pFlIG4XBsfIrmict
+         kz+gxTVU6DJtTGfeIscXEaMRi79gj4dP+W3jsL/6M/th0PWx5kYilbYGF+/jPx5S5F
+         Qf83Ci2iDtX/9G2JRXFufW5Gyihk6VjDurT/xQfo=
+Received: from x230.qca.qualcomm.com (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B2948600C1;
+        Thu, 23 May 2019 08:56:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1558601806;
+        bh=QoKQwUVsXxnHAUsIMkOKP7NNW7ia3bSoaSYhBVtRhcg=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=MH+aR2BiPZAWTJ6vhDfYNLht5Ff4iza9NCDSQvT4M8jR5ul3KhM90rlU58og0wscl
+         Ttp9jZcgT1WsQ/4dXS/Kz+u7GR5J29d/fcMKlsdGuM4hvkDU8508besFkk7DJlwQU4
+         t/G4kqfy89muTbGYh/UduvUPO3K7sz6Wdm/NEUE8=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B2948600C1
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Amitkumar Karwar <amitkarwar@gmail.com>,
+        Siva Rebbagondla <siva8118@gmail.com>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Subject: Re: [PATCH] rsi: Properly initialize data in rsi_sdio_ta_reset
+References: <20190502151548.11143-1-natechancellor@gmail.com>
+        <CAKwvOd=nvKGGW5jvN+WFUXzOm9xeiNNUD0F9--9YcpuRmnWWhA@mail.gmail.com>
+        <20190503031718.GB6969@archlinux-i9>
+        <20190523015415.GA17819@archlinux-epyc>
+        <CAK8P3a001V5qQo4vGfpugtmrnFfUNeP_q4KY-YS7rP_L91HY1A@mail.gmail.com>
+Date:   Thu, 23 May 2019 11:56:42 +0300
+In-Reply-To: <CAK8P3a001V5qQo4vGfpugtmrnFfUNeP_q4KY-YS7rP_L91HY1A@mail.gmail.com>
+        (Arnd Bergmann's message of "Thu, 23 May 2019 10:51:01 +0200")
+Message-ID: <87mujdo8fp.fsf@codeaurora.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All LXT PHYs implement the standard "power down" bit 11 of
-BMCR, so this patch adds support using the generic
-genphy_{suspend,resume} functions added by
-commit 0f0ca340e57b ("phy: power management support").
+Arnd Bergmann <arnd@arndb.de> writes:
 
-LXT970 is left aside because all registers get cleared upon
-"power down" exit.
+>> > @@ -937,7 +937,7 @@ static int rsi_sdio_ta_reset(struct rsi_hw *adapter)
+>> >         }
+>> >
+>> >         rsi_dbg(INIT_ZONE, "%s: Bring TA out of reset\n", __func__);
+>> > -       put_unaligned_le32(TA_HOLD_THREAD_VALUE, data);
+>> > +       put_unaligned_le32(TA_HOLD_THREAD_VALUE, &data);
+>> >         addr = TA_HOLD_THREAD_REG | RSI_SD_REQUEST_MASTER;
+>> >         status = rsi_sdio_write_register_multiple(adapter, addr,
+>> >                                                   (u8 *)&data,
+>
+> This is clearly not ok, as put_unaligned_le32() stores four bytes, and
+> the local variable is only one byte!
+>
+> Also, sdio does use DMA for transfers, so the variable has to be
+> dynamically allocated. I think your original patch was correct.
+> The only change I'd possibly make would be to use
+> RSI_9116_REG_SIZE instead of sizeof(u32).
 
-Reviewed-by: Heiner Kallweit <hkallweit1@gmail.com>
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
----
- I'd be happy if you could also merge that into 4.19
+Good point. Nathan please fix this and submit v2.
 
- v2: revised commit log without the Fixes: tag.
+>> Did any of the maintainers have any comments on what the correct
+>> solution is here to resolve this warning? It is one of the few left
+>> before we can turn on -Wuninitialized for the whole kernel.
+>
+> I would argue that this should not stop us from turning it on, as the
+> warning is for a clear bug in the code that absolutely needs to be
+> fixed, rather than a false-positive.
 
- drivers/net/phy/lxt.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+I can queue v2 for v5.2, just remind me by adding "[PATCH v2 5.2]" to
+the subject.
 
-diff --git a/drivers/net/phy/lxt.c b/drivers/net/phy/lxt.c
-index 314486288119..356bd6472f49 100644
---- a/drivers/net/phy/lxt.c
-+++ b/drivers/net/phy/lxt.c
-@@ -262,6 +262,8 @@ static struct phy_driver lxt97x_driver[] = {
- 	/* PHY_BASIC_FEATURES */
- 	.ack_interrupt	= lxt971_ack_interrupt,
- 	.config_intr	= lxt971_config_intr,
-+	.suspend	= genphy_suspend,
-+	.resume		= genphy_resume,
- }, {
- 	.phy_id		= 0x00137a10,
- 	.name		= "LXT973-A2",
-@@ -271,6 +273,8 @@ static struct phy_driver lxt97x_driver[] = {
- 	.probe		= lxt973_probe,
- 	.config_aneg	= lxt973_config_aneg,
- 	.read_status	= lxt973a2_read_status,
-+	.suspend	= genphy_suspend,
-+	.resume		= genphy_resume,
- }, {
- 	.phy_id		= 0x00137a10,
- 	.name		= "LXT973",
-@@ -279,6 +283,8 @@ static struct phy_driver lxt97x_driver[] = {
- 	.flags		= 0,
- 	.probe		= lxt973_probe,
- 	.config_aneg	= lxt973_config_aneg,
-+	.suspend	= genphy_suspend,
-+	.resume		= genphy_resume,
- } };
- 
- module_phy_driver(lxt97x_driver);
 -- 
-2.13.3
-
+Kalle Valo
