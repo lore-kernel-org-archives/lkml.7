@@ -7,52 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B6ACC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:18:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61EB5C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:18:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 420A62133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:18:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39065217D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:18:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639127;
-	bh=pqomUC/mB5B0Tu67ZwAH0uPUO3ocK5ML1K59knVGFLc=;
+	s=default; t=1558639133;
+	bh=b0VwoUslq5QPp9NlJd1ruUUqXSpc2qq2oRT1XJaKvXw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uvglxtn93UUiUl4IfwvtF+s5eCF3/Qt+4WIq9hguzmq2bSWpQdSB1vTc8InBLiggK
-	 bvoro6p2En4CcRt7AyK1mwD190xG821hFzCB61ib7JAWEvZgW5NYl7EfxJ1RqgacA4
-	 EVdna806j/1NPlY2Ot0el2ZiaEPlyhFjqmVzy4rc=
+	b=aCm4fJ5A2r/Q1YhfapG2UR6Scy0n0VrZnURcmbuOyiwzJ7uToQ5A81rylG26DbXis
+	 XDcs6jKOsrurXJ5E1V1MTGO7DUrCwfYqEk3GMtgaUD/XkCwWcOiTrMTk8uBASIZNm/
+	 a+h98aiBZVmXBNQA3G7jngebbXpImbxuANoebDIg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389200AbfEWTSq (ORCPT
+        id S2389702AbfEWTSw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:18:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54362 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:18:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54522 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389660AbfEWTSo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:18:44 -0400
+        id S2389313AbfEWTSu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:18:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 206692184E;
-        Thu, 23 May 2019 19:18:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B32172133D;
+        Thu, 23 May 2019 19:18:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639123;
-        bh=pqomUC/mB5B0Tu67ZwAH0uPUO3ocK5ML1K59knVGFLc=;
+        s=default; t=1558639129;
+        bh=b0VwoUslq5QPp9NlJd1ruUUqXSpc2qq2oRT1XJaKvXw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VZKVKr63dIMIK16FCLtLIey8nr9K3cjNgXoBReaKfzwfFsusdZWKlIQsn4i6aWAb6
-         xxSEcglFMotYrKtyyHNqyZHm1VWW4S4o64z5v/9TK6/p6f/VvsB5MUV4ML0hVWbWHk
-         VdA7EGFgcNxXxng1u452QtABJGsK//4U/tEbcPxU=
+        b=1GcOB60ymrOxPmosR2jV4+xjFgmQkmYi6LSiEO8VPR8Idd8OQuSdG5lmUUnBcSjHe
+         bWxlmWp2bTD5bdC9aHD7rtsYoHerD28pLEVl3qa6+SLEyyVdqAZXAiXvj8DtQmPkqD
+         ZS1c6ZuG9ayha03daXTm55MDpzyvs7ydtF9Wx8dA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Tobin C. Harding" <tobin@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 103/114] sched/cpufreq: Fix kobject memleak
-Date:   Thu, 23 May 2019 21:06:42 +0200
-Message-Id: <20190523181740.376885118@linuxfoundation.org>
+        stable@vger.kernel.org, Martin Willi <martin@strongswan.org>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 088/114] xfrm: Honor original L3 slave device in xfrmi policy lookup
+Date:   Thu, 23 May 2019 21:06:27 +0200
+Message-Id: <20190523181739.547636418@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181731.372074275@linuxfoundation.org>
 References: <20190523181731.372074275@linuxfoundation.org>
@@ -65,43 +60,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 9a4f26cc98d81b67ecc23b890c28e2df324e29f3 ]
+[ Upstream commit 025c65e119bf58b610549ca359c9ecc5dee6a8d2 ]
 
-Currently the error return path from kobject_init_and_add() is not
-followed by a call to kobject_put() - which means we are leaking
-the kobject.
+If an xfrmi is associated to a vrf layer 3 master device,
+xfrm_policy_check() fails after traffic decapsulation. The input
+interface is replaced by the layer 3 master device, and hence
+xfrmi_decode_session() can't match the xfrmi anymore to satisfy
+policy checking.
 
-Fix it by adding a call to kobject_put() in the error path of
-kobject_init_and_add().
+Extend ingress xfrmi lookup to honor the original layer 3 slave
+device, allowing xfrm interfaces to operate within a vrf domain.
 
-Signed-off-by: Tobin C. Harding <tobin@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Tobin C. Harding <tobin@kernel.org>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>
-Link: http://lkml.kernel.org/r/20190430001144.24890-1-tobin@kernel.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Fixes: f203b76d7809 ("xfrm: Add virtual xfrm interfaces")
+Signed-off-by: Martin Willi <martin@strongswan.org>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/cpufreq_schedutil.c | 1 +
- 1 file changed, 1 insertion(+)
+ include/net/xfrm.h        |  3 ++-
+ net/xfrm/xfrm_interface.c | 17 ++++++++++++++---
+ net/xfrm/xfrm_policy.c    |  2 +-
+ 3 files changed, 17 insertions(+), 5 deletions(-)
 
-diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
-index 217f81ecae176..4e3625109b28d 100644
---- a/kernel/sched/cpufreq_schedutil.c
-+++ b/kernel/sched/cpufreq_schedutil.c
-@@ -751,6 +751,7 @@ out:
- 	return 0;
+diff --git a/include/net/xfrm.h b/include/net/xfrm.h
+index 3e966c632f3b2..4ddd2b13ac8d6 100644
+--- a/include/net/xfrm.h
++++ b/include/net/xfrm.h
+@@ -295,7 +295,8 @@ struct xfrm_replay {
+ };
  
- fail:
-+	kobject_put(&tunables->attr_set.kobj);
- 	policy->governor_data = NULL;
- 	sugov_tunables_free(tunables);
+ struct xfrm_if_cb {
+-	struct xfrm_if	*(*decode_session)(struct sk_buff *skb);
++	struct xfrm_if	*(*decode_session)(struct sk_buff *skb,
++					   unsigned short family);
+ };
  
+ void xfrm_if_register_cb(const struct xfrm_if_cb *ifcb);
+diff --git a/net/xfrm/xfrm_interface.c b/net/xfrm/xfrm_interface.c
+index 82723ef44db3e..555ee2aca6c01 100644
+--- a/net/xfrm/xfrm_interface.c
++++ b/net/xfrm/xfrm_interface.c
+@@ -70,17 +70,28 @@ static struct xfrm_if *xfrmi_lookup(struct net *net, struct xfrm_state *x)
+ 	return NULL;
+ }
+ 
+-static struct xfrm_if *xfrmi_decode_session(struct sk_buff *skb)
++static struct xfrm_if *xfrmi_decode_session(struct sk_buff *skb,
++					    unsigned short family)
+ {
+ 	struct xfrmi_net *xfrmn;
+-	int ifindex;
+ 	struct xfrm_if *xi;
++	int ifindex = 0;
+ 
+ 	if (!secpath_exists(skb) || !skb->dev)
+ 		return NULL;
+ 
++	switch (family) {
++	case AF_INET6:
++		ifindex = inet6_sdif(skb);
++		break;
++	case AF_INET:
++		ifindex = inet_sdif(skb);
++		break;
++	}
++	if (!ifindex)
++		ifindex = skb->dev->ifindex;
++
+ 	xfrmn = net_generic(xs_net(xfrm_input_state(skb)), xfrmi_net_id);
+-	ifindex = skb->dev->ifindex;
+ 
+ 	for_each_xfrmi_rcu(xfrmn->xfrmi[0], xi) {
+ 		if (ifindex == xi->dev->ifindex &&
+diff --git a/net/xfrm/xfrm_policy.c b/net/xfrm/xfrm_policy.c
+index bf5d59270f79d..ce1b262ce9646 100644
+--- a/net/xfrm/xfrm_policy.c
++++ b/net/xfrm/xfrm_policy.c
+@@ -2339,7 +2339,7 @@ int __xfrm_policy_check(struct sock *sk, int dir, struct sk_buff *skb,
+ 	ifcb = xfrm_if_get_cb();
+ 
+ 	if (ifcb) {
+-		xi = ifcb->decode_session(skb);
++		xi = ifcb->decode_session(skb, family);
+ 		if (xi) {
+ 			if_id = xi->p.if_id;
+ 			net = xi->net;
 -- 
 2.20.1
 
