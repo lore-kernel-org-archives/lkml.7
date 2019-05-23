@@ -2,52 +2,58 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 197EEC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:30:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3FD3C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:30:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD98721855
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:30:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B84821855
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:30:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639805;
-	bh=LkxJLjCUKrKFGxWh1/a/LOeqSaX3EHtctEGuUYC9oGE=;
+	s=default; t=1558639809;
+	bh=GoC1OIA003h0+CxziUkA4dOZlYYlol8sXKPimKJOX4g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I3XLTNkhC3eTQ5s4dotxesI7Uf0LL1i1aO2FH0ibo1+AJAMHwm5Aa0liUNg3qLvB8
-	 eYsIYNZh2DtCs6Soni8SKj1ZAbrKVlOU4JJuMaCdzCVoiXUmXbg+9wY+Ufwsh6zsby
-	 DCiWLK8x7OJv8eOkyZiOLwob+J3fzkWtCVpnpBLw=
+	b=CgtCw6wEygJ3JY63gHlYixwp0PmkIeft8/dOz8/u6dWqScj/u4J2dYhqHyPv3kW1g
+	 pSPZv7R1yKQj+FxLc+XfrY7CXlYMHv3tDEd8ik0ul8SNQJCRoOw32mIzwwBIC18xGG
+	 GwYASNdgT0RJf+DSzfXnt+di6mZwfHBUU6QQGGsM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392050AbfEWTaE (ORCPT
+        id S2392073AbfEWTaI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:30:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43330 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:30:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43448 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391787AbfEWTaC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:30:02 -0400
+        id S2392055AbfEWTaH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:30:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 398AA21850;
-        Thu, 23 May 2019 19:30:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71B8D21851;
+        Thu, 23 May 2019 19:30:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639801;
-        bh=LkxJLjCUKrKFGxWh1/a/LOeqSaX3EHtctEGuUYC9oGE=;
+        s=default; t=1558639806;
+        bh=GoC1OIA003h0+CxziUkA4dOZlYYlol8sXKPimKJOX4g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1B4QuAHRWG7Z9iM5JnAPsEuG6UNfoSvhPzLIaJqUU9LzzVyoN6BquuGtWa6KgqNcq
-         Cq+dFCaoPTiu7ZmbNcScugTbuz3A1vT8aBpmQmUAliwwQyC7mDVGGRPUnO1OBM1/I+
-         YlRJJ3vF/vmrUW+4vFZwVPnvdQJJ8nHj+EltmVUI=
+        b=psNzxiYDFSBT2+MSOpUk9V5jMHtkNmMOTANTTingvpE5EO/2hT35ifEk5hSmPDTTf
+         R2QMcaPL6+SUJyNMy3UAOxP7isOfuHQCcwqS9r4Suu+MmfK438z+R8YfqhdBSpLsRO
+         AdpkBxCRrm1fdaBHRRXsMMJh/JX3f6J5fJdJX7+o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 5.1 081/122] perf intel-pt: Fix sample timestamp wrt non-taken branches
-Date:   Thu, 23 May 2019 21:06:43 +0200
-Message-Id: <20190523181715.559197718@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Mukesh Ojha <mojha@codeaurora.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 5.1 083/122] objtool: Allow AR to be overridden with HOSTAR
+Date:   Thu, 23 May 2019 21:06:45 +0200
+Message-Id: <20190523181715.854897254@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181705.091418060@linuxfoundation.org>
 References: <20190523181705.091418060@linuxfoundation.org>
@@ -60,47 +66,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adrian Hunter <adrian.hunter@intel.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-commit 1b6599a9d8e6c9f7e9b0476012383b1777f7fc93 upstream.
+commit 8ea58f1e8b11cca3087b294779bf5959bf89cc10 upstream.
 
-The sample timestamp is updated to ensure that the timestamp represents
-the time of the sample and not a branch that the decoder is still
-walking towards. The sample timestamp is updated when the decoder
-returns, but the decoder does not return for non-taken branches. Update
-the sample timestamp then also.
+Currently, this Makefile hardcodes GNU ar, meaning that if it is not
+available, there is no way to supply a different one and the build will
+fail.
 
-Note that commit 3f04d98e972b5 ("perf intel-pt: Improve sample
-timestamp") was also a stable fix and appears, for example, in v4.4
-stable tree as commit a4ebb58fd124 ("perf intel-pt: Improve sample
-timestamp").
+  $ make AR=llvm-ar CC=clang LD=ld.lld HOSTAR=llvm-ar HOSTCC=clang \
+         HOSTLD=ld.lld HOSTLDFLAGS=-fuse-ld=lld defconfig modules_prepare
+  ...
+    AR       /out/tools/objtool/libsubcmd.a
+  /bin/sh: 1: ar: not found
+  ...
 
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: stable@vger.kernel.org # v4.4+
-Fixes: 3f04d98e972b ("perf intel-pt: Improve sample timestamp")
-Link: http://lkml.kernel.org/r/20190510124143.27054-4-adrian.hunter@intel.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Follow the logic of HOST{CC,LD} and allow the user to specify a
+different ar tool via HOSTAR (which is used elsewhere in other
+tools/ Makefiles).
+
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+Cc: <stable@vger.kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: http://lkml.kernel.org/r/80822a9353926c38fd7a152991c6292491a9d0e8.1558028966.git.jpoimboe@redhat.com
+Link: https://github.com/ClangBuiltLinux/linux/issues/481
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/perf/util/intel-pt-decoder/intel-pt-decoder.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ tools/objtool/Makefile |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
-+++ b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
-@@ -1318,8 +1318,11 @@ static int intel_pt_walk_tnt(struct inte
- 				return 0;
- 			}
- 			decoder->ip += intel_pt_insn.length;
--			if (!decoder->tnt.count)
-+			if (!decoder->tnt.count) {
-+				decoder->sample_timestamp = decoder->timestamp;
-+				decoder->sample_insn_cnt = decoder->timestamp_insn_cnt;
- 				return -EAGAIN;
-+			}
- 			decoder->tnt.payload <<= 1;
- 			continue;
- 		}
+--- a/tools/objtool/Makefile
++++ b/tools/objtool/Makefile
+@@ -7,11 +7,12 @@ ARCH := x86
+ endif
+ 
+ # always use the host compiler
++HOSTAR	?= ar
+ HOSTCC	?= gcc
+ HOSTLD	?= ld
++AR	 = $(HOSTAR)
+ CC	 = $(HOSTCC)
+ LD	 = $(HOSTLD)
+-AR	 = ar
+ 
+ ifeq ($(srctree),)
+ srctree := $(patsubst %/,%,$(dir $(CURDIR)))
 
 
