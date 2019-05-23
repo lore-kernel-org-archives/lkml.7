@@ -2,94 +2,96 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1D16C04AAC
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 07:20:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59DF2C04AAC
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 07:22:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A26E920863
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 07:20:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nkF10v4J"
+	by mail.kernel.org (Postfix) with ESMTP id 0C991204EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 07:22:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558596145;
+	bh=MgxRvVPRCiTGlpJ7u3mhvNbCKBa13fkTjRD8hITHO6M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Uzkgss0cbeuRt/d35irb6yEUFGxv6zfciubNjBlmApbl8yle3kdlnsjgrhdCMeAmT
+	 S6vG0RxdDjeUsDjPcmcCLnWZEH2JFwmmeHE7aY1jt2wOyqojgMGmcGwPi9B2pk/kUr
+	 lOnIiUhK/qBbi+qBK3DhZXtuhAbAZtwEA9wjFCDQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729185AbfEWHUT (ORCPT
+        id S1728545AbfEWHWY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 03:20:19 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:33927 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726230AbfEWHUS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 03:20:18 -0400
-Received: by mail-pg1-f196.google.com with SMTP id c13so2663303pgt.1;
-        Thu, 23 May 2019 00:20:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=vVdvf+2AWc5KiT7ANjzVMpQGfeM7dtNm+6KXSHSOP8k=;
-        b=nkF10v4JCYOwrht2XoSkD6Q0oMFEuMm3xKt/rhQixekJiLi3cOetXjAl267F2iQQqi
-         Db0+puF7qIf5sKMnOz0BPNWy6L+8aZPauRH7tN8oeztJ/rMZBDnd6JCCivAZ3aJbHPpi
-         URSNZi3GMStxpBNBOxLUbb77WRvTzkm7iTmT7rYAkbJJrCC+Cv+lBsUyMKz/d8F9cuzV
-         qv9hIp3idIRJbU2+3tfLArt8woNUjaDO01cVpqZJumWRkzkyWYb2rWg7L5kKruIfc+UH
-         BZnDTo9mPhYxsbye+Z2SvlwuRt7rAYgjAXjnuSBdGPMpHF+TtUYexuXvUJnb8k4da0gw
-         WnjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=vVdvf+2AWc5KiT7ANjzVMpQGfeM7dtNm+6KXSHSOP8k=;
-        b=Z/KpqHzl4prA/DYsu9ELRdIGdrcxar38U+EiMM4D2WeAyddMtWFxiyvJEYqWYDs9mX
-         00KUld6CIe8qHm/31STqOMp3ZLo4nzL/CNnOG0Sf+MAdPT3WEYVmABLQyeEOTVIUnn3f
-         m49VQGz1DPK5oUc9W8BIVmZfvW2d3lSqeCyBa0nE718UCaFVHo0F+fyzZegYnqv4O1OG
-         J0iP/rmdoIg12oZtCF63Zr0NgRbLzMLQFNKR0mT3WNGVuX8Ymqo2Y4+TALL6WtNi8xsr
-         GFmZ6j32Wh86KpmZIHt6TLMMojddm5TbhLNmF0gJM/7FlnITupkRQwd+5IXux+XQoymy
-         lsGQ==
-X-Gm-Message-State: APjAAAWhpcWO6pPWeWS+kQV1SOt1HiECznktiD/fF9wRr3faDI7A0GQd
-        2lsG1Ah4igLLe6XTWpxi+BQ=
-X-Google-Smtp-Source: APXvYqyfsahn4cHjUoe4Kd29p3jy4+veEkTqMNNg7fxpDMnCTvtKIY28QJKZIB28YRlB1nwzmKbc8w==
-X-Received: by 2002:a17:90a:3510:: with SMTP id q16mr217374pjb.13.1558596017252;
-        Thu, 23 May 2019 00:20:17 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id n27sm58830999pfb.129.2019.05.23.00.20.16
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 23 May 2019 00:20:16 -0700 (PDT)
-Date:   Thu, 23 May 2019 00:20:15 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Danct12 <danct12@disroot.org>, linux-input@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] input: silead: Add MSSL0017 to acpi_device_id.
-Message-ID: <20190523072015.GB121292@dtor-ws>
-References: <20190522045455.15769-1-danct12@disroot.org>
- <6c18472f-bedd-6e6d-121c-8a311495c3c3@redhat.com>
+        Thu, 23 May 2019 03:22:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34592 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726222AbfEWHWX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 03:22:23 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2ACC4204EC;
+        Thu, 23 May 2019 07:22:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558596142;
+        bh=MgxRvVPRCiTGlpJ7u3mhvNbCKBa13fkTjRD8hITHO6M=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=G0my/NfK77yM68KWwcJCV6hickLW+wqgNuvXwMNHKBRKG//R75yAzP8xwcQ/YO5mn
+         h0vQOQoQ3+N9feBcYaEfCNckrZ7hCxY51D4OK2Rj+BNS2fWbdD/I1AP1g8cCVDQRyU
+         z0eOM8AVOkhGNedqPmV+rZmxtO6OXBZwzrW3zIqM=
+Date:   Thu, 23 May 2019 09:22:20 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Nishka Dasgupta <nishka.dasgupta@yahoo.com>
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: fieldbus: anybuss: Remove unnecessary variables
+Message-ID: <20190523072220.GC24998@kroah.com>
+References: <20190523063504.10530-1-nishka.dasgupta@yahoo.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <6c18472f-bedd-6e6d-121c-8a311495c3c3@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190523063504.10530-1-nishka.dasgupta@yahoo.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 22, 2019 at 12:12:47PM +0200, Hans de Goede wrote:
-> Hi,
+On Thu, May 23, 2019 at 12:05:01PM +0530, Nishka Dasgupta wrote:
+> In the functions export_reset_0 and export_reset_1 in arcx-anybus.c,
+> the only operation performed before return is passing the variable cd
+> (which takes the value of a function call on one of the parameters) as
+> argument to another function. Hence the variable cd can be removed.
+> Issue found using Coccinelle.
 > 
-> On 22-05-19 06:54, Danct12 wrote:
-> > On Chuwi Hi10 Plus, the Silead device id is MSSL0017.
-> > 
-> > Signed-off-by: Danct12 <danct12@disroot.org>
+> Signed-off-by: Nishka Dasgupta <nishka.dasgupta@yahoo.com>
+> ---
+>  drivers/staging/fieldbus/anybuss/arcx-anybus.c | 8 ++------
+>  1 file changed, 2 insertions(+), 6 deletions(-)
 > 
-> Patch looks good to me:
-> 
-> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+> diff --git a/drivers/staging/fieldbus/anybuss/arcx-anybus.c b/drivers/staging/fieldbus/anybuss/arcx-anybus.c
+> index 2ecffa42e561..e245f940a5c4 100644
+> --- a/drivers/staging/fieldbus/anybuss/arcx-anybus.c
+> +++ b/drivers/staging/fieldbus/anybuss/arcx-anybus.c
+> @@ -87,16 +87,12 @@ static int anybuss_reset(struct controller_priv *cd,
+>  
+>  static void export_reset_0(struct device *dev, bool assert)
+>  {
+> -	struct controller_priv *cd = dev_get_drvdata(dev);
+> -
+> -	anybuss_reset(cd, 0, assert);
+> +	anybuss_reset(dev_get_drvdata(dev), 0, assert);
+>  }
 
-We however need to have a real name for the Signed-off-by.
+While your patch is "correct", it's not the nicest thing.  The way the
+code looks today is to make it obvious we are passing a pointer to a
+struct controller_priv() into anybuss_reset().  But with your change, it
+looks like we are passing any random void pointer to it.
 
-Thanks.
+So I'd prefer the original code please.
 
--- 
-Dmitry
+Also, you forgot to cc: Sven on this patch, please always use the output
+of scripts/get_maintainer.pl.
+
+thanks,
+
+greg k-h
