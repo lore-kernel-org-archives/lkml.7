@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F34AC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:22:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9C19C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:22:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14CA4206BA
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:22:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0C972133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:22:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639373;
-	bh=qpl016BkmSFCvPID8ZSSBPcjs49qlh2T94srlmxYxog=;
+	s=default; t=1558639377;
+	bh=sn+dZ/PchoWhDRxZdzF7nRF8NliCSnp7Ebv9+XJ/kfU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b5uJCuPx/KzBUNvq6Cv007EFMA2szKLWeLPjjgURifzRMsYnxLYm4lhCtrDJe9gJq
-	 pjCYv4DqF3TVltknKRDpC6paV8kZggEKbQW6ybs9IOrwm7iYPff9de5F8tgYATKPYZ
-	 z40CUhXAdGADOq7uQssIJfZPMZVJU51lP8pOfpWo=
+	b=1+DqKIKRnit4DJkf5gPGiDeR3J3EhVwSSwnZOeGubrOdUt9+mIp4hN0YBgU2ON9uE
+	 kLw5J+8PnfIBWtz975OLTrJkG88blb6RpATrKeMZ6QBAaWVFiEKhXuR8V9KX5fnBAa
+	 iP2w2cVsNzPR2s98kl1ibwyhBzwsOJyYhbma5Hs4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390574AbfEWTWw (ORCPT
+        id S2390586AbfEWTWz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:22:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60978 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:22:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32886 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390148AbfEWTWq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:22:46 -0400
+        id S2390563AbfEWTWw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:22:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 570D2206A3;
-        Thu, 23 May 2019 19:22:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D697C2054F;
+        Thu, 23 May 2019 19:22:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639365;
-        bh=qpl016BkmSFCvPID8ZSSBPcjs49qlh2T94srlmxYxog=;
+        s=default; t=1558639371;
+        bh=sn+dZ/PchoWhDRxZdzF7nRF8NliCSnp7Ebv9+XJ/kfU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z1uh8xlTTtr0BP+GHPSw86YPEQ8mwnibVi4UbZSvhz/Su0122u2rQxYjQ13O8GfqR
-         MJOgFMron+JYfSBcJ98UZLgXXRLkorcuCMlBjBA9jzOe0cg3T7+/0zfytHYf0rT8Ci
-         pWT+cVb6yF2lnnqwGbWsBUHSOQdlJUIJ8j3xTWDY=
+        b=jQoqxs2X+ZAanOV+TjxKpJbAf0jcr/fGCVRt8H5eoZk0zNLsMKZRuXeePIEto3qca
+         BQaI/IitSac3pOU3mdsl/XwUrLcYpoAI63XGtCB6mr1FVcObfxOOHmZKXm6d20T3oi
+         LXC95tK5DUDdlevtlmVE9qPvTckAR/ao/0tZmuPQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Douglas Anderson <dianders@chromium.org>,
-        Kees Cook <keescook@chromium.org>
-Subject: [PATCH 5.0 061/139] gcc-plugins: arm_ssp_per_task_plugin: Fix for older GCC < 6
-Date:   Thu, 23 May 2019 21:05:49 +0200
-Message-Id: <20190523181728.668815727@linuxfoundation.org>
+        stable@vger.kernel.org, Owen Chen <owen.chen@mediatek.com>,
+        Weiyi Lu <weiyi.lu@mediatek.com>,
+        James Liao <jamesjj.liao@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Subject: [PATCH 5.0 053/139] clk: mediatek: Disable tuner_en before change PLL rate
+Date:   Thu, 23 May 2019 21:05:41 +0200
+Message-Id: <20190523181727.557852703@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181720.120897565@linuxfoundation.org>
 References: <20190523181720.120897565@linuxfoundation.org>
@@ -61,46 +62,113 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Packham <chris.packham@alliedtelesis.co.nz>
+From: Owen Chen <owen.chen@mediatek.com>
 
-commit 259799ea5a9aa099a267f3b99e1f7078bbaf5c5e upstream.
+commit be17ca6ac76a5cfd07cc3a0397dd05d6929fcbbb upstream.
 
-Use gen_rtx_set instead of gen_rtx_SET. The former is a wrapper macro
-that handles the difference between GCC versions implementing
-the latter.
+PLLs with tuner_en bit, such as APLL1, need to disable
+tuner_en before apply new frequency settings, or the new frequency
+settings (pcw) will not be applied.
+The tuner_en bit will be disabled during changing PLL rate
+and be restored after new settings applied.
 
-This fixes the following error on my system with g++ 5.4.0 as the host
-compiler
-
-   HOSTCXX -fPIC scripts/gcc-plugins/arm_ssp_per_task_plugin.o
- scripts/gcc-plugins/arm_ssp_per_task_plugin.c:42:14: error: macro "gen_rtx_SET" requires 3 arguments, but only 2 given
-          mask)),
-               ^
- scripts/gcc-plugins/arm_ssp_per_task_plugin.c: In function ‘unsigned int arm_pertask_ssp_rtl_execute()’:
- scripts/gcc-plugins/arm_ssp_per_task_plugin.c:39:20: error: ‘gen_rtx_SET’ was not declared in this scope
-    emit_insn_before(gen_rtx_SET
-
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Fixes: 189af4657186 ("ARM: smp: add support for per-task stack canaries")
-Cc: stable@vger.kernel.org
-Tested-by: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Kees Cook <keescook@chromium.org>
+Fixes: e2f744a82d725 (clk: mediatek: Add MT2712 clock support)
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Owen Chen <owen.chen@mediatek.com>
+Signed-off-by: Weiyi Lu <weiyi.lu@mediatek.com>
+Reviewed-by: James Liao <jamesjj.liao@mediatek.com>
+Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- scripts/gcc-plugins/arm_ssp_per_task_plugin.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/clk/mediatek/clk-pll.c |   48 +++++++++++++++++++++++++++++------------
+ 1 file changed, 34 insertions(+), 14 deletions(-)
 
---- a/scripts/gcc-plugins/arm_ssp_per_task_plugin.c
-+++ b/scripts/gcc-plugins/arm_ssp_per_task_plugin.c
-@@ -36,7 +36,7 @@ static unsigned int arm_pertask_ssp_rtl_
- 		mask = GEN_INT(sext_hwi(sp_mask, GET_MODE_PRECISION(Pmode)));
- 		masked_sp = gen_reg_rtx(Pmode);
+--- a/drivers/clk/mediatek/clk-pll.c
++++ b/drivers/clk/mediatek/clk-pll.c
+@@ -88,6 +88,32 @@ static unsigned long __mtk_pll_recalc_ra
+ 	return ((unsigned long)vco + postdiv - 1) / postdiv;
+ }
  
--		emit_insn_before(gen_rtx_SET(masked_sp,
-+		emit_insn_before(gen_rtx_set(masked_sp,
- 					     gen_rtx_AND(Pmode,
- 							 stack_pointer_rtx,
- 							 mask)),
++static void __mtk_pll_tuner_enable(struct mtk_clk_pll *pll)
++{
++	u32 r;
++
++	if (pll->tuner_en_addr) {
++		r = readl(pll->tuner_en_addr) | BIT(pll->data->tuner_en_bit);
++		writel(r, pll->tuner_en_addr);
++	} else if (pll->tuner_addr) {
++		r = readl(pll->tuner_addr) | AUDPLL_TUNER_EN;
++		writel(r, pll->tuner_addr);
++	}
++}
++
++static void __mtk_pll_tuner_disable(struct mtk_clk_pll *pll)
++{
++	u32 r;
++
++	if (pll->tuner_en_addr) {
++		r = readl(pll->tuner_en_addr) & ~BIT(pll->data->tuner_en_bit);
++		writel(r, pll->tuner_en_addr);
++	} else if (pll->tuner_addr) {
++		r = readl(pll->tuner_addr) & ~AUDPLL_TUNER_EN;
++		writel(r, pll->tuner_addr);
++	}
++}
++
+ static void mtk_pll_set_rate_regs(struct mtk_clk_pll *pll, u32 pcw,
+ 		int postdiv)
+ {
+@@ -96,6 +122,9 @@ static void mtk_pll_set_rate_regs(struct
+ 
+ 	pll_en = readl(pll->base_addr + REG_CON0) & CON0_BASE_EN;
+ 
++	/* disable tuner */
++	__mtk_pll_tuner_disable(pll);
++
+ 	/* set postdiv */
+ 	val = readl(pll->pd_addr);
+ 	val &= ~(POSTDIV_MASK << pll->data->pd_shift);
+@@ -122,6 +151,9 @@ static void mtk_pll_set_rate_regs(struct
+ 	if (pll->tuner_addr)
+ 		writel(con1 + 1, pll->tuner_addr);
+ 
++	/* restore tuner_en */
++	__mtk_pll_tuner_enable(pll);
++
+ 	if (pll_en)
+ 		udelay(20);
+ }
+@@ -228,13 +260,7 @@ static int mtk_pll_prepare(struct clk_hw
+ 	r |= pll->data->en_mask;
+ 	writel(r, pll->base_addr + REG_CON0);
+ 
+-	if (pll->tuner_en_addr) {
+-		r = readl(pll->tuner_en_addr) | BIT(pll->data->tuner_en_bit);
+-		writel(r, pll->tuner_en_addr);
+-	} else if (pll->tuner_addr) {
+-		r = readl(pll->tuner_addr) | AUDPLL_TUNER_EN;
+-		writel(r, pll->tuner_addr);
+-	}
++	__mtk_pll_tuner_enable(pll);
+ 
+ 	udelay(20);
+ 
+@@ -258,13 +284,7 @@ static void mtk_pll_unprepare(struct clk
+ 		writel(r, pll->base_addr + REG_CON0);
+ 	}
+ 
+-	if (pll->tuner_en_addr) {
+-		r = readl(pll->tuner_en_addr) & ~BIT(pll->data->tuner_en_bit);
+-		writel(r, pll->tuner_en_addr);
+-	} else if (pll->tuner_addr) {
+-		r = readl(pll->tuner_addr) & ~AUDPLL_TUNER_EN;
+-		writel(r, pll->tuner_addr);
+-	}
++	__mtk_pll_tuner_disable(pll);
+ 
+ 	r = readl(pll->base_addr + REG_CON0);
+ 	r &= ~CON0_BASE_EN;
 
 
