@@ -7,56 +7,52 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7E18C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:26:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10A1CC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:26:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9632E206BA
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:26:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D951C21841
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:26:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639560;
-	bh=2oQPVjb/XH6t5N0VlZPojdoMnrm+tfWh1CGpuHuzy8M=;
+	s=default; t=1558639565;
+	bh=erWqDX8SpUwJR1ygf9C0eCHvcngG2wRO1gFt5XSuHpg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gxVGR5r6GZ0z/ZcDkXF5mrVHAA/WINVjj4mtMRWxBek74QK3Gtlr5h8pqh45QBlHQ
-	 T9XimQ1OpaNpoDo0tdHFE4f0EYGq+/hUJF4VoBlBldB2X3rt0iW0HH2pNox8DvuRk5
-	 +1/s5gIPgo9pjx6DQt3cFgx5MGdsrW+MmdctnS28=
+	b=QN0zezGVNmxIbR7dKGs5CBeTDxwYDS8dzs3FrFFElFTerdV4z+mq9P8LHFFCSO6sZ
+	 wRx4NZ6Zuc5/t9sb/GNz60HGYgYrv9dxOoSw9QbzoEFWG1FS+FL2FwfFteWz/AIMdk
+	 I37GLkl5NpeXmUp1GeNBu1e/8KoqXNk7XNDe7PL4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391248AbfEWTZ7 (ORCPT
+        id S2391274AbfEWT0F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:25:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37668 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:26:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37806 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391228AbfEWTZ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:25:57 -0400
+        id S2391251AbfEWT0C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:26:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D4F6217D9;
-        Thu, 23 May 2019 19:25:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B69742133D;
+        Thu, 23 May 2019 19:26:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639556;
-        bh=2oQPVjb/XH6t5N0VlZPojdoMnrm+tfWh1CGpuHuzy8M=;
+        s=default; t=1558639562;
+        bh=erWqDX8SpUwJR1ygf9C0eCHvcngG2wRO1gFt5XSuHpg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Se5eqo7YphNDsf/vlKqGOvdtp3p/oyMHFtnr7O2NEU7qZsiiIv2fqcl6GkbJa4FeH
-         V6j/hJe25e5ICGJwCxV4a33UZy2Wz1Mc5FQThW43Nii4p7PDanqhMRVAFcoj+fr7cW
-         ifOmkO+fYTfewcRTY0YJxXPTcU9DBFuCbC8lKrHA=
+        b=sb/hsSJ+LEJfQvh05d8QhtZzB98VE5eHHViIGrIKDgVc7FM5FvmfhiLOF3HjLRfos
+         lD03zt1CI3KRxUkubfGwM3Cf6gqEHmemXmSoPrgn4GVz8wx8RQ0TH3DRo2XpVtBtIk
+         9XzgEbOcvPvSiPJOMP2AuUGvSkc2ZeUTmPE127jQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mikael Magnusson <mikael.kernel@lists.m7n.se>,
-        Wei Wang <weiwan@google.com>, Martin Lau <kafai@fb.com>,
-        Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        David Ahern <dsahern@gmail.com>
-Subject: [PATCH 5.1 001/122] ipv6: fix src addr routing with the exception table
-Date:   Thu, 23 May 2019 21:05:23 +0200
-Message-Id: <20190523181705.324928617@linuxfoundation.org>
+        stable@vger.kernel.org, Jiri Pirko <jiri@resnulli.us>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.1 003/122] net: Always descend into dsa/
+Date:   Thu, 23 May 2019 21:05:25 +0200
+Message-Id: <20190523181705.491688046@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181705.091418060@linuxfoundation.org>
 References: <20190523181705.091418060@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -65,137 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Wang <weiwan@google.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit 510e2ceda031eed97a7a0f9aad65d271a58b460d ]
+[ Upstream commit 0fe9f173d6cda95874edeb413b1fa9907b5ae830 ]
 
-When inserting route cache into the exception table, the key is
-generated with both src_addr and dest_addr with src addr routing.
-However, current logic always assumes the src_addr used to generate the
-key is a /128 host address. This is not true in the following scenarios:
-1. When the route is a gateway route or does not have next hop.
-   (rt6_is_gw_or_nonexthop() == false)
-2. When calling ip6_rt_cache_alloc(), saddr is passed in as NULL.
-This means, when looking for a route cache in the exception table, we
-have to do the lookup twice: first time with the passed in /128 host
-address, second time with the src_addr stored in fib6_info.
+Jiri reported that with a kernel built with CONFIG_FIXED_PHY=y,
+CONFIG_NET_DSA=m and CONFIG_NET_DSA_LOOP=m, we would not get to a
+functional state where the mock-up driver is registered. Turns out that
+we are not descending into drivers/net/dsa/ unconditionally, and we
+won't be able to link-in dsa_loop_bdinfo.o which does the actual mock-up
+mdio device registration.
 
-This solves the pmtu discovery issue reported by Mikael Magnusson where
-a route cache with a lower mtu info is created for a gateway route with
-src addr. However, the lookup code is not able to find this route cache.
-
-Fixes: 2b760fcf5cfb ("ipv6: hook up exception table to store dst cache")
-Reported-by: Mikael Magnusson <mikael.kernel@lists.m7n.se>
-Bisected-by: David Ahern <dsahern@gmail.com>
-Signed-off-by: Wei Wang <weiwan@google.com>
-Cc: Martin Lau <kafai@fb.com>
-Cc: Eric Dumazet <edumazet@google.com>
-Acked-by: Martin KaFai Lau <kafai@fb.com>
+Reported-by: Jiri Pirko <jiri@resnulli.us>
+Fixes: 40013ff20b1b ("net: dsa: Fix functional dsa-loop dependency on FIXED_PHY")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
+Tested-by: Jiri Pirko <jiri@resnulli.us>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv6/route.c |   51 +++++++++++++++++++++++++++------------------------
- 1 file changed, 27 insertions(+), 24 deletions(-)
+ drivers/net/Makefile |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/ipv6/route.c
-+++ b/net/ipv6/route.c
-@@ -110,8 +110,8 @@ static int rt6_fill_node(struct net *net
- 			 int iif, int type, u32 portid, u32 seq,
- 			 unsigned int flags);
- static struct rt6_info *rt6_find_cached_rt(struct fib6_info *rt,
--					   struct in6_addr *daddr,
--					   struct in6_addr *saddr);
-+					   const struct in6_addr *daddr,
-+					   const struct in6_addr *saddr);
- 
- #ifdef CONFIG_IPV6_ROUTE_INFO
- static struct fib6_info *rt6_add_route_info(struct net *net,
-@@ -1529,31 +1529,44 @@ out:
-  * Caller has to hold rcu_read_lock()
-  */
- static struct rt6_info *rt6_find_cached_rt(struct fib6_info *rt,
--					   struct in6_addr *daddr,
--					   struct in6_addr *saddr)
-+					   const struct in6_addr *daddr,
-+					   const struct in6_addr *saddr)
- {
-+	const struct in6_addr *src_key = NULL;
- 	struct rt6_exception_bucket *bucket;
--	struct in6_addr *src_key = NULL;
- 	struct rt6_exception *rt6_ex;
- 	struct rt6_info *res = NULL;
- 
--	bucket = rcu_dereference(rt->rt6i_exception_bucket);
--
- #ifdef CONFIG_IPV6_SUBTREES
- 	/* rt6i_src.plen != 0 indicates rt is in subtree
- 	 * and exception table is indexed by a hash of
- 	 * both rt6i_dst and rt6i_src.
--	 * Otherwise, the exception table is indexed by
--	 * a hash of only rt6i_dst.
-+	 * However, the src addr used to create the hash
-+	 * might not be exactly the passed in saddr which
-+	 * is a /128 addr from the flow.
-+	 * So we need to use f6i->fib6_src to redo lookup
-+	 * if the passed in saddr does not find anything.
-+	 * (See the logic in ip6_rt_cache_alloc() on how
-+	 * rt->rt6i_src is updated.)
- 	 */
- 	if (rt->fib6_src.plen)
- 		src_key = saddr;
-+find_ex:
- #endif
-+	bucket = rcu_dereference(rt->rt6i_exception_bucket);
- 	rt6_ex = __rt6_find_exception_rcu(&bucket, daddr, src_key);
- 
- 	if (rt6_ex && !rt6_check_expired(rt6_ex->rt6i))
- 		res = rt6_ex->rt6i;
- 
-+#ifdef CONFIG_IPV6_SUBTREES
-+	/* Use fib6_src as src_key and redo lookup */
-+	if (!res && src_key && src_key != &rt->fib6_src.addr) {
-+		src_key = &rt->fib6_src.addr;
-+		goto find_ex;
-+	}
-+#endif
-+
- 	return res;
- }
- 
-@@ -2608,10 +2621,8 @@ out:
- u32 ip6_mtu_from_fib6(struct fib6_info *f6i, struct in6_addr *daddr,
- 		      struct in6_addr *saddr)
- {
--	struct rt6_exception_bucket *bucket;
--	struct rt6_exception *rt6_ex;
--	struct in6_addr *src_key;
- 	struct inet6_dev *idev;
-+	struct rt6_info *rt;
- 	u32 mtu = 0;
- 
- 	if (unlikely(fib6_metric_locked(f6i, RTAX_MTU))) {
-@@ -2620,18 +2631,10 @@ u32 ip6_mtu_from_fib6(struct fib6_info *
- 			goto out;
- 	}
- 
--	src_key = NULL;
--#ifdef CONFIG_IPV6_SUBTREES
--	if (f6i->fib6_src.plen)
--		src_key = saddr;
--#endif
--
--	bucket = rcu_dereference(f6i->rt6i_exception_bucket);
--	rt6_ex = __rt6_find_exception_rcu(&bucket, daddr, src_key);
--	if (rt6_ex && !rt6_check_expired(rt6_ex->rt6i))
--		mtu = dst_metric_raw(&rt6_ex->rt6i->dst, RTAX_MTU);
--
--	if (likely(!mtu)) {
-+	rt = rt6_find_cached_rt(f6i, daddr, saddr);
-+	if (unlikely(rt)) {
-+		mtu = dst_metric_raw(&rt->dst, RTAX_MTU);
-+	} else {
- 		struct net_device *dev = fib6_info_nh_dev(f6i);
- 
- 		mtu = IPV6_MIN_MTU;
+--- a/drivers/net/Makefile
++++ b/drivers/net/Makefile
+@@ -40,7 +40,7 @@ obj-$(CONFIG_ARCNET) += arcnet/
+ obj-$(CONFIG_DEV_APPLETALK) += appletalk/
+ obj-$(CONFIG_CAIF) += caif/
+ obj-$(CONFIG_CAN) += can/
+-obj-$(CONFIG_NET_DSA) += dsa/
++obj-y += dsa/
+ obj-$(CONFIG_ETHERNET) += ethernet/
+ obj-$(CONFIG_FDDI) += fddi/
+ obj-$(CONFIG_HIPPI) += hippi/
 
 
