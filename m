@@ -2,114 +2,192 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B0D5C04AAC
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 04:19:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD3A1C04AAC
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 04:39:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCC3520881
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 04:19:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="PpC3lN8B";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="HpUEeHGT"
+	by mail.kernel.org (Postfix) with ESMTP id 7E9D620B1F
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 04:39:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727936AbfEWET5 (ORCPT
+        id S1726524AbfEWEjc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 00:19:57 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:40050 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725792AbfEWET4 (ORCPT
+        Thu, 23 May 2019 00:39:32 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:38123 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725848AbfEWEjb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 00:19:56 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 115D66030E; Thu, 23 May 2019 04:19:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1558585196;
-        bh=fcgjdJ/PJA3qLLQdtDzwInWMZt4bLcUj3OyOsUB08Sc=;
-        h=From:To:Cc:Subject:Date:From;
-        b=PpC3lN8BDTY+iUn2gZfoMDqpZAXxrahmq7Q7FmmeQnn3wCocxqiiA0zAz5s3L5ncD
-         NlXBJuDbMgWQRsyPXVQF1uFVmhJr0TfFiqsfrcyWaO3TaTqMC0VX21gTkTomXGwdYi
-         54zt2GqjVZ8f/BgUXlg8xSoZoA21vK7Z/7OzjWqQ=
-Received: from codeaurora.org (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: stummala@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9DF656030E;
-        Thu, 23 May 2019 04:19:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1558585195;
-        bh=fcgjdJ/PJA3qLLQdtDzwInWMZt4bLcUj3OyOsUB08Sc=;
-        h=From:To:Cc:Subject:Date:From;
-        b=HpUEeHGTGyVc3ys5xm/2+psHewPGfZYJp3grZUcmAKFX3YEx4k1DLFHGtQ10m+MsP
-         yc1iierAqa+6FvyeIJ9Rw8dakWGTS5heqtRLDYwPA0GlbW1eLbc/oUMRzm7fSazAEO
-         YPAMNYQr8ai0O7fWkDxXl5HxqofkEyRBMBbYqj3g=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9DF656030E
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=stummala@codeaurora.org
-From:   Sahitya Tummala <stummala@codeaurora.org>
-To:     Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
-        linux-f2fs-devel@lists.sourceforge.net
-Cc:     Sahitya Tummala <stummala@codeaurora.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] f2fs: add error prints for debugging mount failure
-Date:   Thu, 23 May 2019 09:49:17 +0530
-Message-Id: <1558585157-9349-1-git-send-email-stummala@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Thu, 23 May 2019 00:39:31 -0400
+Received: from mail-pl1-f200.google.com ([209.85.214.200])
+        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1hTfVo-0006qJ-Sd
+        for linux-kernel@vger.kernel.org; Thu, 23 May 2019 04:39:29 +0000
+Received: by mail-pl1-f200.google.com with SMTP id u11so2694011plz.22
+        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 21:39:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=N2Cryd12l6XdE1v5HeEzZ2LEH60y6s0KvcwUQwn47uU=;
+        b=D1MRQzZ3jU5Qqx4XjcfU7gE2FwnThs47qFPpblkaQvXcdAda7hxweIKzwFF6UoxOWF
+         G8TaH9PnnJEqWZSk4Hc62ISy2oucSiA6RB98PH4JtN4P50mwlbj8ze3Q4gp7hcCa3SMM
+         RR4zb0np6QKuZH5wfDz7lHwvWuLWnjrqd2toHJniPFAujhHbxoS8WUGAhZg7rst6++3U
+         BQJ6nesNxE/jVp1k4ZY2q4xRAPOP4cepB5nTFaH17QwOj1eD3ktvE4CkGIUoAjbXH44N
+         nnPlR+kPszUce0z+2Sg+UPseDxHoSaVVflf8wLz6Z8GHkc5HTXetLNMGjfa+UPcMeAZA
+         7hXg==
+X-Gm-Message-State: APjAAAWiiTFm73nEgLHas4X33NHpBX0QQGz6zy6shKj5/I/T98r8aRia
+        RWH61CYyJwXIe24O1il+l2je3383yrOXht0iksGbNvazOUQ9XgAlZ+wYcwYrpGZWYcfC+3Xnp9H
+        y0KlXsVDF+Bx++m+qwkSHsGFmc8C8c1pO2/Y5fXIJNw==
+X-Received: by 2002:a62:128a:: with SMTP id 10mr100194240pfs.225.1558586367561;
+        Wed, 22 May 2019 21:39:27 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyrPG0z1duPKpO4cbTDxCLxWSzIR/wnV9OiZUrJRE/swS+01DwEmV0AvQYR5l0wVqtiIlfTWw==
+X-Received: by 2002:a62:128a:: with SMTP id 10mr100194206pfs.225.1558586367174;
+        Wed, 22 May 2019 21:39:27 -0700 (PDT)
+Received: from 2001-b011-380f-14b9-35e2-b960-d580-9726.dynamic-ip6.hinet.net (2001-b011-380f-14b9-35e2-b960-d580-9726.dynamic-ip6.hinet.net. [2001:b011:380f:14b9:35e2:b960:d580:9726])
+        by smtp.gmail.com with ESMTPSA id s137sm39984426pfc.119.2019.05.22.21.39.25
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 22 May 2019 21:39:26 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8;
+        delsp=yes;
+        format=flowed
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH] PCI / PM: Don't runtime suspend when device only supports
+ wakeup from D0
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+In-Reply-To: <20190522205231.GD79339@google.com>
+Date:   Thu, 23 May 2019 12:39:23 +0800
+Cc:     Alan Stern <stern@rowland.harvard.edu>,
+        Rafael Wysocki <rafael.j.wysocki@intel.com>,
+        linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        linux-usb@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+Message-Id: <010C1D41-C66D-45C0-8AFF-6F746306CE29@canonical.com>
+References: <20190522181157.GC79339@google.com>
+ <Pine.LNX.4.44L0.1905221433310.1410-100000@iolanthe.rowland.org>
+ <20190522205231.GD79339@google.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add error prints to get more details on the mount failure.
+at 04:52, Bjorn Helgaas <helgaas@kernel.org> wrote:
 
-Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
----
- fs/f2fs/segment.c | 6 +++++-
- fs/f2fs/super.c   | 4 ++--
- 2 files changed, 7 insertions(+), 3 deletions(-)
+> On Wed, May 22, 2019 at 02:39:56PM -0400, Alan Stern wrote:
+>> On Wed, 22 May 2019, Bjorn Helgaas wrote:
+>>> On Wed, May 22, 2019 at 11:46:25PM +0800, Kai Heng Feng wrote:
+>>>>> On May 22, 2019, at 9:48 PM, Bjorn Helgaas <helgaas@kernel.org> wrote:
+>>>>> On Wed, May 22, 2019 at 11:42:14AM +0800, Kai Heng Feng wrote:
+>>>>>> at 6:23 AM, Bjorn Helgaas <helgaas@kernel.org> wrote:
+>>>>>>> On Wed, May 22, 2019 at 12:31:04AM +0800, Kai-Heng Feng wrote:
+>>>>>>>> There's an xHC device that doesn't wake when a USB device gets  
+>>>>>>>> plugged
+>>>>>>>> to its USB port. The driver's own runtime suspend callback was  
+>>>>>>>> called,
+>>>>>>>> PME signaling was enabled, but it stays at PCI D0.
+>>>
+>>>>> ...
+>>>>> And I guess this patch basically means we wouldn't call the driver's
+>>>>> suspend callback if we're merely going to stay at D0, so the driver
+>>>>> would have no idea anything happened.  That might match
+>>>>> Documentation/power/pci.txt better, because it suggests that the
+>>>>> suspend callback is related to putting a device in a low-power state,
+>>>>> and D0 is not a low-power state.
+>>>>
+>>>> Yes, the patch is to let the device stay at D0 and don’t run driver’s  
+>>>> own
+>>>> runtime suspend routine.
+>>>>
+>>>> I guess I’ll just proceed to send a V2 with updated commit message?
+>>>
+>>> Now that I understand what "runtime suspended to D0" means, help me
+>>> understand what's actually wrong.
+>>
+>> Kai's point is that the xhci-hcd driver thinks the device is now in
+>> runtime suspend, because the runtime_suspend method has been executed.
+>> But in fact the device is still in D0, and as a result, PME signalling
+>> may not work correctly.
+>
+> The device claims to be able to signal PME from D0 (this is from the lspci
+> in https://bugzilla.kernel.org/show_bug.cgi?id=203673):
+>
+>   00:10.0 USB controller: Advanced Micro Devices, Inc. [AMD] FCH USB XHCI Controller (rev 20) (prog-if 30 [XHCI])
+>     Capabilities: [50] Power Management version 3
+>       Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0+,D1-,D2-,D3hot+,D3cold+)
+>
+> From the xHCI spec r1.0, sec 4.15.2.3, it looks like a connect
+> detected while in D0 should assert PME# if enabled (and WCE is set).
 
-diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-index 4896443..bdc6956 100644
---- a/fs/f2fs/segment.c
-+++ b/fs/f2fs/segment.c
-@@ -3567,8 +3567,12 @@ static int restore_curseg_summaries(struct f2fs_sb_info *sbi)
- 
- 	/* sanity check for summary blocks */
- 	if (nats_in_cursum(nat_j) > NAT_JOURNAL_ENTRIES ||
--			sits_in_cursum(sit_j) > SIT_JOURNAL_ENTRIES)
-+			sits_in_cursum(sit_j) > SIT_JOURNAL_ENTRIES) {
-+		f2fs_msg(sbi->sb, KERN_ERR,
-+			"invalid journal entries nats %u sits %u\n",
-+			nats_in_cursum(nat_j), sits_in_cursum(sit_j));
- 		return -EINVAL;
-+	}
- 
- 	return 0;
- }
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index 52f1497..2c9d4f7 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -3413,13 +3413,13 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
- 	err = f2fs_build_segment_manager(sbi);
- 	if (err) {
- 		f2fs_msg(sb, KERN_ERR,
--			"Failed to initialize F2FS segment manager");
-+			"Failed to initialize F2FS segment manager (%d)", err);
- 		goto free_sm;
- 	}
- 	err = f2fs_build_node_manager(sbi);
- 	if (err) {
- 		f2fs_msg(sb, KERN_ERR,
--			"Failed to initialize F2FS node manager");
-+			"Failed to initialize F2FS node manager (%d)", err);
- 		goto free_nm;
- 	}
- 
--- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+I think section 4.15.2.3 is about S3 wake up, no S0 we are discussing here.
+
+>
+>> On the other hand, it wasn't clear from the patch description whether
+>> this actually causes a problem on real systems.  The description only
+>> said that the problem was theoretical.
+>
+> Kai did say nothing happens when hot-adding a USB device, so I think
+> there really is a problem.  This should be an obvious problem that
+> lots of people would trip over, so I expect there should be reports in
+> launchpad, etc.  I'd really like to have those bread crumbs.  Kai, can
+> you add a complete dmesg log to the bugzilla?  Hints from the log,
+> like the platform name, can help find related reports.
+
+It’s a platform in development so the name can’t be disclosed.
+
+>
+>>> The PCI core apparently *does* enable PME when we "suspend to D0".
+>>> But somehow calling the xHCI runtime suspend callback makes the
+>>> driver unable to notice when the PME is signaled?
+>>
+>> According to Kai, PME signalling doesn't work in D0 -- or at least,
+>> it is _documented_ not to work in D0 -- even though it is enabled
+>> and the device claims to support it.
+>
+> I didn't understand this part.  From a PCI perspective, PME signaling
+> while in D0 is an optional feature and should work if the device
+> advertises support for it.  If it doesn't work on this device, we
+> should have a quirk to indicate that.
+
+The only document I can find is the "Device Working State D0” from Microsoft.
+It says:
+"As a best practice, the driver should configure the device to generate  
+interrupts only when the device is in D0, and to generate wake signals only  
+when the device is in a low-power Dx state.”
+
+Wake-up capability
+Not applicable.
+
+Unfortunately PCI spec isn’t publicly available so I can only refer to  
+Microsoft document.
+
+>
+> But I thought Kai said the device *can* signal PME from D0, but for
+> some reason we don't handle it correctly if we have called the xHCI
+> suspend callback.
+
+Sorry, what I meant is PME signaling is enabled, i.e.
+"Status: D0 NoSoftRst+ PME-Enable+ DSel=0 DScale=0 PME-“
+
+But no signal was actually regenerated when USB device gets plugged to the  
+port.
+So there’s no wake up event to let PCI know it should runtime resume the  
+device.
+
+>
+> That's the part I don't understand.  Is this an xHCI driver issue?
+> Should the suspend callback do something different if we're staying in
+> D0?  I'm not sure the callback even knows what Dx state we're going
+> to.
+
+As there’s no PME signal to wakeup event to signal PCI to runtime resume, I  
+don’t think it’s an xHCI bug.
+
+Kai-Heng
 
