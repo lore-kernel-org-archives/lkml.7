@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A638C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:43:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB83CC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:43:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 564F320881
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:43:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5C7B20851
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:43:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558640607;
-	bh=iexFoTaFwO36Jeleb/WolXR7z6X+bBz7nxFVc/Qrhus=;
+	s=default; t=1558640615;
+	bh=9oY+pI8ykV1BKLM3bhcwgDCHMon/QrsSj3NZSK0i6N4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Afd6w9UgLkBiuuJb2CefIFH4hhSDNBQuBwrogtECLXUNnfuJ3g6JrSheKg/BoMYvY
-	 LTWe17rb92ys6pfb7nQ/sgZjtWjBx+qt5kUTX0BhqH7XHB9Wc8HtAn9zTF1m7a8qjf
-	 yCTE1TnX9sxZQoDwmNsxXRAPdnFPUQIFdJIcb/vc=
+	b=l9Kg+wJ/Q0/YKjRvpenlU2ZQdpzv1Wq9mCz+AqKX7uWEpRWDhLaAQugldDh7q9lrf
+	 m0g+P2y7RsqU73oOAcJyuapo+P25MxQ3Amxb5Ohz/mCoc+L8T4nRsgwFkECObo9Eug
+	 eUXnsuJFQ9VRZ15Fk7VoQqsAnoYUfZv5JCxH+8DY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390116AbfEWTn0 (ORCPT
+        id S2390249AbfEWTnf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:43:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53342 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:43:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53278 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389505AbfEWTSB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:18:01 -0400
+        id S2387578AbfEWTR7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:17:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 78106205ED;
-        Thu, 23 May 2019 19:18:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C6D5720863;
+        Thu, 23 May 2019 19:17:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639081;
-        bh=iexFoTaFwO36Jeleb/WolXR7z6X+bBz7nxFVc/Qrhus=;
+        s=default; t=1558639078;
+        bh=9oY+pI8ykV1BKLM3bhcwgDCHMon/QrsSj3NZSK0i6N4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m8JVwpr2lCdmgaoFog1PvVy1ZbYQDw544eW9xKUL5OqB2fTl5kKi8oyosXBD5f3KE
-         bp2+5ZyWWLB1UETo3blKNeJ0ROiki3h2uV1eGtRjZc7DlVo+VBgECEgKcZet0yMOiA
-         UvKLACVlNsDMRUeF1g2L1qvQ5d8yLMVJV4yjB6xM=
+        b=w7+M+beMIWYlhlx6gqLyZYArFcX6wqnov5yEmNQnA82CKklaJKuTe7RqR79MwsHGW
+         /xdIkJJnlfdSK2FsTO7FM4QA/sO5gi3/a20rosHwEpYm6Pn7k8dzmkvYaxWwJKxuXm
+         Nu7r74aX5DyzshAmtHQxInQ0yPR1nwIAwJ5EpOBs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nikolai Kostrigin <nickel@altlinux.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 4.19 070/114] PCI: Mark AMD Stoney Radeon R7 GPU ATS as broken
-Date:   Thu, 23 May 2019 21:06:09 +0200
-Message-Id: <20190523181738.087242815@linuxfoundation.org>
+        stable@vger.kernel.org, Yifeng Li <tomli@tomli.me>,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+        Teddy Wang <teddy.wang@siliconmotion.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: [PATCH 4.19 069/114] fbdev: sm712fb: fix crashes and garbled display during DPMS modesetting
+Date:   Thu, 23 May 2019 21:06:08 +0200
+Message-Id: <20190523181737.993901487@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181731.372074275@linuxfoundation.org>
 References: <20190523181731.372074275@linuxfoundation.org>
@@ -60,44 +61,140 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nikolai Kostrigin <nickel@altlinux.org>
+From: Yifeng Li <tomli@tomli.me>
 
-commit d28ca864c493637f3c957f4ed9348a94fca6de60 upstream.
+commit f627caf55b8e735dcec8fa6538e9668632b55276 upstream.
 
-ATS is broken on the Radeon R7 GPU (at least for Stoney Ridge based laptop)
-and causes IOMMU stalls and system failure.  Disable ATS on these devices
-to make them usable again with IOMMU enabled.
+On a Thinkpad s30 (Pentium III / i440MX, Lynx3DM), blanking the display
+or starting the X server will crash and freeze the system, or garble the
+display.
 
-Thanks to Joerg Roedel <jroedel@suse.de> for help.
+Experiments showed this problem can mostly be solved by adjusting the
+order of register writes. Also, sm712fb failed to consider the difference
+of clock frequency when unblanking the display, and programs the clock for
+SM712 to SM720.
 
-[bhelgaas: In the email thread mentioned below, Alex suspects the real
-problem is in sbios or iommu, so it may affect only certain systems, and it
-may affect other devices in those systems as well.  However, per Joerg we
-lack the ability to debug further, so this quirk is the best we can do for
-now.]
+Fix them by adjusting the order of register writes, and adding an
+additional check for SM720 for programming the clock frequency.
 
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=194521
-Link: https://lore.kernel.org/lkml/20190408103725.30426-1-nickel@altlinux.org
-Fixes: 9b44b0b09dec ("PCI: Mark AMD Stoney GPU ATS as broken")
-Signed-off-by: Nikolai Kostrigin <nickel@altlinux.org>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Acked-by: Joerg Roedel <jroedel@suse.de>
-CC: stable@vger.kernel.org
+Signed-off-by: Yifeng Li <tomli@tomli.me>
+Tested-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Cc: Teddy Wang <teddy.wang@siliconmotion.com>
+Cc: <stable@vger.kernel.org>  # v4.4+
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pci/quirks.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/video/fbdev/sm712fb.c |   64 ++++++++++++++++++++++++------------------
+ 1 file changed, 38 insertions(+), 26 deletions(-)
 
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -4878,6 +4878,7 @@ static void quirk_no_ats(struct pci_dev
+--- a/drivers/video/fbdev/sm712fb.c
++++ b/drivers/video/fbdev/sm712fb.c
+@@ -886,67 +886,79 @@ static inline unsigned int chan_to_field
  
- /* AMD Stoney platform GPU */
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x98e4, quirk_no_ats);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x6900, quirk_no_ats);
- #endif /* CONFIG_PCI_ATS */
- 
- /* Freescale PCIe doesn't support MSI in RC mode */
+ static int smtc_blank(int blank_mode, struct fb_info *info)
+ {
++	struct smtcfb_info *sfb = info->par;
++
+ 	/* clear DPMS setting */
+ 	switch (blank_mode) {
+ 	case FB_BLANK_UNBLANK:
+ 		/* Screen On: HSync: On, VSync : On */
++
++		switch (sfb->chip_id) {
++		case 0x710:
++		case 0x712:
++			smtc_seqw(0x6a, 0x16);
++			smtc_seqw(0x6b, 0x02);
++		case 0x720:
++			smtc_seqw(0x6a, 0x0d);
++			smtc_seqw(0x6b, 0x02);
++			break;
++		}
++
++		smtc_seqw(0x23, (smtc_seqr(0x23) & (~0xc0)));
+ 		smtc_seqw(0x01, (smtc_seqr(0x01) & (~0x20)));
+-		smtc_seqw(0x6a, 0x16);
+-		smtc_seqw(0x6b, 0x02);
+ 		smtc_seqw(0x21, (smtc_seqr(0x21) & 0x77));
+ 		smtc_seqw(0x22, (smtc_seqr(0x22) & (~0x30)));
+-		smtc_seqw(0x23, (smtc_seqr(0x23) & (~0xc0)));
+-		smtc_seqw(0x24, (smtc_seqr(0x24) | 0x01));
+ 		smtc_seqw(0x31, (smtc_seqr(0x31) | 0x03));
++		smtc_seqw(0x24, (smtc_seqr(0x24) | 0x01));
+ 		break;
+ 	case FB_BLANK_NORMAL:
+ 		/* Screen Off: HSync: On, VSync : On   Soft blank */
++		smtc_seqw(0x24, (smtc_seqr(0x24) | 0x01));
++		smtc_seqw(0x31, ((smtc_seqr(0x31) & (~0x07)) | 0x00));
++		smtc_seqw(0x23, (smtc_seqr(0x23) & (~0xc0)));
+ 		smtc_seqw(0x01, (smtc_seqr(0x01) & (~0x20)));
++		smtc_seqw(0x22, (smtc_seqr(0x22) & (~0x30)));
+ 		smtc_seqw(0x6a, 0x16);
+ 		smtc_seqw(0x6b, 0x02);
+-		smtc_seqw(0x22, (smtc_seqr(0x22) & (~0x30)));
+-		smtc_seqw(0x23, (smtc_seqr(0x23) & (~0xc0)));
+-		smtc_seqw(0x24, (smtc_seqr(0x24) | 0x01));
+-		smtc_seqw(0x31, ((smtc_seqr(0x31) & (~0x07)) | 0x00));
+ 		break;
+ 	case FB_BLANK_VSYNC_SUSPEND:
+ 		/* Screen On: HSync: On, VSync : Off */
++		smtc_seqw(0x24, (smtc_seqr(0x24) & (~0x01)));
++		smtc_seqw(0x31, ((smtc_seqr(0x31) & (~0x07)) | 0x00));
++		smtc_seqw(0x23, ((smtc_seqr(0x23) & (~0xc0)) | 0x20));
+ 		smtc_seqw(0x01, (smtc_seqr(0x01) | 0x20));
+-		smtc_seqw(0x20, (smtc_seqr(0x20) & (~0xB0)));
+-		smtc_seqw(0x6a, 0x0c);
+-		smtc_seqw(0x6b, 0x02);
+ 		smtc_seqw(0x21, (smtc_seqr(0x21) | 0x88));
++		smtc_seqw(0x20, (smtc_seqr(0x20) & (~0xB0)));
+ 		smtc_seqw(0x22, ((smtc_seqr(0x22) & (~0x30)) | 0x20));
+-		smtc_seqw(0x23, ((smtc_seqr(0x23) & (~0xc0)) | 0x20));
+-		smtc_seqw(0x24, (smtc_seqr(0x24) & (~0x01)));
+-		smtc_seqw(0x31, ((smtc_seqr(0x31) & (~0x07)) | 0x00));
+ 		smtc_seqw(0x34, (smtc_seqr(0x34) | 0x80));
++		smtc_seqw(0x6a, 0x0c);
++		smtc_seqw(0x6b, 0x02);
+ 		break;
+ 	case FB_BLANK_HSYNC_SUSPEND:
+ 		/* Screen On: HSync: Off, VSync : On */
++		smtc_seqw(0x24, (smtc_seqr(0x24) & (~0x01)));
++		smtc_seqw(0x31, ((smtc_seqr(0x31) & (~0x07)) | 0x00));
++		smtc_seqw(0x23, ((smtc_seqr(0x23) & (~0xc0)) | 0xD8));
+ 		smtc_seqw(0x01, (smtc_seqr(0x01) | 0x20));
+-		smtc_seqw(0x20, (smtc_seqr(0x20) & (~0xB0)));
+-		smtc_seqw(0x6a, 0x0c);
+-		smtc_seqw(0x6b, 0x02);
+ 		smtc_seqw(0x21, (smtc_seqr(0x21) | 0x88));
++		smtc_seqw(0x20, (smtc_seqr(0x20) & (~0xB0)));
+ 		smtc_seqw(0x22, ((smtc_seqr(0x22) & (~0x30)) | 0x10));
+-		smtc_seqw(0x23, ((smtc_seqr(0x23) & (~0xc0)) | 0xD8));
+-		smtc_seqw(0x24, (smtc_seqr(0x24) & (~0x01)));
+-		smtc_seqw(0x31, ((smtc_seqr(0x31) & (~0x07)) | 0x00));
+ 		smtc_seqw(0x34, (smtc_seqr(0x34) | 0x80));
++		smtc_seqw(0x6a, 0x0c);
++		smtc_seqw(0x6b, 0x02);
+ 		break;
+ 	case FB_BLANK_POWERDOWN:
+ 		/* Screen On: HSync: Off, VSync : Off */
++		smtc_seqw(0x24, (smtc_seqr(0x24) & (~0x01)));
++		smtc_seqw(0x31, ((smtc_seqr(0x31) & (~0x07)) | 0x00));
++		smtc_seqw(0x23, ((smtc_seqr(0x23) & (~0xc0)) | 0xD8));
+ 		smtc_seqw(0x01, (smtc_seqr(0x01) | 0x20));
+-		smtc_seqw(0x20, (smtc_seqr(0x20) & (~0xB0)));
+-		smtc_seqw(0x6a, 0x0c);
+-		smtc_seqw(0x6b, 0x02);
+ 		smtc_seqw(0x21, (smtc_seqr(0x21) | 0x88));
++		smtc_seqw(0x20, (smtc_seqr(0x20) & (~0xB0)));
+ 		smtc_seqw(0x22, ((smtc_seqr(0x22) & (~0x30)) | 0x30));
+-		smtc_seqw(0x23, ((smtc_seqr(0x23) & (~0xc0)) | 0xD8));
+-		smtc_seqw(0x24, (smtc_seqr(0x24) & (~0x01)));
+-		smtc_seqw(0x31, ((smtc_seqr(0x31) & (~0x07)) | 0x00));
+ 		smtc_seqw(0x34, (smtc_seqr(0x34) | 0x80));
++		smtc_seqw(0x6a, 0x0c);
++		smtc_seqw(0x6b, 0x02);
+ 		break;
+ 	default:
+ 		return -EINVAL;
 
 
