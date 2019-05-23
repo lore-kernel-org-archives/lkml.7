@@ -2,137 +2,130 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3DD3C282E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 09:04:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAA2CC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 09:05:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F11C20851
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 09:04:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AE9420851
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 09:05:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730152AbfEWJEh (ORCPT
+        id S1730169AbfEWJFs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 05:04:37 -0400
-Received: from foss.arm.com ([217.140.101.70]:40630 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726230AbfEWJEh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 05:04:37 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 409B2341;
-        Thu, 23 May 2019 02:04:36 -0700 (PDT)
-Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A78AC3F575;
-        Thu, 23 May 2019 02:04:30 -0700 (PDT)
-Date:   Thu, 23 May 2019 10:04:28 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Evgenii Stepanov <eugenis@google.com>
-Cc:     Andrey Konovalov <andreyknvl@google.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
-        kvm@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
+        Thu, 23 May 2019 05:05:48 -0400
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:59025 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726429AbfEWJFs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 05:05:48 -0400
+X-Originating-IP: 90.88.22.185
+Received: from localhost (aaubervilliers-681-1-80-185.w90-88.abo.wanadoo.fr [90.88.22.185])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 6583D1C0022;
+        Thu, 23 May 2019 09:05:41 +0000 (UTC)
+Date:   Thu, 23 May 2019 11:05:40 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Torsten Duwe <duwe@lst.de>
+Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Sean Paul <seanpaul@chromium.org>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        Harald Geyer <harald@ccbib.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
-Subject: Re: [PATCH v15 05/17] arms64: untag user pointers passed to memory
- syscalls
-Message-ID: <20190523090427.GA44383@arrakis.emea.arm.com>
-References: <cover.1557160186.git.andreyknvl@google.com>
- <00eb4c63fefc054e2c8d626e8fedfca11d7c2600.1557160186.git.andreyknvl@google.com>
- <20190522114910.emlckebwzv2qz42i@mbp>
- <CAFKCwrjyP+x0JJy=qpBFsp4pub3He6UkvU0qnf1UOKt6W1LPRQ@mail.gmail.com>
+        Thomas Gleixner <tglx@linutronix.de>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/6] dt-bindings: Add ANX6345 DP/eDP transmitter binding
+Message-ID: <20190523090540.nhxrjpz3scx6jt23@flea>
+References: <20190523065013.2719D68B05@newverein.lst.de>
+ <20190523065400.BD9EB68B05@newverein.lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="rseevv2olje4ipja"
 Content-Disposition: inline
-In-Reply-To: <CAFKCwrjyP+x0JJy=qpBFsp4pub3He6UkvU0qnf1UOKt6W1LPRQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190523065400.BD9EB68B05@newverein.lst.de>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 22, 2019 at 02:16:57PM -0700, Evgenii Stepanov wrote:
-> On Wed, May 22, 2019 at 4:49 AM Catalin Marinas <catalin.marinas@arm.com> wrote:
-> > On Mon, May 06, 2019 at 06:30:51PM +0200, Andrey Konovalov wrote:
-> > > This patch is a part of a series that extends arm64 kernel ABI to allow to
-> > > pass tagged user pointers (with the top byte set to something else other
-> > > than 0x00) as syscall arguments.
-> > >
-> > > This patch allows tagged pointers to be passed to the following memory
-> > > syscalls: brk, get_mempolicy, madvise, mbind, mincore, mlock, mlock2,
-> > > mmap, mmap_pgoff, mprotect, mremap, msync, munlock, munmap,
-> > > remap_file_pages, shmat and shmdt.
-> > >
-> > > This is done by untagging pointers passed to these syscalls in the
-> > > prologues of their handlers.
-> >
-> > I'll go through them one by one to see if we can tighten the expected
-> > ABI while having the MTE in mind.
-> >
-> > > diff --git a/arch/arm64/kernel/sys.c b/arch/arm64/kernel/sys.c
-> > > index b44065fb1616..933bb9f3d6ec 100644
-> > > --- a/arch/arm64/kernel/sys.c
-> > > +++ b/arch/arm64/kernel/sys.c
-> > > @@ -35,10 +35,33 @@ SYSCALL_DEFINE6(mmap, unsigned long, addr, unsigned long, len,
-> > >  {
-> > >       if (offset_in_page(off) != 0)
-> > >               return -EINVAL;
-> > > -
-> > > +     addr = untagged_addr(addr);
-> > >       return ksys_mmap_pgoff(addr, len, prot, flags, fd, off >> PAGE_SHIFT);
-> > >  }
-> >
-> > If user passes a tagged pointer to mmap() and the address is honoured
-> > (or MAP_FIXED is given), what is the expected return pointer? Does it
-> > need to be tagged with the value from the hint?
-> 
-> For HWASan the most convenient would be to use the tag from the hint.
-> But since in the TBI (not MTE) mode the kernel has no idea what
-> meaning userspace assigns to pointer tags, perhaps it should not try
-> to guess, and should return raw (zero-tagged) address instead.
 
-Then, just to relax the ABI for hwasan, shall we simply disallow tagged
-pointers on mmap() arguments? We can leave them in for
-mremap(old_address), madvise().
+--rseevv2olje4ipja
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> > With MTE, we may want to use this as a request for the default colour of
-> > the mapped pages (still under discussion).
-> 
-> I like this - and in that case it would make sense to return the
-> pointer that can be immediately dereferenced without crashing the
-> process, i.e. with the matching tag.
+On Thu, May 23, 2019 at 08:54:00AM +0200, Torsten Duwe wrote:
+> From: Icenowy Zheng <icenowy@aosc.io>
+>
+> The anx6345 is an ultra-low power DisplayPort/eDP transmitter designed
+> for portable devices.
+>
+> Add a binding document for it.
+>
+> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Torsten Duwe <duwe@suse.de>
+> ---
+>  .../bindings/display/bridge/anx6345.txt       | 56 +++++++++++++++++++
+>  1 file changed, 56 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/bridge/anx6345.txt
+>
+> diff --git a/Documentation/devicetree/bindings/display/bridge/anx6345.txt b/Documentation/devicetree/bindings/display/bridge/anx6345.txt
+> new file mode 100644
+> index 000000000000..e79a11348d11
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/bridge/anx6345.txt
+> @@ -0,0 +1,56 @@
+> +Analogix ANX6345 eDP Transmitter
+> +--------------------------------
+> +
+> +The ANX6345 is an ultra-low power Full-HD eDP transmitter designed for
+> +portable devices.
+> +
+> +Required properties:
+> +
+> + - compatible		: "analogix,anx6345"
+> + - reg			: I2C address of the device
+> + - reset-gpios		: Which GPIO to use for reset
+> + - dvdd12-supply	: Regulator for 1.2V digital core power.
+> + - dvdd25-supply	: Regulator for 2.5V digital core power.
+> +
+> +Optional properties:
+> +
+> + - Video ports for RGB input and eDP output using the DT bindings
+> +   defined in [1]
 
-This came up from the Android investigation work where large memory
-allocations (using mmap) could be more efficiently pre-tagged by the
-kernel on page fault. Not sure about the implementation details yet.
+The output node can be optional, but the input one is probably going
+to be needed all the time, since otherwise you won't be able to fill
+the output port of the upstream device in the graph.
 
--- 
-Catalin
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--rseevv2olje4ipja
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXOZiZAAKCRDj7w1vZxhR
+xVuoAQD8Ba3TZQabw5gulT70AFWp+5Sbt6VGImJ5sGI0rt0q8gD+JlFZu4467xk+
+FfHXnIhv1o34YAkciYHqAXsdLkLl5A4=
+=PktN
+-----END PGP SIGNATURE-----
+
+--rseevv2olje4ipja--
