@@ -2,344 +2,165 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 562B1C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:37:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFFF9C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:38:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1948E2075B
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:37:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AEA0217D4
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:38:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558625913;
+	bh=In3rvS7qPiwg1FJyBh5dflvbEpFMS5hBT03hiE9/rvA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=n08kEKuwQqATJbXl0AJs5AgEG3+OuuzzONdX6VsGZJiFM6P0ILlMC6zJ2GbhMsMpL
+	 ceUCwrtBugHvI0ba5ovxLiKzf6OFcG/ImNvpBZZozd0TiZ9BJlIKsrYpScWunaVH8o
+	 p3jJx6/87DtNTcqEcKw5RMpdyIkscjooTgq0HpVE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731123AbfEWPhW (ORCPT
+        id S1731086AbfEWPic (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 11:37:22 -0400
-Received: from mga03.intel.com ([134.134.136.65]:65249 "EHLO mga03.intel.com"
+        Thu, 23 May 2019 11:38:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41258 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730859AbfEWPhW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 11:37:22 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 May 2019 08:37:21 -0700
-X-ExtLoop1: 1
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
-  by orsmga003.jf.intel.com with ESMTP; 23 May 2019 08:37:21 -0700
-Date:   Thu, 23 May 2019 08:40:19 -0700
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     Auger Eric <eric.auger@redhat.com>
-Cc:     iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        Yi Liu <yi.l.liu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Andriy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH v3 04/16] ioasid: Add custom IOASID allocator
-Message-ID: <20190523084019.7f940aa5@jacob-builder>
-In-Reply-To: <a33797e9-d34b-b0a9-4f39-700dce8252b3@redhat.com>
-References: <1556922737-76313-1-git-send-email-jacob.jun.pan@linux.intel.com>
-        <1556922737-76313-5-git-send-email-jacob.jun.pan@linux.intel.com>
-        <c991ff0c-87bf-574a-bf31-9b37f0421385@redhat.com>
-        <20190522124255.117de6f6@jacob-builder>
-        <a33797e9-d34b-b0a9-4f39-700dce8252b3@redhat.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+        id S1730760AbfEWPic (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 11:38:32 -0400
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E5F792184B
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 15:38:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558625911;
+        bh=In3rvS7qPiwg1FJyBh5dflvbEpFMS5hBT03hiE9/rvA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=xk6zSVVym0P5KzT42cddxpF5yiXdUhUa7xXOH8MpCn/cfJ3S5vsZrZR1o+iH6sGKX
+         hkrXhHaIakfO9PQJ7lGcW4W7NPRcZPL0drDouwMn9s5QqGCuu2jZjFp4+Z07wrOi7k
+         YHcRad0Pul+hudp7zzagXr+enMDf8Rtwvcy617Ek=
+Received: by mail-wm1-f51.google.com with SMTP id f204so6351652wme.0
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 08:38:30 -0700 (PDT)
+X-Gm-Message-State: APjAAAW+AKsgrPOGSjPBukQSBwawgQJJLWTXR52xrrCbjiHcb8ajfR8M
+        1BCrBwSU0FzDqH6FSWkkp3ZTPVNzGNtP2tZ9AhlKTg==
+X-Google-Smtp-Source: APXvYqy++PtcXnqHwArqj5UBHapLbM3bluHIFIybhJhiF3cxodhKIK1g6g8QRkLstCYhKG/XwAU/aSxLQ8voK78SKUw=
+X-Received: by 2002:a1c:9c42:: with SMTP id f63mr13030971wme.23.1558625909476;
+ Thu, 23 May 2019 08:38:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20190520114105.GD27805@linux.intel.com> <20190521151836.GA4843@linux.intel.com>
+ <20190521155140.GE22089@linux.intel.com> <20190522132022.GC31176@linux.intel.com>
+ <20190522132227.GD31176@linux.intel.com> <0e183cce-c4b4-0e10-dbb6-bd81bea58b66@tycho.nsa.gov>
+ <20190522153836.GA24833@linux.intel.com> <CALCETrUS8xyF1JJmQs18BGTDhPRXf+s81BkMZCZwmY73r7M+zg@mail.gmail.com>
+ <20190523023517.GA31950@linux.intel.com> <20190523102628.GC10955@linux.intel.com>
+ <20190523141752.GA12078@linux.intel.com>
+In-Reply-To: <20190523141752.GA12078@linux.intel.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Thu, 23 May 2019 08:38:17 -0700
+X-Gmail-Original-Message-ID: <CALCETrUzx3LPAKCLFf75P-XshAkRcr+JLET3LA_kHDs9MA11FA@mail.gmail.com>
+Message-ID: <CALCETrUzx3LPAKCLFf75P-XshAkRcr+JLET3LA_kHDs9MA11FA@mail.gmail.com>
+Subject: Re: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
+        Jethro Beekman <jethro@fortanix.com>,
+        "Xing, Cedric" <cedric.xing@intel.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Dr. Greg" <greg@enjellic.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 23 May 2019 09:14:07 +0200
-Auger Eric <eric.auger@redhat.com> wrote:
+On Thu, May 23, 2019 at 7:17 AM Sean Christopherson
+<sean.j.christopherson@intel.com> wrote:
+>
+> On Thu, May 23, 2019 at 01:26:28PM +0300, Jarkko Sakkinen wrote:
+> > On Wed, May 22, 2019 at 07:35:17PM -0700, Sean Christopherson wrote:
+> > > But actually, there's no need to disallow mmap() after ECREATE since the
+> > > LSM checks also apply to mmap(), e.g. FILE__EXECUTE would be needed to
+> > > mmap() any enclave pages PROT_EXEC.  I guess my past self thought mmap()
+> > > bypassed LSM checks?  The real problem is that mmap()'ng an existing
+> > > enclave would require FILE__WRITE and FILE__EXECUTE, which puts us back
+> > > at square one.
+> >
+> > I'm lost with the constraints we want to set.
+>
+> As is today, SELinux policies would require enclave loaders to have
+> FILE__WRITE and FILE__EXECUTE permissions on /dev/sgx/enclave.  Presumably
+> other LSMs have similar requirements.  Requiring all processes to have
+> FILE__{WRITE,EXECUTE} permissions means the permissions don't add much
+> value, e.g. they can't be used to distinguish between an enclave that is
+> being loaded from an unmodified file and an enclave that is being
+> generated on the fly, e.g. Graphene.
+>
+> Looking back at Andy's mail, he was talking about requiring FILE__EXECUTE
+> to run an enclave, so perhaps it's only FILE__WRITE that we're trying to
+> special case.
+>
 
-> Hi Jacob,
-> 
-> On 5/22/19 9:42 PM, Jacob Pan wrote:
-> > On Tue, 21 May 2019 11:55:55 +0200
-> > Auger Eric <eric.auger@redhat.com> wrote:
-> >   
-> >> Hi Jacob,
-> >>
-> >> On 5/4/19 12:32 AM, Jacob Pan wrote:  
-> >>> Sometimes, IOASID allocation must be handled by platform specific
-> >>> code. The use cases are guest vIOMMU and pvIOMMU where IOASIDs
-> >>> need to be allocated by the host via enlightened or paravirt
-> >>> interfaces.
-> >>>
-> >>> This patch adds an extension to the IOASID allocator APIs such
-> >>> that platform drivers can register a custom allocator, possibly
-> >>> at boot time, to take over the allocation. Xarray is still used
-> >>> for tracking and searching purposes internal to the IOASID code.
-> >>> Private data of an IOASID can also be set after the allocation.
-> >>>
-> >>> There can be multiple custom allocators registered but only one is
-> >>> used at a time. In case of hot removal of devices that provides
-> >>> the allocator, all IOASIDs must be freed prior to unregistering
-> >>> the allocator. Default XArray based allocator cannot be mixed with
-> >>> custom allocators, i.e. custom allocators will not be used if
-> >>> there are outstanding IOASIDs allocated by the default XA
-> >>> allocator.
-> >>>
-> >>> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> >>> ---
-> >>>  drivers/iommu/ioasid.c | 125
-> >>> +++++++++++++++++++++++++++++++++++++++++++++++++ 1 file changed,
-> >>> 125 insertions(+)
-> >>>
-> >>> diff --git a/drivers/iommu/ioasid.c b/drivers/iommu/ioasid.c
-> >>> index 99f5e0a..ed2915a 100644
-> >>> --- a/drivers/iommu/ioasid.c
-> >>> +++ b/drivers/iommu/ioasid.c
-> >>> @@ -17,6 +17,100 @@ struct ioasid_data {
-> >>>  };
-> >>>  
-> >>>  static DEFINE_XARRAY_ALLOC(ioasid_xa);
-> >>> +static DEFINE_MUTEX(ioasid_allocator_lock);
-> >>> +static struct ioasid_allocator *active_custom_allocator;
-> >>> +
-> >>> +static LIST_HEAD(custom_allocators);
-> >>> +/*
-> >>> + * A flag to track if ioasid default allocator is in use, this
-> >>> will
-> >>> + * prevent custom allocator from being used. The reason is that
-> >>> custom allocator
-> >>> + * must have unadulterated space to track private data with
-> >>> xarray, there cannot
-> >>> + * be a mix been default and custom allocated IOASIDs.
-> >>> + */
-> >>> +static int default_allocator_active;
-> >>> +
-> >>> +/**
-> >>> + * ioasid_register_allocator - register a custom allocator
-> >>> + * @allocator: the custom allocator to be registered
-> >>> + *
-> >>> + * Custom allocators take precedence over the default xarray
-> >>> based allocator.
-> >>> + * Private data associated with the ASID are managed by ASID
-> >>> common code
-> >>> + * similar to data stored in xa.
-> >>> + *
-> >>> + * There can be multiple allocators registered but only one is
-> >>> active. In case
-> >>> + * of runtime removal of a custom allocator, the next one is
-> >>> activated based
-> >>> + * on the registration ordering.
-> >>> + */
-> >>> +int ioasid_register_allocator(struct ioasid_allocator *allocator)
-> >>> +{
-> >>> +	struct ioasid_allocator *pallocator;
-> >>> +	int ret = 0;
-> >>> +
-> >>> +	if (!allocator)
-> >>> +		return -EINVAL;    
-> >> is it really necessary? Sin't it the caller responsibility?  
-> > makes sense. will remove this one and below.  
-> >>> +
-> >>> +	mutex_lock(&ioasid_allocator_lock);
-> >>> +	/*
-> >>> +	 * No particular preference since all custom allocators
-> >>> end up calling
-> >>> +	 * the host to allocate IOASIDs. We activate the first
-> >>> one and keep
-> >>> +	 * the later registered allocators in a list in case the
-> >>> first one gets
-> >>> +	 * removed due to hotplug.
-> >>> +	 */
-> >>> +	if (list_empty(&custom_allocators))
-> >>> +		active_custom_allocator = allocator;> +
-> >>> else {
-> >>> +		/* Check if the allocator is already registered
-> >>> */
-> >>> +		list_for_each_entry(pallocator,
-> >>> &custom_allocators, list) {
-> >>> +			if (pallocator == allocator) {
-> >>> +				pr_err("IOASID allocator already
-> >>> registered\n");
-> >>> +				ret = -EEXIST;
-> >>> +				goto out_unlock;
-> >>> +			}
-> >>> +		}
-> >>> +	}
-> >>> +	list_add_tail(&allocator->list, &custom_allocators);
-> >>> +
-> >>> +out_unlock:
-> >>> +	mutex_unlock(&ioasid_allocator_lock);
-> >>> +	return ret;
-> >>> +}
-> >>> +EXPORT_SYMBOL_GPL(ioasid_register_allocator);
-> >>> +
-> >>> +/**
-> >>> + * ioasid_unregister_allocator - Remove a custom IOASID allocator
-> >>> + * @allocator: the custom allocator to be removed
-> >>> + *
-> >>> + * Remove an allocator from the list, activate the next allocator
-> >>> in
-> >>> + * the order it was registered.
-> >>> + */
-> >>> +void ioasid_unregister_allocator(struct ioasid_allocator
-> >>> *allocator) +{
-> >>> +	if (!allocator)
-> >>> +		return;    
-> >> is it really necessary?  
-> >>> +
-> >>> +	if (list_empty(&custom_allocators)) {
-> >>> +		pr_warn("No custom IOASID allocators active!\n");
-> >>> +		return;
-> >>> +	}
-> >>> +
-> >>> +	mutex_lock(&ioasid_allocator_lock);
-> >>> +	list_del(&allocator->list);
-> >>> +	if (list_empty(&custom_allocators)) {
-> >>> +		pr_info("No custom IOASID allocators\n")>
-> >>> +		/*
-> >>> +		 * All IOASIDs should have been freed before the
-> >>> last custom
-> >>> +		 * allocator is unregistered. Unless default
-> >>> allocator is in
-> >>> +		 * use.
-> >>> +		 */
-> >>> +		BUG_ON(!xa_empty(&ioasid_xa)
-> >>> && !default_allocator_active);
-> >>> +		active_custom_allocator = NULL;
-> >>> +	} else if (allocator == active_custom_allocator) {    
-> >> In case you are removing the active custom allocator don't you also
-> >> need to check that all ioasids were freed. Otherwise you are likely
-> >> to switch to a different allocator whereas the asid space is
-> >> partially populated.  
-> > The assumption is that all custom allocators on the same guest will
-> > end up calling the same host allocator. Having multiple custom
-> > allocators in the list is just a way to support multiple (p)vIOMMUs
-> > with hotplug. Therefore, we cannot nor need to free all PASIDs when
-> > one custom allocator goes away. This is a different situation then
-> > switching between default allocator and custom allocator, where
-> > custom allocator has to start with a clean space.  
-> Although I understand your specific usecase, this framework may have
-> other users, where custom allocators behave differently.
-> 
-> Also the commit msg says:"
-> In case of hot removal of devices that provides the
-> allocator, all IOASIDs must be freed prior to unregistering the
-> allocator."
-> 
-Right, it is inconsistent.
-Consider the following scenario on a single guest with two vIOMMUs:
-1. vIOMMU1 register allocator A1 first
-2. vIOMMU2 register allocator A2 stored to the allocator list
-3. device belong to vIOMMU1 bind_sva(), allocate PASID1 from A1
-4. device belong to vIOMMU2 bind_sva(), allocate PASID2 from A1
-5. vIOMMU1 hot removed, free PASID1, then unregister A1
-6. IOASID framework will try to free A1 then install A2 as the active
-allocator but PASID2 is in use. It will be unnecessarily disruptive to
-free PASID2
+I thought about this some more, and I have a new proposal that helps
+address the ELRANGE alignment issue and the permission issue at the
+cost of some extra verbosity.  Maybe you all can poke holes in it :)
+The basic idea is to make everything more explicit from a user's
+perspective.  Here's how it works:
 
-I can think of a solution:
- - Add a flag when registering ioasid custom allocator,
-IOASID_ALLOC_RETAIN, which means when switching to another custom
-allocator, all outstanding PASIDs will be retained. Of course it does
-not include switching to default allocator which does not have this
-RETAIN flag.
+Opening /dev/sgx/enclave gives an enclave_fd that, by design, doesn't
+give EXECUTE or WRITE.  mmap() on the enclave_fd only works if you
+pass PROT_NONE and gives the correct alignment.  The resulting VMA
+cannot be mprotected or mremapped.  It can't be mmapped at all until
+after ECREATE because the alignment isn't known before that.
 
- - For the allocators do not have this flag, their PASIDs must be freed
-upon unregistering.
+Associated with the enclave are a bunch (up to 7) "enclave segment
+inodes".  These are anon_inodes that are created automagically.  An
+enclave segment is a group of pages, not necessary contiguous, with an
+upper bound on the memory permissions.  Each enclave page belongs to a
+segment.  When you do EADD, you tell the driver what segment you're
+adding to. [0]  This means that EADD gets an extra argument that is a
+permission mask for the page -- in addition to the initial SECINFO,
+you also pass to EADD something to the effect of "I promise never to
+map this with permissions greater than RX".
 
-Any thoughts?
+Then we just need some way to mmap a region from an enclave segment.
+This could be done by having a way to get an fd for an enclave segment
+or it could be done by having a new ioctl SGX_IOC_MAP_SEGMENT.  User
+code would use this operation to replace, MAP_FIXED-style, ranges from
+the big PROT_NONE mapping with the relevant pages from the enclave
+segment.  The resulting vma would only have VM_MAYWRITE if the segment
+is W, only have VM_MAYEXEC if the segment is X, and only have
+VM_MAYREAD if the segment is R.  Depending on implementation details,
+the VMAs might need to restrict mremap() to avoid mapping pages that
+aren't part of the segment in question.
 
-Jacob
+It's plausible that this whole thing works without the magic segment
+inodes under the hood, but figuring that out would need a careful look
+at how all the core mm bits and LSM bits work together.
 
-> Thanks
-> 
-> Eric
-> > 
-> >    
-> >>> +		active_custom_allocator =
-> >>> list_entry(&custom_allocators, struct ioasid_allocator, list);
-> >>> +		pr_info("IOASID allocator changed");
-> >>> +	}
-> >>> +	mutex_unlock(&ioasid_allocator_lock);
-> >>> +}
-> >>> +EXPORT_SYMBOL_GPL(ioasid_unregister_allocator);
-> >>>  
-> >>>  /**
-> >>>   * ioasid_set_data - Set private data for an allocated ioasid
-> >>> @@ -68,6 +162,29 @@ ioasid_t ioasid_alloc(struct ioasid_set *set,
-> >>> ioasid_t min, ioasid_t max, data->set = set;
-> >>>  	data->private = private;
-> >>>  
-> >>> +	mutex_lock(&ioasid_allocator_lock);
-> >>> +	/*
-> >>> +	 * Use custom allocator if available, otherwise use
-> >>> default.
-> >>> +	 * However, if there are active IOASIDs already been
-> >>> allocated by default
-> >>> +	 * allocator, custom allocator cannot be used.
-> >>> +	 */
-> >>> +	if (!default_allocator_active &&
-> >>> active_custom_allocator) {
-> >>> +		id = active_custom_allocator->alloc(min, max,
-> >>> active_custom_allocator->pdata);
-> >>> +		if (id == INVALID_IOASID) {
-> >>> +			pr_err("Failed ASID allocation by custom
-> >>> allocator\n");
-> >>> +			mutex_unlock(&ioasid_allocator_lock);
-> >>> +			goto exit_free;
-> >>> +		}
-> >>> +		/*
-> >>> +		 * Use XA to manage private data also sanitiy
-> >>> check custom
-> >>> +		 * allocator for duplicates.
-> >>> +		 */
-> >>> +		min = id;
-> >>> +		max = id + 1;
-> >>> +	} else
-> >>> +		default_allocator_active = 1;    
-> >> nit: true?  
-> > yes, i can turn default_allocator_active into a bool type.
-> >   
-> >>> +	mutex_unlock(&ioasid_allocator_lock);
-> >>> +
-> >>>  	if (xa_alloc(&ioasid_xa, &id, data, XA_LIMIT(min, max),
-> >>> GFP_KERNEL)) { pr_err("Failed to alloc ioasid from %d to %d\n",
-> >>> min, max); goto exit_free;> @@ -91,9 +208,17 @@ void
-> >>> ioasid_free(ioasid_t ioasid) {
-> >>>  	struct ioasid_data *ioasid_data;
-> >>>  
-> >>> +	mutex_lock(&ioasid_allocator_lock);
-> >>> +	if (active_custom_allocator)
-> >>> +		active_custom_allocator->free(ioasid,
-> >>> active_custom_allocator->pdata);
-> >>> +	mutex_unlock(&ioasid_allocator_lock);
-> >>> +
-> >>>  	ioasid_data = xa_erase(&ioasid_xa, ioasid);
-> >>>  
-> >>>  	kfree_rcu(ioasid_data, rcu);
-> >>> +
-> >>> +	if (xa_empty(&ioasid_xa))
-> >>> +		default_allocator_active = 0;    
-> >> Isn't it racy? what if an xa_alloc occurs inbetween?
-> >>
-> >>  
-> > yes, i will move it under the mutex. Thanks.  
-> >>>  }
-> >>>  EXPORT_SYMBOL_GPL(ioasid_free);
-> >>>  
-> >>>     
-> >>
-> >> Thanks
-> >>
-> >> Eric  
-> > 
-> > [Jacob Pan]
-> >   
+To get all the LSM stuff to work, SELinux will need some way to
+automatically assign an appropriate label to the segment inodes.  I
+assume that such a mechanism already exists and gets used for things
+like sockets, but I haven't actually confirmed this.
 
-[Jacob Pan]
+[0] There needs to be some vaguely intelligent semantics if you EADD
+the *same* address more than once.  A simple solution would be to
+disallow it if the segments don't match.
