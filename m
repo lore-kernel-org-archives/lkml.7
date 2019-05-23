@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EBFFC282DE
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:30:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33E86C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:30:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C4472184E
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:30:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B3DE217D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:30:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639847;
-	bh=0+FMZ+ewi22YLZs+nmDi4kl7PdV+y8/QWHfucQQnit0=;
+	s=default; t=1558639851;
+	bh=ffYAePsAYSLY2PZJ5lNAa7ZiztMb4ESID2IlEHjN8yc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yLBNEWYZYzDcXMYl/2SujLXWS2aAmAGKF1jNSNBJQICOBvAJLR8jTxCZnwE1OwwUu
-	 93Q8nwPN9K3RdE8MDBm78rXdZEd51ERTPiL2r98j9qq8OOqIMulEwI1UoQIQPQorQl
-	 xxyoYi9oC1AceUMXeiYL4B5tVecgLGGnn4Xcap6E=
+	b=a4fUran3+5OPc8PJ7AjU9jm8s6ffCNtFSDpKB3ta7ZhqFI57SkO/clMyq3N9ZIfP9
+	 LpvQgldNy6jqkg81vnvKqJCXO/Kt+3SPvTn8v3psvDzRSXHRJfUcPEybATrFKRRJzP
+	 EZ9f/CGTFBiJX7ddDVTFA2x4L4tAavu3gvf93ZTo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392175AbfEWTaq (ORCPT
+        id S2392188AbfEWTat (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:30:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44292 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:30:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44334 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391044AbfEWTam (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:30:42 -0400
+        id S2391695AbfEWTap (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:30:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BCDA2206BA;
-        Thu, 23 May 2019 19:30:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A54020879;
+        Thu, 23 May 2019 19:30:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639842;
-        bh=0+FMZ+ewi22YLZs+nmDi4kl7PdV+y8/QWHfucQQnit0=;
+        s=default; t=1558639844;
+        bh=ffYAePsAYSLY2PZJ5lNAa7ZiztMb4ESID2IlEHjN8yc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rpPtoR3Gj6ZA310ta6sZpVr0DtXq38PjBAK7W66pN4RYpi3LjddJSdmrH7PzQ9AnW
-         1X03ib5BYFiqcIOrNd8dMqoaeEhdaKanX9a1uyCMZtfTplKGI3DsuZzbBpGPwZ7zL5
-         Spm1/oZzjpKOJ4mV+h9L/To3VWZXCUWPmiNbacNU=
+        b=d8pL2XpUpwlgUGKurncKehxHjQYf22Rw/PvdZ9Zw17clB7KnPnCmNVpJg4Oodyj/t
+         vnbORAJupnygvuA7ku+T6WJFOABYiZ77Ti4QgIlD/7Ih4OTeA65ck8vFamoPYKCXX4
+         u0YIAlN3zRepASt/O8Abqd4xyn+iarWA4EXFpBKw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>,
-        Nigel Croxon <ncroxon@redhat.com>, Xiao Ni <xni@redhat.com>,
-        Song Liu <songliubraving@fb.com>
-Subject: [PATCH 5.1 112/122] Revert "Dont jump to compute_result state from check_result state"
-Date:   Thu, 23 May 2019 21:07:14 +0200
-Message-Id: <20190523181720.293820308@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH 5.1 097/122] PCI: Init PCIe feature bits for managed host bridge alloc
+Date:   Thu, 23 May 2019 21:06:59 +0200
+Message-Id: <20190523181718.056998161@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181705.091418060@linuxfoundation.org>
 References: <20190523181705.091418060@linuxfoundation.org>
@@ -60,54 +60,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Song Liu <songliubraving@fb.com>
+From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
 
-commit a25d8c327bb41742dbd59f8c545f59f3b9c39983 upstream.
+commit 6302bf3ef78dd210b5ff4a922afcb7d8eff8a211 upstream.
 
-This reverts commit 4f4fd7c5798bbdd5a03a60f6269cf1177fbd11ef.
+Two functions allocate a host bridge: devm_pci_alloc_host_bridge() and
+pci_alloc_host_bridge().  At the moment, only the unmanaged one initializes
+the PCIe feature bits, which prevents from using features such as hotplug
+or AER on some systems, when booting with device tree.  Make the
+initialization code common.
 
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Nigel Croxon <ncroxon@redhat.com>
-Cc: Xiao Ni <xni@redhat.com>
-Signed-off-by: Song Liu <songliubraving@fb.com>
+Fixes: 02bfeb484230 ("PCI/portdrv: Simplify PCIe feature permission checking")
+Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+CC: stable@vger.kernel.org	# v4.17+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/raid5.c |   19 +++++++++++++++----
- 1 file changed, 15 insertions(+), 4 deletions(-)
+ drivers/pci/probe.c |   23 ++++++++++++++---------
+ 1 file changed, 14 insertions(+), 9 deletions(-)
 
---- a/drivers/md/raid5.c
-+++ b/drivers/md/raid5.c
-@@ -4223,15 +4223,26 @@ static void handle_parity_checks6(struct
- 	case check_state_check_result:
- 		sh->check_state = check_state_idle;
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -586,16 +586,9 @@ static void pci_release_host_bridge_dev(
+ 	kfree(to_pci_host_bridge(dev));
+ }
  
--		if (s->failed > 1)
--			break;
- 		/* handle a successful check operation, if parity is correct
- 		 * we are done.  Otherwise update the mismatch count and repair
- 		 * parity if !MD_RECOVERY_CHECK
- 		 */
- 		if (sh->ops.zero_sum_result == 0) {
--			/* Any parity checked was correct */
--			set_bit(STRIPE_INSYNC, &sh->state);
-+			/* both parities are correct */
-+			if (!s->failed)
-+				set_bit(STRIPE_INSYNC, &sh->state);
-+			else {
-+				/* in contrast to the raid5 case we can validate
-+				 * parity, but still have a failure to write
-+				 * back
-+				 */
-+				sh->check_state = check_state_compute_result;
-+				/* Returning at this point means that we may go
-+				 * off and bring p and/or q uptodate again so
-+				 * we make sure to check zero_sum_result again
-+				 * to verify if p or q need writeback
-+				 */
-+			}
- 		} else {
- 			atomic64_add(STRIPE_SECTORS, &conf->mddev->resync_mismatches);
- 			if (test_bit(MD_RECOVERY_CHECK, &conf->mddev->recovery)) {
+-struct pci_host_bridge *pci_alloc_host_bridge(size_t priv)
++static void pci_init_host_bridge(struct pci_host_bridge *bridge)
+ {
+-	struct pci_host_bridge *bridge;
+-
+-	bridge = kzalloc(sizeof(*bridge) + priv, GFP_KERNEL);
+-	if (!bridge)
+-		return NULL;
+-
+ 	INIT_LIST_HEAD(&bridge->windows);
+-	bridge->dev.release = pci_release_host_bridge_dev;
+ 
+ 	/*
+ 	 * We assume we can manage these PCIe features.  Some systems may
+@@ -608,6 +601,18 @@ struct pci_host_bridge *pci_alloc_host_b
+ 	bridge->native_shpc_hotplug = 1;
+ 	bridge->native_pme = 1;
+ 	bridge->native_ltr = 1;
++}
++
++struct pci_host_bridge *pci_alloc_host_bridge(size_t priv)
++{
++	struct pci_host_bridge *bridge;
++
++	bridge = kzalloc(sizeof(*bridge) + priv, GFP_KERNEL);
++	if (!bridge)
++		return NULL;
++
++	pci_init_host_bridge(bridge);
++	bridge->dev.release = pci_release_host_bridge_dev;
+ 
+ 	return bridge;
+ }
+@@ -622,7 +627,7 @@ struct pci_host_bridge *devm_pci_alloc_h
+ 	if (!bridge)
+ 		return NULL;
+ 
+-	INIT_LIST_HEAD(&bridge->windows);
++	pci_init_host_bridge(bridge);
+ 	bridge->dev.release = devm_pci_release_host_bridge_dev;
+ 
+ 	return bridge;
 
 
