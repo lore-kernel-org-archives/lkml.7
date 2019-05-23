@@ -2,213 +2,168 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F55EC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 17:55:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F913C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 17:56:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A8482186A
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 17:55:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="F01S9opK"
+	by mail.kernel.org (Postfix) with ESMTP id 7D0A92186A
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 17:56:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731440AbfEWRzt (ORCPT
+        id S1731478AbfEWR4X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 13:55:49 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:44206 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730928AbfEWRzt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 13:55:49 -0400
-Received: by mail-qt1-f193.google.com with SMTP id f24so7759883qtk.11
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 10:55:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=CgT8oRWFS1J54ASxbVHmBz5Tyd/B834Vmb8dQsBzisk=;
-        b=F01S9opKEjPWv1Ji/EPg5pd8NgABY3rLeWMBPEdUABGVrhUNUf5eWyX9uP4mooc9z7
-         08jsjlnmLzzEGZa2iFIooRKYnwUGmWomH4RW9fOz5RgdIghbJHbngpnj3zQAptdfz5Xn
-         ozn0pvEdcMupMWs0/GT5euLr6qmTjpe5C4rkgyWcIcJQhOmO6JX9pNBvqsTNW3L5DrVo
-         hprfbGpQqesljgeHKGYrVsjgILLrqDcWnb2qGhkNr5O8vilHZmJVaDaUfrbY+RHRDcIS
-         +kdh3CoXyBFc8Ao/3ZL0a4rOoMaQyCwbYk30JpKF1t65UfZNPAu1RebA5i0dYH0QvfuY
-         +Omg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=CgT8oRWFS1J54ASxbVHmBz5Tyd/B834Vmb8dQsBzisk=;
-        b=VebAyfavOvHtJFt5RfOpFYzU23w0sHgvZgNJaUc1AdPKft6E144b8IQKMb6UdJrxkD
-         mS/LHZq6/91UVE61xoMs+5YlA0HK2KL7sn7TZCRF49B+cnvueVfyjCG2mnZnmtgaZ6ga
-         eB7g8F+CRP1AsrKlifNmhYvRXhpqu+gINJtFc0f1ui/UvHkahzNpQdLXCUw4xTYigTnP
-         gZJd+MPIPShgI5/Pmv3qz90leDHEy7kJ+UxeWIWwtVxh/JHW3qvalD+DBKMbs1HA/GDy
-         H+gbQdfG+u6nVkYQ37yOVXDBFIvcX7bBDLsDO1+mHtG9Dfs9pcNdP3fvQi4q5cKSK9j4
-         UqCQ==
-X-Gm-Message-State: APjAAAVmnlE9NilSeOx/V+M81laITJ9u6bEVQQdLvb0m7sIy0/BC0G8a
-        2GcbqRx7Rkz1tk8UM36UY+1pIw==
-X-Google-Smtp-Source: APXvYqx3zTS7lcJS9edhgyAQdVswoEICefM3VTQ/rsN0qW9V3gpHj7jUQQJoTPHGPMbQYnaMuP+Zkg==
-X-Received: by 2002:aed:22e2:: with SMTP id q31mr80397038qtc.238.1558634148140;
-        Thu, 23 May 2019 10:55:48 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-49-251.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.49.251])
-        by smtp.gmail.com with ESMTPSA id o64sm21105qke.61.2019.05.23.10.55.47
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 23 May 2019 10:55:47 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1hTrwQ-0008Ar-MY; Thu, 23 May 2019 14:55:46 -0300
-Date:   Thu, 23 May 2019 14:55:46 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Jerome Glisse <jglisse@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Artemy Kovalyov <artemyko@mellanox.com>,
-        Moni Shoua <monis@mellanox.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Kaike Wan <kaike.wan@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>
-Subject: Re: [PATCH v4 0/1] Use HMM for ODP v4
-Message-ID: <20190523175546.GE12159@ziepe.ca>
-References: <20190506195657.GA30261@ziepe.ca>
- <20190521205321.GC3331@redhat.com>
- <20190522005225.GA30819@ziepe.ca>
- <20190522174852.GA23038@redhat.com>
- <20190522235737.GD15389@ziepe.ca>
- <20190523150432.GA5104@redhat.com>
- <20190523154149.GB12159@ziepe.ca>
- <20190523155207.GC5104@redhat.com>
- <20190523163429.GC12159@ziepe.ca>
- <20190523173302.GD5104@redhat.com>
+        Thu, 23 May 2019 13:56:23 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:57682 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731206AbfEWR4X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 13:56:23 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id AAAE9300414E;
+        Thu, 23 May 2019 17:56:22 +0000 (UTC)
+Received: from kamzik.brq.redhat.com (unknown [10.43.2.160])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1729C1001E6C;
+        Thu, 23 May 2019 17:56:17 +0000 (UTC)
+Date:   Thu, 23 May 2019 19:56:15 +0200
+From:   Andrew Jones <drjones@redhat.com>
+To:     Thomas Huth <thuth@redhat.com>
+Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-s390@vger.kernel.org
+Subject: Re: [PATCH 8/9] KVM: s390: Do not report unusabled IDs via
+ KVM_CAP_MAX_VCPU_ID
+Message-ID: <20190523175615.fowi5tc73nwso6tm@kamzik.brq.redhat.com>
+References: <20190523164309.13345-1-thuth@redhat.com>
+ <20190523164309.13345-9-thuth@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190523173302.GD5104@redhat.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190523164309.13345-9-thuth@redhat.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Thu, 23 May 2019 17:56:22 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 01:33:03PM -0400, Jerome Glisse wrote:
-> On Thu, May 23, 2019 at 01:34:29PM -0300, Jason Gunthorpe wrote:
-> > On Thu, May 23, 2019 at 11:52:08AM -0400, Jerome Glisse wrote:
-> > > On Thu, May 23, 2019 at 12:41:49PM -0300, Jason Gunthorpe wrote:
-> > > > On Thu, May 23, 2019 at 11:04:32AM -0400, Jerome Glisse wrote:
-> > > > > On Wed, May 22, 2019 at 08:57:37PM -0300, Jason Gunthorpe wrote:
-> > > > > > On Wed, May 22, 2019 at 01:48:52PM -0400, Jerome Glisse wrote:
-> > > > > > 
-> > > > > > > > > So attached is a rebase on top of 5.2-rc1, i have tested with pingpong
-> > > > > > > > > (prefetch and not and different sizes). Seems to work ok.
-> > > > > > > > 
-> > > > > > > > Urk, it already doesn't apply to the rdma tree :(
-> > > > > > > > 
-> > > > > > > > The conflicts are a little more extensive than I'd prefer to handle..
-> > > > > > > > Can I ask you to rebase it on top of this branch please:
-> > > > > > > > 
-> > > > > > > > https://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git/log/?h=wip/jgg-for-next
-> > > > > > > > 
-> > > > > > > > Specifically it conflicts with this patch:
-> > > > > > > > 
-> > > > > > > > https://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git/commit/?h=wip/jgg-for-next&id=d2183c6f1958e6b6dfdde279f4cee04280710e34
-> > > > > > 
-> > > > > > There is at least one more serious blocker here:
-> > > > > > 
-> > > > > > config ARCH_HAS_HMM_MIRROR
-> > > > > >         bool
-> > > > > >         default y
-> > > > > >         depends on (X86_64 || PPC64)
-> > > > > >         depends on MMU && 64BIT
-> > > > > > 
-> > > > > > I can't loose ARM64 support for ODP by merging this, that is too
-> > > > > > serious of a regression.
-> > > > > > 
-> > > > > > Can you fix it?
-> > > > > 
-> > > > > 5.2 already has patch to fix the Kconfig (ARCH_HAS_HMM_MIRROR and
-> > > > > ARCH_HAS_HMM_DEVICE replacing ARCH_HAS_HMM) I need to update nouveau
-> > > > 
-> > > > Newer than 5.2-rc1? Is this why ARCH_HAS_HMM_MIRROR is not used anywhere?
-> > > 
-> > > Yes this is multi-step update, first add the new Kconfig release n,
-> > > update driver in release n+1, update core Kconfig in release n+2
-> > > 
-> > > So we are in release n (5.2), in 5.3 i will update nouveau and amdgpu
-> > > so that in 5.4 in ca remove the old ARCH_HAS_HMM
-> > 
-> > Why don't you just send the patch for both parts to mm or to DRM?
-> > 
-> > This is very normal - as long as the resulting conflicts would be
-> > small during there is no reason not to do this. Can you share the
-> > combined patch?
+On Thu, May 23, 2019 at 06:43:08PM +0200, Thomas Huth wrote:
+> KVM_CAP_MAX_VCPU_ID is currently always reporting KVM_MAX_VCPU_ID on all
+> architectures. However, on s390x, the amount of usable CPUs is determined
+> during runtime - it is depending on the features of the machine the code
+> is running on. Since we are using the vcpu_id as an index into the SCA
+> structures that are defined by the hardware (see e.g. the sca_add_vcpu()
+> function), it is not only the amount of CPUs that is limited by the hard-
+> ware, but also the range of IDs that we can use.
+> Thus KVM_CAP_MAX_VCPU_ID must be determined during runtime on s390x, too.
+> So the handling of KVM_CAP_MAX_VCPU_ID has to be moved from the common
+> code into the architecture specific code, and on s390x we have to return
+> the same value here as for KVM_CAP_MAX_VCPUS.
+> This problem has been discovered with the kvm_create_max_vcpus selftest.
+> With this change applied, the selftest now passes on s390x, too.
 > 
-> This was tested in the past an resulted in failure. So for now i am
-> taking the simplest and easiest path with the least burden for every
-> maintainer. It only complexify my life.
-
-I don't know what you tried to do in the past, but it happens all the
-time, every merge cycle with success. Not everything can be done, but
-changing the signature of one function with one call site should
-really not be a problem.
-
-> Note that mm is not a git tree and thus i can not play any git trick
-> to help in this endeavor.
-
-I am aware..
-
-> > > > If mm takes the fixup patches so hmm mirror is as reliable as ODP's
-> > > > existing stuff, and patch from you to enable ARM64, then we can
-> > > > continue to merge into 5.3
-> > > > 
-> > > > So, let us try to get acks on those other threads..
-> > > 
-> > > I will be merging your patchset and Ralph and repost, they are only
-> > > minor change mostly that you can not update the driver API in just
-> > > one release.
-> > 
-> > Of course you can, we do it all the time. It requires some
-> > co-ordination, but as long as the merge conflicts are not big it is
-> > fine.
-> > 
-> > Merge the driver API change and the call site updates to -mm and
-> > refain from merging horrendously conflicting patches through DRM.
-> > 
-> > In the case of the changes in my HMM RFC it is something like 2
-> > lines in DRM that need touching, no problem at all.
-> > 
-> > If you want help I can volunteer make a hmm PR for Linus just for this
-> > during the merge window - but Andrew would need to agree and ack the
-> > patches.
+> Signed-off-by: Thomas Huth <thuth@redhat.com>
+> ---
+>  arch/mips/kvm/mips.c       | 3 +++
+>  arch/powerpc/kvm/powerpc.c | 3 +++
+>  arch/s390/kvm/kvm-s390.c   | 1 +
+>  arch/x86/kvm/x86.c         | 3 +++
+>  virt/kvm/arm/arm.c         | 3 +++
+>  virt/kvm/kvm_main.c        | 2 --
+>  6 files changed, 13 insertions(+), 2 deletions(-)
 > 
-> This was tested in the past and i do not want to go over this issue
-> again (or re-iterate the long emails discussion associated with that).
-> It failed and it put the burden on every maintainers. So it is easier
-> to do the multi-step thing.
-> 
-> You can take a peak at Ralph patchset and yours into one with minor
-> changes here:
-> 
-> https://cgit.freedesktop.org/~glisse/linux/log/?h=hmm-5.3
+> diff --git a/arch/mips/kvm/mips.c b/arch/mips/kvm/mips.c
+> index 6d0517ac18e5..0369f26ab96d 100644
+> --- a/arch/mips/kvm/mips.c
+> +++ b/arch/mips/kvm/mips.c
+> @@ -1122,6 +1122,9 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
+>  	case KVM_CAP_MAX_VCPUS:
+>  		r = KVM_MAX_VCPUS;
+>  		break;
+> +	case KVM_CAP_MAX_VCPU_ID:
+> +		r = KVM_MAX_VCPU_ID;
+> +		break;
+>  	case KVM_CAP_MIPS_FPU:
+>  		/* We don't handle systems with inconsistent cpu_has_fpu */
+>  		r = !!raw_cpu_has_fpu;
+> diff --git a/arch/powerpc/kvm/powerpc.c b/arch/powerpc/kvm/powerpc.c
+> index 3393b166817a..aa3a678711be 100644
+> --- a/arch/powerpc/kvm/powerpc.c
+> +++ b/arch/powerpc/kvm/powerpc.c
+> @@ -657,6 +657,9 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
+>  	case KVM_CAP_MAX_VCPUS:
+>  		r = KVM_MAX_VCPUS;
+>  		break;
+> +	case KVM_CAP_MAX_VCPU_ID:
+> +		r = KVM_MAX_VCPU_ID;
+> +		break;
+>  #ifdef CONFIG_PPC_BOOK3S_64
+>  	case KVM_CAP_PPC_GET_SMMU_INFO:
+>  		r = 1;
+> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
+> index 8d6d75db8de6..871d2e99b156 100644
+> --- a/arch/s390/kvm/kvm-s390.c
+> +++ b/arch/s390/kvm/kvm-s390.c
+> @@ -539,6 +539,7 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
+>  		break;
+>  	case KVM_CAP_NR_VCPUS:
+>  	case KVM_CAP_MAX_VCPUS:
+> +	case KVM_CAP_MAX_VCPU_ID:
+>  		r = KVM_S390_BSCA_CPU_SLOTS;
+>  		if (!kvm_s390_use_sca_entries())
+>  			r = KVM_MAX_VCPUS;
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 536b78c4af6e..09a07d6a154e 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -3122,6 +3122,9 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
+>  	case KVM_CAP_MAX_VCPUS:
+>  		r = KVM_MAX_VCPUS;
+>  		break;
+> +	case KVM_CAP_MAX_VCPU_ID:
+> +		r = KVM_MAX_VCPU_ID;
+> +		break;
+>  	case KVM_CAP_PV_MMU:	/* obsolete */
+>  		r = 0;
+>  		break;
+> diff --git a/virt/kvm/arm/arm.c b/virt/kvm/arm/arm.c
+> index 90cedebaeb94..7eeebe5e9da2 100644
+> --- a/virt/kvm/arm/arm.c
+> +++ b/virt/kvm/arm/arm.c
+> @@ -224,6 +224,9 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
+>  	case KVM_CAP_MAX_VCPUS:
+>  		r = KVM_MAX_VCPUS;
+>  		break;
+> +	case KVM_CAP_MAX_VCPU_ID:
+> +		r = KVM_MAX_VCPU_ID;
+> +		break;
+>  	case KVM_CAP_MSI_DEVID:
+>  		if (!kvm)
+>  			r = -EINVAL;
+> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+> index f0d13d9d125d..c09259dd6286 100644
+> --- a/virt/kvm/kvm_main.c
+> +++ b/virt/kvm/kvm_main.c
+> @@ -3146,8 +3146,6 @@ static long kvm_vm_ioctl_check_extension_generic(struct kvm *kvm, long arg)
+>  	case KVM_CAP_MULTI_ADDRESS_SPACE:
+>  		return KVM_ADDRESS_SPACE_NUM;
+>  #endif
+> -	case KVM_CAP_MAX_VCPU_ID:
+> -		return KVM_MAX_VCPU_ID;
+>  	case KVM_CAP_NR_MEMSLOTS:
+>  		return KVM_USER_MEM_SLOTS;
+>  	default:
+> -- 
+> 2.21.0
+>
 
-Okay..
-
-This patch needs to use down_read(&mm->mmap_sem) not READ_ONCE:
-
- mm/hmm: do not try to create hmm struct from within hmm_range_register()
- Driver should never call hmm_range_register() without a valid and active
- registered hmm_mirror and thus without a valid and active hmm struct. So
- if that happens just return -EFAULT.
-
-Otherwise it is inconsisent with the locking scheme and has a use
-after free race. 
-
-I was not sure if the lock could be obtained safely here so I
-preferred to use the no-lock alternative of passing in mirror. I still
-think you should just change the single call site and sent to -mm.
-
-Thank you for all the other fixes, they look great.
-
-Regards,
-Jason
+Reviewed-by: Andrew Jones <drjones@redhat.com>
