@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F676C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:11:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4718BC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:11:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64F2F217D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:11:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E5D72184B
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:11:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558638693;
-	bh=sBiEtL3xSL3LEDcQEkAfib4ojf4HSSTCLYJxCD6V/jI=;
+	s=default; t=1558638697;
+	bh=WOEa1ws4HotOoIA7LVTMovEkyc6zTE+JoWJkweKPueU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wWVZ8pNlF//gn3j00fyvpj2S0GYe4pb0rn3nhv1lmDFuxqZfBjDm1e54XvDRxypMi
-	 XQHKhfEZQYjxEli08fB/XffcYfWRM72pV+ZFrq6Dz2YPTVgLSAbQT7AOaiFli7DVd/
-	 exCJyZsU6//xBb6fOGTalX4TAh9m6FYE5CXTOmsQ=
+	b=jm5FaZyJJH2OPO8W+KQ8MhDX6IPV7sJW3nZv33AyftRRzPjg6oNqaAngPenhBabq8
+	 8X9IYI6oAKqAEuwnMouW+DiQKxUzLBNsbypmcXbyYEwHvLkXPL6wZDoVRzpw9I0Z42
+	 ohg91o0sxX3GBXhMxOZjgZmDwcPrUSoLgOnxAe10=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388210AbfEWTLc (ORCPT
+        id S2388235AbfEWTLg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:11:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44912 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:11:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45010 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388194AbfEWTL3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:11:29 -0400
+        id S2388217AbfEWTLe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:11:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 261D1217D7;
-        Thu, 23 May 2019 19:11:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7151C2184B;
+        Thu, 23 May 2019 19:11:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558638688;
-        bh=sBiEtL3xSL3LEDcQEkAfib4ojf4HSSTCLYJxCD6V/jI=;
+        s=default; t=1558638694;
+        bh=WOEa1ws4HotOoIA7LVTMovEkyc6zTE+JoWJkweKPueU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P/2Agi0sm51ZnaNmQV6DpsDXXrxV+qfw93PIDDBjCiOjzsiy80Uyq7pOP0xkzD45c
-         ZgyrexhjQQgV4vK4DaxteG2KSn3tj8pKHy7ZspmQ20aFEna07ZFvoqDM8QILMERjH4
-         ArJZuFvs+V3qscWrMqIicRExMBoLZDDiw7kuq+qo=
+        b=di2M9o8WkZsOJ5lautEsGesnH/VMsxKgreCaWlIH/B1IBTLhJfDku413q5P54SlIj
+         oN2E7DX6+q2z+YP9I/oQRcicKH4MoZdXD5fqX8noVT3RvpSPNZA5m5tuCrRV0TPoiv
+         uIfDBU4qsx2dUF0Pp+CQIB6bbD9RI2qdWpYDv7XA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Antonio SJ Musumeci <trapexit@spawn.link>,
-        Miklos Szeredi <mszeredi@redhat.com>
-Subject: [PATCH 4.14 28/77] fuse: fix writepages on 32bit
-Date:   Thu, 23 May 2019 21:05:46 +0200
-Message-Id: <20190523181724.151094898@linuxfoundation.org>
+        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Joerg Roedel <jroedel@suse.de>
+Subject: [PATCH 4.14 30/77] iommu/tegra-smmu: Fix invalid ASID bits on Tegra30/114
+Date:   Thu, 23 May 2019 21:05:48 +0200
+Message-Id: <20190523181724.380491661@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181719.982121681@linuxfoundation.org>
 References: <20190523181719.982121681@linuxfoundation.org>
@@ -59,36 +60,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miklos Szeredi <mszeredi@redhat.com>
+From: Dmitry Osipenko <digetx@gmail.com>
 
-commit 9de5be06d0a89ca97b5ab902694d42dfd2bb77d2 upstream.
+commit 43a0541e312f7136e081e6bf58f6c8a2e9672688 upstream.
 
-Writepage requests were cropped to i_size & 0xffffffff, which meant that
-mmaped writes to any file larger than 4G might be silently discarded.
+Both Tegra30 and Tegra114 have 4 ASID's and the corresponding bitfield of
+the TLB_FLUSH register differs from later Tegra generations that have 128
+ASID's.
 
-Fix by storing the file size in a properly sized variable (loff_t instead
-of size_t).
+In a result the PTE's are now flushed correctly from TLB and this fixes
+problems with graphics (randomly failing tests) on Tegra30.
 
-Reported-by: Antonio SJ Musumeci <trapexit@spawn.link>
-Fixes: 6eaf4782eb09 ("fuse: writepages: crop secondary requests")
-Cc: <stable@vger.kernel.org> # v3.13
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Acked-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/fuse/file.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/iommu/tegra-smmu.c |   25 ++++++++++++++++++-------
+ 1 file changed, 18 insertions(+), 7 deletions(-)
 
---- a/fs/fuse/file.c
-+++ b/fs/fuse/file.c
-@@ -1525,7 +1525,7 @@ __acquires(fc->lock)
+--- a/drivers/iommu/tegra-smmu.c
++++ b/drivers/iommu/tegra-smmu.c
+@@ -94,7 +94,6 @@ static inline u32 smmu_readl(struct tegr
+ #define  SMMU_TLB_FLUSH_VA_MATCH_ALL     (0 << 0)
+ #define  SMMU_TLB_FLUSH_VA_MATCH_SECTION (2 << 0)
+ #define  SMMU_TLB_FLUSH_VA_MATCH_GROUP   (3 << 0)
+-#define  SMMU_TLB_FLUSH_ASID(x)          (((x) & 0x7f) << 24)
+ #define  SMMU_TLB_FLUSH_VA_SECTION(addr) ((((addr) & 0xffc00000) >> 12) | \
+ 					  SMMU_TLB_FLUSH_VA_MATCH_SECTION)
+ #define  SMMU_TLB_FLUSH_VA_GROUP(addr)   ((((addr) & 0xffffc000) >> 12) | \
+@@ -197,8 +196,12 @@ static inline void smmu_flush_tlb_asid(s
  {
- 	struct fuse_conn *fc = get_fuse_conn(inode);
- 	struct fuse_inode *fi = get_fuse_inode(inode);
--	size_t crop = i_size_read(inode);
-+	loff_t crop = i_size_read(inode);
- 	struct fuse_req *req;
+ 	u32 value;
  
- 	while (fi->writectr >= 0 && !list_empty(&fi->queued_writes)) {
+-	value = SMMU_TLB_FLUSH_ASID_MATCH | SMMU_TLB_FLUSH_ASID(asid) |
+-		SMMU_TLB_FLUSH_VA_MATCH_ALL;
++	if (smmu->soc->num_asids == 4)
++		value = (asid & 0x3) << 29;
++	else
++		value = (asid & 0x7f) << 24;
++
++	value |= SMMU_TLB_FLUSH_ASID_MATCH | SMMU_TLB_FLUSH_VA_MATCH_ALL;
+ 	smmu_writel(smmu, value, SMMU_TLB_FLUSH);
+ }
+ 
+@@ -208,8 +211,12 @@ static inline void smmu_flush_tlb_sectio
+ {
+ 	u32 value;
+ 
+-	value = SMMU_TLB_FLUSH_ASID_MATCH | SMMU_TLB_FLUSH_ASID(asid) |
+-		SMMU_TLB_FLUSH_VA_SECTION(iova);
++	if (smmu->soc->num_asids == 4)
++		value = (asid & 0x3) << 29;
++	else
++		value = (asid & 0x7f) << 24;
++
++	value |= SMMU_TLB_FLUSH_ASID_MATCH | SMMU_TLB_FLUSH_VA_SECTION(iova);
+ 	smmu_writel(smmu, value, SMMU_TLB_FLUSH);
+ }
+ 
+@@ -219,8 +226,12 @@ static inline void smmu_flush_tlb_group(
+ {
+ 	u32 value;
+ 
+-	value = SMMU_TLB_FLUSH_ASID_MATCH | SMMU_TLB_FLUSH_ASID(asid) |
+-		SMMU_TLB_FLUSH_VA_GROUP(iova);
++	if (smmu->soc->num_asids == 4)
++		value = (asid & 0x3) << 29;
++	else
++		value = (asid & 0x7f) << 24;
++
++	value |= SMMU_TLB_FLUSH_ASID_MATCH | SMMU_TLB_FLUSH_VA_GROUP(iova);
+ 	smmu_writel(smmu, value, SMMU_TLB_FLUSH);
+ }
+ 
 
 
