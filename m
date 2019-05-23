@@ -2,167 +2,178 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ED5DC282E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:23:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBDB8C282E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:24:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71A61206BA
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:23:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9B57206BA
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 15:24:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730950AbfEWPXw (ORCPT
+        id S1731040AbfEWPY1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 11:23:52 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:40024 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730789AbfEWPXw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 11:23:52 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4NFHpt4034892;
-        Thu, 23 May 2019 11:23:15 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2snvuv4d1u-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 23 May 2019 11:23:15 -0400
-Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x4NFIK3u036897;
-        Thu, 23 May 2019 11:23:15 -0400
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2snvuv4d1b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 23 May 2019 11:23:15 -0400
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x4N9NSvQ003997;
-        Thu, 23 May 2019 09:27:54 GMT
-Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
-        by ppma01dal.us.ibm.com with ESMTP id 2sn84n1r0f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 23 May 2019 09:27:54 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4NFND2v33096048
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 23 May 2019 15:23:13 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3A14CB2065;
-        Thu, 23 May 2019 15:23:13 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0C5AFB2068;
-        Thu, 23 May 2019 15:23:13 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.216])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu, 23 May 2019 15:23:12 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 533AB16C2987; Thu, 23 May 2019 08:23:14 -0700 (PDT)
-Date:   Thu, 23 May 2019 08:23:14 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Andrea Parri <andrea.parri@amarulasolutions.com>,
-        linux-kernel@vger.kernel.org,
-        Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>, rcu@vger.kernel.org,
+        Thu, 23 May 2019 11:24:27 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:35924 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730741AbfEWPY0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 11:24:26 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id D507B308ED53;
+        Thu, 23 May 2019 15:24:20 +0000 (UTC)
+Received: from treble (ovpn-121-106.rdu2.redhat.com [10.10.121.106])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7B6E219695;
+        Thu, 23 May 2019 15:24:15 +0000 (UTC)
+Date:   Thu, 23 May 2019 10:24:13 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Kairui Song <kasong@redhat.com>
+Cc:     Alexei Starovoitov <ast@fb.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will.deacon@arm.com>
-Subject: Re: [RFC PATCH] rcu: Make 'rcu_assign_pointer(p, v)' of type
- 'typeof(p)'
-Message-ID: <20190523152314.GP28207@linux.ibm.com>
-Reply-To: paulmck@linux.ibm.com
-References: <1558618340-17254-1-git-send-email-andrea.parri@amarulasolutions.com>
- <20190523135013.GL28207@linux.ibm.com>
- <20190523141851.GA7523@lakrids.cambridge.arm.com>
+        Song Liu <songliubraving@fb.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>
+Subject: Re: Getting empty callchain from perf_callchain_kernel()
+Message-ID: <20190523152413.m2pbnamihu3s2c5s@treble>
+References: <CACPcB9cB5n1HOmZcVpusJq8rAV5+KfmZ-Lxv3tgsSoy7vNrk7w@mail.gmail.com>
+ <20190517091044.GM2606@hirez.programming.kicks-ass.net>
+ <CACPcB9cpNp5CBqoRs+XMCwufzAFa8Pj-gbmj9fb+g5wVdue=ig@mail.gmail.com>
+ <20190522140233.GC16275@worktop.programming.kicks-ass.net>
+ <ab047883-69f6-1175-153f-5ad9462c6389@fb.com>
+ <20190522174517.pbdopvookggen3d7@treble>
+ <20190522234635.a47bettklcf5gt7c@treble>
+ <CACPcB9dRJ89YAMDQdKoDMU=vFfpb5AaY0mWC_Xzw1ZMTFBf6ng@mail.gmail.com>
+ <20190523133253.tad6ywzzexks6hrp@treble>
+ <CACPcB9fQKg7xhzhCZaF4UGi=EQs1HLTFgg-C_xJQaUfho3yMyA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190523141851.GA7523@lakrids.cambridge.arm.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-23_12:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905230104
+In-Reply-To: <CACPcB9fQKg7xhzhCZaF4UGi=EQs1HLTFgg-C_xJQaUfho3yMyA@mail.gmail.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Thu, 23 May 2019 15:24:25 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 03:19:19PM +0100, Mark Rutland wrote:
-> On Thu, May 23, 2019 at 06:50:13AM -0700, Paul E. McKenney wrote:
-> > On Thu, May 23, 2019 at 03:32:20PM +0200, Andrea Parri wrote:
-> > > The expression
-> > > 
-> > >   rcu_assign_pointer(p, typeof(p) v)
-> > > 
-> > > is reported to be of type 'typeof(p)' in the documentation (c.f., e.g.,
-> > > Documentation/RCU/whatisRCU.txt) but this is not the case: for example,
-> > > the following snippet
-> > > 
-> > >   int **y;
-> > >   int *x;
-> > >   int *r0;
-> > > 
-> > >   ...
-> > > 
-> > >   r0 = rcu_assign_pointer(*y, x);
-> > > 
-> > > can currently result in the compiler warning
-> > > 
-> > >   warning: assignment to ‘int *’ from ‘uintptr_t’ {aka ‘long unsigned int’} makes pointer from integer without a cast [-Wint-conversion]
-> > > 
-> > > Cast the uintptr_t value to a typeof(p) value.
-> > > 
-> > > Signed-off-by: Andrea Parri <andrea.parri@amarulasolutions.com>
-> > > Cc: "Paul E. McKenney" <paulmck@linux.ibm.com>
-> > > Cc: Josh Triplett <josh@joshtriplett.org>
-> > > Cc: Steven Rostedt <rostedt@goodmis.org>
-> > > Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-> > > Cc: Lai Jiangshan <jiangshanlai@gmail.com>
-> > > Cc: Joel Fernandes <joel@joelfernandes.org>
-> > > Cc: rcu@vger.kernel.org
-> > > Cc: Peter Zijlstra <peterz@infradead.org>
-> > > Cc: Will Deacon <will.deacon@arm.com>
-> > > Cc: Mark Rutland <mark.rutland@arm.com>
-> > > ---
-> > > NOTE:
-> > > 
-> > > TBH, I'm not sure this is 'the right patch' (hence the RFC...): in
-> > > fact, I'm currently missing the motivations for allowing assignments
-> > > such as the "r0 = ..." assignment above in generic code.  (BTW, it's
-> > > not currently possible to use such assignments in litmus tests...)
-> > 
-> > Given that a quick (and perhaps error-prone) search of the uses of
-> > rcu_assign_pointer() in v5.1 didn't find a single use of the return
-> > value, let's please instead change the documentation and implementation
-> > to eliminate the return value.
+On Thu, May 23, 2019 at 10:50:24PM +0800, Kairui Song wrote:
+> > > Hi Josh, this still won't fix the problem.
+> > >
+> > > Problem is not (or not only) with ___bpf_prog_run, what actually went
+> > > wrong is with the JITed bpf code.
+> >
+> > There seem to be a bunch of issues.  My patch at least fixes the failing
+> > selftest reported by Alexei for ORC.
+> >
+> > How can I recreate your issue?
 > 
-> FWIW, I completely agree, and for similar reasons I'd say we should do
-> the same to WRITE_ONCE(), where this 'cool feature' has been inherited
-> from.
+> Hmm, I used bcc's example to attach bpf to trace point, and with that
+> fix stack trace is still invalid.
 > 
-> For WRITE_ONCE() there's at least one user that needs to be cleaned up
-> first (relying on non-portable implementation detaisl of atomic*_set()),
-> but I suspect rcu_assign_pointer() isn't used as much as a building
-> block for low-level macros.
+> CMD I used with bcc:
+> python3 ./tools/stackcount.py t:sched:sched_fork
 
-Agreed, for rcu_assign_pointer(), there were only a couple, and I checked
-them as well.  Doesn't mean I didn't miss something, of course!
+I've had problems in the past getting bcc to build, so I was hoping it
+was reproducible with a standalone selftest.
 
-I also got an offlist report of rcu_assign_pointer() not working for
-pointers to incomplete structures.  Which can be fixed by removing
-the RCU_INITIALIZER() from the second argument of the smp_store_release().
-Which destroys sparse's ability to check for __rcu.
+> And I just had another try applying your patch, self test is also failing.
 
-One approach would be to have a separate rcu_assign_pointer_opaque()
-for opaque pointers, and people would just ignore the sparse warnings.
+Is it the same selftest reported by Alexei?
 
-Other suggestions?
+  test_stacktrace_map:FAIL:compare_map_keys stackid_hmap vs. stackmap err -1 errno 2
 
-							Thanx, Paul
+> I'm applying on my local master branch, a few days older than
+> upstream, I can update and try again, am I missing anything?
+
+The above patch had some issues, so with some configs you might see an
+objtool warning for ___bpf_prog_run(), in which case the patch doesn't
+fix the test_stacktrace_map selftest.
+
+Here's the latest version which should fix it in all cases (based on
+tip/master):
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/jpoimboe/linux.git/commit/?h=bpf-orc-fix
+
+> > > For frame pointer unwinder, it seems the JITed bpf code will have a
+> > > shifted "BP" register? (arch/x86/net/bpf_jit_comp.c:217), so if we can
+> > > unshift it properly then it will work.
+> >
+> > Yeah, that looks like a frame pointer bug in emit_prologue().
+> >
+> > > I tried below code, and problem is fixed (only for frame pointer
+> > > unwinder though). Need to find a better way to detect and do any
+> > > similar trick for bpf part, if this is a feasible way to fix it:
+> > >
+> > > diff --git a/arch/x86/kernel/unwind_frame.c b/arch/x86/kernel/unwind_frame.c
+> > > index 9b9fd4826e7a..2c0fa2aaa7e4 100644
+> > > --- a/arch/x86/kernel/unwind_frame.c
+> > > +++ b/arch/x86/kernel/unwind_frame.c
+> > > @@ -330,8 +330,17 @@ bool unwind_next_frame(struct unwind_state *state)
+> > >         }
+> > >
+> > >         /* Move to the next frame if it's safe: */
+> > > -       if (!update_stack_state(state, next_bp))
+> > > -               goto bad_address;
+> > > +       if (!update_stack_state(state, next_bp)) {
+> > > +               // Try again with shifted BP
+> > > +               state->bp += 5; // see AUX_STACK_SPACE
+> > > +               next_bp = (unsigned long
+> > > *)READ_ONCE_TASK_STACK(state->task, *state->bp);
+> > > +               // Clean and refetch stack info, it's marked as error outed
+> > > +               state->stack_mask = 0;
+> > > +               get_stack_info(next_bp, state->task,
+> > > &state->stack_info, &state->stack_mask);
+> > > +               if (!update_stack_state(state, next_bp)) {
+> > > +                       goto bad_address;
+> > > +               }
+> > > +       }
+> > >
+> > >         return true;
+> >
+> > Nack.
+> >
+> > > For ORC unwinder, I think the unwinder can't find any info about the
+> > > JITed part. Maybe if can let it just skip the JITed part and go to
+> > > kernel context, then should be good enough.
+> >
+> > If it's starting from a fake pt_regs then that's going to be a
+> > challenge.
+> >
+> > Will the JIT code always have the same stack layout?  If so then we
+> > could hard code that knowledge in ORC.  Or even better, create a generic
+> > interface for ORC to query the creator of the generated code about the
+> > stack layout.
+> 
+> I think yes.
+> 
+> Not sure why we have the BP shift yet, if the prolog code could be
+> tweaked to work with frame pointer unwinder it will be good to have.
+> But still not for ORC.
+> 
+> Will it be a good idea to have a region reserved for the JITed code?
+> Currently it shares the region with "module mapping space". If let it
+> have a separate region, when the unwinder meet any code in that region
+> it will know it's JITed code and then can do something special about
+> it.
+> 
+> This should make it much easier for both frame pointer and ORC unwinder to work.
+
+There's no need to put special cases in the FP unwinder when we can
+instead just fix the frame pointer usage in the JIT code.
+
+For ORC, I'm thinking we may be able to just require that all generated
+code (BPF and others) always use frame pointers.  Then when ORC doesn't
+recognize a code address, it could try using the frame pointer as a
+fallback.
+
+Once I get a reproducer I can do the patches for all that.
+
+-- 
+Josh
