@@ -2,151 +2,217 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C07D3C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 09:09:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 791E8C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 09:10:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8106420856
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 09:09:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2829E20879
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 09:10:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kA31TSrg"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="BQAIxqLQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730315AbfEWJJq (ORCPT
+        id S1730210AbfEWJKX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 05:09:46 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:33107 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730237AbfEWJJp (ORCPT
+        Thu, 23 May 2019 05:10:23 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:39022 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727319AbfEWJKW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 05:09:45 -0400
-Received: by mail-qt1-f196.google.com with SMTP id m32so5866293qtf.0
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 02:09:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=ZDRg3ieis6hoh/yJ9a80gOidWlG1G6Pw/YGxgRuSE94=;
-        b=kA31TSrggwsJxxWDnJJPIOo3MgixNqwLlwlFlwOzYC28Qzv9rkp8BWwHIdODxR99Nt
-         d7IFt6+f5xHBItXGp2Eu/3CYh18PpggLnYDWOPGEhC58NLAK8u/eOGkbZkra0hb+DjIW
-         5fb8+ypRJRIiFczeHfu1xVkpxzf1gcGRUnImDzPZUWqkbSgL6KAMHL9W7a8Fu8M5DujO
-         90V5srCCUOkBo351510PYMPxAxjqB4JtbYWAJ2PHaAarEBwCMnecaut6HWHq4qz/oqfM
-         qo2HNtUzDfnS3OXjBi1JU+j+hPnA/OKdCeWoN/pvQm7TpUNlroxutZ/9RIUPko5fruIR
-         BCcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=ZDRg3ieis6hoh/yJ9a80gOidWlG1G6Pw/YGxgRuSE94=;
-        b=CiG07S2pSxSL1YJekuxx2s2zWJfVge3ud3R4exR1ImvrxrV9/V1aeKfEwt93vkvD7b
-         v5MquIFu030Joy8NvtffDc1Ed13XAJDUnyfVsDVnuaQhfJd247dF7J1KkhHY42b/JFL+
-         RVHtUNiiLVB6Q/jkKZnrm9y9w914A30I2M1yf+GMeTyYPr0FSnRvL3dQh4dR12bqPwPR
-         UC0bIRs+/fRw4v6rFurxL3SgVs6TdJtoUqW+HaBzHyeFHybTyl7MZh1APZPEeeebwIKB
-         eGGhziP8tntcVyUG7aaKfc+bSFu1t3NOzKzbd9YDAwvMHnFY4y35fVvp0fmzsdsum5VP
-         vFnQ==
-X-Gm-Message-State: APjAAAWjLvjJAnJ2hBilLbTtz3dJ83zLf+daW0W6pwM4nCcteuugeEiU
-        Z1GXxmSdMw1YDZYWVSkr+E1uxMdgCc+LdxIoBWcZBg==
-X-Google-Smtp-Source: APXvYqzPHWai2cPVbmyi53PtZyW+rD0M2Kck+rs0vgo/buY2HBfBi20KQ1+3WaNRxJAeDdyBzyejy/NHzp/5Y2dGtco=
-X-Received: by 2002:ac8:352d:: with SMTP id y42mr78662075qtb.209.1558602584218;
- Thu, 23 May 2019 02:09:44 -0700 (PDT)
+        Thu, 23 May 2019 05:10:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=gvMc8e1blxSFjrQAJfdsPT3oO6xm8lpzhMKEL0P1bLs=; b=BQAIxqLQooHeCeK5WVsEqQJZK
+        kU0lC15VHB4iOLCjEo0UuhKfX4y3viK6OP2dG0YQ9oOblQk2b4q3HSwNPIMmny14TRWG4UCozKlA5
+        LSeXNBB/Cx6oiH5VNEEfnZAY/pKVf0akXlbK3NNsibQl2F/PxFqGh/k4so0wtQH01qhLM1Fbq75Ne
+        YKz05O5L1cM3FGJVNtTd0z8KF/MEl/sHFwI0BNvvLltd0H58QCZ9AjfNFLqy7MuRGwJdTx2ONuCFP
+        WONoC+lPgkCDImHd509WqDqdqe4Yw1v/jnV0G0nl6/IYVwSU4Mq57bogLMImeNpQCiBDUfMUt+oha
+        dwaTv+zrQ==;
+Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:38254)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1hTjjQ-0004gL-Ex; Thu, 23 May 2019 10:09:48 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.89)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1hTjjK-0007V5-1i; Thu, 23 May 2019 10:09:42 +0100
+Date:   Thu, 23 May 2019 10:09:41 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Anson Huang <anson.huang@nxp.com>
+Cc:     "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>,
+        "olof@lixom.net" <olof@lixom.net>,
+        "agross@kernel.org" <agross@kernel.org>,
+        "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>,
+        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "dinguyen@kernel.org" <dinguyen@kernel.org>,
+        "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH V6 1/2] soc: imx: Add SCU SoC info driver support
+Message-ID: <20190523090941.zd4rbvcimgit5lq5@shell.armlinux.org.uk>
+References: <1558586911-29309-1-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-References: <1555580267-29299-1-git-send-email-fabrice.gasnier@st.com> <45e934af-d677-d7d4-09ea-3ed01872dab6@st.com>
-In-Reply-To: <45e934af-d677-d7d4-09ea-3ed01872dab6@st.com>
-From:   Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Date:   Thu, 23 May 2019 11:09:33 +0200
-Message-ID: <CA+M3ks5O9YpZ-4f3x=bFn_LxJu+6i3pu7jsWv_93pe14y8V71w@mail.gmail.com>
-Subject: Re: [RESEND PATCH v5 0/3] Add PM support to STM32 LP Timer drivers
-To:     Fabrice Gasnier <fabrice.gasnier@st.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Loic PALLARDY <loic.pallardy@st.com>, tduszyns@gmail.com,
-        Mark Brown <broonie@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PWM List <linux-pwm@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        u.kleine-koenig@pengutronix.de,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1558586911-29309-1-git-send-email-Anson.Huang@nxp.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le ven. 10 mai 2019 =C3=A0 09:51, Fabrice Gasnier <fabrice.gasnier@st.com> =
-a =C3=A9crit :
->
-> On 4/18/19 11:37 AM, Fabrice Gasnier wrote:
-> > This patch series adds power management support for STM32 LP Timer:
-> > - PWM driver
-> > - Document the pinctrl states for sleep mode
-> >
-> > It also adds device link between the PWM consumer and the PWM provider.
-> > This allows proper sequencing for suspend/resume (e.g. user will likely
-> > do a pwm_disable() before the PWM provider suspend executes), see [1].
-> >
-> > [1] https://lkml.org/lkml/2019/2/5/770
-> >
->
-> Hi Thierry,
->
-> Please let me know if you have some more comments on this series. It's
-> been under review since quite some time now.
->
+On Thu, May 23, 2019 at 04:53:46AM +0000, Anson Huang wrote:
+> Add i.MX SCU SoC info driver to support i.MX8QXP SoC, introduce
+> driver dependency into Kconfig as CONFIG_IMX_SCU must be
+> selected to support i.MX SCU SoC driver, also need to use
+> platform driver model to make sure IMX_SCU driver is probed
+> before i.MX SCU SoC driver.
 
-Hi Thierry,
+This seems buggy...
 
-Does something is blocking on this series ?
-How can we progress on it ?
+> +static int imx_scu_soc_probe(struct platform_device *pdev)
+> +{
+> +	struct soc_device_attribute *soc_dev_attr;
+> +	struct soc_device *soc_dev;
+> +	u32 id, val;
+> +	int ret;
+> +
+> +	ret = imx_scu_get_handle(&soc_ipc_handle);
+> +	if (ret)
+> +		return ret;
+> +
+> +	soc_dev_attr = devm_kzalloc(&pdev->dev, sizeof(*soc_dev_attr),
+> +				    GFP_KERNEL);
+> +	if (!soc_dev_attr)
+> +		return -ENOMEM;
+> +
+> +	soc_dev_attr->family = "Freescale i.MX";
+> +
+> +	ret = of_property_read_string(of_root,
+> +				      "model",
+> +				      &soc_dev_attr->machine);
+> +	if (ret)
+> +		return ret;
+> +
+> +	id = imx_scu_soc_id();
+> +
+> +	/* format soc_id value passed from SCU firmware */
+> +	val = id & 0x1f;
+> +	soc_dev_attr->soc_id = val ? kasprintf(GFP_KERNEL, "0x%x", val)
+> +			       : "unknown";
 
-Regards,
-Benjamin
+soc_id can either be an allocated string, or it can be a static string
+of "unknown".
 
-> Thanks in advance,
-> Best Regards,
-> Fabrice
->
-> > ---
-> > resend v5:
-> > - update collected acks
-> >
-> > Changes in v5:
-> > - improve a warning message, fix a style issue.
-> >
-> > Changes in v4:
-> > - improve error handling when adding the PWM consumer device link.
-> >
-> > Changes in v3:
-> > - Move the device_link_add() call to of_pwm_get() as discussed with Uwe=
-.
-> >
-> > Changes in v2:
-> > - Don't disable PWM channel in PWM provider: rather refuse to suspend
-> >   and report an error as suggested by Uwe and Thierry.
-> > - Add patch 3/3 to propose device link addition.
-> > - No updates for STM32 LP Timer IIO driver. Patches can be send separat=
-ely.
-> >
-> > Fabrice Gasnier (3):
-> >   dt-bindings: pwm-stm32-lp: document pinctrl sleep state
-> >   pwm: stm32-lp: Add power management support
-> >   pwm: core: add consumer device link
-> >
-> >  .../devicetree/bindings/pwm/pwm-stm32-lp.txt       |  9 ++--
-> >  drivers/pwm/core.c                                 | 50 ++++++++++++++=
-++++++--
-> >  drivers/pwm/pwm-stm32-lp.c                         | 25 +++++++++++
-> >  include/linux/pwm.h                                |  6 ++-
-> >  4 files changed, 82 insertions(+), 8 deletions(-)
-> >
->
+> +	if (!soc_dev_attr->soc_id)
+> +		return -ENOMEM;
+> +
+> +	/* format revision value passed from SCU firmware */
+> +	val = (id >> 5) & 0xf;
+> +	val = (((val >> 2) + 1) << 4) | (val & 0x3);
+> +	soc_dev_attr->revision = val ? kasprintf(GFP_KERNEL,
+> +						 "%d.%d",
+> +						 (val >> 4) & 0xf,
+> +						 val & 0xf) : "unknown";
+
+revision here is the same.
+
+> +	if (!soc_dev_attr->revision) {
+> +		ret = -ENOMEM;
+> +		goto free_soc_id;
+> +	}
+> +
+> +	soc_dev = soc_device_register(soc_dev_attr);
+> +	if (IS_ERR(soc_dev)) {
+> +		ret = PTR_ERR(soc_dev);
+> +		goto free_revision;
+> +	}
+> +
+> +	return 0;
+> +
+> +free_revision:
+> +	kfree(soc_dev_attr->revision);
+> +free_soc_id:
+> +	kfree(soc_dev_attr->soc_id);
+
+Yet here you blindly kfree(), which means you could be doing in effect
+kfree("unknown") - which will likely result in a kernel oops.
+
+Either always make revision/soc_id an allocated string, or use some
+static storage for the strings (they're only small, static storage is
+likely to be much more efficient in this case, and there can only be
+one of these in any case.)
+
+> +	return ret;
+> +}
+> +
+> +static struct platform_driver imx_scu_soc_driver = {
+> +	.driver = {
+> +		.name = IMX_SCU_SOC_DRIVER_NAME,
+> +	},
+> +	.probe = imx_scu_soc_probe,
+> +};
+> +
+> +static int __init imx_scu_soc_init(void)
+> +{
+> +	struct platform_device *imx_scu_soc_pdev;
+> +	struct device_node *np;
+> +	int ret;
+> +
+> +	np = of_find_compatible_node(NULL, NULL, "fsl,imx-scu");
+> +	if (!np)
+> +		return -ENODEV;
+> +
+> +	of_node_put(np);
+> +
+> +	ret = platform_driver_register(&imx_scu_soc_driver);
+> +	if (ret)
+> +		return ret;
+> +
+> +	imx_scu_soc_pdev =
+> +		platform_device_register_simple(IMX_SCU_SOC_DRIVER_NAME,
+> +						-1,
+> +						NULL,
+> +						0);
+> +	if (IS_ERR(imx_scu_soc_pdev))
+> +		platform_driver_unregister(&imx_scu_soc_driver);
+> +
+> +	return PTR_ERR_OR_ZERO(imx_scu_soc_pdev);
+> +}
+> +device_initcall(imx_scu_soc_init);
+> -- 
+> 2.7.4
+> 
+> 
 > _______________________________________________
 > linux-arm-kernel mailing list
 > linux-arm-kernel@lists.infradead.org
 > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
