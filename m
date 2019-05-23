@@ -2,298 +2,168 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 071D1C282CE
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 02:23:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CDBEC46470
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 02:26:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8321D20881
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 02:23:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53E3620881
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 02:26:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="NrSed+fz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IBud/dDN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729535AbfEWCXM (ORCPT
+        id S1729656AbfEWC0X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 22 May 2019 22:23:12 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:44783 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728022AbfEWCXM (ORCPT
+        Wed, 22 May 2019 22:26:23 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:43065 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727305AbfEWC0W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 22 May 2019 22:23:12 -0400
-Received: by mail-wr1-f66.google.com with SMTP id w13so4382228wru.11
-        for <linux-kernel@vger.kernel.org>; Wed, 22 May 2019 19:23:10 -0700 (PDT)
+        Wed, 22 May 2019 22:26:22 -0400
+Received: by mail-pg1-f196.google.com with SMTP id f25so2261093pgv.10;
+        Wed, 22 May 2019 19:26:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:subject:to
-         :from:cc;
-        bh=Hnjt/K9t57LlxXJzyl6rEPuBPixyxFUWutrkuh4rjao=;
-        b=NrSed+fzL4RpCD8iPSFxux0YoMWBD5xiClJpTElPXsPOMJV0wLIzY1OKWA0+QVKYgN
-         EQnwBtfcLzE6ggFS2KRh+QWtZYrfDOx7I/edfC1rfz2my86qCXV8rZU+OGKMrKa0+J24
-         FijrlJNzoz6dIYKb9O5YgWusWhx/3xcGx3MA4Nr/Ct8zwi3vOI6q6vJRSTBvdKg3/c8W
-         0xCbyC9YsJUiayUGYaxt/iK6hQPda3xZA8n5bb/Ja+sxPqQ6+iPG58Ypcy3sIXN6KV6S
-         +0pHMt6321DPa/1c4ilxlhUCE+9SZFV0kuThs9ex1/Gv2M1uhrKJL0EqKaWZsRG4YxEc
-         b6RQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nW+e1rPCq+HaAq+HDzDlhXWHIc2ch7yv53hl57cH94s=;
+        b=IBud/dDNmkb2CKyRF+qnrkLEKivpBT51NpnCSYYi+tmggo/eEmSkaVHJQbqWL3qgTY
+         /TwLuTJHggUyYDL4hO9FZbJQN2Y+6FYwMHeW9A+XsR+xXH/idJtcDY2GI/C/lici8Ah+
+         M7AcRtqj2PxBYGT0ScNOfwLhQ2KSJwo8mYZvtwfc8t/IAoV0hLPVw7pUab0RfgqyqZkX
+         1isREY21r66/YjNMMyCM7eoMNWmL9i1B3pxQVo1e4G5vyCMndSb5GDhNYG1jzbcZ8Jq0
+         CSs8EmD0mSCP9f976tkbF2VHldZ1TXTusZdvXA9vgVTqj4sqDupVGQhYXYJIcSqEBvRe
+         56wg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:subject:to:from:cc;
-        bh=Hnjt/K9t57LlxXJzyl6rEPuBPixyxFUWutrkuh4rjao=;
-        b=CE7Fcof4yCRHLibjliCKnNIRkUrylqgTG81Rr/wx4hRGvvcVjKaOT2M4cwME+uD5I8
-         k37SSIr9a5zh1xeMakBUWR05R2ThVxQFb5H08RJDLSp2vrUDnpH5+yeBeMJGOGUXsfDL
-         0j7/J0JlNTVetjTw8tYc2lW+OLHaxJ5uVHWeOs9ImHuZyvJsGKLf453wzyfCFzxWp3lp
-         RCic5SkerHVgDtOmdZX1togq7Ru7LxFL4fGyutQtpiU02sGPnrJQf03v8/B3OpZsDi7q
-         EMYfVp+a3MWdK0bjAg8/uZ3QmklezRteNO2n24acztEM/U2aGZXT4T1ZXxrg9h1EZhg1
-         /i/g==
-X-Gm-Message-State: APjAAAWj8H6WFMOLTKiwDc6fcMqr/jRScLNEy043BmtPQ838es7+qkIH
-        GRsA1SnK/7zxZtk42u+OLoG91w==
-X-Google-Smtp-Source: APXvYqz/QxREnLfKEm8J2aD73wASeFN0MHotPjc9HnDx/Tdd4uk9S2oBIQ4E+6qRfQN3d6BY6eD6Ng==
-X-Received: by 2002:a5d:6a8c:: with SMTP id s12mr24929353wru.326.1558578190207;
-        Wed, 22 May 2019 19:23:10 -0700 (PDT)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id l16sm42303704wrb.40.2019.05.22.19.23.08
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nW+e1rPCq+HaAq+HDzDlhXWHIc2ch7yv53hl57cH94s=;
+        b=ki9jL79Irjau6y8bROOjN94j9M0K4TcFkzLx95c967ACF3Qxugprz7e6Co3KHM23K4
+         jCqVkLaqTPe/yJUzWb+ItMp3lJZVeBaTG1jd2tTfk5wXv7rW7ybLNS7WmeqjzC8QIaR/
+         PaJf4tiTJ12nLMv7E2fPJc+vCD3c/oPrspz/YTZlQP70w/f2Ek4xYIIQroJciYfLd0KR
+         SUo66QNonRQbfGDi+1Auql7aBab6PlY1fTtGkbtE0rU5idYK6pMNN92MAtgIvU7WkNtX
+         K4249sPj6PkHRdT5Log03kVf8b5HOBVrlTtA/br3UA/7J0nOvs03xRWcyovDDIh+MXwj
+         7nsQ==
+X-Gm-Message-State: APjAAAV0czfOdrMgaCLs538hOCNyZa1uDnWN4iGuZJDhQ0sbquSMjZyX
+        5e5t9GwKuy4BP3F+jsDKOecPI2TdliM=
+X-Google-Smtp-Source: APXvYqylHSgH8QQKsP0a66EGksd9+DgjRpa3eK8Lc0JttTx6rug9I1jSz7asAoyO6+41AqHhjuR0Ew==
+X-Received: by 2002:a62:3085:: with SMTP id w127mr76542997pfw.170.1558578381777;
+        Wed, 22 May 2019 19:26:21 -0700 (PDT)
+Received: from localhost.localdomain ([123.139.57.214])
+        by smtp.gmail.com with ESMTPSA id s198sm35554384pfs.34.2019.05.22.19.26.19
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 22 May 2019 19:23:09 -0700 (PDT)
-Message-ID: <5ce6040d.1c69fb81.60b3b.29fb@mx.google.com>
-Date:   Wed, 22 May 2019 19:23:09 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        Wed, 22 May 2019 19:26:21 -0700 (PDT)
+From:   Gaowei Pu <pugaowei@gmail.com>
+To:     tytso@mit.edu
+Cc:     jack@suse.com, linux-ext4@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Jan Kara <jack@suse.cz>
+Subject: [PATCH v2] jbd2: fix some print format mistakes
+Date:   Thu, 23 May 2019 10:26:03 +0800
+Message-Id: <20190523022603.13539-1-pugaowei@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Report-Type: bisect
-X-Kernelci-Tree: mainline
-X-Kernelci-Lab-Name: lab-collabora
-X-Kernelci-Branch: master
-X-Kernelci-Kernel: v5.2-rc1-165-g54dee406374c
-Subject: mainline/master boot bisection: v5.2-rc1-165-g54dee406374c on
- rk3288-veyron-jaq
-To:     tomeu.vizoso@collabora.com, guillaume.tucker@collabora.com,
-        mgalka@collabora.com, broonie@kernel.org, matthew.hart@linaro.org,
-        khilman@baylibre.com, enric.balletbo@collabora.com,
-        Elaine Zhang <zhangqing@rock-chips.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
-From:   "kernelci.org bot" <bot@kernelci.org>
-Cc:     Heiko Stuebner <heiko@sntech.de>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        Zhang Rui <rui.zhang@intel.com>,
-        linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-* This automated bisection report was sent to you on the basis  *
-* that you may be involved with the breaking commit it has      *
-* found.  No manual investigation has been done to verify it,   *
-* and the root cause of the problem may be somewhere else.      *
-* Hope this helps!                                              *
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+There are some print format mistakes in debug messages. Fix them.
 
-mainline/master boot bisection: v5.2-rc1-165-g54dee406374c on rk3288-veyron=
--jaq
+Signed-off-by: Gaowei Pu <pugaowei@gmail.com>
+Reviewed-by: Jan Kara <jack@suse.cz>
 
-Summary:
-  Start:      54dee406374c Merge tag 'arm64-fixes' of git://git.kernel.org/=
-pub/scm/linux/kernel/git/arm64/linux
-  Details:    https://kernelci.org/boot/id/5ce5984c59b514e6a47a364c
-  Plain log:  https://storage.kernelci.org//mainline/master/v5.2-rc1-165-g5=
-4dee406374c/arm/multi_v7_defconfig+CONFIG_EFI=3Dy+CONFIG_ARM_LPAE=3Dy/gcc-8=
-/lab-collabora/boot-rk3288-veyron-jaq.txt
-  HTML log:   https://storage.kernelci.org//mainline/master/v5.2-rc1-165-g5=
-4dee406374c/arm/multi_v7_defconfig+CONFIG_EFI=3Dy+CONFIG_ARM_LPAE=3Dy/gcc-8=
-/lab-collabora/boot-rk3288-veyron-jaq.html
-  Result:     28694e009e51 thermal: rockchip: fix up the tsadc pinctrl sett=
-ing error
+V2: add Reviewed-by.
+---
+ fs/jbd2/journal.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-Checks:
-  revert:     PASS
-  verify:     PASS
-
-Parameters:
-  Tree:       mainline
-  URL:        git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.=
-git
-  Branch:     master
-  Target:     rk3288-veyron-jaq
-  CPU arch:   arm
-  Lab:        lab-collabora
-  Compiler:   gcc-8
-  Config:     multi_v7_defconfig+CONFIG_EFI=3Dy+CONFIG_ARM_LPAE=3Dy
-  Test suite: boot
-
-Breaking commit found:
-
----------------------------------------------------------------------------=
-----
-commit 28694e009e512451ead5519dd801f9869acb1f60
-Author: Elaine Zhang <zhangqing@rock-chips.com>
-Date:   Tue Apr 30 18:09:44 2019 +0800
-
-    thermal: rockchip: fix up the tsadc pinctrl setting error
-    =
-
-    Explicitly use the pinctrl to set/unset the right mode
-    instead of relying on the pinctrl init mode.
-    And it requires setting the tshut polarity before select pinctrl.
-    =
-
-    When the temperature sensor mode is set to 0, it will automatically
-    reset the board via the Clock-Reset-Unit (CRU) if the over temperature
-    threshold is reached. However, when the pinctrl initializes, it does a
-    transition to "otp_out" which may lead the SoC restart all the time.
-    =
-
-    "otp_out" IO may be connected to the RESET circuit on the hardware.
-    If the IO is in the wrong state, it will trigger RESET.
-    (similar to the effect of pressing the RESET button)
-    which will cause the soc to restart all the time.
-    =
-
-    Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
-    Reviewed-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-    Signed-off-by: Eduardo Valentin <edubezval@gmail.com>
-
-diff --git a/drivers/thermal/rockchip_thermal.c b/drivers/thermal/rockchip_=
-thermal.c
-index 9c7643d62ed7..6dc7fc516abf 100644
---- a/drivers/thermal/rockchip_thermal.c
-+++ b/drivers/thermal/rockchip_thermal.c
-@@ -172,6 +172,9 @@ struct rockchip_thermal_data {
- 	int tshut_temp;
- 	enum tshut_mode tshut_mode;
- 	enum tshut_polarity tshut_polarity;
-+	struct pinctrl *pinctrl;
-+	struct pinctrl_state *gpio_state;
-+	struct pinctrl_state *otp_state;
- };
- =
-
- /**
-@@ -1242,6 +1245,8 @@ static int rockchip_thermal_probe(struct platform_dev=
-ice *pdev)
- 		return error;
+diff --git a/fs/jbd2/journal.c b/fs/jbd2/journal.c
+index 37e16d969925..565e99b67b30 100644
+--- a/fs/jbd2/journal.c
++++ b/fs/jbd2/journal.c
+@@ -203,7 +203,7 @@ static int kjournald2(void *arg)
+ 	if (journal->j_flags & JBD2_UNMOUNT)
+ 		goto end_loop;
+ 
+-	jbd_debug(1, "commit_sequence=%d, commit_request=%d\n",
++	jbd_debug(1, "commit_sequence=%u, commit_request=%u\n",
+ 		journal->j_commit_sequence, journal->j_commit_request);
+ 
+ 	if (journal->j_commit_sequence != journal->j_commit_request) {
+@@ -324,7 +324,7 @@ static void journal_kill_thread(journal_t *journal)
+  * IO is in progress. do_get_write_access() handles this.
+  *
+  * The function returns a pointer to the buffer_head to be used for IO.
+- * 
++ *
+  *
+  * Return value:
+  *  <0: Error
+@@ -500,7 +500,7 @@ int __jbd2_log_start_commit(journal_t *journal, tid_t target)
+ 		 */
+ 
+ 		journal->j_commit_request = target;
+-		jbd_debug(1, "JBD2: requesting commit %d/%d\n",
++		jbd_debug(1, "JBD2: requesting commit %u/%u\n",
+ 			  journal->j_commit_request,
+ 			  journal->j_commit_sequence);
+ 		journal->j_running_transaction->t_requested = jiffies;
+@@ -513,7 +513,7 @@ int __jbd2_log_start_commit(journal_t *journal, tid_t target)
+ 		WARN_ONCE(1, "JBD2: bad log_start_commit: %u %u %u %u\n",
+ 			  journal->j_commit_request,
+ 			  journal->j_commit_sequence,
+-			  target, journal->j_running_transaction ? 
++			  target, journal->j_running_transaction ?
+ 			  journal->j_running_transaction->t_tid : 0);
+ 	return 0;
+ }
+@@ -698,12 +698,12 @@ int jbd2_log_wait_commit(journal_t *journal, tid_t tid)
+ #ifdef CONFIG_JBD2_DEBUG
+ 	if (!tid_geq(journal->j_commit_request, tid)) {
+ 		printk(KERN_ERR
+-		       "%s: error: j_commit_request=%d, tid=%d\n",
++		       "%s: error: j_commit_request=%u, tid=%u\n",
+ 		       __func__, journal->j_commit_request, tid);
  	}
- =
+ #endif
+ 	while (tid_gt(tid, journal->j_commit_sequence)) {
+-		jbd_debug(1, "JBD2: want %d, j_commit_sequence=%d\n",
++		jbd_debug(1, "JBD2: want %u, j_commit_sequence=%u\n",
+ 				  tid, journal->j_commit_sequence);
+ 		read_unlock(&journal->j_state_lock);
+ 		wake_up(&journal->j_wait_commit);
+@@ -944,7 +944,7 @@ int __jbd2_update_log_tail(journal_t *journal, tid_t tid, unsigned long block)
+ 
+ 	trace_jbd2_update_log_tail(journal, tid, block, freed);
+ 	jbd_debug(1,
+-		  "Cleaning journal tail from %d to %d (offset %lu), "
++		  "Cleaning journal tail from %u to %u (offset %lu), "
+ 		  "freeing %lu\n",
+ 		  journal->j_tail_sequence, tid, block, freed);
+ 
+@@ -1318,7 +1318,7 @@ static int journal_reset(journal_t *journal)
+ 	 */
+ 	if (sb->s_start == 0) {
+ 		jbd_debug(1, "JBD2: Skipping superblock update on recovered sb "
+-			"(start %ld, seq %d, errno %d)\n",
++			"(start %ld, seq %u, errno %d)\n",
+ 			journal->j_tail, journal->j_tail_sequence,
+ 			journal->j_errno);
+ 		journal->j_flags |= JBD2_FLUSHED;
+@@ -1453,7 +1453,7 @@ static void jbd2_mark_journal_empty(journal_t *journal, int write_op)
+ 		return;
+ 	}
+ 
+-	jbd_debug(1, "JBD2: Marking journal as empty (seq %d)\n",
++	jbd_debug(1, "JBD2: Marking journal as empty (seq %u)\n",
+ 		  journal->j_tail_sequence);
+ 
+ 	sb->s_sequence = cpu_to_be32(journal->j_tail_sequence);
+-- 
+2.21.0
 
-+	thermal->chip->control(thermal->regs, false);
-+
- 	error =3D clk_prepare_enable(thermal->clk);
- 	if (error) {
- 		dev_err(&pdev->dev, "failed to enable converter clock: %d\n",
-@@ -1267,6 +1272,30 @@ static int rockchip_thermal_probe(struct platform_de=
-vice *pdev)
- 	thermal->chip->initialize(thermal->grf, thermal->regs,
- 				  thermal->tshut_polarity);
- =
-
-+	if (thermal->tshut_mode =3D=3D TSHUT_MODE_GPIO) {
-+		thermal->pinctrl =3D devm_pinctrl_get(&pdev->dev);
-+		if (IS_ERR(thermal->pinctrl)) {
-+			dev_err(&pdev->dev, "failed to find thermal pinctrl\n");
-+			return PTR_ERR(thermal->pinctrl);
-+		}
-+
-+		thermal->gpio_state =3D pinctrl_lookup_state(thermal->pinctrl,
-+							   "gpio");
-+		if (IS_ERR_OR_NULL(thermal->gpio_state)) {
-+			dev_err(&pdev->dev, "failed to find thermal gpio state\n");
-+			return -EINVAL;
-+		}
-+
-+		thermal->otp_state =3D pinctrl_lookup_state(thermal->pinctrl,
-+							  "otpout");
-+		if (IS_ERR_OR_NULL(thermal->otp_state)) {
-+			dev_err(&pdev->dev, "failed to find thermal otpout state\n");
-+			return -EINVAL;
-+		}
-+
-+		pinctrl_select_state(thermal->pinctrl, thermal->otp_state);
-+	}
-+
- 	for (i =3D 0; i < thermal->chip->chn_num; i++) {
- 		error =3D rockchip_thermal_register_sensor(pdev, thermal,
- 						&thermal->sensors[i],
-@@ -1337,8 +1366,8 @@ static int __maybe_unused rockchip_thermal_suspend(st=
-ruct device *dev)
- =
-
- 	clk_disable(thermal->pclk);
- 	clk_disable(thermal->clk);
--
--	pinctrl_pm_select_sleep_state(dev);
-+	if (thermal->tshut_mode =3D=3D TSHUT_MODE_GPIO)
-+		pinctrl_select_state(thermal->pinctrl, thermal->gpio_state);
- =
-
- 	return 0;
- }
-@@ -1383,7 +1412,8 @@ static int __maybe_unused rockchip_thermal_resume(str=
-uct device *dev)
- 	for (i =3D 0; i < thermal->chip->chn_num; i++)
- 		rockchip_thermal_toggle_sensor(&thermal->sensors[i], true);
- =
-
--	pinctrl_pm_select_default_state(dev);
-+	if (thermal->tshut_mode =3D=3D TSHUT_MODE_GPIO)
-+		pinctrl_select_state(thermal->pinctrl, thermal->otp_state);
- =
-
- 	return 0;
- }
----------------------------------------------------------------------------=
-----
-
-
-Git bisection log:
-
----------------------------------------------------------------------------=
-----
-git bisect start
-# good: [83f3ef3de625a5766de2382f9e077d4daafd5bac] Merge tag 'libnvdimm-fix=
-es-5.2-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm
-git bisect good 83f3ef3de625a5766de2382f9e077d4daafd5bac
-# bad: [54dee406374ce8adb352c48e175176247cb8db7c] Merge tag 'arm64-fixes' o=
-f git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux
-git bisect bad 54dee406374ce8adb352c48e175176247cb8db7c
-# bad: [dc413a90edbe715bebebe859dc072ef73d490d70] Merge tag 'armsoc-drivers=
-' of git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc
-git bisect bad dc413a90edbe715bebebe859dc072ef73d490d70
-# good: [b45da609a02460c6a34c395f03f891f1fb2a021a] Merge tag 'imx-bindings-=
-5.2' of git://git.kernel.org/pub/scm/linux/kernel/git/shawnguo/linux into a=
-rm/dt
-git bisect good b45da609a02460c6a34c395f03f891f1fb2a021a
-# good: [6cbc4d88ad208d6f5b9567bac2fff038e1bbfa77] Merge tag 'bitmain-soc-5=
-.2' of git://git.kernel.org/pub/scm/linux/kernel/git/mani/linux-bitmain int=
-o arm/dt
-git bisect good 6cbc4d88ad208d6f5b9567bac2fff038e1bbfa77
-# bad: [a455eda33faafcaac1effb31d682765b14ef868c] Merge branch 'linus' of g=
-it://git.kernel.org/pub/scm/linux/kernel/git/evalenti/linux-soc-thermal
-git bisect bad a455eda33faafcaac1effb31d682765b14ef868c
-# bad: [ffd1b122d3a17783b68cfd03b0479dffedf0d960] thermal: rockchip: Suppor=
-t the PX30 SoC in thermal driver
-git bisect bad ffd1b122d3a17783b68cfd03b0479dffedf0d960
-# good: [3e6a8fb3308419129c7a52de6eb42feef5a919a0] drivers: thermal: tsens:=
- Add new operation to check if a sensor is enabled
-git bisect good 3e6a8fb3308419129c7a52de6eb42feef5a919a0
-# good: [d36e2fa025387567710df740fd4dce1d5001b226] thermal: generic-adc: ma=
-ke lookup table optional
-git bisect good d36e2fa025387567710df740fd4dce1d5001b226
-# good: [42cd9b049829d7facbd45ab503d763a86251e81b] thermal/drivers/cpu_cool=
-ing: Fixup the header and copyright
-git bisect good 42cd9b049829d7facbd45ab503d763a86251e81b
-# good: [6ec8070b9d48294fbe865535c167a79527eaf357] thermal: Fix build error=
- of missing devm_ioremap_resource on UM
-git bisect good 6ec8070b9d48294fbe865535c167a79527eaf357
-# bad: [28694e009e512451ead5519dd801f9869acb1f60] thermal: rockchip: fix up=
- the tsadc pinctrl setting error
-git bisect bad 28694e009e512451ead5519dd801f9869acb1f60
-# good: [fcc6d4cadadcc977911c6bfcdd95d379f4082c74] thermal: broadcom: Remov=
-e ACPI support
-git bisect good fcc6d4cadadcc977911c6bfcdd95d379f4082c74
-# first bad commit: [28694e009e512451ead5519dd801f9869acb1f60] thermal: roc=
-kchip: fix up the tsadc pinctrl setting error
----------------------------------------------------------------------------=
-----
