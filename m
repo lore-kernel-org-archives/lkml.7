@@ -2,131 +2,111 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,UNPARSEABLE_RELAY,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36F02C04AAC
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 05:20:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38042C282DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 05:26:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 080F82075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 05:20:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="TvxsMjqK"
+	by mail.kernel.org (Postfix) with ESMTP id 082802133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 05:26:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558589170;
+	bh=XOl00H+dhpzv1UEwzhQKsvEktvq/R8iItH2f+6S5/fw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OlG2siKMZTVAq9MTvhow2Qyoty7kxjOYmDCDFX6D9xP/t3l2BApS8vVlu3VK+sTkL
+	 02th8m6nQyE4JyFleDOBvAEe2x2bvKqBgVUSm/i7nDgJDY20hqHJcsMAi3HvZdDNj9
+	 fFRYxsoxF0JqxmQt9YUL596MKsJjGo3tQvzNSFtw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727373AbfEWFUU (ORCPT
+        id S1726636AbfEWF0J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 01:20:20 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:54010 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725786AbfEWFUT (ORCPT
+        Thu, 23 May 2019 01:26:09 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:42034 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725806AbfEWF0I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 01:20:19 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4N5Ixe3130166;
-        Thu, 23 May 2019 05:19:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=pH8VdY/mb5VHXZ7P2iO2Ynlr34Utx1j6uwMP/dmBjUU=;
- b=TvxsMjqK7E7fjg6ZwqgS4u94YWPvZ6hTHs//r0Na+mv2weRJIid5ojZRTkFsptJobR58
- UUdBnsqyDKn/CXt0Olx4IMd2LBIESu7B12DvLoq7B4EjMEeUYsYvB3BTWraLurN+xoSD
- IqNuTOIKL8PDPYjwwrZ39qhTUUfkYDhB/Nl7W2BLgDNhDSqSJmLcSKwQLbpjXHlneobq
- 2O+7cr0ZIYPaovpHiGyPaOIMvI/Say7RBF/0lI3LdjtzK12uwteYzuF+SIwyXE9H+d7i
- 8qpRljtzVJxdHmImycVjQQlOAuDltR/F18rJiMgrhgrQUj5Do+nHLgV9oxnhIRppPkYf OQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2smsk5fvau-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 23 May 2019 05:19:22 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4N5J64o159989;
-        Thu, 23 May 2019 05:19:22 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by userp3030.oracle.com with ESMTP id 2smshf121f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 23 May 2019 05:19:22 +0000
-Received: from userp3030.oracle.com (userp3030.oracle.com [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x4N5JM3q160229;
-        Thu, 23 May 2019 05:19:22 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2smshf1219-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 23 May 2019 05:19:22 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x4N5JJhB010871;
-        Thu, 23 May 2019 05:19:21 GMT
-Received: from localhost (/10.159.211.99)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 23 May 2019 05:19:18 +0000
-Date:   Thu, 23 May 2019 01:19:16 -0400
-From:   Kris Van Hees <kris.van.hees@oracle.com>
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     Kris Van Hees <kris.van.hees@oracle.com>,
-        Peter Zijlstra <peterz@infradead.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, dtrace-devel@oss.oracle.com,
-        linux-kernel@vger.kernel.org, rostedt@goodmis.org,
-        mhiramat@kernel.org, acme@kernel.org, ast@kernel.org,
-        daniel@iogearbox.net
-Subject: Re: [RFC PATCH 00/11] bpf, trace, dtrace: DTrace BPF program type
- implementation and sample use
-Message-ID: <20190523051916.GQ2422@oracle.com>
-References: <201905202347.x4KNl0cs030532@aserv0121.oracle.com>
- <20190521175617.ipry6ue7o24a2e6n@ast-mbp.dhcp.thefacebook.com>
- <20190522142531.GE16275@worktop.programming.kicks-ass.net>
- <20190522182215.GO2422@oracle.com>
- <20190522195526.mayamzc7gstqzcpr@ast-mbp.dhcp.thefacebook.com>
+        Thu, 23 May 2019 01:26:08 -0400
+Received: by mail-lj1-f196.google.com with SMTP id 188so4187815ljf.9;
+        Wed, 22 May 2019 22:26:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2zCsyXvXKQNDrlDAaTPYsiKB9L/0GPY7IwNwkSTGIws=;
+        b=Ta9mRdKZaIppt1lVoJqu6fTlJpOePKt8UpD0P1KlB+5Dhq5IRFRgjf30yH3w11W0Rz
+         YEOutIeR2eVbTVwwM8xE3TG1Vw0rLpHI7yHMe9wcgF24eWV6mrZTEbwCl2QDJ78Tq7sS
+         lgH1nF185LcEsLWnvD3WzxR0BfM5VB26/nckreMvZB1LkZvhNTYp67QtaOeA4auI3qSV
+         ariGldx5mrqJSCxVgiZVcVyyLMQPSTwKpJaSV2UceiNy8Ghuy+BjmPZFZNSqV/Pppv/S
+         KyuoB7s00FCTXWyMy8Gp1LXYFNh8dalME8JNdybe9xzB94j0j1BzAAVi6+LEI6YiQCtk
+         NRhQ==
+X-Gm-Message-State: APjAAAVmJ0K2kf1riWIKV/jpH/NMT1GSMt2qQyPq/46QuAcnSdHhea2k
+        LPxNW1FoM0hSmodbVTpviw5PF35pidc=
+X-Google-Smtp-Source: APXvYqyA+ouMbSVPDNeED1P3R2zPHpVIba71XK7OdTwYvUvWtpyQh9fTIn1geqaP7SOnZMdVP0vS5Q==
+X-Received: by 2002:a2e:9259:: with SMTP id v25mr4076631ljg.46.1558589166763;
+        Wed, 22 May 2019 22:26:06 -0700 (PDT)
+Received: from xi.terra (c-74bee655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.190.116])
+        by smtp.gmail.com with ESMTPSA id p5sm5818207lfc.80.2019.05.22.22.26.05
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 22 May 2019 22:26:05 -0700 (PDT)
+Received: from johan by xi.terra with local (Exim 4.91)
+        (envelope-from <johan@kernel.org>)
+        id 1hTgEq-00043C-Ic; Thu, 23 May 2019 07:26:01 +0200
+Date:   Thu, 23 May 2019 07:26:00 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Johan Hovold <johan@kernel.org>, linux-usb@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 5.1 077/375] USB: serial: fix initial-termios
+ handling
+Message-ID: <20190523052600.GA15348@localhost>
+References: <20190522192115.22666-1-sashal@kernel.org>
+ <20190522192115.22666-77-sashal@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190522195526.mayamzc7gstqzcpr@ast-mbp.dhcp.thefacebook.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9265 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905230037
+In-Reply-To: <20190522192115.22666-77-sashal@kernel.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 22, 2019 at 12:55:27PM -0700, Alexei Starovoitov wrote:
-> On Wed, May 22, 2019 at 02:22:15PM -0400, Kris Van Hees wrote:
-> > On Wed, May 22, 2019 at 04:25:32PM +0200, Peter Zijlstra wrote:
-> > > On Tue, May 21, 2019 at 10:56:18AM -0700, Alexei Starovoitov wrote:
-> > > 
-> > > > and no changes are necessary in kernel/events/ring_buffer.c either.
-> > > 
-> > > Let me just NAK them on the principle that I don't see them in my inbox.
-> > 
-> > My apologies for failing to include you on the Cc for the patches.  That was
-> > an oversight on my end and certainly not intentional.
-> > 
-> > > Let me further NAK it for adding all sorts of garbage to the code --
-> > > we're not going to do gaps and stay_in_page nonsense.
-> > 
-> > Could you give some guidance in terms of an alternative?  The ring buffer code
-> > provides both non-contiguous page allocation support and a vmalloc-based
-> > allocation, and the vmalloc version certainly would avoid the entire gap and
-> > page boundary stuff.  But since the allocator is chosen at build time based on
-> > the arch capabilities, there is no way to select a specific memory allocator.
-> > I'd be happy to use an alternative approach that allows direct writing into
-> > the ring buffer.
+Hi Sasha,
+
+On Wed, May 22, 2019 at 03:16:17PM -0400, Sasha Levin wrote:
+> From: Johan Hovold <johan@kernel.org>
 > 
-> You do not _need_ direct write from bpf prog.
-> dtrace language doesn't mandate direct write.
-> 'direct write into ring buffer form bpf prog' is an interesting idea and
-> may be nice performance optimization, but in no way it's a blocker for dtrace scripts.
-> Also it's far from clear that it actually brings performance benefits.
-> Letting bpf progs write directly into ring buffer comes with
-> a lot of corner cases. It's something to carefully analyze.
+> [ Upstream commit 579bebe5dd522580019e7b10b07daaf500f9fb1e ]
+> 
+> The USB-serial driver init_termios callback is used to override the
+> default initial terminal settings provided by USB-serial core.
+> 
+> After a bug was fixed in the original implementation introduced by
+> commit fe1ae7fdd2ee ("tty: USB serial termios bits"), the init_termios
+> callback was no longer called just once on first use as intended but
+> rather on every (first) open.
+> 
+> This specifically meant that the terminal settings saved on (final)
+> close were ignored when reopening a port for drivers overriding the
+> initial settings.
+> 
+> Also update the outdated function header referring to the creation of
+> termios objects.
+> 
+> Fixes: 7e29bb4b779f ("usb-serial: fix termios initialization logic")
+> Signed-off-by: Johan Hovold <johan@kernel.org>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
 
-I agree that doing direct writes is something that can be deferred right now,
-especially because there are more fundamental things to focus on.  Thank you
-for your acknowledgement of the idea, and I certainly look forward to exploring
-this further at a later time,
+The stable tag was left out on purpose as this is essentially a new
+feature, and definitely a behavioural change which should not be
+backported.
 
-> I suggest to proceed with user space dtrace conversion to bpf
-> without introducing kernel changes.
+Please drop from your autosel queues.
+
+Also, may I ask you again not to include usb-serial (and drivers/gnss)
+in your autosel processing.
+
+Thanks,
+Johan
