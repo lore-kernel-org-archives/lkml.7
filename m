@@ -2,114 +2,135 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9CD2C282E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:58:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 688DCC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:59:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FD682133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:58:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A22320856
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:59:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qq/CotHf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387658AbfEWT6m (ORCPT
+        id S2387853AbfEWT7Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:58:42 -0400
-Received: from mga14.intel.com ([192.55.52.115]:6299 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726451AbfEWT6m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:58:42 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 May 2019 12:58:41 -0700
-X-ExtLoop1: 1
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
-  by orsmga006.jf.intel.com with ESMTP; 23 May 2019 12:58:41 -0700
-Date:   Thu, 23 May 2019 12:58:41 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Paul Moore <paul@paul-moore.com>,
-        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
-        Jethro Beekman <jethro@fortanix.com>,
-        "Xing, Cedric" <cedric.xing@intel.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Dr. Greg" <greg@enjellic.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>
-Subject: Re: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
-Message-ID: <20190523195840.GA17370@linux.intel.com>
-References: <20190521151836.GA4843@linux.intel.com>
- <20190521155140.GE22089@linux.intel.com>
- <20190522132022.GC31176@linux.intel.com>
- <20190522132227.GD31176@linux.intel.com>
- <0e183cce-c4b4-0e10-dbb6-bd81bea58b66@tycho.nsa.gov>
- <20190522153836.GA24833@linux.intel.com>
- <CALCETrUS8xyF1JJmQs18BGTDhPRXf+s81BkMZCZwmY73r7M+zg@mail.gmail.com>
- <20190523023517.GA31950@linux.intel.com>
- <20190523102628.GC10955@linux.intel.com>
- <20190523141752.GA12078@linux.intel.com>
+        Thu, 23 May 2019 15:59:16 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:33785 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726451AbfEWT7Q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:59:16 -0400
+Received: by mail-pl1-f196.google.com with SMTP id g21so3189045plq.0;
+        Thu, 23 May 2019 12:59:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=FXeIpaG8QnYlsSvuBQzheROLRc/6og0gZQUNXCzHPnk=;
+        b=Qq/CotHfAPTLaqNYoNEM5nBi1kWmhBbet+h8+zbYI46Ur6+z78dgVzQhii8rnPUhN8
+         W2GOA0p+4iYAScMo723GXFTwetRwemzSpBZuVs8DZjnkCLQJGV0MADAvmP93MoJFJ0mn
+         tCU+MZ1f0GGj8P3uIYzQuI0CSIRrllM/iqgjF7KhbLybinPua8ZZk1eJRT3p693fUrfG
+         dw3u89Lmhl0A9pCqotCXB4Qf5R5l+gmobgqyGKQKRL+nsxbDXhVUvvBde1sFStbv0dym
+         YOWHz00RiedElnYrPhFNukcf+IL9lrFW58RGB23cqXQL9yJHoy00X7zRAQjs5NVWnzSm
+         QnFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=FXeIpaG8QnYlsSvuBQzheROLRc/6og0gZQUNXCzHPnk=;
+        b=TmbRK16zaUaoIToH1laetDQHKBPKDZEy/ZCbEbf4+zG2MJZ5VJNZOFCkFQGDwcCeCG
+         VzRymEc4+BoEtWDOHMAjf83743c+W/qvZYTxbaM5VN3gY2FrdhvdUFSGiHcePnNeWBJb
+         Qs6tFBEt593xFDn5XwqsGrhk4Ufk4WGp1z8CtRJOp3kAFBB4Fyowl3VFs6BXJmAuJYK5
+         tcOgt4qZaxT4OmhIKnsTHcsw859OtI4c6M+/oy7vYglLW7W6RV/1WsPgSxA29xLYvcz+
+         r4MWrcFtB/POF3azS6SqyKzeyqE5aoQlqP6zm6dVDUbD0scnqyTMbIUEKUC4MSQ3Hq9Z
+         DTFg==
+X-Gm-Message-State: APjAAAU8LCVF611VXPTIskYX7bgY3NKNBTmBsp3wEkvekv3DUkXMut+j
+        TZuH9rP8AQ5ySTjwXXoEZoE=
+X-Google-Smtp-Source: APXvYqxdnt94P55UH/jYCSg1yplsBpHn60EwfHrpsiXriEm/8u63ix04lQplJk5iK8HBMK6U1zd7nA==
+X-Received: by 2002:a17:902:4283:: with SMTP id h3mr78509603pld.214.1558641554938;
+        Thu, 23 May 2019 12:59:14 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id x16sm260695pff.30.2019.05.23.12.59.14
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 23 May 2019 12:59:14 -0700 (PDT)
+Date:   Thu, 23 May 2019 12:59:12 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc:     linux-input@vger.kernel.org,
+        "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
+        stable@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Input: uinput - add compat ioctl number translation for
+ UI_*_FF_UPLOAD
+Message-ID: <20190523195912.GB176265@dtor-ws>
+References: <20190522013922.25538-1-andrew.smirnov@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190523141752.GA12078@linux.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190522013922.25538-1-andrew.smirnov@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 07:17:52AM -0700, Sean Christopherson wrote:
-> On Thu, May 23, 2019 at 01:26:28PM +0300, Jarkko Sakkinen wrote:
-> > On Wed, May 22, 2019 at 07:35:17PM -0700, Sean Christopherson wrote:
-> > > But actually, there's no need to disallow mmap() after ECREATE since the
-> > > LSM checks also apply to mmap(), e.g. FILE__EXECUTE would be needed to
-> > > mmap() any enclave pages PROT_EXEC.  I guess my past self thought mmap()
-> > > bypassed LSM checks?  The real problem is that mmap()'ng an existing
-> > > enclave would require FILE__WRITE and FILE__EXECUTE, which puts us back
-> > > at square one.
-> > 
-> > I'm lost with the constraints we want to set.
+On Tue, May 21, 2019 at 06:39:22PM -0700, Andrey Smirnov wrote:
+> In the case of compat syscall ioctl numbers for UI_BEGIN_FF_UPLOAD and
+> UI_END_FF_UPLOAD need to be adjusted before being passed on
+> uinput_ioctl_handler() since code built with -m32 will be passing
+> slightly different values. Extend the code already covering
+> UI_SET_PHYS to cover UI_BEGIN_FF_UPLOAD and UI_END_FF_UPLOAD as well.
 > 
-> As is today, SELinux policies would require enclave loaders to have
-> FILE__WRITE and FILE__EXECUTE permissions on /dev/sgx/enclave.  Presumably
-> other LSMs have similar requirements.  Requiring all processes to have
-> FILE__{WRITE,EXECUTE} permissions means the permissions don't add much
-> value, e.g. they can't be used to distinguish between an enclave that is
-> being loaded from an unmodified file and an enclave that is being
-> generated on the fly, e.g. Graphene.
+> Reported-by: Pierre-Loup A. Griffais <pgriffais@valvesoftware.com>
+> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> Cc: linux-input@vger.kernel.org
+> Cc: stable@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+
+Applied, thank you.
+
+> ---
+>  drivers/input/misc/uinput.c | 15 +++++++++++++--
+>  1 file changed, 13 insertions(+), 2 deletions(-)
 > 
-> Looking back at Andy's mail, he was talking about requiring FILE__EXECUTE
-> to run an enclave, so perhaps it's only FILE__WRITE that we're trying to
-> special case.
+> diff --git a/drivers/input/misc/uinput.c b/drivers/input/misc/uinput.c
+> index 1a6762fc38f9..1116d4cd5695 100644
+> --- a/drivers/input/misc/uinput.c
+> +++ b/drivers/input/misc/uinput.c
+> @@ -1051,13 +1051,24 @@ static long uinput_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+>  
+>  #ifdef CONFIG_COMPAT
+>  
+> -#define UI_SET_PHYS_COMPAT	_IOW(UINPUT_IOCTL_BASE, 108, compat_uptr_t)
+> +#define UI_SET_PHYS_COMPAT		_IOW(UINPUT_IOCTL_BASE, 108, compat_uptr_t)
+> +#define UI_BEGIN_FF_UPLOAD_COMPAT	_IOWR(UINPUT_IOCTL_BASE, 200, struct uinput_ff_upload_compat)
+> +#define UI_END_FF_UPLOAD_COMPAT		_IOW(UINPUT_IOCTL_BASE, 201, struct uinput_ff_upload_compat)
+>  
+>  static long uinput_compat_ioctl(struct file *file,
+>  				unsigned int cmd, unsigned long arg)
+>  {
+> -	if (cmd == UI_SET_PHYS_COMPAT)
+> +	switch (cmd) {
+> +	case UI_SET_PHYS_COMPAT:
+>  		cmd = UI_SET_PHYS;
+> +		break;
+> +	case UI_BEGIN_FF_UPLOAD_COMPAT:
+> +		cmd = UI_BEGIN_FF_UPLOAD;
+> +		break;
+> +	case UI_END_FF_UPLOAD_COMPAT:
+> +		cmd = UI_END_FF_UPLOAD;
+> +		break;
+> +	}
+>  
+>  	return uinput_ioctl_handler(file, cmd, arg, compat_ptr(arg));
+>  }
+> -- 
+> 2.21.0
+> 
 
-Argh, as I was working through Andy's latest proposal I realized that I
-was subconciously making FILE__READ imply FILE__EXECUTE.
-
-The idea behind inheriting permissions from the source VMA is to exempt
-"standard" enclaves from needing FILE__WRITE.  But if we don't add an
-exemption for FILE__EXECUTE as well, then all enclaves need FILE__EXECUTE,
-which means FILE__EXECUTE can't be used to identify the case where
-userspace is mapping an inherited PROT_WRITE page as PROT_EXEC.  And if
-the SGX magic exempts FILE__EXECUTE, then FILE__READ implies FILE__EXECUTE.
-
-Yuck.
+-- 
+Dmitry
