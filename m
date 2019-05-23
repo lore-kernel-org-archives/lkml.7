@@ -7,47 +7,51 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8FA1C282DE
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:24:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D1EDC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:24:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96520206BA
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:24:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14AFB21841
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:24:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558639483;
-	bh=ynpK6vOq3ylr4Y2UYS7s2xllcFjZWtS8zw4ic0tmoJQ=;
+	s=default; t=1558639487;
+	bh=hnyuKlwcGnhqMmJ0G7Kl+bjhhI1ODqP4u/lCpUileYo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=da6MB3pgpSpfaTaxZH20eLq1IBqtkgwIokgigNdXVQnoASscu6Fm0ewxe3z8bqLjJ
-	 JIEPnu8pG+0LotZJzx8Vzbw6PLiZ0WNs9d4sT3041kmye+GISwu6pGb5JWNRwxm+fn
-	 7N8q/nsTUUiXgo6wNzSMQd2WrFIL9SIXCSnbKLYs=
+	b=RTQ0Hdr1TLZBHSYzdCx8OHxQs83n4l0/uJHHtOAXdGVVzy+gXEZ4bvbksFL1HkEP4
+	 4puAvKJsMUTQimcsYWRZ7Hf8W+vHkJakixldfPOIHZdJSgvWG1s3a/KOyMWrcU0hWK
+	 J7xPilmMbWjqw0zEPYzWH9lwRgKBclMw6HK0ViRk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390962AbfEWTYm (ORCPT
+        id S2390975AbfEWTYp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:24:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35636 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:24:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35740 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390933AbfEWTYg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:24:36 -0400
+        id S2390545AbfEWTYl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:24:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A10820868;
-        Thu, 23 May 2019 19:24:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EBF722054F;
+        Thu, 23 May 2019 19:24:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639476;
-        bh=ynpK6vOq3ylr4Y2UYS7s2xllcFjZWtS8zw4ic0tmoJQ=;
+        s=default; t=1558639481;
+        bh=hnyuKlwcGnhqMmJ0G7Kl+bjhhI1ODqP4u/lCpUileYo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nXX5IxoivxFHM0i6oxqruGYHuu/xKLqS7acujf8ZtWPcKiQqraEANEJOOBJpWx8Ri
-         EHQIx7w4C8eoDLP9cV2xLj0rlMOcgydkcmmHt5QkyvcCfu0jkBC8DG3cDSW+MQ3W/Q
-         TzGkNj0TkXhazjgAQg4NoziXoNzHn/fH+uDcuwT4=
+        b=w43PHblHTvoOnz/84uDWJo7YuvUsy+kL2Zhjha1XRQJHNcvvC5KQTZe0tUkCmmVUH
+         x8xTZ3lzOcYEzjXaVvO7d5oOfkBSDcbVy5TZutumaTaxDEUO6rrFvXbiJ+NXuTbD+3
+         JyfrFIR97e+om7xlPKWKNnnNxGZ9Cdn11ur3+Rh4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrew Jones <drjones@redhat.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
+        stable@vger.kernel.org, Alban Crequy <alban@kinvolk.io>,
+        Quentin Monnet <quentin.monnet@netronome.com>,
+        Song Liu <songliubraving@fb.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <ast@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 119/139] KVM: arm/arm64: Ensure vcpu target is unset on reset failure
-Date:   Thu, 23 May 2019 21:06:47 +0200
-Message-Id: <20190523181735.150659444@linuxfoundation.org>
+Subject: [PATCH 5.0 121/139] tools: bpftool: fix infinite loop in map create
+Date:   Thu, 23 May 2019 21:06:49 +0200
+Message-Id: <20190523181735.320430804@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181720.120897565@linuxfoundation.org>
 References: <20190523181720.120897565@linuxfoundation.org>
@@ -60,53 +64,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 811328fc3222f7b55846de0cd0404339e2e1e6d7 ]
+[ Upstream commit 8694d8c1f82cccec9380e0d3720b84eee315dfb7 ]
 
-A failed KVM_ARM_VCPU_INIT should not set the vcpu target,
-as the vcpu target is used by kvm_vcpu_initialized() to
-determine if other vcpu ioctls may proceed. We need to set
-the target before calling kvm_reset_vcpu(), but if that call
-fails, we should then unset it and clear the feature bitmap
-while we're at it.
+"bpftool map create" has an infinite loop on "while (argc)". The error
+case is missing.
 
-Signed-off-by: Andrew Jones <drjones@redhat.com>
-[maz: Simplified patch, completed commit message]
-Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+Symptoms: when forgetting to type the keyword 'type' in front of 'hash':
+$ sudo bpftool map create /sys/fs/bpf/dir/foobar hash key 8 value 8 entries 128
+(infinite loop, taking all the CPU)
+^C
+
+After the patch:
+$ sudo bpftool map create /sys/fs/bpf/dir/foobar hash key 8 value 8 entries 128
+Error: unknown arg hash
+
+Fixes: 0b592b5a01be ("tools: bpftool: add map create command")
+Signed-off-by: Alban Crequy <alban@kinvolk.io>
+Reviewed-by: Quentin Monnet <quentin.monnet@netronome.com>
+Acked-by: Song Liu <songliubraving@fb.com>
+Reviewed-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- virt/kvm/arm/arm.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ tools/bpf/bpftool/map.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/virt/kvm/arm/arm.c b/virt/kvm/arm/arm.c
-index 9c486fad3f9f8..6202b4f718cea 100644
---- a/virt/kvm/arm/arm.c
-+++ b/virt/kvm/arm/arm.c
-@@ -949,7 +949,7 @@ int kvm_vm_ioctl_irq_line(struct kvm *kvm, struct kvm_irq_level *irq_level,
- static int kvm_vcpu_set_target(struct kvm_vcpu *vcpu,
- 			       const struct kvm_vcpu_init *init)
- {
--	unsigned int i;
-+	unsigned int i, ret;
- 	int phys_target = kvm_target_cpu();
+diff --git a/tools/bpf/bpftool/map.c b/tools/bpf/bpftool/map.c
+index 1ef1ee2280a28..227766d9f43b1 100644
+--- a/tools/bpf/bpftool/map.c
++++ b/tools/bpf/bpftool/map.c
+@@ -1111,6 +1111,9 @@ static int do_create(int argc, char **argv)
+ 				return -1;
+ 			}
+ 			NEXT_ARG();
++		} else {
++			p_err("unknown arg %s", *argv);
++			return -1;
+ 		}
+ 	}
  
- 	if (init->target != phys_target)
-@@ -984,9 +984,14 @@ static int kvm_vcpu_set_target(struct kvm_vcpu *vcpu,
- 	vcpu->arch.target = phys_target;
- 
- 	/* Now we know what it is, we can reset it. */
--	return kvm_reset_vcpu(vcpu);
--}
-+	ret = kvm_reset_vcpu(vcpu);
-+	if (ret) {
-+		vcpu->arch.target = -1;
-+		bitmap_zero(vcpu->arch.features, KVM_VCPU_MAX_FEATURES);
-+	}
- 
-+	return ret;
-+}
- 
- static int kvm_arch_vcpu_ioctl_vcpu_init(struct kvm_vcpu *vcpu,
- 					 struct kvm_vcpu_init *init)
 -- 
 2.20.1
 
