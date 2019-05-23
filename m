@@ -2,107 +2,152 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 242E0C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 10:39:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2CE0C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 10:41:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4D0720851
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 10:39:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558607976;
-	bh=Az14sqZ7ebvAdl/fRQNK73i/hjMcUGsCAWpfJwgYwJc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=aAVPZcO5/CGUDAchAeTNK3mD3o9pJKednZ9NjdA9VcuHztVZODJcXkHxUynDscOFL
-	 K2DpLufdaR1jP40mPJi0ti+epwOtrQD2jnOX3kF9taKiPbdUue+IEhV9azFQ/tnrGE
-	 SFodip6uKNX5rIToLVqlOXW2pku0LxgYVHjbSD/U=
+	by mail.kernel.org (Postfix) with ESMTP id C820820851
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 10:41:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730453AbfEWKjf (ORCPT
+        id S1730267AbfEWKlJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 06:39:35 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:40373 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727434AbfEWKje (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 06:39:34 -0400
-Received: by mail-lj1-f194.google.com with SMTP id q62so4979003ljq.7
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 03:39:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Qv74DqO1FvoC14nBwYDubCDsUUhrYvH0YUJh7Uw9LZk=;
-        b=jipXITIyZ3dRPmi5fkk/uGBpgLtjW4D/YReeJ3UzlD3C+bvtiR9ThRJVzCdTZSM9qj
-         /2UfvpMktM3VYTssuiTiwA5CaYi602TEYRjbpmqweH27PnDWLZB6Qg6388J7jHzDl7ul
-         lk477G/riNvpo5mSSSi2gVC23iuS30o6na5cilXfgPgWZ7y19PEZ+s66OZ4FKLHaOaRf
-         Qox0fBmAZmFR6ULvQKyT+atS1JXUaHepmBexmGHk0NuYa+vuxI+Qebp7gPMsNeiWnwmf
-         3hSirL0Uzz/XtVx5ZaOXFYGgVr+UT4I0S9O+wb1JBxcVKwa0L23lI4PuZtlo5RbyzyrM
-         dgUw==
-X-Gm-Message-State: APjAAAVUk+8iqEBA03nCcZHAn0y8h4GNCXNAGbW/h+uAxEreu6ipB1LR
-        dSDMNfGAUB3CEh5whRHrIPk=
-X-Google-Smtp-Source: APXvYqxUQE8mW0nZC2ys8mqpiYmn+pu/RF+Y5SX0hWGA9j+1zSh9t6rPfCJ7ZYjgjlbJioR0xVsdKA==
-X-Received: by 2002:a2e:96da:: with SMTP id d26mr39081123ljj.9.1558607973094;
-        Thu, 23 May 2019 03:39:33 -0700 (PDT)
-Received: from xi.terra (c-74bee655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.190.116])
-        by smtp.gmail.com with ESMTPSA id u2sm5595415ljd.97.2019.05.23.03.39.32
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 23 May 2019 03:39:32 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.91)
-        (envelope-from <johan@kernel.org>)
-        id 1hTl8B-0002np-JF; Thu, 23 May 2019 12:39:28 +0200
-Date:   Thu, 23 May 2019 12:39:27 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Johan Hovold <johan@kernel.org>, Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Samuel Iglesias Gonsalvez <siglesias@igalia.com>,
-        Jens Taprogge <jens.taprogge@taprogge.org>,
-        Jiri Slaby <jslaby@suse.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/3] tty: drop unused iflag macro
-Message-ID: <20190523103927.GE568@localhost>
-References: <20190426055925.13430-1-johan@kernel.org>
- <20190523092127.GD568@localhost>
- <20190523093109.GA24097@kroah.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190523093109.GA24097@kroah.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+        Thu, 23 May 2019 06:41:09 -0400
+Received: from smtp2.provo.novell.com ([137.65.250.81]:56381 "EHLO
+        smtp2.provo.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727434AbfEWKlJ (ORCPT
+        <rfc822;groupwise-linux-kernel@vger.kernel.org:0:0>);
+        Thu, 23 May 2019 06:41:09 -0400
+Received: from ghe-pc.suse.asia (prva10-snat226-2.provo.novell.com [137.65.226.36])
+        by smtp2.provo.novell.com with ESMTP (TLS encrypted); Thu, 23 May 2019 04:40:58 -0600
+From:   Gang He <ghe@suse.com>
+To:     mark@fasheh.com, jlbec@evilplan.org, jiangqi903@gmail.com
+Cc:     Gang He <ghe@suse.com>, linux-kernel@vger.kernel.org,
+        ocfs2-devel@oss.oracle.com, akpm@linux-foundation.org
+Subject: [PATCH 1/2] ocfs2: add last unlock times in locking_state
+Date:   Thu, 23 May 2019 18:40:46 +0800
+Message-Id: <20190523104047.14794-1-ghe@suse.com>
+X-Mailer: git-send-email 2.12.3
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 11:31:09AM +0200, Greg Kroah-Hartman wrote:
-> On Thu, May 23, 2019 at 11:21:27AM +0200, Johan Hovold wrote:
-> > On Fri, Apr 26, 2019 at 07:59:22AM +0200, Johan Hovold wrote:
-> > > I noticed that the RELEVANT_IFLAG() macro was unused in USB serial and
-> > > turns out there were a few more instances that could be dropped.
-> > > 
-> > > I have some pending changes that may conflict with the corresponding
-> > > change to USB serial so I'll take that one separately through my tree,
-> > > but perhaps the rest could go through Greg's tty tree.
-> > 
-> > > Johan Hovold (3):
-> > >   tty: simserial: drop unused iflag macro
-> > >   tty: ipoctal: drop unused iflag macro
-> > >   tty: cpm_uart: drop unused iflag macro
-> > > 
-> > >  arch/ia64/hp/sim/simserial.c                | 2 --
-> > >  drivers/ipack/devices/ipoctal.h             | 1 -
-> > >  drivers/tty/serial/cpm_uart/cpm_uart_core.c | 2 --
-> > >  3 files changed, 5 deletions(-)
-> > 
-> > Greg, do you still have these clean-ups in your queue? Want me to resend
-> > with Tony's ack?
-> 
-> They are still in my to-review queue.  Let me dig out from some more
-> stable patches before I tackle the tty/serial stuff later today or
-> tomorrow.
+ocfs2 file system uses locking_state file under debugfs to dump
+each ocfs2 file system's dlm lock resources, but the dlm lock
+resources in memory are becoming more and more after the files
+were touched by the user. it will become a bit difficult to analyze
+these dlm lock resource records in locking_state file by the upper
+scripts, though some files are not active for now, which were
+accessed long time ago.
+Then, I'd like to add last pr/ex unlock times in locking_state file
+for each dlm lock resource record, the the upper scripts can use
+last unlock time to filter inactive dlm lock resource record.
 
-No rush. Just saw you applying some tty patches the other day so figured
-I'd ask. Thanks.
+Signed-off-by: Gang He <ghe@suse.com>
+Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+---
+ fs/ocfs2/dlmglue.c | 21 +++++++++++++++++----
+ fs/ocfs2/ocfs2.h   |  1 +
+ 2 files changed, 18 insertions(+), 4 deletions(-)
 
-Johan
+diff --git a/fs/ocfs2/dlmglue.c b/fs/ocfs2/dlmglue.c
+index af405586c5b1..dccf4136f8c1 100644
+--- a/fs/ocfs2/dlmglue.c
++++ b/fs/ocfs2/dlmglue.c
+@@ -448,7 +448,7 @@ static void ocfs2_update_lock_stats(struct ocfs2_lock_res *res, int level,
+ 				    struct ocfs2_mask_waiter *mw, int ret)
+ {
+ 	u32 usec;
+-	ktime_t kt;
++	ktime_t last, kt;
+ 	struct ocfs2_lock_stats *stats;
+ 
+ 	if (level == LKM_PRMODE)
+@@ -458,7 +458,8 @@ static void ocfs2_update_lock_stats(struct ocfs2_lock_res *res, int level,
+ 	else
+ 		return;
+ 
+-	kt = ktime_sub(ktime_get(), mw->mw_lock_start);
++	last = ktime_get();
++	kt = ktime_sub(last, mw->mw_lock_start);
+ 	usec = ktime_to_us(kt);
+ 
+ 	stats->ls_gets++;
+@@ -474,6 +475,8 @@ static void ocfs2_update_lock_stats(struct ocfs2_lock_res *res, int level,
+ 
+ 	if (ret)
+ 		stats->ls_fail++;
++
++	stats->ls_last = ktime_to_timespec(last).tv_sec;
+ }
+ 
+ static inline void ocfs2_track_lock_refresh(struct ocfs2_lock_res *lockres)
+@@ -3093,8 +3096,10 @@ static void *ocfs2_dlm_seq_next(struct seq_file *m, void *v, loff_t *pos)
+  *	- Lock stats printed
+  * New in version 3
+  *	- Max time in lock stats is in usecs (instead of nsecs)
++ * New in version 4
++ *	- Add last pr/ex unlock times in secs
+  */
+-#define OCFS2_DLM_DEBUG_STR_VERSION 3
++#define OCFS2_DLM_DEBUG_STR_VERSION 4
+ static int ocfs2_dlm_seq_show(struct seq_file *m, void *v)
+ {
+ 	int i;
+@@ -3145,6 +3150,8 @@ static int ocfs2_dlm_seq_show(struct seq_file *m, void *v)
+ # define lock_max_prmode(_l)		((_l)->l_lock_prmode.ls_max)
+ # define lock_max_exmode(_l)		((_l)->l_lock_exmode.ls_max)
+ # define lock_refresh(_l)		((_l)->l_lock_refresh)
++# define lock_last_prmode(_l)		((_l)->l_lock_prmode.ls_last)
++# define lock_last_exmode(_l)		((_l)->l_lock_exmode.ls_last)
+ #else
+ # define lock_num_prmode(_l)		(0)
+ # define lock_num_exmode(_l)		(0)
+@@ -3155,6 +3162,8 @@ static int ocfs2_dlm_seq_show(struct seq_file *m, void *v)
+ # define lock_max_prmode(_l)		(0)
+ # define lock_max_exmode(_l)		(0)
+ # define lock_refresh(_l)		(0)
++# define lock_last_prmode(_l)		(0)
++# define lock_last_exmode(_l)		(0)
+ #endif
+ 	/* The following seq_print was added in version 2 of this output */
+ 	seq_printf(m, "%u\t"
+@@ -3165,6 +3174,8 @@ static int ocfs2_dlm_seq_show(struct seq_file *m, void *v)
+ 		   "%llu\t"
+ 		   "%u\t"
+ 		   "%u\t"
++		   "%u\t"
++		   "%u\t"
+ 		   "%u\t",
+ 		   lock_num_prmode(lockres),
+ 		   lock_num_exmode(lockres),
+@@ -3174,7 +3185,9 @@ static int ocfs2_dlm_seq_show(struct seq_file *m, void *v)
+ 		   lock_total_exmode(lockres),
+ 		   lock_max_prmode(lockres),
+ 		   lock_max_exmode(lockres),
+-		   lock_refresh(lockres));
++		   lock_refresh(lockres),
++		   lock_last_prmode(lockres),
++		   lock_last_exmode(lockres));
+ 
+ 	/* End the line */
+ 	seq_printf(m, "\n");
+diff --git a/fs/ocfs2/ocfs2.h b/fs/ocfs2/ocfs2.h
+index 1f029fbe8b8d..8efa022684f4 100644
+--- a/fs/ocfs2/ocfs2.h
++++ b/fs/ocfs2/ocfs2.h
+@@ -164,6 +164,7 @@ struct ocfs2_lock_stats {
+ 
+ 	/* Storing max wait in usecs saves 24 bytes per inode */
+ 	u32		ls_max;		/* Max wait in USEC */
++	u32		ls_last;	/* Last unlock time in SEC */
+ };
+ #endif
+ 
+-- 
+2.21.0
+
