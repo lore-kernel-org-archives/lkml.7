@@ -5,49 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58EEAC282E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:50:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3FC9C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:50:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2685D20881
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:50:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8F942133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:50:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558641005;
-	bh=xywE+GSgYA5Pfdjb6LBnSzVFaUGC8KB/hDWbOo3Es4M=;
+	s=default; t=1558641007;
+	bh=ZTTP0gwEBPyt/TXYf39wS6QBb+8M2TbhXa5uHJCmQ98=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZcUyjAWRHNZxA5QKNF8c90F2Ex2wdaqGtz1/h2ytEpGJrmM+b1nTKWTsIVUiwTi+A
-	 Qz6TFbnCxfE/ozcYHbIlJiBqYUIIE6f442kBDW1TM9zOlYSK8Qa+ctGbnUUzpM8grJ
-	 oS9LOTjRZesT5iq52C8dekhyq9OK6Xt4sy8R7HWg=
+	b=xmSjc8QQ+DyPEZ5B9VmeVoARIeG4eU5DHJQjmicjUki7T51od4WHcUcl/lzqaHysI
+	 bzsxMLve1we8cgmaONWXF8OfqOdRkB7OtjgG8Qz9LKbt+tDYAYMnBALdQ2naAKNQcr
+	 ah6fIcfbzQWDaFM1wyp+FggxZGxgeTC/EBVe5bJ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387777AbfEWTKU (ORCPT
+        id S2388314AbfEWTuH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:10:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43548 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:50:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43640 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387743AbfEWTKO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:10:14 -0400
+        id S2387761AbfEWTKT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:10:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EFD672133D;
-        Thu, 23 May 2019 19:10:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6FDC02133D;
+        Thu, 23 May 2019 19:10:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558638613;
-        bh=xywE+GSgYA5Pfdjb6LBnSzVFaUGC8KB/hDWbOo3Es4M=;
+        s=default; t=1558638618;
+        bh=ZTTP0gwEBPyt/TXYf39wS6QBb+8M2TbhXa5uHJCmQ98=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A1Yq5ySbuQhqeVOsKDQyfTJUxepdzZLpw1os5hjiQI6JhveTA/CuFuyLdZzsmCLQM
-         zvzkW1Xp/L7XIuvafShhA5VHKxbVwTyOr8WEbVfcd5yfZ4JFM4bGW3LSSwj9zZQvOk
-         yYuiynslrfYVwgGMtcZ7Vl0eal6PIK0AjaulNyJo=
+        b=nCYqOlFYDbK+0QaW+O4WN23ooMs+wQIAZss3G5mKjzIZnEJ12Pkhz3nkap14pZWoh
+         N8Yz18eTXXEqvu4PqzXMg0DwavQjOQkW3PsKtkhGXdTulUcBR2Dt//tfBWAkgjA4vS
+         tmEBOhnjXAJBHDP1GkwSM9NWcDiZv6r+dfRKPlbI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jeremy Sowden <jeremy@azazel.net>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
+        stable@vger.kernel.org,
+        Bhagavathi Perumal S <bperumal@codeaurora.org>,
+        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+        Johannes Berg <johannes.berg@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 44/53] vti4: ipip tunnel deregistration fixes.
-Date:   Thu, 23 May 2019 21:06:08 +0200
-Message-Id: <20190523181717.950582899@linuxfoundation.org>
+Subject: [PATCH 4.9 46/53] mac80211: Fix kernel panic due to use of txq after free
+Date:   Thu, 23 May 2019 21:06:10 +0200
+Message-Id: <20190523181718.277434816@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181710.981455400@linuxfoundation.org>
 References: <20190523181710.981455400@linuxfoundation.org>
@@ -60,46 +62,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5483844c3fc18474de29f5d6733003526e0a9f78 ]
+[ Upstream commit f1267cf3c01b12e0f843fb6a7450a7f0b2efab8a ]
 
-If tunnel registration failed during module initialization, the module
-would fail to deregister the IPPROTO_COMP protocol and would attempt to
-deregister the tunnel.
+The txq of vif is added to active_txqs list for ATF TXQ scheduling
+in the function ieee80211_queue_skb(), but it was not properly removed
+before freeing the txq object. It was causing use after free of the txq
+objects from the active_txqs list, result was kernel panic
+due to invalid memory access.
 
-The tunnel was not deregistered during module-exit.
+Fix kernel invalid memory access by properly removing txq object
+from active_txqs list before free the object.
 
-Fixes: dd9ee3444014e ("vti4: Fix a ipip packet processing bug in 'IPCOMP' virtual tunnel")
-Signed-off-by: Jeremy Sowden <jeremy@azazel.net>
-Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+Signed-off-by: Bhagavathi Perumal S <bperumal@codeaurora.org>
+Acked-by: Toke Høiland-Jørgensen <toke@redhat.com>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/ip_vti.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ net/mac80211/iface.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/net/ipv4/ip_vti.c b/net/ipv4/ip_vti.c
-index 270e79f4d40e6..4e39c935e057e 100644
---- a/net/ipv4/ip_vti.c
-+++ b/net/ipv4/ip_vti.c
-@@ -678,9 +678,9 @@ static int __init vti_init(void)
- 	return err;
+diff --git a/net/mac80211/iface.c b/net/mac80211/iface.c
+index 5768560cbfc3e..ad03331ee7855 100644
+--- a/net/mac80211/iface.c
++++ b/net/mac80211/iface.c
+@@ -1937,6 +1937,9 @@ void ieee80211_if_remove(struct ieee80211_sub_if_data *sdata)
+ 	list_del_rcu(&sdata->list);
+ 	mutex_unlock(&sdata->local->iflist_mtx);
  
- rtnl_link_failed:
--	xfrm4_protocol_deregister(&vti_ipcomp4_protocol, IPPROTO_COMP);
--xfrm_tunnel_failed:
- 	xfrm4_tunnel_deregister(&ipip_handler, AF_INET);
-+xfrm_tunnel_failed:
-+	xfrm4_protocol_deregister(&vti_ipcomp4_protocol, IPPROTO_COMP);
- xfrm_proto_comp_failed:
- 	xfrm4_protocol_deregister(&vti_ah4_protocol, IPPROTO_AH);
- xfrm_proto_ah_failed:
-@@ -696,6 +696,7 @@ pernet_dev_failed:
- static void __exit vti_fini(void)
- {
- 	rtnl_link_unregister(&vti_link_ops);
-+	xfrm4_tunnel_deregister(&ipip_handler, AF_INET);
- 	xfrm4_protocol_deregister(&vti_ipcomp4_protocol, IPPROTO_COMP);
- 	xfrm4_protocol_deregister(&vti_ah4_protocol, IPPROTO_AH);
- 	xfrm4_protocol_deregister(&vti_esp4_protocol, IPPROTO_ESP);
++	if (sdata->vif.txq)
++		ieee80211_txq_purge(sdata->local, to_txq_info(sdata->vif.txq));
++
+ 	synchronize_rcu();
+ 
+ 	if (sdata->dev) {
 -- 
 2.20.1
 
