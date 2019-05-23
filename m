@@ -7,42 +7,42 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 460CCC282DE
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 07:39:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0B6FC04AAC
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 07:39:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 095112075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 07:39:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A37BC2075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 07:39:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="mZSR9f3k"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="O/GHoRiF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730007AbfEWHha (ORCPT
+        id S1730372AbfEWHj2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 03:37:30 -0400
-Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:46686 "EHLO
+        Thu, 23 May 2019 03:39:28 -0400
+Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:46704 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726309AbfEWHh3 (ORCPT
+        by vger.kernel.org with ESMTP id S1727919AbfEWHha (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 03:37:29 -0400
+        Thu, 23 May 2019 03:37:30 -0400
 Received: from mailhost.synopsys.com (dc2-mailhost2.synopsys.com [10.12.135.162])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 831E3C0095;
-        Thu, 23 May 2019 07:37:15 +0000 (UTC)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 5A157C0A67;
+        Thu, 23 May 2019 07:37:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1558597035; bh=pP5DR9i3AWyLzsZCvhK9gxgeY8E2DkEss6ulcg1/dFg=;
+        t=1558597036; bh=b2ymDc1sTBfRFOKmSWq0wNVbV9n3u1N7F2xrFuu36MU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=mZSR9f3kiHtjQIrqbVtyFlfUrtPrp5E2sP7EgKrfWx5qY5Oi3ix7HXRI0nhFNoeIe
-         dqhHiI7K70UopjKObihk3RjtWqbcywS1iN9bphjIsF9/9oDwy46j56wahXbkHUIdAC
-         GcHEWSOCYDALcEwNuIXqGoguwiwNmpKkbAWFX4i0zDHWmkK66YHdkr+tzPa9ZcDqcD
-         Reab0W6uycxrIRDc6RgJc7QY3lHlGtnu1obv7kzYtzlDcgp4utVdl74WqURBF3aBOe
-         aXSd+ezEvuhN4I8BUqr/Wbq+nxgosCz52VfsLE1RAlnno23tf7hEq9+tvYig1SsVCI
-         xxFz3l4XCuLSA==
+        b=O/GHoRiFwLSVpRiCWp6sHpFlGDEowA/ClcJ/bNNeNZcU4REOIh2fRrykjlqzWEI6Z
+         tsq+relg4fgYECHWrC6JBH5tvgs1e4okYOSBsF/hYOEj0hWoFT2vhpspJvB3nscVb9
+         3/+gnPGM8CcdsLBX5h06f0pLC9dWfKAY5Vt1HAzUyi5zt/WTNWZyG86E4jQPENF8u2
+         Zkg25bEQKXduwzscqzxXI3Ke4rRTPIqGT9iOO/vRjmk7OmjjpWQYbzHYe5AsgqcZFw
+         /BG6R1B76KTTd9b24vSemMf2K/nic1//f0/+hOu8Thg0fgXh4RtM6ULChSA8ReRmjg
+         boZX8jkZTuVvw==
 Received: from de02.synopsys.com (de02.internal.synopsys.com [10.225.17.21])
-        by mailhost.synopsys.com (Postfix) with ESMTP id E625BA00A0;
-        Thu, 23 May 2019 07:37:28 +0000 (UTC)
+        by mailhost.synopsys.com (Postfix) with ESMTP id D445FA0099;
+        Thu, 23 May 2019 07:37:29 +0000 (UTC)
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by de02.synopsys.com (Postfix) with ESMTP id 172153D93B;
+        by de02.synopsys.com (Postfix) with ESMTP id 3B71D3D941;
         Thu, 23 May 2019 09:37:28 +0200 (CEST)
 From:   Jose Abreu <Jose.Abreu@synopsys.com>
 To:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org
@@ -52,9 +52,9 @@ Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
         Giuseppe Cavallaro <peppe.cavallaro@st.com>,
         Alexandre Torgue <alexandre.torgue@st.com>,
         Corentin Labbe <clabbe.montjoie@gmail.com>
-Subject: [PATCH net-next 03/18] net: stmmac: dwmac1000: Add MAC loopback support
-Date:   Thu, 23 May 2019 09:36:53 +0200
-Message-Id: <2d2987abead97d9ce2ca82cdf543bce06bb63b1d.1558596600.git.joabreu@synopsys.com>
+Subject: [PATCH net-next 05/18] net: stmmac: dwxgmac2: Add MAC loopback support
+Date:   Thu, 23 May 2019 09:36:55 +0200
+Message-Id: <acfcf629ca6345f315014cc6fd7ab5047eb5ed02.1558596600.git.joabreu@synopsys.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1558596599.git.joabreu@synopsys.com>
 References: <cover.1558596599.git.joabreu@synopsys.com>
@@ -66,7 +66,7 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 In preparation for the addition of stmmac selftests we implement the MAC
-loopback callback in dwmac1000 core.
+loopback callback in dwxgmac2 core.
 
 Signed-off-by: Jose Abreu <joabreu@synopsys.com>
 Cc: Joao Pinto <jpinto@synopsys.com>
@@ -75,40 +75,53 @@ Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
 Cc: Alexandre Torgue <alexandre.torgue@st.com>
 Cc: Corentin Labbe <clabbe.montjoie@gmail.com>
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h      |  1 +
+ drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c | 13 +++++++++++++
+ 2 files changed, 14 insertions(+)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
-index 0877bde6e860..398303c783f4 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
-@@ -499,6 +499,18 @@ static void dwmac1000_debug(void __iomem *ioaddr, struct stmmac_extra_stats *x,
- 		x->mac_gmii_rx_proto_engine++;
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
+index 085b700a4994..f629ccc8932a 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
++++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
+@@ -29,6 +29,7 @@
+ #define XGMAC_CONFIG_GPSL		GENMASK(29, 16)
+ #define XGMAC_CONFIG_GPSL_SHIFT		16
+ #define XGMAC_CONFIG_S2KP		BIT(11)
++#define XGMAC_CONFIG_LM			BIT(10)
+ #define XGMAC_CONFIG_IPC		BIT(9)
+ #define XGMAC_CONFIG_JE			BIT(8)
+ #define XGMAC_CONFIG_WD			BIT(7)
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
+index 64b8cb88ea45..c27b3ca052ea 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
+@@ -321,6 +321,18 @@ static void dwxgmac2_set_filter(struct mac_device_info *hw,
+ 	writel(value, ioaddr + XGMAC_PACKET_FILTER);
  }
  
-+static void dwmac1000_set_mac_loopback(void __iomem *ioaddr, bool enable)
++static void dwxgmac2_set_mac_loopback(void __iomem *ioaddr, bool enable)
 +{
-+	u32 value = readl(ioaddr + GMAC_CONTROL);
++	u32 value = readl(ioaddr + XGMAC_RX_CONFIG);
 +
 +	if (enable)
-+		value |= GMAC_CONTROL_LM;
++		value |= XGMAC_CONFIG_LM;
 +	else
-+		value &= ~GMAC_CONTROL_LM;
++		value &= ~XGMAC_CONFIG_LM;
 +
-+	writel(value, ioaddr + GMAC_CONTROL);
++	writel(value, ioaddr + XGMAC_RX_CONFIG);
 +}
 +
- const struct stmmac_ops dwmac1000_ops = {
- 	.core_init = dwmac1000_core_init,
- 	.set_mac = stmmac_set_mac,
-@@ -518,6 +530,7 @@ const struct stmmac_ops dwmac1000_ops = {
- 	.pcs_ctrl_ane = dwmac1000_ctrl_ane,
- 	.pcs_rane = dwmac1000_rane,
- 	.pcs_get_adv_lp = dwmac1000_get_adv_lp,
-+	.set_mac_loopback = dwmac1000_set_mac_loopback,
+ const struct stmmac_ops dwxgmac210_ops = {
+ 	.core_init = dwxgmac2_core_init,
+ 	.set_mac = dwxgmac2_set_mac,
+@@ -350,6 +362,7 @@ const struct stmmac_ops dwxgmac210_ops = {
+ 	.pcs_get_adv_lp = NULL,
+ 	.debug = NULL,
+ 	.set_filter = dwxgmac2_set_filter,
++	.set_mac_loopback = dwxgmac2_set_mac_loopback,
  };
  
- int dwmac1000_setup(struct stmmac_priv *priv)
+ int dwxgmac2_setup(struct stmmac_priv *priv)
 -- 
 2.7.4
 
