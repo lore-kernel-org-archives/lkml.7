@@ -2,165 +2,137 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69B04C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 14:37:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6596BC282DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 14:38:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D62020879
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 14:37:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A00320879
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 14:38:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="YbCZESmb"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s0hr3OtJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730919AbfEWOhi (ORCPT
+        id S1730954AbfEWOib (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 10:37:38 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:39239 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730895AbfEWOhh (ORCPT
+        Thu, 23 May 2019 10:38:31 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:54510 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730933AbfEWOib (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 10:37:37 -0400
-Received: by mail-it1-f193.google.com with SMTP id 9so8864947itf.4
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 07:37:37 -0700 (PDT)
+        Thu, 23 May 2019 10:38:31 -0400
+Received: by mail-wm1-f67.google.com with SMTP id i3so6104170wml.4
+        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 07:38:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=DahHECUK2AF1J12XBLs2bKF9FH9rjTuzkU7KMfzCZKg=;
-        b=YbCZESmbvCwAQCtgJ5vNBW4fzZ0rmez/RQRMkvQ2gBf8m2vQZ7pZbh6Bnf/yhxyKVI
-         53LigfqSgxhhyV3cJwQAxeBYmchcYj4+L6sb6hM6ANhJ3YzqD5nVaV8VUWyXmRfwM0Js
-         s0qbXNd2fPwKrwA6FMsqrbW+O3oe4jc4dfMVogKbtgea8qKxT3IcnEz6YQoGlNR0pY3m
-         WBeNhDCmn5OB53HQT4TWeQ+Gay0cWaoJ8RQtor16rRwite01Brwb3BNAlCJ/+wg1v28J
-         HJ9HsyrSvI8gu0Uy/czVhZ9L/NkkHH+hj2hN0LXZm7YA7qWQlzwpnrEcctNdcL7rOP5V
-         pe4A==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=/HlefMV0bwmUzLKXhAmlVYeXPjcTFvz8Ki1WeUsw4eA=;
+        b=s0hr3OtJjjizR8t7XxwJFiZcY+6l+tr9RBVt0An3WE8H+XpnT9Q354IZCKjX87NYVI
+         KMk1cXfrqu6RCRqcI98jFGRx1YYoz3lbaq4KFt6yMwBS8R+K9ASEWZqavrD1Wsnu/WU8
+         yi+6BwDM4vC3tlJ212bOE7v1LDXV5rEc4NkCtXp3021wJGiS1NsImjO5DEfvBr7ZGbT4
+         yXmuBa7JWmTolKuO24gcGD1V3qcuYN+PPrXNlhSmWqXzRlnDNU8celvj0R2+jQ15sJln
+         xLhJFArPQsm3zOfKh/0nJNYSJ7GYhYDW15rmrA9P8f56L9m/E3lPhPbFx4F5A3efrQh5
+         QWsw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=DahHECUK2AF1J12XBLs2bKF9FH9rjTuzkU7KMfzCZKg=;
-        b=WyNaACl+0ydDTZxXtocQjf3x7yeS++9rNeEPqQBj6ecSquLZuJLpJkj0qB7guX9HUW
-         k1l8y4XnO4iHpWK9hahzWT7cg8qGF8A61gsM/NDKr7zx8WKa7AtA8uxElUb1JoPEXFXX
-         x6uVKVPvI348pC0fRWp0QLd4Wxq1NfojUMbTWVt3v+ngH+v5liPjwmYPcppNx1j/M81C
-         wo4E+oZ9P4o0hHsMwZnqXL39iV4V5H9h347WISyFsgJdBsXDhheuKufkcoWNq+eizFqP
-         9SyzNNbzhnR+do3GSG3ncArIr41gx81YVYqzyMb/cIsfQOjFD2J1+ZGsg7Y6oo8W2tcW
-         1RMA==
-X-Gm-Message-State: APjAAAXPlNRy7sL4ocX9oLMgvtlPHlOZ4o65jkYAsdm0IYjeKCzlRSjC
-        p0asPnksYO7TDeJZ+6Li1//YKg==
-X-Google-Smtp-Source: APXvYqxCsu1nKhbS62harFEpfvgZRg7+s7a4b8LII1alkH5yuzE7xzETotobVwglIakCJJls3jgHwg==
-X-Received: by 2002:a02:9381:: with SMTP id z1mr24471487jah.130.1558622256966;
-        Thu, 23 May 2019 07:37:36 -0700 (PDT)
-Received: from brauner.io ([172.56.12.187])
-        by smtp.gmail.com with ESMTPSA id l186sm4603784itb.5.2019.05.23.07.37.29
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 23 May 2019 07:37:36 -0700 (PDT)
-Date:   Thu, 23 May 2019 16:37:26 +0200
-From:   Christian Brauner <christian@brauner.io>
-To:     Jann Horn <jannh@google.com>
-Cc:     Oleg Nesterov <oleg@redhat.com>, Al Viro <viro@zeniv.linux.org.uk>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Florian Weimer <fweimer@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Arnd Bergmann <arnd@arndb.de>, Shuah Khan <shuah@kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        Todd Kjos <tkjos@android.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org,
-        linux-arch <linux-arch@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>
-Subject: Re: [PATCH v1 1/2] open: add close_range()
-Message-ID: <20190523143725.y67czx4jxsy6yqrj@brauner.io>
-References: <20190522155259.11174-1-christian@brauner.io>
- <20190522165737.GC4915@redhat.com>
- <20190523115118.pmscbd6kaqy37dym@brauner.io>
- <CAG48ez0Uq2GQnQsuPkNrDdJVku_6GPeZ_5F_-5J3iy2CULr0_Q@mail.gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=/HlefMV0bwmUzLKXhAmlVYeXPjcTFvz8Ki1WeUsw4eA=;
+        b=ijzfpBjui9aX0gim197PhOv89mowXs2LLZ9igtJR50p2NozRCIYmvUbYQgPaTNb4Ff
+         JfrpEjSjnW7nBmQoiuA3HoTvlRT2P3Wl4z0+1mP8QP+np8rlLA1VqQN0aqCQehQtwVVh
+         mH3mvtCSZMxNEMT2gQ86VQ5Bsxo8dbSpvKcN1W0e8b7EudZjgLOO7tkqQZgP3atwTfTu
+         HBFVRim6WOjB3fjkU3CX4bWbB6QDEvWTdQPhwBXSrvRClKnMvgt6jwTWKIIJ7ZF7sysN
+         uRLL2HNcbFTNT+Kl6yiw53Gdj2td98yawl5imcWhRm+9i4ciJud+cuDIs8hdZsibkx+E
+         jvoQ==
+X-Gm-Message-State: APjAAAWFtyqRgEKVno0poZNB5TmDQqPLq64AnhPTdJTuY4wSTiveV8mR
+        Xr5nCSNgFcIGI7mYL2/ED+QM2CZtYh+wiA==
+X-Google-Smtp-Source: APXvYqxQgq+rdSwKf1bkfpHBWA6HZtKthLBgqdX6MDBQOoVwnphvJBoTyijnAK9ayk/rlfQnsZN15g==
+X-Received: by 2002:a1c:ef0c:: with SMTP id n12mr12266159wmh.3.1558622308599;
+        Thu, 23 May 2019 07:38:28 -0700 (PDT)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id t13sm60423742wra.81.2019.05.23.07.38.27
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 23 May 2019 07:38:27 -0700 (PDT)
+Subject: Re: [PATCH] soc: qcom: apr: Don't use reg for domain id
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190522015342.29501-1-bjorn.andersson@linaro.org>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <e7046725-578d-8854-872b-a7837d0fc20a@linaro.org>
+Date:   Thu, 23 May 2019 15:38:27 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAG48ez0Uq2GQnQsuPkNrDdJVku_6GPeZ_5F_-5J3iy2CULr0_Q@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190522015342.29501-1-bjorn.andersson@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 04:32:14PM +0200, Jann Horn wrote:
-> On Thu, May 23, 2019 at 1:51 PM Christian Brauner <christian@brauner.io> wrote:
-> [...]
-> > I kept it dumb and was about to reply that your solution introduces more
-> > code when it seemed we wanted to keep this very simple for now.
-> > But then I saw that find_next_opened_fd() already exists as
-> > find_next_fd(). So it's actually not bad compared to what I sent in v1.
-> > So - with some small tweaks (need to test it and all now) - how do we
-> > feel about?:
-> [...]
-> > static int __close_next_open_fd(struct files_struct *files, unsigned *curfd, unsigned maxfd)
-> > {
-> >         struct file *file = NULL;
-> >         unsigned fd;
-> >         struct fdtable *fdt;
-> >
-> >         spin_lock(&files->file_lock);
-> >         fdt = files_fdtable(files);
-> >         fd = find_next_fd(fdt, *curfd);
-> 
-> find_next_fd() finds free fds, not used ones.
-> 
-> >         if (fd >= fdt->max_fds || fd > maxfd)
-> >                 goto out_unlock;
-> >
-> >         file = fdt->fd[fd];
-> >         rcu_assign_pointer(fdt->fd[fd], NULL);
-> >         __put_unused_fd(files, fd);
-> 
-> You can't do __put_unused_fd() if the old pointer in fdt->fd[fd] was
-> NULL - because that means that the fd has been reserved by another
-> thread that is about to put a file pointer in there, and if you
-> release the fd here, that messes up the refcounting (or hits the
-> BUG_ON() in __fd_install()).
-> 
-> > out_unlock:
-> >         spin_unlock(&files->file_lock);
-> >
-> >         if (!file)
-> >                 return -EBADF;
-> >
-> >         *curfd = fd;
-> >         filp_close(file, files);
-> >         return 0;
-> > }
-> >
-> > int __close_range(struct files_struct *files, unsigned fd, unsigned max_fd)
-> > {
-> >         if (fd > max_fd)
-> >                 return -EINVAL;
-> >
-> >         while (fd <= max_fd) {
-> 
-> Note that with a pattern like this, you have to be careful about what
-> happens if someone gives you max_fd==0xffffffff - then this condition
-> is always true and the loop can not terminate this way.
-> 
-> >                 if (__close_next_fd(files, &fd, maxfd))
-> >                         break;
-> 
-> (obviously it can still terminate this way)
 
-Yup, this was only a quick draft.
-I think the dumb simple thing that I did before was the best way to do
-it for now.
-I first thought that the find_next_open_fd() function already exists but
-when I went to write a POC for testing realized it doesn't anyway.
+
+On 22/05/2019 02:53, Bjorn Andersson wrote:
+> The reg property represents the address and size on the bus that a
+> device lives, but for APR the parent is a rpmsg bus, which does not have
+> numerical addresses. Simply defining #address/#size-cells to 1 and 0,
+> respectively, to silence the compiler is not an appropriate solution.
+> 
+I agree.
+
+> Replace the use of "reg" with an APR specific property.
+> 
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+Can you also change the example too.
+
+other than that am okay with the change.
+
+Reviewed-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+
+--srini
+> 
+> The APR device was recently added to msm8996.dtsi, but this is still
+> depending on working SMMU to provide functional audio support.
+> 
+>   Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt | 2 +-
+>   drivers/soc/qcom/apr.c                                  | 2 +-
+>   2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
+> index bcc612cc7423..38d3c06abc41 100644
+> --- a/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
+> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
+> @@ -9,7 +9,7 @@ used for audio/voice services on the QDSP.
+>   	Value type: <stringlist>
+>   	Definition: must be "qcom,apr-v<VERSION-NUMBER>", example "qcom,apr-v2"
+>   
+> -- reg
+> +- qcom,apr-domain
+>   	Usage: required
+>   	Value type: <u32>
+>   	Definition: Destination processor ID.
+> diff --git a/drivers/soc/qcom/apr.c b/drivers/soc/qcom/apr.c
+> index 74f8b9607daa..b83d71b2e0a4 100644
+> --- a/drivers/soc/qcom/apr.c
+> +++ b/drivers/soc/qcom/apr.c
+> @@ -276,7 +276,7 @@ static int apr_probe(struct rpmsg_device *rpdev)
+>   	if (!apr)
+>   		return -ENOMEM;
+>   
+> -	ret = of_property_read_u32(dev->of_node, "reg", &apr->dest_domain_id);
+> +	ret = of_property_read_u32(dev->of_node, "qcom,apr-domain", &apr->dest_domain_id);
+>   	if (ret) {
+>   		dev_err(dev, "APR Domain ID not specified in DT\n");
+>   		return ret;
+> 
