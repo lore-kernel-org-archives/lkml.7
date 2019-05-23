@@ -2,199 +2,109 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7249C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 21:49:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B64DC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 21:52:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6916320868
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 21:49:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0CEB21773
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 21:52:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="X//cpGAK"
+	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="lydjv4HV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388394AbfEWVtw (ORCPT
+        id S2388322AbfEWVw6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 17:49:52 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:58870 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388134AbfEWVtw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 17:49:52 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4NLhifU004317;
-        Thu, 23 May 2019 21:49:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=CA4BRvH7LpSOvdwGQ1RgbPK5R7ura7qGqy4SrVn6TGs=;
- b=X//cpGAKkvYu1m1BjaIbh5y4EYuwM+8rZjWW5aAmW0vi1toc+ON7ojqHQsbcK6pAW1oD
- bdaUeEmghYKNyuWdojEirpuCtcEnGnpjzGNjA/TAPNGPvcylGBa+20OGWCMnCwLHj8Tf
- YRS6xbAb5NCY6/3hnPEk+xsQaxia6MP4a6XjVZSvoh9chZIbCYwa7XRJ+TOdhejZB+v7
- XSe3hifUXqlRGwDwQJJUjbd8e+die4vTzQ+aF3wEY1CdthC5hOmZQere78SM0w/UZFJa
- y1F1RpJmvyYHjzu9jq9fzTHoce2ebfeYA5vSKPJb2pXe3nPIQrp8MMBgMFftquXsLaI1 XQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2130.oracle.com with ESMTP id 2smsk5n948-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 23 May 2019 21:49:13 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4NLmFZJ185512;
-        Thu, 23 May 2019 21:49:12 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2smsgvrm93-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 23 May 2019 21:49:12 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x4NLn8SI003595;
-        Thu, 23 May 2019 21:49:09 GMT
-Received: from [192.168.1.16] (/24.9.64.241)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 23 May 2019 21:49:08 +0000
-Subject: Re: [PATCH v15 00/17] arm64: untag user pointers passed to the kernel
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Evgenii Stepanov <eugenis@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
-        kvm@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
-        Elliott Hughes <enh@google.com>
-References: <cover.1557160186.git.andreyknvl@google.com>
- <20190517144931.GA56186@arrakis.emea.arm.com>
- <CAFKCwrj6JEtp4BzhqO178LFJepmepoMx=G+YdC8sqZ3bcBp3EQ@mail.gmail.com>
- <20190521182932.sm4vxweuwo5ermyd@mbp> <201905211633.6C0BF0C2@keescook>
- <6049844a-65f5-f513-5b58-7141588fef2b@oracle.com>
- <20190523201105.oifkksus4rzcwqt4@mbp>
-From:   Khalid Aziz <khalid.aziz@oracle.com>
-Organization: Oracle Corp
-Message-ID: <ffe58af3-7c70-d559-69f6-1f6ebcb0fec6@oracle.com>
-Date:   Thu, 23 May 2019 15:49:05 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 23 May 2019 17:52:58 -0400
+Received: from node.akkea.ca ([192.155.83.177]:49564 "EHLO node.akkea.ca"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387709AbfEWVw5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 17:52:57 -0400
+Received: by node.akkea.ca (Postfix, from userid 33)
+        id EE1D44E204B; Thu, 23 May 2019 21:52:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
+        t=1558648376; bh=EEx6+r+EW8Gn9LAjThkYPyrhI3Zs+zGHNmTtqinmKv4=;
+        h=To:Subject:Date:From:Cc:In-Reply-To:References;
+        b=lydjv4HV77oK6COWSrTB1aH1fzxQCpWZn3f9c5YJdUPbwSs9j4jrs+wewljakLQ7n
+         SuVyaPb07lQ5iHRWYIVaoMcXhR2PcSdEsn9Gj4eL9enTjgl4octPYeaEFmGc7eJJ+x
+         uVBAjCgayvFpSuhgomr0JoIhmwvSb+a0fFBEHF90=
+To:     Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v13 2/4] arm64: dts: fsl: librem5: Add a device tree for  the Librem5 devkit
+X-PHP-Originating-Script: 1000:rcube.php
 MIME-Version: 1.0
-In-Reply-To: <20190523201105.oifkksus4rzcwqt4@mbp>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9266 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1905230139
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9266 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905230139
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 23 May 2019 14:52:56 -0700
+From:   Angus Ainslie <angus@akkea.ca>
+Cc:     angus.ainslie@puri.sm, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-kernel-owner@vger.kernel.org
+In-Reply-To: <20190523191922.GA3803@xo-6d-61-c0.localdomain>
+References: <20190520142330.3556-1-angus@akkea.ca>
+ <20190520142330.3556-3-angus@akkea.ca>
+ <20190523191922.GA3803@xo-6d-61-c0.localdomain>
+Message-ID: <9626cd324eaaab2b49c37cf3c824aa5e@www.akkea.ca>
+X-Sender: angus@akkea.ca
+User-Agent: Roundcube Webmail/1.1.3
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/23/19 2:11 PM, Catalin Marinas wrote:
-> Hi Khalid,
->=20
-> On Thu, May 23, 2019 at 11:51:40AM -0600, Khalid Aziz wrote:
->> On 5/21/19 6:04 PM, Kees Cook wrote:
->>> As an aside: I think Sparc ADI support in Linux actually side-stepped=
-
->>> this[1] (i.e. chose "solution 1"): "All addresses passed to kernel mu=
-st
->>> be non-ADI tagged addresses." (And sadly, "Kernel does not enable ADI=
-
->>> for kernel code.") I think this was a mistake we should not repeat fo=
-r
->>> arm64 (we do seem to be at least in agreement about this, I think).
->>>
->>> [1] https://lore.kernel.org/patchwork/patch/654481/
->>
->> That is a very early version of the sparc ADI patch. Support for tagge=
-d
->> addresses in syscalls was added in later versions and is in the patch
->> that is in the kernel.
->=20
-> I tried to figure out but I'm not familiar with the sparc port. How did=
-
-> you solve the tagged address going into various syscall implementations=
-
-> in the kernel (e.g. sys_write)? Is the tag removed on kernel entry or i=
-t
-> ends up deeper in the core code?
->=20
-
-Another spot I should point out in ADI patch - Tags are not stored in
-VMAs and IOMMU does not support ADI tags on M7. ADI tags are stripped
-before userspace addresses are passed to IOMMU in the following snippet
-from the patch:
-
-diff --git a/arch/sparc/mm/gup.c b/arch/sparc/mm/gup.c
-index 5335ba3c850e..357b6047653a 100644
---- a/arch/sparc/mm/gup.c
-+++ b/arch/sparc/mm/gup.c
-@@ -201,6 +202,24 @@ int __get_user_pages_fast(unsigned long start, int
-nr_pages
-, int write,
-        pgd_t *pgdp;
-        int nr =3D 0;
-
-+#ifdef CONFIG_SPARC64
-+       if (adi_capable()) {
-+               long addr =3D start;
-+
-+               /* If userspace has passed a versioned address, kernel
-+                * will not find it in the VMAs since it does not store
-+                * the version tags in the list of VMAs. Storing version
-+                * tags in list of VMAs is impractical since they can be
-+                * changed any time from userspace without dropping into
-+                * kernel. Any address search in VMAs will be done with
-+                * non-versioned addresses. Ensure the ADI version bits
-+                * are dropped here by sign extending the last bit before=
-
-+                * ADI bits. IOMMU does not implement version tags.
-+                */
-+               addr =3D (addr << (long)adi_nbits()) >> (long)adi_nbits()=
-;
-+               start =3D addr;
-+       }
-+#endif
-        start &=3D PAGE_MASK;
-        addr =3D start;
-        len =3D (unsigned long) nr_pages << PAGE_SHIFT;
+Hi Pavel,
 
 
---
-Khalid
+On 2019-05-23 12:19, Pavel Machek wrote:
+> Hi!
+> 
+>> This is for the development kit board for the Librem 5. The current 
+>> level
+>> of support yields a working console and is able to boot userspace from
+>> the network or eMMC.
+>> 
+>> Additional subsystems that are active :
+> 
+>> - haptic motor
+> 
+> Haptic motor is not a LED. It should be controlled by input subsystem.
+> 
+>> +	pwmleds {
+>> +		compatible = "pwm-leds";
+>> +
+>> +		haptic {
+>> +			label = "librem5::haptic";
+>> +			pwms = <&pwm2 0 200000>;
+>> +			active-low;
+>> +			max-brightness = <255>;
+>> +			power-supply = <&reg_3v3_p>;
+>> +		};
+>> +	};
+> 
+> You can take a look at N900, that has reasonable interface.
+> 
 
+I wanted to control the haptic with the pwm-vibra driver but 
+"fsl,imx27-pwm" doesn't seem to respect the PWM_POLARITY_INVERTED flag 
+so when I start the system the vibrator is full on.
+
+I could use gpio-vibrator but that seemed like a waste when the device 
+is connected to pwm.
+
+I figured the using the pwm-leds interface was a reasonable compromise 
+until I had an opportunity to make changes the the imx27-pwm driver.
+
+Thanks
+Angus
+
+
+> Thanks,
+> 										Pavel
 
