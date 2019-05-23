@@ -2,130 +2,128 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B98F7C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 21:40:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E40ABC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 21:43:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8446C2168B
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 21:40:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tq/Xl4Ti"
+	by mail.kernel.org (Postfix) with ESMTP id B10652168B
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 21:43:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388270AbfEWVkO (ORCPT
+        id S2388209AbfEWVnF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 17:40:14 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:36724 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388209AbfEWVkO (ORCPT
+        Thu, 23 May 2019 17:43:05 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:45903 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387709AbfEWVnE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 17:40:14 -0400
-Received: by mail-ed1-f65.google.com with SMTP id a8so11246779edx.3;
-        Thu, 23 May 2019 14:40:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7sFc7ThnmJhmVClW066IBr+ugXYu56ow2YaUneJliW0=;
-        b=tq/Xl4TibAUmg94VVJF+gOJisGDmKCiLyMJc14nMfPZXdAJk7ERCF8P96Ymgh0G9ju
-         zXfESZcUOdHw0qbjIn8kgfN9S4+lvq5/vMKpP6M82gr6SHBkrTgVUQhs0QNEMIxwxe8N
-         2j+eWa81owMg/n74R5C77rAc9jQb6LWfVby6ACsv9lcAtfUHnwFDS3A+9/jRCEIoveRY
-         MfMW9uZxa7+GykS8GsasAk04ID42oxnsUV7kuhdCFAvu9mRHLy9Haubsy3sMrzW5eDjP
-         OfKwdv4B+UW0LmdQBDxtKEzrgqb5I0+T4I8zqmypqL+X0WktI7lX4nAPz9rsFv2G3q6u
-         IP7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7sFc7ThnmJhmVClW066IBr+ugXYu56ow2YaUneJliW0=;
-        b=Q9pQfLxHZIaxU3VmFV1UIyRDA23AIyPz7tcMEwRZ0NU6l37CRpn4+M1bmct6PWBVAR
-         k+7qRKI9NkFiNQGNRg7t+TaARJsNgOOX504Z/z4srf1ms9IRbdP6iHpsBvxSJAzVj4T0
-         9fyZm505/j+xNcjr/3OWwmpgiRi9Rd5Er/3IHnQLfZXHJpET4oyHh80Z8Zemz1/bw+TC
-         PeEVpyTAioaA6ylU3Yw3uk9IfFXnNYR7C+O+0+tL3eFJlYmcptdpDwoTlcZ9vWBOnx/r
-         EdvLUeZYiBBVKC1f+KWx2+LXOMFbTep4iZ29WgWH2uuFGcWYz6HiCg9iVfmZhOuUjjPS
-         afBQ==
-X-Gm-Message-State: APjAAAWaMwRhNeB6Dg8BclYGm2eICRjlt0xYTXPMbcnkz6Nva8d1FUMC
-        Rt0Cxd+9xij1n67//Oik85UQXwe9ZKgGhW+JEkQ=
-X-Google-Smtp-Source: APXvYqw8tJGqA5c5wGFLyYEPWR/Y+2qo9DCjgzJefGelQCRumPO9B4e5aArLC4cN0khqMzdogT8yU2UsLQPAfJH85tg=
-X-Received: by 2002:a17:906:699:: with SMTP id u25mr41633599ejb.245.1558647612145;
- Thu, 23 May 2019 14:40:12 -0700 (PDT)
+        Thu, 23 May 2019 17:43:04 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 37E90803EF; Thu, 23 May 2019 23:42:52 +0200 (CEST)
+Date:   Thu, 23 May 2019 23:43:01 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jacek.anaszewski@gmail.com
+Cc:     linus.walleij@linaro.org, linz@li-pro.net, rpurdie@rpsys.net
+Subject: Disk activity trigger: keeps blinking under full load
+Message-ID: <20190523214301.GA14788@amd>
 MIME-Version: 1.0
-References: <20190523210651.80902-1-fklassen@appneta.com> <20190523210651.80902-2-fklassen@appneta.com>
-In-Reply-To: <20190523210651.80902-2-fklassen@appneta.com>
-From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Date:   Thu, 23 May 2019 17:39:36 -0400
-Message-ID: <CAF=yD-Jf95De=z_nx9WFkGDa6+nRUqM_1PqGkjwaFPzOe+PfXg@mail.gmail.com>
-Subject: Re: [PATCH net 1/4] net/udp_gso: Allow TX timestamp with UDP GSO
-To:     Fred Klassen <fklassen@appneta.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-kselftest@vger.kernel.org,
-        Willem de Bruijn <willemb@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="gBBFr7Ir9EOA20Yy"
+Content-Disposition: inline
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 5:09 PM Fred Klassen <fklassen@appneta.com> wrote:
->
-> Fixes an issue where TX Timestamps are not arriving on the error queue
-> when UDP_SEGMENT CMSG type is combined with CMSG type SO_TIMESTAMPING.
-> This can be illustrated with an updated updgso_bench_tx program which
-> includes the '-T' option to test for this condition.
->
->     ./udpgso_bench_tx -4ucTPv -S 1472 -l2 -D 172.16.120.18
->     poll timeout
->     udp tx:      0 MB/s        1 calls/s      1 msg/s
->
-> The "poll timeout" message above indicates that TX timestamp never
-> arrived.
->
-> It also appears that other TX CMSG types cause similar issues, for
-> example trying to set SOL_IP/IP_TOS.
->
->     ./udpgso_bench_tx -4ucPv -S 1472 -q 182 -l2 -D 172.16.120.18
->     poll timeout
->     udp tx:      0 MB/s        1 calls/s      1 msg/s
->
-> This patch preserves tx_flags for the first UDP GSO segment. This
-> mirrors the stack's behaviour for IPv4 fragments.
->
-> Fixes: ee80d1ebe5ba ("udp: add udp gso")
-> Signed-off-by: Fred Klassen <fklassen@appneta.com>
-> ---
->  net/ipv4/udp_offload.c | 4 ++++
->  1 file changed, 4 insertions(+)
->
-> diff --git a/net/ipv4/udp_offload.c b/net/ipv4/udp_offload.c
-> index 065334b41d57..33de347695ae 100644
-> --- a/net/ipv4/udp_offload.c
-> +++ b/net/ipv4/udp_offload.c
-> @@ -228,6 +228,10 @@ struct sk_buff *__udp_gso_segment(struct sk_buff *gso_skb,
->         seg = segs;
->         uh = udp_hdr(seg);
->
-> +       /* preserve TX timestamp and zero-copy info for first segment */
-> +       skb_shinfo(seg)->tskey = skb_shinfo(gso_skb)->tskey;
-> +       skb_shinfo(seg)->tx_flags = skb_shinfo(gso_skb)->tx_flags;
-> +
 
-Thanks for the report.
+--gBBFr7Ir9EOA20Yy
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Zerocopy notification reference count is managed in skb_segment. That
-should work.
+Hi!
 
-Support for timestamping with the new GSO feature is indeed an
-oversight. The solution is similar to how TCP associates the timestamp
-with the right segment in tcp_gso_tstamp.
+I'm trying to use disk activity trigger on a scrollock LED... but it
+significantly differs from "usual" disk LED: even under "full" disk
+activity (linear read) where it should be solidly "on", it keeps
+blinking.
 
-Only, I think we want to transfer the timestamp request to the last
-datagram, not the first. For send timestamp, the final byte leaving
-the host is usually more interesting.
+I guess that's what led_trigger_blink_oneshot() does. I tried to
+change the parameters... off_delay =3D=3D 0 breaks it completely, and even
+with delay of 1 it behaves very weirdly.
+
+Is there better helper I should use?
+
+								Pavel
+
+diff --git a/drivers/leds/trigger/ledtrig-disk.c b/drivers/leds/trigger/led=
+trig-disk.c
+index 9816b0d..cf40ef2 100644
+--- a/drivers/leds/trigger/ledtrig-disk.c
++++ b/drivers/leds/trigger/ledtrig-disk.c
+@@ -15,7 +15,7 @@
+ #include <linux/init.h>
+ #include <linux/leds.h>
+=20
+-#define BLINK_DELAY 30
++#define BLINK_DELAY 10
+=20
+ DEFINE_LED_TRIGGER(ledtrig_disk);
+ DEFINE_LED_TRIGGER(ledtrig_disk_read);
+@@ -25,17 +25,18 @@ DEFINE_LED_TRIGGER(ledtrig_ide);
+ void ledtrig_disk_activity(bool write)
+ {
+ 	unsigned long blink_delay =3D BLINK_DELAY;
++	unsigned long off_delay =3D 1;
+=20
+ 	led_trigger_blink_oneshot(ledtrig_disk,
+-				  &blink_delay, &blink_delay, 0);
++				  &blink_delay, &off_delay, 0);
+ 	led_trigger_blink_oneshot(ledtrig_ide,
+-				  &blink_delay, &blink_delay, 0);
++				  &blink_delay, &off_delay, 0);
+ 	if (write)
+ 		led_trigger_blink_oneshot(ledtrig_disk_write,
+-					  &blink_delay, &blink_delay, 0);
++					  &blink_delay, &off_delay, 0);
+ 	else
+ 		led_trigger_blink_oneshot(ledtrig_disk_read,
+-					  &blink_delay, &blink_delay, 0);
++					  &blink_delay, &off_delay, 0);
+ }
+ EXPORT_SYMBOL(ledtrig_disk_activity);
+=20
+@@ -44,6 +45,7 @@ static int __init ledtrig_disk_init(void)
+ 	led_trigger_register_simple("disk-activity", &ledtrig_disk);
+ 	led_trigger_register_simple("disk-read", &ledtrig_disk_read);
+ 	led_trigger_register_simple("disk-write", &ledtrig_disk_write);
++	/* deprecate? */
+ 	led_trigger_register_simple("ide-disk", &ledtrig_ide);
+=20
+ 	return 0;
+
+
+
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--gBBFr7Ir9EOA20Yy
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlznE+UACgkQMOfwapXb+vJKOACdGqPnr09NzC9PQ2XF5MqD1rmO
+xDIAn1fRxyfo3+ezZ5mZPTjNix5XLTrg
+=VoB2
+-----END PGP SIGNATURE-----
+
+--gBBFr7Ir9EOA20Yy--
