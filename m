@@ -2,53 +2,52 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E98B8C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:16:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E736BC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:16:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B72C621841
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:16:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF5E921851
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:16:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558638978;
-	bh=w/eKGppXN3s6rEHVW5dIcZisZ+GXQs1ZH/NWkrAohcs=;
+	s=default; t=1558638981;
+	bh=Ix5/FeW61euHB0eP6dvSiXYWjlbhF0GfmGarIiU1x9w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=trDTc4Ifa+rGmhvckfnTXQ006NbHiYMsB2D31tRHUD5vaKKdpjDYVYz6QO5YEhtVB
-	 gIvrfwNJ9lbOu17usaLt0d0JcNjQOSc8MZ7zc34EsVrl4VpZBRC8Sc81IaBwnRh41H
-	 pFCW+YgM5cUqNw8+DasVnM4eoEjWr5MBwTa0/cPY=
+	b=Vo1NzB2ax8cot++PHXGIO6NEwt+8ro97nFIKZo0xLHRDKst5mv/HUPQlYGtEEHRg8
+	 eO7ZaYois5+39uFi98zh7LPL2eWEtikQSLOA+P+0AKtsHqIhs2zfSWAfptzqs1G4Xn
+	 Z4A74hYMl2cVFFkLSns+0LRV6PrvA2Q+xrjo5gyQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389157AbfEWTQS (ORCPT
+        id S2389171AbfEWTQU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:16:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50804 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:16:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50836 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389128AbfEWTQL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:16:11 -0400
+        id S2388746AbfEWTQN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:16:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13A3D21851;
-        Thu, 23 May 2019 19:16:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6C0E21872;
+        Thu, 23 May 2019 19:16:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558638970;
-        bh=w/eKGppXN3s6rEHVW5dIcZisZ+GXQs1ZH/NWkrAohcs=;
+        s=default; t=1558638973;
+        bh=Ix5/FeW61euHB0eP6dvSiXYWjlbhF0GfmGarIiU1x9w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BDk1aZFkFfTG2CBCwuPQrEh/XOARpG9bW4FUD/8hc8nTnJBg3vwFw5KsNIuI0lbci
-         32zSBPJdYVsPIw5sj3UFAZcgvUzIgKj1h7C6arY0v0SN7IFVhQ3+ggROoRRfHoJ12L
-         1dk69p6PQNyOhN2iNRQVyPL6fwdC5ojmuqUhXp/A=
+        b=xBS/gjYNlpkO9yfYaXw/TPKLy39hG6pwU4u2qn4smuI6EQF/kOidIBVdYm+SAwHBs
+         apGGMyNXLRC9zSb7zIjaKKe/ghANCgPIFibogIGtUAmMLCVCiujh0zueTf8xK7v5MI
+         qIJmXl/EK+Oi8QhIQmvi9V8jMFbwKbfjrVeXre7M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Phong Tran <tranmanphong@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        David Laight <David.Laight@ACULAB.COM>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH 4.19 031/114] of: fix clang -Wunsequenced for be32_to_cpu()
-Date:   Thu, 23 May 2019 21:05:30 +0200
-Message-Id: <20190523181734.642536873@linuxfoundation.org>
+        stable@vger.kernel.org, Christoph Probst <kernel@probst.it>,
+        Pavel Shilovsky <pshilov@microsoft.com>,
+        Steve French <stfrench@microsoft.com>
+Subject: [PATCH 4.19 032/114] cifs: fix strcat buffer overflow and reduce raciness in smb21_set_oplock_level()
+Date:   Thu, 23 May 2019 21:05:31 +0200
+Message-Id: <20190523181734.714698055@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181731.372074275@linuxfoundation.org>
 References: <20190523181731.372074275@linuxfoundation.org>
@@ -61,56 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Phong Tran <tranmanphong@gmail.com>
+From: Christoph Probst <kernel@probst.it>
 
-commit 440868661f36071886ed360d91de83bd67c73b4f upstream.
+commit 6a54b2e002c9d00b398d35724c79f9fe0d9b38fb upstream.
 
-Now, make the loop explicit to avoid clang warning.
+Change strcat to strncpy in the "None" case to fix a buffer overflow
+when cinode->oplock is reset to 0 by another thread accessing the same
+cinode. It is never valid to append "None" to any other message.
 
-./include/linux/of.h:238:37: warning: multiple unsequenced modifications
-to 'cell' [-Wunsequenced]
-                r = (r << 32) | be32_to_cpu(*(cell++));
-                                                  ^~
-./include/linux/byteorder/generic.h:95:21: note: expanded from macro
-'be32_to_cpu'
-                    ^
-./include/uapi/linux/byteorder/little_endian.h:40:59: note: expanded
-from macro '__be32_to_cpu'
-                                                          ^
-./include/uapi/linux/swab.h:118:21: note: expanded from macro '__swab32'
-        ___constant_swab32(x) :                 \
-                           ^
-./include/uapi/linux/swab.h:18:12: note: expanded from macro
-'___constant_swab32'
-        (((__u32)(x) & (__u32)0x000000ffUL) << 24) |            \
-                  ^
+Consolidate multiple writes to cinode->oplock to reduce raciness.
 
-Signed-off-by: Phong Tran <tranmanphong@gmail.com>
-Reported-by: Nick Desaulniers <ndesaulniers@google.com>
-Link: https://github.com/ClangBuiltLinux/linux/issues/460
-Suggested-by: David Laight <David.Laight@ACULAB.COM>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Cc: stable@vger.kernel.org
-[robh: fix up whitespace]
-Signed-off-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Christoph Probst <kernel@probst.it>
+Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
+CC: Stable <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/of.h |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/cifs/smb2ops.c |   14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -236,8 +236,8 @@ extern struct device_node *of_find_all_n
- static inline u64 of_read_number(const __be32 *cell, int size)
+--- a/fs/cifs/smb2ops.c
++++ b/fs/cifs/smb2ops.c
+@@ -2348,26 +2348,28 @@ smb21_set_oplock_level(struct cifsInodeI
+ 		       unsigned int epoch, bool *purge_cache)
  {
- 	u64 r = 0;
--	while (size--)
--		r = (r << 32) | be32_to_cpu(*(cell++));
-+	for (; size--; cell++)
-+		r = (r << 32) | be32_to_cpu(*cell);
- 	return r;
- }
+ 	char message[5] = {0};
++	unsigned int new_oplock = 0;
  
+ 	oplock &= 0xFF;
+ 	if (oplock == SMB2_OPLOCK_LEVEL_NOCHANGE)
+ 		return;
+ 
+-	cinode->oplock = 0;
+ 	if (oplock & SMB2_LEASE_READ_CACHING_HE) {
+-		cinode->oplock |= CIFS_CACHE_READ_FLG;
++		new_oplock |= CIFS_CACHE_READ_FLG;
+ 		strcat(message, "R");
+ 	}
+ 	if (oplock & SMB2_LEASE_HANDLE_CACHING_HE) {
+-		cinode->oplock |= CIFS_CACHE_HANDLE_FLG;
++		new_oplock |= CIFS_CACHE_HANDLE_FLG;
+ 		strcat(message, "H");
+ 	}
+ 	if (oplock & SMB2_LEASE_WRITE_CACHING_HE) {
+-		cinode->oplock |= CIFS_CACHE_WRITE_FLG;
++		new_oplock |= CIFS_CACHE_WRITE_FLG;
+ 		strcat(message, "W");
+ 	}
+-	if (!cinode->oplock)
+-		strcat(message, "None");
++	if (!new_oplock)
++		strncpy(message, "None", sizeof(message));
++
++	cinode->oplock = new_oplock;
+ 	cifs_dbg(FYI, "%s Lease granted on inode %p\n", message,
+ 		 &cinode->vfs_inode);
+ }
 
 
