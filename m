@@ -2,135 +2,78 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22405C282E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 18:06:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E102C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 18:07:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0C72217F9
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 18:06:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NWtL07zF"
+	by mail.kernel.org (Postfix) with ESMTP id 129802075B
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 18:07:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731407AbfEWSGt (ORCPT
+        id S1731448AbfEWSHE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 14:06:49 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:45548 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731093AbfEWSGt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 14:06:49 -0400
-Received: by mail-io1-f66.google.com with SMTP id b3so228796iob.12;
-        Thu, 23 May 2019 11:06:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XdOS1jq8b2ZAmKzwdek6sp8pOeqK25qgZhjMRx+3kPc=;
-        b=NWtL07zFOCFP4lBu8Iphuhtalv/5o3pmtac06X4fCcWHWCwJ66NC+/eZo76l5v4fzJ
-         /8EOn/fQ7zeG+DPayQVmNufQw84O/o9H1oOCw0fQfaLZ3sxud2tVSPtfN7Q/HEw7lmxX
-         ouLciFoIAhTvk+ZpGNrpd0iDMLKtjqmCnryYJdyjMrDjqEm5VbOzB5Kc4RsmvChBgu7Y
-         lbD6+axWrJgt+FmL44NWrR2x6diOBV1cHanRkGbk8DpyJJOyMv326+sSpAp4fOxHOESR
-         E3j9rND/5Bml3JxdmQHl5AWGJG69qz+8idDIEcMfQCvBxbKt8bYBJlfTonsCRISMqiz3
-         PcIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XdOS1jq8b2ZAmKzwdek6sp8pOeqK25qgZhjMRx+3kPc=;
-        b=ZNNI5zfvoh7rqkoGsYMz4q6pRzdD/FF+vCU4Xhv19AR/lXo0UQzKQFxMOk17J3+TFk
-         xB9JcCtG56MsClZZHYnZpWHeSOaGN1qva0Yk44Vg5M2bQpB17di3yULCHiKF8iY1m/em
-         DkjOZ1Im+vWOscwSrDSAOJkCEYGwTA8HGoIsP0OL3AgwmlzgTMa8F6jJYalpx1Jt/i/Q
-         MiISGoTu4Re/jci818uEXxVYFqwvEXv3FbkfxxxXPFvR7r2NLkYIi8SFIzFCIJw/ZFvX
-         4eSFImCclbjVGaciUcjzlAE3omL6bOZEhFeGuFiUbTosHeUM9xF3W4+EO6KxrHJalS4X
-         gsJA==
-X-Gm-Message-State: APjAAAUmmCbG8ORP/VO2G41IUYNNcqIzOcHttOlPJeF/j58NaMBB9cSQ
-        FKK+k/sA3UPwODraimJpcph4i7CyIeUWVk1dWGQ=
-X-Google-Smtp-Source: APXvYqyXvLulnivo5Zhy2pYfrQZo94/GrgWZbNEIX2qy7Qee+RUyI7AyGkRhqzwfHnEEtS/npGnzsNF16tkWzAUuAgQ=
-X-Received: by 2002:a6b:c411:: with SMTP id y17mr4123111ioa.265.1558634808133;
- Thu, 23 May 2019 11:06:48 -0700 (PDT)
+        Thu, 23 May 2019 14:07:04 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:52070 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731093AbfEWSHE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 14:07:04 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B8924374;
+        Thu, 23 May 2019 11:07:03 -0700 (PDT)
+Received: from ostrya.cambridge.arm.com (ostrya.cambridge.arm.com [10.1.196.129])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 1AC1A3F5AF;
+        Thu, 23 May 2019 11:07:01 -0700 (PDT)
+From:   Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+To:     joro@8bytes.org, alex.williamson@redhat.com
+Cc:     jacob.jun.pan@linux.intel.com, eric.auger@redhat.com,
+        ashok.raj@intel.com, yi.l.liu@linux.intel.com, robdclark@gmail.com,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
+Subject: [PATCH 0/4] iommu: Add device fault reporting API
+Date:   Thu, 23 May 2019 19:06:09 +0100
+Message-Id: <20190523180613.55049-1-jean-philippe.brucker@arm.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <20190522032144.10995-1-deepa.kernel@gmail.com>
- <20190522150505.GA4915@redhat.com> <CABeXuvrPM5xvzqUydbREapvwgy6deYreHp0aaMoSHyLB6+HGRg@mail.gmail.com>
- <20190522161407.GB4915@redhat.com> <CABeXuvpjrW5Gt95JC-_rYkOA=6RCD5OtkEQdwZVVqGCE3GkQOQ@mail.gmail.com>
- <4f7b6dbeab1d424baaebd7a5df116349@AcuMS.aculab.com> <20190523145944.GB23070@redhat.com>
- <345cfba5edde470f9a68d913f44fa342@AcuMS.aculab.com> <20190523163604.GE23070@redhat.com>
- <f0eced5677c144debfc5a69d0d327bc1@AcuMS.aculab.com>
-In-Reply-To: <f0eced5677c144debfc5a69d0d327bc1@AcuMS.aculab.com>
-From:   Deepa Dinamani <deepa.kernel@gmail.com>
-Date:   Thu, 23 May 2019 11:06:37 -0700
-Message-ID: <CABeXuvo-wey+NHWb4gi=FSRrjJOKkVcLPQ-J+dchJeHEbhGQ6g@mail.gmail.com>
-Subject: Re: [PATCH v2] signal: Adjust error codes according to restore_user_sigmask()
-To:     David Laight <David.Laight@aculab.com>
-Cc:     Oleg Nesterov <oleg@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "dbueso@suse.de" <dbueso@suse.de>,
-        "axboe@kernel.dk" <axboe@kernel.dk>,
-        Davidlohr Bueso <dave@stgolabs.net>, Eric Wong <e@80x24.org>,
-        Jason Baron <jbaron@akamai.com>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        linux-aio <linux-aio@kvack.org>,
-        Omar Kilani <omar.kilani@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ok, since there has been quite a bit of argument here, I will
-backtrack a little bit and maybe it will help us understand what's
-happening here.
-There are many scenarios being discussed on this thread:
-a. State of code before 854a6ed56839a
-b. State after 854a6ed56839a
-c. Proposed fix as per the patchset in question.
+Allow device drivers and VFIO to get notifications on IOMMU translation
+fault, and to handle recoverable faults (PCI PRI). These four patches
+are relatively mature since they are required by three different series,
+and have been under discussion for a while:
 
-Oleg, I will discuss these first and then we can discuss the
-additional changes you suggested.
+* Nested translation support for SMMUv3 [1].
+* vSVA for VT-d [2].
+* My generic host SVA implementation.
 
-Some background on why we have these syscalls that take sigmask as an
-argument. This is just for the sake of completeness of the argument.
+I reworked patch 4 according to previous discussions, and moved the page
+response structure to UAPI. For the other patches I only fixed comments
+and whitespaces. Please have a look and see if it works for you.
 
-These are particularly meant for a scenario(d) such as below:
+[1] [PATCH v7 00/23] SMMUv3 Nested Stage Setup
+    https://lore.kernel.org/lkml/20190408121911.24103-1-eric.auger@redhat.com/
+[2] [PATCH v3 00/16] Shared virtual address IOMMU and VT-d support
+    https://lore.kernel.org/lkml/1556922737-76313-1-git-send-email-jacob.jun.pan@linux.intel.com/
 
-1. block the signals you don't care about.
-2. syscall()
-3. unblock the signals blocked in 1.
+Jacob Pan (3):
+  driver core: Add per device iommu param
+  iommu: Introduce device fault data
+  iommu: Introduce device fault report API
 
-The problem here is that if there is a signal that is not blocked by 1
-and such a signal is delivered between 1 and 2(since they are not
-atomic), the syscall in 2 might block forever as it never found out
-about the signal.
+Jean-Philippe Brucker (1):
+  iommu: Add recoverable fault reporting
 
-As per [a] and let's consider the case of epoll_pwait only first for simplicity.
+ drivers/iommu/iommu.c      | 218 +++++++++++++++++++++++++++++++++++++
+ include/linux/device.h     |   3 +
+ include/linux/iommu.h      |  91 ++++++++++++++++
+ include/uapi/linux/iommu.h | 152 ++++++++++++++++++++++++++
+ 4 files changed, 464 insertions(+)
+ create mode 100644 include/uapi/linux/iommu.h
 
-As I said before, ep_poll() is what checks for signal_pending() and is
-responsible for setting errno to -EINTR when there is a signal.
+-- 
+2.21.0
 
-So if a signal is received after ep_poll() and ep_poll() returns
-success, it is never noticed by the syscall during execution.
-So the question is does the userspace have to know about this signal
-or not. From scenario [d] above, I would say it should, even if all
-the fd's completed successfully.
-This does not happen in [a]. So this is what I said was already broken.
-
-What [b] does is to move the signal check closer to the restoration of
-the signal. This way it is good. So, if there is a signal after
-ep_poll() returns success, it is noticed and the signal is delivered
-when the syscall exits. But, the syscall error status itself is 0.
-
-So now [c] is adjusting the return values based on whether extra
-signals were detected after ep_poll(). This part was needed even for
-[a].
-
-Let me know if this clarifies things a bit.
-
--Deepa
