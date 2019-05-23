@@ -2,54 +2,53 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3241AC282E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:43:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53E2BC282E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:43:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02C5720881
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:43:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DC1720851
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:43:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558640580;
-	bh=Wq/dhTIFr8I9tCX70Ml/hc4MHjBci8SJownoaMbCc6Q=;
+	s=default; t=1558640586;
+	bh=YBMr8ol5ddUzuPtejLpdxwDOqyjzDxIYdtVrFGBFFaU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tFyr4k9sW0+Vx0DhRqtgeZoD7TQOD7BQ09/5UxuOubo2Zg1V+5kjSZOqSL9o65PUr
-	 F1Bx4GyJ44Fj+aicLKUodctzPgF1RbBDltz+4ytTfoe1wrt+ttiRmFpM0PPoAlEiIj
-	 It4ebzc7snKjjs1qk/iu0JCaXgbe/OtWPOiBLaeo=
+	b=l8ycw6T/jJ2ORPLb3hLtV+GdPXdadk2JdyaGlAHMfvLwdj4i8NoU28+cKqaWEfaEo
+	 iZtaFHvHKApt//VURL1EDa5ZmKx6AP41PHJKA2Ht4Cx53gGRQ2R+H/7MODrNMJM6sH
+	 KZXpuDNhJyx6y5GHck1IOXE+AimV9KSTrLgkyXKY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389637AbfEWTSb (ORCPT
+        id S2389599AbfEWTSX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:18:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53908 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:18:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53768 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388931AbfEWTSZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:18:25 -0400
+        id S2389577AbfEWTSU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:18:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 863192133D;
-        Thu, 23 May 2019 19:18:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 282F121850;
+        Thu, 23 May 2019 19:18:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558639105;
-        bh=Wq/dhTIFr8I9tCX70Ml/hc4MHjBci8SJownoaMbCc6Q=;
+        s=default; t=1558639099;
+        bh=YBMr8ol5ddUzuPtejLpdxwDOqyjzDxIYdtVrFGBFFaU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D2gaZYqQSGXUwtZLJxjPJaBedmS3y5JjXUv3bLvo06ojO+sr1bTdPN5ak56La25ZY
-         zW+X+PYeQxlAJvxnqCRhQZlGfBL2gLRjOO692ViyvZfQ/jhBjL9DxcFiV1wFN4CqLX
-         zWM7Z8JrEs4A+RFG/Gwt3qKTGH+0QDvdxOB7Gmf4=
+        b=SZmBxAzB6V7rwirTiEnbjCbh6UfPvyCeS3w9aJoBmchzNA0Ln/nefZkWHSDQrvNL9
+         qU9sO8elB1KSTptcBNym6hgUZzrg1o9SZopStaSdRH3Qui4LSjvgF0vEZ8D3U4M3x4
+         sGup+YcFplEPay0rXWBgGWcgCwRyZ+mYHCfrResk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Bhagavathi Perumal S <bperumal@codeaurora.org>,
-        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 096/114] mac80211: Fix kernel panic due to use of txq after free
-Date:   Thu, 23 May 2019 21:06:35 +0200
-Message-Id: <20190523181740.017307678@linuxfoundation.org>
+        stable@vger.kernel.org, Yifeng Li <tomli@tomli.me>,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+        Teddy Wang <teddy.wang@siliconmotion.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: [PATCH 4.19 067/114] fbdev: sm712fb: fix support for 1024x768-16 mode
+Date:   Thu, 23 May 2019 21:06:06 +0200
+Message-Id: <20190523181737.755622344@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181731.372074275@linuxfoundation.org>
 References: <20190523181731.372074275@linuxfoundation.org>
@@ -62,41 +61,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f1267cf3c01b12e0f843fb6a7450a7f0b2efab8a ]
+From: Yifeng Li <tomli@tomli.me>
 
-The txq of vif is added to active_txqs list for ATF TXQ scheduling
-in the function ieee80211_queue_skb(), but it was not properly removed
-before freeing the txq object. It was causing use after free of the txq
-objects from the active_txqs list, result was kernel panic
-due to invalid memory access.
+commit 6053d3a4793e5bde6299ac5388e76a3bf679ff65 upstream.
 
-Fix kernel invalid memory access by properly removing txq object
-from active_txqs list before free the object.
+In order to support the 1024x600 panel on Yeeloong Loongson MIPS
+laptop, the original 1024x768-16 table was modified to 1024x600-16,
+without leaving the original. It causes problem on x86 laptop as
+the 1024x768-16 support was still claimed but not working.
 
-Signed-off-by: Bhagavathi Perumal S <bperumal@codeaurora.org>
-Acked-by: Toke Høiland-Jørgensen <toke@redhat.com>
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fix it by introducing the 1024x768-16 mode.
+
+Signed-off-by: Yifeng Li <tomli@tomli.me>
+Tested-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Cc: Teddy Wang <teddy.wang@siliconmotion.com>
+Cc: <stable@vger.kernel.org>  # v4.4+
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- net/mac80211/iface.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/video/fbdev/sm712fb.c |   59 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 59 insertions(+)
 
-diff --git a/net/mac80211/iface.c b/net/mac80211/iface.c
-index 3a0171a65db32..152d4365f9616 100644
---- a/net/mac80211/iface.c
-+++ b/net/mac80211/iface.c
-@@ -1910,6 +1910,9 @@ void ieee80211_if_remove(struct ieee80211_sub_if_data *sdata)
- 	list_del_rcu(&sdata->list);
- 	mutex_unlock(&sdata->local->iflist_mtx);
- 
-+	if (sdata->vif.txq)
-+		ieee80211_txq_purge(sdata->local, to_txq_info(sdata->vif.txq));
-+
- 	synchronize_rcu();
- 
- 	if (sdata->dev) {
--- 
-2.20.1
-
+--- a/drivers/video/fbdev/sm712fb.c
++++ b/drivers/video/fbdev/sm712fb.c
+@@ -530,6 +530,65 @@ static const struct modeinit vgamode[] =
+ 			0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x15, 0x03,
+ 		},
+ 	},
++	{	/*  1024 x 768  16Bpp  60Hz */
++		1024, 768, 16, 60,
++		/*  Init_MISC */
++		0xEB,
++		{	/*  Init_SR0_SR4 */
++			0x03, 0x01, 0x0F, 0x03, 0x0E,
++		},
++		{	/*  Init_SR10_SR24 */
++			0xF3, 0xB6, 0xC0, 0xDD, 0x00, 0x0E, 0x17, 0x2C,
++			0x99, 0x02, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00,
++			0xC4, 0x30, 0x02, 0x01, 0x01,
++		},
++		{	/*  Init_SR30_SR75 */
++			0x38, 0x03, 0x20, 0x09, 0xC0, 0x3A, 0x3A, 0x3A,
++			0x3A, 0x3A, 0x3A, 0x3A, 0x00, 0x00, 0x03, 0xFF,
++			0x00, 0xFC, 0x00, 0x00, 0x20, 0x18, 0x00, 0xFC,
++			0x20, 0x0C, 0x44, 0x20, 0x00, 0x00, 0x00, 0x3A,
++			0x06, 0x68, 0xA7, 0x7F, 0x83, 0x24, 0xFF, 0x03,
++			0x0F, 0x60, 0x59, 0x3A, 0x3A, 0x00, 0x00, 0x3A,
++			0x01, 0x80, 0x7E, 0x1A, 0x1A, 0x00, 0x00, 0x00,
++			0x50, 0x03, 0x74, 0x14, 0x3B, 0x0D, 0x09, 0x02,
++			0x04, 0x45, 0x30, 0x30, 0x40, 0x20,
++		},
++		{	/*  Init_SR80_SR93 */
++			0xFF, 0x07, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x3A,
++			0xF7, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0x3A, 0x3A,
++			0x00, 0x00, 0x00, 0x00,
++		},
++		{	/*  Init_SRA0_SRAF */
++			0x00, 0xFB, 0x9F, 0x01, 0x00, 0xED, 0xED, 0xED,
++			0x7B, 0xFB, 0xFF, 0xFF, 0x97, 0xEF, 0xBF, 0xDF,
++		},
++		{	/*  Init_GR00_GR08 */
++			0x00, 0x00, 0x00, 0x00, 0x00, 0x40, 0x05, 0x0F,
++			0xFF,
++		},
++		{	/*  Init_AR00_AR14 */
++			0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
++			0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F,
++			0x41, 0x00, 0x0F, 0x00, 0x00,
++		},
++		{	/*  Init_CR00_CR18 */
++			0xA3, 0x7F, 0x7F, 0x00, 0x85, 0x16, 0x24, 0xF5,
++			0x00, 0x60, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++			0x03, 0x09, 0xFF, 0x80, 0x40, 0xFF, 0x00, 0xE3,
++			0xFF,
++		},
++		{	/*  Init_CR30_CR4D */
++			0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x02, 0x20,
++			0x00, 0x00, 0x00, 0x40, 0x00, 0xFF, 0xBF, 0xFF,
++			0xA3, 0x7F, 0x00, 0x86, 0x15, 0x24, 0xFF, 0x00,
++			0x01, 0x07, 0xE5, 0x20, 0x7F, 0xFF,
++		},
++		{	/*  Init_CR90_CRA7 */
++			0x55, 0xD9, 0x5D, 0xE1, 0x86, 0x1B, 0x8E, 0x26,
++			0xDA, 0x8D, 0xDE, 0x94, 0x00, 0x00, 0x18, 0x00,
++			0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x15, 0x03,
++		},
++	},
+ 	{	/*  mode#5: 1024 x 768  24Bpp  60Hz */
+ 		1024, 768, 24, 60,
+ 		/*  Init_MISC */
 
 
