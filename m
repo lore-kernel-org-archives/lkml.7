@@ -7,46 +7,52 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95C5DC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:13:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E64C2C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:13:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71AC420863
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:13:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE07E20863
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:13:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558638797;
-	bh=f9nW3eW/JZUhDP1mC9CGGowAK0xI9bgaliSg1tvtH0U=;
+	s=default; t=1558638799;
+	bh=5r+2OQke+4P0MesJF4b3pSpHduoWkmgMIG+FC4tijrI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VTFrUXJs/l24k/mC7hxgLa21z6pXSsukDgEMGkfv26fEkQPnAMFlA52ojiKCGuszk
-	 wWLKnrM/qME4hp9FGKekwfTTaY0hkdKFYc7Qvnl251YJry4FsA6GcOEfdiw5U04nsp
-	 FMe1LJuQX9c5mOX9WYLqlwi3i5co1Ow6l9Ezla2A=
+	b=FulwNEa6VcA4xLVLtSQG2y3+EDaQhWqY7PAkv3uAC+PQMEAyMnoTbyRLRtYXXUKtB
+	 jzvzcoi9jFEFAihEclZVue5zIzcO5cl24Dw5pZewIwwYlHs5EjNnLtofYTEzdDWMpf
+	 XMoeqwSMvmZa+PBA+neNbA8w72zOOW+wa+Ty0fVM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388555AbfEWTNQ (ORCPT
+        id S2388567AbfEWTNT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:13:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47114 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:13:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47180 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388535AbfEWTNO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:13:14 -0400
+        id S2388550AbfEWTNQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:13:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 26AEF2133D;
-        Thu, 23 May 2019 19:13:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 974FA2133D;
+        Thu, 23 May 2019 19:13:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558638793;
-        bh=f9nW3eW/JZUhDP1mC9CGGowAK0xI9bgaliSg1tvtH0U=;
+        s=default; t=1558638796;
+        bh=5r+2OQke+4P0MesJF4b3pSpHduoWkmgMIG+FC4tijrI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DCt9xHLSJ0drjz9h+mY4bY88whBoEvLSi6ZaeL8VKuOqxl/Hj3lJIuQ+qaaTyNzhW
-         pIs2n6HPR+AwH0nZ/HbqFgeMyUiyaRscyQX2VOZRqU95MCz8tviJU4zdI5oYZJjjuL
-         SviLVU7IyfLVFgvHpBMFDoZA8IJk9AXTZrmi2LHE=
+        b=esWX0wV1/aNf1AqFzimiuM6IyA26gWVgmadnWKen9snt670CdVGo0blZ/Nu75BAP6
+         OUJJb6wZMkyfJwwrvxkMpw48pIFpfmyg2v9dG2ehEQJDgthA2+cpKx4xzwJXDi4mrC
+         y+zfe27lkIbT3IySIS5hWZzVIZ3O7ZV2k+gA41Oc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Luca Coelho <luciano.coelho@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 67/77] iwlwifi: mvm: check for length correctness in iwl_mvm_create_skb()
-Date:   Thu, 23 May 2019 21:06:25 +0200
-Message-Id: <20190523181729.245577514@linuxfoundation.org>
+        stable@vger.kernel.org, "Tobin C. Harding" <tobin@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 68/77] sched/cpufreq: Fix kobject memleak
+Date:   Thu, 23 May 2019 21:06:26 +0200
+Message-Id: <20190523181729.373956486@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181719.982121681@linuxfoundation.org>
 References: <20190523181719.982121681@linuxfoundation.org>
@@ -59,112 +65,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit de1887c064b9996ac03120d90d0a909a3f678f98 ]
+[ Upstream commit 9a4f26cc98d81b67ecc23b890c28e2df324e29f3 ]
 
-We don't check for the validity of the lengths in the packet received
-from the firmware.  If the MPDU length received in the rx descriptor
-is too short to contain the header length and the crypt length
-together, we may end up trying to copy a negative number of bytes
-(headlen - hdrlen < 0) which will underflow and cause us to try to
-copy a huge amount of data.  This causes oopses such as this one:
+Currently the error return path from kobject_init_and_add() is not
+followed by a call to kobject_put() - which means we are leaking
+the kobject.
 
-BUG: unable to handle kernel paging request at ffff896be2970000
-PGD 5e201067 P4D 5e201067 PUD 5e205067 PMD 16110d063 PTE 8000000162970161
-Oops: 0003 [#1] PREEMPT SMP NOPTI
-CPU: 2 PID: 1824 Comm: irq/134-iwlwifi Not tainted 4.19.33-04308-geea41cf4930f #1
-Hardware name: [...]
-RIP: 0010:memcpy_erms+0x6/0x10
-Code: 90 90 90 90 eb 1e 0f 1f 00 48 89 f8 48 89 d1 48 c1 e9 03 83 e2 07 f3 48 a5 89 d1 f3 a4 c3 66 0f 1f 44 00 00 48 89 f8 48 89 d1 <f3> a4 c3
- 0f 1f 80 00 00 00 00 48 89 f8 48 83 fa 20 72 7e 40 38 fe
-RSP: 0018:ffffa4630196fc60 EFLAGS: 00010287
-RAX: ffff896be2924618 RBX: ffff896bc8ecc600 RCX: 00000000fffb4610
-RDX: 00000000fffffff8 RSI: ffff896a835e2a38 RDI: ffff896be2970000
-RBP: ffffa4630196fd30 R08: ffff896bc8ecc600 R09: ffff896a83597000
-R10: ffff896bd6998400 R11: 000000000200407f R12: ffff896a83597050
-R13: 00000000fffffff8 R14: 0000000000000010 R15: ffff896a83597038
-FS:  0000000000000000(0000) GS:ffff896be8280000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffff896be2970000 CR3: 000000005dc12002 CR4: 00000000003606e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- iwl_mvm_rx_mpdu_mq+0xb51/0x121b [iwlmvm]
- iwl_pcie_rx_handle+0x58c/0xa89 [iwlwifi]
- iwl_pcie_irq_rx_msix_handler+0xd9/0x12a [iwlwifi]
- irq_thread_fn+0x24/0x49
- irq_thread+0xb0/0x122
- kthread+0x138/0x140
- ret_from_fork+0x1f/0x40
+Fix it by adding a call to kobject_put() in the error path of
+kobject_init_and_add().
 
-Fix that by checking the lengths for correctness and trigger a warning
-to show that we have received wrong data.
-
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Signed-off-by: Tobin C. Harding <tobin@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Tobin C. Harding <tobin@kernel.org>
+Cc: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>
+Link: http://lkml.kernel.org/r/20190430001144.24890-1-tobin@kernel.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/mvm/rxmq.c | 28 ++++++++++++++++---
- 1 file changed, 24 insertions(+), 4 deletions(-)
+ kernel/sched/cpufreq_schedutil.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/rxmq.c b/drivers/net/wireless/intel/iwlwifi/mvm/rxmq.c
-index 8ba8c70571fb7..7fb8bbaf21420 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/rxmq.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/rxmq.c
-@@ -141,9 +141,9 @@ static inline int iwl_mvm_check_pn(struct iwl_mvm *mvm, struct sk_buff *skb,
- }
+diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
+index b314c9eaa71d3..f8c45d30ec6d0 100644
+--- a/kernel/sched/cpufreq_schedutil.c
++++ b/kernel/sched/cpufreq_schedutil.c
+@@ -600,6 +600,7 @@ out:
+ 	return 0;
  
- /* iwl_mvm_create_skb Adds the rxb to a new skb */
--static void iwl_mvm_create_skb(struct sk_buff *skb, struct ieee80211_hdr *hdr,
--			       u16 len, u8 crypt_len,
--			       struct iwl_rx_cmd_buffer *rxb)
-+static int iwl_mvm_create_skb(struct iwl_mvm *mvm, struct sk_buff *skb,
-+			      struct ieee80211_hdr *hdr, u16 len, u8 crypt_len,
-+			      struct iwl_rx_cmd_buffer *rxb)
- {
- 	struct iwl_rx_packet *pkt = rxb_addr(rxb);
- 	struct iwl_rx_mpdu_desc *desc = (void *)pkt->data;
-@@ -184,6 +184,20 @@ static void iwl_mvm_create_skb(struct sk_buff *skb, struct ieee80211_hdr *hdr,
- 	 * present before copying packet data.
- 	 */
- 	hdrlen += crypt_len;
-+
-+	if (WARN_ONCE(headlen < hdrlen,
-+		      "invalid packet lengths (hdrlen=%d, len=%d, crypt_len=%d)\n",
-+		      hdrlen, len, crypt_len)) {
-+		/*
-+		 * We warn and trace because we want to be able to see
-+		 * it in trace-cmd as well.
-+		 */
-+		IWL_DEBUG_RX(mvm,
-+			     "invalid packet lengths (hdrlen=%d, len=%d, crypt_len=%d)\n",
-+			     hdrlen, len, crypt_len);
-+		return -EINVAL;
-+	}
-+
- 	skb_put_data(skb, hdr, hdrlen);
- 	skb_put_data(skb, (u8 *)hdr + hdrlen + pad_len, headlen - hdrlen);
+ fail:
++	kobject_put(&tunables->attr_set.kobj);
+ 	policy->governor_data = NULL;
+ 	sugov_tunables_free(tunables);
  
-@@ -196,6 +210,8 @@ static void iwl_mvm_create_skb(struct sk_buff *skb, struct ieee80211_hdr *hdr,
- 		skb_add_rx_frag(skb, 0, rxb_steal_page(rxb), offset,
- 				fraglen, rxb->truesize);
- 	}
-+
-+	return 0;
- }
- 
- /* iwl_mvm_pass_packet_to_mac80211 - passes the packet for mac80211 */
-@@ -1033,7 +1049,11 @@ void iwl_mvm_rx_mpdu_mq(struct iwl_mvm *mvm, struct napi_struct *napi,
- 			rx_status->boottime_ns = ktime_get_boot_ns();
- 	}
- 
--	iwl_mvm_create_skb(skb, hdr, len, crypt_len, rxb);
-+	if (iwl_mvm_create_skb(mvm, skb, hdr, len, crypt_len, rxb)) {
-+		kfree_skb(skb);
-+		goto out;
-+	}
-+
- 	if (!iwl_mvm_reorder(mvm, napi, queue, sta, skb, desc))
- 		iwl_mvm_pass_packet_to_mac80211(mvm, napi, skb, queue, sta);
- out:
 -- 
 2.20.1
 
