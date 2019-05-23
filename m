@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42E9CC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:16:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A19FC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:16:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19B922133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:16:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E46582186A
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:16:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558638961;
-	bh=bRt5aQ02+ZCB3U16y6YlI6tuHQ0IH4I6lTxjjEgaPq4=;
+	s=default; t=1558638964;
+	bh=gf+o3NeVqFACRQ7l+lxfdQbcSz6yhrDzSzQtgBf3Ekw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dnulRVfNZli1ev/fxpP8dIXZND+8o4fVKmN9hZuf/Vb8nvkG68UxpJi4YEb6CynMY
-	 Kvz//apJTNaD46DFL3hiA8HwN2chPH5ONF4f/yDpI4IwZ47NxS1iJPooGy84j23RHF
-	 r2Ejb7Upd9e0Sc4EKo47HOrMjx8TXIy5mX/U/KzI=
+	b=v2MXcsffjHSOZXcCc351uVwfbvyia7GAhJs4qK/sL3ufELTPSPRdI5aiLaPCIgfp8
+	 wou1X5C+/90jIA9ehaU6qSqZVtmrj14HinGBXFpT6icCl7mM2UVlX11bBmPz2WLyIi
+	 XTd6ATDJCfFqq81WWAEtsE2QZENHGLJno7CdCDtY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389099AbfEWTQA (ORCPT
+        id S2387774AbfEWTQD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:16:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50488 "EHLO mail.kernel.org"
+        Thu, 23 May 2019 15:16:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50428 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388263AbfEWTP5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:15:57 -0400
+        id S2388618AbfEWTPz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:15:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8BAAC21841;
-        Thu, 23 May 2019 19:15:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E83D4217D9;
+        Thu, 23 May 2019 19:15:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558638957;
-        bh=bRt5aQ02+ZCB3U16y6YlI6tuHQ0IH4I6lTxjjEgaPq4=;
+        s=default; t=1558638954;
+        bh=gf+o3NeVqFACRQ7l+lxfdQbcSz6yhrDzSzQtgBf3Ekw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QzfysmAmyrv+IZfw9xHpUFaBhEexVVp/evcTrXfK97KOOyVt/mplry8hZRODCSIPu
-         9ymSImcH9OhwIBhQ4TJ6F7V6JK5BoDefABF+RBnvr8VmnUhJGEpXAjofQWiXyyiSpi
-         tlqtmycV3GJW6KRKICwEO4LhA5EUrZXpnYkI7Fb4=
+        b=DbU5Tn1eEt6SpOJtlQKKyJfgmzLrGib7q1unb9nrFD3QT93rho6F9jZ7LMy+TY5zV
+         jAVi8BDoi0w9mlFUYATR001sMN0XzyIm/R/M5y2EtJKRPex0SHtieJoiXgd9qm8wfv
+         h3bmHAAnSH7mwxpMHc6RF0s+aa5YB783CfxVMP+0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
-        Bernie Thompson <bernie@plugable.com>,
-        Ladislav Michl <ladis@linux-mips.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: [PATCH 4.19 043/114] udlfb: delete the unused parameter for dlfb_handle_damage
-Date:   Thu, 23 May 2019 21:05:42 +0200
-Message-Id: <20190523181735.643133184@linuxfoundation.org>
+        stable@vger.kernel.org, Jonas Karlman <jonas@kwiboo.se>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>
+Subject: [PATCH 4.19 042/114] clk: rockchip: fix wrong clock definitions for rk3328
+Date:   Thu, 23 May 2019 21:05:41 +0200
+Message-Id: <20190523181735.564877186@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190523181731.372074275@linuxfoundation.org>
 References: <20190523181731.372074275@linuxfoundation.org>
@@ -61,102 +60,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mikulas Patocka <mpatocka@redhat.com>
+From: Jonas Karlman <jonas@kwiboo.se>
 
-commit bd86b6c5c60711dbd4fa21bdb497a188ecb6cf63 upstream.
+commit fb903392131a324a243c7731389277db1cd9f8df upstream.
 
-Remove the unused parameter "data" and unused variable "ret".
+This patch fixes definition of several clock gate and select register
+that is wrong for rk3328 referring to the TRM and vendor kernel.
+Also use correct number of softrst registers.
 
-Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
-Cc: Bernie Thompson <bernie@plugable.com>
-Cc: Ladislav Michl <ladis@linux-mips.org>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Fix clock definition for:
+- clk_crypto
+- aclk_h265
+- pclk_h265
+- aclk_h264
+- hclk_h264
+- aclk_axisram
+- aclk_gmac
+- aclk_usb3otg
+
+Fixes: fe3511ad8a1c ("clk: rockchip: add clock controller for rk3328")
+Cc: stable@vger.kernel.org
+Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+Tested-by: Peter Geis <pgwipeout@gmail.com>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/video/fbdev/udlfb.c |   21 +++++++++------------
- 1 file changed, 9 insertions(+), 12 deletions(-)
+ drivers/clk/rockchip/clk-rk3328.c |   18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
---- a/drivers/video/fbdev/udlfb.c
-+++ b/drivers/video/fbdev/udlfb.c
-@@ -594,10 +594,9 @@ static int dlfb_render_hline(struct dlfb
- 	return 0;
- }
+--- a/drivers/clk/rockchip/clk-rk3328.c
++++ b/drivers/clk/rockchip/clk-rk3328.c
+@@ -458,7 +458,7 @@ static struct rockchip_clk_branch rk3328
+ 			RK3328_CLKSEL_CON(35), 15, 1, MFLAGS, 8, 7, DFLAGS,
+ 			RK3328_CLKGATE_CON(2), 12, GFLAGS),
+ 	COMPOSITE(SCLK_CRYPTO, "clk_crypto", mux_2plls_p, 0,
+-			RK3328_CLKSEL_CON(20), 7, 1, MFLAGS, 0, 7, DFLAGS,
++			RK3328_CLKSEL_CON(20), 7, 1, MFLAGS, 0, 5, DFLAGS,
+ 			RK3328_CLKGATE_CON(2), 4, GFLAGS),
+ 	COMPOSITE_NOMUX(SCLK_TSADC, "clk_tsadc", "clk_24m", 0,
+ 			RK3328_CLKSEL_CON(22), 0, 10, DFLAGS,
+@@ -550,15 +550,15 @@ static struct rockchip_clk_branch rk3328
+ 	GATE(0, "hclk_rkvenc_niu", "hclk_rkvenc", 0,
+ 			RK3328_CLKGATE_CON(25), 1, GFLAGS),
+ 	GATE(ACLK_H265, "aclk_h265", "aclk_rkvenc", 0,
+-			RK3328_CLKGATE_CON(25), 0, GFLAGS),
++			RK3328_CLKGATE_CON(25), 2, GFLAGS),
+ 	GATE(PCLK_H265, "pclk_h265", "hclk_rkvenc", 0,
+-			RK3328_CLKGATE_CON(25), 1, GFLAGS),
++			RK3328_CLKGATE_CON(25), 3, GFLAGS),
+ 	GATE(ACLK_H264, "aclk_h264", "aclk_rkvenc", 0,
+-			RK3328_CLKGATE_CON(25), 0, GFLAGS),
++			RK3328_CLKGATE_CON(25), 4, GFLAGS),
+ 	GATE(HCLK_H264, "hclk_h264", "hclk_rkvenc", 0,
+-			RK3328_CLKGATE_CON(25), 1, GFLAGS),
++			RK3328_CLKGATE_CON(25), 5, GFLAGS),
+ 	GATE(ACLK_AXISRAM, "aclk_axisram", "aclk_rkvenc", CLK_IGNORE_UNUSED,
+-			RK3328_CLKGATE_CON(25), 0, GFLAGS),
++			RK3328_CLKGATE_CON(25), 6, GFLAGS),
  
--static int dlfb_handle_damage(struct dlfb_data *dlfb, int x, int y,
--	       int width, int height, char *data)
-+static int dlfb_handle_damage(struct dlfb_data *dlfb, int x, int y, int width, int height)
- {
--	int i, ret;
-+	int i;
- 	char *cmd;
- 	cycles_t start_cycles, end_cycles;
- 	int bytes_sent = 0;
-@@ -641,7 +640,7 @@ static int dlfb_handle_damage(struct dlf
- 			*cmd++ = 0xAF;
- 		/* Send partial buffer remaining before exiting */
- 		len = cmd - (char *) urb->transfer_buffer;
--		ret = dlfb_submit_urb(dlfb, urb, len);
-+		dlfb_submit_urb(dlfb, urb, len);
- 		bytes_sent += len;
- 	} else
- 		dlfb_urb_completion(urb);
-@@ -679,7 +678,7 @@ static ssize_t dlfb_ops_write(struct fb_
- 				(u32)info->var.yres);
+ 	COMPOSITE(SCLK_VENC_CORE, "sclk_venc_core", mux_4plls_p, 0,
+ 			RK3328_CLKSEL_CON(51), 14, 2, MFLAGS, 8, 5, DFLAGS,
+@@ -663,7 +663,7 @@ static struct rockchip_clk_branch rk3328
  
- 		dlfb_handle_damage(dlfb, 0, start, info->var.xres,
--			lines, info->screen_base);
-+			lines);
- 	}
+ 	/* PD_GMAC */
+ 	COMPOSITE(ACLK_GMAC, "aclk_gmac", mux_2plls_hdmiphy_p, 0,
+-			RK3328_CLKSEL_CON(35), 6, 2, MFLAGS, 0, 5, DFLAGS,
++			RK3328_CLKSEL_CON(25), 6, 2, MFLAGS, 0, 5, DFLAGS,
+ 			RK3328_CLKGATE_CON(3), 2, GFLAGS),
+ 	COMPOSITE_NOMUX(PCLK_GMAC, "pclk_gmac", "aclk_gmac", 0,
+ 			RK3328_CLKSEL_CON(25), 8, 3, DFLAGS,
+@@ -733,7 +733,7 @@ static struct rockchip_clk_branch rk3328
  
- 	return result;
-@@ -695,7 +694,7 @@ static void dlfb_ops_copyarea(struct fb_
- 	sys_copyarea(info, area);
+ 	/* PD_PERI */
+ 	GATE(0, "aclk_peri_noc", "aclk_peri", CLK_IGNORE_UNUSED, RK3328_CLKGATE_CON(19), 11, GFLAGS),
+-	GATE(ACLK_USB3OTG, "aclk_usb3otg", "aclk_peri", 0, RK3328_CLKGATE_CON(19), 4, GFLAGS),
++	GATE(ACLK_USB3OTG, "aclk_usb3otg", "aclk_peri", 0, RK3328_CLKGATE_CON(19), 14, GFLAGS),
  
- 	dlfb_handle_damage(dlfb, area->dx, area->dy,
--			area->width, area->height, info->screen_base);
-+			area->width, area->height);
- }
+ 	GATE(HCLK_SDMMC, "hclk_sdmmc", "hclk_peri", 0, RK3328_CLKGATE_CON(19), 0, GFLAGS),
+ 	GATE(HCLK_SDIO, "hclk_sdio", "hclk_peri", 0, RK3328_CLKGATE_CON(19), 1, GFLAGS),
+@@ -913,7 +913,7 @@ static void __init rk3328_clk_init(struc
+ 				     &rk3328_cpuclk_data, rk3328_cpuclk_rates,
+ 				     ARRAY_SIZE(rk3328_cpuclk_rates));
  
- static void dlfb_ops_imageblit(struct fb_info *info,
-@@ -706,7 +705,7 @@ static void dlfb_ops_imageblit(struct fb
- 	sys_imageblit(info, image);
+-	rockchip_register_softrst(np, 11, reg_base + RK3328_SOFTRST_CON(0),
++	rockchip_register_softrst(np, 12, reg_base + RK3328_SOFTRST_CON(0),
+ 				  ROCKCHIP_SOFTRST_HIWORD_MASK);
  
- 	dlfb_handle_damage(dlfb, image->dx, image->dy,
--			image->width, image->height, info->screen_base);
-+			image->width, image->height);
- }
- 
- static void dlfb_ops_fillrect(struct fb_info *info,
-@@ -717,7 +716,7 @@ static void dlfb_ops_fillrect(struct fb_
- 	sys_fillrect(info, rect);
- 
- 	dlfb_handle_damage(dlfb, rect->dx, rect->dy, rect->width,
--			      rect->height, info->screen_base);
-+			      rect->height);
- }
- 
- /*
-@@ -859,8 +858,7 @@ static int dlfb_ops_ioctl(struct fb_info
- 		if (area.y > info->var.yres)
- 			area.y = info->var.yres;
- 
--		dlfb_handle_damage(dlfb, area.x, area.y, area.w, area.h,
--			   info->screen_base);
-+		dlfb_handle_damage(dlfb, area.x, area.y, area.w, area.h);
- 	}
- 
- 	return 0;
-@@ -1065,8 +1063,7 @@ static int dlfb_ops_set_par(struct fb_in
- 			pix_framebuffer[i] = 0x37e6;
- 	}
- 
--	dlfb_handle_damage(dlfb, 0, 0, info->var.xres, info->var.yres,
--			   info->screen_base);
-+	dlfb_handle_damage(dlfb, 0, 0, info->var.xres, info->var.yres);
- 
- 	return 0;
- }
+ 	rockchip_register_restart_notifier(ctx, RK3328_GLB_SRST_FST, NULL);
 
 
