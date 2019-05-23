@@ -2,195 +2,211 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECE7BC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 22:36:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2DC3C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 22:36:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEFFA20879
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 22:36:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A015120879
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 22:36:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388573AbfEWWgH (ORCPT
+        id S2388673AbfEWWgK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 18:36:07 -0400
-Received: from gateway31.websitewelcome.com ([192.185.143.43]:15149 "EHLO
-        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387735AbfEWWgG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 18:36:06 -0400
-Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
-        by gateway31.websitewelcome.com (Postfix) with ESMTP id 563872720C
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 17:36:04 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id TwJghytnH4FKpTwJghLEDN; Thu, 23 May 2019 17:36:04 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.47.159] (port=37812 helo=[192.168.1.76])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.91)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hTwJf-001NXA-BB; Thu, 23 May 2019 17:36:03 -0500
-Subject: Re: [PATCH net-next] xprtrdma: Use struct_size() in kzalloc()
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Chuck Lever <chuck.lever@oracle.com>
-Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Bruce Fields <bfields@fieldses.org>,
-        Jeff Layton <jlayton@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190131004622.GA30261@embeddedor>
- <07CB966E-A946-4956-8480-C0FC13E13E4E@oracle.com>
- <ad9eccc7-afd2-3419-b886-6210eeabd5b5@embeddedor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <70ca0dea-6f1f-922c-7c5d-e79c6cf6ecb5@embeddedor.com>
-Date:   Thu, 23 May 2019 17:36:00 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 23 May 2019 18:36:10 -0400
+Received: from mga04.intel.com ([192.55.52.120]:10352 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387735AbfEWWgI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 18:36:08 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 May 2019 15:36:07 -0700
+X-ExtLoop1: 1
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by fmsmga008.fm.intel.com with ESMTP; 23 May 2019 15:36:07 -0700
+Date:   Thu, 23 May 2019 15:37:01 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Jason Gunthorpe <jgg@mellanox.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        Doug Ledford <dledford@redhat.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Christian Benvenuti <benve@cisco.com>, Jan Kara <jack@suse.cz>
+Subject: Re: [PATCH 1/1] infiniband/mm: convert put_page() to put_user_page*()
+Message-ID: <20190523223701.GA15048@iweiny-DESK2.sc.intel.com>
+References: <20190523072537.31940-1-jhubbard@nvidia.com>
+ <20190523072537.31940-2-jhubbard@nvidia.com>
+ <20190523172852.GA27175@iweiny-DESK2.sc.intel.com>
+ <20190523173222.GH12145@mellanox.com>
+ <fa6d7d7c-13a3-0586-6384-768ebb7f0561@nvidia.com>
+ <20190523190423.GA19578@iweiny-DESK2.sc.intel.com>
+ <0bd9859f-8eb0-9148-6209-08ae42665626@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <ad9eccc7-afd2-3419-b886-6210eeabd5b5@embeddedor.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.47.159
-X-Source-L: No
-X-Exim-ID: 1hTwJf-001NXA-BB
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.1.76]) [189.250.47.159]:37812
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 17
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0bd9859f-8eb0-9148-6209-08ae42665626@nvidia.com>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dave,
+On Thu, May 23, 2019 at 12:13:59PM -0700, John Hubbard wrote:
+> On 5/23/19 12:04 PM, Ira Weiny wrote:
+> > On Thu, May 23, 2019 at 10:46:38AM -0700, John Hubbard wrote:
+> > > On 5/23/19 10:32 AM, Jason Gunthorpe wrote:
+> > > > On Thu, May 23, 2019 at 10:28:52AM -0700, Ira Weiny wrote:
+> > > > > > @@ -686,8 +686,8 @@ int ib_umem_odp_map_dma_pages(struct ib_umem_odp *umem_odp, u64 user_virt,
+> > > > > >    			 * ib_umem_odp_map_dma_single_page().
+> > > > > >    			 */
+> > > > > >    			if (npages - (j + 1) > 0)
+> > > > > > -				release_pages(&local_page_list[j+1],
+> > > > > > -					      npages - (j + 1));
+> > > > > > +				put_user_pages(&local_page_list[j+1],
+> > > > > > +					       npages - (j + 1));
+> > > > > 
+> > > > > I don't know if we discussed this before but it looks like the use of
+> > > > > release_pages() was not entirely correct (or at least not necessary) here.  So
+> > > > > I think this is ok.
+> > > > 
+> > > > Oh? John switched it from a put_pages loop to release_pages() here:
+> > > > 
+> > > > commit 75a3e6a3c129cddcc683538d8702c6ef998ec589
+> > > > Author: John Hubbard <jhubbard@nvidia.com>
+> > > > Date:   Mon Mar 4 11:46:45 2019 -0800
+> > > > 
+> > > >       RDMA/umem: minor bug fix in error handling path
+> > > >       1. Bug fix: fix an off by one error in the code that cleans up if it fails
+> > > >          to dma-map a page, after having done a get_user_pages_remote() on a
+> > > >          range of pages.
+> > > >       2. Refinement: for that same cleanup code, release_pages() is better than
+> > > >          put_page() in a loop.
+> > > > 
+> > > > And now we are going to back something called put_pages() that
+> > > > implements the same for loop the above removed?
+> > > > 
+> > > > Seems like we are going in circles?? John?
+> > > > 
+> > > 
+> > > put_user_pages() is meant to be a drop-in replacement for release_pages(),
+> > > so I made the above change as an interim step in moving the callsite from
+> > > a loop, to a single call.
+> > > 
+> > > And at some point, it may be possible to find a way to optimize put_user_pages()
+> > > in a similar way to the batching that release_pages() does, that was part
+> > > of the plan for this.
+> > > 
+> > > But I do see what you mean: in the interim, maybe put_user_pages() should
+> > > just be calling release_pages(), how does that change sound?
+> > 
+> > I'm certainly not the expert here but FWICT release_pages() was originally
+> > designed to work with the page cache.
+> > 
+> > aabfb57296e3  mm: memcontrol: do not kill uncharge batching in free_pages_and_swap_cache
+> > 
+> > But at some point it was changed to be more general?
+> > 
+> > ea1754a08476 mm, fs: remove remaining PAGE_CACHE_* and page_cache_{get,release} usage
+> > 
+> > ... and it is exported and used outside of the swapping code... and used at
+> > lease 1 place to directly "put" pages gotten from get_user_pages_fast()
+> > [arch/x86/kvm/svm.c]
+> > 
+> >  From that it seems like it is safe.
+> > 
+> > But I don't see where release_page() actually calls put_page() anywhere?  What
+> > am I missing?
+> > 
+> 
+> For that question, I recall having to look closely at this function, as well:
+> 
+> void release_pages(struct page **pages, int nr)
+> {
+> 	int i;
+> 	LIST_HEAD(pages_to_free);
+> 	struct pglist_data *locked_pgdat = NULL;
+> 	struct lruvec *lruvec;
+> 	unsigned long uninitialized_var(flags);
+> 	unsigned int uninitialized_var(lock_batch);
+> 
+> 	for (i = 0; i < nr; i++) {
+> 		struct page *page = pages[i];
+> 
+> 		/*
+> 		 * Make sure the IRQ-safe lock-holding time does not get
+> 		 * excessive with a continuous string of pages from the
+> 		 * same pgdat. The lock is held only if pgdat != NULL.
+> 		 */
+> 		if (locked_pgdat && ++lock_batch == SWAP_CLUSTER_MAX) {
+> 			spin_unlock_irqrestore(&locked_pgdat->lru_lock, flags);
+> 			locked_pgdat = NULL;
+> 		}
+> 
+> 		if (is_huge_zero_page(page))
+> 			continue;
+> 
+> 		/* Device public page can not be huge page */
+> 		if (is_device_public_page(page)) {
+> 			if (locked_pgdat) {
+> 				spin_unlock_irqrestore(&locked_pgdat->lru_lock,
+> 						       flags);
+> 				locked_pgdat = NULL;
+> 			}
+> 			put_devmap_managed_page(page);
+> 			continue;
+> 		}
+> 
+> 		page = compound_head(page);
+> 		if (!put_page_testzero(page))
+> 
+> 		     ^here is where it does the put_page() call, is that what
+> 			you were looking for?
 
-I wonder if you can take this patch.
+Yes I saw that...
 
-Thanks
---
-Gustavo
+I've dug in further and I see now that release_pages() implements (almost the
+same thing, see below) as put_page().
 
-On 3/28/19 3:41 PM, Gustavo A. R. Silva wrote:
-> Hi all,
-> 
-> Friendly ping:
-> 
-> Who can take this?
-> 
-> Thanks
-> --
-> Gustavo
-> 
-> On 1/31/19 8:11 AM, Chuck Lever wrote:
->>
->>
->>> On Jan 30, 2019, at 7:46 PM, Gustavo A. R. Silva <gustavo@embeddedor.com> wrote:
->>>
->>> One of the more common cases of allocation size calculations is finding
->>> the size of a structure that has a zero-sized array at the end, along
->>> with memory for some number of elements for that array. For example:
->>>
->>> struct foo {
->>>    int stuff;
->>>    struct boo entry[];
->>> };
->>>
->>> instance = kzalloc(sizeof(struct foo) + count * sizeof(struct boo), GFP_KERNEL);
->>>
->>> Instead of leaving these open-coded and prone to type mistakes, we can
->>> now use the new struct_size() helper:
->>>
->>> instance = kzalloc(struct_size(instance, entry, count), GFP_KERNEL);
->>>
->>> This code was detected with the help of Coccinelle.
->>>
->>> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
->>
->> Reviewed-by: Chuck Lever <chuck.lever@oracle.com>
->>
->>
->>> ---
->>> net/sunrpc/xprtrdma/verbs.c | 3 +--
->>> 1 file changed, 1 insertion(+), 2 deletions(-)
->>>
->>> diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
->>> index 4994e75945b8..9e8cf7456840 100644
->>> --- a/net/sunrpc/xprtrdma/verbs.c
->>> +++ b/net/sunrpc/xprtrdma/verbs.c
->>> @@ -811,8 +811,7 @@ static struct rpcrdma_sendctx *rpcrdma_sendctx_create(struct rpcrdma_ia *ia)
->>> {
->>> 	struct rpcrdma_sendctx *sc;
->>>
->>> -	sc = kzalloc(sizeof(*sc) +
->>> -		     ia->ri_max_send_sges * sizeof(struct ib_sge),
->>> +	sc = kzalloc(struct_size(sc, sc_sges, ia->ri_max_send_sges),
->>> 		     GFP_KERNEL);
->>> 	if (!sc)
->>> 		return NULL;
->>> -- 
->>> 2.20.1
->>>
->>
->> --
->> Chuck Lever
->>
->>
->>
+However, I think we need to be careful here because put_page_testzero() calls
+
+	page_ref_dec_and_test(page);
+
+... and after your changes it will need to call ...
+
+	page_ref_sub_return(page, GUP_PIN_COUNTING_BIAS);
+
+... on a GUP page:
+
+So how do you propose calling release_pages() from within put_user_pages()?  Or
+were you thinking this would be temporary?
+
+That said, there are 2 differences I see between release_pages() and put_page()
+
+1) release_pages() will only work for a MEMORY_DEVICE_PUBLIC page and not all
+   devmem pages...
+   I think this is a bug, patch to follow shortly.
+
+2) release_pages() calls __ClearPageActive() while put_page() does not
+
+I have no idea if the second difference is a bug or not.  But it smells of
+one...
+
+It would be nice to know if the open coding of put_page is really a performance
+benefit or not.  It seems like an attempt to optimize the taking of the page
+data lock.
+
+Does anyone have any information about the performance advantage here?
+
+Given the changes above it seems like it would be a benefit to merge the 2 call
+paths more closely to make sure we do the right thing.
+
+Ira
+
