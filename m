@@ -2,131 +2,128 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92C5CC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 16:57:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7FA6C282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 16:57:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FC542075B
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 16:57:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACABE2070D
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 16:57:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558630647;
+	bh=TCw7cKoRb0mNvs2XUEnU4+3yGCOFVTVy1RJc0z1Ogw0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vcGBXZ2YSvBgUX+F4ih2DknE52ksXAckp6tCa1gp1FSP4ILgw7REM/8dXKookWQAH
+	 psMIwar72kBK1P198EWjcdpnTqREzuVAEKR4n6ezK6yKwXnYx1lfGxtEocJPcjogs9
+	 TirYBE8haZmL/WER0EF29QwMGgXMrMkSgrRdwYtk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731386AbfEWQ5Y (ORCPT
+        id S1731360AbfEWQ5Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 23 May 2019 12:57:24 -0400
-Received: from foss.arm.com ([217.140.101.70]:50904 "EHLO foss.arm.com"
+Received: from mail.kernel.org ([198.145.29.99]:37756 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730899AbfEWQ5W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731299AbfEWQ5W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 May 2019 12:57:22 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0774C374;
-        Thu, 23 May 2019 09:57:22 -0700 (PDT)
-Received: from mbp (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1B06C3F5AF;
-        Thu, 23 May 2019 09:57:15 -0700 (PDT)
-Date:   Thu, 23 May 2019 17:57:09 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Dave Martin <Dave.Martin@arm.com>
-Cc:     Jason Gunthorpe <jgg@ziepe.ca>,
-        Mark Rutland <mark.rutland@arm.com>, kvm@vger.kernel.org,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        dri-devel@lists.freedesktop.org, linux-mm@kvack.org,
-        Lee Smith <Lee.Smith@arm.com>, linux-kselftest@vger.kernel.org,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Leon Romanovsky <leon@kernel.org>, linux-rdma@vger.kernel.org,
-        amd-gfx@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        Evgeniy Stepanov <eugenis@google.com>,
-        linux-media@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        linux-kernel@vger.kernel.org,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Subject: Re: [PATCH v15 00/17] arm64: untag user pointers passed to the kernel
-Message-ID: <20190523165708.q6ru7xg45aqfjzpr@mbp>
-References: <cover.1557160186.git.andreyknvl@google.com>
- <20190517144931.GA56186@arrakis.emea.arm.com>
- <20190521184856.GC2922@ziepe.ca>
- <20190522134925.GV28398@e103592.cambridge.arm.com>
- <20190523002052.GF15389@ziepe.ca>
- <20190523104256.GX28398@e103592.cambridge.arm.com>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF3E62070D;
+        Thu, 23 May 2019 16:51:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558630320;
+        bh=TCw7cKoRb0mNvs2XUEnU4+3yGCOFVTVy1RJc0z1Ogw0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=yaCvTrdue+ruF5/+/4uQDCzrgFwtbSrks+PtpQpAJ8fQNoyl0AZFXYR41m8P0b6AZ
+         RWHVm1Q2EQImnFPXFOU+0KUkHzWCf4dmAQNDWr/n6M1YR0tltL3ICmW0M02M3o0A6A
+         GU5rSksqUXUmyhJn9xel9Ex9paNHOFXzYT6bmb2A=
+Date:   Thu, 23 May 2019 18:51:57 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Nishka Dasgupta <nishkadg.linux@gmail.com>
+Cc:     christian.gromm@microchip.com, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: most: usb: Remove variable frame_size
+Message-ID: <20190523165157.GA19908@kroah.com>
+References: <20190523132334.29611-1-nishkadg.linux@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190523104256.GX28398@e103592.cambridge.arm.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20190523132334.29611-1-nishkadg.linux@gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 11:42:57AM +0100, Dave P Martin wrote:
-> On Wed, May 22, 2019 at 09:20:52PM -0300, Jason Gunthorpe wrote:
-> > On Wed, May 22, 2019 at 02:49:28PM +0100, Dave Martin wrote:
-> > > If multiple people will care about this, perhaps we should try to
-> > > annotate types more explicitly in SYSCALL_DEFINEx() and ABI data
-> > > structures.
-> > > 
-> > > For example, we could have a couple of mutually exclusive modifiers
-> > > 
-> > > T __object *
-> > > T __vaddr * (or U __vaddr)
-> > > 
-> > > In the first case the pointer points to an object (in the C sense)
-> > > that the call may dereference but not use for any other purpose.
-> > 
-> > How would you use these two differently?
-> > 
-> > So far the kernel has worked that __user should tag any pointer that
-> > is from userspace and then you can't do anything with it until you
-> > transform it into a kernel something
+On Thu, May 23, 2019 at 06:53:34PM +0530, Nishka Dasgupta wrote:
+> Remove variable frame_size as its multiple usages are all independent of
+> each other and so can be returned separately.
+> Issue found with Coccinelle.
 > 
-> Ultimately it would be good to disallow casting __object pointers execpt
-> to compatible __object pointer types, and to make get_user etc. demand
-> __object.
+> Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
+> ---
+>  drivers/staging/most/usb/usb.c | 16 ++++++----------
+>  1 file changed, 6 insertions(+), 10 deletions(-)
 > 
-> __vaddr pointers / addresses would be freely castable, but not to
-> __object and so would not be dereferenceable even indirectly.
+> diff --git a/drivers/staging/most/usb/usb.c b/drivers/staging/most/usb/usb.c
+> index 360cb5b7a10b..751e82cf66c5 100644
+> --- a/drivers/staging/most/usb/usb.c
+> +++ b/drivers/staging/most/usb/usb.c
+> @@ -186,32 +186,28 @@ static inline int start_sync_ep(struct usb_device *usb_dev, u16 ep)
+>   */
+>  static unsigned int get_stream_frame_size(struct most_channel_config *cfg)
+>  {
+> -	unsigned int frame_size = 0;
+>  	unsigned int sub_size = cfg->subbuffer_size;
+>  
+>  	if (!sub_size) {
+>  		pr_warn("Misconfig: Subbuffer size zero.\n");
+> -		return frame_size;
+> +		return 0;
+>  	}
+>  	switch (cfg->data_type) {
+>  	case MOST_CH_ISOC:
+> -		frame_size = AV_PACKETS_PER_XACT * sub_size;
+> -		break;
+> +		return AV_PACKETS_PER_XACT * sub_size;
+>  	case MOST_CH_SYNC:
+>  		if (cfg->packets_per_xact == 0) {
+>  			pr_warn("Misconfig: Packets per XACT zero\n");
+> -			frame_size = 0;
+> +			return 0;
+>  		} else if (cfg->packets_per_xact == 0xFF) {
+> -			frame_size = (USB_MTU / sub_size) * sub_size;
+> +			return (USB_MTU / sub_size) * sub_size;
+>  		} else {
+> -			frame_size = cfg->packets_per_xact * sub_size;
+> +			return cfg->packets_per_xact * sub_size;
+>  		}
+> -		break;
+>  	default:
+>  		pr_warn("Query frame size of non-streaming channel\n");
+> -		break;
+> +		return 0;
+>  	}
+> -	return frame_size;
+>  }
 
-I think it gets too complicated and there are ambiguous cases that we
-may not be able to distinguish. For example copy_from_user() may be used
-to copy a user data structure into the kernel, hence __object would
-work, while the same function may be used to copy opaque data to a file,
-so __vaddr may be a better option (unless I misunderstood your
-proposal).
+Now it just feels like you are doing "busy work" :(
 
-We currently have T __user * and I think it's a good starting point. The
-prior attempt [1] was shut down because it was just hiding the cast
-using __force. We'd need to work through those cases again and rather
-start changing the function prototypes to avoid unnecessary casting in
-the callers (e.g. get_user_pages(void __user *) or come up with a new
-type) while changing the explicit casting to a macro where it needs to
-be obvious that we are converting a user pointer, potentially typed
-(tagged), to an untyped address range. We may need a user_ptr_to_ulong()
-macro or similar (it seems that we have a u64_to_user_ptr, wasn't aware
-of it).
+frame_size makes sense here, right?  Why change this code?
 
-It may actually not be far from what you suggested but I'd keep the
-current T __user * to denote possible dereference.
+Remember, code is written for developers first, the compiler second.
+Reading this with frame_size makes it much more obvious what this code
+does when you read it again in 5-10 years.  Why change this, you have
+not made it faster, or smaller at all.
 
-[1] https://lore.kernel.org/lkml/5d54526e5ff2e5ad63d0dfdd9ab17cf359afa4f2.1535629099.git.andreyknvl@google.com/
+So no, I would not accept this, sorry.
 
--- 
-Catalin
+We have so many _real_ things to do in the drivers/staging/ directory if
+you are looking for stuff to clean up.  Don't try to micro-optimize
+things that do not matter at the expense of understanding.
+
+thanks,
+
+greg k-h
