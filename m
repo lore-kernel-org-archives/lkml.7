@@ -2,115 +2,193 @@ Return-Path: <SRS0=P610=TX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01601C282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:35:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 454DDC282DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:35:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBB3121872
-	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:35:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tssa4wzm"
+	by mail.kernel.org (Postfix) with ESMTP id 1690820881
+	for <linux-kernel@archiver.kernel.org>; Thu, 23 May 2019 19:35:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558640115;
+	bh=PXnCjs8j+JetXEPaNFWEecv9BivgufsuIGkzGDl9ea8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=qeXxUs0b0vIS5ffxTGTU0IFU10j6QK9sVNLnoUhOT24vY65nirlklzxW0G+A1d4Pp
+	 m10KwRfr6CPD5gn9fgDK3Cm7GKJUseUF3pGuKQLtyxtP1hds43G+Gr9lKnJvnEgSM+
+	 Rh39M6Z+tSMqhyBAvw9GTtnh5Fen3DwZLM020vc8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391924AbfEWTfL (ORCPT
+        id S2391505AbfEWT1D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 May 2019 15:35:11 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:41009 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387758AbfEWTfJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 May 2019 15:35:09 -0400
-Received: by mail-wr1-f68.google.com with SMTP id u16so3637109wrn.8
-        for <linux-kernel@vger.kernel.org>; Thu, 23 May 2019 12:35:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=LCWIRjkelIsQTcka41nOL2PfrXSiWnEkqhx7SOe+Cs8=;
-        b=Tssa4wzmF60NI8v4tq2Nj7Cvxd/g2lxfLZ8wL/ksNOUR1HbDmTgJHgGW8Ps46oe7pp
-         Abb3+b38WpXcJdKRWry6DBkwceX0sH2h0E3i75WsGTCpR9eNjqUqqPDzYFw0cSpnw6fr
-         /898fTyD6dT53EhE2bVxrcH0VA+/4IhSjKfrGVsEjOfSZbifBGandHI/ZQCkfnA7p7ww
-         l/E7jO7ns5jMClXqhHHceeabWoPCQ8fAdkK7Sf2kQF+bOvkQAoNoHV+FG9gF9RYGQshm
-         mV1f+mIgXg9YOEKbCTP7O1uBRcQNBjRDT+JYCeX27835vtxIXSpz68H7yHY/DXQaaUys
-         aYMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=LCWIRjkelIsQTcka41nOL2PfrXSiWnEkqhx7SOe+Cs8=;
-        b=ewsyK62+uDToYTYWDM+fwhfpsD21DePbdTXgLGUtTWkZkme5GIydXQOqDTwtpEZo0P
-         1qdksJFfnblHwnRlw/RNbyJ43RVlvH4l6RCeo4fcLMqAQk3pZMbTQEjlwAYK9LkMDeh8
-         Cjzw/02+6a2qoZGGbj2kmbKMn1DPUjquZ6YV8ms6SHcP0rHhAMbsyuMUAHCwAip5h9Av
-         sVEmjaSXJ71wg8LZNNqCILt9dw/yAL2vhFI8HUOOTyDaD/3rOGbXewy8WCMDmjORy/d3
-         Im5z+pVbpwq/wRT4bNwlUnyJGyPB72aj2mFauY/Cmyo5p1h7gj3GPpRtYGNhnymGjAUO
-         rPXA==
-X-Gm-Message-State: APjAAAV2LFsTA2PcMspG+WQRIUSapUL4TE+z8005msPzGROklJn1ULxC
-        f4x33/7uxpSACjBzfK1smVWIdhY=
-X-Google-Smtp-Source: APXvYqySB9x4R1K6ByuXf9O/I9uSMXwuEj2Qdszk5SkUHXZE1V2kM7FQ0W7bFjNvqg3gxtEBR0oyOw==
-X-Received: by 2002:adf:db87:: with SMTP id u7mr11184427wri.245.1558640108191;
-        Thu, 23 May 2019 12:35:08 -0700 (PDT)
-Received: from avx2 ([46.53.252.55])
-        by smtp.gmail.com with ESMTPSA id l6sm290312wmi.24.2019.05.23.12.35.07
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 23 May 2019 12:35:07 -0700 (PDT)
-Date:   Thu, 23 May 2019 22:35:05 +0300
-From:   Alexey Dobriyan <adobriyan@gmail.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] elf: fix "start_code" evaluation
-Message-ID: <20190523193505.GA8475@avx2>
-References: <20190523175736.GA6222@avx2>
- <20190523114417.f99d781754ed22950115c64a@linux-foundation.org>
+        Thu, 23 May 2019 15:27:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39050 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391486AbfEWT1A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 May 2019 15:27:00 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6670320868;
+        Thu, 23 May 2019 19:26:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558639618;
+        bh=PXnCjs8j+JetXEPaNFWEecv9BivgufsuIGkzGDl9ea8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=RX6hb7wSylbUUEeOJclaRlqZ9RBWIK3ruFSD/erM0JsnWs/CoJUQciaX5nGk8gpuQ
+         HZMMCe674JyjBig4+UsTzOSiQh0ItvCQMCOUtst1/AatEEmGsBd0YfS2HLmeCcGUDN
+         UBytcB8WcVZ8Lt19SJo40GZzzNUG6fcX0usZFtlE=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Dongli Zhang <dongli.zhang@oracle.com>,
+        James Smart <james.smart@broadcom.com>,
+        Bart Van Assche <bart.vanassche@wdc.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Christoph Hellwig <hch@lst.de>, Ming Lei <ming.lei@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>, linux-scsi@vger.kernel.org,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        "James E . J . Bottomley" <jejb@linux.vnet.ibm.com>
+Subject: [PATCH 5.1 024/122] blk-mq: free hw queues resource in hctxs release handler
+Date:   Thu, 23 May 2019 21:05:46 +0200
+Message-Id: <20190523181707.943993176@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190523181705.091418060@linuxfoundation.org>
+References: <20190523181705.091418060@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190523114417.f99d781754ed22950115c64a@linux-foundation.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 23, 2019 at 11:44:17AM -0700, Andrew Morton wrote:
-> On Thu, 23 May 2019 20:57:36 +0300 Alexey Dobriyan <adobriyan@gmail.com> wrote:
-> 
-> > Only executable ELF program headers should change ->start_code.
-> > 
-> > ...
-> >
-> > --- a/fs/binfmt_elf.c
-> > +++ b/fs/binfmt_elf.c
-> > @@ -1026,7 +1026,7 @@ static int load_elf_binary(struct linux_binprm *bprm)
-> >  			}
-> >  		}
-> >  		k = elf_ppnt->p_vaddr;
-> > -		if (k < start_code)
-> > +		if ((elf_ppnt->p_flags & PF_X) && k < start_code)
-> >  			start_code = k;
-> >  		if (start_data < k)
-> >  			start_data = k;
-> 
-> What problem does this solve?
+From: Ming Lei <ming.lei@redhat.com>
 
-It is a bug. Look at the ->end_code update:
+commit c7e2d94b3d1634988a95ac4d77a72dc7487ece06 upstream.
 
-	if ((elf_ppnt->p_flags & PF_X) && end_code < k)
-		end_code = k;
+Once blk_cleanup_queue() returns, tags shouldn't be used any more,
+because blk_mq_free_tag_set() may be called. Commit 45a9c9d909b2
+("blk-mq: Fix a use-after-free") fixes this issue exactly.
 
-> How does it alter runtime behaviour?
+However, that commit introduces another issue. Before 45a9c9d909b2,
+we are allowed to run queue during cleaning up queue if the queue's
+kobj refcount is held. After that commit, queue can't be run during
+queue cleaning up, otherwise oops can be triggered easily because
+some fields of hctx are freed by blk_mq_free_queue() in blk_cleanup_queue().
 
-It makes "VmExe" and "VmLib" accounting more accurate for common case.
+We have invented ways for addressing this kind of issue before, such as:
 
-> How do we know it won't break anything?
+	8dc765d438f1 ("SCSI: fix queue cleanup race before queue initialization is done")
+	c2856ae2f315 ("blk-mq: quiesce queue before freeing queue")
 
-We don't. Some distros are unaffected because they ship binaries with
-first PT_LOAD segment being executable (Debian 8). Some don't.
+But still can't cover all cases, recently James reports another such
+kind of issue:
 
-Regardless, these fields are lies: ELF binary can have multiple disjoint
-PT_LOAD segments, but all those ->start and ->end fields assume everything
-is mapped together.
+	https://marc.info/?l=linux-scsi&m=155389088124782&w=2
 
-Hopefully nobody actually uses them for anything serious.
+This issue can be quite hard to address by previous way, given
+scsi_run_queue() may run requeues for other LUNs.
+
+Fixes the above issue by freeing hctx's resources in its release handler, and this
+way is safe becasue tags isn't needed for freeing such hctx resource.
+
+This approach follows typical design pattern wrt. kobject's release handler.
+
+Cc: Dongli Zhang <dongli.zhang@oracle.com>
+Cc: James Smart <james.smart@broadcom.com>
+Cc: Bart Van Assche <bart.vanassche@wdc.com>
+Cc: linux-scsi@vger.kernel.org,
+Cc: Martin K . Petersen <martin.petersen@oracle.com>,
+Cc: Christoph Hellwig <hch@lst.de>,
+Cc: James E . J . Bottomley <jejb@linux.vnet.ibm.com>,
+Reported-by: James Smart <james.smart@broadcom.com>
+Fixes: 45a9c9d909b2 ("blk-mq: Fix a use-after-free")
+Cc: stable@vger.kernel.org
+Reviewed-by: Hannes Reinecke <hare@suse.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Tested-by: James Smart <james.smart@broadcom.com>
+Signed-off-by: Ming Lei <ming.lei@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ block/blk-core.c     |    2 +-
+ block/blk-mq-sysfs.c |    6 ++++++
+ block/blk-mq.c       |    8 ++------
+ block/blk-mq.h       |    2 +-
+ 4 files changed, 10 insertions(+), 8 deletions(-)
+
+--- a/block/blk-core.c
++++ b/block/blk-core.c
+@@ -375,7 +375,7 @@ void blk_cleanup_queue(struct request_qu
+ 	blk_exit_queue(q);
+ 
+ 	if (queue_is_mq(q))
+-		blk_mq_free_queue(q);
++		blk_mq_exit_queue(q);
+ 
+ 	percpu_ref_exit(&q->q_usage_counter);
+ 
+--- a/block/blk-mq-sysfs.c
++++ b/block/blk-mq-sysfs.c
+@@ -10,6 +10,7 @@
+ #include <linux/smp.h>
+ 
+ #include <linux/blk-mq.h>
++#include "blk.h"
+ #include "blk-mq.h"
+ #include "blk-mq-tag.h"
+ 
+@@ -33,6 +34,11 @@ static void blk_mq_hw_sysfs_release(stru
+ {
+ 	struct blk_mq_hw_ctx *hctx = container_of(kobj, struct blk_mq_hw_ctx,
+ 						  kobj);
++
++	if (hctx->flags & BLK_MQ_F_BLOCKING)
++		cleanup_srcu_struct(hctx->srcu);
++	blk_free_flush_queue(hctx->fq);
++	sbitmap_free(&hctx->ctx_map);
+ 	free_cpumask_var(hctx->cpumask);
+ 	kfree(hctx->ctxs);
+ 	kfree(hctx);
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -2267,12 +2267,7 @@ static void blk_mq_exit_hctx(struct requ
+ 	if (set->ops->exit_hctx)
+ 		set->ops->exit_hctx(hctx, hctx_idx);
+ 
+-	if (hctx->flags & BLK_MQ_F_BLOCKING)
+-		cleanup_srcu_struct(hctx->srcu);
+-
+ 	blk_mq_remove_cpuhp(hctx);
+-	blk_free_flush_queue(hctx->fq);
+-	sbitmap_free(&hctx->ctx_map);
+ }
+ 
+ static void blk_mq_exit_hw_queues(struct request_queue *q,
+@@ -2905,7 +2900,8 @@ err_exit:
+ }
+ EXPORT_SYMBOL(blk_mq_init_allocated_queue);
+ 
+-void blk_mq_free_queue(struct request_queue *q)
++/* tags can _not_ be used after returning from blk_mq_exit_queue */
++void blk_mq_exit_queue(struct request_queue *q)
+ {
+ 	struct blk_mq_tag_set	*set = q->tag_set;
+ 
+--- a/block/blk-mq.h
++++ b/block/blk-mq.h
+@@ -37,7 +37,7 @@ struct blk_mq_ctx {
+ 	struct kobject		kobj;
+ } ____cacheline_aligned_in_smp;
+ 
+-void blk_mq_free_queue(struct request_queue *q);
++void blk_mq_exit_queue(struct request_queue *q);
+ int blk_mq_update_nr_requests(struct request_queue *q, unsigned int nr);
+ void blk_mq_wake_waiters(struct request_queue *q);
+ bool blk_mq_dispatch_rq_list(struct request_queue *, struct list_head *, bool);
+
+
